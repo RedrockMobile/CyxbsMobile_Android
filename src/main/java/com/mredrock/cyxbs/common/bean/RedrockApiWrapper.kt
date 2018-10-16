@@ -1,0 +1,22 @@
+package com.mredrock.cyxbs.common.bean
+
+/**
+ * Created By jay68 on 2018/8/10.
+ */
+
+/**
+ * 当返回的json中没有data字段时使用此接口
+ */
+open class RedrockApiStatus {
+    var status: Int = 0
+    var info: String? = null
+    var version: String? = null
+    var id: Long = 0L
+}
+
+/**
+ * 当返回的接口json中有data字段时使用此接口
+ */
+class RedrockApiWrapper<T>(val data: T) : RedrockApiStatus()
+
+val RedrockApiStatus.isSuccessful get() = (status == 200)
