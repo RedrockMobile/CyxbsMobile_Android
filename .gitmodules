@@ -1,0 +1,9 @@
+[submodule "lib_common"]
+	path = lib_common
+	url = git@github.com:CyxbsMobile-Android-Submodule/lib_common.git
+[submodule "module_app"]
+	path = module_app
+	url = git@github.com:CyxbsMobile-Android-Submodule/module_app.git
+[submodule "module_main"]
+	path = module_main
+	url = git@github.com:CyxbsMobile-Android-Submodule/module_main.git
