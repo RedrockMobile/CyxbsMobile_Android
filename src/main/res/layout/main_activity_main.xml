@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.MainActivity">
+
+    <include layout="@layout/common_toolbar" />
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/view_pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="@dimen/main_main_bottom_navigation_height" />
+
+    <android.support.design.widget.BottomNavigationView
+        android:id="@+id/nav_main"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/main_main_bottom_navigation_height"
+        android:layout_gravity="bottom"
+        android:background="@color/main_main_bottom_navigation_view_background"
+        app:itemTextColor="@color/main_selector_main_bottom_navigation_text"
+        app:menu="@menu/main_main_nav_menu" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/main_ic_freshman"
+        app:backgroundTint="@color/main_freshman_entry_fab_background"
+        app:elevation="9dp"
+        app:fabCustomSize="42dp"
+        app:layout_anchor="@id/nav_main"
+        app:layout_anchorGravity="center|top" />
+</android.support.design.widget.CoordinatorLayout>
