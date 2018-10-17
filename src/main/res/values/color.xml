@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="grades_activity_tl_white">#FFFFFF</color>
+    <color name="grades_activity_back_grey">#D3D3D3</color>
+    <color name="grades_fragment_back_white">#F6F6F6</color>
+    <color name="grades_fragment_text_color_black">#333333</color>
+    <color name="grades_fragment_text_color_black2">#666666</color>
+    <color name="grades_fragment_text_color_black3">#999999</color>
+    <color name="grades_fragment_item_back_grey">#E4E4E4</color>
+</resources>

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/grades_activity_tl_white"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:padding="17dp">
+
+        <TextView
+            android:id="@+id/tv_grade_course"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="7"
+            android:gravity="left"
+            android:text="图形创意"
+            android:textColor="@color/grades_fragment_text_color_black"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/tv_grade_score"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="left"
+            tools:text="90"
+            android:textColor="@color/grades_fragment_text_color_black"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/tv_grade_property"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:gravity="right"
+            android:text="理论"
+            android:textColor="@color/grades_fragment_text_color_black3"
+            android:textSize="14sp" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/grades_fragment_item_back_grey" />
+</LinearLayout>
