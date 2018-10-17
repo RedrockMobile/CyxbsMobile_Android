@@ -7,3 +7,36 @@
 [submodule "module_main"]
 	path = module_main
 	url = git@github.com:CyxbsMobile-Android-Submodule/module_main.git
+[submodule "module_schoolcar"]
+	path = module_schoolcar
+	url = git@github.com:CyxbsMobile-Android-Submodule/module_schoolcar.git
+[submodule "module_news"]
+	path = module_news
+	url = git@github.com:CyxbsMobile-Android-Submodule/module_news.git
+[submodule "module_map"]
+	path = module_map
+	url = git@github.com:CyxbsMobile-Android-Submodule/module_map.git
+[submodule "module_grades"]
+	path = module_grades
+	url = git@github.com:CyxbsMobile-Android-Submodule/module_grades.git
+[submodule "module_emptyroom"]
+	path = module_emptyroom
+	url = git@github.com:CyxbsMobile-Android-Submodule/module_emptyroom.git
+[submodule "module_noclass"]
+	path = module_noclass
+	url = git@github.com:CyxbsMobile-Android-Submodule/module_noclass.git
+[submodule "module_qa"]
+	path = module_qa
+	url = git@github.com:CyxbsMobile-Android-Submodule/module_qa.git
+[submodule "module_mine"]
+	path = module_mine
+	url = git@github.com:CyxbsMobile-Android-Submodule/module_mine.git
+[submodule "module_discover"]
+	path = module_discover
+	url = git@github.com:CyxbsMobile-Android-Submodule/module_discover.git
+[submodule "module_course"]
+	path = module_course
+	url = git@github.com:CyxbsMobile-Android-Submodule/module_course.git
+[submodule "module_electricity"]
+	path = module_electricity
+	url = git@github.com:CyxbsMobile-Android-Submodule/module_electricity.git
