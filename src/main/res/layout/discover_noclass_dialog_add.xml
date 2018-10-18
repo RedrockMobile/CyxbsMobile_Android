@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="#f9f9f9"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:layout_marginTop="25dp"
+        android:background="#fff">
+
+        <EditText
+            android:id="@+id/noclass_edit_dialog"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@drawable/discover_noclass_shape_rectangle_grey_stroke"
+            android:hint="请输入要查询的学号/姓名"
+            android:paddingLeft="10dp"
+            android:textSize="14sp"/>
+
+        <ImageView
+            android:id="@+id/noclass_btn_delete_dialog"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_gravity="right|center_vertical"
+            android:layout_marginRight="10dp"
+            android:padding="2dp"
+            android:src="@drawable/discover_noclass_ic_delete"/>
+
+    </FrameLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/noclass_btn_cancel_dialog"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_marginBottom="20dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="10dp"
+            android:layout_weight="1"
+            android:background="@drawable/discover_noclass_shape_rectangle_grey_stroke"
+            android:text="取消"
+            android:textColor="#999"/>
+
+        <Button
+            android:id="@+id/noclass_btn_confirm_dialog"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_marginBottom="20dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="20dp"
+            android:layout_weight="1"
+            android:background="@drawable/discover_noclass_shape_rectangle_grey_stroke"
+            android:text="添加"
+            android:textColor="@color/colorPrimary"/>
+
+    </LinearLayout>
+
+</LinearLayout>

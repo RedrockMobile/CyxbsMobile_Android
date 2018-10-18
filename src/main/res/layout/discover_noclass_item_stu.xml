@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="56dp"
+    android:clickable="true"
+    android:focusable="true">
+
+    <TextView
+        android:id="@+id/no_course_name"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/discover_noclass_shape_rectangle_blue_stroke"
+        android:gravity="center"
+        android:text="李佳蔚"
+        android:layout_margin="8dp"
+        android:textColor="#788EFA"
+        android:textSize="13sp"/>
+
+    <ImageView
+        android:id="@+id/no_course_delete"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:padding="3dp"
+        android:clickable="true"
+        android:layout_gravity="right|top"
+        android:scaleType="fitXY"
+        android:src="@drawable/discover_noclass_ic_delete"/>
+</FrameLayout>

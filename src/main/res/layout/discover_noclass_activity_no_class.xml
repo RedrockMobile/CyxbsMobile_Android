@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:weightSum="100"
+
+    android:background="#fff"
+    tools:context=".pages.noclass.NoClassActivity"
+    tools:ignore="ResourceName">
+
+    <include layout="@layout/common_toolbar"/>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/noclass_rv"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="47"
+        android:layout_marginTop="10dp">
+
+    </android.support.v7.widget.RecyclerView>
+
+    <Button
+        android:id="@+id/noclass_btn_query"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_marginLeft="17dp"
+        android:layout_marginRight="17dp"
+        android:layout_marginTop="18dp"
+        android:background="@drawable/discover_noclass_bg_btn"
+        android:text="查    询"
+        android:textColor="#FFFFFF"
+        android:textSize="16sp"/>
+
+</LinearLayout>
