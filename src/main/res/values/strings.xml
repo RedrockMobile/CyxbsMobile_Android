@@ -1,0 +1,80 @@
+<resources>
+    <string name="mine_mine">module_mine</string>
+
+    <string name="mine_my_page">我 的</string>
+    <string name="mine_user_empty_username">请填写用户名</string>
+    <string name="mine_user_empty_introduce">写下你对世界想说的话，就现在</string>
+    <string name="mine_setting_show_note">在课表上没课的地方显示备忘内容</string>
+    <string name="mine_setting_feedback">意见反馈</string>
+    <string name="mine_setting_about">关于</string>
+    <string name="mine_setting_exit">退出当前账号</string>
+    <string name="mine_setting_share">分享</string>
+    <string name="mine_to_download">扫一扫下载，长按保存</string>
+    <string name="mine_money_tell">悄悄告诉你：积分可以兑换礼物~</string>
+    <string name="mine_gift_ontheway">礼物正在路上呢~</string>
+
+
+    <string name="mine_sign_remind_switch_hint">连续签到每日提醒</string>
+    <string name="mine_sign_point_hint">我的积分数：</string>
+    <string name="mine_sign_point_detail">积分明细</string>
+    <string name="mine_sign_day_hint">已连续签到</string>
+    <string name="mine_sign_point_count_default">0</string>
+    <string name="mine_sign_day_count_default">00</string>
+    <string name="mine_sign_day_count_hint">天</string>
+    <string name="mine_sign_to_sign">立即签到</string>
+    <string name="mine_sign_hint_signed">今天打卡任务已完成，你还要忙着可爱</string>
+    <string name="mine_sign_rules">签到规则</string>
+    <string name="mine_sign_point_spec">积分说明</string>
+    <string name="mine_sign_rules_rules">
+        1.每天完成一次签到可获得积分奖励；\n
+        2.连续签到在3天、5天、7天可获得积分加成；\n
+        3.连续签到中断，将从第一天重新开始；\n
+        4.积分计分周期为7天；\n
+        5.连续签到奖励如下：\n
+        第1天 —— +10\n
+        第2天 —— +10\n
+        第3天 —— +20\n
+        第4天 —— +10\n
+        第5天 —— +30\n
+        第6天 —— +10\n
+        第7天 —— +40
+    </string>
+    <string name="mine_sign_detail_more">更多</string>
+    <string name="mine_question_detail_report">举报</string>
+    <string name="mine_question_detail_share">分享</string>
+
+    <string name="mine_point_spec_spec">
+        Q：积分有什么用途？\n
+        A：积分可用于兑换奖品及参与各类活动。\n\n
+        Q：怎样获得积分？\n
+        A：目前获得积分主要有三种途径：\n
+        1.每天登录掌上重邮并签到；\n
+        2.发布优质“帮助”帖；\n
+        3.官方活动发放。
+    </string>
+    <string name="mine_copyright_hint">以上信息的最终解释权归红岩网校工作站所有</string>
+
+
+    <!--草稿箱-->
+    <string name="mine_answer_detail_submit">发送</string>
+    <string name="mine_answer_detail_content_hint">添加你的评论</string>
+    <string name="mine_draft_empty_hint">还没有草稿在这里哦～</string>
+
+    <string name="mine_question_default">提问：线性第一题不会做，求解</string>
+    <string name="mine_question_help_default">帮助：是的，公式是没有问题的，但是你的…</string>
+    <string name="mine_adopt_time_justnow">采纳时间：刚刚</string>
+    <string name="mine_avatar">头像</string>
+    <string name="mine_nickname">昵称</string>
+    <string name="mine_introduce">简介</string>
+    <string name="mine_qq">QQ</string>
+    <string name="mine_phone">电话</string>
+    <string name="mine_edit">编辑</string>
+
+    <!--与我相关-->
+    <string name="mine_relate_me_empty_hint">还没有与我相关的动态哦</string>
+    <string name="mine_relate_me_type_suffix">了我</string>
+    <string name="mine_relate_me_reply">回复</string>
+    <string name="mine_set_widget">自定义桌面小图标</string>
+    <string name="mine_mine_1">我的</string>
+
+</resources>

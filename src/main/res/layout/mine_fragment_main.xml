@@ -1,0 +1,228 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#f6f6f6"
+    android:orientation="vertical"
+    tools:context=".UserFragment">
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:elevation="0dp">
+
+        <com.mredrock.cyxbs.common.component.JToolbar
+            android:id="@+id/mine_main_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/common_toolbar_background"
+            android:fitsSystemWindows="true"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+            app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
+    </android.support.design.widget.AppBarLayout>
+
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <View
+                android:id="@+id/mine_main_topBackground"
+                android:layout_width="match_parent"
+                android:layout_height="122dp"
+                android:background="@drawable/mine_bg_me_top" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/mine_main_avatar"
+                        android:layout_width="68dp"
+                        android:layout_height="68dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="20dp"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/mine_default_avatar"
+                        app:civ_border_color="@color/mine_user_white_color"
+                        app:civ_border_width="2dp" />
+
+                    <TextView
+                        android:id="@+id/mine_main_username"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignTop="@id/mine_main_avatar"
+                        android:layout_marginStart="11dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_toEndOf="@id/mine_main_avatar"
+                        android:text="@string/mine_user_empty_username"
+                        android:textColor="@color/mine_user_white_color"
+                        android:textSize="17sp" />
+
+                    <TextView
+                        android:id="@+id/mine_main_introduce"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/mine_main_username"
+                        android:layout_marginStart="11dp"
+                        android:layout_marginTop="6dp"
+                        android:layout_toEndOf="@id/mine_main_avatar"
+                        android:drawableEnd="@drawable/mine_ic_me_edit"
+                        android:drawablePadding="8dp"
+                        android:ellipsize="end"
+                        android:maxLength="20"
+                        android:maxLines="1"
+                        android:text="@string/mine_user_empty_introduce"
+                        android:textColor="@color/mine_user_white_color"
+                        android:textSize="13sp" />
+
+                </RelativeLayout>
+
+                <com.mredrock.cyxbs.mine.util.widget.UserFragmentItem
+                    android:id="@+id/mine_main_dailySign"
+                    android:layout_width="match_parent"
+                    android:layout_height="76dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginRight="5dp"
+                    app:cardCornerRadius="9dp"
+                    app:itemIcon="@drawable/mine_ic_me_sign"
+                    app:itemTitle="每日签到" />
+
+                <View
+                    android:id="@+id/mine_main_helper"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:visibility="invisible" />
+
+                <com.mredrock.cyxbs.mine.util.widget.UserFragmentItem
+                    android:id="@+id/mine_main_store"
+                    android:layout_width="match_parent"
+                    android:layout_height="66dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    app:cardCornerRadiusLowerLeft="-9dp"
+                    app:cardCornerRadiusLowerRight="-9dp"
+                    app:cardCornerRadiusUpperLeft="9dp"
+                    app:cardCornerRadiusUpperRight="9dp"
+                    app:itemIcon="@drawable/mine_ic_me_store"
+                    app:itemTitle="积分商城"
+                    app:shadowFlags="top|left|right" />
+
+                <View
+                    android:id="@+id/mine_main_divider"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginLeft="19dp"
+                    android:layout_marginRight="19dp"
+                    android:background="@color/mine_user_divider" />
+
+                <com.mredrock.cyxbs.mine.util.widget.UserFragmentItem
+                    android:id="@+id/mine_main_question"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    app:cardCornerRadius="-9dp"
+                    app:itemIcon="@drawable/mine_ic_me_question"
+                    app:itemTitle="问一问"
+                    app:shadowFlags="left|right" />
+
+                <View
+                    android:id="@+id/mine_main_divider1"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginLeft="19dp"
+                    android:layout_marginRight="19dp"
+                    android:background="@color/mine_user_divider"
+                    app:layout_constraintEnd_toEndOf="@+id/mine_main_dailySign"
+                    app:layout_constraintStart_toStartOf="@+id/mine_main_dailySign"
+                    app:layout_constraintTop_toBottomOf="@+id/mine_main_question" />
+
+                <com.mredrock.cyxbs.mine.util.widget.UserFragmentItem
+                    android:id="@+id/mine_main_help"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    app:cardCornerRadius="-9dp"
+                    app:itemIcon="@drawable/mine_ic_me_help"
+                    app:itemTitle="帮一帮"
+                    app:layout_constraintEnd_toEndOf="@+id/mine_main_dailySign"
+                    app:layout_constraintStart_toStartOf="@+id/mine_main_dailySign"
+                    app:layout_constraintTop_toBottomOf="@+id/mine_main_divider1"
+                    app:shadowFlags="left|right" />
+
+                <View
+                    android:id="@+id/mine_main_divider2"
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_marginLeft="19dp"
+                    android:layout_marginRight="19dp"
+                    android:background="@color/mine_user_divider"
+                    app:layout_constraintEnd_toEndOf="@+id/mine_main_dailySign"
+                    app:layout_constraintStart_toStartOf="@+id/mine_main_dailySign"
+                    app:layout_constraintTop_toBottomOf="@+id/mine_main_help" />
+
+                <com.mredrock.cyxbs.mine.util.widget.UserFragmentItem
+                    android:id="@+id/mine_main_draft"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    app:cardCornerRadius="-9dp"
+                    app:itemIcon="@drawable/mine_ic_me_draft"
+                    app:itemTitle="草稿箱"
+                    app:shadowFlags="left|right" />
+
+                <View
+                    android:id="@+id/mine_main_divider3"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginLeft="19dp"
+                    android:layout_marginRight="19dp"
+                    android:background="@color/mine_user_divider" />
+
+                <com.mredrock.cyxbs.mine.util.widget.UserFragmentItem
+                    android:id="@+id/mine_main_relateMe"
+                    android:layout_width="match_parent"
+                    android:layout_height="66dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    app:cardCornerRadiusLowerLeft="9dp"
+                    app:cardCornerRadiusLowerRight="9dp"
+                    app:cardCornerRadiusUpperLeft="-9dp"
+                    app:cardCornerRadiusUpperRight="-9dp"
+                    app:itemIcon="@drawable/mine_ic_me_relate_me"
+                    app:itemTitle="与我相关"
+                    app:shadowFlags="bottom|left|right" />
+
+                <com.mredrock.cyxbs.mine.util.widget.UserFragmentItem
+                    android:id="@+id/mine_main_setting"
+                    android:layout_width="match_parent"
+                    android:layout_height="76dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    app:cardCornerRadius="9dp"
+                    app:itemIcon="@drawable/mine_ic_me_setting"
+                    app:itemTitle="设置"
+                    app:layout_constraintEnd_toEndOf="@+id/mine_main_dailySign"
+                    app:layout_constraintStart_toStartOf="@+id/mine_main_dailySign"
+                    app:layout_constraintTop_toBottomOf="@+id/mine_main_relateMe" />
+
+            </LinearLayout>
+
+        </FrameLayout>
+    </ScrollView>
+
+</LinearLayout>

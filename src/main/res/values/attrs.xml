@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <!--确定唯一，不需要添加前缀-->
+    <declare-styleable name="UserFragmentItem" tools:ignore="ResourceName">
+        <attr name="itemIcon" format="reference" />
+        <attr name="itemTitle" format="string" />
+        <attr name="showRemindIcon" format="boolean" />
+        <attr name="leftRadius" format="dimension" />
+        <attr name="topRadius" format="dimension" />
+        <attr name="rightRadius" format="dimension" />
+        <attr name="bottomRadius" format="dimension" />
+        <attr name="hideLeftShadow" format="boolean" />
+        <attr name="hideTopShadow" format="boolean" />
+        <attr name="hideRightShadow" format="boolean" />
+        <attr name="hideBottomShadow" format="boolean" />
+        <attr name="backgroundColor" format="color" />
+        <attr name="shadowColor" format="color" />
+        <attr name="shadowRadius" format="dimension" />
+    </declare-styleable>
+</resources>

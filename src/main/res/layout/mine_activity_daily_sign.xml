@@ -1,0 +1,398 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".page.sign.DailySignActivity">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <include layout="@layout/common_toolbar" />
+
+            <com.mredrock.cyxbs.common.component.JCardViewPlus
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginRight="8dp"
+                app:cardCornerRadius="6dp"
+                app:shadowColor="#0d000000"
+                app:shadowRadius="10dp">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="17dp">
+
+
+                    <LinearLayout
+                        android:id="@+id/mine_daily_avatarContainer"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <de.hdodenhof.circleimageview.CircleImageView
+                            android:id="@+id/mine_daily_avatar"
+                            android:layout_width="60dp"
+                            android:layout_height="60dp"
+                            android:src="@drawable/mine_default_avatar" />
+
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="14dp"
+                            android:orientation="vertical">
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/mine_sign_point_hint"
+                                    android:textColor="@color/mine_sign_hint_text"
+                                    android:textSize="15sp" />
+
+                                <TextView
+                                    android:id="@+id/mine_daily_pointCount"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/mine_sign_point_count_default"
+                                    android:textColor="@color/mine_sign_point_count"
+                                    android:textSize="16sp"
+                                    tools:text="666" />
+                            </LinearLayout>
+
+                            <TextView
+                                android:id="@+id/mine_daily_pointDetail"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="5dp"
+                                android:text="@string/mine_sign_point_detail"
+                                android:textColor="@color/mine_sign_point_count"
+                                android:textSize="14sp" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/mine_daily_signDayHint"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/mine_daily_avatarContainer"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="31dp"
+                        android:text="@string/mine_sign_day_hint"
+                        android:textColor="@color/mine_sign_hint_text"
+                        android:textSize="15sp" />
+
+                    <TextView
+                        android:id="@+id/mine_daily_dayCount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/mine_daily_signDayHint"
+                        android:layout_centerHorizontal="true"
+                        android:text="@string/mine_sign_day_count_default"
+                        android:textColor="@color/mine_sign_day_count"
+                        android:textSize="60sp"
+                        tools:text="03" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBaseline="@+id/mine_daily_dayCount"
+                        android:layout_marginStart="8dp"
+                        android:layout_toEndOf="@+id/mine_daily_dayCount"
+                        android:text="@string/mine_sign_day_count_hint"
+                        android:textColor="@color/mine_sign_day_count"
+                        android:textSize="16sp" />
+
+                    <LinearLayout
+                        android:id="@+id/mine_daily_dayNameContainer"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/mine_daily_dayCount"
+                        android:layout_marginLeft="22dp"
+                        android:layout_marginRight="22dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:textColor="@color/mine_sign_day_name"
+                            android:textSize="13sp"
+                            tools:text="第2天" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:textColor="@color/mine_sign_day_name"
+                            android:textSize="13sp"
+                            tools:text="第3天" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:textColor="@color/mine_sign_day_name"
+                            android:textSize="13sp"
+                            tools:text="第4天"
+                            tools:textColor="@color/mine_sign_today_name" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:textColor="@color/mine_sign_day_name"
+                            android:textSize="13sp"
+                            tools:text="第5天" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:textColor="@color/mine_sign_day_name"
+                            android:textSize="13sp"
+                            tools:text="第6天" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/mine_daily_daySymbolContainer"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/mine_daily_dayNameContainer"
+                        android:layout_marginTop="7dp"
+                        android:layout_marginBottom="6dp"
+                        android:gravity="center"
+                        android:orientation="horizontal">
+
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="1dp"
+                            android:layout_weight="1"
+                            android:background="@color/mine_sign_divider" />
+
+                        <ImageView
+                            android:layout_width="12dp"
+                            android:layout_height="12dp"
+                            android:background="@drawable/mine_shape_circle_bg_activity_sign"
+                            android:padding="2dp"
+                            tools:src="@drawable/mine_shape_circle_src_activity_sign" />
+
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="1dp"
+                            android:layout_weight="1"
+                            android:background="@color/mine_sign_divider" />
+
+                        <ImageView
+                            android:layout_width="12dp"
+                            android:layout_height="12dp"
+                            android:background="@drawable/mine_shape_circle_bg_activity_sign"
+                            android:padding="2dp"
+                            tools:src="@drawable/mine_shape_circle_src_activity_sign" />
+
+
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="1dp"
+                            android:layout_weight="1"
+                            android:background="@color/mine_sign_divider" />
+
+                        <ImageView
+                            android:layout_width="12dp"
+                            android:layout_height="12dp"
+                            android:background="@drawable/mine_shape_circle_bg_activity_sign"
+                            android:padding="2dp" />
+
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="1dp"
+                            android:layout_weight="1"
+                            android:background="@color/mine_sign_divider" />
+
+                        <ImageView
+                            android:layout_width="12dp"
+                            android:layout_height="12dp"
+                            android:background="@drawable/mine_shape_circle_bg_activity_sign"
+                            android:padding="2dp" />
+
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="1dp"
+                            android:layout_weight="1"
+                            android:background="@color/mine_sign_divider" />
+
+                        <ImageView
+                            android:layout_width="12dp"
+                            android:layout_height="12dp"
+                            android:background="@drawable/mine_shape_circle_bg_activity_sign"
+                            android:padding="2dp" />
+
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="1dp"
+                            android:layout_weight="1"
+                            android:background="@color/mine_sign_divider" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/mine_daily_dayPointContainer"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/mine_daily_daySymbolContainer"
+                        android:layout_marginLeft="22dp"
+                        android:layout_marginRight="22dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:textColor="@color/mine_sign_day_name"
+                            android:textSize="13sp"
+                            tools:text="+5" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:textColor="@color/mine_sign_day_name"
+                            android:textSize="13sp"
+                            tools:text="+15" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:textColor="@color/mine_sign_day_name"
+                            android:textSize="13sp"
+                            tools:text="+20"
+                            tools:textColor="@color/mine_sign_today_name" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:textColor="@color/mine_sign_day_name"
+                            android:textSize="13sp"
+                            tools:text="+25" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:textColor="@color/mine_sign_day_name"
+                            android:textSize="13sp"
+                            tools:text="+30" />
+                    </LinearLayout>
+
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/mine_daily_dayPointContainer"
+                        android:layout_marginTop="36dp"
+                        android:layout_marginBottom="30dp">
+
+                        <LinearLayout
+                            android:id="@+id/mine_daily_toSignFrame"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:orientation="horizontal"
+                            android:weightSum="4">
+
+                            <Button
+                                android:id="@+id/mine_daily_sign"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="45dp"
+                                android:layout_marginRight="45dp"
+                                android:background="@drawable/mine_shape_rect_bg_sign_button"
+                                android:text="@string/mine_sign_to_sign"
+                                android:textColor="@color/mine_white"
+                                android:textSize="16sp" />
+                        </LinearLayout>
+
+                        <TextView
+                            android:id="@+id/mine_daily_signedFrame"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:text="@string/mine_sign_hint_signed"
+                            android:textColor="@color/mine_sign_hint_singed"
+                            android:textSize="13sp"
+                            android:visibility="gone" />
+                    </FrameLayout>
+                </RelativeLayout>
+            </com.mredrock.cyxbs.common.component.JCardViewPlus>
+
+            <com.mredrock.cyxbs.common.component.JCardViewPlus
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                app:cardCornerRadius="6dp"
+                app:shadowColor="#0d000000"
+                app:shadowRadius="10dp">
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="19dp"
+                        android:layout_marginTop="22dp"
+                        android:layout_marginBottom="21dp"
+                        android:text="@string/mine_sign_remind_switch_hint"
+                        android:textColor="@color/mine_sign_hint_text"
+                        android:textSize="14sp" />
+
+                    <com.kyleduo.switchbutton.SwitchButton
+                        android:id="@+id/mine_daily_remindSwitch"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end|center"
+                        android:layout_marginEnd="19dp"
+                        app:kswBackColor="@color/colorAccent"
+                        app:kswBackDrawable="@drawable/mine_bg_switch"
+                        app:kswThumbColor="@color/mine_white" />
+                </FrameLayout>
+            </com.mredrock.cyxbs.common.component.JCardViewPlus>
+        </LinearLayout>
+    </ScrollView>
+
+    <View
+        android:id="@+id/mine_daily_frame"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:alpha="0.3"
+        android:background="@color/mine_black_lightly"
+        android:visibility="gone"></View>
+
+</FrameLayout>
