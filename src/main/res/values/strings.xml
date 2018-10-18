@@ -1,0 +1,104 @@
+<resources>
+    <string name="electricity_set_dormitory">设置寝室</string>
+    <string name="electricity_dormitory_building">楼栋</string>
+    <string name="electricity_dormitory_room">寝室号</string>
+    <string name="electricity_confirm">确定</string>
+    <string name="electricity_info_zero">00</string>
+
+    <string name="electricity_info_1">日均量/度</string>
+    <string name="electricity_info_2">月优惠量/度</string>
+    <string name="electricity_info_3">费用</string>
+    <string name="electricity_info_4">电起度/度</string>
+    <string name="electricity_info_5">电止度/度</string>
+
+    <string name="electricity_notice_hint1">\t抄表日期： </string>
+    <string name="electricity_notice_hint2">\t用电过程中，如需查询请致电：\t023&#8211;62487902</string>
+    <string name="electricity_notice_error">信息不完整或不正确</string>
+
+    <string-array name="electricity_building_name">
+        <item>知行苑1舍(01栋)</item>
+        <item>知行苑2舍(02栋)</item>
+        <item>知行苑3舍(03栋)</item>
+        <item>知行苑4舍(04栋)</item>
+        <item>知行苑5舍(05栋)</item>
+        <item>知行苑6舍(06栋)</item>
+        <item>知行苑7舍(15栋)</item>
+        <item>知行苑8舍(16栋)</item>
+
+        <item>兴业苑1舍(17栋)</item>
+        <item>兴业苑2舍(18栋)</item>
+        <item>兴业苑3舍(19栋)</item>
+        <item>兴业苑4舍(20栋)</item>
+        <item>兴业苑5舍(21栋)</item>
+        <item>兴业苑6舍(22栋)</item>
+        <item>兴业苑7舍(23A栋)</item>
+        <item>兴业苑8舍(23B栋)</item>
+
+        <item>四海苑1舍(36栋)</item>
+        <item>四海苑2舍(37栋)</item>
+
+        <item>宁静苑1舍(08栋)</item>
+        <item>宁静苑2舍(09栋)</item>
+        <item>宁静苑3舍(10栋)</item>
+        <item>宁静苑4舍(11栋)</item>
+        <item>宁静苑5舍(12栋)</item>
+        <item>宁静苑6舍(32栋)</item>
+        <item>宁静苑7舍(33栋)</item>
+        <item>宁静苑8舍(34栋)</item>
+        <item>宁静苑9舍(35栋)</item>
+
+        <item>明理苑1舍(24栋)</item>
+        <item>明理苑2舍(25栋)</item>
+        <item>明理苑3舍(26栋)</item>
+        <item>明理苑4舍(27栋)</item>
+        <item>明理苑5舍(28栋)</item>
+        <item>明理苑6舍(29栋)</item>
+        <item>明理苑7舍(30栋)</item>
+        <item>明理苑8舍(31栋)</item>
+        <item>明理苑9舍(39栋)</item>
+    </string-array>
+
+    <string-array name="electricity_building_id">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>15</item>
+        <item>16</item>
+
+        <item>17</item>
+        <item>18</item>
+        <item>19</item>
+        <item>20</item>
+        <item>21</item>
+        <item>22</item>
+        <item>23A</item>
+        <item>23B</item>
+
+        <item>36</item>
+        <item>37</item>
+
+        <item>8</item>
+        <item>9</item>
+        <item>10</item>
+        <item>11</item>
+        <item>12</item>
+        <item>32</item>
+        <item>33</item>
+        <item>34</item>
+        <item>35</item>
+
+        <item>24</item>
+        <item>25</item>
+        <item>26</item>
+        <item>27</item>
+        <item>28</item>
+        <item>29</item>
+        <item>30</item>
+        <item>31</item>
+        <item>39</item>
+    </string-array>
+
+</resources>

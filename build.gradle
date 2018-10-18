@@ -1,0 +1,8 @@
+apply from: module_config
+
+dependencies {
+    implementation project(':lib_common')
+   
+    implementation "android.arch.navigation:navigation-fragment:1.0.0-alpha05"
+    implementation "android.arch.navigation:navigation-ui:1.0.0-alpha05"
+}

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="electricity_white">#fff</color>
+    <color name="electricity_blue_value">#12b9ff</color>
+    <color name="electricity_gray">#999999</color>
+    <color name="electricity_gray_hint_text">#777777</color>
+    <color name="electricity_blue_hint_btn">#12caff</color>
+    <color name="electricity_gray_line">#f0f1f5</color>
+    <color name="electricity_hint_text">#9ea1a6</color>
+</resources>

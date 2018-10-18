@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/tv_info_value"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:gravity="center"
+        android:textColor="@color/electricity_blue_value"
+        android:textSize="30sp"
+        android:text="@string/electricity_info_zero" />
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/tv_info_describe"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_info_value"
+        android:gravity="center"
+        android:textColor="@color/electricity_gray"
+        android:textSize="14sp"
+        tools:text="日均量/度" />
+</RelativeLayout>

@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.mredrock.cyxbs.electricity.ui.widget.ElectricCircleView
+        android:id="@+id/ecv_electric_circle_view"
+        android:layout_width="280dp"
+        android:layout_height="280dp"
+        android:layout_gravity="center"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.108" />
+
+    <LinearLayout
+        android:id="@+id/ll_electric_info"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ecv_electric_circle_view"
+        app:layout_constraintVertical_bias="0.108">
+
+        <com.mredrock.cyxbs.electricity.ui.widget.ElectricInfoView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            app:describe="@string/electricity_info_1" />
+
+        <com.mredrock.cyxbs.electricity.ui.widget.ElectricInfoView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            app:describe="@string/electricity_info_2" />
+
+        <com.mredrock.cyxbs.electricity.ui.widget.ElectricInfoView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            app:describe="@string/electricity_info_3" />
+
+        <com.mredrock.cyxbs.electricity.ui.widget.ElectricInfoView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            app:describe="@string/electricity_info_4" />
+
+        <com.mredrock.cyxbs.electricity.ui.widget.ElectricInfoView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            app:describe="@string/electricity_info_5" />
+    </LinearLayout>
+
+
+    <View
+        android:id="@+id/electricity_line"
+        android:layout_width="0dp"
+        android:layout_height="10dp"
+        android:layout_marginBottom="8dp"
+        android:background="@color/electricity_gray_line"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ll_electric_info"
+        app:layout_constraintVertical_bias="0.2" />
+
+    <TextView
+        android:id="@+id/tv_electric_time"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:text="@string/electricity_notice_hint1"
+        android:textColor="@color/electricity_hint_text"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toTopOf="@+id/et_hint2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/electricity_line" />
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/et_hint2"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:text="@string/electricity_notice_hint2"
+        android:textColor="@color/electricity_hint_text"
+        app:autoSizeMaxTextSize="16sp"
+        app:autoSizeTextType="uniform"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_electric_time" />
+
+</android.support.constraint.ConstraintLayout>
