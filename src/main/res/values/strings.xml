@@ -1,0 +1,63 @@
+<resources>
+    <integer name="emptyroom_no_limit">-1</integer>
+
+    <string name="emptyroom_name">空教室</string>
+
+    <string name="emptyroom_error_toast">暂未获取数据:(</string>
+
+    <string-array name="emptyroom_buildings">
+        <item>二教</item>
+        <item>三教</item>
+        <item>四教</item>
+        <item>五教</item>
+        <item>八教</item>
+    </string-array>
+
+    <string-array name="emptyroom_sections">
+        <item>1–2节</item>
+        <item>3–4节</item>
+        <item>5–6节</item>
+        <item>7–8节</item>
+        <item>9–10节</item>
+        <item>11–12节</item>
+    </string-array>
+
+    <string-array name="emptyroom_course_weekdays">
+        <item>周一</item>
+        <item>周二</item>
+        <item>周三</item>
+        <item>周四</item>
+        <item>周五</item>
+        <item>周六</item>
+        <item>周日</item>
+    </string-array>
+
+    <string-array name="emptyroom_titles_weeks">
+        <item>整学期</item>
+        <item>第一周</item>
+        <item>第二周</item>
+        <item>第三周</item>
+        <item>第四周</item>
+        <item>第五周</item>
+        <item>第六周</item>
+        <item>第七周</item>
+        <item>第八周</item>
+        <item>第九周</item>
+        <item>第十周</item>
+        <item>第十一周</item>
+        <item>第十二周</item>
+        <item>第十三周</item>
+        <item>第十四周</item>
+        <item>第十五周</item>
+        <item>第十六周</item>
+        <item>第十七周</item>
+        <item>第十八周</item>
+        <item>第十九周</item>
+        <item>第二十周</item>
+        <item>第二十一周</item>
+        <item>第二十二周</item>
+        <item>第二十三周</item>
+        <item>第二十四周</item>
+        <item>第二十五周</item>
+    </string-array>
+</resources>
