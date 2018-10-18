@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".pages.hiding.DiscoverHidingActivity"
+    tools:ignore="ResourceName">
+
+    <include layout="@layout/common_toolbar"/>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/discover_rv_hiding"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+    </android.support.v7.widget.RecyclerView>
+
+    <TextView
+        android:id="@+id/discover_btn_hiding_confirm"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:textColor="#fff"
+        android:gravity="center"
+        android:textSize="20sp"
+        android:background="@color/colorPrimary"
+        android:text="确 定"/>
+
+</LinearLayout>
