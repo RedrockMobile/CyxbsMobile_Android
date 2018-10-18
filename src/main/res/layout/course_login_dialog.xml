@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:padding="5dp"
+    android:layout_height="match_parent">
+
+    <EditText
+        android:id="@+id/account"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="@string/course_input_account"
+        app:layout_constraintBottom_toTopOf="@id/password"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="Autofill,TextFields" />
+
+    <EditText
+        android:id="@+id/password"
+        android:layout_width="0dp"
+        android:inputType="numberPassword"
+        android:layout_height="wrap_content"
+        android:hint="@string/course_input_password"
+        app:layout_constraintBottom_toTopOf="@id/sure"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/account"
+        tools:ignore="Autofill,TextFields" />
+
+    <android.support.v7.widget.AppCompatButton
+        android:id="@+id/sure"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/course_sure"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/password" />
+
+</android.support.constraint.ConstraintLayout>

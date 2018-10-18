@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/iv_course_name"
+        android:layout_width="@dimen/course_schedule_detail_icon_width"
+        android:layout_height="@dimen/course_schedule_detail_icon_height"
+        android:layout_marginStart="@dimen/course_schedule_detail_iv_start_margin"
+        android:layout_marginEnd="@dimen/course_schedule_detail_iv_end_margin"
+        android:src="@mipmap/course_ic_course_name"
+        app:layout_constraintBottom_toTopOf="@id/iv_course_tech"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/tv_course_name"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="ContentDescription" />
+
+    <ImageView
+        android:id="@+id/iv_course_tech"
+        android:layout_width="@dimen/course_schedule_detail_icon_width"
+        android:layout_height="@dimen/course_schedule_detail_icon_height"
+        android:layout_marginStart="@dimen/course_schedule_detail_iv_start_margin"
+        android:layout_marginEnd="@dimen/course_schedule_detail_iv_end_margin"
+        android:src="@mipmap/course_ic_course_tech"
+        app:layout_constraintBottom_toTopOf="@id/iv_course_class_room"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/tv_course_tech"
+        app:layout_constraintTop_toBottomOf="@id/iv_course_name"
+        tools:ignore="ContentDescription" />
+
+
+    <ImageView
+        android:id="@+id/iv_course_class_room"
+        android:layout_width="@dimen/course_schedule_detail_icon_width"
+        android:layout_height="@dimen/course_schedule_detail_icon_height"
+        android:layout_marginStart="@dimen/course_schedule_detail_iv_start_margin"
+        android:layout_marginEnd="@dimen/course_schedule_detail_iv_end_margin"
+        android:src="@mipmap/course_ic_course_addr"
+        app:layout_constraintBottom_toTopOf="@id/iv_course_time"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/tv_course_classroom"
+        app:layout_constraintTop_toBottomOf="@id/iv_course_tech"
+        tools:ignore="ContentDescription" />
+
+    <ImageView
+        android:id="@+id/iv_course_time"
+        android:layout_width="@dimen/course_schedule_detail_icon_width"
+        android:layout_height="@dimen/course_schedule_detail_icon_height"
+        android:layout_marginStart="@dimen/course_schedule_detail_iv_start_margin"
+        android:layout_marginEnd="@dimen/course_schedule_detail_iv_end_margin"
+        android:src="@mipmap/course_ic_course_time"
+        app:layout_constraintBottom_toTopOf="@id/iv_course_type"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/tv_course_time"
+        app:layout_constraintTop_toBottomOf="@id/iv_course_class_room"
+        tools:ignore="ContentDescription" />
+
+    <ImageView
+        android:id="@+id/iv_course_type"
+        android:layout_width="@dimen/course_schedule_detail_icon_width"
+        android:layout_height="@dimen/course_schedule_detail_icon_height"
+        android:layout_marginStart="@dimen/course_schedule_detail_iv_start_margin"
+        android:layout_marginEnd="@dimen/course_schedule_detail_iv_end_margin"
+        android:src="@mipmap/course_ic_course_type"
+        app:layout_constraintBottom_toTopOf="@id/iv_course_week"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/tv_course_type"
+        app:layout_constraintTop_toBottomOf="@id/iv_course_time"
+        tools:ignore="ContentDescription" />
+
+    <ImageView
+        android:id="@+id/iv_course_week"
+        android:layout_width="@dimen/course_schedule_detail_icon_width"
+        android:layout_height="@dimen/course_schedule_detail_icon_height"
+        android:layout_marginStart="@dimen/course_schedule_detail_iv_start_margin"
+        android:layout_marginEnd="@dimen/course_schedule_detail_iv_end_margin"
+        android:src="@mipmap/course_ic_course_week"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/tv_course_week"
+        app:layout_constraintTop_toBottomOf="@id/iv_course_type"
+        tools:ignore="ContentDescription" />
+
+
+    <TextView
+        android:id="@+id/tv_course_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/course_schedule_detail_tv_end_margin"
+        android:textSize="@dimen/course_schedule_detail_text_size"
+        app:layout_constraintLeft_toRightOf="@id/iv_course_name"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@id/iv_course_name" />
+
+    <TextView
+        android:id="@+id/tv_course_tech"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/course_schedule_detail_tv_end_margin"
+        android:textSize="@dimen/course_schedule_detail_text_size"
+        app:layout_constraintLeft_toRightOf="@id/iv_course_tech"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@id/iv_course_tech" />
+
+    <TextView
+        android:id="@+id/tv_course_classroom"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/course_schedule_detail_tv_end_margin"
+        android:textSize="@dimen/course_schedule_detail_text_size"
+        app:layout_constraintLeft_toRightOf="@id/iv_course_class_room"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@id/iv_course_class_room" />
+
+    <TextView
+        android:id="@+id/tv_course_time"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/course_schedule_detail_tv_end_margin"
+        android:textSize="@dimen/course_schedule_detail_text_size"
+        app:layout_constraintLeft_toRightOf="@id/iv_course_time"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@id/iv_course_time" />
+
+    <TextView
+        android:id="@+id/tv_course_type"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/course_schedule_detail_tv_end_margin"
+        android:textSize="@dimen/course_schedule_detail_text_size"
+        app:layout_constraintLeft_toRightOf="@id/iv_course_type"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@id/iv_course_type" />
+
+    <TextView
+        android:id="@+id/tv_course_week"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/course_schedule_detail_tv_end_margin"
+        android:textSize="@dimen/course_schedule_detail_text_size"
+        app:layout_constraintLeft_toRightOf="@id/iv_course_week"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@id/iv_course_week" />
+
+    <!--<TextView-->
+    <!--android:id="@+id/stu_list"-->
+    <!--android:layout_width="0dp"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:gravity="center"-->
+    <!--android:padding="5dp"-->
+    <!--android:text="@string/course_student_list"-->
+    <!--app:layout_constraintBottom_toBottomOf="parent"-->
+    <!--app:layout_constraintLeft_toLeftOf="parent"-->
+    <!--app:layout_constraintRight_toRightOf="parent" />-->
+
+</android.support.constraint.ConstraintLayout>

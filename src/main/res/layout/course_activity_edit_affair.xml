@@ -1,0 +1,367 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="listeners"
+            type="com.mredrock.cyxbs.course.ui.EditAffairActivity.EditAffairListeners" />
+
+        <variable
+            name="editAffairViewModel"
+            type="com.mredrock.cyxbs.course.viewmodels.EditAffairViewModel" />
+
+    </data>
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".ui.EditAffairActivity">
+
+        <include
+            android:id="@+id/tb"
+            layout="@layout/common_toolbar" />
+
+
+        <View
+            android:id="@+id/view_title_content"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:background="@color/courseLightGray"
+            app:layout_constraintBottom_toTopOf="@id/guide_line_content_bottom"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tb"
+            app:layout_constraintVertical_bias="0.4" />
+
+        <ImageView
+            android:id="@+id/iv_title"
+            android:layout_width="@dimen/course_edit_affair_activity_ic_width"
+            android:layout_height="@dimen/course_edit_affair_activity_ic_height"
+            android:layout_marginStart="@dimen/course_edit_affair_activity_ic_margin_start"
+            android:src="@mipmap/course_ic_edit_affair_title"
+            app:layout_constraintBottom_toTopOf="@id/view_title_content"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/tv_title"
+            app:layout_constraintTop_toBottomOf="@id/tb"
+            tools:ignore="ContentDescription" />
+
+
+        <ImageView
+            android:id="@+id/iv_content"
+            android:layout_width="@dimen/course_edit_affair_activity_ic_width"
+            android:layout_height="@dimen/course_edit_affair_activity_ic_height"
+            android:layout_marginStart="@dimen/course_edit_affair_activity_ic_margin_start"
+            android:src="@mipmap/course_ic_edit_affair_content"
+            app:layout_constraintBottom_toTopOf="@id/guide_line_content_bottom"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/tv_content"
+            app:layout_constraintTop_toBottomOf="@id/view_title_content"
+            app:layout_constraintVertical_bias="0.2"
+            tools:ignore="ContentDescription" />
+
+
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/course_title"
+            android:textColor="@color/courseCommonTvColor"
+            android:textSize="@dimen/course_edit_affair_tv_size"
+            app:layout_constraintBottom_toTopOf="@id/view_title_content"
+            app:layout_constraintHorizontal_weight="2"
+            app:layout_constraintLeft_toRightOf="@id/iv_title"
+            app:layout_constraintRight_toLeftOf="@id/et_title"
+            app:layout_constraintTop_toBottomOf="@id/tb" />
+
+        <TextView
+            android:id="@+id/tv_content"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/course_content"
+            android:textColor="@color/courseCommonTvColor"
+            android:textSize="@dimen/course_edit_affair_tv_size"
+            app:layout_constraintBottom_toTopOf="@id/guide_line_content_bottom"
+            app:layout_constraintHorizontal_weight="2"
+            app:layout_constraintLeft_toRightOf="@id/iv_content"
+            app:layout_constraintRight_toLeftOf="@id/et_content"
+            app:layout_constraintTop_toBottomOf="@id/view_title_content"
+            app:layout_constraintVertical_bias="0.2" />
+
+
+        <EditText
+            android:id="@+id/et_title"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@null"
+            android:gravity="center_vertical"
+            android:hint="@string/course_input_title"
+            android:maxLines="1"
+            android:text="@{editAffairViewModel.title}"
+            android:textSize="@dimen/course_edit_affair_tv_size"
+            app:layout_constraintBottom_toTopOf="@id/view_title_content"
+            app:layout_constraintHorizontal_weight="8"
+            app:layout_constraintLeft_toRightOf="@id/tv_title"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tb"
+            tools:ignore="Autofill,TextFields" />
+
+        <EditText
+            android:id="@+id/et_content"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@null"
+            android:gravity="top"
+            android:hint="@string/course_input_content"
+            android:maxLines="4"
+            android:paddingTop="21dp"
+            android:text="@{editAffairViewModel.content}"
+            android:textSize="@dimen/course_edit_affair_tv_size"
+            app:layout_constraintBottom_toTopOf="@id/guide_line_content_bottom"
+            app:layout_constraintHorizontal_weight="8"
+            app:layout_constraintLeft_toRightOf="@id/tv_content"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/view_title_content"
+            tools:ignore="Autofill,TextFields" />
+
+
+        <android.support.constraint.Guideline
+            android:id="@+id/guide_line_content_bottom"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimary"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_begin="270dp" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@color/courseLightGray"
+            app:layout_constraintBottom_toBottomOf="@id/guide_line_week_top"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@id/guide_line_content_bottom" />
+
+
+        <android.support.constraint.Guideline
+            android:id="@+id/guide_line_week_top"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimary"
+            android:orientation="horizontal"
+            android:visibility="visible"
+            app:layout_constraintGuide_begin="280dp" />
+
+
+        <!--上面一部分是标题和内容，下面一部分是周数、时间、提醒-->
+
+        <View
+            android:id="@+id/view_week_time"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:background="@color/courseLightGray"
+            app:layout_constraintBottom_toTopOf="@id/view_time_remind"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@id/guide_line_week_top" />
+
+        <View
+            android:id="@+id/view_time_remind"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:background="@color/courseLightGray"
+            app:layout_constraintBottom_toBottomOf="@id/guide_line_remind_bottom"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/view_week_time" />
+
+        <ImageView
+            android:id="@+id/iv_week"
+            android:layout_width="@dimen/course_edit_affair_activity_ic_width"
+            android:layout_height="@dimen/course_edit_affair_activity_ic_height"
+            android:layout_marginStart="@dimen/course_edit_affair_activity_ic_margin_start"
+            android:src="@mipmap/course_ic_edit_affair_week"
+            app:layout_constraintBottom_toTopOf="@id/view_week_time"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/tv_week"
+            app:layout_constraintTop_toBottomOf="@id/guide_line_week_top"
+            tools:ignore="ContentDescription" />
+
+
+        <ImageView
+            android:id="@+id/iv_time"
+            android:layout_width="@dimen/course_edit_affair_activity_ic_width"
+            android:layout_height="@dimen/course_edit_affair_activity_ic_height"
+            android:layout_marginStart="@dimen/course_edit_affair_activity_ic_margin_start"
+            android:src="@mipmap/course_ic_edit_affair_time"
+            app:layout_constraintBottom_toTopOf="@id/view_time_remind"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/tv_time"
+            app:layout_constraintTop_toBottomOf="@id/view_week_time"
+            tools:ignore="ContentDescription" />
+
+        <ImageView
+            android:id="@+id/iv_remind"
+            android:layout_width="@dimen/course_edit_affair_activity_ic_width"
+            android:layout_height="@dimen/course_edit_affair_activity_ic_height"
+            android:layout_marginStart="@dimen/course_edit_affair_activity_ic_margin_start"
+            android:src="@mipmap/course_ic_edit_affair_remind"
+            app:layout_constraintBottom_toBottomOf="@id/guide_line_remind_bottom"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/tv_remind"
+            app:layout_constraintTop_toBottomOf="@id/view_time_remind"
+            tools:ignore="ContentDescription" />
+
+
+        <TextView
+            android:id="@+id/tv_week"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/course_week"
+            android:textColor="@color/courseCommonTvColor"
+            android:textSize="@dimen/course_edit_affair_tv_size"
+            app:layout_constraintBottom_toTopOf="@id/view_week_time"
+            app:layout_constraintHorizontal_weight="2"
+            app:layout_constraintLeft_toRightOf="@id/iv_week"
+            app:layout_constraintRight_toLeftOf="@id/tv_week_select"
+            app:layout_constraintTop_toBottomOf="@id/guide_line_week_top" />
+
+
+        <TextView
+            android:id="@+id/tv_time"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/course_time"
+            android:textColor="@color/courseCommonTvColor"
+            android:textSize="@dimen/course_edit_affair_tv_size"
+            app:layout_constraintBottom_toTopOf="@id/view_time_remind"
+            app:layout_constraintHorizontal_weight="2"
+            app:layout_constraintLeft_toRightOf="@id/iv_time"
+            app:layout_constraintRight_toLeftOf="@id/tv_time_select"
+            app:layout_constraintTop_toBottomOf="@id/view_week_time" />
+
+        <TextView
+            android:id="@+id/tv_remind"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/course_remind"
+            android:textColor="@color/courseCommonTvColor"
+            android:textSize="@dimen/course_edit_affair_tv_size"
+            app:layout_constraintBottom_toBottomOf="@id/guide_line_remind_bottom"
+            app:layout_constraintHorizontal_weight="2"
+            app:layout_constraintLeft_toRightOf="@id/iv_remind"
+            app:layout_constraintRight_toLeftOf="@id/tv_remind_select"
+            app:layout_constraintTop_toBottomOf="@id/view_time_remind" />
+
+
+        <TextView
+            android:id="@+id/tv_week_select"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:ellipsize="middle"
+            android:gravity="center_vertical"
+            android:onClick="@{listeners::onWeekSelectClick}"
+            android:singleLine="true"
+            android:text="@{editAffairViewModel.selectedWeekString}"
+            android:textSize="@dimen/course_edit_affair_tv_size"
+            app:layout_constraintBottom_toTopOf="@id/view_week_time"
+            app:layout_constraintHorizontal_weight="8"
+            app:layout_constraintLeft_toRightOf="@id/tv_week"
+            app:layout_constraintRight_toLeftOf="@id/ic_right_week"
+            app:layout_constraintTop_toBottomOf="@id/guide_line_week_top" />
+
+        <TextView
+            android:id="@+id/tv_time_select"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:ellipsize="middle"
+            android:gravity="center_vertical"
+            android:onClick="@{listeners::onTimeSelectClick}"
+            android:singleLine="true"
+            app:layout_constraintRight_toLeftOf="@id/ic_right_time"
+            android:text="@{editAffairViewModel.selectedTimeString}"
+            android:textSize="@dimen/course_edit_affair_tv_size"
+            app:layout_constraintBottom_toTopOf="@id/view_time_remind"
+            app:layout_constraintHorizontal_weight="8"
+            app:layout_constraintLeft_toRightOf="@id/tv_time"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/view_week_time" />
+
+        <TextView
+            android:id="@+id/tv_remind_select"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:ellipsize="middle"
+            android:gravity="center_vertical"
+            app:layout_constraintRight_toLeftOf="@id/ic_right_remind"
+            android:onClick="@{listeners::onRemindSelectClick}"
+            android:singleLine="true"
+            android:text="@{editAffairViewModel.selectedRemindString}"
+            android:textSize="@dimen/course_edit_affair_tv_size"
+            app:layout_constraintBottom_toBottomOf="@id/guide_line_remind_bottom"
+            app:layout_constraintHorizontal_weight="8"
+            app:layout_constraintLeft_toRightOf="@id/tv_remind"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/view_time_remind" />
+
+
+        <ImageView
+            android:id="@+id/ic_right_week"
+            android:layout_width="@dimen/course_edit_affair_ic_right_size"
+            android:layout_height="@dimen/course_edit_affair_ic_right_size"
+            android:layout_marginEnd="@dimen/course_edit_affair_ic_right_size"
+            android:src="@drawable/course_ic_arrow_right"
+            app:layout_constraintBottom_toBottomOf="@id/view_week_time"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@id/guide_line_week_top"
+            tools:ignore="ContentDescription" />
+
+        <ImageView
+            android:id="@+id/ic_right_time"
+            android:layout_width="@dimen/course_edit_affair_ic_right_size"
+            android:layout_height="@dimen/course_edit_affair_ic_right_size"
+            android:layout_marginEnd="@dimen/course_edit_affair_ic_right_size"
+            android:src="@drawable/course_ic_arrow_right"
+            app:layout_constraintBottom_toBottomOf="@id/view_time_remind"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@id/view_week_time"
+            tools:ignore="ContentDescription" />
+
+        <ImageView
+            android:id="@+id/ic_right_remind"
+            android:layout_width="@dimen/course_edit_affair_ic_right_size"
+            android:layout_height="@dimen/course_edit_affair_ic_right_size"
+            android:layout_marginEnd="@dimen/course_edit_affair_ic_right_size"
+            android:src="@drawable/course_ic_arrow_right"
+            app:layout_constraintBottom_toBottomOf="@id/guide_line_remind_bottom"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@id/view_time_remind"
+            tools:ignore="ContentDescription" />
+
+
+        <android.support.constraint.Guideline
+            android:id="@+id/guide_line_remind_bottom"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_end="130dp" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@color/courseLightGray"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@id/guide_line_remind_bottom" />
+
+
+    </android.support.constraint.ConstraintLayout>
+</layout>

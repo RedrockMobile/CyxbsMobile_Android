@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <attr name="lineLength" format="float" tools:ignore="ResourceName" />
+    <attr name="startPointRatio" format="float" tools:ignore="ResourceName" />
+</resources>

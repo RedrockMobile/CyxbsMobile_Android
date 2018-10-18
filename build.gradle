@@ -1,0 +1,12 @@
+apply from: module_config
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
+
+dependencies {
+    implementation project(':lib_common')
+    kapt deps.arouter.compiler
+    kapt deps.room.compiler
+    kapt deps.databinding.compiler
+    testImplementation 'junit:junit:4.12'
+}

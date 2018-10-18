@@ -1,0 +1,116 @@
+<resources>
+
+    <string name="course_sure">确定</string>
+    <string name="course_no_courese_invite">没课约</string>
+    <string name="course_empty_course_text">没课的日子总是充满对课程的思恋</string>
+    <string name="course_student_list">课程名单</string>
+    <string name="course_click_to_login">课表懵逼中......点击进行登录</string>
+    <string name="course_all_week">整学期</string>
+
+
+    <!-- Post Affairs -->
+    <string name="course_title_is_null">掌友，标题不能为空哟！</string>
+    <string name="course_content_is_null">掌友，要做的事呢？</string>
+    <string name="course_week_is_not_select">掌友，请选择周数</string>
+    <string name="course_time_is_not_select">掌友，请选时间</string>
+
+    <!-- analog login -->
+    <string name="course_input_account">请输入学号</string>
+    <string name="course_input_password">请输入密码</string>
+
+    <!-- AffairToCalendar -->
+    <string name="course_fail_get_calendar_id">获取CalendarId失败，无法向日历中添加备忘提醒。请检查你的日历是否进行了登录！</string>
+    <string name="course_refuse_calendar_permission">向日历中添加备忘提醒需要获取日历相关的权限哟，拒绝了将无法按时提醒你哟！</string>
+    <string name="course_calendar_permission_reason">要想向日历中添加备忘提醒，就得允许当前权限哟！</string>
+
+    <string-array name="course_course_day_of_week_strings">
+        <item>周一</item>
+        <item>周二</item>
+        <item>周三</item>
+        <item>周四</item>
+        <item>周五</item>
+        <item>周六</item>
+        <item>周日</item>
+    </string-array>
+
+    <string-array name="course_course_time_strings">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+        <item>9</item>
+        <item>10</item>
+        <item>11</item>
+        <item>12</item>
+    </string-array>
+
+    <string-array name="course_time_select_strings">
+        <item>1~2</item>
+        <item>3~4</item>
+        <item>5~6</item>
+        <item>7~8</item>
+        <item>9~10</item>
+        <item>11~12</item>
+    </string-array>
+
+    <string-array name="course_course_weeks_strings">
+        <item>整学期</item>
+        <item>第一周</item>
+        <item>第二周</item>
+        <item>第三周</item>
+        <item>第四周</item>
+        <item>第五周</item>
+        <item>第六周</item>
+        <item>第七周</item>
+        <item>第八周</item>
+        <item>第九周</item>
+        <item>第十周</item>
+        <item>第十一周</item>
+        <item>第十二周</item>
+        <item>第十三周</item>
+        <item>第十四周</item>
+        <item>第十五周</item>
+        <item>第十六周</item>
+        <item>第十七周</item>
+        <item>第十八周</item>
+        <item>第十九周</item>
+        <item>第二十周</item>
+        <item>第二十一周</item>
+    </string-array>
+
+    <string-array name="course_remind_strings">
+        <item>不提醒</item>
+        <item>提前五分钟</item>
+        <item>提前十分钟</item>
+        <item>提前二十分钟</item>
+        <item>提前三十分钟</item>
+        <item>提前一个小时</item>
+    </string-array>
+
+    <!--Course Detail Strings-->
+    <string name="course_affair_modify">修改</string>
+    <string name="course_affair_delete">删除</string>
+    <string name="course_error_get_course">获取课程失败</string>
+    <string name="course_error_get_affair">获取事务失败</string>
+
+    <!--EditAffairActivity-->
+    <string name="course_edit_affair">编辑备忘</string>
+    <string name="course_title">标题</string>
+    <string name="course_content">内容</string>
+    <string name="course_week">周数</string>
+    <string name="course_time">时间</string>
+    <string name="course_remind">提醒</string>
+    <string name="course_input_title">请输入标题</string>
+    <string name="course_input_content">请编辑内容…</string>
+    <string name="course_week_select">选择周数</string>
+    <string name="course_time_select">选择时间</string>
+    <string name="course_remind_select">不提醒</string>
+
+    <!--post affair menu-->
+    <string name="course_post_affair">上传事务</string>
+
+</resources>

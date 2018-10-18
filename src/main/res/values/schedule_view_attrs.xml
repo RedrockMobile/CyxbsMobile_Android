@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <declare-styleable name="ScheduleView" tools:ignore="ResourceName">
+        <attr name="elementGap" format="dimension" />
+        <attr name="touchViewColor" format="color" />
+        <attr name="heightAtLowDpi" format="dimension" />
+        <attr name="touchViewDrawable" format="reference" />
+        <attr name="highlightColor" format="color" />
+        <attr name="noCourseDrawable" format="reference" />
+        <attr name="emptyText" format="string" />
+        <attr name="emptyTextSize" format="dimension" />
+
+        <attr name="ScheduleViewStyle" format="reference" tools:ignore="ResourceName" />
+    </declare-styleable>
+</resources>

@@ -1,0 +1,15 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <style name="CourseDialogFragmentAnimation">
+        <item name="android:windowEnterAnimation" tools:ignore="NewApi">
+            @anim/course_fragment_enter
+        </item>
+        <item name="android:windowExitAnimation" tools:ignore="NewApi">
+            @anim/course_fragment_exit
+        </item>
+    </style>
+
+    <style name="StartAppTheme" parent="Theme.AppCompat.Light.NoActionBar" tools:ignore="ResourceName">
+        <item name="android:windowBackground">@drawable/bg_app</item>
+    </style>
+</resources>

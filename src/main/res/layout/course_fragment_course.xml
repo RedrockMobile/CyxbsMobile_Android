@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+    <data>
+
+        <variable
+            name="coursesViewModel"
+            type="com.mredrock.cyxbs.course.viewmodels.CoursesViewModel" />
+
+        <variable
+            name="dateViewModel"
+            type="com.mredrock.cyxbs.course.viewmodels.DateViewModel" />
+    </data>
+
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+        <TextView
+            android:id="@+id/tv_course_month"
+            android:layout_width="@dimen/course_course_month_width"
+            android:layout_height="@dimen/course_course_month_height"
+            android:background="@color/courseLightBlue"
+            android:gravity="center"
+            android:textColor="@color/courseTimeAndWeekDayColor"
+            android:textSize="@dimen/course_top_and_left_column_text_size"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:month="@{dateViewModel.month}"
+            app:nowWeek="@{dateViewModel.nowWeek}" />
+
+        <com.mredrock.cyxbs.course.component.RedRockTextView
+            android:id="@+id/red_rock_tv_course_day_of_week"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@color/courseLightBlue"
+            android:orientation="horizontal"
+            android:textColor="@color/courseTimeAndWeekDayColor"
+            android:textSize="@dimen/course_top_and_left_column_text_size"
+            app:displayedStrings="@array/course_course_day_of_week_strings"
+            app:layout_constraintBottom_toTopOf="@id/red_rock_tv_course_day_of_month"
+            app:layout_constraintLeft_toRightOf="@id/tv_course_month"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.mredrock.cyxbs.course.component.RedRockTextView
+            android:id="@+id/red_rock_tv_course_day_of_month"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@color/courseLightBlue"
+            android:orientation="horizontal"
+            android:textSize="@dimen/course_top_and_left_column_text_size"
+            app:displayedStrings="@{dateViewModel.daysOfMonth}"
+            app:layout_constraintBottom_toBottomOf="@id/tv_course_month"
+            app:layout_constraintLeft_toRightOf="@id/tv_course_month"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/red_rock_tv_course_day_of_week"
+            app:nowWeek="@{dateViewModel.nowWeek}" />
+
+
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:id="@+id/swipe_refresh_layout"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_course_month">
+
+
+            <ScrollView
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_course_month">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <com.mredrock.cyxbs.course.component.RedRockTextView
+                        android:id="@+id/red_rock_tv_course_time"
+                        android:layout_width="@dimen/course_course_month_width"
+                        android:layout_height="match_parent"
+                        android:background="@color/courseLightBlue"
+                        android:textColor="@color/courseTimeAndWeekDayColor"
+                        android:textSize="@dimen/course_top_and_left_column_text_size"
+                        app:displayedStrings="@array/course_course_time_strings"
+                        app:orientation="vertical" />
+
+
+                    <com.mredrock.cyxbs.course.component.ScheduleView
+                        android:id="@+id/schedule_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:animateLayoutChanges="true"
+                        app:emptyText="@string/course_empty_course_text"
+                        app:elementGap="2dp"
+                        app:emptyTextSize="14sp"
+                        app:noCourseDrawable="@drawable/course_no_course"
+                        app:nowWeek="@{dateViewModel.nowWeek}"
+                        app:schedules="@{coursesViewModel.courses}"
+                        app:touchViewDrawable="@drawable/common_ic_add_circle_white">
+
+                    </com.mredrock.cyxbs.course.component.ScheduleView>
+
+
+                </LinearLayout>
+
+            </ScrollView>
+
+
+        </android.support.v4.widget.SwipeRefreshLayout>
+
+    </android.support.constraint.ConstraintLayout>
+
+</layout>

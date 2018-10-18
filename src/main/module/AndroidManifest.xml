@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.mredrock.cyxbs.course">
+
+    <uses-permission android:name="android.permission.WRITE_CALENDAR" />
+    <uses-permission android:name="android.permission.READ_CALENDAR" />
+
+    <application
+        android:name="com.mredrock.cyxbs.common.BaseApp"
+        android:allowBackup="true"
+        android:icon="@mipmap/course_ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/course_ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme"
+        tools:ignore="AllowBackup,GoogleAppIndexingWarning">
+        <activity
+            android:name="deubg.CourseActivity"
+            android:launchMode="singleTask"
+            android:theme="@style/StartAppTheme"
+            android:windowSoftInputMode="adjustPan">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".ui.EditAffairActivity"
+            android:launchMode="singleTask" />
+        <activity
+            android:name=".ui.NoCourseInviteActivity"
+            android:launchMode="singleTask" />
+        <activity
+            android:name=".ui.StudentListActivity"
+            android:launchMode="singleTask" />
+    </application>
+
+</manifest>
