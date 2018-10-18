@@ -4,8 +4,8 @@ ext.deps = [:]
 
 def versions = [:]
 //kotlin
-versions.kotlin = '1.2.60'
-versions.anko = '0.10.5'
+versions.kotlin = '1.2.71'
+versions.anko = '0.10.7'
 //official ui and support library
 versions.constraint_layout = '1.1.2'
 versions.support = '27.1.1'
