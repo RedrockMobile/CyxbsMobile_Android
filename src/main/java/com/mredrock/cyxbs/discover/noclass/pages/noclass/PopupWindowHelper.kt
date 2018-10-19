@@ -20,8 +20,8 @@ import com.mredrock.cyxbs.common.utils.extensions.gone
 import com.mredrock.cyxbs.common.utils.extensions.visible
 import com.mredrock.cyxbs.discover.noclass.R
 import com.mredrock.cyxbs.discover.noclass.pages.stuselect.NoClassStuSelectActivity
+import com.mredrock.cyxbs.discover.noclass.snackbar
 import kotlinx.android.synthetic.main.discover_noclass_dialog_add.view.*
-import org.jetbrains.anko.toast
 import java.io.Serializable
 
 /**
@@ -63,7 +63,7 @@ class PopupWindowHelper(private val mContext: Context) {
         popupView.noclass_btn_delete_dialog.gone()
         popupView.noclass_btn_confirm_dialog.setOnClickListener {
             if (popupView.noclass_edit_dialog.text.isEmpty()) {
-                popupView.context.toast("输入为空")
+                (mContext as Activity).snackbar("输入为空")
             } else {
                 viewModel!!.getStudent(popupView.noclass_edit_dialog.text.toString())
             }
@@ -96,11 +96,11 @@ class PopupWindowHelper(private val mContext: Context) {
                     context.startActivityForResult(intent, NoClassActivity.REQUEST_SELECT)
                     popupWindow!!.dismiss()
                 }
-                it!!.size == 1 -> {
+                it.size == 1 -> {
                     context.addStu(it[0])
                     popupWindow!!.dismiss()
                 }
-                else -> context.toast("输入有误")
+                else -> context.snackbar("请不要重复添加")
             }
         })
 
