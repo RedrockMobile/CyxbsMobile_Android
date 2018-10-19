@@ -141,7 +141,10 @@ dependencies {
     implementation project(':lib_common')
     if (!isSingleModuleDebug.toBoolean()) {
         implementation project(':module_main')
+
+        implementation project(':module_course')
         implementation project(':module_qa')
+        implementation project(':module_discover')
         implementation project(':module_mine')
     }
     kapt deps.arouter.compiler
