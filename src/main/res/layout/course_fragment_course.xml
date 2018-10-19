@@ -106,8 +106,7 @@
                         app:emptyTextSize="14sp"
                         app:noCourseDrawable="@drawable/course_no_course"
                         app:nowWeek="@{dateViewModel.nowWeek}"
-                        app:schedules="@{coursesViewModel.courses}"
-                        app:touchViewDrawable="@drawable/common_ic_add_circle_white">
+                        app:schedules="@{coursesViewModel.courses}">
 
                     </com.mredrock.cyxbs.course.component.ScheduleView>
 

@@ -11,7 +11,7 @@ import android.view.ViewGroup
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.component.JToolbar
-import com.mredrock.cyxbs.common.config.COURSE
+import com.mredrock.cyxbs.common.config.COURSE_ENTRY
 import com.mredrock.cyxbs.common.event.LoginStateChangeEvent
 import com.mredrock.cyxbs.common.event.MainVPChangeEvent
 import com.mredrock.cyxbs.course.event.TabIsFoldEvent
@@ -27,7 +27,7 @@ import org.greenrobot.eventbus.ThreadMode
 /**
  * Created by anriku on 2018/10/16.
  */
-@Route(path = COURSE)
+@Route(path = COURSE_ENTRY)
 class CourseEntryFragment : BaseFragment(), ICourseEntry {
 
     // 表示是否TabLayout折叠
