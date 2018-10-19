@@ -1,0 +1,6 @@
+apply from: module_config
+
+dependencies {
+    implementation project(':lib_common')
+    kapt deps.arouter.compiler
+}
