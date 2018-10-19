@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/qa_answer_list_background_color"
+    android:orientation="vertical"
+    android:paddingTop="16dp"
+    android:paddingBottom="18dp">
+
+    <TextView
+        android:id="@+id/tv_question_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:maxLines="2"
+        android:paddingStart="17dp"
+        android:paddingEnd="20dp"
+        android:textColor="@color/qa_comment_item_question_title"
+        android:textSize="16sp"
+        tools:text="线代第一题不会，求解，公式应该没问题，算了几次都不对" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="18dp"
+        android:layout_marginEnd="15dp"
+        android:background="@color/qa_comment_item_divider" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="18dp"
+        android:layout_marginEnd="16dp">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/iv_answer_avatar"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:scaleType="centerCrop"
+            tools:src="@drawable/common_default_avatar" />
+
+        <TextView
+            android:id="@+id/tv_answer_nickname"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="6dp"
+            android:layout_toEndOf="@+id/iv_answer_avatar"
+            android:drawablePadding="3dp"
+            android:textColor="@color/qa_comment_item_answer_nickname"
+            android:textSize="14sp"
+            tools:drawableEnd="@drawable/qa_ic_gender_male"
+            tools:text="刘学霸" />
+
+        <TextView
+            android:id="@+id/tv_answer_create_at"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_answer_nickname"
+            android:layout_alignStart="@id/tv_answer_nickname"
+            android:layout_marginTop="2dp"
+            android:textColor="@color/qa_comment_item_answer_create_at"
+            android:textSize="12sp"
+            tools:text="2018-03-03" />
+
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            tools:ignore="RelativeOverlap">
+
+            <TextView
+                android:id="@+id/tv_adopted"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableStart="@drawable/qa_ic_answer_list_accepted"
+                android:drawablePadding="5dp"
+                android:text="@string/qa_answer_list_accepted"
+                android:textColor="@color/qa_answer_list_adopted_color"
+                android:textSize="13sp"
+                android:visibility="gone"
+                tools:visibility="visible" />
+
+            <TextView
+                android:id="@+id/tv_adopt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/qa_answer_list_accept_tv_background"
+                android:paddingStart="12dp"
+                android:paddingTop="6dp"
+                android:paddingEnd="12dp"
+                android:paddingBottom="6dp"
+                android:text="@string/qa_answer_list_accept"
+                android:textColor="@color/qa_answer_list_adopt_color"
+                android:textSize="13sp"
+                android:visibility="gone" />
+        </FrameLayout>
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/tv_answer_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="11dp"
+        android:paddingStart="15dp"
+        android:paddingEnd="15dp"
+        android:textColor="@color/qa_comment_item_answer_content"
+        android:textSize="15sp"
+        tools:text="符号A属于Rmxn表示一个m行n列的矩阵，并且矩阵A中所有的所有元素都是实数。符号x属于Rn表示一个含有n个元素的向量。符号A属于Rmxn表示一个m行n列的矩阵，并且矩阵A中所有的所有元素都是实数，符号x属于Rn表示一个含有n个元素的向量。符号A属于Rmxn表示一个m行n列的矩阵，并且矩阵A中所有的所有元素都是实数." />
+
+    <!--todo 图片-->
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="15dp"
+        android:layout_marginTop="20dp"
+        android:background="@color/qa_comment_item_divider_gap" />
+
+    <TextView
+        android:id="@+id/tv_answer_count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="18dp"
+        android:textColor="@color/qa_comment_item_answer_count"
+        android:textSize="13sp"
+        tools:text="评论20" />
+</LinearLayout>

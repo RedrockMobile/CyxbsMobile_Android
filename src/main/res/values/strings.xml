@@ -1,0 +1,31 @@
+<resources>
+    <string name="qa_footer_view_behavior">com.mredrock.cyxbs.qa.ui.widget.FooterViewBehavior</string>
+    <string name="qa_unlogin_error">需要先登陆才能查看哦~</string>
+    <string name="qa_question_item_show_picture">查看图片</string>
+    <string name="qa_question_item_tag">#%1$s#</string>
+    <string name="qa_question_item_reward">%1$d积分</string>
+    <string name="qa_question_item_disappear">%1$s后消失</string>
+    <string name="qa_question_list_empty_hint">还没有相关问题哦~</string>
+    <string name="qa_loading_error">加载出错了，点击重试吧~</string>
+    <string name="qa_answer_list_title">求助详情</string>
+    <string name="qa_report_menu_title">更多</string>
+    <string name="qa_answer_list_add_reward">加价</string>
+    <string name="qa_answer_list_cancel_question">取消提问</string>
+    <string name="qa_answer_list_ignore_question">忽略</string>
+    <string name="qa_answer_list_help">帮助</string>
+    <string name="qa_answer_list_accepted">已采纳</string>
+    <string name="qa_answer_list_accept">采纳</string>
+    <string name="qa_answer_list_answer_date">%1$s前</string>
+    <string name="qa_answer_list_no_answer_hint">还没有回答哦~</string>
+    <string name="qa_answer_list_sort_by_time">按时间排序</string>
+    <string name="qa_answer_list_sort_by_default">默认排序</string>
+    <string name="qa_comment_list_title">回答详情</string>
+    <string name="qa_comment_list_praise_count">点赞（%1$s）</string>
+    <string name="qa_comment_list_comment_count">评论（%1$s）</string>
+    <string name="qa_comment_item_answer_count">评论%1$s</string>
+    <string name="qa_comment_list_comment_loading_hint">努力加载中，请不要多次点击哦~</string>
+    <string name="qa_comment_dialog_edt_hint">添加你的评论</string>
+    <string name="qa_comment_dialog_send_comment">发送</string>
+    <string name="qa_comment_dialog_error_intput_hint">请先输入有效内容哦~</string>
+    <string name="qa_service_error_hint">服务器错误，请稍后再试</string>
+</resources>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_weight="1"
+    android:gravity="bottom|end"
+    android:orientation="horizontal"
+    android:paddingStart="15dp"
+    android:paddingEnd="15dp">
+
+    <android.support.v7.widget.AppCompatEditText
+        android:id="@+id/edt_comment_content"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:background="@null"
+        android:hint="@string/qa_comment_dialog_edt_hint"
+        android:maxLength="20"
+        android:paddingTop="15dp"
+        android:paddingBottom="15dp"
+        android:singleLine="true"
+        android:textColor="@color/qa_comment_dialog_content_edt_text_color"
+        android:textColorHint="@color/qa_comment_dialog_content_edt_hint_color"
+        android:textSize="15sp" />
+
+    <TextView
+        android:id="@+id/tv_send_comment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="35dp"
+        android:text="@string/qa_comment_dialog_send_comment"
+        android:textColor="@color/qa_comment_dialog_send_tv_color"
+        android:textSize="15sp" />
+</LinearLayout>

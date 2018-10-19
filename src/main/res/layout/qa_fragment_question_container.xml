@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".pages.main.QuestionContainerFragment">
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <android.support.design.widget.TabLayout
+            android:id="@+id/tl_category"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            app:tabBackground="@color/qa_tab_background"
+            app:tabGravity="fill"
+            app:tabIndicatorColor="@color/qa_tab_selected_color"
+            app:tabIndicatorHeight="3dp"
+            app:tabMode="fixed"
+            app:tabSelectedTextColor="@color/qa_tab_selected_color"
+            app:tabTextColor="@color/qa_tab_unselected_color" />
+    </android.support.design.widget.AppBarLayout>
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/vp_question"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_quiz"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginBottom="17dp"
+        android:layout_marginEnd="25dp"
+        android:src="@drawable/qa_ic_main_quiz_fab"
+        app:backgroundTint="@color/qa_quiz_fab_color"
+        app:fabCustomSize="58dp" />
+</android.support.design.widget.CoordinatorLayout>

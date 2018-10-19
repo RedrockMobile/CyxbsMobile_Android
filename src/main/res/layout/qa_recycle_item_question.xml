@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.mredrock.cyxbs.common.component.JCardViewPlus xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="5dp"
+    android:layout_marginEnd="5dp"
+    android:foreground="?attr/selectableItemBackground"
+    app:horizontalContentPadding="16dp"
+    app:shadowColor="@color/qa_question_item_shadow_color"
+    app:shadowRadius="10dp"
+    app:verticalContentPadding="20dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/iv_avatar"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_centerVertical="true"
+                android:scaleType="centerCrop"
+                android:src="@drawable/common_default_avatar" />
+
+            <TextView
+                android:id="@+id/tv_nickname"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="7dp"
+                android:layout_toEndOf="@id/iv_avatar"
+                android:drawableEnd="@drawable/qa_ic_gender_male"
+                android:drawablePadding="3dp"
+                android:textColor="@color/qa_question_item_nickname_color"
+                android:textSize="13sp"
+                tools:text="刘童鞋" />
+
+            <TextView
+                android:id="@+id/tv_disappear_at"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tv_nickname"
+                android:layout_alignStart="@id/tv_nickname"
+                android:textColor="@color/qa_question_item_disappear_color"
+                android:textSize="12sp"
+                tools:text="5小时后消失" />
+
+            <TextView
+                android:id="@+id/tv_reward"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:drawableStart="@drawable/qa_ic_question_list_reward"
+                android:drawablePadding="8dp"
+                android:textColor="@color/qa_question_item_reward_color"
+                android:textSize="12sp"
+                tools:text="5积分" />
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:gravity="bottom"
+            android:orientation="horizontal">
+
+
+            <TextView
+                android:id="@+id/tv_tag"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#7195fa"
+                android:textSize="14sp"
+                tools:text="#线代#" />
+
+            <TextView
+                android:id="@+id/tv_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textColor="@color/qa_question_item_title_color"
+                android:textSize="16sp"
+                tools:text="线代第一题不会，求解" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:textColor="@color/qa_question_item_content_color"
+            android:textSize="14sp"
+            tools:text="常规题目，还请大佬帮忙解答常规题目，还请大佬帮忙解答常规题目，还请大佬常规题目，还请大佬帮忙解答常规题目" />
+
+        <TextView
+            android:id="@+id/tv_show_picture"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="@string/qa_question_item_show_picture"
+            android:textColor="@color/qa_question_item_show_picture_btn_color"
+            android:textSize="14sp" />
+    </LinearLayout>
+</com.mredrock.cyxbs.common.component.JCardViewPlus>
