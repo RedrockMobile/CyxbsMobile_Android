@@ -4,6 +4,5 @@
     <item
         android:id="@+id/add_affair"
         android:icon="@drawable/course_ic_add_circle_white"
-        android:title="@string/common_add_affair"
         app:showAsAction="always" />
 </menu>
