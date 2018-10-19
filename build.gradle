@@ -4,9 +4,16 @@ dependencies {
     implementation project(':lib_common')
     kapt deps.arouter.compiler
 
-    if (!isModule.toBoolean()) {
+    if (!isSingleModuleDebug.toBoolean()) {
         implementation project(':module_noclass')
         implementation project(':module_map')
-        implementation project(':module_stuschedule')
+//        implementation project(':module_othercourse')
+//        implementation project(':module_calendar')
+        implementation project(':module_electricity')
+        implementation project(':module_emptyroom')
+        implementation project(':module_grades')
+        implementation project(':module_news')
+//        implementation project(':module_schoolcar')
+//        implementation project(':module_volunteer')
     }
 }
