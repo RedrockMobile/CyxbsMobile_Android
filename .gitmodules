@@ -40,3 +40,15 @@
 [submodule "module_electricity"]
 	path = module_electricity
 	url = git@github.com:CyxbsMobile-Android-Submodule/module_electricity.git
+[submodule "module_calendar"]
+	path = module_calendar
+	url = git@github.com:CyxbsMobile-Android-Submodule/module_calendar.git
+[submodule "module_othercourse"]
+	path = module_othercourse
+	url = git@github.com:CyxbsMobile-Android-Submodule/module_othercourse.git
+[submodule "module_volunteer"]
+	path = module_volunteer
+	url = git@github.com:CyxbsMobile-Android-Submodule/module_volunteer.git
+[submodule "module_widget"]
+	path = module_widget
+	url = git@github.com:CyxbsMobile-Android-Submodule/module_widget.git
