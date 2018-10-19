@@ -1,0 +1,12 @@
+apply from: module_config
+
+dependencies {
+    implementation project(':lib_common')
+    kapt deps.arouter.compiler
+
+    if (!isModule.toBoolean()) {
+        implementation project(':module_noclass')
+        implementation project(':module_map')
+        implementation project(':module_stuschedule')
+    }
+}
