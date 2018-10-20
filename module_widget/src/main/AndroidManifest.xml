@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.mredrock.cyxbs.widget">
+
+    <application android:theme="@style/AppTheme">
+
+        <activity android:name="com.mredrock.cyxbs.widget.page.ConfigActivity" />
+        <activity android:name="com.mredrock.cyxbs.widget.page.trans.TransConfigActivity" />
+        <activity android:name="com.mredrock.cyxbs.widget.page.little.LittleConfigActivity" />
+        <activity android:name="com.mredrock.cyxbs.widget.page.normal.NormalConfigActivity" />
+
+        <receiver
+            android:name="com.mredrock.cyxbs.widget.widget.little.LittleWidget"
+            android:label="课程显示(小)">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_little" />
+        </receiver>
+        <receiver
+            android:name="com.mredrock.cyxbs.widget.widget.little.LittleTransWidget"
+            android:label="课程透明显示(小)">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_little_trans" />
+        </receiver>
+        <receiver
+            android:name="com.mredrock.cyxbs.widget.widget.normal.NormalWidget"
+            android:label="课程显示(大)">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_normal" />
+        </receiver>
+    </application>
+
+</manifest>
