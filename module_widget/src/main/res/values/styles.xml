@@ -1,0 +1,11 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="widget_AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/widget_colorPrimary</item>
+        <item name="colorPrimaryDark">@color/widget_colorPrimaryDark</item>
+        <item name="colorAccent">@color/widget_colorAccent</item>
+    </style>
+
+</resources>

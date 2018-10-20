@@ -1,0 +1,49 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:minWidth="100dp"
+    android:orientation="vertical">
+
+
+    <TextView
+        android:id="@+id/widget_little_title_trans"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="今日课表"
+        android:textSize="14sp" />
+
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/widget_little_trans_courseName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:maxLines="1"
+            android:text="高等数学"
+            android:textColor="#2E2E2E"
+            android:textSize="16sp" />
+
+        <ImageView
+            android:id="@+id/widget_little_trans_holder"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#7ebfbfbf" />
+
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/widget_little_trans_room"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:text="2217"
+        android:textColor="#2E2E2E"
+        android:textSize="16sp" />
+
+</LinearLayout>
