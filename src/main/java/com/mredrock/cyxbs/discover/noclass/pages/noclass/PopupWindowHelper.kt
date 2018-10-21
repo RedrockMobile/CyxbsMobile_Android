@@ -15,7 +15,7 @@ import android.view.View
 import android.view.WindowManager
 import android.widget.FrameLayout
 import android.widget.PopupWindow
-import com.mredrock.cyxbs.common.utils.ScreenUnit
+import com.mredrock.cyxbs.common.utils.ScreenUtil
 import com.mredrock.cyxbs.common.utils.extensions.gone
 import com.mredrock.cyxbs.common.utils.extensions.visible
 import com.mredrock.cyxbs.discover.noclass.R
@@ -41,7 +41,7 @@ class PopupWindowHelper(private val mContext: Context) {
     private fun initPopupWindow() {
         initObserve(mContext)
         val popupView = initView()
-        val screenUnit = ScreenUnit(mContext)
+        val screenUnit = ScreenUtil(mContext)
         popupWindow = PopupWindow(popupView, screenUnit.pxWide * 3 / 4, FrameLayout.LayoutParams.WRAP_CONTENT, true)
         popupWindow!!.isOutsideTouchable = true
         popupWindow!!.setBackgroundDrawable(BitmapDrawable())
