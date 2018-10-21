@@ -208,7 +208,7 @@ class SchoolcarsSmoothMove(schoolCarMap: SchoolCarMap?, activity: Activity){
      */
     private fun checkBeforeEnter(activity: Activity): Boolean {
         //如果timeList里最后一次校车运行时间和第一次获取到的校车运行时间不一样则说明此时校车正在运行，一样则校车此时未运行
-        if (checkTimeBeforeEnter() || (timeList.size <= 1 || timeList[timeList.size - 1] == timeList[0])) {
+       if (checkTimeBeforeEnter() || (timeList.size <= 1 || timeList[timeList.size - 1] == timeList[0])) {
             timeList = mutableListOf("")
             ExploreSchoolCarDialog.show(activity, TIME_OUT)
             return false    // 校车未运行
@@ -225,7 +225,7 @@ class SchoolcarsSmoothMove(schoolCarMap: SchoolCarMap?, activity: Activity){
         val hour: Int = calendar.get(Calendar.HOUR)
         val AM_PM: Int = calendar.get(Calendar.AM_PM)
 
-        if ((AM_PM == Calendar.AM && hour >= 11 || AM_PM == Calendar.PM && hour >= 5)) {
+        if ((AM_PM == Calendar.AM && hour >= 11) || AM_PM == Calendar.PM && hour <= 11) {
             return false    //时间为校车正在运行时间，返回false
         }
         return true         //时间为校车未运行时间，返回true
