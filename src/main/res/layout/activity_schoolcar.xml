@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/schoolcar_white"
+    tools:context=".SchoolcarActivity"
+    tools:ignore="ResourceName">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/school_car_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/schoolcar_explore_school_car_toolbar"
+        android:fitsSystemWindows="true">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/explore_schoolcar_toolbar_back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:padding="10dp"
+                android:src="@mipmap/ic_school_car_search_back" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/explore_schoolcar_toolbar_learnmore"
+                android:layout_centerInParent="true"
+                android:layout_marginLeft="106dp"
+                android:layout_marginStart="106dp"
+                android:layout_toEndOf="@+id/explore_schoolcar_toolbar_back"
+                android:layout_toRightOf="@+id/explore_schoolcar_toolbar_back"
+                android:text="校车轨迹"
+                android:textColor="@color/schoolcar_white"
+                android:textSize="17sp" />
+
+            <ImageButton
+                android:id="@+id/explore_schoolcar_toolbar_learnmore"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="10dp"
+                android:layout_marginRight="10dp"
+                android:background="#00000000"
+                android:padding="6dp"
+                android:src="@mipmap/ic_school_car_search_tool_more" />
+        </RelativeLayout>
+    </android.support.v7.widget.Toolbar>
+
+    <RelativeLayout
+        android:id="@+id/explore_school_car_linearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/school_car_toolbar">
+
+    </RelativeLayout>
+
+    <!--<ImageView-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="190dp"-->
+    <!--android:layout_centerInParent="true"-->
+    <!--android:layout_gravity="center"-->
+    <!--android:scaleType="centerCrop" />-->
+
+    <pl.droidsonroids.gif.GifImageView
+        android:id="@+id/explore_schoolcar_load"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/ic_school_car_search_load" />
+    <!--<com.amap.api.maps.MapView-->
+    <!--android:id="@+id/explore_schoolcar_map"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:layout_below="@+id/explore_schoolcar_toolbar"-->
+    <!--android:visibility="gone" />-->
+</RelativeLayout>

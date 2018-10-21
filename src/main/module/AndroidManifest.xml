@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.mredrock.cyxbs.schoolcar">
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity android:name=".SchoolcarActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".SchoolCarLearnMoreActivity"/>
+
+        <meta-data
+            android:name="com.amap.api.v2.apikey"
+            android:value="0fc2f79348ec91d8c8079bc78df0ee1d"/>
+
+        <service android:name="com.amap.api.location.APSService" />
+    </application>
+
+</manifest>
