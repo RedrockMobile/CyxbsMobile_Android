@@ -1,22 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:background="#f9f9f9"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
-
+    android:layout_height="wrap_content"
+    android:background="#F6F6F6"
+    android:orientation="vertical"
+    android:paddingLeft="15dp"
+    android:paddingTop="29dp"
+    android:paddingRight="15dp"
+    android:paddingBottom="28dp"
+    tools:ignore="ResourceName">
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="20dp"
-        android:layout_marginTop="25dp"
+        android:layout_marginTop="10dp"
         android:background="#fff">
 
         <EditText
-            android:id="@+id/noclass_edit_dialog"
+            android:id="@+id/discover_no_class_edit_dialog"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:background="@drawable/discover_noclass_shape_rectangle_grey_stroke"
@@ -25,9 +28,10 @@
             android:textSize="14sp"/>
 
         <ImageView
-            android:id="@+id/noclass_btn_delete_dialog"
+            android:id="@+id/discover_no_class_btn_delete_dialog"
             android:layout_width="20dp"
             android:layout_height="20dp"
+            android:visibility="gone"
             android:layout_gravity="right|center_vertical"
             android:layout_marginRight="10dp"
             android:padding="2dp"
@@ -37,33 +41,31 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="45dp"
+        android:layout_marginTop="14dp"
         android:orientation="horizontal">
 
         <Button
-            android:id="@+id/noclass_btn_cancel_dialog"
+            android:id="@+id/discover_no_class_btn_cancel"
             android:layout_width="0dp"
-            android:layout_height="40dp"
-            android:layout_marginBottom="20dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="10dp"
+            android:layout_height="match_parent"
+            android:layout_marginRight="12dp"
             android:layout_weight="1"
-            android:background="@drawable/discover_noclass_shape_rectangle_grey_stroke"
+            android:background="@drawable/discover_noclass_dialog_btn_shape"
             android:text="取消"
-            android:textColor="#999"/>
+            android:textColor="#999999"
+            android:textSize="16dp"
+            tools:ignore="ButtonStyle"/>
 
         <Button
-            android:id="@+id/noclass_btn_confirm_dialog"
+            android:id="@+id/discover_no_class_btn_confirm"
             android:layout_width="0dp"
-            android:layout_height="40dp"
-            android:layout_marginBottom="20dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="20dp"
+            android:layout_height="match_parent"
             android:layout_weight="1"
-            android:background="@drawable/discover_noclass_shape_rectangle_grey_stroke"
+            android:background="@drawable/discover_noclass_dialog_btn_shape"
             android:text="添加"
-            android:textColor="@color/colorPrimary"/>
-
+            android:textColor="#788EFA"
+            android:textSize="16dp"
+            tools:ignore="ButtonStyle"/>
     </LinearLayout>
-
 </LinearLayout>

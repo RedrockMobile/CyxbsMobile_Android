@@ -2,13 +2,14 @@ package com.mredrock.cyxbs.discover.noclass.pages.noclass
 
 import android.content.Context
 import android.support.v7.widget.RecyclerView
+import android.text.Editable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.mredrock.cyxbs.discover.noclass.R
 import com.mredrock.cyxbs.discover.noclass.network.Student
+import com.mredrock.cyxbs.discover.noclass.snackbar
 import kotlinx.android.synthetic.main.discover_noclass_item_stu.view.*
-import org.jetbrains.anko.toast
 
 /**
  * Created by zxzhu
@@ -19,11 +20,6 @@ class NoClassRvAdapter(private val mStuList: MutableList<Student>, private val m
 
     private val TYPE_ADD = 0
     private val TYPE_STU = 1
-    private var helper: PopupWindowHelper? = null
-
-    init {
-        helper = PopupWindowHelper(mContext)
-    }
 
     override fun getItemViewType(position: Int): Int {
         return if (itemCount == 1 || position == mStuList.size) {
@@ -70,7 +66,7 @@ class NoClassRvAdapter(private val mStuList: MutableList<Student>, private val m
     fun addStu(stu: Student) {
         for (s in mStuList) {
             if (s.stunum == stu.stunum) {
-                mContext.toast("请勿重复添加")
+                (mContext as NoClassActivity).snackbar("请勿重复添加")
                 return
             }
         }
@@ -79,9 +75,21 @@ class NoClassRvAdapter(private val mStuList: MutableList<Student>, private val m
     }
 
     private fun showSearchDialog() {
-//        val stu = Student()
-//        addStu(stu)
-        helper!!.showPopup()
+        val dialog = NoClassDialog(mContext)
+        dialog.setListener(object : NoClassDialog.OnClickListener {
+            override fun onCancel() {
+                dialog.dismiss()
+            }
+
+            override fun onConfirm(text: Editable) {
+                if (text.isEmpty()) (mContext as NoClassActivity).snackbar("输入为空")
+                else {
+                    (mContext as NoClassActivity).doSearch(text.toString())
+                    dialog.dismiss()
+                }
+            }
+        })
+        dialog.show()
     }
 
 

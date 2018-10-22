@@ -1,13 +1,16 @@
 package com.mredrock.cyxbs.discover.noclass.pages.noclass
 
 import android.app.Activity
+import android.arch.lifecycle.Observer
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.widget.GridLayoutManager
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.discover.noclass.R
 import com.mredrock.cyxbs.discover.noclass.network.Student
+import com.mredrock.cyxbs.discover.noclass.pages.stuselect.NoClassStuSelectActivity
 import kotlinx.android.synthetic.main.discover_noclass_activity_no_class.*
+import java.io.Serializable
 
 class NoClassActivity : BaseViewModelActivity<NoClassViewModel>() {
 
@@ -28,6 +31,7 @@ class NoClassActivity : BaseViewModelActivity<NoClassViewModel>() {
         }
     }
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.discover_noclass_activity_no_class)
@@ -35,8 +39,29 @@ class NoClassActivity : BaseViewModelActivity<NoClassViewModel>() {
         initToolbar()
         initStuList()
         initBtn()
+        initObserver()
     }
 
+    private fun initObserver() {
+        viewModel.mStuList.observe(this, Observer {
+            when {
+                it!!.size > 1 -> {
+                    val bundle = Bundle()
+                    bundle.putSerializable("stu_list", it as Serializable)
+                    val intent = Intent(this, NoClassStuSelectActivity::class.java)
+                    intent.putExtras(bundle)
+                    startActivityForResult(intent, REQUEST_SELECT)
+                }
+                it.size == 1 -> {
+                    addStu(it[0])
+                }
+            }
+        })
+    }
+
+    fun doSearch(str: String) {
+        viewModel.getStudent(str)
+    }
 
     private fun initBtn() {
         noclass_btn_query.setOnClickListener {
@@ -46,6 +71,8 @@ class NoClassActivity : BaseViewModelActivity<NoClassViewModel>() {
 
     private fun initStuList() {
         val stu = Student()
+//        stu.name = BaseApp.user!!.name
+//        stu.stunum = BaseApp.user!!.stunum
         stu.name = "zzx"
         stu.stunum = "2016214049"
         mStuList!!.add(stu)
@@ -54,7 +81,7 @@ class NoClassActivity : BaseViewModelActivity<NoClassViewModel>() {
         noclass_rv.adapter = mAdapter
     }
 
-    fun addStu(stu: Student) {
+    private fun addStu(stu: Student) {
         mAdapter!!.addStu(stu)
     }
 
@@ -66,6 +93,5 @@ class NoClassActivity : BaseViewModelActivity<NoClassViewModel>() {
             mAdapter!!.addStu(stu)
         }
     }
-
 
 }
