@@ -1,6 +1,5 @@
 package com.mredrock.cyxbs.course.ui
 
-import android.content.Context
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -11,14 +10,13 @@ import android.view.ViewGroup
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.component.JToolbar
-import com.mredrock.cyxbs.common.config.COURSE_ENTRY
+import com.mredrock.cyxbs.common.config.COURSE
 import com.mredrock.cyxbs.common.event.LoginStateChangeEvent
 import com.mredrock.cyxbs.common.event.MainVPChangeEvent
 import com.mredrock.cyxbs.course.event.TabIsFoldEvent
 import com.mredrock.cyxbs.course.event.WeekNumEvent
 import com.mredrock.cyxbs.common.ui.BaseActivity
 import com.mredrock.cyxbs.common.ui.BaseFragment
-import com.mredrock.cyxbs.common.arouter.ICourseEntry
 import com.mredrock.cyxbs.course.R
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -27,8 +25,8 @@ import org.greenrobot.eventbus.ThreadMode
 /**
  * Created by anriku on 2018/10/16.
  */
-@Route(path = COURSE_ENTRY)
-class CourseEntryFragment : BaseFragment(), ICourseEntry {
+@Route(path = COURSE)
+class CourseEntryFragment : BaseFragment() {
 
     // 表示是否TabLayout折叠
     private var mIsFold = true
@@ -38,7 +36,6 @@ class CourseEntryFragment : BaseFragment(), ICourseEntry {
     // 用于记录当前Toolbar要显示的字符串
     private lateinit var mToolbarTitle: String
 
-    override fun init(context: Context?) {}
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.course_fragment_course_entry, container, false)
@@ -58,8 +55,8 @@ class CourseEntryFragment : BaseFragment(), ICourseEntry {
         // 如果用户登录了就显示CourseContainerFragment；如果用户没有登录就行显示NoneLoginFragment进行登录
         if (BaseApp.isLogin) {
             // 获取向上向下的图标
-            mToolbarIc = arrayOf(ContextCompat.getDrawable(activity!!, R.drawable.common_ic_course_fold),
-                    ContextCompat.getDrawable(activity!!, R.drawable.common_ic_course_expand))
+            mToolbarIc = arrayOf(ContextCompat.getDrawable(activity!!, R.drawable.course_ic_course_fold),
+                    ContextCompat.getDrawable(activity!!, R.drawable.course_ic_course_expand))
 
             mToolbarTitle = activity!!.getString(R.string.course_all_week)
             replaceFragment(CourseContainerFragment())

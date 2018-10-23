@@ -5,6 +5,7 @@ import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.databinding.DataBindingUtil
 import android.os.Bundle
+import android.support.v7.app.AppCompatActivity
 import android.view.*
 import com.mredrock.cyxbs.course.event.TabIsFoldEvent
 import com.mredrock.cyxbs.course.event.WeekNumEvent
@@ -152,7 +153,7 @@ class CourseContainerFragment : BaseFragment() {
     fun addTheAffairsToTheCalendar(affairFromInternetEvent: AffairFromInternetEvent) {
         activity?.let {
             if (affairFromInternetEvent.affairs.isNotEmpty()) {
-                val affairToCalendar = AffairToCalendar(it, affairFromInternetEvent.affairs)
+                val affairToCalendar = AffairToCalendar(it as AppCompatActivity, affairFromInternetEvent.affairs)
                 affairToCalendar.getPermissionToInsert()
             }
         }

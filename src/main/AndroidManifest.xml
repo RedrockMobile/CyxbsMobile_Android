@@ -4,7 +4,7 @@
 
     <application>
         <activity
-            android:name="deubg.CourseActivity"
+            android:name="debug.CourseActivity"
             android:launchMode="singleTask" />
         <activity
             android:name=".ui.EditAffairActivity"

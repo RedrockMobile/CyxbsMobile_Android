@@ -1,4 +1,4 @@
-package deubg
+package debug
 
 import android.annotation.SuppressLint
 import android.app.Dialog
@@ -9,7 +9,6 @@ import android.view.ViewGroup
 import android.widget.EditText
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.bean.User
-import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.course.extensions.getScreenWidth
 import com.mredrock.cyxbs.course.R
 import com.mredrock.cyxbs.course.event.AddAffairEvent

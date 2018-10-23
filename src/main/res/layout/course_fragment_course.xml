@@ -101,12 +101,13 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:animateLayoutChanges="true"
-                        app:emptyText="@string/course_empty_course_text"
                         app:elementGap="2dp"
+                        app:emptyText="@string/course_empty_course_text"
                         app:emptyTextSize="14sp"
                         app:noCourseDrawable="@drawable/course_no_course"
                         app:nowWeek="@{dateViewModel.nowWeek}"
-                        app:schedules="@{coursesViewModel.courses}">
+                        app:schedules="@{coursesViewModel.courses}"
+                        app:touchViewDrawable="@drawable/course_ic_add_circle_white">
 
                     </com.mredrock.cyxbs.course.component.ScheduleView>
 

@@ -31,7 +31,6 @@ class NoCourseInviteActivity : BaseActivity() {
         get() = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        isUseSwipeBackHelper = false
         super.onCreate(savedInstanceState)
         mBinding = DataBindingUtil.setContentView(this, R.layout.course_activity_no_course_invite)
 

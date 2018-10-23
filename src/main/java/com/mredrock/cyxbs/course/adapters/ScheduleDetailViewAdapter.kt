@@ -97,8 +97,8 @@ class ScheduleDetailViewAdapter(private val mDialog: Dialog, private val mSchedu
                     .subscribe(ExecuteOnceObserver(onExecuteOnceNext = { _ ->
                         //用于更新UI
                         EventBus.getDefault().post(DeleteAffairEvent())
-                        mDialog.dismiss()
                     }))
+            mDialog.dismiss()
         }
     }
 

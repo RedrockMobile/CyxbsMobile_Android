@@ -24,16 +24,16 @@ class StudentListActivity : BaseActivity() {
         const val COURSE_INFO = "courseInfo"
     }
 
-    private lateinit var mCourseInfo: Course
-    private lateinit var courseApiService: CourseApiService
-    private val retrofit: Retrofit by lazy(LazyThreadSafetyMode.NONE) {
-        Retrofit.Builder()
-                .baseUrl(CourseUrls.STUDENT_LIST_BASE_URL)
-                .client(ApiGenerator.configureOkHttp(OkHttpClient.Builder()))
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                .addConverterFactory(GsonConverterFactory.create())
-                .build()
-    }
+//    private lateinit var mCourseInfo: Course
+//    private lateinit var courseApiService: CourseApiService
+//    private val retrofit: Retrofit by lazy(LazyThreadSafetyMode.NONE) {
+//        Retrofit.Builder()
+//                .baseUrl(CourseUrls.STUDENT_LIST_BASE_URL)
+//                .client(ApiGenerator.configureOkHttp(OkHttpClient.Builder()))
+//                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+//                .addConverterFactory(GsonConverterFactory.create())
+//                .build()
+//    }
 
     override val isFragmentActivity: Boolean
         get() = true
@@ -41,20 +41,20 @@ class StudentListActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.course_activity_student_list)
-
-        mCourseInfo = intent.getParcelableExtra(COURSE_INFO)
-        courseApiService = ApiGenerator.getApiService(retrofit, CourseApiService::class.java)
-
-
-        if (mCourseInfo.courseNum != null && mCourseInfo.classroom != null) {
-            courseApiService.getStudentList(mCourseInfo.courseNum!!, mCourseInfo.classroom!!)
-                    .setSchedulers()
-                    .errorHandler()
-                    .subscribe(ExecuteOnceObserver(onExecuteOnceNext = {
-                        it.data?.let { students ->
-                            rv.adapter = StudentListRecAdapter(this, students)
-                        }
-                    }))
-        }
+//
+//        mCourseInfo = intent.getParcelableExtra(COURSE_INFO)
+//        courseApiService = ApiGenerator.getApiService(retrofit, CourseApiService::class.java)
+//
+//
+//        if (mCourseInfo.courseNum != null && mCourseInfo.classroom != null) {
+//            courseApiService.getStudentList(mCourseInfo.courseNum!!, mCourseInfo.classroom!!)
+//                    .setSchedulers()
+//                    .errorHandler()
+//                    .subscribe(ExecuteOnceObserver(onExecuteOnceNext = {
+//                        it.data?.let { students ->
+//                            rv.adapter = StudentListRecAdapter(this, students)
+//                        }
+//                    }))
+//        }
     }
 }

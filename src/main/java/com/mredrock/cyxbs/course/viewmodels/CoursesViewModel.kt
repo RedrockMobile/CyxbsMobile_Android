@@ -5,9 +5,6 @@ import android.arch.lifecycle.ViewModel
 import android.content.Context
 import com.google.gson.Gson
 import com.mredrock.cyxbs.common.BaseApp
-import com.mredrock.cyxbs.common.config.SP_FIRST_DAY
-import com.mredrock.cyxbs.common.config.SP_WIDGET_NEED_FRESH
-import com.mredrock.cyxbs.common.config.WIDGET_COURSE
 import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.SchoolCalendar
@@ -185,13 +182,13 @@ class CoursesViewModel : ViewModel() {
                         }.start()
                     }
 
-                    // 存储窗口小部件需要的Json数据
-                    if (coursesFromInternet.data?.isEmpty() != true) {
-                        BaseApp.context.defaultSharedPreferences.editor {
-                            putBoolean(SP_WIDGET_NEED_FRESH, true)
-                            putString(WIDGET_COURSE, Gson().toJson(coursesFromInternet))
-                        }
-                    }
+//                    // 存储窗口小部件需要的Json数据
+//                    if (coursesFromInternet.data?.isEmpty() != true) {
+//                        BaseApp.context.defaultSharedPreferences.editor {
+//                            putBoolean(SP_WIDGET_NEED_FRESH, true)
+//                            putString(WIDGET_COURSE, Gson().toJson(coursesFromInternet))
+//                        }
+//                    }
                 }, onExecuteOnceError = {
                     stopRefresh()
                 }))
@@ -270,7 +267,7 @@ class CoursesViewModel : ViewModel() {
                     now.add(Calendar.DATE, -((it - 1) * 7 + (now.get(Calendar.DAY_OF_WEEK) + 5) % 7))
                     // 更新第一天
                     context.defaultSharedPreferences.editor {
-                        putLong(SP_FIRST_DAY, now.timeInMillis)
+                        putLong(SchoolCalendar.FIRST_DAY, now.timeInMillis)
                     }
                     schoolCalendarUpdated.value = true
 

@@ -38,7 +38,6 @@ class EditAffairActivity : BaseActivity() {
     private lateinit var mEditAffairViewModel: EditAffairViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        isUseSwipeBackHelper = false
         super.onCreate(savedInstanceState)
         mEditAffairViewModel = ViewModelProviders.of(this).get(EditAffairViewModel::class.java)
 

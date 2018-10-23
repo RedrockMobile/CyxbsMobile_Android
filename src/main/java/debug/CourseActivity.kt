@@ -1,18 +1,17 @@
-package deubg
+package debug
 
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
-import android.support.v7.widget.Toolbar
 import android.view.MenuItem
+import com.jude.swipbackhelper.SwipeBackHelper
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.ui.BaseActivity
 import com.mredrock.cyxbs.course.R
 import com.mredrock.cyxbs.course.event.TabIsFoldEvent
 import com.mredrock.cyxbs.course.event.WeekNumEvent
 import com.mredrock.cyxbs.course.ui.CourseContainerFragment
-import kotlinx.android.synthetic.main.course_activity_course.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -29,18 +28,18 @@ class CourseActivity : BaseActivity() {
 
     private var mIsFold = true
     private val mToolbarIc: Array<Drawable?> by lazy {
-        arrayOf(ContextCompat.getDrawable(this, R.drawable.common_ic_course_fold),
-                ContextCompat.getDrawable(this, R.drawable.common_ic_course_expand))
+        arrayOf(ContextCompat.getDrawable(this, R.drawable.course_ic_course_fold),
+                ContextCompat.getDrawable(this, R.drawable.course_ic_course_expand))
     }
     private val mLoginDialog: LoginDialog by lazy(LazyThreadSafetyMode.NONE) {
         LoginDialog(this)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        isUseSwipeBackHelper = false
-        setTheme(R.style.AppTheme)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.course_activity_course)
+        SwipeBackHelper.getCurrentPage(this).setSwipeBackEnable(false)
+
 
         analogLogin()
         replaceFragment(CourseContainerFragment())

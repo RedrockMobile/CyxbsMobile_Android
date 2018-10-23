@@ -9,6 +9,7 @@ import android.provider.CalendarContract.Calendars
 import android.provider.CalendarContract.Events
 import android.provider.CalendarContract.Reminders
 import android.support.v4.app.FragmentActivity
+import android.support.v7.app.AppCompatActivity
 import android.widget.Toast
 import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.SchoolCalendar
@@ -22,7 +23,7 @@ import java.util.*
  *
  * Created by anriku on 2018/10/11.
  */
-class AffairToCalendar(private val mActivity: FragmentActivity, private val mAffairs: List<Course>) {
+class AffairToCalendar(private val mActivity: AppCompatActivity, private val mAffairs: List<Course>) {
 
     companion object {
         private const val TAG = "AffairToCalendar"

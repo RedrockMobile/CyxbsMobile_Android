@@ -8,7 +8,4 @@
             @anim/course_fragment_exit
         </item>
     </style>
-
-    <style name="StartAppTheme" parent="Theme.AppCompat.Light.NoActionBar" tools:ignore="ResourceName">
-    </style>
 </resources>
