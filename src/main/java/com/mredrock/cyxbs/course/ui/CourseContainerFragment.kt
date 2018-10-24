@@ -130,7 +130,8 @@ class CourseContainerFragment : BaseFragment() {
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun deleteAffair(deleteAffairEvent: DeleteAffairEvent) {
-        mCoursesViewModel.refreshScheduleData(false)
+        EventBus.getDefault().post(RefreshEvent(true))
+        mCoursesViewModel.refreshScheduleData(true)
     }
 
     /**
@@ -140,13 +141,14 @@ class CourseContainerFragment : BaseFragment() {
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun addAffairs(addAffairEvent: AddAffairEvent) {
-        mCoursesViewModel.refreshScheduleData(false)
-
+        EventBus.getDefault().post(RefreshEvent(true))
+        mCoursesViewModel.refreshScheduleData(true)
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun modifyAffairs(modifyAffairEvent: ModifyAffairEvent) {
-        mCoursesViewModel.refreshScheduleData(false)
+        EventBus.getDefault().post(RefreshEvent(true))
+        mCoursesViewModel.refreshScheduleData(true)
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

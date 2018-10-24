@@ -283,7 +283,7 @@ class CoursesViewModel : ViewModel() {
      */
     private fun stopRefresh() {
         if (isUseSwipeRefreshLayout) {
-            EventBus.getDefault().post(RefreshEvent())
+            EventBus.getDefault().post(RefreshEvent(false))
         }
         mIsGettingData = false
     }

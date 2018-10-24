@@ -62,7 +62,7 @@ class CourseFragment : BaseFragment() {
 
         // 当当前周数进行了改变后有可能SchoolCalendar进行了更新，这时候就对DateViewModel中的日期进行更新
         mCoursesViewModel.schoolCalendarUpdated.observe(this, Observer {
-            if (it == true){
+            if (it == true) {
                 mDateViewModel.getDate()
             }
         })
@@ -80,8 +80,6 @@ class CourseFragment : BaseFragment() {
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun finishRefresh(refreshEvent: RefreshEvent) {
-        if (mBinding.swipeRefreshLayout.isRefreshing) {
-            mBinding.swipeRefreshLayout.isRefreshing = false
-        }
+        mBinding.swipeRefreshLayout.isRefreshing = refreshEvent.isRefresh
     }
 }
