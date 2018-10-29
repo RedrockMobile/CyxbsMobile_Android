@@ -8,8 +8,8 @@ import android.view.*
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
+import com.mredrock.cyxbs.common.utils.extensions.getScreenHeight
 import com.mredrock.cyxbs.course.R
-import com.mredrock.cyxbs.course.extensions.getScreenHeight
 import org.jetbrains.anko.*
 
 /**

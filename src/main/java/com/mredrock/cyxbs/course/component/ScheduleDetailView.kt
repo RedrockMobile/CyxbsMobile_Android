@@ -9,8 +9,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
-import com.mredrock.cyxbs.course.extensions.getScreenHeight
-import com.mredrock.cyxbs.course.extensions.getScreenWidth
+import com.mredrock.cyxbs.common.utils.extensions.getScreenHeight
+import com.mredrock.cyxbs.common.utils.extensions.getScreenWidth
 import com.mredrock.cyxbs.course.R
 import com.mredrock.cyxbs.course.network.Course
 

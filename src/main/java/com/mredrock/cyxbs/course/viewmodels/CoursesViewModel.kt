@@ -3,7 +3,6 @@ package com.mredrock.cyxbs.course.viewmodels
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import android.content.Context
-import com.google.gson.Gson
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.utils.LogUtils
@@ -95,7 +94,8 @@ class CoursesViewModel : ViewModel() {
         mIsGettingData = true
 
         resetGetStatus()
-        isUseSwipeRefreshLayout = false
+        EventBus.getDefault().post(RefreshEvent(true))
+        isUseSwipeRefreshLayout = true
         getCoursesDataFromDatabase()
         getAffairsDataFromDatabase()
         getNowWeek(context)
