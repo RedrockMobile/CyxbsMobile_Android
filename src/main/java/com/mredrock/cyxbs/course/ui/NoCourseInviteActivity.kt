@@ -4,14 +4,14 @@ import android.arch.lifecycle.ViewModelProviders
 import android.databinding.DataBindingUtil
 import android.os.Bundle
 import com.alibaba.android.arouter.facade.annotation.Route
-import com.mredrock.cyxbs.common.config.NO_COURSE_INVITE_ACTIVITY
+import com.mredrock.cyxbs.common.config.COURSE_NO_COURSE_INVITE
 import com.mredrock.cyxbs.common.ui.BaseActivity
 import com.mredrock.cyxbs.course.R
 import com.mredrock.cyxbs.course.adapters.NoCourseInviteVPAdapter
 import com.mredrock.cyxbs.course.databinding.CourseActivityNoCourseInviteBinding
 import com.mredrock.cyxbs.course.viewmodels.NoCourseInviteViewModel
 
-@Route(path = NO_COURSE_INVITE_ACTIVITY)
+@Route(path = COURSE_NO_COURSE_INVITE)
 class NoCourseInviteActivity : BaseActivity() {
 
     companion object {

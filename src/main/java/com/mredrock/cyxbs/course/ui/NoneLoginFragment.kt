@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.alibaba.android.arouter.launcher.ARouter
-import com.mredrock.cyxbs.common.config.LOGIN_ACTIVITY
+import com.mredrock.cyxbs.common.config.COURSE_LOGIN
 import com.mredrock.cyxbs.common.ui.BaseFragment
 import com.mredrock.cyxbs.course.R
 import kotlinx.android.synthetic.main.course_fragment_none_login.*
@@ -23,10 +23,10 @@ class NoneLoginFragment : BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         iv.setOnClickListener {
-            ARouter.getInstance().build(LOGIN_ACTIVITY).navigation(activity)
+            ARouter.getInstance().build(COURSE_LOGIN).navigation(activity)
         }
         tv.setOnClickListener {
-            ARouter.getInstance().build(LOGIN_ACTIVITY).navigation(activity)
+            ARouter.getInstance().build(COURSE_LOGIN).navigation(activity)
         }
     }
 
