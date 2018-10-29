@@ -67,7 +67,7 @@ abstract class BaseActivity : AppCompatActivity() {
         startActivity<T>(*params)
     }
 
-    val common_toolbar get() = toolbar
+    protected val BaseActivity.common_toolbar get() = toolbar
 
     protected fun Toolbar.init(title: String,
                                @DrawableRes icon: Int = R.drawable.common_ic_back,
