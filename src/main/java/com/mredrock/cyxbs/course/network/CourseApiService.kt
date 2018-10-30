@@ -95,10 +95,12 @@ interface CourseApiService {
     /**
      * 获取某个课程的学生名单
      *
-     * @param courseNum 课程代号
+     * @param teacher 老师姓名
+     * @param stuNum 学生学号
      * @param classRoom 教室号
      */
     @GET(CourseUrls.API_GET_STUDENT_LIST)
-    fun getStudentList(@Query("course_num") courseNum: String,
+    fun getStudentList(@Query("teacher") teacher: String,
+                       @Query("stuNum") stuNum: String,
                        @Query("classroom") classRoom: String): Observable<StudentApiWrapper>
 }
