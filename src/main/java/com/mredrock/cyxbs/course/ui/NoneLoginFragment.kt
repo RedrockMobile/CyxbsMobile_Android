@@ -4,11 +4,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.alibaba.android.arouter.launcher.ARouter
-import com.mredrock.cyxbs.common.config.COURSE_LOGIN
+import com.mredrock.cyxbs.common.event.LoginEvent
 import com.mredrock.cyxbs.common.ui.BaseFragment
 import com.mredrock.cyxbs.course.R
 import kotlinx.android.synthetic.main.course_fragment_none_login.*
+import org.greenrobot.eventbus.EventBus
 
 /**
  * Created by anriku on 2018/10/16.
@@ -23,10 +23,10 @@ class NoneLoginFragment : BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         iv.setOnClickListener {
-            ARouter.getInstance().build(COURSE_LOGIN).navigation(activity)
+            EventBus.getDefault().post(LoginEvent())
         }
         tv.setOnClickListener {
-            ARouter.getInstance().build(COURSE_LOGIN).navigation(activity)
+            EventBus.getDefault().post(LoginEvent())
         }
     }
 
