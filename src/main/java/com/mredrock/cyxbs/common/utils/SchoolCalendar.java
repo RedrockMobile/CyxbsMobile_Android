@@ -16,12 +16,13 @@ import java.util.TimeZone;
  * Created by cc on 15/8/23.
  */
 public class SchoolCalendar {
+    public static final String FIRST_DAY = "first_day";
     Calendar firstDay = new GregorianCalendar(2015, Calendar.SEPTEMBER, 7);
     Calendar currentTime;
 
     public SchoolCalendar() {
         // 鄙人认为，在这个时候，我们有必要去更新一下firstDay
-        long first = SharedPreferencesKt.getDefaultSharedPreferences(BaseApp.Companion.getContext()).getLong("first_day", firstDay.getTimeInMillis());
+        long first = SharedPreferencesKt.getDefaultSharedPreferences(BaseApp.Companion.getContext()).getLong(FIRST_DAY, firstDay.getTimeInMillis());
         firstDay.setTimeZone(TimeZone.getTimeZone("GMT+8:00"));
         firstDay.setTimeInMillis(first);
         currentTime = new GregorianCalendar();

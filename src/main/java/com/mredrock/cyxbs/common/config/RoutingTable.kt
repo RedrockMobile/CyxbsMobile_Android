@@ -24,3 +24,6 @@ const val DISCOVER_VOLUNTEER = "/volunteer/discover/entry"
 const val DISCOVER_SCHOOL_CAR = "/school_car/discover/entry"
 const val DISCOVER_ABOUT_US = "/about_us/discover/entry"
 const val DISCOVER_NEWS = "/news/discover/entry"
+
+// NoCourseInviteActivity
+const val COURSE_NO_COURSE_INVITE = "course/no_course_invite_activity"
