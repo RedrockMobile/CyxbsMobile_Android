@@ -1,4 +1,4 @@
-package com.mredrock.cyxbs.calendar.network
+package com.mredrock.cyxbs.discover.calendar.network
 import com.mredrock.cyxbs.common.bean.RedrockApiWrapper
 import io.reactivex.Observable
 import retrofit2.http.GET
