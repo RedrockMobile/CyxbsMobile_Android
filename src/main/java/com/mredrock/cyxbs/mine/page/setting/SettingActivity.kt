@@ -27,7 +27,7 @@ import com.mredrock.cyxbs.common.utils.extensions.saveImage
 import com.mredrock.cyxbs.mine.R
 import kotlinx.android.synthetic.main.mine_activity_setting.*
 import org.greenrobot.eventbus.EventBus
-import org.jetbrains.anko.sdk25.coroutines.onCheckedChange
+import org.jetbrains.anko.sdk27.coroutines.onCheckedChange
 
 
 /**

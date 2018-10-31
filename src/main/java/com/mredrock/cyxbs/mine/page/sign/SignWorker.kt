@@ -6,6 +6,7 @@ import androidx.work.Worker
 import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
 import com.mredrock.cyxbs.common.utils.extensions.editor
 import com.mredrock.cyxbs.mine.util.NotificationUtil
+import com.tencent.bugly.Bugly.applicationContext
 import java.util.*
 
 /**

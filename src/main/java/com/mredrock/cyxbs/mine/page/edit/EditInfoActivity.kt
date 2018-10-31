@@ -14,7 +14,10 @@ import android.widget.EditText
 import com.afollestad.materialdialogs.MaterialDialog
 import com.mredrock.cyxbs.common.config.DIR_PHOTO
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
-import com.mredrock.cyxbs.common.utils.extensions.*
+import com.mredrock.cyxbs.common.utils.extensions.doPermissionAction
+import com.mredrock.cyxbs.common.utils.extensions.getRequestBody
+import com.mredrock.cyxbs.common.utils.extensions.loadAvatar
+import com.mredrock.cyxbs.common.utils.extensions.uri
 import com.mredrock.cyxbs.mine.R
 import com.mredrock.cyxbs.mine.util.setAutoGravity
 import com.mredrock.cyxbs.mine.util.user
@@ -197,7 +200,7 @@ class EditInfoActivity(override val isFragmentActivity: Boolean = false,
             reason = "拍照需要访问你的相机哦~"
             doAfterGranted {
                 val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-                intent.putExtra(MediaStore.EXTRA_OUTPUT, cameraImageFile.getUri(this@EditInfoActivity))
+                intent.putExtra(MediaStore.EXTRA_OUTPUT, cameraImageFile.uri)
                 startActivityForResult(intent, SELECT_CAMERA)
             }
         }
