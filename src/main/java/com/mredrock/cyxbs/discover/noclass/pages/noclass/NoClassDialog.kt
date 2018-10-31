@@ -8,7 +8,8 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.Gravity
 import android.view.View
-import com.mredrock.cyxbs.common.utils.ScreenUtil
+import com.mredrock.cyxbs.common.utils.extensions.dp2px
+import com.mredrock.cyxbs.common.utils.extensions.getScreenWidth
 import com.mredrock.cyxbs.common.utils.extensions.gone
 import com.mredrock.cyxbs.common.utils.extensions.visible
 import com.mredrock.cyxbs.discover.noclass.R
@@ -42,8 +43,7 @@ class NoClassDialog(context: Context): Dialog(context), View.OnClickListener {
         window.setGravity(Gravity.CENTER)
         val decorView = window.decorView
         decorView.getWindowVisibleDisplayFrame(Rect())
-        val screenUtil = ScreenUtil(context)
-        windowParams.width = screenUtil.pxWide - ScreenUtil.dip2px(context, 46f)
+        windowParams.width = context.getScreenWidth() - context.dp2px(46f)
         window.setBackgroundDrawableResource(android.R.color.transparent)
         window.attributes = windowParams
     }
