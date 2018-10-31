@@ -28,6 +28,7 @@ versions.gson = '2.8.2'
 versions.lifecycle = '1.1.1'
 versions.room = '1.1.1'
 versions.paging = '1.0.0'
+versions.workmanager = '1.0.0-alpha09'
 //dagger
 versions.dagger = '2.16'
 //permission
@@ -115,6 +116,10 @@ def paging = [:]
 paging.runtime = "android.arch.paging:runtime:$versions.paging"
 paging.rxjava = "android.arch.paging:rxjava2:1.0.0-rc1"
 deps.paging = paging
+
+def workmanager = [:]
+workmanager.runtime = "android.arch.work:work-runtime:$versions.workmanager"
+deps.workmanager = workmanager
 
 def databinding = [:]
 databinding.compiler = "com.android.databinding:compiler:3.1.4"
