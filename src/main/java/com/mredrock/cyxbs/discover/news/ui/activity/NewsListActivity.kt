@@ -2,6 +2,8 @@ package com.mredrock.cyxbs.news.ui.activity
 
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
+import com.alibaba.android.arouter.facade.annotation.Route
+import com.mredrock.cyxbs.common.config.DISCOVER_NEWS
 import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.ui.BaseActivity
 import com.mredrock.cyxbs.common.utils.extensions.mapOrThrowApiException
@@ -12,7 +14,7 @@ import com.mredrock.cyxbs.news.network.ApiService
 import com.mredrock.cyxbs.news.ui.adapter.NewsAdapter
 import kotlinx.android.synthetic.main.news_activity_list.*
 
-
+@Route(path = DISCOVER_NEWS)
 class NewsListActivity : BaseActivity() {
 
     override val isFragmentActivity = false
