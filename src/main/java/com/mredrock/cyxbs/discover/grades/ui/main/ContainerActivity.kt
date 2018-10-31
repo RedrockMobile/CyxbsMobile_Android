@@ -1,7 +1,9 @@
 package com.mredrock.cyxbs.grades.ui.main
 
 import android.os.Bundle
+import com.alibaba.android.arouter.facade.annotation.Route
 import com.jude.swipbackhelper.SwipeBackHelper
+import com.mredrock.cyxbs.common.config.DISCOVER_GRADES
 import com.mredrock.cyxbs.common.ui.BaseActivity
 import com.mredrock.cyxbs.grades.R
 import com.mredrock.cyxbs.grades.ui.adapter.FPAdapter
@@ -14,6 +16,8 @@ import kotlinx.android.synthetic.main.grades_activity_container.*
  *
  * @CreateAt:2018/9/16
  */
+
+@Route(path = DISCOVER_GRADES)
 class ContainerActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
