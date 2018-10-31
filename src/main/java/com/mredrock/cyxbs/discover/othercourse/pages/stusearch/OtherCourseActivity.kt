@@ -4,6 +4,8 @@ import android.arch.lifecycle.Observer
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import com.alibaba.android.arouter.facade.annotation.Route
+import com.mredrock.cyxbs.common.config.DISCOVER_OTHER_COURSE
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.extensions.gone
 import com.mredrock.cyxbs.common.utils.extensions.visible
@@ -13,6 +15,7 @@ import com.mredrock.cyxbs.discover.othercourse.snackbar
 import kotlinx.android.synthetic.main.discover_activity_other_course.*
 import org.jetbrains.anko.startActivity
 
+@Route(path = DISCOVER_OTHER_COURSE)
 class OtherCourseActivity : BaseViewModelActivity<OtherCourseViewModel>() {
     override val viewModelClass = OtherCourseViewModel::class.java
 
