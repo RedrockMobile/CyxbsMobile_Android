@@ -45,3 +45,7 @@ const val SP_SHOW_MODE = "showMode"
 const val SP_SIGN_REMIND = "signRemind"
 
 const val APP_WEBSITE = "https://wx.idsbllp.cn/app/"
+
+//小控件课表
+const val WIDGET_COURSE = "course_widget"
+const val SP_WIDGET_NEED_FRESH = "sharepreference_widget_need_fresh"

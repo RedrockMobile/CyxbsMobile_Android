@@ -13,7 +13,7 @@ import com.mredrock.cyxbs.common.R
 /**
  * Created By jay68 on 2018/8/27.
  */
-class JCardViewPlus(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : ViewGroup(context, attrs, defStyleAttr) {
+open class JCardViewPlus(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : ViewGroup(context, attrs, defStyleAttr) {
     companion object {
         @JvmStatic
         val DEFAULT_CARD_BACKGROUND_COLOR = Color.parseColor("#ffffff")

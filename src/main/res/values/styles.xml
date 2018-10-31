@@ -13,5 +13,4 @@
     <style name="AppTheme.FullScreen" parent="AppTheme" tools:ignore="ResourceName">
         <item name="android:windowFullscreen">true</item>
     </style>
-
 </resources>

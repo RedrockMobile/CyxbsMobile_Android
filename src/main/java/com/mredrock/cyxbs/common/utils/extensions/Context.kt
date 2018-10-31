@@ -33,3 +33,5 @@ fun Context.getScreenWidth(): Int {
     }
     return screenWidth
 }
+
+fun Context.dp2px(dpValue : Float) = (dpValue * resources.displayMetrics.density + 0.5f).toInt()
