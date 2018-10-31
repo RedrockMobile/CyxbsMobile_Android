@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/schoolcar_white"
-    tools:context=".SchoolCarLearnMoreActivity"
+    tools:context="com.mredrock.cyxbs.discover.schoolcar.SchoolCarLearnMoreActivity"
     tools:ignore="ResourceName">
     <View
         android:id="@+id/learn_more_school_car_statusbar"

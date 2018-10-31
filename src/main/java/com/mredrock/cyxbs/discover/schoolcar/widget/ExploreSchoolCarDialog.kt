@@ -1,13 +1,12 @@
-package com.mredrock.cyxbs.schoolcar.widget
+package com.mredrock.cyxbs.discover.schoolcar.widget
 
 import android.app.Activity
 import android.support.v7.app.AlertDialog
 import android.widget.RelativeLayout
 import com.mredrock.cyxbs.schoolcar.R
-import com.mredrock.cyxbs.schoolcar.SchoolcarActivity
-import com.mredrock.cyxbs.schoolcar.SchoolcarActivity.Companion.LOST_SERVICES
-import com.mredrock.cyxbs.schoolcar.SchoolcarActivity.Companion.NO_GPS
-import com.mredrock.cyxbs.schoolcar.SchoolcarActivity.Companion.TIME_OUT
+import com.mredrock.cyxbs.discover.schoolcar.SchoolCarActivity.Companion.LOST_SERVICES
+import com.mredrock.cyxbs.discover.schoolcar.SchoolCarActivity.Companion.NO_GPS
+import com.mredrock.cyxbs.discover.schoolcar.SchoolCarActivity.Companion.TIME_OUT
 import kotlinx.android.synthetic.main.explore_schoolcar_notserve_dialog.view.*
 
 /**
