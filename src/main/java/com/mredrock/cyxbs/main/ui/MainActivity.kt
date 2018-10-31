@@ -3,7 +3,12 @@ package com.mredrock.cyxbs.main.ui
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.MenuItem
+import com.alibaba.android.arouter.launcher.ARouter
 import com.jude.swipbackhelper.SwipeBackHelper
+import com.mredrock.cyxbs.common.config.COURSE_ENTRY
+import com.mredrock.cyxbs.common.config.DISCOVER_ENTRY
+import com.mredrock.cyxbs.common.config.MINE_ENTRY
+import com.mredrock.cyxbs.common.config.QA_ENTRY
 import com.mredrock.cyxbs.common.event.LoginStateChangeEvent
 import com.mredrock.cyxbs.common.ui.BaseActivity
 import com.mredrock.cyxbs.main.R
@@ -70,10 +75,16 @@ class MainActivity : BaseActivity() {
 
     private fun initFragments() {
         //todo get fragments
+        fragments.add(getFragment(COURSE_ENTRY))
+        fragments.add(getFragment(QA_ENTRY))
+        fragments.add(getFragment(DISCOVER_ENTRY))
+        fragments.add(getFragment(MINE_ENTRY))
         adapter = MainVpAdapter(supportFragmentManager, fragments)
         view_pager.adapter = adapter
         view_pager.offscreenPageLimit = 4
     }
+
+    private fun getFragment(path: String) = ARouter.getInstance().build(path).navigation() as Fragment
 
     override fun onLoginStateChangeEvent(event: LoginStateChangeEvent) {
         super.onLoginStateChangeEvent(event)
