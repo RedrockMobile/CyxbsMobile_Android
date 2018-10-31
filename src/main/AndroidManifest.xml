@@ -3,7 +3,7 @@
     package="com.mredrock.cyxbs.electricity">
 
     <application>
-        <activity android:name=".ui.activity.ElectricityChargeActivity" />
+        <activity android:name="com.mredrock.cyxbs.discover.electricity.ui.activity.ElectricityChargeActivity" />
     </application>
 
 </manifest>

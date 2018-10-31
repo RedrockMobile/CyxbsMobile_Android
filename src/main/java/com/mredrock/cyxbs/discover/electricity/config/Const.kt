@@ -1,4 +1,4 @@
-package com.mredrock.cyxbs.electricity.config
+package com.mredrock.cyxbs.discover.electricity.config
 
 /**
  * Author: Hosigus

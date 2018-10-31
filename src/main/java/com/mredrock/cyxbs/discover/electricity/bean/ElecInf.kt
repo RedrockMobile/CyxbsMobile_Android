@@ -1,4 +1,4 @@
-package com.mredrock.cyxbs.electricity.bean
+package com.mredrock.cyxbs.discover.electricity.bean
 
 import com.google.gson.annotations.SerializedName
 import java.text.DecimalFormat

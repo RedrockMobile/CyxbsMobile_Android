@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.mredrock.cyxbs.electricity.ui.widget.ElectricCircleView
+    <com.mredrock.cyxbs.discover.electricity.ui.widget.ElectricCircleView
         android:id="@+id/ecv_electric_circle_view"
         android:layout_width="280dp"
         android:layout_height="280dp"
@@ -26,31 +26,31 @@
         app:layout_constraintTop_toBottomOf="@id/ecv_electric_circle_view"
         app:layout_constraintVertical_bias="0.108">
 
-        <com.mredrock.cyxbs.electricity.ui.widget.ElectricInfoView
+        <com.mredrock.cyxbs.discover.electricity.ui.widget.ElectricInfoView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             app:describe="@string/electricity_info_1" />
 
-        <com.mredrock.cyxbs.electricity.ui.widget.ElectricInfoView
+        <com.mredrock.cyxbs.discover.electricity.ui.widget.ElectricInfoView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             app:describe="@string/electricity_info_2" />
 
-        <com.mredrock.cyxbs.electricity.ui.widget.ElectricInfoView
+        <com.mredrock.cyxbs.discover.electricity.ui.widget.ElectricInfoView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             app:describe="@string/electricity_info_3" />
 
-        <com.mredrock.cyxbs.electricity.ui.widget.ElectricInfoView
+        <com.mredrock.cyxbs.discover.electricity.ui.widget.ElectricInfoView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             app:describe="@string/electricity_info_4" />
 
-        <com.mredrock.cyxbs.electricity.ui.widget.ElectricInfoView
+        <com.mredrock.cyxbs.discover.electricity.ui.widget.ElectricInfoView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"

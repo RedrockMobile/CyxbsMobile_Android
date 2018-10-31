@@ -1,4 +1,4 @@
-package com.mredrock.cyxbs.electricity.viewmodel
+package com.mredrock.cyxbs.discover.electricity.viewmodel
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
@@ -9,8 +9,8 @@ import com.mredrock.cyxbs.common.utils.extensions.checkError
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
-import com.mredrock.cyxbs.electricity.bean.ElecInf
-import com.mredrock.cyxbs.electricity.network.ApiService
+import com.mredrock.cyxbs.discover.electricity.bean.ElecInf
+import com.mredrock.cyxbs.discover.electricity.network.ApiService
 
 /**
  * Author: Hosigus

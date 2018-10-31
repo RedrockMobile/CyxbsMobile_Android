@@ -1,4 +1,4 @@
-package com.mredrock.cyxbs.electricity.ui.fragment
+package com.mredrock.cyxbs.discover.electricity.ui.fragment
 
 import android.annotation.SuppressLint
 import android.app.Dialog
@@ -18,9 +18,9 @@ import androidx.navigation.fragment.NavHostFragment
 import com.mredrock.cyxbs.common.ui.BaseFragment
 import com.mredrock.cyxbs.common.utils.extensions.editor
 import com.mredrock.cyxbs.electricity.R
-import com.mredrock.cyxbs.electricity.config.SP_BUILDING_KEY
-import com.mredrock.cyxbs.electricity.config.SP_ROOM_KEY
-import com.mredrock.cyxbs.electricity.ui.adapter.DormitoryAdapter
+import com.mredrock.cyxbs.discover.electricity.config.SP_BUILDING_KEY
+import com.mredrock.cyxbs.discover.electricity.config.SP_ROOM_KEY
+import com.mredrock.cyxbs.discover.electricity.ui.adapter.DormitoryAdapter
 import kotlinx.android.synthetic.main.electricity_dialog_dormitory_notice.view.*
 import kotlinx.android.synthetic.main.electricity_fragment_setting.view.*
 import org.jetbrains.anko.support.v4.defaultSharedPreferences

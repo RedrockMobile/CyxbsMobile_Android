@@ -1,4 +1,4 @@
-package com.mredrock.cyxbs.electricity.ui.widget;
+package com.mredrock.cyxbs.discover.electricity.ui.widget;
 
 import android.content.Context;
 import android.graphics.Canvas;

@@ -1,4 +1,4 @@
-package com.mredrock.cyxbs.electricity.ui.adapter
+package com.mredrock.cyxbs.discover.electricity.ui.adapter
 
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater

@@ -6,7 +6,7 @@
 
     <fragment
         android:id="@+id/electricity_nav_setting_fragment"
-        android:name="com.mredrock.cyxbs.electricity.ui.fragment.SettingFragment"
+        android:name="com.mredrock.cyxbs.discover.electricity.ui.fragment.SettingFragment"
         android:label="SettingFragment">
         <action
             android:id="@+id/electricity_action_electricity_settingfragment_to_electricity_chargefragment"
@@ -15,7 +15,7 @@
 
     <fragment
         android:id="@+id/electricity_nav_charge_fragment"
-        android:name="com.mredrock.cyxbs.electricity.ui.fragment.ChargeFragment"
+        android:name="com.mredrock.cyxbs.discover.electricity.ui.fragment.ChargeFragment"
         android:label="ChargeFragment">
         <action
             android:id="@+id/electricity_action_electricity_chargefragment_to_electricity_settingfragment"

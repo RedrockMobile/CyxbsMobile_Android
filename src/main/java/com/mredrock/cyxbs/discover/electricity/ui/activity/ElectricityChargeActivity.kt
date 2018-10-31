@@ -1,14 +1,17 @@
-package com.mredrock.cyxbs.electricity.ui.activity
+package com.mredrock.cyxbs.discover.electricity.ui.activity
 
 import android.os.Bundle
 import android.view.Menu
 import androidx.navigation.fragment.NavHostFragment
+import com.alibaba.android.arouter.facade.annotation.Route
+import com.mredrock.cyxbs.common.config.DISCOVER_ELECTRICITY
 import com.mredrock.cyxbs.common.ui.BaseActivity
 import com.mredrock.cyxbs.electricity.R
-import com.mredrock.cyxbs.electricity.config.SP_BUILDING_KEY
+import com.mredrock.cyxbs.discover.electricity.config.SP_BUILDING_KEY
 import kotlinx.android.synthetic.main.electricity_activity_charge.*
 import org.jetbrains.anko.defaultSharedPreferences
 
+@Route(path = DISCOVER_ELECTRICITY)
 class ElectricityChargeActivity : BaseActivity() {
     override val isFragmentActivity = false
     private val navigation by lazy { NavHostFragment.findNavController(nav_fragment) }

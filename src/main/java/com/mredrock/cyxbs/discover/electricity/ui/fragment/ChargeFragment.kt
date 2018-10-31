@@ -1,4 +1,4 @@
-package com.mredrock.cyxbs.electricity.ui.fragment
+package com.mredrock.cyxbs.discover.electricity.ui.fragment
 
 import android.arch.lifecycle.Observer
 import android.os.Bundle
@@ -8,10 +8,10 @@ import android.view.ViewGroup
 import androidx.navigation.fragment.NavHostFragment
 import com.mredrock.cyxbs.common.ui.BaseViewModelFragment
 import com.mredrock.cyxbs.electricity.R
-import com.mredrock.cyxbs.electricity.config.SP_BUILDING_KEY
-import com.mredrock.cyxbs.electricity.config.SP_ROOM_KEY
-import com.mredrock.cyxbs.electricity.ui.widget.ElectricInfoView
-import com.mredrock.cyxbs.electricity.viewmodel.ChargeViewModel
+import com.mredrock.cyxbs.discover.electricity.config.SP_BUILDING_KEY
+import com.mredrock.cyxbs.discover.electricity.config.SP_ROOM_KEY
+import com.mredrock.cyxbs.discover.electricity.ui.widget.ElectricInfoView
+import com.mredrock.cyxbs.discover.electricity.viewmodel.ChargeViewModel
 import kotlinx.android.synthetic.main.electricity_fragment_charge.*
 import org.jetbrains.anko.support.v4.defaultSharedPreferences
 
