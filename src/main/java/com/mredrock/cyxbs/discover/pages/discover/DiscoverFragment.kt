@@ -8,7 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.mredrock.cyxbs.common.config.DISCOVER_ENTRY
-import com.mredrock.cyxbs.common.event.discover.DiscoverOptionIconClickEvent
+import com.mredrock.cyxbs.common.event.DiscoverOptionIconClickEvent
 import com.mredrock.cyxbs.common.ui.BaseViewModelFragment
 import com.mredrock.cyxbs.common.utils.extensions.editor
 import com.mredrock.cyxbs.common.utils.extensions.sharedPreferences

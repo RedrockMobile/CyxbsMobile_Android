@@ -6,10 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import com.alibaba.android.arouter.launcher.ARouter
 import com.mredrock.cyxbs.common.BaseApp
-import com.mredrock.cyxbs.common.config.DISCOVER_MAP
-import com.mredrock.cyxbs.common.config.DISCOVER_NO_CLASS
-import com.mredrock.cyxbs.common.config.DISCOVER_STU_SCHEDULE
-import com.mredrock.cyxbs.common.event.login.AskLoginEvent
+import com.mredrock.cyxbs.common.config.*
+import com.mredrock.cyxbs.common.event.AskLoginEvent
 import com.mredrock.cyxbs.discover.R
 import kotlinx.android.synthetic.main.discover_rv_item.view.*
 import org.greenrobot.eventbus.EventBus
@@ -43,19 +41,23 @@ class DiscoverMainRvAdapter: RecyclerView.Adapter<DiscoverMainRvAdapter.MyViewHo
         ARouter.getInstance().build(path).navigation()
     }
 
+    private fun startActivityAfterLogin(str: String, path: String) {
+        checkLoginBeforeAction (str) { startActivity(path) }
+    }
+
     private fun onClick(iconPosition: Int) {
         when(iconPosition) {
-            R.drawable.ic_discover_no_course -> checkLoginBeforeAction ("没课约") { startActivity(DISCOVER_NO_CLASS) }
-//            R.drawable.ic_discover_empty_room ->
-//            R.drawable.ic_discover_grade ->
+            R.drawable.ic_discover_no_course -> startActivityAfterLogin("没课约", DISCOVER_NO_CLASS)
+            R.drawable.ic_discover_empty_room -> startActivity(DISCOVER_EMPTY_ROOM)
+            R.drawable.ic_discover_grade -> startActivityAfterLogin("成绩查询", DISCOVER_GRADES)
 //            R.drawable.ic_discover_volunteer_time ->
             R.drawable.ic_discover_map -> startActivity(DISCOVER_MAP)
-//            R.drawable.ic_discover_school_car ->
-//            R.drawable.ic_discover_calendar ->
-//            R.drawable.ic_discover_electric ->
+            R.drawable.ic_discover_school_car -> startActivity(DISCOVER_SCHOOL_CAR)
+            R.drawable.ic_discover_calendar -> startActivity(DISCOVER_CALENDER)
+            R.drawable.ic_discover_electric -> startActivity(DISCOVER_ELECTRICITY)
 //            R.drawable.ic_discover_about ->
-//            R.drawable.ic_discover_news ->
-            R.drawable.ic_discover_stu_schedule -> startActivity(DISCOVER_STU_SCHEDULE)
+            R.drawable.ic_discover_news -> startActivity(DISCOVER_NEWS)
+            R.drawable.ic_discover_stu_schedule -> startActivity(DISCOVER_OTHER_COURSE)
         }
     }
 
