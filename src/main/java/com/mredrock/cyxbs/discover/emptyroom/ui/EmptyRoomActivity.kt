@@ -15,7 +15,9 @@ import android.view.MotionEvent.ACTION_DOWN
 import android.view.MotionEvent.ACTION_MOVE
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.TextView
+import com.alibaba.android.arouter.facade.annotation.Route
 import com.mredrock.cyxbs.common.BaseApp
+import com.mredrock.cyxbs.common.config.DISCOVER_EMPTY_ROOM
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.SchoolCalendar
 import com.mredrock.cyxbs.common.utils.extensions.gone
@@ -34,6 +36,7 @@ import kotlinx.android.synthetic.main.emptyroom_activity_empty_room.*
 import org.jetbrains.anko.dip
 import java.util.*
 
+@Route(path = DISCOVER_EMPTY_ROOM)
 class EmptyRoomActivity : BaseViewModelActivity<EmptyRoomViewModel>(), OnItemSelectedChangeListener {
 
     private val weekdayApi = intArrayOf(1, 2, 3, 4, 5, 6, 7)
