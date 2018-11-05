@@ -5,7 +5,6 @@ import android.arch.lifecycle.ViewModel
 import android.content.Context
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.network.ApiGenerator
-import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.SchoolCalendar
 import com.mredrock.cyxbs.common.utils.extensions.*
 import com.mredrock.cyxbs.course.database.ScheduleDatabase
@@ -53,9 +52,11 @@ class CoursesViewModel : ViewModel() {
 
     // schoolCalendarUpdated用于表示是否从网络请求到了新的数据并更新了SchoolCalendar，如果是这样就设置为True，
     // 并从新获取课表上的号数
-    val schoolCalendarUpdated = MutableLiveData<Boolean>().apply {
-        value = false
-    }
+    val schoolCalendarUpdated = MutableLiveData<Boolean>().apply { value = false }
+    // 用于记录帐号
+    private lateinit var mStuNum: String
+    // 表明是否是在获取他人课表
+    private var mIsGetOthers: Boolean = false
 
     val courses = MutableLiveData<MutableList<Course>>()
     // 表示今天是在第几周。
@@ -79,41 +80,68 @@ class CoursesViewModel : ViewModel() {
 
     // 第一个值表示课程是否获取，第二个表示是否获取事务。
     private val mDataGetStatus = arrayOf(false, false)
-    // 表示说是否用SwipeRefreshLayout进行课程的刷新
-    private var isUseSwipeRefreshLayout: Boolean = false
     // 表示现在是否正在获取数据
     private var mIsGettingData: Boolean = false
 
     /**
      * 此方法用于获取Course和Affair数据
+     *
+     * @param context [Context]
+     * @param stuNum 当显示他人课表的时候就传入对应的的学号。默认为空，之后会为其赋值对应的帐号。
      */
-    fun getSchedulesData(context: Context) {
+    fun getSchedulesData(context: Context, stuNum: String? = null) {
         if (mIsGettingData) {
             return
         }
         mIsGettingData = true
+        // 显示刷新标志
+        EventBus.getDefault().post(RefreshEvent(true))
 
         resetGetStatus()
-        EventBus.getDefault().post(RefreshEvent(true))
-        isUseSwipeRefreshLayout = true
-        getCoursesDataFromDatabase()
-        getAffairsDataFromDatabase()
+
+        // 如果stuNum为null，就说明是用户在进行课表查询。此时BaseApp.user!!.stuNum!!一定不为空
+        mStuNum = if (stuNum == null) {
+            BaseApp.user!!.stuNum!!
+        } else {
+            mIsGetOthers = true
+            stuNum
+        }
+
         getNowWeek(context)
+
+        getCoursesDataFromDatabase()
+
+        // 如果mIsGetOthers为false，就说明是用户在进行课表查询，这时就进行备忘的查询。反之就是他人课表查询pass掉备忘查询
+        if (mIsGetOthers) {
+            isGetAllData(1)
+        } else {
+            getAffairsDataFromDatabase()
+        }
     }
 
     /**
      * 此方法用于对重新从服务器上获取数据
+     *
+     * @param context [Context]
      */
-    fun refreshScheduleData(isUseSwipeRefreshLayout: Boolean) {
+    fun refreshScheduleData(context: Context) {
+        // 防止一次获取数据未获取完又进行重复获取
         if (mIsGettingData) {
             return
         }
         mIsGettingData = true
 
         resetGetStatus()
-        this.isUseSwipeRefreshLayout = isUseSwipeRefreshLayout
+
+        getNowWeek(context)
         getCoursesDataFromInternet()
-        getAffairsDataFromInternet()
+
+        // 如果mIsGetOthers为false，就说明是用户在进行课表查询，这时就进行备忘的查询。反之就是他人课表查询pass掉备忘查询
+        if (mIsGetOthers) {
+            isGetAllData(1)
+        } else {
+            getAffairsDataFromInternet()
+        }
     }
 
     /**
@@ -134,7 +162,7 @@ class CoursesViewModel : ViewModel() {
                         getCoursesDataFromInternet()
                     }
                 }, onExecuteOnceError = {
-                    stopRefresh()
+                    isGetAllData(0)
                 }))
     }
 
@@ -157,7 +185,7 @@ class CoursesViewModel : ViewModel() {
                         getAffairsDataFromInternet()
                     }
                 }, onExecuteOnceError = {
-                    stopRefresh()
+                    isGetAllData(1)
                 }))
     }
 
@@ -165,14 +193,13 @@ class CoursesViewModel : ViewModel() {
      * 此方法用于从服务器中获取课程数据
      */
     private fun getCoursesDataFromInternet() {
-        mCourseApiService.getCourse(stuNum = BaseApp.user!!.stuNum!!)
+        mCourseApiService.getCourse(stuNum = mStuNum)
                 .setSchedulers()
                 .errorHandler()
                 .subscribe(ExecuteOnceObserver(onExecuteOnceNext = { coursesFromInternet ->
                     coursesFromInternet.data?.let { notNullCourses ->
                         mCourses.addAll(notNullCourses)
                         isGetAllData(0)
-                        LogUtils.d(TAG, notNullCourses.toString())
 
                         //将从服务器中获取的课程数据存入数据库中
                         Thread {
@@ -190,7 +217,7 @@ class CoursesViewModel : ViewModel() {
 //                        }
 //                    }
                 }, onExecuteOnceError = {
-                    stopRefresh()
+                    isGetAllData(0)
                 }))
     }
 
@@ -224,7 +251,7 @@ class CoursesViewModel : ViewModel() {
                         }.start()
                     }
                 }, onExecuteOnceError = {
-                    stopRefresh()
+                    isGetAllData(1)
                 }))
     }
 
@@ -234,7 +261,10 @@ class CoursesViewModel : ViewModel() {
     private fun isGetAllData(index: Int) {
         mDataGetStatus[index] = true
         if (mDataGetStatus[0] && mDataGetStatus[1]) {
-            courses.value = mCourses
+            // 如果mCourses为空的话就不用赋值给courses。防止由于网络请求有问题而导致刷新数据为空。
+            if (mCourses.isNotEmpty()) {
+                courses.value = mCourses
+            }
             stopRefresh()
         }
     }
@@ -251,6 +281,8 @@ class CoursesViewModel : ViewModel() {
 
     /**
      * 这个方法用于今天是哪一周
+     *
+     * @param context [Context]
      */
     private fun getNowWeek(context: Context) {
         mCourseApiService.getCourse("2016215039")
@@ -282,9 +314,7 @@ class CoursesViewModel : ViewModel() {
      * 这个方法无论是在获取数据出错还是在没有出错的情况下最终都会被调用因此这里对[mIsGettingData]进行状态设置。
      */
     private fun stopRefresh() {
-        if (isUseSwipeRefreshLayout) {
-            EventBus.getDefault().post(RefreshEvent(false))
-        }
+        EventBus.getDefault().post(RefreshEvent(false))
         mIsGettingData = false
     }
 }

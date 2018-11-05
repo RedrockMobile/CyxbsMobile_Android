@@ -31,8 +31,15 @@ class CourseContainerFragment : BaseFragment() {
 
     companion object {
         private const val TAG = "CourseContainerFragment"
+        const val OTHERS_STU_NUM = "others_stu_num"
+
+        fun getOthersCourseContainerFragment(stuNum: String): CourseContainerFragment =
+                CourseContainerFragment().apply {
+                    arguments = Bundle().apply { putString(OTHERS_STU_NUM, stuNum) }
+                }
     }
 
+    private var mOthersStuNum: String? = null
     private lateinit var mScheduleAdapter: ScheduleVPAdapter
     private lateinit var mCoursesViewModel: CoursesViewModel
     private lateinit var mBinding: CourseFragmentCourseContainerBinding
@@ -53,6 +60,7 @@ class CourseContainerFragment : BaseFragment() {
 
     private fun initFragment() {
         activity ?: return
+        mOthersStuNum = arguments?.getString(OTHERS_STU_NUM)
 
         setHasOptionsMenu(true)
         resources.getStringArray(R.array.course_course_weeks_strings).let {
@@ -74,7 +82,7 @@ class CourseContainerFragment : BaseFragment() {
         // 获取依赖于CourseContainerFragment的Activity的CoursesViewModel。在WeekFragment的切换的时候，不会
         // 重复获取数据。
         mCoursesViewModel = ViewModelProviders.of(activity!!).get(CoursesViewModel::class.java)
-        mCoursesViewModel.getSchedulesData(activity!!)
+        mCoursesViewModel.getSchedulesData(activity!!, mOthersStuNum)
 
         mCoursesViewModel.nowWeek.observe(activity!!, Observer { nowWeek ->
             if (nowWeek != null && nowWeek != 0) {
@@ -131,7 +139,7 @@ class CourseContainerFragment : BaseFragment() {
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun deleteAffair(deleteAffairEvent: DeleteAffairEvent) {
         EventBus.getDefault().post(RefreshEvent(true))
-        mCoursesViewModel.refreshScheduleData(true)
+        mCoursesViewModel.refreshScheduleData(this.context!!)
     }
 
     /**
@@ -142,13 +150,13 @@ class CourseContainerFragment : BaseFragment() {
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun addAffairs(addAffairEvent: AddAffairEvent) {
         EventBus.getDefault().post(RefreshEvent(true))
-        mCoursesViewModel.refreshScheduleData(true)
+        mCoursesViewModel.refreshScheduleData(this.context!!)
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun modifyAffairs(modifyAffairEvent: ModifyAffairEvent) {
         EventBus.getDefault().post(RefreshEvent(true))
-        mCoursesViewModel.refreshScheduleData(true)
+        mCoursesViewModel.refreshScheduleData(this.context!!)
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
