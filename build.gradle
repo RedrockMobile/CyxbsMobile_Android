@@ -6,6 +6,8 @@ apply plugin: 'kotlin-android-extensions'
 
 apply plugin: 'kotlin-kapt'
 
+apply from: 'tinker-support.gradle'
+
 android {
     compileSdkVersion build_versions.target_sdk
     buildToolsVersion build_versions.build_tools
@@ -100,13 +102,12 @@ android {
     productFlavors {
         official {}
         xiaomi {}
-//        _360 {}
-        baidu {}
-        wandoujia {}
+        huawei {}
+        samsung {}
         kuan {}
-        tencent {}
-        anzhi {}
-//        _91{}
+//        baidu {}
+//        alibaba {}
+//        tencent {}
     }
 
     flavorDimensions "default"
