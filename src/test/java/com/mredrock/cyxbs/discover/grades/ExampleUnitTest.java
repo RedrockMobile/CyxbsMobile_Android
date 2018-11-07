@@ -1,4 +1,4 @@
-package com.mredrock.cyxbs.grades;
+package com.mredrock.cyxbs.discover.grades;
 
 import org.junit.Test;
 
