@@ -38,7 +38,9 @@ versions.umeng_common = '1.5.3'
 versions.umeng_analytics = '7.5.3'
 //bugly
 versions.bugly_crashreport = '2.6.6.1'
+versions.bugly_crashreport_upgrade = '1.3.6'
 versions.bugly_nativecrashreport = '3.3.1'
+versions.bugly_tinker_lib = '1.9.9'
 
 def deps = [:]
 
@@ -144,7 +146,9 @@ deps.umeng = umeng
 
 def bugly = [:]
 bugly.crashreport = "com.tencent.bugly:crashreport:$versions.bugly_crashreport"
+bugly.crashreport_upgrade = "com.tencent.bugly:crashreport_upgrade:$versions.bugly_crashreport_upgrade"
 bugly.nativecrashreport = "com.tencent.bugly:nativecrashreport:$versions.bugly_nativecrashreport"
+bugly.tinker_lib = "com.tencent.tinker:tinker-android-lib:$versions.bugly_tinker_lib"
 deps.bugly = bugly
 
 ext.deps = deps
