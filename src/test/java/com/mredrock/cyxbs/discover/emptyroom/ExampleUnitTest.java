@@ -1,4 +1,4 @@
-package com.mredrock.cyxbs.emptyroom;
+package com.mredrock.cyxbs.discover.emptyroom;
 
 import org.junit.Test;
 
