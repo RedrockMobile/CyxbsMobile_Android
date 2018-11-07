@@ -56,7 +56,9 @@ class CoursesViewModel : ViewModel() {
     // 用于记录帐号
     private lateinit var mStuNum: String
     // 表明是否是在获取他人课表
-    private var mIsGetOthers: Boolean = false
+    val isGetOthers: MutableLiveData<Boolean> by lazy(LazyThreadSafetyMode.NONE) {
+        MutableLiveData<Boolean>().apply { value = true }
+    }
 
     val courses = MutableLiveData<MutableList<Course>>()
     // 表示今天是在第几周。
@@ -101,9 +103,10 @@ class CoursesViewModel : ViewModel() {
 
         // 如果stuNum为null，就说明是用户在进行课表查询。此时BaseApp.user!!.stuNum!!一定不为空
         mStuNum = if (stuNum == null) {
+            isGetOthers.value = false
             BaseApp.user!!.stuNum!!
         } else {
-            mIsGetOthers = true
+            isGetOthers.value = true
             stuNum
         }
 
@@ -111,8 +114,8 @@ class CoursesViewModel : ViewModel() {
 
         getCoursesDataFromDatabase()
 
-        // 如果mIsGetOthers为false，就说明是用户在进行课表查询，这时就进行备忘的查询。反之就是他人课表查询pass掉备忘查询
-        if (mIsGetOthers) {
+        // 如果mIsGetOthers为true，就说明是他人课表查询pass掉备忘查询。反之就是用户在进行课表查询，这时就进行备忘的查询。
+        if (isGetOthers.value == true) {
             isGetAllData(1)
         } else {
             getAffairsDataFromDatabase()
@@ -136,8 +139,8 @@ class CoursesViewModel : ViewModel() {
         getNowWeek(context)
         getCoursesDataFromInternet()
 
-        // 如果mIsGetOthers为false，就说明是用户在进行课表查询，这时就进行备忘的查询。反之就是他人课表查询pass掉备忘查询
-        if (mIsGetOthers) {
+        // 如果mIsGetOthers为true，就说明是他人课表查询pass掉备忘查询。反之就是用户在进行课表查询，这时就进行备忘的查询。
+        if (isGetOthers.value == true) {
             isGetAllData(1)
         } else {
             getAffairsDataFromInternet()

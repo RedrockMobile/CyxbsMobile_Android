@@ -104,6 +104,7 @@
                         app:elementGap="2dp"
                         app:emptyText="@string/course_empty_course_text"
                         app:emptyTextSize="14sp"
+                        app:isBanTouchView="@{coursesViewModel.isGetOthers}"
                         app:noCourseDrawable="@drawable/course_no_course"
                         app:nowWeek="@{dateViewModel.nowWeek}"
                         app:schedules="@{coursesViewModel.courses}"

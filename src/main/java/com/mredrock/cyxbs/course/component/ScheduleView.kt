@@ -36,7 +36,7 @@ class ScheduleView : FrameLayout {
 
     companion object {
         const val TAG = "ScheduleView"
-        const val CLICK_RESPONSE_DISTANCE = 5
+        const val CLICK_RESPONSE_DISTANCE = 10
     }
 
     var adapter: Adapter? = null
@@ -278,7 +278,7 @@ class ScheduleView : FrameLayout {
                 clickHashY = 11
             }
 
-            // The mTouchView's tag is used to indicate weather it is showing.
+            // The mTouchView's tag is used to keep the position and indicate weather it is showing.
             val tag = touchView.tag
             if (tag != null) {
                 removeView(touchView)
@@ -346,8 +346,9 @@ class ScheduleView : FrameLayout {
         /**
          * This method is used to implement the [ScheduleView.mTouchView]'s Click Listener.
          *
-         * @return It is a Function Object. It is used to set the [mTouchView]'s onClickListener if
-         * the return is not null. If it return null, the mTouchView won't be displayed.
+         * @return It is a Function Object.
+         * 1.It is used to set the [mTouchView]'s onClickListener if the return is not null.
+         * 2.If it return null, the mTouchView won't be displayed.
          */
         abstract fun setOnTouchViewClickListener(): ((ImageView) -> Unit)?
 

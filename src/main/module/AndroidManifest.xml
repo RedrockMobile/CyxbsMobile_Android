@@ -35,7 +35,9 @@
         <activity
             android:name=".ui.StudentListActivity"
             android:launchMode="singleTask" />
-        <activity android:name=".ui.OthersCourseActivity"></activity>
+        <activity android:name=".ui.OthersCourseActivity">
+
+        </activity>
     </application>
 
 </manifest>

@@ -25,11 +25,17 @@ import java.util.*
 import kotlin.Comparator
 
 /**
+ * @param mContext [Context]
+ * @param mNowWeek 表示当前的周数
+ * @param mSchedules 表示显示的数据
+ * @param mIsBanTouchView 是否禁用在空白处的点击
+ *
  * Created by anriku on 2018/8/14.
  */
 class ScheduleViewAdapter(private val mContext: Context,
                           private val mNowWeek: Int,
-                          private val mSchedules: List<Course>) :
+                          private val mSchedules: List<Course>,
+                          private val mIsBanTouchView: Boolean) :
         ScheduleView.Adapter() {
 
     companion object {
@@ -126,17 +132,32 @@ class ScheduleViewAdapter(private val mContext: Context,
         }
     }
 
-    override fun setOnTouchViewClickListener(): (ImageView) -> Unit = { touchView ->
-        touchView.setOnClickListener {
-            mContext.startActivity(Intent(mContext, EditAffairActivity::class.java).apply {
-                putExtra(EditAffairActivity.WEEK_NUM, mNowWeek)
-                putExtra(EditAffairActivity.TIME_NUM, touchView.tag as Int)
-            })
+    /**
+     * 如果[mIsBanTouchView]为true禁止mTouchView；反之就返回添加事务的事件。
+     */
+    override fun setOnTouchViewClickListener(): ((ImageView) -> Unit)? {
+        if (mIsBanTouchView) {
+            return null
+        } else {
+            return { touchView ->
+                touchView.setOnClickListener {
+                    mContext.startActivity(Intent(mContext, EditAffairActivity::class.java).apply {
+                        putExtra(EditAffairActivity.WEEK_NUM, mNowWeek)
+                        putExtra(EditAffairActivity.TIME_NUM, (touchView.tag ?: 0) as Int)
+                    })
+                }
+            }
         }
     }
 
     /**
      * 在ScheduleView中通过getItemViewInfo方法获取当前行列有schedule信息后，才会调用此方法
+     *
+     * @param row 行
+     * @param column 列
+     * @param container [ScheduleView]
+     *
+     * @return 添加的View
      */
     override fun getItemView(row: Int, column: Int, container: ViewGroup): View {
         val itemView = mInflater.inflate(R.layout.course_schedule_item_view, container, false)
@@ -178,10 +199,10 @@ class ScheduleViewAdapter(private val mContext: Context,
 
     /**
      * 此方法用于对即将添加的ItemView进行数据设置
+     *
      * @param course Course相关信息
      * @param index 表示取那个颜色
      * @param itemCount 表示该位置Course的数量
-     *
      */
     private fun setItemView(course: Course, index: Int, itemCount: Int, isOverlap: Boolean) {
         val top = mTop
