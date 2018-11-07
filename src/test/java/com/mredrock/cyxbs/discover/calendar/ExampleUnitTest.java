@@ -1,4 +1,4 @@
-package com.mredrock.cyxbs.calendar;
+package com.mredrock.cyxbs.discover.calendar;
 
 import org.junit.Test;
 
