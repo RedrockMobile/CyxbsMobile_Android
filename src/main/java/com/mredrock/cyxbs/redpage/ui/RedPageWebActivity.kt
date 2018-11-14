@@ -27,8 +27,9 @@ class RedPageWebActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.redpage_activity_webview)
-        common_toolbar.init("掌邮大红页")
-        common_toolbar.setBackgroundColor(Color.parseColor("#C2463A"))
+        tl_redPage.init("红岩网校")
+        tl_redPage.background = resources.getDrawable(R.drawable.redrock_home_tl_bg_shape)
+        tl_redPage.setNavigationOnClickListener { finish() }
         SwipeBackHelper.getCurrentPage(this).setSwipeBackEnable(false)
 
         val webSettings = wv_redPage.settings
@@ -39,7 +40,7 @@ class RedPageWebActivity : BaseActivity() {
         }
 
         wv_redPage.apply {
-            loadUrl("https://m.baidu.com/")
+            loadUrl("https://criticalcrisis.github.io/build/index.html")
             addJavascriptInterface(this,"android")
             webChromeClient = mWebChromeClient
             webViewClient = mWebViewClient
@@ -76,6 +77,10 @@ class RedPageWebActivity : BaseActivity() {
     private val mWebChromeClient = object : WebChromeClient(){
         override fun onProgressChanged(view: WebView?, newProgress: Int) {
             pb_redPage.progress = newProgress
+        }
+
+        override fun onConsoleMessage(consoleMessage: ConsoleMessage?): Boolean {
+            return true
         }
     }
 
