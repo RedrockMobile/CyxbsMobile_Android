@@ -52,3 +52,6 @@
 [submodule "module_widget"]
 	path = module_widget
 	url = git@github.com:CyxbsMobile-Android-Submodule/module_widget.git
+[submodule "module_redrock_home"]
+	path = module_redrock_home
+	url = git@github.com:CyxbsMobile-Android-Submodule/module_redrock_home.git
