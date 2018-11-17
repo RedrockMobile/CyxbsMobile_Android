@@ -1,4 +1,4 @@
-package com.mredrock.cyxbs.schoolcar
+package com.mredrock.cyxbs.discover.schoolcar
 
 import android.Manifest
 import android.app.Activity
@@ -18,6 +18,7 @@ import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.RelativeLayout
 import android.widget.Toast
+import com.alibaba.android.arouter.facade.annotation.Route
 import com.amap.api.location.AMapLocationClient
 import com.amap.api.location.AMapLocationClientOption
 import com.amap.api.location.AMapLocationListener
@@ -28,26 +29,27 @@ import com.amap.api.maps.model.LatLng
 import com.amap.api.maps.model.MyLocationStyle
 import com.amap.api.maps.utils.overlay.SmoothMoveMarker
 import com.jude.swipbackhelper.SwipeBackHelper
+import com.mredrock.cyxbs.common.config.DISCOVER_SCHOOL_CAR
 import com.mredrock.cyxbs.common.ui.BaseActivity
-import com.mredrock.cyxbs.common.utils.LogUtils
-import com.mredrock.cyxbs.schoolcar.bean.SchoolCarLocation
-import com.mredrock.cyxbs.schoolcar.Interface.SchoolCarInterface
-import com.mredrock.cyxbs.schoolcar.widget.ExploreSchoolCarDialog
-import com.mredrock.cyxbs.schoolcar.widget.SchoolCarMap
-import com.mredrock.cyxbs.schoolcar.widget.SchoolcarsSmoothMove
+import com.mredrock.cyxbs.discover.schoolcar.Interface.SchoolCarInterface
+import com.mredrock.cyxbs.discover.schoolcar.bean.SchoolCarLocation
+import com.mredrock.cyxbs.discover.schoolcar.widget.ExploreSchoolCarDialog
+import com.mredrock.cyxbs.discover.schoolcar.widget.SchoolCarMap
+import com.mredrock.cyxbs.discover.schoolcar.widget.SchoolcarsSmoothMove
+import com.mredrock.cyxbs.schoolcar.R
 import io.reactivex.Observable
 import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.activity_schoolcar.*
-import java.util.*
 import java.util.concurrent.TimeUnit
 
 /**
  * Created by glossimar on 2018/9/12
  */
 
-class SchoolcarActivity : BaseActivity() {
+@Route(path = DISCOVER_SCHOOL_CAR)
+class SchoolCarActivity : BaseActivity() {
     companion object {
         const val TAG: String = "ExploreSchoolCar"
         const val TIME_OUT: Int = 1
@@ -91,7 +93,7 @@ class SchoolcarActivity : BaseActivity() {
     }
 
     fun startSchoolCarActivity(startingActivity: Activity) {
-        val intent = Intent(startingActivity, SchoolcarActivity::class.java)
+        val intent = Intent(startingActivity, SchoolCarActivity::class.java)
         startingActivity.startActivity(intent)
     }
 
@@ -121,12 +123,12 @@ class SchoolcarActivity : BaseActivity() {
 
             //在图地中动态加载控件
             override fun initLocationMapButton(aMap: AMap, locationStyle: MyLocationStyle) {
-                var relativeLayoutDown = RelativeLayout(this@SchoolcarActivity)
+                var relativeLayoutDown = RelativeLayout(this@SchoolCarActivity)
                 var layoutParamsDown = RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
                 explore_school_car_linearLayout.addView(relativeLayoutDown, layoutParamsDown)
 
                 // 在地图中加入"全校"<->"我"的button和两种模式转换时button需要的逻辑修改（包括定位模式和button上的图片）
-                holeSchoolButton = ImageButton(this@SchoolcarActivity)
+                holeSchoolButton = ImageButton(this@SchoolCarActivity)
                 holeSchoolButton.setBackgroundColor(Color.TRANSPARENT)
                 holeSchoolButton.setImageBitmap(BitmapFactory.decodeResource(resources, R.mipmap.ic_school_car_search_hole_school))
                 locationStatus = HOLE_SCHOOL
@@ -184,7 +186,7 @@ class SchoolcarActivity : BaseActivity() {
      */
     private fun initView() {
         makerBitmap = getSmoothMakerBitmap()
-        smoothMoveData = SchoolcarsSmoothMove(schoolCarMap!!, this@SchoolcarActivity)
+        smoothMoveData = SchoolcarsSmoothMove(schoolCarMap!!, this@SchoolCarActivity)
 
         smoothMoveData.setCarMapInterface(object : SchoolCarInterface {
             override fun initLocationMapButton(aMap: AMap, locationStyle: MyLocationStyle) {}
@@ -289,7 +291,7 @@ class SchoolcarActivity : BaseActivity() {
     }
 
     private fun getSmoothMakerBitmap(): Bitmap {
-        val bitmap = BitmapFactory.decodeResource(this@SchoolcarActivity.resources, R.mipmap.ic_school_car)
+        val bitmap = BitmapFactory.decodeResource(this@SchoolCarActivity.resources, R.mipmap.ic_school_car)
         val width = bitmap.width
         val height = bitmap.height
         val scaleWidth = 70.toFloat() / width

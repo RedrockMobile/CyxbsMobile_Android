@@ -1,4 +1,4 @@
-package com.mredrock.cyxbs.schoolcar.bean
+package com.mredrock.cyxbs.discover.schoolcar.bean
 
 /**
  * Created by glossimar on 2018/9/12

@@ -1,9 +1,8 @@
-package com.mredrock.cyxbs.schoolcar.widget
+package com.mredrock.cyxbs.discover.schoolcar.widget
 
 import android.app.Activity
 import android.graphics.Bitmap
 import android.graphics.Color
-import android.util.Log
 import com.amap.api.maps.AMap
 import com.amap.api.maps.model.BitmapDescriptorFactory
 import com.amap.api.maps.model.LatLng
@@ -11,13 +10,11 @@ import com.amap.api.maps.model.PolylineOptions
 import com.amap.api.maps.utils.overlay.SmoothMoveMarker
 
 import com.mredrock.cyxbs.common.network.ApiGenerator
-import com.mredrock.cyxbs.common.utils.extensions.doOnErrorWithDefaultErrorHandler
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
-import com.mredrock.cyxbs.schoolcar.Interface.SchoolCarInterface
-import com.mredrock.cyxbs.schoolcar.SchoolcarActivity.Companion.TAG
-import com.mredrock.cyxbs.schoolcar.SchoolcarActivity.Companion.TIME_OUT
-import com.mredrock.cyxbs.schoolcar.network.ApiService
+import com.mredrock.cyxbs.discover.schoolcar.Interface.SchoolCarInterface
+import com.mredrock.cyxbs.discover.schoolcar.SchoolCarActivity.Companion.TIME_OUT
+import com.mredrock.cyxbs.discover.schoolcar.network.ApiService
 import okio.ByteString
 import java.io.UnsupportedEncodingException
 import java.security.MessageDigest
@@ -210,7 +207,7 @@ class SchoolcarsSmoothMove(schoolCarMap: SchoolCarMap?, activity: Activity){
         //如果timeList里最后一次校车运行时间和第一次获取到的校车运行时间不一样则说明此时校车正在运行，一样则校车此时未运行
        if (checkTimeBeforeEnter() || (timeList.size <= 1 || timeList[timeList.size - 1] == timeList[0])) {
             timeList = mutableListOf("")
-            ExploreSchoolCarDialog.show(activity, TIME_OUT)
+           ExploreSchoolCarDialog.show(activity, TIME_OUT)
             return false    // 校车未运行
         }
         timeList.clear()

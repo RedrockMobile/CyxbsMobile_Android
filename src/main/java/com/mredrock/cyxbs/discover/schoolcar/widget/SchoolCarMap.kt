@@ -1,4 +1,4 @@
-package com.mredrock.cyxbs.schoolcar.widget
+package com.mredrock.cyxbs.discover.schoolcar.widget
 
 import android.content.Context
 import android.content.Intent
@@ -22,8 +22,7 @@ import com.amap.api.maps.model.LatLng
 import com.amap.api.maps.model.MyLocationStyle
 import com.amap.api.maps.utils.overlay.SmoothMoveMarker
 import com.mredrock.cyxbs.common.BaseApp
-import com.mredrock.cyxbs.common.bean.User
-import com.mredrock.cyxbs.schoolcar.Interface.SchoolCarInterface
+import com.mredrock.cyxbs.discover.schoolcar.Interface.SchoolCarInterface
 import com.mredrock.cyxbs.schoolcar.R
 
 /**

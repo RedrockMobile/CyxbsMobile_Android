@@ -1,4 +1,4 @@
-package com.mredrock.cyxbs.schoolcar
+package com.mredrock.cyxbs.discover.schoolcar
 
 import android.graphics.Color
 import android.os.Build
@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.support.annotation.RequiresApi
 import android.view.View
 import com.mredrock.cyxbs.common.ui.BaseActivity
+import com.mredrock.cyxbs.schoolcar.R
 import kotlinx.android.synthetic.main.activity_school_car_learn_more.*
 
 class SchoolCarLearnMoreActivity : BaseActivity() {

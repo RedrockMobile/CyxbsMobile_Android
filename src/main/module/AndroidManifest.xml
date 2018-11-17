@@ -10,7 +10,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".SchoolcarActivity">
+        <activity android:name="com.mredrock.cyxbs.discover.schoolcar.SchoolCarActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -18,7 +18,7 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".SchoolCarLearnMoreActivity"/>
+        <activity android:name="com.mredrock.cyxbs.discover.schoolcar.SchoolCarLearnMoreActivity"/>
 
         <meta-data
             android:name="com.amap.api.v2.apikey"

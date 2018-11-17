@@ -1,6 +1,6 @@
-package com.mredrock.cyxbs.schoolcar.network
+package com.mredrock.cyxbs.discover.schoolcar.network
 
-import com.mredrock.cyxbs.schoolcar.bean.SchoolCarLocation
+import com.mredrock.cyxbs.discover.schoolcar.bean.SchoolCarLocation
 import io.reactivex.Observable
 import io.reactivex.Observer
 import retrofit2.http.*

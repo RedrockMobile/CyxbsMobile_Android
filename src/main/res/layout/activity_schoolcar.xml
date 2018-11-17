@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/schoolcar_white"
-    tools:context=".SchoolcarActivity"
+    tools:context="com.mredrock.cyxbs.discover.schoolcar.SchoolCarActivity"
     tools:ignore="ResourceName">
 
     <android.support.v7.widget.Toolbar
