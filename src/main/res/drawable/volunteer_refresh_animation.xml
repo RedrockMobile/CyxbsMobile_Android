@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animation-list
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:oneshot="false">
+    <item android:drawable="@drawable/volunteer_refreash_animition1" android:duration="65"/>
+    <item android:drawable="@drawable/volunteer_refreash_animition2" android:duration="65"/>
+    <item android:drawable="@drawable/volunteer_refreash_animition3" android:duration="65"/>
+    <item android:drawable="@drawable/volunteer_refreash_animition4" android:duration="65"/>
+    <item android:drawable="@drawable/volunteer_refreash_animition5" android:duration="65"/>
+    <item android:drawable="@drawable/volunteer_refreash_animition6" android:duration="65"/>
+    <item android:drawable="@drawable/volunteer_refreash_animition7" android:duration="65"/>
+</animation-list>

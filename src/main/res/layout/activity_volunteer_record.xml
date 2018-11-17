@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/volunteer_pager_background"
+    tools:context=".VolunteerRecordActivity"
+    tools:ignore="ResourceName">
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:background="@drawable/volunteer_time_toolbar_background"/>
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/volunteer_time_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/volunteer_time_toolbar_background">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal">
+
+            <!--android:layout_centerInParent="true"-->
+            <ImageView
+                android:id="@+id/volunteer_time_back"
+                android:layout_width="30dp"
+                android:layout_height="40dp"
+                android:padding="10dp"
+                android:layout_gravity="center_vertical"
+                android:layout_centerVertical="true"
+                android:src="@mipmap/volunteer_time_back_arrow" />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_centerInParent="true">
+                <TextView
+                    android:id="@+id/volunteer_time_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="全部"
+                    android:gravity="center_vertical"
+                    android:layout_gravity="center_vertical"
+                    android:textColor="@color/volunteer_login_background"
+                    android:textSize="20dp" />
+
+                <FrameLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@id/volunteer_time_title"
+                    android:layout_centerVertical="true">
+
+                    <ImageView
+                        android:id="@+id/volunteer_unshow_image"
+                        android:layout_width="20dp"
+                        android:layout_height="match_parent"
+                        android:paddingBottom="5dp"
+                        android:paddingTop="10dp"
+                        android:paddingLeft="5dp"
+                        android:scaleType="fitXY"
+                        android:src="@mipmap/volunteer_time_unshow_tab" />
+
+                    <ImageView
+                        android:id="@+id/volunteer_show_image"
+                        android:layout_width="20dp"
+                        android:layout_height="match_parent"
+                        android:paddingBottom="5dp"
+                        android:paddingTop="10dp"
+                        android:paddingLeft="5dp"
+                        android:visibility="gone"
+                        android:scaleType="fitXY"
+                        android:src="@mipmap/volunteer_time_show_tab"/>
+                </FrameLayout>
+            </LinearLayout>
+
+
+            <TextView
+                android:id="@+id/volunteer_unbind"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="解绑账号"
+                android:textSize="15dp"
+                android:textColor="@color/volunteer_login_background"
+                android:layout_marginRight="10dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                />
+        </RelativeLayout>
+
+    </android.support.v7.widget.Toolbar>
+
+    <android.support.design.widget.TabLayout
+        android:id="@+id/volunteer_time_tab"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:background="@color/volunteer_login_background"
+        android:visibility="gone"
+        android:overScrollMode="ifContentScrolls"
+        app:tabMode="scrollable"
+        app:tabTextColor="@color/volunteer_tab_text"
+        app:tabSelectedTextColor="@color/volunteer_time_left"
+        app:tabIndicatorColor="@color/volunteer_edit_activated" />
+
+    <ImageView
+        android:id="@+id/volunteer_refresh"
+        android:layout_width="43dp"
+        android:layout_height="48dp"
+        android:layout_gravity="center"
+        android:src="@drawable/volunteer_refresh_animation"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/volunteer_time_nohour">
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/volunteer_view_pager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/volunteer_pager_background" />
+
+    </LinearLayout>
+
+</LinearLayout>

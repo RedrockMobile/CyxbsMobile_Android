@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="volunteer_colorPrimary">#3F51B5</color>
+    <color name="volunteer_colorPrimaryDark">#303F9F</color>
+    <color name="volunteer_colorAccent">#FF4081</color>
+
+    <color name="volunteer_colour_title_text">#212121</color>
+    <color name="volunteer_login_background">#ffffff</color>
+    <color name="volunteer_pager_background">#e7e7e7</color>
+    <color name="volunteer_edit_Normal">#c2bebf</color>
+    <color name="volunteer_tab_text">#797777</color>
+    <color name="volunteer_time_left">#eb726c</color>
+    <color name="volunteer_time_toolbar_left">#ee9075</color>
+    <color name="volunteer_edit_activated">#ed8a80</color>
+    <color name="volunteer_time_toolbar_right">#f2ab95</color>
+    <color name="volunteer_time_right">#f2b4a2</color>
+    <color name="volunteer_grey">#f3f7fa</color>
+    <color name="volunteer_ab_gray_light">#F4F4F4</color>
+</resources>

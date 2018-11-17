@@ -1,0 +1,16 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="Volunteer_AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+    <style name="VolunteerEditText" parent="Theme.AppCompat.Light">
+        <item name="colorControlNormal">@color/volunteer_edit_Normal</item>
+        <item name="colorControlActivated">@color/volunteer_edit_activated</item>
+    </style>
+
+</resources>
