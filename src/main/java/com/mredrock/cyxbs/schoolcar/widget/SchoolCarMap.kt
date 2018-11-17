@@ -22,6 +22,7 @@ import com.amap.api.maps.model.LatLng
 import com.amap.api.maps.model.MyLocationStyle
 import com.amap.api.maps.utils.overlay.SmoothMoveMarker
 import com.mredrock.cyxbs.common.BaseApp
+import com.mredrock.cyxbs.common.bean.User
 import com.mredrock.cyxbs.schoolcar.Interface.SchoolCarInterface
 import com.mredrock.cyxbs.schoolcar.R
 
@@ -52,12 +53,18 @@ class SchoolCarMap(context: Context, savedInstanceState: Bundle?, carInterface: 
      * 设置用户定位图标，获取位置的每次时间间隔，定位模式
      */
     fun initLocationType(){
-        val descriptor: BitmapDescriptor = BitmapDescriptorFactory.fromResource(R.drawable.ic_school_car_search_girl)
-        locationStyle = MyLocationStyle()
+        val descriptor: BitmapDescriptor
+        if (BaseApp.user != null) {
+            if (BaseApp.user!!.gender == "女") {
+                descriptor = BitmapDescriptorFactory.fromResource(R.drawable.ic_school_car_search_girl)
+            } else {
+                descriptor = BitmapDescriptorFactory.fromResource(R.drawable.ic_school_car_search_boy)
+            }
+        } else {
+            descriptor = BitmapDescriptorFactory.fromResource(R.drawable.ic_school_car_search_boy)
+        }
 
-        //        } else {
-//            BitmapDescriptorFactory.fromResource(R.drawable.ic_school_car_search_boy)
-//        }
+        locationStyle = MyLocationStyle()
         locationStyle.interval(2000)
         locationStyle.strokeWidth(0f)
         locationStyle.radiusFillColor(Color.alpha(0))
