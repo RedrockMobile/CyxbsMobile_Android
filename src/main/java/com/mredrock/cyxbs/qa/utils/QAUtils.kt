@@ -54,3 +54,5 @@ internal fun setAdoptedTv(adopedTv: TextView, adoptTv: TextView, isAdopted: Bool
         adopedTv.gone()
     }
 }
+
+internal fun <T> List<T>?.isNullOrEmpty() = this == null || this.isEmpty()

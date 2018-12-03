@@ -1,0 +1,131 @@
+package com.mredrock.cyxbs.qa.ui.widget
+
+import android.content.Context
+import android.support.annotation.IntDef
+import android.util.AttributeSet
+import android.view.View
+import android.view.ViewGroup
+import android.widget.FrameLayout
+import org.jetbrains.anko.dip
+import org.jetbrains.anko.forEachChild
+
+/**
+ * 图片九宫格布局
+ * Created By jay68 on 2018/9/29.
+ */
+class NineGridView(context: Context?, attrs: AttributeSet?, defStyleAttr: Int) : FrameLayout(context, attrs, defStyleAttr) {
+    companion object {
+        const val MODE_FILL = 0
+        const val MODE_NORMAL = 1
+    }
+
+    /**
+     * 图片的排列方式
+     */
+    private var arrangement = MODE_NORMAL
+
+    @Retention(AnnotationRetention.SOURCE)
+    @IntDef(MODE_FILL, MODE_NORMAL)
+    annotation class Arrangement
+
+    /**
+     * 水平方向间距
+     */
+    private var horizontalGap = dip(9).toFloat()
+
+    /**
+     * 垂直方向间距
+     */
+    private var verticalGap = dip(10).toFloat()
+
+    /**
+     * 每个子view的宽高比
+     */
+    private var childSizeRatio = 1f
+
+    private var onItemClickListener: ((itemView: View, index: Int) -> Unit)? = null
+
+    constructor(context: Context) : this(context, null)
+    constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
+
+    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+        if (childCount > 9) {
+            throw IllegalStateException("Only support less than 9 child.")
+        } else if (childCount == 0) {
+            setMeasuredDimension(widthMeasureSpec, getMeasureSpec(0))
+            return
+        }
+        val parentWidth = MeasureSpec.getSize(widthMeasureSpec)
+        if (arrangement == MODE_FILL) {
+            measureInFillMode(parentWidth)
+        } else {
+            measureInNormalMode(parentWidth)
+        }
+    }
+
+    private fun measureInFillMode(parentWidth: Int) {
+        val widthLeft = parentWidth - paddingLeft - paddingTop
+        val childWidth = when (childCount) {
+            1 -> widthLeft
+            2, 3, 4 -> ((widthLeft - horizontalGap) / 2).toInt()
+            else -> ((widthLeft - horizontalGap * 2) / 3).toInt()
+        }
+        val childHeight: Int = (childWidth / childSizeRatio).toInt()
+        forEachChild { it.measure(getMeasureSpec(childWidth), getMeasureSpec(childHeight)) }
+
+        var parentHeight = paddingTop + paddingBottom
+        parentHeight += when (childCount) {
+            1, 2 -> childHeight
+            3, 4, 5, 6 -> (childHeight * 2 + verticalGap).toInt()
+            else -> (childHeight * 3 + verticalGap * 2).toInt()
+        }
+        setMeasuredDimension(getMeasureSpec(parentWidth), getMeasureSpec(parentHeight))
+    }
+
+    private fun measureInNormalMode(parentWidth: Int) {
+        val widthLeft = parentWidth - paddingLeft - paddingTop
+        val childWidth = ((widthLeft - horizontalGap * 2) / 3).toInt()
+        val childHeight: Int = (childWidth / childSizeRatio).toInt()
+        forEachChild { it.measure(getMeasureSpec(childWidth), getMeasureSpec(childHeight)) }
+
+        val col = childCount / 3 + (1.takeIf { childCount % 3 != 0 } ?: 0)
+        var parentHeight = paddingTop + paddingBottom
+        parentHeight += (col * childHeight + (col - 1) * verticalGap).toInt()
+        setMeasuredDimension(getMeasureSpec(parentWidth), getMeasureSpec(parentHeight))
+    }
+
+    private fun getMeasureSpec(size: Int) = MeasureSpec.makeMeasureSpec(size, MeasureSpec.EXACTLY)
+
+    override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
+        var top = paddingTop
+        var left = paddingLeft
+        forEachChild {
+            var right = left + it.measuredWidth
+            var bottom = top + it.measuredHeight
+            if (right - paddingLeft >= measuredWidth - paddingRight) {
+                //这时候应该换到下一行
+                top += it.measuredHeight + verticalGap.toInt()
+                left = paddingLeft
+                right = left + it.measuredWidth
+                bottom = top + it.measuredHeight
+            }
+            it.layout(left, top, right, bottom)
+            left = right + horizontalGap.toInt()
+        }
+    }
+
+    override fun addView(child: View?, index: Int, params: ViewGroup.LayoutParams?) {
+        super.addView(child, index, params)
+        child?.setOnClickListener {
+            for (i in 0 until childCount) {
+                if (getChildAt(i) == it) {
+                    onItemClickListener?.invoke(child, i)
+                }
+            }
+        }
+    }
+
+    fun setOnItemClickListener(listener: (itemView: View, index: Int) -> Unit) {
+        onItemClickListener = listener
+    }
+}

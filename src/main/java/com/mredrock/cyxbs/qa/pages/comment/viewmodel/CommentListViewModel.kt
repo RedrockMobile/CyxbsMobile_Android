@@ -91,7 +91,7 @@ class CommentListViewModel(private val qid: String,
 
     fun sendComment(content: String) {
         if (content.isBlank()) {
-            longToastEvent.value = R.string.qa_comment_dialog_error_intput_hint
+            longToastEvent.value = R.string.qa_comment_dialog_error_input_hint
             return
         }
         val user = BaseApp.user!!

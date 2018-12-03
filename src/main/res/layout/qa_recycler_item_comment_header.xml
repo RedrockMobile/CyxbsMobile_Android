@@ -16,7 +16,7 @@
         android:maxLines="2"
         android:paddingStart="17dp"
         android:paddingEnd="20dp"
-        android:textColor="@color/qa_comment_item_question_title"
+        android:textColor="@color/qa_comment_item_question_title_color"
         android:textSize="16sp"
         tools:text="线代第一题不会，求解，公式应该没问题，算了几次都不对" />
 
@@ -26,7 +26,7 @@
         android:layout_marginStart="15dp"
         android:layout_marginTop="18dp"
         android:layout_marginEnd="15dp"
-        android:background="@color/qa_comment_item_divider" />
+        android:background="@color/qa_comment_item_divider_color" />
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -51,7 +51,7 @@
             android:layout_marginStart="6dp"
             android:layout_toEndOf="@+id/iv_answer_avatar"
             android:drawablePadding="3dp"
-            android:textColor="@color/qa_comment_item_answer_nickname"
+            android:textColor="@color/qa_comment_item_answer_nickname_color"
             android:textSize="14sp"
             tools:drawableEnd="@drawable/qa_ic_gender_male"
             tools:text="刘学霸" />
@@ -63,7 +63,7 @@
             android:layout_below="@id/tv_answer_nickname"
             android:layout_alignStart="@id/tv_answer_nickname"
             android:layout_marginTop="2dp"
-            android:textColor="@color/qa_comment_item_answer_create_at"
+            android:textColor="@color/qa_comment_item_answer_create_at_tv_color"
             android:textSize="12sp"
             tools:text="2018-03-03" />
 
@@ -109,7 +109,7 @@
         android:layout_marginTop="11dp"
         android:paddingStart="15dp"
         android:paddingEnd="15dp"
-        android:textColor="@color/qa_comment_item_answer_content"
+        android:textColor="@color/qa_comment_item_answer_content_color"
         android:textSize="15sp"
         tools:text="符号A属于Rmxn表示一个m行n列的矩阵，并且矩阵A中所有的所有元素都是实数。符号x属于Rn表示一个含有n个元素的向量。符号A属于Rmxn表示一个m行n列的矩阵，并且矩阵A中所有的所有元素都是实数，符号x属于Rn表示一个含有n个元素的向量。符号A属于Rmxn表示一个m行n列的矩阵，并且矩阵A中所有的所有元素都是实数." />
 
@@ -119,7 +119,7 @@
         android:layout_width="match_parent"
         android:layout_height="15dp"
         android:layout_marginTop="20dp"
-        android:background="@color/qa_comment_item_divider_gap" />
+        android:background="@color/qa_comment_item_divider_gap_color" />
 
     <TextView
         android:id="@+id/tv_answer_count"
@@ -127,7 +127,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="18dp"
-        android:textColor="@color/qa_comment_item_answer_count"
+        android:textColor="@color/qa_comment_item_answer_count_color"
         android:textSize="13sp"
         tools:text="评论20" />
 </LinearLayout>

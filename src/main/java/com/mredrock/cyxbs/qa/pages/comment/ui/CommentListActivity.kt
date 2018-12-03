@@ -18,7 +18,7 @@ import com.mredrock.cyxbs.qa.ui.adapter.EmptyRvAdapter
 import com.mredrock.cyxbs.qa.ui.adapter.FooterRvAdapter
 import com.mredrock.cyxbs.qa.utils.setPraise
 import kotlinx.android.synthetic.main.qa_activity_comment_list.*
-import kotlinx.android.synthetic.main.qa_comment_bottom_sheet_dialog.*
+import kotlinx.android.synthetic.main.qa_dialog_comment_bottom_sheet_dialog.*
 import org.jetbrains.anko.startActivityForResult
 
 class CommentListActivity : BaseViewModelActivity<CommentListViewModel>() {
@@ -123,7 +123,7 @@ class CommentListActivity : BaseViewModelActivity<CommentListViewModel>() {
     }
 
     private fun createCommentDialog() = BottomSheetDialog(this).apply {
-        setContentView(R.layout.qa_comment_bottom_sheet_dialog)
+        setContentView(R.layout.qa_dialog_comment_bottom_sheet_dialog)
         setOnDismissListener { this@CommentListActivity.card_footer.visible() }
         tv_send_comment.setOnClickListener { viewModel.sendComment(edt_comment_content.text.toString()) }
     }

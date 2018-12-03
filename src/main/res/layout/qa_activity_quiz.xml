@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/qa_answer_list_background_color"
+    tools:context=".pages.quiz.ui.QuizActivity">
+
+    <include layout="@layout/common_toolbar" />
+
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <LinearLayout
+            android:id="@+id/ll"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="24dp"
+                android:layout_marginEnd="16dp"
+                android:gravity="bottom"
+                android:orientation="horizontal"
+                android:weightSum="1">
+
+                <TextView
+                    android:id="@+id/tv_quiz_tags"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/qa_quiz_type_tv_color"
+                    android:textSize="17sp"
+                    tools:text="#化学#" />
+
+                <android.support.v7.widget.AppCompatEditText
+                    android:id="@+id/edt_quiz_title"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="3dp"
+                    android:layout_weight="1"
+                    android:background="@null"
+                    android:ellipsize="middle"
+                    android:hint="@string/qa_quiz_title_hint"
+                    android:inputType="text"
+                    android:maxLength="20"
+                    android:singleLine="true"
+                    android:textColor="@color/qa_quiz_title_edt_color"
+                    android:textColorHint="@color/qa_quiz_title_edt_hint_color"
+                    android:textSize="16sp"
+                    tools:text="这个题目最后的那个地方计算不出来" />
+
+                <TextView
+                    android:id="@+id/tv_quiz_title_left_count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:textColor="@color/qa_qa_quiz_title_left_count_tv_color"
+                    android:textSize="13sp"
+                    tools:text="3" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="11dp"
+                android:layout_marginEnd="16dp"
+                android:background="@color/qa_quiz_divider_color" />
+
+            <com.mredrock.cyxbs.common.component.RatioLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="11dp"
+                android:layout_marginEnd="16dp"
+                app:ratio="0.69">
+
+                <android.support.v7.widget.AppCompatEditText
+                    android:id="@+id/edt_quiz_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@null"
+                    android:gravity="start"
+                    android:hint="@string/qa_quiz_content_hint"
+                    android:inputType="textMultiLine"
+                    android:maxLength="200"
+                    android:textColor="@color/qa_quiz_content_edt_color"
+                    android:textColorHint="@color/qa_quiz_content_edt_hint_color"
+                    android:textSize="16sp" />
+            </com.mredrock.cyxbs.common.component.RatioLayout>
+
+            <TextView
+                android:id="@+id/tv_quiz_content_left_count"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="15dp"
+                android:layout_marginBottom="19dp"
+                android:gravity="end"
+                android:textColor="@color/qa_quiz_content_left_count_tv_color"
+                android:textSize="13sp"
+                tools:text="200" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="10dp"
+                android:background="@color/qa_quiz_divider_gap_color" />
+
+            <com.mredrock.cyxbs.qa.ui.widget.NineGridView
+                android:id="@+id/nine_grid_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="15dp"
+                android:paddingTop="19dp"
+                android:paddingEnd="15dp"
+                android:paddingBottom="19dp" />
+        </LinearLayout>
+    </android.support.v4.widget.NestedScrollView>
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        app:layout_behavior="@string/qa_footer_view_behavior">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingStart="15dp"
+            android:paddingTop="13dp"
+            android:paddingEnd="15dp"
+            android:paddingBottom="13dp">
+
+            <ImageView
+                android:id="@+id/iv_quiz_select_tag"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/qa_ic_quiz_tag" />
+
+            <ImageView
+                android:id="@+id/iv_quiz_add_img"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginStart="37dp"
+                android:layout_toEndOf="@id/iv_quiz_select_tag"
+                android:scaleType="centerCrop"
+                android:src="@drawable/qa_ic_quiz_add_img" />
+
+            <android.support.v7.widget.AppCompatCheckedTextView
+                android:id="@+id/tv_quiz_anonymous"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:drawableStart="@drawable/qa_selector_quiz_anonymous"
+                android:drawablePadding="5dp"
+                android:text="@string/qa_quiz_anonymous"
+                android:textColor="@color/qa_quiz_anonymous_tv_color"
+                tools:ignore="RelativeOverlap" />
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>
+</android.support.design.widget.CoordinatorLayout>

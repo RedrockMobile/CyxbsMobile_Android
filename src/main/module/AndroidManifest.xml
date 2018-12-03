@@ -7,7 +7,6 @@
         android:name="debug.App"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-
         <activity
             android:name="debug.MainActivity"
             android:screenOrientation="portrait"
@@ -18,11 +17,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity android:name=".pages.answer.ui.AnswerListActivity" />
-
         <activity
             android:name=".pages.comment.ui.CommentListActivity"
             android:windowSoftInputMode="adjustPan" />
+        <activity android:name=".pages.quiz.ui.QuizActivity" />
     </application>
+
 </manifest>

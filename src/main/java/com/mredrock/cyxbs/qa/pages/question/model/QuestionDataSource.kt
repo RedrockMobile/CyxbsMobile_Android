@@ -3,6 +3,7 @@ package com.mredrock.cyxbs.qa.pages.question.model
 import android.arch.lifecycle.MutableLiveData
 import android.arch.paging.DataSource
 import android.arch.paging.PageKeyedDataSource
+import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.utils.extensions.mapOrThrowApiException
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
@@ -21,8 +22,10 @@ class QuestionDataSource(private val kind: String) : PageKeyedDataSource<Int, Qu
     private var failedRequest: (() -> Unit)? = null
 
     override fun loadInitial(params: LoadInitialParams<Int>, callback: LoadInitialCallback<Int, Question>) {
+        val user = BaseApp.user ?: return
         ApiGenerator.getApiService(ApiService::class.java)
-                .getQuestionList(kind, 1, params.requestedLoadSize)
+                .getQuestionList(kind, 1, params.requestedLoadSize,
+                        user.stuNum ?: "", user.idNum ?: "")
                 .mapOrThrowApiException()
                 .setSchedulers()
                 .doOnSubscribe { initialLoad.postValue(NetworkState.LOADING) }
@@ -38,8 +41,10 @@ class QuestionDataSource(private val kind: String) : PageKeyedDataSource<Int, Qu
     }
 
     override fun loadAfter(params: LoadParams<Int>, callback: LoadCallback<Int, Question>) {
+        val user = BaseApp.user ?: return
         ApiGenerator.getApiService(ApiService::class.java)
-                .getQuestionList(kind, params.key, params.requestedLoadSize)
+                .getQuestionList(kind, params.key, params.requestedLoadSize, user.stuNum
+                        ?: "", user.idNum ?: "")
                 .mapOrThrowApiException()
                 .setSchedulers()
                 .doOnSubscribe { networkState.postValue(NetworkState.LOADING) }

@@ -7,7 +7,7 @@ import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.component.recycler.BaseRvAdapter
 import com.mredrock.cyxbs.qa.component.recycler.BaseViewHolder
 import com.mredrock.cyxbs.qa.network.NetworkState
-import kotlinx.android.synthetic.main.qa_recyle_item_footer.view.*
+import kotlinx.android.synthetic.main.qa_recycler_item_footer.view.*
 
 /**
  * Created By jay68 on 2018/9/23.
@@ -22,7 +22,7 @@ class FooterRvAdapter(private val retryCallback: () -> Unit) : BaseRvAdapter<Int
         }
     }
 
-    class FooterViewHolder(parent: ViewGroup) : BaseViewHolder<Int>(parent, R.layout.qa_recyle_item_footer) {
+    class FooterViewHolder(parent: ViewGroup) : BaseViewHolder<Int>(parent, R.layout.qa_recycler_item_footer) {
         override fun refresh(data: Int?) = when (data) {
             NetworkState.LOADING -> {
                 itemView.visible()
