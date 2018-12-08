@@ -36,7 +36,7 @@ data class Answer(@SerializedName("comment_num")
                   val id: String = "",
 
                   @SerializedName("photo_url")
-                  val photoUrl: String, //fixme 格式应该为list
+                  val photoUrl: String,
 
                   @SerializedName("content")
                   val content: String = "") : Parcelable {

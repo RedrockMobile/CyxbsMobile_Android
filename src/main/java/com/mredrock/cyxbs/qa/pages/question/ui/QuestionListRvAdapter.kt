@@ -1,5 +1,7 @@
 package com.mredrock.cyxbs.qa.pages.question.ui
 
+import android.app.Activity
+import android.support.v4.app.Fragment
 import android.support.v7.util.DiffUtil
 import android.view.ViewGroup
 import android.widget.TextView
@@ -13,6 +15,7 @@ import com.mredrock.cyxbs.qa.bean.Question
 import com.mredrock.cyxbs.qa.component.recycler.BaseEndlessRvAdapter
 import com.mredrock.cyxbs.qa.component.recycler.BaseViewHolder
 import com.mredrock.cyxbs.qa.pages.answer.ui.AnswerListActivity
+import com.mredrock.cyxbs.qa.pages.main.QuestionContainerFragment
 import com.mredrock.cyxbs.qa.utils.setNicknameTv
 import com.mredrock.cyxbs.qa.utils.timeDescription
 import com.mredrock.cyxbs.qa.utils.toDate
@@ -22,7 +25,7 @@ import org.greenrobot.eventbus.EventBus
 /**
  * Created By jay68 on 2018/8/26.
  */
-class QuestionListRvAdapter : BaseEndlessRvAdapter<Question>(DIFF_CALLBACK) {
+class QuestionListRvAdapter(private val fragment: Fragment) : BaseEndlessRvAdapter<Question>(DIFF_CALLBACK) {
     companion object {
         @JvmStatic
         val DIFF_CALLBACK = object : DiffUtil.ItemCallback<Question>() {
@@ -38,7 +41,7 @@ class QuestionListRvAdapter : BaseEndlessRvAdapter<Question>(DIFF_CALLBACK) {
         super.onItemClickListener(holder, position, data)
         val context = holder.itemView.context
         if (BaseApp.isLogin) {
-            AnswerListActivity.activityStart(context, data)
+            AnswerListActivity.activityStart(fragment, data, QuestionContainerFragment.REQUEST_LIST_REFRESH_ACTIVITY)
         } else {
             EventBus.getDefault().post(AskLoginEvent(context.getString(R.string.qa_unlogin_error)))
         }

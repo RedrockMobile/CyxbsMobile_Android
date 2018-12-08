@@ -3,9 +3,16 @@ package com.mredrock.cyxbs.qa.pages.answer.viewmodel
 import android.arch.lifecycle.*
 import android.arch.paging.LivePagedListBuilder
 import android.arch.paging.PagedList
+import com.mredrock.cyxbs.common.BaseApp
+import com.mredrock.cyxbs.common.network.ApiGenerator
+import com.mredrock.cyxbs.common.utils.extensions.checkError
+import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
+import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
+import com.mredrock.cyxbs.common.viewmodel.event.SingleLiveEvent
 import com.mredrock.cyxbs.qa.bean.Answer
 import com.mredrock.cyxbs.qa.bean.Question
+import com.mredrock.cyxbs.qa.network.ApiService
 import com.mredrock.cyxbs.qa.pages.answer.model.AnswerDataSource
 
 /**
@@ -14,7 +21,8 @@ import com.mredrock.cyxbs.qa.pages.answer.model.AnswerDataSource
 class AnswerListViewModel(question: Question) : BaseViewModel() {
     val bottomViewEvent = MutableLiveData<Boolean?>()
     val answerList: LiveData<PagedList<Answer>>
-    val questionLiveDate = MutableLiveData<Question>()
+    val questionLiveData = MutableLiveData<Question>()
+    val backAndRefreshPreActivityEvent = SingleLiveEvent<Boolean>()
 
     val networkState: LiveData<Int>
     val initialLoad: LiveData<Int>
@@ -33,7 +41,8 @@ class AnswerListViewModel(question: Question) : BaseViewModel() {
         networkState = Transformations.switchMap(factory.answerDataSourceLiveData) { it.networkState }
         initialLoad = Transformations.switchMap(factory.answerDataSourceLiveData) { it.initialLoad }
 
-        questionLiveDate.value = question
+        questionLiveData.value = question
+        bottomViewEvent.value = question.isSelf.takeUnless { question.hasAdoptedAnswer }
     }
 
     fun invalidate() = factory.answerDataSourceLiveData.value?.invalidate()
@@ -41,15 +50,21 @@ class AnswerListViewModel(question: Question) : BaseViewModel() {
     fun retry() = factory.answerDataSourceLiveData.value?.retry()
 
     fun addReward() {
-
+        //todo 加价
     }
 
     fun cancelQuestion() {
-
+        val user = BaseApp.user ?: return
+        val qid = questionLiveData.value!!.id
+        ApiGenerator.getApiService(ApiService::class.java)
+                .cancelQuestion(user.stuNum!!, user.idNum!!, qid)
+                .setSchedulers()
+                .checkError()
+                .safeSubscribeBy { backAndRefreshPreActivityEvent.value = true }
     }
 
     fun ignoreQuestion() {
-
+        //todo 忽略
     }
 
     class Factory(private val question: Question) : ViewModelProvider.Factory {

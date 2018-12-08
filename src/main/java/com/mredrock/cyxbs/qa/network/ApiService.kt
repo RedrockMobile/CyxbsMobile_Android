@@ -124,4 +124,28 @@ interface ApiService {
     @POST("springtest/cyxbsMobile/index.php/QA/Question/uploadPicture")
     @Multipart
     fun uploadQuestionPic(@Part parts: List<MultipartBody.Part>): Observable<RedrockApiStatus>
+
+    @POST("springtest/cyxbsMobile/index.php/QA/Question/cancelQuestion")
+    @FormUrlEncoded
+    fun cancelQuestion(@Field("stuNum")
+                       stuNum: String,
+                       @Field("idNum")
+                       idNum: String,
+                       @Field("question_id")
+                       qid: String): Observable<RedrockApiStatus>
+
+    @POST("springtest/cyxbsMobile/index.php/QA/Answer/add")
+    @FormUrlEncoded
+    fun answer(@Field("stuNum")
+               stuNum: String,
+               @Field("idNum")
+               idNum: String,
+               @Field("question_id")
+               qid: String,
+               @Field("content")
+               content: String): Observable<RedrockApiWrapper<String>>
+
+    @POST("springtest/cyxbsMobile/index.php/QA/Answer/uploadPicture")
+    @Multipart
+    fun uploadAnswerPic(@Part parts: List<MultipartBody.Part>): Observable<RedrockApiStatus>
 }

@@ -29,7 +29,7 @@ data class Question(@SerializedName("reward")
                     var disappearAt: String = "",
 
                     @SerializedName("answer_num")
-                    val answerNum: Int = 0,
+                    var answerNum: Int = 0,
 
                     @SerializedName("photo_thumbnail_src")
                     val photoThumbnailSrc: String?,

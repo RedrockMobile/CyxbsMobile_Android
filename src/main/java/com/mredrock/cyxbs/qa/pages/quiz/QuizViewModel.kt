@@ -8,10 +8,7 @@ import com.luck.picture.lib.entity.LocalMedia
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.bean.RedrockApiStatus
 import com.mredrock.cyxbs.common.network.ApiGenerator
-import com.mredrock.cyxbs.common.utils.extensions.checkError
-import com.mredrock.cyxbs.common.utils.extensions.mapOrThrowApiException
-import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
-import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
+import com.mredrock.cyxbs.common.utils.extensions.*
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.common.viewmodel.event.ProgressDialogEvent
 import com.mredrock.cyxbs.common.viewmodel.event.SingleLiveEvent
@@ -26,6 +23,7 @@ import io.reactivex.Observable
 import okhttp3.MediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
+import org.jetbrains.anko.longToast
 import java.io.File
 
 
@@ -102,6 +100,7 @@ class QuizViewModel(val type: String) : BaseViewModel() {
             }
         }
         observable.doFinally { progressDialogEvent.value = ProgressDialogEvent.DISMISS_DIALOG_EVENT }
+                .doOnError { BaseApp.context.longToast(it.message!!) }
                 .safeSubscribeBy { backAndRefreshPreActivityEvent.value = true }
 
         return true
@@ -131,7 +130,7 @@ class QuizViewModel(val type: String) : BaseViewModel() {
         if (title.isNullOrBlank()) {
             toastEvent.value = R.string.qa_quiz_hint_title_empty
         } else if (content.isNullOrBlank() && imageLiveData.value.isNullOrEmpty()) {
-            toastEvent.value = R.string.qa_quiz_hint_content_empty
+            toastEvent.value = R.string.qa_hint_content_empty
         } else {
             this.title = title ?: ""
             this.content = content ?: ""

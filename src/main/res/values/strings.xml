@@ -46,7 +46,7 @@
     <string name="qa_quiz_dialog_sure">确定</string>
     <string name="qa_quiz_tag_edit_dialog_hot_tags">热门话题</string>
     <string name="qa_quiz_hint_title_empty">标题不能为空哦~</string>
-    <string name="qa_quiz_hint_content_empty">内容不能为空哦~</string>
+    <string name="qa_hint_content_empty">内容不能为空哦~</string>
     <string name="qa_quiz_dialog_cancel">取消</string>
     <string name="qa_quiz_error_time_too_short">设置的时间太短了哦~</string>
     <string name="qa_quiz_reward_set_dialog_title">求助设置</string>
@@ -54,4 +54,7 @@
     <string name="qa_quiz_reward_set_my_reward">积分剩余：%1$d</string>
     <string name="qa_quiz_reward_set_cur_question_reward">%1$d积分</string>
     <string name="qa_quiz_error_reward_not_enough">积分多，朋友多！客官多打赏点儿~</string>
+    <string name="qa_answer_edit_content_hint">请尽可能给出明确的解决思路哦！</string>
+    <string name="qa_answer_question_title">提供帮助</string>
+    <string name="qa_answer_submit_answer">提交</string>
 </resources>

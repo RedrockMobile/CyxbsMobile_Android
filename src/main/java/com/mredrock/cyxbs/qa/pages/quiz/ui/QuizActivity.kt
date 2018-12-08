@@ -1,11 +1,11 @@
 package com.mredrock.cyxbs.qa.pages.quiz.ui
 
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
+import android.support.v4.app.Fragment
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.Menu
@@ -24,7 +24,7 @@ import com.mredrock.cyxbs.qa.utils.getMaxLength
 import com.mredrock.cyxbs.qa.utils.selectImageFromAlbum
 import com.mredrock.cyxbs.qa.utils.selectImageFromCamera
 import kotlinx.android.synthetic.main.qa_activity_quiz.*
-import org.jetbrains.anko.startActivity
+import org.jetbrains.anko.support.v4.startActivityForResult
 
 //todo 这个界面赶时间写得有点乱，记得优化一下
 
@@ -32,8 +32,8 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
     companion object {
         const val MAX_SELECTABLE_IMAGE_COUNT = 6
 
-        fun activityStart(context: Context, type: String) {
-            context.startActivity<QuizActivity>("type" to type)
+        fun activityStart(fragment: Fragment, type: String, requestCode: Int) {
+            fragment.startActivityForResult<QuizActivity>(requestCode, "type" to type)
         }
     }
 
@@ -91,6 +91,9 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
 
         viewModel.backAndRefreshPreActivityEvent.observeNotNull {
             if (it) {
+                val data = Intent()
+                data.putExtra("type", viewModel.type)
+                setResult(Activity.RESULT_OK, data)
                 finish()
             }
         }

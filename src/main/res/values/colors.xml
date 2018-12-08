@@ -65,4 +65,8 @@
     <color name="qa_quiz_dialog_time_pick_selected_color">#d97195fa</color>
     <color name="qa_quiz_dialog_divider">#26000000</color>
     <color name="qa_quiz_reward_set_my_reward_color">#73000000</color>
+    <color name="qa_answer_content_edt_hint_color">#99999999</color>
+    <color name="qa_answer_content_edt_color">#d9000000</color>
+    <color name="qa_answer_edt_content_counter">#80000000</color>
+    <color name="qa_answer_divider">#14999999</color>
 </resources>

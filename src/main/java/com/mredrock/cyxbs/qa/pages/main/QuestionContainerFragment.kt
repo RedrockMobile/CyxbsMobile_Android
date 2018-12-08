@@ -1,5 +1,6 @@
 package com.mredrock.cyxbs.qa.pages.main
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.BottomSheetDialog
 import android.support.v7.widget.AppCompatCheckedTextView
@@ -21,9 +22,13 @@ import kotlinx.android.synthetic.main.qa_fragment_question_container.view.*
  */
 @Route(path = QA_ENTRY)
 class QuestionContainerFragment : BaseFragment(), View.OnClickListener {
+    companion object {
+        const val REQUEST_LIST_REFRESH_ACTIVITY = 0x1
+    }
 
     private val titles = listOf(Question.ALL, Question.STUDY, Question.LIFE, Question.EMOTION, Question.OTHER)
     private val quizTypeSelectDialog: BottomSheetDialog by lazy { createTypeSelectDialog() }
+    private lateinit var childFragments: List<QuestionListFragment>
 
     private lateinit var curSelectorItem: AppCompatCheckedTextView
 
@@ -31,8 +36,8 @@ class QuestionContainerFragment : BaseFragment(), View.OnClickListener {
                               savedInstanceState: Bundle?): View? {
         super.onCreateView(inflater, container, savedInstanceState)
         val root = inflater.inflate(R.layout.qa_fragment_question_container, container, false)
-        val fragments = titles.map { QuestionListFragment().apply { title = it } }
-        root.vp_question.adapter = QAViewPagerAdapter(fragments, activity!!.supportFragmentManager)
+        childFragments = titles.map { QuestionListFragment().apply { title = it } }
+        root.vp_question.adapter = QAViewPagerAdapter(childFragments, activity!!.supportFragmentManager)
         root.tl_category.setupWithViewPager(root.vp_question)
         root.fab_quiz.setOnClickListener { quizTypeSelectDialog.show() }
         return root
@@ -52,7 +57,7 @@ class QuestionContainerFragment : BaseFragment(), View.OnClickListener {
             iv_quiz_dialog_exit.setOnClickListener { quizTypeSelectDialog.dismiss() }
             tv_quiz_dialog_type_next.setOnClickListener {
                 quizTypeSelectDialog.dismiss()
-                QuizActivity.activityStart(context, curSelectorItem.text.toString())
+                QuizActivity.activityStart(this@QuestionContainerFragment, curSelectorItem.text.toString(), REQUEST_LIST_REFRESH_ACTIVITY)
             }
         }
         curSelectorItem = contentView.tv_quiz_dialog_type_study
@@ -66,5 +71,10 @@ class QuestionContainerFragment : BaseFragment(), View.OnClickListener {
         curSelectorItem.isChecked = false
         curSelectorItem = v as AppCompatCheckedTextView
         curSelectorItem.isChecked = true
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        childFragments.forEach { it.onActivityResult(requestCode, resultCode, data) }
     }
 }

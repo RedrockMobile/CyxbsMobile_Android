@@ -1,7 +1,9 @@
 package com.mredrock.cyxbs.qa.pages.answer.ui
 
-import android.content.Context
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
+import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.view.Menu
 import android.view.MenuItem
@@ -20,7 +22,7 @@ import com.mredrock.cyxbs.qa.ui.adapter.EmptyRvAdapter
 import com.mredrock.cyxbs.qa.ui.adapter.FooterRvAdapter
 import kotlinx.android.synthetic.main.qa_activity_answer_list.*
 import org.greenrobot.eventbus.EventBus
-import org.jetbrains.anko.startActivity
+import org.jetbrains.anko.support.v4.startActivityForResult
 
 class AnswerListActivity : BaseViewModelActivity<AnswerListViewModel>() {
     companion object {
@@ -28,13 +30,14 @@ class AnswerListActivity : BaseViewModelActivity<AnswerListViewModel>() {
         val TAG: String = AnswerListActivity::class.java.simpleName
 
         const val PARAM_QUESTION = "question"
+        const val REQUEST_REFRESH_LIST = 0x2
 
-        fun activityStart(context: Context, question: Question) {
+        fun activityStart(fragment: Fragment, question: Question, requestCode: Int) {
             if (!BaseApp.isLogin) {
-                EventBus.getDefault().post(AskLoginEvent(context.getString(R.string.qa_unlogin_error)))
+                EventBus.getDefault().post(AskLoginEvent(fragment.getString(R.string.qa_unlogin_error)))
                 return
             }
-            context.startActivity<AnswerListActivity>(PARAM_QUESTION to question)
+            fragment.startActivityForResult<AnswerListActivity>(requestCode, PARAM_QUESTION to question)
         }
     }
 
@@ -60,7 +63,7 @@ class AnswerListActivity : BaseViewModelActivity<AnswerListViewModel>() {
         headerAdapter = AnswerListHeaderAdapter { answerListAdapter.resortList(it) }
         answerListAdapter = AnswerListAdapter(this).apply {
             onItemClickListener = { _, answer ->
-                CommentListActivity.activityStart(this@AnswerListActivity, viewModel.questionLiveDate.value!!, answer)
+                CommentListActivity.activityStart(this@AnswerListActivity, viewModel.questionLiveData.value!!, answer)
             }
         }
         footerRvAdapter = FooterRvAdapter { viewModel.retry() }
@@ -75,7 +78,7 @@ class AnswerListActivity : BaseViewModelActivity<AnswerListViewModel>() {
     override fun getViewModelFactory() = AnswerListViewModel.Factory(intent.getParcelableExtra(PARAM_QUESTION))
 
     private fun observeListChangeEvent() = viewModel.apply {
-        questionLiveDate.observeNotNull {
+        questionLiveData.observeNotNull {
             headerAdapter.refreshData(listOf(it))
             answerListAdapter.setQuestionInfo(it)
         }
@@ -104,6 +107,15 @@ class AnswerListActivity : BaseViewModelActivity<AnswerListViewModel>() {
                 }
             }
         }
+
+        backAndRefreshPreActivityEvent.observeNotNull {
+            if (it) {
+                val data = Intent()
+                data.putExtra("type", questionLiveData.value!!.kind)
+                setResult(Activity.RESULT_OK, data)
+                finish()
+            }
+        }
     }
 
     private fun switchToQuestioner() {
@@ -129,7 +141,17 @@ class AnswerListActivity : BaseViewModelActivity<AnswerListViewModel>() {
         val rightDrawable = resources.getDrawable(R.drawable.qa_ic_answer_list_help)
         tv_right.text = getString(R.string.qa_answer_list_help)
         tv_right.setCompoundDrawablesRelativeWithIntrinsicBounds(rightDrawable, null, null, null)
-        fl_right.setOnClickListener { viewModel.cancelQuestion() }
+        fl_right.setOnClickListener { AnswerActivity.activityStart(this@AnswerListActivity, viewModel.questionLiveData.value!!.id, REQUEST_REFRESH_LIST) }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == AnswerListActivity.REQUEST_REFRESH_LIST && resultCode == Activity.RESULT_OK) {
+            viewModel.invalidate()
+            val question = viewModel.questionLiveData.value!!
+            question.answerNum++
+            headerAdapter.refreshData(listOf(question))
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

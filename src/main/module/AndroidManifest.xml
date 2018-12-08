@@ -22,6 +22,9 @@
             android:name=".pages.comment.ui.CommentListActivity"
             android:windowSoftInputMode="adjustPan" />
         <activity android:name=".pages.quiz.ui.QuizActivity" />
+        <activity
+            android:name=".pages.answer.ui.AnswerActivity"
+            android:windowSoftInputMode="adjustPan" />
     </application>
 
 </manifest>

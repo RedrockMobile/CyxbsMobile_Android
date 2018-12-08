@@ -1,6 +1,8 @@
 package com.mredrock.cyxbs.qa.pages.question.ui
 
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
@@ -8,8 +10,10 @@ import android.view.View
 import android.view.ViewGroup
 import com.mredrock.cyxbs.common.ui.BaseViewModelFragment
 import com.mredrock.cyxbs.qa.R
+import com.mredrock.cyxbs.qa.bean.Question
 import com.mredrock.cyxbs.qa.component.recycler.RvAdapterWrapper
 import com.mredrock.cyxbs.qa.network.NetworkState
+import com.mredrock.cyxbs.qa.pages.main.QuestionContainerFragment
 import com.mredrock.cyxbs.qa.pages.question.viewmodel.QuestionListViewModel
 import com.mredrock.cyxbs.qa.ui.adapter.EmptyRvAdapter
 import com.mredrock.cyxbs.qa.ui.adapter.FooterRvAdapter
@@ -30,7 +34,7 @@ class QuestionListFragment : BaseViewModelFragment<QuestionListViewModel>() {
                               savedInstanceState: Bundle?): View? {
         super.onCreateView(inflater, container, savedInstanceState)
         val root = inflater.inflate(R.layout.qa_fragment_question_list, container, false)
-        val questionListRvAdapter = QuestionListRvAdapter()
+        val questionListRvAdapter = QuestionListRvAdapter(this)
         val footerRvAdapter = FooterRvAdapter { viewModel.retry() }
         val emptyRvAdapter = EmptyRvAdapter(getString(R.string.qa_question_list_empty_hint))
         val adapterWrapper = RvAdapterWrapper(
@@ -73,6 +77,14 @@ class QuestionListFragment : BaseViewModelFragment<QuestionListViewModel>() {
         }
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == QuestionContainerFragment.REQUEST_LIST_REFRESH_ACTIVITY  && resultCode == Activity.RESULT_OK) {
+            if (title == Question.ALL || title == data!!.getStringExtra("type")) {
+                viewModel.invalidateQuestionList()
+            }
+        }
+    }
 
     override fun getViewModelFactory() = QuestionListViewModel.Factory(title)
 }

@@ -1,5 +1,6 @@
 package debug
 
+import android.content.Intent
 import android.os.Bundle
 import com.jude.swipbackhelper.SwipeBackHelper
 import com.mredrock.cyxbs.common.ui.BaseActivity
