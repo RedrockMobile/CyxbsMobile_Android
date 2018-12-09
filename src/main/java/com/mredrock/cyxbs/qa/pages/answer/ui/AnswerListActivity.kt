@@ -18,6 +18,7 @@ import com.mredrock.cyxbs.qa.component.recycler.RvAdapterWrapper
 import com.mredrock.cyxbs.qa.network.NetworkState
 import com.mredrock.cyxbs.qa.pages.answer.viewmodel.AnswerListViewModel
 import com.mredrock.cyxbs.qa.pages.comment.ui.CommentListActivity
+import com.mredrock.cyxbs.qa.pages.report.ui.ReportOrSharePopupWindow
 import com.mredrock.cyxbs.qa.ui.adapter.EmptyRvAdapter
 import com.mredrock.cyxbs.qa.ui.adapter.FooterRvAdapter
 import kotlinx.android.synthetic.main.qa_activity_answer_list.*
@@ -161,7 +162,7 @@ class AnswerListActivity : BaseViewModelActivity<AnswerListViewModel>() {
 
     override fun onOptionsItemSelected(item: MenuItem?) = when (item?.itemId) {
         R.id.more -> {
-            //todo show popup window
+            ReportOrSharePopupWindow(this, viewModel.qid, common_toolbar, card_frame).show()
             true
         }
         else -> false

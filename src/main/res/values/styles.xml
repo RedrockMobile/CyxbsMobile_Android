@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <style name="PopupAnimation" parent="@android:style/Animation.Translucent" tools:ignore="ResourceName">
+        <item name="android:windowEnterAnimation">@anim/qa_popup_enter</item>
+        <item name="android:windowExitAnimation">@anim/qa_popup_exit</item>
+    </style>
+</resources>

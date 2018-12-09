@@ -27,6 +27,8 @@ class AnswerListViewModel(question: Question) : BaseViewModel() {
     val networkState: LiveData<Int>
     val initialLoad: LiveData<Int>
 
+    val qid get() = questionLiveData.value!!.id
+
     private val factory: AnswerDataSource.Factory
 
     init {

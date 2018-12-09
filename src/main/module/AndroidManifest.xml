@@ -25,6 +25,7 @@
         <activity
             android:name=".pages.answer.ui.AnswerActivity"
             android:windowSoftInputMode="adjustPan" />
+        <activity android:name=".pages.report.ui.ReportActivity"></activity>
     </application>
 
 </manifest>

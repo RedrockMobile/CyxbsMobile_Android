@@ -57,4 +57,18 @@
     <string name="qa_answer_edit_content_hint">请尽可能给出明确的解决思路哦！</string>
     <string name="qa_answer_question_title">提供帮助</string>
     <string name="qa_answer_submit_answer">提交</string>
+    <string name="qa_hint_report_success">举报成功，会尽快为您处理</string>
+    <string name="qa_report_report_reason_hint">请选择举报原因</string>
+    <string name="qa_report_content_hint">请输入具体投诉原因（选填）</string>
+    <string name="qa_report_submit_report">提交</string>
+    <string name="qa_report_title">举报</string>
+
+    <string-array name="qa_report_type">
+        <item>色情低俗</item>
+        <item>广告骚扰</item>
+        <item>违法信息</item>
+        <item>辱骂威胁</item>
+        <item>欺诈骗钱</item>
+        <item>政治敏感</item>
+    </string-array>
 </resources>
