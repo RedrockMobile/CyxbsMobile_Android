@@ -1,9 +1,9 @@
-package com.mredrock.cyxbs.grades.ui.adapter
+package com.mredrock.cyxbs.discover.grades.ui.adapter
 
 import android.content.Context
-import com.mredrock.cyxbs.grades.bean.Grade
-import com.mredrock.cyxbs.grades.utils.baseRv.BaseAdapter
-import com.mredrock.cyxbs.grades.utils.baseRv.BaseHolder
+import com.mredrock.cyxbs.discover.grades.bean.Grade
+import com.mredrock.cyxbs.discover.grades.utils.baseRv.BaseAdapter
+import com.mredrock.cyxbs.discover.grades.utils.baseRv.BaseHolder
 import kotlinx.android.synthetic.main.grades_item_grade.view.*
 
 /**

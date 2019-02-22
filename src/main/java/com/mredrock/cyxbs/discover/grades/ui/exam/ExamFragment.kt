@@ -1,4 +1,4 @@
-package com.mredrock.cyxbs.grades.ui.exam
+package com.mredrock.cyxbs.discover.grades.ui.exam
 
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
@@ -11,10 +11,10 @@ import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.ui.BaseFragment
 import com.mredrock.cyxbs.common.utils.extensions.*
 import com.mredrock.cyxbs.grades.R
-import com.mredrock.cyxbs.grades.bean.Exam
-import com.mredrock.cyxbs.grades.network.ApiService
-import com.mredrock.cyxbs.grades.ui.adapter.ExamAdapter
-import com.mredrock.cyxbs.grades.ui.adapter.ReExamAdapter
+import com.mredrock.cyxbs.discover.grades.bean.Exam
+import com.mredrock.cyxbs.discover.grades.network.ApiService
+import com.mredrock.cyxbs.discover.grades.ui.adapter.ExamAdapter
+import com.mredrock.cyxbs.discover.grades.ui.adapter.ReExamAdapter
 import kotlinx.android.synthetic.main.grades_fragment.view.*
 import org.jetbrains.anko.support.v4.toast
 
@@ -51,6 +51,7 @@ class ExamFragment : BaseFragment() {
 
     private fun judge() {
         if (kind != null && user != null) {
+            parent.srl_grades.setColorSchemeResources(R.color.colorPrimary)
             when (kind) {
                 "考试安排" -> initExam()
                 "补考安排" -> initReExam()

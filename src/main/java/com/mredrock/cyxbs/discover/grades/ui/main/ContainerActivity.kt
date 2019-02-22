@@ -1,4 +1,4 @@
-package com.mredrock.cyxbs.grades.ui.main
+package com.mredrock.cyxbs.discover.grades.ui.main
 
 import android.os.Bundle
 import com.alibaba.android.arouter.facade.annotation.Route
@@ -6,9 +6,9 @@ import com.jude.swipbackhelper.SwipeBackHelper
 import com.mredrock.cyxbs.common.config.DISCOVER_GRADES
 import com.mredrock.cyxbs.common.ui.BaseActivity
 import com.mredrock.cyxbs.grades.R
-import com.mredrock.cyxbs.grades.ui.adapter.FPAdapter
-import com.mredrock.cyxbs.grades.ui.exam.ExamFragment
-import com.mredrock.cyxbs.grades.ui.grades.GradesFragment
+import com.mredrock.cyxbs.discover.grades.ui.adapter.FPAdapter
+import com.mredrock.cyxbs.discover.grades.ui.exam.ExamFragment
+import com.mredrock.cyxbs.discover.grades.ui.grades.GradesFragment
 import kotlinx.android.synthetic.main.grades_activity_container.*
 
 /**

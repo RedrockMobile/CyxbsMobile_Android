@@ -1,4 +1,4 @@
-package com.mredrock.cyxbs.grades.utils.baseRv
+package com.mredrock.cyxbs.discover.grades.utils.baseRv
 
 import android.content.Context
 import android.view.Gravity

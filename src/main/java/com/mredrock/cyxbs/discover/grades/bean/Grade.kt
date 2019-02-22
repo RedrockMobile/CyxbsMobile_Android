@@ -1,4 +1,4 @@
-package com.mredrock.cyxbs.grades.bean
+package com.mredrock.cyxbs.discover.grades.bean
 
 
 class Grade(
