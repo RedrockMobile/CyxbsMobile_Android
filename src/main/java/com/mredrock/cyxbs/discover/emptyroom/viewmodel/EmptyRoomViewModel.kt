@@ -1,6 +1,7 @@
 package com.mredrock.cyxbs.emptyroom.viewmodel
 
 import android.arch.lifecycle.MutableLiveData
+import android.util.Log
 import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.utils.extensions.mapOrThrowApiException
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
@@ -39,7 +40,6 @@ class EmptyRoomViewModel : BaseViewModel() {
             status.value = DEFAULT
             return
         }
-//      后端说这部分会直接支持多段查找，先这么写了
         status.value = LOADING
         d?.dispose()
         d = apiService.getEmptyRooms(week, weekday, building, tag)
