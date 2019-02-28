@@ -1,10 +1,12 @@
 package com.mredrock.cyxbs.course.network
 
+import java.io.Serializable
+
 /**
  * Created by anriku on 2018/10/13.
  */
 
-class Student {
+class Student:Serializable {
     /**
      * classId : 04031501
      * major : 网络工程
