@@ -1,6 +1,7 @@
-package com.mredrock.cyxbs.grades.bean
+package com.mredrock.cyxbs.discover.grades.bean
+import java.io.Serializable
 
-class Exam : Comparable<Exam> {
+class Exam : Comparable<Exam>,Serializable {
     var week: String? = null
     var weekday: String? = null
     var student: String? = null

@@ -1,8 +1,8 @@
-package com.mredrock.cyxbs.grades.network
+package com.mredrock.cyxbs.discover.grades.network
 
 import com.mredrock.cyxbs.common.bean.RedrockApiWrapper
-import com.mredrock.cyxbs.grades.bean.Exam
-import com.mredrock.cyxbs.grades.bean.Grade
+import com.mredrock.cyxbs.discover.grades.bean.Exam
+import com.mredrock.cyxbs.discover.grades.bean.Grade
 import io.reactivex.Observable
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded

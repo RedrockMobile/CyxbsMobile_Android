@@ -1,5 +1,6 @@
-package com.mredrock.cyxbs.grades.bean
+package com.mredrock.cyxbs.discover.grades.bean
 
+import java.io.Serializable
 
 class Grade(
         val course: String,
@@ -8,4 +9,4 @@ class Grade(
         val status: String,
         val student: String,
         val term: String
-)
+):Serializable

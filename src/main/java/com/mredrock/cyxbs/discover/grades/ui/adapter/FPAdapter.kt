@@ -1,4 +1,4 @@
-package com.mredrock.cyxbs.grades.ui.adapter
+package com.mredrock.cyxbs.discover.grades.ui.adapter
 
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager

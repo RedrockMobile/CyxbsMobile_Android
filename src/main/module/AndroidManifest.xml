@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.mredrock.cyxbs.grades">
+    package="com.mredrock.cyxbs.discover.grades">
 
     <application
         android:name="com.mredrock.cyxbs.common.BaseApp"

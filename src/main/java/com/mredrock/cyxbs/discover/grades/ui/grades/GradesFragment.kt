@@ -1,4 +1,4 @@
-package com.mredrock.cyxbs.grades.ui.grades
+package com.mredrock.cyxbs.discover.grades.ui.grades
 
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
@@ -10,10 +10,10 @@ import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.ui.BaseFragment
 import com.mredrock.cyxbs.common.utils.extensions.*
-import com.mredrock.cyxbs.grades.R
-import com.mredrock.cyxbs.grades.bean.Grade
-import com.mredrock.cyxbs.grades.network.ApiService
-import com.mredrock.cyxbs.grades.ui.adapter.GradesAdapter
+import com.mredrock.cyxbs.discover.grades.R
+import com.mredrock.cyxbs.discover.grades.bean.Grade
+import com.mredrock.cyxbs.discover.grades.network.ApiService
+import com.mredrock.cyxbs.discover.grades.ui.adapter.GradesAdapter
 import kotlinx.android.synthetic.main.grades_fragment.view.*
 import org.jetbrains.anko.support.v4.toast
 
@@ -72,7 +72,7 @@ class GradesFragment : BaseFragment() {
         } else {
             toast("无法获取到用户信息")
         }
-
+        parent.srl_grades.setColorSchemeResources(R.color.colorPrimary)
         parent.srl_grades.setOnRefreshListener {
             refreshData()
         }
