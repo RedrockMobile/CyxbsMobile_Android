@@ -14,8 +14,8 @@ android {
         applicationId "com.mredrock.cyxbs"
         minSdkVersion build_versions.min_sdk
         targetSdkVersion build_versions.target_sdk
-        versionCode 41
-        versionName "重构测试版"
+        versionCode 50
+        versionName "5.0.0"
         multiDexEnabled true
         manifestPlaceholders = [UMENG_CHANNEL_VALUE: "official"]
 
@@ -49,7 +49,6 @@ android {
             minifyEnabled false
             zipAlignEnabled false
             shrinkResources false
-            signingConfig signingConfigs.debug
 
             manifestPlaceholders = [UMENG_CHANNEL_VALUE: "official"]
 
