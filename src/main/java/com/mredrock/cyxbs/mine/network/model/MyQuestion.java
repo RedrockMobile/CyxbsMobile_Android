@@ -1,10 +1,12 @@
 package com.mredrock.cyxbs.mine.network.model;
 
+import java.io.Serializable;
+
 /**
  * Created by yan on 2018/6/2.
  */
 
-public class MyQuestion {
+public class MyQuestion implements Serializable {
 
     /**
      * id : 18

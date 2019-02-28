@@ -1,6 +1,7 @@
 package com.mredrock.cyxbs.mine.network.model
 
 import com.google.gson.annotations.SerializedName
+import java.io.Serializable
 
 data class RelateMeItem(@SerializedName("photo_thumbnail_src")
                         val photoThumbnailSrc: String = "",
@@ -19,7 +20,7 @@ data class RelateMeItem(@SerializedName("photo_thumbnail_src")
                         @SerializedName("content")
                         val content: String = "",
                         @SerializedName("photo_src")
-                        val photoSrc: String = "") {
+                        val photoSrc: String = ""):Serializable {
     val typeDescription get() = (if (type == "1") "赞" else "评论")
     val isComment get() = type == "2"
 

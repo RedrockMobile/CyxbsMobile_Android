@@ -10,5 +10,4 @@ dependencies {
 
     implementation 'de.hdodenhof:circleimageview:2.2.0'
     implementation 'com.kyleduo.switchbutton:library:2.0.0'
-    implementation 'com.github.yalantis:ucrop:2.2.2'
 }

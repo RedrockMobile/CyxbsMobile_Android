@@ -1,10 +1,12 @@
 package com.mredrock.cyxbs.mine.network.model;
 
+import java.io.Serializable;
+
 /**
  * Created by zzzia on 2018/8/21.
  * 图片上传，返回地址
  */
-public class UploadImgResponse {
+public class UploadImgResponse implements Serializable {
     @Override
     public String toString() {
         return "UploadImgResponse{" +

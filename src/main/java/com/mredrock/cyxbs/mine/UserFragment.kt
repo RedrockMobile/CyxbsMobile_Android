@@ -12,6 +12,7 @@ import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.bean.User
 import com.mredrock.cyxbs.common.config.MINE_ENTRY
 import com.mredrock.cyxbs.common.event.AskLoginEvent
+import com.mredrock.cyxbs.common.event.LoginEvent
 import com.mredrock.cyxbs.common.event.LoginStateChangeEvent
 import com.mredrock.cyxbs.common.ui.BaseViewModelFragment
 import com.mredrock.cyxbs.common.utils.extensions.loadAvatar
@@ -41,18 +42,13 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        mine_main_toolbar.title = "我的"
-
         addObserver()
 
         //加载资料
         getPersonInfoData()
 
         //功能按钮
-//        mine_main_dailySign.setOnClickListener { checkLoginBeforeAction("签到") { startActivity<DailySignActivity>() } }
-        mine_main_dailySign.setOnClickListener {
-                startActivity(Intent(context,DailySignActivity::class.java))
-        }
+        mine_main_dailySign.setOnClickListener { checkLoginBeforeAction("签到"){startActivity<DailySignActivity>()} }
         mine_main_store.setOnClickListener { checkLoginBeforeAction("商店") { startActivity<StoreActivity>() } }
         mine_main_question.setOnClickListener { checkLoginBeforeAction("问一问") { startActivity<AskActivity>() } }
         mine_main_help.setOnClickListener { checkLoginBeforeAction("帮一帮") { startActivity<HelpActivity>() } }

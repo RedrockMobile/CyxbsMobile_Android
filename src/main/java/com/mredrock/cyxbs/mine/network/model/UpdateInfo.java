@@ -3,11 +3,13 @@ package com.mredrock.cyxbs.mine.network.model;
 import org.simpleframework.xml.Element;
 import org.simpleframework.xml.Root;
 
+import java.io.Serializable;
+
 /**
  * Created by cc on 16/5/8.
  */
 @Root(name = "updateInfo")
-public class UpdateInfo {
+public class UpdateInfo implements Serializable {
 
     @Element(name = "versionCode")
     public int    versionCode;
