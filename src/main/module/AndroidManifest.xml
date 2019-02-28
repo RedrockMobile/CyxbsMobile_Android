@@ -54,7 +54,6 @@
                 android:resource="@xml/widget_normal" />
         </receiver>
 
-        <activity android:name=".page.ConfigActivity" />
         <activity android:name=".page.trans.TransConfigActivity" />
         <activity android:name=".page.little.LittleConfigActivity" />
         <activity android:name=".page.normal.NormalConfigActivity" />

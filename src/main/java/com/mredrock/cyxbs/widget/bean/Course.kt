@@ -1,9 +1,11 @@
 package com.mredrock.cyxbs.widget.bean
 
+import java.io.Serializable
+
 /**
  * Created by zia on 2018/10/9.
  */
-class Course {
+class Course: Serializable {
 
     /**
      * status : 200
@@ -41,7 +43,7 @@ class Course {
                 '}'.toString()
     }
 
-    class DataBean {
+    class DataBean: Serializable {
         /**
          * hash_day : 0
          * hash_lesson : 1
