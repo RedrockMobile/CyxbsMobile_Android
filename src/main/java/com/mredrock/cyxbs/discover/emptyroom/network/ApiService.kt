@@ -1,4 +1,4 @@
-package com.mredrock.cyxbs.emptyroom.network
+package com.mredrock.cyxbs.discover.emptyroom.network
 
 import com.mredrock.cyxbs.common.bean.RedrockApiWrapper
 import io.reactivex.Observable

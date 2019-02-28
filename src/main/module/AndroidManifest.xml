@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.mredrock.cyxbs.emptyroom">
+    package="com.mredrock.cyxbs.discover.emptyroom">
 
     <application
-        android:theme="@style/AppTheme"
         android:name="com.mredrock.cyxbs.common.BaseApp"
         android:label="@string/emptyroom_name"
         android:supportsRtl="true"
+        android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
 
         <activity android:name=".ui.EmptyRoomActivity">

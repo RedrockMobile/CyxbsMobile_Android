@@ -3,10 +3,10 @@
 
     <!--仅在空教室部分使用了该控件-->
     <declare-styleable name="MultiSelector" tools:ignore="ResourceName">
-        <attr name="max_num" format="integer"/>
-        <attr name="min_num" format="integer"/>
-        <attr name="values" format="reference"/>
-        <attr name="display_values" format="reference"/>
-        <attr name="radio_button_mode" format="boolean"/>
+        <attr name="max_num" format="integer" />
+        <attr name="min_num" format="integer" />
+        <attr name="values" format="reference" />
+        <attr name="display_values" format="reference" />
+        <attr name="radio_button_mode" format="boolean" />
     </declare-styleable>
 </resources>

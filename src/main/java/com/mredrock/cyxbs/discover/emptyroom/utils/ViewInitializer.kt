@@ -1,12 +1,12 @@
-package com.mredrock.cyxbs.emptyroom.utils
+package com.mredrock.cyxbs.discover.emptyroom.utils
 
 import android.content.Context
 import android.support.annotation.Px
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import com.mredrock.cyxbs.emptyroom.ui.adapter.StringAdapter
-import com.mredrock.cyxbs.emptyroom.ui.widget.DefaultItemDecoration
-import com.mredrock.cyxbs.emptyroom.ui.widget.MultiSelector
+import com.mredrock.cyxbs.discover.emptyroom.ui.adapter.StringAdapter
+import com.mredrock.cyxbs.discover.emptyroom.ui.widget.DefaultItemDecoration
+import com.mredrock.cyxbs.discover.emptyroom.ui.widget.MultiSelector
 
 /**
  * Created by Cynthia on 2018/9/19

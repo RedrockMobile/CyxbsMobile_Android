@@ -1,4 +1,4 @@
-package com.mredrock.cyxbs.emptyroom.ui
+package com.mredrock.cyxbs.discover.emptyroom.ui
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
@@ -22,16 +22,16 @@ import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.SchoolCalendar
 import com.mredrock.cyxbs.common.utils.extensions.gone
 import com.mredrock.cyxbs.common.utils.extensions.visible
-import com.mredrock.cyxbs.emptyroom.R
-import com.mredrock.cyxbs.emptyroom.ui.adapter.EmptyRoomResultAdapter
-import com.mredrock.cyxbs.emptyroom.ui.adapter.StringAdapter
-import com.mredrock.cyxbs.emptyroom.ui.widget.MultiSelector
-import com.mredrock.cyxbs.emptyroom.ui.widget.OnItemSelectedChangeListener
-import com.mredrock.cyxbs.emptyroom.utils.ViewInitializer
-import com.mredrock.cyxbs.emptyroom.viewmodel.DEFAULT
-import com.mredrock.cyxbs.emptyroom.viewmodel.EmptyRoomViewModel
-import com.mredrock.cyxbs.emptyroom.viewmodel.FINISH
-import com.mredrock.cyxbs.emptyroom.viewmodel.LOADING
+import com.mredrock.cyxbs.discover.emptyroom.R
+import com.mredrock.cyxbs.discover.emptyroom.ui.adapter.EmptyRoomResultAdapter
+import com.mredrock.cyxbs.discover.emptyroom.ui.adapter.StringAdapter
+import com.mredrock.cyxbs.discover.emptyroom.ui.widget.MultiSelector
+import com.mredrock.cyxbs.discover.emptyroom.ui.widget.OnItemSelectedChangeListener
+import com.mredrock.cyxbs.discover.emptyroom.utils.ViewInitializer
+import com.mredrock.cyxbs.discover.emptyroom.viewmodel.DEFAULT
+import com.mredrock.cyxbs.discover.emptyroom.viewmodel.EmptyRoomViewModel
+import com.mredrock.cyxbs.discover.emptyroom.viewmodel.FINISH
+import com.mredrock.cyxbs.discover.emptyroom.viewmodel.LOADING
 import kotlinx.android.synthetic.main.emptyroom_activity_empty_room.*
 import org.jetbrains.anko.dip
 import java.util.*

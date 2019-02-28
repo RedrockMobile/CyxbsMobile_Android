@@ -1,6 +1,6 @@
-package com.mredrock.cyxbs.emptyroom.utils
+package com.mredrock.cyxbs.discover.emptyroom.utils
 
-import com.mredrock.cyxbs.emptyroom.bean.EmptyRoom
+import com.mredrock.cyxbs.discover.emptyroom.bean.EmptyRoom
 import java.util.*
 import kotlin.collections.ArrayList
 

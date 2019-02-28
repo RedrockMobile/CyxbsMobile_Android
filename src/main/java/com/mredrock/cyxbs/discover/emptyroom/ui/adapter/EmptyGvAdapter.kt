@@ -1,4 +1,4 @@
-package com.mredrock.cyxbs.emptyroom.ui.adapter
+package com.mredrock.cyxbs.discover.emptyroom.ui.adapter
 
 import android.content.Context
 import android.text.Html
@@ -7,7 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.TextView
-import com.mredrock.cyxbs.emptyroom.R
+import com.mredrock.cyxbs.discover.emptyroom.R
 
 /**
  * Created by Cynthia on 2018/9/19

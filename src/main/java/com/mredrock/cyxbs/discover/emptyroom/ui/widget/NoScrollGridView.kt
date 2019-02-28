@@ -1,4 +1,4 @@
-package com.mredrock.cyxbs.emptyroom.ui.widget
+package com.mredrock.cyxbs.discover.emptyroom.ui.widget
 
 import android.content.Context
 import android.util.AttributeSet

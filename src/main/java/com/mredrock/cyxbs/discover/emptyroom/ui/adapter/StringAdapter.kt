@@ -1,4 +1,4 @@
-package com.mredrock.cyxbs.emptyroom.ui.adapter
+package com.mredrock.cyxbs.discover.emptyroom.ui.adapter
 
 import android.support.annotation.IdRes
 import android.support.annotation.LayoutRes
@@ -7,7 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import com.mredrock.cyxbs.emptyroom.ui.widget.MultiSelector
+import com.mredrock.cyxbs.discover.emptyroom.ui.widget.MultiSelector
 
 /**
  * Created by Cynthia on 2018/9/19

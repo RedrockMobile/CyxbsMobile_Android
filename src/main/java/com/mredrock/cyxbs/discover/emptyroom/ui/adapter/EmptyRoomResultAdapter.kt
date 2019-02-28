@@ -1,12 +1,12 @@
-package com.mredrock.cyxbs.emptyroom.ui.adapter
+package com.mredrock.cyxbs.discover.emptyroom.ui.adapter
 
 import android.content.Context
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.mredrock.cyxbs.emptyroom.R
-import com.mredrock.cyxbs.emptyroom.bean.EmptyRoom
+import com.mredrock.cyxbs.discover.emptyroom.R
+import com.mredrock.cyxbs.discover.emptyroom.bean.EmptyRoom
 import kotlinx.android.synthetic.main.emptyroom_recycle_item_room_result.view.*
 
 /**

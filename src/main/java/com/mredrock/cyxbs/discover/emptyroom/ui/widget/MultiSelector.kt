@@ -1,12 +1,12 @@
-package com.mredrock.cyxbs.emptyroom.ui.widget
+package com.mredrock.cyxbs.discover.emptyroom.ui.widget
 
 import android.content.Context
 import android.support.v7.widget.RecyclerView
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.FrameLayout
-import com.mredrock.cyxbs.emptyroom.R
-import com.mredrock.cyxbs.emptyroom.utils.ViewInitializer
+import com.mredrock.cyxbs.discover.emptyroom.R
+import com.mredrock.cyxbs.discover.emptyroom.utils.ViewInitializer
 import kotlinx.android.synthetic.main.emptyroom_layout_multi_selector.view.*
 import java.util.*
 

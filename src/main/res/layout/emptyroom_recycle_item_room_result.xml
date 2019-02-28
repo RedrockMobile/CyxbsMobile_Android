@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="10dp"
     android:layout_marginTop="10dp"
+    android:layout_marginBottom="10dp"
     android:orientation="horizontal">
 
     <LinearLayout
@@ -20,7 +19,7 @@
         <View
             android:layout_width="2dp"
             android:layout_height="13dp"
-            android:background="@drawable/emptyroom_shape_result_item"/>
+            android:background="@drawable/emptyroom_shape_result_item" />
 
         <TextView
             android:id="@+id/tv_building"
@@ -29,16 +28,16 @@
             android:layout_marginStart="8dp"
             android:textColor="#5E5E5E"
             android:textSize="14sp"
-            tools:text="一楼"/>
+            tools:text="一楼" />
     </LinearLayout>
 
-    <com.mredrock.cyxbs.emptyroom.ui.widget.NoScrollGridView
+    <com.mredrock.cyxbs.discover.emptyroom.ui.widget.NoScrollGridView
         android:id="@+id/no_scroll_grid_view"
-        android:listSelector="@android:color/transparent"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="12"
+        android:listSelector="@android:color/transparent"
         android:numColumns="5"
         android:stretchMode="columnWidth"
-        android:verticalSpacing="8dp"/>
+        android:verticalSpacing="8dp" />
 </LinearLayout>

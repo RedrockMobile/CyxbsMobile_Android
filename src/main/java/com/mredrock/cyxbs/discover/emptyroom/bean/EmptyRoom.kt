@@ -1,4 +1,4 @@
-package com.mredrock.cyxbs.emptyroom.bean
+package com.mredrock.cyxbs.discover.emptyroom.bean
 
 import android.os.Parcel
 import android.os.Parcelable

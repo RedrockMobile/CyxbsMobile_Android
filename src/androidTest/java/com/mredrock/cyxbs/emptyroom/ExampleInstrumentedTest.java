@@ -1,4 +1,4 @@
-package com.mredrock.cyxbs.emptyroom;
+package com.mredrock.cyxbs.discover.emptyroom;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("com.mredrock.cyxbs.emptyroom.test", appContext.getPackageName());
+        assertEquals("com.mredrock.cyxbs.discover.emptyroom.test", appContext.getPackageName());
     }
 }

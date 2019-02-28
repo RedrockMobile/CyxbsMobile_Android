@@ -1,4 +1,4 @@
-package com.mredrock.cyxbs.emptyroom.ui.widget
+package com.mredrock.cyxbs.discover.emptyroom.ui.widget
 
 import android.graphics.Rect
 import android.support.annotation.Px
@@ -13,7 +13,6 @@ class DefaultItemDecoration(@Px head: Int, @Px middle: Int, @Px tail: Int) : Rec
     private var mHead: Int = head
     private var mMiddle: Int = middle
     private var mTail: Int = tail
-
 
     override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
         super.getItemOffsets(outRect, view, parent, state)
