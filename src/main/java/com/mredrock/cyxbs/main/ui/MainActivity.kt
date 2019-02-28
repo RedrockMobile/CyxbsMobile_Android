@@ -2,6 +2,7 @@ package com.mredrock.cyxbs.main.ui
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v4.view.ViewPager
 import android.view.MenuItem
 import com.alibaba.android.arouter.launcher.ARouter
 import com.jude.swipbackhelper.SwipeBackHelper
@@ -48,7 +49,6 @@ class MainActivity : BaseActivity() {
 
         fab.setOnClickListener {
             //todo start freshmanActivity
-            startActivity<LoginActivity>()
         }
     }
 
@@ -82,7 +82,16 @@ class MainActivity : BaseActivity() {
         adapter = MainVpAdapter(supportFragmentManager, fragments)
         view_pager.adapter = adapter
         view_pager.offscreenPageLimit = 4
+        view_pager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener{
+            override fun onPageScrollStateChanged(state: Int) {}
+            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {}
+            override fun onPageSelected(position: Int) {
+                menu?.getItem(0)?.isVisible = position == 0
+            }
+        })
     }
+
+
 
     private fun getFragment(path: String) = ARouter.getInstance().build(path).navigation() as Fragment
 

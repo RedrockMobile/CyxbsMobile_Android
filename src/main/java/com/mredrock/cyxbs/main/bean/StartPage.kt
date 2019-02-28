@@ -1,4 +1,5 @@
 package com.mredrock.cyxbs.main.bean
+import java.io.Serializable
 
 /**
  * Created By jay68 on 2018/8/10.
@@ -10,4 +11,4 @@ data class StartPage(
         val start: String?,
         val annotation: String?,
         val column: String?
-)
+):Serializable
