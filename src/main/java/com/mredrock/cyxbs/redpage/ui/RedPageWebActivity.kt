@@ -40,7 +40,7 @@ class RedPageWebActivity : BaseActivity() {
         }
 
         wv_redPage.apply {
-            loadUrl("https://criticalcrisis.github.io/build/index.html")
+            loadUrl("file:///android_asset/index.html")
             addJavascriptInterface(this,"android")
             webChromeClient = mWebChromeClient
             webViewClient = mWebViewClient
