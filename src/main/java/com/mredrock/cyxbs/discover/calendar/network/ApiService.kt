@@ -5,6 +5,6 @@ import retrofit2.http.GET
 
 interface ApiService {
 
-    @GET("http://wx.yyeke.com/api/search/picture/xiaoli?year=2018")
+    @GET("https://www.showdoc.cc/158569683538010?page_id=934446007248273")
     fun getCalendar(): Observable<RedrockApiWrapper<List<Calendar>>>
 }
