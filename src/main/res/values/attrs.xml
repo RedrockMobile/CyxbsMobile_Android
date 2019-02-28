@@ -32,4 +32,14 @@
         <attr name="contentPaddingRight" />
         <attr name="contentPaddingBottom" />
     </declare-styleable>
+
+    <declare-styleable name="RatioLayout">
+        <attr name="ratio" format="float"/>
+    </declare-styleable>
+
+    <declare-styleable name="Toolbar">
+        <attr name="text_title" format="string"/>
+        <attr name="text_left" format="string"/>
+        <attr name="text_right" format="string"/>
+    </declare-styleable>
 </resources>

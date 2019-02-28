@@ -6,4 +6,13 @@
     <string name="common_qa">邮问</string>
     <string name="common_explore">发现</string>
     <string name="common_mine">我的</string>
+
+    <!--multi image selector-->
+    <string name="common_folder_all">所有照片</string>
+    <string name="common_preview">预览</string>
+    <string name="common_msg_no_camera">没有系统相机</string>
+    <string name="common_msg_amount_limit">已经达到最高选择数量</string>
+    <string name="common_action_done">完成</string>
+    <string name="common_photo_unit">张</string>
+    <string name="common_tip_take_photo">拍摄照片</string>
 </resources>

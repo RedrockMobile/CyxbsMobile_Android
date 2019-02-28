@@ -9,6 +9,7 @@ import android.support.annotation.DrawableRes
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import android.util.Log
+import android.view.Menu
 import android.view.View
 import android.view.WindowManager
 import com.afollestad.materialdialogs.MaterialDialog
@@ -68,6 +69,8 @@ abstract class BaseActivity : AppCompatActivity() {
     }
 
     val common_toolbar get() = toolbar
+    var menu: Menu? = null
+        private set
 
     protected fun Toolbar.init(title: String,
                                @DrawableRes icon: Int = R.drawable.common_ic_back,
@@ -108,6 +111,12 @@ abstract class BaseActivity : AppCompatActivity() {
                         }
                     }).show()
         }
+    }
+
+    override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
+        val r = super.onPrepareOptionsMenu(menu)
+        this.menu = menu
+        return r
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

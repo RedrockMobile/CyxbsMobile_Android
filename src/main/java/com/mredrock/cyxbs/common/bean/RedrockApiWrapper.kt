@@ -1,5 +1,7 @@
 package com.mredrock.cyxbs.common.bean
 
+import java.io.Serializable
+
 /**
  * Created By jay68 on 2018/8/10.
  */
@@ -7,7 +9,7 @@ package com.mredrock.cyxbs.common.bean
 /**
  * 当返回的json中没有data字段时使用此接口
  */
-open class RedrockApiStatus {
+open class RedrockApiStatus : Serializable {
     var status: Int = 0
     var info: String? = null
     var version: String? = null
