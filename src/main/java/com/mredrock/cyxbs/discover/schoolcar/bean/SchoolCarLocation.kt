@@ -1,10 +1,12 @@
 package com.mredrock.cyxbs.discover.schoolcar.bean
 
+import java.io.Serializable
+
 /**
  * Created by glossimar on 2018/9/12
  */
 
-class SchoolCarLocation {
+class SchoolCarLocation: Serializable {
     lateinit var status: String
     lateinit var info: String
     lateinit var time: String
