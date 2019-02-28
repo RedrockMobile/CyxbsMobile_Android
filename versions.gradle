@@ -7,7 +7,7 @@ def versions = [:]
 versions.kotlin = '1.2.71'
 versions.anko = '0.10.7'
 //official ui and support library
-versions.constraint_layout = '1.1.2'
+versions.constraint_layout = '1.1.3'
 versions.support = '27.1.1'
 versions.multidex = '1.0.3'
 //event and router
