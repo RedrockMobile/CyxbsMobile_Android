@@ -1,4 +1,4 @@
-package com.mredrock.cyxbs.news.viewmodel
+package com.mredrock.cyxbs.discover.news.viewmodel
 
 import android.Manifest.permission.WRITE_EXTERNAL_STORAGE
 import android.arch.lifecycle.LiveData
@@ -10,11 +10,11 @@ import com.mredrock.cyxbs.common.utils.extensions.mapOrThrowApiException
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
-import com.mredrock.cyxbs.news.bean.NewsAttachment
-import com.mredrock.cyxbs.news.bean.NewsDetails
-import com.mredrock.cyxbs.news.network.ApiService
-import com.mredrock.cyxbs.news.network.download.DownloadManager
-import com.mredrock.cyxbs.news.network.download.RedDownloadListener
+import com.mredrock.cyxbs.discover.news.bean.NewsAttachment
+import com.mredrock.cyxbs.discover.news.bean.NewsDetails
+import com.mredrock.cyxbs.discover.news.network.ApiService
+import com.mredrock.cyxbs.discover.news.network.download.DownloadManager
+import com.mredrock.cyxbs.discover.news.network.download.RedDownloadListener
 import com.tbruyelle.rxpermissions2.RxPermissions
 import java.io.File
 

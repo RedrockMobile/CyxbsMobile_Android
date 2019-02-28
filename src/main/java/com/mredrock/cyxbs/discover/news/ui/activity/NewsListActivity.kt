@@ -1,4 +1,4 @@
-package com.mredrock.cyxbs.news.ui.activity
+package com.mredrock.cyxbs.discover.news.ui.activity
 
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
@@ -9,9 +9,9 @@ import com.mredrock.cyxbs.common.ui.BaseActivity
 import com.mredrock.cyxbs.common.utils.extensions.mapOrThrowApiException
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
-import com.mredrock.cyxbs.news.R
-import com.mredrock.cyxbs.news.network.ApiService
-import com.mredrock.cyxbs.news.ui.adapter.NewsAdapter
+import com.mredrock.cyxbs.discover.news.R
+import com.mredrock.cyxbs.discover.news.network.ApiService
+import com.mredrock.cyxbs.discover.news.ui.adapter.NewsAdapter
 import kotlinx.android.synthetic.main.news_activity_list.*
 
 @Route(path = DISCOVER_NEWS)

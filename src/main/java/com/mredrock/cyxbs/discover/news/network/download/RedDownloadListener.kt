@@ -1,4 +1,4 @@
-package com.mredrock.cyxbs.news.network.download
+package com.mredrock.cyxbs.discover.news.network.download
 
 import java.io.File
 

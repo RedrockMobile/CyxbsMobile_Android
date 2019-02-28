@@ -1,4 +1,4 @@
-package com.mredrock.cyxbs.news.utils
+package com.mredrock.cyxbs.discover.news.utils
 
 import java.io.File
 

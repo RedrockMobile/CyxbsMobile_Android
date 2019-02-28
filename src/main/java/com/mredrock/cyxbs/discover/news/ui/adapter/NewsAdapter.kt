@@ -1,19 +1,19 @@
-package com.mredrock.cyxbs.news.ui.adapter
+package com.mredrock.cyxbs.discover.news.ui.adapter
 
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.mredrock.cyxbs.news.R
-import com.mredrock.cyxbs.news.bean.NewsListItem
-import com.mredrock.cyxbs.news.ui.activity.NewsItemActivity
+import com.mredrock.cyxbs.discover.news.R
+import com.mredrock.cyxbs.discover.news.bean.NewsListItem
+import com.mredrock.cyxbs.discover.news.ui.activity.NewsItemActivity
 import kotlinx.android.synthetic.main.news_item_news.view.*
 import org.jetbrains.anko.startActivity
 
 /**
  * Author: Hosigus
  * Date: 2018/9/20 15:23
- * Description: com.mredrock.cyxbs.news.ui.adapter
+ * Description: com.mredrock.cyxbs.discover.news.ui.adapter
  */
 class NewsAdapter(private val newsList: MutableList<NewsListItem>) : RecyclerView.Adapter<NewsAdapter.ViewHolder>() {
 

@@ -1,6 +1,7 @@
-package com.mredrock.cyxbs.news.bean
+package com.mredrock.cyxbs.discover.news.bean
 
 import com.google.gson.annotations.SerializedName
+import java.io.Serializable
 
 data class NewsListItem(@SerializedName("teaName")
                         val teaName: String = "",
@@ -23,4 +24,4 @@ data class NewsListItem(@SerializedName("teaName")
                         @SerializedName("fileId")
                         val fileId: Int = 0,
                         @SerializedName("dirName")
-                        val dirName: String = "")
+                        val dirName: String = ""): Serializable

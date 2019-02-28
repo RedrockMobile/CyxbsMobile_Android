@@ -1,4 +1,4 @@
-package com.mredrock.cyxbs.news.network.download
+package com.mredrock.cyxbs.discover.news.network.download
 
 import okhttp3.Interceptor
 import okhttp3.Response

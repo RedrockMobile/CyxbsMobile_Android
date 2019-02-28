@@ -1,4 +1,4 @@
-package com.mredrock.cyxbs.news.ui.activity
+package com.mredrock.cyxbs.discover.news.ui.activity
 
 import android.app.AlertDialog
 import android.arch.lifecycle.Observer
@@ -10,10 +10,10 @@ import android.view.Menu
 import com.afollestad.materialdialogs.MaterialDialog
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.viewmodel.event.ProgressDialogEvent
-import com.mredrock.cyxbs.news.R
-import com.mredrock.cyxbs.news.bean.NewsAttachment
-import com.mredrock.cyxbs.news.utils.FileTypeHelper
-import com.mredrock.cyxbs.news.viewmodel.NewsItemViewModel
+import com.mredrock.cyxbs.discover.news.R
+import com.mredrock.cyxbs.discover.news.bean.NewsAttachment
+import com.mredrock.cyxbs.discover.news.utils.FileTypeHelper
+import com.mredrock.cyxbs.discover.news.viewmodel.NewsItemViewModel
 import com.tbruyelle.rxpermissions2.RxPermissions
 import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.news_activity_detail.*
