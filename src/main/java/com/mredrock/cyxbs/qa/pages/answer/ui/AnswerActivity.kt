@@ -12,14 +12,11 @@ import android.text.TextWatcher
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.ImageView
-import com.luck.picture.lib.PictureSelector
-import com.luck.picture.lib.config.PictureConfig
+import com.mredrock.cyxbs.common.component.multi_image_selector.MultiImageSelectorActivity
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.pages.answer.viewmodel.AnswerViewModel
-import com.mredrock.cyxbs.qa.pages.quiz.ui.dialog.SelectImageDialog
 import com.mredrock.cyxbs.qa.utils.selectImageFromAlbum
-import com.mredrock.cyxbs.qa.utils.selectImageFromCamera
 import kotlinx.android.synthetic.main.qa_activity_answer.*
 import org.jetbrains.anko.startActivityForResult
 
@@ -35,18 +32,6 @@ class AnswerActivity : BaseViewModelActivity<AnswerViewModel>() {
     override val viewModelClass = AnswerViewModel::class.java
 
     override val isFragmentActivity = false
-
-    private val selectImageDialog by lazy {
-        SelectImageDialog(this).apply {
-            selectImageFromAlbum = {
-                this@AnswerActivity.selectImageFromAlbum(AnswerActivity.MAX_SELECTABLE_IMAGE_COUNT, viewModel.imageLiveData.value)
-            }
-
-            selectImageFromCamera = {
-                this@AnswerActivity.selectImageFromCamera()
-            }
-        }
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -80,7 +65,7 @@ class AnswerActivity : BaseViewModelActivity<AnswerViewModel>() {
         nine_grid_view.addView(createImageView(BitmapFactory.decodeResource(resources, R.drawable.qa_ic_quiz_grid_add_img)))
         nine_grid_view.setOnItemClickListener { _, index ->
             if (index == nine_grid_view.childCount - 1) {
-                selectImageDialog.show()
+                this@AnswerActivity.selectImageFromAlbum(AnswerActivity.MAX_SELECTABLE_IMAGE_COUNT, viewModel.imageLiveData.value)
             }
         }
 
@@ -93,18 +78,11 @@ class AnswerActivity : BaseViewModelActivity<AnswerViewModel>() {
                     nine_grid_view.removeView(view)
                     continue
                 }
-                val localMedia = selectedImageFiles[i]
-                val path = localMedia.compressPath.takeIf { localMedia.isCompressed }
-                        ?: localMedia.path
-                (view as ImageView).setImageBitmap(BitmapFactory.decodeFile(path))
+                (view as ImageView).setImageBitmap(BitmapFactory.decodeFile(selectedImageFiles[i]))
             }
             //补充缺少的view
             selectedImageFiles.asSequence()
                     .filterIndexed { index, _ -> index >= nine_grid_view.childCount - 1 }
-                    .map { localMedia ->
-                        localMedia.compressPath.takeIf { localMedia.isCompressed }
-                                ?: localMedia.path
-                    }.toList()
                     .forEach {
                         nine_grid_view.addView(createImageView(BitmapFactory.decodeFile(it)),
                                 nine_grid_view.childCount - 1)
@@ -117,17 +95,8 @@ class AnswerActivity : BaseViewModelActivity<AnswerViewModel>() {
         if (resultCode != Activity.RESULT_OK) {
             return
         }
-        if (requestCode == PictureConfig.CHOOSE_REQUEST) {
-            viewModel.setImageList(PictureSelector.obtainMultipleResult(data))
-
-        } else if (requestCode == PictureConfig.REQUEST_CAMERA) {
-            //fixme 调用相机拍照没有返回结果
-            /*val localMedia = PictureSelector.obtainMultipleResult(data)[0]
-            selectedImageFiles.add(localMedia)
-            val path = localMedia.compressPath.takeIf { localMedia.isCompressed }
-                    ?: localMedia.path
-            nine_grid_view.addView(createImageView(BitmapFactory.decodeFile(path)),
-                    nine_grid_view.childCount - 1)*/
+        if (requestCode == MultiImageSelectorActivity.CHOOSE_REQUEST) {
+            viewModel.setImageList(data?.getStringArrayListExtra(MultiImageSelectorActivity.EXTRA_RESULT))
         }
     }
 

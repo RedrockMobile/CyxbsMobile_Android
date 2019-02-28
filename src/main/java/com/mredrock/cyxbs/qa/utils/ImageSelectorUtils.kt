@@ -1,11 +1,9 @@
 package com.mredrock.cyxbs.qa.utils
 
 import android.Manifest
+import android.content.Intent
 import android.support.v7.app.AppCompatActivity
-import com.luck.picture.lib.PictureSelector
-import com.luck.picture.lib.config.PictureConfig
-import com.luck.picture.lib.config.PictureMimeType
-import com.luck.picture.lib.entity.LocalMedia
+import com.mredrock.cyxbs.common.component.multi_image_selector.MultiImageSelectorActivity
 import com.mredrock.cyxbs.common.utils.extensions.doPermissionAction
 import org.jetbrains.anko.longToast
 
@@ -14,36 +12,18 @@ import org.jetbrains.anko.longToast
  */
 
 
-fun AppCompatActivity.selectImageFromAlbum(maxCount: Int, selected: List<LocalMedia>?) {
+fun AppCompatActivity.selectImageFromAlbum(maxCount: Int, selected: ArrayList<String>?) {
     doPermissionAction(Manifest.permission.READ_EXTERNAL_STORAGE) {
         doAfterGranted {
-            PictureSelector.create(this@selectImageFromAlbum)
-                    .openGallery(PictureMimeType.ofImage())
-                    .isCamera(false)
-                    .maxSelectNum(maxCount)
-                    .previewImage(true)
-                    .enableCrop(false)
-                    .compress(true)
-                    .cropCompressQuality(85)
-                    .minimumCompressSize(200)
-                    .selectionMedia(selected ?: emptyList())
-                    .forResult(PictureConfig.CHOOSE_REQUEST)
-        }
+            val intent = Intent(this@selectImageFromAlbum, MultiImageSelectorActivity::class.java)
+            intent.putExtra(MultiImageSelectorActivity.EXTRA_SHOW_CAMERA, true)
+            intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_COUNT, maxCount)
+            intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_MODE, MultiImageSelectorActivity.MODE_MULTI)
 
-        doAfterRefused {
-            longToast("访问相册失败，原因：未授权")
-        }
-    }
-}
+            if (!selected.isNullOrEmpty())
+                intent.putStringArrayListExtra(MultiImageSelectorActivity.EXTRA_DEFAULT_SELECTED_LIST, selected)
 
-fun AppCompatActivity.selectImageFromCamera() {
-    doPermissionAction(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA) {
-        doAfterGranted {
-            PictureSelector.create(this@selectImageFromCamera)
-                    .openCamera(PictureMimeType.ofImage())
-                    .compress(true)
-                    .cropCompressQuality(85)
-                    .forResult(PictureConfig.REQUEST_CAMERA)
+            startActivityForResult(intent, MultiImageSelectorActivity.CHOOSE_REQUEST)
         }
 
         doAfterRefused {

@@ -3,7 +3,6 @@ package com.mredrock.cyxbs.qa.pages.answer.viewmodel
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import android.arch.lifecycle.ViewModelProvider
-import com.luck.picture.lib.entity.LocalMedia
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.bean.RedrockApiStatus
 import com.mredrock.cyxbs.common.network.ApiGenerator
@@ -28,7 +27,7 @@ import java.io.File
  * Created By jay68 on 2018/12/3.
  */
 class AnswerViewModel(val qid: String) : BaseViewModel() {
-    val imageLiveData = MutableLiveData<List<LocalMedia>>()
+    val imageLiveData = MutableLiveData<ArrayList<String>>()
     val backAndRefreshPreActivityEvent = SingleLiveEvent<Boolean>()
 
     fun submitAnswer(content: String) {
@@ -46,7 +45,7 @@ class AnswerViewModel(val qid: String) : BaseViewModel() {
                 .mapOrThrowApiException()
         if (!imageLiveData.value.isNullOrEmpty()) {
             val files = imageLiveData.value!!.asSequence()
-                    .map { File(it.path) }
+                    .map { File(it) }
                     .toList()
             observable = observable.flatMap { uploadPic(stuNum, idNum, it as String, files) }
         }
@@ -73,8 +72,8 @@ class AnswerViewModel(val qid: String) : BaseViewModel() {
                 .checkError()
     }
 
-    fun setImageList(imageList: List<LocalMedia>?) {
-        imageLiveData.value = imageList ?: emptyList()
+    fun setImageList(imageList: ArrayList<String>?) {
+        imageLiveData.value = imageList ?: arrayListOf()
     }
 
     class Factory(private val qid: String) : ViewModelProvider.Factory {

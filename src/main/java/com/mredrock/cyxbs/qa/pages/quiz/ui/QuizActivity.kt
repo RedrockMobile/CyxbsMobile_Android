@@ -11,18 +11,15 @@ import android.text.TextWatcher
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.ImageView
-import com.luck.picture.lib.PictureSelector
-import com.luck.picture.lib.config.PictureConfig
+import com.mredrock.cyxbs.common.component.multi_image_selector.MultiImageSelectorActivity
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.pages.quiz.QuizViewModel
 import com.mredrock.cyxbs.qa.pages.quiz.ui.dialog.RewardSetDialog
-import com.mredrock.cyxbs.qa.pages.quiz.ui.dialog.SelectImageDialog
 import com.mredrock.cyxbs.qa.pages.quiz.ui.dialog.TagsEditDialog
 import com.mredrock.cyxbs.qa.pages.quiz.ui.dialog.TimePickDialog
 import com.mredrock.cyxbs.qa.utils.getMaxLength
 import com.mredrock.cyxbs.qa.utils.selectImageFromAlbum
-import com.mredrock.cyxbs.qa.utils.selectImageFromCamera
 import kotlinx.android.synthetic.main.qa_activity_quiz.*
 import org.jetbrains.anko.support.v4.startActivityForResult
 
@@ -39,18 +36,6 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
 
     override val viewModelClass = QuizViewModel::class.java
     override val isFragmentActivity = false
-
-    private val selectImageDialog by lazy {
-        SelectImageDialog(this).apply {
-            selectImageFromAlbum = {
-                this@QuizActivity.selectImageFromAlbum(QuizActivity.MAX_SELECTABLE_IMAGE_COUNT, viewModel.imageLiveData.value)
-            }
-
-            selectImageFromCamera = {
-                this@QuizActivity.selectImageFromCamera()
-            }
-        }
-    }
 
     private val editTagDialog by lazy {
         TagsEditDialog(this).apply {
@@ -138,7 +123,7 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
         nine_grid_view.addView(createImageView(BitmapFactory.decodeResource(resources, R.drawable.qa_ic_quiz_grid_add_img)))
         nine_grid_view.setOnItemClickListener { _, index ->
             if (index == nine_grid_view.childCount - 1) {
-                selectImageDialog.show()
+                this@QuizActivity.selectImageFromAlbum(QuizActivity.MAX_SELECTABLE_IMAGE_COUNT, viewModel.imageLiveData.value)
             }
         }
 
@@ -155,18 +140,11 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
                     nine_grid_view.removeView(view)
                     continue
                 }
-                val localMedia = selectedImageFiles[i]
-                val path = localMedia.compressPath.takeIf { localMedia.isCompressed }
-                        ?: localMedia.path
-                (view as ImageView).setImageBitmap(BitmapFactory.decodeFile(path))
+                (view as ImageView).setImageBitmap(BitmapFactory.decodeFile(selectedImageFiles[i]))
             }
             //补充缺少的view
             selectedImageFiles.asSequence()
                     .filterIndexed { index, _ -> index >= nine_grid_view.childCount - 1 }
-                    .map { localMedia ->
-                        localMedia.compressPath.takeIf { localMedia.isCompressed }
-                                ?: localMedia.path
-                    }.toList()
                     .forEach {
                         nine_grid_view.addView(createImageView(BitmapFactory.decodeFile(it)),
                                 nine_grid_view.childCount - 1)
@@ -176,7 +154,7 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
 
     private fun initFooterView() {
         iv_quiz_select_tag.setOnClickListener { editTagDialog.show() }
-        iv_quiz_add_img.setOnClickListener { selectImageDialog.show() }
+        iv_quiz_add_img.setOnClickListener { this@QuizActivity.selectImageFromAlbum(QuizActivity.MAX_SELECTABLE_IMAGE_COUNT, viewModel.imageLiveData.value) }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -184,17 +162,8 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
         if (resultCode != Activity.RESULT_OK) {
             return
         }
-        if (requestCode == PictureConfig.CHOOSE_REQUEST) {
-            viewModel.setImageList(PictureSelector.obtainMultipleResult(data))
-
-        } else if (requestCode == PictureConfig.REQUEST_CAMERA) {
-            //fixme 调用相机拍照没有返回结果
-            /*val localMedia = PictureSelector.obtainMultipleResult(data)[0]
-            selectedImageFiles.add(localMedia)
-            val path = localMedia.compressPath.takeIf { localMedia.isCompressed }
-                    ?: localMedia.path
-            nine_grid_view.addView(createImageView(BitmapFactory.decodeFile(path)),
-                    nine_grid_view.childCount - 1)*/
+        if (requestCode == MultiImageSelectorActivity.CHOOSE_REQUEST) {
+            viewModel.setImageList(data?.getStringArrayListExtra(MultiImageSelectorActivity.EXTRA_RESULT))
         }
     }
 

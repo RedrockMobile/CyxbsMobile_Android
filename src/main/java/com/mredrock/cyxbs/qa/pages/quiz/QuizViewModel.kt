@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import android.arch.lifecycle.ViewModelProvider
-import com.luck.picture.lib.entity.LocalMedia
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.bean.RedrockApiStatus
 import com.mredrock.cyxbs.common.network.ApiGenerator
@@ -31,7 +30,7 @@ import java.io.File
  * Created By jay68 on 2018/8/26.
  */
 class QuizViewModel(val type: String) : BaseViewModel() {
-    val imageLiveData = MutableLiveData<List<LocalMedia>>()
+    val imageLiveData = MutableLiveData<ArrayList<String>>()
     val tagLiveData = MutableLiveData<String>()
     val backAndRefreshPreActivityEvent = SingleLiveEvent<Boolean>()
 
@@ -42,8 +41,8 @@ class QuizViewModel(val type: String) : BaseViewModel() {
     private var content: String = ""
     private var disappearTime: String = ""
 
-    fun setImageList(imageList: List<LocalMedia>?) {
-        imageLiveData.value = imageList ?: emptyList()
+    fun setImageList(imageList: ArrayList<String>?) {
+        imageLiveData.value = imageList ?: arrayListOf()
     }
 
     fun setTag(tag: String) {
@@ -92,7 +91,7 @@ class QuizViewModel(val type: String) : BaseViewModel() {
                 .mapOrThrowApiException()
         if (!imageLiveData.value.isNullOrEmpty()) {
             val files = imageLiveData.value!!.asSequence()
-                    .map { File(it.path) }
+                    .map { File(it) }
                     .toList()
             observable = observable.flatMap {
                 val id = (it as QuizResult).id

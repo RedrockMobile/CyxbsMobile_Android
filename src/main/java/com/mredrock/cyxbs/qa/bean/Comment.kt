@@ -1,5 +1,6 @@
 package com.mredrock.cyxbs.qa.bean
 
+import java.io.Serializable
 import com.google.gson.annotations.SerializedName
 
 data class Comment(@SerializedName("photo_thumbnail_src")
@@ -11,6 +12,6 @@ data class Comment(@SerializedName("photo_thumbnail_src")
                    @SerializedName("created_at")
                    val createdAt: String = "",
                    @SerializedName("content")
-                   val content: String = "") {
+                   val content: String = ""): Serializable {
     val isMale get() = gender != "女"
 }
