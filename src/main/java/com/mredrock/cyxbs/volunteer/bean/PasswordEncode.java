@@ -1,8 +1,9 @@
 package com.mredrock.cyxbs.volunteer.bean;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class PasswordEncode {
+public class PasswordEncode implements Serializable {
 
     /**
      * status : 1

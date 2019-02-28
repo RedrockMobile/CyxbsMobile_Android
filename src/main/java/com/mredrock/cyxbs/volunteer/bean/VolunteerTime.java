@@ -1,8 +1,9 @@
 package com.mredrock.cyxbs.volunteer.bean;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class VolunteerTime {
+public class VolunteerTime implements Serializable {
 
     /**
      * code : 0
@@ -58,7 +59,7 @@ public class VolunteerTime {
         this.record = record;
     }
 
-    public static class RecordBean {
+    public static class RecordBean implements Serializable {
         /**
          * hours : 2.0
          * content : 系统导入 三下乡志愿者

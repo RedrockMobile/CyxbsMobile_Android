@@ -1,6 +1,8 @@
 package com.mredrock.cyxbs.volunteer.bean
 
-class VolunteerLogin{
+import java.io.Serializable
+
+class VolunteerLogin: Serializable {
     /**
      * msg : success
      * code : 0
