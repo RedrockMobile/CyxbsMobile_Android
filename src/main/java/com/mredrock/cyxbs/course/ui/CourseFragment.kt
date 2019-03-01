@@ -69,7 +69,7 @@ class CourseFragment : BaseFragment() {
 
         //下拉刷新
         mBinding.swipeRefreshLayout.setOnRefreshListener {
-            mCoursesViewModel.refreshScheduleData(true)
+            mCoursesViewModel.refreshScheduleData(this.context!!)
         }
     }
 

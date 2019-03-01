@@ -40,11 +40,11 @@ class CourseActivity : BaseActivity() {
         setContentView(R.layout.course_activity_course)
         SwipeBackHelper.getCurrentPage(this).setSwipeBackEnable(false)
 
+        initActivity()
 
         analogLogin()
-        replaceFragment(CourseContainerFragment())
 
-        initActivity()
+        replaceFragment(CourseContainerFragment())
     }
 
     /**
@@ -57,13 +57,13 @@ class CourseActivity : BaseActivity() {
     }
 
     private fun initActivity() {
-        val toolbar = common_toolbar
-        setSupportActionBar(toolbar)
+        val toolbar = common_toolbar.apply {
+            init("整学期", listener = null)
+        }
 
         supportActionBar?.setHomeAsUpIndicator(R.drawable.course_ic_login)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        toolbar.init("整学期", listener = null)
         toolbar.titleTextView.setCompoundDrawablesWithIntrinsicBounds(null, null,
                 mToolbarIc[1], null)
         toolbar.titleTextView.setOnClickListener {
