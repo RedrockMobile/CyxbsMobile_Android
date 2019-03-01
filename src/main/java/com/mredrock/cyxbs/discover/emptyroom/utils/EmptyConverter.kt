@@ -74,7 +74,7 @@ class EmptyConverter {
                         }
                     }
                 }
-                emptyRoom.emptyRooms = emptyGroup.get(key)!!
+                emptyRoom.emptyRooms = emptyGroup[key]!!
                 emptyRoomList.add(emptyRoom)
             }
         }

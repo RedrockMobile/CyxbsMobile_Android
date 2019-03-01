@@ -124,6 +124,7 @@ class EmptyRoomActivity : BaseViewModelActivity<EmptyRoomViewModel>(), OnItemSel
         initSelector(multi_selector_weekday, weekdayApi, SchoolCalendar().dayOfWeek - 1, 1)
         initSelector(multi_selector_building, buildingApi, -1, 2)
         initSelector(multi_selector_section, sectionApi, -1, 3)
+        multi_selector_section.setMinSelectedNum(1)
     }
 
     private fun initSelector(selector: MultiSelector, values: IntArray, defaultSelected: Int, tag: Int) {
@@ -206,6 +207,16 @@ class EmptyRoomActivity : BaseViewModelActivity<EmptyRoomViewModel>(), OnItemSel
         } else if (resultAdapter == null || resultAdapter!!.data.isEmpty()) {
             true
         } else queryAnimator.isRunning
+    }
+
+    override fun onDestroy() {
+        if (queryAnimator.isRunning){
+            queryAnimator.cancel()
+        }
+        if (expandedAnimator.isRunning){
+            expandedAnimator.cancel()
+        }
+        super.onDestroy()
     }
 
     override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
