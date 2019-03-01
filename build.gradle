@@ -35,7 +35,7 @@ dependencies {
     api deps.rxjava.rxandroid
     api deps.rxjava.rxkotlin
     api deps.gson.runtime
-    
+
     api('com.squareup.retrofit2:converter-simplexml:2.1.0') {
         exclude group: 'xpp3', module: 'xpp3'
         exclude group: 'stax', module: 'stax-api'
@@ -70,8 +70,10 @@ dependencies {
     api deps.umeng.analytics
 
     //bugly
-    api deps.bugly.crashreport
+//    api deps.bugly.crashreport
+    api deps.bugly.crashreport_upgrade
     api deps.bugly.nativecrashreport
+    api deps.bugly.tinker_lib
 
     //3rd ui
     api 'com.jude:swipebackhelper:3.1.2'

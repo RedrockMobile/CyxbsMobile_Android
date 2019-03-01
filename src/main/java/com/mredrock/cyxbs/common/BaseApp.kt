@@ -2,7 +2,6 @@ package com.mredrock.cyxbs.common
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.support.multidex.MultiDexApplication
 import com.alibaba.android.arouter.launcher.ARouter
 import com.google.gson.Gson
 import com.mredrock.cyxbs.common.bean.User
@@ -11,13 +10,16 @@ import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.encrypt.UserInfoEncryption
 import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
 import com.mredrock.cyxbs.common.utils.extensions.editor
+import com.tencent.tinker.loader.app.TinkerApplication
+import com.tencent.tinker.loader.shareutil.ShareConstants
 import com.umeng.analytics.MobclickAgent
 import com.umeng.commonsdk.UMConfigure
 
 /**
  * Created By jay68 on 2018/8/7.
  */
-open class BaseApp : MultiDexApplication() {
+open class BaseApp : TinkerApplication(ShareConstants.TINKER_ENABLE_ALL, "com.mredrock.cyxbs.common.TinkerAppLike",
+        "com.tencent.tinker.loader.TinkerLoader", false) {
     companion object {
         @SuppressLint("StaticFieldLeak")
         lateinit var context: Context
