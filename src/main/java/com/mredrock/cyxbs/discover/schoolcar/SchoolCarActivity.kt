@@ -77,7 +77,7 @@ class SchoolCarActivity : BaseActivity() {
     private lateinit var smoothMoveMarkers: MutableList<SmoothMoveMarker>
 
     private lateinit var locationClient: AMapLocationClient
-    private lateinit var disposable: Disposable
+    private var disposable: Disposable? = null
     private lateinit var dataList: List<SchoolCarLocation.Data>
 
     override val isFragmentActivity = false
@@ -199,7 +199,7 @@ class SchoolCarActivity : BaseActivity() {
                 }
 
                 if (!showCarIcon && aLong == ADD_TIMER_AND_SHOW_MAP) {
-                    if (disposable != null) disposable.dispose()       //取消之前所有的轮询订阅
+                    if (disposable != null) disposable!!.dispose()       //取消之前所有的轮询订阅
                     timer("showCarIcon")
                     showCarIcon = true
                     Log.d(TAG, "processLocationInfo: " + carLocationInfo.status)
@@ -351,7 +351,7 @@ class SchoolCarActivity : BaseActivity() {
             schoolCarMap!!.distroyMap(locationClient)
         }
         if (disposable != null) {
-            disposable.dispose()
+            disposable!!.dispose()
         }
     }
 
@@ -364,7 +364,7 @@ class SchoolCarActivity : BaseActivity() {
             schoolCarMap!!.pauseMap()
         }
         if (disposable != null) {
-            if (disposable.isDisposed) {
+            if (disposable!!.isDisposed) {
                 Log.d(TAG, "onRestart: disposed!!!")
             } else {
                 Log.d(TAG, "onRestart: not disposed!!!")

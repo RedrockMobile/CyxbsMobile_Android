@@ -1,4 +1,4 @@
-package com.mredrock.cyxbs.schoolcar
+package com.mredrock.cyxbs.discover.schoolcar
 
 import org.junit.Test
 

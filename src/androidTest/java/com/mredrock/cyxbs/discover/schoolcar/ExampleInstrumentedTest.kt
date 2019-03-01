@@ -1,4 +1,4 @@
-package com.mredrock.cyxbs.schoolcar
+package com.mredrock.cyxbs.discover.schoolcar
 
 import android.support.test.InstrumentationRegistry
 import android.support.test.runner.AndroidJUnit4
@@ -19,6 +19,6 @@ class ExampleInstrumentedTest {
     fun useAppContext() {
         // Context of the app under test.
         val appContext = InstrumentationRegistry.getTargetContext()
-        assertEquals("com.mredrock.cyxbs.schoolcar", appContext.packageName)
+        assertEquals("com.mredrock.cyxbs.discover.schoolcar", appContext.packageName)
     }
 }
