@@ -76,8 +76,23 @@
 -keepclassmembers class rx.internal.util.unsafe.BaseLinkedQueueConsumerNodeRef {
     rx.internal.util.atomic.LinkedQueueNode consumerNode;
 }
+-dontwarn rx.internal.util.unsafe.**
 -keep class com.tbruyelle.rxpermissions2.** { *; }
 -keep interface com.tbruyelle.rxpermissions2.** { *; }
+-dontwarn io.rx_cache.internal.**
+-keepclassmembers enum io.rx_cache.Source { *; }
+
+#ucrop
+-dontwarn com.yalantis.ucrop**
+-keep class com.yalantis.ucrop** { *; }
+-keep interface com.yalantis.ucrop** { *; }
+
+#nineoldandroids
+-keep class com.nineoldandroids.** { *; }
+
+# tinker混淆规则
+-dontwarn com.tencent.tinker.**
+-keep class com.tencent.tinker.** { *; }
 
 # OkHttp3
 -dontwarn okio.**

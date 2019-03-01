@@ -4,6 +4,7 @@ import android.os.Process
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.utils.getAppVersionName
 import com.mredrock.cyxbs.common.utils.getProcessName
+import com.tencent.bugly.Bugly
 import com.tencent.bugly.crashreport.CrashReport
 
 /**
@@ -21,8 +22,7 @@ class App : BaseApp() {
         val strategy = CrashReport.UserStrategy(applicationContext)
         strategy.appVersion = getAppVersionName(applicationContext)
         strategy.isUploadProcess = processName == null || processName == packageName
-        CrashReport.initCrashReport(applicationContext, BuildConfig.BUGLY_APP_ID, BuildConfig.DEBUG, strategy)
-
+        Bugly.init(applicationContext, BuildConfig.BUGLY_APP_ID, false)
         if (BuildConfig.DEBUG) {
             CrashReport.setUserSceneTag(applicationContext, 83913)
         }
