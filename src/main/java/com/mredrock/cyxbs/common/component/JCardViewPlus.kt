@@ -6,6 +6,7 @@ import android.graphics.*
 import android.support.annotation.ColorInt
 import android.util.AttributeSet
 import android.util.TypedValue
+import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
 import com.mredrock.cyxbs.common.R
@@ -19,6 +20,8 @@ open class JCardViewPlus(context: Context, attrs: AttributeSet?, defStyleAttr: I
         val DEFAULT_CARD_BACKGROUND_COLOR = Color.parseColor("#ffffff")
         @JvmStatic
         val DEFAULT_SHADER_COLOR = Color.parseColor("#fefefe")
+
+        const val DEFAULT_CHILD_GRAVITY = Gravity.TOP or Gravity.START
 
         const val LEFT_SHADOW_MASK = 0x1
         const val TOP_SHADOW_MASK = 0x2
@@ -168,9 +171,58 @@ open class JCardViewPlus(context: Context, attrs: AttributeSet?, defStyleAttr: I
         val parentLeft = paddingLeft + contentPaddingLeft
         val parentTop = paddingTop + contentPaddingTop
         val child = getChildAt(0)
-        child.layout(parentLeft, parentTop, parentLeft + child.measuredWidth, parentTop + child.measuredHeight)
+        val lp = child.layoutParams as LayoutParams
+        val childLeft = parentLeft + lp.leftMargin
+        val childTop = parentTop + lp.topMargin
+        child.layout(childLeft, childTop, childLeft + child.measuredWidth, childTop + child.measuredHeight)
+//        layoutChildren(left, top, right, bottom)
     }
+/*
+    private fun layoutChildren(left: Int, top: Int, right: Int, bottom: Int) {
+        val parentLeft = paddingLeft + contentPaddingLeft
+        val parentRight = right - left - paddingRight - contentPaddingRight
 
+        val parentTop = paddingTop + contentPaddingTop
+        val parentBottom = bottom - top - paddingBottom - contentPaddingBottom
+
+        val child = getChildAt(0)
+        if (child.visibility != View.GONE) {
+            val lp = child.layoutParams as LayoutParams
+
+            val width = child.measuredWidth
+            val height = child.measuredHeight
+
+            val childLeft: Int
+            val childTop: Int
+
+            var gravity = lp.gravity
+            if (gravity == -1) {
+                gravity = DEFAULT_CHILD_GRAVITY
+            }
+
+            val layoutDirection = layoutDirection
+            val absoluteGravity = Gravity.getAbsoluteGravity(gravity, layoutDirection)
+            val verticalGravity = gravity and Gravity.VERTICAL_GRAVITY_MASK
+
+            when (absoluteGravity and Gravity.HORIZONTAL_GRAVITY_MASK) {
+                Gravity.CENTER_HORIZONTAL -> childLeft = parentLeft + (parentRight - parentLeft - width) / 2 +
+                        lp.leftMargin - lp.rightMargin
+                Gravity.RIGHT -> childLeft = parentRight - width - lp.rightMargin
+                Gravity.LEFT -> childLeft = parentLeft + lp.leftMargin
+                else -> childLeft = parentLeft + lp.leftMargin
+            }
+
+            when (verticalGravity) {
+                Gravity.TOP -> childTop = parentTop + lp.topMargin
+                Gravity.CENTER_VERTICAL -> childTop = parentTop + (parentBottom - parentTop - height) / 2 +
+                        lp.topMargin - lp.bottomMargin
+                Gravity.BOTTOM -> childTop = parentBottom - height - lp.bottomMargin
+                else -> childTop = parentTop + lp.topMargin
+            }
+            child.layout(childLeft, childTop, childLeft + width, childTop + height)
+        }
+    }
+*/
     override fun dispatchDraw(canvas: Canvas) {
         if (backgroundBuffer == null) {
 //            if (childCount != 0 && getChildAt(0) is ImageView) {
@@ -304,13 +356,24 @@ open class JCardViewPlus(context: Context, attrs: AttributeSet?, defStyleAttr: I
 
     private fun Int.toBoolean() = this != 0
 
-    override fun generateLayoutParams(attrs: AttributeSet?) = MarginLayoutParams(context, attrs)
+    override fun generateLayoutParams(attrs: AttributeSet?) = LayoutParams(context, attrs)
 
-    override fun generateDefaultLayoutParams() = MarginLayoutParams(MarginLayoutParams.WRAP_CONTENT, MarginLayoutParams.WRAP_CONTENT)
+    override fun generateDefaultLayoutParams() = LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
 
-    override fun generateLayoutParams(p: LayoutParams?) = MarginLayoutParams(p)
+    override fun generateLayoutParams(p: ViewGroup.LayoutParams?) = LayoutParams(p)
 
-    override fun checkLayoutParams(p: LayoutParams?) = p is MarginLayoutParams
+    override fun checkLayoutParams(p: ViewGroup.LayoutParams?) = p is LayoutParams
 
     private fun dip(dpValue: Int) = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dpValue.toFloat(), resources.displayMetrics)
+
+    class LayoutParams : MarginLayoutParams {
+        constructor(c: Context?, attrs: AttributeSet?) : super(c, attrs)
+        constructor(width: Int, height: Int) : super(width, height)
+//        constructor(width: Int, height: Int, gravity: Int): super(width, height, gravity)
+        constructor(source: ViewGroup.LayoutParams): super(source)
+        constructor(source: ViewGroup.MarginLayoutParams): super(source)
+//        constructor(source: LayoutParams): super(source) {
+//            this.gravity = source.gravity
+//        }
+    }
 }
