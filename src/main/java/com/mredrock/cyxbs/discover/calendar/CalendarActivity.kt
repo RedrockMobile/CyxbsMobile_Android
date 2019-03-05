@@ -19,7 +19,6 @@ import org.jetbrains.anko.toast
 @Route(path = DISCOVER_CALENDER)
 class CalendarActivity : BaseActivity() {
 
-
     private val apiService = ApiGenerator.getApiService(ApiService::class.java)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
