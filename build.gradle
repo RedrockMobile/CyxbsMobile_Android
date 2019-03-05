@@ -6,8 +6,6 @@ apply plugin: 'kotlin-android-extensions'
 
 apply plugin: 'kotlin-kapt'
 
-apply from: 'tinker-support.gradle'
-
 android {
     compileSdkVersion build_versions.target_sdk
     buildToolsVersion build_versions.build_tools

@@ -22,7 +22,8 @@ class App : BaseApp() {
         val strategy = CrashReport.UserStrategy(applicationContext)
         strategy.appVersion = getAppVersionName(applicationContext)
         strategy.isUploadProcess = processName == null || processName == packageName
-        Bugly.init(applicationContext, BuildConfig.BUGLY_APP_ID, false)
+        CrashReport.initCrashReport(applicationContext, BuildConfig.BUGLY_APP_ID, BuildConfig.DEBUG, strategy)
+
         if (BuildConfig.DEBUG) {
             CrashReport.setUserSceneTag(applicationContext, 83913)
         }
