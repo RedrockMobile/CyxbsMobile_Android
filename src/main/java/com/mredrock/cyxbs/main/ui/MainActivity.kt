@@ -86,7 +86,7 @@ class MainActivity : BaseActivity() {
             override fun onPageScrollStateChanged(state: Int) {}
             override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {}
             override fun onPageSelected(position: Int) {
-                menu?.getItem(0)?.isVisible = position == 0
+//                menu?.getItem(0)?.isVisible = position == 0
             }
         })
     }
