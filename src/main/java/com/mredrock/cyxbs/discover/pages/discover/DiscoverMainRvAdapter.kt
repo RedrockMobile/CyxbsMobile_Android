@@ -1,5 +1,8 @@
 package com.mredrock.cyxbs.discover.pages.discover
 
+import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -18,7 +21,7 @@ import org.jetbrains.anko.imageResource
  *   2018/9/15.
  *   enjoy it !!
  */
-class DiscoverMainRvAdapter: RecyclerView.Adapter<DiscoverMainRvAdapter.MyViewHolder>() {
+class DiscoverMainRvAdapter(private val context: Context): RecyclerView.Adapter<DiscoverMainRvAdapter.MyViewHolder>() {
     private var mListHide: List<Boolean>? = null
     private var iconResIds = mutableListOf<Int>()
     private var titleRes = mutableListOf<String>()
@@ -46,16 +49,16 @@ class DiscoverMainRvAdapter: RecyclerView.Adapter<DiscoverMainRvAdapter.MyViewHo
     }
 
     private fun onClick(iconPosition: Int) {
-        when(iconPosition) {
+        when (iconPosition) {
             R.drawable.ic_discover_no_course -> startActivityAfterLogin("没课约", DISCOVER_NO_CLASS)
             R.drawable.ic_discover_empty_room -> startActivity(DISCOVER_EMPTY_ROOM)
             R.drawable.ic_discover_grade -> startActivityAfterLogin("成绩查询", DISCOVER_GRADES)
-//            R.drawable.ic_discover_volunteer_time ->
+            R.drawable.ic_discover_volunteer_time -> startActivity(DISCOVER_VOLUNTEER)
             R.drawable.ic_discover_map -> startActivity(DISCOVER_MAP)
             R.drawable.ic_discover_school_car -> startActivity(DISCOVER_SCHOOL_CAR)
             R.drawable.ic_discover_calendar -> startActivity(DISCOVER_CALENDER)
             R.drawable.ic_discover_electric -> startActivity(DISCOVER_ELECTRICITY)
-//            R.drawable.ic_discover_about ->
+            R.drawable.ic_discover_about -> context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://wx.redrock.team/app/")))
             R.drawable.ic_discover_news -> startActivity(DISCOVER_NEWS)
             R.drawable.ic_discover_stu_schedule -> startActivity(DISCOVER_OTHER_COURSE)
         }

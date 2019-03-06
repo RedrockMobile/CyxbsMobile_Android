@@ -14,6 +14,6 @@ dependencies {
         implementation project(':module_grades')
         implementation project(':module_news')
         implementation project(':module_schoolcar')
-//        implementation project(':module_volunteer')
+        implementation project(':module_volunteer')
     }
 }
