@@ -3,9 +3,7 @@ package com.mredrock.cyxbs.discover.pages.discover
 import android.arch.lifecycle.Observer
 import android.os.Bundle
 import android.support.v7.widget.GridLayoutManager
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.mredrock.cyxbs.common.config.DISCOVER_ENTRY
 import com.mredrock.cyxbs.common.event.DiscoverOptionIconClickEvent
@@ -35,6 +33,15 @@ class DiscoverFragment : BaseViewModelFragment<DiscoverViewModel>() {
     private var mListHide: MutableList<Boolean> = mutableListOf()
     private var mAdapter: DiscoverMainRvAdapter? = null
 
+    private val menuListener = MenuItem.OnMenuItemClickListener {
+        when (it?.itemId) {
+            R.id.discover_manager -> {
+                startActivity<DiscoverHidingActivity>()
+            }
+        }
+        return@OnMenuItemClickListener false
+    }
+
     override val viewModelClass = DiscoverViewModel::class.java
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -48,6 +55,12 @@ class DiscoverFragment : BaseViewModelFragment<DiscoverViewModel>() {
         super.onViewCreated(view, savedInstanceState)
     }
 
+    override fun onPrepareOptionsMenu(menu: Menu?) {
+        activity?.menuInflater?.inflate(R.menu.discover_main_menu, menu)
+        menu?.getItem(0)?.setOnMenuItemClickListener(menuListener)
+        super.onPrepareOptionsMenu(menu)
+    }
+
     private fun initRv() {
         mListHide = mutableListOf(true, true, true, true,
                 true, true, true, true, true, true, true)
@@ -55,7 +68,7 @@ class DiscoverFragment : BaseViewModelFragment<DiscoverViewModel>() {
         for (i in 0..10) {
             mListHide[i] = sp.getBoolean("$KEY_SP_HIDING_DISCOVER$i", true)
         }
-        mAdapter = DiscoverMainRvAdapter()
+        mAdapter = DiscoverMainRvAdapter(context!!)
         mAdapter!!.refreshData(mListHide)
         discover_rv_main.layoutManager = GridLayoutManager(context, 3)
         discover_rv_main.adapter = mAdapter
