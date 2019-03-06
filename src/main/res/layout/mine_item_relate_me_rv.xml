@@ -13,8 +13,6 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="18dp"
-        android:layout_marginBottom="18dp"
         android:orientation="vertical"
         android:padding="10dp">
 
@@ -22,6 +20,7 @@
             android:id="@+id/mine_aboutme_item_avatar"
             android:layout_width="32dp"
             android:layout_height="32dp"
+            android:layout_marginTop="18dp"
             android:src="@drawable/mine_default_avatar" />
 
         <TextView
@@ -91,6 +90,7 @@
             android:layout_below="@id/mine_aboutme_item_content"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
+            android:layout_marginBottom="18dp"
             android:background="@color/mine_relate_me_bg_content"
             android:gravity="center_vertical"
             android:orientation="horizontal"
