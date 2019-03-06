@@ -22,11 +22,14 @@ const val DISCOVER_EMPTY_ROOM = "/empty_room/discover/entry"
 const val DISCOVER_GRADES = "/grades/discover/entry"
 const val DISCOVER_VOLUNTEER = "/volunteer/discover/entry"
 const val DISCOVER_SCHOOL_CAR = "/school_car/discover/entry"
-const val DISCOVER_ABOUT_US = "/about_us/discover/entry"
 const val DISCOVER_NEWS = "/news/discover/entry"
 
 // NoCourseInviteActivity
 const val COURSE_NO_COURSE_INVITE = "/course/no_course_invite_activity"
+
+//大红页
+const val REDROCK_HOME_ENTRY = "/redrock_home/entry"
+
 
 //小控件设置
 const val WIDGET_SETTING = "/setting/widget"

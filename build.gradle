@@ -70,10 +70,10 @@ dependencies {
     api deps.umeng.analytics
 
     //bugly
-//    api deps.bugly.crashreport
-    api deps.bugly.crashreport_upgrade
+    api deps.bugly.crashreport
+//    api deps.bugly.crashreport_upgrade
     api deps.bugly.nativecrashreport
-    api deps.bugly.tinker_lib
+//    api deps.bugly.tinker_lib
 
     //3rd ui
     api 'com.jude:swipebackhelper:3.1.2'
