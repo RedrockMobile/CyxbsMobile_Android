@@ -5,6 +5,9 @@ import android.arch.lifecycle.Observer
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.widget.GridLayoutManager
+import com.alibaba.android.arouter.facade.annotation.Route
+import com.mredrock.cyxbs.common.BaseApp
+import com.mredrock.cyxbs.common.config.DISCOVER_NO_CLASS
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.discover.noclass.R
 import com.mredrock.cyxbs.discover.noclass.network.Student
@@ -12,6 +15,7 @@ import com.mredrock.cyxbs.discover.noclass.pages.stuselect.NoClassStuSelectActiv
 import kotlinx.android.synthetic.main.discover_noclass_activity_no_class.*
 import java.io.Serializable
 
+@Route(path = DISCOVER_NO_CLASS)
 class NoClassActivity : BaseViewModelActivity<NoClassViewModel>() {
 
     override val viewModelClass = NoClassViewModel::class.java
@@ -70,12 +74,12 @@ class NoClassActivity : BaseViewModelActivity<NoClassViewModel>() {
     }
 
     private fun initStuList() {
-        val stu = Student()
-//        stu.name = BaseApp.user!!.name
-//        stu.stunum = BaseApp.user!!.stunum
-        stu.name = "zzx"
-        stu.stunum = "2016214049"
-        mStuList!!.add(stu)
+        BaseApp.user?.apply {
+            val stu = Student()
+            stu.name = name
+            stu.stunum = stunum
+            mStuList!!.add(stu)
+        }
         mAdapter = NoClassRvAdapter(mStuList!!, this)
         noclass_rv.layoutManager = GridLayoutManager(this, 4)
         noclass_rv.adapter = mAdapter
