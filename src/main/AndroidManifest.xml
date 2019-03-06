@@ -1,2 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest package="com.mredrock.cyxbs.volunteer"/>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.mredrock.cyxbs.volunteer">
+
+    <application>
+        <activity android:name=".VolunteerLoginActivity"/>
+        <activity android:name=".VolunteerRecordActivity"/>
+    </application>
+
+</manifest>

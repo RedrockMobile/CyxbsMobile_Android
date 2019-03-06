@@ -20,16 +20,17 @@ import kotlinx.android.synthetic.main.activity_login.*
 import com.mredrock.cyxbs.volunteer.widget.VolunteerTimeSP
 import android.os.Build
 import android.support.annotation.RequiresApi
+import com.alibaba.android.arouter.facade.annotation.Route
 import com.mredrock.cyxbs.common.BaseApp
+import com.mredrock.cyxbs.common.config.DISCOVER_VOLUNTEER
 import com.mredrock.cyxbs.common.utils.LogUtils
 
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.volunteer.Network.VolunteerRetrofit
 import com.mredrock.cyxbs.volunteer.bean.PasswordEncode
-import java.util.Collections.replaceAll
 import java.util.regex.Pattern
 
-
+@Route(path = DISCOVER_VOLUNTEER)
 class VolunteerLoginActivity : BaseActivity() {
     companion object {
         private const val BIND_SUCCESS: Int = 0
@@ -64,7 +65,7 @@ class VolunteerLoginActivity : BaseActivity() {
         }
     }
 
-    private fun initOnClickListener(){
+    private fun initOnClickListener() {
         volunteer_login.setOnClickListener { view: View? ->
             showProgressDialog()
             initUserInfo()
@@ -127,7 +128,7 @@ class VolunteerLoginActivity : BaseActivity() {
                 }
     }
 
-    private fun login(account: String, encodingPassword : String) {
+    private fun login(account: String, encodingPassword: String) {
         if (uid == null) {
 
         }
