@@ -1,2 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.mredrock.cyxbs.qa" />
+    package="com.mredrock.cyxbs.qa">
+
+    <application>
+        <activity android:name=".pages.answer.ui.AnswerListActivity" />
+        <activity
+            android:name=".pages.comment.ui.CommentListActivity"
+            android:windowSoftInputMode="adjustPan" />
+        <activity android:name=".pages.quiz.ui.QuizActivity" />
+        <activity
+            android:name=".pages.answer.ui.AnswerActivity"
+            android:windowSoftInputMode="adjustPan" />
+        <activity android:name=".pages.report.ui.ReportActivity"/>
+    </application>
+
+</manifest>
