@@ -72,7 +72,7 @@
             app:layout_constraintTop_toBottomOf="@id/tv_course_month">
 
 
-            <ScrollView
+            <android.support.v4.widget.NestedScrollView
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -115,7 +115,7 @@
 
                 </LinearLayout>
 
-            </ScrollView>
+            </android.support.v4.widget.NestedScrollView>
 
 
         </android.support.v4.widget.SwipeRefreshLayout>
