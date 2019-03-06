@@ -16,7 +16,7 @@ class DiscoverHidingActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.discover_activity_hiding)
-        common_toolbar.title = "选择功能"
+        common_toolbar.init("选择功能")
         discover_rv_hiding.layoutManager = LinearLayoutManager(this)
         val mAdapter = DiscoverHidingRvAdapter(checkDiscoverHiding())
         discover_rv_hiding.adapter = mAdapter
