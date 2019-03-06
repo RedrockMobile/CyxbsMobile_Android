@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
 import android.view.LayoutInflater
+import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
 import com.alibaba.android.arouter.facade.annotation.Route
@@ -35,6 +36,9 @@ class CourseEntryFragment : BaseFragment() {
     private lateinit var mToolbar: JToolbar
     // 用于记录当前Toolbar要显示的字符串
     private lateinit var mToolbarTitle: String
+
+    // 用于通知更新Toolbar的Menu更新
+    private var insideFragment: Fragment? = null
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -108,6 +112,7 @@ class CourseEntryFragment : BaseFragment() {
     private fun replaceFragment(fragment: Fragment) {
         val transaction = activity!!.supportFragmentManager.beginTransaction()
         transaction.replace(R.id.fl, fragment)
+        insideFragment = fragment
         transaction.commit()
     }
 
@@ -123,6 +128,11 @@ class CourseEntryFragment : BaseFragment() {
             replaceFragment(NoneLoginFragment())
         }
         setToolbar()
+    }
+
+    override fun onPrepareOptionsMenu(menu: Menu?) {
+        super.onPrepareOptionsMenu(menu)
+        insideFragment?.onPrepareOptionsMenu(menu)
     }
 
     /**

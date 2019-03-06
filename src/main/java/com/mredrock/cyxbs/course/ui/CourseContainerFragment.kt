@@ -101,10 +101,10 @@ class CourseContainerFragment : BaseFragment() {
         })
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+    override fun onPrepareOptionsMenu(menu: Menu?) {
         activity?.menuInflater?.inflate(R.menu.course_course_menu, menu)
+        super.onPrepareOptionsMenu(menu)
     }
-
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when (item?.itemId) {
