@@ -58,6 +58,7 @@
         android:layout_height="@dimen/course_affair_detail_acb_height"
         android:layout_marginTop="@dimen/course_affair_detail_image_right_and_top_margin"
         android:background="@color/colorAccent"
+        android:textColor="@color/colorWhite"
         android:text="@string/course_affair_modify"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@id/acb_delete"
@@ -70,6 +71,7 @@
         android:layout_marginTop="@dimen/course_affair_detail_image_right_and_top_margin"
         android:background="@color/colorAccent"
         android:text="@string/course_affair_delete"
+        android:textColor="@color/colorWhite"
         app:layout_constraintLeft_toRightOf="@id/acb_modify"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tv_affair_detail" />
