@@ -6,10 +6,7 @@ import android.support.v4.view.ViewPager
 import android.view.MenuItem
 import com.alibaba.android.arouter.launcher.ARouter
 import com.jude.swipbackhelper.SwipeBackHelper
-import com.mredrock.cyxbs.common.config.COURSE_ENTRY
-import com.mredrock.cyxbs.common.config.DISCOVER_ENTRY
-import com.mredrock.cyxbs.common.config.MINE_ENTRY
-import com.mredrock.cyxbs.common.config.QA_ENTRY
+import com.mredrock.cyxbs.common.config.*
 import com.mredrock.cyxbs.common.event.LoginStateChangeEvent
 import com.mredrock.cyxbs.common.ui.BaseActivity
 import com.mredrock.cyxbs.main.R
@@ -48,7 +45,8 @@ class MainActivity : BaseActivity() {
         initFragments()
 
         fab.setOnClickListener {
-            //todo start freshmanActivity
+            //todo center button
+            ARouter.getInstance().build(REDROCK_HOME_ENTRY).navigation()
         }
     }
 
@@ -86,12 +84,11 @@ class MainActivity : BaseActivity() {
             override fun onPageScrollStateChanged(state: Int) {}
             override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {}
             override fun onPageSelected(position: Int) {
-//                menu?.getItem(0)?.isVisible = position == 0
+                menu?.clear()
+                fragments[position].onPrepareOptionsMenu(menu)
             }
         })
     }
-
-
 
     private fun getFragment(path: String) = ARouter.getInstance().build(path).navigation() as Fragment
 
