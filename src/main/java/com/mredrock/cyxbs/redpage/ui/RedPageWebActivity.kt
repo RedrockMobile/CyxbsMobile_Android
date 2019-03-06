@@ -9,7 +9,9 @@ import android.os.Bundle
 import android.view.KeyEvent
 import android.view.KeyEvent.KEYCODE_BACK
 import android.webkit.*
+import com.alibaba.android.arouter.facade.annotation.Route
 import com.jude.swipbackhelper.SwipeBackHelper
+import com.mredrock.cyxbs.common.config.REDROCK_HOME_ENTRY
 import com.mredrock.cyxbs.common.ui.BaseActivity
 import com.mredrock.cyxbs.common.utils.extensions.gone
 import com.mredrock.cyxbs.common.utils.extensions.visible
@@ -20,6 +22,7 @@ import kotlinx.android.synthetic.main.redpage_activity_webview.*
  * create by:Fxymine4ever
  * time: 2018/11/7
  */
+@Route(path = REDROCK_HOME_ENTRY)
 class RedPageWebActivity : BaseActivity() {
     override val isFragmentActivity: Boolean = false
 
@@ -41,7 +44,7 @@ class RedPageWebActivity : BaseActivity() {
 
         wv_redPage.apply {
             loadUrl("file:///android_asset/index.html")
-            addJavascriptInterface(this,"android")
+            addJavascriptInterface(this, "android")
             webChromeClient = mWebChromeClient
             webViewClient = mWebViewClient
         }
@@ -49,16 +52,16 @@ class RedPageWebActivity : BaseActivity() {
 
     }
 
-    private val mWebViewClient = object : WebViewClient(){
+    private val mWebViewClient = object : WebViewClient() {
         override fun shouldOverrideUrlLoading(view: WebView, url: String): Boolean {
-            try{
-                if(url.startsWith("baidu")){
+            try {
+                if (url.startsWith("baidu")) {
                     val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
                     startActivity(intent)
                     return true
                 }
 
-            }catch (e : Exception){
+            } catch (e: Exception) {
                 return false
             }
             wv_redPage.loadUrl(url)
@@ -74,7 +77,7 @@ class RedPageWebActivity : BaseActivity() {
         }
     }
 
-    private val mWebChromeClient = object : WebChromeClient(){
+    private val mWebChromeClient = object : WebChromeClient() {
         override fun onProgressChanged(view: WebView?, newProgress: Int) {
             pb_redPage.progress = newProgress
         }
@@ -92,7 +95,7 @@ class RedPageWebActivity : BaseActivity() {
         return super.onKeyDown(keyCode, event)
     }
 
-    override fun onDestroy(){
+    override fun onDestroy() {
         super.onDestroy()
         wv_redPage.destroy()
     }
