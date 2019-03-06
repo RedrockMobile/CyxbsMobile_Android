@@ -144,6 +144,7 @@ dependencies {
         implementation project(':module_discover')
         implementation project(':module_mine')
         implementation project(':module_widget')
+        implementation project(':module_redrock_home')
     }
     kapt deps.arouter.compiler
 }
