@@ -29,19 +29,17 @@ import com.mredrock.cyxbs.schoolcar.R
  * Created by glossimar on 2018/9/12
  */
 
-class SchoolCarMap(context: Context, savedInstanceState: Bundle?, carInterface: SchoolCarInterface) {
+class SchoolCarMap(private var context: Context, savedInstanceState: Bundle?, carInterface: SchoolCarInterface) {
     private val TAG = "SchoolCarMap"
 
     lateinit var aMap: AMap
     var mapView: MapView? = null
-    private var context: Context
     private var savedInstanceState: Bundle? = null
     private var carInterface: SchoolCarInterface
     private lateinit var locationStyle: MyLocationStyle
     private lateinit var smoothMarker: SmoothMoveMarker
 
     init {
-        this.context = context
         if (savedInstanceState != null) {
             this.savedInstanceState = savedInstanceState
         }
@@ -52,15 +50,14 @@ class SchoolCarMap(context: Context, savedInstanceState: Bundle?, carInterface: 
      * 设置用户定位图标，获取位置的每次时间间隔，定位模式
      */
     fun initLocationType(){
-        val descriptor: BitmapDescriptor
-        if (BaseApp.user != null) {
+        val descriptor: BitmapDescriptor = if (BaseApp.user != null) {
             if (BaseApp.user!!.gender == "女") {
-                descriptor = BitmapDescriptorFactory.fromResource(R.drawable.ic_school_car_search_girl)
+                BitmapDescriptorFactory.fromResource(R.drawable.ic_school_car_search_girl)
             } else {
-                descriptor = BitmapDescriptorFactory.fromResource(R.drawable.ic_school_car_search_boy)
+                BitmapDescriptorFactory.fromResource(R.drawable.ic_school_car_search_boy)
             }
         } else {
-            descriptor = BitmapDescriptorFactory.fromResource(R.drawable.ic_school_car_search_boy)
+            BitmapDescriptorFactory.fromResource(R.drawable.ic_school_car_search_boy)
         }
 
         locationStyle = MyLocationStyle()
@@ -119,7 +116,7 @@ class SchoolCarMap(context: Context, savedInstanceState: Bundle?, carInterface: 
             layout.addView(relativeLayout, layoutParams)
 
             val imageView = ImageView(context)
-            imageView.setImageBitmap(BitmapFactory.decodeResource(context.resources, R.mipmap.ic_school_car_search_orgnization_logo))
+            imageView.setImageBitmap(BitmapFactory.decodeResource(context.resources, R.drawable.ic_school_car_search_orgnization_logo))
             imageView.setOnClickListener { v ->
                 val intent = Intent()
                 intent.action = Intent.ACTION_VIEW

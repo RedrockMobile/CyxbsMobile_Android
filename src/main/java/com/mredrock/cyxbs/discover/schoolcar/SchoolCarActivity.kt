@@ -1,7 +1,6 @@
 package com.mredrock.cyxbs.discover.schoolcar
 
 import android.Manifest
-import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
@@ -13,6 +12,8 @@ import android.os.PersistableBundle
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
@@ -60,9 +61,9 @@ class SchoolCarActivity : BaseActivity() {
         const val ME: Int = 1
         const val SCHOOL_CAR: Int = 2
 
-        const val ADD_TIMER : Long = 3
-        const val ADD_TIMER_AND_SHOW_MAP : Long = 55
-        const val NOT_ADD_Timer : Long = 0
+        const val ADD_TIMER: Long = 3
+        const val ADD_TIMER_AND_SHOW_MAP: Long = 55
+        const val NOT_ADD_Timer: Long = 0
     }
 
     var ifLocation = true
@@ -82,36 +83,26 @@ class SchoolCarActivity : BaseActivity() {
 
     override val isFragmentActivity = false
 
+    private val menuListener = MenuItem.OnMenuItemClickListener {
+        when (it?.itemId) {
+            R.id.school_car_more -> {
+                startActivity<SchoolCarLearnMoreActivity>()
+            }
+        }
+        return@OnMenuItemClickListener false
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         this.savedInstanceState = savedInstanceState
         setContentView(R.layout.activity_schoolcar)
 
-        initSchoolCarMap()
         checkActivityPermission(Manifest.permission.ACCESS_FINE_LOCATION, 1)
         checkActivityPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, 2)
+        locationClient = AMapLocationClient(applicationContext)
+        initSchoolCarMap()
     }
 
-    fun startSchoolCarActivity(startingActivity: Activity) {
-        val intent = Intent(startingActivity, SchoolCarActivity::class.java)
-        startingActivity.startActivity(intent)
-    }
-
-    private fun initToolcar() {
-        if (school_car_toolbar != null) {
-            school_car_toolbar.title = ""
-            setSupportActionBar(school_car_toolbar)
-        }
-
-        explore_schoolcar_toolbar_back.setOnClickListener {
-            finish()
-        }
-
-        explore_schoolcar_toolbar_learnmore.setOnClickListener {
-            val intent = Intent(this, SchoolCarLearnMoreActivity::class.java)
-            startActivity(intent)
-        }
-    }
 
     /**
      * 获取schoolCarMap的实例并且重写接口initLocationMapButton（高德地图只能使用动态加载添加UI）
@@ -130,13 +121,13 @@ class SchoolCarActivity : BaseActivity() {
                 // 在地图中加入"全校"<->"我"的button和两种模式转换时button需要的逻辑修改（包括定位模式和button上的图片）
                 holeSchoolButton = ImageButton(this@SchoolCarActivity)
                 holeSchoolButton.setBackgroundColor(Color.TRANSPARENT)
-                holeSchoolButton.setImageBitmap(BitmapFactory.decodeResource(resources, R.mipmap.ic_school_car_search_hole_school))
+                holeSchoolButton.setImageBitmap(BitmapFactory.decodeResource(resources, R.drawable.ic_school_car_search_hole_school))
                 locationStatus = HOLE_SCHOOL
 
                 holeSchoolButton.setOnClickListener { v: View ->
                     when (locationStatus) {
                         HOLE_SCHOOL -> {
-                            holeSchoolButton.setImageBitmap(BitmapFactory.decodeResource(resources, R.mipmap.ic_school_car_search_me))
+                            holeSchoolButton.setImageBitmap(BitmapFactory.decodeResource(resources, R.drawable.ic_school_car_search_me))
 
                             if (ifLocation) {
                                 locationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_FOLLOW)
@@ -146,7 +137,7 @@ class SchoolCarActivity : BaseActivity() {
                             locationStatus = ME
                         }
                         ME -> {
-                            holeSchoolButton.setImageBitmap(BitmapFactory.decodeResource(resources, R.mipmap.ic_school_car_search_hole_school))
+                            holeSchoolButton.setImageBitmap(BitmapFactory.decodeResource(resources, R.drawable.ic_school_car_search_hole_school))
 
                             if (ifLocation) {
                                 locationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_FOLLOW_NO_CENTER)
@@ -212,7 +203,7 @@ class SchoolCarActivity : BaseActivity() {
         //进行一次接口数据请求
         smoothMoveData.loadCarLocation(ADD_TIMER)
 
-        initToolcar()
+        common_toolbar.init("校车轨迹")
         SwipeBackHelper.getCurrentPage(this).setSwipeBackEnable(false)
 
         //加载动画为4秒
@@ -237,6 +228,12 @@ class SchoolCarActivity : BaseActivity() {
         })
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater?.inflate(R.menu.schoolcar_menu, menu)
+        menu?.getItem(0)?.setOnMenuItemClickListener(menuListener)
+        return super.onCreateOptionsMenu(menu)
+    }
+
     /**
      * 对地图的定位数据进行初始化，同时判定当前校车是否在学校内
      * 在SchoolCarMap class 中回调initLocationMapButton（）时调用 -> 若用户同意定位权限
@@ -250,7 +247,6 @@ class SchoolCarActivity : BaseActivity() {
                 }
             }
         }
-        locationClient = AMapLocationClient(applicationContext)
         val locationClientOption = AMapLocationClientOption()
 
         locationClient.setLocationOption(locationClientOption)
@@ -311,8 +307,10 @@ class SchoolCarActivity : BaseActivity() {
             ActivityCompat.requestPermissions(this, arrayOf(permission), processingMethod)
         } else {
             when (processingMethod) {
-                1 -> {}
-                2 -> {}
+                1 -> {
+                }
+                2 -> {
+                }
             }
         }
     }
@@ -326,10 +324,12 @@ class SchoolCarActivity : BaseActivity() {
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        if (grantResults.size > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+        if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             when (requestCode) {
-                1 -> {}
-                2 -> {}
+                1 -> {
+                }
+                2 -> {
+                }
             }
         } else {
             when (requestCode) {
@@ -345,7 +345,7 @@ class SchoolCarActivity : BaseActivity() {
     override fun onDestroy() {
         super.onDestroy()
 
-        ExploreSchoolCarDialog.cancleDialog()
+        ExploreSchoolCarDialog.cancelDialog()
 
         if (schoolCarMap != null) {
             schoolCarMap!!.distroyMap(locationClient)
@@ -358,7 +358,7 @@ class SchoolCarActivity : BaseActivity() {
     override fun onPause() {
         super.onPause()
 
-        ExploreSchoolCarDialog.cancleDialog()
+        ExploreSchoolCarDialog.cancelDialog()
 
         if (schoolCarMap != null) {
             schoolCarMap!!.pauseMap()

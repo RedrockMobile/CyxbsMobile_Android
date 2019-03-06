@@ -28,7 +28,7 @@ class  ExploreSchoolCarDialog(){
                     setView(layout).
                     create()
             layout.school_car_dialog_dismiss_button.setOnClickListener {
-                if (it.getId() == R.id.school_car_dialog_dismiss_button) {
+                if (it.id == R.id.school_car_dialog_dismiss_button) {
                     dialog!!.dismiss()
                 }
             }
@@ -62,7 +62,7 @@ class  ExploreSchoolCarDialog(){
             }
         }
 
-        fun cancleDialog(){
+        fun cancelDialog(){
             try {
                 if (dialog != null && dialog!!.isShowing) {
                     dialog!!.dismiss()
