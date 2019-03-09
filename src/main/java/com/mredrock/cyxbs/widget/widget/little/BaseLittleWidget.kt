@@ -79,6 +79,7 @@ abstract class BaseLittleWidget : AppWidgetProvider() {
 
     //获取正常显示的下一节课
     fun refresh(context: Context) {
+        saveDayOffset(context, 0)//重置天数偏移
         val list = getTodayCourse(context)
                 ?: getErrorCourseList()
 
@@ -107,6 +108,8 @@ abstract class BaseLittleWidget : AppWidgetProvider() {
     }
 
     private fun showTomorrowCourse(context: Context) {
+        saveDayOffset(context, 1)//天数偏移加一，上下切换课程将会切换明天的
+
         val tomorrowCalendar = Calendar.getInstance()
         tomorrowCalendar.set(Calendar.DAY_OF_YEAR, tomorrowCalendar.get(Calendar.DAY_OF_YEAR) + 1)
         val tomorrowList = getCourseByCalendar(context, tomorrowCalendar)
@@ -124,17 +127,24 @@ abstract class BaseLittleWidget : AppWidgetProvider() {
     //获取当前课程的上一节课
     private fun goUp(context: Context) {
         val hash_lesson = getHashLesson(context, getShareName())
-        var course: Course.DataBean? = null
-        //拿到当前课程的上一个课程
-        val list = getTodayCourse(context) ?: return
 
+        val dayOffset = getDayOffset(context)
+        val calendar = Calendar.getInstance()
+        calendar.set(Calendar.DATE, calendar.get(Calendar.DATE) + dayOffset)
+
+        //拿到当前课程的上一个课程
+        val list = getCourseByCalendar(context, calendar)
+                ?: getErrorCourseList()
+
+        var course: Course.DataBean? = null
         list.forEach {
             if (hash_lesson > it.hash_lesson) {
                 course = it
             }
         }
         if (course != null) {
-            show(context, course, formatTime(getStartCalendarByNum(course!!.hash_lesson)))
+            val beforeTitle = if (dayOffset == 1) "明日：" else ""
+            show(context, course, beforeTitle + formatTime(getStartCalendarByNum(course!!.hash_lesson)))
         } else {
             Toast.makeText(context, "没有上一节课了~", Toast.LENGTH_SHORT).show()
         }
@@ -143,12 +153,18 @@ abstract class BaseLittleWidget : AppWidgetProvider() {
     //获取当前课程的下一节课
     private fun goDown(context: Context) {
         val hash_lesson = getHashLesson(context, getShareName())
+
+        val dayOffset = getDayOffset(context)
+        val calendar = Calendar.getInstance()
+        calendar.set(Calendar.DATE, calendar.get(Calendar.DATE) + dayOffset)
+
         //拿到最后一节
-        val list = getTodayCourse(context)
+        val list = getCourseByCalendar(context, calendar)
                 ?: getErrorCourseList()
         list.forEach {
             if (hash_lesson < it.hash_lesson) {
-                show(context, it, formatTime(getStartCalendarByNum(it.hash_lesson)))
+                val beforeTitle = if (dayOffset == 1) "明日：" else ""
+                show(context, it, beforeTitle + formatTime(getStartCalendarByNum(it.hash_lesson)))
                 return
             }
         }

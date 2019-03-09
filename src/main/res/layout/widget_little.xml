@@ -1,6 +1,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
+    android:gravity="center_vertical"
     android:minWidth="100dp"
     android:orientation="vertical">
 
@@ -31,13 +32,12 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
+            android:layout_height="25dp"
             android:background="#ffffff"
             android:orientation="horizontal">
 
@@ -47,11 +47,11 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:ellipsize="end"
-                android:maxLines="1"
+                android:gravity="center_vertical"
                 android:minHeight="20dp"
                 android:paddingLeft="3dp"
                 android:singleLine="true"
-                android:text=""
+                android:text="请刷新数据"
                 android:textColor="@color/widget_colorTextBlack"
                 android:textSize="16sp" />
 
@@ -59,6 +59,7 @@
                 android:id="@+id/widget_little_up"
                 android:layout_width="25dp"
                 android:layout_height="25dp"
+                android:layout_gravity="center"
                 android:padding="5dp"
                 android:src="@drawable/widget_up" />
         </LinearLayout>
@@ -66,9 +67,8 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
+            android:layout_height="25dp"
             android:layout_marginTop="0.5dp"
-            android:layout_weight="1"
             android:background="#ffffff"
             android:orientation="horizontal">
 
@@ -78,10 +78,10 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:ellipsize="end"
-                android:maxLines="1"
+                android:gravity="center_vertical"
                 android:minHeight="20dp"
                 android:paddingLeft="3dp"
-                android:text=""
+                android:text="=_="
                 android:textColor="@color/widget_colorTextBlack"
                 android:textSize="16sp" />
 
@@ -89,6 +89,7 @@
                 android:id="@+id/widget_little_down"
                 android:layout_width="25dp"
                 android:layout_height="25dp"
+                android:layout_gravity="center"
                 android:padding="5dp"
                 android:src="@drawable/widget_down" />
         </LinearLayout>

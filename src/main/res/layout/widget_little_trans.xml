@@ -1,9 +1,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:minWidth="100dp"
+    android:gravity="center_vertical"
     android:orientation="vertical">
-
 
     <TextView
         android:id="@+id/widget_little_title_trans"
@@ -23,7 +23,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:maxLines="1"
-            android:text="高等数学"
+            android:text="请刷新数据"
             android:textColor="#2E2E2E"
             android:textSize="16sp" />
 
@@ -42,7 +42,7 @@
         android:layout_height="wrap_content"
         android:ellipsize="end"
         android:maxLines="1"
-        android:text="2217"
+        android:text="=_="
         android:textColor="#2E2E2E"
         android:textSize="16sp" />
 

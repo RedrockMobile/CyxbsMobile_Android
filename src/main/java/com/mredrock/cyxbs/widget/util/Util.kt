@@ -4,6 +4,7 @@ import android.app.PendingIntent
 import android.appwidget.AppWidgetProvider
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.net.Uri
 import android.support.annotation.IdRes
 import android.util.Log
@@ -47,14 +48,15 @@ fun getCourseByCalendar(context: Context, calendar: Calendar): ArrayList<Course.
     /*
     * 转换表，老外从周日开始计数,orz
     * 7 1 2 3 4 5 6 老外
-    * 1 2 3 4 5 6 7 返回
-    * 6 0 1 2 3 4 5 结果(hash_day)
+    * 1 2 3 4 5 6 7 Calendar.DAY_OF_WEEK
+    * 6 0 1 2 3 4 5 需要的结果(hash_day)
     * */
     val hash_day = (calendar.get(Calendar.DAY_OF_WEEK) + 5) % 7
 
     val list = ArrayList<Course.DataBean>()
     course.data!!.forEach {
         if (it.hash_day == hash_day && it.week!!.contains(week)) {
+//            LogUtils.d("Widget", it.toString())
             list.add(it)
         }
     }
@@ -106,6 +108,19 @@ fun saveHashLesson(context: Context, hash_lesson: Int, shareName: String) {
 fun getHashLesson(context: Context, shareName: String): Int {
     return context.defaultSharedPreferences.getInt(shareName, 0)
 }
+
+
+private const val SP_DayOffset = "dayOffset"
+//天数偏移量，用于LittleWidget切换明天课程
+fun saveDayOffset(context: Context, offset: Int) {
+    context.defaultSharedPreferences.editor {
+        putInt(SP_DayOffset, offset)
+    }
+}
+fun getDayOffset(context: Context): Int {
+    return context.defaultSharedPreferences.getInt(SP_DayOffset, 0)
+}
+
 
 fun isNight(): Boolean {
     val calendar = Calendar.getInstance()
@@ -186,3 +201,16 @@ fun filterClassRoom(classRoom: String): String {
         return classRoom
     }
 }
+
+//桌面小部件课表json数据
+const val WIDGET_COURSE = "widget_kb"
+
+const val SP_WIDGET_NEED_FRESH = "widget_need_fresh"
+const val SP_STUNUM = "student_number"
+const val SP_COURSE_UPDATE_TIME = "course_update_time"
+const val SP_IS_AUTO_UPDATE = "is_auto_update"
+
+val Context.defaultSharedPreferences get() = sharedPreferences("share_data")
+
+fun Context.sharedPreferences(name: String): SharedPreferences = getSharedPreferences(name, Context.MODE_PRIVATE)
+fun SharedPreferences.editor(editorBuilder: SharedPreferences.Editor.() -> Unit) = edit().apply(editorBuilder).apply()

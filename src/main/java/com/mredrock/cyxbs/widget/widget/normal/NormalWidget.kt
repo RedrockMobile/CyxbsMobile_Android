@@ -73,17 +73,20 @@ class NormalWidget : AppWidgetProvider() {
     }
 
     /**
-     * 刷新，传入offsetTime为和今天的偏移量
+     * 刷新，传入offsetTime作为今天的偏移量
      */
-    public fun fresh(context: Context, offsetTime: Int) {
+    fun fresh(context: Context, offsetTime: Int) {
         //生成calendar
         val calendar = Calendar.getInstance()
         val nowHour = calendar.get(Calendar.HOUR_OF_DAY)
-        calendar.set(Calendar.DAY_OF_YEAR, calendar.get(Calendar.DAY_OF_YEAR) + offsetTime)
+        calendar.set(Calendar.DATE, calendar.get(Calendar.DATE) + offsetTime)
 
         //获取数据
         val list = getCourseByCalendar(context, calendar)
                 ?: getErrorCourseList()
+        if (list.isEmpty()){
+            list.add(getNoCourse())
+        }
 
         //如果课已经上完了，而且过了晚上7点，显示明天的课程
         if (nowHour > 19) {
