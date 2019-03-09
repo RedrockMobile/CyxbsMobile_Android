@@ -21,7 +21,8 @@ interface CourseApiService {
     @POST(CourseUrls.API_GET_COURSE)
     fun getCourse(@Field("stuNum") stuNum: String,
                   @Field("idNum") idNum: String = "",
-                  @Field("week") week: String = ""): Observable<CourseApiWrapper<List<Course>>>
+                  @Field("week") week: String = "",
+                  @Field("force_fetch") isForceFetch: Boolean = false): Observable<CourseApiWrapper<List<Course>>>
 
     /**
      * 获取服务器中的事务信息

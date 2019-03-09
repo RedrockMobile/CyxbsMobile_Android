@@ -3,7 +3,10 @@ package com.mredrock.cyxbs.course.viewmodels
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import android.content.Context
+import com.google.gson.Gson
 import com.mredrock.cyxbs.common.BaseApp
+import com.mredrock.cyxbs.common.config.SP_WIDGET_NEED_FRESH
+import com.mredrock.cyxbs.common.config.WIDGET_COURSE
 import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.SchoolCalendar
@@ -112,7 +115,7 @@ class CoursesViewModel : ViewModel() {
 
         resetGetStatus()
         this.isUseSwipeRefreshLayout = isUseSwipeRefreshLayout
-        getCoursesDataFromInternet()
+        getCoursesDataFromInternet(true)
         getAffairsDataFromInternet()
     }
 
@@ -164,8 +167,8 @@ class CoursesViewModel : ViewModel() {
     /**
      * 此方法用于从服务器中获取课程数据
      */
-    private fun getCoursesDataFromInternet() {
-        mCourseApiService.getCourse(stuNum = BaseApp.user!!.stuNum!!)
+    private fun getCoursesDataFromInternet(isForceFetch: Boolean = false) {
+        mCourseApiService.getCourse(stuNum = BaseApp.user!!.stuNum!!, isForceFetch = isForceFetch)
                 .setSchedulers()
                 .errorHandler()
                 .subscribe(ExecuteOnceObserver(onExecuteOnceNext = { coursesFromInternet ->
@@ -182,13 +185,13 @@ class CoursesViewModel : ViewModel() {
                         }.start()
                     }
 
-//                    // 存储窗口小部件需要的Json数据
-//                    if (coursesFromInternet.data?.isEmpty() != true) {
-//                        BaseApp.context.defaultSharedPreferences.editor {
-//                            putBoolean(SP_WIDGET_NEED_FRESH, true)
-//                            putString(WIDGET_COURSE, Gson().toJson(coursesFromInternet))
-//                        }
-//                    }
+                    // 存储窗口小部件需要的Json数据
+                    if (coursesFromInternet.data?.isEmpty() != true) {
+                        BaseApp.context.defaultSharedPreferences.editor {
+                            putBoolean(SP_WIDGET_NEED_FRESH, true)
+                            putString(WIDGET_COURSE, Gson().toJson(coursesFromInternet))
+                        }
+                    }
                 }, onExecuteOnceError = {
                     stopRefresh()
                 }))

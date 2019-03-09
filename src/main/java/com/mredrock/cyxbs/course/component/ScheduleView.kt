@@ -72,9 +72,9 @@ class ScheduleView : FrameLayout {
 
                                     val itemView = notNullAdapter.getItemView(row, column, this@ScheduleView)
 
-                                    //compute the LayoutParams of the ItemView
+                                    //compute the LayoutParams of the ItemView。
                                     val params = FrameLayout.LayoutParams(mBasicElementWidth,
-                                            mBasicElementHeight * (itemViewInfo.itemHeight / 2))
+                                            (mBasicElementHeight * (itemViewInfo.itemHeight / 2f)).toInt())
                                     params.leftMargin = mElementGap * (column + 1) + mBasicElementWidth * column
                                     params.topMargin = mElementGap * (row + 1) + mBasicElementHeight * row
                                     // If the itemView is in the left or bottom edge, add additional
@@ -363,8 +363,8 @@ class ScheduleView : FrameLayout {
     /**
      * This class represents the ItemSize going to display
      *
-     * @param itemWidth represent the ScheduleItem's width.
-     * @param itemHeight represent the ScheduleItem's height
+     * @param itemWidth 表示一个课占多宽
+     * @param itemHeight 表示有多少节课的高度。每天的课有12节，这个就表示多少个12分之一。
      */
     data class ScheduleItem(val itemWidth: Int = 1, val itemHeight: Int = 2)
 
