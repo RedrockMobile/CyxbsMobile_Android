@@ -6,5 +6,4 @@ import com.mredrock.cyxbs.common.BaseApp
  *
  * @CreateAt:2018/9/16
  */
-class GradesApplication : BaseApp() {
-}
+class GradesApplication : BaseApp()

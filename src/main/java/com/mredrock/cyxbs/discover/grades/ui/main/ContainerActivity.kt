@@ -2,7 +2,7 @@ package com.mredrock.cyxbs.discover.grades.ui.main
 
 import android.os.Bundle
 import com.alibaba.android.arouter.facade.annotation.Route
-import com.jude.swipbackhelper.SwipeBackHelper
+//import com.jude.swipbackhelper.SwipeBackHelper
 import com.mredrock.cyxbs.common.config.DISCOVER_GRADES
 import com.mredrock.cyxbs.common.ui.BaseActivity
 import com.mredrock.cyxbs.discover.grades.R
@@ -23,7 +23,7 @@ class ContainerActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.grades_activity_container)
-        SwipeBackHelper.getCurrentPage(this).setSwipeBackEnable(false)//滑动会影响体验
+//        SwipeBackHelper.getCurrentPage(this).setSwipeBackEnable(false)//滑动会影响体验
         common_toolbar.init("考试与成绩")
         initVP()
     }
