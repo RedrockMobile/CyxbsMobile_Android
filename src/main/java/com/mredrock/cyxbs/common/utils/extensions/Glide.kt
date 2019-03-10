@@ -28,7 +28,8 @@ fun Context.loadRedrockImage(rowUrl: String?,
     }
     Glide.with(this)
             .load(url)
-            .transition(DrawableTransitionOptions().crossFade())
+            // Glide 加载动画bug
+//            .transition(DrawableTransitionOptions().crossFade())
             .apply(RequestOptions().placeholder(placeholder).error(error))
             .into(imageView)
 }

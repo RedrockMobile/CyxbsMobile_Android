@@ -5,5 +5,4 @@ package com.mredrock.cyxbs.common.event
  *   2018/10/21.
  *   enjoy it !!
  */
-class DiscoverOptionIconClickEvent {
-}
+class DiscoverOptionIconClickEvent

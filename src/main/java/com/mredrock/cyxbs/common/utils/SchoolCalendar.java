@@ -173,9 +173,7 @@ public class SchoolCalendar {
     @Override
     public boolean equals(Object o) {
         if (o instanceof SchoolCalendar) {
-            if (getDayOfTerm() == ((SchoolCalendar) o).getDayOfTerm()) {
-                return true;
-            }
+            return getDayOfTerm() == ((SchoolCalendar) o).getDayOfTerm();
         }
         return false;
     }
