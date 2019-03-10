@@ -18,6 +18,7 @@ import com.mredrock.cyxbs.course.network.CourseApiService
 import com.mredrock.cyxbs.course.rxjava.ExecuteOnceObserver
 import com.mredrock.cyxbs.course.ui.EditAffairActivity
 import org.greenrobot.eventbus.EventBus
+import org.jetbrains.anko.collections.forEach
 
 /**
  * Created by anriku on 2018/9/9.
