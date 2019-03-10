@@ -13,7 +13,7 @@
     <item
         android:id="@+id/freshman"
         android:enabled="false"
-        android:title="迎新" />
+        android:title="@string/common_fab" />
 
     <item
         android:id="@+id/explore"

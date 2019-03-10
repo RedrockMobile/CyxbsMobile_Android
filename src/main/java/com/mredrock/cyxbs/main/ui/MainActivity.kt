@@ -1,18 +1,21 @@
 package com.mredrock.cyxbs.main.ui
 
 import android.os.Bundle
+import android.support.design.widget.AppBarLayout
 import android.support.v4.app.Fragment
 import android.support.v4.view.ViewPager
 import android.view.MenuItem
 import com.alibaba.android.arouter.launcher.ARouter
-import com.jude.swipbackhelper.SwipeBackHelper
+//import com.jude.swipbackhelper.SwipeBackHelper
 import com.mredrock.cyxbs.common.config.*
 import com.mredrock.cyxbs.common.event.LoginStateChangeEvent
+import com.mredrock.cyxbs.common.event.MainVPChangeEvent
 import com.mredrock.cyxbs.common.ui.BaseActivity
 import com.mredrock.cyxbs.main.R
 import com.mredrock.cyxbs.main.ui.adapter.MainVpAdapter
 import com.mredrock.cyxbs.main.utils.BottomNavigationViewHelper
 import kotlinx.android.synthetic.main.main_activity_main.*
+import org.greenrobot.eventbus.EventBus
 import org.jetbrains.anko.dip
 
 class MainActivity : BaseActivity() {
@@ -32,13 +35,17 @@ class MainActivity : BaseActivity() {
             R.drawable.main_ic_mine_unselected, R.drawable.main_ic_mine_selected
     )
 
+    private lateinit var appbar:AppBarLayout
+
     private val fragments = ArrayList<Fragment>()
     private lateinit var adapter: MainVpAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.main_activity_main)
-        SwipeBackHelper.getCurrentPage(this).setSwipeBackEnable(false)
+//        SwipeBackHelper.getCurrentPage(this).setSwipeBackEnable(false)
+
+        appbar = findViewById(R.id.app_bar_layout)
 
         common_toolbar.init(getString(R.string.common_course), listener = null)
         initBottomNavigationView()
@@ -86,14 +93,12 @@ class MainActivity : BaseActivity() {
             override fun onPageSelected(position: Int) {
                 menu?.clear()
                 fragments[position].onPrepareOptionsMenu(menu)
+                EventBus.getDefault().post(MainVPChangeEvent(position))
+                appbar.setExpanded(true)
             }
         })
     }
 
     private fun getFragment(path: String) = ARouter.getInstance().build(path).navigation() as Fragment
 
-    override fun onLoginStateChangeEvent(event: LoginStateChangeEvent) {
-        super.onLoginStateChangeEvent(event)
-        //todo change fragment course
-    }
 }
