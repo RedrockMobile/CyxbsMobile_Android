@@ -9,7 +9,7 @@ import android.os.Bundle
 import android.webkit.WebChromeClient
 import android.webkit.WebView
 import android.webkit.WebViewClient
-import com.jude.swipbackhelper.SwipeBackHelper
+//import com.jude.swipbackhelper.SwipeBackHelper
 import com.mredrock.cyxbs.common.ui.BaseActivity
 import com.mredrock.cyxbs.discover.R
 import kotlinx.android.synthetic.main.discover_activity_roller_view.*
@@ -27,7 +27,7 @@ class RollerViewActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.discover_activity_roller_view)
-        SwipeBackHelper.getCurrentPage(this).setSwipeBackEnable(false)
+//        SwipeBackHelper.getCurrentPage(this).setSwipeBackEnable(false)
 
         initToolbar()
 

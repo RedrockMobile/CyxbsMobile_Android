@@ -56,7 +56,7 @@ class DiscoverMainRvAdapter(private val context: Context): RecyclerView.Adapter<
             R.drawable.ic_discover_volunteer_time -> startActivity(DISCOVER_VOLUNTEER)
             R.drawable.ic_discover_map -> startActivity(DISCOVER_MAP)
             R.drawable.ic_discover_school_car -> startActivity(DISCOVER_SCHOOL_CAR)
-            R.drawable.ic_discover_calendar -> startActivity(DISCOVER_CALENDER)
+            R.drawable.ic_discover_calendar -> startActivity(DISCOVER_CALENDAR)
             R.drawable.ic_discover_electric -> startActivity(DISCOVER_ELECTRICITY)
             R.drawable.ic_discover_about -> context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://wx.redrock.team/app/")))
             R.drawable.ic_discover_news -> startActivity(DISCOVER_NEWS)
