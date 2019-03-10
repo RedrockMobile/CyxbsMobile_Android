@@ -43,7 +43,7 @@ class FirstVolunteerTimeFragment : Fragment(){
         val holeHourString = holehour.toString()
         holeTime.text = holeHourString
         yearList.add(year)
-        getContext()?.let {
+        context?.let {
             val adapter = VolunteerRecyclerAdapter(recordBeanList, it, yearList, null)
             recyclerView.isNestedScrollingEnabled = false
             recyclerView.adapter = adapter

@@ -13,8 +13,8 @@ import java.util.concurrent.TimeUnit
 class VolunteerRetrofit {
     companion object {
         private val DEFAULT_TIME_OUT = 30
-        public val encodingRetrofit : Retrofit = getRetrofit("http://tool.chacuo.net")
-        public val volunteerRetrofit : Retrofit = getRetrofit("http://111.230.169.17:8080")
+        val encodingRetrofit : Retrofit = getRetrofit("http://tool.chacuo.net")
+        val volunteerRetrofit : Retrofit = getRetrofit("http://111.230.169.17:8080")
 
         private fun getRetrofit(baseUrl : String) : Retrofit {
             return Retrofit.Builder()

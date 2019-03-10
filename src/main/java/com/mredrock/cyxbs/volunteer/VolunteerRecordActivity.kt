@@ -11,7 +11,7 @@ import android.support.v4.view.ViewPager
 import android.view.View
 import android.widget.Toast
 import com.afollestad.materialdialogs.MaterialDialog
-import com.jude.swipbackhelper.SwipeBackHelper
+//import com.jude.swipbackhelper.SwipeBackHelper
 import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.ui.BaseActivity
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
@@ -48,7 +48,7 @@ class VolunteerRecordActivity : BaseActivity(), TabLayout.OnTabSelectedListener,
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        SwipeBackHelper.getCurrentPage(this).setSwipeBackEnable(false)
+//        SwipeBackHelper.getCurrentPage(this).setSwipeBackEnable(false)
         setContentView(R.layout.activity_volunteer_record)
 
         initToolbar()
@@ -266,7 +266,7 @@ class VolunteerRecordActivity : BaseActivity(), TabLayout.OnTabSelectedListener,
         val calendar = Calendar.getInstance()
 
         var year: Int
-        val yearCalender = calendar.get(Calendar.YEAR)
+        val yearCalendar = calendar.get(Calendar.YEAR)
         //每个key都对应的该用户key所对应的那一年的所有时长信息
         yearMap = TreeMap()
         //用来加入每一年的信息
@@ -278,7 +278,7 @@ class VolunteerRecordActivity : BaseActivity(), TabLayout.OnTabSelectedListener,
         //用来储存年份
         val yearListInt = mutableListOf<Int>()
         for (x in 0..3) {
-            yearListInt.add(yearCalender - x)
+            yearListInt.add(yearCalendar - x)
         }
 
         //把相应年份的时长信息加到对应年份
