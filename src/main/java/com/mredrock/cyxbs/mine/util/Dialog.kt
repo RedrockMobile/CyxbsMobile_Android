@@ -13,7 +13,7 @@ fun Context.getLoadingDialog(title: String): MaterialDialog {
             .title(title)
             .content("请稍候")
             .theme(Theme.LIGHT)
-            .backgroundColor(getResources().getColor(R.color.mine_white))
+            .backgroundColor(resources.getColor(R.color.mine_white))
             .progress(true, 100)
             .cancelable(false)
             .build()

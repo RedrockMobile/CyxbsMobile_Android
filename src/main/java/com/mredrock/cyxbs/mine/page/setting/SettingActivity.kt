@@ -27,7 +27,6 @@ import com.mredrock.cyxbs.common.utils.extensions.saveImage
 import com.mredrock.cyxbs.mine.R
 import kotlinx.android.synthetic.main.mine_activity_setting.*
 import org.greenrobot.eventbus.EventBus
-import org.jetbrains.anko.sdk27.coroutines.onCheckedChange
 
 
 /**
@@ -53,10 +52,13 @@ class SettingActivity(override val isFragmentActivity: Boolean = false) : BaseAc
         mine_setting_widget.setOnClickListener { onSetWidgetClick() }
 
         //切换按钮
-        mine_setting_switchBtn.setCheckedImmediately(defaultSharedPreferences.getBoolean(SP_SHOW_MODE, false))
-        mine_setting_switchBtn.onCheckedChange { _, isChecked ->
-            //todo 给一鹏说一下这个，还得加一个eventBus通知
-            defaultSharedPreferences.editor { putBoolean(SP_SHOW_MODE, isChecked) }
+        mine_setting_switchBtn.setCheckedImmediately(defaultSharedPreferences.getBoolean(SP_SHOW_MODE, true))
+        mine_setting_switchBtn.setOnClickListener {
+            defaultSharedPreferences.editor {
+                // todo 发给课表的Event
+                val next = !defaultSharedPreferences.getBoolean("SP_SHOW_MODE", true)
+                putBoolean(SP_SHOW_MODE, next)
+            }
         }
     }
 
@@ -69,7 +71,6 @@ class SettingActivity(override val isFragmentActivity: Boolean = false) : BaseAc
                     .negativeText("取消")
                     .onPositive { _, _ ->
                         finish()
-                        BaseApp.user = null
                         //todo 刷新缓存？
 //                                AppWidgetCacheAndUpdateFunc.deleteCache()
                         EventBus.getDefault().post(LoginStateChangeEvent(false))

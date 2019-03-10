@@ -2,7 +2,6 @@ package com.mredrock.cyxbs.mine
 
 
 import android.arch.lifecycle.Observer
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,7 +11,6 @@ import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.bean.User
 import com.mredrock.cyxbs.common.config.MINE_ENTRY
 import com.mredrock.cyxbs.common.event.AskLoginEvent
-import com.mredrock.cyxbs.common.event.LoginEvent
 import com.mredrock.cyxbs.common.event.LoginStateChangeEvent
 import com.mredrock.cyxbs.common.ui.BaseViewModelFragment
 import com.mredrock.cyxbs.common.utils.extensions.loadAvatar
@@ -28,7 +26,6 @@ import com.mredrock.cyxbs.mine.util.user
 import kotlinx.android.synthetic.main.mine_fragment_main.*
 import org.greenrobot.eventbus.EventBus
 import org.jetbrains.anko.support.v4.startActivity
-import org.jetbrains.anko.support.v4.toast
 
 /**
  * Created by zzzia on 2018/8/14.
@@ -38,6 +35,13 @@ import org.jetbrains.anko.support.v4.toast
 class UserFragment : BaseViewModelFragment<UserViewModel>() {
     override val viewModelClass: Class<UserViewModel>
         get() = UserViewModel::class.java
+    private val loginListener = View.OnClickListener {
+        if (user == null) {
+            EventBus.getDefault().post(AskLoginEvent("请先登陆哦~"))
+        } else {
+            startActivity<EditInfoActivity>()
+        }
+    }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -48,7 +52,7 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
         getPersonInfoData()
 
         //功能按钮
-        mine_main_dailySign.setOnClickListener { checkLoginBeforeAction("签到"){startActivity<DailySignActivity>()} }
+        mine_main_dailySign.setOnClickListener { checkLoginBeforeAction("签到") { startActivity<DailySignActivity>() } }
         mine_main_store.setOnClickListener { checkLoginBeforeAction("商店") { startActivity<StoreActivity>() } }
         mine_main_question.setOnClickListener { checkLoginBeforeAction("问一问") { startActivity<AskActivity>() } }
         mine_main_help.setOnClickListener { checkLoginBeforeAction("帮一帮") { startActivity<HelpActivity>() } }
@@ -56,24 +60,17 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
         mine_main_relateMe.setOnClickListener { checkLoginBeforeAction("与我相关") { startActivity<AboutMeActivity>() } }
         mine_main_setting.setOnClickListener { startActivity<SettingActivity>() }
 
-        //个人资料按钮，没有加载完资料之前不能跳转到更改信息页面
-        setUserInfoClickListener(View.OnClickListener {
-            if (user == null){
-                toast("请先登录")
-            }else{
-                toast("正在加载资料，请稍后")
-            }
-        })
+        setUserInfoClickListener(loginListener)
     }
 
     private fun addObserver() {
         viewModel.mUser.observe(this, Observer {
-            if (it == null) return@Observer
+            if (it == null) {
+                BaseApp.user = null
+                return@Observer
+            }
             freshBaseUser(it)
             refreshEditLayout()
-            setUserInfoClickListener(View.OnClickListener { _ ->
-                startActivity<EditInfoActivity>()
-            })
         })
     }
 
@@ -149,6 +146,9 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
 
     override fun onLoginStateChangeEvent(event: LoginStateChangeEvent) {
         super.onLoginStateChangeEvent(event)
+        if (!event.newState) {
+            viewModel.mUser.value = null
+        }
         refreshEditLayout()
     }
 

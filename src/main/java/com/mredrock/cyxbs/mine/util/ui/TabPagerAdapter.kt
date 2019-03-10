@@ -15,11 +15,7 @@ class TabPagerAdapter(fm: FragmentManager, private val mFragmentsList: List<Frag
             return mFragmentsList?.size ?: 0
         }
 
-        override fun instantiateItem(container: ViewGroup, position: Int): Any {
-            return super.instantiateItem(container, position)
-        }
-
-        override fun getItemPosition(`object`: Any): Int {
+    override fun getItemPosition(`object`: Any): Int {
             return POSITION_NONE
         }
 

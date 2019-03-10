@@ -26,8 +26,8 @@ interface ApiService {
      */
     @Multipart
     @POST("/cyxbsMobile/index.php/Home/Photo/uploadArticle")
-    abstract fun uploadSocialImg(@Part("stunum") stunum: RequestBody,
-                                 @Part file: MultipartBody.Part): Observable<RedrockApiWrapper<UploadImgResponse>>
+    fun uploadSocialImg(@Part("stunum") stunum: RequestBody,
+                        @Part file: MultipartBody.Part): Observable<RedrockApiWrapper<UploadImgResponse>>
 
     @FormUrlEncoded
     @POST("/cyxbsMobile/index.php/Home/Person/setInfo")
