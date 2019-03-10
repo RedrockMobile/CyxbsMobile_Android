@@ -5,6 +5,7 @@ import android.support.design.widget.BottomSheetDialog
 import android.support.v7.widget.AppCompatCheckedTextView
 import com.mredrock.cyxbs.qa.R
 import kotlinx.android.synthetic.main.qa_dialog_quiz_reward_set.*
+import org.jetbrains.anko.forEachChild
 
 /**
  * Created By jay68 on 2018/11/27.
@@ -27,11 +28,11 @@ class RewardSetDialog(context: Context, rewardCount: Int) : BottomSheetDialog(co
         tv_quiz_reward_set_dialog_sure.setOnClickListener { onSubmitButtonClickListener(REWARD_LIST[preCheckedTextViewIndex]) }
 
         checkedTextViewGroup = ArrayList()
-        forEach({
+        ll_reward_tv_group.forEachChild {
             if (it is AppCompatCheckedTextView) {
                 checkedTextViewGroup += it
             }
-        })
+        }
         checkedTextViewGroup[0].isChecked = true
         preCheckedTextViewIndex = 0
         tv_reward_set_cur_question_reward.text = checkedTextViewGroup[0].resources.getString(R.string.qa_quiz_reward_set_cur_question_reward, REWARD_LIST[0])
