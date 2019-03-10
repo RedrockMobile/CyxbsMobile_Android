@@ -28,7 +28,7 @@ class NoCourseInviteViewModel(private val mStuNumList: List<String> = mutableLis
     /**
      * 此方法用于获取各个学生的学期课表
      */
-    fun getCourses() {
+    fun getCourses(onFinish: (() -> Unit)? = null) {
         val studentsCourseMap = mutableMapOf<Int, List<Course>>()
         //依次请求所有的学生的课程。
         Observable.fromIterable(mStuNumList)
@@ -43,6 +43,9 @@ class NoCourseInviteViewModel(private val mStuNumList: List<String> = mutableLis
                     }
                 }, onComplete = {
                     this.studentsCourseMap.value = studentsCourseMap
+                    onFinish?.invoke()
+                }, onError = {
+                    onFinish?.invoke()
                 })
     }
 

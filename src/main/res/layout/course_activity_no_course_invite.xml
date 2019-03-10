@@ -11,16 +11,7 @@
         android:orientation="vertical"
         tools:context=".ui.NoCourseInviteActivity">
 
-
-        <com.mredrock.cyxbs.common.component.JToolbar
-            android:id="@+id/tl_course"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/colorPrimary"
-            android:fitsSystemWindows="true"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-            app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-            app:title="@string/course_no_courese_invite" />
+        <include layout="@layout/common_toolbar"/>
 
         <android.support.design.widget.TabLayout
             android:id="@+id/tab_layout"

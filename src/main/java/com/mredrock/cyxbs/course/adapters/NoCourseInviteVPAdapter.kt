@@ -19,7 +19,7 @@ class NoCourseInviteVPAdapter(private val mTiles: List<String>, fm: FragmentMana
         if (mFragmentList[position] == null){
             mFragmentList[position] = NoCourseInviteFragment().also {
                 it.arguments = Bundle().apply {
-                    putInt(NoCourseInviteFragment.NOW_WEEK, position)
+                    putInt(NoCourseInviteFragment.NOW_WEEK, position + 1)
                 }
             }
         }

@@ -23,10 +23,10 @@ object ScheduleViewBidingAdapter {
 
     @JvmStatic
     @BindingAdapter(value = ["nowWeek", "studentsCourseMap", "nameList"])
-    fun setNoCourseInvite(scheduleView: ScheduleView, nowWeek: Int, commonNoCourseMap: Map<Int, List<Course>>?,
+    fun setNoCourseInvite(scheduleView: ScheduleView, nowWeek: Int, studentsCourseMap: Map<Int, List<Course>>?,
                           nameList: List<String>) {
 
-        commonNoCourseMap?.let {
+        studentsCourseMap?.let {
             val noCourScheduleViewAdapter = NoCourseInviteScheduleViewAdapter(scheduleView.context,
                     nowWeek, it, nameList)
             scheduleView.adapter = noCourScheduleViewAdapter

@@ -34,6 +34,10 @@ class NoCourseInviteFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         activity ?: return
 
+        initFragment()
+    }
+
+    private fun initFragment() {
         mBinding.setLifecycleOwner(this)
 
         mNowWeek = arguments?.getInt(NOW_WEEK) ?: 0
@@ -41,6 +45,11 @@ class NoCourseInviteFragment : Fragment() {
         mBinding.nowWeek = mNowWeek
         mBinding.noCourseInviteViewModel = mNoCourseInviteViewModel
 
+        mBinding.swipeRefreshLayout.setOnRefreshListener {
+            mNoCourseInviteViewModel.getCourses {
+                mBinding.swipeRefreshLayout.isRefreshing = false
+            }
+        }
     }
 
 }

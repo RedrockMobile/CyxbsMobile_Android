@@ -3,20 +3,16 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:id="@+id/cv"
     android:layout_height="match_parent"
-    app:cardCornerRadius="@dimen/cardview_default_radius">
-
-    <ImageView
-        android:id="@+id/bk"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:ignore="ContentDescription" />
+    app:cardCornerRadius="@dimen/course_course_item_radius">
 
     <TextView
         android:id="@+id/tv_name_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:gravity="center"
         android:maxLines="5" />
 
 </android.support.v7.widget.CardView>

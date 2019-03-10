@@ -118,8 +118,8 @@ class ScheduleDetailViewAdapter(private val mDialog: Dialog, private val mSchedu
 
 //        itemView.findViewById<TextView>(R.id.stu_list).apply {
 //            setOnClickListener {
-//                mDialog.dismiss()
-//                val context = mDialog.context
+//                dialog.dismiss()
+//                val context = dialog.context
 //                val intent = Intent(context, StudentListActivity::class.java)
 //                intent.putExtra(StudentListActivity.COURSE_INFO, itemViewInfo)
 //                context.startActivity(intent)

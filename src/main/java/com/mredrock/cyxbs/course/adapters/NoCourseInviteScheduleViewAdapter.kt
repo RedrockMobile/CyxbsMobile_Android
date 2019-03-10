@@ -2,6 +2,7 @@ package com.mredrock.cyxbs.course.adapters
 
 import android.content.Context
 import android.support.v4.content.ContextCompat
+import android.support.v7.widget.CardView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,6 +12,7 @@ import com.mredrock.cyxbs.course.component.ScheduleView
 import com.mredrock.cyxbs.common.utils.SchoolCalendar
 import com.mredrock.cyxbs.course.R
 import com.mredrock.cyxbs.course.network.Course
+import com.mredrock.cyxbs.course.ui.NoCourseInviteDetailDialogHelper
 import java.lang.StringBuilder
 import java.util.*
 
@@ -20,7 +22,7 @@ import java.util.*
 
 class NoCourseInviteScheduleViewAdapter(private val mContext: Context,
                                         private val mNowWeek: Int,
-                                        private val mCommonNoCourseMap: Map<Int, List<Course>>,
+                                        private val mCoursesMap: Map<Int, List<Course>>,
                                         private val mNameList: List<String>) : ScheduleView.Adapter() {
 
     companion object {
@@ -34,10 +36,13 @@ class NoCourseInviteScheduleViewAdapter(private val mContext: Context,
                 ContextCompat.getColor(mContext, R.color.courseCoursesOther))
     }
 
-    // 用于存储对应课表没有课的学生的mNameList的index
-    private val mCommonNoCoursesIndex = Array(6) { arrayOfNulls<MutableList<Int>>(7) }
+    // 获取对应位置有课的学生的名字在mNameList中的index
+    private val mCoursesIndex = Array(12) { arrayOfNulls<MutableList<Int>>(7) }
     // 用于存储对应课表没有课的学生的名字
-    private val mCommonNoCoursesNames = Array(6) { arrayOfNulls<MutableList<String>>(7) }
+    private val mCommonNoCoursesNames = Array(12) { arrayOfNulls<MutableList<String>>(7) }
+    private val mNoCourseInviteDetailDialogHelper: NoCourseInviteDetailDialogHelper by lazy(LazyThreadSafetyMode.NONE) {
+        NoCourseInviteDetailDialogHelper(mContext)
+    }
 
     private val mLayoutInflater: LayoutInflater by lazy(LazyThreadSafetyMode.NONE) {
         LayoutInflater.from(mContext)
@@ -48,50 +53,44 @@ class NoCourseInviteScheduleViewAdapter(private val mContext: Context,
     }
 
     /**
-     * 此方法用于对[mCommonNoCourseMap]进行处理。来获取[mCommonNoCoursesNames]。
+     * 此方法用于对[mCoursesMap]进行处理。来获取[mCommonNoCoursesNames]。
      *
      */
     private fun getCommonNoCoursesNames() {
-        val keys = mCommonNoCourseMap.keys
-        val values = mCommonNoCourseMap.values
+        val keys = mCoursesMap.keys
+        val values = mCoursesMap.values
 
         // 获取对应位置有课的学生的名字在mNameList中的index
         for ((index, value) in values.withIndex()) {
             for (course in value) {
-                val row = course.hashLesson
-                val line = course.hashDay
+                val hashLessen = course.hashLesson
+                val hashDay = course.hashDay
 
                 if (mNowWeek != 0) {
                     if (course.week?.contains(mNowWeek) == false) {
                         continue
                     }
                 }
-
-                if (mCommonNoCoursesIndex[row][line] == null) {
-                    mCommonNoCoursesIndex[row][line] = mutableListOf()
-                }
-                mCommonNoCoursesIndex[row][line]!!.add(keys.elementAt(index))
-
-                if (course.period > 2) {
-                    if (mCommonNoCoursesIndex[row + 1][line] == null) {
-                        mCommonNoCoursesIndex[row + 1][line] = mutableListOf()
+                repeat(course.period) {
+                    if (mCoursesIndex[hashLessen * 2 + it][hashDay] == null) {
+                        mCoursesIndex[hashLessen * 2 + it][hashDay] = mutableListOf()
                     }
-                    mCommonNoCoursesIndex[row + 1][line]!!.add(keys.elementAt(index))
+                    mCoursesIndex[hashLessen * 2 + it][hashDay]!!.add(keys.elementAt(index))
                 }
             }
         }
 
         // 获取各个对应位置没有课的学生的名字。
-        for (row in 0 until 6) {
-            for (line in 0 until 7) {
-                val indexes = mCommonNoCoursesIndex[row][line]
+        for (row in 0 until 12) {
+            for (column in 0 until 7) {
+                val indexes = mCoursesIndex[row][column]
 
                 for (i in 0 until mNameList.size) {
                     if (indexes == null || !indexes.contains(i)) {
-                        if (mCommonNoCoursesNames[row][line] == null) {
-                            mCommonNoCoursesNames[row][line] = mutableListOf()
+                        if (mCommonNoCoursesNames[row][column] == null) {
+                            mCommonNoCoursesNames[row][column] = mutableListOf()
                         }
-                        mCommonNoCoursesNames[row][line]!!.add(mNameList[i])
+                        mCommonNoCoursesNames[row][column]!!.add(mNameList[i])
                     }
                 }
             }
@@ -102,24 +101,35 @@ class NoCourseInviteScheduleViewAdapter(private val mContext: Context,
     override fun getItemView(row: Int, column: Int, container: ViewGroup): View {
         val view = mLayoutInflater.inflate(R.layout.course_no_course_invite_item, container, false)
         val tvNameList = view.findViewById<TextView>(R.id.tv_name_list)
-        val bk = view.findViewById<ImageView>(R.id.bk)
+        val cv = view.findViewById<CardView>(R.id.cv)
         val stringBuilder = StringBuilder()
+        val nameList = mutableListOf<String>()
 
-        for ((index, name) in mCommonNoCoursesNames[row][column]!!.withIndex()) {
+        for ((index, name) in mCommonNoCoursesNames[row * 2][column]!!.withIndex()) {
             stringBuilder.append(name)
-            if (index != (mCommonNoCoursesNames[row][column]!!.size - 1)) {
+            nameList.add(name)
+            if (index != (mCommonNoCoursesNames[row * 2][column]!!.size - 1)) {
                 stringBuilder.append("\n")
             }
         }
         tvNameList.text = stringBuilder.toString()
 
-        bk.setBackgroundColor(mCoursesColors[row / 2])
+        cv.setCardBackgroundColor(mCoursesColors[row / 2])
+        view.setOnClickListener {
+//            mNoCourseInviteDetailDialogHelper.showDialog(row, column, ,nameList)
+        }
         return view
     }
 
     override fun getItemViewInfo(row: Int, column: Int): ScheduleView.ScheduleItem? {
-        if (mCommonNoCoursesNames[row][column] != null) {
-            return ScheduleView.ScheduleItem()
+        if (mCommonNoCoursesNames[row * 2][column] != null) {
+
+            return if (Arrays.equals(arrayOf(mCommonNoCoursesNames[row * 2 + 1][column]),
+                            arrayOf(mCommonNoCoursesNames[row * 2][column]))) {
+                ScheduleView.ScheduleItem()
+            } else {
+                ScheduleView.ScheduleItem(itemHeight = 1)
+            }
         }
         return null
     }

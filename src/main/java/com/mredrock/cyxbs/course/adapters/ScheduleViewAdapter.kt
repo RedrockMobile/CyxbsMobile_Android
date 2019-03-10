@@ -18,7 +18,7 @@ import com.mredrock.cyxbs.course.component.ScheduleView
 import com.mredrock.cyxbs.common.utils.SchoolCalendar
 import com.mredrock.cyxbs.course.network.Course
 import com.mredrock.cyxbs.course.ui.EditAffairActivity
-import com.mredrock.cyxbs.course.ui.ScheduleDetailDialog
+import com.mredrock.cyxbs.course.ui.ScheduleDetailDialogHelper
 import com.mredrock.cyxbs.course.utils.ClassRoomParse
 import com.mredrock.cyxbs.course.utils.RippleDrawableUtil
 import java.util.*
@@ -67,8 +67,8 @@ class ScheduleViewAdapter(private val mContext: Context,
     }
     private val mRippleColor = Color.GRAY
 
-    private val mDialog: ScheduleDetailDialog by lazy(LazyThreadSafetyMode.NONE) {
-        ScheduleDetailDialog(mContext)
+    private val mDialogHelper: ScheduleDetailDialogHelper by lazy(LazyThreadSafetyMode.NONE) {
+        ScheduleDetailDialogHelper(mContext)
     }
 
     private lateinit var mTop: TextView
@@ -240,7 +240,7 @@ class ScheduleViewAdapter(private val mContext: Context,
      */
     private fun setItemViewOnclickListener(itemView: View, schedules: MutableList<Course>) {
         itemView.setOnClickListener {
-            mDialog.showDialog(schedules)
+            mDialogHelper.showDialog(schedules)
         }
     }
 

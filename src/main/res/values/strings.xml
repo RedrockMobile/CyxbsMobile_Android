@@ -7,6 +7,9 @@
     <string name="course_click_to_login">课表懵逼中......点击进行登录</string>
     <string name="course_all_week">整学期</string>
     <string name="course_add_affair">添加事务</string>
+    <string name="course_now_week">本周</string>
+    <string name="course_little_friend">小伙伴</string>
+    <string name="course_they_are_free">他们这个时间有空:</string>
 
 
     <!-- Post Affairs -->
