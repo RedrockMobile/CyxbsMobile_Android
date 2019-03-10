@@ -5,7 +5,7 @@ import android.util.Log
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.bumptech.glide.Glide
 import com.mredrock.cyxbs.calendar.R
-import com.mredrock.cyxbs.common.config.DISCOVER_CALENDER
+import com.mredrock.cyxbs.common.config.DISCOVER_CALENDAR
 import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.ui.BaseActivity
 import com.mredrock.cyxbs.common.utils.extensions.doOnErrorWithDefaultErrorHandler
@@ -16,7 +16,7 @@ import com.mredrock.cyxbs.discover.calendar.network.ApiService
 import kotlinx.android.synthetic.main.calendar_activity_main.*
 import org.jetbrains.anko.toast
 
-@Route(path = DISCOVER_CALENDER)
+@Route(path = DISCOVER_CALENDAR)
 class CalendarActivity : BaseActivity() {
 
     private val apiService = ApiGenerator.getApiService(ApiService::class.java)
@@ -35,7 +35,7 @@ class CalendarActivity : BaseActivity() {
                 .setSchedulers()
                 .doOnErrorWithDefaultErrorHandler {
                     toast("无法获取校历")
-                    Log.d("Calender", it.localizedMessage)
+                    Log.d("Calendar", it.localizedMessage)
                     false
                 }
                 .safeSubscribeBy { it ->
