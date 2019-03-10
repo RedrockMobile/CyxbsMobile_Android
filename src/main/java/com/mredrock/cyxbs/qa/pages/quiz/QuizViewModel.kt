@@ -41,8 +41,8 @@ class QuizViewModel(val type: String) : BaseViewModel() {
     private var content: String = ""
     private var disappearTime: String = ""
 
-    fun setImageList(imageList: ArrayList<String>?) {
-        imageLiveData.value = imageList ?: arrayListOf()
+    fun setImageList(imageList: ArrayList<String>) {
+        imageLiveData.value = imageList
     }
 
     fun setTag(tag: String) {

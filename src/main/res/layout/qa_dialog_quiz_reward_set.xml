@@ -77,7 +77,7 @@
             <com.mredrock.cyxbs.qa.pages.quiz.ui.widget.RewardSelectCheckedTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="25dp"
+                style="@style/qa_RewardSelectCheckedTextViewStyle"
                 tools:checked="true"
                 tools:text="1" />
 
@@ -89,7 +89,7 @@
             <com.mredrock.cyxbs.qa.pages.quiz.ui.widget.RewardSelectCheckedTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="25dp"
+                style="@style/qa_RewardSelectCheckedTextViewStyle"
                 tools:text="2" />
 
             <View
@@ -100,7 +100,7 @@
             <com.mredrock.cyxbs.qa.pages.quiz.ui.widget.RewardSelectCheckedTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="25dp"
+                style="@style/qa_RewardSelectCheckedTextViewStyle"
                 tools:text="3" />
 
             <View
@@ -111,7 +111,7 @@
             <com.mredrock.cyxbs.qa.pages.quiz.ui.widget.RewardSelectCheckedTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="25dp"
+                style="@style/qa_RewardSelectCheckedTextViewStyle"
                 tools:text="5" />
 
             <View
@@ -122,7 +122,7 @@
             <com.mredrock.cyxbs.qa.pages.quiz.ui.widget.RewardSelectCheckedTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="25dp"
+                style="@style/qa_RewardSelectCheckedTextViewStyle"
                 tools:text="10" />
 
             <View
@@ -133,7 +133,7 @@
             <com.mredrock.cyxbs.qa.pages.quiz.ui.widget.RewardSelectCheckedTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="25dp"
+                style="@style/qa_RewardSelectCheckedTextViewStyle"
                 tools:text="15" />
         </LinearLayout>
     </LinearLayout>

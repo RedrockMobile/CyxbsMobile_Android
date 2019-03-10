@@ -53,8 +53,9 @@
     <string name="qa_quiz_dialog_submit">发布</string>
     <string name="qa_quiz_reward_set_my_reward">积分剩余：%1$d</string>
     <string name="qa_quiz_reward_set_cur_question_reward">%1$d积分</string>
-    <string name="qa_quiz_error_reward_not_enough">积分多，朋友多！客官多打赏点儿~</string>
-    <string name="qa_answer_edit_content_hint">请尽可能给出明确的解决思路哦！</string>
+    <string name="qa_quiz_error_reward_low">积分多，朋友多！客官多打赏点儿~</string>
+    <string name="qa_quiz_error_reward_not_enough">已经拿不出这么多硬币了( ﾉД`)</string>
+    <string name="qa_answer_edit_content_hint">请尽可能给出明确的解决思路哦！</string>/
     <string name="qa_answer_question_title">提供帮助</string>
     <string name="qa_answer_submit_answer">提交</string>
     <string name="qa_hint_report_success">举报成功，会尽快为您处理</string>

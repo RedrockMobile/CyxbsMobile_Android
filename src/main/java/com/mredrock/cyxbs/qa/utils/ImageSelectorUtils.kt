@@ -1,29 +1,33 @@
 package com.mredrock.cyxbs.qa.utils
 
 import android.Manifest
-import android.content.Intent
 import android.support.v7.app.AppCompatActivity
-import com.mredrock.cyxbs.common.component.multi_image_selector.MultiImageSelectorActivity
 import com.mredrock.cyxbs.common.utils.extensions.doPermissionAction
+import com.mredrock.cyxbs.qa.R
 import org.jetbrains.anko.longToast
+import top.limuyang2.photolibrary.activity.LPhotoPickerActivity
+import top.limuyang2.photolibrary.engine.LGlideEngine
+import top.limuyang2.photolibrary.util.LPPImageType
 
 /**
  * Created By jay68 on 2018/10/24.
  */
 
+const val CHOOSE_PHOTO_REQUEST = 0x1024
 
 fun AppCompatActivity.selectImageFromAlbum(maxCount: Int, selected: ArrayList<String>?) {
     doPermissionAction(Manifest.permission.READ_EXTERNAL_STORAGE) {
         doAfterGranted {
-            val intent = Intent(this@selectImageFromAlbum, MultiImageSelectorActivity::class.java)
-            intent.putExtra(MultiImageSelectorActivity.EXTRA_SHOW_CAMERA, true)
-            intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_COUNT, maxCount)
-            intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_MODE, MultiImageSelectorActivity.MODE_MULTI)
+            val intent = LPhotoPickerActivity.IntentBuilder(this@selectImageFromAlbum)
+                    .maxChooseCount(maxCount)
+                    .columnsNumber(4)
+                    .imageType(LPPImageType.ofAll())
+                    .imageEngine(LGlideEngine())
+                    .selectedPhotos(selected)
+                    .theme(R.style.qa_LPhotoTheme)
+                    .build()
 
-            if (!selected.isNullOrEmpty())
-                intent.putStringArrayListExtra(MultiImageSelectorActivity.EXTRA_DEFAULT_SELECTED_LIST, selected)
-
-            startActivityForResult(intent, MultiImageSelectorActivity.CHOOSE_REQUEST)
+            startActivityForResult(intent, CHOOSE_PHOTO_REQUEST)
         }
 
         doAfterRefused {

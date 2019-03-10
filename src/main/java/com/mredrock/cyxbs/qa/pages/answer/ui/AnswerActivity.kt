@@ -12,13 +12,14 @@ import android.text.TextWatcher
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.ImageView
-import com.mredrock.cyxbs.common.component.multi_image_selector.MultiImageSelectorActivity
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.pages.answer.viewmodel.AnswerViewModel
+import com.mredrock.cyxbs.qa.utils.CHOOSE_PHOTO_REQUEST
 import com.mredrock.cyxbs.qa.utils.selectImageFromAlbum
-import kotlinx.android.synthetic.main.qa_activity_answer.*
 import org.jetbrains.anko.startActivityForResult
+import kotlinx.android.synthetic.main.qa_activity_answer.*
+import top.limuyang2.photolibrary.activity.LPhotoPickerActivity
 
 class AnswerActivity : BaseViewModelActivity<AnswerViewModel>() {
     companion object {
@@ -95,8 +96,8 @@ class AnswerActivity : BaseViewModelActivity<AnswerViewModel>() {
         if (resultCode != Activity.RESULT_OK) {
             return
         }
-        if (requestCode == MultiImageSelectorActivity.CHOOSE_REQUEST) {
-            viewModel.setImageList(data?.getStringArrayListExtra(MultiImageSelectorActivity.EXTRA_RESULT))
+        if (requestCode == CHOOSE_PHOTO_REQUEST) {
+            viewModel.setImageList(LPhotoPickerActivity.getSelectedPhotos(data))
         }
     }
 

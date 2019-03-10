@@ -15,10 +15,7 @@ class RewardSelectCheckedTextView(context: Context?, attrs: AttributeSet?) : App
     private val unCheckedTextColor = Color.parseColor("#7195fa")
 
     init {
-        isChecked = isChecked   //初始化颜色
-        textSize = 16f
-        background = resources.getDrawable(R.drawable.qa_selector_quiz_reward_checked_tv)
-        gravity = Gravity.CENTER
+        setTextColor(checkedTextColor.takeIf { isChecked } ?: unCheckedTextColor)
     }
 
     override fun setChecked(checked: Boolean) {

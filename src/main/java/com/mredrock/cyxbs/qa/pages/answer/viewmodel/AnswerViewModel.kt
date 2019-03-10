@@ -72,8 +72,8 @@ class AnswerViewModel(val qid: String) : BaseViewModel() {
                 .checkError()
     }
 
-    fun setImageList(imageList: ArrayList<String>?) {
-        imageLiveData.value = imageList ?: arrayListOf()
+    fun setImageList(imageList: ArrayList<String>) {
+        imageLiveData.value = imageList
     }
 
     class Factory(private val qid: String) : ViewModelProvider.Factory {

@@ -11,17 +11,18 @@ import android.text.TextWatcher
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.ImageView
-import com.mredrock.cyxbs.common.component.multi_image_selector.MultiImageSelectorActivity
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.pages.quiz.QuizViewModel
 import com.mredrock.cyxbs.qa.pages.quiz.ui.dialog.RewardSetDialog
 import com.mredrock.cyxbs.qa.pages.quiz.ui.dialog.TagsEditDialog
 import com.mredrock.cyxbs.qa.pages.quiz.ui.dialog.TimePickDialog
+import com.mredrock.cyxbs.qa.utils.CHOOSE_PHOTO_REQUEST
 import com.mredrock.cyxbs.qa.utils.getMaxLength
 import com.mredrock.cyxbs.qa.utils.selectImageFromAlbum
 import kotlinx.android.synthetic.main.qa_activity_quiz.*
 import org.jetbrains.anko.support.v4.startActivityForResult
+import top.limuyang2.photolibrary.activity.LPhotoPickerActivity
 
 //todo 这个界面赶时间写得有点乱，记得优化一下
 
@@ -162,8 +163,8 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
         if (resultCode != Activity.RESULT_OK) {
             return
         }
-        if (requestCode == MultiImageSelectorActivity.CHOOSE_REQUEST) {
-            viewModel.setImageList(data?.getStringArrayListExtra(MultiImageSelectorActivity.EXTRA_RESULT))
+        if (requestCode == CHOOSE_PHOTO_REQUEST) {
+            viewModel.setImageList(LPhotoPickerActivity.getSelectedPhotos(data))
         }
     }
 
