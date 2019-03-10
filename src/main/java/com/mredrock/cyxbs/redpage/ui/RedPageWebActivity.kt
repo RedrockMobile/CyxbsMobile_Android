@@ -10,7 +10,7 @@ import android.view.KeyEvent
 import android.view.KeyEvent.KEYCODE_BACK
 import android.webkit.*
 import com.alibaba.android.arouter.facade.annotation.Route
-import com.jude.swipbackhelper.SwipeBackHelper
+//import com.jude.swipbackhelper.SwipeBackHelper
 import com.mredrock.cyxbs.common.config.REDROCK_HOME_ENTRY
 import com.mredrock.cyxbs.common.ui.BaseActivity
 import com.mredrock.cyxbs.common.utils.extensions.gone
@@ -33,7 +33,7 @@ class RedPageWebActivity : BaseActivity() {
         tl_redPage.init("红岩网校")
         tl_redPage.background = resources.getDrawable(R.drawable.redrock_home_tl_bg_shape)
         tl_redPage.setNavigationOnClickListener { finish() }
-        SwipeBackHelper.getCurrentPage(this).setSwipeBackEnable(false)
+//        SwipeBackHelper.getCurrentPage(this).setSwipeBackEnable(false)
 
         val webSettings = wv_redPage.settings
         webSettings.apply {
