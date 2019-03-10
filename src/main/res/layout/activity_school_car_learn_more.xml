@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/schoolcar_white"
     tools:context="com.mredrock.cyxbs.discover.schoolcar.SchoolCarLearnMoreActivity"
     tools:ignore="ResourceName">
-
-    <include layout="@layout/common_toolbar"/>
+    <include
+        layout="@layout/common_toolbar"
+        android:id="@+id/app_bar_layout" />
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        >
+        android:layout_below="@+id/app_bar_layout">
 
         <ImageView
             android:layout_width="match_parent"

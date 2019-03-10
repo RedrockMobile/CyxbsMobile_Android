@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -8,32 +7,20 @@
     tools:context="com.mredrock.cyxbs.discover.schoolcar.SchoolCarActivity"
     tools:ignore="ResourceName">
 
-    <include layout="@layout/common_toolbar"/>
+    <include
+        layout="@layout/common_toolbar"
+        android:id="@+id/app_bar_layout" />
 
     <RelativeLayout
         android:id="@+id/explore_school_car_linearLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        >
-
-    </RelativeLayout>
-
-    <!--<ImageView-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="190dp"-->
-    <!--android:layout_centerInParent="true"-->
-    <!--android:layout_gravity="center"-->
-    <!--android:scaleType="centerCrop" />-->
+        android:layout_below="@+id/app_bar_layout"/>
 
     <pl.droidsonroids.gif.GifImageView
         android:id="@+id/explore_schoolcar_load"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:src="@drawable/ic_school_car_search_load" />
-    <!--<com.amap.api.maps.MapView-->
-    <!--android:id="@+id/explore_schoolcar_map"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="match_parent"-->
-    <!--android:layout_below="@+id/explore_schoolcar_toolbar"-->
-    <!--android:visibility="gone" />-->
+        android:src="@drawable/ic_school_car_search_load"
+        android:layout_below="@+id/app_bar_layout"/>
 </RelativeLayout>

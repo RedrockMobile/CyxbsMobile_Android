@@ -9,6 +9,6 @@ import com.mredrock.cyxbs.discover.schoolcar.bean.SchoolCarLocation
  */
 
 interface SchoolCarInterface{
-    abstract fun initLocationMapButton(aMap: AMap, locationStyle: MyLocationStyle)
-    abstract fun processLocationInfo(carLocationInfo: SchoolCarLocation, aLong: Long)
+    fun initLocationMapButton(aMap: AMap, locationStyle: MyLocationStyle)
+    fun processLocationInfo(carLocationInfo: SchoolCarLocation, aLong: Long)
 }

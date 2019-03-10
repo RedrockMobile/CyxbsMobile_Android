@@ -1,7 +1,6 @@
 package com.mredrock.cyxbs.discover.schoolcar
 
 import android.Manifest
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -29,7 +28,7 @@ import com.amap.api.maps.CameraUpdateFactory
 import com.amap.api.maps.model.LatLng
 import com.amap.api.maps.model.MyLocationStyle
 import com.amap.api.maps.utils.overlay.SmoothMoveMarker
-import com.jude.swipbackhelper.SwipeBackHelper
+//import com.jude.swipbackhelper.SwipeBackHelper
 import com.mredrock.cyxbs.common.config.DISCOVER_SCHOOL_CAR
 import com.mredrock.cyxbs.common.ui.BaseActivity
 import com.mredrock.cyxbs.discover.schoolcar.Interface.SchoolCarInterface
@@ -204,7 +203,7 @@ class SchoolCarActivity : BaseActivity() {
         smoothMoveData.loadCarLocation(ADD_TIMER)
 
         common_toolbar.init("校车轨迹")
-        SwipeBackHelper.getCurrentPage(this).setSwipeBackEnable(false)
+//        SwipeBackHelper.getCurrentPage(this).setSwipeBackEnable(false)
 
         //加载动画为4秒
         Observable.timer(4, TimeUnit.SECONDS).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<Long> {

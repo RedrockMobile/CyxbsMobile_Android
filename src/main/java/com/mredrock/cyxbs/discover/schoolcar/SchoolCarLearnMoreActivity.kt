@@ -8,7 +8,7 @@ import com.mredrock.cyxbs.schoolcar.R
 
 class SchoolCarLearnMoreActivity : BaseActivity() {
 
-    override val isFragmentActivity = true
+    override val isFragmentActivity = false
 
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     override fun onCreate(savedInstanceState: Bundle?) {

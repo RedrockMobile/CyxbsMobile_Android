@@ -61,7 +61,7 @@ class SchoolcarsSmoothMove(schoolCarMap: SchoolCarMap?, activity: Activity){
                 md5Hex((System.currentTimeMillis() - 1).toString().substring(0, 10)))
                 .setSchedulers()
                 .safeSubscribeBy {
-                    carInterface.processLocationInfo(it, ifAddTimer!!)
+                    carInterface.processLocationInfo(it, ifAddTimer)
 
                     val location = it.data
                     smoothMoveList1.add(LatLng(location[0].lat, location[0].lon))

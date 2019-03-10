@@ -13,7 +13,7 @@ import kotlinx.android.synthetic.main.explore_schoolcar_notserve_dialog.view.*
  * Created by glossimar on 2018/9/12
  */
 
-class  ExploreSchoolCarDialog(){
+class  ExploreSchoolCarDialog {
 
     companion object {
         private var dialog: AlertDialog? = null
