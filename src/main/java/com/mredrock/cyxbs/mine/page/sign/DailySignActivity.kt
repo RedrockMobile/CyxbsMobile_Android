@@ -8,6 +8,7 @@ import android.view.*
 import android.widget.ImageView
 import android.widget.PopupWindow
 import android.widget.TextView
+import android.widget.Toast
 import androidx.work.Data
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.PeriodicWorkRequest
@@ -63,7 +64,8 @@ class DailySignActivity(override val viewModelClass: Class<DailyViewModel> = Dai
 
         //积分明细
         mine_daily_pointDetail.setOnClickListener {
-            startActivity<PointDetailActivity>()
+            Toast.makeText(this@DailySignActivity,"还没有开放..",Toast.LENGTH_SHORT).show()
+//            startActivity<PointDetailActivity>()
         }
     }
 

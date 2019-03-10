@@ -10,6 +10,7 @@ import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
 import android.support.v4.content.ContextCompat
+import android.util.Log
 import android.widget.EditText
 import com.afollestad.materialdialogs.MaterialDialog
 import com.mredrock.cyxbs.common.config.DIR_PHOTO
@@ -188,7 +189,7 @@ class EditInfoActivity(override val isFragmentActivity: Boolean = false,
     }
 
     private val fileDir by lazy {
-        StringBuilder(Environment.getExternalStorageDirectory().toString())
+        StringBuilder(Environment.getExternalStorageDirectory().path)
                 .append(DIR_PHOTO)
                 .toString()
     }
