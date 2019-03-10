@@ -8,7 +8,7 @@ import android.webkit.WebChromeClient
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import com.alibaba.android.arouter.facade.annotation.Route
-import com.jude.swipbackhelper.SwipeBackHelper
+//import com.jude.swipbackhelper.SwipeBackHelper
 import com.mredrock.cyxbs.common.config.DISCOVER_MAP
 import com.mredrock.cyxbs.common.ui.BaseActivity
 import kotlinx.android.synthetic.main.discover_map_activity_map.*
@@ -22,7 +22,7 @@ class MapActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.discover_map_activity_map)
 
-        SwipeBackHelper.getCurrentPage(this).setSwipeRelateEnable(false)
+//        SwipeBackHelper.getCurrentPage(this).setSwipeRelateEnable(false)
 
         val dialog = ProgressDialog(this)
         dialog.setMessage("加载中...")
