@@ -15,7 +15,6 @@ import com.mredrock.cyxbs.course.R
 import com.mredrock.cyxbs.course.adapters.WeekSelectRecAdapter
 import com.mredrock.cyxbs.course.databinding.CourseFragmentWeekSelectBinding
 import com.mredrock.cyxbs.course.viewmodels.EditAffairViewModel
-import org.jetbrains.anko.collections.forEach
 
 /**
  * Created by anriku on 2018/9/8.

@@ -5,7 +5,7 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
 import android.view.MenuItem
-import com.jude.swipbackhelper.SwipeBackHelper
+//import com.jude.swipbackhelper.SwipeBackHelper
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.ui.BaseActivity
 import com.mredrock.cyxbs.course.R
@@ -38,7 +38,7 @@ class CourseActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.course_activity_course)
-        SwipeBackHelper.getCurrentPage(this).setSwipeBackEnable(false)
+//        SwipeBackHelper.getCurrentPage(this).setSwipeBackEnable(false)
 
         initActivity()
 

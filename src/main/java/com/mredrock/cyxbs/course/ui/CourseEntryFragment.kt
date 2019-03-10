@@ -14,11 +14,11 @@ import com.mredrock.cyxbs.common.component.JToolbar
 import com.mredrock.cyxbs.common.config.COURSE_ENTRY
 import com.mredrock.cyxbs.common.event.LoginStateChangeEvent
 import com.mredrock.cyxbs.common.event.MainVPChangeEvent
-import com.mredrock.cyxbs.course.event.TabIsFoldEvent
-import com.mredrock.cyxbs.course.event.WeekNumEvent
 import com.mredrock.cyxbs.common.ui.BaseActivity
 import com.mredrock.cyxbs.common.ui.BaseFragment
 import com.mredrock.cyxbs.course.R
+import com.mredrock.cyxbs.course.event.TabIsFoldEvent
+import com.mredrock.cyxbs.course.event.WeekNumEvent
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -31,7 +31,7 @@ class CourseEntryFragment : BaseFragment() {
 
     // 表示是否TabLayout折叠
     private var mIsFold = true
-    private lateinit var mToolbarIc: Array<Drawable?>
+    private var mToolbarIc: Array<Drawable?> = arrayOf(null, null)
 
     private lateinit var mToolbar: JToolbar
     // 用于记录当前Toolbar要显示的字符串
@@ -79,24 +79,13 @@ class CourseEntryFragment : BaseFragment() {
         val toolbar = mToolbar
 
         if (BaseApp.isLogin) {
-            if (mIsFold) {
-                toolbar.titleTextView.setCompoundDrawablesWithIntrinsicBounds(null, null,
-                        mToolbarIc[1], null)
-            } else {
-                toolbar.titleTextView.setCompoundDrawablesWithIntrinsicBounds(null, null,
-                        mToolbarIc[0], null)
-            }
+            toolbar.titleTextView.setCompoundDrawablesWithIntrinsicBounds(null, null,
+                    if (mIsFold) mToolbarIc[1] else mToolbarIc[0], null)
 
             toolbar.titleTextView.setOnClickListener {
-                mIsFold = if (mIsFold) {
-                    toolbar.titleTextView.setCompoundDrawablesWithIntrinsicBounds(null, null,
-                            mToolbarIc[0], null)
-                    false
-                } else {
-                    toolbar.titleTextView.setCompoundDrawablesWithIntrinsicBounds(null, null,
-                            mToolbarIc[1], null)
-                    true
-                }
+                toolbar.titleTextView.setCompoundDrawablesWithIntrinsicBounds(null, null,
+                        if (mIsFold) mToolbarIc[0] else mToolbarIc[1], null)
+                mIsFold = !mIsFold
                 EventBus.getDefault().post(TabIsFoldEvent(mIsFold))
             }
         } else {

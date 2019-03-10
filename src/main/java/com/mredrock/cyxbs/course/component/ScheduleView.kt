@@ -234,10 +234,6 @@ class ScheduleView : FrameLayout {
         setMeasuredDimension(mScheduleViewWidth, mScheduleViewHeight)
     }
 
-    override fun performClick(): Boolean {
-        return super.performClick()
-    }
-
     override fun onTouchEvent(event: MotionEvent): Boolean {
         val startPoint = mStartPoint
         val endPoint = mEndPoint
