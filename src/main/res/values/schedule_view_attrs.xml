@@ -9,6 +9,7 @@
         <attr name="noCourseDrawable" format="reference" />
         <attr name="emptyText" format="string" />
         <attr name="emptyTextSize" format="dimension" />
+        <attr name="isDisplayCourse" format="boolean" />
 
         <attr name="ScheduleViewStyle" format="reference" tools:ignore="ResourceName" />
     </declare-styleable>

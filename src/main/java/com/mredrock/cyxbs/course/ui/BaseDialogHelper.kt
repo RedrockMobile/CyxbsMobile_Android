@@ -3,6 +3,7 @@ package com.mredrock.cyxbs.course.ui
 import android.app.Dialog
 import android.content.Context
 import android.view.LayoutInflater
+import android.view.ViewGroup
 import androidx.annotation.LayoutRes
 import com.mredrock.cyxbs.course.R
 

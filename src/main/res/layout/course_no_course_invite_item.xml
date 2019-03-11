@@ -13,6 +13,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:gravity="center"
-        android:maxLines="5" />
+        android:ellipsize="end"
+        android:textColor="@android:color/white"
+        android:maxLines="3" />
 
 </android.support.v7.widget.CardView>

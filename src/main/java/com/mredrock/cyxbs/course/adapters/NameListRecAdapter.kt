@@ -18,7 +18,7 @@ class NameListRecAdapter(context: Context, private val mPeople: List<String>) : 
 
     override fun onBindViewHolder(holder: BaseViewHolder, position: Int) {
         holder.itemView.findViewById<TextView>(R.id.tv_name).apply {
-            mPeople[position]
+            text = mPeople[position]
         }
     }
 }

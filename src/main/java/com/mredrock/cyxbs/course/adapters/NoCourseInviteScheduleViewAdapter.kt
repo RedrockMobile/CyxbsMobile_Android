@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.course.component.ScheduleView
 import com.mredrock.cyxbs.common.utils.SchoolCalendar
 import com.mredrock.cyxbs.course.R
@@ -105,33 +106,39 @@ class NoCourseInviteScheduleViewAdapter(private val mContext: Context,
         val stringBuilder = StringBuilder()
         val nameList = mutableListOf<String>()
 
-        for ((index, name) in mCommonNoCoursesNames[row * 2][column]!!.withIndex()) {
+        for ((index, name) in mCommonNoCoursesNames[row][column]!!.withIndex()) {
             stringBuilder.append(name)
             nameList.add(name)
-            if (index != (mCommonNoCoursesNames[row * 2][column]!!.size - 1)) {
+            if (index != (mCommonNoCoursesNames[row][column]!!.size - 1)) {
                 stringBuilder.append("\n")
             }
         }
         tvNameList.text = stringBuilder.toString()
-
-        cv.setCardBackgroundColor(mCoursesColors[row / 2])
+        cv.setCardBackgroundColor(mCoursesColors[row / 4])
         view.setOnClickListener {
-//            mNoCourseInviteDetailDialogHelper.showDialog(row, column, ,nameList)
+            mNoCourseInviteDetailDialogHelper.showDialog(row, column, getNoCourseLength(row, column), nameList)
         }
         return view
     }
 
     override fun getItemViewInfo(row: Int, column: Int): ScheduleView.ScheduleItem? {
-        if (mCommonNoCoursesNames[row * 2][column] != null) {
-
-            return if (Arrays.equals(arrayOf(mCommonNoCoursesNames[row * 2 + 1][column]),
-                            arrayOf(mCommonNoCoursesNames[row * 2][column]))) {
-                ScheduleView.ScheduleItem()
-            } else {
-                ScheduleView.ScheduleItem(itemHeight = 1)
-            }
+        if (mCommonNoCoursesNames[row][column] != null) {
+            return ScheduleView.ScheduleItem(itemHeight = getNoCourseLength(row, column))
         }
         return null
+    }
+
+    private fun getNoCourseLength(row: Int, column: Int): Int {
+        return if ((row and 1) == 1) {
+            1
+        } else {
+            if (Arrays.equals(arrayOf(mCommonNoCoursesNames[row + 1][column]),
+                            arrayOf(mCommonNoCoursesNames[row][column]))) {
+                2
+            } else {
+                1
+            }
+        }
     }
 
     override fun setOnTouchViewClickListener(): ((ImageView) -> Unit)? = null
