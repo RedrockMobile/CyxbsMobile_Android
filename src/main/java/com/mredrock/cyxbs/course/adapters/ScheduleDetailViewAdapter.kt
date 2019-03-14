@@ -108,7 +108,7 @@ class ScheduleDetailViewAdapter(private val mDialog: Dialog, private val mSchedu
         itemView.findViewById<TextView>(R.id.tv_course_tech).apply { text = itemViewInfo.teacher }
         itemView.findViewById<TextView>(R.id.tv_course_classroom).apply { text = itemViewInfo.classroom }
         itemView.findViewById<TextView>(R.id.tv_course_time).apply {
-            val courseTimeParse = CourseTimeParse(itemViewInfo.hashLesson, itemViewInfo.period)
+            val courseTimeParse = CourseTimeParse(itemViewInfo.hashLesson * 2, itemViewInfo.period)
             text = """
             ${itemViewInfo.day}~${itemViewInfo.lesson}
             ${courseTimeParse.parseStartCourseTime()}~${courseTimeParse.parseEndCourseTime()}""".trimIndent()
@@ -118,8 +118,8 @@ class ScheduleDetailViewAdapter(private val mDialog: Dialog, private val mSchedu
 
 //        itemView.findViewById<TextView>(R.id.stu_list).apply {
 //            setOnClickListener {
-//                mDialog.dismiss()
-//                val context = mDialog.context
+//                dialog.dismiss()
+//                val context = dialog.context
 //                val intent = Intent(context, StudentListActivity::class.java)
 //                intent.putExtra(StudentListActivity.COURSE_INFO, itemViewInfo)
 //                context.startActivity(intent)

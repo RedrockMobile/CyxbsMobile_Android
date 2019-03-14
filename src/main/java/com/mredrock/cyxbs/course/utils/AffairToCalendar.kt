@@ -155,7 +155,7 @@ class AffairToCalendar(private val mActivity: AppCompatActivity, private val mAf
     private fun getAffairTimeMillis(week: Int, hashDay: Int, classX: Int): AffairTimeInMillis {
         val calendar = SchoolCalendar(week, hashDay + 1)
 
-        val courseTimeParse = CourseTimeParse(classX)
+        val courseTimeParse = CourseTimeParse(classX * 2)
         val startTime = courseTimeParse.parseStartCourseTime()
         val endTime = courseTimeParse.parseEndCourseTime()
 

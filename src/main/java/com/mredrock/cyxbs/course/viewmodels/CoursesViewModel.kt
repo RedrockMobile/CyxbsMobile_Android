@@ -140,7 +140,7 @@ class CoursesViewModel : ViewModel() {
         resetGetStatus()
 
         getNowWeek(context)
-        getCoursesDataFromInternet()
+        getCoursesDataFromInternet(true)
 
         // 如果mIsGetOthers为true，就说明是他人课表查询pass掉备忘查询。反之就是用户在进行课表查询，这时就进行备忘的查询。
         if (isGetOthers.value == true) {
@@ -198,8 +198,8 @@ class CoursesViewModel : ViewModel() {
     /**
      * 此方法用于从服务器中获取课程数据
      */
-    private fun getCoursesDataFromInternet() {
-        mCourseApiService.getCourse(stuNum = mStuNum)
+    private fun getCoursesDataFromInternet(isForceFetch: Boolean = false) {
+        mCourseApiService.getCourse(stuNum = mStuNum, isForceFetch = isForceFetch)
                 .setSchedulers()
                 .errorHandler()
                 .subscribe(ExecuteOnceObserver(onExecuteOnceNext = { coursesFromInternet ->

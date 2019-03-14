@@ -8,6 +8,7 @@ import android.view.*
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
+import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.getScreenHeight
 import com.mredrock.cyxbs.course.R
 import org.jetbrains.anko.*
@@ -26,6 +27,7 @@ import org.jetbrains.anko.*
  * @attr [R.styleable.ScheduleView_highlightColor] represent the ScheduleView's today highlight color.
  * @attr [R.styleable.ScheduleView_emptyTextSize] represent no course the displayed text' size.
  * @attr [R.styleable.ScheduleView_emptyText] represent no course the displayed text.
+ * @attr [R.styleable.ScheduleView_isDisplayCourse] true: display course; false: display no course invite.
  *
  * @attr [R.attr.ScheduleViewStyle] represent the style name of Schedule's View, so you can use a style
  * instead of write it directly in the XML.
@@ -64,64 +66,10 @@ class ScheduleView : FrameLayout {
                             // When we add new courses, remove old values first.
                             removeAllViews()
 
-                            for (row in 0..5) {
-                                for (column in 0..6) {
-                                    val itemViewInfo = notNullAdapter.getItemViewInfo(row, column)
-                                    //if this row and column don't have course or affair continue.
-                                    itemViewInfo ?: continue
-
-                                    val itemView = notNullAdapter.getItemView(row, column, this@ScheduleView)
-
-                                    //compute the LayoutParams of the ItemView
-                                    val params = FrameLayout.LayoutParams(mBasicElementWidth,
-                                            mBasicElementHeight * (itemViewInfo.itemHeight / 2))
-                                    params.leftMargin = mElementGap * (column + 1) + mBasicElementWidth * column
-                                    params.topMargin = mElementGap * (row + 1) + mBasicElementHeight * row
-                                    // If the itemView is in the left or bottom edge, add additional
-                                    // element gap.
-                                    if (column == 6) {
-                                        params.rightMargin = mElementGap
-                                    }
-                                    if (row == 5) {
-                                        params.bottomMargin = mElementGap
-                                    }
-                                    itemView.layoutParams = params
-                                    //add the itemView to the ScheduleView
-                                    addView(itemView)
-
-                                    mIsEmpty = false
-                                }
-                            }
+                            addCourseView(notNullAdapter)
                         }
 
-                        if (mIsEmpty && mNoCourseDrawableResId != 0) {
-                            // Set mEmptyImageView
-                            val emptyImageView = mEmptyImageView
-                            val emptyTextView = mEmptyTextView
-
-                            val imageParams = FrameLayout.LayoutParams(mScheduleViewWidth, mScheduleViewWidth)
-                            emptyImageView.apply {
-                                setImageDrawable(ContextCompat.getDrawable(context, mNoCourseDrawableResId))
-                                scaleType = ImageView.ScaleType.FIT_CENTER
-                                layoutParams = imageParams
-                            }
-                            addView(emptyImageView)
-
-                            // set mEmptyTextView
-                            mEmptyText?.let {
-                                val textParams = FrameLayout.LayoutParams(mScheduleViewWidth,
-                                        FrameLayout.LayoutParams.WRAP_CONTENT)
-                                textParams.topMargin = mScheduleViewWidth * 4 / 5
-
-                                emptyTextView.apply {
-                                    text = it
-                                    textSize = px2sp(mEmptyTextSize)
-                                    gravity = Gravity.CENTER
-                                    layoutParams = textParams
-                                }
-                                addView(emptyTextView)
-                            }
-                        }
+                        addNoCourseView()
 
                         // Remove the OnGlobalLayoutListener after we add the ItemViews.
                         viewTreeObserver.removeOnGlobalLayoutListener(this)
@@ -136,6 +84,104 @@ class ScheduleView : FrameLayout {
             // won't be changed until you let it change.
             requestLayout()
         }
+
+    private fun addNoCourseView() {
+        if (mIsEmpty && mNoCourseDrawableResId != 0) {
+            // Set mEmptyImageView
+            val emptyImageView = mEmptyImageView
+            val emptyTextView = mEmptyTextView
+
+            val imageParams = FrameLayout.LayoutParams(mScheduleViewWidth, mScheduleViewWidth)
+            emptyImageView.apply {
+                setImageDrawable(ContextCompat.getDrawable(context, mNoCourseDrawableResId))
+                scaleType = ImageView.ScaleType.FIT_CENTER
+                layoutParams = imageParams
+            }
+            addView(emptyImageView)
+
+            // set mEmptyTextView
+            mEmptyText?.let {
+                val textParams = FrameLayout.LayoutParams(mScheduleViewWidth,
+                        FrameLayout.LayoutParams.WRAP_CONTENT)
+                textParams.topMargin = mScheduleViewWidth * 4 / 5
+
+                emptyTextView.apply {
+                    text = it
+                    textSize = px2sp(mEmptyTextSize)
+                    gravity = Gravity.CENTER
+                    layoutParams = textParams
+                }
+                addView(emptyTextView)
+            }
+        }
+    }
+
+    private fun addCourseView(notNullAdapter: Adapter) {
+        // 如果是课表，每节课的开始都是偶数，0、2、4...这样开始的。因此这里就使用6 * 7的矩阵。
+        // 但是如果是没课约，有可能是奇数开始的，因此这里需要使用12 * 7的矩阵运算。
+        if (mIsDisplayCourse) {
+            for (row in 0..5) {
+                for (column in 0..6) {
+                    val itemViewInfo = notNullAdapter.getItemViewInfo(row, column)
+                    //if this row and column don't have course or affair continue.
+                    itemViewInfo ?: continue
+
+                    val itemView = notNullAdapter.getItemView(row, column, this@ScheduleView)
+
+                    //compute the LayoutParams of the ItemView。
+                    val params = FrameLayout.LayoutParams(mBasicElementWidth,
+                            mBasicElementHeight * itemViewInfo.itemHeight +
+                                    (itemViewInfo.itemHeight - 1) * mElementGap)
+                    params.leftMargin = mElementGap * (column + 1) + mBasicElementWidth * column
+                    params.topMargin = mElementGap * (row + 1) + (mBasicElementHeight * 2 + mElementGap) * row
+                    // If the itemView is in the left or bottom edge, add additional
+                    // element gap.
+                    if (column == 6) {
+                        params.rightMargin = mElementGap
+                    }
+                    if (row == 5) {
+                        params.bottomMargin = mElementGap
+                    }
+                    itemView.layoutParams = params
+                    //add the itemView to the ScheduleView
+                    addView(itemView)
+
+                    mIsEmpty = false
+                }
+            }
+        } else {
+            for (column in 0..6) {
+                var row = 0
+                while (row < 12) {
+                    val itemViewInfo = notNullAdapter.getItemViewInfo(row, column)
+                    if (itemViewInfo == null) {
+                        row++
+                        continue
+                    }
+                    val itemView = notNullAdapter.getItemView(row, column, this@ScheduleView)
+
+                    val params = FrameLayout.LayoutParams(mBasicElementWidth,
+                            mBasicElementHeight * itemViewInfo.itemHeight +
+                                    mElementGap * (itemViewInfo.itemHeight - 1))
+                    params.leftMargin = mElementGap * (column + 1) + mBasicElementWidth * column
+                    params.topMargin = mElementGap * (row + 1) + mBasicElementHeight * row
+
+                    if (column == 6) {
+                        params.rightMargin = mElementGap
+                    }
+                    if (row == 11) {
+                        params.bottomMargin = mElementGap
+                    }
+                    itemView.layoutParams = params
+
+                    addView(itemView)
+
+                    row += itemViewInfo.itemHeight
+                    mIsEmpty = false
+                }
+            }
+        }
+    }
 
     private val mStartPoint: PointF by lazy(LazyThreadSafetyMode.NONE) { PointF() }
     private val mEndPoint: PointF by lazy(LazyThreadSafetyMode.NONE) { PointF() }
@@ -154,8 +200,7 @@ class ScheduleView : FrameLayout {
     private var mScheduleViewHeight: Int = 0
     private var mBasicElementWidth: Int = 0
     private var mBasicElementHeight: Int = 0
-    private var mTouchViewWidth: Int = 0
-    private var mTouchViewHeight: Int = 0
+    private var mIsDisplayCourse: Boolean = true
 
     // The following fields are the attrs
     private var mElementGap: Int = 0
@@ -186,6 +231,7 @@ class ScheduleView : FrameLayout {
         mNoCourseDrawableResId = typeArray.getResourceId(R.styleable.ScheduleView_noCourseDrawable, 0)
         mEmptyText = typeArray.getString(R.styleable.ScheduleView_emptyText)
         mEmptyTextSize = typeArray.getDimensionPixelSize(R.styleable.ScheduleView_emptyTextSize, sp(12))
+        mIsDisplayCourse = typeArray.getBoolean(R.styleable.ScheduleView_isDisplayCourse, true)
         typeArray.recycle()
         initScheduleView()
     }
@@ -227,10 +273,8 @@ class ScheduleView : FrameLayout {
         }
         // Compute the BasicElement's size.
         mBasicElementWidth = (mScheduleViewWidth - mElementGap * 8) / 7
-        mBasicElementHeight = (mScheduleViewHeight - mElementGap * 7) / 6
-        // Compute the TouchView's size.
-        mTouchViewWidth = mBasicElementWidth
-        mTouchViewHeight = (mBasicElementHeight - mElementGap) / 2
+        mBasicElementHeight = (mScheduleViewHeight - mElementGap * 13) / 12
+
         setMeasuredDimension(mScheduleViewWidth, mScheduleViewHeight)
     }
 
@@ -265,8 +309,8 @@ class ScheduleView : FrameLayout {
                 return true
             }
             // Compute the click event at which range.
-            var clickHashX: Int = (endPoint.x / mTouchViewWidth).toInt()
-            var clickHashY: Int = (endPoint.y / mTouchViewHeight).toInt()
+            var clickHashX: Int = (endPoint.x / mBasicElementWidth).toInt()
+            var clickHashY: Int = (endPoint.y / mBasicElementHeight).toInt()
             if (clickHashX >= 7) {
                 clickHashX = 6
             }
@@ -285,10 +329,10 @@ class ScheduleView : FrameLayout {
                 return true
             }
             // Compute the mTouchView's LayoutParams.
-            val params = FrameLayout.LayoutParams(mTouchViewWidth,
-                    mTouchViewHeight)
-            params.leftMargin = mElementGap * (clickHashX + 1) + mTouchViewWidth * clickHashX
-            params.topMargin = mElementGap * (clickHashY + 1) + mTouchViewHeight * clickHashY
+            val params = FrameLayout.LayoutParams(mBasicElementWidth,
+                    mBasicElementHeight)
+            params.leftMargin = mElementGap * (clickHashX + 1) + mBasicElementWidth * clickHashX
+            params.topMargin = mElementGap * (clickHashY + 1) + mBasicElementHeight * clickHashY
             // If the mTouchView's position is at the right or bottom edge. It will add the additional
             // gap like the course.
             if (clickHashX == 6) {
@@ -360,8 +404,8 @@ class ScheduleView : FrameLayout {
     /**
      * This class represents the ItemSize going to display
      *
-     * @param itemWidth represent the ScheduleItem's width.
-     * @param itemHeight represent the ScheduleItem's height
+     * @param itemWidth 表示一个课占多宽
+     * @param itemHeight 表示有多少节课的高度。每天的课有12节，这个就表示多少个12分之一。
      */
     data class ScheduleItem(val itemWidth: Int = 1, val itemHeight: Int = 2)
 

@@ -87,12 +87,12 @@ class CourseContainerFragment : BaseFragment() {
         mCoursesViewModel.nowWeek.observe(activity!!, Observer { nowWeek ->
             if (nowWeek != null && nowWeek != 0) {
                 // 过时的本周的位置以及将其替换为原始周数显示
-                val oldNowWeek = mWeeks.indexOf("本周")
+                val oldNowWeek = mWeeks.indexOf(resources.getString(R.string.course_now_week))
                 if (oldNowWeek != -1) {
                     mWeeks[oldNowWeek] = mRawWeeks[oldNowWeek]
                 }
                 // 设置现在的本周显示
-                mWeeks[nowWeek] = "本周"
+                mWeeks[nowWeek] = resources.getString(R.string.course_now_week)
                 mScheduleAdapter.notifyDataSetChanged()
             }
             // 跳转到当前周
