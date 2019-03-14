@@ -1,8 +1,6 @@
 package com.mredrock.cyxbs.volunteer.Fragment
 
-import android.app.FragmentManager
 import android.support.v4.app.Fragment
-import android.content.Context
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -34,31 +32,21 @@ class AllVolunteerFragment : Fragment() {
     private fun initData() {
         holeTime.text = allHour
 
-        val adapter = VolunteerRecyclerAdapter(null, context!!, yearList, getRecordBeanList())
+        val adapter = VolunteerRecyclerAdapter(null, context!!, yearList, recordBeanList)
         recyclerView.isNestedScrollingEnabled = false
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(context)
-    }
-
-    private fun getRecordBeanList(): MutableList<MutableList<VolunteerTime.RecordBean>>? {
-        return recordBeanList
     }
 
     fun setRecordBeanList(recordBeanList: MutableList<MutableList<VolunteerTime.RecordBean>>) {
         this.recordBeanList = recordBeanList
     }
 
-    fun getAllHour(): String? {
-        return allHour
-    }
 
     fun setAllHour(allHour: String) {
         this.allHour = allHour
     }
 
-    fun getYearList(): MutableList<String>? {
-        return yearList
-    }
 
     fun setYearList(yearList: MutableList<String>) {
         this.yearList = yearList

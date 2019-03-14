@@ -22,7 +22,7 @@
             />
 
         <android.support.v7.widget.Toolbar
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="13dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/volunteer_toolbar"
@@ -65,7 +65,7 @@
         android:layout_height="50dp"
         android:drawableLeft="@mipmap/volunteer_login_number"
         android:drawablePadding="16dp"
-        android:hint="请输入暖青汇账号"
+        android:hint="请输入中国志愿者网账号"
         android:textSize="14dp"
         android:textColorHint="@color/volunteer_edit_Normal"
         android:textCursorDrawable="@drawable/volunteer_cursor_color"

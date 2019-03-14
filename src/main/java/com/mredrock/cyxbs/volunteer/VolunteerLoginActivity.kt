@@ -6,7 +6,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
@@ -18,24 +17,27 @@ import com.mredrock.cyxbs.volunteer.Network.ApiService
 import com.mredrock.cyxbs.volunteer.bean.VolunteerLogin
 import kotlinx.android.synthetic.main.activity_login.*
 import com.mredrock.cyxbs.volunteer.widget.VolunteerTimeSP
+
 import android.os.Build
 import android.support.annotation.RequiresApi
 import com.alibaba.android.arouter.facade.annotation.Route
+import com.jude.swipbackhelper.SwipeBackHelper
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.config.DISCOVER_VOLUNTEER
 import com.mredrock.cyxbs.common.utils.LogUtils
 
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.volunteer.Network.VolunteerRetrofit
-import com.mredrock.cyxbs.volunteer.bean.PasswordEncode
+
+import com.mredrock.cyxbs.volunteer.widget.EncryptPassword
+import java.util.Collections.replaceAll
 import java.util.regex.Pattern
 
-@Route(path = DISCOVER_VOLUNTEER)
 class VolunteerLoginActivity : BaseActivity() {
     companion object {
         private const val BIND_SUCCESS: Int = 0
-        private const val INVALID_ACCOUNT: Int = -2
-        private const val WRONG_PASSWORD: Int = 3
+//        private const val INVALID_ACCOUNT: Int = 2
+        private const val WRONG_PASSWORD: Int = -1
     }
 
     private var uid: String? = null
@@ -44,10 +46,8 @@ class VolunteerLoginActivity : BaseActivity() {
     private lateinit var volunteerSP: VolunteerTimeSP
     private lateinit var dialog: ProgressDialog
 
-    private var publicKey: String = "-----BEGIN PUBLIC KEY-----\nMFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAN9k0wVGURdzhidVsxzwQrwinXAp88gA\nlbSn6UJqAVHeGhy68AvIUvmp1rLZphZxbl+nzcsaatiI3TOXBMQGwJcCAwEAAQ==\n-----END PUBLIC KEY-----^^^"
     override val isFragmentActivity: Boolean = false
 
-    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
@@ -69,7 +69,7 @@ class VolunteerLoginActivity : BaseActivity() {
         volunteer_login.setOnClickListener { view: View? ->
             showProgressDialog()
             initUserInfo()
-            if (view!!.id == R.id.volunteer_login) passwordEncoding(password)
+            if (view!!.id == R.id.volunteer_login) login(account,EncryptPassword.encrypt(password))
         }
 
         volunteer_login_back.setOnClickListener { finish() }
@@ -106,7 +106,7 @@ class VolunteerLoginActivity : BaseActivity() {
             if (actionId == EditorInfo.IME_ACTION_GO) {
                 showProgressDialog()
                 initUserInfo()
-                passwordEncoding(password)
+                login(account, EncryptPassword.encrypt(password))
                 handled = true
 
                 val inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
@@ -116,16 +116,6 @@ class VolunteerLoginActivity : BaseActivity() {
             }
             handled
         }
-    }
-
-    private fun passwordEncoding(password: String) {
-        var apiService = ApiGenerator.getApiService(VolunteerRetrofit.encodingRetrofit, ApiService::class.java)
-        apiService.getRsaEncode(publicKey + password, "rsapubkey", "pad=1_s=gb2312_t=0")
-                .setSchedulers()
-                .safeSubscribeBy { passwordEncode: PasswordEncode ->
-                    var encodePassword = passwordEncode.data[0]
-                    login(account, encodePassword)
-                }
     }
 
     private fun login(account: String, encodingPassword: String) {
@@ -145,7 +135,7 @@ class VolunteerLoginActivity : BaseActivity() {
                             finish()
                         }
 
-                        INVALID_ACCOUNT -> showUnsuccessDialog("亲，输入的账号不存在哦")
+//                        INVALID_ACCOUNT -> showUnsuccessDialog("亲，输入的账号或密码错误哦")
 
                         WRONG_PASSWORD -> showUnsuccessDialog("亲，输入的账号或密码有误哦")
                     }

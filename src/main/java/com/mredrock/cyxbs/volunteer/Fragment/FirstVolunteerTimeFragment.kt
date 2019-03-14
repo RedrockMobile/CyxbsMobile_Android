@@ -1,7 +1,6 @@
 package com.mredrock.cyxbs.volunteer.Fragment
 
 import android.support.v4.app.Fragment
-import android.content.Context
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -12,7 +11,6 @@ import android.widget.TextView
 import com.mredrock.cyxbs.volunteer.Adapter.VolunteerRecyclerAdapter
 import com.mredrock.cyxbs.volunteer.R
 import com.mredrock.cyxbs.volunteer.bean.VolunteerTime
-import java.util.ArrayList
 
 class FirstVolunteerTimeFragment : Fragment(){
 
