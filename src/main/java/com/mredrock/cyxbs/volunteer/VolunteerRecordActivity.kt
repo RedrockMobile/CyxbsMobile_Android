@@ -23,6 +23,7 @@ import com.mredrock.cyxbs.volunteer.Fragment.NoTimeVolunteerFragment
 import com.mredrock.cyxbs.volunteer.Network.ApiService
 import com.mredrock.cyxbs.volunteer.Network.VolunteerRetrofit
 import com.mredrock.cyxbs.volunteer.bean.VolunteerTime
+import com.mredrock.cyxbs.volunteer.widget.EncryptPassword
 import com.mredrock.cyxbs.volunteer.widget.VolunteerTimeSP
 import java.util.*
 import kotlinx.android.synthetic.main.activity_volunteer_record.*
@@ -152,7 +153,7 @@ class VolunteerRecordActivity : BaseActivity(), TabLayout.OnTabSelectedListener,
         } else {
             //绑定数据，直接请求接口
             animationDrawable.start()
-            loadVolunteerTime(uid)
+            loadVolunteerTime(EncryptPassword.encrypt(uid))
         }
     }
 
@@ -231,7 +232,7 @@ class VolunteerRecordActivity : BaseActivity(), TabLayout.OnTabSelectedListener,
                 dealYear(dataBean.record!!, i - 1)
                 recordBeen = yearMap[Integer.parseInt(yearList[i])]
                 //再循环中，遍历四年数据的同时，对记录"全部"的List进行初始化加入数据
-                allRecordList.add(recordBeen!!)
+                if (recordBeen != null && recordBeen.size != 0) allRecordList.add(recordBeen!!)
 
                 if (recordBeen == null || recordBeen.isEmpty()) {
                     //如果该年数据为空，则加入无时长fragment

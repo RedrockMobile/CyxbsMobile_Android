@@ -2,10 +2,12 @@ package com.mredrock.cyxbs.volunteer.Adapter
 
 import android.support.v7.widget.CardView
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.volunteer.R
 import com.mredrock.cyxbs.volunteer.bean.VolunteerTime
 
@@ -28,6 +30,10 @@ class VolunteerRecyclerChildAdapter(recordBeanList: MutableList<VolunteerTime.Re
 
     override fun onBindViewHolder(holder: VolunteerRecyclerChildAdapter.ViewHolder, position: Int) {
         val record = recordBeanList[position]
+        LogUtils.d("VolunteerRecyclerView", recordBeanList.size.toString())
+        LogUtils.d("VolunteerRecyclerView", record.start_time)
+        LogUtils.d("VolunteerRecyclerView", record.title)
+
         holder.dateText.text = record.start_time!!.substring(5)
         holder.hourText.text = record.hours.plus(" 小时")
         holder.activityText.text = record.title
