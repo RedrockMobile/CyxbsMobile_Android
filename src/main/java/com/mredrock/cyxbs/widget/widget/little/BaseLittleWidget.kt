@@ -7,8 +7,11 @@ import android.content.Context
 import android.content.Intent
 import android.support.annotation.IdRes
 import android.support.annotation.LayoutRes
+import android.util.Log
 import android.widget.RemoteViews
 import android.widget.Toast
+import com.alibaba.android.arouter.launcher.ARouter
+import com.mredrock.cyxbs.common.config.MAIN_SPLASH
 import com.mredrock.cyxbs.widget.bean.Course
 import com.mredrock.cyxbs.widget.util.*
 import java.util.*
@@ -43,6 +46,7 @@ abstract class BaseLittleWidget : AppWidgetProvider() {
     @IdRes
     protected abstract fun getRefreshResId(): Int
 
+
     protected abstract fun getRemoteViews(context: Context, course: Course.DataBean?, timeTv: String = "课程安排"): RemoteViews
 
 
@@ -68,6 +72,10 @@ abstract class BaseLittleWidget : AppWidgetProvider() {
                 refresh(context)
                 Toast.makeText(context, "已刷新", Toast.LENGTH_SHORT).show()
             }
+        }
+
+        if(intent.action == "btn.start.com"){
+            ARouter.getInstance().build(MAIN_SPLASH).navigation()
         }
     }
 

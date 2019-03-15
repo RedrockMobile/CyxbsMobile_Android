@@ -15,6 +15,7 @@ import java.util.*
  * 小型部件，不透明
  */
 class LittleWidget : BaseLittleWidget() {
+
     override fun getLayoutResId(): Int {
         return R.layout.widget_little
     }
@@ -52,6 +53,12 @@ class LittleWidget : BaseLittleWidget() {
         rv.setOnClickPendingIntent(getUpResId(), getClickPendingIntent(context, getUpResId(), "btn.text.com", javaClass))
         rv.setOnClickPendingIntent(getDownResId(), getClickPendingIntent(context, getDownResId(), "btn.text.com", javaClass))
         rv.setOnClickPendingIntent(getRefreshResId(), getClickPendingIntent(context, getRefreshResId(), "btn.text.com", javaClass))
+
+        rv.setOnClickPendingIntent(getCourseNameResId(),
+                getClickPendingIntent(context,getCourseNameResId(),"btn.start.com",javaClass))
+        rv.setOnClickPendingIntent(getRoomResId(),
+                getClickPendingIntent(context,getRoomResId(),"btn.start.com",javaClass))
+
         if (course == null) {
             rv.setTextViewText(getTitleResId(), getWeekDayChineseName(Calendar.getInstance().get(Calendar.DAY_OF_WEEK)))
             rv.setTextViewText(getCourseNameResId(), "今天没有课~")

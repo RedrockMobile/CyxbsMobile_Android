@@ -1,14 +1,18 @@
 package com.mredrock.cyxbs.widget.widget.normal
 
+import android.app.ProgressDialog.show
 import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.support.annotation.IdRes
+import android.util.Log
 import android.view.View
 import android.widget.RemoteViews
 import android.widget.Toast
+import com.alibaba.android.arouter.launcher.ARouter
+import com.mredrock.cyxbs.common.config.MAIN_SPLASH
 import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
 import com.mredrock.cyxbs.common.utils.extensions.editor
 import com.mredrock.cyxbs.widget.R
@@ -24,6 +28,10 @@ import kotlin.math.abs
 class NormalWidget : AppWidgetProvider() {
 
     private val shareName = "zscy_widget_normal"
+
+    companion object {
+        private var lastClickTime:Long = 0//用于记录点击时间
+    }
 
     override fun onUpdate(context: Context, appWidgetManager: AppWidgetManager, appWidgetIds: IntArray) {
         super.onUpdate(context, appWidgetManager, appWidgetIds)
@@ -44,10 +52,10 @@ class NormalWidget : AppWidgetProvider() {
 
             val offsetTime = context.defaultSharedPreferences.getInt(shareName, 0)
 
-            if (abs(offsetTime) == 3) {
-                Toast.makeText(context, "提示：点击星期返回今日", Toast.LENGTH_SHORT).show()
-            }
 
+//            if (abs(offsetTime) == 3) {
+//                Toast.makeText(context, "提示：点击星期返回今日", Toast.LENGTH_SHORT).show()
+//            }
             when (rId) {
                 R.id.widget_normal_back -> {
                     context.defaultSharedPreferences.editor {
@@ -69,7 +77,25 @@ class NormalWidget : AppWidgetProvider() {
 //                    Toast.makeText(context, "已刷新", Toast.LENGTH_SHORT).show()
                 }
             }
+            if(isDoubleClick()){
+                Toast.makeText(context, "提示：点击星期返回今日", Toast.LENGTH_SHORT).show()
+            }
         }
+        if (intent.action == "btn.start.com") {
+            ARouter.getInstance().build(MAIN_SPLASH).navigation()
+        }
+    }
+
+
+    private fun isDoubleClick():Boolean{
+        val time = System.currentTimeMillis()
+        val anotherTime = time - lastClickTime
+
+        if(anotherTime in 1..599){
+            return true
+        }
+        lastClickTime = time
+        return false
     }
 
     /**
@@ -84,7 +110,7 @@ class NormalWidget : AppWidgetProvider() {
         //获取数据
         val list = getCourseByCalendar(context, calendar)
                 ?: getErrorCourseList()
-        if (list.isEmpty()){
+        if (list.isEmpty()) {
             list.add(getNoCourse())
         }
 
@@ -120,6 +146,8 @@ class NormalWidget : AppWidgetProvider() {
             rv.setTextViewText(getTimeId(index), formatTime(getStartCalendarByNum(course.hash_lesson)))
             rv.setTextViewText(getCourseId(index), course.course)
             rv.setTextViewText(getRoomId(index), filterClassRoom(course.classroom!!))
+            rv.setOnClickPendingIntent(getLayoutId(index),
+                    getClickPendingIntent(context, getLayoutId(index), "btn.start.com", javaClass))
             index++
         }
         //隐藏后面的item

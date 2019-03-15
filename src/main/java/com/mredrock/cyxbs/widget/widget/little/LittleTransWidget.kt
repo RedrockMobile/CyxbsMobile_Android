@@ -1,5 +1,6 @@
 package com.mredrock.cyxbs.widget.widget.little
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Color
@@ -10,6 +11,7 @@ import com.mredrock.cyxbs.widget.R
 import com.mredrock.cyxbs.widget.bean.Course
 import com.mredrock.cyxbs.widget.page.trans.TransConfig
 import com.mredrock.cyxbs.widget.util.filterClassRoom
+import com.mredrock.cyxbs.widget.util.getClickPendingIntent
 import com.mredrock.cyxbs.widget.util.getWeekDayChineseName
 import java.util.*
 
@@ -18,6 +20,7 @@ import java.util.*
  * 小型部件，不透明
  */
 class LittleTransWidget : BaseLittleWidget() {
+
     override fun getLayoutResId(): Int {
         return R.layout.widget_little_trans
     }
@@ -47,11 +50,12 @@ class LittleTransWidget : BaseLittleWidget() {
     }
 
     override fun getRefreshResId(): Int {
-        return 0
+        return R.id.widget_little_title_trans
     }
 
     override fun getRemoteViews(context: Context, course: Course.DataBean?, timeTv: String): RemoteViews {
         val rv = RemoteViews(context.packageName, getLayoutResId())
+
         if (course == null) {
             rv.setTextViewText(getTitleResId(), getWeekDayChineseName(Calendar.getInstance().get(Calendar.DAY_OF_WEEK)))
             rv.setTextViewText(getCourseNameResId(), "今天没有课~")
@@ -62,6 +66,13 @@ class LittleTransWidget : BaseLittleWidget() {
             rv.setTextViewText(getRoomResId(), filterClassRoom(course.classroom!!))
         }
 
+        //course和room设置点击事件到Activity，title设置刷新
+        rv.setOnClickPendingIntent(getCourseNameResId(),
+                getClickPendingIntent(context,getCourseNameResId(),"btn.start.com",javaClass))
+        rv.setOnClickPendingIntent(getRoomResId(),
+                getClickPendingIntent(context,getRoomResId(),"btn.start.com",javaClass))
+        rv.setOnClickPendingIntent(getTitleResId(),
+                getClickPendingIntent(context,getTitleResId(),"btn.text.com",javaClass))
         //设置用户自定义定义配置
 
         try {//这个tryCatch防止用户输入的颜色有误,parseColor报错
