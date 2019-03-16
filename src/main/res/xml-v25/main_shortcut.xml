@@ -2,7 +2,7 @@
 <shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
     <shortcut
         android:enabled="true" 
-        android:icon="@drawable/ic_main_stu_schedule"
+        android:icon="@drawable/main_ic_stu_schedule"
         android:shortcutDisabledMessage="@string/main_shortcut_cancel"
         android:shortcutId="course"
         android:shortcutLongLabel="@string/main_course_long_name"
@@ -17,7 +17,7 @@
 
     <shortcut
         android:enabled="true"
-        android:icon="@drawable/ic_main_grade"
+        android:icon="@drawable/main_ic_grade"
         android:shortcutDisabledMessage="@string/main_shortcut_cancel"
         android:shortcutId="grade"
         android:shortcutLongLabel="@string/main_grade_long_name"
@@ -32,7 +32,7 @@
 
     <shortcut
         android:enabled="true"
-        android:icon="@drawable/ic_main_school_car"
+        android:icon="@drawable/main_ic_school_car"
         android:shortcutDisabledMessage="@string/main_shortcut_cancel"
         android:shortcutId="schoolCar"
         android:shortcutLongLabel="@string/main_school_car_long_name"
@@ -47,7 +47,7 @@
 
     <shortcut
         android:enabled="true"
-        android:icon="@drawable/ic_main_empty_room"
+        android:icon="@drawable/main_ic_empty_room"
         android:shortcutDisabledMessage="@string/main_shortcut_cancel"
         android:shortcutId="emptyRoom"
         android:shortcutLongLabel="@string/main_empty_room_long_name"
