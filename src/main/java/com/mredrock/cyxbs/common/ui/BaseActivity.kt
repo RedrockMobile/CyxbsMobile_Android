@@ -14,7 +14,7 @@ import android.view.View
 import android.view.WindowManager
 import com.afollestad.materialdialogs.MaterialDialog
 import com.alibaba.android.arouter.launcher.ARouter
-import com.jude.swipbackhelper.SwipeBackHelper
+//import com.jude.swipbackhelper.SwipeBackHelper
 import com.mredrock.cyxbs.common.R
 import com.mredrock.cyxbs.common.event.AskLoginEvent
 import com.mredrock.cyxbs.common.event.LoginEvent
@@ -44,8 +44,9 @@ abstract class BaseActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        SwipeBackHelper.onCreate(this)
-        SwipeBackHelper.getCurrentPage(this).setSwipeRelateEnable(true)
+        // todo 8.0 系统Bug 窗口透明导致限制竖屏闪退
+//        SwipeBackHelper.onCreate(this)
+//        SwipeBackHelper.getCurrentPage(this).setSwipeRelateEnable(true)
 
         if (Build.VERSION.SDK_INT >= 21) {
             val decorView = window.decorView
@@ -121,12 +122,7 @@ abstract class BaseActivity : AppCompatActivity() {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     open fun onLoginStateChangeEvent(event: LoginStateChangeEvent) {
-        LogUtils.d("LoginStateChangeEvent", "in" + localClassName + "login state: " + event.getNewState() + "")
-    }
-
-    override fun onPostCreate(savedInstanceState: Bundle?) {
-        super.onPostCreate(savedInstanceState)
-        SwipeBackHelper.onPostCreate(this)
+        LogUtils.d("LoginStateChangeEvent", "in" + localClassName + "login state: " + event.newState + "")
     }
 
     override fun onStart() {
@@ -155,8 +151,4 @@ abstract class BaseActivity : AppCompatActivity() {
         EventBus.getDefault().unregister(this)
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        SwipeBackHelper.onDestroy(this)
-    }
 }

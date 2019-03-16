@@ -55,14 +55,14 @@ class NineGridView(context: Context?, attrs: AttributeSet?, defStyleAttr: Int) :
                 val heightSize = MeasureSpec.getSize(heightMeasureSpec)
                 val childHeight = (heightSize - verticalGap * (col - 1)) / row
 
-                forEachChild {
+                forEachChild ({
                     val lp = it.layoutParams
                     lp.width = childWidth.toInt()
                     lp.height = childHeight.toInt()
                     val childWidthMeasureSpec = getChildMeasureSpec(widthSpec, it.paddingLeft + it.paddingRight, lp.width)
                     val childHeightMeasureSpec = getChildMeasureSpec(heightMeasureSpec, it.paddingTop + it.paddingBottom, lp.height)
                     it.measure(childWidthMeasureSpec, childHeightMeasureSpec)
-                }
+                })
             }
 
             MeasureSpec.AT_MOST -> {
@@ -84,9 +84,9 @@ class NineGridView(context: Context?, attrs: AttributeSet?, defStyleAttr: Int) :
             child.layoutParams.width = widthSize
             measureChild(child, widthMeasureSpec, heightMeasureSpec)
         } else {
-            forEachChildWithIndex { i, view ->
+            forEachChildWithIndex({ i, view ->
 
-            }
+            })
         }
     }
 
