@@ -2,23 +2,16 @@ package com.mredrock.cyxbs.main.ui
 
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
-import android.content.Intent
-import android.content.pm.ShortcutInfo
-import android.content.pm.ShortcutManager
 import android.os.Build
 import android.os.Bundle
 import android.view.View
-import com.alibaba.android.arouter.facade.annotation.Route
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
-import com.mredrock.cyxbs.common.config.MAIN_SPLASH
-//import com.jude.swipbackhelper.SwipeBackHelper
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.main.R
 import com.mredrock.cyxbs.main.viewmodel.SplashViewModel
 import kotlinx.android.synthetic.main.main_activity_splash.*
 
-@Route(path = MAIN_SPLASH)
 class SplashActivity : BaseViewModelActivity<SplashViewModel>() {
     companion object {
         val TAG = SplashActivity::class.java.simpleName
@@ -30,7 +23,6 @@ class SplashActivity : BaseViewModelActivity<SplashViewModel>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.main_activity_splash)
-//        SwipeBackHelper.getCurrentPage(this).setSwipeBackEnable(false)
         setFullScreen()
         splash_view.postDelayed({ startActivity<MainActivity>(true) }, 2000)
 
