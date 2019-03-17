@@ -6,5 +6,4 @@ dependencies {
     kapt deps.room.compiler
     kapt deps.databinding.compiler
     testImplementation 'junit:junit:4.12'
-    implementation 'com.github.razerdp:BasePopup:2.1.9'
 }
