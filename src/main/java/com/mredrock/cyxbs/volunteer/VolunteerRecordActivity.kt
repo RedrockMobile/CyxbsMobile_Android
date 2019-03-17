@@ -11,8 +11,6 @@ import android.support.v4.view.ViewPager
 import android.view.View
 import android.widget.Toast
 import com.afollestad.materialdialogs.MaterialDialog
-import com.jude.swipbackhelper.SwipeBackHelper
-//import com.jude.swipbackhelper.SwipeBackHelper
 import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.ui.BaseActivity
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
@@ -51,9 +49,6 @@ class VolunteerRecordActivity : BaseActivity(), TabLayout.OnTabSelectedListener,
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_volunteer_record)
-        //因为和fragment的滑动冲突，关闭侧滑
-        SwipeBackHelper.onCreate(this)
-        SwipeBackHelper.getCurrentPage(this).setSwipeBackEnable(false)
 
         initToolbar()
         initOnClickLisenter()

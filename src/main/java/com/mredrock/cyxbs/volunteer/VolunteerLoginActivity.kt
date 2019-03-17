@@ -3,40 +3,30 @@ package com.mredrock.cyxbs.volunteer
 import android.app.ProgressDialog
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import com.afollestad.materialdialogs.MaterialDialog
+import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.ui.BaseActivity
+import com.mredrock.cyxbs.common.utils.LogUtils
+import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.volunteer.Network.ApiService
-import com.mredrock.cyxbs.volunteer.bean.VolunteerLogin
-import kotlinx.android.synthetic.main.activity_login.*
-import com.mredrock.cyxbs.volunteer.widget.VolunteerTimeSP
-
-import android.os.Build
-import android.support.annotation.RequiresApi
-import com.alibaba.android.arouter.facade.annotation.Route
-import com.jude.swipbackhelper.SwipeBackHelper
-import com.mredrock.cyxbs.common.BaseApp
-import com.mredrock.cyxbs.common.config.DISCOVER_VOLUNTEER
-import com.mredrock.cyxbs.common.utils.LogUtils
-
-import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.volunteer.Network.VolunteerRetrofit
-
+import com.mredrock.cyxbs.volunteer.bean.VolunteerLogin
 import com.mredrock.cyxbs.volunteer.widget.EncryptPassword
-import java.util.Collections.replaceAll
+import com.mredrock.cyxbs.volunteer.widget.VolunteerTimeSP
+import kotlinx.android.synthetic.main.activity_login.*
 import java.util.regex.Pattern
 
 class VolunteerLoginActivity : BaseActivity() {
     companion object {
         private const val BIND_SUCCESS: Int = 0
-//        private const val INVALID_ACCOUNT: Int = 2
+        //        private const val INVALID_ACCOUNT: Int = 2
         private const val WRONG_PASSWORD: Int = -1
     }
 
@@ -52,27 +42,17 @@ class VolunteerLoginActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
-        initToolbar()
-        initOnClickListener()
-        useSoftKeyboard()
-        initUserInfo()
-    }
+        common_toolbar.init("完善信息")
+        common_toolbar.setBackgroundColor(Color.TRANSPARENT)
 
-    private fun initToolbar() {
-        if (volunteer_toolbar != null) {
-            volunteer_toolbar.title = ""
-            setSupportActionBar(volunteer_toolbar)
-        }
-    }
-
-    private fun initOnClickListener() {
         volunteer_login.setOnClickListener { view: View? ->
             showProgressDialog()
             initUserInfo()
-            if (view!!.id == R.id.volunteer_login) login(account,EncryptPassword.encrypt(password))
+            if (view!!.id == R.id.volunteer_login) login(account, EncryptPassword.encrypt(password))
         }
 
-        volunteer_login_back.setOnClickListener { finish() }
+        useSoftKeyboard()
+        initUserInfo()
     }
 
     private fun initUserInfo() {
@@ -101,7 +81,7 @@ class VolunteerLoginActivity : BaseActivity() {
     }
 
     private fun useSoftKeyboard() {
-        volunteer_password.setOnEditorActionListener { v, actionId, event ->
+        volunteer_password.setOnEditorActionListener { _, actionId, _ ->
             var handled = false
             if (actionId == EditorInfo.IME_ACTION_GO) {
                 showProgressDialog()
@@ -122,8 +102,8 @@ class VolunteerLoginActivity : BaseActivity() {
         if (uid == null) {
 
         }
-        var apiService = ApiGenerator.getApiService(VolunteerRetrofit.volunteerRetrofit, ApiService::class.java)
-        apiService.volunteerLogin("Basic enNjeTpyZWRyb2Nrenk=", account, encodingPassword, uid!!)
+        ApiGenerator.getApiService(VolunteerRetrofit.volunteerRetrofit, ApiService::class.java)
+                .volunteerLogin("Basic enNjeTpyZWRyb2Nrenk=", account, encodingPassword, uid!!)
                 .setSchedulers()
                 .safeSubscribeBy { volunteerLogin: VolunteerLogin ->
                     when ((volunteerLogin.code)!!.toInt()) {
@@ -143,29 +123,20 @@ class VolunteerLoginActivity : BaseActivity() {
     }
 
     private fun showProgressDialog() {
-        dialog = ProgressDialog(this@VolunteerLoginActivity)
-        dialog.setMessage("登录中...")
+        dialog = ProgressDialog.show(this, "登录中...", "请稍候")
         dialog.setCancelable(false)
-        dialog.show()
     }
 
     private fun showUnsuccessDialog(text: String) {
         runOnUiThread {
             dialog.dismiss()
-            val handler = Handler(Looper.getMainLooper())
-            handler.post {
-                MaterialDialog.Builder(this@VolunteerLoginActivity)
-                        .title("登录失败")
-                        .content(text)
-                        .positiveText("我知道啦")
-                        .callback(object : MaterialDialog.ButtonCallback() {
-                            override fun onPositive(dialog: MaterialDialog?) {
-                                super.onPositive(dialog)
-                                //                                accountView.setText("");
-                                volunteer_password.setText("")
-                            }
-                        }).show()
-            }
+            MaterialDialog.Builder(this@VolunteerLoginActivity)
+                    .title("登录失败")
+                    .content(text)
+                    .positiveText("我知道啦")
+                    .onPositive{_,_ ->
+                        volunteer_password.setText("")
+                    }.show()
         }
     }
 }

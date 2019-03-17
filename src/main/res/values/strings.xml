@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="volunteer_hint_input_account">请输入中国志愿者网账号</string>
+    <string name="volunteer_hint_input_pwd">请输入密码</string>
+    <string name="volunteer_save">保存</string>
+</resources>
