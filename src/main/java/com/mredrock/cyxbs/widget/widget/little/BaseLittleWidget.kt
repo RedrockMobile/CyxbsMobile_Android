@@ -13,7 +13,6 @@ import android.widget.Toast
 import com.alibaba.android.arouter.launcher.ARouter
 import com.mredrock.cyxbs.common.bean.WidgetCourse
 import com.mredrock.cyxbs.common.config.MAIN_MAIN
-import com.mredrock.cyxbs.common.config.MAIN_SPLASH
 import com.mredrock.cyxbs.common.event.WidgetCourseEvent
 import com.mredrock.cyxbs.widget.bean.Course
 import com.mredrock.cyxbs.widget.util.*
