@@ -219,7 +219,7 @@ class VolunteerRecordActivity : BaseActivity(), TabLayout.OnTabSelectedListener,
      * @param dataBean 接口请求到的用户时长数据
      */
     private fun initFragmentList(dataBean: VolunteerTime?) {
-        if (dataBean!!.record!!.size == 0) {
+        if (dataBean!!.record!!.isEmpty()) {
             // 如果用户的志愿时长记录为0，则所5个（"全部" + 四年，和year对应）fragment都为无时长 fragment
              for (i in 0..5) {
                 fragmentList.add(NoTimeVolunteerFragment())

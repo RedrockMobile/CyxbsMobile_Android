@@ -2,12 +2,10 @@ package com.mredrock.cyxbs.volunteer.bean
 
 import java.io.Serializable
 
-class VolunteerLogin: Serializable {
+data class VolunteerLogin(var msg : String?,
+                          var code : String?): Serializable {
     /**
      * msg : success
      * code : 0
      */
-
-    var msg: String? = null
-    var code: String? = null
 }

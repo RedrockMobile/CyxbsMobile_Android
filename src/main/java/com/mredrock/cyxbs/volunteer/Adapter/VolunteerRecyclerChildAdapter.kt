@@ -2,12 +2,10 @@ package com.mredrock.cyxbs.volunteer.Adapter
 
 import android.support.v7.widget.CardView
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.volunteer.R
 import com.mredrock.cyxbs.volunteer.bean.VolunteerTime
 

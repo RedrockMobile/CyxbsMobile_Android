@@ -5,6 +5,10 @@ import com.mredrock.cyxbs.common.utils.LogUtils
 import java.util.Base64
 import java.io.ByteArrayOutputStream
 import java.io.ObjectOutputStream
+import java.io.UnsupportedEncodingException
+import java.security.InvalidKeyException
+import java.security.NoSuchAlgorithmException
+import javax.crypto.BadPaddingException
 import javax.crypto.Cipher
 import javax.crypto.spec.IvParameterSpec
 import javax.crypto.spec.SecretKeySpec
@@ -12,43 +16,48 @@ import javax.crypto.spec.SecretKeySpec
 
 class EncryptPassword {
     companion object {
-        private val seckey = byteArrayOf(
-                0x33, 0x21, 0x27, 0x21,
-                0x26, 0x73, 0x12, 0x71,
-                0x62, 0x42, 0x73, 0x74,
-                0x72, 0x4c, 0x5f, 0x66)
+        private val IV_STRING = "zhangshangcquptv"
+        private val charset = "UTF-8"
+        val KEY = "redrockvolunteer"
 
-        private val iv = byteArrayOf(
-                0x00, 0x00, 0x00, 0x00,
-                0x00, 0x00, 0x00, 0x00,
-                0x00, 0x00, 0x00, 0x00,
-                0x00, 0x00, 0x00, 0x00)
-
-        fun encrypt(password: String): String {
-            try {
-                val bytestream = ByteArrayOutputStream()
-                val oos = ObjectOutputStream(bytestream)
-                oos.writeObject(password)
-
-                val bintoken = bytestream.toByteArray()
-                val sKey = SecretKeySpec(seckey, "AES")
-                val cipher = Cipher.getInstance("AES/CBC/PKCS5Padding")
-                cipher.init(Cipher.ENCRYPT_MODE, sKey, IvParameterSpec(iv))
-                val sectoken = cipher.doFinal(bintoken)
-
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    val b64encoder = Base64.getUrlEncoder()
-                    var encoding = b64encoder.encodeToString(sectoken)
-//                    LogUtils.d("VolunteerLoginTest", encoding)
-                    return encoding
-                } else {
-                    TODO("VERSION.SDK_INT < O")
-                }
-            } catch (e: Exception) {
-                e.printStackTrace()
+        fun encrypt(content: String): String {
+            val contentBytes = content.toByteArray(charset(charset))
+            val keyBytes = KEY.toByteArray(charset(charset))
+            val encryptedBytes = aesEncryptBytes(contentBytes, keyBytes)
+            return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                val encoder = Base64.getEncoder()
+                encoder.encodeToString(encryptedBytes)
+            } else {
+                TODO("VERSION.SDK_INT < O")
             }
+        }
 
-            return ""
+        private fun aesEncryptString(content: String): String {
+            val contentBytes = content.toByteArray(charset(charset))
+            val keyBytes = KEY.toByteArray(charset(charset))
+            val encryptedBytes = aesEncryptBytes(contentBytes, keyBytes)
+            return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                val encoder = Base64.getEncoder()
+                encoder.encodeToString(encryptedBytes)
+            } else {
+                TODO("VERSION.SDK_INT < O")
+            }
+        }
+
+        private fun aesEncryptBytes(contentBytes: ByteArray, keyBytes: ByteArray): ByteArray {
+            return cipherOperation(contentBytes, keyBytes, Cipher.ENCRYPT_MODE)
+        }
+
+        private fun cipherOperation(contentBytes: ByteArray, keyBytes: ByteArray, mode: Int): ByteArray {
+            val secretKey = SecretKeySpec(keyBytes, "AES")
+
+            val initParam = IV_STRING.toByteArray(charset(charset))
+            val ivParameterSpec = IvParameterSpec(initParam)
+
+            val cipher = Cipher.getInstance("AES/CBC/PKCS5Padding")
+            cipher.init(mode, secretKey, ivParameterSpec)
+
+            return cipher.doFinal(contentBytes)
         }
     }
 }
