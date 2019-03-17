@@ -86,6 +86,7 @@ class NormalWidget : AppWidgetProvider() {
             }
         }
         if (intent.action == "btn.start.com") {
+            fresh(context,0)//在应用没有打开的时候点击跳转需要刷新一下数据
             ARouter.getInstance().build(MAIN_MAIN).navigation()
             val newList = mutableListOf<WidgetCourse.DataBean>()
             list.forEach {it->

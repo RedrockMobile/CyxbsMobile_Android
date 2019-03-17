@@ -28,7 +28,7 @@ abstract class BaseLittleWidget : AppWidgetProvider() {
     private val shareName = "share_hash_lesson_trans"
 
     companion object {
-        private lateinit var curCourse: Course.DataBean//保存当前显示的course
+        private var curCourse: Course.DataBean = Course.DataBean()//保存当前显示的course
     }
 
     @LayoutRes
@@ -83,6 +83,7 @@ abstract class BaseLittleWidget : AppWidgetProvider() {
 
         if(intent.action == "btn.start.com"){
             ARouter.getInstance().build(MAIN_MAIN).navigation()
+            refresh(context)//在应用没有打开的时候点击跳转需要刷新一下数据
             EventBus.getDefault().postSticky(
                     WidgetCourseEvent(mutableListOf(changeCourseToWidgetCourse(curCourse)))
             )
