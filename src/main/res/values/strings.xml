@@ -95,7 +95,7 @@
         <item>提前一个小时</item>
     </string-array>
 
-    <!--Course Detail Strings-->
+    <!--WidgetCourse Detail Strings-->
     <string name="course_affair_modify">修改</string>
     <string name="course_affair_delete">删除</string>
     <string name="course_error_get_course">获取课程失败</string>

@@ -4,7 +4,7 @@ import android.arch.lifecycle.ViewModelProviders
 import android.databinding.DataBindingUtil
 import android.os.Bundle
 import com.alibaba.android.arouter.facade.annotation.Route
-import com.jude.swipbackhelper.SwipeBackHelper
+//import com.jude.swipbackhelper.SwipeBackHelper
 import com.mredrock.cyxbs.common.component.JToolbar
 import com.mredrock.cyxbs.common.config.COURSE_NO_COURSE_INVITE
 import com.mredrock.cyxbs.common.ui.BaseActivity
@@ -36,7 +36,7 @@ class NoCourseInviteActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mBinding = DataBindingUtil.setContentView(this, R.layout.course_activity_no_course_invite)
-        SwipeBackHelper.getCurrentPage(this).setSwipeBackEnable(false)
+        //SwipeBackHelper.getCurrentPage(this).setSwipeBackEnable(false)
 
         initActivity()
     }
