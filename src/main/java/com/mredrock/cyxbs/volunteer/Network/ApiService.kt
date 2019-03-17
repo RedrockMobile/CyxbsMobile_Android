@@ -1,6 +1,5 @@
 package com.mredrock.cyxbs.volunteer.Network
 
-import com.mredrock.cyxbs.volunteer.bean.PasswordEncode
 import com.mredrock.cyxbs.volunteer.bean.VolunteerLogin
 import com.mredrock.cyxbs.volunteer.bean.VolunteerTime
 import io.reactivex.Observable
