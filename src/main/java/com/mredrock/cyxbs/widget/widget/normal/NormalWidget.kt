@@ -1,6 +1,5 @@
 package com.mredrock.cyxbs.widget.widget.normal
 
-import android.app.ProgressDialog.show
 import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
 import android.content.ComponentName
@@ -12,13 +11,17 @@ import android.view.View
 import android.widget.RemoteViews
 import android.widget.Toast
 import com.alibaba.android.arouter.launcher.ARouter
-import com.mredrock.cyxbs.common.config.MAIN_SPLASH
+import com.mredrock.cyxbs.common.bean.WidgetCourse
+import com.mredrock.cyxbs.common.config.MAIN_MAIN
+import com.mredrock.cyxbs.common.event.WidgetCourseEvent
 import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
 import com.mredrock.cyxbs.common.utils.extensions.editor
 import com.mredrock.cyxbs.widget.R
+import com.mredrock.cyxbs.widget.bean.Course
 import com.mredrock.cyxbs.widget.util.*
+import org.greenrobot.eventbus.EventBus
 import java.util.*
-import kotlin.math.abs
+import kotlin.collections.ArrayList
 
 /**
  * Created by zia on 2018/10/10.
@@ -28,9 +31,13 @@ import kotlin.math.abs
 class NormalWidget : AppWidgetProvider() {
 
     private val shareName = "zscy_widget_normal"
+    //生成calendar
+    private val calendar = Calendar.getInstance()
 
     companion object {
-        private var lastClickTime:Long = 0//用于记录点击时间
+        private var lastClickTime: Long = 0//用于记录点击时间
+        //用于保存每一条刷新的课程，多个方法都要使用，若非静态，其他方法无法调用到正确数据
+        var list = ArrayList<Course.DataBean>()
     }
 
     override fun onUpdate(context: Context, appWidgetManager: AppWidgetManager, appWidgetIds: IntArray) {
@@ -43,19 +50,16 @@ class NormalWidget : AppWidgetProvider() {
 
     override fun onReceive(context: Context, intent: Intent) {
         super.onReceive(context, intent)
+        val data = intent.data
+        var rId = -1
+        if (data != null) {
+            rId = data.schemeSpecificPart.toInt()
+        }
         if (intent.action == "btn.text.com") {
-            val data = intent.data
-            var rId = -1
-            if (data != null) {
-                rId = data.schemeSpecificPart.toInt()
-            }
 
             val offsetTime = context.defaultSharedPreferences.getInt(shareName, 0)
 
 
-//            if (abs(offsetTime) == 3) {
-//                Toast.makeText(context, "提示：点击星期返回今日", Toast.LENGTH_SHORT).show()
-//            }
             when (rId) {
                 R.id.widget_normal_back -> {
                     context.defaultSharedPreferences.editor {
@@ -77,21 +81,47 @@ class NormalWidget : AppWidgetProvider() {
 //                    Toast.makeText(context, "已刷新", Toast.LENGTH_SHORT).show()
                 }
             }
-            if(isDoubleClick()){
+            if (isDoubleClick()) {
                 Toast.makeText(context, "提示：点击星期返回今日", Toast.LENGTH_SHORT).show()
             }
         }
         if (intent.action == "btn.start.com") {
-            ARouter.getInstance().build(MAIN_SPLASH).navigation()
+            ARouter.getInstance().build(MAIN_MAIN).navigation()
+            val newList = mutableListOf<WidgetCourse.DataBean>()
+            list.forEach {it->
+                newList.add(changeCourseToWidgetCourse(it))
+            }
+            if (newList.size > 0) {
+                when (rId) {
+                    R.id.widget_normal_layout1 -> {
+                        EventBus.getDefault().postSticky(WidgetCourseEvent(mutableListOf(newList[0])))
+                    }
+                    R.id.widget_normal_layout2 -> {
+                        EventBus.getDefault().postSticky(WidgetCourseEvent(mutableListOf(newList[1])))
+                    }
+                    R.id.widget_normal_layout3 -> {
+                        EventBus.getDefault().postSticky(WidgetCourseEvent(mutableListOf(newList[2])))
+                    }
+                    R.id.widget_normal_layout4 -> {
+                        EventBus.getDefault().postSticky(WidgetCourseEvent(mutableListOf(newList[3])))
+                    }
+                    R.id.widget_normal_layout5 -> {
+                        EventBus.getDefault().postSticky(WidgetCourseEvent(mutableListOf(newList[4])))
+                    }
+                    R.id.widget_normal_layout6 -> {
+                        EventBus.getDefault().postSticky(WidgetCourseEvent(mutableListOf(newList[5])))
+                    }
+                }
+            }
         }
     }
 
 
-    private fun isDoubleClick():Boolean{
+    private fun isDoubleClick(): Boolean {
         val time = System.currentTimeMillis()
         val anotherTime = time - lastClickTime
 
-        if(anotherTime in 1..599){
+        if (anotherTime < 600) {
             return true
         }
         lastClickTime = time
@@ -102,14 +132,13 @@ class NormalWidget : AppWidgetProvider() {
      * 刷新，传入offsetTime作为今天的偏移量
      */
     fun fresh(context: Context, offsetTime: Int) {
-        //生成calendar
-        val calendar = Calendar.getInstance()
         val nowHour = calendar.get(Calendar.HOUR_OF_DAY)
         calendar.set(Calendar.DATE, calendar.get(Calendar.DATE) + offsetTime)
 
         //获取数据
-        val list = getCourseByCalendar(context, calendar)
+        list = getCourseByCalendar(context, calendar)
                 ?: getErrorCourseList()
+
         if (list.isEmpty()) {
             list.add(getNoCourse())
         }

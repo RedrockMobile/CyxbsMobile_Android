@@ -9,6 +9,7 @@ import android.net.Uri
 import android.support.annotation.IdRes
 import android.util.Log
 import com.google.gson.Gson
+import com.mredrock.cyxbs.common.bean.WidgetCourse
 import com.mredrock.cyxbs.common.config.SP_WIDGET_NEED_FRESH
 import com.mredrock.cyxbs.common.config.WIDGET_COURSE
 import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
@@ -200,6 +201,30 @@ fun filterClassRoom(classRoom: String): String {
     } else {
         return classRoom
     }
+}
+
+//将widget模块的course转换为lib模块的WidgetCourse，WidgetCourse达到中转作用
+fun changeCourseToWidgetCourse(courseBean: Course.DataBean):WidgetCourse.DataBean{
+    val bean = WidgetCourse.DataBean()
+    bean.apply {
+        hash_day = courseBean.hash_day
+        hash_lesson = courseBean.hash_lesson
+        begin_lesson = courseBean.begin_lesson
+        day = courseBean.day
+        lesson = courseBean.lesson
+        course = courseBean.course
+        course_num = courseBean.course_num
+        teacher = courseBean.teacher
+        classroom = courseBean.classroom
+        rawWeek = courseBean.rawWeek
+        weekModel = courseBean.weekModel
+        weekBegin = courseBean.weekBegin
+        weekEnd = courseBean.weekEnd
+        week = courseBean.week
+        type = courseBean.type
+        period = courseBean.period
+    }
+    return bean
 }
 
 //桌面小部件课表json数据

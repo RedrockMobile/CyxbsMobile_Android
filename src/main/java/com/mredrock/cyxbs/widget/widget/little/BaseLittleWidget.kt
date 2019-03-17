@@ -11,9 +11,13 @@ import android.util.Log
 import android.widget.RemoteViews
 import android.widget.Toast
 import com.alibaba.android.arouter.launcher.ARouter
+import com.mredrock.cyxbs.common.bean.WidgetCourse
+import com.mredrock.cyxbs.common.config.MAIN_MAIN
 import com.mredrock.cyxbs.common.config.MAIN_SPLASH
+import com.mredrock.cyxbs.common.event.WidgetCourseEvent
 import com.mredrock.cyxbs.widget.bean.Course
 import com.mredrock.cyxbs.widget.util.*
+import org.greenrobot.eventbus.EventBus
 import java.util.*
 
 /**
@@ -23,6 +27,10 @@ import java.util.*
 abstract class BaseLittleWidget : AppWidgetProvider() {
 
     private val shareName = "share_hash_lesson_trans"
+
+    companion object {
+        private lateinit var curCourse: Course.DataBean//保存当前显示的course
+    }
 
     @LayoutRes
     protected abstract fun getLayoutResId(): Int
@@ -75,13 +83,17 @@ abstract class BaseLittleWidget : AppWidgetProvider() {
         }
 
         if(intent.action == "btn.start.com"){
-            ARouter.getInstance().build(MAIN_SPLASH).navigation()
+            ARouter.getInstance().build(MAIN_MAIN).navigation()
+            EventBus.getDefault().postSticky(
+                    WidgetCourseEvent(mutableListOf(changeCourseToWidgetCourse(curCourse)))
+            )
         }
     }
 
     private fun show(context: Context, course: Course.DataBean?, startTime: String = "课程安排") {
         val manager = AppWidgetManager.getInstance(context)
         val componentName = ComponentName(context, javaClass)
+        curCourse = course ?: Course.DataBean()
         manager.updateAppWidget(componentName, getRemoteViews(context, course, startTime))
     }
 
