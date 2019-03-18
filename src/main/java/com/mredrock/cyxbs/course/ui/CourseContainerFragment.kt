@@ -6,7 +6,10 @@ import android.content.Intent
 import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
 import android.view.*
+import com.mredrock.cyxbs.common.bean.WidgetCourse
+import com.mredrock.cyxbs.common.event.WidgetCourseEvent
 import com.mredrock.cyxbs.course.event.TabIsFoldEvent
 import com.mredrock.cyxbs.course.event.WeekNumEvent
 import com.mredrock.cyxbs.common.ui.BaseFragment
@@ -16,8 +19,11 @@ import com.mredrock.cyxbs.course.adapters.ScheduleVPAdapter
 import com.mredrock.cyxbs.course.databinding.CourseFragmentCourseContainerBinding
 import com.mredrock.cyxbs.course.event.*
 import com.mredrock.cyxbs.course.lifecycle.VPOnPagerChangeObserver
+import com.mredrock.cyxbs.course.network.Course
 import com.mredrock.cyxbs.course.utils.AffairToCalendar
+import com.mredrock.cyxbs.course.utils.changeLibBeanToCourse
 import com.mredrock.cyxbs.course.viewmodels.CoursesViewModel
+import com.umeng.commonsdk.stateless.UMSLEnvelopeBuild.mContext
 import kotlinx.android.synthetic.main.course_fragment_course_container.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -45,6 +51,10 @@ class CourseContainerFragment : BaseFragment() {
     private lateinit var mBinding: CourseFragmentCourseContainerBinding
     private lateinit var mRawWeeks: Array<String>
     private lateinit var mWeeks: Array<String>
+
+    private val mDialogHelper: ScheduleDetailDialogHelper by lazy(LazyThreadSafetyMode.NONE) {
+        ScheduleDetailDialogHelper(context!!)
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         mBinding = DataBindingUtil.inflate(inflater, R.layout.course_fragment_course_container, container, false)
@@ -115,6 +125,14 @@ class CourseContainerFragment : BaseFragment() {
         return super.onOptionsItemSelected(item)
     }
 
+    /**
+     * 这个方法用于小部件点击打开课表详情页面
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN,sticky = true)
+    fun showDialogFromWidget(event: WidgetCourseEvent<WidgetCourse.DataBean>){
+        val mCourse = changeLibBeanToCourse(event.mutableList[0])
+        mDialogHelper.showDialog(mutableListOf(mCourse))
+    }
 
     /**
      * 这个方法用于进行TabLayout的显示和折叠

@@ -33,7 +33,7 @@
     <!--course day of month color-->
     <color name="courseDayOfMonthColor">#8395A4</color>
     <color name="courseLightGray">#EFEFEF</color>
-
+    <color name="courseWhite">#FFFFFF</color>
     <color name="courseCommonTvColor">#333333</color>
 
 
