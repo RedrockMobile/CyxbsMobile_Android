@@ -3,7 +3,11 @@
     <string name="main_activity_login_account_hint">请输入学号</string>
     <string name="main_activity_login_password_hint">请输入身份证后六位</string>
     <string name="main_activity_login_btn_login">登 录</string>
+    <string name="main_activity_login_input_error">登录信息错误</string>
     <string name="main_activity_login_not_input_account">还没有输入学号哦~</string>
     <string name="main_activity_login_not_input_password">还没有输入密码哦~</string>
     <string name="main_user_info_error">用户信息异常，请联系管理员</string>
+
+    <string name="main_user_info_input_blank">昵称不能为空哦 (´⊙ω⊙`)</string>
+    <string name="main_user_info_input_hint">请输入昵称，稍候可以更改</string>
 </resources>

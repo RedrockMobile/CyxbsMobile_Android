@@ -33,6 +33,32 @@ class LoginViewModel : BaseViewModel() {
         verifyByWeb(stuNum!!, idNum!!)
     }
 
+    fun register(stuNum: String?, idNum: String?, name: String?):Boolean {
+        if (stuNum?.length ?: 0 < 10 || idNum?.length ?: 0 < 6) {
+            toastEvent.value = R.string.main_activity_login_input_error
+            return true
+        }else if (name.isNullOrBlank()) {
+            toastEvent.value = R.string.main_user_info_input_blank
+            return false
+        } else {
+            ApiGenerator.getApiService(ApiService::class.java)
+                    .updateUserInfo(stuNum!!, idNum!!, name!!)
+                    .checkError()
+                    .setSchedulers()
+                    .doOnErrorWithDefaultErrorHandler {
+                        toastEvent.value = R.string.main_activity_login_input_error
+                        return@doOnErrorWithDefaultErrorHandler false
+                    }
+                    .doFinally { progressDialogEvent.value = ProgressDialogEvent.DISMISS_DIALOG_EVENT }
+                    .doOnSubscribe { progressDialogEvent.value = ProgressDialogEvent.SHOW_NONCANCELABLE_DIALOG_EVENT }
+                    .safeSubscribeBy {
+                        verifyByWeb(stuNum, idNum)
+                    }
+                    .lifeCycle()
+            return true
+        }
+    }
+
     private fun verifyByWeb(stuNum: String, idNum: String) {
         val apiService = ApiGenerator.getApiService(ApiService::class.java)
         val observableSource = apiService.getPersonInfo(stuNum, idNum)

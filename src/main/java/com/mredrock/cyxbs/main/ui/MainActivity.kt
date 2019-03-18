@@ -52,7 +52,6 @@ class MainActivity : BaseActivity() {
         initFragments()
 
         fab.setOnClickListener {
-            //todo center button
             ARouter.getInstance().build(REDROCK_HOME_ENTRY).navigation()
         }
     }
@@ -71,6 +70,11 @@ class MainActivity : BaseActivity() {
                 peeCheckedItemPosition = position
                 menuItem.setIcon(icons[(position * 2) + 1])
                 common_toolbar.title = menuItem.title
+
+                menu?.clear()
+                fragments[position].onPrepareOptionsMenu(menu)
+                EventBus.getDefault().post(MainVPChangeEvent(position))
+                appbar.setExpanded(true)
             }
         }
         nav_main.menu.getItem(0).setIcon(icons[1])  //一定要放在上面的代码后面
@@ -79,7 +83,6 @@ class MainActivity : BaseActivity() {
     }
 
     private fun initFragments() {
-        //todo get fragments
         fragments.add(getFragment(COURSE_ENTRY))
         fragments.add(getFragment(QA_ENTRY))
         fragments.add(getFragment(DISCOVER_ENTRY))
@@ -87,16 +90,6 @@ class MainActivity : BaseActivity() {
         adapter = MainVpAdapter(supportFragmentManager, fragments)
         view_pager.adapter = adapter
         view_pager.offscreenPageLimit = 4
-        view_pager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener{
-            override fun onPageScrollStateChanged(state: Int) {}
-            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {}
-            override fun onPageSelected(position: Int) {
-                menu?.clear()
-                fragments[position].onPrepareOptionsMenu(menu)
-                EventBus.getDefault().post(MainVPChangeEvent(position))
-                appbar.setExpanded(true)
-            }
-        })
     }
 
     private fun getFragment(path: String) = ARouter.getInstance().build(path).navigation() as Fragment

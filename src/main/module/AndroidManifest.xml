@@ -7,19 +7,18 @@
         android:name="debug.MainApplication">
         <activity
             android:name=".ui.SplashActivity"
-            android:theme="@style/AppTheme.MainActivity">
+            android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".ui.MainActivity"
-            android:launchMode="singleTask"
-            android:screenOrientation="portrait" />
-
-        <activity android:name=".ui.LoginActivity" />
+            android:launchMode="singleTask" />
+        <activity
+            android:name=".ui.LoginActivity"
+            android:launchMode="singleTask" />
     </application>
 </manifest>

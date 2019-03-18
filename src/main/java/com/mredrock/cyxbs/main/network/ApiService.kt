@@ -1,5 +1,6 @@
 package com.mredrock.cyxbs.main.network
 
+import com.mredrock.cyxbs.common.bean.RedrockApiStatus
 import com.mredrock.cyxbs.common.bean.RedrockApiWrapper
 import com.mredrock.cyxbs.common.bean.User
 import com.mredrock.cyxbs.main.bean.StartPage
@@ -12,7 +13,7 @@ import retrofit2.http.POST
  * Created By jay68 on 2018/8/10.
  */
 interface ApiService {
-    @POST("/cyxbsMobile/index.php/Home/Photo/showPicture")
+    @POST("/app/index.php/Home/Photo/showPicture")
     fun getStartPage(): Observable<RedrockApiWrapper<List<StartPage>>>
 
     @FormUrlEncoded
@@ -20,6 +21,13 @@ interface ApiService {
     fun verify(@Field("stuNum") stuNum: String, @Field("idNum") idNum: String): Observable<RedrockApiWrapper<User>>
 
     @FormUrlEncoded
-    @POST("/cyxbsMobile/index.php/Home/Person/search")
+    @POST("/app/index.php/Home/Person/search")
     fun getPersonInfo(@Field("stuNum") stuNum: String, @Field("idNum") idNum: String): Observable<RedrockApiWrapper<User>>
+
+
+    @FormUrlEncoded
+    @POST("/app/index.php/Home/Person/setInfo")
+    fun updateUserInfo(@Field("stuNum") stuNum: String,
+                       @Field("idNum") idNum: String,
+                       @Field("nickname") nickname: String): Observable<RedrockApiStatus>
 }
