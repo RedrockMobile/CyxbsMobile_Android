@@ -1,5 +1,6 @@
 package com.mredrock.cyxbs.discover.schoolcar
 
+//import com.jude.swipbackhelper.SwipeBackHelper
 import android.Manifest
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
@@ -13,9 +14,8 @@ import android.support.v4.content.ContextCompat
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageButton
+import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.Toast
 import com.alibaba.android.arouter.facade.annotation.Route
@@ -28,7 +28,6 @@ import com.amap.api.maps.CameraUpdateFactory
 import com.amap.api.maps.model.LatLng
 import com.amap.api.maps.model.MyLocationStyle
 import com.amap.api.maps.utils.overlay.SmoothMoveMarker
-//import com.jude.swipbackhelper.SwipeBackHelper
 import com.mredrock.cyxbs.common.config.DISCOVER_SCHOOL_CAR
 import com.mredrock.cyxbs.common.ui.BaseActivity
 import com.mredrock.cyxbs.discover.schoolcar.Interface.SchoolCarInterface
@@ -42,6 +41,7 @@ import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.activity_schoolcar.*
+import org.jetbrains.anko.dip
 import java.util.concurrent.TimeUnit
 
 /**
@@ -56,7 +56,7 @@ class SchoolCarActivity : BaseActivity() {
         const val LOST_SERVICES: Int = 2
         const val NO_GPS: Int = 3
 
-        const val HOLE_SCHOOL: Int = 0
+        const val WHOLE_SCHOOL: Int = 0
         const val ME: Int = 1
         const val SCHOOL_CAR: Int = 2
 
@@ -71,7 +71,7 @@ class SchoolCarActivity : BaseActivity() {
     private var locationStatus: Int = 0
     private var savedInstanceState: Bundle? = null
     private lateinit var makerBitmap: Bitmap
-    private lateinit var holeSchoolButton: ImageButton
+    private lateinit var holeSchoolButton: ImageView
     private var schoolCarMap: SchoolCarMap? = null
     private lateinit var smoothMoveData: SchoolcarsSmoothMove
     private lateinit var smoothMoveMarkers: MutableList<SmoothMoveMarker>
@@ -105,7 +105,7 @@ class SchoolCarActivity : BaseActivity() {
 
     /**
      * 获取schoolCarMap的实例并且重写接口initLocationMapButton（高德地图只能使用动态加载添加UI）
-     *  onCreat()中调用
+     *  onCreate()中调用
      */
     private fun initSchoolCarMap() {
         schoolCarMap = SchoolCarMap(this, savedInstanceState, object : SchoolCarInterface {
@@ -113,19 +113,20 @@ class SchoolCarActivity : BaseActivity() {
 
             //在图地中动态加载控件
             override fun initLocationMapButton(aMap: AMap, locationStyle: MyLocationStyle) {
-                var relativeLayoutDown = RelativeLayout(this@SchoolCarActivity)
-                var layoutParamsDown = RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+                val relativeLayoutDown = RelativeLayout(this@SchoolCarActivity)
+                val layoutParamsDown = RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
                 explore_school_car_linearLayout.addView(relativeLayoutDown, layoutParamsDown)
 
                 // 在地图中加入"全校"<->"我"的button和两种模式转换时button需要的逻辑修改（包括定位模式和button上的图片）
-                holeSchoolButton = ImageButton(this@SchoolCarActivity)
+                holeSchoolButton = ImageView(this@SchoolCarActivity)
                 holeSchoolButton.setBackgroundColor(Color.TRANSPARENT)
                 holeSchoolButton.setImageBitmap(BitmapFactory.decodeResource(resources, R.drawable.ic_school_car_search_hole_school))
-                locationStatus = HOLE_SCHOOL
 
-                holeSchoolButton.setOnClickListener { v: View ->
+                locationStatus = WHOLE_SCHOOL
+
+                holeSchoolButton.setOnClickListener {
                     when (locationStatus) {
-                        HOLE_SCHOOL -> {
+                        WHOLE_SCHOOL -> {
                             holeSchoolButton.setImageBitmap(BitmapFactory.decodeResource(resources, R.drawable.ic_school_car_search_me))
 
                             if (ifLocation) {
@@ -146,16 +147,19 @@ class SchoolCarActivity : BaseActivity() {
                             //update为地图重加载使用的数据，参数为地图中心点和缩放大小
                             val update = CameraUpdateFactory.newLatLngZoom(LatLng(29.531876, 106.606789), 17f)
                             aMap.animateCamera(update)
-                            locationStatus = HOLE_SCHOOL
+                            locationStatus = WHOLE_SCHOOL
                         }
                     }
                 }
-
+                val dm = resources.displayMetrics
                 //在地图中加入holeSchoolButton的所在的RelativeLayout
-                var stateRelativeLayout = RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+                //自适应屏幕大小
+                val stateRelativeLayout = RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
                 stateRelativeLayout.addRule(RelativeLayout.ALIGN_PARENT_RIGHT)
-                stateRelativeLayout.rightMargin = 25
-                stateRelativeLayout.topMargin = 0
+                stateRelativeLayout.rightMargin = dip(12)
+                stateRelativeLayout.topMargin = dip(12)
+                stateRelativeLayout.width = dm.widthPixels / 7
+                stateRelativeLayout.height = dm.widthPixels / 7
                 relativeLayoutDown.addView(holeSchoolButton, stateRelativeLayout)
 
                 //如果用户同意定位权限，则开启定位和初始化定位用到的类
@@ -207,7 +211,6 @@ class SchoolCarActivity : BaseActivity() {
 
         //加载动画为4秒
         Observable.timer(4, TimeUnit.SECONDS).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<Long> {
-            private var disposable: Disposable? = null
             override fun onNext(t: Long) {
                 Log.d(TAG, "onNext: 校车正在初始化...$t")
             }
@@ -264,7 +267,7 @@ class SchoolCarActivity : BaseActivity() {
                     }
                     smoothMoveMarkers = mutableListOf()
                     var i = 0
-                    while (i < dataList.size && dataList[i].lat !== 0.0) {
+                    while (i < dataList.size && dataList[i].lat != 0.0) {
                         if (showCarIcon) {
                             smoothMoveData.smoothMove(smoothMoveMarkers, makerBitmap)
                         }

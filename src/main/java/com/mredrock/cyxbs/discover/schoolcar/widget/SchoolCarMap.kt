@@ -24,6 +24,8 @@ import com.amap.api.maps.utils.overlay.SmoothMoveMarker
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.discover.schoolcar.Interface.SchoolCarInterface
 import com.mredrock.cyxbs.schoolcar.R
+import org.jetbrains.anko.dip
+import org.jetbrains.anko.displayMetrics
 
 /**
  * Created by glossimar on 2018/9/12
@@ -49,7 +51,7 @@ class SchoolCarMap(private var context: Context, savedInstanceState: Bundle?, ca
     /**
      * 设置用户定位图标，获取位置的每次时间间隔，定位模式
      */
-    fun initLocationType(){
+    fun initLocationType() {
         val descriptor: BitmapDescriptor = if (BaseApp.user != null) {
             if (BaseApp.user!!.gender == "女") {
                 BitmapDescriptorFactory.fromResource(R.drawable.ic_school_car_search_girl)
@@ -71,7 +73,7 @@ class SchoolCarMap(private var context: Context, savedInstanceState: Bundle?, ca
     /**
      * 加载高德地图中的AMap
      */
-    fun initAMap(ifLocation: Boolean){
+    fun initAMap(ifLocation: Boolean) {
         aMap = mapView!!.map
 
         if (aMap == null) {
@@ -95,7 +97,7 @@ class SchoolCarMap(private var context: Context, savedInstanceState: Bundle?, ca
     /**
      * 显示高德地图在校车动画4s加载完成后
      */
-    fun showMap(status: String?, layout: RelativeLayout, loadImage: ImageView){
+    fun showMap(status: String?, layout: RelativeLayout, loadImage: ImageView) {
         //接口数据返回200 时说明获取校车数据成功，并开始加入地图控件
         if (status == "200") {
             loadImage.visibility = View.INVISIBLE
@@ -116,15 +118,21 @@ class SchoolCarMap(private var context: Context, savedInstanceState: Bundle?, ca
             layout.addView(relativeLayout, layoutParams)
 
             val imageView = ImageView(context)
-            imageView.setImageBitmap(BitmapFactory.decodeResource(context.resources, R.drawable.ic_school_car_search_orgnization_logo))
-            imageView.setOnClickListener { v ->
+            val redrockLogo = BitmapFactory.decodeResource(context.resources, R.drawable.ic_school_car_search_orgnization_logo)
+            val width = context.displayMetrics.widthPixels / 3.5
+            val height = redrockLogo.height.toFloat() / redrockLogo.width * width
+            imageView.setImageBitmap(redrockLogo)
+            imageView.setOnClickListener {
                 val intent = Intent()
                 intent.action = Intent.ACTION_VIEW
                 intent.data = Uri.parse("http://eini.cqupt.edu.cn/")
                 context.startActivity(intent)
             }
             val lpLogo = RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-            lpLogo.topMargin = 45
+            lpLogo.topMargin = context.dip(20)
+            lpLogo.leftMargin = context.dip(5)
+            lpLogo.width = width.toInt()
+            lpLogo.height = height.toInt()
             relativeLayout.addView(imageView, lpLogo)
 
             initLocationType()
