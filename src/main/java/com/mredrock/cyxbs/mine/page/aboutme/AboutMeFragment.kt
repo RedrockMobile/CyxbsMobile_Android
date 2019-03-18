@@ -4,6 +4,7 @@ import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.v7.widget.RecyclerView
+import com.mredrock.cyxbs.common.utils.extensions.gone
 import com.mredrock.cyxbs.common.utils.extensions.setImageFromUrl
 import com.mredrock.cyxbs.mine.R
 import com.mredrock.cyxbs.mine.network.model.RelateMeItem
@@ -77,8 +78,12 @@ class AboutMeFragment : BaseRVFragment<RelateMeItem>() {
         holder.itemView.mine_aboutme_item_avatar.setImageFromUrl(data.photoThumbnailSrc)
         holder.itemView.mine_aboutme_item_nickname.text = data.nickname
         holder.itemView.mine_aboutme_item_time.text = data.createdAt
-        holder.itemView.mine_aboutme_item_content.text = data.content
         holder.itemView.mine_aboutme_item_answerContent.text = data.answerContent
+        if(data.content == ""){
+            holder.itemView.mine_aboutme_item_content.setPadding(0,0,0,0)
+        } else {
+            holder.itemView.mine_aboutme_item_content.text = data.content
+        }
         when (data.type) {
             REMARK.toString() -> {
                 holder.itemView.mine_aboutme_item_type.text = "评论"

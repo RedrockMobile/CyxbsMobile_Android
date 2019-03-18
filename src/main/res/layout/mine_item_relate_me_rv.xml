@@ -20,7 +20,8 @@
             android:id="@+id/mine_aboutme_item_avatar"
             android:layout_width="32dp"
             android:layout_height="32dp"
-            android:layout_marginTop="18dp"
+            android:layout_marginTop="17dp"
+            android:layout_alignStart="@id/mine_aboutme_item_answerContainer"
             android:src="@drawable/mine_default_avatar" />
 
         <TextView
@@ -28,7 +29,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignTop="@id/mine_aboutme_item_avatar"
-            android:layout_marginLeft="3dp"
+            android:layout_marginLeft="6dp"
             android:layout_toEndOf="@id/mine_aboutme_item_avatar"
             android:textColor="@color/mine_relate_me_nickname"
             android:textSize="14sp"
@@ -50,6 +51,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
             android:layout_toRightOf="@+id/mine_aboutme_item_nickname"
+            android:layout_alignTop="@id/mine_aboutme_item_avatar"
             android:textColor="@color/mine_relate_me_type"
             android:textSize="14sp"
             tools:text="评论" />
@@ -59,6 +61,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toRightOf="@+id/mine_aboutme_item_type"
+            android:layout_alignTop="@id/mine_aboutme_item_avatar"
             android:text="@string/mine_relate_me_type_suffix"
             android:textColor="@color/mine_relate_me_type"
             android:textSize="14sp" />
@@ -68,7 +71,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignTop="@id/mine_aboutme_item_avatar"
-            android:layout_alignParentRight="true"
+            android:layout_alignEnd="@id/mine_aboutme_item_answerContainer"
             android:gravity="end"
             android:text="@string/mine_relate_me_reply"
             android:textColor="@color/mine_relate_me_nickname"
@@ -79,8 +82,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/mine_aboutme_item_avatar"
-            android:layout_marginTop="7dp"
-            android:layout_marginBottom="7dp"
+            android:layout_alignStart="@id/mine_aboutme_item_answerContainer"
+            android:paddingTop="7dp"
+            android:paddingBottom="7dp"
             tools:text="大佬！这道题正解！" />
 
         <LinearLayout
