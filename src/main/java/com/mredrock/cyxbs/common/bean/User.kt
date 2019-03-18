@@ -40,7 +40,12 @@ data class User(@SerializedName("college")
                 @SerializedName("photo_src")
                 var photoSrc: String? = null,
                 @SerializedName("username")
-                var username: String? = null) : Parcelable {
+                var username: String? = null,
+                @SerializedName("integral")
+                var integral: Int = 0,
+                @SerializedName("check_in_days")
+                var checkInDays: Int = 0) : Parcelable {
+
     constructor(parcel: Parcel) : this(
             parcel.readString(),
             parcel.readString(),
@@ -59,7 +64,9 @@ data class User(@SerializedName("college")
             parcel.readString(),
             parcel.readString(),
             parcel.readString(),
-            parcel.readString())
+            parcel.readString(),
+            parcel.readInt(),
+            parcel.readInt())
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeString(college)
@@ -80,6 +87,8 @@ data class User(@SerializedName("college")
         parcel.writeString(introduction)
         parcel.writeString(photoSrc)
         parcel.writeString(username)
+        parcel.writeInt(integral)
+        parcel.writeInt(checkInDays)
     }
 
     override fun describeContents(): Int {
@@ -105,6 +114,8 @@ data class User(@SerializedName("college")
                 userOrigin.phone = userCloned.phone
                 userOrigin.introduction = userCloned.introduction
                 userOrigin.id = userCloned.id
+                userOrigin.integral = userCloned.integral
+                userOrigin.checkInDays = userCloned.checkInDays
             }
             return userOrigin
         }
