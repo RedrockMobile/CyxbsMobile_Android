@@ -21,7 +21,7 @@ public abstract class BaseRVAdapter<D> extends RecyclerView.Adapter {
     private List<D> datas = new ArrayList<>();
 
     abstract @LayoutRes
-    int getNormalLayout();
+    protected int getNormalLayout();
 
     private View footerView = null;
 

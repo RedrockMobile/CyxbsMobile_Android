@@ -20,14 +20,12 @@ class DailyViewModel : BaseViewModel() {
     val status = MutableLiveData<CheckInStatus>()//签到状态
 
     fun loadAllData(user: User) {
+        account.value = user.integral
         apiService.getCheckInStatus(user.stuNum!!, user.idNum!!)
-                .mapOrThrowApiException()
-                .flatMap {
-                    status.postValue(it)
-                    apiService.getCheckInAccount(user.stuNum!!, user.idNum!!)
-                }
                 .normalWrapper(this)
-                .safeSubscribeBy { account.value = it }
+                .safeSubscribeBy {
+                    status.postValue(it)
+                }
                 .lifeCycle()
     }
 
@@ -35,5 +33,6 @@ class DailyViewModel : BaseViewModel() {
         apiService.checkIn(user.stuNum!!, user.idNum!!)
                 .setSchedulers()
                 .subscribe { action.invoke() }
+                .lifeCycle()
     }
 }

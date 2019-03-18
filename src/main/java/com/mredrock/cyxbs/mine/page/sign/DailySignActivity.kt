@@ -64,8 +64,7 @@ class DailySignActivity(override val viewModelClass: Class<DailyViewModel> = Dai
 
         //积分明细
         mine_daily_pointDetail.setOnClickListener {
-            Toast.makeText(this@DailySignActivity,"还没有开放..",Toast.LENGTH_SHORT).show()
-//            startActivity<PointDetailActivity>()
+            startActivity<PointDetailActivity>()
         }
     }
 

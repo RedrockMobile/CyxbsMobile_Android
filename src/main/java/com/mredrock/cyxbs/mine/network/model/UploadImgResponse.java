@@ -20,8 +20,8 @@ public class UploadImgResponse implements Serializable {
 
     /**
      * date : 2018-08-21 16:05:37
-     * photosrc : http://wx.idsbllp.cn/cyxbsMobile/Public/photo/1534838737_1029204034.jpg
-     * thumbnail_src : http://wx.idsbllp.cn/cyxbsMobile/Public/photo/thumbnail/1534838737_1029204034.jpg
+     * photosrc : http://wx.idsbllp.cn/app/Public/photo/1534838737_1029204034.jpg
+     * thumbnail_src : http://wx.idsbllp.cn/app/Public/photo/thumbnail/1534838737_1029204034.jpg
      * state : 1
      * stunum : 2016210409
      */
