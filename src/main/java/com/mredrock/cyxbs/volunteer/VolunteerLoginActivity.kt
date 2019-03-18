@@ -3,13 +3,15 @@ package com.mredrock.cyxbs.volunteer
 import android.app.ProgressDialog
 import android.content.Context
 import android.content.Intent
-import android.graphics.Color
 import android.os.Bundle
+import android.support.design.widget.AppBarLayout
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import com.afollestad.materialdialogs.MaterialDialog
+import com.alibaba.android.arouter.facade.annotation.Route
 import com.mredrock.cyxbs.common.BaseApp
+import com.mredrock.cyxbs.common.config.DISCOVER_VOLUNTEER
 import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.ui.BaseActivity
 import com.mredrock.cyxbs.common.utils.LogUtils
@@ -23,11 +25,12 @@ import com.mredrock.cyxbs.volunteer.widget.VolunteerTimeSP
 import kotlinx.android.synthetic.main.activity_login.*
 import java.util.regex.Pattern
 
+@Route(path = DISCOVER_VOLUNTEER)
 class VolunteerLoginActivity : BaseActivity() {
     companion object {
         private const val BIND_SUCCESS: Int = 0
-        //        private const val INVALID_ACCOUNT: Int = 2
-        private const val WRONG_PASSWORD: Int = -1
+        private const val INVALID_ACCOUNT: Int = -2
+        private const val WRONG_PASSWORD: Int = 3
     }
 
     private var uid: String? = null
@@ -43,7 +46,6 @@ class VolunteerLoginActivity : BaseActivity() {
         setContentView(R.layout.activity_login)
 
         common_toolbar.init("完善信息")
-        common_toolbar.setBackgroundColor(Color.TRANSPARENT)
 
         volunteer_login.setOnClickListener { view: View? ->
             showProgressDialog()
@@ -115,7 +117,7 @@ class VolunteerLoginActivity : BaseActivity() {
                             finish()
                         }
 
-//                        INVALID_ACCOUNT -> showUnsuccessDialog("亲，输入的账号或密码错误哦")
+                        INVALID_ACCOUNT -> showUnsuccessDialog("亲，输入的账号不存在哦")
 
                         WRONG_PASSWORD -> showUnsuccessDialog("亲，输入的账号或密码有误哦")
                     }

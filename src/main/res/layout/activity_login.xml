@@ -19,7 +19,15 @@
             android:scaleType="centerCrop"
             android:src="@drawable/volunteer_background_login" />
 
-        <include layout="@layout/common_toolbar" />
+        <com.mredrock.cyxbs.common.component.JToolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:fitsSystemWindows="true"
+            app:navigationIcon="@drawable/common_ic_back"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+            app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     </FrameLayout>
 
