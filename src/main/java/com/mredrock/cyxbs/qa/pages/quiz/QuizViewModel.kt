@@ -130,6 +130,8 @@ class QuizViewModel(val type: String) : BaseViewModel() {
             toastEvent.value = R.string.qa_quiz_hint_title_empty
         } else if (content.isNullOrBlank() && imageLiveData.value.isNullOrEmpty()) {
             toastEvent.value = R.string.qa_hint_content_empty
+        } else if (tagLiveData.value.isNullOrBlank()) {
+            toastEvent.value = R.string.qa_hint_tag_empty
         } else {
             this.title = title ?: ""
             this.content = content ?: ""

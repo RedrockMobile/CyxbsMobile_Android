@@ -153,7 +153,11 @@
         android:layout_height="0dp"
         android:layout_marginTop="10dp"
         android:background="#fff"
-        app:layout_constraintDimensionRatio="2.6"
+        android:paddingTop="8dp"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:gravity="start|top"
+        app:layout_constraintDimensionRatio="h,2.6:1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_report_content_edit_hint" />

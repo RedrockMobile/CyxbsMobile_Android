@@ -2,24 +2,36 @@ package com.mredrock.cyxbs.qa.pages.comment.ui
 
 import android.app.Activity
 import android.arch.lifecycle.ViewModelProvider
+import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.BottomSheetDialog
 import android.support.v7.widget.LinearLayoutManager
+import com.mredrock.cyxbs.common.BaseApp
+import com.mredrock.cyxbs.common.bean.isSuccessful
+import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.extensions.gone
+import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
+import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.common.utils.extensions.visible
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.bean.Answer
 import com.mredrock.cyxbs.qa.bean.Question
 import com.mredrock.cyxbs.qa.component.recycler.RvAdapterWrapper
+import com.mredrock.cyxbs.qa.network.ApiService
 import com.mredrock.cyxbs.qa.network.NetworkState
+import com.mredrock.cyxbs.qa.pages.answer.ui.AnswerListActivity
+import com.mredrock.cyxbs.qa.pages.comment.AdoptAnswerEvent
 import com.mredrock.cyxbs.qa.pages.comment.viewmodel.CommentListViewModel
 import com.mredrock.cyxbs.qa.ui.adapter.EmptyRvAdapter
 import com.mredrock.cyxbs.qa.ui.adapter.FooterRvAdapter
 import com.mredrock.cyxbs.qa.utils.setPraise
 import kotlinx.android.synthetic.main.qa_activity_comment_list.*
 import kotlinx.android.synthetic.main.qa_dialog_comment_bottom_sheet_dialog.*
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 import org.jetbrains.anko.startActivityForResult
+import org.jetbrains.anko.toast
 
 class CommentListActivity : BaseViewModelActivity<CommentListViewModel>() {
     companion object {
@@ -88,7 +100,7 @@ class CommentListActivity : BaseViewModelActivity<CommentListViewModel>() {
             R.drawable.qa_ic_comment_list_praise, R.drawable.qa_ic_comment_list_praised)
 
     private fun initRv(title: String, showAdoptIcon: Boolean, isEmotion: Boolean) {
-        headerAdapter = CommentListHeaderRvAdapter(title, isEmotion, showAdoptIcon)
+        headerAdapter = CommentListHeaderRvAdapter( title, isEmotion, showAdoptIcon)
         emptyRvAdapter = EmptyRvAdapter("还没有评论哦~")
         commentListRvAdapter = CommentListRvAdapter(isEmotion)
         footerRvAdapter = FooterRvAdapter { viewModel.retryFailedListRequest() }
@@ -100,6 +112,25 @@ class CommentListActivity : BaseViewModelActivity<CommentListViewModel>() {
         swipe_refresh_layout.setOnRefreshListener { viewModel.invalidateCommentList() }
         observeListChangeEvent()
     }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun adoptAnswer(event:AdoptAnswerEvent) {
+        ApiGenerator.getApiService(ApiService::class.java)
+                .adoptAnswer(event.aId, viewModel.qid,
+                        BaseApp.user?.stuNum ?: "",
+                        BaseApp.user?.idNum ?: "")
+                .setSchedulers()
+                .safeSubscribeBy {
+                    if (it.isSuccessful) {
+                        this@CommentListActivity.toast("采纳成功")
+                    } else {
+                        this@CommentListActivity.toast("采纳失败")
+                    }
+                    setResult(Activity.RESULT_OK)
+                    finish()
+                }
+    }
+
 
     private fun observeListChangeEvent() = viewModel.apply {
         answerLiveData.observeNotNull { headerAdapter.refreshData(listOf(it)) }

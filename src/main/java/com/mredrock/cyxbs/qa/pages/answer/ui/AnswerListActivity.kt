@@ -147,11 +147,18 @@ class AnswerListActivity : BaseViewModelActivity<AnswerListViewModel>() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == AnswerListActivity.REQUEST_REFRESH_LIST && resultCode == Activity.RESULT_OK) {
-            viewModel.invalidate()
-            val question = viewModel.questionLiveData.value!!
-            question.answerNum++
-            headerAdapter.refreshData(listOf(question))
+        if (resultCode == Activity.RESULT_OK) {
+            when (requestCode) {
+                AnswerListActivity.REQUEST_REFRESH_LIST -> {
+                    viewModel.invalidate()
+                    val question = viewModel.questionLiveData.value!!
+                    question.answerNum++
+                    headerAdapter.refreshData(listOf(question))
+                }
+                CommentListActivity.REQUEST_CODE -> {
+                    viewModel.invalidate()
+                }
+            }
         }
     }
 

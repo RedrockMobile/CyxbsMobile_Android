@@ -14,7 +14,7 @@
     <string name="qa_answer_list_ignore_question">忽略</string>
     <string name="qa_answer_list_help">帮助</string>
     <string name="qa_answer_list_accepted">已采纳</string>
-    <string name="qa_answer_list_accept">采纳</string>
+    <string name="qa_answer_list_accept">采纳</string>z
     <string name="qa_answer_list_answer_date">%1$s前</string>
     <string name="qa_answer_list_no_answer_hint">还没有回答哦~</string>
     <string name="qa_answer_list_sort_by_time">按时间排序</string>
@@ -47,6 +47,7 @@
     <string name="qa_quiz_tag_edit_dialog_hot_tags">热门话题</string>
     <string name="qa_quiz_hint_title_empty">标题不能为空哦~</string>
     <string name="qa_hint_content_empty">内容不能为空哦~</string>
+    <string name="qa_hint_tag_empty">需要填写话题哦~</string>
     <string name="qa_quiz_dialog_cancel">取消</string>
     <string name="qa_quiz_error_time_too_short">设置的时间太短了哦~</string>
     <string name="qa_quiz_reward_set_dialog_title">求助设置</string>

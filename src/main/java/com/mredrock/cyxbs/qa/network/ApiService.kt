@@ -14,7 +14,7 @@ import retrofit2.http.*
  * Created By jay68 on 2018/8/26.
  */
 interface ApiService {
-    @POST("/springtest/cyxbsMobile/index.php/QA/Question/getQuestionList")
+    @POST("/app/index.php/QA/Question/getQuestionList")
     @FormUrlEncoded
     fun getQuestionList(@Field("kind")
                         kind: String,
@@ -27,7 +27,7 @@ interface ApiService {
                         @Field("idnum")
                         idNum: String): Observable<RedrockApiWrapper<List<Question>>>
 
-    @POST("/springtest/cyxbsMobile/index.php/QA/Answer/getAnswerlist")
+    @POST("/app/index.php/QA/Answer/getAnswerlist")
     @FormUrlEncoded
     fun getAnswerList(@Field("question_id")
                       qid: String,
@@ -40,7 +40,7 @@ interface ApiService {
                       @Field("idNum")
                       idNum: String): Observable<RedrockApiWrapper<List<Answer>>>
 
-    @POST("/springtest/cyxbsMobile/index.php/QA/Answer/getRemarkList")
+    @POST("/app/index.php/QA/Answer/getRemarkList")
     @FormUrlEncoded
     fun getCommentList(@Field("answer_id")
                        aid: String,
@@ -53,7 +53,7 @@ interface ApiService {
                        @Field("idNum")
                        idNum: String): Observable<RedrockApiWrapper<List<Comment>>>
 
-    @POST("/springtest/cyxbsMobile/index.php/QA/Answer/praise")
+    @POST("/app/index.php/QA/Answer/praise")
     @FormUrlEncoded
     fun praiseAnswer(@Field("answer_id")
                      aid: String,
@@ -62,7 +62,7 @@ interface ApiService {
                      @Field("idNum")
                      idNum: String): Observable<RedrockApiStatus>
 
-    @POST("/springtest/cyxbsMobile/index.php/QA/Answer/cancelPraise")
+    @POST("/app/index.php/QA/Answer/cancelPraise")
     @FormUrlEncoded
     fun cancelPraiseAnswer(@Field("answer_id")
                            aid: String,
@@ -71,7 +71,7 @@ interface ApiService {
                            @Field("idNum")
                            idNum: String): Observable<RedrockApiStatus>
 
-    @POST("/springtest/cyxbsMobile/index.php/QA/Answer/adopt")
+    @POST("/app/index.php/QA/Answer/adopt")
     @FormUrlEncoded
     fun adoptAnswer(@Field("answer_id")
                     aid: String,
@@ -82,7 +82,7 @@ interface ApiService {
                     @Field("idNum")
                     idNum: String): Observable<RedrockApiStatus>
 
-    @POST("/springtest/cyxbsMobile/index.php/QA/Answer/remark")
+    @POST("/app/index.php/QA/Answer/remark")
     @FormUrlEncoded
     fun sendComment(@Field("answer_id")
                     aid: String,
@@ -93,14 +93,14 @@ interface ApiService {
                     @Field("idNum")
                     idNum: String): Observable<RedrockApiStatus>
 
-    @POST("springtest/cyxbsMobile/index.php/QA/Integral/getDiscountBalance")
+    @POST("app/index.php/QA/Integral/getDiscountBalance")
     @FormUrlEncoded
     fun getMyRewardCount(@Field("stuNum")
                          stuNum: String,
                          @Field("idNum")
                          idNum: String): Observable<RedrockApiWrapper<Int>>
 
-    @POST("springtest/cyxbsMobile/index.php/QA/Question/add")
+    @POST("app/index.php/QA/Question/add")
     @FormUrlEncoded
     fun quiz(@Field("stuNum")
              stuNum: String,
@@ -121,11 +121,11 @@ interface ApiService {
              @Field("disappear_time")
              disappear: String): Observable<RedrockApiWrapper<QuizResult>>
 
-    @POST("springtest/cyxbsMobile/index.php/QA/Question/uploadPicture")
+    @POST("app/index.php/QA/Question/uploadPicture")
     @Multipart
     fun uploadQuestionPic(@Part parts: List<MultipartBody.Part>): Observable<RedrockApiStatus>
 
-    @POST("springtest/cyxbsMobile/index.php/QA/Question/cancelQuestion")
+    @POST("app/index.php/QA/Question/cancelQuestion")
     @FormUrlEncoded
     fun cancelQuestion(@Field("stuNum")
                        stuNum: String,
@@ -134,7 +134,7 @@ interface ApiService {
                        @Field("question_id")
                        qid: String): Observable<RedrockApiStatus>
 
-    @POST("springtest/cyxbsMobile/index.php/QA/Answer/add")
+    @POST("app/index.php/QA/Answer/add")
     @FormUrlEncoded
     fun answer(@Field("stuNum")
                stuNum: String,
@@ -145,11 +145,11 @@ interface ApiService {
                @Field("content")
                content: String): Observable<RedrockApiWrapper<String>>
 
-    @POST("springtest/cyxbsMobile/index.php/QA/Answer/uploadPicture")
+    @POST("app/index.php/QA/Answer/uploadPicture")
     @Multipart
     fun uploadAnswerPic(@Part parts: List<MultipartBody.Part>): Observable<RedrockApiStatus>
 
-    @POST("springtest/cyxbsMobile/index.php/QA/Feedback/addReport")
+    @POST("app/index.php/QA/Feedback/addReport")
     @FormUrlEncoded
     fun report(@Field("stunum") stuNum: String,
                @Field("idnum") idNum: String,

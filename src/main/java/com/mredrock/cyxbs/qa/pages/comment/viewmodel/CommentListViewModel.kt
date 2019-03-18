@@ -17,7 +17,7 @@ import com.mredrock.cyxbs.qa.network.ApiService
 import com.mredrock.cyxbs.qa.network.NetworkState
 import com.mredrock.cyxbs.qa.pages.comment.model.CommentDataSource
 
-class CommentListViewModel(private val qid: String,
+class CommentListViewModel(val qid: String,
                            answer: Answer) : BaseViewModel() {
     private val factory: CommentDataSource.Factory
     val commentList: LiveData<PagedList<Comment>>

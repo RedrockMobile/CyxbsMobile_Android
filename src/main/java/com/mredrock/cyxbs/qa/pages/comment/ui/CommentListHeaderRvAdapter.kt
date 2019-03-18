@@ -3,30 +3,39 @@ package com.mredrock.cyxbs.qa.pages.comment.ui
 import android.text.Html
 import android.view.ViewGroup
 import android.widget.TextView
-import com.mredrock.cyxbs.common.utils.extensions.setAvatarImageFromUrl
+import com.mredrock.cyxbs.common.BaseApp
+import com.mredrock.cyxbs.common.network.ApiGenerator
+import com.mredrock.cyxbs.common.utils.extensions.*
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.bean.Answer
 import com.mredrock.cyxbs.qa.component.recycler.BaseRvAdapter
 import com.mredrock.cyxbs.qa.component.recycler.BaseViewHolder
+import com.mredrock.cyxbs.qa.network.ApiService
+import com.mredrock.cyxbs.qa.pages.comment.AdoptAnswerEvent
 import com.mredrock.cyxbs.qa.utils.setAdoptedTv
 import com.mredrock.cyxbs.qa.utils.setNicknameTv
 import com.mredrock.cyxbs.qa.utils.timeDescription
 import com.mredrock.cyxbs.qa.utils.toDate
 import kotlinx.android.synthetic.main.qa_recycler_item_comment_header.view.*
+import org.greenrobot.eventbus.EventBus
 
 /**
  * Created By jay68 on 2018/10/8.
  */
-class CommentListHeaderRvAdapter(private val title: String,
-                                 private val isEmotion: Boolean,
-                                 private val showAdoptIcon: Boolean) : BaseRvAdapter<Answer>() {
+class CommentListHeaderRvAdapter(
+    private val title: String,
+    private val isEmotion: Boolean,
+    private val showAdoptIcon: Boolean
+) : BaseRvAdapter<Answer>() {
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
             HeaderViewHolder(title, isEmotion, showAdoptIcon, parent)
 
-    class HeaderViewHolder(private val title: String,
+    inner class HeaderViewHolder(private val title: String,
                            private val isEmotion: Boolean,
                            private val showAdoptIcon: Boolean,
                            parent: ViewGroup) : BaseViewHolder<Answer>(parent, R.layout.qa_recycler_item_comment_header) {
+
         override fun refresh(data: Answer?) {
             data ?: return
             itemView.apply {
@@ -37,6 +46,9 @@ class CommentListHeaderRvAdapter(private val title: String,
                 setDate(tv_answer_create_at, data.createdAt)
                 //todo 图片
                 setAdoptedTv(tv_adopted, tv_adopt, data.isAdopted, showAdoptIcon)
+                tv_adopt.setOnClickListener {
+                    EventBus.getDefault().post(AdoptAnswerEvent(data.id))
+                }
                 tv_answer_count.text = context.getString(R.string.qa_comment_item_answer_count, data.commentNum)
             }
         }
