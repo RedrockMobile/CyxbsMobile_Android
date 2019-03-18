@@ -4,6 +4,8 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.View
 import android.view.ViewGroup
+import org.jetbrains.anko.forEachChild
+import org.jetbrains.anko.forEachChildWithIndex
 
 /**
  * 九宫格布局
@@ -53,7 +55,7 @@ class NineGridView(context: Context?, attrs: AttributeSet?, defStyleAttr: Int) :
                 val heightSize = MeasureSpec.getSize(heightMeasureSpec)
                 val childHeight = (heightSize - verticalGap * (col - 1)) / row
 
-                forEach({
+                forEachChild ({
                     val lp = it.layoutParams
                     lp.width = childWidth.toInt()
                     lp.height = childHeight.toInt()
@@ -82,7 +84,7 @@ class NineGridView(context: Context?, attrs: AttributeSet?, defStyleAttr: Int) :
             child.layoutParams.width = widthSize
             measureChild(child, widthMeasureSpec, heightMeasureSpec)
         } else {
-            forEachIndexed({ i, view ->
+            forEachChildWithIndex({ i, view ->
 
             })
         }

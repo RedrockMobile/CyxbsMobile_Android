@@ -11,7 +11,6 @@
         android:layout_height="wrap_content"
         android:background="@drawable/common_toolbar_background"
         android:fitsSystemWindows="true"
-        app:layout_scrollFlags="enterAlways|scroll|snap"
         app:navigationIcon="@drawable/common_ic_back"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
         app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
