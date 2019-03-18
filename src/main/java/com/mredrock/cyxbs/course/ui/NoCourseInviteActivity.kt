@@ -4,8 +4,6 @@ import android.arch.lifecycle.ViewModelProviders
 import android.databinding.DataBindingUtil
 import android.os.Bundle
 import com.alibaba.android.arouter.facade.annotation.Route
-import com.jude.swipbackhelper.SwipeBackHelper
-import com.mredrock.cyxbs.common.component.JToolbar
 import com.mredrock.cyxbs.common.config.COURSE_NO_COURSE_INVITE
 import com.mredrock.cyxbs.common.ui.BaseActivity
 import com.mredrock.cyxbs.common.utils.SchoolCalendar
@@ -36,18 +34,16 @@ class NoCourseInviteActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mBinding = DataBindingUtil.setContentView(this, R.layout.course_activity_no_course_invite)
-        SwipeBackHelper.getCurrentPage(this).setSwipeBackEnable(false)
-
         initActivity()
     }
 
     private fun initActivity() {
         common_toolbar.init(getString(R.string.course_no_courese_invite))
-//        mStuNumList = intent.getStringArrayListExtra(STU_NUM_LIST)
-//        mNameList = intent.getStringArrayListExtra(STU_NAME_LIST)
+        mStuNumList = intent.getStringArrayListExtra(STU_NUM_LIST)
+        mNameList = intent.getStringArrayListExtra(STU_NAME_LIST)
 
-        mStuNumList = mutableListOf("2016215039", "2016211541")
-        mNameList = mutableListOf("文一鹏", "姜子来")
+//        mStuNumList = mutableListOf("2016215039", "2016211541")
+//        mNameList = mutableListOf("文一鹏", "姜子来")
 
         mNoCourseInviteViewModel = ViewModelProviders.of(this,
                 NoCourseInviteViewModel.Factory(mStuNumList, mNameList)).get(NoCourseInviteViewModel::class.java)
