@@ -70,6 +70,7 @@ class DiscoverFragment : BaseViewModelFragment<DiscoverViewModel>() {
         }
         mAdapter = DiscoverMainRvAdapter(context!!)
         mAdapter!!.refreshData(mListHide)
+        discover_rv_main.isNestedScrollingEnabled = false
         discover_rv_main.layoutManager = GridLayoutManager(context, 3)
         discover_rv_main.adapter = mAdapter
     }

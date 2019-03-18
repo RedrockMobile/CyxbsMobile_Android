@@ -3,7 +3,6 @@ package com.mredrock.cyxbs.discover.pages
 import android.annotation.SuppressLint
 import android.app.ProgressDialog
 import android.content.Context
-import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.webkit.WebChromeClient
@@ -12,16 +11,12 @@ import android.webkit.WebViewClient
 //import com.jude.swipbackhelper.SwipeBackHelper
 import com.mredrock.cyxbs.common.ui.BaseActivity
 import com.mredrock.cyxbs.discover.R
+import com.mredrock.cyxbs.discover.network.RollerViewInfo
 import kotlinx.android.synthetic.main.discover_activity_roller_view.*
+import org.jetbrains.anko.startActivity
 
 class RollerViewActivity : BaseActivity() {
     override val isFragmentActivity = false
-
-    private fun initToolbar() {
-        if (common_toolbar != null) {
-            common_toolbar.init("")
-        }
-    }
 
     @SuppressLint("ObsoleteSdkInt", "SetJavaScriptEnabled")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,7 +24,7 @@ class RollerViewActivity : BaseActivity() {
         setContentView(R.layout.discover_activity_roller_view)
 //        SwipeBackHelper.getCurrentPage(this).setSwipeBackEnable(false)
 
-        initToolbar()
+        common_toolbar.init(intent.getStringExtra("Key"))
 
         val dialog = ProgressDialog(this)
         dialog.setMessage("加载中...")
@@ -65,10 +60,8 @@ class RollerViewActivity : BaseActivity() {
 
     companion object {
 
-        fun startRollerViewActivity(webUrl: String, context: Context) {
-            val intent = Intent(context, RollerViewActivity::class.java)
-            intent.putExtra("URL", webUrl)
-            context.startActivity(intent)
+        fun startRollerViewActivity(info: RollerViewInfo, context: Context) {
+            context.startActivity<RollerViewActivity>("URL" to info.picture_goto_url, "Key" to info.keyword)
         }
     }
 }

@@ -10,7 +10,6 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-
         <com.mredrock.cyxbs.discover.utils.RollerView
             android:id="@+id/discover_rollerView"
             android:layout_width="match_parent"
@@ -35,10 +34,7 @@
                 android:id="@+id/discover_rv_main"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:nestedScrollingEnabled="false">
-
-            </android.support.v7.widget.RecyclerView>
+                android:paddingBottom="10dp"/>
 
         </com.mredrock.cyxbs.common.component.JCardViewPlus>
 

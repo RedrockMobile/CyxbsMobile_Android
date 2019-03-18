@@ -30,7 +30,7 @@ class DiscoverMainRvAdapter(private val context: Context): RecyclerView.Adapter<
         titleRes = mutableListOf(
                 "没课约", "空教室", "成绩单",
                 "志愿时长", "重邮地图", "校车查询",
-                "校历", "查电费", "关于红岩",
+                "校历", "查电费", "关于我们",
                 "教务新闻", "同学课表")
         iconResIds = mutableListOf(
                 R.drawable.ic_discover_no_course, R.drawable.ic_discover_empty_room, R.drawable.ic_discover_grade,
@@ -58,7 +58,7 @@ class DiscoverMainRvAdapter(private val context: Context): RecyclerView.Adapter<
             R.drawable.ic_discover_school_car -> startActivity(DISCOVER_SCHOOL_CAR)
             R.drawable.ic_discover_calendar -> startActivity(DISCOVER_CALENDAR)
             R.drawable.ic_discover_electric -> startActivity(DISCOVER_ELECTRICITY)
-            R.drawable.ic_discover_about -> context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://wx.redrock.team/app/")))
+            R.drawable.ic_discover_about -> context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("http://redrock.team/aboutus")))
             R.drawable.ic_discover_news -> startActivity(DISCOVER_NEWS)
             R.drawable.ic_discover_stu_schedule -> startActivity(DISCOVER_OTHER_COURSE)
         }
