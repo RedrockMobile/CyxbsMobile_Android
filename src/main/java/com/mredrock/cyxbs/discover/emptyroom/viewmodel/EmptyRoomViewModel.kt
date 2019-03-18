@@ -3,6 +3,7 @@ package com.mredrock.cyxbs.discover.emptyroom.viewmodel
 import android.arch.lifecycle.MutableLiveData
 import android.util.Log
 import com.mredrock.cyxbs.common.network.ApiGenerator
+import com.mredrock.cyxbs.common.utils.extensions.doOnErrorWithDefaultErrorHandler
 import com.mredrock.cyxbs.common.utils.extensions.mapOrThrowApiException
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
@@ -18,10 +19,6 @@ import java.util.concurrent.TimeUnit
  * Created by Cynthia on 2018/9/21
  */
 
-const val DEFAULT = 1
-const val LOADING = 2
-const val FINISH = 3
-
 class EmptyRoomViewModel : BaseViewModel() {
     var rooms: MutableLiveData<List<EmptyRoom>> = MutableLiveData()
     var status: MutableLiveData<Int> = MutableLiveData()
@@ -29,6 +26,13 @@ class EmptyRoomViewModel : BaseViewModel() {
     private var d: Disposable? = null
 
     private val apiService = ApiGenerator.getApiService(ApiService::class.java)
+
+    companion object {
+        const val DEFAULT = 1
+        const val LOADING = 2
+        const val FINISH = 3
+        const val ERROR = 4
+    }
 
     init {
         status.value = DEFAULT
@@ -46,12 +50,15 @@ class EmptyRoomViewModel : BaseViewModel() {
                 .delay(300, TimeUnit.MILLISECONDS)
                 .mapOrThrowApiException()
                 .setSchedulers()
-                .safeSubscribeBy{
-                    status.value = FINISH
-                    val converter = EmptyConverter()
-                    converter.setEmptyData(it)
-                    rooms.value = converter.convert()
-                }
+                .safeSubscribeBy(
+                        onNext = {
+                            status.value = FINISH
+                            val converter = EmptyConverter()
+                            converter.setEmptyData(it)
+                            rooms.value = converter.convert()},
+                        onError = {
+                            status.value = ERROR
+                        })
         d?.lifeCycle()
     }
 }

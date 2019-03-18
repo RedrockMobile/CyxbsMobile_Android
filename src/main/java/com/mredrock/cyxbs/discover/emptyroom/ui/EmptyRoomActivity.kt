@@ -28,12 +28,15 @@ import com.mredrock.cyxbs.discover.emptyroom.ui.adapter.StringAdapter
 import com.mredrock.cyxbs.discover.emptyroom.ui.widget.MultiSelector
 import com.mredrock.cyxbs.discover.emptyroom.ui.widget.OnItemSelectedChangeListener
 import com.mredrock.cyxbs.discover.emptyroom.utils.ViewInitializer
-import com.mredrock.cyxbs.discover.emptyroom.viewmodel.DEFAULT
 import com.mredrock.cyxbs.discover.emptyroom.viewmodel.EmptyRoomViewModel
-import com.mredrock.cyxbs.discover.emptyroom.viewmodel.FINISH
-import com.mredrock.cyxbs.discover.emptyroom.viewmodel.LOADING
+import com.mredrock.cyxbs.discover.emptyroom.viewmodel.EmptyRoomViewModel.Companion
+import com.mredrock.cyxbs.discover.emptyroom.viewmodel.EmptyRoomViewModel.Companion.DEFAULT
+import com.mredrock.cyxbs.discover.emptyroom.viewmodel.EmptyRoomViewModel.Companion.ERROR
+import com.mredrock.cyxbs.discover.emptyroom.viewmodel.EmptyRoomViewModel.Companion.FINISH
+import com.mredrock.cyxbs.discover.emptyroom.viewmodel.EmptyRoomViewModel.Companion.LOADING
 import kotlinx.android.synthetic.main.emptyroom_activity_empty_room.*
 import org.jetbrains.anko.dip
+import org.jetbrains.anko.toast
 import java.util.*
 
 @Route(path = DISCOVER_EMPTY_ROOM)
@@ -99,6 +102,11 @@ class EmptyRoomActivity : BaseViewModelActivity<EmptyRoomViewModel>(), OnItemSel
                     iv_querying.gone()
                     rv_result.visible()
                     queryAnimator.cancel()
+                }
+                ERROR -> {
+                    iv_querying.gone()
+                    rv_result.gone()
+                    toast("抱歉，数据获取失败")
                 }
             }
         })
