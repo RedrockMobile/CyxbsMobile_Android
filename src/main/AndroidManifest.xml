@@ -11,10 +11,16 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <meta-data
+                android:name="android.app.shortcuts"
+                android:resource="@xml/main_shortcut" />
         </activity>
+
         <activity
+            android:exported="true"
             android:name=".ui.MainActivity"
             android:launchMode="singleTask" />
+
         <activity
             android:name=".ui.LoginActivity"
             android:launchMode="singleTask" />

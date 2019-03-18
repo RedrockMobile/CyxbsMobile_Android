@@ -5,10 +5,9 @@ import android.support.design.widget.AppBarLayout
 import android.support.v4.app.Fragment
 import android.support.v4.view.ViewPager
 import android.view.MenuItem
+import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
-//import com.jude.swipbackhelper.SwipeBackHelper
 import com.mredrock.cyxbs.common.config.*
-import com.mredrock.cyxbs.common.event.LoginStateChangeEvent
 import com.mredrock.cyxbs.common.event.MainVPChangeEvent
 import com.mredrock.cyxbs.common.ui.BaseActivity
 import com.mredrock.cyxbs.main.R
@@ -17,7 +16,7 @@ import com.mredrock.cyxbs.main.utils.BottomNavigationViewHelper
 import kotlinx.android.synthetic.main.main_activity_main.*
 import org.greenrobot.eventbus.EventBus
 import org.jetbrains.anko.dip
-
+@Route(path = MAIN_MAIN)
 class MainActivity : BaseActivity() {
     companion object {
         val TAG: String = MainActivity::class.java.simpleName
@@ -43,7 +42,6 @@ class MainActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.main_activity_main)
-//        SwipeBackHelper.getCurrentPage(this).setSwipeBackEnable(false)
 
         appbar = findViewById(R.id.app_bar_layout)
 

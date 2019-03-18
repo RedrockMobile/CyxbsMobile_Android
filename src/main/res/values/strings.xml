@@ -8,6 +8,16 @@
     <string name="main_activity_login_not_input_password">还没有输入密码哦~</string>
     <string name="main_user_info_error">用户信息异常，请联系管理员</string>
 
+    <string name="main_course_long_name">我的课表</string>
+    <string name="main_course_short_name">课表</string>
+    <string name="main_school_car_long_name">校车查询</string>
+    <string name="main_school_car_short_name">校车</string>
+    <string name="main_empty_room_long_name">空教室查询</string>
+    <string name="main_empty_room_short_name">空教室</string>
+    <string name="main_grade_long_name">考试安排查询</string>
+    <string name="main_grade_short_name">考试</string>
+    <string name="main_shortcut_cancel">暂时无法使用哦</string>
+
     <string name="main_user_info_input_blank">昵称不能为空哦 (´⊙ω⊙`)</string>
     <string name="main_user_info_input_hint">请输入昵称，稍候可以更改</string>
 </resources>

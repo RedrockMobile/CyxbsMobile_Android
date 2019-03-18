@@ -7,7 +7,6 @@ import android.os.Bundle
 import android.view.View
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
-//import com.jude.swipbackhelper.SwipeBackHelper
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.main.R
 import com.mredrock.cyxbs.main.viewmodel.SplashViewModel
@@ -24,7 +23,6 @@ class SplashActivity : BaseViewModelActivity<SplashViewModel>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.main_activity_splash)
-//        SwipeBackHelper.getCurrentPage(this).setSwipeBackEnable(false)
         setFullScreen()
         splash_view.postDelayed({ startActivity<MainActivity>(true) }, 2000)
 
@@ -34,6 +32,7 @@ class SplashActivity : BaseViewModelActivity<SplashViewModel>() {
         viewModel.startPage.observe(this, Observer {
             Glide.with(this).load(it?.photo_src).apply(RequestOptions().centerCrop()).into(splash_view)
         })
+
     }
 
     private fun setFullScreen() {
