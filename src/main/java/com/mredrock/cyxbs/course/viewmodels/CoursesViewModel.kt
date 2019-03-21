@@ -323,4 +323,8 @@ class CoursesViewModel : ViewModel() {
         EventBus.getDefault().post(RefreshEvent(false))
         mIsGettingData = false
     }
+
+    fun clearCache() {
+        mCoursesDatabase?.courseDao()?.deleteAllCourses()
+    }
 }

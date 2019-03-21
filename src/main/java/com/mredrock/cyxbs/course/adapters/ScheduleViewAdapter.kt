@@ -16,11 +16,13 @@ import com.mredrock.cyxbs.common.utils.extensions.sharedPreferences
 import com.mredrock.cyxbs.course.R
 import com.mredrock.cyxbs.course.component.ScheduleView
 import com.mredrock.cyxbs.common.utils.SchoolCalendar
+import com.mredrock.cyxbs.course.event.DismissAddAffairViewEvent
 import com.mredrock.cyxbs.course.network.Course
 import com.mredrock.cyxbs.course.ui.EditAffairActivity
 import com.mredrock.cyxbs.course.ui.ScheduleDetailDialogHelper
 import com.mredrock.cyxbs.course.utils.ClassRoomParse
 import com.mredrock.cyxbs.course.utils.RippleDrawableUtil
+import org.greenrobot.eventbus.EventBus
 import java.util.*
 import kotlin.Comparator
 
@@ -262,6 +264,7 @@ class ScheduleViewAdapter(private val mContext: Context,
     private fun setItemViewOnclickListener(itemView: View, schedules: MutableList<Course>) {
         itemView.setOnClickListener {
             mDialogHelper.showDialog(schedules)
+            EventBus.getDefault().post(DismissAddAffairViewEvent())
         }
     }
 

@@ -85,6 +85,8 @@ class CourseContainerFragment : BaseFragment() {
         lifecycle.addObserver(VPOnPagerChangeObserver(mBinding.vp,
                 mOnPageSelected = {
                     LogUtils.d(TAG, mScheduleAdapter.getPageTitle(it).toString())
+                    // 当ViewPager发生了滑动，清理课表上加备忘的View
+                    EventBus.getDefault().post(DismissAddAffairViewEvent())
                     // 当ViewPager发生了滑动，通过EventBus对Toolbar上的周数进行改变
                     EventBus.getDefault().post(WeekNumEvent(mScheduleAdapter.getPageTitle(it).toString()))
                 }))

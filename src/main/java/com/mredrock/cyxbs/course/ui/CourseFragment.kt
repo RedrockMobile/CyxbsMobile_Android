@@ -10,9 +10,11 @@ import android.view.ViewGroup
 import com.mredrock.cyxbs.common.ui.BaseFragment
 import com.mredrock.cyxbs.course.R
 import com.mredrock.cyxbs.course.databinding.CourseFragmentCourseBinding
+import com.mredrock.cyxbs.course.event.DismissAddAffairViewEvent
 import com.mredrock.cyxbs.course.event.RefreshEvent
 import com.mredrock.cyxbs.course.viewmodels.CoursesViewModel
 import com.mredrock.cyxbs.course.viewmodels.DateViewModel
+import kotlinx.android.synthetic.main.course_fragment_course.view.*
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
@@ -71,6 +73,14 @@ class CourseFragment : BaseFragment() {
         mBinding.swipeRefreshLayout.setOnRefreshListener {
             mCoursesViewModel.refreshScheduleData(this.context!!)
         }
+    }
+
+    /**
+     * 这个方法用于清理课表上加备忘的View
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun dissmissAddAffairEventView(e: DismissAddAffairViewEvent) {
+        mBinding.root.schedule_view.clearTouchView()
     }
 
     /**

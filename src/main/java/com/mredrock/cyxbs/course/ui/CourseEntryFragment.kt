@@ -1,5 +1,6 @@
 package com.mredrock.cyxbs.course.ui
 
+import android.arch.lifecycle.ViewModelProviders
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -19,6 +20,7 @@ import com.mredrock.cyxbs.common.ui.BaseFragment
 import com.mredrock.cyxbs.course.R
 import com.mredrock.cyxbs.course.event.TabIsFoldEvent
 import com.mredrock.cyxbs.course.event.WeekNumEvent
+import com.mredrock.cyxbs.course.viewmodels.CoursesViewModel
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -114,6 +116,7 @@ class CourseEntryFragment : BaseFragment() {
         if (event.newState) {
             replaceFragment(CourseContainerFragment())
         } else {
+            ViewModelProviders.of(activity!!).get(CoursesViewModel::class.java).clearCache()
             replaceFragment(NoneLoginFragment())
         }
         setToolbar()

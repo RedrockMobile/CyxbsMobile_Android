@@ -85,6 +85,84 @@ class ScheduleView : FrameLayout {
             requestLayout()
         }
 
+    private val mStartPoint: PointF by lazy(LazyThreadSafetyMode.NONE) { PointF() }
+    private val mEndPoint: PointF by lazy(LazyThreadSafetyMode.NONE) { PointF() }
+    // mTouchView is used to add affair
+    private val mTouchView: ImageView by lazy(LazyThreadSafetyMode.NONE) { ImageView(context) }
+    // This paint is used to draw the place which will be highlighted.
+    private lateinit var mPaint: Paint
+    // This is used to represent whether the courses and affairs are null
+    private var mIsEmpty: Boolean = true
+    // This is the ImageView to show when the courses and affairs are null
+    private val mEmptyImageView: ImageView by lazy(LazyThreadSafetyMode.NONE) { ImageView(context) }
+    // This is the TextView to show when the courses and affairs are null
+    private val mEmptyTextView: TextView by lazy(LazyThreadSafetyMode.NONE) { TextView(context) }
+
+    private var mScheduleViewWidth: Int = 0
+    private var mScheduleViewHeight: Int = 0
+    private var mBasicElementWidth: Int = 0
+    private var mBasicElementHeight: Int = 0
+    private var mIsDisplayCourse: Boolean = true
+
+    // The following fields are the attrs
+    private var mElementGap: Int = 0
+    private var mTouchViewColor: Int = 0
+    private var mHeightAtLowDpi: Int = 0
+    private var mTouchViewDrawableResId: Int = 0
+    private var mHighlightColor: Int = 0
+    private var mNoCourseDrawableResId: Int = 0
+    private var mEmptyText: String? = null
+    private var mEmptyTextSize: Int = sp(12)
+
+
+    constructor(context: Context) : super(context) {
+        mElementGap = dip(2f)
+        mTouchViewColor = Color.parseColor("#bdc3c7")
+        mHeightAtLowDpi = dip(600f)
+        initScheduleView()
+    }
+
+    constructor(context: Context, attrs: AttributeSet?) : super(context, attrs) {
+        val typeArray = context.obtainStyledAttributes(attrs, R.styleable.ScheduleView,
+                R.attr.ScheduleViewStyle, 0)
+        mElementGap = typeArray.getDimensionPixelSize(R.styleable.ScheduleView_elementGap, dip(2f))
+        mTouchViewColor = typeArray.getColor(R.styleable.ScheduleView_touchViewColor, Color.parseColor("#bdc3c7"))
+        mHeightAtLowDpi = typeArray.getDimensionPixelSize(R.styleable.ScheduleView_heightAtLowDpi, dip(600f))
+        mTouchViewDrawableResId = typeArray.getResourceId(R.styleable.ScheduleView_touchViewDrawable, 0)
+        mHighlightColor = typeArray.getColor(R.styleable.ScheduleView_highlightColor, Color.parseColor("#FFFBEB"))
+        mNoCourseDrawableResId = typeArray.getResourceId(R.styleable.ScheduleView_noCourseDrawable, 0)
+        mEmptyText = typeArray.getString(R.styleable.ScheduleView_emptyText)
+        mEmptyTextSize = typeArray.getDimensionPixelSize(R.styleable.ScheduleView_emptyTextSize, sp(12))
+        mIsDisplayCourse = typeArray.getBoolean(R.styleable.ScheduleView_isDisplayCourse, true)
+        typeArray.recycle()
+        initScheduleView()
+    }
+
+    private fun initScheduleView() {
+        setWillNotDraw(false)
+        mPaint = Paint().apply {
+            color = mHighlightColor
+            isAntiAlias = true
+            isDither = true
+            style = Paint.Style.FILL
+        }
+    }
+
+    /**
+     * Do some init work for the [mTouchView].
+     */
+    private fun initTouchView() {
+        val touchView = mTouchView
+
+        touchView.backgroundColor = mTouchViewColor
+        if (mTouchViewDrawableResId != 0) {
+            touchView.apply {
+                scaleType = ImageView.ScaleType.CENTER_INSIDE
+                setImageDrawable(ContextCompat.getDrawable(context, mTouchViewDrawableResId))
+            }
+        }
+    }
+
     private fun addNoCourseView() {
         if (mIsEmpty && mNoCourseDrawableResId != 0) {
             // Set mEmptyImageView
@@ -183,84 +261,6 @@ class ScheduleView : FrameLayout {
         }
     }
 
-    private val mStartPoint: PointF by lazy(LazyThreadSafetyMode.NONE) { PointF() }
-    private val mEndPoint: PointF by lazy(LazyThreadSafetyMode.NONE) { PointF() }
-    // mTouchView is used to add affair
-    private val mTouchView: ImageView by lazy(LazyThreadSafetyMode.NONE) { ImageView(context) }
-    // This paint is used to draw the place which will be highlighted.
-    private lateinit var mPaint: Paint
-    // This is used to represent whether the courses and affairs are null
-    private var mIsEmpty: Boolean = true
-    // This is the ImageView to show when the courses and affairs are null
-    private val mEmptyImageView: ImageView by lazy(LazyThreadSafetyMode.NONE) { ImageView(context) }
-    // This is the TextView to show when the courses and affairs are null
-    private val mEmptyTextView: TextView by lazy(LazyThreadSafetyMode.NONE) { TextView(context) }
-
-    private var mScheduleViewWidth: Int = 0
-    private var mScheduleViewHeight: Int = 0
-    private var mBasicElementWidth: Int = 0
-    private var mBasicElementHeight: Int = 0
-    private var mIsDisplayCourse: Boolean = true
-
-    // The following fields are the attrs
-    private var mElementGap: Int = 0
-    private var mTouchViewColor: Int = 0
-    private var mHeightAtLowDpi: Int = 0
-    private var mTouchViewDrawableResId: Int = 0
-    private var mHighlightColor: Int = 0
-    private var mNoCourseDrawableResId: Int = 0
-    private var mEmptyText: String? = null
-    private var mEmptyTextSize: Int = sp(12)
-
-
-    constructor(context: Context) : super(context) {
-        mElementGap = dip(2f)
-        mTouchViewColor = Color.parseColor("#bdc3c7")
-        mHeightAtLowDpi = dip(600f)
-        initScheduleView()
-    }
-
-    constructor(context: Context, attrs: AttributeSet?) : super(context, attrs) {
-        val typeArray = context.obtainStyledAttributes(attrs, R.styleable.ScheduleView,
-                R.attr.ScheduleViewStyle, 0)
-        mElementGap = typeArray.getDimensionPixelSize(R.styleable.ScheduleView_elementGap, dip(2f))
-        mTouchViewColor = typeArray.getColor(R.styleable.ScheduleView_touchViewColor, Color.parseColor("#bdc3c7"))
-        mHeightAtLowDpi = typeArray.getDimensionPixelSize(R.styleable.ScheduleView_heightAtLowDpi, dip(600f))
-        mTouchViewDrawableResId = typeArray.getResourceId(R.styleable.ScheduleView_touchViewDrawable, 0)
-        mHighlightColor = typeArray.getColor(R.styleable.ScheduleView_highlightColor, Color.parseColor("#FFFBEB"))
-        mNoCourseDrawableResId = typeArray.getResourceId(R.styleable.ScheduleView_noCourseDrawable, 0)
-        mEmptyText = typeArray.getString(R.styleable.ScheduleView_emptyText)
-        mEmptyTextSize = typeArray.getDimensionPixelSize(R.styleable.ScheduleView_emptyTextSize, sp(12))
-        mIsDisplayCourse = typeArray.getBoolean(R.styleable.ScheduleView_isDisplayCourse, true)
-        typeArray.recycle()
-        initScheduleView()
-    }
-
-    private fun initScheduleView() {
-        setWillNotDraw(false)
-        mPaint = Paint().apply {
-            color = mHighlightColor
-            isAntiAlias = true
-            isDither = true
-            style = Paint.Style.FILL
-        }
-    }
-
-    /**
-     * Do some init work for the [mTouchView].
-     */
-    private fun initTouchView() {
-        val touchView = mTouchView
-
-        touchView.backgroundColor = mTouchViewColor
-        if (mTouchViewDrawableResId != 0) {
-            touchView.apply {
-                scaleType = ImageView.ScaleType.CENTER_INSIDE
-                setImageDrawable(ContextCompat.getDrawable(context, mTouchViewDrawableResId))
-            }
-        }
-    }
-
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
 
@@ -287,8 +287,7 @@ class ScheduleView : FrameLayout {
             //record the start position
             startPoint.x = event.x
             startPoint.y = event.y
-        }
-        if (event.action == MotionEvent.ACTION_UP) {
+        }else if (event.action == MotionEvent.ACTION_UP) {
             // 如果setOnTouchViewClickListener返回为null就不启用mTouchView
             adapter?.setOnTouchViewClickListener() ?: return true
 
@@ -349,6 +348,12 @@ class ScheduleView : FrameLayout {
         return true
     }
 
+    fun clearTouchView() {
+        if (mTouchView.tag != null) {
+            mTouchView.tag = null
+            removeView(mTouchView)
+        }
+    }
 
     override fun onDraw(canvas: Canvas) {
         val highlightPosition = adapter?.getHighLightPosition()
