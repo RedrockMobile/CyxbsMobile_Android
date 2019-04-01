@@ -12,15 +12,24 @@ import android.text.TextWatcher
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.ImageView
+import com.alibaba.android.arouter.facade.annotation.Route
+import com.google.gson.Gson
+import com.mredrock.cyxbs.common.config.QA_ANSWER
+import com.mredrock.cyxbs.common.event.DraftEvent
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.qa.R
+import com.mredrock.cyxbs.qa.bean.Content
 import com.mredrock.cyxbs.qa.pages.answer.viewmodel.AnswerViewModel
 import com.mredrock.cyxbs.qa.utils.CHOOSE_PHOTO_REQUEST
 import com.mredrock.cyxbs.qa.utils.selectImageFromAlbum
-import org.jetbrains.anko.startActivityForResult
 import kotlinx.android.synthetic.main.qa_activity_answer.*
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
+import org.jetbrains.anko.startActivityForResult
 import top.limuyang2.photolibrary.activity.LPhotoPickerActivity
 
+@Route(path = QA_ANSWER)
 class AnswerActivity : BaseViewModelActivity<AnswerViewModel>() {
     companion object {
         const val MAX_SELECTABLE_IMAGE_COUNT = 6
@@ -34,6 +43,8 @@ class AnswerActivity : BaseViewModelActivity<AnswerViewModel>() {
 
     override val isFragmentActivity = false
 
+    private var draftId = "-1"
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.qa_activity_answer)
@@ -42,6 +53,10 @@ class AnswerActivity : BaseViewModelActivity<AnswerViewModel>() {
         initImageAddView()
         viewModel.backAndRefreshPreActivityEvent.observeNotNull {
             if (it) {
+                if (draftId != "-1") {
+                    viewModel.deleteDraft(draftId)
+//                    EventBus.getDefault().post(FinishActivityEvent())
+                }
                 setResult(Activity.RESULT_OK)
                 finish()
             }
@@ -118,5 +133,32 @@ class AnswerActivity : BaseViewModelActivity<AnswerViewModel>() {
         return super.onOptionsItemSelected(item)
     }
 
-    override fun getViewModelFactory() = AnswerViewModel.Factory(intent.getStringExtra("qid"))
+    override fun getViewModelFactory(): AnswerViewModel.Factory {
+        return if (intent.getStringExtra("qid") == null) {
+            AnswerViewModel.Factory("-1")
+        } else {
+            AnswerViewModel.Factory(intent.getStringExtra("qid"))
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        if (draftId == "-1") {
+            viewModel.addItemToDraft(edt_answer_content.text.toString())
+        } else {
+            viewModel.updateDraft(edt_answer_content.text.toString(), draftId)
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
+    fun loadDraft(event: DraftEvent) {
+        if (intent.getStringExtra("qid") != null) {
+            EventBus.getDefault().removeStickyEvent(event)
+            return
+        }
+        val content = Gson().fromJson(event.jsonString, Content::class.java)
+        edt_answer_content.setText(content.title)
+        viewModel.qid = event.targetId
+        draftId = event.selfId
+    }
 }

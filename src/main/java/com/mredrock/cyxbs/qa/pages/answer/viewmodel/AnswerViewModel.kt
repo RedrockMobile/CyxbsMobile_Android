@@ -3,6 +3,7 @@ package com.mredrock.cyxbs.qa.pages.answer.viewmodel
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import android.arch.lifecycle.ViewModelProvider
+import android.util.Base64
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.bean.RedrockApiStatus
 import com.mredrock.cyxbs.common.network.ApiGenerator
@@ -26,7 +27,7 @@ import java.io.File
 /**
  * Created By jay68 on 2018/12/3.
  */
-class AnswerViewModel(val qid: String) : BaseViewModel() {
+class AnswerViewModel(var qid: String) : BaseViewModel() {
     val imageLiveData = MutableLiveData<ArrayList<String>>()
     val backAndRefreshPreActivityEvent = SingleLiveEvent<Boolean>()
 
@@ -74,6 +75,66 @@ class AnswerViewModel(val qid: String) : BaseViewModel() {
 
     fun setImageList(imageList: ArrayList<String>) {
         imageLiveData.value = imageList
+    }
+
+    fun addItemToDraft(content: String?) {
+        if (content.isNullOrBlank()) {
+            return
+        }
+        val user = BaseApp.user ?: return
+        val s = "{\"title\":\"$content\"}"
+        val json = Base64.encodeToString(s.toByteArray(), Base64.DEFAULT)
+        ApiGenerator.getApiService(ApiService::class.java)
+                .addItemToDraft(user.stuNum ?: "", user.idNum ?: "", "answer", json, qid)
+                .setSchedulers()
+                .checkError()
+                .safeSubscribeBy(
+                        onError = {
+                            toastEvent.value = R.string.qa_quiz_save_failed
+                        },
+                        onNext = {
+                            toastEvent.value = R.string.qa_quiz_save_success
+                        }
+                )
+                .lifeCycle()
+    }
+
+    fun updateDraft(content: String?, id: String) {
+        if (content.isNullOrBlank()) {
+            deleteDraft(id)
+            return
+        }
+        val user = BaseApp.user ?: return
+        val s = "{\"title\":\"$content\"}"
+        val json = Base64.encodeToString(s.toByteArray(), Base64.DEFAULT)
+        ApiGenerator.getApiService(ApiService::class.java)
+                .updateDraft(user.stuNum ?: "", user.idNum ?: "", json, id)
+                .setSchedulers()
+                .checkError()
+                .safeSubscribeBy(
+                        onError = {
+                            toastEvent.value = R.string.qa_quiz_save_failed
+                        },
+                        onNext = {
+                            toastEvent.value = R.string.qa_quiz_save_success
+                        }
+                )
+                .lifeCycle()
+    }
+
+    fun deleteDraft(id: String) {
+        val user = BaseApp.user ?: return
+        ApiGenerator.getApiService(ApiService::class.java)
+                .deleteDraft(user.stuNum ?: "", user.idNum ?: "", id)
+                .setSchedulers()
+                .checkError()
+                .safeSubscribeBy(
+                        onError = {
+                            toastEvent.value = R.string.qa_quiz_save_failed
+                        },
+                        onNext = {}
+                )
+                .lifeCycle()
     }
 
     class Factory(private val qid: String) : ViewModelProvider.Factory {

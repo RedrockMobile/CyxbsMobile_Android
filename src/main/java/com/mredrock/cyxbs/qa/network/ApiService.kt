@@ -156,4 +156,28 @@ interface ApiService {
                @Field("question_id") qid: String,
                @Field("content") content: String,
                @Field("type") type: String): Observable<RedrockApiStatus>
+
+    /**
+     * 草稿箱
+     */
+    @POST("app/index.php/QA/User/addItemInDraft")
+    @FormUrlEncoded
+    fun addItemToDraft(@Field("stunum") stuNum: String,
+                       @Field("idnum") idNum: String,
+                       @Field("type") type: String,
+                       @Field("content") content: String,
+                       @Field("target_id") id: String): Observable<RedrockApiStatus>
+
+    @POST("app/index.php/QA/User/updateItemInDraft")
+    @FormUrlEncoded
+    fun updateDraft(@Field("stunum") stuNum: String,
+                    @Field("idnum") idNum: String,
+                    @Field("content") content: String,
+                    @Field("id") id: String): Observable<RedrockApiStatus>
+
+    @POST("app/index.php/QA/User/deleteItemInDraft")
+    @FormUrlEncoded
+    fun deleteDraft(@Field("stunum") stuNum: String,
+                    @Field("idnum") idNum: String,
+                    @Field("id") id: String): Observable<RedrockApiStatus>
 }

@@ -4,10 +4,14 @@ import android.annotation.SuppressLint
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import android.arch.lifecycle.ViewModelProvider
+import android.util.Base64
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.bean.RedrockApiStatus
 import com.mredrock.cyxbs.common.network.ApiGenerator
-import com.mredrock.cyxbs.common.utils.extensions.*
+import com.mredrock.cyxbs.common.utils.extensions.checkError
+import com.mredrock.cyxbs.common.utils.extensions.mapOrThrowApiException
+import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
+import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.common.viewmodel.event.ProgressDialogEvent
 import com.mredrock.cyxbs.common.viewmodel.event.SingleLiveEvent
@@ -29,7 +33,7 @@ import java.io.File
 /**
  * Created By jay68 on 2018/8/26.
  */
-class QuizViewModel(val type: String) : BaseViewModel() {
+class QuizViewModel(var type: String) : BaseViewModel() {
     val imageLiveData = MutableLiveData<ArrayList<String>>()
     val tagLiveData = MutableLiveData<String>()
     val backAndRefreshPreActivityEvent = SingleLiveEvent<Boolean>()
@@ -140,6 +144,63 @@ class QuizViewModel(val type: String) : BaseViewModel() {
         return result
     }
 
+    fun addItemToDraft(title: String?, content: String?, tag: String?) {
+        if (title.isNullOrBlank() && content.isNullOrBlank()) {
+            return
+        }
+        val user = BaseApp.user ?: return
+        val t = tag ?: ""
+        val s = "{\"title\":\"$title\",\"description\":\"$content\",\"kind\":\"$type\",\"tags\":\"$t\"}"
+        val json = Base64.encodeToString(s.toByteArray(), Base64.DEFAULT)
+        ApiGenerator.getApiService(ApiService::class.java)
+                .addItemToDraft(user.stuNum ?: "", user.idNum ?: "", "question", json, "")
+                .setSchedulers()
+                .checkError()
+                .safeSubscribeBy(
+                        onError = {
+                            toastEvent.value = R.string.qa_quiz_save_failed
+                        },
+                        onNext = {
+                            toastEvent.value = R.string.qa_quiz_save_success
+                        }
+                )
+                .lifeCycle()
+    }
+
+    fun updateDraftItem(title: String?, content: String?, tag: String?, id: String) {
+        val user = BaseApp.user ?: return
+        val t = tag ?: ""
+        val s = "{\"title\":\"$title\",\"description\":\"$content\",\"kind\":\"$type\",\"tags\":\"$t\"}"
+        val json = Base64.encodeToString(s.toByteArray(), Base64.DEFAULT)
+        ApiGenerator.getApiService(ApiService::class.java)
+                .updateDraft(user.stuNum ?: "", user.idNum ?: "", json, id)
+                .setSchedulers()
+                .checkError()
+                .safeSubscribeBy(
+                        onError = {
+                            toastEvent.value = R.string.qa_quiz_save_failed
+                        },
+                        onNext = {
+                            toastEvent.value = R.string.qa_quiz_save_success
+                        }
+                )
+                .lifeCycle()
+    }
+
+    fun deleteDraft(id: String) {
+        val user = BaseApp.user ?: return
+        ApiGenerator.getApiService(ApiService::class.java)
+                .deleteDraft(user.stuNum ?: "", user.idNum ?: "", id)
+                .setSchedulers()
+                .checkError()
+                .safeSubscribeBy(
+                        onError = {
+                            toastEvent.value = R.string.qa_quiz_save_failed
+                        },
+                        onNext = {}
+                )
+                .lifeCycle()
+    }
 
     class Factory(private val type: String) : ViewModelProvider.Factory {
         override fun <T : ViewModel> create(modelClass: Class<T>): T {

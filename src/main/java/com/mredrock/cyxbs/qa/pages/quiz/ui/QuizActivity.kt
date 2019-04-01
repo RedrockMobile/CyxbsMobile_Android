@@ -11,8 +11,13 @@ import android.text.TextWatcher
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.ImageView
+import com.alibaba.android.arouter.facade.annotation.Route
+import com.google.gson.Gson
+import com.mredrock.cyxbs.common.config.QA_QUIZ
+import com.mredrock.cyxbs.common.event.DraftEvent
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.qa.R
+import com.mredrock.cyxbs.qa.bean.Question
 import com.mredrock.cyxbs.qa.pages.quiz.QuizViewModel
 import com.mredrock.cyxbs.qa.pages.quiz.ui.dialog.RewardSetDialog
 import com.mredrock.cyxbs.qa.pages.quiz.ui.dialog.TagsEditDialog
@@ -21,11 +26,15 @@ import com.mredrock.cyxbs.qa.utils.CHOOSE_PHOTO_REQUEST
 import com.mredrock.cyxbs.qa.utils.getMaxLength
 import com.mredrock.cyxbs.qa.utils.selectImageFromAlbum
 import kotlinx.android.synthetic.main.qa_activity_quiz.*
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 import org.jetbrains.anko.support.v4.startActivityForResult
 import top.limuyang2.photolibrary.activity.LPhotoPickerActivity
 
 //todo 这个界面赶时间写得有点乱，记得优化一下
 
+@Route(path = QA_QUIZ)
 class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
     companion object {
         const val MAX_SELECTABLE_IMAGE_COUNT = 6
@@ -37,6 +46,7 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
 
     override val viewModelClass = QuizViewModel::class.java
     override val isFragmentActivity = false
+    private var draftId = "-1"
 
     private val editTagDialog by lazy {
         TagsEditDialog(this).apply {
@@ -77,6 +87,10 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
 
         viewModel.backAndRefreshPreActivityEvent.observeNotNull {
             if (it) {
+                if (draftId != "-1") {
+                    viewModel.deleteDraft(draftId)
+//                    EventBus.getDefault().post(FinishActivityEvent())
+                }
                 val data = Intent()
                 data.putExtra("type", viewModel.type)
                 setResult(Activity.RESULT_OK, data)
@@ -189,5 +203,36 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
         return super.onOptionsItemSelected(item)
     }
 
-    override fun getViewModelFactory() = QuizViewModel.Factory(intent.getStringExtra("type"))
+    override fun getViewModelFactory(): QuizViewModel.Factory {
+        return if (intent.getStringExtra("type") == null) {
+            QuizViewModel.Factory(getString(R.string.qa_quiz_dialog_type_study))
+        } else {
+            QuizViewModel.Factory(intent.getStringExtra("type"))
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        if (draftId == "-1") {
+            viewModel.addItemToDraft(edt_quiz_title.text.toString(), edt_quiz_content.text.toString(), viewModel.tagLiveData.value)
+        } else {
+            viewModel.updateDraftItem(edt_quiz_title.text.toString(), edt_quiz_content.text.toString(), viewModel.tagLiveData.value, draftId)
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
+    fun loadDraft(event: DraftEvent) {
+        if (intent.getStringExtra("type") != null) {
+            EventBus.getDefault().removeStickyEvent(event)
+            return
+        }
+        val question = Gson().fromJson(event.jsonString, Question::class.java)
+        edt_quiz_title.setText(question.title)
+        edt_quiz_content.setText(question.description)
+        viewModel.type = question.kind
+        if (question.tags.isNotEmpty()) {
+            viewModel.setTag(question.tags)
+        }
+        draftId = event.selfId
+    }
 }

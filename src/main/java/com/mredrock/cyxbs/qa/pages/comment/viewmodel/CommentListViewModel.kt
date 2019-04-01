@@ -3,6 +3,7 @@ package com.mredrock.cyxbs.qa.pages.comment.viewmodel
 import android.arch.lifecycle.*
 import android.arch.paging.LivePagedListBuilder
 import android.arch.paging.PagedList
+import android.util.Base64
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.utils.extensions.checkError
@@ -106,6 +107,29 @@ class CommentListViewModel(val qid: String,
                     answerLiveData.value = answer.apply { commentNum = "${commentNumInt + 1}" }
                     invalidateCommentList()
                 }
+                .lifeCycle()
+    }
+
+    fun saveToDraft(content: String?) {
+        if (content.isNullOrBlank()) {
+            return
+        }
+        val user = BaseApp.user ?: return
+        val s = "{\"title\":\"$content\"}"
+        val json = Base64.encodeToString(s.toByteArray(), Base64.DEFAULT)
+        ApiGenerator.getApiService(ApiService::class.java)
+                .addItemToDraft(user.stuNum ?: "", user.idNum
+                        ?: "", "remark", json, answerLiveData.value!!.id)
+                .setSchedulers()
+                .checkError()
+                .safeSubscribeBy(
+                        onError = {
+                            toastEvent.value = R.string.qa_quiz_save_failed
+                        },
+                        onNext = {
+                            toastEvent.value = R.string.qa_quiz_save_success
+                        }
+                )
                 .lifeCycle()
     }
 
