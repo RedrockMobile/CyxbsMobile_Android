@@ -67,11 +67,12 @@ class DraftViewModel : BaseViewModel() {
                 .lifeCycle()
     }
 
-    fun sendRemark(draft: Draft) {
+    fun sendRemark(draft: Draft, content: String?) {
         if (!isLogin()) {
             return
         }
-        apiService.commentAnswer(user!!.stuNum!!, user!!.idNum!!, draft.targetId, draft.content)
+        val s = content ?: return
+        apiService.commentAnswer(user!!.stuNum!!, user!!.idNum!!, draft.targetId,s)
                 .normalStatus(this)
                 .safeSubscribeBy(
                         onNext = {
@@ -82,6 +83,7 @@ class DraftViewModel : BaseViewModel() {
                         }
                 )
                 .lifeCycle()
+        deleteDraft(draft)
     }
 
     private fun isLogin(): Boolean {

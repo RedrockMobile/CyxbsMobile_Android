@@ -3,6 +3,10 @@ package com.mredrock.cyxbs.mine.page.draft
 import android.arch.lifecycle.Observer
 import android.os.Bundle
 import android.support.design.widget.BottomSheetDialog
+import com.alibaba.android.arouter.launcher.ARouter
+import com.mredrock.cyxbs.common.config.QA_ANSWER
+import com.mredrock.cyxbs.common.config.QA_QUIZ
+import com.mredrock.cyxbs.common.event.DraftEvent
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.extensions.invisible
 import com.mredrock.cyxbs.common.utils.extensions.visible
@@ -10,6 +14,7 @@ import com.mredrock.cyxbs.mine.R
 import com.mredrock.cyxbs.mine.network.model.Draft
 import kotlinx.android.synthetic.main.mine_activity_draft.*
 import kotlinx.android.synthetic.main.mine_dialog_answer_detail.view.*
+import org.greenrobot.eventbus.EventBus
 import org.jetbrains.anko.alert
 import org.jetbrains.anko.noButton
 import org.jetbrains.anko.toast
@@ -136,17 +141,19 @@ class DraftActivity(override val viewModelClass: Class<DraftViewModel> = DraftVi
         when (draft.type) {
             //提问草稿
             Draft.TYPE_QUESTION -> {
-
+                EventBus.getDefault().postSticky(DraftEvent(draft.decodeJson, draft.id, draft.targetId))
+                ARouter.getInstance().build(QA_QUIZ).navigation()
             }
             //回答草稿
             Draft.TYPE_ANSWER -> {
-
+                EventBus.getDefault().postSticky(DraftEvent(draft.decodeJson, draft.id, draft.targetId))
+                ARouter.getInstance().build(QA_ANSWER).navigation()
             }
             //评论草稿
             Draft.TYPE_COMMENT -> {
-                val str = draft.contentDisplay.replace(Draft.CONTENT_TYPE[Draft.TYPE_COMMENT]!!, "")
+                val str = draft.contentDisplay.replace(Draft.CONTENT_TYPE.getValue(Draft.TYPE_COMMENT), "")
                 getBottomSheetDialog(str) {
-                    viewModel.sendRemark(draft)
+                    viewModel.sendRemark(draft,str)
                 }.show()
             }
         }
@@ -165,6 +172,7 @@ class DraftActivity(override val viewModelClass: Class<DraftViewModel> = DraftVi
                 return@setOnClickListener
             }
             sendMessage.invoke()
+            container.mine_dialog_answer_detail_comment.setText("")
         }
         dialog.setOnShowListener {
             if (tempEditText.isEmpty()) {
@@ -178,5 +186,4 @@ class DraftActivity(override val viewModelClass: Class<DraftViewModel> = DraftVi
         }
         return dialog
     }
-
 }

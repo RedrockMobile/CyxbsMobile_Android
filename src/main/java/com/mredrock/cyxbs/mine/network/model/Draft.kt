@@ -3,9 +3,11 @@ package com.mredrock.cyxbs.mine.network.model
 import android.util.Base64
 import com.google.gson.Gson
 import com.google.gson.annotations.SerializedName
+import com.mredrock.cyxbs.common.utils.LogUtils
+import java.io.Serializable
+import java.net.URLDecoder
 import java.text.SimpleDateFormat
 import java.util.*
-import java.io.Serializable
 
 /**
  * Created by jay86.
@@ -22,7 +24,7 @@ data class Draft(@SerializedName("created_at")
                  val titleContent: String = "",
                  @SerializedName("content")
                  val content: String = "",
-                 var question: Question?):Serializable {
+                 var question: Question?) : Serializable {
 
     companion object {
         const val TYPE_QUESTION = "question"
@@ -50,10 +52,12 @@ data class Draft(@SerializedName("created_at")
                 time[0]
             }
         }
+    lateinit var decodeJson: String
 
     fun parseQuestion() {
         try {
-            question = Gson().fromJson(String(Base64.decode(content, Base64.DEFAULT)), Question::class.java)
+            decodeJson = String(Base64.decode(content, Base64.DEFAULT))
+            question = Gson().fromJson(decodeJson, Question::class.java)
         } catch (e: Exception) {
             e.printStackTrace()
 //            if (BuildConfig.DEBUG) {
