@@ -11,6 +11,14 @@
     <style name="VolunteerEditText" parent="Theme.AppCompat.Light">
         <item name="colorControlNormal">@color/volunteer_edit_Normal</item>
         <item name="colorControlActivated">@color/volunteer_edit_activated</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textCursorDrawable">@drawable/volunteer_cursor_color</item>
+        <item name="android:textColorHint">@color/volunteer_edit_Normal</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:imeOptions">actionGo</item>
+        <item name="android:drawablePadding">16dp</item>
+        <item name="android:cursorVisible">true</item>
     </style>
 
 </resources>

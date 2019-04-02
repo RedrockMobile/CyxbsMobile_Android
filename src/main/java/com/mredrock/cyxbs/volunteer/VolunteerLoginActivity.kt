@@ -4,7 +4,6 @@ import android.app.ProgressDialog
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.support.design.widget.AppBarLayout
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
@@ -47,10 +46,10 @@ class VolunteerLoginActivity : BaseActivity() {
 
         common_toolbar.init("完善信息")
 
-        volunteer_login.setOnClickListener { view: View? ->
+        btn_volunteer_login.setOnClickListener { view: View? ->
             showProgressDialog()
             initUserInfo()
-            if (view!!.id == R.id.volunteer_login) login(account, EncryptPassword.encrypt(password))
+            if (view!!.id == R.id.btn_volunteer_login) login(account, EncryptPassword.encrypt(password))
         }
 
         useSoftKeyboard()

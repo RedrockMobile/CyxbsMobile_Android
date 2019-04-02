@@ -4,85 +4,87 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFFFFF"
+    android:background="#F9F9F9"
     android:orientation="vertical"
     tools:context=".VolunteerLoginActivity"
     tools:ignore="ResourceName">
 
-    <FrameLayout
+
+    <com.mredrock.cyxbs.common.component.JToolbar
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="@color/volunteer_colorPrimary"
+        android:fitsSystemWindows="true"
+        app:navigationIcon="@drawable/common_ic_back"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
 
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="280dp"
-            android:scaleType="centerCrop"
-            android:src="@drawable/volunteer_background_login" />
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="true"
+        android:maxHeight="500dp"
+        android:src="@drawable/volunteer_background_login"
+        tools:ignore="ContentDescription" />
 
-        <com.mredrock.cyxbs.common.component.JToolbar
-            android:id="@+id/toolbar"
+    <com.mredrock.cyxbs.common.component.JCardViewPlus
+        android:id="@+id/jcv_volunteer_input"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="65dp"
+        android:layout_marginEnd="20dp"
+        android:foreground="?attr/selectableItemBackground"
+        app:cardCornerRadius="2dp"
+        app:horizontalContentPadding="25dp"
+        app:shadowRadius="10dp"
+        app:verticalContentPadding="25dp">
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@android:color/transparent"
-            android:fitsSystemWindows="true"
-            app:navigationIcon="@drawable/common_ic_back"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-            app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
+            android:background="@android:color/white"
+            android:orientation="vertical">
 
-    </FrameLayout>
+            <EditText
+                android:id="@+id/volunteer_account"
+                style="@style/VolunteerEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="40dp"
+                android:background="@null"
+                android:drawableStart="@drawable/volunteer_ic_account"
+                android:hint="@string/volunteer_hint_input_account"
+                android:inputType="text"
+                tools:ignore="Autofill" />
 
-    <EditText
-        android:id="@+id/volunteer_account"
-        android:layout_width="270dp"
-        android:layout_height="50dp"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="10dp"
-        android:cursorVisible="true"
-        android:drawableStart="@mipmap/volunteer_login_number"
-        android:drawablePadding="16dp"
-        android:hint="@string/volunteer_hint_input_account"
-        android:imeOptions="actionGo"
-        android:inputType="text"
-        android:lines="1"
-        android:singleLine="true"
-        android:textColorHint="@color/volunteer_edit_Normal"
-        android:textCursorDrawable="@drawable/volunteer_cursor_color"
-        android:textSize="14sp"
-        app:theme="@style/VolunteerEditText"
-        tools:ignore="Autofill" />
-
-
-    <EditText
-        android:id="@+id/volunteer_password"
-        android:layout_width="270dp"
-        android:layout_height="50dp"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="10dp"
-        android:cursorVisible="true"
-        android:drawableStart="@mipmap/volunteer_login_password"
-        android:drawablePadding="16dp"
-        android:hint="@string/volunteer_hint_input_pwd"
-        android:imeOptions="actionGo"
-        android:inputType="textPassword"
-        android:lines="1"
-        android:singleLine="true"
-        android:textColorHint="@color/volunteer_edit_Normal"
-        android:textCursorDrawable="@drawable/volunteer_cursor_color"
-        android:textSize="14sp"
-        app:theme="@style/VolunteerEditText"
-        tools:ignore="Autofill" />
+            <EditText
+                android:id="@+id/volunteer_password"
+                style="@style/VolunteerEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:background="@null"
+                android:drawableStart="@drawable/volunteer_ic_pwd"
+                android:hint="@string/volunteer_hint_input_pwd"
+                android:inputType="textPassword"
+                tools:ignore="Autofill" />
+        </LinearLayout>
+    </com.mredrock.cyxbs.common.component.JCardViewPlus>
 
     <Button
-        android:id="@+id/volunteer_login"
-        android:layout_width="wrap_content"
-        android:layout_height="38sp"
+        android:id="@+id/btn_volunteer_login"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginTop="38dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginEnd="30dp"
         android:background="@drawable/volunteer_bg_btn_login"
-        android:paddingStart="114dp"
-        android:paddingEnd="114dp"
-        android:text="@string/volunteer_save"
+        android:text="@string/volunteer_login"
         android:textColor="@android:color/white"
-        android:textSize="16sp" />
+        android:textSize="17sp" />
 
 </LinearLayout>

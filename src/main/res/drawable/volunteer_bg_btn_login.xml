@@ -2,9 +2,7 @@
 <shape android:shape="rectangle"
     xmlns:android="http://schemas.android.com/apk/res/android" >
 
-    <gradient
-        android:startColor="#FD7C5E"
-        android:endColor="#FC6B4F" />
+    <solid android:color="@color/volunteer_bg_btn_login" />
 
     <corners android:radius="24dp" />
 
