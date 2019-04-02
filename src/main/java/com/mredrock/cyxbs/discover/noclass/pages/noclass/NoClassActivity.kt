@@ -5,8 +5,12 @@ import android.arch.lifecycle.Observer
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.widget.GridLayoutManager
+import android.util.Log
 import com.alibaba.android.arouter.facade.annotation.Route
+import com.alibaba.android.arouter.facade.model.RouteMeta.build
+import com.alibaba.android.arouter.launcher.ARouter
 import com.mredrock.cyxbs.common.BaseApp
+import com.mredrock.cyxbs.common.config.COURSE_NO_COURSE_INVITE
 import com.mredrock.cyxbs.common.config.DISCOVER_NO_CLASS
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.discover.noclass.R
@@ -69,7 +73,19 @@ class NoClassActivity : BaseViewModelActivity<NoClassViewModel>() {
 
     private fun initBtn() {
         noclass_btn_query.setOnClickListener {
-            (noclass_rv.adapter as NoClassRvAdapter).getStuList()
+            val students = (noclass_rv.adapter as NoClassRvAdapter).getStuList()
+            val nameList = arrayListOf<String>()
+            val numList = arrayListOf<String>()
+            students.forEach {
+                numList.add(it.stunum?:"")
+                nameList.add(it.name?:"")
+            }
+            Log.d("fxy","stuNum $numList")
+            ARouter.getInstance()
+                    .build(COURSE_NO_COURSE_INVITE)
+                    .withStringArrayList("stuNumList",numList)
+                    .withStringArrayList("stuNameList",nameList)
+                    .navigation()
         }
     }
 
