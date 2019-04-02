@@ -80,7 +80,6 @@ class NoClassActivity : BaseViewModelActivity<NoClassViewModel>() {
                 numList.add(it.stunum?:"")
                 nameList.add(it.name?:"")
             }
-            Log.d("fxy","stuNum $numList")
             ARouter.getInstance()
                     .build(COURSE_NO_COURSE_INVITE)
                     .withStringArrayList("stuNumList",numList)
