@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:paddingStart="50dp"
+    android:paddingEnd="50dp"
+    android:paddingTop="20dp"
+    android:minWidth="500dp"
+    android:paddingBottom="20dp"
+    android:background="@drawable/electricity_shape_round"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <com.aigestudio.wheelpicker.WheelPicker
+        android:id="@+id/wp_dormitory_head"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:wheel_data="@array/electricity_building_name_head"
+        app:wheel_item_space="11dp"
+        app:wheel_item_text_size="18sp"
+        app:wheel_selected_item_text_color="#333"
+        app:wheel_visible_item_count="5"
+        app:wheel_atmospheric="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        app:wheel_cyclic="true"
+        app:wheel_item_text_color="#CC999999" />
+
+    <com.aigestudio.wheelpicker.WheelPicker
+        android:id="@+id/wp_dormitory_foot"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:wheel_item_space="11dp"
+        app:wheel_item_text_size="18sp"
+        app:wheel_selected_item_text_color="#333"
+        app:wheel_visible_item_count="5"
+        app:wheel_atmospheric="true"
+        app:wheel_cyclic="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        app:wheel_item_text_color="#CC999999" />
+
+    <Button
+        android:id="@+id/btn_dialog_dormitory_confirm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="35dp"
+        android:paddingStart="32dp"
+        android:paddingEnd="32dp"
+        android:paddingTop="11dp"
+        android:paddingBottom="11dp"
+        android:textStyle="bold"
+        android:background="@drawable/electricity_bg_btn"
+        android:textColor="@color/electricity_white"
+        android:text="@string/electricity_confirm"
+        android:layout_below="@id/wp_dormitory_head"
+        android:layout_centerHorizontal="true"
+        android:textSize="15sp"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp" />
+
+</RelativeLayout>

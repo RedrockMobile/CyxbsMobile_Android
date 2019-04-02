@@ -7,8 +7,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.NavHostFragment
 import com.mredrock.cyxbs.common.ui.BaseViewModelFragment
+import com.mredrock.cyxbs.discover.electricity.config.BUILDING_NAMES
+import com.mredrock.cyxbs.discover.electricity.config.SP_BUILDING_FOOT_KEY
+import com.mredrock.cyxbs.discover.electricity.config.SP_BUILDING_HEAD_KEY
 import com.mredrock.cyxbs.electricity.R
-import com.mredrock.cyxbs.discover.electricity.config.SP_BUILDING_KEY
 import com.mredrock.cyxbs.discover.electricity.config.SP_ROOM_KEY
 import com.mredrock.cyxbs.discover.electricity.ui.widget.ElectricInfoView
 import com.mredrock.cyxbs.discover.electricity.viewmodel.ChargeViewModel
@@ -30,7 +32,7 @@ class ChargeFragment : BaseViewModelFragment<ChargeViewModel>() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val pos = defaultSharedPreferences.getInt(SP_BUILDING_KEY, -1)
+        val pos = defaultSharedPreferences.getInt(SP_BUILDING_HEAD_KEY, -1)
         if (pos == -1) {
             NavHostFragment.findNavController(this).apply {
                 popBackStack()
@@ -42,20 +44,19 @@ class ChargeFragment : BaseViewModelFragment<ChargeViewModel>() {
 
         viewModel.chargeInfo.observe(this, Observer {
             it ?: return@Observer
-            ecv_electric_circle_view.drawWithData(it.getEleCost().toFloat(), it.lastmoney, it.elecSpend)
-            ll_electric_info.apply {
-                setValue(getChildAt(0), it.getAverage())
-                setValue(getChildAt(1), it.elecFree)
-                setValue(getChildAt(2), it.getEleCost())
-                setValue(getChildAt(3), it.elecStart)
-                setValue(getChildAt(4), it.elecEnd)
-            }
+            electricity_view.refresh(it.lastmoney, it.elecSpend)
+            electricity_info_avg.setValue(it.getAverage())
+            electricity_info_free.setValue(it.elecFree)
+            electricity_info_start.setValue(it.elecStart)
+            electricity_info_end.setValue(it.elecEnd)
+            tv_electricity_info_cost.setValue(it.getEleCost())
             val t = "抄表日期： ${it.recordTime}"
             tv_electric_time.text = t
         })
 
-        val buildingIds = resources.getStringArray(R.array.electricity_building_id)
-        viewModel.getCharge(buildingIds[pos], defaultSharedPreferences.getString(SP_ROOM_KEY, ""))
+        val heads =  resources.getStringArray(R.array.electricity_building_name_head)
+        val id = BUILDING_NAMES.getValue(heads[pos])[defaultSharedPreferences.getInt(SP_BUILDING_FOOT_KEY, -1)].split("(")[1].split("栋")[0]
+        viewModel.getCharge(id, defaultSharedPreferences.getString(SP_ROOM_KEY, ""))
     }
 
     private fun setValue(view: View, value: String) {

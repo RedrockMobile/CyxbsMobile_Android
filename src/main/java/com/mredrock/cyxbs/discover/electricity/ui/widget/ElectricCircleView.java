@@ -58,10 +58,10 @@ public class ElectricCircleView extends View {
 
         centerX = getWidth() / 2;
         centerY = getWidth() / 2;
-        int innerCircleR = dip2px(context, 110); //内圆半径
-        int ringWidth = dip2px(context, 25);   //圆环宽度
+        int innerCircleR = dip2px(110); //内圆半径
+        int ringWidth = dip2px(25);   //圆环宽度
         int outSideWidth = innerCircleR + ringWidth / 2;
-        int outSideWidthLittle = innerCircleR + ringWidth / 2 - dip2px(context, 10);
+        int outSideWidthLittle = innerCircleR + ringWidth / 2 - dip2px(10);
         int count = (int) (rate * 12);
         drawInnerCircle(canvas, ringWidth, innerCircleR);
         drawArc(canvas, outSideWidth, 180, rate * 180, Color.parseColor("#12d0ff"));
@@ -76,43 +76,41 @@ public class ElectricCircleView extends View {
 
     private void drawMoneyText(Canvas canvas, String text) {
         paint.setColor(Color.parseColor("#12d0ff"));
-        paint.setTextSize(dip2px(context, 40));
-        float baseLine = centerY + dip2px(context, 5);
+        paint.setTextSize(dip2px(40));
+        float baseLine = centerY + dip2px(5);
 
         if (text.length() == 7) {
-            canvas.drawText(text, centerX - dip2px(context, 85), baseLine, paint);
-            paint.setTextSize(dip2px(context, 15));
-            canvas.drawText("元", centerX + dip2px(context, 60), baseLine, paint);
+            canvas.drawText(text, centerX - dip2px(85), baseLine, paint);
+            paint.setTextSize(dip2px(15));
+            canvas.drawText("元", centerX + dip2px(60), baseLine, paint);
         } else if (text.length() == 6) {
-            canvas.drawText(text, centerX - dip2px(context, 70), baseLine, paint);
-            paint.setTextSize(dip2px(context, 15));
-            canvas.drawText("元", centerX + dip2px(context, 55), baseLine, paint);
+            canvas.drawText(text, centerX - dip2px(70), baseLine, paint);
+            paint.setTextSize(dip2px(15));
+            canvas.drawText("元", centerX + dip2px(55), baseLine, paint);
         } else if (text.length() == 5) {
-            canvas.drawText(text, centerX - dip2px(context, 55), baseLine, paint);
-            paint.setTextSize(dip2px(context, 15));
-            canvas.drawText("元", centerX + dip2px(context, 50), baseLine, paint);
+            canvas.drawText(text, centerX - dip2px(55), baseLine, paint);
+            paint.setTextSize(dip2px(15));
+            canvas.drawText("元", centerX + dip2px(50), baseLine, paint);
         } else {
-            canvas.drawText(text, centerX - dip2px(context, 45), baseLine, paint);
-            paint.setTextSize(dip2px(context, 15));
-            canvas.drawText("元", centerX + dip2px(context, 40), baseLine, paint);
+            canvas.drawText(text, centerX - dip2px(45), baseLine, paint);
+            paint.setTextSize(dip2px(15));
+            canvas.drawText("元", centerX + dip2px(40), baseLine, paint);
         }
     }
 
     private void drawUsageText(Canvas canvas, String usage) {
         paint.setColor(Color.parseColor("#93b3c2"));
-        paint.setTextSize(dip2px(context, 20));
-        float baseLine = centerY + dip2px(context, 50);
+        paint.setTextSize(dip2px(20));
+        float baseLine = centerY + dip2px(50);
         if (usage == null)
             usage = "0";
         if (usage.length() == 1) {
-            canvas.drawText(usage + "度", centerX - dip2px(context, 20), baseLine, paint);
+            canvas.drawText(usage + "度", centerX - dip2px( 20), baseLine, paint);
         } else if (usage.length() == 2) {
-            canvas.drawText(usage + "度", centerX - dip2px(context, 25), baseLine, paint);
+            canvas.drawText(usage + "度", centerX - dip2px( 25), baseLine, paint);
         } else {
-            canvas.drawText(usage + "度", centerX - dip2px(context, 30), baseLine, paint);
-
+            canvas.drawText(usage + "度", centerX - dip2px(30), baseLine, paint);
         }
-
     }
 
 
@@ -124,7 +122,7 @@ public class ElectricCircleView extends View {
 
     private void drawArc(Canvas canvas, float outSideWidth, float startAngle, float sweepAngle, int color) {
         this.paint.setColor(color);
-        this.paint.setStrokeWidth(dip2px(context, 6));
+        this.paint.setStrokeWidth(dip2px(6));
         rectF.left = centerX - outSideWidth;
         rectF.right = centerX + outSideWidth;
         rectF.bottom = centerY + outSideWidth;
@@ -133,17 +131,17 @@ public class ElectricCircleView extends View {
     }
 
     private void drawShortLine(Canvas canvas, float outSideWidth, float outSideWidthLittle, int startNum, int count, int color) {
-        this.paint.setStrokeWidth(dip2px(context, 3));
-        paint.setColor(color);
-        //this.paint.setColor(Color.parseColor("#12d0ff"));
-
-        for (int i = startNum; i < count; i++) {
-            float startX = (float) (centerX + outSideWidth * cos(15 * (i + 1)));
-            float endX = (float) (centerX + outSideWidthLittle * cos(15 * (i + 1)));
-            float startY = (float) (centerY - outSideWidth * sin(15 * (i + 1)));
-            float endY = (float) (centerY - outSideWidthLittle * sin(15 * (i + 1)));
-            canvas.drawLine(startX, startY, endX, endY, paint);
-        }
+//        this.paint.setStrokeWidth(dip2px(3));
+//        paint.setColor(color);
+//        //this.paint.setColor(Color.parseColor("#12d0ff"));
+//
+//        for (int i = startNum; i < count; i++) {
+//            float startX = (float) (centerX + outSideWidth * cos(15 * (i + 1)));
+//            float endX = (float) (centerX + outSideWidthLittle * cos(15 * (i + 1)));
+//            float startY = (float) (centerY - outSideWidth * sin(15 * (i + 1)));
+//            float endY = (float) (centerY - outSideWidthLittle * sin(15 * (i + 1)));
+//            canvas.drawLine(startX, startY, endX, endY, paint);
+//        }
     }
 
     @Override
@@ -158,10 +156,10 @@ public class ElectricCircleView extends View {
         float degree = 180 - rate * 180;
         float x = (float) (centerX + outSideWidth * cos(degree));
         float y = (float) (centerY - outSideWidth * sin(degree));
-        canvas.drawCircle(x, y, dip2px(context, 18), paint);
-        canvas.drawCircle(x, y, dip2px(context, 14), paint);
+        canvas.drawCircle(x, y, dip2px(18), paint);
+        canvas.drawCircle(x, y, dip2px(14), paint);
         paint.setColor(Color.parseColor("#d941cfff"));
-        canvas.drawCircle(x, y, dip2px(context, 10), paint);
+        canvas.drawCircle(x, y, dip2px(10), paint);
     }
 
     private double sin(double value) {
@@ -172,7 +170,7 @@ public class ElectricCircleView extends View {
         return Math.cos(Math.toRadians(value));
     }
 
-    private static int dip2px(Context context, float dpValue) {
+    private int dip2px(float dpValue) {
         return DimensionsKt.dip(context, dpValue);
     }
 }

@@ -1,65 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/electricity_bg_setting">
+    android:background="@android:color/white"
+    android:orientation="vertical">
 
-
-    <android.support.constraint.Guideline
-        android:id="@+id/electricity_guideline"
-        android:layout_width="wrap_content"
+    <ImageView
+        android:id="@+id/iv_bg"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintGuide_percent="0.5" />
+        android:adjustViewBounds="true"
+        android:maxHeight="500dp"
+        tools:ignore="ContentDescription" />
 
     <android.support.v7.widget.AppCompatEditText
         android:id="@+id/et_dormitory_building"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginStart="70dp"
-        android:layout_marginEnd="50dp"
-        android:paddingStart="5dp"
-        android:paddingEnd="10dp"
-        android:drawableStart="@drawable/electricity_ic_dormitory_building"
-        android:drawablePadding="20dp"
+        android:layout_marginStart="44dp"
+        android:layout_marginTop="50dp"
+        android:layout_marginEnd="44dp"
+        android:background="@drawable/electricity_bg_et"
         android:drawableEnd="@drawable/electricity_ic_arrow_topple"
         android:hint="@string/electricity_dormitory_building"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/electricity_guideline" />
+        android:paddingStart="18dp"
+        android:paddingEnd="20dp"
+        android:textColorHint="#333"/>
 
     <android.support.v7.widget.AppCompatEditText
         android:id="@+id/et_dormitory_room"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginStart="70dp"
-        android:layout_marginEnd="50dp"
-        android:paddingStart="5dp"
-        android:paddingEnd="10dp"
-        android:drawableStart="@drawable/electricity_ic_dormitory_room"
+        android:layout_marginStart="44dp"
+        android:layout_marginTop="23dp"
+        android:layout_marginEnd="44dp"
+        android:background="@drawable/electricity_bg_et"
         android:drawablePadding="20dp"
         android:hint="@string/electricity_dormitory_room"
         android:inputType="number"
         android:maxLength="3"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/et_dormitory_building" />
+        android:paddingStart="18dp"
+        android:paddingEnd="10dp"
+        android:textColorHint="#333" />
 
     <android.support.v7.widget.AppCompatButton
         android:id="@+id/btn_dormitory_confirm"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:background="@drawable/electricity_circle_button_shape"
+        android:background="@drawable/electricity_bg_btn"
+        android:layout_marginStart="44dp"
+        android:layout_marginTop="36dp"
+        android:layout_marginEnd="44dp"
         android:text="@string/electricity_confirm"
-        android:textColor="@color/electricity_white"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/et_dormitory_room"
-        app:layout_constraintStart_toStartOf="@+id/et_dormitory_room"
-        app:layout_constraintTop_toBottomOf="@+id/et_dormitory_room"
-        app:layout_constraintVertical_bias="0.284" />
+        android:textColor="@color/electricity_white" />
 
-</android.support.constraint.ConstraintLayout>
+</LinearLayout>

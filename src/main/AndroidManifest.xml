@@ -3,7 +3,8 @@
     package="com.mredrock.cyxbs.electricity">
 
     <application>
-        <activity android:name="com.mredrock.cyxbs.discover.electricity.ui.activity.ElectricityChargeActivity" />
+        <activity android:name="com.mredrock.cyxbs.discover.electricity.ui.activity.ElectricityChargeActivity"
+            android:windowSoftInputMode="adjustPan"/>
     </application>
 
 </manifest>

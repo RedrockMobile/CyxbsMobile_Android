@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools"  tools:ignore="ResourceName">
     <color name="electricity_white">#fff</color>
-    <color name="electricity_blue_value">#12b9ff</color>
     <color name="electricity_gray">#999999</color>
     <color name="electricity_gray_hint_text">#777777</color>
-    <color name="electricity_blue_hint_btn">#12caff</color>
-    <color name="electricity_gray_line">#f0f1f5</color>
-    <color name="electricity_hint_text">#9ea1a6</color>
+    <color name="electricity_blue_hint_btn">#7C9BFF</color>
+    <color name="electricity_hint_text">#B346ACEB</color>
+
+    <color name="electricity_info_hint_text">#b2e2ff</color>
+    <color name="electricity_info_value">#5a99f7</color>
+
 </resources>

@@ -3,6 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:title="@string/electricity_set_dormitory"
-        android:icon="@drawable/electricity_ic_settings_white_24dp"
+        android:icon="@drawable/electricity_ic_settings_white"
         app:showAsAction="always" />
 </menu>

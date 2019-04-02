@@ -7,8 +7,8 @@ import androidx.navigation.fragment.NavHostFragment
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.mredrock.cyxbs.common.config.DISCOVER_ELECTRICITY
 import com.mredrock.cyxbs.common.ui.BaseActivity
+import com.mredrock.cyxbs.discover.electricity.config.SP_BUILDING_HEAD_KEY
 import com.mredrock.cyxbs.electricity.R
-import com.mredrock.cyxbs.discover.electricity.config.SP_BUILDING_KEY
 import kotlinx.android.synthetic.main.electricity_activity_charge.*
 import org.jetbrains.anko.defaultSharedPreferences
 
@@ -31,7 +31,7 @@ class ElectricityChargeActivity : BaseActivity() {
                 menuI?.isVisible = true
             }
         }
-        if (defaultSharedPreferences.getInt(SP_BUILDING_KEY, -1) == -1) {
+        if (defaultSharedPreferences.getInt(SP_BUILDING_HEAD_KEY, -1) == -1) {
             navigation.popBackStack()
             navigation.navigate(R.id.electricity_nav_setting_fragment)
         }
