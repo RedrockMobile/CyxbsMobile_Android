@@ -28,6 +28,8 @@ const val DISCOVER_NEWS = "/news/discover/entry"
 // NoCourseInviteActivity
 const val COURSE_NO_COURSE_INVITE = "/course/no_course_invite_activity"
 
+const val COURSE_OTHER_COURSE = "/course/other_course_activity"
+
 //大红页
 const val REDROCK_HOME_ENTRY = "/redrock_home/entry"
 
