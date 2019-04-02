@@ -25,10 +25,21 @@ abstract class ScheduleDatabase : RoomDatabase() {
     companion object {
         private var INSTANCE: ScheduleDatabase? = null
         //这里不弄单例模式的原因是因为他人课表和自己课表不能用同一个数据库，损失了性能但是可以节流
-        fun getDatabase(context: Context,stuNum:String): ScheduleDatabase? {
-            INSTANCE = Room.databaseBuilder(context,
-                    ScheduleDatabase::class.java, "schedules_database$stuNum").build()
-            return INSTANCE
+        fun getDatabase(context: Context,isGetOther:Boolean,stuNum:String): ScheduleDatabase? {
+            if (INSTANCE == null) {
+                synchronized(ScheduleDatabase::class) {
+                    if (INSTANCE == null) {
+                        INSTANCE = Room.databaseBuilder(context,
+                                ScheduleDatabase::class.java, "schedules_database").build()
+                    }
+                }
+            }
+            return if(isGetOther){
+                Room.databaseBuilder(context,
+                        ScheduleDatabase::class.java, "schedules_database$stuNum").build()
+            }else{
+                INSTANCE
+            }
         }
     }
 }

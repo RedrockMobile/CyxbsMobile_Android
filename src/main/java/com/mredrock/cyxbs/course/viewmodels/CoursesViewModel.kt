@@ -77,7 +77,7 @@ class CoursesViewModel : ViewModel() {
     }
 
     private val mCoursesDatabase: ScheduleDatabase? by lazy(LazyThreadSafetyMode.NONE) {
-        ScheduleDatabase.getDatabase(BaseApp.context,mStuNum)
+        ScheduleDatabase.getDatabase(BaseApp.context,isGetOthers.value!!,mStuNum)
     }
     private val mCourseApiService: CourseApiService  by lazy(LazyThreadSafetyMode.NONE) {
         ApiGenerator.getApiService(CourseApiService::class.java)
