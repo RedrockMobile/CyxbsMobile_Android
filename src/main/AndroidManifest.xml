@@ -5,6 +5,7 @@
 
     <application tools:ignore="GoogleAppIndexingWarning">
         <activity android:name=".pages.stusearch.OtherCourseActivity"/>
+        <activity android:name=".pages.stulist.StuListActivity"/>
     </application>
 
 </manifest>

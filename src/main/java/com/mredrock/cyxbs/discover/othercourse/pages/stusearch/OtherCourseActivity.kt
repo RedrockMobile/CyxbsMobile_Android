@@ -4,6 +4,7 @@ import android.arch.lifecycle.Observer
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.mredrock.cyxbs.common.config.DISCOVER_OTHER_COURSE
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
@@ -31,13 +32,13 @@ class OtherCourseActivity : BaseViewModelActivity<OtherCourseViewModel>() {
     }
 
     private fun initObserve() {
-        viewModel.mStuList.observe( this, Observer {
+        viewModel.mStuList.observeNotNull {
             if (it!!.isNotEmpty()) {
                 startActivity<StuListActivity>("stu_list" to it)
             } else {
                 snackbar("查无此人")
             }
-        })
+        }
     }
 
     private fun setSearch() {

@@ -28,7 +28,6 @@ class OtherCourseViewModel: BaseViewModel() {
                 .doOnSubscribe { progressDialogEvent.value = ProgressDialogEvent.SHOW_NONCANCELABLE_DIALOG_EVENT }
                 .safeSubscribeBy {
                     mStuList.value = it
-                    LogUtils.d("zzxTest", "change")
                 }.lifeCycle()
     }
 }
