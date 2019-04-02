@@ -20,30 +20,6 @@ class NewsListActivity : BaseActivity() {
     override val isFragmentActivity = false
 
     private val service = ApiGenerator.getApiService(ApiService::class.java)
-    /*           模拟数据 object : ApiService{
-                    override fun getNewsList(page: Int) = Observable.create<RedrockApiWrapper<List<NewsListItem>>> {
-                        val g = Gson()
-                        it.onNext(RedrockApiWrapper(List<NewsListItem>(5) { _ ->
-                            g.fromJson("{\n" +
-                                    "               \"totalCount\": 2676,\n" +
-                                    "               \"fileId\": 6014,\n" +
-                                    "               \"dirId\": \"0001\",\n" +
-                                    "               \"title\": \"关于2018-2019学年第一学期学籍异动学生补、改选课的通知\",\n" +
-                                    "               \"pubId\": \"060408    \",\n" +
-                                    "               \"pubTime\": 2018年9月21日\",\n" +
-                                    "               \"pubIp\": \"172.22.80.110       \",\n" +
-                                    "               \"readCount\": 37,\n" +
-                                    "               \"dirName\": \"最新通知                                \",\n" +
-                                    "               \"teaName\": \"高运玲\",\n" +
-                                    "               \"days\": 0\n" +
-                                    "           }", NewsListItem::class.java)
-                        }).apply {
-                            status = 200
-                        })
-                    }
-
-                    override fun getNewsDetails(id: Int) = Observable.create<RedrockApiWrapper<NewsDetails>> {}
-               }*/
     private var nextPage = 1
 
     private lateinit var adapter: NewsAdapter

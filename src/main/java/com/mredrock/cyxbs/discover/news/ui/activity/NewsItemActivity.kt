@@ -13,6 +13,7 @@ import com.mredrock.cyxbs.common.viewmodel.event.ProgressDialogEvent
 import com.mredrock.cyxbs.discover.news.R
 import com.mredrock.cyxbs.discover.news.bean.NewsAttachment
 import com.mredrock.cyxbs.discover.news.utils.FileTypeHelper
+import com.mredrock.cyxbs.discover.news.utils.TimeFormatHelper
 import com.mredrock.cyxbs.discover.news.viewmodel.NewsItemViewModel
 import com.tbruyelle.rxpermissions2.RxPermissions
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -110,7 +111,7 @@ class NewsItemActivity : BaseViewModelActivity<NewsItemViewModel>(), NewsItemVie
             it ?: return@Observer
 
             tv_title.text = it.title
-            tv_time.text = it.pubTime
+            tv_time.text = TimeFormatHelper.format(it.date)
             tv_detail.text = if (it.content.length < 10 && it.content.contains("(见附件)")) {
                 intent.getStringExtra("title")
             } else {
@@ -132,7 +133,7 @@ class NewsItemActivity : BaseViewModelActivity<NewsItemViewModel>(), NewsItemVie
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.news_menu, menu)
         menu?.getItem(0)?.setOnMenuItemClickListener { _ ->
-            val items = viewModel.news.value?.attachment
+            val items = viewModel.news.value?.files
             if (items == null) {
                 viewModel.toastEvent.value = R.string.news_init
                 return@setOnMenuItemClickListener false

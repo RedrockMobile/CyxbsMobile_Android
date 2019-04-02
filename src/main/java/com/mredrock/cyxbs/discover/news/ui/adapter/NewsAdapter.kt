@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import com.mredrock.cyxbs.discover.news.R
 import com.mredrock.cyxbs.discover.news.bean.NewsListItem
 import com.mredrock.cyxbs.discover.news.ui.activity.NewsItemActivity
+import com.mredrock.cyxbs.discover.news.utils.TimeFormatHelper
 import kotlinx.android.synthetic.main.news_item_news.view.*
 import org.jetbrains.anko.startActivity
 
@@ -32,9 +33,9 @@ class NewsAdapter(private val newsList: MutableList<NewsListItem>) : RecyclerVie
         val news = newsList[position]
         holder.itemView.apply {
             setOnClickListener {
-                context.startActivity<NewsItemActivity>("id" to news.fileId, "title" to news.title)
+                context.startActivity<NewsItemActivity>("id" to news.id, "title" to news.title)
             }
-            tv_time.text = news.pubTime
+            tv_time.text = TimeFormatHelper.format(news.date)
             tv_title.text = news.title
         }
     }

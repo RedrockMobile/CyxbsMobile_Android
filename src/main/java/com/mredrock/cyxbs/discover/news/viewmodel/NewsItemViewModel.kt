@@ -3,8 +3,6 @@ package com.mredrock.cyxbs.discover.news.viewmodel
 import android.Manifest.permission.WRITE_EXTERNAL_STORAGE
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
-import android.databinding.ObservableArrayList
-import android.databinding.ObservableList
 import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.utils.extensions.mapOrThrowApiException
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
@@ -34,19 +32,6 @@ class NewsItemViewModel : BaseViewModel() {
                 .safeSubscribeBy {
                     (news as MutableLiveData).value = it
                 }.dispose()
-/* 模拟数据       (news as MutableLiveData).value = Gson().fromJson("{\n" +
-                "           \"title\": \"2017级学生转专业录取公示\",\n" +
-                "           \"pubTime\": \"2018年9月21日\",\n" +
-                "           \"teaName\": \"杨艳\",\n" +
-                "           \"readCount\": 472,\n" +
-                "           \"content\": \" (见附件) \\n\",\n" +
-                "           \"urlData\": [\n" +
-                "               {\n" +
-                "                   \"url\": \"fileDownLoadAttach.php?id=6567\",\n" +
-                "                   \"urlname\": \"转专业录取公示(753次下载)\"\n" +
-                "               }\n" +
-                "           ]\n" +
-                "       }", NewsDetails::class.java)*/
     }
 
     fun download(rxPermissions: RxPermissions, list: List<NewsAttachment>, listener: NewsDownloadListener) {
@@ -67,7 +52,7 @@ class NewsItemViewModel : BaseViewModel() {
                         override fun onFail(e: Throwable) {
                             listener.onDownloadEnd(pos, e = e)
                         }
-                    }, it.url, it.name)
+                    }, it.id, it.name)
                 }
             } else {
                 listener.onDownloadEnd(-1, e = Exception("permission deny"))

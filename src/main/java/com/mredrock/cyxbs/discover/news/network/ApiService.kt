@@ -4,9 +4,8 @@ import com.mredrock.cyxbs.common.bean.RedrockApiWrapper
 import com.mredrock.cyxbs.discover.news.bean.NewsDetails
 import com.mredrock.cyxbs.discover.news.bean.NewsListItem
 import io.reactivex.Observable
-import retrofit2.http.Field
-import retrofit2.http.FormUrlEncoded
-import retrofit2.http.POST
+import okhttp3.Call
+import retrofit2.http.*
 
 /**
  * Author: Hosigus
@@ -14,12 +13,14 @@ import retrofit2.http.POST
  * Description: com.mredrock.cyxbs.discover.news.network
  */
 interface ApiService {
-    @FormUrlEncoded
-    @POST("/api/jwNewsList")
-    fun getNewsList(@Field("page") page: Int): Observable<RedrockApiWrapper<List<NewsListItem>>>
+    @GET("/api/jwNews/list")
+    fun getNewsList(@Query ("page") page: Int): Observable<RedrockApiWrapper<List<NewsListItem>>>
 
-    @FormUrlEncoded
-    @POST("/api/jwNewsContent")
-    fun getNewsDetails(@Field("id") id: Int): Observable<RedrockApiWrapper<NewsDetails>>
+    @GET("/api/jwNews/content")
+    fun getNewsDetails(@Query("id") id: Int): Observable<RedrockApiWrapper<NewsDetails>>
+
+    @Streaming
+    @GET("/api/file")
+    fun download(@Query("id") id: String): Call
 
 }

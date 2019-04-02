@@ -3,15 +3,17 @@ package com.mredrock.cyxbs.discover.news.bean
 import com.google.gson.annotations.SerializedName
 import java.io.Serializable
 
-data class NewsDetails(@SerializedName("urlData")
-                       val attachment: List<NewsAttachment> = listOf(),
+data class NewsDetails(@SerializedName("date")
+                       val date: String = "",
+                       @SerializedName("author")
+                       val author: String = "",
+                       @SerializedName("files")
+                       val files: List<NewsAttachment>?,
+                       @SerializedName("id")
+                       val id: String = "",
                        @SerializedName("title")
                        val title: String = "",
-                       @SerializedName("pubTime")
-                       val pubTime: String = "",
-                       @SerializedName("teaName")
-                       val teaName: String = "",
                        @SerializedName("readCount")
-                       val readCount: Int = 0,
+                       val readCount: String = "",
                        @SerializedName("content")
                        val content: String = ""): Serializable
