@@ -70,7 +70,10 @@ class CourseContainerFragment : BaseFragment() {
 
     private fun initFragment() {
         activity ?: return
-        mOthersStuNum = arguments?.getString(OTHERS_STU_NUM)
+
+        arguments?.let {
+            mOthersStuNum = it.getString(OTHERS_STU_NUM)
+        }
 
         setHasOptionsMenu(true)
         resources.getStringArray(R.array.course_course_weeks_strings).let {
@@ -93,9 +96,9 @@ class CourseContainerFragment : BaseFragment() {
 
         // 获取依赖于CourseContainerFragment的Activity的CoursesViewModel。在WeekFragment的切换的时候，不会
         // 重复获取数据。
-        mCoursesViewModel = ViewModelProviders.of(activity!!).get(CoursesViewModel::class.java)
-        mCoursesViewModel.getSchedulesData(activity!!, mOthersStuNum)
+            mCoursesViewModel = ViewModelProviders.of(activity!!).get(CoursesViewModel::class.java)
 
+        mCoursesViewModel.getSchedulesData(activity!!,  mOthersStuNum)
         mCoursesViewModel.nowWeek.observe(activity!!, Observer { nowWeek ->
             if (nowWeek != null && nowWeek != 0) {
                 // 过时的本周的位置以及将其替换为原始周数显示
