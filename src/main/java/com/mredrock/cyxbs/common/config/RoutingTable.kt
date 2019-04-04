@@ -28,9 +28,15 @@ const val DISCOVER_NEWS = "/news/discover/entry"
 // NoCourseInviteActivity
 const val COURSE_NO_COURSE_INVITE = "/course/no_course_invite_activity"
 
+const val COURSE_OTHER_COURSE = "/course/other_course_activity"
+
 //大红页
 const val REDROCK_HOME_ENTRY = "/redrock_home/entry"
 
 
 //小控件设置
 const val WIDGET_SETTING = "/setting/widget"
+
+//QA提问、帮助界面
+const val QA_QUIZ = "/quiz/qa/entry"
+const val QA_ANSWER = "/answer/qa/entry"
