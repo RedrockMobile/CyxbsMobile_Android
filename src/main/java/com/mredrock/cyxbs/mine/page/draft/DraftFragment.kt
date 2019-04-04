@@ -3,6 +3,7 @@ package com.mredrock.cyxbs.mine.page.draft
 import android.animation.Animator
 import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Context
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
@@ -101,7 +102,13 @@ class DraftFragment : BaseRVFragment<Draft>() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        view?.initData()
+//        view?.initData()
+    }
+
+    // 为了实时更新数据直接在onResume里面进行加载
+    override fun onResume() {
+        super.onResume()
+        onSwipeLayoutRefresh()
     }
 
     //传递回调
