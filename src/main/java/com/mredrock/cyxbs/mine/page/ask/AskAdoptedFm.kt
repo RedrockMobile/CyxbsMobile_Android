@@ -7,7 +7,7 @@ import android.os.Bundle
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import com.mredrock.cyxbs.mine.R
-import com.mredrock.cyxbs.mine.network.model.MyQuestion
+import com.mredrock.cyxbs.mine.network.model.MyAskQuestion
 import com.mredrock.cyxbs.mine.util.TimeUtil
 import com.mredrock.cyxbs.mine.util.ui.BaseRVFragment
 import kotlinx.android.synthetic.main.mine_list_item_my_help.view.*
@@ -15,7 +15,7 @@ import kotlinx.android.synthetic.main.mine_list_item_my_help.view.*
 /**
  * Created by zia on 2018/8/17.
  */
-class AskAdoptedFm : BaseRVFragment<MyQuestion>() {
+class AskAdoptedFm : BaseRVFragment<MyAskQuestion>() {
 
     val TYPE_ASK_OVER = 1
     val TYPE_ASK_WAIT = 2
@@ -70,7 +70,7 @@ class AskAdoptedFm : BaseRVFragment<MyQuestion>() {
     /**
      * 添加数据到recyclerView中，并显示没有更多
      */
-    private fun loadIntoRv(list: List<MyQuestion>?) {
+    private fun loadIntoRv(list: List<MyAskQuestion>?) {
         if (list == null) {
             return
         }
@@ -92,20 +92,20 @@ class AskAdoptedFm : BaseRVFragment<MyQuestion>() {
     }
 
     @SuppressLint("SetTextI18n")
-    override fun bindDataHolder(holder: RecyclerView.ViewHolder, position: Int, data: MyQuestion) {
+    override fun bindDataHolder(holder: RecyclerView.ViewHolder, position: Int, data: MyAskQuestion) {
         //隐藏全部小红点，以后可能需要使用小红点
         holder.itemView.mine_help_item_red_point.visibility = View.INVISIBLE
 
-        holder.itemView.mine_help_item_tv_question.text = "提问：${data.question_title}"
+        holder.itemView.mine_help_item_tv_question.text = "提问：${data.title}"
 
         when (type) {
             TYPE_ASK_OVER -> {
-                holder.itemView.mine_help_item_tv_answer.text = "采纳：${data.content}"
-                holder.itemView.mine_help_item_tv_time.text = "解决时间：${TimeUtil.wrapTime(data.updated_at)}"
+                holder.itemView.mine_help_item_tv_answer.text = "采纳：${data.description}"
+                holder.itemView.mine_help_item_tv_time.text = "解决时间：${TimeUtil.wrapTime(data.updatedAt)}"
             }
             TYPE_ASK_WAIT -> {
                 holder.itemView.mine_help_item_tv_answer.visibility = View.GONE
-                holder.itemView.mine_help_item_tv_time.text = "发布时间：${TimeUtil.wrapTime(data.created_at)}"
+                holder.itemView.mine_help_item_tv_time.text = "发布时间：${TimeUtil.wrapTime(data.createdAt)}"
             }
         }
     }

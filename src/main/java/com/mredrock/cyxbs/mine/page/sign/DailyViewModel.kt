@@ -6,7 +6,7 @@ import com.mredrock.cyxbs.common.utils.extensions.mapOrThrowApiException
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
-import com.mredrock.cyxbs.mine.network.model.CheckInStatus
+import com.mredrock.cyxbs.mine.network.model.ScoreStatus
 import com.mredrock.cyxbs.mine.util.apiService
 import com.mredrock.cyxbs.mine.util.normalWrapper
 
@@ -16,12 +16,10 @@ import com.mredrock.cyxbs.mine.util.normalWrapper
  */
 class DailyViewModel : BaseViewModel() {
 
-    val account = MutableLiveData<Int>()//账户积分
-    val status = MutableLiveData<CheckInStatus>()//签到状态
+    val status = MutableLiveData<ScoreStatus>()//签到状态
 
     fun loadAllData(user: User) {
-        account.value = user.integral
-        apiService.getCheckInStatus(user.stuNum!!, user.idNum!!)
+        apiService.getScoreStatus(user.stuNum!!, user.idNum!!)
                 .normalWrapper(this)
                 .safeSubscribeBy {
                     status.postValue(it)

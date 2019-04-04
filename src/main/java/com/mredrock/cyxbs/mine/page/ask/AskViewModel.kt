@@ -3,7 +3,7 @@ package com.mredrock.cyxbs.mine.page.ask
 import android.arch.lifecycle.MutableLiveData
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
-import com.mredrock.cyxbs.mine.network.model.MyQuestion
+import com.mredrock.cyxbs.mine.network.model.MyAskQuestion
 import com.mredrock.cyxbs.mine.util.apiService
 import com.mredrock.cyxbs.mine.util.normalWrapper
 import com.mredrock.cyxbs.mine.util.user
@@ -13,8 +13,8 @@ import com.mredrock.cyxbs.mine.util.user
  */
 class AskViewModel : BaseViewModel() {
     val errorEvent = MutableLiveData<String>()
-    val askOverEvent = MutableLiveData<List<MyQuestion>>()
-    val askWaitEvent = MutableLiveData<List<MyQuestion>>()
+    val askOverEvent = MutableLiveData<List<MyAskQuestion>>()
+    val askWaitEvent = MutableLiveData<List<MyAskQuestion>>()
 
     private var overPage = 1
     private var waitPage = 1

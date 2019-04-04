@@ -3,7 +3,8 @@ package com.mredrock.cyxbs.mine.page.help
 import android.arch.lifecycle.MutableLiveData
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
-import com.mredrock.cyxbs.mine.network.model.MyQuestion
+import com.mredrock.cyxbs.mine.network.model.MyAskQuestion
+import com.mredrock.cyxbs.mine.network.model.MyHelpQuestion
 import com.mredrock.cyxbs.mine.util.apiService
 import com.mredrock.cyxbs.mine.util.normalWrapper
 import com.mredrock.cyxbs.mine.util.user
@@ -14,8 +15,8 @@ import com.mredrock.cyxbs.mine.util.user
 class HelpViewModel : BaseViewModel() {
 
     val errorEvent = MutableLiveData<String>()
-    val adoptOverEvent = MutableLiveData<List<MyQuestion>>()
-    val adoptWaitEvent = MutableLiveData<List<MyQuestion>>()
+    val adoptOverEvent = MutableLiveData<List<MyHelpQuestion>>()
+    val adoptWaitEvent = MutableLiveData<List<MyHelpQuestion>>()
 
     private var overPage = 1
     private var waitPage = 1

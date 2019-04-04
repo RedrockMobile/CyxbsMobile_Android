@@ -16,8 +16,8 @@ public class Question implements Serializable {
      * tags : PHP
      * reward : 2
      * answer_num : 1
-     * disappear_at : 2018-04-30 01:11:20
-     * created_at : 2018-04-22 14:28:54
+     * disappearAt : 2018-04-30 01:11:20
+     * createdAt : 2018-04-22 14:28:54
      * is_anonymous : 0
      * id : 49
      * photo_thumbnail_src :
@@ -48,8 +48,8 @@ public class Question implements Serializable {
                 ", tags='" + tags + '\'' +
                 ", reward=" + reward +
                 ", answer_num=" + answer_num +
-                ", disappear_at='" + disappear_at + '\'' +
-                ", created_at='" + created_at + '\'' +
+                ", disappearAt='" + disappear_at + '\'' +
+                ", createdAt='" + created_at + '\'' +
                 ", is_anonymous=" + is_anonymous +
                 ", id=" + id +
                 ", photo_thumbnail_src='" + photo_thumbnail_src + '\'' +

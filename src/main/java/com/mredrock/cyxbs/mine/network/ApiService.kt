@@ -56,14 +56,14 @@ interface ApiService {
                 @Field("idnum") idNum: String): Observable<RedrockApiStatus>
 
     @FormUrlEncoded
-    @POST("app/index.php/QA/Integral/getCheckInStatus")
-    fun getCheckInStatus(@Field("stunum") stuNum: String,
-                         @Field("idnum") idNum: String): Observable<RedrockApiWrapper<CheckInStatus>>
+    @POST("app/index.php/QA/User/getScoreStatus")
+    fun getScoreStatus(@Field("stunum") stuNum: String,
+                       @Field("idnum") idNum: String): Observable<RedrockApiWrapper<ScoreStatus>>
 
     @FormUrlEncoded
     @POST("app/index.php/QA/User/integralRecords")
-    fun getIntegralRecords(@Field("stuNum") stuNum: String,
-                           @Field("idNum") idNum: String,
+    fun getIntegralRecords(@Field("stunum") stuNum: String,
+                           @Field("idnum") idNum: String,
                            @Field("page") page: Int,
                            @Field("size") size: Int): Observable<RedrockApiWrapper<List<PointDetail>>>
 
@@ -81,13 +81,13 @@ interface ApiService {
     fun commentAnswer(@Field("stuNum") stuNum: String,
                       @Field("idNum") idNum: String,
                       @Field("answer_id") aid: String,
-                      @Field("content") content: String): Observable<RedrockApiStatus>
+                      @Field("description") content: String): Observable<RedrockApiStatus>
 
     @FormUrlEncoded
     @POST("app/index.php/QA/User/updateItemInDraft")
     fun refreshDraft(@Field("stunum") stuNum: String,
                      @Field("idnum") idNum: String,
-                     @Field("content") content: String,
+                     @Field("description") content: String,
                      @Field("id") draftId: String): Observable<RedrockApiStatus>
 
     @FormUrlEncoded
@@ -106,7 +106,7 @@ interface ApiService {
                      @Field("idnum") idNum: String,
                      @Field("page") page: Int,
                      @Field("size") size: Int,
-                     @Field("type") type: Int = 1): Observable<RedrockApiWrapper<List<MyQuestion>>>
+                     @Field("type") type: Int = 1): Observable<RedrockApiWrapper<List<MyAskQuestion>>>
 
     @FormUrlEncoded
     @POST("/app/index.php/QA/User/ask")
@@ -114,7 +114,7 @@ interface ApiService {
                      @Field("idnum") idNum: String,
                      @Field("page") page: Int,
                      @Field("size") size: Int,
-                     @Field("type") type: Int = 2): Observable<RedrockApiWrapper<List<MyQuestion>>>
+                     @Field("type") type: Int = 2): Observable<RedrockApiWrapper<List<MyAskQuestion>>>
 
     /**
      * 帮一帮
@@ -125,7 +125,7 @@ interface ApiService {
                       @Field("idnum") idNum: String,
                       @Field("page") page: Int,
                       @Field("size") size: Int,
-                      @Field("type") type: Int = 1): Observable<RedrockApiWrapper<List<MyQuestion>>>
+                      @Field("type") type: Int = 1): Observable<RedrockApiWrapper<List<MyHelpQuestion>>>
 
     @FormUrlEncoded
     @POST("/app/index.php/QA/User/help")
@@ -133,7 +133,7 @@ interface ApiService {
                       @Field("idnum") idNum: String,
                       @Field("page") page: Int,
                       @Field("size") size: Int,
-                      @Field("type") type: Int = 2): Observable<RedrockApiWrapper<List<MyQuestion>>>
+                      @Field("type") type: Int = 2): Observable<RedrockApiWrapper<List<MyHelpQuestion>>>
 
     /**
      * 与我相关

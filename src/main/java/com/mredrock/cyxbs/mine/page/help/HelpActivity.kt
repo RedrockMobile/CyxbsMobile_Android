@@ -33,7 +33,7 @@ class HelpActivity(override val isFragmentActivity: Boolean = false) : BaseActiv
         waitFragment.type = waitFragment.TYPE_ADOPT_WAIT
 
         val fragmentList = listOf(overFragment, waitFragment)
-        val titleList = listOf("已解决", "未解决")
+        val titleList = listOf("已解决", "待解决")
 
         //设置viewPager
         mine_help_view_pager.adapter = TabPagerAdapter(supportFragmentManager, fragmentList, titleList)

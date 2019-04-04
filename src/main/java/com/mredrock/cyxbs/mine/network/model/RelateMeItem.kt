@@ -9,15 +9,15 @@ data class RelateMeItem(@SerializedName("photo_thumbnail_src")
                         val answerContent: String = "",
                         @SerializedName("nickname")
                         val nickname: String = "",
-                        @SerializedName("created_at")
+                        @SerializedName("createdAt")
                         val createdAt: String = "",
                         @SerializedName("target_id")
                         val targetId: String = "",
                         @SerializedName("type")
                         val type: String = "",
-                        @SerializedName("question_id")
+                        @SerializedName("questionId")
                         val questionId: String = "",
-                        @SerializedName("content")
+                        @SerializedName("description")
                         val content: String = "",
                         @SerializedName("photo_src")
                         val photoSrc: String = ""):Serializable {

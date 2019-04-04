@@ -2,9 +2,14 @@ package com.mredrock.cyxbs.mine.page.daily
 
 import android.arch.lifecycle.Observer
 import android.os.Bundle
+import android.support.v4.content.ContextCompat
+import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.view.Menu
+import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
+import com.mredrock.cyxbs.common.utils.extensions.loadAvatar
+import com.mredrock.cyxbs.common.utils.extensions.visible
 import com.mredrock.cyxbs.mine.R
 import kotlinx.android.synthetic.main.mine_activity_point_detail.*
 import org.jetbrains.anko.toast
@@ -24,33 +29,67 @@ class PointDetailActivity : BaseViewModelActivity<PointDetailViewModel>() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.mine_activity_point_detail)
 
-        viewModel.recordEvent.observe(this, Observer {
-            if (srl_point_detail.isRefreshing) {
-                srl_point_detail.isRefreshing = false
-            }
-            it ?: return@Observer
-            adapter.loadMore(it)
-        })
-        viewModel.errorEvent.observe(this, Observer {
-            if (srl_point_detail.isRefreshing) {
-                srl_point_detail.isRefreshing = false
-            }
-            it?:return@Observer
-            toast(it)
-        })
+        initObserve()
+
+        loadAvatar(BaseApp.user!!.photoThumbnailSrc, civ_head)
 
         common_toolbar.init("积 分 明 细")
 
-        rv_point_detail.layoutManager = LinearLayoutManager(this)
-        rv_point_detail.adapter = adapter
+        initRv()
+
+        initData()
+    }
+
+    private fun initData() {
+        viewModel.cleanPage()
+        adapter.clear()
+        viewModel.loadAllData()
+    }
+
+    private fun initRv() {
+        adapter.loadMoreSource = {
+            viewModel.loadRecord()
+        }
+
+        rv_point_detail.apply {
+            layoutManager = LinearLayoutManager(this@PointDetailActivity)
+            adapter = this@PointDetailActivity.adapter
+            addItemDecoration(DividerItemDecoration(this@PointDetailActivity,DividerItemDecoration.VERTICAL).let {
+                it.setDrawable(ContextCompat.getDrawable(this@PointDetailActivity,R.drawable.mine_div_line)!!)
+                it
+            })
+        }
 
         srl_point_detail.setOnRefreshListener {
             viewModel.cleanPage()
             adapter.clear()
-            viewModel.loadIntegralRecords()
+            viewModel.loadAllData()
         }
+    }
 
-        viewModel.loadIntegralRecords()
+    private fun initObserve() {
+        viewModel.apply {
+            accountEvent.observe(this@PointDetailActivity, Observer {
+                tv_point.text = it?.toString()
+            })
+            recordEvent.observe(this@PointDetailActivity, Observer {
+                if (srl_point_detail.isRefreshing) {
+                    srl_point_detail.isRefreshing = false
+                }
+                it ?: return@Observer
+                if (adapter.itemCount < 12) {
+                    jcv_contain.cleanCache()
+                }
+                adapter.loadMore(it)
+            })
+            errorEvent.observe(this@PointDetailActivity, Observer {
+                if (srl_point_detail.isRefreshing) {
+                    srl_point_detail.isRefreshing = false
+                }
+                it?:return@Observer
+                toast(it)
+            })
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

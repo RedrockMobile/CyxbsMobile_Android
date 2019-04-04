@@ -13,7 +13,7 @@ object Const {
 
     //签到
     const val CHECK_IN = "app/index.php/QA/Integral/checkIn"
-    const val CHECK_IN_STATUS = "app/index.php/QA/Integral/getCheckInStatus"
+    const val CHECK_IN_STATUS = "app/index.php/QA/Integral/getScoreStatus"
     const val CHECK_IN_ACCOUNT = "app/index.php/QA/Integral/getDiscountBalance"
     //草稿箱
     const val DELETE_DRAFT = "app/index.php/QA/User/deleteItemInDraft"

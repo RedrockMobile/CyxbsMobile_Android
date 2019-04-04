@@ -11,7 +11,7 @@ public class PointDetail implements Serializable {
     /**
      * num : 10
      * event_type : 签到
-     * created_at : 2019-03-14 09:04:57
+     * createdAt : 2019-03-14 09:04:57
      */
 
     private String num;

@@ -72,11 +72,7 @@ class DailySignActivity(override val viewModelClass: Class<DailyViewModel> = Dai
         viewModel.status.observe(this, Observer {
             it!!
             freshSignView(it.serialDays, it.isChecked)
-        })
-
-        viewModel.account.observe(this, Observer {
-            it!!
-            mine_daily_pointCount.text = it.toString()
+            mine_daily_pointCount.text = it.integral.toString()
         })
         if (!isLogin()) return
         loadAvatar(user!!.photoSrc, mine_daily_avatar)

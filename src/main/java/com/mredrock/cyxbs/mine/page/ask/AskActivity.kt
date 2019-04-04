@@ -35,7 +35,7 @@ class AskActivity(override val isFragmentActivity: Boolean = false) : BaseActivi
         waitFragment.setFragmentType(waitFragment.TYPE_ASK_WAIT)
 
         val fragmentList = listOf(overFragment, waitFragment)
-        val titleList = listOf("已解决", "未解决")
+        val titleList = listOf("已解决", "待解决")
 
         //设置viewPager
         mine_question_view_pager.adapter = TabPagerAdapter(supportFragmentManager, fragmentList, titleList)

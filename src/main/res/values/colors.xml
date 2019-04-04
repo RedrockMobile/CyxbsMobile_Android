@@ -55,6 +55,7 @@
     <!--积分详情-->
     <color name="mine_point_detail_point_color">#6d86e8</color>
     <color name="mine_point_detail_highlight_color">#839bfa</color>
+    <color name="mine_point_detail_dark_color">#B3000000</color>
     <color name="mine_point_detail_footer_color">#A6999999</color>
 
 </resources>

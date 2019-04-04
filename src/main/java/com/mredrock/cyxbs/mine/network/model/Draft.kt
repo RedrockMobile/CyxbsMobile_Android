@@ -10,7 +10,7 @@ import java.io.Serializable
 /**
  * Created by jay86.
  */
-data class Draft(@SerializedName("created_at")
+data class Draft(@SerializedName("createdAt")
                  val createdAt: String = "",
                  @SerializedName("target_id")
                  val targetId: String = "",
@@ -20,7 +20,7 @@ data class Draft(@SerializedName("created_at")
                  val type: String = "",
                  @SerializedName("title_content")
                  val titleContent: String = "",
-                 @SerializedName("content")
+                 @SerializedName("description")
                  val content: String = "",
                  var question: Question?):Serializable {
 
