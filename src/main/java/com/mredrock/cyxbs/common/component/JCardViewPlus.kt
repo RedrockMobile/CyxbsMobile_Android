@@ -9,6 +9,7 @@ import android.util.TypedValue
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewGroup.LayoutParams
 import com.mredrock.cyxbs.common.R
 
 /**
@@ -177,52 +178,53 @@ open class JCardViewPlus(context: Context, attrs: AttributeSet?, defStyleAttr: I
         child.layout(childLeft, childTop, childLeft + child.measuredWidth, childTop + child.measuredHeight)
 //        layoutChildren(left, top, right, bottom)
     }
-/*
-    private fun layoutChildren(left: Int, top: Int, right: Int, bottom: Int) {
-        val parentLeft = paddingLeft + contentPaddingLeft
-        val parentRight = right - left - paddingRight - contentPaddingRight
 
-        val parentTop = paddingTop + contentPaddingTop
-        val parentBottom = bottom - top - paddingBottom - contentPaddingBottom
+    /*
+        private fun layoutChildren(left: Int, top: Int, right: Int, bottom: Int) {
+            val parentLeft = paddingLeft + contentPaddingLeft
+            val parentRight = right - left - paddingRight - contentPaddingRight
 
-        val child = getChildAt(0)
-        if (child.visibility != View.GONE) {
-            val lp = child.layoutParams as LayoutParams
+            val parentTop = paddingTop + contentPaddingTop
+            val parentBottom = bottom - top - paddingBottom - contentPaddingBottom
 
-            val width = child.measuredWidth
-            val height = child.measuredHeight
+            val child = getChildAt(0)
+            if (child.visibility != View.GONE) {
+                val lp = child.layoutParams as LayoutParams
 
-            val childLeft: Int
-            val childTop: Int
+                val width = child.measuredWidth
+                val height = child.measuredHeight
 
-            var gravity = lp.gravity
-            if (gravity == -1) {
-                gravity = DEFAULT_CHILD_GRAVITY
+                val childLeft: Int
+                val childTop: Int
+
+                var gravity = lp.gravity
+                if (gravity == -1) {
+                    gravity = DEFAULT_CHILD_GRAVITY
+                }
+
+                val layoutDirection = layoutDirection
+                val absoluteGravity = Gravity.getAbsoluteGravity(gravity, layoutDirection)
+                val verticalGravity = gravity and Gravity.VERTICAL_GRAVITY_MASK
+
+                when (absoluteGravity and Gravity.HORIZONTAL_GRAVITY_MASK) {
+                    Gravity.CENTER_HORIZONTAL -> childLeft = parentLeft + (parentRight - parentLeft - width) / 2 +
+                            lp.leftMargin - lp.rightMargin
+                    Gravity.RIGHT -> childLeft = parentRight - width - lp.rightMargin
+                    Gravity.LEFT -> childLeft = parentLeft + lp.leftMargin
+                    else -> childLeft = parentLeft + lp.leftMargin
+                }
+
+                when (verticalGravity) {
+                    Gravity.TOP -> childTop = parentTop + lp.topMargin
+                    Gravity.CENTER_VERTICAL -> childTop = parentTop + (parentBottom - parentTop - height) / 2 +
+                            lp.topMargin - lp.bottomMargin
+                    Gravity.BOTTOM -> childTop = parentBottom - height - lp.bottomMargin
+                    else -> childTop = parentTop + lp.topMargin
+                }
+                child.layout(childLeft, childTop, childLeft + width, childTop + height)
             }
-
-            val layoutDirection = layoutDirection
-            val absoluteGravity = Gravity.getAbsoluteGravity(gravity, layoutDirection)
-            val verticalGravity = gravity and Gravity.VERTICAL_GRAVITY_MASK
-
-            when (absoluteGravity and Gravity.HORIZONTAL_GRAVITY_MASK) {
-                Gravity.CENTER_HORIZONTAL -> childLeft = parentLeft + (parentRight - parentLeft - width) / 2 +
-                        lp.leftMargin - lp.rightMargin
-                Gravity.RIGHT -> childLeft = parentRight - width - lp.rightMargin
-                Gravity.LEFT -> childLeft = parentLeft + lp.leftMargin
-                else -> childLeft = parentLeft + lp.leftMargin
-            }
-
-            when (verticalGravity) {
-                Gravity.TOP -> childTop = parentTop + lp.topMargin
-                Gravity.CENTER_VERTICAL -> childTop = parentTop + (parentBottom - parentTop - height) / 2 +
-                        lp.topMargin - lp.bottomMargin
-                Gravity.BOTTOM -> childTop = parentBottom - height - lp.bottomMargin
-                else -> childTop = parentTop + lp.topMargin
-            }
-            child.layout(childLeft, childTop, childLeft + width, childTop + height)
         }
-    }
-*/
+    */
     override fun dispatchDraw(canvas: Canvas) {
         if (backgroundBuffer == null) {
 //            if (childCount != 0 && getChildAt(0) is ImageView) {
@@ -252,6 +254,11 @@ open class JCardViewPlus(context: Context, attrs: AttributeSet?, defStyleAttr: I
         val canvas = Canvas(backgroundBuffer)
         calcBackgroundShape()
         canvas.drawPath(cardBackgroundShape, paint)
+    }
+
+    fun cleanCache() {
+        backgroundBuffer?.recycle()
+        backgroundBuffer = null
     }
 
     private fun calcBackgroundShape() {
@@ -369,9 +376,10 @@ open class JCardViewPlus(context: Context, attrs: AttributeSet?, defStyleAttr: I
     class LayoutParams : MarginLayoutParams {
         constructor(c: Context?, attrs: AttributeSet?) : super(c, attrs)
         constructor(width: Int, height: Int) : super(width, height)
-//        constructor(width: Int, height: Int, gravity: Int): super(width, height, gravity)
-        constructor(source: ViewGroup.LayoutParams): super(source)
-        constructor(source: ViewGroup.MarginLayoutParams): super(source)
+        //        constructor(width: Int, height: Int, gravity: Int): super(width, height, gravity)
+        constructor(source: ViewGroup.LayoutParams) : super(source)
+
+        constructor(source: ViewGroup.MarginLayoutParams) : super(source)
 //        constructor(source: LayoutParams): super(source) {
 //            this.gravity = source.gravity
 //        }
