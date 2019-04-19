@@ -217,8 +217,9 @@ class CoursesViewModel : ViewModel() {
                     }
 
                     // 存储窗口小部件需要的Json数据
-                    if (coursesFromInternet.data?.isEmpty() != true) {
+                    if (coursesFromInternet.data?.isEmpty() != true && mIsGettingData) {
                         BaseApp.context.defaultSharedPreferences.editor {
+                            Log.d("test","put sp")
                             putBoolean(SP_WIDGET_NEED_FRESH, true)
                             putString(WIDGET_COURSE, Gson().toJson(coursesFromInternet))
                         }
