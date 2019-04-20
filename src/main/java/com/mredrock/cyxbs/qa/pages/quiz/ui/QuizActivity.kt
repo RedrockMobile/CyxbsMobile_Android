@@ -8,14 +8,17 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.KeyEvent
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.widget.ImageView
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.google.gson.Gson
 import com.mredrock.cyxbs.common.config.QA_QUIZ
 import com.mredrock.cyxbs.common.event.DraftEvent
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
+import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.bean.Question
 import com.mredrock.cyxbs.qa.pages.quiz.QuizViewModel
@@ -79,7 +82,14 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.qa_activity_quiz)
-        common_toolbar.init(getString(R.string.qa_quiz_title))
+        common_toolbar.init(getString(R.string.qa_quiz_title),listener = View.OnClickListener {
+            if (edt_quiz_title.text.isNullOrEmpty() && edt_quiz_content.text.isNullOrEmpty()) {
+                finish()
+                return@OnClickListener
+            }
+            saveDraft()
+            finish()
+        })
         initEdtView()
         initImageAddView()
         initFooterView()
@@ -89,7 +99,6 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
             if (it) {
                 if (draftId != "-1") {
                     viewModel.deleteDraft(draftId)
-//                    EventBus.getDefault().post(FinishActivityEvent())
                 }
                 val data = Intent()
                 data.putExtra("type", viewModel.type)
@@ -144,6 +153,7 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
 
         viewModel.imageLiveData.observe { selectedImageFiles ->
             selectedImageFiles ?: return@observe
+            viewModel.resetInvalid()
             //对view进行复用
             for (i in 0 until nine_grid_view.childCount - 1) {
                 val view = nine_grid_view.getChildAt(i)
@@ -155,14 +165,22 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
                     nine_grid_view.removeView(view)
                     continue
                 }
-                (view as ImageView).setImageBitmap(BitmapFactory.decodeFile(selectedImageFiles[i]))
+                val bitmap = BitmapFactory.decodeFile(selectedImageFiles[i])
+                if (bitmap != null) {
+                    (view as ImageView).setImageBitmap(bitmap)
+                    viewModel.checkInvalid(false)
+                } else viewModel.checkInvalid(true)
+
             }
             //补充缺少的view
             selectedImageFiles.asSequence()
                     .filterIndexed { index, _ -> index >= nine_grid_view.childCount - 1 }
                     .forEach {
-                        nine_grid_view.addView(createImageView(BitmapFactory.decodeFile(it)),
-                                nine_grid_view.childCount - 1)
+                        val bitmap = BitmapFactory.decodeFile(it)
+                        if (bitmap != null) {
+                            nine_grid_view.addView(createImageView(bitmap), nine_grid_view.childCount - 1)
+                            viewModel.checkInvalid(false)
+                        } else viewModel.checkInvalid(true)
                     }
         }
     }
@@ -211,12 +229,23 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
         }
     }
 
-    override fun onPause() {
-        super.onPause()
+    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            if (edt_quiz_content.text.isNullOrEmpty() && edt_quiz_title.text.isNullOrEmpty()){
+                return super.onKeyDown(keyCode, event)
+            }
+            LogUtils.d("cchanges","on key back")
+            saveDraft()
+            return true
+        }
+        return super.onKeyDown(keyCode, event)
+    }
+
+    private fun saveDraft(){
         if (draftId == "-1") {
-            viewModel.addItemToDraft(edt_quiz_title.text.toString(), edt_quiz_content.text.toString(), viewModel.tagLiveData.value)
+            viewModel.addItemToDraft(edt_quiz_title.text.toString(), edt_quiz_content.text.toString())
         } else {
-            viewModel.updateDraftItem(edt_quiz_title.text.toString(), edt_quiz_content.text.toString(), viewModel.tagLiveData.value, draftId)
+            viewModel.updateDraftItem(edt_quiz_title.text.toString(), edt_quiz_content.text.toString(), draftId)
         }
     }
 
@@ -230,9 +259,9 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
         edt_quiz_title.setText(question.title)
         edt_quiz_content.setText(question.description)
         viewModel.type = question.kind
-        if (question.tags.isNotEmpty()) {
-            viewModel.setTag(question.tags)
-        }
+        if (question.tags.isNotEmpty()) viewModel.setTag(question.tags)
+        val list = question.photoThumbnailSrc?.split("|") ?: arrayListOf()
+        if (list.isNotEmpty()) viewModel.setImageList(arrayListOf<String>().apply { addAll(list) })
         draftId = event.selfId
     }
 }
