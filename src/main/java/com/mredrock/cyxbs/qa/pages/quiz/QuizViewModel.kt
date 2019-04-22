@@ -47,6 +47,7 @@ class QuizViewModel(var type: String) : BaseViewModel() {
     private var title: String = ""
     private var content: String = ""
     private var disappearTime: String = ""
+    private val isInvalidList = arrayListOf<Boolean>()
 
     fun tryEditImg(pos: Int): String? {
         editingImgPos = pos
@@ -152,13 +153,13 @@ class QuizViewModel(var type: String) : BaseViewModel() {
         return result
     }
 
-    fun addItemToDraft(title: String?, content: String?, tag: String?) {
+    fun addItemToDraft(title: String?, content: String?) {
         if (title.isNullOrBlank() && content.isNullOrBlank()) {
             return
         }
         val user = BaseApp.user ?: return
-        val t = tag ?: ""
-        val s = "{\"title\":\"$title\",\"description\":\"$content\",\"kind\":\"$type\",\"tags\":\"$t\"}"
+        val t = tagLiveData.value ?: ""
+        val s = "{\"title\":\"$title\",\"description\":\"$content\",\"kind\":\"$type\",\"tags\":\"$t\",\"photo_thumbnail_src\":\"${getImgListStrings()}\"}"
         val json = Base64.encodeToString(s.toByteArray(), Base64.DEFAULT)
         ApiGenerator.getApiService(ApiService::class.java)
                 .addItemToDraft(user.stuNum ?: "", user.idNum ?: "", "question", json, "")
@@ -167,18 +168,14 @@ class QuizViewModel(var type: String) : BaseViewModel() {
                 .safeSubscribeBy(
                         onError = {
                             toastEvent.value = R.string.qa_quiz_save_failed
-                        },
-                        onNext = {
-                            toastEvent.value = R.string.qa_quiz_save_success
-                        }
-                )
+                        })
                 .lifeCycle()
     }
 
-    fun updateDraftItem(title: String?, content: String?, tag: String?, id: String) {
+    fun updateDraftItem(title: String?, content: String?, id: String) {
         val user = BaseApp.user ?: return
-        val t = tag ?: ""
-        val s = "{\"title\":\"$title\",\"description\":\"$content\",\"kind\":\"$type\",\"tags\":\"$t\"}"
+        val t = tagLiveData.value ?: ""
+        val s = "{\"title\":\"$title\",\"description\":\"$content\",\"kind\":\"$type\",\"tags\":\"$t\",\"photo_thumbnail_src\":\"${getImgListStrings()}\"}"
         val json = Base64.encodeToString(s.toByteArray(), Base64.DEFAULT)
         ApiGenerator.getApiService(ApiService::class.java)
                 .updateDraft(user.stuNum ?: "", user.idNum ?: "", json, id)
@@ -187,11 +184,7 @@ class QuizViewModel(var type: String) : BaseViewModel() {
                 .safeSubscribeBy(
                         onError = {
                             toastEvent.value = R.string.qa_quiz_save_failed
-                        },
-                        onNext = {
-                            toastEvent.value = R.string.qa_quiz_save_success
-                        }
-                )
+                        })
                 .lifeCycle()
     }
 
@@ -201,13 +194,26 @@ class QuizViewModel(var type: String) : BaseViewModel() {
                 .deleteDraft(user.stuNum ?: "", user.idNum ?: "", id)
                 .setSchedulers()
                 .checkError()
-                .safeSubscribeBy(
-                        onError = {
-                            toastEvent.value = R.string.qa_quiz_save_failed
-                        },
-                        onNext = {}
-                )
+                .safeSubscribeBy()
                 .lifeCycle()
+    }
+
+    private fun getImgListStrings(): String {
+        val list = imageLiveData.value ?: return ""
+        val res = arrayListOf<String>()
+        list.forEachIndexed { index, s ->
+            if (!isInvalidList[index]) res.add(s)
+        }
+        val s = res.toString()
+        return s.substring(1, s.length - 1)
+    }
+
+    fun checkInvalid(b: Boolean) {
+        isInvalidList.add(b)
+    }
+
+    fun resetInvalid() {
+        isInvalidList.clear()
     }
 
     class Factory(private val type: String) : ViewModelProvider.Factory {

@@ -9,8 +9,10 @@ import android.os.Bundle
 import android.support.v4.app.FragmentActivity
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.KeyEvent
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.widget.ImageView
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.google.gson.Gson
@@ -49,14 +51,19 @@ class AnswerActivity : BaseViewModelActivity<AnswerViewModel>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.qa_activity_answer)
-        common_toolbar.init(getString(R.string.qa_answer_question_title))
+        common_toolbar.init(getString(R.string.qa_answer_question_title), listener = View.OnClickListener {
+            if (edt_answer_content.text.isNullOrEmpty()) {
+                finish()
+                return@OnClickListener
+            }
+            saveDraft()
+        })
         initView()
         initImageAddView()
         viewModel.backAndRefreshPreActivityEvent.observeNotNull {
             if (it) {
                 if (draftId != "-1") {
                     viewModel.deleteDraft(draftId)
-//                    EventBus.getDefault().post(FinishActivityEvent())
                 }
                 setResult(Activity.RESULT_OK)
                 finish()
@@ -90,6 +97,7 @@ class AnswerActivity : BaseViewModelActivity<AnswerViewModel>() {
         }
 
         viewModel.imageLiveData.observeNotNull { selectedImageFiles ->
+            viewModel.resetInvalid()
             //对view进行复用
             for (i in 0 until nine_grid_view.childCount - 1) {
                 val view = nine_grid_view.getChildAt(i)
@@ -98,14 +106,21 @@ class AnswerActivity : BaseViewModelActivity<AnswerViewModel>() {
                     nine_grid_view.removeView(view)
                     continue
                 }
-                (view as ImageView).setImageBitmap(BitmapFactory.decodeFile(selectedImageFiles[i]))
+                val bitmap = BitmapFactory.decodeFile(selectedImageFiles[i])
+                if (bitmap != null) {
+                    (view as ImageView).setImageBitmap(bitmap)
+                    viewModel.checkInvalid(false)
+                } else viewModel.checkInvalid(true)
             }
             //补充缺少的view
             selectedImageFiles.asSequence()
                     .filterIndexed { index, _ -> index >= nine_grid_view.childCount - 1 }
                     .forEach {
-                        nine_grid_view.addView(createImageView(BitmapFactory.decodeFile(it)),
-                                nine_grid_view.childCount - 1)
+                        val bitmap = BitmapFactory.decodeFile(it)
+                        if (bitmap != null) {
+                            nine_grid_view.addView(createImageView(bitmap), nine_grid_view.childCount - 1)
+                            viewModel.checkInvalid(false)
+                        } else viewModel.checkInvalid(true)
                     }
         }
     }
@@ -149,8 +164,18 @@ class AnswerActivity : BaseViewModelActivity<AnswerViewModel>() {
         }
     }
 
-    override fun onPause() {
-        super.onPause()
+    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            if (edt_answer_content.text.isNullOrEmpty()) {
+                return super.onKeyDown(keyCode, event)
+            }
+            saveDraft()
+            return true
+        }
+        return super.onKeyDown(keyCode, event)
+    }
+
+    private fun saveDraft() {
         if (draftId == "-1") {
             viewModel.addItemToDraft(edt_answer_content.text.toString())
         } else {
@@ -166,6 +191,8 @@ class AnswerActivity : BaseViewModelActivity<AnswerViewModel>() {
         }
         val content = Gson().fromJson(event.jsonString, Content::class.java)
         edt_answer_content.setText(content.title)
+        val list = content.pictures?.split(",") ?: arrayListOf()
+        if (list.isNotEmpty()) viewModel.setImageList(arrayListOf<String>().apply { addAll(list) })
         viewModel.qid = event.targetId
         draftId = event.selfId
     }
