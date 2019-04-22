@@ -43,6 +43,9 @@ data class Question(@SerializedName("reward")
                     @SerializedName("id")
                     val id: String = "",
 
+                    @SerializedName("photo_url")
+                    var photoUrl: List<String> = mutableListOf(),
+
                     @SerializedName("is_self")
                     private var _isSelf: Int = 0) : Parcelable {
     @SerializedName("answers")
@@ -76,7 +79,9 @@ data class Question(@SerializedName("reward")
             parcel.readInt(),
             parcel.readString(),
             parcel.readString(),
-            parcel.readInt())
+            _isSelf = parcel.readInt()) {
+        parcel.readStringList(photoUrl)
+    }
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeInt(reward)
@@ -93,6 +98,7 @@ data class Question(@SerializedName("reward")
         parcel.writeString(nickname)
         parcel.writeString(id)
         parcel.writeInt(_isSelf)
+        parcel.writeStringList(photoUrl)
     }
 
     override fun describeContents(): Int {

@@ -14,6 +14,7 @@ import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.bean.Question
 import com.mredrock.cyxbs.qa.component.recycler.BaseRvAdapter
 import com.mredrock.cyxbs.qa.component.recycler.BaseViewHolder
+import com.mredrock.cyxbs.qa.ui.activity.ViewImageActivity
 import com.mredrock.cyxbs.qa.utils.setNicknameTv
 import com.mredrock.cyxbs.qa.utils.timeDescription
 import com.mredrock.cyxbs.qa.utils.toDate
@@ -44,7 +45,10 @@ class AnswerListHeaderAdapter(private val onSortOrderChangedListener: (sortOrder
             itemView.apply {
                 tv_question_title.text = data.title
                 tv_question_content.text = Html.fromHtml("${getTagHtml(data.tags)}${data.description}")
-                //todo load image
+                ngv_question.setImages(data.photoUrl)
+                ngv_question.setOnItemClickListener { _, index ->
+                    ViewImageActivity.activityStart(context, data.photoUrl[index])
+                }
                 iv_questioner_avatar.setAvatarImageFromUrl(data.photoThumbnailSrc)
                 tv_questioner_nickname.setNicknameTv(data.nickname, data.isEmotion && !data.isAnonymous, data.isMale)
                 setDisappear(tv_disappear_at, data.disappearAt)

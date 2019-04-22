@@ -1,6 +1,5 @@
 package com.mredrock.cyxbs.qa.pages.question.ui
 
-import android.app.Activity
 import android.support.v4.app.Fragment
 import android.support.v7.util.DiffUtil
 import android.view.ViewGroup
@@ -58,7 +57,6 @@ class QuestionListRvAdapter(private val fragment: Fragment) : BaseEndlessRvAdapt
                 tv_title.text = data.title
                 tv_content.text = data.description
                 tv_reward.text = context.getString(R.string.qa_question_item_reward, data.reward)
-                //todo 没图片时隐藏查看图片按钮
                 setShowPictureButton(tv_show_picture, data.photoThumbnailSrc)
             }
         }

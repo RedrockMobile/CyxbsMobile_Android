@@ -10,6 +10,7 @@ import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.bean.Answer
 import com.mredrock.cyxbs.qa.bean.Question
 import com.mredrock.cyxbs.qa.component.recycler.BaseEndlessRvAdapter
+import com.mredrock.cyxbs.qa.component.recycler.BaseRvAdapter
 import com.mredrock.cyxbs.qa.component.recycler.BaseViewHolder
 import com.mredrock.cyxbs.qa.utils.*
 import kotlinx.android.synthetic.main.qa_recycler_item_answer.view.*
@@ -17,7 +18,7 @@ import kotlinx.android.synthetic.main.qa_recycler_item_answer.view.*
 /**
  * Created By jay68 on 2018/9/30.
  */
-class AnswerListAdapter(context: Context) : BaseEndlessRvAdapter<Answer>(DIFF_CALLBACK) {
+class AnswerListAdapter(context: Context) : BaseRvAdapter<Answer>() {
     companion object {
         @JvmStatic
         val DIFF_CALLBACK = object : DiffUtil.ItemCallback<Answer>() {
@@ -37,25 +38,19 @@ class AnswerListAdapter(context: Context) : BaseEndlessRvAdapter<Answer>(DIFF_CA
     private var hasAdoptedAnswer = false
     private var sortBy = sortByDefault
 
-    private val adapterDataObserver = object : RecyclerView.AdapterDataObserver() {
-        override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
-            super.onItemRangeInserted(positionStart, itemCount)
-            hasAdoptedAnswer = currentList?.find { it.isAdopted } != null
-            resortList(sortBy)
-        }
-    }
-
     fun resortList(sortBy: String) {
-        //todo 排序
-        /*this.sortBy = sortBy
-        if (sortBy == sortByDefault) {
-            currentList?.sortWith(Comparator { o1, o2 ->
-                compareValuesBy(o2, o1, Answer::isAdopted, Answer::hotValue, Answer::createdAt)
-            })
-        } else {
-            currentList?.sortByDescending(Answer::createdAt)
+        this.sortBy = sortBy
+        when (sortBy) {
+            sortByDefault->{
+                dataList.sortWith(Comparator { o1, o2 ->
+                    compareValuesBy(o2, o1, Answer::isAdopted, Answer::hotValue, Answer::createdAt)
+                })
+            }
+            sortByTime->{
+                dataList.sortByDescending(Answer::createdAt)
+            }
         }
-        notifyItemRangeChanged(0, this@AnswerListAdapter.itemCount)*/
+        notifyItemRangeChanged(0, this@AnswerListAdapter.itemCount)
     }
 
     fun setQuestionInfo(question: Question) {

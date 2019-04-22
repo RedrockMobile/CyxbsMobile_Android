@@ -113,7 +113,14 @@
         android:textSize="15sp"
         tools:text="符号A属于Rmxn表示一个m行n列的矩阵，并且矩阵A中所有的所有元素都是实数。符号x属于Rn表示一个含有n个元素的向量。符号A属于Rmxn表示一个m行n列的矩阵，并且矩阵A中所有的所有元素都是实数，符号x属于Rn表示一个含有n个元素的向量。符号A属于Rmxn表示一个m行n列的矩阵，并且矩阵A中所有的所有元素都是实数." />
 
-    <!--todo 图片-->
+    <com.mredrock.cyxbs.qa.ui.widget.NineGridView
+        android:id="@+id/ngv_answer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="15dp"
+        android:paddingTop="19dp"
+        android:paddingEnd="15dp"
+        android:paddingBottom="19dp" />
 
     <View
         android:layout_width="match_parent"

@@ -8,6 +8,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.mredrock.cyxbs.common.event.LoginStateChangeEvent
 import com.mredrock.cyxbs.common.ui.BaseViewModelFragment
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.bean.Question
@@ -69,6 +70,10 @@ class QuestionListFragment : BaseViewModelFragment<QuestionListViewModel>() {
                     swipe_refresh_layout.isRefreshing = true
                     emptyRvAdapter.showHolder(3)
                 }
+                NetworkState.CANNOT_LOAD->{
+                    swipe_refresh_layout.isRefreshing = false
+                    viewModel.toastEvent.value = R.string.qa_unlogin_error
+                }
                 else -> {
                     swipe_refresh_layout.isRefreshing = false
                     emptyRvAdapter.hideHolder()
@@ -87,4 +92,8 @@ class QuestionListFragment : BaseViewModelFragment<QuestionListViewModel>() {
     }
 
     override fun getViewModelFactory() = QuestionListViewModel.Factory(title)
+
+    override fun onLoginStateChangeEvent(event: LoginStateChangeEvent) {
+        viewModel.invalidateQuestionList()
+    }
 }

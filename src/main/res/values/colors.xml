@@ -69,4 +69,6 @@
     <color name="qa_answer_content_edt_color">#d9000000</color>
     <color name="qa_answer_edt_content_counter">#80000000</color>
     <color name="qa_answer_divider">#14999999</color>
+
+    <color name="qa_crop_logo">#f0000000</color>
 </resources>

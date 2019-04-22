@@ -1,13 +1,16 @@
 package com.mredrock.cyxbs.qa.pages.answer.ui
 
 import android.app.Activity
+import android.arch.lifecycle.Observer
 import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.view.Menu
 import android.view.MenuItem
+import com.alibaba.android.arouter.facade.annotation.Route
 import com.mredrock.cyxbs.common.BaseApp
+import com.mredrock.cyxbs.common.config.QA_ANSWER_LIST
 import com.mredrock.cyxbs.common.event.AskLoginEvent
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.extensions.gone
@@ -18,6 +21,7 @@ import com.mredrock.cyxbs.qa.component.recycler.RvAdapterWrapper
 import com.mredrock.cyxbs.qa.network.NetworkState
 import com.mredrock.cyxbs.qa.pages.answer.viewmodel.AnswerListViewModel
 import com.mredrock.cyxbs.qa.pages.comment.ui.CommentListActivity
+import com.mredrock.cyxbs.qa.pages.quiz.ui.dialog.RewardSetDialog
 import com.mredrock.cyxbs.qa.pages.report.ui.ReportOrSharePopupWindow
 import com.mredrock.cyxbs.qa.ui.adapter.EmptyRvAdapter
 import com.mredrock.cyxbs.qa.ui.adapter.FooterRvAdapter
@@ -25,6 +29,7 @@ import kotlinx.android.synthetic.main.qa_activity_answer_list.*
 import org.greenrobot.eventbus.EventBus
 import org.jetbrains.anko.support.v4.startActivityForResult
 
+@Route(path = QA_ANSWER_LIST)
 class AnswerListActivity : BaseViewModelActivity<AnswerListViewModel>() {
     companion object {
         @JvmField
@@ -79,6 +84,8 @@ class AnswerListActivity : BaseViewModelActivity<AnswerListViewModel>() {
     override fun getViewModelFactory() = AnswerListViewModel.Factory(intent.getParcelableExtra(PARAM_QUESTION))
 
     private fun observeListChangeEvent() = viewModel.apply {
+        getMyReward()
+
         questionLiveData.observeNotNull {
             headerAdapter.refreshData(listOf(it))
             answerListAdapter.setQuestionInfo(it)
@@ -92,7 +99,11 @@ class AnswerListActivity : BaseViewModelActivity<AnswerListViewModel>() {
             }
         }
 
-        answerList.observe { answerListAdapter.submitList(it) }
+        observeAnswerList(Observer {
+            if (it != null) {
+                answerListAdapter.refreshData(it)
+            }
+        })
 
         networkState.observeNotNull { footerRvAdapter.refreshData(listOf(it)) }
 
@@ -124,7 +135,15 @@ class AnswerListActivity : BaseViewModelActivity<AnswerListViewModel>() {
         val leftDrawable = resources.getDrawable(R.drawable.qa_ic_answer_list_add_reward)
         tv_left.text = getString(R.string.qa_answer_list_add_reward)
         tv_left.setCompoundDrawablesRelativeWithIntrinsicBounds(leftDrawable, null, null, null)
-        fl_left.setOnClickListener { viewModel.addReward() }
+        fl_left.setOnClickListener {
+            RewardSetDialog(this@AnswerListActivity, viewModel.myRewardCount).apply {
+                onSubmitButtonClickListener = {
+                    if (viewModel.addReward(it)) {
+                        dismiss()
+                    }
+                }
+            }
+        }
 
         val rightDrawable = resources.getDrawable(R.drawable.qa_ic_answer_list_cancel)
         tv_right.text = getString(R.string.qa_answer_list_cancel_question)
@@ -137,7 +156,7 @@ class AnswerListActivity : BaseViewModelActivity<AnswerListViewModel>() {
         val leftDrawable = resources.getDrawable(R.drawable.qa_ic_answer_list_ignore)
         tv_left.text = getString(R.string.qa_answer_list_ignore_question)
         tv_left.setCompoundDrawablesRelativeWithIntrinsicBounds(leftDrawable, null, null, null)
-        fl_left.setOnClickListener { viewModel.addReward() }
+        fl_left.setOnClickListener { viewModel.ignoreQuestion() }
 
         val rightDrawable = resources.getDrawable(R.drawable.qa_ic_answer_list_help)
         tv_right.text = getString(R.string.qa_answer_list_help)
@@ -174,4 +193,5 @@ class AnswerListActivity : BaseViewModelActivity<AnswerListViewModel>() {
         }
         else -> false
     }
+
 }

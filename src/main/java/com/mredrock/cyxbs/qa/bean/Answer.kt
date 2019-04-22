@@ -36,7 +36,7 @@ data class Answer(@SerializedName("comment_num")
                   val id: String = "",
 
                   @SerializedName("photo_url")
-                  val photoUrl: String,
+                  var photoUrl: List<String> = mutableListOf(),
 
                   @SerializedName("content")
                   val content: String = "") : Parcelable {
@@ -91,8 +91,9 @@ data class Answer(@SerializedName("comment_num")
             parcel.readString(),
             parcel.readString(),
             parcel.readString(),
-            parcel.readString(),
-            parcel.readString())
+            content = parcel.readString()){
+        parcel.readStringList(photoUrl)
+    }
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeString(commentNum)
@@ -105,8 +106,8 @@ data class Answer(@SerializedName("comment_num")
         parcel.writeString(nickname)
         parcel.writeString(createdAt)
         parcel.writeString(id)
-        parcel.writeString(photoUrl)
         parcel.writeString(content)
+        parcel.writeStringList(photoUrl)
     }
 
     override fun describeContents(): Int {

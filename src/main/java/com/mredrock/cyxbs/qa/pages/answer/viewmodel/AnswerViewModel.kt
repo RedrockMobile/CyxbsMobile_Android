@@ -31,6 +31,14 @@ class AnswerViewModel(var qid: String) : BaseViewModel() {
     val imageLiveData = MutableLiveData<ArrayList<String>>()
     val backAndRefreshPreActivityEvent = SingleLiveEvent<Boolean>()
 
+    var editingImgPos = -1
+        private set
+
+    fun tryEditImg(pos: Int): String? {
+        editingImgPos = pos
+        return imageLiveData.value?.get(pos)
+    }
+
     fun submitAnswer(content: String) {
         if (content.isBlank() && imageLiveData.value.isNullOrEmpty()) {
             toastEvent.value = R.string.qa_hint_content_empty

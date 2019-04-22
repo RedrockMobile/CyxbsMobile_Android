@@ -28,6 +28,9 @@ class ReportOrSharePopupWindow(context: Context,
             ReportActivity.activityStart(context, qid)
             dismiss()
         }
+        contentView.tv_share.setOnClickListener {
+            //todo 分享
+        }
         animationStyle = R.style.PopupAnimation
         isTouchable = true
         isOutsideTouchable = true

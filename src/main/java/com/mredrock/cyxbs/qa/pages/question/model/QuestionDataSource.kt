@@ -22,7 +22,12 @@ class QuestionDataSource(private val kind: String) : PageKeyedDataSource<Int, Qu
     private var failedRequest: (() -> Unit)? = null
 
     override fun loadInitial(params: LoadInitialParams<Int>, callback: LoadInitialCallback<Int, Question>) {
-        val user = BaseApp.user ?: return
+        val user = BaseApp.user
+        if (user == null) {
+            callback.onResult(listOf(), 1, null)
+            initialLoad.postValue(NetworkState.CANNOT_LOAD)
+            return
+        }
         ApiGenerator.getApiService(ApiService::class.java)
                 .getQuestionList(kind, 1, params.requestedLoadSize,
                         user.stuNum ?: "", user.idNum ?: "")

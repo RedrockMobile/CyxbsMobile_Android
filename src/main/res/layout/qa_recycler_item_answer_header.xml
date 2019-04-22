@@ -29,6 +29,15 @@
         android:textSize="15sp"
         tools:text="常规题目，还请大佬帮忙解答常规题目，还请大佬帮忙解答常规题目，还请大佬常规常规题目，还请大佬常规题目，还请大佬帮忙解答常规题目帮忙答常规题目常规题目，还请大佬帮忙解答常规题目常规题目常规题目" />
 
+    <com.mredrock.cyxbs.qa.ui.widget.NineGridView
+        android:id="@+id/ngv_question"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="15dp"
+        android:paddingTop="19dp"
+        android:paddingEnd="15dp"
+        android:paddingBottom="19dp" />
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

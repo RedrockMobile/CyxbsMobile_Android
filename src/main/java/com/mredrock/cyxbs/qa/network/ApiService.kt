@@ -2,10 +2,7 @@ package com.mredrock.cyxbs.qa.network
 
 import com.mredrock.cyxbs.common.bean.RedrockApiStatus
 import com.mredrock.cyxbs.common.bean.RedrockApiWrapper
-import com.mredrock.cyxbs.qa.bean.Answer
-import com.mredrock.cyxbs.qa.bean.Comment
-import com.mredrock.cyxbs.qa.bean.Question
-import com.mredrock.cyxbs.qa.bean.QuizResult
+import com.mredrock.cyxbs.qa.bean.*
 import io.reactivex.Observable
 import okhttp3.MultipartBody
 import retrofit2.http.*
@@ -93,12 +90,10 @@ interface ApiService {
                     @Field("idNum")
                     idNum: String): Observable<RedrockApiStatus>
 
-    @POST("app/index.php/QA/Integral/getDiscountBalance")
     @FormUrlEncoded
-    fun getMyRewardCount(@Field("stuNum")
-                         stuNum: String,
-                         @Field("idNum")
-                         idNum: String): Observable<RedrockApiWrapper<Int>>
+    @POST("app/index.php/QA/User/getScoreStatus")
+    fun getScoreStatus(@Field("stunum") stuNum: String,
+                       @Field("idnum") idNum: String): Observable<RedrockApiWrapper<ScoreStatus>>
 
     @POST("app/index.php/QA/Question/add")
     @FormUrlEncoded
@@ -156,6 +151,26 @@ interface ApiService {
                @Field("question_id") qid: String,
                @Field("content") content: String,
                @Field("type") type: String): Observable<RedrockApiStatus>
+
+    @POST("app/index.php/QA/Question/ignore")
+    @FormUrlEncoded
+    fun ignoreQuestion(@Field("stuNum")
+                       stuNum: String,
+                       @Field("idNum")
+                       idNum: String,
+                       @Field("question_id")
+                       qid: String): Observable<RedrockApiStatus>
+
+    @POST("app/index.php/QA/Question/updateReward")
+    @FormUrlEncoded
+    fun updateReward(@Field("stuNum")
+                     stuNum: String,
+                     @Field("idNum")
+                     idNum: String,
+                     @Field("question_id")
+                     qid: String,
+                     @Field("reward")
+                     reward: String): Observable<RedrockApiStatus>
 
     /**
      * 草稿箱

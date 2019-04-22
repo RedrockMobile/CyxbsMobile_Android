@@ -1,6 +1,6 @@
 <resources>
     <string name="qa_footer_view_behavior">com.mredrock.cyxbs.qa.ui.widget.FooterViewBehavior</string>
-    <string name="qa_unlogin_error">需要先登陆才能查看哦~</string>
+    <string name="qa_unlogin_error">需要先登陆才能查看邮问哦~</string>
     <string name="qa_question_item_show_picture">查看图片</string>
     <string name="qa_question_item_tag">#%1$s#</string>
     <string name="qa_question_item_reward">%1$d积分</string>
@@ -66,6 +66,7 @@
     <string name="qa_report_content_hint">请输入具体投诉原因（选填）</string>
     <string name="qa_report_submit_report">提交</string>
     <string name="qa_report_title">举报</string>
+    <string name="qa_crop">裁剪</string>
 
     <string-array name="qa_report_type">
         <item>色情低俗</item>

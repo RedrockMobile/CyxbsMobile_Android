@@ -20,6 +20,7 @@ import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.bean.Content
 import com.mredrock.cyxbs.qa.pages.answer.viewmodel.AnswerViewModel
+import com.mredrock.cyxbs.qa.ui.activity.ViewImageActivity
 import com.mredrock.cyxbs.qa.utils.CHOOSE_PHOTO_REQUEST
 import com.mredrock.cyxbs.qa.utils.selectImageFromAlbum
 import kotlinx.android.synthetic.main.qa_activity_answer.*
@@ -82,6 +83,9 @@ class AnswerActivity : BaseViewModelActivity<AnswerViewModel>() {
         nine_grid_view.setOnItemClickListener { _, index ->
             if (index == nine_grid_view.childCount - 1) {
                 this@AnswerActivity.selectImageFromAlbum(AnswerActivity.MAX_SELECTABLE_IMAGE_COUNT, viewModel.imageLiveData.value)
+            } else {
+                ViewImageActivity.activityStartForResult(this@AnswerActivity, viewModel.tryEditImg(index)
+                        ?: return@setOnItemClickListener)
             }
         }
 
@@ -108,11 +112,15 @@ class AnswerActivity : BaseViewModelActivity<AnswerViewModel>() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode != Activity.RESULT_OK) {
+        if (resultCode != Activity.RESULT_OK || data == null) {
             return
         }
-        if (requestCode == CHOOSE_PHOTO_REQUEST) {
-            viewModel.setImageList(LPhotoPickerActivity.getSelectedPhotos(data))
+
+        when (requestCode) {
+            CHOOSE_PHOTO_REQUEST -> viewModel.setImageList(LPhotoPickerActivity.getSelectedPhotos(data))
+            ViewImageActivity.DEFAULT_RESULT_CODE -> viewModel.setImageList(viewModel.imageLiveData.value!!.apply {
+                set(viewModel.editingImgPos, data.getStringExtra(ViewImageActivity.EXTRA_NEW_PATH))
+            })
         }
     }
 

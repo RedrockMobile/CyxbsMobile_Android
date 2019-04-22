@@ -8,6 +8,7 @@ class NetworkState {
         const val LOADING = 1
         const val SUCCESSFUL = 2
         const val FAILED = 3
+        const val CANNOT_LOAD = 4
         const val NO_MORE_DATA = 0
     }
 }

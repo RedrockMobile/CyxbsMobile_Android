@@ -38,12 +38,20 @@ class QuizViewModel(var type: String) : BaseViewModel() {
     val tagLiveData = MutableLiveData<String>()
     val backAndRefreshPreActivityEvent = SingleLiveEvent<Boolean>()
 
+    var editingImgPos = -1
+        private set
     var myRewardCount = 0
+        private set
     var isAnonymous = false
 
     private var title: String = ""
     private var content: String = ""
     private var disappearTime: String = ""
+
+    fun tryEditImg(pos: Int): String? {
+        editingImgPos = pos
+        return imageLiveData.value?.get(pos)
+    }
 
     fun setImageList(imageList: ArrayList<String>) {
         imageLiveData.value = imageList
@@ -70,10 +78,10 @@ class QuizViewModel(var type: String) : BaseViewModel() {
     fun getMyReward() {
         val user = BaseApp.user ?: return
         ApiGenerator.getApiService(ApiService::class.java)
-                .getMyRewardCount(user.stuNum ?: "", user.idNum ?: "")
+                .getScoreStatus(user.stuNum ?: "", user.idNum ?: "")
                 .setSchedulers()
                 .mapOrThrowApiException()
-                .safeSubscribeBy { myRewardCount = it }
+                .safeSubscribeBy { myRewardCount = it.integral }
     }
 
     @SuppressLint("CheckResult")
