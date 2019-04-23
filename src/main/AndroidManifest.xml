@@ -5,7 +5,8 @@
     <application android:theme="@style/AppTheme">
 
         <activity android:name="com.mredrock.cyxbs.widget.page.ConfigActivity" />
-        <activity android:name="com.mredrock.cyxbs.widget.page.trans.TransConfigActivity" />
+        <activity android:name="com.mredrock.cyxbs.widget.page.trans.TransConfigActivity"
+            android:windowSoftInputMode="adjustPan"/>
         <activity android:name="com.mredrock.cyxbs.widget.page.little.LittleConfigActivity" />
         <activity android:name="com.mredrock.cyxbs.widget.page.normal.NormalConfigActivity" />
 
