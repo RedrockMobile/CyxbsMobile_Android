@@ -3,16 +3,14 @@ package com.mredrock.cyxbs.mine.network.model
 import android.util.Base64
 import com.google.gson.Gson
 import com.google.gson.annotations.SerializedName
-import com.mredrock.cyxbs.common.utils.LogUtils
 import java.io.Serializable
-import java.net.URLDecoder
 import java.text.SimpleDateFormat
 import java.util.*
 
 /**
  * Created by jay86.
  */
-data class Draft(@SerializedName("createdAt")
+data class Draft(@SerializedName("created_at")
                  val createdAt: String = "",
                  @SerializedName("target_id")
                  val targetId: String = "",
@@ -22,7 +20,7 @@ data class Draft(@SerializedName("createdAt")
                  val type: String = "",
                  @SerializedName("title_content")
                  val titleContent: String = "",
-                 @SerializedName("description")
+                 @SerializedName("content")
                  val content: String = "",
                  var question: Question?) : Serializable {
 
