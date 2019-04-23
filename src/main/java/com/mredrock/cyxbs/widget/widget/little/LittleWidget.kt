@@ -54,10 +54,7 @@ class LittleWidget : BaseLittleWidget() {
         rv.setOnClickPendingIntent(getDownResId(), getClickPendingIntent(context, getDownResId(), "btn.text.com", javaClass))
         rv.setOnClickPendingIntent(getRefreshResId(), getClickPendingIntent(context, getRefreshResId(), "btn.text.com", javaClass))
 
-        rv.setOnClickPendingIntent(getCourseNameResId(),
-                getClickPendingIntent(context,getCourseNameResId(),"btn.start.com",javaClass))
-        rv.setOnClickPendingIntent(getRoomResId(),
-                getClickPendingIntent(context,getRoomResId(),"btn.start.com",javaClass))
+
 
         if (course == null) {
             rv.setTextViewText(getTitleResId(), getWeekDayChineseName(Calendar.getInstance().get(Calendar.DAY_OF_WEEK)))
@@ -69,6 +66,11 @@ class LittleWidget : BaseLittleWidget() {
             rv.setTextViewText(getTitleResId(), timeTv)
             rv.setTextViewText(getCourseNameResId(), course.course)
             rv.setTextViewText(getRoomResId(), filterClassRoom(course.classroom!!))
+            //有课的时候才能跳转
+            rv.setOnClickPendingIntent(getCourseNameResId(),
+                    getClickPendingIntent(context,getCourseNameResId(),"btn.start.com",javaClass))
+            rv.setOnClickPendingIntent(getRoomResId(),
+                    getClickPendingIntent(context,getRoomResId(),"btn.start.com",javaClass))
         }
         return rv
     }

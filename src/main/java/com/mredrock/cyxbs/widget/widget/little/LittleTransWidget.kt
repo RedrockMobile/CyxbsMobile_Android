@@ -64,15 +64,16 @@ class LittleTransWidget : BaseLittleWidget() {
             rv.setTextViewText(getTitleResId(), timeTv)
             rv.setTextViewText(getCourseNameResId(), course.course)
             rv.setTextViewText(getRoomResId(), filterClassRoom(course.classroom!!))
+            //course和room设置点击事件到Activity，title设置刷新，没课才设置点击事件
+            rv.setOnClickPendingIntent(getCourseNameResId(),
+                    getClickPendingIntent(context,getCourseNameResId(),"btn.start.com",javaClass))
+            rv.setOnClickPendingIntent(getRoomResId(),
+                    getClickPendingIntent(context,getRoomResId(),"btn.start.com",javaClass))
+            rv.setOnClickPendingIntent(getTitleResId(),
+                    getClickPendingIntent(context,getTitleResId(),"btn.text.com",javaClass))
         }
 
-        //course和room设置点击事件到Activity，title设置刷新
-        rv.setOnClickPendingIntent(getCourseNameResId(),
-                getClickPendingIntent(context,getCourseNameResId(),"btn.start.com",javaClass))
-        rv.setOnClickPendingIntent(getRoomResId(),
-                getClickPendingIntent(context,getRoomResId(),"btn.start.com",javaClass))
-        rv.setOnClickPendingIntent(getTitleResId(),
-                getClickPendingIntent(context,getTitleResId(),"btn.text.com",javaClass))
+
         //设置用户自定义定义配置
 
         try {//这个tryCatch防止用户输入的颜色有误,parseColor报错
