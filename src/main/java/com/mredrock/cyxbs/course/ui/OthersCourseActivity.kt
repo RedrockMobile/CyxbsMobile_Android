@@ -27,6 +27,7 @@ class OthersCourseActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.course_activity_others_course)
+        common_toolbar.init("同学课表")
         ARouter.getInstance().inject(this)
         replaceFragment(CourseContainerFragment.getOthersCourseContainerFragment(mOthersStuNum))
     }
