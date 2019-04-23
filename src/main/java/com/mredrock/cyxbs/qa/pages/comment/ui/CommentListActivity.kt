@@ -5,10 +5,8 @@ import android.arch.lifecycle.ViewModelProvider
 import android.os.Bundle
 import android.support.design.widget.BottomSheetDialog
 import android.support.v7.widget.LinearLayoutManager
-import com.alibaba.android.arouter.facade.annotation.Route
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.bean.isSuccessful
-import com.mredrock.cyxbs.common.config.QA_COMMENT_LIST
 import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.extensions.gone
@@ -33,7 +31,6 @@ import org.greenrobot.eventbus.ThreadMode
 import org.jetbrains.anko.startActivityForResult
 import org.jetbrains.anko.toast
 
-@Route(path = QA_COMMENT_LIST)
 class CommentListActivity : BaseViewModelActivity<CommentListViewModel>() {
     companion object {
         const val REQUEST_CODE = 0x123

@@ -8,9 +8,7 @@ import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.view.Menu
 import android.view.MenuItem
-import com.alibaba.android.arouter.facade.annotation.Route
 import com.mredrock.cyxbs.common.BaseApp
-import com.mredrock.cyxbs.common.config.QA_ANSWER_LIST
 import com.mredrock.cyxbs.common.event.AskLoginEvent
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.extensions.gone
@@ -29,7 +27,6 @@ import kotlinx.android.synthetic.main.qa_activity_answer_list.*
 import org.greenrobot.eventbus.EventBus
 import org.jetbrains.anko.support.v4.startActivityForResult
 
-@Route(path = QA_ANSWER_LIST)
 class AnswerListActivity : BaseViewModelActivity<AnswerListViewModel>() {
     companion object {
         @JvmField
