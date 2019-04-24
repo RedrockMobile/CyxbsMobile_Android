@@ -26,8 +26,8 @@ class EmptyRoomResultAdapter(var data: MutableList<EmptyRoom>, private val conte
 
     override fun getItemCount() = data.size
 
-    fun updateData(newData : List<EmptyRoom>){
-        if (data.isNotEmpty()){
+    fun updateData(newData: List<EmptyRoom>) {
+        if (data.isNotEmpty()) {
             data.clear()
             data.addAll(newData)
             notifyDataSetChanged()

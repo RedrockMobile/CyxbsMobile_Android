@@ -1,9 +1,7 @@
 package com.mredrock.cyxbs.discover.emptyroom.viewmodel
 
 import android.arch.lifecycle.MutableLiveData
-import android.util.Log
 import com.mredrock.cyxbs.common.network.ApiGenerator
-import com.mredrock.cyxbs.common.utils.extensions.doOnErrorWithDefaultErrorHandler
 import com.mredrock.cyxbs.common.utils.extensions.mapOrThrowApiException
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
@@ -38,7 +36,7 @@ class EmptyRoomViewModel : BaseViewModel() {
         status.value = DEFAULT
     }
 
-    fun getData(week: Int, weekday: Int, building: Int, section: IntArray) {
+    fun getData(week: Int, weekday: Int, building: Int, section: List<Int>) {
         val tag = section.joinToString(",", " ", " ").replace(" ", "")
         if (section.isEmpty()) {
             status.value = DEFAULT
@@ -55,7 +53,8 @@ class EmptyRoomViewModel : BaseViewModel() {
                             status.value = FINISH
                             val converter = EmptyConverter()
                             converter.setEmptyData(it)
-                            rooms.value = converter.convert()},
+                            rooms.value = converter.convert()
+                        },
                         onError = {
                             status.value = ERROR
                         })

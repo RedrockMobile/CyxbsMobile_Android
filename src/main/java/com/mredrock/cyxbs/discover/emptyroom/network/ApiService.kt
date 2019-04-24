@@ -11,9 +11,9 @@ import retrofit2.http.POST
  */
 interface ApiService {
     @FormUrlEncoded
-    @POST("/api/roomEmpty")
+    @POST("/234/newapi/roomEmpty")
     fun getEmptyRooms(@Field("week") week: Int,
-                      @Field("weekdayNum") weekday: Int,
+                      @Field("weekDayNum") weekday: Int,
                       @Field("buildNum") buildNum: Int,
                       @Field("sectionNum") section: String): Observable<RedrockApiWrapper<List<String>>>
 

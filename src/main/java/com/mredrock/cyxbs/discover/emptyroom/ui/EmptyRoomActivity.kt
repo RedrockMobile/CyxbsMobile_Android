@@ -29,7 +29,6 @@ import com.mredrock.cyxbs.discover.emptyroom.ui.widget.MultiSelector
 import com.mredrock.cyxbs.discover.emptyroom.ui.widget.OnItemSelectedChangeListener
 import com.mredrock.cyxbs.discover.emptyroom.utils.ViewInitializer
 import com.mredrock.cyxbs.discover.emptyroom.viewmodel.EmptyRoomViewModel
-import com.mredrock.cyxbs.discover.emptyroom.viewmodel.EmptyRoomViewModel.Companion
 import com.mredrock.cyxbs.discover.emptyroom.viewmodel.EmptyRoomViewModel.Companion.DEFAULT
 import com.mredrock.cyxbs.discover.emptyroom.viewmodel.EmptyRoomViewModel.Companion.ERROR
 import com.mredrock.cyxbs.discover.emptyroom.viewmodel.EmptyRoomViewModel.Companion.FINISH
@@ -203,7 +202,8 @@ class EmptyRoomActivity : BaseViewModelActivity<EmptyRoomViewModel>(), OnItemSel
         val weekday = multi_selector_weekday.getSelectedValues()[0]
         val building = multi_selector_building.getSelectedValues()[0]
         val section = multi_selector_section.getSelectedValues()
-        viewModel.getData(week, weekday, building, section)
+        val res = section.map { it + 1 }
+        viewModel.getData(week, weekday, building, res)
     }
 
     private fun disallowExpandedAnimator(): Boolean {
@@ -218,10 +218,10 @@ class EmptyRoomActivity : BaseViewModelActivity<EmptyRoomViewModel>(), OnItemSel
     }
 
     override fun onDestroy() {
-        if (queryAnimator.isRunning){
+        if (queryAnimator.isRunning) {
             queryAnimator.cancel()
         }
-        if (expandedAnimator.isRunning){
+        if (expandedAnimator.isRunning) {
             expandedAnimator.cancel()
         }
         super.onDestroy()
