@@ -56,11 +56,11 @@ dependencies {
     api deps.workmanager.runtime
 
     //dagger2
-    api deps.dagger.runtime
-    kapt deps.dagger.compiler
-    api deps.dagger.android
-    api deps.dagger.android_support
-    kapt deps.dagger.android_processor
+//    api deps.dagger.runtime
+//    kapt deps.dagger.compiler
+//    api deps.dagger.android
+//    api deps.dagger.android_support
+//    kapt deps.dagger.android_processor
 
     //permission
     api deps.rxpermissions.runtime
