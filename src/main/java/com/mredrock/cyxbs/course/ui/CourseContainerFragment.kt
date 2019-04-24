@@ -117,7 +117,9 @@ class CourseContainerFragment : BaseFragment() {
     }
 
     override fun onPrepareOptionsMenu(menu: Menu?) {
-        activity?.menuInflater?.inflate(R.menu.course_course_menu, menu)
+        if(mCoursesViewModel.isGetOthers.value == false){//如果是他人课表，不加载添加事物的btn
+            activity?.menuInflater?.inflate(R.menu.course_course_menu, menu)
+        }
         super.onPrepareOptionsMenu(menu)
     }
 
