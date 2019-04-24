@@ -103,6 +103,18 @@
 -dontwarn javax.lang.model.element.**
 -dontwarn javax.xml.stream.**
 
+# renderscript
+-keep class android.support.v8.renderscript.** { *; }
+
+# kotlin协程
+# ServiceLoader support
+-keepnames class kotlinx.coroutines.internal.MainDispatcherFactory {}
+-keepnames class kotlinx.coroutines.CoroutineExceptionHandler {}
+
+# Most of volatile fields are updated with AFU and should not be mangled
+-keepclassmembernames class kotlinx.** {
+    volatile <fields>;
+}
 #-------------------------------------------------------------------------
 
 #---------------------------------3.与js互相调用的类------------------------
