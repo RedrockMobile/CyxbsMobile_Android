@@ -16,7 +16,7 @@ import top.limuyang2.photolibrary.util.LPPImageType
 const val CHOOSE_PHOTO_REQUEST = 0x1024
 
 fun AppCompatActivity.selectImageFromAlbum(maxCount: Int, selected: ArrayList<String>?) {
-    doPermissionAction(Manifest.permission.READ_EXTERNAL_STORAGE) {
+    doPermissionAction(Manifest.permission.WRITE_EXTERNAL_STORAGE) {
         doAfterGranted {
             val intent = LPhotoPickerActivity.IntentBuilder(this@selectImageFromAlbum)
                     .maxChooseCount(maxCount)
