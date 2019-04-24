@@ -93,19 +93,28 @@ class AskAdoptedFm : BaseRVFragment<MyAskQuestion>() {
 
     @SuppressLint("SetTextI18n")
     override fun bindDataHolder(holder: RecyclerView.ViewHolder, position: Int, data: MyAskQuestion) {
-        //隐藏全部小红点，以后可能需要使用小红点
-        holder.itemView.mine_help_item_red_point.visibility = View.INVISIBLE
+        holder.itemView.apply {
+            //隐藏全部小红点，以后可能需要使用小红点
+            mine_help_item_red_point.visibility = View.INVISIBLE
 
-        holder.itemView.mine_help_item_tv_question.text = "提问：${data.title}"
+            mine_help_item_tv_question.text = "提问：${data.title}"
 
-        when (type) {
-            TYPE_ASK_OVER -> {
-                holder.itemView.mine_help_item_tv_answer.text = "采纳：${data.description}"
-                holder.itemView.mine_help_item_tv_time.text = "解决时间：${TimeUtil.wrapTime(data.updatedAt)}"
-            }
-            TYPE_ASK_WAIT -> {
-                holder.itemView.mine_help_item_tv_answer.visibility = View.GONE
-                holder.itemView.mine_help_item_tv_time.text = "发布时间：${TimeUtil.wrapTime(data.createdAt)}"
+            //todo 问一问的点击跳转
+            when (type) {
+                TYPE_ASK_OVER -> {
+                    mine_help_item_tv_answer.text = "采纳：${data.description}"
+                    mine_help_item_tv_time.text = "解决时间：${TimeUtil.wrapTime(data.updatedAt)}"
+                    setOnClickListener {
+
+                    }
+                }
+                TYPE_ASK_WAIT -> {
+                    mine_help_item_tv_answer.visibility = View.GONE
+                    mine_help_item_tv_time.text = "发布时间：${TimeUtil.wrapTime(data.createdAt)}"
+                    setOnClickListener {
+
+                    }
+                }
             }
         }
     }
