@@ -43,7 +43,7 @@ class RedPageWebActivity : BaseActivity() {
         }
 
         wv_redPage.apply {
-            loadUrl("file:///android_asset/index.html")
+            loadUrl("https://wx.idsbllp.cn/app/Public/index/")
             addJavascriptInterface(this, "android")
             webChromeClient = mWebChromeClient
             webViewClient = mWebViewClient
