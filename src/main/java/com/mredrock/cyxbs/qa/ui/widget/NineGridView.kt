@@ -7,9 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.ImageView
-import com.bumptech.glide.Glide
-import com.bumptech.glide.request.RequestOptions
-import com.mredrock.cyxbs.common.R
 import com.mredrock.cyxbs.common.utils.extensions.loadRedrockImage
 import org.jetbrains.anko.dip
 import org.jetbrains.anko.forEachChild
@@ -135,30 +132,19 @@ class NineGridView(context: Context?, attrs: AttributeSet?, defStyleAttr: Int) :
     }
 
     fun setImages(urls: List<String>) {
-        for (i in 0 until childCount - 1) {
-            val view = getChildAt(i)
-            if (i == childCount - 1) {
-                //保留添加图标
-                break
-            } else if (i >= urls.size) {
-                //移除多出来的view
-                removeView(view)
-                continue
+        repeat(childCount) {
+            if (it < urls.size) {
+                context.loadRedrockImage(urls[it], getChildAt(it) as ImageView)
+            } else {
+                removeViewAt(it)
             }
-            context.loadRedrockImage(urls[i], view as ImageView)
         }
-        //补充缺少的view
-        urls.asSequence()
-                .filterIndexed { index, _ -> index >= childCount - 1 }
-                .forEach {
-                    val iv=ImageView(context).apply {
-                        scaleType = ImageView.ScaleType.CENTER_CROP
-                    }
-                    Glide.with(this)
-                            .load(it)
-                            .apply(RequestOptions().placeholder(R.drawable.common_place_holder).error(R.drawable.common_place_holder))
-                            .into(iv)
-                    addView(iv, childCount - 1)
-                }
+
+        for (i in childCount until urls.size) {
+            this.addView(ImageView(context).apply {
+                scaleType = ImageView.ScaleType.CENTER_CROP
+                context.loadRedrockImage(urls[i], this@apply)
+            }, childCount)
+        }
     }
 }
