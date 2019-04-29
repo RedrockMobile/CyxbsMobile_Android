@@ -10,6 +10,7 @@ import android.view.KeyEvent
 import android.view.KeyEvent.KEYCODE_BACK
 import android.webkit.*
 import com.alibaba.android.arouter.facade.annotation.Route
+import com.mredrock.cyxbs.common.config.END_POINT_REDROCK
 //import com.jude.swipbackhelper.SwipeBackHelper
 import com.mredrock.cyxbs.common.config.REDROCK_HOME_ENTRY
 import com.mredrock.cyxbs.common.ui.BaseActivity
@@ -43,7 +44,8 @@ class RedPageWebActivity : BaseActivity() {
         }
 
         wv_redPage.apply {
-            loadUrl("https://wx.idsbllp.cn/app/Public/index/")
+
+            loadUrl("$END_POINT_REDROCK/app/Public/index/")
             addJavascriptInterface(this, "android")
             webChromeClient = mWebChromeClient
             webViewClient = mWebViewClient
