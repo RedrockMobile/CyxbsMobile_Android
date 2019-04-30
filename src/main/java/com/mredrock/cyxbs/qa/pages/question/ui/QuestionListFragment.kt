@@ -8,6 +8,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.mredrock.cyxbs.common.event.AskLoginEvent
 import com.mredrock.cyxbs.common.event.LoginStateChangeEvent
 import com.mredrock.cyxbs.common.ui.BaseViewModelFragment
 import com.mredrock.cyxbs.qa.R
@@ -20,6 +21,7 @@ import com.mredrock.cyxbs.qa.ui.adapter.EmptyRvAdapter
 import com.mredrock.cyxbs.qa.ui.adapter.FooterRvAdapter
 import kotlinx.android.synthetic.main.qa_fragment_question_list.*
 import kotlinx.android.synthetic.main.qa_fragment_question_list.view.*
+import org.greenrobot.eventbus.EventBus
 
 /**
  * Created By jay68 on 2018/8/22.
@@ -72,7 +74,7 @@ class QuestionListFragment : BaseViewModelFragment<QuestionListViewModel>() {
                 }
                 NetworkState.CANNOT_LOAD->{
                     swipe_refresh_layout.isRefreshing = false
-                    viewModel.toastEvent.value = R.string.qa_unlogin_error
+                    EventBus.getDefault().post(AskLoginEvent("请先登陆才能查看邮问哦~"))
                 }
                 else -> {
                     swipe_refresh_layout.isRefreshing = false

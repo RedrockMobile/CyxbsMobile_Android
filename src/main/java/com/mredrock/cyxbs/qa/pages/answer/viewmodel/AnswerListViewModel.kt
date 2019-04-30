@@ -60,6 +60,20 @@ class AnswerListViewModel(question: Question) : BaseViewModel() {
         answerPagedList.observe(this, Observer {  })
     }
 
+    fun adoptAnswer(aId: String) {
+        ApiGenerator.getApiService(ApiService::class.java)
+                .adoptAnswer(aId, qid,
+                        BaseApp.user?.stuNum ?: "",
+                        BaseApp.user?.idNum ?: "")
+                .checkError()
+                .setSchedulers()
+                .doOnSubscribe { progressDialogEvent.value = ProgressDialogEvent.SHOW_NONCANCELABLE_DIALOG_EVENT }
+                .doFinally { progressDialogEvent.value = ProgressDialogEvent.DISMISS_DIALOG_EVENT }
+                .safeSubscribeBy {
+                    backAndRefreshPreActivityEvent.value = true
+                }
+    }
+
     fun getMyReward() {
         val user = BaseApp.user ?: return
         ApiGenerator.getApiService(ApiService::class.java)

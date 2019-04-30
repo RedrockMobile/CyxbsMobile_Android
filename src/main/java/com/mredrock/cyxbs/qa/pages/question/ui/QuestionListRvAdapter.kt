@@ -42,7 +42,7 @@ class QuestionListRvAdapter(private val fragment: Fragment) : BaseEndlessRvAdapt
         if (BaseApp.isLogin) {
             AnswerListActivity.activityStart(fragment, data, QuestionContainerFragment.REQUEST_LIST_REFRESH_ACTIVITY)
         } else {
-            EventBus.getDefault().post(AskLoginEvent(context.getString(R.string.qa_unlogin_error)))
+            EventBus.getDefault().post(AskLoginEvent("请先登陆才能查看邮问哦~"))
         }
     }
 

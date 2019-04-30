@@ -32,6 +32,11 @@ class ReportActivity : BaseViewModelActivity<ReportViewModel>() {
         btn_submit_report.setOnClickListener {
             viewModel.report(qid, edt_report_content.text.toString(), typeStringArray[preCheckedTypeSelectorIndex])
         }
+        viewModel.backPreActivityEvent.observe {
+            if (it == true) {
+                finish()
+            }
+        }
     }
 
     private fun initTypeSelector() {

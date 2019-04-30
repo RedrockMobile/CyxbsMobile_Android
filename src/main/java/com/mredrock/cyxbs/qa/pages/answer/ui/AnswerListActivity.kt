@@ -9,15 +9,21 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.Menu
 import android.view.MenuItem
 import com.mredrock.cyxbs.common.BaseApp
+import com.mredrock.cyxbs.common.bean.isSuccessful
 import com.mredrock.cyxbs.common.event.AskLoginEvent
+import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.extensions.gone
+import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
+import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.common.utils.extensions.visible
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.bean.Question
 import com.mredrock.cyxbs.qa.component.recycler.RvAdapterWrapper
+import com.mredrock.cyxbs.qa.network.ApiService
 import com.mredrock.cyxbs.qa.network.NetworkState
 import com.mredrock.cyxbs.qa.pages.answer.viewmodel.AnswerListViewModel
+import com.mredrock.cyxbs.qa.pages.comment.AdoptAnswerEvent
 import com.mredrock.cyxbs.qa.pages.comment.ui.CommentListActivity
 import com.mredrock.cyxbs.qa.pages.quiz.ui.dialog.RewardSetDialog
 import com.mredrock.cyxbs.qa.pages.report.ui.ReportOrSharePopupWindow
@@ -25,7 +31,10 @@ import com.mredrock.cyxbs.qa.ui.adapter.EmptyRvAdapter
 import com.mredrock.cyxbs.qa.ui.adapter.FooterRvAdapter
 import kotlinx.android.synthetic.main.qa_activity_answer_list.*
 import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 import org.jetbrains.anko.support.v4.startActivityForResult
+import org.jetbrains.anko.toast
 
 class AnswerListActivity : BaseViewModelActivity<AnswerListViewModel>() {
     companion object {
@@ -37,7 +46,7 @@ class AnswerListActivity : BaseViewModelActivity<AnswerListViewModel>() {
 
         fun activityStart(fragment: Fragment, question: Question, requestCode: Int) {
             if (!BaseApp.isLogin) {
-                EventBus.getDefault().post(AskLoginEvent(fragment.getString(R.string.qa_unlogin_error)))
+                EventBus.getDefault().post(AskLoginEvent("请先登陆才能查看邮问哦~"))
                 return
             }
             fragment.startActivityForResult<AnswerListActivity>(requestCode, PARAM_QUESTION to question)
@@ -127,19 +136,23 @@ class AnswerListActivity : BaseViewModelActivity<AnswerListViewModel>() {
         }
     }
 
+    private val rewardSetDialog by lazy {
+        RewardSetDialog(this@AnswerListActivity, viewModel.myRewardCount).apply {
+            onSubmitButtonClickListener = {
+                if (viewModel.addReward(it)) {
+                    dismiss()
+                }
+            }
+        }
+    }
+
     private fun switchToQuestioner() {
         card_bottom_container.visible()
         val leftDrawable = resources.getDrawable(R.drawable.qa_ic_answer_list_add_reward)
         tv_left.text = getString(R.string.qa_answer_list_add_reward)
         tv_left.setCompoundDrawablesRelativeWithIntrinsicBounds(leftDrawable, null, null, null)
         fl_left.setOnClickListener {
-            RewardSetDialog(this@AnswerListActivity, viewModel.myRewardCount).apply {
-                onSubmitButtonClickListener = {
-                    if (viewModel.addReward(it)) {
-                        dismiss()
-                    }
-                }
-            }
+            rewardSetDialog.show()
         }
 
         val rightDrawable = resources.getDrawable(R.drawable.qa_ic_answer_list_cancel)
@@ -183,12 +196,19 @@ class AnswerListActivity : BaseViewModelActivity<AnswerListViewModel>() {
         return true
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?) = when (item?.itemId) {
-        R.id.more -> {
-            ReportOrSharePopupWindow(this, viewModel.qid, common_toolbar, card_frame).show()
-            true
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        return when (item?.itemId) {
+            R.id.more -> {
+                val q = viewModel.questionLiveData.value ?: return false
+                ReportOrSharePopupWindow(this, q, common_toolbar, card_frame).show()
+                true
+            }
+            else -> false
         }
-        else -> false
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun adoptAnswer(event: AdoptAnswerEvent) {
+        viewModel.adoptAnswer(event.aId)
+    }
 }

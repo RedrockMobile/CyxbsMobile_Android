@@ -11,6 +11,7 @@ import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.common.viewmodel.event.ProgressDialogEvent
+import com.mredrock.cyxbs.common.viewmodel.event.SingleLiveEvent
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.bean.Answer
 import com.mredrock.cyxbs.qa.bean.Comment
@@ -29,6 +30,8 @@ class CommentListViewModel(val qid: String,
     val isPraised = Transformations.map(this.answerLiveData) { it.isPraised }!!
     val praiseCount = Transformations.map(this.answerLiveData) { it.praiseNum }!!
     val commentCount = Transformations.map(this.answerLiveData) { it.commentNum }!!
+
+    val refreshPreActivityEvent = SingleLiveEvent<Boolean>()
 
     private var praiseNetworkState = NetworkState.SUCCESSFUL
 
@@ -51,6 +54,20 @@ class CommentListViewModel(val qid: String,
 
     fun retryFailedListRequest() = factory.commentDataSourceLiveData.value?.retry()
 
+    fun adoptAnswer(aId: String) {
+        ApiGenerator.getApiService(ApiService::class.java)
+                .adoptAnswer(aId, qid,
+                        BaseApp.user?.stuNum ?: "",
+                        BaseApp.user?.idNum ?: "")
+                .checkError()
+                .setSchedulers()
+                .doOnSubscribe { progressDialogEvent.value = ProgressDialogEvent.SHOW_NONCANCELABLE_DIALOG_EVENT }
+                .doFinally { progressDialogEvent.value = ProgressDialogEvent.DISMISS_DIALOG_EVENT }
+                .safeSubscribeBy {
+                    refreshPreActivityEvent.value = true
+                }
+    }
+
     fun clickPraiseButton() {
         fun Boolean.toInt() = 1.takeIf { this@toInt } ?: -1
 
@@ -64,8 +81,11 @@ class CommentListViewModel(val qid: String,
 
         ApiGenerator.getApiService(ApiService::class.java)
                 .run {
-                    cancelPraiseAnswer(answer.id, user.stuNum!!, user.idNum!!).takeIf { answer.isPraised }
-                            ?: praiseAnswer(answer.id, user.stuNum!!, user.idNum!!)
+                    if (answer.isPraised) {
+                        cancelPraiseAnswer(answer.id, user.stuNum!!, user.idNum!!)
+                    } else {
+                        praiseAnswer(answer.id, user.stuNum!!, user.idNum!!)
+                    }
                 }
                 .checkError()
                 .setSchedulers()
@@ -86,6 +106,7 @@ class CommentListViewModel(val qid: String,
                         praiseNum = "${answer.praiseNumInt + state.toInt()}"
                         isPraised = state
                     }
+                    refreshPreActivityEvent.value = true
                 }
                 .lifeCycle()
     }
@@ -105,6 +126,7 @@ class CommentListViewModel(val qid: String,
                 .doFinally { progressDialogEvent.value = ProgressDialogEvent.DISMISS_DIALOG_EVENT }
                 .safeSubscribeBy {
                     answerLiveData.value = answer.apply { commentNum = "${commentNumInt + 1}" }
+                    refreshPreActivityEvent.value = true
                     invalidateCommentList()
                 }
                 .lifeCycle()

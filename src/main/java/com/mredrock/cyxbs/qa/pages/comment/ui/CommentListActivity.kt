@@ -91,6 +91,10 @@ class CommentListActivity : BaseViewModelActivity<CommentListViewModel>() {
                 headerAdapter.notifyItemChanged(0)
                 tv_comment.text = getString(R.string.qa_comment_list_comment_count, it)
             }
+
+            refreshPreActivityEvent.observeNotNull {
+                setResult(Activity.RESULT_OK)
+            }
         }
     }
 
@@ -113,20 +117,7 @@ class CommentListActivity : BaseViewModelActivity<CommentListViewModel>() {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun adoptAnswer(event: AdoptAnswerEvent) {
-        ApiGenerator.getApiService(ApiService::class.java)
-                .adoptAnswer(event.aId, viewModel.qid,
-                        BaseApp.user?.stuNum ?: "",
-                        BaseApp.user?.idNum ?: "")
-                .setSchedulers()
-                .safeSubscribeBy {
-                    if (it.isSuccessful) {
-                        this@CommentListActivity.toast("采纳成功")
-                    } else {
-                        this@CommentListActivity.toast("采纳失败")
-                    }
-                    setResult(Activity.RESULT_OK)
-                    finish()
-                }
+        viewModel.adoptAnswer(event.aId)
     }
 
 

@@ -1,5 +1,6 @@
 package com.mredrock.cyxbs.qa.pages.report.ui
 
+import android.app.Activity
 import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -11,25 +12,38 @@ import android.widget.PopupWindow
 import com.mredrock.cyxbs.common.utils.extensions.gone
 import com.mredrock.cyxbs.common.utils.extensions.visible
 import com.mredrock.cyxbs.qa.R
+import com.mredrock.cyxbs.qa.bean.Question
+import com.mredrock.cyxbs.qa.utils.isNullOrEmpty
+import com.umeng.socialize.ShareAction
+import com.umeng.socialize.media.UMImage
+import com.umeng.socialize.media.UMWeb
 import kotlinx.android.synthetic.main.qa_popup_window_report_or_share.view.*
 
 /**
  * Created By jay68 on 2018/12/9.
  */
-class ReportOrSharePopupWindow(context: Context,
-                               private val qid: String,
+class ReportOrSharePopupWindow(activity: Activity,
+                               private val question: Question,
                                private val anchor: View,
-                               private val frame: View) : PopupWindow(context) {
+                               private val frame: View) : PopupWindow(activity) {
     init {
         height = ViewGroup.LayoutParams.WRAP_CONTENT
         width = ViewGroup.LayoutParams.WRAP_CONTENT
-        contentView = LayoutInflater.from(context).inflate(R.layout.qa_popup_window_report_or_share, null, false)
+        contentView = LayoutInflater.from(activity).inflate(R.layout.qa_popup_window_report_or_share, null, false)
         contentView.tv_report.setOnClickListener {
-            ReportActivity.activityStart(context, qid)
+            ReportActivity.activityStart(activity, question.id)
             dismiss()
         }
         contentView.tv_share.setOnClickListener {
-            //todo 分享
+            // 分享 url
+            ShareAction(activity).withMedia(UMWeb("https://www.baidu.com").apply {
+                title = question.title
+                description = question.description
+                if (!question.photoUrl.isNullOrEmpty()) {
+                    this.setThumb(UMImage(activity, question.photoUrl[0]))
+                }
+                show()
+            })
         }
         animationStyle = R.style.PopupAnimation
         isTouchable = true
