@@ -16,9 +16,10 @@ import retrofit2.http.POST
 interface ApiService {
 
     @FormUrlEncoded
-    @POST("/api/examGrade")
+    @POST("/234/newapi/examGrade")
     fun getGrades(@Field("stuNum") stuNum: String,
-                  @Field("idNum") idNum: String): Observable<RedrockApiWrapper<List<Grade>>>
+                  @Field("idNum") idNum: String,
+                  @Field("forceFetch") fetch: Boolean = true): Observable<RedrockApiWrapper<List<Grade>>>
 
     @FormUrlEncoded
     @POST("/api/examSchedule")
