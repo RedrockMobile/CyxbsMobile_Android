@@ -14,6 +14,7 @@ import kotlinx.android.synthetic.main.mine_item_point_detail.view.*
 /**
  * Create By Hosigus at 2019/3/17
  */
+
 class PointDetailAdapter : RecyclerView.Adapter<PointDetailAdapter.BaseHolder<PointDetail>>() {
 
     private val darkColor = Color.parseColor("#B3000000")
@@ -25,7 +26,7 @@ class PointDetailAdapter : RecyclerView.Adapter<PointDetailAdapter.BaseHolder<Po
 
     fun loadMore(newList: List<PointDetail>) {
         list.addAll(newList)
-        notifyItemChanged(list.size - newList.size)
+        notifyItemRangeInserted(list.size, newList.size)
     }
 
     fun clear() {
@@ -33,16 +34,14 @@ class PointDetailAdapter : RecyclerView.Adapter<PointDetailAdapter.BaseHolder<Po
         notifyDataSetChanged()
     }
 
-    override fun getItemViewType(position: Int): Int {
-        if (position >= list.size - 1) {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseHolder<PointDetail> = NormalHolder(inflateView(parent, R.layout.mine_item_point_detail))
+    override fun getItemCount() = list.size
+    override fun onBindViewHolder(holder: BaseHolder<PointDetail>, position: Int){
+        if (position == itemCount - 1) {
             loadMoreSource?.invoke()
         }
-        return super.getItemViewType(position)
+        holder.initView(list[position])
     }
-    override fun onBindViewHolder(holder: BaseHolder<PointDetail>, position: Int) = holder.initView(list[position])
-    override fun getItemCount() = list.size
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
-            NormalHolder(inflateView(parent, R.layout.mine_item_point_detail))
 
     private fun inflateView(parent: ViewGroup, @LayoutRes resId: Int) =
             LayoutInflater.from(parent.context).inflate(resId, parent, false)
