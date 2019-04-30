@@ -16,7 +16,7 @@ class CalendarActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.calendar_activity_main)
         common_toolbar.init("校 历")
-        Glide.with(this).load(BASE_NORMAL_IMG_URL + "schoolCalendar").into(iv_calendar)
+        Glide.with(this).load("https://wx.idsbllp.cn/234/newapi/schoolCalendar").into(iv_calendar)
     }
 
     override val isFragmentActivity = false
