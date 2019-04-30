@@ -4,6 +4,8 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
+import android.widget.ProgressBar
 import com.mredrock.cyxbs.discover.news.R
 import com.mredrock.cyxbs.discover.news.bean.NewsListItem
 import com.mredrock.cyxbs.discover.news.ui.activity.NewsItemActivity
@@ -16,22 +18,52 @@ import org.jetbrains.anko.startActivity
  * Date: 2018/9/20 15:23
  * Description: com.mredrock.cyxbs.discover.news.ui.adapter
  */
-class NewsAdapter(private val newsList: MutableList<NewsListItem>) : RecyclerView.Adapter<NewsAdapter.ViewHolder>() {
+const val NORMAL_TYPE = 0x1
+const val FOOT_TYPE = 0x2
+
+class NewsAdapter(private val loadMore: () -> Unit) : RecyclerView.Adapter<NewsAdapter.ViewHolder>() {
+
+    private val newsList: MutableList<NewsListItem> = mutableListOf()
+
+    init {
+        loadMore()
+    }
 
     fun appendNewsList(newList: List<NewsListItem>) {
         newsList.addAll(newList)
-        notifyItemChanged(newsList.size - newList.size)
+        notifyItemRangeInserted(newsList.size, newList.size)
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = ViewHolder(
-            LayoutInflater.from(parent.context).inflate(R.layout.news_item_news, parent, false)
+    fun clear() {
+        newsList.clear()
+        notifyDataSetChanged()
+    }
+
+    override fun getItemViewType(position: Int) = if (position == newsList.size) FOOT_TYPE else NORMAL_TYPE
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = if (viewType == FOOT_TYPE) {
+        FootHolder(LayoutInflater.from(parent.context).inflate(R.layout.news_item_footer,parent,false))
+    } else {
+        ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.news_item_news, parent, false))
+    }
+
+    override fun getItemCount() = newsList.size + 1
+
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) = holder.initView(
+            if (getItemViewType(position) == FOOT_TYPE) {
+                null
+            } else {
+                newsList[position]
+            }
     )
 
-    override fun getItemCount() = newsList.size
+    open inner class ViewHolder(v: View) : RecyclerView.ViewHolder(v) {
+        fun initView(news: NewsListItem?) {
+            itemView.init(news)
+        }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val news = newsList[position]
-        holder.itemView.apply {
+        protected open fun View.init(news: NewsListItem?) {
+            news ?: return
             setOnClickListener {
                 context.startActivity<NewsItemActivity>("id" to news.id, "title" to news.title)
             }
@@ -40,5 +72,9 @@ class NewsAdapter(private val newsList: MutableList<NewsListItem>) : RecyclerVie
         }
     }
 
-    class ViewHolder(v: View) : RecyclerView.ViewHolder(v)
+    inner class FootHolder(v: View) : ViewHolder(v) {
+        override fun View.init(news: NewsListItem?) {
+            loadMore()
+        }
+    }
 }

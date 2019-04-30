@@ -1,16 +1,17 @@
 package com.mredrock.cyxbs.discover.news.network.download
 
+import android.media.MediaScannerConnection
 import android.os.Environment
+import android.os.Environment.DIRECTORY_DOWNLOADS
 import com.mredrock.cyxbs.common.config.END_POINT_REDROCK
 import com.mredrock.cyxbs.discover.news.network.ApiService
-import okhttp3.Call
-import okhttp3.Callback
 import okhttp3.OkHttpClient
-import okhttp3.Response
+import okhttp3.ResponseBody
+import retrofit2.Call
+import retrofit2.Response
 import retrofit2.Retrofit
 import java.io.File
 import java.io.FileOutputStream
-import java.io.IOException
 import java.io.InputStream
 
 /**
@@ -32,32 +33,24 @@ object DownloadManager {
                 .build()
                 .create(ApiService::class.java)
                 .download(id)
-                .enqueue(object : Callback {
-                    override fun onFailure(call: Call, e: IOException) {
-                        listener.onFail(e)
+                .enqueue(object : retrofit2.Callback<ResponseBody> {
+                    override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                        listener.onFail(t)
                     }
 
-                    override fun onResponse(call: Call, response: Response) {
+                    override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                         val body = response.body() ?: return
                         val state = Environment.getExternalStorageState()
                         if (Environment.MEDIA_MOUNTED != state && Environment.MEDIA_MOUNTED_READ_ONLY != state) {
                             listener.onFail(Exception("permission deny"))
                             return
                         }
-
                         val ins: InputStream
                         val fos: FileOutputStream
                         try {
                             ins = body.byteStream()
-                            val file = File(
-                                    Environment.getExternalStorageDirectory().absolutePath
-                                            + "/Download/"
-                                            + fileName
-                                            + "."
-                                            + response.headers()["Content-Disposition"]?.let {
-                                        it.substring(it.indexOf("filename="), it.length).substringAfterLast(".")
-                                    }
-                            )
+                            val file = File(Environment.getExternalStoragePublicDirectory(DIRECTORY_DOWNLOADS),
+                                    "$fileName.${splitFileType(response.headers()["Content-Disposition"])}")
                             fos = FileOutputStream(file)
 
                             val bytes = ByteArray(1024)
@@ -73,6 +66,10 @@ object DownloadManager {
                         }
                     }
                 })
+    }
+
+    private fun splitFileType(string: String?) = string?.let {
+        it.substring(it.indexOf("filename="), it.length).substringAfterLast(".")
     }
 
 }

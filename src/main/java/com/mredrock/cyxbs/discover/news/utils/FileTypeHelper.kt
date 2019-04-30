@@ -33,7 +33,6 @@ object FileTypeHelper {
 
         val end = fName.substring(dotIndex, fName.length).toLowerCase()
         if (end.isBlank()) return type
-
         type = MIME_TABLE[end] ?: return type
         return type
     }

@@ -4,7 +4,8 @@ import com.mredrock.cyxbs.common.bean.RedrockApiWrapper
 import com.mredrock.cyxbs.discover.news.bean.NewsDetails
 import com.mredrock.cyxbs.discover.news.bean.NewsListItem
 import io.reactivex.Observable
-import okhttp3.Call
+import okhttp3.ResponseBody
+import retrofit2.Call
 import retrofit2.http.*
 
 /**
@@ -13,14 +14,14 @@ import retrofit2.http.*
  * Description: com.mredrock.cyxbs.discover.news.network
  */
 interface ApiService {
-    @GET("/api/jwNews/list")
+    @GET("/234/newapi/jwNews/list")
     fun getNewsList(@Query ("page") page: Int): Observable<RedrockApiWrapper<List<NewsListItem>>>
 
-    @GET("/api/jwNews/content")
-    fun getNewsDetails(@Query("id") id: Int): Observable<RedrockApiWrapper<NewsDetails>>
+    @GET("/234/newapi/jwNews/content")
+    fun getNewsDetails(@Query("id") id: String,
+                       @Query("forceFetch") fetch: Boolean = true): Observable<RedrockApiWrapper<NewsDetails>>
 
     @Streaming
-    @GET("/api/file")
-    fun download(@Query("id") id: String): Call
-
+    @GET("/234/newapi/jwNews/file")
+    fun download(@Query("id") id: String): Call<ResponseBody>
 }

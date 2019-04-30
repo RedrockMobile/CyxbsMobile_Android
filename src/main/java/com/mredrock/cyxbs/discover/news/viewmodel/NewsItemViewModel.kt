@@ -24,14 +24,14 @@ import java.io.File
 class NewsItemViewModel : BaseViewModel() {
     val news: LiveData<NewsDetails> = MutableLiveData()
 
-    fun getNews(id: Int) {
+    fun getNews(id: String) {
         ApiGenerator.getApiService(ApiService::class.java)
                 .getNewsDetails(id)
                 .mapOrThrowApiException()
                 .setSchedulers()
                 .safeSubscribeBy {
                     (news as MutableLiveData).value = it
-                }.dispose()
+                }.lifeCycle()
     }
 
     fun download(rxPermissions: RxPermissions, list: List<NewsAttachment>, listener: NewsDownloadListener) {

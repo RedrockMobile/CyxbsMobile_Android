@@ -3,12 +3,16 @@ package com.mredrock.cyxbs.discover.news.ui.activity
 import android.app.AlertDialog
 import android.arch.lifecycle.Observer
 import android.content.Intent
+import android.media.MediaScannerConnection
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
+import android.support.v4.content.FileProvider
 import android.view.Menu
 import com.afollestad.materialdialogs.MaterialDialog
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
+import com.mredrock.cyxbs.common.utils.extensions.uri
 import com.mredrock.cyxbs.common.viewmodel.event.ProgressDialogEvent
 import com.mredrock.cyxbs.discover.news.R
 import com.mredrock.cyxbs.discover.news.bean.NewsAttachment
@@ -18,6 +22,7 @@ import com.mredrock.cyxbs.discover.news.viewmodel.NewsItemViewModel
 import com.tbruyelle.rxpermissions2.RxPermissions
 import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.news_activity_detail.*
+import org.jetbrains.anko.toast
 import java.io.File
 
 class NewsItemActivity : BaseViewModelActivity<NewsItemViewModel>(), NewsItemViewModel.NewsDownloadListener {
@@ -49,7 +54,7 @@ class NewsItemActivity : BaseViewModelActivity<NewsItemViewModel>(), NewsItemVie
                             try {
                                 startActivity(Intent(Intent.ACTION_VIEW)
                                         .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                                        .setDataAndType(Uri.fromFile(file), FileTypeHelper.getMIMEType(file)))
+                                        .setDataAndType(file.uri, FileTypeHelper.getMIMEType(file)))
                             } catch (e: Exception) {
                                 e.printStackTrace()
                             }
@@ -57,7 +62,7 @@ class NewsItemActivity : BaseViewModelActivity<NewsItemViewModel>(), NewsItemVie
                     }
                     return@itemsCallbackSingleChoice true
                 }
-                .title("下载附件")
+                .title("下载完成，打开附件")
                 .positiveText("确定")
                 .negativeText("取消")
                 .show()
@@ -87,7 +92,12 @@ class NewsItemActivity : BaseViewModelActivity<NewsItemViewModel>(), NewsItemVie
         }
         downloadEndSize++
         if (downloadEndSize == downloadNeedSize) {
+            MediaScannerConnection.scanFile(this,
+                    arrayOf(files[0].parent),
+                    files.map { FileTypeHelper.getMIMEType(it) }.toTypedArray(),
+                    null)
             AndroidSchedulers.mainThread().scheduleDirect {
+                toast("文件保存于系统\"Download\"文件夹下哦")
                 viewModel.progressDialogEvent.value = ProgressDialogEvent.DISMISS_DIALOG_EVENT
                 showOpenFileDialog()
             }
@@ -119,9 +129,9 @@ class NewsItemActivity : BaseViewModelActivity<NewsItemViewModel>(), NewsItemVie
             }
         })
 
-        intent.getIntExtra("id", -1).let {
-            if (it == -1) {
-                viewModel.toastEvent.value = R.string.news_init_error
+        intent.getStringExtra("id").let {
+            if (it.isBlank()) {
+                toast(R.string.news_init_error)
                 finish()
             } else {
                 viewModel.getNews(it)
