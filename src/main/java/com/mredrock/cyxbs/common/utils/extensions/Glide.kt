@@ -23,7 +23,7 @@ fun Context.loadRedrockImage(rowUrl: String?,
             imageView.setImageResource(error)
             return
         }
-        rowUrl!!.startsWith("http://") || rowUrl.startsWith("https://") -> rowUrl
+        rowUrl.startsWith("http://") || rowUrl.startsWith("https://") -> rowUrl
         else -> BASE_NORMAL_IMG_URL + rowUrl
     }
     Glide.with(this)
