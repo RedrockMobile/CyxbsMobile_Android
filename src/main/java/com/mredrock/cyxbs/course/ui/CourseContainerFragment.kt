@@ -186,10 +186,12 @@ class CourseContainerFragment : BaseFragment() {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun addTheAffairsToTheCalendar(affairFromInternetEvent: AffairFromInternetEvent) {
-        activity?.let {
+        activity?.let {activity ->
             if (affairFromInternetEvent.affairs.isNotEmpty()) {
-                val affairToCalendar = AffairToCalendar(it as AppCompatActivity, affairFromInternetEvent.affairs)
-                affairToCalendar.getPermissionToInsert()
+                val affairToCalendar = AffairToCalendar(activity as AppCompatActivity, affairFromInternetEvent.affairs)
+                if (affairFromInternetEvent.affairs.find { it.affairTime.isNullOrBlank() } != null) {
+                    affairToCalendar.getPermissionToInsert()
+                }
             }
         }
     }
