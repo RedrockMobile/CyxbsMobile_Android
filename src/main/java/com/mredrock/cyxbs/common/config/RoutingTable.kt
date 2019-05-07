@@ -37,6 +37,7 @@ const val REDROCK_HOME_ENTRY = "/redrock_home/entry"
 //小控件设置
 const val WIDGET_SETTING = "/setting/widget"
 
-//QA提问、帮助界面
+// QA
 const val QA_QUIZ = "/quiz/qa/entry"
 const val QA_ANSWER = "/answer/qa/entry"
+const val QA_ANSWER_LIST = "/answer_list/qa/entry"
