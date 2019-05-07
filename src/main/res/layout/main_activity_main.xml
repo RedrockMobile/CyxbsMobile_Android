@@ -30,7 +30,8 @@
         android:layout_height="wrap_content"
         android:src="@drawable/main_ic_red_home"
         app:backgroundTint="@color/main_red_home_entry_fab_background"
-        app:elevation="9dp"
+        app:rippleColor="@color/main_red_home_entry_fab_background"
+        app:elevation="8.5dp"
         app:fabCustomSize="42dp"
         app:layout_anchor="@id/nav_main"
         app:layout_anchorGravity="center|top" />

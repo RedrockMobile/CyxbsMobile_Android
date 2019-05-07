@@ -2,6 +2,10 @@ package com.mredrock.cyxbs.main.viewmodel
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
+import com.alibaba.android.arouter.launcher.ARouter
+import com.mredrock.cyxbs.common.BaseApp
+import com.mredrock.cyxbs.common.config.QA_ANSWER_LIST
+import com.mredrock.cyxbs.common.event.OpenShareQuestionEvent
 import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.network.exception.RedrockApiException
 import com.mredrock.cyxbs.common.utils.LogUtils
@@ -9,16 +13,26 @@ import com.mredrock.cyxbs.common.utils.extensions.mapOrThrowApiException
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
+import com.mredrock.cyxbs.common.viewmodel.event.SingleLiveEvent
 import com.mredrock.cyxbs.main.bean.StartPage
 import com.mredrock.cyxbs.main.network.ApiService
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
+import org.greenrobot.eventbus.EventBus
 import java.text.SimpleDateFormat
 import java.util.*
+import java.util.concurrent.TimeUnit
 
 /**
  * Created By jay68 on 2018/8/10.
  */
 class SplashViewModel : BaseViewModel() {
-    var startPage: LiveData<StartPage?> = MutableLiveData()
+    val startPage: LiveData<StartPage?> = MutableLiveData()
+    val finishModel = SingleLiveEvent<Boolean>()
+
+    fun finishAfter(time: Long) {
+        AndroidSchedulers.mainThread().scheduleDirect({ finishModel.value = true}, time, TimeUnit.MILLISECONDS)
+    }
 
     fun getStartPage() {
         ApiGenerator.getApiService(ApiService::class.java)
@@ -41,6 +55,18 @@ class SplashViewModel : BaseViewModel() {
                 }
                 .setSchedulers()
                 .safeSubscribeBy { (startPage as MutableLiveData).value = it }
+                .lifeCycle()
+    }
+
+    fun getQuestion(qid: String) {
+        val u = BaseApp.user!!
+        ApiGenerator.getApiService(ApiService::class.java)
+                .getQuestion(u.stuNum!!, u.idNum!!, qid)
+                .setSchedulers()
+                .safeSubscribeBy {
+                    EventBus.getDefault().postSticky(OpenShareQuestionEvent(it.string()))
+                    finishModel.value = true
+                }
                 .lifeCycle()
     }
 }

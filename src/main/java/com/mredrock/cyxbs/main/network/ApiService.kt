@@ -5,6 +5,7 @@ import com.mredrock.cyxbs.common.bean.RedrockApiWrapper
 import com.mredrock.cyxbs.common.bean.User
 import com.mredrock.cyxbs.main.bean.StartPage
 import io.reactivex.Observable
+import okhttp3.ResponseBody
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.POST
@@ -24,10 +25,16 @@ interface ApiService {
     @POST("/app/index.php/Home/Person/search")
     fun getPersonInfo(@Field("stuNum") stuNum: String, @Field("idNum") idNum: String): Observable<RedrockApiWrapper<User>>
 
-
     @FormUrlEncoded
     @POST("/app/index.php/Home/Person/setInfo")
     fun updateUserInfo(@Field("stuNum") stuNum: String,
                        @Field("idNum") idNum: String,
                        @Field("nickname") nickname: String): Observable<RedrockApiStatus>
+
+    @FormUrlEncoded
+    @POST("/app/index.php/QA/Question/getQuestionInfo")
+    fun getQuestion(
+            @Field("stunum") stuNum: String,
+            @Field("idnum") idNum: String,
+            @Field("question_id") qid: String): Observable<ResponseBody>
 }
