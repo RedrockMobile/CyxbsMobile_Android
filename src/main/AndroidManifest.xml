@@ -3,7 +3,7 @@
     package="com.mredrock.cyxbs.qa">
 
     <application>
-        <activity android:name=".ui.activity.ViewImageActivity"></activity>
+        <activity android:name=".ui.activity.ViewImageActivity" />
         <activity android:name=".pages.answer.ui.AnswerListActivity" />
         <activity
             android:name=".pages.comment.ui.CommentListActivity"

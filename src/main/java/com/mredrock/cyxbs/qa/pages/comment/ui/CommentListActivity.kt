@@ -94,6 +94,7 @@ class CommentListActivity : BaseViewModelActivity<CommentListViewModel>() {
 
             refreshPreActivityEvent.observeNotNull {
                 setResult(Activity.RESULT_OK)
+                headerAdapter.notifyItemChanged(0)
             }
         }
     }

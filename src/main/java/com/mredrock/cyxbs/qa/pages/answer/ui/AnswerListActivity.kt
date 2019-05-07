@@ -1,26 +1,32 @@
 package com.mredrock.cyxbs.qa.pages.answer.ui
 
 import android.app.Activity
+import android.app.ProgressDialog
+import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.Observer
+import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.view.Menu
 import android.view.MenuItem
+import com.alibaba.android.arouter.facade.annotation.Route
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.mredrock.cyxbs.common.BaseApp
+import com.mredrock.cyxbs.common.bean.RedrockApiWrapper
 import com.mredrock.cyxbs.common.bean.isSuccessful
+import com.mredrock.cyxbs.common.config.QA_ANSWER_LIST
 import com.mredrock.cyxbs.common.event.AskLoginEvent
-import com.mredrock.cyxbs.common.network.ApiGenerator
-import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
+import com.mredrock.cyxbs.common.event.OpenShareQuestionEvent
+import com.mredrock.cyxbs.common.ui.BaseActivity
 import com.mredrock.cyxbs.common.utils.extensions.gone
-import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
-import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.common.utils.extensions.visible
+import com.mredrock.cyxbs.common.viewmodel.event.ProgressDialogEvent
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.bean.Question
 import com.mredrock.cyxbs.qa.component.recycler.RvAdapterWrapper
-import com.mredrock.cyxbs.qa.network.ApiService
 import com.mredrock.cyxbs.qa.network.NetworkState
 import com.mredrock.cyxbs.qa.pages.answer.viewmodel.AnswerListViewModel
 import com.mredrock.cyxbs.qa.pages.comment.AdoptAnswerEvent
@@ -33,10 +39,13 @@ import kotlinx.android.synthetic.main.qa_activity_answer_list.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import org.jetbrains.anko.indeterminateProgressDialog
+import org.jetbrains.anko.longToast
 import org.jetbrains.anko.support.v4.startActivityForResult
 import org.jetbrains.anko.toast
 
-class AnswerListActivity : BaseViewModelActivity<AnswerListViewModel>() {
+@Route(path = QA_ANSWER_LIST)
+class AnswerListActivity : BaseActivity() {
     companion object {
         @JvmField
         val TAG: String = AnswerListActivity::class.java.simpleName
@@ -53,8 +62,13 @@ class AnswerListActivity : BaseViewModelActivity<AnswerListViewModel>() {
         }
     }
 
+    private lateinit var viewModel: AnswerListViewModel
+    private var progressDialog: ProgressDialog? = null
+    private fun initProgressBar() = indeterminateProgressDialog(message = "Loading...") {
+        setOnDismissListener { viewModel.onProgressDialogDismissed() }
+    }
+
     override val isFragmentActivity = false
-    override val viewModelClass = AnswerListViewModel::class.java
 
     private lateinit var headerAdapter: AnswerListHeaderAdapter
     private lateinit var answerListAdapter: AnswerListAdapter
@@ -66,6 +80,37 @@ class AnswerListActivity : BaseViewModelActivity<AnswerListViewModel>() {
         setContentView(R.layout.qa_activity_answer_list)
 
         common_toolbar.init(getString(R.string.qa_answer_list_title))
+        if (intent.getParcelableExtra<Question>(PARAM_QUESTION) != null) {
+            initViewModel(intent.getParcelableExtra(PARAM_QUESTION))
+            initView()
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        if (progressDialog?.isShowing == true) {
+            progressDialog?.dismiss()
+        }
+    }
+
+    private fun initViewModel(question: Question) {
+        viewModel = ViewModelProviders.of(this, AnswerListViewModel.Factory(question)).get(AnswerListViewModel::class.java)
+        viewModel.apply {
+            toastEvent.observe { str -> str?.let { toast(it) } }
+            longToastEvent.observe { str -> str?.let { longToast(it) } }
+            progressDialogEvent.observe {
+                it ?: return@observe
+                if (it != ProgressDialogEvent.DISMISS_DIALOG_EVENT && progressDialog?.isShowing != true) {
+                    progressDialog = progressDialog ?: initProgressBar()
+                    progressDialog?.show()
+                } else if (it == ProgressDialogEvent.DISMISS_DIALOG_EVENT && progressDialog?.isShowing != false) {
+                    progressDialog?.dismiss()
+                }
+            }
+        }
+    }
+
+    private fun initView() {
         initRv()
         observeListChangeEvent()
     }
@@ -87,7 +132,12 @@ class AnswerListActivity : BaseViewModelActivity<AnswerListViewModel>() {
         }
     }
 
-    override fun getViewModelFactory() = AnswerListViewModel.Factory(intent.getParcelableExtra(PARAM_QUESTION))
+    private inline fun <T> LiveData<T>.observe(crossinline onChange: (T?) -> Unit) = observe(this@AnswerListActivity, Observer { onChange(it) })
+
+    private inline fun <T> LiveData<T>.observeNotNull(crossinline onChange: (T) -> Unit) = observe(this@AnswerListActivity, Observer {
+        it ?: return@Observer
+        onChange(it)
+    })
 
     private fun observeListChangeEvent() = viewModel.apply {
         getMyReward()
@@ -199,8 +249,7 @@ class AnswerListActivity : BaseViewModelActivity<AnswerListViewModel>() {
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         return when (item?.itemId) {
             R.id.more -> {
-                val q = viewModel.questionLiveData.value ?: return false
-                ReportOrSharePopupWindow(this, q, common_toolbar, card_frame).show()
+                ReportOrSharePopupWindow(this, viewModel.questionLiveData.value ?: return false, common_toolbar, card_frame).show()
                 true
             }
             else -> false
@@ -210,5 +259,24 @@ class AnswerListActivity : BaseViewModelActivity<AnswerListViewModel>() {
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun adoptAnswer(event: AdoptAnswerEvent) {
         viewModel.adoptAnswer(event.aId)
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
+    fun openShareQuestion(event: OpenShareQuestionEvent) {
+        if (intent.getParcelableExtra<Question>(PARAM_QUESTION) != null) {
+            EventBus.getDefault().removeStickyEvent(event)
+        } else {
+            val questionWrapper = Gson().fromJson<RedrockApiWrapper<Question>>(event.questionJson,
+                    object : TypeToken<RedrockApiWrapper<Question>>() {}.type)
+
+            if (questionWrapper == null) {
+                toast("无法识别问题")
+            }else if (!questionWrapper.isSuccessful) {
+                toast(questionWrapper.info ?: "未知错误")
+            } else {
+                initViewModel(questionWrapper.data)
+                initView()
+            }
+        }
     }
 }

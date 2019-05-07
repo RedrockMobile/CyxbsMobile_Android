@@ -64,6 +64,7 @@ class CommentListViewModel(val qid: String,
                 .doOnSubscribe { progressDialogEvent.value = ProgressDialogEvent.SHOW_NONCANCELABLE_DIALOG_EVENT }
                 .doFinally { progressDialogEvent.value = ProgressDialogEvent.DISMISS_DIALOG_EVENT }
                 .safeSubscribeBy {
+                    answerLiveData.value?.isAdopted = true
                     refreshPreActivityEvent.value = true
                 }
     }

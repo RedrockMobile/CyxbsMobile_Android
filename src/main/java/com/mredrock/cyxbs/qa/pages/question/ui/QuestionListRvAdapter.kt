@@ -57,7 +57,7 @@ class QuestionListRvAdapter(private val fragment: Fragment) : BaseEndlessRvAdapt
                 tv_title.text = data.title
                 tv_content.text = data.description
                 tv_reward.text = context.getString(R.string.qa_question_item_reward, data.reward)
-                setShowPictureButton(tv_show_picture, data.photoThumbnailSrc)
+                setShowPictureButton(tv_show_picture, data.photoUrl)
             }
         }
 
@@ -66,8 +66,8 @@ class QuestionListRvAdapter(private val fragment: Fragment) : BaseEndlessRvAdapt
                     timeDescription(System.currentTimeMillis(), rowTime.toDate().time))
         }
 
-        private fun setShowPictureButton(tv: TextView, url: String?) {
-            if (url.isNullOrBlank()) {
+        private fun setShowPictureButton(tv: TextView, url: List<String>) {
+            if (url.isEmpty()) {
                 tv.gone()
             } else {
                 tv.visible()

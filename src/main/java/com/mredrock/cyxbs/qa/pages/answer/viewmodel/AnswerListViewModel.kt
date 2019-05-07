@@ -97,12 +97,13 @@ class AnswerListViewModel(question: Question) : BaseViewModel() {
 
         ApiGenerator.getApiService(ApiService::class.java)
                 .updateReward(user.stuNum!!, user.idNum!!, qid,
-                        (questionLiveData.value?.reward ?: 0 + reward).toString())
+                        ((questionLiveData.value?.reward ?: 0) + reward).toString())
                 .setSchedulers()
                 .checkError()
                 .doFinally { progressDialogEvent.value = ProgressDialogEvent.DISMISS_DIALOG_EVENT }
                 .doOnError { BaseApp.context.longToast(it.message!!) }
                 .safeSubscribeBy { backAndRefreshPreActivityEvent.value = true }
+                .lifeCycle()
 
         return true
     }

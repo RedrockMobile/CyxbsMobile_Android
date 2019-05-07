@@ -10,6 +10,7 @@
     app:horizontalContentPadding="16dp"
     app:shadowColor="@color/qa_question_item_shadow_color"
     app:shadowRadius="10dp"
+    app:cardCornerRadius="6dp"
     app:verticalContentPadding="20dp">
 
     <LinearLayout
@@ -58,7 +59,7 @@
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
                 android:drawableStart="@drawable/qa_ic_question_list_reward"
-                android:drawablePadding="8dp"
+                android:drawablePadding="4dp"
                 android:textColor="@color/qa_question_item_reward_color"
                 android:textSize="12sp"
                 tools:text="5积分" />
