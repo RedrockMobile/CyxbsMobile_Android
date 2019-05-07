@@ -8,7 +8,6 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
-import android.support.v4.content.FileProvider
 import android.view.Menu
 import com.afollestad.materialdialogs.MaterialDialog
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
@@ -53,7 +52,11 @@ class NewsItemActivity : BaseViewModelActivity<NewsItemViewModel>(), NewsItemVie
                         if (file.exists()) {
                             try {
                                 startActivity(Intent(Intent.ACTION_VIEW)
-                                        .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                                        .addFlags(if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                                            Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_GRANT_READ_URI_PERMISSION
+                                        } else {
+                                            Intent.FLAG_ACTIVITY_NEW_TASK
+                                        })
                                         .setDataAndType(file.uri, FileTypeHelper.getMIMEType(file)))
                             } catch (e: Exception) {
                                 e.printStackTrace()
