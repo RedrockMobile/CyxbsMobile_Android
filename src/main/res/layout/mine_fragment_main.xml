@@ -18,7 +18,7 @@
             <View
                 android:id="@+id/mine_main_topBackground"
                 android:layout_width="match_parent"
-                android:layout_height="122dp"
+                android:layout_height="135dp"
                 android:background="@drawable/mine_bg_me_top" />
 
             <LinearLayout
