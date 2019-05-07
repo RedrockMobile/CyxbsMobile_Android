@@ -85,9 +85,6 @@ class AnswerViewModel(var qid: String) : BaseViewModel() {
 
     fun setImageList(imageList: ArrayList<String>) {
         imageLiveData.value = imageList
-        repeat(imageList.size - 1) {
-            isInvalidList[it] = false
-        }
     }
 
     fun addItemToDraft(content: String?) {
@@ -95,7 +92,7 @@ class AnswerViewModel(var qid: String) : BaseViewModel() {
             return
         }
         val user = BaseApp.user ?: return
-        val s = "{\"title\":\"$content\",\"pictures\":\"${getImgListStrings()}\"}"
+        val s = "{\"title\":\"$content\"${getImgListStrings()}}"
         val json = Base64.encodeToString(s.toByteArray(), Base64.DEFAULT)
         ApiGenerator.getApiService(ApiService::class.java)
                 .addItemToDraft(user.stuNum ?: "", user.idNum ?: "", "answer", json, qid)
@@ -114,7 +111,7 @@ class AnswerViewModel(var qid: String) : BaseViewModel() {
             return
         }
         val user = BaseApp.user ?: return
-        val s = "{\"title\":\"$content\",\"pictures\":\"${getImgListStrings()}\"}"
+        val s = "{\"title\":\"$content\"${getImgListStrings()}}"
         val json = Base64.encodeToString(s.toByteArray(), Base64.DEFAULT)
         ApiGenerator.getApiService(ApiService::class.java)
                 .updateDraft(user.stuNum ?: "", user.idNum ?: "", json, id)
@@ -141,10 +138,11 @@ class AnswerViewModel(var qid: String) : BaseViewModel() {
         val list = imageLiveData.value ?: return ""
         val res = arrayListOf<String>()
         list.forEachIndexed { index, s ->
-            if (!isInvalidList[index]) res.add(s)
+            if (!isInvalidList[index] || s.isNotEmpty()) res.add(s)
         }
         val s = res.toString()
-        return s.substring(1, s.length - 1)
+        return if (s.isNotEmpty()) ",\"photo_thumbnail_src\":\"${s.substring(1, s.length - 1)}\""
+        else ""
     }
 
     fun checkInvalid(b: Boolean) {

@@ -83,7 +83,7 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.qa_activity_quiz)
-        common_toolbar.init(getString(R.string.qa_quiz_title),listener = View.OnClickListener {
+        common_toolbar.init(getString(R.string.qa_quiz_title), listener = View.OnClickListener {
             if (edt_quiz_title.text.isNullOrEmpty() && edt_quiz_content.text.isNullOrEmpty()) {
                 finish()
                 return@OnClickListener
@@ -238,17 +238,16 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            if (edt_quiz_content.text.isNullOrEmpty() && edt_quiz_title.text.isNullOrEmpty()){
+            if (edt_quiz_content.text.isNullOrEmpty() && edt_quiz_title.text.isNullOrEmpty()) {
                 return super.onKeyDown(keyCode, event)
             }
-            LogUtils.d("cchanges","on key back")
+            LogUtils.d("cchanges", "on key back")
             saveDraft()
-            return true
         }
         return super.onKeyDown(keyCode, event)
     }
 
-    private fun saveDraft(){
+    private fun saveDraft() {
         if (draftId == "-1") {
             viewModel.addItemToDraft(edt_quiz_title.text.toString(), edt_quiz_content.text.toString())
         } else {
@@ -267,8 +266,12 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
         edt_quiz_content.setText(question.description)
         viewModel.type = question.kind
         if (question.tags.isNotEmpty()) viewModel.setTag(question.tags)
-        val list = question.photoThumbnailSrc?.split("|") ?: arrayListOf()
-        if (list.isNotEmpty()) viewModel.setImageList(arrayListOf<String>().apply { addAll(list) })
+        if (question.photoThumbnailSrc != null) {
+            val list = question.photoThumbnailSrc.split(",").toMutableList()
+            if (list[0] != "") {
+                viewModel.setImageList(arrayListOf<String>().apply { addAll(list) })
+            }
+        }
         draftId = event.selfId
     }
 }

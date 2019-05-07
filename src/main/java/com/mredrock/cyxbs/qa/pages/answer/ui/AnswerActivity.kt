@@ -19,6 +19,7 @@ import com.google.gson.Gson
 import com.mredrock.cyxbs.common.config.QA_ANSWER
 import com.mredrock.cyxbs.common.event.DraftEvent
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
+import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.bean.Content
 import com.mredrock.cyxbs.qa.pages.answer.viewmodel.AnswerViewModel
@@ -57,6 +58,7 @@ class AnswerActivity : BaseViewModelActivity<AnswerViewModel>() {
                 return@OnClickListener
             }
             saveDraft()
+            finish()
         })
         initView()
         initImageAddView()
@@ -169,11 +171,12 @@ class AnswerActivity : BaseViewModelActivity<AnswerViewModel>() {
             if (edt_answer_content.text.isNullOrEmpty()) {
                 return super.onKeyDown(keyCode, event)
             }
+            LogUtils.d("cchanges", "on key back")
             saveDraft()
-            return true
         }
         return super.onKeyDown(keyCode, event)
     }
+
 
     private fun saveDraft() {
         if (draftId == "-1") {
@@ -191,8 +194,12 @@ class AnswerActivity : BaseViewModelActivity<AnswerViewModel>() {
         }
         val content = Gson().fromJson(event.jsonString, Content::class.java)
         edt_answer_content.setText(content.title)
-        val list = content.pictures?.split(",") ?: arrayListOf()
-        if (list.isNotEmpty()) viewModel.setImageList(arrayListOf<String>().apply { addAll(list) })
+        if (content.pictures != null) {
+            val list = content.pictures.split(",").toMutableList()
+            if (list[0] != "") {
+                viewModel.setImageList(arrayListOf<String>().apply { addAll(list) })
+            }
+        }
         viewModel.qid = event.targetId
         draftId = event.selfId
     }
