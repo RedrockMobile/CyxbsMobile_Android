@@ -164,6 +164,10 @@ class CoursesViewModel : ViewModel() {
                 .subscribe(ExecuteOnceObserver(onExecuteOnceNext = { coursesFromDatabase ->
                     if (coursesFromDatabase != null && coursesFromDatabase.isNotEmpty()) {
                         mCourses.addAll(coursesFromDatabase)
+                        BaseApp.context.defaultSharedPreferences.editor {
+                            putBoolean(SP_WIDGET_NEED_FRESH, true)
+                            putString(WIDGET_COURSE, Gson().toJson(coursesFromDatabase))
+                        }
                         isGetAllData(0)
                     } else {
                         getCoursesDataFromInternet()
@@ -219,7 +223,6 @@ class CoursesViewModel : ViewModel() {
                     // 存储窗口小部件需要的Json数据
                     if (coursesFromInternet.data?.isEmpty() != true && mIsGettingData) {
                         BaseApp.context.defaultSharedPreferences.editor {
-                            Log.d("test","put sp")
                             putBoolean(SP_WIDGET_NEED_FRESH, true)
                             putString(WIDGET_COURSE, Gson().toJson(coursesFromInternet))
                         }
