@@ -45,7 +45,7 @@ fun getCourseByCalendar(context: Context, calendar: Calendar): ArrayList<Course.
         }
     }
     val week = TimeUtil.calcWeekOffset(Date(beginTime), calendar.time)
-    Log.d("Widget", "week:$week")
+
     /*
     * 转换表，老外从周日开始计数,orz
     * 7 1 2 3 4 5 6 老外
