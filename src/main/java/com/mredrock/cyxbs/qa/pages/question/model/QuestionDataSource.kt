@@ -25,7 +25,7 @@ class QuestionDataSource(private val kind: String) : PageKeyedDataSource<Int, Qu
         val user = BaseApp.user
         if (user == null) {
             callback.onResult(listOf(), 1, null)
-            initialLoad.postValue(NetworkState.CANNOT_LOAD)
+            initialLoad.postValue(NetworkState.CANNOT_LOAD_WITHOUT_LOGIN)
             return
         }
         ApiGenerator.getApiService(ApiService::class.java)

@@ -43,6 +43,7 @@ import org.jetbrains.anko.indeterminateProgressDialog
 import org.jetbrains.anko.longToast
 import org.jetbrains.anko.support.v4.startActivityForResult
 import org.jetbrains.anko.toast
+import java.lang.Exception
 
 @Route(path = QA_ANSWER_LIST)
 class AnswerListActivity : BaseActivity() {
@@ -55,7 +56,7 @@ class AnswerListActivity : BaseActivity() {
 
         fun activityStart(fragment: Fragment, question: Question, requestCode: Int) {
             if (!BaseApp.isLogin) {
-                EventBus.getDefault().post(AskLoginEvent("请先登陆才能查看邮问哦~"))
+                EventBus.getDefault().post(AskLoginEvent("请先登陆才能使用邮问哦~"))
                 return
             }
             fragment.startActivityForResult<AnswerListActivity>(requestCode, PARAM_QUESTION to question)
@@ -266,11 +267,17 @@ class AnswerListActivity : BaseActivity() {
         if (intent.getParcelableExtra<Question>(PARAM_QUESTION) != null) {
             EventBus.getDefault().removeStickyEvent(event)
         } else {
-            val questionWrapper = Gson().fromJson<RedrockApiWrapper<Question>>(event.questionJson,
-                    object : TypeToken<RedrockApiWrapper<Question>>() {}.type)
+            var questionWrapper: RedrockApiWrapper<Question>? = null
+
+            try {
+                questionWrapper = Gson().fromJson<RedrockApiWrapper<Question>>(event.questionJson,
+                        object : TypeToken<RedrockApiWrapper<Question>>() {}.type)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
 
             if (questionWrapper == null) {
-                toast("无法识别问题")
+                toast("无法识别问题,可能问题已过期")
             }else if (!questionWrapper.isSuccessful) {
                 toast(questionWrapper.info ?: "未知错误")
             } else {

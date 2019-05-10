@@ -66,15 +66,20 @@ class QuestionListFragment : BaseViewModelFragment<QuestionListViewModel>() {
             }
         }
 
+        var isFirstTimeLoad = true
         initialLoad.observe {
             when (it) {
                 NetworkState.LOADING -> {
                     swipe_refresh_layout.isRefreshing = true
                     emptyRvAdapter.showHolder(3)
                 }
-                NetworkState.CANNOT_LOAD->{
+                NetworkState.CANNOT_LOAD_WITHOUT_LOGIN->{
                     swipe_refresh_layout.isRefreshing = false
-                    EventBus.getDefault().post(AskLoginEvent("请先登陆才能查看邮问哦~"))
+                    if (isFirstTimeLoad) {
+                        isFirstTimeLoad = false
+                    } else {
+                        EventBus.getDefault().post(AskLoginEvent("请先登陆才能使用邮问哦~"))
+                    }
                 }
                 else -> {
                     swipe_refresh_layout.isRefreshing = false

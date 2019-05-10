@@ -8,7 +8,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.alibaba.android.arouter.facade.annotation.Route
+import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.config.QA_ENTRY
+import com.mredrock.cyxbs.common.event.AskLoginEvent
 import com.mredrock.cyxbs.common.ui.BaseFragment
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.bean.Question
@@ -16,6 +18,7 @@ import com.mredrock.cyxbs.qa.pages.question.ui.QuestionListFragment
 import com.mredrock.cyxbs.qa.pages.quiz.ui.QuizActivity
 import kotlinx.android.synthetic.main.qa_dialog_quiz_type_select.view.*
 import kotlinx.android.synthetic.main.qa_fragment_question_container.view.*
+import org.greenrobot.eventbus.EventBus
 
 /**
  * Created By jay68 on 2018/8/22.
@@ -39,7 +42,13 @@ class QuestionContainerFragment : BaseFragment(), View.OnClickListener {
         childFragments = titles.map { QuestionListFragment().apply { title = it } }
         root.vp_question.adapter = QAViewPagerAdapter(childFragments, activity!!.supportFragmentManager)
         root.tl_category.setupWithViewPager(root.vp_question)
-        root.fab_quiz.setOnClickListener { quizTypeSelectDialog.show() }
+        root.fab_quiz.setOnClickListener {
+            if (BaseApp.isLogin) {
+                quizTypeSelectDialog.show()
+            } else {
+                EventBus.getDefault().post(AskLoginEvent("请先登陆才能使用掌邮哦~"))
+            }
+        }
         return root
     }
 

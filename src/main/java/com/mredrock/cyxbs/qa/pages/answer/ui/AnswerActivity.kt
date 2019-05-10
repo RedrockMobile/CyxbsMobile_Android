@@ -19,7 +19,6 @@ import com.google.gson.Gson
 import com.mredrock.cyxbs.common.config.QA_ANSWER
 import com.mredrock.cyxbs.common.event.DraftEvent
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
-import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.bean.Content
 import com.mredrock.cyxbs.qa.pages.answer.viewmodel.AnswerViewModel
@@ -171,7 +170,6 @@ class AnswerActivity : BaseViewModelActivity<AnswerViewModel>() {
             if (edt_answer_content.text.isNullOrEmpty()) {
                 return super.onKeyDown(keyCode, event)
             }
-            LogUtils.d("cchanges", "on key back")
             saveDraft()
         }
         return super.onKeyDown(keyCode, event)
