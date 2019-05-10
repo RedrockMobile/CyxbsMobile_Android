@@ -38,7 +38,7 @@ class SplashActivity : BaseViewModelActivity<SplashViewModel>() {
         when (uri?.path) {
             URI_PATH_QA_QUESTION -> {
                 if (!BaseApp.isLogin) {
-                    EventBus.getDefault().post(AskLoginEvent("请先登陆才能查看邮问哦~"))
+                    EventBus.getDefault().post(AskLoginEvent("请先登陆才能使用邮问哦~"))
                     return
                 }
                 viewModel.finishModel.observeNotNullAndTrue {
