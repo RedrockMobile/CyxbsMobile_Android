@@ -1,14 +1,6 @@
 package com.mredrock.cyxbs.volunteer.widget
 
-import android.os.Build
-import com.mredrock.cyxbs.common.utils.LogUtils
-import java.util.Base64
-import java.io.ByteArrayOutputStream
-import java.io.ObjectOutputStream
-import java.io.UnsupportedEncodingException
-import java.security.InvalidKeyException
-import java.security.NoSuchAlgorithmException
-import javax.crypto.BadPaddingException
+import android.util.Base64
 import javax.crypto.Cipher
 import javax.crypto.spec.IvParameterSpec
 import javax.crypto.spec.SecretKeySpec
@@ -24,24 +16,14 @@ class EncryptPassword {
             val contentBytes = content.toByteArray(charset(charset))
             val keyBytes = KEY.toByteArray(charset(charset))
             val encryptedBytes = aesEncryptBytes(contentBytes, keyBytes)
-            return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                val encoder = Base64.getEncoder()
-                encoder.encodeToString(encryptedBytes)
-            } else {
-                TODO("VERSION.SDK_INT < O")
-            }
+            return Base64.encodeToString(encryptedBytes, Base64.DEFAULT)
         }
 
         private fun aesEncryptString(content: String): String {
             val contentBytes = content.toByteArray(charset(charset))
             val keyBytes = KEY.toByteArray(charset(charset))
             val encryptedBytes = aesEncryptBytes(contentBytes, keyBytes)
-            return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                val encoder = Base64.getEncoder()
-                encoder.encodeToString(encryptedBytes)
-            } else {
-                TODO("VERSION.SDK_INT < O")
-            }
+            return Base64.encodeToString(encryptedBytes, Base64.DEFAULT)
         }
 
         private fun aesEncryptBytes(contentBytes: ByteArray, keyBytes: ByteArray): ByteArray {
