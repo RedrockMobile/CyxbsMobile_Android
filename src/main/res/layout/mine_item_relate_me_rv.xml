@@ -74,6 +74,7 @@
             android:layout_alignEnd="@id/mine_aboutme_item_answerContainer"
             android:gravity="end"
             android:text="@string/mine_relate_me_reply"
+            android:visibility="gone"
             android:textColor="@color/mine_relate_me_nickname"
             android:textSize="14sp" />
 
