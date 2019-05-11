@@ -3,19 +3,21 @@ package com.mredrock.cyxbs.main.ui
 import android.os.Bundle
 import android.support.design.widget.AppBarLayout
 import android.support.v4.app.Fragment
-import android.support.v4.view.ViewPager
 import android.view.MenuItem
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
 import com.mredrock.cyxbs.common.config.*
 import com.mredrock.cyxbs.common.event.MainVPChangeEvent
 import com.mredrock.cyxbs.common.ui.BaseActivity
+import com.mredrock.cyxbs.common.utils.update.UpdateUtils
 import com.mredrock.cyxbs.main.R
 import com.mredrock.cyxbs.main.ui.adapter.MainVpAdapter
 import com.mredrock.cyxbs.main.utils.BottomNavigationViewHelper
+import com.tbruyelle.rxpermissions2.RxPermissions
 import kotlinx.android.synthetic.main.main_activity_main.*
 import org.greenrobot.eventbus.EventBus
 import org.jetbrains.anko.dip
+
 @Route(path = MAIN_MAIN)
 class MainActivity : BaseActivity() {
     companion object {
@@ -34,7 +36,7 @@ class MainActivity : BaseActivity() {
             R.drawable.main_ic_mine_unselected, R.drawable.main_ic_mine_selected
     )
 
-    private lateinit var appbar:AppBarLayout
+    private lateinit var appbar: AppBarLayout
 
     private val fragments = ArrayList<Fragment>()
     private lateinit var adapter: MainVpAdapter
@@ -52,6 +54,8 @@ class MainActivity : BaseActivity() {
         fab.setOnClickListener {
             ARouter.getInstance().build(REDROCK_HOME_ENTRY).navigation()
         }
+
+        UpdateUtils.checkUpdate(this, RxPermissions(this))
     }
 
     private fun initBottomNavigationView() {
