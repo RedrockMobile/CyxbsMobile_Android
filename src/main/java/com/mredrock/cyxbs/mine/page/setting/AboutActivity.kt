@@ -7,8 +7,11 @@ import com.afollestad.materialdialogs.MaterialDialog
 import com.mredrock.cyxbs.common.config.APP_WEBSITE
 import com.mredrock.cyxbs.common.ui.BaseActivity
 import com.mredrock.cyxbs.common.utils.getAppVersionName
+import com.mredrock.cyxbs.common.utils.update.UpdateUtils
 import com.mredrock.cyxbs.mine.R
+import com.tbruyelle.rxpermissions2.RxPermissions
 import kotlinx.android.synthetic.main.mine_activity_about.*
+import org.jetbrains.anko.toast
 
 class AboutActivity(override val isFragmentActivity: Boolean = false) : BaseActivity() {
 
@@ -26,7 +29,9 @@ class AboutActivity(override val isFragmentActivity: Boolean = false) : BaseActi
     }
 
     private fun clickUpdate() {
-        //todo 更新
+        UpdateUtils.checkUpdate(this, RxPermissions(this)) {
+            toast("已经是最新版了哦")
+        }
     }
 
     private fun clickWebsite() {
