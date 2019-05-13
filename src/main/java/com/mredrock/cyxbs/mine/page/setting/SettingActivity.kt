@@ -16,6 +16,8 @@ import com.afollestad.materialdialogs.MaterialDialog
 import com.alibaba.android.arouter.launcher.ARouter
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.config.SP_SHOW_MODE
+import com.mredrock.cyxbs.common.config.SP_WIDGET_NEED_FRESH
+import com.mredrock.cyxbs.common.config.WIDGET_COURSE
 import com.mredrock.cyxbs.common.config.WIDGET_SETTING
 import com.mredrock.cyxbs.common.event.LoginStateChangeEvent
 import com.mredrock.cyxbs.common.event.ShowModeChangeEvent
@@ -72,11 +74,17 @@ class SettingActivity(override val isFragmentActivity: Boolean = false) : BaseAc
                     .negativeText("取消")
                     .onPositive { _, _ ->
                         finish()
-                        //todo 刷新缓存？
-//                                AppWidgetCacheAndUpdateFunc.deleteCache()
+                        cleanAppWidgetCache()
                         EventBus.getDefault().post(LoginStateChangeEvent(false))
                     }
                     .show()
+        }
+    }
+
+    private fun cleanAppWidgetCache() {
+        defaultSharedPreferences.editor {
+            putString(WIDGET_COURSE, "")
+            putBoolean(SP_WIDGET_NEED_FRESH,true)
         }
     }
 
