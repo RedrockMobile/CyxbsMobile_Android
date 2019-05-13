@@ -65,7 +65,7 @@ public class UserInfoEncryption {
     }
 
     /**
-     * if you update the encrypt method in the future, please update here for compatibility
+     * if you getUpdateInfo the encrypt method in the future, please getUpdateInfo here for compatibility
      *
      * @param i old version
      * @param ii new version

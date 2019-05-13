@@ -35,6 +35,17 @@ fun getProcessName(pid: Int): String? {
     return null
 }
 
+/**
+ * getAppVersionCode
+ */
+fun getAppVersionCode(context: Context): Int {
+    return try {
+        context.packageManager.getPackageInfo(context.packageName, 0).versionCode
+    } catch (e: PackageManager.NameNotFoundException) {
+        0
+    }
+}
+
 fun getAppVersionName(context: Context): String? {
     return try {
         val packageManager = context.packageManager
