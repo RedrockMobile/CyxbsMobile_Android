@@ -6,6 +6,7 @@ import com.bumptech.glide.Glide
 import com.mredrock.cyxbs.calendar.R
 import com.mredrock.cyxbs.common.config.BASE_NORMAL_IMG_URL
 import com.mredrock.cyxbs.common.config.DISCOVER_CALENDAR
+import com.mredrock.cyxbs.common.config.END_POINT_REDROCK
 import com.mredrock.cyxbs.common.ui.BaseActivity
 import kotlinx.android.synthetic.main.calendar_activity_main.*
 
@@ -16,7 +17,7 @@ class CalendarActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.calendar_activity_main)
         common_toolbar.init("校 历")
-        Glide.with(this).load("https://wx.idsbllp.cn/234/newapi/schoolCalendar").into(iv_calendar)
+        Glide.with(this).load("$END_POINT_REDROCK/234/newapi/schoolCalendar").into(iv_calendar)
     }
 
     override val isFragmentActivity = false
