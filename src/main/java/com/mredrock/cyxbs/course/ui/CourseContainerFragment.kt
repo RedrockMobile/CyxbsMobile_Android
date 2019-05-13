@@ -6,9 +6,9 @@ import android.content.Intent
 import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import android.util.Log
 import android.view.*
 import com.mredrock.cyxbs.common.bean.WidgetCourse
+import com.mredrock.cyxbs.common.event.ShowModeChangeEvent
 import com.mredrock.cyxbs.common.event.WidgetCourseEvent
 import com.mredrock.cyxbs.course.event.TabIsFoldEvent
 import com.mredrock.cyxbs.course.event.WeekNumEvent
@@ -19,11 +19,9 @@ import com.mredrock.cyxbs.course.adapters.ScheduleVPAdapter
 import com.mredrock.cyxbs.course.databinding.CourseFragmentCourseContainerBinding
 import com.mredrock.cyxbs.course.event.*
 import com.mredrock.cyxbs.course.lifecycle.VPOnPagerChangeObserver
-import com.mredrock.cyxbs.course.network.Course
 import com.mredrock.cyxbs.course.utils.AffairToCalendar
 import com.mredrock.cyxbs.course.utils.changeLibBeanToCourse
 import com.mredrock.cyxbs.course.viewmodels.CoursesViewModel
-import com.umeng.commonsdk.stateless.UMSLEnvelopeBuild.mContext
 import kotlinx.android.synthetic.main.course_fragment_course_container.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -174,6 +172,15 @@ class CourseContainerFragment : BaseFragment() {
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun addAffairs(addAffairEvent: AddAffairEvent) {
+        EventBus.getDefault().post(RefreshEvent(true))
+        mCoursesViewModel.refreshScheduleData(this.context!!)
+    }
+
+    /**
+     * 这个方法用于接收设置课表上备忘项目显示模式的更新
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun showModeChange(e: ShowModeChangeEvent) {
         EventBus.getDefault().post(RefreshEvent(true))
         mCoursesViewModel.refreshScheduleData(this.context!!)
     }
