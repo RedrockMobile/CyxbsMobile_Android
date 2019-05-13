@@ -18,6 +18,7 @@ import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.config.SP_SHOW_MODE
 import com.mredrock.cyxbs.common.config.WIDGET_SETTING
 import com.mredrock.cyxbs.common.event.LoginStateChangeEvent
+import com.mredrock.cyxbs.common.event.ShowModeChangeEvent
 import com.mredrock.cyxbs.common.ui.BaseActivity
 import com.mredrock.cyxbs.common.utils.encrypt.md5Encoding
 import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
@@ -54,9 +55,9 @@ class SettingActivity(override val isFragmentActivity: Boolean = false) : BaseAc
         //切换按钮
         mine_setting_switchBtn.setCheckedImmediately(defaultSharedPreferences.getBoolean(SP_SHOW_MODE, true))
         mine_setting_switchBtn.setOnClickListener {
+            val next = !defaultSharedPreferences.getBoolean(SP_SHOW_MODE, true)
             defaultSharedPreferences.editor {
-                // todo 发给课表的Event
-                val next = !defaultSharedPreferences.getBoolean("SP_SHOW_MODE", true)
+                EventBus.getDefault().post(ShowModeChangeEvent())
                 putBoolean(SP_SHOW_MODE, next)
             }
         }
