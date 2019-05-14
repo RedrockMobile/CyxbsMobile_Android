@@ -29,6 +29,9 @@ class CourseFragment : BaseFragment() {
         const val WEEK_NUM = "week_num"
     }
 
+    override val openStatistics: Boolean
+        get() = false
+
     private var mWeek: Int = 0
     private lateinit var mCoursesViewModel: CoursesViewModel
     private lateinit var mDateViewModel: DateViewModel

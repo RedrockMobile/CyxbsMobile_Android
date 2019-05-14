@@ -43,6 +43,9 @@ class CourseContainerFragment : BaseFragment() {
                 }
     }
 
+    override val openStatistics: Boolean
+        get() = false
+
     private var mOthersStuNum: String? = null
     private lateinit var mScheduleAdapter: ScheduleVPAdapter
     private lateinit var mCoursesViewModel: CoursesViewModel
