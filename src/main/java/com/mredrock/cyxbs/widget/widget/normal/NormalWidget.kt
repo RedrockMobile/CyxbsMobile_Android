@@ -20,6 +20,7 @@ import com.mredrock.cyxbs.widget.R
 import com.mredrock.cyxbs.widget.bean.Course
 import com.mredrock.cyxbs.widget.util.*
 import org.greenrobot.eventbus.EventBus
+import org.jetbrains.anko.toast
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -133,62 +134,66 @@ class NormalWidget : AppWidgetProvider() {
      * 刷新，传入offsetTime作为今天的偏移量
      */
     fun fresh(context: Context, offsetTime: Int) {
-        val nowHour = calendar.get(Calendar.HOUR_OF_DAY)
-        calendar.set(Calendar.DATE, calendar.get(Calendar.DATE) + offsetTime)
+        try{//catch异常，避免课表挂了之后这边跟着挂
+            val nowHour = calendar.get(Calendar.HOUR_OF_DAY)
+            calendar.set(Calendar.DATE, calendar.get(Calendar.DATE) + offsetTime)
 
-        //获取数据
-        list = getCourseByCalendar(context, calendar)
-                ?: getErrorCourseList()
+            //获取数据
+            list = getCourseByCalendar(context, calendar)
+                    ?: getErrorCourseList()
 
-        if (list.isEmpty()) {
-            list.add(getNoCourse())
-        }
+            if (list.isEmpty()) {
+                list.add(getNoCourse())
+            }
 
-        //如果课已经上完了，而且过了晚上7点，显示明天的课程
-        if (nowHour > 19) {
-            var i = 0
-            list.forEach {
-                val hour = getStartCalendarByNum(it.hash_lesson).get(Calendar.HOUR_OF_DAY)
-                if (nowHour > hour) {
-                    i++
-                } else {
-                    return@forEach
+            //如果课已经上完了，而且过了晚上7点，显示明天的课程
+            if (nowHour > 19) {
+                var i = 0
+                list.forEach {
+                    val hour = getStartCalendarByNum(it.hash_lesson).get(Calendar.HOUR_OF_DAY)
+                    if (nowHour > hour) {
+                        i++
+                    } else {
+                        return@forEach
+                    }
+                }
+                if (i == list.size) {
+                    calendar.set(Calendar.DAY_OF_YEAR, calendar.get(Calendar.DAY_OF_YEAR) + 1)
+                    val tomorrowList = getCourseByCalendar(context, calendar)
+                            ?: getErrorCourseList()
+                    list.clear()
+                    list.addAll(tomorrowList)
                 }
             }
-            if (i == list.size) {
-                calendar.set(Calendar.DAY_OF_YEAR, calendar.get(Calendar.DAY_OF_YEAR) + 1)
-                val tomorrowList = getCourseByCalendar(context, calendar)
-                        ?: getErrorCourseList()
-                list.clear()
-                list.addAll(tomorrowList)
+
+            val rv = RemoteViews(context.packageName, R.layout.widget_normal)
+
+            //显示星期几
+            rv.setTextViewText(R.id.widget_normal_title, getWeekDayChineseName(calendar.get(Calendar.DAY_OF_WEEK)))
+
+            //显示课程
+            var index = 1
+            list.forEach { course ->
+                rv.setViewVisibility(getLayoutId(index), View.VISIBLE)
+                rv.setTextViewText(getTimeId(index), formatTime(getStartCalendarByNum(course.hash_lesson)))
+                rv.setTextViewText(getCourseId(index), course.course)
+                rv.setTextViewText(getRoomId(index), filterClassRoom(course.classroom!!))
+                rv.setOnClickPendingIntent(getLayoutId(index),
+                        getClickPendingIntent(context, getLayoutId(index), "btn.start.com", javaClass))
+                index++
             }
+            //隐藏后面的item
+            for (i in index..6) {
+                rv.setViewVisibility(getLayoutId(i), View.GONE)
+            }
+
+            //设置前后按钮操作
+            addClickPendingIntent(rv, context)
+
+            show(rv, context)
+        }catch (e:Exception){
+            e.printStackTrace()
         }
-
-        val rv = RemoteViews(context.packageName, R.layout.widget_normal)
-
-        //显示星期几
-        rv.setTextViewText(R.id.widget_normal_title, getWeekDayChineseName(calendar.get(Calendar.DAY_OF_WEEK)))
-
-        //显示课程
-        var index = 1
-        list.forEach { course ->
-            rv.setViewVisibility(getLayoutId(index), View.VISIBLE)
-            rv.setTextViewText(getTimeId(index), formatTime(getStartCalendarByNum(course.hash_lesson)))
-            rv.setTextViewText(getCourseId(index), course.course)
-            rv.setTextViewText(getRoomId(index), filterClassRoom(course.classroom!!))
-            rv.setOnClickPendingIntent(getLayoutId(index),
-                    getClickPendingIntent(context, getLayoutId(index), "btn.start.com", javaClass))
-            index++
-        }
-        //隐藏后面的item
-        for (i in index..6) {
-            rv.setViewVisibility(getLayoutId(i), View.GONE)
-        }
-
-        //设置前后按钮操作
-        addClickPendingIntent(rv, context)
-
-        show(rv, context)
     }
 
     private fun addClickPendingIntent(rv: RemoteViews, context: Context) {

@@ -17,6 +17,7 @@ import com.mredrock.cyxbs.common.event.WidgetCourseEvent
 import com.mredrock.cyxbs.widget.bean.Course
 import com.mredrock.cyxbs.widget.util.*
 import org.greenrobot.eventbus.EventBus
+import java.lang.Exception
 import java.util.*
 
 /**
@@ -99,31 +100,35 @@ abstract class BaseLittleWidget : AppWidgetProvider() {
 
     //获取正常显示的下一节课
     fun refresh(context: Context) {
-        saveDayOffset(context, 0)//重置天数偏移
-        val list = getTodayCourse(context)
-                ?: getErrorCourseList()
+        try {//catch异常，避免课表挂了之后这边跟着挂
+            saveDayOffset(context, 0)//重置天数偏移
+            val list = getTodayCourse(context)
+                    ?: getErrorCourseList()
 
-        var isFound = false
-        list.forEach {
-            val endCalendar = getStartCalendarByNum(it.hash_lesson)
-            //如果今天还有下一节课，显示下一节
-            if (Calendar.getInstance() < endCalendar) {
-                show(context, it, formatTime(getStartCalendarByNum(it.hash_lesson)))
-                return
+            var isFound = false
+            list.forEach {
+                val endCalendar = getStartCalendarByNum(it.hash_lesson)
+                //如果今天还有下一节课，显示下一节
+                if (Calendar.getInstance() < endCalendar) {
+                    show(context, it, formatTime(getStartCalendarByNum(it.hash_lesson)))
+                    return
+                }
+                isFound = true
             }
-            isFound = true
-        }
 
-        if (isFound) {//今天有课，但是上完了
-            //新策略：显示明天第一节
-            showTomorrowCourse(context)
-        } else {//今天没有课
-            if (isNight()) {//如果在晚上，显示明天课程
+            if (isFound) {//今天有课，但是上完了
+                //新策略：显示明天第一节
                 showTomorrowCourse(context)
-            } else {
-                //白天显示今天无课
-                show(context, null)
+            } else {//今天没有课
+                if (isNight()) {//如果在晚上，显示明天课程
+                    showTomorrowCourse(context)
+                } else {
+                    //白天显示今天无课
+                    show(context, null)
+                }
             }
+        }catch (e:Exception){
+            e.printStackTrace()
         }
     }
 
