@@ -21,7 +21,7 @@ const val APP_WIDGET_CACHE_FILE_NAME = "AppWidgetCache.json"
  * SharedPreferences key for encrypt version of user
  *
  * use by [com.mredrock.cyxbs.common.utils.encrypt.UserInfoEncryption] for the current encrypt version,
- * you can update the encrypt method in the future and keep compatibility
+ * you can getUpdateInfo the encrypt method in the future and keep compatibility
  * @see com.mredrock.cyxbs.common.utils.encrypt.UserInfoEncryption.onUpdate
  */
 const val SP_KEY_ENCRYPT_VERSION_USER = "encrypt_version_user"
@@ -30,7 +30,7 @@ const val SP_KEY_ENCRYPT_VERSION_USER = "encrypt_version_user"
  * SharedPreferences value for encrypt version of user
  *
  * use by [com.mredrock.cyxbs.common.utils.encrypt.UserInfoEncryption] for the current encrypt version,
- * you can update the encrypt method in the future and keep compatibility
+ * you can getUpdateInfo the encrypt method in the future and keep compatibility
  * @see com.mredrock.cyxbs.common.utils.encrypt.UserInfoEncryption.onUpdate
  */
 const val USER_INFO_ENCRYPT_VERSION = 1
@@ -49,3 +49,11 @@ const val APP_WEBSITE = "https://wx.idsbllp.cn/app/"
 //小控件课表
 const val WIDGET_COURSE = "course_widget"
 const val SP_WIDGET_NEED_FRESH = "sharepreference_widget_need_fresh"
+
+// uri跳转打开应用
+    // QA
+const val URI_HOST_QA = "/qa"
+        // question
+const val URI_PATH_QA_QUESTION = "/question"
+        // answer
+const val URI_PATH_QA_ANSWER = "/answer"

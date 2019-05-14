@@ -13,6 +13,7 @@ import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
 import com.mredrock.cyxbs.common.utils.extensions.editor
 import com.umeng.analytics.MobclickAgent
 import com.umeng.commonsdk.UMConfigure
+import com.umeng.socialize.PlatformConfig
 
 /**
  * Created By jay68 on 2018/8/7.
@@ -60,7 +61,7 @@ open class BaseApp : MultiDexApplication() {
         super.onCreate()
         userInfoEncryption = UserInfoEncryption()
         initRouter()
-        initUmeng()
+        initUMeng()
     }
 
     private fun initRouter() {
@@ -71,12 +72,19 @@ open class BaseApp : MultiDexApplication() {
         ARouter.init(this)
     }
 
-    private fun initUmeng() {
+    private fun initUMeng() {
         UMConfigure.init(applicationContext, UMConfigure.DEVICE_TYPE_PHONE,
                 "123b419248120b9fb91a38260a13e972")
         MobclickAgent.setScenarioType(this, MobclickAgent.EScenarioType.E_UM_NORMAL)
         MobclickAgent.openActivityDurationTrack(false)
         //调试模式（推荐到umeng注册测试机，避免数据污染）
         UMConfigure.setLogEnabled(BuildConfig.DEBUG)
+
+        initShare()
+    }
+
+    private fun initShare() {
+        PlatformConfig.setSinaWeibo("197363903", "7700116c567ab2bb28ffec2dcf67851d", "http://hongyan.cqupt.edu.cn/app/")
+        PlatformConfig.setQQZone("1106072365", "v9w1F3OSDhkX14gA")
     }
 }
