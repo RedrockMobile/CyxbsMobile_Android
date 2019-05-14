@@ -135,6 +135,7 @@ abstract class BaseActivity : AppCompatActivity() {
         MobclickAgent.onResume(this)
         if (!isFragmentActivity) {
             MobclickAgent.onPageStart(javaClass.name)
+            LogUtils.d("UMStat",  javaClass.name + " started")
         }
     }
 
@@ -143,6 +144,7 @@ abstract class BaseActivity : AppCompatActivity() {
         MobclickAgent.onPause(this)
         if (!isFragmentActivity) {
             MobclickAgent.onPageEnd(javaClass.name)
+            LogUtils.d("UMStat",  javaClass.name + " paused")
         }
     }
 
