@@ -32,8 +32,6 @@ class OthersCourseActivity : BaseActivity() {
     override val isFragmentActivity: Boolean
         get() = true
 
-    private lateinit var toolbar:JToolbar
-
     // 用于记录当前Toolbar要显示的字符串
     private lateinit var mToolbarTitle: String
 
@@ -41,7 +39,6 @@ class OthersCourseActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.course_activity_others_course)
         common_toolbar.init("同学课表")
-        toolbar = common_toolbar
         ARouter.getInstance().inject(this)
         replaceFragment(CourseContainerFragment.getOthersCourseContainerFragment(mOthersStuNum))
 
@@ -62,12 +59,14 @@ class OthersCourseActivity : BaseActivity() {
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun getWeekNumFromFragment(weekNumEvent: WeekNumEvent) {
-        mToolbarTitle = weekNumEvent.weekString
-        setToolbar()
+        if (weekNumEvent.isOthers) {
+            mToolbarTitle = weekNumEvent.weekString
+            setToolbar()
+        }
     }
 
     private fun setToolbar() {
         // 设置当前Toolbar的内容
-        toolbar.titleTextView.text = mToolbarTitle
+        common_toolbar.titleTextView.text = mToolbarTitle
     }
 }

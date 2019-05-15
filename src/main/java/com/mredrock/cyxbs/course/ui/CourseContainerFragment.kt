@@ -10,10 +10,7 @@ import android.view.*
 import com.mredrock.cyxbs.common.bean.WidgetCourse
 import com.mredrock.cyxbs.common.event.ShowModeChangeEvent
 import com.mredrock.cyxbs.common.event.WidgetCourseEvent
-import com.mredrock.cyxbs.course.event.TabIsFoldEvent
-import com.mredrock.cyxbs.course.event.WeekNumEvent
 import com.mredrock.cyxbs.common.ui.BaseFragment
-import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.course.R
 import com.mredrock.cyxbs.course.adapters.ScheduleVPAdapter
 import com.mredrock.cyxbs.course.databinding.CourseFragmentCourseContainerBinding
@@ -88,18 +85,17 @@ class CourseContainerFragment : BaseFragment() {
         // 给ViewPager添加OnPageChangeListener
         lifecycle.addObserver(VPOnPagerChangeObserver(mBinding.vp,
                 mOnPageSelected = {
-                    LogUtils.d(TAG, mScheduleAdapter.getPageTitle(it).toString())
                     // 当ViewPager发生了滑动，清理课表上加备忘的View
                     EventBus.getDefault().post(DismissAddAffairViewEvent())
                     // 当ViewPager发生了滑动，通过EventBus对Toolbar上的周数进行改变
-                    EventBus.getDefault().post(WeekNumEvent(mScheduleAdapter.getPageTitle(it).toString()))
+                    EventBus.getDefault().post(WeekNumEvent(mScheduleAdapter.getPageTitle(it).toString(), mOthersStuNum != null))
                 }))
 
         // 获取依赖于CourseContainerFragment的Activity的CoursesViewModel。在WeekFragment的切换的时候，不会
         // 重复获取数据。
-            mCoursesViewModel = ViewModelProviders.of(activity!!).get(CoursesViewModel::class.java)
+        mCoursesViewModel = ViewModelProviders.of(activity!!).get(CoursesViewModel::class.java)
 
-        mCoursesViewModel.getSchedulesData(activity!!,  mOthersStuNum)
+        mCoursesViewModel.getSchedulesData(activity!!, mOthersStuNum)
         mCoursesViewModel.nowWeek.observe(activity!!, Observer { nowWeek ->
             if (nowWeek != null && nowWeek != 0) {
                 // 过时的本周的位置以及将其替换为原始周数显示
@@ -118,7 +114,7 @@ class CourseContainerFragment : BaseFragment() {
     }
 
     override fun onPrepareOptionsMenu(menu: Menu?) {
-        if(mCoursesViewModel.isGetOthers.value == false){//如果是他人课表，不加载添加事物的btn
+        if (mCoursesViewModel.isGetOthers.value == false) {//如果是他人课表，不加载添加事物的btn
             activity?.menuInflater?.inflate(R.menu.course_course_menu, menu)
         }
         super.onPrepareOptionsMenu(menu)
@@ -136,8 +132,8 @@ class CourseContainerFragment : BaseFragment() {
     /**
      * 这个方法用于小部件点击打开课表详情页面
      */
-    @Subscribe(threadMode = ThreadMode.MAIN,sticky = true)
-    fun showDialogFromWidget(event: WidgetCourseEvent<WidgetCourse.DataBean>){
+    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
+    fun showDialogFromWidget(event: WidgetCourseEvent<WidgetCourse.DataBean>) {
         val mCourse = changeLibBeanToCourse(event.mutableList[0])
         mDialogHelper.showDialog(mutableListOf(mCourse))
     }
@@ -196,7 +192,7 @@ class CourseContainerFragment : BaseFragment() {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun addTheAffairsToTheCalendar(affairFromInternetEvent: AffairFromInternetEvent) {
-        activity?.let {activity ->
+        activity?.let { activity ->
             if (affairFromInternetEvent.affairs.isNotEmpty()) {
                 val affairToCalendar = AffairToCalendar(activity as AppCompatActivity, affairFromInternetEvent.affairs)
                 if (affairFromInternetEvent.affairs.find { it.affairTime.isNullOrBlank() } != null) {

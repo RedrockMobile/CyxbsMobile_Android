@@ -17,7 +17,7 @@ import com.mredrock.cyxbs.course.R
  * @attr [R.styleable.RedRockTextView_orientation] this attr is used to set the orientation of the RedRockTextView
  * @attr [R.styleable.RedRockTextView_offsetBetweenText] this attr is used to set the gap between the texts
  *
- * other attrs are the same with TextView.you can set the displayedStrings attr and the offset_between_text
+ * isOthers attrs are the same with TextView.you can set the displayedStrings attr and the offset_between_text
  * attr in the code.
  *
  * Created by anriku on 2018/8/14.

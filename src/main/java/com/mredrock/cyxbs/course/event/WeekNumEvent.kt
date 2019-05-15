@@ -5,7 +5,8 @@ package com.mredrock.cyxbs.course.event
  * 的修改。
  *
  * @param weekString 当前是第几周。其中0表示整学期
+ * @param isOthers 是否是别人课表，防止事件更新到主页面
  *
  * Created by anriku on 2018/8/18.
  */
-data class WeekNumEvent(val weekString: String)
+data class WeekNumEvent(val weekString: String, val isOthers: Boolean = false)

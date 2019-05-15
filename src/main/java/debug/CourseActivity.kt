@@ -92,6 +92,9 @@ class CourseActivity : BaseActivity() {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun getWeekNumFromFragment(weekNumEvent: WeekNumEvent) {
+        if (weekNumEvent.isOthers) {
+            return
+        }
         common_toolbar.titleTextView.text = weekNumEvent.weekString
     }
 

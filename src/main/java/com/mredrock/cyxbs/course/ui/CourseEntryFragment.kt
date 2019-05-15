@@ -157,6 +157,9 @@ class CourseEntryFragment : BaseFragment() {
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun getWeekNumFromFragment(weekNumEvent: WeekNumEvent) {
+        if (weekNumEvent.isOthers) {
+            return
+        }
         mToolbarTitle = weekNumEvent.weekString
         setToolbar()
     }
