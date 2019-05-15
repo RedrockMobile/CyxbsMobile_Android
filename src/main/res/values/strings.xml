@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources >
     <string name="othercourse_hint_no_person">没有查询到此人</string>
+    <string name="othercourse_hint_input_key">请输入姓名或学号</string>
+    <string name="othercourse_confirm">确定</string>
 </resources>

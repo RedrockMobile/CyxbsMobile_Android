@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -23,18 +22,24 @@
             android:background="@drawable/discover_other_course_shape_rectangle_grey_stroke"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingLeft="15dp"
-            android:hint="请输入姓名或学号"/>
+            android:singleLine="true"
+            android:paddingStart="15dp"
+            android:paddingEnd="15dp"
+            android:hint="@string/othercourse_hint_input_key"
+            android:inputType="text"
+            tools:ignore="Autofill" />
 
         <ImageView
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:padding="12dp"
-            android:layout_marginRight="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
             android:visibility="gone"
             android:id="@+id/discover_other_course_delete_edit_search"
             android:src="@drawable/discover_other_course_ic_delete"
-            android:layout_gravity="center_vertical|right"/>
+            android:layout_gravity="center_vertical|end"
+            tools:ignore="ContentDescription" />
 
     </FrameLayout>
 
@@ -45,7 +50,7 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="25dp"
         android:background="@drawable/discover_other_course_bg_btn"
-        android:text="确定"
+        android:text="@string/othercourse_confirm"
         android:textColor="#fff"
         android:textSize="16sp"/>
 
