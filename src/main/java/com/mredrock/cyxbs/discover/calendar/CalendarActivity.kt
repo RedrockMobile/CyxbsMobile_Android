@@ -4,7 +4,6 @@ import android.os.Bundle
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.bumptech.glide.Glide
 import com.mredrock.cyxbs.calendar.R
-import com.mredrock.cyxbs.common.config.BASE_NORMAL_IMG_URL
 import com.mredrock.cyxbs.common.config.DISCOVER_CALENDAR
 import com.mredrock.cyxbs.common.config.END_POINT_REDROCK
 import com.mredrock.cyxbs.common.ui.BaseActivity
