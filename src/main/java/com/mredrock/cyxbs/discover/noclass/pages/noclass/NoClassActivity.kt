@@ -5,9 +5,7 @@ import android.arch.lifecycle.Observer
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.widget.GridLayoutManager
-import android.util.Log
 import com.alibaba.android.arouter.facade.annotation.Route
-import com.alibaba.android.arouter.facade.model.RouteMeta.build
 import com.alibaba.android.arouter.launcher.ARouter
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.config.COURSE_NO_COURSE_INVITE
