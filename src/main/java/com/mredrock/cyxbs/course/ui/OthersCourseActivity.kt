@@ -2,19 +2,13 @@ package com.mredrock.cyxbs.course.ui
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.util.Log
 import com.alibaba.android.arouter.facade.annotation.Autowired
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
-import com.mredrock.cyxbs.common.BaseApp
-import com.mredrock.cyxbs.common.component.JToolbar
 import com.mredrock.cyxbs.common.config.COURSE_OTHER_COURSE
 import com.mredrock.cyxbs.common.ui.BaseActivity
-import com.mredrock.cyxbs.common.utils.extensions.gone
 import com.mredrock.cyxbs.course.R
-import com.mredrock.cyxbs.course.event.TabIsFoldEvent
 import com.mredrock.cyxbs.course.event.WeekNumEvent
-import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 

@@ -3,7 +3,6 @@ package com.mredrock.cyxbs.course.viewmodels
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import android.content.Context
-import android.util.Log
 import com.google.gson.Gson
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.config.SP_WIDGET_NEED_FRESH

@@ -4,7 +4,6 @@ import android.arch.persistence.room.Database
 import android.arch.persistence.room.Room
 import android.arch.persistence.room.RoomDatabase
 import android.content.Context
-import android.util.Log
 import com.mredrock.cyxbs.course.network.Affair
 import com.mredrock.cyxbs.course.network.Course
 
