@@ -6,7 +6,6 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.support.annotation.IdRes
-import android.util.Log
 import android.view.View
 import android.widget.RemoteViews
 import android.widget.Toast
@@ -20,7 +19,6 @@ import com.mredrock.cyxbs.widget.R
 import com.mredrock.cyxbs.widget.bean.Course
 import com.mredrock.cyxbs.widget.util.*
 import org.greenrobot.eventbus.EventBus
-import org.jetbrains.anko.toast
 import java.util.*
 import kotlin.collections.ArrayList
 

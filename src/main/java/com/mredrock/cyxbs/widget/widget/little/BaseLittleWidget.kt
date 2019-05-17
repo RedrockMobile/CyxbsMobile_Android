@@ -7,11 +7,9 @@ import android.content.Context
 import android.content.Intent
 import android.support.annotation.IdRes
 import android.support.annotation.LayoutRes
-import android.util.Log
 import android.widget.RemoteViews
 import android.widget.Toast
 import com.alibaba.android.arouter.launcher.ARouter
-import com.mredrock.cyxbs.common.bean.WidgetCourse
 import com.mredrock.cyxbs.common.config.MAIN_MAIN
 import com.mredrock.cyxbs.common.event.WidgetCourseEvent
 import com.mredrock.cyxbs.widget.bean.Course

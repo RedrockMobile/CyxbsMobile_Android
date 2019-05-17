@@ -4,10 +4,8 @@ import android.app.PendingIntent
 import android.appwidget.AppWidgetProvider
 import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import android.net.Uri
 import android.support.annotation.IdRes
-import android.util.Log
 import com.google.gson.Gson
 import com.mredrock.cyxbs.common.bean.WidgetCourse
 import com.mredrock.cyxbs.common.config.SP_WIDGET_NEED_FRESH
@@ -171,15 +169,15 @@ fun getStartCalendarByNum(hash_lesson: Int): Calendar {
 }
 
 fun getWeekDayChineseName(weekDay: Int): String {
-    when (weekDay) {
-        1 -> return "星期天"
-        2 -> return "星期一"
-        3 -> return "星期二"
-        4 -> return "星期三"
-        5 -> return "星期四"
-        6 -> return "星期五"
-        7 -> return "星期六"
-        else -> return "null"
+    return when (weekDay) {
+        1 -> "星期天"
+        2 -> "星期一"
+        3 -> "星期二"
+        4 -> "星期三"
+        5 -> "星期四"
+        6 -> "星期五"
+        7 -> "星期六"
+        else -> "null"
     }
 }
 
@@ -196,10 +194,10 @@ fun formatTime(calendar: Calendar): String {
 }
 
 fun filterClassRoom(classRoom: String): String {
-    if (classRoom.length > 8) {
-        return classRoom.replace(Regex("[\\u4e00-\\u9fa5()（）]"), "")
+    return if (classRoom.length > 8) {
+        classRoom.replace(Regex("[\\u4e00-\\u9fa5()（）]"), "")
     } else {
-        return classRoom
+        classRoom
     }
 }
 
@@ -226,16 +224,3 @@ fun changeCourseToWidgetCourse(courseBean: Course.DataBean):WidgetCourse.DataBea
     }
     return bean
 }
-
-//桌面小部件课表json数据
-const val WIDGET_COURSE = "widget_kb"
-
-const val SP_WIDGET_NEED_FRESH = "widget_need_fresh"
-const val SP_STUNUM = "student_number"
-const val SP_COURSE_UPDATE_TIME = "course_update_time"
-const val SP_IS_AUTO_UPDATE = "is_auto_update"
-
-val Context.defaultSharedPreferences get() = sharedPreferences("share_data")
-
-fun Context.sharedPreferences(name: String): SharedPreferences = getSharedPreferences(name, Context.MODE_PRIVATE)
-fun SharedPreferences.editor(editorBuilder: SharedPreferences.Editor.() -> Unit) = edit().apply(editorBuilder).apply()
