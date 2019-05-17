@@ -28,7 +28,15 @@ android {
             arguments {
                 arg("AROUTER_MODULE_NAME", project.getName())
             }
+            javacOptions {
+                option("-Xmaxerrs", 500)
+            }
         }
+    }
+
+    dexOptions {
+        preDexLibraries true
+        maxProcessCount 8
     }
 
     dataBinding {
