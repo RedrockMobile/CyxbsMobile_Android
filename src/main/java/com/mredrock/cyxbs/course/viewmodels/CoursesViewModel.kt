@@ -9,6 +9,7 @@ import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.config.SP_WIDGET_NEED_FRESH
 import com.mredrock.cyxbs.common.config.WIDGET_COURSE
 import com.mredrock.cyxbs.common.network.ApiGenerator
+import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.SchoolCalendar
 import com.mredrock.cyxbs.common.utils.extensions.*
 import com.mredrock.cyxbs.course.database.ScheduleDatabase
@@ -164,10 +165,6 @@ class CoursesViewModel : ViewModel() {
                 .subscribe(ExecuteOnceObserver(onExecuteOnceNext = { coursesFromDatabase ->
                     if (coursesFromDatabase != null && coursesFromDatabase.isNotEmpty()) {
                         mCourses.addAll(coursesFromDatabase)
-                        BaseApp.context.defaultSharedPreferences.editor {
-                            putBoolean(SP_WIDGET_NEED_FRESH, true)
-                            putString(WIDGET_COURSE, Gson().toJson(coursesFromDatabase))
-                        }
                         isGetAllData(0)
                     } else {
                         getCoursesDataFromInternet()
