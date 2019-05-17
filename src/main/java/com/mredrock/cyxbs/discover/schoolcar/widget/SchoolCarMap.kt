@@ -6,7 +6,6 @@ import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -76,12 +75,6 @@ class SchoolCarMap(private var context: Context, savedInstanceState: Bundle?, ca
     fun initAMap(ifLocation: Boolean) {
         aMap = mapView!!.map
 
-        if (aMap == null) {
-            aMap = mapView!!.map
-            Log.d(TAG, "initAMap: .........")
-            if (mapView == null) {
-            }
-        }
         if (ifLocation) {
             aMap.isMyLocationEnabled = true
             aMap.myLocationStyle = locationStyle
@@ -138,13 +131,6 @@ class SchoolCarMap(private var context: Context, savedInstanceState: Bundle?, ca
             initLocationType()
             aMap = mapView!!.map
 
-            if (aMap == null) {
-                aMap = mapView!!.map
-                Log.d(TAG, "initAMap: .........")
-                if (mapView == null) {
-                }
-            }
-
             //在地图上加入观察模式的切换"全校"<->"我"button
             carInterface.initLocationMapButton(aMap, locationStyle)
         } else {
@@ -152,7 +138,7 @@ class SchoolCarMap(private var context: Context, savedInstanceState: Bundle?, ca
         }
     }
 
-    fun distroyMap(locationClient: AMapLocationClient?) {
+    fun destroyMap(locationClient: AMapLocationClient?) {
         if (mapView != null) {
             mapView!!.onDestroy()
             locationClient?.onDestroy()

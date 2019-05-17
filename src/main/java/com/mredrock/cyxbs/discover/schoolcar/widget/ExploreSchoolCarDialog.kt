@@ -3,9 +3,7 @@ package com.mredrock.cyxbs.discover.schoolcar.widget
 import android.app.Activity
 import android.graphics.BitmapFactory
 import android.support.v7.app.AlertDialog
-import android.util.Log
 import android.widget.RelativeLayout
-import androidx.annotation.IdRes
 import com.mredrock.cyxbs.schoolcar.R
 import com.mredrock.cyxbs.discover.schoolcar.SchoolCarActivity.Companion.LOST_SERVICES
 import com.mredrock.cyxbs.discover.schoolcar.SchoolCarActivity.Companion.NO_GPS

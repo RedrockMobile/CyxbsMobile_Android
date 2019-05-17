@@ -11,13 +11,11 @@ import android.os.Bundle
 import android.os.PersistableBundle
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.RelativeLayout
-import android.widget.Toast
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.amap.api.location.AMapLocationClient
 import com.amap.api.location.AMapLocationClientOption
@@ -205,7 +203,7 @@ class SchoolCarActivity : BaseActivity() {
                     if (disposable != null) disposable!!.dispose()       //取消之前所有的轮询订阅
                     timer("showCarIcon")
                     showCarIcon = true
-                    Log.d(TAG, "processLocationInfo: " + carLocationInfo.status)
+                    LogUtils.d(TAG, "processLocationInfo: " + carLocationInfo.status)
                     schoolCarMap!!.showMap(carLocationInfo.status, explore_school_car_linearLayout, explore_schoolcar_load)
                 }
 
@@ -221,7 +219,7 @@ class SchoolCarActivity : BaseActivity() {
         //加载动画为4秒
         Observable.timer(4, TimeUnit.SECONDS).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<Long> {
             override fun onNext(t: Long) {
-                Log.d(TAG, "onNext: 校车正在初始化...$t")
+                LogUtils.d(TAG, "onNext: 校车正在初始化...$t")
             }
 
             override fun onSubscribe(d: Disposable) {
@@ -272,9 +270,7 @@ class SchoolCarActivity : BaseActivity() {
     private fun timer(int: String) {
         Observable.interval(2, TimeUnit.SECONDS)
                 .doOnNext {
-                    if (smoothMoveMarkers != null) {
-                        for (i in smoothMoveMarkers.indices) smoothMoveMarkers[i].removeMarker()
-                    }
+                    for (i in smoothMoveMarkers.indices) smoothMoveMarkers[i].removeMarker()
                     smoothMoveMarkers = mutableListOf()
                     var i = 0
                     while (i < dataList.size && dataList[i].lat != 0.0) {
@@ -313,7 +309,7 @@ class SchoolCarActivity : BaseActivity() {
     private fun checkActivityPermission():Boolean {
         refusePermissions.clear()
 
-        permissions.forEach {it->
+        permissions.forEach {
             if(ContextCompat.checkSelfPermission(this, it) != PackageManager.PERMISSION_GRANTED){
                 refusePermissions.add(it)
             }
@@ -365,7 +361,7 @@ class SchoolCarActivity : BaseActivity() {
         ExploreSchoolCarDialog.cancelDialog()
 
         if (schoolCarMap != null) {
-            schoolCarMap!!.distroyMap(locationClient)
+            schoolCarMap!!.destroyMap(locationClient)
         }
         if (disposable != null) {
             disposable!!.dispose()
@@ -383,9 +379,9 @@ class SchoolCarActivity : BaseActivity() {
         }
         if (disposable != null) {
             if (disposable!!.isDisposed) {
-                Log.d(TAG, "onRestart: disposed!!!")
+                LogUtils.d(TAG, "onRestart: disposed!!!")
             } else {
-                Log.d(TAG, "onRestart: not disposed!!!")
+                LogUtils.d(TAG, "onRestart: not disposed!!!")
             }
         }
     }
