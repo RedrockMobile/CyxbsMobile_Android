@@ -7,6 +7,7 @@ import com.alibaba.android.arouter.launcher.ARouter
 import com.google.gson.Gson
 import com.mredrock.cyxbs.common.bean.User
 import com.mredrock.cyxbs.common.config.SP_KEY_USER
+import com.mredrock.cyxbs.common.utils.CrashHandler
 import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.encrypt.UserInfoEncryption
 import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
@@ -59,6 +60,7 @@ open class BaseApp : MultiDexApplication() {
 
     override fun onCreate() {
         super.onCreate()
+        CrashHandler.init(applicationContext)
         userInfoEncryption = UserInfoEncryption()
         initRouter()
         initUMeng()
