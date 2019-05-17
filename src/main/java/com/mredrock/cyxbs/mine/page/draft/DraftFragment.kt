@@ -12,10 +12,8 @@ import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
 import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.gone
-import com.mredrock.cyxbs.common.utils.extensions.visible
 import com.mredrock.cyxbs.mine.R
 import com.mredrock.cyxbs.mine.network.model.Draft
-import com.mredrock.cyxbs.mine.util.log
 import com.mredrock.cyxbs.mine.util.ui.BaseRVFragment
 import com.mredrock.cyxbs.mine.util.ui.RvFooter
 import kotlinx.android.synthetic.main.mine_item_draft_rv.view.*
