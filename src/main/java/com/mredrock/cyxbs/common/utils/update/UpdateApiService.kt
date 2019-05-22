@@ -9,6 +9,6 @@ import retrofit2.http.GET
  */
 interface UpdateApiService {
     //todo
-    @GET("/app/cyxbsAppUpdate.xml")
+    @GET("/app/cyxbsAppUpdate.xml.bk")
     fun getUpdateInfo(): Observable<UpdateInfo>
 }
