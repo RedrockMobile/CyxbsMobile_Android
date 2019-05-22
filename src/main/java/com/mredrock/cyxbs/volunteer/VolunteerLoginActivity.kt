@@ -28,6 +28,7 @@ import java.util.regex.Pattern
 class VolunteerLoginActivity : BaseActivity() {
     companion object {
         private const val BIND_SUCCESS: Int = 0
+        private const val FAILED: Int = -1
         private const val INVALID_ACCOUNT: Int = -2
         private const val WRONG_PASSWORD: Int = 3
     }
@@ -106,8 +107,9 @@ class VolunteerLoginActivity : BaseActivity() {
         ApiGenerator.getApiService(VolunteerRetrofit.volunteerRetrofit, ApiService::class.java)
                 .volunteerLogin("Basic enNjeTpyZWRyb2Nrenk=", account, encodingPassword, uid!!)
                 .setSchedulers()
-                .safeSubscribeBy { volunteerLogin: VolunteerLogin ->
-                    when ((volunteerLogin.code)!!.toInt()) {
+                .safeSubscribeBy (onNext = {
+                    volunteerLogin: VolunteerLogin ->
+                    when (volunteerLogin.code) {
                         BIND_SUCCESS -> {
                             volunteerSP.bindVolunteerInfo(account, password, uid!!)
                             val intent = Intent(this@VolunteerLoginActivity, VolunteerRecordActivity::class.java)
@@ -119,8 +121,13 @@ class VolunteerLoginActivity : BaseActivity() {
                         INVALID_ACCOUNT -> showUnsuccessDialog("亲，输入的账号不存在哦")
 
                         WRONG_PASSWORD -> showUnsuccessDialog("亲，输入的账号或密码有误哦")
+
+                        FAILED -> showUnsuccessDialog("亲，登陆失败哦")
                     }
-                }
+
+                },onError = {
+                    dialog.dismiss()
+                })
     }
 
     private fun showProgressDialog() {

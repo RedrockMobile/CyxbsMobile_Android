@@ -1,6 +1,5 @@
 package com.mredrock.cyxbs.volunteer.widget
 
-import android.util.Base64
 import javax.crypto.Cipher
 import javax.crypto.spec.IvParameterSpec
 import javax.crypto.spec.SecretKeySpec
@@ -16,14 +15,16 @@ class EncryptPassword {
             val contentBytes = content.toByteArray(charset(charset))
             val keyBytes = KEY.toByteArray(charset(charset))
             val encryptedBytes = aesEncryptBytes(contentBytes, keyBytes)
-            return Base64.encodeToString(encryptedBytes, Base64.DEFAULT)
+            val base64 = Base64.getEncoder()
+            return base64.encodeToString(encryptedBytes)
         }
 
         private fun aesEncryptString(content: String): String {
             val contentBytes = content.toByteArray(charset(charset))
             val keyBytes = KEY.toByteArray(charset(charset))
             val encryptedBytes = aesEncryptBytes(contentBytes, keyBytes)
-            return Base64.encodeToString(encryptedBytes, Base64.DEFAULT)
+            val base64 = Base64.getEncoder()
+            return base64.encodeToString(encryptedBytes)
         }
 
         private fun aesEncryptBytes(contentBytes: ByteArray, keyBytes: ByteArray): ByteArray {
