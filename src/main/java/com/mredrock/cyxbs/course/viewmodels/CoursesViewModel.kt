@@ -214,15 +214,14 @@ class CoursesViewModel : ViewModel() {
                             mCoursesDatabase?.courseDao()?.deleteAllCourses()
                             mCoursesDatabase?.courseDao()?.insertCourses(notNullCourses)
                         }.start()
-                    }
-
-                    // 存储窗口小部件需要的Json数据
-                    if (coursesFromInternet.data?.isEmpty() != true && mIsGettingData) {
-                        BaseApp.context.defaultSharedPreferences.editor {
-                            putBoolean(SP_WIDGET_NEED_FRESH, true)
-                            putString(WIDGET_COURSE, Gson().toJson(coursesFromInternet))
+                        if(!coursesFromInternet.data?.isEmpty()!! && isGetOthers.value == false){
+                            BaseApp.context.defaultSharedPreferences.editor {
+                                putString(WIDGET_COURSE, Gson().toJson(coursesFromInternet))
+                                putBoolean(SP_WIDGET_NEED_FRESH, true)
+                            }
                         }
                     }
+
                 }, onExecuteOnceError = {
                     isGetAllData(0)
                 }))
