@@ -25,10 +25,7 @@ import java.util.*
 abstract class BaseLittleWidget : AppWidgetProvider() {
 
     private val shareName = "share_hash_lesson_trans"
-
-    companion object {
-        private var curCourse: Course.DataBean = Course.DataBean()//保存当前显示的course
-    }
+    private var curCourse: Course.DataBean = Course.DataBean()//保存当前显示的course
 
     @LayoutRes
     protected abstract fun getLayoutResId(): Int

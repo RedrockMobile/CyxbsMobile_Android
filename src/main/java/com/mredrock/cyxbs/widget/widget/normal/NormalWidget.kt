@@ -32,11 +32,10 @@ class NormalWidget : AppWidgetProvider() {
     private val shareName = "zscy_widget_normal"
     //生成calendar
     private val calendar = Calendar.getInstance()
-
+    private var list = ArrayList<Course.DataBean>()
     companion object {
         private var lastClickTime: Long = 0//用于记录点击时间
         //用于保存每一条刷新的课程，多个方法都要使用，若非静态，其他方法无法调用到正确数据
-        var list = ArrayList<Course.DataBean>()
     }
 
     override fun onUpdate(context: Context, appWidgetManager: AppWidgetManager, appWidgetIds: IntArray) {
