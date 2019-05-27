@@ -8,11 +8,14 @@ import android.os.Looper
 import android.support.design.widget.TabLayout
 import android.support.v4.app.Fragment
 import android.support.v4.view.ViewPager
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import com.afollestad.materialdialogs.MaterialDialog
+import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.ui.BaseActivity
+import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.volunteer.Adapter.VolunteerFragmentAdapter
@@ -26,6 +29,7 @@ import com.mredrock.cyxbs.volunteer.widget.EncryptPassword
 import com.mredrock.cyxbs.volunteer.widget.VolunteerTimeSP
 import java.util.*
 import kotlinx.android.synthetic.main.activity_volunteer_record.*
+import org.jetbrains.anko.toast
 import kotlin.collections.ArrayList
 
 class VolunteerRecordActivity : BaseActivity(), TabLayout.OnTabSelectedListener, ViewPager.OnPageChangeListener {
@@ -165,19 +169,20 @@ class VolunteerRecordActivity : BaseActivity(), TabLayout.OnTabSelectedListener,
         fragmentList = ArrayList()
         apiService.getVolunteerRecord("Basic enNjeTpyZWRyb2Nrenk=", uid)
                 .setSchedulers()
-                .safeSubscribeBy { volunteerTime: VolunteerTime ->
+                .safeSubscribeBy(onNext = { volunteerTime: VolunteerTime ->
                     allYearList = mutableListOf()
                     //请求加载动画停止，并设置不可见
                     animationDrawable.stop()
                     volunteer_refresh.visibility = View.GONE
-
                     //进行UI显示处理
                     runOnUiThread {
                         initializeYears()
                         initFragmentList(volunteerTime)
                         setTabLayout()
                     }
-                }
+                },onError = {
+                    LogUtils.d("volunteer",it.toString())
+                })
     }
 
     /**

@@ -4,7 +4,7 @@ import java.io.Serializable
 
 data class VolunteerTime(var code : String?,
                          var msg : String?,
-                         var hours : Int?,
+                         var hours : Double?,
                          var record : MutableList<RecordBean>?) :Serializable{
     /**
      * code : 0
