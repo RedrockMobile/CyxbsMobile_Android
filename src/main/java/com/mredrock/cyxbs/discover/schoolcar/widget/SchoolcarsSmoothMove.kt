@@ -8,7 +8,6 @@ import com.amap.api.maps.model.BitmapDescriptorFactory
 import com.amap.api.maps.model.LatLng
 import com.amap.api.maps.model.PolylineOptions
 import com.amap.api.maps.utils.overlay.SmoothMoveMarker
-
 import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
@@ -25,15 +24,15 @@ import java.util.*
  * Created by glossimar on 2018/9/12
  */
 
-class SchoolcarsSmoothMove(schoolCarMap: SchoolCarMap?, activity: Activity){
+class SchoolcarsSmoothMove(schoolCarMap: SchoolCarMap?, activity: Activity) {
     private var carAngle: Double = 0.toDouble()
 
-    private val activity : Activity
+    private val activity: Activity
     private val schoolCarMap: SchoolCarMap
 
     private lateinit var carInterface: SchoolCarInterface
 
-    private var checkTimeList : Boolean = true              //是否需要检查当前时间是否为校车运营时间
+    private var checkTimeList: Boolean = true              //是否需要检查当前时间是否为校车运营时间
     private lateinit var timeList: MutableList<String>      //储存接口每次返回的校车最后运行时间的List
 
     //3辆校车的经纬度的List
@@ -53,7 +52,7 @@ class SchoolcarsSmoothMove(schoolCarMap: SchoolCarMap?, activity: Activity){
     /**
      * 进行接口数据请求
      */
-    fun loadCarLocation(ifAddTimer : Long){
+    fun loadCarLocation(ifAddTimer: Long) {
         val apiService = ApiGenerator.getApiService(ApiService::class.java)
 
         apiService.schoolcar("Redrock", md5Hex(System.currentTimeMillis().toString().substring(0, 10) + "." + "Redrock"),
@@ -70,7 +69,7 @@ class SchoolcarsSmoothMove(schoolCarMap: SchoolCarMap?, activity: Activity){
 
                     //当timeList的size大于3时将会对运营时间（11-2 && 5-10）和从接口数据返回的时间来双重检查是否用户可以进入地图
                     // 或者显示当前TIME_OUT的dialog
-                    if (checkTimeList){
+                    if (checkTimeList) {
                         if (timeList.size < 3) {
                             timeList.add(it.time)
                         } else {
@@ -86,18 +85,18 @@ class SchoolcarsSmoothMove(schoolCarMap: SchoolCarMap?, activity: Activity){
     /**
      * 在地图上绘出校车轨迹
      */
-    private fun drawTraceLine(aMap: AMap?, smoothMoveList: MutableList<LatLng>){
+    private fun drawTraceLine(aMap: AMap?, smoothMoveList: MutableList<LatLng>) {
         val polyline = aMap!!.addPolyline(PolylineOptions()
-                                      .addAll(smoothMoveList.subList(0, smoothMoveList.size - 1))
-                                                            .width(8f)
-                                                            .color(Color.argb(255, 93, 152, 255)))
+                .addAll(smoothMoveList.subList(0, smoothMoveList.size - 1))
+                .width(8f)
+                .color(Color.argb(255, 93, 152, 255)))
 
     }
 
     /**
      * 更改校车车头角度（校车拐弯）
      */
-    private fun changeCarOrientation(marker: SmoothMoveMarker, latlng1: LatLng, latlng2: LatLng, errorRange: Double){
+    private fun changeCarOrientation(marker: SmoothMoveMarker, latlng1: LatLng, latlng2: LatLng, errorRange: Double) {
         if (!(latlng1.latitude == latlng2.latitude && latlng1.longitude == latlng2.longitude)) {
             val nextOrientation = getNextOrientation(latlng1, latlng2)
             val currentAngle = carAngle
@@ -115,7 +114,7 @@ class SchoolcarsSmoothMove(schoolCarMap: SchoolCarMap?, activity: Activity){
     /**
      * 校车平滑移动时调用
      */
-    fun smoothMove(smoothMoveMarkers: MutableList<SmoothMoveMarker>, bitmapChanged: Bitmap){
+    fun smoothMove(smoothMoveMarkers: MutableList<SmoothMoveMarker>, bitmapChanged: Bitmap) {
         if (smoothMoveList1.size > 0 || smoothMoveList2.size > 0) {
             val smoothMarker = SmoothMoveMarker(schoolCarMap.aMap)
             smoothMoveMarkers.add(smoothMarker)
@@ -138,7 +137,7 @@ class SchoolcarsSmoothMove(schoolCarMap: SchoolCarMap?, activity: Activity){
     /**
      * 获取校车车头转向角度算法
      */
-    private fun getNextOrientation(latlng1: LatLng, latlng2: LatLng): Double{
+    private fun getNextOrientation(latlng1: LatLng, latlng2: LatLng): Double {
         var angle: Double
         val a: Double
         val b: Double
@@ -157,7 +156,7 @@ class SchoolcarsSmoothMove(schoolCarMap: SchoolCarMap?, activity: Activity){
             angle = if (latlng2.latitude - latlng1.latitude < 0) 270.0 else 90.0
         } else {
             angle = Math.toDegrees(Math.acos(b / c))
-            if (a1 < 0 && b1 > 0)  angle = 360 - angle
+            if (a1 < 0 && b1 > 0) angle = 360 - angle
             else if (a1 > 0 && b1 > 0)
             else if (a1 > 0 && b1 < 0) angle = 180 - angle
             else if (a1 < 0 && b1 < 0) angle += 180
@@ -205,9 +204,9 @@ class SchoolcarsSmoothMove(schoolCarMap: SchoolCarMap?, activity: Activity){
      */
     private fun checkBeforeEnter(activity: Activity): Boolean {
         //如果timeList里最后一次校车运行时间和第一次获取到的校车运行时间不一样则说明此时校车正在运行，一样则校车此时未运行
-       if (checkTimeBeforeEnter() || (timeList.size <= 1 || timeList[timeList.size - 1] == timeList[0])) {
+        if (checkTimeBeforeEnter() || (timeList.size <= 1 || timeList[timeList.size - 1] == timeList[0])) {
             timeList = mutableListOf("")
-           ExploreSchoolCarDialog.show(activity, TIME_OUT)
+            ExploreSchoolCarDialog.show(activity, TIME_OUT)
             return false    // 校车未运行
         }
         timeList.clear()
@@ -217,7 +216,7 @@ class SchoolcarsSmoothMove(schoolCarMap: SchoolCarMap?, activity: Activity){
     /**
      * 检查当前时间是否时校车运营时间（ 11AM-2PM , 5PM-10PM)
      */
-    private fun checkTimeBeforeEnter(): Boolean{
+    private fun checkTimeBeforeEnter(): Boolean {
         val calendar: Calendar = Calendar.getInstance()
         val hour: Int = calendar.get(Calendar.HOUR)
         val AM_PM: Int = calendar.get(Calendar.AM_PM)

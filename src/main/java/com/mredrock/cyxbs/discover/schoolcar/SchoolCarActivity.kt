@@ -83,7 +83,7 @@ class SchoolCarActivity : BaseActivity() {
     //申请权限
     private val permissions = arrayOf(
             Manifest.permission.ACCESS_FINE_LOCATION
-            ,Manifest.permission.WRITE_EXTERNAL_STORAGE)
+            , Manifest.permission.WRITE_EXTERNAL_STORAGE)
     private val refusePermissions = mutableListOf<String>()
     private val mRequestCode = 200
 
@@ -101,7 +101,7 @@ class SchoolCarActivity : BaseActivity() {
         this.savedInstanceState = savedInstanceState
         setContentView(R.layout.activity_schoolcar)
 
-        if(checkActivityPermission()){
+        if (checkActivityPermission()) {
             locationClient = AMapLocationClient(applicationContext)
             initSchoolCarMap()
         }
@@ -130,7 +130,7 @@ class SchoolCarActivity : BaseActivity() {
                 locationStatus = WHOLE_SCHOOL
 
                 holeSchoolButton.setOnClickListener {
-                    LogUtils.d(TAG,ifLocation.toString())
+                    LogUtils.d(TAG, ifLocation.toString())
                     when (locationStatus) {
                         WHOLE_SCHOOL -> {
                             holeSchoolButton.setImageBitmap(BitmapFactory.decodeResource(resources, R.drawable.ic_school_car_search_me))
@@ -170,7 +170,7 @@ class SchoolCarActivity : BaseActivity() {
 
                 //如果用户同意定位权限，则开启定位和初始化定位用到的类
                 if (ifLocation) {
-                    LogUtils.d(TAG,"schoolCarMap.initLocationType")
+                    LogUtils.d(TAG, "schoolCarMap.initLocationType")
                     schoolCarMap!!.initLocationType()
                     initData()
                 }
@@ -198,11 +198,10 @@ class SchoolCarActivity : BaseActivity() {
                 if (aLong == ADD_TIMER) {
                     timer("initView")
                 }
-
                 if (!showCarIcon && aLong == ADD_TIMER_AND_SHOW_MAP) {
                     if (disposable != null) disposable!!.dispose()       //取消之前所有的轮询订阅
-                    timer("showCarIcon")
                     showCarIcon = true
+                    timer("showCarIcon")
                     LogUtils.d(TAG, "processLocationInfo: " + carLocationInfo.status)
                     schoolCarMap!!.showMap(carLocationInfo.status, explore_school_car_linearLayout, explore_schoolcar_load)
                 }
@@ -306,18 +305,18 @@ class SchoolCarActivity : BaseActivity() {
         return Bitmap.createBitmap(bitmap, 0, 0, width, height, matrix, true)
     }
 
-    private fun checkActivityPermission():Boolean {
+    private fun checkActivityPermission(): Boolean {
         refusePermissions.clear()
 
         permissions.forEach {
-            if(ContextCompat.checkSelfPermission(this, it) != PackageManager.PERMISSION_GRANTED){
+            if (ContextCompat.checkSelfPermission(this, it) != PackageManager.PERMISSION_GRANTED) {
                 refusePermissions.add(it)
             }
         }
 
-        if(refusePermissions.size > 0){//如果有权限未通过，需要申请
+        if (refusePermissions.size > 0) {//如果有权限未通过，需要申请
             ActivityCompat.requestPermissions(this, permissions, mRequestCode)
-        }else{
+        } else {
             return true
         }
         return false
@@ -326,19 +325,19 @@ class SchoolCarActivity : BaseActivity() {
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         var hasPermissionsDismiss = false
 
-        if(requestCode == mRequestCode){
-            grantResults.forEach { grant->
-                if(grant == -1){
+        if (requestCode == mRequestCode) {
+            grantResults.forEach { grant ->
+                if (grant == -1) {
                     hasPermissionsDismiss = true
                 }
             }
         }
 
-        if(hasPermissionsDismiss){
+        if (hasPermissionsDismiss) {
             ExploreSchoolCarDialog.show(this, NO_GPS)
             ifLocation = false
             finish()
-        }else{
+        } else {
             locationClient = AMapLocationClient(applicationContext)
             initSchoolCarMap()
         }
@@ -347,12 +346,11 @@ class SchoolCarActivity : BaseActivity() {
     override fun onSaveInstanceState(outState: Bundle?, outPersistentState: PersistableBundle?) {
         super.onSaveInstanceState(outState)
         schoolCarMap?.let {
-            if(it.mapView!=null){
+            if (it.mapView != null) {
                 it.mapView!!.onSaveInstanceState(outState)
             }
         }
     }
-
 
 
     override fun onDestroy() {
@@ -365,7 +363,7 @@ class SchoolCarActivity : BaseActivity() {
         }
         if (disposable != null) {
             disposable!!.dispose()
-            LogUtils.d(TAG,disposable!!.isDisposed.toString())
+            LogUtils.d(TAG, disposable!!.isDisposed.toString())
         }
     }
 
@@ -396,7 +394,7 @@ class SchoolCarActivity : BaseActivity() {
 
     override fun onStop() {
         super.onStop()
-        if(smoothMoveData != null){
+        if (smoothMoveData != null) {
             smoothMoveData!!.clearAllList()
         }
     }
