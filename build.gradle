@@ -111,9 +111,10 @@ android {
     productFlavors {
         official {}
         xiaomi {}
-//        huawei {}
-//        samsung {}
-//        kuan {}
+        huawei {}
+        samsung {}
+        kuan {}
+        google{}
 //        baidu {}
 //        alibaba {}
 //        tencent {}
