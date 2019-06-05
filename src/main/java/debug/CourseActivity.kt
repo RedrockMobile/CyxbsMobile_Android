@@ -44,7 +44,6 @@ class CourseActivity : BaseActivity() {
 
         analogLogin()
 
-        replaceFragment(CourseContainerFragment())
     }
 
     /**
@@ -52,7 +51,11 @@ class CourseActivity : BaseActivity() {
      */
     private fun analogLogin() {
         if (!BaseApp.isLogin) {
-            mLoginDialog.analogLogin()
+            mLoginDialog.analogLogin{
+                replaceFragment(CourseContainerFragment())
+            }
+        } else {
+            replaceFragment(CourseContainerFragment())
         }
     }
 
@@ -83,7 +86,9 @@ class CourseActivity : BaseActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             android.R.id.home -> {
-                mLoginDialog.analogLogin()
+                mLoginDialog.analogLogin{
+                    replaceFragment(CourseContainerFragment())
+                }
             }
         }
 

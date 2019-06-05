@@ -8,7 +8,6 @@ import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.config.SP_WIDGET_NEED_FRESH
 import com.mredrock.cyxbs.common.config.WIDGET_COURSE
 import com.mredrock.cyxbs.common.network.ApiGenerator
-import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.SchoolCalendar
 import com.mredrock.cyxbs.common.utils.extensions.*
 import com.mredrock.cyxbs.course.database.ScheduleDatabase
@@ -88,14 +87,16 @@ class CoursesViewModel : ViewModel() {
     private val mDataGetStatus = arrayOf(false, false)
     // 表示现在是否正在获取数据
     private var mIsGettingData: Boolean = false
+    // 用于记录是否时第一次因为数据库中拉取不到数据，通过网络请求进行数据的拉取。
+    private var mIsGottenFromInternet = false
 
     /**
-     * 此方法用于获取Course和Affair数据
+     * 此方法用于从数据库中获取Course和Affair数据
      *
      * @param context [Context]
      * @param stuNum 当显示他人课表的时候就传入对应的的学号。默认为空，之后会为其赋值对应的帐号。
      */
-    fun getSchedulesData(context: Context, stuNum: String? = null) {
+    fun getSchedulesDataFromDataBase(context: Context, stuNum: String? = null) {
         if (mIsGettingData) {
             return
         }
@@ -138,9 +139,16 @@ class CoursesViewModel : ViewModel() {
         }
         mIsGettingData = true
 
-        resetGetStatus()
-
         getNowWeek(context)
+
+        getSchedulesFromInternet()
+    }
+
+    /**
+     * 从后端拉取课程和备忘数据
+     */
+    private fun getSchedulesFromInternet() {
+        resetGetStatus()
         getCoursesDataFromInternet(true)
 
         // 如果mIsGetOthers为true，就说明是他人课表查询pass掉备忘查询。反之就是用户在进行课表查询，这时就进行备忘的查询。
@@ -164,10 +172,8 @@ class CoursesViewModel : ViewModel() {
                 .subscribe(ExecuteOnceObserver(onExecuteOnceNext = { coursesFromDatabase ->
                     if (coursesFromDatabase != null && coursesFromDatabase.isNotEmpty()) {
                         mCourses.addAll(coursesFromDatabase)
-                        isGetAllData(0)
-                    } else {
-                        getCoursesDataFromInternet()
                     }
+                    isGetAllData(0)
                 }, onExecuteOnceError = {
                     isGetAllData(0)
                 }))
@@ -187,10 +193,8 @@ class CoursesViewModel : ViewModel() {
                 .subscribe(ExecuteOnceObserver(onExecuteOnceNext = { affairsFromDatabase ->
                     if (affairsFromDatabase != null && affairsFromDatabase.isNotEmpty()) {
                         mCourses.addAll(affairsFromDatabase)
-                        isGetAllData(1)
-                    } else {
-                        getAffairsDataFromInternet()
                     }
+                    isGetAllData(1)
                 }, onExecuteOnceError = {
                     isGetAllData(1)
                 }))
@@ -270,6 +274,12 @@ class CoursesViewModel : ViewModel() {
             // 如果mCourses为空的话就不用赋值给courses。防止由于网络请求有问题而导致刷新数据为空。
             if (mCourses.isNotEmpty()) {
                 courses.value = mCourses
+            } else {
+                // 加个标志，防止因为没有课程以及备忘的情况进行无限循环拉取。
+                if (!mIsGottenFromInternet) {
+                    mIsGottenFromInternet = true
+                    getSchedulesFromInternet()
+                }
             }
             stopRefresh()
         }

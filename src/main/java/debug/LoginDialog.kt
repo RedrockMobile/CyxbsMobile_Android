@@ -33,7 +33,7 @@ class LoginDialog(private val mContext: Context) {
      * 此方法用于在单独模块下模拟登录
      */
     @SuppressLint("InflateParams")
-    fun analogLogin() {
+    fun analogLogin(onLogin: () -> Unit) {
         val itemView = mLayoutInflater.inflate(R.layout.course_login_dialog, null)
         val account = itemView.findViewById<EditText>(R.id.account)
         val password = itemView.findViewById<EditText>(R.id.password)
@@ -43,6 +43,7 @@ class LoginDialog(private val mContext: Context) {
             BaseApp.user = User(stuNum = account.text.toString(), idNum = password.text.toString())
             //这里实际不是添加事务是为了进行UI的更新
             EventBus.getDefault().post(AddAffairEvent())
+            onLogin()
         }
 
         val params = ViewGroup.LayoutParams(mContext.getScreenWidth() * 3 / 4,

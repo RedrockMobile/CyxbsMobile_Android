@@ -95,7 +95,7 @@ class CourseContainerFragment : BaseFragment() {
         // 重复获取数据。
         mCoursesViewModel = ViewModelProviders.of(activity!!).get(CoursesViewModel::class.java)
 
-        mCoursesViewModel.getSchedulesData(activity!!, mOthersStuNum)
+        mCoursesViewModel.getSchedulesDataFromDataBase(activity!!, mOthersStuNum)
         mCoursesViewModel.nowWeek.observe(activity!!, Observer { nowWeek ->
             if (nowWeek != null && nowWeek != 0) {
                 // 过时的本周的位置以及将其替换为原始周数显示
