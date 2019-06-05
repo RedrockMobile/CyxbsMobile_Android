@@ -160,7 +160,7 @@ class CoursesViewModel : ViewModel() {
     }
 
     /**
-     * 此方法用于获取数据库中的课程数据，如果数据库中的数据为空，就从服务器中获取。
+     * 此方法用于获取数据库中的课程数据。
      */
     private fun getCoursesDataFromDatabase() {
         mCoursesDatabase ?: return
@@ -180,7 +180,7 @@ class CoursesViewModel : ViewModel() {
     }
 
     /**
-     * 此方法用于获取数据库中的事务数据，如果数据库中的数据为空，就从服务器中获取。
+     * 此方法用于获取数据库中的事务数据。
      */
     private fun getAffairsDataFromDatabase() {
         mCoursesDatabase ?: return
