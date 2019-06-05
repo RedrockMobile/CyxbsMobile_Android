@@ -3,14 +3,12 @@ package com.mredrock.cyxbs.common.utils.encrypt;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Base64;
-import android.util.Log;
 
 import com.mredrock.cyxbs.common.BaseApp;
 import com.mredrock.cyxbs.common.config.ConfigKt;
 import com.mredrock.cyxbs.common.utils.LogUtils;
 import com.mredrock.cyxbs.common.utils.extensions.SharedPreferencesKt;
 
-import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 
 /**
@@ -27,7 +25,7 @@ public class UserInfoEncryption {
         try {
             encryptor.encrypt("abc".getBytes(StandardCharsets.UTF_8));
         } catch (Exception e) {
-            Log.e("CSET_UIE", "not support", e);
+            LogUtils.INSTANCE.e("CSET_UIE", "not support", e);
             isSupportEncrypt = false;
         }
         synchronized (UserInfoEncryption.class) {
