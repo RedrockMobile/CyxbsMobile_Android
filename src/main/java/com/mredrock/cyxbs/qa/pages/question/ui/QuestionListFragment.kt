@@ -31,11 +31,14 @@ class QuestionListFragment : BaseViewModelFragment<QuestionListViewModel>() {
         get() = false
 
     override val viewModelClass = QuestionListViewModel::class.java
-    lateinit var title: String
+    var title: String = ""
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         super.onCreateView(inflater, container, savedInstanceState)
+        if (title.isBlank()) {
+            title = savedInstanceState?.getString("title") ?: ""
+        }
         val root = inflater.inflate(R.layout.qa_fragment_question_list, container, false)
         val questionListRvAdapter = QuestionListRvAdapter(this)
         val footerRvAdapter = FooterRvAdapter { viewModel.retry() }
@@ -95,6 +98,13 @@ class QuestionListFragment : BaseViewModelFragment<QuestionListViewModel>() {
             if (title == Question.ALL || title == data!!.getStringExtra("type")) {
                 viewModel.invalidateQuestionList()
             }
+        }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        if (title.isNotBlank()) {
+            outState.putString("title", title)
         }
     }
 
