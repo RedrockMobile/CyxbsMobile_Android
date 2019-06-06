@@ -267,7 +267,7 @@ class SchoolCarActivity : BaseActivity() {
      * timer 用来轮询接口时调用
      */
     private fun timer(int: String) {
-        Observable.interval(2, TimeUnit.SECONDS)
+        Observable.interval(5, TimeUnit.SECONDS)
                 .doOnNext {
                     for (i in smoothMoveMarkers.indices) smoothMoveMarkers[i].removeMarker()
                     smoothMoveMarkers = mutableListOf()
