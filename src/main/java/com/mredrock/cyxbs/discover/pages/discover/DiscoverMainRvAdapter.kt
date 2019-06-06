@@ -28,7 +28,7 @@ class DiscoverMainRvAdapter(private val context: Context): RecyclerView.Adapter<
 
     private fun initLists() {
         titleRes = mutableListOf(
-                "没课约", "空教室", "成绩单",
+                "没课约", "空教室", "成绩与考试安排",
                 "志愿时长", "重邮地图", "校车查询",
                 "校历", "查电费", "关于我们",
                 "教务新闻", "同学课表")
