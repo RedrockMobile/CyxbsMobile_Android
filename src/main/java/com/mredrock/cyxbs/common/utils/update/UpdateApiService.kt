@@ -8,7 +8,6 @@ import retrofit2.http.GET
  * Create By Hosigus at 2019/5/11
  */
 interface UpdateApiService {
-    //todo
     @GET("/app/cyxbsAppUpdate.xml.bk")
     fun getUpdateInfo(): Observable<UpdateInfo>
 }

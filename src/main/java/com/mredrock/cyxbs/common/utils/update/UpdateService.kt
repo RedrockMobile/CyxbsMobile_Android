@@ -9,12 +9,10 @@ import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.net.ConnectivityManager
-import android.net.Uri
 import android.os.AsyncTask
 import android.os.Build
 import android.os.IBinder
 import android.support.v4.app.NotificationCompat
-import android.support.v4.content.FileProvider
 import com.mredrock.cyxbs.common.R
 import com.mredrock.cyxbs.common.utils.extensions.uri
 

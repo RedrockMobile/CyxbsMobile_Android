@@ -12,7 +12,7 @@ const val PREF_USER_LOGIN_ALREADY = "login_already"
 const val STATE_SELECTED_POSITION = "selected_navigation_drawer_position"
 
 val dataFilePath = android.os.Environment.getExternalStorageDirectory().toString() + "/" + "Android/data/com.mredrock.cyxbs/"
-val updateFilePath = android.os.Environment.getExternalStorageDirectory().toString() + "/" + "download/"
+val updateFilePath = android.os.Environment.getExternalStorageDirectory().toString() + "/" + "Download/"
 const val updateFilename = "com.mredrock.cyxbs.apk"
 
 const val APP_WIDGET_CACHE_FILE_NAME = "AppWidgetCache.json"
