@@ -90,26 +90,31 @@ class NormalWidget : AppWidgetProvider() {
             list.forEach {it->
                 newList.add(changeCourseToWidgetCourse(it))
             }
-            if (newList.size > 0) {
-                when (rId) {
-                    R.id.widget_normal_layout1 -> {
-                        EventBus.getDefault().postSticky(WidgetCourseEvent(mutableListOf(newList[0])))
-                    }
-                    R.id.widget_normal_layout2 -> {
-                        EventBus.getDefault().postSticky(WidgetCourseEvent(mutableListOf(newList[1])))
-                    }
-                    R.id.widget_normal_layout3 -> {
-                        EventBus.getDefault().postSticky(WidgetCourseEvent(mutableListOf(newList[2])))
-                    }
-                    R.id.widget_normal_layout4 -> {
-                        EventBus.getDefault().postSticky(WidgetCourseEvent(mutableListOf(newList[3])))
-                    }
-                    R.id.widget_normal_layout5 -> {
-                        EventBus.getDefault().postSticky(WidgetCourseEvent(mutableListOf(newList[4])))
-                    }
-                    R.id.widget_normal_layout6 -> {
-                        EventBus.getDefault().postSticky(WidgetCourseEvent(mutableListOf(newList[5])))
-                    }
+            val size = newList.size
+            when (rId) {
+                R.id.widget_normal_layout1 -> {
+                    if(size < 1) return
+                    EventBus.getDefault().postSticky(WidgetCourseEvent(mutableListOf(newList[0])))
+                }
+                R.id.widget_normal_layout2 -> {
+                    if(size < 2) return
+                    EventBus.getDefault().postSticky(WidgetCourseEvent(mutableListOf(newList[1])))
+                }
+                R.id.widget_normal_layout3 -> {
+                    if(size < 3) return
+                    EventBus.getDefault().postSticky(WidgetCourseEvent(mutableListOf(newList[2])))
+                }
+                R.id.widget_normal_layout4 -> {
+                    if(size < 4) return
+                    EventBus.getDefault().postSticky(WidgetCourseEvent(mutableListOf(newList[3])))
+                }
+                R.id.widget_normal_layout5 -> {
+                    if(size < 5) return
+                    EventBus.getDefault().postSticky(WidgetCourseEvent(mutableListOf(newList[4])))
+                }
+                R.id.widget_normal_layout6 -> {
+                    if(size < 6) return
+                    EventBus.getDefault().postSticky(WidgetCourseEvent(mutableListOf(newList[5])))
                 }
             }
         }
