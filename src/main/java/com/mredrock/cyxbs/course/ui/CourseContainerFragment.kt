@@ -45,7 +45,7 @@ class CourseContainerFragment : BaseFragment() {
 
     private var mOthersStuNum: String? = null
     private lateinit var mScheduleAdapter: ScheduleVPAdapter
-    private lateinit var mCoursesViewModel: CoursesViewModel
+    private var mCoursesViewModel: CoursesViewModel? = null
     private lateinit var mBinding: CourseFragmentCourseContainerBinding
     private lateinit var mRawWeeks: Array<String>
     private lateinit var mWeeks: Array<String>
@@ -68,6 +68,8 @@ class CourseContainerFragment : BaseFragment() {
 
     private fun initFragment() {
         activity ?: return
+
+        if(!isAdded) return//如果没有被添加进Activity，Fragment会抛出not attach a context的错误
 
         arguments?.let {
             mOthersStuNum = it.getString(OTHERS_STU_NUM)
@@ -95,27 +97,31 @@ class CourseContainerFragment : BaseFragment() {
         // 重复获取数据。
         mCoursesViewModel = ViewModelProviders.of(activity!!).get(CoursesViewModel::class.java)
 
-        mCoursesViewModel.getSchedulesDataFromDataBase(activity!!, mOthersStuNum)
-        mCoursesViewModel.nowWeek.observe(activity!!, Observer { nowWeek ->
-            if (nowWeek != null && nowWeek != 0) {
-                // 过时的本周的位置以及将其替换为原始周数显示
-                val oldNowWeek = mWeeks.indexOf(resources.getString(R.string.course_now_week))
-                if (oldNowWeek != -1) {
-                    mWeeks[oldNowWeek] = mRawWeeks[oldNowWeek]
+        mCoursesViewModel?.let {model->
+            model.getSchedulesDataFromDataBase(activity!!, mOthersStuNum)
+            model.nowWeek.observe(activity!!, Observer { nowWeek ->
+                if (nowWeek != null && nowWeek != 0) {
+                    // 过时的本周的位置以及将其替换为原始周数显示
+                    val oldNowWeek = mWeeks.indexOf(resources.getString(R.string.course_now_week))
+                    if (oldNowWeek != -1) {
+                        mWeeks[oldNowWeek] = mRawWeeks[oldNowWeek]
+                    }
+                    // 设置现在的本周显示
+                    mWeeks[nowWeek] = resources.getString(R.string.course_now_week)
+                    mScheduleAdapter.notifyDataSetChanged()
                 }
-                // 设置现在的本周显示
-                mWeeks[nowWeek] = resources.getString(R.string.course_now_week)
-                mScheduleAdapter.notifyDataSetChanged()
-            }
-            // 跳转到当前周
-            vp.currentItem = nowWeek ?: 0
+                // 跳转到当前周
+                vp.currentItem = nowWeek ?: 0
 
-        })
+            })
+        }
     }
 
     override fun onPrepareOptionsMenu(menu: Menu?) {
-        if (mCoursesViewModel.isGetOthers.value == false) {//如果是他人课表，不加载添加事物的btn
-            activity?.menuInflater?.inflate(R.menu.course_course_menu, menu)
+        mCoursesViewModel?.let {
+            if (it.isGetOthers.value == false) {//如果是他人课表，不加载添加事物的btn
+                activity?.menuInflater?.inflate(R.menu.course_course_menu, menu)
+            }
         }
         super.onPrepareOptionsMenu(menu)
     }
@@ -161,7 +167,7 @@ class CourseContainerFragment : BaseFragment() {
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun deleteAffair(deleteAffairEvent: DeleteAffairEvent) {
         EventBus.getDefault().post(RefreshEvent(true))
-        mCoursesViewModel.refreshScheduleData(this.context!!)
+        mCoursesViewModel?.refreshScheduleData(this.context!!)
     }
 
     /**
@@ -172,7 +178,7 @@ class CourseContainerFragment : BaseFragment() {
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun addAffairs(addAffairEvent: AddAffairEvent) {
         EventBus.getDefault().post(RefreshEvent(true))
-        mCoursesViewModel.refreshScheduleData(this.context!!)
+        mCoursesViewModel?.refreshScheduleData(this.context!!)
     }
 
     /**
@@ -181,13 +187,13 @@ class CourseContainerFragment : BaseFragment() {
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun showModeChange(e: ShowModeChangeEvent) {
         EventBus.getDefault().post(RefreshEvent(true))
-        mCoursesViewModel.refreshScheduleData(this.context!!)
+        mCoursesViewModel?.refreshScheduleData(this.context!!)
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun modifyAffairs(modifyAffairEvent: ModifyAffairEvent) {
         EventBus.getDefault().post(RefreshEvent(true))
-        mCoursesViewModel.refreshScheduleData(this.context!!)
+        mCoursesViewModel?.refreshScheduleData(this.context!!)
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
