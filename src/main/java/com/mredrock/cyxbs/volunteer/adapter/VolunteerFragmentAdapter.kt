@@ -1,10 +1,8 @@
-package com.mredrock.cyxbs.volunteer.Adapter
+package com.mredrock.cyxbs.volunteer.adapter
 
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import 	android.support.v4.app.FragmentStatePagerAdapter
-import android.view.ViewGroup
-import com.mredrock.cyxbs.common.utils.LogUtils
 
 
 class VolunteerFragmentAdapter(fm: FragmentManager, fragmentList: MutableList<Fragment>, yearList: MutableList<String>) : FragmentStatePagerAdapter(fm) {

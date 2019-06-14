@@ -1,4 +1,4 @@
-package com.mredrock.cyxbs.volunteer.Network
+package com.mredrock.cyxbs.volunteer.network
 
 interface ShowFragmentInterface {
     fun showFragment(postion : Int)

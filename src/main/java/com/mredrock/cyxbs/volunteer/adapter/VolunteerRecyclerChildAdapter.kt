@@ -1,4 +1,4 @@
-package com.mredrock.cyxbs.volunteer.Adapter
+package com.mredrock.cyxbs.volunteer.adapter
 
 import android.support.v7.widget.CardView
 import android.support.v7.widget.RecyclerView

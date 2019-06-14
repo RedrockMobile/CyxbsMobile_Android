@@ -1,4 +1,4 @@
-package com.mredrock.cyxbs.volunteer.Network
+package com.mredrock.cyxbs.volunteer.network
 
 import com.mredrock.cyxbs.volunteer.bean.VolunteerLogin
 import com.mredrock.cyxbs.volunteer.bean.VolunteerTime

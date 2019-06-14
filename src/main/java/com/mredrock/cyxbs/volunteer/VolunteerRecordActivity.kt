@@ -8,28 +8,25 @@ import android.os.Looper
 import android.support.design.widget.TabLayout
 import android.support.v4.app.Fragment
 import android.support.v4.view.ViewPager
-import android.util.Log
 import android.view.View
 import android.widget.Toast
 import com.afollestad.materialdialogs.MaterialDialog
-import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.ui.BaseActivity
 import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
-import com.mredrock.cyxbs.volunteer.Adapter.VolunteerFragmentAdapter
-import com.mredrock.cyxbs.volunteer.Fragment.AllVolunteerFragment
-import com.mredrock.cyxbs.volunteer.Fragment.FirstVolunteerTimeFragment
-import com.mredrock.cyxbs.volunteer.Fragment.NoTimeVolunteerFragment
-import com.mredrock.cyxbs.volunteer.Network.ApiService
-import com.mredrock.cyxbs.volunteer.Network.VolunteerRetrofit
+import com.mredrock.cyxbs.volunteer.adapter.VolunteerFragmentAdapter
 import com.mredrock.cyxbs.volunteer.bean.VolunteerTime
+import com.mredrock.cyxbs.volunteer.fragment.AllVolunteerFragment
+import com.mredrock.cyxbs.volunteer.fragment.FirstVolunteerTimeFragment
+import com.mredrock.cyxbs.volunteer.fragment.NoTimeVolunteerFragment
+import com.mredrock.cyxbs.volunteer.network.ApiService
+import com.mredrock.cyxbs.volunteer.network.VolunteerRetrofit
 import com.mredrock.cyxbs.volunteer.widget.EncryptPassword
 import com.mredrock.cyxbs.volunteer.widget.VolunteerTimeSP
-import java.util.*
 import kotlinx.android.synthetic.main.activity_volunteer_record.*
-import org.jetbrains.anko.toast
+import java.util.*
 import kotlin.collections.ArrayList
 
 class VolunteerRecordActivity : BaseActivity(), TabLayout.OnTabSelectedListener, ViewPager.OnPageChangeListener {
@@ -180,8 +177,8 @@ class VolunteerRecordActivity : BaseActivity(), TabLayout.OnTabSelectedListener,
                         initFragmentList(volunteerTime)
                         setTabLayout()
                     }
-                },onError = {
-                    LogUtils.d("volunteer",it.toString())
+                }, onError = {
+                    LogUtils.d("volunteer", it.toString())
                 })
     }
 
@@ -221,7 +218,7 @@ class VolunteerRecordActivity : BaseActivity(), TabLayout.OnTabSelectedListener,
     private fun initFragmentList(dataBean: VolunteerTime?) {
         if (dataBean!!.record!!.isEmpty()) {
             // 如果用户的志愿时长记录为0，则所5个（"全部" + 四年，和year对应）fragment都为无时长 fragment
-             for (i in 0..5) {
+            for (i in 0..5) {
                 fragmentList.add(NoTimeVolunteerFragment())
             }
         } else {
@@ -252,10 +249,8 @@ class VolunteerRecordActivity : BaseActivity(), TabLayout.OnTabSelectedListener,
             }
 
             //将所有志愿时长的fragment加入到fragmentList中的第0个元素（"全部"为界面显示的第一个fragment），并对data和year绑定
-            var allVolunteerFragment = AllVolunteerFragment()
-            allVolunteerFragment.setAllHour(dataBean.hours.toString())
-            allVolunteerFragment.setRecordBeanList(allRecordList)
-            allVolunteerFragment.setYearList(allYearList)
+            val allVolunteerFragment = AllVolunteerFragment()
+            allVolunteerFragment.updateData(dataBean.hours.toString(), allYearList, allRecordList)
             fragmentList.add(0, allVolunteerFragment)
         }
     }

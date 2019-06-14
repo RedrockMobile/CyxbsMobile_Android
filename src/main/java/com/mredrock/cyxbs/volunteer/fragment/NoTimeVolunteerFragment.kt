@@ -1,4 +1,4 @@
-package com.mredrock.cyxbs.volunteer.Fragment
+package com.mredrock.cyxbs.volunteer.fragment
 
 import android.support.v4.app.Fragment
 import android.os.Bundle

@@ -1,4 +1,4 @@
-package com.mredrock.cyxbs.volunteer.Adapter
+package com.mredrock.cyxbs.volunteer.adapter
 
 import android.content.Context
 import android.support.v7.widget.LinearLayoutManager
@@ -10,11 +10,18 @@ import android.widget.TextView
 import com.mredrock.cyxbs.volunteer.R
 import com.mredrock.cyxbs.volunteer.bean.VolunteerTime
 
-class VolunteerRecyclerAdapter(var recordBeanList: MutableList<VolunteerTime.RecordBean>?
-                               , var context: Context
-                               , var yearList: MutableList<String>
-                               , var allList: MutableList<MutableList<VolunteerTime.RecordBean>>?)
-    : RecyclerView.Adapter<VolunteerRecyclerAdapter.ViewHolder>() {
+class VolunteerRecyclerAdapter(
+        private var recordBeanList: MutableList<VolunteerTime.RecordBean>?,
+        var context: Context,
+        private var yearList: MutableList<String>,
+        private var allList: MutableList<MutableList<VolunteerTime.RecordBean>>?
+) : RecyclerView.Adapter<VolunteerRecyclerAdapter.ViewHolder>() {
+
+    fun updaeList(yList: MutableList<String>,aList: MutableList<MutableList<VolunteerTime.RecordBean>>?) {
+        yearList = yList
+        allList = aList
+        notifyDataSetChanged()
+    }
 
     private lateinit var adapter: VolunteerRecyclerChildAdapter
 
@@ -25,12 +32,12 @@ class VolunteerRecyclerAdapter(var recordBeanList: MutableList<VolunteerTime.Rec
 
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VolunteerRecyclerAdapter.ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val v = LayoutInflater.from(parent.context).inflate(R.layout.item_volunteer_child_year, parent, false)
         return ViewHolder(v)
     }
 
-    override fun onBindViewHolder(holder: VolunteerRecyclerAdapter.ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         //        if (yearList.get(yearList.size() - 1).equals("全部"))
         holder.yearText.text = yearList[position]
         if (allList == null) {
@@ -38,8 +45,8 @@ class VolunteerRecyclerAdapter(var recordBeanList: MutableList<VolunteerTime.Rec
                 adapter = VolunteerRecyclerChildAdapter(recordBeanList!!)
             }
         } else {
-            if (allList != null){
-                adapter =VolunteerRecyclerChildAdapter(allList!![position])
+            if (allList != null) {
+                adapter = VolunteerRecyclerChildAdapter(allList!![position])
 
             }
         }

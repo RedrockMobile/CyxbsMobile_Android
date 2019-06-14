@@ -1,4 +1,4 @@
-package com.mredrock.cyxbs.volunteer.Fragment
+package com.mredrock.cyxbs.volunteer.fragment
 
 import android.support.v4.app.Fragment
 import android.os.Bundle
@@ -8,7 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import com.mredrock.cyxbs.volunteer.Adapter.VolunteerRecyclerAdapter
+import com.mredrock.cyxbs.volunteer.adapter.VolunteerRecyclerAdapter
 import com.mredrock.cyxbs.volunteer.R
 import com.mredrock.cyxbs.volunteer.bean.VolunteerTime
 

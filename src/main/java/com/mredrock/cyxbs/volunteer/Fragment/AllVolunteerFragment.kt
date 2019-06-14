@@ -1,54 +1,47 @@
-package com.mredrock.cyxbs.volunteer.Fragment
+package com.mredrock.cyxbs.volunteer.fragment
 
-import android.support.v4.app.Fragment
 import android.os.Bundle
+import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import com.mredrock.cyxbs.volunteer.Adapter.VolunteerRecyclerAdapter
 import com.mredrock.cyxbs.volunteer.R
+import com.mredrock.cyxbs.volunteer.adapter.VolunteerRecyclerAdapter
 import com.mredrock.cyxbs.volunteer.bean.VolunteerTime
+import kotlinx.android.synthetic.main.fragment_volunteer_time.view.*
 
 class AllVolunteerFragment : Fragment() {
-    internal lateinit var view: View
-    private lateinit var holeTime: TextView
-    private lateinit var recyclerView: RecyclerView
+    private var holeTime: TextView? = null
+    private var mAdapter: VolunteerRecyclerAdapter? = null
 
-    private lateinit var allHour: String
-    private lateinit var yearList: MutableList<String>
-    private lateinit var recordBeanList: MutableList<MutableList<VolunteerTime.RecordBean>>
+    private var allHour: String = "0"
+    private var yearList: MutableList<String> = mutableListOf()
+    private var recordBeanList: MutableList<MutableList<VolunteerTime.RecordBean>> = mutableListOf()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        view = inflater.inflate(R.layout.fragment_volunteer_time, container, false)
-        holeTime = view.findViewById<View>(R.id.volunteer_time_number) as TextView
-        recyclerView = view.findViewById<View>(R.id.volunteer_time_recycler) as RecyclerView
-        initData()
-        return view
+        super.onCreateView(inflater, container, savedInstanceState)
+        return inflater.inflate(R.layout.fragment_volunteer_time, container, false).apply {
+            holeTime = volunteer_time_number
+            volunteer_time_number.text = allHour
+
+            mAdapter = VolunteerRecyclerAdapter(null, context!!, yearList, recordBeanList)
+            volunteer_time_recycler.apply {
+                isNestedScrollingEnabled = false
+                adapter = mAdapter
+                layoutManager = LinearLayoutManager(context)
+            }
+        }
     }
 
-    private fun initData() {
-        holeTime.text = allHour
-
-        val adapter = VolunteerRecyclerAdapter(null, context!!, yearList, recordBeanList)
-        recyclerView.isNestedScrollingEnabled = false
-        recyclerView.adapter = adapter
-        recyclerView.layoutManager = LinearLayoutManager(context)
-    }
-
-    fun setRecordBeanList(recordBeanList: MutableList<MutableList<VolunteerTime.RecordBean>>) {
-        this.recordBeanList = recordBeanList
-    }
-
-
-    fun setAllHour(allHour: String) {
+    fun updateData(allHour: String, yearList: MutableList<String>, recordBeanList: MutableList<MutableList<VolunteerTime.RecordBean>>) {
         this.allHour = allHour
-    }
-
-
-    fun setYearList(yearList: MutableList<String>) {
         this.yearList = yearList
+        this.recordBeanList = recordBeanList
+
+        holeTime?.text = allHour
+        mAdapter?.updaeList(yearList, recordBeanList)
     }
+
 }
