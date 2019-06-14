@@ -14,7 +14,7 @@ android {
         applicationId "com.mredrock.cyxbs"
         minSdkVersion build_versions.min_sdk
         targetSdkVersion build_versions.target_sdk
-        versionCode 50
+        versionCode 51
         versionName "5.0.0"
         multiDexEnabled true
         manifestPlaceholders = [UMENG_CHANNEL_VALUE: "official"]
