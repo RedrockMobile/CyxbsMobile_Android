@@ -68,7 +68,7 @@ public class MyImageView extends AppCompatImageView {
     @Override
     public void draw(Canvas canvas) {
 
-        Bitmap bitmap = Bitmap.createBitmap(getWidth()+1, getHeight(), Bitmap.Config.ARGB_8888);
+        Bitmap bitmap = Bitmap.createBitmap(getWidth() + 1, getHeight() + 1, Bitmap.Config.ARGB_8888);
         Canvas canvas2 = new Canvas(bitmap);
         super.draw(canvas2);
         drawLiftUp(canvas2);
