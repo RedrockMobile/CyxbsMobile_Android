@@ -50,6 +50,7 @@ public class MyImageView extends AppCompatImageView {
             TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.MyImageView);
             roundWidth = a.getDimensionPixelSize(R.styleable.MyImageView_roundWidth, roundWidth);
             roundHeight = a.getDimensionPixelSize(R.styleable.MyImageView_roundHeight, roundHeight);
+            a.recycle();
         } else {
             float density = context.getResources().getDisplayMetrics().density;
             roundWidth = (int) (roundWidth * density);
@@ -65,18 +66,22 @@ public class MyImageView extends AppCompatImageView {
         paint2.setXfermode(null);
     }
 
+
     @Override
     public void draw(Canvas canvas) {
-
-        Bitmap bitmap = Bitmap.createBitmap(getWidth() + 1, getHeight() + 1, Bitmap.Config.ARGB_8888);
-        Canvas canvas2 = new Canvas(bitmap);
-        super.draw(canvas2);
-        drawLiftUp(canvas2);
-        drawLiftDown(canvas2);
-        drawRightUp(canvas2);
-        drawRightDown(canvas2);
-        canvas.drawBitmap(bitmap, 0, 0, paint2);
-        bitmap.recycle();
+        if (getWidth() <= 0 || getHeight() <= 0) {
+            requestLayout();
+        } else {
+            Bitmap bitmap = Bitmap.createBitmap(getWidth(), getHeight(), Bitmap.Config.ARGB_8888);
+            Canvas canvas2 = new Canvas(bitmap);
+            super.draw(canvas2);
+            drawLiftUp(canvas2);
+            drawLiftDown(canvas2);
+            drawRightUp(canvas2);
+            drawRightDown(canvas2);
+            canvas.drawBitmap(bitmap, 0, 0, paint2);
+            bitmap.recycle();
+        }
     }
 
     private void drawLiftUp(Canvas canvas) {
