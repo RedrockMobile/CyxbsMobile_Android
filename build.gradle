@@ -82,7 +82,7 @@ android {
             }
 
             ndk {
-                abiFilters 'armeabi', 'armeabi-v7a'
+                abiFilters 'armeabi-v7a'
             }
         }
     }
