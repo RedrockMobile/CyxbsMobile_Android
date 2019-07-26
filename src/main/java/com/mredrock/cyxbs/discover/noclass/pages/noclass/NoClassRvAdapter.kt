@@ -1,7 +1,7 @@
 package com.mredrock.cyxbs.discover.noclass.pages.noclass
 
 import android.content.Context
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.text.Editable
 import android.view.LayoutInflater
 import android.view.View
@@ -16,7 +16,7 @@ import kotlinx.android.synthetic.main.discover_noclass_item_stu.view.*
  *   2018/9/10.
  *   enjoy it !!
  */
-class NoClassRvAdapter(private val mStuList: MutableList<Student>, private val mContext: Context) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class NoClassRvAdapter(private val mStuList: MutableList<Student>, private val mContext: Context) : androidx.recyclerview.widget.RecyclerView.Adapter<androidx.recyclerview.widget.RecyclerView.ViewHolder>() {
 
     private val TYPE_ADD = 0
     private val TYPE_STU = 1
@@ -29,7 +29,7 @@ class NoClassRvAdapter(private val mStuList: MutableList<Student>, private val m
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): androidx.recyclerview.widget.RecyclerView.ViewHolder {
 
         return when (viewType) {
             TYPE_STU -> {
@@ -43,7 +43,7 @@ class NoClassRvAdapter(private val mStuList: MutableList<Student>, private val m
         }
     }
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: androidx.recyclerview.widget.RecyclerView.ViewHolder, position: Int) {
         when (getItemViewType(position)) {
             TYPE_STU -> {
                 holder.itemView.no_course_name.text = mStuList[position].name
@@ -57,7 +57,7 @@ class NoClassRvAdapter(private val mStuList: MutableList<Student>, private val m
 
     override fun getItemCount() = mStuList.size + 1
 
-    private fun removeStu(holder: RecyclerView.ViewHolder) {
+    private fun removeStu(holder: androidx.recyclerview.widget.RecyclerView.ViewHolder) {
         holder.itemView.no_course_delete.setOnClickListener(null)
         mStuList.removeAt(holder.adapterPosition)
         notifyItemRemoved(holder.adapterPosition)
@@ -95,9 +95,9 @@ class NoClassRvAdapter(private val mStuList: MutableList<Student>, private val m
 
     fun getStuList(): List<Student> = mStuList
 
-    class ItemStuHolder(itemView: View?) : RecyclerView.ViewHolder(itemView)
+    class ItemStuHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
 
-    class ItemAddHolder(itemView: View?) : RecyclerView.ViewHolder(itemView)
+    class ItemAddHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
 
 
 }

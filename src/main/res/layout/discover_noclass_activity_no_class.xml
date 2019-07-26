@@ -13,14 +13,14 @@
 
     <include layout="@layout/common_toolbar"/>
 
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/noclass_rv"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="47"
         android:layout_marginTop="10dp">
 
-    </android.support.v7.widget.RecyclerView>
+    </androidx.recyclerview.widget.RecyclerView>
 
     <Button
         android:id="@+id/noclass_btn_query"

@@ -1,10 +1,10 @@
 package com.mredrock.cyxbs.discover.noclass.pages.noclass
 
 import android.app.Activity
-import android.arch.lifecycle.Observer
+import androidx.lifecycle.Observer
 import android.content.Intent
 import android.os.Bundle
-import android.support.v7.widget.GridLayoutManager
+import androidx.recyclerview.widget.GridLayoutManager
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
 import com.mredrock.cyxbs.common.BaseApp
@@ -94,7 +94,7 @@ class NoClassActivity : BaseViewModelActivity<NoClassViewModel>() {
             mStuList!!.add(stu)
         }
         mAdapter = NoClassRvAdapter(mStuList!!, this)
-        noclass_rv.layoutManager = GridLayoutManager(this, 4)
+        noclass_rv.layoutManager = androidx.recyclerview.widget.GridLayoutManager(this, 4)
         noclass_rv.adapter = mAdapter
     }
 

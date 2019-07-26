@@ -1,7 +1,7 @@
 package com.mredrock.cyxbs.discover.noclass.pages.stuselect
 
 import android.os.Bundle
-import android.support.v7.widget.LinearLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.mredrock.cyxbs.common.ui.BaseActivity
 import com.mredrock.cyxbs.discover.noclass.R
 import com.mredrock.cyxbs.discover.noclass.network.Student
@@ -20,7 +20,7 @@ class NoClassStuSelectActivity : BaseActivity() {
 
     private fun setList() {
         val mList = intent.getSerializableExtra("stu_list") as List<Student>
-        noclass_rv_stu_select.layoutManager = LinearLayoutManager(this)
+        noclass_rv_stu_select.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(this)
         noclass_rv_stu_select.adapter = NoClassStuSelectRvAdapter(mList)
     }
 
