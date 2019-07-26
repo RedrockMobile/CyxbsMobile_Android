@@ -12,7 +12,7 @@ import android.net.ConnectivityManager
 import android.os.AsyncTask
 import android.os.Build
 import android.os.IBinder
-import android.support.v4.app.NotificationCompat
+import androidx.core.app.NotificationCompat
 import com.mredrock.cyxbs.common.R
 import com.mredrock.cyxbs.common.utils.extensions.uri
 

@@ -1,7 +1,7 @@
 package com.mredrock.cyxbs.common.ui
 
 import android.os.Bundle
-import android.support.v4.app.Fragment
+import androidx.fragment.app.Fragment
 import android.view.View
 import com.mredrock.cyxbs.common.event.LoginStateChangeEvent
 import com.mredrock.cyxbs.common.utils.LogUtils
@@ -13,7 +13,7 @@ import org.greenrobot.eventbus.ThreadMode
 /**
  * Created By jay68 on 2018/8/9.
  */
-open class BaseFragment : Fragment() {
+open class BaseFragment : androidx.fragment.app.Fragment() {
     //是否打开友盟统计，当此Fragment只是其他fragment容器时，应当考虑关闭统计
     protected open val openStatistics = true
 

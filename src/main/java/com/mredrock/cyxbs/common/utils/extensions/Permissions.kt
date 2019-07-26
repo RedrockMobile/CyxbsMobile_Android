@@ -1,8 +1,8 @@
 package com.mredrock.cyxbs.common.utils.extensions
 
 import android.content.Context
-import android.support.v4.app.Fragment
-import android.support.v7.app.AppCompatActivity
+import androidx.fragment.app.Fragment
+import androidx.appcompat.app.AppCompatActivity
 import com.tbruyelle.rxpermissions2.RxPermissions
 import org.jetbrains.anko.alert
 import org.jetbrains.anko.yesButton
@@ -79,10 +79,10 @@ fun AppCompatActivity.doPermissionAction(vararg permissionsRequired: String,
     performRequestPermission(this, RxPermissions(this), *permissionsRequired, actionBuilder = actionBuilder)
 }
 
-fun Fragment.doPermissionAction(vararg permissionsRequired: String,
-                                actionBuilder: PermissionActionBuilder.() -> Unit) {
+fun androidx.fragment.app.Fragment.doPermissionAction(vararg permissionsRequired: String,
+                                                      actionBuilder: PermissionActionBuilder.() -> Unit) {
     performRequestPermission(activity!!, RxPermissions(this), *permissionsRequired, actionBuilder = actionBuilder)
 }
 
 fun AppCompatActivity.isPermissionGranted(permissions: String) = RxPermissions(this).isGranted(permissions)
-fun Fragment.isPermissionGranted(permissions: String) = RxPermissions(this).isGranted(permissions)
+fun androidx.fragment.app.Fragment.isPermissionGranted(permissions: String) = RxPermissions(this).isGranted(permissions)

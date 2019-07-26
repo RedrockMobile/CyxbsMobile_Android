@@ -2,7 +2,7 @@ package com.mredrock.cyxbs.common
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.support.multidex.MultiDexApplication
+import androidx.multidex.MultiDexApplication
 import com.alibaba.android.arouter.launcher.ARouter
 import com.google.gson.Gson
 import com.mredrock.cyxbs.common.bean.User
