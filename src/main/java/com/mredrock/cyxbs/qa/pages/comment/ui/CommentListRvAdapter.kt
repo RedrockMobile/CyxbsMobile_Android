@@ -1,6 +1,6 @@
 package com.mredrock.cyxbs.qa.pages.comment.ui
 
-import android.support.v7.util.DiffUtil
+import androidx.recyclerview.widget.DiffUtil
 import android.view.ViewGroup
 import android.widget.TextView
 import com.mredrock.cyxbs.common.utils.extensions.setAvatarImageFromUrl
@@ -20,9 +20,9 @@ class CommentListRvAdapter(private val isEmotion: Boolean) : BaseEndlessRvAdapte
     companion object {
         @JvmStatic
         val DIFF_CALLBACK = object : DiffUtil.ItemCallback<Comment>() {
-            override fun areItemsTheSame(oldItem: Comment?, newItem: Comment?) = oldItem == newItem
+            override fun areItemsTheSame(oldItem: Comment, newItem: Comment) = oldItem == newItem
 
-            override fun areContentsTheSame(oldItem: Comment?, newItem: Comment?) = oldItem == newItem
+            override fun areContentsTheSame(oldItem: Comment, newItem: Comment) = oldItem == newItem
         }
     }
 

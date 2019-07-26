@@ -6,7 +6,7 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
-import android.support.v4.app.FragmentActivity
+import androidx.fragment.app.FragmentActivity
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.KeyEvent
@@ -37,7 +37,7 @@ class AnswerActivity : BaseViewModelActivity<AnswerViewModel>() {
     companion object {
         const val MAX_SELECTABLE_IMAGE_COUNT = 6
 
-        fun activityStart(activity: FragmentActivity, qid: String, requestCode: Int) {
+        fun activityStart(activity: androidx.fragment.app.FragmentActivity, qid: String, requestCode: Int) {
             activity.startActivityForResult<AnswerActivity>(requestCode, "qid" to qid)
         }
     }

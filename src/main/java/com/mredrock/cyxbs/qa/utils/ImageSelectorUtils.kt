@@ -1,7 +1,7 @@
 package com.mredrock.cyxbs.qa.utils
 
 import android.Manifest
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import com.mredrock.cyxbs.common.utils.extensions.doPermissionAction
 import com.mredrock.cyxbs.qa.R
 import org.jetbrains.anko.longToast

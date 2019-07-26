@@ -7,9 +7,9 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
-import android.support.v4.app.Fragment
-import android.support.v4.content.ContextCompat
-import android.support.v7.app.AppCompatActivity
+import androidx.fragment.app.Fragment
+import androidx.core.content.ContextCompat
+import androidx.appcompat.app.AppCompatActivity
 import android.view.View
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
@@ -39,7 +39,7 @@ class ViewImageActivity : AppCompatActivity() {
             context.startActivityForResult<ViewImageActivity>(resultCode, IMG_RES_PATH to imgResPath, NEED_RESULT to true)
         }
 
-        fun activityStartForResult(context: Fragment, imgResPath: String, resultCode: Int = DEFAULT_RESULT_CODE) {
+        fun activityStartForResult(context: androidx.fragment.app.Fragment, imgResPath: String, resultCode: Int = DEFAULT_RESULT_CODE) {
             context.startActivityForResult<ViewImageActivity>(resultCode, IMG_RES_PATH to imgResPath, NEED_RESULT to true)
         }
     }

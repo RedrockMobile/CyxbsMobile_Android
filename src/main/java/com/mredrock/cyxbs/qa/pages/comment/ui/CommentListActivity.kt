@@ -1,10 +1,10 @@
 package com.mredrock.cyxbs.qa.pages.comment.ui
 
 import android.app.Activity
-import android.arch.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
-import android.support.design.widget.BottomSheetDialog
-import android.support.v7.widget.LinearLayoutManager
+import com.google.android.material.bottomsheet.BottomSheetDialog
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.bean.isSuccessful
 import com.mredrock.cyxbs.common.network.ApiGenerator
@@ -109,7 +109,7 @@ class CommentListActivity : BaseViewModelActivity<CommentListViewModel>() {
         footerRvAdapter = FooterRvAdapter { viewModel.retryFailedListRequest() }
         val adapterWrapper = RvAdapterWrapper(commentListRvAdapter, headerAdapter, footerRvAdapter, emptyRvAdapter)
         rv_comment_list.apply {
-            layoutManager = LinearLayoutManager(this@CommentListActivity)
+            layoutManager = androidx.recyclerview.widget.LinearLayoutManager(this@CommentListActivity)
             adapter = adapterWrapper
         }
         swipe_refresh_layout.setOnRefreshListener { viewModel.invalidateCommentList() }

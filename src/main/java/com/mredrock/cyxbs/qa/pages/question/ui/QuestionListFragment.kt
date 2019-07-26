@@ -4,7 +4,7 @@ package com.mredrock.cyxbs.qa.pages.question.ui
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.support.v7.widget.LinearLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -51,7 +51,7 @@ class QuestionListFragment : BaseViewModelFragment<QuestionListViewModel>() {
         observeLoading(questionListRvAdapter, footerRvAdapter, emptyRvAdapter)
         return root.apply {
             rv_question_list.apply {
-                layoutManager = LinearLayoutManager(context)
+                layoutManager = androidx.recyclerview.widget.LinearLayoutManager(context)
                 adapter = adapterWrapper
             }
             swipe_refresh_layout.setOnRefreshListener { viewModel.invalidateQuestionList() }

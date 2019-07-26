@@ -1,8 +1,8 @@
 package com.mredrock.cyxbs.qa.pages.answer.viewmodel
 
-import android.arch.lifecycle.*
-import android.arch.paging.LivePagedListBuilder
-import android.arch.paging.PagedList
+import androidx.lifecycle.*
+import androidx.paging.LivePagedListBuilder
+import androidx.paging.PagedList
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity

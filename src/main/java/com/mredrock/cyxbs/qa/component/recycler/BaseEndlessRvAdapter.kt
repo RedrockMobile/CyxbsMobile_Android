@@ -1,7 +1,7 @@
 package com.mredrock.cyxbs.qa.component.recycler
 
-import android.arch.paging.PagedListAdapter
-import android.support.v7.util.DiffUtil
+import androidx.paging.PagedListAdapter
+import androidx.recyclerview.widget.DiffUtil
 
 /**
  * Created By jay68 on 2018/9/13.

@@ -1,8 +1,8 @@
 package com.mredrock.cyxbs.qa.pages.quiz.ui.dialog
 
 import android.content.Context
-import android.support.design.widget.BottomSheetDialog
-import android.support.v7.widget.AppCompatCheckedTextView
+import com.google.android.material.bottomsheet.BottomSheetDialog
+import androidx.appcompat.widget.AppCompatCheckedTextView
 import com.mredrock.cyxbs.qa.R
 import kotlinx.android.synthetic.main.qa_dialog_quiz_reward_set.*
 import org.jetbrains.anko.forEachChild

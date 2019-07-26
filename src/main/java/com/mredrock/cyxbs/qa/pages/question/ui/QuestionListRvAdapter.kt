@@ -1,7 +1,7 @@
 package com.mredrock.cyxbs.qa.pages.question.ui
 
-import android.support.v4.app.Fragment
-import android.support.v7.util.DiffUtil
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.DiffUtil
 import android.view.ViewGroup
 import android.widget.TextView
 import com.mredrock.cyxbs.common.BaseApp
@@ -24,13 +24,13 @@ import org.greenrobot.eventbus.EventBus
 /**
  * Created By jay68 on 2018/8/26.
  */
-class QuestionListRvAdapter(private val fragment: Fragment) : BaseEndlessRvAdapter<Question>(DIFF_CALLBACK) {
+class QuestionListRvAdapter(private val fragment: androidx.fragment.app.Fragment) : BaseEndlessRvAdapter<Question>(DIFF_CALLBACK) {
     companion object {
         @JvmStatic
         val DIFF_CALLBACK = object : DiffUtil.ItemCallback<Question>() {
-            override fun areItemsTheSame(oldItem: Question?, newItem: Question?) = oldItem?.id == newItem?.id
+            override fun areItemsTheSame(oldItem: Question, newItem: Question) = oldItem?.id == newItem?.id
 
-            override fun areContentsTheSame(oldItem: Question?, newItem: Question?) = oldItem == newItem
+            override fun areContentsTheSame(oldItem: Question, newItem: Question) = oldItem == newItem
         }
     }
 

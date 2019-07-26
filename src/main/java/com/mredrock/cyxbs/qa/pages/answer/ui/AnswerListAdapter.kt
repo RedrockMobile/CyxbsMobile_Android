@@ -1,8 +1,8 @@
 package com.mredrock.cyxbs.qa.pages.answer.ui
 
 import android.content.Context
-import android.support.v7.util.DiffUtil
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.RecyclerView
 import android.view.ViewGroup
 import android.widget.TextView
 import com.mredrock.cyxbs.common.utils.extensions.setAvatarImageFromUrl
@@ -24,9 +24,9 @@ class AnswerListAdapter(context: Context) : BaseRvAdapter<Answer>() {
     companion object {
         @JvmStatic
         val DIFF_CALLBACK = object : DiffUtil.ItemCallback<Answer>() {
-            override fun areItemsTheSame(oldItem: Answer?, newItem: Answer?) = oldItem?.id == newItem?.id
+            override fun areItemsTheSame(oldItem: Answer, newItem: Answer) = oldItem.id == newItem.id
 
-            override fun areContentsTheSame(oldItem: Answer?, newItem: Answer?) = oldItem == newItem
+            override fun areContentsTheSame(oldItem: Answer, newItem: Answer) = oldItem == newItem
         }
     }
 

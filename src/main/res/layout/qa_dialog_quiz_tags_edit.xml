@@ -27,7 +27,7 @@
         android:textSize="14sp"
         tools:ignore="RelativeOverlap" />
 
-    <android.support.v7.widget.AppCompatEditText
+    <androidx.appcompat.widget.AppCompatEditText
         android:id="@+id/edt_quiz_tags"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -61,7 +61,7 @@
         android:textColor="#8c000000"
         android:textSize="14sp" />
 
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_quiz_hot_tags"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

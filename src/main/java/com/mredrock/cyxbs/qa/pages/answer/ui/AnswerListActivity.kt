@@ -2,13 +2,13 @@ package com.mredrock.cyxbs.qa.pages.answer.ui
 
 import android.app.Activity
 import android.app.ProgressDialog
-import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProviders
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v7.widget.LinearLayoutManager
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.Menu
 import android.view.MenuItem
 import com.alibaba.android.arouter.facade.annotation.Route
@@ -54,7 +54,7 @@ class AnswerListActivity : BaseActivity() {
         const val PARAM_QUESTION = "question"
         const val REQUEST_REFRESH_LIST = 0x2
 
-        fun activityStart(fragment: Fragment, question: Question, requestCode: Int) {
+        fun activityStart(fragment: androidx.fragment.app.Fragment, question: Question, requestCode: Int) {
             if (!BaseApp.isLogin) {
                 EventBus.getDefault().post(AskLoginEvent("请先登陆才能使用邮问哦~"))
                 return
@@ -128,7 +128,7 @@ class AnswerListActivity : BaseActivity() {
         emptyRvAdapter = EmptyRvAdapter(getString(R.string.qa_answer_list_no_answer_hint))
         val adapterWrapper = RvAdapterWrapper(answerListAdapter, headerAdapter, footerRvAdapter, emptyRvAdapter)
         rv_answer_list.apply {
-            layoutManager = LinearLayoutManager(this@AnswerListActivity)
+            layoutManager = androidx.recyclerview.widget.LinearLayoutManager(this@AnswerListActivity)
             adapter = adapterWrapper
         }
     }

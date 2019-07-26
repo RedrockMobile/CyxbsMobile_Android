@@ -3,7 +3,7 @@ package com.mredrock.cyxbs.qa.pages.quiz.ui.dialog
 import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
-import android.support.design.widget.BottomSheetDialog
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import android.widget.NumberPicker
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.utils.toFormatString

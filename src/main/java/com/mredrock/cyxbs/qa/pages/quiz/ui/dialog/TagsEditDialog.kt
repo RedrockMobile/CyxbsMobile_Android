@@ -1,7 +1,7 @@
 package com.mredrock.cyxbs.qa.pages.quiz.ui.dialog
 
 import android.content.Context
-import android.support.design.widget.BottomSheetDialog
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.mredrock.cyxbs.qa.R
 import kotlinx.android.synthetic.main.qa_dialog_quiz_tags_edit.*
 import kotlinx.android.synthetic.main.qa_dialog_quiz_tags_edit.view.*

@@ -2,7 +2,7 @@ package com.mredrock.cyxbs.qa.pages.quiz.ui.widget
 
 import android.content.Context
 import android.graphics.Color
-import android.support.v7.widget.AppCompatCheckedTextView
+import androidx.appcompat.widget.AppCompatCheckedTextView
 import android.util.AttributeSet
 import android.view.Gravity
 import com.mredrock.cyxbs.qa.R

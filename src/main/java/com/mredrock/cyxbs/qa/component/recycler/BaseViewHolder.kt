@@ -1,8 +1,8 @@
 package com.mredrock.cyxbs.qa.component.recycler
 
 import android.content.Context
-import android.support.annotation.LayoutRes
-import android.support.v7.widget.RecyclerView
+import androidx.annotation.LayoutRes
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,7 +10,7 @@ import android.view.ViewGroup
 /**
  * Created By jay68 on 2018/8/26.
  */
-abstract class BaseViewHolder<T>(itemView: View) : RecyclerView.ViewHolder(itemView) {
+abstract class BaseViewHolder<T>(itemView: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView) {
     constructor(parent: ViewGroup, @LayoutRes layout: Int) : this(
             LayoutInflater.from(parent.context).inflate(layout, parent, false))
 

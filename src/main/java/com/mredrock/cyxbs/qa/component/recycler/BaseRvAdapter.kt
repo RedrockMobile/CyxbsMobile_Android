@@ -1,11 +1,11 @@
 package com.mredrock.cyxbs.qa.component.recycler
 
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 
 /**
  * Created By jay68 on 2018/8/26.
  */
-abstract class BaseRvAdapter<T> : RecyclerView.Adapter<BaseViewHolder<T>>() {
+abstract class BaseRvAdapter<T> : androidx.recyclerview.widget.RecyclerView.Adapter<BaseViewHolder<T>>() {
     protected val dataList = ArrayList<T>()
 
     override fun getItemCount() = dataList.size

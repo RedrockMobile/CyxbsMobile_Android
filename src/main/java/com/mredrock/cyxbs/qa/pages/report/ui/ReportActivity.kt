@@ -2,7 +2,7 @@ package com.mredrock.cyxbs.qa.pages.report.ui
 
 import android.content.Context
 import android.os.Bundle
-import android.support.v7.widget.AppCompatCheckedTextView
+import androidx.appcompat.widget.AppCompatCheckedTextView
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.pages.report.ReportViewModel

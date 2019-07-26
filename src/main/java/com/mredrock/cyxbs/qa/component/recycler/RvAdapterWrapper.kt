@@ -1,16 +1,16 @@
 package com.mredrock.cyxbs.qa.component.recycler
 
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.ViewGroup
 
 /**
  * Created By jay68 on 2018/8/26.
  */
-class RvAdapterWrapper(normalAdapter: RecyclerView.Adapter<out RecyclerView.ViewHolder>,
-                       headerAdapter: RecyclerView.Adapter<out RecyclerView.ViewHolder>? = null,
-                       footerAdapter: RecyclerView.Adapter<out RecyclerView.ViewHolder>? = null,
-                       emptyAdapter: RecyclerView.Adapter<out RecyclerView.ViewHolder>? = null) :
-        RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class RvAdapterWrapper(normalAdapter: androidx.recyclerview.widget.RecyclerView.Adapter<out androidx.recyclerview.widget.RecyclerView.ViewHolder>,
+                       headerAdapter: androidx.recyclerview.widget.RecyclerView.Adapter<out androidx.recyclerview.widget.RecyclerView.ViewHolder>? = null,
+                       footerAdapter: androidx.recyclerview.widget.RecyclerView.Adapter<out androidx.recyclerview.widget.RecyclerView.ViewHolder>? = null,
+                       emptyAdapter: androidx.recyclerview.widget.RecyclerView.Adapter<out androidx.recyclerview.widget.RecyclerView.ViewHolder>? = null) :
+        androidx.recyclerview.widget.RecyclerView.Adapter<androidx.recyclerview.widget.RecyclerView.ViewHolder>() {
     companion object {
         const val TYPE_HEADER = 0
         const val TYPE_FOOTER = 1
@@ -19,10 +19,10 @@ class RvAdapterWrapper(normalAdapter: RecyclerView.Adapter<out RecyclerView.View
     }
 
     //谁有好的解决方法改改吧……
-    val normalAdapter = normalAdapter as RecyclerView.Adapter<RecyclerView.ViewHolder>
-    val headerAdapter = headerAdapter as? RecyclerView.Adapter<RecyclerView.ViewHolder>
-    val footerAdapter = footerAdapter as? RecyclerView.Adapter<RecyclerView.ViewHolder>
-    val emptyAdapter = emptyAdapter as? RecyclerView.Adapter<RecyclerView.ViewHolder>
+    val normalAdapter = normalAdapter as androidx.recyclerview.widget.RecyclerView.Adapter<androidx.recyclerview.widget.RecyclerView.ViewHolder>
+    val headerAdapter = headerAdapter as? androidx.recyclerview.widget.RecyclerView.Adapter<androidx.recyclerview.widget.RecyclerView.ViewHolder>
+    val footerAdapter = footerAdapter as? androidx.recyclerview.widget.RecyclerView.Adapter<androidx.recyclerview.widget.RecyclerView.ViewHolder>
+    val emptyAdapter = emptyAdapter as? androidx.recyclerview.widget.RecyclerView.Adapter<androidx.recyclerview.widget.RecyclerView.ViewHolder>
 
     init {
         normalAdapter.registerAdapterDataObserver(AdapterDataObserver(TYPE_NORMAL))
@@ -34,7 +34,7 @@ class RvAdapterWrapper(normalAdapter: RecyclerView.Adapter<out RecyclerView.View
     private val normalPositionStart get() = headerAdapter.getItemCountOrDefault()
     private val footerPositionStart get() = normalPositionStart + normalAdapter.itemCount
 
-    private fun RecyclerView.Adapter<out RecyclerView.ViewHolder>?.getItemCountOrDefault(default: Int = 0) = this?.itemCount
+    private fun androidx.recyclerview.widget.RecyclerView.Adapter<out androidx.recyclerview.widget.RecyclerView.ViewHolder>?.getItemCountOrDefault(default: Int = 0) = this?.itemCount
             ?: default
 
     override fun getItemViewType(position: Int) = when {
@@ -51,7 +51,7 @@ class RvAdapterWrapper(normalAdapter: RecyclerView.Adapter<out RecyclerView.View
         else -> footerAdapter!!.onCreateViewHolder(parent, viewType)
     }
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) = when (getItemViewType(position)) {
+    override fun onBindViewHolder(holder: androidx.recyclerview.widget.RecyclerView.ViewHolder, position: Int) = when (getItemViewType(position)) {
         TYPE_HEADER -> headerAdapter!!.onBindViewHolder(holder, position)
         TYPE_NORMAL -> normalAdapter.onBindViewHolder(holder, position - normalPositionStart)
         TYPE_EMPTY -> emptyAdapter!!.onBindViewHolder(holder, position - footerPositionStart)
@@ -68,7 +68,7 @@ class RvAdapterWrapper(normalAdapter: RecyclerView.Adapter<out RecyclerView.View
         return count
     }
 
-    private inner class AdapterDataObserver(val type: Int) : RecyclerView.AdapterDataObserver() {
+    private inner class AdapterDataObserver(val type: Int) : androidx.recyclerview.widget.RecyclerView.AdapterDataObserver() {
         override fun onChanged() = when (type) {
             TYPE_HEADER -> notifyItemRangeChanged(0, normalPositionStart)
             TYPE_NORMAL -> {
