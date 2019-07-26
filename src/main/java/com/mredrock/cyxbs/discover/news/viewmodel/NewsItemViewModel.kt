@@ -1,8 +1,8 @@
 package com.mredrock.cyxbs.discover.news.viewmodel
 
 import android.Manifest.permission.WRITE_EXTERNAL_STORAGE
-import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.MutableLiveData
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.utils.extensions.mapOrThrowApiException
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy

@@ -1,7 +1,7 @@
 package com.mredrock.cyxbs.discover.news.ui.activity
 
 import android.app.AlertDialog
-import android.arch.lifecycle.Observer
+import androidx.lifecycle.Observer
 import android.content.Intent
 import android.media.MediaScannerConnection
 import android.net.Uri

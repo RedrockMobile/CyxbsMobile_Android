@@ -20,7 +20,7 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true">
 
-        <android.support.constraint.ConstraintLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="17dp"
@@ -86,7 +86,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/tv_time"
                 tools:text="会议内容会议章程会议流程大会总结，会议内容会议章程会议流程大会总结会议内容会议章程会议流程大会总结。会议内容会议章程会议流程大会总结会议内容会议章程会议流程大会总结会议内容会议章程会议流程大会总结会议内容会议章程会议流程大会总结会议内容会议章程会议流程大会总结" />
 
-        </android.support.constraint.ConstraintLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 
     <TextView
