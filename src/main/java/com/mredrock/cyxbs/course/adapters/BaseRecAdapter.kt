@@ -1,11 +1,11 @@
 package com.mredrock.cyxbs.course.adapters
 
 import android.content.Context
-import android.databinding.DataBindingComponent
-import android.databinding.DataBindingUtil
-import android.databinding.ViewDataBinding
-import android.support.annotation.LayoutRes
-import android.support.v7.widget.RecyclerView
+import androidx.databinding.DataBindingComponent
+import androidx.databinding.DataBindingUtil
+import androidx.databinding.ViewDataBinding
+import androidx.annotation.LayoutRes
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,7 +18,7 @@ import android.view.ViewGroup
  * Created by anriku on 2018/9/10.
  */
 abstract class BaseRecAdapter(protected val context: Context) :
-        RecyclerView.Adapter<BaseRecAdapter.BaseViewHolder>() {
+        androidx.recyclerview.widget.RecyclerView.Adapter<BaseRecAdapter.BaseViewHolder>() {
 
     protected val inflater: LayoutInflater = LayoutInflater.from(context)
 
@@ -40,5 +40,5 @@ abstract class BaseRecAdapter(protected val context: Context) :
 
     abstract override fun onBindViewHolder(holder: BaseViewHolder, position: Int)
 
-    class BaseViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
+    class BaseViewHolder(itemView: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView)
 }

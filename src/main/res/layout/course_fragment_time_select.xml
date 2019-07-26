@@ -14,7 +14,7 @@
             type="com.mredrock.cyxbs.course.ui.TimeSelectDialogFragment.TimeSelectListeners" />
     </data>
 
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -95,12 +95,12 @@
             app:layout_constraintTop_toBottomOf="@id/tv_empty"
             app:orientation="vertical" />
 
-        <android.support.v7.widget.RecyclerView
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:adapter="@{recAdapter}"
-            app:layoutManager="android.support.v7.widget.GridLayoutManager"
+            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintDimensionRatio="7:6"
             app:layout_constraintLeft_toRightOf="@id/red_rock_tv_course_time"
@@ -109,8 +109,8 @@
             app:spanCount="7">
 
 
-        </android.support.v7.widget.RecyclerView>
+        </androidx.recyclerview.widget.RecyclerView>
 
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>

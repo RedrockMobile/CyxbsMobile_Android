@@ -1,7 +1,7 @@
 package com.mredrock.cyxbs.course.bindingadapter
 
-import android.databinding.BindingAdapter
-import android.support.annotation.ArrayRes
+import androidx.databinding.BindingAdapter
+import androidx.annotation.ArrayRes
 import com.mredrock.cyxbs.course.component.FlexibleNumberPicker
 
 /**

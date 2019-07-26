@@ -2,9 +2,9 @@ package com.mredrock.cyxbs.course.ui
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.support.constraint.ConstraintLayout
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.TextView
@@ -50,8 +50,8 @@ class NoCourseInviteDetailDialogHelper(context: Context) : BaseDialogHelper(cont
         dialog.findViewById<TextView>(R.id.tv_people_count).apply {
             text = "共计${people.size}人"
         }
-        dialog.findViewById<RecyclerView>(R.id.rv_people).apply {
-            layoutManager = LinearLayoutManager(context)
+        dialog.findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.rv_people).apply {
+            layoutManager = androidx.recyclerview.widget.LinearLayoutManager(context)
             adapter = NameListRecAdapter(context, people)
         }
         dialog.findViewById<TextView>(R.id.tv_sure).apply {

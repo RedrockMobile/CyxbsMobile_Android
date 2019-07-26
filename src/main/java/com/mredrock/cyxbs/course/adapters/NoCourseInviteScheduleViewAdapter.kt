@@ -1,8 +1,8 @@
 package com.mredrock.cyxbs.course.adapters
 
 import android.content.Context
-import android.support.v4.content.ContextCompat
-import android.support.v7.widget.CardView
+import androidx.core.content.ContextCompat
+import androidx.cardview.widget.CardView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -102,7 +102,7 @@ class NoCourseInviteScheduleViewAdapter(private val mContext: Context,
     override fun getItemView(row: Int, column: Int, container: ViewGroup): View {
         val view = mLayoutInflater.inflate(R.layout.course_no_course_invite_item, container, false)
         val tvNameList = view.findViewById<TextView>(R.id.tv_name_list)
-        val cv = view.findViewById<CardView>(R.id.cv)
+        val cv = view.findViewById<androidx.cardview.widget.CardView>(R.id.cv)
         val stringBuilder = StringBuilder()
         val nameList = mutableListOf<String>()
 

@@ -1,7 +1,7 @@
 package com.mredrock.cyxbs.course.ui
 
 import android.os.Bundle
-import android.support.v4.app.Fragment
+import androidx.fragment.app.Fragment
 import com.alibaba.android.arouter.facade.annotation.Autowired
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
@@ -39,7 +39,7 @@ class OthersCourseActivity : BaseActivity() {
     }
 
 
-    private fun replaceFragment(fragment: Fragment) {
+    private fun replaceFragment(fragment: androidx.fragment.app.Fragment) {
         val transaction = supportFragmentManager.beginTransaction()
         transaction.replace(R.id.fl, fragment)
         transaction.commit()

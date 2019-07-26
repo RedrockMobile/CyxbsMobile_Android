@@ -1,6 +1,6 @@
 package com.mredrock.cyxbs.course.network
 
-import android.arch.persistence.room.*
+import androidx.room.*
 import android.os.Parcel
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName

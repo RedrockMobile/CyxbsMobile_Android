@@ -15,7 +15,7 @@
 
     </data>
 
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".ui.EditAffairActivity">
@@ -129,7 +129,7 @@
             tools:ignore="Autofill,TextFields" />
 
 
-        <android.support.constraint.Guideline
+        <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guide_line_content_bottom"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -147,7 +147,7 @@
             app:layout_constraintTop_toTopOf="@id/guide_line_content_bottom" />
 
 
-        <android.support.constraint.Guideline
+        <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guide_line_week_top"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -346,7 +346,7 @@
             tools:ignore="ContentDescription" />
 
 
-        <android.support.constraint.Guideline
+        <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guide_line_remind_bottom"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -363,5 +363,5 @@
             app:layout_constraintTop_toTopOf="@id/guide_line_remind_bottom" />
 
 
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

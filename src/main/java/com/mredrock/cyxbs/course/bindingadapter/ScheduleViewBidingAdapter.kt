@@ -1,6 +1,6 @@
 package com.mredrock.cyxbs.course.bindingadapter
 
-import android.databinding.BindingAdapter
+import androidx.databinding.BindingAdapter
 import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.course.adapters.ScheduleViewAdapter
 import com.mredrock.cyxbs.course.component.ScheduleView

@@ -1,6 +1,6 @@
 package com.mredrock.cyxbs.course.database
 
-import android.arch.persistence.room.TypeConverter
+import androidx.room.TypeConverter
 
 /**
  * Created by anriku on 2018/8/17.

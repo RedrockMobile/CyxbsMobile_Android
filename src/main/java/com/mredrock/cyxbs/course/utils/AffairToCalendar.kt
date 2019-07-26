@@ -8,8 +8,8 @@ import android.database.sqlite.SQLiteException
 import android.provider.CalendarContract.Calendars
 import android.provider.CalendarContract.Events
 import android.provider.CalendarContract.Reminders
-import android.support.v4.app.FragmentActivity
-import android.support.v7.app.AppCompatActivity
+import androidx.fragment.app.FragmentActivity
+import androidx.appcompat.app.AppCompatActivity
 import android.widget.Toast
 import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.SchoolCalendar

@@ -1,6 +1,6 @@
 package com.mredrock.cyxbs.course.bindingadapter
 
-import android.databinding.BindingAdapter
+import androidx.databinding.BindingAdapter
 import android.view.View
 import com.mredrock.cyxbs.course.component.RedRockTextView
 

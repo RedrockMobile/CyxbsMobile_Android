@@ -1,7 +1,7 @@
 package com.mredrock.cyxbs.course.network
 
-import android.arch.persistence.room.Entity
-import android.arch.persistence.room.TypeConverters
+import androidx.room.Entity
+import androidx.room.TypeConverters
 import android.os.Parcel
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName

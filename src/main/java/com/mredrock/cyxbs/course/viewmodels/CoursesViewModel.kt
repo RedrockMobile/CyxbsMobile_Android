@@ -1,7 +1,7 @@
 package com.mredrock.cyxbs.course.viewmodels
 
-import android.arch.lifecycle.MutableLiveData
-import android.arch.lifecycle.ViewModel
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import android.content.Context
 import com.google.gson.Gson
 import com.mredrock.cyxbs.common.BaseApp

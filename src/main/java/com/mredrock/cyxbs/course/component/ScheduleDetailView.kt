@@ -1,9 +1,9 @@
 package com.mredrock.cyxbs.course.component
 
 import android.content.Context
-import android.support.annotation.LayoutRes
-import android.support.v4.view.PagerAdapter
-import android.support.v4.view.ViewPager
+import androidx.annotation.LayoutRes
+import androidx.viewpager.widget.PagerAdapter
+import androidx.viewpager.widget.ViewPager
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
@@ -23,10 +23,10 @@ class ScheduleDetailView : FrameLayout {
         private const val TAG = "ScheduleDetailView"
     }
 
-    private lateinit var mViewPager: ViewPager
+    private lateinit var mViewPager: androidx.viewpager.widget.ViewPager
     private lateinit var mLayoutInflater: LayoutInflater
 
-    private lateinit var mViewpagerAdapter: PagerAdapter
+    private lateinit var mViewpagerAdapter: androidx.viewpager.widget.PagerAdapter
     private lateinit var mDotsView: DotsView
     // ScheduleDetailView's size
     private var mScheduleDetailViewWidth = 0
@@ -106,7 +106,7 @@ class ScheduleDetailView : FrameLayout {
      * @param scheduleDetailViewAdapter [ScheduleDetailView] get the data from [Adapter]
      */
     private fun setMultiContent(scheduleDetailViewAdapter: Adapter) {
-        mViewPager = ViewPager(context)
+        mViewPager = androidx.viewpager.widget.ViewPager(context)
         mViewpagerAdapter = ViewPagerAdapter(context, scheduleDetailViewAdapter)
         mViewPager.adapter = mViewpagerAdapter
         val viewPagerParams = FrameLayout.LayoutParams(mViewPagerWidth, mViewPagerHeight)
@@ -132,11 +132,11 @@ class ScheduleDetailView : FrameLayout {
 
     }
 
-    constructor(mContext: Context?) : super(mContext) {
+    constructor(mContext: Context) : super(mContext) {
         initScheduleDetailView()
     }
 
-    constructor(mContext: Context?, attrs: AttributeSet?) : super(mContext, attrs) {
+    constructor(mContext: Context, attrs: AttributeSet?) : super(mContext, attrs) {
         initScheduleDetailView()
     }
 
@@ -159,7 +159,7 @@ class ScheduleDetailView : FrameLayout {
      * @param mScheduleDetailViewAdapter [Adapter] which gets the data [ScheduleDetailView] needs.
      */
     class ViewPagerAdapter(private val mContext: Context,
-                           private val mScheduleDetailViewAdapter: Adapter) : PagerAdapter() {
+                           private val mScheduleDetailViewAdapter: Adapter) : androidx.viewpager.widget.PagerAdapter() {
 
 
         private val mLayoutInflater: LayoutInflater = LayoutInflater.from(mContext)
@@ -197,7 +197,7 @@ class ScheduleDetailView : FrameLayout {
     }
 
 
-    abstract class ScheduleDetailOnPageChangeListener : ViewPager.OnPageChangeListener {
+    abstract class ScheduleDetailOnPageChangeListener : androidx.viewpager.widget.ViewPager.OnPageChangeListener {
         override fun onPageScrollStateChanged(state: Int) {
         }
 

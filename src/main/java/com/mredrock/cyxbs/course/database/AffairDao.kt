@@ -1,6 +1,6 @@
 package com.mredrock.cyxbs.course.database
 
-import android.arch.persistence.room.*
+import androidx.room.*
 import com.mredrock.cyxbs.course.network.Affair
 import io.reactivex.Flowable
 

@@ -2,12 +2,12 @@ package com.mredrock.cyxbs.course.ui
 
 import android.annotation.SuppressLint
 import android.app.Dialog
-import android.arch.lifecycle.ViewModelProviders
-import android.databinding.DataBindingUtil
+import androidx.lifecycle.ViewModelProviders
+import androidx.databinding.DataBindingUtil
 import android.os.Bundle
-import android.support.design.widget.BottomSheetDialog
-import android.support.v4.content.ContextCompat
-import android.support.v7.app.AppCompatDialogFragment
+import com.google.android.material.bottomsheet.BottomSheetDialog
+import androidx.core.content.ContextCompat
+import androidx.appcompat.app.AppCompatDialogFragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,7 +16,7 @@ import android.widget.TextView
 import com.mredrock.cyxbs.course.R
 import com.mredrock.cyxbs.course.adapters.TimeSelectRecAdapter
 import com.mredrock.cyxbs.course.viewmodels.EditAffairViewModel
-import android.support.v7.widget.DividerItemDecoration
+import androidx.recyclerview.widget.DividerItemDecoration
 import com.mredrock.cyxbs.course.databinding.CourseFragmentTimeSelectBinding
 
 
@@ -48,10 +48,10 @@ class TimeSelectDialogFragment : AppCompatDialogFragment() {
         })
 
         ContextCompat.getDrawable(activity!!, R.drawable.course_time_select_divider)?.let {
-            mBinding.rv.addItemDecoration(DividerItemDecoration(activity, DividerItemDecoration.VERTICAL).apply {
+            mBinding.rv.addItemDecoration(androidx.recyclerview.widget.DividerItemDecoration(activity, androidx.recyclerview.widget.DividerItemDecoration.VERTICAL).apply {
                 setDrawable(it)
             })
-            mBinding.rv.addItemDecoration(DividerItemDecoration(activity, DividerItemDecoration.HORIZONTAL).apply {
+            mBinding.rv.addItemDecoration(androidx.recyclerview.widget.DividerItemDecoration(activity, androidx.recyclerview.widget.DividerItemDecoration.HORIZONTAL).apply {
                 setDrawable(it)
             })
         }

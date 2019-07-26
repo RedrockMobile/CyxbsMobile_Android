@@ -1,11 +1,11 @@
 package com.mredrock.cyxbs.course.ui
 
 import android.app.Dialog
-import android.arch.lifecycle.ViewModelProviders
-import android.databinding.DataBindingUtil
+import androidx.lifecycle.ViewModelProviders
+import androidx.databinding.DataBindingUtil
 import android.os.Bundle
-import android.support.design.widget.BottomSheetDialog
-import android.support.v7.app.AppCompatDialogFragment
+import com.google.android.material.bottomsheet.BottomSheetDialog
+import androidx.appcompat.app.AppCompatDialogFragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup

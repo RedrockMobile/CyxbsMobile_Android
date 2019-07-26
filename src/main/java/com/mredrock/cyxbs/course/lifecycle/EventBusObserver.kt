@@ -1,11 +1,11 @@
 package com.mredrock.cyxbs.course.lifecycle
 
-import android.arch.lifecycle.Lifecycle
-import android.arch.lifecycle.LifecycleObserver
-import android.arch.lifecycle.LifecycleOwner
-import android.arch.lifecycle.OnLifecycleEvent
-import android.support.v4.app.ActivityCompat
-import android.support.v4.app.Fragment
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleObserver
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.OnLifecycleEvent
+import androidx.core.app.ActivityCompat
+import androidx.fragment.app.Fragment
 import com.mredrock.cyxbs.common.utils.LogUtils
 import org.greenrobot.eventbus.EventBus
 

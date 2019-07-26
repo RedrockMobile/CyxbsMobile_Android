@@ -14,7 +14,7 @@
             type="com.mredrock.cyxbs.course.ui.RemindSelectDialogFragment.RemindSelectListeners" />
     </data>
 
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -74,5 +74,5 @@
 
         </com.mredrock.cyxbs.course.component.FlexibleNumberPicker>
 
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

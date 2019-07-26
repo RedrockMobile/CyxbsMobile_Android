@@ -1,7 +1,7 @@
 package com.mredrock.cyxbs.course.ui
 
-import android.arch.lifecycle.ViewModelProviders
-import android.databinding.DataBindingUtil
+import androidx.lifecycle.ViewModelProviders
+import androidx.databinding.DataBindingUtil
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.Menu

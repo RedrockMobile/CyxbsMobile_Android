@@ -4,6 +4,6 @@ dependencies {
     implementation project(':lib_common')
     kapt deps.arouter.compiler
     kapt deps.room.compiler
-    kapt deps.databinding.compiler
+//    kapt deps.databinding.compiler
     testImplementation 'junit:junit:4.12'
 }
