@@ -1,7 +1,7 @@
 package com.mredrock.cyxbs.discover.emptyroom.ui.widget
 
 import android.content.Context
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.FrameLayout
@@ -140,8 +140,8 @@ class MultiSelector : FrameLayout {
         mInitializer = initializer
         rv.layoutManager = mInitializer?.getLayoutManager()
         rv.adapter = mInitializer?.getAdapter()
-        if (mInitializer?.getItemDecoration() != null) {
-            rv.addItemDecoration(mInitializer?.getItemDecoration())
+        if (initializer.getItemDecoration() != null) {
+            rv.addItemDecoration(initializer.getItemDecoration()!!)
         }
         if (selectedSize() > 0) {
             scrollToPosition(mSelectedNumbers.toTypedArray()[0])
@@ -221,7 +221,7 @@ class MultiSelector : FrameLayout {
         return mMaxSelectedNum == mMinSelectedNum && mMaxSelectedNum == 1
     }
 
-    abstract class Adapter<T, VH : RecyclerView.ViewHolder>(protected val mSelector: MultiSelector) : RecyclerView.Adapter<VH>() {
+    abstract class Adapter<T, VH : androidx.recyclerview.widget.RecyclerView.ViewHolder>(protected val mSelector: MultiSelector) : androidx.recyclerview.widget.RecyclerView.Adapter<VH>() {
 
         protected abstract fun bindView(holder: VH, displayValue: T, selected: Boolean, position: Int)
 
@@ -257,8 +257,8 @@ class MultiSelector : FrameLayout {
 }
 
 interface OnItemSelectedChangeListener {
-    fun onItemClickListener(selector: MultiSelector, viewHolder: RecyclerView.ViewHolder, position: Int)
+    fun onItemClickListener(selector: MultiSelector, viewHolder: androidx.recyclerview.widget.RecyclerView.ViewHolder, position: Int)
 
-    fun onItemSelectedChange(selector: MultiSelector, viewHolder: RecyclerView.ViewHolder,
+    fun onItemSelectedChange(selector: MultiSelector, viewHolder: androidx.recyclerview.widget.RecyclerView.ViewHolder,
                              value: Int, checked: Boolean, position: Int)
 }

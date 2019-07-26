@@ -1,7 +1,7 @@
 package com.mredrock.cyxbs.discover.emptyroom.ui.adapter
 
 import android.content.Context
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,7 +13,7 @@ import kotlinx.android.synthetic.main.emptyroom_recycle_item_room_result.view.*
  * Created by Cynthia on 2018/9/19
  */
 class EmptyRoomResultAdapter(var data: MutableList<EmptyRoom>, private val context: Context) :
-        RecyclerView.Adapter<EmptyRoomResultAdapter.ViewHolder>() {
+        androidx.recyclerview.widget.RecyclerView.Adapter<EmptyRoomResultAdapter.ViewHolder>() {
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.itemView.tv_building.text = data[position].floor
@@ -34,6 +34,6 @@ class EmptyRoomResultAdapter(var data: MutableList<EmptyRoom>, private val conte
         }
     }
 
-    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
+    inner class ViewHolder(itemView: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView)
 
 }

@@ -4,12 +4,12 @@ import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
-import android.arch.lifecycle.Observer
+import androidx.lifecycle.Observer
 import android.graphics.Color
 import android.os.Bundle
-import android.support.v4.content.ContextCompat
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
+import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import android.view.MotionEvent
 import android.view.MotionEvent.ACTION_DOWN
 import android.view.MotionEvent.ACTION_MOVE
@@ -193,8 +193,8 @@ class EmptyRoomActivity : BaseViewModelActivity<EmptyRoomViewModel>(), OnItemSel
     }
 
     private fun initRv() {
-        rv_result.layoutManager = LinearLayoutManager(this@EmptyRoomActivity)
-                .apply { orientation = LinearLayoutManager.VERTICAL }
+        rv_result.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(this@EmptyRoomActivity)
+                .apply { orientation = androidx.recyclerview.widget.LinearLayoutManager.VERTICAL }
     }
 
     private fun query() {
@@ -252,9 +252,9 @@ class EmptyRoomActivity : BaseViewModelActivity<EmptyRoomViewModel>(), OnItemSel
         return super.dispatchTouchEvent(ev)
     }
 
-    override fun onItemClickListener(selector: MultiSelector, viewHolder: RecyclerView.ViewHolder, position: Int) = Unit
+    override fun onItemClickListener(selector: MultiSelector, viewHolder: androidx.recyclerview.widget.RecyclerView.ViewHolder, position: Int) = Unit
 
-    override fun onItemSelectedChange(selector: MultiSelector, viewHolder: RecyclerView.ViewHolder, value: Int, checked: Boolean, position: Int) {
+    override fun onItemSelectedChange(selector: MultiSelector, viewHolder: androidx.recyclerview.widget.RecyclerView.ViewHolder, value: Int, checked: Boolean, position: Int) {
         if (multi_selector_section.selectedSize() == 0) {
             viewModel.status.value = DEFAULT
         }

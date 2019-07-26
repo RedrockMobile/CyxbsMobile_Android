@@ -1,8 +1,8 @@
 package com.mredrock.cyxbs.discover.emptyroom.ui.adapter
 
-import android.support.annotation.IdRes
-import android.support.annotation.LayoutRes
-import android.support.v7.widget.RecyclerView
+import androidx.annotation.IdRes
+import androidx.annotation.LayoutRes
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -25,7 +25,7 @@ class StringAdapter(selector: MultiSelector, layoutWrapper: LayoutWrapper) : Mul
         return TextViewViewHolder(itemView, mLayoutWrapper.textViewId)
     }
 
-    inner class TextViewViewHolder constructor(itemView: View, textViewId: Int) : RecyclerView.ViewHolder(itemView) {
+    inner class TextViewViewHolder constructor(itemView: View, textViewId: Int) : androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView) {
         val mTextView: TextView = itemView.findViewById<View>(textViewId) as TextView
     }
 
