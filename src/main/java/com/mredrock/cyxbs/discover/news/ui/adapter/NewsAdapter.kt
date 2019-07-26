@@ -1,6 +1,6 @@
 package com.mredrock.cyxbs.discover.news.ui.adapter
 
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,7 +21,7 @@ import org.jetbrains.anko.startActivity
 const val NORMAL_TYPE = 0x1
 const val FOOT_TYPE = 0x2
 
-class NewsAdapter(private val loadMore: () -> Unit) : RecyclerView.Adapter<NewsAdapter.ViewHolder>() {
+class NewsAdapter(private val loadMore: () -> Unit) : androidx.recyclerview.widget.RecyclerView.Adapter<NewsAdapter.ViewHolder>() {
 
     private val newsList: MutableList<NewsListItem> = mutableListOf()
 
@@ -57,7 +57,7 @@ class NewsAdapter(private val loadMore: () -> Unit) : RecyclerView.Adapter<NewsA
             }
     )
 
-    open inner class ViewHolder(v: View) : RecyclerView.ViewHolder(v) {
+    open inner class ViewHolder(v: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(v) {
         fun initView(news: NewsListItem?) {
             itemView.init(news)
         }
