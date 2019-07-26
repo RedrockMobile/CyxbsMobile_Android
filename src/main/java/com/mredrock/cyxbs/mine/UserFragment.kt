@@ -1,7 +1,7 @@
 package com.mredrock.cyxbs.mine
 
 
-import android.arch.lifecycle.Observer
+import androidx.lifecycle.Observer
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View

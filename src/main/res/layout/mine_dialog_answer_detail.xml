@@ -14,7 +14,7 @@
         android:layout_marginTop="15dp"
         android:orientation="horizontal">
 
-        <android.support.v7.widget.AppCompatEditText
+        <androidx.appcompat.widget.AppCompatEditText
             android:id="@+id/mine_dialog_answer_detail_comment"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

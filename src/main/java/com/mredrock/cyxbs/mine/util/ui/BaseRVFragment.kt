@@ -2,10 +2,10 @@ package com.mredrock.cyxbs.mine.util.ui
 
 
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v4.widget.SwipeRefreshLayout
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
+import androidx.fragment.app.Fragment
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,13 +20,13 @@ import kotlinx.android.synthetic.main.mine_fragment_base_rv.*
  * 可参考 {@link com.mredrock.cyxbs.mine.page.ask.AskAdoptedFm}
  * 为了适配更多的页面，没有进行更深的抽象
  */
-abstract class BaseRVFragment<D> : Fragment() {
+abstract class BaseRVFragment<D> : androidx.fragment.app.Fragment() {
 
     abstract fun getItemLayout(): Int
 
-    abstract fun bindFooterHolder(holder: RecyclerView.ViewHolder, position: Int)
+    abstract fun bindFooterHolder(holder: androidx.recyclerview.widget.RecyclerView.ViewHolder, position: Int)
 
-    abstract fun bindDataHolder(holder: RecyclerView.ViewHolder, position: Int, data: D)
+    abstract fun bindDataHolder(holder: androidx.recyclerview.widget.RecyclerView.ViewHolder, position: Int, data: D)
 
     abstract fun onSwipeLayoutRefresh()
 
@@ -43,7 +43,7 @@ abstract class BaseRVFragment<D> : Fragment() {
         baseRVAdapter = RvAdapter()
         setAdapter(baseRVAdapter as RvAdapter)
 
-        mine_fragment_base_rv.layoutManager = LinearLayoutManager(context)
+        mine_fragment_base_rv.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(context)
 
         mine_fragment_base_sf.setOnRefreshListener { onSwipeLayoutRefresh() }
 
@@ -97,11 +97,11 @@ abstract class BaseRVFragment<D> : Fragment() {
         return baseRVAdapter!!
     }
 
-    protected fun getSwipeLayout(): SwipeRefreshLayout {
+    protected fun getSwipeLayout(): androidx.swiperefreshlayout.widget.SwipeRefreshLayout {
         return mine_fragment_base_sf
     }
 
-    protected fun getRecyclerView(): RecyclerView {
+    protected fun getRecyclerView(): androidx.recyclerview.widget.RecyclerView {
         return mine_fragment_base_rv
     }
 
@@ -111,11 +111,11 @@ abstract class BaseRVFragment<D> : Fragment() {
             return this@BaseRVFragment.getItemLayout()
         }
 
-        override fun bindFooterHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        override fun bindFooterHolder(holder: androidx.recyclerview.widget.RecyclerView.ViewHolder, position: Int) {
             this@BaseRVFragment.bindFooterHolder(holder, position)
         }
 
-        override fun bindDataHolder(holder: RecyclerView.ViewHolder, position: Int, data: D) {
+        override fun bindDataHolder(holder: androidx.recyclerview.widget.RecyclerView.ViewHolder, position: Int, data: D) {
             this@BaseRVFragment.bindDataHolder(holder, position, data)
         }
     }

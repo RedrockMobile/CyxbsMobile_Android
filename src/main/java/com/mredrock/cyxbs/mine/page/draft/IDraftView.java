@@ -1,6 +1,6 @@
 package com.mredrock.cyxbs.mine.page.draft;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.mredrock.cyxbs.mine.network.model.Draft;
 

@@ -1,10 +1,10 @@
 package com.mredrock.cyxbs.mine.page.help
 
 import android.annotation.SuppressLint
-import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProviders
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.View
 import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.mine.R
@@ -75,13 +75,13 @@ class HelpAdoptFm : BaseRVFragment<MyHelpQuestion>() {
     }
 
     //自动加载更多
-    override fun bindFooterHolder(holder: RecyclerView.ViewHolder, position: Int) {
+    override fun bindFooterHolder(holder: androidx.recyclerview.widget.RecyclerView.ViewHolder, position: Int) {
         getFooter().showLoading()
         loadMore()
     }
 
     @SuppressLint("SetTextI18n")
-    override fun bindDataHolder(holder: RecyclerView.ViewHolder, position: Int, data: MyHelpQuestion) {
+    override fun bindDataHolder(holder: androidx.recyclerview.widget.RecyclerView.ViewHolder, position: Int, data: MyHelpQuestion) {
         //隐藏小红点
         holder.itemView.mine_help_item_red_point.visibility = View.INVISIBLE
 

@@ -1,9 +1,9 @@
 package com.mredrock.cyxbs.mine.page.sign
 
 import android.annotation.SuppressLint
-import android.arch.lifecycle.Observer
+import androidx.lifecycle.Observer
 import android.os.Bundle
-import android.support.v4.content.ContextCompat
+import androidx.core.content.ContextCompat
 import android.view.*
 import android.widget.ImageView
 import android.widget.PopupWindow

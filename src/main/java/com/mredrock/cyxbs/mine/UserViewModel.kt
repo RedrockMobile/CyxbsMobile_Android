@@ -1,6 +1,6 @@
 package com.mredrock.cyxbs.mine
 
-import android.arch.lifecycle.MutableLiveData
+import androidx.lifecycle.MutableLiveData
 import com.mredrock.cyxbs.common.bean.User
 import com.mredrock.cyxbs.common.utils.extensions.doOnErrorWithDefaultErrorHandler
 import com.mredrock.cyxbs.common.utils.extensions.mapOrThrowApiException

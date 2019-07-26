@@ -1,6 +1,6 @@
 package com.mredrock.cyxbs.mine.page.sign
 
-import android.arch.lifecycle.MutableLiveData
+import androidx.lifecycle.MutableLiveData
 import com.mredrock.cyxbs.common.bean.User
 import com.mredrock.cyxbs.common.utils.extensions.mapOrThrowApiException
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
