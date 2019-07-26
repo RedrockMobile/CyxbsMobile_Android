@@ -5,7 +5,7 @@ import android.appwidget.AppWidgetProvider
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import android.support.annotation.IdRes
+import androidx.annotation.IdRes
 import com.google.gson.Gson
 import com.mredrock.cyxbs.common.bean.WidgetCourse
 import com.mredrock.cyxbs.common.config.SP_WIDGET_NEED_FRESH
