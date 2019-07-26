@@ -4,7 +4,7 @@ dependencies {
     implementation project(':lib_common')
     kapt deps.arouter.compiler
 
-    implementation "android.arch.navigation:navigation-fragment:1.0.0-alpha05"
-    implementation "android.arch.navigation:navigation-ui:1.0.0-alpha05"
+    implementation 'androidx.navigation:navigation-fragment:2.1.0-beta02'
+    implementation 'androidx.navigation:navigation-ui:2.1.0-beta02'
     implementation "cn.aigestudio.wheelpicker:WheelPicker:1.1.2"
 }

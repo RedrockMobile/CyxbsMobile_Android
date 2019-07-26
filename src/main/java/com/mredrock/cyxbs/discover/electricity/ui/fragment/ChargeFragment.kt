@@ -1,6 +1,6 @@
 package com.mredrock.cyxbs.discover.electricity.ui.fragment
 
-import android.arch.lifecycle.Observer
+import androidx.lifecycle.Observer
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View

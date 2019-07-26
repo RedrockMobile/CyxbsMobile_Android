@@ -14,7 +14,7 @@
         android:maxHeight="500dp"
         tools:ignore="ContentDescription" />
 
-    <android.support.v7.widget.AppCompatEditText
+    <androidx.appcompat.widget.AppCompatEditText
         android:id="@+id/et_dormitory_building"
         android:layout_width="match_parent"
         android:layout_height="50dp"
@@ -28,7 +28,7 @@
         android:paddingEnd="20dp"
         android:textColorHint="#333"/>
 
-    <android.support.v7.widget.AppCompatEditText
+    <androidx.appcompat.widget.AppCompatEditText
         android:id="@+id/et_dormitory_room"
         android:layout_width="match_parent"
         android:layout_height="50dp"
@@ -44,7 +44,7 @@
         android:paddingEnd="10dp"
         android:textColorHint="#333" />
 
-    <android.support.v7.widget.AppCompatButton
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btn_dormitory_confirm"
         android:layout_width="match_parent"
         android:layout_height="50dp"

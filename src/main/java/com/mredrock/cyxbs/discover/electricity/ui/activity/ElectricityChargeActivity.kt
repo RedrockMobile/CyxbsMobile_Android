@@ -22,7 +22,7 @@ class ElectricityChargeActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.electricity_activity_charge)
         common_toolbar.init("查电费")
-        navigation.addOnNavigatedListener { _, destination ->
+        navigation.addOnDestinationChangedListener { _, destination, _ ->
             if (destination.id == R.id.electricity_nav_setting_fragment) {
                 common_toolbar.title = "设置寝室"
                 menuI?.isVisible = false

@@ -3,7 +3,7 @@ package com.mredrock.cyxbs.discover.electricity.ui.fragment
 import android.annotation.SuppressLint
 import android.app.Dialog
 import android.os.Bundle
-import android.support.v7.app.AlertDialog
+import androidx.appcompat.app.AlertDialog
 import android.text.InputType
 import android.view.LayoutInflater
 import android.view.View
@@ -134,7 +134,7 @@ class SettingFragment : BaseFragment() {
         view.et_dormitory_room.setText(defaultSharedPreferences.getString(SP_ROOM_KEY, ""))
 
         view.btn_dormitory_confirm.setOnClickListener {
-            if (selectBuildingHeadPosition != -1 && view.et_dormitory_room.text.length == 3) {
+            if (selectBuildingHeadPosition != -1 && view.et_dormitory_room.text?.length == 3) {
                 defaultSharedPreferences.editor {
                     putInt(SP_BUILDING_HEAD_KEY, selectBuildingHeadPosition)
                     putInt(SP_BUILDING_FOOT_KEY, selectBuildingFootPosition)
