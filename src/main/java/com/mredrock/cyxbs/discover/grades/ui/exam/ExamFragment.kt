@@ -1,8 +1,8 @@
 package com.mredrock.cyxbs.discover.grades.ui.exam
 
 import android.os.Bundle
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -29,7 +29,7 @@ class ExamFragment : BaseFragment() {
     private lateinit var reAdapter: ReExamAdapter
     private val user = BaseApp.user
     private val data: MutableList<Exam> = ArrayList()
-    private lateinit var recyclerView: RecyclerView
+    private lateinit var recyclerView: androidx.recyclerview.widget.RecyclerView
 
     private val apiService: ApiService by lazy { ApiGenerator.getApiService(ApiService::class.java) }
 
@@ -63,7 +63,7 @@ class ExamFragment : BaseFragment() {
         parent.tv_grades_noData.text = "暂无考试安排"
         context?.let { context ->
             adapter = ExamAdapter(context, data, intArrayOf(R.layout.grades_item_exam))
-            recyclerView.layoutManager = LinearLayoutManager(getContext())
+            recyclerView.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(getContext())
             recyclerView.adapter = adapter
         }
 
@@ -117,7 +117,7 @@ class ExamFragment : BaseFragment() {
                     context = context,
                     data = data,
                     layoutIds = intArrayOf(R.layout.grades_item_exam))
-            recyclerView.layoutManager = LinearLayoutManager(getContext())
+            recyclerView.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(getContext())
             recyclerView.adapter = reAdapter
 
         }

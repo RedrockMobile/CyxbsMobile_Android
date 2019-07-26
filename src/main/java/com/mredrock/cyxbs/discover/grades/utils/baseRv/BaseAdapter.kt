@@ -2,7 +2,7 @@ package com.mredrock.cyxbs.discover.grades.utils.baseRv
 
 import android.content.Context
 import android.os.Handler
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.ViewGroup
 import android.widget.TextView
 import com.mredrock.cyxbs.common.utils.extensions.gone
@@ -14,7 +14,7 @@ import com.mredrock.cyxbs.common.utils.extensions.gone
  */
 abstract class BaseAdapter<T>(private val mContext: Context,
                               private val mData: MutableList<T>?,
-                              private val mLayoutIds: IntArray) : RecyclerView.Adapter<BaseHolder>() {
+                              private val mLayoutIds: IntArray) : androidx.recyclerview.widget.RecyclerView.Adapter<BaseHolder>() {
     companion object {
         const val NORMAL = 0
         const val FOOTER = 2000

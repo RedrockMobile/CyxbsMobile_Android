@@ -1,8 +1,8 @@
 package com.mredrock.cyxbs.discover.grades.ui.grades
 
 import android.os.Bundle
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -28,7 +28,7 @@ class GradesFragment : BaseFragment() {
     private lateinit var adapter: GradesAdapter
     private val user = BaseApp.user
     private val apiService: ApiService by lazy { ApiGenerator.getApiService(ApiService::class.java) }
-    private lateinit var recyclerView: RecyclerView
+    private lateinit var recyclerView: androidx.recyclerview.widget.RecyclerView
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -49,7 +49,7 @@ class GradesFragment : BaseFragment() {
                     context = context,
                     data = data,
                     layoutIds = intArrayOf(R.layout.grades_item_grade))
-            recyclerView.layoutManager = LinearLayoutManager(getContext())
+            recyclerView.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(getContext())
             recyclerView.adapter = adapter
         }
 

@@ -6,13 +6,13 @@
 
     <include layout="@layout/common_toolbar" />
 
-    <android.support.design.widget.TabLayout
+    <com.google.android.material.tabs.TabLayout
         android:id="@+id/tl_grades"
         android:layout_width="match_parent"
         android:layout_height="?actionBarSize"
         android:background="@color/grades_activity_tl_white">
 
-    </android.support.design.widget.TabLayout>
+    </com.google.android.material.tabs.TabLayout>
 
     <View
         android:layout_width="match_parent"
@@ -20,10 +20,10 @@
         android:layout_gravity="bottom"
         android:background="@color/grades_activity_back_grey" />
 
-    <android.support.v4.view.ViewPager
+    <androidx.viewpager.widget.ViewPager
         android:id="@+id/vp_grades"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-    </android.support.v4.view.ViewPager>
+    </androidx.viewpager.widget.ViewPager>
 </LinearLayout>

@@ -1,7 +1,7 @@
 package com.mredrock.cyxbs.discover.grades.utils.baseRv
 
 import android.content.Context
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,7 +11,7 @@ import android.view.ViewGroup
  *
  * @CreateAt:2018/9/16
  */
-class BaseHolder(itemView: View?) : RecyclerView.ViewHolder(itemView) {
+class BaseHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     companion object {
         fun getHolder(context: Context,
                       parent: ViewGroup,
