@@ -1,12 +1,12 @@
 package com.mredrock.cyxbs.volunteer.adapter
 
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentManager
-import 	android.support.v4.app.FragmentStatePagerAdapter
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import    androidx.fragment.app.FragmentStatePagerAdapter
 
 
-class VolunteerFragmentAdapter(fm: FragmentManager, fragmentList: MutableList<Fragment>, yearList: MutableList<String>) : FragmentStatePagerAdapter(fm) {
-    private val fragmentList: MutableList<Fragment> = fragmentList
+class VolunteerFragmentAdapter(fm: androidx.fragment.app.FragmentManager, fragmentList: MutableList<androidx.fragment.app.Fragment>, yearList: MutableList<String>) : androidx.fragment.app.FragmentStatePagerAdapter(fm) {
+    private val fragmentList: MutableList<androidx.fragment.app.Fragment> = fragmentList
     private val yearList: MutableList<String> = yearList
 
     override fun getPageTitle(position: Int): CharSequence? {
@@ -17,7 +17,7 @@ class VolunteerFragmentAdapter(fm: FragmentManager, fragmentList: MutableList<Fr
         return fragmentList.size
     }
 
-    override fun getItem(position: Int): Fragment {
+    override fun getItem(position: Int): androidx.fragment.app.Fragment {
         return fragmentList[position]
     }
 }

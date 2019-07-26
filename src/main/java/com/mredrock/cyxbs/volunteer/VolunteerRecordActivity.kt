@@ -5,9 +5,9 @@ import android.graphics.drawable.AnimationDrawable
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.support.design.widget.TabLayout
-import android.support.v4.app.Fragment
-import android.support.v4.view.ViewPager
+import com.google.android.material.tabs.TabLayout
+import androidx.fragment.app.Fragment
+import androidx.viewpager.widget.ViewPager
 import android.view.View
 import android.widget.Toast
 import com.afollestad.materialdialogs.MaterialDialog
@@ -29,7 +29,7 @@ import kotlinx.android.synthetic.main.activity_volunteer_record.*
 import java.util.*
 import kotlin.collections.ArrayList
 
-class VolunteerRecordActivity : BaseActivity(), TabLayout.OnTabSelectedListener, ViewPager.OnPageChangeListener {
+class VolunteerRecordActivity : BaseActivity(), TabLayout.OnTabSelectedListener, androidx.viewpager.widget.ViewPager.OnPageChangeListener {
     override val isFragmentActivity: Boolean = false
 
     private lateinit var uid: String
@@ -38,7 +38,7 @@ class VolunteerRecordActivity : BaseActivity(), TabLayout.OnTabSelectedListener,
     private lateinit var adapter: VolunteerFragmentAdapter
     private lateinit var yearList: MutableList<String>
     private lateinit var allYearList: MutableList<String>
-    private lateinit var fragmentList: ArrayList<Fragment>
+    private lateinit var fragmentList: ArrayList<androidx.fragment.app.Fragment>
     private lateinit var volunteerSP: VolunteerTimeSP
     private lateinit var animationDrawable: AnimationDrawable
     private lateinit var firstYear: MutableList<VolunteerTime.RecordBean>

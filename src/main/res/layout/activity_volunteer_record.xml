@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="20dp"
         android:background="@drawable/volunteer_time_toolbar_background"/>
-    <android.support.v7.widget.Toolbar
+    <androidx.appcompat.widget.Toolbar
         android:id="@+id/volunteer_time_toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -90,9 +90,9 @@
                 />
         </RelativeLayout>
 
-    </android.support.v7.widget.Toolbar>
+    </androidx.appcompat.widget.Toolbar>
 
-    <android.support.design.widget.TabLayout
+    <com.google.android.material.tabs.TabLayout
         android:id="@+id/volunteer_time_tab"
         android:layout_width="match_parent"
         android:layout_height="45dp"
@@ -116,7 +116,7 @@
         android:layout_height="match_parent"
         android:background="@drawable/volunteer_time_nohour">
 
-        <android.support.v4.view.ViewPager
+        <androidx.viewpager.widget.ViewPager
             android:id="@+id/volunteer_view_pager"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

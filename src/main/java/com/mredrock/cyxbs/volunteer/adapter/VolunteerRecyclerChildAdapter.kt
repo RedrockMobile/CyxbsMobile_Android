@@ -1,7 +1,7 @@
 package com.mredrock.cyxbs.volunteer.adapter
 
-import android.support.v7.widget.CardView
-import android.support.v7.widget.RecyclerView
+import androidx.cardview.widget.CardView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,15 +9,15 @@ import android.widget.TextView
 import com.mredrock.cyxbs.volunteer.R
 import com.mredrock.cyxbs.volunteer.bean.VolunteerTime
 
-class VolunteerRecyclerChildAdapter(recordBeanList: MutableList<VolunteerTime.RecordBean>) : RecyclerView.Adapter<VolunteerRecyclerChildAdapter.ViewHolder>() {
+class VolunteerRecyclerChildAdapter(recordBeanList: MutableList<VolunteerTime.RecordBean>) : androidx.recyclerview.widget.RecyclerView.Adapter<VolunteerRecyclerChildAdapter.ViewHolder>() {
     private val recordBeanList: MutableList<VolunteerTime.RecordBean> = recordBeanList
 
-    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    class ViewHolder(itemView: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView) {
         var dateText: TextView = itemView.findViewById<View>(R.id.volunteer_time_day) as TextView
         var hourText: TextView = itemView.findViewById<View>(R.id.volunteer_time_hour) as TextView
         var activityText: TextView = itemView.findViewById<View>(R.id.volunteer_time_content) as TextView
         var addressText: TextView = itemView.findViewById<View>(R.id.volunteer_time_address) as TextView
-        var cardView: CardView = itemView as CardView
+        var cardView: androidx.cardview.widget.CardView = itemView as androidx.cardview.widget.CardView
 
     }
 

@@ -1,8 +1,8 @@
 package com.mredrock.cyxbs.volunteer.fragment
 
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v7.widget.LinearLayoutManager
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,7 +12,7 @@ import com.mredrock.cyxbs.volunteer.adapter.VolunteerRecyclerAdapter
 import com.mredrock.cyxbs.volunteer.bean.VolunteerTime
 import kotlinx.android.synthetic.main.fragment_volunteer_time.view.*
 
-class AllVolunteerFragment : Fragment() {
+class AllVolunteerFragment : androidx.fragment.app.Fragment() {
     private var holeTime: TextView? = null
     private var mAdapter: VolunteerRecyclerAdapter? = null
 
@@ -30,7 +30,7 @@ class AllVolunteerFragment : Fragment() {
             volunteer_time_recycler.apply {
                 isNestedScrollingEnabled = false
                 adapter = mAdapter
-                layoutManager = LinearLayoutManager(context)
+                layoutManager = androidx.recyclerview.widget.LinearLayoutManager(context)
             }
         }
     }

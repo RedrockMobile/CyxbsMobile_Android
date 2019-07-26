@@ -1,8 +1,8 @@
 package com.mredrock.cyxbs.volunteer.adapter
 
 import android.content.Context
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,7 +15,7 @@ class VolunteerRecyclerAdapter(
         var context: Context,
         private var yearList: MutableList<String>,
         private var allList: MutableList<MutableList<VolunteerTime.RecordBean>>?
-) : RecyclerView.Adapter<VolunteerRecyclerAdapter.ViewHolder>() {
+) : androidx.recyclerview.widget.RecyclerView.Adapter<VolunteerRecyclerAdapter.ViewHolder>() {
 
     fun updaeList(yList: MutableList<String>,aList: MutableList<MutableList<VolunteerTime.RecordBean>>?) {
         yearList = yList
@@ -25,9 +25,9 @@ class VolunteerRecyclerAdapter(
 
     private lateinit var adapter: VolunteerRecyclerChildAdapter
 
-    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    class ViewHolder(itemView: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView) {
         var yearText: TextView = itemView.findViewById<View>(R.id.volunteer_time_year) as TextView
-        var monthRecycler: RecyclerView = itemView.findViewById<View>(R.id.volunteer_time_child_recycler) as RecyclerView
+        var monthRecycler: androidx.recyclerview.widget.RecyclerView = itemView.findViewById<View>(R.id.volunteer_time_child_recycler) as androidx.recyclerview.widget.RecyclerView
         var divider: TextView = itemView.findViewById<View>(R.id.volunteer_time_divider_line) as TextView
 
     }
@@ -52,7 +52,7 @@ class VolunteerRecyclerAdapter(
         }
 
         holder.monthRecycler.adapter = adapter
-        holder.monthRecycler.layoutManager = LinearLayoutManager(context)
+        holder.monthRecycler.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(context)
 
         if (position == yearList.size - 1) {
             holder.divider.visibility = View.VISIBLE

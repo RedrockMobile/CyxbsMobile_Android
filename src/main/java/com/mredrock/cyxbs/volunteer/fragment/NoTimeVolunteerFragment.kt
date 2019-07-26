@@ -1,13 +1,13 @@
 package com.mredrock.cyxbs.volunteer.fragment
 
-import android.support.v4.app.Fragment
+import androidx.fragment.app.Fragment
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.mredrock.cyxbs.volunteer.R
 
-class NoTimeVolunteerFragment : Fragment() {
+class NoTimeVolunteerFragment : androidx.fragment.app.Fragment() {
 
     internal var view: View? = null
     private val currentY: Float = 0.toFloat()
