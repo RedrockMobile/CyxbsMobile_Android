@@ -86,7 +86,7 @@ class SchoolcarsSmoothMove(schoolCarMap: SchoolCarMap?, activity: Activity) {
      * 在地图上绘出校车轨迹
      */
     private fun drawTraceLine(aMap: AMap?, smoothMoveList: MutableList<LatLng>) {
-        val polyline = aMap!!.addPolyline(PolylineOptions()
+        aMap!!.addPolyline(PolylineOptions()
                 .addAll(smoothMoveList.subList(0, smoothMoveList.size - 1))
                 .width(8f)
                 .color(Color.argb(255, 93, 152, 255)))

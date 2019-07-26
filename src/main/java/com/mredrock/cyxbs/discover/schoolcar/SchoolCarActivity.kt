@@ -9,8 +9,8 @@ import android.graphics.Color
 import android.graphics.Matrix
 import android.os.Bundle
 import android.os.PersistableBundle
-import android.support.v4.app.ActivityCompat
-import android.support.v4.content.ContextCompat
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import android.view.Menu
 import android.view.MenuItem
 import android.view.ViewGroup
@@ -237,7 +237,7 @@ class SchoolCarActivity : BaseActivity() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater?.inflate(R.menu.schoolcar_menu, menu)
+        menuInflater.inflate(R.menu.schoolcar_menu, menu)
         menu?.getItem(0)?.setOnMenuItemClickListener(menuListener)
         return super.onCreateOptionsMenu(menu)
     }

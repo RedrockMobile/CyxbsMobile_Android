@@ -2,7 +2,7 @@ package com.mredrock.cyxbs.discover.schoolcar.widget
 
 import android.app.Activity
 import android.graphics.BitmapFactory
-import android.support.v7.app.AlertDialog
+import androidx.appcompat.app.AlertDialog
 import android.widget.RelativeLayout
 import com.mredrock.cyxbs.schoolcar.R
 import com.mredrock.cyxbs.discover.schoolcar.SchoolCarActivity.Companion.LOST_SERVICES
@@ -55,7 +55,7 @@ class ExploreSchoolCarDialog {
                     }
                     NO_GPS -> {
                         setLayout(activity,R.drawable.ic_school_car_search_no_gps)
-                        dialog!!.window.setBackgroundDrawableResource(R.drawable.ic_school_car_search_no_gps)
+                        dialog?.window?.setBackgroundDrawableResource(R.drawable.ic_school_car_search_no_gps)
                         layout.school_car_dialog_negative_button.setOnClickListener { dialog!!.cancel() }
                         layout.school_car_dialog_positive_button.setOnClickListener { dialog!!.cancel() }
                     }
