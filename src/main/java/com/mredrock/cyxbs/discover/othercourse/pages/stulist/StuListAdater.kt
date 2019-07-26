@@ -1,7 +1,7 @@
 package com.mredrock.cyxbs.discover.othercourse.pages.stulist
 
 import android.annotation.SuppressLint
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,7 +16,7 @@ import kotlinx.android.synthetic.main.discover_other_course_item_rv_stu.view.*
  *   2018/10/19.
  *   enjoy it !!
  */
-class StuListAdater(private val mStuList: List<Student>) : RecyclerView.Adapter<StuListAdater.StuListViewHolder>() {
+class StuListAdater(private val mStuList: List<Student>) : androidx.recyclerview.widget.RecyclerView.Adapter<StuListAdater.StuListViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int)
             = StuListViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.discover_other_course_item_rv_stu, parent, false))
 
@@ -32,5 +32,5 @@ class StuListAdater(private val mStuList: List<Student>) : RecyclerView.Adapter<
 
     }
 
-    class StuListViewHolder(itemView: View): RecyclerView.ViewHolder(itemView)
+    class StuListViewHolder(itemView: View): androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView)
 }
