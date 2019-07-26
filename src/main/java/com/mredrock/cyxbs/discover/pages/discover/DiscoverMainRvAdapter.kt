@@ -3,7 +3,7 @@ package com.mredrock.cyxbs.discover.pages.discover
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,7 +21,7 @@ import org.jetbrains.anko.imageResource
  *   2018/9/15.
  *   enjoy it !!
  */
-class DiscoverMainRvAdapter(private val context: Context): RecyclerView.Adapter<DiscoverMainRvAdapter.MyViewHolder>() {
+class DiscoverMainRvAdapter(private val context: Context): androidx.recyclerview.widget.RecyclerView.Adapter<DiscoverMainRvAdapter.MyViewHolder>() {
     private var mListHide: List<Boolean>? = null
     private var iconResIds = mutableListOf<Int>()
     private var titleRes = mutableListOf<String>()
@@ -97,5 +97,5 @@ class DiscoverMainRvAdapter(private val context: Context): RecyclerView.Adapter<
         notifyDataSetChanged()
     }
 
-    class MyViewHolder(view: View): RecyclerView.ViewHolder(view)
+    class MyViewHolder(view: View): androidx.recyclerview.widget.RecyclerView.ViewHolder(view)
 }

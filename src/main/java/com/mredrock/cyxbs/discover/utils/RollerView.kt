@@ -1,8 +1,8 @@
 package com.mredrock.cyxbs.discover.utils
 
 import android.content.Context
-import android.support.v4.view.PagerAdapter
-import android.support.v4.view.ViewPager
+import androidx.viewpager.widget.PagerAdapter
+import androidx.viewpager.widget.ViewPager
 import android.util.AttributeSet
 import android.view.Gravity
 import android.view.MotionEvent
@@ -18,8 +18,8 @@ import com.mredrock.cyxbs.discover.R
  */
 
 class RollerView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null) :
-        FrameLayout(context, attrs), Runnable, ViewPager.PageTransformer {
-    private var mViewPager: ViewPager? = null
+        FrameLayout(context, attrs), Runnable, androidx.viewpager.widget.ViewPager.PageTransformer {
+    private var mViewPager: androidx.viewpager.widget.ViewPager? = null
     private var mRollerViewAdapter: RollerViewAdapter? = null
     private var mAlpha: Float? = 0f
     private var mPageMargin: Int = 0
@@ -45,7 +45,7 @@ class RollerView @JvmOverloads constructor(context: Context, attrs: AttributeSet
     }
 
     private fun initView() {
-        mViewPager = ViewPager(context)
+        mViewPager = androidx.viewpager.widget.ViewPager(context)
         val params = FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT)
         params.gravity = Gravity.CENTER
         mViewPager!!.layoutParams = params
@@ -161,7 +161,7 @@ class RollerView @JvmOverloads constructor(context: Context, attrs: AttributeSet
         }
     }
 
-    private inner class Adapter : PagerAdapter() {
+    private inner class Adapter : androidx.viewpager.widget.PagerAdapter() {
         private var mRollerViewAdapter: RollerViewAdapter? = null
 
         fun setAdapter(adapter: RollerViewAdapter) {

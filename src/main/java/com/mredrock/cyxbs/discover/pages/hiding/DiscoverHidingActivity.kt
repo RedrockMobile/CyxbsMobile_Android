@@ -1,7 +1,7 @@
 package com.mredrock.cyxbs.discover.pages.hiding
 
 import android.os.Bundle
-import android.support.v7.widget.LinearLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.mredrock.cyxbs.common.ui.BaseActivity
 import com.mredrock.cyxbs.common.utils.extensions.editor
 import com.mredrock.cyxbs.common.utils.extensions.sharedPreferences
@@ -17,7 +17,7 @@ class DiscoverHidingActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.discover_activity_hiding)
         common_toolbar.init("选择功能")
-        discover_rv_hiding.layoutManager = LinearLayoutManager(this)
+        discover_rv_hiding.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(this)
         val mAdapter = DiscoverHidingRvAdapter(checkDiscoverHiding())
         discover_rv_hiding.adapter = mAdapter
         discover_btn_hiding_confirm.setOnClickListener {
