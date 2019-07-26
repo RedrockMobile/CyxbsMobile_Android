@@ -1,8 +1,8 @@
 package com.mredrock.cyxbs.main.ui
 
 import android.os.Bundle
-import android.support.design.widget.AppBarLayout
-import android.support.v4.app.Fragment
+import com.google.android.material.appbar.AppBarLayout
+import androidx.fragment.app.Fragment
 import android.view.MenuItem
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
@@ -38,7 +38,7 @@ class MainActivity : BaseActivity() {
 
     private lateinit var appbar: AppBarLayout
 
-    private val fragments = ArrayList<Fragment>()
+    private val fragments = ArrayList<androidx.fragment.app.Fragment>()
     private lateinit var adapter: MainVpAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -94,6 +94,6 @@ class MainActivity : BaseActivity() {
         view_pager.offscreenPageLimit = 4
     }
 
-    private fun getFragment(path: String) = ARouter.getInstance().build(path).navigation() as Fragment
+    private fun getFragment(path: String) = ARouter.getInstance().build(path).navigation() as androidx.fragment.app.Fragment
 
 }

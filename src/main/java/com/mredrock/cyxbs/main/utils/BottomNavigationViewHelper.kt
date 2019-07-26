@@ -1,11 +1,11 @@
 package com.mredrock.cyxbs.main.utils
 
 import android.content.res.ColorStateList
-import android.support.annotation.DrawableRes
-import android.support.design.internal.BottomNavigationItemView
-import android.support.design.internal.BottomNavigationMenuView
-import android.support.design.widget.BottomNavigationView
-import android.support.v4.view.ViewPager
+import androidx.annotation.DrawableRes
+import com.google.android.material.bottomnavigation.BottomNavigationItemView
+import com.google.android.material.bottomnavigation.BottomNavigationMenuView
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import androidx.viewpager.widget.ViewPager
 import android.util.SparseArray
 import android.view.MenuItem
 import android.widget.ImageView
@@ -34,13 +34,13 @@ open class BottomNavigationViewHelper(nav: BottomNavigationView) {
 
     private lateinit var viewPager: ViewPager
 
-    private fun reflectBottomNavigationMenuView() = getField(bottomNavigationView, "mMenuView") as? BottomNavigationMenuView
+    private fun reflectBottomNavigationMenuView() = getField(bottomNavigationView, "menuView") as? BottomNavigationMenuView
 
     private fun reflectBottomNavigationItemViews(): Array<BottomNavigationItemView>? {
-        val array = getField(menuView, "mButtons") as? Array<BottomNavigationItemView>
-        shiftAmount = getField(array?.get(0), "mShiftAmount") as? Int ?: 0
-        scaleUpFactor = getField(array?.get(0), "mScaleUpFactor") as? Float ?: 0f
-        scaleDownFactor = getField(array?.get(0), "mScaleDownFactor") as? Float ?: 0f
+        val array = getField(menuView, "buttons") as? Array<BottomNavigationItemView>
+        shiftAmount = getField(array?.get(0), "shiftAmount") as? Int ?: 0
+        scaleUpFactor = getField(array?.get(0), "scaleUpFactor") as? Float ?: 0f
+        scaleDownFactor = getField(array?.get(0), "scaleDownFactor") as? Float ?: 0f
         return array
     }
 
@@ -48,11 +48,11 @@ open class BottomNavigationViewHelper(nav: BottomNavigationView) {
         try {
             itemViews?.let { itemViews ->
                 return Array(itemViews.size) {
-                    getField(itemViews[it], "mLargeLabel") as TextView
+                    getField(itemViews[it], "largeLabel") as TextView
                 }
             }
         } catch (e: Throwable) {
-            LogUtils.e(javaClass.name, "reflect field \"mLargeLabel\" failed", e)
+            LogUtils.e(javaClass.name, "reflect field \"largeLabel\" failed", e)
         }
         return null
     }
@@ -61,11 +61,11 @@ open class BottomNavigationViewHelper(nav: BottomNavigationView) {
         try {
             itemViews?.let { itemViews ->
                 return Array(itemViews.size) {
-                    getField(itemViews[it], "mSmallLabel") as TextView
+                    getField(itemViews[it], "smallLabel") as TextView
                 }
             }
         } catch (e: Throwable) {
-            LogUtils.e(javaClass.name, "reflect field \"mSmallLabel\" failed", e)
+            LogUtils.e(javaClass.name, "reflect field \"smallLabel\" failed", e)
         }
         return null
     }
@@ -74,11 +74,11 @@ open class BottomNavigationViewHelper(nav: BottomNavigationView) {
         try {
             itemViews?.let { itemViews ->
                 return Array(itemViews.size) {
-                    getField(itemViews[it], "mIcon") as ImageView
+                    getField(itemViews[it], "icon") as ImageView
                 }
             }
         } catch (e: Throwable) {
-            LogUtils.e(javaClass.name, "reflect field \"mIcon\" failed", e)
+            LogUtils.e(javaClass.name, "reflect field \"icon\" failed", e)
         }
         return null
     }
@@ -87,22 +87,22 @@ open class BottomNavigationViewHelper(nav: BottomNavigationView) {
         if (isAnimationEnable == enable) return
         isAnimationEnable = enable
         itemViews?.forEach {
-            setField(it, "mShiftAmount", if (isAnimationEnable) shiftAmount else 0)
-            setField(it, "mScaleUpFactor", if (isAnimationEnable) scaleUpFactor else 1f)
-            setField(it, "mScaleDownFactor", if (isAnimationEnable) scaleDownFactor else 1f)
+            setField(it, "shiftAmount", if (isAnimationEnable) shiftAmount else 0)
+            setField(it, "scaleUpFactor", if (isAnimationEnable) scaleUpFactor else 1f)
+            setField(it, "scaleDownFactor", if (isAnimationEnable) scaleDownFactor else 1f)
         }
     }
 
     fun enableShiftMode(enable: Boolean) {
         if (isShiftModeEnable == enable) return
         isShiftModeEnable = enable
-        setField(menuView, "mShiftingMode", isShiftModeEnable)
+        setField(menuView, "isShifting", isShiftModeEnable)
     }
 
     fun enableItemShiftMode(enable: Boolean) {
         if (isItemShiftModeEnable == enable) return
         isItemShiftModeEnable = enable
-        itemViews?.forEach { setField(it, "mShiftingMode", enable) }
+        itemViews?.forEach { setField(it, "isShifting", enable) }
     }
 
     fun setTextSize(size: Float) {
