@@ -19,7 +19,8 @@ buildscript {
         classpath "com.android.tools.build:gradle:$gradle_plugins"
         classpath deps.kotlin.gradle
         classpath "com.alibaba:arouter-register:1.0.2"
-        classpath 'com.tencent.bugly:tinker-support:1.1.5'
+        //walle多渠道打包
+        classpath 'com.meituan.android.walle:plugin:1.1.6'
     }
 }
 

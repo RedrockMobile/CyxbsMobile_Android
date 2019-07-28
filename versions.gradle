@@ -41,6 +41,8 @@ versions.bugly_crashreport = '2.6.6.1'
 versions.bugly_crashreport_upgrade = '1.3.6'
 versions.bugly_nativecrashreport = '3.3.1'
 versions.bugly_tinker_lib = '1.9.9'
+//walle
+versions.walle = '1.1.6'
 
 def deps = [:]
 
@@ -151,4 +153,7 @@ bugly.nativecrashreport = "com.tencent.bugly:nativecrashreport:$versions.bugly_n
 bugly.tinker_lib = "com.tencent.tinker:tinker-android-lib:$versions.bugly_tinker_lib"
 deps.bugly = bugly
 
+def walle = [:]
+walle.runtime = "com.meituan.android.walle:library:$versions.walle"
+deps.walle = walle
 ext.deps = deps
