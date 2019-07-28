@@ -15,13 +15,15 @@ import com.mredrock.cyxbs.common.utils.extensions.editor
 import com.umeng.analytics.MobclickAgent
 import com.umeng.commonsdk.UMConfigure
 import com.umeng.socialize.PlatformConfig
+import com.meituan.android.walle.WalleChannelReader
+
 
 /**
  * Created By jay68 on 2018/8/7.
  */
 open class BaseApp : MultiDexApplication() {
     companion object {
-        @SuppressLint("StaticFieldLeak")
+        @SuppressLint("StaticFieldLeak", "CI_StaticFieldLeak")
         lateinit var context: Context
             private set
 
@@ -75,7 +77,8 @@ open class BaseApp : MultiDexApplication() {
     }
 
     private fun initUMeng() {
-        UMConfigure.init(applicationContext, UMConfigure.DEVICE_TYPE_PHONE,
+        val channel = WalleChannelReader.getChannel(this, "debug")
+        UMConfigure.init(applicationContext, "55d88b23e0f55a71ec007365", channel, UMConfigure.DEVICE_TYPE_PHONE,
                 "123b419248120b9fb91a38260a13e972")
         MobclickAgent.setScenarioType(this, MobclickAgent.EScenarioType.E_UM_NORMAL)
         MobclickAgent.openActivityDurationTrack(false)

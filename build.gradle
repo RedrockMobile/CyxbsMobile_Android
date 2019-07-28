@@ -71,9 +71,10 @@ dependencies {
 
     //bugly
     api deps.bugly.crashreport
-//    api deps.bugly.crashreport_upgrade
     api deps.bugly.nativecrashreport
-//    api deps.bugly.tinker_lib
+
+    // walle
+    api deps.walle.runtime
 
     //3rd ui
 //    api 'com.jude:swipebackhelper:3.1.2'
