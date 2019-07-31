@@ -6,6 +6,9 @@ apply plugin: 'kotlin-android-extensions'
 
 apply plugin: 'kotlin-kapt'
 
+apply plugin: 'com.aliyun.ams.emas-services'
+
+apply plugin: 'walle'
 android {
     compileSdkVersion build_versions.target_sdk
     buildToolsVersion build_versions.build_tools
@@ -77,26 +80,8 @@ android {
             buildConfigField("String", "BUGLY_APP_ID", "\"68682669e7\"")
             signingConfig signingConfigs.config
 
-            productFlavors.all { flavor ->
-                flavor.manifestPlaceholders = [UMENG_CHANNEL_VALUE: name]
-            }
-
             ndk {
                 abiFilters 'armeabi-v7a'
-            }
-        }
-    }
-
-    android.applicationVariants.all { variant ->
-        variant.outputs.each { out ->
-            if (out.outputFile != null && out.outputFile.name.endsWith('.apk')) {
-                if ('release' == variant.buildType.name) {
-                    def flavorName = variant.flavorName.startsWith("_") ?
-                            variant.flavorName.substring(1) : variant.flavorName
-                    out.outputFileName = "掌上重邮_${flavorName}_${variant.versionName}.apk"
-                } else if ('debug' == variant.buildType.name) {
-                    out.outputFileName = "掌上重邮_${variant.versionName}_debug.apk"
-                }
             }
         }
     }
@@ -107,20 +92,6 @@ android {
 
         checkReleaseBuilds false
     }
-
-    productFlavors {
-        official {}
-        xiaomi {}
-        huawei {}
-        samsung {}
-        kuan {}
-        google{}
-//        baidu {}
-//        alibaba {}
-//        tencent {}
-    }
-
-    flavorDimensions "default"
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -144,6 +115,15 @@ android {
     }
 }
 
+walle {
+    // 指定渠道包的输出路径
+    apkOutputFolder = new File("${project.buildDir}/outputs/channels");
+    // 定制渠道包的APK的文件名称
+    apkFileNameFormat = '掌上重邮-${channel}-${buildType}-v${versionName}-${versionCode}.apk';
+    // 渠道配置文件
+    channelFile = new File("${project.getProjectDir()}/channel")
+}
+
 dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
@@ -160,4 +140,5 @@ dependencies {
         implementation project(':module_redrock_home')
     }
     kapt deps.arouter.compiler
+    api deps.hotfix.runtime
 }

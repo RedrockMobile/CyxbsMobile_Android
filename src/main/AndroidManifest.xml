@@ -4,25 +4,13 @@
     package="com.mredrock.cyxbs">
 
     <application
-        android:name=".App"
+        android:name=".CySophixApplication"
         android:allowBackup="true"
         android:icon="@mipmap/app_ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/app_ic_launcher_circle"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        tools:ignore="GoogleAppIndexingWarning">
-
-        <meta-data
-            android:name="UMENG_APPKEY"
-            android:value="55d88b23e0f55a71ec007365" />
-        <meta-data
-            android:name="UMENG_CHANNEL"
-            android:value="${UMENG_CHANNEL_VALUE}" />
-
-        <meta-data
-            android:name="BUGLY_APP_CHANNEL"
-            android:value="${UMENG_CHANNEL_VALUE}" />
-    </application>
+        tools:ignore="GoogleAppIndexingWarning"/>
 
 </manifest>

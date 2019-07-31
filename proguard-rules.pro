@@ -1,20 +1,7 @@
-# Add project specific ProGuard rules here.
-# By default, the flags in this file are appended to flags specified
-# in /Users/dayaa/Library/Android/sdk/tools/proguard/proguard-android.txt
-# You can edit the include path and order by changing the proguardFiles
-# directive in build.gradle.
-#
-# For more details, see
-#   http://developer.android.com/guide/developing/tools/proguard.html
-
-# Add any project specific keep options here:
-
-# If your project uses WebView with JS, uncomment the following
-# and specify the fully qualified class name to the JavaScript interface
-# class:
-#-keepclassmembers class fqcn.of.javascript.interface.for.webview {
-#   public *;
-#}
+#基线包使用，生成mapping.txtt
+-printmapping mapping.txt
+#补丁包使用，应用mapping.txt
+#-applymapping mapping.txt
 #-------------------------------------------定制化区域----------------------------------------------
 #---------------------------------1.实体类---------------------------------
 -keep class * implements java.io.Serializable { *;}
@@ -40,6 +27,13 @@
 -keep class * implements com.alibaba.android.arouter.facade.template.ISyringe{*;}
 -keep interface * implements com.alibaba.android.arouter.facade.template.IProvider
 -keep class * implements com.alibaba.android.arouter.facade.template.IProvider
+
+## hotfix
+-keep class com.taobao.sophix.**{*;}
+-keep class com.ta.utdid2.device.**{*;}
+-dontwarn com.alibaba.sdk.android.utils.**
+#防止inline
+-dontoptimize
 
 ## Bugly
 -dontwarn com.tencent.bugly.**
@@ -89,10 +83,6 @@
 
 #nineoldandroids
 -keep class com.nineoldandroids.** { *; }
-
-# tinker混淆规则
--dontwarn com.tencent.tinker.**
--keep class com.tencent.tinker.** { *; }
 
 # OkHttp3
 -dontwarn okio.**
