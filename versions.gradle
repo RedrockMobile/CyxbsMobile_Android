@@ -10,10 +10,11 @@ versions.anko = '0.10.7'
 versions.constraint_layout = '1.1.3'
 versions.support = '27.1.1'
 versions.multidex = '1.0.3'
-//event and router
+// ali
 versions.arouter = '1.4.0'
 versions.arouter_compiler = '1.2.1'
 versions.eventbus = '3.1.1'
+versions.hotfix = '3.2.8'
 //network
 versions.glide = '4.8.0'
 versions.glide_okhttp_integration = '4.8.0'
@@ -40,7 +41,6 @@ versions.umeng_analytics = '7.5.3'
 versions.bugly_crashreport = '2.6.6.1'
 versions.bugly_crashreport_upgrade = '1.3.6'
 versions.bugly_nativecrashreport = '3.3.1'
-versions.bugly_tinker_lib = '1.9.9'
 //walle
 versions.walle = '1.1.6'
 
@@ -150,10 +150,14 @@ def bugly = [:]
 bugly.crashreport = "com.tencent.bugly:crashreport:$versions.bugly_crashreport"
 bugly.crashreport_upgrade = "com.tencent.bugly:crashreport_upgrade:$versions.bugly_crashreport_upgrade"
 bugly.nativecrashreport = "com.tencent.bugly:nativecrashreport:$versions.bugly_nativecrashreport"
-bugly.tinker_lib = "com.tencent.tinker:tinker-android-lib:$versions.bugly_tinker_lib"
 deps.bugly = bugly
 
 def walle = [:]
 walle.runtime = "com.meituan.android.walle:library:$versions.walle"
 deps.walle = walle
+
+def hotfix = [:]
+hotfix.runtime = 'com.aliyun.ams:alicloud-android-hotfix:$versions.hotfix'
+deps.hotfix = hotfix
+
 ext.deps = deps

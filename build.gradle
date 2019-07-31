@@ -13,6 +13,7 @@ buildscript {
     repositories {
         google()
         jcenter()
+        maven { url 'http://maven.aliyun.com/nexus/content/repositories/releases/' }
     }
 
     dependencies {
@@ -21,6 +22,8 @@ buildscript {
         classpath "com.alibaba:arouter-register:1.0.2"
         //walle多渠道打包
         classpath 'com.meituan.android.walle:plugin:1.1.6'
+        // 添加emas-services插件
+        classpath 'com.aliyun.ams:emas-services:1.0.1'
     }
 }
 
@@ -30,6 +33,7 @@ allprojects {
         jcenter()
         mavenCentral()
         maven { url 'https://jitpack.io' }
+        maven { url 'http://maven.aliyun.com/nexus/content/repositories/releases/' }
     }
 }
 
