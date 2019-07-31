@@ -81,4 +81,11 @@
     <string name="mine_point_detail_footer">已 经 到 底 了</string>
     <string name="mine_point_detail_header_hint">当前的积分数：</string>
 
+    <!--关于-->
+    <string name="mine_about_website">官网</string>
+    <string name="mine_about_legal">使用条款</string>
+    <string name="mine_about_update">更新</string>
+    <string name="mine_about_1">红岩网校产品</string>
+    <string name="mine_about_copyright">CopyRight@2013&#8211;2019 All Rights Reserved</string>
+
 </resources>

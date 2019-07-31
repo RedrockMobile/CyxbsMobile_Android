@@ -17,7 +17,8 @@
         android:layout_centerHorizontal="true"
         android:layout_gravity="center"
         android:layout_marginTop="132dp"
-        android:src="@drawable/common_app_logo" />
+        android:src="@drawable/common_app_logo"
+        tools:ignore="ContentDescription"/>
 
     <TextView
         android:id="@+id/mine_about_name"
@@ -51,35 +52,35 @@
             android:id="@+id/mine_about_website"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="4dp"
-            android:text="官网"
+            android:text="@string/mine_about_website"
             android:textSize="14sp" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:layout_marginEnd="8dp"
             android:text="|" />
 
         <TextView
             android:id="@+id/mine_about_legal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="4dp"
-            android:layout_marginRight="4dp"
-            android:text="使用条款"
+            android:text="@string/mine_about_legal"
             android:textSize="14sp" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:layout_marginEnd="8dp"
             android:text="|" />
 
         <TextView
             android:id="@+id/mine_about_update"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="4dp"
-            android:text="更新"
+            android:text="@string/mine_about_update"
             android:textSize="14sp" />
     </LinearLayout>
 
@@ -91,7 +92,7 @@
         android:layout_centerInParent="true"
         android:layout_marginBottom="64dp"
         android:gravity="center"
-        android:text="红岩网校产品" />
+        android:text="@string/mine_about_1" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -100,5 +101,5 @@
         android:layout_centerInParent="true"
         android:layout_marginBottom="36dp"
         android:gravity="center"
-        android:text="CopyRight@2017-2018 All Rights Reserved" />
+        android:text="@string/mine_about_copyright" />
 </RelativeLayout>
