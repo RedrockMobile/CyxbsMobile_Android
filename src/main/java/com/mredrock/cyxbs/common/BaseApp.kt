@@ -1,8 +1,8 @@
 package com.mredrock.cyxbs.common
 
 import android.annotation.SuppressLint
+import android.app.Application
 import android.content.Context
-import android.support.multidex.MultiDexApplication
 import com.alibaba.android.arouter.launcher.ARouter
 import com.google.gson.Gson
 import com.mredrock.cyxbs.common.bean.User
@@ -21,7 +21,7 @@ import com.meituan.android.walle.WalleChannelReader
 /**
  * Created By jay68 on 2018/8/7.
  */
-open class BaseApp : MultiDexApplication() {
+open class BaseApp : Application() {
     companion object {
         @SuppressLint("StaticFieldLeak", "CI_StaticFieldLeak")
         lateinit var context: Context
