@@ -1,6 +1,6 @@
 package com.mredrock.cyxbs.discover.pages.hiding
 
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,7 +17,7 @@ import org.jetbrains.anko.imageResource
  *   2018/9/16.
  *   enjoy it !!
  */
-class DiscoverHidingRvAdapter(val mHideList: MutableList<Boolean>) : RecyclerView.Adapter<DiscoverHidingRvAdapter.HidingRvHolder>() {
+class DiscoverHidingRvAdapter(val mHideList: MutableList<Boolean>) : androidx.recyclerview.widget.RecyclerView.Adapter<DiscoverHidingRvAdapter.HidingRvHolder>() {
 
     private val iconResIds = mutableListOf(
             R.drawable.ic_discover_no_course, R.drawable.ic_discover_empty_room, R.drawable.ic_discover_grade,
@@ -54,5 +54,5 @@ class DiscoverHidingRvAdapter(val mHideList: MutableList<Boolean>) : RecyclerVie
     }
 
 
-    class HidingRvHolder(val view: View) : RecyclerView.ViewHolder(view)
+    class HidingRvHolder(val view: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(view)
 }

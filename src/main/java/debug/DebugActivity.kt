@@ -1,7 +1,7 @@
 package debug
 
 import android.os.Bundle
-import android.support.v4.app.Fragment
+import androidx.fragment.app.Fragment
 import com.mredrock.cyxbs.common.ui.BaseActivity
 import com.mredrock.cyxbs.discover.R
 import com.mredrock.cyxbs.discover.pages.discover.DiscoverFragment
@@ -16,7 +16,7 @@ class DebugActivity : BaseActivity() {
         setContentView(R.layout.activity_debug)
         val fragmentManager = supportFragmentManager
         val fragmentTransaction = fragmentManager.beginTransaction()
-        fragmentTransaction.replace(layout_debug.id, DiscoverFragment() as Fragment)
+        fragmentTransaction.replace(layout_debug.id, DiscoverFragment() as androidx.fragment.app.Fragment)
         fragmentTransaction.commit()
         btn_debug.setOnClickListener {
             startActivity<DiscoverHidingActivity>()

@@ -1,8 +1,8 @@
 package com.mredrock.cyxbs.discover.pages.discover
 
-import android.arch.lifecycle.Observer
+import androidx.lifecycle.Observer
 import android.os.Bundle
-import android.support.v7.widget.GridLayoutManager
+import androidx.recyclerview.widget.GridLayoutManager
 import android.view.*
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.mredrock.cyxbs.common.config.DISCOVER_ENTRY
@@ -55,9 +55,9 @@ class DiscoverFragment : BaseViewModelFragment<DiscoverViewModel>() {
         super.onViewCreated(view, savedInstanceState)
     }
 
-    override fun onPrepareOptionsMenu(menu: Menu?) {
+    override fun onPrepareOptionsMenu(menu: Menu) {
         activity?.menuInflater?.inflate(R.menu.discover_main_menu, menu)
-        menu?.getItem(0)?.setOnMenuItemClickListener(menuListener)
+        menu.getItem(0)?.setOnMenuItemClickListener(menuListener)
         super.onPrepareOptionsMenu(menu)
     }
 
@@ -71,7 +71,7 @@ class DiscoverFragment : BaseViewModelFragment<DiscoverViewModel>() {
         mAdapter = DiscoverMainRvAdapter(context!!)
         mAdapter!!.refreshData(mListHide)
         discover_rv_main.isNestedScrollingEnabled = false
-        discover_rv_main.layoutManager = GridLayoutManager(context, 3)
+        discover_rv_main.layoutManager = androidx.recyclerview.widget.GridLayoutManager(context, 3)
         discover_rv_main.adapter = mAdapter
     }
 
