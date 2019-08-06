@@ -117,9 +117,9 @@ android {
 
 walle {
     // 指定渠道包的输出路径
-    apkOutputFolder = new File("${project.buildDir}/outputs/channels");
+    apkOutputFolder = new File("${project.buildDir}/outputs/channels")
     // 定制渠道包的APK的文件名称
-    apkFileNameFormat = '掌上重邮-${channel}-${buildType}-v${versionName}-${versionCode}.apk';
+    apkFileNameFormat = '掌上重邮-${channel}-${buildType}-v${versionName}-${versionCode}.apk'
     // 渠道配置文件
     channelFile = new File("${project.getProjectDir()}/channel")
 }
