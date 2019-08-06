@@ -1,14 +1,15 @@
 package com.mredrock.cyxbs;
 
 import android.content.Context;
-import android.support.annotation.Keep;
-import android.support.multidex.MultiDex;
 import android.util.Log;
 
 import com.taobao.sophix.PatchStatus;
 import com.taobao.sophix.SophixApplication;
 import com.taobao.sophix.SophixEntry;
 import com.taobao.sophix.SophixManager;
+
+import androidx.annotation.Keep;
+import androidx.multidex.MultiDex;
 
 //import androidx.annotation.Keep;
 
