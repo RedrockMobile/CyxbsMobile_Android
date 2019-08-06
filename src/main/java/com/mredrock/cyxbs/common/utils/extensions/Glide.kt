@@ -1,10 +1,9 @@
 package com.mredrock.cyxbs.common.utils.extensions
 
 import android.content.Context
-import android.support.annotation.DrawableRes
+import androidx.annotation.DrawableRes
 import android.widget.ImageView
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestOptions
 import com.mredrock.cyxbs.common.R
 import com.mredrock.cyxbs.common.config.BASE_NORMAL_IMG_URL

@@ -1,9 +1,6 @@
 apply from: lib_config
 
 dependencies {
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'com.android.support.test:runner:1.0.2'
-    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
     api fileTree(include: ['*.jar'], dir: 'libs')
 
     //kotlin
@@ -50,7 +47,7 @@ dependencies {
     api deps.room.runtime
     api deps.room.rxjava
     kapt deps.room.compiler
-    kapt deps.databinding.compiler
+//    kapt deps.databinding.compiler
     api deps.paging.runtime
     api deps.paging.rxjava
     api deps.workmanager.runtime

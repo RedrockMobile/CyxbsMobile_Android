@@ -2,7 +2,7 @@ package com.mredrock.cyxbs.common.utils.extensions
 
 import android.net.Uri
 import android.os.Build
-import android.support.v4.content.FileProvider
+import androidx.core.content.FileProvider
 import com.mredrock.cyxbs.common.BaseApp
 import okhttp3.MediaType
 import okhttp3.RequestBody

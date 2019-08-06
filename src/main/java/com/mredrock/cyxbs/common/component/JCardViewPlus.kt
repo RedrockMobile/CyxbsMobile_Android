@@ -3,7 +3,7 @@ package com.mredrock.cyxbs.common.component
 import android.content.Context
 import android.content.res.TypedArray
 import android.graphics.*
-import android.support.annotation.ColorInt
+import androidx.annotation.ColorInt
 import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.Gravity
