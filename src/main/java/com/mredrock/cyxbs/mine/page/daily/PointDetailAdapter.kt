@@ -1,8 +1,8 @@
 package com.mredrock.cyxbs.mine.page.daily
 
 import android.graphics.Color
-import android.support.annotation.LayoutRes
-import android.support.v7.widget.RecyclerView
+import androidx.annotation.LayoutRes
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,7 +15,7 @@ import kotlinx.android.synthetic.main.mine_item_point_detail.view.*
  * Create By Hosigus at 2019/3/17
  */
 
-class PointDetailAdapter : RecyclerView.Adapter<PointDetailAdapter.BaseHolder<PointDetail>>() {
+class PointDetailAdapter : androidx.recyclerview.widget.RecyclerView.Adapter<PointDetailAdapter.BaseHolder<PointDetail>>() {
 
     private val darkColor = Color.parseColor("#B3000000")
     private val lightColor = Color.parseColor("#839bfa")
@@ -46,7 +46,7 @@ class PointDetailAdapter : RecyclerView.Adapter<PointDetailAdapter.BaseHolder<Po
     private fun inflateView(parent: ViewGroup, @LayoutRes resId: Int) =
             LayoutInflater.from(parent.context).inflate(resId, parent, false)
 
-    abstract class BaseHolder<D>(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    abstract class BaseHolder<D>(itemView: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView) {
         fun initView(data: D) = itemView.init(data)
         protected abstract fun View.init(data: D)
     }

@@ -1,7 +1,7 @@
 package com.mredrock.cyxbs.mine.page.ask
 
 import android.os.Bundle
-import android.support.design.widget.TabLayout
+import com.google.android.material.tabs.TabLayout
 import android.view.LayoutInflater
 import android.view.View
 import com.mredrock.cyxbs.common.ui.BaseActivity

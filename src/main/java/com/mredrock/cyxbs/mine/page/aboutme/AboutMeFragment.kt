@@ -1,9 +1,9 @@
 package com.mredrock.cyxbs.mine.page.aboutme
 
-import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProviders
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import com.mredrock.cyxbs.common.utils.extensions.setImageFromUrl
 import com.mredrock.cyxbs.mine.R
 import com.mredrock.cyxbs.mine.network.model.RelateMeItem
@@ -69,12 +69,12 @@ class AboutMeFragment : BaseRVFragment<RelateMeItem>() {
         viewModel.loadData(type)
     }
 
-    override fun bindFooterHolder(holder: RecyclerView.ViewHolder, position: Int) {
+    override fun bindFooterHolder(holder: androidx.recyclerview.widget.RecyclerView.ViewHolder, position: Int) {
         getFooter().showLoading()
         loadMore()
     }
 
-    override fun bindDataHolder(holder: RecyclerView.ViewHolder, position: Int, data: RelateMeItem) {
+    override fun bindDataHolder(holder: androidx.recyclerview.widget.RecyclerView.ViewHolder, position: Int, data: RelateMeItem) {
         holder.itemView.mine_aboutme_item_avatar.setImageFromUrl(data.photoThumbnailSrc)
         holder.itemView.mine_aboutme_item_nickname.text = data.nickname
         holder.itemView.mine_aboutme_item_time.text = data.createdAt

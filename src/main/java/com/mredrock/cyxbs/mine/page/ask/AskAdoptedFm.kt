@@ -1,10 +1,10 @@
 package com.mredrock.cyxbs.mine.page.ask
 
 import android.annotation.SuppressLint
-import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProviders
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.View
 import com.mredrock.cyxbs.mine.R
 import com.mredrock.cyxbs.mine.network.model.MyAskQuestion
@@ -86,13 +86,13 @@ class AskAdoptedFm : BaseRVFragment<MyAskQuestion>() {
     }
 
     //自动加载更多
-    override fun bindFooterHolder(holder: RecyclerView.ViewHolder, position: Int) {
+    override fun bindFooterHolder(holder: androidx.recyclerview.widget.RecyclerView.ViewHolder, position: Int) {
         getFooter().showLoading()
         loadMore()
     }
 
     @SuppressLint("SetTextI18n")
-    override fun bindDataHolder(holder: RecyclerView.ViewHolder, position: Int, data: MyAskQuestion) {
+    override fun bindDataHolder(holder: androidx.recyclerview.widget.RecyclerView.ViewHolder, position: Int, data: MyAskQuestion) {
         holder.itemView.apply {
             //隐藏全部小红点，以后可能需要使用小红点
             mine_help_item_red_point.visibility = View.INVISIBLE

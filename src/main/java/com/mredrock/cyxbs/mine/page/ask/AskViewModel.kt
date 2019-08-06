@@ -1,6 +1,6 @@
 package com.mredrock.cyxbs.mine.page.ask
 
-import android.arch.lifecycle.MutableLiveData
+import androidx.lifecycle.MutableLiveData
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.mine.network.model.MyAskQuestion

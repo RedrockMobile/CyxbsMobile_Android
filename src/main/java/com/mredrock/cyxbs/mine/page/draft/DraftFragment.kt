@@ -6,8 +6,8 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.os.Bundle
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
 import com.mredrock.cyxbs.common.utils.LogUtils
@@ -34,7 +34,7 @@ class DraftFragment : BaseRVFragment<Draft>() {
         return R.layout.mine_item_draft_rv
     }
 
-    override fun bindFooterHolder(holder: RecyclerView.ViewHolder, position: Int) {
+    override fun bindFooterHolder(holder: androidx.recyclerview.widget.RecyclerView.ViewHolder, position: Int) {
         if (getFooter().state == RvFooter.State.ERROR
                 || getFooter().state == RvFooter.State.NOMORE
                 || getFooter().state == RvFooter.State.NOTHING) {
@@ -44,7 +44,7 @@ class DraftFragment : BaseRVFragment<Draft>() {
     }
 
     @SuppressLint("SetTextI18n")
-    override fun bindDataHolder(holder: RecyclerView.ViewHolder, position: Int, data: Draft) {
+    override fun bindDataHolder(holder: androidx.recyclerview.widget.RecyclerView.ViewHolder, position: Int, data: Draft) {
         //动画相关
         holder.setIsRecyclable(false)//无奈之举，等待大神优化
         val x = if (toRight) translation else 0f
@@ -127,7 +127,7 @@ class DraftFragment : BaseRVFragment<Draft>() {
     /*以下是动画相关代码*/
 
     fun showAnim(toRight: Boolean) {
-        val lm = getRecyclerView().layoutManager as LinearLayoutManager
+        val lm = getRecyclerView().layoutManager as androidx.recyclerview.widget.LinearLayoutManager
         val firstVisibleItemPosition = lm.findFirstVisibleItemPosition()
         val lastVisibleItemPosition = lm.findLastVisibleItemPosition()
         val visibleItemSize = lastVisibleItemPosition - firstVisibleItemPosition

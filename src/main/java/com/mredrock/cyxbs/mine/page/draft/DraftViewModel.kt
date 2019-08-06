@@ -1,6 +1,6 @@
 package com.mredrock.cyxbs.mine.page.draft
 
-import android.arch.lifecycle.MutableLiveData
+import androidx.lifecycle.MutableLiveData
 import com.mredrock.cyxbs.common.utils.extensions.*
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.mine.network.model.Draft

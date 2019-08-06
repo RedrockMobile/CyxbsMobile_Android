@@ -1,10 +1,10 @@
 package com.mredrock.cyxbs.mine.page.daily
 
-import android.arch.lifecycle.Observer
+import androidx.lifecycle.Observer
 import android.os.Bundle
-import android.support.v4.content.ContextCompat
-import android.support.v7.widget.DividerItemDecoration
-import android.support.v7.widget.LinearLayoutManager
+import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.Menu
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
@@ -52,9 +52,9 @@ class PointDetailActivity : BaseViewModelActivity<PointDetailViewModel>() {
         }
 
         rv_point_detail.apply {
-            layoutManager = LinearLayoutManager(this@PointDetailActivity)
+            layoutManager = androidx.recyclerview.widget.LinearLayoutManager(this@PointDetailActivity)
             adapter = this@PointDetailActivity.adapter
-            addItemDecoration(DividerItemDecoration(this@PointDetailActivity,DividerItemDecoration.VERTICAL).let {
+            addItemDecoration(androidx.recyclerview.widget.DividerItemDecoration(this@PointDetailActivity, androidx.recyclerview.widget.DividerItemDecoration.VERTICAL).let {
                 it.setDrawable(ContextCompat.getDrawable(this@PointDetailActivity,R.drawable.mine_div_line)!!)
                 it
             })

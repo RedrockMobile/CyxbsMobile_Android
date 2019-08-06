@@ -1,8 +1,8 @@
 package com.mredrock.cyxbs.mine.page.draft
 
-import android.arch.lifecycle.Observer
+import androidx.lifecycle.Observer
 import android.os.Bundle
-import android.support.design.widget.BottomSheetDialog
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.alibaba.android.arouter.launcher.ARouter
 import com.mredrock.cyxbs.common.config.QA_ANSWER
 import com.mredrock.cyxbs.common.config.QA_QUIZ
