@@ -38,7 +38,7 @@
         <service
             android:name=".utils.update.UpdateService"
             android:enabled="true"
-            android:exported="true"></service>
+            android:exported="true" />
 
         <provider
             android:name="androidx.core.content.FileProvider"
@@ -102,6 +102,9 @@
             android:process=":exception_handler"
             android:launchMode="singleTop"
             android:theme="@style/AppTheme" />
+
+        <activity android:name=".component.PhotoViewerActivity"
+            android:launchMode="singleInstance"/>
     </application>
 
 </manifest>
