@@ -3,7 +3,6 @@ package com.mredrock.cyxbs.common.component
 import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import androidx.annotation.LayoutRes
@@ -52,7 +51,6 @@ open class PhotoViewerActivity : BaseActivity() {
         mAdapter = object : BasePagerAdapter<PhotoView, String>(list) {
             override fun createView(context: Context) = PhotoView(context)
             override fun PhotoView.initView(mData: String, mPos: Int) {
-                Log.d("test", mData)
                 mImgManager.load(mData).thumbnail(thumbnail).into(this)
                 setOnClickListener { onPhotoClick(mData, mPos) }
             }
