@@ -3,12 +3,14 @@ package com.mredrock.cyxbs.common.component
 import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import androidx.annotation.LayoutRes
 import androidx.viewpager.widget.PagerAdapter
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestManager
+import com.bumptech.glide.request.RequestOptions
 import com.github.chrisbanes.photoview.PhotoView
 import com.mredrock.cyxbs.common.R
 import com.mredrock.cyxbs.common.ui.BaseActivity
@@ -18,17 +20,19 @@ import org.jetbrains.anko.startActivity
 /**
  * Create By Hosigus at 2019/8/7
  */
-fun start(context: Context, photoList: List<String>, pos: Int = 0) {
+fun showPhotos(context: Context, photoList: List<String>, pos: Int = 0) {
     context.startActivity<PhotoViewerActivity>("photos" to photoList.toTypedArray(), "position" to pos)
 }
 
 open class PhotoViewerActivity : BaseActivity() {
     override val isFragmentActivity = false
 
-    protected lateinit var g: RequestManager
-    protected lateinit var adapter: PagerAdapter
+    protected lateinit var mImgManager: RequestManager
+    protected lateinit var mAdapter: PagerAdapter
 
     protected open val backgroundColor: Int = Color.BLACK
+    protected open val glideOption: RequestOptions? = null
+    protected open val thumbnail: Float = 0.1f
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,18 +44,22 @@ open class PhotoViewerActivity : BaseActivity() {
             finish()
             return
         }
-        g = Glide.with(this)
+        mImgManager = Glide.with(this)
+        glideOption?.let {
+            mImgManager.setDefaultRequestOptions(it)
+        }
 
-        adapter = object : BasePagerAdapter<PhotoView, String>(list) {
+        mAdapter = object : BasePagerAdapter<PhotoView, String>(list) {
             override fun createView(context: Context) = PhotoView(context)
             override fun PhotoView.initView(mData: String, mPos: Int) {
-                g.load(mData).thumbnail(0.1f).into(this)
+                Log.d("test", mData)
+                mImgManager.load(mData).thumbnail(thumbnail).into(this)
                 setOnClickListener { onPhotoClick(mData, mPos) }
             }
         }
 
         vp_photo.apply {
-            adapter = this.adapter
+            adapter = mAdapter
             currentItem = curPos
             setBackgroundColor(backgroundColor)
         }

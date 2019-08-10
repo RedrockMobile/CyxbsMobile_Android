@@ -19,7 +19,7 @@ abstract class BasePagerAdapter<V : View, D>(var list: List<D> = listOf()) : Pag
 
     override fun destroyItem(container: ViewGroup, position: Int, `object`: Any) = container.removeView(`object` as View)
 
-    override fun getItemPosition(`object`: Any) = PagerAdapter.POSITION_NONE
+    override fun getItemPosition(`object`: Any) = POSITION_NONE
 
     @Suppress("UNCHECKED_CAST")
     override fun instantiateItem(container: ViewGroup, position: Int): V =
