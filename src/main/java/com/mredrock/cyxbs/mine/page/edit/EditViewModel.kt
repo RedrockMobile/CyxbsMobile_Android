@@ -20,8 +20,8 @@ class EditViewModel : BaseViewModel() {
     val upLoadImageEvent = MutableLiveData<Boolean>()
 
     fun updateUserInfo(nickname: String, introduction: String, qq: String, phone: String
-                       , photoThumbnailSrc: String = user!!.photoThumbnailSrc!!
-                       , photoSrc: String = user!!.photoSrc!!) {
+                       , photoThumbnailSrc: String = user!!.photoThumbnailSrc ?: ""
+                       , photoSrc: String = user!!.photoSrc ?: "") {
         apiService.updateUserInfo(user!!.stuNum!!, user!!.idNum!!,
                 nickname, introduction, qq, phone, photoThumbnailSrc, photoSrc)
                 .normalStatus(this)

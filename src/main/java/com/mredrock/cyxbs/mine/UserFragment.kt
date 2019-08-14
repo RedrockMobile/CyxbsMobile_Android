@@ -135,8 +135,8 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
     private fun refreshEditLayout() {
         if (BaseApp.isLogin) {
             context?.loadAvatar(user!!.photoThumbnailSrc, mine_main_avatar)
-            mine_main_username.text = if (user!!.nickname!!.isBlank()) getString(R.string.mine_user_empty_username) else user!!.nickname
-            mine_main_introduce.text = if (user!!.introduction!!.isBlank()) getString(R.string.mine_user_empty_introduce) else user!!.introduction
+            mine_main_username.text = if (user!!.nickname.isNullOrBlank()) getString(R.string.mine_user_empty_username) else user!!.nickname
+            mine_main_introduce.text = if (user!!.introduction.isNullOrBlank()) getString(R.string.mine_user_empty_introduce) else user!!.introduction
         } else {
             mine_main_username.setText(R.string.mine_user_empty_username)
             mine_main_avatar.setImageResource(R.drawable.mine_default_avatar)
