@@ -134,6 +134,7 @@ dependencies {
         implementation project(':module_mine')
         implementation project(':module_widget')
         implementation project(':module_redrock_home')
+        implementation project(':module_freshman')
     }
     kapt deps.arouter.compiler
     api deps.hotfix.runtime
