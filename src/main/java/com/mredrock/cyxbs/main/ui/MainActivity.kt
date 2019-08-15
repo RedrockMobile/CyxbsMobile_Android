@@ -6,9 +6,12 @@ import androidx.fragment.app.Fragment
 import android.view.MenuItem
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
+import com.google.android.material.bottomnavigation.LabelVisibilityMode
 import com.mredrock.cyxbs.common.config.*
+import com.mredrock.cyxbs.common.event.GoToDiscoverEvent
 import com.mredrock.cyxbs.common.event.MainVPChangeEvent
 import com.mredrock.cyxbs.common.ui.BaseActivity
+import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.update.UpdateUtils
 import com.mredrock.cyxbs.main.R
 import com.mredrock.cyxbs.main.ui.adapter.MainVpAdapter
@@ -16,6 +19,8 @@ import com.mredrock.cyxbs.main.utils.BottomNavigationViewHelper
 import com.tbruyelle.rxpermissions2.RxPermissions
 import kotlinx.android.synthetic.main.main_activity_main.*
 import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 import org.jetbrains.anko.dip
 
 @Route(path = MAIN_MAIN)
@@ -38,7 +43,7 @@ class MainActivity : BaseActivity() {
 
     private lateinit var appbar: AppBarLayout
 
-    private val fragments = ArrayList<androidx.fragment.app.Fragment>()
+    private val fragments = ArrayList<Fragment>()
     private lateinit var adapter: MainVpAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -52,7 +57,7 @@ class MainActivity : BaseActivity() {
         initFragments()
 
         fab.setOnClickListener {
-            ARouter.getInstance().build(REDROCK_HOME_ENTRY).navigation()
+            ARouter.getInstance().build(FRESHMAN_ENTRY).navigation()
         }
 
         UpdateUtils.checkUpdate(this, RxPermissions(this))
@@ -60,9 +65,9 @@ class MainActivity : BaseActivity() {
 
     private fun initBottomNavigationView() {
         navHelpers = BottomNavigationViewHelper(nav_main).apply {
-            enableAnimation(false)
-            enableShiftMode(false)
-            enableItemShiftMode(false)
+            //enableAnimation(false)
+            //enableShiftMode(false)
+            //enableItemShiftMode(false)
             setTextSize(11f)
             setIconSize(dip(21))
             setItemIconTintList(null)
@@ -79,6 +84,7 @@ class MainActivity : BaseActivity() {
                 appbar.setExpanded(true)
             }
         }
+        nav_main.labelVisibilityMode = LabelVisibilityMode.LABEL_VISIBILITY_LABELED
         nav_main.menu.getItem(0).setIcon(icons[1])  //一定要放在上面的代码后面
         preCheckedItem = nav_main.menu.getItem(0)
         peeCheckedItemPosition = 0
@@ -94,6 +100,12 @@ class MainActivity : BaseActivity() {
         view_pager.offscreenPageLimit = 4
     }
 
-    private fun getFragment(path: String) = ARouter.getInstance().build(path).navigation() as androidx.fragment.app.Fragment
+    private fun getFragment(path: String) = ARouter.getInstance().build(path).navigation() as Fragment
 
+
+    // 为完成迎新专题中直接跳转"发现页"的需求添加的event
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun goToDiscover(event: GoToDiscoverEvent) {
+        view_pager.currentItem = 2
+    }
 }
