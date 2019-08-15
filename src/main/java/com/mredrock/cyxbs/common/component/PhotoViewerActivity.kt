@@ -53,6 +53,7 @@ open class PhotoViewerActivity : BaseActivity() {
             override fun PhotoView.initView(mData: String, mPos: Int) {
                 mImgManager.load(mData).thumbnail(thumbnail).into(this)
                 setOnClickListener { onPhotoClick(mData, mPos) }
+                setOnLongClickListener { onLongClick(mData, mPos) }
             }
         }
 
@@ -75,6 +76,7 @@ open class PhotoViewerActivity : BaseActivity() {
     }
 
     protected open fun onPhotoClick(mData: String, mPos: Int) {}
+    protected open fun onLongClick(mData: String, mPos: Int) = false
 
     protected fun addFloatView(@LayoutRes floatLayoutId: Int): View =
             LayoutInflater.from(this).inflate(floatLayoutId, fl_photo_content, true)
