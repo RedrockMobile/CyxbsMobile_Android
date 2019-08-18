@@ -111,7 +111,7 @@ class CourseContainerFragment : BaseFragment() {
                     mScheduleAdapter.notifyDataSetChanged()
                 }
                 // 跳转到当前周
-                vp.currentItem = nowWeek ?: 0
+                mBinding.vp.currentItem = nowWeek ?: 0
 
             })
         }
