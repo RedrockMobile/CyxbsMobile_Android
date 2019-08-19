@@ -9,6 +9,7 @@ import com.mredrock.cyxbs.discover.schoolcar.SchoolCarActivity.Companion.LOST_SE
 import com.mredrock.cyxbs.discover.schoolcar.SchoolCarActivity.Companion.NO_GPS
 import com.mredrock.cyxbs.discover.schoolcar.SchoolCarActivity.Companion.TIME_OUT
 import kotlinx.android.synthetic.main.schoolcar_notserve_dialog.view.*
+import java.util.*
 
 /**
  * Created by glossimar on 2018/9/12
@@ -48,6 +49,11 @@ class ExploreSchoolCarDialog {
                     LOST_SERVICES -> {
                         setLayout(activity,R.drawable.dialog_school_car_not_serve)
                         dialog!!.window!!.setBackgroundDrawableResource(R.drawable.dialog_school_car_not_serve)
+                        Timer().schedule(object : TimerTask(){
+                            override fun run() {
+                                dialog?.dismiss()
+                            }
+                        },4 * 1000)
                     }
                     TIME_OUT -> {
                         setLayout(activity,R.drawable.ic_school_car_search_time_out)
