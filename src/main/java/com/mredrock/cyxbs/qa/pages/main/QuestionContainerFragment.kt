@@ -17,6 +17,7 @@ import com.mredrock.cyxbs.qa.bean.Question
 import com.mredrock.cyxbs.qa.pages.question.ui.QuestionListFragment
 import com.mredrock.cyxbs.qa.pages.quiz.ui.QuizActivity
 import kotlinx.android.synthetic.main.qa_dialog_quiz_type_select.view.*
+import kotlinx.android.synthetic.main.qa_fragment_question_container.*
 import kotlinx.android.synthetic.main.qa_fragment_question_container.view.*
 import org.greenrobot.eventbus.EventBus
 
@@ -41,6 +42,8 @@ class QuestionContainerFragment : BaseFragment(), View.OnClickListener {
         val root = inflater.inflate(R.layout.qa_fragment_question_container, container, false)
         childFragments = titles.map { QuestionListFragment().apply { title = it } }
         root.vp_question.adapter = QAViewPagerAdapter(childFragments, activity!!.supportFragmentManager)
+        //预加载所有部分保证提问后所有fragment能够被通知刷新（虽然我知道这样很不好...）
+        root.vp_question.offscreenPageLimit = 5
         root.tl_category.setupWithViewPager(root.vp_question)
         root.fab_quiz.setOnClickListener {
             if (BaseApp.isLogin) {
@@ -85,5 +88,6 @@ class QuestionContainerFragment : BaseFragment(), View.OnClickListener {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         childFragments.forEach { it.onActivityResult(requestCode, resultCode, data) }
+        //childFragments[vp_question.currentItem].onActivityResult(requestCode, resultCode, data)
     }
 }
