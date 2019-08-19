@@ -51,8 +51,8 @@ class DiscoverFragment : BaseViewModelFragment<DiscoverViewModel>() {
         super.onPrepareOptionsMenu(menu)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when (item?.itemId) {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
             R.id.discover_manager -> startActivity<DiscoverHidingActivity>()
         }
         return super.onOptionsItemSelected(item)
