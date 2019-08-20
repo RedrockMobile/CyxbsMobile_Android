@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="160dp">
+
+    <com.mredrock.cyxbs.freshman.view.widget.SuccessView
+        android:layout_width="65dp"
+        android:layout_height="65dp"
+        app:circleDuration="500"
+        app:gouDuration="600"
+        app:lineWidth="4dp"
+        android:id="@+id/success_view_copy_qq_number_success"
+        app:color="@color/freshman_copy_qq_number_success_gou_color"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="37dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="15dp"
+        android:textColor="@color/freshman_copy_qq_number_success_text_color"
+        android:text="@string/freshman_copy_qq_number_success"/>
+
+</LinearLayout>

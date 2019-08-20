@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/freshman_activity_background_color">
+
+    <include layout="@layout/common_toolbar" />
+
+    <com.google.android.material.tabs.TabLayout
+        android:layout_width="match_parent"
+        android:layout_height="49dp"
+        app:tabBackground="@color/freshman_transparent_bg"
+        app:tabRippleColor="@color/freshman_transparent_bg"
+        android:id="@+id/tl_online_communication"
+        app:tabSelectedTextColor="@color/freshman_tab_selected_color"
+        app:tabTextAppearance="@style/TextAppearance.Design.Tab.TabTextSize"
+        android:background="@drawable/freshman_tab_layout_bg"
+        app:tabIndicatorHeight="0dp">
+
+        <com.google.android.material.tabs.TabItem
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/freshman_tab_layout_online_communication_college_group"/>
+
+        <com.google.android.material.tabs.TabItem
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/freshman_tab_layout_online_communication_fellow_townsman_group"/>
+
+        <com.google.android.material.tabs.TabItem
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/freshman_tab_layout_online_communication_online_activity"/>
+
+    </com.google.android.material.tabs.TabLayout>
+
+    <androidx.viewpager.widget.ViewPager
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/vp_online_communication">
+    </androidx.viewpager.widget.ViewPager>
+
+</LinearLayout>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <com.mredrock.cyxbs.freshman.view.widget.PieChart
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_gravity="center_horizontal"
+        app:titleText="@string/freshman_sex_ratio"
+        android:background="@drawable/freshman_page_bg"
+        android:layout_marginTop="15dp"
+        android:id="@+id/pie_chart_data_disclosure_sex_ratio"
+        app:titleTextColor="@color/freshman_data_disclosure_sex_ratio_title_text_color"
+        app:itemTextColor="@color/freshman_data_disclosure_sex_ratio_item_text_color"
+        app:firstItemColor="@color/freshman_date_disclosure_sex_ratio_first_item_color"
+        app:secondItemColor="@color/freshman_data_disclosure_sex_ratio_second_item_color"
+        app:borderColor="@color/freshman_data_disclosure_sex_ratio_border_color"
+        app:itemDataTextColor="@color/freshman_data_disclosure_sex_ratio_graph_data_color"
+        app:titleTextSize="15sp"
+        app:itemTextSize="13sp"
+        app:itemDataTextSize="12sp"/>
+
+</FrameLayout>

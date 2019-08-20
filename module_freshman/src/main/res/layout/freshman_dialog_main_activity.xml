@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    tools:context=".view.activity.MainActivity">
+
+    <com.mredrock.cyxbs.freshman.view.widget.EnvelopViewGroup
+        android:id="@+id/envelop_effect"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <ImageView
+            android:layout_width="140dp"
+            android:layout_height="50dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/freshman_dialog_envelop_background" />
+
+        <ImageView
+            android:src="@drawable/freshman_dialog_envelop_word"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleType="fitXY"
+            android:alpha="0" />
+
+
+
+        <ImageView
+            android:id="@+id/envelop_iv"
+            android:layout_width="140dp"
+            android:layout_height="50dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/freshman_dialog_envelop_connect" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/freshman_dialog_envelop_left_up" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/freshman_dialog_envelop_right_up" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/freshman_dialog_envelop_left_down" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/freshman_dialog_envelop_right_down" />
+        <ImageView
+            android:id="@+id/iv_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleType="fitXY"
+            android:alpha="0"
+            android:src="@drawable/freshman_dialog_envelop_btn"/>
+
+
+    </com.mredrock.cyxbs.freshman.view.widget.EnvelopViewGroup>
+
+</LinearLayout>

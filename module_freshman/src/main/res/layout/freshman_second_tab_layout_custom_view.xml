@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:text="顺丰"
+    android:gravity="center"
+    android:id="@+id/tv_second_tab_custom_view"
+    android:textAppearance="@style/TextAppearance.Design.Tab.SecondTabTextSize"
+    android:textColor="@color/freshman_tab_layout_second_tab_layout_tab_selected_text_color"
+    android:textStyle="bold"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+</TextView>

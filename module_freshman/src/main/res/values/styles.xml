@@ -1,0 +1,45 @@
+<resources xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar" tools:ignore="ResourceName">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+    <style name="TextAppearance.Design.Tab.TabTextSize" parent="TextAppearance.Design.Tab"
+        tools:ignore="ResourceName">
+        <item name="android:textSize">17sp</item>
+    </style>
+
+    <style name="TextAppearance.Design.Tab.SecondTabTextSize" parent="TextAppearance.Design.Tab"
+        tools:ignore="ResourceName">
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">@color/freshman_tab_layout_express_tab_text_color</item>
+    </style>
+
+    <style name="Theme.AppCompat.DayNight.Dialog.Alert.MyDialog"
+        parent="Theme.AppCompat.DayNight.Dialog.Alert" tools:ignore="ResourceName">
+        <item name="windowNoTitle">true</item>
+        <item name="dialogPreferredPadding">0dp</item>
+    </style>
+
+    <style name="FreshmanDialog.Dialog" parent="android:style/Theme.Dialog">
+        <item name="android:background">@android:color/transparent</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowNoTitle">true</item>
+    </style>
+
+    <style name="Theme.AppCompat.DayNight.Dialog.Alert.MyChooseDialog"
+        parent="Theme.AppCompat.DayNight.Dialog.Alert" tools:ignore="ResourceName" >
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="Test" parent="ThemeOverlay.AppCompat.Dark.ActionBar" tools:ignore="ResourceName">
+    </style>
+
+
+
+</resources>

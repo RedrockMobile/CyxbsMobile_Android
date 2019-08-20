@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/freshman_activity_background_color">
+    
+    <include layout="@layout/common_toolbar"/>
+
+
+    <include layout="@layout/freshman_custom_tab_layout"/>
+
+    <com.mredrock.cyxbs.freshman.view.widget.ScrollEnableViewPager
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/vp_campus_guidelines">
+    </com.mredrock.cyxbs.freshman.view.widget.ScrollEnableViewPager>
+
+</LinearLayout>

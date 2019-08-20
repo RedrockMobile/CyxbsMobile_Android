@@ -1,0 +1,9 @@
+apply from: module_config
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+
+dependencies {
+    implementation project(':lib_common')
+    implementation 'com.youth.banner:banner:1.4.10'
+    kapt deps.arouter.compiler
+}
