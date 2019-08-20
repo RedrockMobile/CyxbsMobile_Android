@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_marginStart="15dp"
+    android:layout_marginEnd="15dp"
+    android:layout_marginBottom="15dp"
+    android:background="@drawable/freshman_recycle_item_common_bg">
+
+    <ImageView
+        android:layout_width="47dp"
+        android:layout_height="47dp"
+        android:padding="15dp"
+        tools:src="@drawable/freshman_recycle_item_enrollment_requirements_todo"
+        android:id="@+id/iv_recycle_item_enrollment_requirements_select"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/tv_recycle_item_enrollment_requirements_name"
+        app:layout_constraintBottom_toBottomOf="@id/iv_recycle_item_enrollment_requirements_select"
+        app:layout_constraintTop_toTopOf="@id/iv_recycle_item_enrollment_requirements_select"
+        android:layout_marginStart="40dp"
+        android:layout_marginEnd="40dp"
+        android:textSize="15sp"
+        android:textColor="@color/freshman_recycle_item_enrollment_requirements_item_name_text_color"
+        tools:text="《新生适应性资料》学习心得"/>
+    
+    <ImageView
+        android:layout_width="13dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/iv_recycle_item_enrollment_requirements_item_open_or_close"
+        tools:src="@drawable/freshman_recycle_item_close"
+        app:layout_constraintTop_toTopOf="@id/iv_recycle_item_enrollment_requirements_select"
+        app:layout_constraintBottom_toBottomOf="@id/iv_recycle_item_enrollment_requirements_select"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginEnd="15dp"
+        android:alpha="0.7"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/tv_recycle_item_enrollment_requirements_item_description"
+        app:layout_constraintTop_toBottomOf="@id/tv_recycle_item_enrollment_requirements_name"
+        android:layout_marginStart="40dp"
+        android:layout_marginEnd="40dp"
+        android:layout_marginTop="18dp"
+        android:paddingBottom="18dp"
+        tools:text="啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦
+        啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

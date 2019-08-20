@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/freshman_activity_background_color">
+
+    <include layout="@layout/common_toolbar"/>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <View
+            android:layout_width="2dp"
+            android:layout_height="match_parent"
+            android:id="@+id/view_enrollment_process"
+            android:background="@color/freshman_recycle_item_enrollment_process_line_bg_color"
+            android:layout_marginStart="21dp"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/rv_enrollment_process"
+            android:overScrollMode="never">
+        </androidx.recyclerview.widget.RecyclerView>
+
+    </FrameLayout>
+
+</LinearLayout>

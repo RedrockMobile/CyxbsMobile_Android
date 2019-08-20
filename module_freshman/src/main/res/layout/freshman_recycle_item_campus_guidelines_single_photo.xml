@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@drawable/freshman_page_bg"
+    android:layout_marginTop="15dp"
+    android:layout_marginStart="15dp"
+    android:layout_marginEnd="15dp"
+    android:layout_marginBottom="15dp">
+    
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="18dp"
+        android:layout_marginStart="18dp"
+        android:layout_marginEnd="18dp"
+        android:scaleType="fitXY"
+        android:adjustViewBounds="true"
+        tools:src="@drawable/freshman_banner_top"
+        android:id="@+id/iv_recycle_item_campus_guidelines_single_photo_photo"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/tv_recycle_item_campus_guidelines_single_photo_place"
+        android:layout_marginStart="17dp"
+        android:layout_marginTop="15dp"
+        android:layout_below="@id/iv_recycle_item_campus_guidelines_single_photo_photo"
+        tools:text="执行员无赦"
+        android:textStyle="bold"
+        android:textSize="14sp"
+        android:textColor="@color/freshman_recycle_item_campus_guidelines_place_text_color" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/tv_recycle_item_campus_guidelines_single_photo_description"
+        android:textSize="14sp"
+        android:textColor="@color/freshman_recycle_item_campus_guidelines_description_text_color"
+        tools:text="关于快递点的描述关于快递点的描述关于快递点的描述关于快递点的描述关于快递点的描述关于快递
+        点的描述关于快递点的描述关于快递点的描述关于快递点的描述关于快递点的描述关于快递点的描述关于快递点的
+        描述关于快递点的描述关于快递点的描述关于快递点的描述关于快递点的描述关于快递点的描述"
+        android:layout_marginStart="17dp"
+        android:layout_marginEnd="21dp"
+        android:layout_marginBottom="22dp"
+        android:layout_marginTop="3dp"
+        android:lineSpacingMultiplier="1.45"
+        android:layout_below="@id/tv_recycle_item_campus_guidelines_single_photo_place"/>
+
+</RelativeLayout>

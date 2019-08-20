@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:scrollbars="none">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"
+        android:layout_marginBottom="15dp"
+        android:background="@drawable/freshman_page_bg">
+
+        <com.youth.banner.Banner
+            android:layout_width="match_parent"
+            android:layout_height="191dp"
+            app:indicator_drawable_selected="@drawable/freshman_banner_indicator_selected"
+            app:indicator_drawable_unselected="@drawable/freshman_banner_indicator_un_select"
+            app:indicator_width="7dp"
+            app:indicator_height="7dp"
+            android:id="@+id/banner_campus_guidelines_photos"
+            android:layout_marginTop="18dp"
+            android:layout_marginStart="18dp"
+            android:layout_marginEnd="18dp"
+            >
+        </com.youth.banner.Banner>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/tv_campus_guidelines_place_photos"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:textColor="@color/freshman_recycle_item_campus_guidelines_place_text_color"
+            android:layout_below="@id/banner_campus_guidelines_photos"
+            android:layout_marginTop="15dp"
+            android:layout_marginStart="17dp"
+            tools:text="执行员牛舌"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/tv_campus_guidelines_description_photos"
+            android:textSize="14sp"
+            android:textColor="@color/freshman_recycle_item_campus_guidelines_description_text_color"
+            android:layout_below="@id/tv_campus_guidelines_place_photos"
+            android:layout_marginStart="17dp"
+            android:layout_marginEnd="21dp"
+            android:layout_marginTop="3dp"
+            android:lineSpacingMultiplier="1.45"
+            android:layout_marginBottom="22dp"
+            tools:text="快递点的描述快递点的描述快递点的描述快递点的描述快递点的描述快递点的描述快递点的描述快
+        递点的描述快递点的描述快递点的描述快递点的描述快递点的描述快递点的描述快递点的描述快递点的描述"/>
+
+    </RelativeLayout>
+
+</androidx.core.widget.NestedScrollView>

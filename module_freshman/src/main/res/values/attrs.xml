@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    
+    <attr name="titleTextSize" format="dimension" tools:ignore="ResourceName" />
+
+    <declare-styleable name="SuccessView" tools:ignore="ResourceName" >
+        <attr name="color" format="color"/>
+        <attr name="circleDuration" format="integer"/>
+        <attr name="gouDuration" format="integer"/>
+        <attr name="lineWidth" format="dimension"/>
+    </declare-styleable>
+
+    <declare-styleable name="Histogram" tools:ignore="ResourceName" >
+        <attr name="titleTextColor" />
+        <attr name="descriptionTextColorY" format="color"/>
+        <attr name="firstGraphColor" format="color"/>
+        <attr name="secondGraphColor" format="color"/>
+        <attr name="thirdGraphColor" format="color"/>
+        <attr name="descriptionTextColorX" format="color"/>
+        <attr name="dataTextColor" format="color"/>
+        <attr name="title" format="string"/>
+        <attr name="descriptionY" format="string"/>
+        <attr name="firstDescriptionX" format="string"/>
+        <attr name="secondDescriptionX" format="string"/>
+        <attr name="thirdDescriptionX" format="string"/>
+        <attr name="decorationColor" format="color"/>
+        <attr name="xYColor" format="color"/>
+        <attr name="titleTextSize"/>
+        <attr name="descriptionTextSizeY" format="dimension"/>
+        <attr name="descriptionTextSizeX" format="dimension"/>
+        <attr name="graphDataTextSize" format="dimension"/>
+    </declare-styleable>
+
+    <declare-styleable name="PieChart" tools:ignore="ResourceName" >
+        <attr name="firstItemColor" format="color"/>
+        <attr name="secondItemColor" format="color"/>
+        <attr name="titleTextColor"/>
+        <attr name="titleText"/>
+        <attr name="itemDataTextColor" format="color"/>
+        <attr name="itemDataTextSize" format="dimension"/>
+        <attr name="itemTextColor" format="color"/>
+        <attr name="firstItem" format="string"/>
+        <attr name="secondItem" format="string"/>
+        <attr name="borderColor" format="color"/>
+        <attr name="itemTextSize" format="dimension"/>
+        <attr name="titleTextSize"/>
+    </declare-styleable>
+
+</resources>

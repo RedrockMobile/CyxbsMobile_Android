@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/freshman_activity_background_color">
+
+    <include layout="@layout/common_toolbar"
+        android:background="@drawable/common_toolbar_background"/>
+
+    <com.google.android.material.tabs.TabLayout
+        android:layout_width="match_parent"
+        android:layout_height="49dp"
+        app:tabBackground="@color/freshman_transparent_bg"
+        app:tabRippleColor="@color/freshman_transparent_bg"
+        android:id="@+id/tl_data_disclosure"
+        app:tabSelectedTextColor="@color/freshman_tab_selected_color"
+        app:tabTextAppearance="@style/TextAppearance.Design.Tab.TabTextSize"
+        app:tabIndicatorHeight="0dp"
+        android:background="@drawable/freshman_tab_layout_bg">
+
+        <com.google.android.material.tabs.TabItem
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="@string/freshman_subject_data" />
+
+        <com.google.android.material.tabs.TabItem
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="@string/freshman_sex_ratio"/>
+
+    </com.google.android.material.tabs.TabLayout>
+
+    <androidx.viewpager.widget.ViewPager
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/vp_data_disclosure">
+    </androidx.viewpager.widget.ViewPager>
+
+</LinearLayout>

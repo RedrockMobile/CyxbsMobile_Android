@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools">
+    
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="273dp"
+        android:id="@+id/iv_save_qr_qr"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginEnd="12dp"
+        tools:src="@drawable/freshman_banner_top"/>
+
+    <ScrollView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/iv_save_qr_qr"
+        android:layout_marginStart="36dp"
+        android:layout_marginEnd="36dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="40dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/tv_save_qr_description"
+            android:gravity="center_horizontal"
+            android:textSize="15sp"
+            android:textColor="@color/freshman_save_qr_text_color"
+            tools:text="关注“重邮小帮手”微信公众号，参与学长学姐帮帮忙。"/>
+
+    </ScrollView>
+
+</RelativeLayout>

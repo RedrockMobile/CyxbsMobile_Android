@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.mredrock.cyxbs.freshman">
+
+    <application
+        android:name="com.mredrock.cyxbs.common.BaseApp"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/freshman_app_name"
+        android:launchMode="singleTop"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme"
+        android:usesCleartextTraffic="true"
+        tools:ignore="AllowBackup,GoogleAppIndexingWarning">
+        <activity
+            android:name=".view.activity.MainActivity"
+            android:screenOrientation="portrait"
+            android:launchMode="singleTop">
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".view.activity.DataDisclosureActivity"
+            android:screenOrientation="portrait"
+            android:launchMode="singleTop" />
+        <activity
+            android:screenOrientation="portrait"
+            android:name=".view.activity.CampusGuidelinesActivity"
+            android:launchMode="singleTop" />
+        <activity
+            android:screenOrientation="portrait"
+            android:name=".view.activity.EnrollmentRequirementsActivity"
+            android:launchMode="singleTop" />
+        <activity
+            android:name=".view.activity.EnrollmentProcessActivity"
+            android:screenOrientation="portrait"
+            android:launchMode="singleTop" />
+        <activity
+            android:screenOrientation="portrait"
+            android:name=".view.activity.CampusMapActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:launchMode="singleTop">
+
+        </activity>
+        <activity
+            android:screenOrientation="portrait"
+            android:name=".view.activity.MoreActivity"
+            android:launchMode="singleTop" />
+        <activity
+            android:screenOrientation="portrait"
+            android:name=".view.activity.PhotoSceneryActivity"
+            android:launchMode="singleTop" />
+        <activity
+            android:name=".view.activity.PhotoMapActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="sensor">
+
+        </activity>
+        <activity
+            android:screenOrientation="portrait"
+            android:name=".view.activity.OnlineCommunicationActivity"
+            android:launchMode="singleTop"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:screenOrientation="portrait"
+            android:name=".view.activity.CopyQQNumberActivity"
+            android:launchMode="singleTop"
+            android:theme="@style/Theme.AppCompat.DayNight.Dialog.Alert.MyDialog" />
+        <activity
+            android:screenOrientation="portrait"
+            android:name=".view.activity.SaveQRActivity"
+            android:launchMode="singleTop"
+
+            android:theme="@style/Theme.AppCompat.DayNight.Dialog.Alert.MyDialog" />
+        <activity
+            android:screenOrientation="portrait"
+            android:name=".view.activity.ChooseSaveQrActivity"
+            android:launchMode="singleTop"
+
+            android:theme="@style/Theme.AppCompat.DayNight.Dialog.Alert.MyChooseDialog" />
+        <activity
+            android:screenOrientation="portrait"
+            android:name=".view.activity.AddMemorandumBookActivity"
+            android:launchMode="singleTop" />
+        <activity
+            android:screenOrientation="portrait"
+            android:name=".view.activity.EditMemorandumBookActivity"
+            android:launchMode="singleTop" />
+    </application>
+
+</manifest>

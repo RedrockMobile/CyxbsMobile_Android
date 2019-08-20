@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_marginTop="15dp"
+    android:layout_marginEnd="15dp"
+    android:layout_marginStart="15dp"
+    android:background="@drawable/freshman_page_bg">
+
+    <ImageView
+        android:id="@+id/iv_recycle_item_online_activity_poster"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scaleType="fitXY"
+        android:adjustViewBounds="true"
+        android:layout_gravity="top|center"
+        android:layout_marginTop="18dp"
+        android:layout_marginStart="18dp"
+        android:layout_marginEnd="18dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/tv_recycle_item_online_activity_name"
+        tools:text="学长学姐帮帮忙"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        android:textColor="@color/freshman_recycle_item_online_activity_name_text_color"
+        android:layout_marginStart="18dp"
+        android:layout_below="@id/iv_recycle_item_online_activity_poster"
+        android:layout_marginTop="18dp"
+        android:layout_marginBottom="26dp"/>
+
+    <Button
+        android:id="@+id/btn_recycle_item_online_activity_join_now"
+        android:layout_width="89dp"
+        android:layout_height="30dp"
+        android:text="@string/freshman_recycle_item_online_activity_join_now"
+        android:background="@drawable/freshman_recycle_item_online_activity_join_now_btn_bg"
+        android:textColor="@color/freshman_white_color"
+        android:textSize="14sp"
+        android:layout_marginEnd="18dp"
+        android:layout_marginTop="12dp"
+        android:layout_below="@id/iv_recycle_item_online_activity_poster"
+        android:layout_alignParentEnd="true"/>
+
+</RelativeLayout>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/iv_dialog_more_qr_code"
+        android:src="@drawable/freshman_dialog_qr_code"
+        android:layout_centerHorizontal="true"
+        android:scaleType="fitCenter"
+        android:layout_width="match_parent"
+        android:layout_height="350dp" />
+    <TextView
+        android:layout_below="@id/iv_dialog_more_qr_code"
+        android:layout_centerHorizontal="true"
+        android:text="@string/freshman_more_dialog"
+        android:gravity="center"
+        android:textSize="15sp"
+        android:textColor="@color/freshman_dialog_more_activity"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="20dp"
+        android:layout_width="224dp"
+        android:layout_height="wrap_content" />
+
+</RelativeLayout>

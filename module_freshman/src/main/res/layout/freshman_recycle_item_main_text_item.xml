@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:orientation="vertical"
+                android:background="@drawable/freshman_item_background"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="9dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+    <TextView
+            android:id="@+id/tv_title"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="17dp"
+            android:textSize="16sp"
+            android:textColor="@color/freshman_recycle_item_main_activity_title"
+            android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+    <TextView
+            android:id="@+id/tv_discript"
+            android:layout_below="@id/tv_title"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="15dp"
+            android:textSize="13sp"
+            android:textColor="@color/freshman_recycle_item_main_activity_discript"
+            android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+    <ImageView
+            android:id="@+id/btn_arrow"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="20dp"
+            android:src="@drawable/freshman_ic_arrow_main"
+            android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+
+</RelativeLayout>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="wrap_content"
+    android:background="@drawable/freshman_page_bg"
+    android:layout_marginStart="3dp"
+    android:layout_marginEnd="3dp"
+    android:layout_marginTop="15dp"
+    android:layout_height="wrap_content">
+    <ImageView
+        android:id="@+id/iv_scenery_recycle_item_header"
+        android:layout_centerHorizontal="true"
+        android:scaleType="fitXY"
+        android:layout_marginTop="14dp"
+        android:layout_marginStart="14dp"
+        android:layout_marginEnd="14dp"
+        android:layout_width="match_parent"
+        android:adjustViewBounds="true"
+        android:layout_height="wrap_content" />
+    <TextView
+        android:id="@+id/tv_scenery_recycle_item_header"
+        android:layout_alignStart="@id/iv_scenery_recycle_item_header"
+        android:layout_marginTop="14dp"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        android:textColor="@color/freshman_recycle_item_scenery_title"
+        android:layout_width="wrap_content"
+        android:layout_below="@id/iv_scenery_recycle_item_header"
+        android:layout_height="wrap_content" />
+    <TextView
+        android:id="@+id/tv_scenery_header_content"
+        android:layout_alignStart="@id/iv_scenery_recycle_item_header"
+        android:layout_marginTop="7dp"
+        android:layout_marginBottom="20dp"
+        android:textSize="13sp"
+        android:textColor="@color/freshman_recycle_item_scenery_content"
+        android:layout_below="@id/tv_scenery_recycle_item_header"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+</RelativeLayout>

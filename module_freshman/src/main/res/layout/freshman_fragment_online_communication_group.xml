@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="53dp"
+        android:background="@drawable/freshman_online_communication_group_input"
+        android:layout_marginTop="15dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"
+        android:elevation="2dp"
+        android:id="@+id/ll_online_communication_group_search">
+
+        <ImageView
+            android:layout_width="22dp"
+            android:layout_height="wrap_content"
+            android:src="@drawable/freshman_recycle_item_search"
+            android:layout_marginTop="15dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginBottom="15dp"/>
+
+        <EditText
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:id="@+id/et_recycle_item_online_communication_group_search"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="8dp"
+            android:background="@null"
+            android:textSize="15sp"
+            android:singleLine="true"
+            android:textColorHint="@color/freshman_recycle_item_online_communication_group_search_hint_text_color"
+            android:textColor="@color/freshman_recycle_item_online_communication_group_search_text_color"
+            tools:hint="找不到学院群？试试搜素"/>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/freshman_recycle_item_online_communication_group_search_decoration"
+            android:layout_gravity="bottom"
+            android:layout_margin="5dp"/>
+
+    </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_online_communication_group"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/ll_online_communication_group_search"
+        android:layout_marginTop="15dp">
+    </androidx.recyclerview.widget.RecyclerView>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"
+        android:overScrollMode="never"
+        android:elevation="2dp"
+        android:background="@drawable/freshman_recycle_item_online_communication_group_search_result_bg"
+        android:id="@+id/rv_online_communication_online_activity_search_result"
+        android:layout_below="@id/ll_online_communication_group_search">
+    </androidx.recyclerview.widget.RecyclerView>
+
+</RelativeLayout>

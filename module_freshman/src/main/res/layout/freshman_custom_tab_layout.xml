@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:id="@+id/cl_custom_tab_layout"
+    android:layout_height="49dp"
+    android:background="@drawable/freshman_tab_layout_bg">
+
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:id="@+id/tv_custom_tab_1"
+        android:textSize="17sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:text="@string/freshman_dormitory"
+        android:layout_gravity="center_vertical"
+        android:gravity="center_vertical"
+        android:layout_marginStart="15dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:id="@+id/tv_custom_tab_2"
+        android:textSize="17sp"
+        app:layout_constraintLeft_toRightOf="@+id/tv_custom_tab_1"
+        app:layout_constraintRight_toLeftOf="@+id/tv_custom_tab_3"
+        android:text="@string/freshman_canteen"
+        android:layout_gravity="center_vertical"
+        android:gravity="center"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:id="@+id/tv_custom_tab_3"
+        android:textSize="17sp"
+        app:layout_constraintLeft_toRightOf="@+id/tv_custom_tab_2"
+        app:layout_constraintRight_toLeftOf="@+id/tv_custom_tab_4"
+        android:text="@string/freshman_express"
+        android:layout_gravity="center"
+        android:gravity="center"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:id="@+id/tv_custom_tab_4"
+        android:textSize="17sp"
+        android:gravity="center"
+        android:layout_marginEnd="15dp"
+        app:layout_constraintRight_toRightOf="parent"
+        android:text="@string/freshman_data_disclosure"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

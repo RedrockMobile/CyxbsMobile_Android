@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/tv_custom_second_tab_fixed_header"
+    tools:text="@string/freshman_data_disclosure"
+    android:textSize="15sp"
+    android:gravity="center_vertical"
+    android:layout_marginStart="15dp"
+    android:textColor="@color/freshman_tab_layout_express_tab_text_color">
+</TextView>

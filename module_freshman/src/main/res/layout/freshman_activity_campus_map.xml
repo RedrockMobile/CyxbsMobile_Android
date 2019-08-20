@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include layout="@layout/common_toolbar"
+        android:background="@drawable/common_toolbar_background"/>
+
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tl_campus_map_activity"
+        android:layout_width="match_parent"
+        app:tabBackground="@android:color/transparent"
+        app:tabRippleColor="@android:color/transparent"
+        android:layout_height="49dp"
+        app:tabSelectedTextColor="@color/freshman_tab_selected_color"
+        app:tabTextAppearance="@style/TextAppearance.Design.Tab.TabTextSize"
+        app:tabIndicatorHeight="0dp"
+        android:background="@drawable/freshman_tab_layout_bg">
+
+    </com.google.android.material.tabs.TabLayout>
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/vp_campus_map"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+</LinearLayout>

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.mredrock.cyxbs.freshman">
+
+    <application>
+        <activity android:name=".view.activity.AboutUsActivity"></activity>
+        <activity
+            android:name=".view.activity.MainActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".view.activity.DataDisclosureActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".view.activity.CampusGuidelinesActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".view.activity.EnrollmentRequirementsActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".view.activity.EnrollmentProcessActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".view.activity.CampusMapActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".view.activity.MoreActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".view.activity.PhotoSceneryActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".view.activity.PhotoMapActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="sensor"></activity>
+        <activity
+            android:name=".view.activity.OnlineCommunicationActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".view.activity.CopyQQNumberActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.DayNight.Dialog.Alert.MyDialog" />
+        <activity
+            android:name=".view.activity.SaveQRActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.DayNight.Dialog.Alert.MyDialog" />
+        <activity
+            android:name=".view.activity.ChooseSaveQrActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.DayNight.Dialog.Alert.MyChooseDialog" />
+        <activity
+            android:name=".view.activity.AddMemorandumBookActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".view.activity.EditMemorandumBookActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait" />
+        <activity android:name=".ui.EmptyRoomActivity" />
+    </application>
+
+</manifest>

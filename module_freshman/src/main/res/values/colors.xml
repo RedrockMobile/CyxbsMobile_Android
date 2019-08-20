@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <color name="colorPrimary" tools:ignore="ResourceName">#58B1FC</color>
+    <color name="colorPrimaryDark" tools:ignore="ResourceName">#798DFA</color>
+    <color name="colorAccent" tools:ignore="ResourceName">#788EFA</color>
+    <color name="freshman_tab_selected_color">#4b72ff</color>
+    <color name="freshman_white_color">#ffffff</color>
+    <color name="freshman_tab_layout_border_color">#b3c4ff</color>
+    <color name="freshman_recycle_item_college_name_color">#333333</color>
+    <color name="freshman_recycle_item_college_border_color">#bfceff</color>
+    <color name="freshman_tab_layout_second_tab_layout_tab_selected_text_color">#A6000000</color>
+    <color name="freshman_tab_layout_express_tab_text_color">#80000000</color>
+    <color name="freshman_activity_background_color">#eff7ff</color>
+    <color name="freshman_recycle_item_online_activity_name_text_color">#B3000000</color>
+    <color name="freshman_recycle_item_online_activity_join_now_btn_bg_color">#A34A7BFE</color>
+    <color name="freshman_recycle_item_online_activity_join_now_btn_border_color">#aec0ff</color>
+    <color name="freshman_recycle_item_enrollment_process_message_text_color">#333333</color>
+    <color name="freshman_recycle_item_enrollment_process_time_text_color">#666666</color>
+    <color name="freshman_recycle_item_main_activity_background">#c9e3ff</color>
+    <color name="freshman_recycle_item_main_activity_discript">#8e9092</color>
+    <color name="freshman_recycle_item_main_activity_title">#333333</color>
+
+    <color name="freshman_recycle_item_title_dark">#333333</color>
+
+    <color name="freshman_recycle_item_scenery_content">#bf000000</color>
+    <color name="freshman_recycle_item_scenery_title">#b3000000</color>
+    <color name="freshman_recycle_item_content_light">#333333</color>
+    <color name="freshman_recycle_item_more_content">#888888</color>
+    <color name="freshman_recycle_item_more_title">#444444</color>
+    <color name="freshman_recycle_item_blue_light">#93a9ff</color>
+    <color name="freshman_recycle_item_copy_blue">#7390ff</color>
+    <color name="freshman_recycle_item_content_lightm">#999999</color>
+
+    <color name="freshman_dialog_more_activity">#888888</color>
+
+    <color name="freshman_view_pager_black">#000000</color>
+    <color name="freshman_view_pager_white">#ffffff</color>
+
+    <color name="freshman_recycle_item_online_communication_group_bg_color">#B3FFFFFF</color>
+    <color name="freshman_recycle_item_online_communication_group_border_color">#bfceff</color>
+    <color name="freshman_recycle_item_online_communication_group_search_hint_text_color">#b6b6b6</color>
+    <color name="freshman_recycle_item_online_communication_group_search_text_color">#333333</color>
+    <color name="freshman_recycle_item_online_communication_group_text_color">#333333</color>
+    <color name="freshman_transparent_bg">#00000000</color>
+    <color name="freshman_copy_qq_number_divider_bg_color">#eff7ff</color>
+    <color name="freshman_copy_qq_number_divider_border_color">#eeeeee</color>
+    <color name="freshman_copy_qq_number_copy_text_color">#4672ff</color>
+    <color name="freshman_copy_qq_number_cancel_text_color">#a3a3a3</color>
+    <color name="freshman_copy_qq_number_text_color">#333333</color>
+    <color name="freshman_copy_qq_number_success_gou_color">#87a3ff</color>
+    <color name="freshman_copy_qq_number_success_text_color">#6b8eff</color>
+    <color name="freshman_recycle_item_online_communication_group_footer_text_color">#acacac</color>
+    <color name="freshman_recycle_item_online_communication_group_search_result_text_color">#999999</color>
+    <color name="freshman_recycle_item_online_communication_group_search_result_bg_color">#f9fcff</color>
+    <color name="freshman_recycle_item_online_communication_group_search_result_border_color">#bfceff</color>
+    <color name="freshman_save_qr_text_color">#888888</color>
+    <color name="freshman_recycle_item_enrollment_process_line_bg_color">#aec0ff</color>
+    <color name="freshman_data_disclosure_subject_data_first_graph_bg_color">#698aff</color>
+    <color name="freshman_data_disclosure_subject_data_second_graph_bg_color">#ff95c3</color>
+    <color name="freshman_data_disclosure_subject_data_third_graph_bg_color">#71d5ff</color>
+    <color name="freshman_data_disclosure_subject_data_graph_decoration_color">#809bff</color>
+    <color name="freshman_data_disclosure_subject_data_xy_color">#5c7ffc</color>
+    <color name="freshman_data_disclosure_subject_data_description_y_text_color">#CC5C7FFC</color>
+    <color name="freshman_data_disclosure_subject_data_description_x_text_color">#5c7ffc</color>
+    <color name="freshman_data_disclosure_subject_data_data_text_color">#CC888888</color>
+    <color name="freshman_data_disclosure_subject_data_title_text_color">#BF000000</color>
+    <color name="freshman_data_disclosure_sex_ratio_title_text_color">#BF000000</color>
+    <color name="freshman_data_disclosure_sex_ratio_item_text_color">#5c7ffc</color>
+    <color name="freshman_date_disclosure_sex_ratio_first_item_color">#71d5ff</color>
+    <color name="freshman_data_disclosure_sex_ratio_second_item_color">#ff95c3</color>
+    <color name="freshman_data_disclosure_sex_ratio_border_color">#698aff</color>
+    <color name="freshman_data_disclosure_sex_ratio_graph_data_color">#ffffff</color>
+
+    <color name="freshman_recycle_item_campus_guidelines_place_text_color">#99000000</color>
+    <color name="freshman_recycle_item_campus_guidelines_description_text_color">#A6000000</color>
+    <color name="freshman_no_research_result_hint_text_color">#FF0000</color>
+    <color name="freshman_add_memorandum_book_hint_text_color">#777777</color>
+    <color name="freshman_add_memorandum_book_input_hint_text_color">#b6b6b6</color>
+    <color name="freshman_add_memorandum_book_input_bg_color">#FFFFFF</color>
+    <color name="freshman_add_memorandum_book_input_border_color">#bfceff</color>
+    <color name="freshman_toolbar_text_color">#ffffff</color>
+    <color name="freshman_recycle_item_enrollment_requirements_title_text_color">#999999</color>
+    <color name="freshman_recycle_item_enrollment_requirements_item_name_text_color">#333333</color>
+    <color name="freshman_recycle_item_enrollment_requirements_item_description_text_color">#666666</color>
+    <color name="freshman_recycle_item_enrollment_requirements_item_name_done_text_color">#bfbfbd</color>
+    <color name="freshman_recycle_item_enrollment_requirements_item_bg_color">#99FFFFFF</color>
+    <color name="freshman_recycle_item_enrollment_requirements_item_border_color">#bfceff</color>
+    <color name="freshman_recycle_item_edit_memorandum_add_hint_text_color">#a9a9a9</color>
+    <color name="freshman_custom_tab_layout_tab_text_color">#CC000000</color>
+
+</resources>

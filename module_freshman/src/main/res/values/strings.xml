@@ -1,0 +1,76 @@
+<resources>
+    <string name="freshman_app_name">CyxbsMobile_Freshman</string>
+    <string name="freshman_data_disclosure">数据揭秘</string>
+    <string name="freshman_subject_data">最难学科</string>
+    <string name="freshman_sex_ratio">男女比例</string>
+    <string name="freshman_dormitory">宿舍</string>
+    <string name="freshman_canteen">食堂</string>
+    <string name="freshman_express">快递</string>
+    <string name="freshman_enrollment_requirement">入学必备</string>
+    <string name="freshman_recycle_item_online_activity_join_now">立即参加</string>
+    <string name="freshman_tab_layout_online_communication_college_group">学院群</string>
+    <string name="freshman_tab_layout_online_communication_fellow_townsman_group">老乡群</string>
+    <string name="freshman_tab_layout_online_communication_online_activity">线上活动</string>
+    <string name="freshman_campus_guidelines">校园指引</string>
+    <string name="freshman_online_communication">线上交流</string>
+    <string name="freshman_enrollment_process">入学流程</string>
+    <string name="freshman_main_essential">入学必备</string>
+    <string name="freshman_main_zhilu">指路重邮</string>
+    <string name="freshman_main_shedule">入学流程</string>
+    <string name="freshman_main_xiaoyuanzhiyin">校园指引</string>
+    <string name="freshman_main_online">线上交流</string>
+    <string name="freshman_main_more">更多功能</string>
+    <string name="freshman_main_about">关于我们</string>
+
+    <string name="freshman_main_essential_detail">报道必备 军训用品</string>
+    <string name="freshman_main_zhilu_detail">公交线路 重邮地图 校园风光</string>
+    <string name="freshman_main_shedule_detail">报道流程</string>
+    <string name="freshman_main_xiaoyuanzhiyin_detail">宿舍 食堂 快递 数据揭秘</string>
+    <string name="freshman_main_online_detail">老乡群 学院群 线上活动</string>
+    <string name="freshman_main_more_detail">迎新网 重邮小帮手 发现</string>
+    <string name="freshman_main_about_detail">红岩网校</string>
+
+
+    <string name="freshman_campus_map">指路重邮</string>
+    <string name="freshman_tab_layout_campus_map_bus">公交路线</string>
+    <string name="freshman_tab_layout_campus_map_scenery">校园风光</string>
+    <string name="freshman_campus_map_copy">复制地址</string>
+    <string name="freshman_campus_map_recommend_route">推荐路线</string>
+    <string name="freshman_campus_map_route_1">路线一:</string>
+    <string name="freshman_campus_map_route_2">路线二:</string>
+
+    <string name="freshman_scenery_big">重邮全景地图前往发现查看(发现->重邮地图)</string>
+
+    <string name="freshman_more">更多功能</string>
+
+    <string name="freshman_more_youni">邮你造未来</string>
+    <string name="freshman_more_xiaoche">校车，校历等更多查询功能</string>
+    <string name="freshman_more_xuezhang">学长学姐帮帮忙 邮子画像</string>
+    <string name="freshman_more_dialog">关注“重邮小帮手”微信公众号， 参与学长学姐帮帮忙</string>
+
+    <string name="freshman_more_zhuanti">重邮2019迎新专题</string>
+    <string name="freshman_more_zhangshang">掌上重邮新功能</string>
+    <string name="freshman_more_cyxbs">重邮小帮手</string>
+
+    <string name="freshman_hint_not_found_college_group">找不到学院群？试试搜索</string>
+    <string name="freshman_hint_not_found_fellow_townsman_group">找不到老乡群？试试搜索</string>
+    <string name="freshman_copy_qq_number_cancel">取消</string>
+    <string name="freshman_copy_qq_number_copy">复制</string>
+    <string name="freshman_copy_qq_number_success">复制成功</string>
+    <string name="freshman_recycle_item_online_communication_group_footer">没有更多了</string>
+    <string name="freshman_data_disclosure_subject_data_degree">难度系数</string>
+
+    <string name="freshman_no_search_result">暂时没有你想要的群号</string>
+    <string name="freshman_choose_save_qr_save">保存</string>
+    <string name="freshman_choose_save_qr_cancel">取消</string>
+    <string name="freshman_add_memorandum_book_hint">添加备忘物品</string>
+    <string name="freshman_add_memorandum_book_input_hint">输入不多于15个字</string>
+    <string name="freshman_add_memorandum_book_toolbar_cancel">取消</string>
+    <string name="freshman_add_memorandum_toolbar_title">备忘录</string>
+    <string name="freshman_add_memorandum_book_save">保存</string>
+    <string name="freshman_add_enrollment_requiremnets_edit">编辑</string>
+    <string name="freshman_edit_memorandum_book_delete">删除</string>
+    <string name="freshman_edit_memorandum_book_cancel">取消</string>
+    <string name="freshman_edit_memorandum_book_add_hint">还未添加内容，点击我添加备忘录清单</string>
+
+</resources>

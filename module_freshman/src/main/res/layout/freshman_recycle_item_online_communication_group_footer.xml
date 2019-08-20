@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="15dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="@string/freshman_recycle_item_online_communication_group_footer"
+        android:textColor="@color/freshman_recycle_item_online_communication_group_footer_text_color"
+        android:textSize="12sp"/>
+
+</FrameLayout>
