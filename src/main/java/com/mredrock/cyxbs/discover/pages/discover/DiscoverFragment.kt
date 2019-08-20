@@ -33,6 +33,15 @@ class DiscoverFragment : BaseViewModelFragment<DiscoverViewModel>() {
     private var mListHide: MutableList<Boolean> = mutableListOf()
     private var mAdapter: DiscoverMainRvAdapter? = null
 
+    private val menuListener = MenuItem.OnMenuItemClickListener {
+        when (it?.itemId) {
+            R.id.discover_manager -> {
+                startActivity<DiscoverHidingActivity>()
+            }
+        }
+        return@OnMenuItemClickListener false
+    }
+
     override val viewModelClass = DiscoverViewModel::class.java
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -48,14 +57,8 @@ class DiscoverFragment : BaseViewModelFragment<DiscoverViewModel>() {
 
     override fun onPrepareOptionsMenu(menu: Menu) {
         activity?.menuInflater?.inflate(R.menu.discover_main_menu, menu)
+        if (menu.size() > 0) menu.getItem(0)?.setOnMenuItemClickListener(menuListener)
         super.onPrepareOptionsMenu(menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.discover_manager -> startActivity<DiscoverHidingActivity>()
-        }
-        return super.onOptionsItemSelected(item)
     }
 
     private fun initRv() {
