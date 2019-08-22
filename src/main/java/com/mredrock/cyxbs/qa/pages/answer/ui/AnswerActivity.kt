@@ -6,7 +6,6 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
-import androidx.fragment.app.FragmentActivity
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.KeyEvent
@@ -14,6 +13,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.ImageView
+import androidx.fragment.app.FragmentActivity
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.google.gson.Gson
 import com.mredrock.cyxbs.common.config.QA_ANSWER
@@ -37,7 +37,7 @@ class AnswerActivity : BaseViewModelActivity<AnswerViewModel>() {
     companion object {
         const val MAX_SELECTABLE_IMAGE_COUNT = 6
 
-        fun activityStart(activity: androidx.fragment.app.FragmentActivity, qid: String, requestCode: Int) {
+        fun activityStart(activity: FragmentActivity, qid: String, requestCode: Int) {
             activity.startActivityForResult<AnswerActivity>(requestCode, "qid" to qid)
         }
     }
@@ -90,7 +90,7 @@ class AnswerActivity : BaseViewModelActivity<AnswerViewModel>() {
         nine_grid_view.addView(createImageView(BitmapFactory.decodeResource(resources, R.drawable.qa_ic_quiz_grid_add_img)))
         nine_grid_view.setOnItemClickListener { _, index ->
             if (index == nine_grid_view.childCount - 1) {
-                this@AnswerActivity.selectImageFromAlbum(AnswerActivity.MAX_SELECTABLE_IMAGE_COUNT, viewModel.imageLiveData.value)
+                this@AnswerActivity.selectImageFromAlbum(MAX_SELECTABLE_IMAGE_COUNT, viewModel.imageLiveData.value)
             } else {
                 ViewImageActivity.activityStartForResult(this@AnswerActivity, viewModel.tryEditImg(index)
                         ?: return@setOnItemClickListener)

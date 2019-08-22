@@ -1,9 +1,9 @@
 package com.mredrock.cyxbs.qa.pages.comment.viewmodel
 
+import android.util.Base64
 import androidx.lifecycle.*
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
-import android.util.Base64
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.utils.extensions.checkError

@@ -2,12 +2,12 @@ package com.mredrock.cyxbs.qa.pages.main
 
 import android.content.Intent
 import android.os.Bundle
-import com.google.android.material.bottomsheet.BottomSheetDialog
-import androidx.appcompat.widget.AppCompatCheckedTextView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.widget.AppCompatCheckedTextView
 import com.alibaba.android.arouter.facade.annotation.Route
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.config.QA_ENTRY
 import com.mredrock.cyxbs.common.event.AskLoginEvent

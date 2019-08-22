@@ -5,7 +5,6 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.KeyEvent
@@ -13,6 +12,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.ImageView
+import androidx.fragment.app.Fragment
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.google.gson.Gson
 import com.mredrock.cyxbs.common.config.QA_QUIZ
@@ -43,7 +43,7 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
     companion object {
         const val MAX_SELECTABLE_IMAGE_COUNT = 6
 
-        fun activityStart(fragment: androidx.fragment.app.Fragment, type: String, requestCode: Int) {
+        fun activityStart(fragment: Fragment, type: String, requestCode: Int) {
             fragment.startActivityForResult<QuizActivity>(requestCode, "type" to type)
         }
     }
@@ -148,7 +148,7 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
         nine_grid_view.addView(createImageView(BitmapFactory.decodeResource(resources, R.drawable.qa_ic_quiz_grid_add_img)))
         nine_grid_view.setOnItemClickListener { _, index ->
             if (index == nine_grid_view.childCount - 1) {
-                this@QuizActivity.selectImageFromAlbum(QuizActivity.MAX_SELECTABLE_IMAGE_COUNT, viewModel.imageLiveData.value)
+                this@QuizActivity.selectImageFromAlbum(MAX_SELECTABLE_IMAGE_COUNT, viewModel.imageLiveData.value)
             } else {
                 ViewImageActivity.activityStartForResult(this@QuizActivity, viewModel.tryEditImg(index)
                         ?: return@setOnItemClickListener)
@@ -191,7 +191,7 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
 
     private fun initFooterView() {
         iv_quiz_select_tag.setOnClickListener { editTagDialog.show() }
-        iv_quiz_add_img.setOnClickListener { this@QuizActivity.selectImageFromAlbum(QuizActivity.MAX_SELECTABLE_IMAGE_COUNT, viewModel.imageLiveData.value) }
+        iv_quiz_add_img.setOnClickListener { this@QuizActivity.selectImageFromAlbum(MAX_SELECTABLE_IMAGE_COUNT, viewModel.imageLiveData.value) }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

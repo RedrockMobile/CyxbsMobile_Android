@@ -1,12 +1,12 @@
 package com.mredrock.cyxbs.qa.ui.widget
 
 import android.content.Context
-import androidx.annotation.IntDef
 import android.util.AttributeSet
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.ImageView
+import androidx.annotation.IntDef
 import com.mredrock.cyxbs.common.utils.extensions.loadRedrockImage
 import org.jetbrains.anko.dip
 import org.jetbrains.anko.forEachChild
@@ -15,7 +15,7 @@ import org.jetbrains.anko.forEachChild
  * 图片九宫格布局
  * Created By jay68 on 2018/9/29.
  */
-class NineGridView(context: Context?, attrs: AttributeSet?, defStyleAttr: Int) : FrameLayout(context, attrs, defStyleAttr) {
+class NineGridView(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : FrameLayout(context, attrs, defStyleAttr) {
     companion object {
         const val MODE_FILL = 0
         const val MODE_NORMAL = 1

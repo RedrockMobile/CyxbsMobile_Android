@@ -1,8 +1,8 @@
 package com.mredrock.cyxbs.qa.pages.comment.ui
 
-import androidx.recyclerview.widget.DiffUtil
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.recyclerview.widget.DiffUtil
 import com.mredrock.cyxbs.common.utils.extensions.setAvatarImageFromUrl
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.bean.Comment

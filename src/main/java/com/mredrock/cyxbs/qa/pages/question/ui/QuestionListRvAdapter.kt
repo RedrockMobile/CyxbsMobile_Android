@@ -1,9 +1,9 @@
 package com.mredrock.cyxbs.qa.pages.question.ui
 
-import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.DiffUtil
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.DiffUtil
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.event.AskLoginEvent
 import com.mredrock.cyxbs.common.utils.extensions.gone
@@ -24,11 +24,11 @@ import org.greenrobot.eventbus.EventBus
 /**
  * Created By jay68 on 2018/8/26.
  */
-class QuestionListRvAdapter(private val fragment: androidx.fragment.app.Fragment) : BaseEndlessRvAdapter<Question>(DIFF_CALLBACK) {
+class QuestionListRvAdapter(private val fragment: Fragment) : BaseEndlessRvAdapter<Question>(DIFF_CALLBACK) {
     companion object {
         @JvmStatic
         val DIFF_CALLBACK = object : DiffUtil.ItemCallback<Question>() {
-            override fun areItemsTheSame(oldItem: Question, newItem: Question) = oldItem?.id == newItem?.id
+            override fun areItemsTheSame(oldItem: Question, newItem: Question) = oldItem.id == newItem.id
 
             override fun areContentsTheSame(oldItem: Question, newItem: Question) = oldItem == newItem
         }
@@ -38,7 +38,6 @@ class QuestionListRvAdapter(private val fragment: androidx.fragment.app.Fragment
 
     override fun onItemClickListener(holder: BaseViewHolder<Question>, position: Int, data: Question) {
         super.onItemClickListener(holder, position, data)
-        val context = holder.itemView.context
         if (BaseApp.isLogin) {
             AnswerListActivity.activityStart(fragment, data, QuestionContainerFragment.REQUEST_LIST_REFRESH_ACTIVITY)
         } else {

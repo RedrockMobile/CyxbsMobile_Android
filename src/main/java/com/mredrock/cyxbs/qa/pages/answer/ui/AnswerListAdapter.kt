@@ -1,15 +1,13 @@
 package com.mredrock.cyxbs.qa.pages.answer.ui
 
 import android.content.Context
-import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.RecyclerView
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.recyclerview.widget.DiffUtil
 import com.mredrock.cyxbs.common.utils.extensions.setAvatarImageFromUrl
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.bean.Answer
 import com.mredrock.cyxbs.qa.bean.Question
-import com.mredrock.cyxbs.qa.component.recycler.BaseEndlessRvAdapter
 import com.mredrock.cyxbs.qa.component.recycler.BaseRvAdapter
 import com.mredrock.cyxbs.qa.component.recycler.BaseViewHolder
 import com.mredrock.cyxbs.qa.pages.comment.AdoptAnswerEvent

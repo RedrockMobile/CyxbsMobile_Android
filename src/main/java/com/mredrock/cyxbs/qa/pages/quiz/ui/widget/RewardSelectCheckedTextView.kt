@@ -2,10 +2,8 @@ package com.mredrock.cyxbs.qa.pages.quiz.ui.widget
 
 import android.content.Context
 import android.graphics.Color
-import androidx.appcompat.widget.AppCompatCheckedTextView
 import android.util.AttributeSet
-import android.view.Gravity
-import com.mredrock.cyxbs.qa.R
+import androidx.appcompat.widget.AppCompatCheckedTextView
 
 /**
  * Created By jay68 on 2018/11/28.

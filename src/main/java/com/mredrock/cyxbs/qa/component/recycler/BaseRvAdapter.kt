@@ -1,7 +1,5 @@
 package com.mredrock.cyxbs.qa.component.recycler
 
-import androidx.recyclerview.widget.RecyclerView
-
 /**
  * Created By jay68 on 2018/8/26.
  */

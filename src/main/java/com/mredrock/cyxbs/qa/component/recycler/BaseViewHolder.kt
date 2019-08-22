@@ -1,11 +1,10 @@
 package com.mredrock.cyxbs.qa.component.recycler
 
 import android.content.Context
-import androidx.annotation.LayoutRes
-import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.LayoutRes
 
 /**
  * Created By jay68 on 2018/8/26.
