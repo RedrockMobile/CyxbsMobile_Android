@@ -2,7 +2,6 @@ package com.mredrock.cyxbs.mine.page.sign
 
 import androidx.lifecycle.MutableLiveData
 import com.mredrock.cyxbs.common.bean.User
-import com.mredrock.cyxbs.common.utils.extensions.mapOrThrowApiException
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel

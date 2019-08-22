@@ -1,9 +1,9 @@
 package com.mredrock.cyxbs.mine.page.draft
 
-import androidx.lifecycle.Observer
 import android.os.Bundle
-import com.google.android.material.bottomsheet.BottomSheetDialog
+import androidx.lifecycle.Observer
 import com.alibaba.android.arouter.launcher.ARouter
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.mredrock.cyxbs.common.config.QA_ANSWER
 import com.mredrock.cyxbs.common.config.QA_QUIZ
 import com.mredrock.cyxbs.common.event.DraftEvent

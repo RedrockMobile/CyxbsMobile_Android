@@ -1,11 +1,10 @@
 package com.mredrock.cyxbs.mine.page.daily
 
 import android.graphics.Color
-import androidx.annotation.LayoutRes
-import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.LayoutRes
 import com.mredrock.cyxbs.mine.R
 import com.mredrock.cyxbs.mine.network.model.PointDetail
 import com.mredrock.cyxbs.mine.util.TimeUtil

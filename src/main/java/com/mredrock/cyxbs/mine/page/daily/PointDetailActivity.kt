@@ -1,15 +1,12 @@
 package com.mredrock.cyxbs.mine.page.daily
 
-import androidx.lifecycle.Observer
 import android.os.Bundle
-import androidx.core.content.ContextCompat
-import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.Menu
+import androidx.core.content.ContextCompat
+import androidx.lifecycle.Observer
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.extensions.loadAvatar
-import com.mredrock.cyxbs.common.utils.extensions.visible
 import com.mredrock.cyxbs.mine.R
 import kotlinx.android.synthetic.main.mine_activity_point_detail.*
 import org.jetbrains.anko.toast

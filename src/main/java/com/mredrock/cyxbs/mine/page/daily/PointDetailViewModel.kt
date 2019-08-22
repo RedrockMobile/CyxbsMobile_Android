@@ -10,7 +10,6 @@ import com.mredrock.cyxbs.mine.network.model.PointDetail
 import com.mredrock.cyxbs.mine.util.apiService
 import com.mredrock.cyxbs.mine.util.normalWrapper
 import com.mredrock.cyxbs.mine.util.user
-import io.reactivex.Observable
 
 /**
  * Create By Hosigus at 2019/3/16

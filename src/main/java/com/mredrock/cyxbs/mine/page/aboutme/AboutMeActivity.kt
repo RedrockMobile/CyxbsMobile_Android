@@ -1,9 +1,9 @@
 package com.mredrock.cyxbs.mine.page.aboutme
 
 import android.os.Bundle
-import com.google.android.material.tabs.TabLayout
 import android.view.LayoutInflater
 import android.view.View
+import com.google.android.material.tabs.TabLayout
 import com.mredrock.cyxbs.common.ui.BaseActivity
 import com.mredrock.cyxbs.mine.R
 import com.mredrock.cyxbs.mine.util.ui.TabPagerAdapter

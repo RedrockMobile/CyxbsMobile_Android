@@ -2,15 +2,15 @@ package com.mredrock.cyxbs.mine.page.edit
 
 import android.Manifest
 import android.app.Activity
-import androidx.lifecycle.Observer
 import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
-import androidx.core.content.ContextCompat
 import android.widget.EditText
+import androidx.core.content.ContextCompat
+import androidx.lifecycle.Observer
 import com.afollestad.materialdialogs.MaterialDialog
 import com.mredrock.cyxbs.common.config.DIR_PHOTO
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity

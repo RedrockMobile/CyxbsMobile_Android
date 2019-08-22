@@ -1,11 +1,10 @@
 package com.mredrock.cyxbs.mine.page.ask
 
 import android.annotation.SuppressLint
+import android.os.Bundle
+import android.view.View
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import android.os.Bundle
-import androidx.recyclerview.widget.RecyclerView
-import android.view.View
 import com.mredrock.cyxbs.mine.R
 import com.mredrock.cyxbs.mine.network.model.MyAskQuestion
 import com.mredrock.cyxbs.mine.util.TimeUtil

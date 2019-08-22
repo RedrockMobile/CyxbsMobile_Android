@@ -6,7 +6,6 @@ import androidx.work.Worker
 import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
 import com.mredrock.cyxbs.common.utils.extensions.editor
 import com.mredrock.cyxbs.mine.util.NotificationUtil
-import com.tencent.bugly.Bugly.applicationContext
 import java.util.*
 
 /**
@@ -17,7 +16,7 @@ class SignWorker : Worker() {
 
     private val FLAG = "SIGNPUSH"
 
-    override fun doWork(): Worker.Result {
+    override fun doWork(): Result {
 
         //读取是否通知过
         val isPush = applicationContext.defaultSharedPreferences.getBoolean(FLAG, false)
@@ -48,7 +47,7 @@ class SignWorker : Worker() {
         //推送通知
         NotificationUtil.makeNotification(applicationContext, "赶快去签到领取积分哦~", CHANNEL_ID = "cyxbs_sign", pendingIntent = intent)
 
-        return Worker.Result.SUCCESS
+        return Result.SUCCESS
     }
 
     private fun compareCurrentHour(targetHour: Int): Boolean {

@@ -1,15 +1,13 @@
 package com.mredrock.cyxbs.mine.page.sign
 
 import android.annotation.SuppressLint
-import androidx.lifecycle.Observer
 import android.os.Bundle
-import androidx.core.content.ContextCompat
 import android.view.*
 import android.widget.ImageView
 import android.widget.PopupWindow
 import android.widget.TextView
-import android.widget.Toast
-import androidx.work.Data
+import androidx.core.content.ContextCompat
+import androidx.lifecycle.Observer
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.PeriodicWorkRequest
 import androidx.work.WorkManager
@@ -25,7 +23,6 @@ import com.mredrock.cyxbs.mine.util.user
 import kotlinx.android.synthetic.main.mine_activity_daily_sign.*
 import kotlinx.android.synthetic.main.mine_popup_window_sign_menu.view.*
 import org.jetbrains.anko.toast
-import java.util.*
 import java.util.concurrent.TimeUnit
 
 

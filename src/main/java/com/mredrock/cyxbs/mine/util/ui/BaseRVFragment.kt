@@ -2,13 +2,10 @@ package com.mredrock.cyxbs.mine.util.ui
 
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import com.mredrock.cyxbs.mine.R
 import kotlinx.android.synthetic.main.mine_fragment_base_rv.*
 
@@ -20,7 +17,7 @@ import kotlinx.android.synthetic.main.mine_fragment_base_rv.*
  * 可参考 {@link com.mredrock.cyxbs.mine.page.ask.AskAdoptedFm}
  * 为了适配更多的页面，没有进行更深的抽象
  */
-abstract class BaseRVFragment<D> : androidx.fragment.app.Fragment() {
+abstract class BaseRVFragment<D> : Fragment() {
 
     abstract fun getItemLayout(): Int
 

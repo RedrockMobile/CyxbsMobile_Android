@@ -8,10 +8,11 @@ import android.graphics.PixelFormat;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
+import android.view.View;
+
 import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import android.view.View;
 
 import static java.lang.Math.abs;
 
@@ -38,7 +39,7 @@ public class RectShadowDrawable extends Drawable {
     }
 
     public RectShadowDrawable(Rect radius, @ColorInt int backgroundColor, @ColorInt int shadowColor,
-                              int shadowRadius, int offsetX, int offsetY, boolean hideShadow[], View view) {
+                              int shadowRadius, int offsetX, int offsetY, boolean[] hideShadow, View view) {
         mRadius = radius;
         mShadowRadius = shadowRadius;
         mOffsetX = offsetX;

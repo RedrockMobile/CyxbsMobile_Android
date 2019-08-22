@@ -4,7 +4,6 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.Gravity
 import android.widget.EditText
-import com.mredrock.cyxbs.common.utils.LogUtils
 
 /**
  * Created by zia on 2018/9/10.

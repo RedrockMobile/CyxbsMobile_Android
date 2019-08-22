@@ -3,11 +3,8 @@ package com.mredrock.cyxbs.mine.page.draft
 import android.animation.Animator
 import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.content.Context
 import android.os.Bundle
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
 import com.mredrock.cyxbs.common.utils.LogUtils

@@ -3,7 +3,6 @@ package com.mredrock.cyxbs.mine.page.help
 import androidx.lifecycle.MutableLiveData
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
-import com.mredrock.cyxbs.mine.network.model.MyAskQuestion
 import com.mredrock.cyxbs.mine.network.model.MyHelpQuestion
 import com.mredrock.cyxbs.mine.util.apiService
 import com.mredrock.cyxbs.mine.util.normalWrapper

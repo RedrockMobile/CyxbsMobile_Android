@@ -5,31 +5,31 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Intent
 import android.graphics.drawable.BitmapDrawable
+import android.media.MediaScannerConnection
 import android.net.Uri
 import android.os.Bundle
-import androidx.appcompat.app.AlertDialog
+import android.os.Environment
 import android.view.LayoutInflater
 import android.view.View
-import android.widget.ImageView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import com.afollestad.materialdialogs.MaterialDialog
 import com.alibaba.android.arouter.launcher.ARouter
 import com.mredrock.cyxbs.common.BaseApp
-import com.mredrock.cyxbs.common.config.SP_SHOW_MODE
-import com.mredrock.cyxbs.common.config.SP_WIDGET_NEED_FRESH
-import com.mredrock.cyxbs.common.config.WIDGET_COURSE
-import com.mredrock.cyxbs.common.config.WIDGET_SETTING
+import com.mredrock.cyxbs.common.config.*
 import com.mredrock.cyxbs.common.event.LoginStateChangeEvent
 import com.mredrock.cyxbs.common.event.ShowModeChangeEvent
 import com.mredrock.cyxbs.common.ui.BaseActivity
-import com.mredrock.cyxbs.common.utils.encrypt.md5Encoding
 import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
 import com.mredrock.cyxbs.common.utils.extensions.doPermissionAction
 import com.mredrock.cyxbs.common.utils.extensions.editor
 import com.mredrock.cyxbs.common.utils.extensions.saveImage
 import com.mredrock.cyxbs.mine.R
+import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.mine_activity_setting.*
+import kotlinx.android.synthetic.main.mine_dialog_share.view.*
 import org.greenrobot.eventbus.EventBus
+import org.jetbrains.anko.toast
 
 
 /**
@@ -84,15 +84,15 @@ class SettingActivity(override val isFragmentActivity: Boolean = false) : BaseAc
     private fun cleanAppWidgetCache() {
         defaultSharedPreferences.editor {
             putString(WIDGET_COURSE, "")
-            putBoolean(SP_WIDGET_NEED_FRESH,true)
+            putBoolean(SP_WIDGET_NEED_FRESH, true)
         }
     }
 
     private fun onShareClick() {
         val builder = AlertDialog.Builder(this)
         val view = LayoutInflater.from(this).inflate(R.layout.mine_dialog_share, null, false)
-        builder.setView(view).show()
-        val imageView = view.findViewById(R.id.imageView) as ImageView
+        val dialog = builder.setView(view).show()
+        val imageView = view.imageView
         imageView.setOnLongClickListener {
             doPermissionAction(Manifest.permission.WRITE_EXTERNAL_STORAGE) {
                 reason = "为保存图片需要您的文件写入权限"
@@ -100,9 +100,17 @@ class SettingActivity(override val isFragmentActivity: Boolean = false) : BaseAc
                     val drawable = imageView.drawable
                     if (drawable is BitmapDrawable) {
                         val bitmap = (imageView.drawable as BitmapDrawable).bitmap
-                        val savePath = saveImage(bitmap, md5Encoding("掌邮二维码"))
-                        runOnUiThread {
+                        Schedulers.io().scheduleDirect {
+                            this@SettingActivity.saveImage(bitmap, "掌邮二维码")
+                            MediaScannerConnection.scanFile(this@SettingActivity,
+                                    arrayOf(Environment.getExternalStorageDirectory().toString() + DIR_PHOTO),
+                                    arrayOf("image/jpeg"),
+                                    null)
 
+                            runOnUiThread {
+                                toast("图片保存于系统\"$DIR_PHOTO\"文件夹下哦")
+                                dialog.dismiss()
+                            }
                         }
                     }
                 }
