@@ -5,10 +5,10 @@ import android.appwidget.AppWidgetProvider
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
-import androidx.annotation.IdRes
 import android.view.View
 import android.widget.RemoteViews
 import android.widget.Toast
+import androidx.annotation.IdRes
 import com.alibaba.android.arouter.launcher.ARouter
 import com.mredrock.cyxbs.common.bean.WidgetCourse
 import com.mredrock.cyxbs.common.config.MAIN_MAIN

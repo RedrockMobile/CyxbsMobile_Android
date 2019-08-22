@@ -1,6 +1,5 @@
 package com.mredrock.cyxbs.widget.widget.little
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Color

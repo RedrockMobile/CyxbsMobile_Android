@@ -9,11 +9,7 @@ import com.mredrock.cyxbs.widget.R
 import com.mredrock.cyxbs.widget.page.little.LittleConfigActivity
 import com.mredrock.cyxbs.widget.page.normal.NormalConfigActivity
 import com.mredrock.cyxbs.widget.page.trans.TransConfigActivity
-import com.mredrock.cyxbs.widget.widget.little.LittleTransWidget
-import com.mredrock.cyxbs.widget.widget.little.LittleWidget
-import com.mredrock.cyxbs.widget.widget.normal.NormalWidget
 import kotlinx.android.synthetic.main.widget_activity_config.*
-import org.jetbrains.anko.toast
 
 
 /**
