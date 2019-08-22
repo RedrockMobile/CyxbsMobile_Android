@@ -10,8 +10,9 @@ import android.graphics.Path;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.RectF;
-import androidx.appcompat.widget.AppCompatImageView;
 import android.util.AttributeSet;
+
+import androidx.appcompat.widget.AppCompatImageView;
 
 import com.mredrock.cyxbs.discover.R;
 
@@ -119,7 +120,7 @@ public class MyImageView extends AppCompatImageView {
         path.moveTo(getWidth(), roundHeight);
         path.lineTo(getWidth(), 0);
         path.lineTo(getWidth() - roundWidth, 0);
-        path.arcTo(new RectF(getWidth() - roundWidth * 2, 0, getWidth(), 0 + roundHeight * 2), -90, 90);
+        path.arcTo(new RectF(getWidth() - roundWidth * 2, 0, getWidth(), roundHeight << 1), -90, 90);
         path.close();
         canvas.drawPath(path, paint);
     }

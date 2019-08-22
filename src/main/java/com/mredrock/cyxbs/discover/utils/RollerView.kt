@@ -1,8 +1,6 @@
 package com.mredrock.cyxbs.discover.utils
 
 import android.content.Context
-import androidx.viewpager.widget.PagerAdapter
-import androidx.viewpager.widget.ViewPager
 import android.util.AttributeSet
 import android.view.Gravity
 import android.view.MotionEvent
@@ -46,7 +44,7 @@ class RollerView @JvmOverloads constructor(context: Context, attrs: AttributeSet
 
     private fun initView() {
         mViewPager = androidx.viewpager.widget.ViewPager(context)
-        val params = FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT)
+        val params = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
         params.gravity = Gravity.CENTER
         mViewPager!!.layoutParams = params
         mViewPager!!.adapter = Adapter()
@@ -81,12 +79,12 @@ class RollerView @JvmOverloads constructor(context: Context, attrs: AttributeSet
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        val widthMode = View.MeasureSpec.getMode(widthMeasureSpec)
-        val heightMode = View.MeasureSpec.getMode(heightMeasureSpec)
-        var widthSize = View.MeasureSpec.getSize(widthMeasureSpec)
-        var heightSize = View.MeasureSpec.getSize(heightMeasureSpec)
+        val widthMode = MeasureSpec.getMode(widthMeasureSpec)
+        val heightMode = MeasureSpec.getMode(heightMeasureSpec)
+        var widthSize = MeasureSpec.getSize(widthMeasureSpec)
+        var heightSize = MeasureSpec.getSize(heightMeasureSpec)
         //处理比例模式
-        if (mAspectRatio != 0f && widthMode == View.MeasureSpec.EXACTLY && heightMode == View.MeasureSpec.EXACTLY) {
+        if (mAspectRatio != 0f && widthMode == MeasureSpec.EXACTLY && heightMode == MeasureSpec.EXACTLY) {
             widthSize = if (widthSize == 0) (heightSize * mAspectRatio).toInt() else widthSize
             heightSize = if (heightSize == 0) (widthSize / mAspectRatio).toInt() else heightSize
         }
@@ -97,8 +95,8 @@ class RollerView @JvmOverloads constructor(context: Context, attrs: AttributeSet
             params.width = (widthSize.toFloat() - (mPageMargin * 2).toFloat() - mEdgeSize * 2).toInt()
             mViewPager!!.layoutParams = params
         }
-        super.onMeasure(View.MeasureSpec.makeMeasureSpec(widthSize, widthMode),
-                View.MeasureSpec.makeMeasureSpec(heightSize, heightMode))
+        super.onMeasure(MeasureSpec.makeMeasureSpec(widthSize, widthMode),
+                MeasureSpec.makeMeasureSpec(heightSize, heightMode))
     }
 
     fun setAdapter(adapter: RollerViewAdapter?) {

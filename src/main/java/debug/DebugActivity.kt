@@ -16,7 +16,7 @@ class DebugActivity : BaseActivity() {
         setContentView(R.layout.activity_debug)
         val fragmentManager = supportFragmentManager
         val fragmentTransaction = fragmentManager.beginTransaction()
-        fragmentTransaction.replace(layout_debug.id, DiscoverFragment() as androidx.fragment.app.Fragment)
+        fragmentTransaction.replace(layout_debug.id, DiscoverFragment() as Fragment)
         fragmentTransaction.commit()
         btn_debug.setOnClickListener {
             startActivity<DiscoverHidingActivity>()

@@ -1,7 +1,6 @@
 package com.mredrock.cyxbs.discover.pages.hiding
 
 import android.os.Bundle
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.mredrock.cyxbs.common.ui.BaseActivity
 import com.mredrock.cyxbs.common.utils.extensions.editor
 import com.mredrock.cyxbs.common.utils.extensions.sharedPreferences

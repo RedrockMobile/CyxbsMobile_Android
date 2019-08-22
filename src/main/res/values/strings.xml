@@ -1,5 +1,6 @@
 <resources>
 
     <string name="discover_manager">管理</string>
+    <string name="discover_confirm">确 定</string>
 
 </resources>

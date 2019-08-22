@@ -1,9 +1,8 @@
 package com.mredrock.cyxbs.discover.pages.discover
 
-import androidx.lifecycle.Observer
 import android.os.Bundle
-import androidx.recyclerview.widget.GridLayoutManager
 import android.view.*
+import androidx.lifecycle.Observer
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.mredrock.cyxbs.common.config.DISCOVER_ENTRY
 import com.mredrock.cyxbs.common.event.DiscoverOptionIconClickEvent
