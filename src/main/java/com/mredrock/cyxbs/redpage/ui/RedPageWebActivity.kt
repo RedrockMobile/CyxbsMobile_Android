@@ -1,9 +1,9 @@
 package com.mredrock.cyxbs.redpage.ui
 
+//import com.jude.swipbackhelper.SwipeBackHelper
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.Bitmap
-import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.view.KeyEvent
@@ -11,13 +11,13 @@ import android.view.KeyEvent.KEYCODE_BACK
 import android.webkit.*
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.mredrock.cyxbs.common.config.END_POINT_REDROCK
-//import com.jude.swipbackhelper.SwipeBackHelper
 import com.mredrock.cyxbs.common.config.REDROCK_HOME_ENTRY
 import com.mredrock.cyxbs.common.ui.BaseActivity
 import com.mredrock.cyxbs.common.utils.extensions.gone
 import com.mredrock.cyxbs.common.utils.extensions.visible
 import com.mredrock.cyxbs.redpage.R
 import kotlinx.android.synthetic.main.redpage_activity_webview.*
+import org.jetbrains.anko.backgroundResource
 
 /**
  * create by:Fxymine4ever
@@ -32,7 +32,7 @@ class RedPageWebActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.redpage_activity_webview)
         tl_redPage.init("红岩网校")
-        tl_redPage.background = resources.getDrawable(R.drawable.redrock_home_tl_bg_shape)
+        tl_redPage.backgroundResource = R.drawable.redrock_home_tl_bg_shape
         tl_redPage.setNavigationOnClickListener { finish() }
 //        SwipeBackHelper.getCurrentPage(this).setSwipeBackEnable(false)
 
