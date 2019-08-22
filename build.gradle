@@ -2,6 +2,15 @@ apply from: lib_config
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
+apply from: secret
+
+android.defaultConfig {
+    manifestPlaceholders = secret.manifestPlaceholders
+    secret.buildConfigField.forEach({ k, v ->
+        buildConfigField("String", k, v)
+    })
+}
+
 dependencies {
     api fileTree(include: ['*.jar'], dir: 'libs')
 
@@ -81,5 +90,5 @@ dependencies {
 //    api 'com.jude:swipebackhelper:3.1.2'
     api 'com.afollestad.material-dialogs:commons:0.9.6.0'
     api 'com.github.yalantis:ucrop:2.2.2'
-    api ('com.github.chrisbanes:PhotoView:2.3.0')
+    api 'com.github.chrisbanes:PhotoView:2.3.0'
 }

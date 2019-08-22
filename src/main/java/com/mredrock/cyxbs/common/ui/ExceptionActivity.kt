@@ -7,11 +7,11 @@ import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.os.Process
-import androidx.appcompat.app.AppCompatActivity
 import android.text.SpannableStringBuilder
 import android.text.Spanned
 import android.text.style.ForegroundColorSpan
 import android.text.style.TypefaceSpan
+import androidx.appcompat.app.AppCompatActivity
 import org.jetbrains.anko.alert
 import org.jetbrains.anko.appendln
 import org.jetbrains.anko.intentFor

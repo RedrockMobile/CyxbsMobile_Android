@@ -3,13 +3,13 @@ package com.mredrock.cyxbs.common.component
 import android.content.Context
 import android.content.res.TypedArray
 import android.graphics.*
-import androidx.annotation.ColorInt
 import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams
+import androidx.annotation.ColorInt
 import com.mredrock.cyxbs.common.R
 
 /**
@@ -244,14 +244,16 @@ open class JCardViewPlus(context: Context, attrs: AttributeSet?, defStyleAttr: I
 //            }
             drawBuffer()
         }
-        canvas.drawBitmap(backgroundBuffer, 0f, 0f, null)
+        val buffer = backgroundBuffer ?: return
+        canvas.drawBitmap(buffer, 0f, 0f, null)
         canvas.clipPath(cardBackgroundShape)
         super.dispatchDraw(canvas)
     }
 
     private fun drawBuffer() {
         backgroundBuffer = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
-        val canvas = Canvas(backgroundBuffer)
+        val buffer = backgroundBuffer ?: return
+        val canvas = Canvas(buffer)
         calcBackgroundShape()
         canvas.drawPath(cardBackgroundShape, paint)
     }
@@ -379,7 +381,7 @@ open class JCardViewPlus(context: Context, attrs: AttributeSet?, defStyleAttr: I
         //        constructor(width: Int, height: Int, gravity: Int): super(width, height, gravity)
         constructor(source: ViewGroup.LayoutParams) : super(source)
 
-        constructor(source: ViewGroup.MarginLayoutParams) : super(source)
+        constructor(source: MarginLayoutParams) : super(source)
 //        constructor(source: LayoutParams): super(source) {
 //            this.gravity = source.gravity
 //        }

@@ -5,6 +5,7 @@ import android.app.Application
 import android.content.Context
 import com.alibaba.android.arouter.launcher.ARouter
 import com.google.gson.Gson
+import com.meituan.android.walle.WalleChannelReader
 import com.mredrock.cyxbs.common.bean.User
 import com.mredrock.cyxbs.common.config.SP_KEY_USER
 import com.mredrock.cyxbs.common.utils.CrashHandler
@@ -15,7 +16,6 @@ import com.mredrock.cyxbs.common.utils.extensions.editor
 import com.umeng.analytics.MobclickAgent
 import com.umeng.commonsdk.UMConfigure
 import com.umeng.socialize.PlatformConfig
-import com.meituan.android.walle.WalleChannelReader
 
 
 /**
@@ -78,8 +78,8 @@ open class BaseApp : Application() {
 
     private fun initUMeng() {
         val channel = WalleChannelReader.getChannel(this, "debug")
-        UMConfigure.init(applicationContext, "55d88b23e0f55a71ec007365", channel, UMConfigure.DEVICE_TYPE_PHONE,
-                "123b419248120b9fb91a38260a13e972")
+        UMConfigure.init(applicationContext, BuildConfig.UM_APP_KEY, channel, UMConfigure.DEVICE_TYPE_PHONE,
+                BuildConfig.UM_PUSH_SECRET)
         MobclickAgent.setScenarioType(this, MobclickAgent.EScenarioType.E_UM_NORMAL)
         MobclickAgent.openActivityDurationTrack(false)
         //调试模式（推荐到umeng注册测试机，避免数据污染）
@@ -89,7 +89,7 @@ open class BaseApp : Application() {
     }
 
     private fun initShare() {
-        PlatformConfig.setSinaWeibo("197363903", "7700116c567ab2bb28ffec2dcf67851d", "http://hongyan.cqupt.edu.cn/app/")
-        PlatformConfig.setQQZone("1106072365", "v9w1F3OSDhkX14gA")
+        PlatformConfig.setSinaWeibo(BuildConfig.UM_SHARE_SINA_APP_KEY, BuildConfig.UM_SHARE_SINA_APP_SECRET, "http://hongyan.cqupt.edu.cn/app/")
+        PlatformConfig.setQQZone(BuildConfig.UM_SHARE_QQ_ZONE_APP_ID, BuildConfig.UM_SHARE_QQ_ZONE_APP_SECRET)
     }
 }

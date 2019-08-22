@@ -1,8 +1,8 @@
 package com.mredrock.cyxbs.common.utils.extensions
 
 import android.content.Context
-import androidx.fragment.app.Fragment
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import com.tbruyelle.rxpermissions2.RxPermissions
 import org.jetbrains.anko.alert
 import org.jetbrains.anko.yesButton

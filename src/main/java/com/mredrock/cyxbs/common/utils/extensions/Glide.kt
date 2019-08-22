@@ -1,8 +1,8 @@
 package com.mredrock.cyxbs.common.utils.extensions
 
 import android.content.Context
-import androidx.annotation.DrawableRes
 import android.widget.ImageView
+import androidx.annotation.DrawableRes
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.mredrock.cyxbs.common.R

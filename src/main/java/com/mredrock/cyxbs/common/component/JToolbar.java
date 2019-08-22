@@ -1,12 +1,14 @@
 package com.mredrock.cyxbs.common.component;
 
 import android.content.Context;
-import androidx.annotation.Nullable;
-import androidx.appcompat.widget.Toolbar;
 import android.util.AttributeSet;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
+import androidx.appcompat.widget.Toolbar;
+
 import java.lang.reflect.Field;
+import java.util.Objects;
 
 /**
  * 标题居中显示的toolbar
@@ -47,7 +49,7 @@ public class JToolbar extends Toolbar {
 
     private TextView getTitleTv(String name) {
         try {
-            Field field = getClass().getSuperclass().getDeclaredField(name);
+            Field field = Objects.requireNonNull(getClass().getSuperclass()).getDeclaredField(name);
             field.setAccessible(true);
             return (TextView) field.get(this);
         } catch (Exception e) {
