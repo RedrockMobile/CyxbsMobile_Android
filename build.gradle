@@ -20,8 +20,8 @@ android {
         applicationId "com.mredrock.cyxbs"
         minSdkVersion build_versions.min_sdk
         targetSdkVersion build_versions.target_sdk
-        versionCode 53
-        versionName "5.0.2"
+        versionCode 54
+        versionName "5.1.0"
         multiDexEnabled true
 
         // LPhotoPicker
@@ -133,6 +133,7 @@ dependencies {
         implementation project(':module_mine')
         implementation project(':module_widget')
         implementation project(':module_redrock_home')
+        implementation project(':module_freshman')
     }
     kapt deps.arouter.compiler
     api deps.hotfix.runtime
