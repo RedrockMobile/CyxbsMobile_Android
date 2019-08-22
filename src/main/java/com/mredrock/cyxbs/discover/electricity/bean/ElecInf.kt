@@ -1,8 +1,8 @@
 package com.mredrock.cyxbs.discover.electricity.bean
 
 import com.google.gson.annotations.SerializedName
-import java.text.DecimalFormat
 import java.io.Serializable
+import java.text.DecimalFormat
 
 data class ElecInf(@SerializedName("elec_end") val elecEnd: String = "",
                    @SerializedName("elec_start") val elecStart: String = "",

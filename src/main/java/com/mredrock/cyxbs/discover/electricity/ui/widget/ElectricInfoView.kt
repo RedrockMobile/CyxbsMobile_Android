@@ -1,9 +1,9 @@
 package com.mredrock.cyxbs.discover.electricity.ui.widget
 
 import android.content.Context
-import androidx.annotation.DrawableRes
 import android.util.AttributeSet
 import android.view.LayoutInflater
+import androidx.annotation.DrawableRes
 import com.mredrock.cyxbs.common.component.JCardViewPlus
 import com.mredrock.cyxbs.electricity.R
 import kotlinx.android.synthetic.main.electricity_view_info.view.*
@@ -19,7 +19,7 @@ class ElectricInfoView : JCardViewPlus {
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
         LayoutInflater.from(context).inflate(R.layout.electricity_view_info, this, true)
         val style = context.obtainStyledAttributes(attrs, R.styleable.ElectricInfoView)
-        setDescribe(style.getString(R.styleable.ElectricInfoView_describe))
+        setDescribe(style.getString(R.styleable.ElectricInfoView_describe)?:"")
         setIcon(style.getResourceId(R.styleable.ElectricInfoView_icon, R.drawable.electricity_charge_ic_free))
         style.recycle()
     }

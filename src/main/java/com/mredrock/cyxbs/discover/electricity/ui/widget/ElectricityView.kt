@@ -1,9 +1,10 @@
 package com.mredrock.cyxbs.discover.electricity.ui.widget
 
+import android.annotation.SuppressLint
 import android.content.Context
-import androidx.constraintlayout.widget.ConstraintLayout
 import android.util.AttributeSet
 import android.view.LayoutInflater
+import androidx.constraintlayout.widget.ConstraintLayout
 import com.mredrock.cyxbs.electricity.R
 import kotlinx.android.synthetic.main.electricity_view_electricity.view.*
 
@@ -17,9 +18,10 @@ class ElectricityView @JvmOverloads constructor(
         LayoutInflater.from(context).inflate(R.layout.electricity_view_electricity, this, true)
     }
 
+    @SuppressLint("SetTextI18n")
     fun refresh(lastMoney: String, costPower: String) {
         tv_electric_money.text = lastMoney
-        tv_electric_use.text = costPower + " 度"
+        tv_electric_use.text = "$costPower 度"
         electric_circle_view.refresh(costPower.toInt())
     }
 }

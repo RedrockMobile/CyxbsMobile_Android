@@ -1,19 +1,19 @@
 package com.mredrock.cyxbs.discover.electricity.ui.fragment
 
-import androidx.lifecycle.Observer
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.NavHostFragment
 import com.mredrock.cyxbs.common.ui.BaseViewModelFragment
 import com.mredrock.cyxbs.discover.electricity.config.BUILDING_NAMES
 import com.mredrock.cyxbs.discover.electricity.config.SP_BUILDING_FOOT_KEY
 import com.mredrock.cyxbs.discover.electricity.config.SP_BUILDING_HEAD_KEY
-import com.mredrock.cyxbs.electricity.R
 import com.mredrock.cyxbs.discover.electricity.config.SP_ROOM_KEY
 import com.mredrock.cyxbs.discover.electricity.ui.widget.ElectricInfoView
 import com.mredrock.cyxbs.discover.electricity.viewmodel.ChargeViewModel
+import com.mredrock.cyxbs.electricity.R
 import kotlinx.android.synthetic.main.electricity_fragment_charge.*
 import org.jetbrains.anko.support.v4.defaultSharedPreferences
 
@@ -54,9 +54,9 @@ class ChargeFragment : BaseViewModelFragment<ChargeViewModel>() {
             tv_electric_time.text = t
         })
 
-        val heads =  resources.getStringArray(R.array.electricity_building_name_head)
+        val heads = resources.getStringArray(R.array.electricity_building_name_head)
         val id = BUILDING_NAMES.getValue(heads[pos])[defaultSharedPreferences.getInt(SP_BUILDING_FOOT_KEY, -1)].split("(")[1].split("栋")[0]
-        viewModel.getCharge(id, defaultSharedPreferences.getString(SP_ROOM_KEY, ""))
+        viewModel.getCharge(id, defaultSharedPreferences.getString(SP_ROOM_KEY, "") ?: "")
     }
 
     private fun setValue(view: View, value: String) {

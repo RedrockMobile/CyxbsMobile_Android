@@ -3,11 +3,11 @@ package com.mredrock.cyxbs.discover.electricity.ui.fragment
 import android.annotation.SuppressLint
 import android.app.Dialog
 import android.os.Bundle
-import androidx.appcompat.app.AlertDialog
 import android.text.InputType
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
 import androidx.navigation.fragment.NavHostFragment
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
@@ -21,14 +21,13 @@ import com.mredrock.cyxbs.common.utils.extensions.editor
 import com.mredrock.cyxbs.discover.electricity.config.BUILDING_NAMES
 import com.mredrock.cyxbs.discover.electricity.config.SP_BUILDING_FOOT_KEY
 import com.mredrock.cyxbs.discover.electricity.config.SP_BUILDING_HEAD_KEY
-import com.mredrock.cyxbs.electricity.R
 import com.mredrock.cyxbs.discover.electricity.config.SP_ROOM_KEY
+import com.mredrock.cyxbs.electricity.R
 import kotlinx.android.synthetic.main.electricity_dialog_dormitory_notice.view.*
 import kotlinx.android.synthetic.main.electricity_dialog_dormitory_select.view.*
 import kotlinx.android.synthetic.main.electricity_fragment_setting.*
 import kotlinx.android.synthetic.main.electricity_fragment_setting.view.*
 import org.jetbrains.anko.support.v4.defaultSharedPreferences
-import org.jetbrains.anko.windowManager
 
 /**
  * Author: Hosigus
