@@ -1,10 +1,9 @@
 package com.mredrock.cyxbs.discover.noclass.pages.noclass
 
 import android.app.Activity
-import androidx.lifecycle.Observer
 import android.content.Intent
 import android.os.Bundle
-import androidx.recyclerview.widget.GridLayoutManager
+import androidx.lifecycle.Observer
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
 import com.mredrock.cyxbs.common.BaseApp
@@ -75,13 +74,13 @@ class NoClassActivity : BaseViewModelActivity<NoClassViewModel>() {
             val nameList = arrayListOf<String>()
             val numList = arrayListOf<String>()
             students.forEach {
-                numList.add(it.stunum?:"")
-                nameList.add(it.name?:"")
+                numList.add(it.stunum ?: "")
+                nameList.add(it.name ?: "")
             }
             ARouter.getInstance()
                     .build(COURSE_NO_COURSE_INVITE)
-                    .withStringArrayList("stuNumList",numList)
-                    .withStringArrayList("stuNameList",nameList)
+                    .withStringArrayList("stuNumList", numList)
+                    .withStringArrayList("stuNameList", nameList)
                     .navigation()
         }
     }
@@ -105,8 +104,9 @@ class NoClassActivity : BaseViewModelActivity<NoClassViewModel>() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
+        data ?: return
         if (requestCode == REQUEST_SELECT && resultCode == Activity.RESULT_OK) {
-            val stu = data!!.extras.getSerializable("stu") as Student
+            val stu = data.extras.getSerializable("stu") as Student
             mAdapter!!.addStu(stu)
         }
     }

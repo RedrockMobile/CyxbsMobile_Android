@@ -4,11 +4,11 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.RecyclerView
 import com.mredrock.cyxbs.discover.noclass.R
 import com.mredrock.cyxbs.discover.noclass.network.Student
 import kotlinx.android.synthetic.main.discover_noclass_item_rv_select.view.*
