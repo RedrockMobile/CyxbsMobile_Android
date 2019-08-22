@@ -9,6 +9,9 @@ apply plugin: 'kotlin-kapt'
 apply plugin: 'com.aliyun.ams.emas-services'
 
 apply plugin: 'walle'
+
+apply from: secret
+
 android {
     compileSdkVersion build_versions.compile_sdk
     buildToolsVersion build_versions.build_tools
@@ -20,7 +23,6 @@ android {
         versionCode 53
         versionName "5.0.2"
         multiDexEnabled true
-        manifestPlaceholders = [UMENG_CHANNEL_VALUE: "official"]
 
         // LPhotoPicker
         renderscriptTargetApi build_versions.target_sdk
@@ -35,6 +37,11 @@ android {
                 option("-Xmaxerrs", 500)
             }
         }
+
+        manifestPlaceholders = secret.manifestPlaceholders
+        secret.buildConfigField.forEach({ k, v ->
+            buildConfigField("String", k, v)
+        })
     }
 
     dexOptions {
@@ -48,14 +55,10 @@ android {
 
     signingConfigs {
         config {
-            File signingConfigFile = file("../local.properties")
-            Properties configs = new Properties()
-            configs.load(new FileInputStream(signingConfigFile))
-
-            keyAlias configs['RELEASE_KEY_ALIAS']
-            keyPassword configs['RELEASE_KEY_PASSWORD']
+            keyAlias secret.sign.RELEASE_KEY_ALIAS
+            keyPassword secret.sign.RELEASE_KEY_PASSWORD
             storeFile file("../key-cyxbs")
-            storePassword configs['RELEASE_STORE_PASSWORD']
+            storePassword secret.sign.RELEASE_STORE_PASSWORD
         }
     }
 
@@ -65,9 +68,6 @@ android {
             zipAlignEnabled false
             shrinkResources false
 
-            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "official"]
-
-            buildConfigField("String", "BUGLY_APP_ID", "\"68682669e7\"")
             signingConfig signingConfigs.config
         }
 
@@ -77,7 +77,6 @@ android {
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
 
-            buildConfigField("String", "BUGLY_APP_ID", "\"68682669e7\"")
             signingConfig signingConfigs.config
 
             ndk {
