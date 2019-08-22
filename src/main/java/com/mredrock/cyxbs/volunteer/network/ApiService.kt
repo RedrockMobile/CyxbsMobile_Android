@@ -3,7 +3,10 @@ package com.mredrock.cyxbs.volunteer.network
 import com.mredrock.cyxbs.volunteer.bean.VolunteerLogin
 import com.mredrock.cyxbs.volunteer.bean.VolunteerTime
 import io.reactivex.Observable
-import retrofit2.http.*
+import retrofit2.http.Field
+import retrofit2.http.FormUrlEncoded
+import retrofit2.http.Header
+import retrofit2.http.POST
 
 interface ApiService {
     @FormUrlEncoded

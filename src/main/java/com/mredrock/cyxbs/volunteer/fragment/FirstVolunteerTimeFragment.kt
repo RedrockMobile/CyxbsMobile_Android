@@ -1,18 +1,16 @@
 package com.mredrock.cyxbs.volunteer.fragment
 
-import androidx.fragment.app.Fragment
 import android.os.Bundle
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import com.mredrock.cyxbs.volunteer.adapter.VolunteerRecyclerAdapter
+import androidx.fragment.app.Fragment
 import com.mredrock.cyxbs.volunteer.R
+import com.mredrock.cyxbs.volunteer.adapter.VolunteerRecyclerAdapter
 import com.mredrock.cyxbs.volunteer.bean.VolunteerTime
 
-class FirstVolunteerTimeFragment : androidx.fragment.app.Fragment(){
+class FirstVolunteerTimeFragment : Fragment(){
 
     internal lateinit var view: View
     private lateinit var holeTime: TextView
@@ -33,12 +31,12 @@ class FirstVolunteerTimeFragment : androidx.fragment.app.Fragment(){
     }
 
     private fun initData() {
-        var holehour = 0
+        var holeHour = 0
         for (i in recordBeanList.indices) {
-            val nowHour = java.lang.Double.parseDouble(recordBeanList[i].hours).toInt()
-            holehour += nowHour
+            val nowHour = java.lang.Double.parseDouble(recordBeanList[i].hours?:"0.0").toInt()
+            holeHour += nowHour
         }
-        val holeHourString = holehour.toString()
+        val holeHourString = holeHour.toString()
         holeTime.text = holeHourString
         yearList.add(year)
         context?.let {

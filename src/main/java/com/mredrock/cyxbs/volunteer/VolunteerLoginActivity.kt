@@ -17,9 +17,9 @@ import com.mredrock.cyxbs.common.ui.BaseActivity
 import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
+import com.mredrock.cyxbs.volunteer.bean.VolunteerLogin
 import com.mredrock.cyxbs.volunteer.network.ApiService
 import com.mredrock.cyxbs.volunteer.network.VolunteerRetrofit
-import com.mredrock.cyxbs.volunteer.bean.VolunteerLogin
 import com.mredrock.cyxbs.volunteer.widget.EncryptPassword
 import com.mredrock.cyxbs.volunteer.widget.VolunteerTimeSP
 import kotlinx.android.synthetic.main.activity_login.*
@@ -48,7 +48,7 @@ class VolunteerLoginActivity : BaseActivity() {
         setContentView(R.layout.activity_login)
 
         common_toolbar.init("完善信息")
-        if(BaseApp.user == null){
+        if (BaseApp.user == null) {
             EventBus.getDefault().post(AskLoginEvent("只有登陆了才能查看志愿时长噢～"))
             finish()
         }
@@ -89,19 +89,19 @@ class VolunteerLoginActivity : BaseActivity() {
 
     private fun useSoftKeyboard() {
         volunteer_password.setOnEditorActionListener { _, actionId, _ ->
-            var handled = false
             if (actionId == EditorInfo.IME_ACTION_GO) {
                 showProgressDialog()
                 initUserInfo()
                 login(account, EncryptPassword.encrypt(password))
-                handled = true
 
                 val inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
                 if (inputMethodManager.isActive) {
-                    inputMethodManager.hideSoftInputFromWindow(this@VolunteerLoginActivity.currentFocus.windowToken, 0)
+                    inputMethodManager.hideSoftInputFromWindow(this@VolunteerLoginActivity.currentFocus?.windowToken
+                            ?: return@setOnEditorActionListener false, 0)
                 }
+                return@setOnEditorActionListener true
             }
-            handled
+            return@setOnEditorActionListener false
         }
     }
 
@@ -112,8 +112,7 @@ class VolunteerLoginActivity : BaseActivity() {
         ApiGenerator.getApiService(VolunteerRetrofit.volunteerRetrofit, ApiService::class.java)
                 .volunteerLogin("Basic enNjeTpyZWRyb2Nrenk=", account, encodingPassword, uid!!)
                 .setSchedulers()
-                .safeSubscribeBy (onNext = {
-                    volunteerLogin: VolunteerLogin ->
+                .safeSubscribeBy(onNext = { volunteerLogin: VolunteerLogin ->
                     when (volunteerLogin.code) {
                         BIND_SUCCESS -> {
                             volunteerSP.bindVolunteerInfo(account, password, uid!!)
@@ -130,7 +129,7 @@ class VolunteerLoginActivity : BaseActivity() {
                         FAILED -> showUnsuccessDialog("亲，登陆失败哦")
                     }
 
-                },onError = {
+                }, onError = {
                     dialog.dismiss()
                 })
     }
@@ -147,7 +146,7 @@ class VolunteerLoginActivity : BaseActivity() {
                     .title("登录失败")
                     .content(text)
                     .positiveText("我知道啦")
-                    .onPositive{_,_ ->
+                    .onPositive { _, _ ->
                         volunteer_password.setText("")
                     }.show()
         }

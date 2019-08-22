@@ -1,18 +1,17 @@
 package com.mredrock.cyxbs.volunteer.fragment
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.fragment.app.Fragment
 import com.mredrock.cyxbs.volunteer.R
 import com.mredrock.cyxbs.volunteer.adapter.VolunteerRecyclerAdapter
 import com.mredrock.cyxbs.volunteer.bean.VolunteerTime
 import kotlinx.android.synthetic.main.fragment_volunteer_time.view.*
 
-class AllVolunteerFragment : androidx.fragment.app.Fragment() {
+class AllVolunteerFragment : Fragment() {
     private var holeTime: TextView? = null
     private var mAdapter: VolunteerRecyclerAdapter? = null
 

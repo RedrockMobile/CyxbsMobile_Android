@@ -5,12 +5,11 @@ import android.graphics.drawable.AnimationDrawable
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import com.google.android.material.tabs.TabLayout
-import androidx.fragment.app.Fragment
-import androidx.viewpager.widget.ViewPager
 import android.view.View
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import com.afollestad.materialdialogs.MaterialDialog
+import com.google.android.material.tabs.TabLayout
 import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.ui.BaseActivity
 import com.mredrock.cyxbs.common.utils.LogUtils
@@ -38,7 +37,7 @@ class VolunteerRecordActivity : BaseActivity(), TabLayout.OnTabSelectedListener,
     private lateinit var adapter: VolunteerFragmentAdapter
     private lateinit var yearList: MutableList<String>
     private lateinit var allYearList: MutableList<String>
-    private lateinit var fragmentList: ArrayList<androidx.fragment.app.Fragment>
+    private lateinit var fragmentList: ArrayList<Fragment>
     private lateinit var volunteerSP: VolunteerTimeSP
     private lateinit var animationDrawable: AnimationDrawable
     private lateinit var firstYear: MutableList<VolunteerTime.RecordBean>
@@ -224,7 +223,7 @@ class VolunteerRecordActivity : BaseActivity(), TabLayout.OnTabSelectedListener,
         } else {
             var recordBeen: MutableList<VolunteerTime.RecordBean>?      //单个年份的时长信息
             //用户所有的时长信息
-            var allRecordList = mutableListOf<MutableList<VolunteerTime.RecordBean>>()
+            val allRecordList = mutableListOf<MutableList<VolunteerTime.RecordBean>>()
 
             //跳过yearList的第一个数据（因为第一个为用户全部年份的时长总和），从第一个年份开始（当前年份）
             for (i in 1 until yearList.size) {
@@ -232,7 +231,7 @@ class VolunteerRecordActivity : BaseActivity(), TabLayout.OnTabSelectedListener,
                 dealYear(dataBean.record!!, i - 1)
                 recordBeen = yearMap[Integer.parseInt(yearList[i])]
                 //再循环中，遍历四年数据的同时，对记录"全部"的List进行初始化加入数据
-                if (recordBeen != null && recordBeen.size != 0) allRecordList.add(recordBeen!!)
+                if (recordBeen != null && recordBeen.size != 0) allRecordList.add(recordBeen)
 
                 if (recordBeen == null || recordBeen.isEmpty()) {
                     //如果该年数据为空，则加入无时长fragment
@@ -241,7 +240,7 @@ class VolunteerRecordActivity : BaseActivity(), TabLayout.OnTabSelectedListener,
                         && yearMap[Integer.parseInt(yearList[i])]!!.isNotEmpty()
                         && yearList[i] != "全部") {
                     //将有时长加fragment入fragmentLList，并对fragment的data和year进行绑定
-                    var fragment = FirstVolunteerTimeFragment()
+                    val fragment = FirstVolunteerTimeFragment()
                     fragment.setRecordBeanList(recordBeen)
                     fragment.setYear(yearList[i])
                     fragmentList.add(fragment)
