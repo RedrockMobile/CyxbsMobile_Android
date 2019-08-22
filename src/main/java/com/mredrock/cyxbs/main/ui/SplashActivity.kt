@@ -1,11 +1,10 @@
 package com.mredrock.cyxbs.main.ui
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import android.os.Build
 import android.os.Bundle
 import android.view.View
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import com.alibaba.android.arouter.launcher.ARouter
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
@@ -44,7 +43,7 @@ class SplashActivity : BaseViewModelActivity<SplashViewModel>() {
                 viewModel.finishModel.observeNotNullAndTrue {
                     navigateAndFinish(QA_ANSWER_LIST)
                 }
-                viewModel.getQuestion(uri.getQueryParameter("qid"))
+                viewModel.getQuestion(uri.getQueryParameter("qid") ?: "0")
             }
             URI_PATH_QA_ANSWER -> {
 

@@ -1,15 +1,15 @@
 package com.mredrock.cyxbs.main.utils
 
 import android.content.res.ColorStateList
-import androidx.annotation.DrawableRes
-import com.google.android.material.bottomnavigation.BottomNavigationItemView
-import com.google.android.material.bottomnavigation.BottomNavigationMenuView
-import com.google.android.material.bottomnavigation.BottomNavigationView
-import androidx.viewpager.widget.ViewPager
 import android.util.SparseArray
 import android.view.MenuItem
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.annotation.DrawableRes
+import androidx.viewpager.widget.ViewPager
+import com.google.android.material.bottomnavigation.BottomNavigationItemView
+import com.google.android.material.bottomnavigation.BottomNavigationMenuView
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.mredrock.cyxbs.common.utils.LogUtils
 
 /**

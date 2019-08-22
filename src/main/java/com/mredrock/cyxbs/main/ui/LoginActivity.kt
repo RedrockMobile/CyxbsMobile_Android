@@ -1,10 +1,10 @@
 package com.mredrock.cyxbs.main.ui
 
 import android.annotation.SuppressLint
-import androidx.lifecycle.Observer
 import android.os.Bundle
-import androidx.appcompat.app.AlertDialog
 import android.view.inputmethod.EditorInfo
+import androidx.appcompat.app.AlertDialog
+import androidx.lifecycle.Observer
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
