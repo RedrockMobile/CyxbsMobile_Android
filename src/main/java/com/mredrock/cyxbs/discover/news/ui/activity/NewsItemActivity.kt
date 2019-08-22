@@ -1,7 +1,6 @@
 package com.mredrock.cyxbs.discover.news.ui.activity
 
 import android.app.AlertDialog
-import androidx.lifecycle.Observer
 import android.content.Intent
 import android.media.MediaScannerConnection
 import android.net.Uri
@@ -9,6 +8,7 @@ import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import android.view.Menu
+import androidx.lifecycle.Observer
 import com.afollestad.materialdialogs.MaterialDialog
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.extensions.uri

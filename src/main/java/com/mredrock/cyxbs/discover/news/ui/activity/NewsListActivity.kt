@@ -1,7 +1,6 @@
 package com.mredrock.cyxbs.discover.news.ui.activity
 
 import android.os.Bundle
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.mredrock.cyxbs.common.config.DISCOVER_NEWS
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
@@ -9,7 +8,6 @@ import com.mredrock.cyxbs.discover.news.R
 import com.mredrock.cyxbs.discover.news.ui.adapter.NewsAdapter
 import com.mredrock.cyxbs.discover.news.viewmodel.NewsListViewModel
 import kotlinx.android.synthetic.main.news_activity_list.*
-import org.jetbrains.anko.startActivity
 
 @Route(path = DISCOVER_NEWS)
 class NewsListActivity : BaseViewModelActivity<NewsListViewModel>() {

@@ -1,6 +1,5 @@
 package com.mredrock.cyxbs.discover.news.network.download
 
-import android.media.MediaScannerConnection
 import android.os.Environment
 import android.os.Environment.DIRECTORY_DOWNLOADS
 import com.mredrock.cyxbs.common.config.END_POINT_REDROCK
