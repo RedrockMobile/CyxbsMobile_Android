@@ -9,11 +9,11 @@ import androidx.fragment.app.FragmentPagerAdapter
  *
  * @CreateAt:2018/9/16
  */
-class FPAdapter(fm: androidx.fragment.app.FragmentManager?,
+class FPAdapter(fm: FragmentManager?,
                 private val titles: List<String>,
-                private val fragments: List<androidx.fragment.app.Fragment>) : androidx.fragment.app.FragmentPagerAdapter(fm) {
+                private val fragments: List<Fragment>) : FragmentPagerAdapter(fm) {
 
-    override fun getItem(p0: Int): androidx.fragment.app.Fragment = fragments[p0]
+    override fun getItem(p0: Int): Fragment = fragments[p0]
 
     override fun getCount(): Int = fragments.size
 

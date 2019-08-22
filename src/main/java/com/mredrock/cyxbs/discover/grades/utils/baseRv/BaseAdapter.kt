@@ -2,7 +2,6 @@ package com.mredrock.cyxbs.discover.grades.utils.baseRv
 
 import android.content.Context
 import android.os.Handler
-import androidx.recyclerview.widget.RecyclerView
 import android.view.ViewGroup
 import android.widget.TextView
 import com.mredrock.cyxbs.common.utils.extensions.gone
