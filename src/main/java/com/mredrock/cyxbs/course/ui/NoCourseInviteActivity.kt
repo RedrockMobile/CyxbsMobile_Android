@@ -13,6 +13,7 @@ import com.mredrock.cyxbs.course.R
 import com.mredrock.cyxbs.course.adapters.NoCourseInviteVPAdapter
 import com.mredrock.cyxbs.course.databinding.CourseActivityNoCourseInviteBinding
 import com.mredrock.cyxbs.course.viewmodels.NoCourseInviteViewModel
+import org.jetbrains.anko.toast
 
 @Route(path = COURSE_NO_COURSE_INVITE)
 class NoCourseInviteActivity : BaseActivity() {
@@ -57,8 +58,15 @@ class NoCourseInviteActivity : BaseActivity() {
                 NoCourseInviteViewModel.Factory(mStuNumList, mNameList)).get(NoCourseInviteViewModel::class.java)
         mNoCourseInviteViewModel.getCourses()
 
+        //为适应获取的当前周会超出已给周数的问题进行判断
         resources.getStringArray(R.array.course_course_weeks_strings).let {
-            it[SchoolCalendar().weekOfTerm] = getString(R.string.course_now_week)
+            val calendarWeek = SchoolCalendar().weekOfTerm
+            val nowWeek = if (calendarWeek < 0) {
+                0
+            } else {
+                if (calendarWeek > it.size - 1) it.size - 1 else calendarWeek
+            }
+            it[nowWeek] = getString(R.string.course_now_week)
             mNoCourseInviteVPAdapter = NoCourseInviteVPAdapter(it.drop(1), supportFragmentManager)
         }
 

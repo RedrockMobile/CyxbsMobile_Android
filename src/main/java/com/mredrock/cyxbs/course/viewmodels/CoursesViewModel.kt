@@ -82,7 +82,7 @@ class CoursesViewModel : ViewModel() {
     }
 
     private val mCoursesDatabase: ScheduleDatabase? by lazy(LazyThreadSafetyMode.NONE) {
-        ScheduleDatabase.getDatabase(BaseApp.context,isGetOthers.value!!,mStuNum)
+        ScheduleDatabase.getDatabase(BaseApp.context, isGetOthers.value!!, mStuNum)
     }
     private val mCourseApiService: CourseApiService  by lazy(LazyThreadSafetyMode.NONE) {
         ApiGenerator.getApiService(CourseApiService::class.java)
@@ -242,7 +242,10 @@ class CoursesViewModel : ViewModel() {
      * 此方法用于从服务器上获取事务数据
      */
     private fun getAffairsDataFromInternet() {
-        mCourseApiService.getAffair(stuNum = BaseApp.user!!.stuNum!!, idNum = BaseApp.user!!.idNum!!)
+        val user = BaseApp.user ?: return
+        val stuNum = user.stuNum ?: return
+        val idNum = user.idNum ?: return
+        mCourseApiService.getAffair(stuNum = stuNum, idNum = idNum)
                 .setSchedulers()
                 .errorHandler()
                 .subscribe(ExecuteOnceObserver(onExecuteOnceNext = { affairsFromInternet ->
