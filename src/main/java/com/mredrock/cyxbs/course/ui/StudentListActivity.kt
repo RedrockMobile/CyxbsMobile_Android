@@ -3,7 +3,6 @@ package com.mredrock.cyxbs.course.ui
 import android.os.Bundle
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.BuildConfig
-import com.mredrock.cyxbs.common.component.JToolbar
 import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.ui.BaseActivity
 import com.mredrock.cyxbs.common.utils.extensions.errorHandler

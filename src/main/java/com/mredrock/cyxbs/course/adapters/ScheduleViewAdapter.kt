@@ -3,19 +3,19 @@ package com.mredrock.cyxbs.course.adapters
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
-import androidx.core.content.ContextCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import com.mredrock.cyxbs.common.config.DEFAULT_PREFERENCE_FILENAME
 import com.mredrock.cyxbs.common.config.SP_SHOW_MODE
 import com.mredrock.cyxbs.common.utils.LogUtils
+import com.mredrock.cyxbs.common.utils.SchoolCalendar
 import com.mredrock.cyxbs.common.utils.extensions.sharedPreferences
 import com.mredrock.cyxbs.course.R
 import com.mredrock.cyxbs.course.component.ScheduleView
-import com.mredrock.cyxbs.common.utils.SchoolCalendar
 import com.mredrock.cyxbs.course.event.DismissAddAffairViewEvent
 import com.mredrock.cyxbs.course.network.Course
 import com.mredrock.cyxbs.course.ui.EditAffairActivity
@@ -24,7 +24,6 @@ import com.mredrock.cyxbs.course.utils.ClassRoomParse
 import com.mredrock.cyxbs.course.utils.RippleDrawableUtil
 import org.greenrobot.eventbus.EventBus
 import java.util.*
-import kotlin.Comparator
 
 /**
  * @param mContext [Context]
@@ -109,7 +108,7 @@ class ScheduleViewAdapter(private val mContext: Context,
             }
             //如果不是整学期的做如下判断
             course.week?.let {
-                if (it.contains(mNowWeek)) {
+                if (mNowWeek in it) {
                     if (mSchedulesArray[row][column] == null) {
                         mSchedulesArray[row][column] = mutableListOf()
                     }

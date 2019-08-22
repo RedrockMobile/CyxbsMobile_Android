@@ -1,7 +1,7 @@
 package com.mredrock.cyxbs.course.bindingadapter
 
-import androidx.databinding.BindingAdapter
 import android.widget.TextView
+import androidx.databinding.BindingAdapter
 
 /**
  * Created by anriku on 2018/9/11.

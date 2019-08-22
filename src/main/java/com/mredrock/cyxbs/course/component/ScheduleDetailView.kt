@@ -1,14 +1,12 @@
 package com.mredrock.cyxbs.course.component
 
 import android.content.Context
-import androidx.annotation.LayoutRes
-import androidx.viewpager.widget.PagerAdapter
-import androidx.viewpager.widget.ViewPager
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
+import androidx.annotation.LayoutRes
 import com.mredrock.cyxbs.common.utils.extensions.getScreenHeight
 import com.mredrock.cyxbs.common.utils.extensions.getScreenWidth
 import com.mredrock.cyxbs.course.R
@@ -84,14 +82,14 @@ class ScheduleDetailView : FrameLayout {
         if (schedule.customType == Course.COURSE) {
             contentView = mLayoutInflater.inflate(R.layout.course_course_detail_item, this, false)
             // Set the LayoutParams
-            val contentViewParams = FrameLayout.LayoutParams(mScheduleDetailViewWidth, mScheduleDetailViewHeight)
+            val contentViewParams = LayoutParams(mScheduleDetailViewWidth, mScheduleDetailViewHeight)
             contentView.layoutParams = contentViewParams
 
             addView(contentView)
         } else {
             contentView = mLayoutInflater.inflate(R.layout.course_affair_detail_item, this, false)
             // Set the LayoutParams
-            val contentViewParams = FrameLayout.LayoutParams(mScheduleDetailViewWidth, mScheduleDetailViewHeight)
+            val contentViewParams = LayoutParams(mScheduleDetailViewWidth, mScheduleDetailViewHeight)
             contentView.layoutParams = contentViewParams
 
             addView(contentView)
@@ -109,7 +107,7 @@ class ScheduleDetailView : FrameLayout {
         mViewPager = androidx.viewpager.widget.ViewPager(context)
         mViewpagerAdapter = ViewPagerAdapter(context, scheduleDetailViewAdapter)
         mViewPager.adapter = mViewpagerAdapter
-        val viewPagerParams = FrameLayout.LayoutParams(mViewPagerWidth, mViewPagerHeight)
+        val viewPagerParams = LayoutParams(mViewPagerWidth, mViewPagerHeight)
         mViewPager.layoutParams = viewPagerParams
 
         // Let the dots scrolled when the ViewPager is scrolled.
@@ -122,7 +120,7 @@ class ScheduleDetailView : FrameLayout {
         addView(mViewPager)
         mDotsView = scheduleDetailViewAdapter.addDotsView(this)
 
-        val params = FrameLayout.LayoutParams(mScheduleDetailViewWidth, mScheduleDetailViewHeight / 10)
+        val params = LayoutParams(mScheduleDetailViewWidth, mScheduleDetailViewHeight / 10)
         params.topMargin = (mScheduleDetailViewHeight * 9) / 10
         params.leftMargin = 0
 

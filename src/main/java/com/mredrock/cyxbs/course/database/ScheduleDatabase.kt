@@ -1,9 +1,9 @@
 package com.mredrock.cyxbs.course.database
 
+import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import android.content.Context
 import com.mredrock.cyxbs.course.network.Affair
 import com.mredrock.cyxbs.course.network.Course
 

@@ -1,7 +1,5 @@
 package com.mredrock.cyxbs.course.ui
 
-import androidx.lifecycle.ViewModelProviders
-import androidx.databinding.DataBindingUtil
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.Menu
@@ -9,6 +7,8 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.TextView
 import android.widget.Toast
+import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.ViewModelProviders
 import com.mredrock.cyxbs.common.ui.BaseActivity
 import com.mredrock.cyxbs.course.R
 import com.mredrock.cyxbs.course.databinding.CourseActivityEditAffairBinding

@@ -2,17 +2,13 @@ package com.mredrock.cyxbs.course.ui
 
 import android.annotation.SuppressLint
 import android.content.Context
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import com.mredrock.cyxbs.common.utils.extensions.getScreenHeight
 import com.mredrock.cyxbs.common.utils.extensions.getScreenWidth
 import com.mredrock.cyxbs.course.R
 import com.mredrock.cyxbs.course.adapters.NameListRecAdapter
-import com.mredrock.cyxbs.course.network.Course
 import com.mredrock.cyxbs.course.utils.CourseTimeParse
 
 
@@ -23,8 +19,8 @@ class NoCourseInviteDetailDialogHelper(context: Context) : BaseDialogHelper(cont
         R.layout.course_no_course_invite_detail_dialog) {
 
     companion object {
-        private const val widthRatio = 0.8f
-        private const val heightRatio = 0.6f
+        private const val WIDTH_RATIO = 0.8f
+        private const val HEIGHT_RATIO = 0.6f
     }
 
     private val mDayOfWeek: Array<String> by lazy(LazyThreadSafetyMode.NONE) {
@@ -34,8 +30,8 @@ class NoCourseInviteDetailDialogHelper(context: Context) : BaseDialogHelper(cont
     @SuppressLint("SetTextI18n")
     fun showDialog(row: Int, column: Int, length: Int, people: List<String>) {
         dialog.findViewById<ConstraintLayout>(R.id.cl).apply {
-            layoutParams = FrameLayout.LayoutParams((context.getScreenWidth() * widthRatio).toInt(),
-                    (context.getScreenHeight() * heightRatio).toInt())
+            layoutParams = FrameLayout.LayoutParams((context.getScreenWidth() * WIDTH_RATIO).toInt(),
+                    (context.getScreenHeight() * HEIGHT_RATIO).toInt())
         }
         dialog.findViewById<TextView>(R.id.tv_day_of_week).apply {
             text = mDayOfWeek[column]

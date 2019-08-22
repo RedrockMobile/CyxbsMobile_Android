@@ -1,8 +1,8 @@
 package com.mredrock.cyxbs.course.ui
 
-import androidx.lifecycle.ViewModelProviders
-import androidx.databinding.DataBindingUtil
 import android.os.Bundle
+import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.ViewModelProviders
 import com.alibaba.android.arouter.facade.annotation.Autowired
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter

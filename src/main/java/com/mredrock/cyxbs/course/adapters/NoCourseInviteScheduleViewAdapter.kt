@@ -1,20 +1,18 @@
 package com.mredrock.cyxbs.course.adapters
 
+import android.annotation.SuppressLint
 import android.content.Context
-import androidx.core.content.ContextCompat
-import androidx.cardview.widget.CardView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import com.mredrock.cyxbs.common.utils.LogUtils
-import com.mredrock.cyxbs.course.component.ScheduleView
+import androidx.core.content.ContextCompat
 import com.mredrock.cyxbs.common.utils.SchoolCalendar
 import com.mredrock.cyxbs.course.R
+import com.mredrock.cyxbs.course.component.ScheduleView
 import com.mredrock.cyxbs.course.network.Course
 import com.mredrock.cyxbs.course.ui.NoCourseInviteDetailDialogHelper
-import java.lang.StringBuilder
 import java.util.*
 
 /**
@@ -57,6 +55,7 @@ class NoCourseInviteScheduleViewAdapter(private val mContext: Context,
      * 此方法用于对[mCoursesMap]进行处理。来获取[mCommonNoCoursesNames]。
      *
      */
+    @SuppressLint("CI_ByteDanceKotlinRules_List_Contains_Not_Allow")
     private fun getCommonNoCoursesNames() {
         val keys = mCoursesMap.keys
         val values = mCoursesMap.values
@@ -87,7 +86,7 @@ class NoCourseInviteScheduleViewAdapter(private val mContext: Context,
                 val indexes = mCoursesIndex[row][column]
 
                 for (i in 0 until mNameList.size) {
-                    if (indexes == null || !indexes.contains(i)) {
+                    if (indexes == null || i !in indexes) {
                         if (mCommonNoCoursesNames[row][column] == null) {
                             mCommonNoCoursesNames[row][column] = mutableListOf()
                         }

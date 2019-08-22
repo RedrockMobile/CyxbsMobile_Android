@@ -1,13 +1,12 @@
 package com.mredrock.cyxbs.course.ui
 
-import androidx.lifecycle.ViewModelProviders
-import androidx.databinding.DataBindingUtil
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.mredrock.cyxbs.common.utils.LogUtils
+import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProviders
 import com.mredrock.cyxbs.course.R
 import com.mredrock.cyxbs.course.databinding.CourseFragmentNoCourseInviteBinding
 import com.mredrock.cyxbs.course.viewmodels.NoCourseInviteViewModel
@@ -16,7 +15,7 @@ import com.mredrock.cyxbs.course.viewmodels.NoCourseInviteViewModel
  * Created by anriku on 2018/10/6.
  */
 
-class NoCourseInviteFragment : androidx.fragment.app.Fragment() {
+class NoCourseInviteFragment : Fragment() {
 
     private lateinit var mBinding: CourseFragmentNoCourseInviteBinding
     private lateinit var mNoCourseInviteViewModel: NoCourseInviteViewModel

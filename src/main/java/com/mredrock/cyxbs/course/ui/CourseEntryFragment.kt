@@ -1,14 +1,14 @@
 package com.mredrock.cyxbs.course.ui
 
-import androidx.lifecycle.ViewModelProviders
 import android.graphics.drawable.Drawable
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import androidx.core.content.ContextCompat
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProviders
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.component.JToolbar
@@ -40,7 +40,7 @@ class CourseEntryFragment : BaseFragment() {
     private lateinit var mToolbarTitle: String
 
     // 用于通知更新Toolbar的Menu更新
-    private var insideFragment: androidx.fragment.app.Fragment? = null
+    private var insideFragment: Fragment? = null
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -100,8 +100,9 @@ class CourseEntryFragment : BaseFragment() {
         toolbar.titleTextView.text = mToolbarTitle
     }
 
-    private fun replaceFragment(fragment: androidx.fragment.app.Fragment) {
-        val transaction = activity!!.supportFragmentManager.beginTransaction()
+    private fun replaceFragment(fragment: Fragment) {
+        val manager = activity?.supportFragmentManager ?: return
+        val transaction = manager.beginTransaction()
         transaction.replace(R.id.fl, fragment)
         insideFragment = fragment
         transaction.commit()

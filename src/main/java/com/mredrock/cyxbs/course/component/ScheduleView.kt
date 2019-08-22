@@ -1,14 +1,16 @@
 package com.mredrock.cyxbs.course.component
 
 import android.content.Context
-import android.graphics.*
-import androidx.core.content.ContextCompat
+import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.Paint
+import android.graphics.PointF
 import android.util.AttributeSet
 import android.view.*
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
-import com.mredrock.cyxbs.common.utils.LogUtils
+import androidx.core.content.ContextCompat
 import com.mredrock.cyxbs.common.utils.extensions.getScreenHeight
 import com.mredrock.cyxbs.course.R
 import org.jetbrains.anko.*
@@ -169,7 +171,7 @@ class ScheduleView : FrameLayout {
             val emptyImageView = mEmptyImageView
             val emptyTextView = mEmptyTextView
 
-            val imageParams = FrameLayout.LayoutParams(mScheduleViewWidth, mScheduleViewWidth)
+            val imageParams = LayoutParams(mScheduleViewWidth, mScheduleViewWidth)
             emptyImageView.apply {
                 setImageDrawable(ContextCompat.getDrawable(context, mNoCourseDrawableResId))
                 scaleType = ImageView.ScaleType.FIT_CENTER
@@ -179,8 +181,8 @@ class ScheduleView : FrameLayout {
 
             // set mEmptyTextView
             mEmptyText?.let {
-                val textParams = FrameLayout.LayoutParams(mScheduleViewWidth,
-                        FrameLayout.LayoutParams.WRAP_CONTENT)
+                val textParams = LayoutParams(mScheduleViewWidth,
+                        LayoutParams.WRAP_CONTENT)
                 textParams.topMargin = mScheduleViewWidth * 4 / 5
 
                 emptyTextView.apply {
@@ -207,7 +209,7 @@ class ScheduleView : FrameLayout {
                     val itemView = notNullAdapter.getItemView(row, column, this@ScheduleView)
 
                     //compute the LayoutParams of the ItemView。
-                    val params = FrameLayout.LayoutParams(mBasicElementWidth,
+                    val params = LayoutParams(mBasicElementWidth,
                             mBasicElementHeight * itemViewInfo.itemHeight +
                                     (itemViewInfo.itemHeight - 1) * mElementGap)
                     params.leftMargin = mElementGap * (column + 1) + mBasicElementWidth * column
@@ -238,7 +240,7 @@ class ScheduleView : FrameLayout {
                     }
                     val itemView = notNullAdapter.getItemView(row, column, this@ScheduleView)
 
-                    val params = FrameLayout.LayoutParams(mBasicElementWidth,
+                    val params = LayoutParams(mBasicElementWidth,
                             mBasicElementHeight * itemViewInfo.itemHeight +
                                     mElementGap * (itemViewInfo.itemHeight - 1))
                     params.leftMargin = mElementGap * (column + 1) + mBasicElementWidth * column
@@ -328,7 +330,7 @@ class ScheduleView : FrameLayout {
                 return true
             }
             // Compute the mTouchView's LayoutParams.
-            val params = FrameLayout.LayoutParams(mBasicElementWidth,
+            val params = LayoutParams(mBasicElementWidth,
                     mBasicElementHeight)
             params.leftMargin = mElementGap * (clickHashX + 1) + mBasicElementWidth * clickHashX
             params.topMargin = mElementGap * (clickHashY + 1) + mBasicElementHeight * clickHashY

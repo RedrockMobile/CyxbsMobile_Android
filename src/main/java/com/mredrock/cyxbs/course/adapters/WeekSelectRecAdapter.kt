@@ -1,16 +1,15 @@
 package com.mredrock.cyxbs.course.adapters
 
-import androidx.lifecycle.ViewModelProviders
-import androidx.fragment.app.FragmentActivity
 import android.widget.CheckBox
-import com.mredrock.cyxbs.common.utils.LogUtils
+import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.ViewModelProviders
 import com.mredrock.cyxbs.course.R
 import com.mredrock.cyxbs.course.viewmodels.EditAffairViewModel
 
 /**
  * Created by anriku on 2018/9/9.
  */
-class WeekSelectRecAdapter(private val mActivity: androidx.fragment.app.FragmentActivity) : BaseRecAdapter(mActivity) {
+class WeekSelectRecAdapter(mActivity: FragmentActivity) : BaseRecAdapter(mActivity) {
 
     private val mEditAffairViewModel: EditAffairViewModel = ViewModelProviders.of(mActivity).get(EditAffairViewModel::class.java)
 

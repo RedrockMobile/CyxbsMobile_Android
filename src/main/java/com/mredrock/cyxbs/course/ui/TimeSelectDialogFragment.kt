@@ -2,22 +2,21 @@ package com.mredrock.cyxbs.course.ui
 
 import android.annotation.SuppressLint
 import android.app.Dialog
-import androidx.lifecycle.ViewModelProviders
-import androidx.databinding.DataBindingUtil
 import android.os.Bundle
-import com.google.android.material.bottomsheet.BottomSheetDialog
-import androidx.core.content.ContextCompat
-import androidx.appcompat.app.AppCompatDialogFragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatDialogFragment
+import androidx.core.content.ContextCompat
+import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.ViewModelProviders
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.mredrock.cyxbs.course.R
 import com.mredrock.cyxbs.course.adapters.TimeSelectRecAdapter
-import com.mredrock.cyxbs.course.viewmodels.EditAffairViewModel
-import androidx.recyclerview.widget.DividerItemDecoration
 import com.mredrock.cyxbs.course.databinding.CourseFragmentTimeSelectBinding
+import com.mredrock.cyxbs.course.viewmodels.EditAffairViewModel
 
 
 /**

@@ -1,6 +1,5 @@
 package com.mredrock.cyxbs.course.utils
 
-import java.lang.StringBuilder
 import java.util.regex.Pattern
 
 /**

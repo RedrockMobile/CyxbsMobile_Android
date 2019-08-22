@@ -3,7 +3,6 @@ package com.mredrock.cyxbs.course.ui
 import android.app.Dialog
 import android.content.Context
 import android.view.LayoutInflater
-import android.view.ViewGroup
 import androidx.annotation.LayoutRes
 import com.mredrock.cyxbs.course.R
 
@@ -20,7 +19,7 @@ abstract class BaseDialogHelper(val context: Context, @LayoutRes val layoutId: I
         dialog = Dialog(context).apply {
             setCancelable(true)
             setContentView(dialogView)
-            window.setWindowAnimations(R.style.CourseDialogFragmentAnimation)
+            window?.setWindowAnimations(R.style.CourseDialogFragmentAnimation)
         }
     }
 }

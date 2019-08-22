@@ -39,7 +39,7 @@ class OthersCourseActivity : BaseActivity() {
     }
 
 
-    private fun replaceFragment(fragment: androidx.fragment.app.Fragment) {
+    private fun replaceFragment(fragment: Fragment) {
         val transaction = supportFragmentManager.beginTransaction()
         transaction.replace(R.id.fl, fragment)
         transaction.commit()

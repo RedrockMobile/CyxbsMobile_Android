@@ -1,9 +1,9 @@
 package com.mredrock.cyxbs.course.network
 
-import androidx.room.Entity
-import androidx.room.TypeConverters
 import android.os.Parcel
 import android.os.Parcelable
+import androidx.room.Entity
+import androidx.room.TypeConverters
 import com.google.gson.annotations.SerializedName
 import com.mredrock.cyxbs.course.database.DateListStringConverter
 
@@ -48,7 +48,6 @@ class Affair {
         this.date = date
     }
 
-
     override fun toString(): String {
         return "Affair(id=$id, time=$time, title='$title', content='$content', " +
                 "updatedTime='$updatedTime', date=$date)"
@@ -62,7 +61,6 @@ class Affair {
         var day: Int = 0
         @SerializedName(value = "week")
         var week: List<Int>? = mutableListOf()
-
 
 
         constructor(parcel: Parcel) {

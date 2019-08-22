@@ -1,9 +1,12 @@
 package com.mredrock.cyxbs.course.viewmodels
 
 import android.app.Application
-import androidx.lifecycle.*
 import android.util.SparseArray
 import android.widget.CheckBox
+import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.utils.extensions.errorHandler
@@ -80,7 +83,7 @@ class EditAffairViewModel(application: Application) : AndroidViewModel(applicati
      *
      * @param activity [com.mredrock.cyxbs.course.ui.EditAffairActivity]
      */
-    fun initData(activity: androidx.fragment.app.FragmentActivity) {
+    fun initData(activity: FragmentActivity) {
         val intent = activity.intent
         //通过点击事务进行修改获取的数据
         passedAffairInfo = intent.getParcelableExtra(EditAffairActivity.AFFAIR_INFO)
@@ -113,7 +116,7 @@ class EditAffairViewModel(application: Application) : AndroidViewModel(applicati
      *
      * @param activity 该ViewModel所依赖的Activity。这里只是将FragmentActivity作为参数，因此不用担心内存泄漏的问题。
      */
-    fun observeWork(activity: androidx.fragment.app.FragmentActivity) {
+    fun observeWork(activity: FragmentActivity) {
         // 周数确定后真正要上传的数据存储
         selectedWeekString.observe(activity, Observer {
             // 将旧的存储的数据清理掉
@@ -158,7 +161,7 @@ class EditAffairViewModel(application: Application) : AndroidViewModel(applicati
      * @param title 事务标题
      * @param content 事务内容
      */
-    fun postOrModifyAffair(activity: androidx.fragment.app.FragmentActivity, title: String, content: String) {
+    fun postOrModifyAffair(activity: FragmentActivity, title: String, content: String) {
         BaseApp.user ?: return
 
         val stuNum = BaseApp.user!!.stuNum ?: return

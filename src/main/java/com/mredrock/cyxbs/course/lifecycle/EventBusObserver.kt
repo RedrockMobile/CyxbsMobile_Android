@@ -4,8 +4,6 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.OnLifecycleEvent
-import androidx.core.app.ActivityCompat
-import androidx.fragment.app.Fragment
 import com.mredrock.cyxbs.common.utils.LogUtils
 import org.greenrobot.eventbus.EventBus
 

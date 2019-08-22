@@ -3,15 +3,11 @@ package com.mredrock.cyxbs.course.utils
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.ContentValues
-import android.database.CursorIndexOutOfBoundsException
+import android.database.Cursor
 import android.database.sqlite.SQLiteException
-import android.provider.CalendarContract.Calendars
-import android.provider.CalendarContract.Events
-import android.provider.CalendarContract.Reminders
-import androidx.fragment.app.FragmentActivity
-import androidx.appcompat.app.AppCompatActivity
+import android.provider.CalendarContract.*
 import android.widget.Toast
-import com.mredrock.cyxbs.common.utils.LogUtils
+import androidx.appcompat.app.AppCompatActivity
 import com.mredrock.cyxbs.common.utils.SchoolCalendar
 import com.mredrock.cyxbs.common.utils.extensions.doPermissionAction
 import com.mredrock.cyxbs.course.R
@@ -69,17 +65,19 @@ class AffairToCalendar(private val mActivity: AppCompatActivity, private val mAf
     /**
      * This method is used to query the Calendar which can modify it events.
      */
-    @SuppressLint("MissingPermission")
+    @SuppressLint("MissingPermission", "Recycle")
     private fun queryCalendarId() {
         val cr = mActivity.contentResolver
+        var cursor: Cursor? = null
         try {
-            val cursor = cr.query(Calendars.CONTENT_URI, mProjection, mGetIdSelection, mGetIdSelectionArgs,
-                    Calendars._ID + " ASC")
+            cursor = cr.query(Calendars.CONTENT_URI, mProjection, mGetIdSelection, mGetIdSelectionArgs,
+                    Calendars._ID + " ASC")!!
             cursor.moveToFirst()
             mCalendarId = cursor.getLong(mProjectionId)
-            cursor.close()
-        } catch (e: CursorIndexOutOfBoundsException){
+        } catch (e: Exception) {
             Toast.makeText(mActivity, mActivity.getString(R.string.course_fail_get_calendar_id), Toast.LENGTH_SHORT).show()
+        } finally {
+            cursor?.close()
         }
     }
 
@@ -129,7 +127,7 @@ class AffairToCalendar(private val mActivity: AppCompatActivity, private val mAf
         eventValues.put(Events.EVENT_TIMEZONE, "UTC/GMT+08:00")
 
         val uri = cr.insert(Events.CONTENT_URI, eventValues)
-        val eventId = uri.lastPathSegment
+        val eventId = uri?.lastPathSegment
         // Add reminder
         val remindValues = ContentValues()
         remindValues.put(Reminders.MINUTES, affair.affairTime?.toInt() ?: 0)
@@ -138,7 +136,7 @@ class AffairToCalendar(private val mActivity: AppCompatActivity, private val mAf
 
         try {
             cr.insert(Reminders.CONTENT_URI, remindValues)
-        } catch (e: SQLiteException){
+        } catch (e: SQLiteException) {
             Toast.makeText(mActivity, mActivity.getString(R.string.course_fail_get_calendar_id), Toast.LENGTH_SHORT).show()
         }
     }

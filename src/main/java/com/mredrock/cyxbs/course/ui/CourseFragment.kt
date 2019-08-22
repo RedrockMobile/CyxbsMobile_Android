@@ -1,12 +1,12 @@
 package com.mredrock.cyxbs.course.ui
 
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
-import androidx.databinding.DataBindingUtil
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import com.mredrock.cyxbs.common.ui.BaseFragment
 import com.mredrock.cyxbs.course.R
 import com.mredrock.cyxbs.course.databinding.CourseFragmentCourseBinding

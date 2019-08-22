@@ -1,8 +1,11 @@
 package com.mredrock.cyxbs.course.network
 
-import androidx.room.*
 import android.os.Parcel
 import android.os.Parcelable
+import androidx.room.Entity
+import androidx.room.Ignore
+import androidx.room.PrimaryKey
+import androidx.room.TypeConverters
 import com.google.gson.annotations.SerializedName
 import com.mredrock.cyxbs.course.database.IntListStringConverter
 

@@ -1,12 +1,12 @@
 package com.mredrock.cyxbs.course.ui
 
+import android.content.Intent
+import android.os.Bundle
+import android.view.*
+import androidx.appcompat.app.AppCompatActivity
+import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import android.content.Intent
-import androidx.databinding.DataBindingUtil
-import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
-import android.view.*
 import com.mredrock.cyxbs.common.bean.WidgetCourse
 import com.mredrock.cyxbs.common.event.ShowModeChangeEvent
 import com.mredrock.cyxbs.common.event.WidgetCourseEvent

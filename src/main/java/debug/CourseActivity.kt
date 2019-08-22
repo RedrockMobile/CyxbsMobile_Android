@@ -1,11 +1,11 @@
 package debug
 
+//import com.jude.swipbackhelper.SwipeBackHelper
 import android.graphics.drawable.Drawable
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import androidx.core.content.ContextCompat
 import android.view.MenuItem
-//import com.jude.swipbackhelper.SwipeBackHelper
+import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.ui.BaseActivity
 import com.mredrock.cyxbs.course.R
@@ -104,7 +104,7 @@ class CourseActivity : BaseActivity() {
     }
 
 
-    private fun replaceFragment(fragment: androidx.fragment.app.Fragment) {
+    private fun replaceFragment(fragment: Fragment) {
         val transaction = supportFragmentManager.beginTransaction()
         transaction.replace(R.id.fl_course_fragment, fragment)
         transaction.commit()

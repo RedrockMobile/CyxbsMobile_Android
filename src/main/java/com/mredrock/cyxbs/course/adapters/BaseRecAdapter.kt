@@ -1,14 +1,10 @@
 package com.mredrock.cyxbs.course.adapters
 
 import android.content.Context
-import androidx.databinding.DataBindingComponent
-import androidx.databinding.DataBindingUtil
-import androidx.databinding.ViewDataBinding
-import androidx.annotation.LayoutRes
-import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.LayoutRes
 
 /**
  * 这个类作为所有RecyclerView的Adapter的基类。然后通过[getThePositionLayoutId]来获取对应位置的View的LayoutId

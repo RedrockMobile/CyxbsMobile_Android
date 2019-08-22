@@ -1,9 +1,9 @@
 package com.mredrock.cyxbs.course.adapters
 
 import android.annotation.SuppressLint
-import androidx.lifecycle.ViewModelProviders
-import androidx.fragment.app.FragmentActivity
 import android.widget.CheckBox
+import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.ViewModelProviders
 import com.mredrock.cyxbs.course.R
 import com.mredrock.cyxbs.course.viewmodels.EditAffairViewModel
 
@@ -13,7 +13,7 @@ import com.mredrock.cyxbs.course.viewmodels.EditAffairViewModel
  */
 
 @SuppressLint("PrivateResource")
-class TimeSelectRecAdapter(private val mActivity: androidx.fragment.app.FragmentActivity) : BaseRecAdapter(mActivity) {
+class TimeSelectRecAdapter(mActivity: FragmentActivity) : BaseRecAdapter(mActivity) {
 
     companion object {
         private const val TAG = "TimeSelectRecAdapter"

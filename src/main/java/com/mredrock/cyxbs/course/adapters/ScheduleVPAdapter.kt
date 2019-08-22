@@ -4,18 +4,17 @@ import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
-import androidx.viewpager.widget.PagerAdapter
 import com.mredrock.cyxbs.course.ui.CourseFragment
 
 /**
  * Created by anriku on 2018/8/16.
  */
 
-class ScheduleVPAdapter(private val mTiles: Array<String>, fm: androidx.fragment.app.FragmentManager?) : androidx.fragment.app.FragmentStatePagerAdapter(fm) {
+class ScheduleVPAdapter(private val mTiles: Array<String>, fm: FragmentManager?) : FragmentStatePagerAdapter(fm) {
 
-    private val mFragmentList = arrayOfNulls<androidx.fragment.app.Fragment>(mTiles.size)
+    private val mFragmentList = arrayOfNulls<Fragment>(mTiles.size)
 
-    override fun getItem(position: Int): androidx.fragment.app.Fragment {
+    override fun getItem(position: Int): Fragment {
         if (mFragmentList[position] == null) {
             mFragmentList[position] = CourseFragment().also {
                 it.arguments = Bundle().apply {

@@ -1,22 +1,28 @@
 package com.mredrock.cyxbs.course.viewmodels
 
+import android.content.Context
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import android.content.Context
 import com.google.gson.Gson
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.config.SP_WIDGET_NEED_FRESH
 import com.mredrock.cyxbs.common.config.WIDGET_COURSE
 import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.utils.SchoolCalendar
-import com.mredrock.cyxbs.common.utils.extensions.*
+import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
+import com.mredrock.cyxbs.common.utils.extensions.editor
+import com.mredrock.cyxbs.common.utils.extensions.errorHandler
+import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.course.database.ScheduleDatabase
 import com.mredrock.cyxbs.course.event.AffairFromInternetEvent
 import com.mredrock.cyxbs.course.event.RefreshEvent
-import com.mredrock.cyxbs.course.network.*
+import com.mredrock.cyxbs.course.network.Affair
+import com.mredrock.cyxbs.course.network.AffairMapToCourse
+import com.mredrock.cyxbs.course.network.Course
+import com.mredrock.cyxbs.course.network.CourseApiService
 import com.mredrock.cyxbs.course.rxjava.ExecuteOnceObserver
-import io.reactivex.*
 import io.reactivex.Observable
+import io.reactivex.ObservableOnSubscribe
 import org.greenrobot.eventbus.EventBus
 import java.util.*
 

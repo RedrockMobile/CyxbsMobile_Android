@@ -3,10 +3,10 @@ package debug
 import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.Context
-import androidx.appcompat.widget.AppCompatButton
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.EditText
+import androidx.appcompat.widget.AppCompatButton
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.bean.User
 import com.mredrock.cyxbs.common.utils.extensions.getScreenWidth
