@@ -14,6 +14,12 @@ android.defaultConfig {
 dependencies {
     api fileTree(include: ['*.jar'], dir: 'libs')
 
+    // copy if need Unit Testing
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'androidx.test:core:1.2.0'
+    androidTestImplementation 'androidx.test:runner:1.2.0'
+    androidTestImplementation 'androidx.test:rules:1.2.0'
+
     //kotlin
     api deps.kotlin.runtime
     api deps.kotlin.anko

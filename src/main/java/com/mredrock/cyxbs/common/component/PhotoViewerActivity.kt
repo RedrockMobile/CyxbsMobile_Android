@@ -13,6 +13,7 @@ import com.bumptech.glide.request.RequestOptions
 import com.github.chrisbanes.photoview.PhotoView
 import com.mredrock.cyxbs.common.R
 import com.mredrock.cyxbs.common.ui.BaseActivity
+import com.mredrock.cyxbs.common.utils.extensions.setFullScreen
 import kotlinx.android.synthetic.main.common_activity_photo_viewer.*
 import org.jetbrains.anko.startActivity
 
@@ -64,15 +65,6 @@ open class PhotoViewerActivity : BaseActivity() {
         }
 
         setFullScreen()
-    }
-
-    private fun setFullScreen() {
-        window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                or View.SYSTEM_UI_FLAG_FULLSCREEN
-                or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY)
     }
 
     protected open fun onPhotoClick(mData: String, mPos: Int) {}
