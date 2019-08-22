@@ -1,8 +1,6 @@
 package com.mredrock.cyxbs.main.ui
 
-import android.os.Build
 import android.os.Bundle
-import android.view.View
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.alibaba.android.arouter.launcher.ARouter
@@ -19,11 +17,10 @@ import com.mredrock.cyxbs.main.R
 import com.mredrock.cyxbs.main.viewmodel.SplashViewModel
 import kotlinx.android.synthetic.main.main_activity_splash.*
 import org.greenrobot.eventbus.EventBus
+import com.mredrock.cyxbs.common.utils.extensions.setFullScreen
+
 
 class SplashActivity : BaseViewModelActivity<SplashViewModel>() {
-    companion object {
-        val TAG = SplashActivity::class.java.simpleName
-    }
 
     override val isFragmentActivity = false
     override val viewModelClass = SplashViewModel::class.java
@@ -75,18 +72,4 @@ class SplashActivity : BaseViewModelActivity<SplashViewModel>() {
             onChange()
         }
     })
-
-    private fun setFullScreen() {
-        val decorView = window.decorView
-        var uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            uiOptions = (View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                    or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                    or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                    or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                    or View.SYSTEM_UI_FLAG_FULLSCREEN
-                    or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY)
-        }
-        decorView.systemUiVisibility = uiOptions
-    }
 }

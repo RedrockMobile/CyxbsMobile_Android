@@ -5,12 +5,7 @@
     <application android:theme="@style/AppTheme">
         <activity
             android:name=".ui.SplashActivity"
-            android:theme="@style/SplashTheme" />
-
-        <activity
-            android:exported="true"
-            android:name=".ui.MainActivity"
-            android:launchMode="singleTask">
+            android:theme="@style/SplashTheme" >
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -35,6 +30,11 @@
                 android:name="android.app.shortcuts"
                 android:resource="@xml/main_shortcut" />
         </activity>
+
+        <activity
+            android:exported="true"
+            android:name=".ui.MainActivity"
+            android:launchMode="singleTask"/>
 
         <activity
             android:name=".ui.LoginActivity"
