@@ -1,7 +1,6 @@
 package com.mredrock.cyxbs.discover.othercourse.pages.stulist
 
 import android.annotation.SuppressLint
-import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup

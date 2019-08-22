@@ -1,9 +1,9 @@
 package com.mredrock.cyxbs.discover.othercourse
 
 import android.app.Activity
-import com.google.android.material.snackbar.Snackbar
-import androidx.fragment.app.Fragment
 import android.view.View
+import androidx.fragment.app.Fragment
+import com.google.android.material.snackbar.Snackbar
 import org.jetbrains.anko.contentView
 
 /**
@@ -15,7 +15,7 @@ fun Activity.snackbar(str: String, LENGTH : Int = -1) {
     Snackbar.make(contentView!!, str, LENGTH).show()
 }
 
-fun androidx.fragment.app.Fragment.snackbar(str: String, LENGTH : Int = -1) {
+fun Fragment.snackbar(str: String, LENGTH : Int = -1) {
     com.google.android.material.snackbar.Snackbar.make(view!!, str, LENGTH).show()
 }
 
