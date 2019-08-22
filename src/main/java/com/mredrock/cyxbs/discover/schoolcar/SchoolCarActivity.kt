@@ -195,6 +195,11 @@ class SchoolCarActivity : BaseActivity() {
             // 回调是否显示地图，和是否开启一个timer轮询接口
             override fun processLocationInfo(carLocationInfo: SchoolCarLocation, aLong: Long) {
                 dataList = carLocationInfo.data
+                if (dataList[0] == null) {
+                    ExploreSchoolCarDialog.show(this@SchoolCarActivity, LOST_SERVICES)
+                    if (disposable != null) disposable!!.dispose()
+                    return
+                }
                 if (aLong == ADD_TIMER) {
                     timer("initView")
                 }
