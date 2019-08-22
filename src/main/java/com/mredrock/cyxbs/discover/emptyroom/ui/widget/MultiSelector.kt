@@ -1,7 +1,6 @@
 package com.mredrock.cyxbs.discover.emptyroom.ui.widget
 
 import android.content.Context
-import androidx.recyclerview.widget.RecyclerView
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.FrameLayout

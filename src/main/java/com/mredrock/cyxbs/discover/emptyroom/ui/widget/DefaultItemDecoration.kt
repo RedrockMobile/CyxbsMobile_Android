@@ -1,10 +1,9 @@
 package com.mredrock.cyxbs.discover.emptyroom.ui.widget
 
 import android.graphics.Rect
+import android.view.View
 import androidx.annotation.Px
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import android.view.View
 
 /**
  * Created by Cynthia on 2018/9/19
@@ -17,7 +16,7 @@ class DefaultItemDecoration(@Px head: Int, @Px middle: Int, @Px tail: Int) : and
     override fun getItemOffsets(outRect: Rect, view: View, parent: androidx.recyclerview.widget.RecyclerView, state: androidx.recyclerview.widget.RecyclerView.State) {
         super.getItemOffsets(outRect, view, parent, state)
         val layoutManager = parent.layoutManager
-        if (layoutManager is androidx.recyclerview.widget.LinearLayoutManager && layoutManager.orientation == androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL) {
+        if (layoutManager is LinearLayoutManager && layoutManager.orientation == LinearLayoutManager.HORIZONTAL) {
             horizontalLinearLayoutManager(outRect, view, parent, state)
         }
     }

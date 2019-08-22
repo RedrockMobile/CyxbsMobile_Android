@@ -4,17 +4,16 @@ import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
-import androidx.lifecycle.Observer
 import android.graphics.Color
 import android.os.Bundle
-import androidx.core.content.ContextCompat
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import android.view.MotionEvent
 import android.view.MotionEvent.ACTION_DOWN
 import android.view.MotionEvent.ACTION_MOVE
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.TextView
+import androidx.core.content.ContextCompat
+import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.config.DISCOVER_EMPTY_ROOM
@@ -193,8 +192,8 @@ class EmptyRoomActivity : BaseViewModelActivity<EmptyRoomViewModel>(), OnItemSel
     }
 
     private fun initRv() {
-        rv_result.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(this@EmptyRoomActivity)
-                .apply { orientation = androidx.recyclerview.widget.LinearLayoutManager.VERTICAL }
+        rv_result.layoutManager = LinearLayoutManager(this@EmptyRoomActivity)
+                .apply { orientation = LinearLayoutManager.VERTICAL }
     }
 
     private fun query() {

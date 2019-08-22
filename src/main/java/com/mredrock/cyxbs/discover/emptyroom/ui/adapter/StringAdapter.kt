@@ -1,12 +1,11 @@
 package com.mredrock.cyxbs.discover.emptyroom.ui.adapter
 
-import androidx.annotation.IdRes
-import androidx.annotation.LayoutRes
-import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.annotation.IdRes
+import androidx.annotation.LayoutRes
 import com.mredrock.cyxbs.discover.emptyroom.ui.widget.MultiSelector
 
 /**
