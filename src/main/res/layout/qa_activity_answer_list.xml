@@ -17,7 +17,8 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_answer_list"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"/>
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     <androidx.cardview.widget.CardView
@@ -26,7 +27,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:visibility="gone"
-        app:layout_behavior="@string/qa_footer_view_behavior"
+        app:layout_behavior="com.google.android.material.behavior.HideBottomViewOnScrollBehavior"
         tools:visibility="visible">
 
         <LinearLayout

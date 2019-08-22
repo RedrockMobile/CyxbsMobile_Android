@@ -38,11 +38,12 @@ class AnswerListViewModel(question: Question) : BaseViewModel() {
     private val factory: AnswerDataSource.Factory
 
     init {
+        val initNum = if (question.answerNum == 0) 6 else question.answerNum
         val config = PagedList.Config.Builder()
                 .setEnablePlaceholders(false)
                 .setPrefetchDistance(3)
-                .setPageSize(6)
-                .setInitialLoadSizeHint(6)
+                .setPageSize(initNum)
+                .setInitialLoadSizeHint(initNum)
                 .build()
         factory = AnswerDataSource.Factory(question.id)
         answerPagedList = LivePagedListBuilder<Int, Answer>(factory, config).build()

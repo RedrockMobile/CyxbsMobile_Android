@@ -36,11 +36,12 @@ class CommentListViewModel(val qid: String,
     private var praiseNetworkState = NetworkState.SUCCESSFUL
 
     init {
+        val initNum = if (answer.commentNumInt == 0) 6 else answer.commentNumInt
         val config = PagedList.Config.Builder()
                 .setEnablePlaceholders(false)
                 .setPrefetchDistance(3)
-                .setPageSize(6)
-                .setInitialLoadSizeHint(6)
+                .setPageSize(initNum)
+                .setInitialLoadSizeHint(initNum)
                 .build()
         factory = CommentDataSource.Factory(answer.id)
         commentList = LivePagedListBuilder<Int, Comment>(factory, config).build()
