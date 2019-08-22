@@ -9,13 +9,13 @@ import android.graphics.Color
 import android.graphics.Matrix
 import android.os.Bundle
 import android.os.PersistableBundle
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import android.view.Menu
 import android.view.MenuItem
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.RelativeLayout
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.amap.api.location.AMapLocationClient
 import com.amap.api.location.AMapLocationClientOption
@@ -61,7 +61,7 @@ class SchoolCarActivity : BaseActivity() {
 
         const val ADD_TIMER: Long = 3
         const val ADD_TIMER_AND_SHOW_MAP: Long = 55
-        const val NOT_ADD_Timer: Long = 0
+        const val NOT_ADD_TIMER: Long = 0
     }
 
     var ifLocation = true
@@ -265,8 +265,9 @@ class SchoolCarActivity : BaseActivity() {
 
     /**
      * timer 用来轮询接口时调用
+     * @param name 标识独立轮询
      */
-    private fun timer(int: String) {
+    private fun timer(name: String) {
         Observable.interval(5, TimeUnit.SECONDS)
                 .doOnNext {
                     for (i in smoothMoveMarkers.indices) smoothMoveMarkers[i].removeMarker()
@@ -278,7 +279,7 @@ class SchoolCarActivity : BaseActivity() {
                         }
                         i++
                     }
-                    smoothMoveData!!.loadCarLocation(NOT_ADD_Timer)
+                    smoothMoveData!!.loadCarLocation(NOT_ADD_TIMER)
 
                 }.observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<Long> {
                     override fun onSubscribe(d: Disposable) {
