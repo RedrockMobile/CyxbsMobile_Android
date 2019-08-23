@@ -33,7 +33,7 @@ import com.mredrock.cyxbs.discover.schoolcar.Interface.SchoolCarInterface
 import com.mredrock.cyxbs.discover.schoolcar.bean.SchoolCarLocation
 import com.mredrock.cyxbs.discover.schoolcar.widget.ExploreSchoolCarDialog
 import com.mredrock.cyxbs.discover.schoolcar.widget.SchoolCarMap
-import com.mredrock.cyxbs.discover.schoolcar.widget.SchoolcarsSmoothMove
+import com.mredrock.cyxbs.discover.schoolcar.widget.SchoolCarsSmoothMove
 import com.mredrock.cyxbs.schoolcar.R
 import io.reactivex.Observable
 import io.reactivex.Observer
@@ -72,7 +72,7 @@ class SchoolCarActivity : BaseActivity() {
     private lateinit var makerBitmap: Bitmap
     private lateinit var holeSchoolButton: ImageView
     private var schoolCarMap: SchoolCarMap? = null
-    private var smoothMoveData: SchoolcarsSmoothMove? = null
+    private var smoothMoveData: SchoolCarsSmoothMove? = null
     private lateinit var smoothMoveMarkers: MutableList<SmoothMoveMarker>
     private lateinit var locationClient: AMapLocationClient
     private var disposable: Disposable? = null
@@ -187,7 +187,7 @@ class SchoolCarActivity : BaseActivity() {
      */
     private fun initView() {
         makerBitmap = getSmoothMakerBitmap()
-        smoothMoveData = SchoolcarsSmoothMove(schoolCarMap!!, this@SchoolCarActivity)
+        smoothMoveData = SchoolCarsSmoothMove(schoolCarMap!!, this@SchoolCarActivity)
 
         smoothMoveData!!.setCarMapInterface(object : SchoolCarInterface {
             override fun initLocationMapButton(aMap: AMap, locationStyle: MyLocationStyle) {}
