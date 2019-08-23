@@ -17,6 +17,7 @@ import com.mredrock.cyxbs.common.event.LoginStateChangeEvent
 import com.mredrock.cyxbs.common.event.MainVPChangeEvent
 import com.mredrock.cyxbs.common.ui.BaseActivity
 import com.mredrock.cyxbs.common.ui.BaseFragment
+import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.course.R
 import com.mredrock.cyxbs.course.event.TabIsFoldEvent
 import com.mredrock.cyxbs.course.event.WeekNumEvent
@@ -42,6 +43,9 @@ class CourseEntryFragment : BaseFragment() {
     // 用于通知更新Toolbar的Menu更新
     private var insideFragment: Fragment? = null
 
+    // 用于检测用户登陆状态是否改变，用于刷新
+    private var isChanged = false
+    private var curIndex = 0
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.course_fragment_course_entry, container, false)
@@ -74,13 +78,42 @@ class CourseEntryFragment : BaseFragment() {
     }
 
     /**
+     * 注：在某些机型（测试机为api22）会出现EventBus通知了事件变化
+     * 但是实际内包裹的fragment并没有被替换，
+     * 发现在EventBus通知的方法调用replace方法后并没有对应调用fragment的生命周期
+     * 暂时没有找到导致的原因，
+     * 之前使用的setUserVisibleHint，但是在用户从该fragment进入Activity后再返回不会刷新状态
+     * 然后更换了一下判断方式
+     *
+     * by Cchanges at 8.21
+     */
+//    override fun setUserVisibleHint(isVisibleToUser: Boolean) {
+//        if (isVisibleToUser && isChanged) {
+//            initCourseEntryFragment()
+//            isChanged = false
+//        }
+//        super.setUserVisibleHint(isVisibleToUser)
+//    }
+
+    override fun onResume() {
+        super.onResume()
+        if (isVisible && isChanged) {
+            initCourseEntryFragment()
+            isChanged = false
+        }
+    }
+
+    /**
      * 用于对Toolbar进行一些设置。如果用户登录了，就增加折叠图标，并添加相应的点击事件。
      * 如果用户没登录，就取消折叠图标以及取消点击事件。
      */
     private fun setToolbar() {
         val toolbar = mToolbar
 
-        if (BaseApp.isLogin) {
+        // 设置当前Toolbar的内容
+        if (curIndex == 0 || userVisibleHint) toolbar.titleTextView.text = mToolbarTitle
+
+        if (BaseApp.isLogin && curIndex == 0) {
             toolbar.titleTextView.setCompoundDrawablesWithIntrinsicBounds(null, null,
                     if (mIsFold) mToolbarIc[1] else mToolbarIc[0], null)
 
@@ -95,9 +128,6 @@ class CourseEntryFragment : BaseFragment() {
                     null, null)
             toolbar.titleTextView.setOnClickListener(null)
         }
-
-        // 设置当前Toolbar的内容
-        toolbar.titleTextView.text = mToolbarTitle
     }
 
     private fun replaceFragment(fragment: Fragment) {
@@ -114,15 +144,19 @@ class CourseEntryFragment : BaseFragment() {
      * @param event 包含当前用户登录状态的事件。
      */
     override fun onLoginStateChangeEvent(event: LoginStateChangeEvent) {
+        super.onLoginStateChangeEvent(event)
+        isChanged = true
         if (event.newState) {
-            replaceFragment(CourseContainerFragment())
+           // replaceFragment(CourseContainerFragment())
+            mToolbarTitle = activity!!.getString(R.string.course_all_week)
         } else {
-            replaceFragment(NoneLoginFragment())
-            Thread{
+           // replaceFragment(NoneLoginFragment())
+            mToolbarTitle = activity!!.getString(R.string.common_course)
+            Thread {
                 ViewModelProviders.of(activity!!).get(CoursesViewModel::class.java).clearCache()
             }.start()
         }
-        setToolbar()
+//        setToolbar()
     }
 
     override fun onPrepareOptionsMenu(menu: Menu?) {
@@ -137,11 +171,11 @@ class CourseEntryFragment : BaseFragment() {
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onMainVPChangeEvent(mainVPChangeEvent: MainVPChangeEvent) {
+        curIndex = mainVPChangeEvent.index
         if (mainVPChangeEvent.index == 0) {
             setToolbar()
         } else {
             val toolbar = mToolbar
-
             toolbar.titleTextView.setCompoundDrawablesWithIntrinsicBounds(null, null,
                     null, null)
             toolbar.titleTextView.setOnClickListener(null)

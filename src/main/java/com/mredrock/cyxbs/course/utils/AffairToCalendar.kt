@@ -48,6 +48,10 @@ class AffairToCalendar(private val mActivity: AppCompatActivity, private val mAf
 
             reason = mActivity.getString(R.string.course_calendar_permission_reason)
 
+            tag = TAG
+
+            isShowNeverNotice = true
+
             doAfterGranted {
                 queryCalendarId()
                 deleteAffairFromCalendar()
