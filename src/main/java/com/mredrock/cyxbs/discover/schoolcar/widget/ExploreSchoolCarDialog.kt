@@ -49,9 +49,10 @@ object ExploreSchoolCarDialog {
                 LOST_SERVICES -> {
                     setLayout(activity, R.drawable.dialog_school_car_not_serve)
                     dialog!!.window!!.setBackgroundDrawableResource(R.drawable.dialog_school_car_not_serve)
-                    AndroidSchedulers.mainThread().scheduleDirect({
+                    layout.school_car_dialog_dismiss_button.setOnClickListener {
                         dialog?.dismiss()
-                    }, 4, TimeUnit.SECONDS)
+                        activity.finish()
+                    }
                 }
                 TIME_OUT -> {
                     setLayout(activity, R.drawable.ic_school_car_search_time_out)
