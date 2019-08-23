@@ -3,6 +3,7 @@ package com.mredrock.cyxbs.common.ui
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
+import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.event.LoginStateChangeEvent
 import com.mredrock.cyxbs.common.utils.LogUtils
 import com.umeng.analytics.MobclickAgent
@@ -53,5 +54,8 @@ open class BaseFragment : Fragment() {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     open fun onLoginStateChangeEvent(event: LoginStateChangeEvent) {
+        if (!event.newState) {
+            BaseApp.user = null
+        }
     }
 }
