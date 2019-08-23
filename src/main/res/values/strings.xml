@@ -7,6 +7,8 @@
     <string name="main_activity_login_not_input_account">还没有输入学号哦~</string>
     <string name="main_activity_login_not_input_password">还没有输入密码哦~</string>
     <string name="main_user_info_error">用户信息异常，请联系管理员</string>
+    <string name="main_user_login_error">what\'s your problem?</string>
+    <string name="main_user_pwd_error">学号或者密码错误，核实一下再尝试哦~</string>
 
     <string name="main_course_long_name">我的课表</string>
     <string name="main_course_short_name">课表</string>

@@ -33,16 +33,16 @@ class LoginViewModel : BaseViewModel() {
         verifyByWeb(stuNum!!, idNum!!)
     }
 
-    fun register(stuNum: String?, idNum: String?, name: String?):Boolean {
+    fun register(stuNum: String?, idNum: String?, name: String?): Boolean {
         if (stuNum?.length ?: 0 < 10 || idNum?.length ?: 0 < 6) {
             toastEvent.value = R.string.main_activity_login_input_error
             return true
-        }else if (name.isNullOrBlank()) {
+        } else if (name.isNullOrBlank()) {
             toastEvent.value = R.string.main_user_info_input_blank
             return false
         } else {
             ApiGenerator.getApiService(ApiService::class.java)
-                    .updateUserInfo(stuNum!!, idNum!!, name!!)
+                    .updateUserInfo(stuNum ?: "", idNum ?: "", name)
                     .checkError()
                     .setSchedulers()
                     .doOnErrorWithDefaultErrorHandler {
@@ -52,7 +52,7 @@ class LoginViewModel : BaseViewModel() {
                     .doFinally { progressDialogEvent.value = ProgressDialogEvent.DISMISS_DIALOG_EVENT }
                     .doOnSubscribe { progressDialogEvent.value = ProgressDialogEvent.SHOW_NONCANCELABLE_DIALOG_EVENT }
                     .safeSubscribeBy {
-                        verifyByWeb(stuNum, idNum)
+                        verifyByWeb(stuNum ?: "", idNum ?: "")
                     }
                     .lifeCycle()
             return true
@@ -82,6 +82,9 @@ class LoginViewModel : BaseViewModel() {
                         return@doOnErrorWithDefaultErrorHandler true
                     } else if (it is IllegalStateException && it.message.equals(BaseApp.context.getString(R.string.main_user_info_error))) {
                         toastEvent.value = R.string.main_user_info_error
+                        return@doOnErrorWithDefaultErrorHandler true
+                    } else if (it.message.equals(BaseApp.context.getString(R.string.main_user_login_error))) {
+                        toastEvent.value = R.string.main_user_pwd_error
                         return@doOnErrorWithDefaultErrorHandler true
                     }
                     return@doOnErrorWithDefaultErrorHandler false
