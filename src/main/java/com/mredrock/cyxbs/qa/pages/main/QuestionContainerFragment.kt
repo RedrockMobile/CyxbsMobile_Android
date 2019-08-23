@@ -87,6 +87,5 @@ class QuestionContainerFragment : BaseFragment(), View.OnClickListener {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         childFragments.forEach { it.onActivityResult(requestCode, resultCode, data) }
-        //childFragments[vp_question.currentItem].onActivityResult(requestCode, resultCode, data)
     }
 }

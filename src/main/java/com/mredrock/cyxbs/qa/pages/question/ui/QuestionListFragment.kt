@@ -32,6 +32,9 @@ class QuestionListFragment : BaseViewModelFragment<QuestionListViewModel>() {
     override val viewModelClass = QuestionListViewModel::class.java
     var title: String = ""
 
+    // 用户每次切换登陆状态，该flag需要重置
+    private var isFirstTimeLoad = true
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         super.onCreateView(inflater, container, savedInstanceState)
@@ -68,7 +71,7 @@ class QuestionListFragment : BaseViewModelFragment<QuestionListViewModel>() {
             }
         }
 
-        var isFirstTimeLoad = true
+        isFirstTimeLoad = true
         initialLoad.observe {
             when (it) {
                 NetworkState.LOADING -> {
@@ -111,5 +114,6 @@ class QuestionListFragment : BaseViewModelFragment<QuestionListViewModel>() {
 
     override fun onLoginStateChangeEvent(event: LoginStateChangeEvent) {
         viewModel.invalidateQuestionList()
+        isFirstTimeLoad = true
     }
 }
