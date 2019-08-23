@@ -3,8 +3,8 @@ package com.mredrock.cyxbs.qa.pages.quiz.ui.dialog
 import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
-import com.google.android.material.bottomsheet.BottomSheetDialog
 import android.widget.NumberPicker
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.utils.toFormatString
 import kotlinx.android.synthetic.main.qa_dialog_quiz_time_pick.*

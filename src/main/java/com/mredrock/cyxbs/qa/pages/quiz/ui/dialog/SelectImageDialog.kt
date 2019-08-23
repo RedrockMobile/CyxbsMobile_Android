@@ -2,8 +2,8 @@ package com.mredrock.cyxbs.qa.pages.quiz.ui.dialog
 
 import android.content.Context
 import android.graphics.Color
-import com.google.android.material.bottomsheet.BottomSheetDialog
 import android.view.ViewGroup
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import org.jetbrains.anko.*
 
 /**

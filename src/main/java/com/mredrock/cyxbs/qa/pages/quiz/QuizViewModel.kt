@@ -1,10 +1,10 @@
 package com.mredrock.cyxbs.qa.pages.quiz
 
 import android.annotation.SuppressLint
+import android.util.Base64
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import android.util.Base64
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.bean.RedrockApiStatus
 import com.mredrock.cyxbs.common.network.ApiGenerator
@@ -146,7 +146,7 @@ class QuizViewModel(var type: String) : BaseViewModel() {
         } else if (tagLiveData.value.isNullOrBlank()) {
             toastEvent.value = R.string.qa_hint_tag_empty
         } else {
-            this.title = title ?: ""
+            this.title = title
             this.content = content ?: ""
             result = true
         }

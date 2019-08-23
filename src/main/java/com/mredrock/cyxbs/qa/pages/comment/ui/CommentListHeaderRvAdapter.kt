@@ -3,7 +3,7 @@ package com.mredrock.cyxbs.qa.pages.comment.ui
 import android.text.Html
 import android.view.ViewGroup
 import android.widget.TextView
-import com.mredrock.cyxbs.common.utils.extensions.*
+import com.mredrock.cyxbs.common.utils.extensions.setAvatarImageFromUrl
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.bean.Answer
 import com.mredrock.cyxbs.qa.component.recycler.BaseRvAdapter

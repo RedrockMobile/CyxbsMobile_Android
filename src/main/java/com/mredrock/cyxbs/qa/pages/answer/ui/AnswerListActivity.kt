@@ -2,15 +2,15 @@ package com.mredrock.cyxbs.qa.pages.answer.ui
 
 import android.app.Activity
 import android.app.ProgressDialog
+import android.content.Intent
+import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
+import androidx.core.content.res.ResourcesCompat
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import android.content.Intent
-import android.os.Bundle
-import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.LinearLayoutManager
-import android.view.Menu
-import android.view.MenuItem
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -43,7 +43,6 @@ import org.jetbrains.anko.indeterminateProgressDialog
 import org.jetbrains.anko.longToast
 import org.jetbrains.anko.support.v4.startActivityForResult
 import org.jetbrains.anko.toast
-import java.lang.Exception
 
 @Route(path = QA_ANSWER_LIST)
 class AnswerListActivity : BaseActivity() {
@@ -54,7 +53,7 @@ class AnswerListActivity : BaseActivity() {
         const val PARAM_QUESTION = "question"
         const val REQUEST_REFRESH_LIST = 0x2
 
-        fun activityStart(fragment: androidx.fragment.app.Fragment, question: Question, requestCode: Int) {
+        fun activityStart(fragment: Fragment, question: Question, requestCode: Int) {
             if (!BaseApp.isLogin) {
                 EventBus.getDefault().post(AskLoginEvent("请先登陆才能使用邮问哦~"))
                 return
@@ -199,14 +198,14 @@ class AnswerListActivity : BaseActivity() {
 
     private fun switchToQuestioner() {
         card_bottom_container.visible()
-        val leftDrawable = resources.getDrawable(R.drawable.qa_ic_answer_list_add_reward)
+        val leftDrawable = ResourcesCompat.getDrawable(resources, R.drawable.qa_ic_answer_list_add_reward, null)
         tv_left.text = getString(R.string.qa_answer_list_add_reward)
         tv_left.setCompoundDrawablesRelativeWithIntrinsicBounds(leftDrawable, null, null, null)
         fl_left.setOnClickListener {
             rewardSetDialog.show()
         }
 
-        val rightDrawable = resources.getDrawable(R.drawable.qa_ic_answer_list_cancel)
+        val rightDrawable = ResourcesCompat.getDrawable(resources, R.drawable.qa_ic_answer_list_cancel, null)
         tv_right.text = getString(R.string.qa_answer_list_cancel_question)
         tv_right.setCompoundDrawablesRelativeWithIntrinsicBounds(rightDrawable, null, null, null)
         fl_right.setOnClickListener { viewModel.cancelQuestion() }
@@ -214,12 +213,12 @@ class AnswerListActivity : BaseActivity() {
 
     private fun switchToHelper() {
         card_bottom_container.visible()
-        val leftDrawable = resources.getDrawable(R.drawable.qa_ic_answer_list_ignore)
+        val leftDrawable = ResourcesCompat.getDrawable(resources, R.drawable.qa_ic_answer_list_ignore, null)
         tv_left.text = getString(R.string.qa_answer_list_ignore_question)
         tv_left.setCompoundDrawablesRelativeWithIntrinsicBounds(leftDrawable, null, null, null)
         fl_left.setOnClickListener { viewModel.ignoreQuestion() }
 
-        val rightDrawable = resources.getDrawable(R.drawable.qa_ic_answer_list_help)
+        val rightDrawable = ResourcesCompat.getDrawable(resources, R.drawable.qa_ic_answer_list_help, null)
         tv_right.text = getString(R.string.qa_answer_list_help)
         tv_right.setCompoundDrawablesRelativeWithIntrinsicBounds(rightDrawable, null, null, null)
         fl_right.setOnClickListener { AnswerActivity.activityStart(this@AnswerListActivity, viewModel.questionLiveData.value!!.id, REQUEST_REFRESH_LIST) }
@@ -229,7 +228,7 @@ class AnswerListActivity : BaseActivity() {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK) {
             when (requestCode) {
-                AnswerListActivity.REQUEST_REFRESH_LIST -> {
+                REQUEST_REFRESH_LIST -> {
                     viewModel.invalidate()
                     val question = viewModel.questionLiveData.value!!
                     question.answerNum++
@@ -250,7 +249,8 @@ class AnswerListActivity : BaseActivity() {
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         return when (item?.itemId) {
             R.id.more -> {
-                ReportOrSharePopupWindow(this, viewModel.questionLiveData.value ?: return false, common_toolbar, card_frame).show()
+                ReportOrSharePopupWindow(this, viewModel.questionLiveData.value
+                        ?: return false, common_toolbar, card_frame).show()
                 true
             }
             else -> false
@@ -278,7 +278,7 @@ class AnswerListActivity : BaseActivity() {
 
             if (questionWrapper == null) {
                 toast("无法识别问题,可能问题已过期")
-            }else if (!questionWrapper.isSuccessful) {
+            } else if (!questionWrapper.isSuccessful) {
                 toast(questionWrapper.info ?: "未知错误")
             } else {
                 initViewModel(questionWrapper.data)

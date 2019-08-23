@@ -1,7 +1,7 @@
 package com.mredrock.cyxbs.qa.bean
 
-import java.io.Serializable
 import com.google.gson.annotations.SerializedName
+import java.io.Serializable
 
 data class Comment(@SerializedName("photo_thumbnail_src")
                    val photoThumbnailSrc: String = "",

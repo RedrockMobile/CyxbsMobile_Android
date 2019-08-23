@@ -1,23 +1,16 @@
 package com.mredrock.cyxbs.qa.pages.comment.ui
 
 import android.app.Activity
-import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
+import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import androidx.recyclerview.widget.LinearLayoutManager
-import com.mredrock.cyxbs.common.BaseApp
-import com.mredrock.cyxbs.common.bean.isSuccessful
-import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.extensions.gone
-import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
-import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.common.utils.extensions.visible
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.bean.Answer
 import com.mredrock.cyxbs.qa.bean.Question
 import com.mredrock.cyxbs.qa.component.recycler.RvAdapterWrapper
-import com.mredrock.cyxbs.qa.network.ApiService
 import com.mredrock.cyxbs.qa.network.NetworkState
 import com.mredrock.cyxbs.qa.pages.comment.AdoptAnswerEvent
 import com.mredrock.cyxbs.qa.pages.comment.viewmodel.CommentListViewModel
@@ -29,7 +22,6 @@ import kotlinx.android.synthetic.main.qa_dialog_comment_bottom_sheet_dialog.*
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.jetbrains.anko.startActivityForResult
-import org.jetbrains.anko.toast
 
 class CommentListActivity : BaseViewModelActivity<CommentListViewModel>() {
     companion object {
