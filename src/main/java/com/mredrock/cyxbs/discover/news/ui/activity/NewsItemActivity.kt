@@ -151,6 +151,10 @@ class NewsItemActivity : BaseViewModelActivity<NewsItemViewModel>(), NewsItemVie
                 viewModel.toastEvent.value = R.string.news_init
                 return@setOnMenuItemClickListener false
             }
+            if (items.isEmpty()){
+                viewModel.toastEvent.value = R.string.news_no_download
+                return@setOnMenuItemClickListener false
+            }
             MaterialDialog.Builder(this)
                     .items(items.map {
                         it.name
