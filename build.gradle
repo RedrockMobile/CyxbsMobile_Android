@@ -8,18 +8,23 @@ buildscript {
         lib_config = "${rootDir}/lib_config.gradle"
         module_config = "${rootDir}/module_config.gradle"
         module_dependencies = "${rootDir}/dependencies.gradle"
+        secret = "${rootDir}/secret.gradle"
     }
 
     repositories {
         google()
         jcenter()
+        maven { url 'http://maven.aliyun.com/nexus/content/repositories/releases/' }
     }
 
     dependencies {
         classpath "com.android.tools.build:gradle:$gradle_plugins"
         classpath deps.kotlin.gradle
         classpath "com.alibaba:arouter-register:1.0.2"
-        classpath 'com.tencent.bugly:tinker-support:1.1.5'
+        //walle多渠道打包
+        classpath 'com.meituan.android.walle:plugin:1.1.6'
+        // 添加emas-services插件
+        classpath 'com.aliyun.ams:emas-services:1.0.1'
     }
 }
 
@@ -29,12 +34,10 @@ allprojects {
         jcenter()
         mavenCentral()
         maven { url 'https://jitpack.io' }
+        maven { url 'http://maven.aliyun.com/nexus/content/repositories/releases/' }
     }
 }
 
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
-/*
-
- */

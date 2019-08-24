@@ -13,7 +13,7 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 
 android {
-    compileSdkVersion build_versions.target_sdk
+    compileSdkVersion build_versions.compile_sdk
     buildToolsVersion build_versions.build_tools
 
     resourcePrefix "${project.getName().replaceAll("module_", "")}_"
@@ -22,7 +22,7 @@ android {
         minSdkVersion build_versions.min_sdk
         targetSdkVersion build_versions.target_sdk
 
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
         kapt {
             //Arouter
