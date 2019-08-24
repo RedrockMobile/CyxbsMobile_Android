@@ -20,7 +20,7 @@ android {
         applicationId "com.mredrock.cyxbs"
         minSdkVersion build_versions.min_sdk
         targetSdkVersion build_versions.target_sdk
-        versionCode 54
+        versionCode 55
         versionName "5.1.0"
         multiDexEnabled true
 

@@ -28,7 +28,7 @@ class App : BaseApp() {
         strategy.appVersion = getAppVersionName(applicationContext)
         strategy.isUploadProcess = processName == null || processName == packageName
         strategy.appChannel = WalleChannelReader.getChannel(this, "debug")
-        Bugly.init(applicationContext, BuildConfig.BUGLY_APP_ID, false)
+        Bugly.init(applicationContext, BuildConfig.BUGLY_APP_ID, false, strategy)
         if (BuildConfig.DEBUG) {
             CrashReport.setUserSceneTag(applicationContext, 83913)
         }
