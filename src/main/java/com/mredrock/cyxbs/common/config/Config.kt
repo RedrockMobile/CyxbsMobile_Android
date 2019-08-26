@@ -1,5 +1,7 @@
 package com.mredrock.cyxbs.common.config
 
+import java.io.File
+
 /**
  * Created By jay68 on 2018/8/10.
  */
@@ -14,6 +16,7 @@ const val STATE_SELECTED_POSITION = "selected_navigation_drawer_position"
 val dataFilePath = android.os.Environment.getExternalStorageDirectory().toString() + "/" + "Android/data/com.mredrock.cyxbs/"
 val updateFilePath = android.os.Environment.getExternalStorageDirectory().toString() + "/" + "Download/"
 const val updateFilename = "com.mredrock.cyxbs.apk"
+val updateFile get() = File(updateFilePath + updateFilename)
 
 const val APP_WIDGET_CACHE_FILE_NAME = "AppWidgetCache.json"
 
@@ -51,9 +54,9 @@ const val WIDGET_COURSE = "course_widget"
 const val SP_WIDGET_NEED_FRESH = "sharepreference_widget_need_fresh"
 
 // uri跳转打开应用
-    // QA
+// QA
 const val URI_HOST_QA = "/qa"
-        // question
+// question
 const val URI_PATH_QA_QUESTION = "/question"
-        // answer
+// answer
 const val URI_PATH_QA_ANSWER = "/answer"
