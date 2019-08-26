@@ -11,11 +11,11 @@ import com.mredrock.cyxbs.common.config.*
 import com.mredrock.cyxbs.common.event.GoToDiscoverEvent
 import com.mredrock.cyxbs.common.event.MainVPChangeEvent
 import com.mredrock.cyxbs.common.ui.BaseActivity
+import com.mredrock.cyxbs.common.utils.update.UpdateEvent
 import com.mredrock.cyxbs.common.utils.update.UpdateUtils
 import com.mredrock.cyxbs.main.R
 import com.mredrock.cyxbs.main.ui.adapter.MainVpAdapter
 import com.mredrock.cyxbs.main.utils.BottomNavigationViewHelper
-import com.tbruyelle.rxpermissions2.RxPermissions
 import kotlinx.android.synthetic.main.main_activity_main.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -59,7 +59,7 @@ class MainActivity : BaseActivity() {
             ARouter.getInstance().build(FRESHMAN_ENTRY).navigation()
         }
 
-        UpdateUtils.checkUpdate(this, RxPermissions(this))
+        UpdateUtils.checkUpdate(this)
     }
 
     private fun initBottomNavigationView() {
@@ -106,5 +106,10 @@ class MainActivity : BaseActivity() {
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun goToDiscover(event: GoToDiscoverEvent) {
         view_pager.currentItem = 2
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun installUpdate(event: UpdateEvent) {
+        UpdateUtils.installApk(this, updateFile)
     }
 }
