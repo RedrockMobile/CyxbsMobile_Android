@@ -14,10 +14,10 @@ import android.os.Build
 import android.os.IBinder
 import androidx.core.app.NotificationCompat
 import com.mredrock.cyxbs.common.R
-import com.mredrock.cyxbs.common.utils.extensions.uri
-
+import com.mredrock.cyxbs.common.config.updateFile
+import com.mredrock.cyxbs.common.config.updateFilePath
+import org.greenrobot.eventbus.EventBus
 import org.jetbrains.anko.toast
-
 import java.io.File
 import java.io.FileOutputStream
 import java.net.HttpURLConnection
@@ -32,23 +32,24 @@ class UpdateService : Service() {
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
         if (intent.extras == null) {
-            if (task != null) {
-                task!!.stop()
-                task!!.cancel(true)
+            val t = task
+            if (t != null) {
+                t.stop()
+                t.cancel(true)
                 task = null
                 toast("取消更新")
             }
             return START_NOT_STICKY
         }
-        val url = intent.extras!!.getString("url")
-        val filepath = intent.extras!!.getString("path")
-        val filename = intent.extras!!.getString("name")
-
-        if (url != null && isNetWorkAvailable()) {
+        val url = intent.extras?.getString("url")
+        if (url.isNullOrBlank()) {
+            stopSelf()
+        } else if (isNetWorkAvailable()) {
             createNotification()
             task = null
-            task = DownloadAsyncTask()
-            task!!.execute(url, filepath, filename)
+            val t = DownloadAsyncTask()
+            t.execute(url)
+            task = t
             toast("新版掌上重邮开始下载了...")
         }
         return START_NOT_STICKY
@@ -61,7 +62,7 @@ class UpdateService : Service() {
     }
 
     override fun onDestroy() {
-        task!!.cancel(true)
+        task?.cancel(true)
         task = null
         super.onDestroy()
     }
@@ -72,16 +73,15 @@ class UpdateService : Service() {
             createNotificationChannel(CHANNEL_ID, CHANNEL_NAME, importance)
         }
         notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val stopIntent = Intent(this, UpdateService::class.java)
         builder = NotificationCompat.Builder(this, CHANNEL_ID)
                 .setSmallIcon(R.drawable.common_app_logo)
                 .setContentTitle("掌上重邮更新中...")
                 .setContentText("0%")
-        builder!!.setProgress(100, 0, false)
-
-        val stopIntent = Intent(this, UpdateService::class.java)
-        builder!!.setDeleteIntent(PendingIntent.getService(this, 0, stopIntent, 0))
-        builder!!.setAutoCancel(true)
-        builder!!.setTicker("新版掌上重邮开始下载了...")
+                .setProgress(100, 0, false)
+                .setDeleteIntent(PendingIntent.getService(this, 0, stopIntent, 0))
+                .setAutoCancel(true)
+                .setTicker("新版掌上重邮开始下载了...")
     }
 
     @TargetApi(Build.VERSION_CODES.O)
@@ -93,9 +93,17 @@ class UpdateService : Service() {
     }
 
     private fun updateNotification(progress: Int) {
-        builder!!.setProgress(100, progress, false)
-        builder!!.setContentText("$progress%")
-        notificationManager!!.notify(notificationId, builder!!.build())
+        val n = builder ?: return
+
+        n.setProgress(100, progress, false)
+        n.setContentText("$progress%")
+
+        val manager = notificationManager
+                ?: getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        manager.notify(notificationId, n.build())
+        if (notificationManager == null) {
+            notificationManager = manager
+        }
     }
 
     override fun onBind(intent: Intent): IBinder? {
@@ -104,8 +112,6 @@ class UpdateService : Service() {
 
     @SuppressLint("StaticFieldLeak")
     internal inner class DownloadAsyncTask : AsyncTask<String, Int, Boolean>() {
-        private var path: String? = null
-        private var name: String? = null
         private var cancelUpdate: Boolean = false
 
         fun stop() {
@@ -113,8 +119,6 @@ class UpdateService : Service() {
         }
 
         override fun doInBackground(vararg params: String): Boolean? {
-            path = params[1]
-            name = params[2]
             var finish = false
             try {
                 val url = URL(params[0])
@@ -122,20 +126,20 @@ class UpdateService : Service() {
                 conn.requestMethod = "GET"
                 conn.connectTimeout = 5000
                 if (conn.responseCode == 200) {
-                    val f = File(params[1])
+                    val f = File(updateFilePath)
                     if (!f.isDirectory) {
                         f.mkdirs()
                     }
                     val `is` = conn.inputStream
                     val length = conn.contentLength
-                    val file = File(path!! + name!!)
+                    val file = updateFile
                     if (file.exists()) {
                         file.delete()  // I think maybe the existent file cause the update failure
                     }
                     val fos = FileOutputStream(file)
                     var count = 0
                     val buf = ByteArray(1024)
-                    var progress:Int
+                    var progress: Int
                     var progressPre = 0
                     do {
                         val numRead = `is`.read(buf)
@@ -157,6 +161,7 @@ class UpdateService : Service() {
                     finish = true
                 }
             } catch (e: Exception) {
+                e.printStackTrace()
                 finish = false
             }
 
@@ -164,20 +169,10 @@ class UpdateService : Service() {
         }
 
         override fun onPostExecute(finish: Boolean?) {
-            notificationManager!!.cancel(notificationId)
-            val file = File(path!! + name!!)
-            if (finish!! && !cancelUpdate && file.exists()) {
-                try {
-                    startActivity(Intent(Intent.ACTION_VIEW)
-                            .addFlags(if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                                Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_GRANT_READ_URI_PERMISSION
-                            } else {
-                                Intent.FLAG_ACTIVITY_NEW_TASK
-                            })
-                            .setDataAndType(file.uri, "application/vnd.android.package-archive"))
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                }
+            notificationManager?.cancel(notificationId)
+            val file = updateFile
+            if (finish == true && !cancelUpdate && file.exists()) {
+                EventBus.getDefault().postSticky(UpdateEvent())
             } else {
                 toast("更新失败")
             }
