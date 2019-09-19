@@ -180,6 +180,7 @@ class CoursesViewModel : ViewModel() {
                         mCourses.addAll(coursesFromDatabase)
                     }
                     isGetAllData(0)
+                    refreshScheduleData(BaseApp.context)
                 }, onExecuteOnceError = {
                     isGetAllData(0)
                 }))
@@ -310,7 +311,7 @@ class CoursesViewModel : ViewModel() {
      * @param context [Context]
      */
     private fun getNowWeek(context: Context) {
-        mCourseApiService.getCourse("2016215039")
+        mCourseApiService.getCourse(BaseApp.user?.stuNum?:"2016215039")
                 .setSchedulers()
                 .errorHandler()
                 .map {
