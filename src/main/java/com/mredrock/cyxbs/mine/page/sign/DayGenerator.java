@@ -51,7 +51,7 @@ public class DayGenerator {
         }
 
         //生成当天Data
-        list.add(new Data(today, moneyArray[today % 7 - 1], isSign));
+        list.add(new Data(today, moneyArray[(today - 1) % 7], isSign));
 
         //生成右边的Data
         for (int i = today + 1; i <= right; i++) {
