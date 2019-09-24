@@ -99,7 +99,7 @@ class CourseContainerFragment : BaseFragment() {
 
         mCoursesViewModel?.let {model->
             model.getSchedulesDataFromDataBase(activity!!, mOthersStuNum)
-            model.nowWeek.observe(activity!!, Observer { nowWeek ->
+            model.nowWeek.observe(this, Observer { nowWeek ->
                 if (nowWeek != null && nowWeek != 0) {
                     // 过时的本周的位置以及将其替换为原始周数显示
                     val oldNowWeek = mWeeks.indexOf(resources.getString(R.string.course_now_week))
