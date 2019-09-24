@@ -4,30 +4,28 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by zia on 2018/8/19.
+ * Created by zia on 2018/8/19.\
+ * 修改 by roger on 2019/9/24:优化了逻辑，修复第八天无法签到的bug
  * 需求：
  * 今日签到尽量保持在中心
- * 逻辑：
- * 以连续签到天数为中心，左边加一个，右边加一个，直到加满5天
  */
 public class DayGenerator {
 
     private int serialDays;
     private boolean isSign;
 
-    private final int[] moneyArray = {0, 10, 10, 20, 10, 30, 10, 40};
+    private final int[] moneyArray = {10, 10, 20, 10, 30, 10, 40};
 
     public DayGenerator(int serialDays, boolean isSign) throws Exception {
         this.serialDays = serialDays;
         this.isSign = isSign;
-        if ((serialDays == 0 && this.isSign) || (serialDays == 7 && !this.isSign)) {
+        if ((serialDays == 0 && this.isSign)) {
             throw new Exception("你这数据怕是有问题哦");
         }
     }
 
     public List<Data> getDatas() {
-        //如果今天没有签到，把中心向右移动一格
-        int today = 0;
+        int today;
         if (isSign) {
             today = serialDays;
         } else {
@@ -36,33 +34,28 @@ public class DayGenerator {
 
         List<Data> list = new ArrayList<>();
 
-        int left = today;
-        int right = today;
-
-        //计算左右两边的天数
-        while (true) {
-            if (left > 1) {
-                left--;
-            }
-            if (right - left >= 4) break;
-            if (right < 7) {
-                right++;
-            }
-            if (right - left >= 4) break;
+        int left, right;
+        if (today >= 3) {
+            left = today - 2;
+            right = today + 2;
+        } else {
+            left = 1;
+            right = 5;
         }
 
         //生成左边的Data
         for (int i = left; i < today; i++) {
-            int money = moneyArray[i];
+            //比如说是第9天，那么对应数组moneyArray[1]
+            int money = moneyArray[(i - 1) % 7];
             list.add(new Data(i, money, true));
         }
 
         //生成当天Data
-        list.add(new Data(today, moneyArray[today], isSign));
+        list.add(new Data(today, moneyArray[today % 7 - 1], isSign));
 
         //生成右边的Data
         for (int i = today + 1; i <= right; i++) {
-            int money = moneyArray[i];
+            int money = moneyArray[(i - 1) % 7];
             list.add(new Data(i, money, false));
         }
         return list;
