@@ -14,7 +14,7 @@ import org.jetbrains.anko.defaultSharedPreferences
 
 @Route(path = DISCOVER_ELECTRICITY)
 class ElectricityChargeActivity : BaseActivity() {
-    override val isFragmentActivity = false
+    override val isFragmentActivity = true
     private val navigation by lazy { NavHostFragment.findNavController(nav_fragment) }
     private var menuI: MenuItem? = null
 

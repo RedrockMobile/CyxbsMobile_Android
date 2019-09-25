@@ -17,12 +17,4 @@
     <string name="electricity_electric_view_hint">余额/量</string>
     <string name="electricity_electric_view_hint_money">元</string>
 
-    <string-array name="electricity_building_name_head">
-        <item>知行苑</item>
-        <item>兴业苑</item>
-        <item>四海苑</item>
-        <item>宁静苑</item>
-        <item>明理苑</item>
-    </string-array>
-
 </resources>
