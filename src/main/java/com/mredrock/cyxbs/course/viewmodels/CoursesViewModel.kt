@@ -8,7 +8,9 @@ import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.config.SP_WIDGET_NEED_FRESH
 import com.mredrock.cyxbs.common.config.WIDGET_COURSE
 import com.mredrock.cyxbs.common.network.ApiGenerator
+import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.SchoolCalendar
+import com.mredrock.cyxbs.common.utils.encrypt.md5Encoding
 import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
 import com.mredrock.cyxbs.common.utils.extensions.editor
 import com.mredrock.cyxbs.common.utils.extensions.errorHandler
@@ -70,6 +72,10 @@ class CoursesViewModel : ViewModel() {
     }
 
     val courses = MutableLiveData<MutableList<Course>>()
+    var nowCoursesMd5 = ""
+    var nextCourseMd5 = ""
+    var nowAffairsMd5 = ""
+    var nextAffairsMd5 = ""
     // 表示今天是在第几周。
     var nowWeek = MutableLiveData<Int>().apply {
         SchoolCalendar().weekOfTerm.let {
@@ -84,7 +90,7 @@ class CoursesViewModel : ViewModel() {
     private val mCoursesDatabase: ScheduleDatabase? by lazy(LazyThreadSafetyMode.NONE) {
         ScheduleDatabase.getDatabase(BaseApp.context, isGetOthers.value!!, mStuNum)
     }
-    private val mCourseApiService: CourseApiService  by lazy(LazyThreadSafetyMode.NONE) {
+    private val mCourseApiService: CourseApiService by lazy(LazyThreadSafetyMode.NONE) {
         ApiGenerator.getApiService(CourseApiService::class.java)
     }
     private lateinit var mCourses: MutableList<Course>
@@ -176,10 +182,20 @@ class CoursesViewModel : ViewModel() {
                 .toObservable()
                 .setSchedulers()
                 .subscribe(ExecuteOnceObserver(onExecuteOnceNext = { coursesFromDatabase ->
+                    var md5Tag = ""
+                    for (c in coursesFromDatabase) {
+                        md5Tag += c.toString().replace(Regex("courseId=[0-9]*,"), "")
+                    }
+                    LogUtils.d("MyTag database", md5Tag)
+                    nextCourseMd5 = md5Encoding(md5Tag)
                     if (coursesFromDatabase != null && coursesFromDatabase.isNotEmpty()) {
                         mCourses.addAll(coursesFromDatabase)
+                        isGetAllData(0)
+                        refreshScheduleData(BaseApp.context)
+                    } else {
+                        isGetAllData(0)
                     }
-                    isGetAllData(0)
+
                 }, onExecuteOnceError = {
                     isGetAllData(0)
                 }))
@@ -197,6 +213,12 @@ class CoursesViewModel : ViewModel() {
                 .setSchedulers()
                 .map(AffairMapToCourse())
                 .subscribe(ExecuteOnceObserver(onExecuteOnceNext = { affairsFromDatabase ->
+                    var md5Tag = ""
+                    for (c in affairsFromDatabase) {
+
+                        md5Tag += c.toString().replace(Regex("courseId=[0-9]*,"), "")
+                    }
+                    nextAffairsMd5 = md5Encoding(md5Tag)
                     if (affairsFromDatabase != null && affairsFromDatabase.isNotEmpty()) {
                         mCourses.addAll(affairsFromDatabase)
                     }
@@ -215,6 +237,14 @@ class CoursesViewModel : ViewModel() {
                 .errorHandler()
                 .subscribe(ExecuteOnceObserver(onExecuteOnceNext = { coursesFromInternet ->
                     coursesFromInternet.data?.let { notNullCourses ->
+                        var md5Tag = ""
+                        for (c in notNullCourses) {
+                            md5Tag += c.toString().replace(Regex("courseId=[0-9]*,"), "")
+
+                        }
+                        LogUtils.d("MyTag", md5Tag)
+                        nextCourseMd5 = md5Encoding(md5Tag)
+//                        nextCourseMd5 = md5Tag
                         mCourses.addAll(notNullCourses)
                         isGetAllData(0)
 
@@ -224,14 +254,13 @@ class CoursesViewModel : ViewModel() {
                             mCoursesDatabase?.courseDao()?.deleteAllCourses()
                             mCoursesDatabase?.courseDao()?.insertCourses(notNullCourses)
                         }.start()
-                        if(!coursesFromInternet.data?.isEmpty()!! && isGetOthers.value == false){
+                        if (!coursesFromInternet.data?.isEmpty()!! && isGetOthers.value == false) {
                             BaseApp.context.defaultSharedPreferences.editor {
                                 putString(WIDGET_COURSE, Gson().toJson(coursesFromInternet))
                                 putBoolean(SP_WIDGET_NEED_FRESH, true)
                             }
                         }
                     }
-
                 }, onExecuteOnceError = {
                     isGetAllData(0)
                 }))
@@ -250,6 +279,11 @@ class CoursesViewModel : ViewModel() {
                 .errorHandler()
                 .subscribe(ExecuteOnceObserver(onExecuteOnceNext = { affairsFromInternet ->
                     affairsFromInternet.data?.let { notNullAffairs ->
+                        var md5Tag = ""
+                        for (c in notNullAffairs) {
+                            md5Tag += c.toString()
+                        }
+                        nextAffairsMd5 = md5Encoding(md5Tag)
                         //将从服务器上获取的事务映射为课程信息。
                         Observable.create(ObservableOnSubscribe<List<Affair>> {
                             it.onNext(notNullAffairs)
@@ -282,7 +316,13 @@ class CoursesViewModel : ViewModel() {
         if (mDataGetStatus[0] && mDataGetStatus[1]) {
             // 如果mCourses为空的话就不用赋值给courses。防止由于网络请求有问题而导致刷新数据为空。
             if (mCourses.isNotEmpty()) {
-                courses.value = mCourses
+                LogUtils.d("MyTag", "now  $nowCoursesMd5  $nowAffairsMd5  next $nextCourseMd5  $nextAffairsMd5")
+
+                if (nowCoursesMd5 != nextCourseMd5 || nowAffairsMd5 != nextAffairsMd5) {
+                    courses.value = mCourses
+                    nowCoursesMd5 = nextCourseMd5
+                    nowAffairsMd5 = nextAffairsMd5
+                }
             } else {
                 // 加个标志，防止因为没有课程以及备忘的情况进行无限循环拉取。
                 if (!mIsGottenFromInternet) {
@@ -310,7 +350,7 @@ class CoursesViewModel : ViewModel() {
      * @param context [Context]
      */
     private fun getNowWeek(context: Context) {
-        mCourseApiService.getCourse("2016215039")
+        mCourseApiService.getCourse(BaseApp.user?.stuNum ?: "2016215039")
                 .setSchedulers()
                 .errorHandler()
                 .map {
