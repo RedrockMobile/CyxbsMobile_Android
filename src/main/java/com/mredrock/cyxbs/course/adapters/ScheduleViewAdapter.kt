@@ -276,7 +276,7 @@ class ScheduleViewAdapter(private val mContext: Context,
          * @param front 现在排在前面的Course
          */
         override fun compare(behind: Course, front: Course): Int {
-            if (front.period >= behind.period && front.customType < behind.customType) {
+            if ((front.period >= behind.period && front.customType < behind.customType)||(front.period > behind.period && front.customType <= behind.customType)) {
                 return 1
             }
             return -1
