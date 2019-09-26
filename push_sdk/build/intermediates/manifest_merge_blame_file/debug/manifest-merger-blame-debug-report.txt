@@ -1,0 +1,317 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    package="com.umeng.message.lib"
+4    android:versionCode="1"
+5    android:versionName="1.0" >
+6
+7    <uses-sdk
+8        android:minSdkVersion="14"
+8-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml
+9        android:targetSdkVersion="29" />
+9-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml
+10
+11    <uses-permission android:name="android.permission.INTERNET" />
+11-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml:7:5-67
+11-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml:7:22-64
+12    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+12-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml:8:5-79
+12-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml:8:22-76
+13    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+13-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml:9:5-76
+13-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml:9:22-73
+14    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+14-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml:10:5-81
+14-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml:10:22-78
+15    <uses-permission android:name="android.permission.WAKE_LOCK" />
+15-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml:11:5-68
+15-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml:11:22-65
+16    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+16-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml:12:5-75
+16-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml:12:22-72
+17    <uses-permission android:name="android.permission.BROADCAST_PACKAGE_ADDED" />
+17-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml:13:5-82
+17-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml:13:22-79
+18    <uses-permission android:name="android.permission.BROADCAST_PACKAGE_CHANGED" />
+18-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml:14:5-84
+18-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml:14:22-81
+19    <uses-permission android:name="android.permission.BROADCAST_PACKAGE_INSTALL" />
+19-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml:15:5-84
+19-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml:15:22-81
+20    <uses-permission android:name="android.permission.BROADCAST_PACKAGE_REPLACED" />
+20-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml:16:5-85
+20-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml:16:22-82
+21    <uses-permission android:name="android.permission.RESTART_PACKAGES" />
+21-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml:17:5-75
+21-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml:17:22-72
+22    <uses-permission android:name="android.permission.GET_TASKS" />
+22-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml:18:5-68
+22-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml:18:22-65
+23    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+23-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml:19:5-81
+23-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml:19:22-78
+24    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
+24-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml:20:5-79
+24-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml:20:22-76
+25    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+25-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml:21:5-76
+25-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml:21:22-73
+26
+27    <application>
+27-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml:23:5-167:19
+28        <service
+28-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml:25:9-35:19
+29            android:name="com.taobao.accs.ChannelService"
+29-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml:26:13-58
+30            android:exported="true"
+30-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml:27:13-36
+31            android:process=":channel" >
+31-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml:28:13-39
+32            <intent-filter>
+32-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml:29:13-31:29
+33                <action android:name="com.taobao.accs.intent.action.SERVICE" />
+33-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml:30:17-80
+33-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml:30:25-77
+34            </intent-filter>
+35            <intent-filter>
+35-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml:32:13-34:29
+36                <action android:name="com.taobao.accs.intent.action.ELECTION" />
+36-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml:33:17-81
+36-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml:33:25-78
+37            </intent-filter>
+38        </service>
+39        <service
+39-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml:37:9-43:19
+40            android:name="com.taobao.accs.data.MsgDistributeService"
+40-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml:38:13-69
+41            android:exported="true" >
+41-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml:39:13-36
+42            <intent-filter>
+42-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml:40:13-42:29
+43                <action android:name="com.taobao.accs.intent.action.RECEIVE" />
+43-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml:41:17-80
+43-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml:41:25-77
+44            </intent-filter>
+45        </service>
+46
+47        <receiver
+47-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml:45:9-61:20
+48            android:name="com.taobao.accs.EventReceiver"
+48-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml:46:13-57
+49            android:process=":channel" >
+49-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml:47:13-39
+50            <intent-filter>
+50-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml:48:13-50:29
+51                <action android:name="android.intent.action.BOOT_COMPLETED" />
+51-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml:49:17-79
+51-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml:49:25-76
+52            </intent-filter>
+53            <intent-filter>
+53-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml:51:13-53:29
+54                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+54-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml:52:17-79
+54-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml:52:25-76
+55            </intent-filter>
+56            <intent-filter>
+56-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml:54:13-57:29
+57                <action android:name="android.intent.action.PACKAGE_REMOVED" />
+57-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml:55:17-80
+57-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml:55:25-77
+58
+59                <data android:scheme="package" />
+59-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml:56:17-50
+59-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml:56:23-47
+60            </intent-filter>
+61            <intent-filter>
+61-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml:58:13-60:29
+62                <action android:name="android.intent.action.USER_PRESENT" />
+62-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml:59:17-77
+62-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml:59:25-74
+63            </intent-filter>
+64        </receiver>
+65        <receiver
+65-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml:63:9-72:20
+66            android:name="com.taobao.accs.ServiceReceiver"
+66-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml:64:13-59
+67            android:process=":channel" >
+67-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml:65:13-39
+68            <intent-filter>
+68-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml:66:13-68:29
+69                <action android:name="com.taobao.accs.intent.action.COMMAND" />
+69-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml:67:17-80
+69-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml:67:25-77
+70            </intent-filter>
+71            <intent-filter>
+71-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml:69:13-71:29
+72                <action android:name="com.taobao.accs.intent.action.START_FROM_AGOO" />
+72-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml:70:17-88
+72-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml:70:25-85
+73            </intent-filter>
+74        </receiver>
+75
+76        <service
+76-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml:74:9-77:41
+77            android:name="com.taobao.accs.internal.AccsJobService"
+77-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml:75:13-67
+78            android:permission="android.permission.BIND_JOB_SERVICE"
+78-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml:76:13-69
+79            android:process=":channel" />
+79-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml:77:13-39
+80        <service
+80-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml:79:9-81:42
+81            android:name="com.taobao.accs.ChannelService$KernelService"
+81-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml:80:13-72
+82            android:process=":channel" />
+82-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml:81:13-39
+83        <service
+83-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml:83:9-89:19
+84            android:name="org.android.agoo.accs.AgooService"
+84-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml:84:13-61
+85            android:exported="true" >
+85-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml:85:13-36
+86            <intent-filter>
+86-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml:40:13-42:29
+87                <action android:name="com.taobao.accs.intent.action.RECEIVE" />
+87-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml:41:17-80
+87-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml:41:25-77
+88            </intent-filter>
+89        </service>
+90        <service
+90-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml:91:9-98:19
+91            android:name="com.umeng.message.UmengIntentService"
+91-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml:92:13-64
+92            android:exported="true"
+92-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml:93:13-36
+93            android:process=":channel" >
+93-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml:94:13-39
+94            <intent-filter>
+94-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml:95:13-97:29
+95                <action android:name="org.agoo.android.intent.action.RECEIVE" />
+95-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml:96:17-81
+95-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml:96:25-78
+96            </intent-filter>
+97        </service>
+98        <service
+98-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml:100:9-107:19
+99            android:name="com.umeng.message.XiaomiIntentService"
+99-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml:101:13-65
+100            android:exported="true"
+100-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml:102:13-36
+101            android:process=":channel" >
+101-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml:103:13-39
+102            <intent-filter>
+102-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml:95:13-97:29
+103                <action android:name="org.agoo.android.intent.action.RECEIVE" />
+103-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml:96:17-81
+103-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml:96:25-78
+104            </intent-filter>
+105        </service>
+106
+107        <receiver
+107-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml:109:9-120:20
+108            android:name="com.taobao.agoo.AgooCommondReceiver"
+108-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml:110:13-63
+109            android:exported="true"
+109-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml:111:13-36
+110            android:process=":channel" >
+110-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml:112:13-39
+111            <intent-filter>
+112                <action android:name="dollar_openBracket_applicationId_closeBracket.intent.action.COMMAND" />
+113            </intent-filter>
+114            <intent-filter>
+114-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml:54:13-57:29
+115                <action android:name="android.intent.action.PACKAGE_REMOVED" />
+115-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml:55:17-80
+115-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml:55:25-77
+116
+117                <data android:scheme="package" />
+117-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml:56:17-50
+117-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml:56:23-47
+118            </intent-filter>
+119        </receiver>
+120
+121        <service
+121-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml:122:9-129:19
+122            android:name="com.umeng.message.UmengMessageIntentReceiverService"
+122-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml:123:13-79
+123            android:exported="true"
+123-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml:124:13-36
+124            android:process=":channel" >
+124-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml:125:13-39
+125            <intent-filter>
+125-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml:126:13-128:29
+126                <action android:name="org.android.agoo.client.MessageReceiverService" />
+126-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml:127:17-89
+126-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml:127:25-86
+127            </intent-filter>
+128        </service>
+129
+130        <receiver
+130-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml:131:9-133:40
+131            android:name="com.umeng.message.NotificationProxyBroadcastReceiver"
+131-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml:132:13-80
+132            android:exported="false" />
+132-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml:133:13-37
+133
+134        <service
+134-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml:135:9-154:19
+135            android:name="com.umeng.message.UmengMessageCallbackHandlerService"
+135-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml:136:13-80
+136            android:exported="false"
+136-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml:138:13-37
+137            android:permission="android.permission.BIND_JOB_SERVICE" >
+137-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml:137:13-69
+138            <intent-filter>
+138-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml:139:13-141:29
+139                <action android:name="com.umeng.messge.registercallback.action" />
+139-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml:140:17-83
+139-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml:140:25-80
+140            </intent-filter>
+141            <intent-filter>
+141-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml:142:13-144:29
+142                <action android:name="com.umeng.message.enablecallback.action" />
+142-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml:143:17-82
+142-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml:143:25-79
+143            </intent-filter>
+144            <intent-filter>
+144-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml:145:13-147:29
+145                <action android:name="com.umeng.message.disablecallback.action" />
+145-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml:146:17-83
+145-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml:146:25-80
+146            </intent-filter>
+147            <intent-filter>
+147-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml:148:13-150:29
+148                <action android:name="com.umeng.message.message.handler.action" />
+148-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml:149:17-83
+148-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml:149:25-80
+149            </intent-filter>
+150            <intent-filter>
+150-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml:151:13-153:29
+151                <action android:name="com.umeng.message.message.sendmessage.action" />
+151-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml:152:17-87
+151-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml:152:25-84
+152            </intent-filter>
+153        </service>
+154        <service
+154-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml:156:9-159:40
+155            android:name="com.umeng.message.UmengDownloadResourceService"
+155-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml:157:13-74
+156            android:exported="false"
+156-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml:159:13-37
+157            android:permission="android.permission.BIND_JOB_SERVICE" />
+157-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml:158:13-69
+158
+159        <provider
+159-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml:161:9-166:20
+160            android:name="com.umeng.message.provider.MessageProvider"
+160-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml:162:13-70
+161            android:authorities="dollar_openBracket_applicationId_closeBracket.umeng.message"
+161-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml:163:13-65
+162            android:exported="false" >
+162-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml:164:13-37
+163            <grant-uri-permission android:pathPattern=".*" />
+163-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml:165:13-62
+163-->C:\data\AndroidStudioProjects\CyxbsMobile_Android\push_sdk\AndroidManifest.xml:165:35-59
+164        </provider>
+165    </application>
+166
+167</manifest>
