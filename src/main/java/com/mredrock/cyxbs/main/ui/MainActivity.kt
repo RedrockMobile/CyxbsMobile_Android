@@ -7,6 +7,7 @@ import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.bottomnavigation.LabelVisibilityMode
+import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.config.*
 import com.mredrock.cyxbs.common.event.GoToDiscoverEvent
 import com.mredrock.cyxbs.common.event.MainVPChangeEvent
@@ -16,6 +17,7 @@ import com.mredrock.cyxbs.common.utils.update.UpdateUtils
 import com.mredrock.cyxbs.main.R
 import com.mredrock.cyxbs.main.ui.adapter.MainVpAdapter
 import com.mredrock.cyxbs.main.utils.BottomNavigationViewHelper
+import com.umeng.message.inapp.InAppMessageManager
 import kotlinx.android.synthetic.main.main_activity_main.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -60,6 +62,12 @@ class MainActivity : BaseActivity() {
         }
 
         UpdateUtils.checkUpdate(this)
+
+
+        InAppMessageManager.getInstance(BaseApp.context).showCardMessage(this,
+                "课表主页面") {
+            //插屏消息关闭之后调用
+        }
     }
 
     private fun initBottomNavigationView() {

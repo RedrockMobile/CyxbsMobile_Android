@@ -56,9 +56,6 @@ class SplashActivity : BaseViewModelActivity<SplashViewModel>() {
         viewModel = ViewModelProviders.of(this).get(SplashViewModel::class.java)
         viewModel.getStartPage()
 
-        viewModel.startPage.observe(this, Observer {
-            Glide.with(this).load(it?.photo_src).apply(RequestOptions().centerCrop()).into(splash_view)
-        })
 
     }
 
