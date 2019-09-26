@@ -122,6 +122,7 @@ class SettingFragment : BaseFragment() {
                 }
 
                 if (selectBuildingHeadPosition != -1) {
+                    wp_dormitory_head.data = buildingHeadNames
                     wp_dormitory_head.selectedItemPosition = selectBuildingHeadPosition
                     wp_dormitory_foot.data = buildingNames[buildingHeadNames[selectBuildingHeadPosition]]
                     wp_dormitory_foot.selectedItemPosition = selectBuildingFootPosition
