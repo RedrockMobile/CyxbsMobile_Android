@@ -8,7 +8,6 @@ import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.config.SP_WIDGET_NEED_FRESH
 import com.mredrock.cyxbs.common.config.WIDGET_COURSE
 import com.mredrock.cyxbs.common.network.ApiGenerator
-import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.SchoolCalendar
 import com.mredrock.cyxbs.common.utils.encrypt.md5Encoding
 import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
@@ -186,7 +185,6 @@ class CoursesViewModel : ViewModel() {
                     for (c in coursesFromDatabase) {
                         md5Tag += c.toString().replace(Regex("courseId=[0-9]*,"), "")
                     }
-                    LogUtils.d("MyTag database", md5Tag)
                     nextCourseMd5 = md5Encoding(md5Tag)
                     if (coursesFromDatabase != null && coursesFromDatabase.isNotEmpty()) {
                         mCourses.addAll(coursesFromDatabase)
@@ -241,7 +239,6 @@ class CoursesViewModel : ViewModel() {
                             md5Tag += c.toString().replace(Regex("courseId=[0-9]*,"), "")
 
                         }
-                        LogUtils.d("MyTag", md5Tag)
                         nextCourseMd5 = md5Encoding(md5Tag)
 //                        nextCourseMd5 = md5Tag
                         mCourses.addAll(notNullCourses)
@@ -315,7 +312,6 @@ class CoursesViewModel : ViewModel() {
         if (mDataGetStatus[0] && mDataGetStatus[1]) {
             // 如果mCourses为空的话就不用赋值给courses。防止由于网络请求有问题而导致刷新数据为空。
             if (mCourses.isNotEmpty()) {
-                LogUtils.d("MyTag", "now  $nowCoursesMd5  $nowAffairsMd5  next $nextCourseMd5  $nextAffairsMd5")
 
                 if (nowCoursesMd5 != nextCourseMd5 || nowAffairsMd5 != nextAffairsMd5) {
                     courses.value = mCourses
@@ -349,7 +345,7 @@ class CoursesViewModel : ViewModel() {
      * @param context [Context]
      */
     private fun getNowWeek(context: Context) {
-        mCourseApiService.getCourse(BaseApp.user?.stuNum?:"2016215039")
+        mCourseApiService.getCourse(BaseApp.user?.stuNum ?: "2016215039")
                 .setSchedulers()
                 .errorHandler()
                 .map {

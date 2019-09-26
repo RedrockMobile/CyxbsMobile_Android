@@ -18,15 +18,15 @@ class CourseTimeParse(private val mClassX: Int, private val mPeriod: Int = 2) {
         7 -> Time("17", "10")
         8 -> Time("19", "00")
         9 -> Time("19", "55")
-        10 -> Time("21", "15")
-        11 -> Time("22", "10")
+        10 -> Time("20", "50")
+        11 -> Time("21", "45")
         else -> Time("00", "00")
     }
 
     fun parseEndCourseTime(): Time {
         val endClassX = mClassX + mPeriod  - 1
         return when (endClassX) {
-            0 -> Time("8", "40")
+            0 -> Time("8", "45")
             1 -> Time("9", "40")
             2 -> Time("11", "00")
             3 -> Time("11", "55")
@@ -36,8 +36,8 @@ class CourseTimeParse(private val mClassX: Int, private val mPeriod: Int = 2) {
             7 -> Time("17", "55")
             8 -> Time("19", "45")
             9 -> Time("20", "40")
-            10 -> Time("22", "00")
-            11 -> Time("22", "55")
+            10 -> Time("21", "35")
+            11 -> Time("22", "30")
             else -> Time("00", "00")
         }
     }
