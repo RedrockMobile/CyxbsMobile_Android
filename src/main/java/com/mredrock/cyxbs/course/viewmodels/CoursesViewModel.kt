@@ -277,7 +277,7 @@ class CoursesViewModel : ViewModel() {
                     affairsFromInternet.data?.let { notNullAffairs ->
                         var md5Tag = ""
                         for (c in notNullAffairs) {
-                            md5Tag += c.toString()
+                            md5Tag += c.toString().replace(Regex("courseId=[0-9]*,"), "")
                         }
                         nextAffairsMd5 = md5Encoding(md5Tag)
                         //将从服务器上获取的事务映射为课程信息。
