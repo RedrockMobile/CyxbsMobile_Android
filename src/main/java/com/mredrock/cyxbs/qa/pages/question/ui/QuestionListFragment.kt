@@ -76,6 +76,9 @@ class QuestionListFragment : BaseViewModelFragment<QuestionListViewModel>() {
             when (it) {
                 NetworkState.LOADING -> {
                     swipe_refresh_layout.isRefreshing = true
+                    (rv_question_list.adapter as? RvAdapterWrapper)?.apply {
+
+                    }
                     emptyRvAdapter.showHolder(3)
                 }
                 NetworkState.CANNOT_LOAD_WITHOUT_LOGIN->{
