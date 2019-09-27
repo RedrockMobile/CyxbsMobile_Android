@@ -8,6 +8,7 @@ import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.config.SP_WIDGET_NEED_FRESH
 import com.mredrock.cyxbs.common.config.WIDGET_COURSE
 import com.mredrock.cyxbs.common.network.ApiGenerator
+import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.SchoolCalendar
 import com.mredrock.cyxbs.common.utils.encrypt.md5Encoding
 import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
@@ -212,8 +213,7 @@ class CoursesViewModel : ViewModel() {
                 .subscribe(ExecuteOnceObserver(onExecuteOnceNext = { affairsFromDatabase ->
                     var md5Tag = ""
                     for (c in affairsFromDatabase) {
-
-                        md5Tag += c.toString().replace(Regex("courseId=[0-9]*,"), "")
+                        md5Tag += "${c.affairDates}${c.course}${c.classroom}"
                     }
                     nextAffairsMd5 = md5Encoding(md5Tag)
                     if (affairsFromDatabase != null && affairsFromDatabase.isNotEmpty()) {
@@ -277,7 +277,7 @@ class CoursesViewModel : ViewModel() {
                     affairsFromInternet.data?.let { notNullAffairs ->
                         var md5Tag = ""
                         for (c in notNullAffairs) {
-                            md5Tag += c.toString().replace(Regex("courseId=[0-9]*,"), "")
+                            md5Tag += "${c.date}${c.title}${c.content}"
                         }
                         nextAffairsMd5 = md5Encoding(md5Tag)
                         //将从服务器上获取的事务映射为课程信息。
@@ -312,7 +312,6 @@ class CoursesViewModel : ViewModel() {
         if (mDataGetStatus[0] && mDataGetStatus[1]) {
             // 如果mCourses为空的话就不用赋值给courses。防止由于网络请求有问题而导致刷新数据为空。
             if (mCourses.isNotEmpty()) {
-
                 if (nowCoursesMd5 != nextCourseMd5 || nowAffairsMd5 != nextAffairsMd5) {
                     courses.value = mCourses
                     nowCoursesMd5 = nextCourseMd5
