@@ -40,7 +40,7 @@ class QuestionContainerFragment : BaseFragment(), View.OnClickListener {
         super.onCreateView(inflater, container, savedInstanceState)
         val root = inflater.inflate(R.layout.qa_fragment_question_container, container, false)
         childFragments = titles.map { QuestionListFragment().apply { title = it } }
-        root.vp_question.adapter = QAViewPagerAdapter(childFragments, activity!!.supportFragmentManager)
+        root.vp_question.adapter = QAViewPagerAdapter(childFragments, childFragmentManager)
         //预加载所有部分保证提问后所有fragment能够被通知刷新，同时保证退出账号时只加载一次对话框
         root.vp_question.offscreenPageLimit = if (BaseApp.isLogin) 5 else 0
         root.tl_category.setupWithViewPager(root.vp_question)
