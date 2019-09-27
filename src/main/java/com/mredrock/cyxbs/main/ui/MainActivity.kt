@@ -1,6 +1,8 @@
 package com.mredrock.cyxbs.main.ui
 
 import android.os.Bundle
+import android.os.Looper
+import android.util.Log
 import android.view.MenuItem
 import androidx.fragment.app.Fragment
 import com.alibaba.android.arouter.facade.annotation.Route
@@ -99,12 +101,17 @@ class MainActivity : BaseActivity() {
 
     private fun initFragments() {
         fragments.add(getFragment(COURSE_ENTRY))
-        fragments.add(getFragment(QA_ENTRY))
-        fragments.add(getFragment(DISCOVER_ENTRY))
-        fragments.add(getFragment(MINE_ENTRY))
         adapter = MainVpAdapter(supportFragmentManager, fragments)
         view_pager.adapter = adapter
         view_pager.offscreenPageLimit = 4
+
+        Looper.myQueue().addIdleHandler {
+            fragments.add(getFragment(QA_ENTRY))
+            fragments.add(getFragment(DISCOVER_ENTRY))
+            fragments.add(getFragment(MINE_ENTRY))
+            adapter.notifyDataSetChanged()
+            false
+        }
     }
 
     private fun getFragment(path: String) = ARouter.getInstance().build(path).navigation() as Fragment

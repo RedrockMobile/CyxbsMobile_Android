@@ -31,6 +31,7 @@ class SplashActivity : BaseViewModelActivity<SplashViewModel>() {
         setFullScreen()
 
         val uri = intent.data
+        println("sadasd ${uri?.path}")
         when (uri?.path) {
             URI_PATH_QA_QUESTION -> {
                 if (!BaseApp.isLogin) {
@@ -49,13 +50,11 @@ class SplashActivity : BaseViewModelActivity<SplashViewModel>() {
                 viewModel.finishModel.observeNotNullAndTrue {
                     startActivity<MainActivity>(true)
                 }
-                viewModel.finishAfter(2000)
+                viewModel.finishAfter(1500)
             }
         }
-
         viewModel = ViewModelProviders.of(this).get(SplashViewModel::class.java)
         viewModel.getStartPage()
-
 
     }
 
