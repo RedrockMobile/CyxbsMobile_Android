@@ -17,7 +17,6 @@ import com.mredrock.cyxbs.common.event.LoginStateChangeEvent
 import com.mredrock.cyxbs.common.event.MainVPChangeEvent
 import com.mredrock.cyxbs.common.ui.BaseActivity
 import com.mredrock.cyxbs.common.ui.BaseFragment
-import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.course.R
 import com.mredrock.cyxbs.course.event.TabIsFoldEvent
 import com.mredrock.cyxbs.course.event.WeekNumEvent
@@ -131,8 +130,7 @@ class CourseEntryFragment : BaseFragment() {
     }
 
     private fun replaceFragment(fragment: Fragment) {
-        val manager = activity?.supportFragmentManager ?: return
-        val transaction = manager.beginTransaction()
+        val transaction = childFragmentManager.beginTransaction()
         transaction.replace(R.id.fl, fragment)
         insideFragment = fragment
         transaction.commit()

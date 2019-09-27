@@ -79,7 +79,7 @@ class CourseContainerFragment : BaseFragment() {
         resources.getStringArray(R.array.course_course_weeks_strings).let {
             mRawWeeks = it
             mWeeks = mRawWeeks.copyOf()
-            mScheduleAdapter = ScheduleVPAdapter(mWeeks, fragmentManager)
+            mScheduleAdapter = ScheduleVPAdapter(mWeeks, childFragmentManager)
         }
         mBinding.vp.adapter = mScheduleAdapter
         mBinding.tabLayout.setupWithViewPager(mBinding.vp)
