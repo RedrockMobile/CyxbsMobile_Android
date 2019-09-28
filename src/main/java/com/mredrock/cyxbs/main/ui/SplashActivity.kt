@@ -15,7 +15,6 @@ import com.mredrock.cyxbs.common.config.URI_PATH_QA_ANSWER
 import com.mredrock.cyxbs.common.config.URI_PATH_QA_QUESTION
 import com.mredrock.cyxbs.common.event.AskLoginEvent
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
-import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.viewmodel.event.SingleLiveEvent
 import com.mredrock.cyxbs.main.R
 import com.mredrock.cyxbs.main.viewmodel.SplashViewModel
@@ -36,6 +35,7 @@ class SplashActivity : BaseViewModelActivity<SplashViewModel>() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        val t1 = System.nanoTime()
         super.onCreate(savedInstanceState)
         setContentView(R.layout.main_activity_splash)
         val startMills = System.currentTimeMillis()
@@ -78,7 +78,6 @@ class SplashActivity : BaseViewModelActivity<SplashViewModel>() {
                 }
             }
         }
-
         viewModel = ViewModelProviders.of(this).get(SplashViewModel::class.java)
     }
 

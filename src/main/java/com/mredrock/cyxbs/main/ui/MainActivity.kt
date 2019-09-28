@@ -1,6 +1,8 @@
 package com.mredrock.cyxbs.main.ui
 
 import android.os.Bundle
+import android.os.Looper
+import android.util.Log
 import android.view.MenuItem
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -12,7 +14,6 @@ import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.config.*
 import com.mredrock.cyxbs.common.event.GoToDiscoverEvent
 import com.mredrock.cyxbs.common.event.MainVPChangeEvent
-import com.mredrock.cyxbs.common.ui.BaseActivity
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.editor
@@ -31,7 +32,6 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.jetbrains.anko.defaultSharedPreferences
 import org.jetbrains.anko.dip
-import java.util.jar.Manifest
 
 @Route(path = MAIN_MAIN)
 class MainActivity : BaseViewModelActivity<MainViewModel>() {
@@ -61,6 +61,7 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
     private var hasPermission: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        val t1 = System.nanoTime()
         super.onCreate(savedInstanceState)
         setContentView(R.layout.main_activity_main)
         appbar = findViewById(R.id.app_bar_layout)
@@ -80,7 +81,6 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
                 "课表主页面") {
             //插屏消息关闭之后调用
         }
-
         //下载Splash图
         viewModel.getStartPage()
         disposable = RxPermissions(this)
@@ -140,12 +140,17 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
 
     private fun initFragments() {
         fragments.add(getFragment(COURSE_ENTRY))
-        fragments.add(getFragment(QA_ENTRY))
-        fragments.add(getFragment(DISCOVER_ENTRY))
-        fragments.add(getFragment(MINE_ENTRY))
         adapter = MainVpAdapter(supportFragmentManager, fragments)
         view_pager.adapter = adapter
         view_pager.offscreenPageLimit = 4
+
+        Looper.myQueue().addIdleHandler {
+            fragments.add(getFragment(QA_ENTRY))
+            fragments.add(getFragment(DISCOVER_ENTRY))
+            fragments.add(getFragment(MINE_ENTRY))
+            adapter.notifyDataSetChanged()
+            false
+        }
     }
 
     private fun getFragment(path: String) = ARouter.getInstance().build(path).navigation() as Fragment
