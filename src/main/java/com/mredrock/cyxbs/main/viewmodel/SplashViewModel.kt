@@ -19,40 +19,16 @@ import org.greenrobot.eventbus.EventBus
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
+import kotlin.math.abs
 
 /**
  * Created By jay68 on 2018/8/10.
  */
 class SplashViewModel : BaseViewModel() {
-    val startPage: LiveData<StartPage?> = MutableLiveData()
     val finishModel = SingleLiveEvent<Boolean>()
 
     fun finishAfter(time: Long) {
         AndroidSchedulers.mainThread().scheduleDirect({ finishModel.value = true}, time, TimeUnit.MILLISECONDS)
-    }
-
-    fun getStartPage() {
-        ApiGenerator.getApiService(ApiService::class.java)
-                .getStartPage()
-                .mapOrThrowApiException()
-                .map {
-                    it.forEach { startPage ->
-                        val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.CHINA)
-                        try {
-                            val now = System.currentTimeMillis() / 1000
-                            val date = dateFormat.parse(startPage.start)
-                            if (Math.abs(date.time / 1000 - now) < 24 * 60 * 60) {
-                                return@map startPage
-                            }
-                        } catch (e: Throwable) {
-                            LogUtils.e("SplashViewModel", "parse time failed", e)
-                        }
-                    }
-                    throw RedrockApiException("no start page found.")
-                }
-                .setSchedulers()
-                .safeSubscribeBy { (startPage as MutableLiveData).value = it }
-                .lifeCycle()
     }
 
     fun getQuestion(qid: String) {

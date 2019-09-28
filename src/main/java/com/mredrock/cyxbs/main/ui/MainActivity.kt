@@ -3,6 +3,7 @@ package com.mredrock.cyxbs.main.ui
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
 import com.google.android.material.appbar.AppBarLayout
@@ -12,23 +13,33 @@ import com.mredrock.cyxbs.common.config.*
 import com.mredrock.cyxbs.common.event.GoToDiscoverEvent
 import com.mredrock.cyxbs.common.event.MainVPChangeEvent
 import com.mredrock.cyxbs.common.ui.BaseActivity
+import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
+import com.mredrock.cyxbs.common.utils.LogUtils
+import com.mredrock.cyxbs.common.utils.extensions.editor
 import com.mredrock.cyxbs.common.utils.update.UpdateEvent
 import com.mredrock.cyxbs.common.utils.update.UpdateUtils
 import com.mredrock.cyxbs.main.R
 import com.mredrock.cyxbs.main.ui.adapter.MainVpAdapter
-import com.mredrock.cyxbs.main.utils.BottomNavigationViewHelper
+import com.mredrock.cyxbs.main.utils.*
+import com.mredrock.cyxbs.main.viewmodel.MainViewModel
+import com.tbruyelle.rxpermissions2.RxPermissions
 import com.umeng.message.inapp.InAppMessageManager
+import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.main_activity_main.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import org.jetbrains.anko.defaultSharedPreferences
 import org.jetbrains.anko.dip
+import java.util.jar.Manifest
 
 @Route(path = MAIN_MAIN)
-class MainActivity : BaseActivity() {
+class MainActivity : BaseViewModelActivity<MainViewModel>() {
+
     companion object {
         val TAG: String = MainActivity::class.java.simpleName
     }
+    override val viewModelClass = MainViewModel::class.java
 
     override val isFragmentActivity = true
 
@@ -46,11 +57,12 @@ class MainActivity : BaseActivity() {
 
     private val fragments = ArrayList<Fragment>()
     private lateinit var adapter: MainVpAdapter
+    private lateinit var disposable: Disposable
+    private var hasPermission: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.main_activity_main)
-
         appbar = findViewById(R.id.app_bar_layout)
 
         common_toolbar.init(getString(R.string.common_course), listener = null)
@@ -68,6 +80,35 @@ class MainActivity : BaseActivity() {
                 "课表主页面") {
             //插屏消息关闭之后调用
         }
+
+        //下载Splash图
+        viewModel.getStartPage()
+        disposable = RxPermissions(this)
+                .request(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                .subscribe {
+                    hasPermission = it
+                }
+        viewModel.startPage.observe(this, Observer{starPage->
+            if(starPage != null && hasPermission){
+
+                val src = starPage.photo_src
+
+                if(src != null && src.startsWith("http")){//如果不为空，且url有效
+                    //对比缓存的url是否一样
+                    if(src != defaultSharedPreferences.getString(SplashActivity.SPLASH_PHOTO_NAME,"#")){
+                        downloadSplash(src)
+                        defaultSharedPreferences.editor {
+                            putString(SplashActivity.SPLASH_PHOTO_NAME,src)
+                        }
+                    }
+
+                }else{
+                    if(isDownloadSplash()){//如果url为空，则删除之前下载的图片
+                        deleteSplash()
+                    }
+                }
+            }
+        })
     }
 
     private fun initBottomNavigationView() {
@@ -119,5 +160,10 @@ class MainActivity : BaseActivity() {
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun installUpdate(event: UpdateEvent) {
         UpdateUtils.installApk(this, updateFile)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        disposable.dispose()
     }
 }
