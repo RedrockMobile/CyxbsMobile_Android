@@ -45,9 +45,12 @@ class RollViewAdapter : RollerView.RollerViewAdapter {
             imageView.setRoundHeight(13)
             imageView.setRoundWidth(13)
             imageView.scaleType = ImageView.ScaleType.CENTER_CROP
-            if (url.picture_goto_url != null) {
-                imageView.setOnClickListener { RollerViewActivity.startRollerViewActivity(url, context) }
+            url.picture_goto_url?.let {
+                if (it.startsWith("http")) {
+                    imageView.setOnClickListener { RollerViewActivity.startRollerViewActivity(url, context) }
+                 }
             }
+
             imageView.setImageFromUrl(url.picture_url)
             mImageViews!!.add(imageView)
         }
