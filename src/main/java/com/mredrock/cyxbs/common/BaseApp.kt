@@ -3,7 +3,6 @@ package com.mredrock.cyxbs.common
 import android.annotation.SuppressLint
 import android.app.Application
 import android.content.Context
-import android.util.Log
 import com.alibaba.android.arouter.launcher.ARouter
 import com.google.gson.Gson
 import com.meituan.android.walle.WalleChannelReader
@@ -95,10 +94,10 @@ open class BaseApp : Application() {
         mPushAgent.register(object : IUmengRegisterCallback {
             override fun onSuccess(deviceToken: String) {
                 //注册成功会返回deviceToken deviceToken是推送消息的唯一标志
-                Log.i("heiheihei", "注册成功：deviceToken：-------->  $deviceToken")
+                LogUtils.i("友盟注册", "注册成功：deviceToken：-------->  $deviceToken")
             }
             override fun onFailure(s: String, s1: String) {
-                Log.e("heiheihei", "注册失败：-------->  s:$s,s1:$s1")
+                LogUtils.e("友盟注册", "注册失败：-------->  s:$s,s1:$s1")
             }
         })
 
