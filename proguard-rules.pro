@@ -244,7 +244,7 @@
 -keep class com.ta.**{*;}
 #----------------------------------------------------------------------------
 
--dontshrink
+#-dontshrink 这行代码去除掉可以删去不用的包
 -keep,allowshrinking class com.umeng.message.* {
     public <fields>;
     public <methods>;
