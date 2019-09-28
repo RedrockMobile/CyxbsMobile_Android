@@ -14,6 +14,7 @@ import com.mredrock.cyxbs.common.config.*
 import com.mredrock.cyxbs.common.event.GoToDiscoverEvent
 import com.mredrock.cyxbs.common.event.MainVPChangeEvent
 import com.mredrock.cyxbs.common.ui.BaseActivity
+import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.update.UpdateEvent
 import com.mredrock.cyxbs.common.utils.update.UpdateUtils
 import com.mredrock.cyxbs.main.R
@@ -50,6 +51,7 @@ class MainActivity : BaseActivity() {
     private lateinit var adapter: MainVpAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        val t1 = System.nanoTime()
         super.onCreate(savedInstanceState)
         setContentView(R.layout.main_activity_main)
 
@@ -70,6 +72,8 @@ class MainActivity : BaseActivity() {
                 "课表主页面") {
             //插屏消息关闭之后调用
         }
+        val t2 = System.nanoTime()
+        LogUtils.d("MyTag main","${t2-t1}")
     }
 
     private fun initBottomNavigationView() {

@@ -12,12 +12,13 @@ import com.mredrock.cyxbs.common.config.URI_PATH_QA_ANSWER
 import com.mredrock.cyxbs.common.config.URI_PATH_QA_QUESTION
 import com.mredrock.cyxbs.common.event.AskLoginEvent
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
+import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.viewmodel.event.SingleLiveEvent
 import com.mredrock.cyxbs.main.R
 import com.mredrock.cyxbs.main.viewmodel.SplashViewModel
-import kotlinx.android.synthetic.main.main_activity_splash.*
 import org.greenrobot.eventbus.EventBus
 import com.mredrock.cyxbs.common.utils.extensions.setFullScreen
+import kotlinx.android.synthetic.main.main_activity_splash.*
 
 
 class SplashActivity : BaseViewModelActivity<SplashViewModel>() {
@@ -26,6 +27,7 @@ class SplashActivity : BaseViewModelActivity<SplashViewModel>() {
     override val viewModelClass = SplashViewModel::class.java
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        val t1 = System.nanoTime()
         super.onCreate(savedInstanceState)
         setContentView(R.layout.main_activity_splash)
         setFullScreen()
@@ -50,12 +52,17 @@ class SplashActivity : BaseViewModelActivity<SplashViewModel>() {
                 viewModel.finishModel.observeNotNullAndTrue {
                     startActivity<MainActivity>(true)
                 }
-                viewModel.finishAfter(1500)
+                viewModel.finishAfter(0)
             }
         }
         viewModel = ViewModelProviders.of(this).get(SplashViewModel::class.java)
         viewModel.getStartPage()
 
+        viewModel.startPage.observe(this, Observer {
+            Glide.with(this).load(it?.photo_src).apply(RequestOptions().centerCrop()).into(splash_view)
+        })
+        val t2 = System.nanoTime()
+        LogUtils.d("MyTag splash","${t2-t1}")
     }
 
     private fun navigateAndFinish(path: String) {
