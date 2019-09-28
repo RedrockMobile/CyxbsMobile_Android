@@ -14,6 +14,9 @@ import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
 import com.mredrock.cyxbs.common.utils.extensions.editor
 import com.umeng.analytics.MobclickAgent
 import com.umeng.commonsdk.UMConfigure
+import com.umeng.message.IUmengRegisterCallback
+import com.umeng.message.PushAgent
+import com.umeng.message.inapp.InAppMessageManager
 import com.umeng.socialize.PlatformConfig
 
 
@@ -87,7 +90,21 @@ open class BaseApp : Application() {
         MobclickAgent.openActivityDurationTrack(false)
         //调试模式（推荐到umeng注册测试机，避免数据污染）
         UMConfigure.setLogEnabled(BuildConfig.DEBUG)
+        //友盟推送服务的接入
+        PushAgent.getInstance(context).onAppStart()
+        val mPushAgent = PushAgent.getInstance(this)
+        //注册推送服务，每次调用register方法都会回调该接口
+        mPushAgent.register(object : IUmengRegisterCallback {
+            override fun onSuccess(deviceToken: String) {
+                //注册成功会返回deviceToken deviceToken是推送消息的唯一标志
+                LogUtils.i("友盟注册", "注册成功：deviceToken：-------->  $deviceToken")
+            }
+            override fun onFailure(s: String, s1: String) {
+                LogUtils.e("友盟注册", "注册失败：-------->  s:$s,s1:$s1")
+            }
+        })
 
+        InAppMessageManager.getInstance(context).setInAppMsgDebugMode(true)
         initShare()
     }
 
