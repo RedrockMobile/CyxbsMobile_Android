@@ -1,14 +1,12 @@
 package com.mredrock.cyxbs.main.ui
 
-import android.graphics.drawable.Drawable
 import android.os.Bundle
+import android.util.Log
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.alibaba.android.arouter.launcher.ARouter
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
-import com.bumptech.glide.request.target.SimpleTarget
-import com.bumptech.glide.request.transition.Transition
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.config.QA_ANSWER_LIST
 import com.mredrock.cyxbs.common.config.URI_PATH_QA_ANSWER
@@ -22,6 +20,7 @@ import org.greenrobot.eventbus.EventBus
 import com.mredrock.cyxbs.common.utils.extensions.setFullScreen
 import com.mredrock.cyxbs.main.utils.getSplashFile
 import com.mredrock.cyxbs.main.utils.isDownloadSplash
+import kotlinx.android.synthetic.main.main_activity_splash.*
 
 
 class SplashActivity : BaseViewModelActivity<SplashViewModel>() {
@@ -35,21 +34,13 @@ class SplashActivity : BaseViewModelActivity<SplashViewModel>() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        val t1 = System.nanoTime()
         super.onCreate(savedInstanceState)
         setContentView(R.layout.main_activity_splash)
-        val startMills = System.currentTimeMillis()
-
         setFullScreen()
 
         //判断是否下载了Splash图，下载了就直接设置
         if(isDownloadSplash()){
-            Glide.with(this).load(getSplashFile()).apply(RequestOptions().centerCrop())
-                    .into(object : SimpleTarget<Drawable>(){
-                        override fun onResourceReady(resource: Drawable, transition: Transition<in Drawable>?) {
-                            window.decorView.background = resource
-                        }
-                    })
+            Glide.with(applicationContext).load(getSplashFile()).apply(RequestOptions().centerCrop()).into(splash_view)
         }
 
         val uri = intent.data
@@ -71,8 +62,10 @@ class SplashActivity : BaseViewModelActivity<SplashViewModel>() {
                 viewModel.finishModel.observeNotNullAndTrue {
                     startActivity<MainActivity>(true)
                 }
-                if (System.currentTimeMillis() - startMills < 1200) {
-                    viewModel.finishAfter(1200 - startMills)
+
+                //如果启动时间都大于2s了，鄙人觉得就不要打开闪屏页伤害用户体验了
+                if (System.currentTimeMillis() - BaseApp.startTime < 2000) {
+                    viewModel.finishAfter(800)//设置这个值，改变闪屏页的时间。
                 } else {
                     viewModel.finishAfter(0)
                 }
@@ -81,6 +74,11 @@ class SplashActivity : BaseViewModelActivity<SplashViewModel>() {
         viewModel = ViewModelProviders.of(this).get(SplashViewModel::class.java)
     }
 
+    override fun finish() {
+        super.finish()
+        //加个固定动画，避免突然闪屏带来的不良好的体验
+        overridePendingTransition(R.anim.main_activity_splash_close,0)
+    }
 
     private fun navigateAndFinish(path: String) {
         ARouter.getInstance().build(path).navigation()
