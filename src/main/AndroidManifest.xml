@@ -11,6 +11,9 @@
         android:roundIcon="@mipmap/app_ic_launcher_circle"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        tools:ignore="GoogleAppIndexingWarning"/>
+        tools:ignore="GoogleAppIndexingWarning">
+        <service android:name=".AppInitService"/>
+        <service android:name=".common.BaseAppInitService"/>
+    </application>
 
 </manifest>

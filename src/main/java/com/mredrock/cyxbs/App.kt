@@ -15,22 +15,7 @@ import com.tencent.bugly.crashreport.CrashReport
 class App : BaseApp() {
     override fun onCreate() {
         super.onCreate()
-        initBugly()
-
-        SophixManager.getInstance().queryAndLoadNewPatch()
+        AppInitService.init(this)
     }
 
-    // 子模块debug不需要bugly
-    private fun initBugly() {
-        val packageName = applicationContext.packageName
-        val processName = getProcessName(Process.myPid())
-        val strategy = CrashReport.UserStrategy(applicationContext)
-        strategy.appVersion = getAppVersionName(applicationContext)
-        strategy.isUploadProcess = processName == null || processName == packageName
-        strategy.appChannel = WalleChannelReader.getChannel(this, "debug")
-        Bugly.init(applicationContext, BuildConfig.BUGLY_APP_ID, false, strategy)
-        if (BuildConfig.DEBUG) {
-            CrashReport.setUserSceneTag(applicationContext, 83913)
-        }
-    }
 }

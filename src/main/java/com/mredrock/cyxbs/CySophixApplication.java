@@ -27,7 +27,6 @@ public class CySophixApplication extends SophixApplication {
     @Override
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
-         MultiDex.install(this);
         initSophix();
     }
 
