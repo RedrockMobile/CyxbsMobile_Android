@@ -185,7 +185,7 @@ class CoursesViewModel : ViewModel() {
                 .subscribe(ExecuteOnceObserver(onExecuteOnceNext = { coursesFromDatabase ->
                     var tag = ""
                     for (c in coursesFromDatabase) {
-                        tag += c.courseNum
+                        tag += c.courseNum+c.hashDay+c.hashLesson+c.teacher+c.classroom+c.weekModel+c.week
                     }
 
                     nextCourses = tag
@@ -239,7 +239,7 @@ class CoursesViewModel : ViewModel() {
                     coursesFromInternet.data?.let { notNullCourses ->
                         var tag = ""
                         for (c in notNullCourses) {
-                            tag += c.courseNum
+                            tag += c.courseNum+c.hashDay+c.hashLesson+c.teacher+c.classroom+c.weekModel+c.week
                         }
                         nextCourses = tag
 //                        nextCourses = tag
