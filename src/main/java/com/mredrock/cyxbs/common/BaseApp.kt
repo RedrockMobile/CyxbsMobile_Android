@@ -8,7 +8,6 @@ import com.google.gson.Gson
 import com.meituan.android.walle.WalleChannelReader
 import com.mredrock.cyxbs.common.bean.User
 import com.mredrock.cyxbs.common.config.SP_KEY_USER
-import com.mredrock.cyxbs.common.utils.CrashHandler
 import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.encrypt.UserInfoEncryption
 import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
@@ -62,10 +61,10 @@ open class BaseApp : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        CrashHandler.init(applicationContext)
-        userInfoEncryption = UserInfoEncryption()
-        initRouter()
+        BaseAppInitService.init(applicationContext)
+        initRouter()//ARouter放在子线程会影响使用
         initUMeng()
+        userInfoEncryption = UserInfoEncryption()
     }
 
     private fun initRouter() {
@@ -76,11 +75,12 @@ open class BaseApp : Application() {
         ARouter.init(this)
     }
 
+
     private fun initUMeng() {
-        val channel = WalleChannelReader.getChannel(this, "debug")
+        val channel = WalleChannelReader.getChannel(applicationContext, "debug")
         UMConfigure.init(applicationContext, BuildConfig.UM_APP_KEY, channel, UMConfigure.DEVICE_TYPE_PHONE,
                 BuildConfig.UM_PUSH_SECRET)
-        MobclickAgent.setScenarioType(this, MobclickAgent.EScenarioType.E_UM_NORMAL)
+        MobclickAgent.setScenarioType(applicationContext, MobclickAgent.EScenarioType.E_UM_NORMAL)
         MobclickAgent.openActivityDurationTrack(false)
         //调试模式（推荐到umeng注册测试机，避免数据污染）
         UMConfigure.setLogEnabled(BuildConfig.DEBUG)
