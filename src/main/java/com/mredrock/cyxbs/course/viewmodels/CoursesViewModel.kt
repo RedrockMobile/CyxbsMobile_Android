@@ -72,10 +72,11 @@ class CoursesViewModel : ViewModel() {
     }
 
     val courses = MutableLiveData<MutableList<Course>>()
-    var nowCoursesMd5 = ""
-    var nextCourseMd5 = ""
-    var nowAffairsMd5 = ""
-    var nextAffairsMd5 = ""
+    //
+    private var nowCourses = ""
+    private var nextCourses = ""
+    private var nowAffairs = ""
+    private var nextAffairs = ""
     // 表示今天是在第几周。
     var nowWeek = MutableLiveData<Int>().apply {
         SchoolCalendar().weekOfTerm.let {
@@ -182,11 +183,12 @@ class CoursesViewModel : ViewModel() {
                 .toObservable()
                 .setSchedulers()
                 .subscribe(ExecuteOnceObserver(onExecuteOnceNext = { coursesFromDatabase ->
-                    var md5Tag = ""
+                    var tag = ""
                     for (c in coursesFromDatabase) {
-                        md5Tag += c.toString().replace(Regex("courseId=[0-9]*,"), "")
+                        tag += c.courseNum
                     }
-                    nextCourseMd5 = md5Encoding(md5Tag)
+
+                    nextCourses = tag
                     if (coursesFromDatabase != null && coursesFromDatabase.isNotEmpty()) {
                         mCourses.addAll(coursesFromDatabase)
                         isGetAllData(0)
@@ -211,12 +213,13 @@ class CoursesViewModel : ViewModel() {
                 .setSchedulers()
                 .map(AffairMapToCourse())
                 .subscribe(ExecuteOnceObserver(onExecuteOnceNext = { affairsFromDatabase ->
-                    var md5Tag = ""
-                    for (c in affairsFromDatabase) {
-                        md5Tag += "${c.affairDates}${c.course}${c.classroom}"
-                    }
-                    nextAffairsMd5 = md5Encoding(md5Tag)
+
                     if (affairsFromDatabase != null && affairsFromDatabase.isNotEmpty()) {
+                        var tag = ""
+                        for (c in affairsFromDatabase) {
+                            tag += "${c.affairDates}${c.course}${c.classroom}"
+                        }
+                        nextAffairs = tag
                         mCourses.addAll(affairsFromDatabase)
                     }
                     isGetAllData(1)
@@ -234,13 +237,12 @@ class CoursesViewModel : ViewModel() {
                 .errorHandler()
                 .subscribe(ExecuteOnceObserver(onExecuteOnceNext = { coursesFromInternet ->
                     coursesFromInternet.data?.let { notNullCourses ->
-                        var md5Tag = ""
+                        var tag = ""
                         for (c in notNullCourses) {
-                            md5Tag += c.toString().replace(Regex("courseId=[0-9]*,"), "")
-
+                            tag += c.courseNum
                         }
-                        nextCourseMd5 = md5Encoding(md5Tag)
-//                        nextCourseMd5 = md5Tag
+                        nextCourses = tag
+//                        nextCourses = tag
                         mCourses.addAll(notNullCourses)
                         isGetAllData(0)
 
@@ -275,11 +277,11 @@ class CoursesViewModel : ViewModel() {
                 .errorHandler()
                 .subscribe(ExecuteOnceObserver(onExecuteOnceNext = { affairsFromInternet ->
                     affairsFromInternet.data?.let { notNullAffairs ->
-                        var md5Tag = ""
+                        var tag = ""
                         for (c in notNullAffairs) {
-                            md5Tag += "${c.date}${c.title}${c.content}"
+                            tag += "${c.date}${c.title}${c.content}"
                         }
-                        nextAffairsMd5 = md5Encoding(md5Tag)
+                        nextAffairs = tag
                         //将从服务器上获取的事务映射为课程信息。
                         Observable.create(ObservableOnSubscribe<List<Affair>> {
                             it.onNext(notNullAffairs)
@@ -312,10 +314,10 @@ class CoursesViewModel : ViewModel() {
         if (mDataGetStatus[0] && mDataGetStatus[1]) {
             // 如果mCourses为空的话就不用赋值给courses。防止由于网络请求有问题而导致刷新数据为空。
             if (mCourses.isNotEmpty()) {
-                if (nowCoursesMd5 != nextCourseMd5 || nowAffairsMd5 != nextAffairsMd5) {
+                if (nowCourses != nextCourses || nowAffairs != nextAffairs) {
                     courses.value = mCourses
-                    nowCoursesMd5 = nextCourseMd5
-                    nowAffairsMd5 = nextAffairsMd5
+                    nowCourses = nextCourses
+                    nowAffairs = nextAffairs
                 }
             } else {
                 // 加个标志，防止因为没有课程以及备忘的情况进行无限循环拉取。
