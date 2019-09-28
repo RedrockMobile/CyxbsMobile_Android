@@ -52,11 +52,14 @@ open class BaseApp : Application() {
         val hasNickname get() = (user != null && user?.nickname != null)
 
         private lateinit var userInfoEncryption: UserInfoEncryption
+
+        var startTime: Long = 0
     }
 
     override fun attachBaseContext(base: Context) {
         super.attachBaseContext(base)
         context = base
+        startTime = System.currentTimeMillis()
     }
 
     override fun onCreate() {
