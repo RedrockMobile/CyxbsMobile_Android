@@ -12,10 +12,7 @@ import java.io.IOException
 
 fun downloadSplash(mUrl: String) {
     val client = OkHttpClient()
-    val request = Request
-            .Builder()
-            .url(mUrl)
-            .build()
+    val request = Request.Builder().url(mUrl).build()
     client.newCall(request).enqueue(object : Callback {
         override fun onFailure(call: Call, e: IOException) {
             LogUtils.d("splash_download", "Download failed")
@@ -51,29 +48,18 @@ fun downloadSplash(mUrl: String) {
 
 }
 
-//删除下载的Splash图
-fun deleteSplash() {
-    val appDir = getDir()//下载目录
-    val fileName = SplashActivity.SPLASH_PHOTO_NAME
-    val destFile = File(appDir, fileName)
-    if (destFile.exists())
-        destFile.delete()//删除图片
-}
-
 //判断是否下载了Splash图
 fun isDownloadSplash(): Boolean {
-    val appDir = getDir()//下载目录
-    val fileName = SplashActivity.SPLASH_PHOTO_NAME
-    val destFile = File(appDir, fileName)
-    return destFile.exists()
+    return getSplashFile().exists()
 }
 
 fun getSplashFile(): File {
     val appDir = getDir()//下载目录
     val fileName = SplashActivity.SPLASH_PHOTO_NAME
-    return File(appDir, fileName)
+    return File("$appDir/$fileName")
 }
 
+//获取路径
 fun getDir(): File {
     val pictureFolder = Environment.getExternalStorageDirectory()
     val appDir = File(pictureFolder, SplashActivity.SPLASH_PHOTO_LOCATION)
@@ -81,4 +67,27 @@ fun getDir(): File {
         appDir.mkdirs()
     }
     return appDir
+}
+
+//删除下载的Splash图
+fun deleteDir(path: File?) {
+    if (null != path) {
+        if (!path.exists())
+            return
+        if (path.isFile) {
+            var result = path.delete()
+            var tryCount = 0
+            while (!result && tryCount++ < 10) {
+                System.gc() // 回收资源
+                result = path.delete()
+            }
+        }
+        val files = path.listFiles()
+        if (null != files) {
+            for (i in files.indices) {
+                deleteDir(files[i])
+            }
+        }
+        path.delete()
+    }
 }

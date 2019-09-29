@@ -87,15 +87,15 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
                 .request(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 .subscribe {
                     hasPermission = it
+                    viewModel.startPage
                 }
         viewModel.startPage.observe(this, Observer{starPage->
             if(starPage != null && hasPermission){
-
                 val src = starPage.photo_src
-
                 if(src != null && src.startsWith("http")){//如果不为空，且url有效
                     //对比缓存的url是否一样
                     if(src != defaultSharedPreferences.getString(SplashActivity.SPLASH_PHOTO_NAME,"#")){
+                        deleteDir(getSplashFile())
                         downloadSplash(src)
                         defaultSharedPreferences.editor {
                             putString(SplashActivity.SPLASH_PHOTO_NAME,src)
@@ -104,7 +104,7 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
 
                 }else{
                     if(isDownloadSplash()){//如果url为空，则删除之前下载的图片
-                        deleteSplash()
+                        deleteDir(getSplashFile())
                     }
                 }
             }

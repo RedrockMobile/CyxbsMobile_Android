@@ -6,6 +6,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.alibaba.android.arouter.launcher.ARouter
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.config.QA_ANSWER_LIST
@@ -13,6 +14,7 @@ import com.mredrock.cyxbs.common.config.URI_PATH_QA_ANSWER
 import com.mredrock.cyxbs.common.config.URI_PATH_QA_QUESTION
 import com.mredrock.cyxbs.common.event.AskLoginEvent
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
+import com.mredrock.cyxbs.common.utils.extensions.gone
 import com.mredrock.cyxbs.common.viewmodel.event.SingleLiveEvent
 import com.mredrock.cyxbs.main.R
 import com.mredrock.cyxbs.main.viewmodel.SplashViewModel
@@ -39,8 +41,15 @@ class SplashActivity : BaseViewModelActivity<SplashViewModel>() {
         setFullScreen()
 
         //判断是否下载了Splash图，下载了就直接设置
-        if(isDownloadSplash()){
-            Glide.with(applicationContext).load(getSplashFile()).apply(RequestOptions().centerCrop()).into(splash_view)
+        if (isDownloadSplash()) {
+            Glide.with(applicationContext)
+                    .load(getSplashFile())
+                    .apply(RequestOptions()
+                            .centerCrop()
+                            .diskCacheStrategy(DiskCacheStrategy.NONE))
+                    .into(splash_view)
+        } else {
+            splash_view.gone()//防止图片拉伸
         }
 
         val uri = intent.data
@@ -65,7 +74,7 @@ class SplashActivity : BaseViewModelActivity<SplashViewModel>() {
 
                 //如果启动时间都大于2s了，鄙人觉得就不要打开闪屏页伤害用户体验了
                 if (System.currentTimeMillis() - BaseApp.startTime < 2000) {
-                    viewModel.finishAfter(800)//设置这个值，改变闪屏页的时间。
+                    viewModel.finishAfter(650)//设置这个值，改变闪屏页的时间。
                 } else {
                     viewModel.finishAfter(0)
                 }
@@ -77,7 +86,7 @@ class SplashActivity : BaseViewModelActivity<SplashViewModel>() {
     override fun finish() {
         super.finish()
         //加个固定动画，避免突然闪屏带来的不良好的体验
-        overridePendingTransition(R.anim.main_activity_splash_close,0)
+        overridePendingTransition(R.anim.main_activity_splash_close, 0)
     }
 
     private fun navigateAndFinish(path: String) {
