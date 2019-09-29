@@ -20,15 +20,21 @@ import com.mredrock.cyxbs.main.R
 import com.mredrock.cyxbs.main.viewmodel.SplashViewModel
 import org.greenrobot.eventbus.EventBus
 import com.mredrock.cyxbs.common.utils.extensions.setFullScreen
+import com.mredrock.cyxbs.common.utils.extensions.visible
 import com.mredrock.cyxbs.main.utils.getSplashFile
 import com.mredrock.cyxbs.main.utils.isDownloadSplash
 import kotlinx.android.synthetic.main.main_activity_splash.*
+import java.sql.Time
+import java.util.*
+import kotlin.concurrent.schedule
 
 
 class SplashActivity : BaseViewModelActivity<SplashViewModel>() {
 
     override val isFragmentActivity = false
     override val viewModelClass = SplashViewModel::class.java
+
+    private var isDownloadSpalsh = false
 
     companion object {
         const val SPLASH_PHOTO_NAME = "splash_photo.jpg"
@@ -42,14 +48,15 @@ class SplashActivity : BaseViewModelActivity<SplashViewModel>() {
 
         //判断是否下载了Splash图，下载了就直接设置
         if (isDownloadSplash()) {
+            splash_view.visible()//防止图片拉伸
+            main_activity_splash_container.visible()
             Glide.with(applicationContext)
                     .load(getSplashFile())
                     .apply(RequestOptions()
                             .centerCrop()
                             .diskCacheStrategy(DiskCacheStrategy.NONE))
                     .into(splash_view)
-        } else {
-            splash_view.gone()//防止图片拉伸
+            isDownloadSpalsh = true
         }
 
         val uri = intent.data
@@ -71,11 +78,26 @@ class SplashActivity : BaseViewModelActivity<SplashViewModel>() {
                 viewModel.finishModel.observeNotNullAndTrue {
                     startActivity<MainActivity>(true)
                 }
+                if(isDownloadSpalsh){
+                    var time:Long = 3
+                    val timer = Timer()
+                    val task = object : TimerTask(){
+                        override fun run() {
+                            runOnUiThread {
+                                main_activity_splash_skip.text = "跳过 ${time+1}"
+                            }
+                            time--
+                            if(time < 0)
+                                viewModel.finishAfter(0)
+                        }
+                    }
 
-                //如果启动时间都大于2s了，鄙人觉得就不要打开闪屏页伤害用户体验了
-                if (System.currentTimeMillis() - BaseApp.startTime < 2000) {
-                    viewModel.finishAfter(650)//设置这个值，改变闪屏页的时间。
-                } else {
+                    timer.schedule(task,time,1000)
+
+                    main_activity_splash_skip.setOnClickListener {
+                        viewModel.finishAfter(0)
+                    }
+                }else{
                     viewModel.finishAfter(0)
                 }
             }

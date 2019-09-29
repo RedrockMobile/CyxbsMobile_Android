@@ -30,7 +30,7 @@ class MainViewModel : BaseViewModel() {
                         try {
                             val now = System.currentTimeMillis() / 1000
                             val date = dateFormat.parse(startPage.start)
-                            if (now - date.time / 1000 > 0) {
+                            if (abs(date.time / 1000 - now) < 24 * 60 * 60) {
                                 return@map startPage
                             }
                         } catch (e: Throwable) {

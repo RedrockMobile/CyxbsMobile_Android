@@ -1,14 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.SplashActivity">
-
-
     <ImageView
+        android:visibility="gone"
         android:id="@+id/splash_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="8"
         android:scaleType="centerCrop" />
-</FrameLayout>
+
+    <FrameLayout
+        android:visibility="gone"
+        android:id="@+id/main_activity_splash_container"
+        android:background="@color/main_activity_splash_bottom_color"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+        <ImageView
+            android:layout_gravity="center"
+            android:src="@drawable/main_ic_splash_bottom"
+            android:layout_width="145dp"
+            android:layout_height="47dp"/>
+        <Button
+            android:id="@+id/main_activity_splash_skip"
+            android:background="@drawable/main_btn_splash_skip"
+            android:layout_gravity="end|bottom"
+            android:layout_margin="10dp"
+            android:layout_width="76dp"
+            tools:text="跳过 3"
+            android:textColor="#C0C0C0"
+            android:layout_height="38dp"/>
+    </FrameLayout>
+
+
+</LinearLayout>
