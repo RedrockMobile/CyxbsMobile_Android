@@ -47,14 +47,12 @@ class AppInitService : IntentService("AppInitService") {
 
     private fun startInit(){
         initBugly()
-        MultiDex.install(this)
         SophixManager.getInstance().queryAndLoadNewPatch()
     }
 
 
     // 子模块debug不需要bugly
     private fun initBugly() {
-        println("Umeng init")
         val packageName = applicationContext.packageName
         val processName = getProcessName(Process.myPid())
         val strategy = CrashReport.UserStrategy(applicationContext)
