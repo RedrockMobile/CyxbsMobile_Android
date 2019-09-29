@@ -1,0 +1,317 @@
+-- Merging decision tree log ---
+manifest
+ADDED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:2:1-169:12
+INJECTED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:2:1-169:12
+INJECTED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:2:1-169:12
+INJECTED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:2:1-169:12
+INJECTED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:2:1-169:12
+INJECTED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:2:1-169:12
+INJECTED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:2:1-169:12
+	package
+		ADDED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:3:5-36
+		INJECTED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml
+		INJECTED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml
+	android:versionName
+		ADDED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:5:5-30
+		INJECTED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml
+		INJECTED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml
+	xmlns:android
+		ADDED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:2:11-69
+	android:versionCode
+		ADDED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:4:5-28
+		INJECTED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml
+		INJECTED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml
+uses-permission#android.permission.INTERNET
+ADDED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:7:5-67
+	android:name
+		ADDED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:7:22-64
+uses-permission#android.permission.ACCESS_NETWORK_STATE
+ADDED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:8:5-79
+	android:name
+		ADDED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:8:22-76
+uses-permission#android.permission.ACCESS_WIFI_STATE
+ADDED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:9:5-76
+	android:name
+		ADDED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:9:22-73
+uses-permission#android.permission.WRITE_EXTERNAL_STORAGE
+ADDED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:10:5-81
+	android:name
+		ADDED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:10:22-78
+uses-permission#android.permission.WAKE_LOCK
+ADDED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:11:5-68
+	android:name
+		ADDED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:11:22-65
+uses-permission#android.permission.READ_PHONE_STATE
+ADDED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:12:5-75
+	android:name
+		ADDED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:12:22-72
+uses-permission#android.permission.BROADCAST_PACKAGE_ADDED
+ADDED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:13:5-82
+	android:name
+		ADDED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:13:22-79
+uses-permission#android.permission.BROADCAST_PACKAGE_CHANGED
+ADDED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:14:5-84
+	android:name
+		ADDED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:14:22-81
+uses-permission#android.permission.BROADCAST_PACKAGE_INSTALL
+ADDED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:15:5-84
+	android:name
+		ADDED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:15:22-81
+uses-permission#android.permission.BROADCAST_PACKAGE_REPLACED
+ADDED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:16:5-85
+	android:name
+		ADDED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:16:22-82
+uses-permission#android.permission.RESTART_PACKAGES
+ADDED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:17:5-75
+	android:name
+		ADDED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:17:22-72
+uses-permission#android.permission.GET_TASKS
+ADDED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:18:5-68
+	android:name
+		ADDED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:18:22-65
+uses-permission#android.permission.RECEIVE_BOOT_COMPLETED
+ADDED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:19:5-81
+	android:name
+		ADDED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:19:22-78
+uses-permission#android.permission.CHANGE_NETWORK_STATE
+ADDED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:20:5-79
+	android:name
+		ADDED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:20:22-76
+uses-permission#android.permission.CHANGE_WIFI_STATE
+ADDED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:21:5-76
+	android:name
+		ADDED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:21:22-73
+application
+ADDED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:23:5-167:19
+service#com.taobao.accs.ChannelService
+ADDED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:25:9-35:19
+	android:process
+		ADDED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:28:13-39
+	android:exported
+		ADDED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:27:13-36
+	android:name
+		ADDED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:26:13-58
+intent-filter#action:name:com.taobao.accs.intent.action.SERVICE
+ADDED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:29:13-31:29
+action#com.taobao.accs.intent.action.SERVICE
+ADDED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:30:17-80
+	android:name
+		ADDED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:30:25-77
+intent-filter#action:name:com.taobao.accs.intent.action.ELECTION
+ADDED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:32:13-34:29
+action#com.taobao.accs.intent.action.ELECTION
+ADDED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:33:17-81
+	android:name
+		ADDED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:33:25-78
+service#com.taobao.accs.data.MsgDistributeService
+ADDED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:37:9-43:19
+	android:exported
+		ADDED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:39:13-36
+	android:name
+		ADDED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:38:13-69
+intent-filter#action:name:com.taobao.accs.intent.action.RECEIVE
+ADDED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:40:13-42:29
+action#com.taobao.accs.intent.action.RECEIVE
+ADDED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:41:17-80
+	android:name
+		ADDED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:41:25-77
+receiver#com.taobao.accs.EventReceiver
+ADDED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:45:9-61:20
+	android:process
+		ADDED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:47:13-39
+	android:name
+		ADDED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:46:13-57
+intent-filter#action:name:android.intent.action.BOOT_COMPLETED
+ADDED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:48:13-50:29
+action#android.intent.action.BOOT_COMPLETED
+ADDED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:49:17-79
+	android:name
+		ADDED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:49:25-76
+intent-filter#action:name:android.net.conn.CONNECTIVITY_CHANGE
+ADDED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:51:13-53:29
+action#android.net.conn.CONNECTIVITY_CHANGE
+ADDED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:52:17-79
+	android:name
+		ADDED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:52:25-76
+intent-filter#action:name:android.intent.action.PACKAGE_REMOVED+data:scheme:package
+ADDED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:54:13-57:29
+action#android.intent.action.PACKAGE_REMOVED
+ADDED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:55:17-80
+	android:name
+		ADDED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:55:25-77
+data
+ADDED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:56:17-50
+	android:scheme
+		ADDED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:56:23-47
+intent-filter#action:name:android.intent.action.USER_PRESENT
+ADDED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:58:13-60:29
+action#android.intent.action.USER_PRESENT
+ADDED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:59:17-77
+	android:name
+		ADDED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:59:25-74
+receiver#com.taobao.accs.ServiceReceiver
+ADDED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:63:9-72:20
+	android:process
+		ADDED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:65:13-39
+	android:name
+		ADDED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:64:13-59
+intent-filter#action:name:com.taobao.accs.intent.action.COMMAND
+ADDED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:66:13-68:29
+action#com.taobao.accs.intent.action.COMMAND
+ADDED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:67:17-80
+	android:name
+		ADDED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:67:25-77
+intent-filter#action:name:com.taobao.accs.intent.action.START_FROM_AGOO
+ADDED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:69:13-71:29
+action#com.taobao.accs.intent.action.START_FROM_AGOO
+ADDED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:70:17-88
+	android:name
+		ADDED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:70:25-85
+service#com.taobao.accs.internal.AccsJobService
+ADDED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:74:9-77:41
+	android:process
+		ADDED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:77:13-39
+	android:permission
+		ADDED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:76:13-69
+	android:name
+		ADDED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:75:13-67
+service#com.taobao.accs.ChannelService$KernelService
+ADDED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:79:9-81:42
+	android:process
+		ADDED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:81:13-39
+	android:name
+		ADDED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:80:13-72
+service#org.android.agoo.accs.AgooService
+ADDED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:83:9-89:19
+	android:exported
+		ADDED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:85:13-36
+	android:name
+		ADDED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:84:13-61
+service#com.umeng.message.UmengIntentService
+ADDED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:91:9-98:19
+	android:process
+		ADDED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:94:13-39
+	android:exported
+		ADDED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:93:13-36
+	android:name
+		ADDED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:92:13-64
+intent-filter#action:name:org.agoo.android.intent.action.RECEIVE
+ADDED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:95:13-97:29
+action#org.agoo.android.intent.action.RECEIVE
+ADDED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:96:17-81
+	android:name
+		ADDED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:96:25-78
+service#com.umeng.message.XiaomiIntentService
+ADDED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:100:9-107:19
+	android:process
+		ADDED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:103:13-39
+	android:exported
+		ADDED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:102:13-36
+	android:name
+		ADDED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:101:13-65
+receiver#com.taobao.agoo.AgooCommondReceiver
+ADDED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:109:9-120:20
+	android:process
+		ADDED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:112:13-39
+	android:exported
+		ADDED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:111:13-36
+	android:name
+		ADDED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:110:13-63
+intent-filter#action:name:${applicationId}.intent.action.COMMAND
+ADDED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:113:13-115:29
+action#${applicationId}.intent.action.COMMAND
+ADDED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:114:17-81
+	android:name
+		ADDED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:114:25-78
+service#com.umeng.message.UmengMessageIntentReceiverService
+ADDED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:122:9-129:19
+	android:process
+		ADDED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:125:13-39
+	android:exported
+		ADDED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:124:13-36
+	android:name
+		ADDED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:123:13-79
+intent-filter#action:name:org.android.agoo.client.MessageReceiverService
+ADDED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:126:13-128:29
+action#org.android.agoo.client.MessageReceiverService
+ADDED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:127:17-89
+	android:name
+		ADDED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:127:25-86
+receiver#com.umeng.message.NotificationProxyBroadcastReceiver
+ADDED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:131:9-133:40
+	android:exported
+		ADDED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:133:13-37
+	android:name
+		ADDED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:132:13-80
+service#com.umeng.message.UmengMessageCallbackHandlerService
+ADDED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:135:9-154:19
+	android:exported
+		ADDED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:138:13-37
+	android:permission
+		ADDED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:137:13-69
+	android:name
+		ADDED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:136:13-80
+intent-filter#action:name:com.umeng.messge.registercallback.action
+ADDED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:139:13-141:29
+action#com.umeng.messge.registercallback.action
+ADDED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:140:17-83
+	android:name
+		ADDED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:140:25-80
+intent-filter#action:name:com.umeng.message.enablecallback.action
+ADDED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:142:13-144:29
+action#com.umeng.message.enablecallback.action
+ADDED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:143:17-82
+	android:name
+		ADDED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:143:25-79
+intent-filter#action:name:com.umeng.message.disablecallback.action
+ADDED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:145:13-147:29
+action#com.umeng.message.disablecallback.action
+ADDED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:146:17-83
+	android:name
+		ADDED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:146:25-80
+intent-filter#action:name:com.umeng.message.message.handler.action
+ADDED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:148:13-150:29
+action#com.umeng.message.message.handler.action
+ADDED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:149:17-83
+	android:name
+		ADDED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:149:25-80
+intent-filter#action:name:com.umeng.message.message.sendmessage.action
+ADDED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:151:13-153:29
+action#com.umeng.message.message.sendmessage.action
+ADDED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:152:17-87
+	android:name
+		ADDED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:152:25-84
+service#com.umeng.message.UmengDownloadResourceService
+ADDED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:156:9-159:40
+	android:exported
+		ADDED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:159:13-37
+	android:permission
+		ADDED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:158:13-69
+	android:name
+		ADDED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:157:13-74
+provider#com.umeng.message.provider.MessageProvider
+ADDED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:161:9-166:20
+	android:authorities
+		ADDED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:163:13-65
+	android:exported
+		ADDED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:164:13-37
+	android:name
+		ADDED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:162:13-70
+grant-uri-permission
+ADDED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:165:13-62
+	android:pathPattern
+		ADDED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml:165:35-59
+uses-sdk
+INJECTED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml reason: use-sdk injection requested
+INJECTED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml
+INJECTED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml
+INJECTED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml
+INJECTED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml
+	android:targetSdkVersion
+		INJECTED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml
+		ADDED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml
+		INJECTED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml
+	android:minSdkVersion
+		INJECTED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml
+		ADDED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml
+		INJECTED from /Users/fxy/Android/redrock/CyxbsMobile_Android/push_sdk/AndroidManifest.xml

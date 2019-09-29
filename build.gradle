@@ -15,6 +15,9 @@ buildscript {
         google()
         jcenter()
         maven { url 'http://maven.aliyun.com/nexus/content/repositories/releases/' }
+
+
+        maven { url 'https://dl.bintray.com/umsdk/release' }
     }
 
     dependencies {
@@ -35,6 +38,10 @@ allprojects {
         mavenCentral()
         maven { url 'https://jitpack.io' }
         maven { url 'http://maven.aliyun.com/nexus/content/repositories/releases/' }
+        maven { url 'https://dl.bintray.com/umsdk/release' }
+        flatDir {
+            dirs 'libs' //this way we can find the .aar file in libs folder
+        }
     }
 }
 

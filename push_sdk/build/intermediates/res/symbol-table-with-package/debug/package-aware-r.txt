@@ -1,0 +1,10 @@
+com.umeng.message.lib
+id notification_bar_image
+id notification_large_icon1
+id notification_large_icon2
+id notification_text
+id notification_title
+id upush_notification1
+id upush_notification2
+layout upush_bar_image_notification
+layout upush_notification
