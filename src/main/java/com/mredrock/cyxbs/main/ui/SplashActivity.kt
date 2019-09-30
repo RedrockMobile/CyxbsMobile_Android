@@ -1,6 +1,7 @@
 package com.mredrock.cyxbs.main.ui
 
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.util.Log
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -14,13 +15,12 @@ import com.mredrock.cyxbs.common.config.URI_PATH_QA_ANSWER
 import com.mredrock.cyxbs.common.config.URI_PATH_QA_QUESTION
 import com.mredrock.cyxbs.common.event.AskLoginEvent
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
-import com.mredrock.cyxbs.common.utils.extensions.gone
+import com.mredrock.cyxbs.common.utils.LogUtils
+import com.mredrock.cyxbs.common.utils.extensions.*
 import com.mredrock.cyxbs.common.viewmodel.event.SingleLiveEvent
 import com.mredrock.cyxbs.main.R
 import com.mredrock.cyxbs.main.viewmodel.SplashViewModel
 import org.greenrobot.eventbus.EventBus
-import com.mredrock.cyxbs.common.utils.extensions.setFullScreen
-import com.mredrock.cyxbs.common.utils.extensions.visible
 import com.mredrock.cyxbs.main.utils.getSplashFile
 import com.mredrock.cyxbs.main.utils.isDownloadSplash
 import kotlinx.android.synthetic.main.main_activity_splash.*
@@ -34,12 +34,12 @@ class SplashActivity : BaseViewModelActivity<SplashViewModel>() {
     override val isFragmentActivity = false
     override val viewModelClass = SplashViewModel::class.java
 
-    private var isDownloadSpalsh = false
-
     companion object {
         const val SPLASH_PHOTO_NAME = "splash_photo.jpg"
         const val SPLASH_PHOTO_LOCATION = "splash_store_location"
     }
+
+    private var isDownloadSplash: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,16 +47,21 @@ class SplashActivity : BaseViewModelActivity<SplashViewModel>() {
         setFullScreen()
 
         //判断是否下载了Splash图，下载了就直接设置
-        if (isDownloadSplash()) {
+        isDownloadSplash = if (isDownloadSplash()) {
             splash_view.visible()//防止图片拉伸
             main_activity_splash_container.visible()
+
             Glide.with(applicationContext)
                     .load(getSplashFile())
                     .apply(RequestOptions()
                             .centerCrop()
                             .diskCacheStrategy(DiskCacheStrategy.NONE))
                     .into(splash_view)
-            isDownloadSpalsh = true
+            true
+        }else{
+            splash_view.gone()//防止图片拉伸
+            main_activity_splash_container.gone()
+            false
         }
 
         val uri = intent.data
@@ -75,29 +80,29 @@ class SplashActivity : BaseViewModelActivity<SplashViewModel>() {
 
             }
             else -> {
+
                 viewModel.finishModel.observeNotNullAndTrue {
                     startActivity<MainActivity>(true)
                 }
-                if(isDownloadSpalsh){
-                    var time:Long = 3
-                    val timer = Timer()
-                    val task = object : TimerTask(){
-                        override fun run() {
-                            runOnUiThread {
-                                main_activity_splash_skip.text = "跳过 ${time+1}"
-                            }
-                            time--
-                            if(time < 0)
-                                viewModel.finishAfter(0)
-                        }
-                    }
 
-                    timer.schedule(task,time,1000)
+                if(isDownloadSplash){//如果下载了
+
+                    object : CountDownTimer(3000,1000){
+                        override fun onFinish() {
+                            viewModel.finishAfter(0)
+                        }
+                        override fun onTick(millisUntilFinished: Long) {
+                            runOnUiThread {
+                                main_activity_splash_skip.text = "跳过 ${millisUntilFinished/1000}"
+                            }
+                        }
+                    }.start()
 
                     main_activity_splash_skip.setOnClickListener {
                         viewModel.finishAfter(0)
                     }
-                }else{
+
+                }else{//如果没闪屏页直接打开
                     viewModel.finishAfter(0)
                 }
             }

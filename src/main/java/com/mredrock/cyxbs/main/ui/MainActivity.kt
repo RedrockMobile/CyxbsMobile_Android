@@ -17,6 +17,7 @@ import com.mredrock.cyxbs.common.event.MainVPChangeEvent
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.editor
+import com.mredrock.cyxbs.common.utils.extensions.sharedPreferences
 import com.mredrock.cyxbs.common.utils.update.UpdateEvent
 import com.mredrock.cyxbs.common.utils.update.UpdateUtils
 import com.mredrock.cyxbs.main.R
@@ -38,7 +39,9 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
 
     companion object {
         val TAG: String = MainActivity::class.java.simpleName
+        const val HAS_PERMISSION = "hasPermission"
     }
+
     override val viewModelClass = MainViewModel::class.java
 
     override val isFragmentActivity = true
@@ -61,7 +64,6 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
     private var hasPermission: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        val t1 = System.nanoTime()
         super.onCreate(savedInstanceState)
         setContentView(R.layout.main_activity_main)
         appbar = findViewById(R.id.app_bar_layout)
@@ -81,29 +83,37 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
                 "课表主页面") {
             //插屏消息关闭之后调用
         }
+
+        hasPermission = applicationContext.sharedPreferences("splash").getBoolean(HAS_PERMISSION, false)
+
         //下载Splash图
         viewModel.getStartPage()
         disposable = RxPermissions(this)
                 .request(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 .subscribe {
                     hasPermission = it
-                    viewModel.startPage
+                    viewModel.getStartPage()
+                    applicationContext.sharedPreferences("splash").editor {
+                        putBoolean(HAS_PERMISSION, true)
+                    }
                 }
-        viewModel.startPage.observe(this, Observer{starPage->
-            if(starPage != null && hasPermission){
+
+        viewModel.startPage.observe(this, Observer { starPage ->
+            if (starPage != null && hasPermission) {
                 val src = starPage.photo_src
-                if(src != null && src.startsWith("http")){//如果不为空，且url有效
+
+                if (src != null && src.startsWith("http")) {//如果不为空，且url有效
                     //对比缓存的url是否一样
-                    if(src != defaultSharedPreferences.getString(SplashActivity.SPLASH_PHOTO_NAME,"#")){
+                    if (src != applicationContext.sharedPreferences("splash").getString(SplashActivity.SPLASH_PHOTO_NAME, "#")) {
                         deleteDir(getSplashFile())
                         downloadSplash(src)
-                        defaultSharedPreferences.editor {
+                        applicationContext.sharedPreferences("splash").editor {
                             putString(SplashActivity.SPLASH_PHOTO_NAME,src)
                         }
                     }
 
-                }else{
-                    if(isDownloadSplash()){//如果url为空，则删除之前下载的图片
+                } else {
+                    if (isDownloadSplash()) {//如果url为空，则删除之前下载的图片
                         deleteDir(getSplashFile())
                     }
                 }
