@@ -2,7 +2,7 @@ package com.mredrock.cyxbs.discover.schoolcar
 
 import android.os.Build
 import android.os.Bundle
-import android.support.annotation.RequiresApi
+import androidx.annotation.RequiresApi
 import com.mredrock.cyxbs.common.ui.BaseActivity
 import com.mredrock.cyxbs.schoolcar.R
 

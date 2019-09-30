@@ -20,7 +20,7 @@
 
         <meta-data
             android:name="com.amap.api.v2.apikey"
-            android:value="0fc2f79348ec91d8c8079bc78df0ee1d"/>
+            android:value="${amap_apikey}"/>
 
         <service android:name="com.amap.api.location.APSService" />
     </application>

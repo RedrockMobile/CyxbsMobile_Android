@@ -12,6 +12,7 @@ import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.discover.schoolcar.Interface.SchoolCarInterface
+import com.mredrock.cyxbs.discover.schoolcar.SchoolCarActivity.Companion.LOST_SERVICES
 import com.mredrock.cyxbs.discover.schoolcar.SchoolCarActivity.Companion.TIME_OUT
 import com.mredrock.cyxbs.discover.schoolcar.network.ApiService
 import okio.ByteString
@@ -24,16 +25,13 @@ import java.util.*
  * Created by glossimar on 2018/9/12
  */
 
-class SchoolcarsSmoothMove(schoolCarMap: SchoolCarMap?, activity: Activity) {
+class SchoolCarsSmoothMove(private val schoolCarMap: SchoolCarMap?, private val activity: Activity) {
     private var carAngle: Double = 0.toDouble()
-
-    private val activity: Activity
-    private val schoolCarMap: SchoolCarMap
 
     private lateinit var carInterface: SchoolCarInterface
 
     private var checkTimeList: Boolean = true              //是否需要检查当前时间是否为校车运营时间
-    private lateinit var timeList: MutableList<String>      //储存接口每次返回的校车最后运行时间的List
+    private var timeList: MutableList<String>      //储存接口每次返回的校车最后运行时间的List
 
     //3辆校车的经纬度的List
     private var smoothMoveList1: MutableList<LatLng>
@@ -41,8 +39,6 @@ class SchoolcarsSmoothMove(schoolCarMap: SchoolCarMap?, activity: Activity) {
     private var smoothMoveList3: MutableList<LatLng>
 
     init {
-        this.schoolCarMap = schoolCarMap!!
-        this.activity = activity
         timeList = mutableListOf()
         smoothMoveList1 = mutableListOf()
         smoothMoveList2 = mutableListOf()
@@ -86,7 +82,7 @@ class SchoolcarsSmoothMove(schoolCarMap: SchoolCarMap?, activity: Activity) {
      * 在地图上绘出校车轨迹
      */
     private fun drawTraceLine(aMap: AMap?, smoothMoveList: MutableList<LatLng>) {
-        val polyline = aMap!!.addPolyline(PolylineOptions()
+        aMap!!.addPolyline(PolylineOptions()
                 .addAll(smoothMoveList.subList(0, smoothMoveList.size - 1))
                 .width(8f)
                 .color(Color.argb(255, 93, 152, 255)))
@@ -102,7 +98,7 @@ class SchoolcarsSmoothMove(schoolCarMap: SchoolCarMap?, activity: Activity) {
             val currentAngle = carAngle
             if (Math.abs(nextOrientation - currentAngle) > errorRange) {
                 carAngle = nextOrientation
-                val computAngle = computRotateAngle(currentAngle, nextOrientation).toFloat()
+                val computAngle = computeRotateAngle(currentAngle, nextOrientation).toFloat()
                 if (marker.marker != null) {
                     val makerLocal = marker.marker
                     makerLocal.rotateAngle = marker.marker.rotateAngle + computAngle
@@ -116,7 +112,7 @@ class SchoolcarsSmoothMove(schoolCarMap: SchoolCarMap?, activity: Activity) {
      */
     fun smoothMove(smoothMoveMarkers: MutableList<SmoothMoveMarker>, bitmapChanged: Bitmap) {
         if (smoothMoveList1.size > 0 || smoothMoveList2.size > 0) {
-            val smoothMarker = SmoothMoveMarker(schoolCarMap.aMap)
+            val smoothMarker = SmoothMoveMarker(schoolCarMap?.aMap)
             smoothMoveMarkers.add(smoothMarker)
             val carAmount = smoothMoveMarkers.size - 1
             smoothMoveMarkers[carAmount].setDescriptor(BitmapDescriptorFactory.fromBitmap(bitmapChanged))
@@ -128,7 +124,7 @@ class SchoolcarsSmoothMove(schoolCarMap: SchoolCarMap?, activity: Activity) {
                 smoothMoveMarkers[carAmount].setPoints(getSmoothMoveList(carAmount).subList(getSmoothMoveList(carAmount).size - 1, getSmoothMoveList(carAmount).size - 1))
             }
             smoothMoveMarkers[carAmount].setTotalDuration(2)
-            drawTraceLine(schoolCarMap.aMap, getSmoothMoveList(carAmount))
+            drawTraceLine(schoolCarMap?.aMap, getSmoothMoveList(carAmount))
             smoothMoveMarkers[carAmount].startSmoothMove()
         }
 
@@ -167,7 +163,7 @@ class SchoolcarsSmoothMove(schoolCarMap: SchoolCarMap?, activity: Activity) {
     /**
      * 计算RotateAngle
      */
-    private fun computRotateAngle(currentAngle: Double, nextAngle: Double): Double {
+    private fun computeRotateAngle(currentAngle: Double, nextAngle: Double): Double {
         return nextAngle - currentAngle
 
     }

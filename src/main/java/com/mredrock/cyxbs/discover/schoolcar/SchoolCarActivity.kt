@@ -9,13 +9,13 @@ import android.graphics.Color
 import android.graphics.Matrix
 import android.os.Bundle
 import android.os.PersistableBundle
-import android.support.v4.app.ActivityCompat
-import android.support.v4.content.ContextCompat
 import android.view.Menu
 import android.view.MenuItem
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.RelativeLayout
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.amap.api.location.AMapLocationClient
 import com.amap.api.location.AMapLocationClientOption
@@ -33,7 +33,7 @@ import com.mredrock.cyxbs.discover.schoolcar.Interface.SchoolCarInterface
 import com.mredrock.cyxbs.discover.schoolcar.bean.SchoolCarLocation
 import com.mredrock.cyxbs.discover.schoolcar.widget.ExploreSchoolCarDialog
 import com.mredrock.cyxbs.discover.schoolcar.widget.SchoolCarMap
-import com.mredrock.cyxbs.discover.schoolcar.widget.SchoolcarsSmoothMove
+import com.mredrock.cyxbs.discover.schoolcar.widget.SchoolCarsSmoothMove
 import com.mredrock.cyxbs.schoolcar.R
 import io.reactivex.Observable
 import io.reactivex.Observer
@@ -61,7 +61,7 @@ class SchoolCarActivity : BaseActivity() {
 
         const val ADD_TIMER: Long = 3
         const val ADD_TIMER_AND_SHOW_MAP: Long = 55
-        const val NOT_ADD_Timer: Long = 0
+        const val NOT_ADD_TIMER: Long = 0
     }
 
     var ifLocation = true
@@ -72,7 +72,7 @@ class SchoolCarActivity : BaseActivity() {
     private lateinit var makerBitmap: Bitmap
     private lateinit var holeSchoolButton: ImageView
     private var schoolCarMap: SchoolCarMap? = null
-    private var smoothMoveData: SchoolcarsSmoothMove? = null
+    private var smoothMoveData: SchoolCarsSmoothMove? = null
     private lateinit var smoothMoveMarkers: MutableList<SmoothMoveMarker>
     private lateinit var locationClient: AMapLocationClient
     private var disposable: Disposable? = null
@@ -187,7 +187,7 @@ class SchoolCarActivity : BaseActivity() {
      */
     private fun initView() {
         makerBitmap = getSmoothMakerBitmap()
-        smoothMoveData = SchoolcarsSmoothMove(schoolCarMap!!, this@SchoolCarActivity)
+        smoothMoveData = SchoolCarsSmoothMove(schoolCarMap!!, this@SchoolCarActivity)
 
         smoothMoveData!!.setCarMapInterface(object : SchoolCarInterface {
             override fun initLocationMapButton(aMap: AMap, locationStyle: MyLocationStyle) {}
@@ -195,6 +195,11 @@ class SchoolCarActivity : BaseActivity() {
             // 回调是否显示地图，和是否开启一个timer轮询接口
             override fun processLocationInfo(carLocationInfo: SchoolCarLocation, aLong: Long) {
                 dataList = carLocationInfo.data
+                if (dataList[0] == null) {
+                    ExploreSchoolCarDialog.show(this@SchoolCarActivity, LOST_SERVICES)
+                    if (disposable != null) disposable!!.dispose()
+                    return
+                }
                 if (aLong == ADD_TIMER) {
                     timer("initView")
                 }
@@ -237,7 +242,7 @@ class SchoolCarActivity : BaseActivity() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater?.inflate(R.menu.schoolcar_menu, menu)
+        menuInflater.inflate(R.menu.schoolcar_menu, menu)
         menu?.getItem(0)?.setOnMenuItemClickListener(menuListener)
         return super.onCreateOptionsMenu(menu)
     }
@@ -265,8 +270,9 @@ class SchoolCarActivity : BaseActivity() {
 
     /**
      * timer 用来轮询接口时调用
+     * @param name 标识独立轮询
      */
-    private fun timer(int: String) {
+    private fun timer(name: String) {
         Observable.interval(5, TimeUnit.SECONDS)
                 .doOnNext {
                     for (i in smoothMoveMarkers.indices) smoothMoveMarkers[i].removeMarker()
@@ -278,7 +284,7 @@ class SchoolCarActivity : BaseActivity() {
                         }
                         i++
                     }
-                    smoothMoveData!!.loadCarLocation(NOT_ADD_Timer)
+                    smoothMoveData!!.loadCarLocation(NOT_ADD_TIMER)
 
                 }.observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<Long> {
                     override fun onSubscribe(d: Disposable) {
