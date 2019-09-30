@@ -12,6 +12,9 @@ apply plugin: 'walle'
 
 apply from: secret
 
+apply from: 'andresguard.gradle'
+apply from: 'redex.gradle'
+
 android {
     compileSdkVersion build_versions.compile_sdk
     buildToolsVersion build_versions.build_tools
@@ -46,6 +49,7 @@ android {
             abiFilters 'armeabi'
         }
 
+        resConfigs "en", "xxhdpi", "ldltr", "desk"
     }
 
     dexOptions {
@@ -112,6 +116,11 @@ android {
         exclude 'META-INF/MANIFEST.MF'
         exclude 'META-INF/NOTICE.txt'
         exclude 'META-INF/rxjava.properties'
+
+        exclude 'lib/armeabi/libAMapSDK_MAP_v6_9_4.so'
+        exclude 'lib/armeabi/libsophix.so'
+        exclude 'lib/armeabi/libBugly.so'
+        exclude 'lib/armeabi/libpl_droidsonroids_gif.so'
 
         doNotStrip '*/mips/*.so'
         doNotStrip '*/mips64/*.so'
