@@ -33,6 +33,7 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.jetbrains.anko.defaultSharedPreferences
 import org.jetbrains.anko.dip
+import java.lang.IndexOutOfBoundsException
 
 @Route(path = MAIN_MAIN)
 class MainActivity : BaseViewModelActivity<MainViewModel>() {
@@ -137,7 +138,13 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
                 common_toolbar.title = menuItem.title
 
                 menu?.clear()
-                fragments[position].onPrepareOptionsMenu(menu)
+
+                try{//防止用户点击过快，IdleHandler还未触发，未懒加载完成fragment
+                    fragments[position].onPrepareOptionsMenu(menu)
+                }catch (e: IndexOutOfBoundsException){
+                    e.printStackTrace()
+                }
+
                 EventBus.getDefault().post(MainVPChangeEvent(position))
                 appbar.setExpanded(true)
             }
@@ -149,17 +156,19 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
     }
 
     private fun initFragments() {
+        //只添加课表的fragment，一次性加入四个fragment又不lazy load的话打开改Activity的时间很长。
         fragments.add(getFragment(COURSE_ENTRY))
         adapter = MainVpAdapter(supportFragmentManager, fragments)
         view_pager.adapter = adapter
         view_pager.offscreenPageLimit = 4
 
+        //不想侵入其他模块的代码，这里定义为事件消耗完成时使用IdleHandler触发加载fragment事件，此时视图应可见
         Looper.myQueue().addIdleHandler {
             fragments.add(getFragment(QA_ENTRY))
             fragments.add(getFragment(DISCOVER_ENTRY))
             fragments.add(getFragment(MINE_ENTRY))
             adapter.notifyDataSetChanged()
-            false
+            false//返回false，则之后不再触发
         }
     }
 
