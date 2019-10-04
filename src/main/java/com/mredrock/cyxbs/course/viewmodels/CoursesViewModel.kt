@@ -8,9 +8,7 @@ import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.config.SP_WIDGET_NEED_FRESH
 import com.mredrock.cyxbs.common.config.WIDGET_COURSE
 import com.mredrock.cyxbs.common.network.ApiGenerator
-import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.SchoolCalendar
-import com.mredrock.cyxbs.common.utils.encrypt.md5Encoding
 import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
 import com.mredrock.cyxbs.common.utils.extensions.editor
 import com.mredrock.cyxbs.common.utils.extensions.errorHandler
@@ -215,11 +213,11 @@ class CoursesViewModel : ViewModel() {
                 .subscribe(ExecuteOnceObserver(onExecuteOnceNext = { affairsFromDatabase ->
 
                     if (affairsFromDatabase != null && affairsFromDatabase.isNotEmpty()) {
-                        var tag = ""
+                        val tag = TreeSet<String>()
                         for (c in affairsFromDatabase) {
-                            tag += "${c.affairDates}${c.course}${c.classroom}"
+                            tag.add("${c.affairDates}+${c.course}+${c.classroom}")
                         }
-                        nextAffairs = tag
+                        nextAffairs = tag.toString()
                         mCourses.addAll(affairsFromDatabase)
                     }
                     isGetAllData(1)
@@ -277,11 +275,11 @@ class CoursesViewModel : ViewModel() {
                 .errorHandler()
                 .subscribe(ExecuteOnceObserver(onExecuteOnceNext = { affairsFromInternet ->
                     affairsFromInternet.data?.let { notNullAffairs ->
-                        var tag = ""
+                        var tag = TreeSet<String>()
                         for (c in notNullAffairs) {
-                            tag += "${c.date}${c.title}${c.content}"
+                            tag.add("${c.date}+${c.title}+${c.content}")
                         }
-                        nextAffairs = tag
+                        nextAffairs = tag.toString()
                         //将从服务器上获取的事务映射为课程信息。
                         Observable.create(ObservableOnSubscribe<List<Affair>> {
                             it.onNext(notNullAffairs)
