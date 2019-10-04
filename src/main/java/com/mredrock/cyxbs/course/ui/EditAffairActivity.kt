@@ -100,10 +100,6 @@ class EditAffairActivity : BaseActivity() {
                 Toast.makeText(this, resources.getString(R.string.course_title_is_null),
                         Toast.LENGTH_SHORT).show()
             }
-            TextUtils.isEmpty(mBinding.etContent.text.trim()) -> {
-                Toast.makeText(this, resources.getString(R.string.course_content_is_null),
-                        Toast.LENGTH_SHORT).show()
-            }
             mEditAffairViewModel.selectedWeekString.value ==
                     resources.getString(R.string.course_week_select) -> {
                 Toast.makeText(this, resources.getString(R.string.course_week_is_not_select),
