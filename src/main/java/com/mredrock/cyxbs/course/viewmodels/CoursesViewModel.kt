@@ -8,6 +8,7 @@ import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.config.SP_WIDGET_NEED_FRESH
 import com.mredrock.cyxbs.common.config.WIDGET_COURSE
 import com.mredrock.cyxbs.common.network.ApiGenerator
+import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.SchoolCalendar
 import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
 import com.mredrock.cyxbs.common.utils.extensions.editor
@@ -217,7 +218,10 @@ class CoursesViewModel : ViewModel() {
                         for (c in affairsFromDatabase) {
                             tag.add("${c.affairDates}+${c.course}+${c.classroom}")
                         }
-                        nextAffairs = tag.toString()
+                        nextAffairs = if(!tag.isEmpty())
+                            tag.toString()
+                        else
+                            ""
                         mCourses.addAll(affairsFromDatabase)
                     }
                     isGetAllData(1)
@@ -275,11 +279,15 @@ class CoursesViewModel : ViewModel() {
                 .errorHandler()
                 .subscribe(ExecuteOnceObserver(onExecuteOnceNext = { affairsFromInternet ->
                     affairsFromInternet.data?.let { notNullAffairs ->
-                        var tag = TreeSet<String>()
+                        val tag = TreeSet<String>()
                         for (c in notNullAffairs) {
                             tag.add("${c.date}+${c.title}+${c.content}")
                         }
-                        nextAffairs = tag.toString()
+                        //我也不知道为什么从数据库和从本地两个toString()方法返回不一样
+                        nextAffairs = if(!tag.isEmpty())
+                            tag.toString()
+                        else
+                            ""
                         //将从服务器上获取的事务映射为课程信息。
                         Observable.create(ObservableOnSubscribe<List<Affair>> {
                             it.onNext(notNullAffairs)
@@ -312,6 +320,7 @@ class CoursesViewModel : ViewModel() {
         if (mDataGetStatus[0] && mDataGetStatus[1]) {
             // 如果mCourses为空的话就不用赋值给courses。防止由于网络请求有问题而导致刷新数据为空。
             if (mCourses.isNotEmpty()) {
+                LogUtils.d("MyTag","aff: now:$nowAffairs next:$nextAffairs")
                 if (nowCourses != nextCourses || nowAffairs != nextAffairs) {
                     courses.value = mCourses
                     nowCourses = nextCourses
