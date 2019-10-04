@@ -2,7 +2,6 @@ package com.mredrock.cyxbs.main.ui
 
 import android.os.Bundle
 import android.os.CountDownTimer
-import android.util.Log
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.alibaba.android.arouter.launcher.ARouter
@@ -15,7 +14,6 @@ import com.mredrock.cyxbs.common.config.URI_PATH_QA_ANSWER
 import com.mredrock.cyxbs.common.config.URI_PATH_QA_QUESTION
 import com.mredrock.cyxbs.common.event.AskLoginEvent
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
-import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.*
 import com.mredrock.cyxbs.common.viewmodel.event.SingleLiveEvent
 import com.mredrock.cyxbs.main.R
@@ -24,9 +22,6 @@ import org.greenrobot.eventbus.EventBus
 import com.mredrock.cyxbs.main.utils.getSplashFile
 import com.mredrock.cyxbs.main.utils.isDownloadSplash
 import kotlinx.android.synthetic.main.main_activity_splash.*
-import java.sql.Time
-import java.util.*
-import kotlin.concurrent.schedule
 
 
 class SplashActivity : BaseViewModelActivity<SplashViewModel>() {
@@ -47,18 +42,18 @@ class SplashActivity : BaseViewModelActivity<SplashViewModel>() {
         setFullScreen()
 
         //判断是否下载了Splash图，下载了就直接设置
-        isDownloadSplash = if (isDownloadSplash()) {
+        isDownloadSplash = if (isDownloadSplash(this@SplashActivity)) {
             splash_view.visible()//防止图片拉伸
             main_activity_splash_container.visible()
 
             Glide.with(applicationContext)
-                    .load(getSplashFile())
+                    .load(getSplashFile(this@SplashActivity))
                     .apply(RequestOptions()
                             .centerCrop()
                             .diskCacheStrategy(DiskCacheStrategy.NONE))
                     .into(splash_view)
             true
-        }else{
+        } else {
             splash_view.gone()//防止图片拉伸
             main_activity_splash_container.gone()
             false
@@ -85,15 +80,16 @@ class SplashActivity : BaseViewModelActivity<SplashViewModel>() {
                     startActivity<MainActivity>(true)
                 }
 
-                if(isDownloadSplash){//如果下载了
+                if (isDownloadSplash) {//如果下载了
 
-                    object : CountDownTimer(3000,1000){
+                    object : CountDownTimer(3000, 1000) {
                         override fun onFinish() {
                             viewModel.finishAfter(0)
                         }
+
                         override fun onTick(millisUntilFinished: Long) {
                             runOnUiThread {
-                                main_activity_splash_skip.text = "跳过 ${millisUntilFinished/1000}"
+                                main_activity_splash_skip.text = "跳过 ${millisUntilFinished / 1000}"
                             }
                         }
                     }.start()
@@ -102,7 +98,7 @@ class SplashActivity : BaseViewModelActivity<SplashViewModel>() {
                         viewModel.finishAfter(0)
                     }
 
-                }else{//如果没闪屏页直接打开
+                } else {//如果没闪屏页直接打开
                     viewModel.finishAfter(0)
                 }
             }

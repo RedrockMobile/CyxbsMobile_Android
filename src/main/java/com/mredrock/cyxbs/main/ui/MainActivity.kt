@@ -2,10 +2,8 @@ package com.mredrock.cyxbs.main.ui
 
 import android.os.Bundle
 import android.os.Looper
-import android.util.Log
 import android.view.MenuItem
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
 import com.google.android.material.appbar.AppBarLayout
@@ -15,7 +13,6 @@ import com.mredrock.cyxbs.common.config.*
 import com.mredrock.cyxbs.common.event.GoToDiscoverEvent
 import com.mredrock.cyxbs.common.event.MainVPChangeEvent
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
-import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.editor
 import com.mredrock.cyxbs.common.utils.extensions.sharedPreferences
 import com.mredrock.cyxbs.common.utils.update.UpdateEvent
@@ -24,14 +21,11 @@ import com.mredrock.cyxbs.main.R
 import com.mredrock.cyxbs.main.ui.adapter.MainVpAdapter
 import com.mredrock.cyxbs.main.utils.*
 import com.mredrock.cyxbs.main.viewmodel.MainViewModel
-import com.tbruyelle.rxpermissions2.RxPermissions
 import com.umeng.message.inapp.InAppMessageManager
-import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.main_activity_main.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import org.jetbrains.anko.defaultSharedPreferences
 import org.jetbrains.anko.dip
 import java.lang.IndexOutOfBoundsException
 
@@ -40,7 +34,6 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
 
     companion object {
         val TAG: String = MainActivity::class.java.simpleName
-        const val HAS_PERMISSION = "hasPermission"
     }
 
     override val viewModelClass = MainViewModel::class.java
@@ -61,8 +54,6 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
 
     private val fragments = ArrayList<Fragment>()
     private lateinit var adapter: MainVpAdapter
-    private lateinit var disposable: Disposable
-    private var hasPermission: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -85,41 +76,36 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
             //插屏消息关闭之后调用
         }
 
-        hasPermission = applicationContext.sharedPreferences("splash").getBoolean(HAS_PERMISSION, false)
-
-        //下载Splash图
-        viewModel.getStartPage()
-        disposable = RxPermissions(this)
-                .request(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                .subscribe {
-                    hasPermission = it
-                    viewModel.getStartPage()
-                    applicationContext.sharedPreferences("splash").editor {
-                        putBoolean(HAS_PERMISSION, true)
-                    }
-                }
-
-        viewModel.startPage.observe(this, Observer { starPage ->
-            if (starPage != null && hasPermission) {
+        viewModel.startPage.observe { starPage ->
+            if (starPage != null) {
                 val src = starPage.photo_src
 
                 if (src != null && src.startsWith("http")) {//如果不为空，且url有效
                     //对比缓存的url是否一样
                     if (src != applicationContext.sharedPreferences("splash").getString(SplashActivity.SPLASH_PHOTO_NAME, "#")) {
-                        deleteDir(getSplashFile())
-                        downloadSplash(src)
+                        deleteDir(getSplashFile(this@MainActivity))
+                        downloadSplash(src, this@MainActivity)
                         applicationContext.sharedPreferences("splash").editor {
-                            putString(SplashActivity.SPLASH_PHOTO_NAME,src)
+                            putString(SplashActivity.SPLASH_PHOTO_NAME, src)
                         }
                     }
 
-                } else {
-                    if (isDownloadSplash()) {//如果url为空，则删除之前下载的图片
-                        deleteDir(getSplashFile())
-                    }
+                } else { //src非法
+                    deleteSplash()
                 }
+            } else { //不显示图片的时候
+                deleteSplash()
             }
-        })
+        }
+
+        //下载Splash图
+        viewModel.getStartPage()
+    }
+
+    private fun deleteSplash() {
+        if (isDownloadSplash(this@MainActivity)) {//如果url为空，则删除之前下载的图片
+            deleteDir(getSplashFile(this@MainActivity))
+        }
     }
 
     private fun initBottomNavigationView() {
@@ -139,9 +125,9 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
 
                 menu?.clear()
 
-                try{//防止用户点击过快，IdleHandler还未触发，未懒加载完成fragment
+                try {//防止用户点击过快，IdleHandler还未触发，未懒加载完成fragment
                     fragments[position].onPrepareOptionsMenu(menu)
-                }catch (e: IndexOutOfBoundsException){
+                } catch (e: IndexOutOfBoundsException) {
                     e.printStackTrace()
                 }
 
@@ -184,10 +170,5 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun installUpdate(event: UpdateEvent) {
         UpdateUtils.installApk(this, updateFile)
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        disposable.dispose()
     }
 }

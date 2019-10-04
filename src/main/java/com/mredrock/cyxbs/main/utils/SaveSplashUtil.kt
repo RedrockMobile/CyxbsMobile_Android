@@ -1,8 +1,8 @@
 package com.mredrock.cyxbs.main.utils
 
+import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.os.Environment
 import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.main.ui.SplashActivity
 import okhttp3.*
@@ -10,7 +10,7 @@ import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 
-fun downloadSplash(mUrl: String) {
+fun downloadSplash(mUrl: String, context: Context) {
     val client = OkHttpClient()
     val request = Request.Builder().url(mUrl).build()
     client.newCall(request).enqueue(object : Callback {
@@ -23,8 +23,8 @@ fun downloadSplash(mUrl: String) {
                 val stream = it.byteStream()
                 val bitmap = BitmapFactory.decodeStream(stream)
 
-                val appDir = getDir()//下载目录
-                if(!appDir.exists())
+                val appDir = getDir(context)//下载目录
+                if (!appDir.exists())
                     appDir.mkdirs()
 
                 val fileName = SplashActivity.SPLASH_PHOTO_NAME
@@ -38,7 +38,7 @@ fun downloadSplash(mUrl: String) {
                     fos.flush()
                     fos.close()
 
-                } catch (e: Exception){
+                } catch (e: Exception) {
                     e.printStackTrace()
                 }
             }
@@ -49,20 +49,20 @@ fun downloadSplash(mUrl: String) {
 }
 
 //判断是否下载了Splash图
-fun isDownloadSplash(): Boolean {
-    return getSplashFile().exists()
+fun isDownloadSplash(context: Context): Boolean {
+    return getSplashFile(context).exists()
 }
 
-fun getSplashFile(): File {
-    val appDir = getDir()//下载目录
+fun getSplashFile(context: Context): File {
+    val appDir = getDir(context)//下载目录
     val fileName = SplashActivity.SPLASH_PHOTO_NAME
     return File("$appDir/$fileName")
 }
 
 //获取路径
-fun getDir(): File {
-    val pictureFolder = Environment.getExternalStorageDirectory()
-    val appDir = File(pictureFolder, SplashActivity.SPLASH_PHOTO_LOCATION)
+fun getDir(context: Context): File {
+    val pictureFolder = context.externalCacheDir
+    val appDir = File("$pictureFolder/${SplashActivity.SPLASH_PHOTO_LOCATION}")
     if (!appDir.exists()) {
         appDir.mkdirs()
     }

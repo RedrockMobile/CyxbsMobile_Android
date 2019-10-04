@@ -2,8 +2,6 @@ package com.mredrock.cyxbs.main.viewmodel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.mredrock.cyxbs.common.BaseApp
-import com.mredrock.cyxbs.common.event.OpenShareQuestionEvent
 import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.network.exception.RedrockApiException
 import com.mredrock.cyxbs.common.utils.LogUtils
@@ -40,7 +38,11 @@ class MainViewModel : BaseViewModel() {
                     throw RedrockApiException("no start page found.")
                 }
                 .setSchedulers()
-                .safeSubscribeBy { (startPage as MutableLiveData).value = it }
+                .safeSubscribeBy(onError = {
+                    (startPage as MutableLiveData).value = null
+                }, onNext = {
+                    (startPage as MutableLiveData).value = it
+                })
                 .lifeCycle()
     }
 }

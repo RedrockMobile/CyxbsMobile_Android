@@ -7,7 +7,7 @@ import java.io.Serializable
 data class StartPage(
         val id: Int,
         val target_url: String?,
-        val photo_src: String?,
+        var photo_src: String?,
         val start: String?,
         val annotation: String?,
         val column: String?
