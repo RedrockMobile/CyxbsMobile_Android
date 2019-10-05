@@ -1,8 +1,10 @@
 package com.mredrock.cyxbs.common
 
 import android.app.IntentService
+import android.app.Notification
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import com.alibaba.android.arouter.launcher.ARouter
 import com.meituan.android.walle.WalleChannelReader
 import com.mredrock.cyxbs.common.utils.CrashHandler
@@ -23,7 +25,18 @@ class BaseAppInitService : IntentService("BaseAppInitService") {
         fun init(context: Context){
             val intent = Intent(context, BaseAppInitService.javaClass)
             intent.action = ACTION_INIT_WHEN_APP_CREATE
-            context.startService(intent)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                context.startForegroundService(intent)
+            } else {
+                context.startService(intent)
+            }
+        }
+    }
+
+    override fun onCreate() {
+        super.onCreate()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            startForeground(Int.MAX_VALUE, Notification())
         }
     }
 
