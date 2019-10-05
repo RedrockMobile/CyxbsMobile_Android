@@ -116,7 +116,9 @@ class AnswerListActivity : BaseActivity() {
     }
 
     private fun initRv() {
-        swipe_refresh_layout.setOnRefreshListener { viewModel.invalidate() }
+        swipe_refresh_layout.setOnRefreshListener {
+            viewModel.invalidate()
+        }
         headerAdapter = AnswerListHeaderAdapter { answerListAdapter.resortList(it) }
         answerListAdapter = AnswerListAdapter(this).apply {
             onItemClickListener = { _, answer ->

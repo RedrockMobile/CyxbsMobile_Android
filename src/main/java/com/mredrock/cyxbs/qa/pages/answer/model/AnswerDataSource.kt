@@ -25,7 +25,8 @@ class AnswerDataSource(private val qid: String) : PageKeyedDataSource<Int, Answe
     override fun loadInitial(params: LoadInitialParams<Int>, callback: LoadInitialCallback<Int, Answer>) {
         val user = BaseApp.user!!
         ApiGenerator.getApiService(ApiService::class.java)
-                .getAnswerList(qid, 1, params.requestedLoadSize, user.stuNum!!, user.idNum!!)
+                //由于没有api文档，
+                .getAnswerList(qid, 0, 0, user.stuNum!!, user.idNum!!)
                 .mapOrThrowApiException()
                 .setSchedulers()
                 .doOnSubscribe { initialLoad.postValue(NetworkState.LOADING) }
