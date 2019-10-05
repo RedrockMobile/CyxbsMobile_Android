@@ -15,7 +15,7 @@ data class Answer(@SerializedName("comment_num")
                   private var _isPraised: String? = "",
 
                   @SerializedName("photo_thumbnail_src")
-                  val photoThumbnailSrc: String?,
+                  val photoThumbnailSrc: String? = null,
 
                   @SerializedName("gender")
                   val gender: String = "",
@@ -28,7 +28,6 @@ data class Answer(@SerializedName("comment_num")
 
                   @SerializedName("nickname")
                   val nickname: String = "",
-
                   @SerializedName("created_at")
                   val createdAt: String = "",
 
@@ -91,7 +90,7 @@ data class Answer(@SerializedName("comment_num")
             parcel.readString(),
             parcel.readString(),
             parcel.readString(),
-            content = parcel.readString()){
+            content = parcel.readString()) {
         parcel.readStringList(photoUrl)
     }
 
