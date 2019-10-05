@@ -1,12 +1,16 @@
 package com.mredrock.cyxbs.main.viewmodel
 
+import android.util.Base64
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.google.gson.Gson
 import com.mredrock.cyxbs.common.BaseApp
+import com.mredrock.cyxbs.common.bean.TokenUser
 import com.mredrock.cyxbs.common.bean.User
 import com.mredrock.cyxbs.common.event.LoginStateChangeEvent
 import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.network.exception.UnsetUserInfoException
+import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.*
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.common.viewmodel.event.ProgressDialogEvent
@@ -60,21 +64,22 @@ class LoginViewModel : BaseViewModel() {
     }
 
     private fun verifyByWeb(stuNum: String, idNum: String) {
+        val g = LoginBody(idNum, stuNum)
         val apiService = ApiGenerator.getApiService(ApiService::class.java)
-        val observableSource = apiService.getPersonInfo(stuNum, idNum)
+        //未作校验
+        val observableSource = apiService.getPersonInfoByToken(g)
                 .map {
-                    val user = it.nextOrError()
-                    if (user.stunum.isNullOrEmpty()) {
-                        throw IllegalStateException(BaseApp.context.getString(R.string.main_user_info_error))
-                    } else if (user.nickname.isNullOrEmpty()) {
-                        throw UnsetUserInfoException()
-                    }
-                    user
+                    val tokenBean = it.data
+                    check(!tokenBean.token.isNullOrEmpty()) { BaseApp.context.getString(R.string.main_user_info_error) }
+
+                    val lstValues: List<String> = tokenBean.token!!.split(".")
+                    Gson().fromJson(String(Base64.decode(lstValues[0], Base64.DEFAULT)), TokenUser::class.java)
                 }
+
 
         apiService.verify(stuNum, idNum)
                 .mapOrThrowApiException()
-                .zipWith(observableSource, User.CREATOR::cloneFromUserInfo)
+                .zipWith(observableSource, User.CREATOR::cloneFromTokenUserInfo)
                 .setSchedulers()
                 .doOnErrorWithDefaultErrorHandler {
                     if (it is UnsetUserInfoException) {
@@ -100,3 +105,9 @@ class LoginViewModel : BaseViewModel() {
                 .lifeCycle()
     }
 }
+
+data class LoginBody(
+        val idNum: String,
+        val stuNum: String
+
+)
