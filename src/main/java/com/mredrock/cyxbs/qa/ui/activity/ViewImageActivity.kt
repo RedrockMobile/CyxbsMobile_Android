@@ -29,7 +29,6 @@ class ViewImageActivity : AppCompatActivity() {
         const val EXTRA_NEW_PATH = "extra_new_path"
         private const val NEED_RESULT = "needResult"
         private const val IMG_RES_PATH = "imgResPath"
-
         fun activityStart(context: Context, imgResUrl: String) {
             context.startActivity<ViewImageActivity>(IMG_RES_PATH to imgResUrl)
         }
@@ -71,7 +70,7 @@ class ViewImageActivity : AppCompatActivity() {
                 .into(iv)
     }
 
-    private val resultPath by lazy{
+    private val resultPath by lazy {
         val path = File(StringBuilder(Environment.getExternalStorageDirectory().path)
                 .append(DIR)
                 .append(File.separatorChar)
@@ -83,7 +82,7 @@ class ViewImageActivity : AppCompatActivity() {
         path
     }
     private var cropResultFilePath: File? = null
-    private fun getNewResultUri() :Uri{
+    private fun getNewResultUri(): Uri {
         val name = StringBuilder(imgResPath.split(File.separatorChar).last().split(".").first())
                 .append(System.currentTimeMillis())
                 .append(".png")
