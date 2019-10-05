@@ -2,8 +2,10 @@ package com.mredrock.cyxbs
 
 
 import android.app.IntentService
+import android.app.Notification
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.Process
 import androidx.multidex.MultiDex
 import com.meituan.android.walle.WalleChannelReader
@@ -18,6 +20,10 @@ import com.umeng.analytics.MobclickAgent
 import com.umeng.commonsdk.UMConfigure
 import com.umeng.socialize.PlatformConfig
 import java.lang.RuntimeException
+import androidx.core.content.ContextCompat.startForegroundService
+import android.os.Build.VERSION.SDK_INT
+
+
 
 /**
  * author: Fxymine4ever
@@ -32,7 +38,19 @@ class AppInitService : IntentService("AppInitService") {
         fun init(context: Context){
             val intent = Intent(context,AppInitService::class.java)
             intent.action = ACTION_INIT_WHEN_APP_CREATE
-            context.startService(intent)
+            if (SDK_INT >= Build.VERSION_CODES.O) {
+                context.startForegroundService(intent)
+            } else {
+                context.startService(intent)
+            }
+        }
+    }
+
+
+    override fun onCreate() {
+        super.onCreate()
+        if (SDK_INT >= Build.VERSION_CODES.O) {
+            startForeground(Int.MAX_VALUE, Notification())
         }
     }
 
