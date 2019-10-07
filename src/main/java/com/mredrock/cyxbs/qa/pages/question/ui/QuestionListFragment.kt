@@ -37,7 +37,6 @@ class QuestionListFragment : BaseViewModelFragment<QuestionListViewModel>() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        super.onCreateView(inflater, container, savedInstanceState)
         if (title.isBlank()) {
             title = savedInstanceState?.getString("title") ?: ""
         }

@@ -37,7 +37,6 @@ class QuestionContainerFragment : BaseFragment(), View.OnClickListener {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        super.onCreateView(inflater, container, savedInstanceState)
         val root = inflater.inflate(R.layout.qa_fragment_question_container, container, false)
         childFragments = titles.map { QuestionListFragment().apply { title = it } }
         root.vp_question.adapter = QAViewPagerAdapter(childFragments, childFragmentManager)
