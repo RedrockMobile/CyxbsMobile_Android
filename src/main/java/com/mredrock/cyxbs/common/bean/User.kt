@@ -4,6 +4,7 @@ import android.os.Parcel
 import android.os.Parcelable
 import com.google.gson.Gson
 import com.google.gson.annotations.SerializedName
+import com.mredrock.cyxbs.common.utils.LogUtils
 
 data class User(@SerializedName("college")
                 var college: String? = null,
@@ -95,16 +96,15 @@ data class User(@SerializedName("college")
             return arrayOfNulls(size)
         }
 
-        fun cloneFromUserInfo(userOrigin: User, userCloned: User?): User {
+        //有两次请求，但数据都不完整，这个方法就是将请求得到的User和Token合并为一个User类
+        fun cloneFromTokenUserInfo(userOrigin: User, userCloned: TokenUser?): User {
             if (userCloned != null) {
-                userOrigin.stunum = userCloned.stunum
-                userOrigin.photoThumbnailSrc = userCloned.photoThumbnailSrc
-                userOrigin.photoSrc = userCloned.photoSrc
-                userOrigin.nickname = userCloned.nickname
+                userOrigin.stunum = userCloned.stuNum
+                userOrigin.photoSrc = userCloned.headImgUrl
+                userOrigin.nickname = userCloned.nickName
                 userOrigin.qq = userCloned.qq
                 userOrigin.phone = userCloned.phone
                 userOrigin.introduction = userCloned.introduction
-                userOrigin.id = userCloned.id
             }
             return userOrigin
         }
