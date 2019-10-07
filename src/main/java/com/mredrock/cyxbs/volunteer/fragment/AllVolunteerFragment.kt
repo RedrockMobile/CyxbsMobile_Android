@@ -20,7 +20,6 @@ class AllVolunteerFragment : Fragment() {
     private var recordBeanList: MutableList<MutableList<VolunteerTime.RecordBean>> = mutableListOf()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        super.onCreateView(inflater, container, savedInstanceState)
         return inflater.inflate(R.layout.fragment_volunteer_time, container, false).apply {
             holeTime = volunteer_time_number
             volunteer_time_number.text = allHour
