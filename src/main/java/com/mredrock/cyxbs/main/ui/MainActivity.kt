@@ -1,6 +1,7 @@
 package com.mredrock.cyxbs.main.ui
 
 import android.os.Bundle
+import android.os.Handler
 import android.os.Looper
 import android.view.MenuItem
 import androidx.fragment.app.Fragment
@@ -27,6 +28,7 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.jetbrains.anko.dip
+import org.jetbrains.anko.toast
 import java.lang.IndexOutOfBoundsException
 
 @Route(path = MAIN_MAIN)
@@ -54,6 +56,15 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
 
     private val fragments = ArrayList<Fragment>()
     private lateinit var adapter: MainVpAdapter
+
+    private val loadHandler: Handler = Handler()
+    private val loadRunnable = Runnable {
+        fragments.add(getFragment(QA_ENTRY))
+        fragments.add(getFragment(DISCOVER_ENTRY))
+        fragments.add(getFragment(MINE_ENTRY))
+        adapter.notifyDataSetChanged()
+    }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -102,6 +113,11 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
         viewModel.getStartPage()
     }
 
+    override fun onBackPressed() {
+//        super.onBackPressed()
+        moveTaskToBack(true)
+    }
+
     private fun deleteSplash() {
         if (isDownloadSplash(this@MainActivity)) {//如果url为空，则删除之前下载的图片
             deleteDir(getSplashFile(this@MainActivity))
@@ -148,14 +164,10 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
         view_pager.adapter = adapter
         view_pager.offscreenPageLimit = 4
 
-        //不想侵入其他模块的代码，这里定义为事件消耗完成时使用IdleHandler触发加载fragment事件，此时视图应可见
-        Looper.myQueue().addIdleHandler {
-            fragments.add(getFragment(QA_ENTRY))
-            fragments.add(getFragment(DISCOVER_ENTRY))
-            fragments.add(getFragment(MINE_ENTRY))
-            adapter.notifyDataSetChanged()
-            false//返回false，则之后不再触发
+        window.decorView.post {
+            loadHandler.post(loadRunnable)
         }
+        toast("启动时间 ${(System.currentTimeMillis() - BaseApp.startTime)} ms")
     }
 
     private fun getFragment(path: String) = ARouter.getInstance().build(path).navigation() as Fragment

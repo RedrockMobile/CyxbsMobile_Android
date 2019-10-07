@@ -109,7 +109,7 @@ class SplashActivity : BaseViewModelActivity<SplashViewModel>() {
     override fun finish() {
         super.finish()
         //加个固定动画，避免突然闪屏带来的不良好的体验
-        overridePendingTransition(R.anim.main_activity_splash_close, 0)
+        overridePendingTransition(0, 0)
     }
 
     private fun navigateAndFinish(path: String) {
