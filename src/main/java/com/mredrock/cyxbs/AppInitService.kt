@@ -22,7 +22,7 @@ import com.umeng.socialize.PlatformConfig
 import java.lang.RuntimeException
 import androidx.core.content.ContextCompat.startForegroundService
 import android.os.Build.VERSION.SDK_INT
-
+import com.mredrock.cyxbs.common.utils.LogUtils
 
 
 /**
@@ -65,9 +65,7 @@ class AppInitService : IntentService("AppInitService") {
 
     private fun startInit(){
         initBugly()
-        SophixManager.getInstance().queryAndLoadNewPatch()
     }
-
 
     // 子模块debug不需要bugly
     private fun initBugly() {
@@ -82,4 +80,5 @@ class AppInitService : IntentService("AppInitService") {
             CrashReport.setUserSceneTag(applicationContext, 83913)
         }
     }
+
 }
