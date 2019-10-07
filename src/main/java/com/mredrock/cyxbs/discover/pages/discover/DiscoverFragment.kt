@@ -44,10 +44,8 @@ class DiscoverFragment : BaseViewModelFragment<DiscoverViewModel>() {
 
     override val viewModelClass = DiscoverViewModel::class.java
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        super.onCreateView(inflater, container, savedInstanceState)
-        return inflater.inflate(R.layout.discover_fragment, container, false)
-    }
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
+        inflater.inflate(R.layout.discover_fragment, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         setupRollerView(discover_rollerView)
