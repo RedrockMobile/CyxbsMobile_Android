@@ -167,7 +167,6 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
         window.decorView.post {
             loadHandler.post(loadRunnable)
         }
-        toast("启动时间 ${(System.currentTimeMillis() - BaseApp.startTime)} ms")
     }
 
     private fun getFragment(path: String) = ARouter.getInstance().build(path).navigation() as Fragment
