@@ -2,6 +2,7 @@ package com.mredrock.cyxbs.main.ui
 
 import android.os.Bundle
 import android.os.CountDownTimer
+import android.view.View
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.alibaba.android.arouter.launcher.ARouter
@@ -22,6 +23,7 @@ import org.greenrobot.eventbus.EventBus
 import com.mredrock.cyxbs.main.utils.getSplashFile
 import com.mredrock.cyxbs.main.utils.isDownloadSplash
 import kotlinx.android.synthetic.main.main_activity_splash.*
+import kotlinx.android.synthetic.main.main_view_stub_splash.view.*
 
 
 class SplashActivity : BaseViewModelActivity<SplashViewModel>() {
@@ -35,6 +37,7 @@ class SplashActivity : BaseViewModelActivity<SplashViewModel>() {
     }
 
     private var isDownloadSplash: Boolean = false
+    private lateinit var viewStub: View
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,19 +46,16 @@ class SplashActivity : BaseViewModelActivity<SplashViewModel>() {
 
         //判断是否下载了Splash图，下载了就直接设置
         isDownloadSplash = if (isDownloadSplash(this@SplashActivity)) {
-            splash_view.visible()//防止图片拉伸
-            main_activity_splash_container.visible()
+            viewStub = main_activity_splash_viewStub.inflate()//ViewStub加载
 
             Glide.with(applicationContext)
                     .load(getSplashFile(this@SplashActivity))
                     .apply(RequestOptions()
                             .centerCrop()
                             .diskCacheStrategy(DiskCacheStrategy.NONE))
-                    .into(splash_view)
+                    .into(viewStub.splash_view)
             true
         } else {
-            splash_view.gone()//防止图片拉伸
-            main_activity_splash_container.gone()
             false
         }
 
@@ -89,12 +89,12 @@ class SplashActivity : BaseViewModelActivity<SplashViewModel>() {
 
                         override fun onTick(millisUntilFinished: Long) {
                             runOnUiThread {
-                                main_activity_splash_skip.text = "跳过 ${millisUntilFinished / 1000}"
+                                viewStub.main_activity_splash_skip.text = "跳过 ${millisUntilFinished / 1000}"
                             }
                         }
                     }.start()
 
-                    main_activity_splash_skip.setOnClickListener {
+                    viewStub.main_activity_splash_skip.setOnClickListener {
                         viewModel.finishAfter(0)
                     }
 
@@ -108,7 +108,6 @@ class SplashActivity : BaseViewModelActivity<SplashViewModel>() {
 
     override fun finish() {
         super.finish()
-        //加个固定动画，避免突然闪屏带来的不良好的体验
         overridePendingTransition(0, 0)
     }
 
