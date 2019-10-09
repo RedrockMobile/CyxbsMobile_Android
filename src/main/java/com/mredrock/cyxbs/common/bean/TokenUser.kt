@@ -14,7 +14,7 @@ data class TokenUser(
         var iat: String,
         var integral: Int,
         var introduction: String,
-        var nickName: String,
+        var nickname: String,
         var phone: String,
         var qq: String,
 

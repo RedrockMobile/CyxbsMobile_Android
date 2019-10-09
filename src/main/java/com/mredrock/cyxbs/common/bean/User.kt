@@ -101,7 +101,7 @@ data class User(@SerializedName("college")
             if (userCloned != null) {
                 userOrigin.stunum = userCloned.stuNum
                 userOrigin.photoSrc = userCloned.headImgUrl
-                userOrigin.nickname = userCloned.nickName
+                userOrigin.nickname = userCloned.nickname
                 userOrigin.qq = userCloned.qq
                 userOrigin.phone = userCloned.phone
                 userOrigin.introduction = userCloned.introduction
