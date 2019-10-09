@@ -106,7 +106,6 @@ data class User(@SerializedName("college")
                 userOrigin.phone = userCloned.phone
                 userOrigin.introduction = userCloned.introduction
             }
-            LogUtils.d("roger", "cloned = " + userCloned.toString())
             return userOrigin
         }
     }
