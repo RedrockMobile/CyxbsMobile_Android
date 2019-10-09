@@ -17,10 +17,9 @@
         android:layout_height="match_parent"
         android:layout_below="@+id/app_bar_layout"/>
 
-    <pl.droidsonroids.gif.GifImageView
+    <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/explore_schoolcar_load"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:src="@drawable/ic_school_car_search_load"
         android:layout_below="@+id/app_bar_layout"/>
 </RelativeLayout>

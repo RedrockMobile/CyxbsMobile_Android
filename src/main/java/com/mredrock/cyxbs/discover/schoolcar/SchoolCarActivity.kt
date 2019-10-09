@@ -26,7 +26,10 @@ import com.amap.api.maps.CameraUpdateFactory
 import com.amap.api.maps.model.LatLng
 import com.amap.api.maps.model.MyLocationStyle
 import com.amap.api.maps.utils.overlay.SmoothMoveMarker
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.mredrock.cyxbs.common.config.DISCOVER_SCHOOL_CAR
+import com.mredrock.cyxbs.common.config.END_POINT_REDROCK
 import com.mredrock.cyxbs.common.ui.BaseActivity
 import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.discover.schoolcar.Interface.SchoolCarInterface
@@ -51,6 +54,7 @@ import java.util.concurrent.TimeUnit
 class SchoolCarActivity : BaseActivity() {
     companion object {
         const val TAG: String = "ExploreSchoolCar"
+        const val EXPLORE_SCHOOL_CAR_URL: String = "$END_POINT_REDROCK/app/schoolbus/load.gif"
         const val TIME_OUT: Int = 1
         const val LOST_SERVICES: Int = 2
         const val NO_GPS: Int = 3
@@ -100,13 +104,25 @@ class SchoolCarActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         this.savedInstanceState = savedInstanceState
         setContentView(R.layout.activity_schoolcar)
-
-        if (checkActivityPermission()) {
-            locationClient = AMapLocationClient(applicationContext)
-            initSchoolCarMap()
-        }
+        initSchoolCarGif()
+//        if (checkActivityPermission()) {
+//            locationClient = AMapLocationClient(applicationContext)
+//            initSchoolCarMap()
+//        }
     }
 
+    /**
+     * 加载校车gif图片
+     */
+    private fun initSchoolCarGif() {
+        Glide.with(this)
+                .load(EXPLORE_SCHOOL_CAR_URL)
+                .apply(RequestOptions()
+                        .placeholder(R.drawable.ic_school_car_search_load)
+                        .error(R.drawable.ic_school_car_search_load))
+                .into(explore_schoolcar_load)
+
+    }
 
     /**
      * 获取schoolCarMap的实例并且重写接口initLocationMapButton（高德地图只能使用动态加载添加UI）
