@@ -1,6 +1,5 @@
 package com.mredrock.cyxbs.discover.schoolcar
 
-//import com.jude.swipbackhelper.SwipeBackHelper
 import android.Manifest
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
@@ -104,15 +103,15 @@ class SchoolCarActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         this.savedInstanceState = savedInstanceState
         setContentView(R.layout.activity_schoolcar)
-        initSchoolCarGif()
-//        if (checkActivityPermission()) {
-//            locationClient = AMapLocationClient(applicationContext)
-//            initSchoolCarMap()
-//        }
+        if (checkActivityPermission()) {
+            locationClient = AMapLocationClient(applicationContext)
+            initSchoolCarGif()
+            initSchoolCarMap()
+        }
     }
 
     /**
-     * 加载校车gif图片
+     * 加载校车gif
      */
     private fun initSchoolCarGif() {
         Glide.with(this)
