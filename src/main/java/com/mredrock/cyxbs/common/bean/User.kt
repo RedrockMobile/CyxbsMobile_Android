@@ -100,6 +100,7 @@ data class User(@SerializedName("college")
         fun cloneFromTokenUserInfo(userOrigin: User, userCloned: TokenUser?): User {
             if (userCloned != null) {
                 userOrigin.stunum = userCloned.stuNum
+                userOrigin.photoThumbnailSrc = userCloned.headImgUrl
                 userOrigin.photoSrc = userCloned.headImgUrl
                 userOrigin.nickname = userCloned.nickname
                 userOrigin.qq = userCloned.qq
