@@ -15,6 +15,7 @@ import com.mredrock.cyxbs.discover.schoolcar.Interface.SchoolCarInterface
 import com.mredrock.cyxbs.discover.schoolcar.SchoolCarActivity.Companion.LOST_SERVICES
 import com.mredrock.cyxbs.discover.schoolcar.SchoolCarActivity.Companion.TIME_OUT
 import com.mredrock.cyxbs.discover.schoolcar.network.ApiService
+import io.reactivex.disposables.Disposable
 import okio.ByteString
 import java.io.UnsupportedEncodingException
 import java.security.MessageDigest
@@ -38,6 +39,8 @@ class SchoolCarsSmoothMove(private val schoolCarMap: SchoolCarMap?, private val 
     private var smoothMoveList2: MutableList<LatLng>
     private var smoothMoveList3: MutableList<LatLng>
 
+    var disposable : Disposable? = null
+
     init {
         timeList = mutableListOf()
         smoothMoveList1 = mutableListOf()
@@ -51,7 +54,7 @@ class SchoolCarsSmoothMove(private val schoolCarMap: SchoolCarMap?, private val 
     fun loadCarLocation(ifAddTimer: Long) {
         val apiService = ApiGenerator.getApiService(ApiService::class.java)
 
-        apiService.schoolcar("Redrock", md5Hex(System.currentTimeMillis().toString().substring(0, 10) + "." + "Redrock"),
+        disposable = apiService.schoolcar("Redrock", md5Hex(System.currentTimeMillis().toString().substring(0, 10) + "." + "Redrock"),
                 System.currentTimeMillis().toString().substring(0, 10),
                 md5Hex((System.currentTimeMillis() - 1).toString().substring(0, 10)))
                 .setSchedulers()
@@ -76,6 +79,7 @@ class SchoolCarsSmoothMove(private val schoolCarMap: SchoolCarMap?, private val 
                         }
                     }
                 }
+
     }
 
     /**

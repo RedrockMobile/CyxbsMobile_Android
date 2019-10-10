@@ -386,6 +386,9 @@ class SchoolCarActivity : BaseActivity() {
             disposable!!.dispose()
             LogUtils.d(TAG, disposable!!.isDisposed.toString())
         }
+        smoothMoveData?.let {
+            disposable?.let { if (!it.isDisposed) it.dispose() }
+        }
     }
 
     override fun onPause() {
