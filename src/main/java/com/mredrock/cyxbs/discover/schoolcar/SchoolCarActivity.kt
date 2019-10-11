@@ -103,9 +103,10 @@ class SchoolCarActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         this.savedInstanceState = savedInstanceState
         setContentView(R.layout.activity_schoolcar)
+        initSchoolCarGif()
+
         if (checkActivityPermission()) {
             locationClient = AMapLocationClient(applicationContext)
-            initSchoolCarGif()
             initSchoolCarMap()
         }
     }
@@ -114,13 +115,12 @@ class SchoolCarActivity : BaseActivity() {
      * 加载校车gif
      */
     private fun initSchoolCarGif() {
-        Glide.with(this)
+        Glide.with(this@SchoolCarActivity)
                 .load(EXPLORE_SCHOOL_CAR_URL)
                 .apply(RequestOptions()
                         .placeholder(R.drawable.ic_school_car_search_load)
                         .error(R.drawable.ic_school_car_search_load))
                 .into(explore_schoolcar_load)
-
     }
 
     /**
@@ -288,7 +288,7 @@ class SchoolCarActivity : BaseActivity() {
      * @param name 标识独立轮询
      */
     private fun timer(name: String) {
-        Observable.interval(5, TimeUnit.SECONDS)
+        Observable.interval(1, TimeUnit.SECONDS)
                 .doOnNext {
                     for (i in smoothMoveMarkers.indices) smoothMoveMarkers[i].removeMarker()
                     smoothMoveMarkers = mutableListOf()
