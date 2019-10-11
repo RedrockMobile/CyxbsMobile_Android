@@ -4,10 +4,13 @@ import android.os.Bundle
 import android.os.Looper
 import android.view.MenuItem
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentTransaction
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.bottomnavigation.LabelVisibilityMode
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.config.*
 import com.mredrock.cyxbs.common.event.GoToDiscoverEvent
@@ -64,9 +67,9 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
         initBottomNavigationView()
         initFragments()
 
-        fab.setOnClickListener {
-            ARouter.getInstance().build(FRESHMAN_ENTRY).navigation()
-        }
+//        fab.setOnClickListener {
+//            ARouter.getInstance().build(FRESHMAN_ENTRY).navigation()
+//        }
 
         UpdateUtils.checkUpdate(this)
 
@@ -125,11 +128,11 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
 
                 menu?.clear()
 
-                try {//防止用户点击过快，IdleHandler还未触发，未懒加载完成fragment
-                    fragments[position].onPrepareOptionsMenu(menu)
-                } catch (e: IndexOutOfBoundsException) {
-                    e.printStackTrace()
-                }
+//                try {//防止用户点击过快，IdleHandler还未触发，未懒加载完成fragment
+//                    fragments[position].onPrepareOptionsMenu(menu)
+//                } catch (e: IndexOutOfBoundsException) {
+//                    e.printStackTrace()
+//                }
 
                 EventBus.getDefault().post(MainVPChangeEvent(position))
                 appbar.setExpanded(true)
@@ -143,19 +146,25 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
 
     private fun initFragments() {
         //只添加课表的fragment，一次性加入四个fragment又不lazy load的话打开改Activity的时间很长。
-        fragments.add(getFragment(COURSE_ENTRY))
+        fragments.add(getFragment(QA_ENTRY))
+        fragments.add(getFragment(DISCOVER_ENTRY))
+        fragments.add(getFragment(MINE_ENTRY))
+
+        val bottomSheetDialogFragment = getFragment(COURSE_ENTRY) as BottomSheetDialogFragment
+
+        bottomSheetDialogFragment.show(supportFragmentManager, "lal")
+
+
         adapter = MainVpAdapter(supportFragmentManager, fragments)
         view_pager.adapter = adapter
-        view_pager.offscreenPageLimit = 4
+        view_pager.offscreenPageLimit = 3
+        view_pager.currentItem = 1
 
-        //不想侵入其他模块的代码，这里定义为事件消耗完成时使用IdleHandler触发加载fragment事件，此时视图应可见
-        Looper.myQueue().addIdleHandler {
-            fragments.add(getFragment(QA_ENTRY))
-            fragments.add(getFragment(DISCOVER_ENTRY))
-            fragments.add(getFragment(MINE_ENTRY))
-            adapter.notifyDataSetChanged()
-            false//返回false，则之后不再触发
-        }
+//        //不想侵入其他模块的代码，这里定义为事件消耗完成时使用IdleHandler触发加载fragment事件，此时视图应可见
+//        Looper.myQueue().addIdleHandler {
+//            adapter.notifyDataSetChanged()
+//            false//返回false，则之后不再触发
+//        }
     }
 
     private fun getFragment(path: String) = ARouter.getInstance().build(path).navigation() as Fragment
