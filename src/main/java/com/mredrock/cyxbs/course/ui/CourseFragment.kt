@@ -22,7 +22,7 @@ import org.greenrobot.eventbus.ThreadMode
  * Created by anriku on 2018/8/14.
  */
 
-class CourseFragment : BaseFragment() {
+class CourseFragment : BaseFragment(){
 
     companion object {
         private const val TAG = "CourseFragment"

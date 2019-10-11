@@ -28,7 +28,6 @@ import org.greenrobot.eventbus.ThreadMode
 /**
  * Created by anriku on 2018/10/16.
  */
-@Route(path = COURSE_ENTRY)
 class CourseEntryFragment : BaseFragment() {
 
     // 表示是否TabLayout折叠
