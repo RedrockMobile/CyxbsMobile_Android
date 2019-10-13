@@ -28,7 +28,7 @@
         android:id="@+id/fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/main_ic_freshman"
+        android:src="@drawable/main_ic_red_home"
         app:backgroundTint="@color/main_red_home_entry_fab_background"
         app:rippleColor="@color/main_red_home_entry_fab_background"
         app:elevation="8.5dp"

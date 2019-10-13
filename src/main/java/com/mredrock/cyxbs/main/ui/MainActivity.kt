@@ -75,12 +75,11 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
         initBottomNavigationView()
         initFragments()
 
-        fab.setOnClickListener {
-            ARouter.getInstance().build(FRESHMAN_ENTRY).navigation()
-        }
-
         UpdateUtils.checkUpdate(this)
 
+        fab.setOnClickListener {
+            ARouter.getInstance().build(REDROCK_HOME_ENTRY).navigation()
+        }
 
         InAppMessageManager.getInstance(BaseApp.context).showCardMessage(this,
                 "课表主页面") {
@@ -170,13 +169,6 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
     }
 
     private fun getFragment(path: String) = ARouter.getInstance().build(path).navigation() as Fragment
-
-
-    // 为完成迎新专题中直接跳转"发现页"的需求添加的event
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun goToDiscover(event: GoToDiscoverEvent) {
-        view_pager.currentItem = 2
-    }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun installUpdate(event: UpdateEvent) {
