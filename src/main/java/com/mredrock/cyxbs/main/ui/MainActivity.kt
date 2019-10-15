@@ -1,16 +1,15 @@
 package com.mredrock.cyxbs.main.ui
 
+import android.app.ActionBar
 import android.os.Bundle
-import android.os.Looper
 import android.view.MenuItem
+import android.widget.FrameLayout
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentTransaction
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.bottomnavigation.LabelVisibilityMode
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.config.*
 import com.mredrock.cyxbs.common.event.GoToDiscoverEvent
@@ -30,7 +29,8 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.jetbrains.anko.dip
-import java.lang.IndexOutOfBoundsException
+import org.jetbrains.anko.px2dip
+
 
 @Route(path = MAIN_MAIN)
 class MainActivity : BaseViewModelActivity<MainViewModel>() {
@@ -150,10 +150,28 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
         fragments.add(getFragment(DISCOVER_ENTRY))
         fragments.add(getFragment(MINE_ENTRY))
 
-        val bottomSheetDialogFragment = getFragment(COURSE_ENTRY) as BottomSheetDialogFragment
+        //添加bottomsheetFragment
+//        val bottomSheetDialogFragment = getFragment(COURSE_ENTRY) as BottomSheetDialogFragment
+//
+//        bottomSheetDialogFragment.show(supportFragmentManager, "lal")
 
-        bottomSheetDialogFragment.show(supportFragmentManager, "lal")
+        //获取状态栏的高度
+        var statusBarHeight = -1;
+		//获取status_bar_height资源的ID
+		val resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
+		if (resourceId > 0) {
+			//根据资源ID获取响应的尺寸值
+			statusBarHeight = getResources().getDimensionPixelSize(resourceId);
+		}
 
+//        CoordinatorLayout.LayoutParams(CoordinatorLayout.LayoutParams.MATCH_PARENT,CoordinatorLayout.LayoutParams.MATCH_PARENT-px2dip(statusBarHeight).toInt()).apply {
+//            course_bottom_sheet_content.layoutParams = this
+//        }
+
+
+        supportFragmentManager.beginTransaction().replace(R.id.course_bottom_sheet_content,getFragment(COURSE_ENTRY)).apply {
+            commit()
+        }
 
         adapter = MainVpAdapter(supportFragmentManager, fragments)
         view_pager.adapter = adapter
