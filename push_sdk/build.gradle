@@ -54,7 +54,7 @@ android {
 }
 
 dependencies {
-compile fileTree(include: ['*.jar'], dir: 'libs')
+api fileTree(include: ['*.jar'], dir: 'libs')
 }
 
 
