@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
 
     <data>
@@ -17,66 +16,50 @@
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:background="#ffffff"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
 
-        <include
-            android:id="@+id/course_include"
-            layout="@layout/common_toolbar"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.0" />
-
-
-
         <TextView
             android:id="@+id/tv_course_month"
-            android:layout_width="25dp"
-            android:layout_height="50dp"
+            android:layout_width="@dimen/course_course_month_width"
+            android:layout_height="@dimen/course_course_month_height"
             android:background="@color/courseLightBlue"
             android:gravity="center"
             android:textColor="@color/courseTimeAndWeekDayColor"
             android:textSize="@dimen/course_top_and_left_column_text_size"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/course_include"
-            app:layout_constraintVertical_bias="0.0"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             app:month="@{dateViewModel.month}"
             app:nowWeek="@{dateViewModel.nowWeek}" />
 
         <com.mredrock.cyxbs.course.component.RedRockTextView
             android:id="@+id/red_rock_tv_course_day_of_week"
-            android:layout_width="386dp"
-            android:layout_height="20dp"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             android:background="@color/courseLightBlue"
             android:orientation="horizontal"
             android:textColor="@color/courseTimeAndWeekDayColor"
             android:textSize="@dimen/course_top_and_left_column_text_size"
             app:displayedStrings="@array/course_course_day_of_week_strings"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/tv_course_month"
-            app:layout_constraintTop_toBottomOf="@+id/course_include"
-            app:layout_constraintVertical_bias="0.0" />
+            app:layout_constraintBottom_toTopOf="@id/red_rock_tv_course_day_of_month"
+            app:layout_constraintLeft_toRightOf="@id/tv_course_month"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <com.mredrock.cyxbs.course.component.RedRockTextView
             android:id="@+id/red_rock_tv_course_day_of_month"
-            android:layout_width="386dp"
-            android:layout_height="30dp"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             android:background="@color/courseLightBlue"
             android:orientation="horizontal"
             android:textSize="@dimen/course_top_and_left_column_text_size"
             app:displayedStrings="@{dateViewModel.daysOfMonth}"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/tv_course_month"
-            app:layout_constraintTop_toBottomOf="@+id/red_rock_tv_course_day_of_week"
-            app:layout_constraintVertical_bias="0.0"
+            app:layout_constraintBottom_toBottomOf="@id/tv_course_month"
+            app:layout_constraintLeft_toRightOf="@id/tv_course_month"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/red_rock_tv_course_day_of_week"
             app:nowWeek="@{dateViewModel.nowWeek}" />
 
 
