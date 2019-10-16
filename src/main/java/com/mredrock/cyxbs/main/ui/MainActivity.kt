@@ -1,8 +1,10 @@
 package com.mredrock.cyxbs.main.ui
 
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.transition.Fade
 import android.view.MenuItem
 import androidx.fragment.app.Fragment
 import com.alibaba.android.arouter.facade.annotation.Route
@@ -19,6 +21,7 @@ import com.mredrock.cyxbs.common.utils.extensions.sharedPreferences
 import com.mredrock.cyxbs.common.utils.update.UpdateEvent
 import com.mredrock.cyxbs.common.utils.update.UpdateUtils
 import com.mredrock.cyxbs.main.R
+import com.mredrock.cyxbs.main.bean.FinishEvent
 import com.mredrock.cyxbs.main.ui.adapter.MainVpAdapter
 import com.mredrock.cyxbs.main.utils.*
 import com.mredrock.cyxbs.main.viewmodel.MainViewModel
@@ -69,6 +72,9 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.main_activity_main)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            window.enterTransition = null
+        }
         appbar = findViewById(R.id.app_bar_layout)
 
         common_toolbar.init(getString(R.string.common_course), listener = null)
@@ -164,9 +170,9 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
         view_pager.adapter = adapter
         view_pager.offscreenPageLimit = 4
 
-        window.decorView.post {
+        window.decorView.postDelayed({
             loadHandler.post(loadRunnable)
-        }
+        },200) 
     }
 
     private fun getFragment(path: String) = ARouter.getInstance().build(path).navigation() as Fragment
@@ -181,5 +187,10 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun installUpdate(event: UpdateEvent) {
         UpdateUtils.installApk(this, updateFile)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        EventBus.getDefault().post(FinishEvent())
     }
 }

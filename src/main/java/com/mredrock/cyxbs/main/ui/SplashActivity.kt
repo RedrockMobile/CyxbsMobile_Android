@@ -1,8 +1,10 @@
 package com.mredrock.cyxbs.main.ui
 
+import android.content.Intent
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.view.View
+import androidx.core.app.ActivityOptionsCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.alibaba.android.arouter.launcher.ARouter
@@ -18,12 +20,15 @@ import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.extensions.*
 import com.mredrock.cyxbs.common.viewmodel.event.SingleLiveEvent
 import com.mredrock.cyxbs.main.R
+import com.mredrock.cyxbs.main.bean.FinishEvent
 import com.mredrock.cyxbs.main.viewmodel.SplashViewModel
 import org.greenrobot.eventbus.EventBus
 import com.mredrock.cyxbs.main.utils.getSplashFile
 import com.mredrock.cyxbs.main.utils.isDownloadSplash
 import kotlinx.android.synthetic.main.main_activity_splash.*
 import kotlinx.android.synthetic.main.main_view_stub_splash.view.*
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 
 
 class SplashActivity : BaseViewModelActivity<SplashViewModel>() {
@@ -77,7 +82,8 @@ class SplashActivity : BaseViewModelActivity<SplashViewModel>() {
             else -> {
 
                 viewModel.finishModel.observeNotNullAndTrue {
-                    startActivity<MainActivity>(true)
+                    startActivity<MainActivity>()
+                    overridePendingTransition(0, 0)
                 }
 
                 if (isDownloadSplash) {//如果下载了
@@ -121,4 +127,8 @@ class SplashActivity : BaseViewModelActivity<SplashViewModel>() {
             onChange()
         }
     })
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onFinish(event:FinishEvent){
+        this.finish()
+    }
 }
