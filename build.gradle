@@ -28,6 +28,8 @@ buildscript {
         classpath 'com.meituan.android.walle:plugin:1.1.6'
         // 添加emas-services插件
         classpath 'com.aliyun.ams:emas-services:1.0.1'
+        // AndResGuard
+        classpath 'com.tencent.mm:AndResGuard-gradle-plugin:1.2.17'
     }
 }
 
