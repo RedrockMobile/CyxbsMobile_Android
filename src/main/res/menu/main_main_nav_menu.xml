@@ -1,24 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-<!--    <item-->
-<!--        android:id="@+id/course"-->
-<!--        android:icon="@drawable/main_ic_course_unselected"-->
-<!--        android:title="@string/common_course" />-->
 
-    <item
-        android:id="@+id/qa"
-        android:icon="@drawable/main_ic_qa_unselected"
-        android:title="@string/common_qa" />
-
-<!--    <item-->
-<!--        android:id="@+id/freshman"-->
-<!--        android:enabled="false"-->
-<!--        android:title="@string/common_fab" />-->
 
     <item
         android:id="@+id/explore"
         android:icon="@drawable/main_ic_explore_unselected"
         android:title="@string/common_explore" />
+
+    <item
+        android:id="@+id/qa"
+        android:icon="@drawable/main_ic_qa_unselected"
+        android:title="@string/common_qa" />
 
     <item
         android:id="@+id/mine"

@@ -3,11 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_content"
+    android:background="@color/windowBackground"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.MainActivity">
-
-    <include layout="@layout/common_toolbar" />
 
     <com.mredrock.cyxbs.main.ui.widget.NeverScrollViewPager
         android:id="@+id/view_pager"

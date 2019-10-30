@@ -1,10 +1,10 @@
 package com.mredrock.cyxbs.main.ui
 
-import android.app.ActionBar
+import android.annotation.SuppressLint
+import android.os.Build
 import android.os.Bundle
+import android.os.Looper
 import android.view.MenuItem
-import android.widget.FrameLayout
-import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.fragment.app.Fragment
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
@@ -29,7 +29,11 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.jetbrains.anko.dip
-import org.jetbrains.anko.px2dip
+import android.view.View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+import android.view.View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+import android.view.View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+import androidx.annotation.RequiresApi
+import android.view.WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS
 
 
 @Route(path = MAIN_MAIN)
@@ -47,38 +51,34 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
     private lateinit var preCheckedItem: MenuItem
     private var peeCheckedItemPosition = 0
     private val icons = arrayOf(
-            R.drawable.main_ic_course_unselected, R.drawable.main_ic_course_selected,
-            R.drawable.main_ic_qa_unselected, R.drawable.main_ic_qa_selected,
             R.drawable.main_ic_explore_unselected, R.drawable.main_ic_explore_selected,
+            R.drawable.main_ic_qa_unselected, R.drawable.main_ic_qa_selected,
             R.drawable.main_ic_mine_unselected, R.drawable.main_ic_mine_selected
     )
 
-    private lateinit var appbar: AppBarLayout
 
     private val fragments = ArrayList<Fragment>()
     private lateinit var adapter: MainVpAdapter
 
+    @SuppressLint("ResourceAsColor")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.main_activity_main)
-        appbar = findViewById(R.id.app_bar_layout)
 
-        common_toolbar.init(getString(R.string.common_course), listener = null)
-        initBottomNavigationView()
-        initFragments()
-
-//        fab.setOnClickListener {
-//            ARouter.getInstance().build(FRESHMAN_ENTRY).navigation()
-//        }
-
-        UpdateUtils.checkUpdate(this)
-
-
-        InAppMessageManager.getInstance(BaseApp.context).showCardMessage(this,
-                "课表主页面") {
-            //插屏消息关闭之后调用
+        //这块先展示效果，后面还会改,因为只能改部分机型
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            window.addFlags(FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+            window.decorView.systemUiVisibility = SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+            window.statusBarColor = resources.getColor(R.color.windowBackground)
         }
 
+        initBottomNavigationView()
+        initFragments()
+        UpdateUtils.checkUpdate(this)
+        InAppMessageManager.getInstance(BaseApp.context).showCardMessage(this,
+                "课表主页面") {
+            //插屏消息关闭之后调用，暂未写功能
+        }
         viewModel.startPage.observe { starPage ->
             if (starPage != null) {
                 val src = starPage.photo_src
@@ -92,7 +92,6 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
                             putString(SplashActivity.SPLASH_PHOTO_NAME, src)
                         }
                     }
-
                 } else { //src非法
                     deleteSplash()
                 }
@@ -105,6 +104,16 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
         viewModel.getStartPage()
     }
 
+    @RequiresApi(Build.VERSION_CODES.M)
+    private fun setAndroidNativeLightStatusBar(dark: Boolean) {
+        val decor = window.decorView
+        if (dark) {
+            decor.systemUiVisibility = SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+        } else {
+            decor.systemUiVisibility = SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or SYSTEM_UI_FLAG_LAYOUT_STABLE
+        }
+    }
+
     private fun deleteSplash() {
         if (isDownloadSplash(this@MainActivity)) {//如果url为空，则删除之前下载的图片
             deleteDir(getSplashFile(this@MainActivity))
@@ -113,9 +122,6 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
 
     private fun initBottomNavigationView() {
         navHelpers = BottomNavigationViewHelper(nav_main).apply {
-            //enableAnimation(false)
-            //enableShiftMode(false)
-            //enableItemShiftMode(false)
             setTextSize(11f)
             setIconSize(dip(21))
             setItemIconTintList(null)
@@ -124,18 +130,9 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
                 preCheckedItem = menuItem
                 peeCheckedItemPosition = position
                 menuItem.setIcon(icons[(position * 2) + 1])
-                common_toolbar.title = menuItem.title
-
                 menu?.clear()
-
-//                try {//防止用户点击过快，IdleHandler还未触发，未懒加载完成fragment
-//                    fragments[position].onPrepareOptionsMenu(menu)
-//                } catch (e: IndexOutOfBoundsException) {
-//                    e.printStackTrace()
-//                }
-
+                //通知相应的具体页面【接收在具体的Fragment里面】
                 EventBus.getDefault().post(MainVPChangeEvent(position))
-                appbar.setExpanded(true)
             }
         }
         nav_main.labelVisibilityMode = LabelVisibilityMode.LABEL_VISIBILITY_LABELED
@@ -145,44 +142,24 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
     }
 
     private fun initFragments() {
-        //只添加课表的fragment，一次性加入四个fragment又不lazy load的话打开改Activity的时间很长。
-        fragments.add(getFragment(QA_ENTRY))
         fragments.add(getFragment(DISCOVER_ENTRY))
-        fragments.add(getFragment(MINE_ENTRY))
 
-        //添加bottomsheetFragment
-//        val bottomSheetDialogFragment = getFragment(COURSE_ENTRY) as BottomSheetDialogFragment
-//
-//        bottomSheetDialogFragment.show(supportFragmentManager, "lal")
-
-        //获取状态栏的高度
-        var statusBarHeight = -1;
-		//获取status_bar_height资源的ID
-		val resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
-		if (resourceId > 0) {
-			//根据资源ID获取响应的尺寸值
-			statusBarHeight = getResources().getDimensionPixelSize(resourceId);
-		}
-
-//        CoordinatorLayout.LayoutParams(CoordinatorLayout.LayoutParams.MATCH_PARENT,CoordinatorLayout.LayoutParams.MATCH_PARENT-px2dip(statusBarHeight).toInt()).apply {
-//            course_bottom_sheet_content.layoutParams = this
-//        }
-
-
-        supportFragmentManager.beginTransaction().replace(R.id.course_bottom_sheet_content,getFragment(COURSE_ENTRY)).apply {
+        //在滑动下拉课表容器中添加整个课表
+        supportFragmentManager.beginTransaction().replace(R.id.course_bottom_sheet_content, getFragment(COURSE_ENTRY)).apply {
             commit()
         }
 
         adapter = MainVpAdapter(supportFragmentManager, fragments)
         view_pager.adapter = adapter
         view_pager.offscreenPageLimit = 3
-        view_pager.currentItem = 1
 
-//        //不想侵入其他模块的代码，这里定义为事件消耗完成时使用IdleHandler触发加载fragment事件，此时视图应可见
-//        Looper.myQueue().addIdleHandler {
-//            adapter.notifyDataSetChanged()
-//            false//返回false，则之后不再触发
-//        }
+        //不想侵入其他模块的代码，这里定义为事件消耗完成时使用IdleHandler触发加载fragment事件，此时视图应可见
+        Looper.myQueue().addIdleHandler {
+            fragments.add(getFragment(QA_ENTRY))
+            fragments.add(getFragment(MINE_ENTRY))
+            adapter.notifyDataSetChanged()
+            false//返回false，则之后不再触发
+        }
     }
 
     private fun getFragment(path: String) = ARouter.getInstance().build(path).navigation() as Fragment
