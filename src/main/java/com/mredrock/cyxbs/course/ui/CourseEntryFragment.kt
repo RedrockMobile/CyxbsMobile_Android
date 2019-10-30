@@ -15,12 +15,12 @@ import com.mredrock.cyxbs.common.component.JToolbar
 import com.mredrock.cyxbs.common.config.COURSE_ENTRY
 import com.mredrock.cyxbs.common.event.LoginStateChangeEvent
 import com.mredrock.cyxbs.common.event.MainVPChangeEvent
-import com.mredrock.cyxbs.common.ui.BaseActivity
 import com.mredrock.cyxbs.common.ui.BaseFragment
 import com.mredrock.cyxbs.course.R
 import com.mredrock.cyxbs.course.event.TabIsFoldEvent
 import com.mredrock.cyxbs.course.event.WeekNumEvent
 import com.mredrock.cyxbs.course.viewmodels.CoursesViewModel
+import kotlinx.android.synthetic.main.course_fragment_course_entry.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -35,7 +35,6 @@ class CourseEntryFragment : BaseFragment() {
     private var mIsFold = true
     private var mToolbarIc: Array<Drawable?> = arrayOf(null, null)
 
-    private lateinit var mToolbar: JToolbar
     // 用于记录当前Toolbar要显示的字符串
     private lateinit var mToolbarTitle: String
 
@@ -58,8 +57,6 @@ class CourseEntryFragment : BaseFragment() {
 
     private fun initCourseEntryFragment() {
         activity ?: return
-
-        mToolbar = (activity as BaseActivity).common_toolbar
 
         // 如果用户登录了就显示CourseContainerFragment；如果用户没有登录就行显示NoneLoginFragment进行登录
         if (BaseApp.isLogin) {
@@ -107,25 +104,24 @@ class CourseEntryFragment : BaseFragment() {
      * 如果用户没登录，就取消折叠图标以及取消点击事件。
      */
     private fun setToolbar() {
-        val toolbar = mToolbar
-
+        
         // 设置当前Toolbar的内容
-        if (curIndex == 0 || userVisibleHint) toolbar.titleTextView.text = mToolbarTitle
+        if (curIndex == 0 || userVisibleHint) course_tv_which_week.text = mToolbarTitle
 
         if (BaseApp.isLogin && curIndex == 0) {
-            toolbar.titleTextView.setCompoundDrawablesWithIntrinsicBounds(null, null,
+            course_tv_which_week.setCompoundDrawablesWithIntrinsicBounds(null, null,
                     if (mIsFold) mToolbarIc[1] else mToolbarIc[0], null)
 
-            toolbar.titleTextView.setOnClickListener {
-                toolbar.titleTextView.setCompoundDrawablesWithIntrinsicBounds(null, null,
+            course_tv_which_week.setOnClickListener {
+                course_tv_which_week.setCompoundDrawablesWithIntrinsicBounds(null, null,
                         if (mIsFold) mToolbarIc[0] else mToolbarIc[1], null)
                 mIsFold = !mIsFold
                 EventBus.getDefault().post(TabIsFoldEvent(mIsFold))
             }
         } else {
-            toolbar.titleTextView.setCompoundDrawablesWithIntrinsicBounds(null, null,
+            course_tv_which_week.setCompoundDrawablesWithIntrinsicBounds(null, null,
                     null, null)
-            toolbar.titleTextView.setOnClickListener(null)
+            course_tv_which_week.setOnClickListener(null)
         }
     }
 
@@ -154,7 +150,6 @@ class CourseEntryFragment : BaseFragment() {
                 ViewModelProviders.of(activity!!).get(CoursesViewModel::class.java).clearCache()
             }.start()
         }
-//        setToolbar()
     }
 
     override fun onPrepareOptionsMenu(menu: Menu?) {
@@ -162,23 +157,6 @@ class CourseEntryFragment : BaseFragment() {
         insideFragment?.onPrepareOptionsMenu(menu)
     }
 
-    /**
-     * 当main模块的ViewPager的page改变后，发送此事件。如果此Page是课表的Page就对Toolbar进行相应的设置。
-     *
-     * @param mainVPChangeEvent [MainVPChangeEvent]
-     */
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onMainVPChangeEvent(mainVPChangeEvent: MainVPChangeEvent) {
-        curIndex = mainVPChangeEvent.index
-        if (mainVPChangeEvent.index == 0) {
-            setToolbar()
-        } else {
-            val toolbar = mToolbar
-            toolbar.titleTextView.setCompoundDrawablesWithIntrinsicBounds(null, null,
-                    null, null)
-            toolbar.titleTextView.setOnClickListener(null)
-        }
-    }
 
     /**
      * 在[CourseContainerFragment]中的ViewPager的Page发生了变化后进行接收对应的事件来对[mToolbar]的标题进行

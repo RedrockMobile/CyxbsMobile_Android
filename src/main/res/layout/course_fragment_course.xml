@@ -4,11 +4,9 @@
 
 
     <data>
-
         <variable
             name="coursesViewModel"
             type="com.mredrock.cyxbs.course.viewmodels.CoursesViewModel" />
-
         <variable
             name="dateViewModel"
             type="com.mredrock.cyxbs.course.viewmodels.DateViewModel" />
@@ -16,7 +14,6 @@
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:background="#ffffff"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -25,9 +22,8 @@
             android:id="@+id/tv_course_month"
             android:layout_width="@dimen/course_course_month_width"
             android:layout_height="@dimen/course_course_month_height"
-            android:background="@color/courseLightBlue"
             android:gravity="center"
-            android:textColor="@color/courseTimeAndWeekDayColor"
+            android:textColor="@color/levelOneFontColor"
             android:textSize="@dimen/course_top_and_left_column_text_size"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -38,9 +34,8 @@
             android:id="@+id/red_rock_tv_course_day_of_week"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:background="@color/courseLightBlue"
             android:orientation="horizontal"
-            android:textColor="@color/courseTimeAndWeekDayColor"
+            android:textColor="@color/levelOneFontColor"
             android:textSize="@dimen/course_top_and_left_column_text_size"
             app:displayedStrings="@array/course_course_day_of_week_strings"
             app:layout_constraintBottom_toTopOf="@id/red_rock_tv_course_day_of_month"
@@ -52,8 +47,8 @@
             android:id="@+id/red_rock_tv_course_day_of_month"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:background="@color/courseLightBlue"
             android:orientation="horizontal"
+            android:textColor="#112C54"
             android:textSize="@dimen/course_top_and_left_column_text_size"
             app:displayedStrings="@{dateViewModel.daysOfMonth}"
             app:layout_constraintBottom_toBottomOf="@id/tv_course_month"
@@ -90,8 +85,7 @@
                         android:id="@+id/red_rock_tv_course_time"
                         android:layout_width="@dimen/course_course_month_width"
                         android:layout_height="match_parent"
-                        android:background="@color/courseLightBlue"
-                        android:textColor="@color/courseTimeAndWeekDayColor"
+                        android:textColor="@color/levelOneFontColor"
                         android:textSize="@dimen/course_top_and_left_column_text_size"
                         app:displayedStrings="@array/course_course_time_strings"
                         app:orientation="vertical" />
