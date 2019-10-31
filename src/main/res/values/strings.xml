@@ -17,7 +17,7 @@
     <string name="course_content_is_null">掌友，要做的事呢？</string>
     <string name="course_week_is_not_select">掌友，请选择周数</string>
     <string name="course_time_is_not_select">掌友，请选时间</string>
-
+    <string name="course_use_cache">正在使用课表缓存</string>
     <!-- analog login -->
     <string name="course_input_account">请输入学号</string>
     <string name="course_input_password">请输入密码</string>
