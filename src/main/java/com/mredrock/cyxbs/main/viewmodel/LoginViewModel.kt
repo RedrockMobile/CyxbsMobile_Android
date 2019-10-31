@@ -5,19 +5,19 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.gson.Gson
 import com.mredrock.cyxbs.common.BaseApp
-import com.mredrock.cyxbs.common.bean.TokenUser
 import com.mredrock.cyxbs.common.bean.User
 import com.mredrock.cyxbs.common.event.LoginStateChangeEvent
 import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.network.exception.UnsetUserInfoException
-import com.mredrock.cyxbs.common.utils.LogUtils
-import com.mredrock.cyxbs.common.utils.extensions.*
+import com.mredrock.cyxbs.common.utils.extensions.checkError
+import com.mredrock.cyxbs.common.utils.extensions.doOnErrorWithDefaultErrorHandler
+import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
+import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.common.viewmodel.event.ProgressDialogEvent
 import com.mredrock.cyxbs.main.R
 import com.mredrock.cyxbs.main.network.ApiService
 import com.umeng.analytics.MobclickAgent
-import io.reactivex.rxkotlin.zipWith
 import org.greenrobot.eventbus.EventBus
 
 /**
@@ -64,22 +64,23 @@ class LoginViewModel : BaseViewModel() {
     }
 
     private fun verifyByWeb(stuNum: String, idNum: String) {
-        val g = LoginBody(idNum, stuNum)
+        val body = LoginBody(idNum, stuNum)
         val apiService = ApiGenerator.getApiService(ApiService::class.java)
         //未作校验
-        val observableSource = apiService.getPersonInfoByToken(g)
+        val observableSource = apiService.getPersonInfoByToken(body)
                 .map {
                     val tokenBean = it.data
                     check(!tokenBean.token.isNullOrEmpty()) { BaseApp.context.getString(R.string.main_user_info_error) }
 
                     val lstValues: List<String> = tokenBean.token!!.split(".")
-                    Gson().fromJson(String(Base64.decode(lstValues[0], Base64.DEFAULT)), TokenUser::class.java)
+                    val user = Gson().fromJson(String(Base64.decode(lstValues[0], Base64.DEFAULT)), User::class.java)
+                    //无法让photoSrc和photoThumbnailSrc字段的SerializedName都为headImgUrl
+                    user.photoSrc = user.photoThumbnailSrc
+                    //如果密码正确，就存储在本地，后端不会传输idNum字段
+                    user.stunum = user.stuNum
+                    user.idNum = idNum
+                    user
                 }
-
-
-        apiService.verify(stuNum, idNum)
-                .mapOrThrowApiException()
-                .zipWith(observableSource, User.CREATOR::cloneFromTokenUserInfo)
                 .setSchedulers()
                 .doOnErrorWithDefaultErrorHandler {
                     if (it is UnsetUserInfoException) {

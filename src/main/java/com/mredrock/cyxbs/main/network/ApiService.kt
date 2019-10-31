@@ -20,9 +20,6 @@ interface ApiService {
     @POST("/app/index.php/Home/Photo/showPicture")
     fun getStartPage(): Observable<RedrockApiWrapper<List<StartPage>>>
 
-    @FormUrlEncoded
-    @POST("/api/verify")
-    fun verify(@Field("stuNum") stuNum: String, @Field("idNum") idNum: String): Observable<RedrockApiWrapper<User>>
 
     @FormUrlEncoded
     @POST("/app/index.php/Home/Person/search")
