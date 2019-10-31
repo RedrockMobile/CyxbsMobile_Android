@@ -1,10 +1,9 @@
 package com.mredrock.cyxbs.common.utils.extensions
 
 import android.content.Context
-import android.support.annotation.DrawableRes
 import android.widget.ImageView
+import androidx.annotation.DrawableRes
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestOptions
 import com.mredrock.cyxbs.common.R
 import com.mredrock.cyxbs.common.config.BASE_NORMAL_IMG_URL
@@ -23,12 +22,13 @@ fun Context.loadRedrockImage(rowUrl: String?,
             imageView.setImageResource(error)
             return
         }
-        rowUrl!!.startsWith("http://") || rowUrl.startsWith("https://") -> rowUrl
+        rowUrl.startsWith("http://") || rowUrl.startsWith("https://") -> rowUrl
         else -> BASE_NORMAL_IMG_URL + rowUrl
     }
     Glide.with(this)
             .load(url)
-            .transition(DrawableTransitionOptions().crossFade())
+            // Glide 加载动画bug
+//            .transition(DrawableTransitionOptions().crossFade())
             .apply(RequestOptions().placeholder(placeholder).error(error))
             .into(imageView)
 }

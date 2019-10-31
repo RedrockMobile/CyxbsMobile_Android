@@ -3,14 +3,13 @@ package com.mredrock.cyxbs.common.utils.encrypt;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Base64;
-import android.util.Log;
 
 import com.mredrock.cyxbs.common.BaseApp;
 import com.mredrock.cyxbs.common.config.ConfigKt;
 import com.mredrock.cyxbs.common.utils.LogUtils;
 import com.mredrock.cyxbs.common.utils.extensions.SharedPreferencesKt;
 
-import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 
 /**
  * @author Haruue Icymoon haruue@caoyue.com.cn
@@ -24,9 +23,9 @@ public class UserInfoEncryption {
     public UserInfoEncryption() {
         encryptor = new SerialAESEncryptor();
         try {
-            encryptor.encrypt("abc".getBytes("UTF-8"));
+            encryptor.encrypt("abc".getBytes(StandardCharsets.UTF_8));
         } catch (Exception e) {
-            Log.e("CSET_UIE", "not support", e);
+            LogUtils.INSTANCE.e("CSET_UIE", "not support", e);
             isSupportEncrypt = false;
         }
         synchronized (UserInfoEncryption.class) {
@@ -44,11 +43,7 @@ public class UserInfoEncryption {
         if (!isSupportEncrypt) {
             return json;
         }
-        try {
-            return Base64.encodeToString(encryptor.encrypt(json.getBytes("UTF-8")), Base64.DEFAULT);
-        } catch (UnsupportedEncodingException e) {
-            throw new RuntimeException(e);
-        }
+        return Base64.encodeToString(encryptor.encrypt(json.getBytes(StandardCharsets.UTF_8)), Base64.DEFAULT);
 
     }
 
@@ -60,15 +55,15 @@ public class UserInfoEncryption {
             return base64Encrypted;
         }
         try {
-            return new String(encryptor.decrypt(Base64.decode(base64Encrypted, Base64.DEFAULT)), "UTF-8");
-        } catch (DecryptFailureException | UnsupportedEncodingException e) {
+            return new String(encryptor.decrypt(Base64.decode(base64Encrypted, Base64.DEFAULT)), StandardCharsets.UTF_8);
+        } catch (DecryptFailureException e) {
             LogUtils.INSTANCE.e("CSET_UIE", "decrypt failure", e);
             return "";
         }
     }
 
     /**
-     * if you update the encrypt method in the future, please update here for compatibility
+     * if you getUpdateInfo the encrypt method in the future, please getUpdateInfo here for compatibility
      *
      * @param i old version
      * @param ii new version

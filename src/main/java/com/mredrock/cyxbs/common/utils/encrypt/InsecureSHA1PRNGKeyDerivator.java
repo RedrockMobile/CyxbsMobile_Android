@@ -172,7 +172,7 @@ public class InsecureSHA1PRNGKeyDerivator {
     }
     /*
      * The method invokes the SHA1Impl's "updateHash(..)" method
-     * to update current seed frame and
+     * to getUpdateInfo current seed frame and
      * to compute new intermediate hash value if the frame is full.
      *
      * After that it computes a length of whole seed.
@@ -429,7 +429,7 @@ public class InsecureSHA1PRNGKeyDerivator {
      *        intArray  - int array containing bytes to which to append;
      *                    intArray.length >= (BYTES_OFFSET+6)
      * @params
-     *        byteInput - array of bytes to use for the update
+     *        byteInput - array of bytes to use for the getUpdateInfo
      * @params
      *        from      - the offset to start in the "byteInput" array
      * @params

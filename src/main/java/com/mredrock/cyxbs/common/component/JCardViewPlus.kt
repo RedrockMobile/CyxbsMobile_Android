@@ -3,22 +3,26 @@ package com.mredrock.cyxbs.common.component
 import android.content.Context
 import android.content.res.TypedArray
 import android.graphics.*
-import android.support.annotation.ColorInt
 import android.util.AttributeSet
 import android.util.TypedValue
+import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewGroup.LayoutParams
+import androidx.annotation.ColorInt
 import com.mredrock.cyxbs.common.R
 
 /**
  * Created By jay68 on 2018/8/27.
  */
-class JCardViewPlus(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : ViewGroup(context, attrs, defStyleAttr) {
+open class JCardViewPlus(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : ViewGroup(context, attrs, defStyleAttr) {
     companion object {
         @JvmStatic
         val DEFAULT_CARD_BACKGROUND_COLOR = Color.parseColor("#ffffff")
         @JvmStatic
         val DEFAULT_SHADER_COLOR = Color.parseColor("#fefefe")
+
+        const val DEFAULT_CHILD_GRAVITY = Gravity.TOP or Gravity.START
 
         const val LEFT_SHADOW_MASK = 0x1
         const val TOP_SHADOW_MASK = 0x2
@@ -168,9 +172,59 @@ class JCardViewPlus(context: Context, attrs: AttributeSet?, defStyleAttr: Int) :
         val parentLeft = paddingLeft + contentPaddingLeft
         val parentTop = paddingTop + contentPaddingTop
         val child = getChildAt(0)
-        child.layout(parentLeft, parentTop, parentLeft + child.measuredWidth, parentTop + child.measuredHeight)
+        val lp = child.layoutParams as LayoutParams
+        val childLeft = parentLeft + lp.leftMargin
+        val childTop = parentTop + lp.topMargin
+        child.layout(childLeft, childTop, childLeft + child.measuredWidth, childTop + child.measuredHeight)
+//        layoutChildren(left, top, right, bottom)
     }
 
+    /*
+        private fun layoutChildren(left: Int, top: Int, right: Int, bottom: Int) {
+            val parentLeft = paddingLeft + contentPaddingLeft
+            val parentRight = right - left - paddingRight - contentPaddingRight
+
+            val parentTop = paddingTop + contentPaddingTop
+            val parentBottom = bottom - top - paddingBottom - contentPaddingBottom
+
+            val child = getChildAt(0)
+            if (child.visibility != View.GONE) {
+                val lp = child.layoutParams as LayoutParams
+
+                val width = child.measuredWidth
+                val height = child.measuredHeight
+
+                val childLeft: Int
+                val childTop: Int
+
+                var gravity = lp.gravity
+                if (gravity == -1) {
+                    gravity = DEFAULT_CHILD_GRAVITY
+                }
+
+                val layoutDirection = layoutDirection
+                val absoluteGravity = Gravity.getAbsoluteGravity(gravity, layoutDirection)
+                val verticalGravity = gravity and Gravity.VERTICAL_GRAVITY_MASK
+
+                when (absoluteGravity and Gravity.HORIZONTAL_GRAVITY_MASK) {
+                    Gravity.CENTER_HORIZONTAL -> childLeft = parentLeft + (parentRight - parentLeft - width) / 2 +
+                            lp.leftMargin - lp.rightMargin
+                    Gravity.RIGHT -> childLeft = parentRight - width - lp.rightMargin
+                    Gravity.LEFT -> childLeft = parentLeft + lp.leftMargin
+                    else -> childLeft = parentLeft + lp.leftMargin
+                }
+
+                when (verticalGravity) {
+                    Gravity.TOP -> childTop = parentTop + lp.topMargin
+                    Gravity.CENTER_VERTICAL -> childTop = parentTop + (parentBottom - parentTop - height) / 2 +
+                            lp.topMargin - lp.bottomMargin
+                    Gravity.BOTTOM -> childTop = parentBottom - height - lp.bottomMargin
+                    else -> childTop = parentTop + lp.topMargin
+                }
+                child.layout(childLeft, childTop, childLeft + width, childTop + height)
+            }
+        }
+    */
     override fun dispatchDraw(canvas: Canvas) {
         if (backgroundBuffer == null) {
 //            if (childCount != 0 && getChildAt(0) is ImageView) {
@@ -190,16 +244,23 @@ class JCardViewPlus(context: Context, attrs: AttributeSet?, defStyleAttr: Int) :
 //            }
             drawBuffer()
         }
-        canvas.drawBitmap(backgroundBuffer, 0f, 0f, null)
+        val buffer = backgroundBuffer ?: return
+        canvas.drawBitmap(buffer, 0f, 0f, null)
         canvas.clipPath(cardBackgroundShape)
         super.dispatchDraw(canvas)
     }
 
     private fun drawBuffer() {
         backgroundBuffer = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
-        val canvas = Canvas(backgroundBuffer)
+        val buffer = backgroundBuffer ?: return
+        val canvas = Canvas(buffer)
         calcBackgroundShape()
         canvas.drawPath(cardBackgroundShape, paint)
+    }
+
+    fun cleanCache() {
+        backgroundBuffer?.recycle()
+        backgroundBuffer = null
     }
 
     private fun calcBackgroundShape() {
@@ -304,13 +365,25 @@ class JCardViewPlus(context: Context, attrs: AttributeSet?, defStyleAttr: Int) :
 
     private fun Int.toBoolean() = this != 0
 
-    override fun generateLayoutParams(attrs: AttributeSet?) = MarginLayoutParams(context, attrs)
+    override fun generateLayoutParams(attrs: AttributeSet?) = LayoutParams(context, attrs)
 
-    override fun generateDefaultLayoutParams() = MarginLayoutParams(MarginLayoutParams.WRAP_CONTENT, MarginLayoutParams.WRAP_CONTENT)
+    override fun generateDefaultLayoutParams() = LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
 
-    override fun generateLayoutParams(p: LayoutParams?) = MarginLayoutParams(p)
+    override fun generateLayoutParams(p: ViewGroup.LayoutParams?) = LayoutParams(p)
 
-    override fun checkLayoutParams(p: LayoutParams?) = p is MarginLayoutParams
+    override fun checkLayoutParams(p: ViewGroup.LayoutParams?) = p is LayoutParams
 
     private fun dip(dpValue: Int) = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dpValue.toFloat(), resources.displayMetrics)
+
+    class LayoutParams : MarginLayoutParams {
+        constructor(c: Context?, attrs: AttributeSet?) : super(c, attrs)
+        constructor(width: Int, height: Int) : super(width, height)
+        //        constructor(width: Int, height: Int, gravity: Int): super(width, height, gravity)
+        constructor(source: ViewGroup.LayoutParams) : super(source)
+
+        constructor(source: MarginLayoutParams) : super(source)
+//        constructor(source: LayoutParams): super(source) {
+//            this.gravity = source.gravity
+//        }
+    }
 }

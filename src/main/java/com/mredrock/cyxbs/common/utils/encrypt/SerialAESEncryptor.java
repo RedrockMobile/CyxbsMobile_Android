@@ -2,6 +2,8 @@ package com.mredrock.cyxbs.common.utils.encrypt;
 
 import android.os.Build;
 
+import java.nio.charset.StandardCharsets;
+
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
@@ -36,7 +38,7 @@ public class SerialAESEncryptor implements Encryptor {
         }
     }
 
-    private static SecretKeySpec generateKey() throws Exception {
+    private static SecretKeySpec generateKey() {
         String key = Build.SERIAL;
         if (key == null || key.equals("")) {
             key = "huQVa6y^Rd0Z^e#K";
@@ -44,7 +46,7 @@ public class SerialAESEncryptor implements Encryptor {
         while (key.length() < 16) {
             key += key;
         }
-        byte[] keyBytes = key.getBytes("US-ASCII");
+        byte[] keyBytes = key.getBytes(StandardCharsets.US_ASCII);
         return new SecretKeySpec(
                 InsecureSHA1PRNGKeyDerivator.deriveInsecureKey(keyBytes, 16), "AES");
     }

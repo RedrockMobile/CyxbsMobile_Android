@@ -12,15 +12,35 @@ const val COURSE_ENTRY = "/course/entry"
 const val QA_ENTRY = "/qa/entry"
 const val DISCOVER_ENTRY = "/discover/entry"
 const val MINE_ENTRY = "/mine/entry"
+const val MAIN_MAIN = "/main/main"
 
 const val DISCOVER_OTHER_COURSE = "/other_course/discover/entry"
 const val DISCOVER_NO_CLASS = "/no_class/discover/entry"
 const val DISCOVER_MAP = "/map/discover/entry"
-const val DISCOVER_CALENDER = "/calender/discover/entry"
+const val DISCOVER_CALENDAR = "/calendar/discover/entry"
 const val DISCOVER_ELECTRICITY = "/electricity/discover/entry"
 const val DISCOVER_EMPTY_ROOM = "/empty_room/discover/entry"
 const val DISCOVER_GRADES = "/grades/discover/entry"
 const val DISCOVER_VOLUNTEER = "/volunteer/discover/entry"
 const val DISCOVER_SCHOOL_CAR = "/school_car/discover/entry"
-const val DISCOVER_ABOUT_US = "/about_us/discover/entry"
 const val DISCOVER_NEWS = "/news/discover/entry"
+
+// NoCourseInviteActivity
+const val COURSE_NO_COURSE_INVITE = "/course/no_course_invite_activity"
+
+const val COURSE_OTHER_COURSE = "/course/other_course_activity"
+
+//大红页
+const val REDROCK_HOME_ENTRY = "/redrock_home/entry"
+
+
+//小控件设置
+const val WIDGET_SETTING = "/setting/widget"
+
+// QA
+const val QA_QUIZ = "/quiz/qa/entry"
+const val QA_ANSWER = "/answer/qa/entry"
+const val QA_ANSWER_LIST = "/answer_list/qa/entry"
+
+// 迎新专题
+const val FRESHMAN_ENTRY = "/freshman/entry"

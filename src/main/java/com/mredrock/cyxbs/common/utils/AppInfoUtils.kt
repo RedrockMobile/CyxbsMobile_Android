@@ -19,7 +19,7 @@ fun getProcessName(pid: Int): String? {
         reader = BufferedReader(FileReader("/proc/$pid/cmdline"))
         var processName = reader.readLine()
         if (!TextUtils.isEmpty(processName)) {
-            processName = processName.trim()
+            processName = processName.trim { it <= ' ' }
         }
         return processName
     } catch (throwable: Throwable) {
@@ -33,6 +33,17 @@ fun getProcessName(pid: Int): String? {
 
     }
     return null
+}
+
+/**
+ * getAppVersionCode
+ */
+fun getAppVersionCode(context: Context): Int {
+    return try {
+        context.packageManager.getPackageInfo(context.packageName, 0).versionCode
+    } catch (e: PackageManager.NameNotFoundException) {
+        0
+    }
 }
 
 fun getAppVersionName(context: Context): String? {

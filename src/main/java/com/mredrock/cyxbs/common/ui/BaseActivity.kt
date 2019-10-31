@@ -1,19 +1,19 @@
 package com.mredrock.cyxbs.common.ui
 
+//import com.jude.swipbackhelper.SwipeBackHelper
 import android.app.Activity
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
-import android.support.annotation.DrawableRes
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.Toolbar
-import android.util.Log
+import android.view.Menu
 import android.view.View
 import android.view.WindowManager
+import androidx.annotation.DrawableRes
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import com.afollestad.materialdialogs.MaterialDialog
 import com.alibaba.android.arouter.launcher.ARouter
-import com.jude.swipbackhelper.SwipeBackHelper
 import com.mredrock.cyxbs.common.R
 import com.mredrock.cyxbs.common.event.AskLoginEvent
 import com.mredrock.cyxbs.common.event.LoginEvent
@@ -43,8 +43,9 @@ abstract class BaseActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        SwipeBackHelper.onCreate(this)
-        SwipeBackHelper.getCurrentPage(this).setSwipeRelateEnable(true)
+        // todo 8.0 系统Bug 窗口透明导致限制竖屏闪退
+//        SwipeBackHelper.onCreate(this)
+//        SwipeBackHelper.getCurrentPage(this).setSwipeRelateEnable(true)
 
         if (Build.VERSION.SDK_INT >= 21) {
             val decorView = window.decorView
@@ -59,7 +60,7 @@ abstract class BaseActivity : AppCompatActivity() {
             )
         }
 
-        Log.v(TAG, javaClass.name)
+        LogUtils.v(TAG, javaClass.name)
     }
 
     inline fun <reified T : Activity> startActivity(finish: Boolean = false, vararg params: Pair<String, Any?>) {
@@ -67,7 +68,9 @@ abstract class BaseActivity : AppCompatActivity() {
         startActivity<T>(*params)
     }
 
-    protected val BaseActivity.common_toolbar get() = toolbar
+    val common_toolbar get() = toolbar
+    var menu: Menu? = null
+        private set
 
     protected fun Toolbar.init(title: String,
                                @DrawableRes icon: Int = R.drawable.common_ic_back,
@@ -110,14 +113,15 @@ abstract class BaseActivity : AppCompatActivity() {
         }
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    open fun onLoginStateChangeEvent(event: LoginStateChangeEvent) {
-        LogUtils.d("LoginStateChangeEvent", "in" + localClassName + "login state: " + event.getNewState() + "")
+    override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
+        val r = super.onPrepareOptionsMenu(menu)
+        this.menu = menu
+        return r
     }
 
-    override fun onPostCreate(savedInstanceState: Bundle?) {
-        super.onPostCreate(savedInstanceState)
-        SwipeBackHelper.onPostCreate(this)
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    open fun onLoginStateChangeEvent(event: LoginStateChangeEvent) {
+        LogUtils.d("LoginStateChangeEvent", "in" + localClassName + "login state: " + event.newState + "")
     }
 
     override fun onStart() {
@@ -130,6 +134,7 @@ abstract class BaseActivity : AppCompatActivity() {
         MobclickAgent.onResume(this)
         if (!isFragmentActivity) {
             MobclickAgent.onPageStart(javaClass.name)
+            LogUtils.d("UMStat", javaClass.name + " started")
         }
     }
 
@@ -138,6 +143,7 @@ abstract class BaseActivity : AppCompatActivity() {
         MobclickAgent.onPause(this)
         if (!isFragmentActivity) {
             MobclickAgent.onPageEnd(javaClass.name)
+            LogUtils.d("UMStat", javaClass.name + " paused")
         }
     }
 
@@ -146,8 +152,4 @@ abstract class BaseActivity : AppCompatActivity() {
         EventBus.getDefault().unregister(this)
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        SwipeBackHelper.onDestroy(this)
-    }
 }

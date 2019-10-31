@@ -3,4 +3,58 @@
     <color name="colorPrimary" tools:ignore="ResourceName">#58B1FC</color>
     <color name="colorPrimaryDark" tools:ignore="ResourceName">#798DFA</color>
     <color name="colorAccent" tools:ignore="ResourceName">#788EFA</color>
+
+    <!--    颜色汇总，方便黑夜模式，自己把用到的颜色，都扔在这，写好注释，并在飞书上标注好
+          并以模块名为前缀-->
+
+    <!--    整体灰色背景-->
+    <color name="windowBackground" tools:ignore="ResourceName">#F2F3F8</color>
+    <!--    整体深灰二级背景-->
+    <color name="secondaryWindowBackground" tools:ignore="ResourceName">#F8F9FC</color>
+
+
+    <!--    纯白色背景和纯白色字体-->
+    <color name="whiteBackground" tools:ignore="ResourceName">#ffffff</color>
+    <color name="whiteFontColor" tools:ignore="ResourceName">#ffffff</color>
+
+
+    <!--    主要字体颜色分以下四种，下列按照蓝色由浅到深排序，要用自取-->
+    <!--    一级字体颜色-->
+    <color name="levelOneFontColor" tools:ignore="ResourceName">#112C54</color>
+    <!--    二级字体颜色-->
+    <color name="levelTwoFontColor" tools:ignore="ResourceName">#15315B</color>
+    <!--    三级字体颜色-->
+    <color name="levelThreeFontColor" tools:ignore="ResourceName">#193866</color>
+    <!--    四级字体颜色-->
+    <color name="levelFourFontColor" tools:ignore="DuplicateDefinition,ResourceName">#2A4E84</color>
+
+
+    <!--    底部tab未聚焦字体颜色-->
+    <color name="unFocusedFontColor" tools:ignore="ResourceName">#AABCD8</color>
+    <!--    底部tab聚焦字体颜色-->
+    <color name="focusedFontColor" tools:ignore="ResourceName">#2923D2</color>
+
+
+
+    <!--    课表可上拉下拉标识小块背景-->
+    <color name="courseTableDragIndicatorBlockColor" tools:ignore="ResourceName">#E2EDFB</color>
+    <!--    课表标识当天阴影-->
+    <color name="courseIdentifiesTheCurrentShadowColor" tools:ignore="ResourceName">#E8F0FC</color>
+
+
+    <!--    课表课程色块颜色-->
+    <color name="morningCourseColor" tools:ignore="ResourceName">#F9E7D8</color>
+    <color name="afternoonCourseColor" tools:ignore="ResourceName">#F9E3E4</color>
+    <color name="eveningCourseColor" tools:ignore="ResourceName">#DDE3F8</color>
+
+    <!--    发现教务在线方框背景-->
+    <color name="discoveryJwzxBackground" tools:ignore="ResourceName">#AFD2FB</color>
+
+
+    <!--    按钮渐变起始颜色-->
+    <color name="buttonGradientStartColor" tools:ignore="ResourceName">#4841E2</color>
+    <!--    按钮渐变终止颜色-->
+    <color name="buttonGradientEndColor" tools:ignore="ResourceName">#4841E2</color>
+
 </resources>
+

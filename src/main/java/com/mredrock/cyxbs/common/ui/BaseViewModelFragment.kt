@@ -1,14 +1,11 @@
 package com.mredrock.cyxbs.common.ui
 
 import android.app.ProgressDialog
-import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProvider
-import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.common.viewmodel.event.ProgressDialogEvent
 import org.jetbrains.anko.support.v4.indeterminateProgressDialog
@@ -29,7 +26,8 @@ abstract class BaseViewModelFragment<T : BaseViewModel> : BaseFragment() {
         setOnDismissListener { viewModel.onProgressDialogDismissed() }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
         val viewModelFactory = getViewModelFactory()
         viewModel = if (viewModelFactory != null) {
             ViewModelProviders.of(this, viewModelFactory).get(viewModelClass)
@@ -50,7 +48,6 @@ abstract class BaseViewModelFragment<T : BaseViewModel> : BaseFragment() {
                 }
             }
         }
-        return super.onCreateView(inflater, container, savedInstanceState)
     }
 
     protected open fun getViewModelFactory(): ViewModelProvider.Factory? = null

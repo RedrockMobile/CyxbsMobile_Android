@@ -1,10 +1,11 @@
 package com.mredrock.cyxbs.common.utils.extensions
 
 import android.content.Context
-import android.support.v4.app.Fragment
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import com.tbruyelle.rxpermissions2.RxPermissions
 import org.jetbrains.anko.alert
+import org.jetbrains.anko.noButton
 import org.jetbrains.anko.yesButton
 
 /**
@@ -26,6 +27,19 @@ doPermissionAction(Manifest.permission.READ_PHONE_STATE, Manifest.permission.CAL
         //optional. do something after permission refused by user
     }
 }
+
+// if you think this may cause user feel bad, you can add a neverNotice flag like this:
+doPermissionAction(Manifest.permission.READ_PHONE_STATE, Manifest.permission.CALL_PHONE) {
+    isShowNeverNotice = true
+    tag = "xxx" //optional. mark a flag in sharePreference to convenient skip show request in next time
+
+    ...
+    //others are the same as above
+}
+
+// also,you can give a choice to cancel this dialog, but this dialog also show in next time.
+// you just add a flag called:isShowCancelNotice = true
+// but there, show never notice and show cancel notice are opposite, and priority : never notice > cancel notice
 */
 
 class PermissionActionBuilder {
@@ -34,6 +48,12 @@ class PermissionActionBuilder {
     var doAfterRefused: (() -> Unit)? = null
         private set
     var reason: String? = null
+
+    var isShowNeverNotice = false
+
+    var isShowCancelNotice = false
+
+    var tag: String? = null
 
 
     fun doAfterGranted(action: () -> Unit) {
@@ -64,10 +84,22 @@ private fun performRequestPermission(context: Context,
     val permissionsToRequest = permissionsRequired.filterNot { rxPermissions.isGranted(it) }
 
     when {
+        context.sharedPreferences(builder.tag
+                ?: permissionsRequired.toString()).getBoolean("isNeverShow", false) -> Unit
         permissionsToRequest.isEmpty() -> builder.doAfterGranted.invoke()
         builder.reason != null -> context.alert(builder.reason!!) {
             yesButton {
                 requestPermission(rxPermissions, builder, *permissionsToRequest.toTypedArray())
+            }
+            if (builder.isShowNeverNotice) {
+                negativeButton("不再提示") {
+                    context.sharedPreferences(builder.tag
+                            ?: permissionsRequired.toString()).editor {
+                        putBoolean("isNeverShow", true)
+                    }
+                }
+            } else if (builder.isShowCancelNotice) {
+                noButton {}
             }
         }.show()
         else -> requestPermission(rxPermissions, builder, *permissionsToRequest.toTypedArray())
