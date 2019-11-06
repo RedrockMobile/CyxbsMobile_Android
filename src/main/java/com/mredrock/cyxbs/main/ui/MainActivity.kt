@@ -4,7 +4,9 @@ import android.annotation.SuppressLint
 import android.os.Build
 import android.os.Bundle
 import android.os.Looper
+import android.util.Log
 import android.view.MenuItem
+import android.view.View
 import androidx.fragment.app.Fragment
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
@@ -34,6 +36,8 @@ import android.view.View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
 import android.view.View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
 import androidx.annotation.RequiresApi
 import android.view.WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.mredrock.cyxbs.common.event.CourseSlipsTopEvent
 
 
 @Route(path = MAIN_MAIN)
@@ -99,9 +103,21 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
                 deleteSplash()
             }
         }
-
         //下载Splash图
         viewModel.getStartPage()
+
+
+        val bottomSheetBehavior = BottomSheetBehavior.from(course_bottom_sheet_content)
+        bottomSheetBehavior.setBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
+            override fun onSlide(p0: View, p1: Float) {
+            }
+
+            override fun onStateChanged(p0: View, p1: Int) {
+                if (p1 == BottomSheetBehavior.STATE_DRAGGING && !viewModel.isCourseTop) {
+                    bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+                }
+            }
+        })
     }
 
     @RequiresApi(Build.VERSION_CODES.M)
@@ -174,5 +190,10 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun installUpdate(event: UpdateEvent) {
         UpdateUtils.installApk(this, updateFile)
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun acceptCourseSlideInformation(evet: CourseSlipsTopEvent) {
+        viewModel.isCourseTop = evet.isTop
     }
 }

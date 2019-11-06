@@ -17,6 +17,7 @@ import kotlin.math.abs
 
 class MainViewModel : BaseViewModel() {
     val startPage: LiveData<StartPage?> = MutableLiveData()
+    var isCourseTop = true
 
     fun getStartPage() {
         ApiGenerator.getApiService(ApiService::class.java)
