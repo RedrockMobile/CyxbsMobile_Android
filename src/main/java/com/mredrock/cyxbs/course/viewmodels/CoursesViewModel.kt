@@ -1,6 +1,7 @@
 package com.mredrock.cyxbs.course.viewmodels
 
 import android.content.Context
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.gson.Gson
@@ -14,6 +15,8 @@ import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
 import com.mredrock.cyxbs.common.utils.extensions.editor
 import com.mredrock.cyxbs.common.utils.extensions.errorHandler
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
+import com.mredrock.cyxbs.common.viewmodel.event.SingleLiveEvent
+import com.mredrock.cyxbs.course.R
 import com.mredrock.cyxbs.course.database.ScheduleDatabase
 import com.mredrock.cyxbs.course.event.AffairFromInternetEvent
 import com.mredrock.cyxbs.course.event.RefreshEvent
@@ -59,7 +62,7 @@ class CoursesViewModel : ViewModel() {
     companion object {
         private const val TAG = "CoursesViewModel"
     }
-
+    public val toastEvent :MutableLiveData<Int> by lazy {SingleLiveEvent<Int>()}
     // schoolCalendarUpdated用于表示是否从网络请求到了新的数据并更新了SchoolCalendar，如果是这样就设置为True，
     // 并从新获取课表上的号数
     val schoolCalendarUpdated = MutableLiveData<Boolean>().apply { value = false }
@@ -161,7 +164,7 @@ class CoursesViewModel : ViewModel() {
      */
     private fun getSchedulesFromInternet() {
         resetGetStatus()
-        getCoursesDataFromInternet(true)
+        getCoursesDataFromInternet()
 
         // 如果mIsGetOthers为true，就说明是他人课表查询pass掉备忘查询。反之就是用户在进行课表查询，这时就进行备忘的查询。
         if (isGetOthers.value == true) {
@@ -238,13 +241,16 @@ class CoursesViewModel : ViewModel() {
                 .setSchedulers()
                 .errorHandler()
                 .subscribe(ExecuteOnceObserver(onExecuteOnceNext = { coursesFromInternet ->
+                    if(coursesFromInternet.status == 233){
+                        toastEvent.value = R.string.app_name
+                    }
                     coursesFromInternet.data?.let { notNullCourses ->
                         var tag = ""
                         for (c in notNullCourses) {
                             tag += c.courseNum+c.hashDay+c.hashLesson+c.teacher+c.classroom+c.weekModel+c.week
                         }
                         nextCourses = tag
-//                        nextCourses = tag
+
                         mCourses.addAll(notNullCourses)
                         isGetAllData(0)
 
