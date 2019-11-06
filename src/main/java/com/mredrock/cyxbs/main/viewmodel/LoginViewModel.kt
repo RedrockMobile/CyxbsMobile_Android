@@ -19,6 +19,7 @@ import com.mredrock.cyxbs.main.network.ApiService
 import com.umeng.analytics.MobclickAgent
 import io.reactivex.rxkotlin.zipWith
 import org.greenrobot.eventbus.EventBus
+import java.io.Serializable
 
 /**
  * Created By jay68 on 2018/8/12.
@@ -110,4 +111,4 @@ data class LoginBody(
         val idNum: String,
         val stuNum: String
 
-)
+) : Serializable

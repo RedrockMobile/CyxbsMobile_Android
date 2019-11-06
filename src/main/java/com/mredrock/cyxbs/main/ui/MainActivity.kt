@@ -3,8 +3,10 @@ package com.mredrock.cyxbs.main.ui
 import android.annotation.SuppressLint
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
 import android.os.Looper
 import android.util.Log
+import android.transition.Fade
 import android.view.MenuItem
 import android.view.View
 import androidx.fragment.app.Fragment
@@ -22,6 +24,7 @@ import com.mredrock.cyxbs.common.utils.extensions.sharedPreferences
 import com.mredrock.cyxbs.common.utils.update.UpdateEvent
 import com.mredrock.cyxbs.common.utils.update.UpdateUtils
 import com.mredrock.cyxbs.main.R
+import com.mredrock.cyxbs.main.bean.FinishEvent
 import com.mredrock.cyxbs.main.ui.adapter.MainVpAdapter
 import com.mredrock.cyxbs.main.utils.*
 import com.mredrock.cyxbs.main.viewmodel.MainViewModel
@@ -39,6 +42,8 @@ import android.view.WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.mredrock.cyxbs.common.event.CourseSlipsTopEvent
 
+import org.jetbrains.anko.toast
+import java.lang.IndexOutOfBoundsException
 
 @Route(path = MAIN_MAIN)
 class MainActivity : BaseViewModelActivity<MainViewModel>() {
@@ -63,6 +68,13 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
 
     private val fragments = ArrayList<Fragment>()
     private lateinit var adapter: MainVpAdapter
+
+    private val loadHandler: Handler = Handler()
+    private val loadRunnable = Runnable {
+        fragments.add(getFragment(QA_ENTRY))
+        fragments.add(getFragment(MINE_ENTRY))
+        adapter.notifyDataSetChanged()
+    }
 
     @SuppressLint("ResourceAsColor")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -130,6 +142,11 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
         }
     }
 
+    override fun onBackPressed() {
+//        super.onBackPressed()
+        moveTaskToBack(true)
+    }
+
     private fun deleteSplash() {
         if (isDownloadSplash(this@MainActivity)) {//如果url为空，则删除之前下载的图片
             deleteDir(getSplashFile(this@MainActivity))
@@ -169,27 +186,21 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
         view_pager.adapter = adapter
         view_pager.offscreenPageLimit = 3
 
-        //不想侵入其他模块的代码，这里定义为事件消耗完成时使用IdleHandler触发加载fragment事件，此时视图应可见
-        Looper.myQueue().addIdleHandler {
-            fragments.add(getFragment(QA_ENTRY))
-            fragments.add(getFragment(MINE_ENTRY))
-            adapter.notifyDataSetChanged()
-            false//返回false，则之后不再触发
-        }
+        window.decorView.postDelayed({
+            loadHandler.post(loadRunnable)
+        },200)
     }
 
     private fun getFragment(path: String) = ARouter.getInstance().build(path).navigation() as Fragment
 
-
-    // 为完成迎新专题中直接跳转"发现页"的需求添加的event
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun goToDiscover(event: GoToDiscoverEvent) {
-        view_pager.currentItem = 2
-    }
-
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun installUpdate(event: UpdateEvent) {
         UpdateUtils.installApk(this, updateFile)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        EventBus.getDefault().post(FinishEvent())
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
