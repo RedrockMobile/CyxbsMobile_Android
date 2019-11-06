@@ -32,7 +32,6 @@ import org.greenrobot.eventbus.ThreadMode
 class CourseContainerFragment : BaseFragment() {
 
     companion object {
-        private const val TAG = "CourseContainerFragment"
         const val OTHERS_STU_NUM = "others_stu_num"
 
         fun getOthersCourseContainerFragment(stuNum: String): CourseContainerFragment =
