@@ -242,7 +242,7 @@ class CoursesViewModel : ViewModel() {
                 .errorHandler()
                 .subscribe(ExecuteOnceObserver(onExecuteOnceNext = { coursesFromInternet ->
                     if(coursesFromInternet.status == 233){
-                        toastEvent.value = R.string.app_name
+                        toastEvent.value = R.string.course_use_cache
                     }
                     coursesFromInternet.data?.let { notNullCourses ->
                         var tag = ""
