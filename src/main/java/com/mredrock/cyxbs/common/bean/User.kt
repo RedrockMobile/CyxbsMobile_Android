@@ -4,7 +4,6 @@ import android.os.Parcel
 import android.os.Parcelable
 import com.google.gson.Gson
 import com.google.gson.annotations.SerializedName
-import com.mredrock.cyxbs.common.utils.LogUtils
 
 data class User(@SerializedName("college")
                 var college: String? = null,
@@ -28,7 +27,7 @@ data class User(@SerializedName("college")
                 var stunum: String? = null,
                 @SerializedName("gender")
                 var gender: String? = null,
-                @SerializedName("photo_thumbnail_src")
+                @SerializedName(value = "photo_thumbnail_src", alternate = ["headImgUrl"])
                 var photoThumbnailSrc: String? = null,
                 @SerializedName("phone")
                 var phone: String? = null,
@@ -41,7 +40,24 @@ data class User(@SerializedName("college")
                 @SerializedName("photo_src")
                 var photoSrc: String? = null,
                 @SerializedName("username")
-                var username: String? = null) : Parcelable {
+                var username: String? = null,
+        //new
+                @SerializedName("checkInDay")
+                var checkInDay: Int = 0,
+                @SerializedName("exp")
+                var exp: String? = null,
+                @SerializedName("iat")
+                var iat: String? = null,
+                @SerializedName("integral")
+                var integral: Int = 0,
+                @SerializedName("realName")
+                var realName: String? = null,
+                @SerializedName("redid")
+                var redid: String? = null,
+                @SerializedName("sub")
+                var sub: String? = null
+
+) : Parcelable {
     constructor(parcel: Parcel) : this(
             parcel.readString(),
             parcel.readString(),
@@ -60,7 +76,16 @@ data class User(@SerializedName("college")
             parcel.readString(),
             parcel.readString(),
             parcel.readString(),
-            parcel.readString())
+            parcel.readString(),
+            //new
+            parcel.readInt(),
+            parcel.readString(),
+            parcel.readString(),
+            parcel.readInt(),
+            parcel.readString(),
+            parcel.readString(),
+            parcel.readString()
+    )
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeString(college)
@@ -81,6 +106,14 @@ data class User(@SerializedName("college")
         parcel.writeString(introduction)
         parcel.writeString(photoSrc)
         parcel.writeString(username)
+        //new
+        parcel.writeInt(checkInDay)
+        parcel.writeString(exp)
+        parcel.writeString(iat)
+        parcel.writeInt(integral)
+        parcel.writeString(realName)
+        parcel.writeString(redid)
+        parcel.writeString(sub)
     }
 
     override fun describeContents(): Int {
@@ -94,20 +127,6 @@ data class User(@SerializedName("college")
 
         override fun newArray(size: Int): Array<User?> {
             return arrayOfNulls(size)
-        }
-
-        //有两次请求，但数据都不完整，这个方法就是将请求得到的User和Token合并为一个User类
-        fun cloneFromTokenUserInfo(userOrigin: User, userCloned: TokenUser?): User {
-            if (userCloned != null) {
-                userOrigin.stunum = userCloned.stuNum
-                userOrigin.photoThumbnailSrc = userCloned.headImgUrl
-                userOrigin.photoSrc = userCloned.headImgUrl
-                userOrigin.nickname = userCloned.nickname
-                userOrigin.qq = userCloned.qq
-                userOrigin.phone = userCloned.phone
-                userOrigin.introduction = userCloned.introduction
-            }
-            return userOrigin
         }
     }
 
