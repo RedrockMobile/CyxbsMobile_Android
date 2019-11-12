@@ -52,6 +52,8 @@
         android:ellipsize="end"
         android:maxLines="1"
         tools:text="标题标题标题标题"
+        android:lines="1"
+        android:maxEms="7"
         android:textColor="#ff15315b"
         android:textSize="16sp" />
 
