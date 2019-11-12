@@ -12,6 +12,23 @@
     <string name="mine_to_download">扫一扫下载，长按保存</string>
     <string name="mine_money_tell">悄悄告诉你：积分可以兑换礼物~</string>
     <string name="mine_gift_ontheway">礼物正在路上呢~</string>
+    <string name="mine_sign_name">签到</string>
+    <string name="mine_sing_successive_default">已连续签到0天</string>
+    <string name="mine_question">提问</string>
+    <string name="mine_answer">回答</string>
+    <string name="mine_reply_to_question">提问回复</string>
+    <string name="mine_praise">获赞</string>
+    <string name="mine_number_default">0</string>
+    <string name="mine_schedule_remind">课表提醒</string>
+    <string name="mine_remind_before_class">上课前十分钟提醒我</string>
+    <string name="mine_push_schedule">每天十分钟前推送课表给我</string>
+    <string name="mine_show_memo">在没课的地方显示备忘录</string>
+    <string name="mine_show_schedule_first_launch">启动页APP时最先显示课表页面</string>
+    <string name="mine_night_mode">夜间模式</string>
+    <string name="mine_custom_icon">自定义桌面小图标</string>
+    <string name="mine_feedback_suggestion">意见与反馈</string>
+    <string name="mine_about_redrock">红岩网校</string>
+
 
 
     <string name="mine_sign_remind_switch_hint">连续签到每日提醒</string>

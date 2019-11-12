@@ -3,8 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#f6f6f6"
     android:orientation="vertical"
+    android:background="@color/windowBackground"
     tools:context=".UserFragment">
 
     <ScrollView
@@ -18,59 +18,288 @@
             <View
                 android:id="@+id/mine_main_topBackground"
                 android:layout_width="match_parent"
-                android:layout_height="135dp"
-                android:background="@drawable/mine_bg_me_top" />
+                android:layout_height="135dp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <RelativeLayout
+                <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content" >
 
                     <de.hdodenhof.circleimageview.CircleImageView
                         android:id="@+id/mine_main_avatar"
-                        android:layout_width="68dp"
-                        android:layout_height="68dp"
-                        android:layout_marginStart="16dp"
-                        android:layout_marginTop="20dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="30dp"
+                        android:layout_marginTop="40dp"
+                        android:layout_marginBottom="20dp"
                         android:scaleType="centerCrop"
-                        android:src="@drawable/mine_default_avatar"
-                        app:civ_border_color="@color/mine_user_white_color"
-                        app:civ_border_width="2dp" />
+                        android:src="@drawable/mine_avatar_default_img"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
 
                     <TextView
                         android:id="@+id/mine_main_username"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignTop="@id/mine_main_avatar"
-                        android:layout_marginStart="11dp"
-                        android:layout_marginTop="10dp"
                         android:layout_toEndOf="@id/mine_main_avatar"
                         android:text="@string/mine_user_empty_username"
-                        android:textColor="@color/mine_user_white_color"
-                        android:textSize="17sp" />
+                        android:textColor="@color/levelOneFontColor"
+                        android:textSize="21sp"
+                        app:layout_constraintStart_toStartOf="@+id/mine_main_introduce"
+                        app:layout_constraintTop_toTopOf="@+id/mine_main_avatar" />
 
                     <TextView
                         android:id="@+id/mine_main_introduce"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/mine_main_username"
-                        android:layout_marginStart="11dp"
-                        android:layout_marginTop="6dp"
+                        android:layout_marginStart="30dp"
                         android:layout_toEndOf="@id/mine_main_avatar"
-                        android:drawableEnd="@drawable/mine_ic_me_edit"
                         android:drawablePadding="8dp"
                         android:ellipsize="end"
                         android:maxLength="20"
                         android:maxLines="1"
                         android:text="@string/mine_user_empty_introduce"
-                        android:textColor="@color/mine_user_white_color"
-                        android:textSize="13sp" />
+                        android:textColor="@color/levelOneFontColor"
+                        android:textSize="13sp"
+                        app:layout_constraintBottom_toBottomOf="@+id/mine_main_avatar"
+                        app:layout_constraintStart_toEndOf="@+id/mine_main_avatar"
+                        app:layout_constraintTop_toBottomOf="@+id/mine_main_username" />
 
-                </RelativeLayout>
+                    <ImageView
+                        android:id="@+id/mine_main_avatar_edit"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignTop="@id/mine_main_username"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginEnd="40dp"
+                        android:src="@drawable/mine_setting_info_btn"
+                        app:layout_constraintBottom_toBottomOf="@+id/mine_main_introduce"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="@+id/mine_main_username" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+                
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="15dp"
+                    app:cardCornerRadius="8dp">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="200dp">
+
+                        <TextView
+                            android:id="@+id/mine_textview"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/mine_sing_successive_default"
+                            android:textColor="@color/levelOneFontColor"
+                            android:textSize="14sp"
+                            app:layout_constraintBottom_toTopOf="@+id/mine_guideline"
+                            app:layout_constraintStart_toStartOf="@+id/mine_main_tv_question"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <Button
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="end"
+                            android:background="@drawable/mine_bg_round_corner"
+                            android:text="@string/mine_sign_name"
+                            android:minHeight="30dp"
+                            android:minWidth="50dp"
+                            android:textColor="@color/whiteFontColor"
+                            android:textSize="14sp"
+                            app:layout_constraintBottom_toTopOf="@+id/mine_guideline"
+                            app:layout_constraintEnd_toEndOf="@+id/mine_main_tv_praise"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <TextView
+                            android:id="@+id/mine_main_question_number"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/mine_number_default"
+                            android:textSize="@dimen/mine_main_large"
+                            android:textStyle="bold"
+                            app:layout_constraintBottom_toTopOf="@+id/mine_main_tv_question"
+                            app:layout_constraintEnd_toEndOf="@+id/mine_main_tv_question"
+                            app:layout_constraintStart_toStartOf="@+id/mine_main_tv_question" />
+
+                        <TextView
+                            android:id="@+id/mine_main_answer_number"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/mine_number_default"
+                            android:textSize="@dimen/mine_main_large"
+                            android:textStyle="bold"
+                            app:layout_constraintBottom_toTopOf="@+id/mine_main_tv_answer"
+                            app:layout_constraintEnd_toEndOf="@+id/mine_main_tv_answer"
+                            app:layout_constraintStart_toStartOf="@+id/mine_main_tv_answer" />
+
+                        <TextView
+                            android:id="@+id/mine_main_reply_to_question_number"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/mine_number_default"
+                            android:textSize="@dimen/mine_main_large"
+                            android:textStyle="bold"
+                            app:layout_constraintBottom_toTopOf="@+id/mine_main_tv_reply_to_answer"
+                            app:layout_constraintEnd_toEndOf="@+id/mine_main_tv_reply_to_answer"
+                            app:layout_constraintStart_toStartOf="@+id/mine_main_tv_reply_to_answer" />
+
+                        <TextView
+                            android:id="@+id/mine_main_praise_number"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/mine_number_default"
+                            android:textSize="@dimen/mine_main_large"
+                            android:textStyle="bold"
+                            app:layout_constraintBottom_toTopOf="@+id/mine_main_tv_praise"
+                            app:layout_constraintEnd_toEndOf="@+id/mine_main_tv_praise"
+                            app:layout_constraintHorizontal_bias="0.55"
+                            app:layout_constraintStart_toStartOf="@+id/mine_main_tv_praise" />
+
+                        <TextView
+                            android:id="@+id/mine_main_tv_question"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="30dp"
+                            android:text="@string/mine_question"
+                            android:textSize="@dimen/mine_main_medium"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toStartOf="@+id/mine_main_tv_answer"
+                            app:layout_constraintHorizontal_bias="0.5"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="@+id/mine_guideline" />
+
+                        <TextView
+                            android:id="@+id/mine_main_tv_answer"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/mine_answer"
+                            android:textSize="@dimen/mine_main_medium"
+                            app:layout_constraintBottom_toBottomOf="@+id/mine_main_tv_question"
+                            app:layout_constraintEnd_toStartOf="@+id/mine_main_tv_reply_to_answer"
+                            app:layout_constraintHorizontal_bias="0.5"
+                            app:layout_constraintStart_toEndOf="@+id/mine_main_tv_question" />
+
+                        <TextView
+                            android:id="@+id/mine_main_tv_reply_to_answer"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/mine_reply_to_question"
+                            android:textSize="@dimen/mine_main_medium"
+                            app:layout_constraintBottom_toBottomOf="@+id/mine_main_tv_answer"
+                            app:layout_constraintEnd_toStartOf="@+id/mine_main_tv_praise"
+                            app:layout_constraintHorizontal_bias="0.5"
+                            app:layout_constraintStart_toEndOf="@+id/mine_main_tv_answer" />
+
+                        <TextView
+                            android:id="@+id/mine_main_tv_praise"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/mine_praise"
+                            android:textSize="@dimen/mine_main_medium"
+                            app:layout_constraintBottom_toBottomOf="@+id/mine_main_tv_reply_to_answer"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintHorizontal_bias="0.5"
+                            app:layout_constraintStart_toEndOf="@+id/mine_main_tv_reply_to_answer" />
+
+                        <androidx.constraintlayout.widget.Guideline
+                            android:id="@+id/mine_guideline"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            app:layout_constraintGuide_begin="79dp" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                </com.google.android.material.card.MaterialCardView>
+                <TextView
+                    android:layout_marginTop="13dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:textSize="@dimen/mine_main_medium"
+                    android:text="@string/mine_schedule_remind"
+                    android:textColor="@color/levelThreeFontColor"/>
+                <Switch
+                    android:layout_marginTop="36dp"
+                    android:layout_marginStart="16dp"
+                    android:textSize="@dimen/mine_main_small"
+                    android:text="@string/mine_remind_before_class"
+                    android:textColor="@color/levelFourFontColor"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+                <Switch
+                    android:layout_marginTop="36dp"
+                    android:layout_marginStart="16dp"
+                    android:textSize="@dimen/mine_main_small"
+                    android:textColor="@color/levelFourFontColor"
+                    android:text="@string/mine_push_schedule"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <Switch
+                    android:layout_marginTop="36dp"
+                    android:layout_marginStart="16dp"
+                    android:textSize="@dimen/mine_main_small"
+                    android:textColor="@color/levelFourFontColor"
+                    android:text="@string/mine_show_memo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+                <View
+                    android:layout_marginTop="28dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/levelFourFontColor"/>
+                <Switch
+                    android:layout_marginTop="36dp"
+                    android:layout_marginStart="16dp"
+                    android:textSize="@dimen/mine_main_medium"
+                    android:textColor="@color/levelThreeFontColor"
+                    android:text="@string/mine_show_schedule_first_launch"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <Switch
+                    android:layout_marginTop="36dp"
+                    android:layout_marginStart="16dp"
+                    android:textColor="@color/levelThreeFontColor"
+                    android:textSize="@dimen/mine_main_medium"
+                    android:text="@string/mine_night_mode"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+                <TextView
+                    android:layout_marginTop="36dp"
+                    android:layout_marginStart="16dp"
+                    android:textSize="@dimen/mine_main_medium"
+                    android:textColor="@color/levelThreeFontColor"
+                    android:text="@string/mine_custom_icon"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+                <TextView
+                    android:layout_marginTop="36dp"
+                    android:layout_marginStart="16dp"
+                    android:textColor="@color/levelThreeFontColor"
+                    android:textSize="@dimen/mine_main_medium"
+                    android:text="@string/mine_feedback_suggestion"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+                <TextView
+                    android:layout_marginTop="36dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginBottom="50dp"
+                    android:textColor="@color/levelThreeFontColor"
+                    android:textSize="@dimen/mine_main_medium"
+                    android:text="@string/mine_about_redrock"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
 
                 <com.mredrock.cyxbs.mine.util.widget.UserFragmentItem
                     android:id="@+id/mine_main_dailySign"
@@ -197,6 +426,7 @@
                     android:layout_height="76dp"
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
+                    android:layout_marginBottom="50dp"
                     app:cardCornerRadius="9dp"
                     app:itemIcon="@drawable/mine_ic_me_setting"
                     app:itemTitle="设置"
