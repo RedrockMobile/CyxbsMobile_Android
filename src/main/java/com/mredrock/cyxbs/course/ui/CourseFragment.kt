@@ -1,12 +1,14 @@
 package com.mredrock.cyxbs.course.ui
 
 import android.graphics.Color
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -77,6 +79,9 @@ class CourseFragment : BaseFragment(){
         mBinding.coursesViewModel = mCoursesViewModel
         mBinding.dateViewModel = mDateViewModel
 
+        mCoursesViewModel.toastEvent.observe(this, Observer {
+            Toast.makeText(context,it,Toast.LENGTH_SHORT).show()
+        })
         // 当当前周数进行了改变后有可能SchoolCalendar进行了更新，这时候就对DateViewModel中的日期进行更新
         mCoursesViewModel.schoolCalendarUpdated.observe(this, Observer {
             if (it == true) {
