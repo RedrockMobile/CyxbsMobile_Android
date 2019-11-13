@@ -1,10 +1,12 @@
 package com.mredrock.cyxbs.course.ui
 
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -20,7 +22,7 @@ import kotlinx.android.synthetic.main.course_fragment_course.view.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-
+import org.jetbrains.anko.textColor
 
 
 /**
@@ -65,6 +67,12 @@ class CourseFragment : BaseFragment(){
         mDateViewModel = ViewModelProviders.of(this,
                 DateViewModel.DateViewModelFactory(mWeek)).get(DateViewModel::class.java)
         mDateViewModel.nowWeek = mWeek
+
+        //夜间模式统一颜色后这里在代码里面设置透明度
+        activity?.let {
+            val color = ContextCompat.getColor(it,R.color.levelOneFontColor)
+            red_rock_tv_course_day_of_month.textColor = Color.argb(153, Color.red(color), Color.green(color), Color.blue(color))
+        }
 
         mBinding.coursesViewModel = mCoursesViewModel
         mBinding.dateViewModel = mDateViewModel

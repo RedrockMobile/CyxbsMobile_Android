@@ -48,7 +48,7 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:orientation="horizontal"
-            android:textColor="#112C54"
+            android:textColor="@color/levelOneFontColor"
             android:textSize="@dimen/course_top_and_left_column_text_size"
             app:displayedStrings="@{dateViewModel.daysOfMonth}"
             app:layout_constraintBottom_toBottomOf="@id/tv_course_month"

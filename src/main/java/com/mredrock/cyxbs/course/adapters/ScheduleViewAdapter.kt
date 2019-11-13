@@ -23,6 +23,7 @@ import com.mredrock.cyxbs.course.ui.ScheduleDetailDialogHelper
 import com.mredrock.cyxbs.course.utils.ClassRoomParse
 import com.mredrock.cyxbs.course.utils.RippleDrawableUtil
 import org.greenrobot.eventbus.EventBus
+import org.jetbrains.anko.textColor
 import java.util.*
 
 /**
@@ -49,10 +50,15 @@ class ScheduleViewAdapter(private val mContext: Context,
     private val mSchedulesArray = Array(6) { arrayOfNulls<MutableList<Course>>(7) }
 
     private val mCoursesColors by lazy(LazyThreadSafetyMode.NONE) {
-        intArrayOf(ContextCompat.getColor(mContext, R.color.courseCoursesForenoon),
-                ContextCompat.getColor(mContext, R.color.courseCoursesAfternoon),
-                ContextCompat.getColor(mContext, R.color.courseCoursesNight),
+        intArrayOf(ContextCompat.getColor(mContext, R.color.morningCourseColor),
+                ContextCompat.getColor(mContext, R.color.afternoonCourseColor),
+                ContextCompat.getColor(mContext, R.color.eveningCourseColor),
                 ContextCompat.getColor(mContext, R.color.courseCoursesOther))
+    }
+      private val mCoursesTextColors by lazy(LazyThreadSafetyMode.NONE) {
+          intArrayOf(ContextCompat.getColor(mContext, R.color.morningCourseTextColor),
+                  ContextCompat.getColor(mContext, R.color.afternoonCourseTextColor),
+                  ContextCompat.getColor(mContext, R.color.eveningCourseTextColor))
     }
     private val mCoursesOverlapColors by lazy(LazyThreadSafetyMode.NONE) {
         intArrayOf(ContextCompat.getColor(mContext, R.color.courseCoursesOverlapForenoon),
@@ -223,6 +229,8 @@ class ScheduleViewAdapter(private val mContext: Context,
                 LogUtils.d(TAG, itemCount.toString())
                 tag.setImageDrawable(mRightTopTags[3])
             }
+            top.textColor = mCoursesTextColors[index]
+            bottom.textColor = mCoursesTextColors[index]
         } else {
             if (!mShowModel) {
                 tag.setImageDrawable(mRightTopTags[index])

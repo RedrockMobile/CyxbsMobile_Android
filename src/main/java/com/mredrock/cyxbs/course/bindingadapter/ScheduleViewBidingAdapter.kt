@@ -14,7 +14,7 @@ object ScheduleViewBidingAdapter {
 
     /**
      * @param scheduleView [ScheduleView]
-     * @param schedules 要显示的内容。如果是用户课表就包含课表和备忘。如果是他人课表就只有备忘。
+     * @param schedules 要显示的内容。如果是用户课表就包含课表和备忘。如果是他人课表就没有备忘。
      * @param nowWeek 表示是第几周
      * @param isBanTouchView 是否禁用空白处点击添加备忘的功能。如果是用户课表就为false。如果是他人课表就为true。
      */
