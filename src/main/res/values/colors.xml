@@ -46,6 +46,10 @@
     <color name="morningCourseColor" tools:ignore="ResourceName">#F9E7D8</color>
     <color name="afternoonCourseColor" tools:ignore="ResourceName">#F9E3E4</color>
     <color name="eveningCourseColor" tools:ignore="ResourceName">#DDE3F8</color>
+    <!--    课程色块内的字体颜色-->
+    <color name="morningCourseTextColor" tools:ignore="ResourceName">#FF8015</color>
+    <color name="afternoonCourseTextColor" tools:ignore="ResourceName">#FF6262</color>
+    <color name="eveningCourseTextColor" tools:ignore="ResourceName">#4066EA</color>
 
     <!--    发现教务在线方框背景-->
     <color name="discoveryJwzxBackground" tools:ignore="ResourceName">#AFD2FB</color>
