@@ -77,6 +77,10 @@ android {
             shrinkResources false
 
             signingConfig signingConfigs.config
+            ndk {
+                abiFilters 'armeabi-v7a'
+                abiFilters 'x86'
+            }
         }
 
         release {
