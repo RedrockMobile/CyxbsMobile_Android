@@ -1,7 +1,9 @@
 package com.mredrock.cyxbs.main.viewmodel
 
+import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.network.exception.RedrockApiException
 import com.mredrock.cyxbs.common.utils.LogUtils
@@ -11,6 +13,8 @@ import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.main.bean.StartPage
 import com.mredrock.cyxbs.main.network.ApiService
+import com.mredrock.cyxbs.main.ui.MainActivity
+import kotlinx.android.synthetic.main.main_activity_main.*
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.abs
@@ -46,5 +50,22 @@ class MainViewModel : BaseViewModel() {
                     (startPage as MutableLiveData).value = it
                 })
                 .lifeCycle()
+    }
+
+    fun initBottomSheetBehavior(activity: MainActivity) {
+        activity.apply {
+            val bottomSheetBehavior = BottomSheetBehavior.from(course_bottom_sheet_content)
+            bottomSheetBehavior.setBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
+                override fun onSlide(p0: View, p1: Float) {
+                    nav_main.translationY = nav_main.height * p1
+                }
+
+                override fun onStateChanged(p0: View, p1: Int) {
+                    if (p1 == BottomSheetBehavior.STATE_DRAGGING && !isCourseTop) {
+                        bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+                    }
+                }
+            })
+        }
     }
 }

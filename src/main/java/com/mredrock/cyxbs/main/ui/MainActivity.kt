@@ -118,19 +118,9 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
         //下载Splash图
         viewModel.getStartPage()
 
-
-        val bottomSheetBehavior = BottomSheetBehavior.from(course_bottom_sheet_content)
-        bottomSheetBehavior.setBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
-            override fun onSlide(p0: View, p1: Float) {
-            }
-
-            override fun onStateChanged(p0: View, p1: Int) {
-                if (p1 == BottomSheetBehavior.STATE_DRAGGING && !viewModel.isCourseTop) {
-                    bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
-                }
-            }
-        })
+        viewModel.initBottomSheetBehavior(this)
     }
+
 
     @RequiresApi(Build.VERSION_CODES.M)
     private fun setAndroidNativeLightStatusBar(dark: Boolean) {
