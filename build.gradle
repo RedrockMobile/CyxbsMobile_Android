@@ -21,7 +21,7 @@ buildscript {
     }
 
     dependencies {
-        classpath "com.android.tools.build:gradle:$gradle_plugins"
+        classpath "com.android.tools.build:gradle:${gradle_plugins}"
         classpath deps.kotlin.gradle
         classpath "com.alibaba:arouter-register:1.0.2"
         //walle多渠道打包
