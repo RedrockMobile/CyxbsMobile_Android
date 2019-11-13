@@ -17,7 +17,6 @@ import com.google.android.material.bottomnavigation.LabelVisibilityMode
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.config.*
 import com.mredrock.cyxbs.common.event.GoToDiscoverEvent
-import com.mredrock.cyxbs.common.event.MainVPChangeEvent
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.extensions.editor
 import com.mredrock.cyxbs.common.utils.extensions.sharedPreferences
@@ -67,7 +66,7 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
     )
 
 
-    private val fragments = ArrayList<Fragment>()
+    private lateinit var fragments: ArrayList<Fragment>
     private lateinit var adapter: MainVpAdapter
 
     private val loadHandler: Handler = Handler()
@@ -86,7 +85,7 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             window.addFlags(FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
             window.decorView.systemUiVisibility = SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
-            window.statusBarColor = ContextCompat.getColor(this,R.color.windowBackground)
+            window.statusBarColor = ContextCompat.getColor(this, R.color.windowBackground)
         }
 
         initBottomNavigationView()
@@ -134,7 +133,6 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
     }
 
     override fun onBackPressed() {
-//        super.onBackPressed()
         moveTaskToBack(true)
     }
 
@@ -155,8 +153,6 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
                 peeCheckedItemPosition = position
                 menuItem.setIcon(icons[(position * 2) + 1])
                 menu?.clear()
-                //通知相应的具体页面【接收在具体的Fragment里面】
-                EventBus.getDefault().post(MainVPChangeEvent(position))
             }
         }
         nav_main.labelVisibilityMode = LabelVisibilityMode.LABEL_VISIBILITY_LABELED
@@ -166,20 +162,19 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
     }
 
     private fun initFragments() {
-        fragments.add(getFragment(DISCOVER_ENTRY))
 
         //在滑动下拉课表容器中添加整个课表
         supportFragmentManager.beginTransaction().replace(R.id.course_bottom_sheet_content, getFragment(COURSE_ENTRY)).apply {
             commit()
         }
 
-        adapter = MainVpAdapter(supportFragmentManager, fragments)
-        view_pager.adapter = adapter
-        view_pager.offscreenPageLimit = 3
+//        adapter = MainVpAdapter(supportFragmentManager, fragments)
+//        view_pager.adapter = adapter
+//        view_pager.offscreenPageLimit = 3
 
-        window.decorView.postDelayed({
-            loadHandler.post(loadRunnable)
-        },200)
+//        window.decorView.postDelayed({
+//            loadHandler.post(loadRunnable)
+//        }, 200)
     }
 
     private fun getFragment(path: String) = ARouter.getInstance().build(path).navigation() as Fragment
@@ -197,5 +192,16 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun acceptCourseSlideInformation(evet: CourseSlipsTopEvent) {
         viewModel.isCourseTop = evet.isTop
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
+    fun acceptFraments(fragments: ArrayList<Fragment>) {
+        this.fragments = fragments
+        adapter = MainVpAdapter(supportFragmentManager, fragments)
+        view_pager.adapter = adapter
+        view_pager.offscreenPageLimit = 3
+        window.decorView.postDelayed({
+            loadHandler.post(loadRunnable)
+        }, 200)
     }
 }

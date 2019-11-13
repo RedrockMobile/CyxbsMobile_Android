@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.os.CountDownTimer
 import android.view.View
 import androidx.core.app.ActivityOptionsCompat
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.alibaba.android.arouter.launcher.ARouter
@@ -12,9 +13,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
 import com.mredrock.cyxbs.common.BaseApp
-import com.mredrock.cyxbs.common.config.QA_ANSWER_LIST
-import com.mredrock.cyxbs.common.config.URI_PATH_QA_ANSWER
-import com.mredrock.cyxbs.common.config.URI_PATH_QA_QUESTION
+import com.mredrock.cyxbs.common.config.*
 import com.mredrock.cyxbs.common.event.AskLoginEvent
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.extensions.*
@@ -48,7 +47,9 @@ class SplashActivity : BaseViewModelActivity<SplashViewModel>() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.main_activity_splash)
         setFullScreen()
-
+        val fragments = ArrayList<Fragment>()
+        fragments.add(ARouter.getInstance().build(DISCOVER_ENTRY).navigation() as Fragment)
+        EventBus.getDefault().postSticky(fragments)
         //判断是否下载了Splash图，下载了就直接设置
         isDownloadSplash = if (isDownloadSplash(this@SplashActivity)) {
             viewStub = main_activity_splash_viewStub.inflate()//ViewStub加载
