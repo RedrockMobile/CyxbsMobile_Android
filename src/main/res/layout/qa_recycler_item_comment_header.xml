@@ -3,30 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/qa_answer_list_background_color"
+    android:background="@color/qa_comment_default_color"
     android:orientation="vertical"
-    android:paddingTop="16dp"
-    android:paddingBottom="18dp">
-
-    <TextView
-        android:id="@+id/tv_question_title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ellipsize="end"
-        android:maxLines="2"
-        android:paddingStart="17dp"
-        android:paddingEnd="20dp"
-        android:textColor="@color/qa_comment_item_question_title_color"
-        android:textSize="16sp"
-        tools:text="线代第一题不会，求解，公式应该没问题，算了几次都不对" />
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginStart="15dp"
-        android:layout_marginTop="18dp"
-        android:layout_marginEnd="15dp"
-        android:background="@color/qa_comment_item_divider_color" />
+    android:paddingTop="14dp">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -107,10 +86,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="11dp"
-        android:paddingStart="15dp"
-        android:paddingEnd="15dp"
+        android:paddingStart="50dp"
+        android:paddingEnd="20dp"
         android:textColor="@color/qa_comment_item_answer_content_color"
-        android:textSize="15sp"
+        android:textSize="16sp"
         tools:text="符号A属于Rmxn表示一个m行n列的矩阵，并且矩阵A中所有的所有元素都是实数。符号x属于Rn表示一个含有n个元素的向量。符号A属于Rmxn表示一个m行n列的矩阵，并且矩阵A中所有的所有元素都是实数，符号x属于Rn表示一个含有n个元素的向量。符号A属于Rmxn表示一个m行n列的矩阵，并且矩阵A中所有的所有元素都是实数." />
 
     <com.mredrock.cyxbs.qa.ui.widget.NineGridView
@@ -124,17 +103,8 @@
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="15dp"
+        android:layout_height="10dp"
         android:layout_marginTop="20dp"
         android:background="@color/qa_comment_item_divider_gap_color" />
 
-    <TextView
-        android:id="@+id/tv_answer_count"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="18dp"
-        android:textColor="@color/qa_comment_item_answer_count_color"
-        android:textSize="13sp"
-        tools:text="评论20" />
 </LinearLayout>

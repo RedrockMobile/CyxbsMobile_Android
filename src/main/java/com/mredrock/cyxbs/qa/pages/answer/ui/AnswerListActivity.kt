@@ -5,7 +5,6 @@ import android.app.ProgressDialog
 import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
-import android.view.MenuItem
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
@@ -32,10 +31,10 @@ import com.mredrock.cyxbs.qa.pages.answer.viewmodel.AnswerListViewModel
 import com.mredrock.cyxbs.qa.pages.comment.AdoptAnswerEvent
 import com.mredrock.cyxbs.qa.pages.comment.ui.CommentListActivity
 import com.mredrock.cyxbs.qa.pages.quiz.ui.dialog.RewardSetDialog
-import com.mredrock.cyxbs.qa.pages.report.ui.ReportOrSharePopupWindow
 import com.mredrock.cyxbs.qa.ui.adapter.EmptyRvAdapter
 import com.mredrock.cyxbs.qa.ui.adapter.FooterRvAdapter
 import kotlinx.android.synthetic.main.qa_activity_answer_list.*
+import kotlinx.android.synthetic.main.qa_recycler_item_answer_toolbar.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -78,11 +77,10 @@ class AnswerListActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.qa_activity_answer_list)
-
-        common_toolbar.init(getString(R.string.qa_answer_list_title))
+//        common_toolbar.init(getString(R.string.qa_answer_list_title))
         if (intent.getParcelableExtra<Question>(PARAM_QUESTION) != null) {
             initViewModel(intent.getParcelableExtra(PARAM_QUESTION))
-            initView()
+            initView(intent.getParcelableExtra(PARAM_QUESTION))
         }
     }
 
@@ -110,8 +108,10 @@ class AnswerListActivity : BaseActivity() {
         }
     }
 
-    private fun initView() {
+    private fun initView(question: Question) {
         initRv()
+        //设置标题
+        qa_tv_question_toolbar_title.text = question.title
         observeListChangeEvent()
     }
 
@@ -248,16 +248,16 @@ class AnswerListActivity : BaseActivity() {
         return true
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        return when (item?.itemId) {
-            R.id.more -> {
-                ReportOrSharePopupWindow(this, viewModel.questionLiveData.value
-                        ?: return false, common_toolbar, card_frame).show()
-                true
-            }
-            else -> false
-        }
-    }
+//    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+//        return when (item?.itemId) {
+//            R.id.more -> {
+//                ReportOrSharePopupWindow(this, viewModel.questionLiveData.value
+//                        ?: return false, common_toolbar, card_frame).show()
+//                true
+//            }
+//            else -> false
+//        }
+//    }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun adoptAnswer(event: AdoptAnswerEvent) {
@@ -284,7 +284,7 @@ class AnswerListActivity : BaseActivity() {
                 toast(questionWrapper.info ?: "未知错误")
             } else {
                 initViewModel(questionWrapper.data)
-                initView()
+                initView(questionWrapper.data)
             }
         }
     }

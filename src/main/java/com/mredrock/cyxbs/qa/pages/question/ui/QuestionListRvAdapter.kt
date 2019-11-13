@@ -51,12 +51,12 @@ class QuestionListRvAdapter(private val fragment: Fragment) : BaseEndlessRvAdapt
             itemView.apply {
                 iv_avatar.setAvatarImageFromUrl(data.photoThumbnailSrc)
                 tv_nickname.setNicknameTv(data.nickname, data.isEmotion && !data.isAnonymous, data.isMale)
-                setDisappear(tv_disappear_at, data.disappearAt)
-                tv_tag.text = context.getString(R.string.qa_question_item_tag, data.tags)
+//                setDisappear(tv_disappear_at, data.disappearAt)
+//                tv_tag.text = context.getString(R.string.qa_question_item_tag, data.tags)
                 tv_title.text = data.title
-                tv_content.text = data.description
-                tv_reward.text = context.getString(R.string.qa_question_item_reward, data.reward)
-                setShowPictureButton(tv_show_picture, data.photoUrl)
+//                tv_content.text = data.description
+                tv_praise_count.text = context.getString(R.string.qa_question_item_reward, data.reward)
+//                setShowPictureButton(tv_show_picture, data.photoUrl)
             }
         }
 

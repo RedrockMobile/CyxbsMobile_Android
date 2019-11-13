@@ -4,6 +4,7 @@
     android:id="@+id/swipe_refresh_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/qa_question_list_recycle_view_background"
     tools:context=".pages.question.ui.QuestionListFragment">
 
     <androidx.recyclerview.widget.RecyclerView

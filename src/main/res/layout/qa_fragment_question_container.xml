@@ -11,15 +11,16 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="9dp"
-        android:layout_marginTop="26.5dp"
+        android:layout_marginTop="20dp"
         android:layout_marginBottom="6.5dp"
-        tools:text="第十一周 周二"
+        android:text="第十一周 周二"
         android:textColor="#ff2a4e84"
-        android:textSize="15sp" />
+        android:textSize="12sp" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp">
 
         <androidx.appcompat.widget.AppCompatTextView
@@ -27,15 +28,16 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="9dp"
             android:text="邮问"
+            android:textStyle="bold"
             android:textColor="#ff15315b"
-            android:textSize="25sp"
+            android:textSize="30sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:layout_width="70dp"
-            android:layout_height="match_parent"
+            android:layout_height="35dp"
             android:background="@drawable/qa_main_have_question_btn_background"
             android:gravity="center"
             android:text="提问"
@@ -50,9 +52,8 @@
         android:id="@+id/tl_category"
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        app:tabBackground="@color/qa_tab_background"
         app:tabGravity="fill"
-        app:tabIndicatorColor="@color/qa_tab_selected_color"
+        app:tabIndicatorColor="@color/qa_tab_selected_indicator_color"
         app:tabIndicatorHeight="3dp"
         app:tabMode="fixed"
         app:tabSelectedTextColor="@color/qa_tab_selected_color"
@@ -60,6 +61,7 @@
 
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/vp_question"
+        android:layout_marginTop="10dp"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
@@ -71,7 +73,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_marginEnd="25dp"
-        android:layout_marginBottom="90dp"
+        android:visibility="gone"
         android:src="@drawable/qa_ic_main_quiz_fab"
         app:backgroundTint="@color/qa_quiz_fab_color"
         app:fabCustomSize="58dp" />

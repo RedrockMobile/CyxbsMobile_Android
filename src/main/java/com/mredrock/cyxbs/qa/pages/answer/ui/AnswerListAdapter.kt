@@ -13,6 +13,7 @@ import com.mredrock.cyxbs.qa.component.recycler.BaseViewHolder
 import com.mredrock.cyxbs.qa.pages.comment.AdoptAnswerEvent
 import com.mredrock.cyxbs.qa.utils.*
 import kotlinx.android.synthetic.main.qa_recycler_item_answer.view.*
+import kotlinx.android.synthetic.main.qa_recycler_item_answer.view.tv_answer_content
 import org.greenrobot.eventbus.EventBus
 
 /**
@@ -78,9 +79,9 @@ class AnswerListAdapter(context: Context) : BaseRvAdapter<Answer>() {
                     EventBus.getDefault().post(AdoptAnswerEvent(data.id))
                 }
                 tv_answer_content.text = data.content
-                setDate(tv_date, data.createdAt)
-                tv_comment_count.text = data.commentNum
-                tv_praise.setPraise(data.praiseNum, data.isPraised)
+                setDate(tv_answer_publish_at, data.createdAt)
+                tv_answer_reply_count.text = data.commentNum
+                tv_answer_praise_count.setPraise(data.praiseNum, data.isPraised)
             }
         }
 

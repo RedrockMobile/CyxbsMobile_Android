@@ -19,6 +19,7 @@ import com.mredrock.cyxbs.qa.ui.adapter.FooterRvAdapter
 import com.mredrock.cyxbs.qa.utils.setPraise
 import kotlinx.android.synthetic.main.qa_activity_comment_list.*
 import kotlinx.android.synthetic.main.qa_dialog_comment_bottom_sheet_dialog.*
+import kotlinx.android.synthetic.main.qa_recycler_item_comment_toolbar.*
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.jetbrains.anko.startActivityForResult
@@ -37,7 +38,8 @@ class CommentListActivity : BaseViewModelActivity<CommentListViewModel>() {
                     "title" to title,
                     "showAdoptIcon" to showAdoptIcon,
                     "isEmotion" to question.isEmotion,
-                    "answer" to answer
+                    "answer" to answer,
+                    "answerNum" to answer.commentNum
             )
         }
     }
@@ -59,7 +61,9 @@ class CommentListActivity : BaseViewModelActivity<CommentListViewModel>() {
         val title = intent.getStringExtra("title")
         val showAdoptIcon = intent.getBooleanExtra("showAdoptIcon", false)
         val isEmotion = intent.getBooleanExtra("isEmotion", false)
-        common_toolbar.init(getString(R.string.qa_comment_list_title))
+        val answerNub = intent.getStringExtra("answerNum")
+        qa_tv_comment_toolbar_title.text = baseContext.getString(R.string.qa_comment_list_comment_count, answerNub)
+//        common_toolbar.init(getString(R.string.qa_comment_list_title))
         initRv(title, showAdoptIcon, isEmotion)
         initBottomView()
     }

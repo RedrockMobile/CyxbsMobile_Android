@@ -1,6 +1,5 @@
 package com.mredrock.cyxbs.qa.pages.comment.ui
 
-import android.text.Html
 import android.view.ViewGroup
 import android.widget.TextView
 import com.mredrock.cyxbs.common.utils.extensions.setAvatarImageFromUrl
@@ -37,7 +36,7 @@ class CommentListHeaderRvAdapter(
         override fun refresh(data: Answer?) {
             data ?: return
             itemView.apply {
-                tv_question_title.text = Html.fromHtml(title)
+//                tv_question_title.text = Html.fromHtml(title)
                 iv_answer_avatar.setAvatarImageFromUrl(data.photoThumbnailSrc)
                 tv_answer_nickname.setNicknameTv(data.nickname, isEmotion, data.isMale)
                 tv_answer_content.text = data.content
@@ -50,7 +49,7 @@ class CommentListHeaderRvAdapter(
                 tv_adopt.setOnClickListener {
                     EventBus.getDefault().post(AdoptAnswerEvent(data.id))
                 }
-                tv_answer_count.text = context.getString(R.string.qa_comment_item_answer_count, data.commentNum)
+//                tv_answer_count.text = context.getString(R.string.qa_comment_item_answer_count, data.commentNum)
             }
         }
 

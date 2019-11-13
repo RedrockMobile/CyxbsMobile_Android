@@ -1,122 +1,113 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@color/qa_answer_list_background_color"
-    android:orientation="vertical"
-    android:paddingTop="17dp"
-    android:paddingBottom="9dp">
+    android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/tv_question_title"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="15dp"
-        android:layout_marginEnd="15dp"
-        android:textColor="@color/qa_answer_list_question_title_color"
-        android:textSize="17sp"
-        tools:text="线代第一题不会，求解，公式应该没问题，算了几次都不对" />
+        android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/tv_question_content"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="15dp"
-        android:layout_marginTop="13dp"
-        android:layout_marginEnd="15dp"
-        android:textColor="@color/qa_answer_list_question_content_color"
-        android:textSize="15sp"
-        tools:text="常规题目，还请大佬帮忙解答常规题目，还请大佬帮忙解答常规题目，还请大佬常规常规题目，还请大佬常规题目，还请大佬帮忙解答常规题目帮忙答常规题目常规题目，还请大佬帮忙解答常规题目常规题目常规题目" />
 
-    <com.mredrock.cyxbs.qa.ui.widget.NineGridView
-        android:id="@+id/ngv_question"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingStart="15dp"
-        android:paddingTop="19dp"
-        android:paddingEnd="15dp"
-        android:paddingBottom="19dp" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="25dp"
+            android:layout_marginEnd="15dp"
+            android:layout_marginBottom="19dp">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="15dp"
-        android:layout_marginTop="14dp"
-        android:layout_marginEnd="15dp"
-        android:layout_marginBottom="19dp">
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/iv_questioner_avatar"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:layout_centerVertical="true"
+                android:scaleType="centerCrop"
+                android:src="@drawable/common_default_avatar" />
 
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/iv_questioner_avatar"
-            android:layout_width="28dp"
-            android:layout_height="28dp"
-            android:layout_centerVertical="true"
-            android:scaleType="centerCrop"
-            android:src="@drawable/common_default_avatar" />
+            <TextView
+                android:id="@+id/tv_questioner_nickname"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_toEndOf="@+id/iv_questioner_avatar"
+                android:drawablePadding="3dp"
+                android:textColor="@color/qa_answer_text_content_color"
+                android:textSize="16sp"
+                tools:text="刘童鞋" />
+
+            <TextView
+                android:id="@+id/tv_question_publish_at"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tv_questioner_nickname"
+                android:layout_alignStart="@+id/tv_questioner_nickname"
+                android:textColor="@color/qa_answer_text_content_color"
+                android:textSize="12sp"
+                tools:text="2019.8.22" />
+
+            <TextView
+                android:id="@+id/tv_reward"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:drawableStart="@drawable/qa_ic_answer_list_reward2"
+                android:drawablePadding="4dp"
+                android:textColor="@color/qa_answer_text_content_color"
+                android:textSize="12sp"
+                tools:text="12" />
+
+        </RelativeLayout>
 
         <TextView
-            android:id="@+id/tv_questioner_nickname"
-            android:layout_width="wrap_content"
+            android:id="@+id/tv_question_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_toEndOf="@+id/iv_questioner_avatar"
-            android:drawableEnd="@drawable/qa_ic_gender_male"
-            android:drawablePadding="3dp"
-            android:textColor="@color/qa_answer_list_questioner_nickname_color"
-            android:textSize="13sp"
-            tools:text="刘童鞋" />
+            android:layout_marginStart="15dp"
+            android:layout_marginEnd="15dp"
+            android:textColor="@color/qa_answer_text_content_color"
+            android:textSize="16sp"
+            tools:text="雪莉曾与宋茜、刘逸云(Amber)、朴善怜(Luna)和
+郑秀晶（Krysal）组成女子流行演唱组合f(x)，因
+为靓丽的外形与甜美的歌曲，到很多歌迷的喜欢，
+虽然五人之后因不同的职业规划各自单飞，但依然
+保持着良好的关系。当听到雪
+" />
 
-        <TextView
-            android:id="@+id/tv_disappear_at"
-            android:layout_width="wrap_content"
+        <com.mredrock.cyxbs.qa.ui.widget.NineGridView
+            android:id="@+id/ngv_question"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/tv_questioner_nickname"
-            android:layout_alignStart="@+id/tv_questioner_nickname"
-            android:textColor="@color/qa_answer_list_disappear_color"
-            android:textSize="12sp"
-            tools:text="5小时后消失" />
+            android:paddingStart="15dp"
+            android:paddingTop="19dp"
+            android:paddingEnd="15dp"
+            android:paddingBottom="19dp" />
 
-        <TextView
-            android:id="@+id/tv_reward"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:id="@+id/ll_answer_reply"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
-            android:drawableStart="@drawable/qa_ic_answer_list_reward"
-            android:drawablePadding="8dp"
-            android:textColor="@color/qa_answer_list_reward_color"
-            android:textSize="12sp"
-            tools:text="5积分" />
-    </RelativeLayout>
+            android:layout_marginTop="15dp"
+            android:orientation="vertical"
+            android:contentDescription="@string/qa_answer_list_help">
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="16dp"
-        android:background="@color/qa_answer_list_gap_divider_color" />
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/qa_answer_item_divider_color" />
 
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="15dp"
-        android:layout_marginTop="17dp"
-        android:layout_marginEnd="15dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="7dp"
+                android:text="@string/qa_answer_reply_hint"
+                android:textColor="@color/qa_answer_text_content_color"
+                android:textSize="24sp"
+                android:textStyle="bold" />
+        </LinearLayout>
 
-        <TextView
-            android:id="@+id/tv_answer_count"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="start|center_vertical"
-            android:textColor="@color/qa_answer_list_answer_count_color"
-            android:textSize="14sp"
-            tools:text="6个回答" />
-
-        <TextView
-            android:id="@+id/tv_sort_answer_list"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end|center_vertical"
-            android:text="@string/qa_answer_list_sort_by_default"
-            android:textColor="@color/qa_answer_list_sort_tv_color"
-            android:textSize="14sp" />
-    </FrameLayout>
-</LinearLayout>
+    </LinearLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
