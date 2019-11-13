@@ -64,7 +64,7 @@
                         android:layout_height="match_parent"
                         android:background="@color/courseLightBlue"
                         android:textColor="@color/courseTimeAndWeekDayColor"
-                        android:textSize="@dimen/course_top_and_left_column_text_size"
+                        android:textSize="@dimen/course_column_text_size"
                         app:displayedStrings="@array/course_course_time_strings"
                         app:orientation="vertical" />
 

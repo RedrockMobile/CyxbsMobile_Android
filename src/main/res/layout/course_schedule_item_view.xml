@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     app:cardCornerRadius="@dimen/course_course_item_radius">
 
-    <ImageView
+    <View
         android:id="@+id/background"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -23,7 +23,7 @@
         android:maxLines="3"
         android:padding="3dp"
         android:textColor="@android:color/white"
-        android:textSize="@dimen/course_top_and_left_column_text_size" />
+        android:textSize="@dimen/course_column_text_size" />
 
     <TextView
         android:id="@+id/bottom"
@@ -36,7 +36,7 @@
         android:maxLines="3"
         android:padding="3dp"
         android:textColor="@android:color/white"
-        android:textSize="@dimen/course_top_and_left_column_text_size" />
+        android:textSize="@dimen/course_column_text_size" />
 
     <ImageView
         android:id="@+id/tag"

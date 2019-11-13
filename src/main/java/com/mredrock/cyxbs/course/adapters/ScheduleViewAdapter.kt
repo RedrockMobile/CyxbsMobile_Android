@@ -86,7 +86,7 @@ class ScheduleViewAdapter(private val mContext: Context,
 
     private lateinit var mTop: TextView
     private lateinit var mBottom: TextView
-    private lateinit var mBackground: ImageView
+    private lateinit var mBackground: View
     private lateinit var mTag: ImageView
 
     init {
