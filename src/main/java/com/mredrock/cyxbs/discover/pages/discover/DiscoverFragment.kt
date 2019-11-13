@@ -27,7 +27,7 @@ import org.jetbrains.anko.support.v4.startActivity
  *   2018/9/7.
  *   发现
  */
-@Route(path = DISCOVER_ENTRY)
+
 class DiscoverFragment : BaseViewModelFragment<DiscoverViewModel>() {
 
     private var mListHide: MutableList<Boolean> = mutableListOf()

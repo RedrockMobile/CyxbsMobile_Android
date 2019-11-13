@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/windowBackground"
+        tools:ignore="ScrollViewSize">
+
+        <TextView
+            android:id="@+id/tv_day"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="1dp"
+            android:layout_marginTop="52dp"
+            android:text="第十一周 周二"
+            android:textColor="@color/levelTwoFontColor"
+            android:textSize="10sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/discover_guideline"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="MissingConstraints" />
+
+        <TextView
+            android:id="@+id/tv_dis"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="发现"
+            android:textColor="@color/levelTwoFontColor"
+            android:textSize="34sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/tv_day"
+            app:layout_constraintTop_toBottomOf="@+id/tv_day"
+            tools:ignore="MissingConstraints" />
+
+        <ImageView
+            android:id="@+id/img_check_in"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_dis"
+            app:layout_constraintEnd_toStartOf="@+id/discover_guideline2"
+            app:layout_constraintTop_toTopOf="@+id/tv_dis"
+            app:layout_constraintVertical_bias="0.555"
+            tools:ignore="ContentDescription,MissingConstraints" />
+
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/vp_discover_home"
+            android:layout_width="0dp"
+            android:layout_height="134dp"
+            android:layout_marginTop="5dp"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toStartOf="@+id/discover_guideline2"
+            app:layout_constraintStart_toStartOf="@+id/discover_guideline"
+            app:layout_constraintTop_toBottomOf="@+id/tv_dis"
+            tools:ignore="MissingConstraints" />
+
+        <FrameLayout
+            android:id="@+id/discover_framelayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/sp_jwzx_title"
+            app:layout_constraintEnd_toStartOf="@+id/tv_jwzx_detail"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/vp_discover_home"
+            tools:ignore="MissingConstraints,UselessLeaf">
+
+            <TextView
+                android:id="@+id/tv_discover_jwzx_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:layout_marginBottom="2dp"
+                android:layout_marginStart="13dp"
+                android:layout_marginEnd="13dp"
+                android:textSize="11sp"
+                android:text="@string/news_jwzx"
+                android:textColor="@color/whiteFontColor"/>
+        </FrameLayout>
+
+        <TextView
+            android:id="@+id/tv_jwzx_detail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="14dp"
+            android:textSize="15sp"
+            app:layout_constraintBottom_toBottomOf="@+id/discover_framelayout"
+            app:layout_constraintStart_toEndOf="@+id/discover_framelayout"
+            app:layout_constraintTop_toTopOf="@+id/discover_framelayout"
+            android:textColor="@color/levelTwoFontColor"
+            tools:ignore="MissingConstraints"
+            tools:text="红领巾志愿服务小队" />
+
+        <ImageView
+            android:id="@+id/img_discover_1"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            app:layout_constraintStart_toStartOf="@+id/discover_guideline"
+            app:layout_constraintTop_toBottomOf="@+id/discover_framelayout"
+            tools:ignore="ContentDescription,MissingConstraints" />
+
+        <ImageView
+            android:id="@+id/img_discover_2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toStartOf="@+id/img_discover_4"
+            app:layout_constraintHorizontal_bias="0.33"
+            app:layout_constraintStart_toStartOf="@+id/img_discover_1"
+            app:layout_constraintTop_toBottomOf="@+id/discover_framelayout"
+            tools:ignore="ContentDescription,MissingConstraints" />
+
+        <ImageView
+            android:id="@+id/img_discover_3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toStartOf="@+id/img_discover_4"
+            app:layout_constraintHorizontal_bias="0.66"
+            app:layout_constraintStart_toStartOf="@+id/img_discover_1"
+            app:layout_constraintTop_toBottomOf="@+id/discover_framelayout"
+            tools:ignore="ContentDescription,MissingConstraints" />
+
+        <ImageView
+            android:id="@+id/img_discover_4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toStartOf="@+id/discover_guideline2"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="@+id/img_discover_1"
+            app:layout_constraintTop_toBottomOf="@+id/discover_framelayout"
+            tools:ignore="ContentDescription,MissingConstraints" />
+
+        <FrameLayout
+            android:id="@+id/fl_discover_feeds"
+            android:layout_width="match_parent"
+            android:layout_height="500dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/sp_jwzx_feeds"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/img_discover_1"
+            tools:ignore="MissingConstraints"
+            tools:layout_height="500dp">
+
+        </FrameLayout>
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/discover_guideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintGuide_percent="0.04"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/discover_guideline2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintGuide_percent="0.96"
+            android:orientation="vertical"
+            app:layout_constraintEnd_toEndOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.core.widget.NestedScrollView>
