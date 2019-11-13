@@ -15,8 +15,6 @@
         android:layout_marginBottom="@dimen/main_main_bottom_navigation_height"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
-
-
     <FrameLayout
         android:id="@+id/course_bottom_sheet_content"
         android:layout_width="match_parent"

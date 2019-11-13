@@ -39,6 +39,7 @@ import android.view.View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
 import android.view.View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
 import androidx.annotation.RequiresApi
 import android.view.WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS
+import androidx.core.content.ContextCompat
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.mredrock.cyxbs.common.event.CourseSlipsTopEvent
 
@@ -85,7 +86,7 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             window.addFlags(FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
             window.decorView.systemUiVisibility = SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
-            window.statusBarColor = resources.getColor(R.color.windowBackground)
+            window.statusBarColor = ContextCompat.getColor(this,R.color.windowBackground)
         }
 
         initBottomNavigationView()
