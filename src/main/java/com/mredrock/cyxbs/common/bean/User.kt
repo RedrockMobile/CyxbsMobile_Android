@@ -4,6 +4,13 @@ import android.os.Parcel
 import android.os.Parcelable
 import com.google.gson.Gson
 import com.google.gson.annotations.SerializedName
+import com.mredrock.cyxbs.common.BaseApp
+import com.mredrock.cyxbs.common.network.ApiGenerator
+import com.mredrock.cyxbs.common.network.ApiService
+import com.mredrock.cyxbs.common.network.RefreshToken
+import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
+import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
+import io.reactivex.disposables.Disposable
 
 data class User(@SerializedName("college")
                 var college: String? = null,
@@ -41,7 +48,7 @@ data class User(@SerializedName("college")
                 var photoSrc: String? = null,
                 @SerializedName("username")
                 var username: String? = null,
-        //new
+                //new
                 @SerializedName("checkInDay")
                 var checkInDay: Int = 0,
                 @SerializedName("exp")
@@ -55,7 +62,11 @@ data class User(@SerializedName("college")
                 @SerializedName("redid")
                 var redid: String? = null,
                 @SerializedName("sub")
-                var sub: String? = null
+                var sub: String? = null,
+                @SerializedName("refreshToken")
+                var refreshToken: String? = null,
+                @SerializedName("token")
+                var token: String? = null
 
 ) : Parcelable {
     constructor(parcel: Parcel) : this(
@@ -82,6 +93,8 @@ data class User(@SerializedName("college")
             parcel.readString(),
             parcel.readString(),
             parcel.readInt(),
+            parcel.readString(),
+            parcel.readString(),
             parcel.readString(),
             parcel.readString(),
             parcel.readString()
@@ -114,6 +127,8 @@ data class User(@SerializedName("college")
         parcel.writeString(realName)
         parcel.writeString(redid)
         parcel.writeString(sub)
+        parcel.writeString(refreshToken)
+        parcel.writeString(token)
     }
 
     override fun describeContents(): Int {
@@ -131,4 +146,19 @@ data class User(@SerializedName("college")
     }
 
     fun toJson() = Gson().toJson(this)
+
+    fun refreshToken(): Disposable? {
+        val apiService = ApiGenerator.getApiService(ApiService::class.java)
+        if (BaseApp.user != null && BaseApp.user!!.refreshToken != null) {
+            val observableSource = apiService.refreshToken(RefreshToken(BaseApp.user!!.refreshToken!!))
+            return observableSource
+                    .map { it.data }
+                    .setSchedulers()
+                    .safeSubscribeBy {
+                        BaseApp.user?.refreshToken = it.refreshToken
+                        BaseApp.user?.token = it.token
+                    }
+        }
+        return null
+    }
 }
