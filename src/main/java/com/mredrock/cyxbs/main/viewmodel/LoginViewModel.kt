@@ -68,7 +68,7 @@ class LoginViewModel : BaseViewModel() {
         val body = LoginBody(idNum, stuNum)
         val apiService = ApiGenerator.getApiService(ApiService::class.java)
         //未作校验
-        val observableSource = apiService.getPersonInfoByToken(body)
+        apiService.getPersonInfoByToken(body)
                 .map {
                     val tokenBean = it.data
                     check(!tokenBean.token.isNullOrEmpty()) { BaseApp.context.getString(R.string.main_user_info_error) }
@@ -80,6 +80,8 @@ class LoginViewModel : BaseViewModel() {
                     //如果密码正确，就存储在本地，后端不会传输idNum字段
                     user.stunum = user.stuNum
                     user.idNum = idNum
+                    user.refreshToken = tokenBean.refreshToken
+                    user.token = tokenBean.token
                     user
                 }
                 .setSchedulers()
