@@ -3,6 +3,8 @@ package com.mredrock.cyxbs.course.adapters
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
+import android.graphics.drawable.Drawable
+import android.graphics.drawable.GradientDrawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,7 +23,6 @@ import com.mredrock.cyxbs.course.network.Course
 import com.mredrock.cyxbs.course.ui.EditAffairActivity
 import com.mredrock.cyxbs.course.ui.ScheduleDetailDialogHelper
 import com.mredrock.cyxbs.course.utils.ClassRoomParse
-import com.mredrock.cyxbs.course.utils.RippleDrawableUtil
 import org.greenrobot.eventbus.EventBus
 import org.jetbrains.anko.textColor
 import java.util.*
@@ -78,7 +79,6 @@ class ScheduleViewAdapter(private val mContext: Context,
                 ContextCompat.getDrawable(mContext, R.mipmap.course_ic_corner_right_top_yellow),
                 ContextCompat.getDrawable(mContext, R.mipmap.course_ic_corner_right_top))
     }
-    private val mRippleColor = Color.GRAY
 
     private val mDialogHelper: ScheduleDetailDialogHelper by lazy(LazyThreadSafetyMode.NONE) {
         ScheduleDetailDialogHelper(mContext)
@@ -221,9 +221,9 @@ class ScheduleViewAdapter(private val mContext: Context,
             top.text = course.course
             bottom.text = ClassRoomParse.parseClassRoom(course.classroom ?: "")
             if (isOverlap) {
-                background.background = RippleDrawableUtil.getRippleDrawable(mRippleColor, mCoursesOverlapColors[index])
+                background.background = createBackgroud( mCoursesOverlapColors[index])
             } else {
-                background.background = RippleDrawableUtil.getRippleDrawable(mRippleColor, mCoursesColors[index])
+                background.background = createBackgroud( mCoursesColors[index])
             }
             if (itemCount > 1) {
                 LogUtils.d(TAG, itemCount.toString())
@@ -238,8 +238,22 @@ class ScheduleViewAdapter(private val mContext: Context,
                 top.text = course.course
                 bottom.text = course.classroom
             }
-            background.background = RippleDrawableUtil.getRippleDrawable(mRippleColor, mAffairsColors[index])
+            background.background = createBackgroud( mAffairsColors[index])
+
         }
+    }
+
+    /**
+     * 这个方法来制造课表item的圆角背景
+     * @param 背景颜色
+     * 里面的圆角的参数是写在资源文件里的
+     */
+    fun  createBackgroud(rgb:Int): Drawable {
+        val drawable = GradientDrawable()
+        val courseCorner = mContext.resources.getDimension(R.dimen.course_course_item_radius)
+        drawable.cornerRadii = floatArrayOf(courseCorner, courseCorner, courseCorner, courseCorner, courseCorner, courseCorner, courseCorner, courseCorner)
+        drawable.setColor(rgb)
+        return drawable
     }
 
 

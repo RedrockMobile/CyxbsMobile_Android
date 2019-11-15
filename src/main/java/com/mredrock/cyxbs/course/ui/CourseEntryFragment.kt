@@ -11,10 +11,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.mredrock.cyxbs.common.BaseApp
-import com.mredrock.cyxbs.common.component.JToolbar
 import com.mredrock.cyxbs.common.config.COURSE_ENTRY
 import com.mredrock.cyxbs.common.event.LoginStateChangeEvent
-import com.mredrock.cyxbs.common.event.MainVPChangeEvent
 import com.mredrock.cyxbs.common.ui.BaseFragment
 import com.mredrock.cyxbs.course.R
 import com.mredrock.cyxbs.course.event.TabIsFoldEvent
@@ -104,7 +102,6 @@ class CourseEntryFragment : BaseFragment() {
      * 如果用户没登录，就取消折叠图标以及取消点击事件。
      */
     private fun setToolbar() {
-        
         // 设置当前Toolbar的内容
         if (curIndex == 0 || userVisibleHint) course_tv_which_week.text = mToolbarTitle
 

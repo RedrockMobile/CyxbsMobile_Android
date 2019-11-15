@@ -2,6 +2,8 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <declare-styleable name="ScheduleView" tools:ignore="ResourceName">
         <attr name="elementGap" format="dimension" />
+        <attr name="noGourseImageHeight" format="dimension" />
+        <attr name="noGourseImageWidth" format="dimension" />
         <attr name="touchViewColor" format="color" />
         <attr name="heightAtLowDpi" format="dimension" />
         <attr name="touchViewDrawable" format="reference" />
@@ -10,7 +12,6 @@
         <attr name="emptyText" format="string" />
         <attr name="emptyTextSize" format="dimension" />
         <attr name="isDisplayCourse" format="boolean" />
-
         <attr name="ScheduleViewStyle" format="reference" tools:ignore="ResourceName" />
     </declare-styleable>
 </resources>

@@ -9,6 +9,7 @@ import android.util.AttributeSet
 import android.view.*
 import android.widget.FrameLayout
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import com.mredrock.cyxbs.common.utils.extensions.getScreenHeight
@@ -115,6 +116,9 @@ class ScheduleView : FrameLayout {
     private var mNoCourseDrawableResId: Int = 0
     private var mEmptyText: String? = null
     private var mEmptyTextSize: Int = sp(12)
+    private var noGourseImageHeight: Int = 0
+    private var noGourseImageWidth: Int = 0
+
 
 
     constructor(context: Context) : super(context) {
@@ -128,6 +132,8 @@ class ScheduleView : FrameLayout {
         val typeArray = context.obtainStyledAttributes(attrs, R.styleable.ScheduleView,
                 R.attr.ScheduleViewStyle, 0)
         mElementGap = typeArray.getDimensionPixelSize(R.styleable.ScheduleView_elementGap, dip(2f))
+        noGourseImageHeight = typeArray.getDimensionPixelSize(R.styleable.ScheduleView_noGourseImageHeight, dip(0f))
+        noGourseImageWidth = typeArray.getDimensionPixelSize(R.styleable.ScheduleView_noGourseImageWidth, dip(0f))
         mTouchViewColor = typeArray.getColor(R.styleable.ScheduleView_touchViewColor, Color.parseColor("#bdc3c7"))
         mHeightAtLowDpi = typeArray.getDimensionPixelSize(R.styleable.ScheduleView_heightAtLowDpi, dip(600f))
         mTouchViewDrawableResId = typeArray.getResourceId(R.styleable.ScheduleView_touchViewDrawable, 0)
@@ -167,31 +173,40 @@ class ScheduleView : FrameLayout {
 
     private fun addNoCourseView() {
         if (mIsEmpty && mNoCourseDrawableResId != 0) {
+            val linearLayout = LinearLayout(context).apply {
+                layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+                orientation = LinearLayout.VERTICAL
+                gravity = Gravity.CENTER
+            }
+
             // Set mEmptyImageView
             val emptyImageView = mEmptyImageView
             val emptyTextView = mEmptyTextView
 
-            val imageParams = LayoutParams(mScheduleViewWidth, mScheduleViewWidth)
+            val imageParams = LayoutParams(
+                    if (noGourseImageWidth == 0) mScheduleViewWidth else noGourseImageWidth,
+                    if (noGourseImageHeight == 0) mScheduleViewHeight else noGourseImageHeight)
             emptyImageView.apply {
                 setImageDrawable(ContextCompat.getDrawable(context, mNoCourseDrawableResId))
-                scaleType = ImageView.ScaleType.FIT_CENTER
+                scaleType = ImageView.ScaleType.FIT_XY
                 layoutParams = imageParams
             }
-            addView(emptyImageView)
+            linearLayout.addView(emptyImageView)
 
             // set mEmptyTextView
             mEmptyText?.let {
-                val textParams = LayoutParams(mScheduleViewWidth,
+                val textParams = LayoutParams(LayoutParams.WRAP_CONTENT,
                         LayoutParams.WRAP_CONTENT)
-                textParams.topMargin = mScheduleViewWidth * 4 / 5
-
+                textParams.topMargin = mScheduleViewWidth * 1 / 10
+                textParams.bottomMargin = mScheduleViewWidth * 4 / 5
                 emptyTextView.apply {
                     text = it
                     textSize = px2sp(mEmptyTextSize)
                     gravity = Gravity.CENTER
                     layoutParams = textParams
                 }
-                addView(emptyTextView)
+                linearLayout.addView(emptyTextView)
+                addView(linearLayout)
             }
         }
     }

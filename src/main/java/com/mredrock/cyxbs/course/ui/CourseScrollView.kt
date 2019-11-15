@@ -4,10 +4,12 @@ import android.content.Context
 import android.util.AttributeSet
 import android.widget.ScrollView
 
-
+/**
+ * @author Jon
+ * @date 2019/11/6 19:01
+ * description：这个ScrollView解决了滑动监听在低版本的问题
+ */
 class CourseScrollView : ScrollView {
-    var isTop = true
-    var isSlideDowm = false
 
     constructor(context: Context) : super(context)
 
@@ -16,24 +18,6 @@ class CourseScrollView : ScrollView {
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
 
 
-//    override fun onInterceptTouchEvent(ev: MotionEvent?): Boolean {
-//        return if (isTop && isSlideDowm) {
-//            false
-//        } else {
-//            super.onInterceptTouchEvent(ev)
-//        }
-////        return false
-//    }
-
-//    override fun onTouchEvent(ev: MotionEvent?): Boolean {
-//        if (isTop && isSlideDowm) {
-//            parent.requestDisallowInterceptTouchEvent(true)
-//            return false
-//        } else {
-//            return super.onTouchEvent(ev)
-//        }
-//    }
-
     fun setScrollViewListener(scrollViewListener: ScrollViewListener) {
         this.scrollViewListener = scrollViewListener
     }
@@ -41,8 +25,6 @@ class CourseScrollView : ScrollView {
     private var scrollViewListener: ScrollViewListener? = null
     override fun onScrollChanged(x: Int, y: Int, oldx: Int, oldy: Int) {
         super.onScrollChanged(x, y, oldx, oldy)
-        isTop = y == 0
-        isSlideDowm = y - oldy > 0
         scrollViewListener?.onScrollChanged(this, x, y, oldx, oldy)
     }
 
