@@ -27,6 +27,8 @@
         app:cardCornerRadius="30dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:focusable="true"
+            android:focusableInTouchMode="true"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
@@ -86,8 +88,9 @@
                 android:background="@null"
                 android:ellipsize="end"
                 android:hint="@string/mine_nickname_default"
-                android:maxLength="20"
+                android:maxLength="8"
                 android:maxLines="1"
+                android:inputType="text"
                 android:textColor="@color/mine_question_detail_answer_content"
                 android:textSize="@dimen/mine_main_small"
                 app:layout_constraintBottom_toTopOf="@+id/mine_tv_sign"
@@ -114,9 +117,10 @@
                 android:layout_height="wrap_content"
                 android:background="@null"
                 android:ellipsize="end"
+                android:inputType="text"
                 android:hint="@string/mine_introduce_default"
                 android:maxLength="20"
-                android:maxLines="2"
+                android:maxLines="1"
                 android:textColor="@color/mine_question_detail_answer_content"
                 android:textSize="@dimen/mine_main_small"
                 app:layout_constraintBottom_toTopOf="@+id/mine_tv_qq"
@@ -221,8 +225,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"
-                android:background="@drawable/mine_bg_round_corner"
+                android:background="@drawable/mine_bg_round_corner_grey"
                 android:minWidth="120dp"
+                android:clickable="false"
                 android:minHeight="40dp"
                 android:text="@string/mine_info_save"
                 android:textColor="@color/whiteFontColor"

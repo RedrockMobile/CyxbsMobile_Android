@@ -2,12 +2,19 @@ package com.mredrock.cyxbs.mine.page.edit
 
 import android.Manifest
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
+import android.text.Editable
+import android.text.TextWatcher
+import android.view.MotionEvent
+import android.view.View
+import android.view.inputmethod.InputMethodManager
+import android.widget.EditText
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import com.afollestad.materialdialogs.MaterialDialog
@@ -24,6 +31,7 @@ import kotlinx.android.synthetic.main.mine_activity_edit_info.*
 import okhttp3.MediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
+import org.jetbrains.anko.backgroundResource
 import org.jetbrains.anko.toast
 import java.io.File
 import java.io.IOException
@@ -39,30 +47,69 @@ class EditInfoActivity(override val isFragmentActivity: Boolean = false,
 
     private val SELECT_PICTURE = 1
     private val SELECT_CAMERA = 2
-    private var isEdit = true //toolbar的字是否是编辑
+
+    private val positiveCallback = {
+        finish()
+    }
+    private val cancelCallback = {
+    }
+    private val watcher = object :TextWatcher {
+        override fun afterTextChanged(s: Editable?) {
+        }
+
+        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+        }
+
+        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+            if (checkIfInfoChange()) {
+                mine_btn_info_save.backgroundResource = R.drawable.mine_bg_round_corner_blue
+                mine_btn_info_save.text = "保存"
+                mine_btn_info_save.isClickable = true
+            } else {
+                mine_btn_info_save.backgroundResource = R.drawable.mine_bg_round_corner_grey
+                mine_btn_info_save.text = "已保存"
+                mine_btn_info_save.isClickable = false
+
+            }
+        }
+
+    }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.mine_activity_edit_info)
 
         mine_et_toolbar.init("资料编辑",
-                R.drawable.mine_ic_arrow_left)
+                R.drawable.mine_ic_arrow_left,
+                View.OnClickListener {
+                    if (checkIfInfoChange()) {
+                        SaveInfoDialogFragment(positiveCallback, cancelCallback).show(supportFragmentManager, "SaveInfo")
+                    } else {
+                        finish()
+                    }
+                })
 
         initObserver()
-
         loadAvatar(user?.photoThumbnailSrc, mine_et_avatarImageView)
         initData()
-
+        setTextChangeListener()
         //点击更换头像
         mine_et_avatarImageView.setOnClickListener { changeAvatar() }
-
-        mine_btn_info_save.setOnClickListener { saveInfo() }
-
-//        mine_et_introduce.setAutoGravity()
+        mine_btn_info_save.setOnClickListener {
+            saveInfo()
+            mine_btn_info_save.text = "已保存"
+            mine_btn_info_save.backgroundResource = R.drawable.mine_bg_round_corner_grey
+            mine_btn_info_save.isClickable = false
+        }
     }
 
-    private fun disableEdit() {
-
+    override fun onBackPressed() {
+        if (checkIfInfoChange()) {
+            SaveInfoDialogFragment(positiveCallback, cancelCallback).show(supportFragmentManager, "SaveInfo")
+        } else {
+            super.onBackPressed()
+        }
     }
 
     private fun initData() {
@@ -72,17 +119,20 @@ class EditInfoActivity(override val isFragmentActivity: Boolean = false,
         mine_et_phone.setText(user!!.phone)
     }
 
+    private fun setTextChangeListener() {
+        mine_et_nickname.addTextChangedListener(watcher)
+        mine_et_introduce.addTextChangedListener(watcher)
+        mine_et_qq.addTextChangedListener(watcher)
+        mine_et_phone.addTextChangedListener(watcher)
+    }
+
     private fun initObserver() {
         viewModel.updateInfoEvent.observe(this, Observer {
             it!!
             if (it) {
                 toast("更改资料成功")
-                disableEdit()
-                isEdit = !isEdit
             } else {
                 toast("上传资料失败")
-                disableEdit()
-                isEdit = !isEdit
             }
         })
 
@@ -104,12 +154,7 @@ class EditInfoActivity(override val isFragmentActivity: Boolean = false,
         val phone = mine_et_phone.text.toString()
 
         //数据没有改变，不进行网络请求
-        if (nickname == user!!.nickname &&
-                introduction == user!!.introduction &&
-                qq == user!!.qq &&
-                phone == user!!.phone) {
-            disableEdit()
-            isEdit = !isEdit
+        if (!checkIfInfoChange()) {
             return
         }
 
@@ -118,6 +163,55 @@ class EditInfoActivity(override val isFragmentActivity: Boolean = false,
             return
         }
         viewModel.updateUserInfo(nickname, introduction, qq, phone)
+    }
+
+    private fun checkIfInfoChange(): Boolean {
+        val nickname = mine_et_nickname.text.toString()
+        val introduction = mine_et_introduce.text.toString()
+        val qq = mine_et_qq.text.toString()
+        val phone = mine_et_phone.text.toString()
+        if (nickname == user!!.nickname &&
+                introduction == user!!.introduction &&
+                qq == user!!.qq &&
+                phone == user!!.phone) {
+            return false
+        }
+        return true
+    }
+
+    //主要做清除焦点的处理
+    override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
+        if (ev.action == MotionEvent.ACTION_UP) {
+            val v = currentFocus
+
+            //如果不是落在EditText区域，则需要关闭输入法
+            if (hideKeyboard(v, ev)) {
+                val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                imm.hideSoftInputFromWindow(v!!.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
+                v.clearFocus()
+            }
+        }
+        return super.dispatchTouchEvent(ev)
+    }
+
+    // 根据EditText所在坐标和用户点击的坐标相对比，来判断是否隐藏键盘
+    private fun hideKeyboard(view: View?, event: MotionEvent): Boolean {
+        if (view != null && view is EditText) {
+
+            val location = intArrayOf(0, 0)
+            view.getLocationInWindow(location)
+
+            //获取现在拥有焦点的控件view的位置，即EditText
+            val left = location[0]
+            val top = location[1]
+            val bottom = top + view.height
+            val right = left + view.width
+            //判断我们手指点击的区域是否落在EditText上面，如果不是，则返回true，否则返回false
+            val isInEt = (event.x > left && event.x < right && event.y > top
+                    && event.y < bottom)
+            return !isInEt
+        }
+        return false
     }
 
     /*下面是上传头像部分的代码*/
