@@ -39,8 +39,7 @@
                 android:layout_gravity="end"
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
-                android:gravity="center"
-                android:text="@string/mine_edit" />
+                android:gravity="center" />
         </androidx.appcompat.widget.Toolbar>
 
     </com.google.android.material.appbar.AppBarLayout>

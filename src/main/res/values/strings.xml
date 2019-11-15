@@ -12,6 +12,8 @@
     <string name="mine_to_download">扫一扫下载，长按保存</string>
     <string name="mine_money_tell">悄悄告诉你：积分可以兑换礼物~</string>
     <string name="mine_gift_ontheway">礼物正在路上呢~</string>
+
+    <!--    首页-->
     <string name="mine_sign_name">签到</string>
     <string name="mine_sing_successive_default">已连续签到0天</string>
     <string name="mine_question">提问</string>
@@ -19,15 +21,27 @@
     <string name="mine_reply_to_question">提问回复</string>
     <string name="mine_praise">获赞</string>
     <string name="mine_number_default">0</string>
-    <string name="mine_schedule_remind">课表提醒</string>
-    <string name="mine_remind_before_class">上课前十分钟提醒我</string>
-    <string name="mine_push_schedule">每天十分钟前推送课表给我</string>
-    <string name="mine_show_memo">在没课的地方显示备忘录</string>
     <string name="mine_show_schedule_first_launch">启动页APP时最先显示课表页面</string>
     <string name="mine_night_mode">夜间模式</string>
     <string name="mine_custom_icon">自定义桌面小图标</string>
     <string name="mine_feedback_suggestion">意见与反馈</string>
     <string name="mine_about_redrock">红岩网校</string>
+    <string name="mine_about">关于</string>
+
+    <!--    编辑-->
+    <string name="mine_info_edit">资料编辑</string>
+    <string name="mine_nickname">昵称</string>
+    <string name="mine_nickname_default">张树洞</string>
+    <string name="mine_introduce">个性签名</string>
+    <string name="mine_introduce_default">有些人错过了一次就是一辈子</string>
+    <string name="mine_qq">QQ</string>
+    <string name="mine_phone">电话</string>
+    <string name="mine_college">学院</string>
+    <string name="mine_save">保存</string>
+    <string name="mine_info_default">完善你的个人信息哦</string>
+    <string name="mine_info_save">保存</string>
+
+
 
 
 
@@ -80,12 +94,7 @@
     <string name="mine_question_default">提问：线性第一题不会做，求解</string>
     <string name="mine_question_help_default">帮助：是的，公式是没有问题的，但是你的…</string>
     <string name="mine_adopt_time_justnow">采纳时间：刚刚</string>
-    <string name="mine_avatar">头像</string>
-    <string name="mine_nickname">昵称</string>
-    <string name="mine_introduce">简介</string>
-    <string name="mine_qq">QQ</string>
-    <string name="mine_phone">电话</string>
-    <string name="mine_edit">编辑</string>
+
 
     <!--与我相关-->
     <string name="mine_relate_me_empty_hint">还没有与我相关的动态哦</string>

@@ -8,7 +8,6 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
-import android.widget.EditText
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import com.afollestad.materialdialogs.MaterialDialog
@@ -19,7 +18,6 @@ import com.mredrock.cyxbs.common.utils.extensions.getRequestBody
 import com.mredrock.cyxbs.common.utils.extensions.loadAvatar
 import com.mredrock.cyxbs.common.utils.extensions.uri
 import com.mredrock.cyxbs.mine.R
-import com.mredrock.cyxbs.mine.util.setAutoGravity
 import com.mredrock.cyxbs.mine.util.user
 import com.yalantis.ucrop.UCrop
 import kotlinx.android.synthetic.main.mine_activity_edit_info.*
@@ -39,48 +37,39 @@ class EditInfoActivity(override val isFragmentActivity: Boolean = false,
                        override val viewModelClass: Class<EditViewModel> = EditViewModel::class.java)
     : BaseViewModelActivity<EditViewModel>() {
 
-    private val editTextList by lazy { arrayOf(mine_edit_nickname, mine_edit_introduce, mine_edit_phone, mine_edit_qq) }
-
     private val SELECT_PICTURE = 1
     private val SELECT_CAMERA = 2
     private var isEdit = true //toolbar的字是否是编辑
-    private var currentEditText: EditText? = null//当前编辑的edtText
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.mine_activity_edit_info)
 
-        mine_edit_toolbar.init("修改信息")
+        mine_et_toolbar.init("资料编辑",
+                R.drawable.mine_ic_arrow_left)
 
         initObserver()
 
-        loadAvatar(user?.photoThumbnailSrc, mine_edit_avatarImageView)
+        loadAvatar(user?.photoThumbnailSrc, mine_et_avatarImageView)
         initData()
 
         //点击更换头像
-        mine_edit_avatar.setOnClickListener { changeAvatar() }
+        mine_et_avatarImageView.setOnClickListener { changeAvatar() }
 
-        //点击编辑/保存
-        mine_edit_toolbarEdit.setOnClickListener {
-            currentEditText?.background = null
-            if (isEdit) {
-                //点击编辑按钮
-                enableEdit()
-                isEdit = !isEdit
-            } else {
-                //点击保存按钮
-                saveInfo()
-            }
-        }
+        mine_btn_info_save.setOnClickListener { saveInfo() }
 
-        mine_edit_introduce.setAutoGravity()
+//        mine_et_introduce.setAutoGravity()
+    }
+
+    private fun disableEdit() {
+
     }
 
     private fun initData() {
-        mine_edit_nickname.setText(user!!.nickname)
-        mine_edit_introduce.setText(user!!.introduction)
-        mine_edit_qq.setText(user!!.qq)
-        mine_edit_phone.setText(user!!.phone)
+        mine_et_nickname.setText(user!!.nickname)
+        mine_et_introduce.setText(user!!.introduction)
+        mine_et_qq.setText(user!!.qq)
+        mine_et_phone.setText(user!!.phone)
     }
 
     private fun initObserver() {
@@ -90,19 +79,17 @@ class EditInfoActivity(override val isFragmentActivity: Boolean = false,
                 toast("更改资料成功")
                 disableEdit()
                 isEdit = !isEdit
-                mine_edit_toolbarEdit.isClickable = true
             } else {
                 toast("上传资料失败")
                 disableEdit()
                 isEdit = !isEdit
-                mine_edit_toolbarEdit.isClickable = true
             }
         })
 
         viewModel.upLoadImageEvent.observe(this, Observer {
             it!!
             if (it) {
-                loadAvatar(user!!.photoThumbnailSrc, mine_edit_avatarImageView)
+                loadAvatar(user!!.photoThumbnailSrc, mine_et_avatarImageView)
                 toast("修改头像成功")
             } else {
                 toast("修改头像失败")
@@ -111,10 +98,10 @@ class EditInfoActivity(override val isFragmentActivity: Boolean = false,
     }
 
     private fun saveInfo() {
-        val nickname = mine_edit_nickname.text.toString()
-        val introduction = mine_edit_introduce.text.toString()
-        val qq = mine_edit_qq.text.toString()
-        val phone = mine_edit_phone.text.toString()
+        val nickname = mine_et_nickname.text.toString()
+        val introduction = mine_et_introduce.text.toString()
+        val qq = mine_et_qq.text.toString()
+        val phone = mine_et_phone.text.toString()
 
         //数据没有改变，不进行网络请求
         if (nickname == user!!.nickname &&
@@ -130,33 +117,7 @@ class EditInfoActivity(override val isFragmentActivity: Boolean = false,
             toast("昵称不能为空")
             return
         }
-
-        mine_edit_toolbarEdit.isClickable = false
-
         viewModel.updateUserInfo(nickname, introduction, qq, phone)
-    }
-
-    private fun enableEdit() {
-        editTextList.forEach {
-            it.isFocusable = true
-            it.isFocusableInTouchMode = true
-            it.setOnFocusChangeListener { _, _ ->
-                it.setBackgroundResource(R.drawable.mine_bg_edit)
-                currentEditText?.background = null
-                currentEditText = it
-            }
-        }
-        editTextList[0].requestFocus()
-        mine_edit_toolbarEdit.text = "保存"
-    }
-
-    private fun disableEdit() {
-        editTextList.forEach {
-            it.isFocusable = false
-            it.isFocusableInTouchMode = false
-            it.setOnClickListener(null)
-        }
-        mine_edit_toolbarEdit.text = "编辑"
     }
 
     /*下面是上传头像部分的代码*/
@@ -224,7 +185,7 @@ class EditInfoActivity(override val isFragmentActivity: Boolean = false,
         options.setStatusBarColor(
                 ContextCompat.getColor(this, R.color.colorPrimaryDark))
         uCrop.withOptions(options)
-                .withAspectRatio(300f,300f)
+                .withAspectRatio(300f, 300f)
                 .withMaxResultSize(300, 300)
                 .start(this)
     }

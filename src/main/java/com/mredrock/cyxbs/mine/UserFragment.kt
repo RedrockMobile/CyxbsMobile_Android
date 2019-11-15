@@ -52,7 +52,7 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
         getPersonInfoData()
 
         //功能按钮
-        mine_main_dailySign.setOnClickListener { checkLoginBeforeAction("签到") { startActivity<DailySignActivity>() } }
+        mine_main_dailySign.setOnClickListener { checkLoginBeforeAction("签到") { startActivity<DailySignActivity>()} }
         mine_main_store.setOnClickListener { checkLoginBeforeAction("商店") { startActivity<StoreActivity>() } }
         mine_main_question.setOnClickListener { checkLoginBeforeAction("问一问") { startActivity<AskActivity>() } }
         mine_main_help.setOnClickListener { checkLoginBeforeAction("帮一帮") { startActivity<HelpActivity>() } }
@@ -96,6 +96,7 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
         mine_main_avatar.setOnClickListener(onClickListener)
         mine_main_username.setOnClickListener(onClickListener)
         mine_main_introduce.setOnClickListener(onClickListener)
+        mine_main_avatar_edit.setOnClickListener(onClickListener)
     }
 
     private fun checkLoginBeforeAction(msg: String, action: () -> Unit) {
