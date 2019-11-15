@@ -17,18 +17,33 @@
 
     <FrameLayout
         android:id="@+id/course_bottom_sheet_content"
+        app:elevation="10dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/bottom_sheet_behavior"
-        app:behavior_peekHeight="120dp"/>
+        app:behavior_peekHeight="132dp"/>
 
 
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/nav_main"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/main_main_bottom_navigation_height"
+    <LinearLayout
+        android:id="@+id/ll_nav_main_container"
+        android:orientation="vertical"
         android:layout_gravity="bottom"
-        android:background="@color/main_main_bottom_navigation_view_background"
-        app:itemTextColor="@color/main_selector_main_bottom_navigation_text"
-        app:menu="@menu/main_main_nav_menu" />
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <View
+            android:background="@color/windowBackground"
+            android:layout_width="match_parent"
+            android:layout_height="1dp" />
+
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/nav_main"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/main_main_bottom_navigation_height"
+            app:elevation="0dp"
+            android:background="@color/main_main_bottom_navigation_view_background"
+            app:itemTextColor="@color/main_selector_main_bottom_navigation_text"
+            app:menu="@menu/main_main_nav_menu" />
+    </LinearLayout>
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

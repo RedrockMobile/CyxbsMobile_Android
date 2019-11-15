@@ -1,12 +1,16 @@
 package com.mredrock.cyxbs.main.viewmodel
 
+import android.app.ActionBar
 import android.view.View
+import android.widget.FrameLayout
+import android.widget.LinearLayout
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.network.exception.RedrockApiException
 import com.mredrock.cyxbs.common.utils.LogUtils
+import com.mredrock.cyxbs.common.utils.extensions.dp2px
 import com.mredrock.cyxbs.common.utils.extensions.mapOrThrowApiException
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
@@ -54,15 +58,28 @@ class MainViewModel : BaseViewModel() {
 
     fun initBottomSheetBehavior(activity: MainActivity) {
         activity.apply {
+//            val layoutParams = course_bottom_sheet_content.layoutParams
+//            layoutParams.height = FrameLayout.LayoutParams.MATCH_PARENT - dp2px(12F)
+
+            var isFirst = true
+            var height = 0
             val bottomSheetBehavior = BottomSheetBehavior.from(course_bottom_sheet_content)
             bottomSheetBehavior.setBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
                 override fun onSlide(p0: View, p1: Float) {
-                    nav_main.translationY = nav_main.height * p1
+                    ll_nav_main_container.translationY = nav_main.height * p1
                 }
 
                 override fun onStateChanged(p0: View, p1: Int) {
                     if (p1 == BottomSheetBehavior.STATE_DRAGGING && !isCourseTop) {
                         bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+                    }
+                    if (isFirst) {
+                        height = p0.height - dp2px(12F)
+                        isFirst = false
+                    }
+                    if (p0.height > height) {
+                        p0.layoutParams.height = height
+                        p0.layoutParams = p0.layoutParams
                     }
                 }
             })
