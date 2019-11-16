@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <dimen name="folder_cover_size">82dp</dimen>
-    <dimen name="image_size">120dp</dimen>
-    <dimen name="md_dialog_max_width">496dp</dimen>
-    <dimen name="space_size">3dp</dimen>
-</resources>
