@@ -40,7 +40,7 @@ class LoginDialog(private val mContext: Context) {
         val sure = itemView.findViewById<AppCompatButton>(R.id.sure)
         sure.setOnClickListener {
             mDialog.dismiss()
-            BaseApp.user = User(stuNum = account.text.toString(), idNum = password.text.toString())
+//            BaseApp.user = User(stuNum = account.text.toString(), idNum = password.text.toString())
             //这里实际不是添加事务是为了进行UI的更新
             EventBus.getDefault().post(AddAffairEvent())
             onLogin()
