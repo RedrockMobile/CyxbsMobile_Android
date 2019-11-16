@@ -1,0 +1,394 @@
+[
+    {
+        "merged": "/Users/liji/Codes/CyxbsMobile_Android/lib_account/build/intermediates/res/merged/debug/layout/abc_popup_menu_header_item_layout.xml",
+        "source": "/Users/liji/.gradle/caches/transforms-2/files-2.1/c32241a80e69d736adf938537414387d/res/layout/abc_popup_menu_header_item_layout.xml"
+    },
+    {
+        "merged": "/Users/liji/Codes/CyxbsMobile_Android/lib_account/build/intermediates/res/merged/debug/layout/abc_select_dialog_material.xml",
+        "source": "/Users/liji/.gradle/caches/transforms-2/files-2.1/c32241a80e69d736adf938537414387d/res/layout/abc_select_dialog_material.xml"
+    },
+    {
+        "merged": "/Users/liji/Codes/CyxbsMobile_Android/lib_account/build/intermediates/res/merged/debug/layout/md_stub_titleframe.xml",
+        "source": "/Users/liji/.gradle/caches/transforms-2/files-2.1/1bb184cf7b44f1839f74ccf60da7c5f8/res/layout/md_stub_titleframe.xml"
+    },
+    {
+        "merged": "/Users/liji/Codes/CyxbsMobile_Android/lib_account/build/intermediates/res/merged/debug/layout/notification_media_cancel_action.xml",
+        "source": "/Users/liji/.gradle/caches/transforms-2/files-2.1/9df5aee35cd87406f4b8eaf930eab455/res/layout/notification_media_cancel_action.xml"
+    },
+    {
+        "merged": "/Users/liji/Codes/CyxbsMobile_Android/lib_account/build/intermediates/res/merged/debug/layout/abc_screen_content_include.xml",
+        "source": "/Users/liji/.gradle/caches/transforms-2/files-2.1/c32241a80e69d736adf938537414387d/res/layout/abc_screen_content_include.xml"
+    },
+    {
+        "merged": "/Users/liji/Codes/CyxbsMobile_Android/lib_account/build/intermediates/res/merged/debug/layout/design_navigation_item_subheader.xml",
+        "source": "/Users/liji/.gradle/caches/transforms-2/files-2.1/ba864d038dd5fe301aa5a0c69bf3c1ee/res/layout/design_navigation_item_subheader.xml"
+    },
+    {
+        "merged": "/Users/liji/Codes/CyxbsMobile_Android/lib_account/build/intermediates/res/merged/debug/layout/ucrop_controls.xml",
+        "source": "/Users/liji/.gradle/caches/transforms-2/files-2.1/a8de83b9d6b6ce7ccc0a5297a200dc70/res/layout/ucrop_controls.xml"
+    },
+    {
+        "merged": "/Users/liji/Codes/CyxbsMobile_Android/lib_account/build/intermediates/res/merged/debug/layout/design_layout_snackbar_include.xml",
+        "source": "/Users/liji/.gradle/caches/transforms-2/files-2.1/ba864d038dd5fe301aa5a0c69bf3c1ee/res/layout/design_layout_snackbar_include.xml"
+    },
+    {
+        "merged": "/Users/liji/Codes/CyxbsMobile_Android/lib_account/build/intermediates/res/merged/debug/layout/md_dialog_progress_indeterminate.xml",
+        "source": "/Users/liji/.gradle/caches/transforms-2/files-2.1/1bb184cf7b44f1839f74ccf60da7c5f8/res/layout/md_dialog_progress_indeterminate.xml"
+    },
+    {
+        "merged": "/Users/liji/Codes/CyxbsMobile_Android/lib_account/build/intermediates/res/merged/debug/layout/abc_action_bar_up_container.xml",
+        "source": "/Users/liji/.gradle/caches/transforms-2/files-2.1/c32241a80e69d736adf938537414387d/res/layout/abc_action_bar_up_container.xml"
+    },
+    {
+        "merged": "/Users/liji/Codes/CyxbsMobile_Android/lib_account/build/intermediates/res/merged/debug/layout/notification_template_part_time.xml",
+        "source": "/Users/liji/.gradle/caches/transforms-2/files-2.1/20128180edea92675b752edaa2194de9/res/layout/notification_template_part_time.xml"
+    },
+    {
+        "merged": "/Users/liji/Codes/CyxbsMobile_Android/lib_account/build/intermediates/res/merged/debug/layout/notification_action_tombstone.xml",
+        "source": "/Users/liji/.gradle/caches/transforms-2/files-2.1/20128180edea92675b752edaa2194de9/res/layout/notification_action_tombstone.xml"
+    },
+    {
+        "merged": "/Users/liji/Codes/CyxbsMobile_Android/lib_account/build/intermediates/res/merged/debug/layout/md_stub_titleframe_lesspadding.xml",
+        "source": "/Users/liji/.gradle/caches/transforms-2/files-2.1/1bb184cf7b44f1839f74ccf60da7c5f8/res/layout/md_stub_titleframe_lesspadding.xml"
+    },
+    {
+        "merged": "/Users/liji/Codes/CyxbsMobile_Android/lib_account/build/intermediates/res/merged/debug/layout/design_layout_tab_text.xml",
+        "source": "/Users/liji/.gradle/caches/transforms-2/files-2.1/ba864d038dd5fe301aa5a0c69bf3c1ee/res/layout/design_layout_tab_text.xml"
+    },
+    {
+        "merged": "/Users/liji/Codes/CyxbsMobile_Android/lib_account/build/intermediates/res/merged/debug/layout/design_bottom_navigation_item.xml",
+        "source": "/Users/liji/.gradle/caches/transforms-2/files-2.1/ba864d038dd5fe301aa5a0c69bf3c1ee/res/layout/design_bottom_navigation_item.xml"
+    },
+    {
+        "merged": "/Users/liji/Codes/CyxbsMobile_Android/lib_account/build/intermediates/res/merged/debug/layout/design_navigation_item_separator.xml",
+        "source": "/Users/liji/.gradle/caches/transforms-2/files-2.1/ba864d038dd5fe301aa5a0c69bf3c1ee/res/layout/design_navigation_item_separator.xml"
+    },
+    {
+        "merged": "/Users/liji/Codes/CyxbsMobile_Android/lib_account/build/intermediates/res/merged/debug/layout/upush_notification.xml",
+        "source": "/Users/liji/Codes/CyxbsMobile_Android/push_sdk/build/intermediates/packaged_res/debug/layout/upush_notification.xml"
+    },
+    {
+        "merged": "/Users/liji/Codes/CyxbsMobile_Android/lib_account/build/intermediates/res/merged/debug/layout/design_text_input_password_icon.xml",
+        "source": "/Users/liji/.gradle/caches/transforms-2/files-2.1/ba864d038dd5fe301aa5a0c69bf3c1ee/res/layout/design_text_input_password_icon.xml"
+    },
+    {
+        "merged": "/Users/liji/Codes/CyxbsMobile_Android/lib_account/build/intermediates/res/merged/debug/layout/design_navigation_menu_item.xml",
+        "source": "/Users/liji/.gradle/caches/transforms-2/files-2.1/ba864d038dd5fe301aa5a0c69bf3c1ee/res/layout/design_navigation_menu_item.xml"
+    },
+    {
+        "merged": "/Users/liji/Codes/CyxbsMobile_Android/lib_account/build/intermediates/res/merged/debug/layout/support_simple_spinner_dropdown_item.xml",
+        "source": "/Users/liji/.gradle/caches/transforms-2/files-2.1/c32241a80e69d736adf938537414387d/res/layout/support_simple_spinner_dropdown_item.xml"
+    },
+    {
+        "merged": "/Users/liji/Codes/CyxbsMobile_Android/lib_account/build/intermediates/res/merged/debug/layout/md_dialog_input_check.xml",
+        "source": "/Users/liji/.gradle/caches/transforms-2/files-2.1/1bb184cf7b44f1839f74ccf60da7c5f8/res/layout/md_dialog_input_check.xml"
+    },
+    {
+        "merged": "/Users/liji/Codes/CyxbsMobile_Android/lib_account/build/intermediates/res/merged/debug/layout/design_menu_item_action_area.xml",
+        "source": "/Users/liji/.gradle/caches/transforms-2/files-2.1/ba864d038dd5fe301aa5a0c69bf3c1ee/res/layout/design_menu_item_action_area.xml"
+    },
+    {
+        "merged": "/Users/liji/Codes/CyxbsMobile_Android/lib_account/build/intermediates/res/merged/debug/layout/umeng_socialize_share.xml",
+        "source": "/Users/liji/Codes/CyxbsMobile_Android/lib_common/build/intermediates/packaged_res/debug/layout/umeng_socialize_share.xml"
+    },
+    {
+        "merged": "/Users/liji/Codes/CyxbsMobile_Android/lib_account/build/intermediates/res/merged/debug/layout/notification_template_lines_media.xml",
+        "source": "/Users/liji/.gradle/caches/transforms-2/files-2.1/9df5aee35cd87406f4b8eaf930eab455/res/layout/notification_template_lines_media.xml"
+    },
+    {
+        "merged": "/Users/liji/Codes/CyxbsMobile_Android/lib_account/build/intermediates/res/merged/debug/layout/abc_expanded_menu_layout.xml",
+        "source": "/Users/liji/.gradle/caches/transforms-2/files-2.1/c32241a80e69d736adf938537414387d/res/layout/abc_expanded_menu_layout.xml"
+    },
+    {
+        "merged": "/Users/liji/Codes/CyxbsMobile_Android/lib_account/build/intermediates/res/merged/debug/layout/md_preference_custom.xml",
+        "source": "/Users/liji/.gradle/caches/transforms-2/files-2.1/82532f3f10efccadae959ee387a55b48/res/layout/md_preference_custom.xml"
+    },
+    {
+        "merged": "/Users/liji/Codes/CyxbsMobile_Android/lib_account/build/intermediates/res/merged/debug/layout/md_listitem_singlechoice.xml",
+        "source": "/Users/liji/.gradle/caches/transforms-2/files-2.1/1bb184cf7b44f1839f74ccf60da7c5f8/res/layout/md_listitem_singlechoice.xml"
+    },
+    {
+        "merged": "/Users/liji/Codes/CyxbsMobile_Android/lib_account/build/intermediates/res/merged/debug/layout/ucrop_layout_rotate_wheel.xml",
+        "source": "/Users/liji/.gradle/caches/transforms-2/files-2.1/a8de83b9d6b6ce7ccc0a5297a200dc70/res/layout/ucrop_layout_rotate_wheel.xml"
+    },
+    {
+        "merged": "/Users/liji/Codes/CyxbsMobile_Android/lib_account/build/intermediates/res/merged/debug/layout/notification_template_big_media_custom.xml",
+        "source": "/Users/liji/.gradle/caches/transforms-2/files-2.1/9df5aee35cd87406f4b8eaf930eab455/res/layout/notification_template_big_media_custom.xml"
+    },
+    {
+        "merged": "/Users/liji/Codes/CyxbsMobile_Android/lib_account/build/intermediates/res/merged/debug/layout/abc_action_menu_item_layout.xml",
+        "source": "/Users/liji/.gradle/caches/transforms-2/files-2.1/c32241a80e69d736adf938537414387d/res/layout/abc_action_menu_item_layout.xml"
+    },
+    {
+        "merged": "/Users/liji/Codes/CyxbsMobile_Android/lib_account/build/intermediates/res/merged/debug/layout/md_simplelist_item.xml",
+        "source": "/Users/liji/.gradle/caches/transforms-2/files-2.1/82532f3f10efccadae959ee387a55b48/res/layout/md_simplelist_item.xml"
+    },
+    {
+        "merged": "/Users/liji/Codes/CyxbsMobile_Android/lib_account/build/intermediates/res/merged/debug/layout/md_stub_inputpref.xml",
+        "source": "/Users/liji/.gradle/caches/transforms-2/files-2.1/82532f3f10efccadae959ee387a55b48/res/layout/md_stub_inputpref.xml"
+    },
+    {
+        "merged": "/Users/liji/Codes/CyxbsMobile_Android/lib_account/build/intermediates/res/merged/debug/layout/md_stub_actionbuttons.xml",
+        "source": "/Users/liji/.gradle/caches/transforms-2/files-2.1/1bb184cf7b44f1839f74ccf60da7c5f8/res/layout/md_stub_actionbuttons.xml"
+    },
+    {
+        "merged": "/Users/liji/Codes/CyxbsMobile_Android/lib_account/build/intermediates/res/merged/debug/layout/mtrl_layout_snackbar.xml",
+        "source": "/Users/liji/.gradle/caches/transforms-2/files-2.1/ba864d038dd5fe301aa5a0c69bf3c1ee/res/layout/mtrl_layout_snackbar.xml"
+    },
+    {
+        "merged": "/Users/liji/Codes/CyxbsMobile_Android/lib_account/build/intermediates/res/merged/debug/layout/abc_tooltip.xml",
+        "source": "/Users/liji/.gradle/caches/transforms-2/files-2.1/c32241a80e69d736adf938537414387d/res/layout/abc_tooltip.xml"
+    },
+    {
+        "merged": "/Users/liji/Codes/CyxbsMobile_Android/lib_account/build/intermediates/res/merged/debug/layout/ucrop_view.xml",
+        "source": "/Users/liji/.gradle/caches/transforms-2/files-2.1/a8de83b9d6b6ce7ccc0a5297a200dc70/res/layout/ucrop_view.xml"
+    },
+    {
+        "merged": "/Users/liji/Codes/CyxbsMobile_Android/lib_account/build/intermediates/res/merged/debug/layout/md_dialog_progress_indeterminate_horizontal.xml",
+        "source": "/Users/liji/.gradle/caches/transforms-2/files-2.1/1bb184cf7b44f1839f74ccf60da7c5f8/res/layout/md_dialog_progress_indeterminate_horizontal.xml"
+    },
+    {
+        "merged": "/Users/liji/Codes/CyxbsMobile_Android/lib_account/build/intermediates/res/merged/debug/layout/select_dialog_item_material.xml",
+        "source": "/Users/liji/.gradle/caches/transforms-2/files-2.1/c32241a80e69d736adf938537414387d/res/layout/select_dialog_item_material.xml"
+    },
+    {
+        "merged": "/Users/liji/Codes/CyxbsMobile_Android/lib_account/build/intermediates/res/merged/debug/layout/mtrl_layout_snackbar_include.xml",
+        "source": "/Users/liji/.gradle/caches/transforms-2/files-2.1/ba864d038dd5fe301aa5a0c69bf3c1ee/res/layout/mtrl_layout_snackbar_include.xml"
+    },
+    {
+        "merged": "/Users/liji/Codes/CyxbsMobile_Android/lib_account/build/intermediates/res/merged/debug/layout/md_dialog_basic_check.xml",
+        "source": "/Users/liji/.gradle/caches/transforms-2/files-2.1/1bb184cf7b44f1839f74ccf60da7c5f8/res/layout/md_dialog_basic_check.xml"
+    },
+    {
+        "merged": "/Users/liji/Codes/CyxbsMobile_Android/lib_account/build/intermediates/res/merged/debug/layout/notification_template_icon_group.xml",
+        "source": "/Users/liji/.gradle/caches/transforms-2/files-2.1/20128180edea92675b752edaa2194de9/res/layout/notification_template_icon_group.xml"
+    },
+    {
+        "merged": "/Users/liji/Codes/CyxbsMobile_Android/lib_account/build/intermediates/res/merged/debug/layout/socialize_share_menu_item.xml",
+        "source": "/Users/liji/Codes/CyxbsMobile_Android/lib_common/build/intermediates/packaged_res/debug/layout/socialize_share_menu_item.xml"
+    },
+    {
+        "merged": "/Users/liji/Codes/CyxbsMobile_Android/lib_account/build/intermediates/res/merged/debug/layout/ucrop_activity_photobox.xml",
+        "source": "/Users/liji/.gradle/caches/transforms-2/files-2.1/a8de83b9d6b6ce7ccc0a5297a200dc70/res/layout/ucrop_activity_photobox.xml"
+    },
+    {
+        "merged": "/Users/liji/Codes/CyxbsMobile_Android/lib_account/build/intermediates/res/merged/debug/layout/notification_template_media.xml",
+        "source": "/Users/liji/.gradle/caches/transforms-2/files-2.1/9df5aee35cd87406f4b8eaf930eab455/res/layout/notification_template_media.xml"
+    },
+    {
+        "merged": "/Users/liji/Codes/CyxbsMobile_Android/lib_account/build/intermediates/res/merged/debug/layout/md_dialog_basic.xml",
+        "source": "/Users/liji/.gradle/caches/transforms-2/files-2.1/1bb184cf7b44f1839f74ccf60da7c5f8/res/layout/md_dialog_basic.xml"
+    },
+    {
+        "merged": "/Users/liji/Codes/CyxbsMobile_Android/lib_account/build/intermediates/res/merged/debug/layout/md_stub_colorchooser_grid.xml",
+        "source": "/Users/liji/.gradle/caches/transforms-2/files-2.1/82532f3f10efccadae959ee387a55b48/res/layout/md_stub_colorchooser_grid.xml"
+    },
+    {
+        "merged": "/Users/liji/Codes/CyxbsMobile_Android/lib_account/build/intermediates/res/merged/debug/layout/md_dialog_custom.xml",
+        "source": "/Users/liji/.gradle/caches/transforms-2/files-2.1/1bb184cf7b44f1839f74ccf60da7c5f8/res/layout/md_dialog_custom.xml"
+    },
+    {
+        "merged": "/Users/liji/Codes/CyxbsMobile_Android/lib_account/build/intermediates/res/merged/debug/layout/notification_template_media_custom.xml",
+        "source": "/Users/liji/.gradle/caches/transforms-2/files-2.1/9df5aee35cd87406f4b8eaf930eab455/res/layout/notification_template_media_custom.xml"
+    },
+    {
+        "merged": "/Users/liji/Codes/CyxbsMobile_Android/lib_account/build/intermediates/res/merged/debug/layout/notification_template_part_chronometer.xml",
+        "source": "/Users/liji/.gradle/caches/transforms-2/files-2.1/20128180edea92675b752edaa2194de9/res/layout/notification_template_part_chronometer.xml"
+    },
+    {
+        "merged": "/Users/liji/Codes/CyxbsMobile_Android/lib_account/build/intermediates/res/merged/debug/layout/md_dialog_colorchooser.xml",
+        "source": "/Users/liji/.gradle/caches/transforms-2/files-2.1/82532f3f10efccadae959ee387a55b48/res/layout/md_dialog_colorchooser.xml"
+    },
+    {
+        "merged": "/Users/liji/Codes/CyxbsMobile_Android/lib_account/build/intermediates/res/merged/debug/layout/abc_screen_simple_overlay_action_mode.xml",
+        "source": "/Users/liji/.gradle/caches/transforms-2/files-2.1/c32241a80e69d736adf938537414387d/res/layout/abc_screen_simple_overlay_action_mode.xml"
+    },
+    {
+        "merged": "/Users/liji/Codes/CyxbsMobile_Android/lib_account/build/intermediates/res/merged/debug/layout/abc_popup_menu_item_layout.xml",
+        "source": "/Users/liji/.gradle/caches/transforms-2/files-2.1/c32241a80e69d736adf938537414387d/res/layout/abc_popup_menu_item_layout.xml"
+    },
+    {
+        "merged": "/Users/liji/Codes/CyxbsMobile_Android/lib_account/build/intermediates/res/merged/debug/layout/common_activity_photo_viewer.xml",
+        "source": "/Users/liji/Codes/CyxbsMobile_Android/lib_common/build/intermediates/packaged_res/debug/layout/common_activity_photo_viewer.xml"
+    },
+    {
+        "merged": "/Users/liji/Codes/CyxbsMobile_Android/lib_account/build/intermediates/res/merged/debug/layout/abc_action_mode_bar.xml",
+        "source": "/Users/liji/.gradle/caches/transforms-2/files-2.1/c32241a80e69d736adf938537414387d/res/layout/abc_action_mode_bar.xml"
+    },
+    {
+        "merged": "/Users/liji/Codes/CyxbsMobile_Android/lib_account/build/intermediates/res/merged/debug/layout/abc_alert_dialog_material.xml",
+        "source": "/Users/liji/.gradle/caches/transforms-2/files-2.1/c32241a80e69d736adf938537414387d/res/layout/abc_alert_dialog_material.xml"
+    },
+    {
+        "merged": "/Users/liji/Codes/CyxbsMobile_Android/lib_account/build/intermediates/res/merged/debug/layout/abc_list_menu_item_layout.xml",
+        "source": "/Users/liji/.gradle/caches/transforms-2/files-2.1/c32241a80e69d736adf938537414387d/res/layout/abc_list_menu_item_layout.xml"
+    },
+    {
+        "merged": "/Users/liji/Codes/CyxbsMobile_Android/lib_account/build/intermediates/res/merged/debug/layout/abc_dialog_title_material.xml",
+        "source": "/Users/liji/.gradle/caches/transforms-2/files-2.1/c32241a80e69d736adf938537414387d/res/layout/abc_dialog_title_material.xml"
+    },
+    {
+        "merged": "/Users/liji/Codes/CyxbsMobile_Android/lib_account/build/intermediates/res/merged/debug/layout/notification_media_action.xml",
+        "source": "/Users/liji/.gradle/caches/transforms-2/files-2.1/9df5aee35cd87406f4b8eaf930eab455/res/layout/notification_media_action.xml"
+    },
+    {
+        "merged": "/Users/liji/Codes/CyxbsMobile_Android/lib_account/build/intermediates/res/merged/debug/layout/ucrop_layout_scale_wheel.xml",
+        "source": "/Users/liji/.gradle/caches/transforms-2/files-2.1/a8de83b9d6b6ce7ccc0a5297a200dc70/res/layout/ucrop_layout_scale_wheel.xml"
+    },
+    {
+        "merged": "/Users/liji/Codes/CyxbsMobile_Android/lib_account/build/intermediates/res/merged/debug/layout/notification_template_big_media.xml",
+        "source": "/Users/liji/.gradle/caches/transforms-2/files-2.1/9df5aee35cd87406f4b8eaf930eab455/res/layout/notification_template_big_media.xml"
+    },
+    {
+        "merged": "/Users/liji/Codes/CyxbsMobile_Android/lib_account/build/intermediates/res/merged/debug/layout/design_bottom_sheet_dialog.xml",
+        "source": "/Users/liji/.gradle/caches/transforms-2/files-2.1/ba864d038dd5fe301aa5a0c69bf3c1ee/res/layout/design_bottom_sheet_dialog.xml"
+    },
+    {
+        "merged": "/Users/liji/Codes/CyxbsMobile_Android/lib_account/build/intermediates/res/merged/debug/layout/notification_template_big_media_narrow_custom.xml",
+        "source": "/Users/liji/.gradle/caches/transforms-2/files-2.1/9df5aee35cd87406f4b8eaf930eab455/res/layout/notification_template_big_media_narrow_custom.xml"
+    },
+    {
+        "merged": "/Users/liji/Codes/CyxbsMobile_Android/lib_account/build/intermediates/res/merged/debug/layout/abc_activity_chooser_view_list_item.xml",
+        "source": "/Users/liji/.gradle/caches/transforms-2/files-2.1/c32241a80e69d736adf938537414387d/res/layout/abc_activity_chooser_view_list_item.xml"
+    },
+    {
+        "merged": "/Users/liji/Codes/CyxbsMobile_Android/lib_account/build/intermediates/res/merged/debug/layout/ucrop_fragment_photobox.xml",
+        "source": "/Users/liji/.gradle/caches/transforms-2/files-2.1/a8de83b9d6b6ce7ccc0a5297a200dc70/res/layout/ucrop_fragment_photobox.xml"
+    },
+    {
+        "merged": "/Users/liji/Codes/CyxbsMobile_Android/lib_account/build/intermediates/res/merged/debug/layout/abc_list_menu_item_icon.xml",
+        "source": "/Users/liji/.gradle/caches/transforms-2/files-2.1/c32241a80e69d736adf938537414387d/res/layout/abc_list_menu_item_icon.xml"
+    },
+    {
+        "merged": "/Users/liji/Codes/CyxbsMobile_Android/lib_account/build/intermediates/res/merged/debug/layout/common_toolbar.xml",
+        "source": "/Users/liji/Codes/CyxbsMobile_Android/lib_common/build/intermediates/packaged_res/debug/layout/common_toolbar.xml"
+    },
+    {
+        "merged": "/Users/liji/Codes/CyxbsMobile_Android/lib_account/build/intermediates/res/merged/debug/layout/abc_screen_simple.xml",
+        "source": "/Users/liji/.gradle/caches/transforms-2/files-2.1/c32241a80e69d736adf938537414387d/res/layout/abc_screen_simple.xml"
+    },
+    {
+        "merged": "/Users/liji/Codes/CyxbsMobile_Android/lib_account/build/intermediates/res/merged/debug/layout/abc_cascading_menu_item_layout.xml",
+        "source": "/Users/liji/.gradle/caches/transforms-2/files-2.1/c32241a80e69d736adf938537414387d/res/layout/abc_cascading_menu_item_layout.xml"
+    },
+    {
+        "merged": "/Users/liji/Codes/CyxbsMobile_Android/lib_account/build/intermediates/res/merged/debug/layout/design_layout_snackbar.xml",
+        "source": "/Users/liji/.gradle/caches/transforms-2/files-2.1/ba864d038dd5fe301aa5a0c69bf3c1ee/res/layout/design_layout_snackbar.xml"
+    },
+    {
+        "merged": "/Users/liji/Codes/CyxbsMobile_Android/lib_account/build/intermediates/res/merged/debug/layout/abc_alert_dialog_title_material.xml",
+        "source": "/Users/liji/.gradle/caches/transforms-2/files-2.1/c32241a80e69d736adf938537414387d/res/layout/abc_alert_dialog_title_material.xml"
+    },
+    {
+        "merged": "/Users/liji/Codes/CyxbsMobile_Android/lib_account/build/intermediates/res/merged/debug/layout/design_navigation_item.xml",
+        "source": "/Users/liji/.gradle/caches/transforms-2/files-2.1/ba864d038dd5fe301aa5a0c69bf3c1ee/res/layout/design_navigation_item.xml"
+    },
+    {
+        "merged": "/Users/liji/Codes/CyxbsMobile_Android/lib_account/build/intermediates/res/merged/debug/layout/abc_activity_chooser_view.xml",
+        "source": "/Users/liji/.gradle/caches/transforms-2/files-2.1/c32241a80e69d736adf938537414387d/res/layout/abc_activity_chooser_view.xml"
+    },
+    {
+        "merged": "/Users/liji/Codes/CyxbsMobile_Android/lib_account/build/intermediates/res/merged/debug/layout/upush_bar_image_notification.xml",
+        "source": "/Users/liji/Codes/CyxbsMobile_Android/push_sdk/build/intermediates/packaged_res/debug/layout/upush_bar_image_notification.xml"
+    },
+    {
+        "merged": "/Users/liji/Codes/CyxbsMobile_Android/lib_account/build/intermediates/res/merged/debug/layout/md_dialog_list.xml",
+        "source": "/Users/liji/.gradle/caches/transforms-2/files-2.1/1bb184cf7b44f1839f74ccf60da7c5f8/res/layout/md_dialog_list.xml"
+    },
+    {
+        "merged": "/Users/liji/Codes/CyxbsMobile_Android/lib_account/build/intermediates/res/merged/debug/layout/abc_action_mode_close_item_material.xml",
+        "source": "/Users/liji/.gradle/caches/transforms-2/files-2.1/c32241a80e69d736adf938537414387d/res/layout/abc_action_mode_close_item_material.xml"
+    },
+    {
+        "merged": "/Users/liji/Codes/CyxbsMobile_Android/lib_account/build/intermediates/res/merged/debug/layout/umeng_socialize_oauth_dialog.xml",
+        "source": "/Users/liji/Codes/CyxbsMobile_Android/lib_common/build/intermediates/packaged_res/debug/layout/umeng_socialize_oauth_dialog.xml"
+    },
+    {
+        "merged": "/Users/liji/Codes/CyxbsMobile_Android/lib_account/build/intermediates/res/merged/debug/layout/abc_alert_dialog_button_bar_material.xml",
+        "source": "/Users/liji/.gradle/caches/transforms-2/files-2.1/c32241a80e69d736adf938537414387d/res/layout/abc_alert_dialog_button_bar_material.xml"
+    },
+    {
+        "merged": "/Users/liji/Codes/CyxbsMobile_Android/lib_account/build/intermediates/res/merged/debug/layout/md_dialog_list_check.xml",
+        "source": "/Users/liji/.gradle/caches/transforms-2/files-2.1/1bb184cf7b44f1839f74ccf60da7c5f8/res/layout/md_dialog_list_check.xml"
+    },
+    {
+        "merged": "/Users/liji/Codes/CyxbsMobile_Android/lib_account/build/intermediates/res/merged/debug/layout/abc_search_dropdown_item_icons_2line.xml",
+        "source": "/Users/liji/.gradle/caches/transforms-2/files-2.1/c32241a80e69d736adf938537414387d/res/layout/abc_search_dropdown_item_icons_2line.xml"
+    },
+    {
+        "merged": "/Users/liji/Codes/CyxbsMobile_Android/lib_account/build/intermediates/res/merged/debug/layout/ucrop_aspect_ratio.xml",
+        "source": "/Users/liji/.gradle/caches/transforms-2/files-2.1/a8de83b9d6b6ce7ccc0a5297a200dc70/res/layout/ucrop_aspect_ratio.xml"
+    },
+    {
+        "merged": "/Users/liji/Codes/CyxbsMobile_Android/lib_account/build/intermediates/res/merged/debug/layout/select_dialog_multichoice_material.xml",
+        "source": "/Users/liji/.gradle/caches/transforms-2/files-2.1/c32241a80e69d736adf938537414387d/res/layout/select_dialog_multichoice_material.xml"
+    },
+    {
+        "merged": "/Users/liji/Codes/CyxbsMobile_Android/lib_account/build/intermediates/res/merged/debug/layout/notification_action.xml",
+        "source": "/Users/liji/.gradle/caches/transforms-2/files-2.1/20128180edea92675b752edaa2194de9/res/layout/notification_action.xml"
+    },
+    {
+        "merged": "/Users/liji/Codes/CyxbsMobile_Android/lib_account/build/intermediates/res/merged/debug/layout/md_listitem.xml",
+        "source": "/Users/liji/.gradle/caches/transforms-2/files-2.1/1bb184cf7b44f1839f74ccf60da7c5f8/res/layout/md_listitem.xml"
+    },
+    {
+        "merged": "/Users/liji/Codes/CyxbsMobile_Android/lib_account/build/intermediates/res/merged/debug/layout/abc_action_bar_title_item.xml",
+        "source": "/Users/liji/.gradle/caches/transforms-2/files-2.1/c32241a80e69d736adf938537414387d/res/layout/abc_action_bar_title_item.xml"
+    },
+    {
+        "merged": "/Users/liji/Codes/CyxbsMobile_Android/lib_account/build/intermediates/res/merged/debug/layout/design_navigation_menu.xml",
+        "source": "/Users/liji/.gradle/caches/transforms-2/files-2.1/ba864d038dd5fe301aa5a0c69bf3c1ee/res/layout/design_navigation_menu.xml"
+    },
+    {
+        "merged": "/Users/liji/Codes/CyxbsMobile_Android/lib_account/build/intermediates/res/merged/debug/layout/md_dialog_progress.xml",
+        "source": "/Users/liji/.gradle/caches/transforms-2/files-2.1/1bb184cf7b44f1839f74ccf60da7c5f8/res/layout/md_dialog_progress.xml"
+    },
+    {
+        "merged": "/Users/liji/Codes/CyxbsMobile_Android/lib_account/build/intermediates/res/merged/debug/layout/design_layout_tab_icon.xml",
+        "source": "/Users/liji/.gradle/caches/transforms-2/files-2.1/ba864d038dd5fe301aa5a0c69bf3c1ee/res/layout/design_layout_tab_icon.xml"
+    },
+    {
+        "merged": "/Users/liji/Codes/CyxbsMobile_Android/lib_account/build/intermediates/res/merged/debug/layout/abc_screen_toolbar.xml",
+        "source": "/Users/liji/.gradle/caches/transforms-2/files-2.1/c32241a80e69d736adf938537414387d/res/layout/abc_screen_toolbar.xml"
+    },
+    {
+        "merged": "/Users/liji/Codes/CyxbsMobile_Android/lib_account/build/intermediates/res/merged/debug/layout/design_navigation_item_header.xml",
+        "source": "/Users/liji/.gradle/caches/transforms-2/files-2.1/ba864d038dd5fe301aa5a0c69bf3c1ee/res/layout/design_navigation_item_header.xml"
+    },
+    {
+        "merged": "/Users/liji/Codes/CyxbsMobile_Android/lib_account/build/intermediates/res/merged/debug/layout/md_dialog_input.xml",
+        "source": "/Users/liji/.gradle/caches/transforms-2/files-2.1/1bb184cf7b44f1839f74ccf60da7c5f8/res/layout/md_dialog_input.xml"
+    },
+    {
+        "merged": "/Users/liji/Codes/CyxbsMobile_Android/lib_account/build/intermediates/res/merged/debug/layout/abc_search_view.xml",
+        "source": "/Users/liji/.gradle/caches/transforms-2/files-2.1/c32241a80e69d736adf938537414387d/res/layout/abc_search_view.xml"
+    },
+    {
+        "merged": "/Users/liji/Codes/CyxbsMobile_Android/lib_account/build/intermediates/res/merged/debug/layout/md_stub_colorchooser_custom.xml",
+        "source": "/Users/liji/.gradle/caches/transforms-2/files-2.1/82532f3f10efccadae959ee387a55b48/res/layout/md_stub_colorchooser_custom.xml"
+    },
+    {
+        "merged": "/Users/liji/Codes/CyxbsMobile_Android/lib_account/build/intermediates/res/merged/debug/layout/abc_action_menu_layout.xml",
+        "source": "/Users/liji/.gradle/caches/transforms-2/files-2.1/c32241a80e69d736adf938537414387d/res/layout/abc_action_menu_layout.xml"
+    },
+    {
+        "merged": "/Users/liji/Codes/CyxbsMobile_Android/lib_account/build/intermediates/res/merged/debug/layout/md_listitem_multichoice.xml",
+        "source": "/Users/liji/.gradle/caches/transforms-2/files-2.1/1bb184cf7b44f1839f74ccf60da7c5f8/res/layout/md_listitem_multichoice.xml"
+    },
+    {
+        "merged": "/Users/liji/Codes/CyxbsMobile_Android/lib_account/build/intermediates/res/merged/debug/layout/notification_template_big_media_narrow.xml",
+        "source": "/Users/liji/.gradle/caches/transforms-2/files-2.1/9df5aee35cd87406f4b8eaf930eab455/res/layout/notification_template_big_media_narrow.xml"
+    },
+    {
+        "merged": "/Users/liji/Codes/CyxbsMobile_Android/lib_account/build/intermediates/res/merged/debug/layout/abc_list_menu_item_checkbox.xml",
+        "source": "/Users/liji/.gradle/caches/transforms-2/files-2.1/c32241a80e69d736adf938537414387d/res/layout/abc_list_menu_item_checkbox.xml"
+    },
+    {
+        "merged": "/Users/liji/Codes/CyxbsMobile_Android/lib_account/build/intermediates/res/merged/debug/layout/select_dialog_singlechoice_material.xml",
+        "source": "/Users/liji/.gradle/caches/transforms-2/files-2.1/c32241a80e69d736adf938537414387d/res/layout/select_dialog_singlechoice_material.xml"
+    },
+    {
+        "merged": "/Users/liji/Codes/CyxbsMobile_Android/lib_account/build/intermediates/res/merged/debug/layout/abc_list_menu_item_radio.xml",
+        "source": "/Users/liji/.gradle/caches/transforms-2/files-2.1/c32241a80e69d736adf938537414387d/res/layout/abc_list_menu_item_radio.xml"
+    }
+]

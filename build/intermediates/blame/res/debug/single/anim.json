@@ -1,0 +1,86 @@
+[
+    {
+        "merged": "/Users/liji/Codes/CyxbsMobile_Android/lib_account/build/intermediates/res/merged/debug/anim/design_bottom_sheet_slide_in.xml",
+        "source": "/Users/liji/.gradle/caches/transforms-2/files-2.1/ba864d038dd5fe301aa5a0c69bf3c1ee/res/anim/design_bottom_sheet_slide_in.xml"
+    },
+    {
+        "merged": "/Users/liji/Codes/CyxbsMobile_Android/lib_account/build/intermediates/res/merged/debug/anim/abc_slide_in_top.xml",
+        "source": "/Users/liji/.gradle/caches/transforms-2/files-2.1/c32241a80e69d736adf938537414387d/res/anim/abc_slide_in_top.xml"
+    },
+    {
+        "merged": "/Users/liji/Codes/CyxbsMobile_Android/lib_account/build/intermediates/res/merged/debug/anim/abc_tooltip_exit.xml",
+        "source": "/Users/liji/.gradle/caches/transforms-2/files-2.1/c32241a80e69d736adf938537414387d/res/anim/abc_tooltip_exit.xml"
+    },
+    {
+        "merged": "/Users/liji/Codes/CyxbsMobile_Android/lib_account/build/intermediates/res/merged/debug/anim/abc_shrink_fade_out_from_bottom.xml",
+        "source": "/Users/liji/.gradle/caches/transforms-2/files-2.1/c32241a80e69d736adf938537414387d/res/anim/abc_shrink_fade_out_from_bottom.xml"
+    },
+    {
+        "merged": "/Users/liji/Codes/CyxbsMobile_Android/lib_account/build/intermediates/res/merged/debug/anim/ucrop_loader_circle_scale.xml",
+        "source": "/Users/liji/.gradle/caches/transforms-2/files-2.1/a8de83b9d6b6ce7ccc0a5297a200dc70/res/anim/ucrop_loader_circle_scale.xml"
+    },
+    {
+        "merged": "/Users/liji/Codes/CyxbsMobile_Android/lib_account/build/intermediates/res/merged/debug/anim/abc_popup_enter.xml",
+        "source": "/Users/liji/.gradle/caches/transforms-2/files-2.1/c32241a80e69d736adf938537414387d/res/anim/abc_popup_enter.xml"
+    },
+    {
+        "merged": "/Users/liji/Codes/CyxbsMobile_Android/lib_account/build/intermediates/res/merged/debug/anim/design_snackbar_in.xml",
+        "source": "/Users/liji/.gradle/caches/transforms-2/files-2.1/ba864d038dd5fe301aa5a0c69bf3c1ee/res/anim/design_snackbar_in.xml"
+    },
+    {
+        "merged": "/Users/liji/Codes/CyxbsMobile_Android/lib_account/build/intermediates/res/merged/debug/anim/design_bottom_sheet_slide_out.xml",
+        "source": "/Users/liji/.gradle/caches/transforms-2/files-2.1/ba864d038dd5fe301aa5a0c69bf3c1ee/res/anim/design_bottom_sheet_slide_out.xml"
+    },
+    {
+        "merged": "/Users/liji/Codes/CyxbsMobile_Android/lib_account/build/intermediates/res/merged/debug/anim/abc_slide_out_bottom.xml",
+        "source": "/Users/liji/.gradle/caches/transforms-2/files-2.1/c32241a80e69d736adf938537414387d/res/anim/abc_slide_out_bottom.xml"
+    },
+    {
+        "merged": "/Users/liji/Codes/CyxbsMobile_Android/lib_account/build/intermediates/res/merged/debug/anim/abc_fade_out.xml",
+        "source": "/Users/liji/.gradle/caches/transforms-2/files-2.1/c32241a80e69d736adf938537414387d/res/anim/abc_fade_out.xml"
+    },
+    {
+        "merged": "/Users/liji/Codes/CyxbsMobile_Android/lib_account/build/intermediates/res/merged/debug/anim/popup_enter.xml",
+        "source": "/Users/liji/.gradle/caches/transforms-2/files-2.1/1bb184cf7b44f1839f74ccf60da7c5f8/res/anim/popup_enter.xml"
+    },
+    {
+        "merged": "/Users/liji/Codes/CyxbsMobile_Android/lib_account/build/intermediates/res/merged/debug/anim/popup_exit.xml",
+        "source": "/Users/liji/.gradle/caches/transforms-2/files-2.1/1bb184cf7b44f1839f74ccf60da7c5f8/res/anim/popup_exit.xml"
+    },
+    {
+        "merged": "/Users/liji/Codes/CyxbsMobile_Android/lib_account/build/intermediates/res/merged/debug/anim/design_snackbar_out.xml",
+        "source": "/Users/liji/.gradle/caches/transforms-2/files-2.1/ba864d038dd5fe301aa5a0c69bf3c1ee/res/anim/design_snackbar_out.xml"
+    },
+    {
+        "merged": "/Users/liji/Codes/CyxbsMobile_Android/lib_account/build/intermediates/res/merged/debug/anim/abc_tooltip_enter.xml",
+        "source": "/Users/liji/.gradle/caches/transforms-2/files-2.1/c32241a80e69d736adf938537414387d/res/anim/abc_tooltip_enter.xml"
+    },
+    {
+        "merged": "/Users/liji/Codes/CyxbsMobile_Android/lib_account/build/intermediates/res/merged/debug/anim/ucrop_loader_circle_path.xml",
+        "source": "/Users/liji/.gradle/caches/transforms-2/files-2.1/a8de83b9d6b6ce7ccc0a5297a200dc70/res/anim/ucrop_loader_circle_path.xml"
+    },
+    {
+        "merged": "/Users/liji/Codes/CyxbsMobile_Android/lib_account/build/intermediates/res/merged/debug/anim/decelerate_cubic.xml",
+        "source": "/Users/liji/.gradle/caches/transforms-2/files-2.1/1bb184cf7b44f1839f74ccf60da7c5f8/res/anim/decelerate_cubic.xml"
+    },
+    {
+        "merged": "/Users/liji/Codes/CyxbsMobile_Android/lib_account/build/intermediates/res/merged/debug/anim/abc_fade_in.xml",
+        "source": "/Users/liji/.gradle/caches/transforms-2/files-2.1/c32241a80e69d736adf938537414387d/res/anim/abc_fade_in.xml"
+    },
+    {
+        "merged": "/Users/liji/Codes/CyxbsMobile_Android/lib_account/build/intermediates/res/merged/debug/anim/abc_slide_out_top.xml",
+        "source": "/Users/liji/.gradle/caches/transforms-2/files-2.1/c32241a80e69d736adf938537414387d/res/anim/abc_slide_out_top.xml"
+    },
+    {
+        "merged": "/Users/liji/Codes/CyxbsMobile_Android/lib_account/build/intermediates/res/merged/debug/anim/abc_slide_in_bottom.xml",
+        "source": "/Users/liji/.gradle/caches/transforms-2/files-2.1/c32241a80e69d736adf938537414387d/res/anim/abc_slide_in_bottom.xml"
+    },
+    {
+        "merged": "/Users/liji/Codes/CyxbsMobile_Android/lib_account/build/intermediates/res/merged/debug/anim/abc_grow_fade_in_from_bottom.xml",
+        "source": "/Users/liji/.gradle/caches/transforms-2/files-2.1/c32241a80e69d736adf938537414387d/res/anim/abc_grow_fade_in_from_bottom.xml"
+    },
+    {
+        "merged": "/Users/liji/Codes/CyxbsMobile_Android/lib_account/build/intermediates/res/merged/debug/anim/abc_popup_exit.xml",
+        "source": "/Users/liji/.gradle/caches/transforms-2/files-2.1/c32241a80e69d736adf938537414387d/res/anim/abc_popup_exit.xml"
+    }
+]

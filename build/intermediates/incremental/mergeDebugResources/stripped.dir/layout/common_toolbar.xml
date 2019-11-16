@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.appbar.AppBarLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/app_bar_layout"
+    app:elevation="0dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <com.mredrock.cyxbs.common.component.JToolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/common_toolbar_background"
+        android:fitsSystemWindows="true"
+        app:navigationIcon="@drawable/common_ic_back"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
+</com.google.android.material.appbar.AppBarLayout>

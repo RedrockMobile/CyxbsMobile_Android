@@ -1,0 +1,82 @@
+{
+    "logs": [
+        {
+            "outputFile": "/Users/liji/Codes/CyxbsMobile_Android/lib_account/build/intermediates/res/merged/debug/values-sw720dp-v13/values-sw720dp-v13.xml",
+            "map": [
+                {
+                    "source": "/Users/liji/.gradle/caches/transforms-2/files-2.1/1bb184cf7b44f1839f74ccf60da7c5f8/res/values-sw720dp-v13/values-sw720dp-v13.xml",
+                    "from": {
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "55",
+                        "endColumns": "51",
+                        "endOffsets": "102"
+                    },
+                    "to": {
+                        "startLines": "4",
+                        "startColumns": "4",
+                        "startOffsets": "147",
+                        "endColumns": "51",
+                        "endOffsets": "194"
+                    }
+                },
+                {
+                    "source": "/Users/liji/Codes/CyxbsMobile_Android/lib_common/build/intermediates/packaged_res/debug/values-sw720dp-v13/values-sw720dp-v13.xml",
+                    "from": {
+                        "startLines": "2,3,4",
+                        "startColumns": "4,4,4",
+                        "startOffsets": "55,104,147",
+                        "endColumns": "48,42,40",
+                        "endOffsets": "99,142,183"
+                    },
+                    "to": {
+                        "startLines": "2,3,5",
+                        "startColumns": "4,4,4",
+                        "startOffsets": "55,104,199",
+                        "endColumns": "48,42,40",
+                        "endOffsets": "99,142,235"
+                    }
+                }
+            ]
+        },
+        {
+            "outputFile": "/Users/liji/Codes/CyxbsMobile_Android/lib_account/build/intermediates/incremental/mergeDebugResources/merged.dir/values-sw720dp-v13/values-sw720dp-v13.xml",
+            "map": [
+                {
+                    "source": "/Users/liji/.gradle/caches/transforms-2/files-2.1/1bb184cf7b44f1839f74ccf60da7c5f8/res/values-sw720dp-v13/values-sw720dp-v13.xml",
+                    "from": {
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "55",
+                        "endColumns": "51",
+                        "endOffsets": "102"
+                    },
+                    "to": {
+                        "startLines": "4",
+                        "startColumns": "4",
+                        "startOffsets": "147",
+                        "endColumns": "51",
+                        "endOffsets": "194"
+                    }
+                },
+                {
+                    "source": "/Users/liji/Codes/CyxbsMobile_Android/lib_common/build/intermediates/packaged_res/debug/values-sw720dp-v13/values-sw720dp-v13.xml",
+                    "from": {
+                        "startLines": "2,3,4",
+                        "startColumns": "4,4,4",
+                        "startOffsets": "55,104,147",
+                        "endColumns": "48,42,40",
+                        "endOffsets": "99,142,183"
+                    },
+                    "to": {
+                        "startLines": "2,3,5",
+                        "startColumns": "4,4,4",
+                        "startOffsets": "55,104,199",
+                        "endColumns": "48,42,40",
+                        "endOffsets": "99,142,235"
+                    }
+                }
+            ]
+        }
+    ]
+}
