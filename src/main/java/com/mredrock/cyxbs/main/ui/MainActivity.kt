@@ -56,7 +56,7 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
     )
 
 
-    private lateinit var fragments: ArrayList<Fragment>
+    private val fragments = ArrayList<Fragment>()
     private lateinit var adapter: MainVpAdapter
 
     private val loadHandler: Handler = Handler()
