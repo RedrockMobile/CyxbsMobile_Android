@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <declare-styleable name="WeekBackgroundView" tools:ignore="ResourceName">
+        <attr name="foreground" format="color"/>
+        <attr name="bottomBackground" format="color"/>
+        <attr name="round" format="dimension" />
+    </declare-styleable>
+</resources>

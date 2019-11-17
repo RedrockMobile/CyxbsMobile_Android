@@ -30,6 +30,16 @@
             app:month="@{dateViewModel.month}"
             app:nowWeek="@{dateViewModel.nowWeek}" />
 
+        <com.mredrock.cyxbs.course.component.WeekBackgroundView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:round="8dp"
+            app:foreground="@color/levelFourFontColor"
+            app:layout_constraintBottom_toBottomOf="@+id/red_rock_tv_course_day_of_month"
+            app:layout_constraintEnd_toEndOf="@+id/red_rock_tv_course_day_of_week"
+            app:layout_constraintStart_toStartOf="@+id/red_rock_tv_course_day_of_week"
+            app:layout_constraintTop_toTopOf="@+id/red_rock_tv_course_day_of_week" />
+
         <com.mredrock.cyxbs.course.component.RedRockTextView
             android:id="@+id/red_rock_tv_course_day_of_week"
             android:layout_width="0dp"
