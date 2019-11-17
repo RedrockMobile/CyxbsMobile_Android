@@ -54,8 +54,6 @@ open class BaseFragment : Fragment() {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     open fun onLoginStateChangeEvent(event: LoginStateChangeEvent) {
-        if (!event.newState) {
-            BaseApp.user = null
-        }
+
     }
 }

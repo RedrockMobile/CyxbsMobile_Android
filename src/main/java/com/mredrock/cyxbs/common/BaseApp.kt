@@ -4,14 +4,11 @@ import android.annotation.SuppressLint
 import android.app.Application
 import android.content.Context
 import com.alibaba.android.arouter.launcher.ARouter
-import com.google.gson.Gson
 import com.meituan.android.walle.WalleChannelReader
 import com.mredrock.cyxbs.common.bean.User
-import com.mredrock.cyxbs.common.config.SP_KEY_USER
+import com.mredrock.cyxbs.common.service.account.IAccountService
+import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.utils.LogUtils
-import com.mredrock.cyxbs.common.utils.encrypt.UserInfoEncryption
-import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
-import com.mredrock.cyxbs.common.utils.extensions.editor
 import com.umeng.analytics.MobclickAgent
 import com.umeng.commonsdk.UMConfigure
 import com.umeng.message.IUmengRegisterCallback
@@ -29,32 +26,12 @@ open class BaseApp : Application() {
         lateinit var context: Context
             private set
 
-        var user: User? = null
-            set(value) {
-                field = value
-                val encryptedJson = userInfoEncryption.encrypt(value?.toJson())
-                context.defaultSharedPreferences.editor {
-                    putString(SP_KEY_USER, encryptedJson)
-                }
-            }
-            get() {
-                if (field == null) {
-                    val encryptedJson = context.defaultSharedPreferences.getString(SP_KEY_USER, "")
-                    val json = userInfoEncryption.decrypt(encryptedJson)
-                    LogUtils.d("userinfo", json)
-                    try {
-                        field = Gson().fromJson(json, User::class.java)
-                    } catch (e: Throwable) {
-                        LogUtils.d("userinfo", "parse user json failed")
-                    }
-                }
-                return field
-            }
+        @Deprecated(message = "已废弃该实现，请使用IAccountService", replaceWith = ReplaceWith("ServiceManager.getService(IAccountService::class.java).getUserService()", "com.mredrock.cyxbs.common.service.ServiceManager", "com.mredrock.cyxbs.common.service.account.IAccountService"), level = DeprecationLevel.WARNING)
+        var user: User = User()
 
-        val isLogin get() = (user != null)
-        val hasNickname get() = (user != null && user?.nickname != null)
-
-        private lateinit var userInfoEncryption: UserInfoEncryption
+        @Deprecated(message = "已废弃该实现，请使用IAccountService", replaceWith = ReplaceWith("ServiceManager.getService(IAccountService::class.java).getVerifyService().isLogin()", "com.mredrock.cyxbs.common.service.ServiceManager", "com.mredrock.cyxbs.common.service.account.IAccountService"), level = DeprecationLevel.WARNING)
+        val isLogin
+            get() = ServiceManager.getService(IAccountService::class.java).getVerifyService().isLogin()
 
         var startTime: Long = 0
     }
@@ -70,7 +47,6 @@ open class BaseApp : Application() {
         BaseAppInitService.init(applicationContext)
         initRouter()//ARouter放在子线程会影响使用
         initUMeng()
-        userInfoEncryption = UserInfoEncryption()
     }
 
     private fun initRouter() {
