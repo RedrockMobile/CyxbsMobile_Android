@@ -60,5 +60,15 @@
     <!--    按钮渐变终止颜色-->
     <color name="buttonGradientEndColor" tools:ignore="ResourceName">#4841E2</color>
 
+
+
+
+    <!--    我的-->
+    <!--    签到页面TextView颜色-->
+    <color name="blueSignTextColor" tools:ignore="ResourceName">#839BFA</color>
+
+
+
+
 </resources>
 
