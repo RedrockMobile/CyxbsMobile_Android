@@ -4,19 +4,13 @@ import android.annotation.SuppressLint
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
-import android.os.Looper
-import android.util.Log
-import android.transition.Fade
 import android.view.MenuItem
-import android.view.View
 import androidx.fragment.app.Fragment
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
-import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.bottomnavigation.LabelVisibilityMode
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.config.*
-import com.mredrock.cyxbs.common.event.GoToDiscoverEvent
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.extensions.editor
 import com.mredrock.cyxbs.common.utils.extensions.sharedPreferences
@@ -39,11 +33,7 @@ import android.view.View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
 import androidx.annotation.RequiresApi
 import android.view.WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS
 import androidx.core.content.ContextCompat
-import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.mredrock.cyxbs.common.event.CourseSlipsTopEvent
-
-import org.jetbrains.anko.toast
-import java.lang.IndexOutOfBoundsException
 
 @Route(path = MAIN_MAIN)
 class MainActivity : BaseViewModelActivity<MainViewModel>() {
@@ -162,19 +152,20 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
     }
 
     private fun initFragments() {
+        fragments.add(getFragment(DISCOVER_ENTRY))
 
         //在滑动下拉课表容器中添加整个课表
         supportFragmentManager.beginTransaction().replace(R.id.course_bottom_sheet_content, getFragment(COURSE_ENTRY)).apply {
             commit()
         }
 
-//        adapter = MainVpAdapter(supportFragmentManager, fragments)
-//        view_pager.adapter = adapter
-//        view_pager.offscreenPageLimit = 3
+        adapter = MainVpAdapter(supportFragmentManager, fragments)
+        view_pager.adapter = adapter
+        view_pager.offscreenPageLimit = 3
 
-//        window.decorView.postDelayed({
-//            loadHandler.post(loadRunnable)
-//        }, 200)
+        window.decorView.postDelayed({
+            loadHandler.post(loadRunnable)
+        },200)
     }
 
     private fun getFragment(path: String) = ARouter.getInstance().build(path).navigation() as Fragment
@@ -192,16 +183,5 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun acceptCourseSlideInformation(evet: CourseSlipsTopEvent) {
         viewModel.isCourseTop = evet.isTop
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
-    fun acceptFraments(fragments: ArrayList<Fragment>) {
-        this.fragments = fragments
-        adapter = MainVpAdapter(supportFragmentManager, fragments)
-        view_pager.adapter = adapter
-        view_pager.offscreenPageLimit = 3
-        window.decorView.postDelayed({
-            loadHandler.post(loadRunnable)
-        }, 200)
     }
 }

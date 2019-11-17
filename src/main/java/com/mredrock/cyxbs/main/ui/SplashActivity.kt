@@ -47,9 +47,7 @@ class SplashActivity : BaseViewModelActivity<SplashViewModel>() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.main_activity_splash)
         setFullScreen()
-        val fragments = ArrayList<Fragment>()
-        fragments.add(ARouter.getInstance().build(DISCOVER_ENTRY).navigation() as Fragment)
-        EventBus.getDefault().postSticky(fragments)
+
         //判断是否下载了Splash图，下载了就直接设置
         isDownloadSplash = if (isDownloadSplash(this@SplashActivity)) {
             viewStub = main_activity_splash_viewStub.inflate()//ViewStub加载
