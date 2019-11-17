@@ -51,7 +51,7 @@
     <color name="afternoonCourseTextColor" tools:ignore="ResourceName">#FF6262</color>
     <color name="eveningCourseTextColor" tools:ignore="ResourceName">#4066EA</color>
     <!--    标识今天的课程的背景阴影-->
-    <color name="todayLogoBackgroundColor" tools:ignore="ResourceName">#E8F0FC</color>
+    <color name="todayLogoBackgroundColor" tools:ignore="ResourceName">#93E8F0FC</color>
 
     <!--    发现教务在线方框背景-->
     <color name="discoveryJwzxBackground" tools:ignore="ResourceName">#AFD2FB</color>
