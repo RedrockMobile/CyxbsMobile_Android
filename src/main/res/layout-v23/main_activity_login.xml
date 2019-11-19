@@ -33,7 +33,6 @@
     <ImageView
         android:layout_width="107dp"
         android:layout_height="107dp"
-        android:contentDescription=""
         android:src="@drawable/common_app_logo"
         app:layout_constraintBottom_toTopOf="@+id/input_field"
         app:layout_constraintEnd_toEndOf="parent"
