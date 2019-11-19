@@ -100,6 +100,13 @@ class CourseFragment : BaseFragment(){
                 }
             }
         })
+
+        schedule_view.adapterChangeListener = {
+            val position = schedule_view.adapter?.getHighLightPosition()
+            week_back_ground_view.position = position
+            red_rock_tv_course_day_of_week.position = position
+            red_rock_tv_course_day_of_month.position = position
+        }
     }
 
 

@@ -7,6 +7,7 @@ import android.graphics.Rect
 import android.util.AttributeSet
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.appcompat.widget.AppCompatTextView
 import com.mredrock.cyxbs.course.R
 
 /**
@@ -22,7 +23,7 @@ import com.mredrock.cyxbs.course.R
  *
  * Created by anriku on 2018/8/14.
  */
-class RedRockTextView : TextView {
+class RedRockTextView : AppCompatTextView {
 
     companion object {
         private const val TAG = "RedRockTextView"
@@ -34,6 +35,7 @@ class RedRockTextView : TextView {
     private val mPaint: Paint by lazy {
         Paint(Paint.ANTI_ALIAS_FLAG or Paint.LINEAR_TEXT_FLAG)
     }
+    private lateinit var whitePaint:Paint
     private var mElementWidth: Float = 0f
     private var mElementHeight: Float = 0f
     //record a CharSequence bounds
@@ -52,6 +54,17 @@ class RedRockTextView : TextView {
             field = value
             invalidate()
         }
+
+
+    var position: Int? = null
+        set(value) {
+            field = value
+            invalidate()
+        }
+
+
+
+
 
     constructor(context: Context) : super(context) {
         initRedRockTextView()
@@ -85,6 +98,9 @@ class RedRockTextView : TextView {
 
         //getTextSize
         mPaint.textSize = textSize
+        whitePaint = Paint(mPaint).apply {
+            color = 0xffffffff.toInt()
+        }
     }
 
 
@@ -163,7 +179,6 @@ class RedRockTextView : TextView {
 
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
-
         if (mOrientation == HORIZONTAL) {
             mElementHeight = measuredHeight.toFloat() - paddingTop - paddingBottom
             mElementWidth = (measuredWidth.toFloat() - paddingLeft - paddingRight -
@@ -175,7 +190,7 @@ class RedRockTextView : TextView {
                         paddingLeft + offsetBetweenText * i
                 val drawY = (mElementHeight - (-mPaint.ascent() + mPaint.descent())) / 2 -
                         mPaint.ascent() + paddingTop
-                canvas?.drawText(displayedStrings[i].toString(), drawX, drawY, mPaint)
+                canvas?.drawText(displayedStrings[i].toString(), drawX, drawY, if (position != null && position == i) whitePaint else mPaint)
             }
         } else {
             mElementWidth = measuredWidth.toFloat() - paddingLeft - paddingRight
@@ -187,7 +202,7 @@ class RedRockTextView : TextView {
                 val drawY = (mElementHeight - (-mPaint.ascent() + mPaint.descent())) / 2 -
                         mPaint.ascent() + mElementHeight * i + paddingTop + offsetBetweenText * i
 
-                canvas?.drawText(displayedStrings[i].toString(), drawX, drawY, mPaint)
+                canvas?.drawText(displayedStrings[i].toString(), drawX, drawY, if (position != null && position == i) whitePaint else mPaint)
             }
         }
     }

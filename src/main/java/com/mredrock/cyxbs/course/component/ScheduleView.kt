@@ -44,10 +44,12 @@ class ScheduleView : FrameLayout {
         const val CLICK_RESPONSE_DISTANCE = 10
     }
 
+    var adapterChangeListener : ((Adapter)-> Unit)? = null
+
     var adapter: Adapter? = null
         set(value) {
             field = value
-
+            field?.let { adapterChangeListener?.invoke(it) }
             // The following code is to add a OnGlobalLayoutListener. When the layout state change
             // will add the ItemViews to the ScheduleView, and the listener will be removed after
             // the itemViews are all added.
@@ -116,8 +118,8 @@ class ScheduleView : FrameLayout {
     private var mNoCourseDrawableResId: Int = 0
     private var mEmptyText: String? = null
     private var mEmptyTextSize: Int = sp(12)
-    private var noGourseImageHeight: Int = 0
-    private var noGourseImageWidth: Int = 0
+    private var noCourseImageHeight: Int = 0
+    private var noCourseImageWidth: Int = 0
 
 
 
@@ -132,8 +134,8 @@ class ScheduleView : FrameLayout {
         val typeArray = context.obtainStyledAttributes(attrs, R.styleable.ScheduleView,
                 R.attr.ScheduleViewStyle, 0)
         mElementGap = typeArray.getDimensionPixelSize(R.styleable.ScheduleView_elementGap, dip(2f))
-        noGourseImageHeight = typeArray.getDimensionPixelSize(R.styleable.ScheduleView_noGourseImageHeight, dip(0f))
-        noGourseImageWidth = typeArray.getDimensionPixelSize(R.styleable.ScheduleView_noGourseImageWidth, dip(0f))
+        noCourseImageHeight = typeArray.getDimensionPixelSize(R.styleable.ScheduleView_noGourseImageHeight, dip(0f))
+        noCourseImageWidth = typeArray.getDimensionPixelSize(R.styleable.ScheduleView_noGourseImageWidth, dip(0f))
         mTouchViewColor = typeArray.getColor(R.styleable.ScheduleView_touchViewColor, Color.parseColor("#bdc3c7"))
         mHeightAtLowDpi = typeArray.getDimensionPixelSize(R.styleable.ScheduleView_heightAtLowDpi, dip(600f))
         mTouchViewDrawableResId = typeArray.getResourceId(R.styleable.ScheduleView_touchViewDrawable, 0)
@@ -184,8 +186,8 @@ class ScheduleView : FrameLayout {
             val emptyTextView = mEmptyTextView
 
             val imageParams = LayoutParams(
-                    if (noGourseImageWidth == 0) mScheduleViewWidth else noGourseImageWidth,
-                    if (noGourseImageHeight == 0) mScheduleViewHeight else noGourseImageHeight)
+                    if (noCourseImageWidth == 0) mScheduleViewWidth else noCourseImageWidth,
+                    if (noCourseImageHeight == 0) mScheduleViewHeight else noCourseImageHeight)
             emptyImageView.apply {
                 setImageDrawable(ContextCompat.getDrawable(context, mNoCourseDrawableResId))
                 scaleType = ImageView.ScaleType.FIT_XY
@@ -430,5 +432,4 @@ class ScheduleView : FrameLayout {
      * @param itemHeight 表示有多少节课的高度。每天的课有12节，这个就表示多少个12分之一。
      */
     data class ScheduleItem(val itemWidth: Int = 1, val itemHeight: Int = 2)
-
 }
