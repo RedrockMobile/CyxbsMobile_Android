@@ -7,3 +7,8 @@ dependencies {
 //    kapt deps.databinding.compiler
     testImplementation 'junit:junit:4.12'
 }
+android {
+    defaultConfig {
+        vectorDrawables.useSupportLibrary = true
+    }
+}
