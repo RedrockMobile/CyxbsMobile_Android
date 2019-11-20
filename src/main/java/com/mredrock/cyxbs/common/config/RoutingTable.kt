@@ -29,7 +29,7 @@ const val DISCOVER_NEWS = "/news/discover/entry"
 const val DISCOVER_NEWS_ITEM = "/news/discover/item"
 
 //签到页
-const val MINE_CHECK_IN = "/mine/discover/check_in"
+const val MINE_CHECK_IN = "/check_in/mine/entry"
 // NoCourseInviteActivity
 const val COURSE_NO_COURSE_INVITE = "/course/no_course_invite_activity"
 
