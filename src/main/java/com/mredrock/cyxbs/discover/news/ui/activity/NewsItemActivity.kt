@@ -10,6 +10,8 @@ import android.provider.Settings
 import android.view.Menu
 import androidx.lifecycle.Observer
 import com.afollestad.materialdialogs.MaterialDialog
+import com.alibaba.android.arouter.facade.annotation.Route
+import com.mredrock.cyxbs.common.config.DISCOVER_NEWS_ITEM
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.extensions.uri
 import com.mredrock.cyxbs.common.viewmodel.event.ProgressDialogEvent
@@ -24,6 +26,7 @@ import kotlinx.android.synthetic.main.news_activity_detail.*
 import org.jetbrains.anko.toast
 import java.io.File
 
+@Route(path = DISCOVER_NEWS_ITEM)
 class NewsItemActivity : BaseViewModelActivity<NewsItemViewModel>(), NewsItemViewModel.NewsDownloadListener {
     private val files = mutableListOf<File>()
     private var downloadNeedSize = 0

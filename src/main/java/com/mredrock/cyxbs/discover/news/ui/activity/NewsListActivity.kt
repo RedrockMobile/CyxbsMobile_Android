@@ -9,6 +9,10 @@ import com.mredrock.cyxbs.discover.news.ui.adapter.NewsAdapter
 import com.mredrock.cyxbs.discover.news.viewmodel.NewsListViewModel
 import kotlinx.android.synthetic.main.news_activity_list.*
 
+/**
+ * @author zixuan
+ * 2019/11/20
+ */
 @Route(path = DISCOVER_NEWS)
 class NewsListActivity : BaseViewModelActivity<NewsListViewModel>() {
     override val viewModelClass: Class<NewsListViewModel> = NewsListViewModel::class.java
