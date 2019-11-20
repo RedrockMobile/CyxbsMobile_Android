@@ -40,8 +40,6 @@
     <color name="courseTableDragIndicatorBlockColor" tools:ignore="ResourceName">#E2EDFB</color>
     <!--    课表标识当天阴影-->
     <color name="courseIdentifiesTheCurrentShadowColor" tools:ignore="ResourceName">#E8F0FC</color>
-
-
     <!--    课表课程色块颜色-->
     <color name="morningCourseColor" tools:ignore="ResourceName">#F9E7D8</color>
     <color name="afternoonCourseColor" tools:ignore="ResourceName">#F9E3E4</color>
@@ -52,6 +50,9 @@
     <color name="eveningCourseTextColor" tools:ignore="ResourceName">#4066EA</color>
     <!--    标识今天的课程的背景阴影-->
     <color name="todayLogoBackgroundColor" tools:ignore="ResourceName">#93E8F0FC</color>
+    <!--    备忘灰色条纹-->
+    <color name="memoGrayStripes" tools:ignore="ResourceName">#E8EBEF</color>
+
 
     <!--    发现教务在线方框背景-->
     <color name="discoveryJwzxBackground" tools:ignore="ResourceName">#AFD2FB</color>
