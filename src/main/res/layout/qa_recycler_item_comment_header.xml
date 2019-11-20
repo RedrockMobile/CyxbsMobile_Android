@@ -4,8 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/qa_comment_default_color"
-    android:orientation="vertical"
-    android:paddingTop="14dp">
+    android:orientation="vertical">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -27,7 +26,8 @@
             android:id="@+id/tv_answer_nickname"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="6dp"
+            android:layout_marginStart="15dp"
+            android:alpha="0.8"
             android:layout_toEndOf="@+id/iv_answer_avatar"
             android:drawablePadding="3dp"
             android:textColor="@color/qa_comment_item_answer_nickname_color"
@@ -42,6 +42,7 @@
             android:layout_below="@id/tv_answer_nickname"
             android:layout_alignStart="@id/tv_answer_nickname"
             android:layout_marginTop="2dp"
+            android:alpha="0.54"
             android:textColor="@color/qa_comment_item_answer_create_at_tv_color"
             android:textSize="12sp"
             tools:text="2018-03-03" />
@@ -86,8 +87,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="11dp"
-        android:paddingStart="50dp"
-        android:paddingEnd="20dp"
+         android:layout_marginStart="67dp"
+        android:layout_marginEnd="20dp"
         android:textColor="@color/qa_comment_item_answer_content_color"
         android:textSize="16sp"
         tools:text="符号A属于Rmxn表示一个m行n列的矩阵，并且矩阵A中所有的所有元素都是实数。符号x属于Rn表示一个含有n个元素的向量。符号A属于Rmxn表示一个m行n列的矩阵，并且矩阵A中所有的所有元素都是实数，符号x属于Rn表示一个含有n个元素的向量。符号A属于Rmxn表示一个m行n列的矩阵，并且矩阵A中所有的所有元素都是实数." />
@@ -96,9 +97,9 @@
         android:id="@+id/ngv_answer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingStart="15dp"
+        android:layout_marginStart="67dp"
+        android:layout_marginEnd="20dp"
         android:paddingTop="19dp"
-        android:paddingEnd="15dp"
         android:paddingBottom="19dp" />
 
     <View

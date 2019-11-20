@@ -5,8 +5,6 @@ import android.os.Bundle
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
-import com.mredrock.cyxbs.common.utils.extensions.gone
-import com.mredrock.cyxbs.common.utils.extensions.visible
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.bean.Answer
 import com.mredrock.cyxbs.qa.bean.Question
@@ -16,7 +14,6 @@ import com.mredrock.cyxbs.qa.pages.comment.AdoptAnswerEvent
 import com.mredrock.cyxbs.qa.pages.comment.viewmodel.CommentListViewModel
 import com.mredrock.cyxbs.qa.ui.adapter.EmptyRvAdapter
 import com.mredrock.cyxbs.qa.ui.adapter.FooterRvAdapter
-import com.mredrock.cyxbs.qa.utils.setPraise
 import kotlinx.android.synthetic.main.qa_activity_comment_list.*
 import kotlinx.android.synthetic.main.qa_dialog_comment_bottom_sheet_dialog.*
 import kotlinx.android.synthetic.main.qa_recycler_item_comment_toolbar.*
@@ -63,40 +60,39 @@ class CommentListActivity : BaseViewModelActivity<CommentListViewModel>() {
         val isEmotion = intent.getBooleanExtra("isEmotion", false)
         val answerNub = intent.getStringExtra("answerNum")
         qa_tv_comment_toolbar_title.text = baseContext.getString(R.string.qa_comment_list_comment_count, answerNub)
-//        common_toolbar.init(getString(R.string.qa_comment_list_title))
         initRv(title, showAdoptIcon, isEmotion)
-        initBottomView()
+//        initBottomView()
     }
 
-    private fun initBottomView() {
-        fl_praise.setOnClickListener { viewModel.clickPraiseButton() }
-        fl_comment.setOnClickListener {
-            card_footer.gone()
-            commentBottomSheetDialog.show()
-        }
+//    private fun initBottomView() {
+//        fl_praise.setOnClickListener { viewModel.clickPraiseButton() }
+//        fl_comment.setOnClickListener {
+//            card_footer.gone()
+//            commentBottomSheetDialog.show()
+//        }
+//
+//        viewModel.apply {
+//            isPraised.observeNotNull { setPraise(null, it) }
+//
+//            praiseCount.observeNotNull {
+//                setPraise(getString(R.string.qa_comment_list_praise_count, it), null)
+//            }
+//
+//            commentCount.observeNotNull {
+//                commentBottomSheetDialog.dismiss()
+//                headerAdapter.notifyItemChanged(0)
+//                tv_comment.text = getString(R.string.qa_comment_list_comment_count, it)
+//            }
+//
+//            refreshPreActivityEvent.observeNotNull {
+//                setResult(Activity.RESULT_OK)
+//                headerAdapter.notifyItemChanged(0)
+//            }
+//        }
+//    }
 
-        viewModel.apply {
-            isPraised.observeNotNull { setPraise(null, it) }
-
-            praiseCount.observeNotNull {
-                setPraise(getString(R.string.qa_comment_list_praise_count, it), null)
-            }
-
-            commentCount.observeNotNull {
-                commentBottomSheetDialog.dismiss()
-                headerAdapter.notifyItemChanged(0)
-                tv_comment.text = getString(R.string.qa_comment_list_comment_count, it)
-            }
-
-            refreshPreActivityEvent.observeNotNull {
-                setResult(Activity.RESULT_OK)
-                headerAdapter.notifyItemChanged(0)
-            }
-        }
-    }
-
-    private fun setPraise(text: String?, isPraised: Boolean?) = tv_praise.setPraise(text, isPraised,
-            R.drawable.qa_ic_comment_list_praise, R.drawable.qa_ic_comment_list_praised)
+//    private fun setPraise(text: String?, isPraised: Boolean?) = tv_comment.setPraise(text, isPraised,
+//            R.drawable.qa_ic_comment_list_praise, R.drawable.qa_ic_comment_list_praised)
 
     private fun initRv(title: String, showAdoptIcon: Boolean, isEmotion: Boolean) {
         headerAdapter = CommentListHeaderRvAdapter(title, isEmotion, showAdoptIcon)
@@ -141,7 +137,7 @@ class CommentListActivity : BaseViewModelActivity<CommentListViewModel>() {
 
     private fun createCommentDialog() = BottomSheetDialog(this).apply {
         setContentView(R.layout.qa_dialog_comment_bottom_sheet_dialog)
-        setOnDismissListener { this@CommentListActivity.card_footer.visible() }
+//        setOnDismissListener { this@CommentListActivity.card_footer.visible() }
         setOnCancelListener { viewModel.saveToDraft(edt_comment_content.text.toString()) }
         tv_send_comment.setOnClickListener { viewModel.sendComment(edt_comment_content.text.toString()) }
     }

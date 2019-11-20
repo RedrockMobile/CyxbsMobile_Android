@@ -9,15 +9,15 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingStart="15dp"
-        android:paddingTop="9dp"
-        android:paddingEnd="15dp"
-        android:paddingBottom="9dp">
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="9dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="9dp">
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/iv_answer_avatar"
-            android:layout_width="33dp"
-            android:layout_height="33dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:layout_marginTop="18dp"
             android:scaleType="centerCrop"
             android:src="@drawable/common_default_avatar" />
@@ -27,7 +27,7 @@
             android:layout_height="0dp"
             android:layout_alignTop="@+id/iv_answer_avatar"
             android:layout_alignBottom="@+id/iv_answer_avatar"
-            android:layout_marginStart="14dp"
+            android:layout_marginStart="15dp"
             android:layout_toEndOf="@+id/iv_answer_avatar">
 
             <TextView
@@ -35,7 +35,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/qa_answer_list_answer_content_color"
-                android:textSize="16sp"
+                android:textSize="13sp"
                 tools:text="刘童鞋" />
 
             <TextView
@@ -44,7 +44,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
                 android:textColor="#ff2a4e84"
-                android:textSize="12sp"
+                android:textSize="11sp"
+                android:alpha="0.54"
                 tools:text="19:00" />
 
 
@@ -96,7 +97,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/iv_answer_avatar"
-            android:layout_marginStart="14dp"
+            android:layout_marginStart="15dp"
             android:layout_toEndOf="@id/iv_answer_avatar"
             android:orientation="vertical">
 
@@ -107,7 +108,7 @@
                 android:paddingTop="10dp"
                 android:paddingBottom="10dp"
                 android:textColor="@color/qa_answer_list_answer_content_color"
-                android:textSize="13sp"
+                android:textSize="15sp"
                 tools:text="是的，公式是没有问题，但是你第三步那个代入方式是错误的，不应该用x的负5次方是的，公式是没有问题，但是你第三步那个代入方式是错误的，不应该是这样" />
 
             <RelativeLayout
@@ -128,8 +129,10 @@
                     android:layout_height="wrap_content"
                     android:drawableEnd="@drawable/qa_ic_answer_list_comment"
                     android:drawablePadding="7dp"
+                    android:layout_centerVertical="true"
                     android:textColor="@color/qa_answer_list_answer_content_color"
                     android:textSize="10sp"
+                    android:alpha="0.8"
                     tools:text="5条回复" />
 
                 <TextView
@@ -140,8 +143,9 @@
                     android:layout_toStartOf="@+id/btn_answer_more"
                     android:drawableStart="@drawable/qa_ic_answer_list_praise"
                     android:drawablePadding="5dp"
+                    android:gravity="center_vertical"
                     android:textColor="@color/qa_answer_list_praise_color"
-                    android:textSize="12sp"
+                    android:textSize="9sp"
                     tools:text="25" />
             </RelativeLayout>
 

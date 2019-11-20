@@ -51,9 +51,9 @@ class AnswerListHeaderAdapter(private val onSortOrderChangedListener: (sortOrder
                 tv_questioner_nickname.setNicknameTv(data.nickname, data.isEmotion && !data.isAnonymous, data.isMale)
                 setDisappear(tv_question_publish_at, data.disappearAt)
                 tv_reward.text = context.getString(R.string.qa_question_item_reward, data.reward)
-                if (data.answerNum == 0){
-                    ll_answer_reply.gone()
-                }
+//                if (data.answerNum == 0){
+//                    ll_answer_reply.gone()
+//                }
 //                tv_answer_count.text = "${data.answerNum}个回答"
 //                initSortBy()
 

@@ -18,7 +18,7 @@ import com.mredrock.cyxbs.qa.pages.main.QuestionContainerFragment
 import com.mredrock.cyxbs.qa.utils.setNicknameTv
 import com.mredrock.cyxbs.qa.utils.timeDescription
 import com.mredrock.cyxbs.qa.utils.toDate
-import kotlinx.android.synthetic.main.qa_recycle_item_question.view.*
+import kotlinx.android.synthetic.main.qa_recycler_item_question.view.*
 import org.greenrobot.eventbus.EventBus
 
 /**
@@ -45,7 +45,7 @@ class QuestionListRvAdapter(private val fragment: Fragment) : BaseEndlessRvAdapt
         }
     }
 
-    class QuestionViewHolder(parent: ViewGroup) : BaseViewHolder<Question>(parent, R.layout.qa_recycle_item_question) {
+    class QuestionViewHolder(parent: ViewGroup) : BaseViewHolder<Question>(parent, R.layout.qa_recycler_item_question) {
         override fun refresh(data: Question?) {
             data ?: return
             itemView.apply {

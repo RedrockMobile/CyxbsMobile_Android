@@ -1,99 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="@color/qa_answer_list_background_color"
+    android:orientation="vertical"
     tools:context=".pages.answer.ui.AnswerListActivity">
 
-<!--    <include layout="@layout/common_toolbar" />-->
-    <include layout="@layout/qa_recycler_item_answer_toolbar" />
-
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/swipe_refresh_layout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_answer_list"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"/>
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-
-    <androidx.cardview.widget.CardView
-        android:id="@+id/card_bottom_container"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:visibility="gone"
-        app:layout_behavior="com.google.android.material.behavior.HideBottomViewOnScrollBehavior"
-        tools:visibility="visible">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="45dp"
-            android:orientation="horizontal">
-
-            <FrameLayout
-                android:id="@+id/fl_left"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:background="?attr/selectableItemBackground">
-
-                <TextView
-                    android:id="@+id/tv_left"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:drawablePadding="8dp"
-                    android:textColor="@color/qa_answer_list_bottom_tv_color"
-                    android:textSize="14sp"
-                    tools:drawableStart="@drawable/qa_ic_answer_list_ignore"
-                    tools:text="忽略" />
-            </FrameLayout>
-
-            <View
-                android:id="@+id/view_divider"
-                android:layout_width="1dp"
-                android:layout_height="match_parent"
-                android:background="@color/qa_answer_list_divider_color" />
-
-            <FrameLayout
-                android:id="@+id/fl_right"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:background="?attr/selectableItemBackground">
-
-                <TextView
-                    android:id="@+id/tv_right"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:drawablePadding="8dp"
-                    android:gravity="center"
-                    android:textColor="@color/qa_answer_list_bottom_tv_color"
-                    android:textSize="14sp"
-                    tools:drawableStart="@drawable/qa_ic_answer_list_help"
-                    tools:text="帮助" />
-            </FrameLayout>
-        </LinearLayout>
-    </androidx.cardview.widget.CardView>
-
-    <androidx.cardview.widget.CardView
-        android:id="@+id/card_frame"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:alpha="0.2"
-        android:visibility="gone"
-        app:cardBackgroundColor="#000" />
-</LinearLayout>
+        android:orientation="vertical">
+        <!--    <include layout="@layout/common_toolbar" />-->
+        <include layout="@layout/qa_recycler_item_answer_toolbar" />
+
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/swipe_refresh_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_answer_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp" />
+
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+    </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/fl_answer"
+        android:layout_width="120dp"
+        android:layout_height="60dp"
+        android:layout_gravity="bottom|center_horizontal"
+        android:layout_marginBottom="50dp">
+
+        <View
+            android:id="@+id/view_answer"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="@drawable/qa_main_have_question_btn_background" >
+        </View>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_gravity="center"
+            android:text="@string/qa_answer_btn_text"
+            android:textColor="@color/whiteFontColor"
+            android:textSize="18sp" />
+        <View
+            android:layout_width="92dp"
+            android:layout_height="26dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/qa_answer_new_answer_button_shadow"
+            android:alpha="0.10"
+            />
+
+    </FrameLayout>
+</FrameLayout>

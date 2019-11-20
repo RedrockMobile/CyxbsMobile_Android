@@ -5,7 +5,6 @@ import android.app.ProgressDialog
 import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
-import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
@@ -111,7 +110,7 @@ class AnswerListActivity : BaseActivity() {
     private fun initView(question: Question) {
         initRv()
         //设置标题
-        qa_tv_question_toolbar_title.text = question.title
+        tv_question_toolbar_title.text = question.title
         observeListChangeEvent()
     }
 
@@ -151,7 +150,7 @@ class AnswerListActivity : BaseActivity() {
 
         bottomViewEvent.observe {
             when {
-                it == null -> card_bottom_container.gone()
+                it == null -> fl_answer.gone()
                 it -> switchToQuestioner()
                 else -> switchToHelper()
             }
@@ -199,31 +198,34 @@ class AnswerListActivity : BaseActivity() {
     }
 
     private fun switchToQuestioner() {
-        card_bottom_container.visible()
-        val leftDrawable = ResourcesCompat.getDrawable(resources, R.drawable.qa_ic_answer_list_add_reward, null)
-        tv_left.text = getString(R.string.qa_answer_list_add_reward)
-        tv_left.setCompoundDrawablesRelativeWithIntrinsicBounds(leftDrawable, null, null, null)
-        fl_left.setOnClickListener {
-            rewardSetDialog.show()
-        }
-
-        val rightDrawable = ResourcesCompat.getDrawable(resources, R.drawable.qa_ic_answer_list_cancel, null)
-        tv_right.text = getString(R.string.qa_answer_list_cancel_question)
-        tv_right.setCompoundDrawablesRelativeWithIntrinsicBounds(rightDrawable, null, null, null)
-        fl_right.setOnClickListener { viewModel.cancelQuestion() }
+//        card_bottom_container.visible()
+//        val leftDrawable = ResourcesCompat.getDrawable(resources, R.drawable.qa_ic_answer_list_add_reward, null)
+//        tv_left.text = getString(R.string.qa_answer_list_add_reward)
+//        tv_left.setCompoundDrawablesRelativeWithIntrinsicBounds(leftDrawable, null, null, null)
+//        fl_left.setOnClickListener {
+//            rewardSetDialog.show()
+//        }
+//
+//        val rightDrawable = ResourcesCompat.getDrawable(resources, R.drawable.qa_ic_answer_list_cancel, null)
+//        tv_right.text = getString(R.string.qa_answer_list_cancel_question)
+//        tv_right.setCompoundDrawablesRelativeWithIntrinsicBounds(rightDrawable, null, null, null)
+//        fl_right.setOnClickListener { viewModel.cancelQuestion() }
+        fl_answer.gone()
     }
-
+//
     private fun switchToHelper() {
-        card_bottom_container.visible()
-        val leftDrawable = ResourcesCompat.getDrawable(resources, R.drawable.qa_ic_answer_list_ignore, null)
-        tv_left.text = getString(R.string.qa_answer_list_ignore_question)
-        tv_left.setCompoundDrawablesRelativeWithIntrinsicBounds(leftDrawable, null, null, null)
-        fl_left.setOnClickListener { viewModel.ignoreQuestion() }
-
-        val rightDrawable = ResourcesCompat.getDrawable(resources, R.drawable.qa_ic_answer_list_help, null)
-        tv_right.text = getString(R.string.qa_answer_list_help)
-        tv_right.setCompoundDrawablesRelativeWithIntrinsicBounds(rightDrawable, null, null, null)
-        fl_right.setOnClickListener { AnswerActivity.activityStart(this@AnswerListActivity, viewModel.questionLiveData.value!!.id, REQUEST_REFRESH_LIST) }
+//        card_bottom_container.visible()
+//        val leftDrawable = ResourcesCompat.getDrawable(resources, R.drawable.qa_ic_answer_list_ignore, null)
+//        tv_left.text = getString(R.string.qa_answer_list_ignore_question)
+//        tv_left.setCompoundDrawablesRelativeWithIntrinsicBounds(leftDrawable, null, null, null)
+//        fl_left.setOnClickListener { viewModel.ignoreQuestion() }
+//
+//        val rightDrawable = ResourcesCompat.getDrawable(resources, R.drawable.qa_ic_answer_list_help, null)
+//        tv_right.text = getString(R.string.qa_answer_list_help)
+//        tv_right.setCompoundDrawablesRelativeWithIntrinsicBounds(rightDrawable, null, null, null)
+//        fl_right.setOnClickListener { AnswerActivity.activityStart(this@AnswerListActivity, viewModel.questionLiveData.value!!.id, REQUEST_REFRESH_LIST) }
+    fl_answer.visibility
+    fl_answer.setOnClickListener { AnswerActivity.activityStart(this@AnswerListActivity, viewModel.questionLiveData.value!!.id, REQUEST_REFRESH_LIST) }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

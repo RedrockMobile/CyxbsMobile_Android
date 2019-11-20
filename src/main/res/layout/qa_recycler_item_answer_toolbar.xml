@@ -14,7 +14,7 @@
 
 
         <ImageButton
-            android:id="@+id/qa_ib_question_toolbar_back"
+            android:id="@+id/ib_question_toolbar_back"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
@@ -25,14 +25,14 @@
             app:layout_constraintVertical_bias="0.407" />
 
         <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/qa_gl_question_toolbar_title_start"
+            android:id="@+id/gl_question_toolbar_title_start"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             app:layout_constraintGuide_percent="0.1" />
 
         <TextView
-            android:id="@+id/qa_tv_question_toolbar_title"
+            android:id="@+id/tv_question_toolbar_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/qa_answer_head_title_color"
@@ -41,12 +41,12 @@
             android:maxEms="11"
             android:singleLine="false"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/qa_gl_question_toolbar_title_start"
+            app:layout_constraintStart_toEndOf="@+id/gl_question_toolbar_title_start"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="期末考试高数应该如何复习" />
 
         <ImageButton
-            android:id="@+id/qa_ib_question_toolbar_more"
+            android:id="@+id/ib_question_toolbar_more"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
@@ -60,6 +60,6 @@
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="5dp"
         android:background="@color/qa_answer_item_divider_color" />
 </androidx.appcompat.widget.LinearLayoutCompat>

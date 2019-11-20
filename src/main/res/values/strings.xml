@@ -67,6 +67,10 @@
     <string name="qa_report_submit_report">提交</string>
     <string name="qa_report_title">举报</string>
     <string name="qa_crop">裁剪</string>
+    <string name="qa_fragment_head_title">邮问</string>
+    <string name="qa_fragment_head_give_question">提问</string>
+    <string name="qa_comment_new_comment_text_view_hint">发布评论</string>
+    <string name="qa_answer_btn_text">回答</string>
 
     <string-array name="qa_report_type">
         <item>色情低俗</item>
