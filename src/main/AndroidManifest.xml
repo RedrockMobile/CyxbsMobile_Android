@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.mredrock.cyxbs.discover">
+    package="com.mredrock.cyxbs.discover">
 
     <application>
-        <activity android:name="debug.DebugActivity"/>
-        <activity android:name=".pages.RollerViewActivity"/>
-        <activity android:name=".pages.hiding.DiscoverHidingActivity"/>
+        <activity android:name=".pages.morefunction.MoreFunctionActivity"
+            android:launchMode="singleTop">
+        </activity>
+        <activity android:name="debug.DebugActivity" />
+        <activity android:name=".pages.RollerViewActivity" />
+        <activity android:name=".pages.hiding.DiscoverHidingActivity" />
     </application>
+
 </manifest>

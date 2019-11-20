@@ -2,4 +2,30 @@
 
     <string name="discover_manager">管理</string>
     <string name="discover_confirm">确 定</string>
+
+    <string name="discover_function">工具</string>
+
+    <string name="discover_title_no_class">没课约</string>
+    <string name="discover_detail_no_class">多人空课表同步查询</string>
+
+    <string name="discover_title_bus_track">校车轨迹</string>
+    <string name="discover_detail_bus_track">校园观光车轨迹路线实时查看</string>
+
+    <string name="discover_title_empty_classroom">空教室</string>
+    <string name="discover_detail_empty_classroom">空余教室即时查询</string>
+
+    <string name="discover_title_my_exam">我的考试</string>
+    <string name="discover_detail_my_exam">考试安排、成绩学分轻松查询</string>
+
+    <string name="discover_title_empty_stu_schedule">空课表</string>
+    <string name="discover_detail_empty_stu_schedule">同学、老师课表快捷查询</string>
+
+    <string name="discover_title_school_calendar">校历</string>
+    <string name="discover_detail_school_calendar">学期安排一目了然</string>
+
+    <string name="discover_title_map">重邮地图</string>
+    <string name="discover_detail_map">校园地图，尽收重邮风光</string>
+
+    <string name="discover_title_more_function">更多功能</string>
+    <string name="discover_detail_more_function">敬请期待</string>
 </resources>

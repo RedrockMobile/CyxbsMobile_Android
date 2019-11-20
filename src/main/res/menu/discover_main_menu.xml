@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/discover_manager"
-        android:icon="@drawable/ic_discover_manger"
+        
         app:showAsAction="always"
         android:title="@string/discover_manager" />
 </menu>

@@ -10,8 +10,8 @@ import com.mredrock.cyxbs.discover.network.RollerViewInfo
 import com.mredrock.cyxbs.discover.network.Services
 import com.mredrock.cyxbs.discover.news.bean.NewsListItem
 import io.reactivex.Observable
-import io.reactivex.Observer
 import java.util.concurrent.TimeUnit
+
 
 class DiscoverHomeViewModel : BaseViewModel() {
     val viewPagerInfos = MutableLiveData<List<RollerViewInfo>>()
@@ -27,7 +27,8 @@ class DiscoverHomeViewModel : BaseViewModel() {
                 }
                 .lifeCycle()
     }
-    fun getJwNews(page:Int){
+
+    fun getJwNews(page: Int) {
         ApiGenerator.getApiService(Services::class.java)
                 .getNewsList(page)
                 .mapOrThrowApiException()
@@ -37,8 +38,9 @@ class DiscoverHomeViewModel : BaseViewModel() {
                 }
                 .lifeCycle()
     }
-    fun startSwitchViewPager(callback:()->Unit){
-        Observable.interval(4444,TimeUnit.MILLISECONDS)
+
+    fun startSwitchViewPager(callback: () -> Unit) {
+        Observable.interval(4444, TimeUnit.MILLISECONDS)
                 .setSchedulers()
                 .safeSubscribeBy {
                     callback.invoke()

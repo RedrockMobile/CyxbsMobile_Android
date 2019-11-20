@@ -31,12 +31,12 @@ class DiscoverMainRvAdapter(private val context: Context): androidx.recyclerview
                 "志愿时长", "重邮地图", "校车查询",
                 "校历", "查电费", "关于我们",
                 "教务新闻", "同学课表")
-        iconResIds = mutableListOf(
-                R.drawable.ic_discover_no_course, R.drawable.ic_discover_empty_room, R.drawable.ic_discover_grade,
-                R.drawable.ic_discover_volunteer_time, R.drawable.ic_discover_map, R.drawable.ic_discover_school_car,
-                R.drawable.ic_discover_calendar, R.drawable.ic_discover_electric, R.drawable.ic_discover_about,
-                R.drawable.ic_discover_news, R.drawable.ic_discover_stu_schedule
-        )
+//        iconResIds = mutableListOf(
+//                R.drawable.ic_discover_no_course, R.drawable.ic_discover_empty_room, R.drawable.ic_discover_grade,
+//                R.drawable.ic_discover_volunteer_time, R.drawable.ic_discover_map, R.drawable.ic_discover_school_car,
+//                R.drawable.ic_discover_calendar, R.drawable.ic_discover_electric, R.drawable.ic_discover_about,
+//                R.drawable.ic_discover_news, R.drawable.ic_discover_stu_schedule
+//        )
     }
 
     private fun startActivity(path: String) {
@@ -49,17 +49,17 @@ class DiscoverMainRvAdapter(private val context: Context): androidx.recyclerview
 
     private fun onClick(iconPosition: Int) {
         when (iconPosition) {
-            R.drawable.ic_discover_no_course -> startActivityAfterLogin("没课约", DISCOVER_NO_CLASS)
-            R.drawable.ic_discover_empty_room -> startActivity(DISCOVER_EMPTY_ROOM)
-            R.drawable.ic_discover_grade -> startActivityAfterLogin("成绩查询", DISCOVER_GRADES)
-            R.drawable.ic_discover_volunteer_time -> startActivity(DISCOVER_VOLUNTEER)
-            R.drawable.ic_discover_map -> startActivity(DISCOVER_MAP)
-            R.drawable.ic_discover_school_car -> startActivity(DISCOVER_SCHOOL_CAR)
-            R.drawable.ic_discover_calendar -> startActivity(DISCOVER_CALENDAR)
-            R.drawable.ic_discover_electric -> startActivity(DISCOVER_ELECTRICITY)
-            R.drawable.ic_discover_about -> context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("http://redrock.team/aboutus")))
-            R.drawable.ic_discover_news -> startActivity(DISCOVER_NEWS)
-            R.drawable.ic_discover_stu_schedule -> startActivity(DISCOVER_OTHER_COURSE)
+//            R.drawable.ic_discover_no_course -> startActivityAfterLogin("没课约", DISCOVER_NO_CLASS)
+//            R.drawable.ic_discover_empty_room -> startActivity(DISCOVER_EMPTY_ROOM)
+//            R.drawable.ic_discover_grade -> startActivityAfterLogin("成绩查询", DISCOVER_GRADES)
+//            R.drawable.ic_discover_volunteer_time -> startActivity(DISCOVER_VOLUNTEER)
+//            R.drawable.ic_discover_map -> startActivity(DISCOVER_MAP)
+//            R.drawable.ic_discover_school_car -> startActivity(DISCOVER_SCHOOL_CAR)
+//            R.drawable.ic_discover_calendar -> startActivity(DISCOVER_CALENDAR)
+//            R.drawable.ic_discover_electric -> startActivity(DISCOVER_ELECTRICITY)
+//            R.drawable.ic_discover_about -> context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("http://redrock.team/aboutus")))
+//            R.drawable.ic_discover_news -> startActivity(DISCOVER_NEWS)
+//            R.drawable.ic_discover_stu_schedule -> startActivity(DISCOVER_OTHER_COURSE)
         }
     }
 

@@ -9,7 +9,6 @@ import com.mredrock.cyxbs.discover.KEY_SP_HIDING_DISCOVER_UPDATE
 import com.mredrock.cyxbs.discover.R
 import com.mredrock.cyxbs.discover.SP_HIDING_DISCOVER
 import kotlinx.android.synthetic.main.discover_rv_hiding_item.view.*
-import org.jetbrains.anko.imageResource
 
 /**
  * Created by zxzhu
@@ -18,12 +17,12 @@ import org.jetbrains.anko.imageResource
  */
 class DiscoverHidingRvAdapter(val mHideList: MutableList<Boolean>) : androidx.recyclerview.widget.RecyclerView.Adapter<DiscoverHidingRvAdapter.HidingRvHolder>() {
 
-    private val iconResIds = mutableListOf(
-            R.drawable.ic_discover_no_course, R.drawable.ic_discover_empty_room, R.drawable.ic_discover_grade,
-            R.drawable.ic_discover_volunteer_time, R.drawable.ic_discover_map, R.drawable.ic_discover_school_car,
-            R.drawable.ic_discover_calendar, R.drawable.ic_discover_electric, R.drawable.ic_discover_about,
-            R.drawable.ic_discover_news, R.drawable.ic_discover_stu_schedule
-    )
+//    private val iconResIds = mutableListOf(
+//            R.drawable.ic_discover_no_course, R.drawable.ic_discover_empty_room, R.drawable.ic_discover_grade,
+//            R.drawable.ic_discover_volunteer_time, R.drawable.ic_discover_map, R.drawable.ic_discover_school_car,
+//            R.drawable.ic_discover_calendar, R.drawable.ic_discover_electric, R.drawable.ic_discover_about,
+//            R.drawable.ic_discover_news, R.drawable.ic_discover_stu_schedule
+//    )
 
     private val titleRes = mutableListOf(
             "没课约", "空教室", "成绩与考试安排",
@@ -41,7 +40,7 @@ class DiscoverHidingRvAdapter(val mHideList: MutableList<Boolean>) : androidx.re
 
     override fun onBindViewHolder(holder: HidingRvHolder, position: Int) {
         holder.view.discover_tx_hiding_item.text = titleRes[position]
-        holder.view.discover_icon_hiding_item.imageResource = iconResIds[position]
+//        holder.view.discover_icon_hiding_item.imageResource = iconResIds[position]
         holder.view.discover_switch_hiding_item.isChecked = mHideList[position]
         holder.view.discover_switch_hiding_item.setOnCheckedChangeListener { _, isChecked ->
             mHideList[position] = isChecked

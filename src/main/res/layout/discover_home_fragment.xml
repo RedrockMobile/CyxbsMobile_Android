@@ -11,7 +11,7 @@
         android:background="@color/windowBackground"
         tools:ignore="ScrollViewSize">
 
-        <TextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tv_day"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -26,7 +26,7 @@
             app:layout_constraintTop_toTopOf="parent"
             tools:ignore="MissingConstraints" />
 
-        <TextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tv_dis"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -42,7 +42,7 @@
             app:layout_constraintTop_toBottomOf="@+id/tv_day"
             tools:ignore="MissingConstraints" />
 
-        <ImageView
+        <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/img_check_in"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -50,34 +50,35 @@
             app:layout_constraintEnd_toStartOf="@+id/discover_guideline2"
             app:layout_constraintTop_toTopOf="@+id/tv_dis"
             app:layout_constraintVertical_bias="0.555"
-            android:src="@drawable/ic_discover_check_in"
+            android:src="@drawable/discover_ic_check_in"
             tools:ignore="ContentDescription,MissingConstraints" />
 
         <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/vp_discover_home"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginTop="5dp"
             android:orientation="horizontal"
+            android:translationZ="4dp"
             app:layout_constraintBottom_toTopOf="@+id/discover_guideline5"
             app:layout_constraintEnd_toStartOf="@+id/discover_guideline2"
             app:layout_constraintStart_toStartOf="@+id/discover_guideline"
-            app:layout_constraintTop_toBottomOf="@+id/tv_dis"
-            tools:ignore="MissingConstraints" />
+            app:layout_constraintTop_toTopOf="@+id/discover_guideline4"
+            tools:ignore="MissingConstraints"
+            tools:targetApi="lollipop" />
 
         <FrameLayout
             android:id="@+id/discover_framelayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:background="@drawable/sp_jwzx_title"
+            android:background="@drawable/discover_shape_jwzx_title"
             app:layout_constraintEnd_toStartOf="@+id/vf_jwzx_detail"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/discover_guideline7"
             tools:ignore="MissingConstraints,UselessLeaf">
 
-            <TextView
+            <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/tv_discover_jwzx_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -103,23 +104,22 @@
             app:layout_constraintTop_toTopOf="@+id/discover_framelayout"
             tools:ignore="MissingConstraints" />
 
-        <ImageView
+        <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/img_discover_1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="2dp"
-            android:src="@drawable/ic_diacover_classroom_inquiry"
+            tools:src="@drawable/diacover_ic_empty_classroom"
             app:layout_constraintEnd_toStartOf="@+id/discover_guideline2"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="@+id/discover_guideline"
             app:layout_constraintTop_toTopOf="@+id/discover_guideline3"
             tools:ignore="ContentDescription,MissingConstraints" />
 
-        <TextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tv_discover_1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="教室查询"
             android:layout_marginTop="1dp"
             android:textSize="11sp"
             android:textColor="@color/levelTwoFontColor"
@@ -127,14 +127,13 @@
             app:layout_constraintEnd_toEndOf="@+id/img_discover_1"
             app:layout_constraintStart_toStartOf="@+id/img_discover_1"
             app:layout_constraintTop_toBottomOf="@+id/img_discover_1"
-            app:layout_constraintVertical_bias="0.0"
-            tools:ignore="MissingConstraints" />
+            app:layout_constraintVertical_bias="0.0" />
 
-        <ImageView
+        <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/img_discover_2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_discover_bus_track"
+            tools:src="@drawable/discover_ic_bus_track"
             app:layout_constraintBottom_toBottomOf="@+id/img_discover_1"
             app:layout_constraintEnd_toEndOf="@+id/img_discover_4"
             app:layout_constraintHorizontal_bias="0.33"
@@ -142,11 +141,10 @@
             app:layout_constraintTop_toTopOf="@+id/img_discover_1"
             tools:ignore="ContentDescription,MissingConstraints" />
 
-        <TextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tv_discover_2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="校车轨迹"
             android:layout_marginTop="1dp"
             android:textSize="11sp"
             android:textColor="@color/levelTwoFontColor"
@@ -155,13 +153,12 @@
             app:layout_constraintHorizontal_bias="0.33"
             app:layout_constraintStart_toStartOf="@+id/img_discover_2"
             app:layout_constraintTop_toBottomOf="@+id/img_discover_1"
-            app:layout_constraintVertical_bias="0.0"
-            tools:ignore="MissingConstraints" />
-        <ImageView
+            app:layout_constraintVertical_bias="0.0" />
+        <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/img_discover_3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_discover_class_schedule_inquiry"
+            tools:src="@drawable/discover_ic_empty_stu_schedule"
             app:layout_constraintBottom_toBottomOf="@+id/img_discover_1"
             app:layout_constraintEnd_toEndOf="@+id/img_discover_4"
             app:layout_constraintHorizontal_bias="0.66"
@@ -169,11 +166,10 @@
             app:layout_constraintTop_toTopOf="@+id/discover_guideline3"
             tools:ignore="ContentDescription,MissingConstraints" />
 
-        <TextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tv_discover_3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="课表查询"
             android:layout_marginTop="1dp"
             android:textSize="11sp"
             android:textColor="@color/levelTwoFontColor"
@@ -182,15 +178,14 @@
             app:layout_constraintHorizontal_bias="0.66"
             app:layout_constraintStart_toStartOf="@+id/img_discover_3"
             app:layout_constraintTop_toBottomOf="@+id/img_discover_1"
-            app:layout_constraintVertical_bias="0.0"
-            tools:ignore="MissingConstraints" />
+            app:layout_constraintVertical_bias="0.0" />
 
-        <ImageView
+        <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/img_discover_4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="2dp"
-            android:src="@drawable/ic_discover_more_function"
+            tools:src="@drawable/discover_ic_more_function"
             app:layout_constraintBottom_toBottomOf="@+id/img_discover_1"
             app:layout_constraintEnd_toStartOf="@+id/discover_guideline2"
             app:layout_constraintHorizontal_bias="1.0"
@@ -198,11 +193,10 @@
             app:layout_constraintTop_toTopOf="@+id/img_discover_1"
             tools:ignore="ContentDescription,MissingConstraints" />
 
-        <TextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tv_discover_4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="更多功能"
             android:layout_marginTop="1dp"
             android:textSize="11sp"
             android:textColor="@color/levelTwoFontColor"
@@ -212,16 +206,18 @@
             app:layout_constraintTop_toBottomOf="@+id/img_discover_1"
             app:layout_constraintVertical_bias="0.0"
             tools:ignore="MissingConstraints" />
+
         <FrameLayout
             android:id="@+id/fl_discover_feeds"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:background="@drawable/sp_jwzx_feeds"
+            android:background="@drawable/discover_shape_jwzx_feeds"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/discover_guideline8"
+            app:layout_constraintVertical_bias="0.0"
             tools:ignore="MissingConstraints">
 
 
@@ -250,7 +246,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintGuide_percent="0.3904"
+            app:layout_constraintGuide_begin="308dp"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.47000003" />
 

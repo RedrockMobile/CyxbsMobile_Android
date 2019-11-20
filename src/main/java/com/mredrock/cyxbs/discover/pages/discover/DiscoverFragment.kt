@@ -45,7 +45,7 @@ class DiscoverFragment : BaseViewModelFragment<DiscoverViewModel>() {
     override val viewModelClass = DiscoverViewModel::class.java
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
-        inflater.inflate(R.layout.discover_fragment, container, false)
+            inflater.inflate(R.layout.discover_fragment, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         setupRollerView(discover_rollerView)
@@ -100,12 +100,12 @@ class DiscoverFragment : BaseViewModelFragment<DiscoverViewModel>() {
     private fun setupRollerView(rollerView: RollerView) {
         viewModel.getRollInfos()
 
-        rollerView.setAdapter(RollViewAdapter(context!!, intArrayOf(R.drawable.img_discover_cqupt1,
-                R.drawable.img_discover_cqupt2,
-                R.drawable.img_discover_cqupt3,
-                R.drawable.img_discover_cqupt1,
-                R.drawable.img_discover_cqupt2,
-                R.drawable.img_discover_cqupt3)))
+//        rollerView.setAdapter(RollViewAdapter(context!!, intArrayOf(R.drawable.img_discover_cqupt1,
+//                R.drawable.img_discover_cqupt2,
+//                R.drawable.img_discover_cqupt3,
+//                R.drawable.img_discover_cqupt1,
+//                R.drawable.img_discover_cqupt2,
+//                R.drawable.img_discover_cqupt3)))
 
         viewModel.rollInfos.observe(this, Observer { rollerView.setAdapter(RollViewAdapter(context!!, it)) })
     }
