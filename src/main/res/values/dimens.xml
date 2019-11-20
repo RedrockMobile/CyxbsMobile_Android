@@ -3,6 +3,7 @@
     <dimen name="mine_main_small_s" tools:ignore="ResourceName">10sp</dimen>
     <dimen name="mine_main_small" tools:ignore="ResourceName">15sp</dimen>
     <dimen name="mine_main_medium" tools:ignore="ResourceName">18sp</dimen>
+    <dimen name="mine_main_medium_l" tools:ignore="ResourceName">22sp</dimen>
     <dimen name="mine_main_large" tools:ignore="ResourceName">30sp</dimen>
     <dimen name="mine_main_large_l" tools:ignore="ResourceName">40sp</dimen>
     <dimen name="mine_main_sub_schedule" tools:ignore="ResourceName">15sp</dimen>

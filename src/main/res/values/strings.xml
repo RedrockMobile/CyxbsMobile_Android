@@ -18,7 +18,7 @@
     <string name="mine_sing_successive_default">已连续签到0天</string>
     <string name="mine_question">提问</string>
     <string name="mine_answer">回答</string>
-    <string name="mine_reply_to_question">提问回复</string>
+    <string name="mine_reply_to_comment">评论回复</string>
     <string name="mine_praise">获赞</string>
     <string name="mine_number_default">0</string>
     <string name="mine_show_schedule_first_launch">启动页APP时最先显示课表页面</string>
@@ -27,6 +27,7 @@
     <string name="mine_feedback_suggestion">意见与反馈</string>
     <string name="mine_about_redrock">红岩网校</string>
     <string name="mine_about">关于</string>
+    <string name="mine_exit">退出登陆</string>
 
     <!--    编辑-->
     <string name="mine_info_edit">资料编辑</string>
@@ -44,6 +45,8 @@
 
 
 
+    <!--    签到-->
+    <string name="mine_sign_to_sign">签到</string>
 
     <string name="mine_sign_remind_switch_hint">连续签到每日提醒</string>
     <string name="mine_sign_point_hint">我的积分数：</string>
@@ -52,7 +55,6 @@
     <string name="mine_sign_point_count_default">0</string>
     <string name="mine_sign_day_count_default">00</string>
     <string name="mine_sign_day_count_hint">天</string>
-    <string name="mine_sign_to_sign">立即签到</string>
     <string name="mine_sign_hint_signed">今天打卡任务已完成，你还要忙着可爱</string>
     <string name="mine_sign_rules">签到规则</string>
     <string name="mine_sign_point_spec">积分说明</string>

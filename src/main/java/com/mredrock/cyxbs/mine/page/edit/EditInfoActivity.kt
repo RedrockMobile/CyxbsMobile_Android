@@ -80,7 +80,7 @@ class EditInfoActivity(override val isFragmentActivity: Boolean = false,
         super.onCreate(savedInstanceState)
         setContentView(R.layout.mine_activity_edit_info)
 
-        mine_et_toolbar.init("资料编辑",
+        mine_et_toolbar .init("资料编辑",
                 R.drawable.mine_ic_arrow_left,
                 View.OnClickListener {
                     if (checkIfInfoChange()) {
@@ -102,6 +102,7 @@ class EditInfoActivity(override val isFragmentActivity: Boolean = false,
             mine_btn_info_save.backgroundResource = R.drawable.mine_bg_round_corner_grey
             mine_btn_info_save.isClickable = false
         }
+        mine_btn_info_save.isClickable = false
     }
 
     override fun onBackPressed() {
