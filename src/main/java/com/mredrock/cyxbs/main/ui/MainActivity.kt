@@ -4,7 +4,9 @@ import android.annotation.SuppressLint
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
+import android.util.Log
 import android.view.MenuItem
+import android.view.View
 import androidx.fragment.app.Fragment
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
@@ -33,7 +35,9 @@ import android.view.View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
 import androidx.annotation.RequiresApi
 import android.view.WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS
 import androidx.core.content.ContextCompat
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.mredrock.cyxbs.common.event.CourseSlipsTopEvent
+import com.mredrock.cyxbs.common.utils.extensions.dp2px
 
 @Route(path = MAIN_MAIN)
 class MainActivity : BaseViewModelActivity<MainViewModel>() {
@@ -71,7 +75,7 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.main_activity_main)
 
-        //这块先展示效果，后面还会改,因为只能改部分机型
+        // TODO: 2019/11/19 此处待处理，这里只能适配部分机型
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             window.addFlags(FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
             window.decorView.systemUiVisibility = SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
@@ -108,7 +112,31 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
         //下载Splash图
         viewModel.getStartPage()
 
-        viewModel.initBottomSheetBehavior(this)
+        var isFirst = true
+        var height = 0
+        val bottomSheetBehavior = BottomSheetBehavior.from(course_bottom_sheet_content)
+        bottomSheetBehavior.setBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
+            override fun onSlide(p0: View, p1: Float) {
+                ll_nav_main_container.translationY = nav_main.height * p1
+
+            }
+
+            override fun onStateChanged(p0: View, p1: Int) {
+                if (p1 == BottomSheetBehavior.STATE_DRAGGING && !viewModel.isCourseTop) {
+                    bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+                }
+                if (isFirst) {
+                    height = p0.height - dp2px(12F)
+                    isFirst = false
+                }
+                if (p0.height > height) {
+                    // TODO: 2019/11/19 经过反复排查，发现如果bottomSheet不充满屏幕，点击添加事务时会直接上移，
+                    //  无论是在代码里面设置还是在xml中设置，应该是文学姐那里刷新了啥影响了bottomSheet，等待排查，这是先不调整高度
+//                    p0.layoutParams.height = height
+//                    p0.layoutParams = p0.layoutParams
+                }
+            }
+        })
     }
 
 
@@ -181,7 +209,7 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    fun acceptCourseSlideInformation(evet: CourseSlipsTopEvent) {
-        viewModel.isCourseTop = evet.isTop
+    fun acceptCourseSlideInformation(event: CourseSlipsTopEvent) {
+        viewModel.isCourseTop = event.isTop
     }
 }

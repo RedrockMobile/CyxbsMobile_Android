@@ -58,31 +58,7 @@ class MainViewModel : BaseViewModel() {
 
     fun initBottomSheetBehavior(activity: MainActivity) {
         activity.apply {
-//            val layoutParams = course_bottom_sheet_content.layoutParams
-//            layoutParams.height = FrameLayout.LayoutParams.MATCH_PARENT - dp2px(12F)
 
-            var isFirst = true
-            var height = 0
-            val bottomSheetBehavior = BottomSheetBehavior.from(course_bottom_sheet_content)
-            bottomSheetBehavior.setBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
-                override fun onSlide(p0: View, p1: Float) {
-                    ll_nav_main_container.translationY = nav_main.height * p1
-                }
-
-                override fun onStateChanged(p0: View, p1: Int) {
-                    if (p1 == BottomSheetBehavior.STATE_DRAGGING && !isCourseTop) {
-                        bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
-                    }
-                    if (isFirst) {
-                        height = p0.height - dp2px(12F)
-                        isFirst = false
-                    }
-                    if (p0.height > height) {
-                        p0.layoutParams.height = height
-                        p0.layoutParams = p0.layoutParams
-                    }
-                }
-            })
         }
     }
 }
