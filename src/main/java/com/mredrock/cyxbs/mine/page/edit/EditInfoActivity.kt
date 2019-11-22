@@ -1,6 +1,7 @@
 package com.mredrock.cyxbs.mine.page.edit
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
@@ -32,6 +33,7 @@ import okhttp3.MediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import org.jetbrains.anko.backgroundResource
+import org.jetbrains.anko.textColor
 import org.jetbrains.anko.toast
 import java.io.File
 import java.io.IOException
@@ -61,18 +63,48 @@ class EditInfoActivity(override val isFragmentActivity: Boolean = false,
         }
 
         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-            if (checkIfInfoChange()) {
-                mine_btn_info_save.backgroundResource = R.drawable.mine_bg_round_corner_blue
-                mine_btn_info_save.text = "保存"
-                mine_btn_info_save.isClickable = true
-            } else {
-                mine_btn_info_save.backgroundResource = R.drawable.mine_bg_round_corner_grey
-                mine_btn_info_save.text = "已保存"
-                mine_btn_info_save.isClickable = false
-
-            }
+            checkColorAndText()
         }
 
+    }
+
+    @SuppressLint("SetTextI18n")
+    private fun checkColorAndText() {
+        if (checkIfInfoChange()) {
+            mine_btn_info_save.backgroundResource = R.drawable.mine_bg_round_corner_blue
+            mine_btn_info_save.text = "保存"
+            mine_btn_info_save.isClickable = true
+        } else {
+            mine_btn_info_save.backgroundResource = R.drawable.mine_bg_round_corner_grey
+            mine_btn_info_save.text = "已保存"
+            mine_btn_info_save.isClickable = false
+        }
+        val nickname = mine_et_nickname.text.toString()
+        val introduction = mine_et_introduce.text.toString()
+        val qq = mine_et_qq.text.toString()
+        val phone = mine_et_phone.text.toString()
+        mine_tv_nickname.text = "昵称(${nickname.length}/8)"
+        mine_tv_sign.text = "个性签名(${introduction.length}/20)"
+        if (nickname != user!!.nickname) {
+            mine_et_nickname.textColor = ContextCompat.getColor(this, R.color.levelTwoFontColor)
+        } else {
+            mine_et_nickname.textColor = ContextCompat.getColor(this, R.color.greyText)
+        }
+        if (introduction != user!!.introduction) {
+            mine_et_introduce.textColor = ContextCompat.getColor(this, R.color.levelTwoFontColor)
+        } else {
+            mine_et_introduce.textColor = ContextCompat.getColor(this, R.color.greyText)
+        }
+        if (qq != user!!.qq) {
+            mine_et_qq.textColor = ContextCompat.getColor(this, R.color.levelTwoFontColor)
+        } else {
+            mine_et_qq.textColor = ContextCompat.getColor(this, R.color.greyText)
+        }
+        if (phone != user!!.phone) {
+            mine_et_phone.textColor = ContextCompat.getColor(this, R.color.levelTwoFontColor)
+        } else {
+            mine_et_phone.textColor = ContextCompat.getColor(this, R.color.greyText)
+        }
     }
 
 
@@ -96,11 +128,10 @@ class EditInfoActivity(override val isFragmentActivity: Boolean = false,
         setTextChangeListener()
         //点击更换头像
         mine_et_avatarImageView.setOnClickListener { changeAvatar() }
+        //需调用一次给textView赋值
+        checkColorAndText()
         mine_btn_info_save.setOnClickListener {
             saveInfo()
-            mine_btn_info_save.text = "已保存"
-            mine_btn_info_save.backgroundResource = R.drawable.mine_bg_round_corner_grey
-            mine_btn_info_save.isClickable = false
         }
         mine_btn_info_save.isClickable = false
     }
@@ -163,7 +194,7 @@ class EditInfoActivity(override val isFragmentActivity: Boolean = false,
             toast("昵称不能为空")
             return
         }
-        viewModel.updateUserInfo(nickname, introduction, qq, phone)
+        viewModel.updateUserInfo(nickname, introduction, qq, phone)  {  checkColorAndText() }
     }
 
     private fun checkIfInfoChange(): Boolean {

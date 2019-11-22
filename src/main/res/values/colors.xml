@@ -68,9 +68,6 @@
 
 
 
-    <!--    分割线颜色-->
-    <color name="severViewColor" tools:ignore="ResourceName">#BDCCE5</color>
-    <color name="blueButton" tools:ignore="ResourceName">#2921D1</color>
-    <color name="greyButton" tools:ignore="ResourceName">#BDBDBD</color>
+
 
 </resources>

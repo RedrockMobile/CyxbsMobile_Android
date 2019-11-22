@@ -21,7 +21,7 @@ class EditViewModel : BaseViewModel() {
 
     fun updateUserInfo(nickname: String, introduction: String, qq: String, phone: String
                        , photoThumbnailSrc: String = user!!.photoThumbnailSrc ?: ""
-                       , photoSrc: String = user!!.photoSrc ?: "") {
+                       , photoSrc: String = user!!.photoSrc ?: "", callback: () -> Unit) {
         apiService.updateUserInfo(user!!.stuNum!!, user!!.idNum!!,
                 nickname, introduction, qq, phone, photoThumbnailSrc, photoSrc)
                 .normalStatus(this)
@@ -33,6 +33,7 @@ class EditViewModel : BaseViewModel() {
                             user!!.phone = phone
                             updateInfoEvent.postValue(true)
                         },
+                        onComplete = callback,
                         onError = {
                             updateInfoEvent.postValue(false)
                         }

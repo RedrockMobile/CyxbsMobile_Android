@@ -6,12 +6,15 @@
     android:background="@color/windowBackground"
     android:orientation="vertical"
     tools:context=".UserFragment">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
+
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/mine_main_cl_info_edit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -66,12 +69,13 @@
                 app:layout_constraintTop_toTopOf="@+id/mine_main_username" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <com.google.android.material.card.MaterialCardView
+
+        <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="15dp"
-            app:cardCornerRadius="8dp">
-
+            android:layout_marginStart="17dp"
+            android:layout_marginEnd="17dp"
+            app:cardCornerRadius="40dp">
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="200dp">
@@ -82,23 +86,21 @@
                     android:layout_height="wrap_content"
                     android:text="@string/mine_sing_successive_default"
                     android:textColor="@color/levelOneFontColor"
+                    android:textSize="@dimen/mine_main_small"
                     android:textStyle="bold"
-                    android:textSize="@dimen/mine_main_medium"
                     app:layout_constraintBottom_toTopOf="@+id/mine_guideline"
                     app:layout_constraintStart_toStartOf="@+id/mine_main_tv_question"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <Button
                     android:id="@+id/mine_main_btn_sign"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="52dp"
+                    android:layout_height="28dp"
                     android:layout_gravity="end"
                     android:background="@drawable/mine_bg_round_corner_blue"
-                    android:minWidth="80dp"
-                    android:minHeight="30dp"
                     android:text="@string/mine_sign_name"
                     android:textColor="@color/whiteFontColor"
-                    android:textSize="@dimen/mine_main_medium"
+                    android:textSize="13sp"
                     app:layout_constraintBottom_toTopOf="@+id/mine_guideline"
                     app:layout_constraintEnd_toEndOf="@+id/mine_main_tv_praise"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -108,19 +110,21 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/mine_number_default"
+                    android:textColor="@color/levelFourFontColor"
+                    android:typeface="serif"
                     android:textSize="@dimen/mine_main_large_l"
                     android:textStyle="bold"
-                    android:textColor="@color/levelFourFontColor"
                     app:layout_constraintBottom_toTopOf="@+id/mine_main_tv_question"
                     app:layout_constraintEnd_toEndOf="@+id/mine_main_tv_question"
                     app:layout_constraintStart_toStartOf="@+id/mine_main_tv_question"
-                    tools:text="10"/>
+                    tools:text="10" />
 
                 <TextView
                     android:id="@+id/mine_main_answer_number"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/mine_number_default"
+                    android:typeface="serif"
                     android:textColor="@color/levelFourFontColor"
                     android:textSize="@dimen/mine_main_large_l"
                     android:textStyle="bold"
@@ -133,9 +137,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/mine_number_default"
-                    android:textSize="@dimen/mine_main_large_l"
-                    android:textStyle="bold"
                     android:textColor="@color/levelFourFontColor"
+                    android:textSize="@dimen/mine_main_large_l"
+                    android:typeface="serif"
+                    android:textStyle="bold"
                     app:layout_constraintBottom_toTopOf="@+id/mine_main_tv_reply_comment"
                     app:layout_constraintEnd_toEndOf="@+id/mine_main_tv_reply_comment"
                     app:layout_constraintStart_toStartOf="@+id/mine_main_tv_reply_comment" />
@@ -145,9 +150,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/mine_number_default"
+                    android:typeface="serif"
+                    android:textColor="@color/levelFourFontColor"
                     android:textSize="@dimen/mine_main_large_l"
                     android:textStyle="bold"
-                    android:textColor="@color/levelFourFontColor"
                     app:layout_constraintBottom_toTopOf="@+id/mine_main_tv_praise"
                     app:layout_constraintEnd_toEndOf="@+id/mine_main_tv_praise"
                     app:layout_constraintHorizontal_bias="0.55"
@@ -159,8 +165,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="30dp"
                     android:text="@string/mine_question"
-                    android:textSize="@dimen/mine_main_small"
                     android:textColor="@color/levelFourFontColor"
+                    android:textSize="@dimen/mine_main_small_s"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/mine_main_tv_answer"
                     app:layout_constraintHorizontal_bias="0.5"
@@ -172,8 +178,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/mine_answer"
-                    android:textSize="@dimen/mine_main_small"
                     android:textColor="@color/levelFourFontColor"
+                    android:textSize="@dimen/mine_main_small_s"
                     app:layout_constraintBottom_toBottomOf="@+id/mine_main_tv_question"
                     app:layout_constraintEnd_toStartOf="@+id/mine_main_tv_reply_comment"
                     app:layout_constraintHorizontal_bias="0.5"
@@ -184,8 +190,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/mine_reply_to_comment"
-                    android:textSize="@dimen/mine_main_small"
                     android:textColor="@color/levelFourFontColor"
+                    android:textSize="@dimen/mine_main_small_s"
                     app:layout_constraintBottom_toBottomOf="@+id/mine_main_tv_answer"
                     app:layout_constraintEnd_toStartOf="@+id/mine_main_tv_praise"
                     app:layout_constraintHorizontal_bias="0.5"
@@ -196,8 +202,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/mine_praise"
-                    android:textSize="@dimen/mine_main_small"
                     android:textColor="@color/levelFourFontColor"
+                    android:textSize="@dimen/mine_main_small_s"
                     app:layout_constraintBottom_toBottomOf="@+id/mine_main_tv_reply_comment"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.5"
@@ -211,25 +217,22 @@
                     app:layout_constraintGuide_begin="79dp" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
-        </com.google.android.material.card.MaterialCardView>
+        </androidx.cardview.widget.CardView>
+
+
 
         <Switch
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="30dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="36dp"
+            android:switchMinWidth="50dp"
+            android:layout_marginEnd="20dp"
             android:text="@string/mine_show_schedule_first_launch"
+            android:thumb="@drawable/mine_bg_thumb"
+            android:track="@drawable/mine_shape_switch_track"
             android:textColor="@color/levelThreeFontColor"
-            android:textSize="@dimen/mine_main_medium" />
-
-        <Switch
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="36dp"
-            android:text="@string/mine_night_mode"
-            android:textColor="@color/levelThreeFontColor"
-            android:textSize="@dimen/mine_main_medium" />
+            android:textSize="15sp" />
 
         <TextView
             android:id="@+id/mine_main_tv_custom_widget"
@@ -239,7 +242,7 @@
             android:layout_marginTop="36dp"
             android:text="@string/mine_custom_icon"
             android:textColor="@color/levelThreeFontColor"
-            android:textSize="@dimen/mine_main_medium" />
+            android:textSize="15sp" />
 
         <TextView
             android:id="@+id/mine_main_tv_feedback"
@@ -249,7 +252,7 @@
             android:layout_marginTop="36dp"
             android:text="@string/mine_feedback_suggestion"
             android:textColor="@color/levelThreeFontColor"
-            android:textSize="@dimen/mine_main_medium" />
+            android:textSize="15sp" />
 
         <TextView
             android:layout_width="match_parent"
@@ -258,7 +261,7 @@
             android:layout_marginTop="36dp"
             android:text="@string/mine_about_redrock"
             android:textColor="@color/levelThreeFontColor"
-            android:textSize="@dimen/mine_main_medium" />
+            android:textSize="15sp" />
 
         <TextView
             android:id="@+id/mine_main_tv_about"
@@ -268,20 +271,19 @@
             android:layout_marginTop="36dp"
             android:text="@string/mine_about"
             android:textColor="@color/levelThreeFontColor"
-            android:textSize="@dimen/mine_main_medium" />
+            android:textSize="15sp" />
 
         <Button
             android:id="@+id/mine_main_btn_exit"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/mine_bg_round_corner_blue"
-            android:minWidth="180dp"
-            android:layout_marginTop="36dp"
-            android:minHeight="44dp"
+            android:layout_width="184dp"
+            android:layout_height="40dp"
             android:layout_gravity="center_horizontal"
+            android:layout_marginTop="36dp"
+            android:background="@drawable/mine_bg_round_corner_blue"
             android:text="@string/mine_exit"
             android:textColor="@color/whiteFontColor"
-            android:textSize="@dimen/mine_main_medium_l" />
+            android:textSize="18sp" />
+
         <View
             android:layout_width="match_parent"
             android:layout_height="100dp" />

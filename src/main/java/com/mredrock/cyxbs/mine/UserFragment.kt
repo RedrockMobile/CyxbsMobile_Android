@@ -106,10 +106,7 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
     }
 
     private fun setUserInfoClickListener(onClickListener: View.OnClickListener) {
-        mine_main_avatar.setOnClickListener(onClickListener)
-        mine_main_username.setOnClickListener(onClickListener)
-        mine_main_introduce.setOnClickListener(onClickListener)
-        mine_main_avatar_edit.setOnClickListener(onClickListener)
+        mine_main_cl_info_edit.setOnClickListener(onClickListener)
     }
 
     private fun checkLoginBeforeAction(msg: String, action: () -> Unit) {
