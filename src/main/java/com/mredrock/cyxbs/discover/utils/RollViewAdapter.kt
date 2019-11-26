@@ -22,7 +22,7 @@ class RollViewAdapter : RollerView.RollerViewAdapter {
         get() = mImageViews!!.size
 
     constructor(context: Context, images: IntArray) {
-        mImageViews = ArrayList()
+//        mImageViews = ArrayList()
         for (id in images) {
             val imageView = MyImageView(context)
             imageView.layoutParams = ViewGroup.LayoutParams(

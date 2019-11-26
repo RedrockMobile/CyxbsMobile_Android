@@ -10,6 +10,10 @@ import com.mredrock.cyxbs.discover.utils.MoreFunctionProvider
 import kotlinx.android.synthetic.main.discover_more_function_recycler_item.view.*
 import org.jetbrains.anko.dip
 
+/**
+ * @author zixuan
+ * 2019/11/20
+ */
 class MoreFunctionRvAdapter(private val functions: List<MoreFunctionProvider.Function>) : RecyclerView.Adapter<MoreFunctionRvAdapter.MoreFunctionViewHolder>() {
     private val LONG_TYPE = 0
     private val LEFT_TYPE = 1

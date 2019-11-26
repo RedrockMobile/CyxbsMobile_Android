@@ -12,10 +12,15 @@ import com.mredrock.cyxbs.discover.news.bean.NewsListItem
 import io.reactivex.Observable
 import java.util.concurrent.TimeUnit
 
-
+/**
+ * @author zixuan
+ * 2019/11/20
+ */
 class DiscoverHomeViewModel : BaseViewModel() {
     val viewPagerInfos = MutableLiveData<List<RollerViewInfo>>()
     val jwNews = MutableLiveData<List<NewsListItem>>()
+
+    //标记是否未经被滑动，被滑动就取消下一次自动滚动
     var scrollFlag = true
     fun getRollInfos() {
         ApiGenerator.getApiService(Services::class.java)

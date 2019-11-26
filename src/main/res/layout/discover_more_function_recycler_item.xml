@@ -30,6 +30,7 @@
         android:layout_height="wrap_content"
         android:textColor="@color/levelFourFontColor"
         android:textSize="11sp"
+        android:maxWidth="120dp"
         app:layout_constraintStart_toStartOf="@+id/discover_guideline9"
         app:layout_constraintTop_toTopOf="@+id/discover_guideline11" />
 

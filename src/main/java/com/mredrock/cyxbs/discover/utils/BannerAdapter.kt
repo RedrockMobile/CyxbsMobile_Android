@@ -10,16 +10,19 @@ import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.MultiTransformation
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
-import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
-import com.bumptech.glide.load.resource.bitmap.TransformationUtils
 import com.bumptech.glide.request.RequestOptions
 import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.discover.R
 import com.mredrock.cyxbs.discover.network.RollerViewInfo
+import com.mredrock.cyxbs.discover.pages.RollerViewActivity
 import kotlinx.android.synthetic.main.discover_viewpager_item.view.*
 
-
+/**
+ * @author zixuan
+ * 2019/11/20
+ *
+ */
 class BannerAdapter(private val context:Context, private val urlList: List<RollerViewInfo>,val viewPager: ViewPager2) : Adapter<RecyclerView.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -40,6 +43,14 @@ class BannerAdapter(private val context:Context, private val urlList: List<Rolle
                 .load(urlList[position%urlList.size].picture_url)
                 .apply(RequestOptions().transform(MultiTransformation(CenterCrop(), RoundedCorners(20))))
                 .into(holder.itemView.img_viewpager_item)
+        if (urlList[position%urlList.size].picture_goto_url==null){
+            return
+        }
+        if(urlList[position%urlList.size].picture_goto_url!!.startsWith("http")){
+            holder.itemView.setOnClickListener {
+                RollerViewActivity.startRollerViewActivity(urlList[position%urlList.size],holder.itemView.context)
+            }
+        }
     }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)

@@ -13,7 +13,10 @@ import com.mredrock.cyxbs.discover.R
 import com.mredrock.cyxbs.discover.pages.morefunction.MoreFunctionActivity
 import org.greenrobot.eventbus.EventBus
 
-
+/**
+ * @author zixuan
+ * 2019/11/20
+ */
 object MoreFunctionProvider {
     public const val HOME_PAGE_FUNCTION_1 = "homePageFunction1"
     public const val HOME_PAGE_FUNCTION_2 = "homePageFunction2"
