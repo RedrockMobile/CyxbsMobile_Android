@@ -110,10 +110,12 @@
     <string name="mine_point_detail_header_hint">当前的积分数：</string>
 
     <!--关于-->
-    <string name="mine_about_website">官网</string>
-    <string name="mine_about_legal">使用条款</string>
-    <string name="mine_about_update">更新</string>
-    <string name="mine_about_1">红岩网校产品</string>
-    <string name="mine_about_copyright">CopyRight@2013&#8211;2019 All Rights Reserved</string>
+    <string name="mine_about_sharing">分享</string>
+    <string name="mine_about_function_intro">功能介绍</string>
+    <string name="mine_about_website">产品官网</string>
+    <string name="mine_about_legal">《掌上重邮用户使用条款》</string>
+    <string name="mine_about_update">版本更新</string>
+    <string name="mine_about_1">红岩网校工作站出品</string>
+    <string name="mine_about_copyright">CopyRight © 2015&#8211;2019 All Rights Reserved</string>
 
 </resources>

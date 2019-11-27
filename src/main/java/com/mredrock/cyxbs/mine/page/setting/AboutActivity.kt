@@ -22,7 +22,8 @@ class AboutActivity(override val isFragmentActivity: Boolean = false) : BaseActi
         super.onCreate(savedInstanceState)
         setContentView(R.layout.mine_activity_about)
 
-        common_toolbar.init("关于")
+        mine_about_toolbar.init("关于",
+                R.drawable.mine_ic_arrow_left)
 
         setAppVersionName()
 

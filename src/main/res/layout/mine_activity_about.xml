@@ -1,105 +1,228 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/windowBackground"
     tools:context=".page.setting.AboutActivity">
 
-    <include
+    <androidx.appcompat.widget.Toolbar
         android:id="@+id/mine_about_toolbar"
-        layout="@layout/common_toolbar" />
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fitsSystemWindows="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:titleTextColor="@color/levelTwoFontColor">
+
+    </androidx.appcompat.widget.Toolbar>
+
+    <ImageView
+        android:id="@+id/mine_imageview"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="40dp"
+        android:src="@drawable/mine_shape_round_corner_about"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/mine_about_version" />
 
     <ImageView
         android:id="@+id/mine_about_logo"
         android:layout_width="96dp"
         android:layout_height="96dp"
-        android:layout_below="@+id/mine_about_toolbar"
-        android:layout_centerHorizontal="true"
-        android:layout_gravity="center"
-        android:layout_marginTop="132dp"
         android:src="@drawable/common_app_logo"
-        tools:ignore="ContentDescription"/>
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/mine_about_toolbar"
+        app:layout_constraintVertical_bias="0.18"
+        tools:ignore="ContentDescription" />
 
     <TextView
         android:id="@+id/mine_about_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/mine_about_logo"
-        android:layout_centerInParent="true"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="11dp"
+        android:textStyle="bold"
+        android:textColor="@color/mine_about_text_color_normal"
         android:text="@string/app_name"
-        android:textSize="20sp" />
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/mine_about_logo" />
 
     <TextView
         android:id="@+id/mine_about_version"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/mine_about_name"
-        android:layout_centerInParent="true"
-        android:layout_marginTop="8dp"
-        android:textSize="14sp" />
+        android:textColor="@color/mine_about_text_color_normal"
+        android:layout_marginTop="3dp"
+        android:textSize="13sp"
+        app:layout_constraintEnd_toEndOf="@+id/mine_about_name"
+        app:layout_constraintStart_toStartOf="@+id/mine_about_name"
+        app:layout_constraintTop_toBottomOf="@+id/mine_about_name"
+        tools:text="Version 6.0.0" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerInParent="true"
-        android:layout_marginBottom="88dp"
-        android:gravity="center"
-        android:orientation="horizontal">
-
-        <TextView
-            android:id="@+id/mine_about_website"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/mine_about_website"
-            android:textSize="14sp" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
-            android:layout_marginEnd="8dp"
-            android:text="|" />
-
-        <TextView
-            android:id="@+id/mine_about_legal"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/mine_about_legal"
-            android:textSize="14sp" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
-            android:layout_marginEnd="8dp"
-            android:text="|" />
-
-        <TextView
-            android:id="@+id/mine_about_update"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/mine_about_update"
-            android:textSize="14sp" />
-    </LinearLayout>
 
     <TextView
         android:id="@+id/mine_about_1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerInParent="true"
-        android:layout_marginBottom="64dp"
-        android:gravity="center"
-        android:text="@string/mine_about_1" />
+        android:layout_marginBottom="10dp"
+        android:text="@string/mine_about_1"
+        android:textSize="11sp"
+        app:layout_constraintBottom_toTopOf="@+id/mine_textview15"
+        app:layout_constraintEnd_toEndOf="@+id/mine_about_legal"
+        app:layout_constraintStart_toStartOf="@+id/mine_about_legal" />
 
     <TextView
+        android:id="@+id/mine_textview15"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerInParent="true"
-        android:layout_marginBottom="36dp"
-        android:gravity="center"
-        android:text="@string/mine_about_copyright" />
-</RelativeLayout>
+        android:layout_marginBottom="30dp"
+        android:textSize="11sp"
+        android:text="@string/mine_about_copyright"
+        app:layout_constraintBottom_toBottomOf="@+id/mine_imageview"
+        app:layout_constraintEnd_toEndOf="@+id/mine_about_1"
+        app:layout_constraintStart_toStartOf="@+id/mine_about_1" />
+
+    <TextView
+        android:id="@+id/mine_about_legal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:text="@string/mine_about_legal"
+        android:textColor="@color/mine_about_text_color_blue"
+        android:textSize="11sp"
+        app:layout_constraintBottom_toTopOf="@+id/mine_about_1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+
+    <RelativeLayout
+        android:id="@+id/mine_linearlayout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@+id/mine_linearlayout2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/mine_imageview">
+
+        <TextView
+            android:id="@+id/mine_textview14"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/mine_about_sharing"
+            android:layout_marginStart="20dp"
+            android:textColor="@color/mine_about_text_color_normal"
+            android:textSize="16sp"
+            tools:text="分享" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="11dp"
+            android:src="@drawable/mine_ic_arrow_right" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/mine_linearlayout2"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@+id/mine_linearlayout3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/mine_linearlayout">
+
+        <TextView
+            android:id="@+id/mine_textview13"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:text="@string/mine_about_function_intro"
+            android:textColor="@color/mine_about_text_color_normal"
+            android:textSize="16sp"
+            tools:text="功能介绍" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="11dp"
+            android:src="@drawable/mine_ic_arrow_right" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/mine_linearlayout3"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@+id/mine_linearlayout4"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/mine_linearlayout2">
+
+        <TextView
+            android:id="@+id/mine_about_website"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:text="@string/mine_about_website"
+            android:textColor="@color/mine_about_text_color_normal"
+            android:textSize="16sp" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="11dp"
+            android:src="@drawable/mine_ic_arrow_right" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/mine_linearlayout4"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@+id/mine_about_legal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/mine_linearlayout3">
+
+        <TextView
+            android:id="@+id/mine_about_update"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="20dp"
+            android:text="@string/mine_about_update"
+            android:textColor="@color/mine_about_text_color_normal"
+            android:textSize="16sp" />
+
+        <TextView
+            android:layout_centerVertical="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toStartOf="@id/mine_about_arrow_update"
+            tools:text="已是最新版本" />
+
+        <ImageView
+            android:id="@+id/mine_about_arrow_update"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="11dp"
+            android:src="@drawable/mine_ic_arrow_right" />
+    </RelativeLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
