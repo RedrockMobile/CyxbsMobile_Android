@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -16,6 +16,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+
+
         <ImageView
             android:id="@+id/mine_imageview3"
             android:layout_width="0dp"
@@ -30,27 +32,28 @@
             android:id="@+id/mine_textview8"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="30dp"
+            android:layout_marginStart="15dp"
             android:layout_marginTop="50dp"
-            android:textColor="@color/blueSignTextColor"
+            android:textColor="@color/whiteFontColor"
+            android:alpha="0.59"
+            android:text="@string/mine_sign_integral_double_default"
             android:textSize="@dimen/mine_main_small_s"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:text="半期考试周打卡翻倍" />
+            app:layout_constraintTop_toTopOf="parent" />
 
 
         <TextView
             android:id="@+id/mine_textview9"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
+            android:layout_marginTop="8dp"
             android:textColor="@color/whiteFontColor"
             android:textSize="@dimen/mine_main_large_l"
             android:textStyle="bold"
+            android:text="@string/mine_sign_year_default"
             app:layout_constraintStart_toStartOf="@+id/mine_textview8"
-            app:layout_constraintTop_toBottomOf="@+id/mine_textview8"
-            tools:text="2019-2020" />
+            app:layout_constraintTop_toBottomOf="@+id/mine_textview8" />
 
         <TextView
             android:id="@+id/mine_textview10"
@@ -60,23 +63,23 @@
             android:textColor="@color/whiteFontColor"
             android:textSize="@dimen/mine_main_large_l"
             android:textStyle="bold"
+            android:text="@string/mine_sign_week_default"
             app:layout_constraintStart_toStartOf="@+id/mine_textview9"
-            app:layout_constraintTop_toBottomOf="@+id/mine_textview9"
-            tools:text="上学期第八周" />
+            app:layout_constraintTop_toBottomOf="@+id/mine_textview9" />
 
 
         <TextView
             android:id="@+id/mine_daily_dayCount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:text="@string/mine_sign_day_count_default"
-            android:textColor="@color/blueSignTextColor"
+            android:layout_marginTop="12dp"
+            android:text="@string/mine_sign_serialDays_default"
+            android:textColor="@color/whiteFontColor"
+            android:alpha="0.8"
             android:textSize="@dimen/mine_main_medium_l"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="@+id/mine_textview10"
-            app:layout_constraintTop_toBottomOf="@+id/mine_textview10"
-            tools:text="已连续打卡10天" />
+            app:layout_constraintTop_toBottomOf="@+id/mine_textview10" />
 
         <TextView
             android:id="@+id/mine_textview11"
@@ -85,49 +88,79 @@
             android:textColor="@color/levelTwoFontColor"
             android:textSize="@dimen/mine_main_medium_l"
             android:textStyle="bold"
+            android:text="@string/mine_sign_ranking_default"
             app:layout_constraintBottom_toTopOf="@+id/mine_daily_iv_mon"
             app:layout_constraintStart_toStartOf="@+id/mine_daily_iv_mon"
             app:layout_constraintTop_toTopOf="@+id/mine_guideline4"
-            app:layout_constraintVertical_bias="0.32"
-            tools:text="今日第1位打卡" />
+            app:layout_constraintVertical_bias="0.32" />
 
         <TextView
             android:id="@+id/mine_textview12"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="@dimen/mine_main_small_s"
-            app:layout_constraintStart_toStartOf="@+id/mine_textview11"
-            app:layout_constraintTop_toBottomOf="@+id/mine_textview11"
-            tools:text="超过99%的邮子" />
-
-        <ImageView
-            android:id="@+id/mine_imageview10"
-            android:layout_width="12dp"
-            android:layout_height="12dp"
-            android:layout_marginEnd="10dp"
-            android:background="@drawable/mine_shape_circle_bg_activity_sign_white"
-            app:layout_constraintBottom_toBottomOf="@+id/mine_daily_pointCount"
-            app:layout_constraintEnd_toStartOf="@+id/mine_daily_pointCount"
-            app:layout_constraintTop_toTopOf="@+id/mine_daily_pointCount" />
-
-        <TextView
-            android:id="@+id/mine_daily_pointCount"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/mine_sign_point_count_default"
+            android:alpha="0.43"
             android:textColor="@color/levelTwoFontColor"
-            android:textSize="@dimen/mine_main_medium"
-            app:layout_constraintEnd_toEndOf="@+id/mine_daily_iv_sun"
+            android:text="@string/mine_sign_ranking_percentage_default"
+            app:layout_constraintStart_toStartOf="@+id/mine_textview11"
+            app:layout_constraintTop_toBottomOf="@+id/mine_textview11" />
+        <com.mredrock.cyxbs.mine.util.widget.Stick
+            android:id="@+id/mine_daily_v_divider_mon_tue"
+            android:layout_width="0dp"
+            android:layout_height="5dp"
+            app:layout_constraintBottom_toBottomOf="@+id/mine_daily_iv_mon"
+            app:layout_constraintEnd_toStartOf="@+id/mine_daily_space_tue"
+            app:layout_constraintStart_toEndOf="@+id/mine_daily_space_mon"
+            app:layout_constraintTop_toTopOf="@+id/mine_daily_iv_mon" />
+        <com.mredrock.cyxbs.mine.util.widget.Stick
+            android:id="@+id/mine_daily_v_divider_tue_wed"
+            android:layout_width="0dp"
+            android:layout_height="5dp"
+            app:layout_constraintEnd_toStartOf="@+id/mine_daily_space_wed"
+            app:layout_constraintStart_toEndOf="@+id/mine_daily_space_tue"
+            app:layout_constraintTop_toTopOf="@+id/mine_daily_v_divider_mon_tue" />
+        <com.mredrock.cyxbs.mine.util.widget.Stick
+            android:id="@+id/mine_daily_v_divider_wed_thurs"
+            android:layout_width="0dp"
+            android:layout_height="5dp"
+            app:layout_constraintEnd_toStartOf="@+id/mine_daily_space_thurs"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toEndOf="@+id/mine_daily_space_wed"
+            app:layout_constraintTop_toTopOf="@+id/mine_daily_v_divider_tue_wed" />
 
-            app:layout_constraintTop_toTopOf="@+id/mine_textview11"
-            tools:text="666"
-            tools:textColor="@color/levelTwoFontColor" />
+        <com.mredrock.cyxbs.mine.util.widget.Stick
+            android:id="@+id/mine_daily_v_divider_thurs_fri"
+            android:layout_width="0dp"
+            android:layout_height="5dp"
+            app:layout_constraintBottom_toBottomOf="@+id/mine_daily_v_divider_wed_thurs"
+            app:layout_constraintEnd_toStartOf="@+id/mine_daily_space_fri"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toEndOf="@+id/mine_daily_space_thurs"
+            app:layout_constraintTop_toTopOf="@+id/mine_daily_v_divider_wed_thurs" />
+
+        <com.mredrock.cyxbs.mine.util.widget.Stick
+            android:id="@+id/mine_daily_v_divider_fri_sat"
+            android:layout_width="0dp"
+            android:layout_height="5dp"
+            app:layout_constraintEnd_toStartOf="@+id/mine_daily_space_sat"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toEndOf="@+id/mine_daily_space_fri"
+            app:layout_constraintTop_toTopOf="@+id/mine_daily_v_divider_thurs_fri" />
+
+        <com.mredrock.cyxbs.mine.util.widget.Stick
+            android:id="@+id/mine_daily_v_divider_sat_sun"
+            android:layout_width="0dp"
+            android:layout_height="5dp"
+            app:layout_constraintEnd_toStartOf="@+id/mine_daily_space_sun"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toEndOf="@+id/mine_daily_space_sat"
+            app:layout_constraintTop_toTopOf="@+id/mine_daily_v_divider_fri_sat" />
 
 
         <ImageView
             android:id="@+id/mine_daily_iv_mon"
-            android:layout_width="12dp"
-            android:layout_height="12dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
             android:padding="2dp"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -137,138 +170,93 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/mine_guideline4"
             app:layout_constraintVertical_bias="0.37"
-            android:background="@drawable/mine_shape_circle_bg_activity_sign_white"
-            android:src="@drawable/mine_shape_circle_src_activity_sign_blue"
+            android:src="@drawable/mine_shape_circle_src_activity_sign"
             android:scaleType="centerInside" />
 
-        <View
-            android:id="@+id/mine_daily_v_divider_mon_tue"
-            android:layout_width="0dp"
-            android:layout_height="3dp"
-            android:background="@color/mine_sign_divider"
-            app:layout_constraintBottom_toBottomOf="@+id/mine_daily_iv_mon"
-            app:layout_constraintEnd_toStartOf="@+id/mine_daily_iv_tue"
-            app:layout_constraintStart_toEndOf="@+id/mine_daily_iv_mon"
-            app:layout_constraintTop_toTopOf="@+id/mine_daily_iv_mon" />
+
 
         <ImageView
             android:id="@+id/mine_daily_iv_tue"
-            android:layout_width="12dp"
-            android:layout_height="12dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:padding="2dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/mine_shape_circle_src_activity_sign"
+            app:layout_constraintBottom_toBottomOf="@+id/mine_daily_iv_mon"
             app:layout_constraintEnd_toStartOf="@+id/mine_daily_iv_wed"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/mine_daily_iv_mon"
-            app:layout_constraintTop_toTopOf="@+id/mine_daily_iv_mon"
-            android:background="@drawable/mine_shape_circle_bg_activity_sign_white"
-            android:src="@drawable/mine_shape_circle_src_activity_sign_blue"
-            android:scaleType="centerInside" />
+            app:layout_constraintTop_toTopOf="@+id/mine_daily_iv_mon" />
 
-        <View
-            android:id="@+id/mine_daily_v_divider_tue_wed"
-            android:layout_width="0dp"
-            android:layout_height="3dp"
-            android:background="@color/mine_sign_divider"
-            app:layout_constraintEnd_toStartOf="@+id/mine_daily_iv_wed"
-            app:layout_constraintStart_toEndOf="@+id/mine_daily_iv_tue"
-            app:layout_constraintTop_toTopOf="@+id/mine_daily_v_divider_mon_tue" />
+
 
         <ImageView
             android:id="@+id/mine_daily_iv_wed"
-            android:layout_width="12dp"
-            android:layout_height="12dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:padding="2dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/mine_shape_circle_src_activity_sign"
+            app:layout_constraintBottom_toBottomOf="@+id/mine_daily_iv_tue"
             app:layout_constraintEnd_toStartOf="@+id/mine_daily_iv_thurs"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/mine_daily_iv_tue"
-            app:layout_constraintTop_toTopOf="@+id/mine_daily_iv_tue"
-            android:background="@drawable/mine_shape_circle_bg_activity_sign_white"
-            android:src="@drawable/mine_shape_circle_src_activity_sign_blue"
-            android:scaleType="centerInside" />
+            app:layout_constraintTop_toTopOf="@+id/mine_daily_iv_tue" />
 
-        <View
-            android:id="@+id/mine_daily_v_divider_wed_thurs"
-            android:layout_width="0dp"
-            android:layout_height="3dp"
-            android:background="@color/mine_sign_divider"
-            app:layout_constraintEnd_toStartOf="@+id/mine_daily_iv_thurs"
-            app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toEndOf="@+id/mine_daily_iv_wed"
-            app:layout_constraintTop_toTopOf="@+id/mine_daily_v_divider_tue_wed" />
+
 
         <ImageView
             android:id="@+id/mine_daily_iv_thurs"
-            android:layout_width="12dp"
-            android:layout_height="12dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:padding="2dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/mine_ic_sign_diamond"
+            app:layout_constraintBottom_toBottomOf="@+id/mine_daily_iv_wed"
             app:layout_constraintEnd_toStartOf="@+id/mine_daily_iv_fri"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/mine_daily_iv_wed"
-            app:layout_constraintTop_toTopOf="@+id/mine_daily_iv_wed"
-            android:background="@drawable/mine_shape_circle_bg_activity_sign_white"
-            android:src="@drawable/mine_shape_circle_src_activity_sign_blue"
-            android:scaleType="centerInside"/>
+            app:layout_constraintTop_toTopOf="@+id/mine_daily_iv_wed" />
 
 
-        <View
-            android:id="@+id/mine_daily_v_divider_thurs_fri"
-            android:layout_width="0dp"
-            android:layout_height="5dp"
-            android:background="@color/mine_sign_bg_grey"
-            app:layout_constraintEnd_toStartOf="@+id/mine_daily_iv_fri"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toEndOf="@+id/mine_daily_iv_thurs"
-            app:layout_constraintTop_toTopOf="@+id/mine_daily_v_divider_wed_thurs"/>
+
 
         <ImageView
             android:id="@+id/mine_daily_iv_fri"
-            android:layout_width="12dp"
-            android:layout_height="12dp"
-            android:background="@drawable/mine_shape_circle_bg_activity_sign_grey"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/mine_shape_circle_src_activity_sign_grey"
             android:padding="2dp"
+            app:layout_constraintBottom_toBottomOf="@+id/mine_daily_iv_thurs"
             app:layout_constraintEnd_toStartOf="@+id/mine_daily_iv_sat"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/mine_daily_iv_thurs"
             app:layout_constraintTop_toTopOf="@+id/mine_daily_iv_thurs" />
 
-        <View
-            android:id="@+id/mine_daily_v_divider_fri_sat"
-            android:layout_width="0dp"
-            android:layout_height="5dp"
-            android:background="@color/mine_sign_bg_grey"
-            app:layout_constraintEnd_toStartOf="@+id/mine_daily_iv_sat"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toEndOf="@+id/mine_daily_iv_fri"
-            app:layout_constraintTop_toTopOf="@+id/mine_daily_v_divider_thurs_fri" />
+
 
         <ImageView
             android:id="@+id/mine_daily_iv_sat"
-            android:layout_width="12dp"
-            android:layout_height="12dp"
-            android:background="@drawable/mine_shape_circle_bg_activity_sign_grey"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/mine_shape_circle_src_activity_sign_grey"
             android:padding="2dp"
+            app:layout_constraintBottom_toBottomOf="@+id/mine_daily_iv_fri"
             app:layout_constraintEnd_toStartOf="@+id/mine_daily_iv_sun"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/mine_daily_iv_fri"
             app:layout_constraintTop_toTopOf="@+id/mine_daily_iv_fri" />
 
-        <View
-            android:id="@+id/mine_daily_v_divider_sat_sun"
-            android:layout_width="0dp"
-            android:layout_height="5dp"
-            android:background="@color/mine_sign_bg_grey"
-            app:layout_constraintEnd_toStartOf="@+id/mine_daily_iv_sun"
-            app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toEndOf="@+id/mine_daily_iv_sat"
-            app:layout_constraintTop_toTopOf="@+id/mine_daily_v_divider_fri_sat" />
+
 
         <ImageView
             android:id="@+id/mine_daily_iv_sun"
-            android:layout_width="12dp"
-            android:layout_height="12dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginEnd="20dp"
-            android:background="@drawable/mine_shape_circle_bg_activity_sign_grey"
+            android:src="@drawable/mine_ic_sign_diamond"
             android:padding="2dp"
+            app:layout_constraintBottom_toBottomOf="@+id/mine_daily_iv_sat"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/mine_daily_iv_sat"
@@ -281,8 +269,10 @@
             android:layout_marginTop="5dp"
             android:layout_weight="1"
             android:gravity="center"
-            android:textColor="@color/mine_sign_day_name"
-            android:textSize="13sp"
+            android:text="@string/mine_sign_mon"
+            android:textColor="@color/levelTwoFontColor"
+            android:alpha="0.35"
+            android:textSize="11sp"
             app:layout_constraintEnd_toStartOf="@+id/mine_daily_v_divider_mon_tue"
             app:layout_constraintStart_toStartOf="@+id/mine_daily_iv_mon"
             app:layout_constraintTop_toBottomOf="@+id/mine_daily_iv_mon"
@@ -294,8 +284,10 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:textColor="@color/mine_sign_day_name"
-            android:textSize="13sp"
+            android:text="@string/mine_sign_tue"
+            android:textColor="@color/levelTwoFontColor"
+            android:alpha="0.35"
+            android:textSize="11sp"
             app:layout_constraintEnd_toStartOf="@+id/mine_daily_v_divider_tue_wed"
             app:layout_constraintStart_toEndOf="@+id/mine_daily_v_divider_mon_tue"
             app:layout_constraintTop_toTopOf="@+id/mine_textview"
@@ -307,8 +299,10 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:textColor="@color/mine_sign_day_name"
-            android:textSize="13sp"
+            android:text="@string/mine_sign_wed"
+            android:textColor="@color/levelTwoFontColor"
+            android:alpha="0.35"
+            android:textSize="11sp"
             app:layout_constraintEnd_toStartOf="@+id/mine_daily_v_divider_wed_thurs"
             app:layout_constraintStart_toEndOf="@+id/mine_daily_v_divider_tue_wed"
             app:layout_constraintTop_toTopOf="@+id/mine_textview2"
@@ -320,8 +314,10 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:textColor="@color/mine_sign_day_name"
-            android:textSize="13sp"
+            android:text="@string/mine_sign_thurs"
+            android:textColor="@color/levelTwoFontColor"
+            android:alpha="0.35"
+            android:textSize="11sp"
             app:layout_constraintEnd_toStartOf="@+id/mine_daily_v_divider_thurs_fri"
             app:layout_constraintStart_toEndOf="@+id/mine_daily_v_divider_wed_thurs"
             app:layout_constraintTop_toTopOf="@+id/mine_textview4"
@@ -334,8 +330,10 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:textColor="@color/mine_sign_day_name"
-            android:textSize="13sp"
+            android:text="@string/mine_sign_fri"
+            android:textColor="@color/levelTwoFontColor"
+            android:alpha="0.35"
+            android:textSize="11sp"
             app:layout_constraintEnd_toStartOf="@+id/mine_daily_v_divider_fri_sat"
             app:layout_constraintStart_toEndOf="@+id/mine_daily_v_divider_thurs_fri"
             app:layout_constraintTop_toTopOf="@+id/mine_textview5"
@@ -348,8 +346,10 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:textColor="@color/mine_sign_day_name"
-            android:textSize="13sp"
+            android:text="@string/mine_sign_sat"
+            android:textColor="@color/levelTwoFontColor"
+            android:alpha="0.35"
+            android:textSize="11sp"
             app:layout_constraintEnd_toStartOf="@+id/mine_daily_v_divider_sat_sun"
             app:layout_constraintStart_toEndOf="@+id/mine_daily_v_divider_fri_sat"
             app:layout_constraintTop_toTopOf="@+id/mine_textview6"
@@ -360,9 +360,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:text="@string/mine_sign_sun"
             android:gravity="center"
-            android:textColor="@color/mine_sign_day_name"
-            android:textSize="13sp"
+            android:textColor="@color/levelTwoFontColor"
+            android:alpha="0.35"
+            android:textSize="11sp"
             app:layout_constraintEnd_toEndOf="@+id/mine_daily_iv_sun"
             app:layout_constraintStart_toEndOf="@+id/mine_daily_v_divider_sat_sun"
             app:layout_constraintTop_toTopOf="@+id/mine_textview7"
@@ -391,9 +393,85 @@
             android:orientation="horizontal"
             app:layout_constraintGuide_percent="0.5" />
 
+        <Space
+            android:id="@+id/mine_daily_space_mon"
+            android:layout_width="1dp"
+            android:layout_height="1dp"
+            app:layout_constraintBottom_toBottomOf="@+id/mine_daily_iv_mon"
+            app:layout_constraintEnd_toEndOf="@+id/mine_daily_iv_mon"
+            app:layout_constraintStart_toStartOf="@+id/mine_daily_iv_mon"
+            app:layout_constraintTop_toTopOf="@+id/mine_daily_iv_mon" />
 
+        <Space
+            android:id="@+id/mine_daily_space_tue"
 
+            android:layout_width="1dp"
+            android:layout_height="1dp"
+            app:layout_constraintBottom_toBottomOf="@+id/mine_daily_iv_tue"
+            app:layout_constraintEnd_toEndOf="@+id/mine_daily_iv_tue"
+            app:layout_constraintStart_toStartOf="@+id/mine_daily_iv_tue"
+            app:layout_constraintTop_toTopOf="@+id/mine_daily_iv_tue" />
+        <Space
+            android:id="@+id/mine_daily_space_wed"
+
+            android:layout_width="1dp"
+            android:layout_height="1dp"
+            app:layout_constraintBottom_toBottomOf="@+id/mine_daily_iv_wed"
+            app:layout_constraintEnd_toEndOf="@+id/mine_daily_iv_wed"
+            app:layout_constraintStart_toStartOf="@+id/mine_daily_iv_wed"
+            app:layout_constraintTop_toTopOf="@+id/mine_daily_iv_wed" />
+        <Space
+            android:id="@+id/mine_daily_space_thurs"
+
+            android:layout_width="1dp"
+            android:layout_height="1dp"
+            app:layout_constraintBottom_toBottomOf="@+id/mine_daily_iv_thurs"
+            app:layout_constraintEnd_toEndOf="@+id/mine_daily_iv_thurs"
+            app:layout_constraintStart_toStartOf="@+id/mine_daily_iv_thurs"
+            app:layout_constraintTop_toTopOf="@+id/mine_daily_iv_thurs" />
+        <Space
+            android:id="@+id/mine_daily_space_fri"
+
+            android:layout_width="1dp"
+            android:layout_height="1dp"
+            app:layout_constraintBottom_toBottomOf="@+id/mine_daily_iv_fri"
+            app:layout_constraintEnd_toEndOf="@+id/mine_daily_iv_fri"
+            app:layout_constraintStart_toStartOf="@+id/mine_daily_iv_fri"
+            app:layout_constraintTop_toTopOf="@+id/mine_daily_iv_fri" />
+        <Space
+            android:id="@+id/mine_daily_space_sat"
+
+            android:layout_width="1dp"
+            android:layout_height="1dp"
+            app:layout_constraintBottom_toBottomOf="@+id/mine_daily_iv_sat"
+            app:layout_constraintEnd_toEndOf="@+id/mine_daily_iv_sat"
+            app:layout_constraintStart_toStartOf="@+id/mine_daily_iv_sat"
+            app:layout_constraintTop_toTopOf="@+id/mine_daily_iv_sat" />
+        <Space
+            android:id="@+id/mine_daily_space_sun"
+
+            android:layout_width="1dp"
+            android:layout_height="1dp"
+            app:layout_constraintBottom_toBottomOf="@+id/mine_daily_iv_sun"
+            app:layout_constraintEnd_toEndOf="@+id/mine_daily_iv_sun"
+            app:layout_constraintStart_toStartOf="@+id/mine_daily_iv_sun"
+            app:layout_constraintTop_toTopOf="@+id/mine_daily_iv_sun" />
+
+        <TextView
+            android:id="@+id/mine_daily_tv_bubble"
+            android:background="@color/mine_sign_integral_text_background"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            android:textSize="11sp"
+            android:text="@string/mine_sign_week_integral"
+            android:textColor="@color/mine_sign_integral_text"
+            app:layout_constraintBottom_toTopOf="@+id/mine_daily_iv_thurs"
+            app:layout_constraintEnd_toEndOf="@+id/mine_textview5"
+            app:layout_constraintStart_toStartOf="@+id/mine_textview5"
+            tools:ignore="SmallSp" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-</FrameLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

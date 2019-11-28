@@ -17,6 +17,9 @@ class DailyViewModel : BaseViewModel() {
 
     val status = MutableLiveData<ScoreStatus>()//签到状态
 
+    //伪造的后端数据，仅供测试使用
+    val fakeStatus = MutableLiveData<Array<Int>>()
+
     fun loadAllData(user: User) {
         apiService.getScoreStatus(user.stuNum!!, user.idNum!!)
                 .normalWrapper(this)
@@ -29,7 +32,11 @@ class DailyViewModel : BaseViewModel() {
     fun checkIn(user: User, action: () -> Unit) {
         apiService.checkIn(user.stuNum!!, user.idNum!!)
                 .setSchedulers()
-                .subscribe { action.invoke() }
+                .subscribe {
+                    if (it.status == 200) {
+                        action.invoke()
+                    }
+                }
                 .lifeCycle()
     }
 }

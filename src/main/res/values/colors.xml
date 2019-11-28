@@ -24,13 +24,11 @@
     <!--签到-->
     <color name="mine_sign_ring_blue">#3A35D2</color>
     <color name="mine_sign_ring_grey">#E1E6F0</color>
-    <color name="mine_sign_bg_grey">#E1E6F0</color>
 
     <color name="mine_sign_hint_text">#d8000000</color>
     <color name="mine_sign_point_count">#6D86E8</color>
     <color name="mine_sign_day_name">#cc000000</color>
     <color name="mine_sign_today_name">#5170EA</color>
-    <color name="mine_sign_divider">#3A35D2</color>
     <color name="mine_sign_hint_singed">#bf000000</color>
     <color name="mine_sign_rules_rules">#b2000000</color>
     <color name="mine_question_detail_menu">#7496FA</color>

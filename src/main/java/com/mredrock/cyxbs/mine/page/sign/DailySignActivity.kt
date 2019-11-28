@@ -1,12 +1,17 @@
 package com.mredrock.cyxbs.mine.page.sign
 
+import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.view.animation.AccelerateDecelerateInterpolator
+import android.widget.ImageView
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.mine.R
 import com.mredrock.cyxbs.mine.util.user
+import com.mredrock.cyxbs.mine.util.widget.Stick
 import kotlinx.android.synthetic.main.mine_activity_daily_sign.*
 import org.jetbrains.anko.toast
 
@@ -20,149 +25,57 @@ class DailySignActivity(override val viewModelClass: Class<DailyViewModel> = Dai
                         , override val isFragmentActivity: Boolean = false)
     : BaseViewModelActivity<DailyViewModel>() {
 
-//    private val menuContentView: View by lazy { initMenuContentView() }
-//    private val popupWindow: PopupWindow by lazy {
-//        PopupWindow(menuContentView,
-//                WindowManager.LayoutParams.WRAP_CONTENT, WindowManager.LayoutParams.WRAP_CONTENT,
-//                true).init()
-//    }
+    private lateinit var dividerResArr: Array<Stick>
+    private lateinit var imageViewResArr: Array<ImageView>
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.mine_activity_daily_sign)
-
-//        common_toolbar.init("每日签到")
+        if (!isLogin()) return
 
         initView()
-
-        //加载信息
         viewModel.loadAllData(user!!)
-
-//        //连续签到每日提醒设置
-//        mine_daily_remindSwitch.setCheckedImmediately(defaultSharedPreferences.getBoolean(SP_SIGN_REMIND, false))
-//        mine_daily_remindSwitch.setOnCheckedChangeListener { _, isChecked ->
-//            remindStatusChange(isChecked)
-//        }
-
-        //积分明细
-//        mine_daily_pointDetail.setOnClickListener {
-//            startActivity<PointDetailActivity>()
-//        }
+        viewModel.fakeStatus.postValue(arrayOf(1, 1, 1, 0, 1, 0, 0))
     }
 
     private fun initView() {
-        viewModel.status.observe(this, Observer {
-            it!!
-            freshSignView(it.serialDays, it.isChecked)
-            mine_daily_pointCount.text = it.integral.toString()
+        dividerResArr = arrayOf(mine_daily_v_divider_mon_tue,
+                mine_daily_v_divider_tue_wed,
+                mine_daily_v_divider_wed_thurs,
+                mine_daily_v_divider_thurs_fri,
+                mine_daily_v_divider_fri_sat,
+                mine_daily_v_divider_sat_sun)
+        imageViewResArr = arrayOf(mine_daily_iv_mon,
+                mine_daily_iv_tue,
+                mine_daily_iv_wed,
+                mine_daily_iv_thurs,
+                mine_daily_iv_fri,
+                mine_daily_iv_sat,
+                mine_daily_iv_sun)
+        viewModel.fakeStatus.observe(this, Observer {
+            freshSignView(it)
         })
-        if (!isLogin()) return
-//        loadAvatar(user!!.photoSrc, mine_daily_avatar)
+
+
     }
 
     /**
      * 刷新签到页面
      */
     @SuppressLint("SetTextI18n")
-    private fun freshSignView(serialDays: Int, isSign: Boolean) {
-
-        if (isSign) {
-//            mine_daily_signedFrame.visible()
-//            mine_daily_toSignFrame.gone()
-        } else {
-//            mine_daily_signedFrame.gone()
-//            mine_daily_toSignFrame.visible()
-            mine_daily_sign.setOnClickListener { checkIn() }
-        }
-
-        mine_daily_dayCount.text = "已连续打卡${serialDays}天"
-
-//        val checkedDrawable = ContextCompat.getDrawable(this, R.drawable.mine_shape_circle_src_activity_sign_blue)
-//        val todayColor = ContextCompat.getColor(this, R.color.mine_sign_today_name)
-//        val otherDayColor = ContextCompat.getColor(this, R.color.mine_sign_day_name)
-//
-//        var position = 0
-//        val weekDay = serialDays % 7
-//        val today = if (isSign) weekDay else weekDay + 1//应该着色的位置
-//        DayGenerator(serialDays, isSign).datas.forEach {
-//            val dayName = mine_daily_dayNameContainer.getChildAt(position) as TextView
-////            val dayPoint = mine_daily_dayPointContainer.getChildAt(position) as TextView
-//
-//            if (it.ischecked) {
-//                (mine_daily_daySymbolContainer.getChildAt(position * 2 + 1) as ImageView).setImageDrawable(checkedDrawable)
-//            }
-//
-//            dayName.text = "第${it.day}天"
-//            dayPoint.text = "+${it.money}"
-//            if (it.day == today) {
-//                dayName.setTextColor(todayColor)
-//                dayPoint.setTextColor(todayColor)
-//            } else {
-//                dayName.setTextColor(otherDayColor)
-//                dayPoint.setTextColor(otherDayColor)
-//            }
-//            position++
-//        }
+    private fun freshSignView(weekArr: Array<Int>) {
+        changeWeekImageView(weekArr)
+        val dividerArr = WeekGenerator.getDividerArr(weekArr)
+        paintDivider(dividerArr)
+        mine_daily_sign.setOnClickListener { checkIn() }
+        moveBubble()
     }
 
     private fun checkIn() {
-        if (!isLogin()) return
         viewModel.checkIn(user!!) { viewModel.loadAllData(user!!) }
+        viewModel.fakeStatus.postValue(arrayOf(1, 1, 1, 0, 1, 1, 0))
     }
-
-//    private val workName = "sign"
-//    private fun remindStatusChange(isChecked: Boolean) {
-//        defaultSharedPreferences.editor {
-//            putBoolean(SP_SIGN_REMIND, isChecked)
-//            if (isChecked){
-//                toast("将会在每天早晨通知您哦~")
-//                val request = PeriodicWorkRequest
-//                        .Builder(SignWorker::class.java, 15, TimeUnit.MINUTES)
-//                        .build()
-//                WorkManager.getInstance().enqueueUniquePeriodicWork(workName, ExistingPeriodicWorkPolicy.KEEP, request)
-//            }else{
-//                WorkManager.getInstance().cancelUniqueWork(workName)
-//            }
-//        }
-//    }
-
-//    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-//        menuInflater.inflate(R.menu.mine_activity_question_detail, menu)
-//        return true
-//    }
-//
-//    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-//        if (item.itemId == R.id.mine_menu_more) {
-//            popupWindow.show()
-//        }
-//        return super.onOptionsItemSelected(item)
-//    }
-
-//    private fun initMenuContentView(): View {
-//        val root = layoutInflater.inflate(R.layout.mine_popup_window_sign_menu, null, false)
-//        root.mine_popup_menu_rules.setOnClickListener {
-//            startActivity<SignRulesActivity>()
-//            popupWindow.dismiss()
-//        }
-//        root.mine_popup_menu_spec.setOnClickListener {
-//            startActivity<PointSpecActivity>()
-//            popupWindow.dismiss()
-//        }
-//        return root
-//    }
-//
-//    private fun PopupWindow.init(): PopupWindow {
-//        isTouchable = true
-//        isOutsideTouchable = true
-//        animationStyle = R.style.mine_PopupAnimation
-//        setOnDismissListener { mine_daily_frame.gone() }
-//        return this
-//    }
-//
-//    private fun PopupWindow.show() {
-//        showAtLocation(common_toolbar, Gravity.END or Gravity.TOP, 0, common_toolbar.height)
-//        mine_daily_frame.visible()
-//    }
 
     private fun isLogin(): Boolean {
         if (!BaseApp.isLogin) {
@@ -170,4 +83,64 @@ class DailySignActivity(override val viewModelClass: Class<DailyViewModel> = Dai
         }
         return BaseApp.isLogin
     }
+
+    private fun changeWeekImageView(weekArr: Array<Int>) {
+        for (i in weekArr.indices) {
+            when {
+                WeekGenerator.isToDayOrSunDay(i) -> {
+                    imageViewResArr[i].setImageResource(R.drawable.mine_ic_sign_diamond)
+                }
+                weekArr[i] == WeekGenerator.WEEK_HAS_SIGN -> {
+                    imageViewResArr[i].setImageResource(R.drawable.mine_shape_circle_src_activity_sign)
+                }
+                else -> {
+                    imageViewResArr[i].setImageResource(R.drawable.mine_shape_circle_src_activity_sign_grey)
+                }
+            }
+        }
+    }
+
+    private fun moveBubble() {
+        val toDay = WeekGenerator.getToDay()
+        val centerX = imageViewResArr[toDay].x + imageViewResArr[toDay].width / 2
+        mine_daily_tv_bubble.x = centerX - mine_daily_tv_bubble.width / 2
+    }
+
+
+    //接下来主要是一些修改divider颜色的方法
+    private fun paintDivider(dividerArr: Array<Int>) {
+        for (i in 0..5) {
+            if (getDividerColor(dividerArr[i]) != null) {
+                dividerResArr[i].color.color = getDividerColor(dividerArr[i])!!
+                if (!WeekGenerator.isToDay(i)) {
+                    dividerResArr[i].progress = 1f
+                } else {
+                    //如果是今天已签到的话，今天之后的那个divider会有个动画
+                    startAnimator(i, dividerArr)
+                }
+            }
+        }
+    }
+
+    private fun startAnimator(index: Int, dividerArr: Array<Int>) {
+        if (index > dividerArr.size - 1) return
+        if (getDividerColor(dividerArr[index]) != null) {
+            dividerResArr[index].color.color = getDividerColor(dividerArr[index])!!
+            dividerResArr[index].progress = 1f
+            val animator = ObjectAnimator.ofFloat(dividerResArr[index], "progress", 0f, 1f)
+            animator.duration = 500
+            animator.interpolator = AccelerateDecelerateInterpolator()
+            animator.start()
+        }
+    }
+
+    private fun getDividerColor(color: Int): Int? {
+        if (color == WeekGenerator.COLOR_GREY) {
+            return ContextCompat.getColor(this, R.color.mine_sign_divider_grey)
+        } else if (color == WeekGenerator.COLOR_BLUE) {
+            return ContextCompat.getColor(this, R.color.mine_sign_divider_blue)
+        }
+        return null
+    }
+
 }
