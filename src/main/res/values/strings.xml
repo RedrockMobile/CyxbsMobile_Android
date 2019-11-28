@@ -61,6 +61,13 @@
     <string name="mine_sign_ranking_default">今日第53位打卡</string>
     <string name="mine_sign_ranking_percentage_default">超过60%的邮子</string>
     <string name="mine_sign_week_integral">10积分</string>
+    <string name="mine_sign_store_integral_default">156</string>
+    <string name="mine_sign_store_title">积分商城</string>
+    <string name="mine_sign_store_my_product">我的商品</string>
+    <string name="mine_sign_store_item_name_default">redrock限量手环</string>
+    <string name="mine_sign_store_item_count_default">仅剩555件</string>
+    <string name="mine_sign_store_item_integral_default">13</string>
+    <string name="mine_sign_store_item_exchange">兑换</string>
 
     <string name="mine_sign_remind_switch_hint">连续签到每日提醒</string>
     <string name="mine_sign_point_hint">我的积分数：</string>

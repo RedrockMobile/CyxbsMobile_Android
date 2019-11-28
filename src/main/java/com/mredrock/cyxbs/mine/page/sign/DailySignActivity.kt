@@ -3,16 +3,21 @@ package com.mredrock.cyxbs.mine.page.sign
 import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.ImageView
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
+import com.mredrock.cyxbs.common.utils.extensions.dp2px
 import com.mredrock.cyxbs.mine.R
 import com.mredrock.cyxbs.mine.util.user
+import com.mredrock.cyxbs.mine.util.widget.SpaceDecoration
 import com.mredrock.cyxbs.mine.util.widget.Stick
 import kotlinx.android.synthetic.main.mine_activity_daily_sign.*
+import kotlinx.android.synthetic.main.mine_layout_store_sign.*
 import org.jetbrains.anko.toast
 
 
@@ -35,6 +40,7 @@ class DailySignActivity(override val viewModelClass: Class<DailyViewModel> = Dai
         if (!isLogin()) return
 
         initView()
+        dealBottomSheet()
         viewModel.loadAllData(user!!)
         viewModel.fakeStatus.postValue(arrayOf(1, 1, 1, 0, 1, 0, 0))
     }
@@ -53,6 +59,16 @@ class DailySignActivity(override val viewModelClass: Class<DailyViewModel> = Dai
                 mine_daily_iv_fri,
                 mine_daily_iv_sat,
                 mine_daily_iv_sun)
+        val adapter = ProductAdapter()
+        mine_store_rv.adapter = adapter
+        val fakeItem = Product("redrock限量手环", 555, 13, "https://raw.githubusercontent.com/roger1245/ImgBed/master/img/rgview_2.jpg")
+        val list = mutableListOf<Product>()
+        for (i in 0..8) {
+            list.add(fakeItem)
+        }
+        adapter.submitList(list)
+
+        mine_store_rv.addItemDecoration(SpaceDecoration(dp2px(8f)))
         viewModel.fakeStatus.observe(this, Observer {
             freshSignView(it)
         })
@@ -82,6 +98,29 @@ class DailySignActivity(override val viewModelClass: Class<DailyViewModel> = Dai
             toast("还没有登录...")
         }
         return BaseApp.isLogin
+    }
+
+    private fun dealBottomSheet() {
+        val behavior = BottomSheetBehavior.from(mine_sign_fl)
+        behavior.setBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
+            override fun onSlide(p0: View, p1: Float) {
+                mine_store_arrow_left.alpha = p1
+                mine_store_myproduct.alpha = p1
+                mine_store_line.alpha = 1 - p1
+                mine_store_tv_title.x = mine_store_arrow_left.x + p1 * dp2px(38f)
+            }
+
+            override fun onStateChanged(p0: View, p1: Int) {
+                if (p1 == BottomSheetBehavior.STATE_COLLAPSED) {
+                    mine_store_arrow_left.visibility = View.GONE
+                    mine_store_myproduct.visibility = View.GONE
+                } else if (p1 == BottomSheetBehavior.STATE_DRAGGING) {
+                    mine_store_arrow_left.visibility = View.VISIBLE
+                    mine_store_myproduct.visibility = View.VISIBLE
+                }
+            }
+        })
+
     }
 
     private fun changeWeekImageView(weekArr: Array<Int>) {

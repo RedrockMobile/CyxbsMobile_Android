@@ -377,6 +377,7 @@
             android:background="@drawable/mine_bg_round_corner_blue"
             android:minWidth="100dp"
             android:minHeight="40dp"
+            android:layout_marginBottom="100dp"
             android:text="@string/mine_sign_to_sign"
             android:textColor="@color/mine_white"
             android:textSize="@dimen/mine_main_medium"
@@ -384,7 +385,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/mine_textview5"
-            app:layout_constraintVertical_bias="0.36" />
+            app:layout_constraintVertical_bias="0.6" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/mine_guideline4"
@@ -471,6 +472,17 @@
             app:layout_constraintStart_toStartOf="@+id/mine_textview5"
             tools:ignore="SmallSp" />
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <FrameLayout
+        android:id="@+id/mine_sign_fl"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true"
+        app:behavior_hideable="false"
+        app:behavior_peekHeight="130dp"
+        app:layout_behavior="@string/bottom_sheet_behavior">
+        <include layout="@layout/mine_layout_store_sign" />
+    </FrameLayout>
 
 
 
