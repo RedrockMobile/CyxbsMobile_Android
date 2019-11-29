@@ -17,7 +17,7 @@
     <color name="whiteBackground" tools:ignore="ResourceName">#ffffff</color>
     <color name="whiteFontColor" tools:ignore="ResourceName">#ffffff</color>
 
-
+    #E2EDFB
     <!--    主要字体颜色分以下四种，下列按照蓝色由浅到深排序，要用自取-->
     <!--    一级字体颜色-->
     <color name="levelOneFontColor" tools:ignore="ResourceName">#112C54</color>
@@ -56,16 +56,39 @@
     <!--    发现教务在线方框背景-->
     <color name="discoveryJwzxBackground" tools:ignore="ResourceName">#AFD2FB</color>
 
-
+    <color name="commonDefaultDivideLineColor">#19f8f9fc</color>
     <!--    按钮渐变起始颜色-->
     <color name="buttonGradientStartColor" tools:ignore="ResourceName">#4841E2</color>
     <!--    按钮渐变终止颜色-->
     <color name="buttonGradientEndColor" tools:ignore="ResourceName">#4841E2</color>
 
+    <!--    打字框背景颜色-->
+    <color name="writeAbleAreaBackgroundShallow" tools:ignore="ResourceName">#EFF4FD</color>
+    <color name="writeAbleAreaBackgroundDark" tools:ignore="ResourceName">#E8F0FC</color>
 
     <!--    我的-->
     <!--    签到页面TextView颜色-->
     <color name="blueSignTextColor" tools:ignore="ResourceName">#839BFA</color>
+    <!--    分割线颜色-->
+    <color name="severViewColor" tools:ignore="ResourceName">#BDCCE5</color>
+    <color name="blueButton" tools:ignore="ResourceName">#2921D1</color>
+    <color name="greyButton" tools:ignore="ResourceName">#BDBDBD</color>
+    <color name="greyText" tools:ignore="ResourceName">#BDBDBD</color>
+    <color name="switchOff" tools:ignore="ResourceName">#C3D4EE</color>
+
+    <color name="mine_about_text_color_normal" tools:ignore="ResourceName">#294169</color>
+    <color name="mine_about_text_color_blue" tools:ignore="ResourceName">#0BCCF0</color>
+    <color name="mine_sign_bg_grey" tools:ignore="ResourceName">#E1E6F0</color>
+    <color name="mine_sign_divider_default" tools:ignore="ResourceName">#E1E6F0</color>
+    <color name="mine_sign_divider_grey" tools:ignore="ResourceName">#2CDEFF</color>
+    <color name="mine_sign_divider_blue" tools:ignore="ResourceName">#3A35D2</color>
+    <color name="mine_sign_integral_text" tools:ignore="ResourceName">#4841E2</color>
+
+    <color name="mine_sign_integral_text_background" tools:ignore="ResourceName">#D4DAFF</color>
+    <color name="mine_sign_store_round_brown_background" tools:ignore="ResourceName">#F8E2DF</color>
+    <color name="mine_sign_store_line" tools:ignore="ResourceName">#E2EDFB</color>
+    <color name="mine_sign_store_item_tv_integral" tools:ignore="ResourceName">#3A34D2</color>
+    <color name="mine_sign_store_item_bg" tools:ignore="ResourceName">#F0F2FB</color>
 
 
     <!--    邮问-->
