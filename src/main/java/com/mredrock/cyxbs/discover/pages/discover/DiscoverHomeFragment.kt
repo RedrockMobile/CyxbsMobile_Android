@@ -47,6 +47,7 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>() {
         viewModel.getRollInfos()
         initFunctions()
         initCheckIn(iv_check_in)
+
         super.onActivityCreated(savedInstanceState)
 
     }

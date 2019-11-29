@@ -8,7 +8,6 @@ import android.os.Bundle
 import android.webkit.WebChromeClient
 import android.webkit.WebView
 import android.webkit.WebViewClient
-//import com.jude.swipbackhelper.SwipeBackHelper
 import com.mredrock.cyxbs.common.ui.BaseActivity
 import com.mredrock.cyxbs.discover.R
 import com.mredrock.cyxbs.discover.network.RollerViewInfo

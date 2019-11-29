@@ -4,8 +4,6 @@ import android.os.Bundle
 import android.view.*
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
-import com.alibaba.android.arouter.facade.annotation.Route
-import com.mredrock.cyxbs.common.config.DISCOVER_ENTRY
 import com.mredrock.cyxbs.common.event.DiscoverOptionIconClickEvent
 import com.mredrock.cyxbs.common.ui.BaseViewModelFragment
 import com.mredrock.cyxbs.common.utils.extensions.editor

@@ -4,7 +4,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.discover.R
 import com.mredrock.cyxbs.discover.utils.MoreFunctionProvider
 import kotlinx.android.synthetic.main.discover_more_function_recycler_item.view.*
@@ -20,7 +19,6 @@ class MoreFunctionRvAdapter(private val functions: List<MoreFunctionProvider.Fun
     private val RIGHT_TYPE = 2
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MoreFunctionViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.discover_more_function_recycler_item, parent, false)
-        LogUtils.d("MyTag", "view type:$viewType")
         when (viewType) {
             0 -> {
                 view.layoutParams.height = parent.context.dip(255)
@@ -44,14 +42,7 @@ class MoreFunctionRvAdapter(private val functions: List<MoreFunctionProvider.Fun
         holder.itemView.setOnClickListener {
             functions[position].startActivityAble.startActivity()
         }
-//        if(position==1){
-//            (holder.itemView.layoutParams as RecyclerView.LayoutParams).height = holder.itemView.context.dip(155)
-//        }
-//        if(position%2==0){
-//            (holder.itemView.layoutParams as RecyclerView.LayoutParams).leftMargin = holder.itemView.context.dip(8)
-//        }else{
-//            (holder.itemView.layoutParams as RecyclerView.LayoutParams).leftMargin = holder.itemView.context.dip(4)
-//        }
+
 
     }
 

@@ -12,11 +12,11 @@ import com.bumptech.glide.load.MultiTransformation
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
-import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.discover.R
 import com.mredrock.cyxbs.discover.network.RollerViewInfo
 import com.mredrock.cyxbs.discover.pages.RollerViewActivity
 import kotlinx.android.synthetic.main.discover_viewpager_item.view.*
+import org.jetbrains.anko.dip
 
 /**
  * @author zixuan
@@ -31,7 +31,6 @@ class BannerAdapter(private val context:Context, private val urlList: List<Rolle
     }
 
     override fun getItemCount(): Int {
-        LogUtils.d("MyTag getItemCount","${viewPager.currentItem}")
         return viewPager.currentItem + 2
     }
 
@@ -41,7 +40,7 @@ class BannerAdapter(private val context:Context, private val urlList: List<Rolle
 
         Glide.with(context)
                 .load(urlList[position%urlList.size].picture_url)
-                .apply(RequestOptions().transform(MultiTransformation(CenterCrop(), RoundedCorners(20))))
+                .apply(RequestOptions().transform(MultiTransformation(CenterCrop(), RoundedCorners(context.dip(8)))))
                 .into(holder.itemView.img_viewpager_item)
         if (urlList[position%urlList.size].picture_goto_url==null){
             return
