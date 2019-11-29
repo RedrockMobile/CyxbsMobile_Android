@@ -57,14 +57,15 @@
     <!--    发现教务在线方框背景-->
     <color name="discoveryJwzxBackground" tools:ignore="ResourceName">#AFD2FB</color>
 
-
+    <color name="commonDefaultDivideLineColor">#19f8f9fc</color>
     <!--    按钮渐变起始颜色-->
     <color name="buttonGradientStartColor" tools:ignore="ResourceName">#4841E2</color>
     <!--    按钮渐变终止颜色-->
     <color name="buttonGradientEndColor" tools:ignore="ResourceName">#4841E2</color>
 
-
-
+    <!--    打字框背景颜色-->
+    <color name="writeAbleAreaBackgroundShallow" tools:ignore="ResourceName">#EFF4FD</color>
+    <color name="writeAbleAreaBackgroundDark" tools:ignore="ResourceName">#E8F0FC</color>
 
     <!--    我的-->
     <!--    签到页面TextView颜色-->

@@ -1,11 +1,15 @@
 package com.mredrock.cyxbs.common.component;
 
 import android.content.Context;
+import android.os.Build;
 import android.util.AttributeSet;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
+
+import com.mredrock.cyxbs.common.R;
 
 import java.lang.reflect.Field;
 import java.util.Objects;
@@ -16,6 +20,7 @@ import java.util.Objects;
  */
 
 public class JToolbar extends Toolbar {
+    private boolean isTitleAtLeft = true;
     private TextView mTitleTextView;
     private TextView mSubtitleTextView;
 
@@ -35,6 +40,21 @@ public class JToolbar extends Toolbar {
     public void setTitle(CharSequence title) {
         super.setTitle(title);
         mTitleTextView = getTitleTv("mTitleTextView");
+        if (mTitleTextView != null) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                mTitleTextView.setTextColor(getContext().getColor(R.color.levelTwoFontColor));
+            } else {
+                mTitleTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.levelTwoFontColor));
+            }
+        }
+    }
+
+    @Override
+    public void setTitleTextColor(int color) {
+        super.setTitleTextColor(color);
+        if (mTitleTextView != null) {
+            mTitleTextView.setTextColor(color);
+        }
     }
 
     @Override
@@ -65,8 +85,13 @@ public class JToolbar extends Toolbar {
         reLayoutTitle(mSubtitleTextView);
     }
 
+    //设置title为左对齐或是居中
+    public void setTitleLocationAtLeft(boolean isLeft) {
+        isTitleAtLeft = isLeft;
+    }
+
     private void reLayoutTitle(TextView title) {
-        if (title == null) return;
+        if (title == null || isTitleAtLeft) return;
         //note: o for old ,t for temp, l for left...
         int ol = title.getLeft();
         int width = title.getMeasuredWidth();
