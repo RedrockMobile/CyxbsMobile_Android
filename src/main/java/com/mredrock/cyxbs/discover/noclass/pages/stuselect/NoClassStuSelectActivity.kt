@@ -1,6 +1,9 @@
 package com.mredrock.cyxbs.discover.noclass.pages.stuselect
 
+import android.os.Build
 import android.os.Bundle
+import android.transition.Slide
+import android.view.Gravity
 import com.mredrock.cyxbs.common.ui.BaseActivity
 import com.mredrock.cyxbs.discover.noclass.R
 import com.mredrock.cyxbs.discover.noclass.network.Student
@@ -13,8 +16,11 @@ class NoClassStuSelectActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.discover_noclass_activity_stu_select)
-        initToolbar()
+
+        initClickListener()
         setList()
+
+        initAnimation()
     }
 
     private fun setList() {
@@ -23,9 +29,16 @@ class NoClassStuSelectActivity : BaseActivity() {
         noclass_rv_stu_select.adapter = NoClassStuSelectRvAdapter(mList)
     }
 
-    private fun initToolbar() {
-        if (common_toolbar != null) {
-            common_toolbar.init("选 择")
+   fun initClickListener(){
+
+        tv_noclass_stu_select_cancel.setOnClickListener {
+            finish()
+        }
+   }
+    fun initAnimation(){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            window.enterTransition = Slide(Gravity.BOTTOM).apply { duration = 1000
+            excludeTarget(cl_noclass_stu_select,true)}
         }
     }
 }

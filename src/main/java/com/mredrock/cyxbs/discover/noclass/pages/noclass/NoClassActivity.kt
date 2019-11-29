@@ -1,8 +1,13 @@
 package com.mredrock.cyxbs.discover.noclass.pages.noclass
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.text.TextUtils
+import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
+import androidx.core.app.ActivityOptionsCompat
 import androidx.lifecycle.Observer
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
@@ -10,9 +15,11 @@ import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.config.COURSE_NO_COURSE_INVITE
 import com.mredrock.cyxbs.common.config.DISCOVER_NO_CLASS
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
+import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.discover.noclass.R
 import com.mredrock.cyxbs.discover.noclass.network.Student
 import com.mredrock.cyxbs.discover.noclass.pages.stuselect.NoClassStuSelectActivity
+import com.mredrock.cyxbs.discover.noclass.snackbar
 import kotlinx.android.synthetic.main.discover_noclass_activity_no_class.*
 import java.io.Serializable
 
@@ -45,6 +52,7 @@ class NoClassActivity : BaseViewModelActivity<NoClassViewModel>() {
         initStuList()
         initBtn()
         initObserver()
+        initEditText()
     }
 
     private fun initObserver() {
@@ -55,7 +63,7 @@ class NoClassActivity : BaseViewModelActivity<NoClassViewModel>() {
                     bundle.putSerializable("stu_list", it as Serializable)
                     val intent = Intent(this, NoClassStuSelectActivity::class.java)
                     intent.putExtras(bundle)
-                    startActivityForResult(intent, REQUEST_SELECT)
+                    startActivityForResult(intent, REQUEST_SELECT ,ActivityOptionsCompat.makeSceneTransitionAnimation(this).toBundle())
                 }
                 it.size == 1 -> {
                     addStu(it[0])
@@ -88,12 +96,12 @@ class NoClassActivity : BaseViewModelActivity<NoClassViewModel>() {
     private fun initStuList() {
         BaseApp.user?.apply {
             val stu = Student()
-            stu.name = name
+            stu.name = realName
             stu.stunum = stunum
             mStuList!!.add(stu)
         }
         mAdapter = NoClassRvAdapter(mStuList!!, this)
-        noclass_rv.layoutManager = androidx.recyclerview.widget.GridLayoutManager(this, 4)
+        noclass_rv.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(this)
         noclass_rv.adapter = mAdapter
     }
 
@@ -105,10 +113,28 @@ class NoClassActivity : BaseViewModelActivity<NoClassViewModel>() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         data ?: return
+
         if (requestCode == REQUEST_SELECT && resultCode == Activity.RESULT_OK) {
             val stu = data.extras.getSerializable("stu") as Student
             mAdapter!!.addStu(stu)
         }
+    }
+    private fun initEditText(){
+        et_noclass_add_classmate.setOnEditorActionListener { v, actionId, event ->
+            if(actionId == EditorInfo.IME_ACTION_SEARCH){
+                var key = et_noclass_add_classmate.getText().toString().trim()
+                if(TextUtils.isEmpty(key)){
+                    snackbar("输入为空")
+                    return@setOnEditorActionListener true
+                }
+                doSearch(key)
+                (getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS)
+                et_noclass_add_classmate.setText("")
+                return@setOnEditorActionListener true
+            }
+            return@setOnEditorActionListener false
+        }
+
     }
 
 }

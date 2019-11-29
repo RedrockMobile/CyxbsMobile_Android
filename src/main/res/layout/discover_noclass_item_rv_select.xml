@@ -11,9 +11,9 @@
         android:layout_height="wrap_content"
         android:id="@+id/noclass_item_select_name"
         android:text="朱展萱"
-        android:textColor="#333"
+        android:textColor="@color/levelTwoFontColor"
         android:textSize="16sp"
-        android:layout_marginLeft="15dp"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="15dp"
         android:layout_gravity="top|left"/>
 
@@ -22,9 +22,9 @@
         android:layout_height="wrap_content"
         android:id="@+id/noclass_item_select_class"
         android:text="软件工程 2016214049"
-        android:textColor="#666"
+        android:textColor="@color/levelFourFontColor"
         android:textSize="13sp"
-        android:layout_marginLeft="15dp"
+        android:layout_marginStart="16dp"
         android:layout_marginBottom="15dp"
         android:layout_gravity="bottom|left"/>
 

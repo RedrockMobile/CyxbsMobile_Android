@@ -1,37 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:weightSum="100"
-
     android:background="#fff"
     tools:context=".pages.noclass.NoClassActivity"
     tools:ignore="ResourceName">
 
-    <include layout="@layout/common_toolbar"/>
+    <include
+        android:id="@+id/noclass_include"
+        layout="@layout/common_toolbar" />
+
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/et_noclass_add_classmate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:maxLines="1"
+        android:singleLine="true"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/discover_noclass_shape_add_classmate"
+        android:paddingStart="19dp"
+        android:paddingTop="12dp"
+        android:paddingBottom="12dp"
+        android:layout_marginTop="30dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/noclass_include"
+        android:hint="添加同学"
+        android:imeOptions="actionSearch" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/noclass_rv"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="47"
-        android:layout_marginTop="10dp">
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/et_noclass_add_classmate">
 
     </androidx.recyclerview.widget.RecyclerView>
 
     <Button
         android:id="@+id/noclass_btn_query"
-        android:layout_width="match_parent"
-        android:layout_height="45dp"
-        android:layout_marginLeft="17dp"
-        android:layout_marginRight="17dp"
-        android:layout_marginTop="18dp"
+        android:layout_width="120dp"
+        android:layout_height="40dp"
         android:background="@drawable/discover_noclass_bg_btn"
-        android:text="查    询"
+        android:text="查询"
         android:textColor="#FFFFFF"
-        android:textSize="16sp"/>
+        android:textSize="18sp"
+        android:layout_marginBottom="58dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

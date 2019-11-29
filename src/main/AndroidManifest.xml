@@ -5,7 +5,8 @@
     <application>
         <activity
             android:name="com.mredrock.cyxbs.discover.noclass.pages.noclass.NoClassActivity"
-            android:windowSoftInputMode="adjustNothing"/>
-        <activity android:name=".pages.stuselect.NoClassStuSelectActivity"/>
+            android:windowSoftInputMode="adjustNothing" />
+        <activity android:name=".pages.stuselect.NoClassStuSelectActivity"
+            android:theme="@style/Transparent"/>
     </application>
 </manifest>

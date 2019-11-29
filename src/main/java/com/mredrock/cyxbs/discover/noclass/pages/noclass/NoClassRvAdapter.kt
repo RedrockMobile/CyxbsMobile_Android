@@ -22,40 +22,24 @@ class NoClassRvAdapter(private val mStuList: MutableList<Student>, private val m
     private val TYPE_STU = 1
 
     override fun getItemViewType(position: Int): Int {
-        return if (itemCount == 1 || position == mStuList.size) {
-            TYPE_ADD
-        } else {
-            TYPE_STU
-        }
+        return TYPE_STU
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
 
-        return when (viewType) {
-            TYPE_STU -> {
-                val viewStu = LayoutInflater.from(parent.context).inflate(R.layout.discover_noclass_item_stu, parent, false)
-                ItemStuHolder(viewStu)
-            }
-            else -> {
-                val viewAdd = LayoutInflater.from(parent.context).inflate(R.layout.discover_noclass_item_add, parent, false)
-                ItemAddHolder(viewAdd)
-            }
-        }
+        val viewStu = LayoutInflater.from(parent.context).inflate(R.layout.discover_noclass_item_stu, parent, false)
+        return ItemStuHolder(viewStu)
+
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        when (getItemViewType(position)) {
-            TYPE_STU -> {
-                holder.itemView.no_course_name.text = mStuList[position].name
-                holder.itemView.no_course_delete.setOnClickListener { removeStu(holder) }
-            }
-            TYPE_ADD -> {
-                holder.itemView.setOnClickListener { showSearchDialog() }
-            }
-        }
+        holder.itemView.no_course_name.text = mStuList[position].name
+        holder.itemView.no_course_delete.setOnClickListener { removeStu(holder) }
+        holder.itemView.no_course_school_id.text = mStuList[position].stunum
+
     }
 
-    override fun getItemCount() = mStuList.size + 1
+    override fun getItemCount() = mStuList.size
 
     private fun removeStu(holder: RecyclerView.ViewHolder) {
         holder.itemView.no_course_delete.setOnClickListener(null)
@@ -97,7 +81,7 @@ class NoClassRvAdapter(private val mStuList: MutableList<Student>, private val m
 
     class ItemStuHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
 
-    class ItemAddHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
+//    class ItemAddHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
 
 
 }
