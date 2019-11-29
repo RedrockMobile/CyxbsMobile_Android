@@ -28,75 +28,46 @@
             android:layout_marginRight="17dp"
             android:layout_marginBottom="25dp">
 
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/civ_avatar"
-                android:layout_width="37dp"
-                android:layout_height="37dp"
-                android:scaleType="centerCrop"
-                android:src="@drawable/news_default_avatar"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <TextView
-                android:id="@+id/tv_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:textColor="#333333"
-                android:textSize="15sp"
-                android:text="@string/news_jwzx"
-                app:layout_constraintBottom_toBottomOf="@+id/civ_avatar"
-                app:layout_constraintStart_toEndOf="@+id/civ_avatar"
-                app:layout_constraintTop_toTopOf="@id/civ_avatar" />
-
-            <TextView
-                android:id="@+id/tv_title"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:textColor="#333333"
-                android:textSize="17sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/civ_avatar"
-                tools:text="学校召开2018年秋季学生干部大会" />
-
             <TextView
                 android:id="@+id/tv_time"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:textColor="#ADADAD"
-                android:textSize="12sp"
+                android:textColor="@color/levelTwoFontColor"
+                android:textSize="13sp"
+                android:layout_marginTop="21dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_title"
-                tools:text="发布时间：2018年10月9日" />
+                tools:text="2018年10月9日" />
+            <TextView
+                android:id="@+id/tv_title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textColor="@color/mine_about_text_color_normal"
+                android:textSize="18sp"
+                android:layout_marginTop="8dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_time"
+                tools:text="学校召开2018年秋季学生干部大会" />
+
+
 
             <TextView
                 android:id="@+id/tv_detail"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="17dp"
                 android:lineSpacingMultiplier="1.25"
-                android:textColor="#666666"
-                android:textSize="14sp"
+                android:textColor="@color/levelTwoFontColor"
+                android:textSize="15sp"
+                android:layout_marginTop="14dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_time"
+                app:layout_constraintTop_toBottomOf="@+id/tv_title"
                 tools:text="会议内容会议章程会议流程大会总结，会议内容会议章程会议流程大会总结会议内容会议章程会议流程大会总结。会议内容会议章程会议流程大会总结会议内容会议章程会议流程大会总结会议内容会议章程会议流程大会总结会议内容会议章程会议流程大会总结会议内容会议章程会议流程大会总结" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 
-    <TextView
-        android:layout_below="@+id/scrollView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:textSize="14sp"
-        android:textColor="#D4D4D4"
-        android:background="#F6F6F6"
-        android:text="@string/news_hint_no_more" />
+
 
 </RelativeLayout>

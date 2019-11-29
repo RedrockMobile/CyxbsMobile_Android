@@ -41,10 +41,16 @@ class NewsAdapter(private val loadMore: () -> Unit) : androidx.recyclerview.widg
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = if (viewType == FOOT_TYPE) {
         FootHolder(LayoutInflater.from(parent.context).inflate(R.layout.news_item_footer,parent,false))
     } else {
+
         ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.news_item_news, parent, false))
     }
 
-    override fun getItemCount() = newsList.size + 1
+    override fun getItemCount():Int {
+        return if(newsList.size!=0)
+            newsList.size + 1
+        else
+            0
+    }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) = holder.initView(
             if (getItemViewType(position) == FOOT_TYPE) {

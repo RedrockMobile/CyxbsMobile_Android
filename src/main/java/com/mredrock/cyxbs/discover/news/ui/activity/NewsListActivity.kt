@@ -1,6 +1,8 @@
 package com.mredrock.cyxbs.discover.news.ui.activity
 
 import android.os.Bundle
+import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.DividerItemDecoration
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.mredrock.cyxbs.common.config.DISCOVER_NEWS
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
@@ -40,7 +42,7 @@ class NewsListActivity : BaseViewModelActivity<NewsListViewModel>() {
         adapter = NewsAdapter(viewModel::loadNewsData)
         rv_list.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(this)
         rv_list.adapter = adapter
-
+        rv_list.addItemDecoration(DividerItemDecoration(this,DividerItemDecoration.VERTICAL).apply { setDrawable(ContextCompat.getDrawable(baseContext,R.drawable.news_recycler_item_split)!!) })
     }
 
 }

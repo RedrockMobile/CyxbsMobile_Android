@@ -1,66 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/news_item_card_view"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="12dp"
+    android:padding="15dp"
     android:foreground="?attr/selectableItemBackground">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
+
+    <TextView
+        android:id="@+id/tv_time"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="17dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginRight="17dp"
-        android:layout_marginBottom="14dp">
+        android:textColor="#999999"
+        android:textSize="13sp"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_download"
+        app:layout_constraintStart_toStartOf="@+id/tv_name"
+        app:layout_constraintTop_toTopOf="@+id/tv_download"
+        tools:text="2018年09月20日" />
 
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/civ_avatar"
-            android:layout_width="37dp"
-            android:layout_height="37dp"
-            android:scaleType="centerCrop"
-            android:src="@drawable/news_default_avatar"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/tv_name"
-            app:layout_constraintBottom_toBottomOf="@id/tv_time" />
-
-        <TextView
-            android:id="@+id/tv_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:textColor="#333333"
-            android:textSize="15sp"
-            android:text="@string/news_jwzx"
-            app:layout_constraintStart_toEndOf="@+id/civ_avatar"
-            app:layout_constraintBottom_toTopOf="@+id/tv_time"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/tv_time"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="#999999"
-            android:textSize="13sp"
-            app:layout_constraintStart_toStartOf="@+id/tv_name"
-            app:layout_constraintTop_toBottomOf="@+id/tv_name"
-            tools:text="2018年09月20日" />
-
-        <TextView
-            android:id="@+id/tv_download"
-            android:layout_width="65dp"
-            android:layout_height="29dp"
-            android:background="@drawable/news_shape_rectangle_blue_stroke"
-            android:gravity="center"
-            android:text="@string/news_hint_download"
-            android:textColor="#788EFA"
-            android:visibility="invisible"
-            app:layout_constraintBottom_toBottomOf="@+id/civ_avatar"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/civ_avatar"
-            tools:visibility="visible" />
+    <TextView
+        android:id="@+id/tv_download"
+        android:layout_width="65dp"
+        android:layout_height="29dp"
+        android:background="@drawable/news_shape_rectangle_blue_stroke"
+        android:gravity="center"
+        android:text="@string/news_hint_download"
+        android:textColor="#788EFA"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:layout_editor_absoluteY="4dp"
+        tools:visibility="visible" />
 
         <TextView
             android:id="@+id/tv_title"
@@ -73,6 +44,5 @@
             app:layout_constraintTop_toBottomOf="@+id/tv_time"
             tools:text="如果你无法简洁的表达你的想法，那么只能说你还不够了解它。" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
 
-</androidx.cardview.widget.CardView>
+</androidx.constraintlayout.widget.ConstraintLayout>
