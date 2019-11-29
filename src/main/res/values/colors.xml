@@ -35,7 +35,6 @@
     <color name="focusedFontColor" tools:ignore="ResourceName">#2923D2</color>
 
 
-
     <!--    课表可上拉下拉标识小块背景-->
     <color name="courseTableDragIndicatorBlockColor" tools:ignore="ResourceName">#E2EDFB</color>
     <!--    课表标识当天阴影-->
@@ -64,13 +63,41 @@
     <color name="buttonGradientEndColor" tools:ignore="ResourceName">#4841E2</color>
 
 
-
-
     <!--    我的-->
     <!--    签到页面TextView颜色-->
     <color name="blueSignTextColor" tools:ignore="ResourceName">#839BFA</color>
 
 
+    <!--    邮问-->
+    <!--    当前时间颜色-->
+    <color name="qa_question_current_time_color" tools:ignore="ResourceName">#ff2a4e84</color>
+
+    <!--    问题item的昵称颜色-->
+    <color name="qa_question_item_nickname_color" tools:ignore="ResourceName">#555555</color>
+    <!--    问题item的积分奖励字体颜色-->
+    <color name="qa_question_item_reward_color" tools:ignore="ResourceName">#777777</color>
+    <!--    问题item的下面的各类数字颜色-->
+    <color name="qa_question_bottom_count_color" tools:ignore="ResourceName">#2A4E84</color>
+    <!--    问题item的分割线颜色-->
+    <color name="qa_question_recycler_item_divide_line_color" tools:ignore="ResourceName">#BDCCE5
+    </color>
+    <!--    评论内容颜色-->
+    <color name="qa_comment_content_color" tools:ignore="ResourceName">#3B4555</color>
+    <!--    回答发布时间颜色-->
+    <color name="qa_answer_publish_at_color" tools:ignore="ResourceName">#ff2a4e84</color>
+    <!--    回答被采纳的标签颜色-->
+    <color name="qa_answer_list_adopted_color" tools:ignore="ResourceName">#94A6C4</color>
+    <!--    提问选择类型的背景颜色-->
+    <color name="qa_quiz_select_type_background_color" tools:ignore="ResourceName">#E8F0FC</color>
+    <!--    提问选择类型的文字颜色-->
+    <color name="qa_quiz_select_type_text_color" tools:ignore="ResourceName">#94A6C4</color>
+    <!--    提问选中类型的文字颜色-->
+    <color name="qa_quiz_selected_type_text_color" tools:ignore="ResourceName">#FFA192</color>
+    <!--    提问选中类型的背景颜色，指定78的不透明度-->
+    <color name="qa_quiz_selected_type_background_color" tools:ignore="ResourceName">#c3F7DAD7</color>
+
+    <!--    提问标题框和内容框的背景颜色，指定79的不透明度-->
+    <color name="qa_quiz_new_text_background_color" tools:ignore="ResourceName">#acE8F0FC</color>
 
 
 </resources>
