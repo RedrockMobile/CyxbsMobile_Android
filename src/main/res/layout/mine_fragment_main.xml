@@ -70,15 +70,13 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-        <androidx.cardview.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="17dp"
-            android:layout_marginEnd="17dp"
-            app:cardCornerRadius="40dp">
+
             <androidx.constraintlayout.widget.ConstraintLayout
+                android:background="@drawable/mine_shape_round_corner_main"
                 android:layout_width="match_parent"
-                android:layout_height="200dp">
+                android:layout_height="wrap_content"
+                android:layout_marginStart="17dp"
+                android:layout_marginEnd="17dp">
 
                 <TextView
                     android:id="@+id/mine_textview"
@@ -86,7 +84,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/mine_sing_successive_default"
                     android:textColor="@color/levelOneFontColor"
-                    android:textSize="@dimen/mine_main_small"
+                    android:textSize="15sp"
                     android:textStyle="bold"
                     app:layout_constraintBottom_toTopOf="@+id/mine_guideline"
                     app:layout_constraintStart_toStartOf="@+id/mine_main_tv_question"
@@ -112,7 +110,7 @@
                     android:text="@string/mine_number_default"
                     android:textColor="@color/levelFourFontColor"
                     android:typeface="serif"
-                    android:textSize="@dimen/mine_main_large_l"
+                    android:textSize="30sp"
                     android:textStyle="bold"
                     app:layout_constraintBottom_toTopOf="@+id/mine_main_tv_question"
                     app:layout_constraintEnd_toEndOf="@+id/mine_main_tv_question"
@@ -126,7 +124,7 @@
                     android:text="@string/mine_number_default"
                     android:typeface="serif"
                     android:textColor="@color/levelFourFontColor"
-                    android:textSize="@dimen/mine_main_large_l"
+                    android:textSize="30sp"
                     android:textStyle="bold"
                     app:layout_constraintBottom_toTopOf="@+id/mine_main_tv_answer"
                     app:layout_constraintEnd_toEndOf="@+id/mine_main_tv_answer"
@@ -138,7 +136,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/mine_number_default"
                     android:textColor="@color/levelFourFontColor"
-                    android:textSize="@dimen/mine_main_large_l"
+                    android:textSize="30sp"
                     android:typeface="serif"
                     android:textStyle="bold"
                     app:layout_constraintBottom_toTopOf="@+id/mine_main_tv_reply_comment"
@@ -152,7 +150,7 @@
                     android:text="@string/mine_number_default"
                     android:typeface="serif"
                     android:textColor="@color/levelFourFontColor"
-                    android:textSize="@dimen/mine_main_large_l"
+                    android:textSize="30sp"
                     android:textStyle="bold"
                     app:layout_constraintBottom_toTopOf="@+id/mine_main_tv_praise"
                     app:layout_constraintEnd_toEndOf="@+id/mine_main_tv_praise"
@@ -164,10 +162,13 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="30dp"
+                    android:layout_marginStart="14dp"
+                    android:layout_marginBottom="20dp"
                     android:text="@string/mine_question"
                     android:textColor="@color/levelFourFontColor"
                     android:textSize="@dimen/mine_main_small_s"
                     app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintHorizontal_chainStyle="spread_inside"
                     app:layout_constraintEnd_toStartOf="@+id/mine_main_tv_answer"
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toStartOf="parent"
@@ -204,6 +205,7 @@
                     android:text="@string/mine_praise"
                     android:textColor="@color/levelFourFontColor"
                     android:textSize="@dimen/mine_main_small_s"
+                    android:layout_marginEnd="14dp"
                     app:layout_constraintBottom_toBottomOf="@+id/mine_main_tv_reply_comment"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.5"
@@ -217,7 +219,6 @@
                     app:layout_constraintGuide_begin="79dp" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
-        </androidx.cardview.widget.CardView>
 
 
 
@@ -284,7 +285,7 @@
             android:textColor="@color/whiteFontColor"
             android:textSize="18sp" />
 
-        <View
+        <Space
             android:layout_width="match_parent"
             android:layout_height="100dp" />
     </LinearLayout>

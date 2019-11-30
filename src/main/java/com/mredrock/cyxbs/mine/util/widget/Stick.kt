@@ -12,7 +12,6 @@ import android.view.View
  */
 class Stick : View {
     val color = Paint(Paint.ANTI_ALIAS_FLAG)
-    val secondaryColor = Paint(Paint.ANTI_ALIAS_FLAG)
 
 
     var progress = 0f
@@ -43,9 +42,6 @@ class Stick : View {
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
         canvas?.drawColor(Color.parseColor("#E1E6F0"))
-
-        secondaryColor.strokeWidth = height.toFloat()
-        canvas?.drawLine(0f, height.toFloat() / 2, secondaryProgress * width.toFloat(), height.toFloat() / 2, secondaryColor)
 
         color.strokeWidth = height.toFloat()
         canvas?.drawLine(0f, height.toFloat() / 2, progress * width.toFloat(), height.toFloat() / 2, color)

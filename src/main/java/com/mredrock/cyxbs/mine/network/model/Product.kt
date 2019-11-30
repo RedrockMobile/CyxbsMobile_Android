@@ -1,4 +1,4 @@
-package com.mredrock.cyxbs.mine.page.sign
+package com.mredrock.cyxbs.mine.network.model
 
 import androidx.recyclerview.widget.DiffUtil
 import java.io.Serializable
