@@ -49,7 +49,6 @@ class CommentListHeaderRvAdapter(
                 tv_adopt.setOnClickListener {
                     EventBus.getDefault().post(AdoptAnswerEvent(data.id))
                 }
-//                tv_answer_count.text = context.getString(R.string.qa_comment_item_answer_count, data.commentNum)
             }
         }
 

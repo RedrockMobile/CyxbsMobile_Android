@@ -58,7 +58,7 @@
         android:lines="1"
         android:maxEms="7"
         android:maxLines="1"
-        android:textColor="@color/qa_question_item_content_color"
+        android:textColor="@color/levelTwoFontColor"
         android:textSize="16sp"
         app:layout_constraintStart_toEndOf="@id/gl_question_start"
         app:layout_constraintTop_toBottomOf="@id/iv_avatar"
@@ -73,7 +73,7 @@
         app:layout_constraintStart_toEndOf="@id/gl_question_start"
         app:layout_constraintTop_toBottomOf="@id/tv_title"
         android:layout_marginTop="18dp"
-        android:textColor="@color/qa_question_comment_count_color"
+        android:textColor="@color/qa_question_bottom_count_color"
         android:textSize="11sp"
         android:text="201" />
     <androidx.appcompat.widget.AppCompatTextView
@@ -87,7 +87,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="18dp"
-        android:textColor="@color/qa_question_praise_count_color"
+        android:textColor="@color/qa_question_bottom_count_color"
         android:alpha="0.67"
         android:textSize="11sp"
         tools:text="201" />
@@ -99,7 +99,7 @@
         android:drawableStart="@drawable/qa_ic_watch_count"
         android:drawablePadding="4dp"
         android:gravity="center_vertical"
-        android:textColor="@color/qa_question_watch_count_color"
+        android:textColor="@color/qa_question_bottom_count_color"
         android:textSize="11sp"
         android:layout_marginTop="18dp"
         app:layout_constraintEnd_toStartOf="@id/gl_question_end"

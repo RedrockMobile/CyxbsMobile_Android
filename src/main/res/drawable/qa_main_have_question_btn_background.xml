@@ -4,8 +4,8 @@
     <gradient
         android:type="linear"
         android:useLevel="true"
-        android:startColor="#ff2921d1"
-        android:endColor="#ff5d5df7"
+        android:startColor="@color/buttonGradientStartColor"
+        android:endColor="@color/buttonGradientEndColor"
         />
     <corners
         android:topLeftRadius="50dp"

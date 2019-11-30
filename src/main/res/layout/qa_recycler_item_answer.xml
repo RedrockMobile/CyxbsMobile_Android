@@ -34,7 +34,7 @@
                 android:id="@+id/tv_answer_nickname"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/qa_answer_list_answer_content_color"
+                android:textColor="@color/levelTwoFontColor"
                 android:textSize="13sp"
                 tools:text="刘童鞋" />
 
@@ -43,7 +43,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
-                android:textColor="#ff2a4e84"
+                android:textColor="@color/qa_answer_publish_at_color"
                 android:textSize="11sp"
                 android:alpha="0.54"
                 tools:text="19:00" />
@@ -58,8 +58,6 @@
                     android:id="@+id/tv_adopted"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:drawableStart="@drawable/qa_ic_answer_list_accepted"
-                    android:drawablePadding="5dp"
                     android:text="@string/qa_answer_list_accepted"
                     android:textColor="@color/qa_answer_list_adopted_color"
                     android:textSize="12sp"
@@ -108,7 +106,7 @@
                 android:paddingTop="10dp"
                 android:paddingBottom="10dp"
                 android:textColor="@color/qa_answer_list_answer_content_color"
-                android:textSize="15sp"
+                android:textSize="14sp"
                 tools:text="是的，公式是没有问题，但是你第三步那个代入方式是错误的，不应该用x的负5次方是的，公式是没有问题，但是你第三步那个代入方式是错误的，不应该是这样" />
 
             <RelativeLayout
@@ -130,7 +128,7 @@
                     android:drawableEnd="@drawable/qa_ic_answer_list_comment"
                     android:drawablePadding="7dp"
                     android:layout_centerVertical="true"
-                    android:textColor="@color/qa_answer_list_answer_content_color"
+                    android:textColor="@color/levelTwoFontColor"
                     android:textSize="10sp"
                     android:alpha="0.8"
                     tools:text="5条回复" />
@@ -144,7 +142,7 @@
                     android:drawableStart="@drawable/qa_ic_answer_list_praise"
                     android:drawablePadding="5dp"
                     android:gravity="center_vertical"
-                    android:textColor="@color/qa_answer_list_praise_color"
+                    android:textColor="@color/unFocusedFontColor"
                     android:textSize="9sp"
                     tools:text="25" />
             </RelativeLayout>

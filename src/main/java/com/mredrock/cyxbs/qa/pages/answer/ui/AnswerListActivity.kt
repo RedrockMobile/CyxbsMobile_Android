@@ -111,6 +111,7 @@ class AnswerListActivity : BaseActivity() {
         initRv()
         //设置标题
         tv_question_toolbar_title.text = question.title
+        ib_question_toolbar_back.setOnClickListener { finish() }
         observeListChangeEvent()
     }
 
@@ -187,45 +188,20 @@ class AnswerListActivity : BaseActivity() {
         }
     }
 
-    private val rewardSetDialog by lazy {
-        RewardSetDialog(this@AnswerListActivity, viewModel.myRewardCount).apply {
-            onSubmitButtonClickListener = {
-                if (viewModel.addReward(it)) {
-                    dismiss()
-                }
-            }
-        }
-    }
 
     private fun switchToQuestioner() {
-//        card_bottom_container.visible()
-//        val leftDrawable = ResourcesCompat.getDrawable(resources, R.drawable.qa_ic_answer_list_add_reward, null)
-//        tv_left.text = getString(R.string.qa_answer_list_add_reward)
-//        tv_left.setCompoundDrawablesRelativeWithIntrinsicBounds(leftDrawable, null, null, null)
-//        fl_left.setOnClickListener {
-//            rewardSetDialog.show()
-//        }
-//
-//        val rightDrawable = ResourcesCompat.getDrawable(resources, R.drawable.qa_ic_answer_list_cancel, null)
-//        tv_right.text = getString(R.string.qa_answer_list_cancel_question)
-//        tv_right.setCompoundDrawablesRelativeWithIntrinsicBounds(rightDrawable, null, null, null)
-//        fl_right.setOnClickListener { viewModel.cancelQuestion() }
         fl_answer.gone()
     }
-//
+
     private fun switchToHelper() {
-//        card_bottom_container.visible()
-//        val leftDrawable = ResourcesCompat.getDrawable(resources, R.drawable.qa_ic_answer_list_ignore, null)
-//        tv_left.text = getString(R.string.qa_answer_list_ignore_question)
-//        tv_left.setCompoundDrawablesRelativeWithIntrinsicBounds(leftDrawable, null, null, null)
-//        fl_left.setOnClickListener { viewModel.ignoreQuestion() }
-//
-//        val rightDrawable = ResourcesCompat.getDrawable(resources, R.drawable.qa_ic_answer_list_help, null)
-//        tv_right.text = getString(R.string.qa_answer_list_help)
-//        tv_right.setCompoundDrawablesRelativeWithIntrinsicBounds(rightDrawable, null, null, null)
-//        fl_right.setOnClickListener { AnswerActivity.activityStart(this@AnswerListActivity, viewModel.questionLiveData.value!!.id, REQUEST_REFRESH_LIST) }
-    fl_answer.visibility
-    fl_answer.setOnClickListener { AnswerActivity.activityStart(this@AnswerListActivity, viewModel.questionLiveData.value!!.id, REQUEST_REFRESH_LIST) }
+        fl_answer.visibility
+        fl_answer.setOnClickListener {
+            AnswerActivity.activityStart(this@AnswerListActivity, viewModel.questionLiveData.value?.id
+                    ?: "", viewModel.questionLiveData.value?.description
+                    ?: "", viewModel.questionLiveData.value?.photoUrl
+                    ?: listOf(), REQUEST_REFRESH_LIST)
+        }
+
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -250,16 +226,6 @@ class AnswerListActivity : BaseActivity() {
         return true
     }
 
-//    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-//        return when (item?.itemId) {
-//            R.id.more -> {
-//                ReportOrSharePopupWindow(this, viewModel.questionLiveData.value
-//                        ?: return false, common_toolbar, card_frame).show()
-//                true
-//            }
-//            else -> false
-//        }
-//    }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun adoptAnswer(event: AdoptAnswerEvent) {

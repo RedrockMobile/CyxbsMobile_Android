@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/qa_answer_list_background_color"
+    android:background="@color/whiteBackground"
     android:orientation="vertical"
     tools:context=".pages.answer.ui.AnswerListActivity">
 
@@ -18,7 +18,7 @@
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
             android:id="@+id/swipe_refresh_layout"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:layout_weight="1"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
@@ -31,35 +31,23 @@
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
     </LinearLayout>
 
-    <FrameLayout
+    <Button
         android:id="@+id/fl_answer"
         android:layout_width="120dp"
-        android:layout_height="60dp"
+        android:layout_height="40dp"
+        android:layout_marginBottom="57dp"
+        android:text="@string/qa_answer_btn_text"
+        android:textColor="@color/whiteFontColor"
         android:layout_gravity="bottom|center_horizontal"
-        android:layout_marginBottom="50dp">
-
-        <View
-            android:id="@+id/view_answer"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:background="@drawable/qa_main_have_question_btn_background" >
-        </View>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:layout_gravity="center"
-            android:text="@string/qa_answer_btn_text"
-            android:textColor="@color/whiteFontColor"
-            android:textSize="18sp" />
-        <View
-            android:layout_width="92dp"
-            android:layout_height="26dp"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="20dp"
-            android:background="@drawable/qa_answer_new_answer_button_shadow"
-            android:alpha="0.10"
-            />
-
-    </FrameLayout>
-</FrameLayout>
+        android:background="@drawable/qa_main_have_question_btn_background"
+        />
+<!--    <androidx.appcompat.widget.AppCompatTextView-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:text="@string/qa_answer_btn_text"-->
+<!--        android:textSize="18sp"-->
+<!--        android:textColor="@color/whiteFontColor"-->
+<!--        android:textOn="@string/qa_answer_btn_text"-->
+<!--        app:layout_anchor="@id/fl_answer"-->
+<!--        app:layout_anchorGravity="center"/>-->
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

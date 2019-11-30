@@ -7,19 +7,20 @@
     android:layout_height="match_parent"
     android:color="#f8f9fc"
     tools:context=".pages.question.ui.QuestionListFragment">
-<com.mredrock.cyxbs.common.component.JCardViewPlus
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    app:cardCornerRadiusUpperLeft="40dp"
-    app:cardCornerRadiusUpperRight="40dp"
-    app:shadowFlags="bottom">
+    <com.mredrock.cyxbs.common.component.JCardViewPlus
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:cardCornerRadiusUpperLeft="40dp"
+        app:cardCornerRadiusUpperRight="40dp"
+        app:shadowFlags="bottom">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_question_list"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:paddingTop="10dp"
-        android:scrollbars="vertical" />
-</com.mredrock.cyxbs.common.component.JCardViewPlus>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_question_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingTop="10dp"
+            android:scrollbars="none"
+            android:overScrollMode="never"/>
+    </com.mredrock.cyxbs.common.component.JCardViewPlus>
 
 </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

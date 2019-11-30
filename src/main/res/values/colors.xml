@@ -6,15 +6,11 @@
     <color name="qa_tab_background">#fefefe</color>
     <color name="qa_quiz_fab_color">#7195fa</color>
     <color name="qa_question_item_shadow_color">#0d000000</color>
-    <color name="qa_question_item_nickname_color">#555555</color>
     <color name="qa_question_item_disappear_color">#D9999999</color>
-    <color name="qa_question_item_reward_color">#777777</color>
     <color name="qa_question_item_title_color">#333333</color>
-    <color name="qa_question_item_content_color">#ff15315b</color>
     <color name="qa_question_item_show_picture_btn_color">#7097fb</color>
     <color name="qa_question_item_empty_holder_color">#E6E6E6</color>
     <color name="qa_question_list_hint_color">#cc999999</color>
-    <color name="qa_answer_head_title_color">#ff15315b</color>
     <color name="qa_answer_text_content_color">#15315B</color>
     <color name="qa_answer_list_divider_color">#bfc6c4c5</color>
     <color name="qa_answer_list_bottom_tv_color">#7396fa</color>
@@ -28,10 +24,8 @@
     <color name="qa_answer_list_answer_count_color">#888888</color>
     <color name="qa_answer_list_sort_tv_color">#788efa</color>
     <color name="qa_answer_list_answer_nickname_color">#15315B</color>
-    <color name="qa_answer_list_adopted_color">#999999</color>
     <color name="qa_answer_list_adopt_color">#788efa</color>
     <color name="qa_answer_list_answer_content_color">#15315B</color>
-    <color name="qa_answer_list_praise_color">#999999</color>
     <color name="qa_answer_list_comment_color">#999999</color>
     <color name="qa_answer_list_answer_date_color">#e6999999</color>
     <color name="qa_answer_item_divider_color">#59c6c4c5</color>
@@ -80,8 +74,6 @@
 
     <color name="qa_crop_logo">#f0000000</color>
     <color name="qa_answer_button_shadow_color">#6B65EF</color>
-    <color name="qa_question_comment_count_color">#2A4E84</color>
-    <color name="qa_question_praise_count_color">#2A4E84</color>
-    <color name="qa_question_watch_count_color">#2A4E84</color>
-    <color name="qa_question_recycler_item_divide_line_color">#BDCCE5</color>
+
+    <color name="qa_comment_recycle_view_header_color">#f8f9fc</color>
 </resources>

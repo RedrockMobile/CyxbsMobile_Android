@@ -6,13 +6,10 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
-import android.view.KeyEvent
-import android.view.Menu
-import android.view.MenuItem
-import android.view.View
+import android.text.TextUtils
+import android.view.*
 import android.widget.ImageView
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.google.gson.Gson
@@ -37,8 +34,9 @@ class AnswerActivity : BaseViewModelActivity<AnswerViewModel>() {
     companion object {
         const val MAX_SELECTABLE_IMAGE_COUNT = 6
 
-        fun activityStart(activity: FragmentActivity, qid: String, requestCode: Int) {
-            activity.startActivityForResult<AnswerActivity>(requestCode, "qid" to qid)
+        fun activityStart(activity: FragmentActivity, qid: String, description: String, photoUrl: List<String>, requestCode: Int) {
+            activity.startActivityForResult<AnswerActivity>(requestCode, "qid" to qid, "photoUrl" to photoUrl,
+                    "description" to description)
         }
     }
 
@@ -74,16 +72,51 @@ class AnswerActivity : BaseViewModelActivity<AnswerViewModel>() {
 
     @SuppressLint("SetTextI18n")
     private fun initView() {
-        tv_answer_content_counter.text = "300"
-        edt_answer_content.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(s: Editable) {
-                tv_answer_content_counter.text = "${300 - s.length}"
+        val description = intent.getStringExtra("description")
+        val photoUrl = intent.getStringArrayListExtra("photoUrl")
+        tv_answer_question_description.text = description
+        nine_grid_view_question.apply {
+            setImages(photoUrl)
+            setOnItemClickListener { _, index ->
+                ViewImageActivity.activityStart(context, photoUrl[index])
+            }
+            visibility = View.GONE
+        }
+        //判断是否当前只有两行
+        tv_answer_question_description.apply {
+            viewTreeObserver.addOnPreDrawListener(object : ViewTreeObserver.OnPreDrawListener {
+                override fun onPreDraw(): Boolean {
+                    viewTreeObserver.removeOnPreDrawListener(this)
+                    if (tv_answer_question_description.lineCount > 2 || photoUrl.size > 0) {
+                        tv_answer_question_description.maxLines = 2
+                        tv_answer_question_description.ellipsize = TextUtils.TruncateAt.END
+                    } else {
+                        tv_answer_question_detail_show_more.visibility = View.GONE
+                    }
+                    return false
+                }
+
+            })
+        }
+
+        tv_answer_question_detail_show_more.apply {
+            setOnClickListener {
+                //点击后展开，tv显示所有内容
+                if (tv_answer_question_description.maxLines == 2) {
+                    tv_answer_question_description.maxLines = Int.MAX_VALUE
+                    val drawable = ContextCompat.getDrawable(this@AnswerActivity, R.drawable.qa_question_describe_show_more)
+                    setCompoundDrawablesWithIntrinsicBounds(null, null, drawable, null)
+                    nine_grid_view_question.visibility = View.VISIBLE
+                } else {
+                    tv_answer_question_description.maxLines = 2
+                    val drawable = ContextCompat.getDrawable(this@AnswerActivity, R.drawable.qa_question_describe_show_more)
+                    setCompoundDrawablesWithIntrinsicBounds(null, null, drawable, null)
+                    nine_grid_view_question.visibility = View.GONE
+                }
             }
 
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) = Unit
+        }
 
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) = Unit
-        })
     }
 
     private fun initImageAddView() {

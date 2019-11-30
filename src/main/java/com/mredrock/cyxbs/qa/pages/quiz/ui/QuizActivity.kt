@@ -91,9 +91,7 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
             saveDraft()
             finish()
         })
-        initEdtView()
         initImageAddView()
-        initFooterView()
         viewModel.getMyReward() //优先初始化积分，避免用户等待
 
         viewModel.backAndRefreshPreActivityEvent.observeNotNull {
@@ -109,30 +107,7 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
         }
     }
 
-    private fun initEdtView() {
-        val maxTitleLength = edt_quiz_title.getMaxLength()
-        val maxContentLength = edt_quiz_content.getMaxLength()
-        edt_quiz_title.addTextChangedListener(createTextWatcher {
-            tv_quiz_title_left_count.text = (maxTitleLength - it.length).toString()
-        })
-        edt_quiz_content.addTextChangedListener(createTextWatcher {
-            tv_quiz_content_left_count.text = (maxContentLength - it.length).toString()
-        })
-        tv_quiz_title_left_count.text = maxTitleLength.toString()
-        tv_quiz_content_left_count.text = maxContentLength.toString()
-        tv_quiz_anonymous.setOnClickListener {
-            tv_quiz_anonymous.toggle()
-            viewModel.isAnonymous = tv_quiz_anonymous.isChecked
-        }
-        tv_quiz_tags.setOnClickListener { editTagDialog.show() }
 
-        viewModel.tagLiveData.observe {
-            if (it.isNullOrBlank()) {
-                return@observe
-            }
-            tv_quiz_tags.text = getString(R.string.qa_quiz_tag, it)
-        }
-    }
 
     private inline fun createTextWatcher(crossinline listener: (Editable) -> Unit) = object : TextWatcher {
         override fun afterTextChanged(s: Editable) {
@@ -189,10 +164,6 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
         }
     }
 
-    private fun initFooterView() {
-        iv_quiz_select_tag.setOnClickListener { editTagDialog.show() }
-        iv_quiz_add_img.setOnClickListener { this@QuizActivity.selectImageFromAlbum(MAX_SELECTABLE_IMAGE_COUNT, viewModel.imageLiveData.value) }
-    }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)

@@ -59,6 +59,8 @@
             android:layout_height="match_parent"
             android:gravity="center_vertical"
             android:hint="@string/qa_comment_new_comment_text_view_hint"
+            android:textColorHint="@color/levelTwoFontColor"
+            android:alpha="0.18"
             app:layout_constraintTop_toBottomOf="parent"
             app:layout_constraintBottom_toTopOf="parent"
             app:layout_constraintStart_toEndOf="@id/gl_comment_publish_text_start"
@@ -73,6 +75,7 @@
             android:drawableStart="@drawable/qa_ic_answer_list_praise"
             android:drawablePadding="10dp"
             android:gravity="center_vertical"
+            android:textColor="@color/unFocusedFontColor"
             tools:text="45"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.appcompat.widget.LinearLayoutCompat>

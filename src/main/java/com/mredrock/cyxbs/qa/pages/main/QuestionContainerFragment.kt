@@ -30,7 +30,6 @@ class QuestionContainerFragment : BaseFragment(), View.OnClickListener {
     }
 
     private val titles = listOf(Question.ALL, Question.STUDY, Question.LIFE, Question.EMOTION, Question.OTHER)
-    private val quizTypeSelectDialog: BottomSheetDialog by lazy { createTypeSelectDialog() }
     private lateinit var childFragments: List<QuestionListFragment>
 
     private lateinit var curSelectorItem: AppCompatCheckedTextView
@@ -42,10 +41,12 @@ class QuestionContainerFragment : BaseFragment(), View.OnClickListener {
         root.vp_question.adapter = QAViewPagerAdapter(childFragments, childFragmentManager)
         //预加载所有部分保证提问后所有fragment能够被通知刷新，同时保证退出账号时只加载一次对话框
         root.vp_question.offscreenPageLimit = if (BaseApp.isLogin) 5 else 0
-        root.tl_category.setupWithViewPager(root.vp_question)
-        root.fab_quiz.setOnClickListener {
+        root.tl_category.apply {
+            setupWithViewPager(root.vp_question)
+        }
+        root.btn_ask_question.setOnClickListener {
             if (BaseApp.isLogin) {
-                quizTypeSelectDialog.show()
+                QuizActivity.activityStart(this@QuestionContainerFragment, "学习", REQUEST_LIST_REFRESH_ACTIVITY)
             } else {
                 EventBus.getDefault().post(AskLoginEvent("请先登陆才能使用掌邮哦~"))
             }
@@ -53,26 +54,6 @@ class QuestionContainerFragment : BaseFragment(), View.OnClickListener {
         return root
     }
 
-    private fun createTypeSelectDialog(): BottomSheetDialog {
-        val contentView = layoutInflater.inflate(R.layout.qa_dialog_quiz_type_select, null, false)
-        val bottomSheetDialog = BottomSheetDialog(context!!).apply {
-            setContentView(contentView, ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                    ViewGroup.LayoutParams.WRAP_CONTENT))
-        }
-        contentView.apply {
-            tv_quiz_dialog_type_study.setOnClickListener(this@QuestionContainerFragment)
-            tv_quiz_dialog_type_life.setOnClickListener(this@QuestionContainerFragment)
-            tv_quiz_dialog_type_emotion.setOnClickListener(this@QuestionContainerFragment)
-            tv_quiz_dialog_type_other.setOnClickListener(this@QuestionContainerFragment)
-            iv_quiz_dialog_exit.setOnClickListener { quizTypeSelectDialog.dismiss() }
-            tv_quiz_dialog_type_next.setOnClickListener {
-                quizTypeSelectDialog.dismiss()
-                QuizActivity.activityStart(this@QuestionContainerFragment, curSelectorItem.text.toString(), REQUEST_LIST_REFRESH_ACTIVITY)
-            }
-        }
-        curSelectorItem = contentView.tv_quiz_dialog_type_study
-        return bottomSheetDialog
-    }
 
     override fun onClick(v: View) {
         if (v == curSelectorItem) {

@@ -87,9 +87,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="11dp"
-         android:layout_marginStart="67dp"
+        android:layout_marginStart="67dp"
         android:layout_marginEnd="20dp"
-        android:textColor="@color/qa_comment_item_answer_content_color"
+        android:textColor="@color/levelTwoFontColor"
         android:textSize="16sp"
         tools:text="符号A属于Rmxn表示一个m行n列的矩阵，并且矩阵A中所有的所有元素都是实数。符号x属于Rn表示一个含有n个元素的向量。符号A属于Rmxn表示一个m行n列的矩阵，并且矩阵A中所有的所有元素都是实数，符号x属于Rn表示一个含有n个元素的向量。符号A属于Rmxn表示一个m行n列的矩阵，并且矩阵A中所有的所有元素都是实数." />
 

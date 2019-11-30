@@ -39,7 +39,7 @@
             android:id="@+id/qa_tv_comment_toolbar_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/qa_answer_head_title_color"
+            android:textColor="@color/levelTwoFontColor"
             android:textSize="22sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"

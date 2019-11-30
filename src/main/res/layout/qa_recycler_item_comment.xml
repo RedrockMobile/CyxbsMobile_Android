@@ -18,12 +18,12 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         app:layout_constraintGuide_percent="0.17" />
-<androidx.constraintlayout.widget.Guideline
-    android:id="@+id/qa_guideline_avatar_end"
-    android:layout_width="0dp"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    app:layout_constraintGuide_percent="0.95"/>
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/qa_guideline_avatar_end"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.95"/>
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/iv_comment_avatar"
         android:layout_width="36dp"
@@ -68,6 +68,8 @@
                 android:layout_alignParentEnd="true"
                 android:layout_marginEnd="20dp"
                 android:textSize="14sp"
+                android:textColor="@color/levelTwoFontColor"
+                android:alpha="0.54"
                 tools:text="19:00"
                 />
             <TextView
@@ -77,6 +79,8 @@
                 android:layout_below="@id/tv_comment_nickname"
                 android:layout_marginTop="10dp"
                 android:textSize="16sp"
+                android:textColor="@color/qa_comment_content_color"
+                android:alpha="0.5"
                 tools:text="是的，公式是没有问题，但是你第三步那个代入方式是错误的，不应该用x的负5次方是的5次方是的5次方是。" />
             <ImageButton
                 android:id="@+id/ib_comment_item_more"

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -7,34 +7,64 @@
     android:orientation="vertical"
     tools:context=".pages.main.QuestionContainerFragment">
 
-    <androidx.appcompat.widget.AppCompatTextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="18dp"
-        android:layout_marginTop="20dp"
-        android:alpha="0.65"
-        android:text="第十一周 周二"
-        android:textColor="#ff2a4e84"
-        android:textSize="8sp" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="13dp">
+        android:layout_height="match_parent">
+
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/gl_tv_time_top"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.065" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/gl_tv_title_top"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.095" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/gl_tv_start"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.048" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/gl_btn_end"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.958" />
 
         <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_current_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="17dp"
+            android:alpha="0.65"
+            android:text="第十一周 周二"
+            android:textColor="@color/qa_question_current_time_color"
+            android:textSize="8sp"
+            app:layout_constraintStart_toStartOf="@id/gl_tv_start"
+            app:layout_constraintTop_toBottomOf="@id/gl_tv_time_top" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:text="@string/qa_fragment_head_title"
-            android:textStyle="bold"
-            android:textColor="#ff15315b"
+            android:textColor="@color/levelTwoFontColor"
             android:textSize="34sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="@id/gl_tv_start"
+            app:layout_constraintTop_toTopOf="@id/gl_tv_title_top" />
 
         <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_ask_question"
             android:layout_width="70dp"
             android:layout_height="35dp"
             android:background="@drawable/qa_main_have_question_btn_background"
@@ -42,40 +72,37 @@
             android:text="@string/qa_fragment_head_give_question"
             android:textColor="@color/whiteFontColor"
             android:textSize="15sp"
-            android:layout_marginEnd="16dp"
+            app:layout_constraintBottom_toBottomOf="@id/tv_title"
+            app:layout_constraintEnd_toStartOf="@id/gl_btn_end"
+            app:layout_constraintTop_toTopOf="@id/gl_tv_title_top" />
+
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tl_category"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginTop="6dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_title"
+            app:tabGravity="fill"
+            app:tabIndicatorColor="@color/qa_tab_selected_indicator_color"
+            app:tabIndicatorHeight="3dp"
+            app:tabMode="fixed"
+            app:tabSelectedTextColor="@color/qa_tab_selected_color"
+            app:tabTextColor="@color/qa_tab_unselected_color" />
+
+        <androidx.viewpager.widget.ViewPager
+            android:id="@+id/vp_question"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="20dp"
+            android:layout_weight="1"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tl_category" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <com.google.android.material.tabs.TabLayout
-        android:id="@+id/tl_category"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:layout_marginTop="6dp"
-        app:tabGravity="fill"
-        app:tabIndicatorColor="@color/qa_tab_selected_indicator_color"
-        app:tabIndicatorHeight="3dp"
-        app:tabMode="fixed"
-        app:tabSelectedTextColor="@color/qa_tab_selected_color"
-        app:tabTextColor="@color/qa_tab_unselected_color" />
-
-    <androidx.viewpager.widget.ViewPager
-        android:id="@+id/vp_question"
-        android:layout_marginTop="20dp"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab_quiz"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_marginEnd="25dp"
-        android:visibility="gone"
-        android:src="@drawable/qa_ic_main_quiz_fab"
-        app:backgroundTint="@color/qa_quiz_fab_color"
-        app:fabCustomSize="58dp" />
-</androidx.appcompat.widget.LinearLayoutCompat>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

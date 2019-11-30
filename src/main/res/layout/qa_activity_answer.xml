@@ -1,62 +1,106 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     tools:context="com.mredrock.cyxbs.qa.pages.answer.ui.AnswerActivity">
 
     <include layout="@layout/common_toolbar" />
 
-    <FrameLayout
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1.3"
-        android:paddingLeft="16dp"
-        android:paddingTop="19dp"
-        android:paddingRight="16dp">
+        android:layout_height="match_parent"
+        android:overScrollMode="never"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <EditText
-            android:id="@+id/edt_answer_content"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@null"
-            android:gravity="start|top"
-            android:hint="@string/qa_answer_edit_content_hint"
-            android:maxLength="300"
-            android:paddingBottom="29dp"
-            android:textColor="@color/qa_answer_content_edt_color"
-            android:textColorHint="@color/qa_answer_content_edt_hint_color"
-            android:textSize="16sp" />
+            android:layout_marginTop="24dp"
+            android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/tv_answer_content_counter"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|end"
-            android:layout_marginBottom="19dp"
-            android:textColor="@color/qa_answer_edt_content_counter"
-            android:textSize="13sp"
-            tools:text="300" />
-    </FrameLayout>
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_answer_question_describe"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="20dp"
+                android:alpha="0.64"
+                android:text="@string/qa_answer_activity_question_describe"
+                android:textColor="@color/levelTwoFontColor"
+                android:textSize="15sp" />
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="11dp"
-        android:background="@color/qa_answer_divider" />
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_answer_question_description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="9dp"
+                android:layout_marginEnd="20dp"
+                android:ellipsize="@null"
+                android:textColor="@color/levelTwoFontColor"
+                android:textSize="15sp"
+                tools:text="雪莉曾与宋茜、刘逸云(Amber)、朴善怜(Luna)和雪莉曾与宋茜、刘逸云(Amber)、朴善怜(Luna)和 郑秀晶（Krysal）组成女子流行演唱组合f(x)方" />
 
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_answer_question_detail_show_more"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="20dp"
+                android:drawableEnd="@drawable/qa_question_describe_show_more"
+                android:drawablePadding="3dp"
+                android:text="@string/qa_answer_question_detail_show_more"
+                android:textSize="11sp" />
 
-        <com.mredrock.cyxbs.qa.ui.widget.NineGridView
-            android:id="@+id/nine_grid_view"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:paddingStart="15dp"
-            android:paddingTop="19dp"
-            android:paddingEnd="15dp"
-            android:paddingBottom="19dp" />
-    </ScrollView>
-</LinearLayout>
+            <com.mredrock.cyxbs.qa.ui.widget.NineGridView
+                android:id="@+id/nine_grid_view_question"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:paddingStart="15dp"
+                android:paddingTop="19dp"
+                android:paddingEnd="15dp"
+                android:paddingBottom="19dp"
+                android:visibility="gone" />
+
+            <com.mredrock.cyxbs.common.component.RatioLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginEnd="20dp"
+                android:background="@drawable/qa_quiz_new_text_background"
+                app:ratio="0.69">
+
+                <EditText
+                    android:id="@+id/edt_answer_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@null"
+                    android:gravity="start|top"
+                    android:hint="@string/qa_answer_edit_content_hint"
+                    android:inputType="text"
+                    android:maxLength="100"
+                    android:paddingStart="15dp"
+                    android:paddingTop="10dp"
+                    android:paddingEnd="15dp"
+                    android:textColor="@color/qa_answer_content_edt_color"
+                    android:textColorHint="@color/qa_answer_content_edt_hint_color"
+                    android:textSize="16sp" />
+            </com.mredrock.cyxbs.common.component.RatioLayout>
+
+            <com.mredrock.cyxbs.qa.ui.widget.NineGridView
+                android:id="@+id/nine_grid_view"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:paddingStart="15dp"
+                android:paddingTop="19dp"
+                android:paddingEnd="15dp"
+                android:paddingBottom="19dp" />
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

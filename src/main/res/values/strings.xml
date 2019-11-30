@@ -58,7 +58,7 @@
     <string name="qa_quiz_reward_set_cur_question_reward">%1$d积分</string>
     <string name="qa_quiz_error_reward_low">积分多，朋友多！客官多打赏点儿~</string>
     <string name="qa_quiz_error_reward_not_enough">已经拿不出这么多硬币了( ﾉД`)</string>
-    <string name="qa_answer_edit_content_hint">请尽可能给出明确的解决思路哦！</string>/
+    <string name="qa_answer_edit_content_hint">请尽可能给出明确的解决思路哦！</string>
     <string name="qa_answer_question_title">提供帮助</string>
     <string name="qa_answer_submit_answer">提交</string>
     <string name="qa_hint_report_success">举报成功，会尽快为您处理</string>
@@ -71,6 +71,13 @@
     <string name="qa_fragment_head_give_question">提问</string>
     <string name="qa_comment_new_comment_text_view_hint">发布评论</string>
     <string name="qa_answer_btn_text">回答</string>
+    <string name="qa_question_new_question_title_hint">输入标题</string>
+    <string name="qa_answer_activity_question_describe">问题描述</string>
+    <string name="qa_answer_question_detail_show_more">展开详情</string>
+    <string name="qa_quiz_select_type_study">学习</string>
+    <string name="qa_quiz_select_type_no_name">匿名</string>
+    <string name="qa_quiz_select_type_life">生活</string>
+    <string name="qa_quiz_select_type_others">其他</string>
 
     <string-array name="qa_report_type">
         <item>色情低俗</item>
