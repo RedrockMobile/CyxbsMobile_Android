@@ -12,6 +12,8 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.extensions.dp2px
+import com.mredrock.cyxbs.common.utils.extensions.invisible
+import com.mredrock.cyxbs.common.utils.extensions.visible
 import com.mredrock.cyxbs.mine.R
 import com.mredrock.cyxbs.mine.network.model.Product
 import com.mredrock.cyxbs.mine.util.user
@@ -40,13 +42,13 @@ class DailySignActivity(override val viewModelClass: Class<DailyViewModel> = Dai
         super.onCreate(savedInstanceState)
         //设置导航栏字体颜色为白色
         window.decorView.systemUiVisibility = View.SYSTEM_UI_LAYOUT_FLAGS
-        
+
         setContentView(R.layout.mine_activity_daily_sign)
-        if (!isLogin()) return
+//        if (!isLogin()) return
 
         initView()
         dealBottomSheet()
-        viewModel.loadAllData(user!!)
+        user?.let { viewModel.loadAllData(it) }
         viewModel.fakeStatus.postValue(arrayOf(1, 1, 1, 0, 1, 0, 0))
         mine_daily_sign.setOnClickListener { checkIn() }
     }
@@ -146,14 +148,11 @@ class DailySignActivity(override val viewModelClass: Class<DailyViewModel> = Dai
 
             override fun onStateChanged(p0: View, p1: Int) {
                 if (p1 == BottomSheetBehavior.STATE_COLLAPSED) {
-                    mine_store_arrow_left.visibility = View.GONE
-                    mine_store_myproduct.visibility = View.GONE
-                } else if (p1 == BottomSheetBehavior.STATE_DRAGGING) {
-                    mine_store_arrow_left.visibility = View.VISIBLE
-                    mine_store_myproduct.visibility = View.VISIBLE
-                } else if (p1 == BottomSheetBehavior.STATE_EXPANDED) {
-                    mine_store_arrow_left.visibility = View.VISIBLE
-                    mine_store_myproduct.visibility = View.VISIBLE
+                    mine_store_arrow_left.invisible()
+                    mine_store_myproduct.invisible()
+                } else {
+                    mine_store_arrow_left.visible()
+                    mine_store_myproduct.visible()
                 }
             }
         })

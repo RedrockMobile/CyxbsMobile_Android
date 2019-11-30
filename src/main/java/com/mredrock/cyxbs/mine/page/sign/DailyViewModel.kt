@@ -21,22 +21,27 @@ class DailyViewModel : BaseViewModel() {
     val fakeStatus = MutableLiveData<Array<Int>>()
 
     fun loadAllData(user: User) {
-        apiService.getScoreStatus(user.stuNum!!, user.idNum!!)
-                .normalWrapper(this)
-                .safeSubscribeBy {
-                    status.postValue(it)
-                }
-                .lifeCycle()
+        if (user.stuNum != null && user.idNum != null) {
+            apiService.getScoreStatus(user.stuNum!!, user.idNum!!)
+                    .normalWrapper(this)
+                    .safeSubscribeBy {
+                        status.postValue(it)
+                    }
+                    .lifeCycle()
+        }
+
     }
 
     fun checkIn(user: User, action: () -> Unit) {
-        apiService.checkIn(user.stuNum!!, user.idNum!!)
-                .setSchedulers()
-                .subscribe {
-                    if (it.status == 200) {
-                        action.invoke()
+        if (user.stuNum != null && user.idNum != null) {
+            apiService.checkIn(user.stuNum!!, user.idNum!!)
+                    .setSchedulers()
+                    .subscribe {
+                        if (it.status == 200) {
+                            action.invoke()
+                        }
                     }
-                }
-                .lifeCycle()
+                    .lifeCycle()
+        }
     }
 }

@@ -29,7 +29,7 @@
             app:layout_constraintTop_toTopOf="@+id/mine_guideline4" />
 
         <TextView
-            android:id="@+id/mine_textview8"
+            android:id="@+id/mine_daily_tv_semiduration"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="15dp"
@@ -44,7 +44,7 @@
 
 
         <TextView
-            android:id="@+id/mine_textview9"
+            android:id="@+id/mine_daily_tv_year"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
@@ -52,11 +52,11 @@
             android:textColor="@color/whiteFontColor"
             android:textSize="@dimen/mine_main_large_l"
             android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="@+id/mine_textview8"
-            app:layout_constraintTop_toBottomOf="@+id/mine_textview8" />
+            app:layout_constraintStart_toStartOf="@+id/mine_daily_tv_semiduration"
+            app:layout_constraintTop_toBottomOf="@+id/mine_daily_tv_semiduration" />
 
         <TextView
-            android:id="@+id/mine_textview10"
+            android:id="@+id/mine_daily_tv_week"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
@@ -64,8 +64,8 @@
             android:textColor="@color/whiteFontColor"
             android:textSize="@dimen/mine_main_large_l"
             android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="@+id/mine_textview9"
-            app:layout_constraintTop_toBottomOf="@+id/mine_textview9" />
+            app:layout_constraintStart_toStartOf="@+id/mine_daily_tv_year"
+            app:layout_constraintTop_toBottomOf="@+id/mine_daily_tv_year" />
 
 
         <TextView
@@ -78,11 +78,11 @@
             android:textColor="@color/whiteFontColor"
             android:textSize="@dimen/mine_main_medium_l"
             android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="@+id/mine_textview10"
-            app:layout_constraintTop_toBottomOf="@+id/mine_textview10" />
+            app:layout_constraintStart_toStartOf="@+id/mine_daily_tv_week"
+            app:layout_constraintTop_toBottomOf="@+id/mine_daily_tv_week" />
 
         <TextView
-            android:id="@+id/mine_textview11"
+            android:id="@+id/mine_daily_tv_ranking"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/mine_sign_ranking_default"
@@ -95,15 +95,15 @@
             app:layout_constraintVertical_bias="0.32" />
 
         <TextView
-            android:id="@+id/mine_textview12"
+            android:id="@+id/mine_daily_tv_ranking_percentage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:alpha="0.43"
             android:text="@string/mine_sign_ranking_percentage_default"
             android:textColor="@color/levelTwoFontColor"
             android:textSize="@dimen/mine_main_small_s"
-            app:layout_constraintStart_toStartOf="@+id/mine_textview11"
-            app:layout_constraintTop_toBottomOf="@+id/mine_textview11" />
+            app:layout_constraintStart_toStartOf="@+id/mine_daily_tv_ranking"
+            app:layout_constraintTop_toBottomOf="@+id/mine_daily_tv_ranking" />
 
         <com.mredrock.cyxbs.mine.util.widget.Stick
             android:id="@+id/mine_daily_v_divider_mon_tue"
@@ -243,7 +243,7 @@
             app:layout_constraintTop_toTopOf="@+id/mine_daily_space_sun" />
 
         <TextView
-            android:id="@+id/mine_textview"
+            android:id="@+id/mine_daily_tv_mon"
             android:layout_width="wrap_content"
             android:layout_height="17dp"
             android:layout_marginTop="30dp"
@@ -257,7 +257,7 @@
             tools:text="周一" />
 
         <TextView
-            android:id="@+id/mine_textview2"
+            android:id="@+id/mine_daily_tv_tue"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -268,11 +268,11 @@
             android:textSize="11sp"
             app:layout_constraintEnd_toEndOf="@+id/mine_daily_space_tue"
             app:layout_constraintStart_toStartOf="@id/mine_daily_space_tue"
-            app:layout_constraintTop_toTopOf="@+id/mine_textview7"
+            app:layout_constraintTop_toTopOf="@+id/mine_daily_tv_sat"
             tools:text="周二" />
 
         <TextView
-            android:id="@+id/mine_textview4"
+            android:id="@+id/mine_daily_tv_wed"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -283,11 +283,11 @@
             android:textSize="11sp"
             app:layout_constraintEnd_toEndOf="@+id/mine_daily_space_wed"
             app:layout_constraintStart_toStartOf="@id/mine_daily_space_wed"
-            app:layout_constraintTop_toTopOf="@+id/mine_textview7"
+            app:layout_constraintTop_toTopOf="@+id/mine_daily_tv_sat"
             tools:text="周三" />
 
         <TextView
-            android:id="@+id/mine_textview5"
+            android:id="@+id/mine_daily_tv_thurs"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -298,12 +298,12 @@
             android:textSize="11sp"
             app:layout_constraintEnd_toEndOf="@+id/mine_daily_space_thurs"
             app:layout_constraintStart_toStartOf="@id/mine_daily_space_thurs"
-            app:layout_constraintTop_toTopOf="@+id/mine_textview7"
+            app:layout_constraintTop_toTopOf="@+id/mine_daily_tv_sat"
             tools:text="周四"
             tools:textColor="@color/mine_sign_today_name" />
 
         <TextView
-            android:id="@+id/mine_textview6"
+            android:id="@+id/mine_daily_tv_fri"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:alpha="0.35"
@@ -312,12 +312,12 @@
             android:textSize="11sp"
             app:layout_constraintEnd_toEndOf="@+id/mine_daily_space_fri"
             app:layout_constraintStart_toStartOf="@id/mine_daily_space_fri"
-            app:layout_constraintTop_toTopOf="@+id/mine_textview7"
+            app:layout_constraintTop_toTopOf="@+id/mine_daily_tv_sat"
             tools:text="周五" />
 
 
         <TextView
-            android:id="@+id/mine_textview7"
+            android:id="@+id/mine_daily_tv_sat"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -328,11 +328,11 @@
             android:textSize="11sp"
             app:layout_constraintEnd_toEndOf="@+id/mine_daily_space_sat"
             app:layout_constraintStart_toStartOf="@id/mine_daily_space_sat"
-            app:layout_constraintTop_toTopOf="@+id/mine_textview"
+            app:layout_constraintTop_toTopOf="@+id/mine_daily_tv_mon"
             tools:text="周六" />
 
         <TextView
-            android:id="@+id/mine_textview3"
+            android:id="@+id/mine_daily_tv_sun"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:alpha="0.35"
@@ -341,7 +341,7 @@
             android:textSize="11sp"
             app:layout_constraintEnd_toEndOf="@+id/mine_daily_space_sun"
             app:layout_constraintStart_toStartOf="@id/mine_daily_space_sun"
-            app:layout_constraintTop_toTopOf="@+id/mine_textview7"
+            app:layout_constraintTop_toTopOf="@+id/mine_daily_tv_sat"
             tools:text="周日" />
 
         <Button
@@ -358,7 +358,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/mine_textview5"
+            app:layout_constraintTop_toBottomOf="@+id/mine_daily_tv_thurs"
             app:layout_constraintVertical_bias="0.6" />
 
         <androidx.constraintlayout.widget.Guideline
@@ -455,8 +455,8 @@
             android:textColor="@color/mine_sign_integral_text"
             android:textSize="11sp"
             app:layout_constraintBottom_toTopOf="@+id/mine_daily_iv_thurs"
-            app:layout_constraintEnd_toEndOf="@+id/mine_textview5"
-            app:layout_constraintStart_toStartOf="@+id/mine_textview5"
+            app:layout_constraintEnd_toEndOf="@+id/mine_daily_tv_thurs"
+            app:layout_constraintStart_toStartOf="@+id/mine_daily_tv_thurs"
             tools:ignore="SmallSp" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
