@@ -79,8 +79,7 @@
     <color name="mine_about_text_color_normal" tools:ignore="ResourceName">#294169</color>
     <color name="mine_about_text_color_blue" tools:ignore="ResourceName">#0BCCF0</color>
     <color name="mine_sign_bg_grey" tools:ignore="ResourceName">#E1E6F0</color>
-    <color name="mine_sign_divider_default" tools:ignore="ResourceName">#E1E6F0</color>
-    <color name="mine_sign_divider_grey" tools:ignore="ResourceName">#2CDEFF</color>
+    <color name="mine_sign_divider_grey" tools:ignore="ResourceName">#E1E6F0</color>
     <color name="mine_sign_divider_blue" tools:ignore="ResourceName">#3A35D2</color>
     <color name="mine_sign_integral_text" tools:ignore="ResourceName">#4841E2</color>
 
