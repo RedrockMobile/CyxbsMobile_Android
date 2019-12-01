@@ -1,4 +1,4 @@
-package com.mredrock.cyxbs.mine.util
+package com.mredrock.cyxbs.mine.util.extension
 
 import com.mredrock.cyxbs.common.bean.RedrockApiStatus
 import com.mredrock.cyxbs.common.bean.RedrockApiWrapper

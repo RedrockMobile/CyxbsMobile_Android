@@ -6,7 +6,7 @@ import com.mredrock.cyxbs.common.utils.extensions.mapOrThrowApiException
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.mine.util.apiService
-import com.mredrock.cyxbs.mine.util.normalStatus
+import com.mredrock.cyxbs.mine.util.extension.normalStatus
 import com.mredrock.cyxbs.mine.util.user
 import okhttp3.MultipartBody
 import okhttp3.RequestBody

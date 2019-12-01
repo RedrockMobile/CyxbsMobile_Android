@@ -1,4 +1,4 @@
-package com.mredrock.cyxbs.mine.util
+package com.mredrock.cyxbs.mine.util.extension
 
 import android.text.Editable
 import android.text.TextWatcher

@@ -7,7 +7,7 @@ import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.mine.network.model.ScoreStatus
 import com.mredrock.cyxbs.mine.util.apiService
-import com.mredrock.cyxbs.mine.util.normalWrapper
+import com.mredrock.cyxbs.mine.util.extension.normalWrapper
 
 /**
  * Created by zia on 2018/8/22.

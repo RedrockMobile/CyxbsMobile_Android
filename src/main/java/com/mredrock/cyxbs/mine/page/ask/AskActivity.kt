@@ -21,21 +21,20 @@ class AskActivity(override val isFragmentActivity: Boolean = false) : BaseActivi
         super.onCreate(savedInstanceState)
         setContentView(R.layout.mine_activity_question)
 
-        common_toolbar.init("问一问")
+        mine_activity_question_toolbar.init("")
+        mine_activity_question_toolbar_title.text = "我的提问"
 
         init()
     }
 
     private fun init() {
         //初始化Fragment
-        val overFragment = AskAdoptedFm()
-        overFragment.setFragmentType(overFragment.TYPE_ASK_OVER)
+        val askPostedFm = AskPostedFm()
 
-        val waitFragment = AskAdoptedFm()
-        waitFragment.setFragmentType(waitFragment.TYPE_ASK_WAIT)
+        val askPostedFm2 = AskPostedFm()
 
-        val fragmentList = listOf(overFragment, waitFragment)
-        val titleList = listOf("已解决", "待解决")
+        val fragmentList = listOf(askPostedFm, askPostedFm2)
+        val titleList = listOf("已发布", "草稿箱")
 
         //设置viewPager
         mine_question_view_pager.adapter = TabPagerAdapter(supportFragmentManager, fragmentList, titleList)

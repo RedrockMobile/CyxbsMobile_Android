@@ -1,13 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".page.ask.AskActivity">
 
-    <include layout="@layout/common_toolbar" />
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/mine_activity_question_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fitsSystemWindows="true"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+        <TextView
+            android:id="@+id/mine_activity_question_toolbar_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="21sp"
+            android:textColor="@color/levelTwoFontColor"
+            android:textStyle="bold"
+            tools:text="adddddddddddd"
+            android:layout_gravity="center_horizontal"/>
+
+    </androidx.appcompat.widget.Toolbar>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
@@ -24,10 +41,11 @@
                 android:layout_height="50dp"
                 app:tabBackground="@color/mine_white_black"
                 app:tabGravity="fill"
-                app:tabIndicatorColor="@color/mine_tabIndicatorColor"
+                app:tabIndicator="@drawable/mine_selector_tab_indicator"
+                app:tabIndicatorHeight="5dp"
                 app:tabMode="fixed"
                 app:tabSelectedTextColor="@color/mine_tabSelectedTextColor"
-                app:tabTextColor="@color/mine_tabTextColor"/>
+                app:tabTextColor="@color/mine_tabTextColor" />
         </com.google.android.material.appbar.AppBarLayout>
 
 
@@ -35,7 +53,7 @@
             android:id="@+id/mine_question_view_pager"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 </LinearLayout>

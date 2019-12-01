@@ -5,8 +5,8 @@ import com.mredrock.cyxbs.common.utils.extensions.*
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.mine.network.model.Draft
 import com.mredrock.cyxbs.mine.util.apiService
-import com.mredrock.cyxbs.mine.util.log
-import com.mredrock.cyxbs.mine.util.normalStatus
+import com.mredrock.cyxbs.mine.util.extension.log
+import com.mredrock.cyxbs.mine.util.extension.normalStatus
 import com.mredrock.cyxbs.mine.util.user
 
 /**

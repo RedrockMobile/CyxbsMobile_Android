@@ -1,4 +1,4 @@
-package com.mredrock.cyxbs.mine.util
+package com.mredrock.cyxbs.mine.util.extension
 
 import android.content.Context
 import com.afollestad.materialdialogs.MaterialDialog
