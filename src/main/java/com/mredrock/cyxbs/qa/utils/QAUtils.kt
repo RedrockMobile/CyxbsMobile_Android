@@ -9,7 +9,8 @@ import com.mredrock.cyxbs.qa.R
  * Created By jay68 on 2018/9/30.
  */
 internal fun TextView.setNicknameTv(nickname: String, showGender: Boolean, isMale: Boolean) {
-    text = nickname
+    //为了防止后端传null
+    text = nickname?:""
     if (showGender) {
         val drawable = if (isMale) {
             context.resources.getDrawable(R.drawable.qa_ic_gender_male)
