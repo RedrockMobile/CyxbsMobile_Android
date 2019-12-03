@@ -8,29 +8,21 @@ import android.util.AttributeSet
 import android.view.View
 
 /**
- * Created by roger on 2019/11/27
+ * Created by roger on 2019/12/3
+ * 主要是在inicator中使用
  */
-class Stick : View {
+class StickPlus : View {
     //默认宽高
     private val mWidth = dp2px(10f).toInt()
     private val mHeight = dp2px(2f).toInt()
-    val color = Paint(Paint.ANTI_ALIAS_FLAG)
+
+    private lateinit var paint: Paint
+
+    private val color = Color.parseColor("#1AD0F2")
 
 
     private fun dp2px(dpValue: Float) =
             (dpValue * resources.displayMetrics.density + 0.5f)
-
-    var progress = 0f
-        set(value) {
-            field = value
-            invalidate()
-        }
-
-    var secondaryProgress = 0f
-        set(value) {
-            field = value
-            invalidate()
-        }
 
     constructor(ctx: Context) : this(ctx, null) {
 
@@ -41,17 +33,28 @@ class Stick : View {
     }
 
     constructor(ctx: Context, attr: AttributeSet?, defStyleAttr: Int) : super(ctx, attr, defStyleAttr) {
+        init()
+    }
+    private fun init() {
+        setBackgroundColor(Color.TRANSPARENT);
+        paint = Paint()
+        paint.isAntiAlias = true
+        paint.color = color
+        paint.style = Paint.Style.STROKE
+        paint.strokeCap = Paint.Cap.ROUND
 
     }
 
 
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
-        canvas?.drawColor(Color.parseColor("#E1E6F0"))
+        paint.strokeWidth = height.toFloat()
+        paint.alpha = 133
+        canvas?.drawLine(width * 0.1f, height.toFloat() / 2, width * 0.8f, height.toFloat() / 2, paint)
 
-        color.strokeWidth = height.toFloat()
-        canvas?.drawLine(0f, height.toFloat() / 2, progress * width.toFloat(), height.toFloat() / 2, color)
-
+        canvas?.drawPoint(width * 0.9f, height.toFloat() / 2, paint)
+        paint.alpha = 255
+        canvas?.drawLine(width * 0.1f, height.toFloat() / 2, width * 0.5f, height.toFloat() / 2, paint)
     }
 
     //只需要给View指定一个默认的内部宽高(mWidth, mHeight)
