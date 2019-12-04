@@ -7,7 +7,7 @@ import retrofit2.http.*
 /**
  * Created by anriku on 2018/8/18.
  */
-interface CourseApiService {
+interface  CourseApiService {
 
     /**
      * 获取服务器课程信息

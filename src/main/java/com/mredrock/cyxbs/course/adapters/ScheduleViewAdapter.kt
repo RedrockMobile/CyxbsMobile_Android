@@ -3,10 +3,10 @@ package com.mredrock.cyxbs.course.adapters
 import android.content.Context
 import android.content.Intent
 import android.graphics.Canvas
-import android.graphics.Path
+import android.graphics.Paint
+import android.graphics.Rect
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.GradientDrawable
-import android.graphics.drawable.LevelListDrawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,6 +17,7 @@ import com.mredrock.cyxbs.common.config.DEFAULT_PREFERENCE_FILENAME
 import com.mredrock.cyxbs.common.config.SP_SHOW_MODE
 import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.SchoolCalendar
+import com.mredrock.cyxbs.common.utils.extensions.dp2px
 import com.mredrock.cyxbs.common.utils.extensions.sharedPreferences
 import com.mredrock.cyxbs.course.R
 import com.mredrock.cyxbs.course.component.ScheduleView
@@ -28,6 +29,7 @@ import com.mredrock.cyxbs.course.utils.ClassRoomParse
 import org.greenrobot.eventbus.EventBus
 import org.jetbrains.anko.textColor
 import java.util.*
+import kotlin.math.sqrt
 
 /**
  * @param mContext [Context]
@@ -58,10 +60,10 @@ class ScheduleViewAdapter(private val mContext: Context,
                 ContextCompat.getColor(mContext, R.color.eveningCourseColor),
                 ContextCompat.getColor(mContext, R.color.courseCoursesOther))
     }
-      private val mCoursesTextColors by lazy(LazyThreadSafetyMode.NONE) {
-          intArrayOf(ContextCompat.getColor(mContext, R.color.morningCourseTextColor),
-                  ContextCompat.getColor(mContext, R.color.afternoonCourseTextColor),
-                  ContextCompat.getColor(mContext, R.color.eveningCourseTextColor))
+    private val mCoursesTextColors by lazy(LazyThreadSafetyMode.NONE) {
+        intArrayOf(ContextCompat.getColor(mContext, R.color.morningCourseTextColor),
+                ContextCompat.getColor(mContext, R.color.afternoonCourseTextColor),
+                ContextCompat.getColor(mContext, R.color.eveningCourseTextColor))
     }
     private val mCoursesOverlapColors by lazy(LazyThreadSafetyMode.NONE) {
         intArrayOf(ContextCompat.getColor(mContext, R.color.courseCoursesOverlapForenoon),
@@ -223,9 +225,9 @@ class ScheduleViewAdapter(private val mContext: Context,
             top.text = course.course
             bottom.text = ClassRoomParse.parseClassRoom(course.classroom ?: "")
             if (isOverlap) {
-                background.background = createBackground( mCoursesOverlapColors[index])
+                background.background = createBackground(mCoursesOverlapColors[index])
             } else {
-                background.background = createBackground( mCoursesColors[index])
+                background.background = createBackground(mCoursesColors[index])
             }
             if (itemCount > 1) {
                 LogUtils.d(TAG, itemCount.toString())
@@ -240,7 +242,10 @@ class ScheduleViewAdapter(private val mContext: Context,
                 top.text = course.course
                 bottom.text = course.classroom
             }
-            background.background = createBackground( mAffairsColors[index])
+//            background.background = createBackground( mAffairsColors[index])
+            top.textColor = ContextCompat.getColor(mContext, R.color.levelTwoFontColor)
+            bottom.textColor = mCoursesTextColors[index]
+            background.background = createMemoBackground()
 
         }
     }
@@ -250,7 +255,7 @@ class ScheduleViewAdapter(private val mContext: Context,
      * @param rgb 背景颜色
      * 里面的圆角的参数是写在资源文件里的
      */
-    private fun  createBackground(rgb:Int): Drawable {
+    private fun createBackground(rgb: Int): Drawable {
         val drawable = GradientDrawable()
         val courseCorner = mContext.resources.getDimension(R.dimen.course_course_item_radius)
         drawable.cornerRadii = floatArrayOf(courseCorner, courseCorner, courseCorner, courseCorner, courseCorner, courseCorner, courseCorner, courseCorner)
@@ -261,21 +266,34 @@ class ScheduleViewAdapter(private val mContext: Context,
     /**
      * 用来绘制备忘的条纹背景
      */
-//    private fun createMemoBackground(): Drawable {
-//        val drawable = GradientDrawable()
-//        val canvas = Canvas()
-//        val gray = ContextCompat.getColor(mContext, R.color.memoGrayStripes)
-//        canvas.drawColor(ContextCompat.getColor(mContext, R.color.whiteBackground))
-//        val space = mContext.dp2px(8f)
-//        for (i in 1..Int.MAX_VALUE) {
-////            val pX1 = 9; val pY1 = 8
-////            val pX2 = 9; val pY2 = 8
-////            val pX3 = 9; val pY3 = 8
-////            val pX4 = 9; val pY4 = 8
-//
+    private fun createMemoBackground(): Drawable {
+        val drawable = GradientDrawable()
+        val canvas = Canvas()
+        val gray = ContextCompat.getColor(mContext, R.color.memoGrayStripes)
+        canvas.drawColor(ContextCompat.getColor(mContext, R.color.levelFourFontColor))
+        val space = mContext.dp2px(8f)
+        val sideLength = if (canvas.width > canvas.height)canvas.width else canvas.height
+        val count = (sideLength / space) * sqrt(2f)
+
+
+//        while (true) {
+//            val pX1 = space * i;
+//            val pY1 = 0
+//            val pX2 = 9; val pY2 = 8
+//            val pX3 = 9; val pY3 = 8
+//            val pX4 = 9; val pY4 = 8
+
 //        }
-//        val path = Path()
-//    }
+
+        canvas.drawRect(Rect(0, 0, canvas.width, canvas.height),Paint().apply {
+            color = 0xff000000.toInt()
+        })
+
+        drawable.draw(canvas)
+
+
+        return drawable
+    }
 
     override fun getItemViewInfo(row: Int, column: Int): ScheduleView.ScheduleItem? {
         val schedules = mSchedulesArray[row][column]
@@ -318,14 +336,10 @@ class ScheduleViewAdapter(private val mContext: Context,
          * @param front 现在排在前面的Course
          */
         override fun compare(behind: Course, front: Course): Int {
-            if ((front.period >= behind.period && front.customType < behind.customType)||(front.period > behind.period && front.customType <= behind.customType)) {
+            if ((front.period >= behind.period && front.customType < behind.customType) || (front.period > behind.period && front.customType <= behind.customType)) {
                 return 1
             }
             return -1
         }
     }
-
-    private fun Context.dp2px(dpValue: Float) =
-            (dpValue * resources.displayMetrics.density + 0.5f)
-
 }

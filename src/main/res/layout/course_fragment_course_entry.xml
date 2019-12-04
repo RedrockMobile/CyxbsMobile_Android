@@ -5,13 +5,15 @@
     android:id="@+id/fl"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/course_shape_background"
+    android:background="@drawable/course_layer_list_container_backgroud"
     android:orientation="vertical">
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/course_current_course_container"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:paddingHorizontal="30dp">
+        android:paddingStart="30dp"
+        android:paddingEnd="30dp">
 
         <View
             android:id="@+id/course_linearlayout"

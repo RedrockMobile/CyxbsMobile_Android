@@ -1,14 +1,12 @@
 package com.mredrock.cyxbs.course.ui
 
 import android.graphics.Color
-import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -56,7 +54,6 @@ class CourseFragment : BaseFragment(){
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         initFragment()
     }
 
@@ -70,17 +67,16 @@ class CourseFragment : BaseFragment(){
                     DateViewModel.DateViewModelFactory(mWeek)).get(DateViewModel::class.java)
             mDateViewModel.nowWeek = mWeek
 
-            //夜间模式统一颜色后这里在代码里面设置透明度
-
-            val color = ContextCompat.getColor(it,R.color.levelOneFontColor)
+            val color = ContextCompat.getColor(it, R.color.levelOneFontColor)
             red_rock_tv_course_day_of_month.textColor = Color.argb(153, Color.red(color), Color.green(color), Color.blue(color))
         }
+
 
         mBinding.coursesViewModel = mCoursesViewModel
         mBinding.dateViewModel = mDateViewModel
 
         mCoursesViewModel.toastEvent.observe(this, Observer {
-            Toast.makeText(context,it,Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
         })
 
         // 当当前周数进行了改变后有可能SchoolCalendar进行了更新，这时候就对DateViewModel中的日期进行更新
@@ -90,8 +86,9 @@ class CourseFragment : BaseFragment(){
             }
         })
 
+
         //防止课表还没滑倒顶部就能够滑动bottomSheet
-        course_sv.setScrollViewListener(object : CourseScrollView.ScrollViewListener{
+        course_sv.setScrollViewListener(object : CourseScrollView.ScrollViewListener {
             override fun onScrollChanged(scrollView: CourseScrollView, x: Int, y: Int, oldx: Int, oldy: Int) {
                 if (y == 0) {
                     EventBus.getDefault().post(CourseSlipsTopEvent(true))
@@ -106,6 +103,7 @@ class CourseFragment : BaseFragment(){
             week_back_ground_view.position = position
             red_rock_tv_course_day_of_week.position = position
             red_rock_tv_course_day_of_month.position = position
+            course_tiv.position = position
         }
     }
 
@@ -120,6 +118,11 @@ class CourseFragment : BaseFragment(){
                 EventBus.getDefault().post(CourseSlipsTopEvent(false))
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        course_tiv.invalidate()
     }
 
     /**

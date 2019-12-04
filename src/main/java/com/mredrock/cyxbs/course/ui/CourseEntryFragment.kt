@@ -13,6 +13,7 @@ import com.alibaba.android.arouter.facade.annotation.Route
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.config.COURSE_ENTRY
 import com.mredrock.cyxbs.common.event.LoginStateChangeEvent
+import com.mredrock.cyxbs.common.event.NotifyBottomSheetToExpandEvent
 import com.mredrock.cyxbs.common.ui.BaseFragment
 import com.mredrock.cyxbs.course.R
 import com.mredrock.cyxbs.course.event.TabIsFoldEvent
@@ -69,6 +70,9 @@ class CourseEntryFragment : BaseFragment() {
             replaceFragment(NoneLoginFragment())
         }
         setToolbar()
+        course_current_course_container.setOnClickListener {
+            EventBus.getDefault().post(NotifyBottomSheetToExpandEvent(true))
+        }
     }
 
     /**

@@ -1,7 +1,6 @@
 package com.mredrock.cyxbs.course.viewmodels
 
 import android.content.Context
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.gson.Gson
@@ -116,8 +115,6 @@ class CoursesViewModel : ViewModel() {
             return
         }
         mIsGettingData = true
-        // 显示刷新标志
-        EventBus.getDefault().post(RefreshEvent(true))
 
         resetGetStatus()
 
@@ -262,6 +259,7 @@ class CoursesViewModel : ViewModel() {
                         }.start()
                         if (!coursesFromInternet.data?.isEmpty()!! && isGetOthers.value == false) {
                             BaseApp.context.defaultSharedPreferences.editor {
+                                //小部件缓存课表
                                 putString(WIDGET_COURSE, Gson().toJson(coursesFromInternet))
                                 putBoolean(SP_WIDGET_NEED_FRESH, true)
                             }
@@ -394,5 +392,6 @@ class CoursesViewModel : ViewModel() {
 
     fun clearCache() {
         mCoursesDatabase?.courseDao()?.deleteAllCourses()
+        mCoursesDatabase?.affairDao()?.deleteAllAffairs()
     }
 }

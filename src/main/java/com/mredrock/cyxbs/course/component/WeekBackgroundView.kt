@@ -1,7 +1,10 @@
 package com.mredrock.cyxbs.course.component
 
 import android.content.Context
-import android.graphics.*
+import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.Paint
+import android.graphics.RectF
 import android.util.AttributeSet
 import android.view.View
 import com.mredrock.cyxbs.course.R
@@ -64,10 +67,10 @@ class WeekBackgroundView : View {
         mBasicElementWidth = (mScheduleViewWidth - mElementGap * 8) / 7
     }
 
-    private val backgroundPaint = Paint()
+    private val backgroundPaint = Paint().apply { isAntiAlias = true }
     private val backgroundRectF = RectF()
 
-    private val foregroundPaint = Paint()
+    private val foregroundPaint = Paint().apply { isAntiAlias = true }
     private val foregroundRectF = RectF()
 
 

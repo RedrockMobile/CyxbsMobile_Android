@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="course_course_month_height">49dp</dimen>
-    <dimen name="course_course_month_width">30dp</dimen>
+    <dimen name="course_course_month_width">33dp</dimen>
 
     <!--    课表item圆角-->
     <dimen name="course_course_item_radius">8dp</dimen>
