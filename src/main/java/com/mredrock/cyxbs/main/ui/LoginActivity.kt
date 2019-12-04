@@ -32,7 +32,7 @@ class LoginActivity : BaseViewModelActivity<LoginViewModel>() {
     }
 
     private fun initView() {
-        toolbar.init(getString(R.string.main_activity_login_title))
+//        toolbar.init(getString(R.string.main_activity_login_title))
         et_password.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_SEND) {
                 viewModel.login(et_account.text?.toString(), et_password.text?.toString())

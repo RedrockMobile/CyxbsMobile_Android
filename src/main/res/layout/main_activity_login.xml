@@ -1,142 +1,134 @@
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+ <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/main_activity_login_background_color"
+    android:background="@color/whiteBackground"
     tools:context=".ui.LoginActivity">
 
-    <View
-        android:id="@+id/top_background"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:background="@drawable/common_toolbar_background"
-        app:layout_constraintBottom_toTopOf="@+id/guideline"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
-    <com.mredrock.cyxbs.common.component.JToolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/common_toolbar_background"
-        android:fitsSystemWindows="true"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:navigationIcon="@drawable/common_ic_back"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        app:title="@string/main_activity_login_title" />
-
-    <ImageView
-        android:layout_width="107dp"
-        android:layout_height="107dp"
-        android:contentDescription=""
-        android:src="@drawable/common_app_logo"
-        app:layout_constraintBottom_toTopOf="@+id/input_field"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar"
-        app:layout_constraintVertical_bias="0.5" />
-
-    <com.mredrock.cyxbs.common.component.JCardViewPlus
-        android:id="@+id/input_field"
+    <TextView
+        android:id="@+id/main_textview2"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
-        app:shadowRadius="2dp"
-        app:cardCornerRadius="3dp"
+        android:gravity="start"
+        android:text="你好！"
+        android:textColor="@color/levelTwoFontColor"
+        android:textSize="34sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.125" />
+
+    <TextView
+        android:id="@+id/main_textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="欢迎来到掌上重邮"
+        android:textColor="@color/levelTwoFontColor"
+        android:textSize="34sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/main_textview2"
+        app:layout_constraintTop_toBottomOf="@+id/main_textview2"
+        app:layout_constraintVertical_bias="0.013" />
+
+
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/et_account"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="46dp"
+        android:layout_marginEnd="16dp"
+        android:background="@null"
+        android:drawableStart="@drawable/main_ic_login_account"
+        android:drawablePadding="16dp"
+        android:hint="@string/main_activity_login_account_hint"
+        android:inputType="number"
+        android:maxLength="10"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:textColor="@color/main_activity_login_et_edited_color"
+        android:textColorHint="@color/main_activity_login_et_hint_color"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/guideline2">
+        app:layout_constraintTop_toBottomOf="@+id/main_textview"
+        app:layout_constraintVertical_bias="0.0" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:gravity="center_horizontal"
-            android:orientation="vertical">
-
-            <androidx.appcompat.widget.AppCompatEditText
-                android:id="@+id/et_account"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="9dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="9dp"
-                android:background="@null"
-                android:drawableStart="@drawable/main_ic_login_account"
-                android:drawablePadding="16dp"
-                android:hint="@string/main_activity_login_account_hint"
-                android:inputType="number"
-                android:maxLength="10"
-                android:selectAllOnFocus="true"
-                android:singleLine="true"
-                android:textColor="@color/main_activity_login_et_edited_color"
-                android:textColorHint="@color/main_activity_login_et_hint_color"
-                android:textSize="14sp" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="9dp"
-                android:layout_marginBottom="32dp"
-                android:background="@color/main_activity_login_divider_color" />
-
-            <androidx.appcompat.widget.AppCompatEditText
-                android:id="@+id/et_password"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="9dp"
-                android:layout_marginEnd="9dp"
-                android:background="@null"
-                android:drawableStart="@drawable/main_ic_login_password"
-                android:drawablePadding="16dp"
-                android:hint="@string/main_activity_login_password_hint"
-                android:imeOptions="actionSend"
-                android:inputType="textPassword"
-                android:maxLength="6"
-                android:selectAllOnFocus="true"
-                android:singleLine="true"
-                android:textColor="@color/main_activity_login_et_edited_color"
-                android:textColorHint="@color/main_activity_login_et_hint_color"
-                android:textSize="14sp" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="9dp"
-                android:layout_marginBottom="36dp"
-                android:background="@color/main_activity_login_divider_color" />
-
-            <Button
-                android:id="@+id/btn_login"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                android:background="@drawable/common_toolbar_background"
-                android:foreground="?attr/selectableItemBackground"
-                android:text="@string/main_activity_login_btn_login"
-                android:textColor="@color/main_activity_login_btn_login_color"
-                android:textSize="16sp" />
-        </LinearLayout>
-    </com.mredrock.cyxbs.common.component.JCardViewPlus>
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline"
-        android:layout_width="wrap_content"
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/et_password"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.41" />
+        android:layout_marginTop="40dp"
+        android:background="@null"
+        android:drawableStart="@drawable/main_ic_login_password"
+        android:drawablePadding="16dp"
+        android:hint="@string/main_activity_login_password_hint"
+        android:imeOptions="actionSend"
+        android:inputType="textPassword"
+        android:maxLength="6"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:textColor="@color/main_activity_login_et_edited_color"
+        android:textColorHint="@color/main_activity_login_et_hint_color"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/et_account"
+        app:layout_constraintStart_toStartOf="@+id/et_account"
+        app:layout_constraintTop_toBottomOf="@+id/et_account"
+        app:layout_constraintVertical_bias="0.0" />
 
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline2"
+
+    <Button
+        android:id="@+id/btn_login"
+        android:layout_width="0dp"
+        android:layout_height="52dp"
+        android:layout_marginTop="48dp"
+        android:layout_marginEnd="33dp"
+        android:layout_marginStart="33dp"
+        android:background="@drawable/common_toolbar_background"
+        android:foreground="?attr/selectableItemBackground"
+        android:text="@string/main_activity_login_btn_login"
+        android:textColor="@color/main_activity_login_btn_login_color"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/et_password"
+        app:layout_constraintVertical_bias="0.047" />
+
+
+     <RadioButton
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:theme="@style/LoginRadioButtonTheme"
+         app:layout_constraintBottom_toBottomOf="@+id/main_textview3"
+         app:layout_constraintEnd_toStartOf="@+id/main_textview3"
+         app:layout_constraintHorizontal_bias="0.929"
+         app:layout_constraintStart_toStartOf="parent"
+         app:layout_constraintTop_toTopOf="@+id/main_textview3" />
+
+     <TextView
+        android:id="@+id/main_textview3"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.346" />
+        android:layout_height="16dp"
+        android:text="@string/main_user_agreement"
+        android:textColor="@color/logInToTheGrayFontBelow"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.603"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_login"
+        app:layout_constraintVertical_bias="0.886" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

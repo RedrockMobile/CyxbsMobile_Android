@@ -24,4 +24,13 @@
         <item name="android:taskToBackExitAnimation">@null</item>
     </style>
 
+
+    <style name="LoginRadioButtonTheme" parent="AppTheme" tools:ignore="ResourceName">
+        <item name="colorAccent">@color/buttonGradientStartColor</item>
+    </style>
+
+    <style name="ProgressBarTheme" parent="AppTheme" tools:ignore="ResourceName">
+        <item name="colorAccent">@color/levelFourFontColor</item>
+    </style>
+
 </resources>

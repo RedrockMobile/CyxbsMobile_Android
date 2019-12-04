@@ -21,7 +21,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/bottom_sheet_behavior"
-        app:behavior_peekHeight="132dp"/>
+        app:behavior_peekHeight="@dimen/main_main_bottom_navigation_height_twice_as_much"/>
 
 
     <LinearLayout
@@ -31,8 +31,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
 
-        <View
-            android:background="@color/windowBackground"
+        <ProgressBar
+            android:id="@+id/main_pb_time_axis"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:theme="@style/ProgressBarTheme"
+            android:progress="50"
+            android:max="100"
             android:layout_width="match_parent"
             android:layout_height="1dp" />
 

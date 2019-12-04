@@ -4,16 +4,24 @@ import android.annotation.SuppressLint
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
-import android.util.Log
 import android.view.MenuItem
 import android.view.View
+import android.view.View.*
+import android.view.WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS
+import android.widget.FrameLayout
+import androidx.annotation.RequiresApi
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
 import com.google.android.material.bottomnavigation.LabelVisibilityMode
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.config.*
+import com.mredrock.cyxbs.common.event.CourseSlipsTopEvent
+import com.mredrock.cyxbs.common.event.NotifyBottomSheetToExpandEvent
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
+import com.mredrock.cyxbs.common.utils.extensions.dp2px
 import com.mredrock.cyxbs.common.utils.extensions.editor
 import com.mredrock.cyxbs.common.utils.extensions.sharedPreferences
 import com.mredrock.cyxbs.common.utils.update.UpdateEvent
@@ -29,15 +37,6 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.jetbrains.anko.dip
-import android.view.View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-import android.view.View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-import android.view.View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
-import androidx.annotation.RequiresApi
-import android.view.WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS
-import androidx.core.content.ContextCompat
-import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.mredrock.cyxbs.common.event.CourseSlipsTopEvent
-import com.mredrock.cyxbs.common.utils.extensions.dp2px
 
 @Route(path = MAIN_MAIN)
 class MainActivity : BaseViewModelActivity<MainViewModel>() {
@@ -49,6 +48,8 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
     override val viewModelClass = MainViewModel::class.java
 
     override val isFragmentActivity = true
+
+    lateinit var bottomSheetBehavior: BottomSheetBehavior<FrameLayout>
 
     private lateinit var navHelpers: BottomNavigationViewHelper
     private lateinit var preCheckedItem: MenuItem
@@ -114,7 +115,7 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
 
         var isFirst = true
         var height = 0
-        val bottomSheetBehavior = BottomSheetBehavior.from(course_bottom_sheet_content)
+        bottomSheetBehavior = BottomSheetBehavior.from(course_bottom_sheet_content)
         bottomSheetBehavior.setBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
             override fun onSlide(p0: View, p1: Float) {
                 ll_nav_main_container.translationY = nav_main.height * p1
@@ -137,6 +138,12 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
                 }
             }
         })
+        main_pb_time_axis.progress = (TimeUtil.getPercentage() * 100).toInt()
+    }
+
+    override fun onRestart() {
+        super.onRestart()
+
     }
 
 
@@ -193,7 +200,7 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
 
         window.decorView.postDelayed({
             loadHandler.post(loadRunnable)
-        },200)
+        }, 200)
     }
 
     private fun getFragment(path: String) = ARouter.getInstance().build(path).navigation() as Fragment
@@ -208,8 +215,21 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
         EventBus.getDefault().post(FinishEvent())
     }
 
+    /**
+     *
+     */
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun acceptCourseSlideInformation(event: CourseSlipsTopEvent) {
         viewModel.isCourseTop = event.isTop
+    }
+
+    /**
+     * 接收bottomSheet的点击事件
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun acceptNotifyBottomsheetToExpandEvent(notifyBottomSheetToExpandEvent: NotifyBottomSheetToExpandEvent){
+        if (notifyBottomSheetToExpandEvent.isToExpand) {
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+        }
     }
 }
