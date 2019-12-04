@@ -22,6 +22,9 @@ import kotlin.collections.ArrayList
  * 精力憔悴，这些方法直接揉在一起了
  */
 
+/**
+ * 获得今天得课程list信息
+ */
 fun getTodayCourse(context: Context): List<Course.DataBean>? {
     return getCourseByCalendar(context, Calendar.getInstance())
 }
