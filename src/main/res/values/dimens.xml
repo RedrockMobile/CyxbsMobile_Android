@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="main_main_bottom_navigation_height">50dp</dimen>
-<!--    下面这个值是上面的值加上60dp的值，更改时务必同时更改-->
-    <dimen name="main_main_bottom_navigation_height_twice_as_much">110dp</dimen>
+<!--    下面这个值是上面的值加上60dp（nav的高度）在加15（bottomSheet展开时距离顶部的距离）的值，更改时务必同时更改-->
+    <dimen name="main_main_bottom_navigation_height_twice_as_much">125dp</dimen>
 </resources>

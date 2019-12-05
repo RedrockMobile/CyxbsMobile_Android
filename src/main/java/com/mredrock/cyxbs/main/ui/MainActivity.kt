@@ -21,7 +21,6 @@ import com.mredrock.cyxbs.common.config.*
 import com.mredrock.cyxbs.common.event.CourseSlipsTopEvent
 import com.mredrock.cyxbs.common.event.NotifyBottomSheetToExpandEvent
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
-import com.mredrock.cyxbs.common.utils.extensions.dp2px
 import com.mredrock.cyxbs.common.utils.extensions.editor
 import com.mredrock.cyxbs.common.utils.extensions.sharedPreferences
 import com.mredrock.cyxbs.common.utils.update.UpdateEvent
@@ -114,7 +113,6 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
         viewModel.getStartPage()
 
         var isFirst = true
-        var height = 0
         bottomSheetBehavior = BottomSheetBehavior.from(course_bottom_sheet_content)
         bottomSheetBehavior.setBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
             override fun onSlide(p0: View, p1: Float) {
@@ -127,14 +125,7 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
                     bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
                 }
                 if (isFirst) {
-                    height = p0.height - dp2px(12F)
                     isFirst = false
-                }
-                if (p0.height > height) {
-                    // TODO: 2019/11/19 经过反复排查，发现如果bottomSheet不充满屏幕，点击添加事务时会直接上移，
-                    //  无论是在代码里面设置还是在xml中设置，应该是文学姐那里刷新了啥影响了bottomSheet，等待排查，这是先不调整高度
-//                    p0.layoutParams.height = height
-//                    p0.layoutParams = p0.layoutParams
                 }
             }
         })
