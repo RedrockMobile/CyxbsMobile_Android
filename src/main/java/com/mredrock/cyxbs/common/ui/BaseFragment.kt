@@ -52,6 +52,10 @@ open class BaseFragment : Fragment() {
         }
     }
 
+    /**
+     * 登陆状态发生改变回调
+     * @param event true 发生改变，false
+     */
     @Subscribe(threadMode = ThreadMode.MAIN)
     open fun onLoginStateChangeEvent(event: LoginStateChangeEvent) {
         if (!event.newState) {
