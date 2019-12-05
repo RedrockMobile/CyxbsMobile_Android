@@ -30,6 +30,7 @@
     <!--    四级字体颜色-->
     <color name="levelFourFontColor" tools:ignore="DuplicateDefinition,ResourceName">#2A4E84</color>
 
+    <color name="courseDeleteButtonTextColor" tools:ignore="ResourceName">#7CA3DF</color>
 
 
 
@@ -65,6 +66,14 @@
     <color name="buttonGradientStartColor" tools:ignore="ResourceName">#4841E2</color>
     <!--    按钮渐变终止颜色-->
     <color name="buttonGradientEndColor" tools:ignore="ResourceName">#4841E2</color>
+
+    <!--    事务dialog删除按钮背景颜色-->
+    <color name="courseAffairDeleteButtonBackgroundColor" tools:ignore="ResourceName">#E6EFFC</color>
+
+    <!--    事务dialog，修改按钮渐变颜色，这个居然和通用渐变不是一个颜色，不科学-->
+    <color name="courseAffairModifyButtonGradientStartColor" tools:ignore="ResourceName">#2921D1</color>
+    <color name="courseAffairModifyButtonGradientEndColor" tools:ignore="ResourceName">#5D5DF7</color>
+
 
     <!--    打字框背景颜色-->
     <color name="writeAbleAreaBackgroundShallow" tools:ignore="ResourceName">#EFF4FD</color>

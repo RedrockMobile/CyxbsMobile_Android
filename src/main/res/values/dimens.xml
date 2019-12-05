@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="common_dialog_fillet">16dp</dimen>
+    <dimen name="common_content_height_from_top">20dp</dimen>
+    <!--    这个值必须是common_dialog_fillet的一半加上common_content_height_from_top-->
+    <dimen name="common_shadow_height">28dp</dimen>
+</resources>
