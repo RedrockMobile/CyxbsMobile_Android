@@ -34,7 +34,7 @@ class OthersCourseActivity : BaseActivity() {
         setContentView(R.layout.course_activity_others_course)
         common_toolbar.init("同学课表")
         ARouter.getInstance().inject(this)
-        replaceFragment(CourseContainerFragment.getOthersCourseContainerFragment(mOthersStuNum))
+        replaceFragment(CourseContainerEntryFragment.getOthersCourseContainerFragment(mOthersStuNum))
 
     }
 
@@ -46,7 +46,7 @@ class OthersCourseActivity : BaseActivity() {
     }
 
     /**
-     * 在[CourseContainerFragment]中的ViewPager的Page发生了变化后进行接收对应的事件来对[mToolbar]的标题进行
+     * 在[CourseContainerEntryFragment]中的ViewPager的Page发生了变化后进行接收对应的事件来对[mToolbar]的标题进行
      * 修改
      *
      * @param weekNumEvent 包含当前周字符串的事件。

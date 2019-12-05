@@ -36,4 +36,6 @@
     <!--StudentListActivity-->
     <dimen name="course_stu_list_activity_tv_size">10sp</dimen>
     <dimen name="course_dialog_padding_top">20dp</dimen>
+    <dimen name="course_shadow_height">47dp</dimen>
+    <dimen name="course_top_distance">15dp</dimen>
 </resources>

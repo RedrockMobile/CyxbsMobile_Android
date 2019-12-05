@@ -143,10 +143,12 @@ class ScheduleDetailView : FrameLayout {
                 }
                 container.addView(itemView)
             }
+            //提前测量itemView高度，否则ViewPager高度不定会抽风
             itemView.measure(MeasureSpec.makeMeasureSpec(0,
                     MeasureSpec.UNSPECIFIED), MeasureSpec.makeMeasureSpec(0,
                     MeasureSpec.UNSPECIFIED))
             parent.layoutParams.apply {
+                //将高度最大的item的高度设置为ViewPager父布局的高度
                 if (itemView.measuredHeight > maxHeight) {
                     this.height = itemView.measuredHeight
                     maxHeight = itemView.measuredHeight

@@ -1,13 +1,20 @@
 package com.mredrock.cyxbs.course.ui
 
-import android.content.Intent
 import android.os.Bundle
-import android.view.*
+import android.view.LayoutInflater
+import android.view.Menu
+import android.view.View
+import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import com.alibaba.android.arouter.facade.annotation.Route
+import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.bean.WidgetCourse
+import com.mredrock.cyxbs.common.config.COURSE_ENTRY
+import com.mredrock.cyxbs.common.event.LoginStateChangeEvent
+import com.mredrock.cyxbs.common.event.NotifyBottomSheetToExpandEvent
 import com.mredrock.cyxbs.common.event.ShowModeChangeEvent
 import com.mredrock.cyxbs.common.event.WidgetCourseEvent
 import com.mredrock.cyxbs.common.ui.BaseFragment
@@ -20,6 +27,7 @@ import com.mredrock.cyxbs.course.utils.AffairToCalendar
 import com.mredrock.cyxbs.course.utils.changeLibBeanToCourse
 import com.mredrock.cyxbs.course.viewmodels.CoursesViewModel
 import kotlinx.android.synthetic.main.course_fragment_course_container.*
+import kotlinx.android.synthetic.main.course_title_present_course.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -27,14 +35,14 @@ import org.greenrobot.eventbus.ThreadMode
 /**
  * Created by anriku on 2018/8/16.
  */
-
-class CourseContainerFragment : BaseFragment() {
+@Route(path = COURSE_ENTRY)
+class CourseContainerEntryFragment : BaseFragment() {
 
     companion object {
         const val OTHERS_STU_NUM = "others_stu_num"
 
-        fun getOthersCourseContainerFragment(stuNum: String): CourseContainerFragment =
-                CourseContainerFragment().apply {
+        fun getOthersCourseContainerFragment(stuNum: String): CourseContainerEntryFragment =
+                CourseContainerEntryFragment().apply {
                     arguments = Bundle().apply { putString(OTHERS_STU_NUM, stuNum) }
                 }
     }
@@ -57,11 +65,31 @@ class CourseContainerFragment : BaseFragment() {
         mBinding = DataBindingUtil.inflate(inflater, R.layout.course_fragment_course_container, container, false)
         return mBinding.root
     }
+    /**
+     * 在用于的登录状态发生改变后进行调用。
+     *
+     * @param event 包含当前用户登录状态的事件。
+     */
+    override fun onLoginStateChangeEvent(event: LoginStateChangeEvent) {
+        super.onLoginStateChangeEvent(event)
+        if (event.newState) {
+            // replaceFragment(CourseContainerFragment())
+            mBinding.vp.adapter?.notifyDataSetChanged()
+            mToolbarTitle = activity!!.getString(R.string.course_all_week)
+        } else {
+            mBinding.vp.adapter?.notifyDataSetChanged()
+            // replaceFragment(NoneLoginFragment())
+            mToolbarTitle = activity!!.getString(R.string.common_course)
+            Thread {
+                ViewModelProviders.of(activity!!).get(CoursesViewModel::class.java).clearCache()
+            }.start()
+        }
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         initFragment()
+        initCourseEntryFragment()
     }
 
 
@@ -96,22 +124,23 @@ class CourseContainerFragment : BaseFragment() {
         // 重复获取数据。
         mCoursesViewModel = ViewModelProviders.of(activity!!).get(CoursesViewModel::class.java)
 
+        var lastWeek:String = "本周"
         mCoursesViewModel?.let {model->
             model.getSchedulesDataFromDataBase(activity!!, mOthersStuNum)
             model.nowWeek.observe(this, Observer { nowWeek ->
                 if (nowWeek != null && nowWeek != 0) {
                     // 过时的本周的位置以及将其替换为原始周数显示
-                    val oldNowWeek = mWeeks.indexOf(resources.getString(R.string.course_now_week))
+                    val oldNowWeek = mWeeks.indexOf(lastWeek)
                     if (oldNowWeek != -1) {
                         mWeeks[oldNowWeek] = mRawWeeks[oldNowWeek]
                     }
                     // 设置现在的本周显示
-                    mWeeks[nowWeek] = resources.getString(R.string.course_now_week)
+                    lastWeek = "${mWeeks[nowWeek]}(${resources.getString(R.string.course_now_week)})"
+                    mWeeks[nowWeek] = lastWeek
                     mScheduleAdapter.notifyDataSetChanged()
                 }
                 // 跳转到当前周
                 mBinding.vp.currentItem = nowWeek ?: 0
-
             })
         }
     }
@@ -126,15 +155,6 @@ class CourseContainerFragment : BaseFragment() {
         super.onPrepareOptionsMenu(menu)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when (item?.itemId) {
-            R.id.add_affair -> {
-                startActivity(Intent(activity, EditAffairActivity::class.java))
-            }
-        }
-        return super.onOptionsItemSelected(item)
-    }
-
     /**
      * 这个方法用于小部件点击打开课表详情页面
      */
@@ -142,20 +162,6 @@ class CourseContainerFragment : BaseFragment() {
     fun showDialogFromWidget(event: WidgetCourseEvent<WidgetCourse.DataBean>) {
         val mCourse = changeLibBeanToCourse(event.mutableList[0])
         mDialogHelper.showDialog(mutableListOf(mCourse))
-    }
-
-    /**
-     * 这个方法用于进行TabLayout的显示和折叠
-     *
-     * @param tabIsFoldEvent 表示TabLayout是否折叠
-     */
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun isWeekTabsFold(tabIsFoldEvent: TabIsFoldEvent) {
-        if (tabIsFoldEvent.isFold) {
-            tab_layout.visibility = View.GONE
-        } else {
-            tab_layout.visibility = View.VISIBLE
-        }
     }
 
 
@@ -206,5 +212,64 @@ class CourseContainerFragment : BaseFragment() {
                 }
             }
         }
+    }
+
+    // 表示是否TabLayout折叠
+    private var mIsFold = true
+
+    // 用于记录当前Toolbar要显示的字符串
+    private lateinit var mToolbarTitle: String
+
+    // 用于检测用户登陆状态是否改变，用于刷新
+    private var curIndex = 0
+
+
+
+    private fun initCourseEntryFragment() {
+        activity ?: return
+        // 如果用户登录了就显示CourseContainerFragment；如果用户没有登录就行显示NoneLoginFragment进行登录
+        mToolbarTitle = activity!!.getString(R.string.course_all_week)
+        setToolbar()
+        course_current_course_container.setOnClickListener {
+            EventBus.getDefault().post(NotifyBottomSheetToExpandEvent(true))
+        }
+    }
+
+
+    /**
+     * 用于对Toolbar进行一些设置。如果用户登录了，就增加折叠图标，并添加相应的点击事件。
+     * 如果用户没登录，就取消折叠图标以及取消点击事件。
+     */
+    private fun setToolbar() {
+        // 设置当前Toolbar的内容
+        if (curIndex == 0 || userVisibleHint) course_tv_which_week.text = mToolbarTitle
+
+        if (BaseApp.isLogin && curIndex == 0) {
+            course_tv_which_week.setOnClickListener {
+                mIsFold = !mIsFold
+                if (mIsFold) {
+                    tab_layout.visibility = View.GONE
+                } else {
+                    tab_layout.visibility = View.VISIBLE
+                }
+            }
+        } else {
+            course_tv_which_week.setOnClickListener(null)
+        }
+    }
+
+
+    /**
+     * 在[CourseContainerEntryFragment]中的ViewPager的Page发生了变化后进行接收对应的事件来对[mToolbar]的标题进行
+     * 修改
+     * @param weekNumEvent 包含当前周字符串的事件。
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun getWeekNumFromFragment(weekNumEvent: WeekNumEvent) {
+        if (weekNumEvent.isOthers) {
+            return
+        }
+        mToolbarTitle = weekNumEvent.weekString
+        setToolbar()
     }
 }

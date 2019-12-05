@@ -118,6 +118,7 @@ class CoursesViewModel : ViewModel() {
 
         resetGetStatus()
 
+        BaseApp.user?:return
         // 如果stuNum为null，就说明是用户在进行课表查询。此时BaseApp.user!!.stuNum!!一定不为空
         mStuNum = if (stuNum == null) {
             isGetOthers.value = false

@@ -46,6 +46,11 @@ class ScheduleView : FrameLayout {
 
     var adapterChangeListener : ((Adapter)-> Unit)? = null
 
+    /**
+     * 接收一个继承了本类内部抽象Adapter的类对象，
+     * 以此把获取数据和itemView的逻辑和itemView数据获取（仿造ViewPager或RecyclerView）
+     * todo 但是这里封装不够彻底，itemView视图的初始化通过[addCourseView]方法，依然放在该View内部，限制了课表View的扩展性，待修改
+     */
     var adapter: Adapter? = null
         set(value) {
             field = value
@@ -103,10 +108,15 @@ class ScheduleView : FrameLayout {
     // This is the TextView to show when the courses and affairs are null
     private val mEmptyTextView: TextView by lazy(LazyThreadSafetyMode.NONE) { TextView(context) }
 
+    var linearLayout: LinearLayout? = null
+
+
     private var mScheduleViewWidth: Int = 0
     private var mScheduleViewHeight: Int = 0
     private var mBasicElementWidth: Int = 0
     private var mBasicElementHeight: Int = 0
+
+    //是否是显示课表
     private var mIsDisplayCourse: Boolean = true
 
     // The following fields are the attrs
@@ -174,8 +184,8 @@ class ScheduleView : FrameLayout {
     }
 
     private fun addNoCourseView() {
-        if (mIsEmpty && mNoCourseDrawableResId != 0) {
-            val linearLayout = LinearLayout(context).apply {
+        if (linearLayout == null&&mIsEmpty && mNoCourseDrawableResId != 0) {
+            linearLayout = LinearLayout(context).apply {
                 layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
                 orientation = LinearLayout.VERTICAL
                 gravity = Gravity.CENTER
@@ -193,7 +203,7 @@ class ScheduleView : FrameLayout {
                 scaleType = ImageView.ScaleType.FIT_XY
                 layoutParams = imageParams
             }
-            linearLayout.addView(emptyImageView)
+            linearLayout?.addView(emptyImageView)
 
             // set mEmptyTextView
             mEmptyText?.let {
@@ -207,9 +217,11 @@ class ScheduleView : FrameLayout {
                     gravity = Gravity.CENTER
                     layoutParams = textParams
                 }
-                linearLayout.addView(emptyTextView)
+                linearLayout?.addView(emptyTextView)
                 addView(linearLayout)
             }
+        }else if (linearLayout != null) {
+            addView(linearLayout)
         }
     }
 
@@ -242,7 +254,6 @@ class ScheduleView : FrameLayout {
                     itemView.layoutParams = params
                     //add the itemView to the ScheduleView
                     addView(itemView)
-
                     mIsEmpty = false
                 }
             }

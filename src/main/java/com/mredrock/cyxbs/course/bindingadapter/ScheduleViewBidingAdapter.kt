@@ -8,6 +8,7 @@ import com.mredrock.cyxbs.course.network.Course
 
 /**
  * Created by anriku on 2018/9/11.
+ * 描述：这个类是用于设置[ScheduleView]的adapter，adapter用于设置[ScheduleView]的内部课程数据
  */
 
 object ScheduleViewBidingAdapter {

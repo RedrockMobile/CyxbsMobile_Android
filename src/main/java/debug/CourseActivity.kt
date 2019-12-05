@@ -11,7 +11,7 @@ import com.mredrock.cyxbs.common.ui.BaseActivity
 import com.mredrock.cyxbs.course.R
 import com.mredrock.cyxbs.course.event.TabIsFoldEvent
 import com.mredrock.cyxbs.course.event.WeekNumEvent
-import com.mredrock.cyxbs.course.ui.CourseContainerFragment
+import com.mredrock.cyxbs.course.ui.CourseContainerEntryFragment
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -52,10 +52,10 @@ class CourseActivity : BaseActivity() {
     private fun analogLogin() {
         if (!BaseApp.isLogin) {
             mLoginDialog.analogLogin{
-                replaceFragment(CourseContainerFragment())
+                replaceFragment(CourseContainerEntryFragment())
             }
         } else {
-            replaceFragment(CourseContainerFragment())
+            replaceFragment(CourseContainerEntryFragment())
         }
     }
 
@@ -87,7 +87,7 @@ class CourseActivity : BaseActivity() {
         when (item.itemId) {
             android.R.id.home -> {
                 mLoginDialog.analogLogin{
-                    replaceFragment(CourseContainerFragment())
+                    replaceFragment(CourseContainerEntryFragment())
                 }
             }
         }

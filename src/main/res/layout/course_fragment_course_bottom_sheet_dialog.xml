@@ -5,9 +5,7 @@
 
     <fragment
         android:id="@+id/fragment_course_bottom_sheet"
-        android:name="com.mredrock.cyxbs.course.ui.CourseEntryFragment"
+        android:name="com.mredrock.cyxbs.course.ui.CourseContainerEntryFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
-
-
 </LinearLayout>
