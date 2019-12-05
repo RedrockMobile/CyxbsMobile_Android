@@ -1,94 +1,114 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:paddingTop="@dimen/course_dialog_padding_top"
+    android:paddingBottom="130dp"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+    <TextView
+        android:id="@+id/tv_affair_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:textColor="@color/levelTwoFontColor"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        android:maxLines="1"
+        app:layout_constraintBottom_toBottomOf="@+id/acb_delete"
+        app:layout_constraintEnd_toStartOf="@+id/acb_delete"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/acb_delete"
+        app:layout_constraintVertical_bias="1.0"
+        tools:text="去图书馆" />
+
+    <TextView
+        android:id="@+id/tv_affair_detail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:textColor="@color/levelTwoFontColor"
+        android:textSize="15sp"
+        android:gravity="top|start"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/tv_course_cycle"
+        app:layout_constraintTop_toBottomOf="@+id/tv_course_cycle"
+        app:layout_constraintVertical_bias="0.0"
+        tools:text="努力学习" />
+
+    <TextView
+        android:id="@+id/acb_modify"
+        android:paddingTop="6dp"
+        android:paddingStart="13dp"
+        android:paddingBottom="6dp"
+        android:paddingEnd="13dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/course_shape_affair_modify_button_backgroud"
+        android:gravity="center"
+        android:text="@string/course_affair_modify"
+        android:textColor="@android:color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0" />
 
 
-        <ImageView
-            android:id="@+id/iv_affair_name"
-            android:layout_width="wrap_content"
-            android:layout_height="@dimen/course_schedule_detail_icon_height"
-            android:layout_marginStart="32dp"
-            android:layout_marginTop="32dp"
-            android:src="@mipmap/course_ic_course_name"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.0"
-            tools:ignore="ContentDescription" />
+    <TextView
+        android:id="@+id/acb_delete"
+        android:paddingTop="6dp"
+        android:paddingStart="13dp"
+        android:paddingBottom="6dp"
+        android:paddingEnd="13dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="13dp"
+        android:textSize="15sp"
+        android:background="@drawable/course_shape_affair_delete_button"
+        android:gravity="center"
+        android:text="@string/course_affair_delete"
+        android:textColor="@color/courseDeleteButtonTextColor"
+        app:layout_constraintBottom_toBottomOf="@+id/acb_modify"
+        app:layout_constraintEnd_toStartOf="@+id/acb_modify"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/acb_modify"
+        app:layout_constraintVertical_bias="0.0" />
 
-        <ImageView
-            android:id="@+id/iv_affair_detail"
-            android:layout_width="wrap_content"
-            android:layout_height="@dimen/course_schedule_detail_icon_height"
-            android:layout_marginTop="32dp"
-            android:src="@mipmap/course_ic_course_tech"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="@+id/iv_affair_name"
-            app:layout_constraintStart_toStartOf="@+id/iv_affair_name"
-            app:layout_constraintTop_toBottomOf="@+id/iv_affair_name"
-            app:layout_constraintVertical_bias="0.0"
-            tools:ignore="ContentDescription" />
+    <TextView
+        android:id="@+id/tv_course_cycle"
+        android:layout_width="wrap_content"
+        android:textColor="@color/levelTwoFontColor"
+        android:textSize="13sp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        tools:text="第十周 周五"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/tv_affair_name"
+        app:layout_constraintTop_toBottomOf="@+id/tv_affair_name"
+        app:layout_constraintVertical_bias="0.0" />
 
-        <TextView
-            android:id="@+id/tv_affair_name"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
-            android:layout_marginEnd="16dp"
-            app:layout_constraintBottom_toBottomOf="@+id/iv_affair_name"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toEndOf="@+id/iv_affair_name"
-            app:layout_constraintTop_toTopOf="@+id/iv_affair_name" />
+    <TextView
+        android:id="@+id/tv_course_exact_time"
+        android:layout_width="wrap_content"
+        android:textColor="@color/levelTwoFontColor"
+        android:textSize="13sp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        tools:text="第一二节课"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_course_cycle"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/tv_course_cycle"
+        app:layout_constraintTop_toTopOf="@+id/tv_course_cycle" />
 
-        <TextView
-            android:id="@+id/tv_affair_detail"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:gravity="top|start"
-            app:layout_constraintBottom_toBottomOf="@+id/iv_affair_detail"
-            app:layout_constraintEnd_toEndOf="@+id/tv_affair_name"
-            app:layout_constraintStart_toStartOf="@+id/tv_affair_name"
-            app:layout_constraintTop_toTopOf="@+id/iv_affair_detail"
-            app:layout_constraintVertical_bias="0.0" />
-
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/acb_modify"
-            android:layout_width="@dimen/course_affair_detail_acb_width"
-            android:layout_height="@dimen/course_affair_detail_acb_height"
-            android:layout_marginTop="24dp"
-            android:layout_marginBottom="24dp"
-            android:background="@color/colorAccent"
-            android:gravity="center"
-            android:text="@string/course_affair_modify"
-            android:textColor="@android:color/white"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.229"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_affair_detail" />
-
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/acb_delete"
-            android:layout_width="@dimen/course_affair_detail_acb_width"
-            android:layout_height="@dimen/course_affair_detail_acb_height"
-            android:background="@color/colorAccent"
-            android:gravity="center"
-            android:text="@string/course_affair_delete"
-            android:textColor="@android:color/white"
-            app:layout_constraintBottom_toBottomOf="@+id/acb_modify"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/acb_modify"
-            app:layout_constraintTop_toTopOf="@+id/acb_modify" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-</ScrollView>
+</androidx.constraintlayout.widget.ConstraintLayout>

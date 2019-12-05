@@ -7,36 +7,23 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import androidx.annotation.LayoutRes
-import com.mredrock.cyxbs.common.utils.extensions.getScreenHeight
-import com.mredrock.cyxbs.common.utils.extensions.getScreenWidth
 import com.mredrock.cyxbs.course.R
 import com.mredrock.cyxbs.course.network.Course
 
 /**
  * Created by anriku on 2018/8/21.
+ * Corrected by JON on 2019/12/4.
+ * 描述：该View使用viewPager下面添加小点实现
+ * ViewPager 默认顶满父布局
+ * ViewPager 的 item 默认顶满父布局
  */
 class ScheduleDetailView : FrameLayout {
-
-    companion object {
-        private const val TAG = "ScheduleDetailView"
-    }
 
     private lateinit var mViewPager: androidx.viewpager.widget.ViewPager
     private lateinit var mLayoutInflater: LayoutInflater
 
     private lateinit var mViewpagerAdapter: androidx.viewpager.widget.PagerAdapter
     private lateinit var mDotsView: DotsView
-    // ScheduleDetailView's size
-    private var mScheduleDetailViewWidth = 0
-    private var mScheduleDetailViewHeight = 0
-    // ViewPager's size
-    private var mViewPagerWidth = 0
-    private var mViewPagerHeight = 0
-    private val mCourseWidthRatio = 0.8f
-    private val mCourseHeightRatio = 0.6f
-    private val mAffairWidthRatio = 0.8f
-    private val mAffairHeightRatio = 0.3f
-
 
     var scheduleDetailViewAdapter: Adapter? = null
         set(value) {
@@ -45,27 +32,13 @@ class ScheduleDetailView : FrameLayout {
 
             scheduleDetailViewAdapter?.let { nonNullScheduleDetailViewAdapter ->
                 val schedules = nonNullScheduleDetailViewAdapter.getSchedules()
-                // Display the Course and Affair in different size.
-                if (schedules[0].customType == Course.COURSE) {
-                    mScheduleDetailViewWidth = (context.getScreenWidth() * mCourseWidthRatio).toInt()
-                    mScheduleDetailViewHeight = (context.getScreenHeight() * mCourseHeightRatio).toInt()
-                } else {
-                    mScheduleDetailViewWidth = (context.getScreenWidth() * mAffairWidthRatio).toInt()
-                    mScheduleDetailViewHeight = (context.getScreenHeight() * mAffairHeightRatio).toInt()
-                }
 
                 val schedulesSize = schedules.size
                 // If the schedules' size is 1, the dots won't be show.
                 if (schedulesSize == 1) {
                     val schedule = schedules[0]
-                    mViewPagerWidth = mScheduleDetailViewWidth
-                    mViewPagerHeight = mScheduleDetailViewHeight
-
                     setOneContent(schedule)
                 } else {
-                    mViewPagerWidth = mScheduleDetailViewWidth
-                    mViewPagerHeight = mScheduleDetailViewHeight * 9 / 10
-
                     setMultiContent(nonNullScheduleDetailViewAdapter)
                 }
             }
@@ -78,23 +51,13 @@ class ScheduleDetailView : FrameLayout {
      */
     private fun setOneContent(schedule: Course) {
         val contentView: View
-
         if (schedule.customType == Course.COURSE) {
             contentView = mLayoutInflater.inflate(R.layout.course_course_detail_item, this, false)
-            // Set the LayoutParams
-            val contentViewParams = LayoutParams(mScheduleDetailViewWidth, mScheduleDetailViewHeight)
-            contentView.layoutParams = contentViewParams
-
             addView(contentView)
         } else {
             contentView = mLayoutInflater.inflate(R.layout.course_affair_detail_item, this, false)
-            // Set the LayoutParams
-            val contentViewParams = LayoutParams(mScheduleDetailViewWidth, mScheduleDetailViewHeight)
-            contentView.layoutParams = contentViewParams
-
             addView(contentView)
         }
-
         scheduleDetailViewAdapter?.setScheduleContent(contentView, schedule)
     }
 
@@ -105,9 +68,9 @@ class ScheduleDetailView : FrameLayout {
      */
     private fun setMultiContent(scheduleDetailViewAdapter: Adapter) {
         mViewPager = androidx.viewpager.widget.ViewPager(context)
-        mViewpagerAdapter = ViewPagerAdapter(context, scheduleDetailViewAdapter)
+        mViewpagerAdapter = ViewPagerAdapter(context, scheduleDetailViewAdapter, this)
         mViewPager.adapter = mViewpagerAdapter
-        val viewPagerParams = LayoutParams(mViewPagerWidth, mViewPagerHeight)
+        val viewPagerParams = LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
         mViewPager.layoutParams = viewPagerParams
 
         // Let the dots scrolled when the ViewPager is scrolled.
@@ -120,14 +83,12 @@ class ScheduleDetailView : FrameLayout {
         addView(mViewPager)
         mDotsView = scheduleDetailViewAdapter.addDotsView(this)
 
-        val params = LayoutParams(mScheduleDetailViewWidth, mScheduleDetailViewHeight / 10)
-        params.topMargin = (mScheduleDetailViewHeight * 9) / 10
+        val params = LayoutParams(measuredWidth, measuredHeight / 10)
+        params.topMargin = (measuredHeight * 9) / 10
         params.leftMargin = 0
-
         addView(mDotsView.apply {
             layoutParams = params
         })
-
     }
 
     constructor(mContext: Context) : super(mContext) {
@@ -142,11 +103,6 @@ class ScheduleDetailView : FrameLayout {
         mLayoutInflater = LayoutInflater.from(context)
     }
 
-    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec)
-
-        setMeasuredDimension(mScheduleDetailViewWidth, mScheduleDetailViewHeight)
-    }
 
 
     /**
@@ -157,8 +113,9 @@ class ScheduleDetailView : FrameLayout {
      * @param mScheduleDetailViewAdapter [Adapter] which gets the data [ScheduleDetailView] needs.
      */
     class ViewPagerAdapter(private val mContext: Context,
-                           private val mScheduleDetailViewAdapter: Adapter) : androidx.viewpager.widget.PagerAdapter() {
+                           private val mScheduleDetailViewAdapter: Adapter, val parent: ViewGroup) : androidx.viewpager.widget.PagerAdapter() {
 
+        private var maxHeight = 0
 
         private val mLayoutInflater: LayoutInflater = LayoutInflater.from(mContext)
 
@@ -186,7 +143,15 @@ class ScheduleDetailView : FrameLayout {
                 }
                 container.addView(itemView)
             }
-
+            itemView.measure(MeasureSpec.makeMeasureSpec(0,
+                    MeasureSpec.UNSPECIFIED), MeasureSpec.makeMeasureSpec(0,
+                    MeasureSpec.UNSPECIFIED))
+            parent.layoutParams.apply {
+                if (itemView.measuredHeight > maxHeight) {
+                    this.height = itemView.measuredHeight
+                    maxHeight = itemView.measuredHeight
+                }
+            }
             return itemView
         }
 

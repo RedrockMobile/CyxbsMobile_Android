@@ -4,7 +4,7 @@ import android.app.Dialog
 import android.content.Context
 import android.view.LayoutInflater
 import androidx.annotation.LayoutRes
-import com.mredrock.cyxbs.course.R
+import com.mredrock.cyxbs.common.component.RedRockBottomSheetDialog
 
 /**
  * Created by anriku on 2019/3/10.
@@ -16,10 +16,8 @@ abstract class BaseDialogHelper(val context: Context, @LayoutRes val layoutId: I
     init {
         val layoutInflater = LayoutInflater.from(context)
         val dialogView = layoutInflater.inflate(layoutId, null)
-        dialog = Dialog(context).apply {
-            setCancelable(true)
+        dialog = RedRockBottomSheetDialog(context).apply {
             setContentView(dialogView)
-            window?.setWindowAnimations(R.style.CourseDialogFragmentAnimation)
         }
     }
 }

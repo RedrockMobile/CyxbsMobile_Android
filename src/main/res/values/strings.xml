@@ -116,5 +116,8 @@
 
     <!--post affair menu-->
     <string name="course_post_affair">上传事务</string>
+    <string name="course_course_detail_cycle">周期</string>
+    <string name="course_course_details_time">时间</string>
+    <string name="course_course_details_credit">学分数</string>
 
 </resources>

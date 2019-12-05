@@ -16,9 +16,6 @@
     <dimen name="course_tab_layout_height">39dp</dimen>
 
     <!--schedule detail widget size-->
-    <dimen name="course_schedule_detail_icon_width">14dp</dimen>
-    <dimen name="course_schedule_detail_icon_height">16dp</dimen>
-    <dimen name="course_schedule_detail_text_size">14sp</dimen>
     <dimen name="course_schedule_detail_horizontal_bias">0.2</dimen>
     <dimen name="course_schedule_detail_iv_end_margin">30dp</dimen>
     <dimen name="course_schedule_detail_iv_start_margin">50dp</dimen>
@@ -38,4 +35,5 @@
 
     <!--StudentListActivity-->
     <dimen name="course_stu_list_activity_tv_size">10sp</dimen>
+    <dimen name="course_dialog_padding_top">20dp</dimen>
 </resources>

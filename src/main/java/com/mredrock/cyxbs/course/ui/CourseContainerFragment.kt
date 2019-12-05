@@ -11,7 +11,6 @@ import com.mredrock.cyxbs.common.bean.WidgetCourse
 import com.mredrock.cyxbs.common.event.ShowModeChangeEvent
 import com.mredrock.cyxbs.common.event.WidgetCourseEvent
 import com.mredrock.cyxbs.common.ui.BaseFragment
-import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.course.R
 import com.mredrock.cyxbs.course.adapters.ScheduleVPAdapter
 import com.mredrock.cyxbs.course.databinding.CourseFragmentCourseContainerBinding

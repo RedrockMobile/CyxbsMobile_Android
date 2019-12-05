@@ -43,7 +43,7 @@ class EditAffairActivity : BaseActivity() {
 
         mBinding = DataBindingUtil.setContentView(this, R.layout.course_activity_edit_affair)
         mBinding.editAffairViewModel = mEditAffairViewModel
-        mBinding.setLifecycleOwner(this)
+        mBinding.lifecycleOwner = this
 
         initActivity()
     }
