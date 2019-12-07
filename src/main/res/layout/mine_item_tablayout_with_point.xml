@@ -9,6 +9,7 @@
     <TextView
         android:id="@+id/mine_item_tv_tab_title"
         android:textStyle="bold"
+        android:alpha="0.49"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/levelTwoFontColor"

@@ -4,6 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="130dp"
+    android:background="@color/secondaryWindowBackground"
     xmlns:tools="http://schemas.android.com/tools">
 
     <TextView
@@ -38,6 +39,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="11sp"
+        android:textColor="@color/mine_askpostedfm_tv_disappear_at"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="@+id/mine_ask_posted_tv_description"
         app:layout_constraintTop_toBottomOf="@+id/mine_ask_posted_tv_description"
@@ -79,5 +81,12 @@
         app:layout_constraintBottom_toBottomOf="@+id/mine_ask_posted_tv_disappear_at"
         app:layout_constraintEnd_toEndOf="parent"
         tools:text="未解决" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:alpha="0.3"
+        android:background="@color/severViewColor"
+        app:layout_constraintBottom_toBottomOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

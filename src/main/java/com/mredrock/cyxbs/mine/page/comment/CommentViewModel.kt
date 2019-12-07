@@ -1,4 +1,4 @@
-package com.mredrock.cyxbs.mine.page.aboutme
+package com.mredrock.cyxbs.mine.page.comment
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -12,7 +12,7 @@ import com.mredrock.cyxbs.mine.util.user
 /**
  * Created by zia on 2018/9/13.
  */
-class AboutMeViewModel : ViewModel() {
+class CommentViewModel : ViewModel() {
 
     val errorEvent = MutableLiveData<String>()
     val dataEvent = MutableLiveData<List<RelateMeItem>>()

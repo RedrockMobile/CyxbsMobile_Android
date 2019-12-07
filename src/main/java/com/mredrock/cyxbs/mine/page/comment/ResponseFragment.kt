@@ -1,4 +1,4 @@
-package com.mredrock.cyxbs.mine.page.aboutme
+package com.mredrock.cyxbs.mine.page.comment
 
 import android.os.Bundle
 import androidx.lifecycle.Observer
@@ -10,16 +10,15 @@ import com.mredrock.cyxbs.mine.util.extension.log
 import com.mredrock.cyxbs.mine.util.ui.BaseRVFragment
 import com.mredrock.cyxbs.mine.util.ui.RvFooter
 import kotlinx.android.synthetic.main.mine_fragment_base_rv.*
-import kotlinx.android.synthetic.main.mine_item_relate_me_rv.view.*
 import kotlinx.android.synthetic.main.mine_layout_me_empty_data.view.*
-import org.jetbrains.anko.support.v4.dip
+import kotlinx.android.synthetic.main.mine_list_item_comment_repsonse.view.*
 
 /**
- * Created by zia on 2018/9/13.
+ * Created by roger on 2019/12/5
  */
-class AboutMeFragment : BaseRVFragment<RelateMeItem>() {
+class ResponseFragment : BaseRVFragment<RelateMeItem>() {
 
-    private val viewModel by lazy { ViewModelProviders.of(this).get(AboutMeViewModel::class.java) }
+    private val viewModel by lazy { ViewModelProviders.of(this).get(CommentViewModel::class.java) }
     private val placeHolder by lazy {
         val view = layoutInflater.inflate(R.layout.mine_layout_me_empty_data
                 , mine_fragment_base_placeholder, false)
@@ -28,10 +27,10 @@ class AboutMeFragment : BaseRVFragment<RelateMeItem>() {
     }
 
 
-    private var type = ALL
+    private var type = REMARK
 
     override fun getItemLayout(): Int {
-        return R.layout.mine_item_relate_me_rv
+        return R.layout.mine_list_item_comment_repsonse
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -74,24 +73,9 @@ class AboutMeFragment : BaseRVFragment<RelateMeItem>() {
     }
 
     override fun bindDataHolder(holder: androidx.recyclerview.widget.RecyclerView.ViewHolder, position: Int, data: RelateMeItem) {
-        holder.itemView.mine_aboutme_item_avatar.setImageFromUrl(data.photoThumbnailSrc)
-        holder.itemView.mine_aboutme_item_nickname.text = data.nickname
-        holder.itemView.mine_aboutme_item_time.text = data.createdAt
-        holder.itemView.mine_aboutme_item_answerContent.text = data.answerContent
-        if (data.content == "") {
-            holder.itemView.mine_aboutme_item_content.setPadding(0, 0, 0, 0)
-        } else {
-            holder.itemView.mine_aboutme_item_content.setPadding(0, dip(7), 0, dip(7))
-            holder.itemView.mine_aboutme_item_content.text = data.content
-        }
-        when (data.type) {
-            REMARK.toString() -> {
-                holder.itemView.mine_aboutme_item_type.text = "评论"
-            }
-            STAR.toString() -> {
-                holder.itemView.mine_aboutme_item_type.text = "赞"
-            }
-        }
+        holder.itemView.mine_comment_circleimageview_avatar.setImageFromUrl(data.photoThumbnailSrc)
+        holder.itemView.mine_comment_tv_nickname.text = data.nickname
+        holder.itemView.mine_comment_tv_response.text = data.answerContent
     }
 
     override fun onSwipeLayoutRefresh() {
@@ -99,10 +83,6 @@ class AboutMeFragment : BaseRVFragment<RelateMeItem>() {
         clearData()
         loadMore()
         getSwipeLayout().isRefreshing = false
-    }
-
-    fun setType(type: Int) {
-        this.type = type
     }
 
     companion object {

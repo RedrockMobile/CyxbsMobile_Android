@@ -40,25 +40,19 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/mine_tl_toolbar">
-
-        <com.mredrock.cyxbs.mine.util.widget.StickPlus
-            android:id="@+id/mine_tl_indicator"
-            android:layout_width="wrap_content"
-            android:layout_height="3dp"
-            android:layout_gravity="bottom" />
-
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/mine_tl_tablayout"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            app:tabBackground="@android:color/transparent"
-            app:tabGravity="fill"
-            app:tabIndicator="@null"
-            app:tabIndicatorHeight="0dp"
+            app:tabIndicatorColor="@color/mine_tablayout_indicator_color"
+            app:tabTextAppearance="@style/mine_tablayout_text_appearance"
+            app:tabIndicator="@drawable/mine_ic_me_indicator"
+            app:tabIndicatorHeight="3dp"
+            app:tabIndicatorFullWidth="false"
             app:tabMode="fixed"
             app:tabRippleColor="@null"
-            app:tabSelectedTextColor="@color/mine_tabSelectedTextColor"
-            app:tabTextColor="@color/mine_tabTextColor" />
+            app:tabSelectedTextColor="@color/levelTwoFontColor"
+            app:tabTextColor="@color/mine_tablayout_text_unselected" />
     </FrameLayout>
 
 

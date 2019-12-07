@@ -7,9 +7,9 @@
         <activity android:name=".page.edit.EditInfoActivity" />
         <activity android:name=".page.sign.DailySignActivity" />
         <activity android:name=".page.draft.DraftActivity" />
-        <activity android:name=".page.help.HelpActivity" />
+        <activity android:name=".page.answer.AnswerActivity" />
         <activity android:name=".page.ask.AskActivity" />
-        <activity android:name=".page.aboutme.AboutMeActivity" />
+        <activity android:name=".page.comment.CommentActivity" />
         <activity android:name=".page.store.StoreActivity" />
         <activity android:name=".page.setting.AboutActivity" />
         <activity android:name=".page.daily.SignRulesActivity" />

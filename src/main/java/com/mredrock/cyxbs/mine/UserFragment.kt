@@ -25,10 +25,10 @@ import com.mredrock.cyxbs.common.event.LoginStateChangeEvent
 import com.mredrock.cyxbs.common.ui.BaseViewModelFragment
 import com.mredrock.cyxbs.common.utils.extensions.editor
 import com.mredrock.cyxbs.common.utils.extensions.loadAvatar
-import com.mredrock.cyxbs.mine.page.aboutme.AboutMeActivity
+import com.mredrock.cyxbs.mine.page.comment.CommentActivity
+import com.mredrock.cyxbs.mine.page.answer.AnswerActivity
 import com.mredrock.cyxbs.mine.page.ask.AskActivity
 import com.mredrock.cyxbs.mine.page.edit.EditInfoActivity
-import com.mredrock.cyxbs.mine.page.help.HelpActivity
 import com.mredrock.cyxbs.mine.page.setting.AboutActivity
 import com.mredrock.cyxbs.mine.page.sign.DailySignActivity
 import com.mredrock.cyxbs.mine.util.user
@@ -65,9 +65,9 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
         //功能按钮
         mine_main_btn_sign.setOnClickListener { checkLoginBeforeAction("签到") { startActivity<DailySignActivity>() } }
         mine_main_question_number.setOnClickListener { checkLoginBeforeAction("提问") { startActivity<AskActivity>() } }
-        mine_main_answer_number.setOnClickListener { checkLoginBeforeAction("回答") { startActivity<HelpActivity>() } }
+        mine_main_answer_number.setOnClickListener { checkLoginBeforeAction("回答") { startActivity<AnswerActivity>() } }
 //        mine_main_draft.setOnClickListener { checkLoginBeforeAction("草稿箱") { startActivity<DraftActivity>() } }
-        mine_main_reply_comment_number.setOnClickListener { checkLoginBeforeAction("评论回复") { startActivity<AboutMeActivity>() } }
+        mine_main_reply_comment_number.setOnClickListener { checkLoginBeforeAction("评论回复") { startActivity<CommentActivity>() } }
 //        mine_main_setting.setOnClickListener { startActivity<SettingActivity>() }
         mine_main_tv_about.setOnClickListener { startActivity<AboutActivity>() }
         mine_main_btn_exit.setOnClickListener { onExitClick() }

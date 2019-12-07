@@ -27,14 +27,14 @@ class AskPostedFm : BaseRVFragment<AskPosted>() {
         for (i in 1..20) {
             list.add(ask)
         }
-        viewModel.askPosted.postValue(list)
+        viewModel.askPostedEvent.postValue(list)
     }
 
     private fun initObserver() {
         viewModel.errorEvent.observe(this, Observer {
             getFooter().showLoadError()
         })
-        viewModel.askPosted.observe(this, Observer {
+        viewModel.askPostedEvent.observe(this, Observer {
             loadIntoRv(it)
         })
     }

@@ -13,4 +13,9 @@
         <item name="android:windowExitAnimation">@anim/mine_popup_exit</item>
     </style>
 
+    <style name="mine_tablayout_text_appearance" parent="TextAppearance.AppCompat.Widget.ActionBar.Title.Inverse">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textAllCaps">true</item>
+    </style>
+
 </resources>
