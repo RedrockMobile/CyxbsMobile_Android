@@ -145,9 +145,8 @@ class ScheduleDetailViewAdapter(private val mDialog: Dialog, private val mSchedu
             tv_course_tech.apply { text = itemViewInfo.teacher }
             tv_course_classroom.apply { text = itemViewInfo.classroom }
             tv_course_time.apply {
-                //todo 这句因为暂时不明白hashLesson这个字段的意思，暂留，方便计算当前课时分析字段意思
                 val courseTimeParse = CourseTimeParse(itemViewInfo.hashLesson * 2, itemViewInfo.period)
-                text = """${itemViewInfo.day}  ${itemViewInfo.lesson}""".trimIndent()
+                text = """${itemViewInfo.day}  ${courseTimeParse.parseStartCourseTime()}-${courseTimeParse.parseEndCourseTime()}""".trimIndent()
             }
             tv_course_type.apply { text = itemViewInfo.type }
             tv_course_week.apply { text = itemViewInfo.rawWeek }

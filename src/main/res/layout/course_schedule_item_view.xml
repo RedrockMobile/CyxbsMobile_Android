@@ -1,50 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/background"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:cardCornerRadius="@dimen/course_course_item_radius">
 
-    <View
-        android:id="@+id/background"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:ignore="ContentDescription" />
 
     <TextView
         android:id="@+id/top"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="top"
-        android:layout_marginTop="3dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
         android:ellipsize="end"
         android:gravity="center"
         android:maxLines="3"
-        android:padding="3dp"
         android:textColor="@android:color/white"
-        android:textSize="@dimen/course_column_text_size" />
+        android:textSize="@dimen/course_column_text_size"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0" />
 
     <TextView
         android:id="@+id/bottom"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:layout_marginBottom="3dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
         android:ellipsize="end"
         android:gravity="center"
         android:maxLines="3"
-        android:padding="3dp"
         android:textColor="@android:color/white"
-        android:textSize="@dimen/course_column_text_size" />
+        android:textSize="@dimen/course_column_text_size"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/top"
+        app:layout_constraintVertical_bias="1.0" />
 
-    <ImageView
+    <View
         android:id="@+id/tag"
         android:layout_width="8dp"
-        android:layout_height="8dp"
-        android:layout_gravity="right|top"
-        android:layout_marginTop="2dp"
-        android:layout_marginRight="2dp"
-        tools:ignore="ContentDescription,RtlHardcoded" />
+        android:layout_height="3dp"
+        android:layout_gravity="end|top"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="5dp"
+        android:visibility="gone"
+        android:background="@drawable/course_shape_conflict_tips"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0" />
 
-</FrameLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

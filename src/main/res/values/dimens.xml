@@ -7,6 +7,8 @@
     <dimen name="course_course_item_radius">8dp</dimen>
     <dimen name="course_schedule_view_height">600dp</dimen>
 
+    <dimen name="course_schedule_tag_radius">3dp</dimen>
+
     <!--text size-->
     <dimen name="course_column_text_size">11sp</dimen>
     <dimen name="course_top_and_left_text_size">12sp</dimen>

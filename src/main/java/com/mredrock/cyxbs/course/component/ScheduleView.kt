@@ -1,5 +1,6 @@
 package com.mredrock.cyxbs.course.component
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
@@ -15,6 +16,8 @@ import androidx.core.content.ContextCompat
 import com.mredrock.cyxbs.common.utils.extensions.getScreenHeight
 import com.mredrock.cyxbs.course.R
 import org.jetbrains.anko.*
+import kotlin.math.pow
+import kotlin.math.sqrt
 
 /**
  * [ScheduleView] is used to display the course. The use of it is very easy. you can only implement
@@ -108,7 +111,7 @@ class ScheduleView : FrameLayout {
     // This is the TextView to show when the courses and affairs are null
     private val mEmptyTextView: TextView by lazy(LazyThreadSafetyMode.NONE) { TextView(context) }
 
-    var linearLayout: LinearLayout? = null
+    private var linearLayout: LinearLayout? = null
 
 
     private var mScheduleViewWidth: Int = 0
@@ -308,6 +311,7 @@ class ScheduleView : FrameLayout {
         setMeasuredDimension(mScheduleViewWidth, mScheduleViewHeight)
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(event: MotionEvent): Boolean {
         val startPoint = mStartPoint
         val endPoint = mEndPoint
@@ -333,8 +337,8 @@ class ScheduleView : FrameLayout {
 
             // If the move distance more than CLICK_RESPONSE_DISTANCE. This MotionEvent won't service
             // as a click event.
-            if (Math.sqrt(Math.pow((endPoint.x - startPoint.x).toDouble(), 2.0) +
-                            Math.pow((endPoint.y - startPoint.y).toDouble(), 2.0)) > CLICK_RESPONSE_DISTANCE) {
+            if (sqrt((endPoint.x - startPoint.x).toDouble().pow(2.0) +
+                            (endPoint.y - startPoint.y).toDouble().pow(2.0)) > CLICK_RESPONSE_DISTANCE) {
                 return true
             }
             // Compute the click event at which range.
@@ -374,7 +378,6 @@ class ScheduleView : FrameLayout {
             // Add the mTouchView to the ScheduleView.
             addView(touchView)
         }
-
         return true
     }
 

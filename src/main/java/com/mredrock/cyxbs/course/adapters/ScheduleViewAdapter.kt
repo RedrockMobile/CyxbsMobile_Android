@@ -65,24 +65,6 @@ class ScheduleViewAdapter(private val mContext: Context,
                 ContextCompat.getColor(mContext, R.color.afternoonCourseTextColor),
                 ContextCompat.getColor(mContext, R.color.eveningCourseTextColor))
     }
-    private val mCoursesOverlapColors by lazy(LazyThreadSafetyMode.NONE) {
-        intArrayOf(ContextCompat.getColor(mContext, R.color.courseCoursesOverlapForenoon),
-                ContextCompat.getColor(mContext, R.color.courseCoursesOverlapAfternoon),
-                ContextCompat.getColor(mContext, R.color.courseCoursesOverlapNight))
-    }
-
-    private val mAffairsColors by lazy(LazyThreadSafetyMode.NONE) {
-        intArrayOf(ContextCompat.getColor(mContext, R.color.courseAffairsForenoon),
-                ContextCompat.getColor(mContext, R.color.courseAffairsAfternoon),
-                ContextCompat.getColor(mContext, R.color.courseAffairsNight))
-    }
-
-    private val mRightTopTags by lazy(LazyThreadSafetyMode.NONE) {
-        arrayOf(ContextCompat.getDrawable(mContext, R.mipmap.course_ic_corner_right_top_green),
-                ContextCompat.getDrawable(mContext, R.mipmap.course_ic_corner_right_top_blue),
-                ContextCompat.getDrawable(mContext, R.mipmap.course_ic_corner_right_top_yellow),
-                ContextCompat.getDrawable(mContext, R.mipmap.course_ic_corner_right_top))
-    }
 
     private val mDialogHelper: ScheduleDetailDialogHelper by lazy(LazyThreadSafetyMode.NONE) {
         ScheduleDetailDialogHelper(mContext)
@@ -91,7 +73,7 @@ class ScheduleViewAdapter(private val mContext: Context,
     private lateinit var mTop: TextView
     private lateinit var mBottom: TextView
     private lateinit var mBackground: View
-    private lateinit var mTag: ImageView
+    private lateinit var mTag: View
 
     init {
         addCourse()
@@ -163,11 +145,9 @@ class ScheduleViewAdapter(private val mContext: Context,
 
     /**
      * 在ScheduleView中通过getItemViewInfo方法获取当前行列有schedule信息后，才会调用此方法
-     *
      * @param row 行
      * @param column 列
      * @param container [ScheduleView]
-     *
      * @return 添加的View
      */
     override fun getItemView(row: Int, column: Int, container: ViewGroup): View {
@@ -185,22 +165,18 @@ class ScheduleViewAdapter(private val mContext: Context,
         mBackground = itemView.findViewById(R.id.background)
         mTag = itemView.findViewById(R.id.tag)
 
-        val isOverlap: Boolean = if (row == 1 || row == 3 || row == 5) {
-            mSchedulesArray[row - 1][column]?.get(0)?.period ?: NOT_LONG_COURSE == 4
-        } else {
-            false
-        }
+
 
         itemViewInfo?.let {
             when {
                 row <= 1 -> {
-                    setItemView(mSchedulesArray[row][column]!![0], 0, itemCount, isOverlap)
+                    setItemView(mSchedulesArray[row][column]!![0], 0, itemCount)
                 }
                 row <= 3 -> {
-                    setItemView(mSchedulesArray[row][column]!![0], 1, itemCount, isOverlap)
+                    setItemView(mSchedulesArray[row][column]!![0], 1, itemCount)
                 }
                 row <= 5 -> {
-                    setItemView(mSchedulesArray[row][column]!![0], 2, itemCount, isOverlap)
+                    setItemView(mSchedulesArray[row][column]!![0], 2, itemCount)
                 }
             }
         }
@@ -215,7 +191,7 @@ class ScheduleViewAdapter(private val mContext: Context,
      * @param index 表示取那个颜色
      * @param itemCount 表示该位置Course的数量
      */
-    private fun setItemView(course: Course, index: Int, itemCount: Int, isOverlap: Boolean) {
+    private fun setItemView(course: Course, index: Int, itemCount: Int) {
         val top = mTop
         val bottom = mBottom
         val tag = mTag
@@ -224,29 +200,21 @@ class ScheduleViewAdapter(private val mContext: Context,
         if (course.customType == Course.COURSE) {
             top.text = course.course
             bottom.text = ClassRoomParse.parseClassRoom(course.classroom ?: "")
-            if (isOverlap) {
-                background.background = createBackground(mCoursesOverlapColors[index])
-            } else {
-                background.background = createBackground(mCoursesColors[index])
-            }
+            background.background = createBackground(mCoursesColors[index])
             if (itemCount > 1) {
-                LogUtils.d(TAG, itemCount.toString())
-                tag.setImageDrawable(mRightTopTags[3])
+                tag.visibility = View.VISIBLE
+                tag.background = createTagBackground(mCoursesTextColors[course.hashLesson])
             }
             top.textColor = mCoursesTextColors[index]
             bottom.textColor = mCoursesTextColors[index]
         } else {
-            if (!mShowModel) {
-                tag.setImageDrawable(mRightTopTags[index])
-            } else {
+            if (mShowModel) {
                 top.text = course.course
                 bottom.text = course.classroom
             }
-//            background.background = createBackground( mAffairsColors[index])
             top.textColor = ContextCompat.getColor(mContext, R.color.levelTwoFontColor)
             bottom.textColor = mCoursesTextColors[index]
             background.background = createMemoBackground()
-
         }
     }
 
@@ -264,6 +232,19 @@ class ScheduleViewAdapter(private val mContext: Context,
     }
 
     /**
+     * 这个方法来制造课表item的圆角背景
+     * @param rgb 背景颜色
+     * 里面的圆角的参数是写在资源文件里的
+     */
+    private fun createTagBackground(rgb: Int): Drawable {
+        val drawable = GradientDrawable()
+        val courseCorner = mContext.resources.getDimension(R.dimen.course_schedule_tag_radius)
+        drawable.cornerRadii = floatArrayOf(courseCorner, courseCorner, courseCorner, courseCorner, courseCorner, courseCorner, courseCorner, courseCorner)
+        drawable.setColor(rgb)
+        return drawable
+    }
+
+    /**
      * 用来绘制备忘的条纹背景
      */
     private fun createMemoBackground(): Drawable {
@@ -272,7 +253,7 @@ class ScheduleViewAdapter(private val mContext: Context,
         val gray = ContextCompat.getColor(mContext, R.color.memoGrayStripes)
         canvas.drawColor(ContextCompat.getColor(mContext, R.color.levelFourFontColor))
         val space = mContext.dp2px(8f)
-        val sideLength = if (canvas.width > canvas.height)canvas.width else canvas.height
+        val sideLength = if (canvas.width > canvas.height) canvas.width else canvas.height
         val count = (sideLength / space) * sqrt(2f)
 
 
@@ -285,7 +266,7 @@ class ScheduleViewAdapter(private val mContext: Context,
 
 //        }
 
-        canvas.drawRect(Rect(0, 0, canvas.width, canvas.height),Paint().apply {
+        canvas.drawRect(Rect(0, 0, canvas.width, canvas.height), Paint().apply {
             color = 0xff000000.toInt()
         })
 
@@ -295,9 +276,19 @@ class ScheduleViewAdapter(private val mContext: Context,
         return drawable
     }
 
+
+    /**
+     * 获取当前课程位置上的高度信息
+     * @param
+     */
     override fun getItemViewInfo(row: Int, column: Int): ScheduleView.ScheduleItem? {
+        val isOverlap: Boolean = if (row == 1 || row == 3 || row == 5) {
+            mSchedulesArray[row - 1][column]?.get(0)?.period ?: NOT_LONG_COURSE == 4
+        } else {
+            false
+        }
         val schedules = mSchedulesArray[row][column]
-        return if (schedules == null || schedules.size == 0) {
+        return if (schedules == null || schedules.size == 0||isOverlap) {
             null
         } else {
             ScheduleView.ScheduleItem(itemHeight = schedules[0].period)
