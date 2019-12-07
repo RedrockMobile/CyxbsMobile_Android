@@ -9,7 +9,7 @@
 
     <!--    整体灰色背景-->
     <color name="windowBackground" tools:ignore="ResourceName">#F2F3F8</color>
-    <!--    整体深灰二级背景-->
+    <!--    整体淡灰二级背景-->
     <color name="secondaryWindowBackground" tools:ignore="ResourceName">#F8F9FC</color>
 
 
@@ -17,8 +17,10 @@
     <color name="whiteBackground" tools:ignore="ResourceName">#ffffff</color>
     <color name="whiteFontColor" tools:ignore="ResourceName">#ffffff</color>
 
-    #E2EDFB
-    <!--    主要字体颜色分以下四种，下列按照蓝色由浅到深排序，要用自取-->
+    <color name="transparentBackground" tools:ignore="ResourceName">#00000000</color>
+
+
+    <!--    主要字体颜色分以下四种，下列按照蓝色由深到浅排序，要用自取-->
     <!--    一级字体颜色-->
     <color name="levelOneFontColor" tools:ignore="ResourceName">#112C54</color>
     <!--    二级字体颜色-->
@@ -27,6 +29,9 @@
     <color name="levelThreeFontColor" tools:ignore="ResourceName">#193866</color>
     <!--    四级字体颜色-->
     <color name="levelFourFontColor" tools:ignore="DuplicateDefinition,ResourceName">#2A4E84</color>
+
+    <color name="courseDeleteButtonTextColor" tools:ignore="ResourceName">#7CA3DF</color>
+
 
 
     <!--    底部tab未聚焦字体颜色-->
@@ -61,6 +66,14 @@
     <color name="buttonGradientStartColor" tools:ignore="ResourceName">#4841E2</color>
     <!--    按钮渐变终止颜色-->
     <color name="buttonGradientEndColor" tools:ignore="ResourceName">#4841E2</color>
+
+    <!--    事务dialog删除按钮背景颜色-->
+    <color name="courseAffairDeleteButtonBackgroundColor" tools:ignore="ResourceName">#E6EFFC</color>
+
+    <!--    事务dialog，修改按钮渐变颜色，这个居然和通用渐变不是一个颜色，不科学-->
+    <color name="courseAffairModifyButtonGradientStartColor" tools:ignore="ResourceName">#2921D1</color>
+    <color name="courseAffairModifyButtonGradientEndColor" tools:ignore="ResourceName">#5D5DF7</color>
+
 
     <!--    打字框背景颜色-->
     <color name="writeAbleAreaBackgroundShallow" tools:ignore="ResourceName">#EFF4FD</color>
@@ -125,6 +138,7 @@
     <!--    提问标题框和内容框的背景颜色，指定79的不透明度-->
     <color name="qa_quiz_new_text_background_color" tools:ignore="ResourceName">#acE8F0FC</color>
 
-
+    <!--    登陆下面的灰色字体-->
+    <color name="logInToTheGrayFontBelow" tools:ignore="ResourceName">#ABBCD8</color>
 </resources>
 
