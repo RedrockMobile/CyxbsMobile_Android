@@ -28,32 +28,21 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/mine_guideline4" />
 
-        <TextView
-            android:id="@+id/mine_daily_tv_semiduration"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="15dp"
-            android:layout_marginTop="50dp"
-            android:alpha="0.59"
-            android:text="@string/mine_sign_integral_double_default"
-            android:textColor="@color/whiteFontColor"
-            android:textSize="@dimen/mine_main_small_s"
-            android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+
 
 
         <TextView
             android:id="@+id/mine_daily_tv_year"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
             android:text="@string/mine_sign_year_default"
             android:textColor="@color/whiteFontColor"
             android:textSize="@dimen/mine_main_large_l"
             android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="@+id/mine_daily_tv_semiduration"
-            app:layout_constraintTop_toBottomOf="@+id/mine_daily_tv_semiduration" />
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="100dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/mine_daily_tv_week"
@@ -82,6 +71,18 @@
             app:layout_constraintTop_toBottomOf="@+id/mine_daily_tv_week" />
 
         <TextView
+            android:id="@+id/mine_daily_tv_ranking_percentage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:alpha="0.64"
+            android:layout_marginTop="5dp"
+            android:text="@string/mine_sign_ranking_percentage_default"
+            android:textColor="@color/whiteFontColor"
+            android:textSize="15sp"
+            app:layout_constraintStart_toStartOf="@+id/mine_daily_dayCount"
+            app:layout_constraintTop_toBottomOf="@+id/mine_daily_dayCount" />
+
+        <TextView
             android:id="@+id/mine_daily_tv_ranking"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -94,16 +95,7 @@
             app:layout_constraintTop_toTopOf="@+id/mine_guideline4"
             app:layout_constraintVertical_bias="0.32" />
 
-        <TextView
-            android:id="@+id/mine_daily_tv_ranking_percentage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:alpha="0.43"
-            android:text="@string/mine_sign_ranking_percentage_default"
-            android:textColor="@color/levelTwoFontColor"
-            android:textSize="@dimen/mine_main_small_s"
-            app:layout_constraintStart_toStartOf="@+id/mine_daily_tv_ranking"
-            app:layout_constraintTop_toBottomOf="@+id/mine_daily_tv_ranking" />
+
 
         <com.mredrock.cyxbs.mine.util.widget.Stick
             android:id="@+id/mine_daily_v_divider_mon_tue"
@@ -372,7 +364,7 @@
             android:id="@+id/mine_daily_space_mon"
             android:layout_width="1dp"
             android:layout_height="1dp"
-            android:layout_marginStart="20dp"
+            android:layout_marginStart="30dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/mine_daily_space_tue"
             app:layout_constraintHorizontal_bias="0.5"
@@ -436,10 +428,9 @@
 
         <Space
             android:id="@+id/mine_daily_space_sun"
-
             android:layout_width="1dp"
             android:layout_height="1dp"
-            android:layout_marginEnd="20dp"
+            android:layout_marginEnd="30dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/mine_daily_space_sat"
@@ -450,7 +441,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="12dp"
-            android:background="@color/mine_sign_integral_text_background"
+            android:gravity="center_horizontal"
+            android:paddingTop="4dp"
+            android:background="@drawable/mine_ic_sign_bubble"
             android:text="@string/mine_sign_week_integral"
             android:textColor="@color/mine_sign_integral_text"
             android:textSize="11sp"
