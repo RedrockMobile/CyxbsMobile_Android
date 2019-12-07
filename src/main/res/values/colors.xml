@@ -76,6 +76,9 @@
     <color name="greyText" tools:ignore="ResourceName">#BDBDBD</color>
     <color name="switchOff" tools:ignore="ResourceName">#C3D4EE</color>
 
+    <color name="mine_tablayout_text_unselected" tools:ignore="ResourceName">#8f15315B</color>
+    <color name="mine_tablayout_indicator_color" tools:ignore="ResourceName">#1AD0F2</color>
+
     <color name="mine_about_text_color_normal" tools:ignore="ResourceName">#294169</color>
     <color name="mine_about_text_color_blue" tools:ignore="ResourceName">#0BCCF0</color>
     <color name="mine_sign_bg_grey" tools:ignore="ResourceName">#E1E6F0</color>
@@ -88,6 +91,7 @@
     <color name="mine_sign_store_line" tools:ignore="ResourceName">#E2EDFB</color>
     <color name="mine_sign_store_item_tv_integral" tools:ignore="ResourceName">#3A34D2</color>
     <color name="mine_sign_store_item_bg" tools:ignore="ResourceName">#F0F2FB</color>
+    <color name="mine_askpostedfm_tv_disappear_at" tools:ignore="ResourceName">#6C84AB</color>
 
 
     <!--    邮问-->
