@@ -19,7 +19,7 @@
 
 
         <ImageView
-            android:id="@+id/mine_imageview3"
+            android:id="@+id/mine_daily_iv_background"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:src="@drawable/mine_shape_round_corner"

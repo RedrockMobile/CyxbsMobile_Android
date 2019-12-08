@@ -125,6 +125,7 @@
     <string name="mine_relate_me_reply">回复</string>
     <string name="mine_set_widget">自定义桌面小图标</string>
     <string name="mine_mine_1">我的</string>
+    <string name="mine_comment_at">\@</string>
 
     <!--积分详情-->
     <string name="mine_point_detail_footer">已 经 到 底 了</string>

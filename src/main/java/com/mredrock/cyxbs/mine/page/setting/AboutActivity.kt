@@ -27,9 +27,9 @@ class AboutActivity(override val isFragmentActivity: Boolean = false) : BaseActi
 
         setAppVersionName()
 
-        mine_about_website.setOnClickListener { clickWebsite() }
+        mine_about_tv_website.setOnClickListener { clickWebsite() }
         mine_about_legal.setOnClickListener { clickLegal() }
-        mine_about_update.setOnClickListener { clickUpdate() }
+        mine_about_tv_update.setOnClickListener { clickUpdate() }
     }
 
     private fun clickUpdate() {

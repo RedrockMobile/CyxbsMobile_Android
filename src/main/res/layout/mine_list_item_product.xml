@@ -44,11 +44,11 @@
         android:text="@string/mine_sign_store_item_count_default"
         android:textColor="@color/levelTwoFontColor"
         android:textSize="10sp"
-        app:layout_constraintStart_toStartOf="@+id/mine_imageview2"
+        app:layout_constraintStart_toStartOf="@+id/mine_sign_store_item_iv_diamond"
         app:layout_constraintTop_toBottomOf="@+id/mine_sign_store_item_tv_title" />
 
     <ImageView
-        android:id="@+id/mine_imageview2"
+        android:id="@+id/mine_sign_store_item_iv_diamond"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
@@ -66,24 +66,24 @@
         android:text="@string/mine_sign_store_item_integral_default"
         android:textColor="@color/mine_sign_store_item_tv_integral"
         android:textSize="18sp"
-        app:layout_constraintBottom_toBottomOf="@+id/mine_imageview2"
-        app:layout_constraintStart_toEndOf="@+id/mine_imageview2"
-        app:layout_constraintTop_toTopOf="@+id/mine_imageview2" />
+        app:layout_constraintBottom_toBottomOf="@+id/mine_sign_store_item_iv_diamond"
+        app:layout_constraintStart_toEndOf="@+id/mine_sign_store_item_iv_diamond"
+        app:layout_constraintTop_toTopOf="@+id/mine_sign_store_item_iv_diamond" />
 
     <Button
         android:id="@+id/mine_sign_store_item_btn_exchange"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="24dp"
+        android:layout_marginEnd="12dp"
         android:background="@drawable/mine_bg_round_corner_blue"
         android:minWidth="47dp"
         android:minHeight="24dp"
         android:text="@string/mine_sign_store_item_exchange"
         android:textColor="@color/mine_white"
         android:textSize="12sp"
-        app:layout_constraintBottom_toBottomOf="@+id/mine_imageview2"
+        app:layout_constraintBottom_toBottomOf="@+id/mine_sign_store_item_iv_diamond"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/mine_imageview2" />
+        app:layout_constraintTop_toTopOf="@+id/mine_sign_store_item_iv_diamond" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

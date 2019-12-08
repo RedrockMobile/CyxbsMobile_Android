@@ -21,7 +21,7 @@ class AnswerPostedFm : BaseRVFragment<AnswerPosted>() {
         super.onActivityCreated(savedInstanceState)
         initObserver()
         loadMore()
-        val answer = AnswerPosted("id", "15", "this is content......................", "2019-13- 13", "question_title", "20122-12-10", "2019-12-1", 20)
+        val answer = AnswerPosted("id", "15", "房子在涨房子在涨房子在涨房子在涨房子在涨房子在涨", "2019.3.1", "这是个问题", "2019.8.22", "2019-7-1", 20)
         val list: MutableList<AnswerPosted> = mutableListOf()
         for (i in 1..20) {
             list.add(answer)

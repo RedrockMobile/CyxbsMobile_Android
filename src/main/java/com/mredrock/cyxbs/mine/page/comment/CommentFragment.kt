@@ -2,39 +2,38 @@ package com.mredrock.cyxbs.mine.page.comment
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.widget.TextView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.mredrock.cyxbs.mine.R
-import com.mredrock.cyxbs.mine.network.model.AnswerPosted
-import com.mredrock.cyxbs.mine.page.answer.AnswerViewModel
+import com.mredrock.cyxbs.mine.network.model.Comment
 import com.mredrock.cyxbs.mine.util.ui.BaseRVFragment
+import kotlinx.android.synthetic.main.mine_list_item_comment_comment.view.*
 
 /**
  * Created by roger on 2019/12/5
  */
-class CommentFragment : BaseRVFragment<AnswerPosted>() {
+class CommentFragment : BaseRVFragment<Comment>() {
 
-    private val viewModel by lazy { ViewModelProviders.of(this).get(AnswerViewModel::class.java) }
+    private val viewModel by lazy { ViewModelProviders.of(this).get(CommentViewModel::class.java) }
 
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         initObserver()
         loadMore()
-        val answer = AnswerPosted("id", "15", "this is content......................", "2019-13- 13", "question_title", "20122-12-10", "2019-12-1", 20)
-        val list: MutableList<AnswerPosted> = mutableListOf()
+        val comment = Comment("张树洞", "房子涨了，我劝你赶紧买房子涨了，我劝你赶紧买房子涨了，我劝你赶紧买房子涨了，我劝你赶紧买")
+        val list: MutableList<Comment> = mutableListOf()
         for (i in 1..20) {
-            list.add(answer)
+            list.add(comment)
         }
-        viewModel.answerPostedEvent.postValue(list)
+        viewModel.fakeComments.postValue(list)
     }
 
     private fun initObserver() {
         viewModel.errorEvent.observe(this, Observer {
             getFooter().showLoadError()
         })
-        viewModel.answerPostedEvent.observe(this, Observer {
+        viewModel.fakeComments.observe(this, Observer {
             loadIntoRv(it)
         })
     }
@@ -49,7 +48,7 @@ class CommentFragment : BaseRVFragment<AnswerPosted>() {
     /**
      * 添加数据到recyclerView中，并显示没有更多
      */
-    private fun loadIntoRv(list: List<AnswerPosted>?) {
+    private fun loadIntoRv(list: List<Comment>?) {
         if (list == null) {
             return
         }
@@ -61,7 +60,7 @@ class CommentFragment : BaseRVFragment<AnswerPosted>() {
     }
 
     override fun getItemLayout(): Int {
-        return R.layout.mine_list_item_my_answer_posted
+        return R.layout.mine_list_item_comment_comment
     }
 
     //自动加载更多
@@ -71,13 +70,9 @@ class CommentFragment : BaseRVFragment<AnswerPosted>() {
     }
 
     @SuppressLint("SetTextI18n")
-    override fun bindDataHolder(holder: androidx.recyclerview.widget.RecyclerView.ViewHolder, position: Int, data: AnswerPosted) {
-        holder.itemView.findViewById<TextView>(R.id.mine_answer_posted_tv_content).text = data.content
-        holder.itemView.findViewById<TextView>(R.id.mine_answer_posted_tv_disappear_at).text = data.disappearAt
-        holder.itemView.findViewById<TextView>(R.id.mine_answer_posted_tv_integral).text = data.integral.toString()
-        if (data.state == 0) {
-            holder.itemView.findViewById<TextView>(R.id.mine_answer_posted_tv_state).text = "已采纳"
-        }
+    override fun bindDataHolder(holder: androidx.recyclerview.widget.RecyclerView.ViewHolder, position: Int, data: Comment) {
+        holder.itemView.mine_comment_tv_at_who.text = data.repsonseTo
+        holder.itemView.mine_comment_tv_content.text = data.content
     }
 
 

@@ -22,7 +22,7 @@
     </androidx.appcompat.widget.Toolbar>
 
     <ImageView
-        android:id="@+id/mine_imageview"
+        android:id="@+id/mine_about_iv"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="40dp"
@@ -69,26 +69,26 @@
 
 
     <TextView
-        android:id="@+id/mine_about_1"
+        android:id="@+id/mine_about_press"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
         android:text="@string/mine_about_1"
         android:textSize="11sp"
-        app:layout_constraintBottom_toTopOf="@+id/mine_textview15"
+        app:layout_constraintBottom_toTopOf="@+id/mine_about_tv_copy_right"
         app:layout_constraintEnd_toEndOf="@+id/mine_about_legal"
         app:layout_constraintStart_toStartOf="@+id/mine_about_legal" />
 
     <TextView
-        android:id="@+id/mine_textview15"
+        android:id="@+id/mine_about_tv_copy_right"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="30dp"
         android:textSize="11sp"
         android:text="@string/mine_about_copyright"
-        app:layout_constraintBottom_toBottomOf="@+id/mine_imageview"
-        app:layout_constraintEnd_toEndOf="@+id/mine_about_1"
-        app:layout_constraintStart_toStartOf="@+id/mine_about_1" />
+        app:layout_constraintBottom_toBottomOf="@+id/mine_about_iv"
+        app:layout_constraintEnd_toEndOf="@+id/mine_about_press"
+        app:layout_constraintStart_toStartOf="@+id/mine_about_press" />
 
     <TextView
         android:id="@+id/mine_about_legal"
@@ -98,23 +98,23 @@
         android:text="@string/mine_about_legal"
         android:textColor="@color/mine_about_text_color_blue"
         android:textSize="11sp"
-        app:layout_constraintBottom_toTopOf="@+id/mine_about_1"
+        app:layout_constraintBottom_toTopOf="@+id/mine_about_press"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
 
     <RelativeLayout
-        android:id="@+id/mine_linearlayout"
+        android:id="@+id/mine_about_ll_share"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="@+id/mine_linearlayout2"
+        app:layout_constraintBottom_toBottomOf="@+id/mine_about_ll_function"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/mine_imageview">
+        app:layout_constraintTop_toTopOf="@+id/mine_about_iv">
 
         <TextView
-            android:id="@+id/mine_textview14"
+            android:id="@+id/mine_about_tv_share"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/mine_about_sharing"
@@ -134,17 +134,17 @@
     </RelativeLayout>
 
     <RelativeLayout
-        android:id="@+id/mine_linearlayout2"
+        android:id="@+id/mine_about_ll_function"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toTopOf="@+id/mine_linearlayout3"
+        app:layout_constraintBottom_toTopOf="@+id/mine_about_ll_website"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/mine_linearlayout">
+        app:layout_constraintTop_toBottomOf="@+id/mine_about_ll_share">
 
         <TextView
-            android:id="@+id/mine_textview13"
+            android:id="@+id/mine_about_tv_function"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
@@ -164,17 +164,17 @@
     </RelativeLayout>
 
     <RelativeLayout
-        android:id="@+id/mine_linearlayout3"
+        android:id="@+id/mine_about_ll_website"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toTopOf="@+id/mine_linearlayout4"
+        app:layout_constraintBottom_toTopOf="@+id/mine_about_ll_update"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/mine_linearlayout2">
+        app:layout_constraintTop_toBottomOf="@+id/mine_about_ll_function">
 
         <TextView
-            android:id="@+id/mine_about_website"
+            android:id="@+id/mine_about_tv_website"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
@@ -192,17 +192,17 @@
     </RelativeLayout>
 
     <RelativeLayout
-        android:id="@+id/mine_linearlayout4"
+        android:id="@+id/mine_about_ll_update"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toTopOf="@+id/mine_about_legal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/mine_linearlayout3">
+        app:layout_constraintTop_toBottomOf="@+id/mine_about_ll_website">
 
         <TextView
-            android:id="@+id/mine_about_update"
+            android:id="@+id/mine_about_tv_update"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
@@ -212,11 +212,12 @@
             android:textSize="16sp" />
 
         <TextView
-            android:layout_centerVertical="true"
+            android:id="@+id/mine_about_tv_already_uptodate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toStartOf="@id/mine_about_arrow_update"
+            android:layout_centerVertical="true"
             android:layout_marginEnd="18dp"
+            android:layout_toStartOf="@id/mine_about_arrow_update"
             tools:text="已是最新版本" />
 
         <ImageView

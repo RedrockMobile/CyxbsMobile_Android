@@ -5,6 +5,10 @@ import android.view.Gravity;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.core.content.ContextCompat;
+
+import com.mredrock.cyxbs.mine.R;
+
 /**
  * Created by zia on 2018/8/17.
  */
@@ -28,6 +32,7 @@ public class RvFooter extends LinearLayout {
         setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
         textView = new TextView(getContext());
         textView.setTextSize(textSize);
+        setBackgroundColor(ContextCompat.getColor(getContext(), R.color.secondaryWindowBackground));
         textView.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
         textView.setGravity(Gravity.CENTER);
         textView.setPadding(0, 40, 0, 40);
