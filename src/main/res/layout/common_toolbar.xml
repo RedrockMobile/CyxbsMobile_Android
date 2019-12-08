@@ -13,10 +13,11 @@
         android:background="@color/whiteBackground"
         android:fitsSystemWindows="true"
         app:navigationIcon="@drawable/common_ic_back"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
     <View
+        android:id="@+id/split_line"
         android:layout_width="match_parent"
         android:layout_height="1px"
-        android:background="@color/commonDefaultDivideLineColor"/>
+        android:background="@color/commonDefaultDivideLineColor"
+        android:visibility="visible"/>
 </com.google.android.material.appbar.AppBarLayout>
