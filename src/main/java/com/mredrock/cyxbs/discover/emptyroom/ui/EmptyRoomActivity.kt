@@ -72,11 +72,11 @@ class EmptyRoomActivity : BaseViewModelActivity<EmptyRoomViewModel>(), OnItemSel
 
     private fun initTab() {
         tl_building.apply {
-            addTab(tl_building.newTab().setText("二教"))
-            addTab(tl_building.newTab().setText("三教"))
-            addTab(tl_building.newTab().setText("四教"))
-            addTab(tl_building.newTab().setText("五教"))
-            addTab(tl_building.newTab().setText("八教"))
+            addTab(tl_building.newTab().setText("二教"),false)
+            addTab(tl_building.newTab().setText("三教"),false)
+            addTab(tl_building.newTab().setText("四教"),false)
+            addTab(tl_building.newTab().setText("五教"),false)
+            addTab(tl_building.newTab().setText("八教"),false)
         }
         tl_building.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabReselected(p0: TabLayout.Tab?) {
