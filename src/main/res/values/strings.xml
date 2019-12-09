@@ -14,12 +14,12 @@
     </string-array>
 
     <string-array name="emptyroom_sections">
-        <item>1–2节</item>
-        <item>3–4节</item>
-        <item>5–6节</item>
-        <item>7–8节</item>
-        <item>9–10节</item>
-        <item>11–12节</item>
+        <item>1–2</item>
+        <item>3–4</item>
+        <item>5–6</item>
+        <item>7–8</item>
+        <item>9–10</item>
+        <item>11–12</item>
     </string-array>
 
     <string-array name="emptyroom_course_weekdays">
@@ -34,30 +34,30 @@
 
     <string-array name="emptyroom_titles_weeks">
         <item>整学期</item>
-        <item>第一周</item>
-        <item>第二周</item>
-        <item>第三周</item>
-        <item>第四周</item>
-        <item>第五周</item>
-        <item>第六周</item>
-        <item>第七周</item>
-        <item>第八周</item>
-        <item>第九周</item>
-        <item>第十周</item>
-        <item>第十一周</item>
-        <item>第十二周</item>
-        <item>第十三周</item>
-        <item>第十四周</item>
-        <item>第十五周</item>
-        <item>第十六周</item>
-        <item>第十七周</item>
-        <item>第十八周</item>
-        <item>第十九周</item>
-        <item>第二十周</item>
-        <item>第二十一周</item>
-        <item>第二十二周</item>
-        <item>第二十三周</item>
-        <item>第二十四周</item>
-        <item>第二十五周</item>
+        <item>一周</item>
+        <item>二周</item>
+        <item>三周</item>
+        <item>四周</item>
+        <item>五周</item>
+        <item>六周</item>
+        <item>七周</item>
+        <item>八周</item>
+        <item>九周</item>
+        <item>十周</item>
+        <item>十一周</item>
+        <item>十二周</item>
+        <item>十三周</item>
+        <item>十四周</item>
+        <item>十五周</item>
+        <item>十六周</item>
+        <item>十七周</item>
+        <item>十八周</item>
+        <item>十九周</item>
+        <item>二十周</item>
+        <item>二十一周</item>
+        <item>二十二周</item>
+        <item>二十三周</item>
+        <item>二十四周</item>
+        <item>二十五周</item>
     </string-array>
 </resources>

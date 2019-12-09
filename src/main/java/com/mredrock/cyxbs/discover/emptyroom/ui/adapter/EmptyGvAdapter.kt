@@ -1,7 +1,6 @@
 package com.mredrock.cyxbs.discover.emptyroom.ui.adapter
 
 import android.content.Context
-import android.text.Html
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,9 +19,7 @@ class EmptyGvAdapter(private val context: Context, private val data: List<String
         }
         val room = convert?.findViewById<TextView>(R.id.tv_grid_item_empty_room)
         val raw = data[position]
-        val start = if (raw.startsWith("8")) 3 else 2
-        val text = raw.substring(0, start) + "<font color='#6197FB'>" + raw.substring(start) + "</font>"
-        room?.text = Html.fromHtml(text)
+        room?.text = raw
         return convert
     }
 

@@ -1,24 +1,24 @@
 package com.mredrock.cyxbs.discover.emptyroom.ui
 
-import android.animation.Animator
-import android.animation.AnimatorListenerAdapter
 import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
 import android.graphics.Color
 import android.os.Bundle
-import android.view.MotionEvent
-import android.view.MotionEvent.ACTION_DOWN
-import android.view.MotionEvent.ACTION_MOVE
+import android.view.Gravity
+import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.TextView
+import androidx.annotation.Px
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.alibaba.android.arouter.facade.annotation.Route
+import com.google.android.material.tabs.TabLayout
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.config.DISCOVER_EMPTY_ROOM
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.SchoolCalendar
+import com.mredrock.cyxbs.common.utils.extensions.getScreenWidth
 import com.mredrock.cyxbs.common.utils.extensions.gone
 import com.mredrock.cyxbs.common.utils.extensions.visible
 import com.mredrock.cyxbs.discover.emptyroom.R
@@ -33,8 +33,8 @@ import com.mredrock.cyxbs.discover.emptyroom.viewmodel.EmptyRoomViewModel.Compan
 import com.mredrock.cyxbs.discover.emptyroom.viewmodel.EmptyRoomViewModel.Companion.FINISH
 import com.mredrock.cyxbs.discover.emptyroom.viewmodel.EmptyRoomViewModel.Companion.LOADING
 import kotlinx.android.synthetic.main.emptyroom_activity_empty_room.*
-import org.jetbrains.anko.dip
-import org.jetbrains.anko.toast
+import org.jetbrains.anko.*
+import org.jetbrains.anko.custom.style
 import java.util.*
 
 @Route(path = DISCOVER_EMPTY_ROOM)
@@ -43,13 +43,10 @@ class EmptyRoomActivity : BaseViewModelActivity<EmptyRoomViewModel>(), OnItemSel
     private val weekdayApi = intArrayOf(1, 2, 3, 4, 5, 6, 7)
     private val buildingApi = intArrayOf(2, 3, 4, 5, 8)
     private val sectionApi = intArrayOf(0, 1, 2, 3, 4, 5)
+    private var buildingPosition = -1
     private lateinit var weekApi: IntArray
-    private var mY = -1f
-
-    private var isExpanded = true
 
     private var resultAdapter: EmptyRoomResultAdapter? = null
-    private lateinit var expandedAnimator: ValueAnimator
     private lateinit var queryAnimator: ObjectAnimator
 
     override val viewModelClass = EmptyRoomViewModel::class.java
@@ -62,14 +59,55 @@ class EmptyRoomActivity : BaseViewModelActivity<EmptyRoomViewModel>(), OnItemSel
     }
 
     private fun init() {
-        common_toolbar.init("空教室")
         initObserver()
         initData()
         initSelectors()
-        initExpandAnimator()
         initQueryingAnimator()
         initRv()
+        initTab()
+        ib_emptyroom_back.setOnClickListener{
+                finish()
+        }
     }
+
+    private fun initTab() {
+        tl_building.apply {
+            addTab(tl_building.newTab().setText("二教"))
+            addTab(tl_building.newTab().setText("三教"))
+            addTab(tl_building.newTab().setText("四教"))
+            addTab(tl_building.newTab().setText("五教"))
+            addTab(tl_building.newTab().setText("八教"))
+        }
+        tl_building.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+            override fun onTabReselected(p0: TabLayout.Tab?) {
+
+            }
+
+            override fun onTabUnselected(p0: TabLayout.Tab?) {
+                if (p0 != null) {
+                    p0.customView = null
+                }
+            }
+
+            override fun onTabSelected(p0: TabLayout.Tab?) {
+                if (p0 != null) {
+                    buildingPosition = p0.position
+                    val textView = TextView(applicationContext)
+                    textView.text = p0.text
+                    textView.setPadding(15,2,15,2)
+                    textView.textColor = Color.parseColor("#112C54")
+                    textView.gravity = Gravity.CENTER
+                    val drawable = ContextCompat.getDrawable(BaseApp.context, R.drawable.emptyroom_shape_query_item)
+                    textView.background = drawable
+                    textView.paint.isFakeBoldText = true
+                    p0.customView = textView
+                    onItemSelectedChange()
+                }
+            }
+
+        })
+    }
+
 
     private fun initObserver() {
         viewModel.rooms.observe(this, Observer {
@@ -125,18 +163,18 @@ class EmptyRoomActivity : BaseViewModelActivity<EmptyRoomViewModel>(), OnItemSel
         repeat(list.size) { weekApi[it] = ++week }
     }
 
+
     private fun initSelectors() {
         initSelector(multi_selector_week, weekApi, 0, 0)
         initSelector(multi_selector_weekday, weekdayApi, SchoolCalendar().dayOfWeek - 1, 1)
-        initSelector(multi_selector_building, buildingApi, -1, 2)
-        initSelector(multi_selector_section, sectionApi, -1, 3)
+        initSelector(multi_selector_section, sectionApi, -1, 3,middle = dip(1))
         multi_selector_section.setMinSelectedNum(1)
     }
 
-    private fun initSelector(selector: MultiSelector, values: IntArray, defaultSelected: Int, tag: Int) {
+    private fun initSelector(selector: MultiSelector, values: IntArray, defaultSelected: Int, tag: Int, isFullUp : Boolean = false, itemNumber: Int = 0, canScroll: Boolean = true, @Px head : Int = 0, @Px middle: Int = 0, @Px tail: Int =0) {
         val initializer = ViewInitializer.Builder(this)
-                .horizontalLinearLayoutManager()
-                .gap(dip(12), dip(3), dip(12))
+                .horizontalLinearLayoutManager(canScroll)
+                .gap(dip(head), dip(middle), dip(tail))
                 .stringAdapter(selector, object : StringAdapter.LayoutWrapper() {
                     override val layoutId: Int
                         get() = R.layout.emptyroom_recycle_item_query_option
@@ -147,11 +185,18 @@ class EmptyRoomActivity : BaseViewModelActivity<EmptyRoomViewModel>(), OnItemSel
                     override fun onBindView(textView: TextView, displayValue: String, selected: Boolean, position: Int) {
                         super.onBindView(textView, displayValue, selected, position)
                         val drawable = if (selected) ContextCompat.getDrawable(BaseApp.context, R.drawable.emptyroom_shape_query_item) else null
-                        val color = if (selected) Color.parseColor("#FFFFFF") else Color.parseColor("#393939")
+                        var color =  1
+                        if (selected) {
+                            color = Color.parseColor("#122D55")
+                            textView.paint.isFakeBoldText = true
+                        }else{
+                            color =  Color.parseColor("#15315B")
+                            textView.paint.isFakeBoldText = false
+                        }
                         textView.background = drawable
                         textView.setTextColor(color)
                     }
-                }).build()
+                },isFullUp ,itemNumber).build()
         selector.apply {
             setValues(values)
             if (defaultSelected >= 0) setSelected(defaultSelected, true)
@@ -161,26 +206,6 @@ class EmptyRoomActivity : BaseViewModelActivity<EmptyRoomViewModel>(), OnItemSel
         }
     }
 
-    private fun initExpandAnimator() {
-        ll_selector_container.post {
-            expandedAnimator = ValueAnimator.ofInt(ll_selector_container.height, dip(6))
-                    .apply {
-                        duration = 500
-                        interpolator = AccelerateDecelerateInterpolator()
-                        addUpdateListener {
-                            ll_selector_container.layoutParams.height = it.animatedValue as Int
-                            ll_selector_container.requestLayout()
-                        }
-                        addListener(object : AnimatorListenerAdapter() {
-                            override fun onAnimationEnd(animation: Animator?) {
-                                super.onAnimationEnd(animation)
-                                iv_arrow.rotation = if (isExpanded) 180f else 0f
-                                isExpanded = !isExpanded
-                            }
-                        })
-                    }
-        }
-    }
 
     private fun initQueryingAnimator() {
         queryAnimator = ObjectAnimator.ofFloat(iv_querying, "rotation", 0f, 360f)
@@ -199,65 +224,28 @@ class EmptyRoomActivity : BaseViewModelActivity<EmptyRoomViewModel>(), OnItemSel
     private fun query() {
         val week = multi_selector_week.getSelectedValues()[0]
         val weekday = multi_selector_weekday.getSelectedValues()[0]
-        val building = multi_selector_building.getSelectedValues()[0]
+        val building = buildingApi[buildingPosition]
         val section = multi_selector_section.getSelectedValues()
         val res = section.map { it + 1 }
         viewModel.getData(week, weekday, building, res)
     }
 
-    private fun disallowExpandedAnimator(): Boolean {
-        if (expandedAnimator.isRunning) {
-            return true
-        }
-        return if (!isExpanded) {
-            false
-        } else if (resultAdapter == null || resultAdapter!!.data.isEmpty()) {
-            true
-        } else queryAnimator.isRunning
-    }
 
     override fun onDestroy() {
         if (queryAnimator.isRunning) {
             queryAnimator.cancel()
         }
-        if (expandedAnimator.isRunning) {
-            expandedAnimator.cancel()
-        }
         super.onDestroy()
     }
 
-    override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
-        val y = ev.y
-        if (y < iv_arrow.bottom) {
-            return super.dispatchTouchEvent(ev)
-        } else if (expandedAnimator.isRunning) {
-            return true
-        }
-        when (ev.action) {
-            ACTION_DOWN -> mY = y
-            ACTION_MOVE -> {
-                if (!disallowExpandedAnimator()) {
-                    if (isExpanded && mY - y > 0) {
-                        expandedAnimator.start()
-                        return true
-                    } else if (!isExpanded && mY - y < 0) {
-                        expandedAnimator.reverse()
-                        return true
-                    }
-                }
-                mY = y
-            }
-        }
-        return super.dispatchTouchEvent(ev)
-    }
 
-    override fun onItemClickListener(selector: MultiSelector, viewHolder: androidx.recyclerview.widget.RecyclerView.ViewHolder, position: Int) = Unit
+    override fun onItemClickListener() = Unit
 
-    override fun onItemSelectedChange(selector: MultiSelector, viewHolder: androidx.recyclerview.widget.RecyclerView.ViewHolder, value: Int, checked: Boolean, position: Int) {
+    override fun onItemSelectedChange() {
         if (multi_selector_section.selectedSize() == 0) {
             viewModel.status.value = DEFAULT
         }
-        if (multi_selector_building.selectedSize() > 0 && multi_selector_section.selectedSize() > 0) {
+        if (buildingPosition != -1 && multi_selector_section.selectedSize() > 0) {
             query()
         } else if (resultAdapter != null) {
             resultAdapter?.apply {

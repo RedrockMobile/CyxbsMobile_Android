@@ -46,16 +46,16 @@ class ViewInitializer private constructor() {
             return this
         }
 
-        fun horizontalLinearLayoutManager(): Builder {
-            return linearLayoutManager(LinearLayoutManager.HORIZONTAL)
+        fun horizontalLinearLayoutManager(canScroll: Boolean): Builder {
+            return linearLayoutManager(LinearLayoutManager.HORIZONTAL, canScroll, 'h')
         }
 
-        fun verticalLinearLayoutManager(): Builder {
-            return linearLayoutManager(LinearLayoutManager.VERTICAL)
+        fun verticalLinearLayoutManager(canScroll: Boolean): Builder {
+            return linearLayoutManager(LinearLayoutManager.VERTICAL, canScroll, 'v')
         }
 
-        fun stringAdapter(selector: MultiSelector, layoutWrapper: StringAdapter.LayoutWrapper): Builder {
-            mInitializer.mAdapter = StringAdapter(selector, layoutWrapper)
+        fun stringAdapter(selector: MultiSelector, layoutWrapper: StringAdapter.LayoutWrapper, isFullUp: Boolean, itemNumber: Int): Builder {
+            mInitializer.mAdapter = StringAdapter(selector, layoutWrapper, isFullUp, itemNumber)
             return this
         }
 
@@ -66,13 +66,28 @@ class ViewInitializer private constructor() {
 
         fun build(): ViewInitializer {
             if (mInitializer.mLayoutManager == null) {
-                horizontalLinearLayoutManager()
+                horizontalLinearLayoutManager(true)
             }
             return mInitializer
         }
 
-        private fun linearLayoutManager(orientation: Int): Builder {
-            val layoutManager = LinearLayoutManager(mContext)
+        private fun linearLayoutManager(orientation: Int, canScroll: Boolean, horizontalOrVertical: Char): Builder {
+            var layoutManager = LinearLayoutManager(mContext)
+            if (!canScroll) {
+                if(horizontalOrVertical == 'h'){
+                    layoutManager = object :LinearLayoutManager(mContext,HORIZONTAL,false){
+                        override fun canScrollHorizontally(): Boolean {
+                            return false
+                        }
+                    }
+                }else if(horizontalOrVertical == 'v'){
+                    layoutManager = object :LinearLayoutManager(mContext){
+                        override fun canScrollVertically(): Boolean {
+                            return false
+                        }
+                    }
+                }
+            }
             layoutManager.orientation = orientation
             mInitializer.mLayoutManager = layoutManager
             return this

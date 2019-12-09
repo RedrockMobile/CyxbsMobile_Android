@@ -16,10 +16,6 @@
         android:paddingStart="15dp"
         tools:ignore="RtlSymmetry">
 
-        <View
-            android:layout_width="2dp"
-            android:layout_height="13dp"
-            android:background="@drawable/emptyroom_shape_result_item" />
 
         <TextView
             android:id="@+id/tv_building"
@@ -27,7 +23,8 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:textColor="#5E5E5E"
-            android:textSize="14sp"
+            android:textSize="15sp"
+            android:textStyle="bold"
             tools:text="一楼" />
     </LinearLayout>
 

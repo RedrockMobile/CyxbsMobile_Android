@@ -18,6 +18,8 @@ class DefaultItemDecoration(@Px head: Int, @Px middle: Int, @Px tail: Int) : and
         val layoutManager = parent.layoutManager
         if (layoutManager is LinearLayoutManager && layoutManager.orientation == LinearLayoutManager.HORIZONTAL) {
             horizontalLinearLayoutManager(outRect, view, parent, state)
+        }else if(layoutManager is LinearLayoutManager && layoutManager.orientation == LinearLayoutManager.VERTICAL){
+            verticalLinearLayoutManager(outRect, view, parent, state)
         }
     }
 
@@ -27,6 +29,15 @@ class DefaultItemDecoration(@Px head: Int, @Px middle: Int, @Px tail: Int) : and
             0 -> outRect.set(mHead, 0, mMiddle, 0)
             state.itemCount - 1 -> outRect.set(mMiddle, 0, mTail, 0)
             else -> outRect.set(mMiddle, 0, mMiddle, 0)
+        }
+    }
+
+    private fun verticalLinearLayoutManager(outRect: Rect, view: View, parent: androidx.recyclerview.widget.RecyclerView, state: androidx.recyclerview.widget.RecyclerView.State) {
+        val position = parent.getChildLayoutPosition(view)
+        when (position) {
+            0 -> outRect.set(0, mHead, 0, mMiddle)
+            state.itemCount - 1 -> outRect.set(0, mMiddle, 0, mTail)
+            else -> outRect.set(0, mMiddle, 0, mMiddle)
         }
     }
 

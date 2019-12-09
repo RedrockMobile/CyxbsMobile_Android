@@ -6,14 +6,14 @@
 
     <TextView
         android:id="@+id/tv_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingLeft="15dp"
-        android:paddingTop="2dp"
-        android:paddingRight="15dp"
-        android:paddingBottom="2dp"
+        android:layout_width="80dp"
+        android:layout_height="40dp"
+        android:paddingLeft="7dp"
+        android:paddingTop="6dp"
+        android:paddingRight="7dp"
+        android:paddingBottom="6dp"
         android:textColor="#15315B"
-        android:textSize="14sp"
-        android:maxLines="1"
+        android:textSize="18sp"
+        android:gravity="center"
         tools:text="第一周" />
 </FrameLayout>

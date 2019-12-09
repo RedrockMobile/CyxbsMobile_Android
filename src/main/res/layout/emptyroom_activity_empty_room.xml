@@ -4,87 +4,80 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFFFFF"
+    android:background="@color/windowBackground"
+    android:fitsSystemWindows="true"
     android:orientation="vertical"
     tools:context="com.mredrock.cyxbs.discover.emptyroom.ui.EmptyRoomActivity">
 
-    <include layout="@layout/common_toolbar" />
 
     <LinearLayout
-        android:id="@+id/ll_selector_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="horizontal">
 
-        <com.mredrock.cyxbs.discover.emptyroom.ui.widget.MultiSelector
-            android:id="@+id/multi_selector_week"
-            android:layout_width="match_parent"
-            android:layout_height="45dp"
-            app:display_values="@array/emptyroom_titles_weeks"
-            app:radio_button_mode="true" />
+        <ImageButton
+            android:id="@+id/ib_emptyroom_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="12dp"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/emptyroom_ic_back" />
 
-        <View
+        <LinearLayout
+            android:id="@+id/ll_selector_container"
             android:layout_width="match_parent"
-            android:layout_height="9dp"
-            android:background="#F1F1F1" />
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-        <com.mredrock.cyxbs.discover.emptyroom.ui.widget.MultiSelector
-            android:id="@+id/multi_selector_weekday"
-            android:layout_width="match_parent"
-            android:layout_height="45dp"
-            app:display_values="@array/emptyroom_course_weekdays"
-            app:radio_button_mode="true" />
+            <com.mredrock.cyxbs.discover.emptyroom.ui.widget.MultiSelector
+                android:id="@+id/multi_selector_week"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                app:display_values="@array/emptyroom_titles_weeks"
+                app:radio_button_mode="true" />
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="#F1F1F1" />
 
-        <com.mredrock.cyxbs.discover.emptyroom.ui.widget.MultiSelector
-            android:id="@+id/multi_selector_building"
-            android:layout_width="match_parent"
-            android:layout_height="45dp"
-            app:display_values="@array/emptyroom_buildings"
-            app:radio_button_mode="true" />
+            <com.mredrock.cyxbs.discover.emptyroom.ui.widget.MultiSelector
+                android:id="@+id/multi_selector_weekday"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                app:display_values="@array/emptyroom_course_weekdays"
+                app:radio_button_mode="true" />
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="#F1F1F1" />
 
-        <com.mredrock.cyxbs.discover.emptyroom.ui.widget.MultiSelector
-            android:id="@+id/multi_selector_section"
-            android:layout_width="match_parent"
-            android:layout_height="45dp"
-            app:display_values="@array/emptyroom_sections" />
+        </LinearLayout>
     </LinearLayout>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:layout_gravity="center"
-        android:background="#F1F1F1" />
-
-    <ImageView
-        android:id="@+id/iv_arrow"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-        android:layout_gravity="center"
-        android:src="@drawable/emptyroom_ic_query_arrow"
-        android:translationY="-5dp" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_result"
+        <com.mredrock.cyxbs.common.component.JCardViewPlus
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:overScrollMode="never"
+            android:layout_height="0dp"
+            app:cardBackgroundColor="@color/secondaryWindowBackground"
+            app:cardCornerRadiusUpperLeft="16dp"
+            app:cardCornerRadiusUpperRight="16dp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
+
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_result"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:overScrollMode="never"
+            app:layout_constraintBottom_toTopOf="@id/jc_building"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="30dp"
+            app:layout_constraintVertical_bias="0.0" />
 
         <ImageView
             android:id="@+id/iv_querying"
@@ -97,5 +90,42 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.3" />
+
+        <com.mredrock.cyxbs.common.component.JCardViewPlus
+            android:id="@+id/jc_building"
+            android:layout_width="match_parent"
+            android:layout_height="105dp"
+            app:cardBackgroundColor="#ffffff"
+            app:cardCornerRadiusUpperLeft="16dp"
+            app:cardCornerRadiusUpperRight="16dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:shadowFlags="bottom" />
+
+        <com.mredrock.cyxbs.discover.emptyroom.ui.widget.MultiSelector
+            android:id="@+id/multi_selector_section"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            app:display_values="@array/emptyroom_sections"
+            app:layout_constraintTop_toTopOf="@id/jc_building"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:layout_marginStart="14dp"
+            android:layout_marginEnd="14dp"
+            />
+
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tl_building"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            app:layout_constraintTop_toBottomOf="@id/multi_selector_section"
+            app:tabIndicatorHeight="0dp"
+            android:autoSizeTextType="uniform"
+            app:tabBackground="@android:color/transparent"
+            app:tabRippleColor="@android:color/transparent"
+            app:tabTextColor="#112C54"
+            style="@style/emptyroom_custom"
+            />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </LinearLayout>

@@ -234,7 +234,7 @@ class MultiSelector : FrameLayout {
         private fun bindClickListener(holder: VH, position: Int) {
             holder.itemView.setOnClickListener {
                 val listener = mSelector.mListener
-                listener.onItemClickListener(mSelector, holder, position)
+                listener.onItemClickListener()
                 if (mSelector.toggle(position)) {
                     performSelectedChange(position, holder)
                 }
@@ -245,7 +245,7 @@ class MultiSelector : FrameLayout {
             val listener = mSelector.mListener
             val value = mSelector.getValue(position)
             val selected = mSelector.isPositionSelected(position)
-            listener.onItemSelectedChange(mSelector, holder, value, selected, position)
+            listener.onItemSelectedChange()
 
         }
 
@@ -256,8 +256,7 @@ class MultiSelector : FrameLayout {
 }
 
 interface OnItemSelectedChangeListener {
-    fun onItemClickListener(selector: MultiSelector, viewHolder: androidx.recyclerview.widget.RecyclerView.ViewHolder, position: Int)
+    fun onItemClickListener()
 
-    fun onItemSelectedChange(selector: MultiSelector, viewHolder: androidx.recyclerview.widget.RecyclerView.ViewHolder,
-                             value: Int, checked: Boolean, position: Int)
+    fun onItemSelectedChange()
 }
