@@ -71,6 +71,7 @@ abstract class BaseActivity : AppCompatActivity() {
     }
 
     val common_toolbar get() = toolbar
+    val common_splite_line get() = split_line
     var menu: Menu? = null
         private set
 
