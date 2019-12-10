@@ -16,6 +16,7 @@ import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
 import com.google.android.material.bottomnavigation.LabelVisibilityMode
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.config.*
 import com.mredrock.cyxbs.common.event.CourseSlipsTopEvent
@@ -184,6 +185,7 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
         supportFragmentManager.beginTransaction().replace(R.id.course_bottom_sheet_content, getFragment(COURSE_ENTRY)).apply {
             commit()
         }
+//        (ARouter.getInstance().build("/test/test").navigation() as BottomSheetDialogFragment).show(supportFragmentManager, "hhh")
 
         adapter = MainVpAdapter(supportFragmentManager, fragments)
         view_pager.adapter = adapter
