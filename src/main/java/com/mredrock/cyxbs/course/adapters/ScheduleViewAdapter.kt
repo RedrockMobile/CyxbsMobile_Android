@@ -156,6 +156,9 @@ class ScheduleViewAdapter(private val mContext: Context,
         val itemViewInfo = getItemViewInfo(row, column)
         var itemCount = 1
         mSchedulesArray[row][column]?.let {
+            if (row == 0 || row == 2 || row == 4) {
+                mSchedulesArray[row+1][column]
+            }
             itemCount = it.size
             setItemViewOnclickListener(itemView, it)
         }

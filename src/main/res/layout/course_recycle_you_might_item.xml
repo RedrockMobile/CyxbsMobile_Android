@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/tv_might"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/course_shape_you_might_backgroud"
+        android:orientation="vertical"
+        android:paddingStart="13dp"
+        android:paddingTop="6dp"
+        android:paddingEnd="13dp"
+        android:paddingBottom="6dp"
+        android:textColor="@color/levelTwoFontColor"
+        android:textSize="12sp"
+        tools:text="会议" />
+
+</FrameLayout>

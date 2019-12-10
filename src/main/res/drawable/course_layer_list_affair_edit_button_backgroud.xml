@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item>
+        <shape
+            android:shape="rectangle">
+            <gradient
+                android:endColor="@color/course_end_of_light"
+                android:gradientRadius="50%p"
+                android:startColor="@color/course_edit_affair_start_color_transparency"
+                android:type="radial" />
+        </shape>
+
+    </item>
+
+
+<!--    <item-->
+<!--        android:left="@dimen/course_edit_affair_button"-->
+<!--        android:bottom="@dimen/course_edit_affair_button">-->
+<!--        <shape-->
+<!--            android:shape="rectangle">-->
+<!--            <gradient-->
+<!--                android:endColor="#006B65EF"-->
+<!--                android:startColor="@color/course_edit_affair_start_color_transparency" />-->
+<!--            <corners android:topLeftRadius="@dimen/course_edit_affair_button_circle"-->
+<!--                android:bottomLeftRadius="@dimen/course_edit_affair_button_circle"/>-->
+
+<!--        </shape>-->
+
+<!--    </item>-->
+
+
+<!--    <item-->
+<!--        android:right="@dimen/course_edit_affair_button"-->
+<!--        android:bottom="@dimen/course_edit_affair_button">-->
+<!--        <shape-->
+<!--            android:shape="rectangle">-->
+<!--            <gradient-->
+<!--                android:endColor="#006B65EF"-->
+<!--                android:startColor="@color/course_edit_affair_start_color_transparency"-->
+<!--                android:angle="180" />-->
+
+<!--            <corners android:bottomRightRadius="@dimen/course_edit_affair_button_circle"-->
+<!--                android:topRightRadius="@dimen/course_edit_affair_button_circle"/>-->
+<!--        </shape>-->
+
+<!--    </item>-->
+
+
+
+
+</layer-list>

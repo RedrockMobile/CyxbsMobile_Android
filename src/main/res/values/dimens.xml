@@ -31,7 +31,7 @@
     <dimen name="course_edit_affair_activity_ic_height">18dp</dimen>
     <dimen name="course_edit_affair_activity_ic_margin_start">19dp</dimen>
     <dimen name="course_edit_affair_activity_title_content_margin">15dp</dimen>
-    <dimen name="course_edit_affair_tv_size">15sp</dimen>
+    <dimen name="course_edit_affair_tv_size">21dp</dimen>
     <dimen name="course_edit_affair_ic_right_size">14dp</dimen>
 
 
@@ -40,4 +40,8 @@
     <dimen name="course_dialog_padding_top">20dp</dimen>
     <dimen name="course_shadow_height">47dp</dimen>
     <dimen name="course_top_distance">15dp</dimen>
+    <dimen name="course_edit_affair_button">10dp</dimen>
+    <dimen name="course_edit_affair_button_circle">20dp</dimen>
+    <dimen name="course_edit_affair_button_height">100dp</dimen>
+    <dimen name="course_edit_affair_button_width">100dp</dimen>
 </resources>
