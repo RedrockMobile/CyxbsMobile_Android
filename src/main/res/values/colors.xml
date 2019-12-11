@@ -105,6 +105,8 @@
     <color name="mine_sign_store_item_tv_integral" tools:ignore="ResourceName">#3A34D2</color>
     <color name="mine_sign_store_item_bg" tools:ignore="ResourceName">#F0F2FB</color>
     <color name="mine_askpostedfm_tv_disappear_at" tools:ignore="ResourceName">#6C84AB</color>
+    <color name="mine_askpostedfm_btn_bg_accept" tools:ignore="ResourceName">#F7DAD7</color>
+    <color name="mine_askpostedfm_btn_accept" tools:ignore="ResourceName">#FFA192</color>
 
 
     <!--    邮问-->
