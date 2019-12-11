@@ -33,7 +33,6 @@
     <color name="courseDeleteButtonTextColor" tools:ignore="ResourceName">#7CA3DF</color>
 
 
-
     <!--    底部tab未聚焦字体颜色-->
     <color name="unFocusedFontColor" tools:ignore="ResourceName">#AABCD8</color>
     <!--    底部tab聚焦字体颜色-->
@@ -57,6 +56,7 @@
     <!--    备忘灰色条纹-->
     <color name="memoGrayStripes" tools:ignore="ResourceName">#E8EBEF</color>
 
+    <color name="courseAffairYouMightRecycleItemBackgroudColor" tools:ignore="ResourceName">#99F2F3F7</color>
 
     <!--    发现教务在线方框背景-->
     <color name="discoveryJwzxBackground" tools:ignore="ResourceName">#AFD2FB</color>
@@ -68,11 +68,17 @@
     <color name="buttonGradientEndColor" tools:ignore="ResourceName">#4841E2</color>
 
     <!--    事务dialog删除按钮背景颜色-->
-    <color name="courseAffairDeleteButtonBackgroundColor" tools:ignore="ResourceName">#E6EFFC</color>
+    <color name="courseAffairDeleteButtonBackgroundColor" tools:ignore="ResourceName">#E6EFFC
+    </color>
 
     <!--    事务dialog，修改按钮渐变颜色，这个居然和通用渐变不是一个颜色，不科学-->
-    <color name="courseAffairModifyButtonGradientStartColor" tools:ignore="ResourceName">#2921D1</color>
-    <color name="courseAffairModifyButtonGradientEndColor" tools:ignore="ResourceName">#5D5DF7</color>
+    <color name="courseAffairModifyButtonGradientStartColor" tools:ignore="ResourceName">#2921D1
+    </color>
+    <color name="courseAffairModifyButtonGradientEndColor" tools:ignore="ResourceName">#5D5DF7
+    </color>
+
+    <!--    添加事务时标题-->
+    <color name="transactionHeading" tools:ignore="ResourceName">#122D55</color>
 
 
     <!--    打字框背景颜色-->
@@ -112,7 +118,8 @@
     <!--    邮问-->
     <!--    当前时间颜色-->
     <color name="qa_question_current_time_color" tools:ignore="ResourceName">#ff2a4e84</color>
-
+    <!--    问题tab下标颜色-->
+    <string name="qa_question_tab_indicator_color" tools:ignore="ResourceName">#1ad0f2</string>
     <!--    问题item的昵称颜色-->
     <color name="qa_question_item_nickname_color" tools:ignore="ResourceName">#555555</color>
     <!--    问题item的积分奖励字体颜色-->
@@ -120,8 +127,7 @@
     <!--    问题item的下面的各类数字颜色-->
     <color name="qa_question_bottom_count_color" tools:ignore="ResourceName">#2A4E84</color>
     <!--    问题item的分割线颜色-->
-    <color name="qa_question_recycler_item_divide_line_color" tools:ignore="ResourceName">#BDCCE5
-    </color>
+    <color name="qa_question_recycler_item_divide_line_color" tools:ignore="ResourceName">#BDCCE5</color>
     <!--    评论内容颜色-->
     <color name="qa_comment_content_color" tools:ignore="ResourceName">#3B4555</color>
     <!--    回答发布时间颜色-->
@@ -134,13 +140,26 @@
     <color name="qa_quiz_select_type_text_color" tools:ignore="ResourceName">#94A6C4</color>
     <!--    提问选中类型的文字颜色-->
     <color name="qa_quiz_selected_type_text_color" tools:ignore="ResourceName">#FFA192</color>
-    <!--    提问选中类型的背景颜色，指定78的不透明度-->
+    <!--    提问选中类型的背景颜色，指定78的透明度-->
     <color name="qa_quiz_selected_type_background_color" tools:ignore="ResourceName">#c3F7DAD7</color>
-
-    <!--    提问标题框和内容框的背景颜色，指定79的不透明度-->
+    <!--    提问标题框和内容框的背景颜色，指定69的透明度-->
     <color name="qa_quiz_new_text_background_color" tools:ignore="ResourceName">#acE8F0FC</color>
+    <!--    举报弹窗的提示文字颜色，指定61的透明度-->
+    <color name="qa_question_report_text_background_color" tools:ignore="ResourceName">#9815315B</color>
+    <!--    举报弹窗的分割线颜色，指定4的透明度-->
+    <color name="qa_question_report_divide_line_background_color" tools:ignore="ResourceName">#0a15315B</color>
 
     <!--    登陆下面的灰色字体-->
     <color name="logInToTheGrayFontBelow" tools:ignore="ResourceName">#ABBCD8</color>
+
+    <!--    添加事务下面按钮的光晕渐变结束颜色-->
+    <color name="course_end_of_light" tools:ignore="ResourceName">#006B65EF</color>
+
+    <!--    添加事务页面的圆角shape背景-->
+    <color name="course_affair_add_backgroud" tools:ignore="ResourceName">#F2F3F7</color>
+
+    <!--    添加事务的气泡颜色-->
+    <color name="course_affair_bubble_color" tools:ignore="ResourceName">#DFE6FF</color>
+
 </resources>
 
