@@ -39,7 +39,7 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:text="期末考试高数应该如何复习" />
 
-    <ImageButton
+    <ImageView
         android:id="@+id/ib_question_toolbar_more"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

@@ -58,7 +58,7 @@
     <color name="qa_quiz_content_edt_color">#b3000000</color>
     <color name="qa_quiz_content_edt_hint_color">#b3999999</color>
     <color name="qa_quiz_divider_color">#26000000</color>
-    <color name="qa_qa_quiz_title_left_count_tv_color">#66000000</color>
+    <color name="qa_quiz_title_left_count_tv_color">#66000000</color>
     <color name="qa_quiz_title_edt_color">#d9000000</color>
     <color name="qa_quiz_title_edt_hint_color">#e6999999</color>
     <color name="qa_quiz_tags_edit_color">#7195fa</color>

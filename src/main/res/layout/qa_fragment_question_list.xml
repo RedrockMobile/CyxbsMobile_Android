@@ -1,26 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/swipe_refresh_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:color="#f8f9fc"
     tools:context=".pages.question.ui.QuestionListFragment">
-    <com.mredrock.cyxbs.common.component.JCardViewPlus
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:cardCornerRadiusUpperLeft="40dp"
-        app:cardCornerRadiusUpperRight="40dp"
-        app:shadowFlags="bottom">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_question_list"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:paddingTop="10dp"
-            android:scrollbars="none"
-            android:overScrollMode="never"/>
-    </com.mredrock.cyxbs.common.component.JCardViewPlus>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_question_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:overScrollMode="never"
+        android:paddingTop="10dp"
+        android:scrollbars="none" />
 
 </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

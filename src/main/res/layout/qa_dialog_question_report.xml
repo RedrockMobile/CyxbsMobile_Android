@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ns_question_report"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tv_report"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:paddingTop="16dp"
+        android:paddingBottom="18dp"
+        android:text="@string/qa_question_report_text"
+        android:textColor="@color/qa_question_report_text_background_color"
+        android:textSize="14sp" />
+
+    <include layout="@layout/qa_dialog_question_report_dialog_type_layout" />
+
+
+</androidx.appcompat.widget.LinearLayoutCompat>

@@ -17,7 +17,8 @@ class QuizTimeNumberPicker(context: Context?, attrs: AttributeSet?) : NumberPick
     override fun addView(child: View?, index: Int, params: ViewGroup.LayoutParams?) {
         super.addView(child, index, params)
         if (child is EditText) {
-            child.setTextColor(Color.parseColor("#d97195fa"))
+            child.setTextColor(Color.parseColor("#2A4E84"))
+            child.textSize = 25f
         }
     }
 }

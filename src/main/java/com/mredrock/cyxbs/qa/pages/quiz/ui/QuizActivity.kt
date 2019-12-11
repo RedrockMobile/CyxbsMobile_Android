@@ -7,11 +7,11 @@ import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.KeyEvent
-import android.view.Menu
-import android.view.MenuItem
-import android.view.View
+import android.view.*
 import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.google.gson.Gson
@@ -21,19 +21,19 @@ import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.bean.Question
-import com.mredrock.cyxbs.qa.pages.quiz.QuizViewModel
 import com.mredrock.cyxbs.qa.pages.quiz.ui.dialog.RewardSetDialog
+import com.mredrock.cyxbs.qa.pages.quiz.QuizViewModel
 import com.mredrock.cyxbs.qa.pages.quiz.ui.dialog.TagsEditDialog
 import com.mredrock.cyxbs.qa.pages.quiz.ui.dialog.TimePickDialog
 import com.mredrock.cyxbs.qa.ui.activity.ViewImageActivity
 import com.mredrock.cyxbs.qa.utils.CHOOSE_PHOTO_REQUEST
-import com.mredrock.cyxbs.qa.utils.getMaxLength
 import com.mredrock.cyxbs.qa.utils.selectImageFromAlbum
 import kotlinx.android.synthetic.main.qa_activity_quiz.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.jetbrains.anko.support.v4.startActivityForResult
+import org.jetbrains.anko.textColor
 import top.limuyang2.photolibrary.activity.LPhotoPickerActivity
 
 //todo 这个界面赶时间写得有点乱，记得优化一下
@@ -64,7 +64,6 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
                 val result = viewModel.setDisAppearTime(it)
                 if (result) {
                     dismiss()
-                    rewardSetDialog.show()
                 }
             }
         }
@@ -83,14 +82,8 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.qa_activity_quiz)
-        common_toolbar.init(getString(R.string.qa_quiz_title), listener = View.OnClickListener {
-            if (edt_quiz_title.text.isNullOrEmpty() && edt_quiz_content.text.isNullOrEmpty()) {
-                finish()
-                return@OnClickListener
-            }
-            saveDraft()
-            finish()
-        })
+        initToolbar()
+        initTagSelector()
         initImageAddView()
         viewModel.getMyReward() //优先初始化积分，避免用户等待
 
@@ -107,6 +100,42 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
         }
     }
 
+    private fun initTagSelector() {
+        var currentTag = 0
+        val tagSelector = findViewById<LinearLayout>(R.id.layout_quiz_tag)
+        val childView = Array(tagSelector.childCount) { tagSelector.getChildAt(it) as TextView }
+        if (childView.isNotEmpty()) {
+            viewModel.setTag(childView[currentTag].text.toString())
+        }
+        for ((index, i) in childView.withIndex()) {
+            i.setOnClickListener { view ->
+                childView[currentTag].apply {
+                    textColor = ContextCompat.getColor(this@QuizActivity, R.color.qa_quiz_select_type_text_color)
+                    background = ContextCompat.getDrawable(this@QuizActivity, R.drawable.qa_selector_quiz_type_default_select)
+
+                }
+
+                (view as TextView).apply {
+                    textColor = ContextCompat.getColor(this@QuizActivity, R.color.qa_quiz_selected_type_text_color)
+                    background = ContextCompat.getDrawable(this@QuizActivity, R.drawable.qa_selector_quiz_type_default_selected)
+                }
+                currentTag = index
+                viewModel.setTag(view.text.toString())
+            }
+        }
+    }
+
+    private fun initToolbar() {
+        common_toolbar.init(getString(R.string.qa_quiz_title), listener = View.OnClickListener {
+            if (edt_quiz_title.text.isNullOrEmpty() && edt_quiz_content.text.isNullOrEmpty()) {
+                finish()
+                return@OnClickListener
+            }
+            saveDraft()
+            finish()
+        })
+
+    }
 
 
     private inline fun createTextWatcher(crossinline listener: (Editable) -> Unit) = object : TextWatcher {
@@ -192,7 +221,7 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
         if (item?.itemId == R.id.qa_quiz_next) {
             val result = viewModel.submitTitleAndContent(edt_quiz_title.text.toString(), edt_quiz_content.text.toString())
             if (result) {
-                timePickDialog.show()
+                rewardSetDialog.show()
             }
             return true
         }

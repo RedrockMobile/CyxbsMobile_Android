@@ -100,7 +100,7 @@
             android:layout_marginTop="7dp"
             android:text="@string/qa_answer_reply_hint"
             android:textColor="@color/levelTwoFontColor"
-            android:textSize="24sp"
+            android:textSize="18sp"
             android:textStyle="bold" />
 
     </LinearLayout>

@@ -1,13 +1,13 @@
 package com.mredrock.cyxbs.qa.pages.main
 
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.AppCompatCheckedTextView
 import com.alibaba.android.arouter.facade.annotation.Route
-import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.config.QA_ENTRY
 import com.mredrock.cyxbs.common.event.AskLoginEvent
@@ -16,7 +16,6 @@ import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.bean.Question
 import com.mredrock.cyxbs.qa.pages.question.ui.QuestionListFragment
 import com.mredrock.cyxbs.qa.pages.quiz.ui.QuizActivity
-import kotlinx.android.synthetic.main.qa_dialog_quiz_type_select.view.*
 import kotlinx.android.synthetic.main.qa_fragment_question_container.view.*
 import org.greenrobot.eventbus.EventBus
 
@@ -43,7 +42,11 @@ class QuestionContainerFragment : BaseFragment(), View.OnClickListener {
         root.vp_question.offscreenPageLimit = if (BaseApp.isLogin) 5 else 0
         root.tl_category.apply {
             setupWithViewPager(root.vp_question)
+            setSelectedTabIndicatorColor(Color.parseColor(context.getString(R.string.qa_question_tab_indicator_color)))
+            setSelectedTabIndicator(R.drawable.qa_question_tab_indicator)
+
         }
+
         root.btn_ask_question.setOnClickListener {
             if (BaseApp.isLogin) {
                 QuizActivity.activityStart(this@QuestionContainerFragment, "学习", REQUEST_LIST_REFRESH_ACTIVITY)

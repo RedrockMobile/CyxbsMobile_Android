@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
     android:layout_marginTop="25dp">
 
     <androidx.constraintlayout.widget.Guideline
@@ -12,86 +12,93 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         app:layout_constraintGuide_percent="0.05" />
+
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/qa_guideline_content_start"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:orientation="vertical"
         app:layout_constraintGuide_percent="0.17" />
+
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/qa_guideline_avatar_end"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.95"/>
+        app:layout_constraintGuide_percent="0.95" />
+
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/iv_comment_avatar"
         android:layout_width="36dp"
         android:layout_height="36dp"
+        android:scaleType="centerCrop"
         app:layout_constraintStart_toStartOf="@+id/qa_guideline_avatar_start"
         app:layout_constraintTop_toTopOf="parent"
-        android:scaleType="centerCrop"
-        tools:src="@drawable/common_default_avatar"/>
+        tools:src="@drawable/common_default_avatar" />
 
     <com.mredrock.cyxbs.common.component.JCardViewPlus
+        android:id="@+id/jCardView_comment"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:cardCornerRadiusLowerLeft="15dp"
         app:cardCornerRadiusLowerRight="15dp"
         app:cardCornerRadiusUpperRight="15dp"
-        app:cardBackgroundColor="@color/qa_comment_content_second_kind_color"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/qa_guideline_avatar_end"
         app:layout_constraintStart_toEndOf="@+id/qa_guideline_content_start"
-        app:layout_constraintTop_toTopOf="parent"
-        app:shadowFlags="bottom">
+        app:layout_constraintTop_toTopOf="parent">
 
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
-            android:layout_marginStart="12dp">
+            android:layout_marginStart="18dp"
+            android:layout_marginEnd="13sp"
+            >
 
             <TextView
+                android:layout_marginTop="17dp"
                 android:id="@+id/tv_comment_nickname"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"
-                android:textSize="18sp"
-                android:textStyle="bold"
                 android:textColor="@color/levelTwoFontColor"
-                tools:text="往后余生"/>
+                android:textSize="15sp"
+                android:textStyle="bold"
+                tools:text="往后余生" />
+
             <TextView
                 android:id="@+id/tv_comment_create_at"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
-                android:layout_marginEnd="20dp"
-                android:textSize="14sp"
-                android:textColor="@color/levelTwoFontColor"
                 android:alpha="0.54"
-                tools:text="19:00"
-                />
+                android:gravity="center"
+                android:layout_alignTop="@+id/tv_comment_nickname"
+                android:layout_alignBottom="@+id/tv_comment_nickname"
+                android:textColor="@color/levelTwoFontColor"
+                android:textSize="11sp"
+                tools:text="19:00" />
+
             <TextView
                 android:id="@+id/tv_comment_content"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/tv_comment_nickname"
                 android:layout_marginTop="10dp"
-                android:textSize="16sp"
-                android:textColor="@color/qa_comment_content_color"
                 android:alpha="0.5"
-                tools:text="是的，公式是没有问题，但是你第三步那个代入方式是错误的，不应该用x的负5次方是的5次方是的5次方是。" />
+                android:textColor="@color/qa_comment_content_color"
+                android:textSize="13sp"
+                tools:text="是的，公式是没有问题，但是你第三步那个代入方式是错误的，不应该用x的负5次方是的5次方是的5次方是。是的，公式是没有问题，但是你第三步那个代入方式是错误的，不应该用x的负5次方是的5次方是的5次方是。" />
+
             <ImageButton
                 android:id="@+id/ib_comment_item_more"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/tv_comment_content"
                 android:layout_alignParentEnd="true"
-                android:layout_marginEnd="20dp"
+                android:layout_marginTop="7dp"
                 android:background="@drawable/qa_ic_answer_list_more"
-                android:layout_marginBottom="20dp"
-                />
+                android:layout_marginBottom="13dp"/>
         </RelativeLayout>
 
     </com.mredrock.cyxbs.common.component.JCardViewPlus>

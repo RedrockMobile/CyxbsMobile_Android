@@ -9,7 +9,9 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.RecyclerView
 import com.alibaba.android.arouter.facade.annotation.Route
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.mredrock.cyxbs.common.BaseApp
@@ -20,16 +22,15 @@ import com.mredrock.cyxbs.common.event.AskLoginEvent
 import com.mredrock.cyxbs.common.event.OpenShareQuestionEvent
 import com.mredrock.cyxbs.common.ui.BaseActivity
 import com.mredrock.cyxbs.common.utils.extensions.gone
-import com.mredrock.cyxbs.common.utils.extensions.visible
 import com.mredrock.cyxbs.common.viewmodel.event.ProgressDialogEvent
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.bean.Question
 import com.mredrock.cyxbs.qa.component.recycler.RvAdapterWrapper
 import com.mredrock.cyxbs.qa.network.NetworkState
+import com.mredrock.cyxbs.qa.pages.answer.ui.dialog.ReportDialog
 import com.mredrock.cyxbs.qa.pages.answer.viewmodel.AnswerListViewModel
 import com.mredrock.cyxbs.qa.pages.comment.AdoptAnswerEvent
 import com.mredrock.cyxbs.qa.pages.comment.ui.CommentListActivity
-import com.mredrock.cyxbs.qa.pages.quiz.ui.dialog.RewardSetDialog
 import com.mredrock.cyxbs.qa.ui.adapter.EmptyRvAdapter
 import com.mredrock.cyxbs.qa.ui.adapter.FooterRvAdapter
 import kotlinx.android.synthetic.main.qa_activity_answer_list.*
@@ -72,11 +73,11 @@ class AnswerListActivity : BaseActivity() {
     private lateinit var answerListAdapter: AnswerListAdapter
     private lateinit var footerRvAdapter: FooterRvAdapter
     private lateinit var emptyRvAdapter: EmptyRvAdapter
+    private lateinit var bottomSheetDialog: BottomSheetDialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.qa_activity_answer_list)
-//        common_toolbar.init(getString(R.string.qa_answer_list_title))
         if (intent.getParcelableExtra<Question>(PARAM_QUESTION) != null) {
             initViewModel(intent.getParcelableExtra(PARAM_QUESTION))
             initView(intent.getParcelableExtra(PARAM_QUESTION))
@@ -113,6 +114,12 @@ class AnswerListActivity : BaseActivity() {
         tv_question_toolbar_title.text = question.title
         ib_question_toolbar_back.setOnClickListener { finish() }
         observeListChangeEvent()
+        //初始化BottomSheetDialog
+        bottomSheetDialog = ReportDialog(this@AnswerListActivity)
+        ib_question_toolbar_more.setOnClickListener {
+            bottomSheetDialog.show()
+        }
+
     }
 
     private fun initRv() {
@@ -131,6 +138,14 @@ class AnswerListActivity : BaseActivity() {
         rv_answer_list.apply {
             layoutManager = androidx.recyclerview.widget.LinearLayoutManager(this@AnswerListActivity)
             adapter = adapterWrapper
+            val mDistance: Int
+            val isVisible: Boolean
+            addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                    super.onScrolled(recyclerView, dx, dy)
+
+                }
+            })
         }
     }
 

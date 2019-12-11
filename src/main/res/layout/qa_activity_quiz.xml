@@ -23,7 +23,9 @@
             android:orientation="vertical">
 
 
-            <include layout="@layout/qa_activity_quiz_select_type_layout" />
+            <include
+                android:id="@+id/layout_quiz_tag"
+                layout="@layout/qa_activity_quiz_select_type_layout" />
 
             <androidx.appcompat.widget.AppCompatEditText
                 android:id="@+id/edt_quiz_title"

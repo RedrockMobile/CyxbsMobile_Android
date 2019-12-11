@@ -68,7 +68,7 @@
     <string name="qa_report_title">举报</string>
     <string name="qa_crop">裁剪</string>
     <string name="qa_fragment_head_title">邮问</string>
-    <string name="qa_fragment_head_give_question">提问</string>
+    <string name="qa_fragment_head_give_question">提 问</string>
     <string name="qa_comment_new_comment_text_view_hint">发布评论</string>
     <string name="qa_answer_btn_text">回答</string>
     <string name="qa_question_new_question_title_hint">输入标题</string>
@@ -78,6 +78,11 @@
     <string name="qa_quiz_select_type_no_name">匿名</string>
     <string name="qa_quiz_select_type_life">生活</string>
     <string name="qa_quiz_select_type_others">其他</string>
+    <string name="qa_quiz_reward_set_text">悬赏积分</string>
+    <string name="qa_quiz_mission_deadline_title_text">任务最晚完成时间</string>
+    <string name="qa_quiz_dialog_cancel_text">取消</string>
+    <string name="qa_reward_set_title_text">积分设置</string>
+    <string name="qa_question_report_text">举报该问题</string>
 
     <string-array name="qa_report_type">
         <item>色情低俗</item>
