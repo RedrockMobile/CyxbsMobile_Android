@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:translationZ="10dp">
     <ImageView
-        android:id="@+id/img_viewpager_item"
+        android:id="@+id/iv_viewpager_item"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:adjustViewBounds="true"

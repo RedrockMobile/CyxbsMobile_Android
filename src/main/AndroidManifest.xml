@@ -6,9 +6,7 @@
         <activity android:name=".pages.morefunction.MoreFunctionActivity"
             android:launchMode="singleTop">
         </activity>
-        <activity android:name="debug.DebugActivity" />
         <activity android:name=".pages.RollerViewActivity" />
-        <activity android:name=".pages.hiding.DiscoverHidingActivity" />
     </application>
 
 </manifest>

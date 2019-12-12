@@ -20,11 +20,27 @@ class MoreFunctionActivity : BaseActivity() {
         setContentView(R.layout.discover_activity_more_function)
 
         initRv(rv_discover_more_function)
+        initSettings()
     }
 
     private fun initRv(rv: RecyclerView) {
         rv.adapter = MoreFunctionRvAdapter(MoreFunctionProvider.functions)
-
         rv.layoutManager = StaggeredGridLayoutManager(2, RecyclerView.VERTICAL)
+    }
+
+    private fun initSettings() {
+        iv_discover_more_function_back.setOnClickListener { finish() }
+        iv_discover_more_function_settings.setOnClickListener {
+            (rv_discover_more_function.adapter as MoreFunctionRvAdapter).apply {
+                changeSettingMode()
+                if (this.getIsSettingMode()) {
+                    iv_discover_more_function_settings.setImageResource(R.drawable.discover_ic_more_function_finish)
+                } else {
+                    iv_discover_more_function_settings.setImageResource(R.drawable.discover_ic_settings)
+                    MoreFunctionProvider.saveHomePageFunctionsToSp(this.getChosenList())
+                    this.resetChosenList()
+                }
+            }
+        }
     }
 }

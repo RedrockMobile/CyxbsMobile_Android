@@ -45,17 +45,25 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>() {
         initViewPager(vp_discover_home)
         initJwNews(vf_jwzx_detail, fl_discover_home_jwnews)
         viewModel.getRollInfos()
-        initFunctions()
-        initCheckIn(iv_check_in)
+
+        iv_check_in.setOnClickListener {
+            ARouter.getInstance().build(MINE_CHECK_IN).navigation()
+        }
 
         super.onActivityCreated(savedInstanceState)
 
     }
 
+    override fun onResume() {
+        super.onResume()
+        initFunctions()
+    }
+
+
     private fun initViewPager(viewPager2: ViewPager2) {
         viewPager2.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageScrollStateChanged(state: Int) {
-                if(state==ViewPager2.SCROLL_STATE_DRAGGING ||state==ViewPager2.SCROLL_STATE_SETTLING)
+                if (state == ViewPager2.SCROLL_STATE_DRAGGING || state == ViewPager2.SCROLL_STATE_SETTLING)
                     vp_discover_home.adapter?.notifyDataSetChanged()
                 super.onPageScrollStateChanged(state)
             }
@@ -80,12 +88,12 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>() {
 
     }
 
-    private fun initJwNews(viewFlipper: ViewFlipper?, frameLayout: FrameLayout) {
+    private fun initJwNews(viewFlipper: ViewFlipper, frameLayout: FrameLayout) {
         viewModel.jwNews.observe {
             if (it != null) {
-                viewFlipper?.removeAllViews()
+                viewFlipper.removeAllViews()
                 for (item in it) {
-                    viewFlipper?.addView(getTextView(item.title, item.id))
+                    viewFlipper.addView(getTextView(item.title, item.id))
                 }
             }
         }
@@ -94,10 +102,10 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>() {
             ARouter.getInstance().build(DISCOVER_NEWS_ITEM).withString("id", viewFlipper.focusedChild.tag as String).navigation()
         }
 
-        viewFlipper?.setFlipInterval(6555)
-        viewFlipper?.setInAnimation(context, R.anim.discover_text_in_anim)
-        viewFlipper?.setOutAnimation(context, R.anim.discover_text_out_anim)
-        viewFlipper?.startFlipping()
+        viewFlipper.setFlipInterval(6555)
+        viewFlipper.setInAnimation(context, R.anim.discover_text_in_anim)
+        viewFlipper.setOutAnimation(context, R.anim.discover_text_out_anim)
+        viewFlipper.startFlipping()
         viewModel.getJwNews(1)
 
         frameLayout.setOnClickListener {
@@ -119,29 +127,21 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>() {
     }
 
     private fun initFunctions() {
-        val functions = context?.let {
-            MoreFunctionProvider.getHomePageFunctions()
-        }
-        functions ?: return
+        val functions = MoreFunctionProvider.getHomePageFunctions()
         val imageViewList = mutableListOf<AppCompatImageView>(iv_discover_1, iv_discover_2, iv_discover_3, iv_discover_4)
         val textViewList = mutableListOf<AppCompatTextView>(tv_discover_1, tv_discover_2, tv_discover_3, tv_discover_4)
         for ((index, imageView) in imageViewList.withIndex()) {
             imageView.setImageResource(functions[index].resource)
             imageView.setOnClickListener {
-                functions[index].startActivityAble.startActivity()
+                functions[index].activityStarter.startActivity()
             }
         }
         for ((index, textView) in textViewList.withIndex()) {
             textView.text = context?.getText(functions[index].title)
             textView.setOnClickListener {
-                functions[index].startActivityAble.startActivity()
+                functions[index].activityStarter.startActivity()
             }
         }
     }
 
-    private fun initCheckIn(imageView: AppCompatImageView){
-        imageView.setOnClickListener {
-            ARouter.getInstance().build(MINE_CHECK_IN).navigation()
-        }
-    }
 }

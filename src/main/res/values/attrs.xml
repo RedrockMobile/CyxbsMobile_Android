@@ -1,14 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <declare-styleable name="RollerView" tools:ignore="ResourceName">
-        <attr name="pageMargin" format="dimension" />
-        <attr name="EdgePageSize" format="dimension" />
-        <attr name="pageScale" format="float" />
-        <attr name="alpha" format="float" />
-        <attr name="aspectRatio" format="float" />
-        <attr name="showMultiPage" format="boolean" />
-        <attr name="delay" format="integer" />
-    </declare-styleable>
+
 
     <declare-styleable name="MyImageView" tools:ignore="ResourceName">
         <attr name="roundWidth" format="dimension" />

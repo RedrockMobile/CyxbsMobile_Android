@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    android:id="@+id/cl_discover_more_function"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical" android:layout_width="match_parent"
@@ -8,7 +10,7 @@
     android:background="@drawable/discover_shape_more_function_recycler_item">
 
     <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/img_discover_recycler_item"
+        android:id="@+id/iv_discover_recycler_item"
         android:layout_width="40dp"
         android:layout_height="41dp"
         app:layout_constraintStart_toStartOf="@+id/discover_guideline9"

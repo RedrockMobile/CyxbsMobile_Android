@@ -12,16 +12,19 @@ import com.mredrock.cyxbs.common.utils.extensions.editor
 import com.mredrock.cyxbs.discover.R
 import com.mredrock.cyxbs.discover.pages.morefunction.MoreFunctionActivity
 import org.greenrobot.eventbus.EventBus
+import java.lang.ref.SoftReference
+import java.lang.ref.WeakReference
 
 /**
  * @author zixuan
  * 2019/11/20
  */
 object MoreFunctionProvider {
-    public const val HOME_PAGE_FUNCTION_1 = "homePageFunction1"
-    public const val HOME_PAGE_FUNCTION_2 = "homePageFunction2"
-    public const val HOME_PAGE_FUNCTION_3 = "homePageFunction3"
-    val functions = listOf<Function>(Function(R.drawable.discover_ic_no_class, R.string.discover_title_no_class, R.string.discover_detail_no_class, StartActivityAfterLogin("没课约", DISCOVER_NO_CLASS)),
+    const val HOME_PAGE_FUNCTION_1 = "homePageFunction1"
+    const val HOME_PAGE_FUNCTION_2 = "homePageFunction2"
+    const val HOME_PAGE_FUNCTION_3 = "homePageFunction3"
+    private var homeFunctions : SoftReference<MutableList<Function>> = SoftReference(mutableListOf())
+    val functions = listOf(Function(R.drawable.discover_ic_no_class, R.string.discover_title_no_class, R.string.discover_detail_no_class, StartActivityAfterLogin("没课约", DISCOVER_NO_CLASS)),
             Function(R.drawable.discover_ic_bus_track, R.string.discover_title_bus_track, R.string.discover_detail_bus_track, StartActivityImpl(DISCOVER_SCHOOL_CAR)),
             Function(R.drawable.diacover_ic_empty_classroom, R.string.discover_title_empty_classroom, R.string.discover_detail_empty_classroom, StartActivityImpl(DISCOVER_EMPTY_ROOM)),
             Function(R.drawable.discover_ic_my_exam, R.string.discover_title_my_exam, R.string.discover_detail_my_exam, StartActivityAfterLogin("我的考试", DISCOVER_GRADES)),
@@ -30,13 +33,25 @@ object MoreFunctionProvider {
             Function(R.drawable.discover_ic_map, R.string.discover_title_map, R.string.discover_detail_map, StartActivityImpl(DISCOVER_MAP)),
             Function(R.drawable.discover_ic_more_function, R.string.discover_title_more_function, R.string.discover_detail_more_function, StartActivityFromIntent(Intent(BaseApp.context, MoreFunctionActivity::class.java))))
 
+    //当有缓存时直接从缓存中获取，没有时从sp中拿
     fun getHomePageFunctions(): List<Function> {
-        val functions = mutableListOf<Function>()
-        val indexes: List<Int> = getHomePageFunctionsFromSp()
-        for (index in indexes) {
-            functions.add(this.functions[index])
+        var func = homeFunctions.get()
+        if(func == null){
+            homeFunctions = SoftReference(mutableListOf())
+            func = homeFunctions.get()
         }
-        return functions
+        if(func!=null && func.size!=3) {
+            val indexes: List<Int> = getHomePageFunctionsFromSp()
+            for (index in indexes) {
+                func.add(this.functions[index])
+            }
+            return func
+        }else{
+            if(func?.size == 3)
+                return func
+        }
+
+        return listOf()
     }
 
     private fun getHomePageFunctionsFromSp(): List<Int> {
@@ -51,17 +66,23 @@ object MoreFunctionProvider {
         return list
     }
 
+    //只存储前三个数据
     fun saveHomePageFunctionsToSp(list: List<Int>) {
-        val context = BaseApp.context
-        context.defaultSharedPreferences.editor {
+        val func = homeFunctions.get()
+        if(func != null){
+            for(i in 0..2){
+                func[i] = functions[list[i]]
+            }
+        }
+        BaseApp.context.defaultSharedPreferences.editor {
             putInt(HOME_PAGE_FUNCTION_1, list[0])
             putInt(HOME_PAGE_FUNCTION_2, list[1])
             putInt(HOME_PAGE_FUNCTION_3, list[2])
         }
     }
 
-    class Function(var resource: Int, val title: Int, val detail: Int, val startActivityAble: StartActivityAble)
-    public interface StartActivityAble {
+    class Function(var resource: Int, val title: Int, val detail: Int, val activityStarter: StartActivityAble)
+    interface StartActivityAble {
         fun startActivity()
     }
 
@@ -74,7 +95,6 @@ object MoreFunctionProvider {
     class StartActivityAfterLogin(private val msg: String, private val routing: String) : StartActivityAble {
         override fun startActivity() {
             if (BaseApp.isLogin) {
-                LogUtils.e("11", "routing:$routing,${TextUtils.isEmpty(routing)},${routing.startsWith("/")}")
                 ARouter.getInstance().build(routing).navigation()
             } else {
                 EventBus.getDefault().post(AskLoginEvent("请先登陆才能使用${msg}哦~"))

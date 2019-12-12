@@ -14,8 +14,7 @@
         android:layout_marginRight="20dp"
         android:layout_marginTop="10dp"
         android:scaleType="centerCrop"
-        android:adjustViewBounds="true"
-        tools:src="@drawable/ic_discover_no_course" />
+        android:adjustViewBounds="true" />
 
     <TextView
         android:id="@+id/discover_grid_item_title"

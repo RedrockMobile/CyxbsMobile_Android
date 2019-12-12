@@ -23,11 +23,11 @@ import org.jetbrains.anko.dip
  * 2019/11/20
  *
  */
-class BannerAdapter(private val context:Context, private val urlList: List<RollerViewInfo>,val viewPager: ViewPager2) : Adapter<RecyclerView.ViewHolder>() {
+class BannerAdapter(private val context: Context, private val urlList: List<RollerViewInfo>, private val viewPager: ViewPager2) : Adapter<RecyclerView.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
 
-        return ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.discover_viewpager_item,parent,false))
+        return ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.discover_viewpager_item, parent, false))
     }
 
     override fun getItemCount(): Int {
@@ -35,19 +35,16 @@ class BannerAdapter(private val context:Context, private val urlList: List<Rolle
     }
 
 
-
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-
+        val url = urlList[position % urlList.size].picture_url
         Glide.with(context)
-                .load(urlList[position%urlList.size].picture_url)
+                .load(url)
                 .apply(RequestOptions().transform(MultiTransformation(CenterCrop(), RoundedCorners(context.dip(8)))))
-                .into(holder.itemView.img_viewpager_item)
-        if (urlList[position%urlList.size].picture_goto_url==null){
-            return
-        }
-        if(urlList[position%urlList.size].picture_goto_url!!.startsWith("http")){
+                .into(holder.itemView.iv_viewpager_item)
+        url ?: return
+        if (url.startsWith("http")) {
             holder.itemView.setOnClickListener {
-                RollerViewActivity.startRollerViewActivity(urlList[position%urlList.size],holder.itemView.context)
+                RollerViewActivity.startRollerViewActivity(urlList[position % urlList.size], holder.itemView.context)
             }
         }
     }

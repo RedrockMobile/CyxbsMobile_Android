@@ -16,14 +16,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="1dp"
-            android:layout_marginTop="52dp"
             android:text="第十一周 周二"
             android:textColor="@color/levelTwoFontColor"
             android:textSize="10sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="@+id/discover_guideline"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/discover_guideline3"
             tools:ignore="MissingConstraints" />
 
         <androidx.appcompat.widget.AppCompatTextView
@@ -40,6 +39,7 @@
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="@+id/tv_day"
             app:layout_constraintTop_toBottomOf="@+id/tv_day"
+            app:layout_constraintVertical_bias="0.0"
             tools:ignore="MissingConstraints" />
 
         <androidx.appcompat.widget.AppCompatImageView
@@ -110,11 +110,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="2dp"
-            android:layout_marginTop="27dp"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_discover_4"
             app:layout_constraintEnd_toStartOf="@+id/discover_guideline2"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="@+id/discover_guideline"
-            app:layout_constraintTop_toBottomOf="@+id/fl_discover_home_jwnews"
+            app:layout_constraintTop_toTopOf="@+id/iv_discover_4"
             tools:ignore="ContentDescription,MissingConstraints"
             tools:src="@drawable/diacover_ic_empty_classroom" />
 
@@ -122,7 +122,7 @@
             android:id="@+id/tv_discover_1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="1dp"
+            android:layout_marginTop="4dp"
             android:textColor="@color/levelTwoFontColor"
             android:textSize="11sp"
             app:layout_constraintEnd_toEndOf="@+id/iv_discover_1"
@@ -133,19 +133,19 @@
             android:id="@+id/iv_discover_2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            tools:src="@drawable/discover_ic_bus_track"
-            app:layout_constraintBottom_toBottomOf="@+id/iv_discover_1"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_discover_4"
             app:layout_constraintEnd_toEndOf="@+id/iv_discover_4"
             app:layout_constraintHorizontal_bias="0.33"
             app:layout_constraintStart_toStartOf="@+id/iv_discover_1"
-            app:layout_constraintTop_toTopOf="@+id/iv_discover_1"
-            tools:ignore="ContentDescription,MissingConstraints" />
+            app:layout_constraintTop_toTopOf="@+id/iv_discover_4"
+            tools:ignore="ContentDescription,MissingConstraints"
+            tools:src="@drawable/discover_ic_bus_track" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tv_discover_2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="1dp"
+            android:layout_marginTop="4dp"
             android:textColor="@color/levelTwoFontColor"
             android:textSize="11sp"
             app:layout_constraintEnd_toEndOf="@+id/iv_discover_2"
@@ -157,10 +157,11 @@
             android:id="@+id/iv_discover_3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="@+id/iv_discover_1"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_discover_4"
             app:layout_constraintEnd_toEndOf="@+id/iv_discover_4"
             app:layout_constraintHorizontal_bias="0.66"
             app:layout_constraintStart_toStartOf="@+id/iv_discover_1"
+            app:layout_constraintTop_toTopOf="@+id/iv_discover_4"
             tools:ignore="ContentDescription,MissingConstraints"
             tools:src="@drawable/discover_ic_empty_stu_schedule" />
 
@@ -168,7 +169,7 @@
             android:id="@+id/tv_discover_3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="1dp"
+            android:layout_marginTop="4dp"
             android:textColor="@color/levelTwoFontColor"
             android:textSize="11sp"
             app:layout_constraintEnd_toEndOf="@+id/iv_discover_3"
@@ -180,20 +181,20 @@
             android:id="@+id/iv_discover_4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="27dp"
             android:layout_marginEnd="2dp"
-            tools:src="@drawable/discover_ic_more_function"
-            app:layout_constraintBottom_toBottomOf="@+id/iv_discover_1"
             app:layout_constraintEnd_toStartOf="@+id/discover_guideline2"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="@+id/iv_discover_1"
-            app:layout_constraintTop_toTopOf="@+id/iv_discover_1"
-            tools:ignore="ContentDescription,MissingConstraints" />
+            app:layout_constraintTop_toBottomOf="@+id/fl_discover_home_jwnews"
+            tools:ignore="ContentDescription,MissingConstraints"
+            tools:src="@drawable/discover_ic_more_function" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tv_discover_4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="1dp"
+            android:layout_marginTop="4dp"
             android:textColor="@color/levelTwoFontColor"
             android:textSize="11sp"
             app:layout_constraintEnd_toEndOf="@+id/iv_discover_4"
@@ -241,6 +242,13 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             app:layout_constraintGuide_percent="0.1515" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/discover_guideline3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.06" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
