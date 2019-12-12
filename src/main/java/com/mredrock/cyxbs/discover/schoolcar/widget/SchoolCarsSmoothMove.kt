@@ -13,8 +13,6 @@ import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.discover.schoolcar.Interface.SchoolCarInterface
-import com.mredrock.cyxbs.discover.schoolcar.SchoolCarActivity.Companion.LOST_SERVICES
-import com.mredrock.cyxbs.discover.schoolcar.SchoolCarActivity.Companion.TIME_OUT
 import com.mredrock.cyxbs.discover.schoolcar.network.ApiService
 import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.activity_schoolcar.*
@@ -62,13 +60,24 @@ class SchoolCarsSmoothMove(private val schoolCarMap: SchoolCarMap?, private val 
                 .setSchedulers()
                 .safeSubscribeBy {
                     carInterface.processLocationInfo(it, ifAddTimer)
-
                     val location = it.data
-                    smoothMoveList1.add(LatLng(location[0].lat, location[0].lon))
-                    smoothMoveList2.add(LatLng(location[1].lat, location[1].lon))
-                    smoothMoveList3.add(LatLng(location[2].lat, location[2].lon))
+                    //现在最多三辆校车
+                    when (location.size) {
+                        1 -> {
+                            smoothMoveList1.add(LatLng(location[0].lat, location[0].lon))
+                        }
+                        2 -> {
+                            smoothMoveList1.add(LatLng(location[0].lat, location[0].lon))
+                            smoothMoveList2.add(LatLng(location[1].lat, location[1].lon))
+                        }
 
-                    //当timeList的size大于3时将会对运营时间（11-2 && 5-10）和从接口数据返回的时间来双重检查是否用户可以进入地图
+                        3 -> {
+                            smoothMoveList1.add(LatLng(location[0].lat, location[0].lon))
+                            smoothMoveList2.add(LatLng(location[1].lat, location[1].lon))
+                            smoothMoveList3.add(LatLng(location[2].lat, location[2].lon))
+                        }
+                    }
+                    //当timeList的size大于3时将会对运营时间（11:30-2 && 5-9）和从接口数据返回的时间来双重检查是否用户可以进入地图
                     // 或者显示当前TIME_OUT的dialog
                     if (checkTimeList) {
                         if (timeList.size < 3) {
@@ -220,9 +229,18 @@ class SchoolCarsSmoothMove(private val schoolCarMap: SchoolCarMap?, private val 
      */
     private fun checkTimeBeforeEnter(): Boolean {
         val calendar: Calendar = Calendar.getInstance()
-        val hour: Int = calendar.get(Calendar.HOUR_OF_DAY)
-        if ((hour >=  11.30 && hour <= 14) || (hour > 17 && hour <= 21)) {
-            return false    //时间为校车正在运行时间，返回false
+        val hour: Int = calendar.get(Calendar.HOUR)
+        val minute: Int = calendar.get(Calendar.MINUTE)
+        val AM_PM: Int = calendar.get(Calendar.AM_PM)
+        //时间为校车正在运行时间，返回false
+        if (AM_PM == Calendar.AM && hour == 11) {
+            if (minute >= 30) {
+                return false
+            }
+        } else if (AM_PM == Calendar.AM && hour > 11 && hour < 2) {
+            return false
+        } else if (AM_PM == Calendar.PM && hour > 5 && hour < 9) {
+            return false
         }
         return true         //时间为校车未运行时间，返回true
     }
