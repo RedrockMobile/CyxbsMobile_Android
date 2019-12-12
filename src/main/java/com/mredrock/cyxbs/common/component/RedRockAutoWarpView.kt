@@ -20,6 +20,9 @@ class RedRockAutoWarpView : FrameLayout {
         set(value) {
             field = value
             adapter?.context = context
+            if (adapter?.getItemCount() ?: 0 == 0) {
+                return
+            }
             if (viewTreeObserver.isAlive) {
                 viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
                     override fun onGlobalLayout() {
@@ -83,7 +86,7 @@ class RedRockAutoWarpView : FrameLayout {
                 val itemHeight: Int = itemView.measuredHeight
                 val layoutParams = itemView.layoutParams as LayoutParams
 
-                if (measuredWidth - rowUsedWith >= itemWith + spacingH||rowUsedWith==0) {
+                if (measuredWidth - rowUsedWith >= itemWith||rowUsedWith==0) {
                     setLayoutP(layoutParams, column, rowUsedHeights, rowUsedWith)
                 }else {
                     column++
