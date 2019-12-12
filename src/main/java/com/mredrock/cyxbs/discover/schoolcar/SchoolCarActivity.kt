@@ -2,11 +2,9 @@ package com.mredrock.cyxbs.discover.schoolcar
 
 import android.Manifest
 import android.content.pm.PackageManager
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.graphics.Color
-import android.graphics.Matrix
+import android.graphics.*
 import android.os.Bundle
+import android.os.Environment
 import android.os.PersistableBundle
 import android.view.Menu
 import android.view.MenuItem
@@ -25,12 +23,11 @@ import com.amap.api.maps.CameraUpdateFactory
 import com.amap.api.maps.model.LatLng
 import com.amap.api.maps.model.MyLocationStyle
 import com.amap.api.maps.utils.overlay.SmoothMoveMarker
-import com.bumptech.glide.Glide
-import com.bumptech.glide.request.RequestOptions
 import com.mredrock.cyxbs.common.config.DISCOVER_SCHOOL_CAR
 import com.mredrock.cyxbs.common.config.END_POINT_REDROCK
 import com.mredrock.cyxbs.common.ui.BaseActivity
 import com.mredrock.cyxbs.common.utils.LogUtils
+import com.mredrock.cyxbs.common.utils.extensions.dp2px
 import com.mredrock.cyxbs.discover.schoolcar.Interface.SchoolCarInterface
 import com.mredrock.cyxbs.discover.schoolcar.bean.SchoolCarLocation
 import com.mredrock.cyxbs.discover.schoolcar.widget.ExploreSchoolCarDialog
@@ -43,6 +40,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.activity_schoolcar.*
 import org.jetbrains.anko.dip
+import java.io.File
 import java.util.concurrent.TimeUnit
 
 /**
@@ -103,24 +101,10 @@ class SchoolCarActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         this.savedInstanceState = savedInstanceState
         setContentView(R.layout.activity_schoolcar)
-        initSchoolCarGif()
-
         if (checkActivityPermission()) {
             locationClient = AMapLocationClient(applicationContext)
             initSchoolCarMap()
         }
-    }
-
-    /**
-     * 加载校车gif
-     */
-    private fun initSchoolCarGif() {
-        Glide.with(this@SchoolCarActivity)
-                .load(EXPLORE_SCHOOL_CAR_URL)
-                .apply(RequestOptions()
-                        .placeholder(R.drawable.ic_school_car_search_load)
-                        .error(R.drawable.ic_school_car_search_load))
-                .into(explore_schoolcar_load)
     }
 
     /**
@@ -133,10 +117,33 @@ class SchoolCarActivity : BaseActivity() {
 
             //在图地中动态加载控件
             override fun initLocationMapButton(aMap: AMap, locationStyle: MyLocationStyle) {
-                val relativeLayoutDown = RelativeLayout(this@SchoolCarActivity)
-                val layoutParamsDown = RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-                explore_school_car_linearLayout.addView(relativeLayoutDown, layoutParamsDown)
+                aMap.uiSettings.isZoomControlsEnabled = false
 
+                cv_out.setOnClickListener {
+                    val update = CameraUpdateFactory.zoomOut()
+                    aMap.animateCamera(update)
+                }
+                cv_expand.setOnClickListener {
+                    val update = CameraUpdateFactory.zoomIn()
+                    aMap.animateCamera(update)
+                }
+                cv_positioning.setOnClickListener{
+                    val update = CameraUpdateFactory.newLatLngZoom(LatLng(29.531876, 106.606789), 17f)
+                    aMap.animateCamera(update)
+                }
+                val relativeLayoutDown = RelativeLayout(this@SchoolCarActivity)
+//                val layoutParamsDown = RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+//                explore_school_car_linearLayout.addView(relativeLayoutDown, layoutParamsDown)
+                val parent = File(Environment.getExternalStorageDirectory().absolutePath + "/maoXhMap")
+                val styleExtra = File(parent, "style_extra.data")
+                val style = File(parent, "style.data")
+                val customMapStyleOptions = com.amap.api.maps.model.CustomMapStyleOptions()
+                customMapStyleOptions.apply {
+                    isEnable = true
+                    styleDataPath = style.absolutePath
+                    styleExtraPath = styleExtra.absolutePath
+                }
+                aMap.setCustomMapStyle(customMapStyleOptions)
                 // 在地图中加入"全校"<->"我"的button和两种模式转换时button需要的逻辑修改（包括定位模式和button上的图片）
                 holeSchoolButton = ImageView(this@SchoolCarActivity)
                 holeSchoolButton.setBackgroundColor(Color.TRANSPARENT)
@@ -179,6 +186,7 @@ class SchoolCarActivity : BaseActivity() {
                 stateRelativeLayout.addRule(RelativeLayout.ALIGN_PARENT_RIGHT)
                 stateRelativeLayout.rightMargin = dip(12)
                 stateRelativeLayout.topMargin = dip(12)
+
                 stateRelativeLayout.width = dm.widthPixels / 7
                 stateRelativeLayout.height = dm.widthPixels / 7
                 relativeLayoutDown.addView(holeSchoolButton, stateRelativeLayout)
@@ -203,7 +211,7 @@ class SchoolCarActivity : BaseActivity() {
     private fun initView() {
         makerBitmap = getSmoothMakerBitmap()
         smoothMoveData = SchoolCarsSmoothMove(schoolCarMap!!, this@SchoolCarActivity)
-
+        jc_schoolCar.setShadow(false, false, false, false)
         smoothMoveData!!.setCarMapInterface(object : SchoolCarInterface {
             override fun initLocationMapButton(aMap: AMap, locationStyle: MyLocationStyle) {}
 
@@ -223,7 +231,7 @@ class SchoolCarActivity : BaseActivity() {
                     showCarIcon = true
                     timer("showCarIcon")
                     LogUtils.d(TAG, "processLocationInfo: " + carLocationInfo.status)
-                    schoolCarMap!!.showMap(carLocationInfo.status, explore_school_car_linearLayout, explore_schoolcar_load)
+                    schoolCarMap!!.showMap(carLocationInfo.status, explore_school_car_linearLayout)
                 }
 
 
@@ -232,28 +240,12 @@ class SchoolCarActivity : BaseActivity() {
         //进行一次接口数据请求
         smoothMoveData!!.loadCarLocation(ADD_TIMER)
 
-        common_toolbar.init("校车轨迹")
 //        SwipeBackHelper.getCurrentPage(this).setSwipeBackEnable(false)
 
-        //加载动画为4秒
-        Observable.timer(4, TimeUnit.SECONDS).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<Long> {
-            override fun onNext(t: Long) {
-                LogUtils.d(TAG, "onNext: 校车正在初始化...$t")
-            }
+        //完成后开始轮询并且显示地图
+        smoothMoveMarkers = mutableListOf()
+        smoothMoveData!!.loadCarLocation(ADD_TIMER_AND_SHOW_MAP)
 
-            override fun onSubscribe(d: Disposable) {
-            }
-
-            override fun onError(e: Throwable) {
-
-            }
-
-            override fun onComplete() {
-                //完成后开始轮询并且显示地图
-                smoothMoveMarkers = mutableListOf()
-                smoothMoveData!!.loadCarLocation(ADD_TIMER_AND_SHOW_MAP)
-            }
-        })
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -315,15 +307,28 @@ class SchoolCarActivity : BaseActivity() {
     }
 
     private fun getSmoothMakerBitmap(): Bitmap {
-        val bitmap = BitmapFactory.decodeResource(this@SchoolCarActivity.resources, R.mipmap.ic_school_car)
-        val width = bitmap.width
-        val height = bitmap.height
-        val scaleWidth = 70.toFloat() / width
-        val scaleHeight = 140.toFloat() / height
-        val matrix = Matrix()
-        matrix.postScale(scaleWidth, scaleHeight)
-
-        return Bitmap.createBitmap(bitmap, 0, 0, width, height, matrix, true)
+        var pointBitmap = BitmapFactory.decodeResource(this@SchoolCarActivity.resources, R.mipmap.ic_school_car)
+        var width = pointBitmap.width
+        var height = pointBitmap.height
+        var scaleWidth = dp2px(22f) / width
+        var scaleHeight = dp2px(22f) / height
+        var matrix = Matrix()
+        matrix.postScale(scaleWidth.toFloat(), scaleHeight.toFloat())
+        pointBitmap = Bitmap.createBitmap(pointBitmap, 0, 0, width, height, matrix, true)
+        var backBitmap = BitmapFactory.decodeResource(this@SchoolCarActivity.resources, R.mipmap.ic_school_car_backgroud)
+        width = backBitmap.width
+        height = backBitmap.height
+        scaleWidth = dp2px(66f) / width
+        scaleHeight = dp2px(66f) / height
+        matrix = Matrix()
+        matrix.postScale(scaleWidth.toFloat(), scaleHeight.toFloat())
+        backBitmap = Bitmap.createBitmap(backBitmap, 0, 0, width, height, matrix, true)
+        val bitmap = backBitmap.copy(Bitmap.Config.ARGB_8888, true)
+        val canvas = Canvas(bitmap)
+        canvas.drawBitmap(pointBitmap, (backBitmap.width - pointBitmap.width) / 2.toFloat(), (backBitmap.height - pointBitmap.height) / 2.toFloat(), null)
+        canvas.save()
+        canvas.restore()
+        return bitmap
     }
 
     private fun checkActivityPermission(): Boolean {

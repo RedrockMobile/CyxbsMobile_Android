@@ -87,13 +87,9 @@ class SchoolCarMap(private var context: Context, savedInstanceState: Bundle?, ca
         smoothMarker = SmoothMoveMarker(aMap)
     }
 
-    /**
-     * 显示高德地图在校车动画4s加载完成后
-     */
-    fun showMap(status: String?, layout: RelativeLayout, loadImage: ImageView) {
+    fun showMap(status: String?, layout: RelativeLayout) {
         //接口数据返回200 时说明获取校车数据成功，并开始加入地图控件
         if (status == "200") {
-            loadImage.visibility = View.INVISIBLE
             if (mapView == null) {
                 mapView = MapView(context)
                 layout.addView(mapView)
@@ -130,7 +126,6 @@ class SchoolCarMap(private var context: Context, savedInstanceState: Bundle?, ca
 
             initLocationType()
             aMap = mapView!!.map
-
             //在地图上加入观察模式的切换"全校"<->"我"button
             carInterface.initLocationMapButton(aMap, locationStyle)
         } else {

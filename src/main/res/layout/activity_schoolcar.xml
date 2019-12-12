@@ -1,25 +1,119 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/schoolcar_white"
     tools:context="com.mredrock.cyxbs.discover.schoolcar.SchoolCarActivity"
     tools:ignore="ResourceName">
 
-    <include
-        layout="@layout/common_toolbar"
-        android:id="@+id/app_bar_layout" />
 
     <RelativeLayout
         android:id="@+id/explore_school_car_linearLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/app_bar_layout"/>
+      />
+    <com.mredrock.cyxbs.common.component.JCardViewPlus
+        android:id="@+id/jc_schoolCar"
+        android:layout_width="0dp"
+        android:layout_height="103dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:cardCornerRadiusUpperLeft="16dp"
+        app:cardCornerRadiusUpperRight="16dp"
+        app:cardBackgroundColor="#ffffff"
+        />
+    <TextView
+        android:id="@+id/tv_carStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="校车运行中"
+        android:textSize="21sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="@id/jc_schoolCar"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="14dp"
+        android:textStyle="bold"
+        android:textColor="#15315B"
+        android:gravity="center"
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="校车营运时间：11：00-14：30、17：00-21：00"
+        android:textSize="13sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_carStatus"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="11dp"
+        android:textColor="#15315B"
+        android:gravity="center"
+        />
 
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/explore_schoolcar_load"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/app_bar_layout"/>
-</RelativeLayout>
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cv_out"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginEnd="18dp"
+        app:cardCornerRadius="90dp"
+        android:background="#ffffff"
+        app:cardElevation="0dp"
+        />
+    <ImageView
+        android:layout_width="17.52dp"
+        android:layout_height="4dp"
+        android:src="@mipmap/ic_zoomout"
+        app:layout_constraintTop_toTopOf="@id/cv_out"
+        app:layout_constraintLeft_toLeftOf="@id/cv_out"
+        app:layout_constraintBottom_toBottomOf="@id/cv_out"
+        app:layout_constraintRight_toRightOf="@id/cv_out"
+        />
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cv_expand"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/cv_out"
+        android:layout_marginEnd="18dp"
+        android:layout_marginBottom="18dp"
+        app:cardCornerRadius="90dp"
+        android:background="#ffffff"
+        app:cardElevation="0dp"
+        />
+    <ImageView
+        android:layout_width="17.52dp"
+        android:layout_height="17.52dp"
+        android:src="@mipmap/ic_zoomexpand"
+        app:layout_constraintTop_toTopOf="@id/cv_expand"
+        app:layout_constraintLeft_toLeftOf="@id/cv_expand"
+        app:layout_constraintBottom_toBottomOf="@id/cv_expand"
+        app:layout_constraintRight_toRightOf="@id/cv_expand"
+        />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cv_positioning"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/jc_schoolCar"
+        android:layout_marginEnd="18dp"
+        android:layout_marginBottom="28dp"
+        app:cardCornerRadius="90dp"
+        android:background="#ffffff"
+        app:cardElevation="0dp"
+        />
+    <ImageView
+        android:layout_width="19dp"
+        android:layout_height="25.8dp"
+        app:layout_constraintTop_toTopOf="@id/cv_positioning"
+        app:layout_constraintBottom_toBottomOf="@id/cv_positioning"
+        app:layout_constraintLeft_toLeftOf="@id/cv_positioning"
+        app:layout_constraintRight_toRightOf="@id/cv_positioning"
+        android:src="@mipmap/ic_positioning"
+        />
+</androidx.constraintlayout.widget.ConstraintLayout>
