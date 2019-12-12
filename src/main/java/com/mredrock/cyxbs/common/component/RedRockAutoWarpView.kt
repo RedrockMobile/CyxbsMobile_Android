@@ -150,7 +150,16 @@ class RedRockAutoWarpView : FrameLayout {
         }
     }
 
-
+    /**
+     * 数据发生更改，刷新数据
+     */
+    fun refreshData() {
+        adapter?.let {
+            for (i in 0 until childCount) {
+                it.initItem(getChildAt(i), i)
+            }
+        }
+    }
 
     private fun clearMagin(itemView: View?) {
         val layoutParams = itemView?.layoutParams as LayoutParams
