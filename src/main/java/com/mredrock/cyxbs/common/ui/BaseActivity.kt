@@ -9,6 +9,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.view.Menu
 import android.view.View
+import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.annotation.DrawableRes
 import androidx.appcompat.app.AppCompatActivity
@@ -25,7 +26,9 @@ import kotlinx.android.synthetic.main.common_toolbar.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import org.jetbrains.anko.backgroundResource
 import org.jetbrains.anko.startActivity
+import org.jetbrains.anko.windowManager
 
 /**
  * Created By jay68 on 2018/8/9.
@@ -71,7 +74,7 @@ abstract class BaseActivity : AppCompatActivity() {
     }
 
     val common_toolbar get() = toolbar
-    val common_splite_line get() = split_line
+
     var menu: Menu? = null
         private set
 
@@ -86,6 +89,19 @@ abstract class BaseActivity : AppCompatActivity() {
             setNavigationIcon(icon)
             setNavigationOnClickListener(listener)
         }
+
+    }
+    protected fun Toolbar.initWithSplitLine(title:String,
+                                            withSplitLine:Boolean = true,
+                                            @DrawableRes icon:Int = R.drawable.common_ic_back,
+                                            listener:View.OnClickListener? = View.OnClickListener { finish() }){
+        if(withSplitLine) {
+            (parent as ViewGroup).addView(View(this.context).apply {
+                layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 1)
+                backgroundResource = R.color.commonDefaultDivideLineColor
+            })
+        }
+        init(title,icon,listener)
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
