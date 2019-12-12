@@ -15,8 +15,8 @@ abstract class BaseAdapter<T>(private val mContext: Context,
                               private val mData: MutableList<T>?,
                               private val mLayoutIds: IntArray) : androidx.recyclerview.widget.RecyclerView.Adapter<BaseHolder>() {
     companion object {
-        const val NORMAL = 0
-        const val FOOTER = 2000
+        var NORMAL = 0
+        var FOOTER = 2000
     }
 
     private var nowPosition = 0//当前位置

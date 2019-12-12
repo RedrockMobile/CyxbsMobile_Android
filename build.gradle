@@ -3,5 +3,6 @@ apply from: module_config
 
 dependencies {
     implementation project(':lib_common')
+    implementation 'de.hdodenhof:circleimageview:2.2.0'
     kapt deps.arouter.compiler
 }

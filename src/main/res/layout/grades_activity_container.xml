@@ -2,28 +2,36 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/whiteBackground"
     android:orientation="vertical">
 
     <include layout="@layout/common_toolbar" />
 
-    <com.google.android.material.tabs.TabLayout
-        android:id="@+id/tl_grades"
-        android:layout_width="match_parent"
-        android:layout_height="?actionBarSize"
-        android:background="@color/grades_activity_tl_white">
-
-    </com.google.android.material.tabs.TabLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_gravity="bottom"
-        android:background="@color/grades_activity_back_grey" />
-
-    <androidx.viewpager.widget.ViewPager
-        android:id="@+id/vp_grades"
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_exam_main"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
 
-    </androidx.viewpager.widget.ViewPager>
+        <com.mredrock.cyxbs.common.component.JCardViewPlus
+            app:cardCornerRadius="16dp"
+            app:shadowRadius="10dp"
+            app:shadowFlags="top"
+            app:shadowColor="@color/grades_bottom_sheet_shadow"
+            android:id="@+id/fl_grades_bottom_sheet"
+            app:behavior_hideable="false"
+            app:layout_behavior="@string/bottom_sheet_behavior"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <include layout="@layout/grades_fragment"/>
+
+        </com.mredrock.cyxbs.common.component.JCardViewPlus>
+
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
 </LinearLayout>

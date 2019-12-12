@@ -2,7 +2,7 @@ package com.mredrock.cyxbs.discover.grades.bean
 
 import java.io.Serializable
 
-class Grade(
+data class Grade(
         val course: String,
         val grade: String,
         val property: String,

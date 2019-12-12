@@ -18,7 +18,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="7"
             android:gravity="left"
-            android:text="图形创意"
+            tools:text="图形创意"
             android:textColor="@color/grades_fragment_text_color_black"
             android:textSize="14sp" />
 

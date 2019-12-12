@@ -1,53 +1,92 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout
+    android:id="@+id/fl_grades_main"
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/grades_fragment_back_white">
-
-    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/fl_grades_noData"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/grades_activity_tl_white"
-        android:visibility="visible">
-
-        <LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:paddingTop="13dp"
+            android:paddingBottom="13dp"
+            android:id="@+id/fl_grades_header"
+            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:orientation="vertical">
-
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:adjustViewBounds="true"
-                android:paddingLeft="40dp"
-                android:paddingRight="40dp"
-                android:src="@drawable/grades_show_img_nodata" />
+            android:layout_height="wrap_content">
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/iv_grades_avatar"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="@id/view_grades_line"
+                android:background="@drawable/common_default_avatar"
+                android:layout_marginStart="30dp"
+                android:layout_marginBottom="10dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"/>
+            <TextView
+                android:id="@+id/tv_grades_name"
+                tools:text="王尼玛"
+                android:textSize="15sp"
+                android:textColor="@color/grades_fragment_text_color_black"
+                app:layout_constraintTop_toTopOf="@id/iv_grades_avatar"
+                app:layout_constraintLeft_toRightOf="@id/iv_grades_avatar"
+                android:layout_marginStart="14dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
 
             <TextView
-                android:id="@+id/tv_grades_noData"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="50dp"
-                android:gravity="center"
-                android:textColor="#4B535B"
-                android:textSize="15sp"
-                tools:text="@string/grades_no_data_history" />
-        </LinearLayout>
-    </FrameLayout>
+                android:id="@+id/tv_grades_college"
+                tools:text="传媒艺术学院"
+                android:textSize="12sp"
+                android:textColor="@color/grades_fragment_text_color_black3"
+                app:layout_constraintLeft_toRightOf="@id/iv_grades_avatar"
+                app:layout_constraintBottom_toBottomOf="@id/iv_grades_avatar"
+                android:layout_marginStart="14dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
 
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/srl_grades"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/tv_grades_stuNum"
+                tools:text="2017211111"
+                android:textSize="12sp"
+                android:layout_marginEnd="32dp"
+                android:textColor="@color/grades_fragment_text_color_black3"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/tv_grades_college"
+                app:layout_constraintTop_toBottomOf="@id/tv_grades_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <View
+                android:id="@+id/view_grades_line"
+                android:layout_marginTop="10dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/iv_grades_avatar"
+                android:background="@color/grades_fragment_text_color_black3"
+                android:layout_width="wrap_content"
+                android:layout_height="0.3dp"/>
+
+
+            <TextView
+                android:id="@+id/tv_grades_title"
+                android:textColor="@color/levelTwoFontColor"
+                android:text="@string/grades_bottom_sheet_title"
+                android:textSize="22sp"
+                android:padding="20dp"
+                android:textStyle="bold"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/view_grades_line"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_grades"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-
-
-</FrameLayout>
+</LinearLayout>

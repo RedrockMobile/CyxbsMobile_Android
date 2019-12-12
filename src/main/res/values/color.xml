@@ -7,4 +7,8 @@
     <color name="grades_fragment_text_color_black2">#666666</color>
     <color name="grades_fragment_text_color_black3">#999999</color>
     <color name="grades_fragment_item_back_grey">#E4E4E4</color>
+    <color name="grades_item_divide">#15315B</color>
+    <color name="grades_item_day_remain">#3A39D3</color>
+    <color name="grades_item_cardView_bg">#E8F1FC</color>
+    <color name="grades_bottom_sheet_shadow">#205369BC</color>
 </resources>
