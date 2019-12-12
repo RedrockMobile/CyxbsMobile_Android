@@ -154,11 +154,8 @@ class RedRockAutoWarpView : FrameLayout {
      * 数据发生更改，刷新数据
      */
     fun refreshData() {
-        adapter?.let {
-            for (i in 0 until childCount) {
-                it.initItem(getChildAt(i), i)
-            }
-        }
+        removeAllViews()
+        addItemView()
     }
 
     private fun clearMagin(itemView: View?) {
