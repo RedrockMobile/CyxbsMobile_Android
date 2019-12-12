@@ -28,7 +28,7 @@
             android:onClick="@{listeners::onCancelClick}"
             android:padding="18dp"
             android:scaleType="centerInside"
-            android:src="@drawable/course_ic_cancel"
+            app:srcCompat="@drawable/course_ic_cancel"
             app:layout_constraintBottom_toTopOf="@id/view_separate"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintLeft_toLeftOf="parent"

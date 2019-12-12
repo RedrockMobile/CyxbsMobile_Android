@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import androidx.annotation.LayoutRes
+import androidx.viewpager.widget.ViewPager
 import com.mredrock.cyxbs.course.R
 import com.mredrock.cyxbs.course.network.Course
 
@@ -67,7 +68,7 @@ class ScheduleDetailView : FrameLayout {
      * @param scheduleDetailViewAdapter [ScheduleDetailView] get the data from [Adapter]
      */
     private fun setMultiContent(scheduleDetailViewAdapter: Adapter) {
-        mViewPager = androidx.viewpager.widget.ViewPager(context)
+        mViewPager = ViewPager(context)
         mViewpagerAdapter = ViewPagerAdapter(context, scheduleDetailViewAdapter, this)
         mViewPager.adapter = mViewpagerAdapter
         val viewPagerParams = LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)

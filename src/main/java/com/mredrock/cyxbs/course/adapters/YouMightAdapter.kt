@@ -1,21 +1,16 @@
 package com.mredrock.cyxbs.course.adapters
 
-import android.content.Context
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.TextView
-import androidx.recyclerview.widget.RecyclerView
 import com.mredrock.cyxbs.course.R
-import com.mredrock.cyxbs.course.component.YouMightView
+import com.mredrock.cyxbs.common.component.RedRockAutoWarpView
 import kotlinx.android.synthetic.main.course_recycle_you_might_item.view.*
 
-class YouMightAdapter(private val editText:EditText): YouMightView.Adapter() {
+class YouMightAdapter(private val editText:EditText): RedRockAutoWarpView.Adapter() {
 
     //仿造数据
-    val data = listOf("自习", "值班", "会议","自习", "值班", "会议","自习", "值班", "会议","自习", "值班", "会议","自习", "值班", "会议","自习", "值班", "会议","自习", "值班", "会议")
-
+    val data = listOf("开会开会开会开会开会开会开会开会开会开会开会开会","啦啦啦啦","嘿咻嘿咻黑","开会开会开会\n开会开会开会","开会","开会","开会","自习")
     override fun getItemId(): Int {
         return R.layout.course_recycle_you_might_item
     }

@@ -2,6 +2,7 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+
     <data>
 
         <variable
@@ -20,11 +21,12 @@
         android:layout_height="match_parent">
 
         <ImageView
-            android:id="@+id/course_imageview2"
-            android:layout_width="12dp"
-            android:layout_height="12dp"
-            android:layout_marginStart="16dp"
+            android:id="@+id/course_back"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_marginStart="4dp"
             android:layout_marginTop="49dp"
+            android:padding="12dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
@@ -120,6 +122,7 @@
             android:maxLines="1"
             android:textColor="@color/transactionHeading"
             android:textSize="15sp"
+            android:text=""
             app:layout_constraintBottom_toBottomOf="@+id/tv_title_text"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
@@ -144,6 +147,24 @@
             app:layout_constraintVertical_bias="0.0" />
 
 
+
+        <TextView
+            android:id="@+id/tv_content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:maxLines="1"
+            android:textColor="@color/transactionHeading"
+            android:textSize="34sp"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="@+id/course_textview"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintHorizontal_weight="2"
+            app:layout_constraintStart_toStartOf="@+id/course_textview"
+            app:layout_constraintTop_toBottomOf="@+id/course_textview"
+            app:layout_constraintVertical_bias="0.0" />
+
+
         <EditText
             android:id="@+id/et_title_content_input"
             android:layout_width="match_parent"
@@ -151,16 +172,17 @@
             android:layout_marginStart="18dp"
             android:layout_marginTop="24dp"
             android:layout_marginEnd="18dp"
-            android:text="@{editAffairViewModel.content}"
             android:background="@drawable/course_shape_affair_edit_tilte"
             android:gravity="center_vertical"
             android:imeOptions="actionNext"
+            android:text="@{editAffairViewModel.content}"
             android:inputType="text"
             android:maxLines="1"
             android:paddingStart="18dp"
             android:paddingTop="12dp"
             android:paddingEnd="18dp"
             android:paddingBottom="12dp"
+            android:textColor="@color/levelTwoFontColor"
             android:textColorHint="@color/levelTwoFontColor"
             android:textSize="@dimen/course_edit_affair_tv_size"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -171,13 +193,15 @@
             app:layout_constraintTop_toBottomOf="@+id/tv_title_text"
             app:layout_constraintVertical_bias="0.0" />
 
-        <com.mredrock.cyxbs.course.component.YouMightView
+        <com.mredrock.cyxbs.common.component.RedRockAutoWarpView
             android:id="@+id/rv_you_might"
             android:layout_width="0dp"
             android:layout_marginStart="4dp"
             android:layout_marginTop="18dp"
             android:layout_marginEnd="4dp"
             android:layout_height="wrap_content"
+            app:horizontalSpacing="7dp"
+            app:verticalsSpacing="8dp"
             app:layout_constraintEnd_toEndOf="@+id/et_title_content_input"
             app:layout_constraintStart_toStartOf="@+id/et_title_content_input"
             app:layout_constraintTop_toBottomOf="@+id/et_title_content_input" />
@@ -185,8 +209,8 @@
 
         <View
             android:id="@+id/course_view22"
-            android:layout_width="85dp"
-            android:layout_height="85dp"
+            android:layout_width="132dp"
+            android:layout_height="97dp"
             android:background="@drawable/course_layer_list_affair_edit_button_backgroud"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -207,22 +231,23 @@
         <EditText
             android:id="@+id/et_title"
             android:layout_width="0dp"
-            android:text="@{editAffairViewModel.title}"
             android:layout_height="55dp"
             android:layout_marginStart="2dp"
             android:layout_marginBottom="16dp"
             android:background="@null"
+            android:textStyle="bold"
             android:gravity="center_vertical"
             android:maxLines="1"
+            android:textColor="@color/levelTwoFontColor"
             android:textColorHint="@color/levelTwoFontColor"
             android:textSize="34sp"
+            android:text="@{editAffairViewModel.title}"
             android:visibility="gone"
             app:layout_constraintBottom_toTopOf="@+id/et_title_content_input"
             app:layout_constraintEnd_toEndOf="@+id/et_title_content_input"
             app:layout_constraintStart_toStartOf="@+id/et_title_content_input"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="1.0" />
-
 
         <TextView
             android:id="@+id/tv_week_select"

@@ -76,6 +76,9 @@ class EditAffairViewModel(application: Application) : AndroidViewModel(applicati
     var passedAffairInfo: Course? = null
 
 
+    var status: Status = Status.TitleStatus
+
+
     /**
      * 此方用于对[com.mredrock.cyxbs.course.ui.EditAffairActivity]进行周数选择、课程时间选择等相关内容的初始化。
      * 比如说从[com.mredrock.cyxbs.common.component.ScheduleView]中通过点击touchView、已有的事务进来要对其
@@ -124,7 +127,7 @@ class EditAffairViewModel(application: Application) : AndroidViewModel(applicati
             isSelectedWeekViews.forEach { key, _ ->
                 //key == 0也就是全学期的情况
                 if (key == 0) {
-                    for (i in 1..(weekArray.size - 1)) {
+                    for (i in 1 until weekArray.size) {
                         mPostWeeks.add(i)
                     }
                     return@Observer
@@ -358,5 +361,11 @@ class EditAffairViewModel(application: Application) : AndroidViewModel(applicati
      */
     fun setRemindSelectString(position: Int) {
         selectedRemindString.value = remindArray[position]
+    }
+
+
+
+    enum class Status {
+        TitleStatus, ContentStatus, AllDoneStatus
     }
 }

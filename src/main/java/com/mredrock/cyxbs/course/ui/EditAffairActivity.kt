@@ -23,8 +23,6 @@ import org.jetbrains.anko.dip
 
 class EditAffairActivity : BaseActivity() {
 
-    var status: Status = Status.TitleStatus
-
     override val isFragmentActivity: Boolean
         get() = true
 
@@ -55,7 +53,6 @@ class EditAffairActivity : BaseActivity() {
         mEditAffairViewModel.observeWork(this)
         mEditAffairViewModel.initData(this)
 
-
         mBinding.listeners = EditAffairListeners({
             if (!mWeekSelectDialogFragment.isAdded) {
                 mWeekSelectDialogFragment.show(supportFragmentManager, "weekSelectDialogFragment")
@@ -80,23 +77,36 @@ class EditAffairActivity : BaseActivity() {
                 } else false
             }
         })
+
+        course_back.setOnClickListener { finish() }
+        //必须在ViewModel的initData之后执行
+        if (mEditAffairViewModel.passedAffairInfo !=null) {
+            modifyPageLayout()
+            mEditAffairViewModel.status = EditAffairViewModel.Status.AllDoneStatus
+        }
         rv_you_might.adapter = YouMightAdapter(et_title_content_input)
     }
 
     private fun onClick(){
-        when (status) {
-            Status.TitleStatus -> addTitleNextMonitor()
-            Status.ContentStatus -> addContentNextMonitor()
-            Status.AllDoneStatus -> postAffair()
+        when (mEditAffairViewModel.status) {
+            EditAffairViewModel.Status.TitleStatus -> addTitleNextMonitor()
+            EditAffairViewModel.Status.ContentStatus -> addContentNextMonitor()
+            EditAffairViewModel.Status.AllDoneStatus -> postAffair()
         }
     }
 
 
     override fun onBackPressed() {
-        when (status) {
-            Status.TitleStatus -> super.onBackPressed()
-            Status.ContentStatus -> addTitleBackMonitor()
-            Status.AllDoneStatus -> addContentBackMonitor()
+        when (mEditAffairViewModel.status) {
+            EditAffairViewModel.Status.TitleStatus -> super.onBackPressed()
+            EditAffairViewModel.Status.ContentStatus -> addTitleBackMonitor()
+            EditAffairViewModel.Status.AllDoneStatus -> {
+                if (mEditAffairViewModel.passedAffairInfo != null) {
+                    super.onBackPressed()
+                }else{
+                    addContentBackMonitor()
+                }
+            }
         }
     }
 
@@ -104,7 +114,7 @@ class EditAffairActivity : BaseActivity() {
     /**
      * 添加标题之后跳转到添加内容动画
      */
-    private fun addTitleNextMonitor() {
+    fun addTitleNextMonitor() {
         if (et_title_content_input.text.trim().isEmpty()) {
             Toast.makeText(this, resources.getString(R.string.course_title_is_null),
                     Toast.LENGTH_SHORT).show()
@@ -130,7 +140,7 @@ class EditAffairActivity : BaseActivity() {
             tv_title.text = et_title_content_input.text.toString()
             tv_content_text.visibility = View.VISIBLE
             et_title_content_input.text.clear()
-            status = Status.ContentStatus
+            mEditAffairViewModel.status = EditAffairViewModel.Status.ContentStatus
         }
     }
 
@@ -161,7 +171,7 @@ class EditAffairActivity : BaseActivity() {
         et_title_content_input.setSelection(tv_title.text.length)
         tv_title.text = ""
         tv_content_text.visibility = View.GONE
-        status = Status.TitleStatus
+        mEditAffairViewModel.status = EditAffairViewModel.Status.TitleStatus
     }
 
     fun addContentNextMonitor(){
@@ -176,24 +186,30 @@ class EditAffairActivity : BaseActivity() {
                 })
                 addTransition(ChangeBounds().apply { duration = 500 })
             })
-            val set = ConstraintSet().apply { clone(course_affair_container) }
-            set.connect(R.id.et_title_content_input, ConstraintSet.TOP, R.id.course_affair_container, ConstraintSet.TOP)
-            set.setVerticalBias(R.id.et_title_content_input, 0.32f)
-            set.applyTo(course_affair_container)
-            //单独修改控件属性要在apply之后
-            course_textview.visibility = View.GONE
-            tv_title_text.visibility = View.GONE
-            tv_title.visibility = View.GONE
-            tv_content_text.visibility = View.GONE
-            et_title.visibility = View.VISIBLE
-            tv_week_select.visibility = View.VISIBLE
-            tv_time_select.visibility = View.VISIBLE
-            tv_remind_select.visibility = View.VISIBLE
-            et_title_content_input.imeOptions = EditorInfo.IME_ACTION_DONE
-            et_title.setText(tv_title.text, TextView.BufferType.EDITABLE);
-            status = Status.AllDoneStatus
+            modifyPageLayout()
+            mEditAffairViewModel.status = EditAffairViewModel.Status.AllDoneStatus
         }
     }
+
+    private fun modifyPageLayout() {
+        val set = ConstraintSet().apply { clone(course_affair_container) }
+        set.connect(R.id.et_title_content_input, ConstraintSet.TOP, R.id.course_affair_container, ConstraintSet.TOP)
+        set.setVerticalBias(R.id.et_title_content_input, 0.32f)
+        set.applyTo(course_affair_container)
+        //单独修改控件属性要在apply之后
+        course_textview.visibility = View.GONE
+        tv_title_text.visibility = View.GONE
+        tv_title.visibility = View.GONE
+        tv_content_text.visibility = View.GONE
+        rv_you_might.visibility = View.GONE
+        et_title.visibility = View.VISIBLE
+        tv_week_select.visibility = View.VISIBLE
+        tv_time_select.visibility = View.VISIBLE
+        tv_remind_select.visibility = View.VISIBLE
+        et_title_content_input.imeOptions = EditorInfo.IME_ACTION_DONE
+        et_title.setText(tv_title.text, TextView.BufferType.EDITABLE);
+    }
+
     fun addContentBackMonitor(){
         if (et_title_content_input.text.trim().isEmpty()) {
             Toast.makeText(this, resources.getString(R.string.course_content_is_null),
@@ -221,7 +237,7 @@ class EditAffairActivity : BaseActivity() {
             tv_remind_select.visibility = View.GONE
             et_title_content_input.imeOptions = EditorInfo.IME_ACTION_NEXT
             tv_title.text = et_title.text
-            status = Status.ContentStatus
+            mEditAffairViewModel.status = EditAffairViewModel.Status.ContentStatus
         }
     }
 
@@ -294,7 +310,4 @@ class EditAffairActivity : BaseActivity() {
         const val TIME_NUM = "timeNum"
     }
 
-    enum class Status {
-        TitleStatus, ContentStatus, AllDoneStatus
-    }
 }
