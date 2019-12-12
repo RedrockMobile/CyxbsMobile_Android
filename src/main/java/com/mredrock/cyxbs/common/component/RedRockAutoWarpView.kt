@@ -33,6 +33,7 @@ class RedRockAutoWarpView : FrameLayout {
 
     var isStrict = true
 
+    var maxLine = -1
 
     private var spacingH: Int = 0
     private var spacingV: Int = 0
@@ -46,6 +47,7 @@ class RedRockAutoWarpView : FrameLayout {
         spacingH = typedArray.getDimension(R.styleable.RedRockAutoWarpView_horizontalSpacing, 0f).toInt()
         spacingV = typedArray.getDimension(R.styleable.RedRockAutoWarpView_verticalsSpacing, 0f).toInt()
         isStrict = typedArray.getBoolean(R.styleable.RedRockAutoWarpView_strictMode, true)
+        maxLine = typedArray.getInteger(R.styleable.RedRockAutoWarpView_maxLine,-1)
         typedArray.recycle()
     }
 
@@ -85,6 +87,9 @@ class RedRockAutoWarpView : FrameLayout {
                     setLayoutP(layoutParams, column, rowUsedHeights, rowUsedWith)
                 }else {
                     column++
+                    if (maxLine!=-1&&column == maxLine) {
+                        break
+                    }
                     rowUsedWith = 0
                     setLayoutP(layoutParams, column, rowUsedHeights, rowUsedWith)
                 }
@@ -120,6 +125,9 @@ class RedRockAutoWarpView : FrameLayout {
                             setLayoutP(layoutParams, column1, rowUsedHeights1, rowUsedWith1)
                         }else {
                             column1++
+                            if (maxLine!=-1&&column == maxLine) {
+                                break
+                            }
                             rowUsedWith1 = 0
                             setLayoutP(layoutParams, column1, rowUsedHeights1, rowUsedWith1)
                         }
