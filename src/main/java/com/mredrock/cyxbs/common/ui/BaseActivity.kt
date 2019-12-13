@@ -17,10 +17,12 @@ import androidx.appcompat.widget.Toolbar
 import com.afollestad.materialdialogs.MaterialDialog
 import com.alibaba.android.arouter.launcher.ARouter
 import com.mredrock.cyxbs.common.R
+import com.mredrock.cyxbs.common.component.JToolbar
 import com.mredrock.cyxbs.common.event.AskLoginEvent
 import com.mredrock.cyxbs.common.event.LoginEvent
 import com.mredrock.cyxbs.common.event.LoginStateChangeEvent
 import com.mredrock.cyxbs.common.utils.LogUtils
+import com.mredrock.cyxbs.common.utils.extensions.getScreenWidth
 import com.umeng.analytics.MobclickAgent
 import kotlinx.android.synthetic.main.common_toolbar.*
 import org.greenrobot.eventbus.EventBus
@@ -89,18 +91,13 @@ abstract class BaseActivity : AppCompatActivity() {
             setNavigationIcon(icon)
             setNavigationOnClickListener(listener)
         }
-
     }
-    protected fun Toolbar.initWithSplitLine(title:String,
-                                            withSplitLine:Boolean = true,
-                                            @DrawableRes icon:Int = R.drawable.common_ic_back,
-                                            listener:View.OnClickListener? = View.OnClickListener { finish() }){
-        if(withSplitLine) {
-            (parent as ViewGroup).addView(View(this.context).apply {
-                layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 1)
-                backgroundResource = R.color.commonDefaultDivideLineColor
-            })
-        }
+    protected fun JToolbar.initWithSplitLine(title:String,
+                                             withSplitLine:Boolean = true,
+                                             @DrawableRes icon:Int = R.drawable.common_ic_back,
+                                             listener:View.OnClickListener? = View.OnClickListener { finish() }){
+        initPaint(R.color.commonDefaultDivideLineColor)
+        setTitleLocationAtLeft(false)
         init(title,icon,listener)
     }
 
