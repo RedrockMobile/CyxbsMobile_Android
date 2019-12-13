@@ -2,7 +2,7 @@
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="rectangle">
 
-    <corners android:radius="8dp" />
-    <solid android:color="@color/mine_sign_store_item_bg" />
+    <corners android:radius="30dp" />
+    <solid android:color="@color/mine_askpostedfm_btn_bg_accept" />
 
 </shape>

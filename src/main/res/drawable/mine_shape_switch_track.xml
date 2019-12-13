@@ -3,13 +3,19 @@
     <item android:state_checked="true">
         <shape android:shape="rectangle">
             <solid android:color="@color/blueButton"/>
-            <corners android:radius="45dp" />
+            <corners android:radius="15dp" />
+            <size
+                android:width="50dp"
+                android:height="30dp"/>
         </shape>
     </item>
     <item>
         <shape android:shape="rectangle">
             <solid android:color="@color/switchOff"/>
-            <corners android:radius="45dp" />
+            <corners android:radius="15dp" />
+            <size
+                android:width="50dp"
+                android:height="30dp"/>
         </shape>
     </item>
 </selector>

@@ -57,16 +57,8 @@ class Stick : View {
     //只需要给View指定一个默认的内部宽高(mWidth, mHeight)
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
-        val widthSpecMode = MeasureSpec.getMode(widthMeasureSpec)
-        val heightSpecMode = MeasureSpec.getMode(heightMeasureSpec)
-        val widthSpecSize = MeasureSpec.getSize(widthMeasureSpec)
-        val heightSpecSize = MeasureSpec.getSize(heightMeasureSpec)
-        if (widthSpecMode == MeasureSpec.AT_MOST && heightSpecMode == MeasureSpec.AT_MOST) {
-            setMeasuredDimension(mWidth, mHeight)
-        } else if (widthSpecMode == MeasureSpec.AT_MOST) {
-            setMeasuredDimension(mWidth, heightSpecSize)
-        } else if (heightSpecMode == MeasureSpec.AT_MOST) {
-            setMeasuredDimension(widthSpecSize, mHeight)
-        }
+        val width = resolveSize(mWidth, widthMeasureSpec)
+        val height = resolveSize(mHeight, heightMeasureSpec)
+        setMeasuredDimension(width, height)
     }
 }

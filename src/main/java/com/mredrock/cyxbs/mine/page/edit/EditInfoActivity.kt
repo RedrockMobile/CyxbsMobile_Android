@@ -17,6 +17,7 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import androidx.core.content.ContextCompat
+import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.Observer
 import com.afollestad.materialdialogs.MaterialDialog
 import com.mredrock.cyxbs.common.config.DIR_PHOTO
@@ -32,7 +33,6 @@ import kotlinx.android.synthetic.main.mine_activity_edit_info.*
 import okhttp3.MediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
-import org.jetbrains.anko.backgroundResource
 import org.jetbrains.anko.textColor
 import org.jetbrains.anko.toast
 import java.io.File
@@ -71,13 +71,19 @@ class EditInfoActivity(override val isFragmentActivity: Boolean = false,
     @SuppressLint("SetTextI18n")
     private fun checkColorAndText() {
         if (checkIfInfoChange()) {
-            mine_btn_info_save.backgroundResource = R.drawable.mine_bg_round_corner_blue
-            mine_btn_info_save.text = "保存"
-            mine_btn_info_save.isClickable = true
+            mine_btn_info_save.apply {
+                textColor = ContextCompat.getColor(context, R.color.mine_white)
+                background = ResourcesCompat.getDrawable(resources, R.drawable.mine_bg_round_corner_blue_gradient, null)
+                text = "保存"
+                isClickable = true
+            }
         } else {
-            mine_btn_info_save.backgroundResource = R.drawable.mine_bg_round_corner_grey
-            mine_btn_info_save.text = "已保存"
-            mine_btn_info_save.isClickable = false
+            mine_btn_info_save.apply {
+                textColor = ContextCompat.getColor(context, R.color.greyButtonText)
+                background = ResourcesCompat.getDrawable(resources, R.drawable.mine_bg_round_corner_grey, null)
+                text = "已保存"
+                isClickable = false
+            }
         }
         val nickname = mine_et_nickname.text.toString()
         val introduction = mine_et_introduce.text.toString()

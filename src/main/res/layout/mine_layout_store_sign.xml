@@ -18,14 +18,15 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+
     <ImageView
         android:id="@+id/mine_store_arrow_left"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="15dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:alpha="0"
+        android:scaleType="center"
         android:src="@drawable/mine_ic_arrow_left"
-        app:layout_constraintBottom_toTopOf="@+id/mine_guideline5"
+        app:layout_constraintBottom_toTopOf="@+id/mine_store_guildeline"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -37,10 +38,10 @@
         android:textColor="@color/levelTwoFontColor"
         android:textSize="21sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/mine_store_arrow_left"
-        app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginStart="15dp"
-        app:layout_constraintTop_toTopOf="@+id/mine_store_arrow_left"
+        app:layout_constraintBottom_toBottomOf="@+id/mine_store_guildeline"
+        app:layout_constraintStart_toStartOf="@+id/mine_store_arrow_left"
+        android:layout_marginStart="17dp"
+        app:layout_constraintTop_toTopOf="parent"
         tools:text="积分商城" />
 
     <TextView
@@ -53,35 +54,35 @@
         android:alpha="0"
         android:paddingEnd="10dp"
         android:paddingBottom="5dp"
+        android:layout_marginStart="34dp"
         android:text="@string/mine_sign_store_my_product"
         app:layout_constraintBottom_toBottomOf="@+id/mine_store_tv_title"
-        app:layout_constraintEnd_toStartOf="@+id/mine_imageview4"
+        app:layout_constraintStart_toEndOf="@id/mine_store_tv_title"
         app:layout_constraintHorizontal_bias="0.72"
-        app:layout_constraintStart_toEndOf="@+id/mine_store_arrow_left"
         app:layout_constraintTop_toTopOf="@+id/mine_store_tv_title"
         tools:text="我的商品" />
 
     <ImageView
-        android:id="@+id/mine_imageview4"
+        android:id="@+id/mine_store_iv_diamond"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="5dp"
         android:src="@drawable/mine_ic_sign_diamond"
         app:layout_constraintBottom_toBottomOf="@+id/mine_store_myproduct"
-        app:layout_constraintEnd_toStartOf="@+id/mine_textview18"
+        app:layout_constraintEnd_toStartOf="@+id/mine_store_tv_integral"
         app:layout_constraintTop_toTopOf="@+id/mine_store_myproduct" />
 
     <TextView
-        android:id="@+id/mine_textview18"
+        android:id="@+id/mine_store_tv_integral"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="25dp"
         android:text="@string/mine_sign_store_integral_default"
         android:textColor="@color/levelTwoFontColor"
         android:textSize="18sp"
-        app:layout_constraintBottom_toBottomOf="@+id/mine_imageview4"
+        app:layout_constraintBottom_toBottomOf="@+id/mine_store_iv_diamond"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/mine_imageview4"
+        app:layout_constraintTop_toTopOf="@+id/mine_store_iv_diamond"
         tools:text="156" />
 
     <androidx.recyclerview.widget.RecyclerView
@@ -93,10 +94,10 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/mine_guideline5" />
+        app:layout_constraintTop_toTopOf="@+id/mine_store_guildeline" />
 
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/mine_guideline5"
+        android:id="@+id/mine_store_guildeline"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"

@@ -1,27 +1,33 @@
 package com.mredrock.cyxbs.mine.page.sign
 
 import android.animation.ObjectAnimator
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.ImageView
 import android.widget.Space
 import androidx.core.content.ContextCompat
+import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.Observer
+import com.alibaba.android.arouter.facade.annotation.Route
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.mredrock.cyxbs.common.BaseApp
+import com.mredrock.cyxbs.common.config.MINE_CHECK_IN
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.extensions.dp2px
+import com.mredrock.cyxbs.common.utils.extensions.gone
 import com.mredrock.cyxbs.common.utils.extensions.invisible
 import com.mredrock.cyxbs.common.utils.extensions.visible
 import com.mredrock.cyxbs.mine.R
 import com.mredrock.cyxbs.mine.network.model.Product
+import com.mredrock.cyxbs.mine.network.model.ScoreStatus
 import com.mredrock.cyxbs.mine.util.user
+import com.mredrock.cyxbs.mine.util.widget.SchoolCalendarPlus
 import com.mredrock.cyxbs.mine.util.widget.SpaceDecoration
 import com.mredrock.cyxbs.mine.util.widget.Stick
 import kotlinx.android.synthetic.main.mine_activity_daily_sign.*
 import kotlinx.android.synthetic.main.mine_layout_store_sign.*
-import org.jetbrains.anko.toast
+import org.jetbrains.anko.textColor
 
 
 /**
@@ -29,6 +35,7 @@ import org.jetbrains.anko.toast
  * origin by jay86
  * 每日签到
  */
+@Route(path = MINE_CHECK_IN)
 class DailySignActivity(override val viewModelClass: Class<DailyViewModel> = DailyViewModel::class.java
                         , override val isFragmentActivity: Boolean = false)
     : BaseViewModelActivity<DailyViewModel>() {
@@ -36,24 +43,30 @@ class DailySignActivity(override val viewModelClass: Class<DailyViewModel> = Dai
     private lateinit var dividerResArr: Array<Stick>
     private lateinit var imageViewResArr: Array<ImageView>
     private lateinit var spaceResArr: Array<Space>
-    private var weekGenerator: WeekGenerator? = null
+    private var weekGenerator: WeekGenerator = WeekGenerator()
+
+
+    //通过一个标志位，来判断刷新divider的时候是否需要动画，
+    //当为true时，表明用户点击了签到按钮导致的UI刷新，这时候需要动画，
+    //当为false时，表明为正常的进入Activity刷新
+    private var isChecking: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         //设置导航栏字体颜色为白色
-        window.decorView.systemUiVisibility = View.SYSTEM_UI_LAYOUT_FLAGS
-
+        window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
         setContentView(R.layout.mine_activity_daily_sign)
-//        if (!isLogin()) return
 
         initView()
         dealBottomSheet()
         user?.let { viewModel.loadAllData(it) }
-        viewModel.fakeStatus.postValue(arrayOf(1, 1, 1, 0, 1, 0, 0))
-        mine_daily_sign.setOnClickListener { checkIn() }
+        viewModel.status.observe(this, Observer {
+            refreshUI(it)
+        })
     }
 
     private fun initView() {
+        mine_daily_sign.setOnClickListener { checkIn() }
         dividerResArr = arrayOf(mine_daily_v_divider_mon_tue,
                 mine_daily_v_divider_tue_wed,
                 mine_daily_v_divider_wed_thurs,
@@ -85,53 +98,72 @@ class DailySignActivity(override val viewModelClass: Class<DailyViewModel> = Dai
         adapter.submitList(list)
 
         mine_store_rv.addItemDecoration(SpaceDecoration(dp2px(8f)))
-        viewModel.fakeStatus.observe(this, Observer {
-            weekGenerator = WeekGenerator(it)
-            refreshUI()
-        })
-
-
     }
 
     /**
      * 刷新签到页面
      */
-    private fun refreshUI() {
+    @SuppressLint("SetTextI18n")
+    private fun refreshUI(scoreStatus: ScoreStatus) {
+        //后端的规则是低位字节代表星期一，高位字节代表星期日，这里做一个翻转处理
+        val weekState = scoreStatus.weekInfo.map(Character::getNumericValue).reversed()
+        weekGenerator.weekSignStateArr = weekState
+        val schoolCalendarPlus = SchoolCalendarPlus()
+        val pair = schoolCalendarPlus.getYearPair()
+        //寒暑假不可签到的一些限制
+        if (schoolCalendarPlus.isInVacation()) {
+            if (schoolCalendarPlus.isWinterVacation()) {
+                mine_daily_tv_week.text = "寒假快乐吗(๑‾ ꇴ ‾๑)"
+            } else {
+                mine_daily_tv_week.text = "暑假快乐吗(´･ω･`)"
+            }
+            mine_daily_dayCount.gone()
+            mine_daily_tv_ranking_percentage.gone()
+            mine_daily_tv_ranking.text = "寒暑假不可签到<(￣3￣)>哼！"
+            mine_daily_sign.gone()
+            mine_daily_tv_bubble.gone()
+            mine_daily_tv_year.text = "${pair.first}-${pair.second}"
+            return
+        }
+        mine_daily_tv_year.text = "${pair.first}-${pair.second}"
+        mine_daily_tv_week.text = "上学期第${schoolCalendarPlus.getChineseWeek()}周"
+        mine_daily_dayCount.text = "已连续打卡${scoreStatus.serialDays}天"
+        mine_daily_tv_ranking_percentage.text = "超过${scoreStatus.percent}的邮子"
+        mine_daily_tv_ranking.text = "今日第${scoreStatus.rank}位打卡"
+        mine_store_tv_integral.text = "${scoreStatus.integral}"
+        if (scoreStatus.isChecked) {
+            mine_daily_sign.apply {
+                isClickable = false
+                background = ResourcesCompat.getDrawable(resources, R.drawable.mine_bg_round_corner_grey, null)
+                textColor = ContextCompat.getColor(context, R.color.greyButtonText)
+            }
+        } else {
+            mine_daily_sign.apply {
+                isClickable = true
+                background = ResourcesCompat.getDrawable(resources, R.drawable.mine_bg_round_corner_blue_gradient, null)
+                textColor = ContextCompat.getColor(context, R.color.mine_white)
+            }
+        }
         changeWeekImage()
-        weekGenerator?.let { paintDivider(it.getDividerColorArr()) }
-        placeBubble()
+        paintDivider(weekGenerator.getDividerColorArr())
+        val toDay = weekGenerator.getToday()
+        toDay.let {
+            val centerX = spaceResArr[it].x
+            mine_daily_tv_bubble.x = centerX - mine_daily_tv_bubble.width / 2
+            mine_daily_tv_bubble.text = "${weekGenerator.getTodayScore()}积分"
+        }
     }
 
     private fun checkIn() {
-//        viewModel.checkIn(user!!) {
-        //创建今天到明天的divider的动画
-        animateUI()
-//        viewModel.fakeStatus.postValue(arrayOf(1, 1, 1, 0, 1, 1, 0))
-//        }
-    }
-
-    private fun animateUI() {
-        weekGenerator?.let {
-            animateDivider(it.getToDay())
-            animateImage(it.getToDay())
-        }
-
-
-    }
-
-    private fun animateImage(weekDay: Int) {
-        imageViewResArr[weekDay].setImageResource(R.drawable.mine_shape_circle_src_activity_sign)
-    }
-
-    private fun isLogin(): Boolean {
-        if (!BaseApp.isLogin) {
-            toast("还没有登录...")
-        }
-        return BaseApp.isLogin
+        isChecking = true
+        viewModel.checkIn(user ?: return)
     }
 
     private fun dealBottomSheet() {
         val behavior = BottomSheetBehavior.from(mine_sign_fl)
+        mine_store_arrow_left.setOnClickListener {
+            behavior.state = BottomSheetBehavior.STATE_COLLAPSED
+        }
         var statusBarHeight = -1
         val resourceId = resources.getIdentifier("status_bar_height", "dimen", "android")
         if (resourceId > 0) {
@@ -143,7 +175,7 @@ class DailySignActivity(override val viewModelClass: Class<DailyViewModel> = Dai
                 mine_store_arrow_left.alpha = p1
                 mine_store_myproduct.alpha = p1
                 mine_store_line.alpha = 1 - p1
-                mine_store_tv_title.x = mine_store_arrow_left.x + p1 * dp2px(38f)
+                mine_store_tv_title.x = mine_store_arrow_left.x + p1 * dp2px(15f) + dp2px(17f)
             }
 
             override fun onStateChanged(p0: View, p1: Int) {
@@ -159,8 +191,8 @@ class DailySignActivity(override val viewModelClass: Class<DailyViewModel> = Dai
     }
 
     private fun changeWeekImage() {
-        weekGenerator ?: return
-        val state = weekGenerator!!.getWeekImageStateArr()
+        weekGenerator
+        val state = weekGenerator.getWeekImageStateArr()
         for (i in 0..6) {
             when {
                 state[i] == ImageState.IMAGE_BLUE -> {
@@ -176,49 +208,42 @@ class DailySignActivity(override val viewModelClass: Class<DailyViewModel> = Dai
         }
     }
 
-    private fun placeBubble() {
-        val toDay = weekGenerator?.getToDay()
-        toDay?.let {
-            val centerX = spaceResArr[it].x
-            mine_daily_tv_bubble.x = centerX - mine_daily_tv_bubble.width / 2
-        }
-    }
 
-
-    //接下来主要是一些修改divider颜色的方法
+    //接下来主要是一些修改divider颜色的方法,如果isChecking == true 那么说明是用户点击了签到导致的UI刷新，此时相应的divider需要有一段动画
     private fun paintDivider(dividerColorArr: Array<ColorState>) {
-        for (i in 0..5) {
-            setDividerColor(i, dividerColorArr[i])
-            dividerResArr[i].progress = 1f
+        weekGenerator.let {
+            for (i in 0..5) {
+                if (i == it.getToday() && isChecking) {
+                    isChecking = false
+                    val index = it.getToday()
+                    if (index > 5) return
+                    setDividerColor(index, ColorState.COLOR_BLUE)
+                    val animator = ObjectAnimator.ofFloat(dividerResArr[index], "progress", 0f, 1f)
+                    animator.duration = 1000
+                    animator.interpolator = AccelerateDecelerateInterpolator()
+                    animator.start()
+                } else {
+                    setDividerColor(i, dividerColorArr[i])
+                    dividerResArr[i].progress = 1f
+                }
+
+            }
         }
+
     }
 
     private fun setDividerColor(i: Int, color: ColorState) {
         when (color) {
             ColorState.COLOR_GREY -> {
                 dividerResArr[i].color.color = ContextCompat.getColor(this, R.color.mine_sign_divider_grey)
-                dividerResArr[i].alpha = 1f
             }
             ColorState.COLOR_BLUE -> {
                 dividerResArr[i].color.color = ContextCompat.getColor(this, R.color.mine_sign_divider_blue)
-                dividerResArr[i].alpha = 1f
             }
             else -> {
-                dividerResArr[i].color.color = ContextCompat.getColor(this, R.color.mine_sign_divider_blue)
-                dividerResArr[i].alpha = 0.31f
+                dividerResArr[i].color.color = ContextCompat.getColor(this, R.color.mine_sign_divider_blue_light)
             }
         }
-    }
-
-
-    //开启一段divider的颜色填充动画,默认颜色为蓝色
-    private fun animateDivider(index: Int, color: ColorState = ColorState.COLOR_BLUE) {
-        if (index > 5) return
-        setDividerColor(index, color)
-        val animator = ObjectAnimator.ofFloat(dividerResArr[index], "progress", 0f, 1f)
-        animator.duration = 500
-        animator.interpolator = AccelerateDecelerateInterpolator()
-        animator.start()
     }
 
 

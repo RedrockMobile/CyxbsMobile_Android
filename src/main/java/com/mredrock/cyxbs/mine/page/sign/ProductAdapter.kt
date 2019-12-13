@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.mredrock.cyxbs.common.utils.extensions.setImageFromUrl
 import com.mredrock.cyxbs.mine.R
 import com.mredrock.cyxbs.mine.network.model.Product
-import org.jetbrains.anko.find
 
 /**
  * Created by roger on 2019/11/28
@@ -27,11 +26,11 @@ class ProductAdapter() : ListAdapter<Product, ProductAdapter.ProductViewHolder>(
             LayoutInflater.from(parent.context)
                     .inflate(R.layout.mine_list_item_product, parent, false)
     ) {
-        private val iv = itemView.find<ImageView>(R.id.mine_sign_store_item_iv)
-        private val title = itemView.find<TextView>(R.id.mine_sign_store_item_tv_title)
-        private val count = itemView.find<TextView>(R.id.mine_sign_store_item_tv_count)
-        private val integral = itemView.find<TextView>(R.id.mine_sign_store_item_tv__integral)
-        private val exchange = itemView.find<Button>(R.id.mine_sign_store_item_btn_exchange)
+        private val iv = itemView.findViewById<ImageView>(R.id.mine_sign_store_item_iv)
+        private val title = itemView.findViewById<TextView>(R.id.mine_sign_store_item_tv_title)
+        private val count = itemView.findViewById<TextView>(R.id.mine_sign_store_item_tv_count)
+        private val integral = itemView.findViewById<TextView>(R.id.mine_sign_store_item_tv__integral)
+        private val exchange = itemView.findViewById<Button>(R.id.mine_sign_store_item_btn_exchange)
 
         @SuppressLint("SetTextI18n")
         fun bind(product: Product) {

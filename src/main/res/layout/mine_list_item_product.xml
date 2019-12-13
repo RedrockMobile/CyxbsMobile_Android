@@ -11,7 +11,7 @@
         android:layout_width="0dp"
         app:cardElevation="0dp"
         android:layout_height="wrap_content"
-        app:cardCornerRadius="10dp"
+        app:cardCornerRadius="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -66,6 +66,7 @@
         android:text="@string/mine_sign_store_item_integral_default"
         android:textColor="@color/mine_sign_store_item_tv_integral"
         android:textSize="18sp"
+        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/mine_sign_store_item_iv_diamond"
         app:layout_constraintStart_toEndOf="@+id/mine_sign_store_item_iv_diamond"
         app:layout_constraintTop_toTopOf="@+id/mine_sign_store_item_iv_diamond" />
