@@ -11,7 +11,7 @@
     <color name="windowBackground" tools:ignore="ResourceName">#F2F3F8</color>
     <!--    整体淡灰二级背景-->
     <color name="secondaryWindowBackground" tools:ignore="ResourceName">#F8F9FC</color>
-
+    <color name="chosenBackground" tools:ignore="ResourceName">#E5EAF2</color>
 
     <!--    纯白色背景和纯白色字体-->
     <color name="whiteBackground" tools:ignore="ResourceName">#ffffff</color>
@@ -90,6 +90,7 @@
     <color name="blueSignTextColor" tools:ignore="ResourceName">#839BFA</color>
     <!--    分割线颜色-->
     <color name="severViewColor" tools:ignore="ResourceName">#BDCCE5</color>
+    <color name="alphaSeverViewColor" tools:ignore="ResourceName">#39BDCCE5</color>
     <color name="blueButton" tools:ignore="ResourceName">#2921D1</color>
 
     <color name="greyButton" tools:ignore="ResourceName">#E1DFE0</color>
