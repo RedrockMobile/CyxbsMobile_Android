@@ -1,11 +1,10 @@
 package com.mredrock.cyxbs.discover.emptyroom.ui
 
 import android.animation.ObjectAnimator
-import android.animation.ValueAnimator
 import android.graphics.Color
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.Gravity
-import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.TextView
 import androidx.annotation.Px
@@ -18,7 +17,6 @@ import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.config.DISCOVER_EMPTY_ROOM
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.SchoolCalendar
-import com.mredrock.cyxbs.common.utils.extensions.getScreenWidth
 import com.mredrock.cyxbs.common.utils.extensions.gone
 import com.mredrock.cyxbs.common.utils.extensions.visible
 import com.mredrock.cyxbs.discover.emptyroom.R
@@ -33,9 +31,11 @@ import com.mredrock.cyxbs.discover.emptyroom.viewmodel.EmptyRoomViewModel.Compan
 import com.mredrock.cyxbs.discover.emptyroom.viewmodel.EmptyRoomViewModel.Companion.FINISH
 import com.mredrock.cyxbs.discover.emptyroom.viewmodel.EmptyRoomViewModel.Companion.LOADING
 import kotlinx.android.synthetic.main.emptyroom_activity_empty_room.*
-import org.jetbrains.anko.*
-import org.jetbrains.anko.custom.style
+import org.jetbrains.anko.dip
+import org.jetbrains.anko.textColor
+import org.jetbrains.anko.toast
 import java.util.*
+
 
 @Route(path = DISCOVER_EMPTY_ROOM)
 class EmptyRoomActivity : BaseViewModelActivity<EmptyRoomViewModel>(), OnItemSelectedChangeListener {
@@ -93,13 +93,17 @@ class EmptyRoomActivity : BaseViewModelActivity<EmptyRoomViewModel>(), OnItemSel
                 if (p0 != null) {
                     buildingPosition = p0.position
                     val textView = TextView(applicationContext)
+                    textView.paint.isFakeBoldText = true
+
+                    val drawable : Drawable? = ContextCompat.getDrawable(BaseApp.context, R.drawable.emptyroom_shape_query_item)
+                    textView.background = drawable
                     textView.text = p0.text
-                    textView.setPadding(15,2,15,2)
                     textView.textColor = Color.parseColor("#112C54")
                     textView.gravity = Gravity.CENTER
-                    val drawable = ContextCompat.getDrawable(BaseApp.context, R.drawable.emptyroom_shape_query_item)
-                    textView.background = drawable
-                    textView.paint.isFakeBoldText = true
+//                    textView.setPadding(dip(15),dip(3),dip(15),dip(3))
+//                    textView.layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT)
+                    textView.height = dip(26)
+                    textView.width = dip(59)
                     p0.customView = textView
                     onItemSelectedChange()
                 }
@@ -193,7 +197,9 @@ class EmptyRoomActivity : BaseViewModelActivity<EmptyRoomViewModel>(), OnItemSel
                             color =  Color.parseColor("#15315B")
                             textView.paint.isFakeBoldText = false
                         }
+                        textView.gravity = Gravity.CENTER
                         textView.background = drawable
+                        textView.height = dip(26)
                         textView.setTextColor(color)
                     }
                 },isFullUp ,itemNumber).build()
