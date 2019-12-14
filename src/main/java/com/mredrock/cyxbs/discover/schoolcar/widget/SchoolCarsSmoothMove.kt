@@ -9,10 +9,10 @@ import com.amap.api.maps.model.LatLng
 import com.amap.api.maps.model.PolylineOptions
 import com.amap.api.maps.utils.overlay.SmoothMoveMarker
 import com.mredrock.cyxbs.common.network.ApiGenerator
-import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.discover.schoolcar.Interface.SchoolCarInterface
+import com.mredrock.cyxbs.discover.schoolcar.SchoolCarActivity
 import com.mredrock.cyxbs.discover.schoolcar.network.ApiService
 import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.activity_schoolcar.*
@@ -26,7 +26,7 @@ import java.util.*
  * Created by glossimar on 2018/9/12
  */
 
-class SchoolCarsSmoothMove(private val schoolCarMap: SchoolCarMap?, private val activity: Activity) {
+class SchoolCarsSmoothMove(private val schoolCarActivity: SchoolCarActivity?, private val activity: Activity) {
     private var carAngle: Double = 0.toDouble()
 
     private lateinit var carInterface: SchoolCarInterface
@@ -127,7 +127,7 @@ class SchoolCarsSmoothMove(private val schoolCarMap: SchoolCarMap?, private val 
      */
     fun smoothMove(smoothMoveMarkers: MutableList<SmoothMoveMarker>, bitmapChanged: Bitmap) {
         if (smoothMoveList1.size > 0 || smoothMoveList2.size > 0) {
-            val smoothMarker = SmoothMoveMarker(schoolCarMap?.aMap)
+            val smoothMarker = SmoothMoveMarker(schoolCarActivity?.aMap)
             smoothMoveMarkers.add(smoothMarker)
             val carAmount = smoothMoveMarkers.size - 1
             smoothMoveMarkers[carAmount].setDescriptor(BitmapDescriptorFactory.fromBitmap(bitmapChanged))
@@ -139,7 +139,7 @@ class SchoolCarsSmoothMove(private val schoolCarMap: SchoolCarMap?, private val 
                 smoothMoveMarkers[carAmount].setPoints(getSmoothMoveList(carAmount).subList(getSmoothMoveList(carAmount).size - 1, getSmoothMoveList(carAmount).size - 1))
             }
             smoothMoveMarkers[carAmount].setTotalDuration(2)
-            drawTraceLine(schoolCarMap?.aMap, getSmoothMoveList(carAmount))
+            drawTraceLine(schoolCarActivity?.aMap, getSmoothMoveList(carAmount))
             smoothMoveMarkers[carAmount].startSmoothMove()
         }
 

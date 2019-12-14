@@ -9,8 +9,8 @@
     tools:ignore="ResourceName">
 
 
-    <RelativeLayout
-        android:id="@+id/explore_school_car_linearLayout"
+    <com.amap.api.maps.MapView
+        android:id="@+id/mv_map"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
       />
@@ -115,5 +115,15 @@
         app:layout_constraintBottom_toBottomOf="@id/cv_positioning"
         app:layout_constraintLeft_toLeftOf="@id/cv_positioning"
         app:layout_constraintRight_toRightOf="@id/cv_positioning"
+        />
+    <ImageView
+        android:id="@+id/iv_cooperation_logo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:src="@drawable/ic_school_car_search_orgnization_logo"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="5dp"
         />
 </androidx.constraintlayout.widget.ConstraintLayout>

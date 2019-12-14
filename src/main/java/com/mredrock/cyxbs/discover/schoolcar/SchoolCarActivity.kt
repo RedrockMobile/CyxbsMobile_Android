@@ -1,16 +1,15 @@
 package com.mredrock.cyxbs.discover.schoolcar
 
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.*
+import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
-import android.os.PersistableBundle
 import android.view.Menu
 import android.view.MenuItem
-import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.RelativeLayout
+import android.view.View
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.alibaba.android.arouter.facade.annotation.Route
@@ -20,6 +19,8 @@ import com.amap.api.location.AMapLocationListener
 import com.amap.api.maps.AMap
 import com.amap.api.maps.AMapUtils
 import com.amap.api.maps.CameraUpdateFactory
+import com.amap.api.maps.model.BitmapDescriptor
+import com.amap.api.maps.model.BitmapDescriptorFactory
 import com.amap.api.maps.model.LatLng
 import com.amap.api.maps.model.MyLocationStyle
 import com.amap.api.maps.utils.overlay.SmoothMoveMarker
@@ -31,7 +32,6 @@ import com.mredrock.cyxbs.common.utils.extensions.dp2px
 import com.mredrock.cyxbs.discover.schoolcar.Interface.SchoolCarInterface
 import com.mredrock.cyxbs.discover.schoolcar.bean.SchoolCarLocation
 import com.mredrock.cyxbs.discover.schoolcar.widget.ExploreSchoolCarDialog
-import com.mredrock.cyxbs.discover.schoolcar.widget.SchoolCarMap
 import com.mredrock.cyxbs.discover.schoolcar.widget.SchoolCarsSmoothMove
 import com.mredrock.cyxbs.schoolcar.R
 import io.reactivex.Observable
@@ -39,7 +39,6 @@ import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.activity_schoolcar.*
-import org.jetbrains.anko.dip
 import java.io.File
 import java.util.concurrent.TimeUnit
 
@@ -48,7 +47,7 @@ import java.util.concurrent.TimeUnit
  */
 
 @Route(path = DISCOVER_SCHOOL_CAR)
-class SchoolCarActivity : BaseActivity() {
+class SchoolCarActivity : BaseActivity(), View.OnClickListener {
     companion object {
         const val TAG: String = "ExploreSchoolCar"
         const val EXPLORE_SCHOOL_CAR_URL: String = "$END_POINT_REDROCK/app/schoolbus/load.gif"
@@ -67,18 +66,16 @@ class SchoolCarActivity : BaseActivity() {
 
     var ifLocation = true
     private var showCarIcon = false
-
-    private var locationStatus: Int = 0
     private var savedInstanceState: Bundle? = null
     private lateinit var makerBitmap: Bitmap
-    private lateinit var holeSchoolButton: ImageView
-    private var schoolCarMap: SchoolCarMap? = null
     private var smoothMoveData: SchoolCarsSmoothMove? = null
     private lateinit var smoothMoveMarkers: MutableList<SmoothMoveMarker>
     private lateinit var locationClient: AMapLocationClient
     private var disposable: Disposable? = null
     private lateinit var dataList: List<SchoolCarLocation.Data>
-
+    lateinit var aMap: AMap
+    private lateinit var smoothMarker: SmoothMoveMarker
+    private lateinit var locationStyle: MyLocationStyle
     override val isFragmentActivity = false
 
     //申请权限
@@ -97,124 +94,63 @@ class SchoolCarActivity : BaseActivity() {
         return@OnMenuItemClickListener false
     }
 
+    override fun onClick(v: View?) {
+        when (v) {
+            cv_out -> {
+                val update = CameraUpdateFactory.zoomOut()
+                aMap.animateCamera(update)
+            }
+            cv_expand -> {
+                val update = CameraUpdateFactory.zoomIn()
+                aMap.animateCamera(update)
+            }
+            cv_positioning -> {
+                val update = CameraUpdateFactory.newLatLngZoom(LatLng(29.531876, 106.606789), 17f)
+                aMap.animateCamera(update)
+            }
+            iv_cooperation_logo -> {
+                val intent = Intent()
+                intent.action = Intent.ACTION_VIEW
+                intent.data = Uri.parse("http://eini.cqupt.edu.cn/")
+                startActivity(intent)
+            }
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         this.savedInstanceState = savedInstanceState
         setContentView(R.layout.activity_schoolcar)
         if (checkActivityPermission()) {
             locationClient = AMapLocationClient(applicationContext)
-            initSchoolCarMap()
+            initView()
         }
     }
 
-    /**
-     * 获取schoolCarMap的实例并且重写接口initLocationMapButton（高德地图只能使用动态加载添加UI）
-     *  onCreate()中调用
-     */
-    private fun initSchoolCarMap() {
-        schoolCarMap = SchoolCarMap(this, savedInstanceState, object : SchoolCarInterface {
-            override fun processLocationInfo(carLocationInfo: SchoolCarLocation, aLong: Long) {}
-
-            //在图地中动态加载控件
-            override fun initLocationMapButton(aMap: AMap, locationStyle: MyLocationStyle) {
-                aMap.uiSettings.isZoomControlsEnabled = false
-
-                cv_out.setOnClickListener {
-                    val update = CameraUpdateFactory.zoomOut()
-                    aMap.animateCamera(update)
-                }
-                cv_expand.setOnClickListener {
-                    val update = CameraUpdateFactory.zoomIn()
-                    aMap.animateCamera(update)
-                }
-                cv_positioning.setOnClickListener{
-                    val update = CameraUpdateFactory.newLatLngZoom(LatLng(29.531876, 106.606789), 17f)
-                    aMap.animateCamera(update)
-                }
-                val relativeLayoutDown = RelativeLayout(this@SchoolCarActivity)
-//                val layoutParamsDown = RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-//                explore_school_car_linearLayout.addView(relativeLayoutDown, layoutParamsDown)
-                val parent = File(Environment.getExternalStorageDirectory().absolutePath + "/maoXhMap")
-                val styleExtra = File(parent, "style_extra.data")
-                val style = File(parent, "style.data")
-                val customMapStyleOptions = com.amap.api.maps.model.CustomMapStyleOptions()
-                customMapStyleOptions.apply {
-                    isEnable = true
-                    styleDataPath = style.absolutePath
-                    styleExtraPath = styleExtra.absolutePath
-                }
-                aMap.setCustomMapStyle(customMapStyleOptions)
-                // 在地图中加入"全校"<->"我"的button和两种模式转换时button需要的逻辑修改（包括定位模式和button上的图片）
-                holeSchoolButton = ImageView(this@SchoolCarActivity)
-                holeSchoolButton.setBackgroundColor(Color.TRANSPARENT)
-                holeSchoolButton.setImageBitmap(BitmapFactory.decodeResource(resources, R.drawable.ic_school_car_search_hole_school))
-
-                locationStatus = WHOLE_SCHOOL
-
-                holeSchoolButton.setOnClickListener {
-                    LogUtils.d(TAG, ifLocation.toString())
-                    when (locationStatus) {
-                        WHOLE_SCHOOL -> {
-                            holeSchoolButton.setImageBitmap(BitmapFactory.decodeResource(resources, R.drawable.ic_school_car_search_me))
-
-                            if (ifLocation) {
-                                locationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_FOLLOW)
-                                aMap.myLocationStyle = locationStyle
-                            }
-
-                            locationStatus = ME
-                        }
-                        ME -> {
-                            holeSchoolButton.setImageBitmap(BitmapFactory.decodeResource(resources, R.drawable.ic_school_car_search_hole_school))
-
-                            if (ifLocation) {
-                                locationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_FOLLOW_NO_CENTER)
-                                aMap.myLocationStyle = locationStyle
-                            }
-
-                            //update为地图重加载使用的数据，参数为地图中心点和缩放大小
-                            val update = CameraUpdateFactory.newLatLngZoom(LatLng(29.531876, 106.606789), 17f)
-                            aMap.animateCamera(update)
-                            locationStatus = WHOLE_SCHOOL
-                        }
-                    }
-                }
-                val dm = resources.displayMetrics
-                //在地图中加入holeSchoolButton的所在的RelativeLayout
-                //自适应屏幕大小
-                val stateRelativeLayout = RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-                stateRelativeLayout.addRule(RelativeLayout.ALIGN_PARENT_RIGHT)
-                stateRelativeLayout.rightMargin = dip(12)
-                stateRelativeLayout.topMargin = dip(12)
-
-                stateRelativeLayout.width = dm.widthPixels / 7
-                stateRelativeLayout.height = dm.widthPixels / 7
-                relativeLayoutDown.addView(holeSchoolButton, stateRelativeLayout)
-
-                //如果用户同意定位权限，则开启定位和初始化定位用到的类
-                if (ifLocation) {
-                    LogUtils.d(TAG, "schoolCarMap.initLocationType")
-                    schoolCarMap!!.initLocationType()
-                    initData()
-                }
-                //加载地图
-                schoolCarMap!!.initAMap(ifLocation)
-            }
-        })
-        initView()
-    }
 
     /**
      * 获取smoothMoveData、makerBitmap的实例, toolbar，开启加载动画
      * 在initSchoolcarMap()中调用 -> 在初始化了schoolCarMap实例后
      */
     private fun initView() {
-        makerBitmap = getSmoothMakerBitmap()
-        smoothMoveData = SchoolCarsSmoothMove(schoolCarMap!!, this@SchoolCarActivity)
+        mv_map.onCreate(savedInstanceState)
+        aMap = mv_map.map
+        cv_out.setOnClickListener(this)
+        cv_expand.setOnClickListener(this)
+        cv_positioning.setOnClickListener(this)
+        iv_cooperation_logo.setOnClickListener(this)
         jc_schoolCar.setShadow(false, false, false, false)
+        //如果用户同意定位权限，则开启定位和初始化定位用到的类
+        if (ifLocation) {
+            LogUtils.d(TAG, "schoolCarMap.initLocationType")
+            initLocationType()
+            initData()
+        }
+        //初始化地图配置
+        initAMap(ifLocation)
+        makerBitmap = getSmoothMakerBitmap()
+        smoothMoveData = SchoolCarsSmoothMove(this, this@SchoolCarActivity)
         smoothMoveData!!.setCarMapInterface(object : SchoolCarInterface {
-            override fun initLocationMapButton(aMap: AMap, locationStyle: MyLocationStyle) {}
-
             // 回调是否显示地图，和是否开启一个timer轮询接口
             override fun processLocationInfo(carLocationInfo: SchoolCarLocation, aLong: Long) {
                 dataList = carLocationInfo.data
@@ -231,7 +167,11 @@ class SchoolCarActivity : BaseActivity() {
                     showCarIcon = true
                     timer("showCarIcon")
                     LogUtils.d(TAG, "processLocationInfo: " + carLocationInfo.status)
-                    schoolCarMap!!.showMap(carLocationInfo.status, explore_school_car_linearLayout)
+                    if (carLocationInfo.status == "200") {
+                        initLocationType()
+                    } else {
+                        tv_carStatus.text = "校车好像失联了..."
+                    }
                 }
 
 
@@ -254,6 +194,41 @@ class SchoolCarActivity : BaseActivity() {
         return super.onCreateOptionsMenu(menu)
     }
 
+    private fun initAMap(ifLocation: Boolean) {
+        if (ifLocation) {
+            aMap.isMyLocationEnabled = true
+            aMap.myLocationStyle = locationStyle
+        }
+        //加载地图材质包
+        aMap.uiSettings.isZoomControlsEnabled = false
+        val parent = File(Environment.getExternalStorageDirectory().absolutePath + "/maoXhMap")
+        val styleExtra = File(parent, "style_extra.data")
+        val style = File(parent, "style.data")
+        val customMapStyleOptions = com.amap.api.maps.model.CustomMapStyleOptions()
+        customMapStyleOptions.apply {
+            isEnable = true
+            styleDataPath = style.absolutePath
+            styleExtraPath = styleExtra.absolutePath
+        }
+        aMap.setCustomMapStyle(customMapStyleOptions)
+        aMap.uiSettings.isMyLocationButtonEnabled = false
+        //地图开始时显示的中心和缩放大小
+        val update = CameraUpdateFactory.newLatLngZoom(LatLng(29.531876, 106.606789), 17f)
+        aMap.animateCamera(update)
+        smoothMarker = SmoothMoveMarker(aMap)
+    }
+
+    fun initLocationType() {
+        val descriptor: BitmapDescriptor = BitmapDescriptorFactory.fromResource(R.drawable.ic_school_car_search_boy)
+        locationStyle = MyLocationStyle()
+        locationStyle.interval(2000)
+        locationStyle.strokeWidth(0f)
+        locationStyle.radiusFillColor(Color.alpha(0))
+        locationStyle.myLocationIcon(descriptor)
+        locationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_FOLLOW_NO_CENTER)
+    }
+
+
     /**
      * 对地图的定位数据进行初始化，同时判定当前校车是否在学校内
      * 在SchoolCarMap class 中回调initLocationMapButton（）时调用 -> 若用户同意定位权限
@@ -263,7 +238,7 @@ class SchoolCarActivity : BaseActivity() {
             if (!showCarIcon) {
                 val myDistance = AMapUtils.calculateLineDistance(LatLng(29.531876, 106.606789), LatLng(it.latitude, it.longitude))
                 if (myDistance > 1300) {
-                    schoolCarMap!!.aMap.isMyLocationEnabled = false
+                    aMap.isMyLocationEnabled = false
                 }
             }
         }
@@ -365,16 +340,6 @@ class SchoolCarActivity : BaseActivity() {
             finish()
         } else {
             locationClient = AMapLocationClient(applicationContext)
-            initSchoolCarMap()
-        }
-    }
-
-    override fun onSaveInstanceState(outState: Bundle?, outPersistentState: PersistableBundle?) {
-        super.onSaveInstanceState(outState)
-        schoolCarMap?.let {
-            if (it.mapView != null) {
-                it.mapView!!.onSaveInstanceState(outState)
-            }
         }
     }
 
@@ -383,10 +348,8 @@ class SchoolCarActivity : BaseActivity() {
         super.onDestroy()
 
         ExploreSchoolCarDialog.cancelDialog()
-
-        if (schoolCarMap != null) {
-            schoolCarMap!!.destroyMap(locationClient)
-        }
+        locationClient.onDestroy()
+        mv_map.onDestroy()
         if (disposable != null) {
             disposable!!.dispose()
             LogUtils.d(TAG, disposable!!.isDisposed.toString())
@@ -401,9 +364,7 @@ class SchoolCarActivity : BaseActivity() {
 
         ExploreSchoolCarDialog.cancelDialog()
 
-        if (schoolCarMap != null) {
-            schoolCarMap!!.pauseMap()
-        }
+        mv_map.onPause()
         if (disposable != null) {
             if (disposable!!.isDisposed) {
                 LogUtils.d(TAG, "onRestart: disposed!!!")
@@ -415,9 +376,7 @@ class SchoolCarActivity : BaseActivity() {
 
     override fun onResume() {
         super.onResume()
-        if (schoolCarMap != null) {
-            schoolCarMap!!.resumeMap()
-        }
+        mv_map.onResume()
 
     }
 
@@ -427,4 +386,5 @@ class SchoolCarActivity : BaseActivity() {
             smoothMoveData!!.clearAllList()
         }
     }
+
 }
