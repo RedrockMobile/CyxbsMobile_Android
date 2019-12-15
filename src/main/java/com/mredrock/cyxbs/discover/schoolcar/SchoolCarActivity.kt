@@ -7,8 +7,6 @@ import android.graphics.*
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
-import android.view.Menu
-import android.view.MenuItem
 import android.view.View
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -85,14 +83,6 @@ class SchoolCarActivity : BaseActivity(), View.OnClickListener {
     private val refusePermissions = mutableListOf<String>()
     private val mRequestCode = 200
 
-    private val menuListener = MenuItem.OnMenuItemClickListener {
-        when (it?.itemId) {
-            R.id.school_car_more -> {
-                startActivity<SchoolCarLearnMoreActivity>()
-            }
-        }
-        return@OnMenuItemClickListener false
-    }
 
     override fun onClick(v: View?) {
         when (v) {
@@ -180,18 +170,10 @@ class SchoolCarActivity : BaseActivity(), View.OnClickListener {
         //进行一次接口数据请求
         smoothMoveData!!.loadCarLocation(ADD_TIMER)
 
-//        SwipeBackHelper.getCurrentPage(this).setSwipeBackEnable(false)
-
         //完成后开始轮询并且显示地图
         smoothMoveMarkers = mutableListOf()
         smoothMoveData!!.loadCarLocation(ADD_TIMER_AND_SHOW_MAP)
 
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.schoolcar_menu, menu)
-        menu?.getItem(0)?.setOnMenuItemClickListener(menuListener)
-        return super.onCreateOptionsMenu(menu)
     }
 
     private fun initAMap(ifLocation: Boolean) {

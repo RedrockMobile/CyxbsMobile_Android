@@ -26,28 +26,14 @@ import java.util.*
  * Created by glossimar on 2018/9/12
  */
 
-class SchoolCarsSmoothMove(private val schoolCarActivity: SchoolCarActivity?, private val activity: Activity) {
-    private var carAngle: Double = 0.toDouble()
-
+class SchoolCarsSmoothMove(private val schoolCarActivity: SchoolCarActivity?, private val activity: Activity){
     private lateinit var carInterface: SchoolCarInterface
 
-    private var checkTimeList: Boolean = true              //是否需要检查当前时间是否为校车运营时间
-    private var timeList: MutableList<String>      //储存接口每次返回的校车最后运行时间的List
-
     //3辆校车的经纬度的List
-    private var smoothMoveList1: MutableList<LatLng>
-    private var smoothMoveList2: MutableList<LatLng>
-    private var smoothMoveList3: MutableList<LatLng>
-
+    private var smoothMoveList1: MutableList<LatLng> = mutableListOf()
+    private var smoothMoveList2: MutableList<LatLng> = mutableListOf()
+    private var smoothMoveList3: MutableList<LatLng> = mutableListOf()
     var disposable: Disposable? = null
-
-    init {
-        timeList = mutableListOf()
-        smoothMoveList1 = mutableListOf()
-        smoothMoveList2 = mutableListOf()
-        smoothMoveList3 = mutableListOf()
-    }
-
     /**
      * 进行接口数据请求
      */
@@ -58,11 +44,17 @@ class SchoolCarsSmoothMove(private val schoolCarActivity: SchoolCarActivity?, pr
                 System.currentTimeMillis().toString().substring(0, 10),
                 md5Hex((System.currentTimeMillis() - 1).toString().substring(0, 10)))
                 .setSchedulers()
-                .safeSubscribeBy {
+                .safeSubscribeBy(onError = {
+                    activity.tv_carStatus.text = "校车好像失联了..."
+                },
+                onNext =  {
                     carInterface.processLocationInfo(it, ifAddTimer)
                     val location = it.data
                     //现在最多三辆校车
                     when (location.size) {
+                        0 -> {
+                            activity.tv_carStatus.text = "校车好像失联了..."
+                        }
                         1 -> {
                             smoothMoveList1.add(LatLng(location[0].lat, location[0].lon))
                         }
@@ -77,19 +69,14 @@ class SchoolCarsSmoothMove(private val schoolCarActivity: SchoolCarActivity?, pr
                             smoothMoveList3.add(LatLng(location[2].lat, location[2].lon))
                         }
                     }
-                    //当timeList的size大于3时将会对运营时间（11:30-2 && 5-9）和从接口数据返回的时间来双重检查是否用户可以进入地图
-                    // 或者显示当前TIME_OUT的dialog
-                    if (checkTimeList) {
-                        if (timeList.size < 3) {
-                            timeList.add(it.time)
-                        } else {
-                            checkTimeList = false
-                            activity.runOnUiThread {
-                                checkBeforeEnter(activity)
-                            }
+                    activity.runOnUiThread {
+                        if (!checkTimeBeforeEnter()) {
+                            activity.tv_carStatus.text = "校车正在休息"
                         }
                     }
+
                 }
+                )
 
     }
 
@@ -104,23 +91,7 @@ class SchoolCarsSmoothMove(private val schoolCarActivity: SchoolCarActivity?, pr
 
     }
 
-    /**
-     * 更改校车车头角度（校车拐弯）
-     */
-    private fun changeCarOrientation(marker: SmoothMoveMarker, latlng1: LatLng, latlng2: LatLng, errorRange: Double) {
-        if (!(latlng1.latitude == latlng2.latitude && latlng1.longitude == latlng2.longitude)) {
-            val nextOrientation = getNextOrientation(latlng1, latlng2)
-            val currentAngle = carAngle
-            if (Math.abs(nextOrientation - currentAngle) > errorRange) {
-                carAngle = nextOrientation
-                val computAngle = computeRotateAngle(currentAngle, nextOrientation).toFloat()
-                if (marker.marker != null) {
-                    val makerLocal = marker.marker
-                    makerLocal.rotateAngle = marker.marker.rotateAngle + computAngle
-                }
-            }
-        }
-    }
+
 
     /**
      * 校车平滑移动时调用
@@ -132,10 +103,8 @@ class SchoolCarsSmoothMove(private val schoolCarActivity: SchoolCarActivity?, pr
             val carAmount = smoothMoveMarkers.size - 1
             smoothMoveMarkers[carAmount].setDescriptor(BitmapDescriptorFactory.fromBitmap(bitmapChanged))
             if (smoothMoveList2.size > 3 || smoothMoveList1.size > 3) {
-                changeCarOrientation(smoothMoveMarkers[carAmount], getSmoothMoveList(carAmount)[getSmoothMoveList(carAmount).size - 3], getSmoothMoveList(carAmount)[getSmoothMoveList(carAmount).size - 2], 2.0)
                 smoothMoveMarkers[carAmount].setPoints(getSmoothMoveList(carAmount).subList(getSmoothMoveList(carAmount).size - 3, getSmoothMoveList(carAmount).size - 1))
             } else {
-//                changeCarOrientation(smoothMoveMarkers[carAmount], getSmoothMoveList(carAmount)[getSmoothMoveList(carAmount).size - 1], getSmoothMoveList(carAmount)[getSmoothMoveList(carAmount).size - 1], 2.0)
                 smoothMoveMarkers[carAmount].setPoints(getSmoothMoveList(carAmount).subList(getSmoothMoveList(carAmount).size - 1, getSmoothMoveList(carAmount).size - 1))
             }
             smoothMoveMarkers[carAmount].setTotalDuration(2)
@@ -145,43 +114,6 @@ class SchoolCarsSmoothMove(private val schoolCarActivity: SchoolCarActivity?, pr
 
     }
 
-    /**
-     * 获取校车车头转向角度算法
-     */
-    private fun getNextOrientation(latlng1: LatLng, latlng2: LatLng): Double {
-        var angle: Double
-        val a: Double
-        val b: Double
-        val c: Double
-        val a1: Double = latlng2.latitude - latlng1.latitude
-        val b1: Double = latlng2.longitude - latlng1.longitude
-
-        val latitudeDif = Math.abs(a1)
-        val longitudeDif = Math.abs(b1)
-        a = latitudeDif
-        b = longitudeDif
-        c = Math.sqrt(Math.pow(a, 2.0) + Math.pow(b, 2.0))
-        if (a == 0.0) {
-            angle = if (latlng2.longitude - latlng1.longitude < 0) 180.0 else 0.0
-        } else if (b == 0.0) {
-            angle = if (latlng2.latitude - latlng1.latitude < 0) 270.0 else 90.0
-        } else {
-            angle = Math.toDegrees(Math.acos(b / c))
-            if (a1 < 0 && b1 > 0) angle = 360 - angle
-            else if (a1 > 0 && b1 > 0)
-            else if (a1 > 0 && b1 < 0) angle = 180 - angle
-            else if (a1 < 0 && b1 < 0) angle += 180
-        }
-        return angle
-    }
-
-    /**
-     * 计算RotateAngle
-     */
-    private fun computeRotateAngle(currentAngle: Double, nextAngle: Double): Double {
-        return nextAngle - currentAngle
-
-    }
 
     fun setCarMapInterface(carMapInterface: SchoolCarInterface) {
         this.carInterface = carMapInterface
@@ -211,20 +143,6 @@ class SchoolCarsSmoothMove(private val schoolCarActivity: SchoolCarActivity?, pr
     }
 
     /**
-     * 时间和接口中校车最后运行时间的双重检查，用户当前是否应该直接进入地图还是显示Dialog->TIME_OUT
-     */
-    private fun checkBeforeEnter(activity: Activity): Boolean {
-        //如果timeList里最后一次校车运行时间和第一次获取到的校车运行时间不一样则说明此时校车正在运行，一样则校车此时未运行
-        if (checkTimeBeforeEnter() || (timeList.size <= 1 || timeList[timeList.size - 1] == timeList[0])) {
-            timeList = mutableListOf("")
-            activity.tv_carStatus.text = "校车正在休息"
-            return false    // 校车未运行
-        }
-        timeList.clear()
-        return true         // 校车正在运行
-    }
-
-    /**
      * 检查当前时间是否时校车运营时间（ 11:30AM-2PM , 5PM-9PM)
      */
     private fun checkTimeBeforeEnter(): Boolean {
@@ -232,17 +150,17 @@ class SchoolCarsSmoothMove(private val schoolCarActivity: SchoolCarActivity?, pr
         val hour: Int = calendar.get(Calendar.HOUR)
         val minute: Int = calendar.get(Calendar.MINUTE)
         val AM_PM: Int = calendar.get(Calendar.AM_PM)
-        //时间为校车正在运行时间，返回false
+
         if (AM_PM == Calendar.AM && hour == 11) {
             if (minute >= 30) {
-                return false
+                return true
             }
         } else if (AM_PM == Calendar.AM && hour > 11 && hour < 2) {
-            return false
-        } else if (AM_PM == Calendar.PM && hour > 5 && hour < 9) {
-            return false
+            return true
+        } else if (AM_PM == Calendar.PM && hour >= 5 && hour < 9) {
+            return true
         }
-        return true         //时间为校车未运行时间，返回true
+        return false
     }
 
     fun clearAllList() {
@@ -263,6 +181,7 @@ class SchoolCarsSmoothMove(private val schoolCarActivity: SchoolCarActivity?, pr
         }
 
     }
+
 }
 
 
