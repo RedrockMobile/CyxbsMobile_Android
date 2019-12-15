@@ -30,6 +30,7 @@ import com.mredrock.cyxbs.mine.R
 import com.mredrock.cyxbs.mine.util.user
 import com.yalantis.ucrop.UCrop
 import kotlinx.android.synthetic.main.mine_activity_edit_info.*
+import kotlinx.android.synthetic.main.mine_layout_common_toolbar.*
 import okhttp3.MediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -118,7 +119,7 @@ class EditInfoActivity(override val isFragmentActivity: Boolean = false,
         super.onCreate(savedInstanceState)
         setContentView(R.layout.mine_activity_edit_info)
 
-        mine_et_toolbar .init("资料编辑",
+        mine_common_toolbar.init("资料编辑",
                 R.drawable.mine_ic_arrow_left,
                 View.OnClickListener {
                     if (checkIfInfoChange()) {
@@ -129,11 +130,11 @@ class EditInfoActivity(override val isFragmentActivity: Boolean = false,
                 })
 
         initObserver()
-        loadAvatar(user?.photoThumbnailSrc, mine_et_avatarImageView)
+        loadAvatar(user?.photoThumbnailSrc, mine_edit_et_avatar)
         initData()
         setTextChangeListener()
         //点击更换头像
-        mine_et_avatarImageView.setOnClickListener { changeAvatar() }
+        mine_edit_et_avatar.setOnClickListener { changeAvatar() }
         //需调用一次给textView赋值
         checkColorAndText()
         mine_btn_info_save.setOnClickListener {
@@ -177,7 +178,7 @@ class EditInfoActivity(override val isFragmentActivity: Boolean = false,
         viewModel.upLoadImageEvent.observe(this, Observer {
             it!!
             if (it) {
-                loadAvatar(user!!.photoThumbnailSrc, mine_et_avatarImageView)
+                loadAvatar(user!!.photoThumbnailSrc, mine_edit_et_avatar)
                 toast("修改头像成功")
             } else {
                 toast("修改头像失败")

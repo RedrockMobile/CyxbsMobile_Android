@@ -129,19 +129,23 @@ class DailySignActivity(override val viewModelClass: Class<DailyViewModel> = Dai
         mine_daily_tv_week.text = "上学期第${schoolCalendarPlus.getChineseWeek()}周"
         mine_daily_dayCount.text = "已连续打卡${scoreStatus.serialDays}天"
         mine_daily_tv_ranking_percentage.text = "超过${scoreStatus.percent}的邮子"
-        mine_daily_tv_ranking.text = "今日第${scoreStatus.rank}位打卡"
+        if (scoreStatus.isChecked) {
+            mine_daily_tv_ranking.text = "今日第${scoreStatus.rank}位打卡"
+        }
         mine_store_tv_integral.text = "${scoreStatus.integral}"
         if (scoreStatus.isChecked) {
             mine_daily_sign.apply {
                 isClickable = false
                 background = ResourcesCompat.getDrawable(resources, R.drawable.mine_bg_round_corner_grey, null)
                 textColor = ContextCompat.getColor(context, R.color.greyButtonText)
+                text = "已签到"
             }
         } else {
             mine_daily_sign.apply {
                 isClickable = true
                 background = ResourcesCompat.getDrawable(resources, R.drawable.mine_bg_round_corner_blue_gradient, null)
                 textColor = ContextCompat.getColor(context, R.color.mine_white)
+                text = "签到"
             }
         }
         changeWeekImage()

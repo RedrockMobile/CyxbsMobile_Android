@@ -1,6 +1,7 @@
 package com.mredrock.cyxbs.mine
 
 
+import android.annotation.SuppressLint
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Intent
@@ -10,6 +11,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.Observer
 import com.afollestad.materialdialogs.MaterialDialog
 import com.alibaba.android.arouter.facade.annotation.Route
@@ -25,9 +28,9 @@ import com.mredrock.cyxbs.common.event.LoginStateChangeEvent
 import com.mredrock.cyxbs.common.ui.BaseViewModelFragment
 import com.mredrock.cyxbs.common.utils.extensions.editor
 import com.mredrock.cyxbs.common.utils.extensions.loadAvatar
-import com.mredrock.cyxbs.mine.page.comment.CommentActivity
 import com.mredrock.cyxbs.mine.page.answer.AnswerActivity
 import com.mredrock.cyxbs.mine.page.ask.AskActivity
+import com.mredrock.cyxbs.mine.page.comment.CommentActivity
 import com.mredrock.cyxbs.mine.page.edit.EditInfoActivity
 import com.mredrock.cyxbs.mine.page.setting.AboutActivity
 import com.mredrock.cyxbs.mine.page.sign.DailySignActivity
@@ -37,6 +40,7 @@ import org.greenrobot.eventbus.EventBus
 import org.jetbrains.anko.support.v4.defaultSharedPreferences
 import org.jetbrains.anko.support.v4.startActivity
 import org.jetbrains.anko.support.v4.toast
+import org.jetbrains.anko.textColor
 
 /**
  * Created by zzzia on 2018/8/14.
@@ -54,26 +58,47 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
         }
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-
         addObserver()
-
         //加载资料
         getPersonInfoData()
-
         //功能按钮
         mine_main_btn_sign.setOnClickListener { checkLoginBeforeAction("签到") { startActivity<DailySignActivity>() } }
+        mine_main_tv_sign.setOnClickListener { checkLoginBeforeAction("签到") { startActivity<DailySignActivity>() } }
+
         mine_main_question_number.setOnClickListener { checkLoginBeforeAction("提问") { startActivity<AskActivity>() } }
+        mine_main_tv_question.setOnClickListener { checkLoginBeforeAction("提问") { startActivity<AskActivity>() } }
+
         mine_main_answer_number.setOnClickListener { checkLoginBeforeAction("回答") { startActivity<AnswerActivity>() } }
-//        mine_main_draft.setOnClickListener { checkLoginBeforeAction("草稿箱") { startActivity<DraftActivity>() } }
+        mine_main_tv_question.setOnClickListener { checkLoginBeforeAction("回答") { startActivity<AnswerActivity>() } }
+
         mine_main_reply_comment_number.setOnClickListener { checkLoginBeforeAction("评论回复") { startActivity<CommentActivity>() } }
-//        mine_main_setting.setOnClickListener { startActivity<SettingActivity>() }
+        mine_main_tv_reply_comment.setOnClickListener { checkLoginBeforeAction("评论回复") { startActivity<CommentActivity>() } }
+
         mine_main_tv_about.setOnClickListener { startActivity<AboutActivity>() }
         mine_main_btn_exit.setOnClickListener { onExitClick() }
         mine_main_tv_feedback.setOnClickListener { onFeedBackClick() }
         mine_main_tv_custom_widget.setOnClickListener { onSetWidgetClick() }
         setUserInfoClickListener(loginListener)
+
+        viewModel.status.observe(this, Observer {
+            mine_main_tv_sign.text = "已连续签到${it.serialDays}天 "
+            if (it.isChecked) {
+                mine_main_btn_sign.apply {
+                    background = ResourcesCompat.getDrawable(resources, R.drawable.mine_bg_round_corner_grey, null)
+                    text = "已签到"
+                    textColor = ContextCompat.getColor(context, R.color.greyButtonText)
+                }
+            } else {
+                mine_main_btn_sign.apply {
+                    text = "签到"
+                    background = ResourcesCompat.getDrawable(resources, R.drawable.mine_bg_round_corner_blue_gradient, null)
+                    textColor = ContextCompat.getColor(context, R.color.mine_white)
+                }
+            }
+        })
     }
 
     private fun addObserver() {
@@ -83,7 +108,7 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
                 return@Observer
             }
             freshBaseUser(it)
-            refreshEditLayout()
+            refreshLayout()
         })
     }
 
@@ -119,7 +144,7 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
 
     override fun onResume() {
         super.onResume()
-        refreshEditLayout()
+        refreshLayout()
     }
 
     private fun getPersonInfoData() {
@@ -127,23 +152,18 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
             mine_main_username.setText(R.string.mine_user_empty_username)
             mine_main_avatar.setImageResource(R.drawable.mine_default_avatar)
             mine_main_introduce.setText(R.string.mine_user_empty_introduce)
-//            clearAllRemind()
             return
         } else {
             loadInfoAndGoEdit()
         }
     }
 
-//    private fun clearAllRemind() {
-//        mine_main_dailySign.isRemindIconShowing = false
-//        mine_main_question.isRemindIconShowing = false
-//        mine_main_help.isRemindIconShowing = false
-//        mine_main_relateMe.isRemindIconShowing = false
-//        mine_main_setting.isRemindIconShowing = false
-//    }
+
+    //刷新界面
+    private fun refreshLayout() {
+        user?.let { viewModel.getScoreStatus(it) }
 
 
-    private fun refreshEditLayout() {
         if (BaseApp.isLogin) {
             context?.loadAvatar(user!!.photoThumbnailSrc, mine_main_avatar)
             mine_main_username.text = if (user!!.nickname.isNullOrBlank()) getString(R.string.mine_user_empty_username) else user!!.nickname
@@ -162,7 +182,7 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
         if (!event.newState) {
             viewModel.mUser.value = null
         }
-        refreshEditLayout()
+        refreshLayout()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
@@ -207,19 +227,16 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
 
 
     private fun onExitClick() {
-//        runOnUiThread {
-            MaterialDialog.Builder(context!!)
-                    .title("退出登录?")
-                    .content("是否退出当前账号?")
-                    .positiveText("退出")
-                    .negativeText("取消")
-                    .onPositive { _, _ ->
-//                        activity?.finish()
-                        cleanAppWidgetCache()
-                        EventBus.getDefault().post(LoginStateChangeEvent(false))
-                    }
-                    .show()
-//        }
+        MaterialDialog.Builder(context!!)
+                .title("退出登录?")
+                .content("是否退出当前账号?")
+                .positiveText("退出")
+                .negativeText("取消")
+                .onPositive { _, _ ->
+                    cleanAppWidgetCache()
+                    EventBus.getDefault().post(LoginStateChangeEvent(false))
+                }
+                .show()
     }
 
     private fun cleanAppWidgetCache() {

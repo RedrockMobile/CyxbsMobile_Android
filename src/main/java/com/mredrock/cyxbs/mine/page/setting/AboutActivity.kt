@@ -12,6 +12,7 @@ import com.mredrock.cyxbs.common.utils.update.UpdateEvent
 import com.mredrock.cyxbs.common.utils.update.UpdateUtils
 import com.mredrock.cyxbs.mine.R
 import kotlinx.android.synthetic.main.mine_activity_about.*
+import kotlinx.android.synthetic.main.mine_layout_common_toolbar.*
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.jetbrains.anko.toast
@@ -22,7 +23,7 @@ class AboutActivity(override val isFragmentActivity: Boolean = false) : BaseActi
         super.onCreate(savedInstanceState)
         setContentView(R.layout.mine_activity_about)
 
-        mine_about_toolbar.init("关于",
+        mine_common_toolbar.init("关于",
                 R.drawable.mine_ic_arrow_left)
 
         setAppVersionName()

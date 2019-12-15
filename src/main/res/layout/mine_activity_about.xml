@@ -6,21 +6,9 @@
     android:layout_height="match_parent"
     android:background="@color/windowBackground"
     tools:context=".page.setting.AboutActivity">
-
-    <androidx.appcompat.widget.Toolbar
+    <include
         android:id="@+id/mine_about_toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:fitsSystemWindows="true"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        app:titleTextColor="@color/levelTwoFontColor">
-
-    </androidx.appcompat.widget.Toolbar>
-
+        layout="@layout/mine_layout_common_toolbar" />
     <ImageView
         android:id="@+id/mine_about_iv"
         android:layout_width="match_parent"
