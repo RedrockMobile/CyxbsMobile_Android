@@ -71,7 +71,8 @@ class ExamAdapter(val context: Context,
                                         holder.itemView.grades_distance.setTextColor(Color.parseColor("#2A4E84"))
                                     }
                                 }
-                                holder.itemView.tv_exam_day_of_week.text = String.format("%s周周%s", getChineseWeek(it.week!!.toInt()), it.chineseWeekday)
+                                holder.itemView.tv_exam_kind.text = it.type ?: ""
+                                holder.itemView.tv_exam_day_of_week.text = String.format("%s周周%s", getChineseWeek(it.week!!.toInt() - 1), it.chineseWeekday)
                                 holder.itemView.tv_exam_day_of_month.text = String.format("%d"+"号", schoolCalendar.day)
                                 holder.itemView.tv_exam_month.text = String.format("%d月", schoolCalendar.month)
                             } else {

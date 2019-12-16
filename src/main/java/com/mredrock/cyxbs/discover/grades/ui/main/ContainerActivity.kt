@@ -45,7 +45,6 @@ class ContainerActivity : BaseActivity() {
     private lateinit var parent: View
     private var gradesData: MutableList<Grade> = ArrayList()
     private lateinit var adapter: GradesShowAdapter
-    private val apiService: ApiService by lazy { ApiGenerator.getApiService(ApiService::class.java) }
     private lateinit var recyclerView: RecyclerView
 
     override fun onCreate(savedInstanceState: Bundle?) {

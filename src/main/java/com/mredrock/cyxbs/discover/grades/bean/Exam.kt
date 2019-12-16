@@ -16,6 +16,7 @@ class Exam : Comparable<Exam>,Serializable {
     var chineseWeekday: String? = null
     var date: String? = null
     var time: String? = null
+    var type: String? = null
 
     override fun compareTo(other: Exam): Int {
         var weekDifference = 0
@@ -37,7 +38,7 @@ class Exam : Comparable<Exam>,Serializable {
     }
 
     override fun toString(): String {
-        return "Exam(week=$week, weekday=$weekday, student=$student, xh=$xh, courseNo=$courseNo, course=$course, classroom=$classroom, examPrivillage=$examPrivillage, begin_time=$begin_time, end_time=$end_time, seat=$seat, chineseWeekday=$chineseWeekday, date=$date, time=$time)"
+        return "Exam(week=$week, weekday=$weekday, student=$student, xh=$xh, courseNo=$courseNo, course=$course, classroom=$classroom, examPrivillage=$examPrivillage, begin_time=$begin_time, end_time=$end_time, seat=$seat, chineseWeekday=$chineseWeekday, date=$date, time=$time, type=$type)"
     }
 
 
