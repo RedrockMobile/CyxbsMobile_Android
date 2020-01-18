@@ -12,7 +12,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
-        <!--    <include layout="@layout/common_toolbar" />-->
         <include layout="@layout/qa_recycler_item_answer_toolbar" />
 
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout

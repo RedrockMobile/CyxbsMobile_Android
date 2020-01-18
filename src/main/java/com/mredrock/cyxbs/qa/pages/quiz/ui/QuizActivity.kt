@@ -5,8 +5,6 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.*
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -23,8 +21,6 @@ import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.bean.Question
 import com.mredrock.cyxbs.qa.pages.quiz.ui.dialog.RewardSetDialog
 import com.mredrock.cyxbs.qa.pages.quiz.QuizViewModel
-import com.mredrock.cyxbs.qa.pages.quiz.ui.dialog.TagsEditDialog
-import com.mredrock.cyxbs.qa.pages.quiz.ui.dialog.TimePickDialog
 import com.mredrock.cyxbs.qa.ui.activity.ViewImageActivity
 import com.mredrock.cyxbs.qa.utils.CHOOSE_PHOTO_REQUEST
 import com.mredrock.cyxbs.qa.utils.selectImageFromAlbum
@@ -52,32 +48,6 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
     override val isFragmentActivity = false
     private var draftId = "-1"
 
-    private val editTagDialog by lazy {
-        TagsEditDialog(this).apply {
-            onSureButtonClickedLister = { viewModel.setTag(it) }
-        }
-    }
-
-    private val timePickDialog by lazy {
-        TimePickDialog(this@QuizActivity).apply {
-            onNextButtonClickListener = {
-                val result = viewModel.setDisAppearTime(it)
-                if (result) {
-                    dismiss()
-                }
-            }
-        }
-    }
-
-    private val rewardSetDialog by lazy {
-        RewardSetDialog(this@QuizActivity, viewModel.myRewardCount).apply {
-            onSubmitButtonClickListener = {
-                if (viewModel.quiz(it)) {
-                    dismiss()
-                }
-            }
-        }
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -135,17 +105,6 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
             finish()
         })
 
-    }
-
-
-    private inline fun createTextWatcher(crossinline listener: (Editable) -> Unit) = object : TextWatcher {
-        override fun afterTextChanged(s: Editable) {
-            listener.invoke(s)
-        }
-
-        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) = Unit
-
-        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) = Unit
     }
 
     private fun initImageAddView() {
@@ -221,7 +180,15 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
         if (item?.itemId == R.id.qa_quiz_next) {
             val result = viewModel.submitTitleAndContent(edt_quiz_title.text.toString(), edt_quiz_content.text.toString())
             if (result) {
-                rewardSetDialog.show()
+                RewardSetDialog(this@QuizActivity, viewModel.myRewardCount).apply {
+                    onSubmitButtonClickListener = { time: String, reward: Int ->
+                        if (viewModel.setDisAppearTime(time)) {
+                            if (viewModel.quiz(reward)) {
+                                dismiss()
+                            }
+                        }
+                    }
+                }.show()
             }
             return true
         }

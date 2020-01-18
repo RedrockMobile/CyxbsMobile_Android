@@ -11,7 +11,6 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.RecyclerView
 import com.alibaba.android.arouter.facade.annotation.Route
-import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.mredrock.cyxbs.common.BaseApp
@@ -73,7 +72,6 @@ class AnswerListActivity : BaseActivity() {
     private lateinit var answerListAdapter: AnswerListAdapter
     private lateinit var footerRvAdapter: FooterRvAdapter
     private lateinit var emptyRvAdapter: EmptyRvAdapter
-    private lateinit var bottomSheetDialog: BottomSheetDialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -115,9 +113,9 @@ class AnswerListActivity : BaseActivity() {
         ib_question_toolbar_back.setOnClickListener { finish() }
         observeListChangeEvent()
         //初始化BottomSheetDialog
-        bottomSheetDialog = ReportDialog(this@AnswerListActivity)
         ib_question_toolbar_more.setOnClickListener {
-            bottomSheetDialog.show()
+            ReportDialog(this@AnswerListActivity)
+                    .show()
         }
 
     }
@@ -143,7 +141,7 @@ class AnswerListActivity : BaseActivity() {
             addOnScrollListener(object : RecyclerView.OnScrollListener() {
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                     super.onScrolled(recyclerView, dx, dy)
-
+                    //TODO 滑动，按钮消失
                 }
             })
         }

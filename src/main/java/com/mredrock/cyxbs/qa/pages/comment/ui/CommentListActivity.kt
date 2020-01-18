@@ -2,8 +2,8 @@ package com.mredrock.cyxbs.qa.pages.comment.ui
 
 import android.app.Activity
 import android.os.Bundle
+import android.view.WindowManager
 import androidx.lifecycle.ViewModelProvider
-import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.bean.Answer
@@ -15,7 +15,7 @@ import com.mredrock.cyxbs.qa.pages.comment.viewmodel.CommentListViewModel
 import com.mredrock.cyxbs.qa.ui.adapter.EmptyRvAdapter
 import com.mredrock.cyxbs.qa.ui.adapter.FooterRvAdapter
 import kotlinx.android.synthetic.main.qa_activity_comment_list.*
-import kotlinx.android.synthetic.main.qa_dialog_comment_bottom_sheet_dialog.*
+import kotlinx.android.synthetic.main.qa_comment_new_publish_layout.*
 import kotlinx.android.synthetic.main.qa_recycler_item_comment_toolbar.*
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -49,7 +49,6 @@ class CommentListActivity : BaseViewModelActivity<CommentListViewModel>() {
     private lateinit var footerRvAdapter: FooterRvAdapter
     private lateinit var commentListRvAdapter: CommentListRvAdapter
 
-    private val commentBottomSheetDialog by lazy { createCommentDialog() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -61,38 +60,8 @@ class CommentListActivity : BaseViewModelActivity<CommentListViewModel>() {
         val answerNub = intent.getStringExtra("answerNum")
         qa_tv_comment_toolbar_title.text = baseContext.getString(R.string.qa_comment_list_comment_count, answerNub)
         initRv(title, showAdoptIcon, isEmotion)
-//        initBottomView()
+        initCommentSheet()
     }
-
-//    private fun initBottomView() {
-//        fl_praise.setOnClickListener { viewModel.clickPraiseButton() }
-//        fl_comment.setOnClickListener {
-//            card_footer.gone()
-//            commentBottomSheetDialog.show()
-//        }
-//
-//        viewModel.apply {
-//            isPraised.observeNotNull { setPraise(null, it) }
-//
-//            praiseCount.observeNotNull {
-//                setPraise(getString(R.string.qa_comment_list_praise_count, it), null)
-//            }
-//
-//            commentCount.observeNotNull {
-//                commentBottomSheetDialog.dismiss()
-//                headerAdapter.notifyItemChanged(0)
-//                tv_comment.text = getString(R.string.qa_comment_list_comment_count, it)
-//            }
-//
-//            refreshPreActivityEvent.observeNotNull {
-//                setResult(Activity.RESULT_OK)
-//                headerAdapter.notifyItemChanged(0)
-//            }
-//        }
-//    }
-
-//    private fun setPraise(text: String?, isPraised: Boolean?) = tv_comment.setPraise(text, isPraised,
-//            R.drawable.qa_ic_comment_list_praise, R.drawable.qa_ic_comment_list_praised)
 
     private fun initRv(title: String, showAdoptIcon: Boolean, isEmotion: Boolean) {
         headerAdapter = CommentListHeaderRvAdapter(title, isEmotion, showAdoptIcon)
@@ -135,11 +104,16 @@ class CommentListActivity : BaseViewModelActivity<CommentListViewModel>() {
         }
     }
 
-    private fun createCommentDialog() = BottomSheetDialog(this).apply {
-        setContentView(R.layout.qa_dialog_comment_bottom_sheet_dialog)
-//        setOnDismissListener { this@CommentListActivity.card_footer.visible() }
-        setOnCancelListener { viewModel.saveToDraft(edt_comment_content.text.toString()) }
-        tv_send_comment.setOnClickListener { viewModel.sendComment(edt_comment_content.text.toString()) }
+    private fun initCommentSheet() {
+//        LayoutInflater.from(this).inflate(R.layout.qa_comment_new_publish_layout,,false)
+//                .apply {
+//            val commentEditText = findViewById<EditText>(R.id.et_new_comment)
+
+        tv_comment_prise.setOnClickListener {
+            viewModel.sendComment(et_new_comment.text.toString())
+            et_new_comment.text = null
+//            }
+        }
     }
 
     override fun getViewModelFactory(): ViewModelProvider.Factory? {

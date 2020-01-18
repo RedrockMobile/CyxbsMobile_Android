@@ -2,10 +2,12 @@
 <androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".pages.comment.ui.CommentListActivity">
+
+
     <include layout="@layout/qa_recycler_item_comment_toolbar" />
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -13,14 +15,16 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
+        android:background="@color/secondaryWindowBackground"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_comment_list"
-            android:background="@color/qa_comment_recycle_view_header_color"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginBottom="8dp"/>
+            android:layout_marginBottom="8dp" />
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-    <include layout="@layout/qa_comment_new_publish_layout"/>
+
+    <include layout="@layout/qa_comment_new_publish_layout" />
 </androidx.appcompat.widget.LinearLayoutCompat>
+

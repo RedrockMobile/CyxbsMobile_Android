@@ -4,21 +4,21 @@
     android:layout_height="match_parent">
 
     <androidx.viewpager2.widget.ViewPager2
-        android:id="@+id/vp_quiz_day"
+        android:id="@+id/tp_quiz_day"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:orientation="vertical" />
 
     <androidx.viewpager2.widget.ViewPager2
-        android:id="@+id/vp_quiz_hour"
+        android:id="@+id/tp_quiz_hour"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:orientation="vertical" />
 
     <androidx.viewpager2.widget.ViewPager2
-        android:id="@+id/vp_quiz_minute"
+        android:id="@+id/tp_quiz_minute"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"

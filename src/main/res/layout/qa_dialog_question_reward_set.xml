@@ -57,7 +57,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="14dp"
-        android:text="2019年10月2日5时21分"
+        tools:text="2019年10月2日5时21分"
         android:textColor="#29D1F1"
         android:textSize="11sp"
         app:layout_constraintBottom_toBottomOf="@+id/tv_mission_deadline_title"
@@ -66,7 +66,7 @@
 
     <RelativeLayout
         android:id="@+id/rl_time_select"
-        android:layout_width="224dp"
+        android:layout_width="340dp"
         android:layout_height="160dp"
         android:layout_marginTop="26dp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -74,21 +74,21 @@
         app:layout_constraintTop_toBottomOf="@id/tv_mission_deadline_title">
 
         <com.mredrock.cyxbs.qa.pages.quiz.ui.widget.QuizTimeNumberPicker
-            android:id="@+id/vp_quiz_day"
+            android:id="@+id/tp_quiz_day"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_centerInParent="true" />
 
         <com.mredrock.cyxbs.qa.pages.quiz.ui.widget.QuizTimeNumberPicker
-            android:id="@+id/vp_quiz_hour"
+            android:id="@+id/tp_quiz_hour"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:layout_centerHorizontal="true" />
 
         <com.mredrock.cyxbs.qa.pages.quiz.ui.widget.QuizTimeNumberPicker
-            android:id="@+id/vp_quiz_minute"
+            android:id="@+id/tp_quiz_minute"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"

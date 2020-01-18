@@ -1,5 +1,7 @@
 package com.mredrock.cyxbs.qa.ui.adapter
 
+import android.view.Gravity
+import android.view.View
 import android.view.ViewGroup
 import com.mredrock.cyxbs.common.utils.extensions.gone
 import com.mredrock.cyxbs.common.utils.extensions.visible
@@ -32,10 +34,14 @@ class EmptyRvAdapter(private val hint: String) : BaseRvAdapter<Boolean>() {
             if (data == true) {
                 itemView.card_holder.gone()
                 itemView.tv_hint.text = hint
+                itemView.iv_hint.visible()
                 itemView.tv_hint.visible()
             } else {
                 itemView.card_holder.visible()
                 itemView.tv_hint.gone()
+                itemView.tv_hint.gone()
+                itemView.iv_hint.visibility = View.VISIBLE
+
             }
         }
     }

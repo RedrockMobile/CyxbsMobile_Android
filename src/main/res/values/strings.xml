@@ -4,7 +4,7 @@
     <string name="qa_question_item_tag">#%1$s#</string>
     <string name="qa_question_item_reward">%1$d积分</string>
     <string name="qa_question_item_disappear">%1$s后消失</string>
-    <string name="qa_question_list_empty_hint">还没有相关问题哦~</string>
+    <string name="qa_question_list_empty_hint">邮问 问你想问~~</string>
     <string name="qa_loading_error">加载出错了，点击重试吧~</string>
     <string name="qa_answer_list_title">求助详情</string>
     <string name="qa_answer_reply_hint">回复</string>
@@ -44,6 +44,8 @@
     <string name="qa_quiz_anonymous">匿名求助</string>
     <string name="qa_quiz_tags_edit_dialog_title">添加话题</string>
     <string name="qa_quiz_dialog_sure">确定</string>
+    <string name="qa_quiz_dialog_exit">退出</string>
+    <string name="qa_quiz_dialog_accept">采纳</string>
     <string name="qa_quiz_tag_edit_dialog_hot_tags">热门话题</string>
     <string name="qa_quiz_hint_title_empty">标题不能为空哦~</string>
     <string name="qa_hint_content_empty">内容不能为空哦~</string>

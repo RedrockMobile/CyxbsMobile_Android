@@ -66,8 +66,8 @@ class QuizViewModel(var type: String) : BaseViewModel() {
     }
 
     fun setDisAppearTime(rawTime: String): Boolean {
-        val date = rawTime.toDate("yyyy年MM月dd日 HH时mm分")
-        //计算与当前时间差，不允许低于TimePickDialog.MIN_GAP_HOUR定义的值（可以有5分钟的误差）
+        val date = rawTime.toDate("yyyy-MM-dd HH时mm分")
+        //计算与当前时间差，不允许低于TimePickDialog.MIN_GAP_HOUR定义的值（可以有5分钟的误差）/
         if (date.time - System.currentTimeMillis() < TimePickDialog.MIN_GAP_HOUR * 3600000 - 3000000) {
             longToastEvent.value = R.string.qa_quiz_error_time_too_short
             return false
@@ -206,7 +206,7 @@ class QuizViewModel(var type: String) : BaseViewModel() {
         }
         val s = res.toString()
         return if (s.isNotEmpty()) ",\"photo_thumbnail_src\":\"${s.substring(1, s.length - 1)}\""
-            else ""
+        else ""
     }
 
     fun checkInvalid(b: Boolean) {

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/transparentBackground"
+    android:orientation="vertical">
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/qa_dialog_notice_my_reward_not_enough_background">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_pic"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="27dp"
+            android:src="@drawable/qa_ic_quiz_notice_question_accept" />
+
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/iv_pic"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="17dp"
+            android:textColor="@color/levelTwoFontColor"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            tools:text="退 出 回 答" />
+
+        <TextView
+            android:id="@+id/tv_notice_first_line"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_title"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="11dp"
+            android:alpha="0.64"
+            android:gravity="center"
+            android:textColor="@color/levelFourFontColor"
+            android:textSize="10sp"
+            tools:text="你的内容还未保存，是否退出？" />
+
+        <Button
+            android:layout_width="93dp"
+            android:layout_height="34dp"
+            android:layout_below="@+id/tv_notice_first_line"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="23dp"
+            android:layout_marginBottom="28dp"
+            android:background="@drawable/qa_main_have_question_btn_background"
+            android:text="@string/qa_quiz_dialog_exit"
+            android:textColor="@color/whiteFontColor"
+            android:textSize="15sp" />
+    </RelativeLayout>
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:src="@drawable/qa_ic_dialog_notice_cancel" />
+</androidx.appcompat.widget.LinearLayoutCompat>
