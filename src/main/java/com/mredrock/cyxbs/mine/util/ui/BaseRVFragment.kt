@@ -57,6 +57,10 @@ abstract class BaseRVFragment<D> : Fragment() {
         }
     }
 
+    fun delete(deleteItem: D) {
+        baseRVAdapter?.delete(deleteItem)
+    }
+
     fun setAdapter(adapter: RvAdapter) {
         adapter.setFooterView(footer)
         this.baseRVAdapter = adapter
@@ -115,5 +119,6 @@ abstract class BaseRVFragment<D> : Fragment() {
         override fun bindDataHolder(holder: androidx.recyclerview.widget.RecyclerView.ViewHolder, position: Int, data: D) {
             this@BaseRVFragment.bindDataHolder(holder, position, data)
         }
+
     }
 }

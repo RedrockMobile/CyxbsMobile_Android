@@ -24,7 +24,8 @@ class CommentViewModel : ViewModel() {
     var fakeComments: MutableLiveData<List<Comment>> = MutableLiveData()
 
     fun loadData(type: Int) {
-        apiService.getRelateMeList(user!!.stuNum!!, user!!.idNum!!, page++, pageSize, type)
+        apiService.getRelateMeList(user?.stuNum ?: return, user?.idNum
+                ?: return, page++, pageSize, type)
                 .mapOrThrowApiException()
                 .setSchedulers()
                 .safeSubscribeBy(

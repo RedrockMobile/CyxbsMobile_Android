@@ -40,10 +40,35 @@ class DailySignActivity(override val viewModelClass: Class<DailyViewModel> = Dai
                         , override val isFragmentActivity: Boolean = false)
     : BaseViewModelActivity<DailyViewModel>() {
 
-    private lateinit var dividerResArr: Array<Stick>
-    private lateinit var imageViewResArr: Array<ImageView>
-    private lateinit var spaceResArr: Array<Space>
-    private var weekGenerator: WeekGenerator = WeekGenerator()
+    private val dividerResArr: Array<Stick> by lazy {
+        arrayOf(mine_daily_v_divider_mon_tue,
+                mine_daily_v_divider_tue_wed,
+                mine_daily_v_divider_wed_thurs,
+                mine_daily_v_divider_thurs_fri,
+                mine_daily_v_divider_fri_sat,
+                mine_daily_v_divider_sat_sun)
+    }
+    private val imageViewResArr: Array<ImageView> by lazy {
+        arrayOf(mine_daily_iv_mon,
+                mine_daily_iv_tue,
+                mine_daily_iv_wed,
+                mine_daily_iv_thurs,
+                mine_daily_iv_fri,
+                mine_daily_iv_sat,
+                mine_daily_iv_sun)
+    }
+    private val spaceResArr: Array<Space> by lazy {
+        arrayOf(mine_daily_space_mon,
+                mine_daily_space_tue,
+                mine_daily_space_wed,
+                mine_daily_space_thurs,
+                mine_daily_space_fri,
+                mine_daily_space_sat,
+                mine_daily_space_sun)
+    }
+    private val weekGenerator: WeekGenerator by lazy {
+        WeekGenerator()
+    }
 
 
     //通过一个标志位，来判断刷新divider的时候是否需要动画，
@@ -67,26 +92,6 @@ class DailySignActivity(override val viewModelClass: Class<DailyViewModel> = Dai
 
     private fun initView() {
         mine_daily_sign.setOnClickListener { checkIn() }
-        dividerResArr = arrayOf(mine_daily_v_divider_mon_tue,
-                mine_daily_v_divider_tue_wed,
-                mine_daily_v_divider_wed_thurs,
-                mine_daily_v_divider_thurs_fri,
-                mine_daily_v_divider_fri_sat,
-                mine_daily_v_divider_sat_sun)
-        imageViewResArr = arrayOf(mine_daily_iv_mon,
-                mine_daily_iv_tue,
-                mine_daily_iv_wed,
-                mine_daily_iv_thurs,
-                mine_daily_iv_fri,
-                mine_daily_iv_sat,
-                mine_daily_iv_sun)
-        spaceResArr = arrayOf(mine_daily_space_mon,
-                mine_daily_space_tue,
-                mine_daily_space_wed,
-                mine_daily_space_thurs,
-                mine_daily_space_fri,
-                mine_daily_space_sat,
-                mine_daily_space_sun)
 
         val adapter = ProductAdapter()
         mine_store_rv.adapter = adapter

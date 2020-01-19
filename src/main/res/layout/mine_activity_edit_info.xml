@@ -1,22 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/windowBackground"
-    tools:context=".page.edit.EditInfoActivity">
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/windowBackground"
+        tools:context=".page.edit.EditInfoActivity">
 
-<!--    <androidx.appcompat.widget.Toolbar-->
-<!--        android:id="@+id/mine_et_toolbar"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:fitsSystemWindows="true"-->
-<!--        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"-->
-<!--        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"-->
-<!--        app:titleTextColor="@color/levelTwoFontColor">-->
-
-<!--    </androidx.appcompat.widget.Toolbar>-->
     <include
         android:id="@+id/mine_et_toolbar"
         layout="@layout/mine_layout_common_toolbar" />
@@ -108,6 +98,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
+            android:textColorHint="@color/greyText"
             android:background="@null"
             android:ellipsize="end"
             android:hint="@string/mine_nickname_default"
@@ -136,6 +127,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
+            android:textColorHint="@color/greyText"
             android:background="@null"
             android:ellipsize="end"
             android:hint="@string/mine_introduce_default"
@@ -168,6 +160,7 @@
             android:ellipsize="end"
             android:hint="@string/mine_info_default"
             android:inputType="number"
+            android:textColorHint="@color/greyText"
             android:lines="1"
             android:maxLength="16"
             android:maxLines="1"
@@ -196,6 +189,7 @@
             android:background="@null"
             android:ellipsize="end"
             android:hint="@string/mine_info_default"
+            android:textColorHint="@color/greyText"
             android:inputType="phone"
             android:lines="1"
             android:maxLength="11"
@@ -228,6 +222,19 @@
             app:layout_constraintEnd_toStartOf="@+id/mine_guideline_left"
             app:layout_constraintTop_toTopOf="@+id/mine_tv_college"
             tools:text="计算机科学与技术" />
+
+        <TextView
+            android:id="@+id/mine_tv_contact"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:alpha="0.29"
+            android:text="@string/mine_info_contact"
+            android:textColor="@color/levelTwoFontColor"
+            android:textSize="11sp"
+            app:layout_constraintBottom_toTopOf="@+id/mine_btn_info_save"
+            app:layout_constraintEnd_toStartOf="@+id/mine_guideline_left"
+            app:layout_constraintTop_toBottomOf="@+id/mine_tv_college_concrete" />
+
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/mine_guideline_left"

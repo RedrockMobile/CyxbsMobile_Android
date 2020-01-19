@@ -27,6 +27,7 @@ import com.mredrock.cyxbs.common.utils.extensions.getRequestBody
 import com.mredrock.cyxbs.common.utils.extensions.loadAvatar
 import com.mredrock.cyxbs.common.utils.extensions.uri
 import com.mredrock.cyxbs.mine.R
+import com.mredrock.cyxbs.mine.util.ui.MineDialogFragment
 import com.mredrock.cyxbs.mine.util.user
 import com.yalantis.ucrop.UCrop
 import kotlinx.android.synthetic.main.mine_activity_edit_info.*
@@ -54,9 +55,9 @@ class EditInfoActivity(override val isFragmentActivity: Boolean = false,
     private val positiveCallback = {
         finish()
     }
-    private val cancelCallback = {
-    }
-    private val watcher = object :TextWatcher {
+    private val cancelCallback = {}
+
+    private val watcher = object : TextWatcher {
         override fun afterTextChanged(s: Editable?) {
         }
 
@@ -71,6 +72,7 @@ class EditInfoActivity(override val isFragmentActivity: Boolean = false,
 
     @SuppressLint("SetTextI18n")
     private fun checkColorAndText() {
+        val userForTemporal = user ?: return
         if (checkIfInfoChange()) {
             mine_btn_info_save.apply {
                 textColor = ContextCompat.getColor(context, R.color.mine_white)
@@ -92,22 +94,22 @@ class EditInfoActivity(override val isFragmentActivity: Boolean = false,
         val phone = mine_et_phone.text.toString()
         mine_tv_nickname.text = "昵称(${nickname.length}/8)"
         mine_tv_sign.text = "个性签名(${introduction.length}/20)"
-        if (nickname != user!!.nickname) {
+        if (nickname != userForTemporal.nickname) {
             mine_et_nickname.textColor = ContextCompat.getColor(this, R.color.levelTwoFontColor)
         } else {
             mine_et_nickname.textColor = ContextCompat.getColor(this, R.color.greyText)
         }
-        if (introduction != user!!.introduction) {
+        if (introduction != userForTemporal.introduction) {
             mine_et_introduce.textColor = ContextCompat.getColor(this, R.color.levelTwoFontColor)
         } else {
             mine_et_introduce.textColor = ContextCompat.getColor(this, R.color.greyText)
         }
-        if (qq != user!!.qq) {
+        if (qq != userForTemporal.qq) {
             mine_et_qq.textColor = ContextCompat.getColor(this, R.color.levelTwoFontColor)
         } else {
             mine_et_qq.textColor = ContextCompat.getColor(this, R.color.greyText)
         }
-        if (phone != user!!.phone) {
+        if (phone != userForTemporal.phone) {
             mine_et_phone.textColor = ContextCompat.getColor(this, R.color.levelTwoFontColor)
         } else {
             mine_et_phone.textColor = ContextCompat.getColor(this, R.color.greyText)
@@ -123,7 +125,7 @@ class EditInfoActivity(override val isFragmentActivity: Boolean = false,
                 R.drawable.mine_ic_arrow_left,
                 View.OnClickListener {
                     if (checkIfInfoChange()) {
-                        SaveInfoDialogFragment(positiveCallback, cancelCallback).show(supportFragmentManager, "SaveInfo")
+                        MineDialogFragment("退出编辑", "你的资料还没有保存，是否退出？", positiveCallback, cancelCallback).show(supportFragmentManager, "SaveInfo")
                     } else {
                         finish()
                     }
@@ -131,6 +133,7 @@ class EditInfoActivity(override val isFragmentActivity: Boolean = false,
 
         initObserver()
         loadAvatar(user?.photoThumbnailSrc, mine_edit_et_avatar)
+
         initData()
         setTextChangeListener()
         //点击更换头像
@@ -145,17 +148,18 @@ class EditInfoActivity(override val isFragmentActivity: Boolean = false,
 
     override fun onBackPressed() {
         if (checkIfInfoChange()) {
-            SaveInfoDialogFragment(positiveCallback, cancelCallback).show(supportFragmentManager, "SaveInfo")
+            MineDialogFragment("退出编辑", "你的资料还没有保存，是否退出？", positiveCallback, cancelCallback).show(supportFragmentManager, "SaveInfo")
         } else {
             super.onBackPressed()
         }
     }
 
     private fun initData() {
-        mine_et_nickname.setText(user!!.nickname)
-        mine_et_introduce.setText(user!!.introduction)
-        mine_et_qq.setText(user!!.qq)
-        mine_et_phone.setText(user!!.phone)
+        val userForTemporal = user ?: return
+        mine_et_nickname.setText(userForTemporal.nickname)
+        mine_et_introduce.setText(userForTemporal.introduction)
+        mine_et_qq.setText(userForTemporal.qq)
+        mine_et_phone.setText(userForTemporal.phone)
     }
 
     private fun setTextChangeListener() {
@@ -167,7 +171,6 @@ class EditInfoActivity(override val isFragmentActivity: Boolean = false,
 
     private fun initObserver() {
         viewModel.updateInfoEvent.observe(this, Observer {
-            it!!
             if (it) {
                 toast("更改资料成功")
             } else {
@@ -176,9 +179,8 @@ class EditInfoActivity(override val isFragmentActivity: Boolean = false,
         })
 
         viewModel.upLoadImageEvent.observe(this, Observer {
-            it!!
             if (it) {
-                loadAvatar(user!!.photoThumbnailSrc, mine_edit_et_avatar)
+                loadAvatar(user?.photoThumbnailSrc, mine_edit_et_avatar)
                 toast("修改头像成功")
             } else {
                 toast("修改头像失败")
@@ -201,18 +203,19 @@ class EditInfoActivity(override val isFragmentActivity: Boolean = false,
             toast("昵称不能为空")
             return
         }
-        viewModel.updateUserInfo(nickname, introduction, qq, phone)  {  checkColorAndText() }
+        viewModel.updateUserInfo(nickname, introduction, qq, phone) { checkColorAndText() }
     }
 
     private fun checkIfInfoChange(): Boolean {
+        val userForTemporal = user ?: return true
         val nickname = mine_et_nickname.text.toString()
         val introduction = mine_et_introduce.text.toString()
         val qq = mine_et_qq.text.toString()
         val phone = mine_et_phone.text.toString()
-        if (nickname == user!!.nickname &&
-                introduction == user!!.introduction &&
-                qq == user!!.qq &&
-                phone == user!!.phone) {
+        if (nickname == userForTemporal.nickname &&
+                introduction == userForTemporal.introduction &&
+                qq == userForTemporal.qq &&
+                phone == userForTemporal.phone) {
             return false
         }
         return true
@@ -226,8 +229,8 @@ class EditInfoActivity(override val isFragmentActivity: Boolean = false,
             //如果不是落在EditText区域，则需要关闭输入法
             if (hideKeyboard(v, ev)) {
                 val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-                imm.hideSoftInputFromWindow(v!!.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
-                v.clearFocus()
+                imm.hideSoftInputFromWindow(v?.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
+                v?.clearFocus()
             }
         }
         return super.dispatchTouchEvent(ev)
@@ -287,7 +290,7 @@ class EditInfoActivity(override val isFragmentActivity: Boolean = false,
                 .toString()
     }
     private val cameraImageFile by lazy { File(fileDir + File.separator + System.currentTimeMillis() + ".png") }
-    private val destinationFile by lazy { File(fileDir + File.separator + user!!.stuNum + ".png") }
+    private val destinationFile by lazy { File(fileDir + File.separator + user?.stuNum + ".png") }
 
     private fun getImageFromCamera() {
         doPermissionAction(Manifest.permission.CAMERA) {
@@ -341,7 +344,7 @@ class EditInfoActivity(override val isFragmentActivity: Boolean = false,
 
         try {
             val fileBody = MultipartBody.Part.createFormData("fold", destinationFile.name, destinationFile.getRequestBody())
-            val numBody = RequestBody.create(MediaType.parse("multipart/form-data"), user!!.stuNum!!)
+            val numBody = RequestBody.create(MediaType.parse("multipart/form-data"), user?.stuNum ?: return)
             viewModel.uploadAvatar(numBody, fileBody)
         } catch (e: IOException) {
             e.printStackTrace()

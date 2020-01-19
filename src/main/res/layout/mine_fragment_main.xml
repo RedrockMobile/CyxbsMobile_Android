@@ -253,6 +253,7 @@
             android:textSize="15sp" />
 
         <TextView
+            android:id="@+id/mine_main_tv_redrock"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"

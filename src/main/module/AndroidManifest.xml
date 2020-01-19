@@ -15,18 +15,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".page.setting.SettingActivity" />
         <activity android:name=".page.edit.EditInfoActivity" />
         <activity android:name=".page.sign.DailySignActivity" />
         <activity android:name=".page.draft.DraftActivity" />
         <activity android:name=".page.answer.AnswerActivity" />
         <activity android:name=".page.ask.AskActivity" />
         <activity android:name=".page.comment.CommentActivity" />
-        <activity android:name=".page.store.StoreActivity" />
-        <activity android:name=".page.setting.AboutActivity" />
-        <activity android:name=".page.daily.SignRulesActivity" />
-        <activity android:name=".page.daily.PointSpecActivity" />
-        <activity android:name=".page.daily.PointDetailActivity" />
+        <activity android:name=".page.about.AboutActivity" />
     </application>
 
 </manifest>

@@ -21,7 +21,7 @@
     <string name="mine_reply_to_comment">评论</string>
     <string name="mine_praise">获赞</string>
     <string name="mine_number_default">11</string>
-    <string name="mine_show_schedule_first_launch">启动页APP时最先显示课表页面</string>
+    <string name="mine_show_schedule_first_launch">启动APP时最先显示课表页面</string>
     <string name="mine_night_mode">夜间模式</string>
     <string name="mine_custom_icon">自定义桌面小图标</string>
     <string name="mine_feedback_suggestion">意见与反馈</string>
@@ -32,15 +32,16 @@
     <!--    编辑-->
     <string name="mine_info_edit">资料编辑</string>
     <string name="mine_nickname">昵称</string>
-    <string name="mine_nickname_default">张树洞</string>
+    <string name="mine_nickname_default">输入您的昵称</string>
     <string name="mine_introduce">个性签名</string>
-    <string name="mine_introduce_default">有些人错过了一次就是一辈子</string>
+    <string name="mine_introduce_default">输入个性签名</string>
     <string name="mine_qq">QQ</string>
     <string name="mine_phone">电话</string>
     <string name="mine_college">学院</string>
     <string name="mine_save">保存</string>
     <string name="mine_info_default">完善你的个人信息哦</string>
     <string name="mine_info_save">已保存</string>
+    <string name="mine_info_contact">写下您的联系方式，便于我们与您联系</string>
 
 
 
@@ -138,6 +139,6 @@
     <string name="mine_about_legal">《掌上重邮用户使用条款》</string>
     <string name="mine_about_update">版本更新</string>
     <string name="mine_about_1">红岩网校工作站出品</string>
-    <string name="mine_about_copyright">CopyRight © 2015&#8211;2019 All Rights Reserved</string>
+    <string name="mine_about_copyright">CopyRight © 2015&#8211;2020 All Rights Reserved</string>
 
 </resources>

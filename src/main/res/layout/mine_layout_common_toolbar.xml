@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <com.mredrock.cyxbs.common.component.JToolbar
+    <androidx.appcompat.widget.Toolbar
         android:id="@+id/mine_common_toolbar"
         app:titleTextAppearance="@style/mine_common_toolbar"
         android:layout_width="match_parent"

@@ -19,20 +19,17 @@ import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.bean.User
-import com.mredrock.cyxbs.common.config.MINE_ENTRY
-import com.mredrock.cyxbs.common.config.SP_WIDGET_NEED_FRESH
-import com.mredrock.cyxbs.common.config.WIDGET_COURSE
-import com.mredrock.cyxbs.common.config.WIDGET_SETTING
+import com.mredrock.cyxbs.common.config.*
 import com.mredrock.cyxbs.common.event.AskLoginEvent
 import com.mredrock.cyxbs.common.event.LoginStateChangeEvent
 import com.mredrock.cyxbs.common.ui.BaseViewModelFragment
 import com.mredrock.cyxbs.common.utils.extensions.editor
 import com.mredrock.cyxbs.common.utils.extensions.loadAvatar
+import com.mredrock.cyxbs.mine.page.about.AboutActivity
 import com.mredrock.cyxbs.mine.page.answer.AnswerActivity
 import com.mredrock.cyxbs.mine.page.ask.AskActivity
 import com.mredrock.cyxbs.mine.page.comment.CommentActivity
 import com.mredrock.cyxbs.mine.page.edit.EditInfoActivity
-import com.mredrock.cyxbs.mine.page.setting.AboutActivity
 import com.mredrock.cyxbs.mine.page.sign.DailySignActivity
 import com.mredrock.cyxbs.mine.util.user
 import kotlinx.android.synthetic.main.mine_fragment_main.*
@@ -50,15 +47,7 @@ import org.jetbrains.anko.textColor
 class UserFragment : BaseViewModelFragment<UserViewModel>() {
     override val viewModelClass: Class<UserViewModel>
         get() = UserViewModel::class.java
-    private val loginListener = View.OnClickListener {
-        if (user == null) {
-            EventBus.getDefault().post(AskLoginEvent("请先登陆哦~"))
-        } else {
-            startActivity<EditInfoActivity>()
-        }
-    }
 
-    @SuppressLint("SetTextI18n")
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         addObserver()
@@ -67,22 +56,31 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
         //功能按钮
         mine_main_btn_sign.setOnClickListener { checkLoginBeforeAction("签到") { startActivity<DailySignActivity>() } }
         mine_main_tv_sign.setOnClickListener { checkLoginBeforeAction("签到") { startActivity<DailySignActivity>() } }
-
         mine_main_question_number.setOnClickListener { checkLoginBeforeAction("提问") { startActivity<AskActivity>() } }
         mine_main_tv_question.setOnClickListener { checkLoginBeforeAction("提问") { startActivity<AskActivity>() } }
-
         mine_main_answer_number.setOnClickListener { checkLoginBeforeAction("回答") { startActivity<AnswerActivity>() } }
         mine_main_tv_question.setOnClickListener { checkLoginBeforeAction("回答") { startActivity<AnswerActivity>() } }
-
         mine_main_reply_comment_number.setOnClickListener { checkLoginBeforeAction("评论回复") { startActivity<CommentActivity>() } }
         mine_main_tv_reply_comment.setOnClickListener { checkLoginBeforeAction("评论回复") { startActivity<CommentActivity>() } }
+        mine_main_cl_info_edit.setOnClickListener { checkLoginBeforeAction("资料") { startActivity<EditInfoActivity>() } }
 
         mine_main_tv_about.setOnClickListener { startActivity<AboutActivity>() }
         mine_main_btn_exit.setOnClickListener { onExitClick() }
         mine_main_tv_feedback.setOnClickListener { onFeedBackClick() }
         mine_main_tv_custom_widget.setOnClickListener { onSetWidgetClick() }
-        setUserInfoClickListener(loginListener)
+        mine_main_tv_redrock.setOnClickListener { clickAboutUsWebsite() }
+    }
 
+    @SuppressLint("SetTextI18n")
+    private fun addObserver() {
+        viewModel.mUser.observe(this, Observer {
+            if (it == null) {
+                BaseApp.user = null
+                return@Observer
+            }
+            freshBaseUser(it)
+            refreshLayout()
+        })
         viewModel.status.observe(this, Observer {
             mine_main_tv_sign.text = "已连续签到${it.serialDays}天 "
             if (it.isChecked) {
@@ -101,26 +99,8 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
         })
     }
 
-    private fun addObserver() {
-        viewModel.mUser.observe(this, Observer {
-            if (it == null) {
-                BaseApp.user = null
-                return@Observer
-            }
-            freshBaseUser(it)
-            refreshLayout()
-        })
-    }
-
-    /**
-     * 更新数据，加载详细资料，加载完后进入编辑页面
-     */
-    private fun loadInfoAndGoEdit() {
-        checkLoginBeforeAction("个人资料") { viewModel.getUserInfo() }
-    }
-
     private fun freshBaseUser(user: User) {
-        val finalUser = BaseApp.user!!
+        val finalUser = BaseApp.user ?: return
         finalUser.nickname = user.nickname
         finalUser.introduction = user.introduction
         finalUser.qq = user.qq
@@ -128,10 +108,6 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
         finalUser.photoSrc = user.photoSrc
         finalUser.photoThumbnailSrc = user.photoThumbnailSrc
         BaseApp.user = finalUser
-    }
-
-    private fun setUserInfoClickListener(onClickListener: View.OnClickListener) {
-        mine_main_cl_info_edit.setOnClickListener(onClickListener)
     }
 
     private fun checkLoginBeforeAction(msg: String, action: () -> Unit) {
@@ -154,7 +130,7 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
             mine_main_introduce.setText(R.string.mine_user_empty_introduce)
             return
         } else {
-            loadInfoAndGoEdit()
+            viewModel.getUserInfo()
         }
     }
 
@@ -162,12 +138,10 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
     //刷新界面
     private fun refreshLayout() {
         user?.let { viewModel.getScoreStatus(it) }
-
-
         if (BaseApp.isLogin) {
-            context?.loadAvatar(user!!.photoThumbnailSrc, mine_main_avatar)
-            mine_main_username.text = if (user!!.nickname.isNullOrBlank()) getString(R.string.mine_user_empty_username) else user!!.nickname
-            mine_main_introduce.text = if (user!!.introduction.isNullOrBlank()) getString(R.string.mine_user_empty_introduce) else user!!.introduction
+            context?.loadAvatar(user?.photoThumbnailSrc, mine_main_avatar)
+            mine_main_username.text = if (user?.nickname.isNullOrBlank()) getString(R.string.mine_user_empty_username) else user?.nickname
+            mine_main_introduce.text = if (user?.introduction.isNullOrBlank()) getString(R.string.mine_user_empty_introduce) else user?.introduction
             mine_main_btn_exit.visibility = View.VISIBLE
         } else {
             mine_main_username.setText(R.string.mine_user_empty_username)
@@ -182,7 +156,6 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
         if (!event.newState) {
             viewModel.mUser.value = null
         }
-        refreshLayout()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
@@ -227,7 +200,7 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
 
 
     private fun onExitClick() {
-        MaterialDialog.Builder(context!!)
+        MaterialDialog.Builder(context ?: return)
                 .title("退出登录?")
                 .content("是否退出当前账号?")
                 .positiveText("退出")
@@ -235,6 +208,9 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
                 .onPositive { _, _ ->
                     cleanAppWidgetCache()
                     EventBus.getDefault().post(LoginStateChangeEvent(false))
+                    //清空activity栈
+                    val flag = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+                    ARouter.getInstance().build("/main/login").withFlags(flag.toInt()).navigation()
                 }
                 .show()
     }
@@ -244,5 +220,10 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
             putString(WIDGET_COURSE, "")
             putBoolean(SP_WIDGET_NEED_FRESH, true)
         }
+    }
+
+    private fun clickAboutUsWebsite() {
+        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(ABOUT_US_WEBSITE))
+        startActivity(intent)
     }
 }

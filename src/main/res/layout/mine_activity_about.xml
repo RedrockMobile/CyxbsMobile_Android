@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/windowBackground"
-    tools:context=".page.setting.AboutActivity">
+    tools:context=".page.about.AboutActivity">
     <include
         android:id="@+id/mine_about_toolbar"
         layout="@layout/mine_layout_common_toolbar" />
@@ -52,8 +52,7 @@
         android:textSize="13sp"
         app:layout_constraintEnd_toEndOf="@+id/mine_about_name"
         app:layout_constraintStart_toStartOf="@+id/mine_about_name"
-        app:layout_constraintTop_toBottomOf="@+id/mine_about_name"
-        tools:text="Version 6.0.0" />
+        app:layout_constraintTop_toBottomOf="@+id/mine_about_name" />
 
 
     <TextView
@@ -92,10 +91,10 @@
 
 
     <RelativeLayout
-        android:id="@+id/mine_about_ll_share"
+        android:id="@+id/mine_about_rl_share"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="@+id/mine_about_ll_function"
+        app:layout_constraintBottom_toBottomOf="@+id/mine_about_rl_function"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
@@ -122,14 +121,14 @@
     </RelativeLayout>
 
     <RelativeLayout
-        android:id="@+id/mine_about_ll_function"
+        android:id="@+id/mine_about_rl_function"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toTopOf="@+id/mine_about_ll_website"
+        app:layout_constraintBottom_toTopOf="@+id/mine_about_rl_website"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/mine_about_ll_share">
+        app:layout_constraintTop_toBottomOf="@+id/mine_about_rl_share">
 
         <TextView
             android:id="@+id/mine_about_tv_function"
@@ -152,14 +151,14 @@
     </RelativeLayout>
 
     <RelativeLayout
-        android:id="@+id/mine_about_ll_website"
+        android:id="@+id/mine_about_rl_website"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toTopOf="@+id/mine_about_ll_update"
+        app:layout_constraintBottom_toTopOf="@+id/mine_about_rl_update"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/mine_about_ll_function">
+        app:layout_constraintTop_toBottomOf="@+id/mine_about_rl_function">
 
         <TextView
             android:id="@+id/mine_about_tv_website"
@@ -180,14 +179,14 @@
     </RelativeLayout>
 
     <RelativeLayout
-        android:id="@+id/mine_about_ll_update"
+        android:id="@+id/mine_about_rl_update"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toTopOf="@+id/mine_about_legal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/mine_about_ll_website">
+        app:layout_constraintTop_toBottomOf="@+id/mine_about_rl_website">
 
         <TextView
             android:id="@+id/mine_about_tv_update"

@@ -23,7 +23,8 @@ class AskViewModel : BaseViewModel() {
     val deleteEvent = MutableLiveData<Draft>()
 
     fun loadAskDraftList() {
-        apiService.getDraftList(user!!.stuNum!!, user!!.idNum!!, askDraftPage++, pageSize)
+        apiService.getDraftList(user?.stuNum ?: return, user?.idNum
+                ?: return, askDraftPage++, pageSize)
                 .mapOrThrowApiException()
                 .map { list ->
                     list.forEach { it.parseQuestion() }
@@ -47,7 +48,7 @@ class AskViewModel : BaseViewModel() {
     }
 
     fun deleteDraft(draft: Draft) {
-        apiService.deleteDraft(user!!.stuNum!!, user!!.idNum!!, draft.id)
+        apiService.deleteDraft(user?.stuNum ?: return, user?.idNum ?: return, draft.id)
                 .checkError()
                 .setSchedulers()
                 .doOnErrorWithDefaultErrorHandler { false }
@@ -67,4 +68,6 @@ class AskViewModel : BaseViewModel() {
         askDraftPage = 1
         askPostedPage = 1
     }
+
+
 }

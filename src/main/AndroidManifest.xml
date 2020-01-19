@@ -3,18 +3,13 @@
     package="com.mredrock.cyxbs.mine">
 
     <application android:theme="@style/AppTheme">
-        <activity android:name=".page.setting.SettingActivity" />
         <activity android:name=".page.edit.EditInfoActivity" />
         <activity android:name=".page.sign.DailySignActivity" />
         <activity android:name=".page.draft.DraftActivity" />
         <activity android:name=".page.answer.AnswerActivity" />
         <activity android:name=".page.ask.AskActivity" />
         <activity android:name=".page.comment.CommentActivity" />
-        <activity android:name=".page.store.StoreActivity" />
-        <activity android:name=".page.setting.AboutActivity" />
-        <activity android:name=".page.daily.SignRulesActivity" />
-        <activity android:name=".page.daily.PointSpecActivity" />
-        <activity android:name=".page.daily.PointDetailActivity" />
+        <activity android:name=".page.about.AboutActivity" />
         <activity
             android:name="com.yalantis.ucrop.UCropActivity"
             android:screenOrientation="portrait"

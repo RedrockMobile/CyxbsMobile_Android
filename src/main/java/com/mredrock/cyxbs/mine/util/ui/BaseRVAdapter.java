@@ -6,9 +6,11 @@ import android.view.ViewGroup;
 
 import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -31,7 +33,40 @@ public abstract class BaseRVAdapter<D> extends RecyclerView.Adapter {
         notifyItemRangeInserted(datas.size(), dataList.size());
     }
 
-    public void clear(){
+    public void delete(D deleteItem) {
+        List<D> oldDatas = new ArrayList<>(datas);
+        Iterator<D> iterator = datas.iterator();
+        while (iterator.hasNext()) {
+            D data = iterator.next();
+            if (data.equals(deleteItem)) {
+                iterator.remove();
+            }
+        }
+        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new DiffUtil.Callback() {
+            @Override
+            public int getOldListSize() {
+                return oldDatas.size();
+            }
+
+            @Override
+            public int getNewListSize() {
+                return datas.size();
+            }
+
+            @Override
+            public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
+                return oldDatas.get(oldItemPosition) == datas.get(newItemPosition);
+            }
+
+            @Override
+            public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
+                return oldDatas.get(oldItemPosition).equals(datas.get(newItemPosition));
+            }
+        });
+        diffResult.dispatchUpdatesTo(this);
+    }
+
+    public void clear() {
         datas.clear();
         notifyDataSetChanged();
     }
@@ -99,4 +134,5 @@ public abstract class BaseRVAdapter<D> extends RecyclerView.Adapter {
     public List<D> getDataList() {
         return datas;
     }
+
 }

@@ -1,6 +1,7 @@
 package com.mredrock.cyxbs.mine.util.widget
 
 import com.mredrock.cyxbs.common.utils.SchoolCalendar
+import com.mredrock.cyxbs.mine.util.extension.logr
 import java.math.BigDecimal
 import java.util.*
 

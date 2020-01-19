@@ -6,7 +6,9 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.mredrock.cyxbs.mine.R
 import com.mredrock.cyxbs.mine.network.model.Draft
+import com.mredrock.cyxbs.mine.util.extension.logr
 import com.mredrock.cyxbs.mine.util.ui.BaseRVFragment
+import com.mredrock.cyxbs.mine.util.ui.MineDialogFragment
 import kotlinx.android.synthetic.main.mine_list_item_my_answer_draft.view.*
 
 /**
@@ -29,6 +31,9 @@ class AnswerDraftFm : BaseRVFragment<Draft>() {
         })
         viewModel.answerDraftEvent.observe(this, Observer {
             loadIntoRv(it)
+        })
+        viewModel.deleteEvent.observe(this, Observer {
+            delete(it)
         })
     }
 
@@ -54,6 +59,8 @@ class AnswerDraftFm : BaseRVFragment<Draft>() {
         }
     }
 
+
+
     override fun getItemLayout(): Int {
         return R.layout.mine_list_item_my_answer_draft
     }
@@ -66,8 +73,11 @@ class AnswerDraftFm : BaseRVFragment<Draft>() {
 
     @SuppressLint("SetTextI18n")
     override fun bindDataHolder(holder: androidx.recyclerview.widget.RecyclerView.ViewHolder, position: Int, data: Draft) {
-        holder.itemView.mine_answer_draft_tv_content.text = data.question?.title
+        holder.itemView.mine_answer_draft_tv_content.text = data.titleContent
         holder.itemView.mine_answer_draft_tv_lastedit_at.text = data.createdAt
+        holder.itemView.mine_answer_draft_iv_garbage.setOnClickListener{
+            dialogShowRemove(data)
+        }
     }
 
 
@@ -76,5 +86,13 @@ class AnswerDraftFm : BaseRVFragment<Draft>() {
         clearData()
         loadMore()
         getSwipeLayout().isRefreshing = false
+    }
+
+    private fun removeItem(draft: Draft) {
+        viewModel.deleteDraft(draft)
+    }
+    private fun dialogShowRemove(draft: Draft) {
+        MineDialogFragment("删除草稿", "是否删除您编辑的草稿？", {removeItem(draft)}, {}).show(this.fragmentManager, "SaveInfo")
+
     }
 }

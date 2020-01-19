@@ -19,7 +19,7 @@
         app:layout_constraintStart_toStartOf="parent"
         android:layout_margin="10dp"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="我在沈阳sssssssssssssssssssssssssssssssssssssssssssssssssssssss的放子大范德萨分" />
+        tools:text="" />
 
     <TextView
         android:id="@+id/mine_answer_draft_tv_lastedit_at"

@@ -1,7 +1,6 @@
 package com.mredrock.cyxbs.mine.page.edit
 
 import androidx.lifecycle.MutableLiveData
-import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.mapOrThrowApiException
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
@@ -20,17 +19,19 @@ class EditViewModel : BaseViewModel() {
     val upLoadImageEvent = MutableLiveData<Boolean>()
 
     fun updateUserInfo(nickname: String, introduction: String, qq: String, phone: String
-                       , photoThumbnailSrc: String = user!!.photoThumbnailSrc ?: ""
-                       , photoSrc: String = user!!.photoSrc ?: "", callback: () -> Unit) {
-        apiService.updateUserInfo(user!!.stuNum!!, user!!.idNum!!,
+                       , photoThumbnailSrc: String = user?.photoThumbnailSrc ?: ""
+                       , photoSrc: String = user?.photoSrc ?: "", callback: () -> Unit) {
+        apiService.updateUserInfo(user?.stuNum ?: return, user?.idNum ?: return,
                 nickname, introduction, qq, phone, photoThumbnailSrc, photoSrc)
                 .normalStatus(this)
                 .safeSubscribeBy(
                         onNext = {
-                            user!!.nickname = nickname
-                            user!!.introduction = introduction
-                            user!!.qq = qq
-                            user!!.phone = phone
+                            user?.let {
+                                it.nickname = nickname
+                                it.introduction = introduction
+                                it.qq = qq
+                                it.phone = phone
+                            }
                             updateInfoEvent.postValue(true)
                         },
                         onComplete = callback,
@@ -43,18 +44,23 @@ class EditViewModel : BaseViewModel() {
 
     fun uploadAvatar(stuNum: RequestBody,
                      file: MultipartBody.Part) {
-        apiService.uploadSocialImg(stuNum, file)
-                .mapOrThrowApiException()
-                .flatMap {
-                    LogUtils.d("ImageUpdateResult", it.toString())
-                    user!!.photoSrc = it.photosrc
-                    user!!.photoThumbnailSrc = it.thumbnail_src
-                    apiService.updateUserImage(user!!.stuNum!!, user!!.idNum!!
-                            , it.thumbnail_src, it.photosrc)
-                }
-                .normalStatus(this)
-                .safeSubscribeBy(onError = { upLoadImageEvent.value = false }
-                        , onNext = { upLoadImageEvent.value = true })
-                .lifeCycle()
+        user?.stuNum?.let { stu ->
+            user?.idNum?.let { id ->
+                apiService.uploadSocialImg(stuNum, file)
+                        .mapOrThrowApiException()
+                        .flatMap {
+                            user?.photoSrc = it.photosrc
+                            user?.photoThumbnailSrc = it.thumbnail_src
+                            apiService.updateUserImage(stu, id
+                                    , it.thumbnail_src, it.photosrc)
+                        }
+                        .normalStatus(this)
+                        .safeSubscribeBy(onError = { upLoadImageEvent.value = false }
+                                , onNext = { upLoadImageEvent.value = true })
+                        .lifeCycle()
+
+            }
+
+        }
     }
 }

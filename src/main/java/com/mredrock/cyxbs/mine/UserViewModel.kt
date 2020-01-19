@@ -21,11 +21,15 @@ class UserViewModel : BaseViewModel() {
 
 
     fun getUserInfo() {
-        apiService.getPersonInfo(user!!.stuNum!!, user!!.idNum!!)
+        val stuNum  = user?.stuNum ?: return
+        val idNum = user?.idNum ?: return
+        apiService.getPersonInfo(stuNum, idNum)
                 .mapOrThrowApiException()
                 .setSchedulers()
                 .doOnErrorWithDefaultErrorHandler { false }
-                .safeSubscribeBy { mUser.value = it }
+                .safeSubscribeBy (onNext = {
+                    mUser.postValue(it)
+                })
     }
 
 

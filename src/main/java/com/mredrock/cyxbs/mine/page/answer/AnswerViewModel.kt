@@ -1,14 +1,11 @@
 package com.mredrock.cyxbs.mine.page.answer
 
 import androidx.lifecycle.MutableLiveData
-import com.mredrock.cyxbs.common.utils.extensions.doOnErrorWithDefaultErrorHandler
-import com.mredrock.cyxbs.common.utils.extensions.mapOrThrowApiException
-import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
-import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.mine.network.model.AnswerPosted
 import com.mredrock.cyxbs.mine.network.model.Draft
-import com.mredrock.cyxbs.mine.util.apiService
+import com.mredrock.cyxbs.mine.network.model.Question
+import com.mredrock.cyxbs.mine.util.extension.logr
 import com.mredrock.cyxbs.mine.util.user
 
 /**
@@ -61,26 +58,60 @@ class AnswerViewModel : BaseViewModel() {
 
 
     fun loadAnswerDraftList() {
-        apiService.getDraftList(user!!.stuNum!!, user!!.idNum!!, answerDraftPage++, pageSize)
-                .mapOrThrowApiException()
-                .map { list ->
-                    list.forEach { it.parseQuestion() }
-                    list
-                }
-                .setSchedulers()
-                .doOnErrorWithDefaultErrorHandler { false }
-                .safeSubscribeBy(
-                        onNext = { it ->
-                            val askDraftList = it.filter {
-                                it.type == "answer"
-                            }
-                            answerDraftEvent.postValue(askDraftList)
-                        },
-                        onError = {
-                            it.printStackTrace()
-                            errorEvent.postValue(it.message)
-                        }
-                )
-                .lifeCycle()
+        val stuNum = user?.stuNum ?: return
+        val idNum = user?.idNum ?: return
+//        apiService.getDraftList(stuNum, idNum, answerDraftPage++, pageSize)
+//                .mapOrThrowApiException()
+//                .map { list ->
+//                    list.forEach { it.parseQuestion() }
+//                    list
+//                }
+//                .setSchedulers()
+//                .doOnErrorWithDefaultErrorHandler { false }
+//                .safeSubscribeBy(
+//                        onNext = { it ->
+//                            val askDraftList = it.filter {
+//                                it.type == "answer"
+//                            }
+//                            answerDraftEvent.postValue(askDraftList)
+//                        },
+//                        onError = {
+//                            it.printStackTrace()
+//                            errorEvent.postValue(it.message)
+//                        }
+//                )
+//                .lifeCycle()
+        if (answerDraftPage == 3) {
+            answerDraftEvent.postValue(listOf())
+            return
+        }
+        val answerDraft = Draft("1", "abc", "roger", "answer", "标题", "内容在此" + Math.random(), Question());
+        val answerDraft1 = Draft("2", "abc", "roger", "answer", "标题", "内容在此" + Math.random(), Question());
+        val answerDraft2 = Draft("3", "abc", "roger", "answer", "标题", "内容在此" + Math.random(), Question());
+        val answerDraft3 = Draft("4", "abc", "roger", "answer", "标题", "内容在此" + Math.random(), Question());
+        val answerDraft4 = Draft("5", "abc", "roger", "answer", "标题", "内容在此" + Math.random(), Question());
+        val list = mutableListOf<Draft>(answerDraft, answerDraft1, answerDraft2, answerDraft3, answerDraft4)
+        answerDraftEvent.postValue(list.toList())
+        answerDraftPage++
+    }
+
+    fun deleteDraft(draft: Draft) {
+        val stuNum = user?.stuNum ?: return
+        val idNum = user?.idNum ?: return
+//        apiService.deleteDraft(stuNum, idNum, draft.id)
+//                .checkError()
+//                .setSchedulers()
+//                .doOnErrorWithDefaultErrorHandler { false }
+//                .safeSubscribeBy(
+//                        onNext = {
+//                            deleteEvent.postValue(draft)
+//                        },
+//                        onError = {
+//                            errorEvent.postValue(it.message)
+//                        }
+//                )
+//                .lifeCycle()
+        deleteEvent.postValue(draft)
+        logr("this is viewmodel delete")
     }
 }

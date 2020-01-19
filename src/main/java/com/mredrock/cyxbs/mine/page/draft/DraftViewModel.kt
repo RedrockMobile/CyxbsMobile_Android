@@ -5,7 +5,6 @@ import com.mredrock.cyxbs.common.utils.extensions.*
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.mine.network.model.Draft
 import com.mredrock.cyxbs.mine.util.apiService
-import com.mredrock.cyxbs.mine.util.extension.log
 import com.mredrock.cyxbs.mine.util.extension.normalStatus
 import com.mredrock.cyxbs.mine.util.user
 
@@ -27,8 +26,7 @@ class DraftViewModel : BaseViewModel() {
         if (!isLogin()) {
             return
         }
-        log("loadDraftList page:$page")
-        apiService.getDraftList(user!!.stuNum!!, user!!.idNum!!, page++, pageSize)
+        apiService.getDraftList(user?.stuNum ?: return, user?.idNum ?: return, page++, pageSize)
                 .mapOrThrowApiException()
                 .map { list ->
                     list.forEach { it.parseQuestion() }
@@ -52,7 +50,7 @@ class DraftViewModel : BaseViewModel() {
         if (!isLogin()) {
             return
         }
-        apiService.deleteDraft(user!!.stuNum!!, user!!.idNum!!, draft.id)
+        apiService.deleteDraft(user?.stuNum ?: return, user?.idNum ?: return, draft.id)
                 .checkError()
                 .setSchedulers()
                 .doOnErrorWithDefaultErrorHandler { false }
@@ -72,7 +70,7 @@ class DraftViewModel : BaseViewModel() {
             return
         }
         val s = content ?: return
-        apiService.commentAnswer(user!!.stuNum!!, user!!.idNum!!, draft.targetId,s)
+        apiService.commentAnswer(user?.stuNum ?: return, user?.idNum ?: return, draft.targetId, s)
                 .normalStatus(this)
                 .safeSubscribeBy(
                         onNext = {
