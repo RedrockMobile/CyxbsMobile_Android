@@ -21,13 +21,13 @@ import com.mredrock.cyxbs.volunteer.fragment.AllVolunteerFragment
 import com.mredrock.cyxbs.volunteer.fragment.FirstVolunteerTimeFragment
 import com.mredrock.cyxbs.volunteer.fragment.NoTimeVolunteerFragment
 import com.mredrock.cyxbs.volunteer.network.ApiService
-import com.mredrock.cyxbs.volunteer.network.VolunteerRetrofit
 import com.mredrock.cyxbs.volunteer.widget.EncryptPassword
 import com.mredrock.cyxbs.volunteer.widget.VolunteerTimeSP
 import kotlinx.android.synthetic.main.activity_volunteer_record.*
 import java.util.*
 import kotlin.collections.ArrayList
 
+//TODO:重构为MVVM 2020.1.20
 class VolunteerRecordActivity : BaseActivity(), TabLayout.OnTabSelectedListener, androidx.viewpager.widget.ViewPager.OnPageChangeListener {
     override val isFragmentActivity: Boolean = false
 
@@ -161,7 +161,7 @@ class VolunteerRecordActivity : BaseActivity(), TabLayout.OnTabSelectedListener,
      * @param uid 用户学号
      */
     private fun loadVolunteerTime(uid: String) {
-        val apiService = ApiGenerator.getApiService(VolunteerRetrofit.volunteerRetrofit, ApiService::class.java)
+        val apiService = ApiGenerator.getApiService(ApiService::class.java)
         fragmentList = ArrayList()
         apiService.getVolunteerRecord("Basic enNjeTpyZWRyb2Nrenk=", uid)
                 .setSchedulers()

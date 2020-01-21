@@ -10,14 +10,14 @@ import retrofit2.http.POST
 
 interface ApiService {
     @FormUrlEncoded
-    @POST("/volunteer/binding")
+    @POST("/wxapi/volunteer/binding")
     fun volunteerLogin(@Header("Authorization") authorization: String,
                        @Field("account") account: String,
                        @Field("password") password: String,
                        @Field("uid") uid: String): Observable<VolunteerLogin>
 
     @FormUrlEncoded
-    @POST("/volunteer/select")
+    @POST("/wxapi/volunteer/select")
     fun getVolunteerRecord(@Header("Authorization") authorization: String,
                            @Field("uid") uid: String): Observable<VolunteerTime>
 

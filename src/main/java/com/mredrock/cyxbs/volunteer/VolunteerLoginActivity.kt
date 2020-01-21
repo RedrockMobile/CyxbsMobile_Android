@@ -19,7 +19,6 @@ import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.volunteer.bean.VolunteerLogin
 import com.mredrock.cyxbs.volunteer.network.ApiService
-import com.mredrock.cyxbs.volunteer.network.VolunteerRetrofit
 import com.mredrock.cyxbs.volunteer.widget.EncryptPassword
 import com.mredrock.cyxbs.volunteer.widget.VolunteerTimeSP
 import kotlinx.android.synthetic.main.activity_login.*
@@ -46,7 +45,6 @@ class VolunteerLoginActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
-
         common_toolbar.init("完善信息")
         if (BaseApp.user == null) {
             EventBus.getDefault().post(AskLoginEvent("只有登陆了才能查看志愿时长噢～"))
@@ -109,7 +107,7 @@ class VolunteerLoginActivity : BaseActivity() {
         if (uid == null) {
 
         }
-        ApiGenerator.getApiService(VolunteerRetrofit.volunteerRetrofit, ApiService::class.java)
+        ApiGenerator.getApiService(ApiService::class.java)
                 .volunteerLogin("Basic enNjeTpyZWRyb2Nrenk=", account, encodingPassword, uid!!)
                 .setSchedulers()
                 .safeSubscribeBy(onNext = { volunteerLogin: VolunteerLogin ->

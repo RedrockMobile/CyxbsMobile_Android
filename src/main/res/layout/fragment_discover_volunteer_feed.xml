@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/cl_volunteer_feed"
+    tools:context=".fragment.DiscoverVolunteerFeedFragment"
+    tools:ignore="ResourceName">
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tv_volunteer_feed_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="21dp"
+        android:text="志愿服务"
+        android:textStyle="bold"
+        android:textSize="18sp"
+        android:textColor="@color/levelTwoFontColor"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tv_volunteer_feed_total_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="18"
+        android:textColor="@color/levelFourFontColor"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_volunteer_feed"
+        app:layout_constraintEnd_toEndOf="@+id/iv_volunteer_feed"
+        app:layout_constraintStart_toStartOf="@+id/iv_volunteer_feed"
+        app:layout_constraintTop_toTopOf="@+id/iv_volunteer_feed" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/iv_volunteer_feed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:layout_marginBottom="23dp"
+        android:src="@drawable/ic_volunteer_feed_background"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/tv_volunteer_feed_title"
+        app:layout_constraintStart_toStartOf="@+id/tv_volunteer_feed_title"
+        app:layout_constraintTop_toBottomOf="@+id/tv_volunteer_feed_title" />
+
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tv_volunteer_feed_activity_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="22dp"
+        android:layout_marginTop="1dp"
+        android:layout_marginEnd="22dp"
+        android:textColor="@color/levelTwoFontColor"
+        android:textSize="15sp"
+        app:layout_constraintEnd_toStartOf="@+id/tv_volunteer_feed_activity_date"
+        app:layout_constraintStart_toEndOf="@+id/iv_volunteer_feed"
+        app:layout_constraintTop_toTopOf="@+id/iv_volunteer_feed"
+        tools:text="红领巾志愿服务小分队" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tv_volunteer_feed_activity_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="15dp"
+        android:alpha="0.54"
+        android:textColor="@color/levelTwoFontColor"
+        android:textSize="10sp"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_volunteer_feed_activity_name"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/tv_volunteer_feed_activity_name"
+        tools:text="2019.8.22" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tv_volunteer_feed_activity_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="23dp"
+        android:layout_marginTop="4dp"
+        android:alpha="0.8"
+        android:textSize="13sp"
+        android:textColor="@color/levelTwoFontColor"
+        tools:text="5小时"
+        app:layout_constraintStart_toEndOf="@+id/iv_volunteer_feed"
+        app:layout_constraintTop_toBottomOf="@+id/tv_volunteer_feed_activity_name" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tv_volunteer_feed_activity_address"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="22dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="22dp"
+        android:alpha="0.8"
+        android:textColor="@color/levelTwoFontColor"
+        android:textSize="13sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/iv_volunteer_feed"
+        app:layout_constraintTop_toBottomOf="@+id/tv_volunteer_feed_activity_time"
+        tools:text="红领巾志愿服务小分队" />
+</androidx.constraintlayout.widget.ConstraintLayout>

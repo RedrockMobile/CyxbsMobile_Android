@@ -1,6 +1,8 @@
 package com.mredrock.cyxbs.volunteer.network
 
 import com.mredrock.cyxbs.common.BuildConfig
+import com.mredrock.cyxbs.common.network.ApiGenerator
+import com.mredrock.cyxbs.common.network.ApiService
 import com.mredrock.cyxbs.common.network.converter.QualifiedTypeConverterFactory
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -13,16 +15,6 @@ import java.util.concurrent.TimeUnit
 class VolunteerRetrofit {
     companion object {
         private val DEFAULT_TIME_OUT = 5
-        val volunteerRetrofit : Retrofit = getRetrofit("https://wx.redrock.team")
-
-        private fun getRetrofit(baseUrl : String) : Retrofit {
-            return Retrofit.Builder()
-                    .baseUrl(baseUrl)
-                    .client(configureOkHttp(OkHttpClient.Builder()))
-                    .addConverterFactory(QualifiedTypeConverterFactory(GsonConverterFactory.create(), SimpleXmlConverterFactory.create()))
-                    .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                    .build()
-        }
 
         private fun configureOkHttp(builder: OkHttpClient.Builder): OkHttpClient {
             builder.connectTimeout(DEFAULT_TIME_OUT.toLong(), TimeUnit.SECONDS)
