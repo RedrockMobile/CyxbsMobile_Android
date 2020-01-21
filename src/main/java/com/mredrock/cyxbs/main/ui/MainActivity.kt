@@ -16,9 +16,9 @@ import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
 import com.google.android.material.bottomnavigation.LabelVisibilityMode
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.config.*
+import com.mredrock.cyxbs.common.event.BottomSheetStateEvent
 import com.mredrock.cyxbs.common.event.CourseSlipsTopEvent
 import com.mredrock.cyxbs.common.event.NotifyBottomSheetToExpandEvent
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
@@ -113,29 +113,17 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
         //下载Splash图
         viewModel.getStartPage()
 
-        var isFirst = true
         bottomSheetBehavior = BottomSheetBehavior.from(course_bottom_sheet_content)
         bottomSheetBehavior.setBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
             override fun onSlide(p0: View, p1: Float) {
                 ll_nav_main_container.translationY = nav_main.height * p1
-
+                EventBus.getDefault().post(BottomSheetStateEvent(p1))
             }
 
             override fun onStateChanged(p0: View, p1: Int) {
-                if (p1 == BottomSheetBehavior.STATE_DRAGGING && !viewModel.isCourseTop) {
-                    bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
-                }
-                if (isFirst) {
-                    isFirst = false
-                }
             }
         })
         main_pb_time_axis.progress = (TimeUtil.getPercentage() * 100).toInt()
-    }
-
-    override fun onRestart() {
-        super.onRestart()
-
     }
 
 
@@ -150,7 +138,11 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
     }
 
     override fun onBackPressed() {
-        moveTaskToBack(true)
+        if (bottomSheetBehavior.state==BottomSheetBehavior.STATE_EXPANDED){
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+        }else{
+            moveTaskToBack(true)
+        }
     }
 
     private fun deleteSplash() {
@@ -185,7 +177,6 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
         supportFragmentManager.beginTransaction().replace(R.id.course_bottom_sheet_content, getFragment(COURSE_ENTRY)).apply {
             commit()
         }
-//        (ARouter.getInstance().build("/test/test").navigation() as BottomSheetDialogFragment).show(supportFragmentManager, "hhh")
 
         adapter = MainVpAdapter(supportFragmentManager, fragments)
         view_pager.adapter = adapter
