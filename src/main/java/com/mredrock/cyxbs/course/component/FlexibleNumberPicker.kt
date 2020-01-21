@@ -98,6 +98,7 @@ class FlexibleNumberPicker : NumberPicker {
         repeat(childCount) {
             (getChildAt(it) as? EditText)?.apply {
                 setTextColor(mSelectorWheelPaintColor)
+                textSize = 16f
                 isEnabled = false
             }
         }

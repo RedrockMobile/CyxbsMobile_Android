@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
 
@@ -22,8 +23,8 @@
 
         <ImageView
             android:id="@+id/course_back"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
             android:layout_marginStart="4dp"
             android:layout_marginTop="49dp"
             android:padding="12dp"
@@ -33,7 +34,8 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.0"
-            app:srcCompat="@drawable/course_ic_back" />
+            app:srcCompat="@drawable/course_ic_back"
+            tools:ignore="ContentDescription" />
 
         <View
             android:id="@+id/course_view"
@@ -78,7 +80,7 @@
             app:layout_constraintHorizontal_bias="0.11"
             app:layout_constraintStart_toEndOf="@+id/course_view3"
             app:layout_constraintTop_toBottomOf="@+id/course_view2"
-            app:layout_constraintVertical_bias="0.26999998" />
+            app:layout_constraintVertical_bias="0.30" />
 
 
         <TextView
@@ -88,7 +90,7 @@
             android:layout_marginStart="18dp"
             android:layout_marginEnd="18dp"
             android:maxLines="1"
-            android:text="为你的行程添加"
+            android:text="@string/course_title_for_your_affair1"
             android:textColor="@color/transactionHeading"
             android:textSize="34sp"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -104,7 +106,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:maxLines="1"
-            android:text="一个标题"
+            android:text="@string/course_title_for_your_affair2"
             android:textColor="@color/transactionHeading"
             android:textSize="34sp"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -135,7 +137,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:maxLines="1"
-            android:text="具体内容"
+            android:text="@string/course_title_for_your_affair3"
             android:textColor="@color/transactionHeading"
             android:textSize="34sp"
             android:visibility="gone"
@@ -196,15 +198,21 @@
         <com.mredrock.cyxbs.common.component.RedRockAutoWarpView
             android:id="@+id/rv_you_might"
             android:layout_width="0dp"
+            android:layout_height="0dp"
             android:layout_marginStart="4dp"
             android:layout_marginTop="18dp"
             android:layout_marginEnd="4dp"
-            android:layout_height="wrap_content"
             app:horizontalSpacing="7dp"
             app:verticalsSpacing="8dp"
+            app:maxLine="2"
+            android:layout_marginBottom="15dp"
+            app:layout_constraintBottom_toTopOf="@+id/course_view22"
             app:layout_constraintEnd_toEndOf="@+id/et_title_content_input"
             app:layout_constraintStart_toStartOf="@+id/et_title_content_input"
-            app:layout_constraintTop_toBottomOf="@+id/et_title_content_input" />
+            app:layout_constraintTop_toBottomOf="@+id/et_title_content_input"
+            app:layout_constraintVertical_bias="0.0">
+
+        </com.mredrock.cyxbs.common.component.RedRockAutoWarpView>
 
 
         <View
@@ -252,6 +260,7 @@
         <TextView
             android:id="@+id/tv_week_select"
             android:paddingStart="13dp"
+            android:textStyle="bold"
             android:paddingEnd="13dp"
             android:paddingTop="9dp"
             android:paddingBottom="9dp"
@@ -278,6 +287,7 @@
         <TextView
             android:id="@+id/tv_time_select"
             android:paddingStart="13dp"
+            android:textStyle="bold"
             android:paddingEnd="13dp"
             android:paddingTop="9dp"
             android:paddingBottom="9dp"
@@ -307,6 +317,7 @@
             android:onClick="@{listeners::onRemindSelectClick}"
             android:paddingEnd="13dp"
             android:paddingTop="9dp"
+            android:textStyle="bold"
             android:paddingBottom="9dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -325,7 +336,6 @@
             app:layout_constraintStart_toStartOf="@+id/tv_time_select"
             app:layout_constraintTop_toBottomOf="@+id/tv_time_select"
             app:layout_constraintVertical_bias="0.0" />
-
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

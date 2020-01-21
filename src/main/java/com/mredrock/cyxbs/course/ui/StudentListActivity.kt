@@ -60,7 +60,7 @@ class StudentListActivity : BaseActivity() {
                     .errorHandler()
                     .subscribe(ExecuteOnceObserver(onExecuteOnceNext = {
                         it.data?.let { students ->
-                            rv.adapter = StudentListRecAdapter(this, students)
+                            course_auto.adapter = StudentListRecAdapter(this, students)
                         }
                     }))
         }

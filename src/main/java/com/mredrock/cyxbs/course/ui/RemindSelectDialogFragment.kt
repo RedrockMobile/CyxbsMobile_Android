@@ -1,16 +1,19 @@
 package com.mredrock.cyxbs.course.ui
 
 import android.app.Dialog
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProviders
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.mredrock.cyxbs.common.component.RedRockBottomSheetDialog
 import com.mredrock.cyxbs.course.R
 import com.mredrock.cyxbs.course.databinding.CourseFragmentRemindSelectBinding
 import com.mredrock.cyxbs.course.viewmodels.EditAffairViewModel
@@ -19,35 +22,21 @@ import com.mredrock.cyxbs.course.viewmodels.EditAffairViewModel
  * Created by anriku on 2018/9/11.
  */
 
-class RemindSelectDialogFragment : AppCompatDialogFragment() {
+class RemindSelectDialogFragment(context: Context) : RedRockBottomSheetDialog(context) {
 
-    private lateinit var mBottomSheetDialog: BottomSheetDialog
-    private lateinit var mBinding: CourseFragmentRemindSelectBinding
-    private lateinit var mEditAffairViewModel: EditAffairViewModel
+    private var mBinding: CourseFragmentRemindSelectBinding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.course_fragment_remind_select,
+            null, false)
+    private var mEditAffairViewModel: EditAffairViewModel = ViewModelProviders.of(context as AppCompatActivity).get(EditAffairViewModel::class.java)
 
-    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        activity ?: throw IllegalStateException("The activity of the Fragment is null")
-
-        mBottomSheetDialog = BottomSheetDialog(activity!!)
-        mBinding = DataBindingUtil.inflate(LayoutInflater.from(activity), R.layout.course_fragment_remind_select,
-                null, false)
-
-        mEditAffairViewModel = ViewModelProviders.of(activity!!).get(EditAffairViewModel::class.java)
-
+    init{
         mBinding.remindStrings = mEditAffairViewModel.remindArray
-
         mBinding.listeners = RemindSelectListeners({
-            mBottomSheetDialog.dismiss()
+            dismiss()
         }, {
             mEditAffairViewModel.setRemindSelectString(mBinding.redRockNp.value)
-            mBottomSheetDialog.dismiss()
+            dismiss()
         })
-
-        val params = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT)
-        mBottomSheetDialog.setContentView(mBinding.root, params)
-
-        return mBottomSheetDialog
+        setContentView(mBinding.root)
     }
 
     class RemindSelectListeners(val onCancel: (ImageView) -> Unit,

@@ -1,6 +1,8 @@
 package com.mredrock.cyxbs.course.viewmodels
 
 import android.content.Context
+import android.view.View
+import androidx.databinding.ObservableField
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.gson.Gson
@@ -8,7 +10,6 @@ import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.config.SP_WIDGET_NEED_FRESH
 import com.mredrock.cyxbs.common.config.WIDGET_COURSE
 import com.mredrock.cyxbs.common.network.ApiGenerator
-import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.SchoolCalendar
 import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
 import com.mredrock.cyxbs.common.utils.extensions.editor
@@ -24,6 +25,9 @@ import com.mredrock.cyxbs.course.network.AffairMapToCourse
 import com.mredrock.cyxbs.course.network.Course
 import com.mredrock.cyxbs.course.network.CourseApiService
 import com.mredrock.cyxbs.course.rxjava.ExecuteOnceObserver
+import com.mredrock.cyxbs.course.utils.getCourseByCalendar
+import com.mredrock.cyxbs.course.utils.getStartCalendarByNum
+import com.mredrock.cyxbs.course.utils.isNight
 import io.reactivex.Observable
 import io.reactivex.ObservableOnSubscribe
 import org.greenrobot.eventbus.EventBus
@@ -72,8 +76,31 @@ class CoursesViewModel : ViewModel() {
         MutableLiveData<Boolean>().apply { value = true }
     }
 
+    //全部课程数据
     val courses = MutableLiveData<MutableList<Course>>()
-    //
+
+    //用于显示在当前或者下一课程对象
+    val nowCourse = ObservableField<Course?>()
+
+    //是否展示当前或者下一课程，用于DataBinDing绑定
+    val isShowCurrentSchedule = object:ObservableField<Int>(nowCourse){
+        override fun get(): Int? {
+            return if (nowCourse.get()==null) View.GONE else View.VISIBLE
+        }
+    }
+
+    //是否展示当前或者下一课程无课展示提示，用于DataBinDing绑定
+    val isShowCurrentNoCourseTip = object:ObservableField<Int>(nowCourse){
+        override fun get(): Int? {
+            return if (nowCourse.get()==null) View.VISIBLE else View.GONE
+        }
+    }
+
+    //是否展示周数中的本周提示
+    val isShowPresentTips: ObservableField<Int> = ObservableField(View.GONE)
+
+    val isShowBackPresentWeek = ObservableField<Int>(View.GONE)
+
     private var nowCourses = ""
     private var nextCourses = ""
     private var nowAffairs = ""
@@ -325,9 +352,11 @@ class CoursesViewModel : ViewModel() {
         if (mDataGetStatus[0] && mDataGetStatus[1]) {
             // 如果mCourses为空的话就不用赋值给courses。防止由于网络请求有问题而导致刷新数据为空。
             if (mCourses.isNotEmpty()) {
-                LogUtils.d("MyTag","aff: now:$nowAffairs next:$nextAffairs")
                 if (nowCourses != nextCourses || nowAffairs != nextAffairs) {
                     courses.value = mCourses
+                    nowWeek.value?.let {
+                        nowCourse.set(getNowCourse(mCourses, it))
+                    }
                     nowCourses = nextCourses
                     nowAffairs = nextAffairs
                 }
@@ -339,6 +368,56 @@ class CoursesViewModel : ViewModel() {
                 }
             }
             stopRefresh()
+        }
+    }
+
+    /**
+     * 获取当前的课程用于显示在课表的头部
+     * @param courses 整个课表数据
+     * @param nowWeek 现在是第几周
+     */
+    private fun getNowCourse(courses: List<Course>, nowWeek: Int):Course? {
+        var isFound = false
+        courses.forEach {
+            val endCalendar = getStartCalendarByNum(it.hashLesson)
+            //如果今天还有下一节课，显示下一节
+            if (Calendar.getInstance() < endCalendar) {
+                return it
+            }
+            isFound = true
+        }
+
+        return if (isFound) {//今天有课，但是上完了
+            //新策略：显示明天第一节
+            getTomorrowCourse(courses, nowWeek)
+        } else {//今天没有课
+            if (isNight()) {//如果在晚上，显示明天课程
+                getTomorrowCourse(courses, nowWeek)
+            } else {
+                //白天显示今天无课
+                null
+            }
+        }
+
+    }
+
+    /**
+     * 获取明天的课程用于显示在课表的头部
+     * @param courses 整个课表数据
+     * @param nowWeek 现在是第几周
+     */
+    private fun getTomorrowCourse(courses: List<Course>, nowWeek: Int): Course? {
+        val tomorrowCalendar = Calendar.getInstance()
+        tomorrowCalendar.set(Calendar.DAY_OF_YEAR, tomorrowCalendar.get(Calendar.DAY_OF_YEAR) + 1)
+        val tomorrowList = getCourseByCalendar(courses, nowWeek, tomorrowCalendar)
+        return if (tomorrowList == null) {//数据出错
+            null
+        } else {
+            if (tomorrowList.isEmpty()) {//明日无课
+                null
+            } else {//显示明天第一节课
+                tomorrowList.first()
+            }
         }
     }
 

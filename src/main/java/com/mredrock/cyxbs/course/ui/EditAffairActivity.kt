@@ -1,7 +1,6 @@
 package com.mredrock.cyxbs.course.ui
 
 import android.os.Bundle
-import android.text.Editable
 import android.text.TextUtils
 import android.view.*
 import android.view.inputmethod.EditorInfo
@@ -10,15 +9,16 @@ import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProviders
-import androidx.recyclerview.widget.StaggeredGridLayoutManager
-import androidx.transition.*
+import androidx.transition.ChangeBounds
+import androidx.transition.Slide
+import androidx.transition.TransitionManager
+import androidx.transition.TransitionSet
 import com.mredrock.cyxbs.common.ui.BaseActivity
 import com.mredrock.cyxbs.course.R
 import com.mredrock.cyxbs.course.adapters.YouMightAdapter
 import com.mredrock.cyxbs.course.databinding.CourseActivityEditAffairBinding
 import com.mredrock.cyxbs.course.viewmodels.EditAffairViewModel
 import kotlinx.android.synthetic.main.course_activity_edit_affair.*
-import org.jetbrains.anko.dip
 
 
 class EditAffairActivity : BaseActivity() {
@@ -28,13 +28,13 @@ class EditAffairActivity : BaseActivity() {
 
     private lateinit var mBinding: CourseActivityEditAffairBinding
     private val mWeekSelectDialogFragment: WeekSelectDialogFragment by lazy(LazyThreadSafetyMode.NONE) {
-        WeekSelectDialogFragment()
+        WeekSelectDialogFragment(this)
     }
     private val mTimeSelectDialogFragment: TimeSelectDialogFragment by lazy(LazyThreadSafetyMode.NONE) {
-        TimeSelectDialogFragment()
+        TimeSelectDialogFragment(this)
     }
     private val mRemindSelectDialogFragment: RemindSelectDialogFragment by lazy(LazyThreadSafetyMode.NONE) {
-        RemindSelectDialogFragment()
+        RemindSelectDialogFragment(this)
     }
     private lateinit var mEditAffairViewModel: EditAffairViewModel
 
@@ -54,16 +54,16 @@ class EditAffairActivity : BaseActivity() {
         mEditAffairViewModel.initData(this)
 
         mBinding.listeners = EditAffairListeners({
-            if (!mWeekSelectDialogFragment.isAdded) {
-                mWeekSelectDialogFragment.show(supportFragmentManager, "weekSelectDialogFragment")
+            if (!mWeekSelectDialogFragment.isShowing) {
+                mWeekSelectDialogFragment.show()
             }
         }, {
-            if (!mTimeSelectDialogFragment.isAdded) {
-                mTimeSelectDialogFragment.show(supportFragmentManager, "timeSelectDialogFragment")
+            if (!mTimeSelectDialogFragment.isShowing) {
+                mTimeSelectDialogFragment.show()
             }
         }, {
-            if (!mRemindSelectDialogFragment.isAdded) {
-                mRemindSelectDialogFragment.show(supportFragmentManager, "remindSelectDialogFragment")
+            if (!mRemindSelectDialogFragment.isShowing) {
+                mRemindSelectDialogFragment.show()
             }
         })
         course_view23.setOnClickListener {
@@ -114,7 +114,7 @@ class EditAffairActivity : BaseActivity() {
     /**
      * 添加标题之后跳转到添加内容动画
      */
-    fun addTitleNextMonitor() {
+    private fun addTitleNextMonitor() {
         if (et_title_content_input.text.trim().isEmpty()) {
             Toast.makeText(this, resources.getString(R.string.course_title_is_null),
                     Toast.LENGTH_SHORT).show()
@@ -122,7 +122,7 @@ class EditAffairActivity : BaseActivity() {
             TransitionManager.beginDelayedTransition(course_affair_container, TransitionSet().apply {
                 addTransition(Slide().apply {
                     duration = 500
-                    slideEdge = Gravity.RIGHT
+                    slideEdge = Gravity.END
                 })
                 addTransition(ChangeBounds().apply { duration = 500 })
             })
@@ -152,7 +152,7 @@ class EditAffairActivity : BaseActivity() {
         TransitionManager.beginDelayedTransition(course_affair_container, TransitionSet().apply {
             addTransition(Slide().apply {
                 duration = 500
-                slideEdge = Gravity.RIGHT
+                slideEdge = Gravity.END
             })
             addTransition(ChangeBounds().apply { duration = 500 })
         })
@@ -182,7 +182,7 @@ class EditAffairActivity : BaseActivity() {
             TransitionManager.beginDelayedTransition(course_affair_container, TransitionSet().apply {
                 addTransition(Slide().apply {
                     duration = 500
-                    slideEdge = Gravity.RIGHT
+                    slideEdge = Gravity.END
                 })
                 addTransition(ChangeBounds().apply { duration = 500 })
             })
@@ -218,7 +218,7 @@ class EditAffairActivity : BaseActivity() {
             TransitionManager.beginDelayedTransition(course_affair_container, TransitionSet().apply {
                 addTransition(Slide().apply {
                     duration = 500
-                    slideEdge = Gravity.RIGHT
+                    slideEdge = Gravity.END
                 })
                 addTransition(ChangeBounds().apply { duration = 500 })
             })

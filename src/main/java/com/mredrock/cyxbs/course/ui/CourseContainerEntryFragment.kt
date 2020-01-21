@@ -1,22 +1,18 @@
 package com.mredrock.cyxbs.course.ui
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.Menu
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.transition.Slide
+import androidx.transition.TransitionManager
+import androidx.transition.TransitionSet
 import com.alibaba.android.arouter.facade.annotation.Route
-import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.bean.WidgetCourse
 import com.mredrock.cyxbs.common.config.COURSE_ENTRY
-import com.mredrock.cyxbs.common.event.LoginStateChangeEvent
-import com.mredrock.cyxbs.common.event.NotifyBottomSheetToExpandEvent
-import com.mredrock.cyxbs.common.event.ShowModeChangeEvent
-import com.mredrock.cyxbs.common.event.WidgetCourseEvent
+import com.mredrock.cyxbs.common.event.*
 import com.mredrock.cyxbs.common.ui.BaseFragment
 import com.mredrock.cyxbs.course.R
 import com.mredrock.cyxbs.course.adapters.ScheduleVPAdapter
@@ -27,7 +23,6 @@ import com.mredrock.cyxbs.course.utils.AffairToCalendar
 import com.mredrock.cyxbs.course.utils.changeLibBeanToCourse
 import com.mredrock.cyxbs.course.viewmodels.CoursesViewModel
 import kotlinx.android.synthetic.main.course_fragment_course_container.*
-import kotlinx.android.synthetic.main.course_title_present_course.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -37,7 +32,6 @@ import org.greenrobot.eventbus.ThreadMode
  */
 @Route(path = COURSE_ENTRY)
 class CourseContainerEntryFragment : BaseFragment() {
-
     companion object {
         const val OTHERS_STU_NUM = "others_stu_num"
 
@@ -65,6 +59,7 @@ class CourseContainerEntryFragment : BaseFragment() {
         mBinding = DataBindingUtil.inflate(inflater, R.layout.course_fragment_course_container, container, false)
         return mBinding.root
     }
+
     /**
      * 在用于的登录状态发生改变后进行调用。
      *
@@ -96,7 +91,7 @@ class CourseContainerEntryFragment : BaseFragment() {
     private fun initFragment() {
         activity ?: return
 
-        if(!isAdded) return//如果没有被添加进Activity，Fragment会抛出not attach a context的错误
+        if (!isAdded) return//如果没有被添加进Activity，Fragment会抛出not attach a context的错误
 
         arguments?.let {
             mOthersStuNum = it.getString(OTHERS_STU_NUM)
@@ -116,29 +111,56 @@ class CourseContainerEntryFragment : BaseFragment() {
                 mOnPageSelected = {
                     // 当ViewPager发生了滑动，清理课表上加备忘的View
                     EventBus.getDefault().post(DismissAddAffairViewEvent())
-                    // 当ViewPager发生了滑动，通过EventBus对Toolbar上的周数进行改变
-                    EventBus.getDefault().post(WeekNumEvent(mScheduleAdapter.getPageTitle(it).toString(), mOthersStuNum != null))
+                    // 当ViewPager发生了滑动，对Head上的周数进行改变
+                    if (mOthersStuNum != null) {
+                        return@VPOnPagerChangeObserver
+                    }
+                    mCoursesViewModel?.isShowPresentTips?.set(
+                            if (mCoursesViewModel?.nowWeek?.value == it) {
+                                View.VISIBLE
+                            } else {
+                                View.GONE
+                            }
+                    )
+                    mCoursesViewModel?.isShowBackPresentWeek?.set(
+                            if (mCoursesViewModel?.nowWeek?.value == it) {
+                                View.GONE
+                            } else {
+                                View.VISIBLE
+                            }
+                    )
+                    mToolbarTitle = mScheduleAdapter.getPageTitle(it).toString()
+                    course_tv_which_week.text = mToolbarTitle
                 }))
+
+        course_back_present_week.setOnClickListener {
+            mCoursesViewModel?.nowWeek?.value?.let {
+                mBinding.vp.currentItem = it
+            }
+        }
 
         // 获取依赖于CourseContainerFragment的Activity的CoursesViewModel。在WeekFragment的切换的时候，不会
         // 重复获取数据。
         mCoursesViewModel = ViewModelProviders.of(activity!!).get(CoursesViewModel::class.java)
+        mBinding.coursesViewModel = mCoursesViewModel
 
-        var lastWeek:String = "本周"
-        mCoursesViewModel?.let {model->
+        var lastWeek = "本周"
+        mCoursesViewModel?.let { model ->
             model.getSchedulesDataFromDataBase(activity!!, mOthersStuNum)
             model.nowWeek.observe(this, Observer { nowWeek ->
-                if (nowWeek != null && nowWeek != 0) {
-                    // 过时的本周的位置以及将其替换为原始周数显示
-                    val oldNowWeek = mWeeks.indexOf(lastWeek)
-                    if (oldNowWeek != -1) {
-                        mWeeks[oldNowWeek] = mRawWeeks[oldNowWeek]
-                    }
-                    // 设置现在的本周显示
-                    lastWeek = "${mWeeks[nowWeek]}(${resources.getString(R.string.course_now_week)})"
-                    mWeeks[nowWeek] = lastWeek
-                    mScheduleAdapter.notifyDataSetChanged()
-                }
+                //todo 带删可能无用代码
+//                if (nowWeek != null && nowWeek != 0) {
+//                    // 过时的本周的位置以及将其替换为原始周数显示
+//                    val oldNowWeek = mWeeks.indexOf(lastWeek)
+//                    if (oldNowWeek != -1) {
+//                        mWeeks[oldNowWeek] = mRawWeeks[oldNowWeek]
+//                    }
+//                    // 设置现在的本周显示
+//                    lastWeek = "${mWeeks[nowWeek]}(${resources.getString(R.string.course_now_week)})"
+//                    mWeeks[nowWeek] = lastWeek
+//                    mScheduleAdapter.notifyDataSetChanged()
+//                }
+
                 // 跳转到当前周
                 mBinding.vp.currentItem = nowWeek ?: 0
             })
@@ -224,7 +246,6 @@ class CourseContainerEntryFragment : BaseFragment() {
     private var curIndex = 0
 
 
-
     private fun initCourseEntryFragment() {
         activity ?: return
         // 如果用户登录了就显示CourseContainerFragment；如果用户没有登录就行显示NoneLoginFragment进行登录
@@ -242,34 +263,47 @@ class CourseContainerEntryFragment : BaseFragment() {
      */
     private fun setToolbar() {
         // 设置当前Toolbar的内容
-        if (curIndex == 0 || userVisibleHint) course_tv_which_week.text = mToolbarTitle
-
-        if (BaseApp.isLogin && curIndex == 0) {
-            course_tv_which_week.setOnClickListener {
-                mIsFold = !mIsFold
-                if (mIsFold) {
-                    tab_layout.visibility = View.GONE
-                } else {
-                    tab_layout.visibility = View.VISIBLE
-                }
-            }
-        } else {
-            course_tv_which_week.setOnClickListener(null)
+        course_tv_which_week.text = mToolbarTitle
+        course_tv_which_week.setOnClickListener {
+            TransitionManager.beginDelayedTransition(fl, TransitionSet().apply {
+                addTransition(Slide().apply {
+                    slideEdge = Gravity.START
+                })
+            })
+            course_header_select_content.visibility = View.VISIBLE
+            course_header_show.visibility = View.GONE
         }
+        course_header_back.setOnClickListener {
+            TransitionManager.beginDelayedTransition(fl, TransitionSet().apply {
+                addTransition(Slide().apply {
+                    slideEdge = Gravity.START
+                })
+            })
+            course_header_select_content.visibility = View.GONE
+            course_header_show.visibility = View.VISIBLE
+        }
+
     }
 
-
-    /**
-     * 在[CourseContainerEntryFragment]中的ViewPager的Page发生了变化后进行接收对应的事件来对[mToolbar]的标题进行
-     * 修改
-     * @param weekNumEvent 包含当前周字符串的事件。
-     */
     @Subscribe(threadMode = ThreadMode.MAIN)
-    fun getWeekNumFromFragment(weekNumEvent: WeekNumEvent) {
-        if (weekNumEvent.isOthers) {
-            return
+    fun bottomSheetSlideStateReceive(bottomSheetStateEvent: BottomSheetStateEvent) {
+        if (course_header_select_content.visibility == View.GONE) {
+            course_current_course_week_select_container.visibility = View.VISIBLE
+            course_current_course_container.alpha = 1 - bottomSheetStateEvent.state
+            course_current_course_week_select_container.alpha = bottomSheetStateEvent.state
+        } else {
+            if (bottomSheetStateEvent.state == 0f) {
+                TransitionManager.beginDelayedTransition(fl, TransitionSet().apply {
+                    addTransition(Slide().apply {
+                        slideEdge = Gravity.START
+                    })
+                })
+                course_header_select_content.visibility = View.GONE
+                course_header_show.visibility = View.VISIBLE
+                course_current_course_container.alpha = 1 - bottomSheetStateEvent.state
+                course_current_course_week_select_container.alpha = bottomSheetStateEvent.state
+                course_current_course_week_select_container.visibility = View.GONE
+            }
         }
-        mToolbarTitle = weekNumEvent.weekString
-        setToolbar()
     }
 }

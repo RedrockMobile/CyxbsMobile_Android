@@ -86,18 +86,6 @@ class CourseFragment : BaseFragment(){
             }
         })
 
-
-        //防止课表还没滑倒顶部就能够滑动bottomSheet
-        course_sv.setScrollViewListener(object : CourseScrollView.ScrollViewListener {
-            override fun onScrollChanged(scrollView: CourseScrollView, x: Int, y: Int, oldx: Int, oldy: Int) {
-                if (y == 0) {
-                    EventBus.getDefault().post(CourseSlipsTopEvent(true))
-                } else {
-                    EventBus.getDefault().post(CourseSlipsTopEvent(false))
-                }
-            }
-        })
-
         schedule_view.adapterChangeListener = {
             val position = schedule_view.adapter?.getHighLightPosition()
             week_back_ground_view.position = position
@@ -111,7 +99,6 @@ class CourseFragment : BaseFragment(){
     override fun setUserVisibleHint(isVisibleToUser: Boolean) {
         super.setUserVisibleHint(isVisibleToUser)
         if (isVisibleToUser) {
-            CourseScrollView.isCurrentCourseTop = if (course_sv==null) true else course_sv.scrollY == 0
             if (CourseScrollView.isCurrentCourseTop) {
                 EventBus.getDefault().post(CourseSlipsTopEvent(true))
             }else{

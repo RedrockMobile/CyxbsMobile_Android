@@ -6,13 +6,10 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import androidx.annotation.IdRes
-import com.google.gson.Gson
 import com.mredrock.cyxbs.common.bean.WidgetCourse
-import com.mredrock.cyxbs.common.config.SP_WIDGET_NEED_FRESH
-import com.mredrock.cyxbs.common.config.WIDGET_COURSE
 import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
 import com.mredrock.cyxbs.common.utils.extensions.editor
-import com.mredrock.cyxbs.course.bean.Course
+import com.mredrock.cyxbs.course.network.Course
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
@@ -25,44 +22,25 @@ import kotlin.collections.ArrayList
 /**
  * 获得今天得课程list信息
  */
-fun getTodayCourse(context: Context): List<Course.DataBean>? {
-    return getCourseByCalendar(context, Calendar.getInstance())
+fun getTodayCourse(courses:List<Course>,nowWeek:Int): List<Course>? {
+    return getCourseByCalendar(courses,nowWeek, Calendar.getInstance())
 }
 
-fun getCourseByCalendar(context: Context, calendar: Calendar): ArrayList<Course.DataBean>? {
-    val json = context.defaultSharedPreferences.getString(WIDGET_COURSE, "")
-    val course = Gson().fromJson<Course>(json, Course::class.java) ?: return null
-    if (course.data == null) return null
-
-    val needFresh = context.defaultSharedPreferences.getBoolean(SP_WIDGET_NEED_FRESH, true)
-    //计算当前周数
-    var beginTime = context.defaultSharedPreferences.getLong(beginTimeShareName, 0L)
-    //需要刷新当前周
-    if (needFresh) {
-        beginTime = saveBeginTime(context, course.nowWeek)
-        context.defaultSharedPreferences.editor {
-            putBoolean(SP_WIDGET_NEED_FRESH, false)
-            putString(WIDGET_COURSE, json)
-        }
-    }
-    val week = TimeUtil.calcWeekOffset(Date(beginTime), calendar.time)
-
+fun getCourseByCalendar(courses:List<Course>,nowWeek:Int,calendar: Calendar): ArrayList<Course>? {
     /*
     * 转换表，老外从周日开始计数,orz
     * 7 1 2 3 4 5 6 老外
     * 1 2 3 4 5 6 7 Calendar.DAY_OF_WEEK
     * 6 0 1 2 3 4 5 需要的结果(hash_day)
     * */
-    val hash_day = (calendar.get(Calendar.DAY_OF_WEEK) + 5) % 7
-
-    val list = ArrayList<Course.DataBean>()
-    course.data!!.forEach {
-        if (it.hash_day == hash_day && it.week!!.contains(week)) {
-//            LogUtils.d("Widget", it.toString())
+    val hashDay = (calendar.get(Calendar.DAY_OF_WEEK) + 5) % 7
+    val list = ArrayList<Course>()
+    courses.forEach {
+        if (it.hashDay == hashDay && it.week!!.contains(nowWeek)) {
             list.add(it)
         }
     }
-    list.sortBy { it.hash_lesson }
+    list.sortBy { it.hashLesson }
     return list
 }
 
@@ -83,19 +61,19 @@ private fun saveBeginTime(context: Context, nowWeek: Int): Long {
     return calendar.time.time
 }
 
-fun getErrorCourseList(): ArrayList<Course.DataBean> {
-    val data = Course.DataBean()
-    data.hash_lesson = 0
+fun getErrorCourseList(): ArrayList<Course> {
+    val data = Course()
+    data.hashLesson = 0
     data.course = "数据异常，请刷新"
     data.classroom = ""
-    val list = ArrayList<Course.DataBean>()
+    val list = ArrayList<Course>()
     list.add(data)
     return list
 }
 
-fun getNoCourse(): Course.DataBean {
-    val data = Course.DataBean()
-    data.hash_lesson = 0
+fun getNoCourse(): Course {
+    val data = Course()
+    data.hashLesson = 0
     data.course = "无课"
     data.classroom = ""
     return data
@@ -205,16 +183,16 @@ fun filterClassRoom(classRoom: String): String {
 }
 
 //将widget模块的course转换为lib模块的WidgetCourse，WidgetCourse达到中转作用
-fun changeCourseToWidgetCourse(courseBean: Course.DataBean):WidgetCourse.DataBean{
+fun changeCourseToWidgetCourse(courseBean: Course):WidgetCourse.DataBean{
     val bean = WidgetCourse.DataBean()
     bean.apply {
-        hash_day = courseBean.hash_day
-        hash_lesson = courseBean.hash_lesson
-        begin_lesson = courseBean.begin_lesson
+        hash_day = courseBean.hashDay
+        hash_lesson = courseBean.hashLesson
+        begin_lesson = courseBean.beginLesson
         day = courseBean.day
         lesson = courseBean.lesson
         course = courseBean.course
-        course_num = courseBean.course_num
+        course_num = courseBean.courseNum
         teacher = courseBean.teacher
         classroom = courseBean.classroom
         rawWeek = courseBean.rawWeek
