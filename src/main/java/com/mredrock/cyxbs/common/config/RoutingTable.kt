@@ -25,6 +25,10 @@ const val DISCOVER_VOLUNTEER = "/volunteer/discover/entry"
 const val DISCOVER_SCHOOL_CAR = "/school_car/discover/entry"
 const val DISCOVER_NEWS = "/news/discover/entry"
 
+//志愿服务在发现页的展示信息
+const val DISCOVER_VOLUNTEER_FEED = "/volunteer/discover/feed"
+//查电费在发现页面的展示信息
+const val DISCOVER_ELECTRICITY_FEED = "/electricity/discover/feed"
 //教务新闻子项入口
 const val DISCOVER_NEWS_ITEM = "/news/discover/item"
 

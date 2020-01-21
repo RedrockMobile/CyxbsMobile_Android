@@ -27,6 +27,9 @@ public class JToolbar extends Toolbar {
     private TextView mTitleTextView;
     private TextView mSubtitleTextView;
     private Paint paint = new Paint();
+    {
+        paint.setColor(0x00ffffff);
+    }
 
     public JToolbar(Context context) {
         super(context);
@@ -99,7 +102,8 @@ public class JToolbar extends Toolbar {
     protected void dispatchDraw(Canvas canvas) {
         super.dispatchDraw(canvas);
         //为什么这个screenWidth绘制不满一个屏幕的宽度？？？
-        canvas.drawLine(0, getMeasuredHeight() - 1, 2 * ContextKt.getScreenWidth(getContext()), getMeasuredHeight(), paint);
+
+        canvas.drawLine(0, getMeasuredHeight() - ContextKt.dp2px(getContext(),1), 2 * ContextKt.getScreenWidth(getContext()), getMeasuredHeight(), paint);
     }
 
     private void reLayoutTitle(TextView title) {
