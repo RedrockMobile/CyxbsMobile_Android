@@ -2,9 +2,12 @@ package com.mredrock.cyxbs.common.component;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.Point;
+import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,9 +33,13 @@ public class CyxbsToast {
         TextView tv = (TextView) v.findViewById(R.id.tv_cyxbs_toast);
         tv.setText(text);
 
+        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        Display display = wm.getDefaultDisplay();
+        Point point = new Point();
+        display.getSize(point);
         result.setView(v);
         result.setDuration(duration);
-        result.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.TOP, 0, ContextKt.dp2px(context, 107));
+        result.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.TOP, 0, point.y/8);
 
         return result;
     }
