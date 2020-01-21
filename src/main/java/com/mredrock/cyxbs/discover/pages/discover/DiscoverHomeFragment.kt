@@ -7,16 +7,16 @@ import android.view.View.OVER_SCROLL_IF_CONTENT_SCROLLS
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.TextView
+import android.widget.Toast
 import android.widget.ViewFlipper
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatTextView
+import androidx.fragment.app.Fragment
 import androidx.viewpager2.widget.ViewPager2
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
-import com.mredrock.cyxbs.common.config.DISCOVER_ENTRY
-import com.mredrock.cyxbs.common.config.DISCOVER_NEWS
-import com.mredrock.cyxbs.common.config.DISCOVER_NEWS_ITEM
-import com.mredrock.cyxbs.common.config.MINE_CHECK_IN
+import com.mredrock.cyxbs.common.component.CyxbsToast
+import com.mredrock.cyxbs.common.config.*
 import com.mredrock.cyxbs.common.ui.BaseViewModelFragment
 import com.mredrock.cyxbs.discover.R
 import com.mredrock.cyxbs.discover.utils.BannerAdapter
@@ -49,6 +49,8 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>() {
         iv_check_in.setOnClickListener {
             ARouter.getInstance().build(MINE_CHECK_IN).navigation()
         }
+
+        initFeeds()
 
         super.onActivityCreated(savedInstanceState)
 
@@ -126,6 +128,7 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>() {
         }
     }
 
+    //加载发现首页中跳转按钮
     private fun initFunctions() {
         val functions = MoreFunctionProvider.getHomePageFunctions()
         val imageViewList = mutableListOf<AppCompatImageView>(iv_discover_1, iv_discover_2, iv_discover_3, iv_discover_4)
@@ -143,5 +146,8 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>() {
             }
         }
     }
+    private fun initFeeds(){
+        fragmentManager?.beginTransaction()?.add(R.id.ll_discover_feeds,(ARouter.getInstance().build(DISCOVER_VOLUNTEER_FEED).navigation() as Fragment))?.commit()
 
+    }
 }

@@ -203,7 +203,7 @@
             tools:ignore="MissingConstraints" />
 
         <androidx.appcompat.widget.LinearLayoutCompat
-            android:id="@+id/fl_discover_feeds"
+            android:id="@+id/ll_discover_feeds"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_marginTop="18dp"
@@ -216,6 +216,7 @@
             app:layout_constraintTop_toBottomOf="@+id/tv_discover_1"
             app:showDividers="end"
             tools:ignore="MissingConstraints">
+
 
         </androidx.appcompat.widget.LinearLayoutCompat>
 

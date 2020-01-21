@@ -1,6 +1,7 @@
 package com.mredrock.cyxbs.discover.pages.morefunction
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.mredrock.cyxbs.common.ui.BaseActivity
@@ -32,13 +33,22 @@ class MoreFunctionActivity : BaseActivity() {
         iv_discover_more_function_back.setOnClickListener { finish() }
         iv_discover_more_function_settings.setOnClickListener {
             (rv_discover_more_function.adapter as MoreFunctionRvAdapter).apply {
-                changeSettingMode()
-                if (this.getIsSettingMode()) {
+
+                if (!this.getIsSettingMode()) {
+                    changeSettingMode()
                     iv_discover_more_function_settings.setImageResource(R.drawable.discover_ic_more_function_finish)
                 } else {
-                    iv_discover_more_function_settings.setImageResource(R.drawable.discover_ic_settings)
-                    MoreFunctionProvider.saveHomePageFunctionsToSp(this.getChosenList())
-                    this.resetChosenList()
+
+                    if(getChosenList().size>=3) {
+                        changeSettingMode()
+                        iv_discover_more_function_settings.setImageResource(R.drawable.discover_ic_settings)
+                        MoreFunctionProvider.saveHomePageFunctionsToSp(this.getChosenList())
+                        this.resetChosenList()
+                        Toast.makeText(this@MoreFunctionActivity,"更新成功",Toast.LENGTH_SHORT).show()
+                    }else{
+                        Toast.makeText(this@MoreFunctionActivity,"要选择三个哦",Toast.LENGTH_SHORT).show()
+                    }
+
                 }
             }
         }
