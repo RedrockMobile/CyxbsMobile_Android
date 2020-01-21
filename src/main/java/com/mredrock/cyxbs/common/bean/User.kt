@@ -149,16 +149,15 @@ data class User(@SerializedName("college")
 
     fun refreshToken(): Disposable? {
         val apiService = ApiGenerator.getApiService(ApiService::class.java)
-        if (BaseApp.user != null && BaseApp.user!!.refreshToken != null) {
-            val observableSource = apiService.refreshToken(RefreshToken(BaseApp.user!!.refreshToken!!))
-            return observableSource
-                    .map { it.data }
-                    .setSchedulers()
-                    .safeSubscribeBy {
-                        BaseApp.user?.refreshToken = it.refreshToken
-                        BaseApp.user?.token = it.token
-                    }
-        }
-        return null
+        val refreshToken = BaseApp.user?.refreshToken ?: return null
+        val token  = BaseApp.user?.token ?: return null
+        val observableSource = apiService.refreshToken(RefreshToken(refreshToken))
+        return observableSource
+                .map { it.data }
+                .setSchedulers()
+                .safeSubscribeBy {
+                    BaseApp.user?.refreshToken = it.refreshToken
+                    BaseApp.user?.token = it.token
+                }
     }
 }

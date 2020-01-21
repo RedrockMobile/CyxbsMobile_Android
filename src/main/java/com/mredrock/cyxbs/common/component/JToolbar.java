@@ -1,6 +1,8 @@
 package com.mredrock.cyxbs.common.component;
 
 import android.content.Context;
+import android.graphics.Canvas;
+import android.graphics.Paint;
 import android.os.Build;
 import android.util.AttributeSet;
 import android.widget.TextView;
@@ -10,6 +12,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 
 import com.mredrock.cyxbs.common.R;
+import com.mredrock.cyxbs.common.utils.extensions.ContextKt;
 
 import java.lang.reflect.Field;
 import java.util.Objects;
@@ -23,6 +26,10 @@ public class JToolbar extends Toolbar {
     private boolean isTitleAtLeft = true;
     private TextView mTitleTextView;
     private TextView mSubtitleTextView;
+    private Paint paint = new Paint();
+    {
+        paint.setColor(0x00ffffff);
+    }
 
     public JToolbar(Context context) {
         super(context);
@@ -78,6 +85,7 @@ public class JToolbar extends Toolbar {
         return null;
     }
 
+
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
         super.onLayout(changed, l, t, r, b);
@@ -90,6 +98,14 @@ public class JToolbar extends Toolbar {
         isTitleAtLeft = isLeft;
     }
 
+    @Override
+    protected void dispatchDraw(Canvas canvas) {
+        super.dispatchDraw(canvas);
+        //为什么这个screenWidth绘制不满一个屏幕的宽度？？？
+
+        canvas.drawLine(0, getMeasuredHeight() - ContextKt.dp2px(getContext(),1), 2 * ContextKt.getScreenWidth(getContext()), getMeasuredHeight(), paint);
+    }
+
     private void reLayoutTitle(TextView title) {
         if (title == null || isTitleAtLeft) return;
         //note: o for old ,t for temp, l for left...
@@ -100,5 +116,9 @@ public class JToolbar extends Toolbar {
         if (tl > ol) {
             title.layout(tl, title.getTop(), tl + width, title.getBottom());
         }
+    }
+
+    public void initPaint(int color) {
+        paint.setColor(color);
     }
 }

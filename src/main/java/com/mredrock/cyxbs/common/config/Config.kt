@@ -49,6 +49,8 @@ const val SP_SIGN_REMIND = "signRemind"
 
 const val APP_WEBSITE = "https://wx.idsbllp.cn/app/"
 
+const val ABOUT_US_WEBSITE = "https://redrock.team/aboutus/"
+
 //小控件课表
 const val WIDGET_COURSE = "course_widget"
 const val SP_WIDGET_NEED_FRESH = "sharepreference_widget_need_fresh"

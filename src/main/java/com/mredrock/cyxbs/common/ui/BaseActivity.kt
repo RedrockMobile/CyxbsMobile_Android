@@ -9,6 +9,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.view.Menu
 import android.view.View
+import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.annotation.DrawableRes
 import androidx.appcompat.app.AppCompatActivity
@@ -16,16 +17,20 @@ import androidx.appcompat.widget.Toolbar
 import com.afollestad.materialdialogs.MaterialDialog
 import com.alibaba.android.arouter.launcher.ARouter
 import com.mredrock.cyxbs.common.R
+import com.mredrock.cyxbs.common.component.JToolbar
 import com.mredrock.cyxbs.common.event.AskLoginEvent
 import com.mredrock.cyxbs.common.event.LoginEvent
 import com.mredrock.cyxbs.common.event.LoginStateChangeEvent
 import com.mredrock.cyxbs.common.utils.LogUtils
+import com.mredrock.cyxbs.common.utils.extensions.getScreenWidth
 import com.umeng.analytics.MobclickAgent
 import kotlinx.android.synthetic.main.common_toolbar.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import org.jetbrains.anko.backgroundResource
 import org.jetbrains.anko.startActivity
+import org.jetbrains.anko.windowManager
 
 /**
  * Created By jay68 on 2018/8/9.
@@ -71,7 +76,7 @@ abstract class BaseActivity : AppCompatActivity() {
     }
 
     val common_toolbar get() = toolbar
-    val common_splite_line get() = split_line
+
     var menu: Menu? = null
         private set
 
@@ -86,6 +91,14 @@ abstract class BaseActivity : AppCompatActivity() {
             setNavigationIcon(icon)
             setNavigationOnClickListener(listener)
         }
+    }
+    protected fun JToolbar.initWithSplitLine(title:String,
+                                             withSplitLine:Boolean = true,
+                                             @DrawableRes icon:Int = R.drawable.common_ic_back,
+                                             listener:View.OnClickListener? = View.OnClickListener { finish() }){
+        initPaint(R.color.commonDefaultDivideLineColor)
+        setTitleLocationAtLeft(false)
+        init(title,icon,listener)
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
