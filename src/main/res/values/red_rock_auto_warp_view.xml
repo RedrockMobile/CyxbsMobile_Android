@@ -4,6 +4,7 @@
         <attr name="verticalsSpacing" format="dimension" />
         <attr name="horizontalSpacing" format="dimension" />
         <attr name="maxLine" format="integer" />
+        <attr name="maxColumn" format="integer" />
 
 <!--        严格模式，部分View测量的宽高与Draw之后的宽高是不一样的，-->
 <!--        例如TextView存在内容过长自动换行的问题，然后会导致布局出现问题-->

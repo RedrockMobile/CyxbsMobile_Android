@@ -13,7 +13,7 @@ import com.mredrock.cyxbs.common.R
  * description：一个顶部有圆角，并且有轻微蓝色阴影,使用方法和标准的bottomSheetDialog一样
  * bottomSheetDialog里面要显示的View设置进去就好
  */
-class RedRockBottomSheetDialog(context: Context) : BottomSheetDialog(context, R.style.BottomSheetDialogTheme) {
+open class RedRockBottomSheetDialog(context: Context) : BottomSheetDialog(context, R.style.BottomSheetDialogTheme) {
     override fun setContentView(view: View) {
         val viewGroup = LayoutInflater.from(context).inflate(R.layout.common_red_rock_bottom_sheet_dalog_container, null) as FrameLayout
         viewGroup.addView(view)
