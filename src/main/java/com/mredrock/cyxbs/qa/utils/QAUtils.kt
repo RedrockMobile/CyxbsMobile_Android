@@ -1,6 +1,7 @@
 package com.mredrock.cyxbs.qa.utils
 
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import com.mredrock.cyxbs.common.utils.extensions.gone
 import com.mredrock.cyxbs.common.utils.extensions.visible
 import com.mredrock.cyxbs.qa.R
@@ -10,12 +11,12 @@ import com.mredrock.cyxbs.qa.R
  */
 internal fun TextView.setNicknameTv(nickname: String, showGender: Boolean, isMale: Boolean) {
     //为了防止后端传null
-    text = nickname?:""
+    text = nickname ?: ""
     if (showGender) {
         val drawable = if (isMale) {
-            context.resources.getDrawable(R.drawable.qa_ic_gender_male)
+            ContextCompat.getDrawable(context, R.drawable.qa_ic_gender_male)
         } else {
-            context.resources.getDrawable(R.drawable.qa_ic_gender_female)
+            ContextCompat.getDrawable(context, R.drawable.qa_ic_gender_female)
         }
         setCompoundDrawablesRelativeWithIntrinsicBounds(null, null, drawable, null)
     } else {
@@ -32,9 +33,9 @@ internal fun TextView.setPraise(praiseNum: String?,
     }
     isPraised ?: return
     val drawable = if (isPraised) {
-        context.resources.getDrawable(praisedIcon)
+        ContextCompat.getDrawable(context, praisedIcon)
     } else {
-        context.resources.getDrawable(praiseIcon)
+        ContextCompat.getDrawable(context, praiseIcon)
     }
     setCompoundDrawablesRelativeWithIntrinsicBounds(drawable, null, null, null)
 }

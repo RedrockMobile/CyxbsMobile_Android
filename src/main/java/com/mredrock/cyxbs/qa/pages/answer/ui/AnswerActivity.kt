@@ -16,6 +16,8 @@ import com.google.gson.Gson
 import com.mredrock.cyxbs.common.config.QA_ANSWER
 import com.mredrock.cyxbs.common.event.DraftEvent
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
+import com.mredrock.cyxbs.common.utils.extensions.gone
+import com.mredrock.cyxbs.common.utils.extensions.visible
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.bean.Content
 import com.mredrock.cyxbs.qa.pages.answer.viewmodel.AnswerViewModel
@@ -23,6 +25,7 @@ import com.mredrock.cyxbs.qa.ui.activity.ViewImageActivity
 import com.mredrock.cyxbs.qa.utils.CHOOSE_PHOTO_REQUEST
 import com.mredrock.cyxbs.qa.utils.selectImageFromAlbum
 import kotlinx.android.synthetic.main.qa_activity_answer.*
+import kotlinx.android.synthetic.main.qa_common_toolbar.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -49,14 +52,7 @@ class AnswerActivity : BaseViewModelActivity<AnswerViewModel>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.qa_activity_answer)
-        common_toolbar.init(getString(R.string.qa_answer_question_title), listener = View.OnClickListener {
-            if (edt_answer_content.text.isNullOrEmpty()) {
-                finish()
-                return@OnClickListener
-            }
-            saveDraft()
-            finish()
-        })
+        initToolbar()
         initView()
         initImageAddView()
         viewModel.backAndRefreshPreActivityEvent.observeNotNull {
@@ -66,6 +62,26 @@ class AnswerActivity : BaseViewModelActivity<AnswerViewModel>() {
                 }
                 setResult(Activity.RESULT_OK)
                 finish()
+            }
+        }
+    }
+
+    private fun initToolbar() {
+        qa_ib_toolbar_back.setOnClickListener(View.OnClickListener {
+            if (edt_answer_content.text.isNullOrEmpty()) {
+                finish()
+                return@OnClickListener
+            }
+            saveDraft()
+            finish()
+        })
+        qa_tv_toolbar_title.text = getString(R.string.qa_answer_question_title)
+        qa_ib_toolbar_more.gone()
+        qa_tv_toolbar_right.apply {
+            visible()
+            text = getString(R.string.qa_answer_btn_text)
+            setOnClickListener {
+                viewModel.submitAnswer(edt_answer_content.text.toString())
             }
         }
     }
@@ -178,17 +194,6 @@ class AnswerActivity : BaseViewModelActivity<AnswerViewModel>() {
         setImageBitmap(bitmap)
     }
 
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(R.menu.qa_answer_toolbar_menu, menu)
-        return super.onCreateOptionsMenu(menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        if (item?.itemId == R.id.qa_answer_submit_answer) {
-            viewModel.submitAnswer(edt_answer_content.text.toString())
-        }
-        return super.onOptionsItemSelected(item)
-    }
 
     override fun getViewModelFactory(): AnswerViewModel.Factory {
         return if (intent.getStringExtra("qid") == null) {

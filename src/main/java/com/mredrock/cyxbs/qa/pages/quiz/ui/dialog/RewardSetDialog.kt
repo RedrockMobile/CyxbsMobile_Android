@@ -48,6 +48,7 @@ class RewardSetDialog(context: Context, rewardCount: Int) : BottomSheetDialog(co
     private val daysDisplayName: Array<String> by lazy { initDayDisplayName() }
     private val todayHourStartIndex: Int
     private val todayMinuteStartIndex: Int
+    private val daysCommitName: Array<String> by lazy { initDaysCommitName() }
 
     init {
         setContentView(container)
@@ -134,16 +135,7 @@ class RewardSetDialog(context: Context, rewardCount: Int) : BottomSheetDialog(co
             }
         }
         fl_quiz_submit.setOnClickListener {
-            val day: String
-            if (showToday) {
-                day = Array(MAX_DAY) {
-                    default.time
-                            .toFormatString("yyyy- MM-dd")
-                }[tp_quiz_day.value]
-            } else {
-                day = daysDisplayName[tp_quiz_day.value]
-            }
-            onSubmitButtonClickListener("$day ${todayHourStartIndex}时${todayMinuteStartIndex}分", rewardCountList[vp_set_reward_count.currentItem])
+            onSubmitButtonClickListener("${daysCommitName[tp_quiz_day.value]} ${tp_quiz_hour.value}时${tp_quiz_minute.value}分", rewardCountList[vp_set_reward_count.currentItem])
         }
     }
 
@@ -168,6 +160,25 @@ class RewardSetDialog(context: Context, rewardCount: Int) : BottomSheetDialog(co
                             .toFormatString("yyyy-MM-dd")
                 }
             } else {
+                now.apply { add(Calendar.DAY_OF_MONTH, 1) }
+                        .time
+                        .toFormatString("yyyy-MM-dd")
+            }
+        }
+    }
+
+    private fun initDaysCommitName(): Array<String> {
+        return if (showToday) {
+            Array(MAX_DAY) {
+                if (it == 0) {
+                    now.time.toFormatString("yyyy-MM-dd")
+                } else
+                    now.apply { add(Calendar.DAY_OF_MONTH, 1) }
+                            .time
+                            .toFormatString("yyyy-MM-dd")
+            }
+        } else {
+            Array(MAX_DAY) {
                 now.apply { add(Calendar.DAY_OF_MONTH, 1) }
                         .time
                         .toFormatString("yyyy-MM-dd")

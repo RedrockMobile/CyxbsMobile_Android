@@ -4,7 +4,6 @@ import android.app.Activity
 import android.app.ProgressDialog
 import android.content.Intent
 import android.os.Bundle
-import android.view.Menu
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
@@ -23,6 +22,7 @@ import com.mredrock.cyxbs.common.ui.BaseActivity
 import com.mredrock.cyxbs.common.utils.extensions.gone
 import com.mredrock.cyxbs.common.viewmodel.event.ProgressDialogEvent
 import com.mredrock.cyxbs.qa.R
+import com.mredrock.cyxbs.qa.bean.Answer
 import com.mredrock.cyxbs.qa.bean.Question
 import com.mredrock.cyxbs.qa.component.recycler.RvAdapterWrapper
 import com.mredrock.cyxbs.qa.network.NetworkState
@@ -33,7 +33,7 @@ import com.mredrock.cyxbs.qa.pages.comment.ui.CommentListActivity
 import com.mredrock.cyxbs.qa.ui.adapter.EmptyRvAdapter
 import com.mredrock.cyxbs.qa.ui.adapter.FooterRvAdapter
 import kotlinx.android.synthetic.main.qa_activity_answer_list.*
-import kotlinx.android.synthetic.main.qa_recycler_item_answer_toolbar.*
+import kotlinx.android.synthetic.main.qa_common_toolbar.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -109,15 +109,31 @@ class AnswerListActivity : BaseActivity() {
     private fun initView(question: Question) {
         initRv()
         //设置标题
-        tv_question_toolbar_title.text = question.title
-        ib_question_toolbar_back.setOnClickListener { finish() }
+        qa_tv_toolbar_title.text = question.title
+        qa_ib_toolbar_back.setOnClickListener { finish() }
         observeListChangeEvent()
-        //初始化BottomSheetDialog
-        ib_question_toolbar_more.setOnClickListener {
-            ReportDialog(this@AnswerListActivity)
-                    .show()
+        if (question.isSelf) {
+            //不展示更多功能
+            qa_ib_toolbar_more.gone()
+        } else {
+            qa_ib_toolbar_more.setOnClickListener {
+                ReportDialog(this@AnswerListActivity).apply {
+                    pressReport = {
+                        viewModel.report(it)
+                    }
+                    viewModel.backPreActivityEvent.observeNotNull {
+                        dismiss()
+                    }
+                    viewModel.backPreActivityIgnoreEvent.observeNotNull{
+                        dismiss()
+                        finish()
+                    }
+                    pressQuestionIgnore={
+                        viewModel.ignoreQuestion()
+                    }
+                }.show()
+            }
         }
-
     }
 
     private fun initRv() {
@@ -128,6 +144,14 @@ class AnswerListActivity : BaseActivity() {
         answerListAdapter = AnswerListAdapter(this).apply {
             onItemClickListener = { _, answer ->
                 CommentListActivity.activityStart(this@AnswerListActivity, viewModel.questionLiveData.value!!, answer)
+            }
+            onPriseClickListener = { i: Int, answer: Answer ->
+                viewModel.clickPraiseButton(answer)
+                viewModel.apply {
+                    refreshPreActivityEvent.observeNotNull {
+                        answerListAdapter.notifyItemChanged(i)
+                    }
+                }
             }
         }
         footerRvAdapter = FooterRvAdapter { viewModel.retry() }
@@ -201,7 +225,6 @@ class AnswerListActivity : BaseActivity() {
         }
     }
 
-
     private fun switchToQuestioner() {
         fl_answer.gone()
     }
@@ -232,11 +255,6 @@ class AnswerListActivity : BaseActivity() {
                 }
             }
         }
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.qa_report_and_share_menu, menu)
-        return true
     }
 
 

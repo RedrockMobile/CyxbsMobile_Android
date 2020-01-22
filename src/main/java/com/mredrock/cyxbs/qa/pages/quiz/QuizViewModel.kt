@@ -18,7 +18,7 @@ import com.mredrock.cyxbs.common.viewmodel.event.SingleLiveEvent
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.bean.QuizResult
 import com.mredrock.cyxbs.qa.network.ApiService
-import com.mredrock.cyxbs.qa.pages.quiz.ui.dialog.TimePickDialog
+import com.mredrock.cyxbs.qa.pages.quiz.ui.dialog.RewardSetDialog
 import com.mredrock.cyxbs.qa.utils.isNullOrEmpty
 import com.mredrock.cyxbs.qa.utils.toDate
 import com.mredrock.cyxbs.qa.utils.toFormatString
@@ -67,8 +67,8 @@ class QuizViewModel(var type: String) : BaseViewModel() {
 
     fun setDisAppearTime(rawTime: String): Boolean {
         val date = rawTime.toDate("yyyy-MM-dd HH时mm分")
-        //计算与当前时间差，不允许低于TimePickDialog.MIN_GAP_HOUR定义的值（可以有5分钟的误差）/
-        if (date.time - System.currentTimeMillis() < TimePickDialog.MIN_GAP_HOUR * 3600000 - 3000000) {
+        //计算与当前时间差，不允许低于TimePickDialog.MIN_GAP_HOUR定义的值，允许5分钟误差/
+        if (date.time - System.currentTimeMillis() < RewardSetDialog.MIN_GAP_HOUR * 3600000 - 300000) {
             longToastEvent.value = R.string.qa_quiz_error_time_too_short
             return false
         }

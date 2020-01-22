@@ -4,6 +4,8 @@ import android.content.Context
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
+import com.mredrock.cyxbs.common.BaseApp
+import com.mredrock.cyxbs.common.utils.extensions.gone
 import com.mredrock.cyxbs.common.utils.extensions.setAvatarImageFromUrl
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.bean.Answer
@@ -28,6 +30,7 @@ class AnswerListAdapter(context: Context) : BaseRvAdapter<Answer>() {
         }
     }
 
+    var onPriseClickListener: ((Int, Answer) -> Unit)? = null
     var onItemClickListener: ((Int, Answer) -> Unit)? = null
 
     private val sortByTime = context.getString(R.string.qa_answer_list_sort_by_time)
@@ -41,12 +44,12 @@ class AnswerListAdapter(context: Context) : BaseRvAdapter<Answer>() {
     fun resortList(sortBy: String) {
         this.sortBy = sortBy
         when (sortBy) {
-            sortByDefault->{
+            sortByDefault -> {
                 dataList.sortWith(Comparator { o1, o2 ->
                     compareValuesBy(o2, o1, Answer::isAdopted, Answer::hotValue, Answer::createdAt)
                 })
             }
-            sortByTime->{
+            sortByTime -> {
                 dataList.sortByDescending(Answer::createdAt)
             }
         }
@@ -67,10 +70,27 @@ class AnswerListAdapter(context: Context) : BaseRvAdapter<Answer>() {
         onItemClickListener?.invoke(position, data)
     }
 
+    override fun onBindViewHolder(holder: BaseViewHolder<Answer>, position: Int) {
+        super.onBindViewHolder(holder, position)
+        holder.itemView.apply {
+            tv_answer_praise_count.setOnClickListener {
+                onPriseClickListener?.invoke(position, dataList[position])
+            }
+        }
+    }
+
     inner class AnswerViewHolder(parent: ViewGroup) : BaseViewHolder<Answer>(parent, R.layout.qa_recycler_item_answer) {
         override fun refresh(data: Answer?) {
             data ?: return
             itemView.apply {
+                //判断是否显示
+                if (data.userId == BaseApp.user?.id) {
+                    btn_answer_more.gone()
+                    tv_answer_praise_count.gone()
+                }
+                if (data.commentNumInt == 0) {
+                    tv_answer_reply_count.gone()
+                }
                 iv_answer_avatar.setAvatarImageFromUrl(data.photoThumbnailSrc)
                 tv_answer_nickname.setNicknameTv(data.nickname, isEmotion, data.isMale)
                 setAdoptedTv(tv_adopted, tv_adopt, data.isAdopted, hasAdoptedAnswer || !isSelf)
@@ -81,6 +101,7 @@ class AnswerListAdapter(context: Context) : BaseRvAdapter<Answer>() {
                 setDate(tv_answer_publish_at, data.createdAt)
                 tv_answer_reply_count.text = data.commentNum
                 tv_answer_praise_count.setPraise(data.praiseNum, data.isPraised)
+
             }
         }
 

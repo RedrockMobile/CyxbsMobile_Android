@@ -6,13 +6,14 @@
     android:layout_height="match_parent"
     android:background="@color/whiteBackground"
     android:orientation="vertical"
+    android:fitsSystemWindows="true"
     tools:context=".pages.answer.ui.AnswerListActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
-        <include layout="@layout/qa_recycler_item_answer_toolbar" />
+        <include layout="@layout/qa_common_toolbar" />
 
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
             android:id="@+id/swipe_refresh_layout"

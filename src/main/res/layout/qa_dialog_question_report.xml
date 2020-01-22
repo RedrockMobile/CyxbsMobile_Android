@@ -17,7 +17,9 @@
         android:textColor="@color/qa_question_report_text_background_color"
         android:textSize="14sp" />
 
-    <include layout="@layout/qa_dialog_question_report_dialog_type_layout" />
+    <include
+        android:id="@+id/layout_report_view_group"
+        layout="@layout/qa_dialog_question_report_dialog_type_layout" />
 
 
 </androidx.appcompat.widget.LinearLayoutCompat>

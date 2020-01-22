@@ -44,7 +44,7 @@
     <string name="qa_quiz_anonymous">匿名求助</string>
     <string name="qa_quiz_tags_edit_dialog_title">添加话题</string>
     <string name="qa_quiz_dialog_sure">确定</string>
-    <string name="qa_quiz_dialog_exit">退出</string>
+    <string name="qa_quiz_dialog_exit">保存并退出</string>
     <string name="qa_quiz_dialog_accept">采纳</string>
     <string name="qa_quiz_tag_edit_dialog_hot_tags">热门话题</string>
     <string name="qa_quiz_hint_title_empty">标题不能为空哦~</string>
@@ -85,6 +85,20 @@
     <string name="qa_quiz_dialog_cancel_text">取消</string>
     <string name="qa_reward_set_title_text">积分设置</string>
     <string name="qa_question_report_text">举报该问题</string>
+    <string name="qa_quiz_toolbar_title_text">提问</string>
+    <string name="qa_quiz_dialog_exit_text">退 出 编 辑</string>
+    <string name="qa_quiz_dialog_not_save_text">你的资料还未保存，是否退出？</string>
+    <string name="qa_quiz_reward_more_text">你的悬赏积分超过你拥有积分了</string>
+    <string name="qa_quiz_down_reward_get_more_text">降低悬赏积分或者去赚取更多积分吧~</string>
+    <string name="qa_quzi_reward_not_enough_text">积 分 不 够</string>
+    <string name="qa_report_rubbish_text">垃圾广告信息</string>
+    <string name="qa_report_useless_text">无用提问</string>
+    <string name="qa_report_illegal_text">煽动信息、造谣</string>
+    <string name="qa_report_infringement_text">侵权信息</string>
+    <string name="qa_report_other_text">其他</string>
+    <string name="qa_report_ignore_text">屏蔽该问题</string>
+    <string name="qa_report_dialog_cancel_text">取消</string>
+    <string name="qa_report_explain">举报成功获得积分</string>
 
     <string-array name="qa_report_type">
         <item>色情低俗</item>

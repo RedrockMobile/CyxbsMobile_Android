@@ -4,9 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
     tools:context="com.mredrock.cyxbs.qa.pages.answer.ui.AnswerActivity">
 
-    <include layout="@layout/common_toolbar" />
+    <include layout="@layout/qa_common_toolbar" />
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"

@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="@drawable/qa_dialog_notice_my_reward_not_enough_background">
+    android:layout_gravity="center"
+    android:background="@drawable/qa_dialog_notice_my_reward_not_enough_background"
+    android:minWidth="255dp"
+    android:minHeight="329dp">
+
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/iv_pic"
         android:layout_width="wrap_content"
@@ -22,17 +25,17 @@
         android:textColor="@color/levelTwoFontColor"
         android:textSize="18sp"
         android:textStyle="bold"
-        tools:text="积 分 不 够" />
+        android:text="@string/qa_quzi_reward_not_enough_text" />
 
     <TextView
         android:id="@+id/tv_notice_first_line"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/tv_title"
-        android:layout_marginTop="10dp"
         android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
         android:gravity="center"
-        android:text="你的悬赏积分超过你拥有积分了"
+        android:text="@string/qa_quiz_reward_more_text"
         android:textColor="@color/levelFourFontColor"
         android:textSize="12sp" />
 
@@ -40,24 +43,28 @@
         android:id="@+id/tv_notice_second_line"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
         android:layout_below="@id/tv_notice_first_line"
         android:layout_centerHorizontal="true"
+        android:layout_marginTop="5dp"
         android:gravity="center"
-        android:text="降低悬赏积分或者去赚取更多积分吧~"
+        android:text="@string/qa_quiz_down_reward_get_more_text"
         android:textColor="@color/levelFourFontColor"
         android:textSize="12sp" />
+
     <Button
-        android:layout_width="92dp"
-        android:layout_height="34dp"
+        android:id="@+id/btn_quiz_reward_not_enough_confirm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_below="@+id/tv_notice_second_line"
-        android:layout_marginTop="14dp"
         android:layout_centerHorizontal="true"
+        android:layout_marginTop="14dp"
         android:layout_marginBottom="28dp"
         android:background="@drawable/qa_main_have_question_btn_background"
+        android:minWidth="92dp"
+        android:minHeight="34dp"
         android:text="@string/qa_quiz_dialog_sure"
-        android:textSize="15sp"
-        android:textColor="@color/whiteFontColor" />
+        android:textColor="@color/whiteFontColor"
+        android:textSize="15sp" />
 
 </RelativeLayout>
 

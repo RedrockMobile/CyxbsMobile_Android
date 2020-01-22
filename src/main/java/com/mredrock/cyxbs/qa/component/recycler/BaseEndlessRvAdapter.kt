@@ -2,7 +2,6 @@ package com.mredrock.cyxbs.qa.component.recycler
 
 import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
-import com.mredrock.cyxbs.common.utils.LogUtils
 
 /**
  * Created By jay68 on 2018/9/13.
@@ -10,7 +9,6 @@ import com.mredrock.cyxbs.common.utils.LogUtils
 abstract class BaseEndlessRvAdapter<T>(diffCallback: DiffUtil.ItemCallback<T>) : PagedListAdapter<T, BaseViewHolder<T>>(diffCallback) {
     override fun onBindViewHolder(holder: BaseViewHolder<T>, position: Int) {
         val data = getItem(position)    //if a nul, placeholder is at the specified position
-        LogUtils.d("itemCount",itemCount.toString())
         holder.refresh(data)
         holder.itemView.setOnClickListener {
             data ?: return@setOnClickListener

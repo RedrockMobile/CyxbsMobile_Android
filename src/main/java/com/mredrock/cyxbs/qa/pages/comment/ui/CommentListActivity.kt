@@ -3,6 +3,7 @@ package com.mredrock.cyxbs.qa.pages.comment.ui
 import android.app.Activity
 import android.os.Bundle
 import android.view.WindowManager
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.qa.R
@@ -16,7 +17,7 @@ import com.mredrock.cyxbs.qa.ui.adapter.EmptyRvAdapter
 import com.mredrock.cyxbs.qa.ui.adapter.FooterRvAdapter
 import kotlinx.android.synthetic.main.qa_activity_comment_list.*
 import kotlinx.android.synthetic.main.qa_comment_new_publish_layout.*
-import kotlinx.android.synthetic.main.qa_recycler_item_comment_toolbar.*
+import kotlinx.android.synthetic.main.qa_common_toolbar.*
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.jetbrains.anko.startActivityForResult
@@ -53,14 +54,22 @@ class CommentListActivity : BaseViewModelActivity<CommentListViewModel>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.qa_activity_comment_list)
-
         val title = intent.getStringExtra("title")
         val showAdoptIcon = intent.getBooleanExtra("showAdoptIcon", false)
         val isEmotion = intent.getBooleanExtra("isEmotion", false)
-        val answerNub = intent.getStringExtra("answerNum")
-        qa_tv_comment_toolbar_title.text = baseContext.getString(R.string.qa_comment_list_comment_count, answerNub)
+//        qa_tv_comment_toolbar_title.text = baseContext.getString(R.string.qa_comment_list_comment_count, answerNub)
+        initToolbar()
         initRv(title, showAdoptIcon, isEmotion)
         initCommentSheet()
+    }
+
+    private fun initToolbar() {
+        qa_ib_toolbar_back.setOnClickListener { finish() }
+        val answerNub = intent.getStringExtra("answerNum")
+        qa_tv_toolbar_title.text = baseContext.getString(R.string.qa_comment_list_comment_count, answerNub)
+        qa_ib_toolbar_more.setOnClickListener {
+            //todo
+        }
     }
 
     private fun initRv(title: String, showAdoptIcon: Boolean, isEmotion: Boolean) {

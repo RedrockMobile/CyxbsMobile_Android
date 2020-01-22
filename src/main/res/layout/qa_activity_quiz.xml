@@ -6,9 +6,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/whiteBackground"
     android:orientation="vertical"
+    android:fitsSystemWindows="true"
     tools:context=".pages.quiz.ui.QuizActivity">
 
-    <include layout="@layout/common_toolbar" />
+    <include layout="@layout/qa_common_toolbar" />
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"

@@ -5,6 +5,7 @@ import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.network.ApiGenerator
+import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.checkError
 import com.mredrock.cyxbs.common.utils.extensions.mapOrThrowApiException
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
@@ -16,6 +17,7 @@ import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.bean.Answer
 import com.mredrock.cyxbs.qa.bean.Question
 import com.mredrock.cyxbs.qa.network.ApiService
+import com.mredrock.cyxbs.qa.network.NetworkState
 import com.mredrock.cyxbs.qa.pages.answer.model.AnswerDataSource
 import org.jetbrains.anko.longToast
 
@@ -27,12 +29,16 @@ class AnswerListViewModel(question: Question) : BaseViewModel() {
     private val answerPagedList: LiveData<PagedList<Answer>>
     val questionLiveData = MutableLiveData<Question>()
     val backAndRefreshPreActivityEvent = SingleLiveEvent<Boolean>()
+    val backPreActivityEvent = SingleLiveEvent<Boolean>()
+    val backPreActivityIgnoreEvent = SingleLiveEvent<Boolean>()
 
     private val answerList: LiveData<List<Answer>>
     val networkState: LiveData<Int>
     val initialLoad: LiveData<Int>
     var myRewardCount = 0
 
+    private var praiseNetworkState = NetworkState.SUCCESSFUL
+    val refreshPreActivityEvent = SingleLiveEvent<Boolean>()
     val qid get() = questionLiveData.value!!.id
 
     private val factory: AnswerDataSource.Factory
@@ -57,7 +63,7 @@ class AnswerListViewModel(question: Question) : BaseViewModel() {
 
     fun LifecycleOwner.observeAnswerList(onChange: Observer<List<Answer>>) {
         answerList.observe(this, onChange)
-        answerPagedList.observe(this, Observer {  })
+        answerPagedList.observe(this, Observer { })
     }
 
     fun adoptAnswer(aId: String) {
@@ -71,6 +77,22 @@ class AnswerListViewModel(question: Question) : BaseViewModel() {
                 .doFinally { progressDialogEvent.value = ProgressDialogEvent.DISMISS_DIALOG_EVENT }
                 .safeSubscribeBy {
                     backAndRefreshPreActivityEvent.value = true
+                }
+    }
+
+    //todo 等后端换接口
+    fun report(content: String) {
+        progressDialogEvent.value = ProgressDialogEvent.SHOW_NONCANCELABLE_DIALOG_EVENT
+        val user = BaseApp.user ?: return
+        ApiGenerator.getApiService(ApiService::class.java)
+                .report(user.stuNum ?: "", user.idNum ?: "", qid, content, "")
+                .setSchedulers()
+                .checkError()
+                .doFinally { progressDialogEvent.value = ProgressDialogEvent.DISMISS_DIALOG_EVENT }
+                .doOnError { toastEvent.value = R.string.qa_service_error_hint }
+                .safeSubscribeBy {
+                    toastEvent.value = R.string.qa_hint_report_success
+                    backPreActivityEvent.value = true
                 }
     }
 
@@ -120,12 +142,49 @@ class AnswerListViewModel(question: Question) : BaseViewModel() {
 
     fun ignoreQuestion() {
         val user = BaseApp.user ?: return
-        val qid = questionLiveData.value!!.id
+        val qid = questionLiveData.value?.id
+        LogUtils.d("ignoreInfo",qid.toString())
         ApiGenerator.getApiService(ApiService::class.java)
-                .ignoreQuestion(user.stuNum!!, user.idNum!!, qid)
+                .ignoreQuestion(user.stuNum?:"", user.idNum?:"", qid?:"")
                 .setSchedulers()
                 .checkError()
-                .safeSubscribeBy { backAndRefreshPreActivityEvent.value = true }
+                .doOnError{ toastEvent.value = R.string.qa_service_error_hint}
+                .safeSubscribeBy { backPreActivityIgnoreEvent.value = true }
+    }
+
+    fun clickPraiseButton(answer: Answer) {
+        fun Boolean.toInt() = 1.takeIf { this@toInt } ?: -1
+
+        if (praiseNetworkState == NetworkState.LOADING) {
+            toastEvent.value = R.string.qa_comment_list_comment_loading_hint
+            return
+        }
+        val user = BaseApp.user ?: return
+        ApiGenerator.getApiService(ApiService::class.java)
+                .run {
+                    if (answer.isPraised) {
+                        cancelPraiseAnswer(answer.id, user.stuNum ?: "", user.idNum ?: "")
+                    } else {
+                        praiseAnswer(answer.id, user.stuNum ?: "", user.idNum ?: "")
+                    }
+                }
+                .checkError()
+                .setSchedulers()
+                .doOnError {
+                    toastEvent.value = R.string.qa_service_error_hint
+                }
+                .doFinally {
+                    praiseNetworkState = NetworkState.SUCCESSFUL
+                }
+                .safeSubscribeBy {
+                    answer.apply {
+                        val state = !isPraised
+                        praiseNum = "${answer.praiseNumInt + state.toInt()}"
+                        isPraised = state
+                    }
+                    refreshPreActivityEvent.value = true
+                }
+                .lifeCycle()
     }
 
     class Factory(private val question: Question) : ViewModelProvider.Factory {

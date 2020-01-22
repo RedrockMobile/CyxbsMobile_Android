@@ -7,9 +7,9 @@ import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.ImageView
 import androidx.annotation.IntDef
+import androidx.core.view.forEach
 import com.mredrock.cyxbs.common.utils.extensions.loadRedrockImage
 import org.jetbrains.anko.dip
-import org.jetbrains.anko.forEachChild
 
 /**
  * 图片九宫格布局
@@ -73,7 +73,7 @@ class NineGridView(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : 
             else -> ((widthLeft - horizontalGap * 2) / 3).toInt()
         }
         val childHeight: Int = (childWidth / childSizeRatio).toInt()
-        forEachChild { it.measure(getMeasureSpec(childWidth), getMeasureSpec(childHeight)) }
+        forEach { it.measure(getMeasureSpec(childWidth), getMeasureSpec(childHeight)) }
 
         var parentHeight = paddingTop + paddingBottom
         parentHeight += when (childCount) {
@@ -88,7 +88,7 @@ class NineGridView(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : 
         val widthLeft = parentWidth - paddingLeft - paddingTop
         val childWidth = ((widthLeft - horizontalGap * 2) / 3).toInt()
         val childHeight: Int = (childWidth / childSizeRatio).toInt()
-        forEachChild { it.measure(getMeasureSpec(childWidth), getMeasureSpec(childHeight)) }
+        forEach { it.measure(getMeasureSpec(childWidth), getMeasureSpec(childHeight)) }
 
         val col = childCount / 3 + (1.takeIf { childCount % 3 != 0 } ?: 0)
         var parentHeight = paddingTop + paddingBottom
@@ -101,7 +101,7 @@ class NineGridView(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : 
     override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
         var top = paddingTop
         var left = paddingLeft
-        forEachChild {
+        forEach {
             var right = left + it.measuredWidth
             var bottom = top + it.measuredHeight
             if (right - paddingLeft >= measuredWidth - paddingRight) {

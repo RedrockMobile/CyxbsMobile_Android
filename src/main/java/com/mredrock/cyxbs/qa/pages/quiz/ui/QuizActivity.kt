@@ -1,9 +1,12 @@
 package com.mredrock.cyxbs.qa.pages.quiz.ui
 
 import android.app.Activity
+import android.app.Dialog
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.*
 import android.widget.ImageView
@@ -13,10 +16,12 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.google.gson.Gson
+import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.common.config.QA_QUIZ
 import com.mredrock.cyxbs.common.event.DraftEvent
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
-import com.mredrock.cyxbs.common.utils.LogUtils
+import com.mredrock.cyxbs.common.utils.extensions.gone
+import com.mredrock.cyxbs.common.utils.extensions.visible
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.bean.Question
 import com.mredrock.cyxbs.qa.pages.quiz.ui.dialog.RewardSetDialog
@@ -25,6 +30,9 @@ import com.mredrock.cyxbs.qa.ui.activity.ViewImageActivity
 import com.mredrock.cyxbs.qa.utils.CHOOSE_PHOTO_REQUEST
 import com.mredrock.cyxbs.qa.utils.selectImageFromAlbum
 import kotlinx.android.synthetic.main.qa_activity_quiz.*
+import kotlinx.android.synthetic.main.qa_common_toolbar.*
+import kotlinx.android.synthetic.main.qa_dialog_notice_exit_quiz.*
+import kotlinx.android.synthetic.main.qa_dialog_notice_reward_not_enough.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -47,6 +55,8 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
     override val viewModelClass = QuizViewModel::class.java
     override val isFragmentActivity = false
     private var draftId = "-1"
+    private val exitDialog by lazy { createExitDialog() }
+    val rewardNotEnoughDialog by lazy { createRewardNotEnoughDialog() }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -96,15 +106,35 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
     }
 
     private fun initToolbar() {
-        common_toolbar.init(getString(R.string.qa_quiz_title), listener = View.OnClickListener {
+        qa_ib_toolbar_back.setOnClickListener(View.OnClickListener {
             if (edt_quiz_title.text.isNullOrEmpty() && edt_quiz_content.text.isNullOrEmpty()) {
                 finish()
                 return@OnClickListener
             }
-            saveDraft()
-            finish()
+            exitDialog.show()
         })
-
+        qa_tv_toolbar_title.text = getString(R.string.qa_quiz_toolbar_title_text)
+        qa_ib_toolbar_more.gone()
+        qa_tv_toolbar_right.apply {
+            visible()
+            text = getString(R.string.qa_quiz_dialog_next)
+            setOnClickListener {
+                val result = viewModel.submitTitleAndContent(edt_quiz_title.text.toString(), edt_quiz_content.text.toString())
+                if (result) {
+                    RewardSetDialog(this@QuizActivity, viewModel.myRewardCount).apply {
+                        onSubmitButtonClickListener = { time: String, reward: Int ->
+                            if (viewModel.setDisAppearTime(time)) {
+                                if (viewModel.quiz(reward)) {
+                                    dismiss()
+                                } else {
+                                    rewardNotEnoughDialog.show()
+                                }
+                            }
+                        }
+                    }.show()
+                }
+            }
+        }
     }
 
     private fun initImageAddView() {
@@ -171,30 +201,6 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
         setImageBitmap(bitmap)
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.qa_quiz_toolbar_menu, menu)
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        if (item?.itemId == R.id.qa_quiz_next) {
-            val result = viewModel.submitTitleAndContent(edt_quiz_title.text.toString(), edt_quiz_content.text.toString())
-            if (result) {
-                RewardSetDialog(this@QuizActivity, viewModel.myRewardCount).apply {
-                    onSubmitButtonClickListener = { time: String, reward: Int ->
-                        if (viewModel.setDisAppearTime(time)) {
-                            if (viewModel.quiz(reward)) {
-                                dismiss()
-                            }
-                        }
-                    }
-                }.show()
-            }
-            return true
-        }
-        return super.onOptionsItemSelected(item)
-    }
-
     override fun getViewModelFactory(): QuizViewModel.Factory {
         return if (intent.getStringExtra("type") == null) {
             QuizViewModel.Factory(getString(R.string.qa_quiz_dialog_type_study))
@@ -205,11 +211,15 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            if (edt_quiz_content.text.isNullOrEmpty() && edt_quiz_title.text.isNullOrEmpty()) {
+            if (exitDialog.isShowing) {
                 return super.onKeyDown(keyCode, event)
             }
-            LogUtils.d("cchanges", "on key back")
-            saveDraft()
+            return if (edt_quiz_content.text.isNullOrEmpty() && edt_quiz_title.text.isNullOrEmpty()) {
+                super.onKeyDown(keyCode, event)
+            } else {
+                exitDialog.show()
+                false
+            }
         }
         return super.onKeyDown(keyCode, event)
     }
@@ -240,5 +250,29 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
             }
         }
         draftId = event.selfId
+    }
+
+    private fun createExitDialog() = Dialog(this).apply {
+        setContentView(R.layout.qa_dialog_notice_exit_quiz)
+        window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        btn_save_and_exit.setOnClickListener {
+            saveDraft()
+            finish()
+        }
+        iv_cancel_exit.setOnClickListener { dismiss() }
+
+    }
+
+    private fun createRewardNotEnoughDialog() = Dialog(this).apply {
+        setContentView(R.layout.qa_dialog_notice_reward_not_enough)
+        window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        btn_quiz_reward_not_enough_confirm.setOnClickListener { dismiss() }
+    }
+
+    override fun onPause() {
+        //防止内存泄漏
+        exitDialog.dismiss()
+        rewardNotEnoughDialog.dismiss()
+        super.onPause()
     }
 }

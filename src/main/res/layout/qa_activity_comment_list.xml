@@ -4,11 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
     android:orientation="vertical"
     tools:context=".pages.comment.ui.CommentListActivity">
 
-
-    <include layout="@layout/qa_recycler_item_comment_toolbar" />
+    <include
+        layout="@layout/qa_common_toolbar"
+        android:background="@drawable/qa_comment_recycle_view_header_background" />
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipe_refresh_layout"

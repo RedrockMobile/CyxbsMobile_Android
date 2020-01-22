@@ -80,7 +80,7 @@ class QuestionListFragment : BaseViewModelFragment<QuestionListViewModel>() {
                     }
                     emptyRvAdapter.showHolder(3)
                 }
-                NetworkState.CANNOT_LOAD_WITHOUT_LOGIN->{
+                NetworkState.CANNOT_LOAD_WITHOUT_LOGIN -> {
                     swipe_refresh_layout.isRefreshing = false
                     if (isFirstTimeLoad) {
                         isFirstTimeLoad = false
@@ -98,7 +98,7 @@ class QuestionListFragment : BaseViewModelFragment<QuestionListViewModel>() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == QuestionContainerFragment.REQUEST_LIST_REFRESH_ACTIVITY  && resultCode == Activity.RESULT_OK) {
+        if (requestCode == QuestionContainerFragment.REQUEST_LIST_REFRESH_ACTIVITY && resultCode == Activity.RESULT_OK) {
             if (title == Question.ALL || title == data!!.getStringExtra("type")) {
                 viewModel.invalidateQuestionList()
             }

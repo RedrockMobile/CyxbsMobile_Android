@@ -17,7 +17,7 @@
         android:gravity="center"
         android:paddingTop="16dp"
         android:paddingBottom="16dp"
-        android:text="垃圾广告信息"
+        android:text="@string/qa_report_rubbish_text"
         android:textColor="@color/levelTwoFontColor"
         android:textSize="19sp" />
 
@@ -28,7 +28,7 @@
         android:gravity="center"
         android:paddingTop="16dp"
         android:paddingBottom="16dp"
-        android:text="无用提问"
+        android:text="@string/qa_report_useless_text"
         android:textColor="@color/levelTwoFontColor"
         android:textSize="19sp" />
 
@@ -39,7 +39,7 @@
         android:gravity="center"
         android:paddingTop="16dp"
         android:paddingBottom="16dp"
-        android:text="煽动信息、造谣"
+        android:text="@string/qa_report_illegal_text"
         android:textColor="@color/levelTwoFontColor"
         android:textSize="19sp" />
 
@@ -50,7 +50,7 @@
         android:gravity="center"
         android:paddingTop="16dp"
         android:paddingBottom="16dp"
-        android:text="侵权信息"
+        android:text="@string/qa_report_infringement_text"
         android:textColor="@color/levelTwoFontColor"
         android:textSize="19sp" />
 
@@ -61,18 +61,18 @@
         android:gravity="center"
         android:paddingTop="16dp"
         android:paddingBottom="16dp"
-        android:text="其他"
+        android:text="@string/qa_report_other_text"
         android:textColor="@color/levelTwoFontColor"
         android:textSize="19sp" />
 
     <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/tv_report_type_ignore"
+        android:id="@+id/tv_question_ignore"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
         android:paddingTop="16dp"
         android:paddingBottom="16dp"
-        android:text="屏蔽该问题"
+        android:text="@string/qa_report_ignore_text"
         android:textColor="@color/buttonGradientStartColor"
         android:textSize="19sp" />
 
@@ -84,18 +84,19 @@
         android:layout_marginTop="16dp"
         android:background="@drawable/qa_main_have_question_btn_background"
         android:gravity="center"
-        android:text="取消"
+        android:text="@string/qa_report_dialog_cancel_text"
         android:textColor="@color/whiteFontColor"
         android:textSize="18sp" />
 
     <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tv_explain"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="14dp"
         android:layout_marginBottom="39dp"
         android:alpha="0.61"
-        android:text="举报成功获得积分"
+        android:text="@string/qa_report_explain"
         android:textColor="@color/levelTwoFontColor"
         android:textSize="12sp" />
 </LinearLayout>
