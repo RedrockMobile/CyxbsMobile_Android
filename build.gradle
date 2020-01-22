@@ -23,7 +23,7 @@ dependencies {
     //kotlin
     api deps.kotlin.runtime
     api deps.kotlin.anko
-
+    api 'androidx.core:core-ktx:1.1.0'
     //official ui and support library
     api deps.support.constraint
     api deps.support.app_compat
