@@ -78,7 +78,9 @@
 
     <Button
         android:id="@+id/btn_cancel_report"
-        android:layout_width="196dp"
+        android:layout_width="wrap_content"
+        android:paddingStart="78dp"
+        android:paddingEnd="78dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="16dp"

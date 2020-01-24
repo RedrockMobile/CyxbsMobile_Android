@@ -18,7 +18,7 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="27dp"
-            android:src="@drawable/qa_ic_quiz_notice_question_accept" />
+            android:src="@drawable/qa_ic_quiz_quit_edit" />
 
         <TextView
             android:id="@+id/tv_title"
@@ -46,8 +46,10 @@
             tools:text="你的内容还未保存，是否退出？" />
 
         <Button
-            android:layout_width="93dp"
-            android:layout_height="34dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="25dp"
+            android:paddingEnd="25dp"
             android:layout_below="@+id/tv_notice_first_line"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="23dp"

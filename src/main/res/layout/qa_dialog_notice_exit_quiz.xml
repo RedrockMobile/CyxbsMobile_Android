@@ -19,7 +19,7 @@
             android:layout_centerHorizontal="true"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="27dp"
-            android:src="@drawable/qa_ic_quiz_notice_question_accept" />
+            android:src="@drawable/qa_ic_quiz_quit_edit" />
 
         <TextView
             android:id="@+id/tv_title"
@@ -50,8 +50,8 @@
             android:id="@+id/btn_save_and_exit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:minHeight="44dp"
-            android:minWidth="138dp"
+            android:paddingStart="25dp"
+            android:paddingEnd="25dp"
             android:layout_below="@+id/tv_notice_first_line"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="23dp"

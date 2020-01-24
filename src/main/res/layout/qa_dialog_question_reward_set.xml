@@ -70,7 +70,7 @@
         android:layout_height="160dp"
         android:layout_marginTop="26dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="@id/iv_point"
         app:layout_constraintTop_toBottomOf="@id/tv_mission_deadline_title">
 
         <com.mredrock.cyxbs.qa.pages.quiz.ui.widget.QuizTimeNumberPicker
@@ -84,8 +84,9 @@
             android:id="@+id/tp_quiz_hour"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:layout_centerHorizontal="true" />
+            android:layout_centerHorizontal="true"
+            android:layout_toStartOf="@id/tp_quiz_minute"
+            android:layout_marginEnd="40dp"/>
 
         <com.mredrock.cyxbs.qa.pages.quiz.ui.widget.QuizTimeNumberPicker
             android:id="@+id/tp_quiz_minute"
@@ -96,13 +97,15 @@
     </RelativeLayout>
 
     <ImageView
+        android:id="@+id/iv_point"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="24dp"
+        android:layout_marginEnd="25dp"
         android:background="@drawable/qa_quiz_time_select_indicator_background"
         app:layout_constraintBottom_toBottomOf="@id/rl_time_select"
-        app:layout_constraintEnd_toStartOf="@id/rl_time_select"
-        app:layout_constraintTop_toTopOf="@id/rl_time_select" />
+        app:layout_constraintTop_toTopOf="@id/rl_time_select"
+        android:layout_marginStart="30dp"
+        app:layout_constraintStart_toStartOf="parent"/>
 
     <ImageView
         android:id="@+id/iv_reward_set_dialog_divide_line"
@@ -171,13 +174,15 @@
 
     <Button
         android:id="@+id/fl_quiz_submit"
-        android:layout_width="120dp"
-        android:layout_height="40dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginTop="40dp"
         android:background="@drawable/qa_main_have_question_btn_background"
         android:text="@string/qa_quiz_dialog_submit"
         android:textColor="@color/whiteFontColor"
         android:textSize="18sp"
+        android:paddingStart="40dp"
+        android:paddingEnd="40dp"
         app:layout_constraintBottom_toTopOf="@+id/gl_bottom"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

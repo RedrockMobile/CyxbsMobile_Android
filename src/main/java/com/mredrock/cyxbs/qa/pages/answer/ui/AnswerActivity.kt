@@ -96,7 +96,7 @@ class AnswerActivity : BaseViewModelActivity<AnswerViewModel>() {
             setOnItemClickListener { _, index ->
                 ViewImageActivity.activityStart(context, photoUrl[index])
             }
-            visibility = View.GONE
+            gone()
         }
         //判断是否当前只有两行
         tv_answer_question_description.apply {
@@ -107,7 +107,7 @@ class AnswerActivity : BaseViewModelActivity<AnswerViewModel>() {
                         tv_answer_question_description.maxLines = 2
                         tv_answer_question_description.ellipsize = TextUtils.TruncateAt.END
                     } else {
-                        tv_answer_question_detail_show_more.visibility = View.GONE
+                        tv_answer_question_detail_show_more.gone()
                     }
                     return false
                 }
@@ -122,12 +122,12 @@ class AnswerActivity : BaseViewModelActivity<AnswerViewModel>() {
                     tv_answer_question_description.maxLines = Int.MAX_VALUE
                     val drawable = ContextCompat.getDrawable(this@AnswerActivity, R.drawable.qa_question_describe_show_more)
                     setCompoundDrawablesWithIntrinsicBounds(null, null, drawable, null)
-                    nine_grid_view_question.visibility = View.VISIBLE
+                    nine_grid_view_question.visible()
                 } else {
                     tv_answer_question_description.maxLines = 2
                     val drawable = ContextCompat.getDrawable(this@AnswerActivity, R.drawable.qa_question_describe_show_more)
                     setCompoundDrawablesWithIntrinsicBounds(null, null, drawable, null)
-                    nine_grid_view_question.visibility = View.GONE
+                    nine_grid_view_question.gone()
                 }
             }
 
