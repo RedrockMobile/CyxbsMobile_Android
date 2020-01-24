@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <color name="colorPrimary" tools:ignore="ResourceName">#58B1FC</color>
+    <color name="colorPrimary" tools:ignore="ResourceName">#f8fafb</color>
     <color name="colorPrimaryDark" tools:ignore="ResourceName">#798DFA</color>
     <color name="colorAccent" tools:ignore="ResourceName">#788EFA</color>
 
@@ -166,6 +166,9 @@
 
     <!--    添加事务的气泡颜色-->
     <color name="course_affair_bubble_color" tools:ignore="ResourceName">#DFE6FF</color>
+
+    <!--    退出编辑dialog二级字体颜色-->
+    <color name="dialog_exit_second_line_text_color" tools:ignore="ResourceName">#2A4E84</color>
 
 </resources>
 
