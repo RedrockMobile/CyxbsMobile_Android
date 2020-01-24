@@ -114,16 +114,27 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
         viewModel.getStartPage()
 
         bottomSheetBehavior = BottomSheetBehavior.from(course_bottom_sheet_content)
+        var statePosition = 0f
+        var lastState = 0
         bottomSheetBehavior.setBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
             override fun onSlide(p0: View, p1: Float) {
                 ll_nav_main_container.translationY = nav_main.height * p1
+                statePosition = p1
                 EventBus.getDefault().post(BottomSheetStateEvent(p1))
             }
 
             override fun onStateChanged(p0: View, p1: Int) {
+//                if (p1 == BottomSheetBehavior.STATE_SETTLING||lastState==BottomSheetBehavior.STATE_EXPANDED) {
+//                    if (statePosition>0.8f){
+//                        bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+//                    }
+//                }else if (p1 == BottomSheetBehavior.STATE_COLLAPSED||p1 == BottomSheetBehavior.STATE_EXPANDED) {
+//                    ll_nav_main_container.translationY = nav_main.height * statePosition
+//                }
+//                lastState = p1
+//                Log.d("onStateChanged","${p1}")
             }
         })
-        main_pb_time_axis.progress = (TimeUtil.getPercentage() * 100).toInt()
     }
 
 

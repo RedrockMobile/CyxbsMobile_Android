@@ -21,7 +21,7 @@
         原因是BottomSheetFragment本质是利用BottomSheetDialog来封装的
         弹出后会显示在最上层，直接遮挡下面的三个tab，我暂时没有想到有什么方法可以
         把某个控件显示到dialog上层的方法，等你来优化解耦吧-->
-    <androidx.core.widget.NestedScrollView
+    <FrameLayout
         android:id="@+id/course_bottom_sheet_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -29,7 +29,7 @@
         app:behavior_peekHeight="@dimen/main_main_bottom_navigation_height_twice_as_much">
 
 
-    </androidx.core.widget.NestedScrollView>
+    </FrameLayout>
 
     <LinearLayout
         android:id="@+id/ll_nav_main_container"
@@ -37,15 +37,6 @@
         android:layout_gravity="bottom"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
-
-        <ProgressBar
-            android:id="@+id/main_pb_time_axis"
-            style="?android:attr/progressBarStyleHorizontal"
-            android:theme="@style/ProgressBarTheme"
-            android:progress="50"
-            android:max="100"
-            android:layout_width="match_parent"
-            android:layout_height="1dp" />
 
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/nav_main"

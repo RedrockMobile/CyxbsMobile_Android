@@ -54,18 +54,15 @@
 
 
      <ImageView
-         android:id="@+id/main_imageview7"
+         android:id="@+id/main_imageview8"
          android:layout_width="wrap_content"
          android:layout_height="wrap_content"
-         android:layout_marginTop="46dp"
-         android:src="@drawable/main_ic_student_id"
+         android:src="@drawable/main_ic_password"
          app:layout_constraintBottom_toBottomOf="parent"
-         app:layout_constraintEnd_toEndOf="parent"
-         app:layout_constraintHorizontal_bias="0.0"
-         app:layout_constraintStart_toStartOf="@+id/main_textview"
-         app:layout_constraintTop_toBottomOf="@+id/main_textview"
-         app:layout_constraintVertical_bias="0.06999999" />
-
+         app:layout_constraintEnd_toEndOf="@+id/main_imageview2"
+         app:layout_constraintStart_toStartOf="@+id/main_imageview2"
+         app:layout_constraintTop_toTopOf="@+id/et_password"
+         app:layout_constraintVertical_bias="0.0" />
 
      <androidx.appcompat.widget.AppCompatEditText
          android:id="@+id/et_account"
@@ -95,7 +92,6 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="40dp"
         android:background="@null"
-        android:drawableStart="@drawable/main_ic_login_password"
         android:drawablePadding="16dp"
         android:hint="@string/main_activity_login_password_hint"
         android:imeOptions="actionSend"
