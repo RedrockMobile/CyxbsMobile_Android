@@ -9,6 +9,10 @@
             name="coursesViewModel"
             type="com.mredrock.cyxbs.course.viewmodels.CoursesViewModel" />
 
+        <variable
+            name="fragment"
+            type="com.mredrock.cyxbs.course.ui.CourseContainerEntryFragment" />
+
     </data>
 
     <LinearLayout
@@ -52,10 +56,11 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:maxLength="8"
-                        android:visibility="@{coursesViewModel.isShowCurrentSchedule}"
+                        android:text="@{coursesViewModel.nowCourse.course}"
                         android:textColor="@color/levelTwoFontColor"
                         android:textSize="22sp"
                         android:textStyle="bold"
+                        android:visibility="@{coursesViewModel.isShowCurrentSchedule}"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toStartOf="@+id/ll_course_time_container"
                         app:layout_constraintHorizontal_bias="0.0"
@@ -94,6 +99,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:gravity="center"
+                            android:text="@{coursesViewModel.nowCourse.lesson}"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toEndOf="@id/course_imageview"
@@ -134,6 +140,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:gravity="center"
+                            android:text="@{coursesViewModel.nowCourse.classroom}"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toEndOf="@id/iv_landmark"
@@ -148,9 +155,9 @@
                         android:layout_height="wrap_content"
                         android:text="今天和明天都没课咯～"
                         android:visibility="@{coursesViewModel.isShowCurrentNoCourseTip}"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
@@ -158,10 +165,10 @@
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/course_current_course_week_select_container"
                     android:layout_width="match_parent"
+                    android:layout_height="51dp"
                     android:paddingStart="16dp"
-                    android:visibility="gone"
                     android:paddingEnd="16dp"
-                    android:layout_height="51dp">
+                    android:visibility="gone">
 
 
                     <TextView
@@ -169,6 +176,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:maxLength="8"
+                        android:text="@{fragment.mWeekTitle}"
                         android:textColor="@color/levelTwoFontColor"
                         android:textSize="22sp"
                         android:textStyle="bold"
@@ -184,29 +192,29 @@
                         android:id="@+id/course_this_week_tips"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:text="  (本周)>"
+                        android:textColor="@color/levelTwoFontColor"
                         android:textSize="15sp"
                         android:visibility="@{coursesViewModel.isShowPresentTips}"
-                        android:textColor="@color/levelTwoFontColor"
-                        android:text="  (本周)>"
-                        app:layout_constraintStart_toEndOf="@+id/course_tv_which_week"
-                        app:layout_constraintBaseline_toBaselineOf="@+id/course_tv_which_week"/>
+                        app:layout_constraintBaseline_toBaselineOf="@+id/course_tv_which_week"
+                        app:layout_constraintStart_toEndOf="@+id/course_tv_which_week" />
 
                     <TextView
                         android:id="@+id/course_back_present_week"
-                        android:textSize="13sp"
-                        android:paddingStart="16dp"
-                        android:paddingEnd="16dp"
-                        android:paddingTop="8dp"
-                        android:paddingBottom="8dp"
-                        android:text="回到本周"
-                        android:visibility="@{coursesViewModel.isShowBackPresentWeek}"
-                        android:background="@drawable/course_shape_affair_modify_button_backgroud"
-                        android:textColor="@color/whiteFontColor"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:background="@drawable/course_shape_affair_modify_button_backgroud"
+                        android:paddingStart="16dp"
+                        android:paddingTop="8dp"
+                        android:paddingEnd="16dp"
+                        android:paddingBottom="8dp"
+                        android:text="回到本周"
+                        android:textColor="@color/whiteFontColor"
+                        android:textSize="13sp"
+                        android:visibility="@{coursesViewModel.isShowBackPresentWeek}"
+                        app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintBottom_toBottomOf="parent"/>
+                        app:layout_constraintTop_toTopOf="parent" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -226,15 +234,15 @@
                     android:id="@+id/tab_layout"
                     android:layout_width="0dp"
                     android:layout_height="@dimen/course_tab_layout_height"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/course_header_back"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
                     app:tabGravity="fill"
                     app:tabIndicatorColor="@null"
                     app:tabMode="scrollable"
                     app:tabSelectedTextColor="@color/levelTwoFontColor"
-                    app:tabTextColor="@color/courseTabText"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/course_header_back">
+                    app:tabTextColor="@color/courseTabText">
 
 
                 </com.google.android.material.tabs.TabLayout>
@@ -256,14 +264,12 @@
 
         </FrameLayout>
 
-
-
-        <com.mredrock.cyxbs.course.component.MeasuringHeightViewPager
+        <androidx.viewpager.widget.ViewPager
             android:id="@+id/vp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fillViewport="true">
 
-        </com.mredrock.cyxbs.course.component.MeasuringHeightViewPager>
+        </androidx.viewpager.widget.ViewPager>
     </LinearLayout>
 </layout>

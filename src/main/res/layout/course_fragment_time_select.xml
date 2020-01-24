@@ -16,101 +16,49 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:paddingTop="33dp"
+        android:paddingBottom="33dp">
+
+        <com.super_rabbit.wheel_picker.WheelPicker
+            android:id="@+id/affair_week_day_select"
+            android:layout_width="wrap_content"
+            android:layout_height="230dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/affair_time_select"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:selectedTextColor="#15315B"
+            app:textSize="16sp"
+            app:wheelItemCount="5" />
+
+        <com.super_rabbit.wheel_picker.WheelPicker
+            android:id="@+id/affair_time_select"
+            android:layout_width="wrap_content"
+            android:layout_height="230dp"
+            app:layout_constraintBottom_toBottomOf="@+id/affair_week_day_select"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/affair_week_day_select"
+            app:selectedTextColor="#15315B"
+            app:textSize="16sp"
+            app:wheelItemCount="5" />
+
 
         <ImageView
-            android:id="@+id/iv_cancel"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_marginStart="3dp"
-            android:background="?android:attr/selectableItemBackground"
-            android:cropToPadding="true"
-            android:onClick="@{listeners::onCancelClick}"
-            android:padding="18dp"
-            android:scaleType="centerInside"
-            app:srcCompat="@drawable/course_ic_cancel"
-            app:layout_constraintBottom_toTopOf="@id/view_separate"
-            app:layout_constraintDimensionRatio="1:1"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:ignore="ContentDescription" />
-
-        <TextView
             android:id="@+id/tv_sure"
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
+            android:layout_width="22dp"
+            android:layout_height="22dp"
             android:layout_marginEnd="3dp"
             android:background="?android:attr/selectableItemBackground"
             android:gravity="center_vertical"
             android:onClick="@{listeners::onSureClick}"
-            android:padding="15dp"
             android:text="@string/course_sure"
-            android:textColor="@color/colorAccent"
-            android:textSize="15sp"
-            app:layout_constraintBottom_toTopOf="@id/view_separate"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <View
-            android:id="@+id/view_separate"
-            android:layout_width="0dp"
-            android:layout_height="1dp"
-            android:layout_marginTop="50dp"
-            android:background="@color/courseLightGray"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-
-        <TextView
-            android:id="@+id/tv_empty"
-            android:layout_width="@dimen/course_course_month_width"
-            android:layout_height="@dimen/course_course_month_height"
-            android:background="@color/courseLightBlue"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/view_separate" />
-
-
-        <com.mredrock.cyxbs.course.component.RedRockTextView
-            android:id="@+id/red_rock_tv_day_of_week"
-            android:layout_width="0dp"
-            android:layout_height="@dimen/course_course_month_height"
-            android:background="@color/courseLightBlue"
-            app:displayedStrings="@array/course_course_day_of_week_strings"
-            app:layout_constraintLeft_toRightOf="@id/tv_empty"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/view_separate"
-            app:orientation="horizontal" />
-
-
-        <com.mredrock.cyxbs.course.component.RedRockTextView
-            android:id="@+id/red_rock_tv_course_time"
-            android:layout_width="@dimen/course_course_month_width"
-            android:layout_height="0dp"
-            android:background="@color/courseLightBlue"
-            app:displayedStrings="@array/course_time_select_strings"
-            app:layout_constraintBottom_toBottomOf="@id/rv"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toLeftOf="@id/rv"
-            app:layout_constraintTop_toBottomOf="@id/tv_empty"
-            app:orientation="vertical" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:adapter="@{recAdapter}"
-            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintDimensionRatio="7:6"
-            app:layout_constraintLeft_toRightOf="@id/red_rock_tv_course_time"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/red_rock_tv_day_of_week"
-            app:spanCount="7">
-
-
-        </androidx.recyclerview.widget.RecyclerView>
-
+            app:layout_constraintBottom_toBottomOf="@+id/affair_time_select"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/affair_time_select"
+            app:layout_constraintTop_toTopOf="@+id/affair_time_select"
+            app:srcCompat="@drawable/course_ic_affair_sure_add" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>

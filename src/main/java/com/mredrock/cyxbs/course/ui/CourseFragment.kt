@@ -10,7 +10,6 @@ import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import com.mredrock.cyxbs.common.event.CourseSlipsTopEvent
 import com.mredrock.cyxbs.common.ui.BaseFragment
 import com.mredrock.cyxbs.course.R
 import com.mredrock.cyxbs.course.databinding.CourseFragmentCourseBinding
@@ -19,7 +18,6 @@ import com.mredrock.cyxbs.course.viewmodels.CoursesViewModel
 import com.mredrock.cyxbs.course.viewmodels.DateViewModel
 import kotlinx.android.synthetic.main.course_fragment_course.*
 import kotlinx.android.synthetic.main.course_fragment_course.view.*
-import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.jetbrains.anko.textColor
@@ -29,7 +27,7 @@ import org.jetbrains.anko.textColor
  * Created by anriku on 2018/8/14.
  */
 
-class CourseFragment : BaseFragment(){
+class CourseFragment : BaseFragment() {
 
     companion object {
         const val WEEK_NUM = "week_num"
@@ -92,18 +90,6 @@ class CourseFragment : BaseFragment(){
             red_rock_tv_course_day_of_week.position = position
             red_rock_tv_course_day_of_month.position = position
             course_tiv.position = position
-        }
-    }
-
-
-    override fun setUserVisibleHint(isVisibleToUser: Boolean) {
-        super.setUserVisibleHint(isVisibleToUser)
-        if (isVisibleToUser) {
-            if (CourseScrollView.isCurrentCourseTop) {
-                EventBus.getDefault().post(CourseSlipsTopEvent(true))
-            }else{
-                EventBus.getDefault().post(CourseSlipsTopEvent(false))
-            }
         }
     }
 

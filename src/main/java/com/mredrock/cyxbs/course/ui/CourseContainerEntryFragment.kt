@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import androidx.databinding.ObservableField
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.transition.Slide
@@ -70,11 +71,11 @@ class CourseContainerEntryFragment : BaseFragment() {
         if (event.newState) {
             // replaceFragment(CourseContainerFragment())
             mBinding.vp.adapter?.notifyDataSetChanged()
-            mToolbarTitle = activity!!.getString(R.string.course_all_week)
+            mWeekTitle.set(activity!!.getString(R.string.course_all_week))
         } else {
             mBinding.vp.adapter?.notifyDataSetChanged()
             // replaceFragment(NoneLoginFragment())
-            mToolbarTitle = activity!!.getString(R.string.common_course)
+            mWeekTitle.set(activity!!.getString(R.string.common_course))
             Thread {
                 ViewModelProviders.of(activity!!).get(CoursesViewModel::class.java).clearCache()
             }.start()
@@ -129,8 +130,7 @@ class CourseContainerEntryFragment : BaseFragment() {
                                 View.VISIBLE
                             }
                     )
-                    mToolbarTitle = mScheduleAdapter.getPageTitle(it).toString()
-                    course_tv_which_week.text = mToolbarTitle
+                    mWeekTitle.set(mScheduleAdapter.getPageTitle(it).toString())
                 }))
 
         course_back_present_week.setOnClickListener {
@@ -143,24 +143,11 @@ class CourseContainerEntryFragment : BaseFragment() {
         // 重复获取数据。
         mCoursesViewModel = ViewModelProviders.of(activity!!).get(CoursesViewModel::class.java)
         mBinding.coursesViewModel = mCoursesViewModel
+        mBinding.fragment = this
 
-        var lastWeek = "本周"
         mCoursesViewModel?.let { model ->
             model.getSchedulesDataFromDataBase(activity!!, mOthersStuNum)
             model.nowWeek.observe(this, Observer { nowWeek ->
-                //todo 带删可能无用代码
-//                if (nowWeek != null && nowWeek != 0) {
-//                    // 过时的本周的位置以及将其替换为原始周数显示
-//                    val oldNowWeek = mWeeks.indexOf(lastWeek)
-//                    if (oldNowWeek != -1) {
-//                        mWeeks[oldNowWeek] = mRawWeeks[oldNowWeek]
-//                    }
-//                    // 设置现在的本周显示
-//                    lastWeek = "${mWeeks[nowWeek]}(${resources.getString(R.string.course_now_week)})"
-//                    mWeeks[nowWeek] = lastWeek
-//                    mScheduleAdapter.notifyDataSetChanged()
-//                }
-
                 // 跳转到当前周
                 mBinding.vp.currentItem = nowWeek ?: 0
             })
@@ -240,39 +227,37 @@ class CourseContainerEntryFragment : BaseFragment() {
     private var mIsFold = true
 
     // 用于记录当前Toolbar要显示的字符串
-    private lateinit var mToolbarTitle: String
-
-    // 用于检测用户登陆状态是否改变，用于刷新
-    private var curIndex = 0
-
+    var mWeekTitle: ObservableField<String> = ObservableField("")
 
     private fun initCourseEntryFragment() {
-        activity ?: return
-        // 如果用户登录了就显示CourseContainerFragment；如果用户没有登录就行显示NoneLoginFragment进行登录
-        mToolbarTitle = activity!!.getString(R.string.course_all_week)
-        setToolbar()
-        course_current_course_container.setOnClickListener {
-            EventBus.getDefault().post(NotifyBottomSheetToExpandEvent(true))
+        activity?.let { activity ->
+            // 如果用户登录了就显示CourseContainerFragment；如果用户没有登录就行显示NoneLoginFragment进行登录
+            mWeekTitle.set(activity.getString(R.string.course_all_week))
+            initHead()
+            course_current_course_container.setOnClickListener {
+                EventBus.getDefault().post(NotifyBottomSheetToExpandEvent(true))
+            }
         }
     }
 
 
     /**
-     * 用于对Toolbar进行一些设置。如果用户登录了，就增加折叠图标，并添加相应的点击事件。
-     * 如果用户没登录，就取消折叠图标以及取消点击事件。
+     * 初始化课表头部信息
      */
-    private fun setToolbar() {
-        // 设置当前Toolbar的内容
-        course_tv_which_week.text = mToolbarTitle
-        course_tv_which_week.setOnClickListener {
+    private fun initHead() {
+        //便于下面复用代码
+        val isShow:()->Unit = {
             TransitionManager.beginDelayedTransition(fl, TransitionSet().apply {
                 addTransition(Slide().apply {
                     slideEdge = Gravity.START
+                    duration = 250
                 })
             })
             course_header_select_content.visibility = View.VISIBLE
             course_header_show.visibility = View.GONE
         }
+        course_tv_which_week.setOnClickListener { isShow() }
+        course_this_week_tips.setOnClickListener { isShow() }
         course_header_back.setOnClickListener {
             TransitionManager.beginDelayedTransition(fl, TransitionSet().apply {
                 addTransition(Slide().apply {
@@ -287,15 +272,21 @@ class CourseContainerEntryFragment : BaseFragment() {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun bottomSheetSlideStateReceive(bottomSheetStateEvent: BottomSheetStateEvent) {
+        course_current_course_week_select_container.visibility = View.VISIBLE
         if (course_header_select_content.visibility == View.GONE) {
-            course_current_course_week_select_container.visibility = View.VISIBLE
             course_current_course_container.alpha = 1 - bottomSheetStateEvent.state
             course_current_course_week_select_container.alpha = bottomSheetStateEvent.state
+            if (bottomSheetStateEvent.state == 0f) {
+                course_header_select_content.visibility = View.GONE
+                course_header_show.visibility = View.VISIBLE
+                course_current_course_week_select_container.visibility = View.GONE
+            }
         } else {
             if (bottomSheetStateEvent.state == 0f) {
                 TransitionManager.beginDelayedTransition(fl, TransitionSet().apply {
                     addTransition(Slide().apply {
                         slideEdge = Gravity.START
+                        duration = 200
                     })
                 })
                 course_header_select_content.visibility = View.GONE

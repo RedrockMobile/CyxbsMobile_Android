@@ -4,9 +4,8 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.ImageView
-import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProviders
 import com.mredrock.cyxbs.common.component.RedRockBottomSheetDialog
@@ -14,6 +13,8 @@ import com.mredrock.cyxbs.course.R
 import com.mredrock.cyxbs.course.adapters.TimeSelectRecAdapter
 import com.mredrock.cyxbs.course.databinding.CourseFragmentTimeSelectBinding
 import com.mredrock.cyxbs.course.viewmodels.EditAffairViewModel
+import com.super_rabbit.wheel_picker.WheelAdapter
+import kotlinx.android.synthetic.main.course_activity_edit_affair.*
 
 
 /**
@@ -28,22 +29,42 @@ class TimeSelectDialogFragment(context: Context) : RedRockBottomSheetDialog(cont
 
 
     init{
-
         mBinding.recAdapter = TimeSelectRecAdapter(context as AppCompatActivity)
         mBinding.listeners = TimeSelectListeners({
             dismiss()
         }, {
-            mEditAffairViewModel.setTimeSelectStringFromFragment()
-            dismiss()
+            val data = Pair(mEditAffairViewModel.timeArray.indexOf(mBinding.affairTimeSelect.getCurrentItem()),
+                    mEditAffairViewModel.dayOfWeekArray.indexOf(mBinding.affairWeekDaySelect.getCurrentItem()))
+            if (!mEditAffairViewModel.mPostClassAndDays.contains(data)) {
+                mEditAffairViewModel.mPostClassAndDays.add(data)
+                (context as EditAffairActivity).tv_time_select.refreshData()
+                dismiss()
+            }else{
+                Toast.makeText(context,"掌友，这个时间已经选择了哦",Toast.LENGTH_SHORT).show()
+            }
+
         })
 
-        ContextCompat.getDrawable(context, R.drawable.course_time_select_divider)?.let {
-            mBinding.rv.addItemDecoration(androidx.recyclerview.widget.DividerItemDecoration(context, androidx.recyclerview.widget.DividerItemDecoration.VERTICAL).apply {
-                setDrawable(it)
-            })
-            mBinding.rv.addItemDecoration(androidx.recyclerview.widget.DividerItemDecoration(context, androidx.recyclerview.widget.DividerItemDecoration.HORIZONTAL).apply {
-                setDrawable(it)
-            })
+        //解决与bottomSheet的滑动冲突
+        mBinding.affairTimeSelect.setOnTouchListener { v, event ->
+            v.parent.requestDisallowInterceptTouchEvent(true)
+            false
+        }
+
+        mBinding.affairTimeSelect.apply {
+            setAdapter(AffairTimeSelectAdapter(mEditAffairViewModel.timeArray))
+            setSelectorRoundedWrapPreferred(true)
+        }
+
+        //解决与BottomSheet的滑动冲突
+        mBinding.affairWeekDaySelect.setOnTouchListener { v, event ->
+            v.parent.requestDisallowInterceptTouchEvent(true)
+            false
+        }
+
+        mBinding.affairWeekDaySelect.apply {
+            setAdapter(AffairWeekSelectAdapter(mEditAffairViewModel.dayOfWeekArray))
+            setSelectorRoundedWrapPreferred(true)
         }
         setContentView(mBinding.root)
     }
@@ -53,14 +74,68 @@ class TimeSelectDialogFragment(context: Context) : RedRockBottomSheetDialog(cont
      * @param onCancel 给取消的ImageView设置点击事件
      * @param onSure 给确定的TextView设置点击事件
      */
-    class TimeSelectListeners(val onCancel: (ImageView) -> Unit, val onSure: (TextView) -> Unit) {
+    class TimeSelectListeners(val onCancel: (ImageView) -> Unit, val onSure: (ImageView) -> Unit) {
         fun onCancelClick(cancel: View) {
             onCancel(cancel as ImageView)
         }
 
         fun onSureClick(sure: View) {
-            onSure(sure as TextView)
+            onSure(sure as ImageView)
         }
     }
 
+    class AffairTimeSelectAdapter(private val timeList:Array<String>):WheelAdapter {
+
+        override fun getMaxIndex(): Int {
+            return timeList.size-1
+        }
+
+        override fun getMinIndex(): Int {
+            return 0
+        }
+
+        override fun getPosition(vale: String): Int {
+            return timeList.indexOf(vale)
+        }
+
+        override fun getTextWithMaximumLength(): String {
+            return "十一十二节课"
+        }
+
+        override fun getValue(position: Int): String {
+            if (position < 0) {
+                val a = (6-(-(position%6)))%6
+                return timeList[a]
+            }
+            return timeList[position % 6]
+        }
+    }
+
+
+    class AffairWeekSelectAdapter(private val timeList:Array<String>):WheelAdapter {
+
+        override fun getMaxIndex(): Int {
+            return timeList.size-1
+        }
+
+        override fun getMinIndex(): Int {
+            return 0
+        }
+
+        override fun getPosition(vale: String): Int {
+            return timeList.indexOf(vale)
+        }
+
+        override fun getTextWithMaximumLength(): String {
+            return "周日"
+        }
+
+        override fun getValue(position: Int): String {
+            if (position < 0) {
+                val a = (7-(-(position%7)))%7
+                return timeList[a]
+            }
+            return timeList[position % 7]
+        }
+    }
 }

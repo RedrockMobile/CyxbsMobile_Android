@@ -15,9 +15,59 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 /**
- * Created by zia on 2018/10/10.
- * 精力憔悴，这些方法直接揉在一起了
+ * Created by Jon on 2020/1/22.
+ * 将子来学长的工具类复用到这个位置
  */
+
+/**
+ * 获取当前的课程用于显示在课表的头部
+ * @param courses 当天的课程数据
+ * @param nowWeek 现在是第几周
+ */
+fun getNowCourse(courses: List<Course>,wholeCourses:List<Course>, nowWeek: Int):Course? {
+    var isFound = false
+    courses.forEach {
+        val endCalendar = getStartCalendarByNum(it.hashLesson)
+        //如果今天还有下一节课，显示下一节
+        if (Calendar.getInstance() < endCalendar) {
+            return it
+        }
+        isFound = true
+    }
+
+    return if (isFound) {//今天有课，但是上完了
+        //新策略：显示明天第一节
+        getTomorrowCourse(wholeCourses, nowWeek)
+    } else {//今天没有课
+        if (isNight()) {//如果在晚上，显示明天课程
+            getTomorrowCourse(wholeCourses, nowWeek)
+        } else {
+            //白天显示今天无课
+            null
+        }
+    }
+
+}
+
+/**
+ * 获取明天的课程用于显示在课表的头部
+ * @param courses 整个课表数据
+ * @param nowWeek 现在是第几周
+ */
+fun getTomorrowCourse(courses: List<Course>, nowWeek: Int): Course? {
+    val tomorrowCalendar = Calendar.getInstance()
+    tomorrowCalendar.set(Calendar.DAY_OF_YEAR, tomorrowCalendar.get(Calendar.DAY_OF_YEAR) + 1)
+    val tomorrowList = getCourseByCalendar(courses, nowWeek, tomorrowCalendar)
+    return if (tomorrowList == null) {//数据出错
+        null
+    } else {
+        if (tomorrowList.isEmpty()) {//明日无课
+            null
+        } else {//显示明天第一节课
+            tomorrowList.first()
+        }
+    }
+}
 
 /**
  * 获得今天得课程list信息
@@ -25,6 +75,7 @@ import kotlin.collections.ArrayList
 fun getTodayCourse(courses:List<Course>,nowWeek:Int): List<Course>? {
     return getCourseByCalendar(courses,nowWeek, Calendar.getInstance())
 }
+
 
 fun getCourseByCalendar(courses:List<Course>,nowWeek:Int,calendar: Calendar): ArrayList<Course>? {
     /*

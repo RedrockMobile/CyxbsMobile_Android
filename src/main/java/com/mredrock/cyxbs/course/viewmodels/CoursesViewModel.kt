@@ -25,9 +25,8 @@ import com.mredrock.cyxbs.course.network.AffairMapToCourse
 import com.mredrock.cyxbs.course.network.Course
 import com.mredrock.cyxbs.course.network.CourseApiService
 import com.mredrock.cyxbs.course.rxjava.ExecuteOnceObserver
-import com.mredrock.cyxbs.course.utils.getCourseByCalendar
-import com.mredrock.cyxbs.course.utils.getStartCalendarByNum
-import com.mredrock.cyxbs.course.utils.isNight
+import com.mredrock.cyxbs.course.utils.getNowCourse
+import com.mredrock.cyxbs.course.utils.getTodayCourse
 import io.reactivex.Observable
 import io.reactivex.ObservableOnSubscribe
 import org.greenrobot.eventbus.EventBus
@@ -98,7 +97,6 @@ class CoursesViewModel : ViewModel() {
 
     //是否展示周数中的本周提示
     val isShowPresentTips: ObservableField<Int> = ObservableField(View.GONE)
-
     val isShowBackPresentWeek = ObservableField<Int>(View.GONE)
 
     private var nowCourses = ""
@@ -354,9 +352,16 @@ class CoursesViewModel : ViewModel() {
             if (mCourses.isNotEmpty()) {
                 if (nowCourses != nextCourses || nowAffairs != nextAffairs) {
                     courses.value = mCourses
-                    nowWeek.value?.let {
-                        nowCourse.set(getNowCourse(mCourses, it))
+                    //获取当前的课程显示在上拉课表的头部
+                    nowWeek.value?.let { nowWeek ->
+                        getTodayCourse(mCourses, nowWeek)?.let { todayCourse ->
+                            courses.value?.let {
+                                nowCourse.set(getNowCourse(todayCourse,it,nowWeek))
+                            }
+                        }
                     }
+                    //防止多次刷新
+                    //todo 璇璇学姐写得太丑了，待优化
                     nowCourses = nextCourses
                     nowAffairs = nextAffairs
                 }
@@ -371,55 +376,6 @@ class CoursesViewModel : ViewModel() {
         }
     }
 
-    /**
-     * 获取当前的课程用于显示在课表的头部
-     * @param courses 整个课表数据
-     * @param nowWeek 现在是第几周
-     */
-    private fun getNowCourse(courses: List<Course>, nowWeek: Int):Course? {
-        var isFound = false
-        courses.forEach {
-            val endCalendar = getStartCalendarByNum(it.hashLesson)
-            //如果今天还有下一节课，显示下一节
-            if (Calendar.getInstance() < endCalendar) {
-                return it
-            }
-            isFound = true
-        }
-
-        return if (isFound) {//今天有课，但是上完了
-            //新策略：显示明天第一节
-            getTomorrowCourse(courses, nowWeek)
-        } else {//今天没有课
-            if (isNight()) {//如果在晚上，显示明天课程
-                getTomorrowCourse(courses, nowWeek)
-            } else {
-                //白天显示今天无课
-                null
-            }
-        }
-
-    }
-
-    /**
-     * 获取明天的课程用于显示在课表的头部
-     * @param courses 整个课表数据
-     * @param nowWeek 现在是第几周
-     */
-    private fun getTomorrowCourse(courses: List<Course>, nowWeek: Int): Course? {
-        val tomorrowCalendar = Calendar.getInstance()
-        tomorrowCalendar.set(Calendar.DAY_OF_YEAR, tomorrowCalendar.get(Calendar.DAY_OF_YEAR) + 1)
-        val tomorrowList = getCourseByCalendar(courses, nowWeek, tomorrowCalendar)
-        return if (tomorrowList == null) {//数据出错
-            null
-        } else {
-            if (tomorrowList.isEmpty()) {//明日无课
-                null
-            } else {//显示明天第一节课
-                tomorrowList.first()
-            }
-        }
-    }
 
     /**
      * 此方法用于重载课程获取状态

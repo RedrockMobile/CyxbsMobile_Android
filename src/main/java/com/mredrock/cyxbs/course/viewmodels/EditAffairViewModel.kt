@@ -19,6 +19,7 @@ import com.mredrock.cyxbs.course.network.Course
 import com.mredrock.cyxbs.course.network.CourseApiService
 import com.mredrock.cyxbs.course.rxjava.ExecuteOnceObserver
 import com.mredrock.cyxbs.course.ui.EditAffairActivity
+import kotlinx.android.synthetic.main.course_activity_edit_affair.*
 import org.greenrobot.eventbus.EventBus
 import org.jetbrains.anko.collections.forEach
 
@@ -28,9 +29,11 @@ import org.jetbrains.anko.collections.forEach
 
 class EditAffairViewModel(application: Application) : AndroidViewModel(application) {
 
+    //显示的字符串，周数，时间，提醒[nb,我万万没想到学姐这样子写的，"nb"]
     val selectedWeekString: MutableLiveData<String> = MutableLiveData()
     val selectedTimeString: MutableLiveData<String> = MutableLiveData()
     val selectedRemindString: MutableLiveData<String> = MutableLiveData()
+
     // 周一到周日的字符串数组
     val dayOfWeekArray: Array<String> by lazy(LazyThreadSafetyMode.NONE) {
         getApplication<Application>().resources.getStringArray(R.array.course_course_day_of_week_strings)
@@ -43,6 +46,11 @@ class EditAffairViewModel(application: Application) : AndroidViewModel(applicati
     val weekArray: Array<String> by lazy(LazyThreadSafetyMode.NONE) {
         getApplication<Application>().resources.getStringArray(R.array.course_course_weeks_strings)
     }
+
+    //具体上课时间字符串
+    val timeArray = arrayOf("一二节课","三四节课","五六节课","七八节课","九十节课","十一十二节课")
+
+
     // 提醒对应的字符串数组
     val remindArray: Array<String> by lazy(LazyThreadSafetyMode.NONE) {
         getApplication<Application>().resources.getStringArray(R.array.course_remind_strings)
@@ -52,6 +60,7 @@ class EditAffairViewModel(application: Application) : AndroidViewModel(applicati
         ApiGenerator.getApiService(CourseApiService::class.java)
     }
 
+    /**todo 学姐写的下面两个变量所涉及到的逻辑可大大简化，待修改[先写需求，在基础上更改，需求写完来优化]*/
     // 用于存储被选择的周数。其中key表示选择的周数在weekArray中的位置，value就是对应的CheckBox。
     val isSelectedWeekViews: SparseArray<CheckBox> by lazy(LazyThreadSafetyMode.NONE) { SparseArray<CheckBox>(weekArray.size) }
     // 用于存储被选择的CourseTime。其中key表示选择的时间 在courseTimeArray的位置 * 7 + dayOfWeekArray中的位置,
@@ -64,9 +73,9 @@ class EditAffairViewModel(application: Application) : AndroidViewModel(applicati
     var content: MutableLiveData<String> = MutableLiveData()
 
     // 记录要被post的课程时间和日期对
-    private val mPostClassAndDays: MutableList<Pair<Int, Int>> by lazy(LazyThreadSafetyMode.NONE) { mutableListOf<Pair<Int, Int>>() }
+    val mPostClassAndDays: MutableList<Pair<Int, Int>> by lazy(LazyThreadSafetyMode.NONE) { mutableListOf<Pair<Int, Int>>() }
     // 记录要被post的选择的周数
-    private val mPostWeeks: MutableList<Int> by lazy(LazyThreadSafetyMode.NONE) { mutableListOf<Int>() }
+    val mPostWeeks: MutableList<Int> by lazy(LazyThreadSafetyMode.NONE) { mutableListOf<Int>() }
     // 记录要被post的选择的提醒时间
     var postRemind: Int = 0
         private set
@@ -119,7 +128,7 @@ class EditAffairViewModel(application: Application) : AndroidViewModel(applicati
      *
      * @param activity 该ViewModel所依赖的Activity。这里只是将FragmentActivity作为参数，因此不用担心内存泄漏的问题。
      */
-    fun observeWork(activity: FragmentActivity) {
+    fun observeWork(activity: EditAffairActivity) {
         // 周数确定后真正要上传的数据存储
         selectedWeekString.observe(activity, Observer {
             // 将旧的存储的数据清理掉
@@ -134,6 +143,7 @@ class EditAffairViewModel(application: Application) : AndroidViewModel(applicati
                 }
                 mPostWeeks.add(key)
             }
+            activity.tv_week_select.refreshData()
         })
 
         // 时间确定后真正要上传的数据的存储
@@ -151,9 +161,25 @@ class EditAffairViewModel(application: Application) : AndroidViewModel(applicati
         selectedRemindString.observe(activity, Observer {
             val remindStrings = activity.resources.getStringArray(R.array.course_remind_strings)
             val position = remindStrings.indexOf(it)
-
             setThePostRemind(position)
         })
+    }
+
+    /**
+     * 用来重置周数选择的CheckBox的点选状态
+     * 待删除方法
+     */
+    fun restoreCheckState(){
+        val s = isSelectedWeekViews.size()
+        repeat(isSelectedWeekViews.size()-1){
+            isSelectedWeekViews.valueAt(it)?.isChecked = false
+            mPostWeeks.forEach {week->
+                if (week == isSelectedWeekViews.indexOfKey(it)) {
+                    isSelectedWeekViews.valueAt(it)?.isChecked = true
+                }
+            }
+            isSelectedWeekViews.removeAt(it)
+        }
     }
 
 
@@ -296,6 +322,7 @@ class EditAffairViewModel(application: Application) : AndroidViewModel(applicati
 
 
     /**
+     * todo 这个方法所改变的字符串值现在只作为中间值，后面优化可以去掉，这个方法以及这个中间值
      * 此方法用于根据传入的课程字符串的的position List来生成对应的字符串
      *
      * @param weeksPositions 传入的一系列课程字符串的position

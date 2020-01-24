@@ -30,6 +30,7 @@ class WeekSelectRecAdapter(mActivity: FragmentActivity) : RedRockAutoWarpView.Ad
 
     override fun initItem(item: View, position: Int) {
         val checkBox = item.findViewById<CheckBox>(R.id.cb)
+        checkBox.tag = position
         checkBox.text = mWeeks[position]
         if (mEditAffairViewModel.isSelectedWeekViews.indexOfKey(position) >= 0) {
             checkBox.isChecked = true

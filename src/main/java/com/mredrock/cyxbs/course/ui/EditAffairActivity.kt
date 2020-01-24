@@ -15,6 +15,8 @@ import androidx.transition.TransitionManager
 import androidx.transition.TransitionSet
 import com.mredrock.cyxbs.common.ui.BaseActivity
 import com.mredrock.cyxbs.course.R
+import com.mredrock.cyxbs.course.adapters.TimeSelectedAdapter
+import com.mredrock.cyxbs.course.adapters.WeekSelectedAdapter
 import com.mredrock.cyxbs.course.adapters.YouMightAdapter
 import com.mredrock.cyxbs.course.databinding.CourseActivityEditAffairBinding
 import com.mredrock.cyxbs.course.viewmodels.EditAffairViewModel
@@ -27,16 +29,16 @@ class EditAffairActivity : BaseActivity() {
         get() = true
 
     private lateinit var mBinding: CourseActivityEditAffairBinding
-    private val mWeekSelectDialogFragment: WeekSelectDialogFragment by lazy(LazyThreadSafetyMode.NONE) {
+    val mWeekSelectDialogFragment: WeekSelectDialogFragment by lazy(LazyThreadSafetyMode.NONE) {
         WeekSelectDialogFragment(this)
     }
-    private val mTimeSelectDialogFragment: TimeSelectDialogFragment by lazy(LazyThreadSafetyMode.NONE) {
+    val mTimeSelectDialogFragment: TimeSelectDialogFragment by lazy(LazyThreadSafetyMode.NONE) {
         TimeSelectDialogFragment(this)
     }
     private val mRemindSelectDialogFragment: RemindSelectDialogFragment by lazy(LazyThreadSafetyMode.NONE) {
         RemindSelectDialogFragment(this)
     }
-    private lateinit var mEditAffairViewModel: EditAffairViewModel
+    lateinit var mEditAffairViewModel: EditAffairViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,6 +55,8 @@ class EditAffairActivity : BaseActivity() {
         mEditAffairViewModel.observeWork(this)
         mEditAffairViewModel.initData(this)
 
+        tv_week_select.adapter = WeekSelectedAdapter(mEditAffairViewModel.mPostWeeks,this)
+        tv_time_select.adapter = TimeSelectedAdapter(mEditAffairViewModel.mPostClassAndDays,this)
         mBinding.listeners = EditAffairListeners({
             if (!mWeekSelectDialogFragment.isShowing) {
                 mWeekSelectDialogFragment.show()

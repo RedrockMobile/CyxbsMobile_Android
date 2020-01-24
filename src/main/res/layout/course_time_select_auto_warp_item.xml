@@ -5,8 +5,8 @@
     android:layout_width="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/course_specific_time"
+    <TextView
+        android:id="@+id/course_time"
         android:background="@drawable/course_shape_add_affair_detailed_backgroud"
         android:textStyle="bold"
         android:layout_marginStart="2dp"
@@ -27,15 +27,18 @@
         app:layout_constraintEnd_toEndOf="parent"
         tools:text="周日 五六节课" />
 
-    <View
-        android:layout_width="10dp"
-        android:layout_height="10dp"
-        android:background="@color/levelFourFontColor"
+    <ImageView
+        android:id="@+id/affair_iv_cancel"
+        android:layout_width="18dp"
+        android:layout_height="18dp"
+        android:paddingBottom="6dp"
+        android:paddingStart="6dp"
+        app:srcCompat="@drawable/course_ic_time_cancel"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintVertical_bias="0.0"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="@id/course_specific_time"
-        app:layout_constraintStart_toStartOf="@id/course_specific_time" />
+        app:layout_constraintBottom_toBottomOf="@id/course_time"
+        app:layout_constraintStart_toStartOf="@id/course_time" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
