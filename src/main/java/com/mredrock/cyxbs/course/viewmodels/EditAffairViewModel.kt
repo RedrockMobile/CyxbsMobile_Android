@@ -69,6 +69,7 @@ class EditAffairViewModel(application: Application) : AndroidViewModel(applicati
     var passedAffairInfo: Course? = null
 
 
+    //当前事务activity的状态，分三个状态，设置标题，内容和时间
     var status: Status = Status.TitleStatus
 
 
@@ -236,7 +237,7 @@ class EditAffairViewModel(application: Application) : AndroidViewModel(applicati
             // 获取选择的课程时间的行列位置
             val row: Int = position / 7
             val column: Int = position - row * 7
-            mPostClassAndDays.add(Pair(column,row))
+            mPostClassAndDays.add(Pair(row,column))
         }
     }
 
@@ -247,7 +248,6 @@ class EditAffairViewModel(application: Application) : AndroidViewModel(applicati
     fun setRemindSelectString(position: Int) {
         selectedRemindString.value = remindArray[position]
     }
-
 
 
     enum class Status {
