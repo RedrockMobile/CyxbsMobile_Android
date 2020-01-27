@@ -2,7 +2,9 @@ package com.mredrock.cyxbs.course.ui
 
 import android.os.Bundle
 import android.text.TextUtils
-import android.view.*
+import android.view.Gravity
+import android.view.KeyEvent
+import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.TextView
 import android.widget.Toast
@@ -29,48 +31,44 @@ class EditAffairActivity : BaseActivity() {
         get() = true
 
     private lateinit var mBinding: CourseActivityEditAffairBinding
+
+    //周数选择BottomSheetDialog
     val mWeekSelectDialogFragment: WeekSelectDialogFragment by lazy(LazyThreadSafetyMode.NONE) {
         WeekSelectDialogFragment(this)
     }
+
+    //时间选择BottomSheetDialog
     val mTimeSelectDialogFragment: TimeSelectDialogFragment by lazy(LazyThreadSafetyMode.NONE) {
         TimeSelectDialogFragment(this)
     }
+
+    //提醒选择BottomSheetDialog
     private val mRemindSelectDialogFragment: RemindSelectDialogFragment by lazy(LazyThreadSafetyMode.NONE) {
         RemindSelectDialogFragment(this)
     }
+
     lateinit var mEditAffairViewModel: EditAffairViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mEditAffairViewModel = ViewModelProviders.of(this).get(EditAffairViewModel::class.java)
-
         mBinding = DataBindingUtil.setContentView(this, R.layout.course_activity_edit_affair)
         mBinding.editAffairViewModel = mEditAffairViewModel
         mBinding.lifecycleOwner = this
-
         initActivity()
     }
 
     private fun initActivity() {
-        mEditAffairViewModel.observeWork(this)
         mEditAffairViewModel.initData(this)
 
         tv_week_select.adapter = WeekSelectedAdapter(mEditAffairViewModel.mPostWeeks,this)
         tv_time_select.adapter = TimeSelectedAdapter(mEditAffairViewModel.mPostClassAndDays,this)
-        mBinding.listeners = EditAffairListeners({
-            if (!mWeekSelectDialogFragment.isShowing) {
-                mWeekSelectDialogFragment.show()
-            }
-        }, {
-            if (!mTimeSelectDialogFragment.isShowing) {
-                mTimeSelectDialogFragment.show()
-            }
-        }, {
+        tv_remind_select.setOnClickListener {
             if (!mRemindSelectDialogFragment.isShowing) {
                 mRemindSelectDialogFragment.show()
             }
-        })
-        course_view23.setOnClickListener {
+        }
+        course_next_step.setOnClickListener {
             onClick()
         }
         et_title_content_input.setOnEditorActionListener(object : TextView.OnEditorActionListener {
@@ -125,10 +123,10 @@ class EditAffairActivity : BaseActivity() {
         } else {
             TransitionManager.beginDelayedTransition(course_affair_container, TransitionSet().apply {
                 addTransition(Slide().apply {
-                    duration = 500
+                    duration = 300
                     slideEdge = Gravity.END
                 })
-                addTransition(ChangeBounds().apply { duration = 500 })
+                addTransition(ChangeBounds().apply { duration = 300 })
             })
             val set = ConstraintSet().apply { clone(course_affair_container) }
             set.connect(R.id.tv_title_text, ConstraintSet.BOTTOM, R.id.course_textview, ConstraintSet.TOP)
@@ -155,10 +153,10 @@ class EditAffairActivity : BaseActivity() {
     private fun addTitleBackMonitor() {
         TransitionManager.beginDelayedTransition(course_affair_container, TransitionSet().apply {
             addTransition(Slide().apply {
-                duration = 500
+                duration = 300
                 slideEdge = Gravity.END
             })
-            addTransition(ChangeBounds().apply { duration = 500 })
+            addTransition(ChangeBounds().apply { duration = 300 })
         })
         val set = ConstraintSet().apply { clone(course_affair_container) }
         set.connect(R.id.tv_title_text, ConstraintSet.BOTTOM, R.id.course_affair_container, ConstraintSet.BOTTOM)
@@ -178,17 +176,20 @@ class EditAffairActivity : BaseActivity() {
         mEditAffairViewModel.status = EditAffairViewModel.Status.TitleStatus
     }
 
-    fun addContentNextMonitor(){
+    /**
+     * 添加事务时的内容
+     */
+    private fun addContentNextMonitor(){
         if (et_title_content_input.text.trim().isEmpty()) {
             Toast.makeText(this, resources.getString(R.string.course_content_is_null),
                     Toast.LENGTH_SHORT).show()
         } else {
             TransitionManager.beginDelayedTransition(course_affair_container, TransitionSet().apply {
                 addTransition(Slide().apply {
-                    duration = 500
+                    duration = 300
                     slideEdge = Gravity.END
                 })
-                addTransition(ChangeBounds().apply { duration = 500 })
+                addTransition(ChangeBounds().apply { duration = 300 })
             })
             modifyPageLayout()
             mEditAffairViewModel.status = EditAffairViewModel.Status.AllDoneStatus
@@ -214,17 +215,17 @@ class EditAffairActivity : BaseActivity() {
         et_title.setText(tv_title.text, TextView.BufferType.EDITABLE);
     }
 
-    fun addContentBackMonitor(){
+    private fun addContentBackMonitor(){
         if (et_title_content_input.text.trim().isEmpty()) {
             Toast.makeText(this, resources.getString(R.string.course_content_is_null),
                     Toast.LENGTH_SHORT).show()
         } else {
             TransitionManager.beginDelayedTransition(course_affair_container, TransitionSet().apply {
                 addTransition(Slide().apply {
-                    duration = 500
+                    duration = 300
                     slideEdge = Gravity.END
                 })
-                addTransition(ChangeBounds().apply { duration = 500 })
+                addTransition(ChangeBounds().apply { duration = 300 })
             })
             val set = ConstraintSet().apply { clone(course_affair_container) }
             set.connect(R.id.et_title_content_input, ConstraintSet.TOP, R.id.tv_content_text, ConstraintSet.BOTTOM)
@@ -246,27 +247,9 @@ class EditAffairActivity : BaseActivity() {
     }
 
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.course_post_affair_menu, menu)
-        return super.onCreateOptionsMenu(menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        item?.let {
-            when (item.itemId) {
-                R.id.post_affair -> {
-                    postAffair()
-                }
-                android.R.id.home -> {
-                    finish()
-                }
-            }
-        }
-        return super.onOptionsItemSelected(item)
-    }
 
     /**
-     * 此方法用于上传事务
+     * 此方法用于最后一步上传事务
      */
     private fun postAffair() {
         when {
@@ -274,13 +257,11 @@ class EditAffairActivity : BaseActivity() {
                 Toast.makeText(this, resources.getString(R.string.course_title_is_null),
                         Toast.LENGTH_SHORT).show()
             }
-            mEditAffairViewModel.selectedWeekString.value ==
-                    resources.getString(R.string.course_week_select) -> {
+            mEditAffairViewModel.mPostWeeks.isEmpty() -> {
                 Toast.makeText(this, resources.getString(R.string.course_week_is_not_select),
                         Toast.LENGTH_SHORT).show()
             }
-            mEditAffairViewModel.selectedTimeString.value ==
-                    resources.getString(R.string.course_time_select) -> {
+            mEditAffairViewModel.mPostClassAndDays.isEmpty() -> {
                 Toast.makeText(this, R.string.course_time_is_not_select, Toast.LENGTH_SHORT).show()
             }
             else -> {
@@ -288,24 +269,6 @@ class EditAffairActivity : BaseActivity() {
                         mBinding.etTitleContentInput.text.toString())
             }
         }
-    }
-
-    class EditAffairListeners(val onSelectWeek: (TextView) -> Unit,
-                              val onSelectTime: (TextView) -> Unit,
-                              val onSelectRemind: (TextView) -> Unit) {
-
-        fun onWeekSelectClick(weekSelect: View) {
-            onSelectWeek(weekSelect as TextView)
-        }
-
-        fun onTimeSelectClick(timeSelect: View) {
-            onSelectTime(timeSelect as TextView)
-        }
-
-        fun onRemindSelectClick(remindSelect: View) {
-            onSelectRemind(remindSelect as TextView)
-        }
-
     }
 
     companion object {

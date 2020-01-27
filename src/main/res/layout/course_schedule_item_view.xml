@@ -7,7 +7,11 @@
     android:layout_height="match_parent"
     app:cardCornerRadius="@dimen/course_course_item_radius">
 
-
+    <com.mredrock.cyxbs.course.component.TestView
+        android:id="@+id/affair_item_background"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+    
     <TextView
         android:id="@+id/top"
         android:layout_width="match_parent"

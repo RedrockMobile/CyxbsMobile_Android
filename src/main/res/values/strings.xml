@@ -53,12 +53,12 @@
     </string-array>
 
     <string-array name="course_time_select_strings">
-        <item>1~2</item>
-        <item>3~4</item>
-        <item>5~6</item>
-        <item>7~8</item>
-        <item>9~10</item>
-        <item>11~12</item>
+        <item>一二节课</item>
+        <item>三四节课</item>
+        <item>五六节课</item>
+        <item>七八节课</item>
+        <item>九十节课</item>
+        <item>十一十二节课</item>
     </string-array>
 
     <string-array name="course_course_weeks_strings">

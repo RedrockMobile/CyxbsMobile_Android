@@ -10,7 +10,6 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProviders
 import com.mredrock.cyxbs.common.component.RedRockBottomSheetDialog
 import com.mredrock.cyxbs.course.R
-import com.mredrock.cyxbs.course.adapters.TimeSelectRecAdapter
 import com.mredrock.cyxbs.course.databinding.CourseFragmentTimeSelectBinding
 import com.mredrock.cyxbs.course.viewmodels.EditAffairViewModel
 import com.super_rabbit.wheel_picker.WheelAdapter
@@ -29,7 +28,6 @@ class TimeSelectDialogFragment(context: Context) : RedRockBottomSheetDialog(cont
 
 
     init{
-        mBinding.recAdapter = TimeSelectRecAdapter(context as AppCompatActivity)
         mBinding.listeners = TimeSelectListeners({
             dismiss()
         }, {

@@ -7,10 +7,6 @@
     <data>
 
         <variable
-            name="listeners"
-            type="com.mredrock.cyxbs.course.ui.EditAffairActivity.EditAffairListeners" />
-
-        <variable
             name="editAffairViewModel"
             type="com.mredrock.cyxbs.course.viewmodels.EditAffairViewModel" />
 
@@ -223,11 +219,11 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/course_view23"
+            app:layout_constraintTop_toTopOf="@+id/course_next_step"
             app:layout_constraintVertical_bias="0.0" />
 
         <View
-            android:id="@+id/course_view23"
+            android:id="@+id/course_next_step"
             android:layout_width="66dp"
             android:layout_height="66dp"
             android:background="@drawable/course_layer_list_affair_edit_button"
@@ -261,6 +257,7 @@
             android:id="@+id/tv_week_select"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:visibility="gone"
             android:layout_marginStart="4dp"
             android:layout_marginTop="16dp"
             app:horizontalSpacing="8dp"
@@ -291,7 +288,6 @@
             android:id="@+id/tv_remind_select"
             android:paddingStart="13dp"
             android:layout_marginTop="20dp"
-            android:onClick="@{listeners::onRemindSelectClick}"
             android:paddingEnd="13dp"
             android:paddingTop="9dp"
             android:textStyle="bold"

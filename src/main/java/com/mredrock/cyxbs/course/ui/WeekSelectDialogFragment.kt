@@ -10,6 +10,7 @@ import com.mredrock.cyxbs.course.R
 import com.mredrock.cyxbs.course.adapters.WeekSelectRecAdapter
 import com.mredrock.cyxbs.course.databinding.CourseFragmentWeekSelectBinding
 import com.mredrock.cyxbs.course.viewmodels.EditAffairViewModel
+import kotlinx.android.synthetic.main.course_activity_edit_affair.*
 
 /**
  * Created by anriku on 2018/9/8.
@@ -20,14 +21,45 @@ class WeekSelectDialogFragment(context: Context) : RedRockBottomSheetDialog(cont
     private var mBinding: CourseFragmentWeekSelectBinding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.course_fragment_week_select,
             null, false)
     private var mEditAffairViewModel: EditAffairViewModel = ViewModelProviders.of(context as AppCompatActivity).get(EditAffairViewModel::class.java)
+    private var adapter: WeekSelectRecAdapter = WeekSelectRecAdapter(context as AppCompatActivity)
 
     init {
-        mBinding.courseAuto.adapter = WeekSelectRecAdapter(context as AppCompatActivity)
+        mBinding.courseAuto.adapter = adapter
         mBinding.fragment = this
         mBinding.tvSure.setOnClickListener {
-            mEditAffairViewModel.setWeekSelectStringFromFragment()
+            mEditAffairViewModel.mPostWeeks.clear()
+            for ((k, v) in adapter.checkBoxMap) {
+                if (v.isChecked) {
+                    if (k == 0) {
+                        for (i in 1..21) {
+                            mEditAffairViewModel.mPostWeeks.add(i)
+                        }
+                        break
+                    }
+                    mEditAffairViewModel.mPostWeeks.add(k)
+                }
+            }
+            (context as EditAffairActivity).tv_week_select.adapter?.view?.refreshData()
             dismiss()
         }
         setContentView(mBinding.root)
+    }
+
+    override fun show() {
+        super.show()
+        for ((k, v) in adapter.checkBoxMap) {
+            v.isChecked = false
+            if (mEditAffairViewModel.mPostWeeks.size == 21) {
+                if (k == 0) {
+                    v.isChecked = true
+                }
+            } else {
+                mEditAffairViewModel.mPostWeeks.forEach {
+                    if (it == k) {
+                        v.isChecked = true
+                    }
+                }
+            }
+        }
     }
 }

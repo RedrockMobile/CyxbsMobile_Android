@@ -6,10 +6,6 @@
     <data>
 
         <variable
-            name="recAdapter"
-            type="com.mredrock.cyxbs.course.adapters.TimeSelectRecAdapter" />
-
-        <variable
             name="listeners"
             type="com.mredrock.cyxbs.course.ui.TimeSelectDialogFragment.TimeSelectListeners" />
     </data>

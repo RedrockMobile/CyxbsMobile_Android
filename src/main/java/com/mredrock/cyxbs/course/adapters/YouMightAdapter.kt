@@ -3,14 +3,14 @@ package com.mredrock.cyxbs.course.adapters
 import android.view.View
 import android.widget.EditText
 import android.widget.TextView
-import com.mredrock.cyxbs.course.R
 import com.mredrock.cyxbs.common.component.RedRockAutoWarpView
+import com.mredrock.cyxbs.course.R
 import kotlinx.android.synthetic.main.course_auto_warp_you_might_item.view.*
 
 class YouMightAdapter(private val editText:EditText): RedRockAutoWarpView.Adapter() {
 
     //仿造数据
-    val data = listOf("开会开会开会开会开会开会开会开会开会开会开会开会","啦啦啦啦","嘿咻嘿咻黑","开会开会开会\n开会开会开会","开会","开会","开会","自习")
+    val data = listOf("自习","开会","补课","值班")
     override fun getItemId(): Int {
         return R.layout.course_auto_warp_you_might_item
     }

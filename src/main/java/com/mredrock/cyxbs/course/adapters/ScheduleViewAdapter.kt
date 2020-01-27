@@ -2,9 +2,6 @@ package com.mredrock.cyxbs.course.adapters
 
 import android.content.Context
 import android.content.Intent
-import android.graphics.Canvas
-import android.graphics.Paint
-import android.graphics.Rect
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.GradientDrawable
 import android.view.LayoutInflater
@@ -17,10 +14,10 @@ import com.mredrock.cyxbs.common.config.DEFAULT_PREFERENCE_FILENAME
 import com.mredrock.cyxbs.common.config.SP_SHOW_MODE
 import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.SchoolCalendar
-import com.mredrock.cyxbs.common.utils.extensions.dp2px
 import com.mredrock.cyxbs.common.utils.extensions.sharedPreferences
 import com.mredrock.cyxbs.course.R
 import com.mredrock.cyxbs.course.component.ScheduleView
+import com.mredrock.cyxbs.course.component.TestView
 import com.mredrock.cyxbs.course.event.DismissAddAffairViewEvent
 import com.mredrock.cyxbs.course.network.Course
 import com.mredrock.cyxbs.course.ui.EditAffairActivity
@@ -29,7 +26,6 @@ import com.mredrock.cyxbs.course.utils.ClassRoomParse
 import org.greenrobot.eventbus.EventBus
 import org.jetbrains.anko.textColor
 import java.util.*
-import kotlin.math.sqrt
 
 /**
  * @param mContext [Context]
@@ -74,6 +70,8 @@ class ScheduleViewAdapter(private val mContext: Context,
     private lateinit var mBottom: TextView
     private lateinit var mBackground: View
     private lateinit var mTag: View
+    private lateinit var mAffairBackground: TestView
+
 
     init {
         addCourse()
@@ -167,6 +165,7 @@ class ScheduleViewAdapter(private val mContext: Context,
         mBottom = itemView.findViewById(R.id.bottom)
         mBackground = itemView.findViewById(R.id.background)
         mTag = itemView.findViewById(R.id.tag)
+        mAffairBackground = itemView.findViewById(R.id.affair_item_background)
 
 
 
@@ -204,6 +203,7 @@ class ScheduleViewAdapter(private val mContext: Context,
             top.text = course.course
             bottom.text = ClassRoomParse.parseClassRoom(course.classroom ?: "")
             background.background = createBackground(mCoursesColors[index])
+            mAffairBackground.visibility = View.GONE
             if (itemCount > 1) {
                 tag.visibility = View.VISIBLE
                 tag.background = createTagBackground(mCoursesTextColors[course.hashLesson])
@@ -216,8 +216,8 @@ class ScheduleViewAdapter(private val mContext: Context,
                 bottom.text = course.classroom
             }
             top.textColor = ContextCompat.getColor(mContext, R.color.levelTwoFontColor)
-            bottom.textColor = mCoursesTextColors[index]
-            background.background = createMemoBackground()
+            bottom.textColor = ContextCompat.getColor(mContext, R.color.levelTwoFontColor)
+            mAffairBackground.visibility = View.VISIBLE
         }
     }
 
@@ -244,38 +244,6 @@ class ScheduleViewAdapter(private val mContext: Context,
         val courseCorner = mContext.resources.getDimension(R.dimen.course_schedule_tag_radius)
         drawable.cornerRadii = floatArrayOf(courseCorner, courseCorner, courseCorner, courseCorner, courseCorner, courseCorner, courseCorner, courseCorner)
         drawable.setColor(rgb)
-        return drawable
-    }
-
-    /**
-     * 用来绘制备忘的条纹背景
-     */
-    private fun createMemoBackground(): Drawable {
-        val drawable = GradientDrawable()
-        val canvas = Canvas()
-        val gray = ContextCompat.getColor(mContext, R.color.memoGrayStripes)
-        canvas.drawColor(ContextCompat.getColor(mContext, R.color.levelFourFontColor))
-        val space = mContext.dp2px(8f)
-        val sideLength = if (canvas.width > canvas.height) canvas.width else canvas.height
-        val count = (sideLength / space) * sqrt(2f)
-
-
-//        while (true) {
-//            val pX1 = space * i;
-//            val pY1 = 0
-//            val pX2 = 9; val pY2 = 8
-//            val pX3 = 9; val pY3 = 8
-//            val pX4 = 9; val pY4 = 8
-
-//        }
-
-        canvas.drawRect(Rect(0, 0, canvas.width, canvas.height), Paint().apply {
-            color = 0xff000000.toInt()
-        })
-
-        drawable.draw(canvas)
-
-
         return drawable
     }
 

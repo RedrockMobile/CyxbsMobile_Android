@@ -20,7 +20,7 @@ class WeekSelectedAdapter(val weekSelectedList: List<Int>,val editAffairActivity
     }
 
     override fun getItemCount(): Int {
-        if (weekSelectedList.isEmpty()) {
+        if (weekSelectedList.isEmpty()||weekSelectedList.size==21) {
             return 1
         }
         return weekSelectedList.size
@@ -28,10 +28,9 @@ class WeekSelectedAdapter(val weekSelectedList: List<Int>,val editAffairActivity
 
     override fun initItem(item: View, position: Int) {
         item.course_tv_week_item.apply {
-            text = if (weekSelectedList.isEmpty()) "请选择周数" else "第${weekSelectedList[position]}周"
+            text = if (weekSelectedList.isEmpty()) "请选择周数" else if (weekSelectedList.size==21) "整学期" else "第${weekSelectedList[position]}周"
             setOnClickListener {
                 if (!editAffairActivity.mWeekSelectDialogFragment.isShowing) {
-//                    editAffairActivity.mEditAffairViewModel.restoreCheckState()
                     editAffairActivity.mWeekSelectDialogFragment.show()
                 }
             }
