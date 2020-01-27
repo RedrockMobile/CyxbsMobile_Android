@@ -133,14 +133,14 @@
          android:layout_width="wrap_content"
          android:layout_height="wrap_content"
          android:theme="@style/LoginRadioButtonTheme"
-         app:layout_constraintBottom_toBottomOf="@+id/main_textview3"
-         app:layout_constraintEnd_toStartOf="@+id/main_textview3"
+         app:layout_constraintBottom_toBottomOf="@+id/main_user_agreement"
+         app:layout_constraintEnd_toStartOf="@+id/main_user_agreement"
          app:layout_constraintHorizontal_bias="0.929"
          app:layout_constraintStart_toStartOf="parent"
-         app:layout_constraintTop_toTopOf="@+id/main_textview3" />
+         app:layout_constraintTop_toTopOf="@+id/main_user_agreement" />
 
      <TextView
-        android:id="@+id/main_textview3"
+        android:id="@+id/main_user_agreement"
         android:layout_width="wrap_content"
         android:layout_height="16dp"
         android:text="@string/main_user_agreement"
