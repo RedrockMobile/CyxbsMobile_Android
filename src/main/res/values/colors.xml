@@ -79,6 +79,8 @@
 
     <!--    添加事务时标题-->
     <color name="transactionHeading" tools:ignore="ResourceName">#122D55</color>
+    <!--    添加事务时周数选择时，点击后字体颜色-->
+    <color name="selectFontColorForTransactionWeeks" tools:ignore="ResourceName">#FFA192</color>
 
 
     <!--    打字框背景颜色-->
