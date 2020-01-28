@@ -16,8 +16,8 @@ import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.SchoolCalendar
 import com.mredrock.cyxbs.common.utils.extensions.sharedPreferences
 import com.mredrock.cyxbs.course.R
+import com.mredrock.cyxbs.course.component.AffairBackgroundView
 import com.mredrock.cyxbs.course.component.ScheduleView
-import com.mredrock.cyxbs.course.component.TestView
 import com.mredrock.cyxbs.course.event.DismissAddAffairViewEvent
 import com.mredrock.cyxbs.course.network.Course
 import com.mredrock.cyxbs.course.ui.EditAffairActivity
@@ -70,7 +70,7 @@ class ScheduleViewAdapter(private val mContext: Context,
     private lateinit var mBottom: TextView
     private lateinit var mBackground: View
     private lateinit var mTag: View
-    private lateinit var mAffairBackground: TestView
+    private lateinit var mAffairBackground: AffairBackgroundView
 
 
     init {
@@ -159,11 +159,14 @@ class ScheduleViewAdapter(private val mContext: Context,
         val itemViewInfo = getItemViewInfo(row, column)
         var itemCount = 1
         mSchedulesArray[row][column]?.let {
-            if (row == 0 || row == 2 || row == 4) {
-                mSchedulesArray[row+1][column]
+            val courseList = it.toMutableList()
+            if ((row == 0 || row == 2 || row == 4)&&it[0].period>2) {
+                mSchedulesArray[row+1][column]?.let { list ->
+                    courseList.addAll(list)
+                }
             }
-            itemCount = it.size
-            setItemViewOnclickListener(itemView, it)
+            itemCount = courseList.size
+            setItemViewOnclickListener(itemView, courseList)
         }
 
         mTop = itemView.findViewById(R.id.top)
@@ -171,8 +174,6 @@ class ScheduleViewAdapter(private val mContext: Context,
         mBackground = itemView.findViewById(R.id.background)
         mTag = itemView.findViewById(R.id.tag)
         mAffairBackground = itemView.findViewById(R.id.affair_item_background)
-
-
 
         itemViewInfo?.let {
             when {

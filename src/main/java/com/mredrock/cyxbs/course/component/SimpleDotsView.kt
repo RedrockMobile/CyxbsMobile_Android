@@ -5,9 +5,12 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.util.AttributeSet
-import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.course.R
 import org.jetbrains.anko.dip
+
+
+
+
 
 /**
  * SimpleDotsView is used as an indicator of the ViewPager or the slideshow.
@@ -79,6 +82,14 @@ class SimpleDotsView : ScheduleDetailView.DotsView {
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
 
+        val heightMode = MeasureSpec.getMode(heightMeasureSpec)
+        val width: Int = measuredWidth
+        val height: Int
+
+        if (heightMode == MeasureSpec.AT_MOST) {
+            height = mDotRadius*2
+            setMeasuredDimension(width, height);
+        }
         mDotsViewWidth = measuredWidth
         mDotsViewHeight = measuredHeight
 
@@ -97,8 +108,6 @@ class SimpleDotsView : ScheduleDetailView.DotsView {
 
             canvas.drawCircle((mFirstDotLeftMargin + (mDotRadius * 2 + mDotGap) * it + mDotRadius).toFloat(),
                     (mDotsViewHeight / 2).toFloat(), mDotRadius.toFloat(), mPaint)
-
-            LogUtils.d(TAG, "$measuredWidth, $measuredHeight")
         }
     }
 }

@@ -20,7 +20,7 @@ import kotlin.math.sqrt
  *
  * 描述:
  */
-internal class TestView : View {
+internal class AffairBackgroundView : View {
 
     var screenWidth:Int?=null
     var screenHeight: Int? = null

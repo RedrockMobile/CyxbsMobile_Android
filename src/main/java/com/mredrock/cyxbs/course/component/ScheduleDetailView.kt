@@ -5,11 +5,13 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.FrameLayout
+import android.widget.RelativeLayout
 import androidx.annotation.LayoutRes
 import androidx.viewpager.widget.ViewPager
 import com.mredrock.cyxbs.course.R
 import com.mredrock.cyxbs.course.network.Course
+import org.jetbrains.anko.alignParentBottom
+import org.jetbrains.anko.dip
 
 /**
  * Created by anriku on 2018/8/21.
@@ -18,7 +20,7 @@ import com.mredrock.cyxbs.course.network.Course
  * ViewPager 默认顶满父布局
  * ViewPager 的 item 默认顶满父布局
  */
-class ScheduleDetailView : FrameLayout {
+class ScheduleDetailView : RelativeLayout {
 
     private lateinit var mViewPager: androidx.viewpager.widget.ViewPager
     private lateinit var mLayoutInflater: LayoutInflater
@@ -84,9 +86,9 @@ class ScheduleDetailView : FrameLayout {
         addView(mViewPager)
         mDotsView = scheduleDetailViewAdapter.addDotsView(this)
 
-        val params = LayoutParams(measuredWidth, measuredHeight / 10)
-        params.topMargin = (measuredHeight * 9) / 10
-        params.leftMargin = 0
+        val params = LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+        params.alignParentBottom()
+        params.bottomMargin = dip(8)
         addView(mDotsView.apply {
             layoutParams = params
         })
