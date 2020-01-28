@@ -9,6 +9,7 @@ import com.mredrock.cyxbs.common.component.RedRockBottomSheetDialog
 import com.mredrock.cyxbs.course.R
 import com.mredrock.cyxbs.course.adapters.WeekSelectRecAdapter
 import com.mredrock.cyxbs.course.databinding.CourseFragmentWeekSelectBinding
+import com.mredrock.cyxbs.course.utils.weekSelectCheckBoxState
 import com.mredrock.cyxbs.course.viewmodels.EditAffairViewModel
 import kotlinx.android.synthetic.main.course_activity_edit_affair.*
 
@@ -49,14 +50,17 @@ class WeekSelectDialogFragment(context: Context) : RedRockBottomSheetDialog(cont
         super.show()
         for ((k, v) in adapter.checkBoxMap) {
             v.isChecked = false
+            weekSelectCheckBoxState(v,context)
             if (mEditAffairViewModel.mPostWeeks.size == 21) {
                 if (k == 0) {
                     v.isChecked = true
+                    weekSelectCheckBoxState(v,context)
                 }
             } else {
                 mEditAffairViewModel.mPostWeeks.forEach {
                     if (it == k) {
                         v.isChecked = true
+                        weekSelectCheckBoxState(v,context)
                     }
                 }
             }

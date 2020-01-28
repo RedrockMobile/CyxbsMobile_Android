@@ -90,7 +90,13 @@ class EditAffairViewModel(application: Application) : AndroidViewModel(applicati
         val passedTimePosition = intent.getIntExtra(EditAffairActivity.TIME_NUM, -1)
 
         if (passedWeekPosition != -1 && passedTimePosition != -1) {
-            mPostWeeks.add(passedWeekPosition)
+            if (passedWeekPosition == 0) {
+                for (i in 1..21){
+                    mPostWeeks.add(i)
+                }
+            }else{
+                mPostWeeks.add(passedWeekPosition)
+            }
             setTimeSelected(mutableListOf(passedTimePosition))
             selectedRemindString.value = getApplication<Application>().resources.getString(R.string.course_remind_select)
         } else if (passedAffairInfo != null) {
@@ -184,7 +190,6 @@ class EditAffairViewModel(application: Application) : AndroidViewModel(applicati
      * 此方法用于对要被修改的事务的信息进行重现显示。
      */
     private fun setPassedAffairInfo() {
-        val passedWeekPositions = mutableListOf<Int>()
         // 对Week数据重现
         passedAffairInfo?.week?.let {
             for (week in it) {

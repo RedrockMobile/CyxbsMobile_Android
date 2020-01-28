@@ -6,6 +6,7 @@ import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProviders
 import com.mredrock.cyxbs.common.component.RedRockAutoWarpView
 import com.mredrock.cyxbs.course.R
+import com.mredrock.cyxbs.course.utils.weekSelectCheckBoxState
 import com.mredrock.cyxbs.course.viewmodels.EditAffairViewModel
 
 /**
@@ -37,25 +38,33 @@ class WeekSelectRecAdapter(mActivity: FragmentActivity) : RedRockAutoWarpView.Ad
         mEditAffairViewModel.mPostWeeks.forEach {
             if (mEditAffairViewModel.mPostWeeks.size == 21 && position == 0) {
                 checkBox.isChecked = true
+                weekSelectCheckBoxState(checkBox,context)
             } else {
                 if (it == position) {
                     checkBox.isChecked = true
+                    weekSelectCheckBoxState(checkBox,context)
                 }
             }
         }
         if (position == 0) {
             checkBox.setOnClickListener {
+                weekSelectCheckBoxState(checkBox,context)
                 if (checkBox.isChecked) {
                     for ((k, v) in checkBoxMap) {
                         if (k != 0) {
                             v.isChecked = false
+                            weekSelectCheckBoxState(v,context)
                         }
                     }
                 }
             }
         }else{
             checkBox.setOnClickListener {
-                checkBoxMap[0]?.isChecked = false
+                weekSelectCheckBoxState(checkBox,context)
+                checkBoxMap[0]?.apply {
+                    weekSelectCheckBoxState(this,context)
+                    isChecked = false
+                }
             }
         }
     }

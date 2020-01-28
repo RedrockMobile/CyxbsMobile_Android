@@ -82,6 +82,14 @@ class ScheduleViewAdapter(private val mContext: Context,
      * 这个方法用于进行课程的添加
      */
     private fun addCourse() {
+
+        //下方复用代码，忽视就好
+        fun initSchedulesArray(row: Int, column: Int) {
+            if (mSchedulesArray[row][column] == null) {
+                mSchedulesArray[row][column] = mutableListOf()
+            }
+        }
+
         for (course in mSchedules) {
             val row = course.hashLesson
             val column = course.hashDay
@@ -89,19 +97,16 @@ class ScheduleViewAdapter(private val mContext: Context,
             //如果是整学期将所有数据返回
             if (mNowWeek == 0) {
                 if (course.customType == Course.COURSE) {
-                    if (mSchedulesArray[row][column] == null) {
-                        mSchedulesArray[row][column] = mutableListOf()
-                    }
+                    initSchedulesArray(row, column)
                     mSchedulesArray[row][column]?.add(course)
                 }
                 continue
             }
             //如果不是整学期的做如下判断
             course.week?.let {
+                //如果本周在这个课所在的周数list当中
                 if (mNowWeek in it) {
-                    if (mSchedulesArray[row][column] == null) {
-                        mSchedulesArray[row][column] = mutableListOf()
-                    }
+                    initSchedulesArray(row, column)
                     mSchedulesArray[row][column]?.add(course)
                 }
             }

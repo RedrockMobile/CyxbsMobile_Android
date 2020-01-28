@@ -221,10 +221,6 @@ class EditAffairActivity : BaseActivity() {
                     Toast.LENGTH_SHORT).show()
         } else {
             TransitionManager.beginDelayedTransition(course_affair_container, TransitionSet().apply {
-                addTransition(Slide().apply {
-                    duration = 300
-                    slideEdge = Gravity.END
-                })
                 addTransition(ChangeBounds().apply { duration = 300 })
             })
             val set = ConstraintSet().apply { clone(course_affair_container) }

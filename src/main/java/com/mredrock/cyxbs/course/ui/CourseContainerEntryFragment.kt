@@ -117,10 +117,16 @@ class CourseContainerEntryFragment : BaseFragment() {
                         return@VPOnPagerChangeObserver
                     }
                     mCoursesViewModel?.isShowPresentTips?.set(
-                            if (mCoursesViewModel?.nowWeek?.value == it) {
-                                View.VISIBLE
-                            } else {
-                                View.GONE
+                            when {
+                                it == 0 -> {
+                                    View.GONE
+                                }
+                                mCoursesViewModel?.nowWeek?.value == it -> {
+                                    View.VISIBLE
+                                }
+                                else -> {
+                                    View.GONE
+                                }
                             }
                     )
                     mCoursesViewModel?.isShowBackPresentWeek?.set(
