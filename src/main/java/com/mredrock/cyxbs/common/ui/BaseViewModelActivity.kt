@@ -2,10 +2,12 @@ package com.mredrock.cyxbs.common.ui
 
 import android.app.ProgressDialog
 import android.os.Bundle
+import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
+import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.common.viewmodel.event.ProgressDialogEvent
 import org.jetbrains.anko.indeterminateProgressDialog
@@ -35,8 +37,8 @@ abstract class BaseViewModelActivity<T : BaseViewModel> : BaseActivity() {
             ViewModelProviders.of(this).get(viewModelClass)
         }
         viewModel.apply {
-            toastEvent.observe { str -> str?.let { toast(it) } }
-            longToastEvent.observe { str -> str?.let { longToast(it) } }
+            toastEvent.observe { str -> str?.let { CyxbsToast.makeText(baseContext,it,Toast.LENGTH_SHORT).show() } }
+            longToastEvent.observe { str -> str?.let { CyxbsToast.makeText(baseContext,it,Toast.LENGTH_LONG).show()} }
             progressDialogEvent.observe {
                 it ?: return@observe
                 //确保只有一个对话框会被弹出
