@@ -16,9 +16,6 @@ import com.mredrock.cyxbs.mine.network.model.Product
  * Created by roger on 2019/11/28
  */
 class ProductAdapter() : ListAdapter<Product, ProductAdapter.ProductViewHolder>(Product.DIFF_CALLBACK) {
-    init {
-        setHasStableIds(true)
-    }
 
     class ProductViewHolder(
             parent: ViewGroup

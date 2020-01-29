@@ -19,8 +19,8 @@ import com.mredrock.cyxbs.common.utils.extensions.gone
 import com.mredrock.cyxbs.common.utils.extensions.invisible
 import com.mredrock.cyxbs.common.utils.extensions.visible
 import com.mredrock.cyxbs.mine.R
-import com.mredrock.cyxbs.mine.network.model.Product
 import com.mredrock.cyxbs.mine.network.model.ScoreStatus
+import com.mredrock.cyxbs.mine.util.extension.logr
 import com.mredrock.cyxbs.mine.util.user
 import com.mredrock.cyxbs.mine.util.widget.SchoolCalendarPlus
 import com.mredrock.cyxbs.mine.util.widget.SpaceDecoration
@@ -70,6 +70,10 @@ class DailySignActivity(override val viewModelClass: Class<DailyViewModel> = Dai
         WeekGenerator()
     }
 
+    private val adapter: ProductAdapter by lazy {
+        ProductAdapter()
+    }
+
 
     //通过一个标志位，来判断刷新divider的时候是否需要动画，
     //当为true时，表明用户点击了签到按钮导致的UI刷新，这时候需要动画，
@@ -84,23 +88,32 @@ class DailySignActivity(override val viewModelClass: Class<DailyViewModel> = Dai
 
         initView()
         dealBottomSheet()
-        user?.let { viewModel.loadAllData(it) }
+        user?.let {
+            viewModel.loadAllData(it)
+            viewModel.loadProduct(it)
+        }
         viewModel.status.observe(this, Observer {
             refreshUI(it)
         })
+        viewModel.products.observe(this, Observer {
+
+            if (it == null || it.isEmpty()) {
+                return@Observer
+            }
+            hidePlaceHolder()
+            adapter.submitList(it)
+        })
+    }
+
+    private fun hidePlaceHolder() {
+        mine_iv_empty_product.gone()
     }
 
     private fun initView() {
         mine_daily_sign.setOnClickListener { checkIn() }
 
-        val adapter = ProductAdapter()
+
         mine_store_rv.adapter = adapter
-        val fakeItem = Product("redrock限量手环", 555, 13, "https://raw.githubusercontent.com/roger1245/ImgBed/master/img/rgview_2.jpg")
-        val list = mutableListOf<Product>()
-        for (i in 0..8) {
-            list.add(fakeItem)
-        }
-        adapter.submitList(list)
 
         mine_store_rv.addItemDecoration(SpaceDecoration(dp2px(8f)))
     }
@@ -116,20 +129,21 @@ class DailySignActivity(override val viewModelClass: Class<DailyViewModel> = Dai
         val schoolCalendarPlus = SchoolCalendarPlus()
         val pair = schoolCalendarPlus.getYearPair()
         //寒暑假不可签到的一些限制
-        if (schoolCalendarPlus.isInVacation()) {
-            if (schoolCalendarPlus.isWinterVacation()) {
-                mine_daily_tv_week.text = "寒假快乐吗(๑‾ ꇴ ‾๑)"
-            } else {
-                mine_daily_tv_week.text = "暑假快乐吗(´･ω･`)"
-            }
-            mine_daily_dayCount.gone()
-            mine_daily_tv_ranking_percentage.gone()
-            mine_daily_tv_ranking.text = "寒暑假不可签到<(￣3￣)>哼！"
-            mine_daily_sign.gone()
-            mine_daily_tv_bubble.gone()
-            mine_daily_tv_year.text = "${pair.first}-${pair.second}"
-            return
-        }
+//        if (schoolCalendarPlus.isInVacation()) {
+//            if (schoolCalendarPlus.isWinterVacation()) {
+//                mine_daily_tv_week.text = "寒假快乐吗(๑‾ ꇴ ‾๑)"
+//            } else {
+//                mine_daily_tv_week.text = "暑假快乐吗(´･ω･`)"
+//            }
+//            mine_daily_dayCount.gone()
+//            mine_daily_tv_ranking_percentage.gone()
+//            mine_daily_tv_ranking.text = "寒暑假不可签到<(￣3￣)>哼！"
+//            mine_daily_sign.gone()
+//            mine_daily_tv_bubble.gone()
+//            mine_daily_tv_year.text = "${pair.first}-${pair.second}"
+//            mine_store_tv_integral.text = "${scoreStatus.integral}"
+//            return
+//        }
         mine_daily_tv_year.text = "${pair.first}-${pair.second}"
         mine_daily_tv_week.text = "上学期第${schoolCalendarPlus.getChineseWeek()}周"
         mine_daily_dayCount.text = "已连续打卡${scoreStatus.serialDays}天"

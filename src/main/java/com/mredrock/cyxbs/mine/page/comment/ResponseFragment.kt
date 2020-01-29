@@ -6,7 +6,6 @@ import androidx.lifecycle.ViewModelProviders
 import com.mredrock.cyxbs.common.utils.extensions.setImageFromUrl
 import com.mredrock.cyxbs.mine.R
 import com.mredrock.cyxbs.mine.network.model.RelateMeItem
-import com.mredrock.cyxbs.mine.util.extension.log
 import com.mredrock.cyxbs.mine.util.ui.BaseRVFragment
 import com.mredrock.cyxbs.mine.util.ui.RvFooter
 import kotlinx.android.synthetic.main.mine_fragment_base_rv.*
@@ -53,7 +52,6 @@ class ResponseFragment : BaseRVFragment<RelateMeItem>() {
                 return@Observer
             } else {
                 hidePlaceHolder()
-                log("load type:$type,data:$it")
                 addData(it)
             }
         })

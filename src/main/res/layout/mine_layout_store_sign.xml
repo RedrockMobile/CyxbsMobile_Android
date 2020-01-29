@@ -34,13 +34,13 @@
         android:id="@+id/mine_store_tv_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="17dp"
         android:text="@string/mine_sign_store_title"
         android:textColor="@color/levelTwoFontColor"
         android:textSize="21sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/mine_store_guildeline"
         app:layout_constraintStart_toStartOf="@+id/mine_store_arrow_left"
-        android:layout_marginStart="17dp"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="积分商城" />
 
@@ -48,17 +48,17 @@
         android:id="@+id/mine_store_myproduct"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="34dp"
+        android:alpha="0"
         android:background="@drawable/mine_shape_round_corner_brown"
         android:paddingStart="10dp"
         android:paddingTop="5dp"
-        android:alpha="0"
         android:paddingEnd="10dp"
         android:paddingBottom="5dp"
-        android:layout_marginStart="34dp"
         android:text="@string/mine_sign_store_my_product"
         app:layout_constraintBottom_toBottomOf="@+id/mine_store_tv_title"
-        app:layout_constraintStart_toEndOf="@id/mine_store_tv_title"
         app:layout_constraintHorizontal_bias="0.72"
+        app:layout_constraintStart_toEndOf="@id/mine_store_tv_title"
         app:layout_constraintTop_toTopOf="@+id/mine_store_tv_title"
         tools:text="我的商品" />
 
@@ -85,16 +85,27 @@
         app:layout_constraintTop_toTopOf="@+id/mine_store_iv_diamond"
         tools:text="156" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/mine_store_rv"
+    <FrameLayout
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:spanCount="2"
-        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/mine_store_guildeline" />
+        app:layout_constraintTop_toTopOf="@+id/mine_store_guildeline">
+        <ImageView
+            android:id="@+id/mine_iv_empty_product"
+            android:src="@drawable/mine_ic_me_empty_data"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/mine_store_rv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layoutManager="androidx.recyclerview.widget.StaggeredGridLayoutManager"
+            app:spanCount="2" />
+    </FrameLayout>
+
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/mine_store_guildeline"

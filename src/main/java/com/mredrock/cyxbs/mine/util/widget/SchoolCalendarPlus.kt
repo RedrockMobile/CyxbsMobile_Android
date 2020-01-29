@@ -1,7 +1,6 @@
 package com.mredrock.cyxbs.mine.util.widget
 
 import com.mredrock.cyxbs.common.utils.SchoolCalendar
-import com.mredrock.cyxbs.mine.util.extension.logr
 import java.math.BigDecimal
 import java.util.*
 
@@ -92,7 +91,7 @@ class SchoolCalendarPlus : SchoolCalendar() {
     //判断是否是在寒暑假
     fun isInVacation() : Boolean {
         val weekOfTerm = super.getWeekOfTerm()
-        return weekOfTerm > 23 || weekOfTerm <= 0
+        return weekOfTerm >= 20 || weekOfTerm < 0
     }
 
     fun isWinterVacation() : Boolean {
