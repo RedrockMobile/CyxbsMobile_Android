@@ -80,16 +80,6 @@
             </FrameLayout>
         </FrameLayout>
 
-        <!--    <com.ms.square.android.expandabletextview.ExpandableTextView-->
-        <!--        android:id="@+id/tv_answer_content"-->
-        <!--        android:layout_width="match_parent"-->
-        <!--        android:layout_height="wrap_content"-->
-        <!--        android:layout_below="@id/iv_answer_avatar"-->
-        <!--        android:layout_marginTop="11dp"-->
-        <!--        app:collapseDrawable="@drawable/qa_ic_expandable_tv_collapse"-->
-        <!--        app:expandDrawable="@drawable/qa_ic_expandable_tv_expand"-->
-        <!--        app:maxCollapsedLines="3">-->
-
         <LinearLayout
             android:id="@+id/rl_answer_item_content"
             android:layout_width="wrap_content"

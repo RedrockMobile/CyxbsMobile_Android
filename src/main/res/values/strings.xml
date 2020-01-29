@@ -13,7 +13,7 @@
     <string name="qa_answer_list_cancel_question">取消提问</string>
     <string name="qa_answer_list_ignore_question">忽略</string>
     <string name="qa_answer_list_help">帮助</string>
-    <string name="qa_answer_list_accepted">已采纳</string>
+    <string name="qa_answer_list_accepted">已解决</string>
     <string name="qa_answer_list_accept">采纳</string>z
     <string name="qa_answer_list_answer_date">%1$s前</string>
     <string name="qa_answer_list_no_answer_hint">还没有回答哦~</string>
@@ -44,7 +44,7 @@
     <string name="qa_quiz_anonymous">匿名求助</string>
     <string name="qa_quiz_tags_edit_dialog_title">添加话题</string>
     <string name="qa_quiz_dialog_sure">确定</string>
-    <string name="qa_quiz_dialog_exit">保存并退出</string>
+    <string name="qa_common_dialog_exit">保存并退出</string>
     <string name="qa_quiz_dialog_accept">采纳</string>
     <string name="qa_quiz_tag_edit_dialog_hot_tags">热门话题</string>
     <string name="qa_quiz_hint_title_empty">标题不能为空哦~</string>
@@ -62,6 +62,7 @@
     <string name="qa_quiz_error_reward_not_enough">已经拿不出这么多硬币了( ﾉД`)</string>
     <string name="qa_answer_edit_content_hint">请尽可能给出明确的解决思路哦！</string>
     <string name="qa_answer_question_title">提供帮助</string>
+    <string name="qa_answer_whether_accept_answer_text">是 否 采 纳 该 问 题</string>
     <string name="qa_answer_submit_answer">提交</string>
     <string name="qa_hint_report_success">举报成功，会尽快为您处理</string>
     <string name="qa_report_report_reason_hint">请选择举报原因</string>
@@ -87,10 +88,13 @@
     <string name="qa_question_report_text">举报该问题</string>
     <string name="qa_quiz_toolbar_title_text">提问</string>
     <string name="qa_quiz_dialog_exit_text">退 出 编 辑</string>
+    <string name="qa_answer_dialog_exit_text">退 出 回 答</string>
+    <string name="qa_answer_accept_dialog_exit_subtitle_text">采纳后他将获得你的悬赏积分</string>
+    <string name="qa_answer_publish_dialog_exit_subtitle_text">你的内容还未保存，是否退出？</string>
     <string name="qa_quiz_dialog_not_save_text">你的资料还未保存，是否退出？</string>
     <string name="qa_quiz_reward_more_text">你的悬赏积分超过你拥有积分了</string>
     <string name="qa_quiz_down_reward_get_more_text">降低悬赏积分或者去赚取更多积分吧~</string>
-    <string name="qa_quzi_reward_not_enough_text">积 分 不 够</string>
+    <string name="qa_quiz_reward_not_enough_text">积 分 不 够</string>
     <string name="qa_report_rubbish_text">垃圾广告信息</string>
     <string name="qa_report_useless_text">无用提问</string>
     <string name="qa_report_illegal_text">煽动信息、造谣</string>
@@ -99,6 +103,7 @@
     <string name="qa_report_ignore_text">屏蔽该问题</string>
     <string name="qa_report_dialog_cancel_text">取消</string>
     <string name="qa_report_explain">举报成功获得积分</string>
+    <string name="qa_answer_submit_successfully_text">您已提交成功</string>
 
     <string-array name="qa_report_type">
         <item>色情低俗</item>

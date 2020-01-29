@@ -42,7 +42,8 @@
         android:background="@drawable/qa_main_have_question_btn_background"
         android:text="@string/qa_answer_btn_text"
         android:textSize="18sp"
-        android:textColor="@color/whiteFontColor" />
+        android:textColor="@color/whiteFontColor"
+        app:layout_behavior="com.mredrock.cyxbs.qa.ui.widget.ButtonScrollBehavior"/>
 
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

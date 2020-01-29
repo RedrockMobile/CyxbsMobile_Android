@@ -4,6 +4,7 @@ import android.app.Activity
 import android.app.ProgressDialog
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
@@ -15,6 +16,7 @@ import com.google.gson.reflect.TypeToken
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.bean.RedrockApiWrapper
 import com.mredrock.cyxbs.common.bean.isSuccessful
+import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.common.config.QA_ANSWER_LIST
 import com.mredrock.cyxbs.common.event.AskLoginEvent
 import com.mredrock.cyxbs.common.event.OpenShareQuestionEvent
@@ -160,14 +162,6 @@ class AnswerListActivity : BaseActivity() {
         rv_answer_list.apply {
             layoutManager = androidx.recyclerview.widget.LinearLayoutManager(this@AnswerListActivity)
             adapter = adapterWrapper
-            val mDistance: Int
-            val isVisible: Boolean
-            addOnScrollListener(object : RecyclerView.OnScrollListener() {
-                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                    super.onScrolled(recyclerView, dx, dy)
-                    //TODO 滑动，按钮消失
-                }
-            })
         }
     }
 

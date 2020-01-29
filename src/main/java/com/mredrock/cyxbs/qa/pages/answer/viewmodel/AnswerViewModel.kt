@@ -62,7 +62,10 @@ class AnswerViewModel(var qid: String) : BaseViewModel() {
         }
         observable.doFinally { progressDialogEvent.value = ProgressDialogEvent.DISMISS_DIALOG_EVENT }
                 .doOnError { BaseApp.context.longToast(it.message!!) }
-                .safeSubscribeBy { backAndRefreshPreActivityEvent.value = true }
+                .safeSubscribeBy {
+                    toastEvent.value = R.string.qa_answer_submit_successfully_text
+                    backAndRefreshPreActivityEvent.value = true
+                }
     }
 
     private fun uploadPic(stuNum: String, idNum: String, qid: String, files: List<File>): Observable<RedrockApiStatus> {

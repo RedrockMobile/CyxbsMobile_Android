@@ -7,7 +7,9 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.text.TextUtils
-import android.view.*
+import android.view.KeyEvent
+import android.view.View
+import android.view.ViewTreeObserver
 import android.widget.ImageView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
@@ -22,6 +24,7 @@ import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.bean.Content
 import com.mredrock.cyxbs.qa.pages.answer.viewmodel.AnswerViewModel
 import com.mredrock.cyxbs.qa.ui.activity.ViewImageActivity
+import com.mredrock.cyxbs.qa.ui.widget.CommonDialog
 import com.mredrock.cyxbs.qa.utils.CHOOSE_PHOTO_REQUEST
 import com.mredrock.cyxbs.qa.utils.selectImageFromAlbum
 import kotlinx.android.synthetic.main.qa_activity_answer.*
@@ -49,6 +52,8 @@ class AnswerActivity : BaseViewModelActivity<AnswerViewModel>() {
 
     private var draftId = "-1"
 
+    private val exitDialog by lazy { createExitDialog() }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.qa_activity_answer)
@@ -72,8 +77,7 @@ class AnswerActivity : BaseViewModelActivity<AnswerViewModel>() {
                 finish()
                 return@OnClickListener
             }
-            saveDraft()
-            finish()
+            exitDialog.show()
         })
         qa_tv_toolbar_title.text = getString(R.string.qa_answer_question_title)
         qa_ib_toolbar_more.gone()
@@ -205,10 +209,15 @@ class AnswerActivity : BaseViewModelActivity<AnswerViewModel>() {
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            if (edt_answer_content.text.isNullOrEmpty()) {
+            if (exitDialog.isShowing) {
                 return super.onKeyDown(keyCode, event)
             }
-            saveDraft()
+            return if (edt_answer_content.text.isNullOrEmpty()) {
+                super.onKeyDown(keyCode, event)
+            } else {
+                exitDialog.show()
+                false
+            }
         }
         return super.onKeyDown(keyCode, event)
     }
@@ -238,5 +247,21 @@ class AnswerActivity : BaseViewModelActivity<AnswerViewModel>() {
         }
         viewModel.qid = event.targetId
         draftId = event.selfId
+    }
+
+    private fun createExitDialog() = CommonDialog(this).apply {
+        initView(icon = R.drawable.qa_ic_quiz_quit_edit
+                , title = getString(R.string.qa_answer_dialog_exit_text)
+                , firstNotice = getString(R.string.qa_answer_publish_dialog_exit_subtitle_text)
+                , secondNotice = null
+                , buttonText = getString(R.string.qa_common_dialog_exit)
+                , confirmListener = View.OnClickListener {
+            saveDraft()
+            dismiss()
+            finish()
+        }
+                , cancelListener = View.OnClickListener {
+            dismiss()
+        })
     }
 }

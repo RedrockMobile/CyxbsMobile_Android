@@ -1,6 +1,7 @@
 package com.mredrock.cyxbs.qa.pages.answer.ui
 
 import android.content.Context
+import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
@@ -13,6 +14,7 @@ import com.mredrock.cyxbs.qa.bean.Question
 import com.mredrock.cyxbs.qa.component.recycler.BaseRvAdapter
 import com.mredrock.cyxbs.qa.component.recycler.BaseViewHolder
 import com.mredrock.cyxbs.qa.pages.comment.AdoptAnswerEvent
+import com.mredrock.cyxbs.qa.ui.widget.CommonDialog
 import com.mredrock.cyxbs.qa.utils.*
 import kotlinx.android.synthetic.main.qa_recycler_item_answer.view.*
 import org.greenrobot.eventbus.EventBus
@@ -95,7 +97,20 @@ class AnswerListAdapter(context: Context) : BaseRvAdapter<Answer>() {
                 tv_answer_nickname.setNicknameTv(data.nickname, isEmotion, data.isMale)
                 setAdoptedTv(tv_adopted, tv_adopt, data.isAdopted, hasAdoptedAnswer || !isSelf)
                 tv_adopt.setOnClickListener {
-                    EventBus.getDefault().post(AdoptAnswerEvent(data.id))
+                    CommonDialog(context).apply {
+                        initView(icon = R.drawable.qa_ic_quiz_notice_question_accept
+                                , title = context.getString(R.string.qa_answer_whether_accept_answer_text)
+                                , firstNotice = context.getString(R.string.qa_answer_accept_dialog_exit_subtitle_text)
+                                , secondNotice = null
+                                , buttonText = context.getString(R.string.qa_quiz_dialog_accept)
+                                , confirmListener = View.OnClickListener {
+                            EventBus.getDefault().post(AdoptAnswerEvent(data.id))
+                            dismiss()
+                        }
+                                , cancelListener = View.OnClickListener {
+                            dismiss()
+                        })
+                    }.show()
                 }
                 tv_answer_content.text = data.content
                 setDate(tv_answer_publish_at, data.createdAt)

@@ -37,6 +37,7 @@
                 android:textColor="@color/levelTwoFontColor"
                 android:textSize="22sp"
                 android:textStyle="bold"
+                android:layout_centerVertical="true"
                 tools:text="评论（2）" />
 
             <ImageButton

@@ -1,12 +1,9 @@
 package com.mredrock.cyxbs.qa.pages.quiz.ui
 
 import android.app.Activity
-import android.app.Dialog
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.*
 import android.widget.ImageView
@@ -16,7 +13,6 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.google.gson.Gson
-import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.common.config.QA_QUIZ
 import com.mredrock.cyxbs.common.event.DraftEvent
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
@@ -27,12 +23,11 @@ import com.mredrock.cyxbs.qa.bean.Question
 import com.mredrock.cyxbs.qa.pages.quiz.ui.dialog.RewardSetDialog
 import com.mredrock.cyxbs.qa.pages.quiz.QuizViewModel
 import com.mredrock.cyxbs.qa.ui.activity.ViewImageActivity
+import com.mredrock.cyxbs.qa.ui.widget.CommonDialog
 import com.mredrock.cyxbs.qa.utils.CHOOSE_PHOTO_REQUEST
 import com.mredrock.cyxbs.qa.utils.selectImageFromAlbum
 import kotlinx.android.synthetic.main.qa_activity_quiz.*
 import kotlinx.android.synthetic.main.qa_common_toolbar.*
-import kotlinx.android.synthetic.main.qa_dialog_notice_exit_quiz.*
-import kotlinx.android.synthetic.main.qa_dialog_notice_reward_not_enough.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -56,7 +51,7 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
     override val isFragmentActivity = false
     private var draftId = "-1"
     private val exitDialog by lazy { createExitDialog() }
-    val rewardNotEnoughDialog by lazy { createRewardNotEnoughDialog() }
+    private val rewardNotEnoughDialog by lazy { createRewardNotEnoughDialog() }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -252,21 +247,32 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
         draftId = event.selfId
     }
 
-    private fun createExitDialog() = Dialog(this).apply {
-        setContentView(R.layout.qa_dialog_notice_exit_quiz)
-        window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-        btn_save_and_exit.setOnClickListener {
+    private fun createExitDialog() = CommonDialog(this).apply {
+        initView(icon = R.drawable.qa_ic_quiz_quit_edit
+                , title = getString(R.string.qa_quiz_dialog_exit_text)
+                , firstNotice = getString(R.string.qa_quiz_dialog_not_save_text)
+                , secondNotice = null
+                , buttonText = getString(R.string.qa_common_dialog_exit)
+                , confirmListener = View.OnClickListener {
             saveDraft()
+            dismiss()
             finish()
         }
-        iv_cancel_exit.setOnClickListener { dismiss() }
-
+                , cancelListener = View.OnClickListener {
+            dismiss()
+        })
     }
 
-    private fun createRewardNotEnoughDialog() = Dialog(this).apply {
-        setContentView(R.layout.qa_dialog_notice_reward_not_enough)
-        window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-        btn_quiz_reward_not_enough_confirm.setOnClickListener { dismiss() }
+    private fun createRewardNotEnoughDialog() = CommonDialog(this).apply {
+        initView(icon = R.drawable.qa_ic_quiz_notice_reward_not_enough
+                , title = getString(R.string.qa_quiz_reward_not_enough_text)
+                , firstNotice = getString(R.string.qa_quiz_reward_more_text)
+                , secondNotice = getString(R.string.qa_quiz_down_reward_get_more_text)
+                , buttonText = getString(R.string.qa_quiz_dialog_sure)
+                , confirmListener = View.OnClickListener {
+            dismiss()
+        }
+                , cancelListener = null)
     }
 
     override fun onPause() {
