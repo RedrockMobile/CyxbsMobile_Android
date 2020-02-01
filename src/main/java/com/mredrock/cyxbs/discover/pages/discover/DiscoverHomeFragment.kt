@@ -7,21 +7,22 @@ import android.view.View.OVER_SCROLL_IF_CONTENT_SCROLLS
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.TextView
-import android.widget.Toast
 import android.widget.ViewFlipper
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatTextView
+import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.widget.ViewPager2
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
-import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.common.config.*
 import com.mredrock.cyxbs.common.ui.BaseViewModelFragment
 import com.mredrock.cyxbs.discover.R
 import com.mredrock.cyxbs.discover.utils.BannerAdapter
 import com.mredrock.cyxbs.discover.utils.MoreFunctionProvider
 import kotlinx.android.synthetic.main.discover_home_fragment.*
+import org.jetbrains.anko.backgroundColor
+import org.jetbrains.anko.backgroundResource
 import org.jetbrains.anko.textColor
 
 /**
@@ -35,6 +36,10 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>() {
 
     override val viewModelClass: Class<DiscoverHomeViewModel> = DiscoverHomeViewModel::class.java
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.discover_home_fragment, container, false)
@@ -42,7 +47,8 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>() {
 
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
-        initViewPager(vp_discover_home)
+
+        initViewPager()
         initJwNews(vf_jwzx_detail, fl_discover_home_jwnews)
         viewModel.getRollInfos()
 
@@ -51,7 +57,6 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>() {
         }
 
         initFeeds()
-
         super.onActivityCreated(savedInstanceState)
 
     }
@@ -61,9 +66,9 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>() {
         initFunctions()
     }
 
-
-    private fun initViewPager(viewPager2: ViewPager2) {
-        viewPager2.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+    //加载轮播图
+    private fun initViewPager() {
+        vp_discover_home.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageScrollStateChanged(state: Int) {
                 if (state == ViewPager2.SCROLL_STATE_DRAGGING || state == ViewPager2.SCROLL_STATE_SETTLING)
                     vp_discover_home.adapter?.notifyDataSetChanged()
@@ -82,7 +87,7 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>() {
         }
         viewModel.startSwitchViewPager {
             if (viewModel.scrollFlag) {
-                viewPager2.currentItem += 1
+                vp_discover_home.currentItem += 1
             }
             viewModel.scrollFlag = true
         }
@@ -146,8 +151,22 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>() {
             }
         }
     }
-    private fun initFeeds(){
-        fragmentManager?.beginTransaction()?.add(R.id.ll_discover_feeds,(ARouter.getInstance().build(DISCOVER_VOLUNTEER_FEED).navigation() as Fragment))?.commit()
 
+    private fun initFeeds() {
+        addFeedByRoute(DISCOVER_VOLUNTEER_FEED)
+    }
+
+    private fun addFeedByRoute(route: String) {
+        addFeedFragment(ARouter.getInstance().build(route).navigation() as Fragment)
+    }
+
+    private fun addFeedFragment(fragment: Fragment) {
+
+        fragmentManager?.beginTransaction()?.add(R.id.ll_discover_feeds, fragment)?.commit()
+        ll_discover_feeds.post {
+            View.inflate(context,R.layout.discover_feed_splite_line,ll_discover_feeds)
+        }
+
+//        fragmentManager?.beginTransaction()?.add(R.id.ll_discover_feeds, fragment)?.commit()
     }
 }

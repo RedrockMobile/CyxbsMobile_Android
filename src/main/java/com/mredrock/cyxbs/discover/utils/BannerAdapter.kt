@@ -39,7 +39,10 @@ class BannerAdapter(private val context: Context, private val urlList: List<Roll
         val url = urlList[position % urlList.size].picture_url
         Glide.with(context)
                 .load(url)
-                .apply(RequestOptions().transform(MultiTransformation(CenterCrop(), RoundedCorners(context.dip(8)))))
+                .apply(RequestOptions()
+                        .placeholder(R.drawable.discover_ic_cyxbsv6)
+                        .transform(MultiTransformation(CenterCrop(), RoundedCorners(context.dip(8))))
+                )
                 .into(holder.itemView.iv_viewpager_item)
         url ?: return
         if (url.startsWith("http")) {

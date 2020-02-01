@@ -20,6 +20,7 @@ class MoreFunctionActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.discover_activity_more_function)
 
+
         initRv(rv_discover_more_function)
         initSettings()
     }
@@ -33,23 +34,8 @@ class MoreFunctionActivity : BaseActivity() {
         iv_discover_more_function_back.setOnClickListener { finish() }
         iv_discover_more_function_settings.setOnClickListener {
             (rv_discover_more_function.adapter as MoreFunctionRvAdapter).apply {
-
-                if (!this.getIsSettingMode()) {
-                    changeSettingMode()
-                    iv_discover_more_function_settings.setImageResource(R.drawable.discover_ic_more_function_finish)
-                } else {
-
-                    if(getChosenList().size>=3) {
-                        changeSettingMode()
-                        iv_discover_more_function_settings.setImageResource(R.drawable.discover_ic_settings)
-                        MoreFunctionProvider.saveHomePageFunctionsToSp(this.getChosenList())
-                        this.resetChosenList()
-                        Toast.makeText(this@MoreFunctionActivity,"更新成功",Toast.LENGTH_SHORT).show()
-                    }else{
-                        Toast.makeText(this@MoreFunctionActivity,"要选择三个哦",Toast.LENGTH_SHORT).show()
-                    }
-
-                }
+                getBindable().settingClicked(this,this@MoreFunctionActivity,iv_discover_more_function_settings)
+                setBindable(if(getBindable() is MoreFunctionBindable)MoreFunctionSettingBindable() else MoreFunctionBindable())
             }
         }
     }

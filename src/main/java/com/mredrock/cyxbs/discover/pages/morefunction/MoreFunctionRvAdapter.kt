@@ -20,7 +20,7 @@ open class MoreFunctionRvAdapter(private val functions: List<MoreFunctionProvide
     private val LONG_TYPE = 0
     private val LEFT_TYPE = 1
     private val RIGHT_TYPE = 2
-    private var isSettingMode = false
+    private var bindable:Bindable = MoreFunctionBindable()
     private val chosenList = mutableListOf<Int>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MoreFunctionViewHolder {
@@ -52,30 +52,16 @@ open class MoreFunctionRvAdapter(private val functions: List<MoreFunctionProvide
             holder.itemView.cl_discover_more_function.backgroundResource = R.drawable.discover_shape_more_function_recycler_item
         }
         holder.itemView.setOnClickListener {
-            if (isSettingMode) {
-                if (!chosenList.contains(position)) {
-                    if (chosenList.size > 2) {
-                        Toast.makeText(holder.itemView.context, "只能选择三个哦", Toast.LENGTH_SHORT).show()
-                    } else {
-                        chosenList.add(position)
-                        notifyItemChanged(position)
-                    }
-                } else {
-                    chosenList.remove(position)
-                    notifyItemChanged(position)
-                }
-            } else {
-                functions[position].activityStarter.startActivity()
-            }
+            bindable?.onBindViewHolder(holder,position,this)
         }
     }
-
-    fun getIsSettingMode() = isSettingMode
-    fun changeSettingMode() {
-        this.isSettingMode = !isSettingMode
+    fun getFunctions() = functions
+    fun getBindable() = bindable
+    fun setBindable(bindable:Bindable) {
+        this.bindable = bindable
     }
 
-    fun getChosenList(): List<Int> {
+    fun getChosenList(): MutableList<Int> {
         return chosenList
     }
 
