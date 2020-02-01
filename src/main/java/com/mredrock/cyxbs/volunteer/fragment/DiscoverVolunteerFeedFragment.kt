@@ -33,7 +33,7 @@ class DiscoverVolunteerFeedFragment : BaseViewModelFragment<DiscoverVolunteerFee
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
-        init()
+
         super.onActivityCreated(savedInstanceState)
     }
 
@@ -41,7 +41,7 @@ class DiscoverVolunteerFeedFragment : BaseViewModelFragment<DiscoverVolunteerFee
 
     override fun onResume() {
         super.onResume()
-
+        init()
         val volunteerSP = VolunteerTimeSP(activity as Activity)
         val uid = volunteerSP.volunteerUid
         if (uid == "404" || volunteerSP.volunteerAccount == "404" ||
@@ -70,7 +70,7 @@ class DiscoverVolunteerFeedFragment : BaseViewModelFragment<DiscoverVolunteerFee
                             setSpan(AbsoluteSizeSpan(context.sp(36)), 0, this.length - 1, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
                             setSpan(AbsoluteSizeSpan(context.sp(8)), this.length - 1, this.length, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
                         }
-                if(it.hours==0.0){
+                if (it.hours == 0.0) {
                     tv_volunteer_feed_activity_time.text = "还没有志愿时长"
                     return@observe
                 }
