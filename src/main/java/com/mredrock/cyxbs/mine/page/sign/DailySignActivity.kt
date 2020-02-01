@@ -20,7 +20,6 @@ import com.mredrock.cyxbs.common.utils.extensions.invisible
 import com.mredrock.cyxbs.common.utils.extensions.visible
 import com.mredrock.cyxbs.mine.R
 import com.mredrock.cyxbs.mine.network.model.ScoreStatus
-import com.mredrock.cyxbs.mine.util.extension.logr
 import com.mredrock.cyxbs.mine.util.user
 import com.mredrock.cyxbs.mine.util.widget.SchoolCalendarPlus
 import com.mredrock.cyxbs.mine.util.widget.SpaceDecoration
@@ -28,6 +27,7 @@ import com.mredrock.cyxbs.mine.util.widget.Stick
 import kotlinx.android.synthetic.main.mine_activity_daily_sign.*
 import kotlinx.android.synthetic.main.mine_layout_store_sign.*
 import org.jetbrains.anko.textColor
+import org.jetbrains.anko.toast
 
 
 /**
@@ -102,6 +102,11 @@ class DailySignActivity(override val viewModelClass: Class<DailyViewModel> = Dai
             }
             hidePlaceHolder()
             adapter.submitList(it)
+        })
+        viewModel.isInVacation.observe(this, Observer {
+            if (it == true) {
+                toast("寒暑假不可签到")
+            }
         })
     }
 
