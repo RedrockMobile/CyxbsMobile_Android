@@ -42,7 +42,9 @@
     <string name="mine_info_default">完善你的个人信息哦</string>
     <string name="mine_info_save">已保存</string>
     <string name="mine_info_contact">写下您的联系方式，便于我们与您联系</string>
-
+    <string name="mine_exit_edit">退出编辑</string>
+    <string name="mine_exit_edit_quest">你的资料还未保存，是否退出？</string>
+    <string name="mine_exit_edit_btn">退出</string>
 
 
 

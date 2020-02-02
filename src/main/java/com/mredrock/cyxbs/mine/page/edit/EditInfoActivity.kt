@@ -27,7 +27,7 @@ import com.mredrock.cyxbs.common.utils.extensions.getRequestBody
 import com.mredrock.cyxbs.common.utils.extensions.loadAvatar
 import com.mredrock.cyxbs.common.utils.extensions.uri
 import com.mredrock.cyxbs.mine.R
-import com.mredrock.cyxbs.mine.util.ui.MineDialogFragment
+import com.mredrock.cyxbs.mine.util.ui.EditDialogFragment
 import com.mredrock.cyxbs.mine.util.user
 import com.yalantis.ucrop.UCrop
 import kotlinx.android.synthetic.main.mine_activity_edit_info.*
@@ -51,11 +51,6 @@ class EditInfoActivity(override val isFragmentActivity: Boolean = false,
 
     private val SELECT_PICTURE = 1
     private val SELECT_CAMERA = 2
-
-    private val positiveCallback = {
-        finish()
-    }
-    private val cancelCallback = {}
 
     private val watcher = object : TextWatcher {
         override fun afterTextChanged(s: Editable?) {
@@ -125,7 +120,7 @@ class EditInfoActivity(override val isFragmentActivity: Boolean = false,
                 R.drawable.mine_ic_arrow_left,
                 View.OnClickListener {
                     if (checkIfInfoChange()) {
-                        MineDialogFragment("退出编辑", "你的资料还没有保存，是否退出？", positiveCallback, cancelCallback).show(supportFragmentManager, "SaveInfo")
+                        EditDialogFragment().show(supportFragmentManager, "SaveInfo")
                     } else {
                         finish()
                     }
@@ -148,7 +143,7 @@ class EditInfoActivity(override val isFragmentActivity: Boolean = false,
 
     override fun onBackPressed() {
         if (checkIfInfoChange()) {
-            MineDialogFragment("退出编辑", "你的资料还没有保存，是否退出？", positiveCallback, cancelCallback).show(supportFragmentManager, "SaveInfo")
+            EditDialogFragment().show(supportFragmentManager, "SaveInfo")
         } else {
             super.onBackPressed()
         }
@@ -344,7 +339,8 @@ class EditInfoActivity(override val isFragmentActivity: Boolean = false,
 
         try {
             val fileBody = MultipartBody.Part.createFormData("fold", destinationFile.name, destinationFile.getRequestBody())
-            val numBody = RequestBody.create(MediaType.parse("multipart/form-data"), user?.stuNum ?: return)
+            val numBody = RequestBody.create(MediaType.parse("multipart/form-data"), user?.stuNum
+                    ?: return)
             viewModel.uploadAvatar(numBody, fileBody)
         } catch (e: IOException) {
             e.printStackTrace()
