@@ -1,0 +1,69 @@
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:context="com.mredrock.cyxbs.discover.electricity.ui.fragment.ElectricityFeedFragment"
+    tools:ignore="ResourceName">
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tv_electricity_feed_fee"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="17dp"
+        android:textColor="@color/levelFourFontColor"
+        tools:text="12.42"
+        app:layout_constraintStart_toStartOf="@+id/electricity_guideline"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="23dp"
+        android:alpha="0.6"
+        android:text="费用/本月"
+        android:textColor="@color/levelTwoFontColor"
+        android:textSize="13sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/tv_electricity_feed_fee"
+        app:layout_constraintStart_toStartOf="@+id/tv_electricity_feed_fee"
+        app:layout_constraintTop_toBottomOf="@+id/tv_electricity_feed_fee" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tv_electricity_feed_kilowatt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="17dp"
+        android:textColor="@color/levelFourFontColor"
+        tools:text="12.42"
+        app:layout_constraintEnd_toStartOf="@+id/electricity_guideline2"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="23dp"
+        android:alpha="0.6"
+        android:text="使用度数/本月"
+        android:textColor="@color/levelTwoFontColor"
+        android:textSize="13sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/tv_electricity_feed_kilowatt"
+        app:layout_constraintStart_toStartOf="@+id/tv_electricity_feed_kilowatt"
+        app:layout_constraintTop_toBottomOf="@+id/tv_electricity_feed_kilowatt" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/electricity_guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.12" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/electricity_guideline2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.88" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

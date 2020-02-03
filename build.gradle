@@ -1,7 +1,10 @@
 apply from: module_config
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
 
 dependencies {
     implementation project(':lib_common')
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     kapt deps.arouter.compiler
 
     implementation 'androidx.navigation:navigation-fragment:2.1.0-beta02'
