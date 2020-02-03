@@ -14,12 +14,16 @@ import com.mredrock.cyxbs.common.R
  *
  * 描述:
  *   该自定义View用来包含不定高度，不定宽度的子项，并从左到右排列，排满一行排第二行，该自定义View采用适配器模式
+ *
+ * 注意：不要给子item设置的最外层设置外边距，因为设置了也没有用
+ *      我留有属性来设置子项的横向距离和纵向距离具体请看该自定义View的属性配置xml文件
  */
 class RedRockAutoWarpView : FrameLayout {
     var adapter: Adapter? = null
         set(value) {
             field = value
             adapter?.context = context
+            adapter?.view= this
             if (adapter?.getItemCount() ?: 0 == 0) {
                 return
             }
@@ -34,10 +38,23 @@ class RedRockAutoWarpView : FrameLayout {
         }
 
 
-    var isStrict = true
+    /**
+     * 开启严格模式，默认开启，若是不开启严格模式子项行与行之间可能无法保证正常显示，
+     * 若是子项只是宽度不同，可以在属性里面关闭，可优化部分性能（有大量子项时）
+     */
+    private var isStrict = true
 
-    var maxLine = -1
+    /**
+     * 最大行数，默认-1无限制
+     */
+    private var maxLine = -1
 
+
+    private var maxColumn = -1
+
+    /**
+     * 子项的左右间距和上下间距
+     */
     private var spacingH: Int = 0
     private var spacingV: Int = 0
 
@@ -51,32 +68,41 @@ class RedRockAutoWarpView : FrameLayout {
         spacingV = typedArray.getDimension(R.styleable.RedRockAutoWarpView_verticalsSpacing, 0f).toInt()
         isStrict = typedArray.getBoolean(R.styleable.RedRockAutoWarpView_strictMode, true)
         maxLine = typedArray.getInteger(R.styleable.RedRockAutoWarpView_maxLine,-1)
+        maxColumn = typedArray.getInteger(R.styleable.RedRockAutoWarpView_maxColumn,-1)
         typedArray.recycle()
     }
 
-    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {}
+    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
 
 
+    /**
+     * 关键函数，用于将所有的子项添加到该View当中
+     */
     private fun addItemView() {
 
         /**
          * 下面复用代码
          */
-        fun setLayoutP(layoutParams: LayoutParams, column: Int, rowUsedHeights: MutableList<Int>, columnUsedWith: Int) {
-            layoutParams.topMargin = (if (column == 0) 0 else {
+        fun setLayoutP(layoutParams: LayoutParams, column: Int, rowUsedHeights: MutableList<Int>, columnUsedWith: Int,itemHeight: Int) {
+            layoutParams.topMargin = (if (column == 0) 0 else {//如果当前是第一排，则为0
+                //不是0则加上上面所有的行的最大高度，如果当前item是当前行第一个，这不用减去当前行，不是则减去当前行
                 rowUsedHeights.sum() - if (columnUsedWith == 0) 0 else rowUsedHeights[column]
-            }) + spacingV * (rowUsedHeights.size -
-                    if (columnUsedWith == 0) 0 else 1)
+                //如果设置了上下间隔则加上间隔
+            }) + spacingV * (rowUsedHeights.size - if (columnUsedWith == 0) 0 else 1)
             layoutParams.leftMargin = if (columnUsedWith == 0) 0 else columnUsedWith
         }
 
         adapter?.let { adapter ->
+            //当前是第几排[从0计数]
             var column = 0
+            //横向已经用的宽度
             var rowUsedWith = 0
+            //每一行的最大高度
             val rowUsedHeights = mutableListOf<Int>()
             var i = 0
             while (i < adapter.getItemCount()) {
-                val itemView = LayoutInflater.from(context).inflate(adapter.getItemId(), this, false)
+                adapter.getItemId(i)?:continue
+                val itemView = LayoutInflater.from(context).inflate(adapter.getItemId(i)!!, this, false)
                 clearMagin(itemView)//清除外边距，以免影响item实际大小
                 adapter.initItem(itemView, i)
                 itemView.measure(MeasureSpec.makeMeasureSpec(0,
@@ -87,17 +113,18 @@ class RedRockAutoWarpView : FrameLayout {
                 val layoutParams = itemView.layoutParams as LayoutParams
 
                 if (measuredWidth - rowUsedWith >= itemWith||rowUsedWith==0) {
-                    setLayoutP(layoutParams, column, rowUsedHeights, rowUsedWith)
+                    setLayoutP(layoutParams, column, rowUsedHeights, rowUsedWith,itemHeight)
                 }else {
                     column++
+
+                    //如果maxLine等于-1则默认包含所有子项。
                     if (maxLine!=-1&&column == maxLine) {
                         break
                     }
                     rowUsedWith = 0
-                    setLayoutP(layoutParams, column, rowUsedHeights, rowUsedWith)
+                    setLayoutP(layoutParams, column, rowUsedHeights, rowUsedWith,itemHeight)
                 }
 
-                //若函数没有退出，说明该View可以包含子View，那么从第一行开始，记录该行
                 if (rowUsedWith == 0 && column + 1 > rowUsedHeights.size) {
                     rowUsedHeights.add(itemHeight)
                 } else {
@@ -113,7 +140,7 @@ class RedRockAutoWarpView : FrameLayout {
             }
 
             if (isStrict) {
-                getChildAt(childCount-1).addOnLayoutChangeListener { view, i, i2, i3, i4, i5, i6, i7, i8 ->
+                getChildAt(childCount-1).addOnLayoutChangeListener { _, _, _, _, _, _, _, _, _ ->
                     var column1 = 0
                     var rowUsedWith1 = 0
                     val rowUsedHeights1 = mutableListOf<Int>()
@@ -125,17 +152,17 @@ class RedRockAutoWarpView : FrameLayout {
                         val layoutParams = itemView.layoutParams as LayoutParams
 
                         if (measuredWidth - rowUsedWith1 >= itemWith + spacingH||rowUsedWith1==0) {
-                            setLayoutP(layoutParams, column1, rowUsedHeights1, rowUsedWith1)
+                            setLayoutP(layoutParams, column1, rowUsedHeights1, rowUsedWith1,itemHeight)
                         }else {
                             column1++
                             if (maxLine!=-1&&column == maxLine) {
                                 break
                             }
                             rowUsedWith1 = 0
-                            setLayoutP(layoutParams, column1, rowUsedHeights1, rowUsedWith1)
+                            setLayoutP(layoutParams, column1, rowUsedHeights1, rowUsedWith1,itemHeight)
                         }
 
-                        //若函数没有退出，说明该View可以包含子View，那么从第一行开始，记录该行
+                        //从第一行开始，记录
                         if (rowUsedWith1 == 0 && column1 + 1 > rowUsedHeights1.size) {
                             rowUsedHeights1.add(itemHeight)
                         } else {
@@ -158,9 +185,14 @@ class RedRockAutoWarpView : FrameLayout {
      */
     fun refreshData() {
         removeAllViews()
-        addItemView()
+        if (adapter?.getItemCount() != 0) {
+            addItemView()
+        }
     }
 
+    /**
+     * 清除view的外边距
+     */
     private fun clearMagin(itemView: View?) {
         val layoutParams = itemView?.layoutParams as LayoutParams
         layoutParams.rightMargin = 0
@@ -169,9 +201,20 @@ class RedRockAutoWarpView : FrameLayout {
         layoutParams.bottomMargin = 0
     }
 
+    /**
+     * 适配器模式需要设置的适配器，需要使用这个view必需传入该Adapter的子类对象
+     */
     abstract class Adapter {
         lateinit var context: Context
-        abstract fun getItemId(): Int
+        lateinit var view:RedRockAutoWarpView
+        //这两个方法必需重写一个，原来不是这样子写的，因为是公共的，只能增加方法，怕影响已经使用的
+        open fun getItemId(): Int?{return null}
+        //这个方法方便不同的item设置
+        open fun getItemId(position: Int): Int?{
+            return if (getItemId() == null) {
+                null
+            }else getItemId()
+        }
         abstract fun getItemCount(): Int
         abstract fun initItem(item: View, position: Int)
     }
