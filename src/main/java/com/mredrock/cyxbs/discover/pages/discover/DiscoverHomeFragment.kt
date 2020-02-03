@@ -10,7 +10,6 @@ import android.widget.TextView
 import android.widget.ViewFlipper
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatTextView
-import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.widget.ViewPager2
 import com.alibaba.android.arouter.facade.annotation.Route
@@ -21,8 +20,6 @@ import com.mredrock.cyxbs.discover.R
 import com.mredrock.cyxbs.discover.utils.BannerAdapter
 import com.mredrock.cyxbs.discover.utils.MoreFunctionProvider
 import kotlinx.android.synthetic.main.discover_home_fragment.*
-import org.jetbrains.anko.backgroundColor
-import org.jetbrains.anko.backgroundResource
 import org.jetbrains.anko.textColor
 
 /**
@@ -36,10 +33,6 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>() {
 
     override val viewModelClass: Class<DiscoverHomeViewModel> = DiscoverHomeViewModel::class.java
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.discover_home_fragment, container, false)
@@ -153,6 +146,7 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>() {
     }
 
     private fun initFeeds() {
+        addFeedByRoute(DISCOVER_ELECTRICITY_FEED)
         addFeedByRoute(DISCOVER_VOLUNTEER_FEED)
     }
 
@@ -163,10 +157,6 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>() {
     private fun addFeedFragment(fragment: Fragment) {
 
         fragmentManager?.beginTransaction()?.add(R.id.ll_discover_feeds, fragment)?.commit()
-        ll_discover_feeds.post {
-            View.inflate(context,R.layout.discover_feed_splite_line,ll_discover_feeds)
-        }
 
-//        fragmentManager?.beginTransaction()?.add(R.id.ll_discover_feeds, fragment)?.commit()
     }
 }
