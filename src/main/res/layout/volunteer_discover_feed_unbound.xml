@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="152dp">
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tv_volunteer_feed_unbound"
+        android:text="还未绑定账号哦～"
+        android:textColor="@color/levelTwoFontColor"
+        android:alpha="0.6"
+        android:textSize="15sp"
+        android:layout_gravity="center_vertical|center_horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+</FrameLayout>
