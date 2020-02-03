@@ -38,7 +38,8 @@
     <!--    底部tab聚焦字体颜色-->
     <color name="focusedFontColor" tools:ignore="ResourceName">#2923D2</color>
 
-
+    <!--    60%透明度的二级字体-->
+    <color name="alphaLevelTwoFontColor" tools:ignore="ResourceName">#f315315B</color>
     <!--    课表可上拉下拉标识小块背景-->
     <color name="courseTableDragIndicatorBlockColor" tools:ignore="ResourceName">#E2EDFB</color>
     <!--    课表标识当天阴影-->
