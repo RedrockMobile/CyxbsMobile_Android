@@ -20,7 +20,6 @@ import com.mredrock.cyxbs.common.utils.extensions.invisible
 import com.mredrock.cyxbs.common.utils.extensions.visible
 import com.mredrock.cyxbs.mine.R
 import com.mredrock.cyxbs.mine.network.model.ScoreStatus
-import com.mredrock.cyxbs.mine.util.user
 import com.mredrock.cyxbs.mine.util.widget.SchoolCalendarPlus
 import com.mredrock.cyxbs.mine.util.widget.SpaceDecoration
 import com.mredrock.cyxbs.mine.util.widget.Stick
@@ -88,10 +87,8 @@ class DailySignActivity(override val viewModelClass: Class<DailyViewModel> = Dai
 
         initView()
         dealBottomSheet()
-        user?.let {
-            viewModel.loadAllData(it)
-            viewModel.loadProduct(it)
-        }
+        viewModel.loadAllData()
+        viewModel.loadProduct()
         viewModel.status.observe(this, Observer {
             refreshUI(it)
         })
@@ -133,22 +130,6 @@ class DailySignActivity(override val viewModelClass: Class<DailyViewModel> = Dai
         weekGenerator.weekSignStateArr = weekState
         val schoolCalendarPlus = SchoolCalendarPlus()
         val pair = schoolCalendarPlus.getYearPair()
-        //寒暑假不可签到的一些限制
-//        if (schoolCalendarPlus.isInVacation()) {
-//            if (schoolCalendarPlus.isWinterVacation()) {
-//                mine_daily_tv_week.text = "寒假快乐吗(๑‾ ꇴ ‾๑)"
-//            } else {
-//                mine_daily_tv_week.text = "暑假快乐吗(´･ω･`)"
-//            }
-//            mine_daily_dayCount.gone()
-//            mine_daily_tv_ranking_percentage.gone()
-//            mine_daily_tv_ranking.text = "寒暑假不可签到<(￣3￣)>哼！"
-//            mine_daily_sign.gone()
-//            mine_daily_tv_bubble.gone()
-//            mine_daily_tv_year.text = "${pair.first}-${pair.second}"
-//            mine_store_tv_integral.text = "${scoreStatus.integral}"
-//            return
-//        }
         mine_daily_tv_year.text = "${pair.first}-${pair.second}"
         mine_daily_tv_week.text = "上学期第${schoolCalendarPlus.getChineseWeek()}周"
         mine_daily_dayCount.text = "已连续打卡${scoreStatus.serialDays}天"
@@ -184,7 +165,7 @@ class DailySignActivity(override val viewModelClass: Class<DailyViewModel> = Dai
 
     private fun checkIn() {
         isChecking = true
-        viewModel.checkIn(user ?: return)
+        viewModel.checkIn()
     }
 
     private fun dealBottomSheet() {

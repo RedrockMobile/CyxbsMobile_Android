@@ -3,9 +3,12 @@ package com.mredrock.cyxbs.mine.page.sign
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
+import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.bean.RedrockApiStatus
 import com.mredrock.cyxbs.common.bean.RedrockApiWrapper
-import com.mredrock.cyxbs.common.bean.User
+import com.mredrock.cyxbs.common.service.ServiceManager
+import com.mredrock.cyxbs.common.service.account.IUserService
+import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
@@ -44,8 +47,11 @@ class DailyViewModel : BaseViewModel() {
     private val pagesize = 6
 
 
-    fun loadAllData(user: User) {
-        apiService.getScoreStatus(user.stuNum ?: return, user.idNum ?: return)
+    fun loadAllData() {
+        val stuNum = ServiceManager.getService(IUserService::class.java).getStuNum()
+        val idNum = BaseApp.context.defaultSharedPreferences.getString("SP_KEY_ID_NUM", "")
+                ?: return
+        apiService.getScoreStatus(stuNum, idNum)
                 .normalWrapper(this)
                 .safeSubscribeBy {
                     _status.postValue(it)
@@ -57,18 +63,17 @@ class DailyViewModel : BaseViewModel() {
 
 
     //用flatmap解决嵌套请求的问题
-    fun checkIn(user: User) {
-        apiService.checkIn(user.stuNum ?: return, user.idNum ?: return)
+    fun checkIn() {
+        val stuNum = ServiceManager.getService(IUserService::class.java).getStuNum()
+        val idNum = BaseApp.context.defaultSharedPreferences.getString("SP_KEY_ID_NUM", "")
+                ?: return
+        apiService.checkIn(stuNum, idNum)
                 .flatMap(Function<RedrockApiStatus, Observable<RedrockApiWrapper<ScoreStatus>>> {
                     //如果status为405，说明是在寒暑假，此时不可签到
                     if (it.status == 405) {
                         _isInVacation.postValue(true)
                     }
-                    return@Function user.stuNum?.let { stuNum ->
-                        user.idNum?.let { idNum ->
-                            apiService.getScoreStatus(stuNum, idNum)
-                        }
-                    }
+                    return@Function apiService.getScoreStatus(stuNum, idNum)
                 })
                 .setSchedulers()
                 .normalWrapper(this)
@@ -81,7 +86,7 @@ class DailyViewModel : BaseViewModel() {
                 .lifeCycle()
     }
 
-    fun loadProduct(user: User) {
+    fun loadProduct() {
         if (page == 5) {
             return
         }
@@ -98,6 +103,6 @@ class DailyViewModel : BaseViewModel() {
         }
 
         page++
-        loadProduct(user)
+        loadProduct()
     }
 }

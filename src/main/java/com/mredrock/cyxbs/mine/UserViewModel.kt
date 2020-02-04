@@ -3,33 +3,35 @@ package com.mredrock.cyxbs.mine
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.mredrock.cyxbs.common.BaseApp
-import com.mredrock.cyxbs.common.bean.User
-import com.mredrock.cyxbs.common.utils.extensions.doOnErrorWithDefaultErrorHandler
-import com.mredrock.cyxbs.common.utils.extensions.mapOrThrowApiException
-import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
-import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
+import com.mredrock.cyxbs.common.service.ServiceManager
+import com.mredrock.cyxbs.common.service.account.IUserEditorService
+import com.mredrock.cyxbs.common.service.account.IUserService
+import com.mredrock.cyxbs.common.service.account.IUserStateService
+import com.mredrock.cyxbs.common.utils.extensions.*
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
+import com.mredrock.cyxbs.common.viewmodel.event.SingleLiveEvent
 import com.mredrock.cyxbs.mine.network.model.ScoreStatus
+import com.mredrock.cyxbs.mine.network.model.UserLocal
 import com.mredrock.cyxbs.mine.util.apiService
-import com.mredrock.cyxbs.mine.util.user
 
 /**
  * Created by zia on 2018/8/26.
  */
 class UserViewModel : BaseViewModel() {
-
-    //作为UserFragment中获取User信息的唯一置信源，UserFragment.java中不直接使用BaseApp.user,同时在viewModel中更新BaseApp.user
-    private val _user = MutableLiveData<User>()
-    val mUser: LiveData<User>
-        get() = _user
+    //提示视图Fragment，User的信息已更新
+    private val _isUserUpdate = SingleLiveEvent<Boolean>()
+    val isUserUpdate: SingleLiveEvent<Boolean>
+        get() = _isUserUpdate
 
     private val _status = MutableLiveData<ScoreStatus>()//签到状态
     val status: LiveData<ScoreStatus>
         get() = _status
 
     fun getUserInfo() {
-        val stuNum = user?.stuNum ?: return
-        val idNum = user?.idNum ?: return
+
+        val stuNum = ServiceManager.getService(IUserService::class.java).getStuNum()
+        val idNum = BaseApp.context.defaultSharedPreferences.getString("SP_KEY_ID_NUM", "")
+                ?: return
         apiService.getPersonInfo(stuNum, idNum)
                 .mapOrThrowApiException()
                 .setSchedulers()
@@ -37,14 +39,17 @@ class UserViewModel : BaseViewModel() {
                 .safeSubscribeBy(onNext = {
                     //更新BaseUser
                     freshBaseUser(it)
-                    _user.postValue(it)
+                    _isUserUpdate.postValue(true)
 
                 })
     }
 
 
-    fun getScoreStatus(user: User) {
-        apiService.getScoreStatus(user.stuNum ?: return, user.idNum ?: return)
+    fun getScoreStatus() {
+        val stuNum = ServiceManager.getService(IUserService::class.java).getStuNum()
+        val idNum = BaseApp.context.defaultSharedPreferences.getString("SP_KEY_ID_NUM", "")
+                ?: return
+        apiService.getScoreStatus(stuNum, idNum)
                 .mapOrThrowApiException()
                 .setSchedulers()
                 .doOnErrorWithDefaultErrorHandler { false }
@@ -59,22 +64,21 @@ class UserViewModel : BaseViewModel() {
     /**
      * 更新BaseApp.user
      */
-    private fun freshBaseUser(user: User) {
-        val finalUser = BaseApp.user ?: return
-        finalUser.nickname = user.nickname
-        finalUser.introduction = user.introduction
-        finalUser.qq = user.qq
-        finalUser.phone = user.phone
-        finalUser.photoSrc = user.photoSrc
-        finalUser.photoThumbnailSrc = user.photoThumbnailSrc
-        BaseApp.user = finalUser
+    private fun freshBaseUser(user: UserLocal) {
+        ServiceManager.getService(IUserEditorService::class.java).apply {
+            setIntroduction(user.introduction)
+            setNickname(user.nickname)
+            setQQ(user.qq)
+            setPhone(user.phone)
+            setAvatarImgUrl(user.photoSrc)
+        }
+
     }
 
     /**
      * 清除User的信息，唯一会调用这个方法的时候是在用户登出
      */
     fun clearUser() {
-        _user.postValue(null)
-        BaseApp.user = null
+        ServiceManager.getService(IUserStateService::class.java).logout(BaseApp.context)
     }
 }
