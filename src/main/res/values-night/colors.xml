@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <color name="colorPrimary" tools:ignore="ResourceName">#f8fafb</color>
-    <color name="colorPrimaryDark" tools:ignore="ResourceName">#798DFA</color>
-    <color name="colorAccent" tools:ignore="ResourceName">#788EFA</color>
+    <color name="colorPrimary" tools:ignore="ResourceName">#000000</color>
+    <color name="colorPrimaryDark" tools:ignore="ResourceName">#000000</color>
+    <color name="colorAccent" tools:ignore="ResourceName">#000000</color>
 
     <!--    颜色汇总，方便黑夜模式，自己把用到的颜色，都扔在这，写好注释，并在飞书上标注好
           并以模块名为前缀-->
@@ -24,7 +24,7 @@
     <!--    一级字体颜色-->
     <color name="levelOneFontColor" tools:ignore="ResourceName">#112C54</color>
     <!--    二级字体颜色-->
-    <color name="levelTwoFontColor" tools:ignore="ResourceName">#15315B</color>
+    <color name="levelTwoFontColor" tools:ignore="ResourceName">#00ff00</color>
     <!--    三级字体颜色-->
     <color name="levelThreeFontColor" tools:ignore="ResourceName">#193866</color>
     <!--    四级字体颜色-->
@@ -57,10 +57,6 @@
     <color name="memoGrayStripes" tools:ignore="ResourceName">#E8EBEF</color>
 
     <color name="courseAffairYouMightRecycleItemBackgroudColor" tools:ignore="ResourceName">#99F2F3F7</color>
-
-    <!--    事务下一步按钮搭配的颜色-->
-    <color name="course_edit_affair_start_color_transparency" tools:ignore="ResourceName">#446B65EF</color>
-    <color name="course_edit_affair_start_color" tools:ignore="ResourceName">#6B65EF</color>
 
     <!--    发现教务在线方框背景-->
     <color name="discoveryJwzxBackground" tools:ignore="ResourceName">#AFD2FB</color>

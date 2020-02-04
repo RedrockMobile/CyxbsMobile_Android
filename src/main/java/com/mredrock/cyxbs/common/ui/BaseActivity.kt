@@ -2,14 +2,12 @@ package com.mredrock.cyxbs.common.ui
 
 //import com.jude.swipbackhelper.SwipeBackHelper
 import android.app.Activity
-import android.content.Context
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.view.Menu
 import android.view.View
-import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.annotation.DrawableRes
 import androidx.appcompat.app.AppCompatActivity
@@ -22,15 +20,12 @@ import com.mredrock.cyxbs.common.event.AskLoginEvent
 import com.mredrock.cyxbs.common.event.LoginEvent
 import com.mredrock.cyxbs.common.event.LoginStateChangeEvent
 import com.mredrock.cyxbs.common.utils.LogUtils
-import com.mredrock.cyxbs.common.utils.extensions.getScreenWidth
 import com.umeng.analytics.MobclickAgent
 import kotlinx.android.synthetic.main.common_toolbar.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import org.jetbrains.anko.backgroundResource
 import org.jetbrains.anko.startActivity
-import org.jetbrains.anko.windowManager
 
 /**
  * Created By jay68 on 2018/8/9.
