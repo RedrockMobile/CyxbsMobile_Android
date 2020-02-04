@@ -15,6 +15,7 @@ dependencies {
     api fileTree(include: ['*.jar'], dir: 'libs')
 
     // copy if need Unit Testing
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:core:1.2.0'
     androidTestImplementation 'androidx.test:runner:1.2.0'
