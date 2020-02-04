@@ -22,7 +22,9 @@ class ElectricityFeedFragment : BaseFeedFragment<ChargeViewModel>() {
         setTitle("电费查询")
         setOnClickListener {
             fragmentManager?.let {
-                ElectricityFeedSettingDialogFragment().show(it, "ElectricityFeedSetting")
+                ElectricityFeedSettingDialogFragment { id, room ->
+                    refreshCharge(id, room)
+                }.show(it, "ElectricityFeedSetting")
             }
 
         }
@@ -32,7 +34,8 @@ class ElectricityFeedFragment : BaseFeedFragment<ChargeViewModel>() {
         val id = BUILDING_NAMES.getValue(BUILDING_NAMES_HEADER[pos])[defaultSharedPreferences.getInt(SP_BUILDING_FOOT_KEY, -1)].split("(")[1].split("栋")[0]
         val room = defaultSharedPreferences.getString(SP_ROOM_KEY, "") ?: ""
 
-        viewModel.getCharge(id, room)
+
+        refreshCharge(id, room)
 
         viewModel.chargeInfo.observe {
             it?.let {
@@ -42,5 +45,9 @@ class ElectricityFeedFragment : BaseFeedFragment<ChargeViewModel>() {
         }
 
 
+    }
+
+    private fun refreshCharge(id: String, room: String) {
+        viewModel.getCharge(id, room)
     }
 }

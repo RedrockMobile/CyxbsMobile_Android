@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.DialogFragment
 import com.mredrock.cyxbs.common.utils.extensions.editor
 import com.mredrock.cyxbs.discover.electricity.config.*
@@ -13,7 +14,7 @@ import kotlinx.android.synthetic.main.electricity_dialog_dormitory_select.*
 import kotlinx.android.synthetic.main.electricity_dialog_dormitory_select.view.*
 import org.jetbrains.anko.support.v4.defaultSharedPreferences
 
-class ElectricityFeedSettingDialogFragment : DialogFragment() {
+class ElectricityFeedSettingDialogFragment(private val refresher: (id: String, room: String) -> Unit) : DialogFragment() {
     private val buildingNames by lazy(LazyThreadSafetyMode.NONE) { BUILDING_NAMES }
     private val buildingHeadNames by lazy(LazyThreadSafetyMode.NONE) { BUILDING_NAMES_HEADER }
 
@@ -35,7 +36,7 @@ class ElectricityFeedSettingDialogFragment : DialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val room = defaultSharedPreferences.getString(SP_ROOM_KEY, "101") ?: "101"
+        var room = defaultSharedPreferences.getString(SP_ROOM_KEY, "101") ?: "101"
         view.apply {
             et_electricity_room_num.apply {
                 setText(room)
@@ -44,6 +45,7 @@ class ElectricityFeedSettingDialogFragment : DialogFragment() {
                 }
 
             }
+            et_electricity_room_num.doOnTextChanged { text, _, _, _ -> room = text.toString() }
             wp_dormitory_head.setOnItemSelectedListener { _, data, _ ->
                 wp_dormitory_foot.data = buildingNames[data]?.map { s -> s.replaceAfter("舍", "") }
                 setCorrectBuildingNum()
@@ -61,6 +63,8 @@ class ElectricityFeedSettingDialogFragment : DialogFragment() {
             btn_dialog_dormitory_confirm.setOnClickListener {
                 selectBuildingHeadPosition = wp_dormitory_head.currentItemPosition
                 selectBuildingFootPosition = wp_dormitory_foot.currentItemPosition
+                val id = BUILDING_NAMES.getValue(BUILDING_NAMES_HEADER[selectBuildingHeadPosition])[selectBuildingFootPosition].split("(")[1].split("栋")[0]
+                refresher.invoke(id, room)
                 this@ElectricityFeedSettingDialogFragment.dismiss()
 
                 defaultSharedPreferences.editor {
