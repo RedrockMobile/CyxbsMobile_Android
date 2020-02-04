@@ -8,18 +8,7 @@
     tools:context=".fragment.DiscoverVolunteerFeedFragment"
     tools:ignore="ResourceName">
 
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/tv_volunteer_feed_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="15dp"
-        android:layout_marginTop="21dp"
-        android:text="志愿服务"
-        android:textStyle="bold"
-        android:textSize="18sp"
-        android:textColor="@color/levelTwoFontColor"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tv_volunteer_feed_total_time"
@@ -39,10 +28,10 @@
         android:layout_marginTop="15dp"
         android:layout_marginBottom="23dp"
         android:src="@drawable/ic_volunteer_feed_background"
+        android:layout_marginStart="15dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/tv_volunteer_feed_title"
-        app:layout_constraintStart_toStartOf="@+id/tv_volunteer_feed_title"
-        app:layout_constraintTop_toBottomOf="@+id/tv_volunteer_feed_title" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 
     <androidx.appcompat.widget.AppCompatTextView
