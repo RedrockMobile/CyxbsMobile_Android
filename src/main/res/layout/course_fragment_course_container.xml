@@ -51,11 +51,15 @@
                     android:paddingEnd="16dp">
 
 
-                    <TextView
+                    <com.mredrock.cyxbs.course.component.MarqueeTextView
                         android:id="@+id/course_tv_now_course"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:maxLength="8"
+                        android:layout_marginEnd="15dp"
+                        android:ellipsize="marquee"
+                        android:focusable="true"
+                        android:marqueeRepeatLimit="-1"
+                        android:singleLine="true"
                         android:text="@{coursesViewModel.nowCourse.course}"
                         android:textColor="@color/levelTwoFontColor"
                         android:textSize="22sp"
@@ -64,10 +68,8 @@
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toStartOf="@+id/ll_course_time_container"
                         app:layout_constraintHorizontal_bias="0.0"
-                        app:layout_constraintHorizontal_chainStyle="spread_inside"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintVertical_chainStyle="spread_inside"
                         tools:text="数据结构" />
 
                     <LinearLayout
@@ -75,17 +77,18 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
+                        android:gravity="center"
                         android:visibility="@{coursesViewModel.isShowCurrentSchedule}"
-                        app:layout_constraintBottom_toBottomOf="@+id/course_tv_now_course"
-                        app:layout_constraintEnd_toStartOf="@+id/ll_course_place_container"
-                        app:layout_constraintStart_toEndOf="@+id/course_tv_now_course"
-                        app:layout_constraintTop_toTopOf="@+id/course_tv_now_course"
-                        app:layout_constraintVertical_bias="0.75">
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
 
                         <ImageView
                             android:id="@+id/course_imageview"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
+                            android:layout_width="18dp"
+                            android:layout_height="18dp"
                             android:adjustViewBounds="true"
                             android:padding="3dp"
                             app:layout_constraintBottom_toBottomOf="parent"
@@ -98,8 +101,9 @@
                             android:id="@+id/tv_course_time"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_marginStart="3dp"
                             android:gravity="center"
-                            android:text="@{coursesViewModel.nowCourse.lesson}"
+                            android:text="@{coursesViewModel.nowCourseTime}"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toEndOf="@id/course_imageview"
@@ -111,8 +115,10 @@
 
                     <LinearLayout
                         android:id="@+id/ll_course_place_container"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_marginStart="15dp"
+                        android:gravity="center_vertical|end"
                         android:orientation="horizontal"
                         android:visibility="@{coursesViewModel.isShowCurrentSchedule}"
                         app:layout_constraintBottom_toBottomOf="@+id/ll_course_time_container"
@@ -124,33 +130,28 @@
 
                         <ImageView
                             android:id="@+id/iv_landmark"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
+                            android:layout_width="18dp"
+                            android:layout_height="18dp"
                             android:adjustViewBounds="true"
                             android:padding="3dp"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toStartOf="@+id/tv_course_place"
-                            app:layout_constraintHorizontal_bias="1.0"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"
                             app:srcCompat="@drawable/course_landmark" />
 
-                        <TextView
+                        <com.mredrock.cyxbs.course.component.MarqueeTextView
                             android:id="@+id/tv_course_place"
+                            android:ellipsize="marquee"
+                            android:singleLine="true"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_marginStart="3dp"
                             android:gravity="center"
                             android:text="@{coursesViewModel.nowCourse.classroom}"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toEndOf="@id/iv_landmark"
-                            app:layout_constraintTop_toTopOf="parent"
                             tools:text="综合实验楼" />
 
                     </LinearLayout>
 
 
                     <TextView
+                        android:id="@+id/course_textview2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="今天和明天都没课咯～"
@@ -188,16 +189,34 @@
                         app:layout_constraintVertical_chainStyle="spread_inside"
                         tools:text="第二周" />
 
+                    <View
+                        android:id="@+id/course_this_week_tips_blank"
+                        android:layout_width="10dp"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/levelTwoFontColor"
+                        app:layout_constraintBaseline_toBaselineOf="@+id/course_tv_which_week"
+                        app:layout_constraintStart_toEndOf="@+id/course_tv_which_week" />
+
                     <TextView
                         android:id="@+id/course_this_week_tips"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="  (本周)>"
+                        android:text="(本周)"
                         android:textColor="@color/levelTwoFontColor"
                         android:textSize="15sp"
                         android:visibility="@{coursesViewModel.isShowPresentTips}"
-                        app:layout_constraintBaseline_toBaselineOf="@+id/course_tv_which_week"
-                        app:layout_constraintStart_toEndOf="@+id/course_tv_which_week" />
+                        app:layout_constraintBaseline_toBaselineOf="@+id/course_this_week_tips_blank"
+                        app:layout_constraintStart_toEndOf="@+id/course_this_week_tips_blank" />
+
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=">"
+                        android:textColor="@color/levelTwoFontColor"
+                        android:textSize="15sp"
+                        app:layout_constraintBaseline_toBaselineOf="@+id/course_this_week_tips"
+                        app:layout_constraintStart_toEndOf="@+id/course_this_week_tips" />
 
                     <TextView
                         android:id="@+id/course_back_present_week"

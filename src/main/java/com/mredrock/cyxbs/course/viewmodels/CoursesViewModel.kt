@@ -25,6 +25,7 @@ import com.mredrock.cyxbs.course.network.AffairMapToCourse
 import com.mredrock.cyxbs.course.network.Course
 import com.mredrock.cyxbs.course.network.CourseApiService
 import com.mredrock.cyxbs.course.rxjava.ExecuteOnceObserver
+import com.mredrock.cyxbs.course.utils.CourseTimeParse
 import com.mredrock.cyxbs.course.utils.getNowCourse
 import com.mredrock.cyxbs.course.utils.getTodayCourse
 import io.reactivex.Observable
@@ -80,6 +81,12 @@ class CoursesViewModel : ViewModel() {
 
     //用于显示在当前或者下一课程对象
     val nowCourse = ObservableField<Course?>()
+    val nowCourseTime = object : ObservableField<String >(nowCourse){
+        override fun get(): String {
+            val s = CourseTimeParse(nowCourse.get()?.hashLesson?:0 * 2, nowCourse.get()?.period?:2)
+            return "${s.parseStartCourseTime()}-${s.parseEndCourseTime()}"
+        }
+    }
 
     //是否展示当前或者下一课程，用于DataBinDing绑定
     val isShowCurrentSchedule = object:ObservableField<Int>(nowCourse){
