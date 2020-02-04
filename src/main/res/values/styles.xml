@@ -11,7 +11,7 @@
     </style>
 
     <!-- 此主题作用与MainActivity上为了避免SwipeLayout和windowIsTranslucent属性一起使用造成的效率问题 -->
-    <style name="MainActivityTheme" parent="Theme.AppCompat.Light.NoActionBar" tools:ignore="ResourceName">
+    <style name="MainActivityTheme" parent="Theme.AppCompat.DayNight.NoActionBar" tools:ignore="ResourceName">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>

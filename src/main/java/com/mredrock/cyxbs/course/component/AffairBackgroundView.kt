@@ -56,7 +56,6 @@ internal class AffairBackgroundView : View {
     }
 
     override fun onDraw(canvas: Canvas?) {
-//        setLayerType(LAYER_TYPE_SOFTWARE,null);
         wholeRectF.set(-(width/2f),(height/2f),width/2f,-(height/2f))
         mPath.addRoundRect(wholeRectF,16f,16f,Path.Direction.CCW)
         val drawEdge = max(width,height) * sqrt(2.0)

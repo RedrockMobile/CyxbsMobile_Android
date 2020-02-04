@@ -212,7 +212,7 @@ class ScheduleViewAdapter(private val mContext: Context,
             mAffairBackground.visibility = View.GONE
             if (itemCount > 1) {
                 tag.visibility = View.VISIBLE
-                tag.background = createTagBackground(mCoursesTextColors[course.hashLesson])
+                tag.background = createTagBackground(mCoursesTextColors[course.hashLesson/2])
             }
             top.textColor = mCoursesTextColors[index]
             bottom.textColor = mCoursesTextColors[index]
