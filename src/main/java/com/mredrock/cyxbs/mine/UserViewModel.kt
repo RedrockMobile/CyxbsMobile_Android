@@ -1,6 +1,8 @@
 package com.mredrock.cyxbs.mine
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.bean.User
 import com.mredrock.cyxbs.common.utils.extensions.doOnErrorWithDefaultErrorHandler
 import com.mredrock.cyxbs.common.utils.extensions.mapOrThrowApiException
@@ -16,19 +18,27 @@ import com.mredrock.cyxbs.mine.util.user
  */
 class UserViewModel : BaseViewModel() {
 
-    val mUser = MutableLiveData<User>()
-    val status = MutableLiveData<ScoreStatus>()//签到状态
+    //作为UserFragment中获取User信息的唯一置信源，UserFragment.java中不直接使用BaseApp.user,同时在viewModel中更新BaseApp.user
+    private val _user = MutableLiveData<User>()
+    val mUser: LiveData<User>
+        get() = _user
 
+    private val _status = MutableLiveData<ScoreStatus>()//签到状态
+    val status: LiveData<ScoreStatus>
+        get() = _status
 
     fun getUserInfo() {
-        val stuNum  = user?.stuNum ?: return
+        val stuNum = user?.stuNum ?: return
         val idNum = user?.idNum ?: return
         apiService.getPersonInfo(stuNum, idNum)
                 .mapOrThrowApiException()
                 .setSchedulers()
                 .doOnErrorWithDefaultErrorHandler { false }
-                .safeSubscribeBy (onNext = {
-                    mUser.postValue(it)
+                .safeSubscribeBy(onNext = {
+                    //更新BaseUser
+                    freshBaseUser(it)
+                    _user.postValue(it)
+
                 })
     }
 
@@ -39,10 +49,32 @@ class UserViewModel : BaseViewModel() {
                 .setSchedulers()
                 .doOnErrorWithDefaultErrorHandler { false }
                 .safeSubscribeBy {
-                    status.postValue(it)
+                    _status.postValue(it)
                 }
                 .lifeCycle()
 
 
+    }
+
+    /**
+     * 更新BaseApp.user
+     */
+    private fun freshBaseUser(user: User) {
+        val finalUser = BaseApp.user ?: return
+        finalUser.nickname = user.nickname
+        finalUser.introduction = user.introduction
+        finalUser.qq = user.qq
+        finalUser.phone = user.phone
+        finalUser.photoSrc = user.photoSrc
+        finalUser.photoThumbnailSrc = user.photoThumbnailSrc
+        BaseApp.user = finalUser
+    }
+
+    /**
+     * 清除User的信息，唯一会调用这个方法的时候是在用户登出
+     */
+    fun clearUser() {
+        _user.postValue(null)
+        BaseApp.user = null
     }
 }

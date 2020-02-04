@@ -18,7 +18,6 @@ import com.afollestad.materialdialogs.MaterialDialog
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
 import com.mredrock.cyxbs.common.BaseApp
-import com.mredrock.cyxbs.common.bean.User
 import com.mredrock.cyxbs.common.config.*
 import com.mredrock.cyxbs.common.event.AskLoginEvent
 import com.mredrock.cyxbs.common.event.LoginStateChangeEvent
@@ -74,11 +73,6 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
     @SuppressLint("SetTextI18n")
     private fun addObserver() {
         viewModel.mUser.observe(this, Observer {
-            if (it == null) {
-                BaseApp.user = null
-                return@Observer
-            }
-            freshBaseUser(it)
             refreshLayout()
         })
         viewModel.status.observe(this, Observer {
@@ -97,17 +91,6 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
                 }
             }
         })
-    }
-
-    private fun freshBaseUser(user: User) {
-        val finalUser = BaseApp.user ?: return
-        finalUser.nickname = user.nickname
-        finalUser.introduction = user.introduction
-        finalUser.qq = user.qq
-        finalUser.phone = user.phone
-        finalUser.photoSrc = user.photoSrc
-        finalUser.photoThumbnailSrc = user.photoThumbnailSrc
-        BaseApp.user = finalUser
     }
 
     private fun checkLoginBeforeAction(msg: String, action: () -> Unit) {
@@ -153,9 +136,6 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
 
     override fun onLoginStateChangeEvent(event: LoginStateChangeEvent) {
         super.onLoginStateChangeEvent(event)
-        if (!event.newState) {
-            viewModel.mUser.value = null
-        }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
@@ -207,6 +187,9 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
                 .negativeText("取消")
                 .onPositive { _, _ ->
                     cleanAppWidgetCache()
+                    //清除BaseApp.user和viewModel的user，必须要在LoginStateChangeEvent之前
+                    viewModel.clearUser()
+
                     EventBus.getDefault().post(LoginStateChangeEvent(false))
                     //清空activity栈
                     val flag = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
