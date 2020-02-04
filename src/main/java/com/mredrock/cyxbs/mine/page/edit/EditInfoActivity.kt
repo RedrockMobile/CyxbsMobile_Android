@@ -21,6 +21,8 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.Observer
 import com.afollestad.materialdialogs.MaterialDialog
 import com.mredrock.cyxbs.common.config.DIR_PHOTO
+import com.mredrock.cyxbs.common.service.ServiceManager
+import com.mredrock.cyxbs.common.service.account.IUserService
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.extensions.doPermissionAction
 import com.mredrock.cyxbs.common.utils.extensions.getRequestBody
@@ -51,6 +53,10 @@ class EditInfoActivity(override val isFragmentActivity: Boolean = false,
 
     private val SELECT_PICTURE = 1
     private val SELECT_CAMERA = 2
+
+    private val userService: IUserService by lazy {
+        ServiceManager.getService(IUserService::class.java)
+    }
 
     private val watcher = object : TextWatcher {
         override fun afterTextChanged(s: Editable?) {
@@ -127,7 +133,7 @@ class EditInfoActivity(override val isFragmentActivity: Boolean = false,
                 })
 
         initObserver()
-        loadAvatar(user?.photoThumbnailSrc, mine_edit_et_avatar)
+        loadAvatar(ServiceManager.getService(IUserService::class.java).getAvatarImgUrl(), mine_edit_et_avatar)
 
         initData()
         setTextChangeListener()
@@ -150,11 +156,10 @@ class EditInfoActivity(override val isFragmentActivity: Boolean = false,
     }
 
     private fun initData() {
-        val userForTemporal = user ?: return
-        mine_et_nickname.setText(userForTemporal.nickname)
-        mine_et_introduce.setText(userForTemporal.introduction)
-        mine_et_qq.setText(userForTemporal.qq)
-        mine_et_phone.setText(userForTemporal.phone)
+        mine_et_nickname.setText(userService.getNickname())
+        mine_et_introduce.setText(userService.getIntroduction())
+        mine_et_qq.setText(userService.getQQ())
+        mine_et_phone.setText(userService.getPhone())
     }
 
     private fun setTextChangeListener() {
@@ -175,7 +180,7 @@ class EditInfoActivity(override val isFragmentActivity: Boolean = false,
 
         viewModel.upLoadImageEvent.observe(this, Observer {
             if (it) {
-                loadAvatar(user?.photoThumbnailSrc, mine_edit_et_avatar)
+                loadAvatar(ServiceManager.getService(IUserService::class.java).getAvatarImgUrl(), mine_edit_et_avatar)
                 toast("修改头像成功")
             } else {
                 toast("修改头像失败")
@@ -202,15 +207,16 @@ class EditInfoActivity(override val isFragmentActivity: Boolean = false,
     }
 
     private fun checkIfInfoChange(): Boolean {
-        val userForTemporal = user ?: return true
         val nickname = mine_et_nickname.text.toString()
         val introduction = mine_et_introduce.text.toString()
         val qq = mine_et_qq.text.toString()
         val phone = mine_et_phone.text.toString()
-        if (nickname == userForTemporal.nickname &&
-                introduction == userForTemporal.introduction &&
-                qq == userForTemporal.qq &&
-                phone == userForTemporal.phone) {
+
+
+        if (nickname == userService.getNickname() &&
+                introduction == userService.getIntroduction() &&
+                qq == userService.getQQ() &&
+                phone == userService.getPhone()) {
             return false
         }
         return true
@@ -285,7 +291,7 @@ class EditInfoActivity(override val isFragmentActivity: Boolean = false,
                 .toString()
     }
     private val cameraImageFile by lazy { File(fileDir + File.separator + System.currentTimeMillis() + ".png") }
-    private val destinationFile by lazy { File(fileDir + File.separator + user?.stuNum + ".png") }
+    private val destinationFile by lazy { File(fileDir + File.separator + userService.getStuNum() + ".png") }
 
     private fun getImageFromCamera() {
         doPermissionAction(Manifest.permission.CAMERA) {
@@ -339,8 +345,7 @@ class EditInfoActivity(override val isFragmentActivity: Boolean = false,
 
         try {
             val fileBody = MultipartBody.Part.createFormData("fold", destinationFile.name, destinationFile.getRequestBody())
-            val numBody = RequestBody.create(MediaType.parse("multipart/form-data"), user?.stuNum
-                    ?: return)
+            val numBody = RequestBody.create(MediaType.parse("multipart/form-data"), userService.getStuNum())
             viewModel.uploadAvatar(numBody, fileBody)
         } catch (e: IOException) {
             e.printStackTrace()

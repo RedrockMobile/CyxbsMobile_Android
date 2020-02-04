@@ -1,6 +1,10 @@
 package com.mredrock.cyxbs.mine.page.answer
 
 import androidx.lifecycle.MutableLiveData
+import com.mredrock.cyxbs.common.BaseApp
+import com.mredrock.cyxbs.common.service.ServiceManager
+import com.mredrock.cyxbs.common.service.account.IUserService
+import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.mine.network.model.AnswerPosted
 import com.mredrock.cyxbs.mine.network.model.Draft
@@ -23,6 +27,9 @@ class AnswerViewModel : BaseViewModel() {
 
     private val pageSize = 6
     private var answerDraftPage = 1
+
+    private val stuNum = ServiceManager.getService(IUserService::class.java).getStuNum()
+    private val idNum = BaseApp.context.defaultSharedPreferences.getString("SP_KEY_ID_NUM", "")
 
 //    fun loadAdoptOver() {
 //        apiService.getMyHelpOver(user!!.stuNum!!, user!!.idNum!!, overPage++, pageSize)
@@ -58,8 +65,6 @@ class AnswerViewModel : BaseViewModel() {
 
 
     fun loadAnswerDraftList() {
-        val stuNum = user?.stuNum ?: return
-        val idNum = user?.idNum ?: return
 //        apiService.getDraftList(stuNum, idNum, answerDraftPage++, pageSize)
 //                .mapOrThrowApiException()
 //                .map { list ->
@@ -96,8 +101,6 @@ class AnswerViewModel : BaseViewModel() {
     }
 
     fun deleteDraft(draft: Draft) {
-        val stuNum = user?.stuNum ?: return
-        val idNum = user?.idNum ?: return
 //        apiService.deleteDraft(stuNum, idNum, draft.id)
 //                .checkError()
 //                .setSchedulers()

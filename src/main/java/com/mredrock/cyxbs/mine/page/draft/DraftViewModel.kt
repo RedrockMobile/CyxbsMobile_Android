@@ -1,6 +1,10 @@
 package com.mredrock.cyxbs.mine.page.draft
 
 import androidx.lifecycle.MutableLiveData
+import com.mredrock.cyxbs.common.BaseApp
+import com.mredrock.cyxbs.common.service.ServiceManager
+import com.mredrock.cyxbs.common.service.account.IUserService
+import com.mredrock.cyxbs.common.service.account.IUserStateService
 import com.mredrock.cyxbs.common.utils.extensions.*
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.mine.network.model.Draft
@@ -18,15 +22,22 @@ class DraftViewModel : BaseViewModel() {
     val deleteEvent = MutableLiveData<Draft>()
     val sendMessageEvent = MutableLiveData<Draft>()
 
+    private val stuNum = ServiceManager.getService(IUserService::class.java).getStuNum()
+    private val idNum = BaseApp.context.defaultSharedPreferences.getString("SP_KEY_ID_NUM", "")
+
+    private val userStateService: IUserStateService by lazy {
+        ServiceManager.getService(IUserStateService::class.java)
+    }
+
     @Volatile
     var page = 1
     private val pageSize = 6
 
     fun loadDraftList() {
-        if (!isLogin()) {
+        if (!userStateService.isLogin()) {
             return
         }
-        apiService.getDraftList(user?.stuNum ?: return, user?.idNum ?: return, page++, pageSize)
+        apiService.getDraftList(stuNum, idNum, page++, pageSize)
                 .mapOrThrowApiException()
                 .map { list ->
                     list.forEach { it.parseQuestion() }
@@ -47,10 +58,10 @@ class DraftViewModel : BaseViewModel() {
     }
 
     fun deleteDraft(draft: Draft) {
-        if (!isLogin()) {
+        if (!userStateService.isLogin()) {
             return
         }
-        apiService.deleteDraft(user?.stuNum ?: return, user?.idNum ?: return, draft.id)
+        apiService.deleteDraft(stuNum, idNum, draft.id)
                 .checkError()
                 .setSchedulers()
                 .doOnErrorWithDefaultErrorHandler { false }
@@ -66,11 +77,11 @@ class DraftViewModel : BaseViewModel() {
     }
 
     fun sendRemark(draft: Draft, content: String?) {
-        if (!isLogin()) {
+        if (!userStateService.isLogin()) {
             return
         }
         val s = content ?: return
-        apiService.commentAnswer(user?.stuNum ?: return, user?.idNum ?: return, draft.targetId, s)
+        apiService.commentAnswer(stuNum, idNum, draft.targetId, s)
                 .normalStatus(this)
                 .safeSubscribeBy(
                         onNext = {
@@ -82,14 +93,6 @@ class DraftViewModel : BaseViewModel() {
                 )
                 .lifeCycle()
         deleteDraft(draft)
-    }
-
-    private fun isLogin(): Boolean {
-        if (user == null) {
-            errorEvent.postValue("没有登录..")
-            return false
-        }
-        return true
     }
 
     fun cleanPage() {
