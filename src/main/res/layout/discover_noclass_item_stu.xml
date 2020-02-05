@@ -13,6 +13,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         tools:text="李佳蔚"
+        android:textStyle="bold"
         android:layout_marginEnd="5dp"
         android:textColor="@color/levelFourFontColor"
         android:textSize="16sp" />
@@ -22,12 +23,14 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/no_course_name"
         android:gravity="left"
+        android:textColor="@color/levelFourFontColor"
+        android:alpha="0.67"
         android:textSize="11sp"/>
 
     <ImageView
         android:id="@+id/no_course_delete"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_marginEnd="0dp"
         android:clickable="true"

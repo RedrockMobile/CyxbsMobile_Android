@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
+import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import androidx.core.app.ActivityOptionsCompat
@@ -16,6 +17,8 @@ import com.mredrock.cyxbs.common.config.COURSE_NO_COURSE_INVITE
 import com.mredrock.cyxbs.common.config.DISCOVER_NO_CLASS
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.LogUtils
+import com.mredrock.cyxbs.common.utils.extensions.getScreenHeight
+import com.mredrock.cyxbs.common.utils.extensions.getScreenWidth
 import com.mredrock.cyxbs.discover.noclass.R
 import com.mredrock.cyxbs.discover.noclass.network.Student
 import com.mredrock.cyxbs.discover.noclass.pages.stuselect.NoClassStuSelectActivity
@@ -40,6 +43,7 @@ class NoClassActivity : BaseViewModelActivity<NoClassViewModel>() {
     private fun initToolbar() {
         if (common_toolbar != null) {
             common_toolbar.init("没课约")
+
         }
     }
 
@@ -63,7 +67,7 @@ class NoClassActivity : BaseViewModelActivity<NoClassViewModel>() {
                     bundle.putSerializable("stu_list", it as Serializable)
                     val intent = Intent(this, NoClassStuSelectActivity::class.java)
                     intent.putExtras(bundle)
-                    startActivityForResult(intent, REQUEST_SELECT ,ActivityOptionsCompat.makeSceneTransitionAnimation(this).toBundle())
+                    startActivityForResult(intent, REQUEST_SELECT ,ActivityOptionsCompat.makeScaleUpAnimation(cl_noclass,getScreenWidth()/2,getScreenHeight(),getScreenWidth(),getScreenHeight()).toBundle())
                 }
                 it.size == 1 -> {
                     addStu(it[0])
