@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.DialogFragment
+import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.editor
 import com.mredrock.cyxbs.discover.electricity.config.*
 import com.mredrock.cyxbs.electricity.R
@@ -64,6 +65,7 @@ class ElectricityFeedSettingDialogFragment(private val refresher: (id: String, r
                 selectBuildingHeadPosition = wp_dormitory_head.currentItemPosition
                 selectBuildingFootPosition = wp_dormitory_foot.currentItemPosition
                 val id = BUILDING_NAMES.getValue(BUILDING_NAMES_HEADER[selectBuildingHeadPosition])[selectBuildingFootPosition].split("(")[1].split("栋")[0]
+                LogUtils.d("MyTag,com.mredrock.cyxbs.discover.electricity.ui.fragment","id=$id,room=$room")
                 refresher.invoke(id, room)
                 this@ElectricityFeedSettingDialogFragment.dismiss()
 

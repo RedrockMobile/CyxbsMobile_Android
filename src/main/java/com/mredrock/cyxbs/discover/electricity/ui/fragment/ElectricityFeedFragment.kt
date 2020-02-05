@@ -28,6 +28,12 @@ class ElectricityFeedFragment : BaseFeedFragment<ChargeViewModel>() {
             }
 
         }
+        viewModel.chargeInfo.observe {
+            it?.let {
+                setAdapter(ElectricityFeedAdapter(it))
+                setSubtitle(it.recordTime.plus("抄表"))
+            }
+        }
         if (pos == -1) {
             return
         }
@@ -37,12 +43,7 @@ class ElectricityFeedFragment : BaseFeedFragment<ChargeViewModel>() {
 
         refreshCharge(id, room)
 
-        viewModel.chargeInfo.observe {
-            it?.let {
-                setAdapter(ElectricityFeedAdapter(it))
-                setSubtitle(it.recordTime.plus("抄表"))
-            }
-        }
+
 
 
     }
