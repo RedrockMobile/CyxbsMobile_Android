@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/qa_comment_default_color"
+    android:background="@color/whiteBackground"
     android:orientation="vertical">
 
     <RelativeLayout
@@ -104,8 +104,9 @@
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="10dp"
+        android:layout_height="1dp"
         android:layout_marginTop="20dp"
+        android:alpha="0.58"
         android:background="@color/qa_comment_item_divider_gap_color" />
 
 </LinearLayout>

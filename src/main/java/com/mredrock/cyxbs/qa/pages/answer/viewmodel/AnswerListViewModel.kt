@@ -38,7 +38,7 @@ class AnswerListViewModel(question: Question) : BaseViewModel() {
     var myRewardCount = 0
 
     private var praiseNetworkState = NetworkState.SUCCESSFUL
-    val refreshPreActivityEvent = SingleLiveEvent<Boolean>()
+    val refreshPreActivityEvent = SingleLiveEvent<Int>()
     val qid get() = questionLiveData.value!!.id
 
     private val factory: AnswerDataSource.Factory
@@ -143,16 +143,16 @@ class AnswerListViewModel(question: Question) : BaseViewModel() {
     fun ignoreQuestion() {
         val user = BaseApp.user ?: return
         val qid = questionLiveData.value?.id
-        LogUtils.d("ignoreInfo",qid.toString())
+        LogUtils.d("ignoreInfo", qid.toString())
         ApiGenerator.getApiService(ApiService::class.java)
-                .ignoreQuestion(user.stuNum?:"", user.idNum?:"", qid?:"")
+                .ignoreQuestion(user.stuNum ?: "", user.idNum ?: "", qid ?: "")
                 .setSchedulers()
                 .checkError()
-                .doOnError{ toastEvent.value = R.string.qa_service_error_hint}
+                .doOnError { toastEvent.value = R.string.qa_service_error_hint }
                 .safeSubscribeBy { backPreActivityIgnoreEvent.value = true }
     }
 
-    fun clickPraiseButton(answer: Answer) {
+    fun clickPraiseButton(position: Int, answer: Answer) {
         fun Boolean.toInt() = 1.takeIf { this@toInt } ?: -1
 
         if (praiseNetworkState == NetworkState.LOADING) {
@@ -182,7 +182,7 @@ class AnswerListViewModel(question: Question) : BaseViewModel() {
                         praiseNum = "${answer.praiseNumInt + state.toInt()}"
                         isPraised = state
                     }
-                    refreshPreActivityEvent.value = true
+                    refreshPreActivityEvent.value = position
                 }
                 .lifeCycle()
     }

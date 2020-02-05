@@ -148,10 +148,10 @@ class AnswerListActivity : BaseActivity() {
                 CommentListActivity.activityStart(this@AnswerListActivity, viewModel.questionLiveData.value!!, answer)
             }
             onPriseClickListener = { i: Int, answer: Answer ->
-                viewModel.clickPraiseButton(answer)
+                viewModel.clickPraiseButton(i,answer)
                 viewModel.apply {
                     refreshPreActivityEvent.observeNotNull {
-                        answerListAdapter.notifyItemChanged(i)
+                        answerListAdapter.notifyItemChanged(it)
                     }
                 }
             }

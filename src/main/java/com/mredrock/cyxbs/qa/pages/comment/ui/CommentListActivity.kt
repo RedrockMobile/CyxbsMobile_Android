@@ -57,7 +57,6 @@ class CommentListActivity : BaseViewModelActivity<CommentListViewModel>() {
         val title = intent.getStringExtra("title")
         val showAdoptIcon = intent.getBooleanExtra("showAdoptIcon", false)
         val isEmotion = intent.getBooleanExtra("isEmotion", false)
-//        qa_tv_comment_toolbar_title.text = baseContext.getString(R.string.qa_comment_list_comment_count, answerNub)
         initToolbar()
         initRv(title, showAdoptIcon, isEmotion)
         initCommentSheet()

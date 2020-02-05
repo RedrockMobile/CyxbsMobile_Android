@@ -78,6 +78,7 @@
                 android:layout_alignTop="@+id/tv_comment_nickname"
                 android:layout_alignBottom="@+id/tv_comment_nickname"
                 android:textColor="@color/levelTwoFontColor"
+                android:layout_marginEnd="12dp"
                 android:textSize="11sp"
                 tools:text="19:00" />
 
@@ -99,8 +100,9 @@
                 android:layout_below="@id/tv_comment_content"
                 android:layout_alignParentEnd="true"
                 android:layout_marginTop="7dp"
+                android:layout_marginEnd="12dp"
                 android:background="@drawable/qa_ic_answer_list_more"
-                android:layout_marginBottom="13dp"/>
+                android:layout_marginBottom="15dp"/>
         </RelativeLayout>
 
     </com.mredrock.cyxbs.common.component.JCardViewPlus>

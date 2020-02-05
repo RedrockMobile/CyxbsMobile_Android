@@ -20,7 +20,6 @@
     <color name="qa_answer_list_questioner_nickname_color">#555555</color>
     <color name="qa_answer_list_disappear_color">#999999</color>
     <color name="qa_answer_list_reward_color">#888888</color>
-    <color name="qa_answer_list_gap_divider_color">#f6f6f6</color>
     <color name="qa_answer_list_answer_count_color">#888888</color>
     <color name="qa_answer_list_sort_tv_color">#788efa</color>
     <color name="qa_answer_list_answer_nickname_color">#15315B</color>
@@ -43,7 +42,6 @@
     <color name="qa_comment_item_answer_nickname_color">#15315B</color>
     <color name="qa_comment_item_answer_create_at_tv_color">#15315B</color>
     <color name="qa_comment_item_answer_content_color">#15315B</color>
-    <color name="qa_comment_item_divider_gap_color">#f6f6f6</color>
     <color name="qa_comment_item_answer_count_color">#888888</color>
     <color name="qa_comment_dialog_content_edt_text_color">#bf333333</color>
     <color name="qa_comment_dialog_content_edt_hint_color">#bf999999</color>
