@@ -31,6 +31,11 @@ class ProductAdapter() : ListAdapter<Product, ProductAdapter.ProductViewHolder>(
 
         @SuppressLint("SetTextI18n")
         fun bind(product: Product) {
+            //只有随机高度
+            val param = iv.layoutParams
+            param.height = (Math.random() * 200 + 200).toInt()
+            iv.layoutParams = param
+
             title.text = product.name
             count.text = "仅剩${product.count}"
             integral.text = product.integral.toString()

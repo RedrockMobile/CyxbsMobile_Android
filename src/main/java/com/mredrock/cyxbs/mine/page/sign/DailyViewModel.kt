@@ -15,7 +15,6 @@ import com.mredrock.cyxbs.mine.network.ApiService
 import com.mredrock.cyxbs.mine.network.model.Product
 import com.mredrock.cyxbs.mine.network.model.ScoreStatus
 import com.mredrock.cyxbs.mine.util.apiService
-import com.mredrock.cyxbs.mine.util.extension.logr
 import com.mredrock.cyxbs.mine.util.extension.normalWrapper
 import io.reactivex.Observable
 import io.reactivex.functions.Function
@@ -90,13 +89,11 @@ class DailyViewModel : BaseViewModel() {
                 .setSchedulers()
                 .normalWrapper(this)
                 .safeSubscribeBy {
-                    logr(it.toString())
                     //往_product中添加Product
-                    if (_products.value == null) {
-                        _products.value = it.toMutableList()
-                    } else {
-                        _products.value?.addAll(it)
-                    }
+                    val localProducts = _products.value ?: mutableListOf()
+                    localProducts.addAll(it)
+                    _products.postValue(localProducts)
+
                     //加载下一页
                     loadProduct(user)
                 }
