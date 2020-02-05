@@ -4,7 +4,8 @@
           package="com.mredrock.cyxbs.discover.othercourse">
 
     <application tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".pages.stusearch.OtherCourseActivity"/>
+        <activity android:name=".pages.stusearch.OtherCourseActivity"
+            android:windowSoftInputMode="adjustPan"/>
         <activity android:name=".pages.stulist.StuListActivity"/>
     </application>
 

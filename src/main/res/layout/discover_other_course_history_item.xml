@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.AppCompatTextView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/tv_other_course_fragment_item"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:paddingTop="7dp"
+    android:paddingBottom="7dp"
+    android:paddingStart="13dp"
+    android:paddingEnd="13dp"
+    android:textColor="@color/levelTwoFontColor"
+    android:background="@drawable/discover_other_course_shape_ev"
+    tools:ignore="ResourceName">
+
+</androidx.appcompat.widget.AppCompatTextView>

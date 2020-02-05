@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import com.alibaba.android.arouter.launcher.ARouter
 import com.mredrock.cyxbs.common.config.COURSE_OTHER_COURSE
 import com.mredrock.cyxbs.discover.othercourse.R
-import com.mredrock.cyxbs.discover.othercourse.network.Student
+import com.mredrock.cyxbs.discover.othercourse.network.Person
 import kotlinx.android.synthetic.main.discover_other_course_item_rv_stu.view.*
 
 /**
@@ -15,21 +15,20 @@ import kotlinx.android.synthetic.main.discover_other_course_item_rv_stu.view.*
  *   2018/10/19.
  *   enjoy it !!
  */
-class StuListAdater(private val mStuList: List<Student>) : androidx.recyclerview.widget.RecyclerView.Adapter<StuListAdater.StuListViewHolder>() {
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int)
-            = StuListViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.discover_other_course_item_rv_stu, parent, false))
+class StuListAdater(private val mList: List<Person>) : androidx.recyclerview.widget.RecyclerView.Adapter<StuListAdater.StuListViewHolder>() {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = StuListViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.discover_other_course_item_rv_stu, parent, false))
 
-    override fun getItemCount() = mStuList.size
+    override fun getItemCount() = mList.size
 
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: StuListViewHolder, position: Int) {
-        holder.itemView.discover_other_course_item_select_name.text = mStuList[position].name
-        holder.itemView.discover_other_course_item_select_class.text = mStuList[position].major + " " + mStuList[position].classnum
+        holder.itemView.discover_other_course_item_select_name.text = mList[position].name
+        holder.itemView.discover_other_course_item_select_class.text = mList[position].major
         holder.itemView.setOnClickListener {
-            ARouter.getInstance().build(COURSE_OTHER_COURSE).withString("stuNum",mStuList[position].stunum).navigation()
+            ARouter.getInstance().build(COURSE_OTHER_COURSE).withString("stuNum", mList[position].num).navigation()
         }
 
     }
 
-    class StuListViewHolder(itemView: View): androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView)
+    class StuListViewHolder(itemView: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView)
 }

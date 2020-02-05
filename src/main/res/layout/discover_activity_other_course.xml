@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -10,48 +11,24 @@
 
     <include layout="@layout/common_toolbar"/>
 
-    <FrameLayout
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tl_other_course"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="100dp"
-        android:layout_marginRight="20dp">
+        android:layout_height="50dp"
+        android:background="@drawable/discover_other_course_tab_shape"
+        app:tabRippleColor="@color/transparentBackground"
+        app:tabBackground="@color/transparentBackground"
+        app:tabTextColor="@color/levelTwoFontColor"
+        app:tabGravity="fill"
+        app:tabIndicatorHeight="3dp"
+        app:tabIndicatorColor="@color/mine_tablayout_indicator_color"
+        app:tabIndicator="@drawable/diacover_other_course_tab_indicator"
+        app:tabIndicatorFullWidth="false"
+        app:tabMode="fixed" />
 
-        <EditText
-            android:id="@+id/discover_other_course_edit_search"
-            android:background="@drawable/discover_other_course_shape_rectangle_grey_stroke"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:singleLine="true"
-            android:paddingStart="15dp"
-            android:paddingEnd="15dp"
-            android:hint="@string/othercourse_hint_input_key"
-            android:inputType="text"
-            tools:ignore="Autofill" />
-
-        <ImageView
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:padding="12dp"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="10dp"
-            android:visibility="gone"
-            android:id="@+id/discover_other_course_delete_edit_search"
-            android:src="@drawable/discover_other_course_ic_delete"
-            android:layout_gravity="center_vertical|end"
-            tools:ignore="ContentDescription" />
-
-    </FrameLayout>
-
-    <Button
-        android:id="@+id/discover_other_course_btn_search"
-        android:layout_width="120dp"
-        android:layout_height="70dp"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="25dp"
-        android:background="@drawable/discover_other_course_bg_btn"
-        android:text="@string/othercourse_confirm"
-        android:textColor="#fff"
-        android:textSize="16sp"/>
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/vp_other_course"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 
 </LinearLayout>

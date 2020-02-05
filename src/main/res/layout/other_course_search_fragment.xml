@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".pages.stusearch.OtherCourseSearchFragment"
+    tools:ignore="ResourceName">
+
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/discover_other_course_edit_search"
+        android:background="@drawable/discover_other_course_shape_ev"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:singleLine="true"
+        android:paddingStart="18dp"
+        android:paddingEnd="18dp"
+        android:layout_marginStart="18dp"
+        android:layout_marginEnd="18dp"
+        android:layout_marginTop="30dp"
+        android:hint="@string/othercourse_hint_input_key"
+        android:inputType="text"
+        android:imeOptions="actionSearch" />
+
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/levelTwoFontColor"
+        android:textSize="15sp"
+        android:text="历史记录"
+        android:textStyle="bold"
+        android:layout_gravity="start"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="21dp"/>
+
+    <com.mredrock.cyxbs.common.component.RedRockAutoWarpView
+        android:id="@+id/aw_other_course_fragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="9dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        app:horizontalSpacing="7dp"
+        app:verticalsSpacing="10dp"
+        app:strictMode="true"
+        app:maxLine="2"/>
+
+</androidx.appcompat.widget.LinearLayoutCompat>
