@@ -141,6 +141,8 @@
     <color name="qa_question_bottom_count_color" tools:ignore="ResourceName">#2A4E84</color>
     <!--    问题item的分割线颜色-->
     <color name="qa_question_recycler_item_divide_line_color" tools:ignore="ResourceName">#BDCCE5</color>
+    <!--    评论默认颜色-->
+    <color name="qa_comment_default_color" tools:ignore="ResourceName">#F8F9FD</color>
     <!--    评论内容颜色-->
     <color name="qa_comment_content_color" tools:ignore="ResourceName">#3B4555</color>
     <!--    回答发布时间颜色-->
@@ -176,6 +178,7 @@
 
     <!--    退出编辑dialog二级字体颜色-->
     <color name="dialog_exit_subtitle_text_color" tools:ignore="ResourceName">#2A4E84</color>
-
+    <!--    评论head和item间隙颜色-->
+    <color name="qa_comment_item_divider_gap_color" tools:ignore="ResourceName">#EFF2F7</color>
 </resources>
 
