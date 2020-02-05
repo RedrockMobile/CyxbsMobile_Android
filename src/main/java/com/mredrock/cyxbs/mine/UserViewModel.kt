@@ -18,7 +18,6 @@ import com.mredrock.cyxbs.mine.util.user
  */
 class UserViewModel : BaseViewModel() {
 
-    //作为UserFragment中获取User信息的唯一置信源，UserFragment.java中不直接使用BaseApp.user,同时在viewModel中更新BaseApp.user
     private val _user = MutableLiveData<User>()
     val mUser: LiveData<User>
         get() = _user

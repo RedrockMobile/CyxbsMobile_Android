@@ -60,12 +60,31 @@ interface ApiService {
     fun getScoreStatus(@Field("stunum") stuNum: String,
                        @Field("idnum") idNum: String): Observable<RedrockApiWrapper<ScoreStatus>>
 
+    //兑换商品
     @FormUrlEncoded
-    @POST("app/index.php/QA/User/integralRecords")
-    fun getIntegralRecords(@Field("stunum") stuNum: String,
-                           @Field("idnum") idNum: String,
-                           @Field("page") page: Int,
-                           @Field("size") size: Int): Observable<RedrockApiWrapper<List<PointDetail>>>
+    @POST("QA/Integral/order")
+    fun exchangeProduct(@Field("stunum") stuNum: String,
+                        @Field("idnum") idNum: String,
+                        @Field("name") name: String,
+                        @Field("value") value: Int): Observable<RedrockApiStatus>
+
+    //获取商品
+    @FormUrlEncoded
+    @POST("QA/Integral/getItemList")
+    fun getProducts(@Field("stunum") stuNum: String,
+                        @Field("idnum") idNum: String,
+                        @Field("page") page: Int,
+                        @Field("size") size: Int = 6): Observable<RedrockApiWrapper<List<Product>>>
+
+    //我的商品
+    @FormUrlEncoded
+    @POST("QA/Integral/myRepertory")
+    fun getMyProducts(@Field("stunum") stuNum: String,
+                        @Field("idnum") idNum: String,
+                        @Field("page") page: Int,
+                        @Field("size") size: Int = 6): Observable<RedrockApiWrapper<List<Product>>>
+
+
 
     /**
      * 草稿箱部分

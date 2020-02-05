@@ -10,9 +10,12 @@ import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.common.viewmodel.event.SingleLiveEvent
+import com.mredrock.cyxbs.mine.network.ApiGeneratorForSign
+import com.mredrock.cyxbs.mine.network.ApiService
 import com.mredrock.cyxbs.mine.network.model.Product
 import com.mredrock.cyxbs.mine.network.model.ScoreStatus
 import com.mredrock.cyxbs.mine.util.apiService
+import com.mredrock.cyxbs.mine.util.extension.logr
 import com.mredrock.cyxbs.mine.util.extension.normalWrapper
 import io.reactivex.Observable
 import io.reactivex.functions.Function
@@ -22,6 +25,9 @@ import io.reactivex.functions.Function
  * 需要确保用户已登录
  */
 class DailyViewModel : BaseViewModel() {
+
+    //临时使用，因为后端测试的baseurl与apiService不同，故作区分
+    private val apiServiceForSign: ApiService by lazy { ApiGeneratorForSign.getApiService(ApiService::class.java) }
 
     //签到状态
     private val _status = MutableLiveData<ScoreStatus>()
@@ -41,8 +47,6 @@ class DailyViewModel : BaseViewModel() {
         get() = _isInVacation
 
     private var page = 1
-    private val pagesize = 6
-
 
     fun loadAllData(user: User) {
         apiService.getScoreStatus(user.stuNum ?: return, user.idNum ?: return)
@@ -82,22 +86,19 @@ class DailyViewModel : BaseViewModel() {
     }
 
     fun loadProduct(user: User) {
-        if (page == 5) {
-            return
-        }
-        val fakeItem: Product = Product("roger" + page + Math.random(), 222, 10, "")
-        val newList = mutableListOf<Product>(fakeItem)
-
-        if (_products.value == null) {
-            _products.value = newList
-        } else {
-            _products.value?.let { list ->
-                list.addAll(newList)
-                _products.value = list
-            }
-        }
-
-        page++
-        loadProduct(user)
+        apiServiceForSign.getProducts(user.stuNum ?: return, user.idNum ?: return, page++)
+                .setSchedulers()
+                .normalWrapper(this)
+                .safeSubscribeBy {
+                    logr(it.toString())
+                    //往_product中添加Product
+                    if (_products.value == null) {
+                        _products.value = it.toMutableList()
+                    } else {
+                        _products.value?.addAll(it)
+                    }
+                    //加载下一页
+                    loadProduct(user)
+                }
     }
 }
