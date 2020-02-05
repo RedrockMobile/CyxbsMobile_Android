@@ -8,6 +8,8 @@ import com.alibaba.android.arouter.launcher.ARouter
 import com.mredrock.cyxbs.common.config.COURSE_OTHER_COURSE
 import com.mredrock.cyxbs.discover.othercourse.R
 import com.mredrock.cyxbs.discover.othercourse.network.Person
+import com.mredrock.cyxbs.discover.othercourse.room.STUDENT_TYPE
+import com.mredrock.cyxbs.discover.othercourse.room.TEACHER_TYPE
 import kotlinx.android.synthetic.main.discover_other_course_item_rv_stu.view.*
 
 /**
@@ -25,7 +27,13 @@ class StuListAdater(private val mList: List<Person>) : androidx.recyclerview.wid
         holder.itemView.discover_other_course_item_select_name.text = mList[position].name
         holder.itemView.discover_other_course_item_select_class.text = mList[position].major
         holder.itemView.setOnClickListener {
-            ARouter.getInstance().build(COURSE_OTHER_COURSE).withString("stuNum", mList[position].num).navigation()
+            when (mList[position].type) {
+                STUDENT_TYPE ->
+                    ARouter.getInstance().build(COURSE_OTHER_COURSE).withString("stuNum", mList[position].num).navigation()
+                TEACHER_TYPE ->
+                    ARouter.getInstance().build(COURSE_OTHER_COURSE).withString("teaNum", mList[position].num).navigation()
+            }
+
         }
 
     }
