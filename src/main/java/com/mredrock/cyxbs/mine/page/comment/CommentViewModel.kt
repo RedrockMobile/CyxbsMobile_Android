@@ -1,10 +1,10 @@
 package com.mredrock.cyxbs.mine.page.comment
 
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import com.mredrock.cyxbs.common.utils.extensions.mapOrThrowApiException
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
+import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.mine.network.model.Comment
 import com.mredrock.cyxbs.mine.network.model.RelateMeItem
 import com.mredrock.cyxbs.mine.util.apiService
@@ -13,7 +13,7 @@ import com.mredrock.cyxbs.mine.util.user
 /**
  * Created by zia on 2018/9/13.
  */
-class CommentViewModel : ViewModel() {
+class CommentViewModel : BaseViewModel() {
 
     val errorEvent = MutableLiveData<String>()
     val dataEvent = MutableLiveData<List<RelateMeItem>>()
@@ -35,7 +35,7 @@ class CommentViewModel : ViewModel() {
                         onError = {
                             errorEvent.postValue(it.message)
                         }
-                )
+                ).lifeCycle()
     }
 
 

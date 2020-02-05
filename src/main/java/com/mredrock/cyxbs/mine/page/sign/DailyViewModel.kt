@@ -86,7 +86,6 @@ class DailyViewModel : BaseViewModel() {
 
     fun loadProduct(user: User) {
         apiServiceForSign.getProducts(user.stuNum ?: return, user.idNum ?: return, page++)
-                .setSchedulers()
                 .normalWrapper(this)
                 .safeSubscribeBy {
                     //往_product中添加Product
@@ -97,5 +96,6 @@ class DailyViewModel : BaseViewModel() {
                     //加载下一页
                     loadProduct(user)
                 }
+                .lifeCycle()
     }
 }

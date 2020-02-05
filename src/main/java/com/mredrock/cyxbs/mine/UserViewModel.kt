@@ -38,7 +38,7 @@ class UserViewModel : BaseViewModel() {
                     freshBaseUser(it)
                     _user.postValue(it)
 
-                })
+                }).lifeCycle()
     }
 
 
