@@ -1,6 +1,8 @@
 package com.mredrock.cyxbs.common.component;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.os.Build;
@@ -26,21 +28,26 @@ public class JToolbar extends Toolbar {
     private boolean isTitleAtLeft = true;
     private TextView mTitleTextView;
     private TextView mSubtitleTextView;
+    private boolean withSplitLine = true;
     private Paint paint = new Paint();
-    {
-        paint.setColor(0x00ffffff);
-    }
 
+
+    @SuppressLint("ResourceAsColor")
     public JToolbar(Context context) {
         super(context);
+        paint.setColor(R.color.commonDefaultDivideLineColor);
     }
 
+    @SuppressLint("ResourceAsColor")
     public JToolbar(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
+        paint.setColor(R.color.commonDefaultDivideLineColor);
     }
 
+    @SuppressLint("ResourceAsColor")
     public JToolbar(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        paint.setColor(R.color.commonDefaultDivideLineColor);
     }
 
     @Override
@@ -74,11 +81,15 @@ public class JToolbar extends Toolbar {
         return mTitleTextView;
     }
 
+    @SuppressLint("ResourceAsColor")
     private TextView getTitleTv(String name) {
         try {
             Field field = Objects.requireNonNull(getClass().getSuperclass()).getDeclaredField(name);
             field.setAccessible(true);
-            return (TextView) field.get(this);
+            TextView view = (TextView) field.get(this);
+            view.getPaint().setFakeBoldText(true);
+            view.setTextColor(R.color.levelTwoFontColor);
+            return view;
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -103,7 +114,8 @@ public class JToolbar extends Toolbar {
         super.dispatchDraw(canvas);
         //为什么这个screenWidth绘制不满一个屏幕的宽度？？？
 
-        canvas.drawLine(0, getMeasuredHeight() - ContextKt.dp2px(getContext(),1), 2 * ContextKt.getScreenWidth(getContext()), getMeasuredHeight(), paint);
+        if(withSplitLine)
+            canvas.drawLine(0, getMeasuredHeight() - ContextKt.dp2px(getContext(),1), 2 * ContextKt.getScreenWidth(getContext()), getMeasuredHeight(), paint);
     }
 
     private void reLayoutTitle(TextView title) {
@@ -116,6 +128,9 @@ public class JToolbar extends Toolbar {
         if (tl > ol) {
             title.layout(tl, title.getTop(), tl + width, title.getBottom());
         }
+    }
+    public void withSplitLine(boolean withSplitLine){
+        this.withSplitLine = withSplitLine;
     }
 
     public void initPaint(int color) {

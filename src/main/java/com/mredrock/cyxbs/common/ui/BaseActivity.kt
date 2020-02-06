@@ -74,10 +74,17 @@ abstract class BaseActivity : AppCompatActivity() {
 
     var menu: Menu? = null
         private set
-
-    protected fun Toolbar.init(title: String,
+    @Deprecated(message = "废弃，请使用initWithSplitLine()",replaceWith = ReplaceWith("JToolbar.initWithSplitLine()","com.mredrock.cyxbs.common.ui"))
+    protected fun JToolbar.init(title: String,
                                @DrawableRes icon: Int = R.drawable.common_ic_back,
                                listener: View.OnClickListener? = View.OnClickListener { finish() }) {
+        withSplitLine(true)
+        initInternal(title, icon, listener)
+    }
+
+    private fun Toolbar.initInternal(title: String,
+                                     @DrawableRes icon: Int = R.drawable.common_ic_back,
+                                     listener: View.OnClickListener? = View.OnClickListener { finish() }){
         this.title = title
         setSupportActionBar(this)
         if (listener == null) {
@@ -91,9 +98,9 @@ abstract class BaseActivity : AppCompatActivity() {
                                              withSplitLine:Boolean = true,
                                              @DrawableRes icon:Int = R.drawable.common_ic_back,
                                              listener:View.OnClickListener? = View.OnClickListener { finish() }){
-        initPaint(R.color.commonDefaultDivideLineColor)
         setTitleLocationAtLeft(false)
-        init(title,icon,listener)
+        withSplitLine(withSplitLine)
+        initInternal(title,icon,listener)
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
