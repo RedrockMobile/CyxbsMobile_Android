@@ -39,7 +39,7 @@
     <color name="focusedFontColor" tools:ignore="ResourceName">#2923D2</color>
 
     <!--    60%透明度的二级字体-->
-    <color name="alphaLevelTwoFontColor" tools:ignore="ResourceName">#f315315B</color>
+    <color name="alphaLevelTwoFontColor" tools:ignore="ResourceName">#9915315B</color>
     <!--    课表可上拉下拉标识小块背景-->
     <color name="courseTableDragIndicatorBlockColor" tools:ignore="ResourceName">#E2EDFB</color>
     <!--    课表标识当天阴影-->
@@ -70,7 +70,7 @@
     <!--    按钮渐变起始颜色-->
     <color name="buttonGradientStartColor" tools:ignore="ResourceName">#4841E2</color>
     <!--    按钮渐变终止颜色-->
-    <color name="buttonGradientEndColor" tools:ignore="ResourceName">#4841E2</color>
+    <color name="buttonGradientEndColor" tools:ignore="ResourceName">#5D5DF7</color>
 
     <!--    事务dialog删除按钮背景颜色-->
     <color name="courseAffairDeleteButtonBackgroundColor" tools:ignore="ResourceName">#E6EFFC
