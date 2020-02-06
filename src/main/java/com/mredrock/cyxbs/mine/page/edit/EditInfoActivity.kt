@@ -116,7 +116,8 @@ class EditInfoActivity(override val isFragmentActivity: Boolean = false,
         super.onCreate(savedInstanceState)
         setContentView(R.layout.mine_activity_edit_info)
 
-        mine_common_toolbar.init("资料编辑",
+        common_toolbar.initWithSplitLine("资料编辑",
+                false,
                 R.drawable.mine_ic_arrow_left,
                 View.OnClickListener {
                     if (checkIfInfoChange()) {

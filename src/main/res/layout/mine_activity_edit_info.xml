@@ -9,7 +9,7 @@
 
     <include
         android:id="@+id/mine_et_toolbar"
-        layout="@layout/mine_layout_common_toolbar" />
+        layout="@layout/common_toolbar" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"

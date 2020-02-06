@@ -6,29 +6,31 @@
     android:layout_height="match_parent"
     tools:context=".page.ask.AskActivity">
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/mine_tl_toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/whiteBackground"
-        android:fitsSystemWindows="true"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+    <include
+        android:id="@+id/mine_tl_toolbar" layout="@layout/common_toolbar"/>
+<!--    <androidx.appcompat.widget.Toolbar-->
+<!--        android:id="@+id/mine_tl_toolbar"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:background="@color/whiteBackground"-->
+<!--        android:fitsSystemWindows="true"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="parent"-->
+<!--        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"-->
+<!--        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">-->
 
-        <TextView
-            android:id="@+id/mine_tl_tv_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:textColor="@color/levelTwoFontColor"
-            android:textSize="21sp"
-            android:textStyle="bold"
-            tools:text="adddddddddddd" />
+<!--        <TextView-->
+<!--            android:id="@+id/mine_tl_tv_title"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_gravity="center_horizontal"-->
+<!--            android:textColor="@color/levelTwoFontColor"-->
+<!--            android:textSize="21sp"-->
+<!--            android:textStyle="bold"-->
+<!--            tools:text="adddddddddddd" />-->
 
-    </androidx.appcompat.widget.Toolbar>
+<!--    </androidx.appcompat.widget.Toolbar>-->
 
 
     <FrameLayout

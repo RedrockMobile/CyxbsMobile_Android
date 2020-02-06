@@ -14,7 +14,7 @@ class CommentActivity : BaseTabLayoutActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        mine_tl_tv_title.text = "评论"
+        common_toolbar.title = "评论"
 
         val fragmentList = listOf<Fragment>(CommentFragment(), ResponseFragment())
         val titleList = listOf<String>("发出评论", "收到回复")

@@ -14,7 +14,7 @@ class AskActivity(override val isFragmentActivity: Boolean = false) : BaseTabLay
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        mine_tl_tv_title.text = "我的提问"
+        common_toolbar.title = "我的提问"
         val fragmentList = listOf<Fragment>(AskPostedFm(), AskDraftFm())
         val titleList = listOf<String>("已发布", "草稿箱")
         init(fragmentList, titleList)
