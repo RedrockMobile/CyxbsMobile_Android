@@ -62,3 +62,6 @@ const val URI_HOST_QA = "/qa"
 const val URI_PATH_QA_QUESTION = "/question"
 // answer
 const val URI_PATH_QA_ANSWER = "/answer"
+
+//课表辨别是查同学课表的tag
+const val OTHERS_STU_NUM = "others_stu_num"
