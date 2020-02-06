@@ -1,6 +1,5 @@
 package com.mredrock.cyxbs.main.ui
 
-import android.annotation.SuppressLint
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
@@ -49,7 +48,7 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
 
     override val isFragmentActivity = true
 
-    lateinit var bottomSheetBehavior: BottomSheetBehavior<FrameLayout>
+    private lateinit var bottomSheetBehavior: BottomSheetBehavior<FrameLayout>
 
     private lateinit var navHelpers: BottomNavigationViewHelper
     private lateinit var preCheckedItem: MenuItem
@@ -71,7 +70,6 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
         adapter.notifyDataSetChanged()
     }
 
-    @SuppressLint("ResourceAsColor")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.main_activity_main)
@@ -124,15 +122,6 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
             }
 
             override fun onStateChanged(p0: View, p1: Int) {
-//                if (p1 == BottomSheetBehavior.STATE_SETTLING||lastState==BottomSheetBehavior.STATE_EXPANDED) {
-//                    if (statePosition>0.8f){
-//                        bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
-//                    }
-//                }else if (p1 == BottomSheetBehavior.STATE_COLLAPSED||p1 == BottomSheetBehavior.STATE_EXPANDED) {
-//                    ll_nav_main_container.translationY = nav_main.height * statePosition
-//                }
-//                lastState = p1
-//                Log.d("onStateChanged","${p1}")
             }
         })
     }
