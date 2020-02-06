@@ -25,7 +25,14 @@ class ScheduleVPAdapter(private val mTiles: Array<String>, fm: FragmentManager) 
         return mFragmentList[position]!!
     }
 
-    override fun getCount(): Int {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun getCount() = mTiles.size
+
+
+    override fun getPageTitle(position: Int): CharSequence? {
+        return mTiles[position]
+    }
+
+    override fun getItemPosition(`object`: Any): Int {
+        return androidx.viewpager.widget.PagerAdapter.POSITION_NONE
     }
 }
