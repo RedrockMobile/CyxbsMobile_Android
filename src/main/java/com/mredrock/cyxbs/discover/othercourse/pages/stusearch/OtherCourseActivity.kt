@@ -7,7 +7,7 @@ import com.mredrock.cyxbs.common.config.DISCOVER_OTHER_COURSE
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.discover.othercourse.OtherCourseViewPagerAdapter
 import com.mredrock.cyxbs.discover.othercourse.R
-import kotlinx.android.synthetic.main.discover_activity_other_course.*
+import kotlinx.android.synthetic.main.othercourse_discover_activity_other_course.*
 
 @Route(path = DISCOVER_OTHER_COURSE)
 class OtherCourseActivity : BaseViewModelActivity<OtherCourseViewModel>() {
@@ -17,7 +17,7 @@ class OtherCourseActivity : BaseViewModelActivity<OtherCourseViewModel>() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.discover_activity_other_course)
+        setContentView(R.layout.othercourse_discover_activity_other_course)
         common_toolbar.init("查课表")
         common_toolbar.setTitleLocationAtLeft(false)
 

@@ -1,33 +1,49 @@
 package com.mredrock.cyxbs.discover.othercourse.pages.stulist
 
 import android.os.Bundle
+import android.widget.FrameLayout
+import androidx.databinding.DataBindingUtil
+import androidx.databinding.ObservableField
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.mredrock.cyxbs.common.ui.BaseActivity
 import com.mredrock.cyxbs.discover.othercourse.R
+import com.mredrock.cyxbs.discover.othercourse.databinding.OthercourseDiscoverActivityStuListBinding
 import com.mredrock.cyxbs.discover.othercourse.network.Person
 import com.mredrock.cyxbs.discover.othercourse.room.STUDENT_TYPE
-import kotlinx.android.synthetic.main.discover_activity_stu_list.*
+import kotlinx.android.synthetic.main.othercourse_discover_activity_stu_list.*
 
 class StuListActivity : BaseActivity() {
     override val isFragmentActivity: Boolean
         get() = false
+     var title:ObservableField<String> = ObservableField("")
+    lateinit var mDataBinding:OthercourseDiscoverActivityStuListBinding
+    lateinit var bottomSheetBehavior: BottomSheetBehavior<FrameLayout>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.discover_activity_stu_list)
-
+        mDataBinding =  DataBindingUtil.setContentView(this,R.layout.othercourse_discover_activity_stu_list)
+        mDataBinding.stuListActivity = this
+        bottomSheetBehavior = BottomSheetBehavior.from(course_bottom_sheet_content)
         val mStuList = intent.getSerializableExtra("stu_list") as List<Person>
-        var title = ""
         if(mStuList.size>1){
             if(mStuList[0].type == STUDENT_TYPE){
-                title = "选择同学"
+                title.set("同学课表")
             }else{
-                title = "选择老师"
+                title.set("老师课表")
             }
         }
-        common_toolbar.init(title)
 
         discover_other_course_rv_stu_list.layoutManager = LinearLayoutManager(this)
-        discover_other_course_rv_stu_list.adapter = StuListAdater(mStuList)
+        discover_other_course_rv_stu_list.adapter = StuListAdater(this,mStuList)
     }
+
+    override fun onBackPressed() {
+        if (bottomSheetBehavior.state == BottomSheetBehavior.STATE_EXPANDED) {
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+        }else{
+            super.onBackPressed()
+        }
+    }
+
 }

@@ -10,7 +10,7 @@ import com.mredrock.cyxbs.discover.othercourse.R
 import com.mredrock.cyxbs.discover.othercourse.pages.stulist.StuListActivity
 import com.mredrock.cyxbs.discover.othercourse.room.History
 import com.mredrock.cyxbs.discover.othercourse.snackbar
-import kotlinx.android.synthetic.main.other_course_search_fragment.*
+import kotlinx.android.synthetic.main.othercourse_other_course_search_fragment.*
 import org.jetbrains.anko.startActivity
 
 
@@ -29,7 +29,7 @@ class OtherCourseSearchFragment(private val type: Int) : BaseViewModelFragment<O
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.other_course_search_fragment, container, false)
+        return inflater.inflate(R.layout.othercourse_other_course_search_fragment, container, false)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {

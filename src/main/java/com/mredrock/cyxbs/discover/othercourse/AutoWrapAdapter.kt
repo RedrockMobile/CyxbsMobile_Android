@@ -6,7 +6,7 @@ import com.mredrock.cyxbs.common.component.RedRockAutoWarpView
 import com.mredrock.cyxbs.discover.othercourse.room.History
 
 class AutoWrapAdapter(val list: List<History>, private val onItemClickListener: (String) -> Unit) : RedRockAutoWarpView.Adapter() {
-    override fun getItemId(): Int = R.layout.discover_other_course_history_item
+    override fun getItemId(): Int = R.layout.othercourse_discover_other_course_history_item
 
 
     override fun getItemCount(): Int = list.size
