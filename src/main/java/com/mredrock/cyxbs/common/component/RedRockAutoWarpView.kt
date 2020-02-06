@@ -4,7 +4,6 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewTreeObserver
 import android.widget.FrameLayout
 import com.mredrock.cyxbs.common.R
 
@@ -23,7 +22,7 @@ class RedRockAutoWarpView : FrameLayout {
         set(value) {
             field = value
             adapter?.context = context
-            adapter?.view= this
+            adapter?.view = this
             if (adapter?.getItemCount() ?: 0 == 0) {
                 return
             }
@@ -61,8 +60,8 @@ class RedRockAutoWarpView : FrameLayout {
         spacingH = typedArray.getDimension(R.styleable.RedRockAutoWarpView_horizontalSpacing, 0f).toInt()
         spacingV = typedArray.getDimension(R.styleable.RedRockAutoWarpView_verticalsSpacing, 0f).toInt()
         isStrict = typedArray.getBoolean(R.styleable.RedRockAutoWarpView_strictMode, true)
-        maxLine = typedArray.getInteger(R.styleable.RedRockAutoWarpView_maxLine,-1)
-        maxColumn = typedArray.getInteger(R.styleable.RedRockAutoWarpView_maxColumn,-1)
+        maxLine = typedArray.getInteger(R.styleable.RedRockAutoWarpView_maxLine, -1)
+        maxColumn = typedArray.getInteger(R.styleable.RedRockAutoWarpView_maxColumn, -1)
         typedArray.recycle()
     }
 
@@ -77,7 +76,7 @@ class RedRockAutoWarpView : FrameLayout {
         /**
          * 下面复用代码
          */
-        fun setLayoutP(layoutParams: LayoutParams, column: Int, rowUsedHeights: MutableList<Int>, columnUsedWith: Int,itemHeight: Int) {
+        fun setLayoutP(layoutParams: LayoutParams, column: Int, rowUsedHeights: MutableList<Int>, columnUsedWith: Int, itemHeight: Int) {
             layoutParams.topMargin = (if (column == 0) 0 else {//如果当前是第一排，则为0
                 //不是0则加上上面所有的行的最大高度，如果当前item是当前行第一个，这不用减去当前行，不是则减去当前行
                 rowUsedHeights.sum() - if (columnUsedWith == 0) 0 else rowUsedHeights[column]
@@ -95,7 +94,7 @@ class RedRockAutoWarpView : FrameLayout {
             val rowUsedHeights = mutableListOf<Int>()
             var i = 0
             while (i < adapter.getItemCount()) {
-                adapter.getItemId(i)?:continue
+                adapter.getItemId(i) ?: continue
                 val itemView = LayoutInflater.from(context).inflate(adapter.getItemId(i)!!, this, false)
                 clearMagin(itemView)//清除外边距，以免影响item实际大小
                 adapter.initItem(itemView, i)
@@ -106,17 +105,17 @@ class RedRockAutoWarpView : FrameLayout {
                 val itemHeight: Int = itemView.measuredHeight
                 val layoutParams = itemView.layoutParams as LayoutParams
 
-                if (measuredWidth - rowUsedWith >= itemWith||rowUsedWith==0) {
-                    setLayoutP(layoutParams, column, rowUsedHeights, rowUsedWith,itemHeight)
-                }else {
+                if (measuredWidth - rowUsedWith >= itemWith || rowUsedWith == 0) {
+                    setLayoutP(layoutParams, column, rowUsedHeights, rowUsedWith, itemHeight)
+                } else {
                     column++
 
                     //如果maxLine等于-1则默认包含所有子项。
-                    if (maxLine!=-1&&column == maxLine) {
+                    if (maxLine != -1 && column == maxLine) {
                         break
                     }
                     rowUsedWith = 0
-                    setLayoutP(layoutParams, column, rowUsedHeights, rowUsedWith,itemHeight)
+                    setLayoutP(layoutParams, column, rowUsedHeights, rowUsedWith, itemHeight)
                 }
 
                 if (rowUsedWith == 0 && column + 1 > rowUsedHeights.size) {
@@ -134,26 +133,28 @@ class RedRockAutoWarpView : FrameLayout {
             }
 
             if (isStrict) {
-                getChildAt(childCount-1).addOnLayoutChangeListener { _, _, _, _, _, _, _, _, _ ->
+                getChildAt(childCount - 1).addOnLayoutChangeListener { _, _, _, _, _, _, _, _, _ ->
                     var column1 = 0
                     var rowUsedWith1 = 0
                     val rowUsedHeights1 = mutableListOf<Int>()
                     var j = 0
                     while (j < adapter.getItemCount()) {
                         val itemView = getChildAt(j)
+                        j++
+                        itemView?:continue
                         val itemWith: Int = itemView.width
                         val itemHeight: Int = itemView.height
                         val layoutParams = itemView.layoutParams as LayoutParams
 
-                        if (measuredWidth - rowUsedWith1 >= itemWith + spacingH||rowUsedWith1==0) {
-                            setLayoutP(layoutParams, column1, rowUsedHeights1, rowUsedWith1,itemHeight)
-                        }else {
+                        if (measuredWidth - rowUsedWith1 >= itemWith + spacingH || rowUsedWith1 == 0) {
+                            setLayoutP(layoutParams, column1, rowUsedHeights1, rowUsedWith1, itemHeight)
+                        } else {
                             column1++
-                            if (maxLine!=-1&&column == maxLine) {
+                            if (maxLine != -1 && column == maxLine) {
                                 break
                             }
                             rowUsedWith1 = 0
-                            setLayoutP(layoutParams, column1, rowUsedHeights1, rowUsedWith1,itemHeight)
+                            setLayoutP(layoutParams, column1, rowUsedHeights1, rowUsedWith1, itemHeight)
                         }
 
                         //从第一行开始，记录
@@ -167,7 +168,7 @@ class RedRockAutoWarpView : FrameLayout {
                         //记录横向所用宽度
                         rowUsedWith1 += itemWith + spacingH
                         itemView.layoutParams = layoutParams
-                        j++
+
                     }
                 }
             }
@@ -200,15 +201,19 @@ class RedRockAutoWarpView : FrameLayout {
      */
     abstract class Adapter {
         lateinit var context: Context
-        lateinit var view:RedRockAutoWarpView
+        lateinit var view: RedRockAutoWarpView
         //这两个方法必需重写一个，原来不是这样子写的，因为是公共的，只能增加方法，怕影响已经使用的
-        open fun getItemId(): Int?{return null}
+        open fun getItemId(): Int? {
+            return null
+        }
+
         //这个方法方便不同的item设置
-        open fun getItemId(position: Int): Int?{
+        open fun getItemId(position: Int): Int? {
             return if (getItemId() == null) {
                 null
-            }else getItemId()
+            } else getItemId()
         }
+
         abstract fun getItemCount(): Int
         abstract fun initItem(item: View, position: Int)
     }
