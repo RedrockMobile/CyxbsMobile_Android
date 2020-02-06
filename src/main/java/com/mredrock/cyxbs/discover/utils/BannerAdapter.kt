@@ -36,16 +36,17 @@ class BannerAdapter(private val context: Context, private val urlList: List<Roll
 
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        val url = urlList[position % urlList.size].picture_url
+        val picUrl = urlList[position % urlList.size].picture_url
         Glide.with(context)
-                .load(url)
+                .load(picUrl)
                 .apply(RequestOptions()
                         .placeholder(R.drawable.discover_ic_cyxbsv6)
                         .transform(MultiTransformation(CenterCrop(), RoundedCorners(context.dip(8))))
                 )
                 .into(holder.itemView.iv_viewpager_item)
-        url ?: return
-        if (url.startsWith("http")) {
+        val targetUrl = urlList[position % urlList.size].picture_goto_url
+        targetUrl ?: return
+        if (targetUrl.startsWith("http")) {
             holder.itemView.setOnClickListener {
                 RollerViewActivity.startRollerViewActivity(urlList[position % urlList.size], holder.itemView.context)
             }
