@@ -111,7 +111,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="21dp"
         android:layout_marginBottom="29dp"
-        android:background="@drawable/electricity_bg_btn"
+        android:background="@drawable/common_shape_button"
         android:paddingStart="32dp"
         android:paddingTop="11dp"
         android:paddingEnd="32dp"
