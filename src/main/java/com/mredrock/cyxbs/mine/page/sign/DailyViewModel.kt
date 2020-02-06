@@ -6,6 +6,7 @@ import androidx.lifecycle.Transformations
 import com.mredrock.cyxbs.common.bean.RedrockApiStatus
 import com.mredrock.cyxbs.common.bean.RedrockApiWrapper
 import com.mredrock.cyxbs.common.bean.User
+import com.mredrock.cyxbs.common.utils.extensions.mapOrThrowApiException
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
@@ -62,6 +63,7 @@ class DailyViewModel : BaseViewModel() {
     //用flatmap解决嵌套请求的问题
     fun checkIn(user: User) {
         apiService.checkIn(user.stuNum ?: return, user.idNum ?: return)
+                .setSchedulers()
                 .flatMap(Function<RedrockApiStatus, Observable<RedrockApiWrapper<ScoreStatus>>> {
                     //如果status为405，说明是在寒暑假，此时不可签到
                     if (it.status == 405) {
@@ -73,7 +75,6 @@ class DailyViewModel : BaseViewModel() {
                         }
                     }
                 })
-                .setSchedulers()
                 .normalWrapper(this)
                 .safeSubscribeBy {
                     //如果status没有内容没有更新，就不用postValue
@@ -86,16 +87,21 @@ class DailyViewModel : BaseViewModel() {
 
     fun loadProduct(user: User) {
         apiServiceForSign.getProducts(user.stuNum ?: return, user.idNum ?: return, page++)
-                .normalWrapper(this)
-                .safeSubscribeBy {
-                    //往_product中添加Product
-                    val localProducts = _products.value ?: mutableListOf()
-                    localProducts.addAll(it)
-                    _products.postValue(localProducts)
-
-                    //加载下一页
-                    loadProduct(user)
-                }
+                .mapOrThrowApiException()
+                .setSchedulers()
+                .safeSubscribeBy (
+                        onNext = {
+                            //往_product中添加Product
+                            val localProducts = _products.value ?: mutableListOf()
+                            localProducts.addAll(it)
+                            _products.postValue(localProducts)
+                            //加载下一页
+                            loadProduct(user)
+                        },
+                        onError = {
+                            //当data为null，那么说明这一页没有数据，加载完了
+                        }
+                )
                 .lifeCycle()
     }
 }
