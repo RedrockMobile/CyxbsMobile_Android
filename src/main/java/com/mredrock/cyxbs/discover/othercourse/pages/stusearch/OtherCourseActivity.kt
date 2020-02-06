@@ -18,14 +18,17 @@ class OtherCourseActivity : BaseViewModelActivity<OtherCourseViewModel>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.discover_activity_other_course)
-        common_toolbar.init("查课表")
+        common_toolbar.initWithSplitLine("查课表",false)
         common_toolbar.setTitleLocationAtLeft(false)
 
         vp_other_course.adapter = OtherCourseViewPagerAdapter(this)
         TabLayoutMediator(tl_other_course, vp_other_course) { tab, position ->
             when (position) {
-                0 -> tab.text = "同学课表"
-                1 -> tab.text = "老师课表"
+                0 -> {
+                    tab.text = "同学课表"
+
+                }
+                1 -> {tab.text = "老师课表"}
             }
         }.attach()
 
