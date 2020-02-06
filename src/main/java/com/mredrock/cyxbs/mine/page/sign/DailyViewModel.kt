@@ -6,7 +6,6 @@ import androidx.lifecycle.Transformations
 import com.mredrock.cyxbs.common.bean.RedrockApiStatus
 import com.mredrock.cyxbs.common.bean.RedrockApiWrapper
 import com.mredrock.cyxbs.common.bean.User
-import com.mredrock.cyxbs.common.utils.extensions.mapOrThrowApiException
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
@@ -16,6 +15,7 @@ import com.mredrock.cyxbs.mine.network.ApiService
 import com.mredrock.cyxbs.mine.network.model.Product
 import com.mredrock.cyxbs.mine.network.model.ScoreStatus
 import com.mredrock.cyxbs.mine.util.apiService
+import com.mredrock.cyxbs.mine.util.extension.mapOrThrowApiExceptionWithData
 import com.mredrock.cyxbs.mine.util.extension.normalWrapper
 import io.reactivex.Observable
 import io.reactivex.functions.Function
@@ -87,21 +87,21 @@ class DailyViewModel : BaseViewModel() {
 
     fun loadProduct(user: User) {
         apiServiceForSign.getProducts(user.stuNum ?: return, user.idNum ?: return, page++)
-                .mapOrThrowApiException()
+                .mapOrThrowApiExceptionWithData()
                 .setSchedulers()
-                .safeSubscribeBy (
-                        onNext = {
-                            //往_product中添加Product
-                            val localProducts = _products.value ?: mutableListOf()
-                            localProducts.addAll(it)
-                            _products.postValue(localProducts)
-                            //加载下一页
-                            loadProduct(user)
-                        },
-                        onError = {
-                            //当data为null，那么说明这一页没有数据，加载完了
-                        }
-                )
+                .safeSubscribeBy {
+                    //由于Rxjava反射不应定能够够保证为空，当为空的说明这一页没有数据，于是停止加载
+                    if (it == null) {
+                        return@safeSubscribeBy
+                    }
+
+                    //往_product中添加Product
+                    val localProducts = _products.value ?: mutableListOf()
+                    localProducts.addAll(it)
+                    _products.postValue(localProducts)
+                    //加载下一页
+                    loadProduct(user)
+                }
                 .lifeCycle()
     }
 }
