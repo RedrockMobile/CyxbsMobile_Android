@@ -27,14 +27,8 @@ class RedRockAutoWarpView : FrameLayout {
             if (adapter?.getItemCount() ?: 0 == 0) {
                 return
             }
-            if (viewTreeObserver.isAlive) {
-                viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
-                    override fun onGlobalLayout() {
-                        addItemView()
-                        viewTreeObserver.removeOnGlobalLayoutListener(this)
-                    }
-                })
-            }
+            refreshData()
+            invalidate()
         }
 
 
