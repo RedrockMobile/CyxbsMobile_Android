@@ -31,7 +31,6 @@ import com.mredrock.cyxbs.mine.util.ui.EditDialogFragment
 import com.mredrock.cyxbs.mine.util.user
 import com.yalantis.ucrop.UCrop
 import kotlinx.android.synthetic.main.mine_activity_edit_info.*
-import kotlinx.android.synthetic.main.mine_layout_common_toolbar.*
 import okhttp3.MediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -116,16 +115,23 @@ class EditInfoActivity(override val isFragmentActivity: Boolean = false,
         super.onCreate(savedInstanceState)
         setContentView(R.layout.mine_activity_edit_info)
 
-        common_toolbar.initWithSplitLine("资料编辑",
-                false,
-                R.drawable.mine_ic_arrow_left,
-                View.OnClickListener {
-                    if (checkIfInfoChange()) {
-                        EditDialogFragment().show(supportFragmentManager, "SaveInfo")
-                    } else {
-                        finish()
-                    }
-                })
+        common_toolbar.apply {
+            setBackgroundColor(ContextCompat.getColor(this@EditInfoActivity, R.color.windowBackground))
+            initWithSplitLine("资料编辑",
+                    false,
+                    R.drawable.mine_ic_arrow_left,
+                    View.OnClickListener {
+                        if (checkIfInfoChange()) {
+                            EditDialogFragment().show(supportFragmentManager, "SaveInfo")
+                        } else {
+                            finish()
+                        }
+                    })
+            setTitleLocationAtLeft(true)
+        }
+
+
+
 
         initObserver()
         loadAvatar(user?.photoThumbnailSrc, mine_edit_et_avatar)

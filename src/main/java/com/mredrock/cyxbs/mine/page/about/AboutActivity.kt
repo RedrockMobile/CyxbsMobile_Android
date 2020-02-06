@@ -9,6 +9,7 @@ import android.os.Bundle
 import android.os.Environment
 import android.view.LayoutInflater
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat
 import com.afollestad.materialdialogs.MaterialDialog
 import com.mredrock.cyxbs.common.config.APP_WEBSITE
 import com.mredrock.cyxbs.common.config.DIR_PHOTO
@@ -23,7 +24,6 @@ import com.mredrock.cyxbs.mine.R
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.mine_activity_about.*
 import kotlinx.android.synthetic.main.mine_dialog_share.view.*
-import kotlinx.android.synthetic.main.mine_layout_common_toolbar.*
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.jetbrains.anko.toast
@@ -34,9 +34,13 @@ class AboutActivity(override val isFragmentActivity: Boolean = false) : BaseActi
         super.onCreate(savedInstanceState)
         setContentView(R.layout.mine_activity_about)
 
-        common_toolbar.initWithSplitLine("关于我们",
-                true,
-                R.drawable.mine_ic_arrow_left)
+        common_toolbar.apply {
+            setBackgroundColor(ContextCompat.getColor(this@AboutActivity, R.color.windowBackground))
+            initWithSplitLine("关于我们",
+                    false,
+                    R.drawable.mine_ic_arrow_left)
+            setTitleLocationAtLeft(true)
+        }
 
         setAppVersionName()
 

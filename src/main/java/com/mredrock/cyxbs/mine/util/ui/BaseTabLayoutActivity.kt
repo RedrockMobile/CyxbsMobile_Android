@@ -15,7 +15,7 @@ abstract class BaseTabLayoutActivity(override val isFragmentActivity: Boolean = 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.mine_activity_tablayout_common)
-        common_toolbar.initWithSplitLine("")
+        common_toolbar.initWithSplitLine("", false)
     }
 
 
