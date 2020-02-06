@@ -10,7 +10,7 @@ import com.mredrock.cyxbs.course.ui.CourseFragment
  * Created by anriku on 2018/8/16.
  */
 
-class ScheduleVPAdapter(private val mTiles: Array<String>, fm: FragmentManager?) : FragmentStatePagerAdapter(fm) {
+class ScheduleVPAdapter(private val mTiles: Array<String>, fm: FragmentManager) : FragmentStatePagerAdapter(fm) {
 
     private val mFragmentList = arrayOfNulls<Fragment>(mTiles.size)
 
@@ -25,14 +25,7 @@ class ScheduleVPAdapter(private val mTiles: Array<String>, fm: FragmentManager?)
         return mFragmentList[position]!!
     }
 
-    override fun getCount() = mTiles.size
-
-
-    override fun getPageTitle(position: Int): CharSequence? {
-        return mTiles[position]
-    }
-
-    override fun getItemPosition(`object`: Any): Int {
-        return androidx.viewpager.widget.PagerAdapter.POSITION_NONE
+    override fun getCount(): Int {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 }

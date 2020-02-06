@@ -17,6 +17,7 @@
 
     <LinearLayout
         android:id="@+id/fl"
+        android:fitsSystemWindows="true"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/course_layer_list_container_backgroud"

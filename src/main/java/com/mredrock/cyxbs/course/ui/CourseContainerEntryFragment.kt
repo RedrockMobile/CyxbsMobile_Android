@@ -13,6 +13,7 @@ import androidx.transition.TransitionSet
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.mredrock.cyxbs.common.bean.WidgetCourse
 import com.mredrock.cyxbs.common.config.COURSE_ENTRY
+import com.mredrock.cyxbs.common.config.OTHERS_STU_NUM
 import com.mredrock.cyxbs.common.event.*
 import com.mredrock.cyxbs.common.ui.BaseFragment
 import com.mredrock.cyxbs.course.R
@@ -34,8 +35,6 @@ import org.greenrobot.eventbus.ThreadMode
 @Route(path = COURSE_ENTRY)
 class CourseContainerEntryFragment : BaseFragment() {
     companion object {
-        const val OTHERS_STU_NUM = "others_stu_num"
-
         fun getOthersCourseContainerFragment(stuNum: String): CourseContainerEntryFragment =
                 CourseContainerEntryFragment().apply {
                     arguments = Bundle().apply { putString(OTHERS_STU_NUM, stuNum) }
@@ -96,6 +95,11 @@ class CourseContainerEntryFragment : BaseFragment() {
 
         arguments?.let {
             mOthersStuNum = it.getString(OTHERS_STU_NUM)
+            if (mOthersStuNum != null) {
+                course_header_select_content.visibility = View.VISIBLE
+                course_current_course_container.visibility = View.GONE
+                course_header_back.visibility = View.GONE
+            }
         }
 
         setHasOptionsMenu(true)
@@ -114,6 +118,8 @@ class CourseContainerEntryFragment : BaseFragment() {
                     EventBus.getDefault().post(DismissAddAffairViewEvent())
                     // 当ViewPager发生了滑动，对Head上的周数进行改变
                     if (mOthersStuNum != null) {
+                        course_header_select_content.visibility = View.VISIBLE
+                        course_current_course_container.visibility = View.GONE
                         return@VPOnPagerChangeObserver
                     }
                     mCoursesViewModel?.isShowPresentTips?.set(
@@ -252,7 +258,7 @@ class CourseContainerEntryFragment : BaseFragment() {
      */
     private fun initHead() {
         //便于下面复用代码
-        val isShow:()->Unit = {
+        val isShow: () -> Unit = {
             TransitionManager.beginDelayedTransition(fl, TransitionSet().apply {
                 addTransition(Slide().apply {
                     slideEdge = Gravity.START
@@ -276,6 +282,9 @@ class CourseContainerEntryFragment : BaseFragment() {
 
     }
 
+    /**
+     * main模块里BottomSheet滑动对应的头部变化
+     */
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun bottomSheetSlideStateReceive(bottomSheetStateEvent: BottomSheetStateEvent) {
         course_current_course_week_select_container.visibility = View.VISIBLE
