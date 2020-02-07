@@ -26,6 +26,7 @@ import com.mredrock.cyxbs.common.utils.extensions.doPermissionAction
 import com.mredrock.cyxbs.common.utils.extensions.getRequestBody
 import com.mredrock.cyxbs.common.utils.extensions.loadAvatar
 import com.mredrock.cyxbs.common.utils.extensions.uri
+import com.mredrock.cyxbs.common.utils.extensions.toast
 import com.mredrock.cyxbs.mine.R
 import com.mredrock.cyxbs.mine.util.ui.EditDialogFragment
 import com.mredrock.cyxbs.mine.util.user
@@ -35,7 +36,6 @@ import okhttp3.MediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import org.jetbrains.anko.textColor
-import org.jetbrains.anko.toast
 import java.io.File
 import java.io.IOException
 
