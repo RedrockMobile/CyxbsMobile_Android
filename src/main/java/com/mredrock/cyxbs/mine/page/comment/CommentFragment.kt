@@ -7,7 +7,6 @@ import androidx.lifecycle.ViewModelProviders
 import com.mredrock.cyxbs.mine.R
 import com.mredrock.cyxbs.mine.network.model.Comment
 import com.mredrock.cyxbs.mine.util.ui.BaseRVFragment
-import kotlinx.android.synthetic.main.mine_list_item_comment_comment.view.*
 
 /**
  * Created by roger on 2019/12/5
@@ -21,12 +20,12 @@ class CommentFragment : BaseRVFragment<Comment>() {
         super.onActivityCreated(savedInstanceState)
         initObserver()
         loadMore()
-        val comment = Comment("张树洞", "房子涨了，我劝你赶紧买房子涨了，我劝你赶紧买房子涨了，我劝你赶紧买房子涨了，我劝你赶紧买")
-        val list: MutableList<Comment> = mutableListOf()
-        for (i in 1..20) {
-            list.add(comment)
-        }
-        viewModel.fakeComments.postValue(list)
+//        val comment = Comment("张树洞", "房子涨了，我劝你赶紧买房子涨了，我劝你赶紧买房子涨了，我劝你赶紧买房子涨了，我劝你赶紧买")
+//        val list: MutableList<Comment> = mutableListOf()
+//        for (i in 1..20) {
+//            list.add(comment)
+//        }
+//        viewModel.fakeComments.postValue(list)
     }
 
     private fun initObserver() {
@@ -71,8 +70,8 @@ class CommentFragment : BaseRVFragment<Comment>() {
 
     @SuppressLint("SetTextI18n")
     override fun bindDataHolder(holder: androidx.recyclerview.widget.RecyclerView.ViewHolder, position: Int, data: Comment) {
-        holder.itemView.mine_comment_tv_at_who.text = data.repsonseTo
-        holder.itemView.mine_comment_tv_content.text = data.content
+//        holder.itemView.mine_comment_tv_at_who.text = data.repsonseTo
+//        holder.itemView.mine_comment_tv_content.text = data.content
     }
 
 

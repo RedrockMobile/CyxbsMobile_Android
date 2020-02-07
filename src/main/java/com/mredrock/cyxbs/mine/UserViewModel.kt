@@ -9,6 +9,7 @@ import com.mredrock.cyxbs.common.utils.extensions.mapOrThrowApiException
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
+import com.mredrock.cyxbs.mine.network.model.QANumber
 import com.mredrock.cyxbs.mine.network.model.ScoreStatus
 import com.mredrock.cyxbs.mine.util.apiService
 import com.mredrock.cyxbs.mine.util.user
@@ -25,6 +26,10 @@ class UserViewModel : BaseViewModel() {
     private val _status = MutableLiveData<ScoreStatus>()//签到状态
     val status: LiveData<ScoreStatus>
         get() = _status
+
+    private val _qaNumber = MutableLiveData<QANumber>()
+    val qaNumber: LiveData<QANumber>
+        get() = _qaNumber
 
     fun getUserInfo() {
         val stuNum = user?.stuNum ?: return
@@ -75,5 +80,10 @@ class UserViewModel : BaseViewModel() {
     fun clearUser() {
         _user.postValue(null)
         BaseApp.user = null
+    }
+
+    fun getQANumber() {
+        val number = QANumber(12, 12, 5, 3)
+        _qaNumber.postValue(number)
     }
 }

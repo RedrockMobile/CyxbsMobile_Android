@@ -51,7 +51,10 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
         super.onActivityCreated(savedInstanceState)
         addObserver()
         //加载资料
-        getPersonInfoData()
+        viewModel.getUserInfo()
+        user?.let { viewModel.getScoreStatus(it) }
+        viewModel.getQANumber()
+
         //功能按钮
         mine_main_btn_sign.setOnClickListener { checkLoginBeforeAction("签到") { startActivity<DailySignActivity>() } }
         mine_main_tv_sign.setOnClickListener { checkLoginBeforeAction("签到") { startActivity<DailySignActivity>() } }
@@ -91,6 +94,12 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
                 }
             }
         })
+        viewModel.qaNumber.observe(this, Observer {
+            mine_main_question_number.text = it.askPostedNumber.toString()
+            mine_main_answer_number.text = it.answerPostedNumber.toString()
+            mine_main_reply_comment_number.text = it.commentNumber.toString()
+            mine_main_praise_number.text = it.praiseNumber.toString()
+        })
     }
 
     private fun checkLoginBeforeAction(msg: String, action: () -> Unit) {
@@ -106,21 +115,8 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
         refreshLayout()
     }
 
-    private fun getPersonInfoData() {
-        if (!BaseApp.isLogin) {
-            mine_main_username.setText(R.string.mine_user_empty_username)
-            mine_main_avatar.setImageResource(R.drawable.mine_default_avatar)
-            mine_main_introduce.setText(R.string.mine_user_empty_introduce)
-            return
-        } else {
-            viewModel.getUserInfo()
-        }
-    }
-
-
     //刷新界面
     private fun refreshLayout() {
-        user?.let { viewModel.getScoreStatus(it) }
         if (BaseApp.isLogin) {
             context?.loadAvatar(user?.photoThumbnailSrc, mine_main_avatar)
             mine_main_username.text = if (user?.nickname.isNullOrBlank()) getString(R.string.mine_user_empty_username) else user?.nickname

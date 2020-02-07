@@ -116,43 +116,43 @@ interface ApiService {
                      @Field("page") page: Int,
                      @Field("size") size: Int): Observable<RedrockApiWrapper<List<Draft>>>
 
-    /**
-     * 问一问
-     */
-    @FormUrlEncoded
-    @POST("/app/index.php/QA/User/ask")
-    fun getMyAskOver(@Field("stunum") stuNum: String,
-                     @Field("idnum") idNum: String,
-                     @Field("page") page: Int,
-                     @Field("size") size: Int,
-                     @Field("type") type: Int = 1): Observable<RedrockApiWrapper<List<MyAskQuestion>>>
+//    /**
+//     * 问一问
+//     */
+//    @FormUrlEncoded
+//    @POST("/app/index.php/QA/User/ask")
+//    fun getMyAskOver(@Field("stunum") stuNum: String,
+//                     @Field("idnum") idNum: String,
+//                     @Field("page") page: Int,
+//                     @Field("size") size: Int,
+//                     @Field("type") type: Int = 1): Observable<RedrockApiWrapper<List<MyAskQuestion>>>
+//
+//    @FormUrlEncoded
+//    @POST("/app/index.php/QA/User/ask")
+//    fun getMyAskWait(@Field("stunum") stuNum: String,
+//                     @Field("idnum") idNum: String,
+//                     @Field("page") page: Int,
+//                     @Field("size") size: Int,
+//                     @Field("type") type: Int = 2): Observable<RedrockApiWrapper<List<MyAskQuestion>>>
 
-    @FormUrlEncoded
-    @POST("/app/index.php/QA/User/ask")
-    fun getMyAskWait(@Field("stunum") stuNum: String,
-                     @Field("idnum") idNum: String,
-                     @Field("page") page: Int,
-                     @Field("size") size: Int,
-                     @Field("type") type: Int = 2): Observable<RedrockApiWrapper<List<MyAskQuestion>>>
-
-    /**
-     * 帮一帮
-     */
-    @FormUrlEncoded
-    @POST("/app/index.php/QA/User/help")
-    fun getMyHelpOver(@Field("stunum") stuNum: String,
-                      @Field("idnum") idNum: String,
-                      @Field("page") page: Int,
-                      @Field("size") size: Int,
-                      @Field("type") type: Int = 1): Observable<RedrockApiWrapper<List<MyHelpQuestion>>>
-
-    @FormUrlEncoded
-    @POST("/app/index.php/QA/User/help")
-    fun getMyHelpWait(@Field("stunum") stuNum: String,
-                      @Field("idnum") idNum: String,
-                      @Field("page") page: Int,
-                      @Field("size") size: Int,
-                      @Field("type") type: Int = 2): Observable<RedrockApiWrapper<List<MyHelpQuestion>>>
+//    /**
+//     * 帮一帮
+//     */
+//    @FormUrlEncoded
+//    @POST("/app/index.php/QA/User/help")
+//    fun getMyHelpOver(@Field("stunum") stuNum: String,
+//                      @Field("idnum") idNum: String,
+//                      @Field("page") page: Int,
+//                      @Field("size") size: Int,
+//                      @Field("type") type: Int = 1): Observable<RedrockApiWrapper<List<MyHelpQuestion>>>
+//
+//    @FormUrlEncoded
+//    @POST("/app/index.php/QA/User/help")
+//    fun getMyHelpWait(@Field("stunum") stuNum: String,
+//                      @Field("idnum") idNum: String,
+//                      @Field("page") page: Int,
+//                      @Field("size") size: Int,
+//                      @Field("type") type: Int = 2): Observable<RedrockApiWrapper<List<MyHelpQuestion>>>
 
     /**
      * 与我相关

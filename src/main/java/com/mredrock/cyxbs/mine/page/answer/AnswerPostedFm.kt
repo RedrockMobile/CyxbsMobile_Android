@@ -21,12 +21,12 @@ class AnswerPostedFm : BaseRVFragment<AnswerPosted>() {
         super.onActivityCreated(savedInstanceState)
         initObserver()
         loadMore()
-        val answer = AnswerPosted("id", "15", "房子在涨房子在涨房子在涨房子在涨房子在涨房子在涨", "2019.3.1", "这是个问题", "2019.8.22", "2019-7-1", 20)
-        val list: MutableList<AnswerPosted> = mutableListOf()
-        for (i in 1..20) {
-            list.add(answer)
-        }
-        viewModel.answerPostedEvent.postValue(list)
+//        val answer = AnswerPosted("id", "15", "房子在涨房子在涨房子在涨房子在涨房子在涨房子在涨", "2019.3.1", "这是个问题", "2019.8.22", "2019-7-1", 20)
+//        val list: MutableList<AnswerPosted> = mutableListOf()
+//        for (i in 1..20) {
+//            list.add(answer)
+//        }
+//        viewModel.answerPostedEvent.postValue(list)
     }
 
     private fun initObserver() {
@@ -72,11 +72,11 @@ class AnswerPostedFm : BaseRVFragment<AnswerPosted>() {
     @SuppressLint("SetTextI18n")
     override fun bindDataHolder(holder: androidx.recyclerview.widget.RecyclerView.ViewHolder, position: Int, data: AnswerPosted) {
         holder.itemView.findViewById<TextView>(R.id.mine_answer_posted_tv_content).text = data.content
-        holder.itemView.findViewById<TextView>(R.id.mine_answer_posted_tv_disappear_at).text = data.disappearAt
-        holder.itemView.findViewById<TextView>(R.id.mine_answer_posted_tv_integral).text = data.integral.toString()
-        if (data.state == 0) {
-            holder.itemView.findViewById<TextView>(R.id.mine_answer_posted_tv_state).text = "已采纳"
-        }
+//        holder.itemView.findViewById<TextView>(R.id.mine_answer_posted_tv_disappear_at).text = data.disappearAt
+//        holder.itemView.findViewById<TextView>(R.id.mine_answer_posted_tv_integral).text = data.integral.toString()
+//        if (data.state == 0) {
+//            holder.itemView.findViewById<TextView>(R.id.mine_answer_posted_tv_state).text = "已采纳"
+//        }
     }
 
 

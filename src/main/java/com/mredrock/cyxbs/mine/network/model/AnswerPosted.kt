@@ -6,22 +6,18 @@ import java.io.Serializable
 /**
  * Created by roger on 2019/12/3
  */
-data class AnswerPosted (
-        @SerializedName("id")
-        val id: String,
+data class AnswerPosted(
+        @SerializedName("answer_id")
+        val answerId: String,
         @SerializedName("question_id")
         val questionId: String,
-        @SerializedName("content")
+        @SerializedName("answer_content")
         val content: String,
-        @SerializedName("created_at")
-        val createdAt: String,
-        @SerializedName("question_title")
-        val questionTitle: String,
-        @SerializedName("disappear_at")
-        val disappearAt: String,
-        @SerializedName("updated_at")
-        val upDatedAt: String,
+        @SerializedName("answer_time")
+        val answerTime: String,
+        @SerializedName("integral")
         val integral: Int,
-        val state: Int = 0
+        @SerializedName("type")
+        val type: String
 
 ) : Serializable

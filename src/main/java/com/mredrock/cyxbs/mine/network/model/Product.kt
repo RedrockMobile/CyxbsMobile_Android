@@ -13,10 +13,18 @@ data class Product(
         @SerializedName("num")
         val count: Int,
         @SerializedName("value")
-        val integral: Int,
+        val integral: String,
         @SerializedName("photo_src")
-        val src: String
+        val src: String,
+        @SerializedName("isVirtual")
+        val isVirtual: Int
 ) : Serializable {
+//          格式说明：
+//              "name": "strwberry",    商品名称
+//              "value": "5",           商品所需积分
+//                "num": 9999,          商品剩余数
+//               "photo_src": "",       图片
+//               "isVirtual": 1         商品类型，0为实物，1为虚拟，主要是用于区分，以后可能会有皮肤类似商品
 
     companion object {
         val DIFF_CALLBACK = object : DiffUtil.ItemCallback<Product>() {
