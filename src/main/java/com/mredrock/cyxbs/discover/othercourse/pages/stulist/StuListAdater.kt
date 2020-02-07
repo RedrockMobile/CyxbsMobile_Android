@@ -26,6 +26,7 @@ class StuListAdater(private val mList: List<Person>) : androidx.recyclerview.wid
     override fun onBindViewHolder(holder: StuListViewHolder, position: Int) {
         holder.itemView.discover_other_course_item_select_name.text = mList[position].name
         holder.itemView.discover_other_course_item_select_class.text = mList[position].major
+        holder.itemView.discover_other_course_item_select_num.text = mList[position].num
         holder.itemView.setOnClickListener {
             when (mList[position].type) {
                 STUDENT_TYPE ->

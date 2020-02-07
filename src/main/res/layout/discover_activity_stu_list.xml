@@ -12,6 +12,7 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/discover_other_course_rv_stu_list"
         android:paddingTop="10dp"
+        android:background="@color/whiteBackground"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
