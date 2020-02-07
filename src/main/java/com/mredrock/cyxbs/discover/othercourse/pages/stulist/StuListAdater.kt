@@ -36,7 +36,6 @@ class StuListAdater(val stuListActivity: StuListActivity, private val mList: Lis
         holder.itemView.apply {
             discover_other_course_item_select_name.text = mList[position].name
             discover_other_course_item_select_class.text = mList[position].major
-            discover_other_course_item_select_num.text = mList[position].num
             other_course_tv_stu_num.text = mList[position].num
             setOnClickListener {
                 when (mList[position].type) {
