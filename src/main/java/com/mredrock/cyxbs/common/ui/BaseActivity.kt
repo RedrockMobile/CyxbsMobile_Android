@@ -139,7 +139,7 @@ abstract class BaseActivity : AppCompatActivity() {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     open fun onLoginStateChangeEvent(event: LoginStateChangeEvent) {
-        LogUtils.d("LoginStateChangeEvent", "in" + localClassName + "login state: " + event.newState + "")
+        LogUtils.d("LoginStateChangeEvent", "in" + localClassName + "login state: " + event.loginState + "")
     }
 
     override fun onStart() {
