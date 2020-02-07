@@ -48,8 +48,6 @@ class AskViewModel : BaseViewModel() {
         data.add(ask)
         data.add(ask)
         _askPosted.value = data
-        //加载下一页
-        loadAskPostedList()
     }
 
     fun loadAskDraftList() {

@@ -44,7 +44,7 @@ abstract class BaseRVFragment<D> : Fragment() {
 
         //生成一个textView当做footer
         footer = RvFooter(context)
-        footer!!.showNoMore()
+        footer!!.showLoading()
 
         baseRVAdapter = RvAdapter()
         setAdapter(baseRVAdapter as RvAdapter)

@@ -59,6 +59,7 @@ public abstract class BaseRVAdapter<D> extends RecyclerView.Adapter {
             }
         });
         diffResult.dispatchUpdatesTo(this);
+        notifyDataSetChanged();
         datas = newData;
     }
 

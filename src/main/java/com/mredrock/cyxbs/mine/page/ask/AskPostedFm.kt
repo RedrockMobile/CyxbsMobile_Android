@@ -15,7 +15,6 @@ import kotlinx.android.synthetic.main.mine_list_item_my_ask_posted.view.*
  */
 class AskPostedFm : BaseRVFragment<AskPosted>() {
 
-    private var rvState: RvFooter.State = RvFooter.State.LOADING
 
     private val viewModel by lazy { ViewModelProviders.of(this).get(AskViewModel::class.java) }
 
@@ -29,9 +28,9 @@ class AskPostedFm : BaseRVFragment<AskPosted>() {
         })
         viewModel.eventOnAskPosted.observe(this, Observer {
             if (it == true) {
-                rvState = RvFooter.State.NOMORE
+                getFooter().showNoMore()
             } else {
-                rvState = RvFooter.State.ERROR
+                getFooter().showLoadError()
             }
         })
     }
@@ -40,15 +39,10 @@ class AskPostedFm : BaseRVFragment<AskPosted>() {
         return R.layout.mine_list_item_my_ask_posted
     }
 
-    //自动加载更多
     override fun bindFooterHolder(holder: androidx.recyclerview.widget.RecyclerView.ViewHolder, position: Int) {
-        when (rvState) {
-            RvFooter.State.NOMORE -> getFooter().showNoMore()
-            RvFooter.State.LOADING -> getFooter().showLoading()
-            RvFooter.State.ERROR -> getFooter().showLoadError()
-            else -> {
-
-            }
+        //通过footer来判断是否继续加载
+        if (getFooter().state == RvFooter.State.LOADING) {
+            viewModel.loadAskPostedList()
         }
     }
 
@@ -63,7 +57,7 @@ class AskPostedFm : BaseRVFragment<AskPosted>() {
 
 
     override fun onSwipeLayoutRefresh() {
-        rvState = RvFooter.State.LOADING
+        getFooter().showLoading()
         viewModel.cleanAskPostedPage()
         viewModel.loadAskPostedList()
         getSwipeLayout().isRefreshing = false
