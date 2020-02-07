@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
+import com.mredrock.cyxbs.common.config.WEEK_NUM
 import com.mredrock.cyxbs.course.ui.CourseFragment
 
 /**
@@ -18,7 +19,7 @@ class ScheduleVPAdapter(private val mTiles: Array<String>, fm: FragmentManager) 
         if (mFragmentList[position] == null) {
             mFragmentList[position] = CourseFragment().also {
                 it.arguments = Bundle().apply {
-                    putInt(CourseFragment.WEEK_NUM, position)
+                    putInt(WEEK_NUM, position)
                 }
             }
         }

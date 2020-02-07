@@ -3,6 +3,7 @@ package com.mredrock.cyxbs.course.adapters
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
+import com.mredrock.cyxbs.common.config.WEEK_NUM
 import com.mredrock.cyxbs.course.ui.NoCourseInviteFragment
 
 /**
@@ -18,7 +19,7 @@ class NoCourseInviteVPAdapter(private val mTiles: List<String>, fm: FragmentMana
         if (mFragmentList[position] == null){
             mFragmentList[position] = NoCourseInviteFragment().also {
                 it.arguments = Bundle().apply {
-                    putInt(NoCourseInviteFragment.NOW_WEEK, position + 1)
+                    putInt(WEEK_NUM, position + 1)
                 }
             }
         }

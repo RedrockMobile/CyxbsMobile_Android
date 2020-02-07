@@ -166,16 +166,14 @@ class CourseContainerEntryFragment : BaseFragment() {
                                 .Factory(mStuNumList.get()!!, mNameList.get()!!))
                         .get(NoCourseInviteViewModel::class.java)
                 mNoCourseInviteViewModel?.getCourses()
+                hideNowCourseHead()
             }
             CoursesViewModel.CourseState.OtherCourse -> {
                 mCoursesViewModel = ViewModelProviders.of(this).get(CoursesViewModel::class.java)
                 mBinding.coursesViewModel = mCoursesViewModel
                 mCoursesViewModel.mStuNum = mStuNum.get()!!//这里不可能为空
                 context?.let { mCoursesViewModel.refreshScheduleData(it) }
-                //如果是查别人的课表，直接显示TabLayout，隐藏当前课程系列控件
-                course_header_select_content.visibility = View.GONE
-                course_current_course_container.visibility = View.GONE
-                course_current_course_week_select_container.visibility = View.VISIBLE
+                hideNowCourseHead()
             }
             CoursesViewModel.CourseState.OrdinaryCourse -> {
                 mCoursesViewModel = ViewModelProviders.of(activity!!).get(CoursesViewModel::class.java)
@@ -233,6 +231,15 @@ class CourseContainerEntryFragment : BaseFragment() {
 
         //对头部课表头部信息进行一系列初始化
         initHead()
+    }
+
+    /**
+     * 隐藏当前课程系列控件
+     */
+    private fun hideNowCourseHead() {
+        course_header_select_content.visibility = View.GONE
+        course_current_course_container.visibility = View.GONE
+        course_current_course_week_select_container.visibility = View.VISIBLE
     }
 
     /**

@@ -10,6 +10,7 @@ import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import com.mredrock.cyxbs.common.config.WEEK_NUM
 import com.mredrock.cyxbs.common.ui.BaseFragment
 import com.mredrock.cyxbs.course.R
 import com.mredrock.cyxbs.course.bindingadapter.ScheduleViewBidingAdapter
@@ -32,7 +33,6 @@ import org.jetbrains.anko.textColor
 class CourseFragment : BaseFragment() {
 
     companion object {
-        const val WEEK_NUM = "week_num"
     }
 
     override val openStatistics: Boolean
@@ -90,7 +90,7 @@ class CourseFragment : BaseFragment() {
                 }
                 CoursesViewModel.CourseState.NoClassInvitationCourse->{
                     mNoCourseInviteViewModel?.studentsCourseMap?.observe(this, Observer {
-                        ScheduleViewBidingAdapter.setNoCourseInvite(schedule_view,mCoursesViewModel.nowWeek.value!!,mNoCourseInviteViewModel?.studentsCourseMap?.value,mNoCourseInviteViewModel?.nameList!!)
+                        ScheduleViewBidingAdapter.setNoCourseInvite(schedule_view,mWeek,mNoCourseInviteViewModel?.studentsCourseMap?.value,mNoCourseInviteViewModel?.nameList!!)
                     })
                 }
             }
