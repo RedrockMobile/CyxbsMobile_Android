@@ -3,7 +3,7 @@ package com.mredrock.cyxbs.common.network.exception
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.BuildConfig
 import com.mredrock.cyxbs.common.utils.LogUtils
-import org.jetbrains.anko.toast
+import com.mredrock.cyxbs.common.utils.extensions.toast
 import retrofit2.HttpException
 import java.net.ConnectException
 import java.net.SocketTimeoutException

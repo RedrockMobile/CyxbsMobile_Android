@@ -16,8 +16,8 @@ import androidx.core.app.NotificationCompat
 import com.mredrock.cyxbs.common.R
 import com.mredrock.cyxbs.common.config.updateFile
 import com.mredrock.cyxbs.common.config.updateFilePath
+import com.mredrock.cyxbs.common.utils.extensions.toast
 import org.greenrobot.eventbus.EventBus
-import org.jetbrains.anko.toast
 import java.io.File
 import java.io.FileOutputStream
 import java.net.HttpURLConnection

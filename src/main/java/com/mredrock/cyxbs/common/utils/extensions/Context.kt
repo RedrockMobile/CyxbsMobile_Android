@@ -6,6 +6,8 @@ import android.graphics.Point
 import android.os.Build
 import android.view.View
 import android.view.WindowManager
+import android.widget.Toast
+import com.mredrock.cyxbs.common.component.CyxbsToast
 
 /**
  * Created by anriku on 2018/8/14.
@@ -53,3 +55,7 @@ fun Activity.setFullScreen() {
             or View.SYSTEM_UI_FLAG_FULLSCREEN
             or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY)
 }
+
+fun Context.toast(message:CharSequence) = CyxbsToast.makeText(this,message,Toast.LENGTH_SHORT).show()
+
+fun Context.toast(res:Int) = CyxbsToast.makeText(this,res,Toast.LENGTH_SHORT).show()

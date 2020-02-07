@@ -11,8 +11,6 @@ import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.common.viewmodel.event.ProgressDialogEvent
 import org.jetbrains.anko.indeterminateProgressDialog
-import org.jetbrains.anko.longToast
-import org.jetbrains.anko.toast
 
 /**
  * Created By jay68 on 2018/8/23.
@@ -37,8 +35,8 @@ abstract class BaseViewModelActivity<T : BaseViewModel> : BaseActivity() {
             ViewModelProviders.of(this).get(viewModelClass)
         }
         viewModel.apply {
-            toastEvent.observe { str -> str?.let { CyxbsToast.makeText(baseContext,it,Toast.LENGTH_SHORT).show() } }
-            longToastEvent.observe { str -> str?.let { CyxbsToast.makeText(baseContext,it,Toast.LENGTH_LONG).show()} }
+            toastEvent.observe { str -> str?.let { CyxbsToast.makeText(baseContext, it, Toast.LENGTH_SHORT).show() } }
+            longToastEvent.observe { str -> str?.let { CyxbsToast.makeText(baseContext, it, Toast.LENGTH_LONG).show() } }
             progressDialogEvent.observe {
                 it ?: return@observe
                 //确保只有一个对话框会被弹出
