@@ -13,7 +13,6 @@ import com.mredrock.cyxbs.course.R
 import com.mredrock.cyxbs.course.adapters.NoCourseInviteVPAdapter
 import com.mredrock.cyxbs.course.databinding.CourseActivityNoCourseInviteBinding
 import com.mredrock.cyxbs.course.viewmodels.NoCourseInviteViewModel
-import org.jetbrains.anko.toast
 
 @Route(path = COURSE_NO_COURSE_INVITE)
 class NoCourseInviteActivity : BaseActivity() {
@@ -27,11 +26,11 @@ class NoCourseInviteActivity : BaseActivity() {
 
     private lateinit var mNoCourseInviteViewModel: NoCourseInviteViewModel
 
-    @Autowired(name = "stuNumList")
+    @Autowired(name = STU_NUM_LIST)
     @JvmField
     var mStuNumList: ArrayList<String> = arrayListOf()
 
-    @Autowired(name = "stuNameList")
+    @Autowired(name = STU_NAME_LIST)
     @JvmField
     var mNameList: ArrayList<String> = arrayListOf()
 
@@ -50,8 +49,6 @@ class NoCourseInviteActivity : BaseActivity() {
     private fun initActivity() {
         common_toolbar.init(getString(R.string.course_no_courese_invite))
 
-//        mStuNumList = mutableListOf("2016215039", "2016211541")
-//        mNameList = mutableListOf("文一鹏", "姜子来")
         ARouter.getInstance().inject(this)
 
         mNoCourseInviteViewModel = ViewModelProviders.of(this,

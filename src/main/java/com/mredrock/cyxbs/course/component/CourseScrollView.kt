@@ -1,4 +1,4 @@
-package com.mredrock.cyxbs.course.ui
+package com.mredrock.cyxbs.course.component
 
 import android.content.Context
 import android.util.AttributeSet

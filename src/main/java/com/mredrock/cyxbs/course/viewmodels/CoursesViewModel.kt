@@ -19,7 +19,6 @@ import com.mredrock.cyxbs.common.viewmodel.event.SingleLiveEvent
 import com.mredrock.cyxbs.course.R
 import com.mredrock.cyxbs.course.database.ScheduleDatabase
 import com.mredrock.cyxbs.course.event.AffairFromInternetEvent
-import com.mredrock.cyxbs.course.event.RefreshEvent
 import com.mredrock.cyxbs.course.network.Affair
 import com.mredrock.cyxbs.course.network.AffairMapToCourse
 import com.mredrock.cyxbs.course.network.Course
@@ -70,7 +69,7 @@ class CoursesViewModel : ViewModel() {
     // 并从新获取课表上的号数
     val schoolCalendarUpdated = MutableLiveData<Boolean>().apply { value = false }
     // 用于记录帐号
-    private lateinit var mStuNum: String
+    lateinit var mStuNum: String
     // 表明是否是在获取他人课表
     val isGetOthers: MutableLiveData<Boolean> by lazy(LazyThreadSafetyMode.NONE) {
         MutableLiveData<Boolean>().apply { value = true }
@@ -78,6 +77,9 @@ class CoursesViewModel : ViewModel() {
 
     //全部课程数据
     val courses = MutableLiveData<MutableList<Course>>()
+
+    private lateinit var mCourses: MutableList<Course>
+
 
     //用于显示在当前或者下一课程对象
     val nowCourse = ObservableField<Course?>()
@@ -123,7 +125,6 @@ class CoursesViewModel : ViewModel() {
     private val mCourseApiService: CourseApiService by lazy(LazyThreadSafetyMode.NONE) {
         ApiGenerator.getApiService(CourseApiService::class.java)
     }
-    private lateinit var mCourses: MutableList<Course>
 
     // 第一个值表示课程是否获取，第二个表示是否获取事务。
     private val mDataGetStatus = arrayOf(false, false)
@@ -404,12 +405,15 @@ class CoursesViewModel : ViewModel() {
      * 这个方法无论是在获取数据出错还是在没有出错的情况下最终都会被调用因此这里对[mIsGettingData]进行状态设置。
      */
     private fun stopRefresh() {
-        EventBus.getDefault().post(RefreshEvent(false))
         mIsGettingData = false
     }
 
     fun clearCache() {
         mCoursesDatabase?.courseDao()?.deleteAllCourses()
         mCoursesDatabase?.affairDao()?.deleteAllAffairs()
+    }
+
+    enum class CourseState{
+        OrdinaryCourse,OtherCourse,NoClassInvitationCourse
     }
 }

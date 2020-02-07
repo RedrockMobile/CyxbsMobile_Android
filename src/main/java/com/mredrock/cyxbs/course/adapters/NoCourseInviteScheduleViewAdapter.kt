@@ -2,17 +2,19 @@ package com.mredrock.cyxbs.course.adapters
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.graphics.drawable.Drawable
+import android.graphics.drawable.GradientDrawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import android.widget.TextView
 import androidx.core.content.ContextCompat
 import com.mredrock.cyxbs.common.utils.SchoolCalendar
 import com.mredrock.cyxbs.course.R
 import com.mredrock.cyxbs.course.component.ScheduleView
 import com.mredrock.cyxbs.course.network.Course
 import com.mredrock.cyxbs.course.ui.NoCourseInviteDetailDialogHelper
+import kotlinx.android.synthetic.main.course_no_course_invite_item.view.*
 import java.util.*
 
 /**
@@ -29,9 +31,9 @@ class NoCourseInviteScheduleViewAdapter(private val mContext: Context,
     }
 
     private val mCoursesColors by lazy(LazyThreadSafetyMode.NONE) {
-        intArrayOf(ContextCompat.getColor(mContext, R.color.courseCoursesForenoon),
-                ContextCompat.getColor(mContext, R.color.courseCoursesAfternoon),
-                ContextCompat.getColor(mContext, R.color.courseCoursesNight),
+        intArrayOf(ContextCompat.getColor(mContext, R.color.morningCourseColor),
+                ContextCompat.getColor(mContext, R.color.afternoonCourseColor),
+                ContextCompat.getColor(mContext, R.color.eveningCourseColor),
                 ContextCompat.getColor(mContext, R.color.courseCoursesOther))
     }
 
@@ -100,8 +102,6 @@ class NoCourseInviteScheduleViewAdapter(private val mContext: Context,
 
     override fun getItemView(row: Int, column: Int, container: ViewGroup): View {
         val view = mLayoutInflater.inflate(R.layout.course_no_course_invite_item, container, false)
-        val tvNameList = view.findViewById<TextView>(R.id.tv_name_list)
-        val cv = view.findViewById<androidx.cardview.widget.CardView>(R.id.cv)
         val stringBuilder = StringBuilder()
         val nameList = mutableListOf<String>()
 
@@ -112,12 +112,25 @@ class NoCourseInviteScheduleViewAdapter(private val mContext: Context,
                 stringBuilder.append("\n")
             }
         }
-        tvNameList.text = stringBuilder.toString()
-        cv.setCardBackgroundColor(mCoursesColors[row / 4])
+        view.tv_name_list.text = stringBuilder.toString()
+        view.cv.background = createBackground(mCoursesColors[row / 4])
         view.setOnClickListener {
             mNoCourseInviteDetailDialogHelper.showDialog(row, column, getNoCourseLength(row, column), nameList)
         }
         return view
+    }
+
+    /**
+     * 这个方法来制造课表item的圆角背景
+     * @param rgb 背景颜色
+     * 里面的圆角的参数是写在资源文件里的
+     */
+    private fun createBackground(rgb: Int): Drawable {
+        val drawable = GradientDrawable()
+        val courseCorner = mContext.resources.getDimension(R.dimen.course_course_item_radius)
+        drawable.cornerRadii = floatArrayOf(courseCorner, courseCorner, courseCorner, courseCorner, courseCorner, courseCorner, courseCorner, courseCorner)
+        drawable.setColor(rgb)
+        return drawable
     }
 
     override fun getItemViewInfo(row: Int, column: Int): ScheduleView.ScheduleItem? {
