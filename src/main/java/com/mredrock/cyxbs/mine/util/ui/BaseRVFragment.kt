@@ -28,7 +28,12 @@ abstract class BaseRVFragment<D> : Fragment() {
     abstract fun onSwipeLayoutRefresh()
 
     protected fun setNewData(newData: List<D>?) {
-        baseRVAdapter?.setNewData(newData)
+        if (mine_fragment_base_rv.isComputingLayout) {
+            mine_fragment_base_rv.post { setNewData(newData) }
+        } else {
+            baseRVAdapter?.setNewData(newData)
+
+        }
     }
 
     private var baseRVAdapter: BaseRVAdapter<D>? = null

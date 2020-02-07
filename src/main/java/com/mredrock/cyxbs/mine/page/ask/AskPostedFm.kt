@@ -28,7 +28,6 @@ class AskPostedFm : BaseRVFragment<AskPosted>() {
             setNewData(it)
         })
         viewModel.eventOnAskPosted.observe(this, Observer {
-            //由于footer可能还未加载到视图，故不可调用getFooter的方法
             if (it == true) {
                 rvState = RvFooter.State.NOMORE
             } else {
@@ -68,5 +67,6 @@ class AskPostedFm : BaseRVFragment<AskPosted>() {
         viewModel.cleanAskPostedPage()
         viewModel.loadAskPostedList()
         getSwipeLayout().isRefreshing = false
+        getRecyclerView().scrollToPosition(0)
     }
 }
