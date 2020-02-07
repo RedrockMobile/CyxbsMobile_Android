@@ -14,8 +14,6 @@
             android:launchMode="singleTask" />
         <activity android:name=".ui.StudentListActivity"
             android:launchMode="singleTask" />
-        <activity android:name=".ui.OthersCourseActivity"
-            android:launchMode="singleTask"/>
     </application>
 
 </manifest>

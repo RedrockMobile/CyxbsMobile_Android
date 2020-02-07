@@ -9,9 +9,6 @@
             name="coursesViewModel"
             type="com.mredrock.cyxbs.course.viewmodels.CoursesViewModel" />
 
-        <variable
-            name="fragment"
-            type="com.mredrock.cyxbs.course.ui.CourseContainerEntryFragment" />
 
     </data>
 
@@ -36,6 +33,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <FrameLayout
+            android:id="@+id/course_header"
             android:layout_width="match_parent"
             android:layout_height="51dp">
 
@@ -178,7 +176,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:maxLength="8"
-                        android:text="@{fragment.mWeekTitle}"
+                        android:text="@{coursesViewModel.mWeekTitle}"
                         android:textColor="@color/levelTwoFontColor"
                         android:textSize="22sp"
                         android:textStyle="bold"

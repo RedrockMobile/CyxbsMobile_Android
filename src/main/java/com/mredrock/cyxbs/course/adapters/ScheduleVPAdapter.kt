@@ -31,8 +31,4 @@ class ScheduleVPAdapter(private val mTiles: Array<String>, fm: FragmentManager) 
     override fun getPageTitle(position: Int): CharSequence? {
         return mTiles[position]
     }
-
-    override fun getItemPosition(`object`: Any): Int {
-        return androidx.viewpager.widget.PagerAdapter.POSITION_NONE
-    }
 }

@@ -9,7 +9,7 @@ import com.mredrock.cyxbs.common.utils.SchoolCalendar
  * Created by anriku on 2018/8/21.
  */
 
-class DateViewModel(private val mWeek: Int) : ViewModel() {
+class CoursePageViewModel(private val mWeek: Int) : ViewModel() {
 
 
     val month = MutableLiveData<String>()
@@ -53,7 +53,7 @@ class DateViewModel(private val mWeek: Int) : ViewModel() {
 
         @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-            return DateViewModel(mWeek) as T
+            return CoursePageViewModel(mWeek) as T
         }
     }
 }

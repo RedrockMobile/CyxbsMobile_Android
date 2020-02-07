@@ -106,10 +106,6 @@ class CoursesViewModel : ViewModel() {
     val isShowPresentTips: ObservableField<Int> = ObservableField(View.GONE)
     val isShowBackPresentWeek = ObservableField<Int>(View.GONE)
 
-    private var nowCourses = ""
-    private var nextCourses = ""
-    private var nowAffairs = ""
-    private var nextAffairs = ""
     // 表示今天是在第几周。
     var nowWeek = MutableLiveData<Int>().apply {
         SchoolCalendar().weekOfTerm.let {
@@ -135,6 +131,9 @@ class CoursesViewModel : ViewModel() {
     private var mIsGettingData: Boolean = false
     // 用于记录是否时第一次因为数据库中拉取不到数据，通过网络请求进行数据的拉取。
     private var mIsGottenFromInternet = false
+
+    // 用于记录当前Toolbar要显示的字符串
+    var mWeekTitle: ObservableField<String> = ObservableField("")
 
     /**
      * 此方法用于从数据库中获取Course和Affair数据
@@ -196,7 +195,10 @@ class CoursesViewModel : ViewModel() {
         resetGetStatus()
         getCoursesDataFromInternet()
 
-        // 如果mIsGetOthers为true，就说明是他人课表查询pass掉备忘查询。反之就是用户在进行课表查询，这时就进行备忘的查询。
+        /**
+         * 如果mIsGetOthers为true，就说明是他人课表查询pass掉备忘查询。
+         * 反之就是用户在进行课表查询，这时就进行备忘的查询。
+         */
         if (isGetOthers.value == true) {
             isGetAllData(1)
         } else {
@@ -215,12 +217,6 @@ class CoursesViewModel : ViewModel() {
                 .toObservable()
                 .setSchedulers()
                 .subscribe(ExecuteOnceObserver(onExecuteOnceNext = { coursesFromDatabase ->
-                    var tag = ""
-                    for (c in coursesFromDatabase) {
-                        tag += c.courseNum+c.hashDay+c.hashLesson+c.teacher+c.classroom+c.weekModel+c.week
-                    }
-
-                    nextCourses = tag
                     if (coursesFromDatabase != null && coursesFromDatabase.isNotEmpty()) {
                         mCourses.addAll(coursesFromDatabase)
                         isGetAllData(0)
@@ -251,10 +247,6 @@ class CoursesViewModel : ViewModel() {
                         for (c in affairsFromDatabase) {
                             tag.add("${c.affairDates}+${c.course}+${c.classroom}")
                         }
-                        nextAffairs = if(!tag.isEmpty())
-                            tag.toString()
-                        else
-                            ""
                         mCourses.addAll(affairsFromDatabase)
                     }
                     isGetAllData(1)
@@ -275,12 +267,6 @@ class CoursesViewModel : ViewModel() {
                         toastEvent.value = R.string.course_use_cache
                     }
                     coursesFromInternet.data?.let { notNullCourses ->
-                        var tag = ""
-                        for (c in notNullCourses) {
-                            tag += c.courseNum+c.hashDay+c.hashLesson+c.teacher+c.classroom+c.weekModel+c.week
-                        }
-                        nextCourses = tag
-
                         mCourses.addAll(notNullCourses)
                         isGetAllData(0)
 
@@ -320,11 +306,6 @@ class CoursesViewModel : ViewModel() {
                         for (c in notNullAffairs) {
                             tag.add("${c.date}+${c.title}+${c.content}")
                         }
-                        //我也不知道为什么从数据库和从本地两个toString()方法返回不一样
-                        nextAffairs = if(!tag.isEmpty())
-                            tag.toString()
-                        else
-                            ""
                         //将从服务器上获取的事务映射为课程信息。
                         Observable.create(ObservableOnSubscribe<List<Affair>> {
                             it.onNext(notNullAffairs)
@@ -357,7 +338,6 @@ class CoursesViewModel : ViewModel() {
         if (mDataGetStatus[0] && mDataGetStatus[1]) {
             // 如果mCourses为空的话就不用赋值给courses。防止由于网络请求有问题而导致刷新数据为空。
             if (mCourses.isNotEmpty()) {
-                if (nowCourses != nextCourses || nowAffairs != nextAffairs) {
                     courses.value = mCourses
                     //获取当前的课程显示在上拉课表的头部
                     nowWeek.value?.let { nowWeek ->
@@ -366,11 +346,6 @@ class CoursesViewModel : ViewModel() {
                                 nowCourse.set(getNowCourse(todayCourse,it,nowWeek))
                             }
                         }
-                    }
-                    //防止多次刷新
-                    //todo 璇璇学姐写得太丑了，待优化
-                    nowCourses = nextCourses
-                    nowAffairs = nextAffairs
                 }
             } else {
                 // 加个标志，防止因为没有课程以及备忘的情况进行无限循环拉取。

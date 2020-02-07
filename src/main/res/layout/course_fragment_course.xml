@@ -10,8 +10,8 @@
             type="com.mredrock.cyxbs.course.viewmodels.CoursesViewModel" />
 
         <variable
-            name="dateViewModel"
-            type="com.mredrock.cyxbs.course.viewmodels.DateViewModel" />
+            name="coursePageViewModel"
+            type="com.mredrock.cyxbs.course.viewmodels.CoursePageViewModel" />
     </data>
 
 
@@ -29,8 +29,8 @@
             android:textSize="@dimen/course_column_text_size"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:month="@{dateViewModel.month}"
-            app:nowWeek="@{dateViewModel.nowWeek}" />
+            app:month="@{coursePageViewModel.month}"
+            app:nowWeek="@{coursePageViewModel.nowWeek}" />
 
         <com.mredrock.cyxbs.course.component.WeekBackgroundView
             android:id="@+id/week_back_ground_view"
@@ -65,12 +65,12 @@
             android:orientation="horizontal"
             android:textColor="@color/levelOneFontColor"
             android:textSize="@dimen/course_column_text_size"
-            app:displayedStrings="@{dateViewModel.daysOfMonth}"
+            app:displayedStrings="@{coursePageViewModel.daysOfMonth}"
             app:layout_constraintBottom_toBottomOf="@id/tv_course_month"
             app:layout_constraintLeft_toRightOf="@id/tv_course_month"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/red_rock_tv_course_day_of_week"
-            app:nowWeek="@{dateViewModel.nowWeek}" />
+            app:nowWeek="@{coursePageViewModel.nowWeek}" />
 
 
             <com.mredrock.cyxbs.course.ui.CourseScrollView
@@ -133,7 +133,7 @@
                     app:noCourseDrawable="@drawable/course_no_course"
                     app:noGourseImageHeight="131dp"
                     app:noGourseImageWidth="202dp"
-                    app:nowWeek="@{dateViewModel.nowWeek}"
+                    app:nowWeek="@{coursePageViewModel.nowWeek}"
                     app:schedules="@{coursesViewModel.courses}"
                     app:touchViewDrawable="@drawable/course_ic_add_circle_white">
 

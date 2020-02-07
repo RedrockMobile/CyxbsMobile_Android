@@ -14,8 +14,8 @@ import com.mredrock.cyxbs.common.ui.BaseFragment
 import com.mredrock.cyxbs.course.R
 import com.mredrock.cyxbs.course.databinding.CourseFragmentCourseBinding
 import com.mredrock.cyxbs.course.event.DismissAddAffairViewEvent
+import com.mredrock.cyxbs.course.viewmodels.CoursePageViewModel
 import com.mredrock.cyxbs.course.viewmodels.CoursesViewModel
-import com.mredrock.cyxbs.course.viewmodels.DateViewModel
 import kotlinx.android.synthetic.main.course_fragment_course.*
 import kotlinx.android.synthetic.main.course_fragment_course.view.*
 import org.greenrobot.eventbus.Subscribe
@@ -36,9 +36,10 @@ class CourseFragment : BaseFragment() {
     override val openStatistics: Boolean
         get() = false
 
+    //当前课表页面代表的第几周[默认0 代表整学期，1代表第一周。。。。。。]
     private var mWeek: Int = 0
     private lateinit var mCoursesViewModel: CoursesViewModel
-    private lateinit var mDateViewModel: DateViewModel
+    private lateinit var mCoursePageViewModel: CoursePageViewModel
     private lateinit var mBinding: CourseFragmentCourseBinding
 
 
@@ -59,19 +60,20 @@ class CourseFragment : BaseFragment() {
         mBinding.lifecycleOwner = this
         mWeek = arguments?.getInt(WEEK_NUM) ?: 0
 
-        activity?.let {
-            mCoursesViewModel = ViewModelProviders.of(it).get(CoursesViewModel::class.java)
-            mDateViewModel = ViewModelProviders.of(this,
-                    DateViewModel.DateViewModelFactory(mWeek)).get(DateViewModel::class.java)
-            mDateViewModel.nowWeek = mWeek
+        activity?.let { activity ->
+            mCoursesViewModel = ViewModelProviders.of(activity).get(CoursesViewModel::class.java)
+            //获取生命周期与当前Fragment绑定的DateViewModel
+            mCoursePageViewModel = ViewModelProviders.of(this,
+                    CoursePageViewModel.DateViewModelFactory(mWeek)).get(CoursePageViewModel::class.java)
+            mCoursePageViewModel.nowWeek = mWeek
 
-            val color = ContextCompat.getColor(it, R.color.levelOneFontColor)
+            val color = ContextCompat.getColor(activity, R.color.levelOneFontColor)
             red_rock_tv_course_day_of_month.textColor = Color.argb(153, Color.red(color), Color.green(color), Color.blue(color))
         }
 
 
         mBinding.coursesViewModel = mCoursesViewModel
-        mBinding.dateViewModel = mDateViewModel
+        mBinding.coursePageViewModel = mCoursePageViewModel
 
         mCoursesViewModel.toastEvent.observe(this, Observer {
             Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
@@ -80,7 +82,7 @@ class CourseFragment : BaseFragment() {
         // 当当前周数进行了改变后有可能SchoolCalendar进行了更新，这时候就对DateViewModel中的日期进行更新
         mCoursesViewModel.schoolCalendarUpdated.observe(this, Observer {
             if (it == true) {
-                mDateViewModel.getDate()
+                mCoursePageViewModel.getDate()
             }
         })
 
@@ -102,7 +104,7 @@ class CourseFragment : BaseFragment() {
      * 这个方法用于清理课表上加备忘的View
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
-    fun dissmissAddAffairEventView(e: DismissAddAffairViewEvent) {
+    fun dismissAddAffairEventView(e: DismissAddAffairViewEvent) {
         mBinding.root.schedule_view.clearTouchView()
     }
 }

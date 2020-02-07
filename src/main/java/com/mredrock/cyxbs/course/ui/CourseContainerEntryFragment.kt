@@ -60,13 +60,12 @@ class CourseContainerEntryFragment : BaseFragment() {
     }
 
     /**
-     * 在用于的登录状态发生改变后进行调用。
-     *
+     * 登陆状态发生改变时会被回调的函数
      * @param event 包含当前用户登录状态的事件。
      */
     override fun onLoginStateChangeEvent(event: LoginStateChangeEvent) {
         super.onLoginStateChangeEvent(event)
-        if (event.newState) {
+        if (event.loginState) {
             // replaceFragment(CourseContainerFragment())
             mBinding.vp.adapter?.notifyDataSetChanged()
             mCoursesViewModel?.mWeekTitle?.set(activity!!.getString(R.string.course_all_week))
@@ -83,10 +82,12 @@ class CourseContainerEntryFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initFragment()
-        initCourseEntryFragment()
     }
 
 
+    /**
+     * 对当前Fragment进行一系列初始化
+     */
     private fun initFragment() {
         activity ?: return
         //如果没有被添加进Activity，Fragment会抛出not attach a context的错误
@@ -95,11 +96,6 @@ class CourseContainerEntryFragment : BaseFragment() {
         //这里如果arguments不为空，说明里面有传过来的学号，说明是查他人课表
         arguments?.let { bundle ->
             mOthersStuNum = bundle.getString(OTHERS_STU_NUM)
-            if (mOthersStuNum != null) {
-                course_header_select_content.visibility = View.VISIBLE
-                course_current_course_container.visibility = View.GONE
-                course_header_back.visibility = View.GONE
-            }
         }
 
         //初始化周数tab和下面课表的Adapter
@@ -117,7 +113,7 @@ class CourseContainerEntryFragment : BaseFragment() {
          * 获取依赖于CourseContainerFragment的Activity的CoursesViewModel。
          * 在WeekFragment的切换的时候，不会重复获取数据。
          */
-        mCoursesViewModel = ViewModelProviders.of(this).get(CoursesViewModel::class.java)
+        mCoursesViewModel = ViewModelProviders.of(activity!!).get(CoursesViewModel::class.java)
         mBinding.coursesViewModel = mCoursesViewModel
 
         //获取到ViewModel后进行一些初始化操作
@@ -128,12 +124,6 @@ class CourseContainerEntryFragment : BaseFragment() {
                 // 跳转到当前周
                 mBinding.vp.currentItem = nowWeek ?: 0
             })
-            //回到本周按钮的点击事件
-            course_back_present_week.setOnClickListener {
-                coursesViewModel.nowWeek.value?.let {
-                    mBinding.vp.currentItem = it
-                }
-            }
 
             // 给ViewPager添加OnPageChangeListener
             lifecycle.addObserver(VPOnPagerChangeObserver(mBinding.vp,
@@ -168,6 +158,58 @@ class CourseContainerEntryFragment : BaseFragment() {
                         )
                         coursesViewModel.mWeekTitle.set(mScheduleAdapter.getPageTitle(it).toString())
                     }))
+        }
+
+        //对头部课表头部信息进行一系列初始化
+        initHead()
+    }
+
+    /**
+     * 初始化课表头部信息
+     */
+    private fun initHead() {
+        //便于下面复用代码
+        val isShow: () -> Unit = {
+            TransitionManager.beginDelayedTransition(fl, TransitionSet().apply {
+                addTransition(Slide().apply {
+                    slideEdge = Gravity.START
+                    duration = 250
+                })
+            })
+            course_header_select_content.visibility = View.VISIBLE
+            course_header_show.visibility = View.GONE
+        }
+        course_tv_which_week.setOnClickListener { isShow() }
+        course_this_week_tips.setOnClickListener { isShow() }
+
+        course_header_back.setOnClickListener {
+            TransitionManager.beginDelayedTransition(fl, TransitionSet().apply {
+                addTransition(Slide().apply {
+                    slideEdge = Gravity.START
+                })
+            })
+            course_header_select_content.visibility = View.GONE
+            course_header_show.visibility = View.VISIBLE
+        }
+        mCoursesViewModel?.mWeekTitle?.set(activity?.getString(R.string.course_all_week))
+
+        //给整个头部设置点击事件，点击展开整个BottomSheet
+        course_header.setOnClickListener {
+            EventBus.getDefault().post(NotifyBottomSheetToExpandEvent(true))
+        }
+
+        //回到本周按钮的点击事件
+        course_back_present_week.setOnClickListener {
+            mCoursesViewModel?.nowWeek?.value?.let {
+                mBinding.vp.currentItem = it
+            }
+        }
+
+        //如果是查别人的课表，直接显示TabLayout，隐藏当前课程系列控件
+        if (mOthersStuNum != null) {
+            course_header_select_content.visibility = View.VISIBLE
+            course_current_course_container.visibility = View.GONE
+            course_header_back.visibility = View.GONE
         }
     }
 
@@ -229,52 +271,6 @@ class CourseContainerEntryFragment : BaseFragment() {
                 }
             }
         }
-    }
-
-    // 表示是否TabLayout折叠
-    private var mIsFold = true
-
-
-
-    private fun initCourseEntryFragment() {
-        activity?.let { activity ->
-            // 如果用户登录了就显示CourseContainerFragment；如果用户没有登录就行显示NoneLoginFragment进行登录
-            mCoursesViewModel?.mWeekTitle?.set(activity.getString(R.string.course_all_week))
-            initHead()
-            course_current_course_container.setOnClickListener {
-                EventBus.getDefault().post(NotifyBottomSheetToExpandEvent(true))
-            }
-        }
-    }
-
-
-    /**
-     * 初始化课表头部信息
-     */
-    private fun initHead() {
-        //便于下面复用代码
-        val isShow: () -> Unit = {
-            TransitionManager.beginDelayedTransition(fl, TransitionSet().apply {
-                addTransition(Slide().apply {
-                    slideEdge = Gravity.START
-                    duration = 250
-                })
-            })
-            course_header_select_content.visibility = View.VISIBLE
-            course_header_show.visibility = View.GONE
-        }
-        course_tv_which_week.setOnClickListener { isShow() }
-        course_this_week_tips.setOnClickListener { isShow() }
-        course_header_back.setOnClickListener {
-            TransitionManager.beginDelayedTransition(fl, TransitionSet().apply {
-                addTransition(Slide().apply {
-                    slideEdge = Gravity.START
-                })
-            })
-            course_header_select_content.visibility = View.GONE
-            course_header_show.visibility = View.VISIBLE
-        }
-
     }
 
     /**
