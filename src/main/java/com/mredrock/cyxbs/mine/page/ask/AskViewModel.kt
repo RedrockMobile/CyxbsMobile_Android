@@ -37,7 +37,7 @@ class AskViewModel : BaseViewModel() {
     val deleteEvent = MutableLiveData<Draft>()
 
     fun loadAskPostedList() {
-        if (askPostedPage++ == 4) {
+        if (askPostedPage++ == 10) {
             _eventOnAskPosted.value = true
             return
         }

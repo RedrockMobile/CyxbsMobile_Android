@@ -59,7 +59,8 @@ public abstract class BaseRVAdapter<D> extends RecyclerView.Adapter {
             }
         });
         diffResult.dispatchUpdatesTo(this);
-        notifyDataSetChanged();
+        //刷新FooterView,否则由于DiffUtil，不会刷新FooterView所在的位置
+        notifyItemChanged(newData.size());
         datas = newData;
     }
 
