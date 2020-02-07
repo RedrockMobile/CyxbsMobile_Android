@@ -15,6 +15,7 @@ import com.mredrock.cyxbs.common.config.DISCOVER_NEWS_ITEM
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.extensions.uri
 import com.mredrock.cyxbs.common.viewmodel.event.ProgressDialogEvent
+import com.mredrock.cyxbs.common.utils.extensions.toast
 import com.mredrock.cyxbs.discover.news.R
 import com.mredrock.cyxbs.discover.news.bean.NewsAttachment
 import com.mredrock.cyxbs.discover.news.utils.FileTypeHelper
@@ -23,7 +24,6 @@ import com.mredrock.cyxbs.discover.news.viewmodel.NewsItemViewModel
 import com.tbruyelle.rxpermissions2.RxPermissions
 import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.news_activity_detail.*
-import org.jetbrains.anko.toast
 import java.io.File
 
 @Route(path = DISCOVER_NEWS_ITEM)
