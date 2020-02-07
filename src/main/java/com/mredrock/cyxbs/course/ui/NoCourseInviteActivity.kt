@@ -13,7 +13,6 @@ import com.mredrock.cyxbs.course.R
 import com.mredrock.cyxbs.course.adapters.NoCourseInviteVPAdapter
 import com.mredrock.cyxbs.course.databinding.CourseActivityNoCourseInviteBinding
 import com.mredrock.cyxbs.course.viewmodels.NoCourseInviteViewModel
-import org.jetbrains.anko.toast
 
 @Route(path = COURSE_NO_COURSE_INVITE)
 class NoCourseInviteActivity : BaseActivity() {
