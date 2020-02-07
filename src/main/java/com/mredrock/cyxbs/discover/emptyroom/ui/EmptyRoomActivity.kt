@@ -6,7 +6,9 @@ import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.Gravity
 import android.view.animation.AccelerateDecelerateInterpolator
+import android.widget.TableLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.annotation.Px
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
@@ -14,6 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.google.android.material.tabs.TabLayout
 import com.mredrock.cyxbs.common.BaseApp
+import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.common.config.DISCOVER_EMPTY_ROOM
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.SchoolCalendar
@@ -33,7 +36,6 @@ import com.mredrock.cyxbs.discover.emptyroom.viewmodel.EmptyRoomViewModel.Compan
 import kotlinx.android.synthetic.main.emptyroom_activity_empty_room.*
 import org.jetbrains.anko.dip
 import org.jetbrains.anko.textColor
-import org.jetbrains.anko.toast
 import java.util.*
 
 
@@ -78,7 +80,7 @@ class EmptyRoomActivity : BaseViewModelActivity<EmptyRoomViewModel>(), OnItemSel
             addTab(tl_building.newTab().setText("五教"),false)
             addTab(tl_building.newTab().setText("八教"),false)
         }
-        tl_building.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+        tl_building.addOnTabSelectedListener(object :TabLayout.BaseOnTabSelectedListener<TabLayout.Tab> {
             override fun onTabReselected(p0: TabLayout.Tab?) {
 
             }
@@ -110,6 +112,7 @@ class EmptyRoomActivity : BaseViewModelActivity<EmptyRoomViewModel>(), OnItemSel
             }
 
         })
+
     }
 
 
@@ -146,7 +149,7 @@ class EmptyRoomActivity : BaseViewModelActivity<EmptyRoomViewModel>(), OnItemSel
                 ERROR -> {
                     iv_querying.gone()
                     rv_result.gone()
-                    toast("抱歉，数据获取失败")
+                    CyxbsToast.makeText(this,"抱歉，数据获取失败",Toast.LENGTH_SHORT).show()
                 }
             }
         })
