@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="#fff"
+    android:layout_marginBottom="1dp"
+    android:layout_width="match_parent"
+    android:layout_height="80dp"
+    tools:ignore="ResourceName">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/discover_other_course_item_select_name"
+        android:text="朱展萱"
+        android:textColor="@color/levelTwoFontColor"
+        android:textStyle="bold"
+        android:textSize="15sp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="15dp"
+        android:layout_gravity="top|start"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/discover_other_course_item_select_class"
+        android:text="软件工程"
+        android:textColor="@color/levelTwoFontColor"
+        android:textSize="13sp"
+        android:layout_marginStart="20dp"
+        android:layout_marginBottom="15dp"
+        android:layout_gravity="bottom|start"/>
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/discover_other_course_item_select_num"
+        android:text="2016214049"
+        android:textColor="@color/levelFourFontColor"
+        android:textSize="11sp"
+        android:alpha="0.67"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="20dp"
+        android:layout_gravity="top|end"/>
+
+
+</FrameLayout>

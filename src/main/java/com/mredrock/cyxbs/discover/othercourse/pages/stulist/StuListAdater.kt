@@ -15,7 +15,10 @@ import com.mredrock.cyxbs.discover.othercourse.R
 import com.mredrock.cyxbs.discover.othercourse.network.Person
 import com.mredrock.cyxbs.discover.othercourse.room.STUDENT_TYPE
 import com.mredrock.cyxbs.discover.othercourse.room.TEACHER_TYPE
+import kotlinx.android.synthetic.main.discover_other_course_item_rv_stu.view.*
 import kotlinx.android.synthetic.main.othercourse_discover_other_course_item_rv_stu.view.*
+import kotlinx.android.synthetic.main.othercourse_discover_other_course_item_rv_stu.view.discover_other_course_item_select_class
+import kotlinx.android.synthetic.main.othercourse_discover_other_course_item_rv_stu.view.discover_other_course_item_select_name
 
 /**
  * Created by zxzhu
@@ -29,9 +32,11 @@ class StuListAdater(val stuListActivity: StuListActivity, private val mList: Lis
 
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: StuListViewHolder, position: Int) {
+
         holder.itemView.apply {
             discover_other_course_item_select_name.text = mList[position].name
             discover_other_course_item_select_class.text = mList[position].major
+            discover_other_course_item_select_num.text = mList[position].num
             other_course_tv_stu_num.text = mList[position].num
             setOnClickListener {
                 when (mList[position].type) {
@@ -48,6 +53,7 @@ class StuListAdater(val stuListActivity: StuListActivity, private val mList: Lis
                     TEACHER_TYPE ->
                         ARouter.getInstance().build(COURSE_OTHER_COURSE).withString("teaNum", mList[position].num).navigation()
                 }
+
 
             }
         }
