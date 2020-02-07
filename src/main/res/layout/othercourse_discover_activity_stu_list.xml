@@ -30,7 +30,7 @@
                 android:layout_marginStart="2dp"
                 android:onClick="@{()->stuListActivity.finish()}"
                 android:padding="14dp"
-                android:src="@drawable/other_course_back"
+                android:src="@drawable/common_back"
                 app:layout_constraintBottom_toBottomOf="@+id/other_course_list_title"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/other_course_list_title"
