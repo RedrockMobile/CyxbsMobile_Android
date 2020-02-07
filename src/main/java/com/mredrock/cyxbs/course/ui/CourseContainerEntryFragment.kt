@@ -1,10 +1,12 @@
 package com.mredrock.cyxbs.course.ui
 
 import android.os.Bundle
-import android.view.*
+import android.view.Gravity
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
-import androidx.databinding.ObservableField
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.transition.Slide
@@ -34,20 +36,17 @@ import org.greenrobot.eventbus.ThreadMode
  */
 @Route(path = COURSE_ENTRY)
 class CourseContainerEntryFragment : BaseFragment() {
-    companion object {
-        fun getOthersCourseContainerFragment(stuNum: String): CourseContainerEntryFragment =
-                CourseContainerEntryFragment().apply {
-                    arguments = Bundle().apply { putString(OTHERS_STU_NUM, stuNum) }
-                }
-    }
-
     override val openStatistics: Boolean
         get() = false
 
+    //如果是在获取他人课表这个值不为空
     private var mOthersStuNum: String? = null
+    //每一周课表的ViewPager的Adapter
     private lateinit var mScheduleAdapter: ScheduleVPAdapter
     private var mCoursesViewModel: CoursesViewModel? = null
+    //当前Fragment的根布局的Binding
     private lateinit var mBinding: CourseFragmentCourseContainerBinding
+    //每一周的Viewpager所对应的tab的显示的字符串
     private lateinit var mRawWeeks: Array<String>
     private lateinit var mWeeks: Array<String>
 
@@ -70,11 +69,11 @@ class CourseContainerEntryFragment : BaseFragment() {
         if (event.newState) {
             // replaceFragment(CourseContainerFragment())
             mBinding.vp.adapter?.notifyDataSetChanged()
-            mWeekTitle.set(activity!!.getString(R.string.course_all_week))
+            mCoursesViewModel?.mWeekTitle?.set(activity!!.getString(R.string.course_all_week))
         } else {
             mBinding.vp.adapter?.notifyDataSetChanged()
             // replaceFragment(NoneLoginFragment())
-            mWeekTitle.set(activity!!.getString(R.string.common_course))
+            mCoursesViewModel?.mWeekTitle?.set(activity!!.getString(R.string.common_course))
             Thread {
                 ViewModelProviders.of(activity!!).get(CoursesViewModel::class.java).clearCache()
             }.start()
@@ -90,11 +89,12 @@ class CourseContainerEntryFragment : BaseFragment() {
 
     private fun initFragment() {
         activity ?: return
+        //如果没有被添加进Activity，Fragment会抛出not attach a context的错误
+        if (!isAdded) return
 
-        if (!isAdded) return//如果没有被添加进Activity，Fragment会抛出not attach a context的错误
-
-        arguments?.let {
-            mOthersStuNum = it.getString(OTHERS_STU_NUM)
+        //这里如果arguments不为空，说明里面有传过来的学号，说明是查他人课表
+        arguments?.let { bundle ->
+            mOthersStuNum = bundle.getString(OTHERS_STU_NUM)
             if (mOthersStuNum != null) {
                 course_header_select_content.visibility = View.VISIBLE
                 course_current_course_container.visibility = View.GONE
@@ -102,79 +102,75 @@ class CourseContainerEntryFragment : BaseFragment() {
             }
         }
 
-        setHasOptionsMenu(true)
+        //初始化周数tab和下面课表的Adapter
         resources.getStringArray(R.array.course_course_weeks_strings).let {
             mRawWeeks = it
             mWeeks = mRawWeeks.copyOf()
             mScheduleAdapter = ScheduleVPAdapter(mWeeks, childFragmentManager)
         }
+        //给下方ViewPager添加适配器和绑定tab
         mBinding.vp.adapter = mScheduleAdapter
         mBinding.tabLayout.setupWithViewPager(mBinding.vp)
 
-        // 给ViewPager添加OnPageChangeListener
-        lifecycle.addObserver(VPOnPagerChangeObserver(mBinding.vp,
-                mOnPageSelected = {
-                    // 当ViewPager发生了滑动，清理课表上加备忘的View
-                    EventBus.getDefault().post(DismissAddAffairViewEvent())
-                    // 当ViewPager发生了滑动，对Head上的周数进行改变
-                    if (mOthersStuNum != null) {
-                        course_header_select_content.visibility = View.VISIBLE
-                        course_current_course_container.visibility = View.GONE
-                        return@VPOnPagerChangeObserver
-                    }
-                    mCoursesViewModel?.isShowPresentTips?.set(
-                            when {
-                                it == 0 -> {
-                                    View.GONE
-                                }
-                                mCoursesViewModel?.nowWeek?.value == it -> {
-                                    View.VISIBLE
-                                }
-                                else -> {
-                                    View.GONE
-                                }
-                            }
-                    )
-                    mCoursesViewModel?.isShowBackPresentWeek?.set(
-                            if (mCoursesViewModel?.nowWeek?.value == it) {
-                                View.GONE
-                            } else {
-                                View.VISIBLE
-                            }
-                    )
-                    mWeekTitle.set(mScheduleAdapter.getPageTitle(it).toString())
-                }))
 
-        course_back_present_week.setOnClickListener {
-            mCoursesViewModel?.nowWeek?.value?.let {
-                mBinding.vp.currentItem = it
-            }
-        }
-
-        // 获取依赖于CourseContainerFragment的Activity的CoursesViewModel。在WeekFragment的切换的时候，不会
-        // 重复获取数据。
-        mCoursesViewModel = ViewModelProviders.of(activity!!).get(CoursesViewModel::class.java)
+        /**
+         * 获取依赖于CourseContainerFragment的Activity的CoursesViewModel。
+         * 在WeekFragment的切换的时候，不会重复获取数据。
+         */
+        mCoursesViewModel = ViewModelProviders.of(this).get(CoursesViewModel::class.java)
         mBinding.coursesViewModel = mCoursesViewModel
-        mBinding.fragment = this
 
-        mCoursesViewModel?.let { model ->
-            model.getSchedulesDataFromDataBase(activity!!, mOthersStuNum)
-            model.nowWeek.observe(this, Observer { nowWeek ->
+        //获取到ViewModel后进行一些初始化操作
+        mCoursesViewModel?.let { coursesViewModel ->
+
+            coursesViewModel.getSchedulesDataFromDataBase(activity!!, mOthersStuNum)
+            coursesViewModel.nowWeek.observe(this, Observer { nowWeek ->
                 // 跳转到当前周
                 mBinding.vp.currentItem = nowWeek ?: 0
             })
+            //回到本周按钮的点击事件
+            course_back_present_week.setOnClickListener {
+                coursesViewModel.nowWeek.value?.let {
+                    mBinding.vp.currentItem = it
+                }
+            }
+
+            // 给ViewPager添加OnPageChangeListener
+            lifecycle.addObserver(VPOnPagerChangeObserver(mBinding.vp,
+                    mOnPageSelected = {
+                        // 当ViewPager发生了滑动，清理课表上加备忘的View
+                        EventBus.getDefault().post(DismissAddAffairViewEvent())
+                        // 当ViewPager发生了滑动，对Head上的周数进行改变
+                        if (mOthersStuNum != null) {
+                            course_header_select_content.visibility = View.VISIBLE
+                            course_current_course_container.visibility = View.GONE
+                            return@VPOnPagerChangeObserver
+                        }
+                        coursesViewModel.isShowPresentTips.set(
+                                when {
+                                    it == 0 -> {
+                                        View.GONE
+                                    }
+                                    coursesViewModel.nowWeek.value == it -> {
+                                        View.VISIBLE
+                                    }
+                                    else -> {
+                                        View.GONE
+                                    }
+                                }
+                        )
+                        coursesViewModel.isShowBackPresentWeek.set(
+                                if (coursesViewModel.nowWeek.value == it) {
+                                    View.GONE
+                                } else {
+                                    View.VISIBLE
+                                }
+                        )
+                        coursesViewModel.mWeekTitle.set(mScheduleAdapter.getPageTitle(it).toString())
+                    }))
         }
     }
 
-    override fun onPrepareOptionsMenu(menu: Menu?) {
-        menu?.clear()
-        mCoursesViewModel?.let {
-            if (it.isGetOthers.value == false) {//如果是他人课表，不加载添加事物的btn
-                activity?.menuInflater?.inflate(R.menu.course_course_menu, menu)
-            }
-        }
-        super.onPrepareOptionsMenu(menu)
-    }
 
     /**
      * 这个方法用于小部件点击打开课表详情页面
@@ -238,13 +234,12 @@ class CourseContainerEntryFragment : BaseFragment() {
     // 表示是否TabLayout折叠
     private var mIsFold = true
 
-    // 用于记录当前Toolbar要显示的字符串
-    var mWeekTitle: ObservableField<String> = ObservableField("")
+
 
     private fun initCourseEntryFragment() {
         activity?.let { activity ->
             // 如果用户登录了就显示CourseContainerFragment；如果用户没有登录就行显示NoneLoginFragment进行登录
-            mWeekTitle.set(activity.getString(R.string.course_all_week))
+            mCoursesViewModel?.mWeekTitle?.set(activity.getString(R.string.course_all_week))
             initHead()
             course_current_course_container.setOnClickListener {
                 EventBus.getDefault().post(NotifyBottomSheetToExpandEvent(true))
