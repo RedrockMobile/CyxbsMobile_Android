@@ -6,7 +6,6 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.mredrock.cyxbs.mine.R
 import com.mredrock.cyxbs.mine.network.model.Draft
-import com.mredrock.cyxbs.mine.util.extension.logr
 import com.mredrock.cyxbs.mine.util.ui.BaseRVFragment
 import kotlinx.android.synthetic.main.mine_list_item_my_ask_draft.view.*
 
@@ -25,9 +24,6 @@ class AskDraftFm : BaseRVFragment<Draft>() {
     }
 
     private fun initObserver() {
-        viewModel.errorEvent.observe(this, Observer {
-            getFooter().showLoadError()
-        })
         viewModel.askDraftEvent.observe(this, Observer {
             loadIntoRv(it)
         })
@@ -74,7 +70,6 @@ class AskDraftFm : BaseRVFragment<Draft>() {
 
 
     override fun onSwipeLayoutRefresh() {
-        viewModel.cleanPage()
         clearData()
         loadMore()
         getSwipeLayout().isRefreshing = false

@@ -1,8 +1,11 @@
 package com.mredrock.cyxbs.mine.page.ask
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Transformations
 import com.mredrock.cyxbs.common.utils.extensions.*
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
+import com.mredrock.cyxbs.common.viewmodel.event.SingleLiveEvent
 import com.mredrock.cyxbs.mine.network.model.AskPosted
 import com.mredrock.cyxbs.mine.network.model.Draft
 import com.mredrock.cyxbs.mine.util.apiService
@@ -15,12 +18,39 @@ class AskViewModel : BaseViewModel() {
 
     private var askDraftPage: Int = 1
     private var askPostedPage: Int = 1
+
     private val pageSize = 6
 
-    val errorEvent = MutableLiveData<String>()
-    val askPostedEvent = MutableLiveData<List<AskPosted>>()
+    //askposted部分
+    private val _eventOnAskPosted = SingleLiveEvent<Boolean>()//true代表加载完，false代表加载错误
+    val eventOnAskPosted: LiveData<Boolean>
+        get() = _eventOnAskPosted
+
+    private val _askPosted = MutableLiveData<MutableList<AskPosted>>()
+    val askPosted: LiveData<List<AskPosted>>
+        get() = Transformations.map(_askPosted) {
+            it.toList()
+        }
+
+    //草稿部分
     val askDraftEvent = MutableLiveData<List<Draft>>()
     val deleteEvent = MutableLiveData<Draft>()
+
+    fun loadAskPostedList() {
+        if (askPostedPage++ == 4) {
+            _eventOnAskPosted.value = true
+            return
+        }
+        val ask = AskPosted(12, "title", "描述", "时间", 12, "未解决")
+
+        val data = _askPosted.value ?: mutableListOf()
+        data.add(ask)
+        data.add(ask)
+        data.add(ask)
+        _askPosted.value = data
+        //加载下一页
+        loadAskPostedList()
+    }
 
     fun loadAskDraftList() {
         apiService.getDraftList(user?.stuNum ?: return, user?.idNum
@@ -41,7 +71,7 @@ class AskViewModel : BaseViewModel() {
                         },
                         onError = {
                             it.printStackTrace()
-                            errorEvent.postValue(it.message)
+//                            errorEvent.postValue(it.message)
                         }
                 )
                 .lifeCycle()
@@ -57,16 +87,16 @@ class AskViewModel : BaseViewModel() {
                             deleteEvent.postValue(draft)
                         },
                         onError = {
-                            errorEvent.postValue(it.message)
+//                            errorEvent.postValue(it.message)
                         }
                 )
                 .lifeCycle()
     }
 
 
-    fun cleanPage() {
-        askDraftPage = 1
+    fun cleanAskPostedPage() {
         askPostedPage = 1
+        _askPosted.value = mutableListOf()
     }
 
 

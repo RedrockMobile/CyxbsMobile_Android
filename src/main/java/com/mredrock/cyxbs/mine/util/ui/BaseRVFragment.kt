@@ -27,6 +27,10 @@ abstract class BaseRVFragment<D> : Fragment() {
 
     abstract fun onSwipeLayoutRefresh()
 
+    protected fun setNewData(newData: List<D>?) {
+        baseRVAdapter?.setNewData(newData)
+    }
+
     private var baseRVAdapter: BaseRVAdapter<D>? = null
     private var footer: RvFooter? = null
 
@@ -71,13 +75,13 @@ abstract class BaseRVFragment<D> : Fragment() {
         baseRVAdapter?.clear()
     }
 
-    fun showPlaceHolder(view: View){
+    fun showPlaceHolder(view: View) {
         mine_fragment_base_placeholder.visibility = View.VISIBLE
         mine_fragment_base_placeholder.removeAllViews()
         mine_fragment_base_placeholder.addView(view)
     }
 
-    fun hidePlaceHolder(){
+    fun hidePlaceHolder() {
         mine_fragment_base_placeholder.visibility = View.GONE
     }
 
@@ -119,6 +123,5 @@ abstract class BaseRVFragment<D> : Fragment() {
         override fun bindDataHolder(holder: androidx.recyclerview.widget.RecyclerView.ViewHolder, position: Int, data: D) {
             this@BaseRVFragment.bindDataHolder(holder, position, data)
         }
-
     }
 }
