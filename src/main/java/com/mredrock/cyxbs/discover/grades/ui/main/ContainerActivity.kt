@@ -14,6 +14,7 @@ import com.mredrock.cyxbs.common.bean.User
 import com.mredrock.cyxbs.common.config.DISCOVER_GRADES
 import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.ui.BaseActivity
+import com.mredrock.cyxbs.common.utils.extensions.toast
 import com.mredrock.cyxbs.discover.grades.R
 import com.mredrock.cyxbs.discover.grades.bean.Exam
 import com.mredrock.cyxbs.discover.grades.bean.Grade
@@ -24,7 +25,6 @@ import com.mredrock.cyxbs.discover.grades.ui.viewModel.ContainerViewModel
 import kotlinx.android.synthetic.main.grades_activity_container.*
 import kotlinx.android.synthetic.main.grades_fragment.*
 import kotlinx.android.synthetic.main.grades_fragment.view.*
-import org.jetbrains.anko.toast
 
 /**
  * @CreateBy: FxyMine4ever
