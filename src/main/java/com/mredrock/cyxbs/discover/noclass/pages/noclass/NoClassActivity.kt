@@ -17,6 +17,7 @@ import com.mredrock.cyxbs.common.config.COURSE_NO_COURSE_INVITE
 import com.mredrock.cyxbs.common.config.DISCOVER_NO_CLASS
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.LogUtils
+import com.mredrock.cyxbs.common.utils.extensions.dp2px
 import com.mredrock.cyxbs.common.utils.extensions.getScreenHeight
 import com.mredrock.cyxbs.common.utils.extensions.getScreenWidth
 import com.mredrock.cyxbs.discover.noclass.R
@@ -42,8 +43,7 @@ class NoClassActivity : BaseViewModelActivity<NoClassViewModel>() {
 
     private fun initToolbar() {
         if (common_toolbar != null) {
-            common_toolbar.init("没课约")
-
+            common_toolbar.initWithSplitLine("没课约")
         }
     }
 

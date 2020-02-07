@@ -24,6 +24,7 @@
             android:id="@+id/tv_noclass_stu_select_cancel"
             android:text="取消"
             android:textColor="@color/levelTwoFontColor"
+            android:textSize="15sp"
             android:layout_marginTop="21dp"
             android:layout_marginStart="16dp"
             android:layout_width="wrap_content"
