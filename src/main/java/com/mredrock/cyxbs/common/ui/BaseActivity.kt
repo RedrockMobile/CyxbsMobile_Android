@@ -82,11 +82,13 @@ abstract class BaseActivity : AppCompatActivity() {
         initInternal(title, icon, listener)
     }
 
-    private fun Toolbar.initInternal(title: String,
+    private fun JToolbar.initInternal(title: String,
                                      @DrawableRes icon: Int = R.drawable.common_ic_back,
-                                     listener: View.OnClickListener? = View.OnClickListener { finish() }){
+                                     listener: View.OnClickListener? = View.OnClickListener { finish() },
+                                      titleOnLeft:Boolean = true){
         this.title = title
         setSupportActionBar(this)
+        setTitleLocationAtLeft(titleOnLeft)
         if (listener == null) {
             navigationIcon = null
         } else {
@@ -97,10 +99,11 @@ abstract class BaseActivity : AppCompatActivity() {
     protected fun JToolbar.initWithSplitLine(title:String,
                                              withSplitLine:Boolean = true,
                                              @DrawableRes icon:Int = R.drawable.common_ic_back,
-                                             listener:View.OnClickListener? = View.OnClickListener { finish() }){
+                                             listener:View.OnClickListener? = View.OnClickListener { finish() },
+                                             titleOnLeft: Boolean = true){
         setTitleLocationAtLeft(false)
         withSplitLine(withSplitLine)
-        initInternal(title,icon,listener)
+        initInternal(title,icon,listener,titleOnLeft)
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

@@ -2,7 +2,6 @@ package com.mredrock.cyxbs.common.component;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.os.Build;
@@ -36,18 +35,21 @@ public class JToolbar extends Toolbar {
     public JToolbar(Context context) {
         super(context);
         paint.setColor(R.color.commonDefaultDivideLineColor);
+        paint.setAlpha(25);
     }
 
     @SuppressLint("ResourceAsColor")
     public JToolbar(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         paint.setColor(R.color.commonDefaultDivideLineColor);
+        paint.setAlpha(25);
     }
 
     @SuppressLint("ResourceAsColor")
     public JToolbar(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         paint.setColor(R.color.commonDefaultDivideLineColor);
+        paint.setAlpha(25);
     }
 
     @Override
@@ -114,12 +116,16 @@ public class JToolbar extends Toolbar {
         super.dispatchDraw(canvas);
         //为什么这个screenWidth绘制不满一个屏幕的宽度？？？
 
-        if(withSplitLine)
-            canvas.drawLine(0, getMeasuredHeight() - ContextKt.dp2px(getContext(),1), 2 * ContextKt.getScreenWidth(getContext()), getMeasuredHeight(), paint);
+        if (withSplitLine)
+            canvas.drawLine(0, getMeasuredHeight() - ContextKt.dp2px(getContext(), 1), 2 * ContextKt.getScreenWidth(getContext()), getMeasuredHeight()-ContextKt.dp2px(getContext(), 1), paint);
     }
 
-    private void reLayoutTitle(TextView title) {
-        if (title == null || isTitleAtLeft) return;
+    private void reLayoutTitleToLeft(TextView title) {
+        if (title == null || !isTitleAtLeft) return;
+        int ir = getChildAt(0).getRight();
+        title.layout(ir, title.getTop(), ir + title.getMeasuredWidth(), title.getBottom());
+    }
+    private void reLayoutTitleToCenter(TextView title){
         //note: o for old ,t for temp, l for left...
         int ol = title.getLeft();
         int width = title.getMeasuredWidth();
@@ -129,7 +135,18 @@ public class JToolbar extends Toolbar {
             title.layout(tl, title.getTop(), tl + width, title.getBottom());
         }
     }
-    public void withSplitLine(boolean withSplitLine){
+
+    private void reLayoutTitle(TextView title) {
+        if (title == null) return;
+        if(isTitleAtLeft){
+            reLayoutTitleToLeft(title);
+        }
+        else {
+            reLayoutTitleToCenter(title);
+        }
+    }
+
+    public void withSplitLine(boolean withSplitLine) {
         this.withSplitLine = withSplitLine;
     }
 
