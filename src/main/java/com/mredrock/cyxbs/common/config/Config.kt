@@ -69,3 +69,6 @@ const val OTHERS_STU_NUM = "others_stu_num"
 //没课约传递信息的key
 const val STU_NUM_LIST = "stuNumList"
 const val STU_NAME_LIST = "stuNameList"
+
+//传递给CourseFragment页数的key
+const val WEEK_NUM = "week_num"
