@@ -34,6 +34,7 @@ import com.mredrock.cyxbs.qa.pages.comment.AdoptAnswerEvent
 import com.mredrock.cyxbs.qa.pages.comment.ui.CommentListActivity
 import com.mredrock.cyxbs.qa.ui.adapter.EmptyRvAdapter
 import com.mredrock.cyxbs.qa.ui.adapter.FooterRvAdapter
+import com.mredrock.cyxbs.common.utils.extensions.toast
 import kotlinx.android.synthetic.main.qa_activity_answer_list.*
 import kotlinx.android.synthetic.main.qa_common_toolbar.*
 import org.greenrobot.eventbus.EventBus
@@ -42,7 +43,6 @@ import org.greenrobot.eventbus.ThreadMode
 import org.jetbrains.anko.indeterminateProgressDialog
 import org.jetbrains.anko.longToast
 import org.jetbrains.anko.support.v4.startActivityForResult
-import org.jetbrains.anko.toast
 
 @Route(path = QA_ANSWER_LIST)
 class AnswerListActivity : BaseActivity() {
