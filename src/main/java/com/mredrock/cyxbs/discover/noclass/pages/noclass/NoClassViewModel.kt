@@ -15,7 +15,7 @@ import com.mredrock.cyxbs.discover.noclass.network.Student
  *   2018/9/9.
  *   enjoy it !!
  */
-class NoClassViewModel: BaseViewModel() {
+class NoClassViewModel : BaseViewModel() {
     var mStuList = MutableLiveData<List<Student>>()
 
     fun getStudent(str: String) {

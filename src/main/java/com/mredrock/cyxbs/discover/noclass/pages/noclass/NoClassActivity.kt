@@ -5,21 +5,17 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
-import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import androidx.core.app.ActivityOptionsCompat
 import androidx.lifecycle.Observer
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
-import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.config.COURSE_NO_COURSE_INVITE
 import com.mredrock.cyxbs.common.config.DISCOVER_NO_CLASS
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.service.account.IUserService
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
-import com.mredrock.cyxbs.common.utils.LogUtils
-import com.mredrock.cyxbs.common.utils.extensions.dp2px
 import com.mredrock.cyxbs.common.utils.extensions.getScreenHeight
 import com.mredrock.cyxbs.common.utils.extensions.getScreenWidth
 import com.mredrock.cyxbs.discover.noclass.R
@@ -69,7 +65,7 @@ class NoClassActivity : BaseViewModelActivity<NoClassViewModel>() {
                     bundle.putSerializable("stu_list", it as Serializable)
                     val intent = Intent(this, NoClassStuSelectActivity::class.java)
                     intent.putExtras(bundle)
-                    startActivityForResult(intent, REQUEST_SELECT ,ActivityOptionsCompat.makeScaleUpAnimation(cl_noclass,getScreenWidth()/2,getScreenHeight(),getScreenWidth(),getScreenHeight()).toBundle())
+                    startActivityForResult(intent, REQUEST_SELECT, ActivityOptionsCompat.makeScaleUpAnimation(cl_noclass, getScreenWidth() / 2, getScreenHeight(), getScreenWidth(), getScreenHeight()).toBundle())
                 }
                 it.size == 1 -> {
                     addStu(it[0])
@@ -126,11 +122,12 @@ class NoClassActivity : BaseViewModelActivity<NoClassViewModel>() {
             mAdapter!!.addStu(stu)
         }
     }
-    private fun initEditText(){
+
+    private fun initEditText() {
         et_noclass_add_classmate.setOnEditorActionListener { v, actionId, event ->
-            if(actionId == EditorInfo.IME_ACTION_SEARCH){
+            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                 val key = et_noclass_add_classmate.getText().toString().trim()
-                if(TextUtils.isEmpty(key)){
+                if (TextUtils.isEmpty(key)) {
                     snackbar("输入为空")
                     return@setOnEditorActionListener true
                 }

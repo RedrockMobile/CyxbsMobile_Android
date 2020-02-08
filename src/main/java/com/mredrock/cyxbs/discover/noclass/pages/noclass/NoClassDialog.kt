@@ -19,12 +19,12 @@ import kotlinx.android.synthetic.main.discover_noclass_dialog_add.*
  * Created by zxzhu
  *   2018/10/21.
  */
-class NoClassDialog(context: Context): Dialog(context), View.OnClickListener {
+class NoClassDialog(context: Context) : Dialog(context), View.OnClickListener {
 
     override fun onClick(v: View?) {
-        if(mListener == null)
+        if (mListener == null)
             return
-        when(v) {
+        when (v) {
             discover_no_class_btn_cancel -> mListener!!.onCancel()
             discover_no_class_btn_confirm -> mListener!!.onConfirm(discover_no_class_edit_dialog.text)
         }

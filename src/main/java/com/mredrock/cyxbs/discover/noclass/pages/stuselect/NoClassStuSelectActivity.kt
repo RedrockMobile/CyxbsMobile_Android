@@ -34,17 +34,20 @@ class NoClassStuSelectActivity : BaseActivity() {
         noclass_rv_stu_select.adapter = NoClassStuSelectRvAdapter(mList)
     }
 
-   fun initClickListener(){
+    fun initClickListener() {
 
         tv_noclass_stu_select_cancel.setOnClickListener {
             finish()
         }
-   }
-    fun initAnimation(){
+    }
+
+    fun initAnimation() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            window.enterTransition = Slide(Gravity.BOTTOM).apply { duration = 1000
-            excludeTarget(cl_noclass_stu_select,true)
-            addTarget(R.id.ll_stu_select)}
+            window.enterTransition = Slide(Gravity.BOTTOM).apply {
+                duration = 1000
+                excludeTarget(cl_noclass_stu_select, true)
+                addTarget(R.id.ll_stu_select)
+            }
         }
     }
 }

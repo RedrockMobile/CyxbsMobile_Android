@@ -18,7 +18,7 @@ import kotlinx.android.synthetic.main.discover_noclass_item_rv_select.view.*
  *   2018/9/13.
  *   enjoy it !!
  */
-class NoClassStuSelectRvAdapter(private val mStuList: List<Student>): RecyclerView.Adapter<NoClassStuSelectRvAdapter.StuSelectHolder>() {
+class NoClassStuSelectRvAdapter(private val mStuList: List<Student>) : RecyclerView.Adapter<NoClassStuSelectRvAdapter.StuSelectHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): StuSelectHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.discover_noclass_item_rv_select, parent, false)
@@ -42,5 +42,5 @@ class NoClassStuSelectRvAdapter(private val mStuList: List<Student>): RecyclerVi
     }
 
 
-    class StuSelectHolder(itemView: View): RecyclerView.ViewHolder(itemView)
+    class StuSelectHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
 }
