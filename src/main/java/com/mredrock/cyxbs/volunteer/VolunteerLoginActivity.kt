@@ -13,6 +13,8 @@ import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.config.DISCOVER_VOLUNTEER
 import com.mredrock.cyxbs.common.event.AskLoginEvent
 import com.mredrock.cyxbs.common.network.ApiGenerator
+import com.mredrock.cyxbs.common.service.ServiceManager
+import com.mredrock.cyxbs.common.service.account.IUserService
 import com.mredrock.cyxbs.common.ui.BaseActivity
 import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
@@ -46,7 +48,8 @@ class VolunteerLoginActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
         common_toolbar.init("完善信息")
-        if (BaseApp.user == null) {
+
+        if (ServiceManager.getService(IUserService::class.java) == null) {
             EventBus.getDefault().post(AskLoginEvent("只有登陆了才能查看志愿时长噢～"))
             finish()
         }
@@ -65,8 +68,9 @@ class VolunteerLoginActivity : BaseActivity() {
         password = volunteer_password.text.toString()
 
         volunteerSP = VolunteerTimeSP(this)
-        if (BaseApp.user != null) {
-            uid = BaseApp.user!!.stuNum!!
+        val user = ServiceManager.getService(IUserService::class.java)
+        if (user != null) {
+            uid = user.getStuNum()
         } else {
             val regEx = "[^0-9]"
             val p = Pattern.compile(regEx)
