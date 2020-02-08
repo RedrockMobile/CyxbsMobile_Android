@@ -15,6 +15,8 @@ import com.alibaba.android.arouter.launcher.ARouter
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.config.COURSE_NO_COURSE_INVITE
 import com.mredrock.cyxbs.common.config.DISCOVER_NO_CLASS
+import com.mredrock.cyxbs.common.service.ServiceManager
+import com.mredrock.cyxbs.common.service.account.IUserService
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.dp2px
@@ -98,10 +100,11 @@ class NoClassActivity : BaseViewModelActivity<NoClassViewModel>() {
     }
 
     private fun initStuList() {
-        BaseApp.user?.apply {
+        val user = ServiceManager.getService(IUserService::class.java)
+        user?.apply {
             val stu = Student()
-            stu.name = realName
-            stu.stunum = stunum
+            stu.name = getRealName()
+            stu.stunum = getStuNum()
             mStuList!!.add(stu)
         }
         mAdapter = NoClassRvAdapter(mStuList!!, this)
@@ -126,7 +129,7 @@ class NoClassActivity : BaseViewModelActivity<NoClassViewModel>() {
     private fun initEditText(){
         et_noclass_add_classmate.setOnEditorActionListener { v, actionId, event ->
             if(actionId == EditorInfo.IME_ACTION_SEARCH){
-                var key = et_noclass_add_classmate.getText().toString().trim()
+                val key = et_noclass_add_classmate.getText().toString().trim()
                 if(TextUtils.isEmpty(key)){
                     snackbar("输入为空")
                     return@setOnEditorActionListener true
