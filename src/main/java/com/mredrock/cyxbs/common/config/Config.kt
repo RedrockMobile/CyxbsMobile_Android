@@ -20,23 +20,16 @@ val updateFile get() = File(updateFilePath + updateFilename)
 
 const val APP_WIDGET_CACHE_FILE_NAME = "AppWidgetCache.json"
 
-/**
- * SharedPreferences key for encrypt version of user
- *
- * use by [com.mredrock.cyxbs.common.utils.encrypt.UserInfoEncryption] for the current encrypt version,
- * you can getUpdateInfo the encrypt method in the future and keep compatibility
- * @see com.mredrock.cyxbs.common.utils.encrypt.UserInfoEncryption.onUpdate
- */
+//SharedPreferences key for encrypt version of user
 const val SP_KEY_ENCRYPT_VERSION_USER = "encrypt_version_user"
 
-/**
- * SharedPreferences value for encrypt version of user
- *
- * use by [com.mredrock.cyxbs.common.utils.encrypt.UserInfoEncryption] for the current encrypt version,
- * you can getUpdateInfo the encrypt method in the future and keep compatibility
- * @see com.mredrock.cyxbs.common.utils.encrypt.UserInfoEncryption.onUpdate
- */
+//SharedPreferences value for encrypt version of user
 const val USER_INFO_ENCRYPT_VERSION = 1
+
+//User信息存储key
+const val SP_KEY_USER_V2 = "cyxbsmobile_user_v2"
+
+@Deprecated(message = "user类结构变动较大，放弃使用该key", replaceWith = ReplaceWith("SP_KEY_USER_V2", "com.mredrock.cyxbs.common.config.SP_KEY_USER_V2"))
 const val SP_KEY_USER = "cyxbsmobile_user"
 
 const val DEFAULT_PREFERENCE_FILENAME = "share_data"
