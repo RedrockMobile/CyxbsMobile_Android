@@ -12,12 +12,12 @@ import com.mredrock.cyxbs.common.utils.extensions.invisible
 import com.mredrock.cyxbs.common.utils.extensions.visible
 import com.mredrock.cyxbs.mine.R
 import com.mredrock.cyxbs.mine.network.model.Draft
+import com.mredrock.cyxbs.common.utils.extensions.toast
 import kotlinx.android.synthetic.main.mine_activity_draft.*
 import kotlinx.android.synthetic.main.mine_dialog_answer_detail.view.*
 import org.greenrobot.eventbus.EventBus
 import org.jetbrains.anko.alert
 import org.jetbrains.anko.noButton
-import org.jetbrains.anko.toast
 import org.jetbrains.anko.yesButton
 
 

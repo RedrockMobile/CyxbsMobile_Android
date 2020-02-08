@@ -17,6 +17,7 @@ import com.mredrock.cyxbs.common.config.updateFile
 import com.mredrock.cyxbs.common.ui.BaseActivity
 import com.mredrock.cyxbs.common.utils.extensions.doPermissionAction
 import com.mredrock.cyxbs.common.utils.extensions.saveImage
+import com.mredrock.cyxbs.common.utils.extensions.toast
 import com.mredrock.cyxbs.common.utils.getAppVersionName
 import com.mredrock.cyxbs.common.utils.update.UpdateEvent
 import com.mredrock.cyxbs.common.utils.update.UpdateUtils
@@ -26,7 +27,6 @@ import kotlinx.android.synthetic.main.mine_activity_about.*
 import kotlinx.android.synthetic.main.mine_dialog_share.view.*
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import org.jetbrains.anko.toast
 
 class AboutActivity(override val isFragmentActivity: Boolean = false) : BaseActivity() {
 

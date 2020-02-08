@@ -24,10 +24,10 @@ import com.mredrock.cyxbs.mine.util.user
 import com.mredrock.cyxbs.mine.util.widget.SchoolCalendarPlus
 import com.mredrock.cyxbs.mine.util.widget.SpaceDecoration
 import com.mredrock.cyxbs.mine.util.widget.Stick
+import com.mredrock.cyxbs.common.utils.extensions.toast
 import kotlinx.android.synthetic.main.mine_activity_daily_sign.*
 import kotlinx.android.synthetic.main.mine_layout_store_sign.*
 import org.jetbrains.anko.textColor
-import org.jetbrains.anko.toast
 
 
 /**
