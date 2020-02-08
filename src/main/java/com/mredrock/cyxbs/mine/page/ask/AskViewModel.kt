@@ -12,7 +12,7 @@ import com.mredrock.cyxbs.common.viewmodel.event.SingleLiveEvent
 import com.mredrock.cyxbs.mine.network.model.AskPosted
 import com.mredrock.cyxbs.mine.network.model.Draft
 import com.mredrock.cyxbs.mine.util.apiService
-import com.mredrock.cyxbs.mine.util.extension.mapOrThrowApiExceptionWithData
+import com.mredrock.cyxbs.mine.util.extension.mapOrThrowApiExceptionWithDataCanBeNull
 import com.mredrock.cyxbs.mine.util.user
 
 /**
@@ -41,9 +41,11 @@ class AskViewModel : BaseViewModel() {
     val deleteEvent = MutableLiveData<Draft>()
 
     fun loadAskPostedList() {
-        apiService.getAskPostedList(user?.stuNum ?: return, user?.idNum ?: return, askPostedPage++, pageSize)
-                .mapOrThrowApiExceptionWithData()
+        apiService.getAskPostedList(user?.stuNum ?: return, user?.idNum
+                ?: return, askPostedPage++, pageSize)
+                .mapOrThrowApiExceptionWithDataCanBeNull()
                 .setSchedulers()
+                .doOnErrorWithDefaultErrorHandler { false }
                 .safeSubscribeBy {
                     //由于Rxjava反射不应定能够够保证为空，当为空的说明这一页没有数据，于是停止加载
                     if (it == null) {
@@ -93,7 +95,7 @@ class AskViewModel : BaseViewModel() {
                             deleteEvent.postValue(draft)
                         },
                         onError = {
-//                            errorEvent.postValue(it.message)
+                            //                            errorEvent.postValue(it.message)
                         }
                 )
                 .lifeCycle()

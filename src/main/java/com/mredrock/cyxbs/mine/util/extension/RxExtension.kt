@@ -24,7 +24,8 @@ fun Observable<RedrockApiStatus>.normalStatus(viewModel: BaseViewModel): Observa
                 .setSchedulers()
                 .doOnErrorWithDefaultErrorHandler { false }
 
-fun <T> Observable<RedrockApiWrapper<T>>.mapOrThrowApiExceptionWithData(): Observable<T> = map {
+
+fun <T> Observable<RedrockApiWrapper<T>>.mapOrThrowApiExceptionWithDataCanBeNull(): Observable<T> = map {
     if (it.isSuccessful) {
         it.data
     } else {

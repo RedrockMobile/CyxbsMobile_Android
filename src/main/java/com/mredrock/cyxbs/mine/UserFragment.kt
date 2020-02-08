@@ -113,6 +113,7 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
     override fun onResume() {
         super.onResume()
         refreshLayout()
+        viewModel.getScoreStatus(user ?: return)
     }
 
     //刷新界面
