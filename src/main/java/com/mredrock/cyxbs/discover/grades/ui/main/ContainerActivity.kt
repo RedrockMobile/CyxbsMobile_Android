@@ -12,13 +12,13 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.bean.User
 import com.mredrock.cyxbs.common.config.DISCOVER_GRADES
-import com.mredrock.cyxbs.common.network.ApiGenerator
+import com.mredrock.cyxbs.common.service.ServiceManager
+import com.mredrock.cyxbs.common.service.account.IUserService
 import com.mredrock.cyxbs.common.ui.BaseActivity
 import com.mredrock.cyxbs.common.utils.extensions.toast
 import com.mredrock.cyxbs.discover.grades.R
 import com.mredrock.cyxbs.discover.grades.bean.Exam
 import com.mredrock.cyxbs.discover.grades.bean.Grade
-import com.mredrock.cyxbs.discover.grades.network.ApiService
 import com.mredrock.cyxbs.discover.grades.ui.adapter.ExamAdapter
 import com.mredrock.cyxbs.discover.grades.ui.adapter.GradesShowAdapter
 import com.mredrock.cyxbs.discover.grades.ui.viewModel.ContainerViewModel
@@ -64,10 +64,10 @@ class ContainerActivity : BaseActivity() {
     }
 
     private fun initExam() {
-        mAdapter = ExamAdapter(this@ContainerActivity, data, intArrayOf(R.layout.grades_item_init,R.layout.grades_item_exam))
+        mAdapter = ExamAdapter(this@ContainerActivity, data, intArrayOf(R.layout.grades_item_init, R.layout.grades_item_exam))
         rv_exam_main.adapter = mAdapter
         rv_exam_main.layoutManager = LinearLayoutManager(this@ContainerActivity)
-        data.add(0,Exam())//这里在首位加空Exam是为了给Adapter里的Header占位
+        data.add(0, Exam())//这里在首位加空Exam是为了给Adapter里的Header占位
 
         //观察数据
         viewModel.examData.observe(this@ContainerActivity, Observer { list ->
@@ -79,10 +79,10 @@ class ContainerActivity : BaseActivity() {
     }
 
     private fun loadExam() {
-        viewModel.loadData(user.stuNum!!)
+        viewModel.loadData(user.stuNum)
     }
 
-    private fun initGrades(){
+    private fun initGrades() {
         parent = fl_grades_bottom_sheet
         recyclerView = parent.rv_grades
         initHeader()
@@ -90,23 +90,21 @@ class ContainerActivity : BaseActivity() {
         initBehavior()
     }
 
-    private fun initBehavior(){
+    private fun initBehavior() {
         val behavior = BottomSheetBehavior.from(parent)
         parent.post {
             behavior.isHideable = false
             behavior.peekHeight = fl_grades_header.height
-            rv_exam_main.setPadding(0,0,0,fl_grades_header.height)
+            rv_exam_main.setPadding(0, 0, 0, fl_grades_header.height)
         }
     }
 
     private fun initHeader() {
-        val user = BaseApp.user
-        user?.let {
-            Glide.with(BaseApp.context).load(it.photoSrc).into(parent.iv_grades_avatar)
-            parent.tv_grades_stuNum.text = it.stuNum
-            parent.tv_grades_college.text = it.college ?: "未设置学院"
-            parent.tv_grades_name.text = it.realName ?: "未设置姓名"
-        }
+        val userService = ServiceManager.getService(IUserService::class.java)
+        Glide.with(BaseApp.context).load(userService.getAvatarImgUrl()).into(parent.iv_grades_avatar)
+        parent.tv_grades_stuNum.text = userService.getStuNum()
+//        parent.tv_grades_college.text = userService.get ?: "未设置学院"
+        parent.tv_grades_name.text = userService.getRealName()?: "未设置姓名"
     }
 
     private fun initRv() {
@@ -118,7 +116,7 @@ class ContainerActivity : BaseActivity() {
             gradesData.addAll(it as MutableList<Grade>)
             adapter.notifyDataSetChanged()
         })
-        viewModel.loadGrades(user.stuNum!!, user.idNum!!)
+        viewModel.loadGrades(user.stuNum, user.idNum!!)
     }
 
 }
