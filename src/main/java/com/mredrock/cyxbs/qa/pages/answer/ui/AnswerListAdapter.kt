@@ -5,7 +5,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
-import com.mredrock.cyxbs.common.BaseApp
+import com.mredrock.cyxbs.common.service.ServiceManager
+import com.mredrock.cyxbs.common.service.account.IAccountService
 import com.mredrock.cyxbs.common.utils.extensions.gone
 import com.mredrock.cyxbs.common.utils.extensions.setAvatarImageFromUrl
 import com.mredrock.cyxbs.qa.R
@@ -90,7 +91,7 @@ class AnswerListAdapter(context: Context) : BaseRvAdapter<Answer>() {
             data ?: return
             itemView.apply {
                 //判断是否显示
-                if (data.userId == BaseApp.user?.id) {
+                if (data.userId == ServiceManager.getService(IAccountService::class.java).getUserService().getStuNum()) {
                     btn_answer_more.gone()
                     tv_answer_praise_count.gone()
                 }
