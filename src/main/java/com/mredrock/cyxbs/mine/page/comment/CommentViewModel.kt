@@ -65,8 +65,6 @@ class CommentViewModel : BaseViewModel() {
     }
 
 
-
-
     val errorEvent = MutableLiveData<String>()
     val dataEvent = MutableLiveData<List<RelateMeItem>>()
 
