@@ -180,5 +180,8 @@
     <color name="dialog_exit_subtitle_text_color" tools:ignore="ResourceName">#2A4E84</color>
     <!--    评论head和item间隙颜色-->
     <color name="qa_comment_item_divider_gap_color" tools:ignore="ResourceName">#EFF2F7</color>
+    <!--    邮问积分说明最下面的小字颜色-->
+    <color name="qa_dialog_qa_reward_description_bottom_text_color" tools:ignore="ResourceName">#ABBCD8</color>
+
 </resources>
 
