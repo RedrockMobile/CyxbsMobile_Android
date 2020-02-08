@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.afollestad.materialdialogs.MaterialDialog
 import com.google.android.material.tabs.TabLayout
+import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.ui.BaseActivity
 import com.mredrock.cyxbs.common.utils.LogUtils
@@ -144,7 +145,7 @@ class VolunteerRecordActivity : BaseActivity(), TabLayout.OnTabSelectedListener,
         if (uid == "404" || volunteerSP.volunteerAccount == "404" ||
                 volunteerSP.volunteerPassword == "404") {
             //没有绑定数据，先登录
-            Toast.makeText(this, "请先登录绑定账号哦", Toast.LENGTH_SHORT).show()
+            CyxbsToast.makeText(this, "请先登录绑定账号哦", Toast.LENGTH_SHORT).show()
             val intent = Intent(this, VolunteerLoginActivity::class.java)
             startActivity(intent)
             finish()
