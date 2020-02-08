@@ -32,8 +32,6 @@ import org.jetbrains.anko.textColor
 
 class CourseFragment : BaseFragment() {
 
-    companion object {
-    }
 
     override val openStatistics: Boolean
         get() = false
@@ -86,11 +84,14 @@ class CourseFragment : BaseFragment() {
             red_rock_tv_course_day_of_month.textColor = Color.argb(153, Color.red(color), Color.green(color), Color.blue(color))
             when(courseContainerEntryFragment.courseState){
                 CoursesViewModel.CourseState.OrdinaryCourse,CoursesViewModel.CourseState.OtherCourse->{
-                    ScheduleViewBidingAdapter.setScheduleData(schedule_view,mCoursesViewModel.courses.value, mCoursesViewModel.nowWeek.value!!, mCoursesViewModel.isGetOthers.value!!)
+                    mCoursesViewModel.courses.observe(this, Observer{
+                        ScheduleViewBidingAdapter.setScheduleData(schedule_view,it,mWeek, mCoursesViewModel.isGetOthers.value!!)
+                    })
                 }
                 CoursesViewModel.CourseState.NoClassInvitationCourse->{
                     mNoCourseInviteViewModel?.studentsCourseMap?.observe(this, Observer {
                         ScheduleViewBidingAdapter.setNoCourseInvite(schedule_view,mWeek,mNoCourseInviteViewModel?.studentsCourseMap?.value,mNoCourseInviteViewModel?.nameList!!)
+                        schedule_view.mIsDisplayCourse = false
                     })
                 }
             }

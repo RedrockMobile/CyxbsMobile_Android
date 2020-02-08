@@ -1,24 +1,26 @@
 package com.mredrock.cyxbs.course.adapters
 
-import android.content.Context
+import android.view.View
 import android.widget.TextView
+import com.mredrock.cyxbs.common.component.RedRockAutoWarpView
 import com.mredrock.cyxbs.course.R
 
 /**
  * Created by wenyipeng on 2019/3/10.
  * desc：
  */
-class NameListRecAdapter(context: Context, private val mPeople: List<String>) : BaseRecAdapter(context) {
-
-
-    override fun getThePositionLayoutId(position: Int): Int =
-            R.layout.course_name_list_rec_item
+class NameListRecAdapter(private val mPeople: List<String>) : RedRockAutoWarpView.Adapter() {
 
     override fun getItemCount(): Int = mPeople.size
 
-    override fun onBindViewHolder(holder: BaseViewHolder, position: Int) {
-        holder.itemView.findViewById<TextView>(R.id.tv_name).apply {
+    override fun getItemId(): Int? {
+        return R.layout.course_name_list_rec_item
+    }
+
+    override fun initItem(item: View, position: Int) {
+        item.findViewById<TextView>(R.id.tv_name).apply {
             text = mPeople[position]
         }
     }
+
 }

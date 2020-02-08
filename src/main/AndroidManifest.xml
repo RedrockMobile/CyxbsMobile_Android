@@ -9,9 +9,6 @@
         <activity
             android:name=".ui.EditAffairActivity"
             android:launchMode="singleTask" />
-        <activity
-            android:name=".ui.NoCourseInviteActivity"
-            android:launchMode="singleTask" />
         <activity android:name=".ui.StudentListActivity"
             android:launchMode="singleTask" />
     </application>

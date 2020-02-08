@@ -37,6 +37,12 @@ class NoCourseInviteScheduleViewAdapter(private val mContext: Context,
                 ContextCompat.getColor(mContext, R.color.courseCoursesOther))
     }
 
+    private val mCoursesTextColors by lazy(LazyThreadSafetyMode.NONE) {
+        intArrayOf(ContextCompat.getColor(mContext, R.color.morningCourseTextColor),
+                ContextCompat.getColor(mContext, R.color.afternoonCourseTextColor),
+                ContextCompat.getColor(mContext, R.color.eveningCourseTextColor))
+    }
+
     // 获取对应位置有课的学生的名字在mNameList中的index
     private val mCoursesIndex = Array(12) { arrayOfNulls<MutableList<Int>>(7) }
     // 用于存储对应课表没有课的学生的名字
@@ -113,6 +119,7 @@ class NoCourseInviteScheduleViewAdapter(private val mContext: Context,
             }
         }
         view.tv_name_list.text = stringBuilder.toString()
+        view.tv_name_list.setTextColor(mCoursesTextColors[row/4])
         view.cv.background = createBackground(mCoursesColors[row / 4])
         view.setOnClickListener {
             mNoCourseInviteDetailDialogHelper.showDialog(row, column, getNoCourseLength(row, column), nameList)

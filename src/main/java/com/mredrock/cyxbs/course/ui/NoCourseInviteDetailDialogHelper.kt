@@ -2,11 +2,8 @@ package com.mredrock.cyxbs.course.ui
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.widget.FrameLayout
 import android.widget.TextView
-import androidx.constraintlayout.widget.ConstraintLayout
-import com.mredrock.cyxbs.common.utils.extensions.getScreenHeight
-import com.mredrock.cyxbs.common.utils.extensions.getScreenWidth
+import com.mredrock.cyxbs.common.component.RedRockAutoWarpView
 import com.mredrock.cyxbs.course.R
 import com.mredrock.cyxbs.course.adapters.NameListRecAdapter
 import com.mredrock.cyxbs.course.utils.CourseTimeParse
@@ -29,10 +26,10 @@ class NoCourseInviteDetailDialogHelper(context: Context) : BaseDialogHelper(cont
 
     @SuppressLint("SetTextI18n")
     fun showDialog(row: Int, column: Int, length: Int, people: List<String>) {
-        dialog.findViewById<ConstraintLayout>(R.id.cl).apply {
-            layoutParams = FrameLayout.LayoutParams((context.getScreenWidth() * WIDTH_RATIO).toInt(),
-                    (context.getScreenHeight() * HEIGHT_RATIO).toInt())
-        }
+//        dialog.findViewById<ConstraintLayout>(R.id.cl).apply {
+//            layoutParams = FrameLayout.LayoutParams((context.getScreenWidth() * WIDTH_RATIO).toInt(),
+//                    (context.getScreenHeight() * HEIGHT_RATIO).toInt())
+//        }
         dialog.findViewById<TextView>(R.id.tv_day_of_week).apply {
             text = mDayOfWeek[column]
         }
@@ -46,16 +43,9 @@ class NoCourseInviteDetailDialogHelper(context: Context) : BaseDialogHelper(cont
         dialog.findViewById<TextView>(R.id.tv_people_count).apply {
             text = "共计${people.size}人"
         }
-        dialog.findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.rv_people).apply {
-            layoutManager = androidx.recyclerview.widget.LinearLayoutManager(context)
-            adapter = NameListRecAdapter(context, people)
+        dialog.findViewById<RedRockAutoWarpView>(R.id.rv_people).apply {
+            adapter = NameListRecAdapter(people)
         }
-        dialog.findViewById<TextView>(R.id.tv_sure).apply {
-            setOnClickListener{
-                dialog.dismiss()
-            }
-        }
-
         dialog.show()
     }
 

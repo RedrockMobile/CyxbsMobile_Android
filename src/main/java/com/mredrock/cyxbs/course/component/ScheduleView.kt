@@ -120,7 +120,7 @@ class ScheduleView : FrameLayout {
     private var mBasicElementHeight: Int = 0
 
     //是否是显示课表
-    private var mIsDisplayCourse: Boolean = true
+    var mIsDisplayCourse: Boolean = true
 
     // The following fields are the attrs
     private var mElementGap: Int = 0

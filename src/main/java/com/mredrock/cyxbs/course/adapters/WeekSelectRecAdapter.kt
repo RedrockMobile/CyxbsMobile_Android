@@ -62,8 +62,8 @@ class WeekSelectRecAdapter(mActivity: FragmentActivity) : RedRockAutoWarpView.Ad
             checkBox.setOnClickListener {
                 weekSelectCheckBoxState(checkBox,context)
                 checkBoxMap[0]?.apply {
-                    weekSelectCheckBoxState(this,context)
                     isChecked = false
+                    weekSelectCheckBoxState(this,context)
                 }
             }
         }
