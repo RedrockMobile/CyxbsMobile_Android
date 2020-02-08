@@ -2,7 +2,6 @@ package com.mredrock.cyxbs.mine.network
 
 import com.mredrock.cyxbs.common.bean.RedrockApiStatus
 import com.mredrock.cyxbs.common.bean.RedrockApiWrapper
-import com.mredrock.cyxbs.common.bean.User
 import com.mredrock.cyxbs.mine.network.model.*
 import io.reactivex.Observable
 import okhttp3.MultipartBody
@@ -19,7 +18,7 @@ interface ApiService {
      */
     @FormUrlEncoded
     @POST("/app/index.php/Home/Person/search")
-    fun getPersonInfo(@Field("stuNum") stuNum: String, @Field("idNum") idNum: String): Observable<RedrockApiWrapper<User>>
+    fun getPersonInfo(@Field("stuNum") stuNum: String, @Field("idNum") idNum: String): Observable<RedrockApiWrapper<UserLocal>>
 
     /**
      * 上传头像

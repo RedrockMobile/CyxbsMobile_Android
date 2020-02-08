@@ -3,6 +3,10 @@ package com.mredrock.cyxbs.mine.page.ask
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
+import com.mredrock.cyxbs.common.BaseApp
+import com.mredrock.cyxbs.common.service.ServiceManager
+import com.mredrock.cyxbs.common.service.account.IUserService
+import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
 import com.mredrock.cyxbs.common.utils.extensions.doOnErrorWithDefaultErrorHandler
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
@@ -12,12 +16,14 @@ import com.mredrock.cyxbs.mine.network.model.AskPosted
 import com.mredrock.cyxbs.mine.network.model.Draft
 import com.mredrock.cyxbs.mine.util.apiService
 import com.mredrock.cyxbs.mine.util.extension.mapOrThrowApiExceptionWithDataCanBeNull
-import com.mredrock.cyxbs.mine.util.user
 
 /**
  * Created by zia on 2018/9/10.
  */
 class AskViewModel : BaseViewModel() {
+
+    private val stuNum = ServiceManager.getService(IUserService::class.java).getStuNum()
+    private val idNum = BaseApp.context.defaultSharedPreferences.getString("SP_KEY_ID_NUM", "")
 
     private var askDraftPage: Int = 1
     private var askPostedPage: Int = 1
@@ -40,7 +46,7 @@ class AskViewModel : BaseViewModel() {
     val deleteEvent = MutableLiveData<Draft>()
 
     fun loadAskPostedList() {
-        apiService.getAskPostedList(user?.stuNum ?: return, user?.idNum
+        apiService.getAskPostedList(stuNum, idNum
                 ?: return, askPostedPage++, pageSize)
                 .mapOrThrowApiExceptionWithDataCanBeNull()
                 .setSchedulers()
@@ -108,9 +114,6 @@ class AskViewModel : BaseViewModel() {
 //                )
 //                .lifeCycle()
 //    }
-
-
-
 
 
 }

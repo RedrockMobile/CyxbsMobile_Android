@@ -17,10 +17,12 @@ import androidx.lifecycle.Observer
 import com.afollestad.materialdialogs.MaterialDialog
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
-import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.config.*
 import com.mredrock.cyxbs.common.event.AskLoginEvent
 import com.mredrock.cyxbs.common.event.LoginStateChangeEvent
+import com.mredrock.cyxbs.common.service.ServiceManager
+import com.mredrock.cyxbs.common.service.account.IUserService
+import com.mredrock.cyxbs.common.service.account.IUserStateService
 import com.mredrock.cyxbs.common.ui.BaseViewModelFragment
 import com.mredrock.cyxbs.common.utils.extensions.editor
 import com.mredrock.cyxbs.common.utils.extensions.loadAvatar
@@ -30,7 +32,6 @@ import com.mredrock.cyxbs.mine.page.ask.AskActivity
 import com.mredrock.cyxbs.mine.page.comment.CommentActivity
 import com.mredrock.cyxbs.mine.page.edit.EditInfoActivity
 import com.mredrock.cyxbs.mine.page.sign.DailySignActivity
-import com.mredrock.cyxbs.mine.util.user
 import kotlinx.android.synthetic.main.mine_fragment_main.*
 import org.greenrobot.eventbus.EventBus
 import org.jetbrains.anko.support.v4.defaultSharedPreferences
@@ -52,7 +53,7 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
         addObserver()
         //加载资料
         viewModel.getUserInfo()
-        user?.let { viewModel.getScoreStatus(it) }
+        viewModel.getScoreStatus()
         viewModel.getQANumber()
 
         //功能按钮
@@ -75,7 +76,7 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
 
     @SuppressLint("SetTextI18n")
     private fun addObserver() {
-        viewModel.mUser.observe(this, Observer {
+        viewModel.isUserUpdate.observe(this, Observer {
             refreshLayout()
         })
         viewModel.status.observe(this, Observer {
@@ -103,7 +104,7 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
     }
 
     private fun checkLoginBeforeAction(msg: String, action: () -> Unit) {
-        if (BaseApp.isLogin) {
+        if (ServiceManager.getService(IUserStateService::class.java).isLogin()) {
             action.invoke()
         } else {
             EventBus.getDefault().post(AskLoginEvent("请先登陆才能查看${msg}哦~"))
@@ -113,16 +114,30 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
     override fun onResume() {
         super.onResume()
         refreshLayout()
-        viewModel.getScoreStatus(user ?: return)
+        viewModel.getScoreStatus()
         viewModel.getQANumber()
     }
 
+    private fun getPersonInfoData() {
+        if (!ServiceManager.getService(IUserStateService::class.java).isLogin()) {
+            mine_main_username.setText(R.string.mine_user_empty_username)
+            mine_main_avatar.setImageResource(R.drawable.mine_default_avatar)
+            mine_main_introduce.setText(R.string.mine_user_empty_introduce)
+            return
+        } else {
+            viewModel.getUserInfo()
+        }
+    }
+
+
     //刷新界面
     private fun refreshLayout() {
-        if (BaseApp.isLogin) {
-            context?.loadAvatar(user?.photoThumbnailSrc, mine_main_avatar)
-            mine_main_username.text = if (user?.nickname.isNullOrBlank()) getString(R.string.mine_user_empty_username) else user?.nickname
-            mine_main_introduce.text = if (user?.introduction.isNullOrBlank()) getString(R.string.mine_user_empty_introduce) else user?.introduction
+        viewModel.getScoreStatus()
+        if (ServiceManager.getService(IUserStateService::class.java).isLogin()) {
+            val userService = ServiceManager.getService(IUserService::class.java)
+            context?.loadAvatar(userService.getAvatarImgUrl(), mine_main_avatar)
+            mine_main_username.text = if (userService.getNickname().isBlank()) getString(R.string.mine_user_empty_username) else userService.getNickname()
+            mine_main_introduce.text = if (userService.getIntroduction().isBlank()) getString(R.string.mine_user_empty_introduce) else userService.getIntroduction()
             mine_main_btn_exit.visibility = View.VISIBLE
         } else {
             mine_main_username.setText(R.string.mine_user_empty_username)
@@ -130,10 +145,6 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
             mine_main_introduce.setText(R.string.mine_user_empty_introduce)
             mine_main_btn_exit.visibility = View.GONE
         }
-    }
-
-    override fun onLoginStateChangeEvent(event: LoginStateChangeEvent) {
-        super.onLoginStateChangeEvent(event)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =

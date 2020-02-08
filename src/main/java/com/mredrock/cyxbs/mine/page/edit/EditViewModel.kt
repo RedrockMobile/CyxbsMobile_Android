@@ -1,12 +1,16 @@
 package com.mredrock.cyxbs.mine.page.edit
 
 import androidx.lifecycle.MutableLiveData
+import com.mredrock.cyxbs.common.BaseApp
+import com.mredrock.cyxbs.common.service.ServiceManager
+import com.mredrock.cyxbs.common.service.account.IUserEditorService
+import com.mredrock.cyxbs.common.service.account.IUserService
+import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
 import com.mredrock.cyxbs.common.utils.extensions.mapOrThrowApiException
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.mine.util.apiService
 import com.mredrock.cyxbs.mine.util.extension.normalStatus
-import com.mredrock.cyxbs.mine.util.user
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 
@@ -19,19 +23,25 @@ class EditViewModel : BaseViewModel() {
     val upLoadImageEvent = MutableLiveData<Boolean>()
 
     fun updateUserInfo(nickname: String, introduction: String, qq: String, phone: String
-                       , photoThumbnailSrc: String = user?.photoThumbnailSrc ?: ""
-                       , photoSrc: String = user?.photoSrc ?: "", callback: () -> Unit) {
-        apiService.updateUserInfo(user?.stuNum ?: return, user?.idNum ?: return,
+                       , photoThumbnailSrc: String = ServiceManager.getService(IUserService::class.java).getAvatarImgUrl()
+                       , photoSrc: String = ServiceManager.getService(IUserService::class.java).getAvatarImgUrl(), callback: () -> Unit) {
+        val stuNum = ServiceManager.getService(IUserService::class.java).getStuNum()
+        val idNum = BaseApp.context.defaultSharedPreferences.getString("SP_KEY_ID_NUM", "")
+                ?: return
+        apiService.updateUserInfo(stuNum, idNum,
                 nickname, introduction, qq, phone, photoThumbnailSrc, photoSrc)
                 .normalStatus(this)
                 .safeSubscribeBy(
                         onNext = {
-                            user?.let {
-                                it.nickname = nickname
-                                it.introduction = introduction
-                                it.qq = qq
-                                it.phone = phone
+                            //更新User信息
+                            val userEditService = ServiceManager.getService(IUserEditorService::class.java)
+                            userEditService.apply {
+                                setQQ(qq)
+                                setNickname(nickname)
+                                setIntroduction(introduction)
+                                setPhone(phone)
                             }
+
                             updateInfoEvent.postValue(true)
                         },
                         onComplete = callback,
@@ -44,23 +54,24 @@ class EditViewModel : BaseViewModel() {
 
     fun uploadAvatar(stuNum: RequestBody,
                      file: MultipartBody.Part) {
-        user?.stuNum?.let { stu ->
-            user?.idNum?.let { id ->
-                apiService.uploadSocialImg(stuNum, file)
-                        .mapOrThrowApiException()
-                        .flatMap {
-                            user?.photoSrc = it.photosrc
-                            user?.photoThumbnailSrc = it.thumbnail_src
-                            apiService.updateUserImage(stu, id
-                                    , it.thumbnail_src, it.photosrc)
-                        }
-                        .normalStatus(this)
-                        .safeSubscribeBy(onError = { upLoadImageEvent.value = false }
-                                , onNext = { upLoadImageEvent.value = true })
-                        .lifeCycle()
+        val stu = ServiceManager.getService(IUserService::class.java).getStuNum()
+        val id = BaseApp.context.defaultSharedPreferences.getString("SP_KEY_ID_NUM", "")
+                ?: return
+        apiService.uploadSocialImg(stuNum, file)
+                .mapOrThrowApiException()
+                .flatMap {
+                    val userEditService = ServiceManager.getService(IUserEditorService::class.java)
+                    userEditService.apply {
+                        setAvatarImgUrl(it.photosrc)
+                    }
+                    apiService.updateUserImage(stu, id
+                            , it.thumbnail_src, it.photosrc)
+                }
+                .normalStatus(this)
+                .safeSubscribeBy(onError = { upLoadImageEvent.value = false }
+                        , onNext = { upLoadImageEvent.value = true })
+                .lifeCycle()
 
-            }
 
-        }
     }
 }

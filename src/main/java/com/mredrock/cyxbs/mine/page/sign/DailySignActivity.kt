@@ -20,7 +20,6 @@ import com.mredrock.cyxbs.common.utils.extensions.invisible
 import com.mredrock.cyxbs.common.utils.extensions.visible
 import com.mredrock.cyxbs.mine.R
 import com.mredrock.cyxbs.mine.network.model.ScoreStatus
-import com.mredrock.cyxbs.mine.util.user
 import com.mredrock.cyxbs.mine.util.widget.SchoolCalendarPlus
 import com.mredrock.cyxbs.mine.util.widget.SpaceDecoration
 import com.mredrock.cyxbs.mine.util.widget.Stick
@@ -88,10 +87,8 @@ class DailySignActivity(override val viewModelClass: Class<DailyViewModel> = Dai
 
         initView()
         dealBottomSheet()
-        user?.let {
-            viewModel.loadAllData(it)
-            viewModel.loadProduct(it)
-        }
+        viewModel.loadAllData()
+        viewModel.loadProduct()
         viewModel.status.observe(this, Observer {
             refreshUI(it)
         })
@@ -168,7 +165,7 @@ class DailySignActivity(override val viewModelClass: Class<DailyViewModel> = Dai
 
     private fun checkIn() {
         isChecking = true
-        viewModel.checkIn(user ?: return)
+        viewModel.checkIn()
     }
 
     private fun dealBottomSheet() {

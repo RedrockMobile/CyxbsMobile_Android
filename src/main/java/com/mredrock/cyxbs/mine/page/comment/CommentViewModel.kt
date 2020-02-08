@@ -3,10 +3,11 @@ package com.mredrock.cyxbs.mine.page.comment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
-import com.mredrock.cyxbs.common.utils.extensions.doOnErrorWithDefaultErrorHandler
-import com.mredrock.cyxbs.common.utils.extensions.mapOrThrowApiException
-import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
-import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
+import androidx.lifecycle.ViewModel
+import com.mredrock.cyxbs.common.BaseApp
+import com.mredrock.cyxbs.common.service.ServiceManager
+import com.mredrock.cyxbs.common.service.account.IUserService
+import com.mredrock.cyxbs.common.utils.extensions.*
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.common.viewmodel.event.SingleLiveEvent
 import com.mredrock.cyxbs.mine.network.model.Comment
@@ -20,6 +21,9 @@ import com.mredrock.cyxbs.mine.util.user
  * Created by zia on 2018/9/13.
  */
 class CommentViewModel : BaseViewModel() {
+
+    val stuNum = ServiceManager.getService(IUserService::class.java).getStuNum()
+    val idNum = BaseApp.context.defaultSharedPreferences.getString("SP_KEY_ID_NUM", "")
 
     private val pageSize = 6
     private var commentPage: Int = 1
@@ -37,7 +41,7 @@ class CommentViewModel : BaseViewModel() {
         }
 
     fun loadCommentList() {
-        apiService.getCommentList(user?.stuNum ?: return, user?.idNum
+        apiService.getCommentList(stuNum, idNum
                 ?: return, commentPage++, pageSize)
                 .mapOrThrowApiExceptionWithDataCanBeNull()
                 .setSchedulers()
@@ -73,7 +77,7 @@ class CommentViewModel : BaseViewModel() {
     var fakeComments: MutableLiveData<List<Comment>> = MutableLiveData()
 
     fun loadData(type: Int) {
-        apiService.getRelateMeList(user?.stuNum ?: return, user?.idNum
+        apiService.getRelateMeList(stuNum, idNum
                 ?: return, page++, pageSize, type)
                 .mapOrThrowApiException()
                 .setSchedulers()

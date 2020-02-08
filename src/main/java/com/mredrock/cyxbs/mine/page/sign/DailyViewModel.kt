@@ -3,9 +3,12 @@ package com.mredrock.cyxbs.mine.page.sign
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
+import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.bean.RedrockApiStatus
 import com.mredrock.cyxbs.common.bean.RedrockApiWrapper
-import com.mredrock.cyxbs.common.bean.User
+import com.mredrock.cyxbs.common.service.ServiceManager
+import com.mredrock.cyxbs.common.service.account.IUserService
+import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
 import com.mredrock.cyxbs.common.utils.extensions.doOnErrorWithDefaultErrorHandler
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
@@ -27,6 +30,8 @@ import io.reactivex.functions.Function
  */
 class DailyViewModel : BaseViewModel() {
 
+    val stuNum = ServiceManager.getService(IUserService::class.java).getStuNum()
+    val idNum = BaseApp.context.defaultSharedPreferences.getString("SP_KEY_ID_NUM", "")
     //临时使用，因为后端测试的baseurl与apiService不同，故作区分
     private val apiServiceForSign: ApiService by lazy { ApiGeneratorForSign.getApiService(ApiService::class.java) }
 
@@ -49,8 +54,11 @@ class DailyViewModel : BaseViewModel() {
 
     private var page = 1
 
-    fun loadAllData(user: User) {
-        apiService.getScoreStatus(user.stuNum ?: return, user.idNum ?: return)
+    fun loadAllData() {
+        val stuNum = ServiceManager.getService(IUserService::class.java).getStuNum()
+        val idNum = BaseApp.context.defaultSharedPreferences.getString("SP_KEY_ID_NUM", "")
+                ?: return
+        apiService.getScoreStatus(stuNum, idNum)
                 .normalWrapper(this)
                 .safeSubscribeBy {
                     _status.postValue(it)
@@ -62,32 +70,25 @@ class DailyViewModel : BaseViewModel() {
 
 
     //用flatmap解决嵌套请求的问题
-    fun checkIn(user: User) {
-        apiService.checkIn(user.stuNum ?: return, user.idNum ?: return)
-                .setSchedulers()
+    fun checkIn() {
+
+        apiService.checkIn(stuNum, idNum ?: return)
                 .flatMap(Function<RedrockApiStatus, Observable<RedrockApiWrapper<ScoreStatus>>> {
                     //如果status为405，说明是在寒暑假，此时不可签到
                     if (it.status == 405) {
                         _isInVacation.postValue(true)
                     }
-                    return@Function user.stuNum?.let { stuNum ->
-                        user.idNum?.let { idNum ->
-                            apiService.getScoreStatus(stuNum, idNum)
-                        }
-                    }
+                    return@Function apiService.getScoreStatus(stuNum, idNum)
                 })
                 .normalWrapper(this)
                 .safeSubscribeBy {
-                    //如果status没有内容没有更新，就不用postValue
-                    if (it != _status.value) {
-                        _status.postValue(it)
-                    }
+                    _status.postValue(it)
                 }
                 .lifeCycle()
     }
 
-    fun loadProduct(user: User) {
-        apiServiceForSign.getProducts(user.stuNum ?: return, user.idNum ?: return, page++)
+    fun loadProduct() {
+        apiServiceForSign.getProducts(stuNum, idNum ?: return, page++)
                 .mapOrThrowApiExceptionWithDataCanBeNull()
                 .setSchedulers()
                 .doOnErrorWithDefaultErrorHandler { false }
@@ -102,7 +103,7 @@ class DailyViewModel : BaseViewModel() {
                     localProducts.addAll(it)
                     _products.postValue(localProducts)
                     //加载下一页
-                    loadProduct(user)
+                    loadProduct()
                 }
                 .lifeCycle()
     }
