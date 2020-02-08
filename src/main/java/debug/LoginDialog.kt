@@ -7,8 +7,6 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.EditText
 import androidx.appcompat.widget.AppCompatButton
-import com.mredrock.cyxbs.common.BaseApp
-import com.mredrock.cyxbs.common.bean.User
 import com.mredrock.cyxbs.common.utils.extensions.getScreenWidth
 import com.mredrock.cyxbs.course.R
 import com.mredrock.cyxbs.course.event.AddAffairEvent
@@ -40,7 +38,7 @@ class LoginDialog(private val mContext: Context) {
         val sure = itemView.findViewById<AppCompatButton>(R.id.sure)
         sure.setOnClickListener {
             mDialog.dismiss()
-            BaseApp.user = User(stuNum = account.text.toString(), idNum = password.text.toString())
+//            BaseApp.user = User(stuNum = account.text.toString(), idNum = password.text.toString())
             //这里实际不是添加事务是为了进行UI的更新
             EventBus.getDefault().post(AddAffairEvent())
             onLogin()
