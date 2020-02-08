@@ -12,6 +12,7 @@ import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.mine.network.model.QANumber
 import com.mredrock.cyxbs.mine.network.model.ScoreStatus
 import com.mredrock.cyxbs.mine.util.apiService
+import com.mredrock.cyxbs.mine.util.extension.normalWrapper
 import com.mredrock.cyxbs.mine.util.user
 
 /**
@@ -56,7 +57,15 @@ class UserViewModel : BaseViewModel() {
                     _status.postValue(it)
                 }
                 .lifeCycle()
+    }
 
+    fun getQANumber() {
+        apiService.getQANumber(user?.stuNum ?: return, user?.idNum ?: return)
+                .normalWrapper(this)
+                .safeSubscribeBy {
+                    _qaNumber.postValue(it)
+                }
+                .lifeCycle()
 
     }
 
@@ -80,10 +89,5 @@ class UserViewModel : BaseViewModel() {
     fun clearUser() {
         _user.postValue(null)
         BaseApp.user = null
-    }
-
-    fun getQANumber() {
-        val number = QANumber(12, 12, 5, 3)
-        _qaNumber.postValue(number)
     }
 }

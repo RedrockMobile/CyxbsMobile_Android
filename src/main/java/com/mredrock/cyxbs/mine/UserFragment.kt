@@ -114,6 +114,7 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
         super.onResume()
         refreshLayout()
         viewModel.getScoreStatus(user ?: return)
+        viewModel.getQANumber()
     }
 
     //刷新界面

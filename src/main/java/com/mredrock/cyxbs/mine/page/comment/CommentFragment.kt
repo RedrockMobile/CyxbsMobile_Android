@@ -7,6 +7,8 @@ import androidx.lifecycle.ViewModelProviders
 import com.mredrock.cyxbs.mine.R
 import com.mredrock.cyxbs.mine.network.model.Comment
 import com.mredrock.cyxbs.mine.util.ui.BaseRVFragment
+import com.mredrock.cyxbs.mine.util.ui.RvFooter
+import kotlinx.android.synthetic.main.mine_list_item_comment_comment.view.*
 
 /**
  * Created by roger on 2019/12/5
@@ -18,44 +20,19 @@ class CommentFragment : BaseRVFragment<Comment>() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        initObserver()
-        loadMore()
-//        val comment = Comment("张树洞", "房子涨了，我劝你赶紧买房子涨了，我劝你赶紧买房子涨了，我劝你赶紧买房子涨了，我劝你赶紧买")
-//        val list: MutableList<Comment> = mutableListOf()
-//        for (i in 1..20) {
-//            list.add(comment)
-//        }
-//        viewModel.fakeComments.postValue(list)
-    }
 
-    private fun initObserver() {
-        viewModel.errorEvent.observe(this, Observer {
-            getFooter().showLoadError()
+
+        viewModel.loadCommentList()
+        viewModel.eventOnComment.observe(this, Observer {
+            if (it == RvFooter.State.ERROR) {
+                getFooter().showLoadError()
+            } else if (it == RvFooter.State.NOMORE) {
+                getFooter().showNoMore()
+            }
         })
-        viewModel.fakeComments.observe(this, Observer {
-            loadIntoRv(it)
+        viewModel.commentList.observe(this, Observer {
+            setNewData(it)
         })
-    }
-
-    /**
-     * 加载更多
-     */
-    private fun loadMore() {
-        getFooter().showLoading()
-    }
-
-    /**
-     * 添加数据到recyclerView中，并显示没有更多
-     */
-    private fun loadIntoRv(list: List<Comment>?) {
-        if (list == null) {
-            return
-        }
-        if (list.isEmpty()) {
-            getFooter().showNoMore()
-        } else {
-            addData(list)
-        }
     }
 
     override fun getItemLayout(): Int {
@@ -64,21 +41,21 @@ class CommentFragment : BaseRVFragment<Comment>() {
 
     //自动加载更多
     override fun bindFooterHolder(holder: androidx.recyclerview.widget.RecyclerView.ViewHolder, position: Int) {
-        getFooter().showLoading()
-        loadMore()
+        if (getFooter().state == RvFooter.State.LOADING) {
+            viewModel.loadCommentList()
+        }
     }
 
     @SuppressLint("SetTextI18n")
     override fun bindDataHolder(holder: androidx.recyclerview.widget.RecyclerView.ViewHolder, position: Int, data: Comment) {
-//        holder.itemView.mine_comment_tv_at_who.text = data.repsonseTo
-//        holder.itemView.mine_comment_tv_content.text = data.content
+        holder.itemView.mine_comment_tv_at_who.text = data.answerer
+        holder.itemView.mine_comment_tv_content.text = data.commentContent
     }
 
-
     override fun onSwipeLayoutRefresh() {
-        viewModel.cleanPage()
-        clearData()
-        loadMore()
+        getFooter().showLoading()
+        viewModel.cleanCommentPage()
+        viewModel.loadCommentList()
         getSwipeLayout().isRefreshing = false
     }
 }

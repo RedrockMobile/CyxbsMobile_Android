@@ -3,7 +3,6 @@ package com.mredrock.cyxbs.mine.page.ask
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
-import com.mredrock.cyxbs.common.utils.extensions.checkError
 import com.mredrock.cyxbs.common.utils.extensions.doOnErrorWithDefaultErrorHandler
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
@@ -46,66 +45,72 @@ class AskViewModel : BaseViewModel() {
                 .mapOrThrowApiExceptionWithDataCanBeNull()
                 .setSchedulers()
                 .doOnErrorWithDefaultErrorHandler { false }
-                .safeSubscribeBy {
-                    //由于Rxjava反射不应定能够够保证为空，当为空的说明这一页没有数据，于是停止加载
-                    if (it == null) {
-                        _eventOnAskPosted.postValue(true)
-                        return@safeSubscribeBy
-                    }
-
-                    val localAskPosted = _askPosted.value ?: mutableListOf()
-                    localAskPosted.addAll(it)
-                    _askPosted.postValue(localAskPosted)
-                }
-                .lifeCycle()
-    }
-
-    fun loadAskDraftList() {
-//        apiService.getDraftList(user?.stuNum ?: return, user?.idNum
-//                ?: return, askDraftPage++, pageSize)
-//                .mapOrThrowApiException()
-//                .map { list ->
-//                    list.forEach { it.parseQuestion() }
-//                    list
-//                }
-//                .setSchedulers()
-//                .doOnErrorWithDefaultErrorHandler { false }
-//                .safeSubscribeBy(
-//                        onNext = { it ->
-//                            val askDraftList = it.filter {
-//                                it.type == "question"
-//                            }
-//                            askDraftEvent.postValue(askDraftList)
-//                        },
-//                        onError = {
-//                            it.printStackTrace()
-////                            errorEvent.postValue(it.message)
-//                        }
-//                )
-//                .lifeCycle()
-    }
-
-    fun deleteDraft(draft: Draft) {
-        apiService.deleteDraft(user?.stuNum ?: return, user?.idNum ?: return, draft.id)
-                .checkError()
-                .setSchedulers()
-                .doOnErrorWithDefaultErrorHandler { false }
                 .safeSubscribeBy(
                         onNext = {
-                            deleteEvent.postValue(draft)
+                            //由于Rxjava反射不应定能够够保证为空，当为空的说明这一页没有数据，于是停止加载
+                            if (it == null) {
+                                _eventOnAskPosted.postValue(true)
+                                return@safeSubscribeBy
+                            }
+
+                            val localAskPosted = _askPosted.value ?: mutableListOf()
+                            localAskPosted.addAll(it)
+                            _askPosted.postValue(localAskPosted)
                         },
                         onError = {
-                            //                            errorEvent.postValue(it.message)
-                        }
-                )
+                            _eventOnAskPosted.postValue(false)
+                        })
                 .lifeCycle()
     }
-
 
     fun cleanAskPostedPage() {
         askPostedPage = 1
         _askPosted.value = mutableListOf()
     }
+
+//    fun loadAskDraftList() {
+////        apiService.getDraftList(user?.stuNum ?: return, user?.idNum
+////                ?: return, askDraftPage++, pageSize)
+////                .mapOrThrowApiException()
+////                .map { list ->
+////                    list.forEach { it.parseQuestion() }
+////                    list
+////                }
+////                .setSchedulers()
+////                .doOnErrorWithDefaultErrorHandler { false }
+////                .safeSubscribeBy(
+////                        onNext = { it ->
+////                            val askDraftList = it.filter {
+////                                it.type == "question"
+////                            }
+////                            askDraftEvent.postValue(askDraftList)
+////                        },
+////                        onError = {
+////                            it.printStackTrace()
+//////                            errorEvent.postValue(it.message)
+////                        }
+////                )
+////                .lifeCycle()
+//    }
+//
+//    fun deleteDraft(draft: Draft) {
+//        apiService.deleteDraft(user?.stuNum ?: return, user?.idNum ?: return, draft.id)
+//                .checkError()
+//                .setSchedulers()
+//                .doOnErrorWithDefaultErrorHandler { false }
+//                .safeSubscribeBy(
+//                        onNext = {
+//                            deleteEvent.postValue(draft)
+//                        },
+//                        onError = {
+//                            //                            errorEvent.postValue(it.message)
+//                        }
+//                )
+//                .lifeCycle()
+//    }
+
+
+
 
 
 }

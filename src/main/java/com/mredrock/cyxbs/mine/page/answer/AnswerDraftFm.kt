@@ -2,11 +2,9 @@ package com.mredrock.cyxbs.mine.page.answer
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.mredrock.cyxbs.mine.R
 import com.mredrock.cyxbs.mine.network.model.Draft
-import com.mredrock.cyxbs.mine.util.extension.logr
 import com.mredrock.cyxbs.mine.util.ui.BaseRVFragment
 import com.mredrock.cyxbs.mine.util.ui.MineDialogFragment
 import kotlinx.android.synthetic.main.mine_list_item_my_answer_draft.view.*
@@ -26,22 +24,22 @@ class AnswerDraftFm : BaseRVFragment<Draft>() {
     }
 
     private fun initObserver() {
-        viewModel.errorEvent.observe(this, Observer {
-            getFooter().showLoadError()
-        })
-        viewModel.answerDraftEvent.observe(this, Observer {
-            loadIntoRv(it)
-        })
-        viewModel.deleteEvent.observe(this, Observer {
-            delete(it)
-        })
+//        viewModel.errorEvent.observe(this, Observer {
+//            getFooter().showLoadError()
+//        })
+//        viewModel.answerDraftEvent.observe(this, Observer {
+//            loadIntoRv(it)
+//        })
+//        viewModel.deleteEvent.observe(this, Observer {
+//            delete(it)
+//        })
     }
 
     /**
      * 加载更多
      */
     private fun loadMore() {
-        viewModel.loadAnswerDraftList()
+//        viewModel.loadAnswerDraftList()
         getFooter().showLoading()
     }
 
@@ -82,14 +80,14 @@ class AnswerDraftFm : BaseRVFragment<Draft>() {
 
 
     override fun onSwipeLayoutRefresh() {
-        viewModel.cleanPage()
+//        viewModel.cleanPage()
         clearData()
         loadMore()
         getSwipeLayout().isRefreshing = false
     }
 
     private fun removeItem(draft: Draft) {
-        viewModel.deleteDraft(draft)
+//        viewModel.deleteDraft(draft)
     }
     private fun dialogShowRemove(draft: Draft) {
         MineDialogFragment("删除草稿", "是否删除您编辑的草稿？", {removeItem(draft)}, {}).show(this.fragmentManager, "SaveInfo")

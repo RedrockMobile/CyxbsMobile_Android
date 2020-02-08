@@ -33,7 +33,7 @@ class AskDraftFm : BaseRVFragment<Draft>() {
      * 加载更多
      */
     private fun loadMore() {
-        viewModel.loadAskDraftList()
+//        viewModel.loadAskDraftList()
         getFooter().showLoading()
     }
 

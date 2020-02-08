@@ -3,7 +3,6 @@ package com.mredrock.cyxbs.mine.page.comment
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import com.mredrock.cyxbs.mine.util.ui.BaseTabLayoutActivity
-import kotlinx.android.synthetic.main.mine_activity_tablayout_common.*
 
 
 /**
@@ -17,7 +16,7 @@ class CommentActivity : BaseTabLayoutActivity() {
         common_toolbar.title = "评论"
 
         val fragmentList = listOf<Fragment>(CommentFragment(), ResponseFragment())
-        val titleList = listOf<String>("发出评论", "收到回复")
+        val titleList = listOf<String>("发出评论", "收到评论")
         init(fragmentList, titleList)
     }
 }

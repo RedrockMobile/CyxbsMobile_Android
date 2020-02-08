@@ -6,6 +6,7 @@ import androidx.lifecycle.Transformations
 import com.mredrock.cyxbs.common.bean.RedrockApiStatus
 import com.mredrock.cyxbs.common.bean.RedrockApiWrapper
 import com.mredrock.cyxbs.common.bean.User
+import com.mredrock.cyxbs.common.utils.extensions.doOnErrorWithDefaultErrorHandler
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
@@ -15,7 +16,7 @@ import com.mredrock.cyxbs.mine.network.ApiService
 import com.mredrock.cyxbs.mine.network.model.Product
 import com.mredrock.cyxbs.mine.network.model.ScoreStatus
 import com.mredrock.cyxbs.mine.util.apiService
-import com.mredrock.cyxbs.mine.util.extension.mapOrThrowApiExceptionWithData
+import com.mredrock.cyxbs.mine.util.extension.mapOrThrowApiExceptionWithDataCanBeNull
 import com.mredrock.cyxbs.mine.util.extension.normalWrapper
 import io.reactivex.Observable
 import io.reactivex.functions.Function
@@ -87,8 +88,9 @@ class DailyViewModel : BaseViewModel() {
 
     fun loadProduct(user: User) {
         apiServiceForSign.getProducts(user.stuNum ?: return, user.idNum ?: return, page++)
-                .mapOrThrowApiExceptionWithData()
+                .mapOrThrowApiExceptionWithDataCanBeNull()
                 .setSchedulers()
+                .doOnErrorWithDefaultErrorHandler { false }
                 .safeSubscribeBy {
                     //由于Rxjava反射不应定能够够保证为空，当为空的说明这一页没有数据，于是停止加载
                     if (it == null) {

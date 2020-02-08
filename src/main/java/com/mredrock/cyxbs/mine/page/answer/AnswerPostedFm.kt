@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModelProviders
 import com.mredrock.cyxbs.mine.R
 import com.mredrock.cyxbs.mine.network.model.AnswerPosted
 import com.mredrock.cyxbs.mine.util.ui.BaseRVFragment
+import com.mredrock.cyxbs.mine.util.ui.RvFooter
 
 /**
  * Created by roger on 2019/12/3
@@ -19,44 +20,18 @@ class AnswerPostedFm : BaseRVFragment<AnswerPosted>() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        initObserver()
-        loadMore()
-//        val answer = AnswerPosted("id", "15", "房子在涨房子在涨房子在涨房子在涨房子在涨房子在涨", "2019.3.1", "这是个问题", "2019.8.22", "2019-7-1", 20)
-//        val list: MutableList<AnswerPosted> = mutableListOf()
-//        for (i in 1..20) {
-//            list.add(answer)
-//        }
-//        viewModel.answerPostedEvent.postValue(list)
-    }
 
-    private fun initObserver() {
-        viewModel.errorEvent.observe(this, Observer {
-            getFooter().showLoadError()
+        viewModel.loadAnswerPostedList()
+        viewModel.eventOnAnswerPosted.observe(this, Observer {
+            if (it == RvFooter.State.ERROR) {
+                getFooter().showLoadError()
+            } else if (it == RvFooter.State.NOMORE) {
+                getFooter().showNoMore()
+            }
         })
-        viewModel.answerPostedEvent.observe(this, Observer {
-            loadIntoRv(it)
+        viewModel.answerPosted.observe(this, Observer {
+            setNewData(it)
         })
-    }
-
-    /**
-     * 加载更多
-     */
-    private fun loadMore() {
-        getFooter().showLoading()
-    }
-
-    /**
-     * 添加数据到recyclerView中，并显示没有更多
-     */
-    private fun loadIntoRv(list: List<AnswerPosted>?) {
-        if (list == null) {
-            return
-        }
-        if (list.isEmpty()) {
-            getFooter().showNoMore()
-        } else {
-            addData(list)
-        }
     }
 
     override fun getItemLayout(): Int {
@@ -65,25 +40,30 @@ class AnswerPostedFm : BaseRVFragment<AnswerPosted>() {
 
     //自动加载更多
     override fun bindFooterHolder(holder: androidx.recyclerview.widget.RecyclerView.ViewHolder, position: Int) {
-        getFooter().showLoading()
-        loadMore()
+        if (getFooter().state == RvFooter.State.LOADING) {
+            viewModel.loadAnswerPostedList()
+        }
     }
 
     @SuppressLint("SetTextI18n")
     override fun bindDataHolder(holder: androidx.recyclerview.widget.RecyclerView.ViewHolder, position: Int, data: AnswerPosted) {
         holder.itemView.findViewById<TextView>(R.id.mine_answer_posted_tv_content).text = data.content
-//        holder.itemView.findViewById<TextView>(R.id.mine_answer_posted_tv_disappear_at).text = data.disappearAt
-//        holder.itemView.findViewById<TextView>(R.id.mine_answer_posted_tv_integral).text = data.integral.toString()
-//        if (data.state == 0) {
-//            holder.itemView.findViewById<TextView>(R.id.mine_answer_posted_tv_state).text = "已采纳"
-//        }
+        holder.itemView.findViewById<TextView>(R.id.mine_answer_posted_tv_disappear_at).text = data.answerTime
+        holder.itemView.findViewById<TextView>(R.id.mine_answer_posted_tv_integral).text = data.integral.toString()
+        if (data.type == "已解决") {
+            holder.itemView.findViewById<TextView>(R.id.mine_answer_posted_tv_state).text = "已采纳"
+        } else {
+            holder.itemView.findViewById<TextView>(R.id.mine_answer_posted_tv_state).text = "未采纳"
+
+        }
     }
 
 
     override fun onSwipeLayoutRefresh() {
-        viewModel.cleanPage()
-        clearData()
-        loadMore()
+        getFooter().showLoading()
+        viewModel.cleanAnswerPostedPage()
+        viewModel.loadAnswerPostedList()
         getSwipeLayout().isRefreshing = false
+        getRecyclerView().scrollToPosition(0)
     }
 }
