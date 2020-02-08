@@ -9,7 +9,6 @@ import android.view.*
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.google.gson.Gson
@@ -24,15 +23,13 @@ import com.mredrock.cyxbs.qa.pages.quiz.ui.dialog.RewardSetDialog
 import com.mredrock.cyxbs.qa.pages.quiz.QuizViewModel
 import com.mredrock.cyxbs.qa.ui.activity.ViewImageActivity
 import com.mredrock.cyxbs.qa.ui.widget.CommonDialog
-import com.mredrock.cyxbs.qa.utils.CHOOSE_PHOTO_REQUEST
-import com.mredrock.cyxbs.qa.utils.selectImageFromAlbum
+import com.mredrock.cyxbs.qa.utils.*
 import kotlinx.android.synthetic.main.qa_activity_quiz.*
 import kotlinx.android.synthetic.main.qa_common_toolbar.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.jetbrains.anko.support.v4.startActivityForResult
-import org.jetbrains.anko.textColor
 import top.limuyang2.photolibrary.activity.LPhotoPickerActivity
 
 //todo 这个界面赶时间写得有点乱，记得优化一下
@@ -49,7 +46,9 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
 
     override val viewModelClass = QuizViewModel::class.java
     override val isFragmentActivity = false
+    private var currentTypeIndex = 0
     private var draftId = "-1"
+    private var questionType: String = ""
     private val exitDialog by lazy { createExitDialog() }
     private val rewardNotEnoughDialog by lazy { createRewardNotEnoughDialog() }
 
@@ -57,8 +56,8 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.qa_activity_quiz)
+        initTypeSelector()
         initToolbar()
-        initTagSelector()
         initImageAddView()
         viewModel.getMyReward() //优先初始化积分，避免用户等待
 
@@ -68,34 +67,25 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
                     viewModel.deleteDraft(draftId)
                 }
                 val data = Intent()
-                data.putExtra("type", viewModel.type)
+                data.putExtra("type", questionType)
                 setResult(Activity.RESULT_OK, data)
                 finish()
             }
         }
     }
 
-    private fun initTagSelector() {
-        var currentTag = 0
+    private fun initTypeSelector() {
         val tagSelector = findViewById<LinearLayout>(R.id.layout_quiz_tag)
         val childView = Array(tagSelector.childCount) { tagSelector.getChildAt(it) as TextView }
         if (childView.isNotEmpty()) {
-            viewModel.setTag(childView[currentTag].text.toString())
+            questionType = childView[currentTypeIndex].text.toString()
         }
         for ((index, i) in childView.withIndex()) {
             i.setOnClickListener { view ->
-                childView[currentTag].apply {
-                    textColor = ContextCompat.getColor(this@QuizActivity, R.color.qa_quiz_select_type_text_color)
-                    background = ContextCompat.getDrawable(this@QuizActivity, R.drawable.qa_selector_quiz_type_default_select)
-
-                }
-
-                (view as TextView).apply {
-                    textColor = ContextCompat.getColor(this@QuizActivity, R.color.qa_quiz_selected_type_text_color)
-                    background = ContextCompat.getDrawable(this@QuizActivity, R.drawable.qa_selector_quiz_type_default_selected)
-                }
-                currentTag = index
-                viewModel.setTag(view.text.toString())
+                childView[currentTypeIndex].unSelected()
+                (view as TextView).selected()
+                currentTypeIndex = index
+                questionType = view.text.toString()
             }
         }
     }
@@ -114,7 +104,7 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
             visible()
             text = getString(R.string.qa_quiz_dialog_next)
             setOnClickListener {
-                val result = viewModel.submitTitleAndContent(edt_quiz_title.text.toString(), edt_quiz_content.text.toString())
+                val result = viewModel.submitTitleAndContent(edt_quiz_title.text.toString(), edt_quiz_content.text.toString(), questionType)
                 if (result) {
                     RewardSetDialog(this@QuizActivity, viewModel.myRewardCount).apply {
                         onSubmitButtonClickListener = { time: String, reward: Int ->
@@ -196,13 +186,6 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
         setImageBitmap(bitmap)
     }
 
-    override fun getViewModelFactory(): QuizViewModel.Factory {
-        return if (intent.getStringExtra("type") == null) {
-            QuizViewModel.Factory(getString(R.string.qa_quiz_dialog_type_study))
-        } else {
-            QuizViewModel.Factory(intent.getStringExtra("type"))
-        }
-    }
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
@@ -221,9 +204,9 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
 
     private fun saveDraft() {
         if (draftId == "-1") {
-            viewModel.addItemToDraft(edt_quiz_title.text.toString(), edt_quiz_content.text.toString())
+            viewModel.addItemToDraft(edt_quiz_title.text.toString(), edt_quiz_content.text.toString(), questionType)
         } else {
-            viewModel.updateDraftItem(edt_quiz_title.text.toString(), edt_quiz_content.text.toString(), draftId)
+            viewModel.updateDraftItem(edt_quiz_title.text.toString(), edt_quiz_content.text.toString(), draftId, questionType)
         }
     }
 
@@ -236,8 +219,16 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
         val question = Gson().fromJson(event.jsonString, Question::class.java)
         edt_quiz_title.setText(question.title)
         edt_quiz_content.setText(question.description)
-        viewModel.type = question.kind
-        if (question.tags.isNotEmpty()) viewModel.setTag(question.tags)
+        val tagSelector = findViewById<LinearLayout>(R.id.layout_quiz_tag)
+        val childView = Array(tagSelector.childCount) { tagSelector.getChildAt(it) as TextView }
+        childView[currentTypeIndex].unSelected()
+        when (question.kind) {
+            getString(R.string.qa_quiz_select_type_study) -> currentTypeIndex = 0
+            getString(R.string.qa_quiz_select_type_no_name) -> currentTypeIndex = 1
+            getString(R.string.qa_quiz_select_type_life) -> currentTypeIndex = 2
+            getString(R.string.qa_quiz_select_type_others) -> currentTypeIndex = 3
+        }
+        childView[currentTypeIndex].selected()
         if (question.photoThumbnailSrc != null) {
             val list = question.photoThumbnailSrc.split(",").toMutableList()
             if (list[0] != "") {

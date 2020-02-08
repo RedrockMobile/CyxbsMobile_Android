@@ -93,6 +93,7 @@ class RewardSetDialog(context: Context, rewardCount: Int) : BottomSheetDialog(co
             }
 
         }
+        iv_reward_description.setOnClickListener { RewardDescriptionDialog(context).show() }
         tv_my_reward_count.text = context.resources.getString(R.string.qa_quiz_reward_set_my_reward, myRewardCount)
         tv_quiz_dialog_cancel.setOnClickListener { cancel() }
     }

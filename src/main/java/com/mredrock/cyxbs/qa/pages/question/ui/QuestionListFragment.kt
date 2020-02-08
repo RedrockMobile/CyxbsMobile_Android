@@ -99,7 +99,7 @@ class QuestionListFragment : BaseViewModelFragment<QuestionListViewModel>() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == QuestionContainerFragment.REQUEST_LIST_REFRESH_ACTIVITY && resultCode == Activity.RESULT_OK) {
-            if (title == Question.ALL || title == data!!.getStringExtra("type")) {
+            if (title == Question.NEW || title == data!!.getStringExtra("type")) {
                 viewModel.invalidateQuestionList()
             }
         }

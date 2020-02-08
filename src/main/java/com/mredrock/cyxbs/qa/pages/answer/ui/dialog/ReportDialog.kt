@@ -9,6 +9,7 @@ import android.widget.TextView
 import androidx.core.view.forEach
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.mredrock.cyxbs.common.utils.extensions.visible
 import com.mredrock.cyxbs.qa.R
 import kotlinx.android.synthetic.main.qa_dialog_question_report.*
 import kotlinx.android.synthetic.main.qa_dialog_question_report_dialog_type_layout.*
@@ -43,6 +44,26 @@ class ReportDialog(context: Context) : BottomSheetDialog(context) {
         mBehavior.peekHeight = container.measuredHeight
         mBehavior.state = BottomSheetBehavior.STATE_EXPANDED
         initReport()
+    }
+
+    fun setType(type: String) {
+        val types = context.resources.getStringArray(R.array.qa_title_type)
+        when(type){
+            types[0]->{
+                tv_report.text=context.getText(R.string.qa_question_report_text)
+                tv_question_ignore.visible()
+                tv_report_type_useless.text=context.getText(R.string.qa_report_useless_question_text)
+            }
+            types[1]->{
+                tv_report.text=context.getText(R.string.qa_answer_report_text)
+                tv_report_type_useless.text=context.getText(R.string.qa_report_useless_answer_text)
+            }
+            types[2]->{
+                tv_report.text=context.getText(R.string.qa_comment_report_text)
+                tv_report_type_useless.text=context.getText(R.string.qa_report_useless_comment_text)
+
+            }
+        }
     }
 
     private fun initReport() {

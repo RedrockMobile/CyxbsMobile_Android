@@ -33,6 +33,7 @@ class AnswerListAdapter(context: Context) : BaseRvAdapter<Answer>() {
     }
 
     var onPriseClickListener: ((Int, Answer) -> Unit)? = null
+    var onReportClickListener: ((String) -> Unit)? = null
     var onItemClickListener: ((Int, Answer) -> Unit)? = null
 
     private val sortByTime = context.getString(R.string.qa_answer_list_sort_by_time)
@@ -77,6 +78,9 @@ class AnswerListAdapter(context: Context) : BaseRvAdapter<Answer>() {
         holder.itemView.apply {
             tv_answer_praise_count.setOnClickListener {
                 onPriseClickListener?.invoke(position, dataList[position])
+            }
+            btn_answer_more.setOnClickListener {
+                onReportClickListener?.invoke(dataList[position].id)
             }
         }
     }

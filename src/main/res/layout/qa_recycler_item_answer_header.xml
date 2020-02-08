@@ -54,7 +54,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
-                android:drawableStart="@drawable/qa_ic_answer_list_reward2"
+                android:drawableStart="@drawable/qa_ic_answer_list_reward"
                 android:drawablePadding="4dp"
                 android:textColor="@color/levelTwoFontColor"
                 android:textSize="12sp"

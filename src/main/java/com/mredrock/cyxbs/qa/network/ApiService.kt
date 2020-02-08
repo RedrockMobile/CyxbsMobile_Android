@@ -146,11 +146,24 @@ interface ApiService {
 
     @POST("app/index.php/QA/Feedback/addReport")
     @FormUrlEncoded
-    fun report(@Field("stunum") stuNum: String,
-               @Field("idnum") idNum: String,
-               @Field("question_id") qid: String,
-               @Field("content") content: String,
-               @Field("type") type: String): Observable<RedrockApiStatus>
+    fun reportQuestion(@Field("stunum") stuNum: String,
+                       @Field("idnum") idNum: String,
+                       @Field("question_id") qid: String,
+                       @Field("type") type: String): Observable<RedrockApiStatus>
+
+    @POST("app/index.php/QA/Feedback/addReport")
+    @FormUrlEncoded
+    fun reportAnswer(@Field("stunum") stuNum: String,
+                     @Field("idnum") idNum: String,
+                     @Field("answer_id") aid: String,
+                     @Field("type") type: String): Observable<RedrockApiStatus>
+
+    @POST("app/index.php/QA/Feedback/addReport")
+    @FormUrlEncoded
+    fun reportComment(@Field("stunum") stuNum: String,
+                      @Field("idnum") idNum: String,
+                      @Field("answer_id") cid: String,
+                      @Field("type") type: String): Observable<RedrockApiStatus>
 
     @POST("app/index.php/QA/Question/ignore")
     @FormUrlEncoded
@@ -195,4 +208,10 @@ interface ApiService {
     fun deleteDraft(@Field("stunum") stuNum: String,
                     @Field("idnum") idNum: String,
                     @Field("id") id: String): Observable<RedrockApiStatus>
+
+    @POST("app/index.php/QA/Question/addView")
+    @FormUrlEncoded
+    fun addView(@Field("stunum") stuNum: String,
+                @Field("idnum") idNum: String,
+                @Field("id") qid: String): Observable<RedrockApiStatus>
 }

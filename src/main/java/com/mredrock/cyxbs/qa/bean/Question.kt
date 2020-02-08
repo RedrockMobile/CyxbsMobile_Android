@@ -106,10 +106,10 @@ data class Question(@SerializedName("reward")
     }
 
     companion object CREATOR : Parcelable.Creator<Question> {
-        const val ALL = "全部"
+        const val NEW = "最新"
         const val STUDY = "学习"
         const val LIFE = "生活"
-        const val EMOTION = "情感"
+        const val ANONYMOUS = "匿名"
         const val OTHER = "其他"
 
         override fun createFromParcel(parcel: Parcel): Question {

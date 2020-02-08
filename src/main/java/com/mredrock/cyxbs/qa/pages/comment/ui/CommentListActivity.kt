@@ -11,6 +11,7 @@ import com.mredrock.cyxbs.qa.bean.Answer
 import com.mredrock.cyxbs.qa.bean.Question
 import com.mredrock.cyxbs.qa.component.recycler.RvAdapterWrapper
 import com.mredrock.cyxbs.qa.network.NetworkState
+import com.mredrock.cyxbs.qa.pages.answer.ui.dialog.ReportDialog
 import com.mredrock.cyxbs.qa.pages.comment.AdoptAnswerEvent
 import com.mredrock.cyxbs.qa.pages.comment.viewmodel.CommentListViewModel
 import com.mredrock.cyxbs.qa.ui.adapter.EmptyRvAdapter
@@ -67,7 +68,15 @@ class CommentListActivity : BaseViewModelActivity<CommentListViewModel>() {
         val answerNub = intent.getStringExtra("answerNum")
         qa_tv_toolbar_title.text = baseContext.getString(R.string.qa_comment_list_comment_count, answerNub)
         qa_ib_toolbar_more.setOnClickListener {
-            //todo
+            ReportDialog(this).apply {
+                setType(resources.getStringArray(R.array.qa_title_type)[1])
+                pressReport = {
+                    viewModel.reportAnswer(it)
+                }
+                viewModel.backPreActivityReportAnswerEvent.observeNotNull {
+                    dismiss()
+                }
+            }.show()
         }
     }
 

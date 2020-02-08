@@ -28,7 +28,7 @@
         android:gravity="center"
         android:paddingTop="16dp"
         android:paddingBottom="16dp"
-        android:text="@string/qa_report_useless_text"
+        android:text="@string/qa_report_useless_question_text"
         android:textColor="@color/levelTwoFontColor"
         android:textSize="19sp" />
 
@@ -73,6 +73,7 @@
         android:paddingTop="16dp"
         android:paddingBottom="16dp"
         android:text="@string/qa_report_ignore_text"
+        android:visibility="gone"
         android:textColor="@color/buttonGradientStartColor"
         android:textSize="19sp" />
 

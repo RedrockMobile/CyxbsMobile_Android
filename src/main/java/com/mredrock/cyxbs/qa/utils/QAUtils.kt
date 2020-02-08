@@ -5,6 +5,7 @@ import androidx.core.content.ContextCompat
 import com.mredrock.cyxbs.common.utils.extensions.gone
 import com.mredrock.cyxbs.common.utils.extensions.visible
 import com.mredrock.cyxbs.qa.R
+import org.jetbrains.anko.textColor
 
 /**
  * Created By jay68 on 2018/9/30.
@@ -38,6 +39,18 @@ internal fun TextView.setPraise(praiseNum: String?,
         ContextCompat.getDrawable(context, praiseIcon)
     }
     setCompoundDrawablesRelativeWithIntrinsicBounds(drawable, null, null, null)
+}
+
+internal fun TextView.unSelected() {
+    textColor = ContextCompat.getColor(context, R.color.qa_quiz_select_type_text_color)
+    background = ContextCompat.getDrawable(context, R.drawable.qa_selector_quiz_type_default_select)
+
+}
+
+internal fun TextView.selected() {
+    textColor = ContextCompat.getColor(context, R.color.qa_quiz_selected_type_text_color)
+    background = ContextCompat.getDrawable(context, R.drawable.qa_selector_quiz_type_default_selected)
+
 }
 
 internal fun setAdoptedTv(adopedTv: TextView, adoptTv: TextView, isAdopted: Boolean, showAdoptIcon: Boolean) = when {

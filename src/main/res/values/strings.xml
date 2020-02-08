@@ -86,6 +86,8 @@
     <string name="qa_quiz_dialog_cancel_text">取消</string>
     <string name="qa_reward_set_title_text">积分设置</string>
     <string name="qa_question_report_text">举报该问题</string>
+    <string name="qa_answer_report_text">举报该回答</string>
+    <string name="qa_comment_report_text">举报该评论</string>
     <string name="qa_quiz_toolbar_title_text">提问</string>
     <string name="qa_quiz_dialog_exit_text">退 出 编 辑</string>
     <string name="qa_answer_dialog_exit_text">退 出 回 答</string>
@@ -96,7 +98,9 @@
     <string name="qa_quiz_down_reward_get_more_text">降低悬赏积分或者去赚取更多积分吧~</string>
     <string name="qa_quiz_reward_not_enough_text">积 分 不 够</string>
     <string name="qa_report_rubbish_text">垃圾广告信息</string>
-    <string name="qa_report_useless_text">无用提问</string>
+    <string name="qa_report_useless_question_text">无用提问</string>
+    <string name="qa_report_useless_answer_text">无用回答</string>
+    <string name="qa_report_useless_comment_text">无用评论</string>
     <string name="qa_report_illegal_text">煽动信息、造谣</string>
     <string name="qa_report_infringement_text">侵权信息</string>
     <string name="qa_report_other_text">其他</string>
@@ -104,13 +108,19 @@
     <string name="qa_report_dialog_cancel_text">取消</string>
     <string name="qa_report_explain">举报成功获得积分</string>
     <string name="qa_answer_submit_successfully_text">您已提交成功</string>
+    <string name="qa_reward_description_first_title">悬赏积分是干嘛的?</string>
+    <string name="qa_reward_description_first_content">为了营造邮问社区的良好氛围，使你的问题得 到及时的解答，你将通过您获取的积分来进行 提问，而你选取的优质回答将获得你的悬赏积 分</string>
+    <string name="qa_reward_description_second_title">任务最晚完成时间是什么意思?</string>
+    <string name="qa_reward_description_second_content">如上所诉，你可以主动对您获取的回答进行采 纳，将你的积分悬赏给该用户；但是如果你没 有及时对用户的回答进行采纳，且你的提问已 经超过了任务最晚完成时间，这个时候我们将 对你所提问的所有回答进行查看，选出最有价 值的回答，将你的积分悬赏给该用户。</string>
+    <string name="qa_reward_description_third_title">如何评判优质回答?</string>
+    <string name="qa_reward_description_third_content">优质回答的首要判断条件是用户自行选择进行 采纳的用户，若用户在任务最短完成时间内没 有进行采纳，且该提问下已有回答，这时候首 要判断机制为：获得最高赞回答数的回答为该 提问的优质回答。</string>
+    <string name="qa_reward_description_fourth_title">如果任务最晚完成时间内没有回答?</string>
+    <string name="qa_reward_description_fourth_content">若存在这种情况的话，我们将对您设置的悬赏 积分退还至您的账户。</string>
+    <string name="qa_reward_description_bottom_text">条款详见《掌上重邮用户协议》</string>
 
-    <string-array name="qa_report_type">
-        <item>色情低俗</item>
-        <item>广告骚扰</item>
-        <item>违法信息</item>
-        <item>辱骂威胁</item>
-        <item>欺诈骗钱</item>
-        <item>政治敏感</item>
+    <string-array name="qa_title_type">
+        <item>问题</item>
+        <item>回答</item>
+        <item>评论</item>
     </string-array>
 </resources>

@@ -29,7 +29,8 @@ class AnswerListViewModel(question: Question) : BaseViewModel() {
     private val answerPagedList: LiveData<PagedList<Answer>>
     val questionLiveData = MutableLiveData<Question>()
     val backAndRefreshPreActivityEvent = SingleLiveEvent<Boolean>()
-    val backPreActivityEvent = SingleLiveEvent<Boolean>()
+    val backPreActivityReportQuestionEvent = SingleLiveEvent<Boolean>()
+    val backPreActivityReportAnswerEvent = SingleLiveEvent<Boolean>()
     val backPreActivityIgnoreEvent = SingleLiveEvent<Boolean>()
 
     private val answerList: LiveData<List<Answer>>
@@ -65,6 +66,21 @@ class AnswerListViewModel(question: Question) : BaseViewModel() {
         answerList.observe(this, onChange)
         answerPagedList.observe(this, Observer { })
     }
+    //增加浏览量，不用显示
+    fun addQuestionView() {
+        ApiGenerator.getApiService(ApiService::class.java)
+                .addView(BaseApp.user?.stuNum ?: "",
+                        BaseApp.user?.idNum ?: "",
+                        qid)
+                .checkError()
+                .setSchedulers()
+                .doOnError {
+                    LogUtils.d("add QuestionView Failed", it.toString())
+                }
+                .safeSubscribeBy {
+                    LogUtils.d("add QuestionView Success", it.toString())
+                }
+    }
 
     fun adoptAnswer(aId: String) {
         ApiGenerator.getApiService(ApiService::class.java)
@@ -80,19 +96,33 @@ class AnswerListViewModel(question: Question) : BaseViewModel() {
                 }
     }
 
-    //todo 等后端换接口
-    fun report(content: String) {
+    fun reportQuestion(reportType: String) {
         progressDialogEvent.value = ProgressDialogEvent.SHOW_NONCANCELABLE_DIALOG_EVENT
         val user = BaseApp.user ?: return
         ApiGenerator.getApiService(ApiService::class.java)
-                .report(user.stuNum ?: "", user.idNum ?: "", qid, content, "")
+                .reportQuestion(user.stuNum ?: "", user.idNum ?: "", qid, reportType)
                 .setSchedulers()
                 .checkError()
                 .doFinally { progressDialogEvent.value = ProgressDialogEvent.DISMISS_DIALOG_EVENT }
                 .doOnError { toastEvent.value = R.string.qa_service_error_hint }
                 .safeSubscribeBy {
                     toastEvent.value = R.string.qa_hint_report_success
-                    backPreActivityEvent.value = true
+                    backPreActivityReportQuestionEvent.value = true
+                }
+    }
+
+    fun reportAnswer(reportType: String, answerId: String) {
+        progressDialogEvent.value = ProgressDialogEvent.SHOW_NONCANCELABLE_DIALOG_EVENT
+        val user = BaseApp.user ?: return
+        ApiGenerator.getApiService(ApiService::class.java)
+                .reportAnswer(user.stuNum ?: "", user.idNum ?: "", answerId, reportType)
+                .setSchedulers()
+                .checkError()
+                .doFinally { progressDialogEvent.value = ProgressDialogEvent.DISMISS_DIALOG_EVENT }
+                .doOnError { toastEvent.value = R.string.qa_service_error_hint }
+                .safeSubscribeBy {
+                    toastEvent.value = R.string.qa_hint_report_success
+                    backPreActivityReportAnswerEvent.value = true
                 }
     }
 

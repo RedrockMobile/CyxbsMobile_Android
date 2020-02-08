@@ -4,19 +4,16 @@ import android.app.Activity
 import android.app.ProgressDialog
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import androidx.recyclerview.widget.RecyclerView
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.bean.RedrockApiWrapper
 import com.mredrock.cyxbs.common.bean.isSuccessful
-import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.common.config.QA_ANSWER_LIST
 import com.mredrock.cyxbs.common.event.AskLoginEvent
 import com.mredrock.cyxbs.common.event.OpenShareQuestionEvent
@@ -81,6 +78,7 @@ class AnswerListActivity : BaseActivity() {
         if (intent.getParcelableExtra<Question>(PARAM_QUESTION) != null) {
             initViewModel(intent.getParcelableExtra(PARAM_QUESTION))
             initView(intent.getParcelableExtra(PARAM_QUESTION))
+            viewModel.addQuestionView()
         }
     }
 
@@ -120,17 +118,18 @@ class AnswerListActivity : BaseActivity() {
         } else {
             qa_ib_toolbar_more.setOnClickListener {
                 ReportDialog(this@AnswerListActivity).apply {
+                    setType(resources.getStringArray(R.array.qa_title_type)[0])
                     pressReport = {
-                        viewModel.report(it)
+                        viewModel.reportQuestion(it)
                     }
-                    viewModel.backPreActivityEvent.observeNotNull {
+                    viewModel.backPreActivityReportQuestionEvent.observeNotNull {
                         dismiss()
                     }
-                    viewModel.backPreActivityIgnoreEvent.observeNotNull{
+                    viewModel.backPreActivityIgnoreEvent.observeNotNull {
                         dismiss()
                         finish()
                     }
-                    pressQuestionIgnore={
+                    pressQuestionIgnore = {
                         viewModel.ignoreQuestion()
                     }
                 }.show()
@@ -148,12 +147,23 @@ class AnswerListActivity : BaseActivity() {
                 CommentListActivity.activityStart(this@AnswerListActivity, viewModel.questionLiveData.value!!, answer)
             }
             onPriseClickListener = { i: Int, answer: Answer ->
-                viewModel.clickPraiseButton(i,answer)
+                viewModel.clickPraiseButton(i, answer)
                 viewModel.apply {
                     refreshPreActivityEvent.observeNotNull {
                         answerListAdapter.notifyItemChanged(it)
                     }
                 }
+            }
+            onReportClickListener = { id ->
+                ReportDialog(this@AnswerListActivity).apply {
+                    setType(resources.getStringArray(R.array.qa_title_type)[1])
+                    pressReport = {
+                        viewModel.reportAnswer(it, id)
+                    }
+                    viewModel.backPreActivityReportAnswerEvent.observeNotNull {
+                        dismiss()
+                    }
+                }.show()
             }
         }
         footerRvAdapter = FooterRvAdapter { viewModel.retry() }

@@ -28,7 +28,7 @@ class QuestionContainerFragment : BaseFragment(), View.OnClickListener {
         const val REQUEST_LIST_REFRESH_ACTIVITY = 0x1
     }
 
-    private val titles = listOf(Question.ALL, Question.STUDY, Question.LIFE, Question.EMOTION, Question.OTHER)
+    private val titles = listOf(Question.NEW, Question.STUDY, Question.ANONYMOUS, Question.LIFE, Question.OTHER)
     private lateinit var childFragments: List<QuestionListFragment>
 
     private lateinit var curSelectorItem: AppCompatCheckedTextView

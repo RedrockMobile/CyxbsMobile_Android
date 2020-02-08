@@ -33,9 +33,8 @@ import java.io.File
 /**
  * Created By jay68 on 2018/8/26.
  */
-class QuizViewModel(var type: String) : BaseViewModel() {
+class QuizViewModel : BaseViewModel() {
     val imageLiveData = MutableLiveData<ArrayList<String>>()
-    val tagLiveData = MutableLiveData<String>()
     val backAndRefreshPreActivityEvent = SingleLiveEvent<Boolean>()
 
     var editingImgPos = -1
@@ -43,7 +42,7 @@ class QuizViewModel(var type: String) : BaseViewModel() {
     var myRewardCount = 0
         private set
     var isAnonymous = false
-
+    private var type: String = ""
     private var title: String = ""
     private var content: String = ""
     private var disappearTime: String = ""
@@ -58,12 +57,6 @@ class QuizViewModel(var type: String) : BaseViewModel() {
         imageLiveData.value = imageList
     }
 
-    fun setTag(tag: String) {
-        if (tag.isBlank()) {
-            return
-        }
-        tagLiveData.value = tag
-    }
 
     fun setDisAppearTime(rawTime: String): Boolean {
         val date = rawTime.toDate("yyyy-MM-dd HH时mm分")
@@ -95,11 +88,10 @@ class QuizViewModel(var type: String) : BaseViewModel() {
         val user = BaseApp.user ?: return true
         val stuNum = user.stuNum ?: ""
         val idNum = user.idNum ?: ""
-        val tags = tagLiveData.value ?: ""
         val isAnonymousInt = 1.takeIf { isAnonymous } ?: 0
 
         var observable: Observable<out Any> = ApiGenerator.getApiService(ApiService::class.java)
-                .quiz(stuNum, idNum, title, content, isAnonymousInt, type, tags, reward, disappearTime)
+                .quiz(stuNum, idNum, title, content, isAnonymousInt, type, "", reward, disappearTime)
                 .setSchedulers()
                 .mapOrThrowApiException()
         if (!imageLiveData.value.isNullOrEmpty()) {
@@ -136,30 +128,28 @@ class QuizViewModel(var type: String) : BaseViewModel() {
                 .checkError()
     }
 
-    fun submitTitleAndContent(title: String?, content: String?): Boolean {
+    fun submitTitleAndContent(title: String?, content: String?, type: String?): Boolean {
         var result = false
 
         if (title.isNullOrBlank()) {
             toastEvent.value = R.string.qa_quiz_hint_title_empty
         } else if (content.isNullOrBlank() && imageLiveData.value.isNullOrEmpty()) {
             toastEvent.value = R.string.qa_hint_content_empty
-        } else if (tagLiveData.value.isNullOrBlank()) {
-            toastEvent.value = R.string.qa_hint_tag_empty
         } else {
             this.title = title
             this.content = content ?: ""
+            this.type = type ?: "学习"
             result = true
         }
         return result
     }
 
-    fun addItemToDraft(title: String?, content: String?) {
+    fun addItemToDraft(title: String?, content: String?,type: String?) {
         if (title.isNullOrBlank() && content.isNullOrBlank()) {
             return
         }
         val user = BaseApp.user ?: return
-        val t = tagLiveData.value ?: ""
-        val s = "{\"title\":\"$title\",\"description\":\"$content\",\"kind\":\"$type\",\"tags\":\"$t\"${getImgListStrings()}}"
+        val s = "{\"title\":\"$title\",\"description\":\"$content\",\"kind\" :\"$type\",${getImgListStrings()}}"
         val json = Base64.encodeToString(s.toByteArray(), Base64.DEFAULT)
         ApiGenerator.getApiService(ApiService::class.java)
                 .addItemToDraft(user.stuNum ?: "", user.idNum ?: "", "question", json, "")
@@ -172,10 +162,9 @@ class QuizViewModel(var type: String) : BaseViewModel() {
                 .lifeCycle()
     }
 
-    fun updateDraftItem(title: String?, content: String?, id: String) {
+    fun updateDraftItem(title: String?, content: String?, id: String,type: String?) {
         val user = BaseApp.user ?: return
-        val t = tagLiveData.value ?: ""
-        val s = "{\"title\":\"$title\",\"description\":\"$content\",\"kind\":\"$type\",\"tags\":\"$t\"${getImgListStrings()}}"
+        val s = "{\"title\":\"$title\",\"description\":\"$content\",\"kind\":\"$type\",${getImgListStrings()}}"
         val json = Base64.encodeToString(s.toByteArray(), Base64.DEFAULT)
         ApiGenerator.getApiService(ApiService::class.java)
                 .updateDraft(user.stuNum ?: "", user.idNum ?: "", json, id)
@@ -215,16 +204,5 @@ class QuizViewModel(var type: String) : BaseViewModel() {
 
     fun resetInvalid() {
         isInvalidList.clear()
-    }
-
-    class Factory(private val type: String) : ViewModelProvider.Factory {
-        override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            @Suppress("UNCHECKED_CAST")
-            if (modelClass.isAssignableFrom(QuizViewModel::class.java)) {
-                return QuizViewModel(type) as T
-            } else {
-                throw IllegalArgumentException("ViewModel Not Found.")
-            }
-        }
     }
 }

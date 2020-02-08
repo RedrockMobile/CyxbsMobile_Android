@@ -32,7 +32,7 @@ class CommentListViewModel(val qid: String,
     val commentCount = Transformations.map(this.answerLiveData) { it.commentNum }!!
 
     val refreshPreActivityEvent = SingleLiveEvent<Boolean>()
-
+    val backPreActivityReportAnswerEvent = SingleLiveEvent<Boolean>()
     private var praiseNetworkState = NetworkState.SUCCESSFUL
 
     init {
@@ -67,6 +67,22 @@ class CommentListViewModel(val qid: String,
                 .safeSubscribeBy {
                     answerLiveData.value?.isAdopted = true
                     refreshPreActivityEvent.value = true
+                }
+    }
+
+    fun reportAnswer(reportType: String) {
+        progressDialogEvent.value = ProgressDialogEvent.SHOW_NONCANCELABLE_DIALOG_EVENT
+        val user = BaseApp.user ?: return
+        val answerId = answerLiveData.value?.id
+        ApiGenerator.getApiService(ApiService::class.java)
+                .reportAnswer(user.stuNum ?: "", user.idNum ?: "", answerId?: "", reportType)
+                .setSchedulers()
+                .checkError()
+                .doFinally { progressDialogEvent.value = ProgressDialogEvent.DISMISS_DIALOG_EVENT }
+                .doOnError { toastEvent.value = R.string.qa_service_error_hint }
+                .safeSubscribeBy {
+                    toastEvent.value = R.string.qa_hint_report_success
+                    backPreActivityReportAnswerEvent.value = true
                 }
     }
 
