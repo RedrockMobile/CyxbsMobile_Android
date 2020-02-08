@@ -3,12 +3,16 @@ package com.mredrock.cyxbs.mine.page.ask
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
-import com.mredrock.cyxbs.common.utils.extensions.*
+import com.mredrock.cyxbs.common.utils.extensions.checkError
+import com.mredrock.cyxbs.common.utils.extensions.doOnErrorWithDefaultErrorHandler
+import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
+import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.common.viewmodel.event.SingleLiveEvent
 import com.mredrock.cyxbs.mine.network.model.AskPosted
 import com.mredrock.cyxbs.mine.network.model.Draft
 import com.mredrock.cyxbs.mine.util.apiService
+import com.mredrock.cyxbs.mine.util.extension.mapOrThrowApiExceptionWithData
 import com.mredrock.cyxbs.mine.util.user
 
 /**
@@ -37,42 +41,46 @@ class AskViewModel : BaseViewModel() {
     val deleteEvent = MutableLiveData<Draft>()
 
     fun loadAskPostedList() {
-        if (askPostedPage++ == 10) {
-            _eventOnAskPosted.value = true
-            return
-        }
-        val ask = AskPosted(12, "title", "描述", "时间", 12, "未解决")
+        apiService.getAskPostedList(user?.stuNum ?: return, user?.idNum ?: return, askPostedPage++, pageSize)
+                .mapOrThrowApiExceptionWithData()
+                .setSchedulers()
+                .safeSubscribeBy {
+                    //由于Rxjava反射不应定能够够保证为空，当为空的说明这一页没有数据，于是停止加载
+                    if (it == null) {
+                        _eventOnAskPosted.postValue(true)
+                        return@safeSubscribeBy
+                    }
 
-        val data = _askPosted.value ?: mutableListOf()
-        data.add(ask)
-        data.add(ask)
-        data.add(ask)
-        _askPosted.value = data
+                    val localAskPosted = _askPosted.value ?: mutableListOf()
+                    localAskPosted.addAll(it)
+                    _askPosted.postValue(localAskPosted)
+                }
+                .lifeCycle()
     }
 
     fun loadAskDraftList() {
-        apiService.getDraftList(user?.stuNum ?: return, user?.idNum
-                ?: return, askDraftPage++, pageSize)
-                .mapOrThrowApiException()
-                .map { list ->
-                    list.forEach { it.parseQuestion() }
-                    list
-                }
-                .setSchedulers()
-                .doOnErrorWithDefaultErrorHandler { false }
-                .safeSubscribeBy(
-                        onNext = { it ->
-                            val askDraftList = it.filter {
-                                it.type == "question"
-                            }
-                            askDraftEvent.postValue(askDraftList)
-                        },
-                        onError = {
-                            it.printStackTrace()
-//                            errorEvent.postValue(it.message)
-                        }
-                )
-                .lifeCycle()
+//        apiService.getDraftList(user?.stuNum ?: return, user?.idNum
+//                ?: return, askDraftPage++, pageSize)
+//                .mapOrThrowApiException()
+//                .map { list ->
+//                    list.forEach { it.parseQuestion() }
+//                    list
+//                }
+//                .setSchedulers()
+//                .doOnErrorWithDefaultErrorHandler { false }
+//                .safeSubscribeBy(
+//                        onNext = { it ->
+//                            val askDraftList = it.filter {
+//                                it.type == "question"
+//                            }
+//                            askDraftEvent.postValue(askDraftList)
+//                        },
+//                        onError = {
+//                            it.printStackTrace()
+////                            errorEvent.postValue(it.message)
+//                        }
+//                )
+//                .lifeCycle()
     }
 
     fun deleteDraft(draft: Draft) {

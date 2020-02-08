@@ -116,6 +116,31 @@ interface ApiService {
                      @Field("page") page: Int,
                      @Field("size") size: Int): Observable<RedrockApiWrapper<List<Draft>>>
 
+    @FormUrlEncoded
+    @POST("app/index.php/QA/User/mine")
+    fun getQANumber(@Field("stunum") stuNum: String,
+                     @Field("idnum") idNum: String): Observable<RedrockApiWrapper<QANumber>>
+
+    @FormUrlEncoded
+    @POST("app/index.php/QA/User/question")
+    fun getAskPostedList(@Field("stunum") stuNum: String,
+                     @Field("idnum") idNum: String,
+                     @Field("page") page: Int,
+                     @Field("size") size: Int): Observable<RedrockApiWrapper<List<AskPosted>>>
+    @FormUrlEncoded
+    @POST("app/index.php/QA/User/answer")
+    fun getAnswerPostedList(@Field("stunum") stuNum: String,
+                     @Field("idnum") idNum: String,
+                     @Field("page") page: Int,
+                     @Field("size") size: Int): Observable<RedrockApiWrapper<List<AnswerPosted>>>
+
+    @FormUrlEncoded
+    @POST("app/index.php/QA/User/comment")
+    fun getCommentList(@Field("stunum") stuNum: String,
+                     @Field("idnum") idNum: String,
+                     @Field("page") page: Int,
+                     @Field("size") size: Int): Observable<RedrockApiWrapper<List<Comment>>>
+
 //    /**
 //     * 问一问
 //     */
