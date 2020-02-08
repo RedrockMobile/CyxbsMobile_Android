@@ -144,7 +144,7 @@ class CourseEntryFragment : BaseFragment() {
     override fun onLoginStateChangeEvent(event: LoginStateChangeEvent) {
         super.onLoginStateChangeEvent(event)
         isChanged = true
-        if (event.newState) {
+        if (event.loginState) {
            // replaceFragment(CourseContainerFragment())
             mToolbarTitle = activity!!.getString(R.string.course_all_week)
         } else {
