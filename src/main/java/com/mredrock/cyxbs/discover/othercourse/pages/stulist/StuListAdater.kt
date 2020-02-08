@@ -15,10 +15,7 @@ import com.mredrock.cyxbs.discover.othercourse.R
 import com.mredrock.cyxbs.discover.othercourse.network.Person
 import com.mredrock.cyxbs.discover.othercourse.room.STUDENT_TYPE
 import com.mredrock.cyxbs.discover.othercourse.room.TEACHER_TYPE
-import kotlinx.android.synthetic.main.discover_other_course_item_rv_stu.view.*
 import kotlinx.android.synthetic.main.othercourse_discover_other_course_item_rv_stu.view.*
-import kotlinx.android.synthetic.main.othercourse_discover_other_course_item_rv_stu.view.discover_other_course_item_select_class
-import kotlinx.android.synthetic.main.othercourse_discover_other_course_item_rv_stu.view.discover_other_course_item_select_name
 
 /**
  * Created by zxzhu
