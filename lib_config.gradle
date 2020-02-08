@@ -19,6 +19,13 @@ android {
         targetSdkVersion build_versions.target_sdk
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        kapt {
+            //Arouter
+            arguments {
+                arg("AROUTER_MODULE_NAME", project.getName())
+            }
+        }
     }
 
     dataBinding {
