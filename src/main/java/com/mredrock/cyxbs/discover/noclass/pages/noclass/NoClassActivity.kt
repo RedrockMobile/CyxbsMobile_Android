@@ -7,12 +7,14 @@ import android.os.Bundle
 import android.text.TextUtils
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
+import android.widget.FrameLayout
 import androidx.core.app.ActivityOptionsCompat
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
-import com.mredrock.cyxbs.common.config.COURSE_NO_COURSE_INVITE
-import com.mredrock.cyxbs.common.config.DISCOVER_NO_CLASS
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.mredrock.cyxbs.common.config.*
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.service.account.IUserService
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
@@ -22,7 +24,7 @@ import com.mredrock.cyxbs.discover.noclass.R
 import com.mredrock.cyxbs.discover.noclass.network.Student
 import com.mredrock.cyxbs.discover.noclass.pages.stuselect.NoClassStuSelectActivity
 import com.mredrock.cyxbs.discover.noclass.snackbar
-import kotlinx.android.synthetic.main.discover_noclass_activity_no_class.*
+import kotlinx.android.synthetic.main.noclass_activity_no_class.*
 import java.io.Serializable
 
 @Route(path = DISCOVER_NO_CLASS)
@@ -32,6 +34,8 @@ class NoClassActivity : BaseViewModelActivity<NoClassViewModel>() {
 
     override val isFragmentActivity = false
 
+    lateinit var bottomSheetBehavior: BottomSheetBehavior<FrameLayout>
+
     private var mStuList: MutableList<Student>? = null
     private var mAdapter: NoClassRvAdapter? = null
 
@@ -39,18 +43,13 @@ class NoClassActivity : BaseViewModelActivity<NoClassViewModel>() {
         const val REQUEST_SELECT = 1
     }
 
-    private fun initToolbar() {
-        if (common_toolbar != null) {
-            common_toolbar.initWithSplitLine("没课约")
-        }
-    }
+//    val mDataBinding:Disc
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.discover_noclass_activity_no_class)
+        setContentView(R.layout.noclass_activity_no_class)
         mStuList = ArrayList()
-        initToolbar()
         initStuList()
         initBtn()
         initObserver()
@@ -79,6 +78,7 @@ class NoClassActivity : BaseViewModelActivity<NoClassViewModel>() {
     }
 
     private fun initBtn() {
+        bottomSheetBehavior = BottomSheetBehavior.from(course_bottom_sheet_content)
         noclass_btn_query.setOnClickListener {
             val students = (noclass_rv.adapter as NoClassRvAdapter).getStuList()
             val nameList = arrayListOf<String>()
@@ -87,11 +87,17 @@ class NoClassActivity : BaseViewModelActivity<NoClassViewModel>() {
                 numList.add(it.stunum ?: "")
                 nameList.add(it.name ?: "")
             }
-            ARouter.getInstance()
-                    .build(COURSE_NO_COURSE_INVITE)
-                    .withStringArrayList("stuNumList", numList)
-                    .withStringArrayList("stuNameList", nameList)
-                    .navigation()
+            val fragment = getFragment(COURSE_ENTRY).apply {
+                arguments = Bundle().apply {
+                    putStringArrayList(STU_NUM_LIST, numList)
+                    putStringArrayList(STU_NAME_LIST, nameList)
+                }
+            }
+            //在滑动下拉课表容器中添加整个课表
+            supportFragmentManager.beginTransaction().replace(R.id.course_bottom_sheet_content, fragment).apply {
+                commit()
+            }
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
         }
     }
 
@@ -108,8 +114,19 @@ class NoClassActivity : BaseViewModelActivity<NoClassViewModel>() {
         noclass_rv.adapter = mAdapter
     }
 
+    private fun getFragment(path: String) = ARouter.getInstance().build(path).navigation() as Fragment
+
+
     private fun addStu(stu: Student) {
         mAdapter!!.addStu(stu)
+    }
+
+    override fun onBackPressed() {
+        if (bottomSheetBehavior.state == BottomSheetBehavior.STATE_EXPANDED) {
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+        }else{
+            super.onBackPressed()
+        }
     }
 
 
