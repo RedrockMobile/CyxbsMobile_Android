@@ -59,6 +59,9 @@ const val URI_PATH_QA_ANSWER = "/answer"
 //课表辨别是查同学课表的key
 const val OTHERS_STU_NUM = "others_stu_num"
 
+//课表辨别是查老师课表的key
+const val OTHERS_TEA_NUM = "others_tea_num"
+
 //没课约传递信息的key
 const val STU_NUM_LIST = "stuNumList"
 const val STU_NAME_LIST = "stuNameList"
