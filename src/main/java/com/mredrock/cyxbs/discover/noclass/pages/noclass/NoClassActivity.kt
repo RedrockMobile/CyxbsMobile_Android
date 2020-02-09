@@ -16,6 +16,7 @@ import com.alibaba.android.arouter.launcher.ARouter
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.mredrock.cyxbs.common.config.*
 import com.mredrock.cyxbs.common.service.ServiceManager
+import com.mredrock.cyxbs.common.service.account.IAccountService
 import com.mredrock.cyxbs.common.service.account.IUserService
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.extensions.getScreenHeight
@@ -102,7 +103,7 @@ class NoClassActivity : BaseViewModelActivity<NoClassViewModel>() {
     }
 
     private fun initStuList() {
-        val user = ServiceManager.getService(IUserService::class.java)
+        val user = ServiceManager.getService(IAccountService::class.java).getUserService()
         user?.apply {
             val stu = Student()
             stu.name = getRealName()
