@@ -9,8 +9,8 @@ import androidx.fragment.app.Fragment
 import com.alibaba.android.arouter.launcher.ARouter
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.mredrock.cyxbs.common.config.COURSE_ENTRY
-import com.mredrock.cyxbs.common.config.COURSE_OTHER_COURSE
 import com.mredrock.cyxbs.common.config.OTHERS_STU_NUM
+import com.mredrock.cyxbs.common.config.OTHERS_TEA_NUM
 import com.mredrock.cyxbs.discover.othercourse.R
 import com.mredrock.cyxbs.discover.othercourse.network.Person
 import com.mredrock.cyxbs.discover.othercourse.room.STUDENT_TYPE
@@ -37,17 +37,11 @@ class StuListAdater(val stuListActivity: StuListActivity, private val mList: Lis
             setOnClickListener {
                 when (mList[position].type) {
                     STUDENT_TYPE -> {
-                        val fragment = getFragment(COURSE_ENTRY).apply {
-                            arguments = Bundle().apply { putString(OTHERS_STU_NUM, mList[position].num) }
-                        }
-                        //在滑动下拉课表容器中添加整个课表
-                        stuListActivity.supportFragmentManager.beginTransaction().replace(R.id.course_bottom_sheet_content, fragment).apply {
-                            commit()
-                        }
-                        stuListActivity.bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+                        openCourseFragment(OTHERS_STU_NUM, position)
                     }
-                    TEACHER_TYPE ->
-                        ARouter.getInstance().build(COURSE_OTHER_COURSE).withString("teaNum", mList[position].num).navigation()
+                    TEACHER_TYPE -> {
+                        openCourseFragment(OTHERS_TEA_NUM, position)
+                    }
                 }
 
 
@@ -55,7 +49,16 @@ class StuListAdater(val stuListActivity: StuListActivity, private val mList: Lis
         }
     }
 
-    private fun getFragment(path: String) = ARouter.getInstance().build(path).navigation() as Fragment
+    private fun openCourseFragment(key: String, position: Int) {
+        val fragment = (ARouter.getInstance().build(COURSE_ENTRY).navigation() as Fragment).apply {
+            arguments = Bundle().apply { putString(key, mList[position].num) }
+        }
+        //在滑动下拉课表容器中添加整个课表
+        stuListActivity.supportFragmentManager.beginTransaction().replace(R.id.course_bottom_sheet_content, fragment).apply {
+            commit()
+        }
+        stuListActivity.bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+    }
 
 
     class StuListViewHolder(itemView: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView)
