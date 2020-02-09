@@ -8,7 +8,7 @@
     android:layout_height="match_parent"
     tools:context=".ui.MainActivity">
 
-    <com.mredrock.cyxbs.main.ui.widget.NeverScrollViewPager
+    <FrameLayout
         android:id="@+id/view_pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

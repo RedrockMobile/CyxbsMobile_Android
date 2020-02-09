@@ -1,12 +1,8 @@
 package com.mredrock.cyxbs.main.utils
 
 import android.content.res.ColorStateList
-import android.util.SparseArray
-import android.view.MenuItem
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.annotation.DrawableRes
-import androidx.viewpager.widget.ViewPager
 import com.google.android.material.bottomnavigation.BottomNavigationItemView
 import com.google.android.material.bottomnavigation.BottomNavigationMenuView
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -24,15 +20,12 @@ open class BottomNavigationViewHelper(nav: BottomNavigationView) {
     private val smallLabels: Array<TextView>? by lazy { reflectSmallLabels() }
     private val icons: Array<ImageView>? by lazy { reflectIcons() }
 
-    private var isAnimationEnable = true
-    private var isShiftModeEnable = itemViews?.size ?: 0 > 3
     private var isItemShiftModeEnable = itemViews?.size ?: 0 > 3
 
     private var shiftAmount = 0
     private var scaleUpFactor = 0f
     private var scaleDownFactor = 0f
 
-    private lateinit var viewPager: ViewPager
 
     private fun reflectBottomNavigationMenuView() = getField(bottomNavigationView, "menuView") as? BottomNavigationMenuView
 
@@ -83,38 +76,11 @@ open class BottomNavigationViewHelper(nav: BottomNavigationView) {
         return null
     }
 
-    fun enableAnimation(enable: Boolean) {
-        if (isAnimationEnable == enable) return
-        isAnimationEnable = enable
-        itemViews?.forEach {
-            setField(it, "shiftAmount", if (isAnimationEnable) shiftAmount else 0)
-            setField(it, "scaleUpFactor", if (isAnimationEnable) scaleUpFactor else 1f)
-            setField(it, "scaleDownFactor", if (isAnimationEnable) scaleDownFactor else 1f)
-        }
-    }
-
-    fun enableShiftMode(enable: Boolean) {
-        if (isShiftModeEnable == enable) return
-        isShiftModeEnable = enable
-        setField(menuView, "isShifting", isShiftModeEnable)
-    }
-
-    fun enableItemShiftMode(enable: Boolean) {
-        if (isItemShiftModeEnable == enable) return
-        isItemShiftModeEnable = enable
-        itemViews?.forEach { setField(it, "isShifting", enable) }
-    }
 
     fun setTextSize(size: Float) {
         largeLabels?.forEach { it.textSize = size }
         if (!isItemShiftModeEnable) {
             smallLabels?.forEach { it.textSize = size }
-        }
-    }
-
-    fun setIcon(index: Int, @DrawableRes drawable: Int) {
-        icons?.let {
-            it[index].setImageResource(drawable)
         }
     }
 
@@ -131,24 +97,6 @@ open class BottomNavigationViewHelper(nav: BottomNavigationView) {
         bottomNavigationView.itemIconTintList = colorStateList
     }
 
-    fun bindViewPager(viewPager: ViewPager, listener: ((position: Int, menuItem: MenuItem) -> Unit)?) {
-        this.viewPager = viewPager
-        val pageChangedListener = OnPageChangedListener(bottomNavigationView, viewPager, listener)
-        viewPager.addOnPageChangeListener(pageChangedListener)
-        bottomNavigationView.setOnNavigationItemSelectedListener(pageChangedListener)
-    }
-
-    private fun setField(obj: Any?, fieldName: String, value: Any) {
-        obj ?: return
-        try {
-            val field = obj.javaClass.getDeclaredField(fieldName)
-            field.isAccessible = true
-            field.set(obj, value)
-        } catch (e: Throwable) {
-            LogUtils.e(javaClass.name, "reflect field \"$fieldName\" failed", e)
-        }
-    }
-
     private fun getField(obj: Any?, fieldName: String): Any? {
         obj ?: return null
         try {
@@ -159,59 +107,5 @@ open class BottomNavigationViewHelper(nav: BottomNavigationView) {
             LogUtils.e(javaClass.name, "reflect field \"$fieldName\" failed", e)
         }
         return null
-    }
-
-    /*fun updateMenuView() {
-        if (menuView == null) throw RuntimeException("get mMenuView by reflect failed")
-        try {
-            val clazz = mMenuView!!.javaClass
-            val method = clazz.getDeclaredMethod("updateMenuView")
-            method.invoke(mMenuView)
-        } catch (e: IllegalAccessException) {
-            e.printStackTrace()
-        } catch (e: InvocationTargetException) {
-            e.printStackTrace()
-        } catch (e: NoSuchMethodException) {
-            e.printStackTrace()
-        }
-
-    }*/
-
-    private class OnPageChangedListener(private val nav: BottomNavigationView,
-                                        private val vp: ViewPager,
-                                        private val listener: ((position: Int, menuItem: MenuItem) -> Unit)?) : BottomNavigationView.OnNavigationItemSelectedListener, ViewPager.OnPageChangeListener {
-        private val idToPosition: SparseArray<Int>
-        private val positionToItem: SparseArray<MenuItem>
-
-        init {
-            val menu = nav.menu
-            val size = menu.size()
-            idToPosition = SparseArray()
-            positionToItem = SparseArray()
-            var j = 0
-            for (i in 0 until size) {
-                val item = menu.getItem(i)
-                if (item.isEnabled) {
-                    positionToItem.put(j, item)
-                    idToPosition.put(item.itemId, j++)
-                }
-            }
-        }
-
-        override fun onNavigationItemSelected(item: MenuItem): Boolean {
-            val position = idToPosition[item.itemId]
-            vp.currentItem = position
-            listener?.invoke(position, item)
-            return true
-        }
-
-        override fun onPageScrollStateChanged(state: Int) = Unit
-
-        override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) = Unit
-
-        override fun onPageSelected(position: Int) {
-            nav.selectedItemId = positionToItem[position].itemId
-            listener?.invoke(position, positionToItem[position])
-        }
     }
 }
