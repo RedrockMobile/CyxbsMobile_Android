@@ -3,6 +3,7 @@ package com.mredrock.cyxbs.mine.page.edit
 import androidx.lifecycle.MutableLiveData
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.service.ServiceManager
+import com.mredrock.cyxbs.common.service.account.IAccountService
 import com.mredrock.cyxbs.common.service.account.IUserEditorService
 import com.mredrock.cyxbs.common.service.account.IUserService
 import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
@@ -23,9 +24,9 @@ class EditViewModel : BaseViewModel() {
     val upLoadImageEvent = MutableLiveData<Boolean>()
 
     fun updateUserInfo(nickname: String, introduction: String, qq: String, phone: String
-                       , photoThumbnailSrc: String = ServiceManager.getService(IUserService::class.java).getAvatarImgUrl()
-                       , photoSrc: String = ServiceManager.getService(IUserService::class.java).getAvatarImgUrl(), callback: () -> Unit) {
-        val stuNum = ServiceManager.getService(IUserService::class.java).getStuNum()
+                       , photoThumbnailSrc: String = ServiceManager.getService(IAccountService::class.java).getUserService().getAvatarImgUrl()
+                       , photoSrc: String = ServiceManager.getService(IAccountService::class.java).getUserService().getAvatarImgUrl(), callback: () -> Unit) {
+        val stuNum = ServiceManager.getService(IAccountService::class.java).getUserService().getStuNum()
         val idNum = BaseApp.context.defaultSharedPreferences.getString("SP_KEY_ID_NUM", "")
                 ?: return
         apiService.updateUserInfo(stuNum, idNum,
@@ -34,7 +35,7 @@ class EditViewModel : BaseViewModel() {
                 .safeSubscribeBy(
                         onNext = {
                             //更新User信息
-                            val userEditService = ServiceManager.getService(IUserEditorService::class.java)
+                            val userEditService = ServiceManager.getService(IAccountService::class.java).getUserEditorService()
                             userEditService.apply {
                                 setQQ(qq)
                                 setNickname(nickname)
@@ -54,13 +55,13 @@ class EditViewModel : BaseViewModel() {
 
     fun uploadAvatar(stuNum: RequestBody,
                      file: MultipartBody.Part) {
-        val stu = ServiceManager.getService(IUserService::class.java).getStuNum()
+        val stu = ServiceManager.getService(IAccountService::class.java).getUserService().getStuNum()
         val id = BaseApp.context.defaultSharedPreferences.getString("SP_KEY_ID_NUM", "")
                 ?: return
         apiService.uploadSocialImg(stuNum, file)
                 .mapOrThrowApiException()
                 .flatMap {
-                    val userEditService = ServiceManager.getService(IUserEditorService::class.java)
+                    val userEditService = ServiceManager.getService(IAccountService::class.java).getUserEditorService()
                     userEditService.apply {
                         setAvatarImgUrl(it.photosrc)
                     }

@@ -22,6 +22,7 @@ import androidx.lifecycle.Observer
 import com.afollestad.materialdialogs.MaterialDialog
 import com.mredrock.cyxbs.common.config.DIR_PHOTO
 import com.mredrock.cyxbs.common.service.ServiceManager
+import com.mredrock.cyxbs.common.service.account.IAccountService
 import com.mredrock.cyxbs.common.service.account.IUserService
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.extensions.doPermissionAction
@@ -54,7 +55,7 @@ class EditInfoActivity(override val isFragmentActivity: Boolean = false,
     private val SELECT_CAMERA = 2
 
     private val userService: IUserService by lazy {
-        ServiceManager.getService(IUserService::class.java)
+        ServiceManager.getService(IAccountService::class.java).getUserService()
     }
 
     private val watcher = object : TextWatcher {
@@ -140,7 +141,7 @@ class EditInfoActivity(override val isFragmentActivity: Boolean = false,
 
 
         initObserver()
-        loadAvatar(ServiceManager.getService(IUserService::class.java).getAvatarImgUrl(), mine_edit_et_avatar)
+        loadAvatar(ServiceManager.getService(IAccountService::class.java).getUserService().getAvatarImgUrl(), mine_edit_et_avatar)
 
         initData()
         setTextChangeListener()
@@ -187,7 +188,7 @@ class EditInfoActivity(override val isFragmentActivity: Boolean = false,
 
         viewModel.upLoadImageEvent.observe(this, Observer {
             if (it) {
-                loadAvatar(ServiceManager.getService(IUserService::class.java).getAvatarImgUrl(), mine_edit_et_avatar)
+                loadAvatar(ServiceManager.getService(IAccountService::class.java).getUserService().getAvatarImgUrl(), mine_edit_et_avatar)
                 toast("修改头像成功")
             } else {
                 toast("修改头像失败")

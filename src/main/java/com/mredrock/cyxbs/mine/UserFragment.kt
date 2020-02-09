@@ -21,6 +21,7 @@ import com.mredrock.cyxbs.common.config.*
 import com.mredrock.cyxbs.common.event.AskLoginEvent
 import com.mredrock.cyxbs.common.event.LoginStateChangeEvent
 import com.mredrock.cyxbs.common.service.ServiceManager
+import com.mredrock.cyxbs.common.service.account.IAccountService
 import com.mredrock.cyxbs.common.service.account.IUserService
 import com.mredrock.cyxbs.common.service.account.IUserStateService
 import com.mredrock.cyxbs.common.ui.BaseViewModelFragment
@@ -104,7 +105,7 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
     }
 
     private fun checkLoginBeforeAction(msg: String, action: () -> Unit) {
-        if (ServiceManager.getService(IUserStateService::class.java).isLogin()) {
+        if (ServiceManager.getService(IAccountService::class.java).getVerifyService().isLogin()) {
             action.invoke()
         } else {
             EventBus.getDefault().post(AskLoginEvent("请先登陆才能查看${msg}哦~"))
@@ -119,7 +120,7 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
     }
 
     private fun getPersonInfoData() {
-        if (!ServiceManager.getService(IUserStateService::class.java).isLogin()) {
+        if (!ServiceManager.getService(IAccountService::class.java).getVerifyService().isLogin()) {
             mine_main_username.setText(R.string.mine_user_empty_username)
             mine_main_avatar.setImageResource(R.drawable.mine_default_avatar)
             mine_main_introduce.setText(R.string.mine_user_empty_introduce)
@@ -133,8 +134,8 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
     //刷新界面
     private fun refreshLayout() {
         viewModel.getScoreStatus()
-        if (ServiceManager.getService(IUserStateService::class.java).isLogin()) {
-            val userService = ServiceManager.getService(IUserService::class.java)
+        if (ServiceManager.getService(IAccountService::class.java).getVerifyService().isLogin()) {
+            val userService = ServiceManager.getService(IAccountService::class.java).getUserService()
             context?.loadAvatar(userService.getAvatarImgUrl(), mine_main_avatar)
             mine_main_username.text = if (userService.getNickname().isBlank()) getString(R.string.mine_user_empty_username) else userService.getNickname()
             mine_main_introduce.text = if (userService.getIntroduction().isBlank()) getString(R.string.mine_user_empty_introduce) else userService.getIntroduction()

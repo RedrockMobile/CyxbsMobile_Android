@@ -7,6 +7,7 @@ import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.bean.RedrockApiStatus
 import com.mredrock.cyxbs.common.bean.RedrockApiWrapper
 import com.mredrock.cyxbs.common.service.ServiceManager
+import com.mredrock.cyxbs.common.service.account.IAccountService
 import com.mredrock.cyxbs.common.service.account.IUserService
 import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
 import com.mredrock.cyxbs.common.utils.extensions.doOnErrorWithDefaultErrorHandler
@@ -30,7 +31,7 @@ import io.reactivex.functions.Function
  */
 class DailyViewModel : BaseViewModel() {
 
-    val stuNum = ServiceManager.getService(IUserService::class.java).getStuNum()
+    val stuNum = ServiceManager.getService(IAccountService::class.java).getUserService().getStuNum()
     val idNum = BaseApp.context.defaultSharedPreferences.getString("SP_KEY_ID_NUM", "")
     //临时使用，因为后端测试的baseurl与apiService不同，故作区分
     private val apiServiceForSign: ApiService by lazy { ApiGeneratorForSign.getApiService(ApiService::class.java) }
@@ -55,7 +56,7 @@ class DailyViewModel : BaseViewModel() {
     private var page = 1
 
     fun loadAllData() {
-        val stuNum = ServiceManager.getService(IUserService::class.java).getStuNum()
+        val stuNum = ServiceManager.getService(IAccountService::class.java).getUserService().getStuNum()
         val idNum = BaseApp.context.defaultSharedPreferences.getString("SP_KEY_ID_NUM", "")
                 ?: return
         apiService.getScoreStatus(stuNum, idNum)

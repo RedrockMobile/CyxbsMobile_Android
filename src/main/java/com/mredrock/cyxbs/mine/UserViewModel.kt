@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.service.ServiceManager
+import com.mredrock.cyxbs.common.service.account.IAccountService
 import com.mredrock.cyxbs.common.service.account.IUserEditorService
 import com.mredrock.cyxbs.common.service.account.IUserService
 import com.mredrock.cyxbs.common.service.account.IUserStateService
@@ -36,7 +37,7 @@ class UserViewModel : BaseViewModel() {
 
     fun getUserInfo() {
 
-        val stuNum = ServiceManager.getService(IUserService::class.java).getStuNum()
+        val stuNum = ServiceManager.getService(IAccountService::class.java).getUserService().getStuNum()
         val idNum = BaseApp.context.defaultSharedPreferences.getString("SP_KEY_ID_NUM", "")
                 ?: return
         apiService.getPersonInfo(stuNum, idNum)
@@ -53,7 +54,7 @@ class UserViewModel : BaseViewModel() {
 
 
     fun getScoreStatus() {
-        val stuNum = ServiceManager.getService(IUserService::class.java).getStuNum()
+        val stuNum = ServiceManager.getService(IAccountService::class.java).getUserService().getStuNum()
         val idNum = BaseApp.context.defaultSharedPreferences.getString("SP_KEY_ID_NUM", "")
                 ?: return
         apiService.getScoreStatus(stuNum, idNum)
@@ -80,7 +81,7 @@ class UserViewModel : BaseViewModel() {
      * 更新BaseApp.user
      */
     private fun freshBaseUser(user: UserLocal) {
-        ServiceManager.getService(IUserEditorService::class.java).apply {
+        ServiceManager.getService(IAccountService::class.java).getUserEditorService().apply {
             setIntroduction(user.introduction)
             setNickname(user.nickname)
             setQQ(user.qq)
@@ -94,6 +95,6 @@ class UserViewModel : BaseViewModel() {
      * 清除User的信息，唯一会调用这个方法的时候是在用户登出
      */
     fun clearUser() {
-        ServiceManager.getService(IUserStateService::class.java).logout(BaseApp.context)
+        ServiceManager.getService(IAccountService::class.java).getVerifyService().logout(BaseApp.context)
     }
 }

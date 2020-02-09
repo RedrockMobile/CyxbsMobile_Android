@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.service.ServiceManager
+import com.mredrock.cyxbs.common.service.account.IAccountService
 import com.mredrock.cyxbs.common.service.account.IUserService
 import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
 import com.mredrock.cyxbs.common.utils.extensions.doOnErrorWithDefaultErrorHandler
@@ -21,7 +22,7 @@ import com.mredrock.cyxbs.mine.util.ui.RvFooter
  * Created by zia on 2018/9/10.
  */
 class AnswerViewModel : BaseViewModel() {
-    private val stuNum = ServiceManager.getService(IUserService::class.java).getStuNum()
+    private val stuNum = ServiceManager.getService(IAccountService::class.java).getUserService().getStuNum()
     private val idNum = BaseApp.context.defaultSharedPreferences.getString("SP_KEY_ID_NUM", "")
 
     private var answerPostedPage: Int = 1

@@ -3,6 +3,7 @@ package com.mredrock.cyxbs.mine.page.draft
 import androidx.lifecycle.MutableLiveData
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.service.ServiceManager
+import com.mredrock.cyxbs.common.service.account.IAccountService
 import com.mredrock.cyxbs.common.service.account.IUserService
 import com.mredrock.cyxbs.common.service.account.IUserStateService
 import com.mredrock.cyxbs.common.utils.extensions.*
@@ -22,11 +23,11 @@ class DraftViewModel : BaseViewModel() {
     val deleteEvent = MutableLiveData<Draft>()
     val sendMessageEvent = MutableLiveData<Draft>()
 
-    private val stuNum = ServiceManager.getService(IUserService::class.java).getStuNum()
+    private val stuNum = ServiceManager.getService(IAccountService::class.java).getUserService().getStuNum()
     private val idNum = BaseApp.context.defaultSharedPreferences.getString("SP_KEY_ID_NUM", "")
 
     private val userStateService: IUserStateService by lazy {
-        ServiceManager.getService(IUserStateService::class.java)
+        ServiceManager.getService(IAccountService::class.java).getVerifyService()
     }
 
     @Volatile

@@ -6,6 +6,7 @@ import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.service.ServiceManager
+import com.mredrock.cyxbs.common.service.account.IAccountService
 import com.mredrock.cyxbs.common.service.account.IUserService
 import com.mredrock.cyxbs.common.utils.extensions.*
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
@@ -22,7 +23,7 @@ import com.mredrock.cyxbs.mine.util.user
  */
 class CommentViewModel : BaseViewModel() {
 
-    val stuNum = ServiceManager.getService(IUserService::class.java).getStuNum()
+    val stuNum = ServiceManager.getService(IAccountService::class.java).getUserService().getStuNum()
     val idNum = BaseApp.context.defaultSharedPreferences.getString("SP_KEY_ID_NUM", "")
 
     private val pageSize = 6
