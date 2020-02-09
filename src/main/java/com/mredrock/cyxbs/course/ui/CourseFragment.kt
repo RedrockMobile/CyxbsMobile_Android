@@ -10,7 +10,6 @@ import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import com.alibaba.android.arouter.facade.annotation.Route
 import com.mredrock.cyxbs.common.config.WEEK_NUM
 import com.mredrock.cyxbs.common.ui.BaseFragment
 import com.mredrock.cyxbs.course.R
@@ -95,6 +94,7 @@ class CourseFragment : BaseFragment() {
                         schedule_view.mIsDisplayCourse = false
                     })
                 }
+                else -> {}
             }
         }
 

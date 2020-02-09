@@ -14,13 +14,14 @@ import androidx.transition.Slide
 import androidx.transition.TransitionManager
 import androidx.transition.TransitionSet
 import com.alibaba.android.arouter.facade.annotation.Route
-import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.bean.WidgetCourse
 import com.mredrock.cyxbs.common.config.COURSE_ENTRY
 import com.mredrock.cyxbs.common.config.OTHERS_STU_NUM
 import com.mredrock.cyxbs.common.config.STU_NAME_LIST
 import com.mredrock.cyxbs.common.config.STU_NUM_LIST
 import com.mredrock.cyxbs.common.event.*
+import com.mredrock.cyxbs.common.service.ServiceManager
+import com.mredrock.cyxbs.common.service.account.IAccountService
 import com.mredrock.cyxbs.common.ui.BaseFragment
 import com.mredrock.cyxbs.course.R
 import com.mredrock.cyxbs.course.adapters.ScheduleVPAdapter
@@ -54,9 +55,10 @@ class CourseContainerEntryFragment : BaseFragment() {
 
     // 当前课表是哪个账号的，如果为空则返回当前登陆账号
     var mStuNum = object : ObservableField<String>() {
+        val stuNum = ServiceManager.getService(IAccountService::class.java).getUserService().getStuNum()
         override fun set(value: String?) {
             if (value == null) {
-                super.set(BaseApp.user?.stuNum)
+                super.set(stuNum)
             } else {
                 super.set(value)
                 courseState = CourseState.OtherCourse
@@ -65,7 +67,7 @@ class CourseContainerEntryFragment : BaseFragment() {
 
         override fun get(): String? {
             return if (super.get() == null) {
-                BaseApp.user?.stuNum
+                stuNum
             } else {
                 super.get()
             }
@@ -375,6 +377,6 @@ class CourseContainerEntryFragment : BaseFragment() {
     }
 
     enum class CourseState{
-        OrdinaryCourse,OtherCourse,NoClassInvitationCourse
+        OrdinaryCourse,TeacherCourse,OtherCourse,NoClassInvitationCourse
     }
 }

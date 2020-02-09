@@ -24,6 +24,8 @@ interface  CourseApiService {
                   @Field("week") week: String = "",
                   @Field("force_fetch") isForceFetch: Boolean = false): Observable<CourseApiWrapper<List<Course>>>
 
+
+
     /**
      * 获取服务器中的事务信息
      *

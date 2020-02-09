@@ -150,11 +150,10 @@ class CoursesViewModel : ViewModel() {
 
         resetGetStatus()
 
-        BaseApp.user?:return
         // 如果stuNum为null，就说明是用户在进行课表查询。此时BaseApp.user!!.stuNum!!一定不为空
         mStuNum = if (stuNum == null) {
             isGetOthers.value = false
-            BaseApp.user!!.stuNum!!
+            BaseApp.user.stuNum
         } else {
             isGetOthers.value = true
             stuNum
@@ -376,7 +375,7 @@ class CoursesViewModel : ViewModel() {
      * @param context [Context]
      */
     private fun getNowWeek(context: Context) {
-        mCourseApiService.getCourse(BaseApp.user?.stuNum ?: "2016215039")
+        mCourseApiService.getCourse(BaseApp.user.stuNum)
                 .setSchedulers()
                 .errorHandler()
                 .map {
