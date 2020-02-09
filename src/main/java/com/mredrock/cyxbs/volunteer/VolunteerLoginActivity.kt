@@ -14,6 +14,7 @@ import com.mredrock.cyxbs.common.config.DISCOVER_VOLUNTEER
 import com.mredrock.cyxbs.common.event.AskLoginEvent
 import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.service.ServiceManager
+import com.mredrock.cyxbs.common.service.account.IAccountService
 import com.mredrock.cyxbs.common.service.account.IUserService
 import com.mredrock.cyxbs.common.ui.BaseActivity
 import com.mredrock.cyxbs.common.utils.LogUtils
@@ -49,7 +50,7 @@ class VolunteerLoginActivity : BaseActivity() {
         setContentView(R.layout.activity_login)
         common_toolbar.init("完善信息")
 
-        if (ServiceManager.getService(IUserService::class.java) == null) {
+        if (ServiceManager.getService(IAccountService::class.java).getUserService() == null) {
             EventBus.getDefault().post(AskLoginEvent("只有登陆了才能查看志愿时长噢～"))
             finish()
         }
@@ -68,7 +69,7 @@ class VolunteerLoginActivity : BaseActivity() {
         password = volunteer_password.text.toString()
 
         volunteerSP = VolunteerTimeSP(this)
-        val user = ServiceManager.getService(IUserService::class.java)
+        val user = ServiceManager.getService(IAccountService::class.java).getUserService()
         if (user != null) {
             uid = user.getStuNum()
         } else {
