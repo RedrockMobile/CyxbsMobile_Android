@@ -6,16 +6,13 @@ import androidx.lifecycle.Transformations
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.service.account.IAccountService
-import com.mredrock.cyxbs.common.service.account.IUserService
 import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
-import com.mredrock.cyxbs.common.utils.extensions.doOnErrorWithDefaultErrorHandler
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
-import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.common.viewmodel.event.SingleLiveEvent
 import com.mredrock.cyxbs.mine.network.model.AnswerPosted
 import com.mredrock.cyxbs.mine.util.apiService
-import com.mredrock.cyxbs.mine.util.extension.mapOrThrowApiExceptionWithDataCanBeNull
+import com.mredrock.cyxbs.mine.util.extension.normalWrapper
 import com.mredrock.cyxbs.mine.util.ui.RvFooter
 
 /**
@@ -43,13 +40,11 @@ class AnswerViewModel : BaseViewModel() {
     fun loadAnswerPostedList() {
         apiService.getAnswerPostedList(stuNum, idNum
                 ?: return, answerPostedPage++, pageSize)
-                .mapOrThrowApiExceptionWithDataCanBeNull()
-                .setSchedulers()
-                .doOnErrorWithDefaultErrorHandler { false }
+                .normalWrapper(this)
                 .safeSubscribeBy(
                         onNext = {
                             //由于Rxjava反射不应定能够够保证为空，当为空的说明这一页没有数据，于是停止加载
-                            if (it == null) {
+                            if (it.isEmpty()) {
                                 _eventOnAnswerPosted.postValue(RvFooter.State.NOMORE)
                                 return@safeSubscribeBy
                             }

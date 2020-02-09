@@ -8,11 +8,8 @@ import com.mredrock.cyxbs.common.bean.RedrockApiStatus
 import com.mredrock.cyxbs.common.bean.RedrockApiWrapper
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.service.account.IAccountService
-import com.mredrock.cyxbs.common.service.account.IUserService
 import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
-import com.mredrock.cyxbs.common.utils.extensions.doOnErrorWithDefaultErrorHandler
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
-import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.common.viewmodel.event.SingleLiveEvent
 import com.mredrock.cyxbs.mine.network.ApiGeneratorForSign
@@ -20,7 +17,6 @@ import com.mredrock.cyxbs.mine.network.ApiService
 import com.mredrock.cyxbs.mine.network.model.Product
 import com.mredrock.cyxbs.mine.network.model.ScoreStatus
 import com.mredrock.cyxbs.mine.util.apiService
-import com.mredrock.cyxbs.mine.util.extension.mapOrThrowApiExceptionWithDataCanBeNull
 import com.mredrock.cyxbs.mine.util.extension.normalWrapper
 import io.reactivex.Observable
 import io.reactivex.functions.Function
@@ -90,12 +86,10 @@ class DailyViewModel : BaseViewModel() {
 
     fun loadProduct() {
         apiServiceForSign.getProducts(stuNum, idNum ?: return, page++)
-                .mapOrThrowApiExceptionWithDataCanBeNull()
-                .setSchedulers()
-                .doOnErrorWithDefaultErrorHandler { false }
+                .normalWrapper(this)
                 .safeSubscribeBy {
                     //由于Rxjava反射不应定能够够保证为空，当为空的说明这一页没有数据，于是停止加载
-                    if (it == null) {
+                    if (it.isEmpty()) {
                         return@safeSubscribeBy
                     }
 

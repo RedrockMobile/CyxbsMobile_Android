@@ -2,8 +2,6 @@ package com.mredrock.cyxbs.mine.util.extension
 
 import com.mredrock.cyxbs.common.bean.RedrockApiStatus
 import com.mredrock.cyxbs.common.bean.RedrockApiWrapper
-import com.mredrock.cyxbs.common.bean.isSuccessful
-import com.mredrock.cyxbs.common.network.exception.RedrockApiException
 import com.mredrock.cyxbs.common.utils.extensions.checkError
 import com.mredrock.cyxbs.common.utils.extensions.doOnErrorWithDefaultErrorHandler
 import com.mredrock.cyxbs.common.utils.extensions.mapOrThrowApiException
@@ -23,13 +21,3 @@ fun Observable<RedrockApiStatus>.normalStatus(viewModel: BaseViewModel): Observa
         checkError()
                 .setSchedulers()
                 .doOnErrorWithDefaultErrorHandler { false }
-
-
-fun <T> Observable<RedrockApiWrapper<T>>.mapOrThrowApiExceptionWithDataCanBeNull(): Observable<T> = map {
-    if (it.isSuccessful) {
-        it.data
-    } else {
-        throw RedrockApiException(it.info, it.status, null)
-    }
-
-}

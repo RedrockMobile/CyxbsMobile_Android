@@ -3,20 +3,20 @@ package com.mredrock.cyxbs.mine.page.comment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
-import androidx.lifecycle.ViewModel
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.service.account.IAccountService
-import com.mredrock.cyxbs.common.service.account.IUserService
-import com.mredrock.cyxbs.common.utils.extensions.*
+import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
+import com.mredrock.cyxbs.common.utils.extensions.mapOrThrowApiException
+import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
+import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.common.viewmodel.event.SingleLiveEvent
 import com.mredrock.cyxbs.mine.network.model.Comment
 import com.mredrock.cyxbs.mine.network.model.RelateMeItem
 import com.mredrock.cyxbs.mine.util.apiService
-import com.mredrock.cyxbs.mine.util.extension.mapOrThrowApiExceptionWithDataCanBeNull
+import com.mredrock.cyxbs.mine.util.extension.normalWrapper
 import com.mredrock.cyxbs.mine.util.ui.RvFooter
-import com.mredrock.cyxbs.mine.util.user
 
 /**
  * Created by zia on 2018/9/13.
@@ -44,13 +44,11 @@ class CommentViewModel : BaseViewModel() {
     fun loadCommentList() {
         apiService.getCommentList(stuNum, idNum
                 ?: return, commentPage++, pageSize)
-                .mapOrThrowApiExceptionWithDataCanBeNull()
-                .setSchedulers()
-                .doOnErrorWithDefaultErrorHandler { false }
+                .normalWrapper(this)
                 .safeSubscribeBy(
                         onNext = {
                             //由于Rxjava反射不应定能够够保证为空，当为空的说明这一页没有数据，于是停止加载
-                            if (it == null) {
+                            if (it.isEmpty()) {
                                 _eventOnComment.postValue(RvFooter.State.NOMORE)
                                 return@safeSubscribeBy
                             }
