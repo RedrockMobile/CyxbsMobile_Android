@@ -10,6 +10,7 @@ import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import com.alibaba.android.arouter.facade.annotation.Route
 import com.mredrock.cyxbs.common.config.WEEK_NUM
 import com.mredrock.cyxbs.common.ui.BaseFragment
 import com.mredrock.cyxbs.course.R
@@ -83,12 +84,12 @@ class CourseFragment : BaseFragment() {
             val color = ContextCompat.getColor(activity, R.color.levelOneFontColor)
             red_rock_tv_course_day_of_month.textColor = Color.argb(153, Color.red(color), Color.green(color), Color.blue(color))
             when(courseContainerEntryFragment.courseState){
-                CoursesViewModel.CourseState.OrdinaryCourse,CoursesViewModel.CourseState.OtherCourse->{
+                CourseContainerEntryFragment.CourseState.OrdinaryCourse,CourseContainerEntryFragment.CourseState.OtherCourse->{
                     mCoursesViewModel.courses.observe(this, Observer{
                         ScheduleViewBidingAdapter.setScheduleData(schedule_view,it,mWeek, mCoursesViewModel.isGetOthers.value!!)
                     })
                 }
-                CoursesViewModel.CourseState.NoClassInvitationCourse->{
+                CourseContainerEntryFragment.CourseState.NoClassInvitationCourse->{
                     mNoCourseInviteViewModel?.studentsCourseMap?.observe(this, Observer {
                         ScheduleViewBidingAdapter.setNoCourseInvite(schedule_view,mWeek,mNoCourseInviteViewModel?.studentsCourseMap?.value,mNoCourseInviteViewModel?.nameList!!)
                         schedule_view.mIsDisplayCourse = false

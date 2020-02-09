@@ -50,16 +50,16 @@ class CourseContainerEntryFragment : BaseFragment() {
 
 
     //当前课表的显示的状态
-    var courseState = CoursesViewModel.CourseState.OrdinaryCourse
+    var courseState = CourseState.OrdinaryCourse
 
     // 当前课表是哪个账号的，如果为空则返回当前登陆账号
-    var mStuNum = object : ObservableField<String>(BaseApp.user?.stuNum) {
+    var mStuNum = object : ObservableField<String>() {
         override fun set(value: String?) {
             if (value == null) {
                 super.set(BaseApp.user?.stuNum)
             } else {
                 super.set(value)
-                courseState = CoursesViewModel.CourseState.OtherCourse
+                courseState = CourseState.OtherCourse
             }
         }
 
@@ -77,7 +77,7 @@ class CourseContainerEntryFragment : BaseFragment() {
         override fun set(value: ArrayList<String>?) {
             super.set(value)
             if (value != null) {
-                courseState = CoursesViewModel.CourseState.NoClassInvitationCourse
+                courseState = CourseState.NoClassInvitationCourse
             }
         }
     }
@@ -85,7 +85,7 @@ class CourseContainerEntryFragment : BaseFragment() {
         override fun set(value: ArrayList<String>?) {
             super.set(value)
             if (value != null) {
-                courseState = CoursesViewModel.CourseState.NoClassInvitationCourse
+                courseState = CourseState.NoClassInvitationCourse
             }
         }
     }
@@ -158,7 +158,7 @@ class CourseContainerEntryFragment : BaseFragment() {
 
         //根据当前Entry的状态来获取相应的ViewModel
         when (courseState) {
-            CoursesViewModel.CourseState.NoClassInvitationCourse -> {
+            CourseState.NoClassInvitationCourse -> {
                 mCoursesViewModel = ViewModelProviders.of(activity!!).get(CoursesViewModel::class.java)
                 mBinding.coursesViewModel = mCoursesViewModel
                 mNoCourseInviteViewModel = ViewModelProviders
@@ -168,14 +168,14 @@ class CourseContainerEntryFragment : BaseFragment() {
                 mNoCourseInviteViewModel?.getCourses()
                 hideNowCourseHead()
             }
-            CoursesViewModel.CourseState.OtherCourse -> {
+            CourseState.OtherCourse -> {
                 mCoursesViewModel = ViewModelProviders.of(this).get(CoursesViewModel::class.java)
                 mBinding.coursesViewModel = mCoursesViewModel
                 mCoursesViewModel.mStuNum = mStuNum.get()!!//这里不可能为空
                 context?.let { mCoursesViewModel.refreshScheduleData(it) }
                 hideNowCourseHead()
             }
-            CoursesViewModel.CourseState.OrdinaryCourse -> {
+            CourseState.OrdinaryCourse -> {
                 mCoursesViewModel = ViewModelProviders.of(activity!!).get(CoursesViewModel::class.java)
                 mBinding.coursesViewModel = mCoursesViewModel
                 mCoursesViewModel.getSchedulesDataFromDataBase(activity!!)
@@ -372,5 +372,9 @@ class CourseContainerEntryFragment : BaseFragment() {
                 course_current_course_week_select_container.visibility = View.GONE
             }
         }
+    }
+
+    enum class CourseState{
+        OrdinaryCourse,OtherCourse,NoClassInvitationCourse
     }
 }

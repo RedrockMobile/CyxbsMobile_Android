@@ -413,7 +413,5 @@ class CoursesViewModel : ViewModel() {
         mCoursesDatabase?.affairDao()?.deleteAllAffairs()
     }
 
-    enum class CourseState{
-        OrdinaryCourse,OtherCourse,NoClassInvitationCourse
-    }
+
 }
