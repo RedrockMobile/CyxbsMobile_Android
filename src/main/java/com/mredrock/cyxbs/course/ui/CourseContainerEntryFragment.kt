@@ -1,6 +1,7 @@
 package com.mredrock.cyxbs.course.ui
 
 import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
 import android.os.Bundle
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -92,7 +93,7 @@ class CourseContainerEntryFragment : BaseFragment() {
     }
 
     //是否直接加载课表子页，默认直接加载，除非传值过来设置为false过来，后面可以懒加载
-    lateinit var directLoadCourse:String
+    lateinit var directLoadCourse: String
 
     //每一周课表的ViewPager的Adapter
     private lateinit var mScheduleAdapter: ScheduleVPAdapter
@@ -101,7 +102,7 @@ class CourseContainerEntryFragment : BaseFragment() {
     lateinit var mCoursesViewModel: CoursesViewModel
 
     //用于没课约的ViewModel
-    var mNoCourseInviteViewModel: NoCourseInviteViewModel?= null
+    var mNoCourseInviteViewModel: NoCourseInviteViewModel? = null
 
     //当前Fragment的根布局的Binding
     private lateinit var mBinding: CourseFragmentCourseContainerBinding
@@ -157,7 +158,7 @@ class CourseContainerEntryFragment : BaseFragment() {
             mStuNum.set(bundle.getString(OTHERS_STU_NUM))
             mStuNumList.set(bundle.getStringArrayList(STU_NUM_LIST))
             mNameList.set(bundle.getStringArrayList(STU_NAME_LIST))
-            directLoadCourse = bundle.getString(COURSE_DIRECT_LOAD)?: TRUE
+            directLoadCourse = bundle.getString(COURSE_DIRECT_LOAD) ?: TRUE
         }
 
 
@@ -191,14 +192,13 @@ class CourseContainerEntryFragment : BaseFragment() {
             mWeeks = mRawWeeks.copyOf()
             mScheduleAdapter = ScheduleVPAdapter(mWeeks, childFragmentManager)
         }
-        if (directLoadCourse== TRUE){
+        if (directLoadCourse == TRUE) {
             //给下方ViewPager添加适配器和绑定tab
             mBinding.vp.adapter = mScheduleAdapter
             mBinding.tabLayout.setupWithViewPager(mBinding.vp)
             course_lottie_load.visibility = View.GONE
             settingFollowBottomSheet(1f)
         }
-
 
 
         //获取到ViewModel后进行一些初始化操作
@@ -352,33 +352,18 @@ class CourseContainerEntryFragment : BaseFragment() {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    fun loadCoursePage(loadCourse: LoadCourse){
+    fun loadCoursePage(loadCourse: LoadCourse) {
         course_lottie_load.playAnimation()
-        course_lottie_load.speed = 2f
-        course_lottie_load.addAnimatorListener(object : Animator.AnimatorListener{
-            override fun onAnimationRepeat(animation: Animator?) {
-            }
-
+        course_lottie_load.speed = 1.5f
+        course_lottie_load.addAnimatorListener(object : AnimatorListenerAdapter() {
             override fun onAnimationEnd(animation: Animator?) {
                 //给下方ViewPager添加适配器和绑定tab
                 mBinding.vp.adapter = mScheduleAdapter
                 mBinding.tabLayout.setupWithViewPager(mBinding.vp)
-                TransitionManager.beginDelayedTransition(course_page_container,Fade())
+                TransitionManager.beginDelayedTransition(course_page_container, Fade())
                 course_lottie_load.visibility = View.GONE
             }
-
-            override fun onAnimationCancel(animation: Animator?) {
-            }
-
-            override fun onAnimationStart(animation: Animator?) {
-            }
         })
-//        Observable.create<Any> {
-//            Thread.sleep(500)
-//            it.onNext(0)
-//        }.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe {
-//
-//        }.isDisposed
     }
 
     /**
@@ -416,7 +401,7 @@ class CourseContainerEntryFragment : BaseFragment() {
         }
     }
 
-    enum class CourseState{
-        OrdinaryCourse,TeacherCourse,OtherCourse,NoClassInvitationCourse
+    enum class CourseState {
+        OrdinaryCourse, TeacherCourse, OtherCourse, NoClassInvitationCourse
     }
 }
