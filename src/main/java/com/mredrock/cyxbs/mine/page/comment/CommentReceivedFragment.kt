@@ -21,7 +21,6 @@ class CommentReceivedFragment : BaseRVFragment<CommentReceived>() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        viewModel.loadCommentReceivedList()
         viewModel.eventOnCommentReceived.observe(this, Observer {
             if (it == RvFooter.State.ERROR) {
                 getFooter().showLoadError()
@@ -32,6 +31,7 @@ class CommentReceivedFragment : BaseRVFragment<CommentReceived>() {
         viewModel.commentReceivedList.observe(this, Observer {
             setNewData(it)
         })
+        viewModel.loadCommentReceivedList()
     }
 
     override fun getItemLayout(): Int {
@@ -40,7 +40,7 @@ class CommentReceivedFragment : BaseRVFragment<CommentReceived>() {
 
     override fun bindFooterHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if (getFooter().state == RvFooter.State.LOADING) {
-            viewModel.loadCommentList()
+            viewModel.loadCommentReceivedList()
         }
     }
 
