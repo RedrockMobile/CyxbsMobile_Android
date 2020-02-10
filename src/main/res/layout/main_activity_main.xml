@@ -9,7 +9,7 @@
     tools:context=".ui.MainActivity">
 
     <FrameLayout
-        android:id="@+id/view_pager"
+        android:id="@+id/other_fragment_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginBottom="100dp"

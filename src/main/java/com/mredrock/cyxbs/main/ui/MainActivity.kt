@@ -2,8 +2,7 @@ package com.mredrock.cyxbs.main.ui
 
 import android.os.Build
 import android.os.Bundle
-import android.os.Handler
-import android.util.Log
+import android.view.Gravity
 import android.view.MenuItem
 import android.view.View
 import android.view.View.*
@@ -13,26 +12,26 @@ import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.core.view.get
 import androidx.fragment.app.Fragment
+import androidx.transition.Slide
+import androidx.transition.TransitionManager
+import androidx.transition.TransitionSet
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
 import com.google.android.material.bottomnavigation.LabelVisibilityMode
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.config.*
-import com.mredrock.cyxbs.common.event.AskLoginEvent
-import com.mredrock.cyxbs.common.event.BottomSheetStateEvent
-import com.mredrock.cyxbs.common.event.CourseSlipsTopEvent
-import com.mredrock.cyxbs.common.event.NotifyBottomSheetToExpandEvent
+import com.mredrock.cyxbs.common.event.*
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.service.account.IAccountService
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
+import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
 import com.mredrock.cyxbs.common.utils.extensions.editor
 import com.mredrock.cyxbs.common.utils.extensions.sharedPreferences
 import com.mredrock.cyxbs.common.utils.update.UpdateEvent
 import com.mredrock.cyxbs.common.utils.update.UpdateUtils
 import com.mredrock.cyxbs.main.R
 import com.mredrock.cyxbs.main.bean.FinishEvent
-import com.mredrock.cyxbs.main.ui.adapter.MainVpAdapter
 import com.mredrock.cyxbs.main.utils.*
 import com.mredrock.cyxbs.main.viewmodel.MainViewModel
 import com.umeng.message.inapp.InAppMessageManager
@@ -64,32 +63,24 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
             R.drawable.main_ic_mine_unselected, R.drawable.main_ic_mine_selected
     )
 
-
-    private val fragments = ArrayList<Fragment>()
-    private lateinit var adapter: MainVpAdapter
-
-    private val loadHandler: Handler = Handler()
-//    private val loadRunnable = Runnable {
-//        fragments.add(getFragment(QA_ENTRY))
-//        fragments.add(getFragment(MINE_ENTRY))
-//        adapter.notifyDataSetChanged()
-//    }
-
-    val courseFragemnt: Fragment by lazy {
+    private val courseFragment: Fragment by lazy(LazyThreadSafetyMode.NONE) {
         getFragment(COURSE_ENTRY)
     }
 
-    val qaFragment: Fragment by lazy {
+    private val qaFragment: Fragment by lazy(LazyThreadSafetyMode.NONE) {
         getFragment(QA_ENTRY)
     }
 
-    val mineFragment: Fragment by lazy {
+    private val mineFragment: Fragment by lazy(LazyThreadSafetyMode.NONE) {
         getFragment(MINE_ENTRY)
     }
 
-    val discoverFragment: Fragment by lazy {
+    private val discoverFragment: Fragment by lazy(LazyThreadSafetyMode.NONE) {
         getFragment(DISCOVER_ENTRY)
     }
+
+    //进入app是否直接显示课表
+    var courseShowState: Boolean = false
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -104,7 +95,6 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
         }
 
         initBottomNavigationView()
-        initFragments()
         UpdateUtils.checkUpdate(this)
         InAppMessageManager.getInstance(BaseApp.context).showCardMessage(this,
                 "课表主页面") {
@@ -134,21 +124,41 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
         viewModel.getStartPage()
 
         bottomSheetBehavior = BottomSheetBehavior.from(course_bottom_sheet_content)
-
         bottomSheetBehavior.setBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
             var statePosition = 0f
+            var isFirst = true
             override fun onSlide(p0: View, p1: Float) {
                 ll_nav_main_container.translationY = nav_main.height * p1
                 statePosition = p1
                 EventBus.getDefault().post(BottomSheetStateEvent(p1))
+                if (ll_nav_main_container.visibility == GONE) {
+                    ll_nav_main_container.visibility = VISIBLE
+                }
             }
 
             override fun onStateChanged(p0: View, p1: Int) {
                 if (bottomSheetBehavior.state == BottomSheetBehavior.STATE_EXPANDED) {
                     checkLoginBeforeAction("课表") {}
                 }
+                if (isFirst && courseShowState && bottomSheetBehavior.state == BottomSheetBehavior.STATE_COLLAPSED) {
+                    other_fragment_container.visibility = GONE
+                    changeFragment(discoverFragment, 0, nav_main.menu[0])
+                    TransitionManager.beginDelayedTransition(main_content, TransitionSet().apply {
+                        addTransition(Slide().apply {
+                            duration = 500
+                            slideEdge = Gravity.TOP
+                        })
+                    })
+                    other_fragment_container.visibility = VISIBLE
+                    isFirst = false
+                }
+                if (isFirst && bottomSheetBehavior.state == BottomSheetBehavior.STATE_EXPANDED) {
+                    EventBus.getDefault().post(LoadCourse())
+                    isFirst = false
+                }
             }
         })
+        initFragments()
     }
 
     private fun checkLoginBeforeAction(msg: String, action: () -> Unit) {
@@ -199,8 +209,6 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
                     }
                     R.id.qa -> {
                         changeFragment(qaFragment, 1, menuItem)
-                        Log.d("navTest","${menuItem.itemId.toString(16)}")
-//                        7f0a02ba
                     }
                     R.id.mine -> {
                         changeFragment(mineFragment, 2, menuItem)
@@ -217,7 +225,7 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
     }
 
     private fun changeFragment(fragment: Fragment, position: Int, menuItem: MenuItem) {
-        supportFragmentManager.beginTransaction().replace(R.id.view_pager, fragment).apply {
+        supportFragmentManager.beginTransaction().replace(R.id.other_fragment_container, fragment).apply {
             commit()
         }
         peeCheckedItemPosition = position
@@ -225,10 +233,23 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
     }
 
     private fun initFragments() {
-        changeFragment(discoverFragment,0, nav_main.menu[0])
-        //在滑动下拉课表容器中添加整个课表
-        supportFragmentManager.beginTransaction().replace(R.id.course_bottom_sheet_content, courseFragemnt).apply {
-            commit()
+
+        courseShowState = defaultSharedPreferences.getBoolean(COURSE_SHOW_STATE, false)
+        if (courseShowState) {
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+            ll_nav_main_container.visibility = GONE
+            //在滑动下拉课表容器中添加整个课表
+            supportFragmentManager.beginTransaction().replace(R.id.course_bottom_sheet_content, courseFragment).apply {
+                commit()
+            }
+        } else {
+            changeFragment(discoverFragment, 0, nav_main.menu[0])
+            courseFragment.arguments = Bundle().apply {
+                putString(COURSE_DIRECT_LOAD, FALSE)
+            }
+            supportFragmentManager.beginTransaction().replace(R.id.course_bottom_sheet_content, courseFragment).apply {
+                commit()
+            }
         }
     }
 
