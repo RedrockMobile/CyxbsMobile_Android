@@ -33,7 +33,6 @@ import com.mredrock.cyxbs.mine.page.ask.AskActivity
 import com.mredrock.cyxbs.mine.page.comment.CommentActivity
 import com.mredrock.cyxbs.mine.page.edit.EditInfoActivity
 import com.mredrock.cyxbs.mine.page.sign.DailySignActivity
-import com.mredrock.cyxbs.mine.util.extension.logr
 import kotlinx.android.synthetic.main.mine_fragment_main.*
 import org.greenrobot.eventbus.EventBus
 import org.jetbrains.anko.support.v4.defaultSharedPreferences
@@ -66,10 +65,7 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         addObserver()
-        //加载资料
-        viewModel.getUserInfo()
-        viewModel.getScoreStatus()
-        viewModel.getQANumber()
+        fetchInfo()
 
         //功能按钮
         mine_main_btn_sign.setOnClickListener { checkLoginBeforeAction("签到") { startActivity<DailySignActivity>() } }
@@ -127,7 +123,6 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
             }
         })
         viewModel.qaNumber.observe(this, Observer {
-            logr("qanumber")
             mine_main_question_number.text = it.askPostedNumber.toString()
             mine_main_answer_number.text = it.answerPostedNumber.toString()
             mine_main_reply_comment_number.text = it.commentNumber.toString()
@@ -145,6 +140,10 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
 
     override fun onResume() {
         super.onResume()
+        fetchInfo()
+    }
+
+    private fun fetchInfo() {
         viewModel.getUserInfo()
         viewModel.getScoreStatus()
         viewModel.getQANumber()

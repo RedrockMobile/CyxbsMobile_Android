@@ -61,6 +61,10 @@ class CommentViewModel : BaseViewModel() {
                 .lifeCycle()
     }
     fun cleanCommentPage() {
+        //清除还在请求网络的接口,
+        //如果一直刷新，那么前一个网络请求没有cancel掉，那么就会导致多的item
+        onCleared()
+
         commentPage = 1
         _commentList.value = mutableListOf()
     }
@@ -99,6 +103,10 @@ class CommentViewModel : BaseViewModel() {
                 .lifeCycle()
     }
     fun cleanCommentReceivedPage() {
+        //清除还在请求网络的接口,
+        //如果一直刷新，那么前一个网络请求没有cancel掉，那么就会导致多的item
+        onCleared()
+
         commentReceivedPage = 1
         _commentReceivedList.value = mutableListOf()
     }

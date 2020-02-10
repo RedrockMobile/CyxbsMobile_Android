@@ -60,6 +60,10 @@ class AnswerViewModel : BaseViewModel() {
     }
 
     fun cleanAnswerPostedPage() {
+        //清除还在请求网络的接口,
+        //如果一直刷新，那么前一个网络请求没有cancel掉，那么就会导致多的item
+        onCleared()
+
         answerPostedPage = 1
         _answerPosted.value = mutableListOf()
     }

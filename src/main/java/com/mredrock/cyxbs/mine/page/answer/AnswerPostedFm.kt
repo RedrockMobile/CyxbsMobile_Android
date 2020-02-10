@@ -50,7 +50,7 @@ class AnswerPostedFm : BaseRVFragment<AnswerPosted>() {
         holder.itemView.findViewById<TextView>(R.id.mine_answer_posted_tv_content).text = data.content
         holder.itemView.findViewById<TextView>(R.id.mine_answer_posted_tv_disappear_at).text = data.answerTime
         holder.itemView.findViewById<TextView>(R.id.mine_answer_posted_tv_integral).text = data.integral.toString()
-        if (data.type == "已解决") {
+        if (data.type == "已采纳") {
             holder.itemView.findViewById<TextView>(R.id.mine_answer_posted_tv_state).text = "已采纳"
         } else {
             holder.itemView.findViewById<TextView>(R.id.mine_answer_posted_tv_state).text = "未采纳"
@@ -60,6 +60,7 @@ class AnswerPostedFm : BaseRVFragment<AnswerPosted>() {
 
 
     override fun onSwipeLayoutRefresh() {
+
         getFooter().showLoading()
         viewModel.cleanAnswerPostedPage()
         viewModel.loadAnswerPostedList()
