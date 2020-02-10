@@ -20,18 +20,14 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.Observer
 import com.afollestad.materialdialogs.MaterialDialog
+import com.mredrock.cyxbs.common.component.CommonDialogFragment
 import com.mredrock.cyxbs.common.config.DIR_PHOTO
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.service.account.IAccountService
 import com.mredrock.cyxbs.common.service.account.IUserService
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
-import com.mredrock.cyxbs.common.utils.extensions.doPermissionAction
-import com.mredrock.cyxbs.common.utils.extensions.getRequestBody
-import com.mredrock.cyxbs.common.utils.extensions.loadAvatar
-import com.mredrock.cyxbs.common.utils.extensions.uri
-import com.mredrock.cyxbs.common.utils.extensions.toast
+import com.mredrock.cyxbs.common.utils.extensions.*
 import com.mredrock.cyxbs.mine.R
-import com.mredrock.cyxbs.mine.util.ui.EditDialogFragment
 import com.mredrock.cyxbs.mine.util.user
 import com.yalantis.ucrop.UCrop
 import kotlinx.android.synthetic.main.mine_activity_edit_info.*
@@ -53,6 +49,17 @@ class EditInfoActivity(override val isFragmentActivity: Boolean = false,
 
     private val SELECT_PICTURE = 1
     private val SELECT_CAMERA = 2
+
+    private val dialogFragment: CommonDialogFragment by lazy {
+        CommonDialogFragment().apply {
+            initView(
+                    containerRes = R.layout.mine_layout_dialog_edit,
+                    onPositiveClick = { finish() },
+                    onNegativeClick = { dismiss() },
+                    positiveString = "退出"
+            )
+        }
+    }
 
     private val userService: IUserService by lazy {
         ServiceManager.getService(IAccountService::class.java).getUserService()
@@ -77,7 +84,7 @@ class EditInfoActivity(override val isFragmentActivity: Boolean = false,
         if (checkIfInfoChange()) {
             mine_btn_info_save.apply {
                 textColor = ContextCompat.getColor(context, R.color.mine_white)
-                background = ResourcesCompat.getDrawable(resources, R.drawable.mine_bg_round_corner_blue_gradient, null)
+                background = ResourcesCompat.getDrawable(resources, R.drawable.common_dialog_btn_positive_blue, null)
                 text = "保存"
                 isClickable = true
             }
@@ -129,7 +136,7 @@ class EditInfoActivity(override val isFragmentActivity: Boolean = false,
                     R.drawable.mine_ic_arrow_left,
                     View.OnClickListener {
                         if (checkIfInfoChange()) {
-                            EditDialogFragment().show(supportFragmentManager, "SaveInfo")
+                            dialogFragment.show(supportFragmentManager, "SaveInfo")
                         } else {
                             finish()
                         }
@@ -157,7 +164,7 @@ class EditInfoActivity(override val isFragmentActivity: Boolean = false,
 
     override fun onBackPressed() {
         if (checkIfInfoChange()) {
-            EditDialogFragment().show(supportFragmentManager, "SaveInfo")
+            dialogFragment.show(supportFragmentManager, "SaveInfo")
         } else {
             super.onBackPressed()
         }

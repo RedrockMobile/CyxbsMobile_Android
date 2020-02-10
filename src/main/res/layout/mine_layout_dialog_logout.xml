@@ -3,26 +3,25 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="@drawable/mine_shape_round_corner_exit_edit"
     android:orientation="vertical">
 
     <ImageView
-        android:layout_marginTop="28dp"
-        android:layout_marginStart="52dp"
-        android:layout_marginEnd="52dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
+        android:layout_marginStart="52dp"
+        android:layout_marginTop="28dp"
+        android:layout_marginEnd="52dp"
         android:src="@drawable/mine_ic_edit_exit"
         tools:layout_editor_absoluteX="27dp"
         tools:layout_editor_absoluteY="16dp" />
 
     <TextView
         android:layout_width="wrap_content"
-        android:layout_marginTop="17dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:text="@string/mine_exit_edit"
+        android:layout_marginTop="17dp"
+        android:text="@string/mine_logout_title"
         android:textColor="@color/levelTwoFontColor"
         android:textSize="18sp"
         android:textStyle="bold"
@@ -31,28 +30,13 @@
 
     <TextView
         android:layout_width="wrap_content"
-        android:layout_marginTop="10dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:text="@string/mine_exit_edit_quest"
+        android:layout_marginTop="10dp"
+        android:text="@string/mine_logout_content"
         android:textColor="@color/levelFourFontColor"
         android:textSize="11sp"
         tools:layout_editor_absoluteX="107dp"
         tools:layout_editor_absoluteY="374dp" />
-
-    <Button
-        android:id="@+id/mine_dialog_btn_exit"
-        android:layout_marginTop="23dp"
-        android:layout_marginBottom="23dp"
-        style="?android:attr/borderlessButtonStyle"
-        android:layout_width="92dp"
-        android:layout_height="34dp"
-        android:layout_gravity="center_horizontal"
-        android:background="@drawable/mine_bg_round_corner_blue_gradient"
-        android:text="@string/mine_exit_edit_btn"
-        android:textColor="@color/whiteFontColor"
-        android:textSize="15sp"
-        tools:layout_editor_absoluteX="104dp"
-        tools:layout_editor_absoluteY="439dp" />
 
 </LinearLayout>

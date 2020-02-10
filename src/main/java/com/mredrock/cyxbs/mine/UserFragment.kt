@@ -14,9 +14,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.Observer
-import com.afollestad.materialdialogs.MaterialDialog
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
+import com.mredrock.cyxbs.common.component.CommonDialogFragment
 import com.mredrock.cyxbs.common.config.*
 import com.mredrock.cyxbs.common.event.AskLoginEvent
 import com.mredrock.cyxbs.common.event.LoginStateChangeEvent
@@ -101,7 +101,7 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
             } else {
                 mine_main_btn_sign.apply {
                     text = "签到"
-                    background = ResourcesCompat.getDrawable(resources, R.drawable.mine_bg_round_corner_blue_gradient, null)
+                    background = ResourcesCompat.getDrawable(resources, R.drawable.common_dialog_btn_positive_blue, null)
                     textColor = ContextCompat.getColor(context, R.color.mine_white)
                 }
             }
@@ -188,25 +188,23 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
 
 
     private fun onExitClick() {
-        MaterialDialog.Builder(context ?: return)
-                .title("退出登录?")
-                .content("是否退出当前账号?")
-                .positiveText("退出")
-                .negativeText("取消")
-                .onPositive { _, _ ->
-                    cleanAppWidgetCache()
-                    //清除BaseApp.user和viewModel的user，必须要在LoginStateChangeEvent之前
-                    viewModel.clearUser()
+        CommonDialogFragment().apply {
+            initView(
+                    containerRes = R.layout.mine_layout_dialog_logout,
+                    onPositiveClick = {
+                        cleanAppWidgetCache()
+                        //清除user信息，必须要在LoginStateChangeEvent之前
+                        viewModel.clearUser()
 
-                    EventBus.getDefault().post(LoginStateChangeEvent(false))
-                    activity?.let {
-                        ServiceManager.getService(IAccountService::class.java).getVerifyService().logout(it)
-                    }
-                    //清空activity栈
-                    val flag = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
-                    ARouter.getInstance().build("/main/login").withFlags(flag.toInt()).navigation()
-                }
-                .show()
+                        EventBus.getDefault().post(LoginStateChangeEvent(false))
+                        //清空activity栈
+                        val flag = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+                        ARouter.getInstance().build("/main/login").withFlags(flag.toInt()).navigation()
+                    },
+                    positiveString = "退出",
+                    onNegativeClick = { dismiss() }
+            )
+        }.show(fragmentManager, "logout")
     }
 
     private fun cleanAppWidgetCache() {

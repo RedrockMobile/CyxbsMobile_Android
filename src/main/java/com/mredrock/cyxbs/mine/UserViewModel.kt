@@ -5,13 +5,10 @@ import androidx.lifecycle.MutableLiveData
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.service.account.IAccountService
-import com.mredrock.cyxbs.common.service.account.IUserEditorService
-import com.mredrock.cyxbs.common.service.account.IUserService
-import com.mredrock.cyxbs.common.service.account.IUserStateService
 import com.mredrock.cyxbs.common.utils.extensions.*
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
-import com.mredrock.cyxbs.mine.network.model.QANumber
 import com.mredrock.cyxbs.common.viewmodel.event.SingleLiveEvent
+import com.mredrock.cyxbs.mine.network.model.QANumber
 import com.mredrock.cyxbs.mine.network.model.ScoreStatus
 import com.mredrock.cyxbs.mine.network.model.UserLocal
 import com.mredrock.cyxbs.mine.util.apiService
@@ -77,9 +74,6 @@ class UserViewModel : BaseViewModel() {
 
     }
 
-    /**
-     * 更新BaseApp.user
-     */
     private fun freshBaseUser(user: UserLocal) {
         ServiceManager.getService(IAccountService::class.java).getUserEditorService().apply {
             setIntroduction(user.introduction)

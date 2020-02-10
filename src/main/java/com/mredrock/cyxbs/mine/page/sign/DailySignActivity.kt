@@ -147,7 +147,7 @@ class DailySignActivity(override val viewModelClass: Class<DailyViewModel> = Dai
         } else {
             mine_daily_sign.apply {
                 isClickable = true
-                background = ResourcesCompat.getDrawable(resources, R.drawable.mine_bg_round_corner_blue_gradient, null)
+                background = ResourcesCompat.getDrawable(resources, R.drawable.common_dialog_btn_positive_blue, null)
                 textColor = ContextCompat.getColor(context, R.color.mine_white)
                 text = "签到"
             }

@@ -279,7 +279,7 @@
             style="?android:attr/borderlessButtonStyle"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="27dp"
-            android:background="@drawable/mine_bg_round_corner_blue_gradient"
+            android:background="@drawable/common_dialog_btn_positive_blue"
             android:text="@string/mine_exit"
             android:textColor="@color/whiteFontColor"
             android:textSize="18sp" />
