@@ -169,14 +169,12 @@ class CourseContainerEntryFragment : BaseFragment() {
                                 .Factory(mStuNumList.get()!!, mNameList.get()!!))
                         .get(NoCourseInviteViewModel::class.java)
                 mNoCourseInviteViewModel?.getCourses()
-                hideNowCourseHead()
             }
             CourseState.OtherCourse -> {
                 mCoursesViewModel = ViewModelProviders.of(this).get(CoursesViewModel::class.java)
                 mBinding.coursesViewModel = mCoursesViewModel
                 mCoursesViewModel.mStuNum = mStuNum.get()!!//这里不可能为空
                 context?.let { mCoursesViewModel.refreshScheduleData(it) }
-                hideNowCourseHead()
             }
             CourseState.OrdinaryCourse -> {
                 mCoursesViewModel = ViewModelProviders.of(activity!!).get(CoursesViewModel::class.java)
@@ -195,6 +193,7 @@ class CourseContainerEntryFragment : BaseFragment() {
             //给下方ViewPager添加适配器和绑定tab
             mBinding.vp.adapter = mScheduleAdapter
             mBinding.tabLayout.setupWithViewPager(mBinding.vp)
+            settingFollowBottomSheet(1f)
         }
 
 
@@ -361,17 +360,21 @@ class CourseContainerEntryFragment : BaseFragment() {
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun bottomSheetSlideStateReceive(bottomSheetStateEvent: BottomSheetStateEvent) {
+        settingFollowBottomSheet(bottomSheetStateEvent.state)
+    }
+
+    private fun settingFollowBottomSheet(state: Float) {
         course_current_course_week_select_container.visibility = View.VISIBLE
         if (course_header_select_content.visibility == View.GONE) {
-            course_current_course_container.alpha = 1 - bottomSheetStateEvent.state
-            course_current_course_week_select_container.alpha = bottomSheetStateEvent.state
-            if (bottomSheetStateEvent.state == 0f) {
+            course_current_course_container.alpha = 1 - state
+            course_current_course_week_select_container.alpha = state
+            if (state == 0f) {
                 course_header_select_content.visibility = View.GONE
                 course_header_show.visibility = View.VISIBLE
                 course_current_course_week_select_container.visibility = View.GONE
             }
         } else {
-            if (bottomSheetStateEvent.state == 0f) {
+            if (state == 0f) {
                 TransitionManager.beginDelayedTransition(fl, TransitionSet().apply {
                     addTransition(Slide().apply {
                         slideEdge = Gravity.START
@@ -380,8 +383,8 @@ class CourseContainerEntryFragment : BaseFragment() {
                 })
                 course_header_select_content.visibility = View.GONE
                 course_header_show.visibility = View.VISIBLE
-                course_current_course_container.alpha = 1 - bottomSheetStateEvent.state
-                course_current_course_week_select_container.alpha = bottomSheetStateEvent.state
+                course_current_course_container.alpha = 1 - state
+                course_current_course_week_select_container.alpha = state
                 course_current_course_week_select_container.visibility = View.GONE
             }
         }
