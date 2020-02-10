@@ -23,7 +23,7 @@ class CommonDialogFragment() : DialogFragment() {
     private var positiveString: String = "确定"
     private var onPositiveClick: (() -> Unit)? = null
     private var onNegativeClick: (() -> Unit)? = null
-    private var elseFunction: (() -> Unit)? = null
+    private var elseFunction: ((View) -> Unit)? = null
 
     fun initView(
             @LayoutRes
@@ -31,7 +31,7 @@ class CommonDialogFragment() : DialogFragment() {
             positiveString: String = "确定",
             onPositiveClick: (() -> Unit)? = null,
             onNegativeClick: (() -> Unit)? = null,
-            elseFunction: (() -> Unit)? = null
+            elseFunction: ((View) -> Unit)? = null
     ) {
         this.containerRes = containerRes
         this.positiveString = positiveString
@@ -44,9 +44,9 @@ class CommonDialogFragment() : DialogFragment() {
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
-        val v = inflater.inflate(R.layout.common_dialog, container)
+        val v = inflater.inflate(R.layout.common_dialog, container, false)
         containerRes?.let {
-            v.findViewById<FrameLayout>(R.id.common_dialog_container).addView(inflater.inflate(it, null))
+            v.findViewById<FrameLayout>(R.id.common_dialog_container).addView(LayoutInflater.from(context).inflate(it, null))
         }
         return v
     }
@@ -60,6 +60,6 @@ class CommonDialogFragment() : DialogFragment() {
         onNegativeClick ?: common_dialog_btn_negative.gone()
         common_dialog_btn_negative.setOnClickListener { onNegativeClick?.invoke() }
 
-        elseFunction?.invoke()
+        elseFunction?.invoke(view)
     }
 }
