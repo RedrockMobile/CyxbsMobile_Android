@@ -12,13 +12,12 @@
 
     </data>
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/fl"
         android:fitsSystemWindows="true"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/course_layer_list_container_backgroud"
-        android:orientation="vertical"
         android:paddingTop="@dimen/course_top_distance">
 
         <View
@@ -35,7 +34,10 @@
         <FrameLayout
             android:id="@+id/course_header"
             android:layout_width="match_parent"
-            android:layout_height="51dp">
+            android:layout_height="51dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/course_tip">
 
             <FrameLayout
                 android:id="@+id/course_header_show"
@@ -75,8 +77,8 @@
                         android:id="@+id/ll_course_time_container"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
                         android:gravity="center"
+                        android:orientation="horizontal"
                         android:visibility="@{coursesViewModel.isShowCurrentSchedule}"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -137,12 +139,12 @@
 
                         <com.mredrock.cyxbs.course.component.MarqueeTextView
                             android:id="@+id/tv_course_place"
-                            android:ellipsize="marquee"
-                            android:singleLine="true"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="3dp"
+                            android:ellipsize="marquee"
                             android:gravity="center"
+                            android:singleLine="true"
                             android:text="@{coursesViewModel.nowCourse.classroom}"
                             tools:text="综合实验楼" />
 
@@ -282,12 +284,38 @@
 
         </FrameLayout>
 
-        <androidx.viewpager.widget.ViewPager
-            android:id="@+id/vp"
+        <FrameLayout
+            android:id="@+id/course_page_container"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:fillViewport="true">
+            android:layout_height="0dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/course_header">
 
-        </androidx.viewpager.widget.ViewPager>
-    </LinearLayout>
+            <androidx.viewpager.widget.ViewPager
+                android:id="@+id/vp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fillViewport="true"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/course_header">
+
+            </androidx.viewpager.widget.ViewPager>
+
+
+
+            <com.airbnb.lottie.LottieAnimationView
+                android:id="@+id/course_lottie_load"
+                android:layout_marginTop="50dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/course_header"
+                app:layout_constraintVertical_bias="0.18"
+                app:lottie_rawRes="@raw/course_loader" />
+        </FrameLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -1,5 +1,6 @@
 package com.mredrock.cyxbs.course.ui
 
+import android.animation.Animator
 import android.os.Bundle
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -10,6 +11,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.databinding.ObservableField
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.transition.Fade
 import androidx.transition.Slide
 import androidx.transition.TransitionManager
 import androidx.transition.TransitionSet
@@ -193,6 +195,7 @@ class CourseContainerEntryFragment : BaseFragment() {
             //给下方ViewPager添加适配器和绑定tab
             mBinding.vp.adapter = mScheduleAdapter
             mBinding.tabLayout.setupWithViewPager(mBinding.vp)
+            course_lottie_load.visibility = View.GONE
             settingFollowBottomSheet(1f)
         }
 
@@ -350,9 +353,32 @@ class CourseContainerEntryFragment : BaseFragment() {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun loadCoursePage(loadCourse: LoadCourse){
-        //给下方ViewPager添加适配器和绑定tab
-        mBinding.vp.adapter = mScheduleAdapter
-        mBinding.tabLayout.setupWithViewPager(mBinding.vp)
+        course_lottie_load.playAnimation()
+        course_lottie_load.speed = 2f
+        course_lottie_load.addAnimatorListener(object : Animator.AnimatorListener{
+            override fun onAnimationRepeat(animation: Animator?) {
+            }
+
+            override fun onAnimationEnd(animation: Animator?) {
+                //给下方ViewPager添加适配器和绑定tab
+                mBinding.vp.adapter = mScheduleAdapter
+                mBinding.tabLayout.setupWithViewPager(mBinding.vp)
+                TransitionManager.beginDelayedTransition(course_page_container,Fade())
+                course_lottie_load.visibility = View.GONE
+            }
+
+            override fun onAnimationCancel(animation: Animator?) {
+            }
+
+            override fun onAnimationStart(animation: Animator?) {
+            }
+        })
+//        Observable.create<Any> {
+//            Thread.sleep(500)
+//            it.onNext(0)
+//        }.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe {
+//
+//        }.isDisposed
     }
 
     /**
