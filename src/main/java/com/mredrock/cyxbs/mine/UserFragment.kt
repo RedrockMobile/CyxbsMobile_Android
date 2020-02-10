@@ -10,6 +10,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
@@ -32,6 +33,7 @@ import com.mredrock.cyxbs.mine.page.ask.AskActivity
 import com.mredrock.cyxbs.mine.page.comment.CommentActivity
 import com.mredrock.cyxbs.mine.page.edit.EditInfoActivity
 import com.mredrock.cyxbs.mine.page.sign.DailySignActivity
+import com.mredrock.cyxbs.mine.util.extension.logr
 import kotlinx.android.synthetic.main.mine_fragment_main.*
 import org.greenrobot.eventbus.EventBus
 import org.jetbrains.anko.support.v4.defaultSharedPreferences
@@ -47,6 +49,19 @@ import org.jetbrains.anko.textColor
 class UserFragment : BaseViewModelFragment<UserViewModel>() {
     override val viewModelClass: Class<UserViewModel>
         get() = UserViewModel::class.java
+
+    private val praiseDialog: CommonDialogFragment by lazy {
+        CommonDialogFragment().apply {
+            initView(
+                    containerRes = R.layout.mine_layout_dialog_praise,
+                    onPositiveClick = { dismiss() },
+                    positiveString = "确定",
+                    elseFunction = { view ->
+                        view.findViewById<TextView>(R.id.mine_dialog_tv_praise).text = "你一共获得${viewModel.qaNumber.value?.praiseNumber ?: 0}个赞"
+                    }
+            )
+        }
+    }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -67,11 +82,15 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
         mine_main_tv_reply_comment.setOnClickListener { checkLoginBeforeAction("评论回复") { startActivity<CommentActivity>() } }
         mine_main_cl_info_edit.setOnClickListener { checkLoginBeforeAction("资料") { startActivity<EditInfoActivity>() } }
 
+        mine_main_tv_praise.setOnClickListener { praiseDialog.show(fragmentManager, "praise") }
+        mine_main_praise_number.setOnClickListener { praiseDialog.show(fragmentManager, "praise") }
+
         mine_main_tv_about.setOnClickListener { startActivity<AboutActivity>() }
         mine_main_btn_exit.setOnClickListener { onExitClick() }
         mine_main_tv_feedback.setOnClickListener { onFeedBackClick() }
         mine_main_tv_custom_widget.setOnClickListener { onSetWidgetClick() }
         mine_main_tv_redrock.setOnClickListener { clickAboutUsWebsite() }
+
         mine_main_switch.setOnCheckedChangeListener { _, isChecked ->
             context?.defaultSharedPreferences?.editor {
                 if (isChecked) {
@@ -83,6 +102,7 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
         }
         mine_main_switch.isChecked = context?.defaultSharedPreferences?.getBoolean(COURSE_SHOW_STATE, false)
                 ?: false
+
     }
 
     @SuppressLint("SetTextI18n")
@@ -107,6 +127,7 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
             }
         })
         viewModel.qaNumber.observe(this, Observer {
+            logr("qanumber")
             mine_main_question_number.text = it.askPostedNumber.toString()
             mine_main_answer_number.text = it.answerPostedNumber.toString()
             mine_main_reply_comment_number.text = it.commentNumber.toString()
