@@ -6,6 +6,7 @@ import androidx.annotation.WorkerThread
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.google.gson.Gson
 import com.mredrock.cyxbs.account.bean.LoginParams
+import com.mredrock.cyxbs.account.bean.RefreshParams
 import com.mredrock.cyxbs.account.bean.TokenWrapper
 import com.mredrock.cyxbs.account.bean.User
 import com.mredrock.cyxbs.account.utils.UserInfoEncryption
@@ -13,13 +14,8 @@ import com.mredrock.cyxbs.common.config.ACCOUNT_SERVICE
 import com.mredrock.cyxbs.common.config.SP_KEY_USER_V2
 import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.network.exception.RedrockApiException
-import com.mredrock.cyxbs.common.service.account.IAccountService
-import com.mredrock.cyxbs.common.service.account.IUserEditorService
-import com.mredrock.cyxbs.common.service.account.IUserService
-import com.mredrock.cyxbs.common.service.account.IUserStateService
-import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
-import com.mredrock.cyxbs.common.utils.extensions.takeIfNoException
-import com.mredrock.cyxbs.common.utils.extensions.editor
+import com.mredrock.cyxbs.common.service.account.*
+import com.mredrock.cyxbs.common.utils.extensions.*
 import retrofit2.HttpException
 
 /**
@@ -35,13 +31,15 @@ internal class AccountService : IAccountService {
     private val mUserService: IUserService = UserService()
     private val mUserStateService: IUserStateService = UserStateService()
     private val mUserEditorService: IUserEditorService = UserEditorService()
-
+    private val mUserTokenSerVice: IUserTokenService = UserTokenSerVice()
     private val mUserInfoEncryption = UserInfoEncryption()
 
     private var user: User? = null
     private var tokenWrapper: TokenWrapper? = null
 
+    private lateinit var mContext: Context
     override fun init(context: Context) {
+        this.mContext = context
         (mUserStateService as UserStateService).loginFromCache(context)
     }
 
@@ -50,7 +48,7 @@ internal class AccountService : IAccountService {
     override fun getVerifyService() = mUserStateService
 
     override fun getUserEditorService() = mUserEditorService
-
+    override fun getUserTokenService(): IUserTokenService = mUserTokenSerVice
     private fun bind(tokenWrapper: TokenWrapper) {
         val encryptedUserJson = tokenWrapper.token.split(".")[0]
         this.tokenWrapper = tokenWrapper
@@ -125,6 +123,19 @@ internal class AccountService : IAccountService {
         }
 
         private fun notifyAllStateListeners(state: IUserStateService.UserState) {
+            //用户状态为过期时，主动刷新，主要是用于从缓存加载时过期的情况
+            when (state) {
+                IUserStateService.UserState.EXPIRED -> {
+                    //并且处于登录状态
+                    if (isLogin()) {
+                        refresh()
+                    }
+
+                }
+                else -> {
+                    //todo
+                }
+            }
             //todo 后面再实现该方法，用于替代以前用EventBus实现的OnStateChangeEvent事件
         }
 
@@ -149,6 +160,25 @@ internal class AccountService : IAccountService {
                 else -> IUserStateService.UserState.NOT_LOGIN
             }
             notifyAllStateListeners(state)
+        }
+
+        override fun refresh(onError: () -> Unit, action: (token: String) -> Unit) {
+            val refreshToken = tokenWrapper?.refreshToken ?: ""
+            val response = ApiGenerator.getCommonApiService(ApiService::class.java).refresh(RefreshParams(refreshToken)).execute()
+            if (response.body() == null) {
+                onError.invoke()
+                throw HttpException(response)
+            }
+            val apiWrapper = response.body()!!
+            if (apiWrapper.data != null) {
+                bind(apiWrapper.data)
+                notifyAllStateListeners(IUserStateService.UserState.LOGIN)
+                mContext.defaultSharedPreferences.editor {
+                    putString(SP_KEY_USER_V2, mUserInfoEncryption.encrypt(Gson().toJson(apiWrapper.data)))
+
+                }
+                action.invoke(apiWrapper.data.token)
+            }
         }
 
         @WorkerThread
@@ -181,6 +211,16 @@ internal class AccountService : IAccountService {
             user = null
             tokenWrapper = null
             notifyAllStateListeners(IUserStateService.UserState.NOT_LOGIN)
+        }
+    }
+
+    inner class UserTokenSerVice : IUserTokenService {
+        override fun getRefreshToken(): String {
+            return tokenWrapper?.refreshToken ?: ""
+        }
+
+        override fun getToken(): String {
+            return tokenWrapper?.token ?: ""
         }
     }
 }
