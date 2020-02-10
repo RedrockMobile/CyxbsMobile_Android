@@ -1,4 +1,4 @@
-package com.mredrock.cyxbs.mine.page.sign
+package com.mredrock.cyxbs.mine.util.ui
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater

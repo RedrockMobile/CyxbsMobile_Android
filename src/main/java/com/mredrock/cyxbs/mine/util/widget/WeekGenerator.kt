@@ -1,4 +1,4 @@
-package com.mredrock.cyxbs.mine.page.sign
+package com.mredrock.cyxbs.mine.util.widget
 
 import com.mredrock.cyxbs.common.utils.SchoolCalendar
 

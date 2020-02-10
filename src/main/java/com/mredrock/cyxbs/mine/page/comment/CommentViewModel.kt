@@ -7,13 +7,11 @@ import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.service.account.IAccountService
 import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
-import com.mredrock.cyxbs.common.utils.extensions.mapOrThrowApiException
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
-import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.common.viewmodel.event.SingleLiveEvent
 import com.mredrock.cyxbs.mine.network.model.Comment
-import com.mredrock.cyxbs.mine.network.model.RelateMeItem
+import com.mredrock.cyxbs.mine.network.model.CommentReceived
 import com.mredrock.cyxbs.mine.util.apiService
 import com.mredrock.cyxbs.mine.util.extension.normalWrapper
 import com.mredrock.cyxbs.mine.util.ui.RvFooter
@@ -28,7 +26,7 @@ class CommentViewModel : BaseViewModel() {
 
     private val pageSize = 6
     private var commentPage: Int = 1
-    private var responsePage: Int = 1
+    private var commentReceivedPage: Int = 1
 
     //发出评论部分
     private val _eventOnComment = SingleLiveEvent<RvFooter.State>()
@@ -47,7 +45,7 @@ class CommentViewModel : BaseViewModel() {
                 .normalWrapper(this)
                 .safeSubscribeBy(
                         onNext = {
-                            //由于Rxjava反射不应定能够够保证为空，当为空的说明这一页没有数据，于是停止加载
+                            //当为空的说明这一页没有数据，于是停止加载
                             if (it.isEmpty()) {
                                 _eventOnComment.postValue(RvFooter.State.NOMORE)
                                 return@safeSubscribeBy
@@ -68,31 +66,40 @@ class CommentViewModel : BaseViewModel() {
     }
 
 
-    val errorEvent = MutableLiveData<String>()
-    val dataEvent = MutableLiveData<List<RelateMeItem>>()
+    //收到评论部分
+    private val _eventOnCommentReceived = SingleLiveEvent<RvFooter.State>()
+    val eventOnCommentReceived: LiveData<RvFooter.State>
+        get() = _eventOnCommentReceived
 
-    var page = 1
+    private val _commentReceivedList = MutableLiveData<MutableList<CommentReceived>>()
+    val commentReceivedList: LiveData<List<CommentReceived>>
+        get() = Transformations.map(_commentReceivedList) {
+            it.toList()
+        }
 
-    var fakeComments: MutableLiveData<List<Comment>> = MutableLiveData()
-
-    fun loadData(type: Int) {
-        apiService.getRelateMeList(stuNum, idNum
-                ?: return, page++, pageSize, type)
-                .mapOrThrowApiException()
-                .setSchedulers()
+    fun loadCommentReceivedList() {
+        apiService.getCommentReceivedList(stuNum, idNum
+                ?: return, commentReceivedPage++, pageSize)
+                .normalWrapper(this)
                 .safeSubscribeBy(
                         onNext = {
-                            dataEvent.postValue(it)
+                            //当为空的说明这一页没有数据，于是停止加载
+                            if (it.isEmpty()) {
+                                _eventOnCommentReceived.postValue(RvFooter.State.NOMORE)
+                                return@safeSubscribeBy
+                            }
+
+                            val localCommentReceived = _commentReceivedList.value ?: mutableListOf()
+                            localCommentReceived.addAll(it)
+                            _commentReceivedList.postValue(localCommentReceived)
                         },
                         onError = {
-                            errorEvent.postValue(it.message)
-                        }
-                ).lifeCycle()
+                            _eventOnCommentReceived.postValue(RvFooter.State.ERROR)
+                        })
+                .lifeCycle()
     }
-
-
-    fun cleanPage() {
-        page = 1
+    fun cleanCommentReceivedPage() {
+        commentReceivedPage = 1
+        _commentReceivedList.value = mutableListOf()
     }
-
 }

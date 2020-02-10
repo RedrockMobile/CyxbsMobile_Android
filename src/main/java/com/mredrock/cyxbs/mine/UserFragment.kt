@@ -22,9 +22,8 @@ import com.mredrock.cyxbs.common.event.AskLoginEvent
 import com.mredrock.cyxbs.common.event.LoginStateChangeEvent
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.service.account.IAccountService
-import com.mredrock.cyxbs.common.service.account.IUserService
-import com.mredrock.cyxbs.common.service.account.IUserStateService
 import com.mredrock.cyxbs.common.ui.BaseViewModelFragment
+import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
 import com.mredrock.cyxbs.common.utils.extensions.editor
 import com.mredrock.cyxbs.common.utils.extensions.loadAvatar
 import com.mredrock.cyxbs.mine.page.about.AboutActivity
@@ -73,12 +72,21 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
         mine_main_tv_feedback.setOnClickListener { onFeedBackClick() }
         mine_main_tv_custom_widget.setOnClickListener { onSetWidgetClick() }
         mine_main_tv_redrock.setOnClickListener { clickAboutUsWebsite() }
+        mine_main_switch.setOnCheckedChangeListener { _, isChecked ->
+            context?.defaultSharedPreferences?.editor {
+                if (isChecked) {
+                    putString(COURSE_SHOW_STATE, "true")
+                } else {
+                    putString(COURSE_SHOW_STATE, "false")
+                }
+            }
+        }
     }
 
     @SuppressLint("SetTextI18n")
     private fun addObserver() {
         viewModel.isUserUpdate.observe(this, Observer {
-            refreshLayout()
+            refreshUserLayout()
         })
         viewModel.status.observe(this, Observer {
             mine_main_tv_sign.text = "已连续签到${it.serialDays}天 "
@@ -114,26 +122,14 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
 
     override fun onResume() {
         super.onResume()
-        refreshLayout()
+        viewModel.getUserInfo()
         viewModel.getScoreStatus()
         viewModel.getQANumber()
+        refreshUserLayout()
     }
 
-    private fun getPersonInfoData() {
-        if (!ServiceManager.getService(IAccountService::class.java).getVerifyService().isLogin()) {
-            mine_main_username.setText(R.string.mine_user_empty_username)
-            mine_main_avatar.setImageResource(R.drawable.mine_default_avatar)
-            mine_main_introduce.setText(R.string.mine_user_empty_introduce)
-            return
-        } else {
-            viewModel.getUserInfo()
-        }
-    }
-
-
-    //刷新界面
-    private fun refreshLayout() {
-        viewModel.getScoreStatus()
+    //刷新和User信息有关的界面
+    private fun refreshUserLayout() {
         if (ServiceManager.getService(IAccountService::class.java).getVerifyService().isLogin()) {
             val userService = ServiceManager.getService(IAccountService::class.java).getUserService()
             context?.loadAvatar(userService.getAvatarImgUrl(), mine_main_avatar)
@@ -201,6 +197,9 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
                     viewModel.clearUser()
 
                     EventBus.getDefault().post(LoginStateChangeEvent(false))
+                    activity?.let {
+                        ServiceManager.getService(IAccountService::class.java).getVerifyService().logout(it)
+                    }
                     //清空activity栈
                     val flag = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
                     ARouter.getInstance().build("/main/login").withFlags(flag.toInt()).navigation()

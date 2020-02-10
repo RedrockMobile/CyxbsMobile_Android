@@ -1,4 +1,4 @@
-package com.mredrock.cyxbs.mine.page.sign
+package com.mredrock.cyxbs.mine.util.widget
 
 /**
  * Created by roger on 2019/11/30

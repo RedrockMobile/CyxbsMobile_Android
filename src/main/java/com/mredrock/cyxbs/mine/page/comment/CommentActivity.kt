@@ -15,7 +15,7 @@ class CommentActivity : BaseTabLayoutActivity() {
         super.onCreate(savedInstanceState)
         common_toolbar.title = "评论"
 
-        val fragmentList = listOf<Fragment>(CommentFragment(), ResponseFragment())
+        val fragmentList = listOf<Fragment>(CommentFragment(), CommentReceivedFragment())
         val titleList = listOf<String>("发出评论", "收到评论")
         init(fragmentList, titleList)
     }

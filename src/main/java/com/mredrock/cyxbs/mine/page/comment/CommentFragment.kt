@@ -12,6 +12,7 @@ import kotlinx.android.synthetic.main.mine_list_item_comment_comment.view.*
 
 /**
  * Created by roger on 2019/12/5
+ * 发出的评论
  */
 class CommentFragment : BaseRVFragment<Comment>() {
 

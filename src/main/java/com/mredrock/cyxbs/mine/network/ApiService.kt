@@ -140,43 +140,13 @@ interface ApiService {
                      @Field("page") page: Int,
                      @Field("size") size: Int): Observable<RedrockApiWrapper<List<Comment>>>
 
-//    /**
-//     * 问一问
-//     */
-//    @FormUrlEncoded
-//    @POST("/app/index.php/QA/User/ask")
-//    fun getMyAskOver(@Field("stunum") stuNum: String,
-//                     @Field("idnum") idNum: String,
-//                     @Field("page") page: Int,
-//                     @Field("size") size: Int,
-//                     @Field("type") type: Int = 1): Observable<RedrockApiWrapper<List<MyAskQuestion>>>
-//
-//    @FormUrlEncoded
-//    @POST("/app/index.php/QA/User/ask")
-//    fun getMyAskWait(@Field("stunum") stuNum: String,
-//                     @Field("idnum") idNum: String,
-//                     @Field("page") page: Int,
-//                     @Field("size") size: Int,
-//                     @Field("type") type: Int = 2): Observable<RedrockApiWrapper<List<MyAskQuestion>>>
+    @FormUrlEncoded
+    @POST("app/index.php/QA/User/reComment")
+    fun getCommentReceivedList(@Field("stunum") stuNum: String,
+                       @Field("idnum") idNum: String,
+                       @Field("page") page: Int,
+                       @Field("size") size: Int): Observable<RedrockApiWrapper<List<CommentReceived>>>
 
-//    /**
-//     * 帮一帮
-//     */
-//    @FormUrlEncoded
-//    @POST("/app/index.php/QA/User/help")
-//    fun getMyHelpOver(@Field("stunum") stuNum: String,
-//                      @Field("idnum") idNum: String,
-//                      @Field("page") page: Int,
-//                      @Field("size") size: Int,
-//                      @Field("type") type: Int = 1): Observable<RedrockApiWrapper<List<MyHelpQuestion>>>
-//
-//    @FormUrlEncoded
-//    @POST("/app/index.php/QA/User/help")
-//    fun getMyHelpWait(@Field("stunum") stuNum: String,
-//                      @Field("idnum") idNum: String,
-//                      @Field("page") page: Int,
-//                      @Field("size") size: Int,
-//                      @Field("type") type: Int = 2): Observable<RedrockApiWrapper<List<MyHelpQuestion>>>
 
     /**
      * 与我相关

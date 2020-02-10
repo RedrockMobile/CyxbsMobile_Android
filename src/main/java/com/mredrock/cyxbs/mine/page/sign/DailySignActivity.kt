@@ -20,10 +20,9 @@ import com.mredrock.cyxbs.common.utils.extensions.invisible
 import com.mredrock.cyxbs.common.utils.extensions.visible
 import com.mredrock.cyxbs.mine.R
 import com.mredrock.cyxbs.mine.network.model.ScoreStatus
-import com.mredrock.cyxbs.mine.util.widget.SchoolCalendarPlus
-import com.mredrock.cyxbs.mine.util.widget.SpaceDecoration
-import com.mredrock.cyxbs.mine.util.widget.Stick
 import com.mredrock.cyxbs.common.utils.extensions.toast
+import com.mredrock.cyxbs.mine.util.ui.ProductAdapter
+import com.mredrock.cyxbs.mine.util.widget.*
 import kotlinx.android.synthetic.main.mine_activity_daily_sign.*
 import kotlinx.android.synthetic.main.mine_layout_store_sign.*
 import org.jetbrains.anko.textColor
