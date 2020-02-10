@@ -2,7 +2,6 @@ package com.mredrock.cyxbs.main.ui
 
 import android.os.Build
 import android.os.Bundle
-import android.view.Gravity
 import android.view.MenuItem
 import android.view.View
 import android.view.View.*
@@ -12,7 +11,7 @@ import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.core.view.get
 import androidx.fragment.app.Fragment
-import androidx.transition.Slide
+import androidx.transition.Explode
 import androidx.transition.TransitionManager
 import androidx.transition.TransitionSet
 import com.alibaba.android.arouter.facade.annotation.Route
@@ -63,23 +62,14 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
             R.drawable.main_ic_mine_unselected, R.drawable.main_ic_mine_selected
     )
 
-    private val courseFragment: Fragment by lazy(LazyThreadSafetyMode.NONE) {
-        getFragment(COURSE_ENTRY)
-    }
+    //四个需要组装的fragment(懒加载)
+    private val courseFragment: Fragment by lazy(LazyThreadSafetyMode.NONE) { getFragment(COURSE_ENTRY) }
+    private val qaFragment: Fragment by lazy(LazyThreadSafetyMode.NONE) { getFragment(QA_ENTRY) }
+    private val mineFragment: Fragment by lazy(LazyThreadSafetyMode.NONE) { getFragment(MINE_ENTRY) }
+    private val discoverFragment: Fragment by lazy(LazyThreadSafetyMode.NONE) { getFragment(DISCOVER_ENTRY) }
 
-    private val qaFragment: Fragment by lazy(LazyThreadSafetyMode.NONE) {
-        getFragment(QA_ENTRY)
-    }
-
-    private val mineFragment: Fragment by lazy(LazyThreadSafetyMode.NONE) {
-        getFragment(MINE_ENTRY)
-    }
-
-    private val discoverFragment: Fragment by lazy(LazyThreadSafetyMode.NONE) {
-        getFragment(DISCOVER_ENTRY)
-    }
-
-    val showedFragments = mutableListOf<Fragment>()
+    //已经加载好的fragment
+    private val showedFragments = mutableListOf<Fragment>()
 
     //进入app是否直接显示课表
     var courseShowState: Boolean = false
@@ -146,9 +136,8 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
                     other_fragment_container.visibility = GONE
                     changeFragment(discoverFragment, 0, nav_main.menu[0])
                     TransitionManager.beginDelayedTransition(main_content, TransitionSet().apply {
-                        addTransition(Slide().apply {
+                        addTransition(Explode().apply {
                             duration = 500
-                            slideEdge = Gravity.TOP
                         })
                     })
                     other_fragment_container.visibility = VISIBLE
@@ -226,17 +215,26 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
         peeCheckedItemPosition = 0
     }
 
+    /**
+     * 进行显示页面的切换
+     * @param fragment 用来切换的fragment
+     * @param position 切换到的tab的索引 从0开始
+     * @param menuItem nav中对应的Item
+     */
     private fun changeFragment(fragment: Fragment, position: Int, menuItem: MenuItem) {
         val transition = supportFragmentManager.beginTransaction()
+        //遍历隐藏已经加载的fragment
         showedFragments.forEach {
             transition.hide(it)
         }
+        //如果这个fragment从来没有加载过，则进行添加
         if (!showedFragments.contains(fragment)) {
             showedFragments.add(fragment)
             transition.add(R.id.other_fragment_container, fragment)
         }
         transition.show(fragment)
         transition.commit()
+        //对tab进行变化
         peeCheckedItemPosition = position
         menuItem.setIcon(icons[(position * 2) + 1])
     }
@@ -286,7 +284,7 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
      * 接收bottomSheet的点击事件
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
-    fun acceptNotifyBottomsheetToExpandEvent(notifyBottomSheetToExpandEvent: NotifyBottomSheetToExpandEvent) {
+    fun acceptNotifyBottomSheetToExpandEvent(notifyBottomSheetToExpandEvent: NotifyBottomSheetToExpandEvent) {
         if (notifyBottomSheetToExpandEvent.isToExpand) {
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
         }
