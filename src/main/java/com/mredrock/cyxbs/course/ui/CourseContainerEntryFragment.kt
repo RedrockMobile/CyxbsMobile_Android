@@ -15,10 +15,7 @@ import androidx.transition.TransitionManager
 import androidx.transition.TransitionSet
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.mredrock.cyxbs.common.bean.WidgetCourse
-import com.mredrock.cyxbs.common.config.COURSE_ENTRY
-import com.mredrock.cyxbs.common.config.OTHERS_STU_NUM
-import com.mredrock.cyxbs.common.config.STU_NAME_LIST
-import com.mredrock.cyxbs.common.config.STU_NUM_LIST
+import com.mredrock.cyxbs.common.config.*
 import com.mredrock.cyxbs.common.event.*
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.service.account.IAccountService
@@ -92,6 +89,9 @@ class CourseContainerEntryFragment : BaseFragment() {
         }
     }
 
+    //是否直接加载课表子页，默认直接加载，除非传值过来设置为false过来，后面可以懒加载
+    lateinit var directLoadCourse:String
+
     //每一周课表的ViewPager的Adapter
     private lateinit var mScheduleAdapter: ScheduleVPAdapter
 
@@ -155,6 +155,7 @@ class CourseContainerEntryFragment : BaseFragment() {
             mStuNum.set(bundle.getString(OTHERS_STU_NUM))
             mStuNumList.set(bundle.getStringArrayList(STU_NUM_LIST))
             mNameList.set(bundle.getStringArrayList(STU_NAME_LIST))
+            directLoadCourse = bundle.getString(COURSE_DIRECT_LOAD)?: TRUE
         }
 
 
@@ -190,9 +191,12 @@ class CourseContainerEntryFragment : BaseFragment() {
             mWeeks = mRawWeeks.copyOf()
             mScheduleAdapter = ScheduleVPAdapter(mWeeks, childFragmentManager)
         }
-        //给下方ViewPager添加适配器和绑定tab
-        mBinding.vp.adapter = mScheduleAdapter
-        mBinding.tabLayout.setupWithViewPager(mBinding.vp)
+        if (directLoadCourse== TRUE){
+            //给下方ViewPager添加适配器和绑定tab
+            mBinding.vp.adapter = mScheduleAdapter
+            mBinding.tabLayout.setupWithViewPager(mBinding.vp)
+        }
+
 
 
         //获取到ViewModel后进行一些初始化操作
@@ -343,6 +347,13 @@ class CourseContainerEntryFragment : BaseFragment() {
                 }
             }
         }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun loadCoursePage(loadCourse: LoadCourse){
+        //给下方ViewPager添加适配器和绑定tab
+        mBinding.vp.adapter = mScheduleAdapter
+        mBinding.tabLayout.setupWithViewPager(mBinding.vp)
     }
 
     /**
