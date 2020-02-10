@@ -11,7 +11,7 @@ import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.core.view.get
 import androidx.fragment.app.Fragment
-import androidx.transition.Explode
+import androidx.transition.Slide
 import androidx.transition.TransitionManager
 import androidx.transition.TransitionSet
 import com.alibaba.android.arouter.facade.annotation.Route
@@ -34,6 +34,9 @@ import com.mredrock.cyxbs.main.bean.FinishEvent
 import com.mredrock.cyxbs.main.utils.*
 import com.mredrock.cyxbs.main.viewmodel.MainViewModel
 import com.umeng.message.inapp.InAppMessageManager
+import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.main_activity_main.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -126,23 +129,28 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
                 if (ll_nav_main_container.visibility == GONE) {
                     ll_nav_main_container.visibility = VISIBLE
                 }
+                if (isFirst && courseShowState && p1<0.5f) {
+                    isFirst = false
+                    Observable.create<Fragment> {
+                        it.onNext(discoverFragment)
+                    }.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe {
+                        other_fragment_container.visibility = GONE
+                        changeFragment(discoverFragment, 0, nav_main.menu[0])
+                        TransitionManager.beginDelayedTransition(main_content, TransitionSet().apply {
+                            addTransition(Slide().apply {
+                                duration = 500
+                            })
+                        })
+                        other_fragment_container.visibility = VISIBLE
+                    }.isDisposed
+                }
             }
 
             override fun onStateChanged(p0: View, p1: Int) {
                 if (bottomSheetBehavior.state == BottomSheetBehavior.STATE_EXPANDED) {
                     checkLoginBeforeAction("课表") {}
                 }
-                if (isFirst && courseShowState && bottomSheetBehavior.state == BottomSheetBehavior.STATE_COLLAPSED) {
-                    other_fragment_container.visibility = GONE
-                    changeFragment(discoverFragment, 0, nav_main.menu[0])
-                    TransitionManager.beginDelayedTransition(main_content, TransitionSet().apply {
-                        addTransition(Explode().apply {
-                            duration = 500
-                        })
-                    })
-                    other_fragment_container.visibility = VISIBLE
-                    isFirst = false
-                }
+
                 if (isFirst && bottomSheetBehavior.state == BottomSheetBehavior.STATE_EXPANDED) {
                     EventBus.getDefault().post(LoadCourse())
                     isFirst = false
