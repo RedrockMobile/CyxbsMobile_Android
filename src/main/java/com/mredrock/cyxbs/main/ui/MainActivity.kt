@@ -79,6 +79,8 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
         getFragment(DISCOVER_ENTRY)
     }
 
+    val showedFragments = mutableListOf<Fragment>()
+
     //进入app是否直接显示课表
     var courseShowState: Boolean = false
 
@@ -225,9 +227,16 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
     }
 
     private fun changeFragment(fragment: Fragment, position: Int, menuItem: MenuItem) {
-        supportFragmentManager.beginTransaction().replace(R.id.other_fragment_container, fragment).apply {
-            commit()
+        val transition = supportFragmentManager.beginTransaction()
+        showedFragments.forEach {
+            transition.hide(it)
         }
+        if (!showedFragments.contains(fragment)) {
+            showedFragments.add(fragment)
+            transition.add(R.id.other_fragment_container, fragment)
+        }
+        transition.show(fragment)
+        transition.commit()
         peeCheckedItemPosition = position
         menuItem.setIcon(icons[(position * 2) + 1])
     }
