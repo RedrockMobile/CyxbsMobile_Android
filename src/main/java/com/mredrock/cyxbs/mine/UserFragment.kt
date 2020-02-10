@@ -75,12 +75,14 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
         mine_main_switch.setOnCheckedChangeListener { _, isChecked ->
             context?.defaultSharedPreferences?.editor {
                 if (isChecked) {
-                    putString(COURSE_SHOW_STATE, "true")
+                    putBoolean(COURSE_SHOW_STATE, true)
                 } else {
-                    putString(COURSE_SHOW_STATE, "false")
+                    putBoolean(COURSE_SHOW_STATE, false)
                 }
             }
         }
+        mine_main_switch.isChecked = context?.defaultSharedPreferences?.getBoolean(COURSE_SHOW_STATE, false)
+                ?: false
     }
 
     @SuppressLint("SetTextI18n")
