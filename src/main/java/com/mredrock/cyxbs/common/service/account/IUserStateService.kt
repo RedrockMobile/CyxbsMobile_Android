@@ -14,6 +14,8 @@ interface IUserStateService {
 
     fun logout(context: Context)
 
+    fun refresh(onError: () -> Unit = {}, action: (token: String) -> Unit = {})
+
     fun isLogin(): Boolean
 
     fun isExpired(): Boolean
