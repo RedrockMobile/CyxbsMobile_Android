@@ -12,6 +12,8 @@ interface IAccountService : IProvider {
     fun getVerifyService(): IUserStateService
 
     fun getUserEditorService(): IUserEditorService
+
+    fun getUserTokenService(): IUserTokenService
 }
 
 

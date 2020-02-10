@@ -71,3 +71,10 @@ const val WEEK_NUM = "week_num"
 
 //启动App时最先显示课表界面的Key
 const val COURSE_SHOW_STATE = "course_show_state"
+
+//通知课表是否直接加载的key
+const val COURSE_DIRECT_LOAD = "direct_load"
+
+//用来替代boolean类型的两种选择（Bundle传递bool类型的值会有默认的false，如果不想要false可以使用这个替代）
+const val TRUE = "true"
+const val FALSE = "false"
