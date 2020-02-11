@@ -61,6 +61,7 @@ const val OTHERS_STU_NUM = "others_stu_num"
 
 //课表辨别是查老师课表的key
 const val OTHERS_TEA_NUM = "others_tea_num"
+const val OTHERS_TEA_NAME = "others_tea_name"
 
 //没课约传递信息的key
 const val STU_NUM_LIST = "stuNumList"
@@ -83,3 +84,6 @@ const val FALSE = "false"
 //从跳转到具体页面时需要以此为key
 const val QUESTION_ID = "question_id"
 const val ANSWER_ID = "answer_id"
+
+//课表版本
+const val COURSE_VERSION = "course_version"
