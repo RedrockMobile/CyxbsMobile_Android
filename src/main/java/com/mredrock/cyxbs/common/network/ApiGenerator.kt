@@ -46,7 +46,7 @@ object ApiGenerator {
                 /**
                  * 所有请求添加token到header，如果有更好方式再改改，或者另外加一个不需要token的ApiGenerator
                  */
-                var response = it.proceed(it.request().newBuilder().header("token", token).build())
+                var response = it.proceed(it.request().newBuilder().header("Authorization", "Bearer $token").build())
                 /**
                  * 刷新token条件设置为，已有refreshToken，并且已经过期，也可以后端返回特定到token失效code
                  */
@@ -55,7 +55,7 @@ object ApiGenerator {
                             onError = { response.close() },
                             action = { t ->
                                 response.close()
-                                response = it.proceed(it.request().newBuilder().header("token", t).build())
+                                response = it.proceed(it.request().newBuilder().header("Authorization", "Bearer $t").build())
                             }
                     )
                 }
