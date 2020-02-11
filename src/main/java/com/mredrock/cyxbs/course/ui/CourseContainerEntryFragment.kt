@@ -207,9 +207,6 @@ class CourseContainerEntryFragment : BaseFragment() {
             mBinding.tabLayout.setupWithViewPager(mBinding.vp)
             course_lottie_load.visibility = View.GONE
             settingFollowBottomSheet(1f)
-            course_current_course_week_select_container.visibility = View.VISIBLE
-        }else{
-            course_current_course_week_select_container.visibility = View.GONE
         }
 
 
@@ -251,15 +248,6 @@ class CourseContainerEntryFragment : BaseFragment() {
 
         //对头部课表头部信息进行一系列初始化
         initHead()
-    }
-
-    /**
-     * 隐藏当前课程系列控件
-     */
-    private fun hideNowCourseHead() {
-        course_header_select_content.visibility = View.GONE
-        course_current_course_container.visibility = View.GONE
-        course_current_course_week_select_container.visibility = View.VISIBLE
     }
 
     /**
@@ -401,6 +389,11 @@ class CourseContainerEntryFragment : BaseFragment() {
     }
 
     private fun settingFollowBottomSheet(state: Float) {
+        if (course_lottie_load.visibility == View.VISIBLE) {
+            course_current_course_week_select_container.visibility  =View.GONE
+        }else{
+            course_current_course_week_select_container.visibility  =View.VISIBLE
+        }
         if (course_header_select_content.visibility == View.GONE) {
             course_current_course_container.alpha = 1 - state
             course_current_course_week_select_container.alpha = state
