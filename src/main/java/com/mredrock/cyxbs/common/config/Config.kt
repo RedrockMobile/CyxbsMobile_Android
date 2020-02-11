@@ -78,3 +78,8 @@ const val COURSE_DIRECT_LOAD = "direct_load"
 //用来替代boolean类型的两种选择（Bundle传递bool类型的值会有默认的false，如果不想要false可以使用这个替代）
 const val TRUE = "true"
 const val FALSE = "false"
+
+//邮问问题和回答
+//从跳转到具体页面时需要以此为key
+const val QUESTION_ID = "question_id"
+const val ANSWER_ID = "answer_id"
