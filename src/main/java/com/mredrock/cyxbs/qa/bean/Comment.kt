@@ -12,6 +12,6 @@ data class Comment(@SerializedName("photo_thumbnail_src")
                    @SerializedName("created_at")
                    val createdAt: String = "",
                    @SerializedName("content")
-                   val content: String = ""): Serializable {
+                   val content: String = "") : Serializable {
     val isMale get() = gender != "女"
 }

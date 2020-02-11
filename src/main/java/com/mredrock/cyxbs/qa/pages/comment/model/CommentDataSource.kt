@@ -3,8 +3,9 @@ package com.mredrock.cyxbs.qa.pages.comment.model
 import androidx.lifecycle.MutableLiveData
 import androidx.paging.DataSource
 import androidx.paging.PageKeyedDataSource
-import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.network.ApiGenerator
+import com.mredrock.cyxbs.common.service.ServiceManager
+import com.mredrock.cyxbs.common.service.account.IAccountService
 import com.mredrock.cyxbs.common.utils.extensions.mapOrThrowApiException
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
@@ -22,9 +23,9 @@ class CommentDataSource(private val aid: String) : PageKeyedDataSource<Int, Comm
     private var failedRequest: (() -> Unit)? = null
 
     override fun loadInitial(params: LoadInitialParams<Int>, callback: LoadInitialCallback<Int, Comment>) {
-        val user = BaseApp.user!!
+        val stuNum = ServiceManager.getService(IAccountService::class.java).getUserService().getStuNum()
         ApiGenerator.getApiService(ApiService::class.java)
-                .getCommentList(aid, 1, params.requestedLoadSize, user.stuNum!!, user.idNum!!)
+                .getCommentList(aid, 1, params.requestedLoadSize, stuNum)
                 .mapOrThrowApiException()
                 .setSchedulers()
                 .doOnSubscribe { initialLoad.postValue(NetworkState.LOADING) }
@@ -40,9 +41,9 @@ class CommentDataSource(private val aid: String) : PageKeyedDataSource<Int, Comm
     }
 
     override fun loadAfter(params: LoadParams<Int>, callback: LoadCallback<Int, Comment>) {
-        val user = BaseApp.user!!
+        val stuNum = ServiceManager.getService(IAccountService::class.java).getUserService().getStuNum()
         ApiGenerator.getApiService(ApiService::class.java)
-                .getCommentList(aid, params.key, params.requestedLoadSize, user.stuNum!!, user.idNum!!)
+                .getCommentList(aid, params.key, params.requestedLoadSize, stuNum)
                 .mapOrThrowApiException()
                 .setSchedulers()
                 .doOnSubscribe { networkState.postValue(NetworkState.LOADING) }

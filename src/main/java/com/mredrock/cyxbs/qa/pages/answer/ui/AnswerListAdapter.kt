@@ -33,7 +33,7 @@ class AnswerListAdapter(context: Context) : BaseRvAdapter<Answer>() {
         }
     }
 
-    var onPriseClickListener: ((Int, Answer) -> Unit)? = null
+    var onPraiseClickListener: ((Int, Answer) -> Unit)? = null
     var onReportClickListener: ((String) -> Unit)? = null
     var onItemClickListener: ((Int, Answer) -> Unit)? = null
 
@@ -78,7 +78,7 @@ class AnswerListAdapter(context: Context) : BaseRvAdapter<Answer>() {
         super.onBindViewHolder(holder, position)
         holder.itemView.apply {
             tv_answer_praise_count.setOnClickListener {
-                onPriseClickListener?.invoke(position, dataList[position])
+                onPraiseClickListener?.invoke(position, dataList[position])
             }
             btn_answer_more.setOnClickListener {
                 onReportClickListener?.invoke(dataList[position].id)

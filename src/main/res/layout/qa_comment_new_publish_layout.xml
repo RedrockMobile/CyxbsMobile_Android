@@ -44,6 +44,7 @@
             android:layout_height="match_parent"
             android:background="@drawable/qa_comment_new_publish_text_view_background"
             android:hint="@string/qa_comment_new_comment_text_view_hint"
+            android:imeOptions="actionSend"
             android:paddingStart="20dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/gl_comment_publish_background_end"
@@ -52,7 +53,7 @@
             tools:ignore="RtlSymmetry" />
 
         <TextView
-            android:id="@+id/tv_comment_prise"
+            android:id="@+id/tv_comment_praise"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:drawableStart="@drawable/qa_ic_answer_list_praise"

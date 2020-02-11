@@ -47,7 +47,10 @@ data class Question(@SerializedName("reward")
                     var photoUrl: List<String> = mutableListOf(),
 
                     @SerializedName("is_self")
-                    private var _isSelf: Int = 0) : Parcelable {
+                    private var _isSelf: Int = 0,
+
+                    @SerializedName("views_num")
+                    var viewCount: Int = 0) : Parcelable {
     @SerializedName("answers")
     private var answers: List<Answer>? = null
 

@@ -3,8 +3,9 @@ package com.mredrock.cyxbs.qa.pages.answer.viewmodel
 import androidx.lifecycle.*
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
-import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.network.ApiGenerator
+import com.mredrock.cyxbs.common.service.ServiceManager
+import com.mredrock.cyxbs.common.service.account.IAccountService
 import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.checkError
 import com.mredrock.cyxbs.common.utils.extensions.mapOrThrowApiException
@@ -19,7 +20,6 @@ import com.mredrock.cyxbs.qa.bean.Question
 import com.mredrock.cyxbs.qa.network.ApiService
 import com.mredrock.cyxbs.qa.network.NetworkState
 import com.mredrock.cyxbs.qa.pages.answer.model.AnswerDataSource
-import org.jetbrains.anko.longToast
 
 /**
  * Created By jay68 on 2018/9/27.
@@ -66,12 +66,12 @@ class AnswerListViewModel(question: Question) : BaseViewModel() {
         answerList.observe(this, onChange)
         answerPagedList.observe(this, Observer { })
     }
+
     //增加浏览量，不用显示
     fun addQuestionView() {
+        val stuNum = ServiceManager.getService(IAccountService::class.java).getUserService().getStuNum()
         ApiGenerator.getApiService(ApiService::class.java)
-                .addView(BaseApp.user?.stuNum ?: "",
-                        BaseApp.user?.idNum ?: "",
-                        qid)
+                .addView(stuNum, qid)
                 .checkError()
                 .setSchedulers()
                 .doOnError {
@@ -83,10 +83,9 @@ class AnswerListViewModel(question: Question) : BaseViewModel() {
     }
 
     fun adoptAnswer(aId: String) {
+        val stuNum = ServiceManager.getService(IAccountService::class.java).getUserService().getStuNum()
         ApiGenerator.getApiService(ApiService::class.java)
-                .adoptAnswer(aId, qid,
-                        BaseApp.user?.stuNum ?: "",
-                        BaseApp.user?.idNum ?: "")
+                .adoptAnswer(aId, qid, stuNum)
                 .checkError()
                 .setSchedulers()
                 .doOnSubscribe { progressDialogEvent.value = ProgressDialogEvent.SHOW_NONCANCELABLE_DIALOG_EVENT }
@@ -98,9 +97,9 @@ class AnswerListViewModel(question: Question) : BaseViewModel() {
 
     fun reportQuestion(reportType: String) {
         progressDialogEvent.value = ProgressDialogEvent.SHOW_NONCANCELABLE_DIALOG_EVENT
-        val user = BaseApp.user ?: return
+        val stuNum = ServiceManager.getService(IAccountService::class.java).getUserService().getStuNum()
         ApiGenerator.getApiService(ApiService::class.java)
-                .reportQuestion(user.stuNum ?: "", user.idNum ?: "", qid, reportType)
+                .reportQuestion(stuNum, qid, reportType)
                 .setSchedulers()
                 .checkError()
                 .doFinally { progressDialogEvent.value = ProgressDialogEvent.DISMISS_DIALOG_EVENT }
@@ -113,9 +112,9 @@ class AnswerListViewModel(question: Question) : BaseViewModel() {
 
     fun reportAnswer(reportType: String, answerId: String) {
         progressDialogEvent.value = ProgressDialogEvent.SHOW_NONCANCELABLE_DIALOG_EVENT
-        val user = BaseApp.user ?: return
+        val stuNum = ServiceManager.getService(IAccountService::class.java).getUserService().getStuNum()
         ApiGenerator.getApiService(ApiService::class.java)
-                .reportAnswer(user.stuNum ?: "", user.idNum ?: "", answerId, reportType)
+                .reportAnswer(stuNum, answerId, reportType)
                 .setSchedulers()
                 .checkError()
                 .doFinally { progressDialogEvent.value = ProgressDialogEvent.DISMISS_DIALOG_EVENT }
@@ -127,9 +126,8 @@ class AnswerListViewModel(question: Question) : BaseViewModel() {
     }
 
     fun getMyReward() {
-        val user = BaseApp.user ?: return
         ApiGenerator.getApiService(ApiService::class.java)
-                .getScoreStatus(user.stuNum ?: "", user.idNum ?: "")
+                .getScoreStatus()
                 .setSchedulers()
                 .mapOrThrowApiException()
                 .safeSubscribeBy { myRewardCount = it.integral }
@@ -139,43 +137,12 @@ class AnswerListViewModel(question: Question) : BaseViewModel() {
 
     fun retry() = factory.answerDataSourceLiveData.value?.retry()
 
-    fun addReward(reward: Int): Boolean {
-        if (reward > myRewardCount) {
-            longToastEvent.value = R.string.qa_quiz_error_reward_not_enough
-            return false
-        }
-        val user = BaseApp.user ?: return true
-        progressDialogEvent.value = ProgressDialogEvent.SHOW_NONCANCELABLE_DIALOG_EVENT
-
-        ApiGenerator.getApiService(ApiService::class.java)
-                .updateReward(user.stuNum!!, user.idNum!!, qid,
-                        ((questionLiveData.value?.reward ?: 0) + reward).toString())
-                .setSchedulers()
-                .checkError()
-                .doFinally { progressDialogEvent.value = ProgressDialogEvent.DISMISS_DIALOG_EVENT }
-                .doOnError { BaseApp.context.longToast(it.message!!) }
-                .safeSubscribeBy { backAndRefreshPreActivityEvent.value = true }
-                .lifeCycle()
-
-        return true
-    }
-
-    fun cancelQuestion() {
-        val user = BaseApp.user ?: return
-        val qid = questionLiveData.value!!.id
-        ApiGenerator.getApiService(ApiService::class.java)
-                .cancelQuestion(user.stuNum!!, user.idNum!!, qid)
-                .setSchedulers()
-                .checkError()
-                .safeSubscribeBy { backAndRefreshPreActivityEvent.value = true }
-    }
 
     fun ignoreQuestion() {
-        val user = BaseApp.user ?: return
         val qid = questionLiveData.value?.id
-        LogUtils.d("ignoreInfo", qid.toString())
+        val stuNum = ServiceManager.getService(IAccountService::class.java).getUserService().getStuNum()
         ApiGenerator.getApiService(ApiService::class.java)
-                .ignoreQuestion(user.stuNum ?: "", user.idNum ?: "", qid ?: "")
+                .ignoreQuestion(stuNum, qid ?: "")
                 .setSchedulers()
                 .checkError()
                 .doOnError { toastEvent.value = R.string.qa_service_error_hint }
@@ -183,19 +150,19 @@ class AnswerListViewModel(question: Question) : BaseViewModel() {
     }
 
     fun clickPraiseButton(position: Int, answer: Answer) {
+        val stuNum = ServiceManager.getService(IAccountService::class.java).getUserService().getStuNum()
         fun Boolean.toInt() = 1.takeIf { this@toInt } ?: -1
 
         if (praiseNetworkState == NetworkState.LOADING) {
             toastEvent.value = R.string.qa_comment_list_comment_loading_hint
             return
         }
-        val user = BaseApp.user ?: return
         ApiGenerator.getApiService(ApiService::class.java)
                 .run {
                     if (answer.isPraised) {
-                        cancelPraiseAnswer(answer.id, user.stuNum ?: "", user.idNum ?: "")
+                        cancelPraiseAnswer(answer.id, stuNum)
                     } else {
-                        praiseAnswer(answer.id, user.stuNum ?: "", user.idNum ?: "")
+                        praiseAnswer(answer.id, stuNum)
                     }
                 }
                 .checkError()

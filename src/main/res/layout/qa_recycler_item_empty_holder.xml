@@ -15,6 +15,7 @@
             android:layout_width="167dp"
             android:layout_height="127dp"
             android:src="@drawable/qa_ic_question_no_question" />
+
         <TextView
             android:id="@+id/tv_hint"
             android:layout_width="wrap_content"

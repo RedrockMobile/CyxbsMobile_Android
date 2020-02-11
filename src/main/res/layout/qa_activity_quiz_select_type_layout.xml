@@ -29,7 +29,7 @@
         android:paddingTop="2dp"
         android:paddingEnd="10dp"
         android:paddingBottom="2dp"
-        android:text="@string/qa_quiz_select_type_no_name"
+        android:text="@string/qa_quiz_select_type_anonymous"
         android:textColor="@color/qa_quiz_select_type_text_color"
         android:textSize="13sp" />
 

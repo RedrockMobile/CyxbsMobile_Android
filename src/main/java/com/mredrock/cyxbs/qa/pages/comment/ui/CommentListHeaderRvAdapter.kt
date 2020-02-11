@@ -20,23 +20,23 @@ import org.greenrobot.eventbus.EventBus
  * Created By jay68 on 2018/10/8.
  */
 class CommentListHeaderRvAdapter(
-    private val title: String,
-    private val isEmotion: Boolean,
-    private val showAdoptIcon: Boolean
+        private val title: String,
+        private val isEmotion: Boolean,
+        private val showAdoptIcon: Boolean
 ) : BaseRvAdapter<Answer>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
             HeaderViewHolder(title, isEmotion, showAdoptIcon, parent)
 
     inner class HeaderViewHolder(private val title: String,
-                           private val isEmotion: Boolean,
-                           private val showAdoptIcon: Boolean,
-                           parent: ViewGroup) : BaseViewHolder<Answer>(parent, R.layout.qa_recycler_item_comment_header) {
+                                 private val isEmotion: Boolean,
+                                 private val showAdoptIcon: Boolean,
+                                 parent: ViewGroup) : BaseViewHolder<Answer>(parent, R.layout.qa_recycler_item_comment_header) {
 
         override fun refresh(data: Answer?) {
             data ?: return
             itemView.apply {
-//                tv_question_title.text = Html.fromHtml(title)
+                //                tv_question_title.text = Html.fromHtml(title)
                 iv_answer_avatar.setAvatarImageFromUrl(data.photoThumbnailSrc)
                 tv_answer_nickname.setNicknameTv(data.nickname, isEmotion, data.isMale)
                 tv_answer_content.text = data.content

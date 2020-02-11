@@ -85,6 +85,7 @@
             android:paddingTop="19dp"
             android:paddingEnd="15dp"
             android:paddingBottom="19dp" />
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

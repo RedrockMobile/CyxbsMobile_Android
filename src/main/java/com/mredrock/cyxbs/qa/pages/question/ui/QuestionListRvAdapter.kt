@@ -48,7 +48,8 @@ class QuestionListRvAdapter(private val fragment: Fragment) : BaseEndlessRvAdapt
                 tv_nickname.setNicknameTv(data.nickname, data.isEmotion && !data.isAnonymous, data.isMale)
                 tv_title.text = data.title
                 tv_praise_count.text = data.reward.toString()
-                tv_answer_count.text=data.answerNum.toString()
+                tv_answer_count.text = data.answerNum.toString()
+                tv_view_count.text = data.viewCount.toString()
             }
         }
 

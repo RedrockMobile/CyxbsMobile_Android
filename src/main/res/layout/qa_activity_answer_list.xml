@@ -13,6 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
+
         <include layout="@layout/qa_common_toolbar" />
 
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -43,7 +44,7 @@
         android:text="@string/qa_answer_btn_text"
         android:textSize="18sp"
         android:textColor="@color/whiteFontColor"
-        app:layout_behavior="com.mredrock.cyxbs.qa.ui.widget.ButtonScrollBehavior"/>
+        app:layout_behavior="com.mredrock.cyxbs.qa.ui.widget.ButtonScrollBehavior" />
 
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

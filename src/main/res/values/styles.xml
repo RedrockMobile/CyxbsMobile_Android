@@ -6,7 +6,7 @@
         <item name="android:windowExitAnimation">@anim/qa_popup_exit</item>
     </style>
 
-    <style name="qa_RewardSelectCheckedTextViewStyle" >
+    <style name="qa_RewardSelectCheckedTextViewStyle">
         <item name="android:background">@drawable/qa_selector_quiz_reward_checked_tv</item>
         <item name="android:textSize">16sp</item>
         <item name="android:layout_marginTop">25dp</item>
@@ -14,7 +14,7 @@
         <item name="android:textAlignment">center</item>
     </style>
 
-    <style name="qa_LPhotoTheme" parent="LPhotoTheme" >
+    <style name="qa_LPhotoTheme" parent="LPhotoTheme">
         <!--页面通用属性（图片选择、图片预览共用）-->
         <item name="l_pp_toolBar_height">56dp</item>
         <item name="l_pp_toolBar_backIcon">@drawable/common_ic_back</item><!--返回按钮资源-->
@@ -36,7 +36,8 @@
         <!--圆形选择框样式（图片选择、图片预览共用，有特别说明的除外）-->
         <item name="l_pp_checkBox_color_tick" format="color">#f2f2f2</item><!--勾勾颜色-->
         <item name="l_pp_checkBox_duration" format="integer">100</item><!--动画时间-->
-        <item name="l_pp_checkBox_color_checked" format="color">@color/colorPrimary</item><!--选择后的背景色-->
+        <item name="l_pp_checkBox_color_checked" format="color">@color/colorPrimary
+        </item><!--选择后的背景色-->
         <item name="l_pp_checkBox_stroke_width" format="dimension">2dp</item><!--（仅预览页面）圆圈边框宽度-->
         <item name="l_pp_checkBox_tick_width" format="dimension">2dp</item><!--勾勾的线条宽度-->
     </style>

@@ -7,6 +7,8 @@ import androidx.lifecycle.ViewModelProvider
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.bean.RedrockApiStatus
 import com.mredrock.cyxbs.common.network.ApiGenerator
+import com.mredrock.cyxbs.common.service.ServiceManager
+import com.mredrock.cyxbs.common.service.account.IAccountService
 import com.mredrock.cyxbs.common.utils.extensions.checkError
 import com.mredrock.cyxbs.common.utils.extensions.mapOrThrowApiException
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
@@ -47,18 +49,16 @@ class AnswerViewModel(var qid: String) : BaseViewModel() {
             return
         }
         progressDialogEvent.value = ProgressDialogEvent.SHOW_NONCANCELABLE_DIALOG_EVENT
-        val user = BaseApp.user ?: return
-        val stuNum = user.stuNum ?: ""
-        val idNum = user.idNum ?: ""
+        val stuNum = ServiceManager.getService(IAccountService::class.java).getUserService().getStuNum()
         var observable: Observable<out Any> = ApiGenerator.getApiService(ApiService::class.java)
-                .answer(stuNum, idNum, qid, content)
+                .answer(qid, content, stuNum)
                 .setSchedulers()
                 .mapOrThrowApiException()
         if (!imageLiveData.value.isNullOrEmpty()) {
             val files = imageLiveData.value!!.asSequence()
                     .map { File(it) }
                     .toList()
-            observable = observable.flatMap { uploadPic(stuNum, idNum, it as String, files) }
+            observable = observable.flatMap { uploadPic(it as String, files) }
         }
         observable.doFinally { progressDialogEvent.value = ProgressDialogEvent.DISMISS_DIALOG_EVENT }
                 .doOnError { BaseApp.context.longToast(it.message!!) }
@@ -68,11 +68,9 @@ class AnswerViewModel(var qid: String) : BaseViewModel() {
                 }
     }
 
-    private fun uploadPic(stuNum: String, idNum: String, qid: String, files: List<File>): Observable<RedrockApiStatus> {
+    private fun uploadPic(qid: String, files: List<File>): Observable<RedrockApiStatus> {
         val builder = MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
-                .addFormDataPart("stuNum", stuNum)
-                .addFormDataPart("idNum", idNum)
                 .addFormDataPart("answer_id", qid)
         files.forEachIndexed { index, file ->
             val suffix = file.name.substring(file.name.lastIndexOf(".") + 1)
@@ -94,11 +92,11 @@ class AnswerViewModel(var qid: String) : BaseViewModel() {
         if (content.isNullOrBlank()) {
             return
         }
-        val user = BaseApp.user ?: return
+        val stuNum = ServiceManager.getService(IAccountService::class.java).getUserService().getStuNum()
         val s = "{\"title\":\"$content\"${getImgListStrings()}}"
         val json = Base64.encodeToString(s.toByteArray(), Base64.DEFAULT)
         ApiGenerator.getApiService(ApiService::class.java)
-                .addItemToDraft(user.stuNum ?: "", user.idNum ?: "", "answer", json, qid)
+                .addItemToDraft(stuNum, "answer", json, qid)
                 .setSchedulers()
                 .checkError()
                 .safeSubscribeBy(
@@ -113,11 +111,11 @@ class AnswerViewModel(var qid: String) : BaseViewModel() {
             deleteDraft(id)
             return
         }
-        val user = BaseApp.user ?: return
+        val stuNum = ServiceManager.getService(IAccountService::class.java).getUserService().getStuNum()
         val s = "{\"title\":\"$content\"${getImgListStrings()}}"
         val json = Base64.encodeToString(s.toByteArray(), Base64.DEFAULT)
         ApiGenerator.getApiService(ApiService::class.java)
-                .updateDraft(user.stuNum ?: "", user.idNum ?: "", json, id)
+                .updateDraft(stuNum, json, id)
                 .setSchedulers()
                 .checkError()
                 .safeSubscribeBy(
@@ -128,9 +126,9 @@ class AnswerViewModel(var qid: String) : BaseViewModel() {
     }
 
     fun deleteDraft(id: String) {
-        val user = BaseApp.user ?: return
+        val stuNum = ServiceManager.getService(IAccountService::class.java).getUserService().getStuNum()
         ApiGenerator.getApiService(ApiService::class.java)
-                .deleteDraft(user.stuNum ?: "", user.idNum ?: "", id)
+                .deleteDraft(stuNum, id)
                 .setSchedulers()
                 .checkError()
                 .safeSubscribeBy()

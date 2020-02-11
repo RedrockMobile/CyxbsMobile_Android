@@ -6,4 +6,4 @@ import java.io.Serializable
 /**
  * Created By jay68 on 2018/12/3.
  */
-data class QuizResult(@SerializedName("Id") val id: String = "") : Serializable
+data class QuizResult(@SerializedName("id") val id: String = "") : Serializable

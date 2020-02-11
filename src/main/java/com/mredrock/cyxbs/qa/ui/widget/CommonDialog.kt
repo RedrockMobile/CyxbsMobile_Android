@@ -4,7 +4,6 @@ import android.app.Dialog
 import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
-import android.view.ContextMenu
 import android.view.View
 import androidx.annotation.DrawableRes
 import com.mredrock.cyxbs.common.utils.extensions.gone
@@ -20,6 +19,7 @@ class CommonDialog(context: Context) : Dialog(context) {
         setContentView(R.layout.qa_common_dialog)
         window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
     }
+
     fun initView(@DrawableRes icon: Int,
                  title: String,
                  firstNotice: String,

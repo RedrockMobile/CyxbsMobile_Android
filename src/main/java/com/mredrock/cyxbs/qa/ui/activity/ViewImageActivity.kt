@@ -13,8 +13,8 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.mredrock.cyxbs.common.config.DIR
 import com.mredrock.cyxbs.common.utils.extensions.setFullScreen
-import com.mredrock.cyxbs.common.utils.extensions.visible
 import com.mredrock.cyxbs.common.utils.extensions.toast
+import com.mredrock.cyxbs.common.utils.extensions.visible
 import com.mredrock.cyxbs.qa.R
 import com.yalantis.ucrop.UCrop
 import kotlinx.android.synthetic.main.qa_activity_view_image.*

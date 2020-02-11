@@ -3,11 +3,11 @@ package com.mredrock.cyxbs.qa.pages.quiz
 import android.annotation.SuppressLint
 import android.util.Base64
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.bean.RedrockApiStatus
 import com.mredrock.cyxbs.common.network.ApiGenerator
+import com.mredrock.cyxbs.common.service.ServiceManager
+import com.mredrock.cyxbs.common.service.account.IAccountService
 import com.mredrock.cyxbs.common.utils.extensions.checkError
 import com.mredrock.cyxbs.common.utils.extensions.mapOrThrowApiException
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
@@ -70,9 +70,8 @@ class QuizViewModel : BaseViewModel() {
     }
 
     fun getMyReward() {
-        val user = BaseApp.user ?: return
         ApiGenerator.getApiService(ApiService::class.java)
-                .getScoreStatus(user.stuNum ?: "", user.idNum ?: "")
+                .getScoreStatus()
                 .setSchedulers()
                 .mapOrThrowApiException()
                 .safeSubscribeBy { myRewardCount = it.integral }
@@ -85,13 +84,10 @@ class QuizViewModel : BaseViewModel() {
             return false
         }
         progressDialogEvent.value = ProgressDialogEvent.SHOW_NONCANCELABLE_DIALOG_EVENT
-        val user = BaseApp.user ?: return true
-        val stuNum = user.stuNum ?: ""
-        val idNum = user.idNum ?: ""
+        val stuNum = ServiceManager.getService(IAccountService::class.java).getUserService().getStuNum()
         val isAnonymousInt = 1.takeIf { isAnonymous } ?: 0
-
         var observable: Observable<out Any> = ApiGenerator.getApiService(ApiService::class.java)
-                .quiz(stuNum, idNum, title, content, isAnonymousInt, type, "", reward, disappearTime)
+                .quiz(stuNum, title, content, isAnonymousInt, type, "", reward, disappearTime)
                 .setSchedulers()
                 .mapOrThrowApiException()
         if (!imageLiveData.value.isNullOrEmpty()) {
@@ -100,7 +96,7 @@ class QuizViewModel : BaseViewModel() {
                     .toList()
             observable = observable.flatMap {
                 val id = (it as QuizResult).id
-                uploadPic(stuNum, idNum, id, files)
+                uploadPic(id, files)
             }
         }
         observable.doFinally { progressDialogEvent.value = ProgressDialogEvent.DISMISS_DIALOG_EVENT }
@@ -110,11 +106,9 @@ class QuizViewModel : BaseViewModel() {
         return true
     }
 
-    private fun uploadPic(stuNum: String, idNum: String, qid: String, files: List<File>): Observable<RedrockApiStatus> {
+    private fun uploadPic(qid: String, files: List<File>): Observable<RedrockApiStatus> {
         val builder = MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
-                .addFormDataPart("stuNum", stuNum)
-                .addFormDataPart("idNum", idNum)
                 .addFormDataPart("question_id", qid)
         files.forEachIndexed { index, file ->
             val suffix = file.name.substring(file.name.lastIndexOf(".") + 1)
@@ -122,7 +116,7 @@ class QuizViewModel : BaseViewModel() {
             val name = "photo" + (index + 1)
             builder.addFormDataPart(name, file.name, imageBody)
         }
-        return ApiGenerator.getApiService(ApiService::class.java)
+        return ApiGenerator.getCommonApiService(ApiService::class.java)
                 .uploadQuestionPic(builder.build().parts())
                 .setSchedulers()
                 .checkError()
@@ -144,15 +138,15 @@ class QuizViewModel : BaseViewModel() {
         return result
     }
 
-    fun addItemToDraft(title: String?, content: String?,type: String?) {
+    fun addItemToDraft(title: String?, content: String?, type: String?) {
         if (title.isNullOrBlank() && content.isNullOrBlank()) {
             return
         }
-        val user = BaseApp.user ?: return
+        val stuNum = ServiceManager.getService(IAccountService::class.java).getUserService().getStuNum()
         val s = "{\"title\":\"$title\",\"description\":\"$content\",\"kind\" :\"$type\",${getImgListStrings()}}"
         val json = Base64.encodeToString(s.toByteArray(), Base64.DEFAULT)
         ApiGenerator.getApiService(ApiService::class.java)
-                .addItemToDraft(user.stuNum ?: "", user.idNum ?: "", "question", json, "")
+                .addItemToDraft(stuNum, "question", json, "")
                 .setSchedulers()
                 .checkError()
                 .safeSubscribeBy(
@@ -162,12 +156,12 @@ class QuizViewModel : BaseViewModel() {
                 .lifeCycle()
     }
 
-    fun updateDraftItem(title: String?, content: String?, id: String,type: String?) {
-        val user = BaseApp.user ?: return
+    fun updateDraftItem(title: String?, content: String?, id: String, type: String?) {
         val s = "{\"title\":\"$title\",\"description\":\"$content\",\"kind\":\"$type\",${getImgListStrings()}}"
         val json = Base64.encodeToString(s.toByteArray(), Base64.DEFAULT)
+        val stuNum = ServiceManager.getService(IAccountService::class.java).getUserService().getStuNum()
         ApiGenerator.getApiService(ApiService::class.java)
-                .updateDraft(user.stuNum ?: "", user.idNum ?: "", json, id)
+                .updateDraft(stuNum, json, id)
                 .setSchedulers()
                 .checkError()
                 .safeSubscribeBy(
@@ -178,9 +172,9 @@ class QuizViewModel : BaseViewModel() {
     }
 
     fun deleteDraft(id: String) {
-        val user = BaseApp.user ?: return
+        val stuNum = ServiceManager.getService(IAccountService::class.java).getUserService().getStuNum()
         ApiGenerator.getApiService(ApiService::class.java)
-                .deleteDraft(user.stuNum ?: "", user.idNum ?: "", id)
+                .deleteDraft(stuNum, id)
                 .setSchedulers()
                 .checkError()
                 .safeSubscribeBy()

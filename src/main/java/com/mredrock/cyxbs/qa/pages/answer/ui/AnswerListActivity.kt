@@ -19,6 +19,7 @@ import com.mredrock.cyxbs.common.event.AskLoginEvent
 import com.mredrock.cyxbs.common.event.OpenShareQuestionEvent
 import com.mredrock.cyxbs.common.ui.BaseActivity
 import com.mredrock.cyxbs.common.utils.extensions.gone
+import com.mredrock.cyxbs.common.utils.extensions.toast
 import com.mredrock.cyxbs.common.viewmodel.event.ProgressDialogEvent
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.bean.Answer
@@ -31,7 +32,6 @@ import com.mredrock.cyxbs.qa.pages.comment.AdoptAnswerEvent
 import com.mredrock.cyxbs.qa.pages.comment.ui.CommentListActivity
 import com.mredrock.cyxbs.qa.ui.adapter.EmptyRvAdapter
 import com.mredrock.cyxbs.qa.ui.adapter.FooterRvAdapter
-import com.mredrock.cyxbs.common.utils.extensions.toast
 import kotlinx.android.synthetic.main.qa_activity_answer_list.*
 import kotlinx.android.synthetic.main.qa_common_toolbar.*
 import org.greenrobot.eventbus.EventBus
@@ -146,7 +146,7 @@ class AnswerListActivity : BaseActivity() {
             onItemClickListener = { _, answer ->
                 CommentListActivity.activityStart(this@AnswerListActivity, viewModel.questionLiveData.value!!, answer)
             }
-            onPriseClickListener = { i: Int, answer: Answer ->
+            onPraiseClickListener = { i: Int, answer: Answer ->
                 viewModel.clickPraiseButton(i, answer)
                 viewModel.apply {
                     refreshPreActivityEvent.observeNotNull {

@@ -3,8 +3,9 @@ package com.mredrock.cyxbs.qa.pages.answer.model
 import androidx.lifecycle.MutableLiveData
 import androidx.paging.DataSource
 import androidx.paging.PageKeyedDataSource
-import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.network.ApiGenerator
+import com.mredrock.cyxbs.common.service.ServiceManager
+import com.mredrock.cyxbs.common.service.account.IAccountService
 import com.mredrock.cyxbs.common.utils.extensions.mapOrThrowApiException
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
@@ -23,10 +24,10 @@ class AnswerDataSource(private val qid: String) : PageKeyedDataSource<Int, Answe
     private var failedRequest: (() -> Unit)? = null
 
     override fun loadInitial(params: LoadInitialParams<Int>, callback: LoadInitialCallback<Int, Answer>) {
-        val user = BaseApp.user!!
+        val stuNum = ServiceManager.getService(IAccountService::class.java).getUserService().getStuNum()
         ApiGenerator.getApiService(ApiService::class.java)
                 //由于没有api文档，
-                .getAnswerList(qid, 0, 0, user.stuNum!!, user.idNum!!)
+                .getAnswerList(qid, 0, 0, stuNum)
                 .mapOrThrowApiException()
                 .setSchedulers()
                 .doOnSubscribe { initialLoad.postValue(NetworkState.LOADING) }
@@ -43,9 +44,9 @@ class AnswerDataSource(private val qid: String) : PageKeyedDataSource<Int, Answe
     }
 
     override fun loadAfter(params: LoadParams<Int>, callback: LoadCallback<Int, Answer>) {
-        val user = BaseApp.user!!
+        val stuNum = ServiceManager.getService(IAccountService::class.java).getUserService().getStuNum()
         ApiGenerator.getApiService(ApiService::class.java)
-                .getAnswerList(qid, params.key, params.requestedLoadSize, user.stuNum!!, user.idNum!!)
+                .getAnswerList(qid, params.key, params.requestedLoadSize, stuNum)
                 .mapOrThrowApiException()
                 .setSchedulers()
                 .doOnSubscribe { networkState.postValue(NetworkState.LOADING) }

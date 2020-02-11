@@ -24,8 +24,8 @@
         android:src="@drawable/qa_dialog_reward_description"
         android:layout_marginStart="20dp"
         app:layout_constraintBottom_toBottomOf="@id/tv_reward_set_title"
-        app:layout_constraintTop_toTopOf="@id/tv_reward_set_title"
-        />
+        app:layout_constraintTop_toTopOf="@id/tv_reward_set_title" />
+
     <TextView
         android:id="@+id/tv_reward_set_title"
         android:layout_width="match_parent"
@@ -96,7 +96,7 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_toStartOf="@id/tp_quiz_minute"
-            android:layout_marginEnd="40dp"/>
+            android:layout_marginEnd="40dp" />
 
         <com.mredrock.cyxbs.qa.pages.quiz.ui.widget.QuizTimeNumberPicker
             android:id="@+id/tp_quiz_minute"
@@ -115,7 +115,7 @@
         app:layout_constraintBottom_toBottomOf="@id/rl_time_select"
         app:layout_constraintTop_toTopOf="@id/rl_time_select"
         android:layout_marginStart="30dp"
-        app:layout_constraintStart_toStartOf="parent"/>
+        app:layout_constraintStart_toStartOf="parent" />
 
     <ImageView
         android:id="@+id/iv_reward_set_dialog_divide_line"

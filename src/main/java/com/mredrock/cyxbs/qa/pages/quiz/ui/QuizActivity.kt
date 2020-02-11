@@ -5,7 +5,8 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
-import android.view.*
+import android.view.KeyEvent
+import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -19,11 +20,14 @@ import com.mredrock.cyxbs.common.utils.extensions.gone
 import com.mredrock.cyxbs.common.utils.extensions.visible
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.bean.Question
-import com.mredrock.cyxbs.qa.pages.quiz.ui.dialog.RewardSetDialog
 import com.mredrock.cyxbs.qa.pages.quiz.QuizViewModel
+import com.mredrock.cyxbs.qa.pages.quiz.ui.dialog.RewardSetDialog
 import com.mredrock.cyxbs.qa.ui.activity.ViewImageActivity
 import com.mredrock.cyxbs.qa.ui.widget.CommonDialog
-import com.mredrock.cyxbs.qa.utils.*
+import com.mredrock.cyxbs.qa.utils.CHOOSE_PHOTO_REQUEST
+import com.mredrock.cyxbs.qa.utils.selectImageFromAlbum
+import com.mredrock.cyxbs.qa.utils.selected
+import com.mredrock.cyxbs.qa.utils.unSelected
 import kotlinx.android.synthetic.main.qa_activity_quiz.*
 import kotlinx.android.synthetic.main.qa_common_toolbar.*
 import org.greenrobot.eventbus.EventBus
@@ -104,6 +108,7 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
             visible()
             text = getString(R.string.qa_quiz_dialog_next)
             setOnClickListener {
+                viewModel.isAnonymous = questionType == getString(R.string.qa_quiz_select_type_anonymous)
                 val result = viewModel.submitTitleAndContent(edt_quiz_title.text.toString(), edt_quiz_content.text.toString(), questionType)
                 if (result) {
                     RewardSetDialog(this@QuizActivity, viewModel.myRewardCount).apply {
@@ -224,7 +229,7 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
         childView[currentTypeIndex].unSelected()
         when (question.kind) {
             getString(R.string.qa_quiz_select_type_study) -> currentTypeIndex = 0
-            getString(R.string.qa_quiz_select_type_no_name) -> currentTypeIndex = 1
+            getString(R.string.qa_quiz_select_type_anonymous) -> currentTypeIndex = 1
             getString(R.string.qa_quiz_select_type_life) -> currentTypeIndex = 2
             getString(R.string.qa_quiz_select_type_others) -> currentTypeIndex = 3
         }

@@ -9,7 +9,7 @@ import com.mredrock.cyxbs.qa.R
 /**
  * Created by yyfbe, Date on 2020-02-08.
  */
-class RewardDescriptionDialog(context: Context): Dialog(context) {
+class RewardDescriptionDialog(context: Context) : Dialog(context) {
     init {
         setContentView(R.layout.qa_dialog_qa_reward_description)
         window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))

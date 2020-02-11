@@ -3,8 +3,9 @@ package com.mredrock.cyxbs.qa.pages.question.model
 import androidx.lifecycle.MutableLiveData
 import androidx.paging.DataSource
 import androidx.paging.PageKeyedDataSource
-import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.network.ApiGenerator
+import com.mredrock.cyxbs.common.service.ServiceManager
+import com.mredrock.cyxbs.common.service.account.IAccountService
 import com.mredrock.cyxbs.common.utils.extensions.mapOrThrowApiException
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
@@ -22,15 +23,15 @@ class QuestionDataSource(private val kind: String) : PageKeyedDataSource<Int, Qu
     private var failedRequest: (() -> Unit)? = null
 
     override fun loadInitial(params: LoadInitialParams<Int>, callback: LoadInitialCallback<Int, Question>) {
-        val user = BaseApp.user
-        if (user == null) {
+        val userState = ServiceManager.getService(IAccountService::class.java).getVerifyService()
+        if (!userState.isLogin()) {
             callback.onResult(listOf(), 1, null)
             initialLoad.postValue(NetworkState.CANNOT_LOAD_WITHOUT_LOGIN)
             return
         }
+        val stuNum = ServiceManager.getService(IAccountService::class.java).getUserService().getStuNum()
         ApiGenerator.getApiService(ApiService::class.java)
-                .getQuestionList(kind, 1, params.requestedLoadSize,
-                        user.stuNum ?: "", user.idNum ?: "")
+                .getQuestionList(kind, 1, params.requestedLoadSize, stuNum)
                 .mapOrThrowApiException()
                 .setSchedulers()
                 .doOnSubscribe { initialLoad.postValue(NetworkState.LOADING) }
@@ -46,10 +47,9 @@ class QuestionDataSource(private val kind: String) : PageKeyedDataSource<Int, Qu
     }
 
     override fun loadAfter(params: LoadParams<Int>, callback: LoadCallback<Int, Question>) {
-        val user = BaseApp.user ?: return
+        val stuNum = ServiceManager.getService(IAccountService::class.java).getUserService().getStuNum()
         ApiGenerator.getApiService(ApiService::class.java)
-                .getQuestionList(kind, params.key, params.requestedLoadSize, user.stuNum
-                        ?: "", user.idNum ?: "")
+                .getQuestionList(kind, params.key, params.requestedLoadSize, stuNum)
                 .mapOrThrowApiException()
                 .setSchedulers()
                 .doOnSubscribe { networkState.postValue(NetworkState.LOADING) }

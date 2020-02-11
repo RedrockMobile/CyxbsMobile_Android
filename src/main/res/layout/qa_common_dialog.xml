@@ -45,6 +45,7 @@
             tools:text="@string/qa_quiz_dialog_not_save_text"
             android:textColor="@color/dialog_exit_subtitle_text_color"
             android:textSize="11sp" />
+
         <TextView
             android:id="@+id/tv_notice_second_line"
             android:layout_width="wrap_content"
@@ -55,7 +56,7 @@
             android:gravity="center"
             tools:text="@string/qa_quiz_down_reward_get_more_text"
             android:textColor="@color/dialog_exit_subtitle_text_color"
-            android:textSize="12sp"/>
+            android:textSize="12sp" />
 
         <Button
             android:id="@+id/btn_confirm"

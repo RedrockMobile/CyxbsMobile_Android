@@ -97,7 +97,7 @@
         tools:text="201" />
 
     <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/tv_watch_count"
+        android:id="@+id/tv_view_count"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="18dp"

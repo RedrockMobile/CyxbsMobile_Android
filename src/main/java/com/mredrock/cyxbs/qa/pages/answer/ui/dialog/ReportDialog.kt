@@ -48,19 +48,19 @@ class ReportDialog(context: Context) : BottomSheetDialog(context) {
 
     fun setType(type: String) {
         val types = context.resources.getStringArray(R.array.qa_title_type)
-        when(type){
-            types[0]->{
-                tv_report.text=context.getText(R.string.qa_question_report_text)
+        when (type) {
+            types[0] -> {
+                tv_report.text = context.getText(R.string.qa_question_report_text)
                 tv_question_ignore.visible()
-                tv_report_type_useless.text=context.getText(R.string.qa_report_useless_question_text)
+                tv_report_type_useless.text = context.getText(R.string.qa_report_useless_question_text)
             }
-            types[1]->{
-                tv_report.text=context.getText(R.string.qa_answer_report_text)
-                tv_report_type_useless.text=context.getText(R.string.qa_report_useless_answer_text)
+            types[1] -> {
+                tv_report.text = context.getText(R.string.qa_answer_report_text)
+                tv_report_type_useless.text = context.getText(R.string.qa_report_useless_answer_text)
             }
-            types[2]->{
-                tv_report.text=context.getText(R.string.qa_comment_report_text)
-                tv_report_type_useless.text=context.getText(R.string.qa_report_useless_comment_text)
+            types[2] -> {
+                tv_report.text = context.getText(R.string.qa_comment_report_text)
+                tv_report_type_useless.text = context.getText(R.string.qa_report_useless_comment_text)
 
             }
         }

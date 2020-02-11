@@ -45,6 +45,5 @@ class AnswerListHeaderAdapter(private val onSortOrderChangedListener: (sortOrder
         }
 
 
-
     }
 }

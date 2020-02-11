@@ -2,6 +2,8 @@ package com.mredrock.cyxbs.qa.pages.comment.ui
 
 import android.app.Activity
 import android.os.Bundle
+import android.text.InputType.TYPE_TEXT_FLAG_MULTI_LINE
+import android.view.inputmethod.EditorInfo
 import androidx.lifecycle.ViewModelProvider
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.mredrock.cyxbs.common.config.QA_COMMENT_LIST
@@ -16,11 +18,13 @@ import com.mredrock.cyxbs.qa.pages.comment.AdoptAnswerEvent
 import com.mredrock.cyxbs.qa.pages.comment.viewmodel.CommentListViewModel
 import com.mredrock.cyxbs.qa.ui.adapter.EmptyRvAdapter
 import com.mredrock.cyxbs.qa.ui.adapter.FooterRvAdapter
+import com.mredrock.cyxbs.qa.utils.setPraise
 import kotlinx.android.synthetic.main.qa_activity_comment_list.*
 import kotlinx.android.synthetic.main.qa_comment_new_publish_layout.*
 import kotlinx.android.synthetic.main.qa_common_toolbar.*
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import org.jetbrains.anko.singleLine
 import org.jetbrains.anko.startActivityForResult
 
 @Route(path = QA_COMMENT_LIST)
@@ -39,7 +43,9 @@ class CommentListActivity : BaseViewModelActivity<CommentListViewModel>() {
                     "showAdoptIcon" to showAdoptIcon,
                     "isEmotion" to question.isEmotion,
                     "answer" to answer,
-                    "answerNum" to answer.commentNum
+                    "answerNum" to answer.commentNum,
+                    "praiseNum" to answer.praiseNum,
+                    "isPraised" to answer.isPraised
             )
         }
     }
@@ -120,17 +126,28 @@ class CommentListActivity : BaseViewModelActivity<CommentListViewModel>() {
                 }
             }
         }
+        refreshPreActivityEvent.observeNotNull {
+            tv_comment_praise.setPraise(answerLiveData.value?.praiseNum, answerLiveData.value?.isPraised)
+        }
     }
 
     private fun initCommentSheet() {
-//        LayoutInflater.from(this).inflate(R.layout.qa_comment_new_publish_layout,,false)
-//                .apply {
-//            val commentEditText = findViewById<EditText>(R.id.et_new_comment)
-
-        tv_comment_prise.setOnClickListener {
-            viewModel.sendComment(et_new_comment.text.toString())
-            et_new_comment.text = null
-//            }
+        et_new_comment.apply {
+            inputType = TYPE_TEXT_FLAG_MULTI_LINE
+            singleLine = false
+            setOnEditorActionListener { p0, p1, p2 ->
+                if (p1 == EditorInfo.IME_ACTION_SEND) {
+                    viewModel.sendComment(et_new_comment.text.toString())
+                    et_new_comment.text = null
+                }
+                false
+            }
+        }
+        tv_comment_praise.apply {
+            val praiseNum = intent.getStringExtra("praiseNum")
+            val isPraised = intent.getBooleanExtra("isPraised", false)
+            setPraise(praiseNum, isPraised)
+            setOnClickListener { viewModel.clickPraiseButton() }
         }
     }
 

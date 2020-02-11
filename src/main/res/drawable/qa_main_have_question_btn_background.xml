@@ -5,8 +5,7 @@
         android:type="linear"
         android:useLevel="true"
         android:startColor="@color/buttonGradientStartColor"
-        android:endColor="@color/buttonGradientEndColor"
-        />
+        android:endColor="@color/buttonGradientEndColor" />
     <corners
         android:topLeftRadius="50dp"
         android:topRightRadius="50dp"
