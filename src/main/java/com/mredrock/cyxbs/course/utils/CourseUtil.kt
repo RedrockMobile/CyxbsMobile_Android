@@ -24,7 +24,7 @@ import kotlin.collections.ArrayList
  * @param courses 当天的课程数据
  * @param nowWeek 现在是第几周
  */
-fun getNowCourse(courses: List<Course>,wholeCourses:List<Course>, nowWeek: Int):Course? {
+fun getNowCourse(courses: List<Course>, wholeCourses: List<Course>, nowWeek: Int): Course? {
     var isFound = false
     courses.forEach {
         val endCalendar = getStartCalendarByNum(it.hashLesson)
@@ -72,12 +72,12 @@ fun getTomorrowCourse(courses: List<Course>, nowWeek: Int): Course? {
 /**
  * 获得今天得课程list信息
  */
-fun getTodayCourse(courses:List<Course>,nowWeek:Int): List<Course>? {
-    return getCourseByCalendar(courses,nowWeek, Calendar.getInstance())
+fun getTodayCourse(courses: List<Course>, nowWeek: Int): List<Course>? {
+    return getCourseByCalendar(courses, nowWeek, Calendar.getInstance())
 }
 
 
-fun getCourseByCalendar(courses:List<Course>,nowWeek:Int,calendar: Calendar): ArrayList<Course>? {
+fun getCourseByCalendar(courses: List<Course>, nowWeek: Int, calendar: Calendar): ArrayList<Course>? {
     /*
     * 转换表，老外从周日开始计数,orz
     * 7 1 2 3 4 5 6 老外
@@ -148,6 +148,7 @@ fun saveDayOffset(context: Context, offset: Int) {
         putInt(SP_DayOffset, offset)
     }
 }
+
 fun getDayOffset(context: Context): Int {
     return context.defaultSharedPreferences.getInt(SP_DayOffset, 0)
 }
@@ -234,7 +235,7 @@ fun filterClassRoom(classRoom: String): String {
 }
 
 //将widget模块的course转换为lib模块的WidgetCourse，WidgetCourse达到中转作用
-fun changeCourseToWidgetCourse(courseBean: Course):WidgetCourse.DataBean{
+fun changeCourseToWidgetCourse(courseBean: Course): WidgetCourse.DataBean {
     val bean = WidgetCourse.DataBean()
     bean.apply {
         hash_day = courseBean.hashDay

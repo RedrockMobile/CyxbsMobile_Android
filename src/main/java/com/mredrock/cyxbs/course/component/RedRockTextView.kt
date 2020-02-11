@@ -6,7 +6,6 @@ import android.graphics.Paint
 import android.graphics.Rect
 import android.util.AttributeSet
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.appcompat.widget.AppCompatTextView
 import com.mredrock.cyxbs.course.R
 
@@ -35,7 +34,7 @@ class RedRockTextView : AppCompatTextView {
     private val mPaint: Paint by lazy {
         Paint(Paint.ANTI_ALIAS_FLAG or Paint.LINEAR_TEXT_FLAG)
     }
-    private lateinit var whitePaint:Paint
+    private lateinit var whitePaint: Paint
     private var mElementWidth: Float = 0f
     private var mElementHeight: Float = 0f
     //record a CharSequence bounds
@@ -61,9 +60,6 @@ class RedRockTextView : AppCompatTextView {
             field = value
             invalidate()
         }
-
-
-
 
 
     constructor(context: Context) : super(context) {

@@ -12,20 +12,18 @@ import androidx.appcompat.widget.AppCompatTextView
  * 描述:一个跑马灯TextView
  */
 internal class MarqueeTextView : AppCompatTextView {
-    constructor(context: Context?) : super(context) {}
+    constructor(context: Context?) : super(context)
     constructor(context: Context?, attrs: AttributeSet?) : super(
-        context,
-        attrs
-    ) {
-    }
+            context,
+            attrs
+    )
 
 
     constructor(
-        context: Context?,
-        attrs: AttributeSet?,
-        defStyleAttr: Int
-    ) : super(context, attrs, defStyleAttr) {
-    }
+            context: Context?,
+            attrs: AttributeSet?,
+            defStyleAttr: Int
+    ) : super(context, attrs, defStyleAttr)
 
 
     override fun isFocused(): Boolean {

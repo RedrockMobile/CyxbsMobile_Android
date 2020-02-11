@@ -160,8 +160,8 @@ class ScheduleViewAdapter(private val mContext: Context,
         var itemCount = 1
         mSchedulesArray[row][column]?.let {
             val courseList = it.toMutableList()
-            if ((row == 0 || row == 2 || row == 4)&&it[0].period>2) {
-                mSchedulesArray[row+1][column]?.let { list ->
+            if ((row == 0 || row == 2 || row == 4) && it[0].period > 2) {
+                mSchedulesArray[row + 1][column]?.let { list ->
                     courseList.addAll(list)
                 }
             }
@@ -212,7 +212,7 @@ class ScheduleViewAdapter(private val mContext: Context,
             mAffairBackground.visibility = View.GONE
             if (itemCount > 1) {
                 tag.visibility = View.VISIBLE
-                tag.background = createTagBackground(mCoursesTextColors[course.hashLesson/2])
+                tag.background = createTagBackground(mCoursesTextColors[course.hashLesson / 2])
             }
             top.textColor = mCoursesTextColors[index]
             bottom.textColor = mCoursesTextColors[index]
@@ -265,7 +265,7 @@ class ScheduleViewAdapter(private val mContext: Context,
             false
         }
         val schedules = mSchedulesArray[row][column]
-        return if (schedules == null || schedules.size == 0||isOverlap) {
+        return if (schedules == null || schedules.size == 0 || isOverlap) {
             null
         } else {
             ScheduleView.ScheduleItem(itemHeight = schedules[0].period)

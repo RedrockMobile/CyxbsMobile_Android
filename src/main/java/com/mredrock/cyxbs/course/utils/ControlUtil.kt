@@ -16,18 +16,18 @@ import com.mredrock.cyxbs.course.R
 /**
  * 周数选择CheckBox字体颜色状态改变，下面两个全局变量是为了防止多次从资源文件中获取颜色
  */
-var isCheckBox:Int?= null
-var notCheckBox:Int? = null
-fun weekSelectCheckBoxState(checkBox: CheckBox,context: Context){
+var isCheckBox: Int? = null
+var notCheckBox: Int? = null
+fun weekSelectCheckBoxState(checkBox: CheckBox, context: Context) {
     if (isCheckBox == null || notCheckBox == null) {
-        notCheckBox =  ContextCompat.getColor(context, R.color.levelTwoFontColor)
+        notCheckBox = ContextCompat.getColor(context, R.color.levelTwoFontColor)
         isCheckBox = ContextCompat.getColor(context, R.color.selectFontColorForTransactionWeeks)
     }
     if (checkBox.isChecked) {
         isCheckBox?.let {
             checkBox.setTextColor(it)
         }
-    }else{
+    } else {
         notCheckBox?.let {
             checkBox.setTextColor(it)
         }

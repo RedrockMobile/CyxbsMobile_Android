@@ -10,16 +10,16 @@ import androidx.viewpager.widget.ViewPager
  *
  * Created by anriku on 2018/9/18.
  */
-class VPOnPagerChangeObserver(private val mViewPager: androidx.viewpager.widget.ViewPager,
+class VPOnPagerChangeObserver(private val mViewPager: ViewPager,
                               private val mOnPageScrollStateChanged: (Int) -> Unit = {},
                               private val mOnPageScrolled: (Int, Float, Int) -> Unit = { _, _, _ -> },
                               private val mOnPageSelected: (Int) -> Unit = {}) : LifecycleObserver {
 
-    private lateinit var onPagerChangeListener: androidx.viewpager.widget.ViewPager.OnPageChangeListener
+    private lateinit var onPagerChangeListener: ViewPager.OnPageChangeListener
 
     @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
     fun addOnPageChangeListener() {
-        onPagerChangeListener = object : androidx.viewpager.widget.ViewPager.OnPageChangeListener {
+        onPagerChangeListener = object : ViewPager.OnPageChangeListener {
             override fun onPageScrollStateChanged(state: Int) {
                 mOnPageScrollStateChanged(state)
             }

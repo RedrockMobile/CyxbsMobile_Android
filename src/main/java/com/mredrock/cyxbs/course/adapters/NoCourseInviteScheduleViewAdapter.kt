@@ -119,7 +119,7 @@ class NoCourseInviteScheduleViewAdapter(private val mContext: Context,
             }
         }
         view.tv_name_list.text = stringBuilder.toString()
-        view.tv_name_list.setTextColor(mCoursesTextColors[row/4])
+        view.tv_name_list.setTextColor(mCoursesTextColors[row / 4])
         view.cv.background = createBackground(mCoursesColors[row / 4])
         view.setOnClickListener {
             mNoCourseInviteDetailDialogHelper.showDialog(row, column, getNoCourseLength(row, column), nameList)

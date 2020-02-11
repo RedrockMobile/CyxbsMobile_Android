@@ -9,9 +9,6 @@ import com.mredrock.cyxbs.course.R
 import org.jetbrains.anko.dip
 
 
-
-
-
 /**
  * SimpleDotsView is used as an indicator of the ViewPager or the slideshow.
  *
@@ -87,8 +84,8 @@ class SimpleDotsView : ScheduleDetailView.DotsView {
         val height: Int
 
         if (heightMode == MeasureSpec.AT_MOST) {
-            height = mDotRadius*2
-            setMeasuredDimension(width, height);
+            height = mDotRadius * 2
+            setMeasuredDimension(width, height)
         }
         mDotsViewWidth = measuredWidth
         mDotsViewHeight = measuredHeight

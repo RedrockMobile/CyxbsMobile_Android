@@ -24,15 +24,12 @@ class WeekBackgroundView : View {
         }
 
 
-
     private var foreground: Int = 0
     private var bottomBackground: Int = 0
     private var round: Float = 0F
     private var mElementGap: Int = 0
     private var mScheduleViewWidth: Int = 0
     private var mBasicElementWidth: Int = 0
-
-
 
 
     constructor(context: Context) : super(context)
@@ -85,6 +82,7 @@ class WeekBackgroundView : View {
             canvas?.drawRoundRect(foregroundRectF, round, round, foregroundPaint)
         }
     }
+
     private fun Context.dp2pxInt(dpValue: Float) =
             (dpValue * resources.displayMetrics.density + 0.5f).toInt()
 }

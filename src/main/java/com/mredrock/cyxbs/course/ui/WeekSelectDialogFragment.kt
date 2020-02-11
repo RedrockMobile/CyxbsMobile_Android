@@ -50,17 +50,17 @@ class WeekSelectDialogFragment(context: Context) : RedRockBottomSheetDialog(cont
         super.show()
         for ((k, v) in adapter.checkBoxMap) {
             v.isChecked = false
-            weekSelectCheckBoxState(v,context)
+            weekSelectCheckBoxState(v, context)
             if (mEditAffairViewModel.mPostWeeks.size == 21) {
                 if (k == 0) {
                     v.isChecked = true
-                    weekSelectCheckBoxState(v,context)
+                    weekSelectCheckBoxState(v, context)
                 }
             } else {
                 mEditAffairViewModel.mPostWeeks.forEach {
                     if (it == k) {
                         v.isChecked = true
-                        weekSelectCheckBoxState(v,context)
+                        weekSelectCheckBoxState(v, context)
                     }
                 }
             }

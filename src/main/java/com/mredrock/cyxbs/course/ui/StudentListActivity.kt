@@ -1,9 +1,10 @@
 package com.mredrock.cyxbs.course.ui
 
 import android.os.Bundle
-import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.BuildConfig
 import com.mredrock.cyxbs.common.network.ApiGenerator
+import com.mredrock.cyxbs.common.service.ServiceManager
+import com.mredrock.cyxbs.common.service.account.IAccountService
 import com.mredrock.cyxbs.common.ui.BaseActivity
 import com.mredrock.cyxbs.common.utils.extensions.errorHandler
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
@@ -55,7 +56,7 @@ class StudentListActivity : BaseActivity() {
         if (mCourseInfo.teacher != null && mCourseInfo.classroom != null) {
 //            (tb as JToolbar).titleTextView.text = mCourseInfo.courseNum
 
-            courseApiService.getStudentList(mCourseInfo.teacher!!, BaseApp.user!!.stuNum!!, mCourseInfo.classroom!!)
+            courseApiService.getStudentList(mCourseInfo.teacher!!, ServiceManager.getService(IAccountService::class.java).getUserService().getStuNum(), mCourseInfo.classroom!!)
                     .setSchedulers()
                     .errorHandler()
                     .subscribe(ExecuteOnceObserver(onExecuteOnceNext = {

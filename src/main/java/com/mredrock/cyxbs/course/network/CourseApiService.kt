@@ -7,7 +7,7 @@ import retrofit2.http.*
 /**
  * Created by anriku on 2018/8/18.
  */
-interface  CourseApiService {
+interface CourseApiService {
 
     /**
      * 获取服务器课程信息
@@ -24,6 +24,18 @@ interface  CourseApiService {
                   @Field("week") week: String = "",
                   @Field("force_fetch") isForceFetch: Boolean = false): Observable<CourseApiWrapper<List<Course>>>
 
+
+    /**
+     * 获取服务器课程信息
+     *
+     * @param teaNum 学生学号
+     * @param teaName 学生身份证后六位。可以不传值
+     */
+    @FormUrlEncoded
+//    @Headers("API_APP: android")
+    @POST(CourseUrls.API_GET_TEA_COURSE)
+    fun getTeaCourse(@Field("tea") teaNum: String,
+                     @Field("teaName") teaName: String): Observable<CourseApiWrapper<List<Course>>>
 
 
     /**

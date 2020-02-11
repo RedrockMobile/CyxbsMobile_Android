@@ -107,7 +107,6 @@ class ScheduleDetailView : RelativeLayout {
     }
 
 
-
     /**
      * This Adapter is the adapter of ViewPager displaying the schedules. There use a proxy. Let the
      * [ViewPagerAdapter]'s work done by [Adapter]

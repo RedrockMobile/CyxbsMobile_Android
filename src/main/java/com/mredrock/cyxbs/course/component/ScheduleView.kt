@@ -47,7 +47,7 @@ class ScheduleView : FrameLayout {
         const val CLICK_RESPONSE_DISTANCE = 10
     }
 
-    var adapterChangeListener : ((Adapter)-> Unit)? = null
+    var adapterChangeListener: ((Adapter) -> Unit)? = null
 
     /**
      * 接收一个继承了本类内部抽象Adapter的类对象，
@@ -135,7 +135,6 @@ class ScheduleView : FrameLayout {
     private var noCourseImageWidth: Int = 0
 
 
-
     constructor(context: Context) : super(context) {
         mElementGap = dip(2f)
         mTouchViewColor = Color.parseColor("#bdc3c7")
@@ -187,7 +186,7 @@ class ScheduleView : FrameLayout {
     }
 
     private fun addNoCourseView() {
-        if (linearLayout == null&&mIsEmpty && mNoCourseDrawableResId != 0) {
+        if (linearLayout == null && mIsEmpty && mNoCourseDrawableResId != 0) {
             linearLayout = LinearLayout(context).apply {
                 layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
                 orientation = LinearLayout.VERTICAL
@@ -223,7 +222,7 @@ class ScheduleView : FrameLayout {
                 linearLayout?.addView(emptyTextView)
                 addView(linearLayout)
             }
-        }else if (linearLayout != null) {
+        } else if (linearLayout != null) {
             addView(linearLayout)
         }
     }
@@ -321,7 +320,7 @@ class ScheduleView : FrameLayout {
             //record the start position
             startPoint.x = event.x
             startPoint.y = event.y
-        }else if (event.action == MotionEvent.ACTION_UP) {
+        } else if (event.action == MotionEvent.ACTION_UP) {
             // 如果setOnTouchViewClickListener返回为null就不启用mTouchView
             adapter?.setOnTouchViewClickListener() ?: return true
 

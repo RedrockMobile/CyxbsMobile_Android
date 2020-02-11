@@ -1,6 +1,6 @@
 package com.mredrock.cyxbs.course.viewmodels
 
-import androidx.lifecycle.MutableLiveData
+import androidx.databinding.ObservableField
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.mredrock.cyxbs.common.network.ApiGenerator
@@ -22,7 +22,7 @@ class NoCourseInviteViewModel(private val mStuNumList: List<String> = mutableLis
     }
 
     //用于存储所有学生的课程。key代表学生在mStuNumList中的index，value代表对应的学生的课程。
-    val studentsCourseMap = MutableLiveData<Map<Int, List<Course>>>()
+    val studentsCourseMap = ObservableField<Map<Int, List<Course>>>()
     private val mCourseApiService = ApiGenerator.getApiService(CourseApiService::class.java)
 
     /**
@@ -42,7 +42,7 @@ class NoCourseInviteViewModel(private val mStuNumList: List<String> = mutableLis
                         studentsCourseMap[mStuNumList.indexOf(it.stuNum)] = courses
                     }
                 }, onComplete = {
-                    this.studentsCourseMap.value = studentsCourseMap
+                    this.studentsCourseMap.set(studentsCourseMap)
                     onFinish?.invoke()
                 }, onError = {
                     onFinish?.invoke()

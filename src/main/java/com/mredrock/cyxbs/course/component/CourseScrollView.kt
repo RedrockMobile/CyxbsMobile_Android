@@ -20,9 +20,9 @@ class CourseScrollView : ScrollView {
 
     override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
         if (scrollY == 0) {
-            parent.requestDisallowInterceptTouchEvent(false);
+            parent.requestDisallowInterceptTouchEvent(false)
         } else {
-            parent.requestDisallowInterceptTouchEvent(true);
+            parent.requestDisallowInterceptTouchEvent(true)
         }
         return super.dispatchTouchEvent(ev)
     }

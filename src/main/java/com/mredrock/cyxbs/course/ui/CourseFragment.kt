@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import android.view.animation.LayoutAnimationController
-import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
@@ -15,14 +14,15 @@ import androidx.lifecycle.ViewModelProviders
 import com.mredrock.cyxbs.common.config.WEEK_NUM
 import com.mredrock.cyxbs.common.ui.BaseFragment
 import com.mredrock.cyxbs.course.R
-import com.mredrock.cyxbs.course.bindingadapter.ScheduleViewBidingAdapter
+import com.mredrock.cyxbs.course.component.ScheduleView
 import com.mredrock.cyxbs.course.databinding.CourseFragmentCourseBinding
+import com.mredrock.cyxbs.course.databinding.CourseNoClassInviteScheduleBinding
+import com.mredrock.cyxbs.course.databinding.CourseOrdinaryScheduleBinding
 import com.mredrock.cyxbs.course.event.DismissAddAffairViewEvent
 import com.mredrock.cyxbs.course.viewmodels.CoursePageViewModel
 import com.mredrock.cyxbs.course.viewmodels.CoursesViewModel
 import com.mredrock.cyxbs.course.viewmodels.NoCourseInviteViewModel
 import kotlinx.android.synthetic.main.course_fragment_course.*
-import kotlinx.android.synthetic.main.course_fragment_course.view.*
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.jetbrains.anko.textColor
@@ -34,11 +34,14 @@ import org.jetbrains.anko.textColor
 
 class CourseFragment : BaseFragment() {
 
+    companion object {
+        var isFistLoad = true
+    }
 
     override val openStatistics: Boolean
         get() = false
 
-    lateinit var courseContainerEntryFragment:CourseContainerEntryFragment
+    lateinit var courseContainerEntryFragment: CourseContainerEntryFragment
 
     //当前课表页面代表的第几周[默认0 代表整学期，1代表第一周。。。。。。]
     private var mWeek: Int = 0
@@ -49,13 +52,15 @@ class CourseFragment : BaseFragment() {
 
     private lateinit var mBinding: CourseFragmentCourseBinding
 
+    lateinit var scheduleView: ScheduleView
+
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         courseContainerEntryFragment = parentFragment as CourseContainerEntryFragment
         mBinding = DataBindingUtil.inflate(inflater, R.layout.course_fragment_course,
                 container, false)
-        mBinding.courseSv.layoutAnimation = LayoutAnimationController(AnimationUtils.loadAnimation(context,R.anim.course_nest_sc_enter))
+        mBinding.courseSv.layoutAnimation = LayoutAnimationController(AnimationUtils.loadAnimation(context, R.anim.course_nest_sc_enter))
         return mBinding.root
     }
 
@@ -83,31 +88,42 @@ class CourseFragment : BaseFragment() {
                     CoursePageViewModel.DateViewModelFactory(mWeek)).get(CoursePageViewModel::class.java)
             mCoursePageViewModel.nowWeek = mWeek
 
+            scheduleView = when (courseContainerEntryFragment.courseState) {
+                CourseContainerEntryFragment.CourseState.OrdinaryCourse, CourseContainerEntryFragment.CourseState.OtherCourse, CourseContainerEntryFragment.CourseState.TeacherCourse -> {
+                    val mBinding = DataBindingUtil.inflate<CourseOrdinaryScheduleBinding>(LayoutInflater.from(context), R.layout.course_ordinary_schedule, course_schedule_container, false)
+                    mBinding.coursePageViewModel = mCoursePageViewModel
+                    mBinding.coursesViewModel = mCoursesViewModel
+                    course_schedule_container.addView(mBinding.root)
+                    mBinding.scheduleView
+                }
+                CourseContainerEntryFragment.CourseState.NoClassInvitationCourse -> {
+                    val mBinding = DataBindingUtil.inflate<CourseNoClassInviteScheduleBinding>(LayoutInflater.from(context), R.layout.course_no_class_invite_schedule, course_schedule_container, false)
+                    mBinding.noCourseInviteViewModel = mNoCourseInviteViewModel
+                    mBinding.nowWeek = mWeek
+                    course_schedule_container.addView(mBinding.root)
+                    mBinding.scheduleView
+                }
+            }
+
+//            if (mCoursesViewModel.nowWeek.value == mWeek&&courseContainerEntryFragment.courseState == CourseContainerEntryFragment.CourseState.OrdinaryCourse&&isFistLoad) {
+//                scheduleView.layoutAnimation = LayoutAnimationController(AnimationUtils.loadAnimation(context, R.anim.course_schedule_view))
+//                scheduleView.layoutAnimationListener = object : Animation.AnimationListener{
+//                    override fun onAnimationRepeat(animation: Animation?) {}
+//                    override fun onAnimationStart(animation: Animation?) {}
+//                    override fun onAnimationEnd(animation: Animation?) {
+//                        scheduleView.layoutAnimation = null
+//                    }
+//                }
+//                isFistLoad = false
+//            }
             val color = ContextCompat.getColor(activity, R.color.levelOneFontColor)
             red_rock_tv_course_day_of_month.textColor = Color.argb(153, Color.red(color), Color.green(color), Color.blue(color))
-            when(courseContainerEntryFragment.courseState){
-                CourseContainerEntryFragment.CourseState.OrdinaryCourse,CourseContainerEntryFragment.CourseState.OtherCourse->{
-                    mCoursesViewModel.courses.observe(this, Observer{
-                        ScheduleViewBidingAdapter.setScheduleData(schedule_view,it,mWeek, mCoursesViewModel.isGetOthers.value!!)
-                    })
-                }
-                CourseContainerEntryFragment.CourseState.NoClassInvitationCourse->{
-                    mNoCourseInviteViewModel?.studentsCourseMap?.observe(this, Observer {
-                        ScheduleViewBidingAdapter.setNoCourseInvite(schedule_view,mWeek,mNoCourseInviteViewModel?.studentsCourseMap?.value,mNoCourseInviteViewModel?.nameList!!)
-                        schedule_view.mIsDisplayCourse = false
-                    })
-                }
-                else -> {}
-            }
+
         }
 
 
         mBinding.coursesViewModel = mCoursesViewModel
         mBinding.coursePageViewModel = mCoursePageViewModel
-
-        mCoursesViewModel.toastEvent.observe(this, Observer {
-            Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
-        })
 
         // 当当前周数进行了改变后有可能SchoolCalendar进行了更新，这时候就对DateViewModel中的日期进行更新
         mCoursesViewModel.schoolCalendarUpdated.observe(this, Observer {
@@ -116,8 +132,8 @@ class CourseFragment : BaseFragment() {
             }
         })
 
-        schedule_view.adapterChangeListener = {
-            val position = schedule_view.adapter?.getHighLightPosition()
+        scheduleView.adapterChangeListener = {
+            val position = scheduleView.adapter?.getHighLightPosition()
             week_back_ground_view.position = position
             red_rock_tv_course_day_of_week.position = position
             red_rock_tv_course_day_of_month.position = position
@@ -135,6 +151,6 @@ class CourseFragment : BaseFragment() {
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun dismissAddAffairEventView(e: DismissAddAffairViewEvent) {
-        mBinding.root.schedule_view.clearTouchView()
+        scheduleView.clearTouchView()
     }
 }

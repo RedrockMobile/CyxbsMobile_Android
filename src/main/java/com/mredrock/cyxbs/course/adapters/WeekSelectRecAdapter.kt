@@ -38,32 +38,32 @@ class WeekSelectRecAdapter(mActivity: FragmentActivity) : RedRockAutoWarpView.Ad
         mEditAffairViewModel.mPostWeeks.forEach {
             if (mEditAffairViewModel.mPostWeeks.size == 21 && position == 0) {
                 checkBox.isChecked = true
-                weekSelectCheckBoxState(checkBox,context)
+                weekSelectCheckBoxState(checkBox, context)
             } else {
                 if (it == position) {
                     checkBox.isChecked = true
-                    weekSelectCheckBoxState(checkBox,context)
+                    weekSelectCheckBoxState(checkBox, context)
                 }
             }
         }
         if (position == 0) {
             checkBox.setOnClickListener {
-                weekSelectCheckBoxState(checkBox,context)
+                weekSelectCheckBoxState(checkBox, context)
                 if (checkBox.isChecked) {
                     for ((k, v) in checkBoxMap) {
                         if (k != 0) {
                             v.isChecked = false
-                            weekSelectCheckBoxState(v,context)
+                            weekSelectCheckBoxState(v, context)
                         }
                     }
                 }
             }
-        }else{
+        } else {
             checkBox.setOnClickListener {
-                weekSelectCheckBoxState(checkBox,context)
+                weekSelectCheckBoxState(checkBox, context)
                 checkBoxMap[0]?.apply {
                     isChecked = false
-                    weekSelectCheckBoxState(this,context)
+                    weekSelectCheckBoxState(this, context)
                 }
             }
         }

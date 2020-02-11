@@ -17,7 +17,7 @@
     <string name="course_content_is_null">掌友，要做的事呢？</string>
     <string name="course_week_is_not_select">掌友，请选择周数</string>
     <string name="course_time_is_not_select">掌友，请选时间</string>
-    <string name="course_use_cache">正在使用课表缓存</string>
+    <string name="course_use_cache">教务在线当前不可用\n正使用红岩网校缓存课表</string>
     <!-- analog login -->
     <string name="course_input_account">请输入学号</string>
     <string name="course_input_password">请输入密码</string>
@@ -122,5 +122,6 @@
     <string name="course_title_for_your_affair1">为你的行程添加</string>
     <string name="course_title_for_your_affair2">一个标题</string>
     <string name="course_title_for_your_affair3">具体内容</string>
+    <string name="course_course_update_tips">你的课表可能发生了变化请留意</string>
 
 </resources>

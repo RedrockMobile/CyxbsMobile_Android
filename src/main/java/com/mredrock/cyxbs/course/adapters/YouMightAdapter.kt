@@ -7,10 +7,11 @@ import com.mredrock.cyxbs.common.component.RedRockAutoWarpView
 import com.mredrock.cyxbs.course.R
 import kotlinx.android.synthetic.main.course_auto_warp_you_might_item.view.*
 
-class YouMightAdapter(private val editText:EditText): RedRockAutoWarpView.Adapter() {
+class YouMightAdapter(private val editText: EditText) : RedRockAutoWarpView.Adapter() {
 
     //仿造数据
-    val data = listOf("自习","开会","补课","值班")
+    val data = listOf("自习", "开会", "补课", "值班")
+
     override fun getItemId(): Int {
         return R.layout.course_auto_warp_you_might_item
     }

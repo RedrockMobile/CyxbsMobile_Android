@@ -7,6 +7,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.network.ApiGenerator
+import com.mredrock.cyxbs.common.service.ServiceManager
+import com.mredrock.cyxbs.common.service.account.IAccountService
+import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
 import com.mredrock.cyxbs.common.utils.extensions.errorHandler
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.course.R
@@ -91,10 +94,10 @@ class EditAffairViewModel(application: Application) : AndroidViewModel(applicati
 
         if (passedWeekPosition != -1 && passedTimePosition != -1) {
             if (passedWeekPosition == 0) {
-                for (i in 1..21){
+                for (i in 1..21) {
                     mPostWeeks.add(i)
                 }
-            }else{
+            } else {
                 mPostWeeks.add(passedWeekPosition)
             }
             setTimeSelected(mutableListOf(passedTimePosition))
@@ -129,10 +132,11 @@ class EditAffairViewModel(application: Application) : AndroidViewModel(applicati
      * @param content 事务内容
      */
     fun postOrModifyAffair(activity: FragmentActivity, title: String, content: String) {
-        BaseApp.user ?: return
+        ServiceManager.getService(IAccountService::class.java).getUserService()
 
-        val stuNum = BaseApp.user!!.stuNum ?: return
-        val idNum = BaseApp.user!!.idNum ?: return
+        val stuNum = ServiceManager.getService(IAccountService::class.java).getUserService().getStuNum()
+        val idNum = BaseApp.context.defaultSharedPreferences.getString("SP_KEY_ID_NUM", "")
+                ?: return
         val date = AffairHelper.generateAffairDateString(mPostClassAndDays, mPostWeeks)
 
         if (passedAffairInfo == null) {
@@ -208,9 +212,9 @@ class EditAffairViewModel(application: Application) : AndroidViewModel(applicati
 
         // 对提醒时间重现
         val remindTime = passedAffairInfo?.affairTime
-        if (remindTime == null){
+        if (remindTime == null) {
             selectedRemindString.value = getApplication<Application>().resources.getString(R.string.course_remind_select)
-        }else{
+        } else {
             setRemindSelectString(getRemindPosition(remindTime.toInt()))
         }
 
@@ -242,7 +246,7 @@ class EditAffairViewModel(application: Application) : AndroidViewModel(applicati
             // 获取选择的课程时间的行列位置
             val row: Int = position / 7
             val column: Int = position - row * 7
-            mPostClassAndDays.add(Pair(row,column))
+            mPostClassAndDays.add(Pair(row, column))
         }
     }
 

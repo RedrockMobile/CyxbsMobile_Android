@@ -7,7 +7,10 @@ import android.view.View
 import android.view.ViewGroup
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.network.ApiGenerator
+import com.mredrock.cyxbs.common.service.ServiceManager
+import com.mredrock.cyxbs.common.service.account.IAccountService
 import com.mredrock.cyxbs.common.utils.Num2CN
+import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
 import com.mredrock.cyxbs.common.utils.extensions.errorHandler
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.course.R
@@ -77,7 +80,7 @@ class ScheduleDetailViewAdapter(private val mDialog: Dialog, private val mSchedu
     private fun setAffairContent(itemView: View, itemViewInfo: Course) {
         itemView.apply {
             tv_course_cycle.text = createAffairWeekStr(itemViewInfo)
-            tv_course_exact_time.text = listOf("一二节课","三四节课","五六节课","七八节课","九十节课","十一十二节课")[itemViewInfo.hashLesson]
+            tv_course_exact_time.text = listOf("一二节课", "三四节课", "五六节课", "七八节课", "九十节课", "十一十二节课")[itemViewInfo.hashLesson]
             tv_affair_name.text = itemViewInfo.course
             tv_affair_detail.text = itemViewInfo.classroom
             acb_modify.setOnClickListener {
@@ -87,7 +90,7 @@ class ScheduleDetailViewAdapter(private val mDialog: Dialog, private val mSchedu
                 mDialog.dismiss()
             }
             acb_delete.setOnClickListener {
-                mCourseApiService.deleteAffair(BaseApp.user!!.stuNum!!, BaseApp.user!!.idNum!!,
+                mCourseApiService.deleteAffair(ServiceManager.getService(IAccountService::class.java).getUserService().getStuNum(), BaseApp.context.defaultSharedPreferences.getString("SP_KEY_ID_NUM", "")!!,
                         itemViewInfo.courseId.toString())
                         .setSchedulers()
                         .errorHandler()
@@ -127,7 +130,7 @@ class ScheduleDetailViewAdapter(private val mDialog: Dialog, private val mSchedu
                 ","
             }
         }
-        tvCourseWeekText+="   "
+        tvCourseWeekText += "   "
         tvCourseWeekText += listOf("周一", "周二", "周三", "周四", "周五", "周六", "周日")[itemViewInfo.hashDay]
         return tvCourseWeekText
     }
@@ -150,6 +153,10 @@ class ScheduleDetailViewAdapter(private val mDialog: Dialog, private val mSchedu
             }
             tv_course_type.apply { text = itemViewInfo.type }
             tv_course_week.apply { text = itemViewInfo.rawWeek }
+            if (itemViewInfo.classNumber.isNotEmpty() && itemViewInfo.classNumber[0].isNotEmpty()) {
+                course_tea_class.visibility = View.VISIBLE
+                rrawv_course_class.adapter = TeaClassAdapter(itemViewInfo.classNumber)
+            }
         }
     }
 

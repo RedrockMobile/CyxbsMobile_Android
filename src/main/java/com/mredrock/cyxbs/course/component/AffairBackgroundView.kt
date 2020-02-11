@@ -22,7 +22,7 @@ import kotlin.math.sqrt
  */
 internal class AffairBackgroundView : View {
 
-    var screenWidth:Int?=null
+    var screenWidth: Int? = null
     var screenHeight: Int? = null
     private val paint = Paint().apply {
         color = 0xFFE4E7EC.toInt()
@@ -35,6 +35,7 @@ internal class AffairBackgroundView : View {
     constructor(context: Context?) : super(context) {
         init()
     }
+
     constructor(context: Context?, attrs: AttributeSet?) : super(
             context,
             attrs
@@ -50,25 +51,25 @@ internal class AffairBackgroundView : View {
         init()
     }
 
-    private fun init(){
+    private fun init() {
         screenHeight = getScreenHeight(context)
         screenWidth = getScreenWidth(context)
     }
 
     override fun onDraw(canvas: Canvas?) {
-        wholeRectF.set(-(width/2f),(height/2f),width/2f,-(height/2f))
-        mPath.addRoundRect(wholeRectF,16f,16f,Path.Direction.CCW)
-        val drawEdge = max(width,height) * sqrt(2.0)
+        wholeRectF.set(-(width / 2f), (height / 2f), width / 2f, -(height / 2f))
+        mPath.addRoundRect(wholeRectF, 16f, 16f, Path.Direction.CCW)
+        val drawEdge = max(width, height) * sqrt(2.0)
         val space = dip(8)
-        val num = drawEdge/(space*2)
-        canvas?.let {canvas ->
+        val num = drawEdge / (space * 2)
+        canvas?.let { canvas ->
             canvas.translate(width / 2f, height / 2f)
             canvas.clipPath(mPath)
             canvas.rotate(45f)
-            rectF.set(-(drawEdge/2).toFloat(), (drawEdge/2).toFloat(),((-drawEdge/2)+space).toFloat(), (-(drawEdge/2f)).toFloat())
+            rectF.set(-(drawEdge / 2).toFloat(), (drawEdge / 2).toFloat(), ((-drawEdge / 2) + space).toFloat(), (-(drawEdge / 2f)).toFloat())
             for (i in 0 until num.toInt()) {
-                canvas.drawRect(rectF,paint)
-                rectF.set(rectF.left+(space*2),rectF.top,rectF.right+(space*2),rectF.bottom)
+                canvas.drawRect(rectF, paint)
+                rectF.set(rectF.left + (space * 2), rectF.top, rectF.right + (space * 2), rectF.bottom)
             }
         }
     }

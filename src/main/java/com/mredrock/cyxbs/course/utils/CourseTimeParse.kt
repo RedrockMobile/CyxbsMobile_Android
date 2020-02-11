@@ -23,7 +23,7 @@ class CourseTimeParse(private val mClassX: Int, private val mPeriod: Int = 2) {
         else -> Time("00", "00")
     }
 
-    fun parseEndCourseTime(): Time = when (mClassX + mPeriod  - 1) {
+    fun parseEndCourseTime(): Time = when (mClassX + mPeriod - 1) {
         0 -> Time("8", "45")
         1 -> Time("9", "40")
         2 -> Time("11", "00")

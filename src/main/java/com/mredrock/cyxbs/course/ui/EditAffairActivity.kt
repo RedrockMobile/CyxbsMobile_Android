@@ -61,8 +61,8 @@ class EditAffairActivity : BaseActivity() {
     private fun initActivity() {
         mEditAffairViewModel.initData(this)
 
-        tv_week_select.adapter = WeekSelectedAdapter(mEditAffairViewModel.mPostWeeks,this)
-        tv_time_select.adapter = TimeSelectedAdapter(mEditAffairViewModel.mPostClassAndDays,this)
+        tv_week_select.adapter = WeekSelectedAdapter(mEditAffairViewModel.mPostWeeks, this)
+        tv_time_select.adapter = TimeSelectedAdapter(mEditAffairViewModel.mPostClassAndDays, this)
         tv_remind_select.setOnClickListener {
             if (!mRemindSelectDialogFragment.isShowing) {
                 mRemindSelectDialogFragment.show()
@@ -82,14 +82,14 @@ class EditAffairActivity : BaseActivity() {
 
         course_back.setOnClickListener { finish() }
         //必须在ViewModel的initData之后执行
-        if (mEditAffairViewModel.passedAffairInfo !=null) {
+        if (mEditAffairViewModel.passedAffairInfo != null) {
             modifyPageLayout()
             mEditAffairViewModel.status = EditAffairViewModel.Status.AllDoneStatus
         }
         rv_you_might.adapter = YouMightAdapter(et_title_content_input)
     }
 
-    private fun onClick(){
+    private fun onClick() {
         when (mEditAffairViewModel.status) {
             EditAffairViewModel.Status.TitleStatus -> addTitleNextMonitor()
             EditAffairViewModel.Status.ContentStatus -> addContentNextMonitor()
@@ -105,7 +105,7 @@ class EditAffairActivity : BaseActivity() {
             EditAffairViewModel.Status.AllDoneStatus -> {
                 if (mEditAffairViewModel.passedAffairInfo != null) {
                     super.onBackPressed()
-                }else{
+                } else {
                     addContentBackMonitor()
                 }
             }
@@ -169,7 +169,7 @@ class EditAffairActivity : BaseActivity() {
         tv_title_text.text = "一个标题"
         tv_title.visibility = View.GONE
         rv_you_might.visibility = View.VISIBLE
-        et_title_content_input.setText(tv_title.text, TextView.BufferType.EDITABLE);
+        et_title_content_input.setText(tv_title.text, TextView.BufferType.EDITABLE)
         et_title_content_input.setSelection(tv_title.text.length)
         tv_title.text = ""
         tv_content_text.visibility = View.GONE
@@ -179,7 +179,7 @@ class EditAffairActivity : BaseActivity() {
     /**
      * 添加事务时的内容
      */
-    private fun addContentNextMonitor(){
+    private fun addContentNextMonitor() {
         if (et_title_content_input.text.trim().isEmpty()) {
             Toast.makeText(this, resources.getString(R.string.course_content_is_null),
                     Toast.LENGTH_SHORT).show()
@@ -212,10 +212,10 @@ class EditAffairActivity : BaseActivity() {
         tv_time_select.visibility = View.VISIBLE
         tv_remind_select.visibility = View.VISIBLE
         et_title_content_input.imeOptions = EditorInfo.IME_ACTION_DONE
-        et_title.setText(tv_title.text, TextView.BufferType.EDITABLE);
+        et_title.setText(tv_title.text, TextView.BufferType.EDITABLE)
     }
 
-    private fun addContentBackMonitor(){
+    private fun addContentBackMonitor() {
         if (et_title_content_input.text.trim().isEmpty()) {
             Toast.makeText(this, resources.getString(R.string.course_content_is_null),
                     Toast.LENGTH_SHORT).show()
@@ -241,7 +241,6 @@ class EditAffairActivity : BaseActivity() {
             mEditAffairViewModel.status = EditAffairViewModel.Status.ContentStatus
         }
     }
-
 
 
     /**

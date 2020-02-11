@@ -23,7 +23,7 @@ class RemindSelectDialogFragment(context: Context) : RedRockBottomSheetDialog(co
             null, false)
     private var mEditAffairViewModel: EditAffairViewModel = ViewModelProviders.of(context as AppCompatActivity).get(EditAffairViewModel::class.java)
 
-    init{
+    init {
         mBinding.remindStrings = mEditAffairViewModel.remindArray
         mBinding.listeners = RemindSelectListeners({
             dismiss()

@@ -8,7 +8,7 @@ import com.mredrock.cyxbs.course.component.FlexibleNumberPicker
  * Created by anriku on 2018/9/11.
  */
 
-object FlexibleNumberPickerBindingAdapter{
+object FlexibleNumberPickerBindingAdapter {
 
     @JvmStatic
     @BindingAdapter("values")

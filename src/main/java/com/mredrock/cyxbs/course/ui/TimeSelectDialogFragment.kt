@@ -27,7 +27,7 @@ class TimeSelectDialogFragment(context: Context) : RedRockBottomSheetDialog(cont
     private var mEditAffairViewModel: EditAffairViewModel = ViewModelProviders.of(context as AppCompatActivity).get(EditAffairViewModel::class.java)
 
 
-    init{
+    init {
         mBinding.listeners = TimeSelectListeners({
             dismiss()
         }, {
@@ -37,8 +37,8 @@ class TimeSelectDialogFragment(context: Context) : RedRockBottomSheetDialog(cont
                 mEditAffairViewModel.mPostClassAndDays.add(data)
                 (context as EditAffairActivity).tv_time_select.refreshData()
                 dismiss()
-            }else{
-                Toast.makeText(context,"掌友，这个时间已经选择了哦",Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(context, "掌友，这个时间已经选择了哦", Toast.LENGTH_SHORT).show()
             }
 
         })
@@ -82,10 +82,10 @@ class TimeSelectDialogFragment(context: Context) : RedRockBottomSheetDialog(cont
         }
     }
 
-    class AffairTimeSelectAdapter(private val timeList:Array<String>):WheelAdapter {
+    class AffairTimeSelectAdapter(private val timeList: Array<String>) : WheelAdapter {
 
         override fun getMaxIndex(): Int {
-            return timeList.size-1
+            return timeList.size - 1
         }
 
         override fun getMinIndex(): Int {
@@ -102,7 +102,7 @@ class TimeSelectDialogFragment(context: Context) : RedRockBottomSheetDialog(cont
 
         override fun getValue(position: Int): String {
             if (position < 0) {
-                val a = (6-(-(position%6)))%6
+                val a = (6 - (-(position % 6))) % 6
                 return timeList[a]
             }
             return timeList[position % 6]
@@ -110,10 +110,10 @@ class TimeSelectDialogFragment(context: Context) : RedRockBottomSheetDialog(cont
     }
 
 
-    class AffairWeekSelectAdapter(private val timeList:Array<String>):WheelAdapter {
+    class AffairWeekSelectAdapter(private val timeList: Array<String>) : WheelAdapter {
 
         override fun getMaxIndex(): Int {
-            return timeList.size-1
+            return timeList.size - 1
         }
 
         override fun getMinIndex(): Int {
@@ -130,7 +130,7 @@ class TimeSelectDialogFragment(context: Context) : RedRockBottomSheetDialog(cont
 
         override fun getValue(position: Int): String {
             if (position < 0) {
-                val a = (7-(-(position%7)))%7
+                val a = (7 - (-(position % 7))) % 7
                 return timeList[a]
             }
             return timeList[position % 7]

@@ -7,6 +7,7 @@ import androidx.room.Ignore
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
 import com.google.gson.annotations.SerializedName
+import com.mredrock.cyxbs.course.database.ClassListStringConverter
 import com.mredrock.cyxbs.course.database.IntListStringConverter
 
 /**
@@ -115,6 +116,11 @@ open class Course() : Parcelable {
     @TypeConverters(IntListStringConverter::class)
     @SerializedName(value = "week")
     var week: List<Int>? = mutableListOf()
+
+    @TypeConverters(ClassListStringConverter::class)
+    @SerializedName(value = "classNumber")
+    var classNumber: List<String> = mutableListOf()
+
 
     constructor(parcel: Parcel) : this() {
         customType = parcel.readInt()

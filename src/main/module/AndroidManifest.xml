@@ -14,17 +14,6 @@
         android:theme="@style/AppTheme"
         tools:ignore="AllowBackup,GoogleAppIndexingWarning">
         <activity
-            android:name="debug.CourseActivity"
-            android:launchMode="singleTask"
-            android:theme="@style/MainActivityTheme"
-            android:windowSoftInputMode="adjustPan">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <activity
             android:name=".ui.EditAffairActivity"
             android:launchMode="singleTask" />
         <activity
