@@ -55,7 +55,7 @@ class CourseFragment : BaseFragment() {
         courseContainerEntryFragment = parentFragment as CourseContainerEntryFragment
         mBinding = DataBindingUtil.inflate(inflater, R.layout.course_fragment_course,
                 container, false)
-        mBinding.scheduleView.layoutAnimation = LayoutAnimationController(AnimationUtils.loadAnimation(context,R.anim.course_schedule_view))
+        mBinding.courseSv.layoutAnimation = LayoutAnimationController(AnimationUtils.loadAnimation(context,R.anim.course_nest_sc_enter))
         return mBinding.root
     }
 

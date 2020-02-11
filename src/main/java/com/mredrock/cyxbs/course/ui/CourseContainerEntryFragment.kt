@@ -7,7 +7,10 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
+import android.view.animation.LayoutAnimationController
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.get
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ObservableField
 import androidx.lifecycle.Observer
@@ -32,6 +35,7 @@ import com.mredrock.cyxbs.course.utils.AffairToCalendar
 import com.mredrock.cyxbs.course.utils.changeLibBeanToCourse
 import com.mredrock.cyxbs.course.viewmodels.CoursesViewModel
 import com.mredrock.cyxbs.course.viewmodels.NoCourseInviteViewModel
+import kotlinx.android.synthetic.main.course_fragment_course.view.*
 import kotlinx.android.synthetic.main.course_fragment_course_container.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -113,6 +117,11 @@ class CourseContainerEntryFragment : BaseFragment() {
     private val mDialogHelper: ScheduleDetailDialogHelper by lazy(LazyThreadSafetyMode.NONE) {
         ScheduleDetailDialogHelper(context!!)
     }
+
+    private val accountService: IAccountService by lazy (LazyThreadSafetyMode.NONE) {
+        ServiceManager.getService(IAccountService::class.java)
+    }
+
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         mBinding = DataBindingUtil.inflate(inflater, R.layout.course_fragment_course_container, container, false)
@@ -198,6 +207,9 @@ class CourseContainerEntryFragment : BaseFragment() {
             mBinding.tabLayout.setupWithViewPager(mBinding.vp)
             course_lottie_load.visibility = View.GONE
             settingFollowBottomSheet(1f)
+            course_current_course_week_select_container.visibility = View.VISIBLE
+        }else{
+            course_current_course_week_select_container.visibility = View.GONE
         }
 
 
@@ -353,17 +365,31 @@ class CourseContainerEntryFragment : BaseFragment() {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun loadCoursePage(loadCourse: LoadCourse) {
-        course_lottie_load.playAnimation()
-        course_lottie_load.speed = 1.5f
-        course_lottie_load.addAnimatorListener(object : AnimatorListenerAdapter() {
-            override fun onAnimationEnd(animation: Animator?) {
-                //给下方ViewPager添加适配器和绑定tab
-                mBinding.vp.adapter = mScheduleAdapter
-                mBinding.tabLayout.setupWithViewPager(mBinding.vp)
-                TransitionManager.beginDelayedTransition(course_page_container, Fade())
-                course_lottie_load.visibility = View.GONE
+        if (loadCourse.isCloseLottie) {
+            course_lottie_load.visibility = View.GONE
+        }else{
+            course_lottie_load.visibility = View.VISIBLE
+            course_lottie_load.playAnimation()
+            course_lottie_load.speed = 1.5f
+            if (!accountService.getVerifyService().isLogin()){
+                course_lottie_load.addAnimatorUpdateListener {
+                    if (it.animatedFraction > 0.8) {
+                        course_lottie_load.pauseAnimation()
+                    }
+                }
             }
-        })
+            course_lottie_load.addAnimatorListener(object : AnimatorListenerAdapter() {
+                override fun onAnimationEnd(animation: Animator?) {
+                    //给下方ViewPager添加适配器和绑定tab
+                    mBinding.vp.adapter = mScheduleAdapter
+                    mBinding.tabLayout.setupWithViewPager(mBinding.vp)
+                    mBinding.vp[0].schedule_view.layoutAnimation = LayoutAnimationController(AnimationUtils.loadAnimation(context,R.anim.course_schedule_view))
+                    TransitionManager.beginDelayedTransition(course_page_container, Fade())
+                    course_lottie_load.visibility = View.GONE
+                    course_current_course_week_select_container.visibility  =View.VISIBLE
+                }
+            })
+        }
     }
 
     /**
@@ -375,7 +401,6 @@ class CourseContainerEntryFragment : BaseFragment() {
     }
 
     private fun settingFollowBottomSheet(state: Float) {
-        course_current_course_week_select_container.visibility = View.VISIBLE
         if (course_header_select_content.visibility == View.GONE) {
             course_current_course_container.alpha = 1 - state
             course_current_course_week_select_container.alpha = state

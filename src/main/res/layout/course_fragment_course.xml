@@ -114,30 +114,30 @@
                     app:layout_constraintTop_toTopOf="parent"
                     app:orientation="vertical" />
 
-                <com.mredrock.cyxbs.course.component.ScheduleView
-                    android:id="@+id/schedule_view"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:animateLayoutChanges="true"
-                    app:elementGap="2dp"
-                    app:emptyText="@string/course_empty_course_text"
-                    app:emptyTextSize="14sp"
-                    app:highlightColor="@color/todayLogoBackgroundColor"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.0"
-                    app:layout_constraintStart_toEndOf="@+id/red_rock_tv_course_time"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="0.0"
-                    app:noCourseDrawable="@drawable/course_no_course"
-                    app:noGourseImageHeight="131dp"
-                    app:noGourseImageWidth="202dp"
-                    app:touchViewDrawable="@drawable/course_ic_add_circle_white">
+                    <com.mredrock.cyxbs.course.component.ScheduleView
+                        android:id="@+id/schedule_view"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:animateLayoutChanges="true"
+                        app:elementGap="2dp"
+                        app:emptyText="@string/course_empty_course_text"
+                        app:emptyTextSize="14sp"
+                        app:highlightColor="@color/todayLogoBackgroundColor"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.0"
+                        app:layout_constraintStart_toEndOf="@+id/red_rock_tv_course_time"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintVertical_bias="0.0"
+                        app:noCourseDrawable="@drawable/course_no_course"
+                        app:noGourseImageHeight="131dp"
+                        app:noGourseImageWidth="202dp"
+                        app:touchViewDrawable="@drawable/course_ic_add_circle_white">
 
-                </com.mredrock.cyxbs.course.component.ScheduleView>
+                    </com.mredrock.cyxbs.course.component.ScheduleView>
 
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
 
         </com.mredrock.cyxbs.course.component.CourseScrollView>
