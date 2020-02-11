@@ -20,7 +20,10 @@ import com.google.android.material.bottomnavigation.LabelVisibilityMode
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.config.*
-import com.mredrock.cyxbs.common.event.*
+import com.mredrock.cyxbs.common.event.BottomSheetStateEvent
+import com.mredrock.cyxbs.common.event.CourseSlipsTopEvent
+import com.mredrock.cyxbs.common.event.LoadCourse
+import com.mredrock.cyxbs.common.event.NotifyBottomSheetToExpandEvent
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.service.account.IAccountService
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
@@ -77,7 +80,7 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
     //进入app是否直接显示课表
     var courseShowState: Boolean = false
 
-    private val accountService: IAccountService by lazy (LazyThreadSafetyMode.NONE) {
+    private val accountService: IAccountService by lazy(LazyThreadSafetyMode.NONE) {
         ServiceManager.getService(IAccountService::class.java)
     }
 
@@ -134,7 +137,7 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
                 if (ll_nav_main_container.visibility == GONE) {
                     ll_nav_main_container.visibility = VISIBLE
                 }
-                if (isFirst && courseShowState && p1<0.5f) {
+                if (isFirst && courseShowState && p1 < 0.5f) {
                     isFirst = false
                     Observable.create<Fragment> {
                         it.onNext(discoverFragment)
@@ -153,30 +156,24 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
 
             override fun onStateChanged(p0: View, p1: Int) {
 
-                if (isFirst && bottomSheetBehavior.state == BottomSheetBehavior.STATE_EXPANDED&&lastState!=BottomSheetBehavior.STATE_EXPANDED) {
+                if (isFirst && bottomSheetBehavior.state == BottomSheetBehavior.STATE_EXPANDED
+                        && lastState != BottomSheetBehavior.STATE_EXPANDED && !courseShowState) {
                     EventBus.getDefault().post(LoadCourse())
-                    if (accountService.getVerifyService().isLogin()){
+                    if (accountService.getVerifyService().isLogin()) {
                         isFirst = false
                     }
                 }
-                lastState = when(p1){
-                    BottomSheetBehavior.STATE_EXPANDED-> BottomSheetBehavior.STATE_EXPANDED
-                    BottomSheetBehavior.STATE_COLLAPSED-> {
+                lastState = when (p1) {
+                    BottomSheetBehavior.STATE_EXPANDED -> BottomSheetBehavior.STATE_EXPANDED
+                    BottomSheetBehavior.STATE_COLLAPSED -> {
                         EventBus.getDefault().post(LoadCourse(true))
-                        BottomSheetBehavior.STATE_COLLAPSED}
+                        BottomSheetBehavior.STATE_COLLAPSED
+                    }
                     else -> lastState
                 }
             }
         })
         initFragments()
-    }
-
-    private fun checkLoginBeforeAction(msg: String, action: () -> Unit) {
-        if (ServiceManager.getService(IAccountService::class.java).getVerifyService().isLogin()) {
-            action.invoke()
-        } else {
-            EventBus.getDefault().post(AskLoginEvent("请先登陆才能查看${msg}哦~"))
-        }
     }
 
 
