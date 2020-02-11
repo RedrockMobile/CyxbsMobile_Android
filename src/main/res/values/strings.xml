@@ -47,7 +47,13 @@
     <string name="mine_exit_edit">退出编辑</string>
     <string name="mine_exit_edit_quest">你的资料还未保存，是否退出？</string>
     <string name="mine_exit_edit_btn">退出</string>
-
+    <string name="mine_dialog_agreement_title">数据互通</string>
+    <string name="mine_dialog_agreement_content">
+        1.若您已经同意相关用户协议条款，那么关于您的头像，您须知以下情况：\n
+            若您已经通过微信绑定了红岩网校工作站的微信公众号：重邮小帮手\n那么您的头像信息也将会被我们所知，且您如果没有对掌上重邮APP上的头像进行自主修改的话，那么您的默认头像将会是您的微信头像，您可以自主修改您的头像，您自主修改的头像我们将会优先设置为您在掌上重邮APP上的头像。\n
+            若您并没有通过微信绑定红岩网校工作站的微信公众号：重邮小帮手\n如果您没有设置您的掌上重邮APP头像，那么我们将会使用默认头像作为您的账户头像。您可以自定义修改您的头像\n
+        2.若您未同意相关用户协议条款，那么关于您的头像，您须知以下情况：\n
+            您将无法获得权限进入掌上重邮APP并使用相关功能\n</string>
 
 
     <!--    签到-->

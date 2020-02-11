@@ -61,6 +61,16 @@ class EditInfoActivity(override val isFragmentActivity: Boolean = false,
         }
     }
 
+    private val agreementDialogFragment: CommonDialogFragment by lazy {
+        CommonDialogFragment().apply {
+            initView(
+                    containerRes = R.layout.mine_layout_dialog_portrait_agreement,
+                    onPositiveClick = { dismiss() },
+                    positiveString = "我知道了"
+            )
+        }
+    }
+
     private val userService: IUserService by lazy {
         ServiceManager.getService(IAccountService::class.java).getUserService()
     }
@@ -145,7 +155,9 @@ class EditInfoActivity(override val isFragmentActivity: Boolean = false,
         }
 
 
-
+        mine_edit_iv_agreement.setOnClickListener {
+            agreementDialogFragment.show(supportFragmentManager, "agreement")
+        }
 
         initObserver()
         loadAvatar(ServiceManager.getService(IAccountService::class.java).getUserService().getAvatarImgUrl(), mine_edit_et_avatar)
