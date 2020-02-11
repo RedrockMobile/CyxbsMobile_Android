@@ -84,6 +84,37 @@ interface ApiService {
                         @Field("size") size: Int = 6): Observable<RedrockApiWrapper<List<Product>>>
 
 
+    @FormUrlEncoded
+    @POST("app/index.php/QA/User/mine")
+    fun getQANumber(@Field("stunum") stuNum: String,
+                    @Field("idnum") idNum: String): Observable<RedrockApiWrapper<QANumber>>
+
+    @FormUrlEncoded
+    @POST("app/index.php/QA/User/question")
+    fun getAskPostedList(@Field("stunum") stuNum: String,
+                         @Field("idnum") idNum: String,
+                         @Field("page") page: Int,
+                         @Field("size") size: Int): Observable<RedrockApiWrapper<List<AskPosted>>>
+    @FormUrlEncoded
+    @POST("app/index.php/QA/User/answer")
+    fun getAnswerPostedList(@Field("stunum") stuNum: String,
+                            @Field("idnum") idNum: String,
+                            @Field("page") page: Int,
+                            @Field("size") size: Int): Observable<RedrockApiWrapper<List<AnswerPosted>>>
+
+    @FormUrlEncoded
+    @POST("app/index.php/QA/User/comment")
+    fun getCommentList(@Field("stunum") stuNum: String,
+                       @Field("idnum") idNum: String,
+                       @Field("page") page: Int,
+                       @Field("size") size: Int): Observable<RedrockApiWrapper<List<Comment>>>
+
+    @FormUrlEncoded
+    @POST("app/index.php/QA/User/reComment")
+    fun getCommentReceivedList(@Field("stunum") stuNum: String,
+                               @Field("idnum") idNum: String,
+                               @Field("page") page: Int,
+                               @Field("size") size: Int): Observable<RedrockApiWrapper<List<CommentReceived>>>
 
     /**
      * 草稿箱部分
@@ -109,53 +140,20 @@ interface ApiService {
                      @Field("id") draftId: String): Observable<RedrockApiStatus>
 
     @FormUrlEncoded
-    @POST("app/index.php/QA/User/getDraftList")
-    fun getDraftList(@Field("stunum") stuNum: String,
-                     @Field("idnum") idNum: String,
+    @POST("wxapi/magipoke-draft/User/getDraftQuestionList")
+    fun getAskDraftList(@Field("stuNum") stuNum: String,
+                     @Field("idNum") idNum: String,
                      @Field("page") page: Int,
-                     @Field("size") size: Int): Observable<RedrockApiWrapper<List<Draft>>>
+                     @Field("size") size: Int): Observable<RedrockApiWrapper<List<AskDraft>>>
 
     @FormUrlEncoded
-    @POST("app/index.php/QA/User/mine")
-    fun getQANumber(@Field("stunum") stuNum: String,
-                     @Field("idnum") idNum: String): Observable<RedrockApiWrapper<QANumber>>
-
-    @FormUrlEncoded
-    @POST("app/index.php/QA/User/question")
-    fun getAskPostedList(@Field("stunum") stuNum: String,
-                     @Field("idnum") idNum: String,
-                     @Field("page") page: Int,
-                     @Field("size") size: Int): Observable<RedrockApiWrapper<List<AskPosted>>>
-    @FormUrlEncoded
-    @POST("app/index.php/QA/User/answer")
-    fun getAnswerPostedList(@Field("stunum") stuNum: String,
-                     @Field("idnum") idNum: String,
-                     @Field("page") page: Int,
-                     @Field("size") size: Int): Observable<RedrockApiWrapper<List<AnswerPosted>>>
-
-    @FormUrlEncoded
-    @POST("app/index.php/QA/User/comment")
-    fun getCommentList(@Field("stunum") stuNum: String,
-                     @Field("idnum") idNum: String,
-                     @Field("page") page: Int,
-                     @Field("size") size: Int): Observable<RedrockApiWrapper<List<Comment>>>
-
-    @FormUrlEncoded
-    @POST("app/index.php/QA/User/reComment")
-    fun getCommentReceivedList(@Field("stunum") stuNum: String,
-                       @Field("idnum") idNum: String,
-                       @Field("page") page: Int,
-                       @Field("size") size: Int): Observable<RedrockApiWrapper<List<CommentReceived>>>
-
-
-    /**
-     * 与我相关
-     */
-    @FormUrlEncoded
-    @POST("app/index.php/QA/User/aboutMe")
-    fun getRelateMeList(@Field("stunum") stuNum: String,
-                        @Field("idnum") idNum: String,
+    @POST("wxapi/magipoke-draft/User/getDraftAnswerList")
+    fun getAnswerDraftList(@Field("stuNum") stuNum: String,
+                        @Field("idNum") idNum: String,
                         @Field("page") page: Int,
-                        @Field("size") size: Int,
-                        @Field("type") type: Int): Observable<RedrockApiWrapper<List<RelateMeItem>>>
+                        @Field("size") size: Int): Observable<RedrockApiWrapper<List<AnswerDraft>>>
+
+
+
+
 }

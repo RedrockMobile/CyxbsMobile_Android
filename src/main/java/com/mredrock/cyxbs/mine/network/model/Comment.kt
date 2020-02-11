@@ -5,6 +5,7 @@ import java.io.Serializable
 
 /**
  * Created by roger on 2019/12/8
+ * 发出的评论
  */
 data class Comment (
         @SerializedName("question_id")

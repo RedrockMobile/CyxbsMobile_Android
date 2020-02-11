@@ -10,6 +10,7 @@ import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.common.viewmodel.event.SingleLiveEvent
+import com.mredrock.cyxbs.mine.network.model.AnswerDraft
 import com.mredrock.cyxbs.mine.network.model.AnswerPosted
 import com.mredrock.cyxbs.mine.util.apiService
 import com.mredrock.cyxbs.mine.util.extension.normalWrapper
@@ -23,6 +24,7 @@ class AnswerViewModel : BaseViewModel() {
     private val idNum = BaseApp.context.defaultSharedPreferences.getString("SP_KEY_ID_NUM", "")
 
     private var answerPostedPage: Int = 1
+    private var answerDraftPage: Int = 1
 
     private val pageSize = 6
 
@@ -68,165 +70,46 @@ class AnswerViewModel : BaseViewModel() {
         _answerPosted.value = mutableListOf()
     }
 
-//    val errorEvent = MutableLiveData<String>()
-//    //    val adoptOverEvent = MutableLiveData<List<MyHelpQuestion>>()
-////    val adoptWaitEvent = MutableLiveData<List<MyHelpQuestion>>()
-//    val answerPostedEvent = MutableLiveData<List<AnswerPosted>>()
-//
-//    val answerDraftEvent = MutableLiveData<List<Draft>>()
-//    val deleteEvent = MutableLiveData<Draft>()
-//
-//    private var answerDraftPage = 1
-//
 
+    //answerDraft部分
+    private val _eventOnAnswerDraft = SingleLiveEvent<RvFooter.State>()
+    val eventOnAnswerDraft: LiveData<RvFooter.State>
+        get() = _eventOnAnswerDraft
 
-//    fun loadAdoptOver() {
-//        apiService.getMyHelpOver(user!!.stuNum!!, user!!.idNum!!, overPage++, pageSize)
-//                .normalWrapper(this)
-//                .safeSubscribeBy(
-//                        onNext = {
-//                            adoptOverEvent.postValue(it)
-//                        },
-//                        onError = {
-//                            errorEvent.postValue(it.message)
-//                        }
-//                )
-//                .lifeCycle()
-//    }
-//
-//    fun loadAdoptWait() {
-//        apiService.getMyHelpWait(user!!.stuNum!!, user!!.idNum!!, waitPage++, pageSize)
-//                .normalWrapper(this)
-//                .safeSubscribeBy(
-//                        onNext = {
-//                            adoptWaitEvent.postValue(it)
-//                        },
-//                        onError = {
-//                            errorEvent.postValue(it.message)
-//                        }
-//                )
-//                .lifeCycle()
-//    }
-//
-//    fun cleanPage() {
-//        answerDraftPage = 1
-//    }
-//
-//
-//    fun loadAnswerDraftList() {
-//        val stuNum = user?.stuNum ?: return
-//        val idNum = user?.idNum ?: return
-////        apiService.getDraftList(stuNum, idNum, answerDraftPage++, pageSize)
-////                .mapOrThrowApiException()
-////                .map { list ->
-////                    list.forEach { it.parseQuestion() }
-////                    list
-////                }
-////                .setSchedulers()
-////                .doOnErrorWithDefaultErrorHandler { false }
-////                .safeSubscribeBy(
-////                        onNext = { it ->
-////                            val askDraftList = it.filter {
-////                                it.type == "answer"
-////                            }
-////                            answerDraftEvent.postValue(askDraftList)
-////                        },
-////                        onError = {
-////                            it.printStackTrace()
-////                            errorEvent.postValue(it.message)
-////                        }
-////                )
-////                .lifeCycle()
-//        if (answerDraftPage == 3) {
-//            answerDraftEvent.postValue(listOf())
-//            return
-//        }
-//        val answerDraft = Draft("1", "abc", "roger", "answer", "标题", "内容在此" + Math.random(), Question());
-//        val answerDraft1 = Draft("2", "abc", "roger", "answer", "标题", "内容在此" + Math.random(), Question());
-//        val answerDraft2 = Draft("3", "abc", "roger", "answer", "标题", "内容在此" + Math.random(), Question());
-//        val answerDraft3 = Draft("4", "abc", "roger", "answer", "标题", "内容在此" + Math.random(), Question());
-//        val answerDraft4 = Draft("5", "abc", "roger", "answer", "标题", "内容在此" + Math.random(), Question());
-//        val list = mutableListOf<Draft>(answerDraft, answerDraft1, answerDraft2, answerDraft3, answerDraft4)
-//        answerDraftEvent.postValue(list.toList())
-//        answerDraftPage++
-//    }
-//
-//    fun deleteDraft(draft: Draft) {
-//        val stuNum = user?.stuNum ?: return
-//        val idNum = user?.idNum ?: return
-////        apiService.deleteDraft(stuNum, idNum, draft.id)
-////                .checkError()
-////                .setSchedulers()
-////                .doOnErrorWithDefaultErrorHandler { false }
-////                .safeSubscribeBy(
-////                        onNext = {
-////                            deleteEvent.postValue(draft)
-////                        },
-////                        onError = {
-////                            errorEvent.postValue(it.message)
-////                        }
-////                )
-////                .lifeCycle()
-//        deleteEvent.postValue(draft)
-//        logr("this is viewmodel delete")
-//    }
-//
-//    fun cleanPage() {
-//        answerDraftPage = 1
-//    }
+    private val _answerDraft = MutableLiveData<MutableList<AnswerDraft>>()
+    val answerDraft: LiveData<List<AnswerDraft>>
+        get() = Transformations.map(_answerDraft) {
+            it.toList()
+        }
 
+    fun loadAnswerDraftList() {
+        apiService.getAnswerDraftList(stuNum, idNum
+                ?: return, answerDraftPage++, pageSize)
+                .normalWrapper(this)
+                .safeSubscribeBy(
+                        onNext = {
+                            //由于Rxjava反射不应定能够够保证为空，当为空的说明这一页没有数据，于是停止加载
+                            if (it.isEmpty()) {
+                                _eventOnAnswerDraft.postValue(RvFooter.State.NOMORE)
+                                return@safeSubscribeBy
+                            }
 
-//    fun loadAnswerDraftList() {
-////        apiService.getDraftList(stuNum, idNum, answerDraftPage++, pageSize)
-////                .mapOrThrowApiException()
-////                .map { list ->
-////                    list.forEach { it.parseQuestion() }
-////                    list
-////                }
-////                .setSchedulers()
-////                .doOnErrorWithDefaultErrorHandler { false }
-////                .safeSubscribeBy(
-////                        onNext = { it ->
-////                            val askDraftList = it.filter {
-////                                it.type == "answer"
-////                            }
-////                            answerDraftEvent.postValue(askDraftList)
-////                        },
-////                        onError = {
-////                            it.printStackTrace()
-////                            errorEvent.postValue(it.message)
-////                        }
-////                )
-////                .lifeCycle()
-//        if (answerDraftPage == 3) {
-//            answerDraftEvent.postValue(listOf())
-//            return
-//        }
-//        val answerDraft = Draft("1", "abc", "roger", "answer", "标题", "内容在此" + Math.random(), Question());
-//        val answerDraft1 = Draft("2", "abc", "roger", "answer", "标题", "内容在此" + Math.random(), Question());
-//        val answerDraft2 = Draft("3", "abc", "roger", "answer", "标题", "内容在此" + Math.random(), Question());
-//        val answerDraft3 = Draft("4", "abc", "roger", "answer", "标题", "内容在此" + Math.random(), Question());
-//        val answerDraft4 = Draft("5", "abc", "roger", "answer", "标题", "内容在此" + Math.random(), Question());
-//        val list = mutableListOf<Draft>(answerDraft, answerDraft1, answerDraft2, answerDraft3, answerDraft4)
-//        answerDraftEvent.postValue(list.toList())
-//        answerDraftPage++
-//    }
-//
-//    fun deleteDraft(draft: Draft) {
-////        apiService.deleteDraft(stuNum, idNum, draft.id)
-////                .checkError()
-////                .setSchedulers()
-////                .doOnErrorWithDefaultErrorHandler { false }
-////                .safeSubscribeBy(
-////                        onNext = {
-////                            deleteEvent.postValue(draft)
-////                        },
-////                        onError = {
-////                            errorEvent.postValue(it.message)
-////                        }
-////                )
-////                .lifeCycle()
-//        deleteEvent.postValue(draft)
-//        logr("this is viewmodel delete")
-//    }
+                            val localAnswerDraft = _answerDraft.value ?: mutableListOf()
+                            localAnswerDraft.addAll(it)
+                            _answerDraft.postValue(localAnswerDraft)
+                        },
+                        onError = {
+                            _eventOnAnswerDraft.postValue(RvFooter.State.ERROR)
+                        })
+                .lifeCycle()
+    }
+
+    fun cleanAnswerDraftPage() {
+        //清除还在请求网络的接口,
+        //如果一直刷新，那么前一个网络请求没有cancel掉，那么就会导致多的item
+        onCleared()
+
+        answerDraftPage = 1
+        _answerDraft.value = mutableListOf()
+    }
 }

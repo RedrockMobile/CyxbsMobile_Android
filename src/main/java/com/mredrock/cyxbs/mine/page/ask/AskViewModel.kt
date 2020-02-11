@@ -10,10 +10,11 @@ import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.common.viewmodel.event.SingleLiveEvent
+import com.mredrock.cyxbs.mine.network.model.AskDraft
 import com.mredrock.cyxbs.mine.network.model.AskPosted
-import com.mredrock.cyxbs.mine.network.model.Draft
 import com.mredrock.cyxbs.mine.util.apiService
 import com.mredrock.cyxbs.mine.util.extension.normalWrapper
+import com.mredrock.cyxbs.mine.util.ui.RvFooter
 
 /**
  * Created by zia on 2018/9/10.
@@ -28,7 +29,7 @@ class AskViewModel : BaseViewModel() {
 
     private val pageSize = 6
 
-    //askposted部分
+    //askPosted部分
     private val _eventOnAskPosted = SingleLiveEvent<Boolean>()//true代表加载完，false代表加载错误
     val eventOnAskPosted: LiveData<Boolean>
         get() = _eventOnAskPosted
@@ -38,10 +39,6 @@ class AskViewModel : BaseViewModel() {
         get() = Transformations.map(_askPosted) {
             it.toList()
         }
-
-    //草稿部分
-    val askDraftEvent = MutableLiveData<List<Draft>>()
-    val deleteEvent = MutableLiveData<Draft>()
 
     fun loadAskPostedList() {
         apiService.getAskPostedList(stuNum, idNum
@@ -73,46 +70,45 @@ class AskViewModel : BaseViewModel() {
         _askPosted.value = mutableListOf()
     }
 
-//    fun loadAskDraftList() {
-////        apiService.getDraftList(user?.stuNum ?: return, user?.idNum
-////                ?: return, askDraftPage++, pageSize)
-////                .mapOrThrowApiException()
-////                .map { list ->
-////                    list.forEach { it.parseQuestion() }
-////                    list
-////                }
-////                .setSchedulers()
-////                .doOnErrorWithDefaultErrorHandler { false }
-////                .safeSubscribeBy(
-////                        onNext = { it ->
-////                            val askDraftList = it.filter {
-////                                it.type == "question"
-////                            }
-////                            askDraftEvent.postValue(askDraftList)
-////                        },
-////                        onError = {
-////                            it.printStackTrace()
-//////                            errorEvent.postValue(it.message)
-////                        }
-////                )
-////                .lifeCycle()
-//    }
-//
-//    fun deleteDraft(draft: Draft) {
-//        apiService.deleteDraft(user?.stuNum ?: return, user?.idNum ?: return, draft.id)
-//                .checkError()
-//                .setSchedulers()
-//                .doOnErrorWithDefaultErrorHandler { false }
-//                .safeSubscribeBy(
-//                        onNext = {
-//                            deleteEvent.postValue(draft)
-//                        },
-//                        onError = {
-//                            //                            errorEvent.postValue(it.message)
-//                        }
-//                )
-//                .lifeCycle()
-//    }
+    //askDraft部分
+    private val _eventOnAskDraft = SingleLiveEvent<RvFooter.State>()
+    val eventOnAskDraft: LiveData<RvFooter.State>
+        get() = _eventOnAskDraft
 
+    private val _askDraft = MutableLiveData<MutableList<AskDraft>>()
+    val askDraft: LiveData<List<AskDraft>>
+        get() = Transformations.map(_askDraft) {
+            it.toList()
+        }
 
+    fun loadAskDraftList() {
+        apiService.getAskDraftList(stuNum, idNum
+                ?: return, askDraftPage++, pageSize)
+                .normalWrapper(this)
+                .safeSubscribeBy(
+                        onNext = {
+                            //由于Rxjava反射不应定能够够保证为空，当为空的说明这一页没有数据，于是停止加载
+                            if (it.isEmpty()) {
+                                _eventOnAskDraft.postValue(RvFooter.State.NOMORE)
+                                return@safeSubscribeBy
+                            }
+
+                            val localAskDraft = _askDraft.value ?: mutableListOf()
+                            localAskDraft.addAll(it)
+                            _askDraft.postValue(localAskDraft)
+                        },
+                        onError = {
+                            _eventOnAskDraft.postValue(RvFooter.State.ERROR)
+                        })
+                .lifeCycle()
+    }
+
+    fun cleanAskDraftPage() {
+        //清除还在请求网络的接口,
+        //如果一直刷新，那么前一个网络请求没有cancel掉，那么就会导致多的item
+        onCleared()
+
+        askDraftPage = 1
+        _askDraft.value = mutableListOf()
+    }
 }
