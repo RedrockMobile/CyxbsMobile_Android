@@ -5,6 +5,9 @@ import android.os.Bundle
 import android.widget.TextView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import com.alibaba.android.arouter.launcher.ARouter
+import com.mredrock.cyxbs.common.config.ANSWER_ID
+import com.mredrock.cyxbs.common.config.QA_COMMENT_LIST
 import com.mredrock.cyxbs.mine.R
 import com.mredrock.cyxbs.mine.network.model.AnswerPosted
 import com.mredrock.cyxbs.mine.util.ui.BaseRVFragment
@@ -55,6 +58,11 @@ class AnswerPostedFm : BaseRVFragment<AnswerPosted>() {
         } else {
             holder.itemView.findViewById<TextView>(R.id.mine_answer_posted_tv_state).text = "未采纳"
 
+        }
+        holder.itemView.setOnClickListener {
+            val bundle = Bundle()
+            bundle.putInt(ANSWER_ID, data.answerId)
+            ARouter.getInstance().build(QA_COMMENT_LIST).with(bundle).navigation()
         }
     }
 

@@ -4,6 +4,9 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import com.alibaba.android.arouter.launcher.ARouter
+import com.mredrock.cyxbs.common.config.QA_ANSWER_LIST
+import com.mredrock.cyxbs.common.config.QUESTION_ID
 import com.mredrock.cyxbs.mine.R
 import com.mredrock.cyxbs.mine.network.model.AskPosted
 import com.mredrock.cyxbs.mine.util.ui.BaseRVFragment
@@ -53,6 +56,11 @@ class AskPostedFm : BaseRVFragment<AskPosted>() {
         holder.itemView.mine_ask_posted_tv_integral.text = data.integral.toString()
         holder.itemView.mine_ask_posted_tv_description.text = data.description
         holder.itemView.mine_ask_posted_tv_state.text = data.type
+        holder.itemView.setOnClickListener {
+            val bundle = Bundle()
+            bundle.putInt(QUESTION_ID, data.questionId)
+            ARouter.getInstance().build(QA_ANSWER_LIST).with(bundle).navigation()
+        }
     }
 
 

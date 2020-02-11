@@ -4,6 +4,9 @@ import android.os.Bundle
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.RecyclerView
+import com.alibaba.android.arouter.launcher.ARouter
+import com.mredrock.cyxbs.common.config.ANSWER_ID
+import com.mredrock.cyxbs.common.config.QA_COMMENT_LIST
 import com.mredrock.cyxbs.common.utils.extensions.setImageFromUrl
 import com.mredrock.cyxbs.mine.R
 import com.mredrock.cyxbs.mine.network.model.CommentReceived
@@ -48,6 +51,11 @@ class CommentReceivedFragment : BaseRVFragment<CommentReceived>() {
         holder.itemView.mine_comment_circleimageview_avatar.setImageFromUrl(data.commenterImageUrl)
         holder.itemView.mine_comment_tv_nickname.text = data.commenterNickname
         holder.itemView.mine_comment_tv_response.text = data.commentContent
+        holder.itemView.setOnClickListener {
+            val bundle = Bundle()
+            bundle.putInt(ANSWER_ID, data.answerId)
+            ARouter.getInstance().build(QA_COMMENT_LIST).with(bundle).navigation()
+        }
     }
 
     override fun onSwipeLayoutRefresh() {
