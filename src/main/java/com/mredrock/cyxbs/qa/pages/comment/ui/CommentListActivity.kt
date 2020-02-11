@@ -2,9 +2,9 @@ package com.mredrock.cyxbs.qa.pages.comment.ui
 
 import android.app.Activity
 import android.os.Bundle
-import android.view.WindowManager
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
+import com.alibaba.android.arouter.facade.annotation.Route
+import com.mredrock.cyxbs.common.config.QA_COMMENT_LIST
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.bean.Answer
@@ -23,6 +23,7 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.jetbrains.anko.startActivityForResult
 
+@Route(path = QA_COMMENT_LIST)
 class CommentListActivity : BaseViewModelActivity<CommentListViewModel>() {
     companion object {
         const val REQUEST_CODE = 0x123
