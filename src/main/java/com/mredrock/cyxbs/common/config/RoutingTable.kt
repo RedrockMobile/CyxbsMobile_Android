@@ -50,6 +50,7 @@ const val WIDGET_SETTING = "/setting/widget"
 const val QA_QUIZ = "/quiz/qa/entry"
 const val QA_ANSWER = "/answer/qa/entry"
 const val QA_ANSWER_LIST = "/answer_list/qa/entry"
+const val QA_COMMENT_LIST = "/comment_list/qa/entry"
 
 // 迎新专题
 const val FRESHMAN_ENTRY = "/freshman/entry"
