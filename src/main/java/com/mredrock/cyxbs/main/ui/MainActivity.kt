@@ -77,6 +77,10 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
     //进入app是否直接显示课表
     var courseShowState: Boolean = false
 
+    private val accountService: IAccountService by lazy (LazyThreadSafetyMode.NONE) {
+        ServiceManager.getService(IAccountService::class.java)
+    }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -122,6 +126,7 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
         bottomSheetBehavior.setBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
             var statePosition = 0f
             var isFirst = true
+            var lastState = if (courseShowState) BottomSheetBehavior.STATE_EXPANDED else BottomSheetBehavior.STATE_COLLAPSED
             override fun onSlide(p0: View, p1: Float) {
                 ll_nav_main_container.translationY = nav_main.height * p1
                 statePosition = p1
@@ -147,13 +152,19 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
             }
 
             override fun onStateChanged(p0: View, p1: Int) {
-                if (bottomSheetBehavior.state == BottomSheetBehavior.STATE_EXPANDED) {
-                    checkLoginBeforeAction("课表") {}
-                }
 
-                if (isFirst && bottomSheetBehavior.state == BottomSheetBehavior.STATE_EXPANDED) {
+                if (isFirst && bottomSheetBehavior.state == BottomSheetBehavior.STATE_EXPANDED&&lastState!=BottomSheetBehavior.STATE_EXPANDED) {
                     EventBus.getDefault().post(LoadCourse())
-                    isFirst = false
+                    if (accountService.getVerifyService().isLogin()){
+                        isFirst = false
+                    }
+                }
+                lastState = when(p1){
+                    BottomSheetBehavior.STATE_EXPANDED-> BottomSheetBehavior.STATE_EXPANDED
+                    BottomSheetBehavior.STATE_COLLAPSED-> {
+                        EventBus.getDefault().post(LoadCourse(true))
+                        BottomSheetBehavior.STATE_COLLAPSED}
+                    else -> lastState
                 }
             }
         })
