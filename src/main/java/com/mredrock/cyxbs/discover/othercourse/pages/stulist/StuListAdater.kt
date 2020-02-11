@@ -10,6 +10,7 @@ import com.alibaba.android.arouter.launcher.ARouter
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.mredrock.cyxbs.common.config.COURSE_ENTRY
 import com.mredrock.cyxbs.common.config.OTHERS_STU_NUM
+import com.mredrock.cyxbs.common.config.OTHERS_TEA_NAME
 import com.mredrock.cyxbs.common.config.OTHERS_TEA_NUM
 import com.mredrock.cyxbs.discover.othercourse.R
 import com.mredrock.cyxbs.discover.othercourse.network.Person
@@ -51,7 +52,12 @@ class StuListAdater(val stuListActivity: StuListActivity, private val mList: Lis
 
     private fun openCourseFragment(key: String, position: Int) {
         val fragment = (ARouter.getInstance().build(COURSE_ENTRY).navigation() as Fragment).apply {
-            arguments = Bundle().apply { putString(key, mList[position].num) }
+            arguments = Bundle().apply {
+                putString(key, mList[position].num)
+                if (key == OTHERS_TEA_NUM) {
+                    putString(OTHERS_TEA_NAME, mList[position].name)
+                }
+            }
         }
         //在滑动下拉课表容器中添加整个课表
         stuListActivity.supportFragmentManager.beginTransaction().replace(R.id.course_bottom_sheet_content, fragment).apply {
