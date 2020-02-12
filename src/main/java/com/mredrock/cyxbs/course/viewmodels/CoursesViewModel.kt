@@ -310,7 +310,7 @@ class CoursesViewModel : BaseViewModel() {
                 .setSchedulers()
                 .errorHandler()
                 .subscribe(ExecuteOnceObserver(onExecuteOnceNext = { coursesFromInternet ->
-                    if (coursesFromInternet.status == 200) {
+                    if (coursesFromInternet.status == 200 || coursesFromInternet.status == 233) {
                         coursesFromInternet.data?.let { notNullCourses ->
                             mReceiveCourses.addAll(notNullCourses)
                             val courseVersion = context.defaultSharedPreferences.getString("${COURSE_VERSION}${mUserNum}", "")
@@ -328,6 +328,7 @@ class CoursesViewModel : BaseViewModel() {
                                     mCoursesDatabase?.courseDao()?.insertCourses(notNullCourses)
                                 }.start()
                                 if (!coursesFromInternet.data?.isEmpty()!! && isGetOthers.get() == false) {
+                                    toastEvent.value = R.string.course_course_update_tips
                                     context.defaultSharedPreferences.editor {
                                         //小部件缓存课表
                                         putString(WIDGET_COURSE, Gson().toJson(coursesFromInternet))
@@ -338,12 +339,12 @@ class CoursesViewModel : BaseViewModel() {
                                 context.defaultSharedPreferences.editor {
                                     putString("${COURSE_VERSION}${mUserNum}", coursesFromInternet.version)
                                 }
-                                toastEvent.value = R.string.course_course_update_tips
                             }
                         }
-                    } else if (coursesFromInternet.status == 233) {
-                        //错误码233是指教务在线无法获取课表了，现在用的课表是缓存在红岩服务器里面的
-                        longToastEvent.value = R.string.course_use_cache
+                        if (coursesFromInternet.status == 233) {
+                            //错误码233是指教务在线无法获取课表了，现在用的课表是缓存在红岩服务器里面的
+                            longToastEvent.value = R.string.course_use_cache
+                        }
                     }
                 }, onExecuteOnceError = {
                     isGetAllData(0)

@@ -41,7 +41,7 @@ class CourseFragment : BaseFragment() {
     override val openStatistics: Boolean
         get() = false
 
-    lateinit var courseContainerEntryFragment: CourseContainerEntryFragment
+    private lateinit var courseContainerEntryFragment: CourseContainerEntryFragment
 
     //当前课表页面代表的第几周[默认0 代表整学期，1代表第一周。。。。。。]
     private var mWeek: Int = 0
