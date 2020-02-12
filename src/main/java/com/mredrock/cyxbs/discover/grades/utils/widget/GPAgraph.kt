@@ -119,10 +119,12 @@ class GPAgraph : View {
 
         //如果有touch 的点的话，画touch的点
         touchPoint?.let {
-            //先画外面的蓝色
-            gpaPaint.style = Paint.Style.FILL
-            canvas.drawCircle((it + 1) * segWidth.toFloat(), -1 * array[it] * segHeight.toFloat(), dp2px(8).toFloat(), gpaPaint)
-            canvas.drawCircle((it + 1) * segWidth.toFloat(), -1 * array[it] * segHeight.toFloat(), dp2px(4).toFloat(), whitePaint)
+            if (array.size >= it + 1) {
+                //先画外面的蓝色
+                gpaPaint.style = Paint.Style.FILL
+                canvas.drawCircle((it + 1) * segWidth.toFloat(), -1 * array[it] * segHeight.toFloat(), dp2px(8).toFloat(), gpaPaint)
+                canvas.drawCircle((it + 1) * segWidth.toFloat(), -1 * array[it] * segHeight.toFloat(), dp2px(4).toFloat(), whitePaint)
+            }
         }
 
     }
@@ -141,8 +143,9 @@ class GPAgraph : View {
             canvas.drawText(textArray[item.index], (item.index + 1) * segWidth.toFloat(), bottomWidth / 2F, textPaint)
         }
 
-        if (!array.isNullOrEmpty()) {
-            touchPoint?.let {
+
+        touchPoint?.let {
+            if (array.size >= it + 1) {
                 textPaint.textSize = dp2px(14).toFloat()
                 canvas.drawText(array[it].toString(), (it + 1) * segWidth.toFloat(), -1 * array[it] * segHeight.toFloat() - dp2px(13), textPaint)
             }
@@ -160,7 +163,7 @@ class GPAgraph : View {
     @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(event: MotionEvent?): Boolean {
 
-        val event = event ?: return false
+        val event = event ?: return true
         when (event.action) {
             MotionEvent.ACTION_DOWN -> {
                 touchPoint = (event.x / segWidth - 0.5).toInt()
@@ -178,7 +181,7 @@ class GPAgraph : View {
                 return true
             }
         }
-        return super.onTouchEvent(event)
+        return true
 
     }
 }
