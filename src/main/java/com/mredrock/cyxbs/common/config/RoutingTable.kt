@@ -13,6 +13,7 @@ const val QA_ENTRY = "/qa/entry"
 const val DISCOVER_ENTRY = "/discover/entry"
 const val MINE_ENTRY = "/mine/entry"
 const val MAIN_MAIN = "/main/main"
+const val MAIN_LOGIN = "/main/login"
 
 const val DISCOVER_OTHER_COURSE = "/other_course/discover/entry"
 const val DISCOVER_NO_CLASS = "/no_class/discover/entry"
