@@ -62,6 +62,8 @@ class ContainerActivity : BaseActivity() {
             initExam()
             initGrades()
         }
+
+        gpa_graph.array = arrayListOf(4.0F, 3.5F, 3F, 2.5F, 2F, 1.8F, 1.5F, 1.2F)
     }
 
     private fun initExam() {
