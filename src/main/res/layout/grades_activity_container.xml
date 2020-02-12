@@ -1,37 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@color/whiteBackground"
-    android:orientation="vertical">
+    android:background="@color/whiteBackground">
 
-    <include layout="@layout/common_toolbar" />
-
-    <androidx.coordinatorlayout.widget.CoordinatorLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
+        <include
+            android:id="@+id/tool_bar"
+            layout="@layout/common_toolbar" />
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_exam_main"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tool_bar" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <com.mredrock.cyxbs.common.component.JCardViewPlus
-            app:cardCornerRadius="16dp"
-            app:shadowRadius="10dp"
-            app:shadowFlags="top"
-            app:shadowColor="@color/grades_bottom_sheet_shadow"
-            android:id="@+id/fl_grades_bottom_sheet"
-            app:behavior_hideable="false"
-            app:layout_behavior="@string/bottom_sheet_behavior"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+    <com.mredrock.cyxbs.common.component.JCardViewPlus
+        android:id="@+id/fl_grades_bottom_sheet"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:behavior_peekHeight="15dp"
+        app:cardCornerRadius="16dp"
+        android:fitsSystemWindows="true"
+        app:layout_behavior="@string/bottom_sheet_behavior"
+        app:shadowColor="@color/grades_bottom_sheet_shadow"
+        app:shadowFlags="top"
+        app:shadowRadius="45dp">
 
-            <include layout="@layout/grades_fragment"/>
+        <include layout="@layout/grades_fragment" />
 
-        </com.mredrock.cyxbs.common.component.JCardViewPlus>
+    </com.mredrock.cyxbs.common.component.JCardViewPlus>
 
 
-    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
 
-</LinearLayout>

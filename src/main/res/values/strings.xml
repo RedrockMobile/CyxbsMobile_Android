@@ -4,4 +4,5 @@
     <string name="grades_main_init_exam">考试安排</string>
     <string name="grades_no_grades_history">"无法获取成绩信息"</string>
     <string name="grades_bottom_sheet_title">学分成绩</string>
+    <string name="grades_bottom_sheet_gpa">平均绩点</string>
 </resources>

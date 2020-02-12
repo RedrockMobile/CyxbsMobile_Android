@@ -13,7 +13,7 @@ import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.bean.User
 import com.mredrock.cyxbs.common.config.DISCOVER_GRADES
 import com.mredrock.cyxbs.common.service.ServiceManager
-import com.mredrock.cyxbs.common.service.account.IUserService
+import com.mredrock.cyxbs.common.service.account.IAccountService
 import com.mredrock.cyxbs.common.ui.BaseActivity
 import com.mredrock.cyxbs.common.utils.extensions.toast
 import com.mredrock.cyxbs.discover.grades.R
@@ -22,6 +22,7 @@ import com.mredrock.cyxbs.discover.grades.bean.Grade
 import com.mredrock.cyxbs.discover.grades.ui.adapter.ExamAdapter
 import com.mredrock.cyxbs.discover.grades.ui.adapter.GradesShowAdapter
 import com.mredrock.cyxbs.discover.grades.ui.viewModel.ContainerViewModel
+import com.mredrock.cyxbs.discover.grades.utils.extension.dp2px
 import kotlinx.android.synthetic.main.grades_activity_container.*
 import kotlinx.android.synthetic.main.grades_fragment.*
 import kotlinx.android.synthetic.main.grades_fragment.view.*
@@ -94,17 +95,17 @@ class ContainerActivity : BaseActivity() {
         val behavior = BottomSheetBehavior.from(parent)
         parent.post {
             behavior.isHideable = false
-            behavior.peekHeight = fl_grades_header.height
+            behavior.peekHeight = fl_grades_header.height + dp2px(45)
             rv_exam_main.setPadding(0, 0, 0, fl_grades_header.height)
         }
     }
 
     private fun initHeader() {
-        val userService = ServiceManager.getService(IUserService::class.java)
+        val userService = ServiceManager.getService(IAccountService::class.java).getUserService()
         Glide.with(BaseApp.context).load(userService.getAvatarImgUrl()).into(parent.iv_grades_avatar)
         parent.tv_grades_stuNum.text = userService.getStuNum()
 //        parent.tv_grades_college.text = userService.get ?: "未设置学院"
-        parent.tv_grades_name.text = userService.getRealName()?: "未设置姓名"
+        parent.tv_grades_name.text = userService.getRealName() ?: "未设置姓名"
     }
 
     private fun initRv() {
