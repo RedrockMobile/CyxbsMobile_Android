@@ -15,7 +15,9 @@ import com.mredrock.cyxbs.common.config.SP_KEY_USER_V2
 import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.network.exception.RedrockApiException
 import com.mredrock.cyxbs.common.service.account.*
-import com.mredrock.cyxbs.common.utils.extensions.*
+import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
+import com.mredrock.cyxbs.common.utils.extensions.editor
+import com.mredrock.cyxbs.common.utils.extensions.takeIfNoException
 import retrofit2.HttpException
 
 /**
@@ -123,19 +125,6 @@ internal class AccountService : IAccountService {
         }
 
         private fun notifyAllStateListeners(state: IUserStateService.UserState) {
-            //用户状态为过期时，主动刷新，主要是用于从缓存加载时过期的情况
-            when (state) {
-                IUserStateService.UserState.EXPIRED -> {
-                    //并且处于登录状态
-                    if (isLogin()) {
-                        refresh()
-                    }
-
-                }
-                else -> {
-                    //todo
-                }
-            }
             //todo 后面再实现该方法，用于替代以前用EventBus实现的OnStateChangeEvent事件
         }
 
