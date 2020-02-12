@@ -20,7 +20,7 @@
     <string name="mine_answer">回答</string>
     <string name="mine_reply_to_comment">评论</string>
     <string name="mine_praise">获赞</string>
-    <string name="mine_number_default">11</string>
+    <string name="mine_number_default">0</string>
     <string name="mine_show_schedule_first_launch">启动APP时最先显示课表页面</string>
     <string name="mine_night_mode">夜间模式</string>
     <string name="mine_custom_icon">自定义桌面小图标</string>
