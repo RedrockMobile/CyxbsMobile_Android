@@ -80,6 +80,7 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
     //进入app是否直接显示课表
     var courseShowState: Boolean = false
 
+    //用户服务
     private val accountService: IAccountService by lazy(LazyThreadSafetyMode.NONE) {
         ServiceManager.getService(IAccountService::class.java)
     }

@@ -2,8 +2,9 @@ package com.mredrock.cyxbs.main.ui
 
 import android.os.Bundle
 import android.view.inputmethod.EditorInfo
+import android.widget.Toast
 import com.alibaba.android.arouter.facade.annotation.Route
-import com.mredrock.cyxbs.common.BaseApp
+import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.main.R
 import com.mredrock.cyxbs.main.viewmodel.LoginViewModel
@@ -19,6 +20,8 @@ class LoginActivity : BaseViewModelActivity<LoginViewModel>() {
 
     override val viewModelClass = LoginViewModel::class.java
 
+    private val lottieProgress = 0.39f
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.main_activity_login)
@@ -27,7 +30,6 @@ class LoginActivity : BaseViewModelActivity<LoginViewModel>() {
     }
 
     private fun initView() {
-//        toolbar.init(getString(R.string.main_activity_login_title))
         et_password.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_SEND) {
                 viewModel.login(et_account.text?.toString(), et_password.text?.toString())
@@ -36,7 +38,24 @@ class LoginActivity : BaseViewModelActivity<LoginViewModel>() {
             return@setOnEditorActionListener false
         }
         btn_login.setOnClickListener {
-            viewModel.login(et_account.text?.toString(), et_password.text?.toString())
+            if (lav_login_check.progress != 1f) {
+                viewModel.login(et_account.text?.toString(), et_password.text?.toString())
+            } else {
+                CyxbsToast.makeText(this, "请先同意用户协议吧", Toast.LENGTH_SHORT).show()
+            }
+        }
+        var isCheck = false
+        lav_login_check.setOnClickListener {
+            lav_login_check.playAnimation()
+        }
+        lav_login_check.addAnimatorUpdateListener {
+            if (it.animatedFraction == 1f && !isCheck) {
+                lav_login_check.pauseAnimation()
+                isCheck = true
+            } else if (it.animatedFraction >= lottieProgress && it.animatedFraction != 1f && isCheck) {
+                lav_login_check.pauseAnimation()
+                isCheck = false
+            }
         }
     }
 

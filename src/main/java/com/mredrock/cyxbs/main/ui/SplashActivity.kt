@@ -1,31 +1,29 @@
 package com.mredrock.cyxbs.main.ui
 
-import android.content.Intent
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.view.View
-import androidx.core.app.ActivityOptionsCompat
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.alibaba.android.arouter.launcher.ARouter
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
-import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.config.*
 import com.mredrock.cyxbs.common.event.AskLoginEvent
+import com.mredrock.cyxbs.common.service.ServiceManager
+import com.mredrock.cyxbs.common.service.account.IAccountService
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
-import com.mredrock.cyxbs.common.utils.extensions.*
+import com.mredrock.cyxbs.common.utils.extensions.setFullScreen
 import com.mredrock.cyxbs.common.viewmodel.event.SingleLiveEvent
 import com.mredrock.cyxbs.main.R
 import com.mredrock.cyxbs.main.bean.FinishEvent
-import com.mredrock.cyxbs.main.viewmodel.SplashViewModel
-import org.greenrobot.eventbus.EventBus
 import com.mredrock.cyxbs.main.utils.getSplashFile
 import com.mredrock.cyxbs.main.utils.isDownloadSplash
+import com.mredrock.cyxbs.main.viewmodel.SplashViewModel
 import kotlinx.android.synthetic.main.main_activity_splash.*
 import kotlinx.android.synthetic.main.main_view_stub_splash.view.*
+import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
@@ -63,10 +61,12 @@ class SplashActivity : BaseViewModelActivity<SplashViewModel>() {
             false
         }
 
+        val isLogin = ServiceManager.getService(IAccountService::class.java).getVerifyService().isLogin()
+
         val uri = intent.data
         when (uri?.path) {
             URI_PATH_QA_QUESTION -> {
-                if (!BaseApp.isLogin) {
+                if (!isLogin) {
                     EventBus.getDefault().post(AskLoginEvent("请先登陆才能使用邮问哦~"))
                     return
                 }
@@ -79,30 +79,28 @@ class SplashActivity : BaseViewModelActivity<SplashViewModel>() {
 
             }
             else -> {
-
                 viewModel.finishModel.observeNotNullAndTrue {
-                    startActivity<MainActivity>()
+                    if (isLogin) {
+                        navigateAndFinish(MAIN_MAIN)
+                    }else{
+                        navigateAndFinish(MAIN_LOGIN)
+                    }
                     overridePendingTransition(0, 0)
                 }
-
                 if (isDownloadSplash) {//如果下载了
-
                     object : CountDownTimer(3000, 1000) {
                         override fun onFinish() {
                             viewModel.finishAfter(0)
                         }
-
                         override fun onTick(millisUntilFinished: Long) {
                             runOnUiThread {
                                 viewStub.main_activity_splash_skip.text = "跳过 ${millisUntilFinished / 1000}"
                             }
                         }
                     }.start()
-
                     viewStub.main_activity_splash_skip.setOnClickListener {
                         viewModel.finishAfter(0)
                     }
-
                 } else {//如果没闪屏页直接打开
                     viewModel.finishAfter(0)
                 }
@@ -116,6 +114,7 @@ class SplashActivity : BaseViewModelActivity<SplashViewModel>() {
         overridePendingTransition(0, 0)
     }
 
+    //用来跳转并且关闭闪屏页
     private fun navigateAndFinish(path: String) {
         ARouter.getInstance().build(path).navigation()
         finish()
@@ -126,8 +125,9 @@ class SplashActivity : BaseViewModelActivity<SplashViewModel>() {
             onChange()
         }
     })
+
     @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onFinish(event:FinishEvent){
+    fun onFinish(event: FinishEvent) {
         this.finish()
     }
 }

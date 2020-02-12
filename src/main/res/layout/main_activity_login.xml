@@ -129,10 +129,12 @@
         app:layout_constraintVertical_bias="0.047" />
 
 
-     <RadioButton
-         android:layout_width="wrap_content"
-         android:layout_height="wrap_content"
-         android:theme="@style/LoginRadioButtonTheme"
+     <com.airbnb.lottie.LottieAnimationView
+         android:id="@+id/lav_login_check"
+         android:layout_width="18dp"
+         android:layout_height="18dp"
+         app:lottie_rawRes="@raw/lottie_check_login"
+         app:lottie_progress="0.39"
          app:layout_constraintBottom_toBottomOf="@+id/main_user_agreement"
          app:layout_constraintEnd_toStartOf="@+id/main_user_agreement"
          app:layout_constraintHorizontal_bias="0.929"
