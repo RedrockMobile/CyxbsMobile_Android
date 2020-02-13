@@ -7,7 +7,6 @@ import android.view.View
 import android.view.View.*
 import android.view.WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS
 import android.widget.FrameLayout
-import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.core.view.get
 import androidx.fragment.app.Fragment
@@ -48,10 +47,6 @@ import org.jetbrains.anko.dip
 
 @Route(path = MAIN_MAIN)
 class MainActivity : BaseViewModelActivity<MainViewModel>() {
-
-    companion object {
-        val TAG: String = MainActivity::class.java.simpleName
-    }
 
     override val viewModelClass = MainViewModel::class.java
 
@@ -178,15 +173,15 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
     }
 
 
-    @RequiresApi(Build.VERSION_CODES.M)
-    private fun setAndroidNativeLightStatusBar(dark: Boolean) {
-        val decor = window.decorView
-        if (dark) {
-            decor.systemUiVisibility = SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
-        } else {
-            decor.systemUiVisibility = SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or SYSTEM_UI_FLAG_LAYOUT_STABLE
-        }
-    }
+//    @RequiresApi(Build.VERSION_CODES.M)
+//    private fun setAndroidNativeLightStatusBar(dark: Boolean) {
+//        val decor = window.decorView
+//        if (dark) {
+//            decor.systemUiVisibility = SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+//        } else {
+//            decor.systemUiVisibility = SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or SYSTEM_UI_FLAG_LAYOUT_STABLE
+//        }
+//    }
 
     override fun onBackPressed() {
         if (bottomSheetBehavior.state == BottomSheetBehavior.STATE_EXPANDED) {

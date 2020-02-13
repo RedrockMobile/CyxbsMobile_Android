@@ -81,9 +81,10 @@ class LoginViewModel : BaseViewModel() {
                 LoginState.LandingSuccessfully -> context.startActivity<MainActivity>()
                 LoginState.LandingFailed -> {
                     landing()
-                    CyxbsToast.makeText(context,"登陆失败，请检查一下用户名和密码是否正确",Toast.LENGTH_SHORT).show()
+                    CyxbsToast.makeText(context, R.string.main_login_error_prompt, Toast.LENGTH_SHORT).show()
                 }
-                else -> {}
+                else -> {
+                }
             }
         }.isDisposed
     }

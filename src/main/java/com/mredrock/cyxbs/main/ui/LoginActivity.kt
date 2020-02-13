@@ -40,16 +40,16 @@ class LoginActivity : BaseViewModelActivity<LoginViewModel>() {
     private fun initView() {
         et_password.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_SEND) {
-                viewModel.login(et_account.text?.toString(), et_password.text?.toString()){landing()}
+                viewModel.login(et_account.text?.toString(), et_password.text?.toString()) { landing() }
                 return@setOnEditorActionListener true
             }
             return@setOnEditorActionListener false
         }
         btn_login.setOnClickListener {
             if (viewModel.userAgreementIsCheck) {
-                viewModel.login(et_account.text?.toString(), et_password.text?.toString()){landing()}
+                viewModel.login(et_account.text?.toString(), et_password.text?.toString()) { landing() }
             } else {
-                CyxbsToast.makeText(this,R.string.main_user_agreement_title, Toast.LENGTH_SHORT).show()
+                CyxbsToast.makeText(this, R.string.main_user_agreement_title, Toast.LENGTH_SHORT).show()
             }
         }
         lav_login_check.setOnClickListener {
@@ -66,7 +66,6 @@ class LoginActivity : BaseViewModelActivity<LoginViewModel>() {
     }
 
 
-
     override fun onBackPressed() {
         landing()
     }
@@ -75,13 +74,13 @@ class LoginActivity : BaseViewModelActivity<LoginViewModel>() {
     //这个方法可以在登陆状态和未登陆状态之间切换
     private fun landing() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            TransitionManager.beginDelayedTransition(login_container,Explode())
+            TransitionManager.beginDelayedTransition(login_container, Explode())
         }
         for (i in 0 until login_container.childCount) {
             val view = login_container[i]
-            view.visibility = when(view.visibility){
-                View.GONE->View.VISIBLE
-                View.VISIBLE->View.GONE
+            view.visibility = when (view.visibility) {
+                View.GONE -> View.VISIBLE
+                View.VISIBLE -> View.GONE
                 else -> View.VISIBLE
             }
         }

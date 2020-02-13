@@ -24,4 +24,5 @@
     <string name="main_user_info_input_hint">请输入昵称，稍候可以更改</string>
     <string name="main_user_agreement">同意《掌上重邮用户协议》</string>
     <string name="main_user_agreement_title">请先同意用户协议吧</string>
+    <string name="main_login_error_prompt">登陆失败，请检查一下用户名和密码是否正确</string>
 </resources>
