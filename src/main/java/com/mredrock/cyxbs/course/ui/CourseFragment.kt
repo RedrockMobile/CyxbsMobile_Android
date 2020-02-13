@@ -28,6 +28,9 @@ import org.greenrobot.eventbus.ThreadMode
 import org.jetbrains.anko.textColor
 
 
+
+
+
 /**
  * Created by anriku on 2018/8/14.
  */
@@ -48,7 +51,7 @@ class CourseFragment : BaseFragment() {
 
     private lateinit var mBinding: CourseFragmentCourseBinding
 
-    lateinit var scheduleView: ScheduleView
+    private lateinit var scheduleView: ScheduleView
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,

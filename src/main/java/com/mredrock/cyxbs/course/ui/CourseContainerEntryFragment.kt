@@ -10,7 +10,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import androidx.transition.Fade
 import androidx.transition.Slide
 import androidx.transition.TransitionManager
 import androidx.transition.TransitionSet
@@ -99,7 +98,7 @@ class CourseContainerEntryFragment : BaseFragment() {
         }
 
     //是否直接加载课表子页，默认直接加载，除非传值过来设置为false过来，后面可以懒加载
-    lateinit var directLoadCourse: String
+    private lateinit var directLoadCourse: String
 
     //每一周课表的ViewPager的Adapter
     private lateinit var mScheduleAdapter: ScheduleVPAdapter
@@ -236,7 +235,7 @@ class CourseContainerEntryFragment : BaseFragment() {
         mCoursesViewModel.toastEvent.observe(activity!!, Observer { str -> str?.let { CyxbsToast.makeText(activity!!, it, Toast.LENGTH_SHORT).show() } })
         mCoursesViewModel.longToastEvent.observe(activity!!, Observer { str -> str?.let { CyxbsToast.makeText(activity!!, it, Toast.LENGTH_LONG).show() } })
         mCoursesViewModel.isShowBackPresentWeek.observe(activity!!, Observer {
-            TransitionManager.beginDelayedTransition(course_current_course_week_select_container,Slide().apply { slideEdge = Gravity.END })
+            TransitionManager.beginDelayedTransition(course_current_course_week_select_container, Slide().apply { slideEdge = Gravity.END })
             course_back_present_week.visibility = it
         })
 
@@ -372,10 +371,10 @@ class CourseContainerEntryFragment : BaseFragment() {
                         //给下方ViewPager添加适配器和绑定tab
                         mBinding.vp.adapter = mScheduleAdapter
                         mBinding.tabLayout.setupWithViewPager(mBinding.vp)
-//                        mBinding.vp[0].findViewById<ScheduleView>(R.id.schedule_view).layoutAnimation = LayoutAnimationController(AnimationUtils.loadAnimation(context, R.anim.course_schedule_view))
-                        TransitionManager.beginDelayedTransition(course_page_container, Fade())
+                        vp.visibility = View.GONE
                         course_lottie_load.visibility = View.GONE
                         course_current_course_week_select_container.visibility = View.VISIBLE
+                        vp.visibility = View.VISIBLE
                     }
                 }
             }

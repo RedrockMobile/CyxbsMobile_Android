@@ -180,20 +180,17 @@ class EditAffairActivity : BaseActivity() {
      * 添加事务时的内容
      */
     private fun addContentNextMonitor() {
-        if (et_title_content_input.text.trim().isEmpty()) {
-            Toast.makeText(this, resources.getString(R.string.course_content_is_null),
-                    Toast.LENGTH_SHORT).show()
-        } else {
-            TransitionManager.beginDelayedTransition(course_affair_container, TransitionSet().apply {
-                addTransition(Slide().apply {
-                    duration = 300
-                    slideEdge = Gravity.END
-                })
-                addTransition(ChangeBounds().apply { duration = 300 })
+        //鄙人觉得这个没有必要做内容为空的判断，事务其实有时候简单的事务大多数人写个内容都是为了占位置，没有具体意义
+        TransitionManager.beginDelayedTransition(course_affair_container, TransitionSet().apply {
+            addTransition(Slide().apply {
+                duration = 300
+                slideEdge = Gravity.END
             })
-            modifyPageLayout()
-            mEditAffairViewModel.status = EditAffairViewModel.Status.AllDoneStatus
-        }
+            addTransition(ChangeBounds().apply { duration = 300 })
+        })
+        modifyPageLayout()
+        mEditAffairViewModel.status = EditAffairViewModel.Status.AllDoneStatus
+
     }
 
     private fun modifyPageLayout() {
@@ -216,30 +213,26 @@ class EditAffairActivity : BaseActivity() {
     }
 
     private fun addContentBackMonitor() {
-        if (et_title_content_input.text.trim().isEmpty()) {
-            Toast.makeText(this, resources.getString(R.string.course_content_is_null),
-                    Toast.LENGTH_SHORT).show()
-        } else {
-            TransitionManager.beginDelayedTransition(course_affair_container, TransitionSet().apply {
-                addTransition(ChangeBounds().apply { duration = 300 })
-            })
-            val set = ConstraintSet().apply { clone(course_affair_container) }
-            set.connect(R.id.et_title_content_input, ConstraintSet.TOP, R.id.tv_content_text, ConstraintSet.BOTTOM)
-            set.setVerticalBias(R.id.et_title_content_input, 0f)
-            set.applyTo(course_affair_container)
-            //单独修改控件属性要在apply之后
-            course_textview.visibility = View.VISIBLE
-            tv_title_text.visibility = View.VISIBLE
-            tv_title.visibility = View.VISIBLE
-            tv_content_text.visibility = View.VISIBLE
-            et_title.visibility = View.GONE
-            tv_week_select.visibility = View.GONE
-            tv_time_select.visibility = View.GONE
-            tv_remind_select.visibility = View.GONE
-            et_title_content_input.imeOptions = EditorInfo.IME_ACTION_NEXT
-            tv_title.text = et_title.text
-            mEditAffairViewModel.status = EditAffairViewModel.Status.ContentStatus
-        }
+        //鄙人觉得这个没有必要做内容为空的判断，事务其实有时候简单的事务大多数人写个内容都是为了占位置，没有具体意义
+        TransitionManager.beginDelayedTransition(course_affair_container, TransitionSet().apply {
+            addTransition(ChangeBounds().apply { duration = 300 })
+        })
+        val set = ConstraintSet().apply { clone(course_affair_container) }
+        set.connect(R.id.et_title_content_input, ConstraintSet.TOP, R.id.tv_content_text, ConstraintSet.BOTTOM)
+        set.setVerticalBias(R.id.et_title_content_input, 0f)
+        set.applyTo(course_affair_container)
+        //单独修改控件属性要在applyTo之后
+        course_textview.visibility = View.VISIBLE
+        tv_title_text.visibility = View.VISIBLE
+        tv_title.visibility = View.VISIBLE
+        tv_content_text.visibility = View.VISIBLE
+        et_title.visibility = View.GONE
+        tv_week_select.visibility = View.GONE
+        tv_time_select.visibility = View.GONE
+        tv_remind_select.visibility = View.GONE
+        et_title_content_input.imeOptions = EditorInfo.IME_ACTION_NEXT
+        tv_title.text = et_title.text
+        mEditAffairViewModel.status = EditAffairViewModel.Status.ContentStatus
     }
 
 

@@ -1,5 +1,8 @@
 package com.mredrock.cyxbs.course.component
 
+import android.animation.LayoutTransition
+import android.animation.ObjectAnimator
+import android.animation.PropertyValuesHolder
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Canvas
@@ -120,7 +123,7 @@ class ScheduleView : FrameLayout {
     private var mBasicElementHeight: Int = 0
 
     //是否是显示课表
-    var mIsDisplayCourse: Boolean = true
+    private var mIsDisplayCourse: Boolean = true
 
     // The following fields are the attrs
     private var mElementGap: Int = 0
@@ -162,12 +165,24 @@ class ScheduleView : FrameLayout {
 
     private fun initScheduleView() {
         setWillNotDraw(false)
+        layoutTransition = layoutTransition()
         mPaint = Paint().apply {
             color = mHighlightColor
             isAntiAlias = true
             isDither = true
             style = Paint.Style.FILL
         }
+    }
+
+    private fun layoutTransition(): LayoutTransition {
+        val mLayoutTransition = LayoutTransition()
+        mLayoutTransition.setStagger(LayoutTransition.APPEARING, 500)
+        val appearingScaleX: PropertyValuesHolder = PropertyValuesHolder.ofFloat("scaleX", 0.5f, 1.0f)
+        val appearingScaleY: PropertyValuesHolder = PropertyValuesHolder.ofFloat("scaleY", 0.5f, 1.0f)
+        val appearingAlpha: PropertyValuesHolder = PropertyValuesHolder.ofFloat("alpha", 0f, 1f)
+        val mAnimatorAppearing: ObjectAnimator = ObjectAnimator.ofPropertyValuesHolder(this, appearingAlpha, appearingScaleX, appearingScaleY)
+        mLayoutTransition.setAnimator(LayoutTransition.APPEARING, mAnimatorAppearing)
+        return mLayoutTransition
     }
 
     /**
