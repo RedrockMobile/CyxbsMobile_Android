@@ -1,6 +1,7 @@
- <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/login_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/whiteBackground"
@@ -39,52 +40,52 @@
         app:layout_constraintVertical_bias="0.013" />
 
 
-     <ImageView
-         android:id="@+id/main_imageview2"
-         android:layout_width="wrap_content"
-         android:layout_height="wrap_content"
-         android:layout_marginTop="46dp"
-         android:src="@drawable/main_ic_student_id"
-         app:layout_constraintBottom_toBottomOf="parent"
-         app:layout_constraintEnd_toEndOf="parent"
-         app:layout_constraintHorizontal_bias="0.0"
-         app:layout_constraintStart_toStartOf="@+id/main_textview"
-         app:layout_constraintTop_toBottomOf="@+id/main_textview"
-         app:layout_constraintVertical_bias="0.06999999" />
+    <ImageView
+        android:id="@+id/main_imageview2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="46dp"
+        android:src="@drawable/main_ic_student_id"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/main_textview"
+        app:layout_constraintTop_toBottomOf="@+id/main_textview"
+        app:layout_constraintVertical_bias="0.06999999" />
 
 
-     <ImageView
-         android:id="@+id/main_imageview8"
-         android:layout_width="wrap_content"
-         android:layout_height="wrap_content"
-         android:src="@drawable/main_ic_password"
-         app:layout_constraintBottom_toBottomOf="parent"
-         app:layout_constraintEnd_toEndOf="@+id/main_imageview2"
-         app:layout_constraintStart_toStartOf="@+id/main_imageview2"
-         app:layout_constraintTop_toTopOf="@+id/et_password"
-         app:layout_constraintVertical_bias="0.0" />
+    <ImageView
+        android:id="@+id/main_imageview8"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/main_ic_password"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/main_imageview2"
+        app:layout_constraintStart_toStartOf="@+id/main_imageview2"
+        app:layout_constraintTop_toTopOf="@+id/et_password"
+        app:layout_constraintVertical_bias="0.0" />
 
-     <androidx.appcompat.widget.AppCompatEditText
-         android:id="@+id/et_account"
-         android:layout_width="0dp"
-         android:layout_height="wrap_content"
-         android:layout_marginStart="24dp"
-         android:layout_marginEnd="16dp"
-         android:background="@null"
-         android:drawablePadding="16dp"
-         android:hint="@string/main_activity_login_account_hint"
-         android:inputType="number"
-         android:maxLength="10"
-         android:selectAllOnFocus="true"
-         android:singleLine="true"
-         android:textColor="@color/main_activity_login_et_edited_color"
-         android:textColorHint="@color/main_activity_login_et_hint_color"
-         android:textSize="14sp"
-         app:layout_constraintBottom_toBottomOf="parent"
-         app:layout_constraintEnd_toEndOf="parent"
-         app:layout_constraintStart_toEndOf="@+id/main_imageview2"
-         app:layout_constraintTop_toTopOf="@+id/main_imageview2"
-         app:layout_constraintVertical_bias="0.0" />
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/et_account"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="16dp"
+        android:background="@null"
+        android:drawablePadding="16dp"
+        android:hint="@string/main_activity_login_account_hint"
+        android:inputType="number"
+        android:maxLength="10"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:textColor="@color/main_activity_login_et_edited_color"
+        android:textColorHint="@color/main_activity_login_et_hint_color"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/main_imageview2"
+        app:layout_constraintTop_toTopOf="@+id/main_imageview2"
+        app:layout_constraintVertical_bias="0.0" />
 
     <androidx.appcompat.widget.AppCompatEditText
         android:id="@+id/et_password"
@@ -113,9 +114,9 @@
         android:id="@+id/btn_login"
         android:layout_width="0dp"
         android:layout_height="52dp"
+        android:layout_marginStart="33dp"
         android:layout_marginTop="48dp"
         android:layout_marginEnd="33dp"
-        android:layout_marginStart="33dp"
         android:background="@drawable/common_toolbar_background"
         android:foreground="?attr/selectableItemBackground"
         android:text="@string/main_activity_login_btn_login"
@@ -129,19 +130,19 @@
         app:layout_constraintVertical_bias="0.047" />
 
 
-     <com.airbnb.lottie.LottieAnimationView
-         android:id="@+id/lav_login_check"
-         android:layout_width="18dp"
-         android:layout_height="18dp"
-         app:lottie_rawRes="@raw/lottie_check_login"
-         app:lottie_progress="0.39"
-         app:layout_constraintBottom_toBottomOf="@+id/main_user_agreement"
-         app:layout_constraintEnd_toStartOf="@+id/main_user_agreement"
-         app:layout_constraintHorizontal_bias="0.929"
-         app:layout_constraintStart_toStartOf="parent"
-         app:layout_constraintTop_toTopOf="@+id/main_user_agreement" />
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/lav_login_check"
+        android:layout_width="18dp"
+        android:layout_height="18dp"
+        app:layout_constraintBottom_toBottomOf="@+id/main_user_agreement"
+        app:layout_constraintEnd_toStartOf="@+id/main_user_agreement"
+        app:layout_constraintHorizontal_bias="0.929"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/main_user_agreement"
+        app:lottie_progress="0.39"
+        app:lottie_rawRes="@raw/lottie_check_login" />
 
-     <TextView
+    <TextView
         android:id="@+id/main_user_agreement"
         android:layout_width="wrap_content"
         android:layout_height="16dp"
@@ -154,5 +155,17 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btn_login"
         app:layout_constraintVertical_bias="0.886" />
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        app:lottie_loop="true"
+        app:lottie_autoPlay="true"
+        app:lottie_rawRes="@raw/login_loging"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
