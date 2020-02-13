@@ -23,4 +23,5 @@
     <string name="main_user_info_input_blank">昵称不能为空哦 (´⊙ω⊙`)</string>
     <string name="main_user_info_input_hint">请输入昵称，稍候可以更改</string>
     <string name="main_user_agreement">同意《掌上重邮用户协议》</string>
+    <string name="main_user_agreement_title">请先同意用户协议吧</string>
 </resources>
