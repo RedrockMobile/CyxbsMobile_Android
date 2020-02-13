@@ -21,7 +21,7 @@ object CourseUrls {
     const val API_GET_AFFAIR = "/wxapi/magipoke-reminder/Person/getTransaction"
     const val API_ADD_AFFAIR = "/wxapi/magipoke-reminder/Person/addTransaction"
     const val API_MODIFY_AFFAIR = "/wxapi/magipoke-reminder/Person/editTransaction"
-    const val API_DELETE_AFFAIR = "/wxapi/magipoke-reminder/Person/getTransaction"
+    const val API_DELETE_AFFAIR = "/wxapi/magipoke-reminder/Person/deleteTransaction"
 
     // 选课名单
     const val STUDENT_LIST_BASE_URL = "http://wx.yyeke.com"

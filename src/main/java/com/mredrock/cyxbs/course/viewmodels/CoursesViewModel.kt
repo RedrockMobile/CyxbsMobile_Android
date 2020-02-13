@@ -333,7 +333,7 @@ class CoursesViewModel : BaseViewModel() {
                             if (courseVersion != coursesFromInternet.version
                                     || (courses.isNotEmpty() && notNullCourses.isNotEmpty() && courses.size != notNullCourses.size)
                                     || (courses.isEmpty() && notNullCourses.isNotEmpty())) {
-
+                                courses.addAll(notNullCourses)
                                 isGetAllData(0)
                                 //将从服务器中获取的课程数据存入数据库中
                                 Thread {
