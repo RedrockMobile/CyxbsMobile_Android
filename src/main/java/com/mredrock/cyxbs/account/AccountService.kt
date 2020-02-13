@@ -172,7 +172,7 @@ internal class AccountService : IAccountService {
 
         @WorkerThread
         override fun login(context: Context, uid: String, passwd: String) {
-            val response = ApiGenerator.getApiService(ApiService::class.java).login(LoginParams(uid, passwd)).execute()
+            val response = ApiGenerator.getCommonApiService(ApiService::class.java).login(LoginParams(uid, passwd)).execute()
             if (response.body() == null) {
                 throw HttpException(response)
             }
