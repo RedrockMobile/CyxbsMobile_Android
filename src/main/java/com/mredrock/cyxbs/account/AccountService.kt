@@ -15,7 +15,9 @@ import com.mredrock.cyxbs.common.config.SP_KEY_USER_V2
 import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.network.exception.RedrockApiException
 import com.mredrock.cyxbs.common.service.account.*
-import com.mredrock.cyxbs.common.utils.extensions.*
+import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
+import com.mredrock.cyxbs.common.utils.extensions.editor
+import com.mredrock.cyxbs.common.utils.extensions.takeIfNoException
 import retrofit2.HttpException
 
 /**
@@ -169,15 +171,14 @@ internal class AccountService : IAccountService {
                 onError.invoke()
                 throw HttpException(response)
             }
-            val apiWrapper = response.body()!!
-            if (apiWrapper.data != null) {
-                bind(apiWrapper.data)
+            response.body()?.data?.let { data ->
+                bind(data)
                 notifyAllStateListeners(IUserStateService.UserState.LOGIN)
                 mContext.defaultSharedPreferences.editor {
-                    putString(SP_KEY_USER_V2, mUserInfoEncryption.encrypt(Gson().toJson(apiWrapper.data)))
+                    putString(SP_KEY_USER_V2, mUserInfoEncryption.encrypt(Gson().toJson(data)))
 
                 }
-                action.invoke(apiWrapper.data.token)
+                action.invoke(data.token)
             }
         }
 
@@ -187,9 +188,9 @@ internal class AccountService : IAccountService {
             if (response.body() == null) {
                 throw HttpException(response)
             }
-            val apiWrapper = response.body()!!
+            val apiWrapper = response?.body()
             //该字段涉及到Java的反射，kotlin的机制无法完全保证不为空，需要判断一下
-            if (apiWrapper.data != null) {
+            if (apiWrapper?.data != null) {
                 bind(apiWrapper.data)
                 notifyAllStateListeners(IUserStateService.UserState.LOGIN)
                 context.defaultSharedPreferences.editor {
@@ -198,7 +199,9 @@ internal class AccountService : IAccountService {
                     putString("SP_KEY_ID_NUM", passwd)
                 }
             } else {
-                throw RedrockApiException(apiWrapper.info, apiWrapper.status)
+                apiWrapper?.apply {
+                    throw RedrockApiException(info, status)
+                }
             }
         }
 
