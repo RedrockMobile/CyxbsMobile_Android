@@ -1,7 +1,9 @@
 package com.mredrock.cyxbs.main.viewmodel
 
+import android.widget.Toast
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.BaseApp.Companion.context
+import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.common.event.LoginStateChangeEvent
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.service.account.IAccountService
@@ -37,10 +39,10 @@ class LoginViewModel : BaseViewModel() {
         }
         isLanding = true
         landing()
-        verifyByWeb(stuNum!!, idNum!!,landing)
+        verifyByWeb(stuNum!!, idNum!!, landing)
     }
 
-    private fun verifyByWeb(stuNum: String, idNum: String,landing:()->Unit) {
+    private fun verifyByWeb(stuNum: String, idNum: String, landing: () -> Unit) {
         thread {
 
         }
@@ -77,12 +79,16 @@ class LoginViewModel : BaseViewModel() {
         }.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe {
             when (it) {
                 LoginState.LandingSuccessfully -> context.startActivity<MainActivity>()
-                LoginState.LandingFailed -> landing()
+                LoginState.LandingFailed -> {
+                    landing()
+                    CyxbsToast.makeText(context,"登陆失败，请检查一下用户名和密码是否正确",Toast.LENGTH_SHORT).show()
+                }
+                else -> {}
             }
         }.isDisposed
     }
 
-    enum class LoginState{
-        LandingSuccessfully,NotLanded,LandingFailed
+    enum class LoginState {
+        LandingSuccessfully, NotLanded, LandingFailed
     }
 }
