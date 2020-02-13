@@ -88,7 +88,7 @@ class CoursesViewModel : BaseViewModel() {
      *
      * 为什么有了上面这个值还需要这个呢
      * 因为后端和教务在线总是时不时各种抽风，跟服务端提需求我又怕打架，但是每次抽风之后是用户遭殃,
-     * 也是客户端人员首先被喷，为了防止客户端被喷的次数，尽管我做了课表拉取处理，
+     * 也是客户端人员首先被喷，为了防止客户端被喷的次数，尽管我做了课表拉取错误处理，
      * 我还是要做一个当从服务端拉取的数据突然变为0但是本地是有课而且课表版本没有变化状态码正常时的处理
      * 这样子可以避免那些本来就没课的同学
      */
@@ -98,6 +98,14 @@ class CoursesViewModel : BaseViewModel() {
             return super.addAll(elements)
         }
     }
+
+    private val affairs = object : ArrayList<Course>() {
+        override fun addAll(elements: Collection<Course>): Boolean {
+            clear()
+            return super.addAll(elements)
+        }
+    }
+
 
     /**在获取中用于组装事务和课程用的list，上面[allCoursesData]才是真正用于显示的*/
     private lateinit var mReceiveCourses: MutableList<Course>
@@ -130,7 +138,9 @@ class CoursesViewModel : BaseViewModel() {
     //是否展示周数中的本周提示
     val isShowPresentTips: ObservableField<Int> = ObservableField(View.GONE)
     //回到本周是否显示
-    val isShowBackPresentWeek = ObservableField<Int>(View.GONE)
+    val isShowBackPresentWeek: MutableLiveData<Int> by lazy(LazyThreadSafetyMode.NONE) {
+        MutableLiveData<Int>().apply { value = View.GONE }
+    }
 
     // 表示今天是在第几周。
     var nowWeek = MutableLiveData<Int>().apply {
@@ -217,28 +227,32 @@ class CoursesViewModel : BaseViewModel() {
         }
     }
 
+
     /**
-     * 此方法用于对重新从服务器上获取数据
-     *
-     * @param context [Context]
+     * 当对事务进行增删改的时候所调用的，可直接只更新事务不更新课表
+     * 其实这里也没有更新课表的必要，在用户打开app之后课表发生改变这种事几率太小
      */
-    fun refreshScheduleData(context: Context) {
-        // 防止一次获取数据未获取完又进行重复获取
-        if (mIsGettingData) {
-            return
-        }
-        mIsGettingData = true
+    fun refreshAffairFromInternet() {
 
-        getNowWeek(context)
+        resetGetStatus()
 
-        getSchedulesFromInternet()
+        mReceiveCourses.addAll(courses)
+        isGetAllData(0)
+
+        getAffairsDataFromInternet()
     }
 
     /**
-     * 从后端拉取课程和备忘数据
+     * 此方法用于对重新从服务器上获取数据，
+     * 这个方法只可以在第一次获取数据时在获取途中调用，不可用于公用方法直接调用然后通过网络更新数据
+     * 如果需要跳过数据库直接通过网络更新数据请使用[getSchedulesDataFromLocalThenNetwork]传入合适的参数
+     *
+     * @param context [Context]
      */
-    private fun getSchedulesFromInternet() {
+    private fun getSchedulesFromInternet(context: Context) {
         resetGetStatus()
+
+        getNowWeek(context)
         getCoursesDataFromInternet()
 
         /**
@@ -266,7 +280,7 @@ class CoursesViewModel : BaseViewModel() {
                             mReceiveCourses.addAll(coursesFromDatabase)
                             courses.addAll(coursesFromDatabase)
                             isGetAllData(0)
-                            refreshScheduleData(context)
+                            getSchedulesFromInternet(context)
                         } else {
                             isGetAllData(0)
                         }
@@ -363,10 +377,6 @@ class CoursesViewModel : BaseViewModel() {
                 .errorHandler()
                 .subscribe(ExecuteOnceObserver(onExecuteOnceNext = { affairsFromInternet ->
                     affairsFromInternet.data?.let { notNullAffairs ->
-                        val tag = TreeSet<String>()
-                        for (c in notNullAffairs) {
-                            tag.add("${c.date}+${c.title}+${c.content}")
-                        }
                         //将从服务器上获取的事务映射为课程信息。
                         Observable.create(ObservableOnSubscribe<List<Affair>> {
                             it.onNext(notNullAffairs)
@@ -392,7 +402,7 @@ class CoursesViewModel : BaseViewModel() {
     }
 
     /**
-     * 这个方法用于判断是尝试获取了课程和事务
+     * 这个方法用于判断是尝试获取了课程和事务,之所以要这样是因为事务和课表分成了两个接口，同时请求
      * @param index 0代表获取了课表，1代表获取了事务
      */
     private fun isGetAllData(index: Int) {
@@ -413,7 +423,7 @@ class CoursesViewModel : BaseViewModel() {
                 // 加个标志，防止因为没有课程以及备忘的情况进行无限循环拉取。
                 if (!mIsGottenFromInternet) {
                     mIsGottenFromInternet = true
-                    getSchedulesFromInternet()
+                    getSchedulesFromInternet(context)
                 }
             }
             stopIntercept()

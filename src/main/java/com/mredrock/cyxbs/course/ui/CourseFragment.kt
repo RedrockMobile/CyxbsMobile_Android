@@ -34,10 +34,6 @@ import org.jetbrains.anko.textColor
 
 class CourseFragment : BaseFragment() {
 
-    companion object {
-        var isFistLoad = true
-    }
-
     override val openStatistics: Boolean
         get() = false
 
@@ -105,17 +101,6 @@ class CourseFragment : BaseFragment() {
                 }
             }
 
-//            if (mCoursesViewModel.nowWeek.value == mWeek&&courseContainerEntryFragment.courseState == CourseContainerEntryFragment.CourseState.OrdinaryCourse&&isFistLoad) {
-//                scheduleView.layoutAnimation = LayoutAnimationController(AnimationUtils.loadAnimation(context, R.anim.course_schedule_view))
-//                scheduleView.layoutAnimationListener = object : Animation.AnimationListener{
-//                    override fun onAnimationRepeat(animation: Animation?) {}
-//                    override fun onAnimationStart(animation: Animation?) {}
-//                    override fun onAnimationEnd(animation: Animation?) {
-//                        scheduleView.layoutAnimation = null
-//                    }
-//                }
-//                isFistLoad = false
-//            }
             val color = ContextCompat.getColor(activity, R.color.levelOneFontColor)
             red_rock_tv_course_day_of_month.textColor = Color.argb(153, Color.red(color), Color.green(color), Color.blue(color))
 

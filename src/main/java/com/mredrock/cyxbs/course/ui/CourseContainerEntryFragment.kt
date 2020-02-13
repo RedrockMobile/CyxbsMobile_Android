@@ -235,6 +235,10 @@ class CourseContainerEntryFragment : BaseFragment() {
         })
         mCoursesViewModel.toastEvent.observe(activity!!, Observer { str -> str?.let { CyxbsToast.makeText(activity!!, it, Toast.LENGTH_SHORT).show() } })
         mCoursesViewModel.longToastEvent.observe(activity!!, Observer { str -> str?.let { CyxbsToast.makeText(activity!!, it, Toast.LENGTH_LONG).show() } })
+        mCoursesViewModel.isShowBackPresentWeek.observe(activity!!, Observer {
+            TransitionManager.beginDelayedTransition(course_current_course_week_select_container,Slide().apply { slideEdge = Gravity.END })
+            course_back_present_week.visibility = it
+        })
 
         // 给ViewPager添加OnPageChangeListener
         lifecycle.addObserver(VPOnPagerChangeObserver(mBinding.vp,
@@ -249,9 +253,7 @@ class CourseContainerEntryFragment : BaseFragment() {
                                 else -> View.GONE
                             }
                     )
-                    mCoursesViewModel.isShowBackPresentWeek.set(
-                            if (mCoursesViewModel.nowWeek.value == it) View.GONE else View.VISIBLE
-                    )
+                    mCoursesViewModel.isShowBackPresentWeek.value = if (mCoursesViewModel.nowWeek.value == it) View.GONE else View.VISIBLE
                     mCoursesViewModel.mWeekTitle.set(mScheduleAdapter.getPageTitle(it).toString())
                 }))
         //对头部课表头部信息进行一系列初始化
@@ -316,7 +318,7 @@ class CourseContainerEntryFragment : BaseFragment() {
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun deleteAffair(deleteAffairEvent: DeleteAffairEvent) {
-        mCoursesViewModel.refreshScheduleData(this.context!!)
+        mCoursesViewModel.refreshAffairFromInternet()
     }
 
     /**
@@ -327,7 +329,7 @@ class CourseContainerEntryFragment : BaseFragment() {
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun addAffairs(addAffairEvent: AddAffairEvent) {
         EventBus.getDefault().post(RefreshEvent(true))
-        mCoursesViewModel.refreshScheduleData(this.context!!)
+        mCoursesViewModel.refreshAffairFromInternet()
     }
 
     /**
@@ -335,12 +337,12 @@ class CourseContainerEntryFragment : BaseFragment() {
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun showModeChange(e: ShowModeChangeEvent) {
-        mCoursesViewModel.refreshScheduleData(this.context!!)
+        mCoursesViewModel.refreshAffairFromInternet()
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun modifyAffairs(modifyAffairEvent: ModifyAffairEvent) {
-        mCoursesViewModel.refreshScheduleData(this.context!!)
+        mCoursesViewModel.refreshAffairFromInternet()
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -370,6 +372,7 @@ class CourseContainerEntryFragment : BaseFragment() {
                         //给下方ViewPager添加适配器和绑定tab
                         mBinding.vp.adapter = mScheduleAdapter
                         mBinding.tabLayout.setupWithViewPager(mBinding.vp)
+//                        mBinding.vp[0].findViewById<ScheduleView>(R.id.schedule_view).layoutAnimation = LayoutAnimationController(AnimationUtils.loadAnimation(context, R.anim.course_schedule_view))
                         TransitionManager.beginDelayedTransition(course_page_container, Fade())
                         course_lottie_load.visibility = View.GONE
                         course_current_course_week_select_container.visibility = View.VISIBLE

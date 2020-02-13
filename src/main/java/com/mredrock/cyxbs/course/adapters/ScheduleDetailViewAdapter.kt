@@ -90,7 +90,8 @@ class ScheduleDetailViewAdapter(private val mDialog: Dialog, private val mSchedu
                 mDialog.dismiss()
             }
             acb_delete.setOnClickListener {
-                mCourseApiService.deleteAffair(ServiceManager.getService(IAccountService::class.java).getUserService().getStuNum(), BaseApp.context.defaultSharedPreferences.getString("SP_KEY_ID_NUM", "")!!,
+                mCourseApiService.deleteAffair(ServiceManager.getService(IAccountService::class.java).getUserService().getStuNum(),
+                        BaseApp.context.defaultSharedPreferences.getString("SP_KEY_ID_NUM", "")!!,
                         itemViewInfo.courseId.toString())
                         .setSchedulers()
                         .errorHandler()

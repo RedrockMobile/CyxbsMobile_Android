@@ -232,7 +232,6 @@
                         android:text="回到本周"
                         android:textColor="@color/whiteFontColor"
                         android:textSize="13sp"
-                        android:visibility="@{coursesViewModel.isShowBackPresentWeek}"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
