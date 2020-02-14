@@ -49,7 +49,7 @@ android {
             abiFilters 'armeabi'
         }
 
-        resConfigs "en", "xxhdpi", "ldltr", "desk"
+//        resConfigs "en", "xxhdpi", "ldltr", "desk"
     }
 
     dexOptions {
