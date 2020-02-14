@@ -7,5 +7,5 @@ package com.mredrock.cyxbs.common.event
  * 描述:
  *   用来通知课表加载子页的
  */
-class LoadCourse (val isCloseLottie:Boolean = false){
+class LoadCourse {
 }
