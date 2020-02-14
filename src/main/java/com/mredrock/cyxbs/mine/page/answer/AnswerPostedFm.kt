@@ -3,6 +3,8 @@ package com.mredrock.cyxbs.mine.page.answer
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.widget.TextView
+import androidx.core.content.ContextCompat
+import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.alibaba.android.arouter.launcher.ARouter
@@ -12,6 +14,8 @@ import com.mredrock.cyxbs.mine.R
 import com.mredrock.cyxbs.mine.network.model.AnswerPosted
 import com.mredrock.cyxbs.mine.util.ui.BaseRVFragment
 import com.mredrock.cyxbs.mine.util.ui.RvFooter
+import kotlinx.android.synthetic.main.mine_list_item_my_answer_posted.view.*
+import org.jetbrains.anko.textColor
 
 /**
  * Created by roger on 2019/12/3
@@ -51,13 +55,19 @@ class AnswerPostedFm : BaseRVFragment<AnswerPosted>() {
     @SuppressLint("SetTextI18n")
     override fun bindDataHolder(holder: androidx.recyclerview.widget.RecyclerView.ViewHolder, position: Int, data: AnswerPosted) {
         holder.itemView.findViewById<TextView>(R.id.mine_answer_posted_tv_content).text = data.content
-        holder.itemView.findViewById<TextView>(R.id.mine_answer_posted_tv_disappear_at).text = data.answerTime
+        holder.itemView.findViewById<TextView>(R.id.mine_answer_posted_tv_disappear_at).text = data.answerTime.split(" ")[0].replace("-", ".")
         holder.itemView.findViewById<TextView>(R.id.mine_answer_posted_tv_integral).text = data.integral.toString()
+        holder.itemView.mine_answer_posted_tv_state.text = data.type
         if (data.type == "已采纳") {
-            holder.itemView.findViewById<TextView>(R.id.mine_answer_posted_tv_state).text = "已采纳"
+            holder.itemView.mine_answer_posted_tv_state.background = ResourcesCompat.getDrawable(resources, R.drawable.mine_shape_round_corner_blue, null)
+            context?.let {
+                holder.itemView.mine_answer_posted_tv_disappear_at.textColor = ContextCompat.getColor(it, R.color.mine_about_text_color_blue)
+            }
         } else {
-            holder.itemView.findViewById<TextView>(R.id.mine_answer_posted_tv_state).text = "未采纳"
-
+            holder.itemView.mine_answer_posted_tv_state.background = ResourcesCompat.getDrawable(resources, R.drawable.mine_shape_round_corner_brown, null)
+            context?.let {
+                holder.itemView.mine_answer_posted_tv_disappear_at.textColor = ContextCompat.getColor(it, R.color.mine_askpostedfm_tv_disappear_at)
+            }
         }
         holder.itemView.setOnClickListener {
             val bundle = Bundle()
