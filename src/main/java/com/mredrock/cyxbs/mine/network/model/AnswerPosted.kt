@@ -8,9 +8,9 @@ import java.io.Serializable
  */
 data class AnswerPosted(
         @SerializedName("answer_id")
-        val answerId: String,
+        val answerId: Int,
         @SerializedName("question_id")
-        val questionId: String,
+        val questionId: Int,
         @SerializedName("answer_content")
         val content: String,
         @SerializedName("answer_time")

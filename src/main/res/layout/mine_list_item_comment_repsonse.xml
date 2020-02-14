@@ -22,11 +22,22 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="12dp"
         android:textSize="13sp"
+        android:textStyle="bold"
         android:textColor="@color/levelTwoFontColor"
         app:layout_constraintStart_toEndOf="@+id/mine_comment_circleimageview_avatar"
         android:layout_marginTop="10dp"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="张树洞" />
+
+    <TextView
+        android:textSize="13sp"
+        android:textColor="@color/levelTwoFontColor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/mine_comment_received_at_end"
+        app:layout_constraintBottom_toBottomOf="@+id/mine_comment_tv_nickname"
+        app:layout_constraintStart_toEndOf="@+id/mine_comment_tv_nickname"
+        app:layout_constraintTop_toTopOf="@+id/mine_comment_tv_nickname" />
 
     <TextView
         android:id="@+id/mine_comment_tv_response"

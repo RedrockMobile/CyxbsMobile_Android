@@ -16,3 +16,9 @@ data class QANumber(
         @SerializedName("praise_number")
         val praiseNumber: Int
 ) : Serializable
+/**
+         "ask_posted_number": 1,         用户的提问已发布的总数
+        "answer_posted_number": 6,      用户的回答已发布的总数
+        "praise_number": 1,             用户获赞数
+        "comment_number": 8             评论数（评论数 = 收到的评论 + 发出的评论）
+ */

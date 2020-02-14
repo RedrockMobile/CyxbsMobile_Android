@@ -4,6 +4,9 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import com.alibaba.android.arouter.launcher.ARouter
+import com.mredrock.cyxbs.common.config.ANSWER_ID
+import com.mredrock.cyxbs.common.config.QA_COMMENT_LIST
 import com.mredrock.cyxbs.mine.R
 import com.mredrock.cyxbs.mine.network.model.Comment
 import com.mredrock.cyxbs.mine.util.ui.BaseRVFragment
@@ -51,6 +54,11 @@ class CommentFragment : BaseRVFragment<Comment>() {
     override fun bindDataHolder(holder: androidx.recyclerview.widget.RecyclerView.ViewHolder, position: Int, data: Comment) {
         holder.itemView.mine_comment_tv_at_who.text = data.answerer
         holder.itemView.mine_comment_tv_content.text = data.commentContent
+        holder.itemView.setOnClickListener {
+            val bundle = Bundle()
+            bundle.putInt(ANSWER_ID, data.answerId)
+            ARouter.getInstance().build(QA_COMMENT_LIST).with(bundle).navigation()
+        }
     }
 
     override fun onSwipeLayoutRefresh() {

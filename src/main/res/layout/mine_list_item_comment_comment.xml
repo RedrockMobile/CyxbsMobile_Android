@@ -13,8 +13,8 @@
         android:layout_marginTop="20dp"
         android:alpha="0.7"
         android:textSize="13sp"
-        android:text="@string/mine_comment_at"
         android:textColor="@color/mine_about_text_color_normal"
+        android:text="@string/mine_comment_at_start"
         app:layout_constraintStart_toStartOf="@+id/mine_comment_tv_content"
         app:layout_constraintTop_toTopOf="parent"/>
 
@@ -25,10 +25,22 @@
         android:alpha="0.7"
         android:textColor="@color/mine_about_text_color_normal"
         android:textSize="13sp"
+        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/mine_comment_tv_at"
         app:layout_constraintStart_toEndOf="@+id/mine_comment_tv_at"
         app:layout_constraintTop_toTopOf="@+id/mine_comment_tv_at"
         tools:text="张树洞" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/mine_comment_at_end"
+        android:alpha="0.7"
+        android:textColor="@color/mine_about_text_color_normal"
+        android:textSize="13sp"
+        app:layout_constraintBottom_toBottomOf="@+id/mine_comment_tv_at_who"
+        app:layout_constraintStart_toEndOf="@+id/mine_comment_tv_at_who"
+        app:layout_constraintTop_toTopOf="@+id/mine_comment_tv_at_who" />
 
     <TextView
         android:id="@+id/mine_comment_tv_content"
