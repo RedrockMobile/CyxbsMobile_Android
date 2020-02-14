@@ -9,6 +9,6 @@
         android:topRightRadius="30dp">
 
     </corners>
-    <solid android:color="@color/whiteBackground" />
+    <solid android:color="@color/curriculum_background_color" />
 
 </shape>
