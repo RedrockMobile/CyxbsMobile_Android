@@ -96,12 +96,12 @@
     <color name="greyButton" tools:ignore="ResourceName">#E1DFE0</color>
     <color name="greyButtonText" tools:ignore="ResourceName">#C3C0C1</color>
     <color name="greyText" tools:ignore="ResourceName">#C4C2C2</color>
-    <color name="switchOff" tools:ignore="ResourceName">#C3D4EE</color>
+    <color name="switchOff" tools:ignore="ResourceName">#5A5A5A</color>
 
     <color name="mine_tablayout_text_unselected" tools:ignore="ResourceName">#8f15315B</color>
     <color name="mine_tablayout_indicator_color" tools:ignore="ResourceName">#1AD0F2</color>
 
-    <color name="mine_about_text_color_normal" tools:ignore="ResourceName">#294169</color>
+    <color name="mine_about_text_color_normal" tools:ignore="ResourceName">#ffffff</color>
     <color name="mine_about_text_color_blue" tools:ignore="ResourceName">#0BCCF0</color>
     <color name="mine_sign_bg_grey" tools:ignore="ResourceName">#E1E6F0</color>
     <color name="mine_sign_divider_grey" tools:ignore="ResourceName">#E1E6F0</color>
@@ -141,15 +141,15 @@
     <!--    回答被采纳的标签颜色-->
     <color name="qa_answer_list_adopted_color" tools:ignore="ResourceName">#94A6C4</color>
     <!--    提问选择类型的背景颜色-->
-    <color name="qa_quiz_select_type_background_color" tools:ignore="ResourceName">#E8F0FC</color>
+    <color name="qa_quiz_select_type_background_color" tools:ignore="ResourceName">#5A5A5A</color>
     <!--    提问选择类型的文字颜色-->
     <color name="qa_quiz_select_type_text_color" tools:ignore="ResourceName">#94A6C4</color>
     <!--    提问选中类型的文字颜色-->
     <color name="qa_quiz_selected_type_text_color" tools:ignore="ResourceName">#FFA192</color>
     <!--    提问选中类型的背景颜色，指定78的透明度-->
-    <color name="qa_quiz_selected_type_background_color" tools:ignore="ResourceName">#c3F7DAD7</color>
+    <color name="qa_quiz_selected_type_background_color" tools:ignore="ResourceName">#0BCCF0</color>
     <!--    提问标题框和内容框的背景颜色，指定69的透明度-->
-    <color name="qa_quiz_new_text_background_color" tools:ignore="ResourceName">#acE8F0FC</color>
+    <color name="qa_quiz_new_text_background_color" tools:ignore="ResourceName">#b32C2C2C</color>
     <!--    举报弹窗的提示文字颜色，指定61的透明度-->
     <color name="qa_question_report_text_background_color" tools:ignore="ResourceName">#9815315B</color>
     <!--    举报弹窗的分割线颜色，指定4的透明度-->
@@ -175,6 +175,22 @@
     <color name="transaction_background_stripe_color" tools:ignore="ResourceName">#4d4b4c</color>
 
     <color name="main_bottom_tab_un_select" tools:ignore="ResourceName">#5A5A5A</color>
+
+    <!--    发现教务在线颜色-->
+    <color name="discoverAcademicOnlineColors" tools:ignore="ResourceName">#000000</color>
+    <color name="discoverAcademicOnlineColorsBackground" tools:ignore="ResourceName">#5A5A5A</color>
+
+    <!--    发现菜单字体颜色-->
+    <color name="menuFontColorFound" tools:ignore="ResourceName">#5A5A5A</color>
+
+
+    <color name="alphaLevelTwoFontColor" tools:ignore="ResourceName">#5A5A5A</color>
+
+    <!--    签到提示颜色-->
+    <color name="checkInPromptColor" tools:ignore="ResourceName">#5A5A5A</color>
+
+    <!--    关于下面声明颜色-->
+    <color name="about_colors_declared_below" tools:ignore="ResourceName">#333333</color>
 
 </resources>
 
