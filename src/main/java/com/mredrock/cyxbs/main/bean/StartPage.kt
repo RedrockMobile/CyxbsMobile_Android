@@ -1,4 +1,5 @@
 package com.mredrock.cyxbs.main.bean
+
 import java.io.Serializable
 
 /**
@@ -11,4 +12,4 @@ data class StartPage(
         val start: String?,
         val annotation: String?,
         val column: String?
-):Serializable
+) : Serializable

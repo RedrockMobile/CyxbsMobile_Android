@@ -14,13 +14,11 @@ import androidx.transition.Slide
 import androidx.transition.TransitionManager
 import androidx.transition.TransitionSet
 import com.alibaba.android.arouter.facade.annotation.Route
-import com.alibaba.android.arouter.launcher.ARouter
 import com.google.android.material.bottomnavigation.LabelVisibilityMode
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.config.*
 import com.mredrock.cyxbs.common.event.BottomSheetStateEvent
-import com.mredrock.cyxbs.common.event.CourseSlipsTopEvent
 import com.mredrock.cyxbs.common.event.LoadCourse
 import com.mredrock.cyxbs.common.event.NotifyBottomSheetToExpandEvent
 import com.mredrock.cyxbs.common.service.ServiceManager
@@ -151,20 +149,22 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
             }
 
             override fun onStateChanged(p0: View, p1: Int) {
-
+                //如果是第一次进入展开则加载详细的课表子页
                 if (isFirst && bottomSheetBehavior.state == BottomSheetBehavior.STATE_EXPANDED
                         && lastState != BottomSheetBehavior.STATE_EXPANDED && !courseShowState) {
                     EventBus.getDefault().post(LoadCourse())
+                    /*
+                     * 下面这个判断判断其实无关紧要
+                     * 但是为了防止用户以一种未登陆状态到达mainActivity时也能保证课表的动画正常运行还是有必要加一下
+                     */
                     if (accountService.getVerifyService().isLogin()) {
                         isFirst = false
                     }
                 }
+                //对状态Bottom的状态进行记录，这里只记录了打开和关闭
                 lastState = when (p1) {
                     BottomSheetBehavior.STATE_EXPANDED -> BottomSheetBehavior.STATE_EXPANDED
-                    BottomSheetBehavior.STATE_COLLAPSED -> {
-                        EventBus.getDefault().post(LoadCourse(true))
-                        BottomSheetBehavior.STATE_COLLAPSED
-                    }
+                    BottomSheetBehavior.STATE_COLLAPSED -> BottomSheetBehavior.STATE_COLLAPSED
                     else -> lastState
                 }
             }
@@ -172,7 +172,7 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
         initFragments()
     }
 
-
+////这个方法可能有用暂不删除
 //    @RequiresApi(Build.VERSION_CODES.M)
 //    private fun setAndroidNativeLightStatusBar(dark: Boolean) {
 //        val decor = window.decorView
@@ -252,27 +252,29 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
     }
 
     private fun initFragments() {
-
+        //取得是否优先显示课表的设置
         courseShowState = defaultSharedPreferences.getBoolean(COURSE_SHOW_STATE, false)
         if (courseShowState) {
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+            //这里必须让它GONE，因为这个设置BottomSheet是不会走滑动监听的，否则导致完全显示BottomSheet后依然有下面的tab
             ll_nav_main_container.visibility = GONE
-            //在滑动下拉课表容器中添加整个课表
+            //加载课表，并在滑动下拉课表容器中添加整个课表
             supportFragmentManager.beginTransaction().replace(R.id.course_bottom_sheet_content, courseFragment).apply {
                 commit()
             }
         } else {
+            //如果用户没有选择优先显示课表，则加载发现
             nav_main.selectedItemId = R.id.explore
-            courseFragment.arguments = Bundle().apply {
-                putString(COURSE_DIRECT_LOAD, FALSE)
-            }
+            //加载课表并给课表传递值，让它不要直接加载详细的课表，只用加载现在可见的头部就好
+            courseFragment.arguments = Bundle().apply { putString(COURSE_DIRECT_LOAD, FALSE) }
             supportFragmentManager.beginTransaction().replace(R.id.course_bottom_sheet_content, courseFragment).apply {
                 commit()
             }
         }
     }
 
-    private fun getFragment(path: String) = ARouter.getInstance().build(path).navigation() as Fragment
+    //封装一下，直接获取fragment
+    private fun getFragment(path: String) = ServiceManager.getService<Fragment>(path)
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun installUpdate(event: UpdateEvent) {
@@ -284,16 +286,9 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
         EventBus.getDefault().post(FinishEvent())
     }
 
-    /**
-     *
-     */
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun acceptCourseSlideInformation(event: CourseSlipsTopEvent) {
-        viewModel.isCourseTop = event.isTop
-    }
 
     /**
-     * 接收bottomSheet的点击事件
+     * 接收bottomSheet头部的点击事件，用来点击打开BottomSheet
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun acceptNotifyBottomSheetToExpandEvent(notifyBottomSheetToExpandEvent: NotifyBottomSheetToExpandEvent) {

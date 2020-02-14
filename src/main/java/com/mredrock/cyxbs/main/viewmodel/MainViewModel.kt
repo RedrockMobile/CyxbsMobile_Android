@@ -1,31 +1,21 @@
 package com.mredrock.cyxbs.main.viewmodel
 
-import android.app.ActionBar
-import android.view.View
-import android.widget.FrameLayout
-import android.widget.LinearLayout
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.network.exception.RedrockApiException
 import com.mredrock.cyxbs.common.utils.LogUtils
-import com.mredrock.cyxbs.common.utils.extensions.dp2px
 import com.mredrock.cyxbs.common.utils.extensions.mapOrThrowApiException
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.main.bean.StartPage
 import com.mredrock.cyxbs.main.network.ApiService
-import com.mredrock.cyxbs.main.ui.MainActivity
-import kotlinx.android.synthetic.main.main_activity_main.*
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.math.abs
 
 class MainViewModel : BaseViewModel() {
     val startPage: LiveData<StartPage?> = MutableLiveData()
-    var isCourseTop = true
 
     fun getStartPage() {
         ApiGenerator.getApiService(ApiService::class.java)
@@ -56,9 +46,4 @@ class MainViewModel : BaseViewModel() {
                 .lifeCycle()
     }
 
-    fun initBottomSheetBehavior(activity: MainActivity) {
-        activity.apply {
-
-        }
-    }
 }

@@ -1,7 +1,6 @@
 package com.mredrock.cyxbs.main.viewmodel
 
 import android.widget.Toast
-import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.BaseApp.Companion.context
 import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.common.event.LoginStateChangeEvent
@@ -26,7 +25,7 @@ class LoginViewModel : BaseViewModel() {
     var userAgreementIsCheck = false
 
     //是否正在登陆，防止用户多次点击
-    var isLanding = false
+    private var isLanding = false
 
     fun login(stuNum: String?, idNum: String?, landing: () -> Unit) {
         if (isLanding) return
@@ -52,7 +51,7 @@ class LoginViewModel : BaseViewModel() {
             takeIfNoException(
                     action = {
                         val accountService = ServiceManager.getService(IAccountService::class.java)
-                        accountService.getVerifyService().login(BaseApp.context, stuNum, idNum)
+                        accountService.getVerifyService().login(context, stuNum, idNum)
                         MobclickAgent.onProfileSignIn(accountService.getUserService().getStuNum())
                         EventBus.getDefault().post(LoginStateChangeEvent(true))
                         loginState = LoginState.LandingSuccessfully

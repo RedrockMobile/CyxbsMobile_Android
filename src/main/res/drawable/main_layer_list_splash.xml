@@ -1,18 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android"
-        android:opacity="opaque"
-    >
+    android:opacity="opaque">
     <!--opaque 防止在启动的时候出现背景的闪烁 -->
 
     <!--白色矩形 作为背景色-->
     <item>
         <shape android:shape="rectangle">
-            <solid android:color="@android:color/white" />
+            <solid android:color="@color/whiteBackground" />
         </shape>
     </item>
 
     <item>
-        <!--位置设置成靠下-->
+        <!--位置设置成居中-->
         <bitmap
             android:gravity="center"
             android:src="@drawable/main_bg_splash_big" />

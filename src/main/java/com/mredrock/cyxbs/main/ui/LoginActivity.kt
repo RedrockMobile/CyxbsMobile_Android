@@ -66,7 +66,6 @@ class LoginActivity : BaseViewModelActivity<LoginViewModel>() {
     }
 
 
-
     //这个方法可以在登陆状态和未登陆状态之间切换
     private fun landing() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {

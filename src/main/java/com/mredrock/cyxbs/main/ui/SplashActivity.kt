@@ -82,7 +82,7 @@ class SplashActivity : BaseViewModelActivity<SplashViewModel>() {
                 viewModel.finishModel.observeNotNullAndTrue {
                     if (isLogin) {
                         navigateAndFinish(MAIN_MAIN)
-                    }else{
+                    } else {
                         navigateAndFinish(MAIN_LOGIN)
                     }
                     overridePendingTransition(0, 0)
@@ -92,9 +92,11 @@ class SplashActivity : BaseViewModelActivity<SplashViewModel>() {
                         override fun onFinish() {
                             viewModel.finishAfter(0)
                         }
+
                         override fun onTick(millisUntilFinished: Long) {
                             runOnUiThread {
-                                viewStub.main_activity_splash_skip.text = "跳过 ${millisUntilFinished / 1000}"
+                                val str = "跳过 ${millisUntilFinished / 1000}"
+                                viewStub.main_activity_splash_skip.text = str
                             }
                         }
                     }.start()
