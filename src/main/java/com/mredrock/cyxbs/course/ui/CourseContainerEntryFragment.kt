@@ -31,6 +31,7 @@ import com.mredrock.cyxbs.course.utils.changeLibBeanToCourse
 import com.mredrock.cyxbs.course.viewmodels.CoursesViewModel
 import com.mredrock.cyxbs.course.viewmodels.NoCourseInviteViewModel
 import kotlinx.android.synthetic.main.course_fragment_course_container.*
+import kotlinx.android.synthetic.main.course_fragment_course_container.view.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -235,8 +236,15 @@ class CourseContainerEntryFragment : BaseFragment() {
         mCoursesViewModel.toastEvent.observe(activity!!, Observer { str -> str?.let { CyxbsToast.makeText(activity!!, it, Toast.LENGTH_SHORT).show() } })
         mCoursesViewModel.longToastEvent.observe(activity!!, Observer { str -> str?.let { CyxbsToast.makeText(activity!!, it, Toast.LENGTH_LONG).show() } })
         mCoursesViewModel.isShowBackPresentWeek.observe(activity!!, Observer {
-            TransitionManager.beginDelayedTransition(course_current_course_week_select_container, Slide().apply { slideEdge = Gravity.END })
-            course_back_present_week.visibility = it
+            /**
+             * 这里为什么要判空呢，因为[mCoursesViewModel.isShowBackPresentWeek]
+             * 在切换黑夜模式的时候这个变量的回调会启动，但是这时候[course_current_course_week_select_container]
+             * 还没有生成，进一步说在应用内开启黑夜模式因为会重启activity但是[mCoursesViewModel]没有
+             */
+            course_current_course_week_select_container?.apply {
+                TransitionManager.beginDelayedTransition(this, Slide().apply { slideEdge = Gravity.END })
+                this.course_back_present_week?.visibility = it
+            }
         })
 
         // 给ViewPager添加OnPageChangeListener

@@ -9,6 +9,7 @@
 
     <com.mredrock.cyxbs.course.component.AffairBackgroundView
         android:id="@+id/affair_item_background"
+        app:backgroundStripeColor="@color/transaction_background_stripe_color"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
     

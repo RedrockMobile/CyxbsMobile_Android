@@ -21,10 +21,10 @@
     <item android:top="15dp">
         <shape android:shape="rectangle">
             <corners
-                android:topLeftRadius="32dp"
-                android:topRightRadius="32dp" />
-            <solid android:color="@color/whiteBackground" />
-            <stroke android:color="#F4F4F4"
+                android:topLeftRadius="16dp"
+                android:topRightRadius="16dp" />
+            <solid android:color="@color/curriculum_background_color" />
+            <stroke android:color="@color/curriculum_background_color"
                 android:width="0.5dp"/>
         </shape>
     </item>

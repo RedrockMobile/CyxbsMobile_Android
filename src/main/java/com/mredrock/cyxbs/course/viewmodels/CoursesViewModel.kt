@@ -404,8 +404,14 @@ class CoursesViewModel : BaseViewModel() {
     /**
      * 这个方法用于判断是尝试获取了课程和事务,之所以要这样是因为事务和课表分成了两个接口，同时请求
      * @param index 0代表获取了课表，1代表获取了事务
+     *
+     * 这里解释一下为什么这里要加上【同步】，虽然浪费一丢丢性能，但是这是很有必要的，
+     * 这个方法会分别在异步【获取到事务和获取到课程】后调用，[mDataGetStatus]变量中的内容所有线程都可以更改的
+     * 但此时就可能出现同步问题，最明显的影响就是获取了所有的数据但是没有进入第一个判断语句，从而导致不能显示课表
+     * 实测，出现这种问题的概率很大，在我这几天尽百次的打开当中其中有4次出现了未进入第一个判断语句从到导致
+     * [mReceiveCourses]有数据，但是[allCoursesData]没有，课表无法显示
      */
-    private fun isGetAllData(index: Int) {
+    @Synchronized private fun isGetAllData(index: Int) {
         mDataGetStatus[index] = true
         if (mDataGetStatus[0] && mDataGetStatus[1]) {
             // 如果mCourses为空的话就不用赋值给courses。防止由于网络请求有问题而导致刷新数据为空。

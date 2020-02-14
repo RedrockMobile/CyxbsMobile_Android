@@ -8,6 +8,7 @@ import android.graphics.RectF
 import android.util.AttributeSet
 import android.util.DisplayMetrics
 import android.view.View
+import com.mredrock.cyxbs.course.R
 import org.jetbrains.anko.dip
 import kotlin.math.max
 import kotlin.math.sqrt
@@ -22,24 +23,26 @@ import kotlin.math.sqrt
  */
 internal class AffairBackgroundView : View {
 
-    var screenWidth: Int? = null
-    var screenHeight: Int? = null
-    private val paint = Paint().apply {
-        color = 0xFFE4E7EC.toInt()
-    }
-    val rectF = RectF()
-    val wholeRectF = RectF()
-    val mPath = Path()
+    private var screenWidth: Int? = null
+    private var screenHeight: Int? = null
+    private val paint = Paint()
+    private val rectF = RectF()
+    private val wholeRectF = RectF()
+    private val mPath = Path()
 
 
     constructor(context: Context?) : super(context) {
         init()
     }
 
-    constructor(context: Context?, attrs: AttributeSet?) : super(
+    constructor(context: Context, attrs: AttributeSet?) : super(
             context,
             attrs
     ) {
+        val typeArray = context.obtainStyledAttributes(attrs, R.styleable.AffairBackgroundView,
+                R.attr.ScheduleViewStyle, 0)
+        paint.color = typeArray.getColor(R.styleable.AffairBackgroundView_backgroundStripeColor, 0xFFE4E7EC.toInt())
+        typeArray.recycle()
         init()
     }
 
@@ -62,13 +65,13 @@ internal class AffairBackgroundView : View {
         val drawEdge = max(width, height) * sqrt(2.0)
         val space = dip(8)
         val num = drawEdge / (space * 2)
-        canvas?.let { canvas ->
-            canvas.translate(width / 2f, height / 2f)
-            canvas.clipPath(mPath)
-            canvas.rotate(45f)
+        canvas?.let { canvas1 ->
+            canvas1.translate(width / 2f, height / 2f)
+            canvas1.clipPath(mPath)
+            canvas1.rotate(45f)
             rectF.set(-(drawEdge / 2).toFloat(), (drawEdge / 2).toFloat(), ((-drawEdge / 2) + space).toFloat(), (-(drawEdge / 2f)).toFloat())
             for (i in 0 until num.toInt()) {
-                canvas.drawRect(rectF, paint)
+                canvas1.drawRect(rectF, paint)
                 rectF.set(rectF.left + (space * 2), rectF.top, rectF.right + (space * 2), rectF.bottom)
             }
         }
@@ -81,14 +84,14 @@ internal class AffairBackgroundView : View {
     /**
      * Get Screen Width
      */
-    fun getScreenWidth(context: Context): Int {
+    private fun getScreenWidth(context: Context): Int {
         return getDisplayMetrics(context).widthPixels
     }
 
     /**
      * Get Screen Height
      */
-    fun getScreenHeight(context: Context): Int {
+    private fun getScreenHeight(context: Context): Int {
         return getDisplayMetrics(context).heightPixels
     }
 }

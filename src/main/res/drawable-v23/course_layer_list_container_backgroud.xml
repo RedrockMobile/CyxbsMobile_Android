@@ -24,8 +24,8 @@
             <corners
                 android:topLeftRadius="16dp"
                 android:topRightRadius="16dp" />
-            <solid android:color="@color/whiteBackground" />
-            <stroke android:color="#F4F4F4"
+            <solid android:color="@color/curriculum_background_color" />
+            <stroke android:color="@color/curriculum_background_color"
                 android:width="0.5dp"/>
         </shape>
     </item>
