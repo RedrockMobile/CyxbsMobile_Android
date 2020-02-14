@@ -8,6 +8,7 @@ import androidx.room.TypeConverter
  *
  * 描述:
  *   用于转换老师所教班级的room转换器
+ *   【另外，有一说一，别通宵写代码，这下看了都怕这个时间】
  */
 class ClassListStringConverter {
 

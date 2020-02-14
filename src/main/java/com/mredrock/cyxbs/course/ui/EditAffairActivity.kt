@@ -24,7 +24,9 @@ import com.mredrock.cyxbs.course.databinding.CourseActivityEditAffairBinding
 import com.mredrock.cyxbs.course.viewmodels.EditAffairViewModel
 import kotlinx.android.synthetic.main.course_activity_edit_affair.*
 
-
+/**
+ * 是个activity是一个有些复杂的动画集合
+ */
 class EditAffairActivity : BaseActivity() {
 
     override val isFragmentActivity: Boolean
@@ -69,12 +71,12 @@ class EditAffairActivity : BaseActivity() {
             }
         }
         course_next_step.setOnClickListener {
-            onClick()
+            forward()
         }
         et_title_content_input.setOnEditorActionListener(object : TextView.OnEditorActionListener {
             override fun onEditorAction(p0: TextView?, p1: Int, p2: KeyEvent?): Boolean {
                 return if (p1 == EditorInfo.IME_ACTION_NEXT) {
-                    onClick()
+                    forward()
                     return true
                 } else false
             }
@@ -84,12 +86,14 @@ class EditAffairActivity : BaseActivity() {
         //必须在ViewModel的initData之后执行
         if (mEditAffairViewModel.passedAffairInfo != null) {
             modifyPageLayout()
-            mEditAffairViewModel.status = EditAffairViewModel.Status.AllDoneStatus
         }
         rv_you_might.adapter = YouMightAdapter(et_title_content_input)
     }
 
-    private fun onClick() {
+    /**
+     * 不断进行下一步，根据状态执行相应动画
+     */
+    private fun forward() {
         when (mEditAffairViewModel.status) {
             EditAffairViewModel.Status.TitleStatus -> addTitleNextMonitor()
             EditAffairViewModel.Status.ContentStatus -> addContentNextMonitor()
@@ -97,21 +101,23 @@ class EditAffairActivity : BaseActivity() {
         }
     }
 
-
+    /**
+     * 不断进行后退，根据状态执行相应动画，或者直接退出activity
+     */
     override fun onBackPressed() {
         when (mEditAffairViewModel.status) {
             EditAffairViewModel.Status.TitleStatus -> super.onBackPressed()
-            EditAffairViewModel.Status.ContentStatus -> addTitleBackMonitor()
+            EditAffairViewModel.Status.ContentStatus -> backAddTitleMonitor()
+            //如果是修改事务，此时按返回键直接退出
             EditAffairViewModel.Status.AllDoneStatus -> {
                 if (mEditAffairViewModel.passedAffairInfo != null) {
                     super.onBackPressed()
                 } else {
-                    addContentBackMonitor()
+                    backAddContentMonitor()
                 }
             }
         }
     }
-
 
     /**
      * 添加标题之后跳转到添加内容动画
@@ -146,11 +152,10 @@ class EditAffairActivity : BaseActivity() {
         }
     }
 
-
     /**
-     * 添加标题之后跳转到添加内容动画
+     * 返回到添加标题的动画
      */
-    private fun addTitleBackMonitor() {
+    private fun backAddTitleMonitor() {
         TransitionManager.beginDelayedTransition(course_affair_container, TransitionSet().apply {
             addTransition(Slide().apply {
                 duration = 300
@@ -177,7 +182,7 @@ class EditAffairActivity : BaseActivity() {
     }
 
     /**
-     * 添加事务时的内容
+     * 添加内容之后跳转到选择时间动画
      */
     private fun addContentNextMonitor() {
         //鄙人觉得这个没有必要做内容为空的判断，事务其实有时候简单的事务大多数人写个内容都是为了占位置，没有具体意义
@@ -193,26 +198,10 @@ class EditAffairActivity : BaseActivity() {
 
     }
 
-    private fun modifyPageLayout() {
-        val set = ConstraintSet().apply { clone(course_affair_container) }
-        set.connect(R.id.et_title_content_input, ConstraintSet.TOP, R.id.course_affair_container, ConstraintSet.TOP)
-        set.setVerticalBias(R.id.et_title_content_input, 0.32f)
-        set.applyTo(course_affair_container)
-        //单独修改控件属性要在apply之后
-        course_textview.visibility = View.GONE
-        tv_title_text.visibility = View.GONE
-        tv_title.visibility = View.GONE
-        tv_content_text.visibility = View.GONE
-        rv_you_might.visibility = View.GONE
-        et_title.visibility = View.VISIBLE
-        tv_week_select.visibility = View.VISIBLE
-        tv_time_select.visibility = View.VISIBLE
-        tv_remind_select.visibility = View.VISIBLE
-        et_title_content_input.imeOptions = EditorInfo.IME_ACTION_DONE
-        et_title.setText(tv_title.text, TextView.BufferType.EDITABLE)
-    }
-
-    private fun addContentBackMonitor() {
+    /**
+     * 返回到添加内容的动画
+     */
+    private fun backAddContentMonitor() {
         //鄙人觉得这个没有必要做内容为空的判断，事务其实有时候简单的事务大多数人写个内容都是为了占位置，没有具体意义
         TransitionManager.beginDelayedTransition(course_affair_container, TransitionSet().apply {
             addTransition(ChangeBounds().apply { duration = 300 })
@@ -235,9 +224,31 @@ class EditAffairActivity : BaseActivity() {
         mEditAffairViewModel.status = EditAffairViewModel.Status.ContentStatus
     }
 
+    /**
+     * 如果是修改事务，这个方法用于将此activity转换到最后一个状态
+     */
+    private fun modifyPageLayout() {
+        val set = ConstraintSet().apply { clone(course_affair_container) }
+        set.connect(R.id.et_title_content_input, ConstraintSet.TOP, R.id.course_affair_container, ConstraintSet.TOP)
+        set.setVerticalBias(R.id.et_title_content_input, 0.32f)
+        set.applyTo(course_affair_container)
+        //单独修改控件属性要在apply之后
+        course_textview.visibility = View.GONE
+        tv_title_text.visibility = View.GONE
+        tv_title.visibility = View.GONE
+        tv_content_text.visibility = View.GONE
+        rv_you_might.visibility = View.GONE
+        et_title.visibility = View.VISIBLE
+        tv_week_select.visibility = View.VISIBLE
+        tv_time_select.visibility = View.VISIBLE
+        tv_remind_select.visibility = View.VISIBLE
+        et_title_content_input.imeOptions = EditorInfo.IME_ACTION_DONE
+        et_title.setText(tv_title.text, TextView.BufferType.EDITABLE)
+        mEditAffairViewModel.status = EditAffairViewModel.Status.AllDoneStatus
+    }
 
     /**
-     * 此方法用于最后一步上传事务
+     * 最后一步上传事务
      */
     private fun postAffair() {
         when {

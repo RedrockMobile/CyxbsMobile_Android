@@ -39,7 +39,7 @@ class SimpleDotsView : ScheduleDetailView.DotsView {
             field = value
             computeFirstDotLeftMargin()
         }
-    var mDotGap: Int = dip(8)
+    private var mDotGap: Int = dip(8)
 
     constructor(context: Context) : super(context) {
         initDotsView()

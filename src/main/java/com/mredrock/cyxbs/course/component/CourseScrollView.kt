@@ -32,7 +32,7 @@ class CourseScrollView : ScrollView {
             downX?.let {
                 if (ev.action == MotionEvent.ACTION_MOVE && abs((ev.rawX - it)) > 0) {
                     parent.requestDisallowInterceptTouchEvent(false)
-                }else{
+                } else {
                     parent.requestDisallowInterceptTouchEvent(true)
                 }
             }

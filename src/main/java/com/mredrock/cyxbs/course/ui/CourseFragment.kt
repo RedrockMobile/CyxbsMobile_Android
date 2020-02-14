@@ -1,13 +1,11 @@
 package com.mredrock.cyxbs.course.ui
 
-import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import android.view.animation.LayoutAnimationController
-import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -25,10 +23,6 @@ import com.mredrock.cyxbs.course.viewmodels.NoCourseInviteViewModel
 import kotlinx.android.synthetic.main.course_fragment_course.*
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import org.jetbrains.anko.textColor
-
-
-
 
 
 /**
@@ -73,43 +67,23 @@ class CourseFragment : BaseFragment() {
         mBinding.lifecycleOwner = this
         mWeek = arguments?.getInt(WEEK_NUM) ?: 0
 
-        activity?.let { activity ->
-            /**
-             * 这里没有使用[ViewModelProviders]来获取ViewModel
-             * 是因为这里必须使用[CourseContainerEntryFragment]所使用的ViewModel
-             * 但是[CourseContainerEntryFragment]的ViewModel根据使用场景不一样所用的依赖的ViewModel
-             * 也不一样
-             */
-            mCoursesViewModel = courseContainerEntryFragment.mCoursesViewModel
-            mNoCourseInviteViewModel = courseContainerEntryFragment.mNoCourseInviteViewModel
-            //获取生命周期与当前Fragment绑定的DateViewModel
-            mCoursePageViewModel = ViewModelProviders.of(this,
-                    CoursePageViewModel.DateViewModelFactory(mWeek)).get(CoursePageViewModel::class.java)
-            mCoursePageViewModel.nowWeek = mWeek
 
-            scheduleView = when (courseContainerEntryFragment.courseState) {
-                CourseContainerEntryFragment.CourseState.OrdinaryCourse, CourseContainerEntryFragment.CourseState.OtherCourse, CourseContainerEntryFragment.CourseState.TeacherCourse -> {
-                    val mBinding = DataBindingUtil.inflate<CourseOrdinaryScheduleBinding>(LayoutInflater.from(context), R.layout.course_ordinary_schedule, course_schedule_container, false)
-                    mBinding.coursePageViewModel = mCoursePageViewModel
-                    mBinding.coursesViewModel = mCoursesViewModel
-                    course_schedule_container.addView(mBinding.root)
-                    mBinding.scheduleView
-                }
-                CourseContainerEntryFragment.CourseState.NoClassInvitationCourse -> {
-                    val mBinding = DataBindingUtil.inflate<CourseNoClassInviteScheduleBinding>(LayoutInflater.from(context), R.layout.course_no_class_invite_schedule, course_schedule_container, false)
-                    mBinding.noCourseInviteViewModel = mNoCourseInviteViewModel
-                    mBinding.nowWeek = mWeek
-                    course_schedule_container.addView(mBinding.root)
-                    mBinding.scheduleView
-                }
-            }
-
-            val color = ContextCompat.getColor(activity, R.color.levelOneFontColor)
-            red_rock_tv_course_day_of_month.textColor = Color.argb(153, Color.red(color), Color.green(color), Color.blue(color))
-
-        }
+        /**
+         * 虽然这里可能有点耦合度高，但是这两个fragment一般是一起用的
+         * 这里没有使用[ViewModelProviders]来获取ViewModel
+         * 是因为这里必须使用[CourseContainerEntryFragment]所使用的ViewModel
+         * 但是[CourseContainerEntryFragment]的ViewModel根据使用场景不一样所用的依赖的ViewModel
+         * 也不一样
+         */
+        mCoursesViewModel = courseContainerEntryFragment.mCoursesViewModel
+        mNoCourseInviteViewModel = courseContainerEntryFragment.mNoCourseInviteViewModel
+        //获取生命周期与当前Fragment绑定的CoursePageViewModel
+        mCoursePageViewModel = ViewModelProviders.of(this,
+                CoursePageViewModel.DateViewModelFactory(mWeek)).get(CoursePageViewModel::class.java)
+        mCoursePageViewModel.nowWeek = mWeek
 
 
+        //获取了ViewModel之后进行一些初始化操作
         mBinding.coursesViewModel = mCoursesViewModel
         mBinding.coursePageViewModel = mCoursePageViewModel
 
@@ -119,6 +93,24 @@ class CourseFragment : BaseFragment() {
                 mCoursePageViewModel.getDate()
             }
         })
+
+        //根据当前课表Fragment被复用的状态，获取相应的课表视图
+        scheduleView = when (courseContainerEntryFragment.courseState) {
+            CourseContainerEntryFragment.CourseState.OrdinaryCourse, CourseContainerEntryFragment.CourseState.OtherCourse, CourseContainerEntryFragment.CourseState.TeacherCourse -> {
+                val mBinding = DataBindingUtil.inflate<CourseOrdinaryScheduleBinding>(LayoutInflater.from(context), R.layout.course_ordinary_schedule, course_schedule_container, false)
+                mBinding.coursePageViewModel = mCoursePageViewModel
+                mBinding.coursesViewModel = mCoursesViewModel
+                course_schedule_container.addView(mBinding.root)
+                mBinding.scheduleView
+            }
+            CourseContainerEntryFragment.CourseState.NoClassInvitationCourse -> {
+                val mBinding = DataBindingUtil.inflate<CourseNoClassInviteScheduleBinding>(LayoutInflater.from(context), R.layout.course_no_class_invite_schedule, course_schedule_container, false)
+                mBinding.noCourseInviteViewModel = mNoCourseInviteViewModel
+                mBinding.nowWeek = mWeek
+                course_schedule_container.addView(mBinding.root)
+                mBinding.scheduleView
+            }
+        }
 
         scheduleView.adapterChangeListener = {
             val position = scheduleView.adapter?.getHighLightPosition()

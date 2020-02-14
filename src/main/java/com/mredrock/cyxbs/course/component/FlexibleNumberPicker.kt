@@ -129,7 +129,7 @@ class FlexibleNumberPicker : NumberPicker {
         mClazz?.let {
             val paint = it.getDeclaredField("mSelectorWheelPaint").apply {
                 isAccessible = true
-            }.get(this) as android.graphics.Paint
+            }.get(this) as Paint
             paint.color = mSelectorWheelPaintColor
         }
     }
@@ -161,7 +161,7 @@ class FlexibleNumberPicker : NumberPicker {
      * if you use the reflection, you will get a warning. But this isn't a good method for a long time.
      * So we should find a good method.
      */
-    @SuppressLint("PrivateApi")
+    @SuppressLint("PrivateApi", "DiscouragedPrivateApi")
     private fun avoidWarningUsingReflection() {
         try {
             val cls = Class.forName("android.app.ActivityThread")

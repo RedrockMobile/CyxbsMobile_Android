@@ -14,7 +14,7 @@ import java.util.*
 /**
  * @author Jon
  * @date 2019/11/28 12:08
- * description：
+ * description：标记一天的时间
  */
 class TimeIdentificationView : View {
     //时间参数，固定“时”以上

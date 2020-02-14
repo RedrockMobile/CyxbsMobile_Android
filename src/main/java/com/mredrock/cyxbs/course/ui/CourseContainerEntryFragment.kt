@@ -45,14 +45,16 @@ class CourseContainerEntryFragment : BaseFragment() {
     override val openStatistics: Boolean
         get() = false
 
-    //如果是在获取老师课表下面值不为空
+    //当前课表Fragment的显示的状态
+    var courseState = CourseState.OrdinaryCourse
+
+    //如果是在获取老师课表下面两值不为空
     private var mOthersTeaNum: String? = null
         set(value) {
             if (value != null) {
                 field = value
                 courseState = CourseState.TeacherCourse
             }
-
         }
     private var mOthersTeaName: String? = null
         set(value) {
@@ -62,25 +64,8 @@ class CourseContainerEntryFragment : BaseFragment() {
             }
         }
 
-
-    //当前课表的显示的状态
-    var courseState = CourseState.OrdinaryCourse
-
-    // 当前课表是哪个账号的，如果为空则返回当前登陆账号
+    // 当前课表是哪个账号的，如果为空则表示在获取他人课表
     private var mStuNum: String? = null
-        set(value) {
-            field = if (value == null) {
-                accountService.getUserService().getStuNum()
-            } else {
-                courseState = CourseState.OtherCourse
-                value
-            }
-        }
-        get() = if (field == null) {
-            accountService.getUserService().getStuNum()
-        } else {
-            field
-        }
 
     //如果是没课约，这两个值不为空
     private var mStuNumList: ArrayList<String>? = null
@@ -120,6 +105,7 @@ class CourseContainerEntryFragment : BaseFragment() {
         ScheduleDetailDialogHelper(context!!)
     }
 
+    //账号服务
     private val accountService: IAccountService by lazy(LazyThreadSafetyMode.NONE) {
         ServiceManager.getService(IAccountService::class.java)
     }
@@ -176,24 +162,26 @@ class CourseContainerEntryFragment : BaseFragment() {
 
 
         /**
-         * 根据当前EntryFragment的状态来获取相应的ViewModel,以此可以加载不同的页面
+         * 在接收从其他模块传来数据时，当前Fragment的状态发生了改变，根据当前EntryFragment的状态
+         * 来获取相应的ViewModel,以此可以加载不同的页面，复用到不同的地方
          */
         when (courseState) {
-            //如果是没课约
-            CourseState.NoClassInvitationCourse -> {
-                mCoursesViewModel = ViewModelProviders.of(activity!!).get(CoursesViewModel::class.java)
-                mBinding.coursesViewModel = mCoursesViewModel
-                mNoCourseInviteViewModel = ViewModelProviders
-                        .of(this, NoCourseInviteViewModel
-                                .Factory(mStuNumList!!, mNameList!!))
-                        .get(NoCourseInviteViewModel::class.java)
-                mNoCourseInviteViewModel?.getCourses()
-            }
             //如果是普通课表
             CourseState.OrdinaryCourse -> {
+                //这里获取的ViewModel不同于其他几个，因为这这些数据需要跟随MainActivity的销毁才销毁
                 mCoursesViewModel = ViewModelProviders.of(activity!!).get(CoursesViewModel::class.java)
                 mBinding.coursesViewModel = mCoursesViewModel
                 context?.let { mCoursesViewModel.getSchedulesDataFromLocalThenNetwork(it) }
+            }
+            //如果是没课约
+            CourseState.NoClassInvitationCourse -> {
+                //没课约获取的ViewModel声明周期是跟随Fragment的，即时销毁
+                mCoursesViewModel = ViewModelProviders.of(this).get(CoursesViewModel::class.java)
+                mBinding.coursesViewModel = mCoursesViewModel
+                mNoCourseInviteViewModel = ViewModelProviders.of(this,
+                        NoCourseInviteViewModel.Factory(mStuNumList!!, mNameList!!))
+                        .get(NoCourseInviteViewModel::class.java)
+                mNoCourseInviteViewModel?.getCourses()
             }
             //如果是查询其他同学的课表
             CourseState.OtherCourse -> {
@@ -219,6 +207,8 @@ class CourseContainerEntryFragment : BaseFragment() {
             mWeeks = mRawWeeks.copyOf()
             mScheduleAdapter = ScheduleVPAdapter(mWeeks, childFragmentManager)
         }
+
+        //如果需要直接加载课表则直接加载课表，否则为了优化性能可以当需要的时候加载
         if (directLoadCourse == TRUE) {
             //给下方ViewPager添加适配器和绑定tab
             mBinding.vp.adapter = mScheduleAdapter
@@ -228,16 +218,13 @@ class CourseContainerEntryFragment : BaseFragment() {
         }
 
 
-        //上面获取到ViewModel后进行一些初始化操作
-        mCoursesViewModel.nowWeek.observe(this, Observer { nowWeek ->
-            // 跳转到当前周
-            mBinding.vp.currentItem = nowWeek ?: 0
-        })
+        //获取到ViewModel后进行一些初始化操作
+        mCoursesViewModel.nowWeek.observe(this, Observer { mBinding.vp.currentItem = it ?: 0 })
         mCoursesViewModel.toastEvent.observe(activity!!, Observer { str -> str?.let { CyxbsToast.makeText(activity!!, it, Toast.LENGTH_SHORT).show() } })
         mCoursesViewModel.longToastEvent.observe(activity!!, Observer { str -> str?.let { CyxbsToast.makeText(activity!!, it, Toast.LENGTH_LONG).show() } })
         mCoursesViewModel.isShowBackPresentWeek.observe(activity!!, Observer {
             /**
-             * 这里为什么要判空呢，因为[mCoursesViewModel.isShowBackPresentWeek]
+             * 这里为什么要判空呢，因为 mCoursesViewModel.isShowBackPresentWeek
              * 在切换黑夜模式的时候这个变量的回调会启动，但是这时候[course_current_course_week_select_container]
              * 还没有生成，进一步说在应用内开启黑夜模式因为会重启activity但是[mCoursesViewModel]没有
              */
@@ -303,8 +290,41 @@ class CourseContainerEntryFragment : BaseFragment() {
                 mBinding.vp.currentItem = it
             }
         }
+    }
 
 
+    /**
+     * 根据主页的fragment的滑动状态来设置当前头部显示效果
+     * @param state 从0到1，1表示BottomSheet完全展开
+     */
+    private fun settingFollowBottomSheet(state: Float) {
+        //如果lottie动画还在显示，那么就不现实周数头部，这样加载时更加纯净一点
+        if (course_lottie_load.visibility == View.VISIBLE) {
+            course_current_course_week_select_container.visibility = View.GONE
+        } else {
+            course_current_course_week_select_container.visibility = View.VISIBLE
+        }
+        if (course_header_select_content.visibility == View.GONE) {
+            course_current_course_container.alpha = 1 - state
+            course_current_course_week_select_container.alpha = state
+            if (state == 0f) {
+                course_header_select_content.visibility = View.GONE
+                course_header_show.visibility = View.VISIBLE
+                course_current_course_week_select_container.visibility = View.GONE
+            }
+        } else {
+            if (state == 0f) {
+                TransitionManager.beginDelayedTransition(fl, Slide().apply {
+                    slideEdge = Gravity.START
+                    duration = 200
+                })
+                course_header_select_content.visibility = View.GONE
+                course_header_show.visibility = View.VISIBLE
+                course_current_course_container.alpha = 1 - state
+                course_current_course_week_select_container.alpha = state
+                course_current_course_week_select_container.visibility = View.GONE
+            }
+        }
     }
 
 
@@ -364,70 +384,30 @@ class CourseContainerEntryFragment : BaseFragment() {
         }
     }
 
+    /**
+     * 如果没有直接加载课表ViewPager子页，这个可以用来通知加载
+     */
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun loadCoursePage(loadCourse: LoadCourse) {
-        if (loadCourse.isCloseLottie) {
-            course_lottie_load.visibility = View.GONE
-        } else {
-            course_lottie_load.visibility = View.VISIBLE
-            course_lottie_load.playAnimation()
-            course_lottie_load.speed = 2f
-            course_lottie_load.addAnimatorUpdateListener {
-                if (it.animatedFraction > 0.78) {
-                    course_lottie_load.pauseAnimation()
-                    if (accountService.getVerifyService().isLogin()) {
-                        //给下方ViewPager添加适配器和绑定tab
-                        mBinding.vp.adapter = mScheduleAdapter
-                        mBinding.tabLayout.setupWithViewPager(mBinding.vp)
-                        vp.visibility = View.GONE
-                        course_lottie_load.visibility = View.GONE
-                        course_current_course_week_select_container.visibility = View.VISIBLE
-                        vp.visibility = View.VISIBLE
-                    }
+        course_lottie_load.visibility = View.VISIBLE
+        course_lottie_load.playAnimation()
+        course_lottie_load.speed = 2f
+        course_lottie_load.addAnimatorUpdateListener {
+            if (it.animatedFraction > 0.78) {
+                course_lottie_load.pauseAnimation()
+                if (accountService.getVerifyService().isLogin()) {
+                    //给下方ViewPager添加适配器和绑定tab
+                    mBinding.vp.adapter = mScheduleAdapter
+                    mBinding.tabLayout.setupWithViewPager(mBinding.vp)
+                    course_lottie_load.visibility = View.GONE
+                    course_current_course_week_select_container.visibility = View.VISIBLE
                 }
             }
         }
     }
 
-
     /**
-     * 根据主页的fragment的滑动状态来设置当前头部显示效果
-     * @param state 从0到1，1表示BottomSheet完全展开
-     */
-    private fun settingFollowBottomSheet(state: Float) {
-        //如果lottie动画还在显示，那么就不现实周数头部，这样加载时更加纯净一点
-        if (course_lottie_load.visibility == View.VISIBLE) {
-            course_current_course_week_select_container.visibility = View.GONE
-        } else {
-            course_current_course_week_select_container.visibility = View.VISIBLE
-        }
-        if (course_header_select_content.visibility == View.GONE) {
-            course_current_course_container.alpha = 1 - state
-            course_current_course_week_select_container.alpha = state
-            if (state == 0f) {
-                course_header_select_content.visibility = View.GONE
-                course_header_show.visibility = View.VISIBLE
-                course_current_course_week_select_container.visibility = View.GONE
-            }
-        } else {
-            if (state == 0f) {
-                TransitionManager.beginDelayedTransition(fl, TransitionSet().apply {
-                    addTransition(Slide().apply {
-                        slideEdge = Gravity.START
-                        duration = 200
-                    })
-                })
-                course_header_select_content.visibility = View.GONE
-                course_header_show.visibility = View.VISIBLE
-                course_current_course_container.alpha = 1 - state
-                course_current_course_week_select_container.alpha = state
-                course_current_course_week_select_container.visibility = View.GONE
-            }
-        }
-    }
-
-    /**
-     * main模块里BottomSheet滑动对应的头部变化
+     * 接收main模块里BottomSheet滑动对应的头部变化
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun bottomSheetSlideStateReceive(bottomSheetStateEvent: BottomSheetStateEvent) {
