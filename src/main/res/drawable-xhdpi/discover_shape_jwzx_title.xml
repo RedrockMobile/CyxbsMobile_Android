@@ -4,5 +4,5 @@
     tools:ignore="ResourceName">
     <corners android:bottomLeftRadius="16dp"
         android:topRightRadius="16dp"/>
-    <solid android:color="#AFD2FB"/>
+    <solid android:color="@color/discoverAcademicOnlineColorsBackground"/>
 </shape>

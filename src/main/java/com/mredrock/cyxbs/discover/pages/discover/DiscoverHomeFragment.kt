@@ -118,7 +118,7 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>() {
             text = info
             maxLines = 1
             overScrollMode = OVER_SCROLL_IF_CONTENT_SCROLLS
-            textColor = R.color.levelTwoFontColor
+            textColor = R.color.menuFontColorFound
             setOnClickListener {
                 ARouter.getInstance().build(DISCOVER_NEWS_ITEM).withString("id", id).navigation()
             }
