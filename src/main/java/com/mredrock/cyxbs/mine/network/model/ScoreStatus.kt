@@ -20,5 +20,15 @@ data class ScoreStatus(
         @SerializedName("percent")
         var percent: String
 ) : Serializable {
+    /**
+         "integral": 1410,    积分
+        "check_in_days": 10,   连续签到天数
+        "is_check_today": 1,   是否今天已签到，1为是，0为否
+        "week_info": "0011111",
+                                本周签到信息，从左到右依次为周日，周六....周一。1为签到，0为未签到
+        "rank": 8,              改天第几个签到
+        "percent": "100%"       连续签到天数超过了100%的人，   分母为连续签到天数大于1的人
+     */
     val isChecked get() = checkSign == 1
 }
+

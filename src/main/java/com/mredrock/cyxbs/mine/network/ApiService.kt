@@ -17,7 +17,7 @@ interface ApiService {
      * 获取个人详细资料
      */
     @FormUrlEncoded
-    @POST("/app/index.php/Home/Person/search")
+    @POST("/app/index.php/Home/Person/Search")
     fun getPersonInfo(@Field("stuNum") stuNum: String, @Field("idNum") idNum: String): Observable<RedrockApiWrapper<UserLocal>>
 
     /**
@@ -28,6 +28,9 @@ interface ApiService {
     fun uploadSocialImg(@Part("stunum") stunum: RequestBody,
                         @Part file: MultipartBody.Part): Observable<RedrockApiWrapper<UploadImgResponse>>
 
+    /**
+     * 上传用户信息
+     */
     @FormUrlEncoded
     @POST("/app/index.php/Home/Person/setInfo")
     fun updateUserInfo(@Field("stuNum") stuNum: String,
@@ -39,6 +42,9 @@ interface ApiService {
                        @Field("photo_thumbnail_src") photo_thumbnail_src: String,
                        @Field("photo_src") photo_src: String): Observable<RedrockApiStatus>
 
+    /**
+     * 上传图片
+     */
     @FormUrlEncoded
     @POST("/app/index.php/Home/Person/setInfo")
     fun updateUserImage(@Field("stuNum") stuNum: String,
@@ -89,12 +95,19 @@ interface ApiService {
     fun getQANumber(@Field("stunum") stuNum: String,
                     @Field("idnum") idNum: String): Observable<RedrockApiWrapper<QANumber>>
 
+    /**
+     * 获取已发布的问题
+     */
     @FormUrlEncoded
     @POST("app/index.php/QA/User/question")
     fun getAskPostedList(@Field("stunum") stuNum: String,
                          @Field("idnum") idNum: String,
                          @Field("page") page: Int,
                          @Field("size") size: Int): Observable<RedrockApiWrapper<List<AskPosted>>>
+
+    /**
+     * 获取已发布的回答
+     */
     @FormUrlEncoded
     @POST("app/index.php/QA/User/answer")
     fun getAnswerPostedList(@Field("stunum") stuNum: String,
@@ -102,6 +115,10 @@ interface ApiService {
                             @Field("page") page: Int,
                             @Field("size") size: Int): Observable<RedrockApiWrapper<List<AnswerPosted>>>
 
+    /**
+     * 获取用户发出的评论
+     *
+     */
     @FormUrlEncoded
     @POST("app/index.php/QA/User/comment")
     fun getCommentList(@Field("stunum") stuNum: String,
@@ -109,6 +126,10 @@ interface ApiService {
                        @Field("page") page: Int,
                        @Field("size") size: Int): Observable<RedrockApiWrapper<List<Comment>>>
 
+    /**
+     * 获取别人对用户的评论
+     * 注：即用户的回答，别人在下面评论
+     */
     @FormUrlEncoded
     @POST("app/index.php/QA/User/reComment")
     fun getCommentReceivedList(@Field("stunum") stuNum: String,
@@ -116,29 +137,32 @@ interface ApiService {
                                @Field("page") page: Int,
                                @Field("size") size: Int): Observable<RedrockApiWrapper<List<CommentReceived>>>
 
+//    /**
+//     * 草稿箱部分
+//     */
+//    @FormUrlEncoded
+//    @POST("app/index.php/QA/User/deleteItemInDraft")
+//    fun deleteDraft(@Field("stunum") stuNum: String,
+//                    @Field("idnum") idNum: String,
+//                    @Field("id") id: String): Observable<RedrockApiStatus>
+//
+//    @FormUrlEncoded
+//    @POST("app/index.php/QA/Answer/remark")
+//    fun commentAnswer(@Field("stuNum") stuNum: String,
+//                      @Field("idNum") idNum: String,
+//                      @Field("answer_id") aid: String,
+//                      @Field("description") content: String): Observable<RedrockApiStatus>
+//
+//    @FormUrlEncoded
+//    @POST("app/index.php/QA/User/updateItemInDraft")
+//    fun refreshDraft(@Field("stunum") stuNum: String,
+//                     @Field("idnum") idNum: String,
+//                     @Field("description") content: String,
+//                     @Field("id") draftId: String): Observable<RedrockApiStatus>
+
     /**
-     * 草稿箱部分
+     * 提问草稿
      */
-    @FormUrlEncoded
-    @POST("app/index.php/QA/User/deleteItemInDraft")
-    fun deleteDraft(@Field("stunum") stuNum: String,
-                    @Field("idnum") idNum: String,
-                    @Field("id") id: String): Observable<RedrockApiStatus>
-
-    @FormUrlEncoded
-    @POST("app/index.php/QA/Answer/remark")
-    fun commentAnswer(@Field("stuNum") stuNum: String,
-                      @Field("idNum") idNum: String,
-                      @Field("answer_id") aid: String,
-                      @Field("description") content: String): Observable<RedrockApiStatus>
-
-    @FormUrlEncoded
-    @POST("app/index.php/QA/User/updateItemInDraft")
-    fun refreshDraft(@Field("stunum") stuNum: String,
-                     @Field("idnum") idNum: String,
-                     @Field("description") content: String,
-                     @Field("id") draftId: String): Observable<RedrockApiStatus>
-
     @FormUrlEncoded
     @POST("wxapi/magipoke-draft/User/getDraftQuestionList")
     fun getAskDraftList(@Field("stuNum") stuNum: String,
@@ -146,6 +170,9 @@ interface ApiService {
                      @Field("page") page: Int,
                      @Field("size") size: Int): Observable<RedrockApiWrapper<List<AskDraft>>>
 
+    /**
+     * 回答草稿
+     */
     @FormUrlEncoded
     @POST("wxapi/magipoke-draft/User/getDraftAnswerList")
     fun getAnswerDraftList(@Field("stuNum") stuNum: String,

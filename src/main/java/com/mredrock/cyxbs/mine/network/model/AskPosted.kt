@@ -20,3 +20,11 @@ data class AskPosted(
         @SerializedName("type")
         val type: String
 ) : Serializable
+/**
+"question_id": 1244,
+"title": "abd",
+"description": "aja",
+"integral": 1,
+"type": "未解决",
+"disappear_at": "2020-02-15 12:40:00"
+ */
