@@ -43,7 +43,7 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/main_main_bottom_navigation_height"
             app:elevation="0dp"
-            android:background="@color/main_main_bottom_navigation_view_background"
+            android:background="@color/curriculum_background_color"
             app:itemTextColor="@color/main_selector_main_bottom_navigation_text"
             app:menu="@menu/main_main_nav_menu" />
     </LinearLayout>

@@ -262,7 +262,7 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
                 commit()
             }
         } else {
-            changeFragment(discoverFragment, 0, nav_main.menu[0])
+            nav_main.selectedItemId = R.id.explore
             courseFragment.arguments = Bundle().apply {
                 putString(COURSE_DIRECT_LOAD, FALSE)
             }
