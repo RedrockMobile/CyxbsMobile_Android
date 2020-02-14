@@ -25,7 +25,7 @@
         <shape>
             <corners android:topRightRadius="@dimen/common_dialog_fillet"
                 android:topLeftRadius="@dimen/common_dialog_fillet"/>
-            <solid android:color="#ffffff"/>
+            <solid android:color="@color/whiteBackground"/>
         </shape>
     </item>
 </layer-list>

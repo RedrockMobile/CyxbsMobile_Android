@@ -8,13 +8,13 @@
           并以模块名为前缀-->
 
     <!--    整体灰色背景-->
-    <color name="windowBackground" tools:ignore="ResourceName">#F2F3F8</color>
+    <color name="windowBackground" tools:ignore="ResourceName">#000000</color>
     <!--    整体淡灰二级背景-->
-    <color name="secondaryWindowBackground" tools:ignore="ResourceName">#F8F9FC</color>
-    <color name="chosenBackground" tools:ignore="ResourceName">#E5EAF2</color>
+    <color name="secondaryWindowBackground" tools:ignore="ResourceName">#1D1D1D</color>
+    <color name="chosenBackground" tools:ignore="ResourceName">#1D1D1D</color>
 
     <!--    纯白色背景和纯白色字体-->
-    <color name="whiteBackground" tools:ignore="ResourceName">#ffffff</color>
+    <color name="whiteBackground" tools:ignore="ResourceName">#000000</color>
     <color name="whiteFontColor" tools:ignore="ResourceName">#ffffff</color>
 
     <color name="transparentBackground" tools:ignore="ResourceName">#00000000</color>
@@ -22,39 +22,37 @@
 
     <!--    主要字体颜色分以下四种，下列按照蓝色由深到浅排序，要用自取-->
     <!--    一级字体颜色-->
-    <color name="levelOneFontColor" tools:ignore="ResourceName">#112C54</color>
+    <color name="levelOneFontColor" tools:ignore="ResourceName">#ffffff</color>
     <!--    二级字体颜色-->
-    <color name="levelTwoFontColor" tools:ignore="ResourceName">#00ff00</color>
+    <color name="levelTwoFontColor" tools:ignore="ResourceName">#ffffff</color>
     <!--    三级字体颜色-->
-    <color name="levelThreeFontColor" tools:ignore="ResourceName">#193866</color>
+    <color name="levelThreeFontColor" tools:ignore="ResourceName">#ffffff</color>
     <!--    四级字体颜色-->
-    <color name="levelFourFontColor" tools:ignore="DuplicateDefinition,ResourceName">#2A4E84</color>
+    <color name="levelFourFontColor" tools:ignore="DuplicateDefinition,ResourceName">#ffffff</color>
 
-    <color name="courseDeleteButtonTextColor" tools:ignore="ResourceName">#7CA3DF</color>
+    <color name="courseDeleteButtonTextColor" tools:ignore="ResourceName">#ffffff</color>
 
 
     <!--    底部tab未聚焦字体颜色-->
-    <color name="unFocusedFontColor" tools:ignore="ResourceName">#AABCD8</color>
+    <color name="unFocusedFontColor" tools:ignore="ResourceName">#5b585c</color>
     <!--    底部tab聚焦字体颜色-->
-    <color name="focusedFontColor" tools:ignore="ResourceName">#2923D2</color>
+    <color name="focusedFontColor" tools:ignore="ResourceName">#465FFF</color>
 
 
     <!--    课表可上拉下拉标识小块背景-->
-    <color name="courseTableDragIndicatorBlockColor" tools:ignore="ResourceName">#E2EDFB</color>
+    <color name="courseTableDragIndicatorBlockColor" tools:ignore="ResourceName">#000000</color>
     <!--    课表标识当天阴影-->
-    <color name="courseIdentifiesTheCurrentShadowColor" tools:ignore="ResourceName">#E8F0FC</color>
+    <color name="courseIdentifiesTheCurrentShadowColor" tools:ignore="ResourceName">#26000101</color>
     <!--    课表课程色块颜色-->
-    <color name="morningCourseColor" tools:ignore="ResourceName">#F9E7D8</color>
-    <color name="afternoonCourseColor" tools:ignore="ResourceName">#F9E3E4</color>
-    <color name="eveningCourseColor" tools:ignore="ResourceName">#DDE3F8</color>
+    <color name="morningCourseColor" tools:ignore="ResourceName">#26FFCCA1</color>
+    <color name="afternoonCourseColor" tools:ignore="ResourceName">#26FF979B</color>
+    <color name="eveningCourseColor" tools:ignore="ResourceName">#269BB2FF</color>
     <!--    课程色块内的字体颜色-->
-    <color name="morningCourseTextColor" tools:ignore="ResourceName">#FF8015</color>
-    <color name="afternoonCourseTextColor" tools:ignore="ResourceName">#FF6262</color>
-    <color name="eveningCourseTextColor" tools:ignore="ResourceName">#4066EA</color>
+    <color name="morningCourseTextColor" tools:ignore="ResourceName">#F0F0F2</color>
+    <color name="afternoonCourseTextColor" tools:ignore="ResourceName">#F0F0F2</color>
+    <color name="eveningCourseTextColor" tools:ignore="ResourceName">#F0F0F2</color>
     <!--    标识今天的课程的背景阴影-->
     <color name="todayLogoBackgroundColor" tools:ignore="ResourceName">#93E8F0FC</color>
-    <!--    备忘灰色条纹-->
-    <color name="memoGrayStripes" tools:ignore="ResourceName">#E8EBEF</color>
 
     <color name="courseAffairYouMightRecycleItemBackgroudColor" tools:ignore="ResourceName">#99F2F3F7</color>
 
@@ -78,7 +76,7 @@
     </color>
 
     <!--    添加事务时标题-->
-    <color name="transactionHeading" tools:ignore="ResourceName">#122D55</color>
+    <color name="transactionHeading" tools:ignore="ResourceName">#ffffff</color>
     <!--    添加事务时周数选择时，点击后字体颜色-->
     <color name="selectFontColorForTransactionWeeks" tools:ignore="ResourceName">#FFA192</color>
 
@@ -170,7 +168,13 @@
     <color name="course_affair_bubble_color" tools:ignore="ResourceName">#DFE6FF</color>
 
     <!--    退出编辑dialog二级字体颜色-->
-    <color name="dialog_exit_second_line_text_color" tools:ignore="ResourceName">#2A4E84</color>
+    <color name="dialog_exit_second_line_text_color" tools:ignore="MissingDefaultResource,ResourceName">#2A4E84</color>
+
+    <color name="curriculum_background_color" tools:ignore="ResourceName">#2D2D2D</color>
+
+    <color name="transaction_background_stripe_color" tools:ignore="ResourceName">#4d4b4c</color>
+
+    <color name="main_bottom_tab_un_select" tools:ignore="ResourceName">#5A5A5A</color>
 
 </resources>
 

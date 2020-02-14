@@ -183,5 +183,12 @@
     <!--    邮问积分说明最下面的小字颜色-->
     <color name="qa_dialog_qa_reward_description_bottom_text_color" tools:ignore="ResourceName">#ABBCD8</color>
 
+    <!--课表背景-->
+    <color name="curriculum_background_color" tools:ignore="ResourceName">#ffffff</color>
+
+    <!--事务备忘条纹-->
+    <color name="transaction_background_stripe_color" tools:ignore="ResourceName">#FFE4E7EC</color>
+
+    <color name="main_bottom_tab_un_select" tools:ignore="ResourceName">#a9bbd7</color>
 </resources>
 
