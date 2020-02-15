@@ -39,7 +39,8 @@
         android:textSize="13sp"
         app:layout_constraintBottom_toTopOf="@+id/tv_title"
         app:layout_constraintStart_toEndOf="@id/iv_avatar"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toTopOf="@id/iv_avatar"
+        android:paddingBottom="6dp"
         tools:text="刘童鞋" />
 
     <androidx.appcompat.widget.AppCompatTextView
@@ -48,9 +49,10 @@
         android:layout_height="wrap_content"
         android:textColor="@color/qa_question_item_reward_color"
         android:textSize="11sp"
+        android:paddingBottom="6dp"
         app:layout_constraintBottom_toBottomOf="@+id/tv_nickname"
         app:layout_constraintEnd_toStartOf="@id/gl_question_end"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toTopOf="@id/tv_nickname"
         tools:text="2019.8.22" />
 
     <androidx.appcompat.widget.AppCompatTextView
@@ -81,12 +83,12 @@
         app:layout_constraintTop_toBottomOf="@id/tv_title" />
 
     <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/tv_praise_count"
+        android:id="@+id/tv_reward_count"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="18dp"
         android:alpha="0.67"
-        android:drawableStart="@drawable/qa_ic_praise_count"
+        android:drawableStart="@drawable/qa_ic_reward_count"
         android:drawablePadding="4dp"
         android:gravity="center_vertical"
         android:textColor="@color/qa_question_bottom_count_color"
@@ -114,7 +116,7 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_marginTop="21dp"
-        android:alpha="0.3"
+        android:alpha="0.1"
         android:background="@color/qa_question_recycler_item_divide_line_color"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

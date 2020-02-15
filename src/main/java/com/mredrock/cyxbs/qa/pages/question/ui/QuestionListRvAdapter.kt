@@ -47,9 +47,10 @@ class QuestionListRvAdapter(private val fragment: Fragment) : BaseEndlessRvAdapt
                 iv_avatar.setAvatarImageFromUrl(data.photoThumbnailSrc)
                 tv_nickname.setNicknameTv(data.nickname, data.isEmotion && !data.isAnonymous, data.isMale)
                 tv_title.text = data.title
-                tv_praise_count.text = data.reward.toString()
+                tv_reward_count.text = data.reward.toString()
                 tv_answer_count.text = data.answerNum.toString()
                 tv_view_count.text = data.viewCount.toString()
+                tv_publish_at.text = data.createdAt.split(" ")[0].replace("-", "/")
             }
         }
 

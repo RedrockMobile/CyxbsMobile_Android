@@ -4,12 +4,14 @@ import android.app.Activity
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.KeyEvent
 import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.google.gson.Gson
@@ -34,6 +36,7 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.jetbrains.anko.support.v4.startActivityForResult
+import org.jetbrains.anko.wrapContent
 import top.limuyang2.photolibrary.activity.LPhotoPickerActivity
 
 //todo 这个界面赶时间写得有点乱，记得优化一下
@@ -75,6 +78,9 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
                 setResult(Activity.RESULT_OK, data)
                 finish()
             }
+        }
+        viewModel.backAndFinishActivityEvent.observeNotNull {
+            finish()
         }
     }
 
@@ -128,7 +134,7 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
     }
 
     private fun initImageAddView() {
-        nine_grid_view.addView(createImageView(BitmapFactory.decodeResource(resources, R.drawable.qa_ic_quiz_grid_add_img)))
+        nine_grid_view.addView(ContextCompat.getDrawable(this, R.drawable.qa_quiz_add_picture_empty)?.let { createImageViewFromVector(it) })
         nine_grid_view.setOnItemClickListener { _, index ->
             if (index == nine_grid_view.childCount - 1) {
                 this@QuizActivity.selectImageFromAlbum(MAX_SELECTABLE_IMAGE_COUNT, viewModel.imageLiveData.value)
@@ -184,6 +190,12 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
                 set(viewModel.editingImgPos, data.getStringExtra(ViewImageActivity.EXTRA_NEW_PATH))
             })
         }
+    }
+
+    private fun createImageViewFromVector(drawable: Drawable) = ImageView(this).apply {
+        scaleType = ImageView.ScaleType.CENTER
+        background = ContextCompat.getDrawable(this@QuizActivity, R.drawable.qa_quiz_select_pic_empty_background)
+        setImageDrawable(drawable)
     }
 
     private fun createImageView(bitmap: Bitmap) = ImageView(this).apply {
@@ -252,7 +264,6 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
                 , confirmListener = View.OnClickListener {
             saveDraft()
             dismiss()
-            finish()
         }
                 , cancelListener = View.OnClickListener {
             dismiss()

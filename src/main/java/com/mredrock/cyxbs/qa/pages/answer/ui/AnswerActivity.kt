@@ -69,6 +69,9 @@ class AnswerActivity : BaseViewModelActivity<AnswerViewModel>() {
                 finish()
             }
         }
+        viewModel.backAndFinishActivityEvent.observeNotNull {
+            finish()
+        }
     }
 
     private fun initToolbar() {
@@ -258,7 +261,6 @@ class AnswerActivity : BaseViewModelActivity<AnswerViewModel>() {
                 , confirmListener = View.OnClickListener {
             saveDraft()
             dismiss()
-            finish()
         }
                 , cancelListener = View.OnClickListener {
             dismiss()

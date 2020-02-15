@@ -22,9 +22,12 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
             android:orientation="vertical">
-
-
-            <include
+<!--            <ImageView-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="1dp"-->
+<!--                android:alpha="0.1"-->
+<!--                android:background="@color/qa_quiz_toolbar_divider_line_color"/>-->
+              <include
                 android:id="@+id/layout_quiz_tag"
                 layout="@layout/qa_activity_quiz_select_type_layout" />
 
@@ -37,6 +40,7 @@
                 android:layout_marginEnd="16dp"
                 android:background="@drawable/qa_quiz_new_text_background"
                 android:gravity="center_vertical"
+                android:textStyle="bold"
                 android:hint="@string/qa_question_new_question_title_hint"
                 android:paddingStart="21dp"
                 android:paddingTop="10dp"

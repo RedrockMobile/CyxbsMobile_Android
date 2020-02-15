@@ -32,6 +32,7 @@ import java.io.File
 class AnswerViewModel(var qid: String) : BaseViewModel() {
     val imageLiveData = MutableLiveData<ArrayList<String>>()
     val backAndRefreshPreActivityEvent = SingleLiveEvent<Boolean>()
+    val backAndFinishActivityEvent = SingleLiveEvent<Boolean>()
 
     var editingImgPos = -1
         private set
@@ -92,17 +93,20 @@ class AnswerViewModel(var qid: String) : BaseViewModel() {
         if (content.isNullOrBlank()) {
             return
         }
-        val stuNum = ServiceManager.getService(IAccountService::class.java).getUserService().getStuNum()
         val s = "{\"title\":\"$content\"${getImgListStrings()}}"
         val json = Base64.encodeToString(s.toByteArray(), Base64.DEFAULT)
         ApiGenerator.getApiService(ApiService::class.java)
-                .addItemToDraft(stuNum, "answer", json, qid)
+                .addItemToDraft("answer", json, qid)
                 .setSchedulers()
                 .checkError()
-                .safeSubscribeBy(
-                        onError = {
-                            toastEvent.value = R.string.qa_quiz_save_failed
-                        })
+                .doOnError {
+                    toastEvent.value = R.string.qa_quiz_save_success
+                    backAndFinishActivityEvent.value = true
+                }
+                .safeSubscribeBy {
+                    toastEvent.value = R.string.qa_quiz_save_failed
+                    backAndFinishActivityEvent.value = true
+                }
                 .lifeCycle()
     }
 
@@ -111,24 +115,26 @@ class AnswerViewModel(var qid: String) : BaseViewModel() {
             deleteDraft(id)
             return
         }
-        val stuNum = ServiceManager.getService(IAccountService::class.java).getUserService().getStuNum()
         val s = "{\"title\":\"$content\"${getImgListStrings()}}"
         val json = Base64.encodeToString(s.toByteArray(), Base64.DEFAULT)
         ApiGenerator.getApiService(ApiService::class.java)
-                .updateDraft(stuNum, json, id)
+                .updateDraft(json, id)
                 .setSchedulers()
                 .checkError()
-                .safeSubscribeBy(
-                        onError = {
-                            toastEvent.value = R.string.qa_quiz_save_failed
-                        })
+                .doOnError {
+                    toastEvent.value = R.string.qa_quiz_save_failed
+                    backAndFinishActivityEvent.value = true
+                }
+                .safeSubscribeBy {
+                    toastEvent.value = R.string.qa_quiz_save_success
+                    backAndFinishActivityEvent.value = true
+                }
                 .lifeCycle()
     }
 
     fun deleteDraft(id: String) {
-        val stuNum = ServiceManager.getService(IAccountService::class.java).getUserService().getStuNum()
         ApiGenerator.getApiService(ApiService::class.java)
-                .deleteDraft(stuNum, id)
+                .deleteDraft(id)
                 .setSchedulers()
                 .checkError()
                 .safeSubscribeBy()

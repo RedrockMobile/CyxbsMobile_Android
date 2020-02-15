@@ -144,23 +144,20 @@ interface ApiService {
     /**
      * 草稿箱
      */
-    @POST("app/index.php/QA/User/addItemInDraft")
+    @POST("wxapi/magipoke-draft/User/addItemInDraft")
     @FormUrlEncoded
-    fun addItemToDraft(@Field("stunum") stuNum: String,
-                       @Field("type") type: String,
+    fun addItemToDraft(@Field("type") type: String,
                        @Field("content") content: String,
                        @Field("target_id") id: String): Observable<RedrockApiStatus>
 
-    @POST("app/index.php/QA/User/updateItemInDraft")
+    @POST("wxapi/magipoke-draft/User/updateItemInDraft")
     @FormUrlEncoded
-    fun updateDraft(@Field("stunum") stuNum: String,
-                    @Field("content") content: String,
+    fun updateDraft(@Field("content") content: String,
                     @Field("id") id: String): Observable<RedrockApiStatus>
 
-    @POST("app/index.php/QA/User/deleteItemInDraft")
+    @POST("wxapi/magipoke-draft/User/deleteItemInDraft")
     @FormUrlEncoded
-    fun deleteDraft(@Field("stunum") stuNum: String,
-                    @Field("id") id: String): Observable<RedrockApiStatus>
+    fun deleteDraft(@Field("id") id: String): Observable<RedrockApiStatus>
 
     @POST("app/index.php/QA/Question/addView")
     @FormUrlEncoded

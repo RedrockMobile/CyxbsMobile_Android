@@ -1,7 +1,6 @@
 package com.mredrock.cyxbs.qa.pages.main
 
 import android.content.Intent
-import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,6 +10,8 @@ import com.alibaba.android.arouter.facade.annotation.Route
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.config.QA_ENTRY
 import com.mredrock.cyxbs.common.event.AskLoginEvent
+import com.mredrock.cyxbs.common.service.ServiceManager
+import com.mredrock.cyxbs.common.service.account.IAccountService
 import com.mredrock.cyxbs.common.ui.BaseFragment
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.bean.Question
@@ -42,13 +43,12 @@ class QuestionContainerFragment : BaseFragment(), View.OnClickListener {
         root.vp_question.offscreenPageLimit = if (BaseApp.isLogin) 5 else 0
         root.tl_category.apply {
             setupWithViewPager(root.vp_question)
-            setSelectedTabIndicatorColor(Color.parseColor(context.getString(R.string.qa_question_tab_indicator_color)))
             setSelectedTabIndicator(R.drawable.qa_question_tab_indicator)
 
         }
 
         root.btn_ask_question.setOnClickListener {
-            if (BaseApp.isLogin) {
+            if (ServiceManager.getService(IAccountService::class.java).getVerifyService().isLogin()) {
                 QuizActivity.activityStart(this@QuestionContainerFragment, "学习", REQUEST_LIST_REFRESH_ACTIVITY)
             } else {
                 EventBus.getDefault().post(AskLoginEvent("请先登陆才能使用掌邮哦~"))

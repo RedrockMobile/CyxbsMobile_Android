@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="qa_tab_selected_color">#15315B</color>
-    <color name="qa_tab_selected_indicator_color">#15315B</color>
-    <color name="qa_tab_unselected_color">#777777</color>
     <color name="qa_tab_background">#fefefe</color>
     <color name="qa_quiz_fab_color">#7195fa</color>
     <color name="qa_question_item_shadow_color">#0d000000</color>
@@ -54,7 +51,6 @@
     <color name="qa_quiz_divider_gap_color">#14999999</color>
     <color name="qa_quiz_content_left_count_tv_color">#66000000</color>
     <color name="qa_quiz_content_edt_color">#b3000000</color>
-    <color name="qa_quiz_content_edt_hint_color">#b3999999</color>
     <color name="qa_quiz_divider_color">#26000000</color>
     <color name="qa_quiz_title_left_count_tv_color">#66000000</color>
     <color name="qa_quiz_title_edt_color">#d9000000</color>

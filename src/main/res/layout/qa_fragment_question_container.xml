@@ -48,7 +48,7 @@
             android:alpha="0.65"
             android:text="第十一周 周二"
             android:textColor="@color/qa_question_current_time_color"
-            android:textSize="8sp"
+            android:textSize="10sp"
             app:layout_constraintStart_toStartOf="@id/gl_tv_start"
             app:layout_constraintTop_toBottomOf="@id/gl_tv_time_top" />
 
@@ -57,7 +57,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/qa_fragment_head_title"
-            android:textColor="@color/levelTwoFontColor"
+            android:textColor="@color/qa_main_title"
             android:textSize="34sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="@id/gl_tv_start"
@@ -86,7 +86,7 @@
             app:layout_constraintTop_toBottomOf="@id/tv_title"
             app:tabBackground="@android:color/transparent"
             app:tabGravity="fill"
-            app:tabIndicatorColor="@color/qa_tab_selected_indicator_color"
+            app:tabIndicatorColor="@color/qa_question_tab_indicator_color"
             app:tabIndicatorFullWidth="false"
             app:tabIndicatorHeight="3dp"
             app:tabMode="fixed"
@@ -99,7 +99,7 @@
             android:layout_height="0dp"
             android:layout_marginTop="20dp"
             android:layout_weight="1"
-            app:cardBackgroundColor="#F8F9FC"
+            app:cardBackgroundColor="@color/qa_question_list_color"
             app:cardCornerRadiusUpperLeft="22dp"
             app:cardCornerRadiusUpperRight="22dp"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
@@ -107,7 +107,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tl_category"
-            app:shadowFlags="bottom" />
+            app:shadowColor="@color/qa_question_list_color"/>
 
         <androidx.viewpager.widget.ViewPager
             android:id="@+id/vp_question"
