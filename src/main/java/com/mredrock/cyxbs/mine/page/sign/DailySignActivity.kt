@@ -7,11 +7,13 @@ import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.ImageView
 import android.widget.Space
+import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.Observer
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.mredrock.cyxbs.common.component.CommonDialogFragment
 import com.mredrock.cyxbs.common.config.MINE_CHECK_IN
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.extensions.*
@@ -66,9 +68,7 @@ class DailySignActivity(override val viewModelClass: Class<DailyViewModel> = Dai
     }
 
     private val adapter: ProductAdapter by lazy {
-        ProductAdapter{
-            viewModel.exchangeProduct(it)
-        }
+        ProductAdapter()
     }
 
 
@@ -103,6 +103,13 @@ class DailySignActivity(override val viewModelClass: Class<DailyViewModel> = Dai
                 toast("寒暑假不可签到")
             }
         })
+        viewModel.exchangeEvent.observe(this, Observer {
+            if (it == true) {
+                toast("兑换成功， 如果是实体物品，请携带相关证件前往红岩网校工作站领取奖品")
+            } else {
+                toast("兑换失败")
+            }
+        })
 
         mine_store_myproduct.setOnClickListener {
             startActivity<MyProductActivity>()
@@ -113,10 +120,44 @@ class DailySignActivity(override val viewModelClass: Class<DailyViewModel> = Dai
         mine_iv_empty_product.gone()
     }
 
+    @SuppressLint("SetTextI18n")
     private fun initView() {
         mine_daily_sign.setOnClickListener { checkIn() }
 
 
+        adapter.onExChangeClick = { product ->
+            val integral = viewModel.status.value?.integral
+
+            integral?.let {
+                if (integral >= product.integral.toInt()) {
+                    CommonDialogFragment().apply {
+                        initView(
+                                containerRes = R.layout.mine_layout_dialog_exchange,
+                                positiveString = "确认兑换",
+                                onPositiveClick = {
+                                    viewModel.exchangeProduct(product)
+                                    dismiss()
+                                },
+                                onNegativeClick = { dismiss() },
+                                elseFunction = {
+                                    it.findViewById<TextView>(R.id.mine_tv_exchange_for_sure_content).text = "这将消耗您的${product.integral}个积分，仍然要兑换吗？"
+                                }
+                        )
+                    }.show(supportFragmentManager, "exchange")
+                } else {
+                    CommonDialogFragment().apply {
+                        initView(
+                                containerRes = R.layout.mine_layout_dialog_exchange,
+                                positiveString = "确认",
+                                onPositiveClick = { dismiss() },
+                                elseFunction = {
+                                    it.findViewById<TextView>(R.id.mine_tv_exchange_for_sure_content).text = "积分不足"
+                                }
+                        )
+                    }.show(supportFragmentManager, "lack of integral")
+                }
+            }
+        }
         mine_store_rv.adapter = adapter
 
         mine_store_rv.addItemDecoration(SpaceDecoration(dp2px(8f)))

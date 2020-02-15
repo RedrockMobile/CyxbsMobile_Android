@@ -15,7 +15,9 @@ import com.mredrock.cyxbs.mine.network.model.Product
 /**
  * Created by roger on 2019/11/28
  */
-class ProductAdapter(private val onExChangeClick: (Product) -> Unit) : ListAdapter<Product, ProductAdapter.ProductViewHolder>(Product.DIFF_CALLBACK) {
+class ProductAdapter : ListAdapter<Product, ProductAdapter.ProductViewHolder>(Product.DIFF_CALLBACK) {
+
+    var onExChangeClick: ((Product) -> Unit)? = null
 
     class ProductViewHolder(
             parent: ViewGroup
@@ -30,7 +32,7 @@ class ProductAdapter(private val onExChangeClick: (Product) -> Unit) : ListAdapt
         private val exchange = itemView.findViewById<Button>(R.id.mine_sign_store_item_btn_exchange)
 
         @SuppressLint("SetTextI18n")
-        fun bind(product: Product, onExChangeClick: (Product) -> Unit) {
+        fun bind(product: Product, onExChangeClick: ((Product) -> Unit)?) {
             //只有随机高度
             val param = iv.layoutParams
             param.height = (Math.random() * 200 + 200).toInt()
@@ -41,7 +43,7 @@ class ProductAdapter(private val onExChangeClick: (Product) -> Unit) : ListAdapt
             integral.text = product.integral
             iv.setImageFromUrl(product.src)
             exchange.setOnClickListener {
-                onExChangeClick.invoke(product)
+                onExChangeClick?.invoke(product)
             }
         }
     }

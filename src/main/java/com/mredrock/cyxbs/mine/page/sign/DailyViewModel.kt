@@ -49,6 +49,11 @@ class DailyViewModel : BaseViewModel() {
     val isInVacation: LiveData<Boolean>
         get() = _isInVacation
 
+    //商品兑换的事件，兑换成功为true，兑换失败为false
+    private val _exchangeEvent = SingleLiveEvent<Boolean>()
+    val exchangeEvent: LiveData<Boolean>
+        get() = _exchangeEvent
+
     private var page = 1
 
     fun loadAllData() {
@@ -106,6 +111,11 @@ class DailyViewModel : BaseViewModel() {
     fun exchangeProduct(product: Product) {
         apiServiceForSign.exchangeProduct(stuNum, idNum, product.name, product.integral.toInt())
                 .flatMap(Function<RedrockApiStatus, Observable<RedrockApiWrapper<ScoreStatus>>> {
+                    if (it.status == 200) {
+                        _exchangeEvent.postValue(true)
+                    } else {
+                        _exchangeEvent.postValue(false)
+                    }
                     return@Function apiService.getScoreStatus(stuNum, idNum)
                 })
                 .normalWrapper(this)
