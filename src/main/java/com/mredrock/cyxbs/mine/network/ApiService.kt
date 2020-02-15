@@ -87,7 +87,7 @@ interface ApiService {
     fun getMyProducts(@Field("stunum") stuNum: String,
                         @Field("idnum") idNum: String,
                         @Field("page") page: Int,
-                        @Field("size") size: Int = 6): Observable<RedrockApiWrapper<List<Product>>>
+                        @Field("size") size: Int = 6): Observable<RedrockApiWrapper<List<MyProduct>>>
 
 
     @FormUrlEncoded

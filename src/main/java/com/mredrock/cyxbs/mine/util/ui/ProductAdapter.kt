@@ -15,7 +15,7 @@ import com.mredrock.cyxbs.mine.network.model.Product
 /**
  * Created by roger on 2019/11/28
  */
-class ProductAdapter : ListAdapter<Product, ProductAdapter.ProductViewHolder>(Product.DIFF_CALLBACK) {
+class ProductAdapter(private val onExChangeClick: (Product) -> Unit) : ListAdapter<Product, ProductAdapter.ProductViewHolder>(Product.DIFF_CALLBACK) {
 
     class ProductViewHolder(
             parent: ViewGroup
@@ -30,7 +30,7 @@ class ProductAdapter : ListAdapter<Product, ProductAdapter.ProductViewHolder>(Pr
         private val exchange = itemView.findViewById<Button>(R.id.mine_sign_store_item_btn_exchange)
 
         @SuppressLint("SetTextI18n")
-        fun bind(product: Product) {
+        fun bind(product: Product, onExChangeClick: (Product) -> Unit) {
             //只有随机高度
             val param = iv.layoutParams
             param.height = (Math.random() * 200 + 200).toInt()
@@ -38,20 +38,21 @@ class ProductAdapter : ListAdapter<Product, ProductAdapter.ProductViewHolder>(Pr
 
             title.text = product.name
             count.text = "仅剩${product.count}"
-            integral.text = product.integral.toString()
+            integral.text = product.integral
             iv.setImageFromUrl(product.src)
-
+            exchange.setOnClickListener {
+                onExChangeClick.invoke(product)
+            }
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProductViewHolder {
-        return ProductViewHolder(parent).apply {
-
-        }
+        return ProductViewHolder(parent)
     }
 
     override fun onBindViewHolder(holder: ProductViewHolder, position: Int) {
-        holder.bind(getItem(position))
+        holder.bind(getItem(position), onExChangeClick)
+
     }
 
 }

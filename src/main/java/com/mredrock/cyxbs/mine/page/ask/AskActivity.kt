@@ -3,7 +3,6 @@ package com.mredrock.cyxbs.mine.page.ask
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import com.mredrock.cyxbs.mine.util.ui.BaseTabLayoutActivity
-import kotlinx.android.synthetic.main.mine_activity_tablayout_common.*
 
 
 /**
@@ -16,7 +15,7 @@ class AskActivity(override val isFragmentActivity: Boolean = false) : BaseTabLay
         super.onCreate(savedInstanceState)
         common_toolbar.title = "我的提问"
         val fragmentList = listOf<Fragment>(AskPostedFm(), AskDraftFm())
-        val titleList = listOf<String>("已发布", "草稿箱")
+        val titleList = listOf("已发布", "草稿箱")
         init(fragmentList, titleList)
     }
 }

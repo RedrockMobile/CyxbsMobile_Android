@@ -56,7 +56,8 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
                     onPositiveClick = { dismiss() },
                     positiveString = "确定",
                     elseFunction = { view ->
-                        view.findViewById<TextView>(R.id.mine_dialog_tv_praise).text = "你一共获得${viewModel.qaNumber.value?.praiseNumber ?: 0}个赞"
+                        view.findViewById<TextView>(R.id.mine_dialog_tv_praise).text = "你一共获得${viewModel.qaNumber.value?.praiseNumber
+                                ?: 0}个赞"
                     }
             )
         }
@@ -78,8 +79,10 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
         mine_main_tv_reply_comment.setOnClickListener { checkLoginBeforeAction("评论回复") { startActivity<CommentActivity>() } }
         mine_main_cl_info_edit.setOnClickListener { checkLoginBeforeAction("资料") { startActivity<EditInfoActivity>() } }
 
-        mine_main_tv_praise.setOnClickListener { praiseDialog.show(fragmentManager, "praise") }
-        mine_main_praise_number.setOnClickListener { praiseDialog.show(fragmentManager, "praise") }
+        fragmentManager?.let { fm ->
+            mine_main_tv_praise.setOnClickListener { praiseDialog.show(fm, "praise") }
+            mine_main_praise_number.setOnClickListener { praiseDialog.show(fm, "praise") }
+        }
 
         mine_main_tv_about.setOnClickListener { startActivity<AboutActivity>() }
         mine_main_btn_exit.setOnClickListener { onExitClick() }
@@ -224,7 +227,7 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
                     positiveString = "退出",
                     onNegativeClick = { dismiss() }
             )
-        }.show(fragmentManager, "logout")
+        }.show(fragmentManager ?: return, "logout")
     }
 
     private fun cleanAppWidgetCache() {

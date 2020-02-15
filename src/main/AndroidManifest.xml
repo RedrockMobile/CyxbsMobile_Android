@@ -3,9 +3,9 @@
     package="com.mredrock.cyxbs.mine">
 
     <application android:theme="@style/AppTheme">
+        <activity android:name=".page.myproduct.MyProductActivity"></activity>
         <activity android:name=".page.edit.EditInfoActivity" />
         <activity android:name=".page.sign.DailySignActivity" />
-        <activity android:name=".page.draft.DraftActivity" />
         <activity android:name=".page.answer.AnswerActivity" />
         <activity android:name=".page.ask.AskActivity" />
         <activity android:name=".page.comment.CommentActivity" />

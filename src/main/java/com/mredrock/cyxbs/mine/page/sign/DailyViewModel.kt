@@ -102,4 +102,16 @@ class DailyViewModel : BaseViewModel() {
                 }
                 .lifeCycle()
     }
+
+    fun exchangeProduct(product: Product) {
+        apiServiceForSign.exchangeProduct(stuNum, idNum, product.name, product.integral.toInt())
+                .flatMap(Function<RedrockApiStatus, Observable<RedrockApiWrapper<ScoreStatus>>> {
+                    return@Function apiService.getScoreStatus(stuNum, idNum)
+                })
+                .normalWrapper(this)
+                .safeSubscribeBy {
+                    _status.postValue(it)
+                }
+                .lifeCycle()
+    }
 }

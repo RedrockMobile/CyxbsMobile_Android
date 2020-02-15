@@ -79,6 +79,7 @@
     <string name="mine_sign_store_item_count_default">仅剩555件</string>
     <string name="mine_sign_store_item_integral_default">13</string>
     <string name="mine_sign_store_item_exchange">兑换</string>
+    <string name="mine_myproduct_time_pre">兑换时间：</string>
 
     <string name="mine_sign_remind_switch_hint">连续签到每日提醒</string>
     <string name="mine_sign_point_hint">我的积分数：</string>

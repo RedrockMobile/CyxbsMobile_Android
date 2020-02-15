@@ -14,13 +14,10 @@ import com.alibaba.android.arouter.facade.annotation.Route
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.mredrock.cyxbs.common.config.MINE_CHECK_IN
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
-import com.mredrock.cyxbs.common.utils.extensions.dp2px
-import com.mredrock.cyxbs.common.utils.extensions.gone
-import com.mredrock.cyxbs.common.utils.extensions.invisible
-import com.mredrock.cyxbs.common.utils.extensions.visible
+import com.mredrock.cyxbs.common.utils.extensions.*
 import com.mredrock.cyxbs.mine.R
 import com.mredrock.cyxbs.mine.network.model.ScoreStatus
-import com.mredrock.cyxbs.common.utils.extensions.toast
+import com.mredrock.cyxbs.mine.page.myproduct.MyProductActivity
 import com.mredrock.cyxbs.mine.util.ui.ProductAdapter
 import com.mredrock.cyxbs.mine.util.widget.*
 import kotlinx.android.synthetic.main.mine_activity_daily_sign.*
@@ -69,7 +66,9 @@ class DailySignActivity(override val viewModelClass: Class<DailyViewModel> = Dai
     }
 
     private val adapter: ProductAdapter by lazy {
-        ProductAdapter()
+        ProductAdapter{
+            viewModel.exchangeProduct(it)
+        }
     }
 
 
@@ -104,6 +103,10 @@ class DailySignActivity(override val viewModelClass: Class<DailyViewModel> = Dai
                 toast("寒暑假不可签到")
             }
         })
+
+        mine_store_myproduct.setOnClickListener {
+            startActivity<MyProductActivity>()
+        }
     }
 
     private fun hidePlaceHolder() {
