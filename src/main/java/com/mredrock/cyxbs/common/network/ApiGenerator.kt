@@ -7,6 +7,7 @@ import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.service.account.IAccountService
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
+import okhttp3.Response
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
@@ -23,8 +24,16 @@ object ApiGenerator {
     private var retrofit: Retrofit
     private var commonRetrofit: Retrofit
     private var okHttpClient: OkHttpClient
+    @Volatile
+    var token = ""
+    @Volatile
+    var refreshToken = ""
 
     init {
+        token = ServiceManager.getService(IAccountService::class.java)?.getUserTokenService()?.getToken()
+                ?: ""
+        refreshToken = ServiceManager.getService(IAccountService::class.java)?.getUserTokenService()?.getRefreshToken()
+                ?: ""
         okHttpClient = configureOkHttp(OkHttpClient.Builder())
         retrofit = Retrofit.Builder()
                 .baseUrl(END_POINT_REDROCK)
@@ -39,27 +48,11 @@ object ApiGenerator {
         builder.apply {
             connectTimeout(DEFAULT_TIME_OUT.toLong(), TimeUnit.SECONDS)
             interceptors().add(Interceptor {
-                val token = ServiceManager.getService(IAccountService::class.java)?.getUserTokenService()?.getToken()
-                        ?: ""
-                val refreshToken = ServiceManager.getService(IAccountService::class.java)?.getUserTokenService()?.getRefreshToken()
-                        ?: ""
                 /**
                  * 所有请求添加token到header，如果有更好方式再改改，或者另外加一个不需要token的ApiGenerator
                  */
-                var response = it.proceed(it.request().newBuilder().header("Authorization", "Bearer $token").build())
-                /**
-                 * 刷新token条件设置为，已有refreshToken，并且已经过期，也可以后端返回特定到token失效code
-                 */
-                if (refreshToken.isNotEmpty() && isTokenExpired()) {
-                    ServiceManager.getService(IAccountService::class.java).getVerifyService().refresh(
-                            onError = { response.close() },
-                            action = { t ->
-                                response.close()
-                                response = it.proceed(it.request().newBuilder().header("Authorization", "Bearer $t").build())
-                            }
-                    )
-                }
-                response
+                val response = it.proceed(it.request().newBuilder().header("Authorization", "Bearer $token").build())
+                checkRefresh(response, it)
             })
         }
         if (BuildConfig.DEBUG) {
@@ -68,6 +61,30 @@ object ApiGenerator {
             builder.addInterceptor(logging)
         }
         return builder.build()
+    }
+
+    @Synchronized
+    private fun checkRefresh(response: Response, chain: Interceptor.Chain): Response? {
+        var newResponse = response
+        /**
+         * 刷新token条件设置为，已有refreshToken，并且已经过期，也可以后端返回特定到token失效code
+         */
+        if (refreshToken.isNotEmpty() && isTokenExpired()) {
+            ServiceManager.getService(IAccountService::class.java).getVerifyService().refresh(
+                    onError = {
+                        response.close()
+                        newResponse = response
+                    },
+                    action = { s: String, s1: String ->
+                        response.close()
+                        token = s
+                        refreshToken = s1
+                        newResponse = chain.run { proceed(chain.request().newBuilder().header("Authorization", "Bearer $s").build()) }
+
+                    }
+            )
+        }
+        return newResponse
     }
 
     private fun commonApiService(): Retrofit {
