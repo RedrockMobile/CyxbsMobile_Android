@@ -1,6 +1,5 @@
 package com.mredrock.cyxbs.mine.util.ui
 
-import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.Button
@@ -18,6 +17,8 @@ import com.mredrock.cyxbs.mine.network.model.Product
 class ProductAdapter : ListAdapter<Product, ProductAdapter.ProductViewHolder>(Product.DIFF_CALLBACK) {
 
     var onExChangeClick: ((Product) -> Unit)? = null
+    //通过集合存储高度，防止错位
+    private val mHeights: MutableList<Int> = mutableListOf()
 
     class ProductViewHolder(
             parent: ViewGroup
@@ -25,27 +26,12 @@ class ProductAdapter : ListAdapter<Product, ProductAdapter.ProductViewHolder>(Pr
             LayoutInflater.from(parent.context)
                     .inflate(R.layout.mine_list_item_product, parent, false)
     ) {
-        private val iv = itemView.findViewById<ImageView>(R.id.mine_sign_store_item_iv)
-        private val title = itemView.findViewById<TextView>(R.id.mine_sign_store_item_tv_title)
-        private val count = itemView.findViewById<TextView>(R.id.mine_sign_store_item_tv_count)
-        private val integral = itemView.findViewById<TextView>(R.id.mine_sign_store_item_tv__integral)
-        private val exchange = itemView.findViewById<Button>(R.id.mine_sign_store_item_btn_exchange)
+        val iv = itemView.findViewById<ImageView>(R.id.mine_sign_store_item_iv)
+        val title = itemView.findViewById<TextView>(R.id.mine_sign_store_item_tv_title)
+        val count = itemView.findViewById<TextView>(R.id.mine_sign_store_item_tv_count)
+        val integral = itemView.findViewById<TextView>(R.id.mine_sign_store_item_tv__integral)
+        val exchange = itemView.findViewById<Button>(R.id.mine_sign_store_item_btn_exchange)
 
-        @SuppressLint("SetTextI18n")
-        fun bind(product: Product, onExChangeClick: ((Product) -> Unit)?) {
-            //只有随机高度
-            val param = iv.layoutParams
-            param.height = (Math.random() * 200 + 200).toInt()
-            iv.layoutParams = param
-
-            title.text = product.name
-            count.text = "仅剩${product.count}"
-            integral.text = product.integral
-            iv.setImageFromUrl(product.src)
-            exchange.setOnClickListener {
-                onExChangeClick?.invoke(product)
-            }
-        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProductViewHolder {
@@ -53,7 +39,26 @@ class ProductAdapter : ListAdapter<Product, ProductAdapter.ProductViewHolder>(Pr
     }
 
     override fun onBindViewHolder(holder: ProductViewHolder, position: Int) {
-        holder.bind(getItem(position), onExChangeClick)
+        val product = getItem(position)
+
+
+        val param = holder.iv.layoutParams
+        if (mHeights.size - 1 >= position) {
+            param.height = mHeights[position]
+        } else {
+            val height = (Math.random() * 200 + 225).toInt()
+            mHeights.add(position, height)
+            param.height = height
+        }
+        holder.iv.layoutParams = param
+
+        holder.title.text = product.name
+        holder.count.text = "仅剩${product.count}"
+        holder.integral.text = product.integral
+        holder.iv.setImageFromUrl(product.src)
+        holder.exchange.setOnClickListener {
+            onExChangeClick?.invoke(product)
+        }
 
     }
 

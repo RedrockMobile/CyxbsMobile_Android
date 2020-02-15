@@ -22,7 +22,7 @@
             android:src="@drawable/common_place_holder"
             android:id="@+id/mine_sign_store_item_iv"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="152dp" />
     </androidx.cardview.widget.CardView>
 
     <TextView
