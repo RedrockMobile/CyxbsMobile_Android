@@ -151,7 +151,7 @@ internal class AccountService : IAccountService {
             notifyAllStateListeners(state)
         }
 
-        override fun refresh(onError: () -> Unit, action: (token: String) -> Unit) {
+        override fun refresh(onError: () -> Unit, action: (token: String, refreshToken: String) -> Unit) {
             val refreshToken = tokenWrapper?.refreshToken ?: ""
             val response = ApiGenerator.getCommonApiService(ApiService::class.java).refresh(RefreshParams(refreshToken)).execute()
             if (response.body() == null) {
@@ -165,7 +165,7 @@ internal class AccountService : IAccountService {
                     putString(SP_KEY_USER_V2, mUserInfoEncryption.encrypt(Gson().toJson(data)))
 
                 }
-                action.invoke(data.token)
+                action.invoke(data.token, data.refreshToken)
             }
         }
 
