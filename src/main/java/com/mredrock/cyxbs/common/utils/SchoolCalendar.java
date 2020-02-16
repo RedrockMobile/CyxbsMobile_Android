@@ -17,7 +17,7 @@ import java.util.TimeZone;
  */
 public class SchoolCalendar {
     public static final String FIRST_DAY = "first_day";
-    Calendar firstDay = new GregorianCalendar(2015, Calendar.SEPTEMBER, 7);
+    public Calendar firstDay = new GregorianCalendar(2015, Calendar.SEPTEMBER, 7);
     Calendar currentTime;
 
     public SchoolCalendar() {
