@@ -108,11 +108,15 @@ class DailyViewModel : BaseViewModel() {
                 .lifeCycle()
     }
 
-    fun exchangeProduct(product: Product) {
-        apiServiceForSign.exchangeProduct(stuNum, idNum, product.name, product.integral.toInt())
+    fun exchangeProduct(product: Product, position: Int) {
+        //防止后端粗心的将integral设置为空
+        val productIntegral = if (product.integral.isEmpty()) 0 else product.integral.toInt()
+
+        apiServiceForSign.exchangeProduct(stuNum, idNum, product.name, productIntegral)
                 .flatMap(Function<RedrockApiStatus, Observable<RedrockApiWrapper<ScoreStatus>>> {
                     if (it.status == 200) {
                         _exchangeEvent.postValue(true)
+                        minusProductCount(product, position)
                     } else {
                         _exchangeEvent.postValue(false)
                     }
@@ -123,5 +127,15 @@ class DailyViewModel : BaseViewModel() {
                     _status.postValue(it)
                 }
                 .lifeCycle()
+    }
+
+    private fun minusProductCount(product: Product, position: Int) {
+        //将product的count减1
+        val list = _products.value ?: mutableListOf()
+        if (list.size - 1 >= position) {
+            val product = list[position]
+            list[position] = Product(product.name, product.count.dec(), product.integral, product.src, product.isVirtual)
+        }
+        _products.postValue(list)
     }
 }

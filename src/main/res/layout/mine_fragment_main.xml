@@ -97,7 +97,7 @@
                     style="?android:attr/borderlessButtonStyle"
                     android:layout_height="28dp"
                     android:layout_gravity="end"
-                    android:background="@drawable/mine_bg_round_corner_blue"
+                    android:background="@drawable/common_dialog_btn_positive_blue"
                     android:text="@string/mine_sign_name"
                     android:textColor="@color/whiteFontColor"
                     android:textSize="13sp"

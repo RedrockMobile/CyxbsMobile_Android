@@ -26,16 +26,20 @@ data class Product(
 //               "photo_src": "",       图片
 //               "isVirtual": 1         商品类型，0为实物，1为虚拟，主要是用于区分，以后可能会有皮肤类似商品
 
+
     companion object {
+        @JvmStatic
         val DIFF_CALLBACK = object : DiffUtil.ItemCallback<Product>() {
             override fun areItemsTheSame(oldItem: Product, newItem: Product): Boolean {
                 return oldItem === newItem
             }
 
             override fun areContentsTheSame(oldItem: Product, newItem: Product): Boolean {
-                return oldItem == newItem
+                return oldItem.count == newItem.count
             }
         }
+
+
     }
 
 }

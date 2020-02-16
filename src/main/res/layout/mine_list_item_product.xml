@@ -77,7 +77,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="12dp"
-        android:background="@drawable/mine_bg_round_corner_blue"
+        android:background="@drawable/common_dialog_btn_positive_blue"
         android:minWidth="47dp"
         android:minHeight="24dp"
         android:text="@string/mine_sign_store_item_exchange"

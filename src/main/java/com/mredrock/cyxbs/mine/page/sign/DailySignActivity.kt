@@ -125,17 +125,20 @@ class DailySignActivity(override val viewModelClass: Class<DailyViewModel> = Dai
         mine_daily_sign.setOnClickListener { checkIn() }
 
 
-        adapter.onExChangeClick = { product ->
+        adapter.onExChangeClick = { product, position ->
             val integral = viewModel.status.value?.integral
 
             integral?.let {
-                if (integral >= product.integral.toInt()) {
+                //防止商品积分为空
+                val productIntegral = if (product.integral.isEmpty()) 0 else product.integral.toInt()
+                //判断用户积分是否大于物品所需积分数 && 物品剩余数大于0
+                if (integral >= productIntegral && product.count > 0) {
                     CommonDialogFragment().apply {
                         initView(
                                 containerRes = R.layout.mine_layout_dialog_exchange,
                                 positiveString = "确认兑换",
                                 onPositiveClick = {
-                                    viewModel.exchangeProduct(product)
+                                    viewModel.exchangeProduct(product, position)
                                     dismiss()
                                 },
                                 onNegativeClick = { dismiss() },
@@ -151,7 +154,12 @@ class DailySignActivity(override val viewModelClass: Class<DailyViewModel> = Dai
                                 positiveString = "确认",
                                 onPositiveClick = { dismiss() },
                                 elseFunction = {
-                                    it.findViewById<TextView>(R.id.mine_tv_exchange_for_sure_content).text = "积分不足"
+                                    //区分是积分不足还是物品剩余数为0
+                                    if (product.count <= 0) {
+                                        it.findViewById<TextView>(R.id.mine_tv_exchange_for_sure_content).text = "物品被抢光了，明天再来吧"
+                                    } else {
+                                        it.findViewById<TextView>(R.id.mine_tv_exchange_for_sure_content).text = "积分不足"
+                                    }
                                 }
                         )
                     }.show(supportFragmentManager, "lack of integral")
