@@ -131,8 +131,16 @@
     <!--    邮问-->
     <!--    当前时间颜色-->
     <color name="qa_question_current_time_color" tools:ignore="ResourceName">#ff2a4e84</color>
+   <!--    邮问大标题-->
+    <color name="qa_main_title" tools:ignore="ResourceName">#15315B</color>
     <!--    问题tab下标颜色-->
-    <string name="qa_question_tab_indicator_color" tools:ignore="ResourceName">#1ad0f2</string>
+    <color name="qa_question_tab_indicator_color" tools:ignore="ResourceName">#1ad0f2</color>
+    <!--    问题tab选中颜色-->
+    <color name="qa_tab_selected_color" tools:ignore="ResourceName">#15315B</color>
+    <!--    问题tab未选中颜色-->
+    <color name="qa_tab_unselected_color" tools:ignore="ResourceName">#15315B</color>
+    <!--    问题JCardView背景-->
+    <color name="qa_question_list_color" tools:ignore="ResourceName">#F8F9FC</color>
     <!--    问题item的昵称颜色-->
     <color name="qa_question_item_nickname_color" tools:ignore="ResourceName">#555555</color>
     <!--    问题item的积分奖励字体颜色-->
@@ -147,6 +155,12 @@
     <color name="qa_comment_content_color" tools:ignore="ResourceName">#3B4555</color>
     <!--    回答发布时间颜色-->
     <color name="qa_answer_publish_at_color" tools:ignore="ResourceName">#ff2a4e84</color>
+    <!--    回答发布toolbar分割线-->
+    <color name="qa_quiz_toolbar_divider_line_color" tools:ignore="ResourceName">#2A4E84</color>
+    <!--    提问图片选择占位图-->
+    <color name="qa_quiz_picture_empty_color" tools:ignore="ResourceName">#E8F0FC</color>
+     <!--    提问图片选择占位图中间颜色-->
+    <color name="qa_quiz_picture_empty_centre_color" tools:ignore="ResourceName">#C4D1E6</color>
     <!--    回答被采纳的标签颜色-->
     <color name="qa_answer_list_adopted_color" tools:ignore="ResourceName">#94A6C4</color>
     <!--    提问选择类型的背景颜色-->
@@ -163,7 +177,8 @@
     <color name="qa_question_report_text_background_color" tools:ignore="ResourceName">#9815315B</color>
     <!--    举报弹窗的分割线颜色，指定4的透明度-->
     <color name="qa_question_report_divide_line_background_color" tools:ignore="ResourceName">#0a15315B</color>
-
+   <!--    提问内容文字hint颜色-->
+    <color name="qa_quiz_content_edt_hint_color" tools:ignore="ResourceName">#15315B</color>
     <!--    登陆下面的灰色字体-->
     <color name="logInToTheGrayFontBelow" tools:ignore="ResourceName">#ABBCD8</color>
 
@@ -176,8 +191,6 @@
     <!--    添加事务的气泡颜色-->
     <color name="course_affair_bubble_color" tools:ignore="ResourceName">#DFE6FF</color>
 
-    <!--    退出编辑dialog二级字体颜色-->
-    <color name="dialog_exit_subtitle_text_color" tools:ignore="ResourceName">#2A4E84</color>
     <!--    评论head和item间隙颜色-->
     <color name="qa_comment_item_divider_gap_color" tools:ignore="ResourceName">#EFF2F7</color>
     <!--    邮问积分说明最下面的小字颜色-->

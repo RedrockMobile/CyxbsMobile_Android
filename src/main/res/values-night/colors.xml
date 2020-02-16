@@ -123,29 +123,43 @@
 
     <!--    邮问-->
     <!--    当前时间颜色-->
-    <color name="qa_question_current_time_color" tools:ignore="ResourceName">#ff2a4e84</color>
+    <color name="qa_question_current_time_color" tools:ignore="ResourceName">#5A5A5A</color>
+    <!--    邮问大标题-->
+    <color name="qa_main_title" tools:ignore="ResourceName">#F0F0F2</color>
     <!--    问题tab下标颜色-->
-    <string name="qa_question_tab_indicator_color" tools:ignore="ResourceName">#1ad0f2</string>
+    <color name="qa_question_tab_indicator_color" tools:ignore="ResourceName">#1ad0f2</color>
+    <!--    问题tab选中颜色-->
+    <color name="qa_tab_selected_color" tools:ignore="ResourceName">#F0F0F2</color>
+    <!--    问题tab未选中颜色-->
+    <color name="qa_tab_unselected_color" tools:ignore="ResourceName">#84F0F0F2</color>
+    <!--    问题JCardView背景-->
+    <color name="qa_question_list_color" tools:ignore="ResourceName">#1D1D1D</color>
     <!--    问题item的昵称颜色-->
-    <color name="qa_question_item_nickname_color" tools:ignore="ResourceName">#555555</color>
+    <color name="qa_question_item_nickname_color" tools:ignore="ResourceName">#7CF0F0F2</color>
     <!--    问题item的积分奖励字体颜色-->
-    <color name="qa_question_item_reward_color" tools:ignore="ResourceName">#777777</color>
+    <color name="qa_question_item_reward_color" tools:ignore="ResourceName">#5A5A5A</color>
     <!--    问题item的下面的各类数字颜色-->
-    <color name="qa_question_bottom_count_color" tools:ignore="ResourceName">#2A4E84</color>
+    <color name="qa_question_bottom_count_color" tools:ignore="ResourceName">#7CF0F0F2</color>
     <!--    问题item的分割线颜色-->
-    <color name="qa_question_recycler_item_divide_line_color" tools:ignore="ResourceName">#BDCCE5</color>
+    <color name="qa_question_recycler_item_divide_line_color" tools:ignore="ResourceName">#696969</color>
     <!--    评论内容颜色-->
     <color name="qa_comment_content_color" tools:ignore="ResourceName">#3B4555</color>
     <!--    回答发布时间颜色-->
     <color name="qa_answer_publish_at_color" tools:ignore="ResourceName">#ff2a4e84</color>
+    <!--    回答发布toolbar分割线-->
+    <color name="qa_quiz_toolbar_divider_line_color" tools:ignore="ResourceName">#57566A</color>
+    <!--    提问图片选择占位图-->
+    <color name="qa_quiz_picture_empty_color" tools:ignore="ResourceName">#2C2C2C</color>
+    <!--    提问图片选择占位图中间颜色-->
+    <color name="qa_quiz_picture_empty_centre_color" tools:ignore="ResourceName">#000101</color>
     <!--    回答被采纳的标签颜色-->
     <color name="qa_answer_list_adopted_color" tools:ignore="ResourceName">#94A6C4</color>
     <!--    提问选择类型的背景颜色-->
-    <color name="qa_quiz_select_type_background_color" tools:ignore="ResourceName">#5A5A5A</color>
+    <color name="qa_quiz_select_type_background_color" tools:ignore="ResourceName">#b25A5A5A</color>
     <!--    提问选择类型的文字颜色-->
-    <color name="qa_quiz_select_type_text_color" tools:ignore="ResourceName">#94A6C4</color>
+    <color name="qa_quiz_select_type_text_color" tools:ignore="ResourceName">#000101</color>
     <!--    提问选中类型的文字颜色-->
-    <color name="qa_quiz_selected_type_text_color" tools:ignore="ResourceName">#FFA192</color>
+    <color name="qa_quiz_selected_type_text_color" tools:ignore="ResourceName">#000101</color>
     <!--    提问选中类型的背景颜色，指定78的透明度-->
     <color name="qa_quiz_selected_type_background_color" tools:ignore="ResourceName">#0BCCF0</color>
     <!--    提问标题框和内容框的背景颜色，指定69的透明度-->
@@ -154,6 +168,8 @@
     <color name="qa_question_report_text_background_color" tools:ignore="ResourceName">#9815315B</color>
     <!--    举报弹窗的分割线颜色，指定4的透明度-->
     <color name="qa_question_report_divide_line_background_color" tools:ignore="ResourceName">#0a15315B</color>
+    <!--    提问内容文字hint颜色-->
+    <color name="qa_quiz_content_edt_hint_color" tools:ignore="ResourceName">#EAEAED</color>
 
     <!--    登陆下面的灰色字体-->
     <color name="logInToTheGrayFontBelow" tools:ignore="ResourceName">#ABBCD8</color>
@@ -167,8 +183,7 @@
     <!--    添加事务的气泡颜色-->
     <color name="course_affair_bubble_color" tools:ignore="ResourceName">#DFE6FF</color>
 
-    <!--    退出编辑dialog二级字体颜色-->
-    <color name="dialog_exit_second_line_text_color" tools:ignore="MissingDefaultResource,ResourceName">#2A4E84</color>
+
 
     <color name="curriculum_background_color" tools:ignore="ResourceName">#2D2D2D</color>
 
