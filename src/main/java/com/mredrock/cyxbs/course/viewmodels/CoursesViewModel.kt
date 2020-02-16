@@ -469,13 +469,14 @@ class CoursesViewModel : BaseViewModel() {
         }
         nowWeek.value?.let { nowWeek ->
             val now = Calendar.getInstance()
+            //这个用来判断是不是可能处于是暑假的那段时间除非大变动应该暑假绝对是5，6，7，8，9，10月当中
             val isProbablySummerVacation: (Int) -> Boolean = { listOf(5, 6, 7, 8, 9, 10).contains(it) }
             val time = when {
                 now.timeInMillis >= firstDay.timeInMillis && nowWeek != 0 ->
                     "第${Num2CN.number2ChineseNumber(nowWeek.toLong())}周 " +
                             "周${if (now[Calendar.DAY_OF_WEEK]!=0) Num2CN.number2ChineseNumber(now[Calendar.DAY_OF_WEEK]-1.toLong()) else "日"}"
-                now.timeInMillis >= firstDay.timeInMillis && nowWeek == 0&&isProbablySummerVacation(now[Calendar.MONTH]+1) -> "暑假快乐鸭"
-                now.timeInMillis >= firstDay.timeInMillis && nowWeek == 0&&!isProbablySummerVacation(now[Calendar.MONTH]+1) -> "寒假快乐鸭"
+                nowWeek == 0&&isProbablySummerVacation(now[Calendar.MONTH]+1) -> "暑假快乐鸭"
+                nowWeek == 0&&!isProbablySummerVacation(now[Calendar.MONTH]+1) -> "寒假快乐鸭"
                 else -> "呜呼～"
             }
             EventBus.getDefault().postSticky(CurrentDateInformationEvent(time))
