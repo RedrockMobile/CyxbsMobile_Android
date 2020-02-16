@@ -9,6 +9,10 @@
             name="coursesViewModel"
             type="com.mredrock.cyxbs.course.viewmodels.CoursesViewModel" />
 
+        <variable
+            name="scheduleDetailDialogHelper"
+            type="com.mredrock.cyxbs.course.ui.ScheduleDetailDialogHelper" />
+
 
     </data>
 
@@ -51,6 +55,19 @@
                     android:layout_height="51dp"
                     android:paddingStart="16dp"
                     android:paddingEnd="16dp">
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/course_tomorrow_tips"
+                        android:textColor="@color/levelTwoFontColor"
+                        android:textSize="8sp"
+                        android:visibility="@{coursesViewModel.tomorrowTips}"
+                        app:layout_constraintBottom_toTopOf="@+id/course_tv_now_course"
+                        app:layout_constraintEnd_toEndOf="@+id/course_tv_now_course"
+                        app:layout_constraintHorizontal_bias="0.0"
+                        app:layout_constraintStart_toStartOf="@+id/course_tv_now_course"
+                        tools:ignore="SmallSp" />
 
 
                     <com.mredrock.cyxbs.course.component.MarqueeTextView

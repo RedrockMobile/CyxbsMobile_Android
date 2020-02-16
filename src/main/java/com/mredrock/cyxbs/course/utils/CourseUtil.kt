@@ -7,6 +7,7 @@ import android.content.Intent
 import android.net.Uri
 import androidx.annotation.IdRes
 import com.mredrock.cyxbs.common.bean.WidgetCourse
+import com.mredrock.cyxbs.common.utils.SchoolCalendar
 import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
 import com.mredrock.cyxbs.common.utils.extensions.editor
 import com.mredrock.cyxbs.course.network.Course
@@ -23,30 +24,18 @@ import kotlin.collections.ArrayList
  * 获取当前的课程用于显示在课表的头部
  * @param courses 当天的课程数据
  * @param nowWeek 现在是第几周
+ * @return 返回两个值，第一个是课表，第二个是是否第二天的课表
  */
-fun getNowCourse(courses: List<Course>, wholeCourses: List<Course>, nowWeek: Int): Course? {
-    var isFound = false
+fun getNowCourse(courses: List<Course>, wholeCourses: List<Course>, nowWeek: Int): Pair<Course?,Boolean> {
     courses.forEach {
         val endCalendar = getStartCalendarByNum(it.hashLesson)
         //如果今天还有下一节课，显示下一节
         if (Calendar.getInstance() < endCalendar) {
-            return it
-        }
-        isFound = true
-    }
-
-    return if (isFound) {//今天有课，但是上完了
-        //新策略：显示明天第一节
-        getTomorrowCourse(wholeCourses, nowWeek)
-    } else {//今天没有课
-        if (isNight()) {//如果在晚上，显示明天课程
-            getTomorrowCourse(wholeCourses, nowWeek)
-        } else {
-            //白天显示今天无课
-            null
+            return Pair(it,false)
         }
     }
-
+    //今天没课了，显示明天的
+    return Pair(getTomorrowCourse(wholeCourses, nowWeek),true)
 }
 
 /**
@@ -55,9 +44,21 @@ fun getNowCourse(courses: List<Course>, wholeCourses: List<Course>, nowWeek: Int
  * @param nowWeek 现在是第几周
  */
 fun getTomorrowCourse(courses: List<Course>, nowWeek: Int): Course? {
+    val schoolCalendar = SchoolCalendar()
     val tomorrowCalendar = Calendar.getInstance()
-    tomorrowCalendar.set(Calendar.DAY_OF_YEAR, tomorrowCalendar.get(Calendar.DAY_OF_YEAR) + 1)
-    val tomorrowList = getCourseByCalendar(courses, nowWeek, tomorrowCalendar)
+    tomorrowCalendar.add(Calendar.DATE, 1)
+    val tomorrowWeek =
+            /**
+             * 这里两个判断，第一是当前如果是周末的话，就取下一周
+             * 但是有个问题是如果是已经放寒假暑假，那么nowWeek也是会是0，这样到了周末依然会显示第一周的星期一的课
+             * 所以要排除这种情况，然后做了一个专门为了开学第一天的判断
+             */
+            if ((tomorrowCalendar.get(Calendar.DAY_OF_WEEK) == Calendar.MONDAY && nowWeek != 0)
+                    || (tomorrowCalendar.get(Calendar.DAY_OF_WEEK) == Calendar.MONDAY
+                            && tomorrowCalendar[Calendar.DAY_OF_YEAR] == schoolCalendar.firstDay[Calendar.DAY_OF_YEAR]))
+                nowWeek + 1
+            else nowWeek
+    val tomorrowList = getCourseByCalendar(courses, tomorrowWeek, tomorrowCalendar)
     return if (tomorrowList == null) {//数据出错
         null
     } else {

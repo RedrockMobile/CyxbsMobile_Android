@@ -123,5 +123,6 @@
     <string name="course_title_for_your_affair2">一个标题</string>
     <string name="course_title_for_your_affair3">具体内容</string>
     <string name="course_course_update_tips">你的课表可能发生了变化请留意</string>
+    <string name="course_tomorrow_tips">明天</string>
 
 </resources>

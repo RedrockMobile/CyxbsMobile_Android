@@ -171,7 +171,7 @@ class CourseContainerEntryFragment : BaseFragment() {
                 //这里获取的ViewModel不同于其他几个，因为这这些数据需要跟随MainActivity的销毁才销毁
                 mCoursesViewModel = ViewModelProviders.of(activity!!).get(CoursesViewModel::class.java)
                 mBinding.coursesViewModel = mCoursesViewModel
-                context?.let { mCoursesViewModel.getSchedulesDataFromLocalThenNetwork(it) }
+                context?.let { mCoursesViewModel.getSchedulesDataFromLocalThenNetwork() }
             }
             //如果是没课约
             CourseState.NoClassInvitationCourse -> {
@@ -187,7 +187,7 @@ class CourseContainerEntryFragment : BaseFragment() {
             CourseState.OtherCourse -> {
                 mCoursesViewModel = ViewModelProviders.of(this).get(CoursesViewModel::class.java)
                 mBinding.coursesViewModel = mCoursesViewModel
-                context?.let { mCoursesViewModel.getSchedulesDataFromLocalThenNetwork(it, mStuNum) }
+                context?.let { mCoursesViewModel.getSchedulesDataFromLocalThenNetwork(mStuNum) }
             }
             //如果是老师课表
             CourseState.TeacherCourse -> {
@@ -197,7 +197,7 @@ class CourseContainerEntryFragment : BaseFragment() {
                 mOthersTeaName?.let {
                     mCoursesViewModel.mUserName = it
                 }
-                context?.let { mCoursesViewModel.getSchedulesDataFromLocalThenNetwork(it, mOthersTeaNum) }
+                context?.let { mCoursesViewModel.getSchedulesDataFromLocalThenNetwork(mOthersTeaNum) }
             }
         }
 
@@ -219,6 +219,11 @@ class CourseContainerEntryFragment : BaseFragment() {
 
 
         //获取到ViewModel后进行一些初始化操作
+        course_tv_now_course.setOnClickListener {
+            mCoursesViewModel.nowCourse.get()?.let { course ->
+                mDialogHelper.showDialog(MutableList(1) { course })
+            }
+        }
         mCoursesViewModel.nowWeek.observe(this, Observer { mBinding.vp.currentItem = it ?: 0 })
         mCoursesViewModel.toastEvent.observe(activity!!, Observer { str -> str?.let { CyxbsToast.makeText(activity!!, it, Toast.LENGTH_SHORT).show() } })
         mCoursesViewModel.longToastEvent.observe(activity!!, Observer { str -> str?.let { CyxbsToast.makeText(activity!!, it, Toast.LENGTH_LONG).show() } })
@@ -233,7 +238,6 @@ class CourseContainerEntryFragment : BaseFragment() {
                 this.course_back_present_week?.visibility = it
             }
         })
-
         // 给ViewPager添加OnPageChangeListener
         lifecycle.addObserver(VPOnPagerChangeObserver(mBinding.vp,
                 mOnPageSelected = {

@@ -1,6 +1,5 @@
 package com.mredrock.cyxbs.course.viewmodels
 
-import android.content.Context
 import android.view.View
 import androidx.databinding.ObservableField
 import androidx.lifecycle.MutableLiveData
@@ -9,9 +8,11 @@ import com.mredrock.cyxbs.common.BaseApp.Companion.context
 import com.mredrock.cyxbs.common.config.COURSE_VERSION
 import com.mredrock.cyxbs.common.config.SP_WIDGET_NEED_FRESH
 import com.mredrock.cyxbs.common.config.WIDGET_COURSE
+import com.mredrock.cyxbs.common.event.CurrentDateInformationEvent
 import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.service.account.IAccountService
+import com.mredrock.cyxbs.common.utils.Num2CN
 import com.mredrock.cyxbs.common.utils.SchoolCalendar
 import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
 import com.mredrock.cyxbs.common.utils.extensions.editor
@@ -72,7 +73,7 @@ class CoursesViewModel : BaseViewModel() {
     // 并从新获取课表上的号数
     val schoolCalendarUpdated = MutableLiveData<Boolean>().apply { value = false }
     // 用于记录帐号
-    lateinit var mUserNum: String
+    private lateinit var mUserNum: String
     // 用于记录用户的真实名字，现在只在复用为老师课表的时候会用到，默认为空
     var mUserName: String = ""
     // 表明是否是在获取他人课表
@@ -120,6 +121,8 @@ class CoursesViewModel : BaseViewModel() {
             return "${s.parseStartCourseTime()}-${s.parseEndCourseTime()}"
         }
     }
+    //是否是明天的课表，显示提示
+    val tomorrowTips = ObservableField<Int>(View.VISIBLE)
 
     //是否展示当前或者下一课程，用于DataBinDing绑定
     val isShowCurrentSchedule = object : ObservableField<Int>(nowCourse) {
@@ -182,11 +185,10 @@ class CoursesViewModel : BaseViewModel() {
      * 优先从数据库中获取Course和Affair数据，等待数据库中获取完毕之后
      * 再从网络上获取
      *
-     * @param context [Context]
      * @param userNum 当显示他人课表的时候就传入对应的的学号。默认为空，之后会为其赋值对应的帐号。
      * @param direct 如果有需要的时候，可以传入true，跳过从数据库加载，直接从网络上加载
      */
-    fun getSchedulesDataFromLocalThenNetwork(context: Context, userNum: String? = null, direct: Boolean = false) {
+    fun getSchedulesDataFromLocalThenNetwork(userNum: String? = null, direct: Boolean = false) {
         //如果现在正在获取数据，这次获取就失效，防止重复多次调用这个方法
         if (mIsGettingData) {
             return
@@ -205,8 +207,6 @@ class CoursesViewModel : BaseViewModel() {
             userNum
         }
 
-        //获取本周是多少周
-        getNowWeek(context)
 
         if (direct) {
             getCoursesDataFromInternet()
@@ -247,12 +247,10 @@ class CoursesViewModel : BaseViewModel() {
      * 这个方法只可以在第一次获取数据时在获取途中调用，不可用于公用方法直接调用然后通过网络更新数据
      * 如果需要跳过数据库直接通过网络更新数据请使用[getSchedulesDataFromLocalThenNetwork]传入合适的参数
      *
-     * @param context [Context]
      */
-    private fun getSchedulesFromInternet(context: Context) {
+    private fun getSchedulesFromInternet() {
         resetGetStatus()
 
-        getNowWeek(context)
         getCoursesDataFromInternet()
 
         /**
@@ -280,7 +278,7 @@ class CoursesViewModel : BaseViewModel() {
                             mReceiveCourses.addAll(coursesFromDatabase)
                             courses.addAll(coursesFromDatabase)
                             isGetAllData(0)
-                            getSchedulesFromInternet(context)
+                            getSchedulesFromInternet()
                         } else {
                             isGetAllData(0)
                         }
@@ -325,6 +323,7 @@ class CoursesViewModel : BaseViewModel() {
                 .errorHandler()
                 .subscribe(ExecuteOnceObserver(onExecuteOnceNext = { coursesFromInternet ->
                     if (coursesFromInternet.status == 200 || coursesFromInternet.status == 233) {
+                        updateNowWeek(coursesFromInternet.nowWeek)
                         coursesFromInternet.data?.let { notNullCourses ->
                             mReceiveCourses.addAll(notNullCourses)
                             val courseVersion = context.defaultSharedPreferences.getString("${COURSE_VERSION}${mUserNum}", "")
@@ -372,7 +371,7 @@ class CoursesViewModel : BaseViewModel() {
     private fun getAffairsDataFromInternet() {
         val stuNum = accountService.getUserService().getStuNum()
         val idNum = context.defaultSharedPreferences.getString("SP_KEY_ID_NUM", "")
-        mCourseApiService.getAffair(stuNum = stuNum, idNum = idNum)
+        mCourseApiService.getAffair(stuNum = stuNum, idNum = idNum!!)
                 .setSchedulers()
                 .errorHandler()
                 .subscribe(ExecuteOnceObserver(onExecuteOnceNext = { affairsFromInternet ->
@@ -411,7 +410,8 @@ class CoursesViewModel : BaseViewModel() {
      * 实测，出现这种问题的概率很大，在我这几天尽百次的打开当中其中有4次出现了未进入第一个判断语句从到导致
      * [mReceiveCourses]有数据，但是[allCoursesData]没有，课表无法显示
      */
-    @Synchronized private fun isGetAllData(index: Int) {
+    @Synchronized
+    private fun isGetAllData(index: Int) {
         mDataGetStatus[index] = true
         if (mDataGetStatus[0] && mDataGetStatus[1]) {
             // 如果mCourses为空的话就不用赋值给courses。防止由于网络请求有问题而导致刷新数据为空。
@@ -421,7 +421,9 @@ class CoursesViewModel : BaseViewModel() {
                 nowWeek.value?.let { nowWeek ->
                     getTodayCourse(mReceiveCourses, nowWeek)?.let { todayCourse ->
                         allCoursesData.get()?.let {
-                            nowCourse.set(getNowCourse(todayCourse, it, nowWeek))
+                            val pair = getNowCourse(todayCourse, it, nowWeek)
+                            nowCourse.set(pair.first)
+                            tomorrowTips.set(if (pair.second) View.VISIBLE else View.GONE)
                         }
                     }
                 }
@@ -429,7 +431,7 @@ class CoursesViewModel : BaseViewModel() {
                 // 加个标志，防止因为没有课程以及备忘的情况进行无限循环拉取。
                 if (!mIsGottenFromInternet) {
                     mIsGottenFromInternet = true
-                    getSchedulesFromInternet(context)
+                    getSchedulesFromInternet()
                 }
             }
             stopIntercept()
@@ -446,35 +448,45 @@ class CoursesViewModel : BaseViewModel() {
         mDataGetStatus[1] = false
     }
 
+    /**
+     * 用来更新周数和开学第一天service
+     */
+    private fun updateNowWeek(networkNowWeek: Int) {
+        val firstDay = Calendar.getInstance()
+        // 下面一行用于获取当前学期的第一天。nowWeek表示的是今天是第几周，然后整个过程就是今天前去前面的整周
+        // 再减去这周过了几天。减去本周的算法是使用了一种源码、补码的思想。也就是通过取余。比如说当前是周一，
+        // 然后now.get(Calendar.DAY_OF_WEEK)对应的值为2，再+5 % 7得到0，因此就不需要减，其它的计算
+        // 也依次类推。
+        firstDay.add(Calendar.DATE, -((networkNowWeek - 1) * 7 + (firstDay.get(Calendar.DAY_OF_WEEK) + 5) % 7))
+        // 更新第一天
+        context.defaultSharedPreferences.editor {
+            putLong(SchoolCalendar.FIRST_DAY, firstDay.timeInMillis)
+        }
+        schoolCalendarUpdated.value = true
+
+        if (this.nowWeek.value != networkNowWeek && networkNowWeek >= 1 && networkNowWeek <= 18) {
+            this.nowWeek.value = networkNowWeek
+        }
+        nowWeek.value?.let { nowWeek ->
+            val now = Calendar.getInstance()
+            val isProbablySummerVacation: (Int) -> Boolean = { listOf(5, 6, 7, 8, 9, 10).contains(it) }
+            val time = when {
+                now.timeInMillis >= firstDay.timeInMillis && nowWeek != 0 ->
+                    "第${Num2CN.number2ChineseNumber(nowWeek.toLong())}周 " +
+                            "周${if (now[Calendar.DAY_OF_WEEK]!=0) Num2CN.number2ChineseNumber(now[Calendar.DAY_OF_WEEK]-1.toLong()) else "日"}"
+                now.timeInMillis >= firstDay.timeInMillis && nowWeek == 0&&isProbablySummerVacation(now[Calendar.MONTH]+1) -> "暑假快乐鸭"
+                now.timeInMillis >= firstDay.timeInMillis && nowWeek == 0&&!isProbablySummerVacation(now[Calendar.MONTH]+1) -> "寒假快乐鸭"
+                else -> "呜呼～"
+            }
+            EventBus.getDefault().postSticky(CurrentDateInformationEvent(time))
+        }
+    }
 
     /**
-     * 这个方法用于今天是哪一周
-     *
-     * @param context [Context]
+     * 判断是否可能处于处于暑假那几天
      */
-    private fun getNowWeek(context: Context) {
-        mCourseApiService.getCourse(accountService.getUserService().getStuNum())
-                .setSchedulers()
-                .errorHandler()
-                .map {
-                    it.nowWeek
-                }.subscribe(ExecuteOnceObserver(onExecuteOnceNext = {
-                    val now = Calendar.getInstance()
-                    // 下面一行用于获取当前学期的第一天。nowWeek表示的是今天是第几周，然后整个过程就是今天前去前面的整周
-                    // 再减去这周过了几天。减去本周的算法是使用了一种源码、补码的思想。也就是通过取余。比如说当前是周一，
-                    // 然后now.get(Calendar.DAY_OF_WEEK)对应的值为2，再+5 % 7得到0，因此就不需要减，其它的计算
-                    // 也依次类推。
-                    now.add(Calendar.DATE, -((it - 1) * 7 + (now.get(Calendar.DAY_OF_WEEK) + 5) % 7))
-                    // 更新第一天
-                    context.defaultSharedPreferences.editor {
-                        putLong(SchoolCalendar.FIRST_DAY, now.timeInMillis)
-                    }
-                    schoolCalendarUpdated.value = true
+    fun isItSummerVacation() {
 
-                    if (nowWeek.value != it && it >= 1 && it <= 18) {
-                        nowWeek.value = it
-                    }
-                }))
     }
 
     /**
