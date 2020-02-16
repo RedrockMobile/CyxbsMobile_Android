@@ -144,7 +144,7 @@
                     android:layout_height="wrap_content"
                     android:background="?android:attr/selectableItemBackground"
                     android:padding="10dp"
-                    android:text="所有的桌面小部件均自动刷新，刷新后不再需要联网，同时不会造成过多电量消耗，请放行使用。\n\n目前以透明主题的设置为主，其它两种主题的自定义可能会根据反馈陆续推出。\n\n透明主题点击Title刷新课表，点击课程或教室跳转课表页面。" />
+                    android:text="所有的桌面小部件均自动刷新，刷新后不再需要联网，同时不会造成过多电量消耗，请放心使用。\n\n目前以透明主题的设置为主，其它两种主题的自定义可能会根据反馈陆续推出。\n\n透明主题点击Title刷新课表，点击课程或教室跳转课表页面。" />
             </androidx.cardview.widget.CardView>
         </LinearLayout>
     </ScrollView>
