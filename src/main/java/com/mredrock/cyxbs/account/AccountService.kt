@@ -137,7 +137,7 @@ internal class AccountService : IAccountService {
             val curTime = System.currentTimeMillis()
             val expiredTime = takeIfNoException { user?.exp?.toLong() } ?: 0L
             //预留10s，防止一些奇怪的错误出现
-            return expiredTime - curTime >= 10000L
+            return expiredTime - curTime / 1000 <= 10000L
         }
 
         fun loginFromCache(context: Context) {
