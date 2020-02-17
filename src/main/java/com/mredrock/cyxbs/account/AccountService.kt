@@ -79,6 +79,7 @@ internal class AccountService : IAccountService {
         override fun getRealName() = user?.realName.orEmpty()
 
         override fun getCheckInDay() = user?.checkInDay ?: 0
+        override fun getCollege() = user?.college.orEmpty()
     }
 
     inner class UserEditorService : IUserEditorService {
@@ -100,6 +101,10 @@ internal class AccountService : IAccountService {
 
         override fun setQQ(qq: String) {
             user?.qq = qq
+        }
+
+        override fun setCollege(college: String) {
+            user?.college = college
         }
 
         override fun setIntegral(integral: Int) {

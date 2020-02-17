@@ -64,6 +64,10 @@ internal class User() : Parcelable {
     @SerializedName("sub")
     var sub: String = ""
 
+    //学院
+    @SerializedName("college")
+    var college: String = ""
+
     constructor(parcel: Parcel) : this() {
         redid = parcel.readString()
         stuNum = parcel.readString()
@@ -79,6 +83,7 @@ internal class User() : Parcelable {
         exp = parcel.readString()
         iat = parcel.readString()
         sub = parcel.readString()
+        college = parcel.readString()
     }
 
     companion object CREATOR : Parcelable.Creator<User> {
@@ -108,6 +113,7 @@ internal class User() : Parcelable {
         parcel.writeString(exp)
         parcel.writeString(iat)
         parcel.writeString(sub)
+        parcel.writeString(college)
     }
 
     override fun describeContents(): Int {
