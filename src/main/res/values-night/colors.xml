@@ -51,8 +51,6 @@
     <color name="morningCourseTextColor" tools:ignore="ResourceName">#F0F0F2</color>
     <color name="afternoonCourseTextColor" tools:ignore="ResourceName">#F0F0F2</color>
     <color name="eveningCourseTextColor" tools:ignore="ResourceName">#F0F0F2</color>
-    <!--    标识今天的课程的背景阴影-->
-    <color name="todayLogoBackgroundColor" tools:ignore="ResourceName">#93E8F0FC</color>
 
     <color name="courseAffairYouMightRecycleItemBackgroudColor" tools:ignore="ResourceName">#99F2F3F7</color>
 
@@ -206,6 +204,9 @@
 
     <!--    关于下面声明颜色-->
     <color name="about_colors_declared_below" tools:ignore="ResourceName">#333333</color>
+
+    <color name="addTransactionToTheTimetableClickColor" tools:ignore="ResourceName">#000000</color>
+
 
 </resources>
 
