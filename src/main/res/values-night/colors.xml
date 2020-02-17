@@ -101,17 +101,23 @@
 
     <color name="mine_about_text_color_normal" tools:ignore="ResourceName">#ffffff</color>
     <color name="mine_about_text_color_blue" tools:ignore="ResourceName">#0BCCF0</color>
-    <color name="mine_sign_bg_grey" tools:ignore="ResourceName">#E1E6F0</color>
-    <color name="mine_sign_divider_grey" tools:ignore="ResourceName">#E1E6F0</color>
-    <color name="mine_sign_divider_blue" tools:ignore="ResourceName">#3A35D2</color>
-    <color name="mine_sign_divider_blue_light" tools:ignore="ResourceName">#B3E5FC</color>
+    <color name="mine_sign_bg_grey" tools:ignore="ResourceName">#5A5A5A</color>
+    <color name="mine_sign_divider_grey" tools:ignore="ResourceName">#5A5A5A</color>
+    <color name="mine_sign_divider_blue" tools:ignore="ResourceName">#2CDEFF</color>
+    <color name="mine_sign_divider_blue_light" tools:ignore="ResourceName">#552CDEFF</color>
     <color name="mine_sign_integral_text" tools:ignore="ResourceName">#4841E2</color>
+    <color name="mine_sign_ring_blue">#2CDEFF</color>
+    <color name="mine_sign_ring_outside">#ffffff</color>
+    <color name="mine_sign_bubble_textcolor">#1D1D1D</color>
+
 
     <color name="mine_sign_integral_text_background" tools:ignore="ResourceName">#D4DAFF</color>
-    <color name="mine_sign_store_round_brown_background" tools:ignore="ResourceName">#F8E2DF</color>
+    <color name="mine_sign_store_round_brown_background" tools:ignore="ResourceName">#5A5A5A</color>
     <color name="mine_sign_store_line" tools:ignore="ResourceName">#E2EDFB</color>
     <color name="mine_sign_store_item_tv_integral" tools:ignore="ResourceName">#3A34D2</color>
-    <color name="mine_sign_store_item_bg" tools:ignore="ResourceName">#F0F2FB</color>
+    <color name="mine_sign_store_item_bg" tools:ignore="ResourceName">#2D2D2D</color>
+    <color name="mine_sign_store_bg" tools:ignore="ResourceName">#1D1D1D</color>
+    <color name="mine_sign_store_my_product_text_color" tools:ignore="ResourceName">#000001</color>
     <color name="mine_askpostedfm_tv_disappear_at" tools:ignore="ResourceName">#6C84AB</color>
     <color name="mine_askpostedfm_btn_bg_accept" tools:ignore="ResourceName">#F7DAD7</color>
     <color name="mine_askpostedfm_btn_accept" tools:ignore="ResourceName">#FFA192</color>

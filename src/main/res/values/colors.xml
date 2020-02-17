@@ -114,12 +114,18 @@
     <color name="mine_sign_divider_blue" tools:ignore="ResourceName">#3A35D2</color>
     <color name="mine_sign_divider_blue_light" tools:ignore="ResourceName">#B3E5FC</color>
     <color name="mine_sign_integral_text" tools:ignore="ResourceName">#4841E2</color>
+    <color name="mine_sign_ring_blue">#3A35D2</color>
+    <color name="mine_sign_ring_outside">#ffffff</color>
+    <color name="mine_sign_bubble_textcolor">#A24841E2</color>
+
 
     <color name="mine_sign_integral_text_background" tools:ignore="ResourceName">#D4DAFF</color>
     <color name="mine_sign_store_round_brown_background" tools:ignore="ResourceName">#F8E2DF</color>
     <color name="mine_sign_store_line" tools:ignore="ResourceName">#E2EDFB</color>
     <color name="mine_sign_store_item_tv_integral" tools:ignore="ResourceName">#3A34D2</color>
     <color name="mine_sign_store_item_bg" tools:ignore="ResourceName">#F0F2FB</color>
+    <color name="mine_sign_store_bg" tools:ignore="ResourceName">#F8F9FC</color>
+    <color name="mine_sign_store_my_product_text_color" tools:ignore="ResourceName">#F8E2DF</color>
     <color name="mine_askpostedfm_tv_disappear_at" tools:ignore="ResourceName">#6C84AB</color>
     <color name="mine_askpostedfm_btn_bg_accept" tools:ignore="ResourceName">#F7DAD7</color>
     <color name="mine_askpostedfm_btn_accept" tools:ignore="ResourceName">#FFA192</color>
