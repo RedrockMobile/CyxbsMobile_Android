@@ -5,12 +5,7 @@ import android.app.Notification
 import android.content.Context
 import android.content.Intent
 import android.os.Build
-import com.alibaba.android.arouter.launcher.ARouter
-import com.meituan.android.walle.WalleChannelReader
 import com.mredrock.cyxbs.common.utils.CrashHandler
-import com.umeng.analytics.MobclickAgent
-import com.umeng.commonsdk.UMConfigure
-import com.umeng.socialize.PlatformConfig
 
 /**
  * author: Fxymine4ever
@@ -23,7 +18,7 @@ class BaseAppInitService : IntentService("BaseAppInitService") {
         const val ACTION_INIT_WHEN_APP_CREATE = "service.action.BASE_INIT"
 
         fun init(context: Context){
-            val intent = Intent(context, BaseAppInitService.javaClass)
+            val intent = Intent(context, BaseAppInitService::class.java)
             intent.action = ACTION_INIT_WHEN_APP_CREATE
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 context.startForegroundService(intent)
