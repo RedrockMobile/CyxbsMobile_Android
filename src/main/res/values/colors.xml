@@ -22,7 +22,6 @@
 
 
     <!--签到-->
-    <color name="mine_sign_ring_blue">#3A35D2</color>
     <color name="mine_sign_ring_grey">#E1E6F0</color>
 
     <color name="mine_sign_hint_text">#d8000000</color>

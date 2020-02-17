@@ -187,6 +187,7 @@ class EditInfoActivity(override val isFragmentActivity: Boolean = false,
         mine_et_introduce.setText(userService.getIntroduction())
         mine_et_qq.setText(userService.getQQ())
         mine_et_phone.setText(userService.getPhone())
+        mine_tv_college_concrete.text = userService.getCollege()
     }
 
     private fun setTextChangeListener() {

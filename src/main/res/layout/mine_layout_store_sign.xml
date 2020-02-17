@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/mine_shape_round_corner_white"
+    android:background="@drawable/mine_shape_round_corner_white_store"
     android:orientation="vertical"
     tools:context=".page.sign.DailySignActivity">
 
@@ -56,6 +56,7 @@
         android:paddingEnd="10dp"
         android:paddingBottom="5dp"
         android:text="@string/mine_sign_store_my_product"
+        android:textColor="@color/mine_sign_store_my_product_text_color"
         app:layout_constraintBottom_toBottomOf="@+id/mine_store_tv_title"
         app:layout_constraintStart_toEndOf="@id/mine_store_tv_title"
         app:layout_constraintTop_toTopOf="@+id/mine_store_tv_title"

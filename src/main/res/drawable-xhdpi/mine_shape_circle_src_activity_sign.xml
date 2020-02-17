@@ -13,7 +13,7 @@
         android:width="4dp"
         android:dashGap="0dp"
         android:dashWidth="10dp"
-        android:color="@color/whiteBackground" />
+        android:color="@color/mine_sign_ring_outside" />
 
 
 </shape>
