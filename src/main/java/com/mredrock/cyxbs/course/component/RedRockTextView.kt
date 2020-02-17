@@ -13,7 +13,6 @@ import com.mredrock.cyxbs.course.R
  * This is a TextView which display the text like cy's course column or week column. There are
  * three custom attrs. It doesn't adaptive multiline text, because I think it is not necessary
  *
- * @attr [R.styleable.RedRockTextView_strings] this attr is used to get a array of string from displayedStrings.xml
  * @attr [R.styleable.RedRockTextView_orientation] this attr is used to set the orientation of the RedRockTextView
  * @attr [R.styleable.RedRockTextView_offsetBetweenText] this attr is used to set the gap between the texts
  *
@@ -63,7 +62,7 @@ class RedRockTextView : AppCompatTextView {
             invalidate()
         }
 
-    var selectColor = 0xffffff.toInt()
+    var selectColor = 0xffffff
 
     constructor(context: Context) : super(context) {
         initRedRockTextView()

@@ -198,7 +198,8 @@
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/course_textview"
                 app:layout_constraintTop_toBottomOf="@+id/tv_title_text"
-                app:layout_constraintVertical_bias="0.0" />
+                app:layout_constraintVertical_bias="0.0"
+                tools:ignore="Autofill,LabelFor" />
 
 
             <EditText
@@ -220,7 +221,8 @@
                 app:layout_constraintEnd_toEndOf="@+id/et_title_content_input"
                 app:layout_constraintStart_toStartOf="@+id/et_title_content_input"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="1.0" />
+                app:layout_constraintVertical_bias="1.0"
+                tools:ignore="Autofill,LabelFor,TextFields" />
 
             <androidx.core.widget.NestedScrollView
                 android:id="@+id/course_affair_sv"
