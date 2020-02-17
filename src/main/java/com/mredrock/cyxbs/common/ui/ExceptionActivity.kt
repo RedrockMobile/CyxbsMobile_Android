@@ -15,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity
 import org.jetbrains.anko.alert
 import org.jetbrains.anko.appendln
 import org.jetbrains.anko.intentFor
+import kotlin.system.exitProcess
 
 
 /**
@@ -54,7 +55,7 @@ class ExceptionActivity : AppCompatActivity() {
                 cm.primaryClip = ClipData.newPlainText("exception trace stack", message)
                 this@ExceptionActivity.finish()
                 Process.killProcess(Process.myPid())
-                System.exit(1)
+                exitProcess(1)
             }
 
             isCancelable = false
