@@ -3,6 +3,7 @@
     <declare-styleable name="RedRockTextView" tools:ignore="ResourceName">
         <!--<attr name="strings" format="reference" />-->
         <attr name="displayedStrings" format="reference" />
+        <attr name="selectedColor" format="color" />
         <attr name="orientation" format="enum">
             <enum name="vertical" value="1" />
             <enum name="horizontal" value="0" />

@@ -34,7 +34,9 @@ class RedRockTextView : AppCompatTextView {
     private val mPaint: Paint by lazy {
         Paint(Paint.ANTI_ALIAS_FLAG or Paint.LINEAR_TEXT_FLAG)
     }
-    private lateinit var whitePaint: Paint
+    private  val selectTextPaint: Paint by lazy {
+        Paint()
+    }
     private var mElementWidth: Float = 0f
     private var mElementHeight: Float = 0f
     //record a CharSequence bounds
@@ -48,7 +50,7 @@ class RedRockTextView : AppCompatTextView {
         }
 
     private var mOrientation: Int = HORIZONTAL
-    var offsetBetweenText = 0
+    private var offsetBetweenText = 0
         set(value) {
             field = value
             invalidate()
@@ -61,6 +63,7 @@ class RedRockTextView : AppCompatTextView {
             invalidate()
         }
 
+    var selectColor = 0xffffff.toInt()
 
     constructor(context: Context) : super(context) {
         initRedRockTextView()
@@ -81,6 +84,7 @@ class RedRockTextView : AppCompatTextView {
         mOrientation = typedArray.getInt(R.styleable.RedRockTextView_orientation, HORIZONTAL)
         offsetBetweenText = typedArray.getDimensionPixelSize(R.styleable.RedRockTextView_offsetBetweenText,
                 0)
+        selectColor = typedArray.getColor(R.styleable.RedRockTextView_selectedColor,0xffffff)
         typedArray.recycle()
 
         initRedRockTextView()
@@ -94,9 +98,8 @@ class RedRockTextView : AppCompatTextView {
 
         //getTextSize
         mPaint.textSize = textSize
-        whitePaint = Paint(mPaint).apply {
-            color = 0xffffffff.toInt()
-        }
+        selectTextPaint.set(mPaint)
+        selectTextPaint.color = selectColor
     }
 
 
@@ -186,7 +189,7 @@ class RedRockTextView : AppCompatTextView {
                         paddingLeft + offsetBetweenText * i
                 val drawY = (mElementHeight - (-mPaint.ascent() + mPaint.descent())) / 2 -
                         mPaint.ascent() + paddingTop
-                canvas?.drawText(displayedStrings[i].toString(), drawX, drawY, if (position != null && position == i) whitePaint else mPaint)
+                canvas?.drawText(displayedStrings[i].toString(), drawX, drawY, if (position != null && position == i) selectTextPaint else mPaint)
             }
         } else {
             mElementWidth = measuredWidth.toFloat() - paddingLeft - paddingRight
@@ -198,7 +201,7 @@ class RedRockTextView : AppCompatTextView {
                 val drawY = (mElementHeight - (-mPaint.ascent() + mPaint.descent())) / 2 -
                         mPaint.ascent() + mElementHeight * i + paddingTop + offsetBetweenText * i
 
-                canvas?.drawText(displayedStrings[i].toString(), drawX, drawY, if (position != null && position == i) whitePaint else mPaint)
+                canvas?.drawText(displayedStrings[i].toString(), drawX, drawY, if (position != null && position == i) selectTextPaint else mPaint)
             }
         }
     }

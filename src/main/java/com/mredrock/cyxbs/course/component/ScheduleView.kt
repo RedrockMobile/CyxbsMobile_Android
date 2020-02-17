@@ -55,7 +55,6 @@ class ScheduleView : FrameLayout {
     /**
      * 接收一个继承了本类内部抽象Adapter的类对象，
      * 以此把获取数据和itemView的逻辑和itemView数据获取（仿造ViewPager或RecyclerView）
-     * todo 但是这里封装不够彻底，itemView视图的初始化通过[addCourseView]方法，依然放在该View内部，限制了课表View的扩展性，待修改
      */
     var adapter: Adapter? = null
         set(value) {

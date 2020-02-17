@@ -31,7 +31,7 @@
     <dimen name="course_edit_affair_activity_ic_height">18dp</dimen>
     <dimen name="course_edit_affair_activity_ic_margin_start">19dp</dimen>
     <dimen name="course_edit_affair_activity_title_content_margin">15dp</dimen>
-    <dimen name="course_edit_affair_tv_size">21dp</dimen>
+    <dimen name="course_edit_affair_tv_size">21sp</dimen>
     <dimen name="course_edit_affair_ic_right_size">14dp</dimen>
 
 

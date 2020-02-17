@@ -23,7 +23,7 @@
         app:elementGap="2dp"
         app:emptyText="@string/course_empty_course_text"
         app:emptyTextSize="14sp"
-        app:highlightColor="@color/todayLogoBackgroundColor"
+        app:highlightColor="@color/courseIdentifiesTheCurrentShadowColor"
         app:isDisplayCourse="false"
         app:nameList="@{noCourseInviteViewModel.nameList}"
         app:noCourseDrawable="@drawable/course_no_course"
