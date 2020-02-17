@@ -14,4 +14,6 @@ interface IUserEditorService {
     fun setIntegral(integral: Int)
 
     fun setCheckInDay(checkInDay: Int)
+
+    fun setCollege(college: String)
 }

@@ -22,4 +22,6 @@ interface IUserService {
     fun getRealName(): String
 
     fun getCheckInDay(): Int
+
+    fun getCollege(): String
 }
