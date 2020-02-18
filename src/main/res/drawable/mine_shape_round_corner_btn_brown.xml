@@ -3,6 +3,6 @@
     android:shape="rectangle">
 
     <corners android:radius="30dp" />
-    <solid android:color="@color/mine_askpostedfm_btn_bg_accept" />
+    <solid android:color="@color/mine_list_item_bg_brown" />
 
 </shape>

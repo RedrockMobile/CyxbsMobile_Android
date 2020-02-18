@@ -69,7 +69,7 @@ class AskPostedFm : BaseRVFragment<AskPosted>() {
         } else {
             holder.itemView.mine_ask_posted_tv_state.background = ResourcesCompat.getDrawable(resources, R.drawable.mine_shape_round_corner_brown, null)
             context?.let {
-                holder.itemView.mine_ask_posted_tv_disappear_at.textColor = ContextCompat.getColor(it, R.color.mine_askpostedfm_tv_disappear_at)
+                holder.itemView.mine_ask_posted_tv_disappear_at.textColor = ContextCompat.getColor(it, R.color.mine_list_item_tv_disappear_at)
             }
         }
         holder.itemView.setOnClickListener {

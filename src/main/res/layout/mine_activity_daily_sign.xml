@@ -436,7 +436,7 @@
             android:paddingTop="4dp"
             android:background="@drawable/mine_ic_sign_bubble"
             android:text="@string/mine_sign_week_integral"
-            android:textColor="@color/mine_sign_bubble_textcolor"
+            android:textColor="@color/mine_sign_bubble_text_color"
             android:textSize="11sp"
             app:layout_constraintBottom_toTopOf="@+id/mine_daily_iv_thurs"
             app:layout_constraintEnd_toEndOf="@+id/mine_daily_tv_thurs"

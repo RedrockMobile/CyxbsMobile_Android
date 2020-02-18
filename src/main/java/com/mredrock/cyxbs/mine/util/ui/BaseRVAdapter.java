@@ -34,7 +34,33 @@ public abstract class BaseRVAdapter<D> extends RecyclerView.Adapter {
     }
 
 
+    //设置新数据集，通过旧数据集和DiffUtil来添加动画
     public void setNewData(List<D> newData) {
+        List<D> oldData = new ArrayList<>(datas);
+        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new DiffUtil.Callback() {
+            @Override
+            public int getOldListSize() {
+                return oldData.size();
+            }
+
+            @Override
+            public int getNewListSize() {
+                return newData.size();
+            }
+
+            @Override
+            public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
+                return oldData.get(oldItemPosition) == newData.get(newItemPosition);
+            }
+
+            @Override
+            public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
+                return oldData.get(oldItemPosition).equals(newData.get(newItemPosition));
+            }
+        });
+        diffResult.dispatchUpdatesTo(this);
+        //刷新FooterView,否则由于DiffUtil，不会刷新FooterView所在的位置
+        notifyItemChanged(newData.size());
         datas = newData;
         notifyDataSetChanged();
     }
