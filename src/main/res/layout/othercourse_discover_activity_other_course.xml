@@ -23,7 +23,7 @@
         app:tabSelectedTextColor="@color/levelTwoFontColor"
         app:tabGravity="fill"
         app:tabIndicatorHeight="3dp"
-        app:tabIndicatorColor="@color/mine_tablayout_indicator_color"
+        app:tabIndicatorColor="@color/mine_tab_layout_indicator_color"
         app:tabIndicator="@drawable/diacover_other_course_tab_indicator"
         app:tabIndicatorFullWidth="false"
         app:tabMode="fixed" />
