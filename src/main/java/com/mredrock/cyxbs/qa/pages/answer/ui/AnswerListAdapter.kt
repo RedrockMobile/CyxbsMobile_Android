@@ -1,24 +1,22 @@
 package com.mredrock.cyxbs.qa.pages.answer.ui
 
 import android.content.Context
-import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.service.account.IAccountService
 import com.mredrock.cyxbs.common.utils.extensions.gone
 import com.mredrock.cyxbs.common.utils.extensions.setAvatarImageFromUrl
+import com.mredrock.cyxbs.common.utils.extensions.visible
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.bean.Answer
 import com.mredrock.cyxbs.qa.bean.Question
 import com.mredrock.cyxbs.qa.component.recycler.BaseRvAdapter
 import com.mredrock.cyxbs.qa.component.recycler.BaseViewHolder
-import com.mredrock.cyxbs.qa.pages.comment.AdoptAnswerEvent
-import com.mredrock.cyxbs.qa.ui.widget.CommonDialog
-import com.mredrock.cyxbs.qa.utils.*
+import com.mredrock.cyxbs.qa.utils.setNicknameTv
+import com.mredrock.cyxbs.qa.utils.setPraise
+import com.mredrock.cyxbs.qa.utils.timeDescription
 import kotlinx.android.synthetic.main.qa_recycler_item_answer.view.*
-import org.greenrobot.eventbus.EventBus
 
 /**
  * Created By jay68 on 2018/9/30.
@@ -100,37 +98,14 @@ class AnswerListAdapter(context: Context) : BaseRvAdapter<Answer>() {
                 }
                 iv_answer_avatar.setAvatarImageFromUrl(data.photoThumbnailSrc)
                 tv_answer_nickname.setNicknameTv(data.nickname, isEmotion, data.isMale)
-                setAdoptedTv(tv_adopted, tv_adopt, data.isAdopted, hasAdoptedAnswer || !isSelf)
-                tv_adopt.setOnClickListener {
-                    CommonDialog(context).apply {
-                        initView(icon = R.drawable.qa_ic_quiz_notice_question_accept
-                                , title = context.getString(R.string.qa_answer_whether_accept_answer_text)
-                                , firstNotice = context.getString(R.string.qa_answer_accept_dialog_exit_subtitle_text)
-                                , secondNotice = null
-                                , buttonText = context.getString(R.string.qa_quiz_dialog_accept)
-                                , confirmListener = View.OnClickListener {
-                            EventBus.getDefault().post(AdoptAnswerEvent(data.id))
-                            dismiss()
-                        }
-                                , cancelListener = View.OnClickListener {
-                            dismiss()
-                        })
-                    }.show()
+                if (hasAdoptedAnswer) {
+                    tv_adopted.visible()
                 }
                 tv_answer_content.text = data.content
-                setDate(tv_answer_publish_at, data.createdAt)
-                tv_answer_reply_count.text = data.commentNum
+                tv_answer_publish_at.text = timeDescription(System.currentTimeMillis(), data.createdAt)
+                tv_answer_reply_count.text = context.getString(R.string.qa_answer_reply_count, data.commentNum)
                 tv_answer_praise_count.setPraise(data.praiseNum, data.isPraised)
 
-            }
-        }
-
-        private fun setDate(dateTv: TextView, date: String) {
-            val desc = timeDescription(System.currentTimeMillis(), date.toDate().time)
-            if (desc.last() in '0'..'9') {
-                dateTv.text = desc
-            } else {
-                dateTv.text = context.getString(R.string.qa_answer_list_answer_date, desc)
             }
         }
     }

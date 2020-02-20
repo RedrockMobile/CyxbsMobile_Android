@@ -1,7 +1,6 @@
 package com.mredrock.cyxbs.qa.pages.comment.ui
 
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import com.mredrock.cyxbs.common.component.JCardViewPlus
@@ -12,7 +11,6 @@ import com.mredrock.cyxbs.qa.component.recycler.BaseEndlessRvAdapter
 import com.mredrock.cyxbs.qa.component.recycler.BaseViewHolder
 import com.mredrock.cyxbs.qa.utils.setNicknameTv
 import com.mredrock.cyxbs.qa.utils.timeDescription
-import com.mredrock.cyxbs.qa.utils.toDate
 import kotlinx.android.synthetic.main.qa_recycler_item_comment.view.*
 
 /**
@@ -37,17 +35,8 @@ class CommentListRvAdapter(private val isEmotion: Boolean) : BaseEndlessRvAdapte
             itemView.apply {
                 iv_comment_avatar.setAvatarImageFromUrl(data.photoThumbnailSrc)
                 tv_comment_nickname.setNicknameTv(data.nickname, isEmotion, data.isMale)
-                setDate(tv_comment_create_at, data.createdAt)
+                tv_comment_create_at.text = timeDescription(System.currentTimeMillis(), data.createdAt)
                 tv_comment_content.text = data.content
-            }
-        }
-
-        private fun setDate(dateTv: TextView, date: String) {
-            val desc = timeDescription(System.currentTimeMillis(), date.toDate().time)
-            if (desc.last() in '0'..'9') {
-                dateTv.text = desc
-            } else {
-                dateTv.text = context.getString(R.string.qa_answer_list_answer_date, desc)
             }
         }
     }

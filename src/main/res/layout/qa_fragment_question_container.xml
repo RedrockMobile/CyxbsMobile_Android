@@ -46,7 +46,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:alpha="0.65"
-            android:text="第十一周 周二"
+            tools:text="第十一周 周二"
             android:textColor="@color/qa_question_current_time_color"
             android:textSize="10sp"
             app:layout_constraintStart_toStartOf="@id/gl_tv_start"

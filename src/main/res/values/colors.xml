@@ -2,16 +2,12 @@
 <resources>
     <color name="qa_tab_background">#fefefe</color>
     <color name="qa_quiz_fab_color">#7195fa</color>
-    <color name="qa_question_item_shadow_color">#0d000000</color>
     <color name="qa_question_item_disappear_color">#D9999999</color>
     <color name="qa_question_item_title_color">#333333</color>
     <color name="qa_question_item_show_picture_btn_color">#7097fb</color>
-    <color name="qa_question_item_empty_holder_color">#E6E6E6</color>
     <color name="qa_question_list_hint_color">#cc999999</color>
-    <color name="qa_answer_text_content_color">#15315B</color>
     <color name="qa_answer_list_divider_color">#bfc6c4c5</color>
     <color name="qa_answer_list_bottom_tv_color">#7396fa</color>
-    <color name="qa_answer_list_background_color">#ffffff</color>
     <color name="qa_answer_list_question_title_color">#333333</color>
     <color name="qa_answer_list_question_content_color">#333333</color>
     <color name="qa_answer_list_questioner_nickname_color">#555555</color>
@@ -21,7 +17,6 @@
     <color name="qa_answer_list_sort_tv_color">#788efa</color>
     <color name="qa_answer_list_answer_nickname_color">#15315B</color>
     <color name="qa_answer_list_adopt_color">#788efa</color>
-    <color name="qa_answer_list_answer_content_color">#15315B</color>
     <color name="qa_answer_list_comment_color">#999999</color>
     <color name="qa_answer_list_answer_date_color">#e6999999</color>
     <color name="qa_answer_item_divider_color">#59c6c4c5</color>
@@ -29,15 +24,9 @@
     <color name="qa_popup_window_sort_by_uncheck_color">#999999</color>
     <color name="qa_popup_window_sort_by_divider_color">#59c6c4c5</color>
     <color name="qa_comment_list_bottom_view_color">#7a90fa</color>
-    <color name="qa_comment_default_color">#ffffff</color>
-    <color name="qa_comment_content_first_kind_color">#f9f3f0</color>
-    <color name="qa_comment_content_second_kind_color">#f0f2fb</color>
-    <color name="qa_comment_content_third_kind_color">#f9eff2</color>
     <color name="qa_comment_new_comment_text_background_color">#eff4fd</color>
     <color name="qa_comment_item_question_title_color">#222222</color>
     <color name="qa_comment_item_divider_color">#80c6c4c5</color>
-    <color name="qa_comment_item_answer_nickname_color">#15315B</color>
-    <color name="qa_comment_item_answer_create_at_tv_color">#15315B</color>
     <color name="qa_comment_item_answer_content_color">#15315B</color>
     <color name="qa_comment_item_answer_count_color">#888888</color>
     <color name="qa_comment_dialog_content_edt_text_color">#bf333333</color>

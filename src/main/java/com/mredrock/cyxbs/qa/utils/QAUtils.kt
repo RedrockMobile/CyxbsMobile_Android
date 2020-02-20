@@ -28,7 +28,9 @@ internal fun TextView.setNicknameTv(nickname: String, showGender: Boolean, isMal
 internal fun TextView.setPraise(praiseNum: String?,
                                 isPraised: Boolean?,
                                 praiseIcon: Int = R.drawable.qa_ic_answer_list_praise,
-                                praisedIcon: Int = R.drawable.qa_ic_answer_list_praised) {
+                                praisedIcon: Int = R.drawable.qa_ic_answer_list_praised,
+                                praiseColor: Int = R.color.qa_answer_praise_count_color,
+                                praisedColor: Int = R.color.qa_answer_praised_count_color) {
     if (praiseNum != null) {
         text = praiseNum
     }
@@ -37,6 +39,11 @@ internal fun TextView.setPraise(praiseNum: String?,
         ContextCompat.getDrawable(context, praisedIcon)
     } else {
         ContextCompat.getDrawable(context, praiseIcon)
+    }
+    textColor = if (isPraised) {
+        ContextCompat.getColor(context, praisedColor)
+    } else {
+        ContextCompat.getColor(context, praiseColor)
     }
     setCompoundDrawablesRelativeWithIntrinsicBounds(drawable, null, null, null)
 }
@@ -53,20 +60,20 @@ internal fun TextView.selected() {
 
 }
 
-internal fun setAdoptedTv(adopedTv: TextView, adoptTv: TextView, isAdopted: Boolean, showAdoptIcon: Boolean) = when {
+internal fun setAdoptedTv(adoptedTv: TextView, adoptTv: TextView, isAdopted: Boolean, showAdoptIcon: Boolean) = when {
     isAdopted -> {
         adoptTv.gone()
-        adopedTv.visible()
+        adoptedTv.visible()
     }
 
     showAdoptIcon -> {
         adoptTv.gone()
-        adopedTv.gone()
+        adoptedTv.gone()
     }
 
     else -> {
         adoptTv.visible()
-        adopedTv.gone()
+        adoptedTv.gone()
     }
 }
 

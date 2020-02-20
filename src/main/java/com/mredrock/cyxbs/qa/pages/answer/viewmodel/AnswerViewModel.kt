@@ -52,7 +52,7 @@ class AnswerViewModel(var qid: String) : BaseViewModel() {
         progressDialogEvent.value = ProgressDialogEvent.SHOW_NONCANCELABLE_DIALOG_EVENT
         val stuNum = ServiceManager.getService(IAccountService::class.java).getUserService().getStuNum()
         var observable: Observable<out Any> = ApiGenerator.getApiService(ApiService::class.java)
-                .answer(qid, content, stuNum)
+                .answer(stuNum, qid, content)
                 .setSchedulers()
                 .mapOrThrowApiException()
         if (!imageLiveData.value.isNullOrEmpty()) {

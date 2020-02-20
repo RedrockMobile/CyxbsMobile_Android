@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/qa_answer_list_background_color"
+    android:background="@color/whiteBackground"
     android:orientation="vertical">
 
     <RelativeLayout
@@ -34,7 +34,7 @@
                 android:id="@+id/tv_answer_nickname"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/levelTwoFontColor"
+                android:textColor="@color/qa_answer_list_header_content_color"
                 android:textSize="13sp"
                 tools:text="刘童鞋" />
 
@@ -45,7 +45,6 @@
                 android:layout_gravity="bottom"
                 android:textColor="@color/qa_answer_publish_at_color"
                 android:textSize="11sp"
-                android:alpha="0.54"
                 tools:text="19:00" />
 
 
@@ -57,26 +56,17 @@
                 <TextView
                     android:id="@+id/tv_adopted"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:text="@string/qa_answer_list_accepted"
+                    android:background="@drawable/qa_answer_adopted_background"
+                    android:paddingStart="10dp"
+                    android:paddingEnd="10dp"
+                    android:paddingTop="4dp"
+                    android:paddingBottom="4dp"
                     android:textColor="@color/qa_answer_list_adopted_color"
                     android:textSize="12sp"
                     android:visibility="gone"
                     tools:visibility="visible" />
-
-                <TextView
-                    android:id="@+id/tv_adopt"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/qa_answer_list_accept_tv_background"
-                    android:paddingStart="11dp"
-                    android:paddingTop="5dp"
-                    android:paddingEnd="11dp"
-                    android:paddingBottom="5dp"
-                    android:text="@string/qa_answer_list_accept"
-                    android:textColor="@color/qa_answer_list_adopt_color"
-                    android:textSize="12sp"
-                    android:visibility="gone" />
             </FrameLayout>
         </FrameLayout>
 
@@ -95,7 +85,7 @@
                 android:layout_height="wrap_content"
                 android:paddingTop="10dp"
                 android:paddingBottom="10dp"
-                android:textColor="@color/qa_answer_list_answer_content_color"
+                android:textColor="@color/qa_answer_content_color"
                 android:textSize="14sp"
                 tools:text="是的，公式是没有问题，但是你第三步那个代入方式是错误的，不应该用x的负5次方是的，公式是没有问题，但是你第三步那个代入方式是错误的，不应该是这样" />
 
@@ -109,7 +99,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
-                    android:background="@drawable/qa_ic_toolbar_more" />
+                    android:background="@drawable/qa_ic_answer_more" />
 
                 <TextView
                     android:id="@+id/tv_answer_reply_count"
@@ -132,7 +122,7 @@
                     android:drawableStart="@drawable/qa_ic_answer_list_praise"
                     android:drawablePadding="5dp"
                     android:gravity="center_vertical"
-                    android:textColor="@color/unFocusedFontColor"
+                    android:textColor="@color/qa_answer_praise_count_color"
                     android:textSize="9sp"
                     tools:text="25" />
             </RelativeLayout>

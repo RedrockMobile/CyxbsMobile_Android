@@ -4,6 +4,7 @@ import com.mredrock.cyxbs.common.utils.LogUtils
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.math.abs
 
 /**
  * Created By jay68 on 2018/9/20.
@@ -23,15 +24,32 @@ fun String.toDate(format: String = "yyyy-MM-dd HH:mm:ss"): Date {
     return Date()
 }
 
-fun timeDescription(current: Long, other: Long): String {
+fun questionTimeDescription(current: Long, other: Long): String {
     val oneMinute = 60000
     val oneHour = 60 * oneMinute
     val oneDay = 24 * oneHour
-    val differ = Math.abs(other - current)
+    val differ = abs(other - current)
     return when {
-        differ < oneHour -> "${differ / oneMinute}分钟"
-        differ < oneDay -> "${differ / oneHour}小时"
-        differ < 7 * oneDay -> "${differ / oneDay}天"
+        differ < oneHour / 2 -> "刚刚"
+        differ < oneDay -> "今天"
+        else -> {
+            val format = SimpleDateFormat("yyyy-MM-dd", Locale.CHINA)
+            format.format(Date(other))
+        }
+    }
+}
+
+fun timeDescription(current: Long, date: String): String {
+    val other = date.toDate().time
+    val oneMinute = 60000
+    val differ = abs(other - current)
+    //"created_at":"2020-01-23 20:45:03"
+    val day = date.split(" ")[0]
+    val hourAndMin = date.split(" ")[1].substring(0, 5)
+    val now = Date().toFormatString().split(" ")[0]
+    return when {
+        differ < oneMinute * 5 -> "刚刚"
+        day == now -> "今天$hourAndMin"
         else -> {
             val format = SimpleDateFormat("yyyy-MM-dd", Locale.CHINA)
             format.format(Date(other))

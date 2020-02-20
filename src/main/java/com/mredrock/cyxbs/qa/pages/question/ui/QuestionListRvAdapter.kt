@@ -12,7 +12,9 @@ import com.mredrock.cyxbs.qa.component.recycler.BaseEndlessRvAdapter
 import com.mredrock.cyxbs.qa.component.recycler.BaseViewHolder
 import com.mredrock.cyxbs.qa.pages.answer.ui.AnswerListActivity
 import com.mredrock.cyxbs.qa.pages.main.QuestionContainerFragment
+import com.mredrock.cyxbs.qa.utils.questionTimeDescription
 import com.mredrock.cyxbs.qa.utils.setNicknameTv
+import com.mredrock.cyxbs.qa.utils.toDate
 import kotlinx.android.synthetic.main.qa_recycler_item_question.view.*
 import org.greenrobot.eventbus.EventBus
 
@@ -50,7 +52,8 @@ class QuestionListRvAdapter(private val fragment: Fragment) : BaseEndlessRvAdapt
                 tv_reward_count.text = data.reward.toString()
                 tv_answer_count.text = data.answerNum.toString()
                 tv_view_count.text = data.viewCount.toString()
-                tv_publish_at.text = data.createdAt.split(" ")[0].replace("-", "/")
+                tv_publish_at.text = questionTimeDescription(System.currentTimeMillis(), data.createdAt.toDate().time)
+
             }
         }
 

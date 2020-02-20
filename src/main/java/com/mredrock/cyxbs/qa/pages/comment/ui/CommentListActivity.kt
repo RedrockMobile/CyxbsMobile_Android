@@ -7,7 +7,10 @@ import android.view.inputmethod.EditorInfo
 import androidx.lifecycle.ViewModelProvider
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.mredrock.cyxbs.common.config.QA_COMMENT_LIST
+import com.mredrock.cyxbs.common.service.ServiceManager
+import com.mredrock.cyxbs.common.service.account.IAccountService
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
+import com.mredrock.cyxbs.common.utils.extensions.gone
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.bean.Answer
 import com.mredrock.cyxbs.qa.bean.Question
@@ -21,7 +24,6 @@ import com.mredrock.cyxbs.qa.ui.adapter.FooterRvAdapter
 import com.mredrock.cyxbs.qa.utils.setPraise
 import kotlinx.android.synthetic.main.qa_activity_comment_list.*
 import kotlinx.android.synthetic.main.qa_comment_new_publish_layout.*
-import kotlinx.android.synthetic.main.qa_common_toolbar.*
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.jetbrains.anko.singleLine
@@ -35,17 +37,16 @@ class CommentListActivity : BaseViewModelActivity<CommentListViewModel>() {
         fun activityStart(activity: Activity,
                           question: Question,
                           answer: Answer) {
-            val title = "<font color=\"#7195fa\">#${question.tags}#</font>${question.title}"
             val showAdoptIcon = question.hasAdoptedAnswer || !question.isSelf
             activity.startActivityForResult<CommentListActivity>(REQUEST_CODE,
                     "qid" to question.id,
-                    "title" to title,
                     "showAdoptIcon" to showAdoptIcon,
                     "isEmotion" to question.isEmotion,
                     "answer" to answer,
                     "answerNum" to answer.commentNum,
                     "praiseNum" to answer.praiseNum,
-                    "isPraised" to answer.isPraised
+                    "isPraised" to answer.isPraised,
+                    "stuNum" to answer.userId
             )
         }
     }
@@ -62,11 +63,10 @@ class CommentListActivity : BaseViewModelActivity<CommentListViewModel>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.qa_activity_comment_list)
-        val title = intent.getStringExtra("title")
         val showAdoptIcon = intent.getBooleanExtra("showAdoptIcon", false)
         val isEmotion = intent.getBooleanExtra("isEmotion", false)
         initToolbar()
-        initRv(title, showAdoptIcon, isEmotion)
+        initRv(showAdoptIcon, isEmotion)
         initCommentSheet()
     }
 
@@ -74,22 +74,27 @@ class CommentListActivity : BaseViewModelActivity<CommentListViewModel>() {
         qa_ib_toolbar_back.setOnClickListener { finish() }
         val answerNub = intent.getStringExtra("answerNum")
         qa_tv_toolbar_title.text = baseContext.getString(R.string.qa_comment_list_comment_count, answerNub)
-        qa_ib_toolbar_more.setOnClickListener {
-            ReportDialog(this).apply {
-                setType(resources.getStringArray(R.array.qa_title_type)[1])
-                pressReport = {
-                    viewModel.reportAnswer(it)
-                }
-                viewModel.backPreActivityReportAnswerEvent.observeNotNull {
-                    dismiss()
-                }
-            }.show()
+        val mStuNum = ServiceManager.getService(IAccountService::class.java).getUserService().getStuNum()
+        if (intent.getStringExtra("stuNum") == mStuNum) {
+            qa_ib_toolbar_more.setOnClickListener {
+                ReportDialog(this).apply {
+                    setType(resources.getStringArray(R.array.qa_title_type)[1])
+                    pressReport = {
+                        viewModel.reportAnswer(it)
+                    }
+                    viewModel.backPreActivityReportAnswerEvent.observeNotNull {
+                        dismiss()
+                    }
+                }.show()
+            }
+        } else {
+            qa_ib_toolbar_more.gone()
         }
     }
 
-    private fun initRv(title: String, showAdoptIcon: Boolean, isEmotion: Boolean) {
-        headerAdapter = CommentListHeaderRvAdapter(title, isEmotion, showAdoptIcon)
-        emptyRvAdapter = EmptyRvAdapter("还没有评论哦~")
+    private fun initRv(showAdoptIcon: Boolean, isEmotion: Boolean) {
+        headerAdapter = CommentListHeaderRvAdapter(isEmotion, showAdoptIcon)
+        emptyRvAdapter = EmptyRvAdapter(getString(R.string.qa_comment_list_no_comment_hint))
         commentListRvAdapter = CommentListRvAdapter(isEmotion)
         footerRvAdapter = FooterRvAdapter { viewModel.retryFailedListRequest() }
         val adapterWrapper = RvAdapterWrapper(commentListRvAdapter, headerAdapter, footerRvAdapter, emptyRvAdapter)

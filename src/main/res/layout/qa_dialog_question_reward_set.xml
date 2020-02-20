@@ -68,7 +68,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="14dp"
         tools:text="2019年10月2日5时21分"
-        android:textColor="#29D1F1"
+        android:textColor="@color/qa_quiz_time_display_color"
         android:textSize="11sp"
         app:layout_constraintBottom_toBottomOf="@+id/tv_mission_deadline_title"
         app:layout_constraintEnd_toEndOf="parent"

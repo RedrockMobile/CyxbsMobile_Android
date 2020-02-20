@@ -10,6 +10,7 @@ import com.alibaba.android.arouter.facade.annotation.Route
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.config.QA_ENTRY
 import com.mredrock.cyxbs.common.event.AskLoginEvent
+import com.mredrock.cyxbs.common.event.CurrentDateInformationEvent
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.service.account.IAccountService
 import com.mredrock.cyxbs.common.ui.BaseFragment
@@ -17,8 +18,11 @@ import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.bean.Question
 import com.mredrock.cyxbs.qa.pages.question.ui.QuestionListFragment
 import com.mredrock.cyxbs.qa.pages.quiz.ui.QuizActivity
+import kotlinx.android.synthetic.main.qa_fragment_question_container.*
 import kotlinx.android.synthetic.main.qa_fragment_question_container.view.*
 import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 
 /**
  * Created By jay68 on 2018/8/22.
@@ -70,5 +74,10 @@ class QuestionContainerFragment : BaseFragment(), View.OnClickListener {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         childFragments.forEach { it.onActivityResult(requestCode, resultCode, data) }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
+    fun setCurrentDate(event: CurrentDateInformationEvent) {
+        tv_current_time.text = event.time
     }
 }
