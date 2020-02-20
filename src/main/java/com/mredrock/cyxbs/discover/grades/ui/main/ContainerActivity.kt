@@ -63,7 +63,9 @@ class ContainerActivity : BaseActivity() {
             initGrades()
         }
 
+        //初始化数据和绑定CoordinatorLayout(必须，内部处理了BottomSheet的事件分发)
         gpa_graph.array = arrayListOf(4.0F, 3.5F, 3F, 2.5F, 2F, 1.8F, 1.5F, 1.2F)
+        gpa_graph.bindCoordinator(coordinator)
     }
 
     private fun initExam() {
