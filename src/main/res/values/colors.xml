@@ -145,6 +145,8 @@
     <!--    邮问-->
     <!--    当前时间颜色-->
     <color name="qa_question_current_time_color" tools:ignore="ResourceName">#ff2a4e84</color>
+    <!--    提问时间选择颜色-->
+    <color name="qa_quiz_select_time_color" tools:ignore="ResourceName">#ff2a4e84</color>
     <!--    邮问大标题-->
     <color name="qa_main_title" tools:ignore="ResourceName">#15315B</color>
     <!--    问题tab下标颜色-->
@@ -165,19 +167,59 @@
     <color name="qa_question_recycler_item_divide_line_color" tools:ignore="ResourceName">#BDCCE5
     </color>
     <!--    评论默认颜色-->
-    <color name="qa_comment_default_color" tools:ignore="ResourceName">#F8F9FD</color>
-    <!--    评论内容颜色-->
-    <color name="qa_comment_content_color" tools:ignore="ResourceName">#3B4555</color>
+    <color name="qa_comment_header_background_color" tools:ignore="ResourceName">#F8F9FD</color>
+    <!--    评论背景颜色-->
+    <color name="qa_comment_background_color" tools:ignore="ResourceName">#f0eff6</color>
+    <!--    评论list背景颜色-->
+    <color name="qa_comment_list_background_color" tools:ignore="ResourceName">#f6fafd</color>
+    <!--    评论header的名字颜色-->
+    <color name="qa_comment_answer_nickname_color" tools:ignore="ResourceName">#CC15315B</color>
+    <!--    评论header的创建时间颜色-->
+    <color name="qa_comment_answer_create_at_color" tools:ignore="ResourceName">#8915315B</color>
+    <!--    评论header的内容颜色-->
+    <color name="qa_comment_answer_content_color" tools:ignore="ResourceName">#15315B</color>
+    <!--    评论item的nickname颜色-->
+    <color name="qa_comment_item_nick_name_color" tools:ignore="ResourceName">#15315B</color>
+    <!--    评论item的创建时间颜色-->
+    <color name="qa_comment_item_create_at_color" tools:ignore="ResourceName">#8915315B</color>
+    <!--    评论item内容颜色-->
+    <color name="qa_comment_content_color" tools:ignore="ResourceName">#7F3B4555</color>
+    <!--    评论JCardView3种背景颜色-->
+    <color name="qa_comment_content_first_kind_color" tools:ignore="ResourceName">#f8f4f0</color>
+    <color name="qa_comment_content_second_kind_color" tools:ignore="ResourceName">#f1f1fa</color>
+    <color name="qa_comment_content_third_kind_color" tools:ignore="ResourceName">#faeef4</color>
+    <!--    评论底部背景颜色-->
+    <color name="qa_comment_bottom_background_color" tools:ignore="ResourceName">#ffffff</color>
     <!--    回答发布时间颜色-->
-    <color name="qa_answer_publish_at_color" tools:ignore="ResourceName">#ff2a4e84</color>
+    <color name="qa_answer_publish_at_color" tools:ignore="ResourceName">#8915315B</color>
     <!--    回答发布toolbar分割线-->
     <color name="qa_quiz_toolbar_divider_line_color" tools:ignore="ResourceName">#2A4E84</color>
     <!--    提问图片选择占位图-->
     <color name="qa_quiz_picture_empty_color" tools:ignore="ResourceName">#E8F0FC</color>
     <!--    提问图片选择占位图中间颜色-->
     <color name="qa_quiz_picture_empty_centre_color" tools:ignore="ResourceName">#C4D1E6</color>
+    <!--    提问时间选择器选中时间颜色-->
+    <color name="qa_quiz_time_display_color" tools:ignore="ResourceName">#29D1F1</color>
+    <!--    提问时间选择器时间颜色-->
+    <color name="qa_quiz_time_select_color" tools:ignore="ResourceName">#2A4E84</color>
     <!--    回答被采纳的标签颜色-->
     <color name="qa_answer_list_adopted_color" tools:ignore="ResourceName">#94A6C4</color>
+    <!--    回答被采纳的标签背景颜色-->
+    <color name="qa_answer_list_adopted_background_color" tools:ignore="ResourceName">#E8F0FC
+    </color>
+    <!--    回答header的问题内容颜色-->
+    <color name="qa_answer_list_header_content_color" tools:ignore="ResourceName">#15315B</color>
+    <!--    回答的内容颜色-->
+    <color name="qa_answer_content_color" tools:ignore="ResourceName">#15315B</color>
+    <!--    回答的回复颜色-->
+    <color name="qa_answer_comment_count_color" tools:ignore="ResourceName">#CC15315B</color>
+    <!--    回答的点赞颜色-->
+    <color name="qa_answer_praise_count_color" tools:ignore="ResourceName">#AABCD8</color>
+    <color name="qa_answer_praised_count_color" tools:ignore="ResourceName">#4841E2</color>
+    <!--    RecyclerView加载时的holder颜色-->
+    <color name="qa_question_item_empty_holder_color" tools:ignore="ResourceName">#E6E6E6</color>
+    <!--    RecyclerView加载时的holder背景颜色-->
+    <color name="qa_question_item_shadow_color" tools:ignore="ResourceName">#ffffff</color>
     <!--    提问选择类型的背景颜色-->
     <color name="qa_quiz_select_type_background_color" tools:ignore="ResourceName">#E8F0FC</color>
     <!--    提问选择类型的文字颜色-->
@@ -211,12 +253,15 @@
     <color name="course_affair_bubble_color" tools:ignore="ResourceName">#DFE6FF</color>
 
     <!--    评论head和item间隙颜色-->
-    <color name="qa_comment_item_divider_gap_color" tools:ignore="ResourceName">#EFF2F7</color>
+    <color name="qa_comment_item_divider_gap_color" tools:ignore="ResourceName">#f5f4f9</color>
     <!--    邮问积分说明最下面的小字颜色-->
     <color name="qa_dialog_qa_reward_description_bottom_text_color" tools:ignore="ResourceName">
         #ABBCD8
     </color>
-
+    <!--    邮问积分说明背景颜色-->
+    <color name="qa_dialog_qa_reward_description_background_color" tools:ignore="ResourceName">
+        #ffffff
+    </color>
     <!--课表背景-->
     <color name="curriculum_background_color" tools:ignore="ResourceName">#ffffff</color>
 
