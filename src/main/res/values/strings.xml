@@ -25,4 +25,6 @@
     <string name="main_user_agreement">同意《掌上重邮用户协议》</string>
     <string name="main_user_agreement_title">请先同意用户协议吧</string>
     <string name="main_login_error_prompt">登陆失败，请检查一下用户名和密码是否正确</string>
+    <string name="main_welcome_speech_2">欢迎来到掌上重邮</string>
+    <string name="main_main_welcome_speech_1">你好！</string>
 </resources>

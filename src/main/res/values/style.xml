@@ -33,4 +33,8 @@
         <item name="colorAccent">@color/levelFourFontColor</item>
     </style>
 
+    <style name="LoginTextInputStyle" parent="AppTheme" tools:ignore="ResourceName">
+        <item name="colorAccent">@color/levelTwoFontColor</item>
+    </style>
+
 </resources>
