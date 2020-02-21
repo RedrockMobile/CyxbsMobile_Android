@@ -302,6 +302,7 @@ class CourseContainerEntryFragment : BaseFragment() {
      * @param state 从0到1，1表示BottomSheet完全展开
      */
     private fun settingFollowBottomSheet(state: Float) {
+        mCoursesViewModel.setTipsState(state, course_tip)
         //如果lottie动画还在显示，那么就不现实周数头部，这样加载时更加纯净一点
         if (course_lottie_load.visibility == View.VISIBLE) {
             course_current_course_week_select_container.visibility = View.GONE

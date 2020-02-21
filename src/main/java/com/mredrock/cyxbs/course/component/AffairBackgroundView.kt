@@ -19,7 +19,8 @@ import kotlin.math.sqrt
  * @create 2020-01-26 2:36 PM
  *
  *
- * 描述:
+ * 描述:课表中事务的背景View，
+ * 别问为什么不用图片，问就是图片太麻烦，而且效果还不好
  */
 internal class AffairBackgroundView : View {
 
@@ -59,21 +60,19 @@ internal class AffairBackgroundView : View {
         screenWidth = getScreenWidth(context)
     }
 
-    override fun onDraw(canvas: Canvas?) {
+    override fun onDraw(canvas: Canvas) {
         wholeRectF.set(-(width / 2f), (height / 2f), width / 2f, -(height / 2f))
         mPath.addRoundRect(wholeRectF, 16f, 16f, Path.Direction.CCW)
         val drawEdge = max(width, height) * sqrt(2.0)
         val space = dip(8)
         val num = drawEdge / (space * 2)
-        canvas?.let { canvas1 ->
-            canvas1.translate(width / 2f, height / 2f)
-            canvas1.clipPath(mPath)
-            canvas1.rotate(45f)
-            rectF.set(-(drawEdge / 2).toFloat(), (drawEdge / 2).toFloat(), ((-drawEdge / 2) + space).toFloat(), (-(drawEdge / 2f)).toFloat())
-            for (i in 0 until num.toInt()) {
-                canvas1.drawRect(rectF, paint)
-                rectF.set(rectF.left + (space * 2), rectF.top, rectF.right + (space * 2), rectF.bottom)
-            }
+        canvas.translate(width / 2f, height / 2f)
+        canvas.clipPath(mPath)
+        canvas.rotate(45f)
+        rectF.set(-(drawEdge / 2).toFloat(), (drawEdge / 2).toFloat(), ((-drawEdge / 2) + space).toFloat(), (-(drawEdge / 2f)).toFloat())
+        for (i in 0 until num.toInt()) {
+            canvas.drawRect(rectF, paint)
+            rectF.set(rectF.left + (space * 2), rectF.top, rectF.right + (space * 2), rectF.bottom)
         }
     }
 

@@ -1,5 +1,6 @@
 package com.mredrock.cyxbs.course.viewmodels
 
+import android.animation.ValueAnimator
 import android.view.View
 import androidx.databinding.ObservableField
 import androidx.lifecycle.MutableLiveData
@@ -20,6 +21,7 @@ import com.mredrock.cyxbs.common.utils.extensions.errorHandler
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.course.R
+import com.mredrock.cyxbs.course.component.RedRockTipsView
 import com.mredrock.cyxbs.course.database.ScheduleDatabase
 import com.mredrock.cyxbs.course.event.AffairFromInternetEvent
 import com.mredrock.cyxbs.course.network.Affair
@@ -179,6 +181,10 @@ class CoursesViewModel : BaseViewModel() {
     private val accountService: IAccountService by lazy(LazyThreadSafetyMode.NONE) {
         ServiceManager.getService(IAccountService::class.java)
     }
+
+
+    private var isNotTipOpen = true
+    private var animMap = mutableMapOf<Int, ValueAnimator>()
 
     /**
      * 此方法用于加载数据
@@ -500,5 +506,21 @@ class CoursesViewModel : BaseViewModel() {
     fun clearCache() {
         mCoursesDatabase?.courseDao()?.deleteAllCourses()
         mCoursesDatabase?.affairDao()?.deleteAllAffairs()
+    }
+
+
+    internal fun setTipsState(state: Float, course_tip: RedRockTipsView) {
+        if (state == 0f || state == 1f) {
+            animMap.forEach {
+                it.value.cancel()
+            }
+            animMap[0] = course_tip.centerWayAnimation()
+            isNotTipOpen = true
+        } else {
+            if (isNotTipOpen) {
+                animMap[1] = course_tip.bottomWayAnimation()
+                isNotTipOpen = false
+            }
+        }
     }
 }
