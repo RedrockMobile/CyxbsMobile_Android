@@ -152,7 +152,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
-        android:text="所教班级"
+        android:text="@string/course_class_taught"
         android:textColor="@color/levelTwoFontColor"
         android:textSize="15sp"
         android:textStyle="bold"

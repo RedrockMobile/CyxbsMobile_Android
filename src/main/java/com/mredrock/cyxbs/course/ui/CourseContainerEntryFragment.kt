@@ -401,8 +401,11 @@ class CourseContainerEntryFragment : BaseFragment() {
                 course_lottie_load.pauseAnimation()
                 if (accountService.getVerifyService().isLogin()) {
                     //给下方ViewPager添加适配器和绑定tab
-                    mBinding.vp.adapter = mScheduleAdapter
-                    mBinding.tabLayout.setupWithViewPager(mBinding.vp)
+                    vp.adapter = mScheduleAdapter
+                    tab_layout.setupWithViewPager(mBinding.vp)
+                    mCoursesViewModel.nowWeek.value?.let { nowWeek ->
+                        vp.currentItem = nowWeek
+                    }
                     course_lottie_load.visibility = View.GONE
                     course_current_course_week_select_container.visibility = View.VISIBLE
                 }

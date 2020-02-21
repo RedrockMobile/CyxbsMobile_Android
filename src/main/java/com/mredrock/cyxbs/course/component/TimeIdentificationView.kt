@@ -20,21 +20,20 @@ class TimeIdentificationView : View {
     //时间参数，固定“时”以上
     private val pattern = "yyyy-MM-dd HH:mm"
     private val specificDate = "2019-11-28 "//这个日期没啥意义，我就是选的创建这个类的时间
-    private val startingTime = "${specificDate}8:00"
-    private val endTime = "${specificDate}22:30"
-    private var simpleDateFormat = SimpleDateFormat(pattern)
+    private var simpleDateFormat = SimpleDateFormat(pattern, Locale("chi (B)"))
 
-    //一天的起始时间戳，和结束时间戳
-    private val startTimeStamp = simpleDateFormat.parse(startingTime).time
-    private val endTimeStamp = simpleDateFormat.parse(endTime).time
+    //上午上课时间
+    private val amStartTimeStamp = simpleDateFormat.parse("${specificDate}8:00").time
+    private val amEndTimeStamp = simpleDateFormat.parse("${specificDate}11:55").time
 
-    //中午休息时间戳
-    private val noonStartTimeStamp = simpleDateFormat.parse("${specificDate}11:55").time
-    private val noonEndTimestamp = simpleDateFormat.parse("${specificDate}14:00").time
-
-    //下午休息时间戳
+    //下午上课时间
     private val pmStartTimeStamp = simpleDateFormat.parse("${specificDate}14:00").time
-    private val pmEndTimeStamp = simpleDateFormat.parse("${specificDate}14:00").time
+    private val pmEndTimeStamp = simpleDateFormat.parse("${specificDate}17:55").time
+
+
+    //晚上上课时间
+    private val nightStartTimeStamp = simpleDateFormat.parse("${specificDate}19:00").time
+    private val nightEndTimeStamp = simpleDateFormat.parse("${specificDate}22:30").time
 
 
     //当前时间，占今天上课时间总体的百分比
@@ -46,7 +45,12 @@ class TimeIdentificationView : View {
     //单位是dp
     private val horizontalLineLength = 25
 
+    //这个量完全是为了配合以前文学姐的逻辑
     var position: Int? = null
+        set(value) {
+            field = value
+            invalidate()
+        }
 
     private lateinit var paint: Paint
     private lateinit var rectF: RectF
@@ -101,16 +105,16 @@ class TimeIdentificationView : View {
      */
     private fun update() {
         val now = getNowTime()
-        percentage = if (now > this.startTimeStamp && now < this.noonStartTimeStamp) {
-            ((now - startTimeStamp).toFloat() / (noonStartTimeStamp - startTimeStamp).toFloat()) * (1f / 3)
-        } else if (now > this.noonStartTimeStamp && now < this.noonEndTimestamp) {
+        percentage = if (now > this.amStartTimeStamp && now < this.amEndTimeStamp) {
+            ((now - amStartTimeStamp).toFloat() / (amEndTimeStamp - amStartTimeStamp).toFloat()) * (1f / 3f)
+        } else if (now > this.amEndTimeStamp && now < this.pmStartTimeStamp) {
             1f / 3
-        } else if (now > this.noonEndTimestamp && now < this.pmStartTimeStamp) {
-            ((now - noonEndTimestamp).toFloat() / (pmStartTimeStamp - noonEndTimestamp).toFloat()) * (2f / 3)
         } else if (now > this.pmStartTimeStamp && now < this.pmEndTimeStamp) {
+            ((now - pmStartTimeStamp).toFloat() / (pmEndTimeStamp - pmStartTimeStamp).toFloat()) * (1f / 3f) + (1f / 3f)
+        } else if (now > this.pmEndTimeStamp && now < this.nightStartTimeStamp) {
             2f / 3
-        } else if (now > this.pmEndTimeStamp && now < this.endTimeStamp) {
-            ((now - startTimeStamp).toFloat() / (endTimeStamp - startTimeStamp).toFloat())
+        } else if (now > this.nightStartTimeStamp && now < this.nightEndTimeStamp) {
+            ((now - nightStartTimeStamp).toFloat() / (nightEndTimeStamp - nightStartTimeStamp).toFloat()) * (1f / 3f) + (2f / 3f)
         } else {
             0f
         }

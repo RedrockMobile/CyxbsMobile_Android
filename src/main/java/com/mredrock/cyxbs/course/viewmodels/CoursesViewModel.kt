@@ -116,8 +116,8 @@ class CoursesViewModel : BaseViewModel() {
     val nowCourse = ObservableField<Course?>()
     val nowCourseTime = object : ObservableField<String>(nowCourse) {
         override fun get(): String {
-            val s = CourseTimeParse(nowCourse.get()?.hashLesson ?: 0 * 2, nowCourse.get()?.period
-                    ?: 2)
+            val s = CourseTimeParse((nowCourse.get()?.hashLesson ?: 0) * 2,
+                    nowCourse.get()?.period ?: 2)
             return "${s.parseStartCourseTime()}-${s.parseEndCourseTime()}"
         }
     }
@@ -474,9 +474,9 @@ class CoursesViewModel : BaseViewModel() {
             val time = when {
                 now.timeInMillis >= firstDay.timeInMillis && nowWeek != 0 ->
                     "第${Num2CN.number2ChineseNumber(nowWeek.toLong())}周 " +
-                            "周${if (now[Calendar.DAY_OF_WEEK]!=0) Num2CN.number2ChineseNumber(now[Calendar.DAY_OF_WEEK]-1.toLong()) else "日"}"
-                nowWeek == 0&&isProbablySummerVacation(now[Calendar.MONTH]+1) -> "暑假快乐鸭"
-                nowWeek == 0&&!isProbablySummerVacation(now[Calendar.MONTH]+1) -> "寒假快乐鸭"
+                            "周${if (now[Calendar.DAY_OF_WEEK] != 0) Num2CN.number2ChineseNumber(now[Calendar.DAY_OF_WEEK] - 1.toLong()) else "日"}"
+                nowWeek == 0 && isProbablySummerVacation(now[Calendar.MONTH] + 1) -> "暑假快乐鸭"
+                nowWeek == 0 && !isProbablySummerVacation(now[Calendar.MONTH] + 1) -> "寒假快乐鸭"
                 else -> "呜呼～"
             }
             EventBus.getDefault().postSticky(CurrentDateInformationEvent(time))
