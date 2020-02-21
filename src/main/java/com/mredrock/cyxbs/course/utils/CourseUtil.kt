@@ -26,16 +26,21 @@ import kotlin.collections.ArrayList
  * @param nowWeek 现在是第几周
  * @return 返回两个值，第一个是课表，第二个是是否第二天的课表
  */
-fun getNowCourse(courses: List<Course>, wholeCourses: List<Course>, nowWeek: Int): Pair<Course?,Boolean> {
+fun getNowCourse(courses: List<Course>, wholeCourses: List<Course>, nowWeek: Int): Pair<Course?, Boolean> {
     courses.forEach {
         val endCalendar = getStartCalendarByNum(it.hashLesson)
         //如果今天还有下一节课，显示下一节
         if (Calendar.getInstance() < endCalendar) {
-            return Pair(it,false)
+            return Pair(it, false)
         }
     }
     //今天没课了，显示明天的
-    return Pair(getTomorrowCourse(wholeCourses, nowWeek),true)
+    val tomorrowCourse = getTomorrowCourse(wholeCourses, nowWeek)
+    return if (tomorrowCourse == null) {
+        Pair(null, false)
+    } else {
+        Pair(tomorrowCourse, false)
+    }
 }
 
 /**
