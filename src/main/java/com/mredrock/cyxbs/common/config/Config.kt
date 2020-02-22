@@ -84,6 +84,9 @@ const val FALSE = "false"
 //从跳转到具体页面时需要以此为key
 const val QUESTION_ID = "question_id"
 const val ANSWER_ID = "answer_id"
+//跳转邮问时，需要RequestBody的string，以此为key
+const val QUESTION_REQUEST_BODY_DATA = "question_request_body"
+const val ANSWER_REQUEST_BODY_DATA = "answer_request_body"
 
 //课表版本
 const val COURSE_VERSION = "course_version"
