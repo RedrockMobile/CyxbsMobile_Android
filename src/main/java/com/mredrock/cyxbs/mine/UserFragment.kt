@@ -44,6 +44,7 @@ import org.jetbrains.anko.textColor
  * Created by zzzia on 2018/8/14.
  * 我的 主界面Fragment
  */
+@SuppressLint("SetTextI18n")
 @Route(path = MINE_ENTRY)
 class UserFragment : BaseViewModelFragment<UserViewModel>() {
     override val viewModelClass: Class<UserViewModel>

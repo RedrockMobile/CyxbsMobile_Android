@@ -109,8 +109,8 @@ class DailyViewModel : BaseViewModel() {
     }
 
     fun exchangeProduct(product: Product, position: Int) {
-        //防止后端粗心的将integral设置为空
-        val productIntegral = if (product.integral.isEmpty()) 0 else product.integral.toInt()
+        //防止后端粗心的将integral设置为空，同时需要处理为小数的情况
+        val productIntegral = if (product.integral.isEmpty()) 0 else product.integral.toFloat().toInt()
 
         apiServiceForSign.exchangeProduct(stuNum, idNum, product.name, productIntegral)
                 .flatMap(Function<RedrockApiStatus, Observable<RedrockApiWrapper<ScoreStatus>>> {

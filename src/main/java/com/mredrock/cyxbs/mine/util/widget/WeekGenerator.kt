@@ -5,7 +5,7 @@ import com.mredrock.cyxbs.common.utils.SchoolCalendar
 /**
  * Created by roger on 2019/11/19
  */
-class WeekGenerator(public var weekSignStateArr: List<Int> = mutableListOf()) {
+class WeekGenerator(var weekSignStateArr: List<Int> = mutableListOf()) {
     companion object {
         @JvmStatic
         val WEEK_HAS_SIGN = 1

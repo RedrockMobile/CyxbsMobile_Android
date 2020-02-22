@@ -18,6 +18,7 @@ import com.mredrock.cyxbs.common.config.MINE_CHECK_IN
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.extensions.*
 import com.mredrock.cyxbs.mine.R
+import com.mredrock.cyxbs.mine.network.model.Product
 import com.mredrock.cyxbs.mine.network.model.ScoreStatus
 import com.mredrock.cyxbs.mine.page.myproduct.MyProductActivity
 import com.mredrock.cyxbs.mine.util.ui.ProductAdapter
@@ -84,7 +85,13 @@ class DailySignActivity(override val viewModelClass: Class<DailyViewModel> = Dai
         setContentView(R.layout.mine_activity_daily_sign)
 
         initView()
+        initAdapter()
         dealBottomSheet()
+        initData()
+    }
+
+    //ViewModel观察和网络请求
+    private fun initData() {
         viewModel.loadAllData()
         viewModel.loadProduct()
         viewModel.status.observe(this, Observer {
@@ -95,7 +102,8 @@ class DailySignActivity(override val viewModelClass: Class<DailyViewModel> = Dai
             if (it == null || it.isEmpty()) {
                 return@Observer
             }
-            hidePlaceHolder()
+            mine_iv_empty_product.gone()
+
             adapter.submitList(it)
         })
         viewModel.isInVacation.observe(this, Observer {
@@ -110,65 +118,14 @@ class DailySignActivity(override val viewModelClass: Class<DailyViewModel> = Dai
                 toast("兑换失败")
             }
         })
+    }
 
+    private fun initView() {
+        mine_daily_sign.setOnClickListener { checkIn() }
+        mine_store_rv.addItemDecoration(SpaceDecoration(dp2px(8f)))
         mine_store_myproduct.setOnClickListener {
             startActivity<MyProductActivity>()
         }
-    }
-
-    private fun hidePlaceHolder() {
-        mine_iv_empty_product.gone()
-    }
-
-    @SuppressLint("SetTextI18n")
-    private fun initView() {
-        mine_daily_sign.setOnClickListener { checkIn() }
-
-
-        adapter.onExChangeClick = { product, position ->
-            val integral = viewModel.status.value?.integral
-
-            integral?.let {
-                //防止商品积分为空
-                val productIntegral = if (product.integral.isEmpty()) 0 else product.integral.toInt()
-                //判断用户积分是否大于物品所需积分数 && 物品剩余数大于0
-                if (integral >= productIntegral && product.count > 0) {
-                    CommonDialogFragment().apply {
-                        initView(
-                                containerRes = R.layout.mine_layout_dialog_exchange,
-                                positiveString = "确认兑换",
-                                onPositiveClick = {
-                                    viewModel.exchangeProduct(product, position)
-                                    dismiss()
-                                },
-                                onNegativeClick = { dismiss() },
-                                elseFunction = {
-                                    it.findViewById<TextView>(R.id.mine_tv_exchange_for_sure_content).text = "这将消耗您的${product.integral}个积分，仍然要兑换吗？"
-                                }
-                        )
-                    }.show(supportFragmentManager, "exchange")
-                } else {
-                    CommonDialogFragment().apply {
-                        initView(
-                                containerRes = R.layout.mine_layout_dialog_exchange,
-                                positiveString = "确认",
-                                onPositiveClick = { dismiss() },
-                                elseFunction = {
-                                    //区分是积分不足还是物品剩余数为0
-                                    if (product.count <= 0) {
-                                        it.findViewById<TextView>(R.id.mine_tv_exchange_for_sure_content).text = "物品被抢光了，明天再来吧"
-                                    } else {
-                                        it.findViewById<TextView>(R.id.mine_tv_exchange_for_sure_content).text = "积分不足"
-                                    }
-                                }
-                        )
-                    }.show(supportFragmentManager, "lack of integral")
-                }
-            }
-        }
-        mine_store_rv.adapter = adapter
-
-        mine_store_rv.addItemDecoration(SpaceDecoration(dp2px(8f)))
     }
 
     /**
@@ -206,8 +163,8 @@ class DailySignActivity(override val viewModelClass: Class<DailyViewModel> = Dai
         }
         changeWeekImage()
         paintDivider(weekGenerator.getDividerColorArr())
-        val toDay = weekGenerator.getToday()
-        toDay.let {
+        val today = weekGenerator.getToday()
+        today.let {
             val centerX = spaceResArr[it].x
             mine_daily_tv_bubble.x = centerX - mine_daily_tv_bubble.width / 2
             mine_daily_tv_bubble.text = "${weekGenerator.getTodayScore()}积分"
@@ -250,8 +207,11 @@ class DailySignActivity(override val viewModelClass: Class<DailyViewModel> = Dai
         })
     }
 
+    /**
+     * 设置签到的七个圆点的Image
+     * 圆点有三种状态：蓝色，钻石，灰色
+     */
     private fun changeWeekImage() {
-        weekGenerator
         val state = weekGenerator.getWeekImageStateArr()
         for (i in 0..6) {
             when {
@@ -269,7 +229,7 @@ class DailySignActivity(override val viewModelClass: Class<DailyViewModel> = Dai
     }
 
 
-    //接下来主要是一些修改divider颜色的方法,如果isChecking == true 那么说明是用户点击了签到导致的UI刷新，此时相应的divider需要有一段动画
+    //修改divider颜色,如果isChecking == true 那么说明是用户点击了签到导致的UI刷新，此时相应的divider需要有一段动画
     private fun paintDivider(dividerColorArr: Array<ColorState>) {
         weekGenerator.let {
             for (i in 0..5) {
@@ -304,6 +264,54 @@ class DailySignActivity(override val viewModelClass: Class<DailyViewModel> = Dai
                 dividerResArr[i].color.color = ContextCompat.getColor(this, R.color.mine_sign_divider_blue_light)
             }
         }
+    }
+
+    //设置商品展示的Adapter，同时设置监听，弹出DialogFragment
+    private fun initAdapter() {
+        val click: ((Product, Int) -> Unit)? = { product, position ->
+            val integral = viewModel.status.value?.integral
+
+            integral?.let {
+                //防止商品积分为空，同时需处理积分为小数的情况
+                val productIntegral = if (product.integral.isEmpty()) 0 else product.integral.toFloat().toInt()
+                //判断用户积分是否大于物品所需积分数 && 物品剩余数大于0
+                if (integral >= productIntegral && product.count > 0) {
+                    CommonDialogFragment().apply {
+                        initView(
+                                containerRes = R.layout.mine_layout_dialog_exchange,
+                                positiveString = "确认兑换",
+                                onPositiveClick = {
+                                    viewModel.exchangeProduct(product, position)
+                                    dismiss()
+                                },
+                                onNegativeClick = { dismiss() },
+                                elseFunction = {
+                                    it.findViewById<TextView>(R.id.mine_tv_exchange_for_sure_content).text = "这将消耗您的${product.integral}个积分，仍然要兑换吗？"
+                                }
+                        )
+                    }.show(supportFragmentManager, "exchange")
+                } else {
+                    CommonDialogFragment().apply {
+                        initView(
+                                containerRes = R.layout.mine_layout_dialog_exchange,
+                                positiveString = "确认",
+                                onPositiveClick = { dismiss() },
+                                elseFunction = {
+                                    //区分是积分不足还是物品剩余数为0
+                                    if (product.count <= 0) {
+                                        it.findViewById<TextView>(R.id.mine_tv_exchange_for_sure_content).text = "物品被抢光了，明天再来吧"
+                                    } else {
+                                        it.findViewById<TextView>(R.id.mine_tv_exchange_for_sure_content).text = "积分不足"
+                                    }
+                                }
+                        )
+                    }.show(supportFragmentManager, "lack of integral")
+                }
+            }
+        }
+        adapter.setOnExChangeClick(click)
+        mine_store_rv.adapter = adapter
+
     }
 
 

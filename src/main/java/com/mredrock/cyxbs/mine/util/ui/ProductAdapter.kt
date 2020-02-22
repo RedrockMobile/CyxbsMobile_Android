@@ -16,7 +16,12 @@ import com.mredrock.cyxbs.mine.network.model.Product
  */
 class ProductAdapter : ListAdapter<Product, ProductAdapter.ProductViewHolder>(Product.DIFF_CALLBACK) {
 
-    var onExChangeClick: ((Product, Int) -> Unit)? = null
+    private var onExChangeClick: ((Product, Int) -> Unit)? = null
+
+    fun setOnExChangeClick(click: ((Product, Int) -> Unit)?) {
+        onExChangeClick = click
+    }
+
     //通过集合存储高度，防止错位
     private val mHeights: MutableList<Int> = mutableListOf()
 
