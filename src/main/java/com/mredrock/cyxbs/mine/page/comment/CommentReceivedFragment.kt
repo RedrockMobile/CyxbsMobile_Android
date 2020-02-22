@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.alibaba.android.arouter.launcher.ARouter
 import com.mredrock.cyxbs.common.config.ANSWER_ID
 import com.mredrock.cyxbs.common.config.QA_COMMENT_LIST
+import com.mredrock.cyxbs.common.config.QUESTION_ID
 import com.mredrock.cyxbs.common.utils.extensions.setImageFromUrl
 import com.mredrock.cyxbs.mine.R
 import com.mredrock.cyxbs.mine.network.model.CommentReceived
@@ -54,6 +55,7 @@ class CommentReceivedFragment : BaseRVFragment<CommentReceived>() {
         holder.itemView.setOnClickListener {
             val bundle = Bundle()
             bundle.putInt(ANSWER_ID, data.answerId)
+            bundle.putInt(QUESTION_ID, data.questionId)
             ARouter.getInstance().build(QA_COMMENT_LIST).with(bundle).navigation()
         }
     }
