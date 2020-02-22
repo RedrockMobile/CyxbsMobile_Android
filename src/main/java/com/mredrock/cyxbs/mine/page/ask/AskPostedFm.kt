@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModelProviders
 import com.alibaba.android.arouter.launcher.ARouter
 import com.mredrock.cyxbs.common.config.QA_ANSWER_LIST
 import com.mredrock.cyxbs.common.config.QUESTION_ID
+import com.mredrock.cyxbs.common.config.QUESTION_REQUEST_BODY_DATA
 import com.mredrock.cyxbs.mine.R
 import com.mredrock.cyxbs.mine.network.model.AskPosted
 import com.mredrock.cyxbs.mine.util.ui.BaseRVFragment
@@ -38,6 +39,12 @@ class AskPostedFm : BaseRVFragment<AskPosted>() {
             } else {
                 getFooter().showLoadError()
             }
+        })
+        viewModel.navigateEvent.observe(this, Observer {
+            val bundle = Bundle()
+            bundle.putInt(QUESTION_ID, it.id)
+            bundle.putString(QUESTION_REQUEST_BODY_DATA, it.data)
+            ARouter.getInstance().build(QA_ANSWER_LIST).with(bundle).navigation()
         })
     }
 
@@ -73,9 +80,7 @@ class AskPostedFm : BaseRVFragment<AskPosted>() {
             }
         }
         holder.itemView.setOnClickListener {
-            val bundle = Bundle()
-            bundle.putInt(QUESTION_ID, data.questionId)
-            ARouter.getInstance().build(QA_ANSWER_LIST).with(bundle).navigation()
+            viewModel.getQuestion(data.questionId)
         }
     }
 

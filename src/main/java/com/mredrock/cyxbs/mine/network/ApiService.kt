@@ -6,6 +6,7 @@ import com.mredrock.cyxbs.mine.network.model.*
 import io.reactivex.Observable
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
+import okhttp3.ResponseBody
 import retrofit2.http.*
 
 /**
@@ -180,7 +181,17 @@ interface ApiService {
                         @Field("page") page: Int,
                         @Field("size") size: Int): Observable<RedrockApiWrapper<List<AnswerDraft>>>
 
-
+    /**
+     * 根据question的id获取Question，注意，网络请求结果为RequestBody对象，未解析
+     * 当跳转qa时，需要传递requestBody的string
+     * 因为qa和mine互不通信，故采取此方法传递Question对象
+     */
+    @FormUrlEncoded
+    @POST("/app/index.php/QA/Question/getQuestionInfo")
+    fun getQuestion(
+            @Field("stunum") stuNum: String,
+            @Field("idnum") idNum: String,
+            @Field("question_id") qid: String): Observable<ResponseBody>
 
 
 }

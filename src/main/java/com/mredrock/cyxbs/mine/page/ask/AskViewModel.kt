@@ -8,10 +8,12 @@ import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.service.account.IAccountService
 import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
+import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.common.viewmodel.event.SingleLiveEvent
 import com.mredrock.cyxbs.mine.network.model.AskDraft
 import com.mredrock.cyxbs.mine.network.model.AskPosted
+import com.mredrock.cyxbs.mine.network.model.NavigateData
 import com.mredrock.cyxbs.mine.util.apiService
 import com.mredrock.cyxbs.mine.util.extension.normalWrapper
 import com.mredrock.cyxbs.mine.util.ui.RvFooter
@@ -110,5 +112,19 @@ class AskViewModel : BaseViewModel() {
 
         askDraftPage = 1
         _askDraft.value = mutableListOf()
+    }
+
+    //Question跳转请求的对象
+    val navigateEvent = SingleLiveEvent<NavigateData>()
+
+    fun getQuestion(qid: Int) {
+        val idNum = idNum ?: return
+        apiService.getQuestion(stuNum, idNum, qid.toString())
+                .setSchedulers()
+                .safeSubscribeBy {
+                    val navigateData = NavigateData(qid, it.string())
+                    navigateEvent.postValue(navigateData)
+                }
+                .lifeCycle()
     }
 }
