@@ -61,7 +61,7 @@ public class RvFooter extends LinearLayout {
     }
 
     public void showNothing(){
-        textView.setText("");
+        textView.setText("什么都没有额（ ’ - ’ * )");
         state = State.NOTHING;
     }
 

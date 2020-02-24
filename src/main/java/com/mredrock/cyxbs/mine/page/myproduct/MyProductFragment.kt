@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.RecyclerView
+import com.mredrock.cyxbs.common.utils.extensions.setImageFromUrl
 import com.mredrock.cyxbs.mine.R
 import com.mredrock.cyxbs.mine.network.model.MyProduct
 import com.mredrock.cyxbs.mine.util.ui.BaseRVFragment
@@ -30,10 +31,16 @@ class MyProductFragment(private val type: Int = UNCLAIMED) : BaseRVFragment<MyPr
                 setNewData(it)
             })
             viewModel.eventOnUnClaimed.observe(this, Observer {
-                if (it == RvFooter.State.ERROR) {
-                    getFooter().showLoadError()
-                } else if (it == RvFooter.State.NOMORE) {
-                    getFooter().showNoMore()
+                when (it) {
+                    RvFooter.State.ERROR -> {
+                        getFooter().showLoadError()
+                    }
+                    RvFooter.State.NOMORE -> {
+                        getFooter().showNoMore()
+                    }
+                    RvFooter.State.NOTHING -> {
+                        getFooter().showNothing()
+                    }
                 }
             })
         } else {
@@ -42,10 +49,16 @@ class MyProductFragment(private val type: Int = UNCLAIMED) : BaseRVFragment<MyPr
                 setNewData(it)
             })
             viewModel.eventOnClaimed.observe(this, Observer {
-                if (it == RvFooter.State.ERROR) {
-                    getFooter().showLoadError()
-                } else if (it == RvFooter.State.NOMORE) {
-                    getFooter().showNoMore()
+                when (it) {
+                    RvFooter.State.ERROR -> {
+                        getFooter().showLoadError()
+                    }
+                    RvFooter.State.NOMORE -> {
+                        getFooter().showNoMore()
+                    }
+                    RvFooter.State.NOTHING -> {
+                        getFooter().showNothing()
+                    }
                 }
             })
         }
@@ -69,6 +82,8 @@ class MyProductFragment(private val type: Int = UNCLAIMED) : BaseRVFragment<MyPr
     override fun bindDataHolder(holder: RecyclerView.ViewHolder, position: Int, data: MyProduct) {
         holder.itemView.mine_myproduct_time.text = data.time.split(" ")[0].replace("-", ".")
         holder.itemView.mine_myproduct_title.text = data.name
+        holder.itemView.mine_myproduct_integral.text = data.integral.toString()
+        holder.itemView.mine_myproduct_iv.setImageFromUrl(data.photoSrc)
 
     }
 

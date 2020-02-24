@@ -3,15 +3,24 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="112dp">
 
-    <ImageView
-        android:id="@+id/mine_myproduct_iv"
+    <androidx.cardview.widget.CardView
+        android:id="@+id/mine_myproduct_cv"
         android:layout_width="88dp"
         android:layout_height="88dp"
+        app:cardCornerRadius="4dp"
+        android:layout_marginStart="18dp"
+        app:cardElevation="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/mine_myproduct_iv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </androidx.cardview.widget.CardView>
 
     <TextView
         android:id="@+id/mine_myproduct_title"
@@ -19,7 +28,9 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="12dp"
         android:layout_marginTop="10dp"
-        app:layout_constraintStart_toEndOf="@+id/mine_myproduct_iv"
+        android:textColor="@color/levelTwoFontColor"
+        android:textSize="15sp"
+        app:layout_constraintStart_toEndOf="@+id/mine_myproduct_cv"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="REDROCK运动手环" />
 
@@ -53,6 +64,7 @@
         android:layout_marginStart="4dp"
         android:textColor="@color/mine_sign_store_item_tv_integral"
         android:textSize="18sp"
+        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/mine_myproduct_diamond"
         app:layout_constraintStart_toEndOf="@+id/mine_myproduct_diamond"
         app:layout_constraintTop_toTopOf="@+id/mine_myproduct_diamond"
@@ -66,5 +78,12 @@
         android:src="@drawable/mine_ic_sign_diamond"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="@+id/mine_myproduct_title" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:alpha="0.3"
+        android:background="@color/severViewColor"
+        app:layout_constraintBottom_toBottomOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

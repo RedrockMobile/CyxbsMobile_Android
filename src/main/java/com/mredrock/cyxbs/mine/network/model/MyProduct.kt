@@ -10,11 +10,15 @@ data class MyProduct(
         @SerializedName("name")
         val name: String,
         @SerializedName("num")
-        val num: Int,
+        val count: Int,
+        @SerializedName("value")
+        val integral: Int,
         @SerializedName("time")
         val time: String,
         @SerializedName("isReceived")
         val isReceived: Int,
         @SerializedName("isVirtual")
-        val isVirtual: Int
+        val isVirtual: Int,
+        @SerializedName("photo_src")
+        val photoSrc: String
 ) : Serializable

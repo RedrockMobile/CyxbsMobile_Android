@@ -47,8 +47,13 @@ class AnswerViewModel : BaseViewModel() {
                         onNext = {
                             //由于Rxjava反射不应定能够够保证为空，当为空的说明这一页没有数据，于是停止加载
                             if (it.isEmpty()) {
-                                _eventOnAnswerPosted.postValue(RvFooter.State.NOMORE)
-                                return@safeSubscribeBy
+                                if (_answerPosted.value.isNullOrEmpty()) {
+                                    _eventOnAnswerPosted.postValue(RvFooter.State.NOTHING)
+                                    return@safeSubscribeBy
+                                } else {
+                                    _eventOnAnswerPosted.postValue(RvFooter.State.NOMORE)
+                                    return@safeSubscribeBy
+                                }
                             }
 
                             val localAnswerPosted = _answerPosted.value ?: mutableListOf()
@@ -90,8 +95,13 @@ class AnswerViewModel : BaseViewModel() {
                         onNext = {
                             //由于Rxjava反射不应定能够够保证为空，当为空的说明这一页没有数据，于是停止加载
                             if (it.isEmpty()) {
-                                _eventOnAnswerDraft.postValue(RvFooter.State.NOMORE)
-                                return@safeSubscribeBy
+                                if (_answerDraft.value.isNullOrEmpty()) {
+                                    _eventOnAnswerDraft.postValue(RvFooter.State.NOTHING)
+                                    return@safeSubscribeBy
+                                } else {
+                                    _eventOnAnswerDraft.postValue(RvFooter.State.NOMORE)
+                                    return@safeSubscribeBy
+                                }
                             }
 
                             val localAnswerDraft = _answerDraft.value ?: mutableListOf()

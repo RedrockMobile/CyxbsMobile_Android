@@ -30,10 +30,16 @@ class AnswerPostedFm : BaseRVFragment<AnswerPosted>() {
 
         viewModel.loadAnswerPostedList()
         viewModel.eventOnAnswerPosted.observe(this, Observer {
-            if (it == RvFooter.State.ERROR) {
-                getFooter().showLoadError()
-            } else if (it == RvFooter.State.NOMORE) {
-                getFooter().showNoMore()
+            when (it) {
+                RvFooter.State.ERROR -> {
+                    getFooter().showLoadError()
+                }
+                RvFooter.State.NOMORE -> {
+                    getFooter().showNoMore()
+                }
+                RvFooter.State.NOTHING -> {
+                    getFooter().showNothing()
+                }
             }
         })
         viewModel.answerPosted.observe(this, Observer {

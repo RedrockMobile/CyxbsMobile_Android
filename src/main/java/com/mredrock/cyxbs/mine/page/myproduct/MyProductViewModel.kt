@@ -44,8 +44,13 @@ class MyProductViewModel : BaseViewModel() {
                 .normalWrapper(this)
                 .safeSubscribeBy { list ->
                     if (list.isEmpty()) {
-                        _eventOnUnclaimed.postValue(RvFooter.State.NOMORE)
-                        return@safeSubscribeBy
+                        if (_unclaimedList.value.isNullOrEmpty()) {
+                            _eventOnUnclaimed.postValue(RvFooter.State.NOTHING)
+                            return@safeSubscribeBy
+                        } else {
+                            _eventOnUnclaimed.postValue(RvFooter.State.NOMORE)
+                            return@safeSubscribeBy
+                        }
                     }
                     val local = _unclaimedList.value ?: mutableListOf()
                     local.addAll(list.filter {
@@ -78,8 +83,13 @@ class MyProductViewModel : BaseViewModel() {
                 .normalWrapper(this)
                 .safeSubscribeBy { list ->
                     if (list.isEmpty()) {
-                        _eventOnClaimed.postValue(RvFooter.State.NOMORE)
-                        return@safeSubscribeBy
+                        if (claimedList.value.isNullOrEmpty()) {
+                            _eventOnClaimed.postValue(RvFooter.State.NOTHING)
+                            return@safeSubscribeBy
+                        } else {
+                            _eventOnClaimed.postValue(RvFooter.State.NOMORE)
+                            return@safeSubscribeBy
+                        }
                     }
                     val local = _claimedList.value ?: mutableListOf()
                     local.addAll(list.filter {

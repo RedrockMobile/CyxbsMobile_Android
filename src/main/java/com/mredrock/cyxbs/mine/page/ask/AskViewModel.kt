@@ -32,8 +32,8 @@ class AskViewModel : BaseViewModel() {
     private val pageSize = 6
 
     //askPosted部分
-    private val _eventOnAskPosted = SingleLiveEvent<Boolean>()//true代表加载完，false代表加载错误
-    val eventOnAskPosted: LiveData<Boolean>
+    private val _eventOnAskPosted = SingleLiveEvent<RvFooter.State>()
+    val eventOnAskPosted: LiveData<RvFooter.State>
         get() = _eventOnAskPosted
 
     private val _askPosted = MutableLiveData<MutableList<AskPosted>>()
@@ -49,8 +49,13 @@ class AskViewModel : BaseViewModel() {
                 .safeSubscribeBy(
                         onNext = {
                             if (it.isEmpty()) {
-                                _eventOnAskPosted.postValue(true)
-                                return@safeSubscribeBy
+                                if (_askPosted.value.isNullOrEmpty()) {
+                                    _eventOnAskPosted.postValue(RvFooter.State.NOTHING)
+                                    return@safeSubscribeBy
+                                } else {
+                                    _eventOnAskPosted.postValue(RvFooter.State.NOMORE)
+                                    return@safeSubscribeBy
+                                }
                             }
 
                             val localAskPosted = _askPosted.value ?: mutableListOf()
@@ -58,7 +63,7 @@ class AskViewModel : BaseViewModel() {
                             _askPosted.postValue(localAskPosted)
                         },
                         onError = {
-                            _eventOnAskPosted.postValue(false)
+                            _eventOnAskPosted.postValue(RvFooter.State.ERROR)
                         })
                 .lifeCycle()
     }
@@ -91,8 +96,13 @@ class AskViewModel : BaseViewModel() {
                         onNext = {
                             //由于Rxjava反射不应定能够够保证为空，当为空的说明这一页没有数据，于是停止加载
                             if (it.isEmpty()) {
-                                _eventOnAskDraft.postValue(RvFooter.State.NOMORE)
-                                return@safeSubscribeBy
+                                if (_askDraft.value.isNullOrEmpty()) {
+                                    _eventOnAskDraft.postValue(RvFooter.State.NOTHING)
+                                    return@safeSubscribeBy
+                                } else {
+                                    _eventOnAskDraft.postValue(RvFooter.State.NOMORE)
+                                    return@safeSubscribeBy
+                                }
                             }
 
                             val localAskDraft = _askDraft.value ?: mutableListOf()

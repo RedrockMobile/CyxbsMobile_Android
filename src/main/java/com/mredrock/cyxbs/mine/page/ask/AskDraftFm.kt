@@ -25,10 +25,16 @@ class AskDraftFm : BaseRVFragment<AskDraft>() {
             setNewData(it)
         })
         viewModel.eventOnAskDraft.observe(this, Observer {
-            if (it == RvFooter.State.NOMORE) {
-                getFooter().showNoMore()
-            } else if (it == RvFooter.State.ERROR) {
-                getFooter().showLoadError()
+            when (it) {
+                RvFooter.State.ERROR -> {
+                    getFooter().showLoadError()
+                }
+                RvFooter.State.NOMORE -> {
+                    getFooter().showNoMore()
+                }
+                RvFooter.State.NOTHING -> {
+                    getFooter().showNothing()
+                }
             }
         })
     }

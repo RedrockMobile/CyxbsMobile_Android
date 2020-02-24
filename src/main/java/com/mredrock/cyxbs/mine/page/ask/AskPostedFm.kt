@@ -34,10 +34,16 @@ class AskPostedFm : BaseRVFragment<AskPosted>() {
             setNewData(it)
         })
         viewModel.eventOnAskPosted.observe(this, Observer {
-            if (it == true) {
-                getFooter().showNoMore()
-            } else {
-                getFooter().showLoadError()
+            when (it) {
+                RvFooter.State.ERROR -> {
+                    getFooter().showLoadError()
+                }
+                RvFooter.State.NOMORE -> {
+                    getFooter().showNoMore()
+                }
+                RvFooter.State.NOTHING -> {
+                    getFooter().showNothing()
+                }
             }
         })
         viewModel.navigateEvent.observe(this, Observer {

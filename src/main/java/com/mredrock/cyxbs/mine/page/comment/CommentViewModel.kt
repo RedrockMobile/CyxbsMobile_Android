@@ -47,8 +47,14 @@ class CommentViewModel : BaseViewModel() {
                         onNext = {
                             //当为空的说明这一页没有数据，于是停止加载
                             if (it.isEmpty()) {
-                                _eventOnComment.postValue(RvFooter.State.NOMORE)
-                                return@safeSubscribeBy
+                                //由于异步的原因，可能会出现后面的page先返回的情况，会把State设置为NOTHING，但是实际上列表并不为空，暂时没有好的解决办法
+                                if (_commentList.value.isNullOrEmpty()) {
+                                    _eventOnComment.postValue(RvFooter.State.NOTHING)
+                                    return@safeSubscribeBy
+                                } else {
+                                    _eventOnComment.postValue(RvFooter.State.NOMORE)
+                                    return@safeSubscribeBy
+                                }
                             }
 
                             val localComment = _commentList.value ?: mutableListOf()
@@ -89,8 +95,13 @@ class CommentViewModel : BaseViewModel() {
                         onNext = {
                             //当为空的说明这一页没有数据，于是停止加载
                             if (it.isEmpty()) {
-                                _eventOnCommentReceived.postValue(RvFooter.State.NOMORE)
-                                return@safeSubscribeBy
+                                if (_commentReceivedList.value.isNullOrEmpty()) {
+                                    _eventOnCommentReceived.postValue(RvFooter.State.NOTHING)
+                                    return@safeSubscribeBy
+                                } else {
+                                    _eventOnCommentReceived.postValue(RvFooter.State.NOMORE)
+                                    return@safeSubscribeBy
+                                }
                             }
 
                             val localCommentReceived = _commentReceivedList.value ?: mutableListOf()
