@@ -15,9 +15,9 @@ import com.mredrock.cyxbs.common.bean.UpdateInfo
 import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
+import com.mredrock.cyxbs.common.utils.extensions.toast
 import com.mredrock.cyxbs.common.utils.extensions.uri
 import com.mredrock.cyxbs.common.utils.getAppVersionCode
-import com.mredrock.cyxbs.common.utils.extensions.toast
 import com.tbruyelle.rxpermissions2.RxPermissions
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
@@ -51,6 +51,35 @@ object UpdateUtils {
                         noticeUpdate(activity, it)
                     }
                 })
+    }
+
+    /**
+     * 用于TextView展示"已是最新版本"和"发现新版本"
+     * @return true表示已是最新版本
+     */
+    fun isUpdate(activity: AppCompatActivity): Boolean {
+        var isUpdate = true
+        ApiGenerator.getApiService(UpdateApiService::class.java)
+                .getUpdateInfo()
+                .setSchedulers()
+                .safeSubscribeBy(onError = {
+                    ApiGenerator.getApiService(Retrofit.Builder()
+                            .baseUrl("http://hongyan.cqupt.edu.cn")
+                            .addConverterFactory(SimpleXmlConverterFactory.create())
+                            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                            .build(), UpdateApiService::class.java)
+                            .getUpdateInfo()
+                            .setSchedulers()
+                            .safeSubscribeBy(onError = {
+                                it.printStackTrace()
+                            }, onNext = {
+                                isUpdate = it.versionCode <= getAppVersionCode(activity)
+                            })
+
+                }, onNext = {
+                    isUpdate = it.versionCode <= getAppVersionCode(activity)
+                })
+        return isUpdate
     }
 
     private fun noticeUpdate(activity: AppCompatActivity, it: UpdateInfo) {
@@ -181,6 +210,7 @@ object UpdateUtils {
             startActivityForResult(Intent(Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES, Uri.fromParts("package", packageName, null)), CODE)
         }
 
+        @RequiresApi(Build.VERSION_CODES.O)
         override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
             requesting = false
             val sub = sub ?: return

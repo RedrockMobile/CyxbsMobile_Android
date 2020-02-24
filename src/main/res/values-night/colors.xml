@@ -102,8 +102,11 @@
     <color name="mine_tab_layout_text_unselected" tools:ignore="ResourceName">#9AF0F0F2</color>
     <color name="mine_tab_layout_indicator_color" tools:ignore="ResourceName">#1AD0F2</color>
 
+    <!--    我的关于板块的颜色-->
     <color name="mine_about_text_color_normal" tools:ignore="ResourceName">#ffffff</color>
+    <color name="mine_about_text_color_up_to_date" tools:ignore="ResourceName">#48F0F0F2</color>
     <color name="mine_about_text_color_blue" tools:ignore="ResourceName">#0BCCF0</color>
+
     <color name="mine_sign_bg_grey" tools:ignore="ResourceName">#5A5A5A</color>
     <color name="mine_sign_divider_grey" tools:ignore="ResourceName">#5A5A5A</color>
     <color name="mine_sign_divider_blue" tools:ignore="ResourceName">#2CDEFF</color>
@@ -129,7 +132,6 @@
 
 
     <color name="common_dialog_bg" tools:ignore="ResourceName">#2C2C2C</color>
-
 
 
     <!--    邮问-->

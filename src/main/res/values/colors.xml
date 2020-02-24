@@ -114,6 +114,7 @@
 
     <!--    关于颜色-->
     <color name="mine_about_text_color_normal" tools:ignore="ResourceName">#294169</color>
+    <color name="mine_about_text_color_up_to_date" tools:ignore="ResourceName">#80294169</color>
     <color name="mine_about_text_color_blue" tools:ignore="ResourceName">#0BCCF0</color>
     <!--    签到部分颜色-->
     <color name="blueSignTextColor" tools:ignore="ResourceName">#839BFA</color>
@@ -131,7 +132,7 @@
     <color name="mine_sign_store_item_tv_integral" tools:ignore="ResourceName">#3A34D2</color>
     <color name="mine_sign_store_item_bg" tools:ignore="ResourceName">#F0F2FB</color>
     <color name="mine_sign_store_bg" tools:ignore="ResourceName">#F8F9FC</color>
-    <color name="mine_sign_store_my_product_text_color" tools:ignore="ResourceName">#F8E2DF</color>
+    <color name="mine_sign_store_my_product_text_color" tools:ignore="ResourceName">#FFA192</color>
 
     <color name="mine_list_item_tv_disappear_at" tools:ignore="ResourceName">#6C84AB</color>
     <color name="mine_list_item_bg_brown" tools:ignore="ResourceName">#F7DAD7</color>
@@ -279,7 +280,7 @@
     <color name="checkInPromptColor" tools:ignore="ResourceName">#d4daff</color>
 
     <!--    关于下面声明颜色-->
-    <color name="about_colors_declared_below" tools:ignore="ResourceName">#333333</color>
+    <color name="about_colors_declared_below" tools:ignore="ResourceName">#64294169</color>
 
     <color name="addTransactionToTheTimetableClickColor" tools:ignore="ResourceName">#bdc3c7</color>
 
