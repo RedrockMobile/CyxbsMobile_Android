@@ -201,11 +201,13 @@
             android:textSize="16sp" />
 
         <TextView
-            android:id="@+id/mine_about_tv_already_uptodate"
+            android:id="@+id/mine_about_tv_already_up_to_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginEnd="18dp"
+            android:textSize="13sp"
+            android:textColor="@color/mine_about_text_color_up_to_date"
             android:layout_toStartOf="@id/mine_about_arrow_update"
             tools:text="已是最新版本" />
 

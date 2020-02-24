@@ -44,6 +44,7 @@ class AboutActivity(override val isFragmentActivity: Boolean = false) : BaseActi
 
         setAppVersionName()
 
+        setIsUpdate()
         mine_about_rl_website.setOnClickListener { clickWebsite() }
         mine_about_legal.setOnClickListener { clickLegal() }
         mine_about_rl_update.setOnClickListener { clickUpdate() }
@@ -72,6 +73,14 @@ class AboutActivity(override val isFragmentActivity: Boolean = false) : BaseActi
 
     private fun setAppVersionName() {
         mine_about_version.text = StringBuilder("Version ").append(getAppVersionName(this@AboutActivity))
+    }
+
+    private fun setIsUpdate() {
+        if (UpdateUtils.isUpdate(this)) {
+            mine_about_tv_already_up_to_date.text = "已是最新版本"
+        } else {
+            mine_about_tv_already_up_to_date.text = "发现新版本"
+        }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
