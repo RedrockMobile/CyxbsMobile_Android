@@ -1,6 +1,5 @@
 package com.mredrock.cyxbs.course.viewmodels
 
-import android.animation.ValueAnimator
 import android.view.View
 import androidx.databinding.ObservableField
 import androidx.lifecycle.MutableLiveData
@@ -184,7 +183,6 @@ class CoursesViewModel : BaseViewModel() {
 
 
     private var isNotTipOpen = true
-    private var animMap = mutableMapOf<Int, ValueAnimator>()
 
     /**
      * 此方法用于加载数据
@@ -204,7 +202,6 @@ class CoursesViewModel : BaseViewModel() {
         //重载获取状态
         resetGetStatus()
 
-        // 如果stuNum为null，就说明是用户在进行课表查询。此时BaseApp.user!!.stuNum!!一定不为空
         mUserNum = if (userNum == null) {
             isGetOthers.set(false)
             accountService.getUserService().getStuNum()
@@ -511,14 +508,11 @@ class CoursesViewModel : BaseViewModel() {
 
     internal fun setTipsState(state: Float, course_tip: RedRockTipsView) {
         if (state == 0f || state == 1f) {
-            animMap.forEach {
-                it.value.cancel()
-            }
-            animMap[0] = course_tip.centerWayAnimation()
+            course_tip.state = RedRockTipsView.CENTER
             isNotTipOpen = true
         } else {
             if (isNotTipOpen) {
-                animMap[1] = course_tip.bottomWayAnimation()
+                course_tip.state = RedRockTipsView.BOTTOM
                 isNotTipOpen = false
             }
         }

@@ -18,13 +18,22 @@ import kotlin.math.atan
  *
  * 描述:课表头部可拉动提示，别问为什么要写这个动态的东西
  *      问的话那还要从一只蝙蝠说起（闲的）
+ *      具体描述一下，这是一个会从平的提示小条变化到上箭头或者下箭头的自定义View
+ *      本来是用在课表的头部中心的，但是发现在BottomSheet上会
+ *      出现性能问题，所以就放弃使用了
+ *      todo 初步判定是因为不断的[invalidate]绘制会造成BottomSheet轻微卡顿
  */
 internal class RedRockTipsView : View {
+
+    companion object {
+        const val UP = 0
+        const val CENTER = 1
+        const val BOTTOM = 2
+    }
 
     private val paint: Paint by lazy(LazyThreadSafetyMode.NONE) {
         Paint().apply {
             color = 0xff000000.toInt()
-            isAntiAlias = true
         }
     }
 
@@ -43,6 +52,62 @@ internal class RedRockTipsView : View {
             field = value
             invalidate()
         }
+
+    /**
+     * 使用这个View只用设置相应的状态就好了
+     */
+    var state = CENTER
+        set(value) {
+            field = value
+            when (value) {
+                UP -> topWayAnimation.start()
+                CENTER -> centerWayAnimation.start()
+                BOTTOM -> bottomWayAnimation.start()
+            }
+        }
+
+    // 因为这三个动画不一定会用到所以懒加载,
+    // 还有这个这三个动画需要根据开启动画时position来展示动画，所以重写了start
+    /**
+     * 将该view的状态从向上指或者向下指的状态恢复到平的状态
+     */
+    private val centerWayAnimation: ValueAnimator by lazy(LazyThreadSafetyMode.NONE) {
+        val animation = object : ValueAnimator() {
+            override fun start() {
+                this.setFloatValues(position, 0f)
+                super.start()
+            }
+        }
+        animSetting(animation)
+    }
+
+    /**
+     * 将状态变化成向下指
+     */
+    private val bottomWayAnimation: ValueAnimator by lazy(LazyThreadSafetyMode.NONE) {
+        val animation = object : ValueAnimator() {
+            override fun start() {
+                this.setFloatValues(position, -1f)
+                super.start()
+            }
+        }
+        animSetting(animation)
+
+    }
+
+    /**
+     * 将状态变化成向上指
+     */
+    private val topWayAnimation: ValueAnimator by lazy(LazyThreadSafetyMode.NONE) {
+        val animation = object : ValueAnimator() {
+            override fun start() {
+                this.setFloatValues(position, 1f)
+                super.start()
+            }
+        }
+        animSetting(animation)
+    }
+
 
     constructor(context: Context?) : super(context) {
         init()
@@ -102,33 +167,13 @@ internal class RedRockTipsView : View {
     }
 
 
-    fun topWayAnimation(): ValueAnimator {
-        val animation = ValueAnimator.ofFloat(position, 1f)
-        animSetting(animation)
-        return animation
-    }
-
-
-    fun bottomWayAnimation(): ValueAnimator {
-        val animation = ValueAnimator.ofFloat(position, -1f)
-        animSetting(animation)
-        return animation
-    }
-
-    fun centerWayAnimation(): ValueAnimator {
-        val animation = ValueAnimator.ofFloat(position, 0f)
-        animSetting(animation)
-        return animation
-    }
-
-    private fun animSetting(animation: ValueAnimator) {
+    private fun animSetting(animation: ValueAnimator): ValueAnimator {
         animation.interpolator = DecelerateInterpolator()
         animation.duration = 500
         animation.addUpdateListener {
             position = it.animatedValue as Float
-            invalidate()
         }
-        animation.start()
+        return animation
     }
 
 }

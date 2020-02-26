@@ -66,6 +66,12 @@ class CourseContainerEntryFragment : BaseFragment() {
 
     // 当前课表是哪个账号的，如果为空则表示在获取他人课表
     private var mStuNum: String? = null
+        set(value) {
+            field = value
+            if (value != null) {
+                courseState = CourseState.OtherCourse
+            }
+        }
 
     //如果是没课约，这两个值不为空
     private var mStuNumList: ArrayList<String>? = null
@@ -296,13 +302,16 @@ class CourseContainerEntryFragment : BaseFragment() {
         }
     }
 
+    var s = true
 
     /**
      * 根据主页的fragment的滑动状态来设置当前头部显示效果
      * @param state 从0到1，1表示BottomSheet完全展开
      */
     private fun settingFollowBottomSheet(state: Float) {
-        mCoursesViewModel.setTipsState(state, course_tip)
+        //给tip小块加上动画和BottomSheet有性能问题
+//        mCoursesViewModel.setTipsState(state, course_tip)
+
         //如果lottie动画还在显示，那么就不现实周数头部，这样加载时更加纯净一点
         if (course_lottie_load.visibility == View.VISIBLE) {
             course_current_course_week_select_container.visibility = View.GONE

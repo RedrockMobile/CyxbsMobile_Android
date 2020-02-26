@@ -75,6 +75,8 @@ class EditAffairViewModel(application: Application) : AndroidViewModel(applicati
     //当前事务activity的状态，分三个状态，设置标题，内容和时间
     var status: Status = Status.TitleStatus
 
+    var titleCandidateList = MutableLiveData<List<String>>()
+
 
     /**
      * 此方用于对[com.mredrock.cyxbs.course.ui.EditAffairActivity]进行周数选择、课程时间选择等相关内容的初始化。
@@ -91,6 +93,7 @@ class EditAffairViewModel(application: Application) : AndroidViewModel(applicati
         //通过点击touchView进来获取的位置信息
         val passedWeekPosition = intent.getIntExtra(EditAffairActivity.WEEK_NUM, -1)
         val passedTimePosition = intent.getIntExtra(EditAffairActivity.TIME_NUM, -1)
+        getTitleCandidate()
 
         if (passedWeekPosition != -1 && passedTimePosition != -1) {
             if (passedWeekPosition == 0) {
@@ -160,6 +163,21 @@ class EditAffairViewModel(application: Application) : AndroidViewModel(applicati
                         EventBus.getDefault().post(ModifyAffairEvent())
                     }))
         }
+    }
+
+
+    /**
+     * 获取事务标题候选
+     */
+    private fun getTitleCandidate() {
+        mCourseApiService.getTitleCandidate()
+                .setSchedulers()
+                .errorHandler()
+                .subscribe(ExecuteOnceObserver(onExecuteOnceNext = { candidate ->
+                    if (candidate.status == 200) {
+                        titleCandidateList.value = candidate.data
+                    }
+                }))
     }
 
 

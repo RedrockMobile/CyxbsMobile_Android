@@ -10,6 +10,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.transition.ChangeBounds
 import androidx.transition.Slide
@@ -87,7 +88,9 @@ class EditAffairActivity : BaseActivity() {
         if (mEditAffairViewModel.passedAffairInfo != null) {
             modifyPageLayout()
         }
-        rv_you_might.adapter = YouMightAdapter(et_title_content_input)
+        mEditAffairViewModel.titleCandidateList.observe(this, Observer {
+            rv_you_might.adapter = YouMightAdapter(it,et_title_content_input)
+        })
     }
 
     /**

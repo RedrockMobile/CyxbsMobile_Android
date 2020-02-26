@@ -39,7 +39,7 @@ fun getNowCourse(courses: List<Course>, wholeCourses: List<Course>, nowWeek: Int
     return if (tomorrowCourse == null) {
         Pair(null, false)
     } else {
-        Pair(tomorrowCourse, false)
+        Pair(tomorrowCourse, true)
     }
 }
 

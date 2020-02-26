@@ -106,6 +106,10 @@ interface CourseApiService {
                      @Field("idNum") idNum: String,
                      @Field("id") id: String): Observable<RedrockApiWrapper<Unit>>
 
+    @GET(CourseUrls.API_GET_TITLE_CANDIDATE)
+    fun getTitleCandidate():Observable<Candidate>
+
+
 
     /**
      * 获取某个课程的学生名单
