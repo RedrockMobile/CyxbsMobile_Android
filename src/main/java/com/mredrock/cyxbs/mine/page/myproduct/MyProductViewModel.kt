@@ -40,7 +40,7 @@ class MyProductViewModel : BaseViewModel() {
         }
 
     fun loadMyProductUnclaimed() {
-        apiServiceForSign.getMyProducts(stuNum, idNum ?: return, unclaimedPage++, pageSize)
+        apiServiceForSign.getMyProducts(unclaimedPage++, pageSize)
                 .normalWrapper(this)
                 .safeSubscribeBy { list ->
                     if (list.isEmpty()) {
@@ -79,7 +79,7 @@ class MyProductViewModel : BaseViewModel() {
         }
 
     fun loadMyProductClaimed() {
-        apiServiceForSign.getMyProducts(stuNum, idNum ?: return, claimedPage++, pageSize)
+        apiServiceForSign.getMyProducts(claimedPage++, pageSize)
                 .normalWrapper(this)
                 .safeSubscribeBy { list ->
                     if (list.isEmpty()) {

@@ -57,10 +57,7 @@ class DailyViewModel : BaseViewModel() {
     private var page = 1
 
     fun loadAllData() {
-        val stuNum = ServiceManager.getService(IAccountService::class.java).getUserService().getStuNum()
-        val idNum = BaseApp.context.defaultSharedPreferences.getString("SP_KEY_ID_NUM", "")
-                ?: return
-        apiService.getScoreStatus(stuNum, idNum)
+        apiService.getScoreStatus()
                 .normalWrapper(this)
                 .safeSubscribeBy {
                     _status.postValue(it)
@@ -74,13 +71,13 @@ class DailyViewModel : BaseViewModel() {
     //用flatmap解决嵌套请求的问题
     fun checkIn() {
 
-        apiService.checkIn(stuNum, idNum ?: return)
+        apiService.checkIn()
                 .flatMap(Function<RedrockApiStatus, Observable<RedrockApiWrapper<ScoreStatus>>> {
                     //如果status为405，说明是在寒暑假，此时不可签到
                     if (it.status == 405) {
                         _isInVacation.postValue(true)
                     }
-                    return@Function apiService.getScoreStatus(stuNum, idNum)
+                    return@Function apiService.getScoreStatus()
                 })
                 .normalWrapper(this)
                 .safeSubscribeBy {
@@ -90,7 +87,7 @@ class DailyViewModel : BaseViewModel() {
     }
 
     fun loadProduct() {
-        apiServiceForSign.getProducts(stuNum, idNum ?: return, page++)
+        apiServiceForSign.getProducts(page++)
                 .normalWrapper(this)
                 .safeSubscribeBy {
                     //由于Rxjava反射不应定能够够保证为空，当为空的说明这一页没有数据，于是停止加载
@@ -112,7 +109,7 @@ class DailyViewModel : BaseViewModel() {
         //防止后端粗心的将integral设置为空，同时需要处理为小数的情况
         val productIntegral = if (product.integral.isEmpty()) 0 else product.integral.toFloat().toInt()
 
-        apiServiceForSign.exchangeProduct(stuNum, idNum, product.name, productIntegral)
+        apiServiceForSign.exchangeProduct(product.name, productIntegral)
                 .flatMap(Function<RedrockApiStatus, Observable<RedrockApiWrapper<ScoreStatus>>> {
                     if (it.status == 200) {
                         _exchangeEvent.postValue(true)
@@ -120,7 +117,7 @@ class DailyViewModel : BaseViewModel() {
                     } else {
                         _exchangeEvent.postValue(false)
                     }
-                    return@Function apiService.getScoreStatus(stuNum, idNum)
+                    return@Function apiService.getScoreStatus()
                 })
                 .normalWrapper(this)
                 .safeSubscribeBy {

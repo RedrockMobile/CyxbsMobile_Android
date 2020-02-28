@@ -56,41 +56,34 @@ interface ApiService {
     /**
      * 签到部分
      */
-    @FormUrlEncoded
     @POST("app/index.php/QA/Integral/checkIn")
-    fun checkIn(@Field("stunum") stuNum: String,
-                @Field("idnum") idNum: String): Observable<RedrockApiStatus>
+    fun checkIn(): Observable<RedrockApiStatus>
 
-    @FormUrlEncoded
     @POST("app/index.php/QA/User/getScoreStatus")
-    fun getScoreStatus(@Field("stunum") stuNum: String,
-                       @Field("idnum") idNum: String): Observable<RedrockApiWrapper<ScoreStatus>>
+    fun getScoreStatus(): Observable<RedrockApiWrapper<ScoreStatus>>
 
     //兑换商品
     @FormUrlEncoded
     @POST("QA/Integral/order")
-    fun exchangeProduct(@Field("stunum") stuNum: String,
-                        @Field("idnum") idNum: String,
-                        @Field("name") name: String,
+    fun exchangeProduct(@Field("name") name: String,
                         @Field("value") value: Int): Observable<RedrockApiStatus>
 
     //获取商品
     @FormUrlEncoded
     @POST("QA/Integral/getItemList")
-    fun getProducts(@Field("stunum") stuNum: String,
-                        @Field("idnum") idNum: String,
-                        @Field("page") page: Int,
-                        @Field("size") size: Int = 6): Observable<RedrockApiWrapper<List<Product>>>
+    fun getProducts(@Field("page") page: Int,
+                    @Field("size") size: Int = 6): Observable<RedrockApiWrapper<List<Product>>>
 
     //我的商品
     @FormUrlEncoded
     @POST("QA/Integral/myRepertory")
-    fun getMyProducts(@Field("stunum") stuNum: String,
-                        @Field("idnum") idNum: String,
-                        @Field("page") page: Int,
-                        @Field("size") size: Int = 6): Observable<RedrockApiWrapper<List<MyProduct>>>
+    fun getMyProducts(@Field("page") page: Int,
+                      @Field("size") size: Int = 6): Observable<RedrockApiWrapper<List<MyProduct>>>
 
 
+    /**
+     * 我的首页部分
+     */
     @FormUrlEncoded
     @POST("app/index.php/QA/User/mine")
     fun getQANumber(@Field("stunum") stuNum: String,
@@ -167,9 +160,9 @@ interface ApiService {
     @FormUrlEncoded
     @POST("wxapi/magipoke-draft/User/getDraftQuestionList")
     fun getAskDraftList(@Field("stuNum") stuNum: String,
-                     @Field("idNum") idNum: String,
-                     @Field("page") page: Int,
-                     @Field("size") size: Int): Observable<RedrockApiWrapper<List<AskDraft>>>
+                        @Field("idNum") idNum: String,
+                        @Field("page") page: Int,
+                        @Field("size") size: Int): Observable<RedrockApiWrapper<List<AskDraft>>>
 
     /**
      * 回答草稿
@@ -177,9 +170,9 @@ interface ApiService {
     @FormUrlEncoded
     @POST("wxapi/magipoke-draft/User/getDraftAnswerList")
     fun getAnswerDraftList(@Field("stuNum") stuNum: String,
-                        @Field("idNum") idNum: String,
-                        @Field("page") page: Int,
-                        @Field("size") size: Int): Observable<RedrockApiWrapper<List<AnswerDraft>>>
+                           @Field("idNum") idNum: String,
+                           @Field("page") page: Int,
+                           @Field("size") size: Int): Observable<RedrockApiWrapper<List<AnswerDraft>>>
 
     /**
      * 根据question的id获取Question，注意，网络请求结果为RequestBody对象，未解析

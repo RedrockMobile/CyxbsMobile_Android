@@ -51,10 +51,7 @@ class UserViewModel : BaseViewModel() {
 
 
     fun getScoreStatus() {
-        val stuNum = ServiceManager.getService(IAccountService::class.java).getUserService().getStuNum()
-        val idNum = BaseApp.context.defaultSharedPreferences.getString("SP_KEY_ID_NUM", "")
-                ?: return
-        apiService.getScoreStatus(stuNum, idNum)
+        apiService.getScoreStatus()
                 .mapOrThrowApiException()
                 .setSchedulers()
                 .doOnErrorWithDefaultErrorHandler { false }
