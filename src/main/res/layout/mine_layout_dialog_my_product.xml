@@ -24,6 +24,6 @@
         android:paddingStart="44dp"
         android:paddingEnd="44dp"
         android:textColor="@color/levelFourFontColor"
-        android:textSize="11sp" />
+        android:textSize="13sp" />
 
 </LinearLayout>

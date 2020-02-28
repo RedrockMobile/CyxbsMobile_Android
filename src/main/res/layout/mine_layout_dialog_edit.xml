@@ -24,9 +24,7 @@
         android:text="@string/mine_exit_edit"
         android:textColor="@color/levelTwoFontColor"
         android:textSize="18sp"
-        android:textStyle="bold"
-        tools:layout_editor_absoluteX="177dp"
-        tools:layout_editor_absoluteY="323dp" />
+        android:textStyle="bold" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -35,8 +33,6 @@
         android:layout_marginTop="10dp"
         android:text="@string/mine_exit_edit_quest"
         android:textColor="@color/levelFourFontColor"
-        android:textSize="11sp"
-        tools:layout_editor_absoluteX="107dp"
-        tools:layout_editor_absoluteY="374dp" />
+        android:textSize="13sp" />
 
 </LinearLayout>
