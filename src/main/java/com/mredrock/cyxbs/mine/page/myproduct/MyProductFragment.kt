@@ -1,9 +1,11 @@
 package com.mredrock.cyxbs.mine.page.myproduct
 
 import android.os.Bundle
+import android.widget.TextView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.RecyclerView
+import com.mredrock.cyxbs.common.component.CommonDialogFragment
 import com.mredrock.cyxbs.common.utils.extensions.setImageFromUrl
 import com.mredrock.cyxbs.mine.R
 import com.mredrock.cyxbs.mine.network.model.MyProduct
@@ -18,6 +20,25 @@ class MyProductFragment(private val type: Int = UNCLAIMED) : BaseRVFragment<MyPr
     companion object {
         const val CLAIMED = 1
         const val UNCLAIMED = 2
+    }
+
+    private val dialogDialogFragment: CommonDialogFragment by lazy {
+        CommonDialogFragment().apply {
+            initView(
+                    containerRes = R.layout.mine_layout_dialog_my_product,
+                    positiveString = "我知道了",
+                    onPositiveClick = { dismiss() },
+                    elseFunction = {
+                        it.findViewById<TextView>(R.id.dialog_title).text = resources.getString(R.string.mine_myproduct);
+
+                        if (type == UNCLAIMED) {
+                            it.findViewById<TextView>(R.id.dialog_content).text = resources.getString(R.string.mine_myproduct_unclaimed)
+                        } else {
+                            it.findViewById<TextView>(R.id.dialog_content).text = resources.getString(R.string.mine_myproduct_claimed)
+                        }
+                    }
+            )
+        }
     }
 
     private val viewModel by lazy { ViewModelProviders.of(this).get(MyProductViewModel::class.java) }
@@ -77,6 +98,9 @@ class MyProductFragment(private val type: Int = UNCLAIMED) : BaseRVFragment<MyPr
         holder.itemView.mine_myproduct_title.text = data.name
         holder.itemView.mine_myproduct_integral.text = data.integral.toString()
         holder.itemView.mine_myproduct_iv.setImageFromUrl(data.photoSrc)
+        holder.itemView.setOnClickListener {
+            dialogDialogFragment.show(fragmentManager, "my_product")
+        }
 
     }
 

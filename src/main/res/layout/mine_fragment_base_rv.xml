@@ -18,7 +18,9 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/mine_fragment_base_rv"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:paddingBottom="100dp"
+            android:clipToPadding="false"/>
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 
