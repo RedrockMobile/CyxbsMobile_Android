@@ -5,6 +5,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:padding="10dp"
+    android:gravity="center"
     android:background="@drawable/common_shape_cyxbs_toast"
     android:textColor="@color/discoverAcademicOnlineColors"
     tools:text="自定义Toast" />
