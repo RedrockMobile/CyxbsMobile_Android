@@ -69,13 +69,6 @@ class MyProductFragment(private val type: Int = UNCLAIMED) : BaseRVFragment<MyPr
     }
 
     override fun bindFooterHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        if (getFooter().state == RvFooter.State.LOADING) {
-            if (type == UNCLAIMED) {
-                viewModel.loadMyProductUnclaimed()
-            } else {
-                viewModel.loadMyProductClaimed()
-            }
-        }
     }
 
 

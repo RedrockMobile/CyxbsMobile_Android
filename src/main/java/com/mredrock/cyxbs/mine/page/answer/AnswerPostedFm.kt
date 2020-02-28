@@ -51,11 +51,7 @@ class AnswerPostedFm : BaseRVFragment<AnswerPosted>() {
         return R.layout.mine_list_item_my_answer_posted
     }
 
-    //自动加载更多
     override fun bindFooterHolder(holder: androidx.recyclerview.widget.RecyclerView.ViewHolder, position: Int) {
-        if (getFooter().state == RvFooter.State.LOADING) {
-            viewModel.loadAnswerPostedList()
-        }
     }
 
     @SuppressLint("SetTextI18n")

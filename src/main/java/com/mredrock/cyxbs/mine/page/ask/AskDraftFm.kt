@@ -46,10 +46,6 @@ class AskDraftFm : BaseRVFragment<AskDraft>() {
 
     //自动加载更多
     override fun bindFooterHolder(holder: androidx.recyclerview.widget.RecyclerView.ViewHolder, position: Int) {
-        //通过footer来判断是否继续加载
-        if (getFooter().state == RvFooter.State.LOADING) {
-            viewModel.loadAskDraftList()
-        }
     }
 
     @SuppressLint("SetTextI18n")

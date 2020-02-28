@@ -13,8 +13,10 @@ import com.mredrock.cyxbs.common.viewmodel.event.SingleLiveEvent
 import com.mredrock.cyxbs.mine.network.model.AnswerDraft
 import com.mredrock.cyxbs.mine.network.model.AnswerPosted
 import com.mredrock.cyxbs.mine.util.apiService
+import com.mredrock.cyxbs.mine.util.extension.disposeAll
 import com.mredrock.cyxbs.mine.util.extension.normalWrapper
 import com.mredrock.cyxbs.mine.util.ui.RvFooter
+import io.reactivex.disposables.Disposable
 
 /**
  * Created by zia on 2018/9/10.
@@ -22,6 +24,9 @@ import com.mredrock.cyxbs.mine.util.ui.RvFooter
 class AnswerViewModel : BaseViewModel() {
     private val stuNum = ServiceManager.getService(IAccountService::class.java).getUserService().getStuNum()
     private val idNum = BaseApp.context.defaultSharedPreferences.getString("SP_KEY_ID_NUM", "")
+
+    private val disposableForPosted: MutableList<Disposable> = mutableListOf()
+    private val disposableForDraft: MutableList<Disposable> = mutableListOf()
 
     private var answerPostedPage: Int = 1
     private var answerDraftPage: Int = 1
@@ -40,7 +45,7 @@ class AnswerViewModel : BaseViewModel() {
         }
 
     fun loadAnswerPostedList() {
-        apiService.getAnswerPostedList(stuNum, idNum
+        val disposable = apiService.getAnswerPostedList(stuNum, idNum
                 ?: return, answerPostedPage++, pageSize)
                 .normalWrapper(this)
                 .safeSubscribeBy(
@@ -59,17 +64,21 @@ class AnswerViewModel : BaseViewModel() {
                             val localAnswerPosted = _answerPosted.value ?: mutableListOf()
                             localAnswerPosted.addAll(it)
                             _answerPosted.postValue(localAnswerPosted)
+                            //下一页
+                            loadAnswerPostedList()
                         },
                         onError = {
                             _eventOnAnswerPosted.postValue(RvFooter.State.ERROR)
                         })
                 .lifeCycle()
+        //请求的添加，刷新的时候要取消已经发送的网络请求
+        disposableForPosted.add(disposable)
     }
 
     fun cleanAnswerPostedPage() {
         //清除还在请求网络的接口,
         //如果一直刷新，那么前一个网络请求没有cancel掉，那么就会导致多的item
-        onCleared()
+        disposeAll(disposableForPosted)
 
         answerPostedPage = 1
         _answerPosted.value = mutableListOf()
@@ -88,7 +97,7 @@ class AnswerViewModel : BaseViewModel() {
         }
 
     fun loadAnswerDraftList() {
-        apiService.getAnswerDraftList(stuNum, idNum
+        val disposable = apiService.getAnswerDraftList(stuNum, idNum
                 ?: return, answerDraftPage++, pageSize)
                 .normalWrapper(this)
                 .safeSubscribeBy(
@@ -107,18 +116,20 @@ class AnswerViewModel : BaseViewModel() {
                             val localAnswerDraft = _answerDraft.value ?: mutableListOf()
                             localAnswerDraft.addAll(it)
                             _answerDraft.postValue(localAnswerDraft)
+                            //下一页
+                            loadAnswerDraftList()
                         },
                         onError = {
                             _eventOnAnswerDraft.postValue(RvFooter.State.ERROR)
                         })
                 .lifeCycle()
+        disposableForDraft.add(disposable)
     }
 
     fun cleanAnswerDraftPage() {
         //清除还在请求网络的接口,
         //如果一直刷新，那么前一个网络请求没有cancel掉，那么就会导致多的item
-        onCleared()
-
+        disposeAll(disposableForDraft)
         answerDraftPage = 1
         _answerDraft.value = mutableListOf()
     }

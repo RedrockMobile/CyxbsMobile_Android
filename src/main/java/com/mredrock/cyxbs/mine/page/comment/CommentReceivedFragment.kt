@@ -49,9 +49,6 @@ class CommentReceivedFragment : BaseRVFragment<CommentReceived>() {
     }
 
     override fun bindFooterHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        if (getFooter().state == RvFooter.State.LOADING) {
-            viewModel.loadCommentReceivedList()
-        }
     }
 
     override fun bindDataHolder(holder: RecyclerView.ViewHolder, position: Int, data: CommentReceived) {

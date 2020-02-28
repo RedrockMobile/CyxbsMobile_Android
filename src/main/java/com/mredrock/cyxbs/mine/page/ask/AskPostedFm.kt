@@ -59,10 +59,6 @@ class AskPostedFm : BaseRVFragment<AskPosted>() {
     }
 
     override fun bindFooterHolder(holder: androidx.recyclerview.widget.RecyclerView.ViewHolder, position: Int) {
-        //通过footer来判断是否继续加载
-        if (getFooter().state == RvFooter.State.LOADING) {
-            viewModel.loadAskPostedList()
-        }
     }
 
     @SuppressLint("SetTextI18n")

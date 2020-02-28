@@ -42,12 +42,7 @@ class AnswerDraftFm : BaseRVFragment<AnswerDraft>() {
         return R.layout.mine_list_item_my_answer_draft
     }
 
-    //自动加载更多
     override fun bindFooterHolder(holder: androidx.recyclerview.widget.RecyclerView.ViewHolder, position: Int) {
-        //通过footer来判断是否继续加载
-        if (getFooter().state == RvFooter.State.LOADING) {
-            viewModel.loadAnswerDraftList()
-        }
     }
 
     @SuppressLint("SetTextI18n")

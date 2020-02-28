@@ -12,8 +12,10 @@ import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.mine.network.ApiGeneratorForSign
 import com.mredrock.cyxbs.mine.network.ApiService
 import com.mredrock.cyxbs.mine.network.model.MyProduct
+import com.mredrock.cyxbs.mine.util.extension.disposeAll
 import com.mredrock.cyxbs.mine.util.extension.normalWrapper
 import com.mredrock.cyxbs.mine.util.ui.RvFooter
+import io.reactivex.disposables.Disposable
 
 /**
  * Created by roger on 2020/2/15
@@ -23,6 +25,9 @@ class MyProductViewModel : BaseViewModel() {
     val idNum = BaseApp.context.defaultSharedPreferences.getString("SP_KEY_ID_NUM", "")
 
     private val apiServiceForSign: ApiService by lazy { ApiGeneratorForSign.getApiService(ApiService::class.java) }
+
+    private val disposableForUnClaimed: MutableList<Disposable> = mutableListOf()
+    private val disposableForClaimed: MutableList<Disposable> = mutableListOf()
 
     private val pageSize = 6
     private var unclaimedPage: Int = 1
@@ -40,7 +45,7 @@ class MyProductViewModel : BaseViewModel() {
         }
 
     fun loadMyProductUnclaimed() {
-        apiServiceForSign.getMyProducts(unclaimedPage++, pageSize)
+        val disposable = apiServiceForSign.getMyProducts(unclaimedPage++, pageSize)
                 .normalWrapper(this)
                 .safeSubscribeBy { list ->
                     if (list.isEmpty()) {
@@ -57,11 +62,14 @@ class MyProductViewModel : BaseViewModel() {
                         it.isReceived == 0
                     })
                     _unclaimedList.postValue(local)
+                    //下一页
+                    loadMyProductUnclaimed()
                 }.lifeCycle()
+        disposableForUnClaimed.add(disposable)
     }
 
     fun cleanUnclaimedPage() {
-        onCleared()
+        disposeAll(disposableForUnClaimed)
 
         unclaimedPage = 1
         _unclaimedList.value = mutableListOf()
@@ -79,11 +87,11 @@ class MyProductViewModel : BaseViewModel() {
         }
 
     fun loadMyProductClaimed() {
-        apiServiceForSign.getMyProducts(claimedPage++, pageSize)
+        val disposable = apiServiceForSign.getMyProducts(claimedPage++, pageSize)
                 .normalWrapper(this)
                 .safeSubscribeBy { list ->
                     if (list.isEmpty()) {
-                        if (claimedList.value.isNullOrEmpty()) {
+                        if (_claimedList.value.isNullOrEmpty()) {
                             _eventOnClaimed.postValue(RvFooter.State.NOTHING)
                             return@safeSubscribeBy
                         } else {
@@ -96,11 +104,14 @@ class MyProductViewModel : BaseViewModel() {
                         it.isReceived == 1
                     })
                     _claimedList.postValue(local)
+                    //下一页
+                    loadMyProductClaimed()
                 }.lifeCycle()
+        disposableForClaimed.add(disposable)
     }
 
     fun cleanClaimedPage() {
-        onCleared()
+        disposeAll(disposableForClaimed)
 
         claimedPage = 1
         _claimedList.value = mutableListOf()

@@ -52,9 +52,6 @@ class CommentFragment : BaseRVFragment<Comment>() {
 
     //自动加载更多
     override fun bindFooterHolder(holder: androidx.recyclerview.widget.RecyclerView.ViewHolder, position: Int) {
-        if (getFooter().state == RvFooter.State.LOADING) {
-            viewModel.loadCommentList()
-        }
     }
 
     @SuppressLint("SetTextI18n")

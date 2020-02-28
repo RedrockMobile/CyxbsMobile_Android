@@ -13,8 +13,10 @@ import com.mredrock.cyxbs.common.viewmodel.event.SingleLiveEvent
 import com.mredrock.cyxbs.mine.network.model.Comment
 import com.mredrock.cyxbs.mine.network.model.CommentReceived
 import com.mredrock.cyxbs.mine.util.apiService
+import com.mredrock.cyxbs.mine.util.extension.disposeAll
 import com.mredrock.cyxbs.mine.util.extension.normalWrapper
 import com.mredrock.cyxbs.mine.util.ui.RvFooter
+import io.reactivex.disposables.Disposable
 
 /**
  * Created by zia on 2018/9/13.
@@ -28,6 +30,9 @@ class CommentViewModel : BaseViewModel() {
     private var commentPage: Int = 1
     private var commentReceivedPage: Int = 1
 
+    private val disposableForComment: MutableList<Disposable> = mutableListOf()
+    private val disposableForReComment: MutableList<Disposable> = mutableListOf()
+
     //发出评论部分
     private val _eventOnComment = SingleLiveEvent<RvFooter.State>()
     val eventOnComment: LiveData<RvFooter.State>
@@ -40,7 +45,7 @@ class CommentViewModel : BaseViewModel() {
         }
 
     fun loadCommentList() {
-        apiService.getCommentList(stuNum, idNum
+        val disposable = apiService.getCommentList(stuNum, idNum
                 ?: return, commentPage++, pageSize)
                 .normalWrapper(this)
                 .safeSubscribeBy(
@@ -60,16 +65,19 @@ class CommentViewModel : BaseViewModel() {
                             val localComment = _commentList.value ?: mutableListOf()
                             localComment.addAll(it)
                             _commentList.postValue(localComment)
+                            //下一页
+                            loadCommentList()
                         },
                         onError = {
                             _eventOnComment.postValue(RvFooter.State.ERROR)
                         })
                 .lifeCycle()
+        disposableForComment.add(disposable)
     }
     fun cleanCommentPage() {
         //清除还在请求网络的接口,
         //如果一直刷新，那么前一个网络请求没有cancel掉，那么就会导致多的item
-        onCleared()
+        disposeAll(disposableForComment)
 
         commentPage = 1
         _commentList.value = mutableListOf()
@@ -88,7 +96,7 @@ class CommentViewModel : BaseViewModel() {
         }
 
     fun loadCommentReceivedList() {
-        apiService.getCommentReceivedList(stuNum, idNum
+        val disposable = apiService.getCommentReceivedList(stuNum, idNum
                 ?: return, commentReceivedPage++, pageSize)
                 .normalWrapper(this)
                 .safeSubscribeBy(
@@ -107,16 +115,19 @@ class CommentViewModel : BaseViewModel() {
                             val localCommentReceived = _commentReceivedList.value ?: mutableListOf()
                             localCommentReceived.addAll(it)
                             _commentReceivedList.postValue(localCommentReceived)
+                            //下一页
+                            loadCommentReceivedList()
                         },
                         onError = {
                             _eventOnCommentReceived.postValue(RvFooter.State.ERROR)
                         })
                 .lifeCycle()
+        disposableForReComment.add(disposable)
     }
     fun cleanCommentReceivedPage() {
         //清除还在请求网络的接口,
         //如果一直刷新，那么前一个网络请求没有cancel掉，那么就会导致多的item
-        onCleared()
+        disposeAll(disposableForReComment)
 
         commentReceivedPage = 1
         _commentReceivedList.value = mutableListOf()

@@ -15,8 +15,10 @@ import com.mredrock.cyxbs.mine.network.model.AskDraft
 import com.mredrock.cyxbs.mine.network.model.AskPosted
 import com.mredrock.cyxbs.mine.network.model.NavigateData
 import com.mredrock.cyxbs.mine.util.apiService
+import com.mredrock.cyxbs.mine.util.extension.disposeAll
 import com.mredrock.cyxbs.mine.util.extension.normalWrapper
 import com.mredrock.cyxbs.mine.util.ui.RvFooter
+import io.reactivex.disposables.Disposable
 
 /**
  * Created by zia on 2018/9/10.
@@ -28,6 +30,9 @@ class AskViewModel : BaseViewModel() {
 
     private var askDraftPage: Int = 1
     private var askPostedPage: Int = 1
+
+    private val disposableForPosted: MutableList<Disposable> = mutableListOf()
+    private val disposableForDraft: MutableList<Disposable> = mutableListOf()
 
     private val pageSize = 6
 
@@ -43,7 +48,7 @@ class AskViewModel : BaseViewModel() {
         }
 
     fun loadAskPostedList() {
-        apiService.getAskPostedList(stuNum, idNum
+        val disposable = apiService.getAskPostedList(stuNum, idNum
                 ?: return, askPostedPage++, pageSize)
                 .normalWrapper(this)
                 .safeSubscribeBy(
@@ -61,17 +66,20 @@ class AskViewModel : BaseViewModel() {
                             val localAskPosted = _askPosted.value ?: mutableListOf()
                             localAskPosted.addAll(it)
                             _askPosted.postValue(localAskPosted)
+                            //下一页
+                            loadAskPostedList()
                         },
                         onError = {
                             _eventOnAskPosted.postValue(RvFooter.State.ERROR)
                         })
                 .lifeCycle()
+        disposableForPosted.add(disposable)
     }
 
     fun cleanAskPostedPage() {
         //清除还在请求网络的接口,
         //如果一直刷新，那么前一个网络请求没有cancel掉，那么就会导致多的item
-        onCleared()
+        disposeAll(disposableForPosted)
 
         askPostedPage = 1
         _askPosted.value = mutableListOf()
@@ -89,7 +97,7 @@ class AskViewModel : BaseViewModel() {
         }
 
     fun loadAskDraftList() {
-        apiService.getAskDraftList(stuNum, idNum
+        val disposable = apiService.getAskDraftList(stuNum, idNum
                 ?: return, askDraftPage++, pageSize)
                 .normalWrapper(this)
                 .safeSubscribeBy(
@@ -108,17 +116,20 @@ class AskViewModel : BaseViewModel() {
                             val localAskDraft = _askDraft.value ?: mutableListOf()
                             localAskDraft.addAll(it)
                             _askDraft.postValue(localAskDraft)
+                            //下一页
+                            loadAskDraftList()
                         },
                         onError = {
                             _eventOnAskDraft.postValue(RvFooter.State.ERROR)
                         })
                 .lifeCycle()
+        disposableForDraft.add(disposable)
     }
 
     fun cleanAskDraftPage() {
         //清除还在请求网络的接口,
         //如果一直刷新，那么前一个网络请求没有cancel掉，那么就会导致多的item
-        onCleared()
+        disposeAll(disposableForDraft)
 
         askDraftPage = 1
         _askDraft.value = mutableListOf()

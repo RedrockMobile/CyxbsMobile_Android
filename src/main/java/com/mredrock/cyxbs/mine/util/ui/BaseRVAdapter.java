@@ -10,7 +10,6 @@ import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -27,12 +26,6 @@ public abstract class BaseRVAdapter<D> extends RecyclerView.Adapter {
     protected int getNormalLayout();
 
     private View footerView = null;
-
-    public void loadData(List<D> dataList) {
-        datas.addAll(dataList);
-        notifyItemRangeInserted(datas.size(), dataList.size());
-    }
-
 
     //设置新数据集，通过旧数据集和DiffUtil来添加动画
     public void setNewData(List<D> newData) {
@@ -62,44 +55,6 @@ public abstract class BaseRVAdapter<D> extends RecyclerView.Adapter {
         //刷新FooterView,否则由于DiffUtil，不会刷新FooterView所在的位置
         notifyItemChanged(newData.size());
         datas = newData;
-        notifyDataSetChanged();
-    }
-
-    public void delete(D deleteItem) {
-        List<D> oldDatas = new ArrayList<>(datas);
-        Iterator<D> iterator = datas.iterator();
-        while (iterator.hasNext()) {
-            D data = iterator.next();
-            if (data.equals(deleteItem)) {
-                iterator.remove();
-            }
-        }
-        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new DiffUtil.Callback() {
-            @Override
-            public int getOldListSize() {
-                return oldDatas.size();
-            }
-
-            @Override
-            public int getNewListSize() {
-                return datas.size();
-            }
-
-            @Override
-            public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
-                return oldDatas.get(oldItemPosition) == datas.get(newItemPosition);
-            }
-
-            @Override
-            public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
-                return oldDatas.get(oldItemPosition).equals(datas.get(newItemPosition));
-            }
-        });
-        diffResult.dispatchUpdatesTo(this);
-    }
-
-    public void clear() {
-        datas.clear();
         notifyDataSetChanged();
     }
 

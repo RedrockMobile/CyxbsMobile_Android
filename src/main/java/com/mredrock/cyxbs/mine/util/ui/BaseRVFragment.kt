@@ -55,29 +55,10 @@ abstract class BaseRVFragment<D> : Fragment() {
 
     }
 
-    /**
-     * recyclerView在滑动时不能刷新，需要等待一下
-     */
-    fun addData(list: List<D>) {
-        if (mine_fragment_base_rv.isComputingLayout) {
-            mine_fragment_base_rv.post { addData(list) }
-        } else {
-            baseRVAdapter?.loadData(list)
-        }
-    }
-
-    fun delete(deleteItem: D) {
-        baseRVAdapter?.delete(deleteItem)
-    }
-
     fun setAdapter(adapter: RvAdapter) {
         adapter.setFooterView(footer)
         this.baseRVAdapter = adapter
         mine_fragment_base_rv.adapter = adapter
-    }
-
-    protected fun clearData() {
-        baseRVAdapter?.clear()
     }
 
     fun showPlaceHolder(view: View) {
