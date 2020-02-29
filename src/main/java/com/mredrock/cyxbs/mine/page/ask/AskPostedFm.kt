@@ -8,13 +8,13 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.alibaba.android.arouter.launcher.ARouter
 import com.mredrock.cyxbs.common.config.QA_ANSWER_LIST
-import com.mredrock.cyxbs.common.config.QUESTION_ID
-import com.mredrock.cyxbs.common.config.QUESTION_REQUEST_BODY_DATA
+import com.mredrock.cyxbs.common.event.OpenShareQuestionEvent
 import com.mredrock.cyxbs.mine.R
 import com.mredrock.cyxbs.mine.network.model.AskPosted
 import com.mredrock.cyxbs.mine.util.ui.BaseRVFragment
 import com.mredrock.cyxbs.mine.util.ui.RvFooter
 import kotlinx.android.synthetic.main.mine_list_item_my_ask_posted.view.*
+import org.greenrobot.eventbus.EventBus
 import org.jetbrains.anko.textColor
 
 /**
@@ -47,10 +47,8 @@ class AskPostedFm : BaseRVFragment<AskPosted>() {
             }
         })
         viewModel.navigateEvent.observe(this, Observer {
-            val bundle = Bundle()
-            bundle.putInt(QUESTION_ID, it.id)
-            bundle.putString(QUESTION_REQUEST_BODY_DATA, it.data)
-            ARouter.getInstance().build(QA_ANSWER_LIST).with(bundle).navigation()
+            EventBus.getDefault().postSticky(OpenShareQuestionEvent(it.data))
+            ARouter.getInstance().build(QA_ANSWER_LIST).navigation()
         })
     }
 

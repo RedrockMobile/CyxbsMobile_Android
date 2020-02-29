@@ -180,7 +180,7 @@ interface ApiService {
      * 因为qa和mine互不通信，故采取此方法传递Question对象
      */
     @FormUrlEncoded
-    @POST("/app/index.php/QA/Question/getQuestionInfo")
+    @POST("app/index.php/QA/Question/getDetailedInfo")
     fun getQuestion(
             @Field("stunum") stuNum: String,
             @Field("idnum") idNum: String,
