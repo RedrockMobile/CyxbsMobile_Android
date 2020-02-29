@@ -1,16 +1,26 @@
 package com.mredrock.cyxbs.qa.pages.comment.ui
 
 import android.app.Activity
+import android.app.ProgressDialog
 import android.os.Bundle
 import android.text.InputType.TYPE_TEXT_FLAG_MULTI_LINE
 import android.view.inputmethod.EditorInfo
-import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import com.alibaba.android.arouter.facade.annotation.Route
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
+import com.mredrock.cyxbs.common.bean.RedrockApiWrapper
+import com.mredrock.cyxbs.common.bean.isSuccessful
 import com.mredrock.cyxbs.common.config.QA_COMMENT_LIST
+import com.mredrock.cyxbs.common.event.OpenShareCommentEvent
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.service.account.IAccountService
-import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
+import com.mredrock.cyxbs.common.ui.BaseActivity
 import com.mredrock.cyxbs.common.utils.extensions.gone
+import com.mredrock.cyxbs.common.utils.extensions.toast
+import com.mredrock.cyxbs.common.viewmodel.event.ProgressDialogEvent
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.bean.Answer
 import com.mredrock.cyxbs.qa.bean.Question
@@ -24,34 +34,36 @@ import com.mredrock.cyxbs.qa.ui.adapter.FooterRvAdapter
 import com.mredrock.cyxbs.qa.utils.setPraise
 import kotlinx.android.synthetic.main.qa_activity_comment_list.*
 import kotlinx.android.synthetic.main.qa_comment_new_publish_layout.*
+import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import org.jetbrains.anko.indeterminateProgressDialog
+import org.jetbrains.anko.longToast
 import org.jetbrains.anko.singleLine
 import org.jetbrains.anko.startActivityForResult
 
 @Route(path = QA_COMMENT_LIST)
-class CommentListActivity : BaseViewModelActivity<CommentListViewModel>() {
+class CommentListActivity : BaseActivity() {
     companion object {
         const val REQUEST_CODE = 0x123
+        const val PARAM_QUESTION = "question"
+        const val PARAM_ANSWER = "answer"
 
         fun activityStart(activity: Activity,
                           question: Question,
                           answer: Answer) {
-            val showAdoptIcon = question.hasAdoptedAnswer || !question.isSelf
             activity.startActivityForResult<CommentListActivity>(REQUEST_CODE,
-                    "qid" to question.id,
-                    "showAdoptIcon" to showAdoptIcon,
-                    "isEmotion" to question.isEmotion,
-                    "answer" to answer,
-                    "answerNum" to answer.commentNum,
-                    "praiseNum" to answer.praiseNum,
-                    "isPraised" to answer.isPraised,
-                    "stuNum" to answer.userId
-            )
+                    PARAM_QUESTION to question,
+                    PARAM_ANSWER to answer)
         }
     }
 
-    override val viewModelClass = CommentListViewModel::class.java
+    private lateinit var viewModel: CommentListViewModel
+    private var progressDialog: ProgressDialog? = null
+    private fun initProgressBar() = indeterminateProgressDialog(message = "Loading...") {
+        setOnDismissListener { viewModel.onProgressDialogDismissed() }
+    }
+
     override val isFragmentActivity = false
 
     private lateinit var headerAdapter: CommentListHeaderRvAdapter
@@ -59,23 +71,50 @@ class CommentListActivity : BaseViewModelActivity<CommentListViewModel>() {
     private lateinit var footerRvAdapter: FooterRvAdapter
     private lateinit var commentListRvAdapter: CommentListRvAdapter
 
+    private lateinit var answer: Answer
+    private lateinit var question: Question
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        answer = intent.getParcelableExtra(PARAM_ANSWER)
+        question = intent.getParcelableExtra(PARAM_QUESTION)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.qa_activity_comment_list)
-        val showAdoptIcon = intent.getBooleanExtra("showAdoptIcon", false)
-        val isEmotion = intent.getBooleanExtra("isEmotion", false)
-        initToolbar()
-        initRv(showAdoptIcon, isEmotion)
-        initCommentSheet()
+        if (intent.getParcelableExtra<Question>(PARAM_QUESTION) != null && intent.getParcelableExtra<Answer>(PARAM_ANSWER) != null) {
+            answer = intent.getParcelableExtra(PARAM_ANSWER)
+            question = intent.getParcelableExtra(PARAM_QUESTION)
+            initViewModel(question.id, answer)
+            val showAdoptIcon = question.hasAdoptedAnswer || !question.isSelf
+            val isEmotion = question.isEmotion
+            initToolbar()
+            initRv(showAdoptIcon, isEmotion)
+            initCommentSheet()
+        }
+    }
+
+    private fun initViewModel(questionId: String, answer: Answer) {
+        viewModel = ViewModelProviders.of(this, CommentListViewModel.Factory(questionId, answer)).get(CommentListViewModel::class.java)
+        viewModel.apply {
+            toastEvent.observe { str -> str?.let { toast(it) } }
+            longToastEvent.observe { str -> str?.let { longToast(it) } }
+            progressDialogEvent.observe {
+                it ?: return@observe
+                if (it != ProgressDialogEvent.DISMISS_DIALOG_EVENT && progressDialog?.isShowing != true) {
+                    progressDialog = progressDialog ?: initProgressBar()
+                    progressDialog?.show()
+                } else if (it == ProgressDialogEvent.DISMISS_DIALOG_EVENT && progressDialog?.isShowing != false) {
+                    progressDialog?.dismiss()
+                }
+            }
+        }
     }
 
     private fun initToolbar() {
         qa_ib_toolbar_back.setOnClickListener { finish() }
-        val answerNub = intent.getStringExtra("answerNum")
-        qa_tv_toolbar_title.text = baseContext.getString(R.string.qa_comment_list_comment_count, answerNub)
+        val commentNub = answer.commentNum
+        qa_tv_toolbar_title.text = baseContext.getString(R.string.qa_comment_list_comment_count, commentNub)
         val mStuNum = ServiceManager.getService(IAccountService::class.java).getUserService().getStuNum()
-        if (intent.getStringExtra("stuNum") == mStuNum) {
+        if (answer.userId == mStuNum) {
             qa_ib_toolbar_more.setOnClickListener {
                 ReportDialog(this).apply {
                     setType(resources.getStringArray(R.array.qa_title_type)[1])
@@ -95,7 +134,19 @@ class CommentListActivity : BaseViewModelActivity<CommentListViewModel>() {
     private fun initRv(showAdoptIcon: Boolean, isEmotion: Boolean) {
         headerAdapter = CommentListHeaderRvAdapter(isEmotion, showAdoptIcon)
         emptyRvAdapter = EmptyRvAdapter(getString(R.string.qa_comment_list_no_comment_hint))
-        commentListRvAdapter = CommentListRvAdapter(isEmotion)
+        commentListRvAdapter = CommentListRvAdapter(isEmotion).apply {
+            onReportClickListener = { commentId ->
+                ReportDialog(this@CommentListActivity).apply {
+                    setType(resources.getStringArray(R.array.qa_title_type)[2])
+                    pressReport = {
+                        viewModel.reportComment(it, commentId)
+                    }
+                    viewModel.backPreActivityReportAnswerEvent.observeNotNull {
+                        dismiss()
+                    }
+                }.show()
+            }
+        }
         footerRvAdapter = FooterRvAdapter { viewModel.retryFailedListRequest() }
         val adapterWrapper = RvAdapterWrapper(commentListRvAdapter, headerAdapter, footerRvAdapter, emptyRvAdapter)
         rv_comment_list.apply {
@@ -111,6 +162,12 @@ class CommentListActivity : BaseViewModelActivity<CommentListViewModel>() {
         viewModel.adoptAnswer(event.aId)
     }
 
+    private inline fun <T> LiveData<T>.observe(crossinline onChange: (T?) -> Unit) = observe(this@CommentListActivity, Observer { onChange(it) })
+
+    private inline fun <T> LiveData<T>.observeNotNull(crossinline onChange: (T) -> Unit) = observe(this@CommentListActivity, Observer {
+        it ?: return@Observer
+        onChange(it)
+    })
 
     private fun observeListChangeEvent() = viewModel.apply {
         answerLiveData.observeNotNull { headerAdapter.refreshData(listOf(it)) }
@@ -149,17 +206,44 @@ class CommentListActivity : BaseViewModelActivity<CommentListViewModel>() {
             }
         }
         tv_comment_praise.apply {
-            val praiseNum = intent.getStringExtra("praiseNum")
-            val isPraised = intent.getBooleanExtra("isPraised", false)
-            setPraise(praiseNum, isPraised)
+            setPraise(answer.praiseNum, answer.isPraised)
             setOnClickListener { viewModel.clickPraiseButton() }
         }
     }
 
-    override fun getViewModelFactory(): ViewModelProvider.Factory? {
-        val qid = intent.getStringExtra("qid")
-        val answer = intent.getParcelableExtra<Answer>("answer")
+    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
+    fun openShareComment(event: OpenShareCommentEvent) {
+        if (intent.getParcelableExtra<Question>(PARAM_QUESTION) != null && intent.getParcelableExtra<Question>(PARAM_ANSWER) != null) {
+            EventBus.getDefault().removeStickyEvent(event)
+        } else {
+            var answerWrapper: RedrockApiWrapper<Answer>? = null
 
-        return CommentListViewModel.Factory(qid, answer)
+            try {
+                answerWrapper = Gson().fromJson<RedrockApiWrapper<Answer>>(event.answerJson,
+                        object : TypeToken<RedrockApiWrapper<Answer>>() {}.type)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+
+            if (answerWrapper == null) {
+                toast("无法识别问题,可能问题已过期")
+            } else if (!answerWrapper.isSuccessful) {
+                toast(answerWrapper.info ?: "未知错误")
+            } else {
+                initViewModel(event.questionId, answerWrapper.data)
+                val showAdoptIcon = question.hasAdoptedAnswer || !question.isSelf
+                val isEmotion = question.isEmotion
+                initToolbar()
+                initRv(showAdoptIcon, isEmotion)
+                initCommentSheet()
+            }
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        if (progressDialog?.isShowing == true) {
+            progressDialog?.dismiss()
+        }
     }
 }

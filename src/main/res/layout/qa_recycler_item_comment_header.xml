@@ -56,11 +56,15 @@
                 android:id="@+id/tv_adopted"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:drawableStart="@drawable/qa_ic_answer_list_accepted"
+                android:background="@drawable/qa_answer_adopted_background"
                 android:drawablePadding="5dp"
+                android:paddingStart="10dp"
+                android:paddingTop="4dp"
+                android:paddingEnd="10dp"
+                android:paddingBottom="4dp"
                 android:text="@string/qa_answer_list_accepted"
                 android:textColor="@color/qa_answer_list_adopted_color"
-                android:textSize="13sp"
+                android:textSize="12sp"
                 android:visibility="gone"
                 tools:visibility="visible" />
 

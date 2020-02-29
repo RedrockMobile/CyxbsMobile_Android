@@ -11,12 +11,13 @@ import androidx.lifecycle.ViewModelProviders
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.bean.RedrockApiWrapper
 import com.mredrock.cyxbs.common.bean.isSuccessful
 import com.mredrock.cyxbs.common.config.QA_ANSWER_LIST
 import com.mredrock.cyxbs.common.event.AskLoginEvent
 import com.mredrock.cyxbs.common.event.OpenShareQuestionEvent
+import com.mredrock.cyxbs.common.service.ServiceManager
+import com.mredrock.cyxbs.common.service.account.IAccountService
 import com.mredrock.cyxbs.common.ui.BaseActivity
 import com.mredrock.cyxbs.common.utils.extensions.gone
 import com.mredrock.cyxbs.common.utils.extensions.toast
@@ -51,7 +52,7 @@ class AnswerListActivity : BaseActivity() {
         const val REQUEST_REFRESH_LIST = 0x2
 
         fun activityStart(fragment: Fragment, question: Question, requestCode: Int) {
-            if (!BaseApp.isLogin) {
+            if (!ServiceManager.getService(IAccountService::class.java).getVerifyService().isLogin()) {
                 EventBus.getDefault().post(AskLoginEvent("请先登陆才能使用邮问哦~"))
                 return
             }

@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.AppCompatCheckedTextView
 import com.alibaba.android.arouter.facade.annotation.Route
-import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.config.QA_ENTRY
 import com.mredrock.cyxbs.common.event.AskLoginEvent
 import com.mredrock.cyxbs.common.event.CurrentDateInformationEvent
@@ -44,7 +43,7 @@ class QuestionContainerFragment : BaseFragment(), View.OnClickListener {
         childFragments = titles.map { QuestionListFragment().apply { title = it } }
         root.vp_question.adapter = QAViewPagerAdapter(childFragments, childFragmentManager)
         //预加载所有部分保证提问后所有fragment能够被通知刷新，同时保证退出账号时只加载一次对话框
-        root.vp_question.offscreenPageLimit = if (BaseApp.isLogin) 5 else 0
+        root.vp_question.offscreenPageLimit = if (ServiceManager.getService(IAccountService::class.java).getVerifyService().isLogin()) 5 else 0
         root.tl_category.apply {
             setupWithViewPager(root.vp_question)
             setSelectedTabIndicator(R.drawable.qa_question_tab_indicator)

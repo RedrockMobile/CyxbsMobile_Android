@@ -3,8 +3,9 @@ package com.mredrock.cyxbs.qa.pages.question.ui
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DiffUtil
-import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.event.AskLoginEvent
+import com.mredrock.cyxbs.common.service.ServiceManager
+import com.mredrock.cyxbs.common.service.account.IAccountService
 import com.mredrock.cyxbs.common.utils.extensions.setAvatarImageFromUrl
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.bean.Question
@@ -35,7 +36,7 @@ class QuestionListRvAdapter(private val fragment: Fragment) : BaseEndlessRvAdapt
 
     override fun onItemClickListener(holder: BaseViewHolder<Question>, position: Int, data: Question) {
         super.onItemClickListener(holder, position, data)
-        if (BaseApp.isLogin) {
+        if (ServiceManager.getService(IAccountService::class.java).getVerifyService().isLogin()) {
             AnswerListActivity.activityStart(fragment, data, QuestionContainerFragment.REQUEST_LIST_REFRESH_ACTIVITY)
         } else {
             EventBus.getDefault().post(AskLoginEvent("请先登陆才能使用邮问哦~"))

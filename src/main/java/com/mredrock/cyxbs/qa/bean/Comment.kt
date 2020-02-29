@@ -3,7 +3,9 @@ package com.mredrock.cyxbs.qa.bean
 import com.google.gson.annotations.SerializedName
 import java.io.Serializable
 
-data class Comment(@SerializedName("photo_thumbnail_src")
+data class Comment(@SerializedName("Id")
+                   val id: String = "",
+                   @SerializedName("photo_thumbnail_src")
                    val photoThumbnailSrc: String = "",
                    @SerializedName("gender")
                    val gender: String = "",

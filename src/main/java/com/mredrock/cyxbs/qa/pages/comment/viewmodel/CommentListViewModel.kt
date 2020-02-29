@@ -84,6 +84,21 @@ class CommentListViewModel(val qid: String,
                 }
     }
 
+    fun reportComment(reportType: String, commentId: String) {
+        progressDialogEvent.value = ProgressDialogEvent.SHOW_NONCANCELABLE_DIALOG_EVENT
+        val stuNum = ServiceManager.getService(IAccountService::class.java).getUserService().getStuNum()
+        ApiGenerator.getApiService(ApiService::class.java)
+                .reportComment(stuNum, commentId, reportType)
+                .setSchedulers()
+                .checkError()
+                .doFinally { progressDialogEvent.value = ProgressDialogEvent.DISMISS_DIALOG_EVENT }
+                .doOnError { toastEvent.value = R.string.qa_service_error_hint }
+                .safeSubscribeBy {
+                    toastEvent.value = R.string.qa_hint_report_success
+                    backPreActivityReportAnswerEvent.value = true
+                }
+    }
+
     fun clickPraiseButton() {
         val stuNum = ServiceManager.getService(IAccountService::class.java).getUserService().getStuNum()
         fun Boolean.toInt() = 1.takeIf { this@toInt } ?: -1

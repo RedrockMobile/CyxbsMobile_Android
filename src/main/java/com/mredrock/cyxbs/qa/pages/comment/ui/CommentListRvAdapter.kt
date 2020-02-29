@@ -26,6 +26,7 @@ class CommentListRvAdapter(private val isEmotion: Boolean) : BaseEndlessRvAdapte
         }
     }
 
+    var onReportClickListener: ((String) -> Unit)? = null
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = CommentViewHolder(isEmotion, parent)
 
     class CommentViewHolder(private val isEmotion: Boolean,
@@ -47,6 +48,9 @@ class CommentListRvAdapter(private val isEmotion: Boolean) : BaseEndlessRvAdapte
             0 -> holder.itemView.findViewById<JCardViewPlus>(R.id.jCardView_comment).setCardBackgroundColor(ContextCompat.getColor(holder.itemView.context, R.color.qa_comment_content_first_kind_color))
             1 -> holder.itemView.findViewById<JCardViewPlus>(R.id.jCardView_comment).setCardBackgroundColor(ContextCompat.getColor(holder.itemView.context, R.color.qa_comment_content_second_kind_color))
             2 -> holder.itemView.findViewById<JCardViewPlus>(R.id.jCardView_comment).setCardBackgroundColor(ContextCompat.getColor(holder.itemView.context, R.color.qa_comment_content_third_kind_color))
+        }
+        holder.itemView.apply {
+            ib_comment_item_more.setOnClickListener { onReportClickListener?.invoke((getItem(position) as Comment).id) }
         }
     }
 }

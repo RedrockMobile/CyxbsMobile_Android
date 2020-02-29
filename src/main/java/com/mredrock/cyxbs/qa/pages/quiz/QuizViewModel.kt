@@ -154,7 +154,7 @@ class QuizViewModel : BaseViewModel() {
                     backAndFinishActivityEvent.value = true
                 }
                 .safeSubscribeBy {
-                    toastEvent.value = R.string.qa_quiz_save_failed
+                    toastEvent.value = R.string.qa_quiz_save_success
                     backAndFinishActivityEvent.value = true
                 }
                 .lifeCycle()
