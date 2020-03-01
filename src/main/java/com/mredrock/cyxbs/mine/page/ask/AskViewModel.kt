@@ -9,6 +9,7 @@ import com.mredrock.cyxbs.common.service.account.IAccountService
 import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
+import com.mredrock.cyxbs.common.utils.extensions.toast
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.common.viewmodel.event.SingleLiveEvent
 import com.mredrock.cyxbs.mine.R
@@ -155,7 +156,7 @@ class AskViewModel : BaseViewModel() {
                 .setSchedulers()
                 .safeSubscribeBy(
                         onNext = {
-                            toastEvent.postValue(R.string.mine_draft_delete_success)
+                            BaseApp.context.toast(R.string.mine_draft_delete_success)
                             //更新DraftList
                             val localDraft = _askDraft.value ?: mutableListOf()
                             _askDraft.postValue(
@@ -165,7 +166,7 @@ class AskViewModel : BaseViewModel() {
                             )
                         },
                         onError = {
-                            toastEvent.postValue(R.string.mine_draft_delete_failed)
+                            BaseApp.context.toast(R.string.mine_draft_delete_failed)
                         }
                 ).lifeCycle()
     }
