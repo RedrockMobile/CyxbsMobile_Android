@@ -36,16 +36,9 @@ abstract class BaseRVFragment<D> : Fragment() {
     }
 
     private var baseRVAdapter: BaseRVAdapter<D>? = null
-    private var footer: RvFooter? = null
-
-
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-
-        //生成一个textView当做footer
-        footer = RvFooter(context)
-        footer!!.showLoading()
 
         baseRVAdapter = RvAdapter()
         setAdapter(baseRVAdapter as RvAdapter)
@@ -56,8 +49,7 @@ abstract class BaseRVFragment<D> : Fragment() {
 
     }
 
-    fun setAdapter(adapter: RvAdapter) {
-        adapter.setFooterView(footer)
+    private fun setAdapter(adapter: RvAdapter) {
         this.baseRVAdapter = adapter
         mine_fragment_base_rv.adapter = adapter
     }
@@ -77,14 +69,6 @@ abstract class BaseRVFragment<D> : Fragment() {
         return inflater.inflate(R.layout.mine_fragment_base_rv, container, false)
     }
 
-    protected fun setFooter(footer: View) {
-        baseRVAdapter?.setFooterView(footer)
-    }
-
-    fun getFooter(): RvFooter {
-        return footer!!
-    }
-
     protected fun getAdapter(): BaseRVAdapter<D> {
         return baseRVAdapter!!
     }
@@ -98,9 +82,7 @@ abstract class BaseRVFragment<D> : Fragment() {
     }
 
     protected fun setState(state: RvFooter.State) {
-        baseRVAdapter?.let {
-            it.setState(state)
-        }
+        baseRVAdapter?.setState(state)
     }
 
     open inner class RvAdapter : BaseRVAdapter<D>() {

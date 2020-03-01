@@ -34,7 +34,6 @@ public abstract class BaseRVAdapter<D> extends RecyclerView.Adapter {
         }
     }
 
-    private View footerView = null;
 
     //设置新数据集，通过旧数据集和DiffUtil来添加动画
     public void setNewData(List<D> newData) {
@@ -104,12 +103,6 @@ public abstract class BaseRVAdapter<D> extends RecyclerView.Adapter {
             return FOOTER;
         } else {
             return NORMAL;
-        }
-    }
-
-    protected void setFooterView(View footerView) {
-        if (footerView != null) {
-            this.footerView = footerView;
         }
     }
 
