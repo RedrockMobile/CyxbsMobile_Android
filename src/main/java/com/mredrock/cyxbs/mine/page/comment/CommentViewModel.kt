@@ -15,7 +15,7 @@ import com.mredrock.cyxbs.mine.network.model.CommentReceived
 import com.mredrock.cyxbs.mine.util.apiService
 import com.mredrock.cyxbs.mine.util.extension.disposeAll
 import com.mredrock.cyxbs.mine.util.extension.normalWrapper
-import com.mredrock.cyxbs.mine.util.ui.RvFooter
+import com.mredrock.cyxbs.mine.util.widget.RvFooter
 import io.reactivex.disposables.Disposable
 
 /**

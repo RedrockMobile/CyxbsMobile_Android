@@ -14,7 +14,7 @@ import com.mredrock.cyxbs.mine.network.ApiService
 import com.mredrock.cyxbs.mine.network.model.MyProduct
 import com.mredrock.cyxbs.mine.util.extension.disposeAll
 import com.mredrock.cyxbs.mine.util.extension.normalWrapper
-import com.mredrock.cyxbs.mine.util.ui.RvFooter
+import com.mredrock.cyxbs.mine.util.widget.RvFooter
 import io.reactivex.disposables.Disposable
 
 /**

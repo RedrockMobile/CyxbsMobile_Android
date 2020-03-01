@@ -8,14 +8,17 @@ import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.service.account.IAccountService
 import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
+import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
+import com.mredrock.cyxbs.common.utils.extensions.toast
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.common.viewmodel.event.SingleLiveEvent
+import com.mredrock.cyxbs.mine.R
 import com.mredrock.cyxbs.mine.network.model.AnswerDraft
 import com.mredrock.cyxbs.mine.network.model.AnswerPosted
 import com.mredrock.cyxbs.mine.util.apiService
 import com.mredrock.cyxbs.mine.util.extension.disposeAll
 import com.mredrock.cyxbs.mine.util.extension.normalWrapper
-import com.mredrock.cyxbs.mine.util.ui.RvFooter
+import com.mredrock.cyxbs.mine.util.widget.RvFooter
 import io.reactivex.disposables.Disposable
 
 /**
@@ -131,5 +134,25 @@ class AnswerViewModel : BaseViewModel() {
         disposeAll(disposableForDraft)
         answerDraftPage = 1
         _answerDraft.value = mutableListOf()
+    }
+
+    fun deleteDraftById(id: Int) {
+        apiService.deleteDraftById(id)
+                .setSchedulers()
+                .safeSubscribeBy(
+                        onNext = {
+                            BaseApp.context.toast(R.string.mine_draft_delete_success)
+                            //更新DraftList
+                            val localDraft = _answerDraft.value ?: mutableListOf()
+                            _answerDraft.postValue(
+                                    localDraft.filter {
+                                        it.draftAnswerId != id
+                                    }.toMutableList()
+                            )
+                        },
+                        onError = {
+                            BaseApp.context.toast(R.string.mine_draft_delete_failed)
+                        }
+                ).lifeCycle()
     }
 }

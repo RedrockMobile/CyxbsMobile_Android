@@ -9,7 +9,7 @@ import com.mredrock.cyxbs.common.component.CommonDialogFragment
 import com.mredrock.cyxbs.mine.R
 import com.mredrock.cyxbs.mine.network.model.AskDraft
 import com.mredrock.cyxbs.mine.util.ui.BaseRVFragment
-import com.mredrock.cyxbs.mine.util.ui.RvFooter
+import com.mredrock.cyxbs.mine.util.widget.RvFooter
 import kotlinx.android.synthetic.main.mine_list_item_my_ask_draft.view.*
 
 /**
@@ -43,7 +43,8 @@ class AskDraftFm : BaseRVFragment<AskDraft>() {
     override fun bindDataHolder(holder: androidx.recyclerview.widget.RecyclerView.ViewHolder, position: Int, data: AskDraft) {
         holder.itemView.mine_ask_draft_tv_title.text = data.title
         holder.itemView.mine_ask_draft_tv_description.text = data.description
-        holder.itemView.mine_ask_draft_tv_lastedit_at.text = data.latestEditTime
+        holder.itemView.mine_ask_draft_tv_lastedit_at.text = data.latestEditTime.split(" ")[0].replace("-", ".")
+
         holder.itemView.mine_ask_draft_iv_garbage.setOnClickListener {
             CommonDialogFragment().apply {
                 initView(

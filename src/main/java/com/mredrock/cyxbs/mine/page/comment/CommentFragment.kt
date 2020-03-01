@@ -11,7 +11,7 @@ import com.mredrock.cyxbs.common.config.QUESTION_ID
 import com.mredrock.cyxbs.mine.R
 import com.mredrock.cyxbs.mine.network.model.Comment
 import com.mredrock.cyxbs.mine.util.ui.BaseRVFragment
-import com.mredrock.cyxbs.mine.util.ui.RvFooter
+import com.mredrock.cyxbs.mine.util.widget.RvFooter
 import kotlinx.android.synthetic.main.mine_list_item_comment_comment.view.*
 
 /**

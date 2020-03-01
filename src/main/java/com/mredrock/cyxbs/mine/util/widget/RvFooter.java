@@ -1,4 +1,4 @@
-package com.mredrock.cyxbs.mine.util.ui;
+package com.mredrock.cyxbs.mine.util.widget;
 
 import android.content.Context;
 import android.view.Gravity;
