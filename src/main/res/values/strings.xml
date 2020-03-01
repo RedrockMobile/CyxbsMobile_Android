@@ -121,6 +121,9 @@
     <string name="mine_question_help_default">帮助：是的，公式是没有问题的，但是你的…</string>
     <string name="mine_adopt_time_justnow">采纳时间：刚刚</string>
 
+    <string name="mine_draft_delete_success">删除成功</string>
+    <string name="mine_draft_delete_failed">删除失败</string>
+
 
     <!--与我相关-->
     <string name="mine_relate_me_empty_hint">还没有与我相关的动态哦</string>

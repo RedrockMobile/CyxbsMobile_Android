@@ -33,36 +33,41 @@ public abstract class BaseRVAdapter<D> extends RecyclerView.Adapter {
         DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new DiffUtil.Callback() {
             @Override
             public int getOldListSize() {
-                return oldData.size();
+                return oldData.size() + 1;
             }
 
             @Override
             public int getNewListSize() {
-                return newData.size();
+                return newData.size() + 1;
             }
 
             @Override
             public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
-                return oldData.get(oldItemPosition) == newData.get(newItemPosition);
+                if (oldItemPosition == oldData.size() || newItemPosition == newData.size()) {
+                    return false;
+                } else {
+                    return oldData.get(oldItemPosition).equals(newData.get(newItemPosition));
+                }
             }
 
             @Override
             public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
-                return oldData.get(oldItemPosition).equals(newData.get(newItemPosition));
+                if (oldItemPosition == oldData.size() || newItemPosition == newData.size()) {
+                    return false;
+                } else {
+                    return oldData.get(oldItemPosition).equals(newData.get(newItemPosition));
+                }
             }
         });
         diffResult.dispatchUpdatesTo(this);
-        //刷新FooterView,否则由于DiffUtil，不会刷新FooterView所在的位置
-        notifyItemChanged(newData.size());
         datas = newData;
-        notifyDataSetChanged();
     }
 
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         if (viewType == FOOTER) {
-            return new FooterHolder(footerView);
+            return new FooterHolder(new RvFooter(parent.getContext()));
         } else {
             return new DataHolder(LayoutInflater.from(parent.getContext()).inflate(getNormalLayout(), parent, false));
         }

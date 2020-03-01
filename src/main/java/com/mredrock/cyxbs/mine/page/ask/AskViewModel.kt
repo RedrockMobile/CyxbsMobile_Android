@@ -11,11 +11,13 @@ import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.common.viewmodel.event.SingleLiveEvent
+import com.mredrock.cyxbs.mine.R
 import com.mredrock.cyxbs.mine.network.model.AskDraft
 import com.mredrock.cyxbs.mine.network.model.AskPosted
 import com.mredrock.cyxbs.mine.network.model.NavigateData
 import com.mredrock.cyxbs.mine.util.apiService
 import com.mredrock.cyxbs.mine.util.extension.disposeAll
+import com.mredrock.cyxbs.mine.util.extension.logr
 import com.mredrock.cyxbs.mine.util.extension.normalWrapper
 import com.mredrock.cyxbs.mine.util.ui.RvFooter
 import io.reactivex.disposables.Disposable
@@ -146,5 +148,25 @@ class AskViewModel : BaseViewModel() {
                     navigateEvent.postValue(navigateData)
                 }
                 .lifeCycle()
+    }
+
+    fun deleteDraftById(id: Int) {
+        apiService.deleteDraftById(id)
+                .setSchedulers()
+                .safeSubscribeBy(
+                        onNext = {
+                            toastEvent.postValue(R.string.mine_draft_delete_success)
+                            //更新DraftList
+                            val localDraft = _askDraft.value ?: mutableListOf()
+                            _askDraft.postValue(
+                                    localDraft.filter {
+                                        it.draftQuestionId != id
+                                    }.toMutableList()
+                            )
+                        },
+                        onError = {
+                            toastEvent.postValue(R.string.mine_draft_delete_failed)
+                        }
+                ).lifeCycle()
     }
 }

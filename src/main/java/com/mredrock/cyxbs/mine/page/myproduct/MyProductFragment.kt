@@ -25,7 +25,7 @@ class MyProductFragment(private val type: Int = UNCLAIMED) : BaseRVFragment<MyPr
     private val dialogDialogFragment: CommonDialogFragment by lazy {
         CommonDialogFragment().apply {
             initView(
-                    containerRes = R.layout.mine_layout_dialog_my_product,
+                    containerRes = R.layout.mine_layout_dialog_with_title_and_content,
                     positiveString = "我知道了",
                     onPositiveClick = { dismiss() },
                     elseFunction = {

@@ -130,7 +130,7 @@ interface ApiService {
                                @Field("idnum") idNum: String,
                                @Field("page") page: Int,
                                @Field("size") size: Int): Observable<RedrockApiWrapper<List<CommentReceived>>>
-    
+
 
     /**
      * 提问草稿
@@ -147,6 +147,15 @@ interface ApiService {
     @POST("wxapi/magipoke-draft/User/getDraftAnswerList")
     fun getAnswerDraftList(@Field("page") page: Int,
                            @Field("size") size: Int): Observable<RedrockApiWrapper<List<AnswerDraft>>>
+
+
+    /**
+     * 删除草稿
+     */
+    @FormUrlEncoded
+    @POST("wxapi/magipoke-draft/User/deleteItemInDraft")
+    fun deleteDraftById(@Field("id") id: Int): Observable<RedrockApiStatus>
+
 
     /**
      * 根据question的id获取Question，注意，网络请求结果为RequestBody对象，未解析
