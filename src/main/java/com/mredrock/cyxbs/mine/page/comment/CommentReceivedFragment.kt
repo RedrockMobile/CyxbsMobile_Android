@@ -26,17 +26,7 @@ class CommentReceivedFragment : BaseRVFragment<CommentReceived>() {
         super.onActivityCreated(savedInstanceState)
 
         viewModel.eventOnCommentReceived.observe(this, Observer {
-            when (it) {
-                RvFooter.State.ERROR -> {
-                    getFooter().showLoadError()
-                }
-                RvFooter.State.NOMORE -> {
-                    getFooter().showNoMore()
-                }
-                RvFooter.State.NOTHING -> {
-                    getFooter().showNothing()
-                }
-            }
+            setState(it)
         })
         viewModel.commentReceivedList.observe(this, Observer {
             setNewData(it)
@@ -64,7 +54,7 @@ class CommentReceivedFragment : BaseRVFragment<CommentReceived>() {
     }
 
     override fun onSwipeLayoutRefresh() {
-        getFooter().showLoading()
+        setState(RvFooter.State.LOADING)
         viewModel.cleanCommentReceivedPage()
         viewModel.loadCommentReceivedList()
         getSwipeLayout().isRefreshing = false

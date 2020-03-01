@@ -69,6 +69,20 @@ public class RvFooter extends LinearLayout {
         return state;
     }
 
+    public void setState(RvFooter.State s) {
+        if (s == State.LOADING) {
+            showLoading();
+        } else if (s == State.SUCCESS) {
+            showSuccess();
+        } else if (s == State.ERROR) {
+            showLoadError();
+        } else if (s == State.NOMORE) {
+            showNoMore();
+        } else if (s == State.NOTHING) {
+            showNothing();
+        }
+    }
+
     public enum State{
         SUCCESS,LOADING,ERROR,NOMORE,NOTHING
     }

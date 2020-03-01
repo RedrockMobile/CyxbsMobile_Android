@@ -22,8 +22,17 @@ public abstract class BaseRVAdapter<D> extends RecyclerView.Adapter {
     private static final int FOOTER = 20000;
     private List<D> datas = new ArrayList<>();
 
+    private RvFooter.State state = RvFooter.State.LOADING;
+
     abstract @LayoutRes
     protected int getNormalLayout();
+
+    public void setState(RvFooter.State state) {
+        if (this.state != state) {
+            this.state = state;
+            notifyItemChanged(datas.size());
+        }
+    }
 
     private View footerView = null;
 
@@ -67,7 +76,8 @@ public abstract class BaseRVAdapter<D> extends RecyclerView.Adapter {
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         if (viewType == FOOTER) {
-            return new FooterHolder(new RvFooter(parent.getContext()));
+            RvFooter rvFooter = new RvFooter(parent.getContext());
+            return new FooterHolder(rvFooter);
         } else {
             return new DataHolder(LayoutInflater.from(parent.getContext()).inflate(getNormalLayout(), parent, false));
         }
@@ -76,6 +86,7 @@ public abstract class BaseRVAdapter<D> extends RecyclerView.Adapter {
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         if (getItemViewType(position) == FOOTER) {
+            ((RvFooter)holder.itemView).setState(state);
             bindFooterHolder(holder, position);
         } else {
             bindDataHolder(holder, position, datas.get(position));
@@ -84,15 +95,12 @@ public abstract class BaseRVAdapter<D> extends RecyclerView.Adapter {
 
     @Override
     public int getItemCount() {
-        int count = datas.size();
-        if (footerView != null)
-            count++;
-        return count;
+        return datas.size() + 1;
     }
 
     @Override
     public int getItemViewType(int position) {
-        if (position == getItemCount() - 1 && footerView != null) {
+        if (position == getItemCount() - 1) {
             return FOOTER;
         } else {
             return NORMAL;

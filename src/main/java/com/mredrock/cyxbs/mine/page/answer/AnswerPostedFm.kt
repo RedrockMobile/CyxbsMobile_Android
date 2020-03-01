@@ -30,17 +30,7 @@ class AnswerPostedFm : BaseRVFragment<AnswerPosted>() {
 
         viewModel.loadAnswerPostedList()
         viewModel.eventOnAnswerPosted.observe(this, Observer {
-            when (it) {
-                RvFooter.State.ERROR -> {
-                    getFooter().showLoadError()
-                }
-                RvFooter.State.NOMORE -> {
-                    getFooter().showNoMore()
-                }
-                RvFooter.State.NOTHING -> {
-                    getFooter().showNothing()
-                }
-            }
+            setState(it)
         })
         viewModel.answerPosted.observe(this, Observer {
             setNewData(it)
@@ -80,8 +70,7 @@ class AnswerPostedFm : BaseRVFragment<AnswerPosted>() {
 
 
     override fun onSwipeLayoutRefresh() {
-
-        getFooter().showLoading()
+        setState(RvFooter.State.LOADING)
         viewModel.cleanAnswerPostedPage()
         viewModel.loadAnswerPostedList()
         getSwipeLayout().isRefreshing = false

@@ -27,17 +27,7 @@ class AskDraftFm : BaseRVFragment<AskDraft>() {
             setNewData(it)
         })
         viewModel.eventOnAskDraft.observe(this, Observer {
-            when (it) {
-                RvFooter.State.ERROR -> {
-                    getFooter().showLoadError()
-                }
-                RvFooter.State.NOMORE -> {
-                    getFooter().showNoMore()
-                }
-                RvFooter.State.NOTHING -> {
-                    getFooter().showNothing()
-                }
-            }
+            setState(it)
         })
     }
 
@@ -76,7 +66,7 @@ class AskDraftFm : BaseRVFragment<AskDraft>() {
 
 
     override fun onSwipeLayoutRefresh() {
-        getFooter().showLoading()
+        setState(RvFooter.State.LOADING)
         viewModel.cleanAskDraftPage()
         viewModel.loadAskDraftList()
         getSwipeLayout().isRefreshing = false

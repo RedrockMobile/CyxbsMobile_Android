@@ -32,12 +32,13 @@ abstract class BaseRVFragment<D> : Fragment() {
             mine_fragment_base_rv.post { setNewData(newData) }
         } else {
             baseRVAdapter?.setNewData(newData)
-
         }
     }
 
     private var baseRVAdapter: BaseRVAdapter<D>? = null
     private var footer: RvFooter? = null
+
+
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -94,6 +95,12 @@ abstract class BaseRVFragment<D> : Fragment() {
 
     protected fun getRecyclerView(): androidx.recyclerview.widget.RecyclerView {
         return mine_fragment_base_rv
+    }
+
+    protected fun setState(state: RvFooter.State) {
+        baseRVAdapter?.let {
+            it.setState(state)
+        }
     }
 
     open inner class RvAdapter : BaseRVAdapter<D>() {

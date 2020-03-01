@@ -52,17 +52,7 @@ class MyProductFragment(private val type: Int = UNCLAIMED) : BaseRVFragment<MyPr
                 setNewData(it)
             })
             viewModel.eventOnUnClaimed.observe(this, Observer {
-                when (it) {
-                    RvFooter.State.ERROR -> {
-                        getFooter().showLoadError()
-                    }
-                    RvFooter.State.NOMORE -> {
-                        getFooter().showNoMore()
-                    }
-                    RvFooter.State.NOTHING -> {
-                        getFooter().showNothing()
-                    }
-                }
+                setState(it)
             })
         } else {
             viewModel.loadMyProductClaimed()
@@ -70,17 +60,7 @@ class MyProductFragment(private val type: Int = UNCLAIMED) : BaseRVFragment<MyPr
                 setNewData(it)
             })
             viewModel.eventOnClaimed.observe(this, Observer {
-                when (it) {
-                    RvFooter.State.ERROR -> {
-                        getFooter().showLoadError()
-                    }
-                    RvFooter.State.NOMORE -> {
-                        getFooter().showNoMore()
-                    }
-                    RvFooter.State.NOTHING -> {
-                        getFooter().showNothing()
-                    }
-                }
+                setState(it)
             })
         }
     }
@@ -105,7 +85,7 @@ class MyProductFragment(private val type: Int = UNCLAIMED) : BaseRVFragment<MyPr
     }
 
     override fun onSwipeLayoutRefresh() {
-        getFooter().showLoading()
+        setState(RvFooter.State.LOADING)
         if (type == UNCLAIMED) {
             viewModel.cleanUnclaimedPage()
             viewModel.loadMyProductUnclaimed()

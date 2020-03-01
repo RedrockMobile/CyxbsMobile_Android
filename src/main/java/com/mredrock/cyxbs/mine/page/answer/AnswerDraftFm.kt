@@ -25,17 +25,7 @@ class AnswerDraftFm : BaseRVFragment<AnswerDraft>() {
             setNewData(it)
         })
         viewModel.eventOnAnswerDraft.observe(this, Observer {
-            when (it) {
-                RvFooter.State.ERROR -> {
-                    getFooter().showLoadError()
-                }
-                RvFooter.State.NOMORE -> {
-                    getFooter().showNoMore()
-                }
-                RvFooter.State.NOTHING -> {
-                    getFooter().showNothing()
-                }
-            }
+            setState(it)
         })
     }
     override fun getItemLayout(): Int {
@@ -53,7 +43,7 @@ class AnswerDraftFm : BaseRVFragment<AnswerDraft>() {
 
 
     override fun onSwipeLayoutRefresh() {
-        getFooter().showLoading()
+        setState(RvFooter.State.LOADING)
         viewModel.cleanAnswerDraftPage()
         viewModel.loadAnswerDraftList()
         getSwipeLayout().isRefreshing = false
