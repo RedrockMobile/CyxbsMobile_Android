@@ -36,7 +36,7 @@ class AboutActivity(override val isFragmentActivity: Boolean = false) : BaseActi
 
         common_toolbar.apply {
             setBackgroundColor(ContextCompat.getColor(this@AboutActivity, R.color.windowBackground))
-            initWithSplitLine("关于我们",
+            initWithSplitLine("关于掌邮",
                     false,
                     R.drawable.mine_ic_arrow_left)
             setTitleLocationAtLeft(true)

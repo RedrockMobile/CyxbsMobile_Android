@@ -130,38 +130,14 @@ interface ApiService {
                                @Field("idnum") idNum: String,
                                @Field("page") page: Int,
                                @Field("size") size: Int): Observable<RedrockApiWrapper<List<CommentReceived>>>
-
-//    /**
-//     * 草稿箱部分
-//     */
-//    @FormUrlEncoded
-//    @POST("app/index.php/QA/User/deleteItemInDraft")
-//    fun deleteDraft(@Field("stunum") stuNum: String,
-//                    @Field("idnum") idNum: String,
-//                    @Field("id") id: String): Observable<RedrockApiStatus>
-//
-//    @FormUrlEncoded
-//    @POST("app/index.php/QA/Answer/remark")
-//    fun commentAnswer(@Field("stuNum") stuNum: String,
-//                      @Field("idNum") idNum: String,
-//                      @Field("answer_id") aid: String,
-//                      @Field("description") content: String): Observable<RedrockApiStatus>
-//
-//    @FormUrlEncoded
-//    @POST("app/index.php/QA/User/updateItemInDraft")
-//    fun refreshDraft(@Field("stunum") stuNum: String,
-//                     @Field("idnum") idNum: String,
-//                     @Field("description") content: String,
-//                     @Field("id") draftId: String): Observable<RedrockApiStatus>
+    
 
     /**
      * 提问草稿
      */
     @FormUrlEncoded
     @POST("wxapi/magipoke-draft/User/getDraftQuestionList")
-    fun getAskDraftList(@Field("stuNum") stuNum: String,
-                        @Field("idNum") idNum: String,
-                        @Field("page") page: Int,
+    fun getAskDraftList(@Field("page") page: Int,
                         @Field("size") size: Int): Observable<RedrockApiWrapper<List<AskDraft>>>
 
     /**
@@ -169,9 +145,7 @@ interface ApiService {
      */
     @FormUrlEncoded
     @POST("wxapi/magipoke-draft/User/getDraftAnswerList")
-    fun getAnswerDraftList(@Field("stuNum") stuNum: String,
-                           @Field("idNum") idNum: String,
-                           @Field("page") page: Int,
+    fun getAnswerDraftList(@Field("page") page: Int,
                            @Field("size") size: Int): Observable<RedrockApiWrapper<List<AnswerDraft>>>
 
     /**

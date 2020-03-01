@@ -97,8 +97,7 @@ class AskViewModel : BaseViewModel() {
         }
 
     fun loadAskDraftList() {
-        val disposable = apiService.getAskDraftList(stuNum, idNum
-                ?: return, askDraftPage++, pageSize)
+        val disposable = apiService.getAskDraftList(askDraftPage++, pageSize)
                 .normalWrapper(this)
                 .safeSubscribeBy(
                         onNext = {

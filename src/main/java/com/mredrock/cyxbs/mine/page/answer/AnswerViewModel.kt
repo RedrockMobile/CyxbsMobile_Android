@@ -97,8 +97,7 @@ class AnswerViewModel : BaseViewModel() {
         }
 
     fun loadAnswerDraftList() {
-        val disposable = apiService.getAnswerDraftList(stuNum, idNum
-                ?: return, answerDraftPage++, pageSize)
+        val disposable = apiService.getAnswerDraftList(answerDraftPage++, pageSize)
                 .normalWrapper(this)
                 .safeSubscribeBy(
                         onNext = {
