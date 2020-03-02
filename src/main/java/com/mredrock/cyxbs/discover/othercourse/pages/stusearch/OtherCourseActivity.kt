@@ -18,7 +18,7 @@ class OtherCourseActivity : BaseViewModelActivity<OtherCourseViewModel>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.othercourse_discover_activity_other_course)
-        common_toolbar.init("查课表")
+        common_toolbar.initWithSplitLine("查课表",false)
         common_toolbar.setTitleLocationAtLeft(false)
 
         vp_other_course.adapter = OtherCourseViewPagerAdapter(this)
