@@ -8,10 +8,7 @@ import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.electricity.R
 import org.jetbrains.anko.layoutInflater
 
-class ElectricityFeedUnboundAdapter : BaseFeedFragment.Adapter {
-    override fun getView(context: Context, parent: ViewGroup): View {
-        val view = context.layoutInflater.inflate(R.layout.electricity_discover_feed_unbound, parent, false)
-        LogUtils.d("MyTag", "${view.layoutParams.height}")
-        return view
-    }
+class ElectricityFeedUnboundAdapter : BaseFeedFragment.Adapter() {
+    override fun onCreateView(context: Context, parent: ViewGroup): View =
+            context.layoutInflater.inflate(R.layout.electricity_discover_feed_unbound, parent, false)
 }

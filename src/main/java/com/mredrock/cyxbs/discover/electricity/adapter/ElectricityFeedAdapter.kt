@@ -13,19 +13,27 @@ import kotlinx.android.synthetic.main.electricity_discover_feed.view.*
 import org.jetbrains.anko.layoutInflater
 import org.jetbrains.anko.sp
 
-class ElectricityFeedAdapter(private val elecInf: ElecInf) : BaseFeedFragment.Adapter {
-    override fun getView(context: Context, parent: ViewGroup): View {
-        val view = context.layoutInflater.inflate(R.layout.electricity_discover_feed, parent, false)
+class ElectricityFeedAdapter(private val elecInf: ElecInf) : BaseFeedFragment.Adapter() {
+
+    override fun onCreateView(context: Context, parent: ViewGroup): View {
+        view = context.layoutInflater.inflate(R.layout.electricity_discover_feed, parent, false)
+        refresh(elecInf)
+        return view!!
+    }
+    fun refresh(elecInf: ElecInf){
+        val context = view?.context
+        context?:return
         if (elecInf.elecCost.size > 1) {
-            view.tv_electricity_feed_fee.text = SpannableStringBuilder(elecInf.getEleCost().plus("元")).apply {
+            view?.tv_electricity_feed_fee?.text = SpannableStringBuilder(elecInf.getEleCost().plus("元")).apply {
                 setSpan(AbsoluteSizeSpan(context.sp(36)), 0, this.length - 1, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
                 setSpan(AbsoluteSizeSpan(context.sp(13)), this.length - 1, this.length, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
             }
         }
-        view.tv_electricity_feed_kilowatt.text = SpannableStringBuilder(elecInf.elecSpend.plus("度")).apply {
+        view?.tv_electricity_feed_kilowatt?.text = SpannableStringBuilder(elecInf.elecSpend.plus("度")).apply {
             setSpan(AbsoluteSizeSpan(context.sp(36)), 0, this.length - 1, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
             setSpan(AbsoluteSizeSpan(context.sp(13)), this.length - 1, this.length, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
         }
-        return view
     }
+
+
 }
