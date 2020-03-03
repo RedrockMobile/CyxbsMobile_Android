@@ -23,16 +23,33 @@ class DiscoverVolunteerFeedFragment : BaseFeedFragment<DiscoverVolunteerFeedView
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setAdapter(VolunteerFeedUnbindAdapter())
-    }
 
-    override fun onResume() {
-        super.onResume()
         init()
     }
 
+
+
     private fun init() {
         setTitle("志愿服务")
+        setAdapter(VolunteerFeedUnbindAdapter())
+        viewModel.volunteerData.observe { volunteerTime ->
+
+            volunteerTime?.let {
+                val adapter = getAdapter()
+                if(adapter is VolunteerFeedAdapter){
+                    adapter.refresh(it)
+                }else{
+                    setAdapter(VolunteerFeedAdapter(it))
+                }
+
+            }
+
+        }
+        setOnClickListener { ARouter.getInstance().build(DISCOVER_VOLUNTEER).navigation() }
+    }
+
+    override var hasTopSplitLine = true
+    override fun onRefresh() {
         val volunteerSP = VolunteerTimeSP(activity as Activity)
         val uid = volunteerSP.volunteerUid
 
@@ -41,14 +58,6 @@ class DiscoverVolunteerFeedFragment : BaseFeedFragment<DiscoverVolunteerFeedView
 
             viewModel.loadVolunteerTime(EncryptPassword.encrypt(uid))
         }
-        viewModel.volunteerData.observe { volunteerTime ->
-
-            volunteerTime?.let {
-                setAdapter(VolunteerFeedAdapter(it))
-            }
-
-        }
-        setOnClickListener { ARouter.getInstance().build(DISCOVER_VOLUNTEER).navigation() }
     }
 
 
