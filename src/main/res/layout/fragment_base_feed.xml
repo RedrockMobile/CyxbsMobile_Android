@@ -7,6 +7,10 @@
     android:orientation="vertical"
     tools:context=".ui.BaseFeedFragment"
     tools:ignore="ResourceName">
+    <include
+        layout="@layout/common_splite_line"
+        android:id="@+id/feed_split_line"
+        android:visibility="gone"/>
     <FrameLayout
         android:layout_marginTop="26dp"
         android:layout_width="match_parent"
