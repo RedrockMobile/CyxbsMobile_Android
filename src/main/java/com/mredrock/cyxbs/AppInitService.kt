@@ -6,23 +6,13 @@ import android.app.Notification
 import android.content.Context
 import android.content.Intent
 import android.os.Build
+import android.os.Build.VERSION.SDK_INT
 import android.os.Process
-import androidx.multidex.MultiDex
 import com.meituan.android.walle.WalleChannelReader
-import com.mredrock.cyxbs.common.BuildConfig
-import com.mredrock.cyxbs.common.utils.CrashHandler
 import com.mredrock.cyxbs.common.utils.getAppVersionName
 import com.mredrock.cyxbs.common.utils.getProcessName
-import com.taobao.sophix.SophixManager
 import com.tencent.bugly.Bugly
 import com.tencent.bugly.crashreport.CrashReport
-import com.umeng.analytics.MobclickAgent
-import com.umeng.commonsdk.UMConfigure
-import com.umeng.socialize.PlatformConfig
-import java.lang.RuntimeException
-import androidx.core.content.ContextCompat.startForegroundService
-import android.os.Build.VERSION.SDK_INT
-import com.mredrock.cyxbs.common.utils.LogUtils
 
 
 /**
@@ -32,11 +22,11 @@ import com.mredrock.cyxbs.common.utils.LogUtils
 
 class AppInitService : IntentService("AppInitService") {
 
-    companion object{
+    companion object {
         const val ACTION_INIT_WHEN_APP_CREATE = "service.action.INIT"
 
-        fun init(context: Context){
-            val intent = Intent(context,AppInitService::class.java)
+        fun init(context: Context) {
+            val intent = Intent(context, AppInitService::class.java)
             intent.action = ACTION_INIT_WHEN_APP_CREATE
             if (SDK_INT >= Build.VERSION_CODES.O) {
                 context.startForegroundService(intent)
@@ -57,13 +47,13 @@ class AppInitService : IntentService("AppInitService") {
     override fun onHandleIntent(intent: Intent?) {
         intent?.let {
             val action = intent.action
-            if(action == ACTION_INIT_WHEN_APP_CREATE){
+            if (action == ACTION_INIT_WHEN_APP_CREATE) {
                 startInit()
             }
         }
     }
 
-    private fun startInit(){
+    private fun startInit() {
         initBugly()
     }
 
