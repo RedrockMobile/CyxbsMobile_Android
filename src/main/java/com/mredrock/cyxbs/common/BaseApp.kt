@@ -14,7 +14,6 @@ import com.umeng.commonsdk.UMConfigure
 import com.umeng.message.IUmengRegisterCallback
 import com.umeng.message.PushAgent
 import com.umeng.message.inapp.InAppMessageManager
-import com.umeng.socialize.PlatformConfig
 
 
 /**
@@ -60,8 +59,6 @@ open class BaseApp : Application() {
 
     private fun initUMeng() {
         val channel = WalleChannelReader.getChannel(applicationContext, "debug")
-        UMConfigure.init(applicationContext, BuildConfig.UM_APP_KEY, channel, UMConfigure.DEVICE_TYPE_PHONE,
-                BuildConfig.UM_PUSH_SECRET)
         MobclickAgent.setScenarioType(applicationContext, MobclickAgent.EScenarioType.E_UM_NORMAL)
         MobclickAgent.openActivityDurationTrack(false)
         //调试模式（推荐到umeng注册测试机，避免数据污染）
@@ -81,11 +78,6 @@ open class BaseApp : Application() {
         })
 
         InAppMessageManager.getInstance(context).setInAppMsgDebugMode(true)
-        initShare()
     }
 
-    private fun initShare() {
-        PlatformConfig.setSinaWeibo(BuildConfig.UM_SHARE_SINA_APP_KEY, BuildConfig.UM_SHARE_SINA_APP_SECRET, "http://hongyan.cqupt.edu.cn/app/")
-        PlatformConfig.setQQZone(BuildConfig.UM_SHARE_QQ_ZONE_APP_ID, BuildConfig.UM_SHARE_QQ_ZONE_APP_SECRET)
-    }
 }
