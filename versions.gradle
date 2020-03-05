@@ -1,4 +1,4 @@
-ext.gradle_plugins = '3.6.0'
+ext.gradle_plugins = '3.6.1'
 
 ext.deps = [:]
 
@@ -163,7 +163,7 @@ walle.runtime = "com.meituan.android.walle:library:$versions.walle"
 deps.walle = walle
 
 def hotfix = [:]
-hotfix.runtime = 'com.aliyun.ams:alicloud-android-hotfix:$versions.hotfix'
+hotfix.runtime = "com.aliyun.ams:alicloud-android-hotfix:$versions.hotfix"
 deps.hotfix = hotfix
 
 

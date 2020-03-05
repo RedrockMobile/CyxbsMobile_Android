@@ -7,7 +7,7 @@ buildscript {
     ext {
         lib_config = "${rootDir}/lib_config.gradle"
         module_config = "${rootDir}/module_config.gradle"
-        module_dependencies = "${rootDir}/dependencies.gradle"
+//        module_dependencies = "${rootDir}/dependencies.gradle"
         secret = "${rootDir}/secret.gradle"
     }
 
