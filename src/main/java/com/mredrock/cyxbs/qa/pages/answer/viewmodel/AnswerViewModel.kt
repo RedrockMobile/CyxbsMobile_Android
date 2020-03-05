@@ -7,8 +7,6 @@ import androidx.lifecycle.ViewModelProvider
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.bean.RedrockApiStatus
 import com.mredrock.cyxbs.common.network.ApiGenerator
-import com.mredrock.cyxbs.common.service.ServiceManager
-import com.mredrock.cyxbs.common.service.account.IAccountService
 import com.mredrock.cyxbs.common.utils.extensions.checkError
 import com.mredrock.cyxbs.common.utils.extensions.mapOrThrowApiException
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
@@ -50,9 +48,8 @@ class AnswerViewModel(var qid: String) : BaseViewModel() {
             return
         }
         progressDialogEvent.value = ProgressDialogEvent.SHOW_NONCANCELABLE_DIALOG_EVENT
-        val stuNum = ServiceManager.getService(IAccountService::class.java).getUserService().getStuNum()
         var observable: Observable<out Any> = ApiGenerator.getApiService(ApiService::class.java)
-                .answer(stuNum, qid, content)
+                .answer(qid, content)
                 .setSchedulers()
                 .mapOrThrowApiException()
         if (!imageLiveData.value.isNullOrEmpty()) {

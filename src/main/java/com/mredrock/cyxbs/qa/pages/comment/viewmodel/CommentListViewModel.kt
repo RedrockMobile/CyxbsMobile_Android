@@ -4,8 +4,6 @@ import androidx.lifecycle.*
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
 import com.mredrock.cyxbs.common.network.ApiGenerator
-import com.mredrock.cyxbs.common.service.ServiceManager
-import com.mredrock.cyxbs.common.service.account.IAccountService
 import com.mredrock.cyxbs.common.utils.extensions.checkError
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
@@ -55,9 +53,8 @@ class CommentListViewModel(val qid: String,
     fun retryFailedListRequest() = factory.commentDataSourceLiveData.value?.retry()
 
     fun adoptAnswer(aId: String) {
-        val stuNum = ServiceManager.getService(IAccountService::class.java).getUserService().getStuNum()
         ApiGenerator.getApiService(ApiService::class.java)
-                .adoptAnswer(aId, qid, stuNum)
+                .adoptAnswer(aId, qid)
                 .checkError()
                 .setSchedulers()
                 .doOnSubscribe { progressDialogEvent.value = ProgressDialogEvent.SHOW_NONCANCELABLE_DIALOG_EVENT }
@@ -70,10 +67,9 @@ class CommentListViewModel(val qid: String,
 
     fun reportAnswer(reportType: String) {
         progressDialogEvent.value = ProgressDialogEvent.SHOW_NONCANCELABLE_DIALOG_EVENT
-        val stuNum = ServiceManager.getService(IAccountService::class.java).getUserService().getStuNum()
         val answerId = answerLiveData.value?.id
         ApiGenerator.getApiService(ApiService::class.java)
-                .reportAnswer(stuNum, answerId ?: "", reportType)
+                .reportAnswer(answerId ?: "", reportType)
                 .setSchedulers()
                 .checkError()
                 .doFinally { progressDialogEvent.value = ProgressDialogEvent.DISMISS_DIALOG_EVENT }
@@ -86,9 +82,8 @@ class CommentListViewModel(val qid: String,
 
     fun reportComment(reportType: String, commentId: String) {
         progressDialogEvent.value = ProgressDialogEvent.SHOW_NONCANCELABLE_DIALOG_EVENT
-        val stuNum = ServiceManager.getService(IAccountService::class.java).getUserService().getStuNum()
         ApiGenerator.getApiService(ApiService::class.java)
-                .reportComment(stuNum, commentId, reportType)
+                .reportComment(commentId, reportType)
                 .setSchedulers()
                 .checkError()
                 .doFinally { progressDialogEvent.value = ProgressDialogEvent.DISMISS_DIALOG_EVENT }
@@ -100,7 +95,6 @@ class CommentListViewModel(val qid: String,
     }
 
     fun clickPraiseButton() {
-        val stuNum = ServiceManager.getService(IAccountService::class.java).getUserService().getStuNum()
         fun Boolean.toInt() = 1.takeIf { this@toInt } ?: -1
 
         if (praiseNetworkState == NetworkState.LOADING) {
@@ -113,9 +107,9 @@ class CommentListViewModel(val qid: String,
         ApiGenerator.getApiService(ApiService::class.java)
                 .run {
                     if (answer.isPraised) {
-                        cancelPraiseAnswer(answer.id, stuNum)
+                        cancelPraiseAnswer(answer.id)
                     } else {
-                        praiseAnswer(answer.id, stuNum)
+                        praiseAnswer(answer.id)
                     }
                 }
                 .checkError()
@@ -148,9 +142,8 @@ class CommentListViewModel(val qid: String,
             return
         }
         val answer = answerLiveData.value ?: return
-        val stuNum = ServiceManager.getService(IAccountService::class.java).getUserService().getStuNum()
         ApiGenerator.getApiService(ApiService::class.java)
-                .sendComment(answer.id, content, stuNum)
+                .sendComment(answer.id, content)
                 .checkError()
                 .setSchedulers()
                 .doOnSubscribe { progressDialogEvent.value = ProgressDialogEvent.SHOW_NONCANCELABLE_DIALOG_EVENT }

@@ -76,8 +76,6 @@ class CommentListActivity : BaseActivity() {
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        answer = intent.getParcelableExtra(PARAM_ANSWER)
-        question = intent.getParcelableExtra(PARAM_QUESTION)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.qa_activity_comment_list)
         if (intent.getParcelableExtra<Question>(PARAM_QUESTION) != null && intent.getParcelableExtra<Answer>(PARAM_ANSWER) != null) {
@@ -226,9 +224,9 @@ class CommentListActivity : BaseActivity() {
             }
 
             if (answerWrapper == null) {
-                toast("无法识别问题,可能问题已过期")
+                toast(getString(R.string.qa_answer_from_mine_loading_error))
             } else if (!answerWrapper.isSuccessful) {
-                toast(answerWrapper.info ?: "未知错误")
+                toast(answerWrapper.info ?: getString(R.string.qa_loading_from_mine_unknown_error))
             } else {
                 initViewModel(event.questionId, answerWrapper.data)
                 val showAdoptIcon = question.hasAdoptedAnswer || !question.isSelf

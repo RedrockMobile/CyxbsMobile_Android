@@ -29,9 +29,8 @@ class QuestionDataSource(private val kind: String) : PageKeyedDataSource<Int, Qu
             initialLoad.postValue(NetworkState.CANNOT_LOAD_WITHOUT_LOGIN)
             return
         }
-        val stuNum = ServiceManager.getService(IAccountService::class.java).getUserService().getStuNum()
         ApiGenerator.getApiService(ApiService::class.java)
-                .getQuestionList(kind, 1, params.requestedLoadSize, stuNum)
+                .getQuestionList(kind, 1, params.requestedLoadSize)
                 .mapOrThrowApiException()
                 .setSchedulers()
                 .doOnSubscribe { initialLoad.postValue(NetworkState.LOADING) }
@@ -47,9 +46,8 @@ class QuestionDataSource(private val kind: String) : PageKeyedDataSource<Int, Qu
     }
 
     override fun loadAfter(params: LoadParams<Int>, callback: LoadCallback<Int, Question>) {
-        val stuNum = ServiceManager.getService(IAccountService::class.java).getUserService().getStuNum()
         ApiGenerator.getApiService(ApiService::class.java)
-                .getQuestionList(kind, params.key, params.requestedLoadSize, stuNum)
+                .getQuestionList(kind, params.key, params.requestedLoadSize)
                 .mapOrThrowApiException()
                 .setSchedulers()
                 .doOnSubscribe { networkState.postValue(NetworkState.LOADING) }

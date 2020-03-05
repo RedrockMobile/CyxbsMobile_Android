@@ -283,9 +283,10 @@ class AnswerListActivity : BaseActivity() {
             }
 
             if (questionWrapper == null) {
-                toast("无法识别问题,可能问题已过期")
+                toast(getString(R.string.qa_question_from_mine_loading_error))
             } else if (!questionWrapper.isSuccessful) {
-                toast(questionWrapper.info ?: "未知错误")
+                toast(questionWrapper.info
+                        ?: getString(R.string.qa_loading_from_mine_unknown_error))
             } else {
                 initViewModel(questionWrapper.data)
                 initView(questionWrapper.data)

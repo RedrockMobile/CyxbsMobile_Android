@@ -6,8 +6,6 @@ import androidx.lifecycle.MutableLiveData
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.bean.RedrockApiStatus
 import com.mredrock.cyxbs.common.network.ApiGenerator
-import com.mredrock.cyxbs.common.service.ServiceManager
-import com.mredrock.cyxbs.common.service.account.IAccountService
 import com.mredrock.cyxbs.common.utils.extensions.checkError
 import com.mredrock.cyxbs.common.utils.extensions.mapOrThrowApiException
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
@@ -85,10 +83,9 @@ class QuizViewModel : BaseViewModel() {
             return false
         }
         progressDialogEvent.value = ProgressDialogEvent.SHOW_NONCANCELABLE_DIALOG_EVENT
-        val stuNum = ServiceManager.getService(IAccountService::class.java).getUserService().getStuNum()
         val isAnonymousInt = 1.takeIf { isAnonymous } ?: 0
         var observable: Observable<out Any> = ApiGenerator.getApiService(ApiService::class.java)
-                .quiz(stuNum, title, content, isAnonymousInt, type, "", reward, disappearTime)
+                .quiz(title, content, isAnonymousInt, type, "", reward, disappearTime)
                 .setSchedulers()
                 .mapOrThrowApiException()
         if (!imageLiveData.value.isNullOrEmpty()) {
@@ -167,7 +164,7 @@ class QuizViewModel : BaseViewModel() {
                 .updateDraft(json, id)
                 .setSchedulers()
                 .checkError()
-                .doOnError{
+                .doOnError {
                     toastEvent.value = R.string.qa_quiz_save_failed
                     backAndFinishActivityEvent.value = true
                 }

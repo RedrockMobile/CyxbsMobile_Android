@@ -4,8 +4,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.paging.DataSource
 import androidx.paging.PageKeyedDataSource
 import com.mredrock.cyxbs.common.network.ApiGenerator
-import com.mredrock.cyxbs.common.service.ServiceManager
-import com.mredrock.cyxbs.common.service.account.IAccountService
 import com.mredrock.cyxbs.common.utils.extensions.mapOrThrowApiException
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
@@ -24,10 +22,8 @@ class AnswerDataSource(private val qid: String) : PageKeyedDataSource<Int, Answe
     private var failedRequest: (() -> Unit)? = null
 
     override fun loadInitial(params: LoadInitialParams<Int>, callback: LoadInitialCallback<Int, Answer>) {
-        val stuNum = ServiceManager.getService(IAccountService::class.java).getUserService().getStuNum()
         ApiGenerator.getApiService(ApiService::class.java)
-                //由于没有api文档，
-                .getAnswerList(qid, 0, 0, stuNum)
+                .getAnswerList(qid, 0, 0)
                 .mapOrThrowApiException()
                 .setSchedulers()
                 .doOnSubscribe { initialLoad.postValue(NetworkState.LOADING) }
@@ -44,9 +40,8 @@ class AnswerDataSource(private val qid: String) : PageKeyedDataSource<Int, Answe
     }
 
     override fun loadAfter(params: LoadParams<Int>, callback: LoadCallback<Int, Answer>) {
-        val stuNum = ServiceManager.getService(IAccountService::class.java).getUserService().getStuNum()
         ApiGenerator.getApiService(ApiService::class.java)
-                .getAnswerList(qid, params.key, params.requestedLoadSize, stuNum)
+                .getAnswerList(qid, params.key, params.requestedLoadSize)
                 .mapOrThrowApiException()
                 .setSchedulers()
                 .doOnSubscribe { networkState.postValue(NetworkState.LOADING) }

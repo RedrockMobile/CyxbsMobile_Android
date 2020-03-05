@@ -4,8 +4,6 @@ import androidx.lifecycle.*
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
 import com.mredrock.cyxbs.common.network.ApiGenerator
-import com.mredrock.cyxbs.common.service.ServiceManager
-import com.mredrock.cyxbs.common.service.account.IAccountService
 import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.checkError
 import com.mredrock.cyxbs.common.utils.extensions.mapOrThrowApiException
@@ -69,9 +67,8 @@ class AnswerListViewModel(question: Question) : BaseViewModel() {
 
     //增加浏览量，不用显示
     fun addQuestionView() {
-        val stuNum = ServiceManager.getService(IAccountService::class.java).getUserService().getStuNum()
         ApiGenerator.getApiService(ApiService::class.java)
-                .addView(stuNum, qid)
+                .addView(qid)
                 .checkError()
                 .setSchedulers()
                 .doOnError {
@@ -83,9 +80,8 @@ class AnswerListViewModel(question: Question) : BaseViewModel() {
     }
 
     fun adoptAnswer(aId: String) {
-        val stuNum = ServiceManager.getService(IAccountService::class.java).getUserService().getStuNum()
         ApiGenerator.getApiService(ApiService::class.java)
-                .adoptAnswer(aId, qid, stuNum)
+                .adoptAnswer(aId, qid)
                 .checkError()
                 .setSchedulers()
                 .doOnSubscribe { progressDialogEvent.value = ProgressDialogEvent.SHOW_NONCANCELABLE_DIALOG_EVENT }
@@ -97,9 +93,8 @@ class AnswerListViewModel(question: Question) : BaseViewModel() {
 
     fun reportQuestion(reportType: String) {
         progressDialogEvent.value = ProgressDialogEvent.SHOW_NONCANCELABLE_DIALOG_EVENT
-        val stuNum = ServiceManager.getService(IAccountService::class.java).getUserService().getStuNum()
         ApiGenerator.getApiService(ApiService::class.java)
-                .reportQuestion(stuNum, qid, reportType)
+                .reportQuestion(qid, reportType)
                 .setSchedulers()
                 .checkError()
                 .doFinally { progressDialogEvent.value = ProgressDialogEvent.DISMISS_DIALOG_EVENT }
@@ -112,9 +107,8 @@ class AnswerListViewModel(question: Question) : BaseViewModel() {
 
     fun reportAnswer(reportType: String, answerId: String) {
         progressDialogEvent.value = ProgressDialogEvent.SHOW_NONCANCELABLE_DIALOG_EVENT
-        val stuNum = ServiceManager.getService(IAccountService::class.java).getUserService().getStuNum()
         ApiGenerator.getApiService(ApiService::class.java)
-                .reportAnswer(stuNum, answerId, reportType)
+                .reportAnswer(answerId, reportType)
                 .setSchedulers()
                 .checkError()
                 .doFinally { progressDialogEvent.value = ProgressDialogEvent.DISMISS_DIALOG_EVENT }
@@ -140,9 +134,8 @@ class AnswerListViewModel(question: Question) : BaseViewModel() {
 
     fun ignoreQuestion() {
         val qid = questionLiveData.value?.id
-        val stuNum = ServiceManager.getService(IAccountService::class.java).getUserService().getStuNum()
         ApiGenerator.getApiService(ApiService::class.java)
-                .ignoreQuestion(stuNum, qid ?: "")
+                .ignoreQuestion(qid ?: "")
                 .setSchedulers()
                 .checkError()
                 .doOnError { toastEvent.value = R.string.qa_service_error_hint }
@@ -150,7 +143,6 @@ class AnswerListViewModel(question: Question) : BaseViewModel() {
     }
 
     fun clickPraiseButton(position: Int, answer: Answer) {
-        val stuNum = ServiceManager.getService(IAccountService::class.java).getUserService().getStuNum()
         fun Boolean.toInt() = 1.takeIf { this@toInt } ?: -1
 
         if (praiseNetworkState == NetworkState.LOADING) {
@@ -160,9 +152,9 @@ class AnswerListViewModel(question: Question) : BaseViewModel() {
         ApiGenerator.getApiService(ApiService::class.java)
                 .run {
                     if (answer.isPraised) {
-                        cancelPraiseAnswer(answer.id, stuNum)
+                        cancelPraiseAnswer(answer.id)
                     } else {
-                        praiseAnswer(answer.id, stuNum)
+                        praiseAnswer(answer.id)
                     }
                 }
                 .checkError()

@@ -18,9 +18,7 @@ interface ApiService {
                         @Field("page")
                         page: Int,
                         @Field("size")
-                        size: Int = 6,
-                        @Field("stunum")
-                        stuNum: String): Observable<RedrockApiWrapper<List<Question>>>
+                        size: Int = 6): Observable<RedrockApiWrapper<List<Question>>>
 
     @POST("/app/index.php/QA/Answer/getAnswerlist")
     @FormUrlEncoded
@@ -29,9 +27,7 @@ interface ApiService {
                       @Field("page")
                       page: Int,
                       @Field("size")
-                      size: Int = 6,
-                      @Field("stuNum")
-                      stuNum: String): Observable<RedrockApiWrapper<List<Answer>>>
+                      size: Int = 6): Observable<RedrockApiWrapper<List<Answer>>>
 
     @POST("/app/index.php/QA/Answer/getRemarkList")
     @FormUrlEncoded
@@ -40,50 +36,38 @@ interface ApiService {
                        @Field("page")
                        page: Int,
                        @Field("size")
-                       size: Int = 6,
-                       @Field("stuNum")
-                       stuNum: String): Observable<RedrockApiWrapper<List<Comment>>>
+                       size: Int = 6): Observable<RedrockApiWrapper<List<Comment>>>
 
     @POST("/app/index.php/QA/Answer/praise")
     @FormUrlEncoded
     fun praiseAnswer(@Field("answer_id")
-                     aid: String,
-                     @Field("stuNum")
-                     stuNum: String): Observable<RedrockApiStatus>
+                     aid: String): Observable<RedrockApiStatus>
 
     @POST("/app/index.php/QA/Answer/cancelPraise")
     @FormUrlEncoded
     fun cancelPraiseAnswer(@Field("answer_id")
-                           aid: String,
-                           @Field("stuNum")
-                           stuNum: String): Observable<RedrockApiStatus>
+                           aid: String): Observable<RedrockApiStatus>
 
     @POST("/app/index.php/QA/Answer/adopt")
     @FormUrlEncoded
     fun adoptAnswer(@Field("answer_id")
                     aid: String,
                     @Field("question_id")
-                    qid: String,
-                    @Field("stuNum")
-                    stuNum: String): Observable<RedrockApiStatus>
+                    qid: String): Observable<RedrockApiStatus>
 
     @POST("/app/index.php/QA/Answer/remark")
     @FormUrlEncoded
     fun sendComment(@Field("answer_id")
                     aid: String,
                     @Field("content")
-                    content: String,
-                    @Field("stuNum")
-                    stuNum: String): Observable<RedrockApiStatus>
+                    content: String): Observable<RedrockApiStatus>
 
     @POST("app/index.php/QA/User/getScoreStatus")
     fun getScoreStatus(): Observable<RedrockApiWrapper<ScoreStatus>>
 
     @POST("app/index.php/QA/Question/add")
     @FormUrlEncoded
-    fun quiz(@Field("stuNum")
-             stuNum: String,
-             @Field("title")
+    fun quiz(@Field("title")
              title: String,
              @Field("description")
              content: String,
@@ -105,9 +89,7 @@ interface ApiService {
 
     @POST("app/index.php/QA/Answer/add")
     @FormUrlEncoded
-    fun answer(@Field("stuNum")
-               stuNum: String,
-               @Field("question_id")
+    fun answer(@Field("question_id")
                qid: String,
                @Field("content")
                content: String): Observable<RedrockApiWrapper<String>>
@@ -118,27 +100,22 @@ interface ApiService {
 
     @POST("app/index.php/QA/Feedback/addReport")
     @FormUrlEncoded
-    fun reportQuestion(@Field("stunum") stuNum: String,
-                       @Field("question_id") qid: String,
+    fun reportQuestion(@Field("question_id") qid: String,
                        @Field("type") type: String): Observable<RedrockApiStatus>
 
     @POST("app/index.php/QA/Feedback/addReport")
     @FormUrlEncoded
-    fun reportAnswer(@Field("stunum") stuNum: String,
-                     @Field("answer_id") aid: String,
+    fun reportAnswer(@Field("answer_id") aid: String,
                      @Field("type") type: String): Observable<RedrockApiStatus>
 
     @POST("app/index.php/QA/Feedback/addReport")
     @FormUrlEncoded
-    fun reportComment(@Field("stunum") stuNum: String,
-                      @Field("answer_id") cid: String,
+    fun reportComment(@Field("answer_id") cid: String,
                       @Field("type") type: String): Observable<RedrockApiStatus>
 
     @POST("app/index.php/QA/Question/ignore")
     @FormUrlEncoded
-    fun ignoreQuestion(@Field("stuNum")
-                       stuNum: String,
-                       @Field("question_id")
+    fun ignoreQuestion(@Field("question_id")
                        qid: String): Observable<RedrockApiStatus>
 
     /**
@@ -161,6 +138,5 @@ interface ApiService {
 
     @POST("app/index.php/QA/Question/addView")
     @FormUrlEncoded
-    fun addView(@Field("stunum") stuNum: String,
-                @Field("id") qid: String): Observable<RedrockApiStatus>
+    fun addView(@Field("id") qid: String): Observable<RedrockApiStatus>
 }
