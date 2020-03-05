@@ -114,7 +114,7 @@ class QuizViewModel : BaseViewModel() {
             val name = "photo" + (index + 1)
             builder.addFormDataPart(name, file.name, imageBody)
         }
-        return ApiGenerator.getCommonApiService(ApiService::class.java)
+        return ApiGenerator.getApiService(ApiService::class.java)
                 .uploadQuestionPic(builder.build().parts())
                 .setSchedulers()
                 .checkError()
