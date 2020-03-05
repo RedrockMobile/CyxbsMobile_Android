@@ -16,14 +16,14 @@ import com.google.gson.annotations.SerializedName
 internal class User() : Parcelable {
     //用户唯一识别码
     @SerializedName("redid")
-    var redid: String = ""
+    var redid: String? = ""
 
     //学号
     @SerializedName("stuNum")
-    var stuNum: String = ""
+    var stuNum: String? = ""
 
     @SerializedName("nickname")
-    var nickname: String = ""
+    var nickname: String? = ""
 
     @SerializedName("headImgUrl")
     var avatarImgUrl: String? = null
@@ -54,19 +54,19 @@ internal class User() : Parcelable {
 
     //token过期时间
     @SerializedName("exp")
-    var exp: String = ""
+    var exp: String? = ""
 
     //token颁发时间
     @SerializedName("iat")
-    var iat: String = ""
+    var iat: String? = ""
 
     //token颁发应用类别
     @SerializedName("sub")
-    var sub: String = ""
+    var sub: String? = ""
 
     //学院
     @SerializedName("college")
-    var college: String = ""
+    var college: String? = ""
 
     constructor(parcel: Parcel) : this() {
         redid = parcel.readString()
