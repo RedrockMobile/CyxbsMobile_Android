@@ -24,7 +24,7 @@
             app:layout_constraintEnd_toStartOf="@+id/affair_time_select"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:selectedTextColor="#15315B"
+            app:selectedTextColor="@color/menuFontColorFound"
             app:textSize="16sp"
             app:wheelItemCount="5" />
 
@@ -36,7 +36,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/affair_week_day_select"
-            app:selectedTextColor="#15315B"
+            app:selectedTextColor="@color/menuFontColorFound"
             app:textSize="16sp"
             app:wheelItemCount="5" />
 

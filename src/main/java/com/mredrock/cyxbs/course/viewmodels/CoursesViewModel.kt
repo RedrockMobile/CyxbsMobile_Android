@@ -1,10 +1,12 @@
 package com.mredrock.cyxbs.course.viewmodels
 
 import android.view.View
+import android.widget.Toast
 import androidx.databinding.ObservableField
 import androidx.lifecycle.MutableLiveData
 import com.google.gson.Gson
 import com.mredrock.cyxbs.common.BaseApp.Companion.context
+import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.common.config.COURSE_VERSION
 import com.mredrock.cyxbs.common.config.SP_WIDGET_NEED_FRESH
 import com.mredrock.cyxbs.common.config.WIDGET_COURSE

@@ -116,7 +116,7 @@ class TimeIdentificationView : View {
         } else if (now > this.nightStartTimeStamp && now < this.nightEndTimeStamp) {
             ((now - nightStartTimeStamp).toFloat() / (nightEndTimeStamp - nightStartTimeStamp).toFloat()) * (1f / 3f) + (2f / 3f)
         } else {
-            0f
+            1f
         }
     }
 }

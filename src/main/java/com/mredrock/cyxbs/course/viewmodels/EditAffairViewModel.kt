@@ -1,11 +1,14 @@
 package com.mredrock.cyxbs.course.viewmodels
 
 import android.app.Application
+import android.widget.Toast
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import com.mredrock.cyxbs.common.BaseApp
+import com.mredrock.cyxbs.common.BaseApp.Companion.context
+import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.service.account.IAccountService
@@ -260,7 +263,7 @@ class EditAffairViewModel(application: Application) : AndroidViewModel(applicati
      * @param timeSelectPositions 对应的课程字符串的position
      */
     private fun setTimeSelected(timeSelectPositions: List<Int>) {
-        for ((index, position) in timeSelectPositions.withIndex()) {
+        for ((_, position) in timeSelectPositions.withIndex()) {
             // 获取选择的课程时间的行列位置
             val row: Int = position / 7
             val column: Int = position - row * 7
