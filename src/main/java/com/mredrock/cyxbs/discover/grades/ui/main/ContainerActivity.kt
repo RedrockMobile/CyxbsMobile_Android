@@ -2,6 +2,7 @@ package com.mredrock.cyxbs.discover.grades.ui.main
 
 import android.os.Bundle
 import android.view.View
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -10,12 +11,12 @@ import com.alibaba.android.arouter.facade.annotation.Route
 import com.bumptech.glide.Glide
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.mredrock.cyxbs.common.BaseApp
-import com.mredrock.cyxbs.common.bean.User
 import com.mredrock.cyxbs.common.config.DISCOVER_GRADES
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.service.account.IAccountService
+import com.mredrock.cyxbs.common.service.account.IUserService
 import com.mredrock.cyxbs.common.ui.BaseActivity
-import com.mredrock.cyxbs.common.utils.extensions.toast
+import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
 import com.mredrock.cyxbs.discover.grades.R
 import com.mredrock.cyxbs.discover.grades.bean.Exam
 import com.mredrock.cyxbs.discover.grades.bean.Grade
@@ -38,7 +39,9 @@ class ContainerActivity : BaseActivity() {
     //exam
     override val isFragmentActivity = true
     private lateinit var viewModel: ContainerViewModel
-    private lateinit var user: User
+    private val user: IUserService by lazy {
+        ServiceManager.getService(IAccountService::class.java).getUserService()
+    }
     private lateinit var mAdapter: ExamAdapter
     private val data = mutableListOf<Exam>()
 
@@ -51,17 +54,15 @@ class ContainerActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.grades_activity_container)
-        common_toolbar.init("考试与成绩")
-
-        if (BaseApp.user == null) {
-            toast("无法获取到用户信息")
-            return
-        } else {
-            user = BaseApp.user!!
-            viewModel = ViewModelProviders.of(this@ContainerActivity).get(ContainerViewModel::class.java)
-            initExam()
-            initGrades()
+        common_toolbar.apply {
+            setBackgroundColor(ContextCompat.getColor(this@ContainerActivity, R.color.windowBackground))
+            initWithSplitLine("考试与成绩",
+                    false)
+            setTitleLocationAtLeft(true)
         }
+        viewModel = ViewModelProviders.of(this@ContainerActivity).get(ContainerViewModel::class.java)
+        initExam()
+        initGrades()
 
         //初始化数据和绑定CoordinatorLayout(必须，内部处理了BottomSheet的事件分发)
         gpa_graph.array = arrayListOf(4.0F, 3.5F, 3F, 2.5F, 2F, 1.8F, 1.5F, 1.2F)
@@ -84,7 +85,7 @@ class ContainerActivity : BaseActivity() {
     }
 
     private fun loadExam() {
-        viewModel.loadData(user.stuNum)
+        viewModel.loadData(user.getStuNum())
     }
 
     private fun initGrades() {
@@ -105,11 +106,10 @@ class ContainerActivity : BaseActivity() {
     }
 
     private fun initHeader() {
-        val userService = ServiceManager.getService(IAccountService::class.java).getUserService()
-        Glide.with(BaseApp.context).load(userService.getAvatarImgUrl()).into(parent.iv_grades_avatar)
-        parent.tv_grades_stuNum.text = userService.getStuNum()
-//        parent.tv_grades_college.text = userService.get ?: "未设置学院"
-        parent.tv_grades_name.text = userService.getRealName() ?: "未设置姓名"
+        Glide.with(BaseApp.context).load(user.getAvatarImgUrl()).into(parent.iv_grades_avatar)
+        parent.tv_grades_stuNum.text = user.getStuNum()
+        parent.tv_grades_college.text = user.getCollege()
+        parent.tv_grades_name.text = user.getRealName()
     }
 
     private fun initRv() {
@@ -121,7 +121,9 @@ class ContainerActivity : BaseActivity() {
             gradesData.addAll(it as MutableList<Grade>)
             adapter.notifyDataSetChanged()
         })
-        viewModel.loadGrades(user.stuNum, user.idNum!!)
+        val idNum = BaseApp.context.defaultSharedPreferences.getString("SP_KEY_ID_NUM", "")
+                ?: return
+        viewModel.loadGrades(user.getStuNum(), idNum)
     }
 
 }
