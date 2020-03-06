@@ -48,14 +48,6 @@ const val ABOUT_US_WEBSITE = "https://redrock.team/aboutus/"
 const val WIDGET_COURSE = "course_widget"
 const val SP_WIDGET_NEED_FRESH = "sharepreference_widget_need_fresh"
 
-// uri跳转打开应用
-// QA
-const val URI_HOST_QA = "/qa"
-// question
-const val URI_PATH_QA_QUESTION = "/question"
-// answer
-const val URI_PATH_QA_ANSWER = "/answer"
-
 //课表辨别是查同学课表的key
 const val OTHERS_STU_NUM = "others_stu_num"
 

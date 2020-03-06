@@ -59,6 +59,8 @@ open class BaseApp : Application() {
 
     private fun initUMeng() {
         val channel = WalleChannelReader.getChannel(applicationContext, "debug")
+        UMConfigure.init(applicationContext, BuildConfig.UM_APP_KEY, channel, UMConfigure.DEVICE_TYPE_PHONE,
+                BuildConfig.UM_PUSH_SECRET)
         MobclickAgent.setScenarioType(applicationContext, MobclickAgent.EScenarioType.E_UM_NORMAL)
         MobclickAgent.openActivityDurationTrack(false)
         //调试模式（推荐到umeng注册测试机，避免数据污染）
