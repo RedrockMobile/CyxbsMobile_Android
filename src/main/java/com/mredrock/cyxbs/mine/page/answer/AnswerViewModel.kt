@@ -48,8 +48,7 @@ class AnswerViewModel : BaseViewModel() {
         }
 
     fun loadAnswerPostedList() {
-        val disposable = apiService.getAnswerPostedList(stuNum, idNum
-                ?: return, answerPostedPage++, pageSize)
+        val disposable = apiService.getAnswerPostedList(answerPostedPage++, pageSize)
                 .normalWrapper(this)
                 .safeSubscribeBy(
                         onNext = {

@@ -23,8 +23,6 @@ import io.reactivex.disposables.Disposable
  */
 class CommentViewModel : BaseViewModel() {
 
-    val stuNum = ServiceManager.getService(IAccountService::class.java).getUserService().getStuNum()
-    val idNum = BaseApp.context.defaultSharedPreferences.getString("SP_KEY_ID_NUM", "")
 
     private val pageSize = 6
     private var commentPage: Int = 1
@@ -45,8 +43,7 @@ class CommentViewModel : BaseViewModel() {
         }
 
     fun loadCommentList() {
-        val disposable = apiService.getCommentList(stuNum, idNum
-                ?: return, commentPage++, pageSize)
+        val disposable = apiService.getCommentList(commentPage++, pageSize)
                 .normalWrapper(this)
                 .safeSubscribeBy(
                         onNext = {
@@ -96,8 +93,7 @@ class CommentViewModel : BaseViewModel() {
         }
 
     fun loadCommentReceivedList() {
-        val disposable = apiService.getCommentReceivedList(stuNum, idNum
-                ?: return, commentReceivedPage++, pageSize)
+        val disposable = apiService.getCommentReceivedList(commentReceivedPage++, pageSize)
                 .normalWrapper(this)
                 .safeSubscribeBy(
                         onNext = {

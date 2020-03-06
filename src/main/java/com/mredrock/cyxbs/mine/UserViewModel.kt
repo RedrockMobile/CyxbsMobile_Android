@@ -5,7 +5,10 @@ import androidx.lifecycle.MutableLiveData
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.service.account.IAccountService
-import com.mredrock.cyxbs.common.utils.extensions.*
+import com.mredrock.cyxbs.common.utils.extensions.doOnErrorWithDefaultErrorHandler
+import com.mredrock.cyxbs.common.utils.extensions.mapOrThrowApiException
+import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
+import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.mine.network.model.QANumber
 import com.mredrock.cyxbs.mine.network.model.ScoreStatus
@@ -26,12 +29,6 @@ class UserViewModel : BaseViewModel() {
     val qaNumber: LiveData<QANumber>
         get() = _qaNumber
 
-    private val stuNum = ServiceManager.getService(IAccountService::class.java).getUserService().getStuNum()
-    private val idNum = BaseApp.context.defaultSharedPreferences.getString("SP_KEY_ID_NUM", "")
-
-
-
-
     fun getScoreStatus() {
         apiService.getScoreStatus()
                 .mapOrThrowApiException()
@@ -44,7 +41,7 @@ class UserViewModel : BaseViewModel() {
     }
 
     fun getQANumber() {
-        apiService.getQANumber(stuNum, idNum ?: return)
+        apiService.getQANumber()
                 .normalWrapper(this)
                 .safeSubscribeBy {
                     _qaNumber.postValue(it)

@@ -27,8 +27,6 @@ import io.reactivex.functions.Function
  */
 class DailyViewModel : BaseViewModel() {
 
-    val stuNum = ServiceManager.getService(IAccountService::class.java).getUserService().getStuNum()
-    val idNum = BaseApp.context.defaultSharedPreferences.getString("SP_KEY_ID_NUM", "")
     //临时使用，因为后端测试的baseurl与apiService不同，故作区分
     private val apiServiceForSign: ApiService by lazy { ApiGeneratorForSign.getApiService(ApiService::class.java) }
 

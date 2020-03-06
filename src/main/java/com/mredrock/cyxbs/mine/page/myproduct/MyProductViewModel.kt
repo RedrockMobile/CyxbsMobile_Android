@@ -21,9 +21,6 @@ import io.reactivex.disposables.Disposable
  * Created by roger on 2020/2/15
  */
 class MyProductViewModel : BaseViewModel() {
-    val stuNum = ServiceManager.getService(IAccountService::class.java).getUserService().getStuNum()
-    val idNum = BaseApp.context.defaultSharedPreferences.getString("SP_KEY_ID_NUM", "")
-
     private val apiServiceForSign: ApiService by lazy { ApiGeneratorForSign.getApiService(ApiService::class.java) }
 
     private val disposableForUnClaimed: MutableList<Disposable> = mutableListOf()

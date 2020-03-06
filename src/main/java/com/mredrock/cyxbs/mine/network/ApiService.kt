@@ -84,19 +84,15 @@ interface ApiService {
     /**
      * 我的首页部分
      */
-    @FormUrlEncoded
     @POST("app/index.php/QA/User/mine")
-    fun getQANumber(@Field("stunum") stuNum: String,
-                    @Field("idnum") idNum: String): Observable<RedrockApiWrapper<QANumber>>
+    fun getQANumber(): Observable<RedrockApiWrapper<QANumber>>
 
     /**
      * 获取已发布的问题
      */
     @FormUrlEncoded
     @POST("app/index.php/QA/User/question")
-    fun getAskPostedList(@Field("stunum") stuNum: String,
-                         @Field("idnum") idNum: String,
-                         @Field("page") page: Int,
+    fun getAskPostedList(@Field("page") page: Int,
                          @Field("size") size: Int): Observable<RedrockApiWrapper<List<AskPosted>>>
 
     /**
@@ -104,9 +100,7 @@ interface ApiService {
      */
     @FormUrlEncoded
     @POST("app/index.php/QA/User/answer")
-    fun getAnswerPostedList(@Field("stunum") stuNum: String,
-                            @Field("idnum") idNum: String,
-                            @Field("page") page: Int,
+    fun getAnswerPostedList(@Field("page") page: Int,
                             @Field("size") size: Int): Observable<RedrockApiWrapper<List<AnswerPosted>>>
 
     /**
@@ -115,9 +109,7 @@ interface ApiService {
      */
     @FormUrlEncoded
     @POST("app/index.php/QA/User/comment")
-    fun getCommentList(@Field("stunum") stuNum: String,
-                       @Field("idnum") idNum: String,
-                       @Field("page") page: Int,
+    fun getCommentList(@Field("page") page: Int,
                        @Field("size") size: Int): Observable<RedrockApiWrapper<List<Comment>>>
 
     /**
@@ -126,9 +118,7 @@ interface ApiService {
      */
     @FormUrlEncoded
     @POST("app/index.php/QA/User/reComment")
-    fun getCommentReceivedList(@Field("stunum") stuNum: String,
-                               @Field("idnum") idNum: String,
-                               @Field("page") page: Int,
+    fun getCommentReceivedList(@Field("page") page: Int,
                                @Field("size") size: Int): Observable<RedrockApiWrapper<List<CommentReceived>>>
 
 

@@ -50,8 +50,7 @@ class AskViewModel : BaseViewModel() {
         }
 
     fun loadAskPostedList() {
-        val disposable = apiService.getAskPostedList(stuNum, idNum
-                ?: return, askPostedPage++, pageSize)
+        val disposable = apiService.getAskPostedList(askPostedPage++, pageSize)
                 .normalWrapper(this)
                 .safeSubscribeBy(
                         onNext = {
