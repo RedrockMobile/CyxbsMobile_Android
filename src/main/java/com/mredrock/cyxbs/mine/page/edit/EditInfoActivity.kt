@@ -87,6 +87,9 @@ class EditInfoActivity(override val isFragmentActivity: Boolean = false,
 
     }
 
+    /**
+     * 当因用户输入导致文字有变化时，变更button和相应的颜色
+     */
     @SuppressLint("SetTextI18n")
     private fun checkColorAndText() {
         val userForTemporal = ServiceManager.getService(IAccountService::class.java).getUserService()
@@ -154,23 +157,13 @@ class EditInfoActivity(override val isFragmentActivity: Boolean = false,
         }
 
 
-        mine_edit_iv_agreement.setOnClickListener {
-            agreementDialogFragment.show(supportFragmentManager, "agreement")
-        }
-
         initObserver()
-        loadAvatar(ServiceManager.getService(IAccountService::class.java).getUserService().getAvatarImgUrl(), mine_edit_et_avatar)
 
-        initData()
+        initViewAndData()
+
         setTextChangeListener()
-        //点击更换头像
-        mine_edit_et_avatar.setOnClickListener { changeAvatar() }
-        //需调用一次给textView赋值
-        checkColorAndText()
-        mine_btn_info_save.setOnClickListener {
-            saveInfo()
-        }
-        mine_btn_info_save.isClickable = false
+
+        viewModel.getUserInfo()
     }
 
     override fun onBackPressed() {
@@ -181,7 +174,25 @@ class EditInfoActivity(override val isFragmentActivity: Boolean = false,
         }
     }
 
-    private fun initData() {
+    private fun initViewAndData() {
+        refreshUserInfo()
+
+        //点击更换头像
+        mine_edit_et_avatar.setOnClickListener { changeAvatar() }
+        //需调用一次给textView赋值
+        checkColorAndText()
+        mine_btn_info_save.setOnClickListener {
+            saveInfo()
+        }
+        mine_btn_info_save.isClickable = false
+
+        mine_edit_iv_agreement.setOnClickListener {
+            agreementDialogFragment.show(supportFragmentManager, "agreement")
+        }
+    }
+
+    private fun refreshUserInfo() {
+        loadAvatar(userService.getAvatarImgUrl(), mine_edit_et_avatar)
         mine_et_nickname.setText(userService.getNickname())
         mine_et_introduce.setText(userService.getIntroduction())
         mine_et_qq.setText(userService.getQQ())
@@ -212,6 +223,10 @@ class EditInfoActivity(override val isFragmentActivity: Boolean = false,
             } else {
                 toast("修改头像失败")
             }
+        })
+
+        viewModel.isUserUpdate.observe(this, Observer {
+            refreshUserInfo()
         })
     }
 

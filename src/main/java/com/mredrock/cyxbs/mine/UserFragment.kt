@@ -19,7 +19,6 @@ import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
 import com.mredrock.cyxbs.common.component.CommonDialogFragment
 import com.mredrock.cyxbs.common.config.*
-import com.mredrock.cyxbs.common.event.AskLoginEvent
 import com.mredrock.cyxbs.common.event.LoginStateChangeEvent
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.service.account.IAccountService
@@ -67,23 +66,25 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         addObserver()
-        fetchInfo()
 
+        initView()
+
+    }
+
+    private fun initView() {
         //功能按钮
-        mine_main_btn_sign.setOnClickListener { checkLoginBeforeAction("签到") { startActivity<DailySignActivity>() } }
-        mine_main_tv_sign.setOnClickListener { checkLoginBeforeAction("签到") { startActivity<DailySignActivity>() } }
-        mine_main_question_number.setOnClickListener { checkLoginBeforeAction("提问") { startActivity<AskActivity>() } }
-        mine_main_tv_question.setOnClickListener { checkLoginBeforeAction("提问") { startActivity<AskActivity>() } }
-        mine_main_answer_number.setOnClickListener { checkLoginBeforeAction("回答") { startActivity<AnswerActivity>() } }
-        mine_main_tv_question.setOnClickListener { checkLoginBeforeAction("回答") { startActivity<AnswerActivity>() } }
-        mine_main_reply_comment_number.setOnClickListener { checkLoginBeforeAction("评论回复") { startActivity<CommentActivity>() } }
-        mine_main_tv_reply_comment.setOnClickListener { checkLoginBeforeAction("评论回复") { startActivity<CommentActivity>() } }
-        mine_main_cl_info_edit.setOnClickListener { checkLoginBeforeAction("资料") { startActivity<EditInfoActivity>() } }
+        mine_main_btn_sign.setOnClickListener { startActivity<DailySignActivity>()  }
+        mine_main_tv_sign.setOnClickListener { startActivity<DailySignActivity>() }
+        mine_main_question_number.setOnClickListener { startActivity<AskActivity>() }
+        mine_main_tv_question.setOnClickListener { startActivity<AskActivity>() }
+        mine_main_answer_number.setOnClickListener { startActivity<AnswerActivity>() }
+        mine_main_tv_question.setOnClickListener { startActivity<AnswerActivity>() }
+        mine_main_reply_comment_number.setOnClickListener { startActivity<CommentActivity>() }
+        mine_main_tv_reply_comment.setOnClickListener { startActivity<CommentActivity>() }
+        mine_main_cl_info_edit.setOnClickListener { startActivity<EditInfoActivity>() }
 
-        fragmentManager?.let { fm ->
-            mine_main_tv_praise.setOnClickListener { praiseDialog.show(fm, "praise") }
-            mine_main_praise_number.setOnClickListener { praiseDialog.show(fm, "praise") }
-        }
+        mine_main_tv_praise.setOnClickListener { praiseDialog.show(fragmentManager, "praise") }
+        mine_main_praise_number.setOnClickListener { praiseDialog.show(fragmentManager, "praise") }
 
         mine_main_tv_about.setOnClickListener { startActivity<AboutActivity>() }
         mine_main_btn_exit.setOnClickListener { onExitClick() }
@@ -102,14 +103,10 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
         }
         mine_main_switch.isChecked = context?.defaultSharedPreferences?.getBoolean(COURSE_SHOW_STATE, false)
                 ?: false
-
     }
 
     @SuppressLint("SetTextI18n")
     private fun addObserver() {
-        viewModel.isUserUpdate.observe(this, Observer {
-            refreshUserLayout()
-        })
         viewModel.status.observe(this, Observer {
             mine_main_tv_sign.text = "已连续签到${it.serialDays}天 "
             if (it.isChecked) {
@@ -134,21 +131,12 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
         })
     }
 
-    private fun checkLoginBeforeAction(msg: String, action: () -> Unit) {
-        if (ServiceManager.getService(IAccountService::class.java).getVerifyService().isLogin()) {
-            action.invoke()
-        } else {
-            EventBus.getDefault().post(AskLoginEvent("请先登陆才能查看${msg}哦~"))
-        }
-    }
-
     override fun onResume() {
         super.onResume()
         fetchInfo()
     }
 
     private fun fetchInfo() {
-        viewModel.getUserInfo()
         viewModel.getScoreStatus()
         viewModel.getQANumber()
         refreshUserLayout()
@@ -156,18 +144,11 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
 
     //刷新和User信息有关的界面
     private fun refreshUserLayout() {
-        if (ServiceManager.getService(IAccountService::class.java).getVerifyService().isLogin()) {
-            val userService = ServiceManager.getService(IAccountService::class.java).getUserService()
-            context?.loadAvatar(userService.getAvatarImgUrl(), mine_main_avatar)
-            mine_main_username.text = if (userService.getNickname().isBlank()) getString(R.string.mine_user_empty_username) else userService.getNickname()
-            mine_main_introduce.text = if (userService.getIntroduction().isBlank()) getString(R.string.mine_user_empty_introduce) else userService.getIntroduction()
-            mine_main_btn_exit.visibility = View.VISIBLE
-        } else {
-            mine_main_username.setText(R.string.mine_user_empty_username)
-            mine_main_avatar.setImageResource(R.drawable.mine_default_avatar)
-            mine_main_introduce.setText(R.string.mine_user_empty_introduce)
-            mine_main_btn_exit.visibility = View.GONE
-        }
+        val userService = ServiceManager.getService(IAccountService::class.java).getUserService()
+        context?.loadAvatar(userService.getAvatarImgUrl(), mine_main_avatar)
+        mine_main_username.text = if (userService.getNickname().isBlank()) getString(R.string.mine_user_empty_username) else userService.getNickname()
+        mine_main_introduce.text = if (userService.getIntroduction().isBlank()) getString(R.string.mine_user_empty_introduce) else userService.getIntroduction()
+        mine_main_btn_exit.visibility = View.VISIBLE
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
