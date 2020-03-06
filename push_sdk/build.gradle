@@ -44,7 +44,6 @@ android {
     }
 
 
-
     repositories {
         mavenCentral()
         flatDir {
@@ -54,7 +53,7 @@ android {
 }
 
 dependencies {
-api fileTree(include: ['*.jar'], dir: 'libs')
+    api fileTree(include: ['*.jar'], dir: 'libs')
 }
 
 

@@ -12,9 +12,9 @@ buildscript {
     }
 
     repositories {
-        google()
-        jcenter()
-        maven { url 'http://maven.aliyun.com/nexus/content/repositories/releases/' }
+        // 以下两行代码相当于有了 google() jcenter() mavenCentral()，使用国内的阿里镜像
+        maven { url 'https://maven.aliyun.com/nexus/content/groups/public' }
+        maven { url 'https://maven.aliyun.com/nexus/content/repositories/google' }
 
 
         maven { url 'https://dl.bintray.com/umsdk/release' }
@@ -35,11 +35,11 @@ buildscript {
 
 allprojects {
     repositories {
-        google()
-        jcenter()
-        mavenCentral()
+        // 以下两行代码相当于有了 google() jcenter() mavenCentral()，使用国内的阿里镜像
+        maven { url 'https://maven.aliyun.com/nexus/content/groups/public' }
+        maven { url 'https://maven.aliyun.com/nexus/content/repositories/google' }
+
         maven { url 'https://jitpack.io' }
-        maven { url 'http://maven.aliyun.com/nexus/content/repositories/releases/' }
         maven { url 'https://dl.bintray.com/umsdk/release' }
         flatDir {
             dirs 'libs' //this way we can find the .aar file in libs folder
