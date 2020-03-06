@@ -29,15 +29,4 @@ class SplashViewModel : BaseViewModel() {
         AndroidSchedulers.mainThread().scheduleDirect({ finishModel.value = true }, time, TimeUnit.MILLISECONDS)
     }
 
-    fun getQuestion(qid: String) {
-        val idNum = context.defaultSharedPreferences.getString("SP_KEY_ID_NUM", "")
-        ApiGenerator.getApiService(ApiService::class.java)
-                .getQuestion(accountService.getUserService().getStuNum(), idNum!!, qid)
-                .setSchedulers()
-                .safeSubscribeBy {
-                    EventBus.getDefault().postSticky(OpenShareQuestionEvent(it.string()))
-                    finishModel.value = true
-                }
-                .lifeCycle()
-    }
 }
