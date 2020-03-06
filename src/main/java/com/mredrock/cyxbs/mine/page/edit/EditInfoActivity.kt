@@ -28,7 +28,6 @@ import com.mredrock.cyxbs.common.service.account.IUserService
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.extensions.*
 import com.mredrock.cyxbs.mine.R
-import com.mredrock.cyxbs.mine.util.user
 import com.yalantis.ucrop.UCrop
 import kotlinx.android.synthetic.main.mine_activity_edit_info.*
 import okhttp3.MediaType
@@ -90,7 +89,7 @@ class EditInfoActivity(override val isFragmentActivity: Boolean = false,
 
     @SuppressLint("SetTextI18n")
     private fun checkColorAndText() {
-        val userForTemporal = user ?: return
+        val userForTemporal = ServiceManager.getService(IAccountService::class.java).getUserService()
         if (checkIfInfoChange()) {
             mine_btn_info_save.apply {
                 textColor = ContextCompat.getColor(context, R.color.mine_white)
@@ -112,22 +111,22 @@ class EditInfoActivity(override val isFragmentActivity: Boolean = false,
         val phone = mine_et_phone.text.toString()
         mine_tv_nickname.text = "昵称(${nickname.length}/8)"
         mine_tv_sign.text = "个性签名(${introduction.length}/20)"
-        if (nickname != userForTemporal.nickname) {
+        if (nickname != userForTemporal.getNickname()) {
             mine_et_nickname.textColor = ContextCompat.getColor(this, R.color.levelTwoFontColor)
         } else {
             mine_et_nickname.textColor = ContextCompat.getColor(this, R.color.greyText)
         }
-        if (introduction != userForTemporal.introduction) {
+        if (introduction != userForTemporal.getIntroduction()) {
             mine_et_introduce.textColor = ContextCompat.getColor(this, R.color.levelTwoFontColor)
         } else {
             mine_et_introduce.textColor = ContextCompat.getColor(this, R.color.greyText)
         }
-        if (qq != userForTemporal.qq) {
+        if (qq != userForTemporal.getQQ()) {
             mine_et_qq.textColor = ContextCompat.getColor(this, R.color.levelTwoFontColor)
         } else {
             mine_et_qq.textColor = ContextCompat.getColor(this, R.color.greyText)
         }
-        if (phone != userForTemporal.phone) {
+        if (phone != userForTemporal.getPhone()) {
             mine_et_phone.textColor = ContextCompat.getColor(this, R.color.levelTwoFontColor)
         } else {
             mine_et_phone.textColor = ContextCompat.getColor(this, R.color.greyText)

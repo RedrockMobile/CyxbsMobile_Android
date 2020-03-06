@@ -13,7 +13,6 @@ import com.mredrock.cyxbs.mine.network.model.ScoreStatus
 import com.mredrock.cyxbs.mine.network.model.UserLocal
 import com.mredrock.cyxbs.mine.util.apiService
 import com.mredrock.cyxbs.mine.util.extension.normalWrapper
-import com.mredrock.cyxbs.mine.util.user
 
 /**
  * Created by zia on 2018/8/26.
@@ -32,12 +31,11 @@ class UserViewModel : BaseViewModel() {
     val qaNumber: LiveData<QANumber>
         get() = _qaNumber
 
-    fun getUserInfo() {
+    private val stuNum = ServiceManager.getService(IAccountService::class.java).getUserService().getStuNum()
+    private val idNum = BaseApp.context.defaultSharedPreferences.getString("SP_KEY_ID_NUM", "")
 
-        val stuNum = ServiceManager.getService(IAccountService::class.java).getUserService().getStuNum()
-        val idNum = BaseApp.context.defaultSharedPreferences.getString("SP_KEY_ID_NUM", "")
-                ?: return
-        apiService.getPersonInfo(stuNum, idNum)
+    fun getUserInfo() {
+        apiService.getPersonInfo(stuNum, idNum ?: return)
                 .mapOrThrowApiException()
                 .setSchedulers()
                 .doOnErrorWithDefaultErrorHandler { false }
@@ -62,7 +60,7 @@ class UserViewModel : BaseViewModel() {
     }
 
     fun getQANumber() {
-        apiService.getQANumber(user?.stuNum ?: return, user?.idNum ?: return)
+        apiService.getQANumber(stuNum, idNum ?: return)
                 .normalWrapper(this)
                 .safeSubscribeBy {
                     _qaNumber.postValue(it)
