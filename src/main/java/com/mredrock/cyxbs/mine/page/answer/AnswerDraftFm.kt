@@ -5,12 +5,16 @@ import android.os.Bundle
 import android.widget.TextView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import com.alibaba.android.arouter.launcher.ARouter
 import com.mredrock.cyxbs.common.component.CommonDialogFragment
+import com.mredrock.cyxbs.common.config.QA_ANSWER
+import com.mredrock.cyxbs.common.event.DraftEvent
 import com.mredrock.cyxbs.mine.R
 import com.mredrock.cyxbs.mine.network.model.AnswerDraft
 import com.mredrock.cyxbs.mine.util.ui.BaseRVFragment
 import com.mredrock.cyxbs.mine.util.widget.RvFooter
 import kotlinx.android.synthetic.main.mine_list_item_my_answer_draft.view.*
+import org.greenrobot.eventbus.EventBus
 
 /**
  * Created by roger on 2019/12/3
@@ -59,6 +63,12 @@ class AnswerDraftFm : BaseRVFragment<AnswerDraft>() {
 
                 )
             }.show(fragmentManager, "delete_draft")
+        }
+
+        holder.itemView.setOnClickListener {
+            //草稿箱的EventBus数据传递
+            EventBus.getDefault().postSticky(DraftEvent(data.draftAnswerContent, data.draftAnswerId.toString(), data.questionId.toString()))
+            ARouter.getInstance().build(QA_ANSWER).navigation()
         }
     }
 

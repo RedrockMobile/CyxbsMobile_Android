@@ -5,12 +5,16 @@ import android.os.Bundle
 import android.widget.TextView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import com.alibaba.android.arouter.launcher.ARouter
 import com.mredrock.cyxbs.common.component.CommonDialogFragment
+import com.mredrock.cyxbs.common.config.QA_QUIZ
+import com.mredrock.cyxbs.common.event.DraftEvent
 import com.mredrock.cyxbs.mine.R
 import com.mredrock.cyxbs.mine.network.model.AskDraft
 import com.mredrock.cyxbs.mine.util.ui.BaseRVFragment
 import com.mredrock.cyxbs.mine.util.widget.RvFooter
 import kotlinx.android.synthetic.main.mine_list_item_my_ask_draft.view.*
+import org.greenrobot.eventbus.EventBus
 
 /**
  * Created by roger on 2019/12/3
@@ -62,6 +66,11 @@ class AskDraftFm : BaseRVFragment<AskDraft>() {
 
                 )
             }.show(fragmentManager, "delete_draft")
+        }
+
+        holder.itemView.setOnClickListener {
+            EventBus.getDefault().postSticky(DraftEvent(data.content, data.draftQuestionId.toString(), ""))
+            ARouter.getInstance().build(QA_QUIZ).navigation()
         }
     }
 

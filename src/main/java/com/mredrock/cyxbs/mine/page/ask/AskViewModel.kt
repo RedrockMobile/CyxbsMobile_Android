@@ -140,10 +140,11 @@ class AskViewModel : BaseViewModel() {
 
     fun getQuestion(qid: Int) {
         val idNum = idNum ?: return
-        apiService.getQuestion(stuNum, idNum, qid.toString())
+        apiService.getQuestion(qid.toString())
                 .setSchedulers()
                 .safeSubscribeBy {
-                    val navigateData = NavigateData(qid, it.string())
+                    //NavigateData不需要answerId字段
+                    val navigateData = NavigateData(qid, -1, it.string())
                     navigateEvent.postValue(navigateData)
                 }
                 .lifeCycle()

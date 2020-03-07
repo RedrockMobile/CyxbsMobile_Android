@@ -5,15 +5,15 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.RecyclerView
 import com.alibaba.android.arouter.launcher.ARouter
-import com.mredrock.cyxbs.common.config.ANSWER_ID
 import com.mredrock.cyxbs.common.config.QA_COMMENT_LIST
-import com.mredrock.cyxbs.common.config.QUESTION_ID
+import com.mredrock.cyxbs.common.event.OpenShareCommentEvent
 import com.mredrock.cyxbs.common.utils.extensions.setImageFromUrl
 import com.mredrock.cyxbs.mine.R
 import com.mredrock.cyxbs.mine.network.model.CommentReceived
 import com.mredrock.cyxbs.mine.util.ui.BaseRVFragment
 import com.mredrock.cyxbs.mine.util.widget.RvFooter
 import kotlinx.android.synthetic.main.mine_list_item_comment_repsonse.view.*
+import org.greenrobot.eventbus.EventBus
 
 /**
  * Created by roger on 2020/2/10
@@ -32,6 +32,10 @@ class CommentReceivedFragment : BaseRVFragment<CommentReceived>() {
             setNewData(it)
         })
         viewModel.loadCommentReceivedList()
+        viewModel.navigateEventOnReComment.observe(this, Observer {
+            EventBus.getDefault().postSticky(OpenShareCommentEvent(it.qid.toString(), it.data))
+            ARouter.getInstance().build(QA_COMMENT_LIST).navigation()
+        })
     }
 
     override fun getItemLayout(): Int {
@@ -46,10 +50,8 @@ class CommentReceivedFragment : BaseRVFragment<CommentReceived>() {
         holder.itemView.mine_comment_tv_nickname.text = data.commenterNickname
         holder.itemView.mine_comment_tv_response.text = data.commentContent
         holder.itemView.setOnClickListener {
-            val bundle = Bundle()
-            bundle.putInt(ANSWER_ID, data.answerId)
-            bundle.putInt(QUESTION_ID, data.questionId)
-            ARouter.getInstance().build(QA_COMMENT_LIST).with(bundle).navigation()
+            //点击评论的item实际上也是跳转到具体的回答页面
+            viewModel.getAnswerFromReComment(data.questionId, data.answerId)
         }
     }
 

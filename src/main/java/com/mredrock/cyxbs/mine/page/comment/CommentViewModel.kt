@@ -4,14 +4,14 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import com.mredrock.cyxbs.common.BaseApp
-import com.mredrock.cyxbs.common.service.ServiceManager
-import com.mredrock.cyxbs.common.service.account.IAccountService
 import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
+import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.common.viewmodel.event.SingleLiveEvent
 import com.mredrock.cyxbs.mine.network.model.Comment
 import com.mredrock.cyxbs.mine.network.model.CommentReceived
+import com.mredrock.cyxbs.mine.network.model.NavigateData
 import com.mredrock.cyxbs.mine.util.apiService
 import com.mredrock.cyxbs.mine.util.extension.disposeAll
 import com.mredrock.cyxbs.mine.util.extension.normalWrapper
@@ -22,6 +22,7 @@ import io.reactivex.disposables.Disposable
  * Created by zia on 2018/9/13.
  */
 class CommentViewModel : BaseViewModel() {
+    private val idNum = BaseApp.context.defaultSharedPreferences.getString("SP_KEY_ID_NUM", "")
 
 
     private val pageSize = 6
@@ -71,6 +72,7 @@ class CommentViewModel : BaseViewModel() {
                 .lifeCycle()
         disposableForComment.add(disposable)
     }
+
     fun cleanCommentPage() {
         //清除还在请求网络的接口,
         //如果一直刷新，那么前一个网络请求没有cancel掉，那么就会导致多的item
@@ -120,6 +122,7 @@ class CommentViewModel : BaseViewModel() {
                 .lifeCycle()
         disposableForReComment.add(disposable)
     }
+
     fun cleanCommentReceivedPage() {
         //清除还在请求网络的接口,
         //如果一直刷新，那么前一个网络请求没有cancel掉，那么就会导致多的item
@@ -127,5 +130,33 @@ class CommentViewModel : BaseViewModel() {
 
         commentReceivedPage = 1
         _commentReceivedList.value = mutableListOf()
+    }
+
+
+    //发出的评论跳转监听
+    val navigateEventOnComment = SingleLiveEvent<NavigateData>()
+    //收到的评论跳转监听
+    val navigateEventOnReComment = SingleLiveEvent<NavigateData>()
+
+    fun getAnswerFromComment(qid: Int, id: Int) {
+        val idNum = idNum ?: return
+        apiService.getAnswer(id.toString())
+                .setSchedulers()
+                .safeSubscribeBy {
+                    val navigateData = NavigateData(qid, id, it.string())
+                    navigateEventOnComment.postValue(navigateData)
+                }
+                .lifeCycle()
+    }
+
+    fun getAnswerFromReComment(qid: Int, id: Int) {
+        val idNum = idNum ?: return
+        apiService.getAnswer(id.toString())
+                .setSchedulers()
+                .safeSubscribeBy {
+                    val navigateData = NavigateData(qid, id, it.string())
+                    navigateEventOnReComment.postValue(navigateData)
+                }
+                .lifeCycle()
     }
 }

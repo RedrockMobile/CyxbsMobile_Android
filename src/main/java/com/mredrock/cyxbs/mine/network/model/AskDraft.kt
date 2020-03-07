@@ -14,5 +14,7 @@ data class AskDraft(
         @SerializedName("description")
         val description: String,
         @SerializedName("latest_edit_time")
-        val latestEditTime: String
+        val latestEditTime: String,
+        @SerializedName("content")
+        val content: String
 ) : Serializable

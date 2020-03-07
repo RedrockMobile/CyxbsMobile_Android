@@ -155,9 +155,11 @@ interface ApiService {
     @FormUrlEncoded
     @POST("app/index.php/QA/Question/getDetailedInfo")
     fun getQuestion(
-            @Field("stunum") stuNum: String,
-            @Field("idnum") idNum: String,
             @Field("question_id") qid: String): Observable<ResponseBody>
 
+    @FormUrlEncoded
+    @POST("app/index.php/QA/Answer/getAnswerInfo")
+    fun getAnswer(
+            @Field("answer_id") answer_id: String): Observable<ResponseBody>
 
 }

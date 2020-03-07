@@ -15,6 +15,7 @@ import com.mredrock.cyxbs.common.viewmodel.event.SingleLiveEvent
 import com.mredrock.cyxbs.mine.R
 import com.mredrock.cyxbs.mine.network.model.AnswerDraft
 import com.mredrock.cyxbs.mine.network.model.AnswerPosted
+import com.mredrock.cyxbs.mine.network.model.NavigateData
 import com.mredrock.cyxbs.mine.util.apiService
 import com.mredrock.cyxbs.mine.util.extension.disposeAll
 import com.mredrock.cyxbs.mine.util.extension.normalWrapper
@@ -153,5 +154,19 @@ class AnswerViewModel : BaseViewModel() {
                             BaseApp.context.toast(R.string.mine_draft_delete_failed)
                         }
                 ).lifeCycle()
+    }
+
+    //Answer
+    val navigateEvent = SingleLiveEvent<NavigateData>()
+
+    fun getAnswer(qid: Int, id: Int) {
+        val idNum = idNum ?: return
+        apiService.getAnswer(id.toString())
+                .setSchedulers()
+                .safeSubscribeBy {
+                    val navigateData = NavigateData(qid, id, it.string())
+                    navigateEvent.postValue(navigateData)
+                }
+                .lifeCycle()
     }
 }
