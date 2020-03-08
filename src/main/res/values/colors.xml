@@ -1,62 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="qa_tab_background">#fefefe</color>
-    <color name="qa_quiz_fab_color">#7195fa</color>
-    <color name="qa_question_item_disappear_color">#D9999999</color>
-    <color name="qa_question_item_title_color">#333333</color>
-    <color name="qa_question_item_show_picture_btn_color">#7097fb</color>
-    <color name="qa_question_list_hint_color">#cc999999</color>
-    <color name="qa_answer_list_divider_color">#bfc6c4c5</color>
-    <color name="qa_answer_list_bottom_tv_color">#7396fa</color>
-    <color name="qa_answer_list_question_title_color">#333333</color>
-    <color name="qa_answer_list_question_content_color">#333333</color>
-    <color name="qa_answer_list_questioner_nickname_color">#555555</color>
-    <color name="qa_answer_list_disappear_color">#999999</color>
-    <color name="qa_answer_list_reward_color">#888888</color>
-    <color name="qa_answer_list_answer_count_color">#888888</color>
-    <color name="qa_answer_list_sort_tv_color">#788efa</color>
-    <color name="qa_answer_list_answer_nickname_color">#15315B</color>
     <color name="qa_answer_list_adopt_color">#788efa</color>
-    <color name="qa_answer_list_comment_color">#999999</color>
-    <color name="qa_answer_list_answer_date_color">#e6999999</color>
-    <color name="qa_answer_item_divider_color">#59c6c4c5</color>
-    <color name="qa_popup_window_sort_by_checked_color">#8093fa</color>
-    <color name="qa_popup_window_sort_by_uncheck_color">#999999</color>
-    <color name="qa_popup_window_sort_by_divider_color">#59c6c4c5</color>
-    <color name="qa_comment_list_bottom_view_color">#7a90fa</color>
-    <color name="qa_comment_new_comment_text_background_color">#eff4fd</color>
-    <color name="qa_comment_item_question_title_color">#222222</color>
-    <color name="qa_comment_item_divider_color">#80c6c4c5</color>
-    <color name="qa_comment_item_answer_content_color">#15315B</color>
-    <color name="qa_comment_item_answer_count_color">#888888</color>
-    <color name="qa_comment_dialog_content_edt_text_color">#bf333333</color>
-    <color name="qa_comment_dialog_content_edt_hint_color">#bf999999</color>
-    <color name="qa_comment_dialog_send_tv_color">#bf7f94fa</color>
-    <color name="qa_quiz_dialog_header_button_color">#f27195fa</color>
-    <color name="qa_quiz_dialog_title_color">#d9000000</color>
-    <color name="qa_quiz_type_select_dialog_type_title_color">#7295fb</color>
-    <color name="qa_quiz_anonymous_tv_color">#f27195fa</color>
-    <color name="qa_quiz_type_tv_color">#7195fa</color>
-    <color name="qa_quiz_divider_gap_color">#14999999</color>
-    <color name="qa_quiz_content_left_count_tv_color">#66000000</color>
-    <color name="qa_quiz_content_edt_color">#b3000000</color>
-    <color name="qa_quiz_divider_color">#26000000</color>
-    <color name="qa_quiz_title_left_count_tv_color">#66000000</color>
-    <color name="qa_quiz_title_edt_color">#d9000000</color>
-    <color name="qa_quiz_title_edt_hint_color">#e6999999</color>
-    <color name="qa_quiz_tags_edit_color">#7195fa</color>
-    <color name="qa_quiz_hot_tag_recycler_item_tv_color">#7195fa</color>
-    <color name="qa_quiz_dialog_time_pick_unselected_color">#80000000</color>
-    <color name="qa_quiz_dialog_time_pick_selected_color">#d97195fa</color>
-    <color name="qa_quiz_dialog_divider">#26000000</color>
-    <color name="qa_quiz_reward_set_my_reward_color">#73000000</color>
-    <color name="qa_answer_content_edt_hint_color">#99999999</color>
-    <color name="qa_answer_content_edt_color">#d9000000</color>
-    <color name="qa_answer_edt_content_counter">#80000000</color>
-    <color name="qa_answer_divider">#14999999</color>
+
 
     <color name="qa_crop_logo">#f0000000</color>
     <color name="qa_answer_button_shadow_color">#6B65EF</color>
 
-    <color name="qa_comment_recycle_view_header_color">#f8f9fc</color>
 </resources>

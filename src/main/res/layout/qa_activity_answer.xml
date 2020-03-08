@@ -61,6 +61,7 @@
                 android:layout_marginEnd="20dp"
                 android:drawableEnd="@drawable/qa_question_describe_show_more"
                 android:drawablePadding="3dp"
+                android:textColor="@color/levelTwoFontColor"
                 android:text="@string/qa_answer_question_detail_show_more"
                 android:textSize="11sp" />
 
@@ -95,8 +96,8 @@
                     android:paddingStart="15dp"
                     android:paddingTop="10dp"
                     android:paddingEnd="15dp"
-                    android:textColor="@color/qa_answer_content_edt_color"
-                    android:textColorHint="@color/qa_answer_content_edt_hint_color"
+                    android:textColor="@color/levelTwoFontColor"
+                    android:textColorHint="@color/qa_quiz_content_edt_hint_color"
                     android:textSize="16sp" />
             </com.mredrock.cyxbs.common.component.RatioLayout>
 

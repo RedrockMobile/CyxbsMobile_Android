@@ -7,83 +7,77 @@
     android:orientation="vertical"
     tools:context=".pages.main.QuestionContainerFragment">
 
-
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/abl_main"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:background="@color/qa_question_title_background_color"
+        app:elevation="0dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/gl_tv_time_top"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:orientation="horizontal"
-            app:layout_constraintGuide_percent="0.025" />
-
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/gl_tv_title_top"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:orientation="horizontal"
-            app:layout_constraintGuide_percent="0.055" />
-
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/gl_tv_start"
+        <androidx.appcompat.widget.Toolbar
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.048" />
-
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/gl_btn_end"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.958" />
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/tv_current_time"
-            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:alpha="0.65"
-            tools:text="第十一周 周二"
-            android:textColor="@color/qa_question_current_time_color"
-            android:textSize="10sp"
-            app:layout_constraintStart_toStartOf="@id/gl_tv_start"
-            app:layout_constraintTop_toBottomOf="@id/gl_tv_time_top" />
+            app:layout_scrollFlags="scroll|enterAlways">
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/tv_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/qa_fragment_head_title"
-            android:textColor="@color/qa_main_title"
-            android:textSize="34sp"
-            android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="@id/gl_tv_start"
-            app:layout_constraintTop_toTopOf="@id/gl_tv_title_top" />
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="31dp"
+                android:layout_marginEnd="16dp">
 
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/btn_ask_question"
-            android:layout_width="70dp"
-            android:layout_height="35dp"
-            android:background="@drawable/qa_main_have_question_btn_background"
-            android:gravity="center"
-            android:text="@string/qa_fragment_head_give_question"
-            android:textColor="@color/whiteFontColor"
-            android:textSize="15sp"
-            app:layout_constraintBottom_toBottomOf="@id/tv_title"
-            app:layout_constraintEnd_toStartOf="@id/gl_btn_end"
-            app:layout_constraintTop_toTopOf="@id/gl_tv_title_top" />
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tv_current_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:alpha="0.65"
+                    android:textColor="@color/qa_question_current_time_color"
+                    android:textSize="10sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:text="第十一周 周二" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tv_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="13dp"
+                    android:text="@string/qa_fragment_head_title"
+                    android:textColor="@color/qa_main_title"
+                    android:textSize="34sp"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_current_time" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btn_ask_question"
+                    android:layout_width="70dp"
+                    android:layout_height="35dp"
+                    android:background="@drawable/qa_main_have_question_btn_background"
+                    android:gravity="center"
+                    android:text="@string/qa_fragment_head_give_question"
+                    android:textColor="@color/whiteFontColor"
+                    android:textSize="15sp"
+                    app:layout_constraintBottom_toBottomOf="@id/tv_title"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/tv_title" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.appcompat.widget.Toolbar>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tl_category"
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:layout_marginTop="6dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_title"
             app:tabBackground="@android:color/transparent"
             app:tabGravity="fill"
             app:tabIndicatorColor="@color/qa_question_tab_indicator_color"
@@ -96,33 +90,20 @@
 
         <com.mredrock.cyxbs.common.component.JCardViewPlus
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginTop="20dp"
-            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:layout_below="@id/tl_category"
             app:cardBackgroundColor="@color/qa_question_list_color"
             app:cardCornerRadiusUpperLeft="22dp"
             app:cardCornerRadiusUpperRight="22dp"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tl_category"
             app:shadowColor="@color/qa_question_list_color" />
 
         <androidx.viewpager.widget.ViewPager
             android:id="@+id/vp_question"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginTop="20dp"
-            android:layout_weight="1"
-            android:overScrollMode="never"
+            android:layout_height="match_parent"
+            android:layout_below="@id/tl_category"
             android:background="@android:color/transparent"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tl_category" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            android:overScrollMode="never" />
+    </RelativeLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

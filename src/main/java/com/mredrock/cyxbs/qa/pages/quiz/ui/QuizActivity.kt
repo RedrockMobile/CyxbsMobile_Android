@@ -6,6 +6,7 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.drawable.Drawable
 import android.os.Bundle
+import android.util.Base64
 import android.view.KeyEvent
 import android.view.View
 import android.widget.ImageView
@@ -42,7 +43,7 @@ import top.limuyang2.photolibrary.activity.LPhotoPickerActivity
 class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
     companion object {
         const val MAX_SELECTABLE_IMAGE_COUNT = 6
-
+        const val NOT_DRAFT_ID = "-1"
         fun activityStart(fragment: Fragment, type: String, requestCode: Int) {
             fragment.startActivityForResult<QuizActivity>(requestCode, "type" to type)
         }
@@ -51,7 +52,7 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
     override val viewModelClass = QuizViewModel::class.java
     override val isFragmentActivity = false
     private var currentTypeIndex = 0
-    private var draftId = "-1"
+    private var draftId = NOT_DRAFT_ID
     private var questionType: String = ""
     private val exitDialog by lazy { createExitDialog() }
     private val rewardNotEnoughDialog by lazy { createRewardNotEnoughDialog() }
@@ -67,7 +68,7 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
 
         viewModel.backAndRefreshPreActivityEvent.observeNotNull {
             if (it) {
-                if (draftId != "-1") {
+                if (draftId != NOT_DRAFT_ID) {
                     viewModel.deleteDraft(draftId)
                 }
                 val data = Intent()
@@ -99,7 +100,7 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
 
     private fun initToolbar() {
         qa_ib_toolbar_back.setOnClickListener(View.OnClickListener {
-            if (edt_quiz_title.text.isNullOrEmpty() && edt_quiz_content.text.isNullOrEmpty()) {
+            if (edt_quiz_title.text.isNullOrEmpty() && edt_quiz_content.text.isNullOrEmpty() && draftId == NOT_DRAFT_ID) {
                 finish()
                 return@OnClickListener
             }
@@ -206,7 +207,7 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
             if (exitDialog.isShowing) {
                 return super.onKeyDown(keyCode, event)
             }
-            return if (edt_quiz_content.text.isNullOrEmpty() && edt_quiz_title.text.isNullOrEmpty()) {
+            return if (edt_quiz_content.text.isNullOrEmpty() && edt_quiz_title.text.isNullOrEmpty() && draftId == NOT_DRAFT_ID) {
                 super.onKeyDown(keyCode, event)
             } else {
                 exitDialog.show()
@@ -217,7 +218,7 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
     }
 
     private fun saveDraft() {
-        if (draftId == "-1") {
+        if (draftId == NOT_DRAFT_ID) {
             viewModel.addItemToDraft(edt_quiz_title.text.toString(), edt_quiz_content.text.toString(), questionType)
         } else {
             viewModel.updateDraftItem(edt_quiz_title.text.toString(), edt_quiz_content.text.toString(), draftId, questionType)
@@ -230,7 +231,8 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
             EventBus.getDefault().removeStickyEvent(event)
             return
         }
-        val question = Gson().fromJson(event.jsonString, Question::class.java)
+        val json = String(Base64.decode(event.jsonString, Base64.DEFAULT))
+        val question = Gson().fromJson(json, Question::class.java)
         edt_quiz_title.setText(question.title)
         edt_quiz_content.setText(question.description)
         val tagSelector = findViewById<LinearLayout>(R.id.layout_quiz_tag)

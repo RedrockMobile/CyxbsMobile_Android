@@ -140,7 +140,7 @@ class QuizViewModel : BaseViewModel() {
         if (title.isNullOrBlank() && content.isNullOrBlank()) {
             return
         }
-        val s = "{\"title\":\"$title\",\"description\":\"$content\",\"kind\" :\"$type\",${getImgListStrings()}}"
+        val s = "{\"title\":\"$title\",\"description\":\"$content\",\"kind\":\"$type\"${getImgListStrings()}}"
         val json = Base64.encodeToString(s.toByteArray(), Base64.DEFAULT)
         ApiGenerator.getApiService(ApiService::class.java)
                 .addItemToDraft("question", json, "")
@@ -158,18 +158,21 @@ class QuizViewModel : BaseViewModel() {
     }
 
     fun updateDraftItem(title: String?, content: String?, id: String, type: String?) {
-        val s = "{\"title\":\"$title\",\"description\":\"$content\",\"kind\":\"$type\",${getImgListStrings()}}"
+        if (title.isNullOrEmpty()&&content.isNullOrEmpty()){
+            deleteDraft(id)
+        }
+        val s = "{\"title\":\"$title\",\"description\":\"$content\",\"kind\":\"$type\"${getImgListStrings()}}"
         val json = Base64.encodeToString(s.toByteArray(), Base64.DEFAULT)
         ApiGenerator.getApiService(ApiService::class.java)
                 .updateDraft(json, id)
                 .setSchedulers()
                 .checkError()
                 .doOnError {
-                    toastEvent.value = R.string.qa_quiz_save_failed
+                    toastEvent.value = R.string.qa_quiz_update_failed
                     backAndFinishActivityEvent.value = true
                 }
                 .safeSubscribeBy {
-                    toastEvent.value = R.string.qa_quiz_save_success
+                    toastEvent.value = R.string.qa_quiz_update_success
                     backAndFinishActivityEvent.value = true
                 }
                 .lifeCycle()

@@ -9,7 +9,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_margin="16dp"
-        android:textColor="@color/qa_question_list_hint_color"
+        android:textColor="@color/levelTwoFontColor"
         android:textSize="14sp"
         android:visibility="gone" />
 

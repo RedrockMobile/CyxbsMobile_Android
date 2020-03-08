@@ -5,8 +5,10 @@ import android.app.Activity
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.text.TextUtils
+import android.util.Base64
 import android.view.KeyEvent
 import android.view.View
 import android.view.ViewTreeObserver
@@ -39,7 +41,7 @@ import top.limuyang2.photolibrary.activity.LPhotoPickerActivity
 class AnswerActivity : BaseViewModelActivity<AnswerViewModel>() {
     companion object {
         const val MAX_SELECTABLE_IMAGE_COUNT = 6
-
+        const val NOT_DRAFT_ID = "-1"
         fun activityStart(activity: FragmentActivity, qid: String, description: String, photoUrl: List<String>, requestCode: Int) {
             activity.startActivityForResult<AnswerActivity>(requestCode, "qid" to qid, "photoUrl" to photoUrl,
                     "description" to description)
@@ -50,7 +52,7 @@ class AnswerActivity : BaseViewModelActivity<AnswerViewModel>() {
 
     override val isFragmentActivity = false
 
-    private var draftId = "-1"
+    private var draftId = NOT_DRAFT_ID
 
     private val exitDialog by lazy { createExitDialog() }
 
@@ -62,7 +64,7 @@ class AnswerActivity : BaseViewModelActivity<AnswerViewModel>() {
         initImageAddView()
         viewModel.backAndRefreshPreActivityEvent.observeNotNull {
             if (it) {
-                if (draftId != "-1") {
+                if (draftId != NOT_DRAFT_ID) {
                     viewModel.deleteDraft(draftId)
                 }
                 setResult(Activity.RESULT_OK)
@@ -76,7 +78,7 @@ class AnswerActivity : BaseViewModelActivity<AnswerViewModel>() {
 
     private fun initToolbar() {
         qa_ib_toolbar_back.setOnClickListener(View.OnClickListener {
-            if (edt_answer_content.text.isNullOrEmpty()) {
+            if (edt_answer_content.text.isNullOrEmpty() && draftId == NOT_DRAFT_ID) {
                 finish()
                 return@OnClickListener
             }
@@ -95,8 +97,8 @@ class AnswerActivity : BaseViewModelActivity<AnswerViewModel>() {
 
     @SuppressLint("SetTextI18n")
     private fun initView() {
-        val description = intent.getStringExtra("description")
-        val photoUrl = intent.getStringArrayListExtra("photoUrl")
+        val description = intent.getStringExtra("description") ?: ""
+        val photoUrl = intent.getStringArrayListExtra("photoUrl") ?: listOf<String>()
         tv_answer_question_description.text = description
         nine_grid_view_question.apply {
             setImages(photoUrl)
@@ -110,7 +112,7 @@ class AnswerActivity : BaseViewModelActivity<AnswerViewModel>() {
             viewTreeObserver.addOnPreDrawListener(object : ViewTreeObserver.OnPreDrawListener {
                 override fun onPreDraw(): Boolean {
                     viewTreeObserver.removeOnPreDrawListener(this)
-                    if (tv_answer_question_description.lineCount > 2 || photoUrl.size > 0) {
+                    if (tv_answer_question_description.lineCount > 2 || photoUrl.isNotEmpty()) {
                         tv_answer_question_description.maxLines = 2
                         tv_answer_question_description.ellipsize = TextUtils.TruncateAt.END
                     } else {
@@ -143,7 +145,7 @@ class AnswerActivity : BaseViewModelActivity<AnswerViewModel>() {
     }
 
     private fun initImageAddView() {
-        nine_grid_view.addView(createImageView(BitmapFactory.decodeResource(resources, R.drawable.qa_ic_quiz_grid_add_img)))
+        nine_grid_view.addView(ContextCompat.getDrawable(this, R.drawable.qa_quiz_add_picture_empty)?.let { createImageViewFromVector(it) })
         nine_grid_view.setOnItemClickListener { _, index ->
             if (index == nine_grid_view.childCount - 1) {
                 this@AnswerActivity.selectImageFromAlbum(MAX_SELECTABLE_IMAGE_COUNT, viewModel.imageLiveData.value)
@@ -182,6 +184,12 @@ class AnswerActivity : BaseViewModelActivity<AnswerViewModel>() {
         }
     }
 
+    private fun createImageViewFromVector(drawable: Drawable) = ImageView(this).apply {
+        scaleType = ImageView.ScaleType.CENTER
+        background = ContextCompat.getDrawable(this@AnswerActivity, R.drawable.qa_quiz_select_pic_empty_background)
+        setImageDrawable(drawable)
+    }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode != Activity.RESULT_OK || data == null) {
@@ -215,7 +223,7 @@ class AnswerActivity : BaseViewModelActivity<AnswerViewModel>() {
             if (exitDialog.isShowing) {
                 return super.onKeyDown(keyCode, event)
             }
-            return if (edt_answer_content.text.isNullOrEmpty()) {
+            return if (edt_answer_content.text.isNullOrEmpty() && draftId == NOT_DRAFT_ID) {
                 super.onKeyDown(keyCode, event)
             } else {
                 exitDialog.show()
@@ -227,7 +235,7 @@ class AnswerActivity : BaseViewModelActivity<AnswerViewModel>() {
 
 
     private fun saveDraft() {
-        if (draftId == "-1") {
+        if (draftId == NOT_DRAFT_ID) {
             viewModel.addItemToDraft(edt_answer_content.text.toString())
         } else {
             viewModel.updateDraft(edt_answer_content.text.toString(), draftId)
@@ -240,7 +248,8 @@ class AnswerActivity : BaseViewModelActivity<AnswerViewModel>() {
             EventBus.getDefault().removeStickyEvent(event)
             return
         }
-        val content = Gson().fromJson(event.jsonString, Content::class.java)
+        val json = String(Base64.decode(event.jsonString, Base64.DEFAULT))
+        val content = Gson().fromJson(json, Content::class.java)
         edt_answer_content.setText(content.title)
         if (content.pictures != null) {
             val list = content.pictures.split(",").toMutableList()
