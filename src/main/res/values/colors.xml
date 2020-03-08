@@ -144,8 +144,11 @@
 
 
     <!--    邮问-->
+
     <!--    当前时间颜色-->
     <color name="qa_question_current_time_color" tools:ignore="ResourceName">#ff2a4e84</color>
+    <!--    主页AppBarLayout背景颜色-->
+    <color name="qa_question_title_background_color" tools:ignore="ResourceName">#f3f2fb</color>
     <!--    提问时间选择颜色-->
     <color name="qa_quiz_select_time_color" tools:ignore="ResourceName">#ff2a4e84</color>
     <!--    邮问大标题-->
@@ -185,6 +188,9 @@
     <color name="qa_comment_item_create_at_color" tools:ignore="ResourceName">#8915315B</color>
     <!--    评论item内容颜色-->
     <color name="qa_comment_content_color" tools:ignore="ResourceName">#7F3B4555</color>
+    <!--    评论框背景颜色-->
+    <color name="qa_comment_new_comment_text_background_color" tools:ignore="ResourceName">#eff4fd
+    </color>
     <!--    评论JCardView3种背景颜色-->
     <color name="qa_comment_content_first_kind_color" tools:ignore="ResourceName">#f8f4f0</color>
     <color name="qa_comment_content_second_kind_color" tools:ignore="ResourceName">#f1f1fa</color>
@@ -216,6 +222,8 @@
     <color name="qa_answer_comment_count_color" tools:ignore="ResourceName">#CC15315B</color>
     <!--    回答的点赞颜色-->
     <color name="qa_answer_praise_count_color" tools:ignore="ResourceName">#AABCD8</color>
+    <!--    回答的点赞颜色-->
+    <color name="qa_answer_item_divider_color" tools:ignore="ResourceName">#162A4E84</color>
     <color name="qa_answer_praised_count_color" tools:ignore="ResourceName">#4841E2</color>
     <!--    RecyclerView加载时的holder颜色-->
     <color name="qa_question_item_empty_holder_color" tools:ignore="ResourceName">#E6E6E6</color>
@@ -241,6 +249,8 @@
     </color>
     <!--    提问内容文字hint颜色-->
     <color name="qa_quiz_content_edt_hint_color" tools:ignore="ResourceName">#15315B</color>
+    <!--    回答内容文字hint颜色-->
+    <color name="qa_answer_content_edt_hint_color" tools:ignore="ResourceName">#6315315B</color>
     <!--    登陆下面的灰色字体-->
     <color name="logInToTheGrayFontBelow" tools:ignore="ResourceName">#ABBCD8</color>
 
@@ -283,8 +293,6 @@
     <color name="about_colors_declared_below" tools:ignore="ResourceName">#64294169</color>
 
     <color name="addTransactionToTheTimetableClickColor" tools:ignore="ResourceName">#bdc3c7</color>
-
-
 
 
 </resources>

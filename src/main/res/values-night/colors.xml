@@ -137,6 +137,8 @@
     <!--    邮问-->
     <!--    当前时间颜色-->
     <color name="qa_question_current_time_color" tools:ignore="ResourceName">#5A5A5A</color>
+    <!--    主页AppBarLayout背景颜色-->
+    <color name="qa_question_title_background_color" tools:ignore="ResourceName">#000000</color>
     <!--    提问时间选择颜色-->
     <color name="qa_quiz_select_time_color" tools:ignore="ResourceName">#5A5A5A</color>
     <!--    邮问大标题-->
@@ -176,6 +178,9 @@
     <color name="qa_comment_item_create_at_color" tools:ignore="ResourceName">#3FF0F0F2</color>
     <!--    评论item内容颜色-->
     <color name="qa_comment_content_color" tools:ignore="ResourceName">#7FF0F0F2</color>
+    <!--    评论框背景颜色-->
+    <color name="qa_comment_new_comment_text_background_color" tools:ignore="ResourceName">#515A5A5A
+    </color>
     <!--    评论JCardView3种背景颜色-->
     <color name="qa_comment_content_first_kind_color" tools:ignore="ResourceName">#33302f</color>
     <color name="qa_comment_content_second_kind_color" tools:ignore="ResourceName">#2d2d2f</color>
@@ -203,6 +208,8 @@
     <color name="qa_answer_comment_count_color" tools:ignore="ResourceName">#5A5A5A</color>
     <!--    回答的点赞颜色-->
     <color name="qa_answer_praise_count_color" tools:ignore="ResourceName">#5A5A5A</color>
+    <!--    回答的点赞颜色-->
+    <color name="qa_answer_item_divider_color" tools:ignore="ResourceName">#475A5A5A</color>
     <color name="qa_answer_praised_count_color" tools:ignore="ResourceName">#2CDEFF</color>
     <!--    RecyclerView加载时的holder颜色-->
     <color name="qa_question_item_empty_holder_color" tools:ignore="ResourceName">#5A5A5A</color>
@@ -241,7 +248,8 @@
     </color>
     <!--    提问内容文字hint颜色-->
     <color name="qa_quiz_content_edt_hint_color" tools:ignore="ResourceName">#EAEAED</color>
-
+    <!--    回答内容文字hint颜色-->
+    <color name="qa_answer_content_edt_hint_color" tools:ignore="ResourceName">#EAEAED</color>
     <!--    登陆下面的灰色字体-->
     <color name="logInToTheGrayFontBelow" tools:ignore="ResourceName">#ABBCD8</color>
 
