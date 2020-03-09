@@ -40,6 +40,7 @@ class CourseFragment : BaseFragment() {
     private var mWeek: Int = 0
     private lateinit var mCoursesViewModel: CoursesViewModel
     private lateinit var mCoursePageViewModel: CoursePageViewModel
+
     //用于没课约的ViewModel
     private var mNoCourseInviteViewModel: NoCourseInviteViewModel? = null
 

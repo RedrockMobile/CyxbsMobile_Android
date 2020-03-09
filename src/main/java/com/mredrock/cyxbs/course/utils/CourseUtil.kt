@@ -4,6 +4,8 @@ import android.app.PendingIntent
 import android.appwidget.AppWidgetProvider
 import android.content.Context
 import android.content.Intent
+import android.graphics.drawable.Drawable
+import android.graphics.drawable.GradientDrawable
 import android.net.Uri
 import androidx.annotation.IdRes
 import com.mredrock.cyxbs.common.bean.WidgetCourse
@@ -17,7 +19,6 @@ import kotlin.collections.ArrayList
 
 /**
  * Created by Jon on 2020/1/22.
- * 将子来学长的工具类复用到这个位置
  */
 
 /**
@@ -99,6 +100,19 @@ fun getCourseByCalendar(courses: List<Course>, nowWeek: Int, calendar: Calendar)
     }
     list.sortBy { it.hashLesson }
     return list
+}
+
+
+/**
+ * 这个方法来制造课表item的圆角背景
+ * @param rgb 背景颜色
+ * 里面的圆角的参数是写在资源文件里的
+ */
+fun createCornerBackground(rgb: Int, corner:Float): Drawable {
+    val drawable = GradientDrawable()
+    drawable.cornerRadii = floatArrayOf(corner, corner, corner, corner, corner, corner, corner, corner)
+    drawable.setColor(rgb)
+    return drawable
 }
 
 private val beginTimeShareName = "zscy_widget_beginTime"

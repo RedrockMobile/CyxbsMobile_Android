@@ -18,7 +18,11 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import com.mredrock.cyxbs.common.utils.extensions.getScreenHeight
 import com.mredrock.cyxbs.course.R
-import org.jetbrains.anko.*
+import com.mredrock.cyxbs.course.utils.createCornerBackground
+import org.jetbrains.anko.dip
+import org.jetbrains.anko.px2dip
+import org.jetbrains.anko.px2sp
+import org.jetbrains.anko.sp
 import kotlin.math.pow
 import kotlin.math.sqrt
 
@@ -102,14 +106,19 @@ class ScheduleView : FrameLayout {
 
     private val mStartPoint: PointF by lazy(LazyThreadSafetyMode.NONE) { PointF() }
     private val mEndPoint: PointF by lazy(LazyThreadSafetyMode.NONE) { PointF() }
+
     // mTouchView is used to add affair
     private val mTouchView: ImageView by lazy(LazyThreadSafetyMode.NONE) { ImageView(context) }
+
     // This paint is used to draw the place which will be highlighted.
     private lateinit var mPaint: Paint
+
     // This is used to represent whether the courses and affairs are null
     private var mIsEmpty: Boolean = true
+
     // This is the ImageView to show when the courses and affairs are null
     private val mEmptyImageView: ImageView by lazy(LazyThreadSafetyMode.NONE) { ImageView(context) }
+
     // This is the TextView to show when the courses and affairs are null
     private val mEmptyTextView: TextView by lazy(LazyThreadSafetyMode.NONE) { TextView(context) }
 
@@ -189,8 +198,7 @@ class ScheduleView : FrameLayout {
      */
     private fun initTouchView() {
         val touchView = mTouchView
-
-        touchView.backgroundColor = mTouchViewColor
+        touchView.background = createCornerBackground(mTouchViewColor, context.resources.getDimension(R.dimen.course_course_item_radius))
         if (mTouchViewDrawableResId != 0) {
             touchView.apply {
                 scaleType = ImageView.ScaleType.CENTER_INSIDE
@@ -363,7 +371,7 @@ class ScheduleView : FrameLayout {
             if (clickHashY >= 12) {
                 clickHashY = 11
             }
-
+            clickHashY = if (clickHashY % 2 == 0) clickHashY else clickHashY - 1
             // The mTouchView's tag is used to keep the position and indicate weather it is showing.
             val tag = touchView.tag
             if (tag != null) {
@@ -376,7 +384,7 @@ class ScheduleView : FrameLayout {
             }
             // Compute the mTouchView's LayoutParams.
             val params = LayoutParams(mBasicElementWidth,
-                    mBasicElementHeight)
+                    mBasicElementHeight * 2)
             params.leftMargin = mElementGap * (clickHashX + 1) + mBasicElementWidth * clickHashX
             params.topMargin = mElementGap * (clickHashY + 1) + mBasicElementHeight * clickHashY
             // If the mTouchView's position is at the right or bottom edge. It will add the additional

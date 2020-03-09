@@ -20,7 +20,7 @@ var isCheckBox: Int? = null
 var notCheckBox: Int? = null
 fun weekSelectCheckBoxState(checkBox: CheckBox, context: Context) {
     if (isCheckBox == null || notCheckBox == null) {
-        notCheckBox = ContextCompat.getColor(context, R.color.levelTwoFontColor)
+        notCheckBox = ContextCompat.getColor(context, R.color.transactionAddPageWarpItemTextColor)
         isCheckBox = ContextCompat.getColor(context, R.color.selectFontColorForTransactionWeeks)
     }
     if (checkBox.isChecked) {

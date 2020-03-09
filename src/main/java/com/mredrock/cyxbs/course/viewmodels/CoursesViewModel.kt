@@ -1,12 +1,10 @@
 package com.mredrock.cyxbs.course.viewmodels
 
 import android.view.View
-import android.widget.Toast
 import androidx.databinding.ObservableField
 import androidx.lifecycle.MutableLiveData
 import com.google.gson.Gson
 import com.mredrock.cyxbs.common.BaseApp.Companion.context
-import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.common.config.COURSE_VERSION
 import com.mredrock.cyxbs.common.config.SP_WIDGET_NEED_FRESH
 import com.mredrock.cyxbs.common.config.WIDGET_COURSE
@@ -75,10 +73,13 @@ class CoursesViewModel : BaseViewModel() {
     // schoolCalendarUpdated用于表示是否从网络请求到了新的数据并更新了SchoolCalendar，如果是这样就设置为True，
     // 并从新获取课表上的号数
     val schoolCalendarUpdated = MutableLiveData<Boolean>().apply { value = false }
+
     // 用于记录帐号
     private lateinit var mUserNum: String
+
     // 用于记录用户的真实名字，现在只在复用为老师课表的时候会用到，默认为空
     var mUserName: String = ""
+
     // 表明是否是在获取他人课表
     val isGetOthers: ObservableField<Boolean> by lazy(LazyThreadSafetyMode.NONE) {
         ObservableField<Boolean>(true)
@@ -124,6 +125,7 @@ class CoursesViewModel : BaseViewModel() {
             return "${s.parseStartCourseTime()}-${s.parseEndCourseTime()}"
         }
     }
+
     //是否是明天的课表，显示提示
     val tomorrowTips = ObservableField<Int>(View.VISIBLE)
 
@@ -143,6 +145,7 @@ class CoursesViewModel : BaseViewModel() {
 
     //是否展示周数中的本周提示
     val isShowPresentTips: ObservableField<Int> = ObservableField(View.GONE)
+
     //回到本周是否显示
     val isShowBackPresentWeek: MutableLiveData<Int> by lazy(LazyThreadSafetyMode.NONE) {
         MutableLiveData<Int>().apply { value = View.GONE }
@@ -168,8 +171,10 @@ class CoursesViewModel : BaseViewModel() {
 
     // 第一个值表示课程是否获取，第二个表示是否获取事务。
     private val mDataGetStatus = arrayOf(false, false)
+
     // 表示现在是否正在获取数据
     private var mIsGettingData: Boolean = false
+
     // 用于记录是否时第一次因为数据库中拉取不到数据，通过网络请求进行数据的拉取。
     private var mIsGottenFromInternet = false
 
@@ -383,8 +388,8 @@ class CoursesViewModel : BaseViewModel() {
                     affairsFromInternet.data?.let { notNullAffairs ->
                         //将从服务器上获取的事务映射为课程信息。
                         Observable.create(ObservableOnSubscribe<List<Affair>> {
-                            it.onNext(notNullAffairs)
-                        }).setSchedulers()
+                                    it.onNext(notNullAffairs)
+                                }).setSchedulers()
                                 .errorHandler()
                                 .map(AffairMapToCourse())
                                 .subscribe {
@@ -479,20 +484,18 @@ class CoursesViewModel : BaseViewModel() {
             val time = when {
                 now.timeInMillis >= firstDay.timeInMillis && nowWeek != 0 ->
                     "第${Num2CN.number2ChineseNumber(nowWeek.toLong())}周 " +
-                            "周${if (now[Calendar.DAY_OF_WEEK] != 0) Num2CN.number2ChineseNumber(now[Calendar.DAY_OF_WEEK] - 1.toLong()) else "日"}"
+                            "周${
+                            if (now[Calendar.DAY_OF_WEEK] != 1)
+                                Num2CN.number2ChineseNumber(now[Calendar.DAY_OF_WEEK] - 1.toLong())
+                            else
+                                "日"
+                            }"
                 nowWeek == 0 && isProbablySummerVacation(now[Calendar.MONTH] + 1) -> "暑假快乐鸭"
                 nowWeek == 0 && !isProbablySummerVacation(now[Calendar.MONTH] + 1) -> "寒假快乐鸭"
-                else -> "呜呼～"
+                else -> "呜呼～,发生了意料之外的错误呀"
             }
             EventBus.getDefault().postSticky(CurrentDateInformationEvent(time))
         }
-    }
-
-    /**
-     * 判断是否可能处于处于暑假那几天
-     */
-    fun isItSummerVacation() {
-
     }
 
     /**

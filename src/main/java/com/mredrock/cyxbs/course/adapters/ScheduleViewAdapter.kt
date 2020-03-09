@@ -23,6 +23,7 @@ import com.mredrock.cyxbs.course.network.Course
 import com.mredrock.cyxbs.course.ui.EditAffairActivity
 import com.mredrock.cyxbs.course.ui.ScheduleDetailDialogHelper
 import com.mredrock.cyxbs.course.utils.ClassRoomParse
+import com.mredrock.cyxbs.course.utils.createCornerBackground
 import org.greenrobot.eventbus.EventBus
 import org.jetbrains.anko.textColor
 import java.util.*
@@ -208,11 +209,11 @@ class ScheduleViewAdapter(private val mContext: Context,
         if (course.customType == Course.COURSE) {
             top.text = course.course
             bottom.text = ClassRoomParse.parseClassRoom(course.classroom ?: "")
-            background.background = createBackground(mCoursesColors[index])
+            background.background = createCornerBackground(mCoursesColors[index],mContext.resources.getDimension(R.dimen.course_course_item_radius))
             mAffairBackground.visibility = View.GONE
             if (itemCount > 1) {
                 tag.visibility = View.VISIBLE
-                tag.background = createTagBackground(mCoursesTextColors[course.hashLesson / 2])
+                tag.background = createCornerBackground(mCoursesTextColors[course.hashLesson / 2],mContext.resources.getDimension(R.dimen.course_schedule_tag_radius))
             }
             top.textColor = mCoursesTextColors[index]
             bottom.textColor = mCoursesTextColors[index]
@@ -227,31 +228,6 @@ class ScheduleViewAdapter(private val mContext: Context,
         }
     }
 
-    /**
-     * 这个方法来制造课表item的圆角背景
-     * @param rgb 背景颜色
-     * 里面的圆角的参数是写在资源文件里的
-     */
-    private fun createBackground(rgb: Int): Drawable {
-        val drawable = GradientDrawable()
-        val courseCorner = mContext.resources.getDimension(R.dimen.course_course_item_radius)
-        drawable.cornerRadii = floatArrayOf(courseCorner, courseCorner, courseCorner, courseCorner, courseCorner, courseCorner, courseCorner, courseCorner)
-        drawable.setColor(rgb)
-        return drawable
-    }
-
-    /**
-     * 这个方法来制造课表item的圆角背景
-     * @param rgb 背景颜色
-     * 里面的圆角的参数是写在资源文件里的
-     */
-    private fun createTagBackground(rgb: Int): Drawable {
-        val drawable = GradientDrawable()
-        val courseCorner = mContext.resources.getDimension(R.dimen.course_schedule_tag_radius)
-        drawable.cornerRadii = floatArrayOf(courseCorner, courseCorner, courseCorner, courseCorner, courseCorner, courseCorner, courseCorner, courseCorner)
-        drawable.setColor(rgb)
-        return drawable
-    }
 
 
     /**
