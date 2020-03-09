@@ -14,12 +14,14 @@ import com.mredrock.cyxbs.common.config.MAIN_MAIN
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.service.account.IAccountService
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
+import com.mredrock.cyxbs.common.utils.extensions.getDarkModeStatus
 import com.mredrock.cyxbs.common.utils.extensions.setFullScreen
 import com.mredrock.cyxbs.common.viewmodel.event.SingleLiveEvent
 import com.mredrock.cyxbs.main.R
 import com.mredrock.cyxbs.main.bean.FinishEvent
 import com.mredrock.cyxbs.main.utils.getSplashFile
 import com.mredrock.cyxbs.main.utils.isDownloadSplash
+import com.mredrock.cyxbs.main.utils.isNightMode
 import com.mredrock.cyxbs.main.viewmodel.SplashViewModel
 import kotlinx.android.synthetic.main.main_activity_splash.*
 import kotlinx.android.synthetic.main.main_view_stub_splash.view.*
@@ -44,7 +46,7 @@ class SplashActivity : BaseViewModelActivity<SplashViewModel>() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.main_activity_splash)
         setFullScreen()
-
+        isNightMode = getDarkModeStatus()
         //判断是否下载了Splash图，下载了就直接设置
         isDownloadSplash = if (isDownloadSplash(this@SplashActivity)) {
             viewStub = main_activity_splash_viewStub.inflate()//ViewStub加载

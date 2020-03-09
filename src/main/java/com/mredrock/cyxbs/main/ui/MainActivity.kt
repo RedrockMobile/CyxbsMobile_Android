@@ -252,6 +252,7 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
     }
 
     private fun initFragments() {
+        other_fragment_container.removeAllViews()
         //取得是否优先显示课表的设置
         courseShowState = defaultSharedPreferences.getBoolean(COURSE_SHOW_STATE, false)
         if (courseShowState) {

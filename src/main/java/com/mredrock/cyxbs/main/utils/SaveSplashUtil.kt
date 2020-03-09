@@ -1,6 +1,7 @@
 package com.mredrock.cyxbs.main.utils
 
 import android.content.Context
+import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import com.mredrock.cyxbs.common.utils.LogUtils
@@ -91,3 +92,5 @@ fun deleteDir(path: File?) {
         path.delete()
     }
 }
+
+var isNightMode = false
