@@ -10,13 +10,13 @@ import java.util.*
  */
 class SchoolCalendarPlus : SchoolCalendar() {
     fun getChineseWeek(): String? {
-        return digital2Chinese(super.getWeekOfTerm().toLong())
+        return digital2Chinese(super.weekOfTerm.toLong())
     }
 
     //返回一个学年的Pair，比如<2019, 2020>，以八月为分界线
     fun getYearPair(): Pair<Int, Int> {
-        val currentYear = super.getYear()
-        val currentMonth = super.getMonth()
+        val currentYear = super.year
+        val currentMonth = super.month
         if (currentMonth < Calendar.AUGUST) {
             return Pair(currentYear - 1, currentYear)
         } else {
@@ -90,11 +90,11 @@ class SchoolCalendarPlus : SchoolCalendar() {
 
     //判断是否是在寒暑假
     fun isInVacation() : Boolean {
-        val weekOfTerm = super.getWeekOfTerm()
+        val weekOfTerm = super.weekOfTerm
         return weekOfTerm >= 20 || weekOfTerm < 0
     }
 
     fun isWinterVacation() : Boolean {
-        return super.getMonth() < 5
+        return super.month < 5
     }
 }
