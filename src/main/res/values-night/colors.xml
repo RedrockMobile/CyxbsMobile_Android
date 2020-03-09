@@ -257,10 +257,10 @@
     <color name="course_end_of_light" tools:ignore="ResourceName">#006B65EF</color>
 
     <!--    添加事务页面的圆角shape背景-->
-    <color name="course_affair_add_backgroud" tools:ignore="ResourceName">#F2F3F7</color>
+    <color name="course_affair_add_backgroud" tools:ignore="ResourceName">#2D2D2D</color>
 
     <!--    添加事务的气泡颜色-->
-    <color name="course_affair_bubble_color" tools:ignore="ResourceName">#DFE6FF</color>
+    <color name="course_affair_bubble_color" tools:ignore="ResourceName">#1d1d1d</color>
 
 
     <color name="curriculum_background_color" tools:ignore="ResourceName">#2D2D2D</color>
@@ -285,8 +285,12 @@
     <!--    关于下面声明颜色-->
     <color name="about_colors_declared_below" tools:ignore="ResourceName">#48F0F0F2</color>
 
-    <color name="addTransactionToTheTimetableClickColor" tools:ignore="ResourceName">#000000</color>
+    <color name="addTransactionToTheTimetableClickColor" tools:ignore="ResourceName">#202020</color>
 
+    <color name="transactionAddPageWarpItemTextColor" tools:ignore="ResourceName">#737373</color>
+
+
+    <color name="transactionCompletionEditViewColor" tools:ignore="ResourceName">#efefef</color>
 
 </resources>
 

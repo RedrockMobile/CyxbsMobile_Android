@@ -46,8 +46,5 @@ class BaseAppInitService : IntentService("BaseAppInitService") {
 
     private fun startInit(){
         CrashHandler.init(applicationContext)
-//        initUMeng()
     }
-
-
 }

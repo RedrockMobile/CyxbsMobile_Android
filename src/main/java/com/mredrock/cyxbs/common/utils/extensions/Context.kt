@@ -2,6 +2,7 @@ package com.mredrock.cyxbs.common.utils.extensions
 
 import android.app.Activity
 import android.content.Context
+import android.content.res.Configuration
 import android.graphics.Point
 import android.os.Build
 import android.view.View
@@ -59,3 +60,8 @@ fun Activity.setFullScreen() {
 fun Context.toast(message:CharSequence) = CyxbsToast.makeText(this,message,Toast.LENGTH_SHORT).show()
 
 fun Context.toast(res:Int) = CyxbsToast.makeText(this,res,Toast.LENGTH_SHORT).show()
+
+fun Context.getDarkModeStatus(): Boolean {
+    val mode = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+    return mode == Configuration.UI_MODE_NIGHT_YES
+}

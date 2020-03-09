@@ -5,9 +5,6 @@ import android.app.Application
 import android.content.Context
 import com.alibaba.android.arouter.launcher.ARouter
 import com.meituan.android.walle.WalleChannelReader
-import com.mredrock.cyxbs.common.bean.User
-import com.mredrock.cyxbs.common.service.ServiceManager
-import com.mredrock.cyxbs.common.service.account.IAccountService
 import com.mredrock.cyxbs.common.utils.LogUtils
 import com.umeng.analytics.MobclickAgent
 import com.umeng.commonsdk.UMConfigure
@@ -24,14 +21,6 @@ open class BaseApp : Application() {
         @SuppressLint("StaticFieldLeak", "CI_StaticFieldLeak")
         lateinit var context: Context
             private set
-
-        @Deprecated(message = "已废弃该实现，请使用IAccountService", replaceWith = ReplaceWith("ServiceManager.getService(IAccountService::class.java).getUserService()", "com.mredrock.cyxbs.common.service.ServiceManager", "com.mredrock.cyxbs.common.service.account.IAccountService"), level = DeprecationLevel.WARNING)
-        var user: User = User()
-
-        @Deprecated(message = "已废弃该实现，请使用IAccountService", replaceWith = ReplaceWith("ServiceManager.getService(IAccountService::class.java).getVerifyService().isLogin()", "com.mredrock.cyxbs.common.service.ServiceManager", "com.mredrock.cyxbs.common.service.account.IAccountService"), level = DeprecationLevel.WARNING)
-        val isLogin
-            get() = ServiceManager.getService(IAccountService::class.java).getVerifyService().isLogin()
-
         var startTime: Long = 0
     }
 
@@ -74,6 +63,7 @@ open class BaseApp : Application() {
                 //注册成功会返回deviceToken deviceToken是推送消息的唯一标志
                 LogUtils.i("友盟注册", "注册成功：deviceToken：-------->  $deviceToken")
             }
+
             override fun onFailure(s: String, s1: String) {
                 LogUtils.e("友盟注册", "注册失败：-------->  s:$s,s1:$s1")
             }

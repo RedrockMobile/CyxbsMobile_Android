@@ -76,7 +76,7 @@ class RedRockAutoWarpView : FrameLayout {
         /**
          * 下面复用代码
          */
-        fun setLayoutP(layoutParams: LayoutParams, column: Int, rowUsedHeights: MutableList<Int>, columnUsedWith: Int, itemHeight: Int) {
+        fun setLayoutP(layoutParams: LayoutParams, column: Int, rowUsedHeights: MutableList<Int>, columnUsedWith: Int) {
             layoutParams.topMargin = (if (column == 0) 0 else {//如果当前是第一排，则为0
                 //不是0则加上上面所有的行的最大高度，如果当前item是当前行第一个，这不用减去当前行，不是则减去当前行
                 rowUsedHeights.sum() - if (columnUsedWith == 0) 0 else rowUsedHeights[column]
@@ -106,7 +106,7 @@ class RedRockAutoWarpView : FrameLayout {
                 val layoutParams = itemView.layoutParams as LayoutParams
 
                 if (measuredWidth - rowUsedWith >= itemWith || rowUsedWith == 0) {
-                    setLayoutP(layoutParams, column, rowUsedHeights, rowUsedWith, itemHeight)
+                    setLayoutP(layoutParams, column, rowUsedHeights, rowUsedWith)
                 } else {
                     column++
 
@@ -115,7 +115,7 @@ class RedRockAutoWarpView : FrameLayout {
                         break
                     }
                     rowUsedWith = 0
-                    setLayoutP(layoutParams, column, rowUsedHeights, rowUsedWith, itemHeight)
+                    setLayoutP(layoutParams, column, rowUsedHeights, rowUsedWith)
                 }
 
                 if (rowUsedWith == 0 && column + 1 > rowUsedHeights.size) {
@@ -147,14 +147,14 @@ class RedRockAutoWarpView : FrameLayout {
                         val layoutParams = itemView.layoutParams as LayoutParams
 
                         if (measuredWidth - rowUsedWith1 >= itemWith + spacingH || rowUsedWith1 == 0) {
-                            setLayoutP(layoutParams, column1, rowUsedHeights1, rowUsedWith1, itemHeight)
+                            setLayoutP(layoutParams, column1, rowUsedHeights1, rowUsedWith1)
                         } else {
                             column1++
                             if (maxLine != -1 && column == maxLine) {
                                 break
                             }
                             rowUsedWith1 = 0
-                            setLayoutP(layoutParams, column1, rowUsedHeights1, rowUsedWith1, itemHeight)
+                            setLayoutP(layoutParams, column1, rowUsedHeights1, rowUsedWith1)
                         }
 
                         //从第一行开始，记录

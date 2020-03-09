@@ -292,8 +292,12 @@
     <!--    关于下面声明颜色-->
     <color name="about_colors_declared_below" tools:ignore="ResourceName">#64294169</color>
 
-    <color name="addTransactionToTheTimetableClickColor" tools:ignore="ResourceName">#bdc3c7</color>
+    <color name="addTransactionToTheTimetableClickColor" tools:ignore="ResourceName">#E9EDF2</color>
 
+   <!--    事务添加页面圆角item背景-->
+    <color name="transactionAddPageWarpItemTextColor" tools:ignore="ResourceName">#15315B</color>
+
+    <color name="transactionCompletionEditViewColor" tools:ignore="ResourceName">#15315B</color>
 
 </resources>
 
