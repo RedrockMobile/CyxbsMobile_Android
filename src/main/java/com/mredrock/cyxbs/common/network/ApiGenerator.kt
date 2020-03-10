@@ -28,10 +28,8 @@ object ApiGenerator {
     var refreshToken = ""
 
     init {
-        token = ServiceManager.getService(IAccountService::class.java)?.getUserTokenService()?.getToken()
-                ?: ""
-        refreshToken = ServiceManager.getService(IAccountService::class.java)?.getUserTokenService()?.getRefreshToken()
-                ?: ""
+        token = ServiceManager.getService(IAccountService::class.java).getUserTokenService().getToken()
+        refreshToken = ServiceManager.getService(IAccountService::class.java).getUserTokenService().getRefreshToken()
         okHttpClient = configureOkHttp(OkHttpClient.Builder())
         retrofit = Retrofit.Builder()
                 .baseUrl(END_POINT_REDROCK)
@@ -51,10 +49,18 @@ object ApiGenerator {
                  * 在外面加一层判断，用于token未过期时，能够异步请求，不用阻塞在checkRefresh()
                  * 如果有更好方式再改改
                  */
-                if (refreshToken.isNotEmpty() && isTokenExpired()) {
-                    checkRefresh(it)
-                } else {
-                    it.proceed(it.request().newBuilder().header("Authorization", "Bearer $token").build())
+                when {
+                    refreshToken.isEmpty() || token.isEmpty() -> {
+                        token = ServiceManager.getService(IAccountService::class.java).getUserTokenService()?.getToken()
+                        refreshToken = ServiceManager.getService(IAccountService::class.java).getUserTokenService()?.getRefreshToken()
+                        it.proceed(it.request().newBuilder().header("Authorization", "Bearer $token").build())
+                    }
+                    isTokenExpired() -> {
+                        checkRefresh(it)
+                    }
+                    else -> {
+                        it.proceed(it.request().newBuilder().header("Authorization", "Bearer $token").build())
+                    }
                 }
             })
         }
