@@ -72,6 +72,7 @@ class AnswerListActivity : BaseActivity() {
     private lateinit var answerListAdapter: AnswerListAdapter
     private lateinit var footerRvAdapter: FooterRvAdapter
     private lateinit var emptyRvAdapter: EmptyRvAdapter
+    private lateinit var questionReportDialog: ReportDialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -113,27 +114,13 @@ class AnswerListActivity : BaseActivity() {
         qa_tv_toolbar_title.text = question.title
         qa_ib_toolbar_back.setOnClickListener { finish() }
         observeListChangeEvent()
+        questionReportDialog = createQuestionReportDialog()
         if (question.isSelf) {
             //不展示更多功能
             qa_ib_toolbar_more.gone()
         } else {
             qa_ib_toolbar_more.setOnClickListener {
-                ReportDialog(this@AnswerListActivity).apply {
-                    setType(resources.getStringArray(R.array.qa_title_type)[0])
-                    pressReport = {
-                        viewModel.reportQuestion(it)
-                    }
-                    viewModel.backPreActivityReportQuestionEvent.observeNotNull {
-                        dismiss()
-                    }
-                    viewModel.backPreActivityIgnoreEvent.observeNotNull {
-                        dismiss()
-                        finish()
-                    }
-                    pressQuestionIgnore = {
-                        viewModel.ignoreQuestion()
-                    }
-                }.show()
+                questionReportDialog.show()
             }
         }
     }
@@ -243,6 +230,23 @@ class AnswerListActivity : BaseActivity() {
                     ?: listOf(), REQUEST_REFRESH_LIST)
         }
 
+    }
+
+    private fun createQuestionReportDialog() = ReportDialog(this@AnswerListActivity).apply {
+        setType(resources.getStringArray(R.array.qa_title_type)[0])
+        pressReport = {
+            viewModel.reportQuestion(it)
+        }
+        viewModel.backPreActivityReportQuestionEvent.observeNotNull {
+            dismiss()
+        }
+        viewModel.backPreActivityIgnoreEvent.observeNotNull {
+            dismiss()
+            finish()
+        }
+        pressQuestionIgnore = {
+            viewModel.ignoreQuestion()
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

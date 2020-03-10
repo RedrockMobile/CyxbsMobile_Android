@@ -158,7 +158,7 @@ class QuizViewModel : BaseViewModel() {
     }
 
     fun updateDraftItem(title: String?, content: String?, id: String, type: String?) {
-        if (title.isNullOrEmpty()&&content.isNullOrEmpty()){
+        if (title.isNullOrEmpty() && content.isNullOrEmpty()) {
             deleteDraft(id)
         }
         val s = "{\"title\":\"$title\",\"description\":\"$content\",\"kind\":\"$type\"${getImgListStrings()}}"

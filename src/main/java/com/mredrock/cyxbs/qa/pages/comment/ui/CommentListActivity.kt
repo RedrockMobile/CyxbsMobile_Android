@@ -70,6 +70,7 @@ class CommentListActivity : BaseActivity() {
     private lateinit var emptyRvAdapter: EmptyRvAdapter
     private lateinit var footerRvAdapter: FooterRvAdapter
     private lateinit var commentListRvAdapter: CommentListRvAdapter
+    private lateinit var answerReportDialog: ReportDialog
 
     private lateinit var answer: Answer
     private lateinit var question: Question
@@ -83,9 +84,8 @@ class CommentListActivity : BaseActivity() {
             question = intent.getParcelableExtra(PARAM_QUESTION)
             initViewModel(question.id, answer)
             val showAdoptIcon = question.hasAdoptedAnswer || !question.isSelf
-            val isEmotion = question.isEmotion
             initToolbar()
-            initRv(showAdoptIcon, isEmotion)
+            initRv(showAdoptIcon)
             initCommentSheet()
         }
     }
@@ -105,6 +105,7 @@ class CommentListActivity : BaseActivity() {
                 }
             }
         }
+        answerReportDialog = createAnswerReportDialog()
     }
 
     private fun initToolbar() {
@@ -112,27 +113,19 @@ class CommentListActivity : BaseActivity() {
         val commentNub = answer.commentNum
         qa_tv_toolbar_title.text = baseContext.getString(R.string.qa_comment_list_comment_count, commentNub)
         val mStuNum = ServiceManager.getService(IAccountService::class.java).getUserService().getStuNum()
-        if (answer.userId == mStuNum) {
+        if (answer.userId != mStuNum) {
             qa_ib_toolbar_more.setOnClickListener {
-                ReportDialog(this).apply {
-                    setType(resources.getStringArray(R.array.qa_title_type)[1])
-                    pressReport = {
-                        viewModel.reportAnswer(it)
-                    }
-                    viewModel.backPreActivityReportAnswerEvent.observeNotNull {
-                        dismiss()
-                    }
-                }.show()
+                answerReportDialog.show()
             }
         } else {
             qa_ib_toolbar_more.gone()
         }
     }
 
-    private fun initRv(showAdoptIcon: Boolean, isEmotion: Boolean) {
-        headerAdapter = CommentListHeaderRvAdapter(isEmotion, showAdoptIcon)
+    private fun initRv(showAdoptIcon: Boolean) {
+        headerAdapter = CommentListHeaderRvAdapter(showAdoptIcon)
         emptyRvAdapter = EmptyRvAdapter(getString(R.string.qa_comment_list_no_comment_hint))
-        commentListRvAdapter = CommentListRvAdapter(isEmotion).apply {
+        commentListRvAdapter = CommentListRvAdapter().apply {
             onReportClickListener = { commentId ->
                 ReportDialog(this@CommentListActivity).apply {
                     setType(resources.getStringArray(R.array.qa_title_type)[2])
@@ -209,6 +202,16 @@ class CommentListActivity : BaseActivity() {
         }
     }
 
+    private fun createAnswerReportDialog() = ReportDialog(this).apply {
+        setType(resources.getStringArray(R.array.qa_title_type)[1])
+        pressReport = {
+            viewModel.reportAnswer(it)
+        }
+        viewModel.backPreActivityReportAnswerEvent.observeNotNull {
+            dismiss()
+        }
+    }
+
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     fun openShareComment(event: OpenShareCommentEvent) {
         if (intent.getParcelableExtra<Question>(PARAM_QUESTION) != null && intent.getParcelableExtra<Question>(PARAM_ANSWER) != null) {
@@ -228,11 +231,11 @@ class CommentListActivity : BaseActivity() {
             } else if (!answerWrapper.isSuccessful) {
                 toast(answerWrapper.info ?: getString(R.string.qa_loading_from_mine_unknown_error))
             } else {
+                answer = answerWrapper.data
                 initViewModel(event.questionId, answerWrapper.data)
-                val showAdoptIcon = question.hasAdoptedAnswer || !question.isSelf
-                val isEmotion = question.isEmotion
+                val showAdoptIcon = answer.isAdopted || answer.userId != ServiceManager.getService(IAccountService::class.java).getUserService().getStuNum()
                 initToolbar()
-                initRv(showAdoptIcon, isEmotion)
+                initRv(showAdoptIcon)
                 initCommentSheet()
             }
         }

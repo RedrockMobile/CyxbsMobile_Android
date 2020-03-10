@@ -18,7 +18,7 @@ import androidx.fragment.app.FragmentActivity
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.google.gson.Gson
 import com.mredrock.cyxbs.common.config.QA_ANSWER
-import com.mredrock.cyxbs.common.event.DraftEvent
+import com.mredrock.cyxbs.common.event.AnswerDraftEvent
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.extensions.gone
 import com.mredrock.cyxbs.common.utils.extensions.visible
@@ -60,7 +60,10 @@ class AnswerActivity : BaseViewModelActivity<AnswerViewModel>() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.qa_activity_answer)
         initToolbar()
-        initView()
+        if (intent.getStringExtra("description") != null && intent.getStringArrayListExtra("photoUrl") != null) {
+            initView(intent.getStringExtra("description")
+                    ?: "", intent.getStringArrayListExtra("photoUrl") ?: listOf<String>())
+        }
         initImageAddView()
         viewModel.backAndRefreshPreActivityEvent.observeNotNull {
             if (it) {
@@ -73,6 +76,9 @@ class AnswerActivity : BaseViewModelActivity<AnswerViewModel>() {
         }
         viewModel.backAndFinishActivityEvent.observeNotNull {
             finish()
+        }
+        viewModel.questionData.observeNotNull {
+            initView(it.description, it.photoUrl)
         }
     }
 
@@ -96,9 +102,7 @@ class AnswerActivity : BaseViewModelActivity<AnswerViewModel>() {
     }
 
     @SuppressLint("SetTextI18n")
-    private fun initView() {
-        val description = intent.getStringExtra("description") ?: ""
-        val photoUrl = intent.getStringArrayListExtra("photoUrl") ?: listOf<String>()
+    private fun initView(description: String, photoUrl: List<String>) {
         tv_answer_question_description.text = description
         nine_grid_view_question.apply {
             setImages(photoUrl)
@@ -243,7 +247,7 @@ class AnswerActivity : BaseViewModelActivity<AnswerViewModel>() {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
-    fun loadDraft(event: DraftEvent) {
+    fun loadDraft(event: AnswerDraftEvent) {
         if (intent.getStringExtra("qid") != null) {
             EventBus.getDefault().removeStickyEvent(event)
             return
@@ -258,6 +262,7 @@ class AnswerActivity : BaseViewModelActivity<AnswerViewModel>() {
             }
         }
         viewModel.qid = event.targetId
+        viewModel.getQuestionInfo()
         draftId = event.selfId
     }
 

@@ -14,7 +14,6 @@ import com.mredrock.cyxbs.qa.component.recycler.BaseViewHolder
 import com.mredrock.cyxbs.qa.pages.answer.ui.AnswerListActivity
 import com.mredrock.cyxbs.qa.pages.main.QuestionContainerFragment
 import com.mredrock.cyxbs.qa.utils.questionTimeDescription
-import com.mredrock.cyxbs.qa.utils.setNicknameTv
 import com.mredrock.cyxbs.qa.utils.toDate
 import kotlinx.android.synthetic.main.qa_recycler_item_question.view.*
 import org.greenrobot.eventbus.EventBus
@@ -48,7 +47,7 @@ class QuestionListRvAdapter(private val fragment: Fragment) : BaseEndlessRvAdapt
             data ?: return
             itemView.apply {
                 iv_avatar.setAvatarImageFromUrl(data.photoThumbnailSrc)
-                tv_nickname.setNicknameTv(data.nickname, data.isEmotion && !data.isAnonymous, data.isMale)
+                tv_nickname.text = data.nickname
                 tv_title.text = data.title
                 tv_reward_count.text = data.reward.toString()
                 tv_answer_count.text = data.answerNum.toString()

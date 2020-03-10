@@ -92,9 +92,11 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@id/tl_category"
+            android:layout_marginTop="20dp"
             app:cardBackgroundColor="@color/qa_question_list_color"
             app:cardCornerRadiusUpperLeft="22dp"
             app:cardCornerRadiusUpperRight="22dp"
+            app:shadowRadius="0dp"
             app:shadowColor="@color/qa_question_list_color" />
 
         <androidx.viewpager.widget.ViewPager
@@ -102,6 +104,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@id/tl_category"
+            android:layout_marginTop="20dp"
             android:background="@android:color/transparent"
             android:overScrollMode="never" />
     </RelativeLayout>

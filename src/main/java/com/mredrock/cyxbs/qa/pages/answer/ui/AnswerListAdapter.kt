@@ -13,7 +13,6 @@ import com.mredrock.cyxbs.qa.bean.Answer
 import com.mredrock.cyxbs.qa.bean.Question
 import com.mredrock.cyxbs.qa.component.recycler.BaseRvAdapter
 import com.mredrock.cyxbs.qa.component.recycler.BaseViewHolder
-import com.mredrock.cyxbs.qa.utils.setNicknameTv
 import com.mredrock.cyxbs.qa.utils.setPraise
 import com.mredrock.cyxbs.qa.utils.timeDescription
 import kotlinx.android.synthetic.main.qa_recycler_item_answer.view.*
@@ -97,7 +96,7 @@ class AnswerListAdapter(context: Context) : BaseRvAdapter<Answer>() {
                     tv_answer_reply_count.gone()
                 }
                 iv_answer_avatar.setAvatarImageFromUrl(data.photoThumbnailSrc)
-                tv_answer_nickname.setNicknameTv(data.nickname, isEmotion, data.isMale)
+                tv_answer_nickname.text = data.nickname
                 if (hasAdoptedAnswer) {
                     tv_adopted.visible()
                 }

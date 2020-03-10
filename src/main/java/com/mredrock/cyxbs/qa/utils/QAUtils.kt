@@ -10,21 +10,6 @@ import org.jetbrains.anko.textColor
 /**
  * Created By jay68 on 2018/9/30.
  */
-internal fun TextView.setNicknameTv(nickname: String, showGender: Boolean, isMale: Boolean) {
-    //为了防止后端传null
-    text = nickname ?: ""
-    if (showGender) {
-        val drawable = if (isMale) {
-            ContextCompat.getDrawable(context, R.drawable.qa_ic_gender_male)
-        } else {
-            ContextCompat.getDrawable(context, R.drawable.qa_ic_gender_female)
-        }
-        setCompoundDrawablesRelativeWithIntrinsicBounds(null, null, drawable, null)
-    } else {
-        setCompoundDrawablesRelativeWithIntrinsicBounds(null, null, null, null)
-    }
-}
-
 internal fun TextView.setPraise(praiseNum: String?,
                                 isPraised: Boolean?,
                                 praiseIcon: Int = R.drawable.qa_ic_answer_list_praise,

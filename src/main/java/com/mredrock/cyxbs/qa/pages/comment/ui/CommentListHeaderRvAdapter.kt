@@ -9,7 +9,6 @@ import com.mredrock.cyxbs.qa.component.recycler.BaseViewHolder
 import com.mredrock.cyxbs.qa.pages.comment.AdoptAnswerEvent
 import com.mredrock.cyxbs.qa.ui.activity.ViewImageActivity
 import com.mredrock.cyxbs.qa.utils.setAdoptedTv
-import com.mredrock.cyxbs.qa.utils.setNicknameTv
 import com.mredrock.cyxbs.qa.utils.timeDescription
 import kotlinx.android.synthetic.main.qa_recycler_item_comment_header.view.*
 import org.greenrobot.eventbus.EventBus
@@ -18,23 +17,20 @@ import org.greenrobot.eventbus.EventBus
  * Created By jay68 on 2018/10/8.
  */
 class CommentListHeaderRvAdapter(
-        private val isEmotion: Boolean,
         private val showAdoptIcon: Boolean
 ) : BaseRvAdapter<Answer>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
-            HeaderViewHolder(isEmotion, showAdoptIcon, parent)
+            HeaderViewHolder(showAdoptIcon, parent)
 
-    inner class HeaderViewHolder(private val isEmotion: Boolean,
-                                 private val showAdoptIcon: Boolean,
+    inner class HeaderViewHolder(private val showAdoptIcon: Boolean,
                                  parent: ViewGroup) : BaseViewHolder<Answer>(parent, R.layout.qa_recycler_item_comment_header) {
 
         override fun refresh(data: Answer?) {
             data ?: return
             itemView.apply {
-                //                tv_question_title.text = Html.fromHtml(title)
                 iv_answer_avatar.setAvatarImageFromUrl(data.photoThumbnailSrc)
-                tv_answer_nickname.setNicknameTv(data.nickname, isEmotion, data.isMale)
+                tv_answer_nickname.text = data.nickname
                 tv_answer_content.text = data.content
                 tv_answer_create_at.text = timeDescription(System.currentTimeMillis(), data.createdAt)
                 ngv_answer.setImages(data.photoUrl)

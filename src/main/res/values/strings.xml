@@ -58,6 +58,7 @@
     <string name="qa_quiz_update_failed">抱歉暂时没有更新草稿箱呢…</string>
     <string name="qa_quiz_save_success">成功存入草稿箱~</string>
     <string name="qa_quiz_update_success">成功更新草稿箱~</string>
+    <string name="qa_answer_load_draft_question_failed">问题加载失败</string>
     <string name="qa_quiz_dialog_cancel">取消</string>
     <string name="qa_quiz_error_time_too_short">设置的时间太短了哦~</string>
     <string name="qa_quiz_reward_set_dialog_title">求助设置</string>

@@ -8,7 +8,6 @@ import com.mredrock.cyxbs.qa.component.recycler.BaseRvAdapter
 import com.mredrock.cyxbs.qa.component.recycler.BaseViewHolder
 import com.mredrock.cyxbs.qa.ui.activity.ViewImageActivity
 import com.mredrock.cyxbs.qa.utils.questionTimeDescription
-import com.mredrock.cyxbs.qa.utils.setNicknameTv
 import com.mredrock.cyxbs.qa.utils.toDate
 import kotlinx.android.synthetic.main.qa_recycler_item_answer_header.view.*
 
@@ -32,7 +31,7 @@ class AnswerListHeaderAdapter(private val onSortOrderChangedListener: (sortOrder
                     ViewImageActivity.activityStart(context, data.photoUrl[index])
                 }
                 iv_questioner_avatar.setAvatarImageFromUrl(data.photoThumbnailSrc)
-                tv_questioner_nickname.setNicknameTv(data.nickname, data.isEmotion && !data.isAnonymous, data.isMale)
+                tv_questioner_nickname.text = data.nickname
                 tv_question_publish_at.text = questionTimeDescription(System.currentTimeMillis(), data.createdAt.toDate().time)
                 tv_reward.text = context.getString(R.string.qa_question_item_reward, data.reward)
             }

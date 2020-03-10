@@ -9,9 +9,10 @@
         android:id="@+id/jcv_margin"
         android:layout_width="match_parent"
         android:layout_height="20dp"
-        android:background="@color/transparentBackground"
         app:cardCornerRadiusUpperLeft="16dp"
         app:cardCornerRadiusUpperRight="16dp"
+        app:shadowRadius="0dp"
+        app:cardBackgroundColor="@color/whiteBackground"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

@@ -15,6 +15,7 @@ import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.common.viewmodel.event.ProgressDialogEvent
 import com.mredrock.cyxbs.common.viewmodel.event.SingleLiveEvent
 import com.mredrock.cyxbs.qa.R
+import com.mredrock.cyxbs.qa.bean.Question
 import com.mredrock.cyxbs.qa.network.ApiService
 import com.mredrock.cyxbs.qa.utils.isNullOrEmpty
 import io.reactivex.Observable
@@ -31,7 +32,7 @@ class AnswerViewModel(var qid: String) : BaseViewModel() {
     val imageLiveData = MutableLiveData<ArrayList<String>>()
     val backAndRefreshPreActivityEvent = SingleLiveEvent<Boolean>()
     val backAndFinishActivityEvent = SingleLiveEvent<Boolean>()
-
+    val questionData = MutableLiveData<Question>()
     var editingImgPos = -1
         private set
 
@@ -136,6 +137,22 @@ class AnswerViewModel(var qid: String) : BaseViewModel() {
                 .checkError()
                 .safeSubscribeBy()
                 .lifeCycle()
+    }
+
+    //通过EventBus拿到id后请求详情
+    fun getQuestionInfo() {
+        ApiGenerator.getApiService(ApiService::class.java)
+                .getQuestion(qid)
+                .setSchedulers()
+                .doOnSubscribe { progressDialogEvent.value = ProgressDialogEvent.SHOW_NONCANCELABLE_DIALOG_EVENT }
+                .doOnError {
+                    toastEvent.value = R.string.qa_answer_load_draft_question_failed
+                    progressDialogEvent.value = ProgressDialogEvent.DISMISS_DIALOG_EVENT
+                }
+                .safeSubscribeBy {
+                    progressDialogEvent.value = ProgressDialogEvent.DISMISS_DIALOG_EVENT
+                    questionData.value = it
+                }
     }
 
     private fun getImgListStrings(): String {

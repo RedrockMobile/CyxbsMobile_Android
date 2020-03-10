@@ -17,7 +17,7 @@ import androidx.fragment.app.Fragment
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.google.gson.Gson
 import com.mredrock.cyxbs.common.config.QA_QUIZ
-import com.mredrock.cyxbs.common.event.DraftEvent
+import com.mredrock.cyxbs.common.event.QuestionDraftEvent
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.extensions.gone
 import com.mredrock.cyxbs.common.utils.extensions.visible
@@ -226,7 +226,7 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
-    fun loadDraft(event: DraftEvent) {
+    fun loadDraft(event: QuestionDraftEvent) {
         if (intent.getStringExtra("type") != null) {
             EventBus.getDefault().removeStickyEvent(event)
             return
