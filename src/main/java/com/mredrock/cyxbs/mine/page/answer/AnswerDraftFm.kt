@@ -8,7 +8,7 @@ import androidx.lifecycle.ViewModelProviders
 import com.alibaba.android.arouter.launcher.ARouter
 import com.mredrock.cyxbs.common.component.CommonDialogFragment
 import com.mredrock.cyxbs.common.config.QA_ANSWER
-import com.mredrock.cyxbs.common.event.DraftEvent
+import com.mredrock.cyxbs.common.event.AnswerDraftEvent
 import com.mredrock.cyxbs.mine.R
 import com.mredrock.cyxbs.mine.network.model.AnswerDraft
 import com.mredrock.cyxbs.mine.util.ui.BaseRVFragment
@@ -67,7 +67,7 @@ class AnswerDraftFm : BaseRVFragment<AnswerDraft>() {
 
         holder.itemView.setOnClickListener {
             //草稿箱的EventBus数据传递
-            EventBus.getDefault().postSticky(DraftEvent(data.draftAnswerContent, data.draftAnswerId.toString(), data.questionId.toString()))
+            EventBus.getDefault().postSticky(AnswerDraftEvent(data.draftAnswerContent, data.draftAnswerId.toString(), data.questionId.toString()))
             ARouter.getInstance().build(QA_ANSWER).navigation()
         }
     }

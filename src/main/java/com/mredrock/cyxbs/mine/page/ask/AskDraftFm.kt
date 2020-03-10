@@ -8,7 +8,7 @@ import androidx.lifecycle.ViewModelProviders
 import com.alibaba.android.arouter.launcher.ARouter
 import com.mredrock.cyxbs.common.component.CommonDialogFragment
 import com.mredrock.cyxbs.common.config.QA_QUIZ
-import com.mredrock.cyxbs.common.event.DraftEvent
+import com.mredrock.cyxbs.common.event.QuestionDraftEvent
 import com.mredrock.cyxbs.mine.R
 import com.mredrock.cyxbs.mine.network.model.AskDraft
 import com.mredrock.cyxbs.mine.util.ui.BaseRVFragment
@@ -69,7 +69,7 @@ class AskDraftFm : BaseRVFragment<AskDraft>() {
         }
 
         holder.itemView.setOnClickListener {
-            EventBus.getDefault().postSticky(DraftEvent(data.content, data.draftQuestionId.toString(), ""))
+            EventBus.getDefault().postSticky(QuestionDraftEvent(data.content, data.draftQuestionId.toString()))
             ARouter.getInstance().build(QA_QUIZ).navigation()
         }
     }

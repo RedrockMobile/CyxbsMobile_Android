@@ -139,7 +139,6 @@ class AskViewModel : BaseViewModel() {
     val navigateEvent = SingleLiveEvent<NavigateData>()
 
     fun getQuestion(qid: Int) {
-        val idNum = idNum ?: return
         apiService.getQuestion(qid.toString())
                 .setSchedulers()
                 .safeSubscribeBy {

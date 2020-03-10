@@ -139,7 +139,6 @@ class CommentViewModel : BaseViewModel() {
     val navigateEventOnReComment = SingleLiveEvent<NavigateData>()
 
     fun getAnswerFromComment(qid: Int, id: Int) {
-        val idNum = idNum ?: return
         apiService.getAnswer(id.toString())
                 .setSchedulers()
                 .safeSubscribeBy {
@@ -150,7 +149,6 @@ class CommentViewModel : BaseViewModel() {
     }
 
     fun getAnswerFromReComment(qid: Int, id: Int) {
-        val idNum = idNum ?: return
         apiService.getAnswer(id.toString())
                 .setSchedulers()
                 .safeSubscribeBy {
