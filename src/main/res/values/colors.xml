@@ -135,6 +135,7 @@
     <color name="mine_sign_store_my_product_text_color" tools:ignore="ResourceName">#FFA192</color>
 
     <color name="mine_list_item_tv_disappear_at" tools:ignore="ResourceName">#6C84AB</color>
+    <color name="mine_list_item_tv_content" tools:ignore="ResourceName">#15315B</color>
     <color name="mine_list_item_bg_brown" tools:ignore="ResourceName">#F7DAD7</color>
     <color name="mine_list_item_btn_text_color_accept" tools:ignore="ResourceName">#FFA192</color>
     <color name="mine_main_btn_gradient_start" tools:ignore="ResourceName">#4841E2</color>
