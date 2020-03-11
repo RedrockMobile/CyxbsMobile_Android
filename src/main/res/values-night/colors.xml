@@ -90,7 +90,7 @@
     <!--    签到页面TextView颜色-->
     <color name="blueSignTextColor" tools:ignore="ResourceName">#839BFA</color>
     <!--    分割线颜色-->
-    <color name="severViewColor" tools:ignore="ResourceName">#2857566A</color>
+    <color name="severViewColor" tools:ignore="ResourceName">#35F8F9FC</color>
     <color name="alphaSeverViewColor" tools:ignore="ResourceName">#39BDCCE5</color>
     <color name="blueButton" tools:ignore="ResourceName">#2921D1</color>
 
