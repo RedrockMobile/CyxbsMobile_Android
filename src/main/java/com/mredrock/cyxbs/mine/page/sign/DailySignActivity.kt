@@ -38,6 +38,8 @@ class DailySignActivity(override val viewModelClass: Class<DailyViewModel> = Dai
                         , override val isFragmentActivity: Boolean = false)
     : BaseViewModelActivity<DailyViewModel>() {
 
+    private var objectAnimator: ObjectAnimator? = null
+
     private val dividerResArr: Array<Stick> by lazy {
         arrayOf(mine_daily_v_divider_mon_tue,
                 mine_daily_v_divider_tue_wed,
@@ -88,6 +90,18 @@ class DailySignActivity(override val viewModelClass: Class<DailyViewModel> = Dai
         initAdapter()
         dealBottomSheet()
         initData()
+    }
+
+    /**
+     * 需要处理属性动画内存泄露的问题
+     */
+    override fun onDestroy() {
+        objectAnimator?.let {
+            if (it.isRunning) {
+                it.cancel()
+            }
+        }
+        super.onDestroy()
     }
 
     //ViewModel观察和网络请求
@@ -239,6 +253,9 @@ class DailySignActivity(override val viewModelClass: Class<DailyViewModel> = Dai
                     if (index > 5) return
                     setDividerColor(index, ColorState.COLOR_BLUE)
                     val animator = ObjectAnimator.ofFloat(dividerResArr[index], "progress", 0f, 1f)
+                    //先让objectAnimator保存animator的引用，方便退出Activity时cancel掉阻止内存泄漏
+                    objectAnimator = animator
+
                     animator.duration = 1000
                     animator.interpolator = AccelerateDecelerateInterpolator()
                     animator.start()
