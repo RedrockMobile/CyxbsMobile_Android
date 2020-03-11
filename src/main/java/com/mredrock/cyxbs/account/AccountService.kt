@@ -128,6 +128,17 @@ internal class AccountService : IAccountService {
 
         private fun notifyAllStateListeners(state: IUserStateService.UserState) {
             //todo 后面再实现该方法，用于替代以前用EventBus实现的OnStateChangeEvent事件
+            when (state) {
+                IUserStateService.UserState.LOGIN -> {
+                    ApiGenerator.apply {
+                        token = tokenWrapper?.token ?: ""
+                        refreshToken = tokenWrapper?.refreshToken ?: ""
+                    }
+                }
+                else -> {
+                    //todo 其他情况
+                }
+            }
         }
 
         override fun isLogin() = tokenWrapper != null
