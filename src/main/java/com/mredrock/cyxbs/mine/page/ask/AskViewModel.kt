@@ -141,11 +141,16 @@ class AskViewModel : BaseViewModel() {
     fun getQuestion(qid: Int) {
         apiService.getQuestion(qid.toString())
                 .setSchedulers()
-                .safeSubscribeBy {
-                    //NavigateData不需要answerId字段
-                    val navigateData = NavigateData(qid, -1, it.string())
-                    navigateEvent.postValue(navigateData)
-                }
+                .safeSubscribeBy (
+                        onNext = {
+                            //NavigateData不需要answerId字段
+                            val navigateData = NavigateData(qid, -1, it.string())
+                            navigateEvent.postValue(navigateData)
+                        },
+                        onError = {
+                            BaseApp.context.toast("获取提问信息失败")
+                        }
+                )
                 .lifeCycle()
     }
 

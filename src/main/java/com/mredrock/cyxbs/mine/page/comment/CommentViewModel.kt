@@ -7,6 +7,7 @@ import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
+import com.mredrock.cyxbs.common.utils.extensions.toast
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.common.viewmodel.event.SingleLiveEvent
 import com.mredrock.cyxbs.mine.network.model.Comment
@@ -141,20 +142,30 @@ class CommentViewModel : BaseViewModel() {
     fun getAnswerFromComment(qid: Int, id: Int) {
         apiService.getAnswer(id.toString())
                 .setSchedulers()
-                .safeSubscribeBy {
-                    val navigateData = NavigateData(qid, id, it.string())
-                    navigateEventOnComment.postValue(navigateData)
-                }
+                .safeSubscribeBy (
+                        onNext = {
+                            val navigateData = NavigateData(qid, id, it.string())
+                            navigateEventOnComment.postValue(navigateData)
+                        },
+                        onError = {
+                            BaseApp.context.toast("获取评论信息失败")
+                        }
+                )
                 .lifeCycle()
     }
 
     fun getAnswerFromReComment(qid: Int, id: Int) {
         apiService.getAnswer(id.toString())
                 .setSchedulers()
-                .safeSubscribeBy {
-                    val navigateData = NavigateData(qid, id, it.string())
-                    navigateEventOnReComment.postValue(navigateData)
-                }
+                .safeSubscribeBy (
+                        onNext = {
+                            val navigateData = NavigateData(qid, id, it.string())
+                            navigateEventOnReComment.postValue(navigateData)
+                        },
+                        onError = {
+                            BaseApp.context.toast("获取评论信息失败")
+                        }
+                )
                 .lifeCycle()
     }
 }

@@ -165,10 +165,15 @@ class AnswerViewModel : BaseViewModel() {
     fun getAnswer(qid: Int, id: Int) {
         apiService.getAnswer(id.toString())
                 .setSchedulers()
-                .safeSubscribeBy {
-                    val navigateData = NavigateData(qid, id, it.string())
-                    navigateEvent.postValue(navigateData)
-                }
+                .safeSubscribeBy (
+                        onNext = {
+                            val navigateData = NavigateData(qid, id, it.string())
+                            navigateEvent.postValue(navigateData)
+                        },
+                        onError = {
+                            BaseApp.context.toast("获取回答信息失败")
+                        }
+                )
                 .lifeCycle()
     }
 }
