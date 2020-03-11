@@ -143,12 +143,15 @@ class AnswerViewModel : BaseViewModel() {
                         onNext = {
                             BaseApp.context.toast(R.string.mine_draft_delete_success)
                             //更新DraftList
-                            val localDraft = _answerDraft.value ?: mutableListOf()
+                            val localDraft = (_answerDraft.value ?: mutableListOf()).filter {
+                                it.draftAnswerId != id
+                            }.toMutableList()
                             _answerDraft.postValue(
-                                    localDraft.filter {
-                                        it.draftAnswerId != id
-                                    }.toMutableList()
+                                    localDraft
                             )
+                            if (localDraft.isEmpty()) {
+                                _eventOnAnswerDraft.postValue(RvFooter.State.NOTHING)
+                            }
                         },
                         onError = {
                             BaseApp.context.toast(R.string.mine_draft_delete_failed)

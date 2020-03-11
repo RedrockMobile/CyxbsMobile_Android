@@ -156,12 +156,15 @@ class AskViewModel : BaseViewModel() {
                         onNext = {
                             BaseApp.context.toast(R.string.mine_draft_delete_success)
                             //更新DraftList
-                            val localDraft = _askDraft.value ?: mutableListOf()
+                            val localDraft = (_askDraft.value ?: mutableListOf()).filter {
+                                it.draftQuestionId != id
+                            }.toMutableList()
                             _askDraft.postValue(
-                                    localDraft.filter {
-                                        it.draftQuestionId != id
-                                    }.toMutableList()
+                                    localDraft
                             )
+                            if (localDraft.isEmpty()) {
+                                _eventOnAskDraft.postValue(RvFooter.State.NOTHING)
+                            }
                         },
                         onError = {
                             BaseApp.context.toast(R.string.mine_draft_delete_failed)
