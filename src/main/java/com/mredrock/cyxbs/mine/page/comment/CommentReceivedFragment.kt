@@ -46,7 +46,7 @@ class CommentReceivedFragment : BaseRVFragment<CommentReceived>() {
     }
 
     override fun bindDataHolder(holder: RecyclerView.ViewHolder, position: Int, data: CommentReceived) {
-        holder.itemView.mine_comment_circleimageview_avatar.setImageFromUrl(data.commenterImageUrl)
+        holder.itemView.mine_comment_iv_avatar.setImageFromUrl(data.commenterImageUrl)
         holder.itemView.mine_comment_tv_nickname.text = data.commenterNickname
         holder.itemView.mine_comment_tv_response.text = data.commentContent
         holder.itemView.setOnClickListener {

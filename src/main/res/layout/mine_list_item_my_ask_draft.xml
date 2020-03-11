@@ -23,7 +23,7 @@
     <TextView
         android:id="@+id/mine_ask_draft_tv_description"
         android:layout_width="0dp"
-        android:textColor="@color/levelTwoFontColor"
+        android:textColor="@color/mine_list_item_tv_content"
         android:textSize="15sp"
         android:maxLines="2"
         android:ellipsize="end"

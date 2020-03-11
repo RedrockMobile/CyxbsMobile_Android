@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:ellipsize="end"
         android:maxLines="2"
-        android:textColor="@color/levelTwoFontColor"
+        android:textColor="@color/mine_list_item_tv_content"
         android:textSize="15sp"
         android:layout_marginStart="10dp"
         android:layout_marginTop="15dp"
@@ -21,7 +21,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginEnd="10dp"
-        tools:text="我在沈阳sssssssssssssssssssssssssssssssssssssssssssssssssssssss的放子大范德萨分" />
+        tools:text="ssssssssssssssssssssssssssssssssssssss的放子大范德萨分" />
 
     <TextView
         android:id="@+id/mine_answer_posted_tv_disappear_at"

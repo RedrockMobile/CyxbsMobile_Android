@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:ellipsize="end"
         android:maxLines="2"
-        android:textColor="@color/levelTwoFontColor"
+        android:textColor="@color/mine_list_item_tv_content"
         android:textSize="15sp"
         app:layout_constraintEnd_toEndOf="@id/mine_answer_draft_iv_garbage"
         app:layout_constraintStart_toStartOf="parent"
