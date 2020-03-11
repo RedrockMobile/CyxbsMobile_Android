@@ -2,6 +2,7 @@ package com.mredrock.cyxbs.mine.page.answer
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Base64
 import android.widget.TextView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -15,6 +16,7 @@ import com.mredrock.cyxbs.mine.util.ui.BaseRVFragment
 import com.mredrock.cyxbs.mine.util.widget.RvFooter
 import kotlinx.android.synthetic.main.mine_list_item_my_answer_draft.view.*
 import org.greenrobot.eventbus.EventBus
+import org.json.JSONObject
 
 /**
  * Created by roger on 2019/12/3
@@ -44,7 +46,9 @@ class AnswerDraftFm : BaseRVFragment<AnswerDraft>() {
 
     @SuppressLint("SetTextI18n")
     override fun bindDataHolder(holder: androidx.recyclerview.widget.RecyclerView.ViewHolder, position: Int, data: AnswerDraft) {
-        holder.itemView.mine_answer_draft_tv_content.text = data.draftAnswerContent
+        val json = String(Base64.decode(data.draftAnswerContent, Base64.DEFAULT))
+        val title = JSONObject(json).getString("title")
+        holder.itemView.mine_answer_draft_tv_content.text = title
         holder.itemView.mine_answer_draft_tv_lastedit_at.text = data.latestEditTime.split(" ")[0].replace("-", ".")
         holder.itemView.mine_answer_draft_iv_garbage.setOnClickListener {
             CommonDialogFragment().apply {

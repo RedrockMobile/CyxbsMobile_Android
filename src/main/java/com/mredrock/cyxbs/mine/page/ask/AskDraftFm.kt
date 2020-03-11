@@ -45,8 +45,8 @@ class AskDraftFm : BaseRVFragment<AskDraft>() {
 
     @SuppressLint("SetTextI18n")
     override fun bindDataHolder(holder: androidx.recyclerview.widget.RecyclerView.ViewHolder, position: Int, data: AskDraft) {
-        holder.itemView.mine_ask_draft_tv_title.text = data.title
-        holder.itemView.mine_ask_draft_tv_description.text = data.description
+        holder.itemView.mine_ask_draft_tv_title.text = if (data.title.isEmpty()) "(标题为空)" else data.title
+        holder.itemView.mine_ask_draft_tv_description.text = if (data.description.isEmpty()) "(内容为空)" else data.description
         holder.itemView.mine_ask_draft_tv_lastedit_at.text = data.latestEditTime.split(" ")[0].replace("-", ".")
 
         holder.itemView.mine_ask_draft_iv_garbage.setOnClickListener {
