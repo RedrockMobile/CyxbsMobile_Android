@@ -1,17 +1,9 @@
 <resources>
     <string name="mine_mine">module_mine</string>
 
-    <string name="mine_my_page">我 的</string>
     <string name="mine_user_empty_username">请填写用户名</string>
     <string name="mine_user_empty_introduce">写下你对世界想说的话，就现在</string>
-    <string name="mine_setting_show_note">在课表上没课的地方显示备忘内容</string>
-    <string name="mine_setting_feedback">意见反馈</string>
-    <string name="mine_setting_about">关于</string>
-    <string name="mine_setting_exit">退出当前账号</string>
-    <string name="mine_setting_share">分享</string>
     <string name="mine_to_download">扫一扫下载，长按保存</string>
-    <string name="mine_money_tell">悄悄告诉你：积分可以兑换礼物~</string>
-    <string name="mine_gift_ontheway">礼物正在路上呢~</string>
 
     <!--    首页-->
     <string name="mine_sign_name">签到</string>
@@ -81,63 +73,22 @@
     <string name="mine_sign_store_item_exchange">兑换</string>
     <string name="mine_sign_store_item_exchange_for_sure">商品兑换</string>
 
-    <string name="mine_myproduct_time_pre">兑换时间：</string>
-    <string name="mine_myproduct">商品领取</string>
-    <string name="mine_myproduct_unclaimed">如果是实体商品，请携带有效证件前往红岩网校工作站B区领取奖品</string>
-    <string name="mine_myproduct_claimed">商品已经领了哟，继续攒积分兑换更多奖品吧</string>
-
-    <string name="mine_sign_remind_switch_hint">连续签到每日提醒</string>
-    <string name="mine_sign_point_hint">我的积分数：</string>
-    <string name="mine_sign_point_detail">积分明细</string>
-    <string name="mine_sign_day_hint">已连续签到</string>
-    <string name="mine_sign_point_count_default">0</string>
-    <string name="mine_sign_day_count_default">00</string>
-    <string name="mine_sign_day_count_hint">天</string>
-    <string name="mine_sign_hint_signed">今天打卡任务已完成，你还要忙着可爱</string>
-    <string name="mine_sign_rules">签到规则</string>
-    <string name="mine_sign_point_spec">积分说明</string>
-    <string name="mine_sign_detail_more">更多</string>
-    <string name="mine_question_detail_report">举报</string>
-    <string name="mine_question_detail_share">分享</string>
-
-    <string name="mine_point_spec_spec">
-        Q：积分有什么用途？\n
-        A：积分可用于兑换奖品及参与各类活动。\n\n
-        Q：怎样获得积分？\n
-        A：目前获得积分主要有三种途径：\n
-        1.每天登录掌上重邮并签到；\n
-        2.发布优质“帮助”帖；\n
-        3.官方活动发放。
-    </string>
-    <string name="mine_copyright_hint">以上信息的最终解释权归红岩网校工作站所有</string>
+    <string name="mine_my_product_time_pre">兑换时间：</string>
+    <string name="mine_my_product">商品领取</string>
+    <string name="mine_my_product_unclaimed">如果是实体商品，请携带有效证件前往红岩网校工作站B区领取奖品</string>
+    <string name="mine_my_product_claimed">商品已经领了哟，继续攒积分兑换更多奖品吧</string>
 
 
     <!--草稿箱-->
-    <string name="mine_answer_detail_submit">发送</string>
-    <string name="mine_answer_detail_content_hint">添加你的评论</string>
-    <string name="mine_draft_empty_hint">还没有草稿在这里哦～</string>
-
-    <string name="mine_question_default">提问：线性第一题不会做，求解</string>
-    <string name="mine_question_help_default">帮助：是的，公式是没有问题的，但是你的…</string>
-    <string name="mine_adopt_time_justnow">采纳时间：刚刚</string>
-
     <string name="mine_draft_delete_success">删除成功</string>
     <string name="mine_draft_delete_failed">删除失败</string>
 
 
-    <!--与我相关-->
-    <string name="mine_relate_me_empty_hint">还没有与我相关的动态哦</string>
-    <string name="mine_relate_me_type_suffix">了我</string>
-    <string name="mine_relate_me_reply">回复</string>
-    <string name="mine_set_widget">自定义桌面小图标</string>
-    <string name="mine_mine_1">我的</string>
+    <!--    评论-->
     <string name="mine_comment_at_start">你评论了 </string>
     <string name="mine_comment_at_end"> 的回答</string>
     <string name="mine_comment_received_at_end"> 评论了你的回答</string>
 
-    <!--积分详情-->
-    <string name="mine_point_detail_footer">已 经 到 底 了</string>
-    <string name="mine_point_detail_header_hint">当前的积分数：</string>
 
     <!--关于-->
     <string name="mine_about_sharing">分享</string>

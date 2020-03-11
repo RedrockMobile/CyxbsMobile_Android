@@ -137,7 +137,7 @@ class DailySignActivity(override val viewModelClass: Class<DailyViewModel> = Dai
     private fun initView() {
         mine_daily_sign.setOnClickListener { checkIn() }
         mine_store_rv.addItemDecoration(SpaceDecoration(dp2px(8f)))
-        mine_store_myproduct.setOnClickListener {
+        mine_store_my_product.setOnClickListener {
             startActivity<MyProductActivity>()
         }
     }
@@ -171,7 +171,7 @@ class DailySignActivity(override val viewModelClass: Class<DailyViewModel> = Dai
             mine_daily_sign.apply {
                 isClickable = true
                 background = ResourcesCompat.getDrawable(resources, R.drawable.common_dialog_btn_positive_blue, null)
-                textColor = ContextCompat.getColor(context, R.color.mine_white)
+                textColor = ContextCompat.getColor(context, R.color.whiteFontColor)
                 text = "签到"
             }
         }
@@ -204,7 +204,7 @@ class DailySignActivity(override val viewModelClass: Class<DailyViewModel> = Dai
         behavior.setBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
             override fun onSlide(p0: View, p1: Float) {
                 mine_store_arrow_left.alpha = p1
-                mine_store_myproduct.alpha = p1
+                mine_store_my_product.alpha = p1
                 mine_store_line.alpha = 1 - p1
                 mine_store_tv_title.x = mine_store_arrow_left.x + p1 * dp2px(15f) + dp2px(17f)
             }
@@ -212,10 +212,10 @@ class DailySignActivity(override val viewModelClass: Class<DailyViewModel> = Dai
             override fun onStateChanged(p0: View, p1: Int) {
                 if (p1 == BottomSheetBehavior.STATE_COLLAPSED) {
                     mine_store_arrow_left.invisible()
-                    mine_store_myproduct.invisible()
+                    mine_store_my_product.invisible()
                 } else {
                     mine_store_arrow_left.visible()
-                    mine_store_myproduct.visible()
+                    mine_store_my_product.visible()
                 }
             }
         })

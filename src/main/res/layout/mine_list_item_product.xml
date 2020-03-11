@@ -82,7 +82,7 @@
         android:minHeight="24dp"
         android:text="@string/mine_sign_store_item_exchange"
         style="?android:attr/borderlessButtonStyle"
-        android:textColor="@color/mine_white"
+        android:textColor="@color/whiteFontColor"
         android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="@+id/mine_sign_store_item_iv_diamond"
         app:layout_constraintEnd_toEndOf="parent"

@@ -95,7 +95,7 @@ class EditInfoActivity(override val isFragmentActivity: Boolean = false,
         val userForTemporal = ServiceManager.getService(IAccountService::class.java).getUserService()
         if (checkIfInfoChange()) {
             mine_btn_info_save.apply {
-                textColor = ContextCompat.getColor(context, R.color.mine_white)
+                textColor = ContextCompat.getColor(context, R.color.whiteFontColor)
                 background = ResourcesCompat.getDrawable(resources, R.drawable.common_dialog_btn_positive_blue, null)
                 text = "保存"
                 isClickable = true
@@ -358,7 +358,7 @@ class EditInfoActivity(override val isFragmentActivity: Boolean = false,
         val options = UCrop.Options()
         options.setCompressionFormat(Bitmap.CompressFormat.PNG)
         options.setCompressionQuality(100)
-        options.setLogoColor(ContextCompat.getColor(this, R.color.mine_black_lightly))
+        options.setLogoColor(ContextCompat.getColor(this, R.color.levelTwoFontColor))
         options.setToolbarColor(
                 ContextCompat.getColor(this, R.color.colorPrimaryDark))
         options.setStatusBarColor(

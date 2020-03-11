@@ -119,7 +119,7 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
                 mine_main_btn_sign.apply {
                     text = "签到"
                     background = ResourcesCompat.getDrawable(resources, R.drawable.common_dialog_btn_positive_blue, null)
-                    textColor = ContextCompat.getColor(context, R.color.mine_white)
+                    textColor = ContextCompat.getColor(context, R.color.whiteFontColor)
                 }
             }
         })

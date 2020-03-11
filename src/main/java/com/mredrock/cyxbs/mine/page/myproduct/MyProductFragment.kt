@@ -29,12 +29,12 @@ class MyProductFragment(private val type: Int = UNCLAIMED) : BaseRVFragment<MyPr
                     positiveString = "我知道了",
                     onPositiveClick = { dismiss() },
                     elseFunction = {
-                        it.findViewById<TextView>(R.id.dialog_title).text = resources.getString(R.string.mine_myproduct);
+                        it.findViewById<TextView>(R.id.dialog_title).text = resources.getString(R.string.mine_my_product);
 
                         if (type == UNCLAIMED) {
-                            it.findViewById<TextView>(R.id.dialog_content).text = resources.getString(R.string.mine_myproduct_unclaimed)
+                            it.findViewById<TextView>(R.id.dialog_content).text = resources.getString(R.string.mine_my_product_unclaimed)
                         } else {
-                            it.findViewById<TextView>(R.id.dialog_content).text = resources.getString(R.string.mine_myproduct_claimed)
+                            it.findViewById<TextView>(R.id.dialog_content).text = resources.getString(R.string.mine_my_product_claimed)
                         }
                     }
             )
@@ -74,10 +74,10 @@ class MyProductFragment(private val type: Int = UNCLAIMED) : BaseRVFragment<MyPr
 
 
     override fun bindDataHolder(holder: RecyclerView.ViewHolder, position: Int, data: MyProduct) {
-        holder.itemView.mine_myproduct_time.text = data.time.split(" ")[0].replace("-", ".")
-        holder.itemView.mine_myproduct_title.text = data.name
-        holder.itemView.mine_myproduct_integral.text = data.integral.toString()
-        holder.itemView.mine_myproduct_iv.setImageFromUrl(data.photoSrc)
+        holder.itemView.mine_my_product_time.text = data.time.split(" ")[0].replace("-", ".")
+        holder.itemView.mine_my_product_title.text = data.name
+        holder.itemView.mine_my_product_integral.text = data.integral.toString()
+        holder.itemView.mine_my_product_iv.setImageFromUrl(data.photoSrc)
         holder.itemView.setOnClickListener {
             dialogDialogFragment.show(fragmentManager, "my_product")
         }

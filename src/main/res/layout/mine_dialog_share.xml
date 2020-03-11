@@ -11,7 +11,7 @@
         android:layout_margin="16dp"
         android:layout_marginTop="26dp"
         android:text="@string/mine_to_download"
-        android:textColor="@color/mine_black_lightly"
+        android:textColor="@color/levelTwoFontColor"
         android:textSize="22sp" />
 
     <ImageView

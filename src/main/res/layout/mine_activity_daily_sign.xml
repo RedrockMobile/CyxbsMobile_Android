@@ -345,7 +345,7 @@
             style="?android:attr/borderlessButtonStyle"
             android:text="@string/mine_sign_to_sign"
             android:layout_marginTop="29dp"
-            android:textColor="@color/mine_white"
+            android:textColor="@color/whiteFontColor"
             android:textSize="@dimen/mine_main_medium"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

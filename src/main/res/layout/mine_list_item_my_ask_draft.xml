@@ -32,7 +32,7 @@
         app:layout_constraintEnd_toEndOf="@id/mine_ask_draft_iv_garbage"
         app:layout_constraintStart_toStartOf="@+id/mine_ask_draft_tv_title"
         app:layout_constraintTop_toBottomOf="@+id/mine_ask_draft_tv_title"
-        tools:text="我在沈阳sssssssssssssssssssssssssssssssssssssssssssssssssssssss的放子大范德萨分" />
+        tools:text="我在沈阳" />
 
     <TextView
         android:id="@+id/mine_ask_draft_tv_lastedit_at"
@@ -52,6 +52,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="15dp"
+        android:padding="10dp"
         android:src="@drawable/mine_ic_draft_garbage"
         app:layout_constraintBottom_toBottomOf="@id/mine_ask_draft_tv_lastedit_at"
         app:layout_constraintTop_toTopOf="@id/mine_ask_draft_tv_lastedit_at"
