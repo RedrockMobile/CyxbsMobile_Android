@@ -97,6 +97,8 @@
     <color name="writeAbleAreaBackgroundDark" tools:ignore="ResourceName">#E8F0FC</color>
 
     <!--    我的-->
+    <!--    签到页面TextView颜色-->
+    <color name="blueSignTextColor" tools:ignore="ResourceName">#839BFA</color>
     <!--    分割线颜色-->
     <color name="severViewColor" tools:ignore="ResourceName">#BDCCE5</color>
     <color name="alphaSeverViewColor" tools:ignore="ResourceName">#39BDCCE5</color>
@@ -112,12 +114,11 @@
     <color name="mine_tab_layout_text_unselected" tools:ignore="ResourceName">#8f15315B</color>
     <color name="mine_tab_layout_indicator_color" tools:ignore="ResourceName">#1AD0F2</color>
 
-    <!--    关于颜色-->
+    <!--    关于板块的颜色-->
     <color name="mine_about_text_color_normal" tools:ignore="ResourceName">#294169</color>
     <color name="mine_about_text_color_up_to_date" tools:ignore="ResourceName">#80294169</color>
     <color name="mine_about_text_color_blue" tools:ignore="ResourceName">#0BCCF0</color>
     <!--    签到部分颜色-->
-    <color name="blueSignTextColor" tools:ignore="ResourceName">#839BFA</color>
     <color name="mine_sign_bg_grey" tools:ignore="ResourceName">#E1E6F0</color>
     <color name="mine_sign_divider_grey" tools:ignore="ResourceName">#E1E6F0</color>
     <color name="mine_sign_divider_blue" tools:ignore="ResourceName">#3A35D2</color>
@@ -134,13 +135,17 @@
     <color name="mine_sign_store_bg" tools:ignore="ResourceName">#F8F9FC</color>
     <color name="mine_sign_store_my_product_text_color" tools:ignore="ResourceName">#FFA192</color>
 
+    <!--    我的模块提问，回答，评论的颜色-->
     <color name="mine_list_item_tv_disappear_at" tools:ignore="ResourceName">#6C84AB</color>
     <color name="mine_list_item_tv_content" tools:ignore="ResourceName">#15315B</color>
     <color name="mine_list_item_bg_brown" tools:ignore="ResourceName">#F7DAD7</color>
     <color name="mine_list_item_btn_text_color_accept" tools:ignore="ResourceName">#FFA192</color>
+
+    <!--    我的模块首页颜色-->
     <color name="mine_main_btn_gradient_start" tools:ignore="ResourceName">#4841E2</color>
     <color name="mine_main_btn_gradient_end" tools:ignore="ResourceName">#5D5DF7</color>
 
+    <!--    公共dialog背景-->
     <color name="common_dialog_bg" tools:ignore="ResourceName">#FFFFFF</color>
 
 
@@ -295,7 +300,7 @@
 
     <color name="addTransactionToTheTimetableClickColor" tools:ignore="ResourceName">#E9EDF2</color>
 
-   <!--    事务添加页面圆角item背景-->
+    <!--    事务添加页面圆角item背景-->
     <color name="transactionAddPageWarpItemTextColor" tools:ignore="ResourceName">#15315B</color>
 
     <color name="transactionCompletionEditViewColor" tools:ignore="ResourceName">#15315B</color>

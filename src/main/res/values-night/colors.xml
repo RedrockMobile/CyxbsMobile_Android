@@ -94,19 +94,21 @@
     <color name="alphaSeverViewColor" tools:ignore="ResourceName">#39BDCCE5</color>
     <color name="blueButton" tools:ignore="ResourceName">#2921D1</color>
 
+    <!--    按钮颜色-->
     <color name="greyButton" tools:ignore="ResourceName">#E1DFE0</color>
     <color name="greyButtonText" tools:ignore="ResourceName">#C3C0C1</color>
     <color name="greyText" tools:ignore="ResourceName">#C4C2C2</color>
     <color name="switchOff" tools:ignore="ResourceName">#5A5A5A</color>
 
+    <!--    tab_layout颜色-->
     <color name="mine_tab_layout_text_unselected" tools:ignore="ResourceName">#9AF0F0F2</color>
     <color name="mine_tab_layout_indicator_color" tools:ignore="ResourceName">#1AD0F2</color>
 
-    <!--    我的关于板块的颜色-->
+    <!--    关于板块的颜色-->
     <color name="mine_about_text_color_normal" tools:ignore="ResourceName">#ffffff</color>
     <color name="mine_about_text_color_up_to_date" tools:ignore="ResourceName">#48F0F0F2</color>
     <color name="mine_about_text_color_blue" tools:ignore="ResourceName">#0BCCF0</color>
-
+    <!--    签到部分颜色-->
     <color name="mine_sign_bg_grey" tools:ignore="ResourceName">#5A5A5A</color>
     <color name="mine_sign_divider_grey" tools:ignore="ResourceName">#5A5A5A</color>
     <color name="mine_sign_divider_blue" tools:ignore="ResourceName">#2CDEFF</color>
@@ -115,8 +117,6 @@
     <color name="mine_sign_ring_blue" tools:ignore="ResourceName">#2CDEFF</color>
     <color name="mine_sign_ring_outside" tools:ignore="ResourceName">#ffffff</color>
     <color name="mine_sign_bubble_text_color" tools:ignore="ResourceName">#1D1D1D</color>
-
-
     <color name="mine_sign_integral_text_background" tools:ignore="ResourceName">#D4DAFF</color>
     <color name="mine_sign_store_round_brown_background" tools:ignore="ResourceName">#5A5A5A</color>
     <color name="mine_sign_store_line" tools:ignore="ResourceName">#E2EDFB</color>
@@ -125,14 +125,17 @@
     <color name="mine_sign_store_bg" tools:ignore="ResourceName">#1D1D1D</color>
     <color name="mine_sign_store_my_product_text_color" tools:ignore="ResourceName">#000001</color>
 
+    <!--    我的模块提问，回答，评论的颜色-->
     <color name="mine_list_item_tv_content" tools:ignore="ResourceName">#A1D2D2D8</color>
     <color name="mine_list_item_tv_disappear_at" tools:ignore="ResourceName">#6C84AB</color>
     <color name="mine_list_item_bg_brown" tools:ignore="ResourceName">#F7DAD7</color>
     <color name="mine_list_item_btn_text_color_accept" tools:ignore="ResourceName">#FFA192</color>
+
+    <!--    我的模块首页颜色-->
     <color name="mine_main_btn_gradient_start" tools:ignore="ResourceName">#4841E2</color>
     <color name="mine_main_btn_gradient_end" tools:ignore="ResourceName">#5D5DF7</color>
 
-
+    <!--    公共dialog背景-->
     <color name="common_dialog_bg" tools:ignore="ResourceName">#2C2C2C</color>
 
 
