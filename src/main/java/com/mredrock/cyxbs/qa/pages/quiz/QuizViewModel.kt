@@ -193,8 +193,9 @@ class QuizViewModel : BaseViewModel() {
         list.forEachIndexed { index, s ->
             if (!isInvalidList[index] || s.isNotEmpty()) res.add(s)
         }
-        val s = res.toString()
-        return if (s.isNotEmpty()) ",\"photo_thumbnail_src\":\"${s.substring(1, s.length - 1)}\""
+        val s = StringBuilder()
+        res.forEach { s.append("\"$it\",") }
+        return if (s.isNotEmpty()) ",\"photo_url\":[${s.substring(0, s.length - 1)}]"
         else ""
     }
 

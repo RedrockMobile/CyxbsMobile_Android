@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -158,7 +159,7 @@ class AnswerListActivity : BaseActivity() {
         emptyRvAdapter = EmptyRvAdapter(getString(R.string.qa_answer_list_no_answer_hint))
         val adapterWrapper = RvAdapterWrapper(answerListAdapter, headerAdapter, footerRvAdapter, emptyRvAdapter)
         rv_answer_list.apply {
-            layoutManager = androidx.recyclerview.widget.LinearLayoutManager(this@AnswerListActivity)
+            layoutManager = LinearLayoutManager(this@AnswerListActivity)
             adapter = adapterWrapper
         }
     }
@@ -278,7 +279,6 @@ class AnswerListActivity : BaseActivity() {
             EventBus.getDefault().removeStickyEvent(event)
         } else {
             var questionWrapper: RedrockApiWrapper<Question>? = null
-
             try {
                 questionWrapper = Gson().fromJson<RedrockApiWrapper<Question>>(event.questionJson,
                         object : TypeToken<RedrockApiWrapper<Question>>() {}.type)
@@ -294,6 +294,7 @@ class AnswerListActivity : BaseActivity() {
             } else {
                 initViewModel(questionWrapper.data)
                 initView(questionWrapper.data)
+                viewModel.addQuestionView()
             }
         }
     }

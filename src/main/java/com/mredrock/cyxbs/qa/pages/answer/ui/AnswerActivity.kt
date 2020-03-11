@@ -255,11 +255,8 @@ class AnswerActivity : BaseViewModelActivity<AnswerViewModel>() {
         val json = String(Base64.decode(event.jsonString, Base64.DEFAULT))
         val content = Gson().fromJson(json, Content::class.java)
         edt_answer_content.setText(content.title)
-        if (content.pictures != null) {
-            val list = content.pictures.split(",").toMutableList()
-            if (list[0] != "") {
-                viewModel.setImageList(arrayListOf<String>().apply { addAll(list) })
-            }
+        if (content.pictures.isNotEmpty()){
+            viewModel.setImageList(content.pictures)
         }
         viewModel.qid = event.targetId
         viewModel.getQuestionInfo()

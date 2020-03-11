@@ -245,11 +245,8 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
             getString(R.string.qa_quiz_select_type_others) -> currentTypeIndex = 3
         }
         childView[currentTypeIndex].selected()
-        if (question.photoThumbnailSrc != null) {
-            val list = question.photoThumbnailSrc.split(",").toMutableList()
-            if (list[0] != "") {
-                viewModel.setImageList(arrayListOf<String>().apply { addAll(list) })
-            }
+        if (question.photoUrl.isNotEmpty()) {
+            viewModel.setImageList(arrayListOf<String>().apply { addAll(question.photoUrl) })
         }
         draftId = event.selfId
     }

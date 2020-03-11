@@ -60,7 +60,10 @@ class AnswerViewModel(var qid: String) : BaseViewModel() {
             observable = observable.flatMap { uploadPic(it as String, files) }
         }
         observable.doFinally { progressDialogEvent.value = ProgressDialogEvent.DISMISS_DIALOG_EVENT }
-                .doOnError { BaseApp.context.longToast(it.message!!) }
+                .doOnError {
+                    BaseApp.context.longToast(it.message!!)
+                    backAndRefreshPreActivityEvent.value = true
+                }
                 .safeSubscribeBy {
                     toastEvent.value = R.string.qa_answer_submit_successfully_text
                     backAndRefreshPreActivityEvent.value = true
@@ -144,14 +147,11 @@ class AnswerViewModel(var qid: String) : BaseViewModel() {
         ApiGenerator.getApiService(ApiService::class.java)
                 .getQuestion(qid)
                 .setSchedulers()
-                .doOnSubscribe { progressDialogEvent.value = ProgressDialogEvent.SHOW_NONCANCELABLE_DIALOG_EVENT }
                 .doOnError {
                     toastEvent.value = R.string.qa_answer_load_draft_question_failed
-                    progressDialogEvent.value = ProgressDialogEvent.DISMISS_DIALOG_EVENT
                 }
                 .safeSubscribeBy {
-                    progressDialogEvent.value = ProgressDialogEvent.DISMISS_DIALOG_EVENT
-                    questionData.value = it
+                    questionData.value = it.data
                 }
     }
 
@@ -161,8 +161,9 @@ class AnswerViewModel(var qid: String) : BaseViewModel() {
         list.forEachIndexed { index, s ->
             if (!isInvalidList[index] || s.isNotEmpty()) res.add(s)
         }
-        val s = res.toString()
-        return if (s.isNotEmpty()) ",\"photo_thumbnail_src\":\"${s.substring(1, s.length - 1)}\""
+        val s = StringBuilder()
+        res.forEach { s.append("\"$it\",") }
+        return if (s.isNotEmpty()) ",\"photo_url\":[${s.substring(0, s.length - 1)}]"
         else ""
     }
 
