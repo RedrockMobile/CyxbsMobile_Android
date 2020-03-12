@@ -125,6 +125,12 @@ class CoursesViewModel : BaseViewModel() {
             return "${s.parseStartCourseTime()}-${s.parseEndCourseTime()}"
         }
     }
+    val isAffair = object : ObservableField<Int>(nowCourse) {
+        override fun get(): Int? {
+            val isShow = nowCourse.get() != null
+            return if (nowCourse.get()?.courseNum == null && isShow) View.GONE else View.VISIBLE
+        }
+    }
 
     //是否是明天的课表，显示提示
     val tomorrowTips = ObservableField<Int>(View.VISIBLE)
@@ -388,8 +394,8 @@ class CoursesViewModel : BaseViewModel() {
                     affairsFromInternet.data?.let { notNullAffairs ->
                         //将从服务器上获取的事务映射为课程信息。
                         Observable.create(ObservableOnSubscribe<List<Affair>> {
-                                    it.onNext(notNullAffairs)
-                                }).setSchedulers()
+                            it.onNext(notNullAffairs)
+                        }).setSchedulers()
                                 .errorHandler()
                                 .map(AffairMapToCourse())
                                 .subscribe {
