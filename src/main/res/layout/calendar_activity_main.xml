@@ -1,24 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
+    android:fitsSystemWindows="true"
+    android:background="#ffffff"
     android:orientation="vertical"
     tools:context="com.mredrock.cyxbs.discover.calendar.CalendarActivity">
-
-    <include layout="@layout/common_toolbar" />
-
-    <ScrollView
+    <ImageView
+        android:id="@+id/iv_calendar"
+        android:fitsSystemWindows="true"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-            <ImageView
-                android:id="@+id/iv_calendar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:adjustViewBounds="true"
-                tools:ignore="ContentDescription" />
-
-    </ScrollView>
-
-</LinearLayout>
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="true"
+        tools:ignore="ContentDescription" />
+</ScrollView>
