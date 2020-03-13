@@ -72,13 +72,11 @@ const val COURSE_DIRECT_LOAD = "direct_load"
 const val TRUE = "true"
 const val FALSE = "false"
 
-//邮问问题和回答
-//从跳转到具体页面时需要以此为key
-const val QUESTION_ID = "question_id"
-const val ANSWER_ID = "answer_id"
-//跳转邮问时，需要RequestBody的string，以此为key
-const val QUESTION_REQUEST_BODY_DATA = "question_request_body"
-const val ANSWER_REQUEST_BODY_DATA = "answer_request_body"
+//从个人板块跳转邮问时，需要传递的key和value
+const val NAVIGATE_FROM_WHERE = "NAVIGATE_FROM_WHERE"  //作为Key
+
+const val IS_COMMENT = 1 //从我的评论跳转到具体回答页面
+const val IS_ANSWER = 0 //从我的回答跳转到具体的回答页面
 
 //课表版本
 const val COURSE_VERSION = "course_version"
