@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_content"
     android:background="@color/windowBackground"
+    android:fitsSystemWindows="true"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.MainActivity">
@@ -23,8 +24,9 @@
         把某个控件显示到dialog上层的方法，等你来优化解耦吧-->
     <FrameLayout
         android:id="@+id/course_bottom_sheet_content"
+        android:fitsSystemWindows="true"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         app:layout_behavior="@string/bottom_sheet_behavior"
         app:behavior_peekHeight="@dimen/main_main_bottom_navigation_height_twice_as_much">
 
