@@ -14,11 +14,4 @@ import retrofit2.http.POST
 interface ApiService {
     @POST("/app/index.php/Home/Photo/showPicture")
     fun getStartPage(): Observable<RedrockApiWrapper<List<StartPage>>>
-
-    @FormUrlEncoded
-    @POST("/app/index.php/QA/Question/getQuestionInfo")
-    fun getQuestion(
-            @Field("stunum") stuNum: String,
-            @Field("idnum") idNum: String,
-            @Field("question_id") qid: String): Observable<ResponseBody>
 }

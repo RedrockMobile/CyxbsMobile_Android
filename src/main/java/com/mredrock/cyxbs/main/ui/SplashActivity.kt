@@ -9,20 +9,24 @@ import com.alibaba.android.arouter.launcher.ARouter
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
-import com.mredrock.cyxbs.common.config.*
-import com.mredrock.cyxbs.common.event.AskLoginEvent
+import com.mredrock.cyxbs.common.config.MAIN_LOGIN
+import com.mredrock.cyxbs.common.config.MAIN_MAIN
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.service.account.IAccountService
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
+import com.mredrock.cyxbs.common.utils.extensions.getDarkModeStatus
 import com.mredrock.cyxbs.common.utils.extensions.setFullScreen
 import com.mredrock.cyxbs.common.viewmodel.event.SingleLiveEvent
 import com.mredrock.cyxbs.main.R
 import com.mredrock.cyxbs.main.utils.getSplashFile
 import com.mredrock.cyxbs.main.utils.isDownloadSplash
+import com.mredrock.cyxbs.main.utils.isNightMode
 import com.mredrock.cyxbs.main.viewmodel.SplashViewModel
 import kotlinx.android.synthetic.main.main_activity_splash.*
 import kotlinx.android.synthetic.main.main_view_stub_splash.view.*
 import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 
 
 class SplashActivity : BaseViewModelActivity<SplashViewModel>() {
@@ -42,7 +46,7 @@ class SplashActivity : BaseViewModelActivity<SplashViewModel>() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.main_activity_splash)
         setFullScreen()
-
+        isNightMode = getDarkModeStatus()
         //判断是否下载了Splash图，下载了就直接设置
         isDownloadSplash = if (isDownloadSplash(this@SplashActivity)) {
             viewStub = main_activity_splash_viewStub.inflate()//ViewStub加载
@@ -59,51 +63,32 @@ class SplashActivity : BaseViewModelActivity<SplashViewModel>() {
         }
 
         val isLogin = ServiceManager.getService(IAccountService::class.java).getVerifyService().isLogin()
-
-        val uri = intent.data
-        when (uri?.path) {
-            URI_PATH_QA_QUESTION -> {
-                if (!isLogin) {
-                    EventBus.getDefault().post(AskLoginEvent("请先登陆才能使用邮问哦~"))
-                    return
-                }
-                viewModel.finishModel.observeNotNullAndTrue {
-                    navigateAndFinish(QA_ANSWER_LIST)
-                }
-                viewModel.getQuestion(uri.getQueryParameter("qid") ?: "0")
+        viewModel.finishModel.observeNotNullAndTrue {
+            if (isLogin) {
+                navigateAndFinish(MAIN_MAIN)
+            } else {
+                navigateAndFinish(MAIN_LOGIN)
             }
-            URI_PATH_QA_ANSWER -> {
-
-            }
-            else -> {
-                viewModel.finishModel.observeNotNullAndTrue {
-                    if (isLogin) {
-                        navigateAndFinish(MAIN_MAIN)
-                    } else {
-                        navigateAndFinish(MAIN_LOGIN)
-                    }
-                    overridePendingTransition(0, 0)
-                }
-                if (isDownloadSplash) {//如果下载了
-                    object : CountDownTimer(3000, 1000) {
-                        override fun onFinish() {
-                            viewModel.finishAfter(0)
-                        }
-
-                        override fun onTick(millisUntilFinished: Long) {
-                            runOnUiThread {
-                                val str = "跳过 ${millisUntilFinished / 1000}"
-                                viewStub.main_activity_splash_skip.text = str
-                            }
-                        }
-                    }.start()
-                    viewStub.main_activity_splash_skip.setOnClickListener {
-                        viewModel.finishAfter(0)
-                    }
-                } else {//如果没闪屏页直接打开
+            overridePendingTransition(0, 0)
+        }
+        if (isDownloadSplash) {//如果下载了
+            object : CountDownTimer(3000, 1000) {
+                override fun onFinish() {
                     viewModel.finishAfter(0)
                 }
+
+                override fun onTick(millisUntilFinished: Long) {
+                    runOnUiThread {
+                        val str = "跳过 ${millisUntilFinished / 1000}"
+                        viewStub.main_activity_splash_skip.text = str
+                    }
+                }
+            }.start()
+            viewStub.main_activity_splash_skip.setOnClickListener {
+                viewModel.finishAfter(0)
             }
+        } else {//如果没闪屏页直接打开
+            viewModel.finishAfter(0)
         }
         viewModel = ViewModelProviders.of(this).get(SplashViewModel::class.java)
     }

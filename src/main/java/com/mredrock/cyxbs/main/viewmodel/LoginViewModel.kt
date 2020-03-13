@@ -42,9 +42,6 @@ class LoginViewModel : BaseViewModel() {
     }
 
     private fun verifyByWeb(stuNum: String, idNum: String, landing: () -> Unit) {
-        thread {
-
-        }
         Observable.create<LoginState> {
             val startTime = System.currentTimeMillis()
             var loginState = LoginState.NotLanded
@@ -83,6 +80,8 @@ class LoginViewModel : BaseViewModel() {
                     CyxbsToast.makeText(context, R.string.main_login_error_prompt, Toast.LENGTH_SHORT).show()
                 }
                 else -> {
+                    //这种情况按道理来说不会出现，所以直接返回就好
+                    landing()
                 }
             }
         }.isDisposed
