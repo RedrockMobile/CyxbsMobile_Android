@@ -1,5 +1,7 @@
 package com.mredrock.cyxbs.discover.pages.discover
 
+import android.annotation.SuppressLint
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -23,7 +25,6 @@ import com.mredrock.cyxbs.discover.utils.MoreFunctionProvider
 import kotlinx.android.synthetic.main.discover_home_fragment.*
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import org.jetbrains.anko.textColor
 
 /**
  * @author zixuan
@@ -101,7 +102,7 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>() {
             }
         }
 
-        viewFlipper?.setOnClickListener {
+        viewFlipper.setOnClickListener {
             ARouter.getInstance().build(DISCOVER_NEWS_ITEM).withString("id", viewFlipper.focusedChild.tag as String).navigation()
         }
 
@@ -116,12 +117,19 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>() {
         }
     }
 
+    @SuppressLint("ResourceAsColor")
     private fun getTextView(info: String, id: String): TextView {
         return TextView(context).apply {
             text = info
             maxLines = 1
             overScrollMode = OVER_SCROLL_IF_CONTENT_SCROLLS
-            textColor = R.color.menuFontColorFound
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                setTextColor(context.resources.getColor(R.color.menuFontColorFound, context.theme))
+            } else {
+                setTextColor(context.resources.getColor(R.color.menuFontColorFound))
+            }
+//            textColor = R.color.menuFontColorFound
             setOnClickListener {
                 ARouter.getInstance().build(DISCOVER_NEWS_ITEM).withString("id", id).navigation()
             }
