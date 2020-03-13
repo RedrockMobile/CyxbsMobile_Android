@@ -156,16 +156,8 @@ fun getStartCalendarByNum(hash_lesson: Int): Calendar {
             calendar.set(Calendar.MINUTE, 0)
         }
         5 -> {
-            calendar.set(Calendar.HOUR_OF_DAY, 21)
-            calendar.set(Calendar.MINUTE, 15)
-        }
-        6 -> {
-            calendar.set(Calendar.HOUR_OF_DAY, 19)
-            calendar.set(Calendar.MINUTE, 0)
-        }
-        7 -> {
-            calendar.set(Calendar.HOUR_OF_DAY, 21)
-            calendar.set(Calendar.MINUTE, 0)
+            calendar.set(Calendar.HOUR_OF_DAY, 20)
+            calendar.set(Calendar.MINUTE, 50)
         }
     }
     return calendar
