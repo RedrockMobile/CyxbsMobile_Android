@@ -45,13 +45,13 @@ internal fun TextView.selected() {
 
 }
 
-internal fun setAdoptedTv(adoptedTv: TextView, adoptTv: TextView, isAdopted: Boolean, showAdoptIcon: Boolean) = when {
+internal fun setAdoptedTv(adoptedTv: TextView, adoptTv: TextView, isAdopted: Boolean, removeAdoptIcon: Boolean) = when {
     isAdopted -> {
         adoptTv.gone()
         adoptedTv.visible()
     }
 
-    showAdoptIcon -> {
+    removeAdoptIcon -> {
         adoptTv.gone()
         adoptedTv.gone()
     }

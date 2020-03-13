@@ -5,6 +5,8 @@ import android.app.ProgressDialog
 import android.os.Bundle
 import android.text.InputType.TYPE_TEXT_FLAG_MULTI_LINE
 import android.view.inputmethod.EditorInfo
+import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -13,6 +15,9 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.mredrock.cyxbs.common.bean.RedrockApiWrapper
 import com.mredrock.cyxbs.common.bean.isSuccessful
+import com.mredrock.cyxbs.common.config.IS_ANSWER
+import com.mredrock.cyxbs.common.config.IS_COMMENT
+import com.mredrock.cyxbs.common.config.NAVIGATE_FROM_WHERE
 import com.mredrock.cyxbs.common.config.QA_COMMENT_LIST
 import com.mredrock.cyxbs.common.event.OpenShareCommentEvent
 import com.mredrock.cyxbs.common.service.ServiceManager
@@ -20,12 +25,14 @@ import com.mredrock.cyxbs.common.service.account.IAccountService
 import com.mredrock.cyxbs.common.ui.BaseActivity
 import com.mredrock.cyxbs.common.utils.extensions.gone
 import com.mredrock.cyxbs.common.utils.extensions.toast
+import com.mredrock.cyxbs.common.utils.extensions.visible
 import com.mredrock.cyxbs.common.viewmodel.event.ProgressDialogEvent
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.bean.Answer
 import com.mredrock.cyxbs.qa.bean.Question
 import com.mredrock.cyxbs.qa.component.recycler.RvAdapterWrapper
 import com.mredrock.cyxbs.qa.network.NetworkState
+import com.mredrock.cyxbs.qa.pages.answer.ui.AnswerListActivity
 import com.mredrock.cyxbs.qa.pages.answer.ui.dialog.ReportDialog
 import com.mredrock.cyxbs.qa.pages.comment.AdoptAnswerEvent
 import com.mredrock.cyxbs.qa.pages.comment.viewmodel.CommentListViewModel
@@ -37,10 +44,7 @@ import kotlinx.android.synthetic.main.qa_comment_new_publish_layout.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import org.jetbrains.anko.indeterminateProgressDialog
-import org.jetbrains.anko.longToast
-import org.jetbrains.anko.singleLine
-import org.jetbrains.anko.startActivityForResult
+import org.jetbrains.anko.*
 
 @Route(path = QA_COMMENT_LIST)
 class CommentListActivity : BaseActivity() {
@@ -83,9 +87,9 @@ class CommentListActivity : BaseActivity() {
             answer = intent.getParcelableExtra(PARAM_ANSWER)
             question = intent.getParcelableExtra(PARAM_QUESTION)
             initViewModel(question.id, answer)
-            val showAdoptIcon = question.hasAdoptedAnswer || !question.isSelf
+            val removeAdoptIcon = !question.isSelf
             initToolbar()
-            initRv(showAdoptIcon)
+            initRv(removeAdoptIcon)
             initCommentSheet()
         }
     }
@@ -113,12 +117,27 @@ class CommentListActivity : BaseActivity() {
         val commentNub = answer.commentNum
         qa_tv_toolbar_title.text = baseContext.getString(R.string.qa_comment_list_comment_count, commentNub)
         val mStuNum = ServiceManager.getService(IAccountService::class.java).getUserService().getStuNum()
-        if (answer.userId != mStuNum) {
-            qa_ib_toolbar_more.setOnClickListener {
-                answerReportDialog.show()
-            }
-        } else {
+        if (intent.getIntExtra(NAVIGATE_FROM_WHERE, IS_COMMENT) == IS_ANSWER) {
+            cl_toolbar_root.addView(TextView(this).apply {
+                layoutParams = qa_ib_toolbar_more.layoutParams
+                text = getString(R.string.qa_answer_show_question)
+                textColor = ContextCompat.getColor(this@CommentListActivity, R.color.levelTwoFontColor)
+                textSize = 15f
+                visible()
+                setOnClickListener {
+                    this@CommentListActivity.startActivityForResult<AnswerListActivity>(0, AnswerListActivity.PARAM_QUESTION to question)
+                    this@CommentListActivity.finish()
+                }
+            })
             qa_ib_toolbar_more.gone()
+        } else {
+            if (answer.userId != mStuNum) {
+                qa_ib_toolbar_more.setOnClickListener {
+                    answerReportDialog.show()
+                }
+            } else {
+                qa_ib_toolbar_more.gone()
+            }
         }
     }
 
@@ -181,6 +200,7 @@ class CommentListActivity : BaseActivity() {
         }
         refreshPreActivityEvent.observeNotNull {
             tv_comment_praise.setPraise(answerLiveData.value?.praiseNum, answerLiveData.value?.isPraised)
+            viewModel.isDealing = false
         }
     }
 
@@ -198,7 +218,13 @@ class CommentListActivity : BaseActivity() {
         }
         tv_comment_praise.apply {
             setPraise(answer.praiseNum, answer.isPraised)
-            setOnClickListener { viewModel.clickPraiseButton() }
+            setOnClickListener {
+                if (viewModel.isDealing) {
+                    toast(getString(R.string.qa_answer_praise_dealing))
+                } else {
+                    viewModel.clickPraiseButton()
+                }
+            }
         }
     }
 
@@ -233,9 +259,12 @@ class CommentListActivity : BaseActivity() {
             } else {
                 answer = answerWrapper.data
                 initViewModel(event.questionId, answerWrapper.data)
-                val showAdoptIcon = answer.isAdopted || answer.userId != ServiceManager.getService(IAccountService::class.java).getUserService().getStuNum()
                 initToolbar()
-                initRv(showAdoptIcon)
+                viewModel.getQuestionInfo()
+                viewModel.questionData.observeNotNull {
+                    initRv(!it.isSelf)
+                    question = it
+                }
                 initCommentSheet()
             }
         }

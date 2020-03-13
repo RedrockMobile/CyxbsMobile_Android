@@ -20,7 +20,7 @@ data class Answer(@SerializedName("comment_num")
                   @SerializedName("gender")
                   val gender: String = "",
 
-                  @SerializedName("user_id")
+                  @SerializedName("stunum")
                   val userId: String = "",
 
                   @SerializedName("praise_num")

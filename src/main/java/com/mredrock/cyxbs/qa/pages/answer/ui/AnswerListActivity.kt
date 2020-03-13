@@ -130,16 +130,21 @@ class AnswerListActivity : BaseActivity() {
         swipe_refresh_layout.setOnRefreshListener {
             viewModel.invalidate()
         }
-        headerAdapter = AnswerListHeaderAdapter { answerListAdapter.resortList(it) }
-        answerListAdapter = AnswerListAdapter(this).apply {
+        headerAdapter = AnswerListHeaderAdapter()
+        answerListAdapter = AnswerListAdapter().apply {
             onItemClickListener = { _, answer ->
                 CommentListActivity.activityStart(this@AnswerListActivity, viewModel.questionLiveData.value!!, answer)
             }
             onPraiseClickListener = { i: Int, answer: Answer ->
-                viewModel.clickPraiseButton(i, answer)
-                viewModel.apply {
-                    refreshPreActivityEvent.observeNotNull {
-                        answerListAdapter.notifyItemChanged(it)
+                if (viewModel.isDealing) {
+                    toast(getString(R.string.qa_answer_praise_dealing))
+                } else {
+                    viewModel.clickPraiseButton(i, answer)
+                    viewModel.apply {
+                        refreshPreActivityEvent.observeNotNull {
+                            answerListAdapter.notifyItemChanged(it)
+                            viewModel.isDealing = false
+                        }
                     }
                 }
             }

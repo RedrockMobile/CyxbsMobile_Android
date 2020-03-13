@@ -38,7 +38,9 @@ class AnswerListViewModel(question: Question) : BaseViewModel() {
 
     private var praiseNetworkState = NetworkState.SUCCESSFUL
     val refreshPreActivityEvent = SingleLiveEvent<Int>()
-    val qid get() = questionLiveData.value!!.id
+    private val qid get() = questionLiveData.value!!.id
+    //防止点赞快速点击
+    var isDealing = false
 
     private val factory: AnswerDataSource.Factory
 
@@ -157,6 +159,7 @@ class AnswerListViewModel(question: Question) : BaseViewModel() {
                         praiseAnswer(answer.id)
                     }
                 }
+                .doOnSubscribe { isDealing = true }
                 .checkError()
                 .setSchedulers()
                 .doOnError {

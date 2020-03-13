@@ -13,6 +13,7 @@ import com.mredrock.cyxbs.common.viewmodel.event.SingleLiveEvent
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.bean.Answer
 import com.mredrock.cyxbs.qa.bean.Comment
+import com.mredrock.cyxbs.qa.bean.Question
 import com.mredrock.cyxbs.qa.network.ApiService
 import com.mredrock.cyxbs.qa.network.NetworkState
 import com.mredrock.cyxbs.qa.pages.comment.model.CommentDataSource
@@ -23,6 +24,7 @@ class CommentListViewModel(val qid: String,
     val commentList: LiveData<PagedList<Comment>>
     val networkState: LiveData<Int>
     val initialLoad: LiveData<Int>
+    val questionData = MutableLiveData<Question>()
 
     val answerLiveData = MutableLiveData<Answer>()
     val isPraised = Transformations.map(this.answerLiveData) { it.isPraised }!!
@@ -31,6 +33,8 @@ class CommentListViewModel(val qid: String,
     val refreshPreActivityEvent = SingleLiveEvent<Boolean>()
     val backPreActivityReportAnswerEvent = SingleLiveEvent<Boolean>()
     private var praiseNetworkState = NetworkState.SUCCESSFUL
+    //防止点赞快速点击
+    var isDealing = false
 
     init {
         val initNum = if (answer.commentNumInt == 0) 6 else answer.commentNumInt
@@ -61,7 +65,18 @@ class CommentListViewModel(val qid: String,
                 .doFinally { progressDialogEvent.value = ProgressDialogEvent.DISMISS_DIALOG_EVENT }
                 .safeSubscribeBy {
                     answerLiveData.value?.isAdopted = true
-                    refreshPreActivityEvent.value = true
+                }
+    }
+
+    fun getQuestionInfo() {
+        ApiGenerator.getApiService(ApiService::class.java)
+                .getQuestion(qid)
+                .setSchedulers()
+                .doOnError {
+                    toastEvent.value = R.string.qa_answer_load_draft_question_failed
+                }
+                .safeSubscribeBy {
+                    questionData.value = it.data
                 }
     }
 
@@ -112,6 +127,7 @@ class CommentListViewModel(val qid: String,
                         praiseAnswer(answer.id)
                     }
                 }
+                .doOnSubscribe { isDealing = true }
                 .checkError()
                 .setSchedulers()
                 .doOnSubscribe {
@@ -150,7 +166,6 @@ class CommentListViewModel(val qid: String,
                 .doFinally { progressDialogEvent.value = ProgressDialogEvent.DISMISS_DIALOG_EVENT }
                 .safeSubscribeBy {
                     answerLiveData.value = answer.apply { commentNum = "${commentNumInt + 1}" }
-                    refreshPreActivityEvent.value = true
                     invalidateCommentList()
                 }
                 .lifeCycle()

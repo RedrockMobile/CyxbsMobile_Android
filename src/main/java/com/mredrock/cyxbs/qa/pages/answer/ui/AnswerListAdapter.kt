@@ -1,11 +1,11 @@
 package com.mredrock.cyxbs.qa.pages.answer.ui
 
-import android.content.Context
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.service.account.IAccountService
 import com.mredrock.cyxbs.common.utils.extensions.gone
+import com.mredrock.cyxbs.common.utils.extensions.invisible
 import com.mredrock.cyxbs.common.utils.extensions.setAvatarImageFromUrl
 import com.mredrock.cyxbs.common.utils.extensions.visible
 import com.mredrock.cyxbs.qa.R
@@ -20,7 +20,7 @@ import kotlinx.android.synthetic.main.qa_recycler_item_answer.view.*
 /**
  * Created By jay68 on 2018/9/30.
  */
-class AnswerListAdapter(context: Context) : BaseRvAdapter<Answer>() {
+class AnswerListAdapter() : BaseRvAdapter<Answer>() {
     companion object {
         @JvmStatic
         val DIFF_CALLBACK = object : DiffUtil.ItemCallback<Answer>() {
@@ -34,28 +34,11 @@ class AnswerListAdapter(context: Context) : BaseRvAdapter<Answer>() {
     var onReportClickListener: ((String) -> Unit)? = null
     var onItemClickListener: ((Int, Answer) -> Unit)? = null
 
-    private val sortByTime = context.getString(R.string.qa_answer_list_sort_by_time)
-    private val sortByDefault = context.getString(R.string.qa_answer_list_sort_by_default)
 
     private var isEmotion = false
     private var isSelf = false
     private var hasAdoptedAnswer = false
-    private var sortBy = sortByDefault
 
-    fun resortList(sortBy: String) {
-        this.sortBy = sortBy
-        when (sortBy) {
-            sortByDefault -> {
-                dataList.sortWith(Comparator { o1, o2 ->
-                    compareValuesBy(o2, o1, Answer::isAdopted, Answer::hotValue, Answer::createdAt)
-                })
-            }
-            sortByTime -> {
-                dataList.sortByDescending(Answer::createdAt)
-            }
-        }
-        notifyItemRangeChanged(0, this@AnswerListAdapter.itemCount)
-    }
 
     fun setQuestionInfo(question: Question) {
         isEmotion = question.isEmotion
@@ -77,9 +60,10 @@ class AnswerListAdapter(context: Context) : BaseRvAdapter<Answer>() {
             tv_answer_praise_count.setOnClickListener {
                 onPraiseClickListener?.invoke(position, dataList[position])
             }
-            btn_answer_more.setOnClickListener {
-                onReportClickListener?.invoke(dataList[position].id)
-            }
+            if (dataList[position].userId != ServiceManager.getService(IAccountService::class.java).getUserService().getStuNum())
+                btn_answer_more.setOnClickListener {
+                    onReportClickListener?.invoke(dataList[position].id)
+                }
         }
     }
 
@@ -89,8 +73,7 @@ class AnswerListAdapter(context: Context) : BaseRvAdapter<Answer>() {
             itemView.apply {
                 //判断是否显示
                 if (data.userId == ServiceManager.getService(IAccountService::class.java).getUserService().getStuNum()) {
-                    btn_answer_more.gone()
-                    tv_answer_praise_count.gone()
+                    btn_answer_more.invisible()
                 }
                 if (data.commentNumInt == 0) {
                     tv_answer_reply_count.gone()

@@ -10,6 +10,7 @@
     tools:context=".pages.comment.ui.CommentListActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_toolbar_root"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"

@@ -17,13 +17,13 @@ import org.greenrobot.eventbus.EventBus
  * Created By jay68 on 2018/10/8.
  */
 class CommentListHeaderRvAdapter(
-        private val showAdoptIcon: Boolean
+        private val removeAdoptIcon: Boolean
 ) : BaseRvAdapter<Answer>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
-            HeaderViewHolder(showAdoptIcon, parent)
+            HeaderViewHolder(removeAdoptIcon, parent)
 
-    inner class HeaderViewHolder(private val showAdoptIcon: Boolean,
+    inner class HeaderViewHolder(private val removeAdoptIcon: Boolean,
                                  parent: ViewGroup) : BaseViewHolder<Answer>(parent, R.layout.qa_recycler_item_comment_header) {
 
         override fun refresh(data: Answer?) {
@@ -37,7 +37,7 @@ class CommentListHeaderRvAdapter(
                 ngv_answer.setOnItemClickListener { _, index ->
                     ViewImageActivity.activityStart(context, data.photoUrl[index])
                 }
-                setAdoptedTv(tv_adopted, tv_adopt, data.isAdopted, showAdoptIcon)
+                setAdoptedTv(tv_adopted, tv_adopt, data.isAdopted, removeAdoptIcon)
                 tv_adopt.setOnClickListener {
                     EventBus.getDefault().post(AdoptAnswerEvent(data.id))
                 }

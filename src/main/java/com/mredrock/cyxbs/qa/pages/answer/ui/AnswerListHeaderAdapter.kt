@@ -14,14 +14,9 @@ import kotlinx.android.synthetic.main.qa_recycler_item_answer_header.view.*
 /**
  * Created By jay68 on 2018/9/30.
  */
-class AnswerListHeaderAdapter(private val onSortOrderChangedListener: (sortOrder: String) -> Unit) : BaseRvAdapter<Question>() {
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = HeaderViewHolder(parent).apply {
-        onSortOrderChangedListener = this@AnswerListHeaderAdapter.onSortOrderChangedListener
-    }
-
+class AnswerListHeaderAdapter : BaseRvAdapter<Question>() {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = HeaderViewHolder(parent)
     class HeaderViewHolder(parent: ViewGroup) : BaseViewHolder<Question>(parent, R.layout.qa_recycler_item_answer_header) {
-        var onSortOrderChangedListener: ((sortOrder: String) -> Unit)? = null
-
         override fun refresh(data: Question?) {
             data ?: return
             itemView.apply {

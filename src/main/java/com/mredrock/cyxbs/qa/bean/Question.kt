@@ -57,8 +57,6 @@ data class Question(@SerializedName("reward")
     var hasAdoptedAnswer: Boolean = false
 
     val isEmotion get() = kind == "情感"
-    val isAnonymous get() = _isAnonymous == 1
-    val isMale get() = gender != "女"
     val isSelf get() = _isSelf == 1
 
     fun refresh(question: Question) {
