@@ -17,15 +17,12 @@ import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.extensions.setFullScreen
 import com.mredrock.cyxbs.common.viewmodel.event.SingleLiveEvent
 import com.mredrock.cyxbs.main.R
-import com.mredrock.cyxbs.main.bean.FinishEvent
 import com.mredrock.cyxbs.main.utils.getSplashFile
 import com.mredrock.cyxbs.main.utils.isDownloadSplash
 import com.mredrock.cyxbs.main.viewmodel.SplashViewModel
 import kotlinx.android.synthetic.main.main_activity_splash.*
 import kotlinx.android.synthetic.main.main_view_stub_splash.view.*
 import org.greenrobot.eventbus.EventBus
-import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.ThreadMode
 
 
 class SplashActivity : BaseViewModelActivity<SplashViewModel>() {
@@ -128,8 +125,4 @@ class SplashActivity : BaseViewModelActivity<SplashViewModel>() {
         }
     })
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onFinish(event: FinishEvent) {
-        this.finish()
-    }
 }

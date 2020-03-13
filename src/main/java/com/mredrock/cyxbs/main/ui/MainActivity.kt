@@ -2,6 +2,7 @@ package com.mredrock.cyxbs.main.ui
 
 import android.os.Build
 import android.os.Bundle
+import android.os.PersistableBundle
 import android.view.MenuItem
 import android.view.View
 import android.view.View.*
@@ -10,9 +11,6 @@ import android.widget.FrameLayout
 import androidx.core.content.ContextCompat
 import androidx.core.view.get
 import androidx.fragment.app.Fragment
-import androidx.transition.Slide
-import androidx.transition.TransitionManager
-import androidx.transition.TransitionSet
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.google.android.material.bottomnavigation.LabelVisibilityMode
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -30,7 +28,6 @@ import com.mredrock.cyxbs.common.utils.extensions.sharedPreferences
 import com.mredrock.cyxbs.common.utils.update.UpdateEvent
 import com.mredrock.cyxbs.common.utils.update.UpdateUtils
 import com.mredrock.cyxbs.main.R
-import com.mredrock.cyxbs.main.bean.FinishEvent
 import com.mredrock.cyxbs.main.utils.*
 import com.mredrock.cyxbs.main.viewmodel.MainViewModel
 import com.umeng.message.inapp.InAppMessageManager
@@ -120,6 +117,18 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
         viewModel.getStartPage()
 
         bottomSheetBehavior = BottomSheetBehavior.from(course_bottom_sheet_content)
+        Observable.create<Fragment> {
+            it.onNext(discoverFragment)
+        }.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe {
+            other_fragment_container.visibility = GONE
+            changeFragment(discoverFragment, 0, nav_main.menu[0])
+//                        TransitionManager.beginDelayedTransition(main_content, TransitionSet().apply {
+//                            addTransition(Slide().apply {
+//                                duration = 500
+//                            })
+//                        })
+            other_fragment_container.visibility = VISIBLE
+        }.isDisposed
         bottomSheetBehavior.setBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
             var statePosition = 0f
             var isFirst = true
@@ -131,20 +140,8 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
                 if (ll_nav_main_container.visibility == GONE) {
                     ll_nav_main_container.visibility = VISIBLE
                 }
-                if (isFirst && courseShowState && p1 < 0.5f) {
+                if (isFirst && courseShowState && p1 < 0.8f) {
                     isFirst = false
-                    Observable.create<Fragment> {
-                        it.onNext(discoverFragment)
-                    }.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe {
-                        other_fragment_container.visibility = GONE
-                        changeFragment(discoverFragment, 0, nav_main.menu[0])
-                        TransitionManager.beginDelayedTransition(main_content, TransitionSet().apply {
-                            addTransition(Slide().apply {
-                                duration = 500
-                            })
-                        })
-                        other_fragment_container.visibility = VISIBLE
-                    }.isDisposed
                 }
             }
 
@@ -280,12 +277,6 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
     fun installUpdate(event: UpdateEvent) {
         UpdateUtils.installApk(this, updateFile)
     }
-
-    override fun onResume() {
-        super.onResume()
-        EventBus.getDefault().post(FinishEvent())
-    }
-
 
     /**
      * 接收bottomSheet头部的点击事件，用来点击打开BottomSheet
