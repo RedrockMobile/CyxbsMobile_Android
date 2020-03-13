@@ -29,7 +29,7 @@
         android:id="@+id/mine_sign_store_item_tv_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="9dp"
+        android:layout_marginTop="8dp"
         android:text="@string/mine_sign_store_item_name_default"
         android:textColor="@color/levelTwoFontColor"
         android:textSize="13sp"

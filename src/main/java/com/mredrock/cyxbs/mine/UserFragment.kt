@@ -73,7 +73,7 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
 
     private fun initView() {
         //功能按钮
-        mine_main_btn_sign.setOnClickListener { startActivity<DailySignActivity>()  }
+        mine_main_btn_sign.setOnClickListener { startActivity<DailySignActivity>() }
         mine_main_tv_sign.setOnClickListener { startActivity<DailySignActivity>() }
         mine_main_question_number.setOnClickListener { startActivity<AskActivity>() }
         mine_main_tv_question.setOnClickListener { startActivity<AskActivity>() }
@@ -124,10 +124,12 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
             }
         })
         viewModel.qaNumber.observe(this, Observer {
-            mine_main_question_number.text = it.askPostedNumber.toString()
-            mine_main_answer_number.text = it.answerPostedNumber.toString()
-            mine_main_reply_comment_number.text = it.commentNumber.toString()
-            mine_main_praise_number.text = it.praiseNumber.toString()
+            //可能会出现部分number为负数的情况，客户端需要处理（虽然是后端的锅）
+            fun getNumber(number: Int): String = if (number >= 0) number.toString() else "0"
+            mine_main_question_number.text = getNumber(it.askPostedNumber)
+            mine_main_answer_number.text = getNumber(it.answerPostedNumber)
+            mine_main_reply_comment_number.text = getNumber(it.commentNumber)
+            mine_main_praise_number.text = getNumber(it.praiseNumber)
         })
     }
 

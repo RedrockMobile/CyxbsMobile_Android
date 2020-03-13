@@ -1,5 +1,6 @@
 package com.mredrock.cyxbs.mine.util.ui
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.Button
@@ -31,11 +32,11 @@ class ProductAdapter : ListAdapter<Product, ProductAdapter.ProductViewHolder>(Pr
             LayoutInflater.from(parent.context)
                     .inflate(R.layout.mine_list_item_product, parent, false)
     ) {
-        val iv = itemView.findViewById<ImageView>(R.id.mine_sign_store_item_iv)
-        val title = itemView.findViewById<TextView>(R.id.mine_sign_store_item_tv_title)
-        val count = itemView.findViewById<TextView>(R.id.mine_sign_store_item_tv_count)
-        val integral = itemView.findViewById<TextView>(R.id.mine_sign_store_item_tv__integral)
-        val exchange = itemView.findViewById<Button>(R.id.mine_sign_store_item_btn_exchange)
+        val iv: ImageView = itemView.findViewById<ImageView>(R.id.mine_sign_store_item_iv)
+        val title: TextView = itemView.findViewById<TextView>(R.id.mine_sign_store_item_tv_title)
+        val count: TextView = itemView.findViewById<TextView>(R.id.mine_sign_store_item_tv_count)
+        val integral: TextView = itemView.findViewById<TextView>(R.id.mine_sign_store_item_tv__integral)
+        val exchange: Button = itemView.findViewById<Button>(R.id.mine_sign_store_item_btn_exchange)
 
     }
 
@@ -43,6 +44,7 @@ class ProductAdapter : ListAdapter<Product, ProductAdapter.ProductViewHolder>(Pr
         return ProductViewHolder(parent)
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: ProductViewHolder, position: Int) {
         val product = getItem(position)
 
@@ -57,9 +59,9 @@ class ProductAdapter : ListAdapter<Product, ProductAdapter.ProductViewHolder>(Pr
         }
         holder.iv.layoutParams = param
 
-        holder.title.text = product.name
+        holder.title.text = if (product.name.isNotEmpty()) product.name else "(无名的物品)"
         holder.count.text = "仅剩${product.count}"
-        holder.integral.text = product.integral
+        holder.integral.text = if (product.integral.isNotEmpty()) product.integral else "0"
         holder.iv.setImageFromUrl(product.src)
         holder.exchange.setOnClickListener {
             onExChangeClick?.invoke(product, position)
