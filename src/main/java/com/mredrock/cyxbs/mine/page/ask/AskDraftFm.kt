@@ -1,6 +1,7 @@
 package com.mredrock.cyxbs.mine.page.ask
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
 import android.widget.TextView
 import androidx.lifecycle.Observer
@@ -11,6 +12,7 @@ import com.mredrock.cyxbs.common.config.QA_QUIZ
 import com.mredrock.cyxbs.common.event.QuestionDraftEvent
 import com.mredrock.cyxbs.mine.R
 import com.mredrock.cyxbs.mine.network.model.AskDraft
+import com.mredrock.cyxbs.mine.util.extension.logr
 import com.mredrock.cyxbs.mine.util.ui.BaseRVFragment
 import com.mredrock.cyxbs.mine.util.widget.RvFooter
 import kotlinx.android.synthetic.main.mine_list_item_my_ask_draft.view.*
@@ -20,6 +22,8 @@ import org.greenrobot.eventbus.EventBus
  * Created by roger on 2019/12/3
  */
 class AskDraftFm : BaseRVFragment<AskDraft>() {
+
+    private val NAVIGATION = 200
 
     private val viewModel by lazy { ViewModelProviders.of(this).get(AskViewModel::class.java) }
 
@@ -70,10 +74,17 @@ class AskDraftFm : BaseRVFragment<AskDraft>() {
 
         holder.itemView.setOnClickListener {
             EventBus.getDefault().postSticky(QuestionDraftEvent(data.content, data.draftQuestionId.toString()))
-            ARouter.getInstance().build(QA_QUIZ).navigation()
+            ARouter.getInstance().build(QA_QUIZ).navigation(activity, NAVIGATION)
         }
     }
 
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == NAVIGATION) {
+            onSwipeLayoutRefresh()
+        }
+    }
 
     override fun onSwipeLayoutRefresh() {
         setState(RvFooter.State.LOADING)

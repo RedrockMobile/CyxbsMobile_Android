@@ -1,5 +1,6 @@
 package com.mredrock.cyxbs.mine.util.ui
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import com.google.android.material.tabs.TabLayout
@@ -29,5 +30,19 @@ abstract class BaseTabLayoutActivity(override val isFragmentActivity: Boolean = 
         mine_tl_tablayout.tabMode = TabLayout.MODE_FIXED
         mine_tl_tablayout.setupWithViewPager(mine_tl_view_pager)
 
+    }
+
+    /**
+     * 由于Arouter的fragment跳转不会调用fragment的onActivityResult,具体见这篇文章：
+     * https://juejin.im/post/5c31d4bff265da61307506a6
+     */
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        val allFragments: List<Fragment>? = supportFragmentManager.fragments
+        if (allFragments != null) {
+            for (fragment in allFragments) {
+                fragment.onActivityResult(requestCode, resultCode, data)
+            }
+        }
     }
 }

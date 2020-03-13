@@ -1,6 +1,7 @@
 package com.mredrock.cyxbs.mine.page.answer
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
 import android.util.Base64
 import android.widget.TextView
@@ -22,6 +23,8 @@ import org.json.JSONObject
  * Created by roger on 2019/12/3
  */
 class AnswerDraftFm : BaseRVFragment<AnswerDraft>() {
+
+    private val NAVIGATION = 200
 
     private val viewModel by lazy { ViewModelProviders.of(this).get(AnswerViewModel::class.java) }
 
@@ -72,10 +75,16 @@ class AnswerDraftFm : BaseRVFragment<AnswerDraft>() {
         holder.itemView.setOnClickListener {
             //草稿箱的EventBus数据传递
             EventBus.getDefault().postSticky(AnswerDraftEvent(data.draftAnswerContent, data.draftAnswerId.toString(), data.questionId.toString()))
-            ARouter.getInstance().build(QA_ANSWER).navigation()
+            ARouter.getInstance().build(QA_ANSWER).navigation(activity, NAVIGATION)
         }
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == NAVIGATION) {
+            onSwipeLayoutRefresh()
+        }
+    }
 
     override fun onSwipeLayoutRefresh() {
         setState(RvFooter.State.LOADING)
