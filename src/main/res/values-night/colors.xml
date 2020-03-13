@@ -83,7 +83,7 @@
 
 
     <!--    打字框背景颜色-->
-    <color name="writeAbleAreaBackgroundShallow" tools:ignore="ResourceName">#EFF4FD</color>
+    <color name="writeAbleAreaBackgroundShallow" tools:ignore="ResourceName">#1F1F1F</color>
     <color name="writeAbleAreaBackgroundDark" tools:ignore="ResourceName">#E8F0FC</color>
 
     <!--    我的-->
@@ -295,7 +295,9 @@
     <color name="transactionAddPageWarpItemTextColor" tools:ignore="ResourceName">#737373</color>
 
 
-    <color name="transactionCompletionEditViewColor" tools:ignore="ResourceName">#efefef</color>
+<!--    <color name="transactionCompletionEditViewColor" tools:ignore="ResourceName">#efefef</color>-->
+    <!--没课约选择学生页面背景-->
+    <color name="no_class_select_student_page_background" tools:ignore="ResourceName">#2D2D2D</color>
 
 </resources>
 

@@ -279,6 +279,9 @@
     <color name="qa_dialog_qa_reward_description_background_color" tools:ignore="ResourceName">
         #ffffff
     </color>
+    <!--没课约选择学生页面背景-->
+    <color name="no_class_select_student_page_background" tools:ignore="ResourceName">#ffffff</color>
+
     <!--课表背景-->
     <color name="curriculum_background_color" tools:ignore="ResourceName">#ffffff</color>
 
