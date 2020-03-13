@@ -7,7 +7,7 @@
     <string name="course_click_to_login">课表懵逼中......点击进行登录</string>
     <string name="course_all_week">整学期</string>
     <string name="course_add_affair">添加事务</string>
-    <string name="course_now_week">本周</string>
+    <string name="course_now_week">(本周)</string>
     <string name="course_little_friend">小伙伴</string>
     <string name="course_they_are_free">集合！！ 出发</string>
 
@@ -125,5 +125,7 @@
     <string name="course_course_update_tips">你的课表可能发生了变化请留意</string>
     <string name="course_tomorrow_tips">明天</string>
     <string name="course_class_taught">所教班级</string>
+    <string name="course_no_class_recently">今天和明天都没课咯～</string>
+    <string name="course_back_now_week">回到本周</string>
 
 </resources>

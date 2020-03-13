@@ -319,12 +319,15 @@ class CourseContainerEntryFragment : BaseFragment() {
             course_current_course_week_select_container.visibility = View.VISIBLE
         }
         if (course_header_select_content.visibility == View.GONE) {
+            course_current_course_container.visibility = View.VISIBLE
             course_current_course_container.alpha = 1 - state
             course_current_course_week_select_container.alpha = state
             if (state == 0f) {
                 course_header_select_content.visibility = View.GONE
                 course_header_show.visibility = View.VISIBLE
                 course_current_course_week_select_container.visibility = View.GONE
+            }else if (1 - state == 0f) {
+                course_current_course_container.visibility = View.GONE
             }
         } else {
             if (state == 0f) {

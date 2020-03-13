@@ -128,12 +128,15 @@ class CoursesViewModel : BaseViewModel() {
     val isAffair = object : ObservableField<Int>(nowCourse) {
         override fun get(): Int? {
             val isShow = nowCourse.get() != null
-            return if (nowCourse.get()?.courseNum == null && isShow) View.GONE else View.VISIBLE
+            return if (nowCourse.get() == null || nowCourse.get()?.courseNum == null && isShow)
+                View.GONE
+            else
+                View.VISIBLE
         }
     }
 
     //是否是明天的课表，显示提示
-    val tomorrowTips = ObservableField<Int>(View.VISIBLE)
+    val tomorrowTips = ObservableField<String>("")
 
     //是否展示当前或者下一课程，用于DataBinDing绑定
     val isShowCurrentSchedule = object : ObservableField<Int>(nowCourse) {
@@ -439,7 +442,7 @@ class CoursesViewModel : BaseViewModel() {
                         allCoursesData.get()?.let {
                             val pair = getNowCourse(todayCourse, it, nowWeek)
                             nowCourse.set(pair.first)
-                            tomorrowTips.set(if (pair.second) View.VISIBLE else View.GONE)
+                            tomorrowTips.set(pair.second)
                         }
                     }
                 }

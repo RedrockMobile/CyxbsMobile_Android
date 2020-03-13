@@ -1,19 +1,9 @@
 package com.mredrock.cyxbs.course.utils
 
-import android.app.PendingIntent
-import android.appwidget.AppWidgetProvider
-import android.content.Context
-import android.content.Intent
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.GradientDrawable
-import android.net.Uri
-import androidx.annotation.IdRes
-import com.mredrock.cyxbs.common.bean.WidgetCourse
 import com.mredrock.cyxbs.common.utils.SchoolCalendar
-import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
-import com.mredrock.cyxbs.common.utils.extensions.editor
 import com.mredrock.cyxbs.course.network.Course
-import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -27,20 +17,29 @@ import kotlin.collections.ArrayList
  * @param nowWeek 现在是第几周
  * @return 返回两个值，第一个是课表，第二个是是否第二天的课表
  */
-fun getNowCourse(courses: List<Course>, wholeCourses: List<Course>, nowWeek: Int): Pair<Course?, Boolean> {
+fun getNowCourse(courses: List<Course>, wholeCourses: List<Course>, nowWeek: Int): Pair<Course?, String> {
+    var course: Course? = null
     courses.forEach {
-        val endCalendar = getStartCalendarByNum(it.hashLesson)
+        val startCalendar = getStartCalendarByNum(it.hashLesson)
+        val endCalendar = getEndCalendarByNum(it.hashLesson)
+        val middleCalendar = startCalendar.clone() as Calendar
+        middleCalendar.add(Calendar.MINUTE, 45)
+
         //如果今天还有下一节课，显示下一节
-        if (Calendar.getInstance() < endCalendar) {
-            return Pair(it, false)
+        when {
+            //下节课还没开始这节课已经过半，显示下节课提示
+            Calendar.getInstance() < startCalendar -> return Pair(it, "下节课")
+            Calendar.getInstance() < middleCalendar -> return Pair(it, "进行中...")
+            Calendar.getInstance() < endCalendar -> { course = it }
         }
     }
-    //今天没课了，显示明天的
     val tomorrowCourse = getTomorrowCourse(wholeCourses, nowWeek)
     return if (tomorrowCourse == null) {
-        Pair(null, false)
+        //如果明天也没课了，那么就把当前这节课显示完（例如周五最后一节课，细节）
+        if (course != null) Pair(course, "进行中...") else Pair(null, "")
     } else {
-        Pair(tomorrowCourse, true)
+        //明天有课显示明天的课程
+        Pair(tomorrowCourse, "明天")
     }
 }
 
@@ -102,83 +101,6 @@ fun getCourseByCalendar(courses: List<Course>, nowWeek: Int, calendar: Calendar)
     return list
 }
 
-
-/**
- * 这个方法来制造课表item的圆角背景
- * @param rgb 背景颜色
- * 里面的圆角的参数是写在资源文件里的
- */
-fun createCornerBackground(rgb: Int, corner:Float): Drawable {
-    val drawable = GradientDrawable()
-    drawable.cornerRadii = floatArrayOf(corner, corner, corner, corner, corner, corner, corner, corner)
-    drawable.setColor(rgb)
-    return drawable
-}
-
-private val beginTimeShareName = "zscy_widget_beginTime"
-
-private fun saveBeginTime(context: Context, nowWeek: Int): Long {
-    val calendar = Calendar.getInstance()
-    val targetWeek = calendar.get(Calendar.WEEK_OF_YEAR) - nowWeek
-    calendar.set(Calendar.WEEK_OF_YEAR, targetWeek)
-    val hash_day = (calendar.get(Calendar.DAY_OF_WEEK) + 5) % 7
-    calendar.set(Calendar.DAY_OF_YEAR, calendar.get(Calendar.DAY_OF_YEAR) - hash_day)
-    calendar.set(Calendar.HOUR_OF_DAY, 0)
-    calendar.set(Calendar.MINUTE, 0)
-    calendar.set(Calendar.MILLISECOND, 0)
-    context.defaultSharedPreferences.editor {
-        putLong(beginTimeShareName, calendar.time.time)
-    }
-    return calendar.time.time
-}
-
-fun getErrorCourseList(): ArrayList<Course> {
-    val data = Course()
-    data.hashLesson = 0
-    data.course = "数据异常，请刷新"
-    data.classroom = ""
-    val list = ArrayList<Course>()
-    list.add(data)
-    return list
-}
-
-fun getNoCourse(): Course {
-    val data = Course()
-    data.hashLesson = 0
-    data.course = "无课"
-    data.classroom = ""
-    return data
-}
-
-fun saveHashLesson(context: Context, hash_lesson: Int, shareName: String) {
-    context.defaultSharedPreferences.editor {
-        putInt(shareName, hash_lesson)
-    }
-}
-
-fun getHashLesson(context: Context, shareName: String): Int {
-    return context.defaultSharedPreferences.getInt(shareName, 0)
-}
-
-
-private const val SP_DayOffset = "dayOffset"
-//天数偏移量，用于LittleWidget切换明天课程
-fun saveDayOffset(context: Context, offset: Int) {
-    context.defaultSharedPreferences.editor {
-        putInt(SP_DayOffset, offset)
-    }
-}
-
-fun getDayOffset(context: Context): Int {
-    return context.defaultSharedPreferences.getInt(SP_DayOffset, 0)
-}
-
-
-fun isNight(): Boolean {
-    val calendar = Calendar.getInstance()
-    return calendar.get(Calendar.HOUR_OF_DAY) > 19
-}
-
 /**
  * hash_lesson == 0 第1节 返回8:00
  */
@@ -206,74 +128,53 @@ fun getStartCalendarByNum(hash_lesson: Int): Calendar {
             calendar.set(Calendar.MINUTE, 0)
         }
         5 -> {
-            calendar.set(Calendar.HOUR_OF_DAY, 21)
-            calendar.set(Calendar.MINUTE, 15)
-        }
-        6 -> {
-            calendar.set(Calendar.HOUR_OF_DAY, 19)
-            calendar.set(Calendar.MINUTE, 0)
-        }
-        7 -> {
-            calendar.set(Calendar.HOUR_OF_DAY, 21)
-            calendar.set(Calendar.MINUTE, 0)
+            calendar.set(Calendar.HOUR_OF_DAY, 20)
+            calendar.set(Calendar.MINUTE, 50)
         }
     }
     return calendar
 }
 
-fun getWeekDayChineseName(weekDay: Int): String {
-    return when (weekDay) {
-        1 -> "星期天"
-        2 -> "星期一"
-        3 -> "星期二"
-        4 -> "星期三"
-        5 -> "星期四"
-        6 -> "星期五"
-        7 -> "星期六"
-        else -> "null"
+fun getEndCalendarByNum(hash_lesson: Int): Calendar {
+    val calendar = Calendar.getInstance()
+    when (hash_lesson) {
+        0 -> {
+            calendar.set(Calendar.HOUR_OF_DAY, 9)
+            calendar.set(Calendar.MINUTE, 40)
+        }
+        1 -> {
+            calendar.set(Calendar.HOUR_OF_DAY, 11)
+            calendar.set(Calendar.MINUTE, 55)
+        }
+        2 -> {
+            calendar.set(Calendar.HOUR_OF_DAY, 15)
+            calendar.set(Calendar.MINUTE, 40)
+        }
+        3 -> {
+            calendar.set(Calendar.HOUR_OF_DAY, 17)
+            calendar.set(Calendar.MINUTE, 55)
+        }
+        4 -> {
+            calendar.set(Calendar.HOUR_OF_DAY, 20)
+            calendar.set(Calendar.MINUTE, 40)
+        }
+        5 -> {
+            calendar.set(Calendar.HOUR_OF_DAY, 22)
+            calendar.set(Calendar.MINUTE, 30)
+        }
     }
+    return calendar
 }
 
-fun getClickPendingIntent(context: Context, @IdRes resId: Int, action: String, clazz: Class<AppWidgetProvider>): PendingIntent {
-    val intent = Intent()
-    intent.setClass(context, clazz)
-    intent.action = action
-    intent.data = Uri.parse("id:$resId")
-    return PendingIntent.getBroadcast(context, 0, intent, 0)
-}
 
-fun formatTime(calendar: Calendar): String {
-    return SimpleDateFormat("HH:mm", Locale.SIMPLIFIED_CHINESE).format(calendar.time)
-}
-
-fun filterClassRoom(classRoom: String): String {
-    return if (classRoom.length > 8) {
-        classRoom.replace(Regex("[\\u4e00-\\u9fa5()（）]"), "")
-    } else {
-        classRoom
-    }
-}
-
-//将widget模块的course转换为lib模块的WidgetCourse，WidgetCourse达到中转作用
-fun changeCourseToWidgetCourse(courseBean: Course): WidgetCourse.DataBean {
-    val bean = WidgetCourse.DataBean()
-    bean.apply {
-        hash_day = courseBean.hashDay
-        hash_lesson = courseBean.hashLesson
-        begin_lesson = courseBean.beginLesson
-        day = courseBean.day
-        lesson = courseBean.lesson
-        course = courseBean.course
-        course_num = courseBean.courseNum
-        teacher = courseBean.teacher
-        classroom = courseBean.classroom
-        rawWeek = courseBean.rawWeek
-        weekModel = courseBean.weekModel
-        weekBegin = courseBean.weekBegin
-        weekEnd = courseBean.weekEnd
-        week = courseBean.week
-        type = courseBean.type
-        period = courseBean.period
-    }
-    return bean
+/**
+ * 这个方法来制造课表item的圆角背景
+ * @param rgb 背景颜色
+ * 里面的圆角的参数是写在资源文件里的
+ */
+fun createCornerBackground(rgb: Int, corner: Float): Drawable {
+    val drawable = GradientDrawable()
+    drawable.cornerRadii = floatArrayOf(corner, corner, corner, corner, corner, corner, corner, corner)
+    drawable.setColor(rgb)
+    return drawable
 }
