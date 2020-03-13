@@ -1,21 +1,39 @@
 package com.mredrock.cyxbs.main.viewmodel
 
+import android.view.View
+import android.widget.FrameLayout
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.mredrock.cyxbs.common.BaseApp.Companion.context
+import com.mredrock.cyxbs.common.event.BottomSheetStateEvent
 import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.network.exception.RedrockApiException
 import com.mredrock.cyxbs.common.utils.LogUtils
-import com.mredrock.cyxbs.common.utils.extensions.mapOrThrowApiException
-import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
-import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
+import com.mredrock.cyxbs.common.utils.extensions.*
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.main.bean.StartPage
 import com.mredrock.cyxbs.main.network.ApiService
+import com.mredrock.cyxbs.main.ui.SplashActivity
+import com.mredrock.cyxbs.main.utils.deleteDir
+import com.mredrock.cyxbs.main.utils.downloadSplash
+import com.mredrock.cyxbs.main.utils.getSplashFile
+import com.mredrock.cyxbs.main.utils.isDownloadSplash
+import com.tencent.bugly.Bugly.applicationContext
+import org.greenrobot.eventbus.EventBus
 import java.text.SimpleDateFormat
 import java.util.*
 
 class MainViewModel : BaseViewModel() {
     val startPage: LiveData<StartPage?> = MutableLiveData()
+
+    //进入app是否直接显示课表
+    var courseShowState = false
+    var lastState = BottomSheetBehavior.STATE_COLLAPSED
+
+
+    var isFirst = true
+
 
     fun getStartPage() {
         ApiGenerator.getApiService(ApiService::class.java)
@@ -45,5 +63,54 @@ class MainViewModel : BaseViewModel() {
                 })
                 .lifeCycle()
     }
+
+
+    fun bottomSheetCallbackBind(bottomSheetBehavior: BottomSheetBehavior<FrameLayout>,
+                                onSlide: (View, Float) -> Unit,
+                                onStateChanged: (View, Int) -> Unit) {
+        bottomSheetBehavior.setBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
+            override fun onSlide(p0: View, p1: Float) {
+                EventBus.getDefault().post(BottomSheetStateEvent(p1))
+                onSlide(p0, p1)
+            }
+            override fun onStateChanged(p0: View, p1: Int) {
+                onStateChanged(p0, p1)
+                //对状态Bottom的状态进行记录，这里只记录了打开和关闭
+                lastState = when (p1) {
+                    BottomSheetBehavior.STATE_EXPANDED -> BottomSheetBehavior.STATE_EXPANDED
+                    BottomSheetBehavior.STATE_COLLAPSED -> BottomSheetBehavior.STATE_COLLAPSED
+                    else -> lastState
+                }
+            }
+        })
+
+    }
+
+    fun initStartPage(starPage: StartPage?) {
+        if (starPage != null) {
+            val src = starPage.photo_src
+            if (src != null && src.startsWith("http")) {//如果不为空，且url有效
+                //对比缓存的url是否一样
+                if (src != applicationContext.sharedPreferences("splash").getString(SplashActivity.SPLASH_PHOTO_NAME, "#")) {
+                    deleteDir(getSplashFile(context))
+                    downloadSplash(src, context)
+                    applicationContext.sharedPreferences("splash").editor {
+                        putString(SplashActivity.SPLASH_PHOTO_NAME, src)
+                    }
+                }
+            } else { //src非法
+                deleteSplash()
+            }
+        } else { //不显示图片的时候
+            deleteSplash()
+        }
+    }
+
+    private fun deleteSplash() {
+        if (isDownloadSplash(context)) {//如果url为空，则删除之前下载的图片
+            deleteDir(getSplashFile(context))
+        }
+    }
+
 
 }

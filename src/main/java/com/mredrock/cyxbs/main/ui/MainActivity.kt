@@ -1,15 +1,16 @@
 package com.mredrock.cyxbs.main.ui
 
-import android.os.Build
 import android.os.Bundle
+import android.os.PersistableBundle
+import android.util.Log
 import android.view.MenuItem
 import android.view.View
-import android.view.View.*
-import android.view.WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.widget.FrameLayout
-import androidx.core.content.ContextCompat
 import androidx.core.view.get
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.transition.Slide
 import androidx.transition.TransitionManager
 import androidx.transition.TransitionSet
@@ -18,30 +19,25 @@ import com.google.android.material.bottomnavigation.LabelVisibilityMode
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.config.*
-import com.mredrock.cyxbs.common.event.BottomSheetStateEvent
 import com.mredrock.cyxbs.common.event.LoadCourse
 import com.mredrock.cyxbs.common.event.NotifyBottomSheetToExpandEvent
 import com.mredrock.cyxbs.common.service.ServiceManager
-import com.mredrock.cyxbs.common.service.account.IAccountService
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
-import com.mredrock.cyxbs.common.utils.extensions.editor
-import com.mredrock.cyxbs.common.utils.extensions.sharedPreferences
+import com.mredrock.cyxbs.common.utils.extensions.getStatusBarHeight
 import com.mredrock.cyxbs.common.utils.update.UpdateEvent
 import com.mredrock.cyxbs.common.utils.update.UpdateUtils
 import com.mredrock.cyxbs.main.R
 import com.mredrock.cyxbs.main.bean.FinishEvent
-import com.mredrock.cyxbs.main.utils.*
+import com.mredrock.cyxbs.main.utils.BottomNavigationViewHelper
 import com.mredrock.cyxbs.main.viewmodel.MainViewModel
 import com.umeng.message.inapp.InAppMessageManager
-import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.main_activity_main.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.jetbrains.anko.dip
+
 
 @Route(path = MAIN_MAIN)
 class MainActivity : BaseViewModelActivity<MainViewModel>() {
@@ -62,80 +58,56 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
     )
 
     //四个需要组装的fragment(懒加载)
-    private val courseFragment: Fragment by lazy(LazyThreadSafetyMode.NONE) { getFragment(COURSE_ENTRY) }
-    private val qaFragment: Fragment by lazy(LazyThreadSafetyMode.NONE) { getFragment(QA_ENTRY) }
-    private val mineFragment: Fragment by lazy(LazyThreadSafetyMode.NONE) { getFragment(MINE_ENTRY) }
-    private val discoverFragment: Fragment by lazy(LazyThreadSafetyMode.NONE) { getFragment(DISCOVER_ENTRY) }
+    private val courseFragment: Fragment by lazy(LazyThreadSafetyMode.NONE) { ServiceManager.getService<Fragment>(COURSE_ENTRY) }
+    private val qaFragment: Fragment by lazy(LazyThreadSafetyMode.NONE) { ServiceManager.getService<Fragment>(QA_ENTRY) }
+    private val mineFragment: Fragment by lazy(LazyThreadSafetyMode.NONE) { ServiceManager.getService<Fragment>(MINE_ENTRY) }
+    private val discoverFragment: Fragment by lazy(LazyThreadSafetyMode.NONE) { ServiceManager.getService<Fragment>(DISCOVER_ENTRY) }
 
     //已经加载好的fragment
     private val showedFragments = mutableListOf<Fragment>()
-
-    //进入app是否直接显示课表
-    var courseShowState: Boolean = false
-
-    //用户服务
-    private val accountService: IAccountService by lazy(LazyThreadSafetyMode.NONE) {
-        ServiceManager.getService(IAccountService::class.java)
-    }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.main_activity_main)
-
-        // TODO: 2019/11/19 此处待处理，这里只能适配部分机型
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            window.addFlags(FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
-            window.decorView.systemUiVisibility = SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
-            window.statusBarColor = ContextCompat.getColor(this, R.color.windowBackground)
-        }
-
+//        // TODO: 2019/11/19 此处待处理，这里只能适配部分机型
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+//            window.addFlags(FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+//            window.decorView.systemUiVisibility = SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+//            window.statusBarColor = ContextCompat.getColor(this, R.color.windowBackground)
+//        }
         initBottomNavigationView()
         UpdateUtils.checkUpdate(this)
         InAppMessageManager.getInstance(BaseApp.context).showCardMessage(this,
                 "课表主页面") {
-            //插屏消息关闭之后调用，暂未写功能
+            //友盟插屏消息关闭之后调用，暂未写功能
         }
-        viewModel.startPage.observe { starPage ->
-            if (starPage != null) {
-                val src = starPage.photo_src
+        initBottomSheetBehavior()
+        initFragments()
+        Log.d("MainAAAAAAAA", "onCreate")
 
-                if (src != null && src.startsWith("http")) {//如果不为空，且url有效
-                    //对比缓存的url是否一样
-                    if (src != applicationContext.sharedPreferences("splash").getString(SplashActivity.SPLASH_PHOTO_NAME, "#")) {
-                        deleteDir(getSplashFile(this@MainActivity))
-                        downloadSplash(src, this@MainActivity)
-                        applicationContext.sharedPreferences("splash").editor {
-                            putString(SplashActivity.SPLASH_PHOTO_NAME, src)
-                        }
-                    }
-                } else { //src非法
-                    deleteSplash()
-                }
-            } else { //不显示图片的时候
-                deleteSplash()
-            }
-        }
-        //下载Splash图
-        viewModel.getStartPage()
+    }
 
+    override fun onStart() {
+
+        super.onStart()
+        Log.d("MainAAAAAAAA", "onStart")
+
+    }
+
+
+    private fun initBottomSheetBehavior() {
         bottomSheetBehavior = BottomSheetBehavior.from(course_bottom_sheet_content)
-        bottomSheetBehavior.setBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
-            var statePosition = 0f
-            var isFirst = true
-            var lastState = if (courseShowState) BottomSheetBehavior.STATE_EXPANDED else BottomSheetBehavior.STATE_COLLAPSED
-            override fun onSlide(p0: View, p1: Float) {
-                ll_nav_main_container.translationY = nav_main.height * p1
-                statePosition = p1
-                EventBus.getDefault().post(BottomSheetStateEvent(p1))
-                if (ll_nav_main_container.visibility == GONE) {
-                    ll_nav_main_container.visibility = VISIBLE
-                }
-                if (isFirst && courseShowState && p1 < 0.5f) {
-                    isFirst = false
-                    Observable.create<Fragment> {
-                        it.onNext(discoverFragment)
-                    }.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe {
+        //这里因为BottomSheet和[android:fitsSystemWindows="true"]冲突要加上一个状态栏高度
+        bottomSheetBehavior.peekHeight = bottomSheetBehavior.peekHeight + getStatusBarHeight()
+        viewModel.bottomSheetCallbackBind(bottomSheetBehavior,
+                onSlide = { _, fl ->
+                    ll_nav_main_container.translationY = nav_main.height * fl
+                    if (ll_nav_main_container.visibility == GONE) {
+                        ll_nav_main_container.visibility = View.VISIBLE
+                    }
+                    if (viewModel.isFirst && viewModel.courseShowState && fl < 0.5f) {
+                        viewModel.isFirst = false
                         other_fragment_container.visibility = GONE
                         changeFragment(discoverFragment, 0, nav_main.menu[0])
                         TransitionManager.beginDelayedTransition(main_content, TransitionSet().apply {
@@ -143,34 +115,56 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
                                 duration = 500
                             })
                         })
-                        other_fragment_container.visibility = VISIBLE
-                    }.isDisposed
-                }
-            }
-
-            override fun onStateChanged(p0: View, p1: Int) {
-                //如果是第一次进入展开则加载详细的课表子页
-                if (isFirst && bottomSheetBehavior.state == BottomSheetBehavior.STATE_EXPANDED
-                        && lastState != BottomSheetBehavior.STATE_EXPANDED && !courseShowState) {
-                    EventBus.getDefault().post(LoadCourse())
-                    /*
-                     * 下面这个判断判断其实无关紧要
-                     * 但是为了防止用户以一种未登陆状态到达mainActivity时也能保证课表的动画正常运行还是有必要加一下
-                     */
-                    if (accountService.getVerifyService().isLogin()) {
-                        isFirst = false
+                        other_fragment_container.visibility = View.VISIBLE
                     }
-                }
-                //对状态Bottom的状态进行记录，这里只记录了打开和关闭
-                lastState = when (p1) {
-                    BottomSheetBehavior.STATE_EXPANDED -> BottomSheetBehavior.STATE_EXPANDED
-                    BottomSheetBehavior.STATE_COLLAPSED -> BottomSheetBehavior.STATE_COLLAPSED
-                    else -> lastState
-                }
-            }
-        })
-        initFragments()
+                },
+                onStateChanged = { _, _ ->
+                    //如果是第一次进入展开则加载详细的课表子页
+                    if (viewModel.isFirst && bottomSheetBehavior.state == BottomSheetBehavior.STATE_EXPANDED
+                            && viewModel.lastState != BottomSheetBehavior.STATE_EXPANDED && !viewModel.courseShowState) {
+                        EventBus.getDefault().post(LoadCourse())
+                    }
+                })
     }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        super.onRestoreInstanceState(savedInstanceState)
+        bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+//        val navTranslation = savedInstanceState.getFloat("navTranslation")
+        ll_nav_main_container.translationY = 0f
+//        ll_nav_main_container.visibility = if (navTranslation == 0f) VISIBLE else GONE
+        Log.d("MainAAAAAAAA", "onRestoreInstanceState")
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.d("MainAAAAAAAA", "onDestroy")
+    }
+
+    override fun onPause() {
+        super.onPause()
+        Log.d("MainAAAAAAAA", "onPause")
+    }
+
+    override fun onStop() {
+        super.onStop()
+        Log.d("MainAAAAAAAA", "onStop")
+    }
+
+    override fun onResume() {
+        super.onResume()
+        EventBus.getDefault().post(FinishEvent())
+        Log.d("MainAAAAAAAA", "onResume")
+
+    }
+
+//    override fun onSaveInstanceState(outState: Bundle, outPersistentState: PersistableBundle) {
+//        super.onSaveInstanceState(outState, outPersistentState)
+//        //保存BottomSheet和Nav的位置状态，发现系统不会自动帮忙保存
+//        outState.putInt("BottomSheetBehaviorState", bottomSheetBehavior.state)
+//        outState.putFloat("navTranslation", ll_nav_main_container.translationY)
+//        Log.d("MainAAAAAAAA", "onSaveInstanceState")
+//    }
 
 ////这个方法可能有用暂不删除
 //    @RequiresApi(Build.VERSION_CODES.M)
@@ -191,11 +185,6 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
         }
     }
 
-    private fun deleteSplash() {
-        if (isDownloadSplash(this@MainActivity)) {//如果url为空，则删除之前下载的图片
-            deleteDir(getSplashFile(this@MainActivity))
-        }
-    }
 
     private fun initBottomNavigationView() {
         navHelpers = BottomNavigationViewHelper(nav_main).apply {
@@ -207,20 +196,13 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
                 preCheckedItem = menuItem
                 menu?.clear()
                 when (menuItem.itemId) {
-                    R.id.explore -> {
-                        changeFragment(discoverFragment, 0, menuItem)
-                    }
-                    R.id.qa -> {
-                        changeFragment(qaFragment, 1, menuItem)
-                    }
-                    R.id.mine -> {
-                        changeFragment(mineFragment, 2, menuItem)
-                    }
+                    R.id.explore -> changeFragment(discoverFragment, 0, menuItem)
+                    R.id.qa -> changeFragment(qaFragment, 1, menuItem)
+                    R.id.mine -> changeFragment(mineFragment, 2, menuItem)
                 }
                 return@setOnNavigationItemSelectedListener true
             }
         }
-
         nav_main.labelVisibilityMode = LabelVisibilityMode.LABEL_VISIBILITY_LABELED
         nav_main.menu.getItem(0).setIcon(icons[1])  //一定要放在上面的代码后面
         preCheckedItem = nav_main.menu.getItem(0)
@@ -252,10 +234,17 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
     }
 
     private fun initFragments() {
+        viewModel.startPage.observe(this, Observer { starPage ->
+            viewModel.initStartPage(starPage)
+        })
+        //下载Splash图
+        viewModel.getStartPage()
+
         other_fragment_container.removeAllViews()
         //取得是否优先显示课表的设置
-        courseShowState = defaultSharedPreferences.getBoolean(COURSE_SHOW_STATE, false)
-        if (courseShowState) {
+        viewModel.courseShowState = defaultSharedPreferences.getBoolean(COURSE_SHOW_STATE, false)
+        viewModel.lastState = if (viewModel.courseShowState) BottomSheetBehavior.STATE_EXPANDED else BottomSheetBehavior.STATE_COLLAPSED
+        if (viewModel.courseShowState) {
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
             //这里必须让它GONE，因为这个设置BottomSheet是不会走滑动监听的，否则导致完全显示BottomSheet后依然有下面的tab
             ll_nav_main_container.visibility = GONE
@@ -274,19 +263,10 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
         }
     }
 
-    //封装一下，直接获取fragment
-    private fun getFragment(path: String) = ServiceManager.getService<Fragment>(path)
-
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun installUpdate(event: UpdateEvent) {
         UpdateUtils.installApk(this, updateFile)
     }
-
-    override fun onResume() {
-        super.onResume()
-        EventBus.getDefault().post(FinishEvent())
-    }
-
 
     /**
      * 接收bottomSheet头部的点击事件，用来点击打开BottomSheet
