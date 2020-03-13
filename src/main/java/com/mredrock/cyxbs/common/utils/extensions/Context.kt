@@ -3,6 +3,7 @@ package com.mredrock.cyxbs.common.utils.extensions
 import android.app.Activity
 import android.content.Context
 import android.content.res.Configuration
+import android.content.res.Resources
 import android.graphics.Point
 import android.os.Build
 import android.view.View
@@ -64,4 +65,13 @@ fun Context.toast(res:Int) = CyxbsToast.makeText(this,res,Toast.LENGTH_SHORT).sh
 fun Context.getDarkModeStatus(): Boolean {
     val mode = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
     return mode == Configuration.UI_MODE_NIGHT_YES
+}
+
+/**
+ * 获取状态栏高度
+ */
+fun Context.getStatusBarHeight(): Int {
+    val resources: Resources = resources
+    val resourceId: Int = resources.getIdentifier("status_bar_height", "dimen", "android")
+    return resources.getDimensionPixelSize(resourceId)
 }
