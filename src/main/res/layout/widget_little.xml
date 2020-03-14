@@ -3,6 +3,7 @@
     android:layout_height="match_parent"
     android:gravity="center_vertical"
     android:minWidth="100dp"
+    android:background="@drawable/shape_course_backgroud"
     android:orientation="vertical">
 
     <FrameLayout
@@ -61,7 +62,7 @@
                 android:layout_height="25dp"
                 android:layout_gravity="center"
                 android:padding="5dp"
-                android:src="@drawable/widget_up" />
+                android:src="@drawable/ic_expand_less_black_24dp" />
         </LinearLayout>
 
 
@@ -91,7 +92,7 @@
                 android:layout_height="25dp"
                 android:layout_gravity="center"
                 android:padding="5dp"
-                android:src="@drawable/widget_down" />
+                android:src="@drawable/ic_expand_more_black_24dp" />
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

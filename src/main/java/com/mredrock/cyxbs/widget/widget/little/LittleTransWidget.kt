@@ -7,7 +7,7 @@ import android.util.TypedValue
 import android.view.View
 import android.widget.RemoteViews
 import com.mredrock.cyxbs.widget.R
-import com.mredrock.cyxbs.widget.bean.Course
+import com.mredrock.cyxbs.widget.bean.CourseStatus
 import com.mredrock.cyxbs.widget.page.trans.TransConfig
 import com.mredrock.cyxbs.widget.util.filterClassRoom
 import com.mredrock.cyxbs.widget.util.getClickPendingIntent
@@ -52,17 +52,17 @@ class LittleTransWidget : BaseLittleWidget() {
         return R.id.widget_little_title_trans
     }
 
-    override fun getRemoteViews(context: Context, course: Course.DataBean?, timeTv: String): RemoteViews {
+    override fun getRemoteViews(context: Context, courseStatus: CourseStatus.Course?, timeTv: String): RemoteViews {
         val rv = RemoteViews(context.packageName, getLayoutResId())
 
-        if (course == null) {
+        if (courseStatus == null) {
             rv.setTextViewText(getTitleResId(), getWeekDayChineseName(Calendar.getInstance().get(Calendar.DAY_OF_WEEK)))
             rv.setTextViewText(getCourseNameResId(), "今天没有课~")
             rv.setTextViewText(getRoomResId(), "")
         } else {
             rv.setTextViewText(getTitleResId(), timeTv)
-            rv.setTextViewText(getCourseNameResId(), course.course)
-            rv.setTextViewText(getRoomResId(), filterClassRoom(course.classroom!!))
+            rv.setTextViewText(getCourseNameResId(), courseStatus.course)
+            rv.setTextViewText(getRoomResId(), filterClassRoom(courseStatus.classroom!!))
             //course和room设置点击事件到Activity，title设置刷新，没课才设置点击事件
             rv.setOnClickPendingIntent(getCourseNameResId(),
                     getClickPendingIntent(context,getCourseNameResId(),"btn.start.com",javaClass))

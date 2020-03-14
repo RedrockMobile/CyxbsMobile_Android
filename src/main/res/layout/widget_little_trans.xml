@@ -12,6 +12,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="今日课表"
+        android:textColor="@color/widget_colorTextBlack"
         android:background="@color/widget_trans_color"
         android:textSize="14sp"
         />
@@ -29,7 +30,7 @@
             android:maxLines="1"
             android:text="请刷新数据"
             android:background="@color/widget_trans_color"
-            android:textColor="#2E2E2E"
+            android:textColor="@color/widget_colorTextBlack"
             android:textSize="16sp" />
 
         <ImageView
@@ -49,7 +50,7 @@
         android:maxLines="1"
         android:background="@color/widget_trans_color"
         android:text="=_="
-        android:textColor="#2E2E2E"
+        android:textColor="@color/widget_colorTextBlack"
         android:textSize="16sp" />
 
 </LinearLayout>

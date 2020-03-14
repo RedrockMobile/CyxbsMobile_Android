@@ -3,15 +3,38 @@
     package="com.mredrock.cyxbs.widget">
 
     <application android:theme="@style/AppTheme">
+        <service
+            android:name=".service.GridWidgetService"
+            android:permission="android.permission.BIND_REMOTEVIEWS">
 
-        <activity android:name="com.mredrock.cyxbs.widget.page.ConfigActivity" />
-        <activity android:name="com.mredrock.cyxbs.widget.page.trans.TransConfigActivity"
-            android:windowSoftInputMode="adjustPan"/>
-        <activity android:name="com.mredrock.cyxbs.widget.page.little.LittleConfigActivity" />
-        <activity android:name="com.mredrock.cyxbs.widget.page.normal.NormalConfigActivity" />
+        </service>
 
         <receiver
-            android:name="com.mredrock.cyxbs.widget.widget.little.LittleWidget"
+            android:name=".widget.oversize.OversizedAppWidget"
+            android:label="超大小部件">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/oversized_app_widget_info" />
+        </receiver>
+
+        <activity android:name=".page.oversized.OversizedAppWidgetConfigureActivity">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".page.ConfigActivity" />
+        <activity
+            android:name=".page.trans.TransConfigActivity"
+            android:windowSoftInputMode="adjustPan" />
+        <activity android:name=".page.little.LittleConfigActivity" />
+        <activity android:name=".page.normal.NormalConfigActivity" />
+
+        <receiver
+            android:name=".widget.little.LittleWidget"
             android:label="课程显示(小)">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
@@ -22,7 +45,7 @@
                 android:resource="@xml/widget_little" />
         </receiver>
         <receiver
-            android:name="com.mredrock.cyxbs.widget.widget.little.LittleTransWidget"
+            android:name=".widget.little.LittleTransWidget"
             android:label="课程透明显示(小)">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
@@ -33,7 +56,7 @@
                 android:resource="@xml/widget_little_trans" />
         </receiver>
         <receiver
-            android:name="com.mredrock.cyxbs.widget.widget.normal.NormalWidget"
+            android:name=".widget.normal.NormalWidget"
             android:label="课程显示(大)">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />

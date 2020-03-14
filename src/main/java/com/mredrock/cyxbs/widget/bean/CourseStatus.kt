@@ -1,11 +1,20 @@
 package com.mredrock.cyxbs.widget.bean
 
+import androidx.room.Ignore
 import java.io.Serializable
 
 /**
  * Created by zia on 2018/10/9.
  */
-class Course: Serializable {
+class CourseStatus : Serializable {
+
+
+    companion object {
+        @Ignore
+        const val COURSE = 0
+        @Ignore
+        const val AFFAIR = 1
+    }
 
     /**
      * status : 200
@@ -27,7 +36,7 @@ class Course: Serializable {
     var cachedTimestamp: Long = 0
     var outOfDateTimestamp: Long = 0
     var nowWeek: Int = 0
-    var data: List<DataBean>? = null
+    var data: List<Course>? = null
 
     override fun toString(): String {
         return "Course{" +
@@ -43,7 +52,7 @@ class Course: Serializable {
                 '}'.toString()
     }
 
-    class DataBean: Serializable {
+    class Course : Serializable {
         /**
          * hash_day : 0
          * hash_lesson : 1
@@ -79,6 +88,8 @@ class Course: Serializable {
         var type: String? = null
         var period: Int = 0
         var week: List<Int>? = null
+        var customType: Int = 0
+
 
         override fun toString(): String {
             return "DataBean{" +

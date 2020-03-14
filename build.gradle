@@ -1,9 +1,11 @@
 apply from: module_config
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
 
 dependencies {
     implementation project(':lib_common')
     kapt deps.arouter.compiler
-
+    implementation 'androidx.palette:palette:1.0.0'
     implementation 'com.jaredrummler:colorpicker:1.0.2'
     implementation 'com.squareup.retrofit2:converter-scalars:2.4.0'
 

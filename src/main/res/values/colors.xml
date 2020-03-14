@@ -3,6 +3,6 @@
     <color name="widget_colorPrimary">#44a5f7</color>
     <color name="widget_colorPrimaryDark">#44a5f7</color>
     <color name="widget_colorAccent">#58B1FC</color>
-    <color name="widget_colorTextBlack">#cc000000</color>
+    <color name="widget_colorTextBlack">#15315B</color>
     <color name="widget_trans_color">#00000000</color>
 </resources>

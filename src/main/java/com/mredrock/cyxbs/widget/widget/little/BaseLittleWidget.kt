@@ -12,7 +12,7 @@ import androidx.annotation.LayoutRes
 import com.alibaba.android.arouter.launcher.ARouter
 import com.mredrock.cyxbs.common.config.MAIN_MAIN
 import com.mredrock.cyxbs.common.event.WidgetCourseEvent
-import com.mredrock.cyxbs.widget.bean.Course
+import com.mredrock.cyxbs.widget.bean.CourseStatus
 import com.mredrock.cyxbs.widget.util.*
 import org.greenrobot.eventbus.EventBus
 import java.util.*
@@ -24,7 +24,7 @@ import java.util.*
 abstract class BaseLittleWidget : AppWidgetProvider() {
 
     private val shareName = "share_hash_lesson_trans"
-    private var curCourse: Course.DataBean = Course.DataBean()//保存当前显示的course
+    private var curCourseStatus: CourseStatus.Course = CourseStatus.Course()//保存当前显示的course
 
     @LayoutRes
     protected abstract fun getLayoutResId(): Int
@@ -49,7 +49,7 @@ abstract class BaseLittleWidget : AppWidgetProvider() {
     protected abstract fun getRefreshResId(): Int
 
 
-    protected abstract fun getRemoteViews(context: Context, course: Course.DataBean?, timeTv: String = "课程安排"): RemoteViews
+    protected abstract fun getRemoteViews(context: Context, courseStatus: CourseStatus.Course?, timeTv: String = "课程安排"): RemoteViews
 
 
     override fun onUpdate(context: Context, appWidgetManager: AppWidgetManager, appWidgetIds: IntArray) {
@@ -80,16 +80,16 @@ abstract class BaseLittleWidget : AppWidgetProvider() {
             ARouter.getInstance().build(MAIN_MAIN).navigation()
             refresh(context)//在应用没有打开的时候点击跳转需要刷新一下数据
             EventBus.getDefault().postSticky(
-                    WidgetCourseEvent(mutableListOf(changeCourseToWidgetCourse(curCourse)))
+                    WidgetCourseEvent(mutableListOf(changeCourseToWidgetCourse(curCourseStatus)))
             )
         }
     }
 
-    private fun show(context: Context, course: Course.DataBean?, startTime: String = "课程安排") {
+    private fun show(context: Context, courseStatus: CourseStatus.Course?, startTime: String = "课程安排") {
         val manager = AppWidgetManager.getInstance(context)
         val componentName = ComponentName(context, javaClass)
-        curCourse = course ?: Course.DataBean()
-        manager.updateAppWidget(componentName, getRemoteViews(context, course, startTime))
+        curCourseStatus = courseStatus ?: CourseStatus.Course()
+        manager.updateAppWidget(componentName, getRemoteViews(context, courseStatus, startTime))
     }
 
     //获取正常显示的下一节课
@@ -155,15 +155,15 @@ abstract class BaseLittleWidget : AppWidgetProvider() {
         val list = getCourseByCalendar(context, calendar)
                 ?: getErrorCourseList()
 
-        var course: Course.DataBean? = null
+        var courseStatus: CourseStatus.Course? = null
         list.forEach {
             if (hash_lesson > it.hash_lesson) {
-                course = it
+                courseStatus = it
             }
         }
-        if (course != null) {
+        if (courseStatus != null) {
             val beforeTitle = if (dayOffset == 1) "明日：" else ""
-            show(context, course, beforeTitle + formatTime(getStartCalendarByNum(course!!.hash_lesson)))
+            show(context, courseStatus, beforeTitle + formatTime(getStartCalendarByNum(courseStatus!!.hash_lesson)))
         } else {
             Toast.makeText(context, "没有上一节课了~", Toast.LENGTH_SHORT).show()
         }

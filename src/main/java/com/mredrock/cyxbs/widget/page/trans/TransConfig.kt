@@ -1,7 +1,6 @@
 package com.mredrock.cyxbs.widget.page.trans
 
 import android.content.Context
-import androidx.annotation.ColorInt
 import com.mredrock.cyxbs.common.utils.extensions.editor
 import com.mredrock.cyxbs.common.utils.extensions.sharedPreferences
 
@@ -16,16 +15,16 @@ class TransConfig {
     var courseTextSize = 19
     var roomTextSize = 15
 
-    @ColorInt
+
     var timeTextColor = "#FFFFFF"
 
-    @ColorInt
+
     var courseTextColor = "#FFFFFF"
 
-    @ColorInt
+
     var roomTextColor = "#FFFFFF"
 
-    @ColorInt
+
     var holderColor = "#FFFFFF"
 
     fun save(context: Context) {
@@ -50,9 +49,13 @@ class TransConfig {
         fun getUserConfig(context: Context): TransConfig {
             return TransConfig().apply {
                 timeTextColor = context.sharedPreferences(shareName).getString("timeTextColor", timeTextColor)
+                        ?: "#FFFFFF"
                 courseTextColor = context.sharedPreferences(shareName).getString("courseTextColor", courseTextColor)
+                        ?: "#FFFFFF"
                 roomTextColor = context.sharedPreferences(shareName).getString("roomTextColor", roomTextColor)
+                        ?: "#FFFFFF"
                 holderColor = context.sharedPreferences(shareName).getString("holderColor", holderColor)
+                        ?: "#FFFFFF"
                 timeTextSize = context.sharedPreferences(shareName).getInt("timeTextSize", timeTextSize)
                 courseTextSize = context.sharedPreferences(shareName).getInt("courseTextSize", courseTextSize)
                 roomTextSize = context.sharedPreferences(shareName).getInt("roomTextSize", roomTextSize)

@@ -3,7 +3,7 @@ package com.mredrock.cyxbs.widget.widget.little
 import android.content.Context
 import android.widget.RemoteViews
 import com.mredrock.cyxbs.widget.R
-import com.mredrock.cyxbs.widget.bean.Course
+import com.mredrock.cyxbs.widget.bean.CourseStatus
 import com.mredrock.cyxbs.widget.util.filterClassRoom
 import com.mredrock.cyxbs.widget.util.getClickPendingIntent
 import com.mredrock.cyxbs.widget.util.getWeekDayChineseName
@@ -48,7 +48,7 @@ class LittleWidget : BaseLittleWidget() {
         return R.id.widget_little_refresh
     }
 
-    override fun getRemoteViews(context: Context, course: Course.DataBean?, timeTv: String): RemoteViews {
+    override fun getRemoteViews(context: Context, courseStatus: CourseStatus.Course?, timeTv: String): RemoteViews {
         val rv = RemoteViews(context.packageName, getLayoutResId())
         rv.setOnClickPendingIntent(getUpResId(), getClickPendingIntent(context, getUpResId(), "btn.text.com", javaClass))
         rv.setOnClickPendingIntent(getDownResId(), getClickPendingIntent(context, getDownResId(), "btn.text.com", javaClass))
@@ -56,16 +56,16 @@ class LittleWidget : BaseLittleWidget() {
 
 
 
-        if (course == null) {
+        if (courseStatus == null) {
             rv.setTextViewText(getTitleResId(), getWeekDayChineseName(Calendar.getInstance().get(Calendar.DAY_OF_WEEK)))
             rv.setTextViewText(getCourseNameResId(), "今天没有课~")
             rv.setTextViewText(getRoomResId(), "")
         } else {
             //保存当前hash_lesson
-            saveHashLesson(context, course.hash_lesson, getShareName())
+            saveHashLesson(context, courseStatus.hash_lesson, getShareName())
             rv.setTextViewText(getTitleResId(), timeTv)
-            rv.setTextViewText(getCourseNameResId(), course.course)
-            rv.setTextViewText(getRoomResId(), filterClassRoom(course.classroom!!))
+            rv.setTextViewText(getCourseNameResId(), courseStatus.course)
+            rv.setTextViewText(getRoomResId(), filterClassRoom(courseStatus.classroom!!))
             //有课的时候才能跳转
             rv.setOnClickPendingIntent(getCourseNameResId(),
                     getClickPendingIntent(context,getCourseNameResId(),"btn.start.com",javaClass))
