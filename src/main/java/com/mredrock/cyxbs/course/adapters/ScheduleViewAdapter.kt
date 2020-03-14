@@ -2,8 +2,6 @@ package com.mredrock.cyxbs.course.adapters
 
 import android.content.Context
 import android.content.Intent
-import android.graphics.drawable.Drawable
-import android.graphics.drawable.GradientDrawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -22,7 +20,7 @@ import com.mredrock.cyxbs.course.event.DismissAddAffairViewEvent
 import com.mredrock.cyxbs.course.network.Course
 import com.mredrock.cyxbs.course.ui.EditAffairActivity
 import com.mredrock.cyxbs.course.ui.ScheduleDetailDialogHelper
-import com.mredrock.cyxbs.course.utils.ClassRoomParse
+import com.mredrock.cyxbs.common.utils.ClassRoomParse
 import com.mredrock.cyxbs.course.utils.createCornerBackground
 import org.greenrobot.eventbus.EventBus
 import org.jetbrains.anko.textColor
