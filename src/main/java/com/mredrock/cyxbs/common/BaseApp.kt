@@ -6,6 +6,7 @@ import android.content.Context
 import com.alibaba.android.arouter.launcher.ARouter
 import com.meituan.android.walle.WalleChannelReader
 import com.mredrock.cyxbs.common.utils.LogUtils
+import com.mredrock.cyxbs.common.utils.extensions.getDarkModeStatus
 import com.umeng.analytics.MobclickAgent
 import com.umeng.commonsdk.UMConfigure
 import com.umeng.message.IUmengRegisterCallback
@@ -22,11 +23,14 @@ open class BaseApp : Application() {
         lateinit var context: Context
             private set
         var startTime: Long = 0
+        var isNightMode = false
+
     }
 
     override fun attachBaseContext(base: Context) {
         super.attachBaseContext(base)
         context = base
+        isNightMode = context.getDarkModeStatus()
         startTime = System.currentTimeMillis()
     }
 

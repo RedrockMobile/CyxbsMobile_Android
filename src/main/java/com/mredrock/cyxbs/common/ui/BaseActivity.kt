@@ -1,7 +1,10 @@
 package com.mredrock.cyxbs.common.ui
 
 //import com.jude.swipbackhelper.SwipeBackHelper
+import android.annotation.SuppressLint
 import android.app.Activity
+import android.content.pm.ActivityInfo
+import android.content.res.Configuration
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
@@ -11,20 +14,25 @@ import android.view.View
 import android.view.WindowManager
 import androidx.annotation.DrawableRes
 import androidx.appcompat.app.AppCompatActivity
+import com.afollestad.materialdialogs.DialogAction
 import com.afollestad.materialdialogs.MaterialDialog
 import com.alibaba.android.arouter.launcher.ARouter
+import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.R
 import com.mredrock.cyxbs.common.component.JToolbar
+import com.mredrock.cyxbs.common.config.MAIN_SPLASH
 import com.mredrock.cyxbs.common.event.AskLoginEvent
 import com.mredrock.cyxbs.common.event.LoginEvent
 import com.mredrock.cyxbs.common.event.LoginStateChangeEvent
 import com.mredrock.cyxbs.common.utils.LogUtils
+import com.mredrock.cyxbs.common.utils.extensions.getDarkModeStatus
 import com.umeng.analytics.MobclickAgent
 import kotlinx.android.synthetic.main.common_toolbar.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.jetbrains.anko.startActivity
+import kotlin.system.exitProcess
 
 /**
  * Created By jay68 on 2018/8/9.
@@ -73,18 +81,19 @@ abstract class BaseActivity : AppCompatActivity() {
 
     var menu: Menu? = null
         private set
-    @Deprecated(message = "废弃，请使用initWithSplitLine()",replaceWith = ReplaceWith("JToolbar.initWithSplitLine()","com.mredrock.cyxbs.common.ui"))
+
+    @Deprecated(message = "废弃，请使用initWithSplitLine()", replaceWith = ReplaceWith("JToolbar.initWithSplitLine()", "com.mredrock.cyxbs.common.ui"))
     protected fun JToolbar.init(title: String,
-                               @DrawableRes icon: Int = R.drawable.common_ic_back,
-                               listener: View.OnClickListener? = View.OnClickListener { finish() }) {
+                                @DrawableRes icon: Int = R.drawable.common_ic_back,
+                                listener: View.OnClickListener? = View.OnClickListener { finish() }) {
         withSplitLine(true)
         initInternal(title, icon, listener)
     }
 
     private fun JToolbar.initInternal(title: String,
-                                     @DrawableRes icon: Int = R.drawable.common_ic_back,
-                                     listener: View.OnClickListener? = View.OnClickListener { finish() },
-                                      titleOnLeft:Boolean = true){
+                                      @DrawableRes icon: Int = R.drawable.common_ic_back,
+                                      listener: View.OnClickListener? = View.OnClickListener { finish() },
+                                      titleOnLeft: Boolean = true) {
         this.title = title
         setSupportActionBar(this)
         setTitleLocationAtLeft(titleOnLeft)
@@ -95,14 +104,15 @@ abstract class BaseActivity : AppCompatActivity() {
             setNavigationOnClickListener(listener)
         }
     }
-    protected fun JToolbar.initWithSplitLine(title:String,
-                                             withSplitLine:Boolean = true,
-                                             @DrawableRes icon:Int = R.drawable.common_ic_back,
-                                             listener:View.OnClickListener? = View.OnClickListener { finish() },
-                                             titleOnLeft: Boolean = true){
+
+    protected fun JToolbar.initWithSplitLine(title: String,
+                                             withSplitLine: Boolean = true,
+                                             @DrawableRes icon: Int = R.drawable.common_ic_back,
+                                             listener: View.OnClickListener? = View.OnClickListener { finish() },
+                                             titleOnLeft: Boolean = true) {
         setTitleLocationAtLeft(false)
         withSplitLine(withSplitLine)
-        initInternal(title,icon,listener,titleOnLeft)
+        initInternal(title, icon, listener, titleOnLeft)
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -147,6 +157,26 @@ abstract class BaseActivity : AppCompatActivity() {
     override fun onStart() {
         super.onStart()
         EventBus.getDefault().register(this)
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        if (getDarkModeStatus() != BaseApp.isNightMode) {
+            BaseApp.isNightMode = getDarkModeStatus()
+            MaterialDialog.Builder(this)
+                    .title("是否重启应用？")
+                    .content("检测到你切换了显示模式，需要重启app才能完全正常显示")
+                    .positiveText("立即重启")
+                    .negativeText("稍后自己重启")
+                    .autoDismiss(false)
+                    .onPositive { _, _ ->
+                        finishAffinity();
+                        ARouter.getInstance().build(MAIN_SPLASH).navigation();
+                        finish()
+                    }.onNegative{ materialDialog, _ ->
+                        materialDialog.dismiss()
+                    }.show()
+        }
     }
 
     override fun onResume() {
