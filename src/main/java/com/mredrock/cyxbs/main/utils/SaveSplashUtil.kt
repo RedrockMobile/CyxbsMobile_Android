@@ -92,5 +92,3 @@ fun deleteDir(path: File?) {
         path.delete()
     }
 }
-
-var isNightMode = false

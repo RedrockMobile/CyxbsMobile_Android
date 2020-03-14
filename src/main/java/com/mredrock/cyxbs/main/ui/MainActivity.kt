@@ -1,7 +1,10 @@
 package com.mredrock.cyxbs.main.ui
 
+import android.content.res.Configuration
+import android.os.Build
 import android.os.Bundle
 import android.view.MenuItem
+import android.view.View
 import android.view.View.GONE
 import android.widget.FrameLayout
 import androidx.fragment.app.Fragment
@@ -10,12 +13,14 @@ import com.alibaba.android.arouter.facade.annotation.Route
 import com.google.android.material.bottomnavigation.LabelVisibilityMode
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.mredrock.cyxbs.common.BaseApp
+import com.mredrock.cyxbs.common.BaseApp.Companion.isNightMode
 import com.mredrock.cyxbs.common.config.*
 import com.mredrock.cyxbs.common.event.LoadCourse
 import com.mredrock.cyxbs.common.event.NotifyBottomSheetToExpandEvent
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
+import com.mredrock.cyxbs.common.utils.extensions.getDarkModeStatus
 import com.mredrock.cyxbs.common.utils.extensions.getStatusBarHeight
 import com.mredrock.cyxbs.common.utils.update.UpdateEvent
 import com.mredrock.cyxbs.common.utils.update.UpdateUtils
@@ -60,13 +65,17 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        init()
+    }
+
+    private fun init() {
         setContentView(R.layout.main_activity_main)
-//        // TODO: 2019/11/19 此处待处理，这里只能适配部分机型
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-//            window.addFlags(FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
-//            window.decorView.systemUiVisibility = SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
-//            window.statusBarColor = ContextCompat.getColor(this, R.color.windowBackground)
-//        }
+        //        // TODO: 2019/11/19 此处待处理，这里只能适配部分机型
+        //        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        //            window.addFlags(FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+        //            window.decorView.systemUiVisibility = SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+        //            window.statusBarColor = ContextCompat.getColor(this, R.color.windowBackground)
+        //        }
         initBottomNavigationView()
         UpdateUtils.checkUpdate(this)
         InAppMessageManager.getInstance(BaseApp.context).showCardMessage(this,
@@ -75,14 +84,9 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
         }
         initBottomSheetBehavior()
         initFragments()
-
     }
 
-    override fun onStart() {
 
-        super.onStart()
-
-    }
 
 
     private fun initBottomSheetBehavior() {
@@ -91,47 +95,21 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
         bottomSheetBehavior.peekHeight = bottomSheetBehavior.peekHeight + getStatusBarHeight()
         viewModel.bottomSheetCallbackBind(bottomSheetBehavior,
                 onSlide = { _, fl ->
-                    //                    ll_nav_main_container.translationY = nav_main.height * fl
-//                    if (ll_nav_main_container.visibility == GONE) {
-//                        ll_nav_main_container.visibility = View.VISIBLE
-//                    }
-//                    if (viewModel.isFirst && viewModel.courseShowState && fl < 0.5f) {
-//                        viewModel.isFirst = false
-//                        other_fragment_container.visibility = GONE
-//                        changeFragment(discoverFragment, 0, nav_main.menu[0])
-////                        TransitionManager.beginDelayedTransition(main_content, TransitionSet().apply {
-////                            addTransition(Slide().apply {
-////                                duration = 500
-////                            })
-////                        })
-//                        other_fragment_container.visibility = View.VISIBLE
-//                    }
+                    ll_nav_main_container.translationY = nav_main.height * fl
+                    if (ll_nav_main_container.visibility == GONE) {
+                        ll_nav_main_container.visibility = View.VISIBLE
+                    }
                 },
                 onStateChanged = { _, _ ->
                     //如果是第一次进入展开则加载详细的课表子页
                     if (viewModel.isFirst && bottomSheetBehavior.state == BottomSheetBehavior.STATE_EXPANDED
                             && viewModel.lastState != BottomSheetBehavior.STATE_EXPANDED && !viewModel.courseShowState) {
                         EventBus.getDefault().post(LoadCourse())
+                        viewModel.isFirst = false
                     }
                 })
     }
 
-    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
-        super.onRestoreInstanceState(savedInstanceState)
-        bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
-//        val navTranslation = savedInstanceState.getFloat("navTranslation")
-        ll_nav_main_container.translationY = 0f
-//        ll_nav_main_container.visibility = if (navTranslation == 0f) VISIBLE else GONE
-    }
-
-
-//    override fun onSaveInstanceState(outState: Bundle, outPersistentState: PersistableBundle) {
-//        super.onSaveInstanceState(outState, outPersistentState)
-//        //保存BottomSheet和Nav的位置状态，发现系统不会自动帮忙保存
-//        outState.putInt("BottomSheetBehaviorState", bottomSheetBehavior.state)
-//        outState.putFloat("navTranslation", ll_nav_main_container.translationY)
-//        Log.d("MainAAAAAAAA", "onSaveInstanceState")
-//    }
 
 ////这个方法可能有用暂不删除
 //    @RequiresApi(Build.VERSION_CODES.M)
@@ -212,6 +190,7 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
         viewModel.courseShowState = defaultSharedPreferences.getBoolean(COURSE_SHOW_STATE, false)
         viewModel.lastState = if (viewModel.courseShowState) BottomSheetBehavior.STATE_EXPANDED else BottomSheetBehavior.STATE_COLLAPSED
         if (viewModel.courseShowState) {
+            nav_main.selectedItemId = R.id.explore
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
             //这里必须让它GONE，因为这个设置BottomSheet是不会走滑动监听的，否则导致完全显示BottomSheet后依然有下面的tab
             ll_nav_main_container.visibility = GONE
