@@ -12,6 +12,7 @@ import com.mredrock.cyxbs.common.event.CurrentDateInformationEvent
 import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.service.account.IAccountService
+import com.mredrock.cyxbs.common.utils.ClassRoomParse
 import com.mredrock.cyxbs.common.utils.Num2CN
 import com.mredrock.cyxbs.common.utils.SchoolCalendar
 import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
@@ -123,6 +124,11 @@ class CoursesViewModel : BaseViewModel() {
             val s = CourseTimeParse((nowCourse.get()?.hashLesson ?: 0) * 2,
                     nowCourse.get()?.period ?: 2)
             return "${s.parseStartCourseTime()}-${s.parseEndCourseTime()}"
+        }
+    }
+    val nowCoursePlace = object : ObservableField<String>(nowCourse){
+        override fun get(): String? {
+            return ClassRoomParse.parseClassRoom(nowCourse.get()?.classroom?: "")
         }
     }
     val isAffair = object : ObservableField<Int>(nowCourse) {

@@ -132,7 +132,7 @@
                                 android:ellipsize="marquee"
                                 android:gravity="center"
                                 android:singleLine="true"
-                                android:text="@{coursesViewModel.nowCourse.classroom}"
+                                android:text="@{coursesViewModel.nowCoursePlace}"
                                 tools:text="综合实验楼" />
 
                         </LinearLayout>
