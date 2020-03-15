@@ -22,6 +22,8 @@ import kotlin.collections.ArrayList
  * 精力憔悴，这些方法直接揉在一起了
  */
 
+const val EmptyCourseObject = -1
+
 /**
  * 获得今天得课程list信息
  */
@@ -95,7 +97,7 @@ fun getErrorCourseList(): ArrayList<CourseStatus.Course> {
 
 fun getNoCourse(): CourseStatus.Course {
     val data = CourseStatus.Course()
-    data.hash_lesson = 0
+    data.hash_lesson = EmptyCourseObject
     data.course = "无课"
     data.classroom = ""
     return data

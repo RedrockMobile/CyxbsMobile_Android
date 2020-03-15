@@ -18,7 +18,7 @@
 
             <meta-data
                 android:name="android.appwidget.provider"
-                android:resource="@xml/oversized_app_widget_info" />
+                android:resource="@xml/wideget_oversized_app_widget_info" />
         </receiver>
 
         <activity android:name=".page.oversized.OversizedAppWidgetConfigureActivity">

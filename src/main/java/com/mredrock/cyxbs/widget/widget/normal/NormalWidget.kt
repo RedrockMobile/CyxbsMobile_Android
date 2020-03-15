@@ -5,6 +5,7 @@ import android.appwidget.AppWidgetProvider
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.graphics.BitmapFactory
 import android.view.View
 import android.widget.RemoteViews
 import android.widget.Toast
@@ -85,7 +86,6 @@ class NormalWidget : AppWidgetProvider() {
         }
         if (intent.action == "btn.start.com") {
             fresh(context,0)//在应用没有打开的时候点击跳转需要刷新一下数据
-            ARouter.getInstance().build(MAIN_MAIN).navigation()
             val newList = mutableListOf<WidgetCourse.DataBean>()
             list.forEach {it->
                 newList.add(changeCourseToWidgetCourse(it))
@@ -93,31 +93,36 @@ class NormalWidget : AppWidgetProvider() {
             val size = newList.size
             when (rId) {
                 R.id.widget_normal_layout1 -> {
-                    if(size < 1) return
-                    EventBus.getDefault().postSticky(WidgetCourseEvent(mutableListOf(newList[0])))
+                    if(size < 1||newList[0].hash_lesson==EmptyCourseObject) return
+                    startOperation(newList[0])
                 }
                 R.id.widget_normal_layout2 -> {
                     if(size < 2) return
-                    EventBus.getDefault().postSticky(WidgetCourseEvent(mutableListOf(newList[1])))
+                    startOperation(newList[1])
                 }
                 R.id.widget_normal_layout3 -> {
                     if(size < 3) return
-                    EventBus.getDefault().postSticky(WidgetCourseEvent(mutableListOf(newList[2])))
+                    startOperation(newList[2])
                 }
                 R.id.widget_normal_layout4 -> {
                     if(size < 4) return
-                    EventBus.getDefault().postSticky(WidgetCourseEvent(mutableListOf(newList[3])))
+                    startOperation(newList[3])
                 }
                 R.id.widget_normal_layout5 -> {
                     if(size < 5) return
-                    EventBus.getDefault().postSticky(WidgetCourseEvent(mutableListOf(newList[4])))
+                    startOperation(newList[4])
                 }
                 R.id.widget_normal_layout6 -> {
                     if(size < 6) return
-                    EventBus.getDefault().postSticky(WidgetCourseEvent(mutableListOf(newList[5])))
+                    startOperation(newList[5])
                 }
             }
         }
+    }
+
+    private fun startOperation(dataBean: WidgetCourse.DataBean) {
+        ARouter.getInstance().build(MAIN_MAIN).navigation()
+        EventBus.getDefault().postSticky(WidgetCourseEvent(mutableListOf(dataBean)))
     }
 
 
@@ -177,7 +182,7 @@ class NormalWidget : AppWidgetProvider() {
             var index = 1
             list.forEach { course ->
                 rv.setViewVisibility(getLayoutId(index), View.VISIBLE)
-                rv.setTextViewText(getTimeId(index), formatTime(getStartCalendarByNum(course.hash_lesson)))
+                rv.setTextViewText(getTimeId(index),if (course.hash_lesson!=-1) formatTime(getStartCalendarByNum(course.hash_lesson)) else "")
                 rv.setTextViewText(getCourseId(index), course.course)
                 rv.setTextViewText(getRoomId(index), filterClassRoom(course.classroom!!))
                 rv.setOnClickPendingIntent(getLayoutId(index),
