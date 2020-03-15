@@ -21,7 +21,7 @@
             android:layout_height="match_parent"
             android:orientation="vertical"
             android:weightSum="100"
-            android:background="#fff"
+            android:background="@color/whiteBackground"
             tools:context=".pages.noclass.NoClassActivity"
             tools:ignore="ResourceName">
 
@@ -98,7 +98,7 @@
                 android:layout_height="40dp"
                 android:background="@drawable/common_shape_button"
                 android:text="查询"
-                android:textColor="#FFFFFF"
+                android:textColor="@color/whiteFontColor"
                 android:textSize="18sp"
                 android:layout_marginBottom="58dp"
                 app:layout_constraintBottom_toBottomOf="parent"

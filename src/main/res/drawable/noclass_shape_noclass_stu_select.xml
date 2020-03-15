@@ -2,5 +2,5 @@
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
     <corners android:topRightRadius="16dp"
         android:topLeftRadius="16dp"/>
-    <solid android:color="@color/whiteBackground"/>
+    <solid android:color="@color/no_class_select_student_page_background"/>
 </shape>
