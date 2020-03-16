@@ -10,8 +10,7 @@ import com.mredrock.cyxbs.common.utils.extensions.setAvatarImageFromUrl
 import com.mredrock.cyxbs.common.utils.extensions.visible
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.bean.Answer
-import com.mredrock.cyxbs.qa.bean.Question
-import com.mredrock.cyxbs.qa.component.recycler.BaseRvAdapter
+import com.mredrock.cyxbs.qa.component.recycler.BaseEndlessRvAdapter
 import com.mredrock.cyxbs.qa.component.recycler.BaseViewHolder
 import com.mredrock.cyxbs.qa.utils.setPraise
 import com.mredrock.cyxbs.qa.utils.timeDescription
@@ -20,7 +19,7 @@ import kotlinx.android.synthetic.main.qa_recycler_item_answer.view.*
 /**
  * Created By jay68 on 2018/9/30.
  */
-class AnswerListAdapter() : BaseRvAdapter<Answer>() {
+class AnswerListAdapter : BaseEndlessRvAdapter<Answer>(DIFF_CALLBACK) {
     companion object {
         @JvmStatic
         val DIFF_CALLBACK = object : DiffUtil.ItemCallback<Answer>() {
@@ -35,18 +34,6 @@ class AnswerListAdapter() : BaseRvAdapter<Answer>() {
     var onItemClickListener: ((Int, Answer) -> Unit)? = null
 
 
-    private var isEmotion = false
-    private var isSelf = false
-    private var hasAdoptedAnswer = false
-
-
-    fun setQuestionInfo(question: Question) {
-        isEmotion = question.isEmotion
-        isSelf = question.isSelf
-        hasAdoptedAnswer = question.hasAdoptedAnswer
-        notifyDataSetChanged()
-    }
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = AnswerViewHolder(parent)
 
     override fun onItemClickListener(holder: BaseViewHolder<Answer>, position: Int, data: Answer) {
@@ -58,11 +45,11 @@ class AnswerListAdapter() : BaseRvAdapter<Answer>() {
         super.onBindViewHolder(holder, position)
         holder.itemView.apply {
             tv_answer_praise_count.setOnClickListener {
-                onPraiseClickListener?.invoke(position, dataList[position])
+                getItem(position)?.let { it1 -> onPraiseClickListener?.invoke(position, it1) }
             }
-            if (dataList[position].userId != ServiceManager.getService(IAccountService::class.java).getUserService().getStuNum())
+            if (getItem(position)?.userId != ServiceManager.getService(IAccountService::class.java).getUserService().getStuNum())
                 btn_answer_more.setOnClickListener {
-                    onReportClickListener?.invoke(dataList[position].id)
+                    getItem(position)?.id?.let { it1 -> onReportClickListener?.invoke(it1) }
                 }
         }
     }
@@ -72,16 +59,31 @@ class AnswerListAdapter() : BaseRvAdapter<Answer>() {
             data ?: return
             itemView.apply {
                 //判断是否显示
-                if (data.userId == ServiceManager.getService(IAccountService::class.java).getUserService().getStuNum()) {
-                    btn_answer_more.invisible()
+                when (data.userId) {
+                    ServiceManager.getService(IAccountService::class.java).getUserService().getStuNum() -> {
+                        btn_answer_more.invisible()
+                    }
+                    else -> {
+                        btn_answer_more.visible()
+                    }
                 }
-                if (data.commentNumInt == 0) {
-                    tv_answer_reply_count.gone()
+                when (data.commentNumInt) {
+                    0 -> {
+                        tv_answer_reply_count.gone()
+                    }
+                    else -> {
+                        tv_answer_reply_count.visible()
+                    }
                 }
                 iv_answer_avatar.setAvatarImageFromUrl(data.photoThumbnailSrc)
                 tv_answer_nickname.text = data.nickname
-                if (hasAdoptedAnswer) {
-                    tv_adopted.visible()
+                when {
+                    data.isAdopted -> {
+                        tv_adopted.visible()
+                    }
+                    else -> {
+                        tv_adopted.invisible()
+                    }
                 }
                 tv_answer_content.text = data.content
                 tv_answer_publish_at.text = timeDescription(System.currentTimeMillis(), data.createdAt)

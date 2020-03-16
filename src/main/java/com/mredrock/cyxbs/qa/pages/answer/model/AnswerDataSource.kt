@@ -17,13 +17,12 @@ import com.mredrock.cyxbs.qa.network.NetworkState
 class AnswerDataSource(private val qid: String) : PageKeyedDataSource<Int, Answer>() {
     val networkState = MutableLiveData<Int>()
     val initialLoad = MutableLiveData<Int>()
-    val answerList = MutableLiveData<List<Answer>>()
 
     private var failedRequest: (() -> Unit)? = null
 
     override fun loadInitial(params: LoadInitialParams<Int>, callback: LoadInitialCallback<Int, Answer>) {
         ApiGenerator.getApiService(ApiService::class.java)
-                .getAnswerList(qid, 0, 0)
+                .getAnswerList(qid, 1, params.requestedLoadSize)
                 .mapOrThrowApiException()
                 .setSchedulers()
                 .doOnSubscribe { initialLoad.postValue(NetworkState.LOADING) }
@@ -34,7 +33,6 @@ class AnswerDataSource(private val qid: String) : PageKeyedDataSource<Int, Answe
                 .safeSubscribeBy { list ->
                     initialLoad.value = NetworkState.SUCCESSFUL
                     val nextPageKey = 2.takeUnless { (list.size < params.requestedLoadSize) }
-                    answerList.value = list
                     callback.onResult(list, 1, nextPageKey)
                 }
     }
@@ -52,7 +50,6 @@ class AnswerDataSource(private val qid: String) : PageKeyedDataSource<Int, Answe
                 .safeSubscribeBy { list ->
                     networkState.value = NetworkState.SUCCESSFUL
                     val adjacentPageKey = (params.key + 1).takeUnless { list.size < params.requestedLoadSize }
-                    answerList.value = list
                     callback.onResult(list, adjacentPageKey)
                 }
     }

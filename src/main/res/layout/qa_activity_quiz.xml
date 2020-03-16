@@ -39,6 +39,7 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="15dp"
                 android:layout_marginEnd="16dp"
+                android:maxLength="12"
                 android:background="@drawable/qa_quiz_new_text_background"
                 android:gravity="center_vertical"
                 android:hint="@string/qa_question_new_question_title_hint"
