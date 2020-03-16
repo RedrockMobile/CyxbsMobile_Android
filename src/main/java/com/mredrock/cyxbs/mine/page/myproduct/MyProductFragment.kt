@@ -75,7 +75,7 @@ class MyProductFragment(private val type: Int = UNCLAIMED) : BaseRVFragment<MyPr
 
     override fun bindDataHolder(holder: RecyclerView.ViewHolder, position: Int, data: MyProduct) {
         holder.itemView.mine_my_product_time.text = data.time.split(" ")[0].replace("-", ".")
-        holder.itemView.mine_my_product_title.text = if (data.name.isNotEmpty()) data.name else "(无名的物品)"
+        holder.itemView.mine_my_product_title.text = if (data.name.isNotEmpty()) data.name else "--"
         holder.itemView.mine_my_product_integral.text = if (data.integral.toString().isNotEmpty()) data.integral.toString() else "0"
         holder.itemView.mine_my_product_iv.setImageFromUrl(data.photoSrc)
         holder.itemView.setOnClickListener {

@@ -59,7 +59,7 @@ class ProductAdapter : ListAdapter<Product, ProductAdapter.ProductViewHolder>(Pr
         }
         holder.iv.layoutParams = param
 
-        holder.title.text = if (product.name.isNotEmpty()) product.name else "(无名的物品)"
+        holder.title.text = if (product.name.isNotEmpty()) product.name else "--"
         holder.count.text = "仅剩${product.count}"
         holder.integral.text = if (product.integral.isNotEmpty()) product.integral else "0"
         holder.iv.setImageFromUrl(product.src)
