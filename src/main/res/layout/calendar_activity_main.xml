@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:fitsSystemWindows="true"
-    android:background="#ffffff"
+    android:background="@color/whiteBackground"
     android:orientation="vertical"
     tools:context="com.mredrock.cyxbs.discover.calendar.CalendarActivity">
     <ImageView

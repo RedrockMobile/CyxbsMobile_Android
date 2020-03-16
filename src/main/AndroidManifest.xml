@@ -3,7 +3,8 @@
           package="com.mredrock.cyxbs.calendar">
 
     <application>
-        <activity android:name="com.mredrock.cyxbs.discover.calendar.CalendarActivity" />
+        <activity android:name="com.mredrock.cyxbs.discover.calendar.CalendarActivity"
+            android:launchMode="singleTop"/>
     </application>
 
 </manifest>
