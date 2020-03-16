@@ -3,10 +3,6 @@ package com.mredrock.cyxbs.mine.page.myproduct
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
-import com.mredrock.cyxbs.common.BaseApp
-import com.mredrock.cyxbs.common.service.ServiceManager
-import com.mredrock.cyxbs.common.service.account.IAccountService
-import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.mine.network.ApiGeneratorForSign
@@ -44,24 +40,29 @@ class MyProductViewModel : BaseViewModel() {
     fun loadMyProductUnclaimed() {
         val disposable = apiServiceForSign.getMyProducts(unclaimedPage++, pageSize)
                 .normalWrapper(this)
-                .safeSubscribeBy { list ->
-                    if (list.isEmpty()) {
-                        if (_unclaimedList.value.isNullOrEmpty()) {
-                            _eventOnUnclaimed.postValue(RvFooter.State.NOTHING)
-                            return@safeSubscribeBy
-                        } else {
-                            _eventOnUnclaimed.postValue(RvFooter.State.NOMORE)
-                            return@safeSubscribeBy
+                .safeSubscribeBy (
+                        onNext = { list ->
+                            if (list.isEmpty()) {
+                                if (_unclaimedList.value.isNullOrEmpty()) {
+                                    _eventOnUnclaimed.postValue(RvFooter.State.NOTHING)
+                                    return@safeSubscribeBy
+                                } else {
+                                    _eventOnUnclaimed.postValue(RvFooter.State.NOMORE)
+                                    return@safeSubscribeBy
+                                }
+                            }
+                            val local = _unclaimedList.value ?: mutableListOf()
+                            local.addAll(list.filter {
+                                it.isReceived == 0
+                            })
+                            _unclaimedList.postValue(local)
+                            //下一页
+                            loadMyProductUnclaimed()
+                        },
+                        onError = {
+                            _eventOnUnclaimed.postValue(RvFooter.State.ERROR)
                         }
-                    }
-                    val local = _unclaimedList.value ?: mutableListOf()
-                    local.addAll(list.filter {
-                        it.isReceived == 0
-                    })
-                    _unclaimedList.postValue(local)
-                    //下一页
-                    loadMyProductUnclaimed()
-                }.lifeCycle()
+                ).lifeCycle()
         disposableForUnClaimed.add(disposable)
     }
 
@@ -86,24 +87,29 @@ class MyProductViewModel : BaseViewModel() {
     fun loadMyProductClaimed() {
         val disposable = apiServiceForSign.getMyProducts(claimedPage++, pageSize)
                 .normalWrapper(this)
-                .safeSubscribeBy { list ->
-                    if (list.isEmpty()) {
-                        if (_claimedList.value.isNullOrEmpty()) {
-                            _eventOnClaimed.postValue(RvFooter.State.NOTHING)
-                            return@safeSubscribeBy
-                        } else {
-                            _eventOnClaimed.postValue(RvFooter.State.NOMORE)
-                            return@safeSubscribeBy
+                .safeSubscribeBy (
+                        onNext = { list ->
+                            if (list.isEmpty()) {
+                                if (_claimedList.value.isNullOrEmpty()) {
+                                    _eventOnClaimed.postValue(RvFooter.State.NOTHING)
+                                    return@safeSubscribeBy
+                                } else {
+                                    _eventOnClaimed.postValue(RvFooter.State.NOMORE)
+                                    return@safeSubscribeBy
+                                }
+                            }
+                            val local = _claimedList.value ?: mutableListOf()
+                            local.addAll(list.filter {
+                                it.isReceived == 1
+                            })
+                            _claimedList.postValue(local)
+                            //下一页
+                            loadMyProductClaimed()
+                        },
+                        onError = {
+                            _eventOnClaimed.postValue(RvFooter.State.ERROR)
                         }
-                    }
-                    val local = _claimedList.value ?: mutableListOf()
-                    local.addAll(list.filter {
-                        it.isReceived == 1
-                    })
-                    _claimedList.postValue(local)
-                    //下一页
-                    loadMyProductClaimed()
-                }.lifeCycle()
+                ).lifeCycle()
         disposableForClaimed.add(disposable)
     }
 

@@ -289,8 +289,7 @@
             app:layout_constraintEnd_toEndOf="@+id/mine_daily_space_thurs"
             app:layout_constraintStart_toStartOf="@id/mine_daily_space_thurs"
             app:layout_constraintTop_toTopOf="@+id/mine_daily_tv_sat"
-            tools:text="周四"
-            tools:textColor="@color/mine_sign_today_name" />
+            tools:text="周四"/>
 
         <TextView
             android:id="@+id/mine_daily_tv_fri"

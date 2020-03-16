@@ -6,10 +6,8 @@ import androidx.lifecycle.Transformations
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.bean.RedrockApiStatus
 import com.mredrock.cyxbs.common.bean.RedrockApiWrapper
-import com.mredrock.cyxbs.common.service.ServiceManager
-import com.mredrock.cyxbs.common.service.account.IAccountService
-import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
+import com.mredrock.cyxbs.common.utils.extensions.toast
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.common.viewmodel.event.SingleLiveEvent
 import com.mredrock.cyxbs.mine.network.ApiGeneratorForSign
@@ -57,9 +55,14 @@ class DailyViewModel : BaseViewModel() {
     fun loadAllData() {
         apiService.getScoreStatus()
                 .normalWrapper(this)
-                .safeSubscribeBy {
-                    _status.postValue(it)
-                }
+                .safeSubscribeBy (
+                        onNext = {
+                            _status.postValue(it)
+                        },
+                        onError = {
+                            BaseApp.context.toast("获取积分失败")
+                        }
+                )
                 .lifeCycle()
 
 
@@ -78,28 +81,38 @@ class DailyViewModel : BaseViewModel() {
                     return@Function apiService.getScoreStatus()
                 })
                 .normalWrapper(this)
-                .safeSubscribeBy {
-                    _status.postValue(it)
-                }
+                .safeSubscribeBy (
+                        onNext = {
+                            _status.postValue(it)
+                        },
+                        onError = {
+                            BaseApp.context.toast("签到失败")
+                        }
+                )
                 .lifeCycle()
     }
 
     fun loadProduct() {
         apiServiceForSign.getProducts(page++)
                 .normalWrapper(this)
-                .safeSubscribeBy {
-                    //由于Rxjava反射不应定能够够保证为空，当为空的说明这一页没有数据，于是停止加载
-                    if (it.isEmpty()) {
-                        return@safeSubscribeBy
-                    }
+                .safeSubscribeBy (
+                        onNext = {
+                            //由于Rxjava反射不应定能够够保证为空，当为空的说明这一页没有数据，于是停止加载
+                            if (it.isEmpty()) {
+                                return@safeSubscribeBy
+                            }
 
-                    //往_product中添加Product
-                    val localProducts = _products.value ?: mutableListOf()
-                    localProducts.addAll(it)
-                    _products.postValue(localProducts)
-                    //加载下一页
-                    loadProduct()
-                }
+                            //往_product中添加Product
+                            val localProducts = _products.value ?: mutableListOf()
+                            localProducts.addAll(it)
+                            _products.postValue(localProducts)
+                            //加载下一页
+                            loadProduct()
+                        },
+                        onError = {
+                            BaseApp.context.toast("加载物品失败")
+                        }
+                )
                 .lifeCycle()
     }
 
@@ -118,9 +131,14 @@ class DailyViewModel : BaseViewModel() {
                     return@Function apiService.getScoreStatus()
                 })
                 .normalWrapper(this)
-                .safeSubscribeBy {
-                    _status.postValue(it)
-                }
+                .safeSubscribeBy (
+                        onNext = {
+                            _status.postValue(it)
+                        },
+                        onError = {
+                            BaseApp.context.toast("兑换失败")
+                        }
+                )
                 .lifeCycle()
     }
 
