@@ -34,7 +34,6 @@ import com.mredrock.cyxbs.qa.component.recycler.RvAdapterWrapper
 import com.mredrock.cyxbs.qa.network.NetworkState
 import com.mredrock.cyxbs.qa.pages.answer.ui.AnswerListActivity
 import com.mredrock.cyxbs.qa.pages.answer.ui.dialog.ReportDialog
-import com.mredrock.cyxbs.qa.pages.comment.AdoptAnswerEvent
 import com.mredrock.cyxbs.qa.pages.comment.viewmodel.CommentListViewModel
 import com.mredrock.cyxbs.qa.ui.adapter.EmptyRvAdapter
 import com.mredrock.cyxbs.qa.ui.adapter.FooterRvAdapter
@@ -50,6 +49,7 @@ import org.jetbrains.anko.*
 class CommentListActivity : BaseActivity() {
     companion object {
         const val REQUEST_CODE = 0x123
+        const val ANSWER_LIST_REQUEST_CODE = 0x3
         const val PARAM_QUESTION = "question"
         const val PARAM_ANSWER = "answer"
 
@@ -125,7 +125,7 @@ class CommentListActivity : BaseActivity() {
                 textSize = 15f
                 visible()
                 setOnClickListener {
-                    this@CommentListActivity.startActivityForResult<AnswerListActivity>(0, AnswerListActivity.PARAM_QUESTION to question)
+                    this@CommentListActivity.startActivityForResult<AnswerListActivity>(ANSWER_LIST_REQUEST_CODE, AnswerListActivity.PARAM_QUESTION to question)
                     this@CommentListActivity.finish()
                 }
             })
@@ -142,7 +142,11 @@ class CommentListActivity : BaseActivity() {
     }
 
     private fun initRv(showAdoptIcon: Boolean) {
-        headerAdapter = CommentListHeaderRvAdapter(showAdoptIcon)
+        headerAdapter = CommentListHeaderRvAdapter(showAdoptIcon).apply {
+            onAdoptClickListener = {
+                viewModel.adoptAnswer(it)
+            }
+        }
         emptyRvAdapter = EmptyRvAdapter(getString(R.string.qa_comment_list_no_comment_hint))
         commentListRvAdapter = CommentListRvAdapter().apply {
             onReportClickListener = { commentId ->
@@ -167,10 +171,6 @@ class CommentListActivity : BaseActivity() {
         observeListChangeEvent()
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun adoptAnswer(event: AdoptAnswerEvent) {
-        viewModel.adoptAnswer(event.aId)
-    }
 
     private inline fun <T> LiveData<T>.observe(crossinline onChange: (T?) -> Unit) = observe(this@CommentListActivity, Observer { onChange(it) })
 
@@ -180,7 +180,11 @@ class CommentListActivity : BaseActivity() {
     })
 
     private fun observeListChangeEvent() = viewModel.apply {
-        answerLiveData.observeNotNull { headerAdapter.refreshData(listOf(it)) }
+        answerLiveData.observeNotNull {
+            setResult(Activity.RESULT_OK)
+            qa_tv_toolbar_title.text = baseContext.getString(R.string.qa_comment_list_comment_count, it.commentNum)
+            headerAdapter.refreshData(listOf(it))
+        }
 
         commentList.observe { commentListRvAdapter.submitList(it) }
 

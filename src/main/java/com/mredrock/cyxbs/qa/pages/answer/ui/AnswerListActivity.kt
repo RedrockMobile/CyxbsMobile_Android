@@ -30,7 +30,6 @@ import com.mredrock.cyxbs.qa.component.recycler.RvAdapterWrapper
 import com.mredrock.cyxbs.qa.network.NetworkState
 import com.mredrock.cyxbs.qa.pages.answer.ui.dialog.ReportDialog
 import com.mredrock.cyxbs.qa.pages.answer.viewmodel.AnswerListViewModel
-import com.mredrock.cyxbs.qa.pages.comment.AdoptAnswerEvent
 import com.mredrock.cyxbs.qa.pages.comment.ui.CommentListActivity
 import com.mredrock.cyxbs.qa.ui.adapter.EmptyRvAdapter
 import com.mredrock.cyxbs.qa.ui.adapter.FooterRvAdapter
@@ -181,7 +180,6 @@ class AnswerListActivity : BaseActivity() {
 
         questionLiveData.observeNotNull {
             headerAdapter.refreshData(listOf(it))
-            answerListAdapter.setQuestionInfo(it)
         }
 
         bottomViewEvent.observe {
@@ -191,13 +189,9 @@ class AnswerListActivity : BaseActivity() {
                 else -> switchToHelper()
             }
         }
-
-        observeAnswerList(Observer {
-            if (it != null) {
-                answerListAdapter.refreshData(it)
-            }
-        })
-
+        answerPagedList.observeNotNull {
+            answerListAdapter.submitList(it)
+        }
         networkState.observeNotNull { footerRvAdapter.refreshData(listOf(it)) }
 
         initialLoad.observe {
@@ -272,11 +266,6 @@ class AnswerListActivity : BaseActivity() {
         }
     }
 
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun adoptAnswer(event: AdoptAnswerEvent) {
-        viewModel.adoptAnswer(event.aId)
-    }
 
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     fun openShareQuestion(event: OpenShareQuestionEvent) {

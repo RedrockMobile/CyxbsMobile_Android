@@ -6,12 +6,10 @@ import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.bean.Answer
 import com.mredrock.cyxbs.qa.component.recycler.BaseRvAdapter
 import com.mredrock.cyxbs.qa.component.recycler.BaseViewHolder
-import com.mredrock.cyxbs.qa.pages.comment.AdoptAnswerEvent
 import com.mredrock.cyxbs.qa.ui.activity.ViewImageActivity
 import com.mredrock.cyxbs.qa.utils.setAdoptedTv
 import com.mredrock.cyxbs.qa.utils.timeDescription
 import kotlinx.android.synthetic.main.qa_recycler_item_comment_header.view.*
-import org.greenrobot.eventbus.EventBus
 
 /**
  * Created By jay68 on 2018/10/8.
@@ -19,6 +17,7 @@ import org.greenrobot.eventbus.EventBus
 class CommentListHeaderRvAdapter(
         private val removeAdoptIcon: Boolean
 ) : BaseRvAdapter<Answer>() {
+    var onAdoptClickListener: ((String) -> Unit)? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
             HeaderViewHolder(removeAdoptIcon, parent)
@@ -39,7 +38,7 @@ class CommentListHeaderRvAdapter(
                 }
                 setAdoptedTv(tv_adopted, tv_adopt, data.isAdopted, removeAdoptIcon)
                 tv_adopt.setOnClickListener {
-                    EventBus.getDefault().post(AdoptAnswerEvent(data.id))
+                    onAdoptClickListener?.invoke(data.id)
                 }
             }
         }

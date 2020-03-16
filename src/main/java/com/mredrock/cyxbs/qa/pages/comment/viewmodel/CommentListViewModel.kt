@@ -27,8 +27,8 @@ class CommentListViewModel(val qid: String,
     val questionData = MutableLiveData<Question>()
 
     val answerLiveData = MutableLiveData<Answer>()
-    val isPraised = Transformations.map(this.answerLiveData) { it.isPraised }!!
-    val praiseCount = Transformations.map(this.answerLiveData) { it.praiseNum }!!
+    private val isPraised = Transformations.map(this.answerLiveData) { it.isPraised }!!
+    private val praiseCount = Transformations.map(this.answerLiveData) { it.praiseNum }!!
 
     val refreshPreActivityEvent = SingleLiveEvent<Boolean>()
     val backPreActivityReportAnswerEvent = SingleLiveEvent<Boolean>()
@@ -37,7 +37,7 @@ class CommentListViewModel(val qid: String,
     var isDealing = false
 
     init {
-        val initNum = if (answer.commentNumInt == 0) 6 else answer.commentNumInt
+        val initNum = if (answer.commentNumInt in 1..5) answer.commentNumInt else 6
         val config = PagedList.Config.Builder()
                 .setEnablePlaceholders(false)
                 .setPrefetchDistance(3)
@@ -64,7 +64,7 @@ class CommentListViewModel(val qid: String,
                 .doOnSubscribe { progressDialogEvent.value = ProgressDialogEvent.SHOW_NONCANCELABLE_DIALOG_EVENT }
                 .doFinally { progressDialogEvent.value = ProgressDialogEvent.DISMISS_DIALOG_EVENT }
                 .safeSubscribeBy {
-                    answerLiveData.value?.isAdopted = true
+                    answerLiveData.value = answerLiveData.value?.apply { isAdopted = true }
                 }
     }
 

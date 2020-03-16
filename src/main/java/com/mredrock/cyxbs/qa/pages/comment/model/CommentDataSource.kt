@@ -22,7 +22,7 @@ class CommentDataSource(private val aid: String) : PageKeyedDataSource<Int, Comm
 
     override fun loadInitial(params: LoadInitialParams<Int>, callback: LoadInitialCallback<Int, Comment>) {
         ApiGenerator.getApiService(ApiService::class.java)
-                .getCommentList(aid, 1, params.requestedLoadSize)
+                .getCommentList(aid, 1)
                 .mapOrThrowApiException()
                 .setSchedulers()
                 .doOnSubscribe { initialLoad.postValue(NetworkState.LOADING) }
@@ -39,7 +39,7 @@ class CommentDataSource(private val aid: String) : PageKeyedDataSource<Int, Comm
 
     override fun loadAfter(params: LoadParams<Int>, callback: LoadCallback<Int, Comment>) {
         ApiGenerator.getApiService(ApiService::class.java)
-                .getCommentList(aid, params.key, params.requestedLoadSize)
+                .getCommentList(aid, params.key)
                 .mapOrThrowApiException()
                 .setSchedulers()
                 .doOnSubscribe { networkState.postValue(NetworkState.LOADING) }

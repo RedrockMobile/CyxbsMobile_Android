@@ -57,10 +57,6 @@ data class Answer(@SerializedName("comment_num")
             }
         }
 
-
-    val isMale get() = gender != "女"
-    val hotValue get() = commentNumInt + praiseNumInt
-
     val commentNumInt: Int
         get() {
             if (commentNum.isEmpty() || commentNum.filterNot { it in '0'..'9' }.isNotEmpty()) {

@@ -29,14 +29,13 @@ interface ApiService {
                       @Field("size")
                       size: Int = 6): Observable<RedrockApiWrapper<List<Answer>>>
 
+    //后端没size这个参数（无语），每次都是6个
     @POST("/app/index.php/QA/Answer/getRemarkList")
     @FormUrlEncoded
     fun getCommentList(@Field("answer_id")
                        aid: String,
                        @Field("page")
-                       page: Int,
-                       @Field("size")
-                       size: Int = 6): Observable<RedrockApiWrapper<List<Comment>>>
+                       page: Int): Observable<RedrockApiWrapper<List<Comment>>>
 
     @POST("/app/index.php/QA/Answer/praise")
     @FormUrlEncoded

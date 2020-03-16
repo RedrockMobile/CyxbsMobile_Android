@@ -13,6 +13,7 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.content.ContextCompat
+import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.google.gson.Gson
@@ -20,6 +21,7 @@ import com.mredrock.cyxbs.common.config.QA_QUIZ
 import com.mredrock.cyxbs.common.event.QuestionDraftEvent
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.extensions.gone
+import com.mredrock.cyxbs.common.utils.extensions.toast
 import com.mredrock.cyxbs.common.utils.extensions.visible
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.bean.Question
@@ -44,6 +46,7 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
     companion object {
         const val MAX_SELECTABLE_IMAGE_COUNT = 6
         const val NOT_DRAFT_ID = "-1"
+        const val QUIZ_TITLE_MAX = 12
         fun activityStart(fragment: Fragment, type: String, requestCode: Int) {
             fragment.startActivityForResult<QuizActivity>(requestCode, "type" to type)
         }
@@ -79,6 +82,11 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
         }
         viewModel.backAndFinishActivityEvent.observeNotNull {
             finish()
+        }
+        edt_quiz_title.doAfterTextChanged {
+            if (edt_quiz_title.text.toString().length == QUIZ_TITLE_MAX) {
+                toast(R.string.qa_quiz_title_text_size_toast)
+            }
         }
     }
 

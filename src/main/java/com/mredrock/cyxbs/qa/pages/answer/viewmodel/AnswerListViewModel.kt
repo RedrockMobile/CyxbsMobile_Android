@@ -24,14 +24,13 @@ import com.mredrock.cyxbs.qa.pages.answer.model.AnswerDataSource
  */
 class AnswerListViewModel(question: Question) : BaseViewModel() {
     val bottomViewEvent = MutableLiveData<Boolean?>()
-    private val answerPagedList: LiveData<PagedList<Answer>>
+    val answerPagedList: LiveData<PagedList<Answer>>
     val questionLiveData = MutableLiveData<Question>()
     val backAndRefreshPreActivityEvent = SingleLiveEvent<Boolean>()
     val backPreActivityReportQuestionEvent = SingleLiveEvent<Boolean>()
     val backPreActivityReportAnswerEvent = SingleLiveEvent<Boolean>()
     val backPreActivityIgnoreEvent = SingleLiveEvent<Boolean>()
 
-    private val answerList: LiveData<List<Answer>>
     val networkState: LiveData<Int>
     val initialLoad: LiveData<Int>
     var myRewardCount = 0
@@ -45,7 +44,7 @@ class AnswerListViewModel(question: Question) : BaseViewModel() {
     private val factory: AnswerDataSource.Factory
 
     init {
-        val initNum = if (question.answerNum == 0) 6 else question.answerNum
+        val initNum = if (question.answerNum in 1..5) question.answerNum else 6
         val config = PagedList.Config.Builder()
                 .setEnablePlaceholders(false)
                 .setPrefetchDistance(3)
@@ -54,17 +53,11 @@ class AnswerListViewModel(question: Question) : BaseViewModel() {
                 .build()
         factory = AnswerDataSource.Factory(question.id)
         answerPagedList = LivePagedListBuilder<Int, Answer>(factory, config).build()
-        answerList = Transformations.switchMap(factory.answerDataSourceLiveData) { it.answerList }
         networkState = Transformations.switchMap(factory.answerDataSourceLiveData) { it.networkState }
         initialLoad = Transformations.switchMap(factory.answerDataSourceLiveData) { it.initialLoad }
 
         questionLiveData.value = question
         bottomViewEvent.value = question.isSelf.takeUnless { question.hasAdoptedAnswer }
-    }
-
-    fun LifecycleOwner.observeAnswerList(onChange: Observer<List<Answer>>) {
-        answerList.observe(this, onChange)
-        answerPagedList.observe(this, Observer { })
     }
 
     //增加浏览量，不用显示
@@ -78,18 +71,6 @@ class AnswerListViewModel(question: Question) : BaseViewModel() {
                 }
                 .safeSubscribeBy {
                     LogUtils.d("add QuestionView Success", it.toString())
-                }
-    }
-
-    fun adoptAnswer(aId: String) {
-        ApiGenerator.getApiService(ApiService::class.java)
-                .adoptAnswer(aId, qid)
-                .checkError()
-                .setSchedulers()
-                .doOnSubscribe { progressDialogEvent.value = ProgressDialogEvent.SHOW_NONCANCELABLE_DIALOG_EVENT }
-                .doFinally { progressDialogEvent.value = ProgressDialogEvent.DISMISS_DIALOG_EVENT }
-                .safeSubscribeBy {
-                    backAndRefreshPreActivityEvent.value = true
                 }
     }
 
