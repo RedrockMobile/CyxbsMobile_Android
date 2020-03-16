@@ -3,7 +3,8 @@ package com.mredrock.cyxbs.discover.grades.ui.adapter
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Color
-import com.mredrock.cyxbs.common.utils.LogUtils
+import androidx.core.content.res.ResourcesCompat
+import androidx.core.text.isDigitsOnly
 import com.mredrock.cyxbs.common.utils.SchoolCalendar
 import com.mredrock.cyxbs.discover.grades.R
 import com.mredrock.cyxbs.discover.grades.bean.Exam
@@ -26,9 +27,9 @@ class ExamAdapter(val context: Context,
     override fun getItemType(position: Int): Int {
         NORMAL = 1
         getData()?.let { _ ->
-            return if(position == 0){
+            return if (position == 0) {
                 HEADER
-            }else{
+            } else {
                 NORMAL
             }
         }
@@ -44,15 +45,19 @@ class ExamAdapter(val context: Context,
                     it?.let {
                         if (it.week?.toInt() != 0) {
 
-                            val drawableTime = context.resources.getDrawable(R.drawable.grades_time)
-                            drawableTime.setBounds(0,0,30,30)
-                            holder.itemView.tv_exam_month.setCompoundDrawables( drawableTime, null, null, null)
+                            val drawableTime = ResourcesCompat.getDrawable(context.resources, R.drawable.grades_time, null)
+                            drawableTime?.setBounds(0, 0, 30, 30)
+                            holder.itemView.tv_exam_month.setCompoundDrawables(drawableTime, null, null, null)
 
-                            val drawableLocation = context.resources.getDrawable(R.drawable.grades_exam_location)
-                            drawableLocation.setBounds(0,0,30,30)
+                            val drawableLocation = ResourcesCompat.getDrawable(context.resources, R.drawable.grades_exam_location, null)
+                            drawableLocation?.setBounds(0, 0, 30, 30)
                             holder.itemView.tv_exam_location.setCompoundDrawables(drawableLocation, null, null, null)
-
-                            val schoolCalendar = SchoolCalendar(it.week!!.toInt(), it.weekday!!.toInt())
+                            var schoolCalendar: SchoolCalendar? = null
+                            it.week?.let { week ->
+                                it.weekday?.let { weekday ->
+                                    schoolCalendar = SchoolCalendar(week.toInt(), weekday.toInt())
+                                }
+                            }
                             val isSuccess = examDataHelper.tryModifyData(it)
                             if (isSuccess) {
                                 val distance = getDay(it.date)
@@ -72,20 +77,22 @@ class ExamAdapter(val context: Context,
                                     }
                                 }
                                 holder.itemView.tv_exam_kind.text = it.type ?: ""
-                                holder.itemView.tv_exam_day_of_week.text = String.format("%s周周%s", getChineseWeek(it.week!!.toInt() - 1), it.chineseWeekday)
-                                holder.itemView.tv_exam_day_of_month.text = String.format("%d"+"号", schoolCalendar.day)
-                                holder.itemView.tv_exam_month.text = String.format("%d月", schoolCalendar.month)
+                                it.week?.let { week ->
+                                    holder.itemView.tv_exam_day_of_week.text = String.format("%s周周%s", getChineseWeek(week.toInt() - 1), it.chineseWeekday ?: "--")
+                                }
+                                holder.itemView.tv_exam_day_of_month.text = String.format("%s" + "号", schoolCalendar?.day ?: "--")
+                                holder.itemView.tv_exam_month.text = String.format("%s月", schoolCalendar?.month ?: "--")
                             } else {
                                 holder.itemView.tv_exam_day_of_week.text = String.format("%s周周%s", "-", "-")
-                                holder.itemView.tv_exam_day_of_month.text = String.format("%s"+"号", "-")
-                                holder.itemView.tv_exam_month.text = String.format("%s月", "")
+                                holder.itemView.tv_exam_day_of_month.text = String.format("%s" + "号", "-")
+                                holder.itemView.tv_exam_month.text = String.format("%s月", "-")
                             }
                         }
 
                         holder.itemView.tv_exam_name.text = it.course
-                        var seat = if (it.seat?.toInt() != 0) it.seat else "--"
+                        var seat = it.seat ?: "--"
 
-                        if (seat!!.length < 2) seat = "0$seat"
+                        if (seat.length < 2) seat = "0$seat"
                         seat = "${seat}号"
 
                         holder.itemView.tv_exam_location.text = "${it.classroom}场$seat"
@@ -98,19 +105,29 @@ class ExamAdapter(val context: Context,
                     }
                 }
 
-                if (position == t!!.size - 1) {
-                    holder.itemView.iv_exam_circle.setLineVisible(false)
+                t?.let { t ->
+                    if (position == t.size - 1) {
+                        holder.itemView.iv_exam_circle.setLineVisible(false)
+                    }
                 }
             }
         }
     }
 
-    private fun getChineseWeek(week: Int): String{
-        val array = listOf("第一","第二","第三","第四","第五","第六","第七","第八",
-                "第九","第十","十一","十二","十三","十四","十五",
-                "十六","十七","十八","十九","二十","二十一",
-                "二十二","二十三","二十四","二十五","二十六","二十七")
-        return array[week]
+    /**
+     * 需要做一个防止数组越界的处理
+    */
+    private fun getChineseWeek(week: Int): String {
+        val array = listOf("第一", "第二", "第三", "第四", "第五", "第六", "第七", "第八",
+                "第九", "第十", "十一", "十二", "十三", "十四", "十五",
+                "十六", "十七", "十八", "十九", "二十", "二十一",
+                "二十二", "二十三", "二十四", "二十五", "二十六", "二十七")
+        if (week in 0..26) {
+            return array[week]
+        } else {
+            return "第--周"
+        }
+
     }
 
     companion object {
@@ -143,19 +160,24 @@ class ExamAdapter(val context: Context,
     }
 
     //传入一个2019-11-24格式的时间
-    private fun getDay(time: String?) : Int{
+    private fun getDay(time: String?): Int {
         time?.let { time ->
             val now = Date()
             val examDate = Calendar.getInstance()
 
             val array = time.split("-")//分割为2019，11，24
-            examDate.set(array[0].toInt(),array[1].toInt() - 1,array[2].toInt())
-            LogUtils.d("exam","today ${now.time}  examDate ${examDate.time.time}")
+            //由于后端补考接口date字段可能会返回"月日"，因此需要做个处理防止NumberFormatException
+            for (item in array) {
+                if (!item.isDigitsOnly()) {
+                    return -2
+                }
+            }
+            examDate.set(array[0].toInt(), array[1].toInt() - 1, array[2].toInt())
             val diff = examDate.time.time - now.time
             val day = 1000 * 24 * 60 * 60
-            return if(diff > 0){
+            return if (diff > 0) {
                 (diff / day).toInt()
-            }else{
+            } else {
                 -1//-1表示考试已结束
             }
         }
