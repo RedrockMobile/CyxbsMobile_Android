@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="widget_app_name">掌邮课表小部件</string>
     <string name="appwidget_text" tools:ignore="ExtraTranslation,ResourceName">EXAMPLE</string>
     <string name="add_widget" tools:ignore="ExtraTranslation,ResourceName">Add widget</string>
-    <string name="configure" tools:ignore="ExtraTranslation,ResourceName">Configure</string>
     <string name="widget_three_lesson_tips">三节连上</string>
 </resources>
