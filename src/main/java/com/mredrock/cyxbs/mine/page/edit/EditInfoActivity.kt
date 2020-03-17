@@ -150,7 +150,7 @@ class EditInfoActivity(override val isFragmentActivity: Boolean = false,
                         if (checkIfInfoChange()) {
                             dialogFragment.show(supportFragmentManager, "SaveInfo")
                         } else {
-                            finish()
+                            finishAfterTransition()
                         }
                     })
             setTitleLocationAtLeft(true)

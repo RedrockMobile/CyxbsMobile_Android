@@ -1,5 +1,4 @@
 <resources>
-    <string name="mine_mine">module_mine</string>
 
     <string name="mine_user_empty_username">请填写用户名</string>
     <string name="mine_user_empty_introduce">写下你对世界想说的话，就现在</string>
@@ -14,7 +13,6 @@
     <string name="mine_praise">获赞</string>
     <string name="mine_number_default">--</string>
     <string name="mine_show_schedule_first_launch">启动APP时最先显示课表页面</string>
-    <string name="mine_night_mode">夜间模式</string>
     <string name="mine_custom_icon">自定义桌面小图标</string>
     <string name="mine_feedback_suggestion">意见与反馈</string>
     <string name="mine_about_redrock">红岩网校</string>
@@ -24,7 +22,6 @@
     <string name="mine_logout_content">是否退出当前账号？</string>
 
     <!--    编辑-->
-    <string name="mine_info_edit">资料编辑</string>
     <string name="mine_nickname">昵称</string>
     <string name="mine_nickname_default">输入您的昵称</string>
     <string name="mine_introduce">个性签名</string>
@@ -32,13 +29,11 @@
     <string name="mine_qq">QQ</string>
     <string name="mine_phone">电话</string>
     <string name="mine_college">学院</string>
-    <string name="mine_save">保存</string>
     <string name="mine_info_default">完善你的个人信息哦</string>
     <string name="mine_info_save">已保存</string>
     <string name="mine_info_contact">写下您的联系方式，便于我们与您联系</string>
     <string name="mine_exit_edit">退出编辑</string>
     <string name="mine_exit_edit_quest">你的资料还未保存，是否退出？</string>
-    <string name="mine_exit_edit_btn">退出</string>
     <string name="mine_dialog_agreement_title">数据互通</string>
     <string name="mine_dialog_agreement_content">
         1.若您已经同意相关用户协议条款，那么关于您的头像，您须知以下情况：\n
@@ -57,7 +52,6 @@
     <string name="mine_sign_fri">周五</string>
     <string name="mine_sign_sat">周六</string>
     <string name="mine_sign_sun">周日</string>
-    <string name="mine_sign_integral_double_default">半期考试周打卡翻倍</string>
     <string name="mine_sign_year_default">2019&#8211;2020</string>
     <string name="mine_sign_week_default">上学期第--周</string>
     <string name="mine_sign_serialDays_default">已连续打卡--天</string>

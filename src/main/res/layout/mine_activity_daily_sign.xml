@@ -2,7 +2,6 @@
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/mine_sign_cl"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".page.sign.DailySignActivity">
@@ -247,7 +246,6 @@
             tools:text="周一" />
 
         <TextView
-            android:id="@+id/mine_daily_tv_tue"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -262,7 +260,6 @@
             tools:text="周二" />
 
         <TextView
-            android:id="@+id/mine_daily_tv_wed"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -292,7 +289,6 @@
             tools:text="周四"/>
 
         <TextView
-            android:id="@+id/mine_daily_tv_fri"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:alpha="0.35"
@@ -321,7 +317,6 @@
             tools:text="周六" />
 
         <TextView
-            android:id="@+id/mine_daily_tv_sun"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:alpha="0.35"

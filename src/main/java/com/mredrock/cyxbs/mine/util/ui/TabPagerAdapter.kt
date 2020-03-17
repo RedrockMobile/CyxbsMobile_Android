@@ -4,14 +4,14 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
 
-class TabPagerAdapter(fm: FragmentManager, private val mFragmentsList: List<Fragment>?, private val mTitleList: List<String>) : FragmentStatePagerAdapter(fm) {
+class TabPagerAdapter(fm: FragmentManager, private val mFragmentsList: List<Fragment>, private val mTitleList: List<String>) : FragmentStatePagerAdapter(fm) {
 
-        override fun getItem(position: Int): Fragment? {
-            return if (mFragmentsList == null || mFragmentsList.isEmpty()) null else mFragmentsList[position]
+        override fun getItem(position: Int): Fragment {
+            return mFragmentsList[position]
         }
 
         override fun getCount(): Int {
-            return mFragmentsList?.size ?: 0
+            return mFragmentsList.size
         }
 
     override fun getItemPosition(`object`: Any): Int {

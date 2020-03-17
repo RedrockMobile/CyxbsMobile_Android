@@ -24,7 +24,6 @@
         android:focusableInTouchMode="true">
 
         <View
-            android:id="@+id/mine_edit_v_introduce"
             android:layout_width="0dp"
             android:layout_height="1dp"
             android:layout_marginTop="12dp"
@@ -35,7 +34,6 @@
             app:layout_constraintTop_toBottomOf="@+id/mine_et_introduce" />
 
         <View
-            android:id="@+id/mine_edit_v_phone"
             android:layout_width="0dp"
             android:layout_height="1dp"
             android:layout_marginTop="11dp"
@@ -46,7 +44,6 @@
             app:layout_constraintTop_toBottomOf="@+id/mine_et_phone" />
 
         <View
-            android:id="@+id/mine_edit_v_qq"
             android:layout_width="0dp"
             android:layout_height="1dp"
             android:layout_marginTop="11dp"
@@ -57,7 +54,6 @@
             app:layout_constraintTop_toBottomOf="@+id/mine_et_qq" />
 
         <View
-            android:id="@+id/mine_edit_v_nickname"
             android:layout_width="0dp"
             android:layout_height="1dp"
             android:layout_marginTop="12dp"
@@ -72,6 +68,7 @@
             android:layout_width="64dp"
             android:layout_height="64dp"
             android:layout_marginTop="17dp"
+            android:transitionName="avatar"
             android:src="@drawable/mine_avatar_default_img"
             app:layout_constraintStart_toStartOf="@+id/mine_guideline_right"
             app:layout_constraintTop_toTopOf="parent" />
@@ -229,7 +226,6 @@
             tools:text="计算机科学与技术" />
 
         <TextView
-            android:id="@+id/mine_tv_contact"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:alpha="0.29"

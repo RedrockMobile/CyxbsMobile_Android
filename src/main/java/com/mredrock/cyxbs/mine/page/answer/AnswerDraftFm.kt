@@ -54,22 +54,24 @@ class AnswerDraftFm : BaseRVFragment<AnswerDraft>() {
         holder.itemView.mine_answer_draft_tv_content.text = title
         holder.itemView.mine_answer_draft_tv_lastedit_at.text = data.latestEditTime.split(" ")[0].replace("-", ".")
         holder.itemView.mine_answer_draft_iv_garbage.setOnClickListener {
-            CommonDialogFragment().apply {
-                initView(
-                        containerRes = R.layout.mine_layout_dialog_with_title_and_content,
-                        positiveString = "删除",
-                        onPositiveClick = {
-                            viewModel.deleteDraftById(data.draftAnswerId)
-                            dismiss()
-                        },
-                        onNegativeClick = { dismiss() },
-                        elseFunction = {
-                            it.findViewById<TextView>(R.id.dialog_title).text = "删除草稿";
-                            it.findViewById<TextView>(R.id.dialog_content).text = "确定要删除该草稿吗?";
-                        }
+            fragmentManager?.let { it1 ->
+                CommonDialogFragment().apply {
+                    initView(
+                            containerRes = R.layout.mine_layout_dialog_with_title_and_content,
+                            positiveString = "删除",
+                            onPositiveClick = {
+                                viewModel.deleteDraftById(data.draftAnswerId)
+                                dismiss()
+                            },
+                            onNegativeClick = { dismiss() },
+                            elseFunction = {
+                                it.findViewById<TextView>(R.id.dialog_title).text = "删除草稿";
+                                it.findViewById<TextView>(R.id.dialog_content).text = "确定要删除该草稿吗?";
+                            }
 
-                )
-            }.show(fragmentManager, "delete_draft")
+                    )
+                }.show(it1, "delete_draft")
+            }
         }
 
         holder.itemView.setOnClickListener {

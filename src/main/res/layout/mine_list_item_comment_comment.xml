@@ -61,7 +61,6 @@
         tools:text="房子房子房子房子房子房子房子房子房子房子房子房子房子房子房子房子房子房子房子房子房子房子房子房子" />
 
     <View
-        android:id="@+id/mine_view_divider"
         android:layout_width="0dp"
         android:layout_height="1dp"
         android:alpha="0.3"

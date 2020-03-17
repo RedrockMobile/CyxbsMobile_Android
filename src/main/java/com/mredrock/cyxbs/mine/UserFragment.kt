@@ -2,6 +2,7 @@ package com.mredrock.cyxbs.mine
 
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Intent
@@ -12,8 +13,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityOptionsCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.util.Pair
 import androidx.lifecycle.Observer
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
@@ -81,10 +84,14 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
         mine_main_tv_question.setOnClickListener { startActivity<AnswerActivity>() }
         mine_main_reply_comment_number.setOnClickListener { startActivity<CommentActivity>() }
         mine_main_tv_reply_comment.setOnClickListener { startActivity<CommentActivity>() }
-        mine_main_cl_info_edit.setOnClickListener { startActivity<EditInfoActivity>() }
+        mine_main_cl_info_edit.setOnClickListener {
+            startActivity(
+                    Intent(context, EditInfoActivity::class.java),
+                    ActivityOptionsCompat.makeSceneTransitionAnimation(context as Activity, Pair(mine_main_avatar,"avatar")).toBundle())
+        }
 
-        mine_main_tv_praise.setOnClickListener { praiseDialog.show(fragmentManager, "praise") }
-        mine_main_praise_number.setOnClickListener { praiseDialog.show(fragmentManager, "praise") }
+        mine_main_tv_praise.setOnClickListener { fragmentManager?.let { it1 -> praiseDialog.show(it1, "praise") } }
+        mine_main_praise_number.setOnClickListener { fragmentManager?.let { it1 -> praiseDialog.show(it1, "praise") } }
 
         mine_main_tv_about.setOnClickListener { startActivity<AboutActivity>() }
         mine_main_btn_exit.setOnClickListener { onExitClick() }

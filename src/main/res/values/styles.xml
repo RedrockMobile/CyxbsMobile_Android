@@ -1,27 +1,11 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="mine_AppTheme" parent="AppTheme">
-        <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
-    </style>
-
-    <style name="mine_PopupAnimation" parent="@android:style/Animation.Translucent">
-        <item name="android:windowEnterAnimation">@anim/mine_popup_enter</item>
-        <item name="android:windowExitAnimation">@anim/mine_popup_exit</item>
-    </style>
 
     <style name="mine_tablayout_text_appearance" parent="TextAppearance.AppCompat.Widget.ActionBar.Title.Inverse">
         <item name="android:textSize">18sp</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textAllCaps">true</item>
-    </style>
-
-    <style name="mine_common_toolbar" parent="@android:style/TextAppearance.Medium">
-        <item name="android:textStyle">bold</item>
-        <item name="android:textSize">21sp</item>
     </style>
 
 </resources>
