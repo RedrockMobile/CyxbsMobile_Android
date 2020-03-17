@@ -1,12 +1,8 @@
 <resources>
 
     <string name="course_sure">确定</string>
-    <string name="course_no_courese_invite">没课约</string>
     <string name="course_empty_course_text">一片寂静 </string>
-    <string name="course_student_list">课程名单</string>
-    <string name="course_click_to_login">课表懵逼中......点击进行登录</string>
     <string name="course_all_week">整学期</string>
-    <string name="course_add_affair">添加事务</string>
     <string name="course_now_week">(本周)</string>
     <string name="course_little_friend">小伙伴</string>
     <string name="course_they_are_free">集合！！ 出发</string>
@@ -14,13 +10,10 @@
 
     <!-- Post Affairs -->
     <string name="course_title_is_null">掌友，标题不能为空哟！</string>
-    <string name="course_content_is_null">掌友，要做的事呢？</string>
     <string name="course_week_is_not_select">掌友，请选择周数</string>
     <string name="course_time_is_not_select">掌友，请选时间</string>
     <string name="course_use_cache">教务在线当前不可用\n正使用红岩网校缓存课表</string>
     <!-- analog login -->
-    <string name="course_input_account">请输入学号</string>
-    <string name="course_input_password">请输入密码</string>
 
     <!-- AffairToCalendar -->
     <string name="course_fail_get_calendar_id">获取CalendarId失败，无法向日历中添加备忘提醒。请检查你的日历是否进行了登录！</string>
@@ -98,24 +91,13 @@
     <!--WidgetCourse Detail Strings-->
     <string name="course_affair_modify">修改</string>
     <string name="course_affair_delete">删除</string>
-    <string name="course_error_get_course">获取课程失败</string>
-    <string name="course_error_get_affair">获取事务失败</string>
 
     <!--EditAffairActivity-->
-    <string name="course_edit_affair">编辑备忘</string>
-    <string name="course_title">标题</string>
-    <string name="course_content">内容</string>
-    <string name="course_week">周数</string>
     <string name="course_time">时间</string>
-    <string name="course_remind">提醒</string>
-    <string name="course_input_title">请输入标题</string>
-    <string name="course_input_content">请编辑内容…</string>
-    <string name="course_week_select">选择周数</string>
     <string name="course_time_select">选择时间</string>
     <string name="course_remind_select">不提醒</string>
 
     <!--post affair menu-->
-    <string name="course_post_affair">上传事务</string>
     <string name="course_course_detail_cycle">周期</string>
     <string name="course_course_details_time">时间</string>
     <string name="course_course_details_credit">学分数</string>
@@ -123,7 +105,6 @@
     <string name="course_title_for_your_affair2">一个标题</string>
     <string name="course_title_for_your_affair3">具体内容</string>
     <string name="course_course_update_tips">你的课表可能发生了变化请留意</string>
-    <string name="course_tomorrow_tips">明天</string>
     <string name="course_class_taught">所教班级</string>
     <string name="course_no_class_recently">今天和明天都没课咯～</string>
     <string name="course_back_now_week">回到本周</string>

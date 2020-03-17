@@ -11,7 +11,7 @@ import com.mredrock.cyxbs.course.network.Course
  * Created by anriku on 2018/8/14.
  */
 
-@Database(entities = [Course::class, Affair::class], version = 1, exportSchema = false)
+@Database(entities = [Course::class, Affair::class], version = 2, exportSchema = false)
 abstract class ScheduleDatabase : RoomDatabase() {
 
     abstract fun affairDao(): AffairDao
@@ -29,13 +29,17 @@ abstract class ScheduleDatabase : RoomDatabase() {
                 synchronized(ScheduleDatabase::class) {
                     if (INSTANCE == null) {
                         INSTANCE = Room.databaseBuilder(context,
-                                ScheduleDatabase::class.java, "schedules_database").build()
+                                ScheduleDatabase::class.java, "schedules_database")
+                                .fallbackToDestructiveMigration()
+                                .build()
                     }
                 }
             }
             return if (isGetOther) {
                 Room.databaseBuilder(context,
-                        ScheduleDatabase::class.java, "schedules_database$stuNum").build()
+                        ScheduleDatabase::class.java, "schedules_database$stuNum")
+                        .fallbackToDestructiveMigration()
+                        .build()
             } else {
                 INSTANCE
             }

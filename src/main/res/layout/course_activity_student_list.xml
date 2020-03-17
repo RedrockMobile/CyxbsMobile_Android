@@ -7,8 +7,7 @@
     android:orientation="vertical"
     tools:context=".ui.StudentListActivity">
 
-    <include layout="@layout/common_toolbar"
-        android:id="@+id/tb"/>
+    <include layout="@layout/common_toolbar" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/course_auto"

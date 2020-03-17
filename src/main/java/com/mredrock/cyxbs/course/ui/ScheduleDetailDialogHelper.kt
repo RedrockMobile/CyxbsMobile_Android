@@ -2,6 +2,8 @@ package com.mredrock.cyxbs.course.ui
 
 import android.annotation.SuppressLint
 import android.content.Context
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.mredrock.cyxbs.course.R
 import com.mredrock.cyxbs.course.adapters.ScheduleDetailViewAdapter
 import com.mredrock.cyxbs.course.component.ScheduleDetailView
@@ -26,7 +28,9 @@ class ScheduleDetailDialogHelper constructor(context: Context) :
     fun showDialog(schedules: MutableList<Course>) {
         mScheduleDetailViewAdapter = ScheduleDetailViewAdapter(dialog, schedules)
         val mScheduleDetailView = dialog.findViewById<ScheduleDetailView>(R.id.schedule_detail_view)
-        mScheduleDetailView.scheduleDetailViewAdapter = mScheduleDetailViewAdapter
+        mScheduleDetailView?.scheduleDetailViewAdapter = mScheduleDetailViewAdapter
+        dialog.behavior.peekHeight = 0
         dialog.show()
+        dialog.behavior.state = BottomSheetBehavior.STATE_EXPANDED
     }
 }

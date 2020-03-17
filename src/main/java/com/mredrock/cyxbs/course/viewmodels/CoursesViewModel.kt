@@ -24,7 +24,6 @@ import com.mredrock.cyxbs.course.R
 import com.mredrock.cyxbs.course.component.RedRockTipsView
 import com.mredrock.cyxbs.course.database.ScheduleDatabase
 import com.mredrock.cyxbs.course.event.AffairFromInternetEvent
-import com.mredrock.cyxbs.course.network.Affair
 import com.mredrock.cyxbs.course.network.AffairMapToCourse
 import com.mredrock.cyxbs.course.network.Course
 import com.mredrock.cyxbs.course.network.CourseApiService
@@ -32,8 +31,8 @@ import com.mredrock.cyxbs.course.rxjava.ExecuteOnceObserver
 import com.mredrock.cyxbs.course.utils.CourseTimeParse
 import com.mredrock.cyxbs.course.utils.getNowCourse
 import com.mredrock.cyxbs.course.utils.getTodayCourse
-import io.reactivex.Observable
-import io.reactivex.ObservableOnSubscribe
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import org.greenrobot.eventbus.EventBus
 import java.util.*
 
@@ -126,9 +125,9 @@ class CoursesViewModel : BaseViewModel() {
             return "${s.parseStartCourseTime()}-${s.parseEndCourseTime()}"
         }
     }
-    val nowCoursePlace = object : ObservableField<String>(nowCourse){
+    val nowCoursePlace = object : ObservableField<String>(nowCourse) {
         override fun get(): String? {
-            return ClassRoomParse.parseClassRoom(nowCourse.get()?.classroom?: "")
+            return ClassRoomParse.parseClassRoom(nowCourse.get()?.classroom ?: "")
         }
     }
     val isAffair = object : ObservableField<Int>(nowCourse) {
@@ -215,11 +214,7 @@ class CoursesViewModel : BaseViewModel() {
      * @param direct 如果有需要的时候，可以传入true，跳过从数据库加载，直接从网络上加载
      */
     fun getSchedulesDataFromLocalThenNetwork(userNum: String? = null, direct: Boolean = false) {
-        //如果现在正在获取数据，这次获取就失效，防止重复多次调用这个方法
-        if (mIsGettingData) {
-            return
-        }
-        mIsGettingData = true
+        if (isContinueExecution()) return
 
         //重载获取状态
         resetGetStatus()
@@ -252,18 +247,28 @@ class CoursesViewModel : BaseViewModel() {
         }
     }
 
+    /**
+     * 是否可以继续获取数据
+     * @return true 表示不可以，正在获取数据
+     */
+    private fun isContinueExecution(): Boolean {
+        //如果现在正在获取数据，这次获取就失效，防止重复多次调用这个方法
+        if (mIsGettingData) {
+            return true
+        }
+        mIsGettingData = true
+        return false
+    }
+
 
     /**
      * 当对事务进行增删改的时候所调用的，可直接只更新事务不更新课表
      * 其实这里也没有更新课表的必要，在用户打开app之后课表发生改变这种事几率太小
      */
     fun refreshAffairFromInternet() {
-
         resetGetStatus()
-
         mReceiveCourses.addAll(courses)
         isGetAllData(0)
-
         getAffairsDataFromInternet()
     }
 
@@ -324,16 +329,12 @@ class CoursesViewModel : BaseViewModel() {
                     .setSchedulers()
                     .map(AffairMapToCourse())
                     .subscribe(ExecuteOnceObserver(onExecuteOnceNext = { affairsFromDatabase ->
-
                         if (affairsFromDatabase != null && affairsFromDatabase.isNotEmpty()) {
-                            val tag = TreeSet<String>()
-                            for (c in affairsFromDatabase) {
-                                tag.add("${c.affairDates}+${c.course}+${c.classroom}")
-                            }
                             mReceiveCourses.addAll(affairsFromDatabase)
                         }
-                        isGetAllData(1)
                     }, onExecuteOnceError = {
+                        isGetAllData(1)
+                    }, onExecuteOnceComplete = {
                         isGetAllData(1)
                     }))
         }
@@ -384,9 +385,8 @@ class CoursesViewModel : BaseViewModel() {
                             longToastEvent.value = R.string.course_use_cache
                         }
                     }
-                }, onExecuteOnceError = {
-                    isGetAllData(0)
-                }))
+                }, onExecuteOnceError = { isGetAllData(0) },
+                        onExecuteOnceComplete = { isGetAllData(0) }))
     }
 
 
@@ -397,30 +397,23 @@ class CoursesViewModel : BaseViewModel() {
         val stuNum = accountService.getUserService().getStuNum()
         val idNum = context.defaultSharedPreferences.getString("SP_KEY_ID_NUM", "")
         mCourseApiService.getAffair(stuNum = stuNum, idNum = idNum!!)
-                .setSchedulers()
+                .setSchedulers(observeOn = Schedulers.io())
                 .errorHandler()
-                .subscribe(ExecuteOnceObserver(onExecuteOnceNext = { affairsFromInternet ->
-                    affairsFromInternet.data?.let { notNullAffairs ->
-                        //将从服务器上获取的事务映射为课程信息。
-                        Observable.create(ObservableOnSubscribe<List<Affair>> {
-                            it.onNext(notNullAffairs)
-                        }).setSchedulers()
-                                .errorHandler()
-                                .map(AffairMapToCourse())
-                                .subscribe {
-                                    EventBus.getDefault().post(AffairFromInternetEvent(it))
-                                    mReceiveCourses.addAll(it)
-                                    isGetAllData(1)
-                                }
-
-                        //在子线程中将事务数据存储到数据库中
-                        Thread {
-                            //从网络中获取数据后先对数据库中的数据进行清除，再向其中加入数据
-                            mCoursesDatabase?.affairDao()?.deleteAllAffairs()
-                            mCoursesDatabase?.affairDao()?.insertAffairs(notNullAffairs)
-                        }.start()
+                .doOnNext {
+                    it.data?.let { affairs ->
+                        mCoursesDatabase?.affairDao()?.deleteAllAffairs()
+                        mCoursesDatabase?.affairDao()?.insertAffairs(affairs)
                     }
+                }
+                .map { it.data?.let { it1 -> AffairMapToCourse().apply(it1) } }
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(ExecuteOnceObserver(onExecuteOnceNext = { affairsCourse ->
+                    affairsCourse ?: return@ExecuteOnceObserver
+                    EventBus.getDefault().post(AffairFromInternetEvent(affairsCourse))
+                    mReceiveCourses.addAll(affairsCourse)
                 }, onExecuteOnceError = {
+                    isGetAllData(1)
+                }, onExecuteOnceComplete = {
                     isGetAllData(1)
                 }))
     }
@@ -439,7 +432,7 @@ class CoursesViewModel : BaseViewModel() {
     private fun isGetAllData(index: Int) {
         mDataGetStatus[index] = true
         if (mDataGetStatus[0] && mDataGetStatus[1]) {
-            // 如果mCourses为空的话就不用赋值给courses。防止由于网络请求有问题而导致刷新数据为空。
+            // 如果mCourses为空的话就不用赋值给allCoursesData。防止由于网络请求有问题而导致刷新数据为空。
             if (mReceiveCourses.isNotEmpty()) {
                 allCoursesData.set(mReceiveCourses)
                 //获取当前的课程显示在上拉课表的头部

@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:paddingTop="@dimen/course_dialog_padding_top"
-    android:paddingBottom="130dp"
+    android:paddingBottom="@dimen/course_dialog_padding_top"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -25,27 +25,12 @@
         tools:text="去图书馆" />
 
     <TextView
-        android:id="@+id/tv_affair_detail"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:gravity="top|start"
-        android:textColor="@color/levelTwoFontColor"
-        android:textSize="15sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/acb_modify"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/tv_course_cycle"
-        app:layout_constraintTop_toBottomOf="@+id/tv_course_cycle"
-        app:layout_constraintVertical_bias="0.0"
-        tools:text="努力学习" />
-
-    <TextView
         android:id="@+id/acb_modify"
         android:paddingTop="6dp"
         android:paddingStart="13dp"
         android:paddingBottom="6dp"
         android:paddingEnd="13dp"
+        android:transitionName=""
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
@@ -110,5 +95,25 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/tv_course_cycle"
         app:layout_constraintTop_toTopOf="@+id/tv_course_cycle" />
+
+
+
+    <TextView
+        android:id="@+id/tv_affair_detail"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:minHeight="140dp"
+        android:layout_marginTop="20dp"
+        android:gravity="top|start"
+        android:textColor="@color/levelTwoFontColor"
+        android:textSize="15sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/acb_modify"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/tv_course_cycle"
+        app:layout_constraintTop_toBottomOf="@+id/tv_course_cycle"
+        app:layout_constraintVertical_bias="0.0"
+        tools:text="努力学习" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

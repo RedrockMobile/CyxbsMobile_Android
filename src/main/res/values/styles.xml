@@ -1,22 +1,8 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
     //老的课表点击dialog弹出的动画和隐藏动画,待删除
-    <style name="CourseDialogFragmentAnimation">
-        <item name="android:windowEnterAnimation" tools:ignore="NewApi">
-            @anim/course_fragment_enter
-        </item>
-        <item name="android:windowExitAnimation" tools:ignore="NewApi">
-            @anim/course_fragment_exit
-        </item>
-    </style>
 
     <!-- 此主题作用与MainActivity上为了避免SwipeLayout和windowIsTranslucent属性一起使用造成的效率问题 -->
-    <style name="MainActivityTheme" parent="Theme.AppCompat.DayNight.NoActionBar" tools:ignore="ResourceName">
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
-        <item name="android:windowIsTranslucent">true</item>
-    </style>
 
     <style name="BottomSheetDialogTheme" parent="Theme.Design.BottomSheetDialog" tools:ignore="ResourceName">
         <!--        dialog是否有边框-->

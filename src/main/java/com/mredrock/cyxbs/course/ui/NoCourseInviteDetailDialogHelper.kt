@@ -30,20 +30,20 @@ class NoCourseInviteDetailDialogHelper(context: Context) : BaseDialogHelper(cont
 //            layoutParams = FrameLayout.LayoutParams((context.getScreenWidth() * WIDTH_RATIO).toInt(),
 //                    (context.getScreenHeight() * HEIGHT_RATIO).toInt())
 //        }
-        dialog.findViewById<TextView>(R.id.tv_day_of_week).apply {
+        dialog.findViewById<TextView>(R.id.tv_day_of_week)?.apply {
             text = mDayOfWeek[column]
         }
-        dialog.findViewById<TextView>(R.id.tv_course_time).apply {
+        dialog.findViewById<TextView>(R.id.tv_course_time)?.apply {
             text = "${row + 1}~${row + length}"
         }
-        dialog.findViewById<TextView>(R.id.tv_specific_time).apply {
+        dialog.findViewById<TextView>(R.id.tv_specific_time)?.apply {
             val courseTimeParse = CourseTimeParse(row, length)
             text = "${courseTimeParse.parseStartCourseTime()}~${courseTimeParse.parseEndCourseTime()}"
         }
-        dialog.findViewById<TextView>(R.id.tv_people_count).apply {
+        dialog.findViewById<TextView>(R.id.tv_people_count)?.apply {
             text = "共计${people.size}人"
         }
-        dialog.findViewById<RedRockAutoWarpView>(R.id.rv_people).apply {
+        dialog.findViewById<RedRockAutoWarpView>(R.id.rv_people)?.apply {
             adapter = NameListRecAdapter(people)
         }
         dialog.show()

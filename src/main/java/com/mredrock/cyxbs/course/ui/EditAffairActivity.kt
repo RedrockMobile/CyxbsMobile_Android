@@ -1,23 +1,24 @@
 package com.mredrock.cyxbs.course.ui
 
+import android.os.Build
 import android.os.Bundle
 import android.text.TextUtils
+import android.transition.*
 import android.view.Gravity
 import android.view.KeyEvent
 import android.view.View
+import android.view.animation.DecelerateInterpolator
 import android.view.inputmethod.EditorInfo
 import android.widget.TextView
 import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintSet
+import androidx.core.view.ViewCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import androidx.transition.ChangeBounds
-import androidx.transition.Slide
-import androidx.transition.TransitionManager
-import androidx.transition.TransitionSet
 import com.mredrock.cyxbs.common.ui.BaseActivity
 import com.mredrock.cyxbs.course.R
+import com.mredrock.cyxbs.course.TransitionNameConfig
 import com.mredrock.cyxbs.course.adapters.TimeSelectedAdapter
 import com.mredrock.cyxbs.course.adapters.WeekSelectedAdapter
 import com.mredrock.cyxbs.course.adapters.YouMightAdapter
@@ -89,7 +90,7 @@ class EditAffairActivity : BaseActivity() {
             modifyPageLayout()
         }
         mEditAffairViewModel.titleCandidateList.observe(this, Observer {
-            rv_you_might.adapter = YouMightAdapter(it,et_title_content_input)
+            rv_you_might.adapter = YouMightAdapter(it, et_title_content_input)
         })
     }
 
@@ -131,10 +132,12 @@ class EditAffairActivity : BaseActivity() {
                     Toast.LENGTH_SHORT).show()
         } else {
             TransitionManager.beginDelayedTransition(course_affair_container, TransitionSet().apply {
-                addTransition(Slide().apply {
-                    duration = 300
-                    slideEdge = Gravity.END
-                })
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    addTransition(Slide().apply {
+                        duration = 300
+                        slideEdge = Gravity.END
+                    })
+                }
                 addTransition(ChangeBounds().apply { duration = 300 })
             })
             val set = ConstraintSet().apply { clone(course_affair_container) }
@@ -146,9 +149,9 @@ class EditAffairActivity : BaseActivity() {
             //单独修改控件属性要在apply之后
             tv_title_text.textSize = 15f
             tv_title_text.text = "标题："
-            tv_title.visibility = View.VISIBLE
+            tv_title_tips.visibility = View.VISIBLE
             rv_you_might.visibility = View.GONE
-            tv_title.text = et_title_content_input.text.toString()
+            tv_title_tips.text = et_title_content_input.text.toString()
             tv_content_text.visibility = View.VISIBLE
             et_title_content_input.text.clear()
             mEditAffairViewModel.status = EditAffairViewModel.Status.ContentStatus
@@ -160,10 +163,12 @@ class EditAffairActivity : BaseActivity() {
      */
     private fun backAddTitleMonitor() {
         TransitionManager.beginDelayedTransition(course_affair_container, TransitionSet().apply {
-            addTransition(Slide().apply {
-                duration = 300
-                slideEdge = Gravity.END
-            })
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                addTransition(Slide().apply {
+                    duration = 300
+                    slideEdge = Gravity.END
+                })
+            }
             addTransition(ChangeBounds().apply { duration = 300 })
         })
         val set = ConstraintSet().apply { clone(course_affair_container) }
@@ -175,11 +180,11 @@ class EditAffairActivity : BaseActivity() {
         //单独修改控件属性要在apply之后
         tv_title_text.textSize = 34f
         tv_title_text.text = "一个标题"
-        tv_title.visibility = View.GONE
+        tv_title_tips.visibility = View.GONE
         rv_you_might.visibility = View.VISIBLE
-        et_title_content_input.setText(tv_title.text, TextView.BufferType.EDITABLE)
-        et_title_content_input.setSelection(tv_title.text.length)
-        tv_title.text = ""
+        et_title_content_input.setText(tv_title_tips.text, TextView.BufferType.EDITABLE)
+        et_title_content_input.setSelection(tv_title_tips.text.length)
+        tv_title_tips.text = ""
         tv_content_text.visibility = View.GONE
         mEditAffairViewModel.status = EditAffairViewModel.Status.TitleStatus
     }
@@ -190,10 +195,12 @@ class EditAffairActivity : BaseActivity() {
     private fun addContentNextMonitor() {
         //鄙人觉得这个没有必要做内容为空的判断，事务其实有时候简单的事务大多数人写个内容都是为了占位置，没有具体意义
         TransitionManager.beginDelayedTransition(course_affair_container, TransitionSet().apply {
-            addTransition(Slide().apply {
-                duration = 300
-                slideEdge = Gravity.END
-            })
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                addTransition(Slide().apply {
+                    duration = 300
+                    slideEdge = Gravity.END
+                })
+            }
             addTransition(ChangeBounds().apply { duration = 300 })
         })
         modifyPageLayout()
@@ -216,14 +223,14 @@ class EditAffairActivity : BaseActivity() {
         //单独修改控件属性要在applyTo之后
         course_textview.visibility = View.VISIBLE
         tv_title_text.visibility = View.VISIBLE
-        tv_title.visibility = View.VISIBLE
+        tv_title_tips.visibility = View.VISIBLE
         tv_content_text.visibility = View.VISIBLE
         et_title.visibility = View.GONE
         tv_week_select.visibility = View.GONE
         tv_time_select.visibility = View.GONE
         tv_remind_select.visibility = View.GONE
         et_title_content_input.imeOptions = EditorInfo.IME_ACTION_NEXT
-        tv_title.text = et_title.text
+        tv_title_tips.text = et_title.text
         mEditAffairViewModel.status = EditAffairViewModel.Status.ContentStatus
     }
 
@@ -238,7 +245,7 @@ class EditAffairActivity : BaseActivity() {
         //单独修改控件属性要在apply之后
         course_textview.visibility = View.GONE
         tv_title_text.visibility = View.GONE
-        tv_title.visibility = View.GONE
+        tv_title_tips.visibility = View.GONE
         tv_content_text.visibility = View.GONE
         rv_you_might.visibility = View.GONE
         et_title.visibility = View.VISIBLE
@@ -246,7 +253,7 @@ class EditAffairActivity : BaseActivity() {
         tv_time_select.visibility = View.VISIBLE
         tv_remind_select.visibility = View.VISIBLE
         et_title_content_input.imeOptions = EditorInfo.IME_ACTION_DONE
-        et_title.setText(tv_title.text, TextView.BufferType.EDITABLE)
+        et_title.setText(tv_title_tips.text, TextView.BufferType.EDITABLE)
         mEditAffairViewModel.status = EditAffairViewModel.Status.AllDoneStatus
     }
 

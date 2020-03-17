@@ -1,5 +1,6 @@
 package com.mredrock.cyxbs.course.bindingadapter
 
+import android.app.Activity
 import androidx.databinding.BindingAdapter
 import com.mredrock.cyxbs.course.adapters.NoCourseInviteScheduleViewAdapter
 import com.mredrock.cyxbs.course.adapters.ScheduleViewAdapter
@@ -23,7 +24,7 @@ object ScheduleViewBidingAdapter {
     @BindingAdapter(value = ["schedules", "nowWeek", "isBanTouchView"])
     fun setScheduleData(scheduleView: ScheduleView, schedules: List<Course>?, nowWeek: Int, isBanTouchView: Boolean) {
         schedules?.let {
-            val scheduleViewAdapter = ScheduleViewAdapter(scheduleView.context, nowWeek, it, isBanTouchView)
+            val scheduleViewAdapter = ScheduleViewAdapter(scheduleView.context as Activity, nowWeek, it, isBanTouchView)
             scheduleView.adapter = scheduleViewAdapter
         }
     }

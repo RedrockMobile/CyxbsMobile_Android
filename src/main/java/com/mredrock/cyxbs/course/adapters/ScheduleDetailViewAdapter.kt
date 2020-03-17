@@ -1,10 +1,17 @@
 package com.mredrock.cyxbs.course.adapters
 
 import android.annotation.SuppressLint
+import android.app.Activity
+import android.app.ActivityOptions
 import android.app.Dialog
 import android.content.Intent
+import android.os.Build
+import android.transition.ChangeBounds
+import android.util.Pair
+import android.view.ContextThemeWrapper
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.DecelerateInterpolator
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.service.ServiceManager
@@ -13,7 +20,9 @@ import com.mredrock.cyxbs.common.utils.Num2CN
 import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
 import com.mredrock.cyxbs.common.utils.extensions.errorHandler
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
+import com.mredrock.cyxbs.common.utils.extensions.startActivityTransition
 import com.mredrock.cyxbs.course.R
+import com.mredrock.cyxbs.course.TransitionNameConfig
 import com.mredrock.cyxbs.course.component.ScheduleDetailView
 import com.mredrock.cyxbs.course.component.SimpleDotsView
 import com.mredrock.cyxbs.course.event.DeleteAffairEvent
@@ -84,15 +93,16 @@ class ScheduleDetailViewAdapter(private val mDialog: Dialog, private val mSchedu
             tv_affair_name.text = itemViewInfo.course
             tv_affair_detail.text = itemViewInfo.classroom
             acb_modify.setOnClickListener {
-                mDialog.context.startActivity(Intent(mDialog.context, EditAffairActivity::class.java).apply {
+                val activity = (mDialog.context as ContextThemeWrapper).baseContext as Activity
+                activity.startActivityTransition(Intent(activity, EditAffairActivity::class.java).apply {
                     putExtra(EditAffairActivity.AFFAIR_INFO, itemViewInfo)
                 })
                 mDialog.dismiss()
             }
             acb_delete.setOnClickListener {
                 mCourseApiService.deleteAffair(ServiceManager.getService(IAccountService::class.java).getUserService().getStuNum(),
-                        BaseApp.context.defaultSharedPreferences.getString("SP_KEY_ID_NUM", "")!!,
-                        itemViewInfo.courseId.toString())
+                                BaseApp.context.defaultSharedPreferences.getString("SP_KEY_ID_NUM", "")!!,
+                                itemViewInfo.courseId.toString())
                         .setSchedulers()
                         .errorHandler()
                         .subscribe(ExecuteOnceObserver(onExecuteOnceNext = {

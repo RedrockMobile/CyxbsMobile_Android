@@ -309,7 +309,7 @@ class CourseContainerEntryFragment : BaseFragment() {
      * @param state 从0到1，1表示BottomSheet完全展开
      */
     private fun settingFollowBottomSheet(state: Float) {
-        //给tip小块加上动画和BottomSheet有性能问题
+        //todo 给tip小块加上动画的话和BottomSheet一起会有性能问题
 //        mCoursesViewModel.setTipsState(state, course_tip)
 
         //如果lottie动画还在显示，那么就不现实周数头部，这样加载时更加纯净一点

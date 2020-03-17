@@ -4,6 +4,7 @@ import android.app.Dialog
 import android.content.Context
 import android.view.LayoutInflater
 import androidx.annotation.LayoutRes
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.mredrock.cyxbs.common.component.RedRockBottomSheetDialog
 
 /**
@@ -11,7 +12,7 @@ import com.mredrock.cyxbs.common.component.RedRockBottomSheetDialog
  */
 abstract class BaseDialogHelper(val context: Context, @LayoutRes val layoutId: Int) {
 
-    protected val dialog: Dialog
+    protected val dialog: BottomSheetDialog
 
     init {
         val layoutInflater = LayoutInflater.from(context)

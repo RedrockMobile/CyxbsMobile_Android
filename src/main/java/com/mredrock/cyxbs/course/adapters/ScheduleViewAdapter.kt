@@ -1,5 +1,6 @@
 package com.mredrock.cyxbs.course.adapters
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.view.LayoutInflater
@@ -21,20 +22,21 @@ import com.mredrock.cyxbs.course.network.Course
 import com.mredrock.cyxbs.course.ui.EditAffairActivity
 import com.mredrock.cyxbs.course.ui.ScheduleDetailDialogHelper
 import com.mredrock.cyxbs.common.utils.ClassRoomParse
+import com.mredrock.cyxbs.common.utils.extensions.startActivityTransition
 import com.mredrock.cyxbs.course.utils.createCornerBackground
 import org.greenrobot.eventbus.EventBus
 import org.jetbrains.anko.textColor
 import java.util.*
 
 /**
- * @param mContext [Context]
+ * @param mActivity [Context]
  * @param mNowWeek 表示当前的周数
  * @param mSchedules 表示显示的数据
  * @param mIsBanTouchView 是否禁用在空白处的点击
  *
  * Created by anriku on 2018/8/14.
  */
-class ScheduleViewAdapter(private val mContext: Context,
+class ScheduleViewAdapter(private val mActivity: Activity,
                           private val mNowWeek: Int,
                           private val mSchedules: List<Course>,
                           private val mIsBanTouchView: Boolean) :
@@ -45,24 +47,24 @@ class ScheduleViewAdapter(private val mContext: Context,
         private const val NOT_LONG_COURSE = -1
     }
 
-    private var mInflater: LayoutInflater = LayoutInflater.from(mContext)
-    private val mShowModel = mContext.sharedPreferences(DEFAULT_PREFERENCE_FILENAME).getBoolean(SP_SHOW_MODE, true)
+    private var mInflater: LayoutInflater = LayoutInflater.from(mActivity)
+    private val mShowModel = mActivity.sharedPreferences(DEFAULT_PREFERENCE_FILENAME).getBoolean(SP_SHOW_MODE, true)
     private val mSchedulesArray = Array(6) { arrayOfNulls<MutableList<Course>>(7) }
 
     private val mCoursesColors by lazy(LazyThreadSafetyMode.NONE) {
-        intArrayOf(ContextCompat.getColor(mContext, R.color.morningCourseColor),
-                ContextCompat.getColor(mContext, R.color.afternoonCourseColor),
-                ContextCompat.getColor(mContext, R.color.eveningCourseColor),
-                ContextCompat.getColor(mContext, R.color.courseCoursesOther))
+        intArrayOf(ContextCompat.getColor(mActivity, R.color.morningCourseColor),
+                ContextCompat.getColor(mActivity, R.color.afternoonCourseColor),
+                ContextCompat.getColor(mActivity, R.color.eveningCourseColor),
+                ContextCompat.getColor(mActivity, R.color.courseCoursesOther))
     }
     private val mCoursesTextColors by lazy(LazyThreadSafetyMode.NONE) {
-        intArrayOf(ContextCompat.getColor(mContext, R.color.morningCourseTextColor),
-                ContextCompat.getColor(mContext, R.color.afternoonCourseTextColor),
-                ContextCompat.getColor(mContext, R.color.eveningCourseTextColor))
+        intArrayOf(ContextCompat.getColor(mActivity, R.color.morningCourseTextColor),
+                ContextCompat.getColor(mActivity, R.color.afternoonCourseTextColor),
+                ContextCompat.getColor(mActivity, R.color.eveningCourseTextColor))
     }
 
     private val mDialogHelper: ScheduleDetailDialogHelper by lazy(LazyThreadSafetyMode.NONE) {
-        ScheduleDetailDialogHelper(mContext)
+        ScheduleDetailDialogHelper(mActivity)
     }
 
     private lateinit var mTop: TextView
@@ -136,7 +138,7 @@ class ScheduleViewAdapter(private val mContext: Context,
         } else {
             return { touchView ->
                 touchView.setOnClickListener {
-                    mContext.startActivity(Intent(mContext, EditAffairActivity::class.java).apply {
+                    mActivity.startActivityTransition(Intent(mActivity, EditAffairActivity::class.java).apply {
                         putExtra(EditAffairActivity.WEEK_NUM, mNowWeek)
                         putExtra(EditAffairActivity.TIME_NUM, (touchView.tag ?: 0) as Int)
                     })
@@ -207,11 +209,11 @@ class ScheduleViewAdapter(private val mContext: Context,
         if (course.customType == Course.COURSE) {
             top.text = course.course
             bottom.text = ClassRoomParse.parseClassRoom(course.classroom ?: "")
-            background.background = createCornerBackground(mCoursesColors[index],mContext.resources.getDimension(R.dimen.course_course_item_radius))
+            background.background = createCornerBackground(mCoursesColors[index],mActivity.resources.getDimension(R.dimen.course_course_item_radius))
             mAffairBackground.visibility = View.GONE
             if (itemCount > 1) {
                 tag.visibility = View.VISIBLE
-                tag.background = createCornerBackground(mCoursesTextColors[course.hashLesson / 2],mContext.resources.getDimension(R.dimen.course_schedule_tag_radius))
+                tag.background = createCornerBackground(mCoursesTextColors[course.hashLesson / 2],mActivity.resources.getDimension(R.dimen.course_schedule_tag_radius))
             }
             top.textColor = mCoursesTextColors[index]
             bottom.textColor = mCoursesTextColors[index]
@@ -220,8 +222,8 @@ class ScheduleViewAdapter(private val mContext: Context,
                 top.text = course.course
                 bottom.text = course.classroom
             }
-            top.textColor = ContextCompat.getColor(mContext, R.color.levelTwoFontColor)
-            bottom.textColor = ContextCompat.getColor(mContext, R.color.levelTwoFontColor)
+            top.textColor = ContextCompat.getColor(mActivity, R.color.levelTwoFontColor)
+            bottom.textColor = ContextCompat.getColor(mActivity, R.color.levelTwoFontColor)
             mAffairBackground.visibility = View.VISIBLE
         }
     }

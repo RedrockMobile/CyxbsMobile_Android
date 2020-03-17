@@ -5,7 +5,6 @@
 
     <!--    课表item圆角-->
     <dimen name="course_course_item_radius">8dp</dimen>
-    <dimen name="course_schedule_view_height">600dp</dimen>
 
     <dimen name="course_schedule_tag_radius">3dp</dimen>
 
@@ -13,26 +12,13 @@
     <dimen name="course_column_text_size">11sp</dimen>
     <dimen name="course_top_and_left_text_size">12sp</dimen>
     <!--course itemView gap-->
-    <dimen name="course_course_item_view_gap">2dp</dimen>
     <!--tabLayout height-->
     <dimen name="course_tab_layout_height">39dp</dimen>
 
     <!--schedule detail widget size-->
-    <dimen name="course_schedule_detail_horizontal_bias">0.2</dimen>
-    <dimen name="course_schedule_detail_iv_end_margin">30dp</dimen>
-    <dimen name="course_schedule_detail_iv_start_margin">50dp</dimen>
-    <dimen name="course_schedule_detail_tv_end_margin">30dp</dimen>
-    <dimen name="course_affair_detail_acb_height">30dp</dimen>
-    <dimen name="course_affair_detail_acb_width">80dp</dimen>
-    <dimen name="course_affair_detail_image_right_and_top_margin">30dp</dimen>
 
     <!--EditAffairActivity-->
-    <dimen name="course_edit_affair_activity_ic_width">15dp</dimen>
-    <dimen name="course_edit_affair_activity_ic_height">18dp</dimen>
-    <dimen name="course_edit_affair_activity_ic_margin_start">19dp</dimen>
-    <dimen name="course_edit_affair_activity_title_content_margin">15dp</dimen>
     <dimen name="course_edit_affair_tv_size">21sp</dimen>
-    <dimen name="course_edit_affair_ic_right_size">14dp</dimen>
 
 
     <!--StudentListActivity-->
@@ -40,8 +26,5 @@
     <dimen name="course_dialog_padding_top">20dp</dimen>
     <dimen name="course_shadow_height">47dp</dimen>
     <dimen name="course_top_distance">15dp</dimen>
-    <dimen name="course_edit_affair_button">10dp</dimen>
     <dimen name="course_edit_affair_button_circle">20dp</dimen>
-    <dimen name="course_edit_affair_button_height">100dp</dimen>
-    <dimen name="course_edit_affair_button_width">100dp</dimen>
 </resources>
