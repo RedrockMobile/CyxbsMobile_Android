@@ -25,7 +25,6 @@
             android:background="@drawable/emptyroom_ic_back" />
 
         <LinearLayout
-            android:id="@+id/ll_selector_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">

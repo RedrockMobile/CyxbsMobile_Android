@@ -1,18 +1,6 @@
 <resources>
     <integer name="emptyroom_no_limit">-1</integer>
 
-    <string name="emptyroom_name">空教室</string>
-
-    <string name="emptyroom_error_toast">暂未获取数据:(</string>
-
-    <string-array name="emptyroom_buildings">
-        <item>二教</item>
-        <item>三教</item>
-        <item>四教</item>
-        <item>五教</item>
-        <item>八教</item>
-    </string-array>
-
     <string-array name="emptyroom_sections">
         <item>1–2</item>
         <item>3–4</item>
