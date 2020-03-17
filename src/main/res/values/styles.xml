@@ -6,13 +6,6 @@
         <item name="android:windowExitAnimation">@anim/qa_popup_exit</item>
     </style>
 
-    <style name="qa_RewardSelectCheckedTextViewStyle">
-        <item name="android:background">@drawable/qa_selector_quiz_reward_checked_tv</item>
-        <item name="android:textSize">16sp</item>
-        <item name="android:layout_marginTop">25dp</item>
-        <item name="android:gravity">center</item>
-        <item name="android:textAlignment">center</item>
-    </style>
 
     <style name="qa_LPhotoTheme" parent="LPhotoTheme">
         <!--页面通用属性（图片选择、图片预览共用）-->

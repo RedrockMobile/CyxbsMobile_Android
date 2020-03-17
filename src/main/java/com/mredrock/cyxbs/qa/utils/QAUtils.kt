@@ -1,5 +1,6 @@
 package com.mredrock.cyxbs.qa.utils
 
+import android.view.View
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import com.mredrock.cyxbs.common.utils.extensions.gone
@@ -59,6 +60,24 @@ internal fun setAdoptedTv(adoptedTv: TextView, adoptTv: TextView, isAdopted: Boo
     else -> {
         adoptTv.visible()
         adoptedTv.gone()
+    }
+}
+
+internal fun View.setVisibleCondition(visibleCondition: Boolean) = when {
+    visibleCondition -> {
+        this.visible()
+    }
+    else -> {
+        this.gone()
+    }
+}
+
+internal fun View.setInvisibleCondition(invisibleCondition: Boolean) = when {
+    invisibleCondition -> {
+        this.gone()
+    }
+    else -> {
+        this.visible()
     }
 }
 

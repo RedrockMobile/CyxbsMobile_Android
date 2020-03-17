@@ -4,7 +4,6 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.service.account.IAccountService
-import com.mredrock.cyxbs.common.utils.extensions.gone
 import com.mredrock.cyxbs.common.utils.extensions.invisible
 import com.mredrock.cyxbs.common.utils.extensions.setAvatarImageFromUrl
 import com.mredrock.cyxbs.common.utils.extensions.visible
@@ -12,7 +11,9 @@ import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.bean.Answer
 import com.mredrock.cyxbs.qa.component.recycler.BaseEndlessRvAdapter
 import com.mredrock.cyxbs.qa.component.recycler.BaseViewHolder
+import com.mredrock.cyxbs.qa.utils.setInvisibleCondition
 import com.mredrock.cyxbs.qa.utils.setPraise
+import com.mredrock.cyxbs.qa.utils.setVisibleCondition
 import com.mredrock.cyxbs.qa.utils.timeDescription
 import kotlinx.android.synthetic.main.qa_recycler_item_answer.view.*
 
@@ -61,30 +62,19 @@ class AnswerListAdapter : BaseEndlessRvAdapter<Answer>(DIFF_CALLBACK) {
                 //判断是否显示
                 when (data.userId) {
                     ServiceManager.getService(IAccountService::class.java).getUserService().getStuNum() -> {
-                        btn_answer_more.invisible()
+                        btn_answer_more.apply {
+                            invisible()
+
+                        }
                     }
                     else -> {
                         btn_answer_more.visible()
                     }
                 }
-                when (data.commentNumInt) {
-                    0 -> {
-                        tv_answer_reply_count.gone()
-                    }
-                    else -> {
-                        tv_answer_reply_count.visible()
-                    }
-                }
+                tv_answer_reply_count.setInvisibleCondition(data.commentNumInt == 0)
                 iv_answer_avatar.setAvatarImageFromUrl(data.photoThumbnailSrc)
                 tv_answer_nickname.text = data.nickname
-                when {
-                    data.isAdopted -> {
-                        tv_adopted.visible()
-                    }
-                    else -> {
-                        tv_adopted.invisible()
-                    }
-                }
+                tv_adopted.setVisibleCondition(data.isAdopted)
                 tv_answer_content.text = data.content
                 tv_answer_publish_at.text = timeDescription(System.currentTimeMillis(), data.createdAt)
                 tv_answer_reply_count.text = context.getString(R.string.qa_answer_reply_count, data.commentNum)
