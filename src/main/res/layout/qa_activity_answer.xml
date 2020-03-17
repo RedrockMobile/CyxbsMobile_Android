@@ -29,7 +29,6 @@
                 android:background="@color/qa_quiz_toolbar_divider_line_color" />
 
             <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/tv_answer_question_describe"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
