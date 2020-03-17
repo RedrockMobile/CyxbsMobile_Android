@@ -48,7 +48,6 @@
                             android:textColor="@color/volunteer_pager_background"
                             android:textSize="30dp" />
                         <RelativeLayout
-                            android:id="@+id/volunteer_time"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:orientation="horizontal"

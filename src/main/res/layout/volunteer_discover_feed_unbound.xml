@@ -3,7 +3,6 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="152dp">
     <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/tv_volunteer_feed_unbound"
         android:text="还未绑定账号哦～"
         android:textColor="@color/levelTwoFontColor"
         android:alpha="0.6"
