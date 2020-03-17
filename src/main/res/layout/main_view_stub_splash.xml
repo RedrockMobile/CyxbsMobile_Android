@@ -13,7 +13,6 @@
         android:scaleType="centerCrop" />
 
     <FrameLayout
-        android:id="@+id/main_activity_splash_container"
         android:background="@color/main_activity_splash_bottom_color"
         android:layout_width="match_parent"
         android:layout_height="0dp"

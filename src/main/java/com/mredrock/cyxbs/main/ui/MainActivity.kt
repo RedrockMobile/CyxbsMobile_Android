@@ -53,11 +53,11 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
             R.drawable.main_ic_mine_unselected, R.drawable.main_ic_mine_selected
     )
 
-    //四个需要组装的fragment(懒加载)
-    private val courseFragment: Fragment by lazy(LazyThreadSafetyMode.NONE) { ServiceManager.getService<Fragment>(COURSE_ENTRY) }
-    private val qaFragment: Fragment by lazy(LazyThreadSafetyMode.NONE) { ServiceManager.getService<Fragment>(QA_ENTRY) }
-    private val mineFragment: Fragment by lazy(LazyThreadSafetyMode.NONE) { ServiceManager.getService<Fragment>(MINE_ENTRY) }
-    private val discoverFragment: Fragment by lazy(LazyThreadSafetyMode.NONE) { ServiceManager.getService<Fragment>(DISCOVER_ENTRY) }
+    //四个需要组装的fragment(懒加载),为啥要加return@lazy呢，这里lint检查原因会爆黄不加也没关系
+    private val courseFragment: Fragment by lazy(LazyThreadSafetyMode.NONE) { return@lazy ServiceManager.getService<Fragment>(COURSE_ENTRY) }
+    private val qaFragment: Fragment by lazy(LazyThreadSafetyMode.NONE) { return@lazy ServiceManager.getService<Fragment>(QA_ENTRY) }
+    private val mineFragment: Fragment by lazy(LazyThreadSafetyMode.NONE) { return@lazy ServiceManager.getService<Fragment>(MINE_ENTRY) }
+    private val discoverFragment: Fragment by lazy(LazyThreadSafetyMode.NONE) { return@lazy ServiceManager.getService<Fragment>(DISCOVER_ENTRY) }
 
     //已经加载好的fragment
     private val showedFragments = mutableListOf<Fragment>()
@@ -65,17 +65,7 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        init()
-    }
-
-    private fun init() {
         setContentView(R.layout.main_activity_main)
-        //        // TODO: 2019/11/19 此处待处理，这里只能适配部分机型
-        //        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-        //            window.addFlags(FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
-        //            window.decorView.systemUiVisibility = SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
-        //            window.statusBarColor = ContextCompat.getColor(this, R.color.windowBackground)
-        //        }
         initBottomNavigationView()
         UpdateUtils.checkUpdate(this)
         InAppMessageManager.getInstance(BaseApp.context).showCardMessage(this,
@@ -85,6 +75,7 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
         initBottomSheetBehavior()
         initFragments()
     }
+
 
 
 

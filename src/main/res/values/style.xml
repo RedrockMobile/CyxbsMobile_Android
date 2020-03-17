@@ -9,32 +9,10 @@
 <!--        <item name="android:windowAnimationStyle">@style/main_Animation</item>-->
     </style>
 
-    <style name="main_Animation">
-        <item name="android:activityOpenEnterAnimation">@null</item>
-        <item name="android:activityOpenExitAnimation">@null</item>
-        <item name="android:activityCloseEnterAnimation">@null</item>
-        <item name="android:activityCloseExitAnimation">@null</item>
-        <item name="android:taskOpenEnterAnimation">@null</item>
-        <item name="android:taskOpenExitAnimation">@null</item>
-        <item name="android:taskCloseEnterAnimation">@null</item>
-        <item name="android:taskCloseExitAnimation">@null</item>
-        <item name="android:taskToFrontEnterAnimation">@null</item>
-        <item name="android:taskToFrontExitAnimation">@null</item>
-        <item name="android:taskToBackEnterAnimation">@null</item>
-        <item name="android:taskToBackExitAnimation">@null</item>
-    </style>
-
-
-    <style name="LoginRadioButtonTheme" parent="AppTheme" tools:ignore="ResourceName">
-        <item name="colorAccent">@color/buttonGradientStartColor</item>
-    </style>
-
-    <style name="ProgressBarTheme" parent="AppTheme" tools:ignore="ResourceName">
-        <item name="colorAccent">@color/levelFourFontColor</item>
-    </style>
 
     <style name="LoginTextInputStyle" parent="AppTheme" tools:ignore="ResourceName">
         <item name="colorAccent">@color/levelTwoFontColor</item>
     </style>
+
 
 </resources>
