@@ -52,7 +52,6 @@
         tools:text="73 度" />
 
     <TextView
-        android:id="@+id/tv_electric_hint"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/electricity_electric_view_hint"
