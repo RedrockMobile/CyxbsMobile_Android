@@ -1,6 +1,9 @@
 package com.mredrock.cyxbs.qa.pages.question.ui
 
+import android.app.Activity
 import android.view.ViewGroup
+import androidx.core.app.ActivityOptionsCompat
+import androidx.core.util.Pair
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DiffUtil
 import com.mredrock.cyxbs.common.event.AskLoginEvent
@@ -36,7 +39,13 @@ class QuestionListRvAdapter(private val fragment: Fragment) : BaseEndlessRvAdapt
     override fun onItemClickListener(holder: BaseViewHolder<Question>, position: Int, data: Question) {
         super.onItemClickListener(holder, position, data)
         if (ServiceManager.getService(IAccountService::class.java).getVerifyService().isLogin()) {
-            AnswerListActivity.activityStart(fragment, data, QuestionContainerFragment.REQUEST_LIST_REFRESH_ACTIVITY)
+            if (holder !is QuestionViewHolder) return
+            AnswerListActivity.activityStart(
+                    fragment, data, QuestionContainerFragment.REQUEST_LIST_REFRESH_ACTIVITY,
+                    ActivityOptionsCompat.makeSceneTransitionAnimation(
+                            fragment.context as Activity,
+                            Pair(holder.itemView.iv_avatar, "avatar")
+                    ).toBundle())
         } else {
             EventBus.getDefault().post(AskLoginEvent("请先登陆才能使用邮问哦~"))
         }

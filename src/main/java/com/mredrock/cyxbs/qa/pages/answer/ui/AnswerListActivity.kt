@@ -1,6 +1,7 @@
 package com.mredrock.cyxbs.qa.pages.answer.ui
 
 import android.app.Activity
+import android.app.ActivityOptions
 import android.app.ProgressDialog
 import android.content.Intent
 import android.os.Bundle
@@ -12,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.bean.RedrockApiWrapper
 import com.mredrock.cyxbs.common.bean.isSuccessful
 import com.mredrock.cyxbs.common.config.QA_ANSWER_LIST
@@ -51,12 +53,12 @@ class AnswerListActivity : BaseActivity() {
         const val PARAM_QUESTION = "question"
         const val REQUEST_REFRESH_LIST = 0x2
 
-        fun activityStart(fragment: Fragment, question: Question, requestCode: Int) {
+        fun activityStart(fragment: Fragment, question: Question, requestCode: Int,options: Bundle? = Bundle()) {
             if (!ServiceManager.getService(IAccountService::class.java).getVerifyService().isLogin()) {
                 EventBus.getDefault().post(AskLoginEvent("请先登陆才能使用邮问哦~"))
                 return
             }
-            fragment.startActivityForResult<AnswerListActivity>(requestCode, PARAM_QUESTION to question)
+            fragment.startActivityForResult(Intent(fragment.context as Activity,AnswerListActivity::class.java).apply { putExtra(PARAM_QUESTION , question) },requestCode,options)
         }
     }
 

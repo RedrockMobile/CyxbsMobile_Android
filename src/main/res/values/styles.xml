@@ -1,11 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
 
-    <style name="PopupAnimation" parent="@android:style/Animation.Translucent" tools:ignore="ResourceName">
-        <item name="android:windowEnterAnimation">@anim/qa_popup_enter</item>
-        <item name="android:windowExitAnimation">@anim/qa_popup_exit</item>
-    </style>
-
 
     <style name="qa_LPhotoTheme" parent="LPhotoTheme">
         <!--页面通用属性（图片选择、图片预览共用）-->

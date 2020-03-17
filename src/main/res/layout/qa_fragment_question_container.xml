@@ -9,7 +9,6 @@
     tools:context=".pages.main.QuestionContainerFragment">
 
     <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/abl_main"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/qa_question_title_background_color"

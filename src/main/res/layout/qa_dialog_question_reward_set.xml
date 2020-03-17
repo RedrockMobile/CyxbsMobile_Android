@@ -175,7 +175,6 @@
             android:clipChildren="false" />
 
         <ImageView
-            android:id="@+id/iv_reward_select_indicator"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/vp_set_reward_count"
