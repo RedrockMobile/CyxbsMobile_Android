@@ -4,7 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
     <TextView
-        android:id="@+id/tv_exam_init"
         android:textSize="22sp"
         android:text="@string/grades_main_init_exam"
         android:layout_marginStart="19dp"

@@ -1,5 +1,4 @@
 <resources>
-    <string name="grades_no_data_history">暂无补考记录~</string>
     <string name="grades_no_exam_history">暂无考试记录~</string>
     <string name="grades_main_init_exam">考试安排</string>
     <string name="grades_no_grades_history">"无法获取成绩信息"</string>
