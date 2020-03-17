@@ -204,7 +204,6 @@ class CommentListActivity : BaseActivity() {
         }
         refreshPreActivityEvent.observeNotNull {
             tv_comment_praise.setPraise(answerLiveData.value?.praiseNum, answerLiveData.value?.isPraised)
-            viewModel.isDealing = false
         }
     }
 

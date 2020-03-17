@@ -77,8 +77,13 @@ class AnswerListAdapter : BaseEndlessRvAdapter<Answer>(DIFF_CALLBACK) {
                 }
                 iv_answer_avatar.setAvatarImageFromUrl(data.photoThumbnailSrc)
                 tv_answer_nickname.text = data.nickname
-                if (data.isAdopted) {
-                    tv_adopted.visible()
+                when {
+                    data.isAdopted -> {
+                        tv_adopted.visible()
+                    }
+                    else -> {
+                        tv_adopted.invisible()
+                    }
                 }
                 tv_answer_content.text = data.content
                 tv_answer_publish_at.text = timeDescription(System.currentTimeMillis(), data.createdAt)

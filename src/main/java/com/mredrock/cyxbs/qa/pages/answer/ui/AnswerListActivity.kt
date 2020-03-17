@@ -142,7 +142,6 @@ class AnswerListActivity : BaseActivity() {
                     viewModel.apply {
                         refreshPreActivityEvent.observeNotNull {
                             answerListAdapter.notifyItemChanged(it)
-                            viewModel.isDealing = false
                         }
                     }
                 }

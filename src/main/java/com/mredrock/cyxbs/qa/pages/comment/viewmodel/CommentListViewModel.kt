@@ -139,9 +139,11 @@ class CommentListViewModel(val qid: String,
                     (isPraised as MutableLiveData).value = answer.isPraised
                     (praiseCount as MutableLiveData).value = answer.praiseNum
                     toastEvent.value = R.string.qa_service_error_hint
+                    isDealing = false
                 }
                 .doFinally { praiseNetworkState = NetworkState.SUCCESSFUL }
                 .safeSubscribeBy {
+                    isDealing = false
                     answer.apply {
                         val state = !isPraised
                         praiseNum = "${answer.praiseNumInt + state.toInt()}"

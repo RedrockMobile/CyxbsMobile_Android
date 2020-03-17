@@ -145,11 +145,13 @@ class AnswerListViewModel(question: Question) : BaseViewModel() {
                 .setSchedulers()
                 .doOnError {
                     toastEvent.value = R.string.qa_service_error_hint
+                    isDealing = false
                 }
                 .doFinally {
                     praiseNetworkState = NetworkState.SUCCESSFUL
                 }
                 .safeSubscribeBy {
+                    isDealing = false
                     answer.apply {
                         val state = !isPraised
                         praiseNum = "${answer.praiseNumInt + state.toInt()}"
