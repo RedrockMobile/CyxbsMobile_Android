@@ -133,12 +133,12 @@ class AnswerActivity : BaseViewModelActivity<AnswerViewModel>() {
                 //点击后展开，tv显示所有内容
                 if (tv_answer_question_description.maxLines == 2) {
                     tv_answer_question_description.maxLines = Int.MAX_VALUE
-                    val drawable = ContextCompat.getDrawable(this@AnswerActivity, R.drawable.qa_question_describe_show_more)
+                    val drawable = ContextCompat.getDrawable(this@AnswerActivity, R.drawable.qa_question_describe_show_more_up)
                     setCompoundDrawablesWithIntrinsicBounds(null, null, drawable, null)
                     nine_grid_view_question.visible()
                 } else {
                     tv_answer_question_description.maxLines = 2
-                    val drawable = ContextCompat.getDrawable(this@AnswerActivity, R.drawable.qa_question_describe_show_more)
+                    val drawable = ContextCompat.getDrawable(this@AnswerActivity, R.drawable.qa_question_describe_show_more_down)
                     setCompoundDrawablesWithIntrinsicBounds(null, null, drawable, null)
                     nine_grid_view_question.gone()
                 }
