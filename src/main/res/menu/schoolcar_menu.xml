@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
-    <item
-        android:id="@+id/school_car_more"
-        android:icon="@drawable/ic_school_car_search_tool_more"
-        app:showAsAction="always"
-        android:title="@string/schoolcar_string"/>
-</menu>
