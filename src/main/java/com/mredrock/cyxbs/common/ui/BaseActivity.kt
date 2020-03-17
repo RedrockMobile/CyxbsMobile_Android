@@ -1,9 +1,7 @@
 package com.mredrock.cyxbs.common.ui
 
 //import com.jude.swipbackhelper.SwipeBackHelper
-import android.annotation.SuppressLint
 import android.app.Activity
-import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.graphics.Color
 import android.os.Build
@@ -14,7 +12,6 @@ import android.view.View
 import android.view.WindowManager
 import androidx.annotation.DrawableRes
 import androidx.appcompat.app.AppCompatActivity
-import com.afollestad.materialdialogs.DialogAction
 import com.afollestad.materialdialogs.MaterialDialog
 import com.alibaba.android.arouter.launcher.ARouter
 import com.mredrock.cyxbs.common.BaseApp
@@ -32,7 +29,6 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.jetbrains.anko.startActivity
-import kotlin.system.exitProcess
 
 /**
  * Created By jay68 on 2018/8/9.
@@ -54,22 +50,32 @@ abstract class BaseActivity : AppCompatActivity() {
         // todo 8.0 系统Bug 窗口透明导致限制竖屏闪退
 //        SwipeBackHelper.onCreate(this)
 //        SwipeBackHelper.getCurrentPage(this).setSwipeRelateEnable(true)
+        initFlag()
+        LogUtils.v(TAG, javaClass.name)
+    }
+
+    private fun initFlag() {
 
         when {
-            Build.VERSION.SDK_INT >= 23 -> window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+            Build.VERSION.SDK_INT >= 23 -> {
+                if (BaseApp.isNightMode) {
+                    window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                }else{
+                    window.decorView.systemUiVisibility =
+                            //亮色模式状态栏
+                            View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR or
+                                    //设置decorView的布局设置为全屏
+                                    View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or
+                                    //维持布局稳定，不会因为statusBar和虚拟按键的消失而移动view位置
+                                    View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                }
+            }
             Build.VERSION.SDK_INT >= 21 -> {
-                val decorView = window.decorView
-                val option = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                decorView.systemUiVisibility = option
+                //设置decorView的布局设置为全屏，并维持布局稳定
+                window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                 window.statusBarColor = Color.TRANSPARENT
             }
-            Build.VERSION.SDK_INT >= 19 -> window.setFlags(
-                    WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS,
-                    WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS
-            )
         }
-
-        LogUtils.v(TAG, javaClass.name)
     }
 
     inline fun <reified T : Activity> startActivity(finish: Boolean = false, vararg params: Pair<String, Any?>) {

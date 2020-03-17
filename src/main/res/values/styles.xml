@@ -7,6 +7,10 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowEnterTransition">@transition/fade</item>
+        <item name="android:windowExitTransition">@transition/fade</item>
+        <item name="android:windowSharedElementEnterTransition">@transition/app_transaction</item>
+        <item name="android:windowSharedElementExitTransition">@transition/app_transaction</item>
         <item name="actionMenuTextColor">@color/levelTwoFontColor</item>
     </style>
 
