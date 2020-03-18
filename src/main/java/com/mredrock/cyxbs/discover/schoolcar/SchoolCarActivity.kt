@@ -319,7 +319,6 @@ class SchoolCarActivity : BaseActivity(), View.OnClickListener {
         if (hasPermissionsDismiss) {
             ExploreSchoolCarDialog.show(this, NO_GPS)
             ifLocation = false
-            finish()
         } else {
             locationClient = AMapLocationClient(applicationContext)
         }
@@ -330,7 +329,9 @@ class SchoolCarActivity : BaseActivity(), View.OnClickListener {
         super.onDestroy()
 
         ExploreSchoolCarDialog.cancelDialog()
-        locationClient.onDestroy()
+        if (checkActivityPermission()) {
+            locationClient.onDestroy()
+        }
         mv_map.onDestroy()
         if (disposable != null) {
             disposable!!.dispose()
