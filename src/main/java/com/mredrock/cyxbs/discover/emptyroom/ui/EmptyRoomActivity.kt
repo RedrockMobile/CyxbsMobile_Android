@@ -6,7 +6,6 @@ import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.Gravity
 import android.view.animation.AccelerateDecelerateInterpolator
-import android.widget.TableLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.Px
