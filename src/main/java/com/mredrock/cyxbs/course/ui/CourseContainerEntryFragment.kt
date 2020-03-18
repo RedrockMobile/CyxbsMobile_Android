@@ -302,8 +302,6 @@ class CourseContainerEntryFragment : BaseFragment() {
         }
     }
 
-    var s = true
-
     /**
      * 根据主页的fragment的滑动状态来设置当前头部显示效果
      * @param state 从0到1，1表示BottomSheet完全展开
