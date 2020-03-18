@@ -9,13 +9,11 @@ import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import com.afollestad.materialdialogs.MaterialDialog
 import com.alibaba.android.arouter.facade.annotation.Route
-import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.config.DISCOVER_VOLUNTEER
 import com.mredrock.cyxbs.common.event.AskLoginEvent
 import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.service.account.IAccountService
-import com.mredrock.cyxbs.common.service.account.IUserService
 import com.mredrock.cyxbs.common.ui.BaseActivity
 import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
