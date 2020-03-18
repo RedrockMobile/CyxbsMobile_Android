@@ -3,5 +3,4 @@ apply from: module_config
 dependencies {
     implementation project(':lib_common')
     kapt deps.arouter.compiler
-    testImplementation 'junit:junit:4.12'
 }
