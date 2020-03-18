@@ -1,26 +1,24 @@
 package com.mredrock.cyxbs.main.ui
 
-import android.content.res.Configuration
 import android.os.Bundle
+import android.os.PersistableBundle
 import android.view.MenuItem
 import android.view.View
 import android.view.View.GONE
 import android.widget.FrameLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import com.afollestad.materialdialogs.MaterialDialog
 import com.alibaba.android.arouter.facade.annotation.Route
-import com.alibaba.android.arouter.launcher.ARouter
 import com.google.android.material.bottomnavigation.LabelVisibilityMode
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.config.*
+import com.mredrock.cyxbs.common.event.BottomSheetStateEvent
 import com.mredrock.cyxbs.common.event.LoadCourse
 import com.mredrock.cyxbs.common.event.NotifyBottomSheetToExpandEvent
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
-import com.mredrock.cyxbs.common.utils.extensions.getDarkModeStatus
 import com.mredrock.cyxbs.common.utils.extensions.getStatusBarHeight
 import com.mredrock.cyxbs.common.utils.update.UpdateEvent
 import com.mredrock.cyxbs.common.utils.update.UpdateUtils
@@ -33,6 +31,7 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.jetbrains.anko.dip
+import org.jetbrains.anko.topPadding
 
 
 @Route(path = MAIN_MAIN)
@@ -41,6 +40,14 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
     override val viewModelClass = MainViewModel::class.java
 
     override val isFragmentActivity = true
+
+    /**
+     * 这个变量切记千万不能搬到viewModel,这个变量需要跟activity同生共死
+     * 以保障activity异常重启时，这个值会被刷新，activity异常销毁viewModel仍在
+     */
+    private var isLoadCourse = true
+    var lastState = BottomSheetBehavior.STATE_COLLAPSED
+
 
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<FrameLayout>
 
@@ -63,6 +70,11 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
     private val showedFragments = mutableListOf<Fragment>()
 
 
+    override var TAG: String = "MainHHHHH"
+    override var isOpenLifeCycleLog: Boolean
+        get() = true
+        set(value) {}
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.main_activity_main)
@@ -76,63 +88,39 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
         initFragments()
     }
 
-
-    override fun onConfigurationChanged(newConfig: Configuration) {
-        super.onConfigurationChanged(newConfig)
-        if (getDarkModeStatus() != BaseApp.isNightMode) {
-            BaseApp.isNightMode = getDarkModeStatus()
-            MaterialDialog.Builder(this)
-                    .title("是否重启应用？")
-                    .content("检测到你切换了显示模式，需要重启app才能完全正常显示")
-                    .positiveText("立即重启")
-                    .negativeText("稍后自己重启")
-                    .autoDismiss(false)
-                    .onPositive { _, _ ->
-                        finishAffinity();
-                        ARouter.getInstance().build(MAIN_SPLASH).navigation();
-                        finish()
-                    }.onNegative{ materialDialog, _ ->
-                        materialDialog.dismiss()
-                    }.show()
-        }
-    }
-
-
-
-
-
     private fun initBottomSheetBehavior() {
         bottomSheetBehavior = BottomSheetBehavior.from(course_bottom_sheet_content)
-        //这里因为BottomSheet和[android:fitsSystemWindows="true"]冲突要加上一个状态栏高度
+        /**
+         * 没有选择[android:fitsSystemWindows="true"]让系统预留一个状态栏高度
+         * 而是手动加上一个状态栏高度的内边距，为了解决在BottomSheet正完全展开时
+         * activity异常重启后fitsSystemWindows失效的问题
+         */
+        course_bottom_sheet_content.topPadding = course_bottom_sheet_content.topPadding + getStatusBarHeight()
         bottomSheetBehavior.peekHeight = bottomSheetBehavior.peekHeight + getStatusBarHeight()
-        viewModel.bottomSheetCallbackBind(bottomSheetBehavior,
-                onSlide = { _, fl ->
-                    ll_nav_main_container.translationY = nav_main.height * fl
-                    if (ll_nav_main_container.visibility == GONE) {
-                        ll_nav_main_container.visibility = View.VISIBLE
-                    }
-                },
-                onStateChanged = { _, _ ->
-                    //如果是第一次进入展开则加载详细的课表子页
-                    if (viewModel.isFirst && bottomSheetBehavior.state == BottomSheetBehavior.STATE_EXPANDED
-                            && viewModel.lastState != BottomSheetBehavior.STATE_EXPANDED && !viewModel.courseShowState) {
-                        EventBus.getDefault().post(LoadCourse())
-                        viewModel.isFirst = false
-                    }
-                })
+        bottomSheetBehavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {
+                EventBus.getDefault().post(BottomSheetStateEvent(slideOffset))
+                ll_nav_main_container.translationY = nav_main.height * slideOffset
+                if (ll_nav_main_container.visibility == GONE) {
+                    ll_nav_main_container.visibility = View.VISIBLE
+                }
+            }
+            override fun onStateChanged(bottomSheet: View, newState: Int) {
+                //如果是第一次进入展开则加载详细的课表子页
+                if (isLoadCourse && bottomSheetBehavior.state == BottomSheetBehavior.STATE_EXPANDED
+                        && lastState != BottomSheetBehavior.STATE_EXPANDED && !viewModel.courseShowState) {
+                    EventBus.getDefault().post(LoadCourse())
+                    isLoadCourse = false
+                }
+                //对状态Bottom的状态进行记录，这里只记录了打开和关闭
+                lastState = when (newState) {
+                    BottomSheetBehavior.STATE_EXPANDED -> BottomSheetBehavior.STATE_EXPANDED
+                    BottomSheetBehavior.STATE_COLLAPSED -> BottomSheetBehavior.STATE_COLLAPSED
+                    else -> lastState
+                }
+            }
+        })
     }
-
-
-////这个方法可能有用暂不删除
-//    @RequiresApi(Build.VERSION_CODES.M)
-//    private fun setAndroidNativeLightStatusBar(dark: Boolean) {
-//        val decor = window.decorView
-//        if (dark) {
-//            decor.systemUiVisibility = SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
-//        } else {
-//            decor.systemUiVisibility = SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or SYSTEM_UI_FLAG_LAYOUT_STABLE
-//        }
-//    }
 
     override fun onBackPressed() {
         if (bottomSheetBehavior.state == BottomSheetBehavior.STATE_EXPANDED) {
@@ -165,6 +153,20 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
         preCheckedItem = nav_main.menu.getItem(0)
         peeCheckedItemPosition = 0
     }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        //防止activity由于异常重启导致旧的Fragment显示在新的fragment的下面
+        val transition = supportFragmentManager.beginTransaction()
+        showedFragments.forEach { transition.remove(it) }
+        transition.commit()
+        super.onSaveInstanceState(outState)
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
+        nav_main.menu.clear()
+        super.onRestoreInstanceState(savedInstanceState, persistentState)
+    }
+
 
     /**
      * 进行显示页面的切换
@@ -200,9 +202,8 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
         other_fragment_container.removeAllViews()
         //取得是否优先显示课表的设置
         viewModel.courseShowState = defaultSharedPreferences.getBoolean(COURSE_SHOW_STATE, false)
-        viewModel.lastState = if (viewModel.courseShowState) BottomSheetBehavior.STATE_EXPANDED else BottomSheetBehavior.STATE_COLLAPSED
+        lastState = if (viewModel.courseShowState) BottomSheetBehavior.STATE_EXPANDED else BottomSheetBehavior.STATE_COLLAPSED
         if (viewModel.courseShowState) {
-            nav_main.selectedItemId = R.id.explore
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
             //这里必须让它GONE，因为这个设置BottomSheet是不会走滑动监听的，否则导致完全显示BottomSheet后依然有下面的tab
             ll_nav_main_container.visibility = GONE
@@ -211,14 +212,14 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
                 commit()
             }
         } else {
-            //如果用户没有选择优先显示课表，则加载发现
-            nav_main.selectedItemId = R.id.explore
             //加载课表并给课表传递值，让它不要直接加载详细的课表，只用加载现在可见的头部就好
             courseFragment.arguments = Bundle().apply { putString(COURSE_DIRECT_LOAD, FALSE) }
             supportFragmentManager.beginTransaction().replace(R.id.course_bottom_sheet_content, courseFragment).apply {
                 commit()
             }
         }
+        //加载发现
+        nav_main.selectedItemId = R.id.explore
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
