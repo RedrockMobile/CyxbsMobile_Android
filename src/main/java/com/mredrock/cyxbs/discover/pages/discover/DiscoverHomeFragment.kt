@@ -33,7 +33,7 @@ import org.greenrobot.eventbus.ThreadMode
 
 @Route(path = DISCOVER_ENTRY)
 class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>() {
-
+    private val discoverFeedFragments = mutableListOf<Fragment>()
 
     override val viewModelClass: Class<DiscoverHomeViewModel> = DiscoverHomeViewModel::class.java
 
@@ -166,7 +166,7 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>() {
     }
 
     private fun addFeedFragment(fragment: Fragment) {
-
+        discoverFeedFragments.add(fragment)
         fragmentManager?.beginTransaction()?.add(R.id.ll_discover_feeds, fragment)?.commit()
 
     }
