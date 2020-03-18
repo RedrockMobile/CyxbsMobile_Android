@@ -8,9 +8,7 @@ import com.mredrock.cyxbs.discover.schoolcar.SchoolCarActivity.Companion.LOST_SE
 import com.mredrock.cyxbs.discover.schoolcar.SchoolCarActivity.Companion.NO_GPS
 import com.mredrock.cyxbs.discover.schoolcar.SchoolCarActivity.Companion.TIME_OUT
 import com.mredrock.cyxbs.schoolcar.R
-import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.schoolcar_notserve_dialog.view.*
-import java.util.concurrent.TimeUnit
 
 /**
  * Created by glossimar on 2018/9/12
