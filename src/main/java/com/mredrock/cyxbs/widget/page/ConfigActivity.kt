@@ -49,4 +49,9 @@ class ConfigActivity(override val isFragmentActivity: Boolean = false) : BaseAct
 //            }).start()
 //        }
     }
+
+
+    override fun finish() {
+        super.finish()
+    }
 }
