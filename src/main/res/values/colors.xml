@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="main_activity_login_background_color">#f6f6f6</color>
-    <color name="main_activity_login_et_edited_color">#333333</color>
-    <color name="main_activity_login_et_hint_color">#999999</color>
     <color name="main_activity_login_divider_color">#F6F6F6</color>
     <color name="main_activity_login_btn_login_color">#FFFFFF</color>
     <color name="main_main_bottom_navigation_text_checked">#779afa</color>

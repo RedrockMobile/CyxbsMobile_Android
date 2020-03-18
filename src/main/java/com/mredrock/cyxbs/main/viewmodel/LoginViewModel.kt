@@ -16,7 +16,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import org.greenrobot.eventbus.EventBus
 import org.jetbrains.anko.startActivity
-import kotlin.concurrent.thread
 
 /**
  * Created By jay68 on 2018/8/12.

@@ -1,7 +1,6 @@
 package com.mredrock.cyxbs.main.ui
 
 import android.content.res.Configuration
-import android.os.Build
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
@@ -9,11 +8,12 @@ import android.view.View.GONE
 import android.widget.FrameLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import com.afollestad.materialdialogs.MaterialDialog
 import com.alibaba.android.arouter.facade.annotation.Route
+import com.alibaba.android.arouter.launcher.ARouter
 import com.google.android.material.bottomnavigation.LabelVisibilityMode
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.mredrock.cyxbs.common.BaseApp
-import com.mredrock.cyxbs.common.BaseApp.Companion.isNightMode
 import com.mredrock.cyxbs.common.config.*
 import com.mredrock.cyxbs.common.event.LoadCourse
 import com.mredrock.cyxbs.common.event.NotifyBottomSheetToExpandEvent
@@ -74,6 +74,27 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
         }
         initBottomSheetBehavior()
         initFragments()
+    }
+
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        if (getDarkModeStatus() != BaseApp.isNightMode) {
+            BaseApp.isNightMode = getDarkModeStatus()
+            MaterialDialog.Builder(this)
+                    .title("是否重启应用？")
+                    .content("检测到你切换了显示模式，需要重启app才能完全正常显示")
+                    .positiveText("立即重启")
+                    .negativeText("稍后自己重启")
+                    .autoDismiss(false)
+                    .onPositive { _, _ ->
+                        finishAffinity();
+                        ARouter.getInstance().build(MAIN_SPLASH).navigation();
+                        finish()
+                    }.onNegative{ materialDialog, _ ->
+                        materialDialog.dismiss()
+                    }.show()
+        }
     }
 
 
