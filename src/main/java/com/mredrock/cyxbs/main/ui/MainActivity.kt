@@ -1,7 +1,6 @@
 package com.mredrock.cyxbs.main.ui
 
 import android.os.Bundle
-import android.os.PersistableBundle
 import android.view.MenuItem
 import android.view.View
 import android.view.View.GONE
@@ -54,6 +53,7 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
     private lateinit var navHelpers: BottomNavigationViewHelper
     private lateinit var preCheckedItem: MenuItem
     private var peeCheckedItemPosition = 0
+    val menuIdList = listOf(R.id.explore, R.id.qa, R.id.mine)
     private val icons = arrayOf(
             R.drawable.main_ic_explore_unselected, R.drawable.main_ic_explore_selected,
             R.drawable.main_ic_qa_unselected, R.drawable.main_ic_qa_selected,
@@ -105,6 +105,7 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
                     ll_nav_main_container.visibility = View.VISIBLE
                 }
             }
+
             override fun onStateChanged(bottomSheet: View, newState: Int) {
                 //如果是第一次进入展开则加载详细的课表子页
                 if (isLoadCourse && bottomSheetBehavior.state == BottomSheetBehavior.STATE_EXPANDED
@@ -130,7 +131,6 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
         }
     }
 
-
     private fun initBottomNavigationView() {
         navHelpers = BottomNavigationViewHelper(nav_main).apply {
             setTextSize(11f)
@@ -141,9 +141,9 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
                 preCheckedItem = menuItem
                 menu?.clear()
                 when (menuItem.itemId) {
-                    R.id.explore -> changeFragment(discoverFragment, 0, menuItem)
-                    R.id.qa -> changeFragment(qaFragment, 1, menuItem)
-                    R.id.mine -> changeFragment(mineFragment, 2, menuItem)
+                    menuIdList[0] -> changeFragment(discoverFragment, 0, menuItem)
+                    menuIdList[1] -> changeFragment(qaFragment, 1, menuItem)
+                    menuIdList[2] -> changeFragment(mineFragment, 2, menuItem)
                 }
                 return@setOnNavigationItemSelectedListener true
             }
@@ -153,20 +153,6 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
         preCheckedItem = nav_main.menu.getItem(0)
         peeCheckedItemPosition = 0
     }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        //防止activity由于异常重启导致旧的Fragment显示在新的fragment的下面
-        val transition = supportFragmentManager.beginTransaction()
-        showedFragments.forEach { transition.remove(it) }
-        transition.commit()
-        super.onSaveInstanceState(outState)
-    }
-
-    override fun onRestoreInstanceState(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
-        nav_main.menu.clear()
-        super.onRestoreInstanceState(savedInstanceState, persistentState)
-    }
-
 
     /**
      * 进行显示页面的切换
@@ -193,6 +179,11 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
     }
 
     private fun initFragments() {
+        //防止activity由于异常重启导致旧的Fragment显示在新的fragment的下面
+        val transition = supportFragmentManager.beginTransaction()
+        supportFragmentManager.fragments.forEach { transition.detach(it) }
+        transition.commit()
+
         viewModel.startPage.observe(this, Observer { starPage ->
             viewModel.initStartPage(starPage)
         })
