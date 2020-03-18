@@ -75,7 +75,6 @@ class VolunteerLoginActivity : BaseActivity() {
             val p = Pattern.compile(regEx)
             val m = p.matcher(account)
             uid = m.replaceAll("").trim()
-            LogUtils.d(TAG, uid!!)
         }
 
         if ((!(volunteerSP.volunteerUid == "404"
