@@ -19,6 +19,7 @@ import com.alibaba.android.arouter.launcher.ARouter
 import com.mredrock.cyxbs.common.config.*
 import com.mredrock.cyxbs.common.event.CurrentDateInformationEvent
 import com.mredrock.cyxbs.common.ui.BaseViewModelFragment
+import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.discover.R
 import com.mredrock.cyxbs.discover.utils.BannerAdapter
 import com.mredrock.cyxbs.discover.utils.MoreFunctionProvider
@@ -30,7 +31,7 @@ import org.greenrobot.eventbus.ThreadMode
  * @author zixuan
  * 2019/11/20
  */
-
+var isFeedLoaded = false
 @Route(path = DISCOVER_ENTRY)
 class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>() {
 
@@ -50,10 +51,13 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>() {
         iv_check_in.setOnClickListener {
             ARouter.getInstance().build(MINE_CHECK_IN).navigation()
         }
-
         initFeeds()
     }
 
+
+    override fun onStart() {
+        super.onStart()
+    }
 
     override fun onResume() {
         super.onResume()
@@ -154,8 +158,12 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>() {
     }
 
     private fun initFeeds() {
-        addFeedByRoute(DISCOVER_ELECTRICITY_FEED)
-        addFeedByRoute(DISCOVER_VOLUNTEER_FEED)
+        //让feed只加载一次，在 activity重建时会导致重复加载，没有找到更好的解决方案 TODO 换一种方案解决重复加载的问题
+         if(!isFeedLoaded){
+            addFeedByRoute(DISCOVER_ELECTRICITY_FEED)
+            addFeedByRoute(DISCOVER_VOLUNTEER_FEED)
+        }
+        isFeedLoaded = true
     }
 
     private fun addFeedByRoute(route: String) {
@@ -164,6 +172,7 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>() {
 
     private fun addFeedFragment(fragment: Fragment) {
         fragmentManager?.beginTransaction()?.add(R.id.ll_discover_feeds, fragment)?.commit()
+
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
