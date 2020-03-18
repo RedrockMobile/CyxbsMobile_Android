@@ -3,7 +3,6 @@ package com.mredrock.cyxbs.mine.page.answer
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import com.mredrock.cyxbs.mine.util.ui.BaseTabLayoutActivity
-import kotlinx.android.synthetic.main.mine_activity_tablayout_common.*
 
 
 /**
