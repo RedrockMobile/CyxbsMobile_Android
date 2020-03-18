@@ -33,7 +33,6 @@ import org.greenrobot.eventbus.ThreadMode
 
 @Route(path = DISCOVER_ENTRY)
 class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>() {
-    private val discoverFeedFragments = mutableListOf<Fragment>()
 
     override val viewModelClass: Class<DiscoverHomeViewModel> = DiscoverHomeViewModel::class.java
 
@@ -42,9 +41,8 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>() {
         return inflater.inflate(R.layout.discover_home_fragment, container, false)
     }
 
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         initViewPager()
         initJwNews(vf_jwzx_detail, fl_discover_home_jwnews)
         viewModel.getRollInfos()
@@ -54,9 +52,8 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>() {
         }
 
         initFeeds()
-        super.onActivityCreated(savedInstanceState)
-
     }
+
 
     override fun onResume() {
         super.onResume()
@@ -166,9 +163,7 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>() {
     }
 
     private fun addFeedFragment(fragment: Fragment) {
-        discoverFeedFragments.add(fragment)
         fragmentManager?.beginTransaction()?.add(R.id.ll_discover_feeds, fragment)?.commit()
-
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
