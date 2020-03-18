@@ -1,8 +1,5 @@
 <resources>
 
-    <string name="discover_manager">管理</string>
-    <string name="discover_confirm">确 定</string>
-
     <string name="discover_function">工具</string>
 
     <string name="discover_title_no_class">没课约</string>
