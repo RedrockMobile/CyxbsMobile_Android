@@ -3,8 +3,10 @@ package com.mredrock.cyxbs.qa.bean
 import com.google.gson.annotations.SerializedName
 import java.io.Serializable
 
-data class Comment(@SerializedName("Id")
+data class Comment(@SerializedName("id")
                    val id: String = "",
+                   @SerializedName("stunum")
+                   val stuNum: String = "",
                    @SerializedName("photo_thumbnail_src")
                    val photoThumbnailSrc: String = "",
                    @SerializedName("gender")
@@ -15,5 +17,4 @@ data class Comment(@SerializedName("Id")
                    val createdAt: String = "",
                    @SerializedName("content")
                    val content: String = "") : Serializable {
-    val isMale get() = gender != "女"
 }

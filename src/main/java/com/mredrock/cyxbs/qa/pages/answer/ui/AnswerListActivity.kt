@@ -1,10 +1,11 @@
 package com.mredrock.cyxbs.qa.pages.answer.ui
 
 import android.app.Activity
-import android.app.ActivityOptions
 import android.app.ProgressDialog
 import android.content.Intent
 import android.os.Bundle
+import androidx.core.app.ActivityOptionsCompat
+import androidx.core.util.Pair
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
@@ -13,7 +14,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.bean.RedrockApiWrapper
 import com.mredrock.cyxbs.common.bean.isSuccessful
 import com.mredrock.cyxbs.common.config.QA_ANSWER_LIST
@@ -24,6 +24,7 @@ import com.mredrock.cyxbs.common.service.account.IAccountService
 import com.mredrock.cyxbs.common.ui.BaseActivity
 import com.mredrock.cyxbs.common.utils.extensions.gone
 import com.mredrock.cyxbs.common.utils.extensions.toast
+import com.mredrock.cyxbs.common.utils.extensions.visible
 import com.mredrock.cyxbs.common.viewmodel.event.ProgressDialogEvent
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.bean.Answer
@@ -42,7 +43,6 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.jetbrains.anko.indeterminateProgressDialog
 import org.jetbrains.anko.longToast
-import org.jetbrains.anko.support.v4.startActivityForResult
 
 @Route(path = QA_ANSWER_LIST)
 class AnswerListActivity : BaseActivity() {
@@ -53,12 +53,12 @@ class AnswerListActivity : BaseActivity() {
         const val PARAM_QUESTION = "question"
         const val REQUEST_REFRESH_LIST = 0x2
 
-        fun activityStart(fragment: Fragment, question: Question, requestCode: Int,options: Bundle? = Bundle()) {
+        fun activityStart(fragment: Fragment, question: Question, requestCode: Int, options: Bundle? = Bundle()) {
             if (!ServiceManager.getService(IAccountService::class.java).getVerifyService().isLogin()) {
                 EventBus.getDefault().post(AskLoginEvent("请先登陆才能使用邮问哦~"))
                 return
             }
-            fragment.startActivityForResult(Intent(fragment.context as Activity,AnswerListActivity::class.java).apply { putExtra(PARAM_QUESTION , question) },requestCode,options)
+            fragment.startActivityForResult(Intent(fragment.context as Activity, AnswerListActivity::class.java).apply { putExtra(PARAM_QUESTION, question) }, requestCode, options)
         }
     }
 
@@ -133,8 +133,12 @@ class AnswerListActivity : BaseActivity() {
         }
         headerAdapter = AnswerListHeaderAdapter()
         answerListAdapter = AnswerListAdapter().apply {
-            onItemClickListener = { _, answer ->
-                CommentListActivity.activityStart(this@AnswerListActivity, viewModel.questionLiveData.value!!, answer)
+            onItemClickListener = { _, answer, view ->
+                if (viewModel.questionLiveData.value != null)
+                    CommentListActivity.activityStart(this@AnswerListActivity, viewModel.questionLiveData.value!!, answer, ActivityOptionsCompat.makeSceneTransitionAnimation(
+                            this@AnswerListActivity,
+                            Pair(view, "answer_avatar")
+                    ).toBundle())
             }
             onPraiseClickListener = { i: Int, answer: Answer ->
                 if (viewModel.isDealing) {
@@ -154,7 +158,7 @@ class AnswerListActivity : BaseActivity() {
                     pressReport = {
                         viewModel.reportAnswer(it, id)
                     }
-                    viewModel.backPreActivityReportAnswerEvent.observeNotNull {
+                    viewModel.reportAnswerEvent.observeNotNull {
                         dismiss()
                     }
                 }.show()
@@ -186,7 +190,7 @@ class AnswerListActivity : BaseActivity() {
         bottomViewEvent.observe {
             when {
                 it == null -> fl_answer.gone()
-                it -> switchToQuestioner()
+                it -> fl_answer.gone()
                 else -> switchToHelper()
             }
         }
@@ -218,17 +222,14 @@ class AnswerListActivity : BaseActivity() {
         }
     }
 
-    private fun switchToQuestioner() {
-        fl_answer.gone()
-    }
-
     private fun switchToHelper() {
-        fl_answer.visibility
+        fl_answer.visible()
         fl_answer.setOnClickListener {
             AnswerActivity.activityStart(this@AnswerListActivity, viewModel.questionLiveData.value?.id
                     ?: "", viewModel.questionLiveData.value?.description
                     ?: "", viewModel.questionLiveData.value?.photoUrl
                     ?: listOf(), REQUEST_REFRESH_LIST)
+            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
         }
 
     }
@@ -238,12 +239,11 @@ class AnswerListActivity : BaseActivity() {
         pressReport = {
             viewModel.reportQuestion(it)
         }
-        viewModel.backPreActivityReportQuestionEvent.observeNotNull {
+        viewModel.reportQuestionEvent.observeNotNull {
             dismiss()
         }
-        viewModel.backPreActivityIgnoreEvent.observeNotNull {
+        viewModel.ignoreEvent.observeNotNull {
             dismiss()
-            finish()
         }
         pressQuestionIgnore = {
             viewModel.ignoreQuestion()

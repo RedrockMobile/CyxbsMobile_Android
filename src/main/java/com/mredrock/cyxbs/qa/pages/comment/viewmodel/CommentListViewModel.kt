@@ -30,8 +30,9 @@ class CommentListViewModel(val qid: String,
     private val isPraised = Transformations.map(this.answerLiveData) { it.isPraised }!!
     private val praiseCount = Transformations.map(this.answerLiveData) { it.praiseNum }!!
 
-    val refreshPreActivityEvent = SingleLiveEvent<Boolean>()
-    val backPreActivityReportAnswerEvent = SingleLiveEvent<Boolean>()
+    val praiseEvent = SingleLiveEvent<Boolean>()
+    val reportAnswerEvent = MutableLiveData<Boolean>()
+    val backAndRefreshEvent = SingleLiveEvent<Boolean>()
     private var praiseNetworkState = NetworkState.SUCCESSFUL
     //防止点赞快速点击
     var isDealing = false
@@ -65,6 +66,7 @@ class CommentListViewModel(val qid: String,
                 .doFinally { progressDialogEvent.value = ProgressDialogEvent.DISMISS_DIALOG_EVENT }
                 .safeSubscribeBy {
                     answerLiveData.value = answerLiveData.value?.apply { isAdopted = true }
+                    backAndRefreshEvent.value = true
                 }
     }
 
@@ -91,7 +93,7 @@ class CommentListViewModel(val qid: String,
                 .doOnError { toastEvent.value = R.string.qa_service_error_hint }
                 .safeSubscribeBy {
                     toastEvent.value = R.string.qa_hint_report_success
-                    backPreActivityReportAnswerEvent.value = true
+                    reportAnswerEvent.value = true
                 }
     }
 
@@ -105,7 +107,8 @@ class CommentListViewModel(val qid: String,
                 .doOnError { toastEvent.value = R.string.qa_service_error_hint }
                 .safeSubscribeBy {
                     toastEvent.value = R.string.qa_hint_report_success
-                    backPreActivityReportAnswerEvent.value = true
+                    reportAnswerEvent.value = true
+
                 }
     }
 
@@ -149,7 +152,8 @@ class CommentListViewModel(val qid: String,
                         praiseNum = "${answer.praiseNumInt + state.toInt()}"
                         isPraised = state
                     }
-                    refreshPreActivityEvent.value = true
+                    praiseEvent.value = true
+                    backAndRefreshEvent.value = true
                 }
                 .lifeCycle()
     }
@@ -169,6 +173,7 @@ class CommentListViewModel(val qid: String,
                 .safeSubscribeBy {
                     answerLiveData.value = answer.apply { commentNum = "${commentNumInt + 1}" }
                     invalidateCommentList()
+                    backAndRefreshEvent.value = true
                 }
                 .lifeCycle()
     }

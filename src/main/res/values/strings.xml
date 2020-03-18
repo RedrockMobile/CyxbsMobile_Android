@@ -13,7 +13,8 @@
     <string name="qa_comment_list_comment_count">评论（%1$s）</string>
     <string name="qa_comment_list_comment_loading_hint">努力加载中，请不要多次点击哦~</string>
     <string name="qa_comment_dialog_error_input_hint">请先输入有效内容哦~</string>
-    <string name="qa_service_error_hint">服务器错误，请稍后再试</string>
+    <string name="qa_service_error_hint">服务器错误，请稍后再试，或您已执行该操作</string>
+    <string name="qa_question_ignore_success">已忽略该问题</string>
     <string name="qa_quiz_dialog_next">下一步</string>
     <string name="qa_quiz_content_hint">详细描述你的问题和需求，表达越清楚，越容易获得帮助哦！</string>
     <string name="qa_quiz_dialog_sure">确定</string>

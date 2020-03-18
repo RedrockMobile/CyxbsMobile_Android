@@ -78,10 +78,12 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
                 data.putExtra("type", questionType)
                 setResult(Activity.RESULT_OK, data)
                 finish()
+                overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right)
             }
         }
-        viewModel.backAndFinishActivityEvent.observeNotNull {
+        viewModel.finishActivityEvent.observeNotNull {
             finish()
+            overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right)
         }
         edt_quiz_title.doAfterTextChanged {
             if (edt_quiz_title.text.toString().length == QUIZ_TITLE_MAX) {
@@ -110,6 +112,7 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
         qa_ib_toolbar_back.setOnClickListener(View.OnClickListener {
             if (edt_quiz_title.text.isNullOrEmpty() && edt_quiz_content.text.isNullOrEmpty() && draftId == NOT_DRAFT_ID) {
                 finish()
+                overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right)
                 return@OnClickListener
             }
             exitDialog.show()
@@ -209,6 +212,10 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
         setImageBitmap(bitmap)
     }
 
+    override fun onBackPressed() {
+        super.onBackPressed()
+        overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right)
+    }
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         if (keyCode == KeyEvent.KEYCODE_BACK) {

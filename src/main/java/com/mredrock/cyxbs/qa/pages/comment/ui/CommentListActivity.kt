@@ -2,6 +2,7 @@ package com.mredrock.cyxbs.qa.pages.comment.ui
 
 import android.app.Activity
 import android.app.ProgressDialog
+import android.content.Intent
 import android.os.Bundle
 import android.text.InputType.TYPE_TEXT_FLAG_MULTI_LINE
 import android.view.inputmethod.EditorInfo
@@ -55,10 +56,11 @@ class CommentListActivity : BaseActivity() {
 
         fun activityStart(activity: Activity,
                           question: Question,
-                          answer: Answer) {
-            activity.startActivityForResult<CommentListActivity>(REQUEST_CODE,
-                    PARAM_QUESTION to question,
-                    PARAM_ANSWER to answer)
+                          answer: Answer, options: Bundle? = Bundle()) {
+            activity.startActivityForResult(Intent(activity, CommentListActivity::class.java).apply {
+                putExtra(PARAM_QUESTION, question)
+                putExtra(PARAM_ANSWER, answer)
+            }, REQUEST_CODE, options)
         }
     }
 
@@ -155,7 +157,7 @@ class CommentListActivity : BaseActivity() {
                     pressReport = {
                         viewModel.reportComment(it, commentId)
                     }
-                    viewModel.backPreActivityReportAnswerEvent.observeNotNull {
+                    viewModel.reportAnswerEvent.observeNotNull {
                         dismiss()
                     }
                 }.show()
@@ -181,11 +183,10 @@ class CommentListActivity : BaseActivity() {
 
     private fun observeListChangeEvent() = viewModel.apply {
         answerLiveData.observeNotNull {
-            setResult(Activity.RESULT_OK)
             qa_tv_toolbar_title.text = baseContext.getString(R.string.qa_comment_list_comment_count, it.commentNum)
             headerAdapter.refreshData(listOf(it))
         }
-
+        backAndRefreshEvent.observeNotNull { setResult(Activity.RESULT_OK) }
         commentList.observe { commentListRvAdapter.submitList(it) }
 
         networkState.observeNotNull { footerRvAdapter.refreshData(listOf(it)) }
@@ -202,7 +203,7 @@ class CommentListActivity : BaseActivity() {
                 }
             }
         }
-        refreshPreActivityEvent.observeNotNull {
+        praiseEvent.observeNotNull {
             tv_comment_praise.setPraise(answerLiveData.value?.praiseNum, answerLiveData.value?.isPraised)
         }
     }
@@ -236,7 +237,7 @@ class CommentListActivity : BaseActivity() {
         pressReport = {
             viewModel.reportAnswer(it)
         }
-        viewModel.backPreActivityReportAnswerEvent.observeNotNull {
+        viewModel.reportAnswerEvent.observeNotNull {
             dismiss()
         }
     }

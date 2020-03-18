@@ -53,6 +53,7 @@ class QuestionContainerFragment : BaseFragment(), View.OnClickListener {
         root.btn_ask_question.setOnClickListener {
             if (ServiceManager.getService(IAccountService::class.java).getVerifyService().isLogin()) {
                 QuizActivity.activityStart(this@QuestionContainerFragment, "学习", REQUEST_LIST_REFRESH_ACTIVITY)
+                activity?.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
             } else {
                 EventBus.getDefault().post(AskLoginEvent("请先登陆才能使用掌邮哦~"))
             }

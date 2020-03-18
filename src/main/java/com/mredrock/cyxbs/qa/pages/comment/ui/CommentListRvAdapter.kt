@@ -4,7 +4,11 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import com.mredrock.cyxbs.common.component.JCardViewPlus
+import com.mredrock.cyxbs.common.service.ServiceManager
+import com.mredrock.cyxbs.common.service.account.IAccountService
+import com.mredrock.cyxbs.common.utils.extensions.invisible
 import com.mredrock.cyxbs.common.utils.extensions.setAvatarImageFromUrl
+import com.mredrock.cyxbs.common.utils.extensions.visible
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.bean.Comment
 import com.mredrock.cyxbs.qa.component.recycler.BaseEndlessRvAdapter
@@ -48,7 +52,15 @@ class CommentListRvAdapter : BaseEndlessRvAdapter<Comment>(DIFF_CALLBACK) {
             2 -> holder.itemView.findViewById<JCardViewPlus>(R.id.jCardView_comment).setCardBackgroundColor(ContextCompat.getColor(holder.itemView.context, R.color.qa_comment_content_third_kind_color))
         }
         holder.itemView.apply {
-            ib_comment_item_more.setOnClickListener { onReportClickListener?.invoke((getItem(position) as Comment).id) }
+            when ((getItem(position) as Comment).stuNum) {
+                ServiceManager.getService(IAccountService::class.java).getUserService().getStuNum() -> {
+                    ib_comment_item_more.invisible()
+                }
+                else -> {
+                    ib_comment_item_more.visible()
+                    ib_comment_item_more.setOnClickListener { onReportClickListener?.invoke((getItem(position) as Comment).id) }
+                }
+            }
         }
     }
 }

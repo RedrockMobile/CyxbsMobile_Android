@@ -27,13 +27,13 @@ class AnswerListViewModel(question: Question) : BaseViewModel() {
     val answerPagedList: LiveData<PagedList<Answer>>
     val questionLiveData = MutableLiveData<Question>()
     val backAndRefreshPreActivityEvent = SingleLiveEvent<Boolean>()
-    val backPreActivityReportQuestionEvent = SingleLiveEvent<Boolean>()
-    val backPreActivityReportAnswerEvent = SingleLiveEvent<Boolean>()
-    val backPreActivityIgnoreEvent = SingleLiveEvent<Boolean>()
+    val reportQuestionEvent = SingleLiveEvent<Boolean>()
+    val reportAnswerEvent = SingleLiveEvent<Boolean>()
+    val ignoreEvent = SingleLiveEvent<Boolean>()
 
     val networkState: LiveData<Int>
     val initialLoad: LiveData<Int>
-    var myRewardCount = 0
+    private var myRewardCount = 0
 
     private var praiseNetworkState = NetworkState.SUCCESSFUL
     val refreshPreActivityEvent = SingleLiveEvent<Int>()
@@ -69,9 +69,7 @@ class AnswerListViewModel(question: Question) : BaseViewModel() {
                 .doOnError {
                     LogUtils.d("add QuestionView Failed", it.toString())
                 }
-                .safeSubscribeBy {
-                    LogUtils.d("add QuestionView Success", it.toString())
-                }
+                .safeSubscribeBy { LogUtils.d("add QuestionView Success", it.toString()) }
     }
 
     fun reportQuestion(reportType: String) {
@@ -84,7 +82,7 @@ class AnswerListViewModel(question: Question) : BaseViewModel() {
                 .doOnError { toastEvent.value = R.string.qa_service_error_hint }
                 .safeSubscribeBy {
                     toastEvent.value = R.string.qa_hint_report_success
-                    backPreActivityReportQuestionEvent.value = true
+                    reportQuestionEvent.value = true
                 }
     }
 
@@ -98,7 +96,7 @@ class AnswerListViewModel(question: Question) : BaseViewModel() {
                 .doOnError { toastEvent.value = R.string.qa_service_error_hint }
                 .safeSubscribeBy {
                     toastEvent.value = R.string.qa_hint_report_success
-                    backPreActivityReportAnswerEvent.value = true
+                    reportAnswerEvent.value = true
                 }
     }
 
@@ -122,7 +120,11 @@ class AnswerListViewModel(question: Question) : BaseViewModel() {
                 .setSchedulers()
                 .checkError()
                 .doOnError { toastEvent.value = R.string.qa_service_error_hint }
-                .safeSubscribeBy { backPreActivityIgnoreEvent.value = true }
+                .safeSubscribeBy {
+                    toastEvent.value = R.string.qa_question_ignore_success
+                    ignoreEvent.value = true
+                    backAndRefreshPreActivityEvent.value = true
+                }
     }
 
     fun clickPraiseButton(position: Int, answer: Answer) {

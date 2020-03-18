@@ -34,7 +34,7 @@ import java.io.File
 class QuizViewModel : BaseViewModel() {
     val imageLiveData = MutableLiveData<ArrayList<String>>()
     val backAndRefreshPreActivityEvent = SingleLiveEvent<Boolean>()
-    val backAndFinishActivityEvent = SingleLiveEvent<Boolean>()
+    val finishActivityEvent = MutableLiveData<Boolean>()
 
     var editingImgPos = -1
         private set
@@ -148,11 +148,11 @@ class QuizViewModel : BaseViewModel() {
                 .checkError()
                 .doOnError {
                     toastEvent.value = R.string.qa_quiz_save_failed
-                    backAndFinishActivityEvent.value = true
+                    finishActivityEvent.value = true
                 }
                 .safeSubscribeBy {
                     toastEvent.value = R.string.qa_quiz_save_success
-                    backAndFinishActivityEvent.value = true
+                    finishActivityEvent.value = true
                 }
                 .lifeCycle()
     }
@@ -169,11 +169,11 @@ class QuizViewModel : BaseViewModel() {
                 .checkError()
                 .doOnError {
                     toastEvent.value = R.string.qa_quiz_update_failed
-                    backAndFinishActivityEvent.value = true
+                    finishActivityEvent.value = true
                 }
                 .safeSubscribeBy {
                     toastEvent.value = R.string.qa_quiz_update_success
-                    backAndFinishActivityEvent.value = true
+                    finishActivityEvent.value = true
                 }
                 .lifeCycle()
     }
