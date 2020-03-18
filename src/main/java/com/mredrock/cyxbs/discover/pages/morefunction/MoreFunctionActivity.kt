@@ -1,7 +1,6 @@
 package com.mredrock.cyxbs.discover.pages.morefunction
 
 import android.os.Bundle
-import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.mredrock.cyxbs.common.ui.BaseActivity
