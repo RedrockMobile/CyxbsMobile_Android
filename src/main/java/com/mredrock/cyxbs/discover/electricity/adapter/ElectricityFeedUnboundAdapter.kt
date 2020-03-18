@@ -4,7 +4,6 @@ import android.content.Context
 import android.view.View
 import android.view.ViewGroup
 import com.mredrock.cyxbs.common.ui.BaseFeedFragment
-import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.electricity.R
 import org.jetbrains.anko.layoutInflater
 
