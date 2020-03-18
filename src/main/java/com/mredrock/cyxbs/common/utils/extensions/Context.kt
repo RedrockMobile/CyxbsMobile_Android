@@ -2,16 +2,13 @@ package com.mredrock.cyxbs.common.utils.extensions
 
 import android.app.Activity
 import android.content.Context
-import android.content.Intent
 import android.content.res.Configuration
 import android.content.res.Resources
 import android.graphics.Point
 import android.os.Build
-import android.os.Bundle
 import android.view.View
 import android.view.WindowManager
 import android.widget.Toast
-import androidx.core.app.ActivityOptionsCompat
 import com.mredrock.cyxbs.common.component.CyxbsToast
 
 /**

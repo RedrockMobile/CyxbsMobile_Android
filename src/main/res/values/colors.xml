@@ -308,5 +308,10 @@
 
     <color name="transactionCompletionEditViewColor" tools:ignore="ResourceName">#15315B</color>
 
+    <color name="main_activity_login_et_edited_color" tools:ignore="ResourceName">#333333</color>
+
+    <color name="main_activity_login_et_hint_color" tools:ignore="ResourceName">#999999</color>
+
+
 </resources>
 

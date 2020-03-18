@@ -3,7 +3,6 @@ package com.mredrock.cyxbs.common.ui
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
-import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.event.LoginStateChangeEvent
 import com.mredrock.cyxbs.common.utils.LogUtils
 import com.umeng.analytics.MobclickAgent

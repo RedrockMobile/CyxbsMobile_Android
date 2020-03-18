@@ -299,5 +299,8 @@
     <!--没课约选择学生页面背景-->
     <color name="no_class_select_student_page_background" tools:ignore="ResourceName">#2D2D2D</color>
 
+    <color name="main_activity_login_et_edited_color" tools:ignore="ResourceName">#ffffff</color>
+
+
 </resources>
 

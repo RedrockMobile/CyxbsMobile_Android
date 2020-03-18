@@ -2,14 +2,12 @@ package com.mredrock.cyxbs.common.ui
 
 //import com.jude.swipbackhelper.SwipeBackHelper
 import android.app.Activity
-import android.content.res.Configuration
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.view.Menu
 import android.view.View
-import android.view.WindowManager
 import androidx.annotation.DrawableRes
 import androidx.appcompat.app.AppCompatActivity
 import com.afollestad.materialdialogs.MaterialDialog
@@ -17,12 +15,10 @@ import com.alibaba.android.arouter.launcher.ARouter
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.R
 import com.mredrock.cyxbs.common.component.JToolbar
-import com.mredrock.cyxbs.common.config.MAIN_SPLASH
 import com.mredrock.cyxbs.common.event.AskLoginEvent
 import com.mredrock.cyxbs.common.event.LoginEvent
 import com.mredrock.cyxbs.common.event.LoginStateChangeEvent
 import com.mredrock.cyxbs.common.utils.LogUtils
-import com.mredrock.cyxbs.common.utils.extensions.getDarkModeStatus
 import com.umeng.analytics.MobclickAgent
 import kotlinx.android.synthetic.main.common_toolbar.*
 import org.greenrobot.eventbus.EventBus
@@ -51,6 +47,7 @@ abstract class BaseActivity : AppCompatActivity() {
 //        SwipeBackHelper.onCreate(this)
 //        SwipeBackHelper.getCurrentPage(this).setSwipeRelateEnable(true)
         initFlag()
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out)
         LogUtils.v(TAG, javaClass.name)
     }
 
@@ -76,6 +73,11 @@ abstract class BaseActivity : AppCompatActivity() {
                 window.statusBarColor = Color.TRANSPARENT
             }
         }
+    }
+
+    override fun finish() {
+        super.finish()
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out)
     }
 
     inline fun <reified T : Activity> startActivity(finish: Boolean = false, vararg params: Pair<String, Any?>) {
@@ -165,25 +167,6 @@ abstract class BaseActivity : AppCompatActivity() {
         EventBus.getDefault().register(this)
     }
 
-    override fun onConfigurationChanged(newConfig: Configuration) {
-        super.onConfigurationChanged(newConfig)
-        if (getDarkModeStatus() != BaseApp.isNightMode) {
-            BaseApp.isNightMode = getDarkModeStatus()
-            MaterialDialog.Builder(this)
-                    .title("是否重启应用？")
-                    .content("检测到你切换了显示模式，需要重启app才能完全正常显示")
-                    .positiveText("立即重启")
-                    .negativeText("稍后自己重启")
-                    .autoDismiss(false)
-                    .onPositive { _, _ ->
-                        finishAffinity();
-                        ARouter.getInstance().build(MAIN_SPLASH).navigation();
-                        finish()
-                    }.onNegative{ materialDialog, _ ->
-                        materialDialog.dismiss()
-                    }.show()
-        }
-    }
 
     override fun onResume() {
         super.onResume()
