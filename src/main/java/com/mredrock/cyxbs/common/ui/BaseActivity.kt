@@ -6,6 +6,7 @@ import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
+import android.os.PersistableBundle
 import android.view.Menu
 import android.view.View
 import androidx.annotation.DrawableRes
@@ -30,10 +31,15 @@ import org.jetbrains.anko.startActivity
  * Created By jay68 on 2018/8/9.
  */
 abstract class BaseActivity : AppCompatActivity() {
-    companion object {
-        @JvmField
-        val TAG: String = BaseActivity::class.java.simpleName
-    }
+
+    /**
+     * 这里可以开启生命周期的Log，你可以重写这个值并给值为true，
+     * 也可以直接赋值为true（赋值的话请在init{}里面赋值或者在onCreate的super.onCreate(savedInstanceState)调用之前赋值）
+     */
+    open protected var isOpenLifeCycleLog = false
+
+    //当然，你要定义自己的TAG方便在Log里面找也可以重写这个
+    open protected var TAG: String = this::class.java.simpleName
 
     /**
      * service for umeng
@@ -48,7 +54,7 @@ abstract class BaseActivity : AppCompatActivity() {
 //        SwipeBackHelper.getCurrentPage(this).setSwipeRelateEnable(true)
         initFlag()
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out)
-        LogUtils.v(TAG, javaClass.name)
+        lifeCycleLog("onCreate")
     }
 
     private fun initFlag() {
@@ -162,9 +168,16 @@ abstract class BaseActivity : AppCompatActivity() {
         LogUtils.d("LoginStateChangeEvent", "in" + localClassName + "login state: " + event.loginState + "")
     }
 
+    override fun onRestart() {
+        super.onRestart()
+        lifeCycleLog("onRestart")
+    }
+
+
     override fun onStart() {
         super.onStart()
         EventBus.getDefault().register(this)
+        lifeCycleLog("onStart")
     }
 
 
@@ -175,6 +188,7 @@ abstract class BaseActivity : AppCompatActivity() {
             MobclickAgent.onPageStart(javaClass.name)
             LogUtils.d("UMStat", javaClass.name + " started")
         }
+        lifeCycleLog("onResume")
     }
 
     override fun onPause() {
@@ -184,11 +198,33 @@ abstract class BaseActivity : AppCompatActivity() {
             MobclickAgent.onPageEnd(javaClass.name)
             LogUtils.d("UMStat", javaClass.name + " paused")
         }
+        lifeCycleLog("onPause")
     }
 
     override fun onStop() {
         super.onStop()
         EventBus.getDefault().unregister(this)
+        lifeCycleLog("onStop")
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        lifeCycleLog("onDestroy")
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        lifeCycleLog("onSaveInstanceState")
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
+        super.onRestoreInstanceState(savedInstanceState, persistentState)
+        lifeCycleLog("onRestoreInstanceState")
+    }
+
+    fun lifeCycleLog(message:String){
+        if (isOpenLifeCycleLog) {
+            LogUtils.d(TAG, "${this::class.java.simpleName}\$\$${message}")
+        }
+    }
 }

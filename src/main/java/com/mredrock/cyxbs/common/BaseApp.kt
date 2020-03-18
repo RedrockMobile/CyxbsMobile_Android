@@ -23,14 +23,15 @@ open class BaseApp : Application() {
         lateinit var context: Context
             private set
         var startTime: Long = 0
-        var isNightMode = false
+        //当前是不是黑夜模式
+        val isNightMode :Boolean
+        get() = context.getDarkModeStatus()
 
     }
 
     override fun attachBaseContext(base: Context) {
         super.attachBaseContext(base)
         context = base
-        isNightMode = context.getDarkModeStatus()
         startTime = System.currentTimeMillis()
     }
 

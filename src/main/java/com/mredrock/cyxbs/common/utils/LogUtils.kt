@@ -7,6 +7,7 @@ import kotlin.experimental.and
 /**
  * log工具
  * Created by Jay on 2017/10/10.
+ * 这个Log工具打印的Log只会在Debug的时候会出现
  */
 
 object LogUtils {
