@@ -8,7 +8,6 @@ dependencies {
 //    implementation "androidx.viewpager2:viewpager2:1.0.0"
 //    implementation 'com.google.android.material:material:1.2.0-alpha04'
 //    kapt deps.databinding.compiler
-    testImplementation 'junit:junit:4.12'
 }
 android {
     defaultConfig {

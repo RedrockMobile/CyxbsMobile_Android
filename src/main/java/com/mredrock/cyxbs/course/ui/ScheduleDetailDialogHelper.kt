@@ -28,8 +28,8 @@ class ScheduleDetailDialogHelper constructor(context: Context) :
         mScheduleDetailViewAdapter = ScheduleDetailViewAdapter(dialog, schedules)
         val mScheduleDetailView = dialog.findViewById<ScheduleDetailView>(R.id.schedule_detail_view)
         mScheduleDetailView?.scheduleDetailViewAdapter = mScheduleDetailViewAdapter
-        dialog.behavior.peekHeight = 0
+        dialog.getBehavior().peekHeight = 0
         dialog.show()
-        dialog.behavior.state = BottomSheetBehavior.STATE_EXPANDED
+        dialog.getBehavior().state = BottomSheetBehavior.STATE_EXPANDED
     }
 }
