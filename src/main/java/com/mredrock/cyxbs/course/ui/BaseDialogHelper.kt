@@ -1,6 +1,5 @@
 package com.mredrock.cyxbs.course.ui
 
-import android.app.Dialog
 import android.content.Context
 import android.view.LayoutInflater
 import androidx.annotation.LayoutRes

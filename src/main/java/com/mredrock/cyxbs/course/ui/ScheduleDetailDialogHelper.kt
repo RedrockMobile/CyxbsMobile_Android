@@ -3,7 +3,6 @@ package com.mredrock.cyxbs.course.ui
 import android.annotation.SuppressLint
 import android.content.Context
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.mredrock.cyxbs.course.R
 import com.mredrock.cyxbs.course.adapters.ScheduleDetailViewAdapter
 import com.mredrock.cyxbs.course.component.ScheduleDetailView

@@ -22,7 +22,6 @@ import com.mredrock.cyxbs.course.network.Course
 import com.mredrock.cyxbs.course.ui.EditAffairActivity
 import com.mredrock.cyxbs.course.ui.ScheduleDetailDialogHelper
 import com.mredrock.cyxbs.common.utils.ClassRoomParse
-import com.mredrock.cyxbs.common.utils.extensions.startActivityTransition
 import com.mredrock.cyxbs.course.utils.createCornerBackground
 import org.greenrobot.eventbus.EventBus
 import org.jetbrains.anko.textColor
@@ -138,7 +137,7 @@ class ScheduleViewAdapter(private val mActivity: Activity,
         } else {
             return { touchView ->
                 touchView.setOnClickListener {
-                    mActivity.startActivityTransition(Intent(mActivity, EditAffairActivity::class.java).apply {
+                    mActivity.startActivity(Intent(mActivity, EditAffairActivity::class.java).apply {
                         putExtra(EditAffairActivity.WEEK_NUM, mNowWeek)
                         putExtra(EditAffairActivity.TIME_NUM, (touchView.tag ?: 0) as Int)
                     })
