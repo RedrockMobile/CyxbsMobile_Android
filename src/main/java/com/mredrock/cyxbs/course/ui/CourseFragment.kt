@@ -1,5 +1,6 @@
 package com.mredrock.cyxbs.course.ui
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -49,6 +50,15 @@ class CourseFragment : BaseFragment() {
     private lateinit var scheduleView: ScheduleView
 
 
+    override var isOpenLifeCycleLog: Boolean
+        get() = true
+        set(value) {}
+
+    override fun onAttach(context: Context) {
+        TAG = "CourseFragment${arguments?.getInt(WEEK_NUM) ?: 0}"
+        super.onAttach(context)
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         courseContainerEntryFragment = parentFragment as CourseContainerEntryFragment
@@ -67,7 +77,6 @@ class CourseFragment : BaseFragment() {
     private fun initFragment() {
         mBinding.lifecycleOwner = this
         mWeek = arguments?.getInt(WEEK_NUM) ?: 0
-
 
         /**
          * 虽然这里可能有点耦合度高，但是这两个fragment一般是一起用的
@@ -98,17 +107,15 @@ class CourseFragment : BaseFragment() {
         //根据当前课表Fragment被复用的状态，获取相应的课表视图
         scheduleView = when (courseContainerEntryFragment.courseState) {
             CourseContainerEntryFragment.CourseState.OrdinaryCourse, CourseContainerEntryFragment.CourseState.OtherCourse, CourseContainerEntryFragment.CourseState.TeacherCourse -> {
-                val mBinding = DataBindingUtil.inflate<CourseOrdinaryScheduleBinding>(LayoutInflater.from(context), R.layout.course_ordinary_schedule, course_schedule_container, false)
+                val mBinding = DataBindingUtil.inflate<CourseOrdinaryScheduleBinding>(LayoutInflater.from(context), R.layout.course_ordinary_schedule, course_schedule_container, true)
                 mBinding.coursePageViewModel = mCoursePageViewModel
                 mBinding.coursesViewModel = mCoursesViewModel
-                course_schedule_container.addView(mBinding.root)
                 mBinding.scheduleView
             }
             CourseContainerEntryFragment.CourseState.NoClassInvitationCourse -> {
-                val mBinding = DataBindingUtil.inflate<CourseNoClassInviteScheduleBinding>(LayoutInflater.from(context), R.layout.course_no_class_invite_schedule, course_schedule_container, false)
+                val mBinding = DataBindingUtil.inflate<CourseNoClassInviteScheduleBinding>(LayoutInflater.from(context), R.layout.course_no_class_invite_schedule, course_schedule_container, true)
                 mBinding.noCourseInviteViewModel = mNoCourseInviteViewModel
                 mBinding.nowWeek = mWeek
-                course_schedule_container.addView(mBinding.root)
                 mBinding.scheduleView
             }
         }

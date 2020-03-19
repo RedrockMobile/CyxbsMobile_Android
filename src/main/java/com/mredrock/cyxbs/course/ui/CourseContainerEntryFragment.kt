@@ -18,8 +18,6 @@ import com.mredrock.cyxbs.common.bean.WidgetCourse
 import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.common.config.*
 import com.mredrock.cyxbs.common.event.*
-import com.mredrock.cyxbs.common.service.ServiceManager
-import com.mredrock.cyxbs.common.service.account.IAccountService
 import com.mredrock.cyxbs.common.ui.BaseFragment
 import com.mredrock.cyxbs.course.R
 import com.mredrock.cyxbs.course.adapters.ScheduleVPAdapter
@@ -103,6 +101,7 @@ class CourseContainerEntryFragment : BaseFragment() {
 
     //当前Fragment的根布局的Binding
     private lateinit var mBinding: CourseFragmentCourseContainerBinding
+
     //每一周的Viewpager所对应的tab的显示的字符串
     private lateinit var mRawWeeks: Array<String>
     private lateinit var mWeeks: Array<String>
@@ -110,12 +109,6 @@ class CourseContainerEntryFragment : BaseFragment() {
     private val mDialogHelper: ScheduleDetailDialogHelper by lazy(LazyThreadSafetyMode.NONE) {
         ScheduleDetailDialogHelper(context!!)
     }
-
-    //账号服务
-    private val accountService: IAccountService by lazy(LazyThreadSafetyMode.NONE) {
-        ServiceManager.getService(IAccountService::class.java)
-    }
-
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         mBinding = DataBindingUtil.inflate(inflater, R.layout.course_fragment_course_container, container, false)
@@ -185,7 +178,7 @@ class CourseContainerEntryFragment : BaseFragment() {
                 mCoursesViewModel = ViewModelProviders.of(this).get(CoursesViewModel::class.java)
                 mBinding.coursesViewModel = mCoursesViewModel
                 mNoCourseInviteViewModel = ViewModelProviders.of(this,
-                        NoCourseInviteViewModel.Factory(mStuNumList!!, mNameList!!))
+                                NoCourseInviteViewModel.Factory(mStuNumList!!, mNameList!!))
                         .get(NoCourseInviteViewModel::class.java)
                 mNoCourseInviteViewModel?.getCourses()
             }
@@ -309,22 +302,17 @@ class CourseContainerEntryFragment : BaseFragment() {
     private fun settingFollowBottomSheet(state: Float) {
         //todo 给tip小块加上动画的话和BottomSheet一起会有性能问题
 //        mCoursesViewModel.setTipsState(state, course_tip)
-
-        //如果lottie动画还在显示，那么就不现实周数头部，这样加载时更加纯净一点
-        if (course_lottie_load.visibility == View.VISIBLE) {
-            course_current_course_week_select_container.visibility = View.GONE
-        } else {
-            course_current_course_week_select_container.visibility = View.VISIBLE
-        }
         if (course_header_select_content.visibility == View.GONE) {
             course_current_course_container.visibility = View.VISIBLE
             course_current_course_container.alpha = 1 - state
-            course_current_course_week_select_container.alpha = state
+            actionWhenLoaded {
+                course_current_course_week_select_container.alpha = state
+            }
             if (state == 0f) {
                 course_header_select_content.visibility = View.GONE
                 course_header_show.visibility = View.VISIBLE
                 course_current_course_week_select_container.visibility = View.GONE
-            }else if (1 - state == 0f) {
+            } else if (1 - state == 0f) {
                 course_current_course_container.visibility = View.GONE
             }
         } else {
@@ -339,6 +327,16 @@ class CourseContainerEntryFragment : BaseFragment() {
                 course_current_course_week_select_container.alpha = state
                 course_current_course_week_select_container.visibility = View.GONE
             }
+        }
+    }
+
+
+    private fun actionWhenLoaded(action: () -> Unit) {
+        if (vp.adapter == null) {
+            course_current_course_week_select_container.visibility = View.GONE
+        } else {
+            course_current_course_week_select_container.visibility = View.VISIBLE
+            action()
         }
     }
 
@@ -405,23 +403,21 @@ class CourseContainerEntryFragment : BaseFragment() {
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun loadCoursePage(loadCourse: LoadCourse) {
         course_lottie_load.visibility = View.VISIBLE
-        course_lottie_load.playAnimation()
         course_lottie_load.speed = 2f
         course_lottie_load.addAnimatorUpdateListener {
             if (it.animatedFraction > 0.78) {
                 course_lottie_load.pauseAnimation()
-                if (accountService.getVerifyService().isLogin()) {
-                    //给下方ViewPager添加适配器和绑定tab
-                    vp.adapter = mScheduleAdapter
-                    tab_layout.setupWithViewPager(mBinding.vp)
-                    mCoursesViewModel.nowWeek.value?.let { nowWeek ->
-                        vp.currentItem = nowWeek
-                    }
-                    course_lottie_load.visibility = View.GONE
-                    course_current_course_week_select_container.visibility = View.VISIBLE
+                //给下方ViewPager添加适配器和绑定tab
+                vp.adapter = mScheduleAdapter
+                tab_layout.setupWithViewPager(mBinding.vp)
+                mCoursesViewModel.nowWeek.value?.let { nowWeek ->
+                    vp.currentItem = nowWeek
                 }
+                course_lottie_load.visibility = View.GONE
+                course_current_course_week_select_container.visibility = View.VISIBLE
             }
         }
+        course_lottie_load.playAnimation()
     }
 
     /**

@@ -317,9 +317,8 @@ class ScheduleView : FrameLayout {
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
-
         // Get the ScheduleView's size
-        mScheduleViewWidth = measuredWidth
+        mScheduleViewWidth = MeasureSpec.getSize(widthMeasureSpec)
         mScheduleViewHeight = if (px2dip(context.getScreenHeight()) > 700) {
             context.getScreenHeight()
         } else {
@@ -331,6 +330,23 @@ class ScheduleView : FrameLayout {
 
         setMeasuredDimension(mScheduleViewWidth, mScheduleViewHeight)
     }
+
+//    override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
+//        super.onLayout(changed, left, top, right, bottom)
+//        adapter?.let { notNullAdapter ->
+//            // Set the TouchView's OnClickListener
+//            notNullAdapter.setOnTouchViewClickListener()?.let {
+//                initTouchView()
+//                it.invoke(mTouchView)
+//            }
+//
+//            // When we add new courses, remove old values first.
+//            removeAllViews()
+//
+//            addCourseView(notNullAdapter)
+//        }
+//        addNoCourseView()
+//    }
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(event: MotionEvent): Boolean {
