@@ -45,6 +45,6 @@ class BaseAppInitService : IntentService("BaseAppInitService") {
     }
 
     private fun startInit(){
-        CrashHandler.init(applicationContext)
+//        CrashHandler.init(applicationContext)
     }
 }
