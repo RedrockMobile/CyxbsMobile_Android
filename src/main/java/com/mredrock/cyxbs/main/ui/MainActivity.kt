@@ -8,6 +8,7 @@ import android.widget.FrameLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import com.alibaba.android.arouter.facade.annotation.Route
+import com.alibaba.android.arouter.launcher.ARouter
 import com.google.android.material.bottomnavigation.LabelVisibilityMode
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.mredrock.cyxbs.common.BaseApp
@@ -60,11 +61,27 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
             R.drawable.main_ic_mine_unselected, R.drawable.main_ic_mine_selected
     )
 
+    val listFragmentData = listOf(
+            Pair(COURSE_ENTRY,"CourseContainerEntryFragment"),
+            Pair(QA_ENTRY,"QuestionContainerFragment"),
+            Pair(MINE_ENTRY,"UserFragment"),
+            Pair(DISCOVER_ENTRY,"DiscoverHomeFragment")
+    )
+
     //四个需要组装的fragment(懒加载),为啥要加return@lazy呢，这里lint检查原因会爆黄不加也没关系
-    private val courseFragment: Fragment by lazy(LazyThreadSafetyMode.NONE) { return@lazy ServiceManager.getService<Fragment>(COURSE_ENTRY) }
-    private val qaFragment: Fragment by lazy(LazyThreadSafetyMode.NONE) { return@lazy ServiceManager.getService<Fragment>(QA_ENTRY) }
-    private val mineFragment: Fragment by lazy(LazyThreadSafetyMode.NONE) { return@lazy ServiceManager.getService<Fragment>(MINE_ENTRY) }
-    private val discoverFragment: Fragment by lazy(LazyThreadSafetyMode.NONE) { return@lazy ServiceManager.getService<Fragment>(DISCOVER_ENTRY) }
+    private val courseFragment: Fragment by lazy(LazyThreadSafetyMode.NONE) { getFragment(listFragmentData[0]) }
+    private val qaFragment: Fragment by lazy(LazyThreadSafetyMode.NONE) { getFragment(listFragmentData[1]) }
+    private val mineFragment: Fragment by lazy(LazyThreadSafetyMode.NONE) { getFragment(listFragmentData[2]) }
+    private val discoverFragment: Fragment by lazy(LazyThreadSafetyMode.NONE) { getFragment(listFragmentData[3]) }
+
+
+    private fun getFragment(data:Pair<String,String>): Fragment {
+        return if (supportFragmentManager.fragments.entryContains(data.second)==null) {
+            ServiceManager.getService(data.first)
+        } else {
+            supportFragmentManager.fragments.filter { it::class.java.simpleName == data.second }[0]
+        }
+    }
 
     //已经加载好的fragment
     private val showedFragments = mutableListOf<Fragment>()
@@ -72,7 +89,7 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
 
     override var TAG: String = "MainHHHHH"
     override var isOpenLifeCycleLog: Boolean
-        get() = true
+        get() = false
         set(value) {}
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -169,6 +186,7 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
         //如果这个fragment从来没有加载过，则进行添加
         if (!showedFragments.contains(fragment)) {
             showedFragments.add(fragment)
+            if (!supportFragmentManager.fragments.contains(fragment))
             transition.add(R.id.other_fragment_container, fragment)
         }
         transition.show(fragment)
@@ -179,11 +197,14 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
     }
 
     private fun initFragments() {
-        //防止activity由于异常重启导致旧的Fragment显示在新的fragment的下面
-        val transition = supportFragmentManager.beginTransaction()
-        supportFragmentManager.fragments.forEach { transition.remove(it) }
-        transition.commit()
-
+        val transaction = supportFragmentManager.beginTransaction()
+        listFragmentData.forEach {
+            val fragment = supportFragmentManager.fragments.entryContains(it.second)
+            if (fragment != null) {
+                transaction.hide(fragment)
+            }
+        }
+        transaction.commit()
         viewModel.startPage.observe(this, Observer { starPage ->
             viewModel.initStartPage(starPage)
         })
@@ -199,18 +220,31 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
             //这里必须让它GONE，因为这个设置BottomSheet是不会走滑动监听的，否则导致完全显示BottomSheet后依然有下面的tab
             ll_nav_main_container.visibility = GONE
             //加载课表，并在滑动下拉课表容器中添加整个课表
-            supportFragmentManager.beginTransaction().replace(R.id.course_bottom_sheet_content, courseFragment).apply {
+            supportFragmentManager.beginTransaction().apply {
+                if (supportFragmentManager.fragments.entryContains(listFragmentData[0].second) == null) {
+                    add(R.id.course_bottom_sheet_content, courseFragment)
+                }
+                show(courseFragment)
                 commit()
             }
         } else {
             //加载课表并给课表传递值，让它不要直接加载详细的课表，只用加载现在可见的头部就好
             courseFragment.arguments = Bundle().apply { putString(COURSE_DIRECT_LOAD, FALSE) }
-            supportFragmentManager.beginTransaction().replace(R.id.course_bottom_sheet_content, courseFragment).apply {
+            supportFragmentManager.beginTransaction().apply {
+                if (supportFragmentManager.fragments.entryContains(listFragmentData[0].second) == null) {
+                    add(R.id.course_bottom_sheet_content, courseFragment)
+                }
+                show(courseFragment)
                 commit()
             }
         }
         //加载发现
         nav_main.selectedItemId = R.id.explore
+    }
+
+    private fun List<Fragment>.entryContains(entryClassName:String):Fragment?{
+        val list = filter { it::class.java.simpleName == entryClassName }
+        return if (list.isEmpty()) null else list[0]
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
