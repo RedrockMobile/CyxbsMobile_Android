@@ -15,20 +15,12 @@
         android:layout_marginBottom="100dp"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
-
-<!--    这里为什么不用BottomSheetFragment组装进来
-        以减少course模块和main模块BottomSheet滑动监听的交互？
-        原因是BottomSheetFragment本质是利用BottomSheetDialog来封装的
-        弹出后会显示在最上层，直接遮挡下面的三个tab，我暂时没有想到有什么方法可以
-        把某个控件显示到dialog上层的方法，等你来优化解耦吧-->
     <FrameLayout
         android:id="@+id/course_bottom_sheet_content"
-        android:fitsSystemWindows="true"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/bottom_sheet_behavior"
         app:behavior_peekHeight="@dimen/main_main_bottom_navigation_height_twice_as_much">
-
 
     </FrameLayout>
 

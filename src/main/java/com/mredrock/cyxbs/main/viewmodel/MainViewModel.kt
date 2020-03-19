@@ -29,11 +29,6 @@ class MainViewModel : BaseViewModel() {
 
     //进入app是否直接显示课表
     var courseShowState = false
-    var lastState = BottomSheetBehavior.STATE_COLLAPSED
-
-
-    var isFirst = true
-
 
     fun getStartPage() {
         ApiGenerator.getApiService(ApiService::class.java)
@@ -64,27 +59,6 @@ class MainViewModel : BaseViewModel() {
                 .lifeCycle()
     }
 
-
-    fun bottomSheetCallbackBind(bottomSheetBehavior: BottomSheetBehavior<FrameLayout>,
-                                onSlide: (View, Float) -> Unit,
-                                onStateChanged: (View, Int) -> Unit) {
-        bottomSheetBehavior.setBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
-            override fun onSlide(p0: View, p1: Float) {
-                EventBus.getDefault().post(BottomSheetStateEvent(p1))
-                onSlide(p0, p1)
-            }
-            override fun onStateChanged(p0: View, p1: Int) {
-                onStateChanged(p0, p1)
-                //对状态Bottom的状态进行记录，这里只记录了打开和关闭
-                lastState = when (p1) {
-                    BottomSheetBehavior.STATE_EXPANDED -> BottomSheetBehavior.STATE_EXPANDED
-                    BottomSheetBehavior.STATE_COLLAPSED -> BottomSheetBehavior.STATE_COLLAPSED
-                    else -> lastState
-                }
-            }
-        })
-
-    }
 
     fun initStartPage(starPage: StartPage?) {
         if (starPage != null) {
