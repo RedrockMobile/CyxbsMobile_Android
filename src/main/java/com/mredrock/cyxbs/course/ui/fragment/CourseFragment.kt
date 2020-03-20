@@ -1,4 +1,4 @@
-package com.mredrock.cyxbs.course.ui
+package com.mredrock.cyxbs.course.ui.fragment
 
 import android.content.Context
 import android.os.Bundle
@@ -49,10 +49,6 @@ class CourseFragment : BaseFragment() {
 
     private lateinit var scheduleView: ScheduleView
 
-
-    override var isOpenLifeCycleLog: Boolean
-        get() = true
-        set(value) {}
 
     override fun onAttach(context: Context) {
         TAG = "CourseFragment${arguments?.getInt(WEEK_NUM) ?: 0}"

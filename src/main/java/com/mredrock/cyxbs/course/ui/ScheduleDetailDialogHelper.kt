@@ -6,6 +6,7 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.mredrock.cyxbs.course.R
 import com.mredrock.cyxbs.course.adapters.ScheduleDetailViewAdapter
 import com.mredrock.cyxbs.course.component.ScheduleDetailView
+import com.mredrock.cyxbs.course.ui.BaseDialogHelper
 import com.mredrock.cyxbs.course.network.Course
 
 /**

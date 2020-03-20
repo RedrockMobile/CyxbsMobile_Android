@@ -19,7 +19,7 @@ import com.mredrock.cyxbs.course.component.AffairBackgroundView
 import com.mredrock.cyxbs.course.component.ScheduleView
 import com.mredrock.cyxbs.course.event.DismissAddAffairViewEvent
 import com.mredrock.cyxbs.course.network.Course
-import com.mredrock.cyxbs.course.ui.EditAffairActivity
+import com.mredrock.cyxbs.course.ui.activity.AffairEditActivity
 import com.mredrock.cyxbs.course.ui.ScheduleDetailDialogHelper
 import com.mredrock.cyxbs.common.utils.ClassRoomParse
 import com.mredrock.cyxbs.course.utils.createCornerBackground
@@ -137,9 +137,9 @@ class ScheduleViewAdapter(private val mActivity: Activity,
         } else {
             return { touchView ->
                 touchView.setOnClickListener {
-                    mActivity.startActivity(Intent(mActivity, EditAffairActivity::class.java).apply {
-                        putExtra(EditAffairActivity.WEEK_NUM, mNowWeek)
-                        putExtra(EditAffairActivity.TIME_NUM, (touchView.tag ?: 0) as Int)
+                    mActivity.startActivity(Intent(mActivity, AffairEditActivity::class.java).apply {
+                        putExtra(AffairEditActivity.WEEK_NUM, mNowWeek)
+                        putExtra(AffairEditActivity.TIME_NUM, (touchView.tag ?: 0) as Int)
                     })
                 }
             }

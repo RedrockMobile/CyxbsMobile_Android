@@ -14,10 +14,7 @@
         android:theme="@style/AppTheme"
         tools:ignore="AllowBackup,GoogleAppIndexingWarning">
         <activity
-            android:name=".ui.EditAffairActivity"
-            android:launchMode="singleTask" />
-        <activity
-            android:name=".ui.StudentListActivity"
+            android:name=".ui.activity.AffairEditActivity"
             android:launchMode="singleTask" />
     </application>
 

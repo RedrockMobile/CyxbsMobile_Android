@@ -19,7 +19,7 @@ import com.mredrock.cyxbs.course.network.AffairHelper
 import com.mredrock.cyxbs.course.network.Course
 import com.mredrock.cyxbs.course.network.CourseApiService
 import com.mredrock.cyxbs.course.rxjava.ExecuteOnceObserver
-import com.mredrock.cyxbs.course.ui.EditAffairActivity
+import com.mredrock.cyxbs.course.ui.activity.AffairEditActivity
 import org.greenrobot.eventbus.EventBus
 
 /**
@@ -83,16 +83,16 @@ class EditAffairViewModel(application: Application) : AndroidViewModel(applicati
      * 比如说从[com.mredrock.cyxbs.common.component.ScheduleView]中通过点击touchView、已有的事务进来要对其
      * 信息显示初始化。
      *
-     * @param activity [com.mredrock.cyxbs.course.ui.EditAffairActivity]
+     * @param editActivity [com.mredrock.cyxbs.course.ui.EditAffairActivity]
      */
-    fun initData(activity: EditAffairActivity) {
-        observeWork(activity)
-        val intent = activity.intent
+    fun initData(editActivity: AffairEditActivity) {
+        observeWork(editActivity)
+        val intent = editActivity.intent
         //通过点击事务进行修改获取的数据
-        passedAffairInfo = intent.getParcelableExtra(EditAffairActivity.AFFAIR_INFO)
+        passedAffairInfo = intent.getParcelableExtra(AffairEditActivity.AFFAIR_INFO)
         //通过点击touchView进来获取的位置信息
-        val passedWeekPosition = intent.getIntExtra(EditAffairActivity.WEEK_NUM, -1)
-        val passedTimePosition = intent.getIntExtra(EditAffairActivity.TIME_NUM, -1)
+        val passedWeekPosition = intent.getIntExtra(AffairEditActivity.WEEK_NUM, -1)
+        val passedTimePosition = intent.getIntExtra(AffairEditActivity.TIME_NUM, -1)
         getTitleCandidate()
 
         if (passedWeekPosition != -1 && passedTimePosition != -1) {
@@ -115,12 +115,12 @@ class EditAffairViewModel(application: Application) : AndroidViewModel(applicati
     /**
      * 进行绑定设置，在周数、时间和提醒改变后将其存储到对应将要被上传的属性中。
      *
-     * @param activity 该ViewModel所依赖的Activity。这里只是将FragmentActivity作为参数，因此不用担心内存泄漏的问题。
+     * @param editActivity 该ViewModel所依赖的Activity。这里只是将FragmentActivity作为参数，因此不用担心内存泄漏的问题。
      */
-    private fun observeWork(activity: EditAffairActivity) {
+    private fun observeWork(editActivity: AffairEditActivity) {
         // 提醒确定后真正要上传的数据的存储
-        selectedRemindString.observe(activity, Observer {
-            val remindStrings = activity.resources.getStringArray(R.array.course_remind_strings)
+        selectedRemindString.observe(editActivity, Observer {
+            val remindStrings = editActivity.resources.getStringArray(R.array.course_remind_strings)
             val position = remindStrings.indexOf(it)
             setThePostRemind(position)
         })

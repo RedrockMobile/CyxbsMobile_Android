@@ -1,4 +1,4 @@
-package com.mredrock.cyxbs.course.ui
+package com.mredrock.cyxbs.course.ui.fragment
 
 import android.os.Bundle
 import android.view.Gravity
@@ -24,6 +24,7 @@ import com.mredrock.cyxbs.course.adapters.ScheduleVPAdapter
 import com.mredrock.cyxbs.course.databinding.CourseFragmentCourseContainerBinding
 import com.mredrock.cyxbs.course.event.*
 import com.mredrock.cyxbs.course.lifecycle.VPOnPagerChangeObserver
+import com.mredrock.cyxbs.course.ui.ScheduleDetailDialogHelper
 import com.mredrock.cyxbs.course.utils.AffairToCalendar
 import com.mredrock.cyxbs.course.utils.changeLibBeanToCourse
 import com.mredrock.cyxbs.course.viewmodels.CoursesViewModel
@@ -402,23 +403,31 @@ class CourseContainerEntryFragment : BaseFragment() {
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun loadCoursePage(loadCourse: LoadCourse) {
-        course_lottie_load.visibility = View.VISIBLE
-        course_lottie_load.speed = 2f
-        course_lottie_load.addAnimatorUpdateListener {
-            if (it.animatedFraction > 0.78) {
-                course_lottie_load.pauseAnimation()
-                //给下方ViewPager添加适配器和绑定tab
-                vp.adapter = mScheduleAdapter
-                tab_layout.setupWithViewPager(mBinding.vp)
-                mCoursesViewModel.nowWeek.value?.let { nowWeek ->
-                    vp.currentItem = nowWeek
-                }
-                course_lottie_load.visibility = View.GONE
-                course_current_course_week_select_container.visibility = View.VISIBLE
+        val load = {
+            //给下方ViewPager添加适配器和绑定tab
+            vp.adapter = mScheduleAdapter
+            tab_layout.setupWithViewPager(mBinding.vp)
+            mCoursesViewModel.nowWeek.value?.let { nowWeek ->
+                vp.currentItem = nowWeek
             }
         }
-        course_lottie_load.playAnimation()
+        if (loadCourse.isUserSee) {
+            course_lottie_load.visibility = View.VISIBLE
+            course_lottie_load.speed = 2f
+            course_lottie_load.addAnimatorUpdateListener {
+                if (it.animatedFraction > 0.78) {
+                    course_lottie_load.pauseAnimation()
+                    load()
+                    course_lottie_load.visibility = View.GONE
+                    course_current_course_week_select_container.visibility = View.VISIBLE
+                }
+            }
+            course_lottie_load.playAnimation()
+        } else {
+            load()
+        }
     }
+
 
     /**
      * 接收main模块里BottomSheet滑动对应的头部变化

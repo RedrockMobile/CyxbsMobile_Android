@@ -11,7 +11,7 @@
 
         <variable
             name="listeners"
-            type="com.mredrock.cyxbs.course.ui.RemindSelectDialogFragment.RemindSelectListeners" />
+            type="com.mredrock.cyxbs.course.ui.fragment.RemindSelectDialogFragment.RemindSelectListeners" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

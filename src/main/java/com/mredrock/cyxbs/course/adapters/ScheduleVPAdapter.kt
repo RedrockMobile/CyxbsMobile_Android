@@ -5,7 +5,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
 import com.mredrock.cyxbs.common.config.WEEK_NUM
-import com.mredrock.cyxbs.course.ui.CourseFragment
+import com.mredrock.cyxbs.course.ui.fragment.CourseFragment
 
 /**
  * Created by anriku on 2018/8/16.

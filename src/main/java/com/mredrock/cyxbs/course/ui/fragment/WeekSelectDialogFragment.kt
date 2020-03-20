@@ -1,4 +1,4 @@
-package com.mredrock.cyxbs.course.ui
+package com.mredrock.cyxbs.course.ui.fragment
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -9,6 +9,7 @@ import com.mredrock.cyxbs.common.component.RedRockBottomSheetDialog
 import com.mredrock.cyxbs.course.R
 import com.mredrock.cyxbs.course.adapters.WeekSelectRecAdapter
 import com.mredrock.cyxbs.course.databinding.CourseFragmentWeekSelectBinding
+import com.mredrock.cyxbs.course.ui.activity.AffairEditActivity
 import com.mredrock.cyxbs.course.utils.weekSelectCheckBoxState
 import com.mredrock.cyxbs.course.viewmodels.EditAffairViewModel
 import kotlinx.android.synthetic.main.course_activity_edit_affair.*
@@ -40,7 +41,7 @@ class WeekSelectDialogFragment(context: Context) : RedRockBottomSheetDialog(cont
                     mEditAffairViewModel.mPostWeeks.add(k)
                 }
             }
-            (context as EditAffairActivity).tv_week_select.adapter?.view?.refreshData()
+            (context as AffairEditActivity).tv_week_select.adapter?.view?.refreshData()
             dismiss()
         }
         setContentView(mBinding.root)

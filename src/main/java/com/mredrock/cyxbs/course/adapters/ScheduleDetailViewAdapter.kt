@@ -7,7 +7,10 @@ import android.content.Intent
 import android.view.ContextThemeWrapper
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
+import androidx.core.content.ContextCompat
 import com.mredrock.cyxbs.common.BaseApp
+import com.mredrock.cyxbs.common.component.RedRockAutoWarpView
 import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.service.account.IAccountService
@@ -22,11 +25,12 @@ import com.mredrock.cyxbs.course.event.DeleteAffairEvent
 import com.mredrock.cyxbs.course.network.Course
 import com.mredrock.cyxbs.course.network.CourseApiService
 import com.mredrock.cyxbs.course.rxjava.ExecuteOnceObserver
-import com.mredrock.cyxbs.course.ui.EditAffairActivity
+import com.mredrock.cyxbs.course.ui.activity.AffairEditActivity
 import com.mredrock.cyxbs.course.utils.CourseTimeParse
 import kotlinx.android.synthetic.main.course_affair_detail_item.view.*
 import kotlinx.android.synthetic.main.course_course_detail_item.view.*
 import org.greenrobot.eventbus.EventBus
+import org.jetbrains.anko.textColor
 
 /**
  * Created by anriku on 2018/8/21.
@@ -87,8 +91,8 @@ class ScheduleDetailViewAdapter(private val mDialog: Dialog, private val mSchedu
             tv_affair_detail.text = itemViewInfo.classroom
             acb_modify.setOnClickListener {
                 val activity = (mDialog.context as ContextThemeWrapper).baseContext as Activity
-                activity.startActivity(Intent(activity, EditAffairActivity::class.java).apply {
-                    putExtra(EditAffairActivity.AFFAIR_INFO, itemViewInfo)
+                activity.startActivity(Intent(activity, AffairEditActivity::class.java).apply {
+                    putExtra(AffairEditActivity.AFFAIR_INFO, itemViewInfo)
                 })
                 mDialog.dismiss()
             }
@@ -149,8 +153,18 @@ class ScheduleDetailViewAdapter(private val mDialog: Dialog, private val mSchedu
     private fun setCourseContent(itemView: View, itemViewInfo: Course) {
         itemView.apply {
             tv_course_name.apply { text = itemViewInfo.course }
-            tv_course_tech.apply { text = itemViewInfo.teacher }
-            tv_course_classroom.apply { text = itemViewInfo.classroom }
+            val value = object : RedRockAutoWarpView.Adapter() {
+                override fun getItemCount(): Int = 2
+                override fun getItemView(position: Int): View? = TextView(context).apply {
+                    textColor = ContextCompat.getColor(context, R.color.levelTwoFontColor)
+                    textSize = 13f
+                    when (position) {
+                        0 -> text = itemViewInfo.classroom
+                        1 -> text = itemViewInfo.teacher
+                    }
+                }
+            }
+            tv_course_classroom.adapter = value
             tv_course_time.apply {
                 val courseTimeParse = CourseTimeParse(itemViewInfo.hashLesson * 2, itemViewInfo.period)
                 text = """${itemViewInfo.day}  ${courseTimeParse.parseStartCourseTime()}-${courseTimeParse.parseEndCourseTime()}""".trimIndent()

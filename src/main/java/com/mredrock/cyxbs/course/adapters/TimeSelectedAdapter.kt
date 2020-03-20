@@ -3,7 +3,7 @@ package com.mredrock.cyxbs.course.adapters
 import android.view.View
 import com.mredrock.cyxbs.common.component.RedRockAutoWarpView
 import com.mredrock.cyxbs.course.R
-import com.mredrock.cyxbs.course.ui.EditAffairActivity
+import com.mredrock.cyxbs.course.ui.activity.AffairEditActivity
 import kotlinx.android.synthetic.main.course_time_select_auto_warp_item.view.*
 
 /**
@@ -13,11 +13,11 @@ import kotlinx.android.synthetic.main.course_time_select_auto_warp_item.view.*
  * 描述:
  *   事务添加页面事务在一周中的时间的适配器
  */
-class TimeSelectedAdapter(private val timeList: MutableList<Pair<Int, Int>>, val editAffairActivity: EditAffairActivity) : RedRockAutoWarpView.Adapter() {
+class TimeSelectedAdapter(private val timeList: MutableList<Pair<Int, Int>>, val affairEditActivity: AffairEditActivity) : RedRockAutoWarpView.Adapter() {
 
-    private val timeArray = editAffairActivity.mEditAffairViewModel.timeArray
-    private val dayOfWeekArray = editAffairActivity.mEditAffairViewModel.dayOfWeekArray
-    private val mTimeSelectDialogFragment = editAffairActivity.mTimeSelectDialogFragment
+    private val timeArray = affairEditActivity.mEditAffairViewModel.timeArray
+    private val dayOfWeekArray = affairEditActivity.mEditAffairViewModel.dayOfWeekArray
+    private val mTimeSelectDialogFragment = affairEditActivity.mTimeSelectDialogFragment
 
 
     override fun getItemId(position: Int): Int {

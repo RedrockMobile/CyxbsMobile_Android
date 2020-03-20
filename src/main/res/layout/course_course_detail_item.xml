@@ -68,35 +68,20 @@
         app:layout_constraintVertical_bias="0.0"
         tools:text="黄龙姐姐究竟有多美" />
 
-    <TextView
-        android:id="@+id/tv_course_tech"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:textColor="@color/levelTwoFontColor"
-        android:textSize="13sp"
-        app:layout_constraintBottom_toBottomOf="@+id/tv_course_classroom"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toEndOf="@+id/tv_course_classroom"
-        app:layout_constraintTop_toTopOf="@+id/tv_course_classroom"
-        tools:text="JoJo" />
-
-    <TextView
+    <com.mredrock.cyxbs.common.component.RedRockAutoWarpView
         android:id="@+id/tv_course_classroom"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:maxLines="1"
-        android:textColor="@color/levelTwoFontColor"
-        android:textSize="13sp"
+        android:layout_marginEnd="16dp"
+        app:horizontalSpacing="28dp"
+        app:verticalsSpacing="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/tv_course_name"
         app:layout_constraintTop_toBottomOf="@+id/tv_course_name"
-        app:layout_constraintVertical_bias="0.0"
-        tools:text="80万厕所" />
+        app:layout_constraintVertical_bias="0.0" />
 
     <TextView
         android:id="@+id/tv_course_time"

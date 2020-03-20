@@ -1,4 +1,4 @@
-package com.mredrock.cyxbs.course.ui
+package com.mredrock.cyxbs.course.ui.fragment
 
 import android.content.Context
 import android.view.LayoutInflater
