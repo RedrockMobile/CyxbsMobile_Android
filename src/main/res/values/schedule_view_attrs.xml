@@ -16,4 +16,7 @@
         <attr name="isDisplayCourse" format="boolean" />
         <attr name="ScheduleViewStyle" format="reference" tools:ignore="ResourceName" />
     </declare-styleable>
+    <item name="item_position_row" type="id" tools:ignore="ResourceName" />
+    <item name="item_position_column" type="id" tools:ignore="ResourceName" />
+    <item name="item_info" type="id" tools:ignore="ResourceName" />
 </resources>
