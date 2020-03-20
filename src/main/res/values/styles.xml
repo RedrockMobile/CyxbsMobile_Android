@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <style name="tab_style">
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <style name="tab_style" tools:ignore="ResourceName">
         <item name="android:textSize">18sp</item>
 
         <item name="android:unselectedAlpha">0.6</item>
