@@ -100,7 +100,7 @@
         app:layout_constraintTop_toBottomOf="@+id/tv_grades_title"
         app:layout_constraintVertical_bias="0.0" />
 
-    <com.mredrock.cyxbs.discover.grades.utils.widget.GPAgraph
+    <com.mredrock.cyxbs.discover.grades.utils.widget.GpAGraph
         android:id="@+id/gpa_graph"
         android:layout_width="match_parent"
         android:layout_height="300dp"

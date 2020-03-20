@@ -21,10 +21,16 @@ interface ApiService {
                   @Field("idNum") idNum: String,
                   @Field("forceFetch") fetch: Boolean = true): Observable<RedrockApiWrapper<List<Grade>>>
 
+    /**
+     * 获取考试信息（不含补考）
+     */
     @FormUrlEncoded
     @POST("/api/examSchedule")
     fun getExam(@Field("stuNum") stuNum: String): Observable<RedrockApiWrapper<List<Exam>>>
 
+    /**
+     * 获取补考信息
+     */
     @FormUrlEncoded
     @POST("/api/examReexam")
     fun getReExam(@Field("stuNum") stu: String): Observable<RedrockApiWrapper<List<Exam>>>

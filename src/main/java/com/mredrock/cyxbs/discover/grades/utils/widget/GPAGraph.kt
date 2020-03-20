@@ -6,7 +6,6 @@ import android.graphics.*
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
-import androidx.coordinatorlayout.widget.CoordinatorLayout
 import com.mredrock.cyxbs.discover.grades.utils.extension.dp2px
 import org.jetbrains.anko.backgroundColor
 import kotlin.math.abs
@@ -14,7 +13,8 @@ import kotlin.math.abs
 /**
  * Created by roger on 2020/2/11
  */
-class GPAgraph : View {
+@Suppress("NAME_SHADOWING")
+class GpAGraph : View {
 
     constructor(ctx: Context) : this(ctx, null)
 
@@ -25,23 +25,40 @@ class GPAgraph : View {
     }
 
 
-    private lateinit var gpaPaint: Paint
+    //默认的宽高
     private val mWidth: Int = dp2px(100)
     private val mHeight: Int = dp2px(100)
+
     private lateinit var path: Path
     private lateinit var pathBlue: Path
-    private val bottomWidth = dp2px(50)
-    private val topWidth = dp2px(25)
+    //顶部和底部预留的高度
+    private val bottomHeight = dp2px(50)
+    private val topHeight = dp2px(25)
+
     private var segHeight: Int = 0
     private var segWidth: Int = 0
+    //Paint
     private lateinit var dashPaint: Paint
-    private val textArray = arrayListOf("大一上", "大一下", "大二上", "大二下", "大三上", "大三下", "大四上", "大四下")
+    private lateinit var gpaPaint: Paint
     private lateinit var textPaint: Paint
     private lateinit var gradientPaint: Paint
-    private lateinit var linearGradient: LinearGradient
-    var touchPoint: Int? = null
-    var array = arrayListOf<Float>()
     private lateinit var whitePaint: Paint
+
+
+    private lateinit var linearGradient: LinearGradient
+    //用户点击的是textArray中的第几个。例如用户点击"大一上"，touchPoint则为0
+    private var touchPoint: Int? = null
+    private val textArray = arrayListOf("大一上", "大一下", "大二上", "大二下", "大三上", "大三下", "大四上", "大四下")
+
+    /**
+     * 数据
+     */
+    private var originalData = arrayListOf<Float>()   //原始数据
+    private lateinit var mappingData: List<Float>       //经过映射后的数据：通过将array用mappingRule一一映射得到
+
+    //映射规则
+    private var mappingRule: GraphRule = DefaultMappingRule()
+
 
     private fun init() {
         backgroundColor = Color.WHITE
@@ -71,7 +88,31 @@ class GPAgraph : View {
         whitePaint = Paint()
         whitePaint.color = Color.parseColor("#FFFFFFFF")
         whitePaint.style = Paint.Style.FILL
+        //将原始数据转换成元素范围在区间[0,4]的数据
+        mappingData = originalData.map {
+            mappingRule.mappingRule(it)
+        }
 
+    }
+
+    /**
+     * 设置数据
+     */
+    fun setData(newData: ArrayList<Float>) {
+        originalData = newData
+        mappingData = originalData.map {
+            mappingRule.mappingRule(it)
+        }
+    }
+
+    /**
+     * 设置规则
+     */
+    fun setRule(newRule: GraphRule) {
+        mappingRule = newRule
+        mappingData = originalData.map {
+            mappingRule.mappingRule(it)
+        }
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
@@ -85,11 +126,11 @@ class GPAgraph : View {
         canvas.save()
         path.reset()
         pathBlue.reset()
-        canvas.translate(0F, (height - bottomWidth).toFloat())
+        canvas.translate(0F, (height - bottomHeight).toFloat())
 
         drawDashLine(canvas)
         drawText(canvas)
-        if (!array.isNullOrEmpty()) {
+        if (!mappingData.isNullOrEmpty()) {
             drawGPAPath(canvas)
         }
 
@@ -98,10 +139,10 @@ class GPAgraph : View {
 
     private fun drawGPAPath(canvas: Canvas) {
         path.moveTo(0F, -3F * segHeight)
-        for (item in array.withIndex()) {
+        for (item in mappingData.withIndex()) {
             path.lineTo(segWidth * (item.index + 1F), -1 * segHeight * item.value)
         }
-        path.lineTo(width.toFloat(), -1 * array.last() * segHeight)
+        path.lineTo(width.toFloat(), -1 * mappingData.last() * segHeight)
         pathBlue.addPath(path)
 
         path.lineTo(segWidth * 9F, 0F)
@@ -113,7 +154,7 @@ class GPAgraph : View {
 
         //画点
         gpaPaint.style = Paint.Style.FILL
-        for (item in array.withIndex()) {
+        for (item in mappingData.withIndex()) {
             canvas.drawCircle((item.index + 1) * segWidth.toFloat(), -1 * item.value * segHeight.toFloat(), dp2px(5).toFloat(), gpaPaint)
         }
         gpaPaint.style = Paint.Style.STROKE
@@ -121,11 +162,11 @@ class GPAgraph : View {
 
         //如果有touch 的点的话，画touch的点
         touchPoint?.let {
-            if (array.size >= it + 1) {
+            if (mappingData.size >= it + 1) {
                 //先画外面的蓝色
                 gpaPaint.style = Paint.Style.FILL
-                canvas.drawCircle((it + 1) * segWidth.toFloat(), -1 * array[it] * segHeight.toFloat(), dp2px(8).toFloat(), gpaPaint)
-                canvas.drawCircle((it + 1) * segWidth.toFloat(), -1 * array[it] * segHeight.toFloat(), dp2px(4).toFloat(), whitePaint)
+                canvas.drawCircle((it + 1) * segWidth.toFloat(), -1 * mappingData[it] * segHeight.toFloat(), dp2px(8).toFloat(), gpaPaint)
+                canvas.drawCircle((it + 1) * segWidth.toFloat(), -1 * mappingData[it] * segHeight.toFloat(), dp2px(4).toFloat(), whitePaint)
             }
         }
 
@@ -142,21 +183,21 @@ class GPAgraph : View {
 
         textPaint.textSize = dp2px(9).toFloat()
         for (item in textArray.withIndex()) {
-            canvas.drawText(textArray[item.index], (item.index + 1) * segWidth.toFloat(), bottomWidth / 2F, textPaint)
+            canvas.drawText(textArray[item.index], (item.index + 1) * segWidth.toFloat(), bottomHeight / 2F, textPaint)
         }
 
 
         touchPoint?.let {
-            if (array.size >= it + 1) {
+            if (mappingData.size >= it + 1) {
                 textPaint.textSize = dp2px(14).toFloat()
-                canvas.drawText(array[it].toString(), (it + 1) * segWidth.toFloat(), -1 * array[it] * segHeight.toFloat() - dp2px(13), textPaint)
+                canvas.drawText(originalData[it].toString(), (it + 1) * segWidth.toFloat(), -1 * mappingData[it] * segHeight.toFloat() - dp2px(13), textPaint)
             }
         }
     }
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
-        segHeight = (h - bottomWidth - topWidth) / 4
+        segHeight = (h - bottomHeight - topHeight) / 4
         segWidth = w / 9
 
         linearGradient = LinearGradient(0F, 0F, 0F, -1F * h, Color.parseColor("#66FFFFFF"), Color.parseColor("#44A19EFF"), Shader.TileMode.REPEAT)
@@ -167,22 +208,12 @@ class GPAgraph : View {
     override fun onTouchEvent(event: MotionEvent?): Boolean {
 
         val event = event ?: return true
-        when (event.action) {
-            MotionEvent.ACTION_DOWN -> {
-                touchPoint = (event.x / segWidth - 0.5).toInt()
-                postInvalidate()
-                return true
-            }
-            MotionEvent.ACTION_MOVE -> {
-                touchPoint = (event.x / segWidth - 0.5).toInt()
-                postInvalidate()
-                return true
-            }
-            MotionEvent.ACTION_UP -> {
-                touchPoint = (event.x / segWidth - 0.5).toInt()
-                postInvalidate()
-                return true
-            }
+        val newPoint = (event.x / segWidth - 0.5).toInt()
+        if (touchPoint != null && touchPoint == newPoint) {
+            return true
+        } else {
+            touchPoint = (event.x / segWidth - 0.5).toInt()
+            postInvalidate()
         }
         return true
     }
@@ -190,17 +221,12 @@ class GPAgraph : View {
     /**
      * 以下是配合BottomSheet的事件分发部分
      */
-    private var coordinator: CoordinatorLayout? = null
-    fun bindCoordinator(view: CoordinatorLayout) {
-        coordinator = view
-    }
-
     private var childNeed = false
     private var mLastX: Float? = null
     private var mLastY: Float? = null
 
     override fun dispatchTouchEvent(event: MotionEvent?): Boolean {
-        val coordinatorLayout = coordinator ?: return super.dispatchTouchEvent(event)
+        val parent = parent ?: return super.dispatchTouchEvent(event)
         val event = event ?: return super.dispatchTouchEvent(event)
 
         val x = event.x
@@ -214,9 +240,9 @@ class GPAgraph : View {
                         val deltaX = x - lastX
                         val deltaY = y - lastY
                         if (abs(deltaY) - abs(deltaX) > 0.000001F && !childNeed) {
-                            coordinatorLayout.requestDisallowInterceptTouchEvent(false)
+                            parent.requestDisallowInterceptTouchEvent(false)
                         } else if (abs(deltaY) - abs(deltaX) <= 0.000001F) {
-                            coordinatorLayout.requestDisallowInterceptTouchEvent(true)
+                            parent.requestDisallowInterceptTouchEvent(true)
                             childNeed = true
                         }
                     }
@@ -232,5 +258,13 @@ class GPAgraph : View {
         mLastX = x
         mLastY = y
         return super.dispatchTouchEvent(event)
+    }
+
+
+    class DefaultMappingRule : GraphRule() {
+        override fun mappingRule(old: Float): Float {
+            return old
+        }
+
     }
 }
