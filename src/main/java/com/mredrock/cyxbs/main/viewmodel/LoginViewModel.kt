@@ -28,10 +28,10 @@ class LoginViewModel : BaseViewModel() {
 
     fun login(stuNum: String?, idNum: String?, landing: () -> Unit) {
         if (isLanding) return
-        if (stuNum?.length ?: 0 < 10) {
+        if ((stuNum?.length ?: 0) < 10) {
             toastEvent.value = R.string.main_activity_login_not_input_account
             return
-        } else if (idNum?.length ?: 0 < 6) {
+        } else if ((idNum?.length ?: 0) < 6) {
             toastEvent.value = R.string.main_activity_login_not_input_password
             return
         }

@@ -5,6 +5,7 @@ import android.view.MenuItem
 import android.view.View
 import android.view.View.GONE
 import android.widget.FrameLayout
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import com.alibaba.android.arouter.facade.annotation.Route
@@ -36,13 +37,19 @@ import org.jetbrains.anko.topPadding
 @Route(path = MAIN_MAIN)
 class MainActivity : BaseViewModelActivity<MainViewModel>() {
 
+
+    companion object {
+        const val BOTTOM_SHEET_STATE = "BOTTOM_SHEET_STATE"
+        const val NAV_SELECT = "NAV_SELECT"
+    }
+
     override val viewModelClass = MainViewModel::class.java
 
     override val isFragmentActivity = true
 
     /**
      * 这个变量切记千万不能搬到viewModel,这个变量需要跟activity同生共死
-     * 以保障activity异常重启时，这个值会被刷新，activity异常销毁viewModel仍在
+     * 以保障activity异常重启时，这个值会被刷新，activity异常销毁重启viewModel仍在
      */
     private var isLoadCourse = true
     var lastState = BottomSheetBehavior.STATE_COLLAPSED
@@ -61,10 +68,10 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
     )
 
     private val listFragmentData = listOf(
-            Pair(COURSE_ENTRY,"CourseContainerEntryFragment"),
-            Pair(QA_ENTRY,"QuestionContainerFragment"),
-            Pair(MINE_ENTRY,"UserFragment"),
-            Pair(DISCOVER_ENTRY,"DiscoverHomeFragment")
+            Pair(COURSE_ENTRY, "CourseContainerEntryFragment"),
+            Pair(QA_ENTRY, "QuestionContainerFragment"),
+            Pair(MINE_ENTRY, "UserFragment"),
+            Pair(DISCOVER_ENTRY, "DiscoverHomeFragment")
     )
 
     //四个需要组装的fragment(懒加载),为啥要加return@lazy呢，这里lint检查原因会爆黄不加也没关系
@@ -72,15 +79,6 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
     private val qaFragment: Fragment by lazy(LazyThreadSafetyMode.NONE) { getFragment(listFragmentData[1]) }
     private val mineFragment: Fragment by lazy(LazyThreadSafetyMode.NONE) { getFragment(listFragmentData[2]) }
     private val discoverFragment: Fragment by lazy(LazyThreadSafetyMode.NONE) { getFragment(listFragmentData[3]) }
-
-
-    private fun getFragment(data:Pair<String,String>): Fragment {
-        return if (supportFragmentManager.fragments.entryContains(data.second)==null) {
-            ServiceManager.getService(data.first)
-        } else {
-            supportFragmentManager.fragments.filter { it::class.java.simpleName == data.second }[0]
-        }
-    }
 
     //已经加载好的fragment
     private val showedFragments = mutableListOf<Fragment>()
@@ -152,6 +150,7 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
             setTextSize(11f)
             setIconSize(dip(21))
             setItemIconTintList(null)
+            nav_main.itemTextColor
             nav_main.setOnNavigationItemSelectedListener { menuItem ->
                 preCheckedItem.setIcon(icons[peeCheckedItemPosition * 2])
                 preCheckedItem = menuItem
@@ -179,7 +178,7 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
     private fun changeFragment(fragment: Fragment, position: Int, menuItem: MenuItem) {
         val transition = supportFragmentManager.beginTransaction()
         //遍历隐藏已经加载的fragment
-        listFragmentData.filter {listFragmentData[0] != it}.forEach {
+        listFragmentData.filter { listFragmentData[0] != it }.forEach {
             val fragment1 = supportFragmentManager.fragments.entryContains(it.second)
             if (fragment1 != null) {
                 transition.hide(fragment1)
@@ -236,9 +235,39 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
         nav_main.selectedItemId = R.id.explore
     }
 
-    private fun List<Fragment>.entryContains(entryClassName:String):Fragment?{
+    private fun List<Fragment>.entryContains(entryClassName: String): Fragment? {
         val list = filter { it::class.java.simpleName == entryClassName }
         return if (list.isEmpty()) null else list[0]
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putInt(BOTTOM_SHEET_STATE, bottomSheetBehavior.state)
+        outState.putInt(NAV_SELECT, nav_main.selectedItemId)
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        super.onRestoreInstanceState(savedInstanceState)
+        nav_main.selectedItemId = savedInstanceState.getInt(NAV_SELECT)
+        if (savedInstanceState.getInt(BOTTOM_SHEET_STATE) == BottomSheetBehavior.STATE_EXPANDED && !viewModel.courseShowState) {
+            bottomSheetBehavior.state = savedInstanceState.getInt(BOTTOM_SHEET_STATE)
+            EventBus.getDefault().post(LoadCourse(false))
+            EventBus.getDefault().post(BottomSheetStateEvent(1f))
+            ll_nav_main_container.visibility = View.GONE
+            isLoadCourse = false
+        } else if (savedInstanceState.getInt(BOTTOM_SHEET_STATE) == BottomSheetBehavior.STATE_COLLAPSED && viewModel.courseShowState){
+            bottomSheetBehavior.state = savedInstanceState.getInt(BOTTOM_SHEET_STATE)
+            EventBus.getDefault().post(BottomSheetStateEvent(0f))
+            ll_nav_main_container.visibility = View.VISIBLE
+        }
+    }
+
+    private fun getFragment(data: Pair<String, String>): Fragment {
+        return if (supportFragmentManager.fragments.entryContains(data.second) == null) {
+            ServiceManager.getService(data.first)
+        } else {
+            supportFragmentManager.fragments.filter { it::class.java.simpleName == data.second }[0]
+        }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

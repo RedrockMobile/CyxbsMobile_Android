@@ -29,6 +29,7 @@ open class BottomNavigationViewHelper(nav: BottomNavigationView) {
 
     private fun reflectBottomNavigationMenuView() = getField(bottomNavigationView, "menuView") as? BottomNavigationMenuView
 
+    @Suppress("UNCHECKED_CAST")
     private fun reflectBottomNavigationItemViews(): Array<BottomNavigationItemView>? {
         val array = getField(menuView, "buttons") as? Array<BottomNavigationItemView>
         shiftAmount = getField(array?.get(0), "shiftAmount") as? Int ?: 0
@@ -95,6 +96,10 @@ open class BottomNavigationViewHelper(nav: BottomNavigationView) {
 
     fun setItemIconTintList(colorStateList: ColorStateList?) {
         bottomNavigationView.itemIconTintList = colorStateList
+    }
+
+    fun setItemTextColor(colorStateList: ColorStateList?){
+        bottomNavigationView.itemTextColor = colorStateList
     }
 
     private fun getField(obj: Any?, fieldName: String): Any? {
