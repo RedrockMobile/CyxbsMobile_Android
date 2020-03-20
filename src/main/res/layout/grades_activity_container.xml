@@ -36,7 +36,7 @@
         app:shadowFlags="top"
         app:shadowRadius="45dp">
 
-        <include layout="@layout/grades_fragment" />
+        <include layout="@layout/grades_bottom_sheet" />
 
     </com.mredrock.cyxbs.common.component.JCardViewPlus>
 
