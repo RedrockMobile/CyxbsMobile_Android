@@ -5,11 +5,13 @@ import android.appwidget.AppWidgetProvider
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
-import android.view.View
 import android.widget.RemoteViews
 import android.widget.Toast
 import androidx.annotation.IdRes
+import androidx.core.content.edit
 import com.alibaba.android.arouter.launcher.ARouter
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.mredrock.cyxbs.common.bean.WidgetCourse
 import com.mredrock.cyxbs.common.config.MAIN_MAIN
 import com.mredrock.cyxbs.common.event.WidgetCourseEvent
@@ -30,9 +32,14 @@ import kotlin.collections.ArrayList
 class NormalWidget : AppWidgetProvider() {
 
     private val shareName = "zscy_widget_normal"
+    private val courseData = "courseData"
+
+
     //生成calendar
     private val calendar = Calendar.getInstance()
+    private var gson = Gson()
     private var list = ArrayList<CourseStatus.Course>()
+
     companion object {
         private var lastClickTime: Long = 0//用于记录点击时间
         //用于保存每一条刷新的课程，多个方法都要使用，若非静态，其他方法无法调用到正确数据
@@ -57,7 +64,6 @@ class NormalWidget : AppWidgetProvider() {
 
             val offsetTime = context.defaultSharedPreferences.getInt(shareName, 0)
 
-
             when (rId) {
                 R.id.widget_normal_back -> {
                     context.defaultSharedPreferences.editor {
@@ -76,7 +82,6 @@ class NormalWidget : AppWidgetProvider() {
                         putInt(shareName, 0)
                     }
                     fresh(context, 0)
-//                    Toast.makeText(context, "已刷新", Toast.LENGTH_SHORT).show()
                 }
             }
             if (isDoubleClick()) {
@@ -84,36 +89,29 @@ class NormalWidget : AppWidgetProvider() {
             }
         }
         if (intent.action == "btn.start.com") {
-            fresh(context,0)//在应用没有打开的时候点击跳转需要刷新一下数据
+            list = gson.fromJson(context.defaultSharedPreferences.getString(courseData,""),object : TypeToken<ArrayList<CourseStatus.Course>>(){}.type)
             val newList = mutableListOf<WidgetCourse.DataBean>()
-            list.forEach {it->
+            list.forEach {
                 newList.add(changeCourseToWidgetCourse(it))
             }
-            val size = newList.size
             when (rId) {
                 R.id.widget_normal_layout1 -> {
-                    if(size < 1||newList[0].hash_lesson==EmptyCourseObject) return
-                    startOperation(newList[0])
+                    startOperation(newList.filter { it.hash_lesson==0 }[0])
                 }
                 R.id.widget_normal_layout2 -> {
-                    if(size < 2) return
-                    startOperation(newList[1])
+                    startOperation(newList.filter { it.hash_lesson==1 }[0])
                 }
                 R.id.widget_normal_layout3 -> {
-                    if(size < 3) return
-                    startOperation(newList[2])
+                    startOperation(newList.filter { it.hash_lesson==2 }[0])
                 }
                 R.id.widget_normal_layout4 -> {
-                    if(size < 4) return
-                    startOperation(newList[3])
+                    startOperation(newList.filter { it.hash_lesson==3 }[0])
                 }
                 R.id.widget_normal_layout5 -> {
-                    if(size < 5) return
-                    startOperation(newList[4])
+                    startOperation(newList.filter { it.hash_lesson==4 }[0])
                 }
                 R.id.widget_normal_layout6 -> {
-                    if(size < 6) return
-                    startOperation(newList[5])
+                    startOperation(newList.filter { it.hash_lesson==5 }[0])
                 }
             }
         }
@@ -129,18 +127,19 @@ class NormalWidget : AppWidgetProvider() {
         val time = System.currentTimeMillis()
         val anotherTime = time - lastClickTime
 
-        if (anotherTime < 600) {
+        if (anotherTime < 200) {
             return true
         }
         lastClickTime = time
         return false
     }
 
+
     /**
      * 刷新，传入offsetTime作为今天的偏移量
      */
-    fun fresh(context: Context, offsetTime: Int) {
-        try{//catch异常，避免课表挂了之后这边跟着挂
+    private fun fresh(context: Context, offsetTime: Int) {
+        try {//catch异常，避免课表挂了之后这边跟着挂
             val nowHour = calendar.get(Calendar.HOUR_OF_DAY)
             calendar.set(Calendar.DATE, calendar.get(Calendar.DATE) + offsetTime)
 
@@ -148,12 +147,12 @@ class NormalWidget : AppWidgetProvider() {
             list = getCourseByCalendar(context, calendar)
                     ?: getErrorCourseList()
 
-            if (list.isEmpty()) {
-                list.add(getNoCourse())
-            }
+            val rv = RemoteViews(context.packageName, R.layout.widget_normal)
 
             //如果课已经上完了，而且过了晚上7点，显示明天的课程
             if (nowHour > 19) {
+                //显示星期几
+                rv.setTextViewText(R.id.widget_normal_title, "明")
                 var i = 0
                 list.forEach {
                     val hour = getStartCalendarByNum(it.hash_lesson).get(Calendar.HOUR_OF_DAY)
@@ -170,35 +169,52 @@ class NormalWidget : AppWidgetProvider() {
                     list.clear()
                     list.addAll(tomorrowList)
                 }
+            }else{
+                //显示星期几
+                val text = if (Calendar.getInstance()[Calendar.DAY_OF_WEEK] == calendar[Calendar.DAY_OF_WEEK]) "今" else getWeekDayChineseName(calendar.get(Calendar.DAY_OF_WEEK))
+                rv.setTextViewText(R.id.widget_normal_title, text)
             }
-
-            val rv = RemoteViews(context.packageName, R.layout.widget_normal)
-
-            //显示星期几
-            rv.setTextViewText(R.id.widget_normal_title, getWeekDayChineseName(calendar.get(Calendar.DAY_OF_WEEK)))
 
             //显示课程
-            var index = 1
             list.forEach { course ->
-                rv.setViewVisibility(getLayoutId(index), View.VISIBLE)
-                rv.setTextViewText(getTimeId(index),if (course.hash_lesson!=-1) formatTime(getStartCalendarByNum(course.hash_lesson)) else "")
-                rv.setTextViewText(getCourseId(index), course.course)
-                rv.setTextViewText(getRoomId(index), filterClassRoom(course.classroom!!))
-                rv.setOnClickPendingIntent(getLayoutId(index),
-                        getClickPendingIntent(context, getLayoutId(index), "btn.start.com", javaClass))
-                index++
+                val num = course.hash_lesson + 1
+                rv.setTextViewText(getCourseId(num), course.course)
+                rv.setTextViewText(getRoomId(num), filterClassRoom(course.classroom!!))
+                rv.setOnClickPendingIntent(getLayoutId(num),
+                        getClickPendingIntent(context, getLayoutId(num), "btn.start.com", javaClass))
             }
-            //隐藏后面的item
-            for (i in index..6) {
-                rv.setViewVisibility(getLayoutId(i), View.GONE)
+
+            val map = list.map { it.hash_lesson }
+            MutableList(6) { it }.filter { !map.contains(it) }.forEach {
+                val num = it + 1
+                rv.setTextViewText(getCourseId(num), "")
+                rv.setTextViewText(getRoomId(num), "")
+                rv.setOnClickPendingIntent(getLayoutId(num),
+                        getClickPendingIntent(context, getLayoutId(num), "", javaClass))
             }
 
             //设置前后按钮操作
             addClickPendingIntent(rv, context)
 
             show(rv, context)
-        }catch (e:Exception){
+            context.defaultSharedPreferences.editor {
+                putString(courseData,gson.toJson(list))
+            }
+        } catch (e: Exception) {
             e.printStackTrace()
+        }
+    }
+
+    private fun getWeekDayChineseName(weekDay: Int): String {
+        return when (weekDay) {
+            1 -> "天"
+            2 -> "一"
+            3 -> "二"
+            4 -> "三"
+            5 -> "四"
+            6 -> "五"
+            7 -> "六"
+            else -> "null"
         }
     }
 
@@ -240,33 +256,6 @@ class NormalWidget : AppWidgetProvider() {
             }
             else -> {
                 return R.id.widget_normal_layout1
-            }
-        }
-    }
-
-    @IdRes
-    private fun getTimeId(num: Int): Int {
-        when (num) {
-            1 -> {
-                return R.id.widget_normal_time1
-            }
-            2 -> {
-                return R.id.widget_normal_time2
-            }
-            3 -> {
-                return R.id.widget_normal_time3
-            }
-            4 -> {
-                return R.id.widget_normal_time4
-            }
-            5 -> {
-                return R.id.widget_normal_time5
-            }
-            6 -> {
-                return R.id.widget_normal_time6
-            }
-            else -> {
-                return R.id.widget_normal_time1
             }
         }
     }

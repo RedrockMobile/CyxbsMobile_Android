@@ -1,27 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@color/whiteBackground"
     android:orientation="vertical"
-    android:padding="16dp">
+    android:padding="20dp">
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/widget_course_margin"
-        android:text="hhhhhh" />
+        android:layout_gravity="center_horizontal"
+        android:gravity="center_horizontal"
+        android:textSize="22sp"
+        android:text="该小部件为预上线测试版，可能随时会下线，是否确认添加？"
+        android:textColor="@color/levelTwoFontColor" />
 
-    <EditText
-        android:id="@+id/appwidget_text"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:inputType="text" />
-
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/add_button"
         android:layout_width="wrap_content"
+        android:background="@drawable/shape_day_week_backgroud"
+        android:textColor="#ffffff"
+        android:layout_gravity="center_horizontal"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/widget_course_margin"
-        android:text="@string/add_widget" />
+        android:layout_marginTop="35dp"
+        android:layout_marginBottom="16dp"
+        android:baselineAligned="false"
+        android:text="同意添加" />
 
 </LinearLayout>

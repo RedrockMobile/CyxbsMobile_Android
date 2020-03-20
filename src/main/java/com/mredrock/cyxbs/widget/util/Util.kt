@@ -167,13 +167,13 @@ fun getStartCalendarByNum(hash_lesson: Int): Calendar {
 
 fun getWeekDayChineseName(weekDay: Int): String {
     return when (weekDay) {
-        1 -> "星期天"
-        2 -> "星期一"
-        3 -> "星期二"
-        4 -> "星期三"
-        5 -> "星期四"
-        6 -> "星期五"
-        7 -> "星期六"
+        1 -> "周日"
+        2 -> "周一"
+        3 -> "周二"
+        4 -> "周三"
+        5 -> "周四"
+        6 -> "周五"
+        7 -> "周六"
         else -> "null"
     }
 }

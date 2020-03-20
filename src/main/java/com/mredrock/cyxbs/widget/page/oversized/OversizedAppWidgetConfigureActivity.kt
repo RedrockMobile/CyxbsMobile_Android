@@ -5,7 +5,10 @@ import android.appwidget.AppWidgetManager
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.Gravity
 import android.view.View
+import android.view.ViewGroup
+import android.view.WindowManager
 import android.widget.EditText
 import com.mredrock.cyxbs.widget.R
 import com.mredrock.cyxbs.widget.widget.oversize.updateAppWidget
@@ -15,13 +18,13 @@ import com.mredrock.cyxbs.widget.widget.oversize.updateAppWidget
  */
 class OversizedAppWidgetConfigureActivity : Activity() {
     private var appWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID
-    private lateinit var appWidgetText: EditText
+//    private lateinit var appWidgetText: EditText
     private var onClickListener = View.OnClickListener {
         val context = this@OversizedAppWidgetConfigureActivity
 
         // When the button is clicked, store the string locally
-        val widgetText = appWidgetText.text.toString()
-        saveTitlePref(context, appWidgetId, widgetText)
+//        val widgetText = appWidgetText.text.toString()
+//        saveTitlePref(context, appWidgetId, widgetText)
 
         // It is the responsibility of the configuration activity to update the app widget
         val appWidgetManager = AppWidgetManager.getInstance(context)
@@ -42,7 +45,9 @@ class OversizedAppWidgetConfigureActivity : Activity() {
         setResult(RESULT_CANCELED)
 
         setContentView(R.layout.widget_oversized_app_widget_configure)
-        appWidgetText = findViewById<View>(R.id.appwidget_text) as EditText
+        window.setLayout(WindowManager.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+        window.attributes.gravity = Gravity.BOTTOM
+//        appWidgetText = findViewById<View>(R.id.appwidget_text) as EditText
         findViewById<View>(R.id.add_button).setOnClickListener(onClickListener)
 
         // Find the widget id from the intent.
@@ -59,7 +64,7 @@ class OversizedAppWidgetConfigureActivity : Activity() {
             return
         }
 
-        appWidgetText.setText(loadTitlePref(this@OversizedAppWidgetConfigureActivity, appWidgetId))
+//        appWidgetText.setText(loadTitlePref(this@OversizedAppWidgetConfigureActivity, appWidgetId))
     }
 
 }
