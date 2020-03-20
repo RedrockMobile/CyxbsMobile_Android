@@ -25,7 +25,7 @@ import com.mredrock.cyxbs.common.utils.extensions.visible
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.bean.Content
 import com.mredrock.cyxbs.qa.pages.answer.viewmodel.AnswerViewModel
-import com.mredrock.cyxbs.qa.ui.activity.ViewImageActivity
+import com.mredrock.cyxbs.qa.ui.activity.ViewImageCropActivity
 import com.mredrock.cyxbs.qa.ui.widget.CommonDialog
 import com.mredrock.cyxbs.qa.utils.CHOOSE_PHOTO_REQUEST
 import com.mredrock.cyxbs.qa.utils.selectImageFromAlbum
@@ -110,7 +110,7 @@ class AnswerActivity : BaseViewModelActivity<AnswerViewModel>() {
         nine_grid_view_question.apply {
             setImages(photoUrl)
             setOnItemClickListener { _, index ->
-                ViewImageActivity.activityStart(context, photoUrl[index])
+                ViewImageCropActivity.activityStart(context, photoUrl[index])
             }
             gone()
         }
@@ -157,7 +157,7 @@ class AnswerActivity : BaseViewModelActivity<AnswerViewModel>() {
             if (index == nine_grid_view.childCount - 1) {
                 this@AnswerActivity.selectImageFromAlbum(MAX_SELECTABLE_IMAGE_COUNT, viewModel.imageLiveData.value)
             } else {
-                ViewImageActivity.activityStartForResult(this@AnswerActivity, viewModel.tryEditImg(index)
+                ViewImageCropActivity.activityStartForResult(this@AnswerActivity, viewModel.tryEditImg(index)
                         ?: return@setOnItemClickListener)
             }
         }
@@ -205,8 +205,8 @@ class AnswerActivity : BaseViewModelActivity<AnswerViewModel>() {
 
         when (requestCode) {
             CHOOSE_PHOTO_REQUEST -> viewModel.setImageList(LPhotoPickerActivity.getSelectedPhotos(data))
-            ViewImageActivity.DEFAULT_RESULT_CODE -> viewModel.setImageList(viewModel.imageLiveData.value!!.apply {
-                set(viewModel.editingImgPos, data.getStringExtra(ViewImageActivity.EXTRA_NEW_PATH))
+            ViewImageCropActivity.DEFAULT_RESULT_CODE -> viewModel.setImageList(viewModel.imageLiveData.value!!.apply {
+                set(viewModel.editingImgPos, data.getStringExtra(ViewImageCropActivity.EXTRA_NEW_PATH))
             })
         }
     }

@@ -34,7 +34,7 @@ class CommentListHeaderRvAdapter(
                 tv_answer_create_at.text = timeDescription(System.currentTimeMillis(), data.createdAt)
                 ngv_answer.setImages(data.photoUrl)
                 ngv_answer.setOnItemClickListener { _, index ->
-                    ViewImageActivity.activityStart(context, data.photoUrl[index])
+                    ViewImageActivity.activityStart(context, data.photoUrl.toTypedArray(), index)
                 }
                 setAdoptedTv(tv_adopted, tv_adopt, data.isAdopted, removeAdoptIcon)
                 tv_adopt.setOnClickListener {

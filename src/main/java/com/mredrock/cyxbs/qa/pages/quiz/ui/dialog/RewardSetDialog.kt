@@ -11,7 +11,7 @@ import android.widget.RelativeLayout
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.mredrock.cyxbs.qa.R
-import com.mredrock.cyxbs.qa.pages.quiz.ui.RewardSetAdapter
+import com.mredrock.cyxbs.qa.pages.quiz.ui.adpter.RewardSetAdapter
 import com.mredrock.cyxbs.qa.utils.toFormatString
 import kotlinx.android.synthetic.main.qa_dialog_question_reward_set.*
 import top.limuyang2.photolibrary.util.getScreenWidth

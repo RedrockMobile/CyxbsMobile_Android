@@ -6,9 +6,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.ImageView
-import androidx.annotation.IntDef
 import androidx.core.view.forEach
 import com.mredrock.cyxbs.common.utils.extensions.loadRedrockImage
+import com.mredrock.cyxbs.qa.R
 import org.jetbrains.anko.dip
 
 /**
@@ -26,9 +26,11 @@ class NineGridView(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : 
      */
     private var arrangement = MODE_NORMAL
 
-    @Retention(AnnotationRetention.SOURCE)
-    @IntDef(MODE_FILL, MODE_NORMAL)
-    annotation class Arrangement
+    init {
+        val typeArrayList = context.obtainStyledAttributes(attrs, intArrayOf(R.attr.arrangementMode))
+        arrangement = typeArrayList.getInt(R.styleable.NineGridView_arrangementMode, MODE_NORMAL)
+        typeArrayList.recycle()
+    }
 
     /**
      * 水平方向间距

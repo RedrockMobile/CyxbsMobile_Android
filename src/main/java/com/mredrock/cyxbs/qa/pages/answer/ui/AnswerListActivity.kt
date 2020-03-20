@@ -189,8 +189,8 @@ class AnswerListActivity : BaseActivity() {
 
         bottomViewEvent.observe {
             when {
-                it == null -> fl_answer.gone()
-                it -> fl_answer.gone()
+                it == null -> btn_answer.gone()
+                it -> btn_answer.gone()
                 else -> switchToHelper()
             }
         }
@@ -223,8 +223,8 @@ class AnswerListActivity : BaseActivity() {
     }
 
     private fun switchToHelper() {
-        fl_answer.visible()
-        fl_answer.setOnClickListener {
+        btn_answer.visible()
+        btn_answer.setOnClickListener {
             AnswerActivity.activityStart(this@AnswerListActivity, viewModel.questionLiveData.value?.id
                     ?: "", viewModel.questionLiveData.value?.description
                     ?: "", viewModel.questionLiveData.value?.photoUrl

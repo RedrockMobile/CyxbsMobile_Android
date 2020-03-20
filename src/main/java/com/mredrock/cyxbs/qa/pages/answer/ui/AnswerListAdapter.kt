@@ -3,6 +3,7 @@ package com.mredrock.cyxbs.qa.pages.answer.ui
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.service.account.IAccountService
@@ -13,11 +14,13 @@ import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.bean.Answer
 import com.mredrock.cyxbs.qa.component.recycler.BaseEndlessRvAdapter
 import com.mredrock.cyxbs.qa.component.recycler.BaseViewHolder
+import com.mredrock.cyxbs.qa.ui.activity.ViewImageActivity
 import com.mredrock.cyxbs.qa.utils.setInvisibleCondition
 import com.mredrock.cyxbs.qa.utils.setPraise
 import com.mredrock.cyxbs.qa.utils.setVisibleCondition
 import com.mredrock.cyxbs.qa.utils.timeDescription
 import kotlinx.android.synthetic.main.qa_recycler_item_answer.view.*
+import org.jetbrains.anko.textColor
 
 /**
  * Created By jay68 on 2018/9/30.
@@ -77,7 +80,15 @@ class AnswerListAdapter : BaseEndlessRvAdapter<Answer>(DIFF_CALLBACK) {
                 iv_answer_avatar.setAvatarImageFromUrl(data.photoThumbnailSrc)
                 tv_answer_nickname.text = data.nickname
                 tv_adopted.setVisibleCondition(data.isAdopted)
-                tv_answer_content.text = data.content
+                if (data.content.isEmpty()) {
+                    tv_answer_content.apply {
+                        text = context.getString(R.string.qa_answer_photo_count, data.photoUrl.size.toString())
+                        textColor = ContextCompat.getColor(context, R.color.qa_answer_empty_content_color)
+                        setOnClickListener { ViewImageActivity.activityStart(context, data.photoUrl.toTypedArray(), 0) }
+                    }
+                } else {
+                    tv_answer_content.text = data.content
+                }
                 tv_answer_publish_at.text = timeDescription(System.currentTimeMillis(), data.createdAt)
                 tv_answer_reply_count.text = context.getString(R.string.qa_answer_reply_count, data.commentNum)
                 tv_answer_praise_count.setPraise(data.praiseNum, data.isPraised)

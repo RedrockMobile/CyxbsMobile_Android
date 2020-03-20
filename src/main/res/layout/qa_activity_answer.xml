@@ -60,8 +60,8 @@
                 android:layout_marginEnd="20dp"
                 android:drawableEnd="@drawable/qa_question_describe_show_more_down"
                 android:drawablePadding="3dp"
-                android:textColor="@color/levelTwoFontColor"
                 android:text="@string/qa_answer_question_detail_show_more"
+                android:textColor="@color/levelTwoFontColor"
                 android:textSize="11sp" />
 
             <com.mredrock.cyxbs.qa.ui.widget.NineGridView
@@ -72,7 +72,8 @@
                 android:paddingTop="19dp"
                 android:paddingEnd="15dp"
                 android:paddingBottom="19dp"
-                android:visibility="gone" />
+                android:visibility="gone"
+                app:arrangementMode="fill" />
 
             <com.mredrock.cyxbs.common.component.RatioLayout
                 android:layout_width="match_parent"

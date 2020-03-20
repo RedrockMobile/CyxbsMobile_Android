@@ -23,7 +23,7 @@ class AnswerListHeaderAdapter : BaseRvAdapter<Question>() {
                 tv_question_content.text = data.description
                 ngv_question.setImages(data.photoUrl)
                 ngv_question.setOnItemClickListener { _, index ->
-                    ViewImageActivity.activityStart(context, data.photoUrl[index])
+                    ViewImageActivity.activityStart(context, data.photoUrl.toTypedArray(), index)
                 }
                 iv_questioner_avatar.setAvatarImageFromUrl(data.photoThumbnailSrc)
                 tv_questioner_nickname.text = data.nickname

@@ -1,127 +1,41 @@
 package com.mredrock.cyxbs.qa.ui.activity
 
-import android.app.Activity
 import android.content.Context
-import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
-import android.os.Environment
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
-import androidx.fragment.app.Fragment
-import com.bumptech.glide.Glide
-import com.bumptech.glide.request.RequestOptions
-import com.mredrock.cyxbs.common.config.DIR
 import com.mredrock.cyxbs.common.utils.extensions.setFullScreen
-import com.mredrock.cyxbs.common.utils.extensions.toast
-import com.mredrock.cyxbs.common.utils.extensions.visible
 import com.mredrock.cyxbs.qa.R
-import com.yalantis.ucrop.UCrop
+import com.mredrock.cyxbs.qa.ui.adapter.HackyViewPagerAdapter
 import kotlinx.android.synthetic.main.qa_activity_view_image.*
 import org.jetbrains.anko.startActivity
-import org.jetbrains.anko.startActivityForResult
-import org.jetbrains.anko.support.v4.startActivityForResult
-import java.io.File
 
+/**
+ * Created by yyfbe, Date on 2020/3/20.
+ * 将图片点击放大独立出来，实现左右滑动功能
+ */
 class ViewImageActivity : AppCompatActivity() {
     companion object {
-        const val DEFAULT_RESULT_CODE = 0x1248
-        const val EXTRA_NEW_PATH = "extra_new_path"
-        private const val NEED_RESULT = "needResult"
-        private const val IMG_RES_PATH = "imgResPath"
-        fun activityStart(context: Context, imgResUrl: String) {
-            context.startActivity<ViewImageActivity>(IMG_RES_PATH to imgResUrl)
-        }
+        private const val IMG_RES_PATHS = "imgResPaths"
+        private const val POSITION = "position"
 
-        fun activityStartForResult(context: Activity, imgResPath: String, resultCode: Int = DEFAULT_RESULT_CODE) {
-            context.startActivityForResult<ViewImageActivity>(resultCode, IMG_RES_PATH to imgResPath, NEED_RESULT to true)
-        }
-
-        fun activityStartForResult(context: Fragment, imgResPath: String, resultCode: Int = DEFAULT_RESULT_CODE) {
-            context.startActivityForResult<ViewImageActivity>(resultCode, IMG_RES_PATH to imgResPath, NEED_RESULT to true)
+        fun activityStart(context: Context, imgResUrls: Array<String>, position: Int) {
+            context.startActivity<ViewImageActivity>(IMG_RES_PATHS to imgResUrls, POSITION to position)
         }
     }
 
-
-    private var needResult: Boolean = false
-    private var imgResPath: String = ""
-
+    private var imgUrls: Array<String>? = null
+    private var position: Int = 0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.qa_activity_view_image)
-
         setFullScreen()
-
-        needResult = intent.getBooleanExtra(NEED_RESULT, false)
-        imgResPath = intent.getStringExtra(IMG_RES_PATH)
-
-        if (needResult) {
-            edit.visible()
-            edit.setOnClickListener {
-                startCropActivity()
-            }
+        imgUrls = intent?.extras?.getStringArray(IMG_RES_PATHS)
+        position = intent.getIntExtra(POSITION, 0)
+        if (!imgUrls.isNullOrEmpty()) {
+            hc_vp.adapter = HackyViewPagerAdapter(imgUrls)
+            hc_vp.currentItem = position
         }
 
-        Glide.with(this)
-                .load(imgResPath)
-                .apply(RequestOptions()
-                        .placeholder(com.mredrock.cyxbs.common.R.drawable.common_place_holder)
-                        .error(com.mredrock.cyxbs.common.R.drawable.common_place_holder))
-                .into(iv)
-    }
-
-    private val resultPath by lazy {
-        val path = File(StringBuilder(Environment.getExternalStorageDirectory().path)
-                .append(DIR)
-                .append(File.separatorChar)
-                .append("crop")
-                .toString())
-        if (!path.exists()) {
-            path.mkdirs()
-        }
-        path
-    }
-    private var cropResultFilePath: File? = null
-    private fun getNewResultUri(): Uri {
-        val name = StringBuilder(imgResPath.split(File.separatorChar).last().split(".").first())
-                .append(System.currentTimeMillis())
-                .append(".png")
-                .toString()
-        cropResultFilePath = File(resultPath, name)
-        return Uri.fromFile(cropResultFilePath)
-    }
-
-    private fun startCropActivity() = UCrop.of(Uri.fromFile(File(imgResPath)), getNewResultUri())
-            .withOptions(UCrop.Options().apply {
-                setLogoColor(ContextCompat.getColor(this@ViewImageActivity, R.color.qa_crop_logo))
-                setToolbarColor(
-                        ContextCompat.getColor(this@ViewImageActivity, R.color.colorPrimaryDark))
-                setStatusBarColor(
-                        ContextCompat.getColor(this@ViewImageActivity, R.color.colorPrimaryDark))
-            })
-            .start(this)
-
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == UCrop.RESULT_ERROR && data != null) {
-            val cropError = UCrop.getError(data)
-            if (cropError != null) {
-                toast(cropError.message.toString())
-            } else {
-                toast("Unexpected error")
-            }
-        } else if (resultCode == Activity.RESULT_OK && data != null) {
-            imgResPath = cropResultFilePath?.absolutePath ?: ""
-            Glide.with(this)
-                    .load(imgResPath)
-                    .apply(RequestOptions().placeholder(com.mredrock.cyxbs.common.R.drawable.common_place_holder)
-                            .error(com.mredrock.cyxbs.common.R.drawable.common_place_holder))
-                    .into(iv)
-            setResult(Activity.RESULT_OK, Intent().putExtra(EXTRA_NEW_PATH, imgResPath))
-        } else {
-            toast("无法获得裁剪结果")
-        }
     }
 
 }

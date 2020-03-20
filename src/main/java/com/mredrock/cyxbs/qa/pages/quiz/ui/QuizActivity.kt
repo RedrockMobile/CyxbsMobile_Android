@@ -27,7 +27,7 @@ import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.bean.Question
 import com.mredrock.cyxbs.qa.pages.quiz.QuizViewModel
 import com.mredrock.cyxbs.qa.pages.quiz.ui.dialog.RewardSetDialog
-import com.mredrock.cyxbs.qa.ui.activity.ViewImageActivity
+import com.mredrock.cyxbs.qa.ui.activity.ViewImageCropActivity
 import com.mredrock.cyxbs.qa.ui.widget.CommonDialog
 import com.mredrock.cyxbs.qa.utils.CHOOSE_PHOTO_REQUEST
 import com.mredrock.cyxbs.qa.utils.selectImageFromAlbum
@@ -148,7 +148,7 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
             if (index == nine_grid_view.childCount - 1) {
                 this@QuizActivity.selectImageFromAlbum(MAX_SELECTABLE_IMAGE_COUNT, viewModel.imageLiveData.value)
             } else {
-                ViewImageActivity.activityStartForResult(this@QuizActivity, viewModel.tryEditImg(index)
+                ViewImageCropActivity.activityStartForResult(this@QuizActivity, viewModel.tryEditImg(index)
                         ?: return@setOnItemClickListener)
             }
         }
@@ -195,8 +195,8 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
         }
         when (requestCode) {
             CHOOSE_PHOTO_REQUEST -> viewModel.setImageList(LPhotoPickerActivity.getSelectedPhotos(data))
-            ViewImageActivity.DEFAULT_RESULT_CODE -> viewModel.setImageList(viewModel.imageLiveData.value!!.apply {
-                set(viewModel.editingImgPos, data.getStringExtra(ViewImageActivity.EXTRA_NEW_PATH))
+            ViewImageCropActivity.DEFAULT_RESULT_CODE -> viewModel.setImageList(viewModel.imageLiveData.value!!.apply {
+                set(viewModel.editingImgPos, data.getStringExtra(ViewImageCropActivity.EXTRA_NEW_PATH))
             })
         }
     }

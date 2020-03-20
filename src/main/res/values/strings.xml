@@ -7,6 +7,7 @@
     <string name="qa_loading_from_mine_unknown_error">未知错误</string>
     <string name="qa_answer_reply_hint">回复</string>
     <string name="qa_answer_reply_count">%1$s条回复</string>
+    <string name="qa_answer_photo_count">查看%1$s张照片</string>
     <string name="qa_answer_list_accepted">已解决</string>
     <string name="qa_answer_list_accept">采纳</string>z
     <string name="qa_answer_list_no_answer_hint">还没有回答哦~</string>

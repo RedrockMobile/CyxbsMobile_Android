@@ -1,4 +1,4 @@
-package com.mredrock.cyxbs.qa.pages.quiz.ui
+package com.mredrock.cyxbs.qa.pages.quiz.ui.adpter
 
 import android.view.LayoutInflater
 import android.view.View
