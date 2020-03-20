@@ -2,7 +2,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <color name="colorPrimary" tools:ignore="ResourceName">#000000</color>
     <color name="colorPrimaryDark" tools:ignore="ResourceName">#000000</color>
-    <color name="colorAccent" tools:ignore="ResourceName">#000000</color>
+    <color name="colorAccent" tools:ignore="ResourceName">#ffffff</color>
 
     <!--    颜色汇总，方便黑夜模式，自己把用到的颜色，都扔在这，写好注释，并在飞书上标注好
           并以模块名为前缀-->
@@ -301,6 +301,7 @@
 
     <color name="main_activity_login_et_edited_color" tools:ignore="ResourceName">#ffffff</color>
 
+    <color name="transactionCompletionEditViewColor" tools:ignore="ResourceName">#ffffff</color>
 
 </resources>
 
