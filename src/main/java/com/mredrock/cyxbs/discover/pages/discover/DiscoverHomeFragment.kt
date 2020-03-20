@@ -12,6 +12,7 @@ import android.widget.TextView
 import android.widget.ViewFlipper
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatTextView
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.widget.ViewPager2
 import com.alibaba.android.arouter.facade.annotation.Route
@@ -19,7 +20,6 @@ import com.alibaba.android.arouter.launcher.ARouter
 import com.mredrock.cyxbs.common.config.*
 import com.mredrock.cyxbs.common.event.CurrentDateInformationEvent
 import com.mredrock.cyxbs.common.ui.BaseViewModelFragment
-import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.discover.R
 import com.mredrock.cyxbs.discover.utils.BannerAdapter
 import com.mredrock.cyxbs.discover.utils.MoreFunctionProvider
@@ -32,6 +32,7 @@ import org.greenrobot.eventbus.ThreadMode
  * 2019/11/20
  */
 var isFeedLoaded = false
+
 @Route(path = DISCOVER_ENTRY)
 class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>() {
 
@@ -54,10 +55,6 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>() {
         initFeeds()
     }
 
-
-    override fun onStart() {
-        super.onStart()
-    }
 
     override fun onResume() {
         super.onResume()
@@ -128,7 +125,7 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>() {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 setTextColor(context.resources.getColor(R.color.menuFontColorFound, context.theme))
             } else {
-                setTextColor(context.resources.getColor(R.color.menuFontColorFound))
+                setTextColor(ContextCompat.getColor(context,R.color.menuFontColorFound))
             }
 //            textColor = R.color.menuFontColorFound
             setOnClickListener {
@@ -159,7 +156,7 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>() {
 
     private fun initFeeds() {
         //让feed只加载一次，在 activity重建时会导致重复加载，没有找到更好的解决方案 TODO 换一种方案解决重复加载的问题
-         if(!isFeedLoaded){
+        if (!isFeedLoaded) {
             addFeedByRoute(DISCOVER_ELECTRICITY_FEED)
             addFeedByRoute(DISCOVER_VOLUNTEER_FEED)
         }
