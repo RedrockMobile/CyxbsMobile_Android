@@ -8,7 +8,6 @@ import android.widget.FrameLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import com.alibaba.android.arouter.facade.annotation.Route
-import com.alibaba.android.arouter.launcher.ARouter
 import com.google.android.material.bottomnavigation.LabelVisibilityMode
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.mredrock.cyxbs.common.BaseApp
@@ -54,14 +53,14 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
     private lateinit var navHelpers: BottomNavigationViewHelper
     private lateinit var preCheckedItem: MenuItem
     private var peeCheckedItemPosition = 0
-    val menuIdList = listOf(R.id.explore, R.id.qa, R.id.mine)
+    private val menuIdList = listOf(R.id.explore, R.id.qa, R.id.mine)
     private val icons = arrayOf(
             R.drawable.main_ic_explore_unselected, R.drawable.main_ic_explore_selected,
             R.drawable.main_ic_qa_unselected, R.drawable.main_ic_qa_selected,
             R.drawable.main_ic_mine_unselected, R.drawable.main_ic_mine_selected
     )
 
-    val listFragmentData = listOf(
+    private val listFragmentData = listOf(
             Pair(COURSE_ENTRY,"CourseContainerEntryFragment"),
             Pair(QA_ENTRY,"QuestionContainerFragment"),
             Pair(MINE_ENTRY,"UserFragment"),
@@ -180,13 +179,14 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
     private fun changeFragment(fragment: Fragment, position: Int, menuItem: MenuItem) {
         val transition = supportFragmentManager.beginTransaction()
         //遍历隐藏已经加载的fragment
-        showedFragments.forEach {
-            transition.hide(it)
+        listFragmentData.filter {listFragmentData[0] != it}.forEach {
+            val fragment1 = supportFragmentManager.fragments.entryContains(it.second)
+            if (fragment1 != null) {
+                transition.hide(fragment1)
+            }
         }
         //如果这个fragment从来没有加载过，则进行添加
-        if (!showedFragments.contains(fragment)) {
-            showedFragments.add(fragment)
-            if (!supportFragmentManager.fragments.contains(fragment))
+        if (!supportFragmentManager.fragments.contains(fragment)) {
             transition.add(R.id.other_fragment_container, fragment)
         }
         transition.show(fragment)
@@ -197,14 +197,6 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
     }
 
     private fun initFragments() {
-        val transaction = supportFragmentManager.beginTransaction()
-        listFragmentData.forEach {
-            val fragment = supportFragmentManager.fragments.entryContains(it.second)
-            if (fragment != null) {
-                transaction.hide(fragment)
-            }
-        }
-        transaction.commit()
         viewModel.startPage.observe(this, Observer { starPage ->
             viewModel.initStartPage(starPage)
         })
@@ -219,6 +211,7 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
             //这里必须让它GONE，因为这个设置BottomSheet是不会走滑动监听的，否则导致完全显示BottomSheet后依然有下面的tab
             ll_nav_main_container.visibility = GONE
+            courseFragment.arguments = Bundle().apply { putString(COURSE_DIRECT_LOAD, TRUE) }
             //加载课表，并在滑动下拉课表容器中添加整个课表
             supportFragmentManager.beginTransaction().apply {
                 if (supportFragmentManager.fragments.entryContains(listFragmentData[0].second) == null) {
@@ -228,6 +221,7 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
                 commit()
             }
         } else {
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
             //加载课表并给课表传递值，让它不要直接加载详细的课表，只用加载现在可见的头部就好
             courseFragment.arguments = Bundle().apply { putString(COURSE_DIRECT_LOAD, FALSE) }
             supportFragmentManager.beginTransaction().apply {
