@@ -152,7 +152,8 @@ class NormalWidget : AppWidgetProvider() {
             //如果课已经上完了，而且过了晚上7点，显示明天的课程
             if (nowHour > 19) {
                 //显示星期几
-                rv.setTextViewText(R.id.widget_normal_title, "明")
+                val text = if (Calendar.getInstance()[Calendar.DAY_OF_WEEK] == calendar[Calendar.DAY_OF_WEEK]) "明" else getWeekDayChineseName(calendar.get(Calendar.DAY_OF_WEEK))
+                rv.setTextViewText(R.id.widget_normal_title, text)
                 var i = 0
                 list.forEach {
                     val hour = getStartCalendarByNum(it.hash_lesson).get(Calendar.HOUR_OF_DAY)
@@ -207,7 +208,7 @@ class NormalWidget : AppWidgetProvider() {
 
     private fun getWeekDayChineseName(weekDay: Int): String {
         return when (weekDay) {
-            1 -> "天"
+            1 -> "七"
             2 -> "一"
             3 -> "二"
             4 -> "三"
