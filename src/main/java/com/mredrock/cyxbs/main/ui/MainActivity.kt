@@ -188,6 +188,7 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
         if (!supportFragmentManager.fragments.contains(fragment)) {
             transition.add(R.id.other_fragment_container, fragment)
         }
+        transition.setCustomAnimations(R.anim.fade_slow_in,R.anim.fade_slow_out)
         transition.show(fragment)
         transition.commit()
         //对tab进行变化
