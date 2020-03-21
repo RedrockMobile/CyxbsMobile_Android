@@ -23,7 +23,7 @@ import com.mredrock.cyxbs.discover.grades.bean.Exam
 import com.mredrock.cyxbs.discover.grades.bean.Grade
 import com.mredrock.cyxbs.discover.grades.ui.adapter.ExamAdapter
 import com.mredrock.cyxbs.discover.grades.ui.adapter.GradesShowAdapter
-import com.mredrock.cyxbs.discover.grades.ui.fragment.bindfragment.BindFragment
+import com.mredrock.cyxbs.discover.grades.ui.fragment.gpafragment.GPAFragment
 import com.mredrock.cyxbs.discover.grades.ui.viewModel.ContainerViewModel
 import com.mredrock.cyxbs.discover.grades.utils.extension.dp2px
 import kotlinx.android.synthetic.main.grades_activity_container.*
@@ -65,7 +65,15 @@ class ContainerActivity : BaseActivity() {
         viewModel = ViewModelProviders.of(this@ContainerActivity).get(ContainerViewModel::class.java)
         initExam()
         initBottomSheet()
+        initObserver()
+    }
 
+    private fun initObserver() {
+        viewModel.replaceBindFragmentToGPAFragment.observe(this@ContainerActivity, Observer {
+            if (it == true) {
+                replaceFragment(GPAFragment())
+            }
+        })
     }
 
     private fun initExam() {
@@ -93,7 +101,8 @@ class ContainerActivity : BaseActivity() {
         initHeader()
 //        initRv()
         initBehavior()
-        replaceFragment(BindFragment())
+
+        replaceFragment(GPAFragment())
     }
 
     private fun initBehavior() {
