@@ -324,6 +324,7 @@ class CourseContainerEntryFragment : BaseFragment() {
                 })
                 course_header_select_content.visibility = View.GONE
                 course_header_show.visibility = View.VISIBLE
+                course_current_course_container.visibility = View.VISIBLE
                 course_current_course_container.alpha = 1 - state
                 course_current_course_week_select_container.alpha = state
                 course_current_course_week_select_container.visibility = View.GONE
