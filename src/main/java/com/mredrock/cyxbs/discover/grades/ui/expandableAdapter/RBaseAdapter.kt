@@ -2,16 +2,25 @@ package com.mredrock.cyxbs.discover.grades.ui.expandableAdapter
 
 import android.content.Context
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.mredrock.cyxbs.common.component.CommonDialogFragment
+import com.mredrock.cyxbs.discover.grades.R
 import com.mredrock.cyxbs.discover.grades.bean.analyze.GPAData
 import com.mredrock.cyxbs.discover.grades.bean.analyze.SingleGrade
 import com.mredrock.cyxbs.discover.grades.bean.analyze.TermGrade
 import com.mredrock.cyxbs.discover.grades.utils.baseRv.BaseHolder
+import kotlinx.android.synthetic.main.grades_dialog_a_credit.view.*
+import kotlinx.android.synthetic.main.grades_item_dialog_a_credit.view.*
 import kotlinx.android.synthetic.main.grades_item_gpa_list_child.view.*
+import kotlinx.android.synthetic.main.grades_item_gpa_list_child.view.tv_grade_score
+import kotlinx.android.synthetic.main.grades_item_gpa_list_header.view.*
 import kotlinx.android.synthetic.main.grades_item_gpa_list_normal_top.view.*
 
 /**
  * Created by roger on 2020/3/22
+ * 一个多type的可以展开的adapter，时间匆忙，没有更多抽象
  */
 class RBaseAdapter(
         val context: Context,
@@ -50,7 +59,14 @@ class RBaseAdapter(
         when (arrayList[position]) {
 
             is HeaderData -> {
-
+                holder.itemView.grades_tv_a_credit_number.text = gpaData.aCredit
+                holder.itemView.grades_tv_b_credit_number.text = gpaData.bCredit
+                holder.itemView.grades_tv_a_credit_number.setOnClickListener {
+                    clickACredit()
+                }
+                holder.itemView.grades_tv_a_credit.setOnClickListener {
+                    clickACredit()
+                }
             }
             is TermGrade -> {
                 val termGrade = arrayList[position] as TermGrade
@@ -73,8 +89,8 @@ class RBaseAdapter(
                 }
             }
             is NormalBottom -> {
+                val bean = arrayList[position] as NormalBottom
                 holder.itemView.setOnClickListener {
-                    val bean = arrayList[position] as NormalBottom
                     if (bean.termGrade.isClose()) {
                         bean.termGrade.status = TermGrade.EXPAND
                     } else {
@@ -94,19 +110,35 @@ class RBaseAdapter(
     }
 
     private fun refreshArrayList() {
+        val oldArray = arrayList
         arrayList = arrayListOf()
 
         arrayList.add(HeaderData())
         for (item in gpaData.termGrade) {
             arrayList.add(item)
             if (!item.isClose()) {
-                for (it in item.singleGrade) {
-                    arrayList.add(it)
-                }
+                arrayList.addAll(item.singleGrade)
             }
             arrayList.add(NormalBottom(item))
         }
-        notifyDataSetChanged()
+        val diffResult = DiffUtil.calculateDiff(object : DiffUtil.Callback() {
+            override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+                return arrayList[newItemPosition] == oldArray[oldItemPosition]
+            }
+
+            override fun getOldListSize(): Int {
+                return oldArray.size
+            }
+
+            override fun getNewListSize(): Int {
+                return arrayList.size
+            }
+
+            override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+                return arrayList[newItemPosition] == oldArray[oldItemPosition]
+            }
+        })
+        diffResult.dispatchUpdatesTo(this)
     }
 
     override fun getItemViewType(position: Int): Int {
@@ -125,5 +157,41 @@ class RBaseAdapter(
             }
         }
         return NORMAL_TOP
+    }
+
+    private fun clickACredit() {
+        val tag = "a_credit"
+        if ((context as AppCompatActivity).supportFragmentManager.findFragmentByTag(tag) == null) {
+            val dialog = CommonDialogFragment().apply {
+                initView(
+                        containerRes = R.layout.grades_dialog_a_credit,
+                        positiveString = "知道了",
+                        onPositiveClick = { dismiss() },
+                        elseFunction = {
+                            val data = gpaData.allCredit
+                            it.tv_a_credit_score.text = gpaData.aCredit
+                            it.grades_compulsory.tv_grade_score.text = data[0].credit
+                            it.grades_compulsory.tv_grade_type.text = data[0].name
+
+                            it.grades_optional.tv_grade_score.text = data[1].credit
+                            it.grades_optional.tv_grade_type.text = data[1].name
+
+                            it.grades_others.tv_grade_score.text = data[2].credit
+                            it.grades_others.tv_grade_type.text = data[2].name
+
+                            it.grades_humanistic.tv_grade_score.text = data[3].credit
+                            it.grades_humanistic.tv_grade_type.text = data[3].name
+
+                            it.grades_natural.tv_grade_score.text = data[4].credit
+                            it.grades_natural.tv_grade_type.text = data[4].name
+
+                            it.grades_cross_functional.tv_grade_score.text = data[5].credit
+                            it.grades_cross_functional.tv_grade_type.text = data[5].name
+
+                        }
+                )
+            }.show(context.supportFragmentManager, tag)
+        }
+
     }
 }

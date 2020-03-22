@@ -41,8 +41,6 @@ class ExamAdapter(val context: Context,
     override fun onBinds(holder: BaseHolder, t: MutableList<Exam>?, position: Int, viewType: Int) {
         when (viewType) {
             NORMAL -> {
-                logr("position 0 = " + t?.get(0).toString())
-                logr("normal + position = " + position)
                 t?.get(position).let { it ->
 
                     it?.let {

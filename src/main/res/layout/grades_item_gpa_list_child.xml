@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="@color/grades_activity_tl_white"
+    android:background="@color/grades_gpa_rv_list_round_corner_background"
     android:orientation="vertical">
 
     <LinearLayout
@@ -18,8 +18,9 @@
             android:layout_height="wrap_content"
             android:layout_weight="7"
             android:gravity="left"
+            android:paddingStart="25dp"
             tools:text="图形创意"
-            android:textColor="@color/grades_fragment_text_color_black"
+            android:textColor="@color/levelTwoFontColor"
             android:textSize="14sp" />
 
         <TextView
@@ -29,7 +30,7 @@
             android:layout_weight="1"
             android:gravity="left"
             tools:text="90"
-            android:textColor="@color/grades_fragment_text_color_black"
+            android:textColor="@color/levelTwoFontColor"
             android:textSize="14sp" />
 
         <TextView
@@ -39,12 +40,16 @@
             android:layout_weight="2"
             android:gravity="right"
             android:text="理论"
-            android:textColor="@color/grades_fragment_text_color_black3"
+            android:paddingEnd="25dp"
+            android:textColor="@color/levelTwoFontColor"
             android:textSize="14sp" />
     </LinearLayout>
 
-    <View
+    <ImageView
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/grades_fragment_item_back_grey" />
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:src="@color/qa_answer_item_divider_color"/>
+
 </LinearLayout>

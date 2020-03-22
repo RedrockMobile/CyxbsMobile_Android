@@ -23,4 +23,8 @@
     <string name="grades_bottom_sheet_gpa_rv_average_grades">平均成绩</string>
     <string name="grades_bottom_sheet_gpa_rv_average_rank">平均排名</string>
     <string name="grades_bottom_sheet_gpa_rv_grades_list_detail">查看各科成绩</string>
+
+    <!--    dialog-->
+    <string name="grades_dialog_a_credit">A学分</string>
+
 </resources>
