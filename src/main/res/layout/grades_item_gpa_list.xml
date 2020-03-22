@@ -16,10 +16,10 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/grades_textview7" />
+        app:layout_constraintTop_toBottomOf="@+id/grades_gpa_list_tv_term" />
 
     <TextView
-        android:id="@+id/grades_textview7"
+        android:id="@+id/grades_gpa_list_tv_term"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="28dp"
@@ -32,7 +32,7 @@
         tools:text="2018-2019第一学期" />
 
     <TextView
-        android:id="@+id/grades_textview6"
+        android:id="@+id/grades_gpa_list_tv_average_credit_num"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
@@ -40,72 +40,73 @@
         android:textColor="@color/levelTwoFontColor"
         android:textSize="24sp"
         android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="@+id/grades_textview3"
-        app:layout_constraintStart_toStartOf="@+id/grades_textview3"
-        app:layout_constraintTop_toBottomOf="@+id/grades_textview7"
+        app:layout_constraintEnd_toEndOf="@+id/grades_gpa_list_tv_average_credit"
+        app:layout_constraintStart_toStartOf="@+id/grades_gpa_list_tv_average_credit"
+        app:layout_constraintTop_toBottomOf="@+id/grades_gpa_list_tv_term"
         tools:text="3.4" />
 
     <TextView
-        android:id="@+id/grades_textview5"
+        android:id="@+id/grades_gpa_list_tv_average_grades_num"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/grades_bottom_sheet_gpa_number_default"
         android:textColor="@color/levelTwoFontColor"
         android:textSize="24sp"
         android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="@+id/grades_textview"
-        app:layout_constraintStart_toStartOf="@+id/grades_textview"
-        app:layout_constraintTop_toTopOf="@+id/grades_textview6"
+        app:layout_constraintEnd_toEndOf="@+id/grades_gpa_list_tv_average_grades"
+        app:layout_constraintStart_toStartOf="@+id/grades_gpa_list_tv_average_grades"
+        app:layout_constraintTop_toTopOf="@+id/grades_gpa_list_tv_average_credit_num"
         tools:text="98" />
 
     <TextView
+        android:id="@+id/grades_gpa_list_tv_average_rank_num"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/grades_bottom_sheet_gpa_number_default"
         android:textColor="@color/levelTwoFontColor"
         android:textSize="24sp"
         android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="@+id/grades_textview4"
-        app:layout_constraintStart_toStartOf="@+id/grades_textview4"
-        app:layout_constraintTop_toTopOf="@+id/grades_textview5"
+        app:layout_constraintEnd_toEndOf="@+id/grades_gpa_list_tv_average_rank"
+        app:layout_constraintStart_toStartOf="@+id/grades_gpa_list_tv_average_rank"
+        app:layout_constraintTop_toTopOf="@+id/grades_gpa_list_tv_average_grades_num"
         tools:text="1024" />
 
     <TextView
-        android:id="@+id/grades_textview3"
+        android:id="@+id/grades_gpa_list_tv_average_credit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="2dp"
         android:text="@string/grades_bottom_sheet_gpa_rv_average_gpa"
         android:textColor="@color/levelTwoFontColor"
-        app:layout_constraintEnd_toStartOf="@+id/grades_textview"
+        app:layout_constraintEnd_toStartOf="@+id/grades_gpa_list_tv_average_grades"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/grades_textview6" />
+        app:layout_constraintTop_toBottomOf="@+id/grades_gpa_list_tv_average_credit_num" />
 
     <TextView
-        android:id="@+id/grades_textview"
+        android:id="@+id/grades_gpa_list_tv_average_grades"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/grades_bottom_sheet_gpa_rv_average_grades"
         android:textColor="@color/levelTwoFontColor"
-        app:layout_constraintEnd_toStartOf="@+id/grades_textview4"
+        app:layout_constraintEnd_toStartOf="@+id/grades_gpa_list_tv_average_rank"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/grades_textview3"
-        app:layout_constraintTop_toTopOf="@+id/grades_textview3" />
+        app:layout_constraintStart_toEndOf="@+id/grades_gpa_list_tv_average_credit"
+        app:layout_constraintTop_toTopOf="@+id/grades_gpa_list_tv_average_credit" />
 
     <TextView
-        android:id="@+id/grades_textview4"
+        android:id="@+id/grades_gpa_list_tv_average_rank"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/grades_bottom_sheet_gpa_rv_average_rank"
         android:textColor="@color/levelTwoFontColor"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/grades_textview"
-        app:layout_constraintTop_toTopOf="@+id/grades_textview" />
+        app:layout_constraintStart_toEndOf="@+id/grades_gpa_list_tv_average_grades"
+        app:layout_constraintTop_toTopOf="@+id/grades_gpa_list_tv_average_grades" />
 
     <TextView
-        android:id="@+id/grades_textview8"
+        android:id="@+id/grades_gpa_list_tv_grades_detail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/grades_bottom_sheet_gpa_rv_grades_list_detail"
@@ -114,17 +115,17 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/grades_textview" />
+        app:layout_constraintTop_toBottomOf="@+id/grades_gpa_list_tv_average_grades" />
 
 
     <ImageView
         android:layout_width="0dp"
         android:layout_height="1dp"
         android:src="@color/qa_answer_item_divider_color"
-        app:layout_constraintBottom_toTopOf="@+id/grades_textview8"
+        app:layout_constraintBottom_toTopOf="@+id/grades_gpa_list_tv_grades_detail"
         app:layout_constraintEnd_toEndOf="@+id/grades_imageview5"
         app:layout_constraintStart_toStartOf="@+id/grades_imageview5"
-        app:layout_constraintTop_toBottomOf="@+id/grades_textview" />
+        app:layout_constraintTop_toBottomOf="@+id/grades_gpa_list_tv_average_grades" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

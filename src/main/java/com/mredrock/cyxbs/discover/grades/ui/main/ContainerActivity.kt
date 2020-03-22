@@ -42,6 +42,17 @@ import kotlinx.android.synthetic.main.grades_bottom_sheet.view.*
 
 @Route(path = DISCOVER_GRADES)
 class ContainerActivity : BaseActivity() {
+    companion object {
+        @JvmStatic
+        val UNDEFINED = 1
+        @JvmStatic
+        val IS_BIND_FRAGMENT = 2
+        @JvmStatic
+        val IS_GPA_FRAGMENT = 3
+    }
+
+    //区分FrameLayout内的fragment的type：未确定，BindFragment，或GPAFragment
+    private var typeOfFragment = UNDEFINED
     //exam
     override val isFragmentActivity = true
     private lateinit var viewModel: ContainerViewModel
@@ -76,15 +87,21 @@ class ContainerActivity : BaseActivity() {
     private fun initObserver() {
         viewModel.replaceBindFragmentToGPAFragment.observe(this@ContainerActivity, Observer {
             if (it == true) {
-                replaceFragment(GPAFragment())
+                viewModel.getAnalyzeData()
             }
         })
         viewModel.analyzeData.observe(this@ContainerActivity, Observer {
             if (it.isSuccessful) {
-                replaceFragment(GPAFragment())
+                if (typeOfFragment != IS_GPA_FRAGMENT) {
+                    typeOfFragment = IS_GPA_FRAGMENT
+                    replaceFragment(GPAFragment())
+                }
             } else {
                 if (it.isNotBind) {
-                    replaceFragment(BindFragment())
+                    if (typeOfFragment != IS_BIND_FRAGMENT) {
+                        typeOfFragment = IS_BIND_FRAGMENT
+                        replaceFragment(BindFragment())
+                    }
                 } else {
                     BaseApp.context.toast("未知错误")
                 }

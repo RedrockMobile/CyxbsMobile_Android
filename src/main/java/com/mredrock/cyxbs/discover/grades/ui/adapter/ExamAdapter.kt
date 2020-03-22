@@ -10,6 +10,7 @@ import com.mredrock.cyxbs.discover.grades.R
 import com.mredrock.cyxbs.discover.grades.bean.Exam
 import com.mredrock.cyxbs.discover.grades.utils.baseRv.BaseAdapter
 import com.mredrock.cyxbs.discover.grades.utils.baseRv.BaseHolder
+import com.mredrock.cyxbs.discover.grades.utils.extension.logr
 import kotlinx.android.synthetic.main.grades_item_exam.view.*
 import java.util.*
 
@@ -40,6 +41,8 @@ class ExamAdapter(val context: Context,
     override fun onBinds(holder: BaseHolder, t: MutableList<Exam>?, position: Int, viewType: Int) {
         when (viewType) {
             NORMAL -> {
+                logr("position 0 = " + t?.get(0).toString())
+                logr("normal + position = " + position)
                 t?.get(position).let { it ->
 
                     it?.let {

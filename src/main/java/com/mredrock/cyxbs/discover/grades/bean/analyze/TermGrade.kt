@@ -8,9 +8,9 @@ import java.io.Serializable
  */
 data class TermGrade(
         val term: String,
-        val gpa: Double,
-        val grade: Double,
-        val rank: Int,
+        val gpa: String,
+        val grade: String,
+        val rank: String,
         @SerializedName("singe_grades")
         val singleGrade: List<SingleGrade>
 ) : Serializable
