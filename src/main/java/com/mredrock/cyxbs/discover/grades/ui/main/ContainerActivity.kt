@@ -18,12 +18,16 @@ import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.service.account.IAccountService
 import com.mredrock.cyxbs.common.service.account.IUserService
 import com.mredrock.cyxbs.common.ui.BaseActivity
+import com.mredrock.cyxbs.common.utils.extensions.toast
 import com.mredrock.cyxbs.discover.grades.R
 import com.mredrock.cyxbs.discover.grades.bean.Exam
 import com.mredrock.cyxbs.discover.grades.bean.Grade
+import com.mredrock.cyxbs.discover.grades.bean.analyze.isNotBind
+import com.mredrock.cyxbs.discover.grades.bean.analyze.isSuccessful
 import com.mredrock.cyxbs.discover.grades.ui.adapter.ExamAdapter
 import com.mredrock.cyxbs.discover.grades.ui.adapter.GradesShowAdapter
-import com.mredrock.cyxbs.discover.grades.ui.fragment.gpafragment.GPAFragment
+import com.mredrock.cyxbs.discover.grades.ui.fragment.BindFragment
+import com.mredrock.cyxbs.discover.grades.ui.fragment.GPAFragment
 import com.mredrock.cyxbs.discover.grades.ui.viewModel.ContainerViewModel
 import com.mredrock.cyxbs.discover.grades.utils.extension.dp2px
 import kotlinx.android.synthetic.main.grades_activity_container.*
@@ -66,6 +70,7 @@ class ContainerActivity : BaseActivity() {
         initExam()
         initBottomSheet()
         initObserver()
+        viewModel.getAnalyzeData()
     }
 
     private fun initObserver() {
@@ -74,6 +79,18 @@ class ContainerActivity : BaseActivity() {
                 replaceFragment(GPAFragment())
             }
         })
+        viewModel.analyzeData.observe(this@ContainerActivity, Observer {
+            if (it.isSuccessful) {
+                replaceFragment(GPAFragment())
+            } else {
+                if (it.isNotBind) {
+                    replaceFragment(BindFragment())
+                } else {
+                    BaseApp.context.toast("未知错误")
+                }
+            }
+        })
+
     }
 
     private fun initExam() {
@@ -101,8 +118,6 @@ class ContainerActivity : BaseActivity() {
         initHeader()
 //        initRv()
         initBehavior()
-
-        replaceFragment(GPAFragment())
     }
 
     private fun initBehavior() {

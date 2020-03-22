@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="150dp">
+
+    <ImageView
+        android:id="@+id/grades_imageview5"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="9dp"
+        android:layout_marginEnd="16dp"
+        android:src="@drawable/grades_gpa_shape_blue_round_corner"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/grades_textview7" />
+
+    <TextView
+        android:id="@+id/grades_textview7"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="28dp"
+        android:layout_marginTop="10dp"
+        android:textColor="@color/levelTwoFontColor"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="2018-2019第一学期" />
+
+    <TextView
+        android:id="@+id/grades_textview6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="@string/grades_bottom_sheet_gpa_number_default"
+        android:textColor="@color/levelTwoFontColor"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@+id/grades_textview3"
+        app:layout_constraintStart_toStartOf="@+id/grades_textview3"
+        app:layout_constraintTop_toBottomOf="@+id/grades_textview7"
+        tools:text="3.4" />
+
+    <TextView
+        android:id="@+id/grades_textview5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/grades_bottom_sheet_gpa_number_default"
+        android:textColor="@color/levelTwoFontColor"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@+id/grades_textview"
+        app:layout_constraintStart_toStartOf="@+id/grades_textview"
+        app:layout_constraintTop_toTopOf="@+id/grades_textview6"
+        tools:text="98" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/grades_bottom_sheet_gpa_number_default"
+        android:textColor="@color/levelTwoFontColor"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@+id/grades_textview4"
+        app:layout_constraintStart_toStartOf="@+id/grades_textview4"
+        app:layout_constraintTop_toTopOf="@+id/grades_textview5"
+        tools:text="1024" />
+
+    <TextView
+        android:id="@+id/grades_textview3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:text="@string/grades_bottom_sheet_gpa_rv_average_gpa"
+        android:textColor="@color/levelTwoFontColor"
+        app:layout_constraintEnd_toStartOf="@+id/grades_textview"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/grades_textview6" />
+
+    <TextView
+        android:id="@+id/grades_textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/grades_bottom_sheet_gpa_rv_average_grades"
+        android:textColor="@color/levelTwoFontColor"
+        app:layout_constraintEnd_toStartOf="@+id/grades_textview4"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/grades_textview3"
+        app:layout_constraintTop_toTopOf="@+id/grades_textview3" />
+
+    <TextView
+        android:id="@+id/grades_textview4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/grades_bottom_sheet_gpa_rv_average_rank"
+        android:textColor="@color/levelTwoFontColor"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/grades_textview"
+        app:layout_constraintTop_toTopOf="@+id/grades_textview" />
+
+    <TextView
+        android:id="@+id/grades_textview8"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/grades_bottom_sheet_gpa_rv_grades_list_detail"
+        android:textColor="@color/qa_answer_content_edt_hint_color"
+        android:textSize="8sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/grades_textview" />
+
+
+    <ImageView
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:src="@color/qa_answer_item_divider_color"
+        app:layout_constraintBottom_toTopOf="@+id/grades_textview8"
+        app:layout_constraintEnd_toEndOf="@+id/grades_imageview5"
+        app:layout_constraintStart_toStartOf="@+id/grades_imageview5"
+        app:layout_constraintTop_toBottomOf="@+id/grades_textview" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -7,5 +7,5 @@ import java.io.Serializable
  */
 data class Credit(
         val name: String,
-        val credit: Double
+        val credit: String
 ) : Serializable

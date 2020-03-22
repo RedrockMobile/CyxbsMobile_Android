@@ -1,4 +1,4 @@
-package com.mredrock.cyxbs.discover.grades.ui.fragment.bindfragment
+package com.mredrock.cyxbs.discover.grades.ui.fragment
 
 import android.os.Bundle
 import android.view.LayoutInflater

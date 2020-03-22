@@ -11,6 +11,6 @@ data class TermGrade(
         val gpa: Double,
         val grade: Double,
         val rank: Int,
-        @SerializedName("singeGrade")
+        @SerializedName("singe_grades")
         val singleGrade: List<SingleGrade>
 ) : Serializable

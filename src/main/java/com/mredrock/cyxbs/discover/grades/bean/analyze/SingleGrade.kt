@@ -14,11 +14,11 @@ data class SingleGrade(
         @SerializedName("class_type")
         val classType: String,
         @SerializedName("credit")
-        val credit: Double,
+        val credit: String,
         @SerializedName("exam_type")
         val examType: String,
         @SerializedName("grade")
-        val grade: Double,
+        val grade: String,
         @SerializedName("gpa")
-        val gpa: Double
+        val gpa: String
 ) : Serializable

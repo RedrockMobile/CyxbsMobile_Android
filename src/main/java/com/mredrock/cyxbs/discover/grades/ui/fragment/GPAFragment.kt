@@ -1,10 +1,11 @@
-package com.mredrock.cyxbs.discover.grades.ui.fragment.gpafragment
+package com.mredrock.cyxbs.discover.grades.ui.fragment
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.mredrock.cyxbs.discover.grades.R
 import com.mredrock.cyxbs.discover.grades.ui.viewModel.ContainerViewModel
@@ -27,7 +28,9 @@ class GPAFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.getAnalyzeData()
+        viewModel.analyzeData.observe(this, Observer {
+
+        })
 
     }
 }
