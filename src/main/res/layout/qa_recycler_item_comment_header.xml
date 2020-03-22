@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/qa_comment_header_background_color"
     android:orientation="vertical">
 
@@ -100,9 +100,11 @@
         android:id="@+id/ngv_answer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingStart="16dp"
         android:paddingTop="19dp"
+        android:paddingEnd="16dp"
         android:paddingBottom="19dp"
-        app:arrangementMode="fill"/>
+        app:arrangementMode="fill" />
 
     <View
         android:layout_width="match_parent"

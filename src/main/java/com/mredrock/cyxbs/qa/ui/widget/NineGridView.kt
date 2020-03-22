@@ -68,7 +68,7 @@ class NineGridView(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : 
     }
 
     private fun measureInFillMode(parentWidth: Int) {
-        val widthLeft = parentWidth - paddingLeft - paddingTop
+        val widthLeft = parentWidth - paddingLeft - paddingRight
         val childWidth = when (childCount) {
             1 -> widthLeft
             2, 3, 4 -> ((widthLeft - horizontalGap) / 2).toInt()
@@ -87,7 +87,7 @@ class NineGridView(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : 
     }
 
     private fun measureInNormalMode(parentWidth: Int) {
-        val widthLeft = parentWidth - paddingLeft - paddingTop
+        val widthLeft = parentWidth - paddingLeft - paddingRight
         val childWidth = ((widthLeft - horizontalGap * 2) / 3).toInt()
         val childHeight: Int = (childWidth / childSizeRatio).toInt()
         forEach { it.measure(getMeasureSpec(childWidth), getMeasureSpec(childHeight)) }
@@ -106,7 +106,7 @@ class NineGridView(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : 
         forEach {
             var right = left + it.measuredWidth
             var bottom = top + it.measuredHeight
-            if (right - paddingLeft >= measuredWidth - paddingRight) {
+            if (right - paddingLeft > measuredWidth - paddingRight) {
                 //这时候应该换到下一行
                 top += it.measuredHeight + verticalGap.toInt()
                 left = paddingLeft

@@ -15,11 +15,12 @@
     <TextView
         android:id="@+id/edit"
         android:text="@string/qa_crop"
-        android:textColor="@android:color/white"
-        android:visibility="gone"
+        android:textColor="@android:color/black"
+        android:textSize="18sp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginTop="30dp"
         android:layout_gravity="top|end" />
 
 </FrameLayout>
