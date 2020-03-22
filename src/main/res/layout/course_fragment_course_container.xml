@@ -232,7 +232,7 @@
                 </FrameLayout>
 
                 <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/course_header_select_content"
+                    android:id="@+id/course_header_week_select_content"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center"

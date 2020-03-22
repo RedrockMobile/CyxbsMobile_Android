@@ -179,7 +179,7 @@ class CourseContainerEntryFragment : BaseFragment() {
                 mCoursesViewModel = ViewModelProviders.of(this).get(CoursesViewModel::class.java)
                 mBinding.coursesViewModel = mCoursesViewModel
                 mNoCourseInviteViewModel = ViewModelProviders.of(this,
-                                NoCourseInviteViewModel.Factory(mStuNumList!!, mNameList!!))
+                        NoCourseInviteViewModel.Factory(mStuNumList!!, mNameList!!))
                         .get(NoCourseInviteViewModel::class.java)
                 mNoCourseInviteViewModel?.getCourses()
             }
@@ -270,15 +270,17 @@ class CourseContainerEntryFragment : BaseFragment() {
                     duration = 250
                 })
             })
-            course_header_select_content.visibility = View.VISIBLE
+            //显示周数选择，隐藏周数显示和最近课表
+            course_header_week_select_content.visibility = View.VISIBLE
             course_header_show.visibility = View.GONE
         }
+
         course_tv_which_week.setOnClickListener { isShow() }
         course_this_week_tips.setOnClickListener { isShow() }
 
         course_header_back.setOnClickListener {
             TransitionManager.beginDelayedTransition(fl, Slide().apply { slideEdge = Gravity.START })
-            course_header_select_content.visibility = View.GONE
+            course_header_week_select_content.visibility = View.GONE
             course_header_show.visibility = View.VISIBLE
         }
         mCoursesViewModel.mWeekTitle.set(activity?.getString(R.string.course_all_week))
@@ -303,42 +305,74 @@ class CourseContainerEntryFragment : BaseFragment() {
     private fun settingFollowBottomSheet(state: Float) {
         //todo 给tip小块加上动画的话和BottomSheet一起会有性能问题
 //        mCoursesViewModel.setTipsState(state, course_tip)
-        if (course_header_select_content.visibility == View.GONE) {
-            course_current_course_container.visibility = View.VISIBLE
-            course_current_course_container.alpha = 1 - state
-            actionWhenLoaded {
-                course_current_course_week_select_container.alpha = state
-            }
-            if (state == 0f) {
-                course_header_select_content.visibility = View.GONE
-                course_header_show.visibility = View.VISIBLE
-                course_current_course_week_select_container.visibility = View.GONE
-            } else if (1 - state == 0f) {
-                course_current_course_container.visibility = View.GONE
-            }
+        //判断周数选择是不是显示的
+        if (course_header_week_select_content.visibility == View.GONE) {
+            headViewAlphaChange(state)
         } else {
             if (state == 0f) {
+                //增加转场动画
                 TransitionManager.beginDelayedTransition(fl, Slide().apply {
                     slideEdge = Gravity.START
                     duration = 200
                 })
-                course_header_select_content.visibility = View.GONE
+                course_header_week_select_content.visibility = View.GONE
                 course_header_show.visibility = View.VISIBLE
-                course_current_course_container.visibility = View.VISIBLE
-                course_current_course_container.alpha = 1 - state
-                course_current_course_week_select_container.alpha = state
-                course_current_course_week_select_container.visibility = View.GONE
+                headViewAlphaChange(state)
             }
         }
     }
 
-
-    private fun actionWhenLoaded(action: () -> Unit) {
+    private fun headViewAlphaChange(state: Float) {
+        //如果周数选择没有显示就对最近课表和周数做透明度变换
+        course_current_course_container.visibility = View.VISIBLE
+        course_current_course_container.alpha = 1 - state
+        //对周数选择做透明度变换
+        course_current_course_week_select_container.alpha = state
+        //如果课表子页还没有加载，则不显示周数
         if (vp.adapter == null) {
+            //没有加载隐藏周数显示
             course_current_course_week_select_container.visibility = View.GONE
         } else {
+            //加载了就显示周数
             course_current_course_week_select_container.visibility = View.VISIBLE
-            action()
+        }
+        //根据不同的最终状态确认,显示和隐藏
+        if (state == 0f) {
+            course_current_course_week_select_container.visibility = View.GONE
+        } else if (state == 1f) {
+            course_current_course_container.visibility = View.GONE
+        }
+    }
+
+
+    /**
+     * 如果没有直接加载课表ViewPager子页，这个可以用来通知加载
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun loadCoursePage(loadCourse: LoadCourse) {
+        //加载课表的代码
+        val load = {
+            //给下方ViewPager添加适配器和绑定tab
+            vp.adapter = mScheduleAdapter
+            tab_layout.setupWithViewPager(mBinding.vp)
+            mCoursesViewModel.nowWeek.value?.let { nowWeek ->
+                vp.currentItem = nowWeek
+            }
+        }
+        if (loadCourse.isUserSee) {
+            course_lottie_load.visibility = View.VISIBLE
+            course_lottie_load.speed = 2f
+            course_lottie_load.addAnimatorUpdateListener {
+                if (it.animatedFraction > 0.78) {
+                    course_lottie_load.pauseAnimation()
+                    load()
+                    course_lottie_load.visibility = View.GONE
+                    course_current_course_week_select_container.visibility = View.VISIBLE
+                }
+            }
+            course_lottie_load.playAnimation()
+        } else {
+            load()
         }
     }
 
@@ -396,36 +430,6 @@ class CourseContainerEntryFragment : BaseFragment() {
                     affairToCalendar.getPermissionToInsert()
                 }
             }
-        }
-    }
-
-    /**
-     * 如果没有直接加载课表ViewPager子页，这个可以用来通知加载
-     */
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun loadCoursePage(loadCourse: LoadCourse) {
-        val load = {
-            //给下方ViewPager添加适配器和绑定tab
-            vp.adapter = mScheduleAdapter
-            tab_layout.setupWithViewPager(mBinding.vp)
-            mCoursesViewModel.nowWeek.value?.let { nowWeek ->
-                vp.currentItem = nowWeek
-            }
-        }
-        if (loadCourse.isUserSee) {
-            course_lottie_load.visibility = View.VISIBLE
-            course_lottie_load.speed = 2f
-            course_lottie_load.addAnimatorUpdateListener {
-                if (it.animatedFraction > 0.78) {
-                    course_lottie_load.pauseAnimation()
-                    load()
-                    course_lottie_load.visibility = View.GONE
-                    course_current_course_week_select_container.visibility = View.VISIBLE
-                }
-            }
-            course_lottie_load.playAnimation()
-        } else {
-            load()
         }
     }
 
