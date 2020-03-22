@@ -13,4 +13,15 @@ data class TermGrade(
         val rank: String,
         @SerializedName("singe_grades")
         val singleGrade: List<SingleGrade>
-) : Serializable
+) : Serializable {
+    var status = CLOSE
+
+    companion object {
+        @JvmStatic
+        val CLOSE = 0
+        @JvmStatic
+        val EXPAND = 1
+    }
+
+    fun isClose() = status == CLOSE
+}

@@ -3,16 +3,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="150dp">
+    android:layout_height="125dp">
 
     <ImageView
         android:id="@+id/grades_imageview5"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginStart="16dp"
         android:layout_marginTop="9dp"
-        android:layout_marginEnd="16dp"
-        android:src="@drawable/grades_gpa_shape_blue_round_corner"
+        android:src="@drawable/grades_gpa_shape_blue_round_corner_top_part"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -105,27 +103,14 @@
         app:layout_constraintStart_toEndOf="@+id/grades_gpa_list_tv_average_grades"
         app:layout_constraintTop_toTopOf="@+id/grades_gpa_list_tv_average_grades" />
 
-    <TextView
-        android:id="@+id/grades_gpa_list_tv_grades_detail"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/grades_bottom_sheet_gpa_rv_grades_list_detail"
-        android:textColor="@color/qa_answer_content_edt_hint_color"
-        android:textSize="8sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/grades_gpa_list_tv_average_grades" />
-
 
     <ImageView
         android:layout_width="0dp"
         android:layout_height="1dp"
         android:src="@color/qa_answer_item_divider_color"
-        app:layout_constraintBottom_toTopOf="@+id/grades_gpa_list_tv_grades_detail"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/grades_imageview5"
-        app:layout_constraintStart_toStartOf="@+id/grades_imageview5"
-        app:layout_constraintTop_toBottomOf="@+id/grades_gpa_list_tv_average_grades" />
+        app:layout_constraintStart_toStartOf="@+id/grades_imageview5" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
