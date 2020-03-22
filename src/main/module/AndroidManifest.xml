@@ -12,7 +12,7 @@
         android:roundIcon="@mipmap/widget_ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".page.ConfigActivity">
+        <activity android:name=".widget.page.ConfigActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -54,10 +54,10 @@
                 android:resource="@xml/widget_normal" />
         </receiver>
 
-        <activity android:name=".page.trans.TransConfigActivity"
+        <activity android:name=".widget.page.trans.TransConfigActivity"
             android:windowSoftInputMode="adjustPan"/>
-        <activity android:name=".page.little.LittleConfigActivity" />
-        <activity android:name=".page.normal.NormalConfigActivity" />
+        <activity android:name=".widget.page.little.LittleConfigActivity" />
+        <activity android:name=".widget.page.normal.NormalConfigActivity" />
     </application>
 
 </manifest>

@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".page.trans.TransConfigActivity">
+    tools:context=".widget.page.trans.TransConfigActivity">
 
     <include layout="@layout/common_toolbar" />
 

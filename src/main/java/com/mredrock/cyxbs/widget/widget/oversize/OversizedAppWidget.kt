@@ -6,7 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.widget.RemoteViews
 import com.mredrock.cyxbs.widget.R
-import com.mredrock.cyxbs.widget.page.oversized.deleteTitlePref
+import com.mredrock.cyxbs.widget.widget.page.oversized.deleteTitlePref
 import com.mredrock.cyxbs.widget.service.GridWidgetService
 
 

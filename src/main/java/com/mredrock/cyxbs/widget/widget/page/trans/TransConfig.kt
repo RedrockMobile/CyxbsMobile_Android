@@ -1,4 +1,4 @@
-package com.mredrock.cyxbs.widget.page.trans
+package com.mredrock.cyxbs.widget.widget.page.trans
 
 import android.content.Context
 import com.mredrock.cyxbs.common.utils.extensions.editor

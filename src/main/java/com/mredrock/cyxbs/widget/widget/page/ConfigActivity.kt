@@ -1,4 +1,4 @@
-package com.mredrock.cyxbs.widget.page
+package com.mredrock.cyxbs.widget.widget.page
 
 import android.content.Intent
 import android.os.Bundle
@@ -6,9 +6,9 @@ import com.alibaba.android.arouter.facade.annotation.Route
 import com.mredrock.cyxbs.common.config.WIDGET_SETTING
 import com.mredrock.cyxbs.common.ui.BaseActivity
 import com.mredrock.cyxbs.widget.R
-import com.mredrock.cyxbs.widget.page.little.LittleConfigActivity
-import com.mredrock.cyxbs.widget.page.normal.NormalConfigActivity
-import com.mredrock.cyxbs.widget.page.trans.TransConfigActivity
+import com.mredrock.cyxbs.widget.widget.page.little.LittleConfigActivity
+import com.mredrock.cyxbs.widget.widget.page.normal.NormalConfigActivity
+import com.mredrock.cyxbs.widget.widget.page.trans.TransConfigActivity
 import kotlinx.android.synthetic.main.widget_activity_config.*
 
 

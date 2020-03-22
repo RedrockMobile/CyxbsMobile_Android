@@ -1,4 +1,4 @@
-package com.mredrock.cyxbs.widget.page.trans
+package com.mredrock.cyxbs.widget.widget.page.trans
 
 import android.graphics.Color
 import android.os.Bundle

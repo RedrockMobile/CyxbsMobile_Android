@@ -1,4 +1,4 @@
-package com.mredrock.cyxbs.widget.page.little
+package com.mredrock.cyxbs.widget.widget.page.little
 
 import android.os.Bundle
 import com.mredrock.cyxbs.common.ui.BaseActivity

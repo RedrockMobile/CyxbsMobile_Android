@@ -1,4 +1,4 @@
-package com.mredrock.cyxbs.widget.page.oversized
+package com.mredrock.cyxbs.widget.widget.page.oversized
 
 import android.app.Activity
 import android.appwidget.AppWidgetManager
@@ -9,7 +9,6 @@ import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
-import android.widget.EditText
 import com.mredrock.cyxbs.widget.R
 import com.mredrock.cyxbs.widget.widget.oversize.updateAppWidget
 

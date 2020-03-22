@@ -8,7 +8,7 @@ import android.view.View
 import android.widget.RemoteViews
 import com.mredrock.cyxbs.widget.R
 import com.mredrock.cyxbs.widget.bean.CourseStatus
-import com.mredrock.cyxbs.widget.page.trans.TransConfig
+import com.mredrock.cyxbs.widget.widget.page.trans.TransConfig
 import com.mredrock.cyxbs.widget.util.filterClassRoom
 import com.mredrock.cyxbs.widget.util.getClickPendingIntent
 import com.mredrock.cyxbs.widget.util.getWeekDayChineseName
