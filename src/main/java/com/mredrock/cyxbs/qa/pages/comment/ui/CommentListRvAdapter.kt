@@ -4,8 +4,6 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import com.mredrock.cyxbs.common.component.JCardViewPlus
-import com.mredrock.cyxbs.common.service.ServiceManager
-import com.mredrock.cyxbs.common.service.account.IAccountService
 import com.mredrock.cyxbs.common.utils.extensions.invisible
 import com.mredrock.cyxbs.common.utils.extensions.setAvatarImageFromUrl
 import com.mredrock.cyxbs.common.utils.extensions.visible
@@ -19,7 +17,7 @@ import kotlinx.android.synthetic.main.qa_recycler_item_comment.view.*
 /**
  * Created By jay68 on 2018/10/8.
  */
-class CommentListRvAdapter : BaseEndlessRvAdapter<Comment>(DIFF_CALLBACK) {
+class CommentListRvAdapter(private val questionAnonymous: Boolean) : BaseEndlessRvAdapter<Comment>(DIFF_CALLBACK) {
     companion object {
         @JvmStatic
         val DIFF_CALLBACK = object : DiffUtil.ItemCallback<Comment>() {
@@ -30,14 +28,20 @@ class CommentListRvAdapter : BaseEndlessRvAdapter<Comment>(DIFF_CALLBACK) {
     }
 
     var onReportClickListener: ((String) -> Unit)? = null
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = CommentViewHolder(parent)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = CommentViewHolder(parent, questionAnonymous)
 
-    class CommentViewHolder(parent: ViewGroup) : BaseViewHolder<Comment>(parent, R.layout.qa_recycler_item_comment) {
+    class CommentViewHolder(parent: ViewGroup, private val questionAnonymous: Boolean) : BaseViewHolder<Comment>(parent, R.layout.qa_recycler_item_comment) {
         override fun refresh(data: Comment?) {
             data ?: return
             itemView.apply {
-                iv_comment_avatar.setAvatarImageFromUrl(data.photoThumbnailSrc)
-                tv_comment_nickname.text = data.nickname
+                if (data.isSelf && questionAnonymous && data.questionIsSelf) {
+                    iv_comment_avatar.setImageResource(R.drawable.common_default_avatar)
+                    tv_comment_nickname.text = context.getString(R.string.qa_comment_anontmous_text)
+                } else {
+                    iv_comment_avatar.setAvatarImageFromUrl(data.photoThumbnailSrc)
+                    tv_comment_nickname.text = data.nickname
+                }
+
                 tv_comment_create_at.text = timeDescription(System.currentTimeMillis(), data.createdAt)
                 tv_comment_content.text = data.content
             }
@@ -52,8 +56,8 @@ class CommentListRvAdapter : BaseEndlessRvAdapter<Comment>(DIFF_CALLBACK) {
             2 -> holder.itemView.findViewById<JCardViewPlus>(R.id.jCardView_comment).setCardBackgroundColor(ContextCompat.getColor(holder.itemView.context, R.color.qa_comment_content_third_kind_color))
         }
         holder.itemView.apply {
-            when ((getItem(position) as Comment).stuNum) {
-                ServiceManager.getService(IAccountService::class.java).getUserService().getStuNum() -> {
+            when {
+                (getItem(position) as Comment).isSelf -> {
                     ib_comment_item_more.invisible()
                 }
                 else -> {

@@ -57,6 +57,7 @@ data class Question(@SerializedName("reward")
     var hasAdoptedAnswer: Boolean = false
 
     val isSelf get() = _isSelf == 1
+    val isAnonymous get() = _isAnonymous == 1
 
     fun refresh(question: Question) {
         _isSelf = question._isSelf

@@ -21,8 +21,6 @@ import com.mredrock.cyxbs.common.config.IS_COMMENT
 import com.mredrock.cyxbs.common.config.NAVIGATE_FROM_WHERE
 import com.mredrock.cyxbs.common.config.QA_COMMENT_LIST
 import com.mredrock.cyxbs.common.event.OpenShareCommentEvent
-import com.mredrock.cyxbs.common.service.ServiceManager
-import com.mredrock.cyxbs.common.service.account.IAccountService
 import com.mredrock.cyxbs.common.ui.BaseActivity
 import com.mredrock.cyxbs.common.utils.extensions.gone
 import com.mredrock.cyxbs.common.utils.extensions.toast
@@ -89,9 +87,8 @@ class CommentListActivity : BaseActivity() {
             answer = intent.getParcelableExtra(PARAM_ANSWER)
             question = intent.getParcelableExtra(PARAM_QUESTION)
             initViewModel(question.id, answer)
-            val removeAdoptIcon = !question.isSelf
             initToolbar()
-            initRv(removeAdoptIcon)
+            initRv(!question.isSelf, question.isAnonymous)
             initCommentSheet()
         }
     }
@@ -118,7 +115,6 @@ class CommentListActivity : BaseActivity() {
         qa_ib_toolbar_back.setOnClickListener { finish() }
         val commentNub = answer.commentNum
         qa_tv_toolbar_title.text = baseContext.getString(R.string.qa_comment_list_comment_count, commentNub)
-        val mStuNum = ServiceManager.getService(IAccountService::class.java).getUserService().getStuNum()
         if (intent.getIntExtra(NAVIGATE_FROM_WHERE, IS_COMMENT) == IS_ANSWER) {
             cl_toolbar_root.addView(TextView(this).apply {
                 layoutParams = qa_ib_toolbar_more.layoutParams
@@ -127,13 +123,15 @@ class CommentListActivity : BaseActivity() {
                 textSize = 15f
                 visible()
                 setOnClickListener {
-                    this@CommentListActivity.startActivityForResult<AnswerListActivity>(ANSWER_LIST_REQUEST_CODE, AnswerListActivity.PARAM_QUESTION to question)
+                    //防止从mine传过来未初始化
+                    if (question == null) return@setOnClickListener
+                    this@CommentListActivity.startActivity<AnswerListActivity>(AnswerListActivity.PARAM_QUESTION to question)
                     this@CommentListActivity.finish()
                 }
             })
             qa_ib_toolbar_more.gone()
         } else {
-            if (answer.userId != mStuNum) {
+            if (!answer.isSelf) {
                 qa_ib_toolbar_more.setOnClickListener {
                     answerReportDialog.show()
                 }
@@ -143,14 +141,14 @@ class CommentListActivity : BaseActivity() {
         }
     }
 
-    private fun initRv(showAdoptIcon: Boolean) {
+    private fun initRv(showAdoptIcon: Boolean, questionAnonymous: Boolean) {
         headerAdapter = CommentListHeaderRvAdapter(showAdoptIcon).apply {
             onAdoptClickListener = {
                 viewModel.adoptAnswer(it)
             }
         }
         emptyRvAdapter = EmptyRvAdapter(getString(R.string.qa_comment_list_no_comment_hint))
-        commentListRvAdapter = CommentListRvAdapter().apply {
+        commentListRvAdapter = CommentListRvAdapter(questionAnonymous).apply {
             onReportClickListener = { commentId ->
                 ReportDialog(this@CommentListActivity).apply {
                     setType(resources.getStringArray(R.array.qa_title_type)[2])
@@ -266,8 +264,8 @@ class CommentListActivity : BaseActivity() {
                 initToolbar()
                 viewModel.getQuestionInfo()
                 viewModel.questionData.observeNotNull {
-                    initRv(!it.isSelf)
                     question = it
+                    initRv(!it.isSelf, it.isAnonymous)
                 }
                 initCommentSheet()
             }

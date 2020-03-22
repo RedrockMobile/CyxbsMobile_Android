@@ -15,13 +15,13 @@ data class Answer(@SerializedName("comment_num")
                   private var _isPraised: String? = "",
 
                   @SerializedName("photo_thumbnail_src")
-                  val photoThumbnailSrc: String? = null,
+                  val photoThumbnailSrc: String = "",
 
                   @SerializedName("gender")
                   val gender: String = "",
 
-                  @SerializedName("stunum")
-                  val userId: String = "",
+                  @SerializedName("is_self")
+                  private val _isSelf: Int = 0,
 
                   @SerializedName("praise_num")
                   var praiseNum: String = "",
@@ -56,6 +56,7 @@ data class Answer(@SerializedName("comment_num")
                 _isPraised = "0"
             }
         }
+    val isSelf get() = _isSelf == 1
 
     val commentNumInt: Int
         get() {
@@ -81,7 +82,7 @@ data class Answer(@SerializedName("comment_num")
             parcel.readString(),
             parcel.readString(),
             parcel.readString(),
-            parcel.readString(),
+            parcel.readInt(),
             parcel.readString(),
             parcel.readString(),
             parcel.readString(),
@@ -96,7 +97,7 @@ data class Answer(@SerializedName("comment_num")
         parcel.writeString(_isPraised)
         parcel.writeString(photoThumbnailSrc)
         parcel.writeString(gender)
-        parcel.writeString(userId)
+        parcel.writeInt(_isSelf)
         parcel.writeString(praiseNum)
         parcel.writeString(nickname)
         parcel.writeString(createdAt)
