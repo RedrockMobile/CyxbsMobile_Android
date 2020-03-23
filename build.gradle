@@ -13,6 +13,8 @@ buildscript {
 
     repositories {
         // 以下两行代码相当于有了 google() jcenter() mavenCentral()，使用国内的阿里镜像
+        // 注意：开了梯子之后可能会变慢，pac模式可能也没有完全屏蔽，，如果有中国大陆白名单模式的话，应该可以
+        // 可以使用这个网站测试 https://maven.aliyun.com/mvn/view 开了梯子之后你还能快速的进去 那么你的sync速度也会起飞
         maven { url 'https://maven.aliyun.com/nexus/content/groups/public' }
         maven { url 'https://maven.aliyun.com/nexus/content/repositories/google' }
 
