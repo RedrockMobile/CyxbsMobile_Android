@@ -5,7 +5,8 @@
 
     <application tools:ignore="GoogleAppIndexingWarning">
         <activity android:name=".pages.stusearch.OtherCourseActivity"
-            android:windowSoftInputMode="adjustPan"/>
+            android:windowSoftInputMode="adjustPan"
+            android:launchMode="singleTop"/>
         <activity android:name=".pages.stulist.StuListActivity"/>
     </application>
 
