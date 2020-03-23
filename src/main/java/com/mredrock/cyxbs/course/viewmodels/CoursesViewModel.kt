@@ -27,6 +27,7 @@ import com.mredrock.cyxbs.course.event.AffairFromInternetEvent
 import com.mredrock.cyxbs.course.network.AffairMapToCourse
 import com.mredrock.cyxbs.course.network.Course
 import com.mredrock.cyxbs.course.network.CourseApiService
+import com.mredrock.cyxbs.course.network.CourseApiWrapper
 import com.mredrock.cyxbs.course.rxjava.ExecuteOnceObserver
 import com.mredrock.cyxbs.course.utils.CourseTimeParse
 import com.mredrock.cyxbs.course.utils.getNowCourse
@@ -89,8 +90,9 @@ class CoursesViewModel : BaseViewModel() {
     val allCoursesData = ObservableField<MutableList<Course>>()
 
     /**
-     * 用于储存真正的用于展示的数据,下面是一些无关紧要的话可以不看，只是解释这个值的重要性
+     * 用于单独储存真正的用于展示的课表数据
      *
+     * 下面是一些无关紧要的话可以不看，只是解释这个值的重要性
      * 为什么有了上面这个值还需要这个呢
      * 因为后端和教务在线总是时不时各种抽风，跟服务端提需求我又怕打架，但是每次抽风之后是用户遭殃,
      * 也是客户端人员首先被喷，为了防止客户端被喷的次数，尽管我做了课表拉取错误处理，
@@ -110,11 +112,6 @@ class CoursesViewModel : BaseViewModel() {
             return super.addAll(elements)
         }
     }
-
-
-    /**在获取中用于组装事务和课程用的list，上面[allCoursesData]才是真正用于显示的*/
-    private lateinit var mReceiveCourses: MutableList<Course>
-
 
     //用于显示在当前或者下一课程对象
     val nowCourse = ObservableField<Course?>()
@@ -267,7 +264,6 @@ class CoursesViewModel : BaseViewModel() {
      */
     fun refreshAffairFromInternet() {
         resetGetStatus()
-        mReceiveCourses.addAll(courses)
         isGetAllData(0)
         getAffairsDataFromInternet()
     }
@@ -305,16 +301,10 @@ class CoursesViewModel : BaseViewModel() {
                     .setSchedulers()
                     .subscribe(ExecuteOnceObserver(onExecuteOnceNext = { coursesFromDatabase ->
                         if (coursesFromDatabase != null && coursesFromDatabase.isNotEmpty()) {
-                            mReceiveCourses.addAll(coursesFromDatabase)
                             courses.addAll(coursesFromDatabase)
-                            isGetAllData(0)
                             getSchedulesFromInternet()
-                        } else {
-                            isGetAllData(0)
                         }
-                    }, onExecuteOnceError = {
-                        isGetAllData(0)
-                    }))
+                    }, onExecuteOnFinal = { isGetAllData(0) }))
         }
     }
 
@@ -330,13 +320,9 @@ class CoursesViewModel : BaseViewModel() {
                     .map(AffairMapToCourse())
                     .subscribe(ExecuteOnceObserver(onExecuteOnceNext = { affairsFromDatabase ->
                         if (affairsFromDatabase != null && affairsFromDatabase.isNotEmpty()) {
-                            mReceiveCourses.addAll(affairsFromDatabase)
+                            affairs.addAll(affairsFromDatabase)
                         }
-                    }, onExecuteOnceError = {
-                        isGetAllData(1)
-                    }, onExecuteOnceComplete = {
-                        isGetAllData(1)
-                    }))
+                    }, onExecuteOnFinal = { isGetAllData(1) }))
         }
     }
 
@@ -345,38 +331,29 @@ class CoursesViewModel : BaseViewModel() {
      */
     private fun getCoursesDataFromInternet(isForceFetch: Boolean = false) {
         (if (isTeaCourse) mCourseApiService.getTeaCourse(mUserNum, mUserName) else mCourseApiService.getCourse(stuNum = mUserNum, isForceFetch = isForceFetch))
-                .setSchedulers()
+                .setSchedulers(observeOn = Schedulers.io())
                 .errorHandler()
+                .doOnNext {
+                    courseAbnormalErrorHandling(it) { courses ->
+                        //将从服务器中获取的课程数据存入数据库中
+                        //从网络中获取数据后先对数据库中的数据进行清除，再向其中加入数据
+                        mCoursesDatabase?.courseDao()?.deleteAllCourses()
+                        mCoursesDatabase?.courseDao()?.insertCourses(courses)
+                    }
+                }
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(ExecuteOnceObserver(onExecuteOnceNext = { coursesFromInternet ->
                     if (coursesFromInternet.status == 200 || coursesFromInternet.status == 233) {
                         updateNowWeek(coursesFromInternet.nowWeek)
-                        coursesFromInternet.data?.let { notNullCourses ->
-                            mReceiveCourses.addAll(notNullCourses)
-                            val courseVersion = context.defaultSharedPreferences.getString("${COURSE_VERSION}${mUserNum}", "")
-                            /**防止服务器里面的课表抽风,所以这个弄了这么多条件，只有满足以下条件才会去替换数据库的课表
-                             * 课表版本发生了变化或者从数据库中取出的课表与网络上的课表课数不一样或者原来数据库中没有课表现在取有课表了*/
-                            if (courseVersion != coursesFromInternet.version
-                                    || (courses.isNotEmpty() && notNullCourses.isNotEmpty() && courses.size != notNullCourses.size)
-                                    || (courses.isEmpty() && notNullCourses.isNotEmpty())) {
-                                courses.addAll(notNullCourses)
-                                isGetAllData(0)
-                                //将从服务器中获取的课程数据存入数据库中
-                                Thread {
-                                    //从网络中获取数据后先对数据库中的数据进行清除，再向其中加入数据
-                                    mCoursesDatabase?.courseDao()?.deleteAllCourses()
-                                    mCoursesDatabase?.courseDao()?.insertCourses(notNullCourses)
-                                }.start()
-                                if (!coursesFromInternet.data?.isEmpty()!! && isGetOthers.get() == false) {
-                                    toastEvent.value = R.string.course_course_update_tips
-                                    context.defaultSharedPreferences.editor {
-                                        //小部件缓存课表
-                                        putString(WIDGET_COURSE, Gson().toJson(coursesFromInternet))
-                                        putBoolean(SP_WIDGET_NEED_FRESH, true)
-                                    }
-                                }
-                                //储存课表版本
+                        //课表容错处理
+                        courseAbnormalErrorHandling(coursesFromInternet) {
+                            courses.addAll(it)
+                            if (it.isNotEmpty() && isGetOthers.get() == false) {
+                                toastEvent.value = R.string.course_course_update_tips
                                 context.defaultSharedPreferences.editor {
-                                    putString("${COURSE_VERSION}${mUserNum}", coursesFromInternet.version)
+                                    //小部件缓存课表
+                                    putString(WIDGET_COURSE, Gson().toJson(coursesFromInternet))
+                                    putBoolean(SP_WIDGET_NEED_FRESH, true)
                                 }
                             }
                         }
@@ -385,8 +362,30 @@ class CoursesViewModel : BaseViewModel() {
                             longToastEvent.value = R.string.course_use_cache
                         }
                     }
-                }, onExecuteOnceError = { isGetAllData(0) },
-                        onExecuteOnceComplete = { isGetAllData(0) }))
+                }, onExecuteOnFinal = { isGetAllData(0) }))
+    }
+
+    /**
+     * 课表的容错处理
+     *
+     * @param coursesFromInternet 直接从网络上拉取的课表数据
+     * @param action 如果网络上的数据可信就执行这个lambda
+     */
+    private fun courseAbnormalErrorHandling(coursesFromInternet: CourseApiWrapper<List<Course>>, action: (List<Course>) -> Unit) {
+        coursesFromInternet.data?.let { notNullCourses ->
+            val courseVersion = context.defaultSharedPreferences.getString("${COURSE_VERSION}${mUserNum}", "")
+            /**防止服务器里面的课表抽风,所以这个弄了这么多条件，只有满足以下条件才会去替换数据库的课表
+             * 课表版本发生了变化或者从数据库中取出的课表与网络上的课表课数不一样或者原来数据库中没有课表现在取有课表了*/
+            if (courseVersion != coursesFromInternet.version
+                    || (courses.isNotEmpty() && notNullCourses.isNotEmpty() && courses.size != notNullCourses.size)
+                    || (courses.isEmpty() && notNullCourses.isNotEmpty())) {
+                action(notNullCourses)
+                //储存课表版本
+                context.defaultSharedPreferences.editor {
+                    putString("${COURSE_VERSION}${mUserNum}", coursesFromInternet.version)
+                }
+            }
+        }
     }
 
 
@@ -410,12 +409,8 @@ class CoursesViewModel : BaseViewModel() {
                 .subscribe(ExecuteOnceObserver(onExecuteOnceNext = { affairsCourse ->
                     affairsCourse ?: return@ExecuteOnceObserver
                     EventBus.getDefault().post(AffairFromInternetEvent(affairsCourse))
-                    mReceiveCourses.addAll(affairsCourse)
-                }, onExecuteOnceError = {
-                    isGetAllData(1)
-                }, onExecuteOnceComplete = {
-                    isGetAllData(1)
-                }))
+                    affairs.addAll(affairsCourse)
+                }, onExecuteOnFinal = { isGetAllData(1) }))
     }
 
     /**
@@ -432,17 +427,21 @@ class CoursesViewModel : BaseViewModel() {
     private fun isGetAllData(index: Int) {
         mDataGetStatus[index] = true
         if (mDataGetStatus[0] && mDataGetStatus[1]) {
-            // 如果mCourses为空的话就不用赋值给allCoursesData。防止由于网络请求有问题而导致刷新数据为空。
-            if (mReceiveCourses.isNotEmpty()) {
-                allCoursesData.set(mReceiveCourses)
-                //获取当前的课程显示在上拉课表的头部
-                nowWeek.value?.let { nowWeek ->
-                    getTodayCourse(mReceiveCourses, nowWeek)?.let { todayCourse ->
-                        allCoursesData.get()?.let {
-                            val pair = getNowCourse(todayCourse, it, nowWeek)
-                            nowCourse.set(pair.first)
-                            tomorrowTips.set(pair.second)
-                        }
+            //第一种情况没啥好讲的，第二种是为了规避那种本身就没有课的大四学生，
+            // 没课也可以正常显示课表，如果有课也出现了第二种情况那么说明后端出啥问题了或者上面的容错机制还不够完善
+            if (courses.isNotEmpty() || (courses.isEmpty() && affairs.isNotEmpty())) {
+                allCoursesData.set(mutableListOf<Course>().apply {
+                    addAll(courses)
+                    addAll(affairs)
+                })
+                val nowWeek = nowWeek.value
+                val courses = allCoursesData.get()
+                if (nowWeek != null && courses != null) {
+                    //获取当前的课程显示在上拉课表的头部
+                    getTodayCourse(courses, nowWeek)?.let { todayCourse ->
+                        val pair = getNowCourse(todayCourse, courses, nowWeek)
+                        nowCourse.set(pair.first)
+                        tomorrowTips.set(pair.second)
                     }
                 }
             } else {
@@ -461,7 +460,6 @@ class CoursesViewModel : BaseViewModel() {
      * 此方法用于重置课程获取状态
      */
     private fun resetGetStatus() {
-        mReceiveCourses = mutableListOf()
         mDataGetStatus[0] = false
         mDataGetStatus[1] = false
     }
