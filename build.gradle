@@ -59,25 +59,16 @@ dependencies {
 
     //architecture
     api deps.lifecycle.extensions
+    api deps.lifecycle.viewmodel_ktx
     api deps.lifecycle.java8
     api deps.lifecycle.reactivestrean
-    implementation 'androidx.appcompat:appcompat:1.0.2'
-    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
     kapt deps.lifecycle.compiler
     api deps.room.runtime
     api deps.room.rxjava
     kapt deps.room.compiler
-//    kapt deps.databinding.compiler
     api deps.paging.runtime
     api deps.paging.rxjava
     api deps.workmanager.runtime
-
-    //dagger2
-//    api deps.dagger.runtime
-//    kapt deps.dagger.compiler
-//    api deps.dagger.android
-//    api deps.dagger.android_support
-//    kapt deps.dagger.android_processor
 
     //permission
     api deps.rxpermissions.runtime
@@ -96,12 +87,14 @@ dependencies {
     //airbnb
     api deps.airbnb.lottie
 
-    //3rd ui
-//    api 'com.jude:swipebackhelper:3.1.2'
+
+    //杂项
     api 'com.afollestad.material-dialogs:commons:0.9.6.0'
     api 'com.github.yalantis:ucrop:2.2.2'
     api 'com.github.chrisbanes:PhotoView:2.3.0'
     api 'com.billy.android:smart-swipe:1.1.2'
+    //可以通过在Logcat中过滤 LeakCanary 标记来确认它在启动时正在运行
+    debugApi 'com.squareup.leakcanary:leakcanary-android:2.2'
     api project(path: ':push_sdk')
 
 }
