@@ -29,6 +29,7 @@ import com.mredrock.cyxbs.course.network.Course
 import com.mredrock.cyxbs.course.network.CourseApiService
 import com.mredrock.cyxbs.course.network.CourseApiWrapper
 import com.mredrock.cyxbs.course.rxjava.ExecuteOnceObserver
+import com.mredrock.cyxbs.course.ui.fragment.CourseContainerEntryFragment
 import com.mredrock.cyxbs.course.utils.CourseTimeParse
 import com.mredrock.cyxbs.course.utils.getNowCourse
 import com.mredrock.cyxbs.course.utils.getTodayCourse
@@ -69,6 +70,9 @@ class CoursesViewModel : BaseViewModel() {
     companion object {
         private const val TAG = "CoursesViewModel"
     }
+
+    //当前课表Fragment的显示的状态
+    var courseState = CourseContainerEntryFragment.CourseState.OrdinaryCourse
 
 
     // schoolCalendarUpdated用于表示是否从网络请求到了新的数据并更新了SchoolCalendar，如果是这样就设置为True，

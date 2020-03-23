@@ -49,10 +49,10 @@ class NoCourseInviteViewModel(private val mStuNumList: List<String> = mutableLis
                 })
     }
 
+    @Suppress("UNCHECKED_CAST")
     class Factory(private val mStuNumList: List<String>, private val mNameList: List<String>) :
             ViewModelProvider.Factory {
 
-        @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel?> create(modelClass: Class<T>): T {
             return NoCourseInviteViewModel(mStuNumList, mNameList) as T
         }

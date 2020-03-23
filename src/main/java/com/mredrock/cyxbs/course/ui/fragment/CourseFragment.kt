@@ -5,11 +5,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.AnimationUtils
-import android.view.animation.LayoutAnimationController
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
+import com.billy.android.swipe.SmartSwipe
+import com.billy.android.swipe.consumer.SpaceConsumer
 import com.mredrock.cyxbs.common.config.WEEK_NUM
 import com.mredrock.cyxbs.common.ui.BaseFragment
 import com.mredrock.cyxbs.course.R
@@ -35,15 +37,10 @@ class CourseFragment : BaseFragment() {
     override val openStatistics: Boolean
         get() = false
 
-    private lateinit var courseContainerEntryFragment: CourseContainerEntryFragment
-
     //当前课表页面代表的第几周[默认0 代表整学期，1代表第一周。。。。。。]
     private var mWeek: Int = 0
     private lateinit var mCoursesViewModel: CoursesViewModel
     private lateinit var mCoursePageViewModel: CoursePageViewModel
-
-    //用于没课约的ViewModel
-    private var mNoCourseInviteViewModel: NoCourseInviteViewModel? = null
 
     private lateinit var mBinding: CourseFragmentCourseBinding
 
@@ -57,10 +54,8 @@ class CourseFragment : BaseFragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        courseContainerEntryFragment = parentFragment as CourseContainerEntryFragment
         mBinding = DataBindingUtil.inflate(inflater, R.layout.course_fragment_course,
                 container, false)
-        mBinding.courseSv.layoutAnimation = LayoutAnimationController(AnimationUtils.loadAnimation(context, R.anim.course_nest_sc_enter))
         return mBinding.root
     }
 
@@ -81,10 +76,11 @@ class CourseFragment : BaseFragment() {
          * 但是[CourseContainerEntryFragment]的ViewModel根据使用场景不一样所用的依赖的ViewModel
          * 也不一样
          */
-        mCoursesViewModel = courseContainerEntryFragment.mCoursesViewModel
-        mNoCourseInviteViewModel = courseContainerEntryFragment.mNoCourseInviteViewModel
+        activity?.let { activity: FragmentActivity ->
+            mCoursesViewModel = ViewModelProvider(activity).get(CoursesViewModel::class.java)
+        }
         //获取生命周期与当前Fragment绑定的CoursePageViewModel
-        mCoursePageViewModel = ViewModelProviders.of(this,
+        mCoursePageViewModel = ViewModelProvider(this,
                 CoursePageViewModel.DateViewModelFactory(mWeek)).get(CoursePageViewModel::class.java)
         mCoursePageViewModel.nowWeek = mWeek
 
@@ -94,14 +90,14 @@ class CourseFragment : BaseFragment() {
         mBinding.coursePageViewModel = mCoursePageViewModel
 
         // 当当前周数进行了改变后有可能SchoolCalendar进行了更新，这时候就对DateViewModel中的日期进行更新
-        mCoursesViewModel.schoolCalendarUpdated.observe(this, Observer {
+        mCoursesViewModel.schoolCalendarUpdated.observe(viewLifecycleOwner, Observer {
             if (it == true) {
                 mCoursePageViewModel.getDate()
             }
         })
 
         //根据当前课表Fragment被复用的状态，获取相应的课表视图
-        scheduleView = when (courseContainerEntryFragment.courseState) {
+        scheduleView = when (mCoursesViewModel.courseState) {
             CourseContainerEntryFragment.CourseState.OrdinaryCourse, CourseContainerEntryFragment.CourseState.OtherCourse, CourseContainerEntryFragment.CourseState.TeacherCourse -> {
                 val mBinding = DataBindingUtil.inflate<CourseOrdinaryScheduleBinding>(LayoutInflater.from(context), R.layout.course_ordinary_schedule, course_schedule_container, true)
                 mBinding.coursePageViewModel = mCoursePageViewModel
@@ -110,7 +106,7 @@ class CourseFragment : BaseFragment() {
             }
             CourseContainerEntryFragment.CourseState.NoClassInvitationCourse -> {
                 val mBinding = DataBindingUtil.inflate<CourseNoClassInviteScheduleBinding>(LayoutInflater.from(context), R.layout.course_no_class_invite_schedule, course_schedule_container, true)
-                mBinding.noCourseInviteViewModel = mNoCourseInviteViewModel
+                mBinding.noCourseInviteViewModel = activity?.let { ViewModelProvider(it).get(NoCourseInviteViewModel::class.java) }
                 mBinding.nowWeek = mWeek
                 mBinding.scheduleView
             }
