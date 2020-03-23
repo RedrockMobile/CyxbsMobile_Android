@@ -2,6 +2,7 @@
 <manifest package="com.mredrock.cyxbs.discover.grades"
     xmlns:android="http://schemas.android.com/apk/res/android">
     <application>
-        <activity android:name="com.mredrock.cyxbs.discover.grades.ui.main.ContainerActivity"/>
+        <activity android:name="com.mredrock.cyxbs.discover.grades.ui.main.ContainerActivity"
+            android:launchMode="singleTop"/>
     </application>
 </manifest>
