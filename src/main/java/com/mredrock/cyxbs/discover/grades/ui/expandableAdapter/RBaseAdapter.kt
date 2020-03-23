@@ -2,6 +2,7 @@ package com.mredrock.cyxbs.discover.grades.ui.expandableAdapter
 
 import android.content.Context
 import android.view.Gravity
+import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DiffUtil
@@ -9,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.transition.Slide
 import androidx.transition.TransitionManager
 import androidx.transition.TransitionSet
+import com.google.android.material.tabs.TabLayout
 import com.mredrock.cyxbs.common.component.CommonDialogFragment
 import com.mredrock.cyxbs.common.utils.extensions.gone
 import com.mredrock.cyxbs.common.utils.extensions.visible
@@ -17,6 +19,7 @@ import com.mredrock.cyxbs.discover.grades.bean.analyze.GPAData
 import com.mredrock.cyxbs.discover.grades.bean.analyze.SingleGrade
 import com.mredrock.cyxbs.discover.grades.bean.analyze.TermGrade
 import com.mredrock.cyxbs.discover.grades.utils.baseRv.BaseHolder
+import com.mredrock.cyxbs.discover.grades.utils.widget.GraphRule
 import kotlinx.android.synthetic.main.grades_dialog_a_credit.view.*
 import kotlinx.android.synthetic.main.grades_item_dialog_a_credit.view.*
 import kotlinx.android.synthetic.main.grades_item_gpa_list_child.view.*
@@ -39,7 +42,13 @@ class RBaseAdapter(
         const val NORMAL_TOP = 2
         const val NORMAL_BOTTOM = 4
         const val CHILD = 5
+
+        const val GPA = "GPA"
+        const val GRADES = "GRADES"
+        const val RANK = "RANK"
     }
+
+    private var tabSelectedType = GPA
 
     private var isExpand: Boolean = false
 
@@ -69,7 +78,6 @@ class RBaseAdapter(
 
             is HeaderData -> {
                 val fl = holder.itemView.grades_tv_gpa_fl_title
-
                 val changeScene: () -> Unit = {
                     TransitionManager.beginDelayedTransition(fl, TransitionSet().apply {
                         addTransition(Slide().apply {
@@ -91,6 +99,52 @@ class RBaseAdapter(
                 fl.setOnClickListener {
                     changeScene.invoke()
                 }
+
+
+                holder.itemView.grades_tab_layout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+                    override fun onTabReselected(tab: TabLayout.Tab?) {
+                    }
+
+                    override fun onTabUnselected(tab: TabLayout.Tab?) {
+                    }
+
+                    override fun onTabSelected(tab: TabLayout.Tab?) {
+
+                        tab?.let {
+                            when (it.position) {
+                                0 -> {
+                                    tabSelectedType = GPA
+
+                                }
+                                1 -> {
+                                    tabSelectedType = GRADES
+                                }
+                                2 -> {
+                                    tabSelectedType = RANK
+                                }
+                            }
+                        }
+                        when (tabSelectedType) {
+                            GPA -> {
+                                holder.itemView.grades_tv_gpa_title.text = context.getString(R.string.grades_bottom_sheet_gpa_rv_average_gpa)
+                            }
+                            GRADES -> {
+                                holder.itemView.grades_tv_gpa_title.text = context.getString(R.string.grades_bottom_sheet_gpa_rv_average_grades)
+
+                            }
+                            RANK -> {
+                                holder.itemView.grades_tv_gpa_title.text = context.getString(R.string.grades_bottom_sheet_gpa_rv_average_rank)
+                            }
+                        }
+                        changeGPAGraph(holder.itemView)
+                        if (isExpand) {
+                            changeScene.invoke()
+                        }
+                    }
+
+                })
+
+
 
 
                 holder.itemView.grades_tv_a_credit_number.text = gpaData.aCredit
@@ -227,6 +281,45 @@ class RBaseAdapter(
             }.show(context.supportFragmentManager, tag)
         }
 
+    }
+
+    private fun changeGPAGraph(view: View) {
+        val gpaGraph = view.grades_view_gpa_graph
+        when (tabSelectedType) {
+            GPA -> {
+                val gpaList = gpaData.termGrade.map {
+                    it.gpa.toFloat()
+                }
+                gpaGraph.setData(gpaList)
+            }
+            GRADES -> {
+                val list = gpaData.termGrade.map {
+                    it.grade.toFloat()
+                }
+                gpaGraph.setData(list)
+                gpaGraph.setRule(object : GraphRule() {
+                    override fun mappingRule(old: Float): Float {
+                        return old / 25
+                    }
+                })
+            }
+            RANK -> {
+                val list = gpaData.termGrade.map {
+                    it.rank.toFloat()
+                }
+                gpaGraph.setData(list)
+                gpaGraph.setRule(object : GraphRule() {
+                    override fun mappingRule(old: Float): Float {
+                        val max = list.max() ?: return 0F
+                        val min = list.min() ?: return 0F
+                        return (old - min) / (max - min) * 4
+                    }
+
+                })
+            }
+        }
+
+        gpaGraph.invalidate()
     }
 
 }

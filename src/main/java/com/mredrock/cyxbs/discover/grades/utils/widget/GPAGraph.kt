@@ -98,8 +98,8 @@ class GpAGraph : View {
     /**
      * 设置数据
      */
-    fun setData(newData: ArrayList<Float>) {
-        originalData = newData
+    fun setData(newData: List<Float>) {
+        originalData = ArrayList(newData)
         mappingData = originalData.map {
             mappingRule.mappingRule(it)
         }
