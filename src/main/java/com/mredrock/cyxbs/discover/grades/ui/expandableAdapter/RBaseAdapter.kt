@@ -1,11 +1,17 @@
 package com.mredrock.cyxbs.discover.grades.ui.expandableAdapter
 
 import android.content.Context
+import android.view.Gravity
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import androidx.transition.Slide
+import androidx.transition.TransitionManager
+import androidx.transition.TransitionSet
 import com.mredrock.cyxbs.common.component.CommonDialogFragment
+import com.mredrock.cyxbs.common.utils.extensions.gone
+import com.mredrock.cyxbs.common.utils.extensions.visible
 import com.mredrock.cyxbs.discover.grades.R
 import com.mredrock.cyxbs.discover.grades.bean.analyze.GPAData
 import com.mredrock.cyxbs.discover.grades.bean.analyze.SingleGrade
@@ -17,6 +23,7 @@ import kotlinx.android.synthetic.main.grades_item_gpa_list_child.view.*
 import kotlinx.android.synthetic.main.grades_item_gpa_list_child.view.tv_grade_score
 import kotlinx.android.synthetic.main.grades_item_gpa_list_header.view.*
 import kotlinx.android.synthetic.main.grades_item_gpa_list_normal_top.view.*
+import kotlinx.android.synthetic.main.grades_layout_transition.view.*
 
 /**
  * Created by roger on 2020/3/22
@@ -33,6 +40,8 @@ class RBaseAdapter(
         const val NORMAL_BOTTOM = 4
         const val CHILD = 5
     }
+
+    private var isExpand: Boolean = false
 
     private var arrayList: ArrayList<Any> = arrayListOf()
 
@@ -59,6 +68,31 @@ class RBaseAdapter(
         when (arrayList[position]) {
 
             is HeaderData -> {
+                val fl = holder.itemView.grades_tv_gpa_fl_title
+
+                val changeScene: () -> Unit = {
+                    TransitionManager.beginDelayedTransition(fl, TransitionSet().apply {
+                        addTransition(Slide().apply {
+                            slideEdge = Gravity.START
+                            duration = 250
+                        })
+                    })
+                    isExpand = !isExpand
+                    if (isExpand) {
+                        holder.itemView.grades_tv_gpa_title.gone()
+                        holder.itemView.grades_tab_layout.visible()
+                        holder.itemView.grades_iv_gpa_arrow.setImageResource(R.drawable.grades_ic_arrow_left)
+                    } else {
+                        holder.itemView.grades_tv_gpa_title.visible()
+                        holder.itemView.grades_tab_layout.gone()
+                        holder.itemView.grades_iv_gpa_arrow.setImageResource(R.drawable.grades_ic_arrow_right)
+                    }
+                }
+                fl.setOnClickListener {
+                    changeScene.invoke()
+                }
+
+
                 holder.itemView.grades_tv_a_credit_number.text = gpaData.aCredit
                 holder.itemView.grades_tv_b_credit_number.text = gpaData.bCredit
                 holder.itemView.grades_tv_a_credit_number.setOnClickListener {
@@ -194,4 +228,5 @@ class RBaseAdapter(
         }
 
     }
+
 }

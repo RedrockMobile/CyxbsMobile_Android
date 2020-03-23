@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    xmlns:tools="http://schemas.android.com/tools">
+    android:layout_height="wrap_content">
 
     <TextView
         android:id="@+id/grades_tv_grades_title"
@@ -18,21 +18,19 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/grades_tv_gpa_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <FrameLayout
+        android:id="@+id/grades_tv_gpa_fl_title"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
         android:layout_marginTop="15dp"
-        android:text="@string/grades_bottom_sheet_gpa"
-        android:textColor="@color/levelTwoFontColor"
-        android:textSize="20sp"
-        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/grades_tv_grades_title"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/grades_tv_grades_title"
         app:layout_constraintTop_toBottomOf="@+id/grades_tv_grades_title"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintVertical_bias="0.0">
+
+        <include layout="@layout/grades_layout_transition" />
+    </FrameLayout>
 
     <com.mredrock.cyxbs.discover.grades.utils.widget.GpAGraph
         android:id="@+id/grades_view_gpa_graph"
@@ -40,7 +38,7 @@
         android:layout_height="300dp"
         android:layout_marginTop="20dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/grades_tv_gpa_title" />
+        app:layout_constraintTop_toBottomOf="@id/grades_tv_gpa_fl_title" />
 
     <TextView
         android:id="@+id/grades_tv_a_credit"
@@ -69,7 +67,6 @@
 
     <TextView
         android:id="@+id/grades_tv_a_credit_number"
-        tools:text="11"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
@@ -81,11 +78,11 @@
         android:typeface="serif"
         app:layout_constraintEnd_toEndOf="@+id/grades_tv_a_credit"
         app:layout_constraintStart_toStartOf="@+id/grades_tv_a_credit"
-        app:layout_constraintTop_toBottomOf="@+id/grades_tv_a_credit" />
+        app:layout_constraintTop_toBottomOf="@+id/grades_tv_a_credit"
+        tools:text="11" />
 
     <TextView
         android:id="@+id/grades_tv_b_credit_number"
-        tools:text="29"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="@font/impact_min"
@@ -96,7 +93,8 @@
         android:typeface="serif"
         app:layout_constraintBottom_toBottomOf="@+id/grades_tv_a_credit_number"
         app:layout_constraintEnd_toEndOf="@+id/grades_tv_b_credit"
-        app:layout_constraintStart_toStartOf="@+id/grades_tv_b_credit" />
+        app:layout_constraintStart_toStartOf="@+id/grades_tv_b_credit"
+        tools:text="29" />
 
     <ImageView
         android:id="@+id/grades_imageview3"
@@ -130,7 +128,7 @@
         android:textColor="@color/levelTwoFontColor"
         android:textSize="22sp"
         android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="@+id/grades_tv_gpa_title"
+        app:layout_constraintStart_toStartOf="@+id/grades_tv_gpa_fl_title"
         app:layout_constraintTop_toBottomOf="@+id/grades_imageview4" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
