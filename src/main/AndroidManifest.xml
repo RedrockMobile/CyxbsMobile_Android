@@ -3,8 +3,10 @@
     package="com.mredrock.cyxbs.volunteer">
 
     <application>
-        <activity android:name=".VolunteerLoginActivity"/>
-        <activity android:name=".VolunteerRecordActivity"/>
+        <activity android:name=".VolunteerLoginActivity"
+            android:launchMode="singleTop"/>
+        <activity android:name=".VolunteerRecordActivity"
+            android:launchMode="singleTop"/>
     </application>
 
 </manifest>
