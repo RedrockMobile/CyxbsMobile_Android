@@ -4,7 +4,7 @@ import okhttp3.ResponseBody
 import okio.Buffer
 import okio.BufferedSource
 import okio.ForwardingSource
-import okio.Okio
+import okio.buffer
 
 /**
  * Author: Hosigus
@@ -16,19 +16,18 @@ class RedResponseBody(private val responseBody: ResponseBody,
 ) : ResponseBody() {
 
     private val source by lazy {
-        Okio.buffer(
-                object : ForwardingSource(responseBody.source()) {
-                    private var bytesRead = 0L
-                    override fun read(sink: Buffer, byteCount: Long): Long {
-                        val read = super.read(sink, byteCount)
-                        if (read != -1L) {
-                            bytesRead += read
-                            listener.onProgress(bytesRead, responseBody.contentLength())
-                        }
-                        return read
-                    }
+        object : ForwardingSource(responseBody.source()) {
+            private var bytesRead = 0L
+            override fun read(sink: Buffer, byteCount: Long): Long {
+                val read = super.read(sink, byteCount)
+                if (read != -1L) {
+                    bytesRead += read
+                    listener.onProgress(bytesRead, responseBody.contentLength())
                 }
-        )
+                return read
+            }
+        }
+                .buffer()
     }
 
     override fun contentLength() = responseBody.contentLength()
