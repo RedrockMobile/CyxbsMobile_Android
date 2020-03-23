@@ -19,7 +19,7 @@ import com.mredrock.cyxbs.discover.grades.bean.analyze.GPAData
 import com.mredrock.cyxbs.discover.grades.bean.analyze.SingleGrade
 import com.mredrock.cyxbs.discover.grades.bean.analyze.TermGrade
 import com.mredrock.cyxbs.discover.grades.utils.baseRv.BaseHolder
-import com.mredrock.cyxbs.discover.grades.utils.widget.GraphRule
+import com.mredrock.cyxbs.discover.grades.utils.widget.AverageRule
 import kotlinx.android.synthetic.main.grades_dialog_a_credit.view.*
 import kotlinx.android.synthetic.main.grades_item_dialog_a_credit.view.*
 import kotlinx.android.synthetic.main.grades_item_gpa_list_child.view.*
@@ -101,8 +101,12 @@ class RBaseAdapter(
                 }
 
 
+                changeGPAGraph(holder.itemView)
                 holder.itemView.grades_tab_layout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
                     override fun onTabReselected(tab: TabLayout.Tab?) {
+                        if (isExpand) {
+                            changeScene.invoke()
+                        }
                     }
 
                     override fun onTabUnselected(tab: TabLayout.Tab?) {
@@ -211,6 +215,10 @@ class RBaseAdapter(
         }
         val diffResult = DiffUtil.calculateDiff(object : DiffUtil.Callback() {
             override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+                if (newItemPosition == oldItemPosition && newItemPosition == 0) {
+                    //说明是header
+                    return true
+                }
                 return arrayList[newItemPosition] == oldArray[oldItemPosition]
             }
 
@@ -223,6 +231,10 @@ class RBaseAdapter(
             }
 
             override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+                if (newItemPosition == oldItemPosition && newItemPosition == 0) {
+                    //说明是header
+                    return true
+                }
                 return arrayList[newItemPosition] == oldArray[oldItemPosition]
             }
         })
@@ -291,30 +303,27 @@ class RBaseAdapter(
                     it.gpa.toFloat()
                 }
                 gpaGraph.setData(gpaList)
+                gpaGraph.setRule(AverageRule(gpaList))
             }
             GRADES -> {
                 val list = gpaData.termGrade.map {
                     it.grade.toFloat()
                 }
                 gpaGraph.setData(list)
-                gpaGraph.setRule(object : GraphRule() {
-                    override fun mappingRule(old: Float): Float {
-                        return old / 25
-                    }
-                })
+                gpaGraph.setRule(AverageRule(list))
             }
             RANK -> {
                 val list = gpaData.termGrade.map {
                     it.rank.toFloat()
                 }
                 gpaGraph.setData(list)
-                gpaGraph.setRule(object : GraphRule() {
+                gpaGraph.setRule(object : AverageRule(list) {
                     override fun mappingRule(old: Float): Float {
-                        val max = list.max() ?: return 0F
-                        val min = list.min() ?: return 0F
-                        return (old - min) / (max - min) * 4
+                        if (old == 0F) {
+                            return 0F
+                        }
+                        return 4 - super.mappingRule(old)
                     }
-
                 })
             }
         }

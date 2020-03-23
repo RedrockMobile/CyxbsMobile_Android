@@ -263,7 +263,7 @@ class GpAGraph : View {
 
     class DefaultMappingRule : GraphRule() {
         override fun mappingRule(old: Float): Float {
-            return old
+            return old / 2 + 1
         }
 
     }
