@@ -65,7 +65,6 @@ class SplashActivity : BaseViewModelActivity<SplashViewModel>() {
             } else {
                 navigateAndFinish(MAIN_LOGIN)
             }
-            overridePendingTransition(0, 0)
         }
         if (isDownloadSplash) {//如果下载了
             object : CountDownTimer(3000, 1000) {
@@ -87,11 +86,6 @@ class SplashActivity : BaseViewModelActivity<SplashViewModel>() {
             viewModel.finishAfter(0)
         }
         viewModel = ViewModelProviders.of(this).get(SplashViewModel::class.java)
-    }
-
-    override fun finish() {
-        super.finish()
-        overridePendingTransition(0, 0)
     }
 
     //用来跳转并且关闭闪屏页
