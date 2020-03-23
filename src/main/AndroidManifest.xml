@@ -4,7 +4,8 @@
           package="com.mredrock.cyxbs.schoolcar">
 
     <application tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name="com.mredrock.cyxbs.discover.schoolcar.SchoolCarActivity"/>
+        <activity android:name="com.mredrock.cyxbs.discover.schoolcar.SchoolCarActivity"
+            android:launchMode="singleTop"/>
         <meta-data
             android:name="com.amap.api.v2.apikey"
             android:value="${amap_apikey}"/>
