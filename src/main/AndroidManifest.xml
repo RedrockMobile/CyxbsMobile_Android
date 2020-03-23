@@ -3,6 +3,7 @@
           package="com.mredrock.cyxbs.discover.map">
 
     <application>
-        <activity android:name=".MapActivity"/>
+        <activity android:name=".MapActivity"
+            android:launchMode="singleTop"/>
     </application>
 </manifest>
