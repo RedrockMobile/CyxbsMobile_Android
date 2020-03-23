@@ -3,7 +3,8 @@
     package="com.mredrock.cyxbs.discover.emptyroom">
 
     <application>
-        <activity android:name=".ui.EmptyRoomActivity" />
+        <activity android:name=".ui.EmptyRoomActivity"
+            android:launchMode="singleTop"/>
     </application>
 
 </manifest>
