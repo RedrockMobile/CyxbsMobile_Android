@@ -145,6 +145,9 @@
     <color name="mine_main_btn_gradient_start" tools:ignore="ResourceName">#4841E2</color>
     <color name="mine_main_btn_gradient_end" tools:ignore="ResourceName">#5D5DF7</color>
 
+    <!--    考试成绩-->
+    <color name="grades_gpa_rv_list_round_corner_background" tools:ignore="ResourceName">#88E8F1FC</color>
+
     <!--    公共dialog背景-->
     <color name="common_dialog_bg" tools:ignore="ResourceName">#FFFFFF</color>
 
@@ -280,7 +283,8 @@
         #ffffff
     </color>
     <!--没课约选择学生页面背景-->
-    <color name="no_class_select_student_page_background" tools:ignore="ResourceName">#ffffff</color>
+    <color name="no_class_select_student_page_background" tools:ignore="ResourceName">#ffffff
+    </color>
 
     <!--课表背景-->
     <color name="curriculum_background_color" tools:ignore="ResourceName">#ffffff</color>
