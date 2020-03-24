@@ -23,7 +23,6 @@ class ExecuteOnceObserver<T>(val onExecuteOnceNext: (T) -> Unit = {},
 
     override fun onComplete() {
         onExecuteOnceComplete()
-        onExecuteOnFinal()
     }
 
     override fun onSubscribe(d: Disposable) {

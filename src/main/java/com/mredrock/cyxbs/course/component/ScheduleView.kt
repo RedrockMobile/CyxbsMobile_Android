@@ -17,11 +17,9 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import com.mredrock.cyxbs.common.utils.LogUtils
-import com.mredrock.cyxbs.common.utils.extensions.getScreenHeight
 import com.mredrock.cyxbs.course.R
 import com.mredrock.cyxbs.course.utils.createCornerBackground
 import org.jetbrains.anko.dip
-import org.jetbrains.anko.px2dip
 import org.jetbrains.anko.px2sp
 import org.jetbrains.anko.sp
 import kotlin.math.pow

@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.mredrock.cyxbs.common.config.WEEK_NUM
@@ -66,9 +65,7 @@ class CourseFragment : BaseFragment() {
         mBinding.lifecycleOwner = this
         mWeek = arguments?.getInt(WEEK_NUM) ?: 0
 
-        activity?.let { activity: FragmentActivity ->
-            mCoursesViewModel = ViewModelProvider(activity).get(CoursesViewModel::class.java)
-        }
+        parentFragment?.let { mCoursesViewModel = ViewModelProvider(it).get(CoursesViewModel::class.java) }
         //获取生命周期与当前Fragment绑定的CoursePageViewModel
         mCoursePageViewModel = ViewModelProvider(this,
                 CoursePageViewModel.DateViewModelFactory(mWeek)).get(CoursePageViewModel::class.java)
@@ -96,7 +93,7 @@ class CourseFragment : BaseFragment() {
             }
             CourseContainerEntryFragment.CourseState.NoClassInvitationCourse -> {
                 val mBinding = DataBindingUtil.inflate<CourseNoClassInviteScheduleBinding>(LayoutInflater.from(context), R.layout.course_no_class_invite_schedule, course_schedule_container, true)
-                mBinding.noCourseInviteViewModel = activity?.let { ViewModelProvider(it).get(NoCourseInviteViewModel::class.java) }
+                mBinding.noCourseInviteViewModel = parentFragment?.let { ViewModelProvider(it).get(NoCourseInviteViewModel::class.java) }
                 mBinding.nowWeek = mWeek
                 mBinding.scheduleView
             }

@@ -22,7 +22,7 @@ import org.jetbrains.anko.dip
  */
 class ScheduleDetailView : RelativeLayout {
 
-    private lateinit var mViewPager: androidx.viewpager.widget.ViewPager
+    private lateinit var mViewPager: ViewPager
     private lateinit var mLayoutInflater: LayoutInflater
 
     private lateinit var mViewpagerAdapter: androidx.viewpager.widget.PagerAdapter
@@ -150,7 +150,7 @@ class ScheduleDetailView : RelativeLayout {
                     MeasureSpec.UNSPECIFIED), MeasureSpec.makeMeasureSpec(0,
                     MeasureSpec.UNSPECIFIED))
             parent.layoutParams.apply {
-                //将高度最大的item的高度设置为ViewPager父布局的高度
+                //将高度最大的itm的高度设置为eViewPager父布局的高度
                 if (itemView.measuredHeight > maxHeight) {
                     this.height = itemView.measuredHeight
                     maxHeight = itemView.measuredHeight
@@ -164,7 +164,7 @@ class ScheduleDetailView : RelativeLayout {
     }
 
 
-    abstract class ScheduleDetailOnPageChangeListener : androidx.viewpager.widget.ViewPager.OnPageChangeListener {
+    abstract class ScheduleDetailOnPageChangeListener : ViewPager.OnPageChangeListener {
         override fun onPageScrollStateChanged(state: Int) {
         }
 

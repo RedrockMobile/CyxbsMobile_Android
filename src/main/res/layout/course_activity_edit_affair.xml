@@ -175,10 +175,11 @@
 
 
             <EditText
-                android:id="@+id/et_title_content_input"
+                android:id="@+id/et_content_input"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
+                android:maxEms="250"
                 android:background="@drawable/course_shape_affair_edit_tilte"
                 android:gravity="center_vertical"
                 android:imeOptions="actionNext"
@@ -217,9 +218,9 @@
                 android:textSize="34sp"
                 android:textStyle="bold"
                 android:visibility="gone"
-                app:layout_constraintBottom_toTopOf="@+id/et_title_content_input"
-                app:layout_constraintEnd_toEndOf="@+id/et_title_content_input"
-                app:layout_constraintStart_toStartOf="@+id/et_title_content_input"
+                app:layout_constraintBottom_toTopOf="@+id/et_content_input"
+                app:layout_constraintEnd_toEndOf="@+id/et_content_input"
+                app:layout_constraintStart_toStartOf="@+id/et_content_input"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="1.0"
                 tools:ignore="Autofill,LabelFor,TextFields" />
@@ -231,7 +232,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/et_title_content_input"
+                app:layout_constraintTop_toBottomOf="@+id/et_content_input"
                 app:layout_constraintVertical_bias="0.0">
 
                 <androidx.constraintlayout.widget.ConstraintLayout

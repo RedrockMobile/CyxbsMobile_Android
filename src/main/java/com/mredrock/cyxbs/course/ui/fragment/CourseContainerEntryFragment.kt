@@ -14,7 +14,6 @@ import androidx.transition.Slide
 import androidx.transition.TransitionManager
 import androidx.transition.TransitionSet
 import com.alibaba.android.arouter.facade.annotation.Route
-import com.google.android.material.tabs.TabLayoutMediator
 import com.mredrock.cyxbs.common.bean.WidgetCourse
 import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.common.config.*
@@ -45,20 +44,22 @@ class CourseContainerEntryFragment : BaseFragment() {
     override val openStatistics: Boolean
         get() = false
 
+    private var courseState = CourseState.OrdinaryCourse
+
 
     //如果是在获取老师课表下面两值不为空
     private var mOthersTeaNum: String? = null
         set(value) {
             if (value != null) {
                 field = value
-                mCoursesViewModel.courseState = CourseState.TeacherCourse
+                courseState = CourseState.TeacherCourse
             }
         }
     private var mOthersTeaName: String? = null
         set(value) {
             if (value != null) {
                 field = value
-                mCoursesViewModel.courseState = CourseState.TeacherCourse
+                courseState = CourseState.TeacherCourse
             }
         }
 
@@ -67,7 +68,7 @@ class CourseContainerEntryFragment : BaseFragment() {
         set(value) {
             field = value
             if (value != null) {
-                mCoursesViewModel.courseState = CourseState.OtherCourse
+                courseState = CourseState.OtherCourse
             }
         }
 
@@ -76,14 +77,14 @@ class CourseContainerEntryFragment : BaseFragment() {
         set(value) {
             field = value
             if (value != null) {
-                mCoursesViewModel.courseState = CourseState.NoClassInvitationCourse
+                courseState = CourseState.NoClassInvitationCourse
             }
         }
     private var mNameList: ArrayList<String>? = null
         set(value) {
             field = value
             if (value != null) {
-                mCoursesViewModel.courseState = CourseState.NoClassInvitationCourse
+                courseState = CourseState.NoClassInvitationCourse
             }
         }
 
@@ -130,7 +131,7 @@ class CourseContainerEntryFragment : BaseFragment() {
             // replaceFragment(NoneLoginFragment())
             mCoursesViewModel.mWeekTitle.set(activity!!.getString(R.string.common_course))
             Thread {
-                ViewModelProvider(activity!!).get(CoursesViewModel::class.java).clearCache()
+                ViewModelProvider(this).get(CoursesViewModel::class.java).clearCache()
             }.start()
         }
     }
@@ -150,10 +151,6 @@ class CourseContainerEntryFragment : BaseFragment() {
             //如果没有被添加进Activity，Fragment会抛出not attach a context的错误
             if (!isAdded) return
 
-            //这行代码必须在下面之前执行
-            mCoursesViewModel = ViewModelProvider(activity).get(CoursesViewModel::class.java)
-            mBinding.coursesViewModel = mCoursesViewModel
-
             //获取从其他模块传来的数据
             arguments?.let { bundle ->
                 mStuNum = bundle.getString(OTHERS_STU_NUM)
@@ -169,24 +166,32 @@ class CourseContainerEntryFragment : BaseFragment() {
              * 以此可以加载不同的页面，复用到不同的地方
              */
 
-            when (mCoursesViewModel.courseState) {
+            when (courseState) {
                 //如果是普通课表
                 CourseState.OrdinaryCourse -> {
+                    mCoursesViewModel = ViewModelProvider(this).get(CoursesViewModel::class.java)
+                    mBinding.coursesViewModel = mCoursesViewModel
                     context?.let { mCoursesViewModel.getSchedulesDataFromLocalThenNetwork() }
                 }
                 //如果是没课约
                 CourseState.NoClassInvitationCourse -> {
+                    mCoursesViewModel = ViewModelProvider(this).get(CoursesViewModel::class.java)
+                    mBinding.coursesViewModel = mCoursesViewModel
                     mNoCourseInviteViewModel =
-                            ViewModelProvider(activity, NoCourseInviteViewModel.Factory(mStuNumList!!, mNameList!!))
+                            ViewModelProvider(this, NoCourseInviteViewModel.Factory(mStuNumList!!, mNameList!!))
                                     .get(NoCourseInviteViewModel::class.java)
                     mNoCourseInviteViewModel?.getCourses()
                 }
                 //如果是查询其他同学的课表
                 CourseState.OtherCourse -> {
+                    mCoursesViewModel = ViewModelProvider(this).get(CoursesViewModel::class.java)
+                    mBinding.coursesViewModel = mCoursesViewModel
                     context?.let { mCoursesViewModel.getSchedulesDataFromLocalThenNetwork(mStuNum) }
                 }
                 //如果是老师课表
                 CourseState.TeacherCourse -> {
+                    mCoursesViewModel = ViewModelProvider(this).get(CoursesViewModel::class.java)
+                    mBinding.coursesViewModel = mCoursesViewModel
                     mCoursesViewModel.isTeaCourse = true
                     mOthersTeaName?.let {
                         mCoursesViewModel.mUserName = it
@@ -212,6 +217,7 @@ class CourseContainerEntryFragment : BaseFragment() {
 
 
             //获取到ViewModel后进行一些初始化操作
+            mCoursesViewModel.courseState = courseState
             course_tv_now_course.setOnClickListener {
                 mCoursesViewModel.nowCourse.get()?.let { course ->
                     mDialogHelper.showDialog(MutableList(1) { course })

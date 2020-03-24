@@ -77,7 +77,7 @@ class AffairEditActivity : BaseActivity() {
         course_next_step.setOnClickListener {
             forward()
         }
-        et_title_content_input.setOnEditorActionListener(object : TextView.OnEditorActionListener {
+        et_content_input.setOnEditorActionListener(object : TextView.OnEditorActionListener {
             override fun onEditorAction(p0: TextView?, p1: Int, p2: KeyEvent?): Boolean {
                 return if (p1 == EditorInfo.IME_ACTION_NEXT) {
                     forward()
@@ -86,8 +86,8 @@ class AffairEditActivity : BaseActivity() {
             }
         })
         mEditAffairViewModel.content.observe(this, Observer {
-            et_title_content_input.setText(it)
-            et_title_content_input.setSelection(it.length)
+            et_content_input.setText(it)
+            et_content_input.setSelection(it.length)
         })
 
         course_back.setOnClickListener { finish() }
@@ -96,7 +96,7 @@ class AffairEditActivity : BaseActivity() {
             affairTransitionAnimHelper.modifyPageLayout()
         }
         mEditAffairViewModel.titleCandidateList.observe(this, Observer {
-            rv_you_might.adapter = YouMightAdapter(it, et_title_content_input)
+            rv_you_might.adapter = YouMightAdapter(it, et_content_input)
         })
     }
 
@@ -153,7 +153,7 @@ class AffairEditActivity : BaseActivity() {
             }
             else -> {
                 mEditAffairViewModel.postOrModifyAffair(this, mBinding.etTitle.text.toString(),
-                        mBinding.etTitleContentInput.text.toString())
+                        mBinding.etContentInput.text.toString())
             }
         }
     }

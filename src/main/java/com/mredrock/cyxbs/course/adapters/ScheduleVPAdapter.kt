@@ -1,11 +1,8 @@
 package com.mredrock.cyxbs.course.adapters
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
-import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.mredrock.cyxbs.common.config.WEEK_NUM
 import com.mredrock.cyxbs.course.ui.fragment.CourseFragment
 

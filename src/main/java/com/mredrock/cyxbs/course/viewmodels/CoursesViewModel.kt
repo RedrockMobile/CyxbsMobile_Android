@@ -69,6 +69,8 @@ class CoursesViewModel : BaseViewModel() {
 
     companion object {
         private const val TAG = "CoursesViewModel"
+        const val COURSE_TAG = 0
+        const val AFFAIR_TAG = 1
     }
 
     //当前课表Fragment的显示的状态
@@ -232,13 +234,14 @@ class CoursesViewModel : BaseViewModel() {
         if (direct) {
             getCoursesDataFromInternet()
         } else {//从数据库中获取课表数据
+            mIsGottenFromInternet = true
             getCoursesDataFromDatabase()
         }
 
         // 如果是在查他人课表(mIsGetOthers为true)，就不进行备忘查询。
         if (isGetOthers.get() == true) {
             //直接将备忘获取状态变为已经获取
-            isGetAllData(1)
+            isGetAllData(AFFAIR_TAG)
         } else {
             if (direct) {
                 getAffairsDataFromInternet()
@@ -268,7 +271,7 @@ class CoursesViewModel : BaseViewModel() {
      */
     fun refreshAffairFromInternet() {
         resetGetStatus()
-        isGetAllData(0)
+        isGetAllData(COURSE_TAG)
         getAffairsDataFromInternet()
     }
 
@@ -288,7 +291,7 @@ class CoursesViewModel : BaseViewModel() {
          * 反之就是用户在进行课表查询，这时就进行备忘的查询。
          */
         if (isGetOthers.get() == true) {
-            isGetAllData(1)
+            isGetAllData(AFFAIR_TAG)
         } else {
             getAffairsDataFromInternet()
         }
@@ -306,9 +309,8 @@ class CoursesViewModel : BaseViewModel() {
                     .subscribe(ExecuteOnceObserver(onExecuteOnceNext = { coursesFromDatabase ->
                         if (coursesFromDatabase != null && coursesFromDatabase.isNotEmpty()) {
                             courses.addAll(coursesFromDatabase)
-                            getSchedulesFromInternet()
                         }
-                    }, onExecuteOnFinal = { isGetAllData(0) }))
+                    }, onExecuteOnFinal = { isGetAllData(COURSE_TAG) }))
         }
     }
 
@@ -323,10 +325,11 @@ class CoursesViewModel : BaseViewModel() {
                     .setSchedulers()
                     .map(AffairMapToCourse())
                     .subscribe(ExecuteOnceObserver(onExecuteOnceNext = { affairsFromDatabase ->
+
                         if (affairsFromDatabase != null && affairsFromDatabase.isNotEmpty()) {
                             affairs.addAll(affairsFromDatabase)
                         }
-                    }, onExecuteOnFinal = { isGetAllData(1) }))
+                    }, onExecuteOnFinal = { isGetAllData(AFFAIR_TAG) }))
         }
     }
 
@@ -350,7 +353,7 @@ class CoursesViewModel : BaseViewModel() {
                     if (coursesFromInternet.status == 200 || coursesFromInternet.status == 233) {
                         updateNowWeek(coursesFromInternet.nowWeek)
                         //课表容错处理
-                        courseAbnormalErrorHandling(coursesFromInternet) {
+                        courseAbnormalErrorHandling(coursesFromInternet,cancel = {stopIntercept()}) {
                             courses.addAll(it)
                             if (it.isNotEmpty() && isGetOthers.get() == false) {
                                 toastEvent.value = R.string.course_course_update_tips
@@ -366,7 +369,7 @@ class CoursesViewModel : BaseViewModel() {
                             longToastEvent.value = R.string.course_use_cache
                         }
                     }
-                }, onExecuteOnFinal = { isGetAllData(0) }))
+                }, onExecuteOnFinal = { isGetAllData(COURSE_TAG) }))
     }
 
     /**
@@ -375,7 +378,7 @@ class CoursesViewModel : BaseViewModel() {
      * @param coursesFromInternet 直接从网络上拉取的课表数据
      * @param action 如果网络上的数据可信就执行这个lambda
      */
-    private fun courseAbnormalErrorHandling(coursesFromInternet: CourseApiWrapper<List<Course>>, action: (List<Course>) -> Unit) {
+    private fun courseAbnormalErrorHandling(coursesFromInternet: CourseApiWrapper<List<Course>>,cancel:()->Unit={}, action: (List<Course>) -> Unit) {
         coursesFromInternet.data?.let { notNullCourses ->
             val courseVersion = context.defaultSharedPreferences.getString("${COURSE_VERSION}${mUserNum}", "")
             /**防止服务器里面的课表抽风,所以这个弄了这么多条件，只有满足以下条件才会去替换数据库的课表
@@ -388,6 +391,8 @@ class CoursesViewModel : BaseViewModel() {
                 context.defaultSharedPreferences.editor {
                     putString("${COURSE_VERSION}${mUserNum}", coursesFromInternet.version)
                 }
+            }else{
+                cancel
             }
         }
     }
@@ -414,7 +419,7 @@ class CoursesViewModel : BaseViewModel() {
                     affairsCourse ?: return@ExecuteOnceObserver
                     EventBus.getDefault().post(AffairFromInternetEvent(affairsCourse))
                     affairs.addAll(affairsCourse)
-                }, onExecuteOnFinal = { isGetAllData(1) }))
+                }, onExecuteOnFinal = { isGetAllData(AFFAIR_TAG) }))
     }
 
     /**
@@ -429,6 +434,7 @@ class CoursesViewModel : BaseViewModel() {
      */
     @Synchronized
     private fun isGetAllData(index: Int) {
+        if (!mIsGettingData) return
         mDataGetStatus[index] = true
         if (mDataGetStatus[0] && mDataGetStatus[1]) {
             //第一种情况没啥好讲的，第二种是为了规避那种本身就没有课的大四学生，
@@ -448,14 +454,13 @@ class CoursesViewModel : BaseViewModel() {
                         tomorrowTips.set(pair.second)
                     }
                 }
-            } else {
-                // 加个标志，防止因为没有课程以及备忘的情况进行无限循环拉取。
-                if (!mIsGottenFromInternet) {
-                    mIsGottenFromInternet = true
-                    getSchedulesFromInternet()
-                }
             }
-            stopIntercept()
+            if (mIsGottenFromInternet) {
+                mIsGottenFromInternet = false
+                getSchedulesFromInternet()
+            } else {
+                stopIntercept()
+            }
         }
     }
 
@@ -464,8 +469,8 @@ class CoursesViewModel : BaseViewModel() {
      * 此方法用于重置课程获取状态
      */
     private fun resetGetStatus() {
-        mDataGetStatus[0] = false
-        mDataGetStatus[1] = false
+        mDataGetStatus[COURSE_TAG] = false
+        mDataGetStatus[AFFAIR_TAG] = false
     }
 
     /**

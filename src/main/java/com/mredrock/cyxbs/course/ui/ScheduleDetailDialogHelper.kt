@@ -6,7 +6,6 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.mredrock.cyxbs.course.R
 import com.mredrock.cyxbs.course.adapters.ScheduleDetailViewAdapter
 import com.mredrock.cyxbs.course.component.ScheduleDetailView
-import com.mredrock.cyxbs.course.ui.BaseDialogHelper
 import com.mredrock.cyxbs.course.network.Course
 
 /**
@@ -25,12 +24,13 @@ class ScheduleDetailDialogHelper constructor(context: Context) :
         private const val TAG = "ScheduleDetailDialogHelper"
     }
 
+    init {
+    }
+
     fun showDialog(schedules: MutableList<Course>) {
         mScheduleDetailViewAdapter = ScheduleDetailViewAdapter(dialog, schedules)
         val mScheduleDetailView = dialog.findViewById<ScheduleDetailView>(R.id.schedule_detail_view)
         mScheduleDetailView?.scheduleDetailViewAdapter = mScheduleDetailViewAdapter
-        dialog.getBehavior().peekHeight = 0
         dialog.show()
-        dialog.getBehavior().state = BottomSheetBehavior.STATE_EXPANDED
     }
 }

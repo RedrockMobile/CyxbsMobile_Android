@@ -1,6 +1,5 @@
 package com.mredrock.cyxbs.course.ui
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.widget.TextView
 import com.mredrock.cyxbs.common.component.RedRockAutoWarpView

@@ -29,7 +29,7 @@ class AffairTransitionAnimHelper(var affairEditActivity: AffairEditActivity?){
      */
     fun addTitleNextMonitor() {
         affairEditActivity?.apply {
-            if (et_title_content_input.text.trim().isEmpty()) {
+            if (et_content_input.text.trim().isEmpty()) {
                 Toast.makeText(this, resources.getString(R.string.course_title_is_null),
                         Toast.LENGTH_SHORT).show()
             } else {
@@ -46,16 +46,16 @@ class AffairTransitionAnimHelper(var affairEditActivity: AffairEditActivity?){
                 set.connect(R.id.tv_title_text, ConstraintSet.BOTTOM, R.id.course_textview, ConstraintSet.TOP)
                 set.connect(R.id.tv_title_text, ConstraintSet.TOP, R.id.course_affair_container, ConstraintSet.TOP)
                 set.setVerticalBias(R.id.tv_title_text, 1f)
-                set.connect(R.id.et_title_content_input, ConstraintSet.TOP, R.id.tv_content_text, ConstraintSet.BOTTOM)
+                set.connect(R.id.et_content_input, ConstraintSet.TOP, R.id.tv_content_text, ConstraintSet.BOTTOM)
                 set.applyTo(course_affair_container)
                 //单独修改控件属性要在apply之后
                 tv_title_text.textSize = 15f
                 tv_title_text.text = "标题："
                 tv_title_tips.visibility = View.VISIBLE
                 rv_you_might.visibility = View.GONE
-                tv_title_tips.text = et_title_content_input.text.toString()
+                tv_title_tips.text = et_content_input.text.toString()
                 tv_content_text.visibility = View.VISIBLE
-                et_title_content_input.text.clear()
+                et_content_input.text.clear()
                 mEditAffairViewModel.status = EditAffairViewModel.Status.ContentStatus
             }
         }
@@ -79,15 +79,15 @@ class AffairTransitionAnimHelper(var affairEditActivity: AffairEditActivity?){
             set.connect(R.id.tv_title_text, ConstraintSet.BOTTOM, R.id.course_affair_container, ConstraintSet.BOTTOM)
             set.connect(R.id.tv_title_text, ConstraintSet.TOP, R.id.course_textview, ConstraintSet.BOTTOM)
             set.setVerticalBias(R.id.tv_title_text, 0f)
-            set.connect(R.id.et_title_content_input, ConstraintSet.TOP, R.id.tv_title_text, ConstraintSet.BOTTOM)
+            set.connect(R.id.et_content_input, ConstraintSet.TOP, R.id.tv_title_text, ConstraintSet.BOTTOM)
             set.applyTo(course_affair_container)
             //单独修改控件属性要在apply之后
             tv_title_text.textSize = 34f
             tv_title_text.text = "一个标题"
             tv_title_tips.visibility = View.GONE
             rv_you_might.visibility = View.VISIBLE
-            et_title_content_input.setText(tv_title_tips.text, TextView.BufferType.EDITABLE)
-            et_title_content_input.setSelection(tv_title_tips.text.length)
+            et_content_input.setText(tv_title_tips.text, TextView.BufferType.EDITABLE)
+            et_content_input.setSelection(tv_title_tips.text.length)
             tv_title_tips.text = ""
             tv_content_text.visibility = View.GONE
             mEditAffairViewModel.status = EditAffairViewModel.Status.TitleStatus
@@ -126,8 +126,8 @@ class AffairTransitionAnimHelper(var affairEditActivity: AffairEditActivity?){
             addTransition(ChangeBounds().apply { duration = 300 })
         })
         val set = ConstraintSet().apply { clone(course_affair_container) }
-        set.connect(R.id.et_title_content_input, ConstraintSet.TOP, R.id.tv_content_text, ConstraintSet.BOTTOM)
-        set.setVerticalBias(R.id.et_title_content_input, 0f)
+        set.connect(R.id.et_content_input, ConstraintSet.TOP, R.id.tv_content_text, ConstraintSet.BOTTOM)
+        set.setVerticalBias(R.id.et_content_input, 0f)
         set.applyTo(course_affair_container)
         //单独修改控件属性要在applyTo之后
         course_textview.visibility = View.VISIBLE
@@ -138,7 +138,7 @@ class AffairTransitionAnimHelper(var affairEditActivity: AffairEditActivity?){
         tv_week_select.visibility = View.GONE
         tv_time_select.visibility = View.GONE
         tv_remind_select.visibility = View.GONE
-        et_title_content_input.imeOptions = EditorInfo.IME_ACTION_NEXT
+        et_content_input.imeOptions = EditorInfo.IME_ACTION_NEXT
         tv_title_tips.text = et_title.text
         mEditAffairViewModel.status = EditAffairViewModel.Status.ContentStatus}
     }
@@ -151,8 +151,8 @@ class AffairTransitionAnimHelper(var affairEditActivity: AffairEditActivity?){
      */
     fun modifyPageLayout() {
         affairEditActivity?.apply{val set = ConstraintSet().apply { clone(course_affair_container) }
-        set.connect(R.id.et_title_content_input, ConstraintSet.TOP, R.id.course_affair_container, ConstraintSet.TOP)
-        set.setVerticalBias(R.id.et_title_content_input, 0.32f)
+        set.connect(R.id.et_content_input, ConstraintSet.TOP, R.id.course_affair_container, ConstraintSet.TOP)
+        set.setVerticalBias(R.id.et_content_input, 0.32f)
         set.applyTo(course_affair_container)
         //单独修改控件属性要在apply之后
         course_textview.visibility = View.GONE
@@ -164,7 +164,7 @@ class AffairTransitionAnimHelper(var affairEditActivity: AffairEditActivity?){
         tv_week_select.visibility = View.VISIBLE
         tv_time_select.visibility = View.VISIBLE
         tv_remind_select.visibility = View.VISIBLE
-        et_title_content_input.imeOptions = EditorInfo.IME_ACTION_DONE
+        et_content_input.imeOptions = EditorInfo.IME_ACTION_DONE
         et_title.setText(tv_title_tips.text, TextView.BufferType.EDITABLE)
         mEditAffairViewModel.status = EditAffairViewModel.Status.AllDoneStatus}
     }
