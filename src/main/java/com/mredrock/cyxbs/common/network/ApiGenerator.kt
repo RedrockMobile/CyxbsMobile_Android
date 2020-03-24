@@ -61,7 +61,7 @@ object ApiGenerator {
                     else -> {
                         it.proceed(it.request().newBuilder().header("Authorization", "Bearer $token").build())
                     }
-                }
+                } as Response
             })
         }
         if (BuildConfig.DEBUG) {

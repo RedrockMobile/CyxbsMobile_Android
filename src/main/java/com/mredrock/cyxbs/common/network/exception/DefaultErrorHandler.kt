@@ -23,7 +23,7 @@ object DefaultErrorHandler : ErrorHandler {
                     if (BuildConfig.DEBUG) e.toString() else "网络中断，请检查您的网络状态"
             )
             e is HttpException -> BaseApp.context.toast(
-                    if (BuildConfig.DEBUG) e.response().raw().toString() else "此服务暂时不可用"
+                    if (BuildConfig.DEBUG) e.response()?.raw().toString() else "此服务暂时不可用"
             )
 
             e is RedrockApiIllegalStateException -> BaseApp.context.toast("数据异常，请稍后再试")

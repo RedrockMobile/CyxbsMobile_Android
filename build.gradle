@@ -51,7 +51,7 @@ dependencies {
     api deps.rxjava.rxkotlin
     api deps.gson.runtime
 
-    api('com.squareup.retrofit2:converter-simplexml:2.1.0') {
+    api('com.squareup.retrofit2:converter-simplexml:2.7.2') {
         exclude group: 'xpp3', module: 'xpp3'
         exclude group: 'stax', module: 'stax-api'
         exclude group: 'stax', module: 'stax'
@@ -90,9 +90,10 @@ dependencies {
 
     //杂项
     api 'com.afollestad.material-dialogs:commons:0.9.6.0'
-    api 'com.github.yalantis:ucrop:2.2.2'
+    api 'com.github.yalantis:ucrop:2.2.4'
     api 'com.github.chrisbanes:PhotoView:2.3.0'
     api 'com.billy.android:smart-swipe:1.1.2'
+//    implementation "com.squareup.okio:okio:2.3.0"
     //可以通过在Logcat中过滤 LeakCanary 标记来确认它在启动时正在运行
     debugApi 'com.squareup.leakcanary:leakcanary-android:2.2'
     api project(path: ':push_sdk')
