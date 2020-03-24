@@ -1,5 +1,7 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 apply plugin: 'com.alibaba.arouter'
+
+//这个是用来检测所有依赖的版本更新和人性化推荐版本，方便自己选择
 apply plugin: "com.github.ben-manes.versions"
 
 buildscript {
@@ -8,7 +10,6 @@ buildscript {
     ext {
         lib_config = "${rootDir}/lib_config.gradle"
         module_config = "${rootDir}/module_config.gradle"
-//        module_dependencies = "${rootDir}/dependencies.gradle"
         secret = "${rootDir}/secret.gradle"
     }
 
@@ -33,6 +34,7 @@ buildscript {
         classpath 'com.aliyun.ams:emas-services:1.0.1'
         // AndResGuard
         classpath 'com.tencent.mm:AndResGuard-gradle-plugin:1.2.17'
+        //依赖版本检测
         classpath "com.github.ben-manes:gradle-versions-plugin:0.28.0"
     }
 }
@@ -53,4 +55,13 @@ allprojects {
 
 task clean(type: Delete) {
     delete rootProject.buildDir
+}
+
+// 运行这个可以检测依赖库的是否有最新发行版，请选择更新
+// 如果要直接提升到最新版本，请自己做好新版适配准备，最好不要更新预览版或者测试版
+// 因为依赖比较多通常需要分析30分钟左右，运行完毕会在
+// 项目级的build的dependencyUpdates/report.json里面有输出文档
+dependencyUpdates {
+    revision = 'release'
+    outputFormatter = 'json'
 }
