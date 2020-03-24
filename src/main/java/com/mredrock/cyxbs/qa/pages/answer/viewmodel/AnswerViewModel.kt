@@ -20,6 +20,7 @@ import com.mredrock.cyxbs.qa.network.ApiService
 import com.mredrock.cyxbs.qa.utils.isNullOrEmpty
 import io.reactivex.Observable
 import okhttp3.MediaType
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import org.jetbrains.anko.longToast
@@ -76,12 +77,12 @@ class AnswerViewModel(var qid: String) : BaseViewModel() {
                 .addFormDataPart("answer_id", qid)
         files.forEachIndexed { index, file ->
             val suffix = file.name.substring(file.name.lastIndexOf(".") + 1)
-            val imageBody = RequestBody.create(MediaType.parse("image/$suffix"), file)
+            val imageBody = RequestBody.create("image/$suffix".toMediaTypeOrNull(), file)
             val name = "photo" + (index + 1)
             builder.addFormDataPart(name, file.name, imageBody)
         }
         return ApiGenerator.getApiService(ApiService::class.java)
-                .uploadAnswerPic(builder.build().parts())
+                .uploadAnswerPic(builder.build().parts)
                 .setSchedulers()
                 .checkError()
     }

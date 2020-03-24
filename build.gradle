@@ -6,7 +6,7 @@ dependencies {
     implementation project(':lib_common')
     kapt deps.arouter.compiler
 
-    implementation 'de.hdodenhof:circleimageview:2.2.0'
+    implementation 'de.hdodenhof:circleimageview:3.1.0'
     implementation 'com.ms-square:expandableTextView:0.1.4'
-    implementation 'com.github.limuyang2:LPhotoPicker:1.0.7'
+    implementation 'com.github.limuyang2:LPhotoPicker:1.0.9'
 }

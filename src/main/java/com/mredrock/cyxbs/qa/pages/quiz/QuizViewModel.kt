@@ -22,6 +22,7 @@ import com.mredrock.cyxbs.qa.utils.toDate
 import com.mredrock.cyxbs.qa.utils.toFormatString
 import io.reactivex.Observable
 import okhttp3.MediaType
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import org.jetbrains.anko.longToast
@@ -110,12 +111,12 @@ class QuizViewModel : BaseViewModel() {
                 .addFormDataPart("question_id", qid)
         files.forEachIndexed { index, file ->
             val suffix = file.name.substring(file.name.lastIndexOf(".") + 1)
-            val imageBody = RequestBody.create(MediaType.parse("image/$suffix"), file)
+            val imageBody = RequestBody.create("image/$suffix".toMediaTypeOrNull(), file)
             val name = "photo" + (index + 1)
             builder.addFormDataPart(name, file.name, imageBody)
         }
         return ApiGenerator.getApiService(ApiService::class.java)
-                .uploadQuestionPic(builder.build().parts())
+                .uploadQuestionPic(builder.build().parts)
                 .setSchedulers()
                 .checkError()
     }
