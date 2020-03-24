@@ -5,7 +5,6 @@ import android.app.Notification
 import android.content.Context
 import android.content.Intent
 import android.os.Build
-import com.mredrock.cyxbs.common.utils.CrashHandler
 
 /**
  * author: Fxymine4ever

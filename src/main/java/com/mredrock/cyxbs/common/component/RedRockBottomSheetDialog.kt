@@ -25,6 +25,5 @@ open class RedRockBottomSheetDialog(context: Context) : BottomSheetDialog(contex
 
     override fun dismiss() {
         super.dismiss()
-        this.behavior.state = BottomSheetBehavior.STATE_COLLAPSED
     }
 }
