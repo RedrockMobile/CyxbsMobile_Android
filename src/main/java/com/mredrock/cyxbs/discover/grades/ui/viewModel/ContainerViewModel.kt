@@ -87,7 +87,7 @@ class ContainerViewModel : BaseViewModel() {
                             //密码错误的话,会导致状态码为400，Retrofit无法回调onNext
                             //详见：https://www.cnblogs.com/fuyaozhishang/p/8607706.html
                             if (it is HttpException) {
-                                val body = (it).response().errorBody() ?: return@safeSubscribeBy
+                                val body = (it).response()?.errorBody() ?: return@safeSubscribeBy
                                 val data = Gson().fromJson(body.string(), IdsStatus::class.java)
                                 if (data.errorCode == ERROR) {
                                     replaceBindFragmentToGPAFragment.postValue(false)
@@ -128,7 +128,7 @@ class ContainerViewModel : BaseViewModel() {
                             //未绑定的话,会导致状态码为400，Retrofit无法回调onNext
                             //详见：https://www.cnblogs.com/fuyaozhishang/p/8607706.html
                             if (it is HttpException) {
-                                val errorBody = it.response().errorBody()?.string() ?: ""
+                                val errorBody = it.response()?.errorBody()?.string() ?: ""
                                 val gpaStatus = Gson().fromJson(errorBody, GPAStatus::class.java)
                                 _analyzeData.postValue(gpaStatus)
                             } else {
