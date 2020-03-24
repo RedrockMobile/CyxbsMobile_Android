@@ -31,6 +31,7 @@ import com.mredrock.cyxbs.mine.R
 import com.yalantis.ucrop.UCrop
 import kotlinx.android.synthetic.main.mine_activity_edit_info.*
 import okhttp3.MediaType
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import org.jetbrains.anko.textColor
@@ -387,7 +388,7 @@ class EditInfoActivity(override val isFragmentActivity: Boolean = false,
 
         try {
             val fileBody = MultipartBody.Part.createFormData("fold", destinationFile.name, destinationFile.getRequestBody())
-            val numBody = RequestBody.create(MediaType.parse("multipart/form-data"), userService.getStuNum())
+            val numBody = RequestBody.create("multipart/form-data".toMediaTypeOrNull(), userService.getStuNum())
             viewModel.uploadAvatar(numBody, fileBody)
         } catch (e: IOException) {
             e.printStackTrace()
