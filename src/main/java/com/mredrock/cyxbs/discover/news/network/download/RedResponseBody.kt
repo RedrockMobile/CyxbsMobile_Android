@@ -1,10 +1,7 @@
 package com.mredrock.cyxbs.discover.news.network.download
 
 import okhttp3.ResponseBody
-import okio.Buffer
-import okio.BufferedSource
-import okio.ForwardingSource
-import okio.buffer
+import okio.*
 
 /**
  * Author: Hosigus
@@ -26,8 +23,7 @@ class RedResponseBody(private val responseBody: ResponseBody,
                 }
                 return read
             }
-        }
-                .buffer()
+        }.buffer()
     }
 
     override fun contentLength() = responseBody.contentLength()
