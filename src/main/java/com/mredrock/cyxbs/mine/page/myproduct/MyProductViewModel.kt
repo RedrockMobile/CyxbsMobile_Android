@@ -3,9 +3,9 @@ package com.mredrock.cyxbs.mine.page.myproduct
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
+import com.mredrock.cyxbs.common.network.ApiGeneratorForSign
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
-import com.mredrock.cyxbs.mine.network.ApiGeneratorForSign
 import com.mredrock.cyxbs.mine.network.ApiService
 import com.mredrock.cyxbs.mine.network.model.MyProduct
 import com.mredrock.cyxbs.mine.util.extension.disposeAll

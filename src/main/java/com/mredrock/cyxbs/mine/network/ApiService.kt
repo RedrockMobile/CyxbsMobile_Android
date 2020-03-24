@@ -64,19 +64,19 @@ interface ApiService {
 
     //兑换商品
     @FormUrlEncoded
-    @POST("QA/Integral/order")
+    @POST("/magipoke-intergral/QA/Integral/order")
     fun exchangeProduct(@Field("name") name: String,
                         @Field("value") value: Int): Observable<RedrockApiStatus>
 
     //获取商品
     @FormUrlEncoded
-    @POST("QA/Integral/getItemList")
+    @POST("/magipoke-intergral/QA/Integral/getItemList")
     fun getProducts(@Field("page") page: Int,
                     @Field("size") size: Int = 6): Observable<RedrockApiWrapper<List<Product>>>
 
     //我的商品
     @FormUrlEncoded
-    @POST("QA/Integral/myRepertory")
+    @POST("/magipoke-intergral/QA/Integral/myRepertory")
     fun getMyProducts(@Field("page") page: Int,
                       @Field("size") size: Int = 6): Observable<RedrockApiWrapper<List<MyProduct>>>
 
