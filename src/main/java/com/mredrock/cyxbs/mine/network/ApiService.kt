@@ -15,13 +15,6 @@ import retrofit2.http.*
 interface ApiService {
 
     /**
-     * 获取个人详细资料
-     */
-    @FormUrlEncoded
-    @POST("/app/index.php/Home/Person/search")
-    fun getPersonInfo(@Field("stuNum") stuNum: String, @Field("idNum") idNum: String): Observable<RedrockApiWrapper<UserLocal>>
-
-    /**
      * 上传头像
      */
     @Multipart

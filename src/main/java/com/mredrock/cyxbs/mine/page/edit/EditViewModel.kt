@@ -6,10 +6,10 @@ import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.service.account.IAccountService
 import com.mredrock.cyxbs.common.service.account.IUserEditorService
 import com.mredrock.cyxbs.common.service.account.IUserService
-import com.mredrock.cyxbs.common.utils.extensions.*
+import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
+import com.mredrock.cyxbs.common.utils.extensions.mapOrThrowApiException
+import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
-import com.mredrock.cyxbs.common.viewmodel.event.SingleLiveEvent
-import com.mredrock.cyxbs.mine.network.model.UserLocal
 import com.mredrock.cyxbs.mine.util.apiService
 import com.mredrock.cyxbs.mine.util.extension.normalStatus
 import okhttp3.MultipartBody
@@ -20,15 +20,10 @@ import okhttp3.RequestBody
  */
 class EditViewModel : BaseViewModel() {
 
-    //提示视图Fragment，User的信息已更新
-    private val _isUserUpdate = SingleLiveEvent<Boolean>()
-    val isUserUpdate: SingleLiveEvent<Boolean>
-        get() = _isUserUpdate
-
-
     private val userService: IUserService by lazy {
         ServiceManager.getService(IAccountService::class.java).getUserService()
     }
+
     private val idNum = BaseApp.context.defaultSharedPreferences.getString("SP_KEY_ID_NUM", "")
     private val userEditService: IUserEditorService by lazy {
         ServiceManager.getService(IAccountService::class.java).getUserEditorService()
@@ -82,31 +77,5 @@ class EditViewModel : BaseViewModel() {
                 .safeSubscribeBy(onError = { upLoadImageEvent.value = false }
                         , onNext = { upLoadImageEvent.value = true })
                 .lifeCycle()
-
-
-    }
-
-    fun getUserInfo() {
-        apiService.getPersonInfo(userService.getStuNum(), idNum ?: return)
-                .mapOrThrowApiException()
-                .setSchedulers()
-                .doOnErrorWithDefaultErrorHandler { false }
-                .safeSubscribeBy(onNext = {
-                    //更新BaseUser
-                    freshBaseUser(it)
-                    _isUserUpdate.postValue(true)
-
-                }).lifeCycle()
-    }
-
-    private fun freshBaseUser(user: UserLocal) {
-        ServiceManager.getService(IAccountService::class.java).getUserEditorService().apply {
-            setIntroduction(user.introduction)
-            setNickname(user.nickname)
-            setQQ(user.qq)
-            setPhone(user.phone)
-            setAvatarImgUrl(user.photoSrc)
-        }
-
     }
 }

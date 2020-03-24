@@ -143,8 +143,6 @@ class EditInfoActivity(override val isFragmentActivity: Boolean = false,
         initViewAndData()
 
         setTextChangeListener()
-
-        viewModel.getUserInfo()
     }
 
     override fun onBackPressed() {
@@ -204,10 +202,6 @@ class EditInfoActivity(override val isFragmentActivity: Boolean = false,
             } else {
                 toast("修改头像失败")
             }
-        })
-
-        viewModel.isUserUpdate.observe(this, Observer {
-            refreshUserInfo()
         })
     }
 
