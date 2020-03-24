@@ -26,6 +26,7 @@ import com.mredrock.cyxbs.discover.utils.MoreFunctionProvider
 import kotlinx.android.synthetic.main.discover_home_fragment.*
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import org.jetbrains.anko.sp
 
 /**
  * @author zixuan
@@ -127,6 +128,7 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>() {
             } else {
                 setTextColor(ContextCompat.getColor(context,R.color.menuFontColorFound))
             }
+            textSize = 15f
 //            textColor = R.color.menuFontColorFound
             setOnClickListener {
                 ARouter.getInstance().build(DISCOVER_NEWS_ITEM).withString("id", id).navigation()
@@ -168,7 +170,7 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>() {
     }
 
     private fun addFeedFragment(fragment: Fragment) {
-        fragmentManager?.beginTransaction()?.add(R.id.ll_discover_feeds, fragment)?.commit()
+        parentFragmentManager.beginTransaction().add(R.id.ll_discover_feeds, fragment).commit()
 
     }
 
