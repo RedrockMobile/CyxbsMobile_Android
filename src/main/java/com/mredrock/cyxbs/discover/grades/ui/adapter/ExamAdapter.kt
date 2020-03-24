@@ -37,7 +37,7 @@ class ExamAdapter(val context: Context,
     }
 
     override fun getItemCount(): Int {
-        return super.getItemCount()
+        return super.getItemCount() + 1
     }
 
     @SuppressLint("SetTextI18n")
