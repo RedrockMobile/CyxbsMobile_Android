@@ -52,11 +52,11 @@ object ApiGeneratorForSign {
                  * 在外面加一层判断，用于token未过期时，能够异步请求，不用阻塞在checkRefresh()
                  * 如果有更好方式再改改
                  */
-                if (refreshToken.isNotEmpty() && isTokenExpired()) {
+                (if (refreshToken.isNotEmpty() && isTokenExpired()) {
                     checkRefresh(it)
                 } else {
                     it.proceed(it.request().newBuilder().header("Authorization", "Bearer $token").build())
-                }
+                }) as Response
             })
         }
         if (BuildConfig.DEBUG) {

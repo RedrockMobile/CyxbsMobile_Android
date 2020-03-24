@@ -21,6 +21,10 @@ dependencies {
     androidTestImplementation 'androidx.test:runner:1.2.0'
     androidTestImplementation 'androidx.test:rules:1.2.0'
 
+    //上线之前如果需要检测是否有内存泄漏，直接解除注释，然后安装debug版本的掌邮
+    // 就会附带一个LeakCanary的app来检测是否有内存泄漏
+    //debugApi 'com.squareup.leakcanary:leakcanary-android:2.2'
+
     //kotlin
     api deps.kotlin.runtime
     api deps.kotlin.anko
@@ -92,10 +96,6 @@ dependencies {
     api 'com.afollestad.material-dialogs:commons:0.9.6.0'
     api 'com.github.yalantis:ucrop:2.2.4'
     api 'com.github.chrisbanes:PhotoView:2.3.0'
-    api 'com.billy.android:smart-swipe:1.1.2'
-//    implementation "com.squareup.okio:okio:2.3.0"
-    //可以通过在Logcat中过滤 LeakCanary 标记来确认它在启动时正在运行
-    debugApi 'com.squareup.leakcanary:leakcanary-android:2.2'
     api project(path: ':push_sdk')
 
 }
