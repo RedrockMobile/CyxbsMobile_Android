@@ -10,6 +10,7 @@ import com.mredrock.cyxbs.discover.grades.R
 import com.mredrock.cyxbs.discover.grades.bean.Exam
 import com.mredrock.cyxbs.discover.grades.utils.baseRv.BaseAdapter
 import com.mredrock.cyxbs.discover.grades.utils.baseRv.BaseHolder
+import com.mredrock.cyxbs.discover.grades.utils.extension.logr
 import kotlinx.android.synthetic.main.grades_item_exam.view.*
 import java.util.*
 

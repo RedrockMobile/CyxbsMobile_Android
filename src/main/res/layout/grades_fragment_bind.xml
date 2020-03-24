@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/grades_constraint_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/grades_textview2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="20dp"
+        android:textColor="@color/levelTwoFontColor"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:text="@string/grades_bottom_sheet_bind_title" />
+
+
+    <ImageView
+        android:id="@+id/grades_imageview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:src="@drawable/grades_bind_ids_num"
+        app:layout_constraintStart_toStartOf="@+id/grades_textview2"
+        app:layout_constraintTop_toBottomOf="@+id/grades_textview2" />
+
+    <ImageView
+        android:id="@+id/grades_imageview2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:src="@drawable/grades_bind_ids_password"
+        app:layout_constraintEnd_toEndOf="@+id/grades_imageview"
+        app:layout_constraintStart_toStartOf="@+id/grades_imageview"
+        app:layout_constraintTop_toBottomOf="@+id/grades_imageview" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/et_account_container"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:gravity="bottom"
+        app:layout_constraintBottom_toBottomOf="@+id/grades_imageview"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/grades_imageview">
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/grades_et_ids"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:drawablePadding="16dp"
+            android:hint="@string/grades_bottom_sheet_bind_ids_num"
+            android:inputType="number"
+            android:maxLength="10"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:textColor="@color/main_activity_login_et_edited_color"
+            android:textColorHint="@color/main_activity_login_et_hint_color"
+            android:textSize="14sp" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/et_password_container"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:gravity="bottom"
+        app:layout_constraintBottom_toBottomOf="@+id/grades_imageview2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/grades_imageview">
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/grades_et_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:drawablePadding="16dp"
+            android:hint="@string/grades_bottom_sheet_bind_ids_password"
+            android:imeOptions="actionSend"
+            android:inputType="textPassword"
+            android:maxLength="6"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:textColor="@color/main_activity_login_et_edited_color"
+            android:textColorHint="@color/main_activity_login_et_hint_color"
+            android:textSize="14sp" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <Button
+        android:id="@+id/grades_btn_bind"
+        android:layout_width="0dp"
+        android:layout_height="52dp"
+        android:layout_marginStart="33dp"
+        android:layout_marginTop="48dp"
+        android:layout_marginEnd="33dp"
+        android:background="@drawable/common_toolbar_background"
+        android:text="@string/grades_bottom_sheet_bind_btn"
+        android:textColor="@color/whiteFontColor"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/et_password_container"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/grades_lottie"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        app:lottie_loop="true"
+        app:lottie_autoPlay="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:lottie_fileName="bubble.json" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

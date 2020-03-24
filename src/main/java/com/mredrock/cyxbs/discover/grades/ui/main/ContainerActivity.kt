@@ -3,10 +3,11 @@ package com.mredrock.cyxbs.discover.grades.ui.main
 import android.os.Bundle
 import android.view.View
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.bumptech.glide.Glide
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -16,18 +17,20 @@ import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.service.account.IAccountService
 import com.mredrock.cyxbs.common.service.account.IUserService
 import com.mredrock.cyxbs.common.ui.BaseActivity
-import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
+import com.mredrock.cyxbs.common.utils.extensions.toast
 import com.mredrock.cyxbs.discover.grades.R
 import com.mredrock.cyxbs.discover.grades.bean.Exam
-import com.mredrock.cyxbs.discover.grades.bean.Grade
+import com.mredrock.cyxbs.discover.grades.bean.analyze.isNotBind
+import com.mredrock.cyxbs.discover.grades.bean.analyze.isSuccessful
 import com.mredrock.cyxbs.discover.grades.ui.adapter.ExamAdapter
 import com.mredrock.cyxbs.discover.grades.ui.adapter.GradesShowAdapter
+import com.mredrock.cyxbs.discover.grades.ui.fragment.BindFragment
+import com.mredrock.cyxbs.discover.grades.ui.fragment.GPAFragment
 import com.mredrock.cyxbs.discover.grades.ui.viewModel.ContainerViewModel
 import com.mredrock.cyxbs.discover.grades.utils.extension.dp2px
-import com.mredrock.cyxbs.discover.grades.utils.widget.GraphRule
 import kotlinx.android.synthetic.main.grades_activity_container.*
-import kotlinx.android.synthetic.main.grades_fragment.*
-import kotlinx.android.synthetic.main.grades_fragment.view.*
+import kotlinx.android.synthetic.main.grades_bottom_sheet.*
+import kotlinx.android.synthetic.main.grades_bottom_sheet.view.*
 
 /**
  * @CreateBy: FxyMine4ever
@@ -37,6 +40,17 @@ import kotlinx.android.synthetic.main.grades_fragment.view.*
 
 @Route(path = DISCOVER_GRADES)
 class ContainerActivity : BaseActivity() {
+    companion object {
+        @JvmStatic
+        val UNDEFINED = 1
+        @JvmStatic
+        val IS_BIND_FRAGMENT = 2
+        @JvmStatic
+        val IS_GPA_FRAGMENT = 3
+    }
+
+    //区分FrameLayout内的fragment的type：未确定，BindFragment，或GPAFragment
+    private var typeOfFragment = UNDEFINED
     //exam
     override val isFragmentActivity = true
     private lateinit var viewModel: ContainerViewModel
@@ -48,9 +62,7 @@ class ContainerActivity : BaseActivity() {
 
     //grades
     private lateinit var parent: View
-    private var gradesData: MutableList<Grade> = ArrayList()
     private lateinit var adapter: GradesShowAdapter
-    private lateinit var recyclerView: RecyclerView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,16 +75,35 @@ class ContainerActivity : BaseActivity() {
         }
         viewModel = ViewModelProviders.of(this@ContainerActivity).get(ContainerViewModel::class.java)
         initExam()
-        initGrades()
+        initBottomSheet()
+        initObserver()
+        viewModel.getAnalyzeData()
+    }
 
-        //初始化数据和设置映射规则
-        gpa_graph.setData(arrayListOf(88F, 99F, 77F, 44F, 100F, 98F, 99F, 89F))
-        gpa_graph.setRule(object : GraphRule() {
-            override fun mappingRule(old: Float): Float {
-                return old / 25
+    private fun initObserver() {
+        viewModel.replaceBindFragmentToGPAFragment.observe(this@ContainerActivity, Observer {
+            if (it == true) {
+                viewModel.getAnalyzeData()
             }
         })
-        gpa_graph.invalidate()
+        viewModel.analyzeData.observe(this@ContainerActivity, Observer {
+            if (it.isSuccessful) {
+                if (typeOfFragment != IS_GPA_FRAGMENT) {
+                    typeOfFragment = IS_GPA_FRAGMENT
+                    replaceFragment(GPAFragment())
+                }
+            } else {
+                if (it.isNotBind) {
+                    if (typeOfFragment != IS_BIND_FRAGMENT) {
+                        typeOfFragment = IS_BIND_FRAGMENT
+                        replaceFragment(BindFragment())
+                    }
+                } else {
+                    BaseApp.context.toast("未知错误")
+                }
+            }
+        })
+
     }
 
     private fun initExam() {
@@ -94,11 +125,9 @@ class ContainerActivity : BaseActivity() {
         viewModel.loadData(user.getStuNum())
     }
 
-    private fun initGrades() {
+    private fun initBottomSheet() {
         parent = fl_grades_bottom_sheet
-        recyclerView = parent.rv_grades
         initHeader()
-        initRv()
         initBehavior()
     }
 
@@ -118,18 +147,11 @@ class ContainerActivity : BaseActivity() {
         parent.tv_grades_name.text = user.getRealName()
     }
 
-    private fun initRv() {
-        adapter = GradesShowAdapter(gradesData, this)
-        recyclerView.layoutManager = LinearLayoutManager(this)
-        recyclerView.adapter = adapter
-        viewModel.gradesData.observe(this@ContainerActivity, Observer {
-            gradesData.clear()
-            gradesData.addAll(it as MutableList<Grade>)
-            adapter.notifyDataSetChanged()
-        })
-        val idNum = BaseApp.context.defaultSharedPreferences.getString("SP_KEY_ID_NUM", "")
-                ?: return
-        viewModel.loadGrades(user.getStuNum(), idNum)
+    private fun replaceFragment(fragment: Fragment) {
+        val fragmentManager = supportFragmentManager
+        val transaction: FragmentTransaction = fragmentManager.beginTransaction()
+        transaction.replace(R.id.grades_bottom_sheet_frame_layout, fragment)
+        transaction.commit()
     }
 
 }

@@ -12,14 +12,14 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.mredrock.cyxbs.discover.grades.R
 import com.mredrock.cyxbs.discover.grades.bean.Grade
-import kotlinx.android.synthetic.main.grades_item_grade.view.*
+import kotlinx.android.synthetic.main.grades_item_gpa_list_child.view.*
 
 class GradesShowAdapter(val data : MutableList<Grade>,
                         val context: Context)
     : RecyclerView.Adapter<GradesShowAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder(LayoutInflater.from(context).inflate(R.layout.grades_item_grade,parent,false))
+        return ViewHolder(LayoutInflater.from(context).inflate(R.layout.grades_item_gpa_list_child,parent,false))
     }
 
     override fun getItemCount(): Int {

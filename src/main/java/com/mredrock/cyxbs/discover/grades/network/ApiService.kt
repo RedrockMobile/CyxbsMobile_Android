@@ -3,10 +3,11 @@ package com.mredrock.cyxbs.discover.grades.network
 import com.mredrock.cyxbs.common.bean.RedrockApiWrapper
 import com.mredrock.cyxbs.discover.grades.bean.Exam
 import com.mredrock.cyxbs.discover.grades.bean.Grade
+import com.mredrock.cyxbs.discover.grades.bean.IdsBean
+import com.mredrock.cyxbs.discover.grades.bean.IdsStatus
+import com.mredrock.cyxbs.discover.grades.bean.analyze.GPAStatus
 import io.reactivex.Observable
-import retrofit2.http.Field
-import retrofit2.http.FormUrlEncoded
-import retrofit2.http.POST
+import retrofit2.http.*
 
 /**
  * @CreateBy: FxyMine4ever
@@ -34,5 +35,11 @@ interface ApiService {
     @FormUrlEncoded
     @POST("/api/examReexam")
     fun getReExam(@Field("stuNum") stu: String): Observable<RedrockApiWrapper<List<Exam>>>
+
+    @POST("/wxapi/magipoke/ids/bind")
+    fun bindIds(@Body idsBean: IdsBean) : Observable<IdsStatus>
+
+    @GET("/magipoke/gpa")
+    fun getAnalyzeData(): Observable<GPAStatus>
 
 }

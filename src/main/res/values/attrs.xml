@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <declare-styleable name="GpAGraph" tools:ignore="ResourceName">
+        <attr name="gpa_line_color" format="color" />
+        <attr name="gpa_dash_color" format="color" />
+        <attr name="gpa_text_color" format="color" />
+        <attr name="gpa_text_size" format="dimension" />
+        <attr name="gpa_circle_inside_color" format="color" />
+        <attr name="gpa_gradient_bottom_color" format="color" />
+        <attr name="gpa_gradient_top_color" format="color" />
+    </declare-styleable>
+</resources>
