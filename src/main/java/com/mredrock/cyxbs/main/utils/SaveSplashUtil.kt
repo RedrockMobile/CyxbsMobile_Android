@@ -19,7 +19,7 @@ fun downloadSplash(mUrl: String, context: Context) {
         }
 
         override fun onResponse(call: Call, response: Response) {
-            response.body()?.let {
+            response.body?.let {
                 val stream = it.byteStream()
                 val bitmap = BitmapFactory.decodeStream(stream)
 
