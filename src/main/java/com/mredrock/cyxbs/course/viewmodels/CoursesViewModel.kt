@@ -271,6 +271,7 @@ class CoursesViewModel : BaseViewModel() {
      */
     fun refreshAffairFromInternet() {
         resetGetStatus()
+        isContinueExecution()
         isGetAllData(COURSE_TAG)
         getAffairsDataFromInternet()
     }
