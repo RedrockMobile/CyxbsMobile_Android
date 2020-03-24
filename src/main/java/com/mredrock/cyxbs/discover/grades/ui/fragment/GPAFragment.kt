@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import com.mredrock.cyxbs.discover.grades.R
 import com.mredrock.cyxbs.discover.grades.ui.expandableAdapter.RBaseAdapter
 import com.mredrock.cyxbs.discover.grades.ui.viewModel.ContainerViewModel
@@ -29,7 +29,7 @@ class GPAFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel = activity?.run {
-            ViewModelProviders.of(this)[ContainerViewModel::class.java]
+            ViewModelProvider(this)[ContainerViewModel::class.java]
         } ?: throw Exception("Invalid Activity")
     }
 
@@ -43,7 +43,7 @@ class GPAFragment : Fragment() {
         hashMap.put(RBaseAdapter.NORMAL_TOP, R.layout.grades_item_gpa_list_normal_top)
 
 
-        viewModel.analyzeData.observe(this, Observer {
+        viewModel.analyzeData.observe(viewLifecycleOwner, Observer {
             val context = context ?: return@Observer
             adapter = RBaseAdapter(context, hashMap, it.data)
             grades_rv.adapter = adapter

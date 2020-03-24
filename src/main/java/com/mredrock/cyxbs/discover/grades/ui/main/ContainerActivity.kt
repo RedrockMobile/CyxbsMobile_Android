@@ -6,7 +6,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.bumptech.glide.Glide
@@ -17,10 +17,8 @@ import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.service.account.IAccountService
 import com.mredrock.cyxbs.common.service.account.IUserService
 import com.mredrock.cyxbs.common.ui.BaseActivity
-import com.mredrock.cyxbs.common.utils.extensions.toast
 import com.mredrock.cyxbs.discover.grades.R
 import com.mredrock.cyxbs.discover.grades.bean.Exam
-import com.mredrock.cyxbs.discover.grades.bean.analyze.isNotBind
 import com.mredrock.cyxbs.discover.grades.bean.analyze.isSuccessful
 import com.mredrock.cyxbs.discover.grades.ui.adapter.ExamAdapter
 import com.mredrock.cyxbs.discover.grades.ui.adapter.GradesShowAdapter
@@ -73,7 +71,7 @@ class ContainerActivity : BaseActivity() {
                     false)
             setTitleLocationAtLeft(true)
         }
-        viewModel = ViewModelProviders.of(this@ContainerActivity).get(ContainerViewModel::class.java)
+        viewModel = ViewModelProvider(this@ContainerActivity).get(ContainerViewModel::class.java)
         initExam()
         initBottomSheet()
         initObserver()
@@ -87,21 +85,18 @@ class ContainerActivity : BaseActivity() {
             }
         })
         viewModel.analyzeData.observe(this@ContainerActivity, Observer {
-            if (it.isSuccessful) {
+            if (it != null && it.isSuccessful) {
                 if (typeOfFragment != IS_GPA_FRAGMENT) {
                     typeOfFragment = IS_GPA_FRAGMENT
                     replaceFragment(GPAFragment())
                 }
             } else {
-                if (it.isNotBind) {
-                    if (typeOfFragment != IS_BIND_FRAGMENT) {
-                        typeOfFragment = IS_BIND_FRAGMENT
-                        replaceFragment(BindFragment())
-                    }
-                } else {
-                    BaseApp.context.toast("未知错误")
+                if (typeOfFragment != IS_BIND_FRAGMENT) {
+                    typeOfFragment = IS_BIND_FRAGMENT
+                    replaceFragment(BindFragment())
                 }
             }
+
         })
 
     }
@@ -110,7 +105,6 @@ class ContainerActivity : BaseActivity() {
         mAdapter = ExamAdapter(this@ContainerActivity, data, intArrayOf(R.layout.grades_item_init, R.layout.grades_item_exam))
         rv_exam_main.adapter = mAdapter
         rv_exam_main.layoutManager = LinearLayoutManager(this@ContainerActivity)
-        data.add(0, Exam())//这里在首位加空Exam是为了给Adapter里的Header占位
 
         //观察数据
         viewModel.examData.observe(this@ContainerActivity, Observer { list ->

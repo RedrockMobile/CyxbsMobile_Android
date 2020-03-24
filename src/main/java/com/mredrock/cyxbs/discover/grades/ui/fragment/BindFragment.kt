@@ -11,7 +11,7 @@ import android.view.inputmethod.EditorInfo
 import androidx.core.view.get
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import com.mredrock.cyxbs.common.utils.extensions.toast
 import com.mredrock.cyxbs.discover.grades.R
 import com.mredrock.cyxbs.discover.grades.ui.viewModel.ContainerViewModel
@@ -30,7 +30,7 @@ class BindFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel = activity?.run {
-            ViewModelProviders.of(this)[ContainerViewModel::class.java]
+            ViewModelProvider(this)[ContainerViewModel::class.java]
         } ?: throw Exception("Invalid Activity")
     }
 
@@ -47,7 +47,7 @@ class BindFragment : Fragment() {
                 context?.toast("请输入统一认证码和密码哟")
             }
         }
-        viewModel.replaceBindFragmentToGPAFragment.observe(this, Observer {
+        viewModel.replaceBindFragmentToGPAFragment.observe(viewLifecycleOwner, Observer {
             if (it == false) {
                 bubble()
             }

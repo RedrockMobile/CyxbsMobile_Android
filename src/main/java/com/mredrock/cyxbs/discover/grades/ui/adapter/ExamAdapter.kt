@@ -10,7 +10,6 @@ import com.mredrock.cyxbs.discover.grades.R
 import com.mredrock.cyxbs.discover.grades.bean.Exam
 import com.mredrock.cyxbs.discover.grades.utils.baseRv.BaseAdapter
 import com.mredrock.cyxbs.discover.grades.utils.baseRv.BaseHolder
-import com.mredrock.cyxbs.discover.grades.utils.extension.logr
 import kotlinx.android.synthetic.main.grades_item_exam.view.*
 import java.util.*
 
@@ -37,11 +36,16 @@ class ExamAdapter(val context: Context,
         return FOOTER
     }
 
+    override fun getItemCount(): Int {
+        return super.getItemCount()
+    }
+
     @SuppressLint("SetTextI18n")
     override fun onBinds(holder: BaseHolder, t: MutableList<Exam>?, position: Int, viewType: Int) {
         when (viewType) {
             NORMAL -> {
-                t?.get(position).let { it ->
+                //减一是因为要删除Header的占位
+                t?.get(position - 1).let { it ->
 
                     it?.let {
                         if (it.week?.toInt() != 0) {
