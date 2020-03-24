@@ -6,7 +6,6 @@ import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.common.viewmodel.event.ProgressDialogEvent
@@ -30,9 +29,9 @@ abstract class BaseViewModelActivity<T : BaseViewModel> : BaseActivity() {
         super.onCreate(savedInstanceState)
         val viewModelFactory = getViewModelFactory()
         viewModel = if (viewModelFactory != null) {
-            ViewModelProviders.of(this, viewModelFactory).get(viewModelClass)
+            ViewModelProvider(this, viewModelFactory).get(viewModelClass)
         } else {
-            ViewModelProviders.of(this).get(viewModelClass)
+            ViewModelProvider(this).get(viewModelClass)
         }
         viewModel.apply {
             toastEvent.observe { str -> str?.let { CyxbsToast.makeText(baseContext, it, Toast.LENGTH_SHORT).show() } }
