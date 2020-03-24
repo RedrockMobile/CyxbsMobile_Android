@@ -36,6 +36,13 @@
         android:id="@+id/grades_view_gpa_graph"
         android:layout_width="match_parent"
         android:layout_height="300dp"
+        android:background="@color/secondaryWindowBackground"
+        app:gpa_line_color="@color/grades_gpa_line_color"
+        app:gpa_dash_color="@color/grades_gpa_dash_color"
+        app:gpa_text_color="@color/grades_gpa_text_color"
+        app:gpa_circle_inside_color="@color/grades_gpa_circle_inside_color"
+        app:gpa_gradient_bottom_color="@color/grades_gpa_gradient_bottom_color"
+        app:gpa_gradient_top_color="@color/grades_gpa_gradient_top_color"
         android:layout_marginTop="20dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/grades_tv_gpa_fl_title" />

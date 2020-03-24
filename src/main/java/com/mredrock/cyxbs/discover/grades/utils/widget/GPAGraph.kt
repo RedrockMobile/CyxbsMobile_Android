@@ -6,9 +6,10 @@ import android.graphics.*
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
+import com.mredrock.cyxbs.discover.grades.R
 import com.mredrock.cyxbs.discover.grades.utils.extension.dp2px
-import org.jetbrains.anko.backgroundColor
 import kotlin.math.abs
+import kotlin.properties.Delegates
 
 /**
  * Created by roger on 2020/2/11
@@ -21,10 +22,20 @@ class GpAGraph : View {
     constructor(ctx: Context, attrs: AttributeSet?) : this(ctx, attrs, 0)
 
     constructor(ctx: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(ctx, attrs, defStyleAttr) {
+
+        val typeArray = ctx.obtainStyledAttributes(attrs, R.styleable.GpAGraph)
+        gpaLineColor = typeArray.getColor(R.styleable.GpAGraph_gpa_line_color, Color.parseColor("#2921D1"))
+        gpaDashColor = typeArray.getColor(R.styleable.GpAGraph_gpa_dash_color, Color.parseColor("#2915315B"))
+        gpaTextColor = typeArray.getColor(R.styleable.GpAGraph_gpa_text_color, Color.parseColor("#A415315B"))
+        gpaCircleInsideColor = typeArray.getColor(R.styleable.GpAGraph_gpa_circle_inside_color, Color.parseColor("#FFFFFFFF"))
+        gpaGradientBottomColor = typeArray.getColor(R.styleable.GpAGraph_gpa_gradient_bottom_color, Color.parseColor("#66FFFFFF"))
+        gpaGradientTopColor = typeArray.getColor(R.styleable.GpAGraph_gpa_gradient_top_color, Color.parseColor("#44A19EFF"))
+        gpaTextSize = typeArray.getColor(R.styleable.GpAGraph_gpa_text_size, dp2px(11))
+        typeArray.recycle()
         init()
     }
 
-
+    private var background: Int? = null
     //默认的宽高
     private val mWidth: Int = dp2px(100)
     private val mHeight: Int = dp2px(100)
@@ -44,6 +55,15 @@ class GpAGraph : View {
     private lateinit var gradientPaint: Paint
     private lateinit var whitePaint: Paint
 
+    //color and property
+    private var gpaLineColor by Delegates.notNull<Int>()
+    private var gpaDashColor by Delegates.notNull<Int>()
+    private var gpaTextColor by Delegates.notNull<Int>()
+    private var gpaCircleInsideColor by Delegates.notNull<Int>()
+    private var gpaGradientBottomColor by Delegates.notNull<Int>()
+    private var gpaGradientTopColor by Delegates.notNull<Int>()
+    private var gpaTextSize by Delegates.notNull<Int>()
+
 
     private lateinit var linearGradient: LinearGradient
     //用户点击的是textArray中的第几个。例如用户点击"大一上"，touchPoint则为0
@@ -61,10 +81,9 @@ class GpAGraph : View {
 
 
     private fun init() {
-        backgroundColor = Color.WHITE
 
         gpaPaint = Paint()
-        gpaPaint.color = Color.parseColor("#2921D1")
+        gpaPaint.color = gpaLineColor
         gpaPaint.style = Paint.Style.STROKE
         gpaPaint.strokeWidth = dp2px(4).toFloat()
 
@@ -72,21 +91,21 @@ class GpAGraph : View {
         pathBlue = Path()
 
         dashPaint = Paint()
-        dashPaint.color = Color.parseColor("#2915315B")
+        dashPaint.color = gpaDashColor
         dashPaint.style = Paint.Style.STROKE
         dashPaint.strokeWidth = dp2px(1).toFloat()
         dashPaint.pathEffect = DashPathEffect(floatArrayOf(dp2px(5).toFloat(), dp2px(3).toFloat()), 0F)
 
         textPaint = Paint()
-        textPaint.color = Color.parseColor("#A415315B")
-        textPaint.textSize = dp2px(9).toFloat()
+        textPaint.color = gpaTextColor
+        textPaint.textSize = gpaTextSize.toFloat()
         textPaint.textAlign = Paint.Align.CENTER
 
         gradientPaint = Paint()
         gradientPaint.style = Paint.Style.FILL
 
         whitePaint = Paint()
-        whitePaint.color = Color.parseColor("#FFFFFFFF")
+        whitePaint.color = gpaCircleInsideColor
         whitePaint.style = Paint.Style.FILL
         //将原始数据转换成元素范围在区间[0,4]的数据
         mappingData = originalData.map {
@@ -129,10 +148,11 @@ class GpAGraph : View {
         canvas.translate(0F, (height - bottomHeight).toFloat())
 
         drawDashLine(canvas)
-        drawText(canvas)
         if (!mappingData.isNullOrEmpty()) {
             drawGPAPath(canvas)
         }
+        drawText(canvas)
+
 
         canvas.restore()
     }
@@ -181,7 +201,7 @@ class GpAGraph : View {
 
     private fun drawText(canvas: Canvas) {
 
-        textPaint.textSize = dp2px(9).toFloat()
+        textPaint.textSize = gpaTextSize.toFloat()
         for (item in textArray.withIndex()) {
             canvas.drawText(textArray[item.index], (item.index + 1) * segWidth.toFloat(), bottomHeight / 2F, textPaint)
         }
@@ -200,7 +220,7 @@ class GpAGraph : View {
         segHeight = (h - bottomHeight - topHeight) / 4
         segWidth = w / 9
 
-        linearGradient = LinearGradient(0F, 0F, 0F, -1F * h, Color.parseColor("#66FFFFFF"), Color.parseColor("#44A19EFF"), Shader.TileMode.REPEAT)
+        linearGradient = LinearGradient(0F, 0F, 0F, -1F * h, gpaGradientBottomColor, gpaGradientTopColor, Shader.TileMode.REPEAT)
     }
 
 

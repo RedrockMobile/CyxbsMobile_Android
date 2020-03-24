@@ -8,7 +8,6 @@ import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.bumptech.glide.Glide
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -21,7 +20,6 @@ import com.mredrock.cyxbs.common.ui.BaseActivity
 import com.mredrock.cyxbs.common.utils.extensions.toast
 import com.mredrock.cyxbs.discover.grades.R
 import com.mredrock.cyxbs.discover.grades.bean.Exam
-import com.mredrock.cyxbs.discover.grades.bean.Grade
 import com.mredrock.cyxbs.discover.grades.bean.analyze.isNotBind
 import com.mredrock.cyxbs.discover.grades.bean.analyze.isSuccessful
 import com.mredrock.cyxbs.discover.grades.ui.adapter.ExamAdapter
@@ -64,9 +62,7 @@ class ContainerActivity : BaseActivity() {
 
     //grades
     private lateinit var parent: View
-    private var gradesData: MutableList<Grade> = ArrayList()
     private lateinit var adapter: GradesShowAdapter
-    private lateinit var recyclerView: RecyclerView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -131,9 +127,7 @@ class ContainerActivity : BaseActivity() {
 
     private fun initBottomSheet() {
         parent = fl_grades_bottom_sheet
-//        recyclerView = parent.rv_grades
         initHeader()
-//        initRv()
         initBehavior()
     }
 
@@ -159,18 +153,5 @@ class ContainerActivity : BaseActivity() {
         transaction.replace(R.id.grades_bottom_sheet_frame_layout, fragment)
         transaction.commit()
     }
-//    private fun initRv() {
-//        adapter = GradesShowAdapter(gradesData, this)
-//        recyclerView.layoutManager = LinearLayoutManager(this)
-//        recyclerView.adapter = adapter
-//        viewModel.gradesData.observe(this@ContainerActivity, Observer {
-//            gradesData.clear()
-//            gradesData.addAll(it as MutableList<Grade>)
-//            adapter.notifyDataSetChanged()
-//        })
-//        val idNum = BaseApp.context.defaultSharedPreferences.getString("SP_KEY_ID_NUM", "")
-//                ?: return
-//        viewModel.loadGrades(user.getStuNum(), idNum)
-//    }
 
 }

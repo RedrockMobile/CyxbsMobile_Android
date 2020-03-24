@@ -2,6 +2,8 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="40dp"
+    android:layout_marginStart="15dp"
+    android:layout_marginEnd="15dp"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <ImageView
         android:src="@drawable/grades_gpa_shape_blue_round_corner_bottom_part"
@@ -13,7 +15,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/grades_bottom_sheet_gpa_rv_grades_list_detail"
-        android:textColor="@color/qa_answer_content_edt_hint_color"
+        android:textColor="@color/grades_gpa_normal_font_color"
         android:textSize="11sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
