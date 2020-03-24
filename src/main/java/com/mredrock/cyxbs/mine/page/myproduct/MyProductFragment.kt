@@ -3,7 +3,7 @@ package com.mredrock.cyxbs.mine.page.myproduct
 import android.os.Bundle
 import android.widget.TextView
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import com.mredrock.cyxbs.common.component.CommonDialogFragment
 import com.mredrock.cyxbs.common.utils.extensions.setImageFromUrl
@@ -22,44 +22,25 @@ class MyProductFragment(private val type: Int = UNCLAIMED) : BaseRVFragment<MyPr
         const val UNCLAIMED = 2
     }
 
-    private val dialogDialogFragment: CommonDialogFragment by lazy {
-        CommonDialogFragment().apply {
-            initView(
-                    containerRes = R.layout.mine_layout_dialog_with_title_and_content,
-                    positiveString = "我知道了",
-                    onPositiveClick = { dismiss() },
-                    elseFunction = {
-                        it.findViewById<TextView>(R.id.dialog_title).text = resources.getString(R.string.mine_my_product);
-
-                        if (type == UNCLAIMED) {
-                            it.findViewById<TextView>(R.id.dialog_content).text = resources.getString(R.string.mine_my_product_unclaimed)
-                        } else {
-                            it.findViewById<TextView>(R.id.dialog_content).text = resources.getString(R.string.mine_my_product_claimed)
-                        }
-                    }
-            )
-        }
-    }
-
-    private val viewModel by lazy { ViewModelProviders.of(this).get(MyProductViewModel::class.java) }
+    private val viewModel by lazy { ViewModelProvider(this).get(MyProductViewModel::class.java) }
 
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         if (type == UNCLAIMED) {
             viewModel.loadMyProductUnclaimed()
-            viewModel.unclaimedList.observe(this, Observer {
+            viewModel.unclaimedList.observe(viewLifecycleOwner, Observer {
                 setNewData(it)
             })
-            viewModel.eventOnUnClaimed.observe(this, Observer {
+            viewModel.eventOnUnClaimed.observe(viewLifecycleOwner, Observer {
                 setState(it)
             })
         } else {
             viewModel.loadMyProductClaimed()
-            viewModel.claimedList.observe(this, Observer {
+            viewModel.claimedList.observe(viewLifecycleOwner, Observer {
                 setNewData(it)
             })
-            viewModel.eventOnClaimed.observe(this, Observer {
+            viewModel.eventOnClaimed.observe(viewLifecycleOwner, Observer {
                 setState(it)
             })
         }
@@ -79,7 +60,7 @@ class MyProductFragment(private val type: Int = UNCLAIMED) : BaseRVFragment<MyPr
         holder.itemView.mine_my_product_integral.text = if (data.integral.toString().isNotEmpty()) data.integral.toString() else "0"
         holder.itemView.mine_my_product_iv.setImageFromUrl(data.photoSrc)
         holder.itemView.setOnClickListener {
-            fragmentManager?.let { it1 -> dialogDialogFragment.show(it1, "my_product") }
+            showDialog()
         }
 
     }
@@ -94,5 +75,30 @@ class MyProductFragment(private val type: Int = UNCLAIMED) : BaseRVFragment<MyPr
             viewModel.loadMyProductClaimed()
         }
         getSwipeLayout().isRefreshing = false
+    }
+
+
+    private fun showDialog() {
+        val tag = "notice"
+        activity?.supportFragmentManager?.let { f ->
+            if (f.findFragmentByTag(tag) == null) {
+                CommonDialogFragment().apply {
+                    initView(
+                            containerRes = R.layout.mine_layout_dialog_with_title_and_content,
+                            positiveString = "我知道了",
+                            onPositiveClick = { dismiss() },
+                            elseFunction = {
+                                it.findViewById<TextView>(R.id.dialog_title).text = resources.getString(R.string.mine_my_product);
+
+                                if (type == UNCLAIMED) {
+                                    it.findViewById<TextView>(R.id.dialog_content).text = resources.getString(R.string.mine_my_product_unclaimed)
+                                } else {
+                                    it.findViewById<TextView>(R.id.dialog_content).text = resources.getString(R.string.mine_my_product_claimed)
+                                }
+                            }
+                    )
+                }.show(f, tag)
+            }
+        }
     }
 }

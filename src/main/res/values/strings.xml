@@ -52,7 +52,7 @@
     <string name="mine_sign_fri">周五</string>
     <string name="mine_sign_sat">周六</string>
     <string name="mine_sign_sun">周日</string>
-    <string name="mine_sign_year_default">2019&#8211;2020</string>
+    <string name="mine_sign_year_default">2019-2020</string>
     <string name="mine_sign_week_default">上学期第--周</string>
     <string name="mine_sign_serialDays_default">已连续打卡--天</string>
     <string name="mine_sign_ranking_default">还没有打卡哦</string>

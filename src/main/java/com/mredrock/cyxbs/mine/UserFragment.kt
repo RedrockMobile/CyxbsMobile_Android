@@ -52,20 +52,6 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
     override val viewModelClass: Class<UserViewModel>
         get() = UserViewModel::class.java
 
-    private val praiseDialog: CommonDialogFragment by lazy {
-        CommonDialogFragment().apply {
-            initView(
-                    containerRes = R.layout.mine_layout_dialog_praise,
-                    onPositiveClick = { dismiss() },
-                    positiveString = "确定",
-                    elseFunction = { view ->
-                        view.findViewById<TextView>(R.id.mine_dialog_tv_praise).text = "你一共获得${viewModel.qaNumber.value?.praiseNumber
-                                ?: 0}个赞"
-                    }
-            )
-        }
-    }
-
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         addObserver()
@@ -87,11 +73,11 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
         mine_main_cl_info_edit.setOnClickListener {
             startActivity(
                     Intent(context, EditInfoActivity::class.java),
-                    ActivityOptionsCompat.makeSceneTransitionAnimation(context as Activity, Pair(mine_main_avatar,"avatar")).toBundle())
+                    ActivityOptionsCompat.makeSceneTransitionAnimation(context as Activity, Pair(mine_main_avatar, "avatar")).toBundle())
         }
 
-        mine_main_tv_praise.setOnClickListener { fragmentManager?.let { it1 -> praiseDialog.show(it1, "praise") } }
-        mine_main_praise_number.setOnClickListener { fragmentManager?.let { it1 -> praiseDialog.show(it1, "praise") } }
+        mine_main_tv_praise.setOnClickListener { showPraise() }
+        mine_main_praise_number.setOnClickListener { showPraise() }
 
         mine_main_tv_about.setOnClickListener { startActivity<AboutActivity>() }
         mine_main_btn_exit.setOnClickListener { onExitClick() }
@@ -114,7 +100,7 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
 
     @SuppressLint("SetTextI18n")
     private fun addObserver() {
-        viewModel.status.observe(this, Observer {
+        viewModel.status.observe(viewLifecycleOwner, Observer {
             mine_main_tv_sign.text = "已连续签到${it.serialDays}天 "
             if (it.isChecked) {
                 mine_main_btn_sign.apply {
@@ -130,7 +116,7 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
                 }
             }
         })
-        viewModel.qaNumber.observe(this, Observer {
+        viewModel.qaNumber.observe(viewLifecycleOwner, Observer {
             //可能会出现部分number为负数的情况，客户端需要处理（虽然是后端的锅）
             fun getNumber(number: Int): String = if (number >= 0) number.toString() else "0"
             mine_main_question_number.text = getNumber(it.askPostedNumber)
@@ -202,23 +188,50 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
 
 
     private fun onExitClick() {
-        CommonDialogFragment().apply {
-            initView(
-                    containerRes = R.layout.mine_layout_dialog_logout,
-                    onPositiveClick = {
-                        cleanAppWidgetCache()
-                        //清除user信息，必须要在LoginStateChangeEvent之前
-                        viewModel.clearUser()
+        val tag = "exit"
+        activity?.let { act ->
+            if (act.supportFragmentManager.findFragmentByTag(tag) == null) {
+                CommonDialogFragment().apply {
+                    initView(
+                            containerRes = R.layout.mine_layout_dialog_logout,
+                            onPositiveClick = {
+                                cleanAppWidgetCache()
+                                //清除user信息，必须要在LoginStateChangeEvent之前
+                                viewModel.clearUser()
 
-                        EventBus.getDefault().post(LoginStateChangeEvent(false))
-                        //清空activity栈
-                        val flag = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
-                        ARouter.getInstance().build("/main/login").withFlags(flag.toInt()).navigation()
-                    },
-                    positiveString = "退出",
-                    onNegativeClick = { dismiss() }
-            )
-        }.show(fragmentManager ?: return, "logout")
+                                EventBus.getDefault().post(LoginStateChangeEvent(false))
+                                //清空activity栈
+                                val flag = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+                                ARouter.getInstance().build("/main/login").withFlags(flag.toInt()).navigation()
+                            },
+                            positiveString = "退出",
+                            onNegativeClick = { dismiss() }
+                    )
+                }.show(act.supportFragmentManager, tag)
+            }
+
+        }
+    }
+
+    private fun showPraise() {
+        val tag = "praise"
+        activity?.let { act ->
+            if (act.supportFragmentManager.findFragmentByTag(tag) == null) {
+                CommonDialogFragment().apply {
+                    initView(
+                            containerRes = R.layout.mine_layout_dialog_praise,
+                            onPositiveClick = { dismiss() },
+                            positiveString = "确定",
+                            elseFunction = { view ->
+                                view.findViewById<TextView>(R.id.mine_dialog_tv_praise).text = "你一共获得${viewModel.qaNumber.value?.praiseNumber
+                                        ?: 0}个赞"
+                            }
+                    )
+                }.show(act.supportFragmentManager, tag)
+            }
+
+        }
+
     }
 
     private fun cleanAppWidgetCache() {

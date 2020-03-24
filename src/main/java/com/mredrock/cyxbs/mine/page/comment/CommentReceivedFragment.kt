@@ -2,7 +2,7 @@ package com.mredrock.cyxbs.mine.page.comment
 
 import android.os.Bundle
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import com.alibaba.android.arouter.launcher.ARouter
 import com.mredrock.cyxbs.common.config.IS_COMMENT
@@ -22,19 +22,19 @@ import org.greenrobot.eventbus.EventBus
  * 收到的评论
  */
 class CommentReceivedFragment : BaseRVFragment<CommentReceived>() {
-    private val viewModel by lazy { ViewModelProviders.of(this).get(CommentViewModel::class.java) }
+    private val viewModel by lazy { ViewModelProvider(this).get(CommentViewModel::class.java) }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        viewModel.eventOnCommentReceived.observe(this, Observer {
+        viewModel.eventOnCommentReceived.observe(viewLifecycleOwner, Observer {
             setState(it)
         })
-        viewModel.commentReceivedList.observe(this, Observer {
+        viewModel.commentReceivedList.observe(viewLifecycleOwner, Observer {
             setNewData(it)
         })
         viewModel.loadCommentReceivedList()
-        viewModel.navigateEventOnReComment.observe(this, Observer {
+        viewModel.navigateEventOnReComment.observe(viewLifecycleOwner, Observer {
             EventBus.getDefault().postSticky(OpenShareCommentEvent(it.qid.toString(), it.data))
             ARouter.getInstance().build(QA_COMMENT_LIST).withInt(NAVIGATE_FROM_WHERE, IS_COMMENT).navigation()
         })

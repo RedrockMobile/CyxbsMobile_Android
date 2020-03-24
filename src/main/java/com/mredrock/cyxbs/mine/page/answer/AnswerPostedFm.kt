@@ -6,7 +6,7 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import com.alibaba.android.arouter.launcher.ARouter
 import com.mredrock.cyxbs.common.config.IS_ANSWER
 import com.mredrock.cyxbs.common.config.NAVIGATE_FROM_WHERE
@@ -25,20 +25,20 @@ import org.jetbrains.anko.textColor
  */
 class AnswerPostedFm : BaseRVFragment<AnswerPosted>() {
 
-    private val viewModel by lazy { ViewModelProviders.of(this).get(AnswerViewModel::class.java) }
+    private val viewModel by lazy { ViewModelProvider(this).get(AnswerViewModel::class.java) }
 
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
         viewModel.loadAnswerPostedList()
-        viewModel.eventOnAnswerPosted.observe(this, Observer {
+        viewModel.eventOnAnswerPosted.observe(viewLifecycleOwner, Observer {
             setState(it)
         })
-        viewModel.answerPosted.observe(this, Observer {
+        viewModel.answerPosted.observe(viewLifecycleOwner, Observer {
             setNewData(it)
         })
-        viewModel.navigateEvent.observe(this, Observer {
+        viewModel.navigateEvent.observe(viewLifecycleOwner, Observer {
             EventBus.getDefault().postSticky(OpenShareCommentEvent(it.qid.toString(), it.data))
             ARouter.getInstance().build(QA_COMMENT_LIST).withInt(NAVIGATE_FROM_WHERE, IS_ANSWER).navigation()
         })

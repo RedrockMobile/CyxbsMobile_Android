@@ -3,7 +3,7 @@ package com.mredrock.cyxbs.mine.page.comment
 import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import com.alibaba.android.arouter.launcher.ARouter
 import com.mredrock.cyxbs.common.config.IS_COMMENT
 import com.mredrock.cyxbs.common.config.NAVIGATE_FROM_WHERE
@@ -22,7 +22,7 @@ import org.greenrobot.eventbus.EventBus
  */
 class CommentFragment : BaseRVFragment<Comment>() {
 
-    private val viewModel by lazy { ViewModelProviders.of(this).get(CommentViewModel::class.java) }
+    private val viewModel by lazy { ViewModelProvider(this).get(CommentViewModel::class.java) }
 
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -30,13 +30,13 @@ class CommentFragment : BaseRVFragment<Comment>() {
 
 
         viewModel.loadCommentList()
-        viewModel.eventOnComment.observe(this, Observer {
+        viewModel.eventOnComment.observe(viewLifecycleOwner, Observer {
             setState(it)
         })
-        viewModel.commentList.observe(this, Observer {
+        viewModel.commentList.observe(viewLifecycleOwner, Observer {
             setNewData(it)
         })
-        viewModel.navigateEventOnComment.observe(this, Observer {
+        viewModel.navigateEventOnComment.observe(viewLifecycleOwner, Observer {
             EventBus.getDefault().postSticky(OpenShareCommentEvent(it.qid.toString(), it.data))
             ARouter.getInstance().build(QA_COMMENT_LIST).withInt(NAVIGATE_FROM_WHERE, IS_COMMENT).navigation()
         })

@@ -49,26 +49,7 @@ class EditInfoActivity(override val isFragmentActivity: Boolean = false,
     private val SELECT_PICTURE = 1
     private val SELECT_CAMERA = 2
 
-    private val dialogFragment: CommonDialogFragment by lazy {
-        CommonDialogFragment().apply {
-            initView(
-                    containerRes = R.layout.mine_layout_dialog_edit,
-                    onPositiveClick = { finish() },
-                    onNegativeClick = { dismiss() },
-                    positiveString = "退出"
-            )
-        }
-    }
 
-    private val agreementDialogFragment: CommonDialogFragment by lazy {
-        CommonDialogFragment().apply {
-            initView(
-                    containerRes = R.layout.mine_layout_dialog_portrait_agreement,
-                    onPositiveClick = { dismiss() },
-                    positiveString = "我知道了"
-            )
-        }
-    }
 
     private val userService: IUserService by lazy {
         ServiceManager.getService(IAccountService::class.java).getUserService()
@@ -148,7 +129,7 @@ class EditInfoActivity(override val isFragmentActivity: Boolean = false,
                     R.drawable.mine_ic_arrow_left,
                     View.OnClickListener {
                         if (checkIfInfoChange()) {
-                            dialogFragment.show(supportFragmentManager, "SaveInfo")
+                            showExit()
                         } else {
                             finishAfterTransition()
                         }
@@ -168,7 +149,7 @@ class EditInfoActivity(override val isFragmentActivity: Boolean = false,
 
     override fun onBackPressed() {
         if (checkIfInfoChange()) {
-            dialogFragment.show(supportFragmentManager, "SaveInfo")
+            showExit()
         } else {
             super.onBackPressed()
         }
@@ -187,7 +168,7 @@ class EditInfoActivity(override val isFragmentActivity: Boolean = false,
         mine_btn_info_save.isClickable = false
 
         mine_edit_iv_agreement.setOnClickListener {
-            agreementDialogFragment.show(supportFragmentManager, "agreement")
+            showAgree()
         }
     }
 
@@ -419,6 +400,32 @@ class EditInfoActivity(override val isFragmentActivity: Boolean = false,
                     toast("未知错误，请重试")
                 }
             }
+        }
+    }
+
+    private fun showExit() {
+        val tag = "exit"
+        if (supportFragmentManager.findFragmentByTag(tag) == null) {
+            CommonDialogFragment().apply {
+                initView(
+                        containerRes = R.layout.mine_layout_dialog_edit,
+                        onPositiveClick = { finish() },
+                        onNegativeClick = { dismiss() },
+                        positiveString = "退出"
+                )
+            }.show(supportFragmentManager, tag)
+        }
+    }
+    private fun showAgree() {
+        val tag = "agree"
+        if (supportFragmentManager.findFragmentByTag(tag) == null) {
+            CommonDialogFragment().apply {
+                initView(
+                        containerRes = R.layout.mine_layout_dialog_portrait_agreement,
+                        onPositiveClick = { dismiss() },
+                        positiveString = "我知道了"
+                )
+            }.show(supportFragmentManager, tag)
         }
     }
 }

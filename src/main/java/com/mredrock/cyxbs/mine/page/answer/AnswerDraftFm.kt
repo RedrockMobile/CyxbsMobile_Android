@@ -6,7 +6,7 @@ import android.os.Bundle
 import android.util.Base64
 import android.widget.TextView
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import com.alibaba.android.arouter.launcher.ARouter
 import com.mredrock.cyxbs.common.component.CommonDialogFragment
 import com.mredrock.cyxbs.common.config.QA_ANSWER
@@ -26,16 +26,16 @@ class AnswerDraftFm : BaseRVFragment<AnswerDraft>() {
 
     private val NAVIGATION = 200
 
-    private val viewModel by lazy { ViewModelProviders.of(this).get(AnswerViewModel::class.java) }
+    private val viewModel by lazy { ViewModelProvider(this).get(AnswerViewModel::class.java) }
 
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         viewModel.loadAnswerDraftList()
-        viewModel.answerDraft.observe(this, Observer {
+        viewModel.answerDraft.observe(viewLifecycleOwner, Observer {
             setNewData(it)
         })
-        viewModel.eventOnAnswerDraft.observe(this, Observer {
+        viewModel.eventOnAnswerDraft.observe(viewLifecycleOwner, Observer {
             setState(it)
         })
     }
@@ -54,23 +54,27 @@ class AnswerDraftFm : BaseRVFragment<AnswerDraft>() {
         holder.itemView.mine_answer_draft_tv_content.text = title
         holder.itemView.mine_answer_draft_tv_lastedit_at.text = data.latestEditTime.split(" ")[0].replace("-", ".")
         holder.itemView.mine_answer_draft_iv_garbage.setOnClickListener {
-            fragmentManager?.let { it1 ->
-                CommonDialogFragment().apply {
-                    initView(
-                            containerRes = R.layout.mine_layout_dialog_with_title_and_content,
-                            positiveString = "删除",
-                            onPositiveClick = {
-                                viewModel.deleteDraftById(data.draftAnswerId)
-                                dismiss()
-                            },
-                            onNegativeClick = { dismiss() },
-                            elseFunction = {
-                                it.findViewById<TextView>(R.id.dialog_title).text = "删除草稿";
-                                it.findViewById<TextView>(R.id.dialog_content).text = "确定要删除该草稿吗?";
-                            }
+            activity?.supportFragmentManager?.let { it1 ->
+                val tag = "delete_draft"
+                if (it1.findFragmentByTag(tag) == null) {
+                    CommonDialogFragment().apply {
+                        initView(
+                                containerRes = R.layout.mine_layout_dialog_with_title_and_content,
+                                positiveString = "删除",
+                                onPositiveClick = {
+                                    viewModel.deleteDraftById(data.draftAnswerId)
+                                    dismiss()
+                                },
+                                onNegativeClick = { dismiss() },
+                                elseFunction = {
+                                    it.findViewById<TextView>(R.id.dialog_title).text = "删除草稿";
+                                    it.findViewById<TextView>(R.id.dialog_content).text = "确定要删除该草稿吗?";
+                                }
 
-                    )
-                }.show(it1, "delete_draft")
+                        )
+                    }.show(it1, tag)
+                }
+
             }
         }
 

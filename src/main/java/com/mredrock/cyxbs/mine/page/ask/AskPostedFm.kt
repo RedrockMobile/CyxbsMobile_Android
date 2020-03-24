@@ -5,7 +5,7 @@ import android.os.Bundle
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import com.alibaba.android.arouter.launcher.ARouter
 import com.mredrock.cyxbs.common.config.QA_ANSWER_LIST
 import com.mredrock.cyxbs.common.event.OpenShareQuestionEvent
@@ -23,20 +23,20 @@ import org.jetbrains.anko.textColor
 class AskPostedFm : BaseRVFragment<AskPosted>() {
 
 
-    private val viewModel by lazy { ViewModelProviders.of(this).get(AskViewModel::class.java) }
+    private val viewModel by lazy { ViewModelProvider(this).get(AskViewModel::class.java) }
 
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
         viewModel.loadAskPostedList()
-        viewModel.askPosted.observe(this, Observer {
+        viewModel.askPosted.observe(viewLifecycleOwner, Observer {
             setNewData(it)
         })
-        viewModel.eventOnAskPosted.observe(this, Observer {
+        viewModel.eventOnAskPosted.observe(viewLifecycleOwner, Observer {
             setState(it)
         })
-        viewModel.navigateEvent.observe(this, Observer {
+        viewModel.navigateEvent.observe(viewLifecycleOwner, Observer {
             EventBus.getDefault().postSticky(OpenShareQuestionEvent(it.data))
             ARouter.getInstance().build(QA_ANSWER_LIST).navigation()
         })
