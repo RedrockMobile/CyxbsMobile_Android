@@ -4,33 +4,33 @@ ext.deps = [:]
 
 def versions = [:]
 //kotlin
-versions.kotlin = '1.3.30'
-versions.anko = '0.10.7'
+versions.kotlin = '1.3.70'
+versions.anko = '0.10.8'
 versions.core = '1.2.0'
 //official ui and support library
 versions.constraint_layout = '1.1.3'
 versions.support = '27.1.1'
 versions.multidex = '1.0.3'
 // ali
-versions.arouter = '1.4.0'
-versions.arouter_compiler = '1.2.1'
-versions.eventbus = '3.1.1'
-versions.hotfix = '3.2.8'
+versions.arouter = '1.5.0'
+versions.arouter_compiler = '1.2.2'
+versions.eventbus = '3.2.0'
+versions.hotfix = '3.2.13'
 //network
-versions.glide = '4.8.0'
-versions.glide_okhttp_integration = '4.8.0'
-versions.okhttp = '3.10.0'
-versions.okhttp_logging_interceptor = '3.8.0'
-versions.retrofit = '2.4.0'
-versions.rxjava = '2.2.0'
-versions.rxandroid = '2.0.2'
-versions.rxkotlin = '2.2.0'
-versions.gson = '2.8.2'
+versions.glide = '4.11.0'
+versions.glide_okhttp_integration = '4.11.0'
+versions.okhttp = '4.4.1'
+versions.okhttp_logging_interceptor = '4.4.1'
+versions.retrofit = '2.7.2'
+versions.rxjava = '2.2.19'
+versions.rxandroid = '2.1.1'
+versions.rxkotlin = '2.4.0'
+versions.gson = '2.8.6'
 //architecture
 versions.lifecycle = '1.1.1'
 versions.room = '1.1.1'
 versions.paging = '1.0.0'
-versions.workmanager = '1.0.0-alpha09'
+versions.workmanager = '1.0.1'
 //dagger
 versions.dagger = '2.16'
 //permission
@@ -39,13 +39,13 @@ versions.rxpermissions = '0.10.2'
 versions.umeng_common = '1.5.3'
 versions.umeng_analytics = '7.5.3'
 //bugly
-versions.bugly_crashreport = '2.6.6.1'
+versions.bugly_crashreport = '3.1.9'
 versions.bugly_crashreport_upgrade = '1.3.6'
-versions.bugly_nativecrashreport = '3.3.1'
+versions.bugly_nativecrashreport = '3.7.1'
 //walle
 versions.walle = '1.1.6'
 //airbnb
-versions.lottie = '3.3.1'
+versions.lottie = '3.4.0'
 
 
 def deps = [:]
@@ -118,14 +118,14 @@ lifecycle.compiler = 'androidx.lifecycle:lifecycle-compiler:2.0.0'
 deps.lifecycle = lifecycle
 
 def room = [:]
-room.runtime = 'androidx.room:room-runtime:2.0.0'
-room.compiler = 'androidx.room:room-compiler:2.0.0'
-room.rxjava = 'androidx.room:room-rxjava2:2.0.0'
+room.runtime = 'androidx.room:room-runtime:2.2.5'
+room.compiler = 'androidx.room:room-compiler:2.2.5'
+room.rxjava = 'androidx.room:room-rxjava2:2.2.5'
 deps.room = room
 
 def paging = [:]
-paging.runtime = 'androidx.paging:paging-runtime:2.0.0'
-paging.rxjava = "android.arch.paging:rxjava2:1.0.0-rc1"
+paging.runtime = 'androidx.paging:paging-runtime:2.1.2'
+paging.rxjava = "android.arch.paging:rxjava2:1.0.1"
 deps.paging = paging
 
 def workmanager = [:]
