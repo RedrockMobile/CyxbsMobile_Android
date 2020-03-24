@@ -36,7 +36,7 @@ class ChargeFragment : BaseViewModelFragment<ChargeViewModel>() {
             return
         }
 
-        viewModel.chargeInfo.observe(this, Observer {
+        viewModel.chargeInfo.observe(viewLifecycleOwner, Observer {
             it ?: return@Observer
             electricity_view.refresh(it.lastmoney, it.elecSpend)
             electricity_info_avg.setValue(it.getAverage())
