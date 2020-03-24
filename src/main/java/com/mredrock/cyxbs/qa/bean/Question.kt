@@ -32,7 +32,7 @@ data class Question(@SerializedName("reward")
                     var answerNum: Int = 0,
 
                     @SerializedName("photo_thumbnail_src")
-                    val photoThumbnailSrc: String? = null,
+                    val photoThumbnailSrc: String = "",
 
                     @SerializedName("is_anonymous")
                     private val _isAnonymous: Int = 0,

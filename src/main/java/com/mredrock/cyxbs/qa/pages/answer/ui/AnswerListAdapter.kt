@@ -67,7 +67,6 @@ class AnswerListAdapter : BaseEndlessRvAdapter<Answer>(DIFF_CALLBACK) {
                     data.isSelf -> {
                         btn_answer_more.apply {
                             invisible()
-
                         }
                     }
                     else -> {
@@ -82,10 +81,17 @@ class AnswerListAdapter : BaseEndlessRvAdapter<Answer>(DIFF_CALLBACK) {
                     tv_answer_content.apply {
                         text = context.getString(R.string.qa_answer_photo_count, data.photoUrl.size.toString())
                         textColor = ContextCompat.getColor(context, R.color.qa_answer_empty_content_color)
-                        setOnClickListener { ViewImageActivity.activityStart(context, data.photoUrl.toTypedArray(), 0) }
+                        setOnClickListener {
+                            ViewImageActivity.activityStart(context, data.photoUrl.toTypedArray(), 0)
+                        }
                     }
                 } else {
-                    tv_answer_content.text = data.content
+                    tv_answer_content.apply {
+                        textColor = ContextCompat.getColor(context, R.color.qa_answer_content_color)
+                        text = data.content
+                        setOnClickListener(null)
+                        isClickable = false
+                    }
                 }
                 tv_answer_publish_at.text = timeDescription(System.currentTimeMillis(), data.createdAt)
                 tv_answer_reply_count.text = context.getString(R.string.qa_answer_reply_count, data.commentNum)

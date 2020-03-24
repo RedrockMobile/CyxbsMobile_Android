@@ -19,7 +19,6 @@ import com.mredrock.cyxbs.qa.pages.question.viewmodel.QuestionListViewModel
 import com.mredrock.cyxbs.qa.ui.adapter.EmptyRvAdapter
 import com.mredrock.cyxbs.qa.ui.adapter.FooterRvAdapter
 import kotlinx.android.synthetic.main.qa_fragment_question_list.*
-import kotlinx.android.synthetic.main.qa_fragment_question_list.view.*
 import org.greenrobot.eventbus.EventBus
 
 /**
@@ -40,7 +39,12 @@ class QuestionListFragment : BaseViewModelFragment<QuestionListViewModel>() {
         if (title.isBlank()) {
             title = savedInstanceState?.getString("title") ?: ""
         }
-        val root = inflater.inflate(R.layout.qa_fragment_question_list, container, false)
+
+        return inflater.inflate(R.layout.qa_fragment_question_list, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         val questionListRvAdapter = QuestionListRvAdapter(this)
         val footerRvAdapter = FooterRvAdapter { viewModel.retry() }
         val emptyRvAdapter = EmptyRvAdapter(getString(R.string.qa_question_list_empty_hint))
@@ -50,13 +54,11 @@ class QuestionListFragment : BaseViewModelFragment<QuestionListViewModel>() {
                 footerAdapter = footerRvAdapter
         )
         observeLoading(questionListRvAdapter, footerRvAdapter, emptyRvAdapter)
-        return root.apply {
-            rv_question_list.apply {
-                layoutManager = androidx.recyclerview.widget.LinearLayoutManager(context)
-                adapter = adapterWrapper
-            }
-            swipe_refresh_layout.setOnRefreshListener { viewModel.invalidateQuestionList() }
+        rv_question_list.apply {
+            layoutManager = androidx.recyclerview.widget.LinearLayoutManager(context)
+            adapter = adapterWrapper
         }
+        swipe_refresh_layout.setOnRefreshListener { viewModel.invalidateQuestionList() }
     }
 
     private fun observeLoading(questionListRvAdapter: QuestionListRvAdapter,

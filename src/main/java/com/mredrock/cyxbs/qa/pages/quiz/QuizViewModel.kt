@@ -21,7 +21,6 @@ import com.mredrock.cyxbs.qa.utils.isNullOrEmpty
 import com.mredrock.cyxbs.qa.utils.toDate
 import com.mredrock.cyxbs.qa.utils.toFormatString
 import io.reactivex.Observable
-import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody

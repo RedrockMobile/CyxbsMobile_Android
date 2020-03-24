@@ -48,7 +48,6 @@ import org.jetbrains.anko.*
 class CommentListActivity : BaseActivity() {
     companion object {
         const val REQUEST_CODE = 0x123
-        const val ANSWER_LIST_REQUEST_CODE = 0x3
         const val PARAM_QUESTION = "question"
         const val PARAM_ANSWER = "answer"
 
