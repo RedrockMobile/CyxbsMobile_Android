@@ -271,6 +271,7 @@ class CoursesViewModel : BaseViewModel() {
      */
     fun refreshAffairFromInternet() {
         resetGetStatus()
+        isContinueExecution()
         isGetAllData(COURSE_TAG)
         getAffairsDataFromInternet()
     }
@@ -392,7 +393,7 @@ class CoursesViewModel : BaseViewModel() {
                     putString("${COURSE_VERSION}${mUserNum}", coursesFromInternet.version)
                 }
             }else{
-                cancel
+                cancel()
             }
         }
     }
