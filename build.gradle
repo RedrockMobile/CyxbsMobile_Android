@@ -109,6 +109,11 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
+
+    kotlinOptions{
+        jvmTarget = JavaVersion.VERSION_1_8
+    }
+
     packagingOptions {
         exclude 'LICENSE.txt'
         exclude 'META-INF/DEPENDENCIES'
