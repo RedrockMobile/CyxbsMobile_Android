@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.FrameLayout
 import com.mredrock.cyxbs.common.R
 
@@ -94,9 +95,10 @@ class RedRockAutoWarpView : FrameLayout {
             val rowUsedHeights = mutableListOf<Int>()
             var i = 0
             while (i < adapter.getItemCount()) {
-                adapter.getItemId(i) ?: continue
-                val itemView = LayoutInflater.from(context).inflate(adapter.getItemId(i)!!, this, false)
-                clearMagin(itemView)//清除外边距，以免影响item实际大小
+                val itemId = adapter.getItemId(i)
+                val itemView = if (itemId != null) LayoutInflater.from(context).inflate(itemId, this, false) else adapter.getItemView(i)
+                itemView ?: throw NullPointerException("item为空，请检查是否复写getItemId或者getItemView中的其中一个")
+                clearMargin(itemView)//清除外边距，以免影响item实际大小
                 adapter.initItem(itemView, i)
                 itemView.measure(MeasureSpec.makeMeasureSpec(0,
                         MeasureSpec.UNSPECIFIED), MeasureSpec.makeMeasureSpec(0,
@@ -141,7 +143,7 @@ class RedRockAutoWarpView : FrameLayout {
                     while (j < adapter.getItemCount()) {
                         val itemView = getChildAt(j)
                         j++
-                        itemView?:continue
+                        itemView ?: continue
                         val itemWith: Int = itemView.width
                         val itemHeight: Int = itemView.height
                         val layoutParams = itemView.layoutParams as LayoutParams
@@ -188,8 +190,13 @@ class RedRockAutoWarpView : FrameLayout {
     /**
      * 清除view的外边距
      */
-    private fun clearMagin(itemView: View?) {
-        val layoutParams = itemView?.layoutParams as LayoutParams
+    private fun clearMargin(itemView: View) {
+        val layoutParams = if (itemView.layoutParams != null) itemView.layoutParams as LayoutParams
+        else {
+            LayoutParams(LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply {
+                itemView.layoutParams = this
+            }
+        }
         layoutParams.rightMargin = 0
         layoutParams.leftMargin = 0
         layoutParams.topMargin = 0
@@ -200,21 +207,37 @@ class RedRockAutoWarpView : FrameLayout {
      * 适配器模式需要设置的适配器，需要使用这个view必需传入该Adapter的子类对象
      */
     abstract class Adapter {
+        /**
+         * 这两个变量可以在下面任意一个复写对的方法中使用，
+         * 但是不可以在构造器或者init中使用
+         */
         lateinit var context: Context
         lateinit var view: RedRockAutoWarpView
-        //这两个方法必需重写一个，原来不是这样子写的，因为是公共的，只能增加方法，怕影响已经使用的
+
+        //下面三个方法都可以用来获取item，任写一个就可以了
         open fun getItemId(): Int? {
             return null
         }
 
-        //这个方法方便不同的item设置
         open fun getItemId(position: Int): Int? {
             return if (getItemId() == null) {
                 null
             } else getItemId()
         }
 
+        open fun getItemView(position: Int): View? = null
+
+        /**
+         * 这个方法用于初始化view
+         * @param item 对应位置上的view
+         * @param position 位置
+         */
+        open fun initItem(item: View, position: Int) {}
+
+        /**
+         * @return 有多少子项
+         */
         abstract fun getItemCount(): Int
-        abstract fun initItem(item: View, position: Int)
+
     }
 }
