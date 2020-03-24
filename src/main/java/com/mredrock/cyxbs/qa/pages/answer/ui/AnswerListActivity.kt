@@ -9,7 +9,7 @@ import androidx.core.util.Pair
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.google.gson.Gson
@@ -94,7 +94,7 @@ class AnswerListActivity : BaseActivity() {
     }
 
     private fun initViewModel(question: Question) {
-        viewModel = ViewModelProviders.of(this, AnswerListViewModel.Factory(question)).get(AnswerListViewModel::class.java)
+        viewModel = ViewModelProvider(this, AnswerListViewModel.Factory(question)).get(AnswerListViewModel::class.java)
         viewModel.apply {
             toastEvent.observe { str -> str?.let { toast(it) } }
             longToastEvent.observe { str -> str?.let { longToast(it) } }

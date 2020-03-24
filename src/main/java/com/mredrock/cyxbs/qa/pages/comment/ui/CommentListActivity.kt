@@ -10,7 +10,7 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -94,7 +94,7 @@ class CommentListActivity : BaseActivity() {
     }
 
     private fun initViewModel(questionId: String, answer: Answer) {
-        viewModel = ViewModelProviders.of(this, CommentListViewModel.Factory(questionId, answer)).get(CommentListViewModel::class.java)
+        viewModel = ViewModelProvider(this, CommentListViewModel.Factory(questionId, answer)).get(CommentListViewModel::class.java)
         viewModel.apply {
             toastEvent.observe { str -> str?.let { toast(it) } }
             longToastEvent.observe { str -> str?.let { longToast(it) } }
