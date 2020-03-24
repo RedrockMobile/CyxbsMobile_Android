@@ -135,6 +135,29 @@
     <color name="mine_main_btn_gradient_start" tools:ignore="ResourceName">#4841E2</color>
     <color name="mine_main_btn_gradient_end" tools:ignore="ResourceName">#5D5DF7</color>
 
+    <!--    考试成绩-->
+    <color name="grades_gpa_rv_list_round_corner_background" tools:ignore="ResourceName">#345A5A5A</color>
+    <color name="grades_item_cardView_bg" tools:ignore="ResourceName">#813A3A3A</color>
+    <color name="grades_activity_tl_white" tools:ignore="ResourceName">#FFFFFF</color>
+    <color name="grades_activity_back_grey" tools:ignore="ResourceName">#D3D3D3</color>
+    <color name="grades_fragment_back_white" tools:ignore="ResourceName">#F6F6F6</color>
+    <color name="grades_fragment_text_color_black" tools:ignore="ResourceName">#333333</color>
+    <color name="grades_fragment_text_color_black2" tools:ignore="ResourceName">#80F0F0F2</color>
+    <color name="grades_fragment_text_color_black3" tools:ignore="ResourceName">#7BF0F0F2</color>
+    <color name="grades_fragment_item_back_grey" tools:ignore="ResourceName">#E4E4E4</color>
+    <color name="grades_item_divide" tools:ignore="ResourceName">#15315B</color>
+    <color name="grades_item_day_remain" tools:ignore="ResourceName">#0BCCF0</color>
+    <color name="grades_bottom_sheet_shadow" tools:ignore="ResourceName">#205369BC</color>
+
+    <color name="grades_gpa_normal_font_color" tools:ignore="ResourceName">#80F0F0F2</color>
+
+    <color name="grades_gpa_line_color" tools:ignore="ResourceName">#2921D1</color>
+    <color name="grades_gpa_dash_color" tools:ignore="ResourceName">#457C7C7C</color>
+    <color name="grades_gpa_text_color" tools:ignore="ResourceName">#50F0F0F2</color>
+    <color name="grades_gpa_circle_inside_color" tools:ignore="ResourceName">#FFFFFFFF</color>
+    <color name="grades_gpa_gradient_bottom_color" tools:ignore="ResourceName">#302D2D2D</color>
+    <color name="grades_gpa_gradient_top_color" tools:ignore="ResourceName">#81342DFF</color>
+
     <!--    公共dialog背景-->
     <color name="common_dialog_bg" tools:ignore="ResourceName">#2C2C2C</color>
 
