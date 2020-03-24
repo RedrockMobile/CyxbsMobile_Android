@@ -8,7 +8,7 @@ import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import com.mredrock.cyxbs.common.component.RedRockBottomSheetDialog
 import com.mredrock.cyxbs.course.R
 import com.mredrock.cyxbs.course.databinding.CourseFragmentTimeSelectBinding
@@ -26,7 +26,7 @@ class TimeSelectDialogFragment(context: Context) : RedRockBottomSheetDialog(cont
 
     private var mBinding: CourseFragmentTimeSelectBinding = DataBindingUtil.inflate(LayoutInflater.from(context),
             R.layout.course_fragment_time_select, null, false)
-    private var mEditAffairViewModel: EditAffairViewModel = ViewModelProviders.of(context as AppCompatActivity).get(EditAffairViewModel::class.java)
+    private var mEditAffairViewModel: EditAffairViewModel = ViewModelProvider(context as AppCompatActivity).get(EditAffairViewModel::class.java)
 
     init {
         mBinding.listeners = TimeSelectListeners {

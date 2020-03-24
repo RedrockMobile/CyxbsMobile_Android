@@ -8,7 +8,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import com.mredrock.cyxbs.common.ui.BaseActivity
 import com.mredrock.cyxbs.course.R
 import com.mredrock.cyxbs.course.adapters.TimeSelectedAdapter
@@ -51,13 +51,13 @@ class AffairEditActivity : BaseActivity() {
         RemindSelectDialogFragment(this)
     }
 
-    private lateinit var affairTransitionAnimHelper:AffairTransitionAnimHelper
+    private lateinit var affairTransitionAnimHelper: AffairTransitionAnimHelper
 
     lateinit var mEditAffairViewModel: EditAffairViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        mEditAffairViewModel = ViewModelProviders.of(this).get(EditAffairViewModel::class.java)
+        mEditAffairViewModel = ViewModelProvider(this).get(EditAffairViewModel::class.java)
         mBinding = DataBindingUtil.setContentView(this, R.layout.course_activity_edit_affair)
         mBinding.editAffairViewModel = mEditAffairViewModel
         mBinding.lifecycleOwner = this

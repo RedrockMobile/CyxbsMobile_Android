@@ -3,7 +3,7 @@ package com.mredrock.cyxbs.course.adapters
 import android.view.View
 import android.widget.CheckBox
 import androidx.fragment.app.FragmentActivity
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import com.mredrock.cyxbs.common.component.RedRockAutoWarpView
 import com.mredrock.cyxbs.course.R
 import com.mredrock.cyxbs.course.utils.weekSelectCheckBoxState
@@ -17,7 +17,7 @@ import com.mredrock.cyxbs.course.viewmodels.EditAffairViewModel
  */
 class WeekSelectRecAdapter(mActivity: FragmentActivity) : RedRockAutoWarpView.Adapter() {
 
-    private val mEditAffairViewModel: EditAffairViewModel = ViewModelProviders.of(mActivity).get(EditAffairViewModel::class.java)
+    private val mEditAffairViewModel: EditAffairViewModel = ViewModelProvider(mActivity).get(EditAffairViewModel::class.java)
 
     private val mWeeks = mEditAffairViewModel.weekArray
 

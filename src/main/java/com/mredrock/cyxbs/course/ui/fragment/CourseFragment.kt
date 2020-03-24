@@ -69,13 +69,6 @@ class CourseFragment : BaseFragment() {
         mBinding.lifecycleOwner = this
         mWeek = arguments?.getInt(WEEK_NUM) ?: 0
 
-        /**
-         * 虽然这里可能有点耦合度高，但是这两个fragment一般是一起用的
-         * 这里没有使用[ViewModelProviders]来获取ViewModel
-         * 是因为这里必须使用[CourseContainerEntryFragment]所使用的ViewModel
-         * 但是[CourseContainerEntryFragment]的ViewModel根据使用场景不一样所用的依赖的ViewModel
-         * 也不一样
-         */
         activity?.let { activity: FragmentActivity ->
             mCoursesViewModel = ViewModelProvider(activity).get(CoursesViewModel::class.java)
         }
