@@ -114,31 +114,30 @@ internal class AccountService : IAccountService {
     }
 
     inner class UserStateService : IUserStateService {
+        private val stateListeners: MutableList<IUserStateService.StateListener> = mutableListOf()
         override fun addOnStateChangedListener(listener: (state: IUserStateService.UserState) -> Unit) {
-            //todo 后面再实现该方法，用于替代以前用EventBus实现的OnStateChangeEvent事件
+            stateListeners.add(object : IUserStateService.StateListener {
+                override fun onStateChanged(state: IUserStateService.UserState) {
+                    listener.invoke(state)
+                }
+            })
         }
 
-        override fun removeStateChangedListener(listener: (state: IUserStateService.UserState) -> Unit) {
-            //todo 后面再实现该方法，用于替代以前用EventBus实现的OnStateChangeEvent事件
+        override fun addOnStateChangedListener(listener: IUserStateService.StateListener) {
+            stateListeners.add(listener)
         }
+
+        override fun removeStateChangedListener(listener: IUserStateService.StateListener) {
+            stateListeners.remove(listener)
+        }
+
 
         override fun removeAllStateListeners() {
-            //todo 后面再实现该方法，用于替代以前用EventBus实现的OnStateChangeEvent事件
+            stateListeners.clear()
         }
 
         private fun notifyAllStateListeners(state: IUserStateService.UserState) {
-            //todo 后面再实现该方法，用于替代以前用EventBus实现的OnStateChangeEvent事件
-            when (state) {
-                IUserStateService.UserState.LOGIN -> {
-                    ApiGenerator.apply {
-                        token = tokenWrapper?.token ?: ""
-                        refreshToken = tokenWrapper?.refreshToken ?: ""
-                    }
-                }
-                else -> {
-                    //todo 其他情况
-                }
-            }
+            for (i in stateListeners) i.onStateChanged(state)
         }
 
         override fun isLogin() = tokenWrapper != null
@@ -150,7 +149,7 @@ internal class AccountService : IAccountService {
             val curTime = System.currentTimeMillis()
             val expiredTime = takeIfNoException { user?.exp?.toLong() } ?: 0L
             //预留10s，防止一些奇怪的错误出现
-            return expiredTime - curTime / 1000 <= 10000L
+            return expiredTime * 1000 - curTime <= 10000L
         }
 
         fun loginFromCache(context: Context) {
@@ -164,7 +163,7 @@ internal class AccountService : IAccountService {
             notifyAllStateListeners(state)
         }
 
-        override fun refresh(onError: () -> Unit, action: (token: String, refreshToken: String) -> Unit) {
+        override fun refresh(onError: () -> Unit, action: (token: String) -> Unit) {
             val refreshToken = tokenWrapper?.refreshToken ?: ""
             val response = ApiGenerator.getCommonApiService(ApiService::class.java).refresh(RefreshParams(refreshToken)).execute()
             if (response.body() == null) {
@@ -176,9 +175,8 @@ internal class AccountService : IAccountService {
                 notifyAllStateListeners(IUserStateService.UserState.LOGIN)
                 mContext.defaultSharedPreferences.editor {
                     putString(SP_KEY_USER_V2, mUserInfoEncryption.encrypt(Gson().toJson(data)))
-
                 }
-                action.invoke(data.token, data.refreshToken)
+                action.invoke(data.token)
             }
         }
 
@@ -188,7 +186,7 @@ internal class AccountService : IAccountService {
             if (response.body() == null) {
                 throw HttpException(response)
             }
-            val apiWrapper = response?.body()
+            val apiWrapper = response.body()
             //该字段涉及到Java的反射，kotlin的机制无法完全保证不为空，需要判断一下
             if (apiWrapper?.data != null) {
                 bind(apiWrapper.data)
