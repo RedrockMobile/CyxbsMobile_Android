@@ -53,7 +53,7 @@ class RewardSetDialog(context: Context, rewardCount: Int) : BottomSheetDialog(co
     init {
         setContentView(container)
         mBehavior = BottomSheetBehavior.from(container.parent as View).apply {
-            setBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
+            addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
                 override fun onSlide(p0: View, p1: Float) {
                 }
 
@@ -98,6 +98,7 @@ class RewardSetDialog(context: Context, rewardCount: Int) : BottomSheetDialog(co
         tv_quiz_dialog_cancel.setOnClickListener { cancel() }
     }
 
+    @SuppressLint("SetTextI18n")
     private fun initPickerView() {
         tp_quiz_day.apply {
             initDividerColor()

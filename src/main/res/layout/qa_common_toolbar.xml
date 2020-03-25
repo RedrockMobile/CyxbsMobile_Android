@@ -33,6 +33,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="19dp"
                 android:layout_toEndOf="@id/qa_ib_toolbar_back"
+                android:layout_toStartOf="@id/qa_ib_toolbar_more"
                 android:textColor="@color/levelTwoFontColor"
                 android:textSize="22sp"
                 android:textStyle="bold"

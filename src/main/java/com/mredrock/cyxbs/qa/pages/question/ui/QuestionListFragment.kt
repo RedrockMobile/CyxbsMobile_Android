@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.mredrock.cyxbs.common.event.AskLoginEvent
 import com.mredrock.cyxbs.common.event.LoginStateChangeEvent
 import com.mredrock.cyxbs.common.ui.BaseViewModelFragment
@@ -55,7 +56,7 @@ class QuestionListFragment : BaseViewModelFragment<QuestionListViewModel>() {
         )
         observeLoading(questionListRvAdapter, footerRvAdapter, emptyRvAdapter)
         rv_question_list.apply {
-            layoutManager = androidx.recyclerview.widget.LinearLayoutManager(context)
+            layoutManager = LinearLayoutManager(context)
             adapter = adapterWrapper
         }
         swipe_refresh_layout.setOnRefreshListener { viewModel.invalidateQuestionList() }

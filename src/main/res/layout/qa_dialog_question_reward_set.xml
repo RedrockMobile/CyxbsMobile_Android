@@ -75,37 +75,44 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/tv_mission_deadline_title" />
 
-    <RelativeLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/rl_time_select"
-        android:layout_width="340dp"
+        android:layout_width="wrap_content"
         android:layout_height="160dp"
         android:layout_marginTop="26dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@id/iv_point"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tv_mission_deadline_title">
 
         <com.mredrock.cyxbs.qa.pages.quiz.ui.widget.QuizTimeNumberPicker
             android:id="@+id/tp_quiz_day"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_centerInParent="true" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/tp_quiz_hour" />
 
         <com.mredrock.cyxbs.qa.pages.quiz.ui.widget.QuizTimeNumberPicker
             android:id="@+id/tp_quiz_hour"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="40dp"
             android:layout_centerHorizontal="true"
-            android:layout_toStartOf="@id/tp_quiz_minute"
-            android:layout_marginEnd="40dp" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/tp_quiz_day" />
 
         <com.mredrock.cyxbs.qa.pages.quiz.ui.widget.QuizTimeNumberPicker
             android:id="@+id/tp_quiz_minute"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_centerInParent="true" />
-    </RelativeLayout>
+            android:layout_marginStart="20dp"
+            android:layout_centerHorizontal="true"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/tp_quiz_hour" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <ImageView
         android:id="@+id/iv_point"
@@ -116,7 +123,8 @@
         app:layout_constraintBottom_toBottomOf="@id/rl_time_select"
         app:layout_constraintTop_toTopOf="@id/rl_time_select"
         android:layout_marginStart="30dp"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/rl_time_select" />
 
     <ImageView
         android:id="@+id/iv_reward_set_dialog_divide_line"
