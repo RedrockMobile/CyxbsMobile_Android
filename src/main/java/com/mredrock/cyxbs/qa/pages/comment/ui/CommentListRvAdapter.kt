@@ -34,7 +34,7 @@ class CommentListRvAdapter(private val questionAnonymous: Boolean) : BaseEndless
         override fun refresh(data: Comment?) {
             data ?: return
             itemView.apply {
-                if (data.isSelf && questionAnonymous && data.questionIsSelf) {
+                if (questionAnonymous && data.questionIsSelf) {
                     iv_comment_avatar.setImageResource(R.drawable.common_default_avatar)
                     tv_comment_nickname.text = context.getString(R.string.qa_comment_anonymous_text)
                 } else {
