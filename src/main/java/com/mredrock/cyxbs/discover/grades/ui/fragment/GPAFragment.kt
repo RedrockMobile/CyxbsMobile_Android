@@ -8,7 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.mredrock.cyxbs.discover.grades.R
-import com.mredrock.cyxbs.discover.grades.ui.expandableAdapter.RBaseAdapter
+import com.mredrock.cyxbs.discover.grades.ui.expandableAdapter.GPAAdapter
 import com.mredrock.cyxbs.discover.grades.ui.viewModel.ContainerViewModel
 import kotlinx.android.synthetic.main.grades_fragment_gpa.*
 
@@ -18,7 +18,7 @@ import kotlinx.android.synthetic.main.grades_fragment_gpa.*
 class GPAFragment : Fragment() {
     private lateinit var viewModel: ContainerViewModel
 
-    private lateinit var adapter: RBaseAdapter
+    private lateinit var adapter: GPAAdapter
 
     private lateinit var hashMap: HashMap<Int, Int>
 
@@ -37,15 +37,15 @@ class GPAFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         //创建type到resId的映射
         hashMap = HashMap(4)
-        hashMap.put(RBaseAdapter.HEADER, R.layout.grades_item_gpa_list_header)
-        hashMap.put(RBaseAdapter.CHILD, R.layout.grades_item_gpa_list_child)
-        hashMap.put(RBaseAdapter.NORMAL_BOTTOM, R.layout.grades_item_gpa_list_normal_bottom)
-        hashMap.put(RBaseAdapter.NORMAL_TOP, R.layout.grades_item_gpa_list_normal_top)
+        hashMap.put(GPAAdapter.HEADER, R.layout.grades_item_gpa_list_header)
+        hashMap.put(GPAAdapter.CHILD, R.layout.grades_item_gpa_list_child)
+        hashMap.put(GPAAdapter.NORMAL_BOTTOM, R.layout.grades_item_gpa_list_normal_bottom)
+        hashMap.put(GPAAdapter.NORMAL_TOP, R.layout.grades_item_gpa_list_normal_top)
 
 
         viewModel.analyzeData.observe(viewLifecycleOwner, Observer {
             val context = context ?: return@Observer
-            adapter = RBaseAdapter(context, hashMap, it.data)
+            adapter = GPAAdapter(context, hashMap, it.data)
             grades_rv.adapter = adapter
         })
 
