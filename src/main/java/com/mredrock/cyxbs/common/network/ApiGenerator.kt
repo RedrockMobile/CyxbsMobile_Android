@@ -5,6 +5,7 @@ import com.mredrock.cyxbs.common.config.END_POINT_REDROCK
 import com.mredrock.cyxbs.common.network.converter.QualifiedTypeConverterFactory
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.service.account.IAccountService
+import com.mredrock.cyxbs.common.service.account.IUserStateService
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.Response
@@ -24,12 +25,24 @@ object ApiGenerator {
     private var retrofit: Retrofit
     private var commonRetrofit: Retrofit
     private var okHttpClient: OkHttpClient
-    var token = ""
-    var refreshToken = ""
+    private var token = ""
+    private var refreshToken = ""
 
     init {
-        token = ServiceManager.getService(IAccountService::class.java).getUserTokenService().getToken()
-        refreshToken = ServiceManager.getService(IAccountService::class.java).getUserTokenService().getRefreshToken()
+        val accountService = ServiceManager.getService(IAccountService::class.java)
+        accountService.getVerifyService().addOnStateChangedListener {
+            when (it) {
+                IUserStateService.UserState.LOGIN -> {
+                    token = accountService.getUserTokenService().getToken()
+                    refreshToken = accountService.getUserTokenService().getRefreshToken()
+                }
+                else -> {
+                    //不用操作
+                }
+            }
+        }
+        token = accountService.getUserTokenService().getToken()
+        refreshToken = accountService.getUserTokenService().getRefreshToken()
         okHttpClient = configureOkHttp(OkHttpClient.Builder())
         retrofit = Retrofit.Builder()
                 .baseUrl(END_POINT_REDROCK)
@@ -85,10 +98,8 @@ object ApiGenerator {
                     onError = {
                         response.close()
                     },
-                    action = { s: String, s1: String ->
+                    action = { s: String ->
                         response.close()
-                        token = s
-                        refreshToken = s1
                         response = chain.run { proceed(chain.request().newBuilder().header("Authorization", "Bearer $s").build()) }
                     }
             )

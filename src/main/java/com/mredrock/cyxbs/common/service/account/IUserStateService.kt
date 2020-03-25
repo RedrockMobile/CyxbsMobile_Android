@@ -8,13 +8,17 @@ interface IUserStateService {
         LOGIN, NOT_LOGIN, EXPIRED
     }
 
+    interface StateListener {
+        fun onStateChanged(state: UserState)
+    }
+
     @WorkerThread
     @Throws(Exception::class)
     fun login(context: Context, uid: String, passwd: String)
 
     fun logout(context: Context)
 
-    fun refresh(onError: () -> Unit = {}, action: (token: String, refreshToken: String) -> Unit = { s: String, s1: String -> })
+    fun refresh(onError: () -> Unit = {}, action: (token: String) -> Unit = { s: String -> })
 
     fun isLogin(): Boolean
 
@@ -22,7 +26,9 @@ interface IUserStateService {
 
     fun addOnStateChangedListener(listener: (state: UserState) -> Unit)
 
-    fun removeStateChangedListener(listener: (state: UserState) -> Unit)
+    fun addOnStateChangedListener(listener: StateListener)
+
+    fun removeStateChangedListener(listener: StateListener)
 
     fun removeAllStateListeners()
 }

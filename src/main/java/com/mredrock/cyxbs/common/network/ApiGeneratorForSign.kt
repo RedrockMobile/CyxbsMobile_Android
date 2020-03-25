@@ -5,6 +5,7 @@ import com.mredrock.cyxbs.common.config.END_POINT_REDROCK
 import com.mredrock.cyxbs.common.network.converter.QualifiedTypeConverterFactory
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.service.account.IAccountService
+import com.mredrock.cyxbs.common.service.account.IUserStateService
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.Response
@@ -16,8 +17,7 @@ import retrofit2.converter.simplexml.SimpleXmlConverterFactory
 import java.util.concurrent.TimeUnit
 
 /**
- * Created by roger on 2020/2/5
- * 这只是一个临时的签到ApiGenerator
+ * Created by AceMurder on 2018/1/24.
  */
 object ApiGeneratorForSign {
     private const val DEFAULT_TIME_OUT = 30
@@ -25,14 +25,24 @@ object ApiGeneratorForSign {
     private var retrofit: Retrofit
     private var commonRetrofit: Retrofit
     private var okHttpClient: OkHttpClient
-    var token = ""
-    var refreshToken = ""
+    private var token = ""
+    private var refreshToken = ""
 
     init {
-        token = ServiceManager.getService(IAccountService::class.java)?.getUserTokenService()?.getToken()
-                ?: ""
-        refreshToken = ServiceManager.getService(IAccountService::class.java)?.getUserTokenService()?.getRefreshToken()
-                ?: ""
+        val accountService = ServiceManager.getService(IAccountService::class.java)
+        accountService.getVerifyService().addOnStateChangedListener {
+            when (it) {
+                IUserStateService.UserState.LOGIN -> {
+                    token = accountService.getUserTokenService().getToken()
+                    refreshToken = accountService.getUserTokenService().getRefreshToken()
+                }
+                else -> {
+                    //不用操作
+                }
+            }
+        }
+        token = accountService.getUserTokenService().getToken()
+        refreshToken = accountService.getUserTokenService().getRefreshToken()
         okHttpClient = configureOkHttp(OkHttpClient.Builder())
         retrofit = Retrofit.Builder()
                 .baseUrl("http://api-234.redrock.team")
@@ -52,11 +62,19 @@ object ApiGeneratorForSign {
                  * 在外面加一层判断，用于token未过期时，能够异步请求，不用阻塞在checkRefresh()
                  * 如果有更好方式再改改
                  */
-                (if (refreshToken.isNotEmpty() && isTokenExpired()) {
-                    checkRefresh(it)
-                } else {
-                    it.proceed(it.request().newBuilder().header("Authorization", "Bearer $token").build())
-                }) as Response
+                when {
+                    refreshToken.isEmpty() || token.isEmpty() -> {
+                        token = ServiceManager.getService(IAccountService::class.java).getUserTokenService()?.getToken()
+                        refreshToken = ServiceManager.getService(IAccountService::class.java).getUserTokenService()?.getRefreshToken()
+                        it.proceed(it.request().newBuilder().header("Authorization", "Bearer $token").build())
+                    }
+                    isTokenExpired() -> {
+                        checkRefresh(it)
+                    }
+                    else -> {
+                        it.proceed(it.request().newBuilder().header("Authorization", "Bearer $token").build())
+                    }
+                } as Response
             })
         }
         if (BuildConfig.DEBUG) {
@@ -80,10 +98,8 @@ object ApiGeneratorForSign {
                     onError = {
                         response.close()
                     },
-                    action = { s: String, s1: String ->
+                    action = { s: String ->
                         response.close()
-                        token = s
-                        refreshToken = s1
                         response = chain.run { proceed(chain.request().newBuilder().header("Authorization", "Bearer $s").build()) }
                     }
             )
