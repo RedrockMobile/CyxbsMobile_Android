@@ -1,12 +1,15 @@
 package com.mredrock.cyxbs.discover.pages.discover
 
 import android.annotation.SuppressLint
+import android.content.Context
+import android.graphics.Point
 import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.OVER_SCROLL_IF_CONTENT_SCROLLS
 import android.view.ViewGroup
+import android.view.WindowManager
 import android.widget.FrameLayout
 import android.widget.TextView
 import android.widget.ViewFlipper
@@ -26,13 +29,13 @@ import com.mredrock.cyxbs.discover.utils.MoreFunctionProvider
 import kotlinx.android.synthetic.main.discover_home_fragment.*
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import org.jetbrains.anko.displayManager
 import org.jetbrains.anko.sp
 
 /**
  * @author zixuan
  * 2019/11/20
  */
-var isFeedLoaded = false
 
 @Route(path = DISCOVER_ENTRY)
 class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>() {
@@ -157,12 +160,15 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>() {
     }
 
     private fun initFeeds() {
-        //让feed只加载一次，在 activity重建时会导致重复加载，没有找到更好的解决方案 TODO 换一种方案解决重复加载的问题
-        if (!isFeedLoaded) {
-            addFeedByRoute(DISCOVER_ELECTRICITY_FEED)
-            addFeedByRoute(DISCOVER_VOLUNTEER_FEED)
+        addFeedByRoute(DISCOVER_ELECTRICITY_FEED)
+        addFeedByRoute(DISCOVER_VOLUNTEER_FEED)
+        //处理手机屏幕过长导致feed无法填充满下方的情况
+        ll_discover_feeds.post {
+            val point = Point()
+            (context?.getSystemService(Context.WINDOW_SERVICE) as WindowManager).defaultDisplay.getSize(point)
+            ll_discover_feeds.minimumHeight = point.y - ll_discover_feeds.top
         }
-        isFeedLoaded = true
+
     }
 
     private fun addFeedByRoute(route: String) {
@@ -177,5 +183,10 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>() {
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     fun onGetData(dataEvent: CurrentDateInformationEvent) {
         tv_day.text = dataEvent.time
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        vf_jwzx_detail.stopFlipping()
     }
 }
