@@ -29,7 +29,10 @@ class ElectricityFeedAdapter(private val elecInf: ElecInf) : BaseFeedFragment.Ad
                 setSpan(AbsoluteSizeSpan(context.sp(13)), this.length - 1, this.length, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
             }
         }
-        view?.tv_electricity_feed_kilowatt?.text = SpannableStringBuilder(elecInf.elecSpend.plus("度")).apply {
+        var spend = "0"
+        //elecSpend可能为空
+        if(elecInf.elecSpend != null)spend = elecInf.elecSpend
+        view?.tv_electricity_feed_kilowatt?.text = SpannableStringBuilder(spend.plus("度")).apply {
             setSpan(AbsoluteSizeSpan(context.sp(36)), 0, this.length - 1, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
             setSpan(AbsoluteSizeSpan(context.sp(13)), this.length - 1, this.length, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
         }

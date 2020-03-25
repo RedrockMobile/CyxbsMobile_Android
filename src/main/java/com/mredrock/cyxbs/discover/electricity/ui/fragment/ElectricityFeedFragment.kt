@@ -27,7 +27,7 @@ class ElectricityFeedFragment : BaseFeedFragment<ChargeViewModel>() {
         setAdapter(ElectricityFeedUnboundAdapter())
         setTitle("电费查询")
         setOnClickListener {
-            fragmentManager?.let {
+            parentFragmentManager.let {
                 ElectricityFeedSettingDialogFragment { id, room ->
                     refreshCharge(id, room)
                 }.show(it, "ElectricityFeedSetting")
