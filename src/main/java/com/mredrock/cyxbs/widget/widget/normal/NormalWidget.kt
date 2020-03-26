@@ -8,7 +8,6 @@ import android.content.Intent
 import android.widget.RemoteViews
 import android.widget.Toast
 import androidx.annotation.IdRes
-import androidx.core.content.edit
 import com.alibaba.android.arouter.launcher.ARouter
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -89,29 +88,29 @@ class NormalWidget : AppWidgetProvider() {
             }
         }
         if (intent.action == "btn.start.com") {
-            list = gson.fromJson(context.defaultSharedPreferences.getString(courseData,""),object : TypeToken<ArrayList<CourseStatus.Course>>(){}.type)
+            list = gson.fromJson(context.defaultSharedPreferences.getString(courseData, ""), object : TypeToken<ArrayList<CourseStatus.Course>>() {}.type)
             val newList = mutableListOf<WidgetCourse.DataBean>()
             list.forEach {
                 newList.add(changeCourseToWidgetCourse(it))
             }
             when (rId) {
                 R.id.widget_normal_layout1 -> {
-                    startOperation(newList.filter { it.hash_lesson==0 }[0])
+                    startOperation(newList.filter { it.hash_lesson == 0 }[0])
                 }
                 R.id.widget_normal_layout2 -> {
-                    startOperation(newList.filter { it.hash_lesson==1 }[0])
+                    startOperation(newList.filter { it.hash_lesson == 1 }[0])
                 }
                 R.id.widget_normal_layout3 -> {
-                    startOperation(newList.filter { it.hash_lesson==2 }[0])
+                    startOperation(newList.filter { it.hash_lesson == 2 }[0])
                 }
                 R.id.widget_normal_layout4 -> {
-                    startOperation(newList.filter { it.hash_lesson==3 }[0])
+                    startOperation(newList.filter { it.hash_lesson == 3 }[0])
                 }
                 R.id.widget_normal_layout5 -> {
-                    startOperation(newList.filter { it.hash_lesson==4 }[0])
+                    startOperation(newList.filter { it.hash_lesson == 4 }[0])
                 }
                 R.id.widget_normal_layout6 -> {
-                    startOperation(newList.filter { it.hash_lesson==5 }[0])
+                    startOperation(newList.filter { it.hash_lesson == 5 }[0])
                 }
             }
         }
@@ -149,32 +148,9 @@ class NormalWidget : AppWidgetProvider() {
 
             val rv = RemoteViews(context.packageName, R.layout.widget_normal)
 
-            //如果课已经上完了，而且过了晚上7点，显示明天的课程
-            if (nowHour > 19) {
-                //显示星期几
-                val text = if (Calendar.getInstance()[Calendar.DAY_OF_WEEK] == calendar[Calendar.DAY_OF_WEEK]) "明" else getWeekDayChineseName(calendar.get(Calendar.DAY_OF_WEEK))
-                rv.setTextViewText(R.id.widget_normal_title, text)
-                var i = 0
-                list.forEach {
-                    val hour = getStartCalendarByNum(it.hash_lesson).get(Calendar.HOUR_OF_DAY)
-                    if (nowHour > hour) {
-                        i++
-                    } else {
-                        return@forEach
-                    }
-                }
-                if (i == list.size) {
-                    calendar.set(Calendar.DAY_OF_YEAR, calendar.get(Calendar.DAY_OF_YEAR) + 1)
-                    val tomorrowList = getCourseByCalendar(context, calendar)
-                            ?: getErrorCourseList()
-                    list.clear()
-                    list.addAll(tomorrowList)
-                }
-            }else{
-                //显示星期几
-                val text = if (Calendar.getInstance()[Calendar.DAY_OF_WEEK] == calendar[Calendar.DAY_OF_WEEK]) "今" else getWeekDayChineseName(calendar.get(Calendar.DAY_OF_WEEK))
-                rv.setTextViewText(R.id.widget_normal_title, text)
-            }
+            //显示星期几
+            val text = if (Calendar.getInstance()[Calendar.DAY_OF_WEEK] == calendar[Calendar.DAY_OF_WEEK]) "今" else getWeekDayChineseName(calendar.get(Calendar.DAY_OF_WEEK))
+            rv.setTextViewText(R.id.widget_normal_title, text)
 
             //显示课程
             list.forEach { course ->
@@ -185,8 +161,8 @@ class NormalWidget : AppWidgetProvider() {
                         getClickPendingIntent(context, getLayoutId(num), "btn.start.com", javaClass))
             }
 
-            val map = list.map { it.hash_lesson }
-            MutableList(6) { it }.filter { !map.contains(it) }.forEach {
+            val listLesson = list.map { it.hash_lesson }
+            MutableList(6) { it }.filter { !listLesson.contains(it) }.forEach {
                 val num = it + 1
                 rv.setTextViewText(getCourseId(num), "")
                 rv.setTextViewText(getRoomId(num), "")
@@ -199,7 +175,7 @@ class NormalWidget : AppWidgetProvider() {
 
             show(rv, context)
             context.defaultSharedPreferences.editor {
-                putString(courseData,gson.toJson(list))
+                putString(courseData, gson.toJson(list))
             }
         } catch (e: Exception) {
             e.printStackTrace()
