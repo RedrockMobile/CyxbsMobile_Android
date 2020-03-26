@@ -17,8 +17,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|center"
-        android:layout_marginBottom="30dp"
-        android:textColor="@color/levelTwoFontColor"
+        android:layout_marginBottom="50dp"
+        android:textColor="@color/levelFourFontColor"
         android:textSize="20sp"
         tools:text="2/10" />
 </FrameLayout>

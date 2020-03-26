@@ -1,21 +1,22 @@
 package com.mredrock.cyxbs.qa.ui.adapter
 
 import android.annotation.SuppressLint
+import android.graphics.Bitmap
+import android.graphics.drawable.BitmapDrawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.viewpager.widget.PagerAdapter
-import com.bumptech.glide.Glide
-import com.bumptech.glide.request.RequestOptions
 import com.github.chrisbanes.photoview.PhotoView
+import com.mredrock.cyxbs.common.utils.extensions.setImageFromUrl
 import com.mredrock.cyxbs.qa.R
 
 /**
  * Created by yyfbe, Date on 2020/3/20.
  */
 class HackyViewPagerAdapter(private val picUrls: Array<String>?) : PagerAdapter() {
-
+    var savePicClick: ((Bitmap, String) -> Unit)? = null
     override fun isViewFromObject(view: View, `object`: Any): Boolean {
         return view == `object`
     }
@@ -31,11 +32,17 @@ class HackyViewPagerAdapter(private val picUrls: Array<String>?) : PagerAdapter(
         root.findViewById<TextView>(R.id.tv_position).apply {
             text = "${position + 1}/${picUrls?.size}"
         }
-        Glide.with(container.context)
-                .load(picUrls?.get(position))
-                .apply(RequestOptions().placeholder(com.mredrock.cyxbs.common.R.drawable.common_place_holder)
-                        .error(com.mredrock.cyxbs.common.R.drawable.common_place_holder))
-                .into(photoView)
+        val url = picUrls?.get(position)
+        photoView.setImageFromUrl(url)
+        photoView.setOnLongClickListener {
+            val drawable = photoView.drawable
+            if (drawable is BitmapDrawable) {
+                val bitmap = (photoView.drawable as BitmapDrawable).bitmap
+                if (!url.isNullOrEmpty())
+                    savePicClick?.invoke(bitmap, url)
+            }
+            true
+        }
         container.addView(root)
         return root
     }

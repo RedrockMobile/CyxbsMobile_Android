@@ -86,6 +86,8 @@
     <string name="qa_answer_show_question">查看问题</string>
     <string name="qa_quiz_title_text_size_toast">已达最多字数</string>
     <string name="qa_comment_anonymous_text">匿名用户</string>
+    <string name="qa_pic_save_alert_dialog_title">是否保存</string>
+    <string name="qa_pic_save_alert_dialog_message">这张图片将保存到手机</string>
 
     <string-array name="qa_title_type">
         <item>问题</item>
