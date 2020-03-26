@@ -5,6 +5,7 @@ import android.appwidget.AppWidgetProvider
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.view.View
 import android.widget.RemoteViews
 import android.widget.Toast
 import androidx.annotation.IdRes
@@ -26,7 +27,7 @@ import kotlin.collections.ArrayList
 /**
  * Created by zia on 2018/10/10.
  * 大课表
- * 简单原理：因为一天最多6节课，直接写了6个布局，隐藏后面没有用到的布局就完了
+ *
  */
 class NormalWidget : AppWidgetProvider() {
 
@@ -139,14 +140,13 @@ class NormalWidget : AppWidgetProvider() {
      */
     private fun fresh(context: Context, offsetTime: Int) {
         try {//catch异常，避免课表挂了之后这边跟着挂
-            val nowHour = calendar.get(Calendar.HOUR_OF_DAY)
+            val rv = RemoteViews(context.packageName, R.layout.widget_normal)
+            initView(rv,context)
             calendar.set(Calendar.DATE, calendar.get(Calendar.DATE) + offsetTime)
-
             //获取数据
             list = getCourseByCalendar(context, calendar)
                     ?: getErrorCourseList()
 
-            val rv = RemoteViews(context.packageName, R.layout.widget_normal)
 
             //显示星期几
             val text = if (Calendar.getInstance()[Calendar.DAY_OF_WEEK] == calendar[Calendar.DAY_OF_WEEK]) "今" else getWeekDayChineseName(calendar.get(Calendar.DAY_OF_WEEK))
@@ -155,10 +155,18 @@ class NormalWidget : AppWidgetProvider() {
             //显示课程
             list.forEach { course ->
                 val num = course.hash_lesson + 1
-                rv.setTextViewText(getCourseId(num), course.course)
-                rv.setTextViewText(getRoomId(num), filterClassRoom(course.classroom!!))
-                rv.setOnClickPendingIntent(getLayoutId(num),
-                        getClickPendingIntent(context, getLayoutId(num), "btn.start.com", javaClass))
+                if (course.period == 2) {
+                    rv.setTextViewText(getCourseId(num), course.course)
+                    rv.setTextViewText(getRoomId(num), filterClassRoom(course.classroom!!))
+                    rv.setOnClickPendingIntent(getLayoutId(num),
+                            getClickPendingIntent(context, getLayoutId(num), "btn.start.com", javaClass))
+                }else if (course.period == 3) {
+                    setMoreView(num, rv, course, context)
+                }else if (course.period == 4) {
+                    setMoreView(num, rv, course, context)
+                    rv.setViewVisibility(getMoreViewId((num+1) / 2),View.GONE)
+                }
+
             }
 
             val listLesson = list.map { it.hash_lesson }
@@ -179,6 +187,50 @@ class NormalWidget : AppWidgetProvider() {
             }
         } catch (e: Exception) {
             e.printStackTrace()
+        }
+    }
+
+    private fun setMoreView(num: Int, rv: RemoteViews, course: CourseStatus.Course, context: Context) {
+        val moreViewNum = (num+1) / 2
+        hideNormalLayout(moreViewNum, rv)
+        rv.setViewVisibility(getMoreContentId(moreViewNum), View.VISIBLE)
+        rv.setTextViewText(getMoreCourseId(moreViewNum), course.course)
+        rv.setTextViewText(getMoreRoomId(moreViewNum), filterClassRoom(course.classroom!!))
+        rv.setOnClickPendingIntent(getLayoutId(num),
+                getClickPendingIntent(context, getLayoutId(num), "btn.start.com", javaClass))
+    }
+
+    private fun initView(rv: RemoteViews,context:Context) {
+        for (i in 1..6) {
+            rv.setTextViewText(getCourseId(i), "")
+            rv.setTextViewText(getRoomId(i), "")
+            rv.setOnClickPendingIntent(getLayoutId(i),
+                    getClickPendingIntent(context, getLayoutId(i), "", javaClass))
+            rv.setViewVisibility(getCourseId(i), View.VISIBLE)
+            rv.setViewVisibility(getRoomId(i), View.VISIBLE)
+            rv.setViewVisibility(getLayoutId(i), View.VISIBLE)
+            val b = i / 2 != 0
+            if (b) {
+                rv.setViewVisibility(getMoreContentId(i), View.GONE)
+                rv.setViewVisibility(getMoreViewId(i), View.VISIBLE)
+            }
+        }
+    }
+
+    private fun hideNormalLayout(num: Int, rv: RemoteViews) {
+        when (num) {
+            1 -> {
+                rv.setViewVisibility(R.id.widget_normal_layout1, View.GONE)
+                rv.setViewVisibility(R.id.widget_normal_layout2, View.GONE)
+            }
+            2 -> {
+                rv.setViewVisibility(R.id.widget_normal_layout3, View.GONE)
+                rv.setViewVisibility(R.id.widget_normal_layout4, View.GONE)
+            }
+            3 -> {
+                rv.setViewVisibility(R.id.widget_normal_layout5, View.GONE)
+                rv.setViewVisibility(R.id.widget_normal_layout6, View.GONE)
+            }
         }
     }
 
@@ -290,4 +342,37 @@ class NormalWidget : AppWidgetProvider() {
             }
         }
     }
+
+
+    fun getMoreContentId(num: Int) = when (num) {
+        1 -> R.id.widget_normal_content_more_class1
+        2 -> R.id.widget_normal_content_more_class2
+        3 -> R.id.widget_normal_content_more_class3
+        else -> R.id.widget_normal_content_more_class1
+    }
+
+    fun getMoreRoomId(num: Int) = when (num) {
+        1 -> R.id.widget_normal_room_more_class1
+        2 -> R.id.widget_normal_room_more_class2
+        3 -> R.id.widget_normal_room_more_class3
+        else -> R.id.widget_normal_room_more_class1
+    }
+
+    fun getMoreCourseId(num: Int) = when (num) {
+        1 -> R.id.widget_normal_course_more_class1
+        2 -> R.id.widget_normal_course_more_class2
+        3 -> R.id.widget_normal_course_more_class3
+        else -> R.id.widget_normal_course_more_class1
+    }
+
+
+    fun getMoreViewId(num: Int) = when (num) {
+        1 -> R.id.widget_normal_layout_view_more_class1
+        2 -> R.id.widget_normal_layout_view_more_class2
+        3 -> R.id.widget_normal_layout_view_more_class3
+        else -> R.id.widget_normal_layout_view_more_class1
+    }
+
+
+
 }
