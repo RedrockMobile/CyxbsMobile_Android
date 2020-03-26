@@ -17,6 +17,7 @@ import com.mredrock.cyxbs.qa.R
  */
 class HackyViewPagerAdapter(private val picUrls: Array<String>?) : PagerAdapter() {
     var savePicClick: ((Bitmap, String) -> Unit)? = null
+    var photoTapClick: (() -> Unit)? = null
     override fun isViewFromObject(view: View, `object`: Any): Boolean {
         return view == `object`
     }
@@ -42,6 +43,9 @@ class HackyViewPagerAdapter(private val picUrls: Array<String>?) : PagerAdapter(
                     savePicClick?.invoke(bitmap, url)
             }
             true
+        }
+        photoView.setOnPhotoTapListener { view, x, y ->
+            photoTapClick?.invoke()
         }
         container.addView(root)
         return root

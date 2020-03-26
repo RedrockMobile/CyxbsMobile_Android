@@ -43,6 +43,10 @@ class ViewImageActivity : AppCompatActivity() {
         position = intent.getIntExtra(POSITION, 0)
         if (!imgUrls.isNullOrEmpty()) {
             hc_vp.adapter = HackyViewPagerAdapter(imgUrls).apply {
+                photoTapClick = {
+                    finish()
+                    overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
+                }
                 savePicClick = { bitmap, url ->
                     doPermissionAction(Manifest.permission.WRITE_EXTERNAL_STORAGE) {
                         doAfterGranted {
@@ -78,6 +82,11 @@ class ViewImageActivity : AppCompatActivity() {
             hc_vp.currentItem = position
         }
 
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
     }
 
 }
