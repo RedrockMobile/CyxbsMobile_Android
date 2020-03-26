@@ -9,13 +9,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.content.ContextCompat
-import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.component.RedRockAutoWarpView
 import com.mredrock.cyxbs.common.network.ApiGenerator
-import com.mredrock.cyxbs.common.service.ServiceManager
-import com.mredrock.cyxbs.common.service.account.IAccountService
 import com.mredrock.cyxbs.common.utils.Num2CN
-import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
 import com.mredrock.cyxbs.common.utils.extensions.errorHandler
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.course.R
@@ -97,9 +93,7 @@ class ScheduleDetailViewAdapter(private val mDialog: Dialog, private val mSchedu
                 mDialog.dismiss()
             }
             acb_delete.setOnClickListener {
-                mCourseApiService.deleteAffair(ServiceManager.getService(IAccountService::class.java).getUserService().getStuNum(),
-                                BaseApp.context.defaultSharedPreferences.getString("SP_KEY_ID_NUM", "")!!,
-                                itemViewInfo.courseId.toString())
+                mCourseApiService.deleteAffair(itemViewInfo.courseId.toString())
                         .setSchedulers()
                         .errorHandler()
                         .subscribe(ExecuteOnceObserver(onExecuteOnceNext = {

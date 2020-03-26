@@ -136,16 +136,12 @@ class EditAffairViewModel(application: Application) : AndroidViewModel(applicati
      */
     fun postOrModifyAffair(activity: FragmentActivity, title: String, content: String) {
         ServiceManager.getService(IAccountService::class.java).getUserService()
-
-        val stuNum = ServiceManager.getService(IAccountService::class.java).getUserService().getStuNum()
-        val idNum = BaseApp.context.defaultSharedPreferences.getString("SP_KEY_ID_NUM", "")
-                ?: return
         val date = AffairHelper.generateAffairDateString(mPostClassAndDays, mPostWeeks)
 
         if (passedAffairInfo == null) {
             val id = AffairHelper.generateAffairId()
 
-            mCourseApiService.addAffair(id, stuNum, idNum, date, postRemind, title, content)
+            mCourseApiService.addAffair(id,date, postRemind, title, content)
                     .setSchedulers()
                     .errorHandler()
                     .subscribe(ExecuteOnceObserver(onExecuteOnceNext = {
@@ -154,7 +150,7 @@ class EditAffairViewModel(application: Application) : AndroidViewModel(applicati
                         EventBus.getDefault().post(AddAffairEvent())
                     }))
         } else {
-            mCourseApiService.modifyAffair(passedAffairInfo!!.courseId.toString(), stuNum, idNum, date,
+            mCourseApiService.modifyAffair(passedAffairInfo!!.courseId.toString(), date,
                     postRemind, title, content)
                     .setSchedulers()
                     .errorHandler()

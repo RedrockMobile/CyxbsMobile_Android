@@ -403,9 +403,7 @@ class CoursesViewModel : BaseViewModel() {
      * 此方法用于从服务器上获取事务数据
      */
     private fun getAffairsDataFromInternet() {
-        val stuNum = accountService.getUserService().getStuNum()
-        val idNum = context.defaultSharedPreferences.getString("SP_KEY_ID_NUM", "")
-        mCourseApiService.getAffair(stuNum = stuNum, idNum = idNum!!)
+        mCourseApiService.getAffair()
                 .setSchedulers(observeOn = Schedulers.io())
                 .errorHandler()
                 .doOnNext {
