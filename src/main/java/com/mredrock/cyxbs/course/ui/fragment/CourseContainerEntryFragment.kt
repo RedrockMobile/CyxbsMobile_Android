@@ -169,13 +169,13 @@ class CourseContainerEntryFragment : BaseFragment() {
             when (courseState) {
                 //如果是普通课表
                 CourseState.OrdinaryCourse -> {
-                    mCoursesViewModel = ViewModelProvider(this).get(CoursesViewModel::class.java)
+                    mCoursesViewModel = ViewModelProvider(this)[CoursesViewModel::class.java]
                     mBinding.coursesViewModel = mCoursesViewModel
                     context?.let { mCoursesViewModel.getSchedulesDataFromLocalThenNetwork() }
                 }
                 //如果是没课约
                 CourseState.NoClassInvitationCourse -> {
-                    mCoursesViewModel = ViewModelProvider(this).get(CoursesViewModel::class.java)
+                    mCoursesViewModel = ViewModelProvider(this)[CoursesViewModel::class.java]
                     mBinding.coursesViewModel = mCoursesViewModel
                     mNoCourseInviteViewModel =
                             ViewModelProvider(this, NoCourseInviteViewModel.Factory(mStuNumList!!, mNameList!!))
@@ -184,13 +184,13 @@ class CourseContainerEntryFragment : BaseFragment() {
                 }
                 //如果是查询其他同学的课表
                 CourseState.OtherCourse -> {
-                    mCoursesViewModel = ViewModelProvider(this).get(CoursesViewModel::class.java)
+                    mCoursesViewModel = ViewModelProvider(this)[CoursesViewModel::class.java]
                     mBinding.coursesViewModel = mCoursesViewModel
                     context?.let { mCoursesViewModel.getSchedulesDataFromLocalThenNetwork(mStuNum) }
                 }
                 //如果是老师课表
                 CourseState.TeacherCourse -> {
-                    mCoursesViewModel = ViewModelProvider(this).get(CoursesViewModel::class.java)
+                    mCoursesViewModel = ViewModelProvider(this)[CoursesViewModel::class.java]
                     mBinding.coursesViewModel = mCoursesViewModel
                     mCoursesViewModel.isTeaCourse = true
                     mOthersTeaName?.let {
@@ -390,6 +390,7 @@ class CourseContainerEntryFragment : BaseFragment() {
     fun showDialogFromWidget(event: WidgetCourseEvent<WidgetCourse.DataBean>) {
         val mCourse = changeLibBeanToCourse(event.mutableList[0])
         mDialogHelper.showDialog(mutableListOf(mCourse))
+        EventBus.getDefault().removeStickyEvent(event)
     }
 
 
