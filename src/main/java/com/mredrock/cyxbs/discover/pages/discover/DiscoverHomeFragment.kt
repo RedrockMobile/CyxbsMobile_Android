@@ -23,6 +23,7 @@ import com.alibaba.android.arouter.launcher.ARouter
 import com.mredrock.cyxbs.common.config.*
 import com.mredrock.cyxbs.common.event.CurrentDateInformationEvent
 import com.mredrock.cyxbs.common.ui.BaseViewModelFragment
+import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.discover.R
 import com.mredrock.cyxbs.discover.utils.BannerAdapter
 import com.mredrock.cyxbs.discover.utils.MoreFunctionProvider
@@ -39,9 +40,8 @@ import org.jetbrains.anko.sp
 
 @Route(path = DISCOVER_ENTRY)
 class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>() {
-
     override val viewModelClass: Class<DiscoverHomeViewModel> = DiscoverHomeViewModel::class.java
-
+    private var firstLoadFragmentFlag = true
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.discover_home_fragment, container, false)
@@ -56,7 +56,10 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>() {
         iv_check_in.setOnClickListener {
             ARouter.getInstance().build(MINE_CHECK_IN).navigation()
         }
-        initFeeds()
+        if(savedInstanceState == null){
+            initFeeds()
+            firstLoadFragmentFlag = false
+        }
     }
 
 
@@ -187,6 +190,7 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+
         vf_jwzx_detail.stopFlipping()
     }
 }
