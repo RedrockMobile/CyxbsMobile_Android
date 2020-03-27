@@ -225,6 +225,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="18dp"
             android:paddingStart="16dp"
+            android:paddingEnd="20dp"
             android:paddingTop="9dp"
             android:paddingBottom="9dp"
             android:foreground="?android:selectableItemBackground"
