@@ -37,24 +37,27 @@
         tools:text="2019.12.1" />
 
     <ImageView
+        android:id="@+id/mine_imageview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="5dp"
+        android:layout_marginEnd="50dp"
         android:src="@drawable/mine_ic_sign_diamond"
-        app:layout_constraintBottom_toBottomOf="@+id/mine_answer_posted_tv_integral"
-        app:layout_constraintEnd_toStartOf="@+id/mine_answer_posted_tv_integral"
-        app:layout_constraintTop_toTopOf="@+id/mine_answer_posted_tv_integral" />
+        app:layout_constraintBottom_toBottomOf="@+id/mine_answer_posted_tv_state"
+        app:layout_constraintEnd_toStartOf="@+id/mine_answer_posted_tv_state"
+        app:layout_constraintTop_toTopOf="@+id/mine_answer_posted_tv_state" />
 
     <TextView
         android:id="@+id/mine_answer_posted_tv_integral"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="30dp"
         android:alpha="0.67"
+        android:layout_marginStart="4dp"
         android:textColor="@color/qa_question_bottom_count_color"
         android:textSize="11sp"
         app:layout_constraintBottom_toBottomOf="@+id/mine_answer_posted_tv_state"
         app:layout_constraintEnd_toStartOf="@+id/mine_answer_posted_tv_state"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/mine_imageview"
         app:layout_constraintTop_toTopOf="@+id/mine_answer_posted_tv_state"
         tools:text="20" />
 
