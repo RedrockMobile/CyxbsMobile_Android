@@ -16,7 +16,10 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.mredrock.cyxbs.common.component.CommonDialogFragment
 import com.mredrock.cyxbs.common.config.MINE_CHECK_IN
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
-import com.mredrock.cyxbs.common.utils.extensions.*
+import com.mredrock.cyxbs.common.utils.extensions.dp2px
+import com.mredrock.cyxbs.common.utils.extensions.invisible
+import com.mredrock.cyxbs.common.utils.extensions.toast
+import com.mredrock.cyxbs.common.utils.extensions.visible
 import com.mredrock.cyxbs.mine.R
 import com.mredrock.cyxbs.mine.network.model.Product
 import com.mredrock.cyxbs.mine.network.model.ScoreStatus
@@ -116,7 +119,6 @@ class DailySignActivity(override val viewModelClass: Class<DailyViewModel> = Dai
             if (it == null || it.isEmpty()) {
                 return@Observer
             }
-            mine_iv_empty_product.gone()
 
             adapter.submitList(it)
         })

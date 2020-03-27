@@ -93,11 +93,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/mine_store_guildeline">
-        <ImageView
-            android:id="@+id/mine_iv_empty_product"
-            android:src="@drawable/mine_ic_me_empty_data"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/mine_store_rv"
