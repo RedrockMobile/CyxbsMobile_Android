@@ -144,7 +144,7 @@ class ScheduleView : FrameLayout {
     constructor(context: Context) : super(context) {
         mElementGap = dip(2f)
         mTouchViewColor = Color.parseColor("#bdc3c7")
-        mHeightAtLowDpi = dip(600f)
+        mHeightAtLowDpi = dip(620f)
         initScheduleView()
     }
 
@@ -155,7 +155,7 @@ class ScheduleView : FrameLayout {
         noCourseImageHeight = typeArray.getDimensionPixelSize(R.styleable.ScheduleView_noGourseImageHeight, dip(0f))
         noCourseImageWidth = typeArray.getDimensionPixelSize(R.styleable.ScheduleView_noGourseImageWidth, dip(0f))
         mTouchViewColor = typeArray.getColor(R.styleable.ScheduleView_touchViewColor, Color.parseColor("#bdc3c7"))
-        mHeightAtLowDpi = typeArray.getDimensionPixelSize(R.styleable.ScheduleView_heightAtLowDpi, dip(600f))
+        mHeightAtLowDpi = typeArray.getDimensionPixelSize(R.styleable.ScheduleView_heightAtLowDpi, dip(620f))
         mTouchViewDrawableResId = typeArray.getResourceId(R.styleable.ScheduleView_touchViewDrawable, 0)
         mHighlightColor = typeArray.getColor(R.styleable.ScheduleView_highlightColor, Color.parseColor("#FFFBEB"))
         mNoCourseDrawableResId = typeArray.getResourceId(R.styleable.ScheduleView_noCourseDrawable, 0)
