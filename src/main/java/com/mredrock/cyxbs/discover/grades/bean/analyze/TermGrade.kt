@@ -5,6 +5,12 @@ import java.io.Serializable
 
 /**
  * Created by roger on 2020/3/21
+内容实例：
+"term": "20182",
+"gpa": 3.41,
+"grade": 82.75,
+"rank": 33,
+"singe_grades" : [...]
  */
 data class TermGrade(
         val term: String,

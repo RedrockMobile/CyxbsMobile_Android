@@ -11,11 +11,13 @@ import com.google.gson.Gson
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.network.ApiGeneratorForSign
-import com.mredrock.cyxbs.common.utils.extensions.*
+import com.mredrock.cyxbs.common.utils.extensions.doOnErrorWithDefaultErrorHandler
+import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
+import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
+import com.mredrock.cyxbs.common.utils.extensions.toast
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.discover.grades.R
 import com.mredrock.cyxbs.discover.grades.bean.Exam
-import com.mredrock.cyxbs.discover.grades.bean.Grade
 import com.mredrock.cyxbs.discover.grades.bean.IdsBean
 import com.mredrock.cyxbs.discover.grades.bean.IdsStatus
 import com.mredrock.cyxbs.discover.grades.bean.analyze.GPAStatus
@@ -30,7 +32,6 @@ class ContainerViewModel : BaseViewModel() {
     }
 
     val examData = MutableLiveData<List<Exam>>()
-    val gradesData = MutableLiveData<List<Grade>>()
     private val apiService = ApiGenerator.getApiService(ApiService::class.java)
     private val apiServiceForSign = ApiGeneratorForSign.getApiService(ApiService::class.java)
     fun loadData(stuNum: String) {
@@ -47,18 +48,6 @@ class ContainerViewModel : BaseViewModel() {
                 }.lifeCycle()
     }
 
-    fun loadGrades(stuNum: String, idNum: String) {
-        apiService.getGrades(stuNum, idNum)
-                .mapOrThrowApiException()
-                .setSchedulers()
-                .doOnErrorWithDefaultErrorHandler {
-                    toastEvent.value = R.string.grades_no_grades_history
-                    false
-                }
-                .safeSubscribeBy {
-                    gradesData.value = it
-                }.lifeCycle()
-    }
 
     private var isAnimating = false
 

@@ -2,7 +2,6 @@ package com.mredrock.cyxbs.discover.grades.network
 
 import com.mredrock.cyxbs.common.bean.RedrockApiWrapper
 import com.mredrock.cyxbs.discover.grades.bean.Exam
-import com.mredrock.cyxbs.discover.grades.bean.Grade
 import com.mredrock.cyxbs.discover.grades.bean.IdsBean
 import com.mredrock.cyxbs.discover.grades.bean.IdsStatus
 import com.mredrock.cyxbs.discover.grades.bean.analyze.GPAStatus
@@ -16,11 +15,6 @@ import retrofit2.http.*
  */
 interface ApiService {
 
-    @FormUrlEncoded
-    @POST("/234/newapi/examGrade")
-    fun getGrades(@Field("stuNum") stuNum: String,
-                  @Field("idNum") idNum: String,
-                  @Field("forceFetch") fetch: Boolean = true): Observable<RedrockApiWrapper<List<Grade>>>
 
     /**
      * 获取考试信息（不含补考）

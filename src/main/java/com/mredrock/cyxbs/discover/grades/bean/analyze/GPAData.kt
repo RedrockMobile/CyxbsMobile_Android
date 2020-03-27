@@ -5,6 +5,7 @@ import java.io.Serializable
 
 /**
  * Created by roger on 2020/3/21
+ *
  */
 data class GPAData (
         @SerializedName("term_grades")
