@@ -1,10 +1,12 @@
 package com.mredrock.cyxbs.widget.widget.normal
 
 import android.appwidget.AppWidgetManager
+import android.appwidget.AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT
 import android.appwidget.AppWidgetProvider
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.os.Bundle
 import android.view.View
 import android.widget.RemoteViews
 import android.widget.Toast
@@ -13,14 +15,20 @@ import com.alibaba.android.arouter.launcher.ARouter
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.mredrock.cyxbs.common.bean.WidgetCourse
+import com.mredrock.cyxbs.common.component.CyxbsToast
+import com.mredrock.cyxbs.common.config.ACCOUNT_SERVICE
 import com.mredrock.cyxbs.common.config.MAIN_MAIN
 import com.mredrock.cyxbs.common.event.WidgetCourseEvent
+import com.mredrock.cyxbs.common.service.ServiceManager
+import com.mredrock.cyxbs.common.service.account.IAccountService
 import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
 import com.mredrock.cyxbs.common.utils.extensions.editor
 import com.mredrock.cyxbs.widget.R
 import com.mredrock.cyxbs.widget.bean.CourseStatus
 import com.mredrock.cyxbs.widget.util.*
 import org.greenrobot.eventbus.EventBus
+import org.jetbrains.anko.dip
+import org.jetbrains.anko.sp
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -51,6 +59,24 @@ class NormalWidget : AppWidgetProvider() {
             putInt(shareName, 0)
         }
         fresh(context, 0)
+    }
+
+    override fun onAppWidgetOptionsChanged(context: Context, appWidgetManager: AppWidgetManager, appWidgetId: Int, newOptions: Bundle) {
+        super.onAppWidgetOptionsChanged(context, appWidgetManager, appWidgetId, newOptions)
+        val minHeight = newOptions.getInt(OPTION_APPWIDGET_MIN_HEIGHT)
+        val rv = RemoteViews(context.packageName, R.layout.widget_normal)
+        when{
+            minHeight <=100 -> setTextMaxLines(rv,2)
+            minHeight <=110 -> setTextMaxLines(rv,3)
+            else -> setTextMaxLines(rv,10)
+        }
+        show(rv, context)
+    }
+
+    private fun setTextMaxLines(rv: RemoteViews, i1: Int) {
+        for (i in 1..6) {
+            rv.setInt(getCourseId(i), "setMaxLines", i1)
+        }
     }
 
     override fun onReceive(context: Context, intent: Intent) {
@@ -85,33 +111,37 @@ class NormalWidget : AppWidgetProvider() {
                 }
             }
             if (isDoubleClick()) {
-                Toast.makeText(context, "提示：点击星期返回今日", Toast.LENGTH_SHORT).show()
+                CyxbsToast.makeText(context, "提示：点击星期返回今日", Toast.LENGTH_SHORT).show()
             }
         }
         if (intent.action == "btn.start.com") {
-            list = gson.fromJson(context.defaultSharedPreferences.getString(courseData, ""), object : TypeToken<ArrayList<CourseStatus.Course>>() {}.type)
-            val newList = mutableListOf<WidgetCourse.DataBean>()
-            list.forEach {
-                newList.add(changeCourseToWidgetCourse(it))
-            }
-            when (rId) {
-                R.id.widget_normal_layout1 -> {
-                    startOperation(newList.filter { it.hash_lesson == 0 }[0])
+            if (ServiceManager.getService(IAccountService::class.java).getVerifyService().isLogin()) {
+                CyxbsToast.makeText(context, "请登陆之后再点击查看详细信息", Toast.LENGTH_SHORT).show()
+            }else{
+                list = gson.fromJson(context.defaultSharedPreferences.getString(courseData, ""), object : TypeToken<ArrayList<CourseStatus.Course>>() {}.type)
+                val newList = mutableListOf<WidgetCourse.DataBean>()
+                list.forEach {
+                    newList.add(changeCourseToWidgetCourse(it))
                 }
-                R.id.widget_normal_layout2 -> {
-                    startOperation(newList.filter { it.hash_lesson == 1 }[0])
-                }
-                R.id.widget_normal_layout3 -> {
-                    startOperation(newList.filter { it.hash_lesson == 2 }[0])
-                }
-                R.id.widget_normal_layout4 -> {
-                    startOperation(newList.filter { it.hash_lesson == 3 }[0])
-                }
-                R.id.widget_normal_layout5 -> {
-                    startOperation(newList.filter { it.hash_lesson == 4 }[0])
-                }
-                R.id.widget_normal_layout6 -> {
-                    startOperation(newList.filter { it.hash_lesson == 5 }[0])
+                when (rId) {
+                    R.id.widget_normal_layout1 -> {
+                        startOperation(newList.filter { it.hash_lesson == 0 }[0])
+                    }
+                    R.id.widget_normal_layout2 -> {
+                        startOperation(newList.filter { it.hash_lesson == 1 }[0])
+                    }
+                    R.id.widget_normal_layout3 -> {
+                        startOperation(newList.filter { it.hash_lesson == 2 }[0])
+                    }
+                    R.id.widget_normal_layout4 -> {
+                        startOperation(newList.filter { it.hash_lesson == 3 }[0])
+                    }
+                    R.id.widget_normal_layout5 -> {
+                        startOperation(newList.filter { it.hash_lesson == 4 }[0])
+                    }
+                    R.id.widget_normal_layout6 -> {
+                        startOperation(newList.filter { it.hash_lesson == 5 }[0])
+                    }
                 }
             }
         }
@@ -127,7 +157,7 @@ class NormalWidget : AppWidgetProvider() {
         val time = System.currentTimeMillis()
         val anotherTime = time - lastClickTime
 
-        if (anotherTime < 200) {
+        if (anotherTime < 150) {
             return true
         }
         lastClickTime = time
@@ -141,7 +171,7 @@ class NormalWidget : AppWidgetProvider() {
     private fun fresh(context: Context, offsetTime: Int) {
         try {//catch异常，避免课表挂了之后这边跟着挂
             val rv = RemoteViews(context.packageName, R.layout.widget_normal)
-            initView(rv,context)
+            initView(rv, context)
             calendar.set(Calendar.DATE, calendar.get(Calendar.DATE) + offsetTime)
             //获取数据
             list = getCourseByCalendar(context, calendar)
@@ -160,11 +190,12 @@ class NormalWidget : AppWidgetProvider() {
                     rv.setTextViewText(getRoomId(num), filterClassRoom(course.classroom!!))
                     rv.setOnClickPendingIntent(getLayoutId(num),
                             getClickPendingIntent(context, getLayoutId(num), "btn.start.com", javaClass))
-                }else if (course.period == 3) {
+                } else if (course.period == 3) {
                     setMoreView(num, rv, course, context)
-                }else if (course.period == 4) {
+
+                } else if (course.period == 4) {
                     setMoreView(num, rv, course, context)
-                    rv.setViewVisibility(getMoreViewId((num+1) / 2),View.GONE)
+                    rv.setViewVisibility(getMoreViewId((num + 1) / 2), View.GONE)
                 }
 
             }
@@ -191,16 +222,16 @@ class NormalWidget : AppWidgetProvider() {
     }
 
     private fun setMoreView(num: Int, rv: RemoteViews, course: CourseStatus.Course, context: Context) {
-        val moreViewNum = (num+1) / 2
+        val moreViewNum = (num + 1) / 2
         hideNormalLayout(moreViewNum, rv)
         rv.setViewVisibility(getMoreContentId(moreViewNum), View.VISIBLE)
         rv.setTextViewText(getMoreCourseId(moreViewNum), course.course)
         rv.setTextViewText(getMoreRoomId(moreViewNum), filterClassRoom(course.classroom!!))
-        rv.setOnClickPendingIntent(getLayoutId(num),
+        rv.setOnClickPendingIntent(getMoreContentId(moreViewNum),
                 getClickPendingIntent(context, getLayoutId(num), "btn.start.com", javaClass))
     }
 
-    private fun initView(rv: RemoteViews,context:Context) {
+    private fun initView(rv: RemoteViews, context: Context) {
         for (i in 1..6) {
             rv.setTextViewText(getCourseId(i), "")
             rv.setTextViewText(getRoomId(i), "")
@@ -372,7 +403,6 @@ class NormalWidget : AppWidgetProvider() {
         3 -> R.id.widget_normal_layout_view_more_class3
         else -> R.id.widget_normal_layout_view_more_class1
     }
-
 
 
 }

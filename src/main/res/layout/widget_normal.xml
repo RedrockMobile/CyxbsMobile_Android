@@ -10,7 +10,7 @@
     android:orientation="horizontal">
 
 
-    <FrameLayout
+    <LinearLayout
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_columnWeight="0.5"
@@ -22,7 +22,8 @@
         <ImageView
             android:id="@+id/widget_normal_back"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
             android:layout_gravity="center_horizontal|top"
             android:src="@drawable/ic_keyboard_arrow_up_black_24dp"
             tools:ignore="ContentDescription" />
@@ -31,7 +32,9 @@
         <TextView
             android:id="@+id/widget_normal_title"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center"
             android:layout_gravity="center_horizontal|center_vertical"
             android:textSize="12sp"
             android:textStyle="bold"
@@ -42,12 +45,13 @@
             android:id="@+id/widget_normal_front"
             android:layout_width="match_parent"
             android:layout_gravity="center_horizontal|bottom"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
             android:scaleType="fitCenter"
             android:src="@drawable/ic_keyboard_arrow_down_black_24dp"
             tools:ignore="ContentDescription" />
 
-    </FrameLayout>
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/widget_normal_content_more_class1"
