@@ -66,7 +66,7 @@ class EditViewModel : BaseViewModel() {
                     userEditService.apply {
                         setAvatarImgUrl(it.photosrc)
                     }
-                    apiService.updateUserImage( it.thumbnail_src, it.photosrc)
+                    apiServiceForSign.updateUserImage( it.thumbnail_src, it.photosrc)
                 }
                 .normalStatus(this)
                 .safeSubscribeBy(onError = { upLoadImageEvent.value = false }
