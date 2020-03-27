@@ -23,9 +23,6 @@ import io.reactivex.disposables.Disposable
  * Created by zia on 2018/9/13.
  */
 class CommentViewModel : BaseViewModel() {
-    private val idNum = BaseApp.context.defaultSharedPreferences.getString("SP_KEY_ID_NUM", "")
-
-
     private val pageSize = 6
     private var commentPage: Int = 1
     private var commentReceivedPage: Int = 1

@@ -26,10 +26,8 @@ interface ApiService {
      * 上传用户信息
      */
     @FormUrlEncoded
-    @POST("/app/index.php/Home/Person/setInfo")
-    fun updateUserInfo(@Field("stuNum") stuNum: String,
-                       @Field("idNum") idNum: String,
-                       @Field("nickname") nickname: String,
+    @POST("/magipoke/Person/SetInfo")
+    fun updateUserInfo(@Field("nickname") nickname: String,
                        @Field("introduction") introduction: String,
                        @Field("qq") qq: String,
                        @Field("phone") phone: String,
@@ -40,10 +38,8 @@ interface ApiService {
      * 上传图片
      */
     @FormUrlEncoded
-    @POST("/app/index.php/Home/Person/setInfo")
-    fun updateUserImage(@Field("stuNum") stuNum: String,
-                        @Field("idNum") idNum: String,
-                        @Field("photo_thumbnail_src") photo_thumbnail_src: String,
+    @POST("/magipoke/Person/SetInfo")
+    fun updateUserImage(@Field("photo_thumbnail_src") photo_thumbnail_src: String,
                         @Field("photo_src") photo_src: String): Observable<RedrockApiStatus>
 
     /**
@@ -52,6 +48,7 @@ interface ApiService {
     @POST("app/index.php/QA/Integral/checkIn")
     fun checkIn(): Observable<RedrockApiStatus>
 
+    //获取积分
     @POST("app/index.php/QA/User/getScoreStatus")
     fun getScoreStatus(): Observable<RedrockApiWrapper<ScoreStatus>>
 
