@@ -9,7 +9,7 @@ import com.mredrock.cyxbs.common.config.IS_COMMENT
 import com.mredrock.cyxbs.common.config.NAVIGATE_FROM_WHERE
 import com.mredrock.cyxbs.common.config.QA_COMMENT_LIST
 import com.mredrock.cyxbs.common.event.OpenShareCommentEvent
-import com.mredrock.cyxbs.common.utils.extensions.setImageFromUrl
+import com.mredrock.cyxbs.common.utils.extensions.loadAvatar
 import com.mredrock.cyxbs.mine.R
 import com.mredrock.cyxbs.mine.network.model.CommentReceived
 import com.mredrock.cyxbs.mine.util.ui.BaseRVFragment
@@ -48,7 +48,7 @@ class CommentReceivedFragment : BaseRVFragment<CommentReceived>() {
     }
 
     override fun bindDataHolder(holder: RecyclerView.ViewHolder, position: Int, data: CommentReceived) {
-        holder.itemView.mine_comment_iv_avatar.setImageFromUrl(data.commenterImageUrl)
+        holder.itemView.context.loadAvatar(data.commenterImageUrl, holder.itemView.mine_comment_iv_avatar)
         holder.itemView.mine_comment_tv_nickname.text = data.commenterNickname
         holder.itemView.mine_comment_tv_response.text = data.commentContent
         holder.itemView.setOnClickListener {
