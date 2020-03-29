@@ -38,6 +38,9 @@ class ElectricityFeedSettingDialogFragment(private val refresher: (id: String, r
         super.onViewCreated(view, savedInstanceState)
 
         var room = defaultSharedPreferences.getString(SP_ROOM_KEY, "101") ?: "101"
+        selectBuildingHeadPosition = defaultSharedPreferences.getInt(SP_BUILDING_HEAD_KEY,0)
+        selectBuildingFootPosition = defaultSharedPreferences.getInt(SP_BUILDING_FOOT_KEY,0)
+
         view.apply {
             et_electricity_room_num.apply {
                 setText(room)
@@ -46,6 +49,8 @@ class ElectricityFeedSettingDialogFragment(private val refresher: (id: String, r
                 }
 
             }
+            wp_dormitory_head.selectedItemPosition = selectBuildingHeadPosition
+            wp_dormitory_foot.selectedItemPosition = selectBuildingFootPosition
             et_electricity_room_num.doOnTextChanged { text, _, _, _ -> room = text.toString() }
             wp_dormitory_head.setOnItemSelectedListener { _, data, _ ->
                 wp_dormitory_foot.data = buildingNames[data]?.map { s -> s.replaceAfter("舍", "") }
