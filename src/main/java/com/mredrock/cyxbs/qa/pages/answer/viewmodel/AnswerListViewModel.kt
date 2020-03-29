@@ -57,7 +57,7 @@ class AnswerListViewModel(question: Question) : BaseViewModel() {
         initialLoad = Transformations.switchMap(factory.answerDataSourceLiveData) { it.initialLoad }
 
         questionLiveData.value = question
-        bottomViewEvent.value = question.isSelf.takeUnless { question.hasAdoptedAnswer }
+        bottomViewEvent.value = question.isSelf
     }
 
     //增加浏览量，不用显示

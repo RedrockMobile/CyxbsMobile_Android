@@ -23,7 +23,7 @@ import com.mredrock.cyxbs.qa.utils.toFormatString
 import io.reactivex.Observable
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
-import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.asRequestBody
 import org.jetbrains.anko.longToast
 import java.io.File
 
@@ -110,7 +110,7 @@ class QuizViewModel : BaseViewModel() {
                 .addFormDataPart("question_id", qid)
         files.forEachIndexed { index, file ->
             val suffix = file.name.substring(file.name.lastIndexOf(".") + 1)
-            val imageBody = RequestBody.create("image/$suffix".toMediaTypeOrNull(), file)
+            val imageBody = file.asRequestBody("image/$suffix".toMediaTypeOrNull())
             val name = "photo" + (index + 1)
             builder.addFormDataPart(name, file.name, imageBody)
         }

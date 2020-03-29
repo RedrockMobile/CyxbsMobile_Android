@@ -7,6 +7,9 @@ import com.google.gson.annotations.SerializedName
 data class Question(@SerializedName("reward")
                     var reward: Int = 0,
 
+                    @SerializedName("hasAdoptedAnswer")
+                    var _hasAdoptedAnswer: Int = 0,
+
                     @SerializedName("gender")
                     val gender: String = "",
 
@@ -51,22 +54,13 @@ data class Question(@SerializedName("reward")
 
                     @SerializedName("views_num")
                     var viewCount: Int = 0) : Parcelable {
-    @SerializedName("answers")
-    private var answers: List<Answer>? = null
-
-    var hasAdoptedAnswer: Boolean = false
 
     val isSelf get() = _isSelf == 1
     val isAnonymous get() = _isAnonymous == 1
-
-    fun refresh(question: Question) {
-        _isSelf = question._isSelf
-        reward = question.reward
-        disappearAt = question.disappearAt
-        hasAdoptedAnswer = answers?.find { it.isAdopted } != null
-    }
+    val hasAdoptedAnswer get() = _hasAdoptedAnswer == 1
 
     constructor(parcel: Parcel) : this(
+            parcel.readInt(),
             parcel.readInt(),
             parcel.readString(),
             parcel.readString(),
@@ -86,6 +80,7 @@ data class Question(@SerializedName("reward")
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeInt(reward)
+        parcel.writeInt(_hasAdoptedAnswer)
         parcel.writeString(gender)
         parcel.writeString(kind)
         parcel.writeString(description)

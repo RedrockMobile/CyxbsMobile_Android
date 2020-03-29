@@ -52,6 +52,7 @@ class AnswerListActivity : BaseActivity() {
 
         const val PARAM_QUESTION = "question"
         const val REQUEST_REFRESH_LIST = 0x2
+        const val REQUEST_REFRESH_QUESTION_ADOPTED = "adopted"
 
         fun activityStart(fragment: Fragment, question: Question, requestCode: Int, options: Bundle? = Bundle()) {
             if (!ServiceManager.getService(IAccountService::class.java).getVerifyService().isLogin()) {
@@ -215,7 +216,7 @@ class AnswerListActivity : BaseActivity() {
         backAndRefreshPreActivityEvent.observeNotNull {
             if (it) {
                 val data = Intent()
-                data.putExtra("type", questionLiveData.value!!.kind)
+                data.putExtra("type", questionLiveData.value?.kind)
                 setResult(Activity.RESULT_OK, data)
                 finish()
             }
@@ -258,6 +259,9 @@ class AnswerListActivity : BaseActivity() {
                     viewModel.invalidate()
                     val question = viewModel.questionLiveData.value!!
                     question.answerNum++
+                    if (data?.getIntExtra(REQUEST_REFRESH_QUESTION_ADOPTED, 0) == 1) {
+                        question._hasAdoptedAnswer = 1
+                    }
                     headerAdapter.refreshData(listOf(question))
                 }
                 CommentListActivity.REQUEST_CODE -> {

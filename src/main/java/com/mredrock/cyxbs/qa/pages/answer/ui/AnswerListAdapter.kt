@@ -77,7 +77,7 @@ class AnswerListAdapter : BaseEndlessRvAdapter<Answer>(DIFF_CALLBACK) {
                 iv_answer_avatar.setAvatarImageFromUrl(data.photoThumbnailSrc)
                 tv_answer_nickname.text = data.nickname
                 tv_adopted.setVisibleCondition(data.isAdopted)
-                if (data.content.isEmpty()) {
+                if (data.content.isEmpty() && data.photoUrl.isNotEmpty()) {
                     tv_answer_content.apply {
                         text = context.getString(R.string.qa_answer_photo_count, data.photoUrl.size.toString())
                         textColor = ContextCompat.getColor(context, R.color.qa_answer_empty_content_color)

@@ -5,6 +5,7 @@ import android.app.ProgressDialog
 import android.content.Intent
 import android.os.Bundle
 import android.text.InputType.TYPE_TEXT_FLAG_MULTI_LINE
+import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.TextView
 import androidx.core.content.ContextCompat
@@ -36,6 +37,7 @@ import com.mredrock.cyxbs.qa.pages.answer.ui.dialog.ReportDialog
 import com.mredrock.cyxbs.qa.pages.comment.viewmodel.CommentListViewModel
 import com.mredrock.cyxbs.qa.ui.adapter.EmptyRvAdapter
 import com.mredrock.cyxbs.qa.ui.adapter.FooterRvAdapter
+import com.mredrock.cyxbs.qa.ui.widget.CommonDialog
 import com.mredrock.cyxbs.qa.utils.setPraise
 import kotlinx.android.synthetic.main.qa_activity_comment_list.*
 import kotlinx.android.synthetic.main.qa_comment_new_publish_layout.*
@@ -142,8 +144,22 @@ class CommentListActivity : BaseActivity() {
 
     private fun initRv(showAdoptIcon: Boolean, questionAnonymous: Boolean) {
         headerAdapter = CommentListHeaderRvAdapter(showAdoptIcon).apply {
-            onAdoptClickListener = {
-                viewModel.adoptAnswer(it)
+            onAdoptClickListener = { aId ->
+                CommonDialog(this@CommentListActivity).apply {
+                    initView(
+                            icon = R.drawable.qa_icon_answer_accept,
+                            title = getString(R.string.qa_answer_whether_accept_title),
+                            firstNotice = getString(R.string.qa_answer_whether_accept_notice),
+                            secondNotice = null,
+                            buttonText = getString(R.string.qa_answer_list_accept),
+                            confirmListener = View.OnClickListener {
+                                viewModel.adoptAnswer(aId)
+                                dismiss()
+                            },
+                            cancelListener = View.OnClickListener {
+                                dismiss()
+                            })
+                }.show()
             }
         }
         emptyRvAdapter = EmptyRvAdapter(getString(R.string.qa_comment_list_no_comment_hint))
@@ -183,7 +199,9 @@ class CommentListActivity : BaseActivity() {
             qa_tv_toolbar_title.text = baseContext.getString(R.string.qa_comment_list_comment_count, it.commentNum)
             headerAdapter.refreshData(listOf(it))
         }
-        backAndRefreshEvent.observeNotNull { setResult(Activity.RESULT_OK) }
+        backAndRefreshEvent.observeNotNull {
+            setResult(Activity.RESULT_OK, Intent().apply { putExtra(AnswerListActivity.REQUEST_REFRESH_QUESTION_ADOPTED, 1) })
+        }
         commentList.observe { commentListRvAdapter.submitList(it) }
 
         networkState.observeNotNull { footerRvAdapter.refreshData(listOf(it)) }

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="qa_answer_list_adopt_color">#788efa</color>
+    <color name="qa_full_screen_pic_indicator_color">#fffFFF</color>
 
 
     <color name="qa_crop_logo">#f0000000</color>

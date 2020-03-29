@@ -9,7 +9,9 @@
     <string name="qa_answer_reply_count">%1$s条回复</string>
     <string name="qa_answer_photo_count">查看%1$s张照片</string>
     <string name="qa_answer_list_accepted">已解决</string>
-    <string name="qa_answer_list_accept">采纳</string>z
+    <string name="qa_answer_list_accept">采纳</string>
+    <string name="qa_answer_whether_accept_title">是否采纳该回答?</string>
+    <string name="qa_answer_whether_accept_notice">采纳后他将获得你的悬赏积分</string>
     <string name="qa_answer_list_no_answer_hint">还没有回答哦~</string>
     <string name="qa_comment_list_comment_count">评论（%1$s）</string>
     <string name="qa_comment_list_comment_loading_hint">努力加载中，请不要多次点击哦~</string>

@@ -1,12 +1,10 @@
 package com.mredrock.cyxbs.qa.ui.adapter
 
-import android.annotation.SuppressLint
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.viewpager.widget.PagerAdapter
 import com.github.chrisbanes.photoview.PhotoView
 import com.mredrock.cyxbs.common.utils.extensions.setImageFromUrl
@@ -26,13 +24,9 @@ class HackyViewPagerAdapter(private val picUrls: Array<String>?) : PagerAdapter(
         return picUrls?.size ?: 0
     }
 
-    @SuppressLint("SetTextI18n")
     override fun instantiateItem(container: ViewGroup, position: Int): Any {
         val root = LayoutInflater.from(container.context).inflate(R.layout.qa_view_pager_item_view_image, container, false)
         val photoView = root.findViewById<PhotoView>(R.id.pv_view_image)
-        root.findViewById<TextView>(R.id.tv_position).apply {
-            text = "${position + 1}/${picUrls?.size}"
-        }
         val url = picUrls?.get(position)
         photoView.setImageFromUrl(url)
         photoView.setOnLongClickListener {

@@ -1,11 +1,13 @@
 package com.mredrock.cyxbs.qa.ui.activity
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.Context
 import android.media.MediaScannerConnection
 import android.os.Bundle
 import android.os.Environment
 import androidx.appcompat.app.AppCompatActivity
+import androidx.viewpager.widget.ViewPager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.mredrock.cyxbs.common.config.DIR_PHOTO
 import com.mredrock.cyxbs.common.utils.extensions.doPermissionAction
@@ -34,6 +36,7 @@ class ViewImageActivity : AppCompatActivity() {
 
     private var imgUrls: Array<String>? = null
     private var position: Int = 0
+    @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.qa_activity_view_image)
@@ -41,7 +44,20 @@ class ViewImageActivity : AppCompatActivity() {
         setFullScreen()
         imgUrls = intent?.extras?.getStringArray(IMG_RES_PATHS)
         position = intent.getIntExtra(POSITION, 0)
+        tv_position.text = "${position + 1}/${imgUrls?.size}"
         if (!imgUrls.isNullOrEmpty()) {
+            hc_vp.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
+                override fun onPageScrollStateChanged(state: Int) {
+                }
+
+                override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
+                }
+
+                override fun onPageSelected(position: Int) {
+                    tv_position.text = "${position + 1}/${imgUrls?.size}"
+                }
+
+            })
             hc_vp.adapter = HackyViewPagerAdapter(imgUrls).apply {
                 photoTapClick = {
                     finish()

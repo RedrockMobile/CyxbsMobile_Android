@@ -18,7 +18,7 @@ import com.mredrock.cyxbs.qa.network.ApiService
 import com.mredrock.cyxbs.qa.network.NetworkState
 import com.mredrock.cyxbs.qa.pages.comment.model.CommentDataSource
 
-class CommentListViewModel(val qid: String,
+class CommentListViewModel(private val qid: String,
                            answer: Answer) : BaseViewModel() {
     private val factory: CommentDataSource.Factory
     val commentList: LiveData<PagedList<Comment>>
@@ -27,8 +27,8 @@ class CommentListViewModel(val qid: String,
     val questionData = MutableLiveData<Question>()
 
     val answerLiveData = MutableLiveData<Answer>()
-    private val isPraised = Transformations.map(this.answerLiveData) { it.isPraised }!!
-    private val praiseCount = Transformations.map(this.answerLiveData) { it.praiseNum }!!
+    private val isPraised = Transformations.map(this.answerLiveData) { it.isPraised }
+    private val praiseCount = Transformations.map(this.answerLiveData) { it.praiseNum }
 
     val praiseEvent = SingleLiveEvent<Boolean>()
     val reportAnswerEvent = MutableLiveData<Boolean>()

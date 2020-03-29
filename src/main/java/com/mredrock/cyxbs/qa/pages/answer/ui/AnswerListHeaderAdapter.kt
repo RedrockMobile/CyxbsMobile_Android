@@ -1,6 +1,7 @@
 package com.mredrock.cyxbs.qa.pages.answer.ui
 
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import com.mredrock.cyxbs.common.utils.extensions.setAvatarImageFromUrl
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.bean.Question
@@ -25,6 +26,12 @@ class AnswerListHeaderAdapter : BaseRvAdapter<Question>() {
                 ngv_question.setOnItemClickListener { _, index ->
                     ViewImageActivity.activityStart(context, data.photoUrl.toTypedArray(), index)
                 }
+                val drawable = if (data.hasAdoptedAnswer) {
+                    ContextCompat.getDrawable(context, R.drawable.qa_ic_reward_accept)
+                } else {
+                    ContextCompat.getDrawable(context, R.drawable.qa_ic_answer_list_reward)
+                }
+                tv_reward.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null)
                 iv_questioner_avatar.setAvatarImageFromUrl(data.photoThumbnailSrc)
                 tv_questioner_nickname.text = data.nickname
                 tv_question_publish_at.text = questionTimeDescription(System.currentTimeMillis(), data.createdAt.toDate().time)
