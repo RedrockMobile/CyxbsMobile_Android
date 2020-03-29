@@ -11,6 +11,8 @@ import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.mine.util.apiService
 import com.mredrock.cyxbs.mine.util.apiServiceForSign
 import com.mredrock.cyxbs.mine.util.extension.normalStatus
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 
@@ -32,28 +34,26 @@ class EditViewModel : BaseViewModel() {
 
     fun updateUserInfo(nickname: String, introduction: String, qq: String, phone: String
                        , photoThumbnailSrc: String = userService.getAvatarImgUrl()
-                       , photoSrc: String = userService.getAvatarImgUrl(), callback: () -> Unit) {
+                       , photoSrc: String = userService.getAvatarImgUrl()) {
 
 
         apiServiceForSign.updateUserInfo(nickname, introduction, qq, phone, photoThumbnailSrc, photoSrc)
                 .normalStatus(this)
-                .safeSubscribeBy(
-                        onNext = {
-                            //更新User信息
-
-                            userEditService.apply {
-                                setQQ(qq)
-                                setNickname(nickname)
-                                setIntroduction(introduction)
-                                setPhone(phone)
+                .observeOn(Schedulers.io())
+                .map {
+                    //setInfo请求后，本地数据需要调用refresh接口刷新并保存即时的用户信息到sp
+                    ServiceManager.getService(IAccountService::class.java).getVerifyService().refresh(
+                            onError = {
+                                updateInfoEvent.postValue(false)
+                            },
+                            action = { s: String ->
+                                updateInfoEvent.postValue(true)
                             }
-
-                            updateInfoEvent.postValue(true)
-                        },
-                        onComplete = callback,
-                        onError = {
-                            updateInfoEvent.postValue(false)
-                        }
+                    )
+                    it
+                }
+                .observeOn(AndroidSchedulers.mainThread())
+                .safeSubscribeBy(
                 )
                 .lifeCycle()
     }

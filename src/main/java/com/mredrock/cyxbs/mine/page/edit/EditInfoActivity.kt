@@ -30,7 +30,6 @@ import com.mredrock.cyxbs.common.utils.extensions.*
 import com.mredrock.cyxbs.mine.R
 import com.yalantis.ucrop.UCrop
 import kotlinx.android.synthetic.main.mine_activity_edit_info.*
-import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -191,6 +190,7 @@ class EditInfoActivity(override val isFragmentActivity: Boolean = false,
         viewModel.updateInfoEvent.observe(this, Observer {
             if (it) {
                 toast("更改资料成功")
+                checkColorAndText()
             } else {
                 toast("上传资料失败")
             }
@@ -217,11 +217,11 @@ class EditInfoActivity(override val isFragmentActivity: Boolean = false,
             return
         }
 
-        if (nickname.isEmpty()) {
-            toast("昵称不能为空")
+        if (nickname.isEmpty() || introduction.isEmpty() || qq.isEmpty() || phone.isEmpty()) {
+            toast("信息不能为空")
             return
         }
-        viewModel.updateUserInfo(nickname, introduction, qq, phone) { checkColorAndText() }
+        viewModel.updateUserInfo(nickname, introduction, qq, phone)
     }
 
     private fun checkIfInfoChange(): Boolean {
