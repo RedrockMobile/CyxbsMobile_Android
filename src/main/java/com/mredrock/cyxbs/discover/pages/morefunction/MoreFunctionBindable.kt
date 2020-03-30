@@ -14,8 +14,9 @@ class MoreFunctionBindable:Bindable {
         imageView.setImageResource(R.drawable.discover_ic_more_function_finish)
     }
 
-    override fun settingClicked(adapter: MoreFunctionRvAdapter, context: Context,imageView: ImageView) {
+    override fun settingClicked(adapter: MoreFunctionRvAdapter, context: Context,imageView: ImageView):Boolean {
         setMoreFunctionIcon(imageView)
+        return true
     }
 
 

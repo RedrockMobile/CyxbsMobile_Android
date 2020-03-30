@@ -51,7 +51,7 @@ open class MoreFunctionRvAdapter(private val functions: List<MoreFunctionProvide
             holder.itemView.cl_discover_more_function.backgroundResource = R.drawable.discover_shape_more_function_recycler_item
         }
         holder.itemView.setOnClickListener {
-            bindable?.onBindViewHolder(holder,position,this)
+            bindable.onBindViewHolder(holder,position,this)
         }
     }
     fun getFunctions() = functions

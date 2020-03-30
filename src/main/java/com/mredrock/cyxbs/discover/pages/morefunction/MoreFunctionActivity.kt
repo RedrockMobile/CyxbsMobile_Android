@@ -33,8 +33,9 @@ class MoreFunctionActivity : BaseActivity() {
         iv_discover_more_function_back.setOnClickListener { finish() }
         iv_discover_more_function_settings.setOnClickListener {
             (rv_discover_more_function.adapter as MoreFunctionRvAdapter).apply {
-                getBindable().settingClicked(this,this@MoreFunctionActivity,iv_discover_more_function_settings)
-                setBindable(if(getBindable() is MoreFunctionBindable)MoreFunctionSettingBindable() else MoreFunctionBindable())
+                if(getBindable().settingClicked(this,this@MoreFunctionActivity,iv_discover_more_function_settings)) {
+                    setBindable(if (getBindable() is MoreFunctionBindable) MoreFunctionSettingBindable() else MoreFunctionBindable())
+                }
             }
         }
     }
