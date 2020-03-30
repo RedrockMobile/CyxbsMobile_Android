@@ -4,10 +4,12 @@ import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
 import android.content.Context
 import android.content.Intent
+import android.view.View
 import android.widget.RemoteViews
 import com.mredrock.cyxbs.widget.R
 import com.mredrock.cyxbs.widget.widget.page.oversized.deleteTitlePref
 import com.mredrock.cyxbs.widget.service.GridWidgetService
+import java.util.*
 
 
 class OversizedAppWidget : AppWidgetProvider() {
@@ -29,11 +31,29 @@ class OversizedAppWidget : AppWidgetProvider() {
 
     override fun onDisabled(context: Context) {
     }
+
 }
 
 internal fun updateAppWidget(context: Context, appWidgetManager: AppWidgetManager, appWidgetId: Int) {
     val remoteViews = RemoteViews(context.packageName, R.layout.widget_oversized_app_widget)
     val intent = Intent(context, GridWidgetService::class.java)
     remoteViews.setRemoteAdapter(R.id.grid_course_widget, intent)
+    val weekDay = Calendar.getInstance()[Calendar.DAY_OF_WEEK]
+    for (i in 1..7) {
+        val i1 = if (i == weekDay) View.VISIBLE else View.INVISIBLE
+        remoteViews.setViewVisibility(getShadowId(i), i1)
+    }
     appWidgetManager.updateAppWidget(appWidgetId, remoteViews)
+}
+
+fun getShadowId(num: Int) = when (num) {
+    //因为Calendar这个类里面的星期是从周日开始记的
+    2 -> R.id.oversize_shadow_1
+    3 -> R.id.oversize_shadow_2
+    4 -> R.id.oversize_shadow_3
+    5 -> R.id.oversize_shadow_4
+    6 -> R.id.oversize_shadow_5
+    7 -> R.id.oversize_shadow_6
+    1 -> R.id.oversize_shadow_7
+    else -> R.id.oversize_shadow_1
 }

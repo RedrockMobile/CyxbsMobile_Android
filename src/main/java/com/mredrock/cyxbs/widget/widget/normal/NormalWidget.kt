@@ -115,7 +115,7 @@ class NormalWidget : AppWidgetProvider() {
             }
         }
         if (intent.action == "btn.start.com") {
-            if (ServiceManager.getService(IAccountService::class.java).getVerifyService().isLogin()) {
+            if (!ServiceManager.getService(IAccountService::class.java).getVerifyService().isLogin()) {
                 CyxbsToast.makeText(context, "请登陆之后再点击查看详细信息", Toast.LENGTH_SHORT).show()
             }else{
                 list = gson.fromJson(context.defaultSharedPreferences.getString(courseData, ""), object : TypeToken<ArrayList<CourseStatus.Course>>() {}.type)
