@@ -43,8 +43,7 @@
     <!--    课表可上拉下拉标识小块背景-->
     <color name="courseTableDragIndicatorBlockColor" tools:ignore="ResourceName">#E2EDFB</color>
     <!--    课表标识当天阴影-->
-    <color name="courseIdentifiesTheCurrentShadowColor" tools:ignore="ResourceName">#93E8F0FC
-    </color>
+    <color name="courseIdentifiesTheCurrentShadowColor" tools:ignore="ResourceName">#93E8F0FC</color>
     <!--    课表课程色块颜色-->
     <color name="morningCourseColor" tools:ignore="ResourceName">#F9E7D8</color>
     <color name="afternoonCourseColor" tools:ignore="ResourceName">#F9E3E4</color>
