@@ -127,7 +127,7 @@ class NoClassActivity : BaseViewModelActivity<NoClassViewModel>() {
     override fun onBackPressed() {
         if (bottomSheetBehavior.state == BottomSheetBehavior.STATE_EXPANDED) {
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
-        }else{
+        } else {
             super.onBackPressed()
         }
     }

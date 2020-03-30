@@ -7,6 +7,7 @@ import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.common.viewmodel.event.ProgressDialogEvent
+import com.mredrock.cyxbs.discover.noclass.R
 import com.mredrock.cyxbs.discover.noclass.network.Services
 import com.mredrock.cyxbs.discover.noclass.network.Student
 
@@ -25,8 +26,10 @@ class NoClassViewModel : BaseViewModel() {
                 .setSchedulers()
                 .doFinally { progressDialogEvent.value = ProgressDialogEvent.DISMISS_DIALOG_EVENT }
                 .doOnSubscribe { progressDialogEvent.value = ProgressDialogEvent.SHOW_NONCANCELABLE_DIALOG_EVENT }
-                .safeSubscribeBy {
+                .safeSubscribeBy(onError = {
+                    toastEvent.value = R.string.emptySearchResult
+                }, onNext = {
                     mStuList.value = it
-                }.lifeCycle()
+                }).lifeCycle()
     }
 }
