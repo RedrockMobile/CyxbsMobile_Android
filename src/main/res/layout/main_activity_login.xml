@@ -23,28 +23,27 @@
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.125" />
+        app:layout_constraintVertical_bias="0.19" />
 
     <TextView
         android:id="@+id/main_textview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/main_welcome_speech_2"
-        android:textColor="@color/levelTwoFontColor"
-        android:textSize="34sp"
+        android:textColor="@color/alphaLevelTwoFontColor"
+        android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/main_textview2"
         app:layout_constraintTop_toBottomOf="@+id/main_textview2"
-        app:layout_constraintVertical_bias="0.013" />
+        app:layout_constraintVertical_bias="0.01999998" />
 
 
     <ImageView
         android:id="@+id/main_imageview2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="46dp"
         android:src="@drawable/main_ic_student_id"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

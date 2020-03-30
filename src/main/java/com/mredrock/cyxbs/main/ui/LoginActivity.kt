@@ -40,17 +40,13 @@ class LoginActivity : BaseViewModelActivity<LoginViewModel>() {
     private fun initView() {
         et_password.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_SEND) {
-                viewModel.login(et_account.text?.toString(), et_password.text?.toString()) { landing() }
+                loginAction()
                 return@setOnEditorActionListener true
             }
             return@setOnEditorActionListener false
         }
         btn_login.setOnClickListener {
-            if (viewModel.userAgreementIsCheck) {
-                viewModel.login(et_account.text?.toString(), et_password.text?.toString()) { landing() }
-            } else {
-                CyxbsToast.makeText(this, R.string.main_user_agreement_title, Toast.LENGTH_SHORT).show()
-            }
+            loginAction()
         }
         lav_login_check.setOnClickListener {
             lav_login_check.playAnimation()
@@ -62,6 +58,14 @@ class LoginActivity : BaseViewModelActivity<LoginViewModel>() {
             } else if (it.animatedFraction >= lottieProgress && it.animatedFraction != 1f && !viewModel.userAgreementIsCheck) {
                 lav_login_check.pauseAnimation()
             }
+        }
+    }
+
+    private fun loginAction() {
+        if (viewModel.userAgreementIsCheck) {
+            viewModel.login(et_account.text?.toString(), et_password.text?.toString()) { landing() }
+        } else {
+            CyxbsToast.makeText(this, R.string.main_user_agreement_title, Toast.LENGTH_SHORT).show()
         }
     }
 
