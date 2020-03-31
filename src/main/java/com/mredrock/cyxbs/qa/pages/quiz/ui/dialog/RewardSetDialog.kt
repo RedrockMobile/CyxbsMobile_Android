@@ -10,8 +10,11 @@ import android.widget.NumberPicker
 import android.widget.RelativeLayout
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.mredrock.cyxbs.common.utils.extensions.editor
 import com.mredrock.cyxbs.common.utils.extensions.getScreenWidth
+import com.mredrock.cyxbs.common.utils.extensions.sharedPreferences
 import com.mredrock.cyxbs.qa.R
+import com.mredrock.cyxbs.qa.pages.quiz.ui.QuizActivity
 import com.mredrock.cyxbs.qa.pages.quiz.ui.adpter.RewardSetAdapter
 import com.mredrock.cyxbs.qa.utils.toFormatString
 import kotlinx.android.synthetic.main.qa_dialog_question_reward_set.*
@@ -19,7 +22,7 @@ import java.util.*
 import kotlin.math.abs
 import kotlin.math.pow
 
-class RewardSetDialog(context: Context, rewardCount: Int) : BottomSheetDialog(context) {
+class RewardSetDialog(context: Context, rewardCount: Int, private val isFirstQuiz: Boolean) : BottomSheetDialog(context) {
     companion object {
         @JvmStatic
         val HOURS_DISPLAY_NAME = Array(24) { String.format("%02d时", it) }
@@ -96,6 +99,19 @@ class RewardSetDialog(context: Context, rewardCount: Int) : BottomSheetDialog(co
         iv_reward_description.setOnClickListener { RewardDescriptionDialog(context).show() }
         tv_my_reward_count.text = context.resources.getString(R.string.qa_quiz_reward_set_my_reward, myRewardCount)
         tv_quiz_dialog_cancel.setOnClickListener { cancel() }
+
+    }
+
+
+    override fun show() {
+        super.show()
+        if (isFirstQuiz) {
+            RewardDescriptionDialog(context).apply {
+                setOnDismissListener {
+                    context.sharedPreferences(QuizActivity.FIRST_QUIZ).editor { putBoolean(QuizActivity.FIRST_QUIZ_SP_KEY, false) }
+                }
+            }.show()
+        }
     }
 
     @SuppressLint("SetTextI18n")

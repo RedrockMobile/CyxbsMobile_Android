@@ -4,7 +4,6 @@ import android.util.Base64
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.bean.RedrockApiStatus
 import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.utils.extensions.checkError
@@ -22,7 +21,6 @@ import io.reactivex.Observable
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
-import org.jetbrains.anko.longToast
 import java.io.File
 
 /**
@@ -61,7 +59,7 @@ class AnswerViewModel(var qid: String) : BaseViewModel() {
         }
         observable.doFinally { progressDialogEvent.value = ProgressDialogEvent.DISMISS_DIALOG_EVENT }
                 .doOnError {
-                    BaseApp.context.longToast(it.message!!)
+                    toastEvent.value = R.string.qa_upload_pic_failed
                     backAndRefreshPreActivityEvent.value = true
                 }
                 .safeSubscribeBy {

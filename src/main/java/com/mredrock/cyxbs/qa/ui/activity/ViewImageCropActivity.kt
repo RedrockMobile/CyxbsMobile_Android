@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.mredrock.cyxbs.common.config.DIR
+import com.mredrock.cyxbs.common.utils.extensions.gone
 import com.mredrock.cyxbs.common.utils.extensions.setFullScreen
 import com.mredrock.cyxbs.common.utils.extensions.toast
 import com.mredrock.cyxbs.common.utils.extensions.visible
@@ -29,6 +30,7 @@ class ViewImageCropActivity : AppCompatActivity() {
         const val EXTRA_NEW_PATH = "extra_new_path"
         private const val NEED_RESULT = "needResult"
         private const val IMG_RES_PATH = "imgResPath"
+        const val DELETE_CODE = 0x123
         fun activityStart(context: Context, imgResUrl: String) {
             context.startActivity<ViewImageCropActivity>(IMG_RES_PATH to imgResUrl)
         }
@@ -55,10 +57,15 @@ class ViewImageCropActivity : AppCompatActivity() {
         needResult = intent.getBooleanExtra(NEED_RESULT, false)
         imgResPath = intent.getStringExtra(IMG_RES_PATH)
 
+        tv_delete.setOnClickListener {
+            setResult(DELETE_CODE)
+            finish()
+        }
         if (needResult) {
-            edit.visible()
-            edit.setOnClickListener {
+            tv_edit.visible()
+            tv_edit.setOnClickListener {
                 startCropActivity()
+                tv_delete.gone()
             }
         }
 

@@ -37,6 +37,7 @@
     <string name="qa_answer_question_title">提供帮助</string>
     <string name="qa_hint_report_success">举报成功，会尽快为您处理</string>
     <string name="qa_crop">裁剪</string>
+    <string name="qa_crop_delete">删除</string>
     <string name="qa_fragment_head_title">邮问</string>
     <string name="qa_fragment_head_give_question">提 问</string>
     <string name="qa_comment_new_comment_text_view_hint">发布评论</string>
@@ -90,6 +91,9 @@
     <string name="qa_comment_anonymous_text">匿名用户</string>
     <string name="qa_pic_save_alert_dialog_title">是否保存</string>
     <string name="qa_pic_save_alert_dialog_message">这张图片将保存到手机</string>
+    <string name="qa_upload_pic_failed">图片上传失败</string>
+    <string name="qa_answer_adopted_other_answer">你已采纳其他回答~</string>
+    <string name="qa_answer_adopt_late">已经过了你设置的任务完成时间～</string>
 
     <string-array name="qa_title_type">
         <item>问题</item>

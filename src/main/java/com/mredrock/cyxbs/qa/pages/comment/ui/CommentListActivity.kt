@@ -39,6 +39,7 @@ import com.mredrock.cyxbs.qa.ui.adapter.EmptyRvAdapter
 import com.mredrock.cyxbs.qa.ui.adapter.FooterRvAdapter
 import com.mredrock.cyxbs.qa.ui.widget.CommonDialog
 import com.mredrock.cyxbs.qa.utils.setPraise
+import com.mredrock.cyxbs.qa.utils.toDate
 import kotlinx.android.synthetic.main.qa_activity_comment_list.*
 import kotlinx.android.synthetic.main.qa_comment_new_publish_layout.*
 import org.greenrobot.eventbus.EventBus
@@ -63,6 +64,8 @@ class CommentListActivity : BaseActivity() {
         }
     }
 
+    private var backRefresh: Boolean = false
+    private lateinit var intentBack: Intent
     private lateinit var viewModel: CommentListViewModel
     private var progressDialog: ProgressDialog? = null
     private fun initProgressBar() = indeterminateProgressDialog(message = "Loading...") {
@@ -84,6 +87,7 @@ class CommentListActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.qa_activity_comment_list)
+        intentBack = Intent()
         if (intent.getParcelableExtra<Question>(PARAM_QUESTION) != null && intent.getParcelableExtra<Answer>(PARAM_ANSWER) != null) {
             answer = intent.getParcelableExtra(PARAM_ANSWER)
             question = intent.getParcelableExtra(PARAM_QUESTION)
@@ -145,21 +149,25 @@ class CommentListActivity : BaseActivity() {
     private fun initRv(showAdoptIcon: Boolean, questionAnonymous: Boolean) {
         headerAdapter = CommentListHeaderRvAdapter(showAdoptIcon).apply {
             onAdoptClickListener = { aId ->
-                CommonDialog(this@CommentListActivity).apply {
-                    initView(
-                            icon = R.drawable.qa_icon_answer_accept,
-                            title = getString(R.string.qa_answer_whether_accept_title),
-                            firstNotice = getString(R.string.qa_answer_whether_accept_notice),
-                            secondNotice = null,
-                            buttonText = getString(R.string.qa_answer_list_accept),
-                            confirmListener = View.OnClickListener {
-                                viewModel.adoptAnswer(aId)
-                                dismiss()
-                            },
-                            cancelListener = View.OnClickListener {
-                                dismiss()
-                            })
-                }.show()
+                if (!question.hasAdoptedAnswer) {
+                    if (question.disappearAt.toDate().time > System.currentTimeMillis()) {
+                        CommonDialog(this@CommentListActivity).apply {
+                            initView(
+                                    icon = R.drawable.qa_icon_answer_accept,
+                                    title = getString(R.string.qa_answer_whether_accept_title),
+                                    firstNotice = getString(R.string.qa_answer_whether_accept_notice),
+                                    secondNotice = null,
+                                    buttonText = getString(R.string.qa_answer_list_accept),
+                                    confirmListener = View.OnClickListener {
+                                        viewModel.adoptAnswer(aId)
+                                        dismiss()
+                                    },
+                                    cancelListener = View.OnClickListener {
+                                        dismiss()
+                                    })
+                        }.show()
+                    } else toast(getString(R.string.qa_answer_adopt_late))
+                } else toast(getString(R.string.qa_answer_adopted_other_answer))
             }
         }
         emptyRvAdapter = EmptyRvAdapter(getString(R.string.qa_comment_list_no_comment_hint))
@@ -199,9 +207,16 @@ class CommentListActivity : BaseActivity() {
             qa_tv_toolbar_title.text = baseContext.getString(R.string.qa_comment_list_comment_count, it.commentNum)
             headerAdapter.refreshData(listOf(it))
         }
-        backAndRefreshEvent.observeNotNull {
-            setResult(Activity.RESULT_OK, Intent().apply { putExtra(AnswerListActivity.REQUEST_REFRESH_QUESTION_ADOPTED, 1) })
+        backAndRefreshAnswerAdoptedEvent.observeNotNull {
+            intentBack.putExtra(AnswerListActivity.REQUEST_REFRESH_QUESTION_ADOPTED, 1)
+            setResult(Activity.RESULT_OK, intentBack)
         }
+        backAndRefreshAnswerEvent.observeNotNull {
+            intentBack.putExtra(AnswerListActivity.REQUEST_REFRESH_ANSWER_REFRESH, 1)
+            setResult(Activity.RESULT_OK, intentBack)
+        }
+
+
         commentList.observe { commentListRvAdapter.submitList(it) }
 
         networkState.observeNotNull { footerRvAdapter.refreshData(listOf(it)) }

@@ -3,7 +3,6 @@ package com.mredrock.cyxbs.qa.pages.quiz
 import android.annotation.SuppressLint
 import android.util.Base64
 import androidx.lifecycle.MutableLiveData
-import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.bean.RedrockApiStatus
 import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.utils.extensions.checkError
@@ -24,7 +23,6 @@ import io.reactivex.Observable
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
-import org.jetbrains.anko.longToast
 import java.io.File
 
 
@@ -98,7 +96,10 @@ class QuizViewModel : BaseViewModel() {
             }
         }
         observable.doFinally { progressDialogEvent.value = ProgressDialogEvent.DISMISS_DIALOG_EVENT }
-                .doOnError { BaseApp.context.longToast(it.message!!) }
+                .doOnError {
+                    toastEvent.value = R.string.qa_upload_pic_failed
+                    backAndRefreshPreActivityEvent.value = true
+                }
                 .safeSubscribeBy { backAndRefreshPreActivityEvent.value = true }
 
         return true

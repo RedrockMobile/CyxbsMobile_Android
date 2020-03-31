@@ -21,6 +21,7 @@ import com.mredrock.cyxbs.common.config.QA_QUIZ
 import com.mredrock.cyxbs.common.event.QuestionDraftEvent
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.extensions.gone
+import com.mredrock.cyxbs.common.utils.extensions.sharedPreferences
 import com.mredrock.cyxbs.common.utils.extensions.toast
 import com.mredrock.cyxbs.common.utils.extensions.visible
 import com.mredrock.cyxbs.qa.R
@@ -46,6 +47,8 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
     companion object {
         const val MAX_SELECTABLE_IMAGE_COUNT = 6
         const val NOT_DRAFT_ID = "-1"
+        const val FIRST_QUIZ = "cyxbs_quiz_is_first_time"
+        const val FIRST_QUIZ_SP_KEY = "isFirstTimeQuiz"
         const val QUIZ_TITLE_MAX = 12
         fun activityStart(fragment: Fragment, type: String, requestCode: Int) {
             fragment.startActivityForResult<QuizActivity>(requestCode, "type" to type)
@@ -57,6 +60,7 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
     private var currentTypeIndex = 0
     private var draftId = NOT_DRAFT_ID
     private var questionType: String = ""
+    private var isFirstQuiz: Boolean = true
     private val exitDialog by lazy { createExitDialog() }
     private val rewardNotEnoughDialog by lazy { createRewardNotEnoughDialog() }
 
@@ -64,6 +68,7 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.qa_activity_quiz)
+        isFirstQuiz = sharedPreferences(FIRST_QUIZ).getBoolean(FIRST_QUIZ_SP_KEY, true)
         initTypeSelector()
         initToolbar()
         initImageAddView()
@@ -126,7 +131,7 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
                 viewModel.isAnonymous = questionType == getString(R.string.qa_quiz_select_type_anonymous)
                 val result = viewModel.submitTitleAndContent(edt_quiz_title.text.toString(), edt_quiz_content.text.toString(), questionType)
                 if (result) {
-                    RewardSetDialog(this@QuizActivity, viewModel.myRewardCount).apply {
+                    RewardSetDialog(this@QuizActivity, viewModel.myRewardCount, isFirstQuiz).apply {
                         onSubmitButtonClickListener = { time: String, reward: Int ->
                             if (viewModel.setDisAppearTime(time)) {
                                 if (viewModel.quiz(reward)) {
@@ -164,7 +169,8 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
                     break
                 } else if (i >= selectedImageFiles.size) {
                     //移除多出来的view
-                    nine_grid_view.removeView(view)
+                    for (j in i until nine_grid_view.childCount - 1)
+                        nine_grid_view.removeViewAt(i)
                     continue
                 }
                 val bitmap = BitmapFactory.decodeFile(selectedImageFiles[i])
@@ -190,6 +196,11 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == ViewImageCropActivity.DELETE_CODE && requestCode == ViewImageCropActivity.DEFAULT_RESULT_CODE) {
+            viewModel.setImageList(viewModel.imageLiveData.value!!.apply {
+                removeAt(viewModel.editingImgPos)
+            })
+        }
         if (resultCode != Activity.RESULT_OK || data == null) {
             return
         }

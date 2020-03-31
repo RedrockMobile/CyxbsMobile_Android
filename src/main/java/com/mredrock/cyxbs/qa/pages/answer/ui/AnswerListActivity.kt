@@ -53,6 +53,7 @@ class AnswerListActivity : BaseActivity() {
         const val PARAM_QUESTION = "question"
         const val REQUEST_REFRESH_LIST = 0x2
         const val REQUEST_REFRESH_QUESTION_ADOPTED = "adopted"
+        const val REQUEST_REFRESH_ANSWER_REFRESH = "answerRefresh"
 
         fun activityStart(fragment: Fragment, question: Question, requestCode: Int, options: Bundle? = Bundle()) {
             if (!ServiceManager.getService(IAccountService::class.java).getVerifyService().isLogin()) {
@@ -257,15 +258,16 @@ class AnswerListActivity : BaseActivity() {
             when (requestCode) {
                 REQUEST_REFRESH_LIST -> {
                     viewModel.invalidate()
-                    val question = viewModel.questionLiveData.value!!
-                    question.answerNum++
-                    if (data?.getIntExtra(REQUEST_REFRESH_QUESTION_ADOPTED, 0) == 1) {
-                        question._hasAdoptedAnswer = 1
-                    }
-                    headerAdapter.refreshData(listOf(question))
                 }
                 CommentListActivity.REQUEST_CODE -> {
-                    viewModel.invalidate()
+                    val question = viewModel.questionLiveData.value!!
+                    if (data?.getIntExtra(REQUEST_REFRESH_ANSWER_REFRESH, 0) == 1) {
+                        viewModel.invalidate()
+                    }
+                    if (data?.getIntExtra(REQUEST_REFRESH_QUESTION_ADOPTED, 0) == 1) {
+                        question._hasAdoptedAnswer = 1
+                        headerAdapter.refreshData(listOf(question))
+                    }
                 }
             }
         }

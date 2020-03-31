@@ -13,14 +13,25 @@
         android:layout_height="match_parent" />
 
     <TextView
-        android:id="@+id/edit"
+        android:id="@+id/tv_edit"
         android:text="@string/qa_crop"
-        android:textColor="@android:color/black"
+        android:textColor="@android:color/white"
         android:textSize="18sp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="20dp"
         android:layout_marginTop="30dp"
         android:layout_gravity="top|end" />
+
+    <TextView
+        android:id="@+id/tv_delete"
+        android:text="@string/qa_crop_delete"
+        android:textColor="@android:color/white"
+        android:textSize="18sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="30dp"
+        android:layout_gravity="top|start" />
 
 </FrameLayout>

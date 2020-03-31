@@ -22,7 +22,7 @@
         <item name="l_pp_picker_segmenting_line_width">2dp</item>
 
         <!--圆形选择框样式（图片选择、图片预览共用，有特别说明的除外）-->
-        <item name="l_pp_checkBox_color_tick" format="color">#f2f2f2</item><!--勾勾颜色-->
+        <item name="l_pp_checkBox_color_tick" format="color">#00FF7F</item><!--勾勾颜色-->
         <item name="l_pp_checkBox_duration" format="integer">100</item><!--动画时间-->
         <item name="l_pp_checkBox_color_checked" format="color">@color/colorPrimary
         </item><!--选择后的背景色-->

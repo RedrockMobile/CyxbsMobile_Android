@@ -32,7 +32,8 @@ class CommentListViewModel(private val qid: String,
 
     val praiseEvent = SingleLiveEvent<Boolean>()
     val reportAnswerEvent = MutableLiveData<Boolean>()
-    val backAndRefreshEvent = SingleLiveEvent<Boolean>()
+    val backAndRefreshAnswerEvent = SingleLiveEvent<Boolean>()
+    val backAndRefreshAnswerAdoptedEvent = SingleLiveEvent<Boolean>()
     private var praiseNetworkState = NetworkState.SUCCESSFUL
     //防止点赞快速点击
     var isDealing = false
@@ -66,7 +67,7 @@ class CommentListViewModel(private val qid: String,
                 .doFinally { progressDialogEvent.value = ProgressDialogEvent.DISMISS_DIALOG_EVENT }
                 .safeSubscribeBy {
                     answerLiveData.value = answerLiveData.value?.apply { isAdopted = true }
-                    backAndRefreshEvent.value = true
+                    backAndRefreshAnswerAdoptedEvent.value = true
                 }
     }
 
@@ -153,7 +154,7 @@ class CommentListViewModel(private val qid: String,
                         isPraised = state
                     }
                     praiseEvent.value = true
-                    backAndRefreshEvent.value = true
+                    backAndRefreshAnswerEvent.value = true
                 }
                 .lifeCycle()
     }
@@ -173,7 +174,7 @@ class CommentListViewModel(private val qid: String,
                 .safeSubscribeBy {
                     answerLiveData.value = answer.apply { commentNum = "${commentNumInt + 1}" }
                     invalidateCommentList()
-                    backAndRefreshEvent.value = true
+                    backAndRefreshAnswerEvent.value = true
                 }
                 .lifeCycle()
     }
