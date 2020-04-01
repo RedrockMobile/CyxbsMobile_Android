@@ -100,7 +100,8 @@ class ExamAdapter(val context: Context,
                         if (seat.length < 2) seat = "0$seat"
                         seat = "${seat}号"
 
-                        holder.itemView.tv_exam_location.text = "${it.classroom}场$seat"
+                        holder.itemView.tv_exam_location.text = "${it.classroom}场"
+                        holder.itemView.tv_exam_location_number.text = seat
 
                         if (it.begin_time != null && it.end_time != null) {
                             holder.itemView.tv_exam_time.text = String.format("%s - %s", it.begin_time, it.end_time)
