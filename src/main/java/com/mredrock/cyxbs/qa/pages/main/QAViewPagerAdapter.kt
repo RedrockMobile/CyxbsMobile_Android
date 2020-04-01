@@ -13,5 +13,5 @@ class QAViewPagerAdapter(private val fragments: List<QuestionListFragment>,
 
     override fun getCount() = fragments.size
 
-    override fun getPageTitle(position: Int) = fragments[position].title
+    override fun getPageTitle(position: Int) = fragments[position].arguments?.getString(QuestionListFragment.FRAGMENT_TITLE)
 }

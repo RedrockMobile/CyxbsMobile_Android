@@ -2,6 +2,7 @@ package com.mredrock.cyxbs.qa.pages.question.ui
 
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -29,6 +30,14 @@ import org.greenrobot.eventbus.ThreadMode
  * Created By jay68 on 2018/8/22.
  */
 class QuestionListFragment : BaseViewModelFragment<QuestionListViewModel>() {
+
+    companion object {
+        const val FRAGMENT_TITLE = "title"
+        fun newInstance(title: String): QuestionListFragment = QuestionListFragment().apply {
+            arguments = Bundle().apply { putString(FRAGMENT_TITLE, title) }
+        }
+    }
+
     override val openStatistics: Boolean
         get() = false
 
@@ -38,12 +47,18 @@ class QuestionListFragment : BaseViewModelFragment<QuestionListViewModel>() {
     // 判断rv是否到顶
     private var isRvAtTop = true
 
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        if (title.isBlank()) {
+            title = arguments?.getString(FRAGMENT_TITLE).toString()
+        }
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         if (title.isBlank()) {
-            title = savedInstanceState?.getString("title") ?: ""
+            title = arguments?.getString(FRAGMENT_TITLE).toString()
         }
-
         return inflater.inflate(R.layout.qa_fragment_question_list, container, false)
     }
 
@@ -114,12 +129,6 @@ class QuestionListFragment : BaseViewModelFragment<QuestionListViewModel>() {
         }
     }
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        if (title.isNotBlank()) {
-            outState.putString("title", title)
-        }
-    }
 
     override fun getViewModelFactory() = QuestionListViewModel.Factory(title)
 

@@ -45,14 +45,13 @@ class QuestionContainerFragment : BaseFragment(), View.OnClickListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        childFragments = titles.map { QuestionListFragment().apply { title = it } }
+        childFragments = titles.map { QuestionListFragment.newInstance(it) }
         view.vp_question.adapter = QAViewPagerAdapter(childFragments, childFragmentManager)
         //预加载所有部分保证提问后所有fragment能够被通知刷新，同时保证退出账号时只加载一次对话框
-        view.vp_question.offscreenPageLimit = if (ServiceManager.getService(IAccountService::class.java).getVerifyService().isLogin()) 5 else 0
+        view.vp_question.offscreenPageLimit = 5
         view.tl_category.apply {
             setupWithViewPager(view.vp_question)
             setSelectedTabIndicator(R.drawable.qa_question_tab_indicator)
-
         }
         btn_ask_question.setOnClickListener {
             if (ServiceManager.getService(IAccountService::class.java).getVerifyService().isLogin()) {
