@@ -8,8 +8,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.mredrock.cyxbs.common.event.AskLoginEvent
-import com.mredrock.cyxbs.common.event.LoginStateChangeEvent
+import androidx.recyclerview.widget.RecyclerView
+import com.mredrock.cyxbs.common.event.RefreshQaEvent
+import com.mredrock.cyxbs.common.service.ServiceManager
+import com.mredrock.cyxbs.common.service.account.IAccountService
 import com.mredrock.cyxbs.common.ui.BaseViewModelFragment
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.bean.Question
@@ -20,7 +22,8 @@ import com.mredrock.cyxbs.qa.pages.question.viewmodel.QuestionListViewModel
 import com.mredrock.cyxbs.qa.ui.adapter.EmptyRvAdapter
 import com.mredrock.cyxbs.qa.ui.adapter.FooterRvAdapter
 import kotlinx.android.synthetic.main.qa_fragment_question_list.*
-import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 
 /**
  * Created By jay68 on 2018/8/22.
@@ -32,8 +35,8 @@ class QuestionListFragment : BaseViewModelFragment<QuestionListViewModel>() {
     override val viewModelClass = QuestionListViewModel::class.java
     var title: String = ""
 
-    // 用户每次切换登陆状态，该flag需要重置
-    private var isFirstTimeLoad = true
+    // 判断rv是否到顶
+    private var isRvAtTop = true
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -58,8 +61,17 @@ class QuestionListFragment : BaseViewModelFragment<QuestionListViewModel>() {
         rv_question_list.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = adapterWrapper
+            addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                    super.onScrollStateChanged(recyclerView, newState)
+                    isRvAtTop = !recyclerView.canScrollVertically(-1)
+                }
+            })
         }
         swipe_refresh_layout.setOnRefreshListener { viewModel.invalidateQuestionList() }
+        ServiceManager.getService(IAccountService::class.java).getVerifyService().addOnStateChangedListener {
+            viewModel.invalidateQuestionList()
+        }
     }
 
     private fun observeLoading(questionListRvAdapter: QuestionListRvAdapter,
@@ -73,7 +85,6 @@ class QuestionListFragment : BaseViewModelFragment<QuestionListViewModel>() {
             }
         }
 
-        isFirstTimeLoad = true
         initialLoad.observe {
             when (it) {
                 NetworkState.LOADING -> {
@@ -85,11 +96,6 @@ class QuestionListFragment : BaseViewModelFragment<QuestionListViewModel>() {
                 }
                 NetworkState.CANNOT_LOAD_WITHOUT_LOGIN -> {
                     swipe_refresh_layout.isRefreshing = false
-                    if (isFirstTimeLoad) {
-                        isFirstTimeLoad = false
-                    } else {
-                        EventBus.getDefault().post(AskLoginEvent("请先登陆才能使用邮问哦~"))
-                    }
                 }
                 else -> {
                     swipe_refresh_layout.isRefreshing = false
@@ -117,8 +123,12 @@ class QuestionListFragment : BaseViewModelFragment<QuestionListViewModel>() {
 
     override fun getViewModelFactory() = QuestionListViewModel.Factory(title)
 
-    override fun onLoginStateChangeEvent(event: LoginStateChangeEvent) {
-        viewModel.invalidateQuestionList()
-        isFirstTimeLoad = true
+    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
+    fun refreshQuestionList(event: RefreshQaEvent) {
+        if (isRvAtTop)
+            viewModel.invalidateQuestionList()
+        else
+            rv_question_list.smoothScrollToPosition(0)
+
     }
 }

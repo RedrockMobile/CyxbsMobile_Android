@@ -64,7 +64,6 @@ class CommentListActivity : BaseActivity() {
         }
     }
 
-    private var backRefresh: Boolean = false
     private lateinit var intentBack: Intent
     private lateinit var viewModel: CommentListViewModel
     private var progressDialog: ProgressDialog? = null

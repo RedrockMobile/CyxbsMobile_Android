@@ -8,7 +8,7 @@ import com.mredrock.cyxbs.qa.pages.question.ui.QuestionListFragment
  * Created By jay68 on 2018/8/22.
  */
 class QAViewPagerAdapter(private val fragments: List<QuestionListFragment>,
-                         fm: FragmentManager) : FragmentPagerAdapter(fm) {
+                         fm: FragmentManager) : FragmentPagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
     override fun getItem(position: Int) = fragments[position]
 
     override fun getCount() = fragments.size

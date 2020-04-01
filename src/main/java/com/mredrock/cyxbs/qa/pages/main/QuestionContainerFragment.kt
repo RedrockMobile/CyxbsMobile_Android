@@ -39,18 +39,22 @@ class QuestionContainerFragment : BaseFragment(), View.OnClickListener {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        val root = inflater.inflate(R.layout.qa_fragment_question_container, container, false)
+
+        return inflater.inflate(R.layout.qa_fragment_question_container, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         childFragments = titles.map { QuestionListFragment().apply { title = it } }
-        root.vp_question.adapter = QAViewPagerAdapter(childFragments, childFragmentManager)
+        view.vp_question.adapter = QAViewPagerAdapter(childFragments, childFragmentManager)
         //预加载所有部分保证提问后所有fragment能够被通知刷新，同时保证退出账号时只加载一次对话框
-        root.vp_question.offscreenPageLimit = if (ServiceManager.getService(IAccountService::class.java).getVerifyService().isLogin()) 5 else 0
-        root.tl_category.apply {
-            setupWithViewPager(root.vp_question)
+        view.vp_question.offscreenPageLimit = if (ServiceManager.getService(IAccountService::class.java).getVerifyService().isLogin()) 5 else 0
+        view.tl_category.apply {
+            setupWithViewPager(view.vp_question)
             setSelectedTabIndicator(R.drawable.qa_question_tab_indicator)
 
         }
-
-        root.btn_ask_question.setOnClickListener {
+        btn_ask_question.setOnClickListener {
             if (ServiceManager.getService(IAccountService::class.java).getVerifyService().isLogin()) {
                 QuizActivity.activityStart(this@QuestionContainerFragment, "学习", REQUEST_LIST_REFRESH_ACTIVITY)
                 activity?.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
@@ -58,9 +62,7 @@ class QuestionContainerFragment : BaseFragment(), View.OnClickListener {
                 EventBus.getDefault().post(AskLoginEvent("请先登陆才能使用掌邮哦~"))
             }
         }
-        return root
     }
-
 
     override fun onClick(v: View) {
         if (v == curSelectorItem) {
