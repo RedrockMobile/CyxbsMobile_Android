@@ -15,6 +15,7 @@ import com.mredrock.cyxbs.common.config.*
 import com.mredrock.cyxbs.common.event.BottomSheetStateEvent
 import com.mredrock.cyxbs.common.event.LoadCourse
 import com.mredrock.cyxbs.common.event.NotifyBottomSheetToExpandEvent
+import com.mredrock.cyxbs.common.event.RefreshQaEvent
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
@@ -156,7 +157,10 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
                 menu?.clear()
                 when (menuItem.itemId) {
                     menuIdList[0] -> changeFragment(discoverFragment, 0, menuItem)
-                    menuIdList[1] -> changeFragment(qaFragment, 1, menuItem)
+                    menuIdList[1] -> {
+                        if (peeCheckedItemPosition == 1) EventBus.getDefault().post(RefreshQaEvent())
+                        changeFragment(qaFragment, 1, menuItem)
+                    }
                     menuIdList[2] -> changeFragment(mineFragment, 2, menuItem)
                 }
                 return@setOnNavigationItemSelectedListener true
@@ -254,7 +258,7 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
             EventBus.getDefault().post(BottomSheetStateEvent(1f))
             ll_nav_main_container.visibility = View.GONE
             isLoadCourse = false
-        } else if (savedInstanceState.getInt(BOTTOM_SHEET_STATE) == BottomSheetBehavior.STATE_COLLAPSED && viewModel.courseShowState){
+        } else if (savedInstanceState.getInt(BOTTOM_SHEET_STATE) == BottomSheetBehavior.STATE_COLLAPSED && viewModel.courseShowState) {
             bottomSheetBehavior.state = savedInstanceState.getInt(BOTTOM_SHEET_STATE)
             EventBus.getDefault().post(BottomSheetStateEvent(0f))
             ll_nav_main_container.visibility = View.VISIBLE
