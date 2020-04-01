@@ -30,9 +30,9 @@ abstract class BaseViewModelFragment<T : BaseViewModel> : BaseFragment() {
         super.onCreate(savedInstanceState)
         val viewModelFactory = getViewModelFactory()
         viewModel = if (viewModelFactory != null) {
-            ViewModelProviders.of(this, viewModelFactory).get(viewModelClass)
+            ViewModelProvider(this, viewModelFactory).get(viewModelClass)
         } else {
-            ViewModelProviders.of(this).get(viewModelClass)
+            ViewModelProvider(this).get(viewModelClass)
         }
         viewModel.apply {
             toastEvent.observe { str -> str?.let { CyxbsToast.makeText(context, it, Toast.LENGTH_SHORT).show() } }

@@ -237,7 +237,7 @@
     <!--    提问时间选择器选中时间颜色-->
     <color name="qa_quiz_time_display_color" tools:ignore="ResourceName">#29D1F1</color>
     <!--    回答只有图片时-->
-    <color name="qa_answer_empty_content_color" tools:ignore="ResourceName">#29D1F1</color>
+    <color name="qa_answer_empty_content_color" tools:ignore="ResourceName">#00BFFF</color>
     <!--    提问时间选择器时间颜色-->
     <color name="qa_quiz_time_select_color" tools:ignore="ResourceName">#2A4E84</color>
     <!--    回答被采纳的标签颜色-->
