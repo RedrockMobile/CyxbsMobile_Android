@@ -36,22 +36,6 @@ class ConfigActivity(override val isFragmentActivity: Boolean = false) : BaseAct
         widget_config_normalLayout.setOnClickListener {
             startActivity(Intent(this@ConfigActivity, NormalConfigActivity::class.java))
         }
-
-        //本来想网络请求刷新数据的，这样准一点，但是lib的工具类不能改，不配置okHttp又怕有证书问题，所以直接刷新界面算了
-//        widget_config_fresh.setOnClickListener {
-//            Thread(Runnable {
-//                LittleTransWidget().refresh(this@ConfigActivity)
-//                LittleWidget().refresh(this@ConfigActivity)
-//                NormalWidget().fresh(this@ConfigActivity, 0)
-//                runOnUiThread {
-//                    toast("刷新成功")
-//                }
-//            }).start()
-//        }
     }
 
-
-    override fun finish() {
-        super.finish()
-    }
 }

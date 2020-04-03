@@ -3,12 +3,16 @@
     package="com.mredrock.cyxbs.widget">
 
     <application android:theme="@style/AppTheme">
-        <activity android:name="com.mredrock.cyxbs.widget.widget.page.ConfigActivity" />
+        <activity android:name=".widget.page.normal.NormalSelectActivity"
+            android:theme="@style/widget_Theme">
+
+        </activity>
+        <activity android:name=".widget.page.ConfigActivity" />
         <activity
-            android:name="com.mredrock.cyxbs.widget.widget.page.trans.TransConfigActivity"
+            android:name=".widget.page.trans.TransConfigActivity"
             android:windowSoftInputMode="adjustPan" />
-        <activity android:name="com.mredrock.cyxbs.widget.widget.page.little.LittleConfigActivity" />
-        <activity android:name="com.mredrock.cyxbs.widget.widget.page.normal.NormalConfigActivity" />
+        <activity android:name=".widget.page.little.LittleConfigActivity" />
+        <activity android:name=".widget.page.normal.NormalConfigActivity" />
 
         <receiver
             android:name=".widget.little.LittleWidget"
@@ -62,13 +66,13 @@
                 android:resource="@xml/wideget_oversized_app_widget_info" />
         </receiver>
 
-        <activity android:name="com.mredrock.cyxbs.widget.widget.page.oversized.OversizedAppWidgetConfigureActivity"
-            android:theme="@style/Oversize_Theme">
+        <activity
+            android:name=".widget.page.oversized.OversizedAppWidgetConfigureActivity"
+            android:theme="@style/widget_Theme">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
             </intent-filter>
         </activity>
-
     </application>
 
 </manifest>

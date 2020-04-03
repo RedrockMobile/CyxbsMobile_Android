@@ -23,13 +23,13 @@ class GridWidgetService : RemoteViewsService() {
     private inner class GridRemoteViewsFactory(val mContext: Context, intent: Intent) : RemoteViewsFactory {
 
         private val mSchedulesArray = Array(6) { arrayOfNulls<MutableList<CourseStatus.Course>>(7) }
-        private val calendar = Calendar.getInstance()
 
         private fun initCourse() {
             val json = mContext.defaultSharedPreferences.getString(WIDGET_COURSE, "")
-            val courses = Gson().fromJson<CourseStatus>(json, CourseStatus::class.java).data
+            val courses = Gson().fromJson(json, CourseStatus::class.java).data
                     ?: return
             val schoolCalendar = SchoolCalendar()
+
             //下方复用代码，忽视就好
             fun initSchedulesArray(row: Int, column: Int) {
                 if (mSchedulesArray[row][column] == null) {
@@ -58,8 +58,8 @@ class GridWidgetService : RemoteViewsService() {
                         //针对三节课做处理
                         if (course.period == 3) {
                             initSchedulesArray(row + 1, column)
-                            mSchedulesArray[row + 1][column]?.add(CourseStatus.Course().apply { period = 1})
-                        }else if (course.period == 4) {
+                            mSchedulesArray[row + 1][column]?.add(CourseStatus.Course().apply { period = 1 })
+                        } else if (course.period == 4) {
                             initSchedulesArray(row + 1, column)
                             mSchedulesArray[row + 1][column]?.add(course)
                         }
@@ -70,6 +70,7 @@ class GridWidgetService : RemoteViewsService() {
 
 
         override fun getViewAt(position: Int): RemoteViews? {
+            val calendar = Calendar.getInstance()
             if (position < 7) {
                 val id = if (calendar[Calendar.DAY_OF_WEEK] - 2 == position
                         || calendar[Calendar.DAY_OF_WEEK] == 1 && position == 6)
