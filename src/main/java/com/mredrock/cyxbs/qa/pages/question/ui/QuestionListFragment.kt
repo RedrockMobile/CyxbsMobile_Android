@@ -11,8 +11,6 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.mredrock.cyxbs.common.event.RefreshQaEvent
-import com.mredrock.cyxbs.common.service.ServiceManager
-import com.mredrock.cyxbs.common.service.account.IAccountService
 import com.mredrock.cyxbs.common.ui.BaseViewModelFragment
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.bean.Question
@@ -84,9 +82,6 @@ class QuestionListFragment : BaseViewModelFragment<QuestionListViewModel>() {
             })
         }
         swipe_refresh_layout.setOnRefreshListener { viewModel.invalidateQuestionList() }
-        ServiceManager.getService(IAccountService::class.java).getVerifyService().addOnStateChangedListener {
-            viewModel.invalidateQuestionList()
-        }
     }
 
     private fun observeLoading(questionListRvAdapter: QuestionListRvAdapter,

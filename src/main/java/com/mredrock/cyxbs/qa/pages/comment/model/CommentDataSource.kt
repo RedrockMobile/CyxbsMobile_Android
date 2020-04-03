@@ -32,6 +32,8 @@ class CommentDataSource(private val aid: String) : PageKeyedDataSource<Int, Comm
                 }
                 .safeSubscribeBy { list ->
                     initialLoad.value = NetworkState.SUCCESSFUL
+                    if (list.isNotEmpty())
+                        networkState.value = NetworkState.SUCCESSFUL
                     val nextPageKey = 2.takeUnless { (list.size < params.requestedLoadSize) }
                     callback.onResult(list, 1, nextPageKey)
                 }

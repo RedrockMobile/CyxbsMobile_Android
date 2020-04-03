@@ -289,9 +289,11 @@ class AnswerListActivity : BaseActivity() {
 
             if (questionWrapper == null) {
                 toast(getString(R.string.qa_question_from_mine_loading_error))
+                finish()
             } else if (!questionWrapper.isSuccessful) {
                 toast(questionWrapper.info
                         ?: getString(R.string.qa_loading_from_mine_unknown_error))
+                finish()
             } else {
                 initViewModel(questionWrapper.data)
                 initView(questionWrapper.data)

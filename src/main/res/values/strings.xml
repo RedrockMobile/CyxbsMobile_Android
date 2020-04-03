@@ -85,6 +85,7 @@
     <string name="qa_reward_description_fourth_content">若存在这种情况的话，我们将对您设置的悬赏 积分退还至您的账户。</string>
     <string name="qa_reward_description_bottom_text">条款详见《掌上重邮用户协议》</string>
     <string name="qa_comment_list_no_comment_hint">还没有评论哦~</string>
+    <string name="qa_comment_list_no_more_comment">没有更多内容了～</string>
     <string name="qa_answer_praise_dealing">正在处理上次点击</string>
     <string name="qa_answer_show_question">查看问题</string>
     <string name="qa_quiz_title_text_size_toast">已达最多字数</string>

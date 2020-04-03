@@ -5,6 +5,7 @@ import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.view.MotionEvent
 import android.view.View
 import android.widget.NumberPicker
 import android.widget.RelativeLayout
@@ -96,6 +97,7 @@ class RewardSetDialog(context: Context, rewardCount: Int, private val isFirstQui
             }
 
         }
+        rl_reward_picker.setOnTouchListener { v, event -> vp_set_reward_count.onTouchEvent(event) }
         iv_reward_description.setOnClickListener { RewardDescriptionDialog(context).show() }
         tv_my_reward_count.text = context.resources.getString(R.string.qa_quiz_reward_set_my_reward, myRewardCount)
         tv_quiz_dialog_cancel.setOnClickListener { cancel() }

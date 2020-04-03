@@ -12,6 +12,7 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -127,8 +128,6 @@ class CommentListActivity : BaseActivity() {
                 textSize = 15f
                 visible()
                 setOnClickListener {
-                    //防止从mine传过来未初始化
-                    if (question == null) return@setOnClickListener
                     this@CommentListActivity.startActivity<AnswerListActivity>(AnswerListActivity.PARAM_QUESTION to question)
                     this@CommentListActivity.finish()
                 }
@@ -186,7 +185,7 @@ class CommentListActivity : BaseActivity() {
         footerRvAdapter = FooterRvAdapter { viewModel.retryFailedListRequest() }
         val adapterWrapper = RvAdapterWrapper(commentListRvAdapter, headerAdapter, footerRvAdapter, emptyRvAdapter)
         rv_comment_list.apply {
-            layoutManager = androidx.recyclerview.widget.LinearLayoutManager(this@CommentListActivity)
+            layoutManager = LinearLayoutManager(this@CommentListActivity)
             adapter = adapterWrapper
         }
         swipe_refresh_layout.setOnRefreshListener { viewModel.invalidateCommentList() }
@@ -287,18 +286,21 @@ class CommentListActivity : BaseActivity() {
 
             if (answerWrapper == null) {
                 toast(getString(R.string.qa_answer_from_mine_loading_error))
+                finish()
             } else if (!answerWrapper.isSuccessful) {
                 toast(answerWrapper.info ?: getString(R.string.qa_loading_from_mine_unknown_error))
+                finish()
             } else {
                 answer = answerWrapper.data
                 initViewModel(event.questionId, answerWrapper.data)
-                initToolbar()
                 viewModel.getQuestionInfo()
-                viewModel.questionData.observeNotNull {
-                    question = it
+                viewModel.questionData.observe {
+                    if (it==null) finish()
+                    question = it!!
                     initRv(!it.isSelf, it.isAnonymous)
+                    initToolbar()
+                    initCommentSheet()
                 }
-                initCommentSheet()
             }
         }
     }

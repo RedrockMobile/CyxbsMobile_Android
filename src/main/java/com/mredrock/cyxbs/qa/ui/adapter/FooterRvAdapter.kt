@@ -1,6 +1,7 @@
 package com.mredrock.cyxbs.qa.ui.adapter
 
 import android.view.ViewGroup
+import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.gone
 import com.mredrock.cyxbs.common.utils.extensions.visible
 import com.mredrock.cyxbs.qa.R
@@ -23,7 +24,8 @@ class FooterRvAdapter(private val retryCallback: () -> Unit) : BaseRvAdapter<Int
     }
 
     class FooterViewHolder(parent: ViewGroup) : BaseViewHolder<Int>(parent, R.layout.qa_recycler_item_footer) {
-        override fun refresh(data: Int?) = when (data) {
+        override fun refresh(data: Int?) {
+            when (data) {
             NetworkState.LOADING -> {
                 itemView.visible()
                 itemView.tv_hint.gone()
@@ -37,9 +39,12 @@ class FooterRvAdapter(private val retryCallback: () -> Unit) : BaseRvAdapter<Int
             }
 
             NetworkState.NO_MORE_DATA, NetworkState.SUCCESSFUL -> {
-                itemView.gone()
+                itemView.tv_hint.visible()
+                itemView.progress_bar.gone()
+                itemView.tv_hint.text = "没有更多内容了～"
+
             }
             else -> Unit
-        }
+        }}
     }
 }
