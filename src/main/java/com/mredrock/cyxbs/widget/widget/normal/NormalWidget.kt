@@ -16,7 +16,6 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.mredrock.cyxbs.common.bean.WidgetCourse
 import com.mredrock.cyxbs.common.component.CyxbsToast
-import com.mredrock.cyxbs.common.config.ACCOUNT_SERVICE
 import com.mredrock.cyxbs.common.config.MAIN_MAIN
 import com.mredrock.cyxbs.common.event.WidgetCourseEvent
 import com.mredrock.cyxbs.common.service.ServiceManager
@@ -27,8 +26,6 @@ import com.mredrock.cyxbs.widget.R
 import com.mredrock.cyxbs.widget.bean.CourseStatus
 import com.mredrock.cyxbs.widget.util.*
 import org.greenrobot.eventbus.EventBus
-import org.jetbrains.anko.dip
-import org.jetbrains.anko.sp
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -65,10 +62,10 @@ class NormalWidget : AppWidgetProvider() {
         super.onAppWidgetOptionsChanged(context, appWidgetManager, appWidgetId, newOptions)
         val minHeight = newOptions.getInt(OPTION_APPWIDGET_MIN_HEIGHT)
         val rv = RemoteViews(context.packageName, R.layout.widget_normal)
-        when{
-            minHeight <=100 -> setTextMaxLines(rv,2)
-            minHeight <=110 -> setTextMaxLines(rv,3)
-            else -> setTextMaxLines(rv,10)
+        when {
+            minHeight <= 100 -> setTextMaxLines(rv, 2)
+            minHeight <= 110 -> setTextMaxLines(rv, 3)
+            else -> setTextMaxLines(rv, 10)
         }
         show(rv, context)
     }
@@ -93,15 +90,15 @@ class NormalWidget : AppWidgetProvider() {
             when (rId) {
                 R.id.widget_normal_back -> {
                     context.defaultSharedPreferences.editor {
-                        putInt(shareName, offsetTime - 1)
+                        putInt(shareName, makeOffsetTime(offsetTime - 1))
                     }
-                    fresh(context, offsetTime - 1)
+                    fresh(context, makeOffsetTime(offsetTime - 1))
                 }
                 R.id.widget_normal_front -> {
                     context.defaultSharedPreferences.editor {
-                        putInt(shareName, offsetTime + 1)
+                        putInt(shareName, makeOffsetTime(offsetTime + 1))
                     }
-                    fresh(context, offsetTime + 1)
+                    fresh(context, makeOffsetTime(offsetTime + 1))
                 }
                 R.id.widget_normal_title -> {
                     context.defaultSharedPreferences.editor {
@@ -117,7 +114,7 @@ class NormalWidget : AppWidgetProvider() {
         if (intent.action == "btn.start.com") {
             if (!ServiceManager.getService(IAccountService::class.java).getVerifyService().isLogin()) {
                 CyxbsToast.makeText(context, "请登陆之后再点击查看详细信息", Toast.LENGTH_SHORT).show()
-            }else{
+            } else {
                 list = gson.fromJson(context.defaultSharedPreferences.getString(courseData, ""), object : TypeToken<ArrayList<CourseStatus.Course>>() {}.type)
                 val newList = mutableListOf<WidgetCourse.DataBean>()
                 list.forEach {
@@ -146,6 +143,21 @@ class NormalWidget : AppWidgetProvider() {
             }
         }
     }
+
+    private fun makeOffsetTime(offsetTime: Int): Int {
+        val i1 = Calendar.getInstance()[Calendar.DAY_OF_WEEK]
+        val dayOfWeek = if (i1 == 1) 7 else i1 - 1
+        val i = 7 - dayOfWeek
+        val i2 = -dayOfWeek + 1
+        if (offsetTime > i) {
+            return (offsetTime - i) % 7 - dayOfWeek
+        }
+        if (offsetTime < i2) {
+            return 8 + (offsetTime - i2) % 7 - dayOfWeek
+        }
+        return offsetTime
+    }
+
 
     private fun startOperation(dataBean: WidgetCourse.DataBean) {
         ARouter.getInstance().build(MAIN_MAIN).navigation()
