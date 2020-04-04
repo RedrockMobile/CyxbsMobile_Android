@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F9F9F9"
+    android:background="@color/windowBackground"
     android:orientation="vertical"
     tools:context=".VolunteerLoginActivity"
     tools:ignore="ResourceName">
@@ -36,6 +36,8 @@
         android:layout_marginTop="65dp"
         android:layout_marginEnd="20dp"
         android:foreground="?attr/selectableItemBackground"
+        app:cardBackgroundColor="@color/windowBackground"
+        app:shadowColor="@color/windowBackground"
         app:cardCornerRadius="2dp"
         app:horizontalContentPadding="25dp"
         app:shadowRadius="10dp"
@@ -44,7 +46,6 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@android:color/white"
             android:orientation="vertical">
 
             <EditText

@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/volunteer_pager_background"
+    android:background="@color/windowBackground"
     tools:context=".VolunteerRecordActivity"
     tools:ignore="ResourceName">
     <TextView
@@ -120,7 +120,7 @@
             android:id="@+id/volunteer_view_pager"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/volunteer_pager_background" />
+            android:background="@color/windowBackground" />
 
     </LinearLayout>
 

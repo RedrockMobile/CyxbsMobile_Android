@@ -7,7 +7,9 @@
         <item name="colorControlActivated">@color/volunteer_edit_activated</item>
         <item name="android:textSize">14sp</item>
         <item name="android:textCursorDrawable">@drawable/volunteer_cursor_color</item>
-        <item name="android:textColorHint">@color/volunteer_edit_Normal</item>
+        <item name="android:textColorHint">@color/levelTwoFontColor</item>
+        <item name="hintTextColor">@color/levelTwoFontColor</item>
+        <item name="android:textColor">@color/levelTwoFontColor</item>
         <item name="android:maxLines">1</item>
         <item name="android:singleLine">true</item>
         <item name="android:imeOptions">actionGo</item>

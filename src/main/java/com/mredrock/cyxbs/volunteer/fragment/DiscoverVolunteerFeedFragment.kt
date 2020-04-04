@@ -37,10 +37,12 @@ class DiscoverVolunteerFeedFragment : BaseFeedFragment<DiscoverVolunteerFeedView
             volunteerTime?.let {
                 val adapter = getAdapter()
                 if(adapter is VolunteerFeedAdapter){
+
                     adapter.refresh(it)
                 }else{
                     setAdapter(VolunteerFeedAdapter(it))
                 }
+
 
             }
 
@@ -57,6 +59,8 @@ class DiscoverVolunteerFeedFragment : BaseFeedFragment<DiscoverVolunteerFeedView
                         volunteerSP.volunteerPassword == "404")) {
 
             viewModel.loadVolunteerTime(EncryptPassword.encrypt(uid))
+        }else{
+            setAdapter(VolunteerFeedUnbindAdapter())
         }
     }
 
