@@ -52,7 +52,7 @@ class AnswerActivity : BaseViewModelActivity<AnswerViewModel>() {
 
     override val isFragmentActivity = false
 
-    private var draftId = NOT_DRAFT_ID
+    private var draftId: String = NOT_DRAFT_ID
 
     private val exitDialog by lazy { createExitDialog() }
 
@@ -261,15 +261,15 @@ class AnswerActivity : BaseViewModelActivity<AnswerViewModel>() {
             EventBus.getDefault().removeStickyEvent(event)
             return
         }
+        draftId = event.selfId
+        viewModel.qid = event.targetId
         val json = String(Base64.decode(event.jsonString, Base64.DEFAULT))
         val content = Gson().fromJson(json, Content::class.java)
         edt_answer_content.setText(content.title)
-        if (content.pictures.isNotEmpty()) {
+        viewModel.getQuestionInfo()
+        if (!content.pictures.isNullOrEmpty()) {
             viewModel.setImageList(content.pictures)
         }
-        viewModel.qid = event.targetId
-        viewModel.getQuestionInfo()
-        draftId = event.selfId
     }
 
     private fun createExitDialog() = CommonDialog(this).apply {

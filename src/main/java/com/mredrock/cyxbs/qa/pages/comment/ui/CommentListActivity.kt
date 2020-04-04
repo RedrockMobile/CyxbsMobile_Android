@@ -295,7 +295,7 @@ class CommentListActivity : BaseActivity() {
                 initViewModel(event.questionId, answerWrapper.data)
                 viewModel.getQuestionInfo()
                 viewModel.questionData.observe {
-                    if (it==null) finish()
+                    if (it == null) finish()
                     question = it!!
                     initRv(!it.isSelf, it.isAnonymous)
                     initToolbar()

@@ -136,7 +136,14 @@ class AnswerViewModel(var qid: String) : BaseViewModel() {
                 .deleteDraft(id)
                 .setSchedulers()
                 .checkError()
-                .safeSubscribeBy()
+                .doOnError {
+                    backAndFinishActivityEvent.value = true
+                    toastEvent.value = R.string.qa_quiz_update_failed
+                }
+                .safeSubscribeBy {
+                    backAndFinishActivityEvent.value = true
+                    toastEvent.value = R.string.qa_quiz_update_success
+                }
                 .lifeCycle()
     }
 

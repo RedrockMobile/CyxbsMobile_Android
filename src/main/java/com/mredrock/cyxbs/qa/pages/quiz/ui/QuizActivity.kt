@@ -271,10 +271,10 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
             getString(R.string.qa_quiz_select_type_others) -> currentTypeIndex = 3
         }
         childView[currentTypeIndex].selected()
-        if (question.photoUrl.isNotEmpty()) {
+        draftId = event.selfId
+        if (!question.photoUrl.isNullOrEmpty()) {
             viewModel.setImageList(arrayListOf<String>().apply { addAll(question.photoUrl) })
         }
-        draftId = event.selfId
     }
 
     private fun createExitDialog() = CommonDialog(this).apply {
