@@ -41,7 +41,6 @@ import org.jetbrains.anko.sp
 @Route(path = DISCOVER_ENTRY)
 class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>() {
     override val viewModelClass: Class<DiscoverHomeViewModel> = DiscoverHomeViewModel::class.java
-    private var firstLoadFragmentFlag = true
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.discover_home_fragment, container, false)
@@ -49,16 +48,16 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initViewPager()
-        initJwNews(vf_jwzx_detail, fl_discover_home_jwnews)
-        viewModel.getRollInfos()
 
-        iv_check_in.setOnClickListener {
-            ARouter.getInstance().build(MINE_CHECK_IN).navigation()
-        }
         if(savedInstanceState == null){
+            initViewPager()
+            initJwNews(vf_jwzx_detail, fl_discover_home_jwnews)
+            viewModel.getRollInfos()
             initFeeds()
-            firstLoadFragmentFlag = false
+
+            iv_check_in.setOnClickListener {
+                ARouter.getInstance().build(MINE_CHECK_IN).navigation()
+            }
         }
     }
 
@@ -66,6 +65,8 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>() {
     override fun onResume() {
         super.onResume()
         initFunctions()
+        viewModel.startSwitchViewPager()
+        vf_jwzx_detail.startFlipping()
     }
 
     //加载轮播图
@@ -87,14 +88,12 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>() {
                 vp_discover_home?.adapter = BannerAdapter(context!!, it, vp_discover_home)
             }
         }
-        viewModel.startSwitchViewPager {
+        viewModel.viewPagerTurner.observe {
             if (viewModel.scrollFlag) {
                 vp_discover_home.currentItem += 1
             }
             viewModel.scrollFlag = true
         }
-
-
     }
 
     private fun initJwNews(viewFlipper: ViewFlipper, frameLayout: FrameLayout) {
@@ -114,7 +113,6 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>() {
         viewFlipper.setFlipInterval(6555)
         viewFlipper.setInAnimation(context, R.anim.discover_text_in_anim)
         viewFlipper.setOutAnimation(context, R.anim.discover_text_out_anim)
-        viewFlipper.startFlipping()
         viewModel.getJwNews(1)
 
         frameLayout.setOnClickListener {
@@ -188,9 +186,9 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>() {
         tv_day.text = dataEvent.time
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-
+    override fun onPause() {
+        super.onPause()
         vf_jwzx_detail.stopFlipping()
     }
+
 }

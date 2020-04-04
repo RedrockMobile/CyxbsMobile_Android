@@ -19,6 +19,7 @@ import java.util.concurrent.TimeUnit
 class DiscoverHomeViewModel : BaseViewModel() {
     val viewPagerInfos = MutableLiveData<List<RollerViewInfo>>()
     val jwNews = MutableLiveData<List<NewsListItem>>()
+    val viewPagerTurner = MutableLiveData<Int>()
 
     //标记是否未经被滑动，被滑动就取消下一次自动滚动
     var scrollFlag = true
@@ -44,11 +45,11 @@ class DiscoverHomeViewModel : BaseViewModel() {
                 .lifeCycle()
     }
 
-    fun startSwitchViewPager(callback: () -> Unit) {
+    fun startSwitchViewPager() {
         Observable.interval(4444, TimeUnit.MILLISECONDS)
                 .setSchedulers()
                 .safeSubscribeBy {
-                    callback.invoke()
+                    viewPagerTurner.setValue(viewPagerTurner.value?:1)
                 }.lifeCycle()
     }
 }
