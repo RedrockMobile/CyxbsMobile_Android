@@ -125,7 +125,7 @@
             android:autoSizeTextType="uniform"
             app:tabBackground="@android:color/transparent"
             app:tabRippleColor="@android:color/transparent"
-            app:tabTextColor="#112C54"
+            app:tabTextColor="@color/levelOneFontColor"
             style="@style/emptyroom_custom"
             />
     </androidx.constraintlayout.widget.ConstraintLayout>

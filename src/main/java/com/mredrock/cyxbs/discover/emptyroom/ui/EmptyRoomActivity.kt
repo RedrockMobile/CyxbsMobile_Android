@@ -35,6 +35,7 @@ import com.mredrock.cyxbs.discover.emptyroom.viewmodel.EmptyRoomViewModel.Compan
 import kotlinx.android.synthetic.main.emptyroom_activity_empty_room.*
 import org.jetbrains.anko.dip
 import org.jetbrains.anko.textColor
+import org.jetbrains.anko.textColorResource
 import java.util.*
 
 
@@ -191,18 +192,17 @@ class EmptyRoomActivity : BaseViewModelActivity<EmptyRoomViewModel>(), OnItemSel
                     override fun onBindView(textView: TextView, displayValue: String, selected: Boolean, position: Int) {
                         super.onBindView(textView, displayValue, selected, position)
                         val drawable = if (selected) ContextCompat.getDrawable(BaseApp.context, R.drawable.emptyroom_shape_query_item) else null
-                        var color =  1
+//                        var color =  1
                         if (selected) {
-                            color = Color.parseColor("#122D55")
+                            textView.textColorResource = R.color.transactionHeading
                             textView.paint.isFakeBoldText = true
                         }else{
-                            color =  Color.parseColor("#15315B")
+                            textView.textColorResource = R.color.levelTwoFontColor
                             textView.paint.isFakeBoldText = false
                         }
                         textView.gravity = Gravity.CENTER
                         textView.background = drawable
                         textView.height = dip(26)
-                        textView.setTextColor(color)
                     }
                 },isFullUp ,itemNumber).build()
         selector.apply {

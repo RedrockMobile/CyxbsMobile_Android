@@ -12,7 +12,7 @@
         android:paddingTop="2dp"
         android:paddingRight="15dp"
         android:paddingBottom="2dp"
-        android:textColor="#15315B"
+        android:textColor="@color/levelTwoFontColor"
         android:textSize="14sp"
         android:maxLines="1"
         tools:text="第一周" />
