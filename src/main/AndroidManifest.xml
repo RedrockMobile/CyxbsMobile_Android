@@ -4,8 +4,7 @@
 
     <application>
         <activity android:name=".VolunteerLoginActivity"
-            android:launchMode="singleTop"
-            android:windowSoftInputMode="adjustNothing"/>
+            android:launchMode="singleTop"/>
         <activity android:name=".VolunteerRecordActivity"
             android:launchMode="singleTop"/>
     </application>
