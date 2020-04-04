@@ -100,7 +100,7 @@
     <!--post affair menu-->
     <string name="course_course_detail_cycle">周期</string>
     <string name="course_course_details_time">时间</string>
-    <string name="course_course_details_credit">学分数</string>
+    <string name="course_course_details_credit">课程类型</string>
     <string name="course_title_for_your_affair1">为你的行程添加</string>
     <string name="course_title_for_your_affair2">一个标题</string>
     <string name="course_title_for_your_affair3">具体内容</string>
