@@ -42,7 +42,6 @@ class AnswerDataSource(private val qid: String) : PageKeyedDataSource<Int, Answe
                 .getAnswerList(qid, params.key, params.requestedLoadSize)
                 .mapOrThrowApiException()
                 .setSchedulers()
-                .doOnSubscribe { networkState.postValue(NetworkState.LOADING) }
                 .doOnError {
                     networkState.value = NetworkState.FAILED
                     failedRequest = { loadAfter(params, callback) }

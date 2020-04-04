@@ -44,7 +44,6 @@ class CommentDataSource(private val aid: String) : PageKeyedDataSource<Int, Comm
                 .getCommentList(aid, params.key)
                 .mapOrThrowApiException()
                 .setSchedulers()
-                .doOnSubscribe { networkState.postValue(NetworkState.LOADING) }
                 .doOnError {
                     networkState.value = NetworkState.FAILED
                     failedRequest = { loadAfter(params, callback) }

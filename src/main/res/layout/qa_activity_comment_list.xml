@@ -21,8 +21,10 @@
             android:id="@+id/qa_ib_toolbar_back"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="14dp"
-            android:background="@drawable/qa_comment_header_ic_back"
+            android:background="@null"
+            android:paddingStart="20dp"
+            android:paddingEnd="7dp"
+            android:src="@drawable/qa_comment_header_ic_back"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -31,12 +33,12 @@
             android:id="@+id/qa_tv_toolbar_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="19dp"
+            android:layout_marginStart="15dp"
             android:textColor="@color/levelTwoFontColor"
             android:textSize="22sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="@id/qa_ib_toolbar_back"
+            app:layout_constraintStart_toEndOf="@id/qa_ib_toolbar_back"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="评论（2）" />
 
