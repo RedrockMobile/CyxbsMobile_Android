@@ -1,6 +1,5 @@
 package com.mredrock.cyxbs.discover.grades.ui.fragment
 
-import android.os.Build
 import android.os.Bundle
 import android.transition.Explode
 import android.transition.TransitionManager
@@ -74,9 +73,7 @@ class BindFragment : Fragment() {
     }
 
     private fun bubble() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            TransitionManager.beginDelayedTransition(grades_constraint_layout, Explode())
-        }
+        TransitionManager.beginDelayedTransition(grades_constraint_layout, Explode())
         for (i in 0 until grades_constraint_layout.childCount) {
             val view = grades_constraint_layout[i]
             view.visibility = when (view.visibility) {
