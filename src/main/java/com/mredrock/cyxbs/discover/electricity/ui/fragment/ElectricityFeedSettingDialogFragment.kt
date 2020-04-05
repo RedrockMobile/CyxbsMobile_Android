@@ -1,6 +1,5 @@
 package com.mredrock.cyxbs.discover.electricity.ui.fragment
 
-import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -24,9 +23,7 @@ class ElectricityFeedSettingDialogFragment(private val refresher: (id: String, r
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            setStyle(STYLE_NO_TITLE, android.R.style.Theme_Material_Dialog_MinWidth)
-        }
+        setStyle(STYLE_NO_TITLE, android.R.style.Theme_Material_Dialog_MinWidth)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -38,8 +35,8 @@ class ElectricityFeedSettingDialogFragment(private val refresher: (id: String, r
         super.onViewCreated(view, savedInstanceState)
 
         var room = defaultSharedPreferences.getString(SP_ROOM_KEY, "101") ?: "101"
-        selectBuildingHeadPosition = defaultSharedPreferences.getInt(SP_BUILDING_HEAD_KEY,0)
-        selectBuildingFootPosition = defaultSharedPreferences.getInt(SP_BUILDING_FOOT_KEY,0)
+        selectBuildingHeadPosition = defaultSharedPreferences.getInt(SP_BUILDING_HEAD_KEY, 0)
+        selectBuildingFootPosition = defaultSharedPreferences.getInt(SP_BUILDING_FOOT_KEY, 0)
 
         view.apply {
             et_electricity_room_num.apply {
@@ -70,7 +67,7 @@ class ElectricityFeedSettingDialogFragment(private val refresher: (id: String, r
                 selectBuildingHeadPosition = wp_dormitory_head.currentItemPosition
                 selectBuildingFootPosition = wp_dormitory_foot.currentItemPosition
                 val id = BUILDING_NAMES.getValue(BUILDING_NAMES_HEADER[selectBuildingHeadPosition])[selectBuildingFootPosition].split("(")[1].split("栋")[0]
-                LogUtils.d("MyTag,com.mredrock.cyxbs.discover.electricity.ui.fragment","id=$id,room=$room")
+                LogUtils.d("MyTag,com.mredrock.cyxbs.discover.electricity.ui.fragment", "id=$id,room=$room")
                 refresher.invoke(id, room)
                 this@ElectricityFeedSettingDialogFragment.dismiss()
 
