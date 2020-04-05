@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
 import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.widget.FrameLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -67,27 +68,11 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
             R.drawable.main_ic_mine_unselected, R.drawable.main_ic_mine_selected
     )
 
-    private val listFragmentData = listOf(
-            Pair(COURSE_ENTRY, "CourseContainerEntryFragment"),
-            Pair(QA_ENTRY, "QuestionContainerFragment"),
-            Pair(MINE_ENTRY, "UserFragment"),
-            Pair(DISCOVER_ENTRY, "DiscoverHomeFragment")
-    )
-
-    //四个需要组装的fragment(懒加载),为啥要加return@lazy呢，这里lint检查原因会爆黄不加也没关系
-    private val courseFragment: Fragment by lazy(LazyThreadSafetyMode.NONE) { getFragment(listFragmentData[0]) }
-    private val qaFragment: Fragment by lazy(LazyThreadSafetyMode.NONE) { getFragment(listFragmentData[1]) }
-    private val mineFragment: Fragment by lazy(LazyThreadSafetyMode.NONE) { getFragment(listFragmentData[2]) }
-    private val discoverFragment: Fragment by lazy(LazyThreadSafetyMode.NONE) { getFragment(listFragmentData[3]) }
-
-    //已经加载好的fragment
-    private val showedFragments = mutableListOf<Fragment>()
-
-
-    override var TAG: String = "MainHHHHH"
-    override var isOpenLifeCycleLog: Boolean
-        get() = false
-        set(value) {}
+    //四个需要组装的fragment(懒加载)
+    private val courseFragment: Fragment by lazy(LazyThreadSafetyMode.NONE) { getFragment(COURSE_ENTRY) }
+    private val discoverFragment: Fragment by lazy(LazyThreadSafetyMode.NONE) { getFragment(DISCOVER_ENTRY) }
+    private val qaFragment: Fragment by lazy(LazyThreadSafetyMode.NONE) { getFragment(QA_ENTRY) }
+    private val mineFragment: Fragment by lazy(LazyThreadSafetyMode.NONE) { getFragment(MINE_ENTRY) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -116,7 +101,7 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
                 EventBus.getDefault().post(BottomSheetStateEvent(slideOffset))
                 ll_nav_main_container.translationY = nav_main.height * slideOffset
                 if (ll_nav_main_container.visibility == GONE) {
-                    ll_nav_main_container.visibility = View.VISIBLE
+                    ll_nav_main_container.visibility = VISIBLE
                 }
             }
 
@@ -181,8 +166,8 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
     private fun changeFragment(fragment: Fragment, position: Int, menuItem: MenuItem) {
         val transition = supportFragmentManager.beginTransaction()
         //遍历隐藏已经加载的fragment
-        listFragmentData.filter { listFragmentData[0] != it }.forEach {
-            val fragment1 = supportFragmentManager.fragments.entryContains(it.second)
+        viewModel.mainPageLoadedFragmentClassList.filter { COURSE_ENTRY != it.key }.forEach {
+            val fragment1 = supportFragmentManager.fragments.entryContains(it.key)
             if (fragment1 != null) {
                 transition.hide(fragment1)
             }
@@ -216,7 +201,7 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
             courseFragment.arguments = Bundle().apply { putString(COURSE_DIRECT_LOAD, TRUE) }
             //加载课表，并在滑动下拉课表容器中添加整个课表
             supportFragmentManager.beginTransaction().apply {
-                if (supportFragmentManager.fragments.entryContains(listFragmentData[0].second) == null) {
+                if (supportFragmentManager.fragments.entryContains(COURSE_ENTRY) == null) {
                     add(R.id.course_bottom_sheet_content, courseFragment)
                 }
                 show(courseFragment)
@@ -227,7 +212,7 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
             //加载课表并给课表传递值，让它不要直接加载详细的课表，只用加载现在可见的头部就好
             courseFragment.arguments = Bundle().apply { putString(COURSE_DIRECT_LOAD, FALSE) }
             supportFragmentManager.beginTransaction().apply {
-                if (supportFragmentManager.fragments.entryContains(listFragmentData[0].second) == null) {
+                if (supportFragmentManager.fragments.entryContains(COURSE_ENTRY) == null) {
                     add(R.id.course_bottom_sheet_content, courseFragment)
                 }
                 show(courseFragment)
@@ -238,8 +223,9 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
         nav_main.selectedItemId = R.id.explore
     }
 
-    private fun List<Fragment>.entryContains(entryClassName: String): Fragment? {
-        val list = filter { it::class.java.simpleName == entryClassName }
+    //根据aRouterPath来查询是否已经加载当前Fragment，以此来增强app在Activity异常重启时的稳定性
+    private fun List<Fragment>.entryContains(aRouterPath: String): Fragment? {
+        val list = filter { it::class.java === viewModel.mainPageLoadedFragmentClassList[aRouterPath] }
         return if (list.isEmpty()) null else list[0]
     }
 
@@ -256,22 +242,21 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
             bottomSheetBehavior.state = savedInstanceState.getInt(BOTTOM_SHEET_STATE)
             EventBus.getDefault().post(LoadCourse(false))
             EventBus.getDefault().post(BottomSheetStateEvent(1f))
-            ll_nav_main_container.visibility = View.GONE
+            ll_nav_main_container.visibility = GONE
             isLoadCourse = false
         } else if (savedInstanceState.getInt(BOTTOM_SHEET_STATE) == BottomSheetBehavior.STATE_COLLAPSED && viewModel.courseShowState) {
             bottomSheetBehavior.state = savedInstanceState.getInt(BOTTOM_SHEET_STATE)
             EventBus.getDefault().post(BottomSheetStateEvent(0f))
-            ll_nav_main_container.visibility = View.VISIBLE
+            ll_nav_main_container.visibility = VISIBLE
         }
     }
 
-    private fun getFragment(data: Pair<String, String>): Fragment {
-        return if (supportFragmentManager.fragments.entryContains(data.second) == null) {
-            ServiceManager.getService(data.first)
-        } else {
-            supportFragmentManager.fragments.filter { it::class.java.simpleName == data.second }[0]
-        }
-    }
+    private fun getFragment(data: String) =
+            supportFragmentManager.fragments.entryContains(data)
+                    ?: (ServiceManager.getService(data) as Fragment).apply {
+                        viewModel.mainPageLoadedFragmentClassList[data] = this.javaClass
+                    }
+
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun installUpdate(event: UpdateEvent) {

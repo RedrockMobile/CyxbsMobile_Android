@@ -1,12 +1,8 @@
 package com.mredrock.cyxbs.main.viewmodel
 
-import android.view.View
-import android.widget.FrameLayout
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.mredrock.cyxbs.common.BaseApp.Companion.context
-import com.mredrock.cyxbs.common.event.BottomSheetStateEvent
 import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.network.exception.RedrockApiException
 import com.mredrock.cyxbs.common.utils.LogUtils
@@ -20,11 +16,16 @@ import com.mredrock.cyxbs.main.utils.downloadSplash
 import com.mredrock.cyxbs.main.utils.getSplashFile
 import com.mredrock.cyxbs.main.utils.isDownloadSplash
 import com.tencent.bugly.Bugly.applicationContext
-import org.greenrobot.eventbus.EventBus
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 
 class MainViewModel : BaseViewModel() {
+
+    //这个变量主要是做标志使用，防止Activity异常重启造成的Fragment多次加载
+    val mainPageLoadedFragmentClassList = HashMap<String,Class<*>>()
+
     val startPage: LiveData<StartPage?> = MutableLiveData()
 
     //进入app是否直接显示课表

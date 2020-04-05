@@ -1,6 +1,5 @@
 package com.mredrock.cyxbs.main.ui
 
-import android.os.Build
 import android.os.Bundle
 import android.transition.Explode
 import android.transition.TransitionManager
@@ -21,9 +20,6 @@ import org.greenrobot.eventbus.ThreadMode
 
 @Route(path = MAIN_LOGIN)
 class LoginActivity : BaseViewModelActivity<LoginViewModel>() {
-    companion object {
-        val TAG = LoginActivity::class.java.simpleName
-    }
 
     override val isFragmentActivity = false
 
@@ -72,9 +68,7 @@ class LoginActivity : BaseViewModelActivity<LoginViewModel>() {
 
     //这个方法可以在登陆状态和未登陆状态之间切换
     private fun landing() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            TransitionManager.beginDelayedTransition(login_container, Explode())
-        }
+        TransitionManager.beginDelayedTransition(login_container, Explode())
         for (i in 0 until login_container.childCount) {
             val view = login_container[i]
             view.visibility = when (view.visibility) {

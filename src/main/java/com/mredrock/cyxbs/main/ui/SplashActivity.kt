@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.os.CountDownTimer
 import android.view.View
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
 import com.bumptech.glide.Glide
@@ -85,7 +85,7 @@ class SplashActivity : BaseViewModelActivity<SplashViewModel>() {
         } else {//如果没闪屏页直接打开
             viewModel.finishAfter(0)
         }
-        viewModel = ViewModelProviders.of(this).get(SplashViewModel::class.java)
+        viewModel = ViewModelProvider(this).get(SplashViewModel::class.java)
     }
 
     //用来跳转并且关闭闪屏页
