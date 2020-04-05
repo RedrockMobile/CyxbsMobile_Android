@@ -28,7 +28,7 @@ class RedRockAutoWarpView : FrameLayout {
                 return
             }
             refreshData()
-            invalidate()
+            requestLayout()
         }
 
 
