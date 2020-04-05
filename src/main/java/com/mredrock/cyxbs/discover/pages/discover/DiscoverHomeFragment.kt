@@ -50,14 +50,15 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>() {
         super.onViewCreated(view, savedInstanceState)
 
         if(savedInstanceState == null){
-            initViewPager()
-            initJwNews(vf_jwzx_detail, fl_discover_home_jwnews)
-            viewModel.getRollInfos()
             initFeeds()
+            viewModel.startSwitchViewPager()
+        }
+        initJwNews(vf_jwzx_detail, fl_discover_home_jwnews)
 
-            iv_check_in.setOnClickListener {
-                ARouter.getInstance().build(MINE_CHECK_IN).navigation()
-            }
+        initViewPager()
+        viewModel.getRollInfos()
+        iv_check_in.setOnClickListener {
+            ARouter.getInstance().build(MINE_CHECK_IN).navigation()
         }
     }
 
@@ -65,7 +66,6 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>() {
     override fun onResume() {
         super.onResume()
         initFunctions()
-        viewModel.startSwitchViewPager()
         vf_jwzx_detail.startFlipping()
     }
 
