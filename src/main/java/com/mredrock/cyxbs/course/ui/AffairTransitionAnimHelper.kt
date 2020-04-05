@@ -1,6 +1,5 @@
 package com.mredrock.cyxbs.course.ui
 
-import android.os.Build
 import android.transition.ChangeBounds
 import android.transition.Slide
 import android.transition.TransitionManager
@@ -22,7 +21,7 @@ import kotlinx.android.synthetic.main.course_activity_edit_affair.*
  * description：事务Activity的Transition动画的逻辑代码,
  *              以此来使activity主要逻辑代码显得更加清晰，让activity专心处理逻辑代码
  */
-class AffairTransitionAnimHelper(var affairEditActivity: AffairEditActivity?){
+class AffairTransitionAnimHelper(var affairEditActivity: AffairEditActivity?) {
 
     /**
      * 添加标题之后跳转到添加内容动画
@@ -34,12 +33,10 @@ class AffairTransitionAnimHelper(var affairEditActivity: AffairEditActivity?){
                         Toast.LENGTH_SHORT).show()
             } else {
                 TransitionManager.beginDelayedTransition(course_affair_container, TransitionSet().apply {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        addTransition(Slide().apply {
-                            duration = 300
-                            slideEdge = Gravity.END
-                        })
-                    }
+                    addTransition(Slide().apply {
+                        duration = 300
+                        slideEdge = Gravity.END
+                    })
                     addTransition(ChangeBounds().apply { duration = 300 })
                 })
                 val set = ConstraintSet().apply { clone(course_affair_container) }
@@ -67,12 +64,10 @@ class AffairTransitionAnimHelper(var affairEditActivity: AffairEditActivity?){
     fun backAddTitleMonitor() {
         affairEditActivity?.apply {
             TransitionManager.beginDelayedTransition(course_affair_container, TransitionSet().apply {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    addTransition(Slide().apply {
-                        duration = 300
-                        slideEdge = Gravity.END
-                    })
-                }
+                addTransition(Slide().apply {
+                    duration = 300
+                    slideEdge = Gravity.END
+                })
                 addTransition(ChangeBounds().apply { duration = 300 })
             })
             val set = ConstraintSet().apply { clone(course_affair_container) }
@@ -95,7 +90,6 @@ class AffairTransitionAnimHelper(var affairEditActivity: AffairEditActivity?){
     }
 
 
-
     /**
      * 添加内容之后跳转到选择时间动画
      */
@@ -103,73 +97,73 @@ class AffairTransitionAnimHelper(var affairEditActivity: AffairEditActivity?){
         affairEditActivity?.apply {
             //鄙人觉得这个没有必要做内容为空的判断，事务其实有时候简单的事务大多数人写个内容都是为了占位置，没有具体意义
             TransitionManager.beginDelayedTransition(course_affair_container, TransitionSet().apply {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    addTransition(Slide().apply {
-                        duration = 300
-                        slideEdge = Gravity.END
-                    })
-                }
+                addTransition(Slide().apply {
+                    duration = 300
+                    slideEdge = Gravity.END
+                })
                 addTransition(ChangeBounds().apply { duration = 300 })
             })
             modifyPageLayout()
             mEditAffairViewModel.status = EditAffairViewModel.Status.AllDoneStatus
 
-        } }
+        }
+    }
 
 
     /**
      * 返回到添加内容的动画
      */
     fun backAddContentMonitor() {
-       affairEditActivity?.apply{ //鄙人觉得这个没有必要做内容为空的判断，事务其实有时候简单的事务大多数人写个内容都是为了占位置，没有具体意义
-        TransitionManager.beginDelayedTransition(course_affair_container, TransitionSet().apply {
-            addTransition(ChangeBounds().apply { duration = 300 })
-        })
-        val set = ConstraintSet().apply { clone(course_affair_container) }
-        set.connect(R.id.et_content_input, ConstraintSet.TOP, R.id.tv_content_text, ConstraintSet.BOTTOM)
-        set.setVerticalBias(R.id.et_content_input, 0f)
-        set.applyTo(course_affair_container)
-        //单独修改控件属性要在applyTo之后
-        course_textview.visibility = View.VISIBLE
-        tv_title_text.visibility = View.VISIBLE
-        tv_title_tips.visibility = View.VISIBLE
-        tv_content_text.visibility = View.VISIBLE
-        et_title.visibility = View.GONE
-        tv_week_select.visibility = View.GONE
-        tv_time_select.visibility = View.GONE
-        tv_remind_select.visibility = View.GONE
-        et_content_input.imeOptions = EditorInfo.IME_ACTION_NEXT
-        tv_title_tips.text = et_title.text
-        mEditAffairViewModel.status = EditAffairViewModel.Status.ContentStatus}
+        affairEditActivity?.apply { //鄙人觉得这个没有必要做内容为空的判断，事务其实有时候简单的事务大多数人写个内容都是为了占位置，没有具体意义
+            TransitionManager.beginDelayedTransition(course_affair_container, TransitionSet().apply {
+                addTransition(ChangeBounds().apply { duration = 300 })
+            })
+            val set = ConstraintSet().apply { clone(course_affair_container) }
+            set.connect(R.id.et_content_input, ConstraintSet.TOP, R.id.tv_content_text, ConstraintSet.BOTTOM)
+            set.setVerticalBias(R.id.et_content_input, 0f)
+            set.applyTo(course_affair_container)
+            //单独修改控件属性要在applyTo之后
+            course_textview.visibility = View.VISIBLE
+            tv_title_text.visibility = View.VISIBLE
+            tv_title_tips.visibility = View.VISIBLE
+            tv_content_text.visibility = View.VISIBLE
+            et_title.visibility = View.GONE
+            tv_week_select.visibility = View.GONE
+            tv_time_select.visibility = View.GONE
+            tv_remind_select.visibility = View.GONE
+            et_content_input.imeOptions = EditorInfo.IME_ACTION_NEXT
+            tv_title_tips.text = et_title.text
+            mEditAffairViewModel.status = EditAffairViewModel.Status.ContentStatus
+        }
     }
-
-
 
 
     /**
      * 如果是修改事务，这个方法用于将此activity转换到最后一个状态
      */
     fun modifyPageLayout() {
-        affairEditActivity?.apply{val set = ConstraintSet().apply { clone(course_affair_container) }
-        set.connect(R.id.et_content_input, ConstraintSet.TOP, R.id.course_affair_container, ConstraintSet.TOP)
-        set.setVerticalBias(R.id.et_content_input, 0.32f)
-        set.applyTo(course_affair_container)
-        //单独修改控件属性要在apply之后
-        course_textview.visibility = View.GONE
-        tv_title_text.visibility = View.GONE
-        tv_title_tips.visibility = View.GONE
-        tv_content_text.visibility = View.GONE
-        rv_you_might.visibility = View.GONE
-        et_title.visibility = View.VISIBLE
-        tv_week_select.visibility = View.VISIBLE
-        tv_time_select.visibility = View.VISIBLE
-        tv_remind_select.visibility = View.VISIBLE
-        et_content_input.imeOptions = EditorInfo.IME_ACTION_DONE
-        et_title.setText(tv_title_tips.text, TextView.BufferType.EDITABLE)
-        mEditAffairViewModel.status = EditAffairViewModel.Status.AllDoneStatus}
+        affairEditActivity?.apply {
+            val set = ConstraintSet().apply { clone(course_affair_container) }
+            set.connect(R.id.et_content_input, ConstraintSet.TOP, R.id.course_affair_container, ConstraintSet.TOP)
+            set.setVerticalBias(R.id.et_content_input, 0.32f)
+            set.applyTo(course_affair_container)
+            //单独修改控件属性要在apply之后
+            course_textview.visibility = View.GONE
+            tv_title_text.visibility = View.GONE
+            tv_title_tips.visibility = View.GONE
+            tv_content_text.visibility = View.GONE
+            rv_you_might.visibility = View.GONE
+            et_title.visibility = View.VISIBLE
+            tv_week_select.visibility = View.VISIBLE
+            tv_time_select.visibility = View.VISIBLE
+            tv_remind_select.visibility = View.VISIBLE
+            et_content_input.imeOptions = EditorInfo.IME_ACTION_DONE
+            et_title.setText(tv_title_tips.text, TextView.BufferType.EDITABLE)
+            mEditAffairViewModel.status = EditAffairViewModel.Status.AllDoneStatus
+        }
     }
 
-    fun unBindActivity(){
+    fun unBindActivity() {
         affairEditActivity = null
     }
 }
