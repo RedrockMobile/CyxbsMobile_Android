@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.mredrock.cyxbs.common.config.WEEK_NUM
 import com.mredrock.cyxbs.common.ui.BaseFragment
 import com.mredrock.cyxbs.course.R
+import com.mredrock.cyxbs.course.adapters.TimeRealityAdapter
 import com.mredrock.cyxbs.course.component.ScheduleView
 import com.mredrock.cyxbs.course.databinding.CourseFragmentCourseBinding
 import com.mredrock.cyxbs.course.databinding.CourseNoClassInviteScheduleBinding
@@ -102,8 +103,7 @@ class CourseFragment : BaseFragment() {
         scheduleView.adapterChangeListener = {
             val position = scheduleView.adapter?.getHighLightPosition()
             week_back_ground_view.position = position
-            red_rock_tv_course_day_of_week.position = position
-            red_rock_tv_course_day_of_month.position = position
+            gv_time_reality.adapter = TimeRealityAdapter(resources.getStringArray(R.array.course_course_day_of_week_strings),mCoursePageViewModel.daysOfMonth,position)
             course_tiv.position = position
         }
     }

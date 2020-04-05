@@ -39,41 +39,24 @@
             app:backgroundElementGap="2dp"
             app:bottomBackground="@color/courseIdentifiesTheCurrentShadowColor"
             app:foreground="@color/levelFourFontColor"
-            app:layout_constraintBottom_toBottomOf="@+id/red_rock_tv_course_day_of_month"
-            app:layout_constraintEnd_toEndOf="@+id/red_rock_tv_course_day_of_week"
-            app:layout_constraintStart_toStartOf="@+id/red_rock_tv_course_day_of_week"
-            app:layout_constraintTop_toTopOf="@+id/red_rock_tv_course_day_of_week"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_course_month"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/tv_course_month"
+            app:layout_constraintTop_toTopOf="@+id/tv_course_month"
             app:round="8dp" />
 
-        <com.mredrock.cyxbs.course.component.RedRockTextView
-            android:id="@+id/red_rock_tv_course_day_of_week"
+        <GridView
+            android:id="@+id/gv_time_reality"
             android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:orientation="horizontal"
-            android:textColor="@color/levelOneFontColor"
-            android:textSize="@dimen/course_top_and_left_text_size"
-            app:displayedStrings="@array/course_course_day_of_week_strings"
-            app:layout_constraintBottom_toTopOf="@id/red_rock_tv_course_day_of_month"
-            app:layout_constraintLeft_toRightOf="@id/tv_course_month"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:selectedColor="@color/discoverAcademicOnlineColors" />
-
-        <com.mredrock.cyxbs.course.component.RedRockTextView
-            android:id="@+id/red_rock_tv_course_day_of_month"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:alpha="0.6"
-            android:orientation="horizontal"
-            android:textColor="@color/levelOneFontColor"
-            android:textSize="@dimen/course_column_text_size"
-            app:displayedStrings="@{coursePageViewModel.daysOfMonth}"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="2dp"
+            android:gravity="center"
+            android:horizontalSpacing="2dp"
+            android:numColumns="7"
             app:layout_constraintBottom_toBottomOf="@id/tv_course_month"
-            app:layout_constraintLeft_toRightOf="@id/tv_course_month"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/red_rock_tv_course_day_of_week"
-            app:nowWeek="@{coursePageViewModel.nowWeek}"
-            app:selectedColor="@color/discoverAcademicOnlineColors" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/tv_course_month"
+            app:layout_constraintTop_toTopOf="parent" />
 
 
         <com.mredrock.cyxbs.course.component.CourseScrollView

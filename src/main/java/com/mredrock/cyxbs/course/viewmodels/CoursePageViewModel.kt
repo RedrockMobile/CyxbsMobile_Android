@@ -13,7 +13,7 @@ class CoursePageViewModel(private val mWeek: Int) : ViewModel() {
 
 
     val month = MutableLiveData<String>()
-    val daysOfMonth = MutableLiveData<Array<CharSequence>>()
+    var daysOfMonth = Array(7) {""}
     var nowWeek: Int = 0
 
     init {
@@ -40,12 +40,12 @@ class CoursePageViewModel(private val mWeek: Int) : ViewModel() {
      */
     private fun getDaysOfMonth() {
         // 获取这一周的各个在月份中的号数
-        val daysOfMonth = Array<CharSequence>(7) { "" }
+        val daysOfMonth = Array(7) { "" }
         for (i in 1..7) {
             val schoolCalendar = SchoolCalendar(mWeek, i)
             daysOfMonth[i - 1] = "${schoolCalendar.day}日"
         }
-        this.daysOfMonth.value = daysOfMonth
+        this.daysOfMonth = daysOfMonth
     }
 
 
