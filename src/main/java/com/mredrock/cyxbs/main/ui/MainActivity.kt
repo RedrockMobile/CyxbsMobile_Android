@@ -1,15 +1,19 @@
 package com.mredrock.cyxbs.main.ui
 
 import android.os.Bundle
-import android.view.MenuItem
+import android.os.CountDownTimer
+import android.os.Looper
 import android.view.View
 import android.view.View.GONE
-import android.view.View.VISIBLE
 import android.widget.FrameLayout
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import com.alibaba.android.arouter.facade.annotation.Route
-import com.google.android.material.bottomnavigation.LabelVisibilityMode
+import com.alibaba.android.arouter.launcher.ARouter
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.request.RequestOptions
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.config.*
@@ -18,20 +22,24 @@ import com.mredrock.cyxbs.common.event.LoadCourse
 import com.mredrock.cyxbs.common.event.NotifyBottomSheetToExpandEvent
 import com.mredrock.cyxbs.common.event.RefreshQaEvent
 import com.mredrock.cyxbs.common.service.ServiceManager
+import com.mredrock.cyxbs.common.service.account.IAccountService
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
 import com.mredrock.cyxbs.common.utils.extensions.getStatusBarHeight
 import com.mredrock.cyxbs.common.utils.update.UpdateEvent
 import com.mredrock.cyxbs.common.utils.update.UpdateUtils
+import com.mredrock.cyxbs.main.BuildConfig
 import com.mredrock.cyxbs.main.R
-import com.mredrock.cyxbs.main.utils.BottomNavigationViewHelper
+import com.mredrock.cyxbs.main.utils.BottomNavigationHelper
+import com.mredrock.cyxbs.main.utils.getSplashFile
+import com.mredrock.cyxbs.main.utils.isDownloadSplash
 import com.mredrock.cyxbs.main.viewmodel.MainViewModel
 import com.umeng.message.inapp.InAppMessageManager
 import kotlinx.android.synthetic.main.main_activity_main.*
+import kotlinx.android.synthetic.main.main_view_stub_splash.view.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import org.jetbrains.anko.dip
 import org.jetbrains.anko.topPadding
 
 
@@ -42,6 +50,8 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
     companion object {
         const val BOTTOM_SHEET_STATE = "BOTTOM_SHEET_STATE"
         const val NAV_SELECT = "NAV_SELECT"
+        const val SPLASH_PHOTO_NAME = "splash_photo.jpg"
+        const val SPLASH_PHOTO_LOCATION = "splash_store_location"
     }
 
     override val viewModelClass = MainViewModel::class.java
@@ -58,15 +68,10 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
 
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<FrameLayout>
 
-    private lateinit var navHelpers: BottomNavigationViewHelper
-    private lateinit var preCheckedItem: MenuItem
+    private lateinit var navigationHelpers: BottomNavigationHelper
+
     private var peeCheckedItemPosition = 0
-    private val menuIdList = listOf(R.id.explore, R.id.qa, R.id.mine)
-    private val icons = arrayOf(
-            R.drawable.main_ic_explore_unselected, R.drawable.main_ic_explore_selected,
-            R.drawable.main_ic_qa_unselected, R.drawable.main_ic_qa_selected,
-            R.drawable.main_ic_mine_unselected, R.drawable.main_ic_mine_selected
-    )
+
 
     //四个需要组装的fragment(懒加载)
     private val courseFragment: Fragment by lazy(LazyThreadSafetyMode.NONE) { getFragment(COURSE_ENTRY) }
@@ -76,16 +81,33 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        checkIsLogin()//检查是否登陆
         setContentView(R.layout.main_activity_main)
-        initBottomNavigationView()
-        UpdateUtils.checkUpdate(this)
+        checkSplash()//检查闪屏页是否需要显示
+        initActivity()//Activity相关初始化
+        val time = System.currentTimeMillis() - BaseApp.time
+        if (BuildConfig.DEBUG) {
+            Toast.makeText(this, "启动时间DEBUG：${time}ms", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    /**
+     * 一些非重量级初始化操作
+     */
+    private fun initActivity() {
         InAppMessageManager.getInstance(BaseApp.context).showCardMessage(this,
                 "课表主页面") {
             //友盟插屏消息关闭之后调用，暂未写功能
         }
+        viewModel.startPage.observe(this, Observer { starPage ->
+            viewModel.initStartPage(starPage)
+        })
+        UpdateUtils.checkUpdate(this)
+        initBottom()
         initBottomSheetBehavior()
         initFragments()
     }
+
 
     private fun initBottomSheetBehavior() {
         bottomSheetBehavior = BottomSheetBehavior.from(course_bottom_sheet_content)
@@ -99,10 +121,7 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
         bottomSheetBehavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
             override fun onSlide(bottomSheet: View, slideOffset: Float) {
                 EventBus.getDefault().post(BottomSheetStateEvent(slideOffset))
-                ll_nav_main_container.translationY = nav_main.height * slideOffset
-                if (ll_nav_main_container.visibility == GONE) {
-                    ll_nav_main_container.visibility = VISIBLE
-                }
+                ll_nav_main_container.translationY = ll_nav_main_container.height * slideOffset
             }
 
             override fun onStateChanged(bottomSheet: View, newState: Int) {
@@ -130,31 +149,28 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
         }
     }
 
-    private fun initBottomNavigationView() {
-        navHelpers = BottomNavigationViewHelper(nav_main).apply {
-            setTextSize(11f)
-            setIconSize(dip(21))
-            setItemIconTintList(null)
-            nav_main.itemTextColor
-            nav_main.setOnNavigationItemSelectedListener { menuItem ->
-                preCheckedItem.setIcon(icons[peeCheckedItemPosition * 2])
-                preCheckedItem = menuItem
-                menu?.clear()
-                when (menuItem.itemId) {
-                    menuIdList[0] -> changeFragment(discoverFragment, 0, menuItem)
-                    menuIdList[1] -> {
-                        if (peeCheckedItemPosition == 1) EventBus.getDefault().post(RefreshQaEvent())
-                        changeFragment(qaFragment, 1, menuItem)
-                    }
-                    menuIdList[2] -> changeFragment(mineFragment, 2, menuItem)
+    private fun initBottom() {
+        navigationHelpers = BottomNavigationHelper(
+                arrayOf(explore, qa, mine),
+                arrayOf(
+                        R.drawable.main_ic_explore_selected,
+                        R.drawable.main_ic_qa_selected,
+                        R.drawable.main_ic_mine_selected),
+                arrayOf(
+                        R.drawable.main_ic_explore_unselected,
+                        R.drawable.main_ic_qa_unselected,
+                        R.drawable.main_ic_mine_unselected))
+        {
+            when (it) {
+                0 -> changeFragment(discoverFragment)
+                1 -> {
+                    if (peeCheckedItemPosition == 1) EventBus.getDefault().post(RefreshQaEvent())
+                    changeFragment(qaFragment)
                 }
-                return@setOnNavigationItemSelectedListener true
+                2 -> changeFragment(mineFragment)
             }
+            peeCheckedItemPosition = it
         }
-        nav_main.labelVisibilityMode = LabelVisibilityMode.LABEL_VISIBILITY_LABELED
-        nav_main.menu.getItem(0).setIcon(icons[1])  //一定要放在上面的代码后面
-        preCheckedItem = nav_main.menu.getItem(0)
-        peeCheckedItemPosition = 0
     }
 
     /**
@@ -163,7 +179,7 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
      * @param position 切换到的tab的索引 从0开始
      * @param menuItem nav中对应的Item
      */
-    private fun changeFragment(fragment: Fragment, position: Int, menuItem: MenuItem) {
+    private fun changeFragment(fragment: Fragment) {
         val transition = supportFragmentManager.beginTransaction()
         //遍历隐藏已经加载的fragment
         viewModel.mainPageLoadedFragmentClassList.filter { COURSE_ENTRY != it.key }.forEach {
@@ -178,26 +194,53 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
         }
         transition.show(fragment)
         transition.commit()
-        //对tab进行变化
-        peeCheckedItemPosition = position
-        menuItem.setIcon(icons[(position * 2) + 1])
+    }
+
+
+    private fun checkSplash() {
+        //判断是否下载了Splash图，下载了就直接设置
+        if (isDownloadSplash(this@MainActivity)) {
+            val inflate = main_activity_splash_viewStub.inflate()
+            Glide.with(this)
+                    .load(getSplashFile(this@MainActivity))
+                    .apply(RequestOptions()
+                            .centerCrop()
+                            .diskCacheStrategy(DiskCacheStrategy.NONE))
+                    .into(inflate.splash_view)
+            object : CountDownTimer(3000, 1000) {
+                override fun onFinish() {
+                    inflate.visibility = GONE
+                }
+
+                override fun onTick(millisUntilFinished: Long) {
+                    runOnUiThread {
+                        val str = "跳过 ${millisUntilFinished / 1000}"
+                        inflate.main_activity_splash_skip.text = str
+                    }
+                }
+            }.start()
+            inflate.main_activity_splash_skip.setOnClickListener {
+                inflate.visibility = GONE
+            }
+        }
+        //检查网络有没有闪屏页，有的话下载，下次显示
+        viewModel.getStartPage()
+    }
+
+    private fun checkIsLogin() {
+        if (!ServiceManager.getService(IAccountService::class.java).getVerifyService().isLogin()) {
+            ARouter.getInstance().build(MAIN_LOGIN).navigation()
+            finish()
+        }
     }
 
     private fun initFragments() {
-        viewModel.startPage.observe(this, Observer { starPage ->
-            viewModel.initStartPage(starPage)
-        })
-        //下载Splash图
-        viewModel.getStartPage()
-
-        other_fragment_container.removeAllViews()
         //取得是否优先显示课表的设置
         viewModel.courseShowState = defaultSharedPreferences.getBoolean(COURSE_SHOW_STATE, false)
         lastState = if (viewModel.courseShowState) BottomSheetBehavior.STATE_EXPANDED else BottomSheetBehavior.STATE_COLLAPSED
         if (viewModel.courseShowState) {
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
-            //这里必须让它GONE，因为这个设置BottomSheet是不会走滑动监听的，否则导致完全显示BottomSheet后依然有下面的tab
-            ll_nav_main_container.visibility = GONE
+            ll_nav_main_container.translationY = 10000f
             courseFragment.arguments = Bundle().apply { putString(COURSE_DIRECT_LOAD, TRUE) }
             //加载课表，并在滑动下拉课表容器中添加整个课表
             supportFragmentManager.beginTransaction().apply {
@@ -206,6 +249,11 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
                 }
                 show(courseFragment)
                 commit()
+            }
+            Looper.myQueue().addIdleHandler {
+                //加载发现
+                navigationHelpers.selectTab(0)
+                false
             }
         } else {
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
@@ -218,9 +266,9 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
                 show(courseFragment)
                 commit()
             }
+            //加载发现
+            navigationHelpers.selectTab(0)
         }
-        //加载发现
-        nav_main.selectedItemId = R.id.explore
     }
 
     //根据aRouterPath来查询是否已经加载当前Fragment，以此来增强app在Activity异常重启时的稳定性
@@ -232,22 +280,21 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putInt(BOTTOM_SHEET_STATE, bottomSheetBehavior.state)
-        outState.putInt(NAV_SELECT, nav_main.selectedItemId)
+        outState.putInt(NAV_SELECT, peeCheckedItemPosition)
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
-        nav_main.selectedItemId = savedInstanceState.getInt(NAV_SELECT)
+        navigationHelpers.selectTab(savedInstanceState.getInt(NAV_SELECT))
         if (savedInstanceState.getInt(BOTTOM_SHEET_STATE) == BottomSheetBehavior.STATE_EXPANDED && !viewModel.courseShowState) {
             bottomSheetBehavior.state = savedInstanceState.getInt(BOTTOM_SHEET_STATE)
             EventBus.getDefault().post(LoadCourse(false))
             EventBus.getDefault().post(BottomSheetStateEvent(1f))
-            ll_nav_main_container.visibility = GONE
+            ll_nav_main_container.translationY = 1000f
             isLoadCourse = false
         } else if (savedInstanceState.getInt(BOTTOM_SHEET_STATE) == BottomSheetBehavior.STATE_COLLAPSED && viewModel.courseShowState) {
             bottomSheetBehavior.state = savedInstanceState.getInt(BOTTOM_SHEET_STATE)
             EventBus.getDefault().post(BottomSheetStateEvent(0f))
-            ll_nav_main_container.visibility = VISIBLE
         }
     }
 

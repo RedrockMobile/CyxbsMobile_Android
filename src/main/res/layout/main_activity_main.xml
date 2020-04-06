@@ -2,10 +2,12 @@
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="@color/windowBackground"
-    android:fitsSystemWindows="true"
+    android:id="@+id/content"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:animateLayoutChanges="true"
+    android:background="@color/windowBackground"
+    android:fitsSystemWindows="true"
     tools:context=".ui.MainActivity">
 
     <FrameLayout
@@ -13,32 +15,73 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginBottom="94dp"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
     <FrameLayout
         android:id="@+id/course_bottom_sheet_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior="@string/bottom_sheet_behavior"
-        app:behavior_peekHeight="@dimen/main_main_bottom_navigation_height_twice_as_much">
+        app:behavior_peekHeight="@dimen/main_main_bottom_navigation_height_twice_as_much"
+        app:layout_behavior="@string/bottom_sheet_behavior">
 
     </FrameLayout>
 
+
     <LinearLayout
         android:id="@+id/ll_nav_main_container"
-        android:orientation="vertical"
-        android:layout_gravity="bottom"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="@dimen/main_main_bottom_navigation_height"
+        android:layout_gravity="bottom"
+        android:background="@color/curriculum_background_color"
+        android:gravity="center"
+        tools:ignore="MissingDefaultResource">
 
-        <com.google.android.material.bottomnavigation.BottomNavigationView
-            android:id="@+id/nav_main"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/main_main_bottom_navigation_height"
-            app:elevation="0dp"
-            android:background="@color/curriculum_background_color"
-            app:itemTextColor="@color/main_selector_main_bottom_navigation_text"
-            app:menu="@menu/main_main_nav_menu" />
+        <CheckedTextView
+            android:id="@+id/explore"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textColor="@color/main_selector_main_bottom_navigation_text"
+            android:textSize="@dimen/main_bottom_text_size"
+            android:drawableTop="@drawable/main_ic_explore_unselected"
+            android:gravity="center"
+            android:textAlignment="center"
+            android:drawablePadding="2dp"
+            android:text="@string/common_explore" />
+
+        <CheckedTextView
+            android:id="@+id/qa"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textSize="@dimen/main_bottom_text_size"
+            android:textColor="@color/main_selector_main_bottom_navigation_text"
+            android:drawableTop="@drawable/main_ic_qa_unselected"
+            android:textAlignment="center"
+            android:gravity="center"
+            android:drawablePadding="2dp"
+            android:text="@string/common_qa" />
+
+        <CheckedTextView
+            android:id="@+id/mine"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textSize="@dimen/main_bottom_text_size"
+            android:textColor="@color/main_selector_main_bottom_navigation_text"
+            android:drawableTop="@drawable/main_ic_mine_unselected"
+            android:textAlignment="center"
+            android:gravity="center"
+            android:drawablePadding="2dp"
+            android:text="@string/common_mine" />
+
+
     </LinearLayout>
+
+    <ViewStub
+        android:id="@+id/main_activity_splash_viewStub"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout="@layout/main_view_stub_splash" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

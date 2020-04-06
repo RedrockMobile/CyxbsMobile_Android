@@ -10,7 +10,7 @@ import com.mredrock.cyxbs.common.utils.extensions.*
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.main.bean.StartPage
 import com.mredrock.cyxbs.main.network.ApiService
-import com.mredrock.cyxbs.main.ui.SplashActivity
+import com.mredrock.cyxbs.main.ui.MainActivity
 import com.mredrock.cyxbs.main.utils.deleteDir
 import com.mredrock.cyxbs.main.utils.downloadSplash
 import com.mredrock.cyxbs.main.utils.getSplashFile
@@ -66,11 +66,11 @@ class MainViewModel : BaseViewModel() {
             val src = starPage.photo_src
             if (src != null && src.startsWith("http")) {//如果不为空，且url有效
                 //对比缓存的url是否一样
-                if (src != applicationContext.sharedPreferences("splash").getString(SplashActivity.SPLASH_PHOTO_NAME, "#")) {
+                if (src != applicationContext.sharedPreferences("splash").getString(MainActivity.SPLASH_PHOTO_NAME, "#")) {
                     deleteDir(getSplashFile(context))
                     downloadSplash(src, context)
                     applicationContext.sharedPreferences("splash").editor {
-                        putString(SplashActivity.SPLASH_PHOTO_NAME, src)
+                        putString(MainActivity.SPLASH_PHOTO_NAME, src)
                     }
                 }
             } else { //src非法
