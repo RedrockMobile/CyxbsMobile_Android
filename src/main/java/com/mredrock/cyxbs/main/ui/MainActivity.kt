@@ -2,7 +2,6 @@ package com.mredrock.cyxbs.main.ui
 
 import android.os.Bundle
 import android.os.CountDownTimer
-import android.os.Looper
 import android.view.View
 import android.view.View.GONE
 import android.widget.FrameLayout
@@ -250,11 +249,7 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
                 show(courseFragment)
                 commit()
             }
-            Looper.myQueue().addIdleHandler {
-                //加载发现
-                navigationHelpers.selectTab(0)
-                false
-            }
+            navigationHelpers.selectTab(0)
         } else {
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
             //加载课表并给课表传递值，让它不要直接加载详细的课表，只用加载现在可见的头部就好
