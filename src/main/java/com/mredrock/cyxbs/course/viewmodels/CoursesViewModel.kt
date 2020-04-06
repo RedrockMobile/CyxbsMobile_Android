@@ -177,6 +177,8 @@ class CoursesViewModel : BaseViewModel() {
         }
     }
 
+    var isFirstLoadItemAnim = true
+
     private val mCoursesDatabase: ScheduleDatabase? by lazy(LazyThreadSafetyMode.NONE) {
         ScheduleDatabase.getDatabase(context, isGetOthers.get()!!, mUserNum)
     }

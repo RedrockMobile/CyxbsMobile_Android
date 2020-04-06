@@ -84,6 +84,7 @@ class CourseFragment : BaseFragment() {
             }
         })
 
+
         //根据当前课表Fragment被复用的状态，获取相应的课表视图
         scheduleView = when (mCoursesViewModel.courseState) {
             CourseContainerEntryFragment.CourseState.OrdinaryCourse, CourseContainerEntryFragment.CourseState.OtherCourse, CourseContainerEntryFragment.CourseState.TeacherCourse -> {
@@ -103,8 +104,16 @@ class CourseFragment : BaseFragment() {
         scheduleView.adapterChangeListener = {
             val position = scheduleView.adapter?.getHighLightPosition()
             week_back_ground_view.position = position
-            gv_time_reality.adapter = TimeRealityAdapter(resources.getStringArray(R.array.course_course_day_of_week_strings),mCoursePageViewModel.daysOfMonth,position)
+            gv_time_reality.adapter = TimeRealityAdapter(resources.getStringArray(R.array.course_course_day_of_week_strings), mCoursePageViewModel.daysOfMonth, position)
             course_tiv.position = position
+        }
+
+        mCoursesViewModel.nowWeek.value?.let {
+            if (it != mWeek||!mCoursesViewModel.isFirstLoadItemAnim) {
+                scheduleView.layoutAnimation = null
+            } else if (it==mWeek&&mCoursesViewModel.isFirstLoadItemAnim){
+                mCoursesViewModel.isFirstLoadItemAnim = !mCoursesViewModel.isFirstLoadItemAnim
+            }
         }
     }
 

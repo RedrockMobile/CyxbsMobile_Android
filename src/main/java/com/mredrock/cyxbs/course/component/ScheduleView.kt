@@ -11,6 +11,8 @@ import android.graphics.Paint
 import android.graphics.PointF
 import android.util.AttributeSet
 import android.view.*
+import android.view.animation.AnimationUtils
+import android.view.animation.LayoutAnimationController
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -168,7 +170,8 @@ class ScheduleView : FrameLayout {
 
     private fun initScheduleView() {
         setWillNotDraw(false)
-        layoutTransition = layoutTransition()
+//        layoutTransition = layoutTransition()
+        layoutAnimation = LayoutAnimationController(AnimationUtils.loadAnimation(context,R.anim.course_item_show_anim))
         mPaint = Paint().apply {
             color = mHighlightColor
             isAntiAlias = true
@@ -187,6 +190,7 @@ class ScheduleView : FrameLayout {
         mLayoutTransition.setAnimator(LayoutTransition.APPEARING, mAnimatorAppearing)
         return mLayoutTransition
     }
+
 
     /**
      * Do some init work for the [mTouchView].

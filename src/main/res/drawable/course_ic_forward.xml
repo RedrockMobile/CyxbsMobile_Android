@@ -7,7 +7,7 @@
     tools:ignore="MissingDefaultResource">
     <path
         android:strokeWidth="1"
-        android:pathData="M0.504,0.705 L4.756,5.658 0.504,10.823"
+        android:pathData="M0.504,1.905 L4.756,6.258 0.504,11.023"
         android:strokeLineJoin="round"
         android:fillColor="@color/transparentBackground"
         android:strokeColor="@color/levelTwoFontColor"

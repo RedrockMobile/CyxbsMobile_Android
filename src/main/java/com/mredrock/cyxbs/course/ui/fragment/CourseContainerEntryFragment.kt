@@ -6,6 +6,8 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
+import android.view.animation.LayoutAnimationController
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
@@ -324,7 +326,7 @@ class CourseContainerEntryFragment : BaseFragment() {
             course_header_week_select_content.visibility = View.GONE
             course_header_show.visibility = View.VISIBLE
         }
-        mCoursesViewModel.mWeekTitle.set(activity?.getString(R.string.course_all_week))
+        mCoursesViewModel.mWeekTitle.set("")
 
         //给整个头部设置点击事件，点击展开整个BottomSheet
         course_header.setOnClickListener {
@@ -384,26 +386,11 @@ class CourseContainerEntryFragment : BaseFragment() {
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun loadCoursePage(loadCourse: LoadCourse) {
-        //加载课表的代码
-        val load = {
-            //给下方ViewPager添加适配器和绑定tab
-            loadViewPager()
-        }
         if (loadCourse.isUserSee) {
-            inflateView.course_lottie_load.visibility = View.VISIBLE
-            inflateView.course_lottie_load.speed = 2f
-            inflateView.course_lottie_load.addAnimatorUpdateListener {
-                if (it.animatedFraction > 0.78) {
-                    inflateView.course_lottie_load.pauseAnimation()
-                    load()
-                    inflateView.course_lottie_load.visibility = View.GONE
-                    course_current_course_week_select_container.visibility = View.VISIBLE
-                }
-            }
-            inflateView.course_lottie_load.playAnimation()
-        } else {
-            load()
+            course_current_course_week_select_container.visibility = View.VISIBLE
         }
+        //给下方ViewPager添加适配器和绑定tab
+        loadViewPager()
     }
 
 

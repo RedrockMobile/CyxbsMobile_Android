@@ -51,6 +51,7 @@
             android:layout_height="@dimen/course_course_month_height"
             android:layout_marginEnd="@dimen/course_item_gap"
             android:layout_marginStart="@dimen/course_item_gap"
+            android:animateLayoutChanges="true"
             android:gravity="center"
             android:horizontalSpacing="2dp"
             android:numColumns="7"

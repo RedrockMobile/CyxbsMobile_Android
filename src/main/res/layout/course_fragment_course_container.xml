@@ -154,6 +154,7 @@
                         android:id="@+id/course_current_course_week_select_container"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:animateLayoutChanges="true"
                         android:paddingStart="16dp"
                         android:paddingEnd="16dp"
                         android:visibility="gone">
@@ -193,23 +194,13 @@
                             android:layout_height="wrap_content"
                             android:text="@string/course_now_week"
                             android:textColor="@color/levelTwoFontColor"
+                            android:drawableEnd="@drawable/course_ic_forward"
+                            android:drawablePadding="5dp"
                             android:textSize="15sp"
                             android:visibility="@{coursesViewModel.isShowPresentTips}"
                             app:layout_constraintBaseline_toBaselineOf="@+id/course_tv_which_week"
                             app:layout_constraintStart_toEndOf="@+id/course_this_week_tips_blank" />
 
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="4dp"
-                            android:textColor="@color/levelTwoFontColor"
-                            android:textSize="15sp"
-                            app:layout_constraintBottom_toBottomOf="@+id/course_this_week_tips_blank"
-                            app:layout_constraintStart_toEndOf="@+id/course_this_week_tips"
-                            app:layout_constraintTop_toTopOf="@+id/course_this_week_tips_blank"
-                            app:layout_constraintVertical_bias="0.73"
-                            app:srcCompat="@drawable/course_ic_forward"
-                            tools:ignore="ContentDescription" />
 
                         <TextView
                             android:id="@+id/course_back_present_week"
