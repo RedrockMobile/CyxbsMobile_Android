@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
     <declare-styleable name="ScheduleView" tools:ignore="ResourceName">
-        <!-- elementGap这个参数是用来调整item左右间距的-->
+        <!-- elementGap这个参数是用来调整item间距的,并且与GridView不同,这个在边界上也会添加-->
         <attr name="elementGap" format="dimension" />
         <!-- 没有课的时候，显示的图片的宽高,若需要显示没课时的提示，必须加这两个属性-->
         <attr name="noGourseImageHeight" format="dimension" />

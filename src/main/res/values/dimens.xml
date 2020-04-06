@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="course_course_month_height">49dp</dimen>
+    <dimen name="course_course_month_height">50dp</dimen>
     <dimen name="course_course_month_width">33dp</dimen>
 
     <!--    课表item圆角-->
@@ -27,4 +27,5 @@
     <dimen name="course_shadow_height">47dp</dimen>
     <dimen name="course_top_distance">15dp</dimen>
     <dimen name="course_edit_affair_button_circle">20dp</dimen>
+    <dimen name="course_item_gap">2dp</dimen>
 </resources>

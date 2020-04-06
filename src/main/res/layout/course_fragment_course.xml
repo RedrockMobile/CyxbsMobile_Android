@@ -48,8 +48,9 @@
         <GridView
             android:id="@+id/gv_time_reality"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="2dp"
+            android:layout_height="@dimen/course_course_month_height"
+            android:layout_marginEnd="@dimen/course_item_gap"
+            android:layout_marginStart="@dimen/course_item_gap"
             android:gravity="center"
             android:horizontalSpacing="2dp"
             android:numColumns="7"

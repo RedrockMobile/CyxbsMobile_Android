@@ -19,7 +19,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:animateLayoutChanges="true"
-        app:elementGap="2dp"
+        app:elementGap="@dimen/course_item_gap"
         app:emptyText="@string/course_empty_course_text"
         app:emptyTextSize="14sp"
         app:touchViewColor="@color/addTransactionToTheTimetableClickColor"

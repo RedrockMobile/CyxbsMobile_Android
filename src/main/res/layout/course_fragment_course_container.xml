@@ -279,40 +279,15 @@
 
         </FrameLayout>
 
-
-        <FrameLayout
-            android:id="@+id/course_page_container"
+        <ViewStub
+            android:id="@+id/course_load_lottie_anim"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout="@layout/course_load_lottie_anim"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/course_header">
-
-            <androidx.viewpager.widget.ViewPager
-                android:id="@+id/vp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:fillViewport="true"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/course_header">
-
-            </androidx.viewpager.widget.ViewPager>
-
-
-            <com.airbnb.lottie.LottieAnimationView
-                android:id="@+id/course_lottie_load"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="50dp"
-                android:visibility="gone"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/course_header"
-                app:layout_constraintVertical_bias="0.18"
-                app:lottie_rawRes="@raw/course_loader" />
-        </FrameLayout>
+            app:layout_constraintTop_toBottomOf="@+id/course_header"
+            app:layout_constraintVertical_bias="0.18" />
     </LinearLayout>
 </layout>

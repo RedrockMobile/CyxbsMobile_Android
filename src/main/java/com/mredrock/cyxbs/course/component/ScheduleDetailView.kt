@@ -15,7 +15,6 @@ import org.jetbrains.anko.dip
 
 /**
  * Created by anriku on 2018/8/21.
- * Corrected by JON on 2019/12/4.
  * 描述：该View使用viewPager下面添加小点实现
  * ViewPager 默认顶满父布局
  * ViewPager 的 item 默认顶满父布局
@@ -70,7 +69,7 @@ class ScheduleDetailView : RelativeLayout {
      * @param scheduleDetailViewAdapter [ScheduleDetailView] get the data from [Adapter]
      */
     private fun setMultiContent(scheduleDetailViewAdapter: Adapter) {
-        mViewPager = ViewPager(context)
+        mViewPager = WarpHeightViewPager(context)
         mViewpagerAdapter = ViewPagerAdapter(context, scheduleDetailViewAdapter, this)
         mViewPager.adapter = mViewpagerAdapter
         val viewPagerParams = LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
@@ -117,7 +116,6 @@ class ScheduleDetailView : RelativeLayout {
     class ViewPagerAdapter(private val mContext: Context,
                            private val mScheduleDetailViewAdapter: Adapter, val parent: ViewGroup) : androidx.viewpager.widget.PagerAdapter() {
 
-        private var maxHeight = 0
 
         private val mLayoutInflater: LayoutInflater = LayoutInflater.from(mContext)
 
@@ -145,21 +143,27 @@ class ScheduleDetailView : RelativeLayout {
                 }
                 container.addView(itemView)
             }
-            //提前测量itemView高度，否则ViewPager高度不定会抽风
-            itemView.measure(MeasureSpec.makeMeasureSpec(0,
-                    MeasureSpec.UNSPECIFIED), MeasureSpec.makeMeasureSpec(0,
-                    MeasureSpec.UNSPECIFIED))
-            parent.layoutParams.apply {
-                //将高度最大的itm的高度设置为eViewPager父布局的高度
-                if (itemView.measuredHeight > maxHeight) {
-                    this.height = itemView.measuredHeight
-                    maxHeight = itemView.measuredHeight
-                }
-            }
             return itemView
         }
 
         override fun destroyItem(container: ViewGroup, position: Int, any: Any) {
+        }
+    }
+
+    class WarpHeightViewPager(context:Context): ViewPager(context) {
+        override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+            var height = 0
+            //下面遍历所有child的高度
+            for (i in 0 until childCount) {
+                val child = getChildAt(i)
+                child.measure(widthMeasureSpec,
+                        MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED))
+                val h = child.measuredHeight
+                if (h > height) //采用最大的view的高度。
+                    height = h
+            }
+            super.onMeasure(widthMeasureSpec, MeasureSpec.makeMeasureSpec(height,
+                    MeasureSpec.EXACTLY))
         }
     }
 

@@ -1,6 +1,7 @@
 package com.mredrock.cyxbs.course.ui.fragment
 
 import android.os.Bundle
+import android.os.Looper
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -31,6 +32,7 @@ import com.mredrock.cyxbs.course.viewmodels.CoursesViewModel
 import com.mredrock.cyxbs.course.viewmodels.NoCourseInviteViewModel
 import kotlinx.android.synthetic.main.course_fragment_course_container.*
 import kotlinx.android.synthetic.main.course_fragment_course_container.view.*
+import kotlinx.android.synthetic.main.course_load_lottie_anim.view.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -95,10 +97,10 @@ class CourseContainerEntryFragment : BaseFragment() {
     private lateinit var mScheduleAdapter: ScheduleVPAdapter
 
     //普通课程和查课表需要的ViewModel
-    lateinit var mCoursesViewModel: CoursesViewModel
+    private lateinit var mCoursesViewModel: CoursesViewModel
 
     //用于没课约的ViewModel
-    var mNoCourseInviteViewModel: NoCourseInviteViewModel? = null
+    private var mNoCourseInviteViewModel: NoCourseInviteViewModel? = null
 
     //当前Fragment的根布局的Binding
     private lateinit var mBinding: CourseFragmentCourseContainerBinding
@@ -110,6 +112,20 @@ class CourseContainerEntryFragment : BaseFragment() {
     private val mDialogHelper: ScheduleDetailDialogHelper by lazy(LazyThreadSafetyMode.NONE) {
         ScheduleDetailDialogHelper(context!!)
     }
+
+
+    //懒加载课表具体内容，加快启动速度
+    private val inflateView: View by lazy(LazyThreadSafetyMode.NONE) {
+        course_load_lottie_anim.inflate().apply {
+            inflateListener?.invoke(this)
+        }
+    }
+
+    //因为课表具体内容是懒加载
+    //所以如果要对ViewStub加载的view或者里面的一些控件进行一些初始化的话
+    //请把代码放在这里面，请不要在这个监听里面使用[inflateView]来取得具体view
+    //我已经在形参里传给你了,如果你通过[inflateView]来取，极有可能造成死循环
+    private var inflateListener: ((View) -> Unit)? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         mBinding = DataBindingUtil.inflate(inflater, R.layout.course_fragment_course_container, container, false)
@@ -124,10 +140,10 @@ class CourseContainerEntryFragment : BaseFragment() {
         super.onLoginStateChangeEvent(event)
         if (event.loginState) {
             // replaceFragment(CourseContainerFragment())
-            mBinding.vp.adapter?.notifyDataSetChanged()
+            inflateView.vp.adapter?.notifyDataSetChanged()
             mCoursesViewModel.mWeekTitle.set(activity!!.getString(R.string.course_all_week))
         } else {
-            mBinding.vp.adapter?.notifyDataSetChanged()
+            inflateView.vp.adapter?.notifyDataSetChanged()
             // replaceFragment(NoneLoginFragment())
             mCoursesViewModel.mWeekTitle.set(activity!!.getString(R.string.common_course))
             Thread {
@@ -207,12 +223,45 @@ class CourseContainerEntryFragment : BaseFragment() {
                 mScheduleAdapter = ScheduleVPAdapter(mWeeks, childFragmentManager)
             }
 
+            inflateListener = { inflate ->
+
+                mCoursesViewModel.nowWeek.observe(viewLifecycleOwner, Observer {
+                    inflate.vp.currentItem = it ?: 0
+                })
+                // 给ViewPager添加OnPageChangeListener
+                VPOnPagerChangeObserver(inflate.vp,
+                        mOnPageSelected = {
+                            // 当ViewPager发生了滑动，清理课表上加备忘的View
+                            EventBus.getDefault().post(DismissAddAffairViewEvent())
+                            // 当ViewPager发生了滑动，对Head上的周数进行改变
+                            mCoursesViewModel.isShowPresentTips.set(
+                                    when (it) {
+                                        0 -> View.GONE
+                                        mCoursesViewModel.nowWeek.value -> View.VISIBLE
+                                        else -> View.GONE
+                                    }
+                            )
+                            mCoursesViewModel.isShowBackPresentWeek.value = if (mCoursesViewModel.nowWeek.value == it) View.GONE else View.VISIBLE
+                            mCoursesViewModel.mWeekTitle.set(mWeeks[it])
+                        })
+                //回到本周按钮的点击事件
+                course_back_present_week.setOnClickListener {
+                    mCoursesViewModel.nowWeek.value?.let {
+                        inflate.vp.currentItem = it
+                    }
+                }
+            }
+
             //如果需要直接加载课表则直接加载课表，否则为了优化性能可以当需要的时候加载
+            //这个判断必须得在上面的[inflateListener]赋值之后执行，否则，其中的初始化代码很有可能不会执行
             if (directLoadCourse == TRUE) {
-                //给下方ViewPager添加适配器和绑定tab
-                loadViewPager()
-                course_lottie_load.visibility = View.GONE
-                settingFollowBottomSheet(1f)
+                course_current_course_container.visibility = View.GONE
+                Looper.myQueue().addIdleHandler {
+                    //给下方ViewPager添加适配器和绑定tab
+                    loadViewPager()
+                    settingFollowBottomSheet(1f)
+                    false
+                }
             }
 
 
@@ -223,9 +272,7 @@ class CourseContainerEntryFragment : BaseFragment() {
                     mDialogHelper.showDialog(MutableList(1) { course })
                 }
             }
-            mCoursesViewModel.nowWeek.observe(viewLifecycleOwner, Observer {
-                mBinding.vp.currentItem = it ?: 0
-            })
+
             mCoursesViewModel.toastEvent.observe(viewLifecycleOwner, Observer { str -> str?.let { CyxbsToast.makeText(activity, it, Toast.LENGTH_SHORT).show() } })
             mCoursesViewModel.longToastEvent.observe(viewLifecycleOwner, Observer { str -> str?.let { CyxbsToast.makeText(activity, it, Toast.LENGTH_LONG).show() } })
             mCoursesViewModel.isShowBackPresentWeek.observe(viewLifecycleOwner, Observer {
@@ -239,30 +286,17 @@ class CourseContainerEntryFragment : BaseFragment() {
                     this.course_back_present_week?.visibility = it
                 }
             })
-            // 给ViewPager添加OnPageChangeListener
-            lifecycle.addObserver(VPOnPagerChangeObserver(mBinding.vp,
-                    mOnPageSelected = {
-                        // 当ViewPager发生了滑动，清理课表上加备忘的View
-                        EventBus.getDefault().post(DismissAddAffairViewEvent())
-                        // 当ViewPager发生了滑动，对Head上的周数进行改变
-                        mCoursesViewModel.isShowPresentTips.set(
-                                when (it) {
-                                    0 -> View.GONE
-                                    mCoursesViewModel.nowWeek.value -> View.VISIBLE
-                                    else -> View.GONE
-                                }
-                        )
-                        mCoursesViewModel.isShowBackPresentWeek.value = if (mCoursesViewModel.nowWeek.value == it) View.GONE else View.VISIBLE
-                        mCoursesViewModel.mWeekTitle.set(mWeeks[it])
-                    }))
             //对头部课表头部信息进行一系列初始化
             initHead()
         }
     }
 
     private fun loadViewPager() {
-        mBinding.vp.adapter = mScheduleAdapter
-        tab_layout.setupWithViewPager(mBinding.vp)
+        inflateView.vp.adapter = mScheduleAdapter
+        tab_layout.setupWithViewPager(inflateView.vp)
+        mCoursesViewModel.nowWeek.value?.let { nowWeek ->
+            inflateView.vp.currentItem = nowWeek
+        }
     }
 
     /**
@@ -295,13 +329,6 @@ class CourseContainerEntryFragment : BaseFragment() {
         //给整个头部设置点击事件，点击展开整个BottomSheet
         course_header.setOnClickListener {
             EventBus.getDefault().post(NotifyBottomSheetToExpandEvent(true))
-        }
-
-        //回到本周按钮的点击事件
-        course_back_present_week.setOnClickListener {
-            mCoursesViewModel.nowWeek.value?.let {
-                mBinding.vp.currentItem = it
-            }
         }
     }
 
@@ -336,7 +363,7 @@ class CourseContainerEntryFragment : BaseFragment() {
         //对周数选择做透明度变换
         course_current_course_week_select_container.alpha = state
         //如果课表子页还没有加载，则不显示周数
-        if (vp.adapter == null) {
+        if (inflateView.vp.adapter == null) {
             //没有加载隐藏周数显示
             course_current_course_week_select_container.visibility = View.GONE
         } else {
@@ -361,22 +388,19 @@ class CourseContainerEntryFragment : BaseFragment() {
         val load = {
             //给下方ViewPager添加适配器和绑定tab
             loadViewPager()
-            mCoursesViewModel.nowWeek.value?.let { nowWeek ->
-                vp.currentItem = nowWeek
-            }
         }
         if (loadCourse.isUserSee) {
-            course_lottie_load.visibility = View.VISIBLE
-            course_lottie_load.speed = 2f
-            course_lottie_load.addAnimatorUpdateListener {
+            inflateView.course_lottie_load.visibility = View.VISIBLE
+            inflateView.course_lottie_load.speed = 2f
+            inflateView.course_lottie_load.addAnimatorUpdateListener {
                 if (it.animatedFraction > 0.78) {
-                    course_lottie_load.pauseAnimation()
+                    inflateView.course_lottie_load.pauseAnimation()
                     load()
-                    course_lottie_load.visibility = View.GONE
+                    inflateView.course_lottie_load.visibility = View.GONE
                     course_current_course_week_select_container.visibility = View.VISIBLE
                 }
             }
-            course_lottie_load.playAnimation()
+            inflateView.course_lottie_load.playAnimation()
         } else {
             load()
         }

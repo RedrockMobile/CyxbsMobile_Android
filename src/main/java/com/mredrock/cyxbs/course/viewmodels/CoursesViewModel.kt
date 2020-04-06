@@ -21,7 +21,6 @@ import com.mredrock.cyxbs.common.utils.extensions.errorHandler
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.course.R
-import com.mredrock.cyxbs.course.component.RedRockTipsView
 import com.mredrock.cyxbs.course.database.ScheduleDatabase
 import com.mredrock.cyxbs.course.event.AffairFromInternetEvent
 import com.mredrock.cyxbs.course.network.AffairMapToCourse
@@ -68,7 +67,6 @@ import java.util.*
 class CoursesViewModel : BaseViewModel() {
 
     companion object {
-        private const val TAG = "CoursesViewModel"
         const val COURSE_TAG = 0
         const val AFFAIR_TAG = 1
     }
@@ -144,7 +142,7 @@ class CoursesViewModel : BaseViewModel() {
     }
 
     //是否是明天的课表，显示提示
-    val tomorrowTips = ObservableField<String>("")
+    val tomorrowTips = ObservableField("")
 
     //是否展示当前或者下一课程，用于DataBinDing绑定
     val isShowCurrentSchedule = object : ObservableField<Int>(nowCourse) {
@@ -204,9 +202,6 @@ class CoursesViewModel : BaseViewModel() {
     private val accountService: IAccountService by lazy(LazyThreadSafetyMode.NONE) {
         ServiceManager.getService(IAccountService::class.java)
     }
-
-
-    private var isNotTipOpen = true
 
     /**
      * 此方法用于加载数据
@@ -354,7 +349,7 @@ class CoursesViewModel : BaseViewModel() {
                     if (coursesFromInternet.status == 200 || coursesFromInternet.status == 233) {
                         updateNowWeek(coursesFromInternet.nowWeek)
                         //课表容错处理
-                        courseAbnormalErrorHandling(coursesFromInternet,cancel = {stopIntercept()}) {
+                        courseAbnormalErrorHandling(coursesFromInternet, cancel = { stopIntercept() }) {
                             courses.addAll(it)
                             if (it.isNotEmpty() && isGetOthers.get() == false) {
                                 toastEvent.value = R.string.course_course_update_tips
@@ -379,7 +374,7 @@ class CoursesViewModel : BaseViewModel() {
      * @param coursesFromInternet 直接从网络上拉取的课表数据
      * @param action 如果网络上的数据可信就执行这个lambda
      */
-    private fun courseAbnormalErrorHandling(coursesFromInternet: CourseApiWrapper<List<Course>>,cancel:()->Unit={}, action: (List<Course>) -> Unit) {
+    private fun courseAbnormalErrorHandling(coursesFromInternet: CourseApiWrapper<List<Course>>, cancel: () -> Unit = {}, action: (List<Course>) -> Unit) {
         coursesFromInternet.data?.let { notNullCourses ->
             val courseVersion = context.defaultSharedPreferences.getString("${COURSE_VERSION}${mUserNum}", "")
             /**防止服务器里面的课表抽风,所以这个弄了这么多条件，只有满足以下条件才会去替换数据库的课表
@@ -392,7 +387,7 @@ class CoursesViewModel : BaseViewModel() {
                 context.defaultSharedPreferences.editor {
                     putString("${COURSE_VERSION}${mUserNum}", coursesFromInternet.version)
                 }
-            }else{
+            } else {
                 cancel()
             }
         }
@@ -429,7 +424,7 @@ class CoursesViewModel : BaseViewModel() {
      * 这个方法会分别在异步【获取到事务和获取到课程】后调用，[mDataGetStatus]变量中的内容所有线程都可以更改的
      * 但此时就可能出现同步问题，最明显的影响就是获取了所有的数据但是没有进入第一个判断语句，从而导致不能显示课表
      * 实测，出现这种问题的概率很大，在我这几天尽百次的打开当中其中有4次出现了未进入第一个判断语句从到导致
-     * [mReceiveCourses]有数据，但是[allCoursesData]没有，课表无法显示
+     * [courses]有数据，但是[allCoursesData]没有，课表无法显示
      */
     @Synchronized
     private fun isGetAllData(index: Int) {
@@ -524,16 +519,16 @@ class CoursesViewModel : BaseViewModel() {
         mCoursesDatabase?.affairDao()?.deleteAllAffairs()
     }
 
-
-    internal fun setTipsState(state: Float, course_tip: RedRockTipsView) {
-        if (state == 0f || state == 1f) {
-            course_tip.state = RedRockTipsView.CENTER
-            isNotTipOpen = true
-        } else {
-            if (isNotTipOpen) {
-                course_tip.state = RedRockTipsView.BOTTOM
-                isNotTipOpen = false
-            }
-        }
-    }
+    //课程头部小条的动画方法，暂时不启用，没找到和BottomSheet滑动和其他动画共存并不会影响性能的
+//    internal fun setTipsState(state: Float, course_tip: RedRockTipsView) {
+//        if (state == 0f || state == 1f) {
+//            course_tip.state = RedRockTipsView.CENTER
+//            isNotTipOpen = true
+//        } else {
+//            if (isNotTipOpen) {
+//                course_tip.state = RedRockTipsView.BOTTOM
+//                isNotTipOpen = false
+//            }
+//        }
+//    }
 }
