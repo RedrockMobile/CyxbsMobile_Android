@@ -36,6 +36,7 @@ android {
 
     sourceSets {
         main {
+            //debug时能独立执行Main模块的配置
             if (isSingleModuleDebug.toBoolean()) {
                 manifest.srcFile 'src/main/module/AndroidManifest.xml'
             } else {
