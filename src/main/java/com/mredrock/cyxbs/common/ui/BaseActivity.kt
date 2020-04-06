@@ -49,9 +49,6 @@ abstract class BaseActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        // todo 8.0 系统Bug 窗口透明导致限制竖屏闪退
-//        SwipeBackHelper.onCreate(this)
-//        SwipeBackHelper.getCurrentPage(this).setSwipeRelateEnable(true)
         initFlag()
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out)
         lifeCycleLog("onCreate")

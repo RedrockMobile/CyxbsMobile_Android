@@ -2,16 +2,13 @@ package com.mredrock.cyxbs.common
 
 import android.annotation.SuppressLint
 import android.app.Application
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.content.Context
+import android.os.Build
 import com.alibaba.android.arouter.launcher.ARouter
-import com.meituan.android.walle.WalleChannelReader
-import com.mredrock.cyxbs.common.utils.LogUtils
+import com.mredrock.cyxbs.common.utils.CrashHandler
 import com.mredrock.cyxbs.common.utils.extensions.getDarkModeStatus
-import com.umeng.analytics.MobclickAgent
-import com.umeng.commonsdk.UMConfigure
-import com.umeng.message.IUmengRegisterCallback
-import com.umeng.message.PushAgent
-import com.umeng.message.inapp.InAppMessageManager
 
 
 /**
@@ -22,24 +19,29 @@ open class BaseApp : Application() {
         @SuppressLint("StaticFieldLeak", "CI_StaticFieldLeak")
         lateinit var context: Context
             private set
-        var startTime: Long = 0
-        //当前是不是黑夜模式
-        val isNightMode :Boolean
-        get() = context.getDarkModeStatus()
 
+        //当前是不是黑夜模式
+        val isNightMode: Boolean
+            get() = context.getDarkModeStatus()
+
+        const val foregroundService = "foreground"
+        var time = 0L
     }
 
     override fun attachBaseContext(base: Context) {
         super.attachBaseContext(base)
         context = base
-        startTime = System.currentTimeMillis()
+        time = System.currentTimeMillis()
     }
 
     override fun onCreate() {
         super.onCreate()
-        BaseAppInitService.init(applicationContext)
+        createChannel()
+        InitService.init(applicationContext)
         initRouter()//ARouter放在子线程会影响使用
-        initUMeng()
+        //不用放到service里面，只是debug会用到，
+        //而且这是轻量级操作，不会对启动速度造成太大的影响
+        CrashHandler.init(applicationContext)
     }
 
     private fun initRouter() {
@@ -50,31 +52,13 @@ open class BaseApp : Application() {
         ARouter.init(this)
     }
 
-
-    private fun initUMeng() {
-        val channel = WalleChannelReader.getChannel(applicationContext, "debug")
-        UMConfigure.init(applicationContext, BuildConfig.UM_APP_KEY, channel, UMConfigure.DEVICE_TYPE_PHONE,
-                BuildConfig.UM_PUSH_SECRET)
-        MobclickAgent.setScenarioType(applicationContext, MobclickAgent.EScenarioType.E_UM_NORMAL)
-        MobclickAgent.openActivityDurationTrack(false)
-        //调试模式（推荐到umeng注册测试机，避免数据污染）
-        UMConfigure.setLogEnabled(BuildConfig.DEBUG)
-        //友盟推送服务的接入
-        PushAgent.getInstance(context).onAppStart()
-        val mPushAgent = PushAgent.getInstance(this)
-        //注册推送服务，每次调用register方法都会回调该接口
-        mPushAgent.register(object : IUmengRegisterCallback {
-            override fun onSuccess(deviceToken: String) {
-                //注册成功会返回deviceToken deviceToken是推送消息的唯一标志
-                LogUtils.i("友盟注册", "注册成功：deviceToken：-------->  $deviceToken")
-            }
-
-            override fun onFailure(s: String, s1: String) {
-                LogUtils.e("友盟注册", "注册失败：-------->  s:$s,s1:$s1")
-            }
-        })
-
-        InAppMessageManager.getInstance(context).setInAppMsgDebugMode(true)
+    private fun createChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val name = "掌上重邮"
+            val importance = NotificationManager.IMPORTANCE_MIN
+            val channel = NotificationChannel(foregroundService, name, importance)
+            val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.createNotificationChannel(channel)
+        }
     }
-
 }

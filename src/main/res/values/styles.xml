@@ -6,7 +6,10 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-        <item name="android:windowIsTranslucent">true</item>
+        <!--        透明状态栏-->
+<!--        <item name="android:windowTranslucentStatus">true</item>-->
+        <item name="statusBarBackground">@color/transparentBackground</item>
+        <!--        Transition转场动画，暂未启用-->
         <item name="android:windowEnterTransition">@transition/fade</item>
         <item name="android:windowExitTransition">@transition/fade</item>
         <item name="android:windowSharedElementEnterTransition">@transition/app_transaction</item>

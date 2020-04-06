@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
     <color name="colorPrimary" tools:ignore="ResourceName">#ffffff</color>
-    <color name="colorPrimaryDark" tools:ignore="ResourceName">#798DFA</color>
+    <color name="colorPrimaryDark" tools:ignore="ResourceName">#00000000</color>
     <color name="colorAccent" tools:ignore="ResourceName">#788EFA</color>
 
     <!--    颜色汇总，方便黑夜模式，自己把用到的颜色，都扔在这，写好注释，并在飞书上标注好
