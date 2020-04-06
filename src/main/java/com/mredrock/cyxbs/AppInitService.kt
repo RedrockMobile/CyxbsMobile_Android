@@ -8,7 +8,10 @@ import android.content.Intent
 import android.os.Build
 import android.os.Build.VERSION.SDK_INT
 import android.os.Process
+import androidx.core.app.NotificationManagerCompat
 import com.meituan.android.walle.WalleChannelReader
+import com.mredrock.cyxbs.common.BaseApp
+import com.mredrock.cyxbs.common.BaseApp.Companion.context
 import com.mredrock.cyxbs.common.utils.getAppVersionName
 import com.mredrock.cyxbs.common.utils.getProcessName
 import com.tencent.bugly.Bugly
@@ -20,7 +23,7 @@ import com.tencent.bugly.crashreport.CrashReport
  * time: 2019/9/28
  */
 
-class AppInitService : IntentService("AppInitService") {
+class AppInitService : IntentService("InitService") {
 
     companion object {
         const val ACTION_INIT_WHEN_APP_CREATE = "service.action.INIT"
@@ -40,7 +43,8 @@ class AppInitService : IntentService("AppInitService") {
     override fun onCreate() {
         super.onCreate()
         if (SDK_INT >= Build.VERSION_CODES.O) {
-            startForeground(Int.MAX_VALUE, Notification())
+            NotificationManagerCompat.from(this).notify(Int.MAX_VALUE, Notification.Builder(context, BaseApp.foregroundService).setSmallIcon(R.drawable.common_app_logo).build())
+            startForeground(Int.MAX_VALUE, Notification.Builder(context, BaseApp.foregroundService).build())
         }
     }
 
