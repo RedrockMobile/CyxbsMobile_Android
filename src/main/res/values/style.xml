@@ -1,12 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
 
-    <style name="SplashTheme" parent="Theme.AppCompat.DayNight.NoActionBar" tools:ignore="ResourceName">
-        <item name="android:windowFullscreen">true</item>
+    <style name="SplashTheme" parent="AppTheme" tools:ignore="ResourceName">
         <item name="android:windowBackground">@drawable/main_layer_list_splash</item>
-        <item name="android:windowNoTitle">true</item>
-        <item name="android:windowActionBar">false</item>
-<!--        <item name="android:windowAnimationStyle">@style/main_Animation</item>-->
     </style>
 
 

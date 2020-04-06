@@ -4,7 +4,7 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import com.mredrock.cyxbs.common.utils.LogUtils
-import com.mredrock.cyxbs.main.ui.SplashActivity
+import com.mredrock.cyxbs.main.ui.MainActivity
 import okhttp3.*
 import java.io.File
 import java.io.FileOutputStream
@@ -27,7 +27,7 @@ fun downloadSplash(mUrl: String, context: Context) {
                 if (!appDir.exists())
                     appDir.mkdirs()
 
-                val fileName = SplashActivity.SPLASH_PHOTO_NAME
+                val fileName = MainActivity.SPLASH_PHOTO_NAME
                 val file = File("$appDir/$fileName")
                 try {
                     if (!file.exists())
@@ -55,14 +55,14 @@ fun isDownloadSplash(context: Context): Boolean {
 
 fun getSplashFile(context: Context): File {
     val appDir = getDir(context)//下载目录
-    val fileName = SplashActivity.SPLASH_PHOTO_NAME
+    val fileName = MainActivity.SPLASH_PHOTO_NAME
     return File("$appDir/$fileName")
 }
 
 //获取路径
 fun getDir(context: Context): File {
     val pictureFolder = context.externalCacheDir
-    val appDir = File("$pictureFolder/${SplashActivity.SPLASH_PHOTO_LOCATION}")
+    val appDir = File("$pictureFolder/${MainActivity.SPLASH_PHOTO_LOCATION}")
     if (!appDir.exists()) {
         appDir.mkdirs()
     }
