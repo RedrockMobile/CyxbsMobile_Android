@@ -5,6 +5,10 @@ import android.util.Base64
 import androidx.lifecycle.MutableLiveData
 import com.mredrock.cyxbs.common.bean.RedrockApiStatus
 import com.mredrock.cyxbs.common.network.ApiGenerator
+import com.mredrock.cyxbs.common.network.ApiGeneratorForAnother
+import com.mredrock.cyxbs.common.network.CommonApiService
+import com.mredrock.cyxbs.common.utils.down.bean.DownMessageText
+import com.mredrock.cyxbs.common.utils.down.params.DownMessageParams
 import com.mredrock.cyxbs.common.utils.extensions.checkError
 import com.mredrock.cyxbs.common.utils.extensions.mapOrThrowApiException
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
@@ -39,6 +43,7 @@ class QuizViewModel : BaseViewModel() {
     var myRewardCount = 0
         private set
     var isAnonymous = false
+    var rewardExplainList: List<DownMessageText> = listOf()
     private var type: String = ""
     private var title: String = ""
     private var content: String = ""
@@ -72,6 +77,19 @@ class QuizViewModel : BaseViewModel() {
                 .setSchedulers()
                 .mapOrThrowApiException()
                 .safeSubscribeBy { myRewardCount = it.integral }
+    }
+
+    fun getRewardExplain(name: String) {
+        ApiGeneratorForAnother.getCommonApiService(CommonApiService::class.java)
+                .getDownMessage(DownMessageParams(name))
+                .setSchedulers()
+                .doOnError {
+                    it.printStackTrace()
+                }
+                .mapOrThrowApiException()
+                .safeSubscribeBy {
+                    rewardExplainList = it.textList
+                }
     }
 
     @SuppressLint("CheckResult")

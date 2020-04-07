@@ -10,6 +10,7 @@ import android.widget.NumberPicker
 import android.widget.RelativeLayout
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.mredrock.cyxbs.common.utils.down.bean.DownMessageText
 import com.mredrock.cyxbs.common.utils.extensions.editor
 import com.mredrock.cyxbs.common.utils.extensions.getScreenWidth
 import com.mredrock.cyxbs.common.utils.extensions.sharedPreferences
@@ -22,7 +23,7 @@ import java.util.*
 import kotlin.math.abs
 import kotlin.math.pow
 
-class RewardSetDialog(context: Context, rewardCount: Int, private val isFirstQuiz: Boolean) : BottomSheetDialog(context) {
+class RewardSetDialog(context: Context, rewardCount: Int, private val isFirstQuiz: Boolean, private val contentList: List<DownMessageText>) : BottomSheetDialog(context) {
     companion object {
         @JvmStatic
         val HOURS_DISPLAY_NAME = Array(24) { String.format("%02d时", it) }
@@ -97,7 +98,7 @@ class RewardSetDialog(context: Context, rewardCount: Int, private val isFirstQui
             currentItem = 3
         }
         rl_reward_picker.setOnTouchListener { v, event -> vp_set_reward_count.onTouchEvent(event) }
-        iv_reward_description.setOnClickListener { RewardDescriptionDialog(context).show() }
+        iv_reward_description.setOnClickListener { RewardDescriptionDialog(context, contentList).show() }
         tv_my_reward_count.text = context.resources.getString(R.string.qa_quiz_reward_set_my_reward, myRewardCount)
         tv_quiz_dialog_cancel.setOnClickListener { cancel() }
 
@@ -107,7 +108,7 @@ class RewardSetDialog(context: Context, rewardCount: Int, private val isFirstQui
     override fun show() {
         super.show()
         if (isFirstQuiz) {
-            RewardDescriptionDialog(context).apply {
+            RewardDescriptionDialog(context, contentList).apply {
                 setOnDismissListener {
                     context.sharedPreferences(QuizActivity.FIRST_QUIZ).editor { putBoolean(QuizActivity.FIRST_QUIZ_SP_KEY, false) }
                 }

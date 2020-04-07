@@ -12,7 +12,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:overScrollMode="never"
-        android:paddingTop="10dp"
-        android:scrollbars="none" />
+        android:paddingTop="10dp" />
 
 </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

@@ -20,6 +20,7 @@ import com.google.gson.Gson
 import com.mredrock.cyxbs.common.config.QA_QUIZ
 import com.mredrock.cyxbs.common.event.QuestionDraftEvent
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
+import com.mredrock.cyxbs.common.utils.down.bean.DownMessageText
 import com.mredrock.cyxbs.common.utils.extensions.gone
 import com.mredrock.cyxbs.common.utils.extensions.sharedPreferences
 import com.mredrock.cyxbs.common.utils.extensions.toast
@@ -50,6 +51,7 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
         const val FIRST_QUIZ = "cyxbs_quiz_is_first_time"
         const val FIRST_QUIZ_SP_KEY = "isFirstTimeQuiz"
         const val QUIZ_TITLE_MAX = 12
+        const val DOWN_MESSAGE_NAME = "zscy_qa_reward_explain"
         fun activityStart(fragment: Fragment, type: String, requestCode: Int) {
             fragment.startActivityForResult<QuizActivity>(requestCode, "type" to type)
         }
@@ -63,17 +65,21 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
     private var isFirstQuiz: Boolean = true
     private val exitDialog by lazy { createExitDialog() }
     private val rewardNotEnoughDialog by lazy { createRewardNotEnoughDialog() }
+    private var rewardExplainList: List<DownMessageText> = listOf()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.qa_activity_quiz)
+        val titles = resources.getStringArray(R.array.qa_quiz_reward_explain_title)
+        val contents = resources.getStringArray(R.array.qa_quiz_reward_explain_content)
+        rewardExplainList = titles.zip(contents) { title, content -> DownMessageText(title, content) }
         isFirstQuiz = sharedPreferences(FIRST_QUIZ).getBoolean(FIRST_QUIZ_SP_KEY, true)
         initTypeSelector()
         initToolbar()
         initImageAddView()
-        viewModel.getMyReward() //优先初始化积分，避免用户等待
-
+        viewModel.getMyReward() //优先初始化积分和说明，避免用户等待
+        viewModel.getRewardExplain(DOWN_MESSAGE_NAME)
         viewModel.backAndRefreshPreActivityEvent.observeNotNull {
             if (it) {
                 if (draftId != NOT_DRAFT_ID) {
@@ -131,7 +137,8 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
                 viewModel.isAnonymous = questionType == getString(R.string.qa_quiz_select_type_anonymous)
                 val result = viewModel.submitTitleAndContent(edt_quiz_title.text.toString(), edt_quiz_content.text.toString(), questionType)
                 if (result) {
-                    RewardSetDialog(this@QuizActivity, viewModel.myRewardCount, isFirstQuiz).apply {
+                    if (!viewModel.rewardExplainList.isNullOrEmpty()) rewardExplainList = viewModel.rewardExplainList
+                    RewardSetDialog(this@QuizActivity, viewModel.myRewardCount, isFirstQuiz, rewardExplainList).apply {
                         onSubmitButtonClickListener = { time: String, reward: Int ->
                             if (viewModel.setDisAppearTime(time)) {
                                 if (viewModel.quiz(reward)) {
