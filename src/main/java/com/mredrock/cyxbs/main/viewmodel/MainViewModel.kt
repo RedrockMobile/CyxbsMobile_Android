@@ -29,7 +29,7 @@ class MainViewModel : BaseViewModel() {
     val startPage: LiveData<StartPage?> = MutableLiveData()
 
     //进入app是否直接显示课表
-    var courseShowState = false
+    var isCourseDirectShow = false
 
     fun getStartPage() {
         ApiGenerator.getApiService(ApiService::class.java)

@@ -126,7 +126,7 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
             override fun onStateChanged(bottomSheet: View, newState: Int) {
                 //如果是第一次进入展开则加载详细的课表子页
                 if (isLoadCourse && bottomSheetBehavior.state == BottomSheetBehavior.STATE_EXPANDED
-                        && lastState != BottomSheetBehavior.STATE_EXPANDED && !viewModel.courseShowState) {
+                        && lastState != BottomSheetBehavior.STATE_EXPANDED && !viewModel.isCourseDirectShow) {
                     EventBus.getDefault().post(LoadCourse())
                     isLoadCourse = false
                 }
@@ -235,9 +235,11 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
 
     private fun initFragments() {
         //取得是否优先显示课表的设置
-        viewModel.courseShowState = defaultSharedPreferences.getBoolean(COURSE_SHOW_STATE, false)
-        lastState = if (viewModel.courseShowState) BottomSheetBehavior.STATE_EXPANDED else BottomSheetBehavior.STATE_COLLAPSED
-        if (viewModel.courseShowState) {
+        viewModel.isCourseDirectShow = defaultSharedPreferences.getBoolean(COURSE_SHOW_STATE, false)
+        val isShortcut = intent.action == "com.mredrock.cyxbs.action.COURSE"
+        lastState = if (viewModel.isCourseDirectShow) BottomSheetBehavior.STATE_EXPANDED else BottomSheetBehavior.STATE_COLLAPSED
+        if (viewModel.isCourseDirectShow||isShortcut) {
+            intent.action = ""
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
             ll_nav_main_container.translationY = 10000f
             courseFragment.arguments = Bundle().apply { putString(COURSE_DIRECT_LOAD, TRUE) }
@@ -281,13 +283,13 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
         navigationHelpers.selectTab(savedInstanceState.getInt(NAV_SELECT))
-        if (savedInstanceState.getInt(BOTTOM_SHEET_STATE) == BottomSheetBehavior.STATE_EXPANDED && !viewModel.courseShowState) {
+        if (savedInstanceState.getInt(BOTTOM_SHEET_STATE) == BottomSheetBehavior.STATE_EXPANDED && !viewModel.isCourseDirectShow) {
             bottomSheetBehavior.state = savedInstanceState.getInt(BOTTOM_SHEET_STATE)
             EventBus.getDefault().post(LoadCourse(false))
             EventBus.getDefault().post(BottomSheetStateEvent(1f))
             ll_nav_main_container.translationY = 1000f
             isLoadCourse = false
-        } else if (savedInstanceState.getInt(BOTTOM_SHEET_STATE) == BottomSheetBehavior.STATE_COLLAPSED && viewModel.courseShowState) {
+        } else if (savedInstanceState.getInt(BOTTOM_SHEET_STATE) == BottomSheetBehavior.STATE_COLLAPSED && viewModel.isCourseDirectShow) {
             bottomSheetBehavior.state = savedInstanceState.getInt(BOTTOM_SHEET_STATE)
             EventBus.getDefault().post(BottomSheetStateEvent(0f))
         }
