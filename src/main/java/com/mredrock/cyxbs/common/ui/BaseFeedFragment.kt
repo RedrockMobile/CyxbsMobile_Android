@@ -14,7 +14,7 @@ import org.jetbrains.anko.textResource
 //module_discover 中的信息部分
 abstract class BaseFeedFragment<T : BaseViewModel> : BaseViewModelFragment<T>() {
     private lateinit var adapter: Adapter
-    protected abstract var hasTopSplitLine:Boolean
+    protected abstract var hasTopSplitLine: Boolean
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
@@ -23,7 +23,7 @@ abstract class BaseFeedFragment<T : BaseViewModel> : BaseViewModelFragment<T>() 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        if(hasTopSplitLine){
+        if (hasTopSplitLine) {
             feed_split_line.visibility = View.VISIBLE
         }
     }
@@ -60,6 +60,7 @@ abstract class BaseFeedFragment<T : BaseViewModel> : BaseViewModelFragment<T>() 
         }
 
     }
+
     fun getAdapter() = adapter
 
     fun setOnClickListener(listener: () -> Unit) {
@@ -68,10 +69,10 @@ abstract class BaseFeedFragment<T : BaseViewModel> : BaseViewModelFragment<T>() 
 
     abstract fun onRefresh()
 
-    abstract class Adapter{
-        protected var view:View? = null
-        fun getView(context: Context,parent: ViewGroup):View{
-            view = view?:onCreateView(context,parent)
+    abstract class Adapter {
+        protected var view: View? = null
+        fun getView(context: Context, parent: ViewGroup): View {
+            view = view ?: onCreateView(context, parent)
             return view!!
         }
 

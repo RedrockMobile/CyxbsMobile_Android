@@ -21,4 +21,7 @@ open class RedrockApiStatus : Serializable {
  */
 class RedrockApiWrapper<T>(val data: T) : RedrockApiStatus()
 
-val RedrockApiStatus.isSuccessful get() = (status == 200)
+/**
+ * 一些后端接口给10000
+ */
+val RedrockApiStatus.isSuccessful get() = (status == 200 || status == 10000)

@@ -7,4 +7,4 @@ package com.mredrock.cyxbs.common.event
  * 描述:
  *   用来通知课表加载子页的
  */
-data class LoadCourse(val isUserSee:Boolean = true)
+data class LoadCourse(val isUserSee: Boolean = true)
