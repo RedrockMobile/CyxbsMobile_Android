@@ -52,6 +52,8 @@ class ContainerActivity : BaseActivity() {
         val IS_GPA_FRAGMENT = 3
     }
 
+    override val loginConfig = LoginConfig(isFinish = true)
+
     //区分FrameLayout内的fragment的type：未确定，BindFragment，或GPAFragment
     private var typeOfFragment = UNDEFINED
 
@@ -90,6 +92,14 @@ class ContainerActivity : BaseActivity() {
         if (!ServiceManager.getService(IAccountService::class.java).getVerifyService().isLogin()) {
             return
         }
+        initExam()
+        initBottomSheet()
+        initObserver()
+        viewModel.getAnalyzeData()
+    }
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
         initExam()
         initBottomSheet()
         initObserver()
