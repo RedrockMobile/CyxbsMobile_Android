@@ -84,4 +84,7 @@ const val COURSE_VERSION = "course_version"
 //登陆跳转时，前一个Activity的Class对象的键
 const val ACTIVITY_CLASS = "ACTIVITY_CLASS"
 
+//是否为退出登陆按钮退出
 const val IS_EXIT_LOGIN = "IS_EXIT_LOGIN"
+
+const val IS_PRE_FINISH = "IS_PRE_FINISH"

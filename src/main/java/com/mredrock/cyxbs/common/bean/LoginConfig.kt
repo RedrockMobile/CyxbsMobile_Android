@@ -3,7 +3,7 @@ package com.mredrock.cyxbs.common.bean
 /**
  * @author  Jon
  * @date  2020/4/7 17:39
- * @param isCheckLogin 是否需要登陆检查
+ * @param isCheckLogin 是否需要登陆检查,如果设置为false，可以自行调用[com.mredrock.cyxbs.common.ui.BaseActivity.checkIsLogin],方法进行登陆检查
  * @param isWarnUser 如果没有登陆，是否需要提示
  * @param warnMessage 提示内容
  * @param isFinish 登陆成功之后是直接销毁登陆页面返回到用户所想要打开的Activity，还是重新打开一个新的，
