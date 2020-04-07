@@ -6,8 +6,6 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.AnimationUtils
-import android.view.animation.LayoutAnimationController
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
@@ -21,6 +19,8 @@ import com.mredrock.cyxbs.common.bean.WidgetCourse
 import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.common.config.*
 import com.mredrock.cyxbs.common.event.*
+import com.mredrock.cyxbs.common.service.ServiceManager
+import com.mredrock.cyxbs.common.service.account.IAccountService
 import com.mredrock.cyxbs.common.ui.BaseFragment
 import com.mredrock.cyxbs.course.R
 import com.mredrock.cyxbs.course.adapters.ScheduleVPAdapter
@@ -115,6 +115,7 @@ class CourseContainerEntryFragment : BaseFragment() {
         ScheduleDetailDialogHelper(context!!)
     }
 
+    private val accountService: IAccountService = ServiceManager.getService(IAccountService::class.java)
 
     //懒加载课表具体内容，加快启动速度
     private val inflateView: View by lazy(LazyThreadSafetyMode.NONE) {
@@ -141,13 +142,8 @@ class CourseContainerEntryFragment : BaseFragment() {
     override fun onLoginStateChangeEvent(event: LoginStateChangeEvent) {
         super.onLoginStateChangeEvent(event)
         if (event.loginState) {
-            // replaceFragment(CourseContainerFragment())
-            inflateView.vp.adapter?.notifyDataSetChanged()
-            mCoursesViewModel.mWeekTitle.set(activity!!.getString(R.string.course_all_week))
+            initFragment()
         } else {
-            inflateView.vp.adapter?.notifyDataSetChanged()
-            // replaceFragment(NoneLoginFragment())
-            mCoursesViewModel.mWeekTitle.set(activity!!.getString(R.string.common_course))
             Thread {
                 ViewModelProvider(this).get(CoursesViewModel::class.java).clearCache()
             }.start()
@@ -164,133 +160,134 @@ class CourseContainerEntryFragment : BaseFragment() {
      * 对当前Fragment进行一系列初始化
      */
     private fun initFragment() {
-        activity?.let { activity ->
-
-            //如果没有被添加进Activity，Fragment会抛出not attach a context的错误
-            if (!isAdded) return
-
-            //获取从其他模块传来的数据
-            arguments?.let { bundle ->
-                mStuNum = bundle.getString(OTHERS_STU_NUM)
-                mStuNumList = bundle.getStringArrayList(STU_NUM_LIST)
-                mNameList = bundle.getStringArrayList(STU_NAME_LIST)
-                mOthersTeaName = bundle.getString(OTHERS_TEA_NAME)
-                mOthersTeaNum = bundle.getString(OTHERS_TEA_NUM)
-                directLoadCourse = bundle.getString(COURSE_DIRECT_LOAD) ?: TRUE
-            }
-
-            /**
-             * 在接收从其他模块传来数据时，根据当前EntryFragment的状态,
-             * 以此可以加载不同的页面，复用到不同的地方
-             */
-
-            when (courseState) {
-                //如果是普通课表
-                CourseState.OrdinaryCourse -> {
-                    mCoursesViewModel = ViewModelProvider(this)[CoursesViewModel::class.java]
-                    mBinding.coursesViewModel = mCoursesViewModel
-                    context?.let { mCoursesViewModel.getSchedulesDataFromLocalThenNetwork() }
-                }
-                //如果是没课约
-                CourseState.NoClassInvitationCourse -> {
-                    mCoursesViewModel = ViewModelProvider(this)[CoursesViewModel::class.java]
-                    mBinding.coursesViewModel = mCoursesViewModel
-                    mNoCourseInviteViewModel =
-                            ViewModelProvider(this, NoCourseInviteViewModel.Factory(mStuNumList!!, mNameList!!))
-                                    .get(NoCourseInviteViewModel::class.java)
-                    mNoCourseInviteViewModel?.getCourses()
-                }
-                //如果是查询其他同学的课表
-                CourseState.OtherCourse -> {
-                    mCoursesViewModel = ViewModelProvider(this)[CoursesViewModel::class.java]
-                    mBinding.coursesViewModel = mCoursesViewModel
-                    context?.let { mCoursesViewModel.getSchedulesDataFromLocalThenNetwork(mStuNum) }
-                }
-                //如果是老师课表
-                CourseState.TeacherCourse -> {
-                    mCoursesViewModel = ViewModelProvider(this)[CoursesViewModel::class.java]
-                    mBinding.coursesViewModel = mCoursesViewModel
-                    mCoursesViewModel.isTeaCourse = true
-                    mOthersTeaName?.let {
-                        mCoursesViewModel.mUserName = it
-                    }
-                    context?.let { mCoursesViewModel.getSchedulesDataFromLocalThenNetwork(mOthersTeaNum) }
-                }
-            }
-
-            //初始化周数tab的文字和下面课表的Adapter
-            resources.getStringArray(R.array.course_course_weeks_strings).let {
-                mRawWeeks = it
-                mWeeks = mRawWeeks.copyOf()
-                mScheduleAdapter = ScheduleVPAdapter(mWeeks, childFragmentManager)
-            }
-
-            inflateListener = { inflate ->
-
-                mCoursesViewModel.nowWeek.observe(viewLifecycleOwner, Observer {
-                    inflate.vp.currentItem = it ?: 0
-                })
-                // 给ViewPager添加OnPageChangeListener
-                VPOnPagerChangeObserver(inflate.vp,
-                        mOnPageSelected = {
-                            // 当ViewPager发生了滑动，清理课表上加备忘的View
-                            EventBus.getDefault().post(DismissAddAffairViewEvent())
-                            // 当ViewPager发生了滑动，对Head上的周数进行改变
-                            mCoursesViewModel.isShowPresentTips.set(
-                                    when (it) {
-                                        0 -> View.GONE
-                                        mCoursesViewModel.nowWeek.value -> View.VISIBLE
-                                        else -> View.GONE
-                                    }
-                            )
-                            mCoursesViewModel.isShowBackPresentWeek.value = if (mCoursesViewModel.nowWeek.value == it) View.GONE else View.VISIBLE
-                            mCoursesViewModel.mWeekTitle.set(mWeeks[it])
-                        })
-                //回到本周按钮的点击事件
-                course_back_present_week.setOnClickListener {
-                    mCoursesViewModel.nowWeek.value?.let {
-                        inflate.vp.currentItem = it
-                    }
-                }
-            }
-
-            //如果需要直接加载课表则直接加载课表，否则为了优化性能可以当需要的时候加载
-            //这个判断必须得在上面的[inflateListener]赋值之后执行，否则，其中的初始化代码很有可能不会执行
-            if (directLoadCourse == TRUE) {
-                course_current_course_container.visibility = View.GONE
-                Looper.myQueue().addIdleHandler {
-                    //给下方ViewPager添加适配器和绑定tab
-                    loadViewPager()
-                    settingFollowBottomSheet(1f)
-                    false
-                }
-            }
-
-
-            //获取到ViewModel后进行一些初始化操作
-            mCoursesViewModel.courseState = courseState
-            course_tv_now_course.setOnClickListener {
-                mCoursesViewModel.nowCourse.get()?.let { course ->
-                    mDialogHelper.showDialog(MutableList(1) { course })
-                }
-            }
-
-            mCoursesViewModel.toastEvent.observe(viewLifecycleOwner, Observer { str -> str?.let { CyxbsToast.makeText(activity, it, Toast.LENGTH_SHORT).show() } })
-            mCoursesViewModel.longToastEvent.observe(viewLifecycleOwner, Observer { str -> str?.let { CyxbsToast.makeText(activity, it, Toast.LENGTH_LONG).show() } })
-            mCoursesViewModel.isShowBackPresentWeek.observe(viewLifecycleOwner, Observer {
-                /**
-                 * 这里为什么要判空呢，因为 mCoursesViewModel.isShowBackPresentWeek
-                 * 在切换黑夜模式的时候这个变量的回调会启动，但是这时候[course_current_course_week_select_container]
-                 * 还没有生成，进一步说在应用内开启黑夜模式因为会重启activity但是[mCoursesViewModel]没有
-                 */
-                course_current_course_week_select_container?.apply {
-                    TransitionManager.beginDelayedTransition(this, Slide().apply { slideEdge = Gravity.END })
-                    this.course_back_present_week?.visibility = it
-                }
-            })
-            //对头部课表头部信息进行一系列初始化
-            initHead()
+        if (!accountService.getVerifyService().isLogin()) {
+            return
         }
+        //如果没有被添加进Activity，Fragment会抛出not attach a context的错误
+        if (!isAdded) return
+
+        //获取从其他模块传来的数据
+        arguments?.let { bundle ->
+            mStuNum = bundle.getString(OTHERS_STU_NUM)
+            mStuNumList = bundle.getStringArrayList(STU_NUM_LIST)
+            mNameList = bundle.getStringArrayList(STU_NAME_LIST)
+            mOthersTeaName = bundle.getString(OTHERS_TEA_NAME)
+            mOthersTeaNum = bundle.getString(OTHERS_TEA_NUM)
+            directLoadCourse = bundle.getString(COURSE_DIRECT_LOAD) ?: TRUE
+        }
+
+        /**
+         * 在接收从其他模块传来数据时，根据当前EntryFragment的状态,
+         * 以此可以加载不同的页面，复用到不同的地方
+         */
+
+        when (courseState) {
+            //如果是普通课表
+            CourseState.OrdinaryCourse -> {
+                mCoursesViewModel = ViewModelProvider(this)[CoursesViewModel::class.java]
+                mBinding.coursesViewModel = mCoursesViewModel
+                context?.let { mCoursesViewModel.getSchedulesDataFromLocalThenNetwork(accountService.getUserService().getStuNum()) }
+            }
+            //如果是没课约
+            CourseState.NoClassInvitationCourse -> {
+                mCoursesViewModel = ViewModelProvider(this)[CoursesViewModel::class.java]
+                mBinding.coursesViewModel = mCoursesViewModel
+                mNoCourseInviteViewModel =
+                        ViewModelProvider(this, NoCourseInviteViewModel.Factory(mStuNumList!!, mNameList!!))
+                                .get(NoCourseInviteViewModel::class.java)
+                mNoCourseInviteViewModel?.getCourses()
+            }
+            //如果是查询其他同学的课表
+            CourseState.OtherCourse -> {
+                mCoursesViewModel = ViewModelProvider(this)[CoursesViewModel::class.java]
+                mBinding.coursesViewModel = mCoursesViewModel
+                context?.let { mCoursesViewModel.getSchedulesDataFromLocalThenNetwork(mStuNum!!, true) }
+            }
+            //如果是老师课表
+            CourseState.TeacherCourse -> {
+                mCoursesViewModel = ViewModelProvider(this)[CoursesViewModel::class.java]
+                mBinding.coursesViewModel = mCoursesViewModel
+                mCoursesViewModel.isTeaCourse = true
+                mOthersTeaName?.let {
+                    mCoursesViewModel.mUserName = it
+                }
+                context?.let { mCoursesViewModel.getSchedulesDataFromLocalThenNetwork(mOthersTeaNum!!, true) }
+            }
+        }
+
+        //初始化周数tab的文字和下面课表的Adapter
+        resources.getStringArray(R.array.course_course_weeks_strings).let {
+            mRawWeeks = it
+            mWeeks = mRawWeeks.copyOf()
+            mScheduleAdapter = ScheduleVPAdapter(mWeeks, childFragmentManager)
+        }
+
+        inflateListener = { inflate ->
+
+            mCoursesViewModel.nowWeek.observe(viewLifecycleOwner, Observer {
+                inflate.vp.currentItem = it ?: 0
+            })
+            // 给ViewPager添加OnPageChangeListener
+            VPOnPagerChangeObserver(inflate.vp,
+                    mOnPageSelected = {
+                        // 当ViewPager发生了滑动，清理课表上加备忘的View
+                        EventBus.getDefault().post(DismissAddAffairViewEvent())
+                        // 当ViewPager发生了滑动，对Head上的周数进行改变
+                        mCoursesViewModel.isShowPresentTips.set(
+                                when (it) {
+                                    0 -> View.GONE
+                                    mCoursesViewModel.nowWeek.value -> View.VISIBLE
+                                    else -> View.GONE
+                                }
+                        )
+                        mCoursesViewModel.isShowBackPresentWeek.value = if (mCoursesViewModel.nowWeek.value == it) View.GONE else View.VISIBLE
+                        mCoursesViewModel.mWeekTitle.set(mWeeks[it])
+                    })
+            //回到本周按钮的点击事件
+            course_back_present_week.setOnClickListener {
+                mCoursesViewModel.nowWeek.value?.let {
+                    inflate.vp.currentItem = it
+                }
+            }
+        }
+
+        //如果需要直接加载课表则直接加载课表，否则为了优化性能可以当需要的时候加载
+        //这个判断必须得在上面的[inflateListener]赋值之后执行，否则，其中的初始化代码很有可能不会执行
+        if (directLoadCourse == TRUE) {
+            course_current_course_container.visibility = View.GONE
+            Looper.myQueue().addIdleHandler {
+                //给下方ViewPager添加适配器和绑定tab
+                loadViewPager()
+                settingFollowBottomSheet(1f)
+                false
+            }
+        }
+
+
+        //获取到ViewModel后进行一些初始化操作
+        mCoursesViewModel.courseState = courseState
+        course_tv_now_course.setOnClickListener {
+            mCoursesViewModel.nowCourse.get()?.let { course ->
+                mDialogHelper.showDialog(MutableList(1) { course })
+            }
+        }
+
+//            mCoursesViewModel.
+        mCoursesViewModel.toastEvent.observe(viewLifecycleOwner, Observer { str -> str?.let { CyxbsToast.makeText(activity, it, Toast.LENGTH_SHORT).show() } })
+        mCoursesViewModel.longToastEvent.observe(viewLifecycleOwner, Observer { str -> str?.let { CyxbsToast.makeText(activity, it, Toast.LENGTH_LONG).show() } })
+        mCoursesViewModel.isShowBackPresentWeek.observe(viewLifecycleOwner, Observer {
+            /**
+             * 这里为什么要判空呢，因为 mCoursesViewModel.isShowBackPresentWeek
+             * 在切换黑夜模式的时候这个变量的回调会启动，但是这时候[course_current_course_week_select_container]
+             * 还没有生成，进一步说在应用内开启黑夜模式因为会重启activity但是[mCoursesViewModel]没有
+             */
+            course_current_course_week_select_container?.apply {
+                TransitionManager.beginDelayedTransition(this, Slide().apply { slideEdge = Gravity.END })
+                this.course_back_present_week?.visibility = it
+            }
+        })
+        //对头部课表头部信息进行一系列初始化
+        initHead()
     }
 
     private fun loadViewPager() {

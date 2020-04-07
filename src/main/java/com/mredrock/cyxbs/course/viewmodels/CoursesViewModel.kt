@@ -10,8 +10,6 @@ import com.mredrock.cyxbs.common.config.SP_WIDGET_NEED_FRESH
 import com.mredrock.cyxbs.common.config.WIDGET_COURSE
 import com.mredrock.cyxbs.common.event.CurrentDateInformationEvent
 import com.mredrock.cyxbs.common.network.ApiGenerator
-import com.mredrock.cyxbs.common.service.ServiceManager
-import com.mredrock.cyxbs.common.service.account.IAccountService
 import com.mredrock.cyxbs.common.utils.ClassRoomParse
 import com.mredrock.cyxbs.common.utils.Num2CN
 import com.mredrock.cyxbs.common.utils.SchoolCalendar
@@ -201,9 +199,6 @@ class CoursesViewModel : BaseViewModel() {
     //是否是老师课表
     var isTeaCourse: Boolean = false
 
-    private val accountService: IAccountService by lazy(LazyThreadSafetyMode.NONE) {
-        ServiceManager.getService(IAccountService::class.java)
-    }
 
     /**
      * 此方法用于加载数据
@@ -213,20 +208,14 @@ class CoursesViewModel : BaseViewModel() {
      * @param userNum 当显示他人课表的时候就传入对应的的学号。默认为空，之后会为其赋值对应的帐号。
      * @param direct 如果有需要的时候，可以传入true，跳过从数据库加载，直接从网络上加载
      */
-    fun getSchedulesDataFromLocalThenNetwork(userNum: String? = null, direct: Boolean = false) {
+    fun getSchedulesDataFromLocalThenNetwork(userNum: String, isGetOther: Boolean = false, direct: Boolean = false) {
         if (isContinueExecution()) return
 
         //重载获取状态
         resetGetStatus()
 
-        mUserNum = if (userNum == null) {
-            isGetOthers.set(false)
-            accountService.getUserService().getStuNum()
-        } else {
-            isGetOthers.set(true)
-            userNum
-        }
-
+        mUserNum = userNum
+        isGetOthers.set(isGetOther)
 
         if (direct) {
             getCoursesDataFromInternet()
