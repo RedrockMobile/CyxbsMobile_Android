@@ -79,6 +79,7 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
     private val mineFragment: Fragment by lazy(LazyThreadSafetyMode.NONE) { getFragment(MINE_ENTRY) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        setTheme(R.style.MainActivityTheme)//恢复真正的主题，保证WindowBackground为主题色
         super.onCreate(savedInstanceState)
         checkIsLogin()//检查是否登陆
         setContentView(R.layout.main_activity_main)

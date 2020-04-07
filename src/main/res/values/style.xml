@@ -1,8 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
 
+    <!--    闪屏页,用于系统在创建app进程之前显示的预览图片-->
     <style name="SplashTheme" parent="AppTheme" tools:ignore="ResourceName">
         <item name="android:windowBackground">@drawable/main_layer_list_splash</item>
+    </style>
+    <!--    真正MainActivity的主题，如果需要对MainActivity主题进行定制，请写在下面-->
+    <style name="MainActivityTheme" parent="SplashTheme">
+        <!--        切记不要将这个设置为空来优化UI绘制-->
+        <item name="android:windowBackground">@drawable/main_main_activity_window_backgroud</item>
     </style>
 
 
