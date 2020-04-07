@@ -1,5 +1,6 @@
 package com.mredrock.cyxbs.main.ui
 
+import android.content.Intent
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.view.View
@@ -9,19 +10,18 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import com.alibaba.android.arouter.facade.annotation.Route
-import com.alibaba.android.arouter.launcher.ARouter
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.mredrock.cyxbs.common.BaseApp
+import com.mredrock.cyxbs.common.bean.LoginConfig
 import com.mredrock.cyxbs.common.config.*
 import com.mredrock.cyxbs.common.event.BottomSheetStateEvent
 import com.mredrock.cyxbs.common.event.LoadCourse
 import com.mredrock.cyxbs.common.event.NotifyBottomSheetToExpandEvent
 import com.mredrock.cyxbs.common.event.RefreshQaEvent
 import com.mredrock.cyxbs.common.service.ServiceManager
-import com.mredrock.cyxbs.common.service.account.IAccountService
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
 import com.mredrock.cyxbs.common.utils.extensions.getStatusBarHeight
@@ -57,6 +57,8 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
 
     override val isFragmentActivity = true
 
+    override val loginConfig = LoginConfig(isWarnUser = false)
+
     /**
      * 这个变量切记千万不能搬到viewModel,这个变量需要跟activity同生共死
      * 以保障activity异常重启时，这个值会被刷新，activity异常销毁重启viewModel仍在
@@ -81,20 +83,26 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(R.style.MainActivityTheme)//恢复真正的主题，保证WindowBackground为主题色
         super.onCreate(savedInstanceState)
-        checkIsLogin()//检查是否登陆
         setContentView(R.layout.main_activity_main)
         checkSplash()//检查闪屏页是否需要显示
         initActivity()//Activity相关初始化
-        val time = System.currentTimeMillis() - BaseApp.time
-        if (BuildConfig.DEBUG) {
-            Toast.makeText(this, "启动时间DEBUG：${time}ms", Toast.LENGTH_SHORT).show()
-        }
+    }
+
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        if (intent?.getStringExtra(LoginActivity.USER_LOGIN) == LoginActivity.USER_LOGIN)
+            initActivity()//Activity相关初始化
     }
 
     /**
      * 一些非重量级初始化操作
      */
     private fun initActivity() {
+        val time = System.currentTimeMillis() - BaseApp.time
+        if (BuildConfig.DEBUG) {
+            Toast.makeText(this, "启动时间DEBUG：${time}ms", Toast.LENGTH_SHORT).show()
+        }
         InAppMessageManager.getInstance(BaseApp.context).showCardMessage(this,
                 "课表主页面") {
             //友盟插屏消息关闭之后调用，暂未写功能
@@ -145,7 +153,11 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
         if (bottomSheetBehavior.state == BottomSheetBehavior.STATE_EXPANDED) {
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
         } else {
-            moveTaskToBack(true)
+//            moveTaskToBack(true)
+            val intent = Intent(Intent.ACTION_MAIN)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            intent.addCategory(Intent.CATEGORY_HOME)
+            startActivity(intent)
         }
     }
 
@@ -227,19 +239,13 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
         viewModel.getStartPage()
     }
 
-    private fun checkIsLogin() {
-        if (!ServiceManager.getService(IAccountService::class.java).getVerifyService().isLogin()) {
-            ARouter.getInstance().build(MAIN_LOGIN).navigation()
-            finish()
-        }
-    }
 
     private fun initFragments() {
         //取得是否优先显示课表的设置
         viewModel.isCourseDirectShow = defaultSharedPreferences.getBoolean(COURSE_SHOW_STATE, false)
         val isShortcut = intent.action == "com.mredrock.cyxbs.action.COURSE"
         lastState = if (viewModel.isCourseDirectShow) BottomSheetBehavior.STATE_EXPANDED else BottomSheetBehavior.STATE_COLLAPSED
-        if (viewModel.isCourseDirectShow||isShortcut) {
+        if (viewModel.isCourseDirectShow || isShortcut) {
             intent.action = ""
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
             ll_nav_main_container.translationY = 10000f
