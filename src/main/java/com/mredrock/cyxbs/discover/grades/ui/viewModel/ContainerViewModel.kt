@@ -10,7 +10,7 @@ import androidx.lifecycle.MutableLiveData
 import com.google.gson.Gson
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.network.ApiGenerator
-import com.mredrock.cyxbs.common.network.ApiGeneratorForSign
+import com.mredrock.cyxbs.common.network.ApiGeneratorForAnother
 import com.mredrock.cyxbs.common.utils.extensions.doOnErrorWithDefaultErrorHandler
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
@@ -33,7 +33,7 @@ class ContainerViewModel : BaseViewModel() {
 
     val examData = MutableLiveData<List<Exam>>()
     private val apiService = ApiGenerator.getApiService(ApiService::class.java)
-    private val apiServiceForSign = ApiGeneratorForSign.getApiService(ApiService::class.java)
+    private val apiServiceForSign = ApiGeneratorForAnother.getApiService(ApiService::class.java)
     fun loadData(stuNum: String) {
         val exam = apiService.getExam(stuNum)
         val reExam = apiService.getReExam(stuNum)

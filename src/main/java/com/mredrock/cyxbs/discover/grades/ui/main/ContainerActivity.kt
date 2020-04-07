@@ -1,5 +1,6 @@
 package com.mredrock.cyxbs.discover.grades.ui.main
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.core.content.ContextCompat
@@ -12,7 +13,9 @@ import com.alibaba.android.arouter.facade.annotation.Route
 import com.bumptech.glide.Glide
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.mredrock.cyxbs.common.BaseApp
+import com.mredrock.cyxbs.common.bean.LoginConfig
 import com.mredrock.cyxbs.common.config.DISCOVER_GRADES
+import com.mredrock.cyxbs.common.event.LoginStateChangeEvent
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.service.account.IAccountService
 import com.mredrock.cyxbs.common.service.account.IUserService
@@ -41,14 +44,17 @@ class ContainerActivity : BaseActivity() {
     companion object {
         @JvmStatic
         val UNDEFINED = 1
+
         @JvmStatic
         val IS_BIND_FRAGMENT = 2
+
         @JvmStatic
         val IS_GPA_FRAGMENT = 3
     }
 
     //区分FrameLayout内的fragment的type：未确定，BindFragment，或GPAFragment
     private var typeOfFragment = UNDEFINED
+
     //exam
     override val isFragmentActivity = true
     private lateinit var viewModel: ContainerViewModel
@@ -72,6 +78,18 @@ class ContainerActivity : BaseActivity() {
             setTitleLocationAtLeft(true)
         }
         viewModel = ViewModelProvider(this@ContainerActivity).get(ContainerViewModel::class.java)
+        init()
+    }
+
+    override fun onLoginStateChangeEvent(event: LoginStateChangeEvent) {
+        super.onLoginStateChangeEvent(event)
+        init()
+    }
+
+    private fun init() {
+        if (!ServiceManager.getService(IAccountService::class.java).getVerifyService().isLogin()) {
+            return
+        }
         initExam()
         initBottomSheet()
         initObserver()
