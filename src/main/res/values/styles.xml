@@ -8,7 +8,8 @@
         <item name="colorAccent">@color/colorAccent</item>
         <!--        透明状态栏-->
         <item name="statusBarBackground">@color/transparentBackground</item>
-        <item name="android:windowBackground">@null</item>
+        <!--        每个Activity的Window背景，最好别设置透明或者空-->
+        <item name="android:windowBackground">@color/windowBackground</item>
         <!--        Transition转场动画，暂未启用-->
         <item name="android:windowEnterTransition">@transition/fade</item>
         <item name="android:windowExitTransition">@transition/fade</item>

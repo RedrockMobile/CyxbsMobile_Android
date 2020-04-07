@@ -9,16 +9,23 @@ import android.os.Handler
 import android.os.PersistableBundle
 import android.view.Menu
 import android.view.View
+import android.widget.Toast
 import androidx.annotation.DrawableRes
 import androidx.appcompat.app.AppCompatActivity
 import com.afollestad.materialdialogs.MaterialDialog
 import com.alibaba.android.arouter.launcher.ARouter
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.R
+import com.mredrock.cyxbs.common.bean.LoginConfig
+import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.common.component.JToolbar
+import com.mredrock.cyxbs.common.config.ACTIVITY_CLASS
+import com.mredrock.cyxbs.common.config.MAIN_LOGIN
 import com.mredrock.cyxbs.common.event.AskLoginEvent
 import com.mredrock.cyxbs.common.event.LoginEvent
 import com.mredrock.cyxbs.common.event.LoginStateChangeEvent
+import com.mredrock.cyxbs.common.service.ServiceManager
+import com.mredrock.cyxbs.common.service.account.IAccountService
 import com.mredrock.cyxbs.common.utils.LogUtils
 import com.umeng.analytics.MobclickAgent
 import kotlinx.android.synthetic.main.common_toolbar.*
@@ -36,10 +43,10 @@ abstract class BaseActivity : AppCompatActivity() {
      * 这里可以开启生命周期的Log，你可以重写这个值并给值为true，
      * 也可以直接赋值为true（赋值的话请在init{}里面赋值或者在onCreate的super.onCreate(savedInstanceState)调用之前赋值）
      */
-    open protected var isOpenLifeCycleLog = false
+    protected open var isOpenLifeCycleLog = false
 
     //当然，你要定义自己的TAG方便在Log里面找也可以重写这个
-    open protected var TAG: String = this::class.java.simpleName
+    protected open var TAG: String = this::class.java.simpleName
 
     /**
      * service for umeng
@@ -47,11 +54,27 @@ abstract class BaseActivity : AppCompatActivity() {
      */
     abstract val isFragmentActivity: Boolean
 
+    protected open val loginConfig = LoginConfig()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initFlag()
-        overridePendingTransition(R.anim.fade_in, R.anim.fade_out)
+        checkIsLogin()
         lifeCycleLog("onCreate")
+    }
+
+    private fun checkIsLogin() {
+        if (!ServiceManager.getService(IAccountService::class.java).getVerifyService().isLogin()&&loginConfig.isCheckLogin) {
+            val postcard = ARouter.getInstance().build(MAIN_LOGIN).withTransition(0,0)
+            if (loginConfig.isFinish) {
+                postcard.withSerializable(ACTIVITY_CLASS,this::class.java)
+                finish()
+            }
+            if (loginConfig.isWarnUser) {
+                CyxbsToast.makeText(this, loginConfig.warnMessage, Toast.LENGTH_SHORT).show()
+            }
+            postcard.navigation(this)
+        }
     }
 
     private fun initFlag() {
@@ -76,11 +99,6 @@ abstract class BaseActivity : AppCompatActivity() {
                 window.statusBarColor = Color.TRANSPARENT
             }
         }
-    }
-
-    override fun finish() {
-        super.finish()
-        overridePendingTransition(R.anim.fade_in, R.anim.fade_out)
     }
 
     inline fun <reified T : Activity> startActivity(finish: Boolean = false, vararg params: Pair<String, Any?>) {

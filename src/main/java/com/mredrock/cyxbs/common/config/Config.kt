@@ -80,3 +80,8 @@ const val IS_ANSWER = 0 //从我的回答跳转到具体的回答页面
 
 //课表版本
 const val COURSE_VERSION = "course_version"
+
+//登陆跳转时，前一个Activity的Class对象的键
+const val ACTIVITY_CLASS = "ACTIVITY_CLASS"
+
+const val IS_EXIT_LOGIN = "IS_EXIT_LOGIN"
