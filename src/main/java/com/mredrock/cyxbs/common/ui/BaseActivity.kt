@@ -64,10 +64,10 @@ abstract class BaseActivity : AppCompatActivity() {
     }
 
     private fun checkIsLogin() {
-        if (!ServiceManager.getService(IAccountService::class.java).getVerifyService().isLogin()&&loginConfig.isCheckLogin) {
-            val postcard = ARouter.getInstance().build(MAIN_LOGIN).withTransition(0,0)
+        if (!ServiceManager.getService(IAccountService::class.java).getVerifyService().isLogin() && loginConfig.isCheckLogin) {
+            val postcard = ARouter.getInstance().build(MAIN_LOGIN).withTransition(0, 0)
             if (loginConfig.isFinish) {
-                postcard.withSerializable(ACTIVITY_CLASS,this::class.java)
+                postcard.withSerializable(ACTIVITY_CLASS, this::class.java)
                 finish()
             }
             if (loginConfig.isWarnUser) {
