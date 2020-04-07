@@ -37,7 +37,6 @@ class LoginViewModel : BaseViewModel() {
                         val accountService = ServiceManager.getService(IAccountService::class.java)
                         accountService.getVerifyService().login(context, stuNum!!, idNum!!)
                         MobclickAgent.onProfileSignIn(accountService.getUserService().getStuNum())
-                        EventBus.getDefault().post(LoginStateChangeEvent(true))
                         loginState = LoginState.LandingSuccessfully
                     },
                     doOnException = { e ->

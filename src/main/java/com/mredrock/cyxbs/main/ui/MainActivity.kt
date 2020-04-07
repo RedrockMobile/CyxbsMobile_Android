@@ -1,14 +1,13 @@
 package com.mredrock.cyxbs.main.ui
 
-import android.content.Intent
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.view.View
 import android.view.View.GONE
 import android.widget.FrameLayout
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import com.alibaba.android.arouter.facade.annotation.Autowired
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
@@ -22,12 +21,12 @@ import com.mredrock.cyxbs.common.event.LoadCourse
 import com.mredrock.cyxbs.common.event.NotifyBottomSheetToExpandEvent
 import com.mredrock.cyxbs.common.event.RefreshQaEvent
 import com.mredrock.cyxbs.common.service.ServiceManager
+import com.mredrock.cyxbs.common.ui.BaseActivity
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
 import com.mredrock.cyxbs.common.utils.extensions.getStatusBarHeight
 import com.mredrock.cyxbs.common.utils.update.UpdateEvent
 import com.mredrock.cyxbs.common.utils.update.UpdateUtils
-import com.mredrock.cyxbs.main.BuildConfig
 import com.mredrock.cyxbs.main.R
 import com.mredrock.cyxbs.main.utils.BottomNavigationHelper
 import com.mredrock.cyxbs.main.utils.getSplashFile
@@ -51,13 +50,19 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
         const val NAV_SELECT = "NAV_SELECT"
         const val SPLASH_PHOTO_NAME = "splash_photo.jpg"
         const val SPLASH_PHOTO_LOCATION = "splash_store_location"
+        const val IS_LOGIN_ENTER = "isLoginEnter"
     }
+
+    @JvmField
+    @Autowired(name = IS_LOGIN_ENTER)
+    var isLoginEnter: Boolean? = false
 
     override val viewModelClass = MainViewModel::class.java
 
     override val isFragmentActivity = true
 
-    override val loginConfig = LoginConfig(isWarnUser = false)
+    //放弃使用父类的登陆检查，自己做登陆检查操作
+    override val loginConfig = LoginConfig(isCheckLogin = false)
 
     /**
      * 这个变量切记千万不能搬到viewModel,这个变量需要跟activity同生共死
@@ -85,14 +90,8 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.main_activity_main)
         checkSplash()//检查闪屏页是否需要显示
+        checkIsLogin(LoginConfig(isWarnUser = false),this)
         initActivity()//Activity相关初始化
-    }
-
-
-    override fun onNewIntent(intent: Intent?) {
-        super.onNewIntent(intent)
-        if (intent?.getStringExtra(LoginActivity.USER_LOGIN) == LoginActivity.USER_LOGIN)
-            initActivity()//Activity相关初始化
     }
 
     /**
@@ -101,8 +100,8 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
     private fun initActivity() {
         InAppMessageManager.getInstance(BaseApp.context)
                 .showCardMessage(this, "课表主页面") {
-            //友盟插屏消息关闭之后调用，暂未写功能
-        }
+                    //友盟插屏消息关闭之后调用，暂未写功能
+                }
         viewModel.startPage.observe(this, Observer { starPage ->
             viewModel.initStartPage(starPage)
         })
@@ -149,11 +148,7 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
         if (bottomSheetBehavior.state == BottomSheetBehavior.STATE_EXPANDED) {
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
         } else {
-//            moveTaskToBack(true)
-            val intent = Intent(Intent.ACTION_MAIN)
-            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-            intent.addCategory(Intent.CATEGORY_HOME)
-            startActivity(intent)
+            moveTaskToBack(true)
         }
     }
 
