@@ -3,7 +3,7 @@ package com.mredrock.cyxbs.mine.page.myproduct
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
-import com.mredrock.cyxbs.common.network.ApiGeneratorForSign
+import com.mredrock.cyxbs.common.network.ApiGeneratorForAnother
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.mine.network.ApiService
@@ -17,7 +17,7 @@ import io.reactivex.disposables.Disposable
  * Created by roger on 2020/2/15
  */
 class MyProductViewModel : BaseViewModel() {
-    private val apiServiceForSign: ApiService by lazy { ApiGeneratorForSign.getApiService(ApiService::class.java) }
+    private val apiServiceForSign: ApiService by lazy { ApiGeneratorForAnother.getApiService(ApiService::class.java) }
 
     private val disposableForUnClaimed: MutableList<Disposable> = mutableListOf()
     private val disposableForClaimed: MutableList<Disposable> = mutableListOf()
