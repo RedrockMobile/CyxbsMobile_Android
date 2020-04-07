@@ -27,7 +27,7 @@ import org.greenrobot.eventbus.ThreadMode
 @Route(path = MAIN_LOGIN)
 class LoginActivity : BaseViewModelActivity<LoginViewModel>() {
 
-    companion object{
+    companion object {
         const val USER_LOGIN = "UserLogin"
     }
 
@@ -48,10 +48,9 @@ class LoginActivity : BaseViewModelActivity<LoginViewModel>() {
     var isExitLogin: Boolean? = false
 
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        ARouter.getInstance().inject(this);
+        ARouter.getInstance().inject(this)
         setContentView(R.layout.main_activity_login)
         initView()
     }
@@ -82,13 +81,13 @@ class LoginActivity : BaseViewModelActivity<LoginViewModel>() {
 
     private fun loginAction() {
         if (viewModel.userAgreementIsCheck) {
-            viewModel.login(et_account.text?.toString(), et_password.text?.toString(), landing){
-                if (isExitLogin!=null && isExitLogin!!) {
-                    startActivity(Intent(this,MainActivity::class.java).apply {
-                        putExtra(USER_LOGIN,"UserLogin")
+            viewModel.login(et_account.text?.toString(), et_password.text?.toString(), landing) {
+                if (isExitLogin != null && isExitLogin!!) {
+                    startActivity(Intent(this, MainActivity::class.java).apply {
+                        putExtra(USER_LOGIN, "UserLogin")
                     })
                     finish()
-                }else{
+                } else {
                     if (targetActivity != null) {
                         startActivity(Intent(this, targetActivity))
                         finish()
@@ -103,7 +102,7 @@ class LoginActivity : BaseViewModelActivity<LoginViewModel>() {
     }
 
     override fun onBackPressed() {
-        finishAffinity();
+        finishAffinity()
         finish()
     }
 

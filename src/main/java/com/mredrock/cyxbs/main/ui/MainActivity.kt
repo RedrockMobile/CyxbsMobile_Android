@@ -99,12 +99,8 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
      * 一些非重量级初始化操作
      */
     private fun initActivity() {
-        val time = System.currentTimeMillis() - BaseApp.time
-        if (BuildConfig.DEBUG) {
-            Toast.makeText(this, "启动时间DEBUG：${time}ms", Toast.LENGTH_SHORT).show()
-        }
-        InAppMessageManager.getInstance(BaseApp.context).showCardMessage(this,
-                "课表主页面") {
+        InAppMessageManager.getInstance(BaseApp.context)
+                .showCardMessage(this, "课表主页面") {
             //友盟插屏消息关闭之后调用，暂未写功能
         }
         viewModel.startPage.observe(this, Observer { starPage ->
