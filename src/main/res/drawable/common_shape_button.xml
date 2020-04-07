@@ -4,5 +4,5 @@
     <corners android:radius="100dp" />
     <gradient
         android:startColor="@color/buttonGradientStartColor"
-        android:endColor="@color/buttonGradientEndColor"/>
+        android:endColor="@color/buttonGradientEndColor" />
 </shape>

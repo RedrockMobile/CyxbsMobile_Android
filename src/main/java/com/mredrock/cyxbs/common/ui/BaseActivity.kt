@@ -60,7 +60,7 @@ abstract class BaseActivity : AppCompatActivity() {
             Build.VERSION.SDK_INT >= 23 -> {
                 if (BaseApp.isNightMode) {
                     window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                }else{
+                } else {
                     window.decorView.systemUiVisibility =
                             //亮色模式状态栏
                             View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR or
@@ -219,7 +219,7 @@ abstract class BaseActivity : AppCompatActivity() {
         lifeCycleLog("onRestoreInstanceState")
     }
 
-    fun lifeCycleLog(message:String){
+    fun lifeCycleLog(message: String) {
         if (isOpenLifeCycleLog) {
             LogUtils.d(TAG, "${this::class.java.simpleName}\$\$${message}")
         }

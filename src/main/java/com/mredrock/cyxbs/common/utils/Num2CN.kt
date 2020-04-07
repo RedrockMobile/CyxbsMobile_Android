@@ -22,6 +22,7 @@ object Num2CN {
      */
     private var CN_CHARS = arrayOf("零", "一", "二", "三", "四",
             "五", "六", "七", "八", "九")
+
     /**
      * 数值转换为中文字符串(口语化)
      * @param num

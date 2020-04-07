@@ -136,7 +136,8 @@
     <color name="mine_main_btn_gradient_end" tools:ignore="ResourceName">#5D5DF7</color>
 
     <!--    考试成绩-->
-    <color name="grades_gpa_rv_list_round_corner_background" tools:ignore="ResourceName">#345A5A5A</color>
+    <color name="grades_gpa_rv_list_round_corner_background" tools:ignore="ResourceName">#345A5A5A
+    </color>
     <color name="grades_item_cardView_bg" tools:ignore="ResourceName">#813A3A3A</color>
     <color name="grades_activity_tl_white" tools:ignore="ResourceName">#FFFFFF</color>
     <color name="grades_activity_back_grey" tools:ignore="ResourceName">#D3D3D3</color>

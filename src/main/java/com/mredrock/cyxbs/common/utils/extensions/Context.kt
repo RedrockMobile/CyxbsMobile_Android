@@ -58,9 +58,9 @@ fun Activity.setFullScreen() {
             or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY)
 }
 
-fun Context.toast(message:CharSequence) = CyxbsToast.makeText(this,message,Toast.LENGTH_SHORT).show()
+fun Context.toast(message: CharSequence) = CyxbsToast.makeText(this, message, Toast.LENGTH_SHORT).show()
 
-fun Context.toast(res:Int) = CyxbsToast.makeText(this,res,Toast.LENGTH_SHORT).show()
+fun Context.toast(res: Int) = CyxbsToast.makeText(this, res, Toast.LENGTH_SHORT).show()
 
 fun Context.getDarkModeStatus(): Boolean {
     val mode = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK

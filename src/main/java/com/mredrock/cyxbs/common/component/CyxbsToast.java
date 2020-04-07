@@ -15,7 +15,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
 
 import com.mredrock.cyxbs.common.R;
-import com.mredrock.cyxbs.common.utils.extensions.ContextKt;
 
 public class CyxbsToast {
     public static Toast makeText(Context context, @StringRes int resId, int duration)
@@ -39,7 +38,7 @@ public class CyxbsToast {
         display.getSize(point);
         result.setView(v);
         result.setDuration(duration);
-        result.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.TOP, 0, point.y/8);
+        result.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.TOP, 0, point.y / 8);
 
         return result;
     }

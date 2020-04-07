@@ -20,18 +20,18 @@ package com.mredrock.cyxbs.common.utils.encrypt;
 
 /**
  * Stripped-down version of the SHA1PRNG provided by the Crypto provider.
- *
+ * <p>
  * The Crypto provider that offers this functionality was deprecated on Android.
- *
+ * <p>
  * Use this class only to retrieve encrypted data that couldn't be retrieved otherwise.
  */
 public class InsecureSHA1PRNGKeyDerivator {
     /**
      * Only public method. Derive a key from the given seed.
-     *
+     * <p>
      * Use this method only to retrieve encrypted data that couldn't be retrieved otherwise.
      *
-     * @param seed seed used for the random generator, usually coming from a password
+     * @param seed           seed used for the random generator, usually coming from a password
      * @param keySizeInBytes length of the array returned
      */
     public static byte[] deriveInsecureKey(byte[] seed, int keySizeInBytes) {
@@ -41,6 +41,7 @@ public class InsecureSHA1PRNGKeyDerivator {
         derivator.nextBytes(key);
         return key;
     }
+
     // constants to use in expressions operating on bytes in int and long variables:
     // END_FLAGS - final bytes in words to append to message;
     //             see "ch.5.1 Padding the Message, FIPS 180-2"
@@ -48,12 +49,12 @@ public class InsecureSHA1PRNGKeyDerivator {
     // RIGHT2    - shifts to right for right half of long
     // LEFT      - shifts to left for bytes
     // MASK      - mask to select counter's bytes after shift to right
-    private static final int[] END_FLAGS = { 0x80000000, 0x800000, 0x8000, 0x80 };
-    private static final int[] RIGHT1 = { 0, 40, 48, 56 };
-    private static final int[] RIGHT2 = { 0, 8, 16, 24 };
-    private static final int[] LEFT = { 0, 24, 16, 8 };
-    private static final int[] MASK = { 0xFFFFFFFF, 0x00FFFFFF, 0x0000FFFF,
-            0x000000FF };
+    private static final int[] END_FLAGS = {0x80000000, 0x800000, 0x8000, 0x80};
+    private static final int[] RIGHT1 = {0, 40, 48, 56};
+    private static final int[] RIGHT2 = {0, 8, 16, 24};
+    private static final int[] LEFT = {0, 24, 16, 8};
+    private static final int[] MASK = {0xFFFFFFFF, 0x00FFFFFF, 0x0000FFFF,
+            0x000000FF};
     // HASHBYTES_TO_USE defines # of bytes returned by "computeHash(byte[])"
     // to use to form byte array returning by the "nextBytes(byte[])" method
     // Note, that this implementation uses more bytes than it is defined
@@ -107,23 +108,23 @@ public class InsecureSHA1PRNGKeyDerivator {
     // contains int value corresponding to engine's current state
     private transient int state;
     /**
-     *  constant defined in "SECURE HASH STANDARD"
+     * constant defined in "SECURE HASH STANDARD"
      */
     private static final int H0 = 0x67452301;
     /**
-     *  constant defined in "SECURE HASH STANDARD"
+     * constant defined in "SECURE HASH STANDARD"
      */
     private static final int H1 = 0xEFCDAB89;
     /**
-     *  constant defined in "SECURE HASH STANDARD"
+     * constant defined in "SECURE HASH STANDARD"
      */
     private static final int H2 = 0x98BADCFE;
     /**
-     *  constant defined in "SECURE HASH STANDARD"
+     * constant defined in "SECURE HASH STANDARD"
      */
     private static final int H3 = 0x10325476;
     /**
-     *  constant defined in "SECURE HASH STANDARD"
+     * constant defined in "SECURE HASH STANDARD"
      */
     private static final int H4 = 0xC3D2E1F0;
     /**
@@ -139,6 +140,7 @@ public class InsecureSHA1PRNGKeyDerivator {
      * in this implementation # is set to 20 (in general # varies from 1 to 20)
      */
     private static final int DIGEST_LENGTH = 20;
+
     // The "seed" array is used to compute both "current seed hash" and "next bytes".
     //
     // As the "SHA1" algorithm computes a hash of entire seed by splitting it into
@@ -170,6 +172,7 @@ public class InsecureSHA1PRNGKeyDerivator {
         counter = COUNTER_BASE;
         state = UNDEFINED;
     }
+
     /*
      * The method invokes the SHA1Impl's "updateHash(..)" method
      * to getUpdateInfo current seed frame and
@@ -184,17 +187,16 @@ public class InsecureSHA1PRNGKeyDerivator {
         updateHash(seed, bytes, 0, bytes.length - 1);
         seedLength += bytes.length;
     }
+
     /**
      * Changes current seed by supplementing a seed argument to the current seed,
      * if this already set;
      * the argument is used as first seed otherwise. <BR>
-     *
+     * <p>
      * The method overrides "engineSetSeed(byte[])" in class SecureRandomSpi.
      *
-     * @param
-     *       seed - byte array
-     * @throws
-     *       NullPointerException - if null is passed to the "seed" argument
+     * @param seed - byte array
+     * @throws NullPointerException - if null is passed to the "seed" argument
      */
     private void setSeed(byte[] seed) {
         if (seed == null) {
@@ -209,21 +211,20 @@ public class InsecureSHA1PRNGKeyDerivator {
             updateSeed(seed);
         }
     }
+
     /**
      * Writes random bytes into an array supplied.
      * Bits in a byte are from left to right. <BR>
-     *
+     * <p>
      * To generate random bytes, the "expansion of source bits" method is used,
      * that is,
      * the current seed with a 64-bit counter appended is used to compute new bits.
      * The counter is incremented by 1 for each 20-byte output. <BR>
-     *
+     * <p>
      * The method overrides engineNextBytes in class SecureRandomSpi.
      *
-     * @param
-     *       bytes - byte array to be filled in with bytes
-     * @throws
-     *       NullPointerException - if null is passed to the "bytes" argument
+     * @param bytes - byte array to be filled in with bytes
+     * @throws NullPointerException - if null is passed to the "bytes" argument
      */
     protected synchronized void nextBytes(byte[] bytes) {
         int i, n;
@@ -290,7 +291,7 @@ public class InsecureSHA1PRNGKeyDerivator {
             return; // return because "bytes[]" are filled in
         }
         n = seed[BYTES_OFFSET] & 0x03;
-        for (;;) {
+        for (; ; ) {
             if (n == 0) {
                 seed[lastWord] = (int) (counter >>> 32);
                 seed[lastWord + 1] = (int) (counter & 0xFFFFFFFF);
@@ -335,30 +336,30 @@ public class InsecureSHA1PRNGKeyDerivator {
             }
         }
     }
+
     /**
      * The method generates a 160 bit hash value using
      * a 512 bit message stored in first 16 words of int[] array argument and
      * current hash value stored in five words, beginning OFFSET+1, of the array argument.
      * Computation is done according to SHA-1 algorithm.
-     *
+     * <p>
      * The resulting hash value replaces the previous hash value in the array;
      * original bits of the message are not preserved.
-     *
+     * <p>
      * No checks on argument supplied, that is,
      * a calling method is responsible for such checks.
      * In case of incorrect array passed to the method
      * either NPE or IndexOutOfBoundException gets thrown by JVM.
      *
-     * @params
-     *        arrW - integer array; arrW.length >= (BYTES_OFFSET+6); <BR>
-     *               only first (BYTES_OFFSET+6) words are used
+     * @params arrW - integer array; arrW.length >= (BYTES_OFFSET+6); <BR>
+     * only first (BYTES_OFFSET+6) words are used
      */
     private static void computeHash(int[] arrW) {
-        int  a = arrW[HASH_OFFSET   ];
-        int  b = arrW[HASH_OFFSET +1];
-        int  c = arrW[HASH_OFFSET +2];
-        int  d = arrW[HASH_OFFSET +3];
-        int  e = arrW[HASH_OFFSET +4];
+        int a = arrW[HASH_OFFSET];
+        int b = arrW[HASH_OFFSET + 1];
+        int c = arrW[HASH_OFFSET + 2];
+        int d = arrW[HASH_OFFSET + 3];
+        int e = arrW[HASH_OFFSET + 4];
         int temp;
         // In this implementation the "d. For t = 0 to 79 do" loop
         // is split into four loops. The following constants:
@@ -367,74 +368,71 @@ public class InsecureSHA1PRNGKeyDerivator {
         //     K = 8F1BBCDC  40 <= t <= 59
         //     K = CA62C1D6  60 <= t <= 79
         // are hex literals in the loops.
-        for ( int t = 16; t < 80 ; t++ ) {
-            temp  = arrW[t-3] ^ arrW[t-8] ^ arrW[t-14] ^ arrW[t-16];
-            arrW[t] = ( temp<<1 ) | ( temp>>>31 );
+        for (int t = 16; t < 80; t++) {
+            temp = arrW[t - 3] ^ arrW[t - 8] ^ arrW[t - 14] ^ arrW[t - 16];
+            arrW[t] = (temp << 1) | (temp >>> 31);
         }
-        for ( int t = 0 ; t < 20 ; t++ ) {
-            temp = ( ( a<<5 ) | ( a>>>27 )   ) +
-                    ( ( b & c) | ((~b) & d)   ) +
-                    ( e + arrW[t] + 0x5A827999 ) ;
+        for (int t = 0; t < 20; t++) {
+            temp = ((a << 5) | (a >>> 27)) +
+                    ((b & c) | ((~b) & d)) +
+                    (e + arrW[t] + 0x5A827999);
             e = d;
             d = c;
-            c = ( b<<30 ) | ( b>>>2 ) ;
+            c = (b << 30) | (b >>> 2);
             b = a;
             a = temp;
         }
-        for ( int t = 20 ; t < 40 ; t++ ) {
-            temp = ((( a<<5 ) | ( a>>>27 ))) + (b ^ c ^ d) + (e + arrW[t] + 0x6ED9EBA1) ;
+        for (int t = 20; t < 40; t++) {
+            temp = (((a << 5) | (a >>> 27))) + (b ^ c ^ d) + (e + arrW[t] + 0x6ED9EBA1);
             e = d;
             d = c;
-            c = ( b<<30 ) | ( b>>>2 ) ;
+            c = (b << 30) | (b >>> 2);
             b = a;
             a = temp;
         }
-        for ( int t = 40 ; t < 60 ; t++ ) {
-            temp = (( a<<5 ) | ( a>>>27 )) + ((b & c) | (b & d) | (c & d)) +
-                    (e + arrW[t] + 0x8F1BBCDC) ;
+        for (int t = 40; t < 60; t++) {
+            temp = ((a << 5) | (a >>> 27)) + ((b & c) | (b & d) | (c & d)) +
+                    (e + arrW[t] + 0x8F1BBCDC);
             e = d;
             d = c;
-            c = ( b<<30 ) | ( b>>>2 ) ;
+            c = (b << 30) | (b >>> 2);
             b = a;
             a = temp;
         }
-        for ( int t = 60 ; t < 80 ; t++ ) {
-            temp = ((( a<<5 ) | ( a>>>27 ))) + (b ^ c ^ d) + (e + arrW[t] + 0xCA62C1D6) ;
+        for (int t = 60; t < 80; t++) {
+            temp = (((a << 5) | (a >>> 27))) + (b ^ c ^ d) + (e + arrW[t] + 0xCA62C1D6);
             e = d;
             d = c;
-            c = ( b<<30 ) | ( b>>>2 ) ;
+            c = (b << 30) | (b >>> 2);
             b = a;
             a = temp;
         }
-        arrW[HASH_OFFSET   ] += a;
-        arrW[HASH_OFFSET +1] += b;
-        arrW[HASH_OFFSET +2] += c;
-        arrW[HASH_OFFSET +3] += d;
-        arrW[HASH_OFFSET +4] += e;
+        arrW[HASH_OFFSET] += a;
+        arrW[HASH_OFFSET + 1] += b;
+        arrW[HASH_OFFSET + 2] += c;
+        arrW[HASH_OFFSET + 3] += d;
+        arrW[HASH_OFFSET + 4] += e;
     }
+
     /**
      * The method appends new bytes to existing ones
      * within limit of a frame of 64 bytes (16 words).
-     *
+     * <p>
      * Once a length of accumulated bytes reaches the limit
      * the "computeHash(int[])" method is invoked on the array to compute updated hash,
      * and the number of bytes in the frame is set to 0.
      * Thus, after appending all bytes, the array contain only those bytes
      * that were not used in computing final hash value yet.
-     *
+     * <p>
      * No checks on arguments passed to the method, that is,
      * a calling method is responsible for such checks.
      *
-     * @params
-     *        intArray  - int array containing bytes to which to append;
-     *                    intArray.length >= (BYTES_OFFSET+6)
-     * @params
-     *        byteInput - array of bytes to use for the getUpdateInfo
-     * @params
-     *        from      - the offset to start in the "byteInput" array
-     * @params
-     *        to        - a number of the last byte in the input array to use,
-     *                that is, for first byte "to"==0, for last byte "to"==input.length-1
+     * @params intArray  - int array containing bytes to which to append;
+     * intArray.length >= (BYTES_OFFSET+6)
+     * @params byteInput - array of bytes to use for the getUpdateInfo
+     * @params from      - the offset to start in the "byteInput" array
+     * @params to        - a number of the last byte in the input array to use,
+     * that is, for first byte "to"==0, for last byte "to"==input.length-1
      */
     private static void updateHash(int[] intArray, byte[] byteInput, int fromByte, int toByte) {
         // As intArray contains a packed bytes
@@ -443,39 +441,39 @@ public class InsecureSHA1PRNGKeyDerivator {
         int i = fromByte;
         int maxWord;
         int nBytes;
-        int wordIndex = index >>2;
+        int wordIndex = index >> 2;
         int byteIndex = index & 0x03;
-        intArray[BYTES_OFFSET] = ( index + toByte - fromByte + 1 ) & 077 ;
+        intArray[BYTES_OFFSET] = (index + toByte - fromByte + 1) & 077;
         // In general case there are 3 stages :
         // - appending bytes to non-full word,
         // - writing 4 bytes into empty words,
         // - writing less than 4 bytes in last word
-        if ( byteIndex != 0 ) {       // appending bytes in non-full word (as if)
-            for ( ; ( i <= toByte ) && ( byteIndex < 4 ) ; i++ ) {
-                intArray[wordIndex] |= ( byteInput[i] & 0xFF ) << ((3 - byteIndex)<<3) ;
+        if (byteIndex != 0) {       // appending bytes in non-full word (as if)
+            for (; (i <= toByte) && (byteIndex < 4); i++) {
+                intArray[wordIndex] |= (byteInput[i] & 0xFF) << ((3 - byteIndex) << 3);
                 byteIndex++;
             }
-            if ( byteIndex == 4 ) {
+            if (byteIndex == 4) {
                 wordIndex++;
-                if ( wordIndex == 16 ) {          // intArray is full, computing hash
+                if (wordIndex == 16) {          // intArray is full, computing hash
                     computeHash(intArray);
                     wordIndex = 0;
                 }
             }
-            if ( i > toByte ) {                 // all input bytes appended
-                return ;
+            if (i > toByte) {                 // all input bytes appended
+                return;
             }
         }
         // writing full words
         maxWord = (toByte - i + 1) >> 2;           // # of remaining full words, may be "0"
-        for ( int k = 0; k < maxWord ; k++ ) {
-            intArray[wordIndex] = ( ((int) byteInput[i   ] & 0xFF) <<24 ) |
-                    ( ((int) byteInput[i +1] & 0xFF) <<16 ) |
-                    ( ((int) byteInput[i +2] & 0xFF) <<8  ) |
-                    ( ((int) byteInput[i +3] & 0xFF)      )  ;
+        for (int k = 0; k < maxWord; k++) {
+            intArray[wordIndex] = (((int) byteInput[i] & 0xFF) << 24) |
+                    (((int) byteInput[i + 1] & 0xFF) << 16) |
+                    (((int) byteInput[i + 2] & 0xFF) << 8) |
+                    (((int) byteInput[i + 3] & 0xFF));
             i += 4;
             wordIndex++;
-            if ( wordIndex < 16 ) {     // buffer is not full yet
+            if (wordIndex < 16) {     // buffer is not full yet
                 continue;
             }
             computeHash(intArray);      // buffer is full, computing hash
@@ -483,17 +481,17 @@ public class InsecureSHA1PRNGKeyDerivator {
         }
         // writing last incomplete word
         // after writing free byte positions are set to "0"s
-        nBytes = toByte - i +1;
-        if ( nBytes != 0 ) {
-            int w =  ((int) byteInput[i] & 0xFF) <<24 ;
-            if ( nBytes != 1 ) {
-                w |= ((int) byteInput[i +1] & 0xFF) <<16 ;
-                if ( nBytes != 2) {
-                    w |= ((int) byteInput[i +2] & 0xFF) <<8 ;
+        nBytes = toByte - i + 1;
+        if (nBytes != 0) {
+            int w = ((int) byteInput[i] & 0xFF) << 24;
+            if (nBytes != 1) {
+                w |= ((int) byteInput[i + 1] & 0xFF) << 16;
+                if (nBytes != 2) {
+                    w |= ((int) byteInput[i + 2] & 0xFF) << 8;
                 }
             }
             intArray[wordIndex] = w;
         }
-        return ;
+        return;
     }
 }

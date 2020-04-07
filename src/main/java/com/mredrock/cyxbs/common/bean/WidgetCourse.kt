@@ -5,7 +5,7 @@ import java.io.Serializable
 /**
  * Created by zia on 2018/10/9.
  */
-class WidgetCourse: Serializable {
+class WidgetCourse : Serializable {
 
     /**
      * status : 200
@@ -43,7 +43,7 @@ class WidgetCourse: Serializable {
                 '}'.toString()
     }
 
-    class DataBean: Serializable {
+    class DataBean : Serializable {
         /**
          * hash_day : 0
          * hash_lesson : 1
