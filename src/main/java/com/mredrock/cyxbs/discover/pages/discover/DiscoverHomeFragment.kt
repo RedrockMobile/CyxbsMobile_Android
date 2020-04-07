@@ -51,10 +51,8 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>() {
 
         if(savedInstanceState == null){
             initFeeds()
-            viewModel.startSwitchViewPager()
         }
         initJwNews(vf_jwzx_detail, fl_discover_home_jwnews)
-
         initViewPager()
         viewModel.getRollInfos()
         iv_check_in.setOnClickListener {
@@ -66,7 +64,7 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>() {
     override fun onResume() {
         super.onResume()
         initFunctions()
-        vf_jwzx_detail.startFlipping()
+        viewModel.startSwitchViewPager()
     }
 
     //加载轮播图
@@ -103,6 +101,7 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>() {
                 for (item in it) {
                     viewFlipper.addView(getTextView(item.title, item.id))
                 }
+                vf_jwzx_detail.startFlipping()
             }
         }
 
@@ -189,6 +188,7 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>() {
     override fun onPause() {
         super.onPause()
         vf_jwzx_detail.stopFlipping()
+        viewModel.stopPageTurner()
     }
 
 }
