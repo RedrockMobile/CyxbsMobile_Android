@@ -202,7 +202,7 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
                                 EventBus.getDefault().post(LoginStateChangeEvent(false))
                                 //清空activity栈
                                 val flag = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
-                                ARouter.getInstance().build("/main/login").withFlags(flag.toInt()).navigation()
+                                ARouter.getInstance().build(MAIN_LOGIN).withFlags(flag).withBoolean(IS_EXIT_LOGIN,true).navigation()
                             },
                             positiveString = "退出",
                             onNegativeClick = { dismiss() }
