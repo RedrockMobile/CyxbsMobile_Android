@@ -9,7 +9,7 @@ import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import com.mredrock.cyxbs.common.ui.BaseActivity
+import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.course.R
 import com.mredrock.cyxbs.course.adapters.TimeSelectedAdapter
 import com.mredrock.cyxbs.course.adapters.WeekSelectedAdapter
@@ -29,12 +29,13 @@ import kotlinx.android.synthetic.main.course_activity_edit_affair.*
  *              分别对应了Helper里面的几个切换方法
  */
 
-class AffairEditActivity : BaseActivity() {
+class AffairEditActivity : BaseViewModelActivity<EditAffairViewModel>() {
 
     override val isFragmentActivity: Boolean
         get() = true
 
     private lateinit var mBinding: CourseActivityEditAffairBinding
+    override val viewModelClass: Class<EditAffairViewModel> = EditAffairViewModel::class.java
 
     //周数选择BottomSheetDialog
     val mWeekSelectDialogFragment: WeekSelectDialogFragment by lazy(LazyThreadSafetyMode.NONE) {
@@ -53,22 +54,20 @@ class AffairEditActivity : BaseActivity() {
 
     private lateinit var affairTransitionAnimHelper: AffairTransitionAnimHelper
 
-    lateinit var mEditAffairViewModel: EditAffairViewModel
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        mEditAffairViewModel = ViewModelProvider(this).get(EditAffairViewModel::class.java)
+        viewModel = ViewModelProvider(this).get(EditAffairViewModel::class.java)
         mBinding = DataBindingUtil.setContentView(this, R.layout.course_activity_edit_affair)
-        mBinding.editAffairViewModel = mEditAffairViewModel
+        mBinding.editAffairViewModel = viewModel
         mBinding.lifecycleOwner = this
         affairTransitionAnimHelper = AffairTransitionAnimHelper(this)
         initActivity()
     }
 
     private fun initActivity() {
-        mEditAffairViewModel.initData(this)
-        tv_week_select.adapter = WeekSelectedAdapter(mEditAffairViewModel.mPostWeeks, this)
-        tv_time_select.adapter = TimeSelectedAdapter(mEditAffairViewModel.mPostClassAndDays, this)
+        viewModel.initData(this)
+        tv_week_select.adapter = WeekSelectedAdapter(viewModel.mPostWeeks, this)
+        tv_time_select.adapter = TimeSelectedAdapter(viewModel.mPostClassAndDays, this)
         tv_remind_select.setOnClickListener {
             if (!mRemindSelectDialogFragment.isShowing) {
                 mRemindSelectDialogFragment.show()
@@ -85,17 +84,17 @@ class AffairEditActivity : BaseActivity() {
                 } else false
             }
         })
-        mEditAffairViewModel.content.observe(this, Observer {
+        viewModel.content.observe(this, Observer {
             et_content_input.setText(it)
             et_content_input.setSelection(it.length)
         })
 
         course_back.setOnClickListener { finish() }
         //必须在ViewModel的initData之后执行
-        if (mEditAffairViewModel.passedAffairInfo != null) {
+        if (viewModel.passedAffairInfo != null) {
             affairTransitionAnimHelper.modifyPageLayout()
         }
-        mEditAffairViewModel.titleCandidateList.observe(this, Observer {
+        viewModel.titleCandidateList.observe(this, Observer {
             rv_you_might.adapter = YouMightAdapter(it, et_content_input)
         })
     }
@@ -104,7 +103,7 @@ class AffairEditActivity : BaseActivity() {
      * 不断进行下一步，根据状态执行相应动画
      */
     private fun forward() {
-        when (mEditAffairViewModel.status) {
+        when (viewModel.status) {
             EditAffairViewModel.Status.TitleStatus -> affairTransitionAnimHelper.addTitleNextMonitor()
             EditAffairViewModel.Status.ContentStatus -> affairTransitionAnimHelper.addContentNextMonitor()
             EditAffairViewModel.Status.AllDoneStatus -> postAffair()
@@ -115,12 +114,12 @@ class AffairEditActivity : BaseActivity() {
      * 不断进行后退，根据状态执行相应动画，或者直接退出activity
      */
     override fun onBackPressed() {
-        when (mEditAffairViewModel.status) {
+        when (viewModel.status) {
             EditAffairViewModel.Status.TitleStatus -> super.onBackPressed()
             EditAffairViewModel.Status.ContentStatus -> affairTransitionAnimHelper.backAddTitleMonitor()
             //如果是修改事务，此时按返回键直接退出
             EditAffairViewModel.Status.AllDoneStatus -> {
-                if (mEditAffairViewModel.passedAffairInfo != null) {
+                if (viewModel.passedAffairInfo != null) {
                     super.onBackPressed()
                 } else {
                     affairTransitionAnimHelper.backAddContentMonitor()
@@ -144,15 +143,15 @@ class AffairEditActivity : BaseActivity() {
                 Toast.makeText(this, resources.getString(R.string.course_title_is_null),
                         Toast.LENGTH_SHORT).show()
             }
-            mEditAffairViewModel.mPostWeeks.isEmpty() -> {
+            viewModel.mPostWeeks.isEmpty() -> {
                 Toast.makeText(this, resources.getString(R.string.course_week_is_not_select),
                         Toast.LENGTH_SHORT).show()
             }
-            mEditAffairViewModel.mPostClassAndDays.isEmpty() -> {
+            viewModel.mPostClassAndDays.isEmpty() -> {
                 Toast.makeText(this, R.string.course_time_is_not_select, Toast.LENGTH_SHORT).show()
             }
             else -> {
-                mEditAffairViewModel.postOrModifyAffair(this, mBinding.etTitle.text.toString(),
+                viewModel.postOrModifyAffair(this, mBinding.etTitle.text.toString(),
                         mBinding.etContentInput.text.toString())
             }
         }
@@ -163,4 +162,5 @@ class AffairEditActivity : BaseActivity() {
         const val WEEK_NUM = "weekString"
         const val TIME_NUM = "timeNum"
     }
+
 }

@@ -10,6 +10,7 @@ import android.view.inputmethod.EditorInfo
 import android.widget.TextView
 import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintSet
+import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.course.R
 import com.mredrock.cyxbs.course.ui.activity.AffairEditActivity
 import com.mredrock.cyxbs.course.viewmodels.EditAffairViewModel
@@ -29,7 +30,7 @@ class AffairTransitionAnimHelper(var affairEditActivity: AffairEditActivity?) {
     fun addTitleNextMonitor() {
         affairEditActivity?.apply {
             if (et_content_input.text.trim().isEmpty()) {
-                Toast.makeText(this, resources.getString(R.string.course_title_is_null),
+                CyxbsToast.makeText(this, resources.getString(R.string.course_title_is_null),
                         Toast.LENGTH_SHORT).show()
             } else {
                 TransitionManager.beginDelayedTransition(course_affair_container, TransitionSet().apply {
@@ -53,7 +54,7 @@ class AffairTransitionAnimHelper(var affairEditActivity: AffairEditActivity?) {
                 tv_title_tips.text = et_content_input.text.toString()
                 tv_content_text.visibility = View.VISIBLE
                 et_content_input.text.clear()
-                mEditAffairViewModel.status = EditAffairViewModel.Status.ContentStatus
+                viewModel.status = EditAffairViewModel.Status.ContentStatus
             }
         }
     }
@@ -85,7 +86,7 @@ class AffairTransitionAnimHelper(var affairEditActivity: AffairEditActivity?) {
             et_content_input.setSelection(tv_title_tips.text.length)
             tv_title_tips.text = ""
             tv_content_text.visibility = View.GONE
-            mEditAffairViewModel.status = EditAffairViewModel.Status.TitleStatus
+            viewModel.status = EditAffairViewModel.Status.TitleStatus
         }
     }
 
@@ -104,7 +105,7 @@ class AffairTransitionAnimHelper(var affairEditActivity: AffairEditActivity?) {
                 addTransition(ChangeBounds().apply { duration = 300 })
             })
             modifyPageLayout()
-            mEditAffairViewModel.status = EditAffairViewModel.Status.AllDoneStatus
+            viewModel.status = EditAffairViewModel.Status.AllDoneStatus
 
         }
     }
@@ -133,7 +134,7 @@ class AffairTransitionAnimHelper(var affairEditActivity: AffairEditActivity?) {
             tv_remind_select.visibility = View.GONE
             et_content_input.imeOptions = EditorInfo.IME_ACTION_NEXT
             tv_title_tips.text = et_title.text
-            mEditAffairViewModel.status = EditAffairViewModel.Status.ContentStatus
+            viewModel.status = EditAffairViewModel.Status.ContentStatus
         }
     }
 
@@ -159,7 +160,7 @@ class AffairTransitionAnimHelper(var affairEditActivity: AffairEditActivity?) {
             tv_remind_select.visibility = View.VISIBLE
             et_content_input.imeOptions = EditorInfo.IME_ACTION_DONE
             et_title.setText(tv_title_tips.text, TextView.BufferType.EDITABLE)
-            mEditAffairViewModel.status = EditAffairViewModel.Status.AllDoneStatus
+            viewModel.status = EditAffairViewModel.Status.AllDoneStatus
         }
     }
 

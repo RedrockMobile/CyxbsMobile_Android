@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.RelativeLayout
 import androidx.annotation.LayoutRes
+import androidx.core.view.children
 import androidx.viewpager.widget.ViewPager
 import com.mredrock.cyxbs.course.R
 import com.mredrock.cyxbs.course.network.Course
@@ -106,6 +107,22 @@ class ScheduleDetailView : RelativeLayout {
     }
 
 
+    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+        val mode = MeasureSpec.getMode(heightMeasureSpec)
+        if (mode == MeasureSpec.AT_MOST) {
+            var maxHeight = 0
+            children.forEach {
+                it.measure(widthMeasureSpec, MeasureSpec.makeMeasureSpec(MeasureSpec.getSize(heightMeasureSpec), MeasureSpec.AT_MOST))
+                if (it.measuredHeight > maxHeight) {
+                    maxHeight = it.measuredHeight
+                }
+            }
+            super.onMeasure(widthMeasureSpec, MeasureSpec.makeMeasureSpec(maxHeight,MeasureSpec.EXACTLY))
+        }else{
+            super.onMeasure(widthMeasureSpec, heightMeasureSpec)
+        }
+    }
+
     /**
      * This Adapter is the adapter of ViewPager displaying the schedules. There use a proxy. Let the
      * [ViewPagerAdapter]'s work done by [Adapter]
@@ -150,7 +167,7 @@ class ScheduleDetailView : RelativeLayout {
         }
     }
 
-    class WarpHeightViewPager(context:Context): ViewPager(context) {
+    class WarpHeightViewPager(context: Context) : ViewPager(context) {
         override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
             var height = 0
             //下面遍历所有child的高度

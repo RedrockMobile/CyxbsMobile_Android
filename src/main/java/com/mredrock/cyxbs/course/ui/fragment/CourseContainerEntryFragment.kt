@@ -27,7 +27,7 @@ import com.mredrock.cyxbs.course.adapters.ScheduleVPAdapter
 import com.mredrock.cyxbs.course.databinding.CourseFragmentCourseContainerBinding
 import com.mredrock.cyxbs.course.event.*
 import com.mredrock.cyxbs.course.lifecycle.VPOnPagerChangeObserver
-import com.mredrock.cyxbs.course.ui.ScheduleDetailDialogHelper
+import com.mredrock.cyxbs.course.ui.ScheduleDetailBottomSheetDialogHelper
 import com.mredrock.cyxbs.course.utils.AffairToCalendar
 import com.mredrock.cyxbs.course.utils.changeLibBeanToCourse
 import com.mredrock.cyxbs.course.viewmodels.CoursesViewModel
@@ -111,8 +111,8 @@ class CourseContainerEntryFragment : BaseFragment() {
     private lateinit var mRawWeeks: Array<String>
     private lateinit var mWeeks: Array<String>
 
-    private val mDialogHelper: ScheduleDetailDialogHelper by lazy(LazyThreadSafetyMode.NONE) {
-        ScheduleDetailDialogHelper(context!!)
+    private val mDialogHelper: ScheduleDetailBottomSheetDialogHelper by lazy(LazyThreadSafetyMode.NONE) {
+        ScheduleDetailBottomSheetDialogHelper(context!!)
     }
 
     private val accountService: IAccountService = ServiceManager.getService(IAccountService::class.java)

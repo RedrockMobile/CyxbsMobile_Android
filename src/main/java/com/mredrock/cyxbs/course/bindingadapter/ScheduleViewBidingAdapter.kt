@@ -26,7 +26,6 @@ object ScheduleViewBidingAdapter {
         schedules?.let {
             val scheduleViewAdapter = ScheduleViewAdapter(scheduleView.context as Activity, nowWeek, it, isBanTouchView)
             scheduleView.adapter = scheduleViewAdapter
-            scheduleView.startLayoutAnimation()
         }
     }
 

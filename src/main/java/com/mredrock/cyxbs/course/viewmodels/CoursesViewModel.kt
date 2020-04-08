@@ -89,7 +89,10 @@ class CoursesViewModel : BaseViewModel() {
     }
 
     //全部课程数据,如果加载了事务，事务也在其中
-    val allCoursesData = ObservableField<MutableList<Course>>()
+    val allCoursesData = mutableListOf<Course>()
+
+    //这个变量只是用来通知课表发生了改变
+    val notifyCourseDataChange = MutableLiveData<Unit>()
 
     /**
      * 用于单独储存真正的用于展示的课表数据
@@ -425,16 +428,18 @@ class CoursesViewModel : BaseViewModel() {
             //第一种情况没啥好讲的，第二种是为了规避那种本身就没有课的大四学生，
             // 没课也可以正常显示课表，如果有课也出现了第二种情况那么说明后端出啥问题了或者上面的容错机制还不够完善
             if (courses.isNotEmpty() || (courses.isEmpty() && affairs.isNotEmpty())) {
-                allCoursesData.set(mutableListOf<Course>().apply {
+                //这里没有直接set，所以不能引起所绑定的监听
+                allCoursesData.clear()
+                allCoursesData.addAll(mutableListOf<Course>().apply {
                     addAll(courses)
                     addAll(affairs)
                 })
+                notifyCourseDataChange.value = Unit
                 val nowWeek = nowWeek.value
-                val courses = allCoursesData.get()
-                if (nowWeek != null && courses != null) {
+                if (nowWeek != null && allCoursesData != null) {
                     //获取当前的课程显示在上拉课表的头部
-                    getTodayCourse(courses, nowWeek)?.let { todayCourse ->
-                        val pair = getNowCourse(todayCourse, courses, nowWeek)
+                    getTodayCourse(allCoursesData, nowWeek)?.let { todayCourse ->
+                        val pair = getNowCourse(todayCourse, allCoursesData, nowWeek)
                         nowCourse.set(pair.first)
                         tomorrowTips.set(pair.second)
                     }

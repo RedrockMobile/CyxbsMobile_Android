@@ -15,8 +15,8 @@ import kotlinx.android.synthetic.main.course_time_select_auto_warp_item.view.*
  */
 class TimeSelectedAdapter(private val timeList: MutableList<Pair<Int, Int>>, val affairEditActivity: AffairEditActivity) : RedRockAutoWarpView.Adapter() {
 
-    private val timeArray = affairEditActivity.mEditAffairViewModel.timeArray
-    private val dayOfWeekArray = affairEditActivity.mEditAffairViewModel.dayOfWeekArray
+    private val timeArray = affairEditActivity.viewModel.timeArray
+    private val dayOfWeekArray = affairEditActivity.viewModel.dayOfWeekArray
     private val mTimeSelectDialogFragment = affairEditActivity.mTimeSelectDialogFragment
 
 

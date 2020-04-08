@@ -11,7 +11,7 @@
 
         <variable
             name="scheduleDetailDialogHelper"
-            type="com.mredrock.cyxbs.course.ui.ScheduleDetailDialogHelper" />
+            type="com.mredrock.cyxbs.course.ui.ScheduleDetailBottomSheetDialogHelper" />
 
 
     </data>
@@ -99,6 +99,7 @@
                             android:layout_height="wrap_content"
                             android:drawableStart="@drawable/course_time"
                             android:gravity="center"
+                            android:drawablePadding="5dp"
                             android:text="@{coursesViewModel.nowCourseTime}"
                             android:visibility="@{coursesViewModel.isShowCurrentSchedule}"
                             app:layout_constraintBottom_toBottomOf="parent"
@@ -127,6 +128,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="3dp"
+                                android:drawablePadding="5dp"
                                 android:drawableStart="@drawable/course_landmark"
                                 android:ellipsize="marquee"
                                 android:gravity="center"

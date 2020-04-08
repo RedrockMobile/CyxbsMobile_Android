@@ -1,17 +1,15 @@
 package com.mredrock.cyxbs.course.viewmodels
 
-import android.app.Application
 import androidx.fragment.app.FragmentActivity
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
-import com.mredrock.cyxbs.common.BaseApp
+import com.mredrock.cyxbs.common.BaseApp.Companion.context
 import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.service.account.IAccountService
-import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
 import com.mredrock.cyxbs.common.utils.extensions.errorHandler
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
+import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.course.R
 import com.mredrock.cyxbs.course.event.AddAffairEvent
 import com.mredrock.cyxbs.course.event.ModifyAffairEvent
@@ -25,30 +23,32 @@ import org.greenrobot.eventbus.EventBus
 /**
  * Created by anriku on 2018/9/9.
  */
-
-class EditAffairViewModel(application: Application) : AndroidViewModel(application) {
+@Suppress("RemoveExplicitTypeArguments")
+class EditAffairViewModel : BaseViewModel() {
 
     //显示的字符串，提醒
     val selectedRemindString: MutableLiveData<String> = MutableLiveData()
 
     // 周一到周日的字符串数组
     val dayOfWeekArray: Array<String> by lazy(LazyThreadSafetyMode.NONE) {
-        getApplication<Application>().resources.getStringArray(R.array.course_course_day_of_week_strings)
+        context.resources.getStringArray(R.array.course_course_day_of_week_strings)
     }
+
     // 周数对应的字符串数组
     val weekArray: Array<String> by lazy(LazyThreadSafetyMode.NONE) {
-        getApplication<Application>().resources.getStringArray(R.array.course_course_weeks_strings)
+        context.resources.getStringArray(R.array.course_course_weeks_strings)
     }
 
     //具体上课时间字符串
     val timeArray: Array<String> by lazy(LazyThreadSafetyMode.NONE) {
-        getApplication<Application>().resources.getStringArray(R.array.course_time_select_strings)
+        context.resources.getStringArray(R.array.course_time_select_strings)
     }
 
     // 提醒对应的字符串数组
     val remindArray: Array<String> by lazy(LazyThreadSafetyMode.NONE) {
-        getApplication<Application>().resources.getStringArray(R.array.course_remind_strings)
+        context.resources.getStringArray(R.array.course_remind_strings)
     }
+
     // 进行事务提交网络请求网络请求
     private val mCourseApiService by lazy(LazyThreadSafetyMode.NONE) {
         ApiGenerator.getApiService(CourseApiService::class.java)
@@ -56,13 +56,16 @@ class EditAffairViewModel(application: Application) : AndroidViewModel(applicati
 
     // 事务标题
     var title: MutableLiveData<String> = MutableLiveData()
+
     // 事务内容
     var content: MutableLiveData<String> = MutableLiveData()
 
-    // 记录要被post的课程时间和日期对
+    // 记录要被post的课程时间和日期对,这个有个Lint检查Kotlin的坑，所以在类上面添加了忽略检查
     val mPostClassAndDays: MutableList<Pair<Int, Int>> by lazy(LazyThreadSafetyMode.NONE) { mutableListOf<Pair<Int, Int>>() }
+
     // 记录要被post的选择的周数
     val mPostWeeks: MutableList<Int> by lazy(LazyThreadSafetyMode.NONE) { mutableListOf<Int>() }
+
     // 记录要被post的选择的提醒时间
     var postRemind: Int = 0
         private set
@@ -104,11 +107,11 @@ class EditAffairViewModel(application: Application) : AndroidViewModel(applicati
                 mPostWeeks.add(passedWeekPosition)
             }
             setTimeSelected(mutableListOf(passedTimePosition))
-            selectedRemindString.value = getApplication<Application>().resources.getString(R.string.course_remind_select)
+            selectedRemindString.value = context.resources.getString(R.string.course_remind_select)
         } else if (passedAffairInfo != null) {
             setPassedAffairInfo()
         } else {
-            selectedRemindString.value = getApplication<Application>().resources.getString(R.string.course_remind_select)
+            selectedRemindString.value = context.resources.getString(R.string.course_remind_select)
         }
     }
 
@@ -141,13 +144,20 @@ class EditAffairViewModel(application: Application) : AndroidViewModel(applicati
         if (passedAffairInfo == null) {
             val id = AffairHelper.generateAffairId()
 
-            mCourseApiService.addAffair(id,date, postRemind, title, content)
+            mCourseApiService.addAffair(id, date, postRemind, title, content)
                     .setSchedulers()
                     .errorHandler()
                     .subscribe(ExecuteOnceObserver(onExecuteOnceNext = {
-                        activity.finish()
-                        // 更新课表
-                        EventBus.getDefault().post(AddAffairEvent())
+                        it.apply {
+//                            if (info == "success" && status == 200) {
+                            activity.finish()
+                            // 更新课表
+                            EventBus.getDefault().post(AddAffairEvent())
+                            toastEvent.value = R.string.course_add_transaction_as_a_reminder
+//                            } else {
+//                                toastEvent.value = R.string.course_add_transaction
+//                            }
+                        }
                     }))
         } else {
             mCourseApiService.modifyAffair(passedAffairInfo!!.courseId.toString(), date,
@@ -155,8 +165,16 @@ class EditAffairViewModel(application: Application) : AndroidViewModel(applicati
                     .setSchedulers()
                     .errorHandler()
                     .subscribe(ExecuteOnceObserver(onExecuteOnceNext = {
-                        activity.finish()
-                        EventBus.getDefault().post(ModifyAffairEvent())
+                        it.apply {
+                            if (info == "success" && status == 200) {
+                                activity.finish()
+                                // 更新课表
+                                EventBus.getDefault().post(ModifyAffairEvent())
+                                toastEvent.value = R.string.course_modify_transaction_successful
+                            } else {
+                                toastEvent.value = R.string.course_network_error_modification_failed
+                            }
+                        }
                     }))
         }
     }
@@ -227,7 +245,7 @@ class EditAffairViewModel(application: Application) : AndroidViewModel(applicati
         // 对提醒时间重现
         val remindTime = passedAffairInfo?.affairTime
         if (remindTime == null) {
-            selectedRemindString.value = getApplication<Application>().resources.getString(R.string.course_remind_select)
+            selectedRemindString.value = context.resources.getString(R.string.course_remind_select)
         } else {
             setRemindSelectString(getRemindPosition(remindTime.toInt()))
         }
@@ -256,7 +274,7 @@ class EditAffairViewModel(application: Application) : AndroidViewModel(applicati
      * @param timeSelectPositions 对应的课程字符串的position
      */
     private fun setTimeSelected(timeSelectPositions: List<Int>) {
-        for ((_, position) in timeSelectPositions.withIndex()) {
+        for (position in timeSelectPositions) {
             // 获取选择的课程时间的行列位置
             val row: Int = position / 7
             val column: Int = position - row * 7

@@ -39,6 +39,7 @@ open class Course() : Parcelable {
     companion object {
         @Ignore
         const val COURSE = 0
+
         @Ignore
         const val AFFAIR = 1
 
@@ -58,8 +59,10 @@ open class Course() : Parcelable {
     //下面的三个变量都是和Affair相关的。是由Affair转换为Course中，Course没有任何变量存储所新增的变量。
     @Ignore
     var customType: Int = 0
+
     @Ignore
     var affairTime: String? = null
+
     //affairDates将在进行数据修改的时候使用
     @Ignore
     var affairDates: List<Affair.Date>? = mutableListOf()
@@ -173,6 +176,32 @@ open class Course() : Parcelable {
         return 0
     }
 
+    override fun equals(other: Any?): Boolean {
+        if (other !is Course) return false
+        if (customType == other.customType &&
+                affairTime == other.affairTime &&
+                courseId == other.courseId &&
+                courseNum == other.courseNum &&
+                course == other.course &&
+                hashDay == other.hashDay &&
+                hashLesson == other.hashLesson &&
+                beginLesson == other.beginLesson &&
+                day == other.day &&
+                lesson == other.lesson &&
+                teacher == other.teacher &&
+                classroom == other.classroom &&
+                rawWeek == other.rawWeek &&
+                weekModel == other.weekModel &&
+                weekBegin == other.weekBegin &&
+                weekEnd == other.weekEnd &&
+                type == other.type &&
+                period == other.period &&
+                affairDates.toString() == other.affairDates.toString() &&
+                week.toString() == other.week.toString()) return true
+        return false
+    }
+
+
     override fun toString(): String {
         return "Course(customType=$customType, affairTime=$affairTime, affairDates=$affairDates, " +
                 "courseId=$courseId, courseNum=$courseNum, course=$course, hashDay=$hashDay, " +
@@ -180,6 +209,4 @@ open class Course() : Parcelable {
                 "teacher=$teacher, classroom=$classroom, rawWeek=$rawWeek, weekModel=$weekModel," +
                 " weekBegin=$weekBegin, weekEnd=$weekEnd, type=$type, period=$period, week=$week)"
     }
-
-
 }

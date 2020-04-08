@@ -6,12 +6,12 @@ import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.AnimationUtils
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import com.mredrock.cyxbs.common.config.DEFAULT_PREFERENCE_FILENAME
 import com.mredrock.cyxbs.common.config.SP_SHOW_MODE
+import com.mredrock.cyxbs.common.utils.ClassRoomParse
 import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.SchoolCalendar
 import com.mredrock.cyxbs.common.utils.extensions.sharedPreferences
@@ -20,9 +20,8 @@ import com.mredrock.cyxbs.course.component.AffairBackgroundView
 import com.mredrock.cyxbs.course.component.ScheduleView
 import com.mredrock.cyxbs.course.event.DismissAddAffairViewEvent
 import com.mredrock.cyxbs.course.network.Course
+import com.mredrock.cyxbs.course.ui.ScheduleDetailBottomSheetDialogHelper
 import com.mredrock.cyxbs.course.ui.activity.AffairEditActivity
-import com.mredrock.cyxbs.course.ui.ScheduleDetailDialogHelper
-import com.mredrock.cyxbs.common.utils.ClassRoomParse
 import com.mredrock.cyxbs.course.utils.createCornerBackground
 import org.greenrobot.eventbus.EventBus
 import org.jetbrains.anko.textColor
@@ -49,7 +48,7 @@ class ScheduleViewAdapter(private val mActivity: Activity,
 
     private var mInflater: LayoutInflater = LayoutInflater.from(mActivity)
     private val mShowModel = mActivity.sharedPreferences(DEFAULT_PREFERENCE_FILENAME).getBoolean(SP_SHOW_MODE, true)
-    private val mSchedulesArray = Array(6) { arrayOfNulls<MutableList<Course>>(7) }
+    private lateinit var mSchedulesArray: Array<Array<MutableList<Course>?>>
 
     private val mCoursesColors by lazy(LazyThreadSafetyMode.NONE) {
         intArrayOf(ContextCompat.getColor(mActivity, R.color.morningCourseColor),
@@ -63,8 +62,8 @@ class ScheduleViewAdapter(private val mActivity: Activity,
                 ContextCompat.getColor(mActivity, R.color.eveningCourseTextColor))
     }
 
-    private val mDialogHelper: ScheduleDetailDialogHelper by lazy(LazyThreadSafetyMode.NONE) {
-        ScheduleDetailDialogHelper(mActivity)
+    private val mDialogHelper: ScheduleDetailBottomSheetDialogHelper by lazy(LazyThreadSafetyMode.NONE) {
+        ScheduleDetailBottomSheetDialogHelper(mActivity)
     }
 
     private lateinit var mTop: TextView
@@ -79,18 +78,23 @@ class ScheduleViewAdapter(private val mActivity: Activity,
         sortCourse()
     }
 
+    override fun notifyDataChange() {
+        addCourse()
+        sortCourse()
+    }
+
     /**
      * 这个方法用于进行课程的添加
      */
+    @Suppress("RemoveExplicitTypeArguments")//下面的MutableList<Course>，lint检查不需要写，但是不写编译不了
     private fun addCourse() {
-
+        mSchedulesArray = Array(6) { arrayOfNulls<MutableList<Course>>(7) }
         //下方复用代码，忽视就好
         fun initSchedulesArray(row: Int, column: Int) {
             if (mSchedulesArray[row][column] == null) {
                 mSchedulesArray[row][column] = mutableListOf()
             }
         }
-
         for (course in mSchedules) {
             val row = course.hashLesson
             val column = course.hashDay
@@ -154,8 +158,10 @@ class ScheduleViewAdapter(private val mActivity: Activity,
      * @param container [ScheduleView]
      * @return 添加的View
      */
-    override fun getItemView(row: Int, column: Int, container: ViewGroup): View {
-        val itemView = mInflater.inflate(R.layout.course_schedule_item_view, container, false)
+    override fun getItemView(row: Int, column: Int, container: ViewGroup): View = mInflater.inflate(R.layout.course_schedule_item_view, container, false)
+
+
+    override fun initItemView(view: View, row: Int, column: Int) {
         //itemInfo表示当前行列的第一个schedule的信息，itemCount表示当前行列schedule的数量
         val itemViewInfo = getItemViewInfo(row, column)
         var itemCount = 1
@@ -167,14 +173,15 @@ class ScheduleViewAdapter(private val mActivity: Activity,
                 }
             }
             itemCount = courseList.size
-            setItemViewOnclickListener(itemView, courseList)
+            setItemViewOnclickListener(view, courseList)
         }
 
-        mTop = itemView.findViewById(R.id.top)
-        mBottom = itemView.findViewById(R.id.bottom)
-        mBackground = itemView.findViewById(R.id.background)
-        mTag = itemView.findViewById(R.id.tag)
-        mAffairBackground = itemView.findViewById(R.id.affair_item_background)
+        mTop = view.findViewById(R.id.top)
+        mBottom = view.findViewById(R.id.bottom)
+        mBackground = view.findViewById(R.id.background)
+        mTag = view.findViewById(R.id.tag)
+        mTag.visibility = View.GONE
+        mAffairBackground = view.findViewById(R.id.affair_item_background)
 
         itemViewInfo?.let {
             when {
@@ -189,7 +196,6 @@ class ScheduleViewAdapter(private val mActivity: Activity,
                 }
             }
         }
-        return itemView
     }
 
     /**
@@ -208,11 +214,11 @@ class ScheduleViewAdapter(private val mActivity: Activity,
         if (course.customType == Course.COURSE) {
             top.text = course.course
             bottom.text = ClassRoomParse.parseClassRoom(course.classroom ?: "")
-            background.background = createCornerBackground(mCoursesColors[index],mActivity.resources.getDimension(R.dimen.course_course_item_radius))
+            background.background = createCornerBackground(mCoursesColors[index], mActivity.resources.getDimension(R.dimen.course_course_item_radius))
             mAffairBackground.visibility = View.GONE
             if (itemCount > 1) {
                 tag.visibility = View.VISIBLE
-                tag.background = createCornerBackground(mCoursesTextColors[course.hashLesson / 2],mActivity.resources.getDimension(R.dimen.course_schedule_tag_radius))
+                tag.background = createCornerBackground(mCoursesTextColors[course.hashLesson / 2], mActivity.resources.getDimension(R.dimen.course_schedule_tag_radius))
             }
             top.textColor = mCoursesTextColors[index]
             bottom.textColor = mCoursesTextColors[index]
@@ -228,14 +234,14 @@ class ScheduleViewAdapter(private val mActivity: Activity,
     }
 
 
-
     /**
      * 获取当前课程位置上的高度信息
      * @param
      */
     override fun getItemViewInfo(row: Int, column: Int): ScheduleView.ScheduleItem? {
         val isOverlap: Boolean = if (row == 1 || row == 3 || row == 5) {
-            mSchedulesArray[row - 1][column]?.get(0)?.period ?: NOT_LONG_COURSE == 4
+            mSchedulesArray[row - 1][column]?.get(0)?.period ?: NOT_LONG_COURSE == 4 ||
+                    mSchedulesArray[row - 1][column]?.get(0)?.period ?: NOT_LONG_COURSE == 3
         } else {
             false
         }
@@ -243,7 +249,7 @@ class ScheduleViewAdapter(private val mActivity: Activity,
         return if (schedules == null || schedules.size == 0 || isOverlap) {
             null
         } else {
-            ScheduleView.ScheduleItem(itemHeight = schedules[0].period)
+            ScheduleView.ScheduleItem(itemHeight = schedules[0].period, uniqueSign = schedules[0])
         }
     }
 

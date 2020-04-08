@@ -109,12 +109,15 @@ class CourseFragment : BaseFragment() {
         }
 
         mCoursesViewModel.nowWeek.value?.let {
-            if (it != mWeek||!mCoursesViewModel.isFirstLoadItemAnim) {
+            if (it != mWeek || !mCoursesViewModel.isFirstLoadItemAnim) {
                 scheduleView.layoutAnimation = null
-            } else if (it==mWeek&&mCoursesViewModel.isFirstLoadItemAnim){
+            } else if (it == mWeek && mCoursesViewModel.isFirstLoadItemAnim) {
                 mCoursesViewModel.isFirstLoadItemAnim = !mCoursesViewModel.isFirstLoadItemAnim
             }
         }
+        mCoursesViewModel.notifyCourseDataChange.observe(viewLifecycleOwner, Observer {
+            scheduleView.notifyDataChange()
+        })
     }
 
     override fun onResume() {

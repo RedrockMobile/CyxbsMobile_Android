@@ -13,7 +13,7 @@ import com.mredrock.cyxbs.common.utils.SchoolCalendar
 import com.mredrock.cyxbs.course.R
 import com.mredrock.cyxbs.course.component.ScheduleView
 import com.mredrock.cyxbs.course.network.Course
-import com.mredrock.cyxbs.course.ui.NoCourseInviteDetailDialogHelper
+import com.mredrock.cyxbs.course.ui.NoCourseInviteDetailBottomSheetDialogHelper
 import kotlinx.android.synthetic.main.course_no_course_invite_item.view.*
 import java.util.*
 
@@ -45,10 +45,11 @@ class NoCourseInviteScheduleViewAdapter(private val mContext: Context,
 
     // 获取对应位置有课的学生的名字在mNameList中的index
     private val mCoursesIndex = Array(12) { arrayOfNulls<MutableList<Int>>(7) }
+
     // 用于存储对应课表没有课的学生的名字
     private val mCommonNoCoursesNames = Array(12) { arrayOfNulls<MutableList<String>>(7) }
-    private val mNoCourseInviteDetailDialogHelper: NoCourseInviteDetailDialogHelper by lazy(LazyThreadSafetyMode.NONE) {
-        NoCourseInviteDetailDialogHelper(mContext)
+    private val mNoCourseInviteDetailDialogHelper: NoCourseInviteDetailBottomSheetDialogHelper by lazy(LazyThreadSafetyMode.NONE) {
+        NoCourseInviteDetailBottomSheetDialogHelper(mContext)
     }
 
     private val mLayoutInflater: LayoutInflater by lazy(LazyThreadSafetyMode.NONE) {

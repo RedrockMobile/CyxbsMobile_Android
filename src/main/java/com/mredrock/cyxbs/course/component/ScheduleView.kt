@@ -11,6 +11,7 @@ import android.graphics.Paint
 import android.graphics.PointF
 import android.util.AttributeSet
 import android.view.*
+import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.view.animation.LayoutAnimationController
 import android.widget.FrameLayout
@@ -18,6 +19,7 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.content.ContextCompat
+import androidx.core.view.children
 import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.course.R
 import com.mredrock.cyxbs.course.utils.createCornerBackground
@@ -86,7 +88,6 @@ class ScheduleView : FrameLayout {
                             removeAllViews()
                             addCourseView(notNullAdapter)
                         }
-                        addNoCourseView()
                         // Remove the OnGlobalLayoutListener after we add the ItemViews.
                         viewTreeObserver.removeOnGlobalLayoutListener(this)
                     }
@@ -99,6 +100,15 @@ class ScheduleView : FrameLayout {
             // internet which is time-consuming. when you get the data from the internet, your layout
             // won't be changed until you let it change.
             requestLayout()
+            startLayoutAnimation()
+            //保证出场动画只显示一次
+            layoutAnimation?.animation?.setAnimationListener(object : Animation.AnimationListener {
+                override fun onAnimationRepeat(animation: Animation?) {}
+                override fun onAnimationStart(animation: Animation?) {}
+                override fun onAnimationEnd(animation: Animation?) {
+                    layoutAnimation.animation.cancel()
+                }
+            })
         }
 
     private val mStartPoint: PointF by lazy(LazyThreadSafetyMode.NONE) { PointF() }
@@ -119,8 +129,9 @@ class ScheduleView : FrameLayout {
     // This is the TextView to show when the courses and affairs are null
     private val mEmptyTextView: TextView by lazy(LazyThreadSafetyMode.NONE) { TextView(context) }
 
-    private var linearLayout: LinearLayout? = null
+    private var noCourseBackground: LinearLayout? = null
 
+    private var courseItemCount = 0
 
     private var mScheduleViewWidth: Int = 0
     private var mScheduleViewHeight: Int = 0
@@ -170,8 +181,8 @@ class ScheduleView : FrameLayout {
 
     private fun initScheduleView() {
         setWillNotDraw(false)
-//        layoutTransition = layoutTransition()
-        layoutAnimation = LayoutAnimationController(AnimationUtils.loadAnimation(context,R.anim.course_item_show_anim))
+        layoutTransition = layoutTransition()
+        layoutAnimation = LayoutAnimationController(AnimationUtils.loadAnimation(context, R.anim.course_item_show_anim))
         mPaint = Paint().apply {
             color = mHighlightColor
             isAntiAlias = true
@@ -182,12 +193,13 @@ class ScheduleView : FrameLayout {
 
     private fun layoutTransition(): LayoutTransition {
         val mLayoutTransition = LayoutTransition()
+        //课表显示动画item，切记这里不是第一次显示的动画
         mLayoutTransition.setStagger(LayoutTransition.APPEARING, 500)
-        val appearingScaleX: PropertyValuesHolder = PropertyValuesHolder.ofFloat("scaleX", 0.5f, 1.0f)
-        val appearingScaleY: PropertyValuesHolder = PropertyValuesHolder.ofFloat("scaleY", 0.5f, 1.0f)
-        val appearingAlpha: PropertyValuesHolder = PropertyValuesHolder.ofFloat("alpha", 0f, 1f)
-        val mAnimatorAppearing: ObjectAnimator = ObjectAnimator.ofPropertyValuesHolder(this, appearingAlpha, appearingScaleX, appearingScaleY)
-        mLayoutTransition.setAnimator(LayoutTransition.APPEARING, mAnimatorAppearing)
+        val appearingScaleX: PropertyValuesHolder = PropertyValuesHolder.ofFloat("scaleX", 0.0f, 1.0f)
+        val appearingScaleY: PropertyValuesHolder = PropertyValuesHolder.ofFloat("scaleY", 0.0f, 1.0f)
+//        val appearingAlpha: PropertyValuesHolder = PropertyValuesHolder.ofFloat("alpha", 0f, 1f)
+        val mAnimatorAppearing: ObjectAnimator = ObjectAnimator.ofPropertyValuesHolder(this, appearingScaleX, appearingScaleY)
+        mLayoutTransition.setAnimator(LayoutTransition.CHANGING, mAnimatorAppearing)
         return mLayoutTransition
     }
 
@@ -207,8 +219,8 @@ class ScheduleView : FrameLayout {
     }
 
     private fun addNoCourseView() {
-        if (linearLayout == null && mIsEmpty && mNoCourseDrawableResId != 0) {
-            linearLayout = LinearLayout(context).apply {
+        if (noCourseBackground == null && mIsEmpty && mNoCourseDrawableResId != 0) {
+            noCourseBackground = LinearLayout(context).apply {
                 layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
                 orientation = LinearLayout.VERTICAL
                 gravity = Gravity.CENTER
@@ -226,7 +238,7 @@ class ScheduleView : FrameLayout {
                 scaleType = ImageView.ScaleType.FIT_XY
                 layoutParams = imageParams
             }
-            linearLayout?.addView(emptyImageView)
+            noCourseBackground?.addView(emptyImageView)
 
             // set mEmptyTextView
             mEmptyText?.let {
@@ -240,15 +252,16 @@ class ScheduleView : FrameLayout {
                     gravity = Gravity.CENTER
                     layoutParams = textParams
                 }
-                linearLayout?.addView(emptyTextView)
-                addView(linearLayout)
+                noCourseBackground?.addView(emptyTextView)
+                addView(noCourseBackground)
             }
-        } else if (linearLayout != null) {
-            addView(linearLayout)
+        } else if (noCourseBackground != null && noCourseBackground?.parent == null) {
+            addView(noCourseBackground)
         }
     }
 
     private fun addCourseView(notNullAdapter: Adapter) {
+        courseItemCount = 0
         // 如果是课表，每节课的开始都是偶数，0、2、4...这样开始的。因此这里就使用6 * 7的矩阵。
         // 但是如果是没课约，有可能是奇数开始的，因此这里需要使用12 * 7的矩阵运算。
         if (mIsDisplayCourse) {
@@ -258,6 +271,7 @@ class ScheduleView : FrameLayout {
                     //if this row and column don't have course or affair continue.
                     itemViewInfo ?: continue
                     val itemView = notNullAdapter.getItemView(row, column, this@ScheduleView)
+                    notNullAdapter.initItemView(itemView, row, column)
                     //这里设置tag，将真正用来测量和布局的代码放到标准的view绘制流程的回调方法里
                     //如果直接在这进行测量或者布局，在activity异常重启而导致的view异常重启之后
                     //无法异常重启的view第一次显示时，能够获取准确的测绘高度和宽度
@@ -265,6 +279,7 @@ class ScheduleView : FrameLayout {
                     itemView.setTag(R.id.item_position_column, column)
                     itemView.setTag(R.id.item_info, itemViewInfo)
                     addView(itemView)
+                    courseItemCount++
                     mIsEmpty = false
                 }
             }
@@ -278,15 +293,18 @@ class ScheduleView : FrameLayout {
                         continue
                     }
                     val itemView = notNullAdapter.getItemView(row, column, this@ScheduleView)
+                    notNullAdapter.initItemView(itemView, row, column)
                     itemView.setTag(R.id.item_position_row, row)
                     itemView.setTag(R.id.item_position_column, column)
                     itemView.setTag(R.id.item_info, itemViewInfo)
                     addView(itemView)
+                    courseItemCount++
                     row += itemViewInfo.itemHeight
                     mIsEmpty = false
                 }
             }
         }
+        checkIsNoCourse()
     }
 
     override fun measureChild(child: View, parentWidthMeasureSpec: Int, parentHeightMeasureSpec: Int) {
@@ -324,6 +342,106 @@ class ScheduleView : FrameLayout {
                         MeasureSpec.makeMeasureSpec(childWidth, MeasureSpec.EXACTLY),
                         MeasureSpec.makeMeasureSpec(childHeight, MeasureSpec.EXACTLY))
             }, infoNotFound = { super.measureChild(child, parentWidthMeasureSpec, parentHeightMeasureSpec) })
+        }
+    }
+
+    fun notifyDataChange() {
+        courseItemCount = 0
+        adapter ?: return
+        adapter?.let { adapter ->
+            adapter.notifyDataChange()
+            removeView(mTouchView.apply { tag = null })
+            // 如果是课表，每节课的开始都是偶数，0、2、4...这样开始的。因此这里就使用6 * 7的矩阵。
+            // 但是如果是没课约，有可能是奇数开始的，因此这里需要使用12 * 7的矩阵运算。
+            if (mIsDisplayCourse) {
+                for (row in 0..5) {
+                    Column@ for (column in 0..6) {
+                        val itemViewInfo = adapter.getItemViewInfo(row, column)
+                        var removeChildren: View? = null
+                        for (view in children) {
+                            if (row == view.getTag(R.id.item_position_row) && column == view.getTag(R.id.item_position_column)) {
+                                adapter.initItemView(view, row, column)
+                                courseItemCount++
+                                if (itemViewInfo?.uniqueSign?.equals((view.getTag(R.id.item_info) as? ScheduleItem)?.uniqueSign) == true) {
+                                    continue@Column
+                                } else {
+                                    removeChildren = view
+                                }
+                            }
+                        }
+                        removeChildren?.let { removeView(it) }
+                        itemViewInfo ?: continue
+                        val itemView = adapter.getItemView(row, column, this@ScheduleView)
+                        adapter.initItemView(itemView, row, column)
+                        //这里设置tag，将真正用来测量和布局的代码放到标准的view绘制流程的回调方法里
+                        //如果直接在这进行测量或者布局，在activity异常重启而导致的view异常重启之后
+                        //无法异常重启的view第一次显示时，能够获取准确的测绘高度和宽度
+                        itemView.setTag(R.id.item_position_row, row)
+                        itemView.setTag(R.id.item_position_column, column)
+                        itemView.setTag(R.id.item_info, itemViewInfo)
+                        addView(itemView)
+                        courseItemCount++
+                        mIsEmpty = false
+                    }
+                }
+            } else {
+                for (column in 0..6) {
+                    var row = 0
+                    Row@ while (row < 12) {
+                        val itemViewInfo = adapter.getItemViewInfo(row, column)
+                        var removeChildren: View? = null
+                        for (view in children) {
+                            if (row == view.getTag(R.id.item_position_row) && column == view.getTag(R.id.item_position_column)) {
+                                adapter.initItemView(view, row, column)
+                                courseItemCount++
+                                if (itemViewInfo?.uniqueSign?.equals((view.getTag(R.id.item_info) as? ScheduleItem)?.uniqueSign) == true) {
+                                    continue@Row
+                                } else {
+                                    removeChildren = view
+                                }
+                            }
+                        }
+                        removeChildren?.let { removeView(it) }
+                        if (itemViewInfo == null) {
+                            row++
+                            continue
+                        }
+                        val itemView = adapter.getItemView(row, column, this@ScheduleView)
+                        val params = LayoutParams(mBasicElementWidth,
+                                mBasicElementHeight * itemViewInfo.itemHeight +
+                                        mElementGap * (itemViewInfo.itemHeight - 1))
+                        params.leftMargin = mElementGap * (column + 1) + mBasicElementWidth * column
+                        params.topMargin = mElementGap * (row + 1) + mBasicElementHeight * row
+
+                        if (column == 6) {
+                            params.rightMargin = mElementGap
+                        }
+                        if (row == 11) {
+                            params.bottomMargin = mElementGap
+                        }
+                        itemView.layoutParams = params
+                        itemView.setTag(R.id.item_position_row, row)
+                        itemView.setTag(R.id.item_position_column, column)
+                        itemView.setTag(R.id.item_info, itemViewInfo)
+                        addView(itemView)
+                        courseItemCount++
+                        row += itemViewInfo.itemHeight
+                        mIsEmpty = false
+                    }
+                }
+            }
+        }
+        checkIsNoCourse()
+    }
+
+    /**
+     * 检查是否需要添加没课提示图片
+     */
+    private fun checkIsNoCourse() {
+        if (courseItemCount == 0) {
+            addNoCourseView()
+        } else {
+            removeView(noCourseBackground)
         }
     }
 
@@ -405,7 +523,7 @@ class ScheduleView : FrameLayout {
             }
             // Compute the mTouchView's LayoutParams.
             val params = LayoutParams(mBasicElementWidth,
-                    mBasicElementHeight * 2)
+                    mBasicElementHeight * 2 + mElementGap)
             params.leftMargin = mElementGap * (clickHashX + 1) + mBasicElementWidth * clickHashX
             params.topMargin = mElementGap * (clickHashY + 1) + mBasicElementHeight * clickHashY
             // If the mTouchView's position is at the right or bottom edge. It will add the additional
@@ -481,6 +599,11 @@ class ScheduleView : FrameLayout {
          * null: don't highlight.
          */
         abstract fun getHighLightPosition(): Int?
+
+        //局部更新方法
+        open fun notifyDataChange() {}
+
+        open fun initItemView(view: View, row: Int, column: Int) {}
     }
 
     /**
@@ -488,6 +611,7 @@ class ScheduleView : FrameLayout {
      *
      * @param itemWidth 表示一个课占多宽
      * @param itemHeight 表示有多少节课的高度。每天的课有12节，这个就表示多少个12分之一。
+     * @param uniqueSign 会根据这个标志来确定更新前后是否为同一个信息，若不设置，则不会对item更改生效，只会对删除添加生效
      */
-    data class ScheduleItem(val itemWidth: Int = 1, val itemHeight: Int = 2)
+    data class ScheduleItem(val itemWidth: Int = 1, val itemHeight: Int = 2, val uniqueSign: Any = Any())
 }

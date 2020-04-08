@@ -8,7 +8,9 @@ import android.view.ContextThemeWrapper
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import android.widget.Toast
 import androidx.core.content.ContextCompat
+import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.common.component.RedRockAutoWarpView
 import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.utils.Num2CN
@@ -97,8 +99,15 @@ class ScheduleDetailViewAdapter(private val mDialog: Dialog, private val mSchedu
                         .setSchedulers()
                         .errorHandler()
                         .subscribe(ExecuteOnceObserver(onExecuteOnceNext = {
-                            //用于更新UI
-                            EventBus.getDefault().post(DeleteAffairEvent())
+                            it.apply {
+                                if (info == "success" && status == 200) {
+                                    //用于更新UI
+                                    EventBus.getDefault().post(DeleteAffairEvent())
+                                    CyxbsToast.makeText(context, R.string.course_transaction_deleted_successfully, Toast.LENGTH_SHORT).show()
+                                } else {
+                                    CyxbsToast.makeText(context, R.string.course_transaction_deletion_failed, Toast.LENGTH_SHORT).show()
+                                }
+                            }
                         }))
                 mDialog.dismiss()
             }
