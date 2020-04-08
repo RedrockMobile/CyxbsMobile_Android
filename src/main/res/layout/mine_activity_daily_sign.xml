@@ -12,6 +12,19 @@
         android:scaleType="centerCrop"
         android:src="@drawable/mine_bg_sign" />
 
+    <com.mredrock.cyxbs.common.component.JToolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fitsSystemWindows="true"
+        android:background="@android:color/transparent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:contentInsetStartWithNavigation="0dp"
+        app:navigationIcon="@drawable/common_ic_back"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -442,7 +455,7 @@
         android:id="@+id/mine_sign_fl"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fitsSystemWindows="true"
+        android:paddingTop="30dp"
         app:behavior_hideable="false"
         app:behavior_peekHeight="0dp"
         app:layout_behavior="@string/bottom_sheet_behavior">

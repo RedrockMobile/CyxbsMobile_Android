@@ -88,7 +88,7 @@ class DailySignActivity(override val viewModelClass: Class<DailyViewModel> = Dai
         //设置导航栏字体颜色为白色
         window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
         setContentView(R.layout.mine_activity_daily_sign)
-
+        common_toolbar.initWithSplitLine("", false)
         initView()
         initAdapter()
         dealBottomSheet()
@@ -197,13 +197,8 @@ class DailySignActivity(override val viewModelClass: Class<DailyViewModel> = Dai
         mine_store_arrow_left.setOnClickListener {
             behavior.state = BottomSheetBehavior.STATE_COLLAPSED
         }
-        var statusBarHeight = -1
-        val resourceId = resources.getIdentifier("status_bar_height", "dimen", "android")
-        if (resourceId > 0) {
-            statusBarHeight = resources.getDimensionPixelSize(resourceId)
-        }
-        behavior.peekHeight = dp2px(95f) + (if (statusBarHeight > 0) statusBarHeight else 0)
-        behavior.setBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
+        behavior.peekHeight = dp2px(95f + 30f)
+        behavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
             override fun onSlide(p0: View, p1: Float) {
                 mine_store_arrow_left.alpha = p1
                 mine_store_my_product.alpha = p1
