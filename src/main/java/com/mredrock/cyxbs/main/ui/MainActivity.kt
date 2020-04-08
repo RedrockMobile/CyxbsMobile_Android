@@ -7,7 +7,6 @@ import android.view.View.GONE
 import android.widget.FrameLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import com.alibaba.android.arouter.facade.annotation.Autowired
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
@@ -21,7 +20,6 @@ import com.mredrock.cyxbs.common.event.LoadCourse
 import com.mredrock.cyxbs.common.event.NotifyBottomSheetToExpandEvent
 import com.mredrock.cyxbs.common.event.RefreshQaEvent
 import com.mredrock.cyxbs.common.service.ServiceManager
-import com.mredrock.cyxbs.common.ui.BaseActivity
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
 import com.mredrock.cyxbs.common.utils.extensions.getStatusBarHeight
@@ -48,14 +46,10 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
     companion object {
         const val BOTTOM_SHEET_STATE = "BOTTOM_SHEET_STATE"
         const val NAV_SELECT = "NAV_SELECT"
+        const val PAGE_CLASS_TAG = "PAGE_CLASS_TAG"
         const val SPLASH_PHOTO_NAME = "splash_photo.jpg"
         const val SPLASH_PHOTO_LOCATION = "splash_store_location"
-        const val IS_LOGIN_ENTER = "isLoginEnter"
     }
-
-    @JvmField
-    @Autowired(name = IS_LOGIN_ENTER)
-    var isLoginEnter: Boolean? = false
 
     override val viewModelClass = MainViewModel::class.java
 
@@ -89,8 +83,12 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
         setTheme(R.style.MainActivityTheme)//恢复真正的主题，保证WindowBackground为主题色
         super.onCreate(savedInstanceState)
         setContentView(R.layout.main_activity_main)
-        checkSplash()//检查闪屏页是否需要显示
-        checkIsLogin(LoginConfig(isWarnUser = false),this)
+        //检查闪屏页是否需要显示，闪屏页现在业务逻辑相对简单，为了减少启动时不必要的开销，暂时放到这里
+        //后期，跳转逻辑复杂的话可以考虑将闪屏页独立成Activity
+        checkSplash()
+        //检查是否登陆，虽然BaseActivity里面也有登陆检查，
+        //但是这里因为涉及到闪屏页的部分逻辑，不得不放弃BaseActivity的登陆检查
+        checkIsLogin(LoginConfig(isWarnUser = false), this)
         initActivity()//Activity相关初始化
     }
 
@@ -276,10 +274,13 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
         super.onSaveInstanceState(outState)
         outState.putInt(BOTTOM_SHEET_STATE, bottomSheetBehavior.state)
         outState.putInt(NAV_SELECT, peeCheckedItemPosition)
+        outState.putSerializable(PAGE_CLASS_TAG, viewModel.mainPageLoadedFragmentClassList)
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
+        @Suppress("UNCHECKED_CAST")//不加报警告，加了又不好看，check类型又说Hash<*,*>更好，但是又不让，太难了
+        viewModel.mainPageLoadedFragmentClassList = savedInstanceState.getSerializable(PAGE_CLASS_TAG) as HashMap<String, Class<*>>
         navigationHelpers.selectTab(savedInstanceState.getInt(NAV_SELECT))
         if (savedInstanceState.getInt(BOTTOM_SHEET_STATE) == BottomSheetBehavior.STATE_EXPANDED && !viewModel.isCourseDirectShow) {
             bottomSheetBehavior.state = savedInstanceState.getInt(BOTTOM_SHEET_STATE)
