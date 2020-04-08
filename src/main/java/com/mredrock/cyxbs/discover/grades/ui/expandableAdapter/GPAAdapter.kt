@@ -1,5 +1,6 @@
 package com.mredrock.cyxbs.discover.grades.ui.expandableAdapter
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.view.Gravity
 import android.view.View
@@ -54,6 +55,7 @@ class GPAAdapter(
 
     private var isExpand: Boolean = false
 
+    @SuppressLint("SetTextI18n")
     override fun onBind(holder: BaseHolder, position: Int, type: Int) {
         when (dataMirror[position]) {
 
@@ -234,7 +236,7 @@ class GPAAdapter(
     private fun clickACredit() {
         val tag = "a_credit"
         if ((context as AppCompatActivity).supportFragmentManager.findFragmentByTag(tag) == null) {
-            val dialog = CommonDialogFragment().apply {
+            CommonDialogFragment().apply {
                 initView(
                         containerRes = R.layout.grades_dialog_a_credit,
                         positiveString = "知道了",
@@ -272,31 +274,31 @@ class GPAAdapter(
         when (tabSelectedType) {
             GPA -> {
                 val gpaList = gpaData.termGrade.map {
-                    it.gpa.toFloat()
+                    it.gpa
                 }
-                gpaGraph.setData(gpaList)
                 gpaGraph.setRule(AverageRule(gpaList))
+                gpaGraph.setData(gpaList)
             }
             GRADES -> {
                 val list = gpaData.termGrade.map {
-                    it.grade.toFloat()
+                    it.grade
                 }
-                gpaGraph.setData(list)
                 gpaGraph.setRule(AverageRule(list))
+                gpaGraph.setData(list)
+
             }
             RANK -> {
                 val list = gpaData.termGrade.map {
-                    it.rank.toFloat()
+                    it.rank
+                }.filter {
+                    it != "0"
                 }
-                gpaGraph.setData(list)
                 gpaGraph.setRule(object : AverageRule(list) {
-                    override fun mappingRule(old: Float): Float {
-                        if (old == 0F) {
-                            return 0F
-                        }
+                    override fun mappingRule(old: String): Float {
                         return 4 - super.mappingRule(old)
                     }
                 })
+                gpaGraph.setData(list)
             }
         }
 

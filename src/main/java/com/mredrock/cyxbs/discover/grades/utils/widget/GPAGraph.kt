@@ -73,7 +73,7 @@ class GpAGraph : View {
     /**
      * 数据
      */
-    private var originalData = arrayListOf<Float>()   //原始数据
+    private var originalData = arrayListOf<String>()   //原始数据
     private lateinit var mappingData: List<Float>       //经过映射后的数据：通过将array用mappingRule一一映射得到
 
     //映射规则
@@ -117,7 +117,7 @@ class GpAGraph : View {
     /**
      * 设置数据
      */
-    fun setData(newData: List<Float>) {
+    fun setData(newData: List<String>) {
         originalData = ArrayList(newData)
         mappingData = originalData.map {
             mappingRule.mappingRule(it)
@@ -282,8 +282,9 @@ class GpAGraph : View {
 
 
     class DefaultMappingRule : GraphRule() {
-        override fun mappingRule(old: Float): Float {
-            return old / 2 + 1
+        override fun mappingRule(old: String): Float {
+            val temp = old.toFloatOrNull() ?: return 0F
+            return temp / 2 + 1
         }
 
     }
