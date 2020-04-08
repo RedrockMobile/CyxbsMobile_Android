@@ -22,6 +22,7 @@ import kotlinx.android.synthetic.main.grades_item_dialog_a_credit.view.*
 import kotlinx.android.synthetic.main.grades_item_gpa_list_child.view.*
 import kotlinx.android.synthetic.main.grades_item_gpa_list_child.view.tv_grade_score
 import kotlinx.android.synthetic.main.grades_item_gpa_list_header.view.*
+import kotlinx.android.synthetic.main.grades_item_gpa_list_normal_bottom.view.*
 import kotlinx.android.synthetic.main.grades_item_gpa_list_normal_top.view.*
 import kotlinx.android.synthetic.main.grades_layout_transition.view.*
 
@@ -165,8 +166,10 @@ class GPAAdapter(
                 holder.itemView.setOnClickListener {
                     if (bean.termGrade.isClose()) {
                         bean.termGrade.status = TermGrade.EXPAND
+                        holder.itemView.grades_gpa_list_tv_grades_detail.text = "收起各科成绩"
                     } else {
                         bean.termGrade.status = TermGrade.CLOSE
+                        holder.itemView.grades_gpa_list_tv_grades_detail.text = "查看各科成绩"
                     }
                     refreshArrayList()
 

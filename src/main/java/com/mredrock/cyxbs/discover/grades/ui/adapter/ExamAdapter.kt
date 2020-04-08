@@ -112,7 +112,8 @@ class ExamAdapter(val context: Context,
                 }
 
                 t?.let { t ->
-                    if (position == t.size - 1) {
+                    //要去除header的占位
+                    if (position - 1 == t.size - 1) {
                         holder.itemView.iv_exam_circle.setLineVisible(false)
                     }
                 }
