@@ -18,6 +18,7 @@ import com.mredrock.cyxbs.discover.grades.bean.analyze.SingleGrade
 import com.mredrock.cyxbs.discover.grades.bean.analyze.TermGrade
 import com.mredrock.cyxbs.discover.grades.utils.baseRv.BaseHolder
 import com.mredrock.cyxbs.discover.grades.utils.widget.AverageRule
+import com.mredrock.cyxbs.discover.grades.utils.widget.NoDoubleClickListener
 import kotlinx.android.synthetic.main.grades_dialog_a_credit.view.*
 import kotlinx.android.synthetic.main.grades_item_dialog_a_credit.view.*
 import kotlinx.android.synthetic.main.grades_item_gpa_list_child.view.*
@@ -165,17 +166,25 @@ class GPAAdapter(
             }
             is NormalBottom -> {
                 val bean = dataMirror[position] as NormalBottom
-                holder.itemView.setOnClickListener {
-                    if (bean.termGrade.isClose()) {
-                        bean.termGrade.status = TermGrade.EXPAND
-                        holder.itemView.grades_gpa_list_tv_grades_detail.text = "收起各科成绩"
-                    } else {
-                        bean.termGrade.status = TermGrade.CLOSE
-                        holder.itemView.grades_gpa_list_tv_grades_detail.text = "查看各科成绩"
-                    }
-                    refreshArrayList()
-
+                val view = holder.itemView
+                if (bean.termGrade.isClose()) {
+                    view.grades_gpa_list_tv_grades_detail.text = "查看各科成绩"
+                } else {
+                    view.grades_gpa_list_tv_grades_detail.text = "收起各科成绩"
                 }
+                holder.itemView.setOnClickListener(object : NoDoubleClickListener() {
+                    override fun onNoDoubleClick(v: View) {
+                        if (bean.termGrade.isClose()) {
+                            bean.termGrade.status = TermGrade.EXPAND
+                            view.grades_gpa_list_tv_grades_detail.text = "收起各科成绩"
+                        } else {
+                            bean.termGrade.status = TermGrade.CLOSE
+                            view.grades_gpa_list_tv_grades_detail.text = "查看各科成绩"
+                        }
+                        refreshArrayList()
+                    }
+
+                })
             }
             is SingleGrade -> {
                 val single = dataMirror[position] as SingleGrade

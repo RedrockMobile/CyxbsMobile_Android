@@ -176,4 +176,13 @@ class ContainerActivity : BaseActivity() {
         transaction.commit()
     }
 
+
+    override fun onBackPressed() {
+        val behavior = BottomSheetBehavior.from(fl_grades_bottom_sheet)
+        if (behavior.state == BottomSheetBehavior.STATE_EXPANDED) {
+            behavior.state = BottomSheetBehavior.STATE_COLLAPSED
+        } else {
+            super.onBackPressed()
+        }
+    }
 }
