@@ -6,7 +6,9 @@
     android:layout_height="match_parent"
     android:background="@drawable/mine_shape_round_corner_white_store"
     android:orientation="vertical"
-    tools:context=".page.sign.DailySignActivity">
+    android:clickable="true"
+    tools:context=".page.sign.DailySignActivity"
+    android:focusable="true">
 
     <ImageView
         android:id="@+id/mine_store_line"

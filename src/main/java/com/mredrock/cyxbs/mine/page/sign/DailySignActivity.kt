@@ -336,4 +336,12 @@ class DailySignActivity(override val viewModelClass: Class<DailyViewModel> = Dai
     }
 
 
+    override fun onBackPressed() {
+        val behavior = BottomSheetBehavior.from(mine_sign_fl)
+        if (behavior.state == BottomSheetBehavior.STATE_EXPANDED) {
+            behavior.state = BottomSheetBehavior.STATE_COLLAPSED
+        } else {
+            super.onBackPressed()
+        }
+    }
 }
