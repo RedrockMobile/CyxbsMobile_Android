@@ -82,6 +82,10 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(R.style.MainActivityTheme)//恢复真正的主题，保证WindowBackground为主题色
         super.onCreate(savedInstanceState)
+        @Suppress("UNCHECKED_CAST")//不加报警告，加了又不好看，check类型又说Hash<*,*>更好，但是又不让，太难了
+        (savedInstanceState?.getSerializable(PAGE_CLASS_TAG) as? HashMap<String, Class<*>>)?.let {
+            viewModel.mainPageLoadedFragmentClassList = it
+        }
         setContentView(R.layout.main_activity_main)
         //检查闪屏页是否需要显示，闪屏页现在业务逻辑相对简单，为了减少启动时不必要的开销，暂时放到这里
         //后期，跳转逻辑复杂的话可以考虑将闪屏页独立成Activity
@@ -279,8 +283,6 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
-        @Suppress("UNCHECKED_CAST")//不加报警告，加了又不好看，check类型又说Hash<*,*>更好，但是又不让，太难了
-        viewModel.mainPageLoadedFragmentClassList = savedInstanceState.getSerializable(PAGE_CLASS_TAG) as HashMap<String, Class<*>>
         navigationHelpers.selectTab(savedInstanceState.getInt(NAV_SELECT))
         if (savedInstanceState.getInt(BOTTOM_SHEET_STATE) == BottomSheetBehavior.STATE_EXPANDED && !viewModel.isCourseDirectShow) {
             bottomSheetBehavior.state = savedInstanceState.getInt(BOTTOM_SHEET_STATE)
