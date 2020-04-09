@@ -26,7 +26,7 @@ const val DISCOVER_GRADES = "/grades/discover/entry"
 const val DISCOVER_VOLUNTEER = "/volunteer/discover/entry"
 const val DISCOVER_SCHOOL_CAR = "/school_car/discover/entry"
 const val DISCOVER_NEWS = "/news/discover/entry"
-
+const val DISCOVER_MORE_FUNCTION = "/more_function/discover/entry"
 //志愿服务在发现页的展示信息
 const val DISCOVER_VOLUNTEER_FEED = "/volunteer/discover/feed"
 //查电费在发现页面的展示信息
