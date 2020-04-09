@@ -108,11 +108,11 @@
     <string name="course_class_taught">所教班级</string>
     <string name="course_no_class_recently">今天和明天都没课咯～</string>
     <string name="course_back_now_week">回到本周</string>
-    <string name="course_add_transaction">网络错误，添加失败</string>
+    <string name="course_add_transaction">添加失败</string>
     <string name="course_add_transaction_as_a_reminder">添加成功</string>
     <string name="course_modify_transaction_successful">修改成功</string>
-    <string name="course_network_error_modification_failed">网络错误，修改失败</string>
+    <string name="course_network_error_modification_failed">修改失败</string>
     <string name="course_transaction_deleted_successfully">删除成功</string>
-    <string name="course_transaction_deletion_failed">网络错误，删除失败</string>
+    <string name="course_transaction_deletion_failed">删除失败</string>
 
 </resources>

@@ -1,4 +1,4 @@
-package com.mredrock.cyxbs.course.ui.fragment
+package com.mredrock.cyxbs.course.component
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -22,7 +22,7 @@ import kotlinx.android.synthetic.main.course_activity_edit_affair.*
  * Created by anriku on 2018/9/10.
  */
 @SuppressLint("ClickableViewAccessibility")
-class TimeSelectDialogFragment(context: Context) : RedRockBottomSheetDialog(context) {
+class TimeSelectDialog(context: Context) : RedRockBottomSheetDialog(context) {
 
     private var mBinding: CourseFragmentTimeSelectBinding = DataBindingUtil.inflate(LayoutInflater.from(context),
             R.layout.course_fragment_time_select, null, false)

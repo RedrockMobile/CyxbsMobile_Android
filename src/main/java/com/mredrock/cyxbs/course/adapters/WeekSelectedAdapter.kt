@@ -30,8 +30,8 @@ class WeekSelectedAdapter(val weekSelectedList: List<Int>, val affairEditActivit
         item.course_tv_week_item.apply {
             text = if (weekSelectedList.isEmpty()) "请选择周数" else if (weekSelectedList.size == 21) "整学期" else "第${weekSelectedList[position]}周"
             setOnClickListener {
-                if (!affairEditActivity.mWeekSelectDialogFragment.isShowing) {
-                    affairEditActivity.mWeekSelectDialogFragment.show()
+                if (!affairEditActivity.mWeekSelectDialog.isShowing) {
+                    affairEditActivity.mWeekSelectDialog.show()
                 }
             }
         }

@@ -2,7 +2,6 @@ package com.mredrock.cyxbs.course.viewmodels
 
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
 import com.mredrock.cyxbs.common.BaseApp.Companion.context
 import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.service.ServiceManager
@@ -16,6 +15,7 @@ import com.mredrock.cyxbs.course.event.ModifyAffairEvent
 import com.mredrock.cyxbs.course.network.AffairHelper
 import com.mredrock.cyxbs.course.network.Course
 import com.mredrock.cyxbs.course.network.CourseApiService
+import com.mredrock.cyxbs.course.network.RedRockApiWrapper
 import com.mredrock.cyxbs.course.rxjava.ExecuteOnceObserver
 import com.mredrock.cyxbs.course.ui.activity.AffairEditActivity
 import org.greenrobot.eventbus.EventBus
@@ -89,7 +89,6 @@ class EditAffairViewModel : BaseViewModel() {
      * @param editActivity [com.mredrock.cyxbs.course.ui.EditAffairActivity]
      */
     fun initData(editActivity: AffairEditActivity) {
-        observeWork(editActivity)
         val intent = editActivity.intent
         //通过点击事务进行修改获取的数据
         passedAffairInfo = intent.getParcelableExtra(AffairEditActivity.AFFAIR_INFO)
@@ -115,20 +114,6 @@ class EditAffairViewModel : BaseViewModel() {
         }
     }
 
-    /**
-     * 进行绑定设置，在周数、时间和提醒改变后将其存储到对应将要被上传的属性中。
-     *
-     * @param editActivity 该ViewModel所依赖的Activity。这里只是将FragmentActivity作为参数，因此不用担心内存泄漏的问题。
-     */
-    private fun observeWork(editActivity: AffairEditActivity) {
-        // 提醒确定后真正要上传的数据的存储
-        selectedRemindString.observe(editActivity, Observer {
-            val remindStrings = editActivity.resources.getStringArray(R.array.course_remind_strings)
-            val position = remindStrings.indexOf(it)
-            setThePostRemind(position)
-        })
-    }
-
 
     /**
      * 此方法用于提交新的事务或者是修改已有事务
@@ -149,14 +134,14 @@ class EditAffairViewModel : BaseViewModel() {
                     .errorHandler()
                     .subscribe(ExecuteOnceObserver(onExecuteOnceNext = {
                         it.apply {
-//                            if (info == "success" && status == 200) {
+                            if (info == "success" && status == 200) {
                             activity.finish()
                             // 更新课表
                             EventBus.getDefault().post(AddAffairEvent())
                             toastEvent.value = R.string.course_add_transaction_as_a_reminder
-//                            } else {
-//                                toastEvent.value = R.string.course_add_transaction
-//                            }
+                            } else {
+                                toastEvent.value = R.string.course_add_transaction
+                            }
                         }
                     }))
         } else {
@@ -167,7 +152,6 @@ class EditAffairViewModel : BaseViewModel() {
                     .subscribe(ExecuteOnceObserver(onExecuteOnceNext = {
                         it.apply {
                             if (info == "success" && status == 200) {
-                                activity.finish()
                                 // 更新课表
                                 EventBus.getDefault().post(ModifyAffairEvent())
                                 toastEvent.value = R.string.course_modify_transaction_successful
@@ -199,7 +183,7 @@ class EditAffairViewModel : BaseViewModel() {
      * 此方法用于根据提醒的的位置来设置对应的将要post的提醒值
      * @param position 对应的[remindArray]的位置
      */
-    private fun setThePostRemind(position: Int) {
+    fun setThePostRemind(position: Int) {
         when (position) {
             0 -> {
                 postRemind = 0

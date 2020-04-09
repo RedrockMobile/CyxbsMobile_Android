@@ -8,17 +8,16 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.course.R
 import com.mredrock.cyxbs.course.adapters.TimeSelectedAdapter
 import com.mredrock.cyxbs.course.adapters.WeekSelectedAdapter
 import com.mredrock.cyxbs.course.adapters.YouMightAdapter
+import com.mredrock.cyxbs.course.component.RemindSelectDialog
+import com.mredrock.cyxbs.course.component.TimeSelectDialog
+import com.mredrock.cyxbs.course.component.WeekSelectDialog
 import com.mredrock.cyxbs.course.databinding.CourseActivityEditAffairBinding
 import com.mredrock.cyxbs.course.ui.AffairTransitionAnimHelper
-import com.mredrock.cyxbs.course.ui.fragment.RemindSelectDialogFragment
-import com.mredrock.cyxbs.course.ui.fragment.TimeSelectDialogFragment
-import com.mredrock.cyxbs.course.ui.fragment.WeekSelectDialogFragment
 import com.mredrock.cyxbs.course.viewmodels.EditAffairViewModel
 import kotlinx.android.synthetic.main.course_activity_edit_affair.*
 
@@ -38,25 +37,24 @@ class AffairEditActivity : BaseViewModelActivity<EditAffairViewModel>() {
     override val viewModelClass: Class<EditAffairViewModel> = EditAffairViewModel::class.java
 
     //周数选择BottomSheetDialog
-    val mWeekSelectDialogFragment: WeekSelectDialogFragment by lazy(LazyThreadSafetyMode.NONE) {
-        WeekSelectDialogFragment(this)
+    val mWeekSelectDialog: WeekSelectDialog by lazy(LazyThreadSafetyMode.NONE) {
+        WeekSelectDialog(this, tv_week_select.adapter, viewModel.mPostWeeks)
     }
 
     //时间选择BottomSheetDialog
-    val mTimeSelectDialogFragment: TimeSelectDialogFragment by lazy(LazyThreadSafetyMode.NONE) {
-        TimeSelectDialogFragment(this)
+    val mTimeSelectDialog: TimeSelectDialog by lazy(LazyThreadSafetyMode.NONE) {
+        TimeSelectDialog(this)
     }
 
     //提醒选择BottomSheetDialog
-    private val mRemindSelectDialogFragment: RemindSelectDialogFragment by lazy(LazyThreadSafetyMode.NONE) {
-        RemindSelectDialogFragment(this)
+    private val mRemindSelectDialog: RemindSelectDialog by lazy(LazyThreadSafetyMode.NONE) {
+        RemindSelectDialog(this)
     }
 
     private lateinit var affairTransitionAnimHelper: AffairTransitionAnimHelper
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(EditAffairViewModel::class.java)
         mBinding = DataBindingUtil.setContentView(this, R.layout.course_activity_edit_affair)
         mBinding.editAffairViewModel = viewModel
         mBinding.lifecycleOwner = this
@@ -67,10 +65,10 @@ class AffairEditActivity : BaseViewModelActivity<EditAffairViewModel>() {
     private fun initActivity() {
         viewModel.initData(this)
         tv_week_select.adapter = WeekSelectedAdapter(viewModel.mPostWeeks, this)
-        tv_time_select.adapter = TimeSelectedAdapter(viewModel.mPostClassAndDays, this)
+        tv_time_select.adapter = TimeSelectedAdapter(viewModel.mPostClassAndDays, mTimeSelectDialog)
         tv_remind_select.setOnClickListener {
-            if (!mRemindSelectDialogFragment.isShowing) {
-                mRemindSelectDialogFragment.show()
+            if (!mRemindSelectDialog.isShowing) {
+                mRemindSelectDialog.show()
             }
         }
         course_next_step.setOnClickListener {
@@ -87,6 +85,13 @@ class AffairEditActivity : BaseViewModelActivity<EditAffairViewModel>() {
         viewModel.content.observe(this, Observer {
             et_content_input.setText(it)
             et_content_input.setSelection(it.length)
+        })
+
+        // 提醒确定后真正要上传的数据的存储
+        viewModel.selectedRemindString.observe(this, Observer {
+            val remindStrings = resources.getStringArray(R.array.course_remind_strings)
+            val position = remindStrings.indexOf(it)
+            viewModel.setThePostRemind(position)
         })
 
         course_back.setOnClickListener { finish() }
@@ -153,6 +158,7 @@ class AffairEditActivity : BaseViewModelActivity<EditAffairViewModel>() {
             else -> {
                 viewModel.postOrModifyAffair(this, mBinding.etTitle.text.toString(),
                         mBinding.etContentInput.text.toString())
+                finish()
             }
         }
     }

@@ -31,22 +31,12 @@ internal class RedRockTipsView : View {
         const val BOTTOM = 2
     }
 
-    private val paint: Paint by lazy(LazyThreadSafetyMode.NONE) {
-        Paint().apply {
-            color = 0xff000000.toInt()
-        }
+    private val paint: Paint = Paint().apply {
+        color = 0xff000000.toInt()
     }
-
-    private val leftPath: Path by lazy(LazyThreadSafetyMode.NONE) {
-        Path()
-    }
-
-    private val rightPath: Path by lazy(LazyThreadSafetyMode.NONE) {
-        Path()
-    }
-
+    private val leftPath: Path = Path()
+    private val rightPath: Path = Path()
     private var tipColor: Int = 0xff000000.toInt()
-
     var position = 0f
         set(value) {
             field = value
@@ -65,7 +55,6 @@ internal class RedRockTipsView : View {
                 BOTTOM -> bottomWayAnimation.start()
             }
         }
-
     // 因为这三个动画不一定会用到所以懒加载,
     // 还有这个这三个动画需要根据开启动画时position来展示动画，所以重写了start
     /**
@@ -92,7 +81,6 @@ internal class RedRockTipsView : View {
             }
         }
         animSetting(animation)
-
     }
 
     /**
@@ -107,7 +95,6 @@ internal class RedRockTipsView : View {
         }
         animSetting(animation)
     }
-
 
     constructor(context: Context?) : super(context) {
         init()

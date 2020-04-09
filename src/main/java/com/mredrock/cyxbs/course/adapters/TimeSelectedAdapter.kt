@@ -3,7 +3,7 @@ package com.mredrock.cyxbs.course.adapters
 import android.view.View
 import com.mredrock.cyxbs.common.component.RedRockAutoWarpView
 import com.mredrock.cyxbs.course.R
-import com.mredrock.cyxbs.course.ui.activity.AffairEditActivity
+import com.mredrock.cyxbs.course.component.TimeSelectDialog
 import kotlinx.android.synthetic.main.course_time_select_auto_warp_item.view.*
 
 /**
@@ -13,12 +13,10 @@ import kotlinx.android.synthetic.main.course_time_select_auto_warp_item.view.*
  * 描述:
  *   事务添加页面事务在一周中的时间的适配器
  */
-class TimeSelectedAdapter(private val timeList: MutableList<Pair<Int, Int>>, val affairEditActivity: AffairEditActivity) : RedRockAutoWarpView.Adapter() {
+class TimeSelectedAdapter(private val timeList: MutableList<Pair<Int, Int>>, val mTimeSelectDialog: TimeSelectDialog) : RedRockAutoWarpView.Adapter() {
 
-    private val timeArray = affairEditActivity.viewModel.timeArray
-    private val dayOfWeekArray = affairEditActivity.viewModel.dayOfWeekArray
-    private val mTimeSelectDialogFragment = affairEditActivity.mTimeSelectDialogFragment
-
+    private val timeArray = listOf("周一", "周二", "周三", "周四", "周五", "周六", "周日")
+    private val dayOfWeekArray = listOf("一二节课", "三四节课", "五六节课", "七八节课", "九十节课", "十一十二节课")
 
     override fun getItemId(position: Int): Int {
         return if (timeList.size == 0) {
@@ -48,16 +46,16 @@ class TimeSelectedAdapter(private val timeList: MutableList<Pair<Int, Int>>, val
                 item.affair_iv_cancel.visibility = View.GONE
             } else {
                 item.setOnClickListener {
-                    if (!mTimeSelectDialogFragment.isShowing) {
-                        mTimeSelectDialogFragment.show()
+                    if (!mTimeSelectDialog.isShowing) {
+                        mTimeSelectDialog.show()
                     }
                 }
             }
         } else {
             if (position == timeList.size) {
                 item.setOnClickListener {
-                    if (!mTimeSelectDialogFragment.isShowing) {
-                        mTimeSelectDialogFragment.show()
+                    if (!mTimeSelectDialog.isShowing) {
+                        mTimeSelectDialog.show()
                     }
                 }
             } else {

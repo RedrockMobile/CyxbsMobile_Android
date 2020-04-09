@@ -1,4 +1,4 @@
-package com.mredrock.cyxbs.course.ui.fragment
+package com.mredrock.cyxbs.course.component
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -17,7 +17,7 @@ import com.mredrock.cyxbs.course.viewmodels.EditAffairViewModel
  * Created by anriku on 2018/9/11.
  */
 
-class RemindSelectDialogFragment(context: Context) : RedRockBottomSheetDialog(context) {
+class RemindSelectDialog(context: Context) : RedRockBottomSheetDialog(context) {
 
     private var mBinding: CourseFragmentRemindSelectBinding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.course_fragment_remind_select,
             null, false)

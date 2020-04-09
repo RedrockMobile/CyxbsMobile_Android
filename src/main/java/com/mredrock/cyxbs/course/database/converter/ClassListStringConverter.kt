@@ -1,4 +1,4 @@
-package com.mredrock.cyxbs.course.database
+package com.mredrock.cyxbs.course.database.converter
 
 import androidx.room.TypeConverter
 

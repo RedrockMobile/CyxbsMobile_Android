@@ -2,12 +2,10 @@ package com.mredrock.cyxbs.course.adapters
 
 import android.view.View
 import android.widget.CheckBox
-import androidx.fragment.app.FragmentActivity
-import androidx.lifecycle.ViewModelProvider
+import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.component.RedRockAutoWarpView
 import com.mredrock.cyxbs.course.R
 import com.mredrock.cyxbs.course.utils.weekSelectCheckBoxState
-import com.mredrock.cyxbs.course.viewmodels.EditAffairViewModel
 
 /**
  * Created by anriku on 2018/9/9.
@@ -15,11 +13,9 @@ import com.mredrock.cyxbs.course.viewmodels.EditAffairViewModel
  * 描述:
  *   这个适配用于周数选择里面的AutoWarpView的适配器
  */
-class WeekSelectRecAdapter(mActivity: FragmentActivity) : RedRockAutoWarpView.Adapter() {
+class WeekSelectRecAdapter(val mPostWeeks: MutableList<Int>) : RedRockAutoWarpView.Adapter() {
 
-    private val mEditAffairViewModel: EditAffairViewModel = ViewModelProvider(mActivity).get(EditAffairViewModel::class.java)
-
-    private val mWeeks = mEditAffairViewModel.weekArray
+    private val mWeeks = BaseApp.context.resources.getStringArray(R.array.course_course_weeks_strings)
 
     val checkBoxMap = HashMap<Int, CheckBox>()
 
@@ -35,8 +31,8 @@ class WeekSelectRecAdapter(mActivity: FragmentActivity) : RedRockAutoWarpView.Ad
         val checkBox = item.findViewById<CheckBox>(R.id.cb)
         checkBox.text = mWeeks[position]
         checkBoxMap[position] = checkBox
-        mEditAffairViewModel.mPostWeeks.forEach {
-            if (mEditAffairViewModel.mPostWeeks.size == 21 && position == 0) {
+        mPostWeeks.forEach {
+            if (mPostWeeks.size == 21 && position == 0) {
                 checkBox.isChecked = true
                 weekSelectCheckBoxState(checkBox, context)
             } else {

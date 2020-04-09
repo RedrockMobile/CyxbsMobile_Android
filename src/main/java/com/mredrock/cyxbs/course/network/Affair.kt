@@ -5,7 +5,7 @@ import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.TypeConverters
 import com.google.gson.annotations.SerializedName
-import com.mredrock.cyxbs.course.database.DateListStringConverter
+import com.mredrock.cyxbs.course.database.converter.DateListStringConverter
 
 /**
  * Created by anriku on 2018/8/14.

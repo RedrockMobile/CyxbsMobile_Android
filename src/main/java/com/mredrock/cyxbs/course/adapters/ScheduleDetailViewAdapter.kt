@@ -36,9 +36,8 @@ import org.jetbrains.anko.textColor
 class ScheduleDetailViewAdapter(private val mDialog: Dialog, private val mSchedules: List<Course>) :
         ScheduleDetailView.Adapter {
 
-    private companion object {
-        private const val TAG = "ScheduleDetailViewAdapter"
-    }
+    private val dayOfWeek = listOf("周一", "周二", "周三", "周四", "周五", "周六", "周日")
+    private val courseOfDay = listOf("一二节课", "三四节课", "五六节课", "七八节课", "九十节课", "十一十二节课")
 
     private val mCourseApiService: CourseApiService by lazy(LazyThreadSafetyMode.NONE) {
         ApiGenerator.getApiService(CourseApiService::class.java)
@@ -84,7 +83,7 @@ class ScheduleDetailViewAdapter(private val mDialog: Dialog, private val mSchedu
     private fun setAffairContent(itemView: View, itemViewInfo: Course) {
         itemView.apply {
             tv_course_cycle.text = createAffairWeekStr(itemViewInfo)
-            tv_course_exact_time.text = listOf("一二节课", "三四节课", "五六节课", "七八节课", "九十节课", "十一十二节课")[itemViewInfo.hashLesson]
+            tv_course_exact_time.text = courseOfDay[itemViewInfo.hashLesson]
             tv_affair_name.text = itemViewInfo.course
             tv_affair_detail.text = itemViewInfo.classroom
             acb_modify.setOnClickListener {
@@ -118,7 +117,7 @@ class ScheduleDetailViewAdapter(private val mDialog: Dialog, private val mSchedu
      * 用来构造事务
      */
     private fun createAffairWeekStr(itemViewInfo: Course): String {
-        var tvCourseWeekText = "第"
+        val tvCourseWeekTextBuilder = StringBuilder("第")
         val weekGroup = ArrayList<ArrayList<Int>>()
         var lastWeek: Int? = null
         itemViewInfo.week?.forEach {
@@ -130,20 +129,20 @@ class ScheduleDetailViewAdapter(private val mDialog: Dialog, private val mSchedu
             lastWeek = it
         }
         weekGroup.forEach {
-            tvCourseWeekText += if (it.size == 1) {
+            tvCourseWeekTextBuilder.append(if (it.size == 1) {
                 Num2CN.number2ChineseNumber(it.first().toLong())
             } else {
                 "${Num2CN.number2ChineseNumber(it.first().toLong())} 至 ${Num2CN.number2ChineseNumber(it.last().toLong())}"
-            }
-            tvCourseWeekText += if (it == weekGroup.last()) {
+            })
+            tvCourseWeekTextBuilder.append(if (it == weekGroup.last()) {
                 "周"
             } else {
                 ","
-            }
+            })
         }
-        tvCourseWeekText += "   "
-        tvCourseWeekText += listOf("周一", "周二", "周三", "周四", "周五", "周六", "周日")[itemViewInfo.hashDay]
-        return tvCourseWeekText
+        tvCourseWeekTextBuilder.append("   ")
+        tvCourseWeekTextBuilder.append(dayOfWeek[itemViewInfo.hashDay])
+        return tvCourseWeekTextBuilder.toString()
     }
 
 

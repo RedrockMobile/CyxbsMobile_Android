@@ -12,7 +12,7 @@ import com.mredrock.cyxbs.course.R
  * 描述:
  *   课程详细信息弹出dialog下面显示的班级
  */
-class TeaClassAdapter(val dataList: List<String>) : RedRockAutoWarpView.Adapter() {
+class TeaClassAdapter(private val dataList: List<String>) : RedRockAutoWarpView.Adapter() {
 
     override fun getItemId(): Int? {
         return R.layout.course_week_selected_item_auto_warp

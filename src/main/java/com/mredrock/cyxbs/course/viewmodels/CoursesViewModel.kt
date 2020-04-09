@@ -436,7 +436,7 @@ class CoursesViewModel : BaseViewModel() {
                 })
                 notifyCourseDataChange.value = Unit
                 val nowWeek = nowWeek.value
-                if (nowWeek != null && allCoursesData != null) {
+                if (nowWeek != null) {
                     //获取当前的课程显示在上拉课表的头部
                     getTodayCourse(allCoursesData, nowWeek)?.let { todayCourse ->
                         val pair = getNowCourse(todayCourse, allCoursesData, nowWeek)
