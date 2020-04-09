@@ -14,7 +14,6 @@ import com.mredrock.cyxbs.common.utils.getAppVersionName
 import com.mredrock.cyxbs.common.utils.update.UpdateEvent
 import com.mredrock.cyxbs.common.utils.update.UpdateUtils
 import com.mredrock.cyxbs.mine.R
-import com.mredrock.cyxbs.mine.util.extension.logr
 import kotlinx.android.synthetic.main.mine_activity_about.*
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -36,7 +35,6 @@ class AboutActivity(override val isFragmentActivity: Boolean = false,
             setTitleLocationAtLeft(true)
         }
         getAppVersionName(this@AboutActivity)?.let {
-            logr(it)
             val name = "zscy-feature-intro-${it}"
             viewModel.getFeatureIntroduction(name)
         }
@@ -91,12 +89,12 @@ class AboutActivity(override val isFragmentActivity: Boolean = false,
         if (supportFragmentManager.findFragmentByTag(tag) == null) {
             CommonDialogFragment().apply {
                 initView(
-                        containerRes = R.layout.mine_layout_dialog_feature_intro,
+                        containerRes = R.layout.mine_layout_dialog_with_title_and_content,
                         onPositiveClick = { dismiss() },
                         positiveString = "我知道了",
                         elseFunction = { rootView ->
-                            rootView.findViewById<TextView>(R.id.mine_about_tv_feature_title).text = "使用条款"
-                            rootView.findViewById<TextView>(R.id.mine_about_tv_feature_content).text = "版权归红岩网校工作站所有,感谢您的使用"
+                            rootView.findViewById<TextView>(R.id.dialog_title).text = "使用条款"
+                            rootView.findViewById<TextView>(R.id.dialog_content).text = "版权归红岩网校工作站所有,感谢您的使用"
                         }
                 )
             }.show(supportFragmentManager, tag)

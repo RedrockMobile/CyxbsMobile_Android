@@ -5,7 +5,10 @@ import androidx.lifecycle.MutableLiveData
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.service.account.IAccountService
-import com.mredrock.cyxbs.common.utils.extensions.*
+import com.mredrock.cyxbs.common.utils.extensions.doOnErrorWithDefaultErrorHandler
+import com.mredrock.cyxbs.common.utils.extensions.mapOrThrowApiException
+import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
+import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.mine.network.model.QANumber
 import com.mredrock.cyxbs.mine.network.model.ScoreStatus
@@ -34,9 +37,6 @@ class UserViewModel : BaseViewModel() {
                 .safeSubscribeBy(
                         onNext = {
                             _status.postValue(it)
-                        },
-                        onError = {
-                            BaseApp.context.toast("积分加载失败")
                         }
                 )
                 .lifeCycle()
@@ -48,9 +48,6 @@ class UserViewModel : BaseViewModel() {
                 .safeSubscribeBy(
                         onNext = {
                             _qaNumber.postValue(it)
-                        },
-                        onError = {
-                            BaseApp.context.toast("获取邮问数字失败")
                         }
                 )
                 .lifeCycle()
