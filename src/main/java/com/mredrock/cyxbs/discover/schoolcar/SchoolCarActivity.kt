@@ -26,6 +26,7 @@ import com.mredrock.cyxbs.common.config.DISCOVER_SCHOOL_CAR
 import com.mredrock.cyxbs.common.config.END_POINT_REDROCK
 import com.mredrock.cyxbs.common.ui.BaseActivity
 import com.mredrock.cyxbs.common.utils.LogUtils
+import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
 import com.mredrock.cyxbs.common.utils.extensions.dp2px
 import com.mredrock.cyxbs.discover.schoolcar.Interface.SchoolCarInterface
 import com.mredrock.cyxbs.discover.schoolcar.bean.SchoolCarLocation
@@ -43,7 +44,7 @@ import java.util.concurrent.TimeUnit
 /**
  * Created by glossimar on 2018/9/12
  */
-
+const val IS_MAP_SAVED = "isMapSaved"
 @Route(path = DISCOVER_SCHOOL_CAR)
 class SchoolCarActivity : BaseActivity(), View.OnClickListener {
     companion object {
@@ -79,7 +80,7 @@ class SchoolCarActivity : BaseActivity(), View.OnClickListener {
     //申请权限
     private val permissions = arrayOf(
             Manifest.permission.ACCESS_FINE_LOCATION
-            , Manifest.permission.WRITE_EXTERNAL_STORAGE)
+            )
     private val refusePermissions = mutableListOf<String>()
     private val mRequestCode = 200
 
@@ -104,6 +105,9 @@ class SchoolCarActivity : BaseActivity(), View.OnClickListener {
                 intent.data = Uri.parse("http://eini.cqupt.edu.cn/")
                 startActivity(intent)
             }
+            iv_back -> {
+                finishAfterTransition()
+            }
         }
     }
 
@@ -111,10 +115,11 @@ class SchoolCarActivity : BaseActivity(), View.OnClickListener {
         super.onCreate(savedInstanceState)
         this.savedInstanceState = savedInstanceState
         setContentView(R.layout.activity_schoolcar)
-        if (checkActivityPermission()) {
+        checkActivityPermission()
+//        if (checkActivityPermission()) {
             locationClient = AMapLocationClient(applicationContext)
             initView()
-        }
+//        }
     }
 
 
@@ -129,6 +134,7 @@ class SchoolCarActivity : BaseActivity(), View.OnClickListener {
         cv_expand.setOnClickListener(this)
         cv_positioning.setOnClickListener(this)
         iv_cooperation_logo.setOnClickListener(this)
+        iv_back.setOnClickListener(this)
         jc_schoolCar.setShadow(false, false, false, false)
         //如果用户同意定位权限，则开启定位和初始化定位用到的类
         if (ifLocation) {
@@ -183,7 +189,12 @@ class SchoolCarActivity : BaseActivity(), View.OnClickListener {
         }
         //加载地图材质包
         aMap.uiSettings.isZoomControlsEnabled = false
-        val parent = File(Environment.getExternalStorageDirectory().absolutePath + "/maoXhMap")
+        val parent = File(filesDir , "/maoXhMap")
+
+
+        if(!defaultSharedPreferences.getBoolean(IS_MAP_SAVED,false))MapStyleHelper(this).saveMapStyle{
+            initAMap(ifLocation)
+        }
         val styleExtra = File(parent, "style_extra.data")
         val style = File(parent, "style.data")
         val customMapStyleOptions = com.amap.api.maps.model.CustomMapStyleOptions()
