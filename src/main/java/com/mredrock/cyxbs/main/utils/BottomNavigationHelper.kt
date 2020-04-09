@@ -1,7 +1,6 @@
 package com.mredrock.cyxbs.main.utils
 
 import android.widget.CheckedTextView
-import com.mredrock.cyxbs.main.R
 import org.jetbrains.anko.sdk27.coroutines.onClick
 
 /**
@@ -14,6 +13,9 @@ class BottomNavigationHelper(private val tabList: Array<CheckedTextView>,
                              private val unSelectIcons: Array<Int>,
                              private var selectedListener: ((Int) -> Unit)? = null
 ) {
+
+    //前一个选中的位置
+    var peeCheckedItemPosition = 0
 
     init {
         for ((i, value) in tabList.withIndex()) {
@@ -28,7 +30,7 @@ class BottomNavigationHelper(private val tabList: Array<CheckedTextView>,
     }
 
 
-    private fun removeOtherCheckStatus(i:Int) {
+    private fun removeOtherCheckStatus(i: Int) {
         for ((p, value) in tabList.withIndex()) {
             if (p != i) {
                 value.isChecked = false
@@ -42,5 +44,6 @@ class BottomNavigationHelper(private val tabList: Array<CheckedTextView>,
         removeOtherCheckStatus(i)
         tabList[i].setCompoundDrawablesWithIntrinsicBounds(0, selectIcons[i], 0, 0)
         selectedListener?.invoke(i)
+        peeCheckedItemPosition = i
     }
 }

@@ -18,12 +18,8 @@ import com.mredrock.cyxbs.main.utils.isDownloadSplash
 import com.tencent.bugly.Bugly.applicationContext
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.collections.HashMap
 
 class MainViewModel : BaseViewModel() {
-
-    //这个变量主要是做标志使用，防止Activity异常重启造成的Fragment多次加载
-    var mainPageLoadedFragmentClassList = HashMap<String, Class<*>>()
 
     val startPage: LiveData<StartPage?> = MutableLiveData()
 
