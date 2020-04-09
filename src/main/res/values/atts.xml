@@ -1,7 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <declare-styleable name="ElectricInfoView" tools:ignore="ResourceName">
-        <attr name="describe" format="string"/>
-        <attr name="icon" format="reference"/>
-    </declare-styleable>
+
 </resources>
