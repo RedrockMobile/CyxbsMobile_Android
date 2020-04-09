@@ -8,6 +8,7 @@ public interface Encryptor {
 
 
     byte[] encrypt(byte[] orig);
+
     byte[] decrypt(byte[] encrypted) throws DecryptFailureException;
 
 }

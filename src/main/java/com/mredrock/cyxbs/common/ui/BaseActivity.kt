@@ -9,16 +9,23 @@ import android.os.Handler
 import android.os.PersistableBundle
 import android.view.Menu
 import android.view.View
+import android.widget.Toast
 import androidx.annotation.DrawableRes
 import androidx.appcompat.app.AppCompatActivity
 import com.afollestad.materialdialogs.MaterialDialog
 import com.alibaba.android.arouter.launcher.ARouter
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.R
+import com.mredrock.cyxbs.common.bean.LoginConfig
+import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.common.component.JToolbar
+import com.mredrock.cyxbs.common.config.ACTIVITY_CLASS
+import com.mredrock.cyxbs.common.config.MAIN_LOGIN
 import com.mredrock.cyxbs.common.event.AskLoginEvent
 import com.mredrock.cyxbs.common.event.LoginEvent
 import com.mredrock.cyxbs.common.event.LoginStateChangeEvent
+import com.mredrock.cyxbs.common.service.ServiceManager
+import com.mredrock.cyxbs.common.service.account.IAccountService
 import com.mredrock.cyxbs.common.utils.LogUtils
 import com.umeng.analytics.MobclickAgent
 import kotlinx.android.synthetic.main.common_toolbar.*
@@ -36,10 +43,10 @@ abstract class BaseActivity : AppCompatActivity() {
      * 这里可以开启生命周期的Log，你可以重写这个值并给值为true，
      * 也可以直接赋值为true（赋值的话请在init{}里面赋值或者在onCreate的super.onCreate(savedInstanceState)调用之前赋值）
      */
-    open protected var isOpenLifeCycleLog = false
+    protected open var isOpenLifeCycleLog = false
 
     //当然，你要定义自己的TAG方便在Log里面找也可以重写这个
-    open protected var TAG: String = this::class.java.simpleName
+    protected open var TAG: String = this::class.java.simpleName
 
     /**
      * service for umeng
@@ -47,13 +54,13 @@ abstract class BaseActivity : AppCompatActivity() {
      */
     abstract val isFragmentActivity: Boolean
 
+    protected open val loginConfig = LoginConfig()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        // todo 8.0 系统Bug 窗口透明导致限制竖屏闪退
-//        SwipeBackHelper.onCreate(this)
-//        SwipeBackHelper.getCurrentPage(this).setSwipeRelateEnable(true)
+        EventBus.getDefault().register(this)
         initFlag()
-        overridePendingTransition(R.anim.fade_in, R.anim.fade_out)
+        checkIsLogin(loginConfig, this)
         lifeCycleLog("onCreate")
     }
 
@@ -63,7 +70,7 @@ abstract class BaseActivity : AppCompatActivity() {
             Build.VERSION.SDK_INT >= 23 -> {
                 if (BaseApp.isNightMode) {
                     window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                }else{
+                } else {
                     window.decorView.systemUiVisibility =
                             //亮色模式状态栏
                             View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR or
@@ -79,11 +86,6 @@ abstract class BaseActivity : AppCompatActivity() {
                 window.statusBarColor = Color.TRANSPARENT
             }
         }
-    }
-
-    override fun finish() {
-        super.finish()
-        overridePendingTransition(R.anim.fade_in, R.anim.fade_out)
     }
 
     inline fun <reified T : Activity> startActivity(finish: Boolean = false, vararg params: Pair<String, Any?>) {
@@ -176,7 +178,6 @@ abstract class BaseActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
-        EventBus.getDefault().register(this)
         lifeCycleLog("onStart")
     }
 
@@ -203,12 +204,12 @@ abstract class BaseActivity : AppCompatActivity() {
 
     override fun onStop() {
         super.onStop()
-        EventBus.getDefault().unregister(this)
         lifeCycleLog("onStop")
     }
 
     override fun onDestroy() {
         super.onDestroy()
+        EventBus.getDefault().unregister(this)
         lifeCycleLog("onDestroy")
     }
 
@@ -222,9 +223,30 @@ abstract class BaseActivity : AppCompatActivity() {
         lifeCycleLog("onRestoreInstanceState")
     }
 
-    fun lifeCycleLog(message:String){
+    fun lifeCycleLog(message: String) {
         if (isOpenLifeCycleLog) {
             LogUtils.d(TAG, "${this::class.java.simpleName}\$\$${message}")
+        }
+    }
+
+
+    companion object {
+        fun checkIsLogin(loginConfig: LoginConfig, activity: Activity) {
+            if (!ServiceManager.getService(IAccountService::class.java).getVerifyService().isLogin() && loginConfig.isCheckLogin) {
+                //取消转场动画
+                val postcard = ARouter.getInstance().build(MAIN_LOGIN).withTransition(0, 0)
+                //如果设置了重新启动activity，则传Class过去，并关闭当前Activity
+                if (loginConfig.isFinish) {
+                    postcard.withSerializable(ACTIVITY_CLASS, this::class.java)
+                    activity.finish()
+                }
+                //如果需要提示用户未登陆
+                if (loginConfig.isWarnUser) {
+                    CyxbsToast.makeText(activity, loginConfig.warnMessage, Toast.LENGTH_SHORT).show()
+                }
+                //正式开始路由
+                postcard.navigation(activity)
+            }
         }
     }
 }

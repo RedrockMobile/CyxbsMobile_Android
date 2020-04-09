@@ -4,8 +4,7 @@
     android:background="@drawable/layer_list_dialog_popup_background"
     android:paddingTop="@dimen/common_content_height_from_top"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
+    android:layout_height="wrap_content">
 
 
 </FrameLayout>

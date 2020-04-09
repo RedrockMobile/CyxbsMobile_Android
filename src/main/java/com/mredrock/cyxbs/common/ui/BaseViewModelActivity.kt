@@ -15,7 +15,7 @@ import org.jetbrains.anko.indeterminateProgressDialog
  * Created By jay68 on 2018/8/23.
  */
 abstract class BaseViewModelActivity<T : BaseViewModel> : BaseActivity() {
-    protected lateinit var viewModel: T
+    lateinit var viewModel: T
 
     protected abstract val viewModelClass: Class<T>
 

@@ -1,7 +1,7 @@
 package com.mredrock.cyxbs.common.network
 
 import com.mredrock.cyxbs.common.BuildConfig
-import com.mredrock.cyxbs.common.config.END_POINT_REDROCK
+import com.mredrock.cyxbs.common.config.END_POINT_REDROCK_VERSION_TWO
 import com.mredrock.cyxbs.common.network.converter.QualifiedTypeConverterFactory
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.service.account.IAccountService
@@ -18,8 +18,9 @@ import java.util.concurrent.TimeUnit
 
 /**
  * Created by AceMurder on 2018/1/24.
+ * 适用于另一种baseUrl
  */
-object ApiGeneratorForSign {
+object ApiGeneratorForAnother {
     private const val DEFAULT_TIME_OUT = 30
 
     private var retrofit: Retrofit
@@ -45,7 +46,7 @@ object ApiGeneratorForSign {
         refreshToken = accountService.getUserTokenService().getRefreshToken()
         okHttpClient = configureOkHttp(OkHttpClient.Builder())
         retrofit = Retrofit.Builder()
-                .baseUrl("http://api-234.redrock.team")
+                .baseUrl(END_POINT_REDROCK_VERSION_TWO)
                 .client(okHttpClient)
                 .addConverterFactory(QualifiedTypeConverterFactory(GsonConverterFactory.create(), SimpleXmlConverterFactory.create()))
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
@@ -109,7 +110,7 @@ object ApiGeneratorForSign {
 
     private fun commonApiService(): Retrofit {
         return Retrofit.Builder()
-                .baseUrl(END_POINT_REDROCK)
+                .baseUrl(END_POINT_REDROCK_VERSION_TWO)
                 .client(OkHttpClient().newBuilder().apply {
                     connectTimeout(DEFAULT_TIME_OUT.toLong(), TimeUnit.SECONDS)
                     if (BuildConfig.DEBUG) {

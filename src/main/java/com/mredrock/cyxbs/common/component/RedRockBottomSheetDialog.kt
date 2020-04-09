@@ -17,7 +17,7 @@ import com.mredrock.cyxbs.common.R
  */
 open class RedRockBottomSheetDialog(context: Context) : BottomSheetDialog(context, R.style.BottomSheetDialogTheme) {
     override fun setContentView(view: View) {
-        val viewGroup = LayoutInflater.from(context).inflate(R.layout.common_red_rock_bottom_sheet_dalog_container,window?.decorView as ViewGroup,false) as FrameLayout
+        val viewGroup = LayoutInflater.from(context).inflate(R.layout.common_red_rock_bottom_sheet_dalog_container, window?.decorView as ViewGroup, false) as FrameLayout
         viewGroup.addView(view)
         super.setContentView(viewGroup)
     }

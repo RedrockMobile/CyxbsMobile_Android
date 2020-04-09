@@ -57,11 +57,11 @@ open class BaseFragment : Fragment() {
         if (!isStarted && isVisibleToUser) {
             isStarted = true
             MobclickAgent.onPageStart(javaClass.name)
-            LogUtils.d("UMStat",  javaClass.name + " started")
+            LogUtils.d("UMStat", javaClass.name + " started")
         } else if (isStarted) {
             isStarted = false
             MobclickAgent.onPageEnd(javaClass.name)
-            LogUtils.d("UMStat",  javaClass.name + " paused")
+            LogUtils.d("UMStat", javaClass.name + " paused")
         }
     }
 
@@ -110,7 +110,7 @@ open class BaseFragment : Fragment() {
         lifeCycleLog("onDetach")
     }
 
-    fun lifeCycleLog(message:String){
+    fun lifeCycleLog(message: String) {
         if (isOpenLifeCycleLog) {
             LogUtils.d(TAG, "${this::class.java.simpleName}\$\$${message}")
         }

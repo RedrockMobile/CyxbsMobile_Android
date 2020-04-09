@@ -3,8 +3,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     tools:ignore="ResourceName">
 
-<!--    因为6.0版本的所有的dialog均替换为bottomSheetDialog样式-->
-<!--    并且所有的圆角角度和阴影均是一样的，所以在这写一个背景复用-->
+    <!--    因为6.0版本的所有的dialog均替换为bottomSheetDialog样式-->
+    <!--    并且所有的圆角角度和阴影均是一样的，所以在这写一个背景复用-->
 
     <item
         android:gravity="top"
@@ -13,19 +13,19 @@
             <gradient
                 android:angle="90"
                 android:startColor="#205369BC"
-                android:endColor="#005369BC"/>
+                android:endColor="#005369BC" />
             <corners
                 android:topRightRadius="@dimen/common_dialog_fillet"
-                android:topLeftRadius="@dimen/common_dialog_fillet"/>
+                android:topLeftRadius="@dimen/common_dialog_fillet" />
         </shape>
     </item>
 
-    <item
-        android:top="@dimen/common_content_height_from_top">
+    <item android:top="@dimen/common_content_height_from_top">
         <shape>
-            <corners android:topRightRadius="@dimen/common_dialog_fillet"
-                android:topLeftRadius="@dimen/common_dialog_fillet"/>
-            <solid android:color="@color/whiteBackground"/>
+            <corners
+                android:topRightRadius="@dimen/common_dialog_fillet"
+                android:topLeftRadius="@dimen/common_dialog_fillet" />
+            <solid android:color="@color/whiteBackground" />
         </shape>
     </item>
 </layer-list>

@@ -117,7 +117,7 @@ public class JToolbar extends Toolbar {
         //为什么这个screenWidth绘制不满一个屏幕的宽度？？？
 
         if (withSplitLine)
-            canvas.drawLine(0, getMeasuredHeight() - ContextKt.dp2px(getContext(), 1), 2 * ContextKt.getScreenWidth(getContext()), getMeasuredHeight()-ContextKt.dp2px(getContext(), 1), paint);
+            canvas.drawLine(0, getMeasuredHeight() - ContextKt.dp2px(getContext(), 1), 2 * ContextKt.getScreenWidth(getContext()), getMeasuredHeight() - ContextKt.dp2px(getContext(), 1), paint);
     }
 
     private void reLayoutTitleToLeft(TextView title) {
@@ -125,7 +125,8 @@ public class JToolbar extends Toolbar {
         int ir = getChildAt(0).getRight();
         title.layout(ir, title.getTop(), ir + title.getMeasuredWidth(), title.getBottom());
     }
-    private void reLayoutTitleToCenter(TextView title){
+
+    private void reLayoutTitleToCenter(TextView title) {
         //note: o for old ,t for temp, l for left...
         int ol = title.getLeft();
         int width = title.getMeasuredWidth();
@@ -138,10 +139,9 @@ public class JToolbar extends Toolbar {
 
     private void reLayoutTitle(TextView title) {
         if (title == null) return;
-        if(isTitleAtLeft){
+        if (isTitleAtLeft) {
             reLayoutTitleToLeft(title);
-        }
-        else {
+        } else {
             reLayoutTitleToCenter(title);
         }
     }

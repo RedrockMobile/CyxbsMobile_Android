@@ -6,7 +6,11 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-        <item name="android:windowIsTranslucent">true</item>
+        <!--        透明状态栏-->
+        <item name="statusBarBackground">@color/transparentBackground</item>
+        <!--        每个Activity的Window背景，最好别设置透明或者空-->
+        <item name="android:windowBackground">@color/windowBackground</item>
+        <!--        Transition转场动画，暂未启用-->
         <item name="android:windowEnterTransition">@transition/fade</item>
         <item name="android:windowExitTransition">@transition/fade</item>
         <item name="android:windowSharedElementEnterTransition">@transition/app_transaction</item>
@@ -18,13 +22,6 @@
         <item name="android:windowFullscreen">true</item>
     </style>
 
-    <!-- 此主题作用与MainActivity上为了避免SwipeLayout和windowIsTranslucent属性一起使用造成的效率问题 -->
-    <style name="MainActivityTheme" parent="Theme.AppCompat.DayNight.NoActionBar" tools:ignore="ResourceName">
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
-        <item name="android:windowIsTranslucent">true</item>
-    </style>
 
     <style name="BottomSheetDialogTheme" parent="Theme.Design.BottomSheetDialog" tools:ignore="ResourceName">
         <!--        dialog是否有边框-->

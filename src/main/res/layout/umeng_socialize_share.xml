@@ -92,6 +92,7 @@
         android:layout_marginRight="15dp"
         android:background="#F2F5F6"
         android:visibility="gone">
+
         <RelativeLayout
             android:layout_width="62dp"
             android:layout_height="62dp"
@@ -100,36 +101,37 @@
             android:layout_marginLeft="15dp"
             android:id="@+id/umeng_image_edge"
             android:layout_marginTop="15dp"
-           android:background="@drawable/umeng_socialize_edit_bg"
-            >
-        <ImageView
-            android:id="@+id/umeng_share_icon"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-           android:layout_centerInParent="true"
-            android:src="#2c3035" />
-        </RelativeLayout>
-    <TextView
-        android:layout_width="280dp"
-        android:id="@+id/umeng_web_title"
-        android:layout_toRightOf="@id/umeng_image_edge"
-        android:layout_marginLeft="40dp"
-        android:layout_marginTop="20dp"
-        android:textColor="#575A5C"
-        android:singleLine="true"
-        android:textSize="14sp"
-        android:visibility="gone"
-        android:layout_height="wrap_content" />
+            android:background="@drawable/umeng_socialize_edit_bg">
 
-    <ImageView
-        android:id="@+id/umeng_del"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-        android:layout_alignRight="@id/umeng_image_edge"
-        android:layout_alignTop="@id/umeng_image_edge"
-        android:layout_marginRight="-10dp"
-        android:layout_marginTop="-10dp"
-        android:background="@drawable/umeng_socialize_delete" />
+            <ImageView
+                android:id="@+id/umeng_share_icon"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_centerInParent="true"
+                android:src="#2c3035" />
+        </RelativeLayout>
+
+        <TextView
+            android:layout_width="280dp"
+            android:id="@+id/umeng_web_title"
+            android:layout_toRightOf="@id/umeng_image_edge"
+            android:layout_marginLeft="40dp"
+            android:layout_marginTop="20dp"
+            android:textColor="#575A5C"
+            android:singleLine="true"
+            android:textSize="14sp"
+            android:visibility="gone"
+            android:layout_height="wrap_content" />
+
+        <ImageView
+            android:id="@+id/umeng_del"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_alignRight="@id/umeng_image_edge"
+            android:layout_alignTop="@id/umeng_image_edge"
+            android:layout_marginRight="-10dp"
+            android:layout_marginTop="-10dp"
+            android:background="@drawable/umeng_socialize_delete" />
 
 
     </RelativeLayout>

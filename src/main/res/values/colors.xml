@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
     <color name="colorPrimary" tools:ignore="ResourceName">#ffffff</color>
-    <color name="colorPrimaryDark" tools:ignore="ResourceName">#798DFA</color>
+    <color name="colorPrimaryDark" tools:ignore="ResourceName">#00000000</color>
     <color name="colorAccent" tools:ignore="ResourceName">#788EFA</color>
 
     <!--    颜色汇总，方便黑夜模式，自己把用到的颜色，都扔在这，写好注释，并在飞书上标注好
@@ -43,7 +43,8 @@
     <!--    课表可上拉下拉标识小块背景-->
     <color name="courseTableDragIndicatorBlockColor" tools:ignore="ResourceName">#E2EDFB</color>
     <!--    课表标识当天阴影-->
-    <color name="courseIdentifiesTheCurrentShadowColor" tools:ignore="ResourceName">#93E8F0FC</color>
+    <color name="courseIdentifiesTheCurrentShadowColor" tools:ignore="ResourceName">#93E8F0FC
+    </color>
     <!--    课表课程色块颜色-->
     <color name="morningCourseColor" tools:ignore="ResourceName">#F9E7D8</color>
     <color name="afternoonCourseColor" tools:ignore="ResourceName">#F9E3E4</color>
@@ -145,7 +146,8 @@
     <color name="mine_main_btn_gradient_end" tools:ignore="ResourceName">#5D5DF7</color>
 
     <!--    考试成绩-->
-    <color name="grades_gpa_rv_list_round_corner_background" tools:ignore="ResourceName">#88E8F1FC</color>
+    <color name="grades_gpa_rv_list_round_corner_background" tools:ignore="ResourceName">#88E8F1FC
+    </color>
     <color name="grades_item_cardView_bg" tools:ignore="ResourceName">#E8F1FC</color>
     <color name="grades_activity_tl_white" tools:ignore="ResourceName">#FFFFFF</color>
     <color name="grades_activity_back_grey" tools:ignore="ResourceName">#D3D3D3</color>
