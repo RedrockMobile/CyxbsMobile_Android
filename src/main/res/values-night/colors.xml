@@ -30,7 +30,7 @@
     <!--    四级字体颜色-->
     <color name="levelFourFontColor" tools:ignore="DuplicateDefinition,ResourceName">#ffffff</color>
 
-    <color name="courseDeleteButtonTextColor" tools:ignore="ResourceName">#ffffff</color>
+    <color name="courseDeleteButtonTextColor" tools:ignore="ResourceName">#5b585c</color>
 
 
     <!--    底部tab未聚焦字体颜色-->
