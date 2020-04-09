@@ -30,7 +30,7 @@ object MoreFunctionProvider {
             Function(R.drawable.discover_ic_empty_stu_schedule, R.string.discover_title_empty_stu_schedule, R.string.discover_detail_empty_stu_schedule, StartActivityImpl(DISCOVER_OTHER_COURSE)),
             Function(R.drawable.discover_ic_school_calendar, R.string.discover_title_school_calendar, R.string.discover_detail_school_calendar, StartActivityImpl(DISCOVER_CALENDAR)),
             Function(R.drawable.discover_ic_map, R.string.discover_title_map, R.string.discover_detail_map, StartActivityImpl(DISCOVER_MAP)),
-            Function(R.drawable.discover_ic_more_function, R.string.discover_title_more_function, R.string.discover_detail_more_function, StartActivityFromIntent(Intent(BaseApp.context, MoreFunctionActivity::class.java))))
+            Function(R.drawable.discover_ic_more_function, R.string.discover_title_more_function, R.string.discover_detail_more_function,StartActivityImpl(DISCOVER_MORE_FUNCTION )))
 
     //当有缓存时直接从缓存中获取，没有时从sp中拿
     fun getHomePageFunctions(): List<Function> {
@@ -98,13 +98,6 @@ object MoreFunctionProvider {
             } else {
                 EventBus.getDefault().post(AskLoginEvent("请先登陆才能使用${msg}哦~"))
             }
-        }
-
-    }
-
-    class StartActivityFromIntent(private val intent: Intent) : StartActivityAble {
-        override fun startActivity() {
-            BaseApp.context.startActivity(intent)
         }
 
     }

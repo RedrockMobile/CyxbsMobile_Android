@@ -3,6 +3,8 @@ package com.mredrock.cyxbs.discover.pages.morefunction
 import android.os.Bundle
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
+import com.alibaba.android.arouter.facade.annotation.Route
+import com.mredrock.cyxbs.common.config.DISCOVER_MORE_FUNCTION
 import com.mredrock.cyxbs.common.ui.BaseActivity
 import com.mredrock.cyxbs.discover.R
 import com.mredrock.cyxbs.discover.utils.MoreFunctionProvider
@@ -12,6 +14,7 @@ import kotlinx.android.synthetic.main.discover_activity_more_function.*
  * @author zixuan
  * 2019/11/20
  */
+@Route(path = DISCOVER_MORE_FUNCTION)
 class MoreFunctionActivity : BaseActivity() {
     override val isFragmentActivity: Boolean = false
 
