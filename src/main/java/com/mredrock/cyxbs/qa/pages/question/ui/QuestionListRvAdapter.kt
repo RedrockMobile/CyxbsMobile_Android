@@ -1,30 +1,20 @@
 package com.mredrock.cyxbs.qa.pages.question.ui
 
-import android.app.Activity
 import android.view.ViewGroup
-import androidx.core.app.ActivityOptionsCompat
-import androidx.core.util.Pair
-import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DiffUtil
-import com.mredrock.cyxbs.common.event.AskLoginEvent
-import com.mredrock.cyxbs.common.service.ServiceManager
-import com.mredrock.cyxbs.common.service.account.IAccountService
 import com.mredrock.cyxbs.common.utils.extensions.setAvatarImageFromUrl
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.bean.Question
 import com.mredrock.cyxbs.qa.component.recycler.BaseEndlessRvAdapter
 import com.mredrock.cyxbs.qa.component.recycler.BaseViewHolder
-import com.mredrock.cyxbs.qa.pages.answer.ui.AnswerListActivity
-import com.mredrock.cyxbs.qa.pages.main.QuestionContainerFragment
 import com.mredrock.cyxbs.qa.utils.questionTimeDescription
 import com.mredrock.cyxbs.qa.utils.toDate
 import kotlinx.android.synthetic.main.qa_recycler_item_question.view.*
-import org.greenrobot.eventbus.EventBus
 
 /**
  * Created By jay68 on 2018/8/26.
  */
-class QuestionListRvAdapter(private val fragment: Fragment) : BaseEndlessRvAdapter<Question>(DIFF_CALLBACK) {
+class QuestionListRvAdapter(private val onItemClickEvent: (Question) -> Unit) : BaseEndlessRvAdapter<Question>(DIFF_CALLBACK) {
     companion object {
         @JvmStatic
         val DIFF_CALLBACK = object : DiffUtil.ItemCallback<Question>() {
@@ -38,17 +28,8 @@ class QuestionListRvAdapter(private val fragment: Fragment) : BaseEndlessRvAdapt
 
     override fun onItemClickListener(holder: BaseViewHolder<Question>, position: Int, data: Question) {
         super.onItemClickListener(holder, position, data)
-        if (ServiceManager.getService(IAccountService::class.java).getVerifyService().isLogin()) {
-            if (holder !is QuestionViewHolder) return
-            AnswerListActivity.activityStart(
-                    fragment, data, QuestionContainerFragment.REQUEST_LIST_REFRESH_ACTIVITY,
-                    ActivityOptionsCompat.makeSceneTransitionAnimation(
-                            fragment.context as Activity,
-                            Pair(holder.itemView.iv_avatar, "avatar")
-                    ).toBundle())
-        } else {
-            EventBus.getDefault().post(AskLoginEvent("请先登陆才能使用邮问哦~"))
-        }
+        if (holder !is QuestionViewHolder) return
+        onItemClickEvent.invoke(data)
     }
 
     class QuestionViewHolder(parent: ViewGroup) : BaseViewHolder<Question>(parent, R.layout.qa_recycler_item_question) {

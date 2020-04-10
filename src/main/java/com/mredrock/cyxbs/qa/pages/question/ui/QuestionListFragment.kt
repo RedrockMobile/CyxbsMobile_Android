@@ -16,6 +16,7 @@ import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.bean.Question
 import com.mredrock.cyxbs.qa.component.recycler.RvAdapterWrapper
 import com.mredrock.cyxbs.qa.network.NetworkState
+import com.mredrock.cyxbs.qa.pages.answer.ui.AnswerListActivity
 import com.mredrock.cyxbs.qa.pages.main.QuestionContainerFragment
 import com.mredrock.cyxbs.qa.pages.question.viewmodel.QuestionListViewModel
 import com.mredrock.cyxbs.qa.ui.adapter.EmptyRvAdapter
@@ -62,7 +63,10 @@ class QuestionListFragment : BaseViewModelFragment<QuestionListViewModel>() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val questionListRvAdapter = QuestionListRvAdapter(this)
+        val questionListRvAdapter = QuestionListRvAdapter {
+            AnswerListActivity.activityStart(this, it, QuestionContainerFragment.REQUEST_LIST_REFRESH_ACTIVITY)
+            activity?.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
+        }
         val footerRvAdapter = FooterRvAdapter { viewModel.retry() }
         val emptyRvAdapter = EmptyRvAdapter(getString(R.string.qa_question_list_empty_hint))
         val adapterWrapper = RvAdapterWrapper(

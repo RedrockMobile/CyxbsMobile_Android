@@ -57,11 +57,11 @@ class CommentListActivity : BaseActivity() {
 
         fun activityStart(activity: Activity,
                           question: Question,
-                          answer: Answer, options: Bundle? = Bundle()) {
-            activity.startActivityForResult(Intent(activity, CommentListActivity::class.java).apply {
-                putExtra(PARAM_QUESTION, question)
-                putExtra(PARAM_ANSWER, answer)
-            }, REQUEST_CODE, options)
+                          answer: Answer) {
+            activity.startActivityForResult<CommentListActivity>(REQUEST_CODE,
+                    PARAM_QUESTION to question,
+                    PARAM_ANSWER to answer)
+
         }
     }
 

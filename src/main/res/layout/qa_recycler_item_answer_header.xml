@@ -21,8 +21,7 @@
             android:layout_height="40dp"
             android:layout_centerVertical="true"
             android:scaleType="centerCrop"
-            android:src="@drawable/common_default_avatar"
-            android:transitionName="avatar" />
+            android:src="@drawable/common_default_avatar" />
 
         <TextView
             android:id="@+id/tv_questioner_nickname"

@@ -1,8 +1,6 @@
 package com.mredrock.cyxbs.qa.pages.answer.ui
 
-import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import com.mredrock.cyxbs.common.utils.extensions.invisible
@@ -35,14 +33,14 @@ class AnswerListAdapter : BaseEndlessRvAdapter<Answer>(DIFF_CALLBACK) {
 
     var onPraiseClickListener: ((Int, Answer) -> Unit)? = null
     var onReportClickListener: ((String) -> Unit)? = null
-    var onItemClickListener: ((Int, Answer, View) -> Unit)? = null
+    var onItemClickListener: ((Answer) -> Unit)? = null
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = AnswerViewHolder(parent)
 
     override fun onItemClickListener(holder: BaseViewHolder<Answer>, position: Int, data: Answer) {
         super.onItemClickListener(holder, position, data)
-        onItemClickListener?.invoke(position, data, holder.itemView.findViewById<ImageView>(R.id.iv_answer_avatar))
+        onItemClickListener?.invoke(data)
     }
 
     override fun onBindViewHolder(holder: BaseViewHolder<Answer>, position: Int) {

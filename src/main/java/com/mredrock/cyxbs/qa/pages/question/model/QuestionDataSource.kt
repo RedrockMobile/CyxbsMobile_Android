@@ -23,6 +23,7 @@ class QuestionDataSource(private val kind: String) : PageKeyedDataSource<Int, Qu
     private var failedRequest: (() -> Unit)? = null
 
     override fun loadInitial(params: LoadInitialParams<Int>, callback: LoadInitialCallback<Int, Question>) {
+        //最开始加上判断，以防登录bug
         val userState = ServiceManager.getService(IAccountService::class.java).getVerifyService()
         if (!userState.isLogin()) {
             callback.onResult(listOf(), 1, null)

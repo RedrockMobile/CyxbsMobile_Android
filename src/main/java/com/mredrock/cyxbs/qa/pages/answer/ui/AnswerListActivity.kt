@@ -4,8 +4,6 @@ import android.app.Activity
 import android.app.ProgressDialog
 import android.content.Intent
 import android.os.Bundle
-import androidx.core.app.ActivityOptionsCompat
-import androidx.core.util.Pair
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
@@ -17,10 +15,7 @@ import com.google.gson.reflect.TypeToken
 import com.mredrock.cyxbs.common.bean.RedrockApiWrapper
 import com.mredrock.cyxbs.common.bean.isSuccessful
 import com.mredrock.cyxbs.common.config.QA_ANSWER_LIST
-import com.mredrock.cyxbs.common.event.AskLoginEvent
 import com.mredrock.cyxbs.common.event.OpenShareQuestionEvent
-import com.mredrock.cyxbs.common.service.ServiceManager
-import com.mredrock.cyxbs.common.service.account.IAccountService
 import com.mredrock.cyxbs.common.ui.BaseActivity
 import com.mredrock.cyxbs.common.utils.extensions.gone
 import com.mredrock.cyxbs.common.utils.extensions.toast
@@ -43,6 +38,7 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.jetbrains.anko.indeterminateProgressDialog
 import org.jetbrains.anko.longToast
+import org.jetbrains.anko.support.v4.startActivityForResult
 
 @Route(path = QA_ANSWER_LIST)
 class AnswerListActivity : BaseActivity() {
@@ -55,12 +51,8 @@ class AnswerListActivity : BaseActivity() {
         const val REQUEST_REFRESH_QUESTION_ADOPTED = "adopted"
         const val REQUEST_REFRESH_ANSWER_REFRESH = "answerRefresh"
 
-        fun activityStart(fragment: Fragment, question: Question, requestCode: Int, options: Bundle? = Bundle()) {
-            if (!ServiceManager.getService(IAccountService::class.java).getVerifyService().isLogin()) {
-                EventBus.getDefault().post(AskLoginEvent("请先登陆才能使用邮问哦~"))
-                return
-            }
-            fragment.startActivityForResult(Intent(fragment.context as Activity, AnswerListActivity::class.java).apply { putExtra(PARAM_QUESTION, question) }, requestCode, options)
+        fun activityStart(fragment: Fragment, question: Question, requestCode: Int) {
+            fragment.startActivityForResult<AnswerListActivity>(requestCode, PARAM_QUESTION to question)
         }
     }
 
@@ -135,12 +127,11 @@ class AnswerListActivity : BaseActivity() {
         }
         headerAdapter = AnswerListHeaderAdapter()
         answerListAdapter = AnswerListAdapter().apply {
-            onItemClickListener = { _, answer, view ->
-                if (viewModel.questionLiveData.value != null)
-                    CommentListActivity.activityStart(this@AnswerListActivity, viewModel.questionLiveData.value!!, answer, ActivityOptionsCompat.makeSceneTransitionAnimation(
-                            this@AnswerListActivity,
-                            Pair(view, "answer_avatar")
-                    ).toBundle())
+            onItemClickListener = {
+                if (viewModel.questionLiveData.value != null) {
+                    CommentListActivity.activityStart(this@AnswerListActivity, viewModel.questionLiveData.value!!, it)
+                    overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
+                }
             }
             onPraiseClickListener = { i: Int, answer: Answer ->
                 if (viewModel.isDealing) {

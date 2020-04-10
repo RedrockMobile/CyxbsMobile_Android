@@ -8,10 +8,7 @@ import android.view.ViewGroup
 import androidx.appcompat.widget.AppCompatCheckedTextView
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.mredrock.cyxbs.common.config.QA_ENTRY
-import com.mredrock.cyxbs.common.event.AskLoginEvent
 import com.mredrock.cyxbs.common.event.CurrentDateInformationEvent
-import com.mredrock.cyxbs.common.service.ServiceManager
-import com.mredrock.cyxbs.common.service.account.IAccountService
 import com.mredrock.cyxbs.common.ui.BaseFragment
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.bean.Question
@@ -19,7 +16,6 @@ import com.mredrock.cyxbs.qa.pages.question.ui.QuestionListFragment
 import com.mredrock.cyxbs.qa.pages.quiz.ui.QuizActivity
 import kotlinx.android.synthetic.main.qa_fragment_question_container.*
 import kotlinx.android.synthetic.main.qa_fragment_question_container.view.*
-import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
@@ -54,12 +50,8 @@ class QuestionContainerFragment : BaseFragment(), View.OnClickListener {
             setSelectedTabIndicator(R.drawable.qa_question_tab_indicator)
         }
         btn_ask_question.setOnClickListener {
-            if (ServiceManager.getService(IAccountService::class.java).getVerifyService().isLogin()) {
-                QuizActivity.activityStart(this@QuestionContainerFragment, "学习", REQUEST_LIST_REFRESH_ACTIVITY)
-                activity?.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
-            } else {
-                EventBus.getDefault().post(AskLoginEvent("请先登陆才能使用掌邮哦~"))
-            }
+            QuizActivity.activityStart(this@QuestionContainerFragment, "学习", REQUEST_LIST_REFRESH_ACTIVITY)
+            activity?.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
         }
     }
 
