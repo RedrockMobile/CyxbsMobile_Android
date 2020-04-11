@@ -25,12 +25,12 @@ open class MoreFunctionRvAdapter(private val functions: List<MoreFunctionProvide
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MoreFunctionViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.discover_more_function_recycler_item, parent, false)
         when (viewType) {
-            0 -> {
+            LONG_TYPE -> {
                 view.layoutParams.height = parent.context.dip(255)
                 (view.layoutParams as RecyclerView.LayoutParams).rightMargin = parent.context.dip(16)
             }
-            1 -> (view.layoutParams as RecyclerView.LayoutParams).leftMargin = parent.context.dip(16)
-            2 -> (view.layoutParams as RecyclerView.LayoutParams).rightMargin = parent.context.dip(16)
+            LEFT_TYPE -> (view.layoutParams as RecyclerView.LayoutParams).leftMargin = parent.context.dip(16)
+            RIGHT_TYPE -> (view.layoutParams as RecyclerView.LayoutParams).rightMargin = parent.context.dip(16)
         }
 
         return MoreFunctionViewHolder(view)
