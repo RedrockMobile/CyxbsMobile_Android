@@ -52,6 +52,8 @@ class NoClassActivity : BaseViewModelActivity<NoClassViewModel>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.noclass_activity_no_class)
+
+        common_toolbar.initWithSplitLine("没课约")
         mStuList = ArrayList()
         initStuList()
         initBtn()

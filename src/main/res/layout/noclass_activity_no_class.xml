@@ -26,61 +26,28 @@
             tools:ignore="ResourceName">
 
 
-            <ImageView
-                android:id="@+id/no_class_course_iv_back"
-                android:layout_width="35.5dp"
-                android:layout_height="43dp"
-                android:layout_marginStart="2dp"
-                android:onClick="@{()->stuListActivity.finish()}"
-                android:padding="14dp"
-                android:src="@drawable/common_back"
-                app:layout_constraintBottom_toBottomOf="@+id/no_class_course_list_title"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/no_class_course_list_title"
-                app:layout_constraintVertical_bias="0.32999998" />
-
-            <TextView
-                android:id="@+id/no_class_course_list_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:textSize="21sp"
-                android:textColor="@color/levelTwoFontColor"
-                android:textStyle="bold"
-                android:text="没课约"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/no_class_course_iv_back"/>
-
-            <View
-                android:id="@+id/no_class_course_list_title_bottom_line"
-                android:background="@color/levelTwoFontColor"
-                android:alpha="0.1"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="8dp"
-                app:layout_constraintTop_toBottomOf="@+id/no_class_course_list_title"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"/>
+            <include
+                android:id="@+id/noclass_include"
+                layout="@layout/common_toolbar" />
 
             <androidx.appcompat.widget.AppCompatEditText
                 android:id="@+id/et_noclass_add_classmate"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:maxLines="1"
-                android:singleLine="true"
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
                 android:background="@drawable/discover_noclass_shape_add_classmate"
+                android:hint="添加同学"
+                android:imeOptions="actionSearch"
+                android:maxLines="1"
                 android:paddingStart="19dp"
-                android:textColor="@color/levelTwoFontColor"
                 android:paddingTop="12dp"
                 android:paddingBottom="12dp"
-                android:layout_marginTop="30dp"
+                android:singleLine="true"
+                android:textColor="@color/levelTwoFontColor"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/no_class_course_list_title_bottom_line"
-                android:hint="添加同学"
-                android:imeOptions="actionSearch" />
+                app:layout_constraintTop_toBottomOf="@+id/noclass_include" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/noclass_rv"
