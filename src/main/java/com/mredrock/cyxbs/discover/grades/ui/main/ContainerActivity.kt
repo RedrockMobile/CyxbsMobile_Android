@@ -15,7 +15,6 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.bean.LoginConfig
 import com.mredrock.cyxbs.common.config.DISCOVER_GRADES
-import com.mredrock.cyxbs.common.event.LoginStateChangeEvent
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.service.account.IAccountService
 import com.mredrock.cyxbs.common.service.account.IUserService
@@ -80,11 +79,6 @@ class ContainerActivity : BaseActivity() {
             setTitleLocationAtLeft(true)
         }
         viewModel = ViewModelProvider(this@ContainerActivity).get(ContainerViewModel::class.java)
-        init()
-    }
-
-    override fun onLoginStateChangeEvent(event: LoginStateChangeEvent) {
-        super.onLoginStateChangeEvent(event)
         init()
     }
 
