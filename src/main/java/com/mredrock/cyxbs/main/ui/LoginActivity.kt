@@ -1,13 +1,18 @@
 package com.mredrock.cyxbs.main.ui
 
+import android.app.Dialog
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.transition.Explode
 import android.transition.TransitionManager
+import android.view.LayoutInflater
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.Toast
 import androidx.core.view.get
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.alibaba.android.arouter.facade.annotation.Autowired
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
@@ -19,9 +24,11 @@ import com.mredrock.cyxbs.common.config.MAIN_LOGIN
 import com.mredrock.cyxbs.common.event.LoginStateChangeEvent
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.main.R
+import com.mredrock.cyxbs.main.adapter.UserAgreementAdapter
 import com.mredrock.cyxbs.main.bean.LoginFailEvent
 import com.mredrock.cyxbs.main.viewmodel.LoginViewModel
 import kotlinx.android.synthetic.main.main_activity_login.*
+import kotlinx.android.synthetic.main.main_user_agreement_dialog.view.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -77,6 +84,22 @@ class LoginActivity : BaseViewModelActivity<LoginViewModel>() {
                 lav_login_check.pauseAnimation()
             } else if (it.animatedFraction >= lottieProgress && it.animatedFraction != 1f && !viewModel.userAgreementIsCheck) {
                 lav_login_check.pauseAnimation()
+            }
+        }
+        main_user_agreement.setOnClickListener {
+            val materialDialog = Dialog(this)
+            val view = LayoutInflater.from(this).inflate(R.layout.main_user_agreement_dialog, null, false)
+            materialDialog
+                    .setContentView(view)
+            materialDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            val userAgreementAdapter = UserAgreementAdapter(viewModel.userAgreementList)
+            view.rv_content.adapter = userAgreementAdapter
+            view.rv_content.layoutManager = LinearLayoutManager(this@LoginActivity)
+            if (!viewModel.userAgreementList.isEmpty()) view.loader.visibility = View.GONE
+            materialDialog.show()
+            viewModel.getUserAgreement {
+                userAgreementAdapter.notifyDataSetChanged()
+                view.loader.visibility = View.GONE
             }
         }
     }

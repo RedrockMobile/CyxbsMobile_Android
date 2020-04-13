@@ -95,6 +95,13 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
         initFragments(bundle)//对四个主要的fragment进行配置
     }
 
+    override fun onStart() {
+        super.onStart()
+        //如果是正常未登录时启动，onCreate里面跳转了之后onStart就不会执行了，
+        //但是如果时异常状态下进入，这里还需要多进行一次检查才能保证没登陆时不能进入MainActivity
+        checkIsLogin(LoginConfig(isWarnUser = false), this)
+    }
+
 
     private fun initBottomSheetBehavior() {
         bottomSheetBehavior = BottomSheetBehavior.from(course_bottom_sheet_content)

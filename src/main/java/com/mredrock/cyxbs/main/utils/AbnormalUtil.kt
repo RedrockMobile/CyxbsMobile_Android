@@ -27,7 +27,6 @@ fun List<Fragment>.entryContains(aRouterPath: String, activity: MainActivity): F
  * 用于Main初始化Fragment
  * @param data ARouter的注册路径
  * @param activity MainActivity
- * @param viewModel
  */
 fun getFragment(data: String, activity: MainActivity) =
         activity.supportFragmentManager.fragments.entryContains(data, activity)
