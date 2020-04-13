@@ -3,7 +3,7 @@ package com.mredrock.cyxbs.course.adapters
 import android.view.View
 import com.mredrock.cyxbs.common.component.RedRockAutoWarpView
 import com.mredrock.cyxbs.course.R
-import com.mredrock.cyxbs.course.ui.activity.AffairEditActivity
+import com.mredrock.cyxbs.course.component.WeekSelectDialog
 import kotlinx.android.synthetic.main.course_week_selected_item_auto_warp.view.*
 
 /**
@@ -13,7 +13,7 @@ import kotlinx.android.synthetic.main.course_week_selected_item_auto_warp.view.*
  * 描述:
  *   周数选择结果的适配器
  */
-class WeekSelectedAdapter(val weekSelectedList: List<Int>, val affairEditActivity: AffairEditActivity) : RedRockAutoWarpView.Adapter() {
+class WeekSelectedAdapter(private val weekSelectedList: List<Int>, private val weekSelectDialog: WeekSelectDialog) : RedRockAutoWarpView.Adapter() {
 
     override fun getItemId(): Int {
         return R.layout.course_week_selected_item_auto_warp
@@ -30,8 +30,8 @@ class WeekSelectedAdapter(val weekSelectedList: List<Int>, val affairEditActivit
         item.course_tv_week_item.apply {
             text = if (weekSelectedList.isEmpty()) "请选择周数" else if (weekSelectedList.size == 21) "整学期" else "第${weekSelectedList[position]}周"
             setOnClickListener {
-                if (!affairEditActivity.mWeekSelectDialog.isShowing) {
-                    affairEditActivity.mWeekSelectDialog.show()
+                if (!weekSelectDialog.isShowing) {
+                    weekSelectDialog.show()
                 }
             }
         }

@@ -26,10 +26,6 @@ class NoCourseInviteScheduleViewAdapter(private val mContext: Context,
                                         private val mCoursesMap: Map<Int, List<Course>>,
                                         private val mNameList: List<String>) : ScheduleView.Adapter() {
 
-    companion object {
-        private const val TAG = "NoCourseInviteScheduleViewAdapter"
-    }
-
     private val mCoursesColors by lazy(LazyThreadSafetyMode.NONE) {
         intArrayOf(ContextCompat.getColor(mContext, R.color.morningCourseColor),
                 ContextCompat.getColor(mContext, R.color.afternoonCourseColor),
@@ -94,7 +90,7 @@ class NoCourseInviteScheduleViewAdapter(private val mContext: Context,
             for (column in 0 until 7) {
                 val indexes = mCoursesIndex[row][column]
 
-                for (i in 0 until mNameList.size) {
+                for (i in mNameList.indices) {
                     if (indexes == null || i !in indexes) {
                         if (mCommonNoCoursesNames[row][column] == null) {
                             mCommonNoCoursesNames[row][column] = mutableListOf()
@@ -152,8 +148,7 @@ class NoCourseInviteScheduleViewAdapter(private val mContext: Context,
         return if ((row and 1) == 1) {
             1
         } else {
-            if (Arrays.equals(arrayOf(mCommonNoCoursesNames[row + 1][column]),
-                            arrayOf(mCommonNoCoursesNames[row][column]))) {
+            if (arrayOf(mCommonNoCoursesNames[row + 1][column]).contentEquals(arrayOf(mCommonNoCoursesNames[row][column]))) {
                 2
             } else {
                 1

@@ -13,7 +13,7 @@ import com.mredrock.cyxbs.course.utils.weekSelectCheckBoxState
  * 描述:
  *   这个适配用于周数选择里面的AutoWarpView的适配器
  */
-class WeekSelectRecAdapter(val mPostWeeks: MutableList<Int>) : RedRockAutoWarpView.Adapter() {
+class WeekSelectRecAdapter(private val mPostWeeks: MutableList<Int>) : RedRockAutoWarpView.Adapter() {
 
     private val mWeeks = BaseApp.context.resources.getStringArray(R.array.course_course_weeks_strings)
 
