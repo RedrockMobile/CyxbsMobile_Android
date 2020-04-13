@@ -58,7 +58,6 @@ abstract class BaseActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        EventBus.getDefault().register(this)
         initFlag()
         checkIsLogin(loginConfig, this)
         lifeCycleLog("onCreate")
@@ -178,6 +177,7 @@ abstract class BaseActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
+        EventBus.getDefault().register(this)
         lifeCycleLog("onStart")
     }
 
@@ -204,12 +204,12 @@ abstract class BaseActivity : AppCompatActivity() {
 
     override fun onStop() {
         super.onStop()
+        EventBus.getDefault().unregister(this)
         lifeCycleLog("onStop")
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        EventBus.getDefault().unregister(this)
         lifeCycleLog("onDestroy")
     }
 
