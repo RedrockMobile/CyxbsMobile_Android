@@ -21,13 +21,15 @@
         app:layout_constraintTop_toTopOf="parent" />
 
 
-    <ImageView
+    <ImageButton
         android:id="@+id/mine_store_arrow_left"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        android:layout_marginStart="5dp"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
         android:alpha="0"
-        android:scaleType="center"
-        android:src="@drawable/mine_ic_arrow_left"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        app:srcCompat="@drawable/mine_ic_arrow_left"
+        android:contentDescription="@string/mine_sign_store_back"
         app:layout_constraintBottom_toTopOf="@+id/mine_store_guildeline"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
