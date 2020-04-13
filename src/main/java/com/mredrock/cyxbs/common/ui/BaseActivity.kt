@@ -58,9 +58,7 @@ abstract class BaseActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        EventBus.getDefault().register(this)
         initFlag()
-        checkIsLogin(loginConfig, this)
         lifeCycleLog("onCreate")
     }
 
@@ -178,6 +176,8 @@ abstract class BaseActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
+        EventBus.getDefault().register(this)
+        checkIsLogin(loginConfig, this)
         lifeCycleLog("onStart")
     }
 
@@ -204,12 +204,12 @@ abstract class BaseActivity : AppCompatActivity() {
 
     override fun onStop() {
         super.onStop()
+        EventBus.getDefault().unregister(this)
         lifeCycleLog("onStop")
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        EventBus.getDefault().unregister(this)
         lifeCycleLog("onDestroy")
     }
 
@@ -229,24 +229,21 @@ abstract class BaseActivity : AppCompatActivity() {
         }
     }
 
-
-    companion object {
-        fun checkIsLogin(loginConfig: LoginConfig, activity: Activity) {
-            if (!ServiceManager.getService(IAccountService::class.java).getVerifyService().isLogin() && loginConfig.isCheckLogin) {
-                //取消转场动画
-                val postcard = ARouter.getInstance().build(MAIN_LOGIN).withTransition(0, 0)
-                //如果设置了重新启动activity，则传Class过去，并关闭当前Activity
-                if (loginConfig.isFinish) {
-                    postcard.withSerializable(ACTIVITY_CLASS, this::class.java)
-                    activity.finish()
-                }
-                //如果需要提示用户未登陆
-                if (loginConfig.isWarnUser) {
-                    CyxbsToast.makeText(activity, loginConfig.warnMessage, Toast.LENGTH_SHORT).show()
-                }
-                //正式开始路由
-                postcard.navigation(activity)
+    protected fun checkIsLogin(loginConfig: LoginConfig, activity: Activity) {
+        if (!ServiceManager.getService(IAccountService::class.java).getVerifyService().isLogin() && loginConfig.isCheckLogin) {
+            //取消转场动画
+            val postcard = ARouter.getInstance().build(MAIN_LOGIN).withTransition(0, 0)
+            //如果设置了重新启动activity，则传Class过去，并关闭当前Activity
+            if (loginConfig.isFinish) {
+                postcard.withSerializable(ACTIVITY_CLASS, this::class.java)
+                activity.finish()
             }
+            //如果需要提示用户未登陆
+            if (loginConfig.isWarnUser) {
+                CyxbsToast.makeText(activity, loginConfig.warnMessage, Toast.LENGTH_SHORT).show()
+            }
+            //正式开始路由
+            postcard.navigation(activity)
         }
     }
 }
