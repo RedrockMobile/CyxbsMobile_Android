@@ -19,8 +19,17 @@ class NoCourseInviteDetailBottomSheetDialogHelper(val context: Context) {
         context.resources.getStringArray(R.array.course_course_day_of_week_strings)
     }
 
+    //保证每次只有一个Dialog弹出，这里没有复用dialog而是每次都新建一个dialog是因为没课约详细
+    //信息内容高度是不定的，复用的话会造成弹出之后尺寸才变化，而且是一闪，体验不大好
+    private var preDialog: RedRockBottomSheetDialog? = null
+
     fun showDialog(row: Int, column: Int, length: Int, people: List<String>) {
-        val dialog = RedRockBottomSheetDialog(context).apply {
+        val dialog = object : RedRockBottomSheetDialog(context){
+            override fun dismiss() {
+                super.dismiss()
+                preDialog = null
+            }
+        }.apply {
             val layoutInflater = LayoutInflater.from(context)
             val dialogView = layoutInflater.inflate(R.layout.course_no_course_invite_detail_dialog, null)
             setContentView(dialogView)
@@ -44,6 +53,8 @@ class NoCourseInviteDetailBottomSheetDialogHelper(val context: Context) {
         dialog.findViewById<RedRockAutoWarpView>(R.id.rv_people)?.apply {
             adapter = NameListRecAdapter(people)
         }
+        preDialog?.dismiss()
         dialog.show()
+        preDialog = dialog
     }
 }
