@@ -15,6 +15,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.mredrock.cyxbs.common.BaseApp
+import com.mredrock.cyxbs.common.bean.LoginConfig
 import com.mredrock.cyxbs.common.config.*
 import com.mredrock.cyxbs.common.event.BottomSheetStateEvent
 import com.mredrock.cyxbs.common.event.LoadCourse
@@ -43,6 +44,8 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
     override val viewModelClass = MainViewModel::class.java
 
     override val isFragmentActivity = true
+
+    override val loginConfig = LoginConfig(isWarnUser = false)
 
     /**
      * 这个变量切记千万不能搬到viewModel,这个变量需要跟activity同生共死
