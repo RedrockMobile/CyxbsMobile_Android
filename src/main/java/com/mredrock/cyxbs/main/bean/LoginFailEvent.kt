@@ -7,5 +7,4 @@ package com.mredrock.cyxbs.main.bean
  * 描述:
  *   登陆失败event
  */
-class LoginFailEvent {
-}
+class LoginFailEvent

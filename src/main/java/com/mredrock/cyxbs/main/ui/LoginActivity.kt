@@ -9,6 +9,7 @@ import android.transition.Explode
 import android.transition.TransitionManager
 import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.widget.Toast
 import androidx.core.view.get
@@ -35,10 +36,6 @@ import org.greenrobot.eventbus.ThreadMode
 
 @Route(path = MAIN_LOGIN)
 class LoginActivity : BaseViewModelActivity<LoginViewModel>() {
-
-    companion object {
-        const val USER_LOGIN = "UserLogin"
-    }
 
     override val isFragmentActivity = false
 
@@ -88,14 +85,13 @@ class LoginActivity : BaseViewModelActivity<LoginViewModel>() {
         }
         main_user_agreement.setOnClickListener {
             val materialDialog = Dialog(this)
-            val view = LayoutInflater.from(this).inflate(R.layout.main_user_agreement_dialog, null, false)
-            materialDialog
-                    .setContentView(view)
+            val view = LayoutInflater.from(this).inflate(R.layout.main_user_agreement_dialog, materialDialog.window?.decorView as ViewGroup, false)
+            materialDialog.setContentView(view)
             materialDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             val userAgreementAdapter = UserAgreementAdapter(viewModel.userAgreementList)
             view.rv_content.adapter = userAgreementAdapter
             view.rv_content.layoutManager = LinearLayoutManager(this@LoginActivity)
-            if (!viewModel.userAgreementList.isEmpty()) view.loader.visibility = View.GONE
+            if (viewModel.userAgreementList.isNotEmpty()) view.loader.visibility = View.GONE
             materialDialog.show()
             viewModel.getUserAgreement {
                 userAgreementAdapter.notifyDataSetChanged()

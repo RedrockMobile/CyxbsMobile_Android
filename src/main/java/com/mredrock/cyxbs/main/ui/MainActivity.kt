@@ -238,8 +238,6 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
     /**
      * 进行显示页面的切换
      * @param fragment 用来切换的fragment
-     * @param position 切换到的tab的索引 从0开始
-     * @param menuItem nav中对应的Item
      */
     private fun changeFragment(fragment: Fragment) {
         val transition = supportFragmentManager.beginTransaction()

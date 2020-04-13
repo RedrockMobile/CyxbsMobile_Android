@@ -17,7 +17,7 @@ import kotlinx.android.synthetic.main.main_recycle_item_user_agreement.view.*
  * 描述:用户协议的adapter
  */
 
-class UserAgreementAdapter(val list: List<DownMessageText>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class UserAgreementAdapter(private val list: List<DownMessageText>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return object : RecyclerView.ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.main_recycle_item_user_agreement, parent, false)) {}
@@ -42,8 +42,9 @@ class UserAgreementAdapter(val list: List<DownMessageText>) : RecyclerView.Adapt
                     user_agreement_title.visibility = View.GONE
                 }
                 else -> {
-                    user_agreement_title.text = list[position].title.replace("ß","      ")
-                    user_agreement_content.text = list[position].content.replace("ß","      ")
+                    //ß这个字符是我在下发文档里面嵌入的标识符，表示需要加上双tab
+                    user_agreement_title.text = list[position].title.replace("ß", "      ")
+                    user_agreement_content.text = list[position].content.replace("ß", "      ")
                 }
             }
         }
