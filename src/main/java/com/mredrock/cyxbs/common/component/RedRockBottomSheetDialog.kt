@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
-import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.mredrock.cyxbs.common.R
 
@@ -20,10 +19,5 @@ open class RedRockBottomSheetDialog(context: Context) : BottomSheetDialog(contex
         val viewGroup = LayoutInflater.from(context).inflate(R.layout.common_red_rock_bottom_sheet_dalog_container, window?.decorView as ViewGroup, false) as FrameLayout
         viewGroup.addView(view)
         super.setContentView(viewGroup)
-    }
-
-
-    override fun dismiss() {
-        super.dismiss()
     }
 }
