@@ -15,7 +15,6 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.mredrock.cyxbs.common.BaseApp
-import com.mredrock.cyxbs.common.bean.LoginConfig
 import com.mredrock.cyxbs.common.config.*
 import com.mredrock.cyxbs.common.event.BottomSheetStateEvent
 import com.mredrock.cyxbs.common.event.LoadCourse
@@ -44,9 +43,6 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
     override val viewModelClass = MainViewModel::class.java
 
     override val isFragmentActivity = true
-
-    //放弃使用父类的登陆检查，自己做登陆检查操作
-    override val loginConfig = LoginConfig(isCheckLogin = false)
 
     /**
      * 这个变量切记千万不能搬到viewModel,这个变量需要跟activity同生共死
@@ -79,7 +75,6 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
         checkSplash()
         //检查是否登陆，虽然BaseActivity里面也有登陆检查，
         //但是这里因为涉及到闪屏页的部分逻辑，不得不放弃BaseActivity的登陆检查
-        checkIsLogin(LoginConfig(isWarnUser = false), this)
         initActivity(savedInstanceState)//Activity相关初始化
     }
 
@@ -94,14 +89,6 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
         initBottomSheetBehavior()//初始化上拉容器BottomSheet课表
         initFragments(bundle)//对四个主要的fragment进行配置
     }
-
-    override fun onStart() {
-        super.onStart()
-        //如果是正常未登录时启动，onCreate里面跳转了之后onStart就不会执行了，
-        //但是如果时异常状态下进入，这里还需要多进行一次检查才能保证没登陆时不能进入MainActivity
-        checkIsLogin(LoginConfig(isWarnUser = false), this)
-    }
-
 
     private fun initBottomSheetBehavior() {
         bottomSheetBehavior = BottomSheetBehavior.from(course_bottom_sheet_content)
