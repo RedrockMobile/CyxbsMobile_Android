@@ -64,7 +64,7 @@ class AffairEditActivity : BaseViewModelActivity<EditAffairViewModel>() {
 
     private fun initActivity() {
         viewModel.initData(this)
-        tv_week_select.adapter = WeekSelectedAdapter(viewModel.mPostWeeks, this)
+        tv_week_select.adapter = WeekSelectedAdapter(viewModel.mPostWeeks, mWeekSelectDialog)
         tv_time_select.adapter = TimeSelectedAdapter(viewModel.mPostClassAndDays, mTimeSelectDialog)
         tv_remind_select.setOnClickListener {
             if (!mRemindSelectDialog.isShowing) {

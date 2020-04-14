@@ -24,8 +24,6 @@ import com.mredrock.cyxbs.course.R
 class RedRockTextView : AppCompatTextView {
 
     companion object {
-        private const val TAG = "RedRockTextView"
-
         const val HORIZONTAL = 0
         const val VERTICAL = 1
     }
@@ -33,11 +31,12 @@ class RedRockTextView : AppCompatTextView {
     private val mPaint: Paint by lazy {
         Paint(Paint.ANTI_ALIAS_FLAG or Paint.LINEAR_TEXT_FLAG)
     }
-    private  val selectTextPaint: Paint by lazy {
+    private val selectTextPaint: Paint by lazy {
         Paint()
     }
     private var mElementWidth: Float = 0f
     private var mElementHeight: Float = 0f
+
     //record a CharSequence bounds
     private lateinit var mTextBounds: ArrayList<Rect>
 
@@ -83,7 +82,7 @@ class RedRockTextView : AppCompatTextView {
         mOrientation = typedArray.getInt(R.styleable.RedRockTextView_orientation, HORIZONTAL)
         offsetBetweenText = typedArray.getDimensionPixelSize(R.styleable.RedRockTextView_offsetBetweenText,
                 0)
-        selectColor = typedArray.getColor(R.styleable.RedRockTextView_selectedColor,0xffffff)
+        selectColor = typedArray.getColor(R.styleable.RedRockTextView_selectedColor, 0xffffff)
         typedArray.recycle()
 
         initRedRockTextView()

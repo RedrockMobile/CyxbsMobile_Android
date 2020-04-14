@@ -13,7 +13,7 @@ import kotlinx.android.synthetic.main.course_time_select_auto_warp_item.view.*
  * 描述:
  *   事务添加页面事务在一周中的时间的适配器
  */
-class TimeSelectedAdapter(private val timeList: MutableList<Pair<Int, Int>>, val mTimeSelectDialog: TimeSelectDialog) : RedRockAutoWarpView.Adapter() {
+class TimeSelectedAdapter(private val timeList: MutableList<Pair<Int, Int>>, private val mTimeSelectDialog: TimeSelectDialog) : RedRockAutoWarpView.Adapter() {
 
     private val timeArray = listOf("周一", "周二", "周三", "周四", "周五", "周六", "周日")
     private val dayOfWeekArray = listOf("一二节课", "三四节课", "五六节课", "七八节课", "九十节课", "十一十二节课")
