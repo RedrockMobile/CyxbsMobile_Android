@@ -139,7 +139,7 @@ class CourseContainerEntryFragment : BaseViewModelFragment<CoursesViewModel>() {
     }
 
     /**
-     * 登陆状态发生改变时会被回调的函数
+     * 登录状态发生改变时会被回调的函数
      * @param event 包含当前用户登录状态的事件。
      */
     override fun onLoginStateChangeEvent(event: LoginStateChangeEvent) {
