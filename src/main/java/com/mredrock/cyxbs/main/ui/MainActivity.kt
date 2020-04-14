@@ -76,8 +76,8 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
         //检查闪屏页是否需要显示，闪屏页现在业务逻辑相对简单，为了减少启动时不必要的开销，暂时放到这里
         //后期，跳转逻辑复杂的话可以考虑将闪屏页独立成Activity
         checkSplash()
-        //检查是否登陆，虽然BaseActivity里面也有登陆检查，
-        //但是这里因为涉及到闪屏页的部分逻辑，不得不放弃BaseActivity的登陆检查
+        //检查是否登录，虽然BaseActivity里面也有登录检查，
+        //但是这里因为涉及到闪屏页的部分逻辑，不得不放弃BaseActivity的登录检查
         initActivity(savedInstanceState)//Activity相关初始化
     }
 

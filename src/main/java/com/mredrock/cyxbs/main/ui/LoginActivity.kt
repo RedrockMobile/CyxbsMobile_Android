@@ -103,7 +103,7 @@ class LoginActivity : BaseViewModelActivity<LoginViewModel>() {
     private fun loginAction() {
         if (viewModel.userAgreementIsCheck) {
             viewModel.login(et_account.text?.toString(), et_password.text?.toString(), landing) {
-                //如果是点击退出按钮到达的登陆页那么就默认启动mainActivity，或者唤起登陆页的Activity是MainActivity就默认启动
+                //如果是点击退出按钮到达的登录页那么就默认启动mainActivity，或者唤起登录页的Activity是MainActivity就默认启动
                 if (isExitLogin != null && isExitLogin!!) {
                     startActivity(Intent(this, MainActivity::class.java))
                     finish()
@@ -127,7 +127,7 @@ class LoginActivity : BaseViewModelActivity<LoginViewModel>() {
         finish()
     }
 
-    //这个方法可以在登陆状态和未登陆状态之间切换
+    //这个方法可以在登录状态和未登录状态之间切换
     private val landing = {
         TransitionManager.beginDelayedTransition(login_container, Explode())
         for (i in 0 until login_container.childCount) {
