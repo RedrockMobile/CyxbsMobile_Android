@@ -238,7 +238,7 @@ abstract class BaseActivity : AppCompatActivity() {
                 postcard.withSerializable(ACTIVITY_CLASS, this::class.java)
                 activity.finish()
             }
-            //如果需要提示用户未登陆
+            //如果需要提示用户未登录
             if (loginConfig.isWarnUser) {
                 CyxbsToast.makeText(activity, loginConfig.warnMessage, Toast.LENGTH_SHORT).show()
             }

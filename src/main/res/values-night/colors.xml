@@ -281,7 +281,7 @@
     <color name="qa_quiz_content_edt_hint_color" tools:ignore="ResourceName">#EAEAED</color>
     <!--    回答内容文字hint颜色-->
     <color name="qa_answer_content_edt_hint_color" tools:ignore="ResourceName">#EAEAED</color>
-    <!--    登陆下面的灰色字体-->
+    <!--    登录下面的灰色字体-->
     <color name="logInToTheGrayFontBelow" tools:ignore="ResourceName">#ABBCD8</color>
 
     <!--    添加事务下面按钮的光晕渐变结束颜色-->
