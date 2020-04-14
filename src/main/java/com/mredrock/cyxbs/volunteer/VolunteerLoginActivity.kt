@@ -49,7 +49,7 @@ class VolunteerLoginActivity : BaseActivity() {
         common_toolbar.init("完善信息")
 
         if (ServiceManager.getService(IAccountService::class.java).getUserService() == null) {
-            EventBus.getDefault().post(AskLoginEvent("只有登陆了才能查看志愿时长噢～"))
+            EventBus.getDefault().post(AskLoginEvent("只有登录了才能查看志愿时长噢～"))
             finish()
         }
         btn_volunteer_login.setOnClickListener { view: View? ->
@@ -126,7 +126,7 @@ class VolunteerLoginActivity : BaseActivity() {
 
                         WRONG_PASSWORD -> showUnsuccessDialog("亲，输入的账号或密码有误哦")
 
-                        FAILED -> showUnsuccessDialog("亲，登陆失败哦")
+                        FAILED -> showUnsuccessDialog("亲，登录失败哦")
                     }
 
                 }, onError = {
