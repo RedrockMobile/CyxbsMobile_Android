@@ -96,7 +96,7 @@ object MoreFunctionProvider {
             if (ServiceManager.getService(IAccountService::class.java).getVerifyService().isLogin()) {
                 ARouter.getInstance().build(routing).navigation()
             } else {
-                EventBus.getDefault().post(AskLoginEvent("请先登陆才能使用${msg}哦~"))
+                EventBus.getDefault().post(AskLoginEvent("请先登录才能使用${msg}哦~"))
             }
         }
 
