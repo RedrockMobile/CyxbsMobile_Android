@@ -51,7 +51,7 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
         const val FIRST_QUIZ = "cyxbs_quiz_is_first_time"
         const val FIRST_QUIZ_SP_KEY = "isFirstTimeQuiz"
         const val QUIZ_TITLE_MAX = 12
-        const val DOWN_MESSAGE_NAME = "zscy_qa_reward_explain"
+        const val DOWN_MESSAGE_NAME = "zscy-qa-reward-explain"
         fun activityStart(fragment: Fragment, type: String, requestCode: Int) {
             fragment.startActivityForResult<QuizActivity>(requestCode, "type" to type)
         }
@@ -271,6 +271,7 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
         val tagSelector = findViewById<LinearLayout>(R.id.layout_quiz_tag)
         val childView = Array(tagSelector.childCount) { tagSelector.getChildAt(it) as TextView }
         childView[currentTypeIndex].unSelected()
+        questionType = question.kind
         when (question.kind) {
             getString(R.string.qa_quiz_select_type_study) -> currentTypeIndex = 0
             getString(R.string.qa_quiz_select_type_anonymous) -> currentTypeIndex = 1
