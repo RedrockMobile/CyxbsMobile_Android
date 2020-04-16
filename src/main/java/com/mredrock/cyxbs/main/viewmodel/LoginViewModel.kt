@@ -26,7 +26,7 @@ import io.reactivex.schedulers.Schedulers
 class LoginViewModel : BaseViewModel() {
     var userAgreementIsCheck = false
 
-    //是否正在登陆，防止用户多次点击
+    //是否正在登录，防止用户多次点击
     private var isLanding = false
 
     val userAgreementList: MutableList<DownMessageText> = mutableListOf()
