@@ -435,21 +435,25 @@ class CoursesViewModel : BaseViewModel() {
                     addAll(affairs)
                 })
                 notifyCourseDataChange.value = Unit
-                val nowWeek = nowWeek.value
-                if (nowWeek != null) {
-                    //获取当前的课程显示在上拉课表的头部
-                    getTodayCourse(allCoursesData, nowWeek)?.let { todayCourse ->
-                        val pair = getNowCourse(todayCourse, allCoursesData, nowWeek)
-                        nowCourse.set(pair.first)
-                        tomorrowTips.set(pair.second)
-                    }
-                }
+                buildHeadData()
             }
             if (mIsGottenFromInternet) {
                 mIsGottenFromInternet = false
                 getSchedulesFromInternet()
             } else {
                 stopIntercept()
+            }
+        }
+    }
+
+    fun buildHeadData() {
+        val nowWeek = nowWeek.value
+        if (nowWeek != null) {
+            //获取当前的课程显示在上拉课表的头部
+            getTodayCourse(allCoursesData, nowWeek)?.let { todayCourse ->
+                val pair = getNowCourse(todayCourse, allCoursesData, nowWeek)
+                nowCourse.set(pair.first)
+                tomorrowTips.set(pair.second)
             }
         }
     }

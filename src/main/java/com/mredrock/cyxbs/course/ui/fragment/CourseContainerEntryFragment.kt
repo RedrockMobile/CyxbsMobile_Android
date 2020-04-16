@@ -21,7 +21,6 @@ import com.mredrock.cyxbs.common.config.*
 import com.mredrock.cyxbs.common.event.*
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.service.account.IAccountService
-import com.mredrock.cyxbs.common.ui.BaseFragment
 import com.mredrock.cyxbs.common.ui.BaseViewModelFragment
 import com.mredrock.cyxbs.course.R
 import com.mredrock.cyxbs.course.adapters.ScheduleVPAdapter
@@ -100,9 +99,6 @@ class CourseContainerEntryFragment : BaseViewModelFragment<CoursesViewModel>() {
 
     //每一周课表的ViewPager的Adapter
     private lateinit var mScheduleAdapter: ScheduleVPAdapter
-
-    //普通课程和查课表需要的ViewModel
-    private lateinit var mCoursesViewModel: CoursesViewModel
 
     //用于没课约的ViewModel
     private var mNoCourseInviteViewModel: NoCourseInviteViewModel? = null
@@ -375,6 +371,13 @@ class CourseContainerEntryFragment : BaseViewModelFragment<CoursesViewModel>() {
         }
     }
 
+    override fun onStart() {
+        super.onStart()
+        //构建最近课表（head上面的课程显示），第一次构建并不是这里构建的
+        //而是在获取课表数据之后更新的,
+        //这里再调用一次是为了能够在课表可以在不用重复获取课表数据时就更新头部课程
+        viewModel.buildHeadData()
+    }
 
     /**
      * 如果没有直接加载课表ViewPager子页，这个可以用来通知加载
