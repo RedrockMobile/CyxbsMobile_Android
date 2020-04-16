@@ -3,7 +3,7 @@
     android:id="@+id/tv_day_of_week"
     android:layout_width="match_parent"
     android:background="@drawable/shape_day_week_backgroud"
-    android:layout_height="45dp"
+    android:layout_height="@dimen/widget_day_of_week_height"
     android:textSize="@dimen/widget_day_of_week_text_size"
     android:textStyle="bold"
     android:gravity="center"

@@ -12,7 +12,6 @@ import com.mredrock.cyxbs.common.utils.SchoolCalendar
 import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
 import com.mredrock.cyxbs.widget.R
 import com.mredrock.cyxbs.widget.bean.CourseStatus
-import java.util.*
 
 
 class GridWidgetService : RemoteViewsService() {
@@ -20,7 +19,7 @@ class GridWidgetService : RemoteViewsService() {
         return GridRemoteViewsFactory(this, intent)
     }
 
-    private inner class GridRemoteViewsFactory(val mContext: Context, intent: Intent) : RemoteViewsFactory {
+    private inner class GridRemoteViewsFactory(val mContext: Context, val intent: Intent) : RemoteViewsFactory {
 
         private val mSchedulesArray = Array(6) { arrayOfNulls<MutableList<CourseStatus.Course>>(7) }
 
@@ -70,12 +69,15 @@ class GridWidgetService : RemoteViewsService() {
 
 
         override fun getViewAt(position: Int): RemoteViews? {
-            val calendar = Calendar.getInstance()
+            //获取当前时间
+            val time = intent.getIntExtra("time", 0)
+            //如果是前7个说明是显示今天是星期几
             if (position < 7) {
-                val id = if (calendar[Calendar.DAY_OF_WEEK] - 2 == position
-                        || calendar[Calendar.DAY_OF_WEEK] == 1 && position == 6)
+                //获取当前item是否应该高亮
+                val id = if (time == position)
                     R.layout.widget_grid_view_day_of_week_selected_item
                 else R.layout.widget_grid_view_day_of_week_item
+                //返回对应的item
                 return RemoteViews(mContext.packageName, id).apply {
                     setTextViewText(R.id.tv_day_of_week, "周${
                     if (position != 6) Num2CN.number2ChineseNumber((position + 1).toLong()) else "日"
@@ -122,20 +124,13 @@ class GridWidgetService : RemoteViewsService() {
             return position.toLong()
         }
 
-        override fun getLoadingView(): RemoteViews? {
-            return RemoteViews(mContext.packageName, R.layout.widget_grid_view_item_blank)
-        }
+        override fun getLoadingView() = RemoteViews(mContext.packageName, R.layout.widget_grid_view_item_blank)
 
-        override fun getViewTypeCount(): Int {
-            return 10
-        }
+        override fun getViewTypeCount() = 10
 
-        override fun hasStableIds(): Boolean {
-            return true
-        }
+        override fun hasStableIds() = true
 
         override fun onDataSetChanged() {}
-        override fun onDestroy() {
-        }
+        override fun onDestroy() {}
     }
 }

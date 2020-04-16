@@ -7,6 +7,8 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.RemoteViews
+import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
+import com.mredrock.cyxbs.common.utils.extensions.editor
 import com.mredrock.cyxbs.widget.R
 import com.mredrock.cyxbs.widget.service.GridWidgetService
 import com.mredrock.cyxbs.widget.widget.page.oversized.deleteTitlePref
@@ -41,13 +43,21 @@ class OversizedAppWidget : AppWidgetProvider() {
 
 internal fun updateAppWidget(context: Context, appWidgetManager: AppWidgetManager, appWidgetId: Int) {
     val remoteViews = RemoteViews(context.packageName, R.layout.widget_oversized_app_widget)
-    val intent = Intent(context, GridWidgetService::class.java)
-    remoteViews.setRemoteAdapter(R.id.grid_course_widget, intent)
     val weekDay = Calendar.getInstance()[Calendar.DAY_OF_WEEK]
     for (i in 1..7) {
         val i1 = if (i == weekDay) View.VISIBLE else View.INVISIBLE
         remoteViews.setViewVisibility(getShadowId(i), i1)
     }
+    val intent = Intent(context, GridWidgetService::class.java).apply {
+        putExtra("time", if (weekDay == 1) 6 else weekDay - 2)
+        //因为如果每次更新的时候都是一个Intent那么onGetViewFactory只会执行一次
+        //这样更新就不会生效，因为RemoteView中的GridView只会局部更新,这样处理并不是很好
+        //如果谁有好办法，希望尽快更换
+        var int = context.defaultSharedPreferences.getInt("type", 0)
+        context.defaultSharedPreferences.editor { putInt("type", ++int) }
+        type = int.toString()
+    }
+    remoteViews.setRemoteAdapter(R.id.grid_course_widget, intent)
     appWidgetManager.updateAppWidget(appWidgetId, remoteViews)
 }
 
