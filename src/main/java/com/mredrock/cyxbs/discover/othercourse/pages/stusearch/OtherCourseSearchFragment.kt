@@ -15,7 +15,7 @@ import org.jetbrains.anko.startActivity
 
 
 class OtherCourseSearchFragment(private val type: Int) : BaseViewModelFragment<OtherCourseSearchViewModel>() {
-
+    private var lastSearch: String? = null
     private val funcList = listOf("同学课表", "老师课表")
     fun getTitle(): String {
         if (type < funcList.size && type >= 0) {
@@ -44,6 +44,9 @@ class OtherCourseSearchFragment(private val type: Int) : BaseViewModelFragment<O
         viewModel.mList.observeNotNull {
 
             if (it.isNotEmpty()) {
+                lastSearch?.let { text ->
+                    viewModel.addHistory(History(text))
+                }
                 context?.startActivity<StuListActivity>("stu_list" to it)
             } else {
                 snackbar("查无此人")
@@ -59,7 +62,7 @@ class OtherCourseSearchFragment(private val type: Int) : BaseViewModelFragment<O
                 return@setOnEditorActionListener false
             } else {
                 viewModel.getPerson(text)
-                viewModel.addHistory(History(text))
+                lastSearch = text
 
                 return@setOnEditorActionListener true
             }
