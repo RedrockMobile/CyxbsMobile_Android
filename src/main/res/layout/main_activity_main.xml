@@ -6,15 +6,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:animateLayoutChanges="true"
-    android:background="@color/windowBackground"
     android:fitsSystemWindows="true"
+    tools:background="@color/windowBackground"
     tools:context=".ui.MainActivity">
 
     <FrameLayout
         android:id="@+id/other_fragment_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="94dp"
+        android:paddingBottom="94dp"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
     <FrameLayout
@@ -41,39 +41,39 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:textColor="@color/main_selector_main_bottom_navigation_text"
-            android:textSize="@dimen/main_bottom_text_size"
             android:drawableTop="@drawable/main_ic_explore_unselected"
-            android:gravity="center"
-            android:textAlignment="center"
             android:drawablePadding="2dp"
-            android:text="@string/common_explore" />
+            android:gravity="center"
+            android:text="@string/common_explore"
+            android:textAlignment="center"
+            android:textColor="@color/main_selector_main_bottom_navigation_text"
+            android:textSize="@dimen/main_bottom_text_size" />
 
         <CheckedTextView
             android:id="@+id/qa"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:textSize="@dimen/main_bottom_text_size"
-            android:textColor="@color/main_selector_main_bottom_navigation_text"
             android:drawableTop="@drawable/main_ic_qa_unselected"
-            android:textAlignment="center"
-            android:gravity="center"
             android:drawablePadding="2dp"
-            android:text="@string/common_qa" />
+            android:gravity="center"
+            android:text="@string/common_qa"
+            android:textAlignment="center"
+            android:textColor="@color/main_selector_main_bottom_navigation_text"
+            android:textSize="@dimen/main_bottom_text_size" />
 
         <CheckedTextView
             android:id="@+id/mine"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:textSize="@dimen/main_bottom_text_size"
-            android:textColor="@color/main_selector_main_bottom_navigation_text"
             android:drawableTop="@drawable/main_ic_mine_unselected"
-            android:textAlignment="center"
-            android:gravity="center"
             android:drawablePadding="2dp"
-            android:text="@string/common_mine" />
+            android:gravity="center"
+            android:text="@string/common_mine"
+            android:textAlignment="center"
+            android:textColor="@color/main_selector_main_bottom_navigation_text"
+            android:textSize="@dimen/main_bottom_text_size" />
 
 
     </LinearLayout>

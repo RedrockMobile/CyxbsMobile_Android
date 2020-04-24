@@ -20,7 +20,9 @@ class BottomNavigationHelper(private val tabList: Array<CheckedTextView>,
     init {
         for ((i, value) in tabList.withIndex()) {
             value.onClick {
-                value.toggle()
+                if (!value.isChecked) {
+                    value.toggle()
+                }
                 if (value.isChecked) {
                     selectTab(i)
                 }
