@@ -1,6 +1,5 @@
 package com.mredrock.cyxbs.course.viewmodels
 
-import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.MutableLiveData
 import com.mredrock.cyxbs.common.BaseApp.Companion.context
 import com.mredrock.cyxbs.common.network.ApiGenerator
@@ -15,7 +14,6 @@ import com.mredrock.cyxbs.course.event.ModifyAffairEvent
 import com.mredrock.cyxbs.course.network.AffairHelper
 import com.mredrock.cyxbs.course.network.Course
 import com.mredrock.cyxbs.course.network.CourseApiService
-import com.mredrock.cyxbs.course.network.RedRockApiWrapper
 import com.mredrock.cyxbs.course.rxjava.ExecuteOnceObserver
 import com.mredrock.cyxbs.course.ui.activity.AffairEditActivity
 import org.greenrobot.eventbus.EventBus
@@ -122,7 +120,7 @@ class EditAffairViewModel : BaseViewModel() {
      * @param title 事务标题
      * @param content 事务内容
      */
-    fun postOrModifyAffair(activity: FragmentActivity, title: String, content: String) {
+    fun postOrModifyAffair(title: String, content: String) {
         ServiceManager.getService(IAccountService::class.java).getUserService()
         val date = AffairHelper.generateAffairDateString(mPostClassAndDays, mPostWeeks)
 
@@ -135,7 +133,6 @@ class EditAffairViewModel : BaseViewModel() {
                     .subscribe(ExecuteOnceObserver(onExecuteOnceNext = {
                         it.apply {
                             if (info == "success" && status == 200) {
-                            activity.finish()
                             // 更新课表
                             EventBus.getDefault().post(AddAffairEvent())
                             toastEvent.value = R.string.course_add_transaction_as_a_reminder

@@ -22,7 +22,7 @@ import kotlinx.android.synthetic.main.course_activity_edit_affair.*
  * description：事务Activity的Transition动画的逻辑代码,
  *              以此来使activity主要逻辑代码显得更加清晰，让activity专心处理逻辑代码
  */
-class AffairTransitionAnimHelper(var affairEditActivity: AffairEditActivity?) {
+class AffairTransitionAnimHelper(private var affairEditActivity: AffairEditActivity?) {
 
     /**
      * 添加标题之后跳转到添加内容动画

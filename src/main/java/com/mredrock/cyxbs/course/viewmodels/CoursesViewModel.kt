@@ -37,28 +37,9 @@ import java.util.*
 
 /**
  * [CoursesViewModel]获取课表所遇到的坑有必要在这里做一下记录。
- * 1. 请注意使用[android.arch.persistence.room.Room]的时候，如果[io.reactivex.Observer]没有及时的被dispose
+ * 请注意使用Room的时候，如果[io.reactivex.Observer]没有及时的被dispose
  * 掉。在以后数据库中的数据发生变化后。对应的[io.reactivex.Observable]会继续给其[io.reactivex.Observer]发射
  * 数据。为了使[io.reactivex.Observer]使用一次后就是被回收掉，可以使用[ExecuteOnceObserver].
- *
- * 2. 在[android.support.v4.view.ViewPager]中对于那种不是针对单独的Fragment做的事情不要放到ViewPager的Fragment中。
- * 因为ViewPager默认是会加载当前Fragment两边的Fragment的。这里举个遇到问题的例子：之前我将增删事务的之后的数据
- * 刷新放到了Fragment中。在进行操作之后就会进行三次数据的刷新。
- * 再加上当时我的另一个致命的逻辑问题，我将[mDataGetStatus]的状态重置放到了[isGetAllData]中。当时的代码。
- *      private fun isGetAllData(index: Int) {
- *           mDataGetStatus[index] = true
- *           if (mDataGetStatus[0] && mDataGetStatus[1]) {
- *           courses.value = mCourses
- *           mDataGetStatus[0] = false
- *           mDataGetStatus[1] = false
- *           stopRefresh()
- *           }
- *       }
- * 然后，在进行的三次更新请求中[getAffairsDataFromInternet]所使用的时间要比[getCoursesDataFromInternet]少些。
- * 也就是可能[getAffairsDataFromInternet]执行完三次后[getCoursesDataFromInternet]才执行1～2次。这是
- * [mDataGetStatus]的状态就是false、true。之后再进行刷新的时候就会调用[getAffairsDataFromInternet]了之后，
- * 就变为true、true进行数据更新。然后在调用[getCoursesDataFromInternet]又变为true、false的情况了。(调用顺序这样
- * 是因为课程数据要多些，其调用时间长些)。
  *
  * Created by anriku on 2018/8/18.
  */

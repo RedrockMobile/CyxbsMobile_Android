@@ -37,12 +37,12 @@ class AffairEditActivity : BaseViewModelActivity<EditAffairViewModel>() {
     override val viewModelClass: Class<EditAffairViewModel> = EditAffairViewModel::class.java
 
     //周数选择BottomSheetDialog
-    val mWeekSelectDialog: WeekSelectDialog by lazy(LazyThreadSafetyMode.NONE) {
+    private val mWeekSelectDialog: WeekSelectDialog by lazy(LazyThreadSafetyMode.NONE) {
         WeekSelectDialog(this, tv_week_select.adapter, viewModel.mPostWeeks)
     }
 
     //时间选择BottomSheetDialog
-    val mTimeSelectDialog: TimeSelectDialog by lazy(LazyThreadSafetyMode.NONE) {
+    private val mTimeSelectDialog: TimeSelectDialog by lazy(LazyThreadSafetyMode.NONE) {
         TimeSelectDialog(this)
     }
 
@@ -156,8 +156,7 @@ class AffairEditActivity : BaseViewModelActivity<EditAffairViewModel>() {
                 Toast.makeText(this, R.string.course_time_is_not_select, Toast.LENGTH_SHORT).show()
             }
             else -> {
-                viewModel.postOrModifyAffair(this, mBinding.etTitle.text.toString(),
-                        mBinding.etContentInput.text.toString())
+                viewModel.postOrModifyAffair(mBinding.etTitle.text.toString(), mBinding.etContentInput.text.toString())
                 finish()
             }
         }

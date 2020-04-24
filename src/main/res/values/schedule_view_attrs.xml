@@ -19,4 +19,12 @@
     <item name="item_position_row" type="id" tools:ignore="ResourceName" />
     <item name="item_position_column" type="id" tools:ignore="ResourceName" />
     <item name="item_info" type="id" tools:ignore="ResourceName" />
+
+    <!--    课表其他配件view的定位tag的id-->
+    <item name="childTop" type="id" tools:ignore="ResourceName" />
+    <item name="childLeft" type="id" tools:ignore="ResourceName" />
+    <item name="childBottom" type="id" tools:ignore="ResourceName" />
+    <item name="childRight" type="id" tools:ignore="ResourceName" />
+
+    <item name="touchPosition" type="id" tools:ignore="ResourceName" />
 </resources>

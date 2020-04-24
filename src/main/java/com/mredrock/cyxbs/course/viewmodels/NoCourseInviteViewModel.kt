@@ -17,9 +17,6 @@ import io.reactivex.Observable
 class NoCourseInviteViewModel(private val mStuNumList: List<String> = mutableListOf(),
                               val nameList: List<String> = mutableListOf()) : ViewModel() {
 
-    companion object {
-        private const val TAG = "NoCourseInviteViewModel"
-    }
 
     //用于存储所有学生的课程。key代表学生在mStuNumList中的index，value代表对应的学生的课程。
     val studentsCourseMap = ObservableField<Map<Int, List<Course>>>()

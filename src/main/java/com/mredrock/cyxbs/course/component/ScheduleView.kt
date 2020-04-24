@@ -3,18 +3,19 @@ package com.mredrock.cyxbs.course.component
 import android.animation.LayoutTransition
 import android.animation.ObjectAnimator
 import android.animation.PropertyValuesHolder
-import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.PointF
 import android.util.AttributeSet
-import android.view.*
+import android.view.Gravity
+import android.view.MotionEvent
+import android.view.View
+import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.view.animation.LayoutAnimationController
-import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -50,14 +51,15 @@ import kotlin.math.sqrt
  *
  * Created by anriku on 2018/8/14.
  */
-class ScheduleView : FrameLayout {
+class ScheduleView : ViewGroup {
 
     companion object {
-        const val TAG = "ScheduleView"
         const val CLICK_RESPONSE_DISTANCE = 10
     }
 
     var adapterChangeListener: ((Adapter) -> Unit)? = null
+
+    private var touchClickListener: (() -> Unit)? = null
 
     /**
      * 接收一个继承了本类内部抽象Adapter的类对象，
@@ -67,55 +69,23 @@ class ScheduleView : FrameLayout {
         set(value) {
             field = value
             field?.let { adapterChangeListener?.invoke(it) }
-            // The following code is to add a OnGlobalLayoutListener. When the layout state change
-            // will add the ItemViews to the ScheduleView, and the listener will be removed after
-            // the itemViews are all added.
-            // Do like this, because the viewPager will add next fragment going to display for more
-            // good performance. The Fragment preload but the ScheduleView of this Fragment isn't show,
-            // so the measuredWidth and measureHeight will be 0. In the following way, the itemViews
-            // will be added after the onMeasure function is called, and the size of ScheduleView is
-            // correct now.
-            if (viewTreeObserver.isAlive) {
-                viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
-                    override fun onGlobalLayout() {
-                        adapter?.let { notNullAdapter ->
-                            // Set the TouchView's OnClickListener
-                            notNullAdapter.setOnTouchViewClickListener()?.let {
-                                initTouchView()
-                                it.invoke(mTouchView)
-                            }
-                            // When we add new courses, remove old values first.
-                            removeAllViews()
-                            addCourseView(notNullAdapter)
-                        }
-                        // Remove the OnGlobalLayoutListener after we add the ItemViews.
-                        viewTreeObserver.removeOnGlobalLayoutListener(this)
-                    }
-                })
+            adapter?.let { notNullAdapter ->
+                // Set the TouchView's OnClickListener
+                initTouchView()
+                touchClickListener = notNullAdapter.onTouchViewClick(mTouchView, (mTouchView.getTag(R.id.touchPosition) as TouchPositionData))
+                mTouchView.setOnClickListener { touchClickListener?.invoke() }
+                // When we add new courses, remove old values first.
+                removeAllViews()
+                addCourseView(notNullAdapter)
+                showAnimationForTheFirstTime()
             }
-
-            // This is used to guaranteed the layout change, and trigger to add views. If requestLayout
-            // isn't called in there, the ScheduleView won't add views until you let the layout change
-            // at the first time when you install the app, because the first time is getting data from
-            // internet which is time-consuming. when you get the data from the internet, your layout
-            // won't be changed until you let it change.
-            requestLayout()
-            startLayoutAnimation()
-            //保证出场动画只显示一次
-            layoutAnimation?.animation?.setAnimationListener(object : Animation.AnimationListener {
-                override fun onAnimationRepeat(animation: Animation?) {}
-                override fun onAnimationStart(animation: Animation?) {}
-                override fun onAnimationEnd(animation: Animation?) {
-                    layoutAnimation.animation.cancel()
-                }
-            })
         }
 
     private val mStartPoint: PointF by lazy(LazyThreadSafetyMode.NONE) { PointF() }
     private val mEndPoint: PointF by lazy(LazyThreadSafetyMode.NONE) { PointF() }
 
     // mTouchView is used to add affair
-    private val mTouchView: ImageView by lazy(LazyThreadSafetyMode.NONE) { ImageView(context) }
+    private val mTouchView: ImageView by lazy(LazyThreadSafetyMode.NONE) { ImageView(context).apply { setTag(R.id.touchPosition, TouchPositionData(0)) } }
 
     // This paint is used to draw the place which will be highlighted.
     private lateinit var mPaint: Paint
@@ -123,13 +93,8 @@ class ScheduleView : FrameLayout {
     // This is used to represent whether the courses and affairs are null
     private var mIsEmpty: Boolean = true
 
-    // This is the ImageView to show when the courses and affairs are null
-    private val mEmptyImageView: ImageView by lazy(LazyThreadSafetyMode.NONE) { ImageView(context) }
-
     // This is the TextView to show when the courses and affairs are null
     private val mEmptyTextView: TextView by lazy(LazyThreadSafetyMode.NONE) { TextView(context) }
-
-    private var noCourseBackground: LinearLayout? = null
 
     private var courseItemCount = 0
 
@@ -197,7 +162,6 @@ class ScheduleView : FrameLayout {
         mLayoutTransition.setStagger(LayoutTransition.APPEARING, 500)
         val appearingScaleX: PropertyValuesHolder = PropertyValuesHolder.ofFloat("scaleX", 0.0f, 1.0f)
         val appearingScaleY: PropertyValuesHolder = PropertyValuesHolder.ofFloat("scaleY", 0.0f, 1.0f)
-//        val appearingAlpha: PropertyValuesHolder = PropertyValuesHolder.ofFloat("alpha", 0f, 1f)
         val mAnimatorAppearing: ObjectAnimator = ObjectAnimator.ofPropertyValuesHolder(this, appearingScaleX, appearingScaleY)
         mLayoutTransition.setAnimator(LayoutTransition.CHANGING, mAnimatorAppearing)
         return mLayoutTransition
@@ -219,55 +183,110 @@ class ScheduleView : FrameLayout {
     }
 
     private fun addNoCourseView() {
-        if (noCourseBackground == null && mIsEmpty && mNoCourseDrawableResId != 0) {
-            noCourseBackground = LinearLayout(context).apply {
-                layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
-                orientation = LinearLayout.VERTICAL
-                gravity = Gravity.CENTER
-            }
-
-            // Set mEmptyImageView
-            val emptyImageView = mEmptyImageView
-            val emptyTextView = mEmptyTextView
-
-            val imageParams = LayoutParams(
-                    if (noCourseImageWidth == 0) mScheduleViewWidth else noCourseImageWidth,
-                    if (noCourseImageHeight == 0) mScheduleViewHeight else noCourseImageHeight)
-            emptyImageView.apply {
-                setImageDrawable(ContextCompat.getDrawable(context, mNoCourseDrawableResId))
-                scaleType = ImageView.ScaleType.FIT_XY
-                layoutParams = imageParams
-            }
-            noCourseBackground?.addView(emptyImageView)
-
-            // set mEmptyTextView
-            mEmptyText?.let {
-                val textParams = LayoutParams(LayoutParams.WRAP_CONTENT,
+        if (mIsEmpty && mNoCourseDrawableResId != 0) {
+            // Set mEmptyTextView
+            mEmptyTextView.apply {
+                val drawable = ContextCompat.getDrawable(context, mNoCourseDrawableResId)
+                drawable?.setBounds(0, 0,
+                        if (noCourseImageWidth == 0) dip(100) else noCourseImageWidth,
+                        if (noCourseImageHeight == 0) dip(100) else noCourseImageHeight)
+                setCompoundDrawablesRelativeWithIntrinsicBounds(null, drawable, null, null)
+                compoundDrawablePadding = dip(25)
+                val textParams = LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT,
                         LayoutParams.WRAP_CONTENT)
-                textParams.topMargin = mScheduleViewWidth * 1 / 10
-                textParams.bottomMargin = mScheduleViewWidth * 4 / 5
-                emptyTextView.apply {
-                    text = it
-                    textSize = px2sp(mEmptyTextSize)
-                    gravity = Gravity.CENTER
-                    layoutParams = textParams
-                }
-                noCourseBackground?.addView(emptyTextView)
-                addView(noCourseBackground)
+                text = mEmptyText
+                textSize = px2sp(mEmptyTextSize)
+                gravity = Gravity.CENTER
+                layoutParams = textParams
             }
-        } else if (noCourseBackground != null && noCourseBackground?.parent == null) {
-            addView(noCourseBackground)
+            addView(mEmptyTextView)
+        } else if (mEmptyTextView.parent == null) {
+            addView(mEmptyTextView)
         }
     }
 
-    private fun addCourseView(notNullAdapter: Adapter) {
+    override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
+        for (i in 0 until childCount) {
+            val childView = getChildAt(i)
+            val childStart = childView.getTag(R.id.childLeft) as Int
+            val childTop = childView.getTag(R.id.childTop) as Int
+            val childEnd = childStart + childView.measuredWidth
+            val childBottom = childTop + childView.measuredHeight
+            childView.layout(childStart, childTop, childEnd, childBottom)
+        }
+    }
+
+
+    override fun measureChild(child: View, parentWidthMeasureSpec: Int, parentHeightMeasureSpec: Int) {
+        when {
+            mEmptyTextView == child -> {
+                mEmptyTextView.setTag(R.id.childTop, mScheduleViewHeight / 5)
+                mEmptyTextView.setTag(R.id.childLeft, (mScheduleViewWidth - if (noCourseImageWidth == 0) mScheduleViewWidth else noCourseImageWidth) / 2)
+                super.measureChild(child, parentWidthMeasureSpec, parentHeightMeasureSpec)
+            }
+            mIsDisplayCourse -> {
+                actionItemInfoStatus(child, infoFound = { itemViewInfo, row, column ->
+                    val childWidth = mBasicElementWidth
+                    val childHeight = (mBasicElementHeight * itemViewInfo.itemHeight + (itemViewInfo.itemHeight - 1) * mElementGap)
+                    child.setTag(R.id.childTop, mElementGap * (row + 1) + (mBasicElementHeight * 2 + mElementGap) * row)
+                    child.setTag(R.id.childLeft, mElementGap * (column + 1) + mBasicElementWidth * column)
+                    val widthMeasureSpec = MeasureSpec.makeMeasureSpec(childWidth, MeasureSpec.EXACTLY)
+                    val heightMeasureSpec = MeasureSpec.makeMeasureSpec(childHeight, MeasureSpec.EXACTLY)
+                    child.measure(widthMeasureSpec, heightMeasureSpec)
+                }, infoNotFound = { super.measureChild(child, parentWidthMeasureSpec, parentHeightMeasureSpec) })
+            }
+            !mIsDisplayCourse -> {
+                actionItemInfoStatus(child, infoFound = { itemViewInfo, row, column ->
+                    val childWidth = mBasicElementWidth
+                    val childHeight = (mBasicElementHeight * itemViewInfo.itemHeight + mElementGap * (itemViewInfo.itemHeight - 1))
+                    child.setTag(R.id.childTop, mElementGap * (row + 1) + mBasicElementHeight * row)
+                    child.setTag(R.id.childLeft, mElementGap * (column + 1) + mBasicElementWidth * column)
+                    child.measure(
+                            MeasureSpec.makeMeasureSpec(childWidth, MeasureSpec.EXACTLY),
+                            MeasureSpec.makeMeasureSpec(childHeight, MeasureSpec.EXACTLY))
+                }, infoNotFound = { super.measureChild(child, parentWidthMeasureSpec, parentHeightMeasureSpec) })
+            }
+        }
+    }
+
+    /**
+     * 动态更新
+     */
+    fun notifyDataChange() {
+        adapter?.let {
+            addCourseView(it, true)
+        }
+    }
+
+    /**
+     *
+     */
+    private fun addCourseView(notNullAdapter: Adapter, isCheckChange: Boolean = false) {
         courseItemCount = 0
+        if (isCheckChange) notNullAdapter.notifyDataChange()
+        //为了不影响检查变化
+        clearTouchView()
         // 如果是课表，每节课的开始都是偶数，0、2、4...这样开始的。因此这里就使用6 * 7的矩阵。
         // 但是如果是没课约，有可能是奇数开始的，因此这里需要使用12 * 7的矩阵运算。
         if (mIsDisplayCourse) {
             for (row in 0..5) {
-                for (column in 0..6) {
+                Column@ for (column in 0..6) {
                     val itemViewInfo = notNullAdapter.getItemViewInfo(row, column)
+                    if (isCheckChange) {
+                        var removeChildren: View? = null
+                        for (view in children) {
+                            if (row == view.getTag(R.id.item_position_row) && column == view.getTag(R.id.item_position_column)) {
+                                notNullAdapter.initItemView(view, row, column)
+                                courseItemCount++
+                                if (itemViewInfo?.uniqueSign?.equals((view.getTag(R.id.item_info) as? ScheduleItem)?.uniqueSign) == true) {
+                                    continue@Column
+                                } else {
+                                    removeChildren = view
+                                }
+                            }
+                        }
+                        removeChildren?.let { removeView(it) }
+                    }
                     //if this row and column don't have course or affair continue.
                     itemViewInfo ?: continue
                     val itemView = notNullAdapter.getItemView(row, column, this@ScheduleView)
@@ -286,8 +305,23 @@ class ScheduleView : FrameLayout {
         } else {
             for (column in 0..6) {
                 var row = 0
-                while (row < 12) {
+                Row@ while (row < 12) {
                     val itemViewInfo = notNullAdapter.getItemViewInfo(row, column)
+                    if (isCheckChange) {
+                        var removeChildren: View? = null
+                        for (view in children) {
+                            if (row == view.getTag(R.id.item_position_row) && column == view.getTag(R.id.item_position_column)) {
+                                notNullAdapter.initItemView(view, row, column)
+                                courseItemCount++
+                                if (itemViewInfo?.uniqueSign?.equals((view.getTag(R.id.item_info) as? ScheduleItem)?.uniqueSign) == true) {
+                                    continue@Row
+                                } else {
+                                    removeChildren = view
+                                }
+                            }
+                        }
+                        removeChildren?.let { removeView(it) }
+                    }
                     if (itemViewInfo == null) {
                         row++
                         continue
@@ -307,133 +341,6 @@ class ScheduleView : FrameLayout {
         checkIsNoCourse()
     }
 
-    override fun measureChild(child: View, parentWidthMeasureSpec: Int, parentHeightMeasureSpec: Int) {
-        if (mIsDisplayCourse) {
-            actionItemInfoStatus(child, infoFound = { itemViewInfo, row, column ->
-                val layoutParams = child.layoutParams as LayoutParams
-                val childWidth = mBasicElementWidth
-                val childHeight = (mBasicElementHeight * itemViewInfo.itemHeight + (itemViewInfo.itemHeight - 1) * mElementGap)
-                layoutParams.leftMargin = mElementGap * (column + 1) + mBasicElementWidth * column
-                layoutParams.topMargin = mElementGap * (row + 1) + (mBasicElementHeight * 2 + mElementGap) * row
-                if (column == 6) {
-                    layoutParams.marginEnd -= mElementGap
-                }
-                if (row == 5) {
-                    layoutParams.bottomMargin -= mElementGap
-                }
-                val widthMeasureSpec = MeasureSpec.makeMeasureSpec(childWidth, MeasureSpec.EXACTLY)
-                val heightMeasureSpec = MeasureSpec.makeMeasureSpec(childHeight, MeasureSpec.EXACTLY)
-                child.measure(widthMeasureSpec, heightMeasureSpec)
-            }, infoNotFound = { super.measureChild(child, parentWidthMeasureSpec, parentHeightMeasureSpec) })
-        } else {
-            actionItemInfoStatus(child, infoFound = { itemViewInfo, row, column ->
-                val layoutParams = child.layoutParams as LayoutParams
-                val childWidth = mBasicElementWidth
-                val childHeight = (mBasicElementHeight * itemViewInfo.itemHeight + mElementGap * (itemViewInfo.itemHeight - 1))
-                layoutParams.leftMargin = (mElementGap * (column + 1) + mBasicElementWidth * column)
-                layoutParams.topMargin = (mElementGap * (row + 1) + mBasicElementHeight * row)
-                if (column == 6) {
-                    layoutParams.marginEnd -= mElementGap
-                }
-                if (row == 11) {
-                    layoutParams.bottomMargin -= mElementGap
-                }
-                child.measure(
-                        MeasureSpec.makeMeasureSpec(childWidth, MeasureSpec.EXACTLY),
-                        MeasureSpec.makeMeasureSpec(childHeight, MeasureSpec.EXACTLY))
-            }, infoNotFound = { super.measureChild(child, parentWidthMeasureSpec, parentHeightMeasureSpec) })
-        }
-    }
-
-    fun notifyDataChange() {
-        courseItemCount = 0
-        adapter ?: return
-        adapter?.let { adapter ->
-            adapter.notifyDataChange()
-            removeView(mTouchView.apply { tag = null })
-            // 如果是课表，每节课的开始都是偶数，0、2、4...这样开始的。因此这里就使用6 * 7的矩阵。
-            // 但是如果是没课约，有可能是奇数开始的，因此这里需要使用12 * 7的矩阵运算。
-            if (mIsDisplayCourse) {
-                for (row in 0..5) {
-                    Column@ for (column in 0..6) {
-                        val itemViewInfo = adapter.getItemViewInfo(row, column)
-                        var removeChildren: View? = null
-                        for (view in children) {
-                            if (row == view.getTag(R.id.item_position_row) && column == view.getTag(R.id.item_position_column)) {
-                                adapter.initItemView(view, row, column)
-                                courseItemCount++
-                                if (itemViewInfo?.uniqueSign?.equals((view.getTag(R.id.item_info) as? ScheduleItem)?.uniqueSign) == true) {
-                                    continue@Column
-                                } else {
-                                    removeChildren = view
-                                }
-                            }
-                        }
-                        removeChildren?.let { removeView(it) }
-                        itemViewInfo ?: continue
-                        val itemView = adapter.getItemView(row, column, this@ScheduleView)
-                        adapter.initItemView(itemView, row, column)
-                        //这里设置tag，将真正用来测量和布局的代码放到标准的view绘制流程的回调方法里
-                        //如果直接在这进行测量或者布局，在activity异常重启而导致的view异常重启之后
-                        //无法异常重启的view第一次显示时，能够获取准确的测绘高度和宽度
-                        itemView.setTag(R.id.item_position_row, row)
-                        itemView.setTag(R.id.item_position_column, column)
-                        itemView.setTag(R.id.item_info, itemViewInfo)
-                        addView(itemView)
-                        courseItemCount++
-                        mIsEmpty = false
-                    }
-                }
-            } else {
-                for (column in 0..6) {
-                    var row = 0
-                    Row@ while (row < 12) {
-                        val itemViewInfo = adapter.getItemViewInfo(row, column)
-                        var removeChildren: View? = null
-                        for (view in children) {
-                            if (row == view.getTag(R.id.item_position_row) && column == view.getTag(R.id.item_position_column)) {
-                                adapter.initItemView(view, row, column)
-                                courseItemCount++
-                                if (itemViewInfo?.uniqueSign?.equals((view.getTag(R.id.item_info) as? ScheduleItem)?.uniqueSign) == true) {
-                                    continue@Row
-                                } else {
-                                    removeChildren = view
-                                }
-                            }
-                        }
-                        removeChildren?.let { removeView(it) }
-                        if (itemViewInfo == null) {
-                            row++
-                            continue
-                        }
-                        val itemView = adapter.getItemView(row, column, this@ScheduleView)
-                        val params = LayoutParams(mBasicElementWidth,
-                                mBasicElementHeight * itemViewInfo.itemHeight +
-                                        mElementGap * (itemViewInfo.itemHeight - 1))
-                        params.leftMargin = mElementGap * (column + 1) + mBasicElementWidth * column
-                        params.topMargin = mElementGap * (row + 1) + mBasicElementHeight * row
-
-                        if (column == 6) {
-                            params.rightMargin = mElementGap
-                        }
-                        if (row == 11) {
-                            params.bottomMargin = mElementGap
-                        }
-                        itemView.layoutParams = params
-                        itemView.setTag(R.id.item_position_row, row)
-                        itemView.setTag(R.id.item_position_column, column)
-                        itemView.setTag(R.id.item_info, itemViewInfo)
-                        addView(itemView)
-                        courseItemCount++
-                        row += itemViewInfo.itemHeight
-                        mIsEmpty = false
-                    }
-                }
-            }
-        }
-        checkIsNoCourse()
-    }
-
     /**
      * 检查是否需要添加没课提示图片
      */
@@ -441,7 +348,7 @@ class ScheduleView : FrameLayout {
         if (courseItemCount == 0) {
             addNoCourseView()
         } else {
-            removeView(noCourseBackground)
+            removeView(mEmptyTextView)
         }
     }
 
@@ -471,81 +378,72 @@ class ScheduleView : FrameLayout {
         setMeasuredDimension(mScheduleViewWidth, mScheduleViewHeight)
     }
 
-    @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(event: MotionEvent): Boolean {
         val startPoint = mStartPoint
         val endPoint = mEndPoint
-        val touchView = mTouchView
-
         if (event.action == MotionEvent.ACTION_DOWN) {
             //record the start position
             startPoint.x = event.x
             startPoint.y = event.y
         } else if (event.action == MotionEvent.ACTION_UP) {
-            // 如果setOnTouchViewClickListener返回为null就不启用mTouchView
-            adapter?.setOnTouchViewClickListener() ?: return true
-
-            // 如果没有课程就不启用mTouchView
-            if (mIsEmpty) {
-                return true
-            }
-
-            performClick()
-            //record the end position
             endPoint.x = event.x
             endPoint.y = event.y
-
-            // If the move distance more than CLICK_RESPONSE_DISTANCE. This MotionEvent won't service
-            // as a click event.
-            if (sqrt((endPoint.x - startPoint.x).toDouble().pow(2.0) +
-                            (endPoint.y - startPoint.y).toDouble().pow(2.0)) > CLICK_RESPONSE_DISTANCE) {
-                return true
-            }
-            // Compute the click event at which range.
-            var clickHashX: Int = (endPoint.x / mBasicElementWidth).toInt()
-            var clickHashY: Int = (endPoint.y / mBasicElementHeight).toInt()
-            if (clickHashX >= 7) {
-                clickHashX = 6
-            }
-            if (clickHashY >= 12) {
-                clickHashY = 11
-            }
-            clickHashY = if (clickHashY % 2 == 0) clickHashY else clickHashY - 1
-            // The mTouchView's tag is used to keep the position and indicate weather it is showing.
-            val tag = touchView.tag
-            if (tag != null) {
-                removeView(touchView)
-            }
-            touchView.tag = (clickHashY / 2) * 7 + clickHashX
-            // If the click position has course, it will be consumed.
-            if (adapter!!.getItemViewInfo(clickHashY / 2, clickHashX) != null) {
-                return true
-            }
-            // Compute the mTouchView's LayoutParams.
-            val params = LayoutParams(mBasicElementWidth,
-                    mBasicElementHeight * 2 + mElementGap)
-            params.leftMargin = mElementGap * (clickHashX + 1) + mBasicElementWidth * clickHashX
-            params.topMargin = mElementGap * (clickHashY + 1) + mBasicElementHeight * clickHashY
-            // If the mTouchView's position is at the right or bottom edge. It will add the additional
-            // gap like the course.
-            if (clickHashX == 6) {
-                params.rightMargin = mElementGap
-            }
-            if (clickHashY == 11) {
-                params.bottomMargin = mElementGap
-            }
-            touchView.layoutParams = params
-            // Add the mTouchView to the ScheduleView.
-            addView(touchView)
+            performClick()
         }
         return true
     }
 
+    override fun performClick(): Boolean {
+        val startPoint = mStartPoint
+        val endPoint = mEndPoint
+        val touchView = mTouchView
+        // If the move distance more than CLICK_RESPONSE_DISTANCE. This MotionEvent won't service
+        // as a click event.
+        val isClick = sqrt((endPoint.x - startPoint.x).toDouble().pow(2.0) + (endPoint.y - startPoint.y).toDouble().pow(2.0)) > CLICK_RESPONSE_DISTANCE
+
+        // Compute the click event at which range.
+        val clickHashX: Int = (endPoint.x / (mBasicElementWidth + mElementGap)).toInt().run {
+            if (this >= 7) {
+                //虽然按照常理来说这里必定不可能大于6，
+                // 但是不知道是不是全面屏手势的影响，交界处的计算的值是大于6的，下同
+                6
+            } else this
+        }
+        val clickHashY: Int = (endPoint.y / (mBasicElementHeight * 2 + mElementGap)).toInt().run {
+            if (this >= 12) {
+                11
+            } else this
+        }
+        return if (touchClickListener != null && !mIsEmpty && !isClick && adapter?.getItemViewInfo(clickHashY, clickHashX) == null) {
+            clearTouchView()
+            (touchView.getTag(R.id.touchPosition) as TouchPositionData).position = (clickHashY) * 7 + clickHashX
+            // Compute the mTouchView's LayoutParams.
+            touchView.layoutParams = LayoutParams(mBasicElementWidth, mBasicElementHeight * 2 + mElementGap)
+            touchView.setTag(R.id.item_position_row, clickHashY)
+            touchView.setTag(R.id.item_position_column, clickHashX)
+            touchView.setTag(R.id.item_info, ScheduleItem())
+            // Add the mTouchView to the ScheduleView.
+            addView(touchView)
+            true
+        } else super.performClick()
+    }
+
     fun clearTouchView() {
-        if (mTouchView.tag != null) {
-            mTouchView.tag = null
+        if (mTouchView.parent != null) {
             removeView(mTouchView)
         }
+    }
+
+    private fun showAnimationForTheFirstTime() {
+        startLayoutAnimation()
+        //保证出场动画只显示一次
+        layoutAnimation?.animation?.setAnimationListener(object : Animation.AnimationListener {
+            override fun onAnimationRepeat(animation: Animation?) {}
+            override fun onAnimationStart(animation: Animation?) {}
+            override fun onAnimationEnd(animation: Animation?) {
+                layoutAnimation.animation.cancel()
+            }
+        })
     }
 
     override fun onDraw(canvas: Canvas) {
@@ -590,7 +488,7 @@ class ScheduleView : FrameLayout {
          * 1.It is used to set the [mTouchView]'s onClickListener if the return is not null.
          * 2.If it return null, the mTouchView won't be displayed.
          */
-        abstract fun setOnTouchViewClickListener(): ((ImageView) -> Unit)?
+        open fun onTouchViewClick(view: View, position: TouchPositionData): (() -> Unit)? = null
 
         /**
          * This method is used to get the position which will be highlighted.
@@ -600,7 +498,7 @@ class ScheduleView : FrameLayout {
          */
         abstract fun getHighLightPosition(): Int?
 
-        //局部更新方法
+        //当该view调用notifyDataChange方法时会回调这个方法
         open fun notifyDataChange() {}
 
         open fun initItemView(view: View, row: Int, column: Int) {}
@@ -614,4 +512,10 @@ class ScheduleView : FrameLayout {
      * @param uniqueSign 会根据这个标志来确定更新前后是否为同一个信息，若不设置，则不会对item更改生效，只会对删除添加生效
      */
     data class ScheduleItem(val itemWidth: Int = 1, val itemHeight: Int = 2, val uniqueSign: Any = Any())
+
+    /**
+     * 为了记录touchView的位置
+     * @param
+     */
+    data class TouchPositionData(var position: Int)
 }

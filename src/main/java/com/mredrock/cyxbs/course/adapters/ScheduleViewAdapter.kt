@@ -6,7 +6,6 @@ import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import com.mredrock.cyxbs.common.config.DEFAULT_PREFERENCE_FILENAME
@@ -136,17 +135,15 @@ class ScheduleViewAdapter(private val mActivity: Activity,
     /**
      * 如果[mIsBanTouchView]为true禁止mTouchView；反之就返回添加事务的事件。
      */
-    override fun setOnTouchViewClickListener(): ((ImageView) -> Unit)? {
+    override fun onTouchViewClick(view: View, positionData: ScheduleView.TouchPositionData): (() -> Unit)? {
         if (mIsBanTouchView) {
             return null
         } else {
-            return { touchView ->
-                touchView.setOnClickListener {
-                    mActivity.startActivity(Intent(mActivity, AffairEditActivity::class.java).apply {
-                        putExtra(AffairEditActivity.WEEK_NUM, mNowWeek)
-                        putExtra(AffairEditActivity.TIME_NUM, (touchView.tag ?: 0) as Int)
-                    })
-                }
+            return {
+                mActivity.startActivity(Intent(mActivity, AffairEditActivity::class.java).apply {
+                    putExtra(AffairEditActivity.WEEK_NUM, mNowWeek)
+                    putExtra(AffairEditActivity.TIME_NUM, (positionData.position))
+                })
             }
         }
     }

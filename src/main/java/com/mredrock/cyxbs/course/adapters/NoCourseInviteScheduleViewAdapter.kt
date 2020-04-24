@@ -7,7 +7,6 @@ import android.graphics.drawable.GradientDrawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import androidx.core.content.ContextCompat
 import com.mredrock.cyxbs.common.utils.SchoolCalendar
 import com.mredrock.cyxbs.course.R
@@ -155,8 +154,6 @@ class NoCourseInviteScheduleViewAdapter(private val mContext: Context,
             }
         }
     }
-
-    override fun setOnTouchViewClickListener(): ((ImageView) -> Unit)? = null
 
     override fun getHighLightPosition(): Int? {
         val schoolCalendar = SchoolCalendar()
