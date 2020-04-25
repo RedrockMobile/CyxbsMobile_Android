@@ -1,7 +1,9 @@
 package com.mredrock.cyxbs.course.viewmodels
 
+import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
 import com.mredrock.cyxbs.common.BaseApp.Companion.context
+import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.service.account.IAccountService
@@ -133,11 +135,13 @@ class EditAffairViewModel : BaseViewModel() {
                     .subscribe(ExecuteOnceObserver(onExecuteOnceNext = {
                         it.apply {
                             if (info == "success" && status == 200) {
+                                //这里没有直接使用BaseViewModel里面的toastEvent
+                                //因为在弹出时有可能toastEvent中持有的context已经回收，会出现无法弹出的情况
+                                CyxbsToast.makeText(context, R.string.course_add_transaction_as_a_reminder, Toast.LENGTH_SHORT).show()
                                 // 更新课表
                                 EventBus.getDefault().post(AddAffairEvent())
-                                toastEvent.value = R.string.course_add_transaction_as_a_reminder
                             } else {
-                                toastEvent.value = R.string.course_add_transaction
+                                CyxbsToast.makeText(context, R.string.course_add_transaction, Toast.LENGTH_SHORT).show()
                             }
                         }
                     }))
@@ -150,10 +154,10 @@ class EditAffairViewModel : BaseViewModel() {
                         it.apply {
                             if (info == "success" && status == 200) {
                                 // 更新课表
+                                CyxbsToast.makeText(context, R.string.course_modify_transaction_successful, Toast.LENGTH_SHORT).show()
                                 EventBus.getDefault().post(ModifyAffairEvent())
-                                toastEvent.value = R.string.course_modify_transaction_successful
                             } else {
-                                toastEvent.value = R.string.course_network_error_modification_failed
+                                CyxbsToast.makeText(context, R.string.course_network_error_modification_failed, Toast.LENGTH_SHORT).show()
                             }
                         }
                     }))
