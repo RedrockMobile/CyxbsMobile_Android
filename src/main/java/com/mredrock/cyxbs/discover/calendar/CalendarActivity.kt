@@ -4,6 +4,7 @@ import android.graphics.*
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.os.Bundle
+import android.view.View
 import android.view.ViewGroup
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.bumptech.glide.Glide
@@ -32,6 +33,7 @@ class CalendarActivity : BaseActivity() {
                 .apply(request)
                 .into(object : DrawableImageViewTarget(iv_calendar) {
                     override fun onResourceReady(resource: Drawable, transition: Transition<in Drawable>?) {
+                        calendar_progress_bar.visibility = View.GONE
                         val width: Int = resource.intrinsicWidth
                         val height: Int = resource.intrinsicHeight
                         var ivWidth: Int = iv_calendar.width
@@ -49,6 +51,12 @@ class CalendarActivity : BaseActivity() {
                         iv_calendar.setImageBitmap(bitmap)
                     }
 
+                    override fun onLoadFailed(errorDrawable: Drawable?) {
+                        super.onLoadFailed(errorDrawable)
+                        calendar_progress_bar.visibility = View.GONE
+                        calendar_image_view.visibility = View.VISIBLE
+                        calendar_text_view_tip.visibility = View.VISIBLE
+                    }
                 })
     }
 
