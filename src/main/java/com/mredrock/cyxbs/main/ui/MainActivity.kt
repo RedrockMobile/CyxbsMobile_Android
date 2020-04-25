@@ -102,7 +102,7 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
          * 异常重启后fitsSystemWindows失效的问题
          */
         course_bottom_sheet_content.topPadding = course_bottom_sheet_content.topPadding + getStatusBarHeight()
-        bottomSheetBehavior.peekHeight = bottomSheetBehavior.peekHeight + getStatusBarHeight()
+        bottomSheetBehavior.peekHeight = bottomSheetBehavior.peekHeight + course_bottom_sheet_content.topPadding
         bottomSheetBehavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
             override fun onSlide(bottomSheet: View, slideOffset: Float) {
                 EventBus.getDefault().post(BottomSheetStateEvent(slideOffset))
