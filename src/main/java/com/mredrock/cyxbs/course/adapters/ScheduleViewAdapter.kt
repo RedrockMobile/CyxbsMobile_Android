@@ -135,14 +135,14 @@ class ScheduleViewAdapter(private val mActivity: Activity,
     /**
      * 如果[mIsBanTouchView]为true禁止mTouchView；反之就返回添加事务的事件。
      */
-    override fun onTouchViewClick(view: View, positionData: ScheduleView.TouchPositionData): (() -> Unit)? {
+    override fun onTouchViewClick(view: View, position: ScheduleView.TouchPositionData): (() -> Unit)? {
         if (mIsBanTouchView) {
             return null
         } else {
             return {
                 mActivity.startActivity(Intent(mActivity, AffairEditActivity::class.java).apply {
                     putExtra(AffairEditActivity.WEEK_NUM, mNowWeek)
-                    putExtra(AffairEditActivity.TIME_NUM, (positionData.position))
+                    putExtra(AffairEditActivity.TIME_NUM, (position.position))
                 })
             }
         }

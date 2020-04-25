@@ -14,29 +14,13 @@
     </data>
 
     <FrameLayout
-        android:background="@color/whiteBackground"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/whiteBackground">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-
-            <ImageView
-                android:id="@+id/course_back"
-                android:layout_width="44dp"
-                android:layout_height="44dp"
-                android:layout_marginStart="4dp"
-                android:layout_marginTop="49dp"
-                android:padding="12dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.0"
-                app:srcCompat="@drawable/course_ic_back"
-                tools:ignore="ContentDescription" />
 
             <View
                 android:id="@+id/course_view"
@@ -89,8 +73,22 @@
             android:id="@+id/course_affair_container"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:paddingStart="18dp"
-            android:paddingEnd="18dp">
+            android:padding="18dp">
+
+            <ImageView
+                android:id="@+id/course_back"
+                android:layout_width="8dp"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:fitsSystemWindows="true"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.0"
+                app:srcCompat="@drawable/course_ic_back"
+                tools:ignore="ContentDescription" />
 
 
             <TextView
@@ -178,14 +176,13 @@
                 android:id="@+id/et_content_input"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:maxEms="250"
                 android:background="@drawable/course_shape_affair_edit_tilte"
                 android:gravity="center_vertical"
                 android:imeOptions="actionNext"
                 android:inputType="text"
-                android:maxLines="1"
+                android:maxEms="250"
                 android:maxLength="180"
+                android:maxLines="1"
                 android:paddingStart="18dp"
                 android:paddingTop="12dp"
                 android:paddingEnd="18dp"
@@ -199,7 +196,7 @@
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/course_textview"
                 app:layout_constraintTop_toBottomOf="@+id/tv_title_text"
-                app:layout_constraintVertical_bias="0.0"
+                app:layout_constraintVertical_bias="0.04000002"
                 tools:ignore="Autofill,LabelFor" />
 
 
@@ -207,11 +204,10 @@
                 android:id="@+id/et_title"
                 android:layout_width="0dp"
                 android:layout_height="55dp"
-                android:layout_marginStart="2dp"
-                android:layout_marginBottom="16dp"
                 android:background="@null"
                 android:gravity="center_vertical"
                 android:maxLines="1"
+                android:paddingHorizontal="2dp"
                 android:text="@{editAffairViewModel.title}"
                 android:textColor="@color/levelTwoFontColor"
                 android:textColorHint="@color/levelTwoFontColor"
@@ -245,10 +241,10 @@
                         android:id="@+id/rv_you_might"
                         android:layout_width="0dp"
                         android:layout_height="0dp"
-                        android:layout_marginStart="4dp"
-                        android:layout_marginTop="18dp"
-                        android:layout_marginEnd="4dp"
-                        android:layout_marginBottom="15dp"
+                        android:paddingStart="4dp"
+                        android:paddingTop="18dp"
+                        android:paddingEnd="4dp"
+                        android:paddingBottom="15dp"
                         app:horizontalSpacing="7dp"
                         app:layout_constraintBottom_toTopOf="@+id/course_view22"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -264,8 +260,9 @@
                         android:id="@+id/tv_week_select"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="4dp"
-                        android:layout_marginTop="16dp"
+                        android:paddingHorizontal="4dp"
+                        android:paddingTop="16dp"
+                        android:paddingBottom="0dp"
                         android:visibility="gone"
                         app:horizontalSpacing="8dp"
                         app:layout_constraintBottom_toBottomOf="@+id/course_next_step"
@@ -281,7 +278,8 @@
                         android:id="@+id/tv_time_select"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="20dp"
+                        android:paddingTop="20dp"
+                        android:paddingBottom="20dp"
                         android:visibility="gone"
                         app:horizontalSpacing="10dp"
                         app:layout_constraintBottom_toTopOf="@+id/course_view22"
@@ -296,8 +294,6 @@
                         android:id="@+id/tv_remind_select"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="20dp"
-                        android:layout_marginEnd="4dp"
                         android:background="@drawable/course_shape_add_affair_detailed_backgroud"
                         android:ellipsize="middle"
                         android:gravity="center_vertical"

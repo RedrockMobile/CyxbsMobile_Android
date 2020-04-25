@@ -21,7 +21,6 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.core.view.children
-import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.course.R
 import com.mredrock.cyxbs.course.utils.createCornerBackground
 import org.jetbrains.anko.dip
@@ -401,17 +400,16 @@ class ScheduleView : ViewGroup {
         // as a click event.
         val isClick = sqrt((endPoint.x - startPoint.x).toDouble().pow(2.0) + (endPoint.y - startPoint.y).toDouble().pow(2.0)) > CLICK_RESPONSE_DISTANCE
 
-        // Compute the click event at which range.
+        //虽然按照常理来说这里必定不可能大于6，
+        //但是不知道是不是全面屏手势的影响，交界处的计算的值是大于6的，下同
         val clickHashX: Int = (endPoint.x / (mBasicElementWidth + mElementGap)).toInt().run {
             if (this >= 7) {
-                //虽然按照常理来说这里必定不可能大于6，
-                // 但是不知道是不是全面屏手势的影响，交界处的计算的值是大于6的，下同
                 6
             } else this
         }
         val clickHashY: Int = (endPoint.y / (mBasicElementHeight * 2 + mElementGap)).toInt().run {
-            if (this >= 12) {
-                11
+            if (this >= 6) {
+                5
             } else this
         }
         return if (touchClickListener != null && !mIsEmpty && !isClick && adapter?.getItemViewInfo(clickHashY, clickHashX) == null) {
@@ -447,8 +445,6 @@ class ScheduleView : ViewGroup {
     }
 
     override fun onDraw(canvas: Canvas) {
-        LogUtils.d("${this::class.java.simpleName}GGG${this.hashCode()}", "onDraw")
-
         val highlightPosition = adapter?.getHighLightPosition()
         highlightPosition ?: return
 

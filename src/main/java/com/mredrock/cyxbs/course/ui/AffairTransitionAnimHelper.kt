@@ -121,7 +121,7 @@ class AffairTransitionAnimHelper(private var affairEditActivity: AffairEditActiv
             })
             val set = ConstraintSet().apply { clone(course_affair_container) }
             set.connect(R.id.et_content_input, ConstraintSet.TOP, R.id.tv_content_text, ConstraintSet.BOTTOM)
-            set.setVerticalBias(R.id.et_content_input, 0f)
+            set.setVerticalBias(R.id.et_content_input, 0.04f)
             set.applyTo(course_affair_container)
             //单独修改控件属性要在applyTo之后
             course_textview.visibility = View.VISIBLE

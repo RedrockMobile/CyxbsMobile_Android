@@ -35,7 +35,6 @@ class ScheduleDetailView : RelativeLayout {
 
             scheduleDetailViewAdapter?.let { nonNullScheduleDetailViewAdapter ->
                 val schedules = nonNullScheduleDetailViewAdapter.getSchedules()
-
                 val schedulesSize = schedules.size
                 // If the schedules' size is 1, the dots won't be show.
                 if (schedulesSize == 1) {
@@ -117,8 +116,8 @@ class ScheduleDetailView : RelativeLayout {
                     maxHeight = it.measuredHeight
                 }
             }
-            super.onMeasure(widthMeasureSpec, MeasureSpec.makeMeasureSpec(maxHeight,MeasureSpec.EXACTLY))
-        }else{
+            super.onMeasure(widthMeasureSpec, MeasureSpec.makeMeasureSpec(maxHeight, MeasureSpec.EXACTLY))
+        } else {
             super.onMeasure(widthMeasureSpec, heightMeasureSpec)
         }
     }
@@ -173,14 +172,12 @@ class ScheduleDetailView : RelativeLayout {
             //下面遍历所有child的高度
             for (i in 0 until childCount) {
                 val child = getChildAt(i)
-                child.measure(widthMeasureSpec,
-                        MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED))
+                child.measure(widthMeasureSpec, MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED))
                 val h = child.measuredHeight
                 if (h > height) //采用最大的view的高度。
                     height = h
             }
-            super.onMeasure(widthMeasureSpec, MeasureSpec.makeMeasureSpec(height,
-                    MeasureSpec.EXACTLY))
+            super.onMeasure(widthMeasureSpec, MeasureSpec.makeMeasureSpec(height, MeasureSpec.EXACTLY))
         }
     }
 

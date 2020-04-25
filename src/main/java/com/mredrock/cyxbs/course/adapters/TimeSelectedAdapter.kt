@@ -59,7 +59,7 @@ class TimeSelectedAdapter(private val timeList: MutableList<Pair<Int, Int>>, pri
                     }
                 }
             } else {
-                val time = "${dayOfWeekArray[timeList[position].second]} ${timeArray[timeList[position].first]}"
+                val time = "${dayOfWeekArray[timeList[position].first]} ${timeArray[timeList[position].second]}"
                 item.apply {
                     course_time.text = time
                     affair_iv_cancel.setOnClickListener {

@@ -133,9 +133,9 @@ class EditAffairViewModel : BaseViewModel() {
                     .subscribe(ExecuteOnceObserver(onExecuteOnceNext = {
                         it.apply {
                             if (info == "success" && status == 200) {
-                            // 更新课表
-                            EventBus.getDefault().post(AddAffairEvent())
-                            toastEvent.value = R.string.course_add_transaction_as_a_reminder
+                                // 更新课表
+                                EventBus.getDefault().post(AddAffairEvent())
+                                toastEvent.value = R.string.course_add_transaction_as_a_reminder
                             } else {
                                 toastEvent.value = R.string.course_add_transaction
                             }
@@ -258,7 +258,7 @@ class EditAffairViewModel : BaseViewModel() {
         for (position in timeSelectPositions) {
             // 获取选择的课程时间的行列位置
             val row: Int = position / 7
-            val column: Int = position - row * 7
+            val column: Int = position % 7
             mPostClassAndDays.add(Pair(row, column))
         }
     }
