@@ -28,7 +28,7 @@ class DiscoverHomeViewModel : BaseViewModel() {
     var scrollFlag = true
     fun getRollInfos() {
         ApiGenerator.getApiService(Services::class.java)
-                .getRollerViewInfo("5")
+                .getRollerViewInfo()
                 .mapOrThrowApiException()
                 .setSchedulers()
                 .safeSubscribeBy {

@@ -1,6 +1,6 @@
 package com.mredrock.cyxbs.discover
 
-import com.mredrock.cyxbs.common.config.END_POINT_REDROCK
+import com.mredrock.cyxbs.common.config.END_POINT_REDROCK_VERSION_TWO
 
 /**
  * Created by zxzhu
@@ -16,4 +16,4 @@ const val KEY_SP_HIDING_DISCOVER = "hide_num_"
 const val KEY_SP_HIDING_DISCOVER_UPDATE = "hiding_update"
 
 //轮播图api
-const val API_ROLLER_VIEW = "$END_POINT_REDROCK/app/api/pictureCarousel.php"
+const val API_ROLLER_VIEW = "$END_POINT_REDROCK_VERSION_TWO/magipoke-text/banner/get"
