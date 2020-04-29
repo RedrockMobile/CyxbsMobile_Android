@@ -35,21 +35,21 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="9dp"
         android:layout_toEndOf="@id/iv_avatar"
+        android:paddingBottom="6dp"
         android:textColor="@color/qa_question_item_nickname_color"
         android:textSize="13sp"
         app:layout_constraintBottom_toTopOf="@+id/tv_title"
         app:layout_constraintStart_toEndOf="@id/iv_avatar"
         app:layout_constraintTop_toTopOf="@id/iv_avatar"
-        android:paddingBottom="6dp"
         tools:text="刘童鞋" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tv_publish_at"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:paddingBottom="6dp"
         android:textColor="@color/qa_question_item_reward_color"
         android:textSize="11sp"
-        android:paddingBottom="6dp"
         app:layout_constraintBottom_toBottomOf="@+id/tv_nickname"
         app:layout_constraintEnd_toStartOf="@id/gl_question_end"
         app:layout_constraintTop_toTopOf="@id/tv_nickname"
@@ -57,16 +57,18 @@
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tv_title"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="6dp"
         android:ellipsize="end"
-        android:maxLines="1"
+        android:gravity="start"
+        android:singleLine="true"
         android:textColor="@color/levelTwoFontColor"
         android:textSize="16sp"
+        app:layout_constraintEnd_toStartOf="@id/gl_question_end"
         app:layout_constraintStart_toEndOf="@id/gl_question_start"
         app:layout_constraintTop_toBottomOf="@id/iv_avatar"
-        tools:text="标题标题标题标题" />
+        tools:text="标题标题标题标题标题标题标题标题标题标题标题标题标题" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tv_answer_count"
@@ -76,11 +78,11 @@
         android:drawableStart="@drawable/qa_ic_comment_count"
         android:drawablePadding="4dp"
         android:gravity="center_vertical"
-        tools:text="201"
         android:textColor="@color/qa_question_bottom_count_color"
         android:textSize="11sp"
         app:layout_constraintStart_toEndOf="@id/gl_question_start"
-        app:layout_constraintTop_toBottomOf="@id/tv_title" />
+        app:layout_constraintTop_toBottomOf="@id/tv_title"
+        tools:text="201" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tv_reward_count"
@@ -106,11 +108,11 @@
         android:drawableStart="@drawable/qa_ic_watch_count"
         android:drawablePadding="4dp"
         android:gravity="center_vertical"
-        tools:text="201"
         android:textColor="@color/qa_question_bottom_count_color"
         android:textSize="11sp"
         app:layout_constraintEnd_toStartOf="@id/gl_question_end"
-        app:layout_constraintTop_toBottomOf="@id/tv_title" />
+        app:layout_constraintTop_toBottomOf="@id/tv_title"
+        tools:text="201" />
 
     <ImageView
         android:layout_width="match_parent"
