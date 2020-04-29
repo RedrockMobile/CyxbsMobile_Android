@@ -25,7 +25,7 @@ class ReportDialog(context: Context) : BottomSheetDialog(context) {
     init {
         setContentView(container)
         mBehavior = BottomSheetBehavior.from(container.parent as View).apply {
-            setBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
+            addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
                 override fun onSlide(p0: View, p1: Float) {
                 }
 
@@ -42,7 +42,6 @@ class ReportDialog(context: Context) : BottomSheetDialog(context) {
         super.onCreate(savedInstanceState)
         window?.findViewById<View>(R.id.design_bottom_sheet)?.setBackgroundResource(android.R.color.transparent)
         mBehavior.peekHeight = container.measuredHeight
-        mBehavior.state = BottomSheetBehavior.STATE_EXPANDED
         initReport()
     }
 
@@ -79,5 +78,10 @@ class ReportDialog(context: Context) : BottomSheetDialog(context) {
         btn_cancel_report.setOnClickListener { dismiss() }
     }
 
-
+    override fun onStart() {
+        super.onStart()
+        if (behavior.state == BottomSheetBehavior.STATE_HIDDEN || behavior.state == BottomSheetBehavior.STATE_COLLAPSED) {
+            behavior.state = BottomSheetBehavior.STATE_EXPANDED
+        }
+    }
 }
