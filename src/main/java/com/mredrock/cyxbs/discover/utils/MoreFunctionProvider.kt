@@ -1,6 +1,5 @@
 package com.mredrock.cyxbs.discover.utils
 
-import android.content.Intent
 import com.alibaba.android.arouter.launcher.ARouter
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.config.*
@@ -10,7 +9,6 @@ import com.mredrock.cyxbs.common.service.account.IAccountService
 import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
 import com.mredrock.cyxbs.common.utils.extensions.editor
 import com.mredrock.cyxbs.discover.R
-import com.mredrock.cyxbs.discover.pages.morefunction.MoreFunctionActivity
 import org.greenrobot.eventbus.EventBus
 import java.lang.ref.SoftReference
 
@@ -27,7 +25,7 @@ object MoreFunctionProvider {
             Function(R.drawable.discover_ic_bus_track, R.string.discover_title_bus_track, R.string.discover_detail_bus_track, StartActivityImpl(DISCOVER_SCHOOL_CAR)),
             Function(R.drawable.diacover_ic_empty_classroom, R.string.discover_title_empty_classroom, R.string.discover_detail_empty_classroom, StartActivityImpl(DISCOVER_EMPTY_ROOM)),
             Function(R.drawable.discover_ic_my_exam, R.string.discover_title_my_exam, R.string.discover_detail_my_exam, StartActivityAfterLogin("我的考试", DISCOVER_GRADES)),
-            Function(R.drawable.discover_ic_empty_stu_schedule, R.string.discover_title_empty_stu_schedule, R.string.discover_detail_empty_stu_schedule, StartActivityImpl(DISCOVER_OTHER_COURSE)),
+            Function(R.drawable.discover_ic_other_course, R.string.discover_title_other_course, R.string.discover_detail_other_course, StartActivityImpl(DISCOVER_OTHER_COURSE)),
             Function(R.drawable.discover_ic_school_calendar, R.string.discover_title_school_calendar, R.string.discover_detail_school_calendar, StartActivityImpl(DISCOVER_CALENDAR)),
             Function(R.drawable.discover_ic_map, R.string.discover_title_map, R.string.discover_detail_map, StartActivityImpl(DISCOVER_MAP)),
             Function(R.drawable.discover_ic_more_function, R.string.discover_title_more_function, R.string.discover_detail_more_function,StartActivityImpl(DISCOVER_MORE_FUNCTION )))

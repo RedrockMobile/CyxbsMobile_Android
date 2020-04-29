@@ -14,8 +14,8 @@
     <string name="discover_title_my_exam">我的考试</string>
     <string name="discover_detail_my_exam">考试安排、成绩学分轻松查询</string>
 
-    <string name="discover_title_empty_stu_schedule">空课表</string>
-    <string name="discover_detail_empty_stu_schedule">同学、老师课表快捷查询</string>
+    <string name="discover_title_other_course">课表查询</string>
+    <string name="discover_detail_other_course">同学、老师课表快捷查询</string>
 
     <string name="discover_title_school_calendar">校历</string>
     <string name="discover_detail_school_calendar">学期安排一目了然</string>
