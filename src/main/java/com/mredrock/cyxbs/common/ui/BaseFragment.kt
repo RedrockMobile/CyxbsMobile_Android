@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import com.mredrock.cyxbs.common.mark.EventBusLifecycleSubscriber
 import com.mredrock.cyxbs.common.utils.LogUtils
 import com.umeng.analytics.MobclickAgent
 import org.greenrobot.eventbus.EventBus
@@ -30,7 +31,7 @@ open class BaseFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        EventBus.getDefault().register(this)
+        if (this is EventBusLifecycleSubscriber && EventBus.getDefault().isRegistered(this)) EventBus.getDefault().register(this)
     }
 
     override fun onPause() {
@@ -43,7 +44,7 @@ open class BaseFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         lifeCycleLog("onDestroyView")
-        EventBus.getDefault().unregister(this)
+        if (this is EventBusLifecycleSubscriber && EventBus.getDefault().isRegistered(this)) EventBus.getDefault().unregister(this)
     }
 
     override fun setUserVisibleHint(isVisibleToUser: Boolean) {

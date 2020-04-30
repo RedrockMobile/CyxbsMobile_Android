@@ -18,6 +18,7 @@ import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.common.component.JToolbar
 import com.mredrock.cyxbs.common.config.ACTIVITY_CLASS
 import com.mredrock.cyxbs.common.config.MAIN_LOGIN
+import com.mredrock.cyxbs.common.mark.EventBusLifecycleSubscriber
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.service.account.IAccountService
 import com.mredrock.cyxbs.common.utils.LogUtils
@@ -134,7 +135,7 @@ abstract class BaseActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
-        EventBus.getDefault().register(this)
+        if (this is EventBusLifecycleSubscriber && EventBus.getDefault().isRegistered(this)) EventBus.getDefault().register(this)
         checkIsLogin(loginConfig, this)
         lifeCycleLog("onStart")
     }
@@ -161,7 +162,7 @@ abstract class BaseActivity : AppCompatActivity() {
 
     override fun onStop() {
         super.onStop()
-        EventBus.getDefault().unregister(this)
+        if (this is EventBusLifecycleSubscriber && EventBus.getDefault().isRegistered(this)) EventBus.getDefault().unregister(this)
         lifeCycleLog("onStop")
     }
 
