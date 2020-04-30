@@ -22,7 +22,6 @@ import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
 import com.mredrock.cyxbs.common.component.CommonDialogFragment
 import com.mredrock.cyxbs.common.config.*
-import com.mredrock.cyxbs.common.event.LoginStateChangeEvent
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.service.account.IAccountService
 import com.mredrock.cyxbs.common.ui.BaseViewModelFragment
@@ -199,7 +198,6 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
                                 //清除user信息，必须要在LoginStateChangeEvent之前
                                 viewModel.clearUser()
 
-                                EventBus.getDefault().post(LoginStateChangeEvent(false))
                                 //清空activity栈
                                 val flag = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
                                 ARouter.getInstance().build(MAIN_LOGIN).withFlags(flag).withBoolean(IS_EXIT_LOGIN,true).navigation()
