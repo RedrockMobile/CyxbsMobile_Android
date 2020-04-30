@@ -22,6 +22,7 @@ import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.common.config.ACTIVITY_CLASS
 import com.mredrock.cyxbs.common.config.IS_EXIT_LOGIN
 import com.mredrock.cyxbs.common.config.MAIN_LOGIN
+import com.mredrock.cyxbs.common.mark.EventBusLifecycleSubscriber
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.main.R
 import com.mredrock.cyxbs.main.adapter.UserAgreementAdapter
@@ -33,7 +34,7 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
 @Route(path = MAIN_LOGIN)
-class LoginActivity : BaseViewModelActivity<LoginViewModel>() {
+class LoginActivity : BaseViewModelActivity<LoginViewModel>(), EventBusLifecycleSubscriber {
 
     override val isFragmentActivity = false
 

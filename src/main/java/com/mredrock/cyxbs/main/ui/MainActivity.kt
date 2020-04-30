@@ -21,6 +21,7 @@ import com.mredrock.cyxbs.common.event.BottomSheetStateEvent
 import com.mredrock.cyxbs.common.event.LoadCourse
 import com.mredrock.cyxbs.common.event.NotifyBottomSheetToExpandEvent
 import com.mredrock.cyxbs.common.event.RefreshQaEvent
+import com.mredrock.cyxbs.common.mark.EventBusLifecycleSubscriber
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
 import com.mredrock.cyxbs.common.utils.extensions.getStatusBarHeight
@@ -39,7 +40,7 @@ import org.jetbrains.anko.topPadding
 
 
 @Route(path = MAIN_MAIN)
-class MainActivity : BaseViewModelActivity<MainViewModel>() {
+class MainActivity : BaseViewModelActivity<MainViewModel>() , EventBusLifecycleSubscriber {
 
     override val viewModelClass = MainViewModel::class.java
 
