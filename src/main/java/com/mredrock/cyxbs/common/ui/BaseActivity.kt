@@ -1,18 +1,15 @@
 package com.mredrock.cyxbs.common.ui
 
-//import com.jude.swipbackhelper.SwipeBackHelper
 import android.app.Activity
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
-import android.os.Handler
 import android.os.PersistableBundle
 import android.view.Menu
 import android.view.View
 import android.widget.Toast
 import androidx.annotation.DrawableRes
 import androidx.appcompat.app.AppCompatActivity
-import com.afollestad.materialdialogs.MaterialDialog
 import com.alibaba.android.arouter.launcher.ARouter
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.R
@@ -21,17 +18,12 @@ import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.common.component.JToolbar
 import com.mredrock.cyxbs.common.config.ACTIVITY_CLASS
 import com.mredrock.cyxbs.common.config.MAIN_LOGIN
-import com.mredrock.cyxbs.common.event.AskLoginEvent
-import com.mredrock.cyxbs.common.event.LoginEvent
-import com.mredrock.cyxbs.common.event.LoginStateChangeEvent
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.service.account.IAccountService
 import com.mredrock.cyxbs.common.utils.LogUtils
 import com.umeng.analytics.MobclickAgent
 import kotlinx.android.synthetic.main.common_toolbar.*
 import org.greenrobot.eventbus.EventBus
-import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.ThreadMode
 import org.jetbrains.anko.startActivity
 
 /**
@@ -129,43 +121,10 @@ abstract class BaseActivity : AppCompatActivity() {
         initInternal(title, icon, listener, titleOnLeft)
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    open fun onLoginEvent(event: LoginEvent) {
-        ARouter.getInstance().build("/main/login").navigation()
-    }
-
-    @Subscribe(threadMode = ThreadMode.POSTING)
-    open fun onAskLoginEvent(event: AskLoginEvent) {
-        val handler = Handler(mainLooper)
-        handler.post {
-            MaterialDialog.Builder(this)
-                    .title("是否登录?")
-                    .content(event.msg)
-                    .positiveText("马上去登录")
-                    .negativeText("我再看看")
-                    .callback(object : MaterialDialog.ButtonCallback() {
-                        override fun onPositive(dialog: MaterialDialog?) {
-                            super.onPositive(dialog)
-                            onLoginEvent(LoginEvent())
-                        }
-
-                        override fun onNegative(dialog: MaterialDialog?) {
-                            super.onNegative(dialog)
-                            dialog!!.dismiss()
-                        }
-                    }).show()
-        }
-    }
-
     override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
         val r = super.onPrepareOptionsMenu(menu)
         this.menu = menu
         return r
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    open fun onLoginStateChangeEvent(event: LoginStateChangeEvent) {
-        LogUtils.d("LoginStateChangeEvent", "in" + localClassName + "login state: " + event.loginState + "")
     }
 
     override fun onRestart() {
@@ -173,14 +132,12 @@ abstract class BaseActivity : AppCompatActivity() {
         lifeCycleLog("onRestart")
     }
 
-
     override fun onStart() {
         super.onStart()
         EventBus.getDefault().register(this)
         checkIsLogin(loginConfig, this)
         lifeCycleLog("onStart")
     }
-
 
     override fun onResume() {
         super.onResume()

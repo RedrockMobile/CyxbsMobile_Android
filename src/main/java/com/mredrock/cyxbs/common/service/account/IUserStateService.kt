@@ -1,6 +1,7 @@
 package com.mredrock.cyxbs.common.service.account
 
 import android.content.Context
+import androidx.annotation.MainThread
 import androidx.annotation.WorkerThread
 
 interface IUserStateService {
@@ -11,6 +12,9 @@ interface IUserStateService {
     interface StateListener {
         fun onStateChanged(state: UserState)
     }
+
+    @MainThread
+    fun askLogin(context: Context, reason: String)
 
     @WorkerThread
     @Throws(Exception::class)

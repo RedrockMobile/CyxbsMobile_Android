@@ -8,7 +8,4 @@
     <string name="common_mine">我的</string>
 
     <string name="common_fab">红岩网校</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment" tools:ignore="ResourceName">Hello blank fragment</string>
 </resources>

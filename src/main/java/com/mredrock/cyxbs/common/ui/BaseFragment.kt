@@ -6,12 +6,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.mredrock.cyxbs.common.event.LoginStateChangeEvent
 import com.mredrock.cyxbs.common.utils.LogUtils
 import com.umeng.analytics.MobclickAgent
 import org.greenrobot.eventbus.EventBus
-import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.ThreadMode
 
 /**
  * Created By jay68 on 2018/8/9.
@@ -116,11 +113,4 @@ open class BaseFragment : Fragment() {
         }
     }
 
-    /**
-     * 登录状态发生改变回调
-     * @param event true 发生改变，false
-     */
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    open fun onLoginStateChangeEvent(event: LoginStateChangeEvent) {
-    }
 }
