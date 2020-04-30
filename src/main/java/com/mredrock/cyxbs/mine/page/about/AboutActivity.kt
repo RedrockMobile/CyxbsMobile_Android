@@ -8,6 +8,7 @@ import androidx.core.content.ContextCompat
 import com.mredrock.cyxbs.common.component.CommonDialogFragment
 import com.mredrock.cyxbs.common.config.APP_WEBSITE
 import com.mredrock.cyxbs.common.config.updateFile
+import com.mredrock.cyxbs.common.mark.EventBusLifecycleSubscriber
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.extensions.toast
 import com.mredrock.cyxbs.common.utils.getAppVersionName
@@ -21,7 +22,7 @@ import org.greenrobot.eventbus.ThreadMode
 
 class AboutActivity(override val isFragmentActivity: Boolean = false,
                     override val viewModelClass: Class<AboutViewModel> = AboutViewModel::class.java)
-    : BaseViewModelActivity<AboutViewModel>() {
+    : BaseViewModelActivity<AboutViewModel>(), EventBusLifecycleSubscriber {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
