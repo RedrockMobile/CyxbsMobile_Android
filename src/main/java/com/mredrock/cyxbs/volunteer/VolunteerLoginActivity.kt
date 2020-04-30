@@ -10,12 +10,10 @@ import android.view.inputmethod.InputMethodManager
 import com.afollestad.materialdialogs.MaterialDialog
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.mredrock.cyxbs.common.config.DISCOVER_VOLUNTEER
-import com.mredrock.cyxbs.common.event.AskLoginEvent
 import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.service.account.IAccountService
 import com.mredrock.cyxbs.common.ui.BaseActivity
-import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.volunteer.bean.VolunteerLogin
@@ -23,7 +21,6 @@ import com.mredrock.cyxbs.volunteer.network.ApiService
 import com.mredrock.cyxbs.volunteer.widget.EncryptPassword
 import com.mredrock.cyxbs.volunteer.widget.VolunteerTimeSP
 import kotlinx.android.synthetic.main.activity_login.*
-import org.greenrobot.eventbus.EventBus
 import java.util.regex.Pattern
 
 @Route(path = DISCOVER_VOLUNTEER)
@@ -48,10 +45,6 @@ class VolunteerLoginActivity : BaseActivity() {
         setContentView(R.layout.activity_login)
         common_toolbar.init("完善信息")
 
-        if (ServiceManager.getService(IAccountService::class.java).getUserService() == null) {
-            EventBus.getDefault().post(AskLoginEvent("只有登录了才能查看志愿时长噢～"))
-            finish()
-        }
         btn_volunteer_login.setOnClickListener { view: View? ->
             showProgressDialog()
             initUserInfo()
