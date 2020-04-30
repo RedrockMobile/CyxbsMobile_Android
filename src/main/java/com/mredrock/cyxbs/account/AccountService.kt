@@ -2,8 +2,11 @@ package com.mredrock.cyxbs.account
 
 import android.content.Context
 import android.util.Base64
+import androidx.annotation.MainThread
 import androidx.annotation.WorkerThread
+import com.afollestad.materialdialogs.MaterialDialog
 import com.alibaba.android.arouter.facade.annotation.Route
+import com.alibaba.android.arouter.launcher.ARouter
 import com.google.gson.Gson
 import com.mredrock.cyxbs.account.bean.LoginParams
 import com.mredrock.cyxbs.account.bean.RefreshParams
@@ -178,6 +181,25 @@ internal class AccountService : IAccountService {
                 }
                 action.invoke(data.token)
             }
+        }
+
+        @MainThread
+        override fun askLogin(context: Context, reason: String) {
+            if (isLogin()) {
+                return
+            }
+            MaterialDialog.Builder(context)
+                    .title("是否登录?")
+                    .content(reason)
+                    .positiveText("马上去登录")
+                    .negativeText("我再看看")
+                    .onPositive { _, _ ->
+                        if (!isLogin()) {
+                            ARouter.getInstance().build("/main/login").navigation()
+                        }
+                    }.onNegative { dialog, _ ->
+                        dialog.dismiss()
+                    }.show()
         }
 
         @WorkerThread
