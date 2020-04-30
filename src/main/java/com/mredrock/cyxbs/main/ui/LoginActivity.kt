@@ -22,7 +22,6 @@ import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.common.config.ACTIVITY_CLASS
 import com.mredrock.cyxbs.common.config.IS_EXIT_LOGIN
 import com.mredrock.cyxbs.common.config.MAIN_LOGIN
-import com.mredrock.cyxbs.common.event.LoginStateChangeEvent
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.main.R
 import com.mredrock.cyxbs.main.adapter.UserAgreementAdapter
@@ -30,7 +29,6 @@ import com.mredrock.cyxbs.main.bean.LoginFailEvent
 import com.mredrock.cyxbs.main.viewmodel.LoginViewModel
 import kotlinx.android.synthetic.main.main_activity_login.*
 import kotlinx.android.synthetic.main.main_user_agreement_dialog.view.*
-import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
@@ -115,7 +113,6 @@ class LoginActivity : BaseViewModelActivity<LoginViewModel>() {
                         finish()
                     }
                 }
-                EventBus.getDefault().post(LoginStateChangeEvent(true))
             }
         } else {
             CyxbsToast.makeText(this, R.string.main_user_agreement_title, Toast.LENGTH_SHORT).show()
