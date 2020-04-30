@@ -16,7 +16,4 @@
     <string name="electricity_notice_error">信息不完整或不正确</string>
     <string name="electricity_electric_view_hint">余额/量</string>
     <string name="electricity_electric_view_hint_money">元</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-
 </resources>
