@@ -21,6 +21,7 @@ import com.mredrock.cyxbs.common.config.*
 import com.mredrock.cyxbs.common.event.*
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.service.account.IAccountService
+import com.mredrock.cyxbs.common.service.account.IUserStateService
 import com.mredrock.cyxbs.common.ui.BaseViewModelFragment
 import com.mredrock.cyxbs.course.R
 import com.mredrock.cyxbs.course.adapters.ScheduleVPAdapter
@@ -44,7 +45,7 @@ import java.util.*
  * Created by anriku on 2018/8/16.
  */
 @Route(path = COURSE_ENTRY)
-class CourseContainerEntryFragment : BaseViewModelFragment<CoursesViewModel>() {
+class CourseContainerEntryFragment : BaseViewModelFragment<CoursesViewModel>(), IUserStateService.StateListener {
     override val openStatistics: Boolean
         get() = false
 
@@ -134,26 +135,16 @@ class CourseContainerEntryFragment : BaseViewModelFragment<CoursesViewModel>() {
         return mBinding.root
     }
 
-    /**
-     * 登录状态发生改变时会被回调的函数
-     * @param event 包含当前用户登录状态的事件。
-     */
-    override fun onLoginStateChangeEvent(event: LoginStateChangeEvent) {
-        super.onLoginStateChangeEvent(event)
-        if (event.loginState) {
-            initFragment()
-        } else {
-            Thread {
-                ViewModelProvider(this).get(CoursesViewModel::class.java).clearCache()
-            }.start()
-        }
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        ServiceManager.getService(IAccountService::class.java).getVerifyService().addOnStateChangedListener(this)
         initFragment()
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        ServiceManager.getService(IAccountService::class.java).getVerifyService().removeStateChangedListener(this)
+    }
 
     /**
      * 对当前Fragment进行一系列初始化
@@ -460,6 +451,16 @@ class CourseContainerEntryFragment : BaseViewModelFragment<CoursesViewModel>() {
 
     enum class CourseState {
         OrdinaryCourse, TeacherCourse, OtherCourse, NoClassInvitationCourse
+    }
+
+    override fun onStateChanged(state: IUserStateService.UserState) {
+        if (state == IUserStateService.UserState.LOGIN) {
+            initFragment()
+        } else {
+            Thread {
+                ViewModelProvider(this).get(CoursesViewModel::class.java).clearCache()
+            }.start()
+        }
     }
 
 }
