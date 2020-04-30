@@ -9,6 +9,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.mredrock.cyxbs.common.config.WEEK_NUM
+import com.mredrock.cyxbs.common.mark.EventBusLifecycleSubscriber
 import com.mredrock.cyxbs.common.ui.BaseFragment
 import com.mredrock.cyxbs.course.R
 import com.mredrock.cyxbs.course.adapters.TimeRealityAdapter
@@ -29,7 +30,7 @@ import org.greenrobot.eventbus.ThreadMode
  * Created by anriku on 2018/8/14.
  */
 
-class CourseFragment : BaseFragment() {
+class CourseFragment : BaseFragment(), EventBusLifecycleSubscriber {
 
     override val openStatistics: Boolean
         get() = false

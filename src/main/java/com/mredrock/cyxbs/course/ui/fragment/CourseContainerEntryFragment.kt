@@ -22,6 +22,7 @@ import com.mredrock.cyxbs.common.event.*
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.service.account.IAccountService
 import com.mredrock.cyxbs.common.service.account.IUserStateService
+import com.mredrock.cyxbs.common.mark.EventBusLifecycleSubscriber
 import com.mredrock.cyxbs.common.ui.BaseViewModelFragment
 import com.mredrock.cyxbs.course.R
 import com.mredrock.cyxbs.course.adapters.ScheduleVPAdapter
@@ -45,7 +46,7 @@ import java.util.*
  * Created by anriku on 2018/8/16.
  */
 @Route(path = COURSE_ENTRY)
-class CourseContainerEntryFragment : BaseViewModelFragment<CoursesViewModel>(), IUserStateService.StateListener {
+class CourseContainerEntryFragment : BaseViewModelFragment<CoursesViewModel>(), IUserStateService.StateListener, EventBusLifecycleSubscriber {
     override val openStatistics: Boolean
         get() = false
 
