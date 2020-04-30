@@ -1,6 +1,5 @@
 package com.mredrock.cyxbs.redpage.ui
 
-//import com.jude.swipbackhelper.SwipeBackHelper
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.Bitmap
@@ -34,7 +33,6 @@ class RedPageWebActivity : BaseActivity() {
         tl_redPage.init("红岩网校")
         tl_redPage.backgroundResource = R.drawable.redrock_home_tl_bg_shape
         tl_redPage.setNavigationOnClickListener { finish() }
-//        SwipeBackHelper.getCurrentPage(this).setSwipeBackEnable(false)
 
         val webSettings = wv_redPage.settings
         webSettings.apply {
