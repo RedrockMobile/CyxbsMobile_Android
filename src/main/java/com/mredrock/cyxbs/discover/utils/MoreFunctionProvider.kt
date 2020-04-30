@@ -1,15 +1,14 @@
 package com.mredrock.cyxbs.discover.utils
 
+import android.content.Context
 import com.alibaba.android.arouter.launcher.ARouter
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.config.*
-import com.mredrock.cyxbs.common.event.AskLoginEvent
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.service.account.IAccountService
 import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
 import com.mredrock.cyxbs.common.utils.extensions.editor
 import com.mredrock.cyxbs.discover.R
-import org.greenrobot.eventbus.EventBus
 import java.lang.ref.SoftReference
 
 /**
@@ -80,21 +79,21 @@ object MoreFunctionProvider {
 
     class Function(var resource: Int, val title: Int, val detail: Int, val activityStarter: StartActivityAble)
     interface StartActivityAble {
-        fun startActivity()
+        fun startActivity(context: Context)
     }
 
     class StartActivityImpl(private val routing: String) : StartActivityAble {
-        override fun startActivity() {
-            ARouter.getInstance().build(routing).navigation()
+        override fun startActivity(context: Context) {
+            ARouter.getInstance().build(routing).navigation(context)
         }
     }
 
     class StartActivityAfterLogin(private val msg: String, private val routing: String) : StartActivityAble {
-        override fun startActivity() {
+        override fun startActivity(context: Context) {
             if (ServiceManager.getService(IAccountService::class.java).getVerifyService().isLogin()) {
                 ARouter.getInstance().build(routing).navigation()
             } else {
-                EventBus.getDefault().post(AskLoginEvent("请先登录才能使用${msg}哦~"))
+                ServiceManager.getService(IAccountService::class.java).getVerifyService().askLogin(context, "请先登录才能使用${msg}哦~")
             }
         }
 

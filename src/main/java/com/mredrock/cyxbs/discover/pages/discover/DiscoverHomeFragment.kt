@@ -23,15 +23,12 @@ import com.alibaba.android.arouter.launcher.ARouter
 import com.mredrock.cyxbs.common.config.*
 import com.mredrock.cyxbs.common.event.CurrentDateInformationEvent
 import com.mredrock.cyxbs.common.ui.BaseViewModelFragment
-import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.discover.R
 import com.mredrock.cyxbs.discover.utils.BannerAdapter
 import com.mredrock.cyxbs.discover.utils.MoreFunctionProvider
 import kotlinx.android.synthetic.main.discover_home_fragment.*
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import org.jetbrains.anko.displayManager
-import org.jetbrains.anko.sp
 
 /**
  * @author zixuan
@@ -148,13 +145,15 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>() {
         for ((index, imageView) in imageViewList.withIndex()) {
             imageView.setImageResource(functions[index].resource)
             imageView.setOnClickListener {
-                functions[index].activityStarter.startActivity()
+                val context = activity ?: return@setOnClickListener
+                functions[index].activityStarter.startActivity(context)
             }
         }
         for ((index, textView) in textViewList.withIndex()) {
             textView.text = context?.getText(functions[index].title)
             textView.setOnClickListener {
-                functions[index].activityStarter.startActivity()
+                val context = activity ?: return@setOnClickListener
+                functions[index].activityStarter.startActivity(context)
             }
         }
     }

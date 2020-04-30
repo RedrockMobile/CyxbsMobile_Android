@@ -7,7 +7,7 @@ import com.mredrock.cyxbs.discover.R
 
 class MoreFunctionBindable:Bindable {
     override fun onBindViewHolder(holder: MoreFunctionRvAdapter.MoreFunctionViewHolder, position: Int, adapter: MoreFunctionRvAdapter) {
-        adapter.getFunctions()[position].activityStarter.startActivity()
+        adapter.getFunctions()[position].activityStarter.startActivity(holder.itemView.context)
     }
 
     override fun setMoreFunctionIcon(imageView: ImageView) {
