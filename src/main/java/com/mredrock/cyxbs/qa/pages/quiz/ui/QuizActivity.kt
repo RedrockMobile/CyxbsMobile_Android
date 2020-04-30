@@ -19,6 +19,7 @@ import com.alibaba.android.arouter.facade.annotation.Route
 import com.google.gson.Gson
 import com.mredrock.cyxbs.common.config.QA_QUIZ
 import com.mredrock.cyxbs.common.event.QuestionDraftEvent
+import com.mredrock.cyxbs.common.mark.EventBusLifecycleSubscriber
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.down.bean.DownMessageText
 import com.mredrock.cyxbs.common.utils.extensions.gone
@@ -44,7 +45,7 @@ import org.jetbrains.anko.support.v4.startActivityForResult
 import top.limuyang2.photolibrary.activity.LPhotoPickerActivity
 
 @Route(path = QA_QUIZ)
-class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
+class QuizActivity : BaseViewModelActivity<QuizViewModel>() , EventBusLifecycleSubscriber {
     companion object {
         const val MAX_SELECTABLE_IMAGE_COUNT = 6
         const val NOT_DRAFT_ID = "-1"

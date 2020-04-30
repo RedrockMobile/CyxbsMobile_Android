@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.mredrock.cyxbs.common.event.RefreshQaEvent
+import com.mredrock.cyxbs.common.mark.EventBusLifecycleSubscriber
 import com.mredrock.cyxbs.common.ui.BaseViewModelFragment
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.bean.Question
@@ -28,7 +29,7 @@ import org.greenrobot.eventbus.ThreadMode
 /**
  * Created By jay68 on 2018/8/22.
  */
-class QuestionListFragment : BaseViewModelFragment<QuestionListViewModel>() {
+class QuestionListFragment : BaseViewModelFragment<QuestionListViewModel>(), EventBusLifecycleSubscriber {
 
     companion object {
         const val FRAGMENT_TITLE = "title"

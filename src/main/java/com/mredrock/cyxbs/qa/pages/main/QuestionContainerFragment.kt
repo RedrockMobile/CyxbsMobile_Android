@@ -9,6 +9,7 @@ import androidx.appcompat.widget.AppCompatCheckedTextView
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.mredrock.cyxbs.common.config.QA_ENTRY
 import com.mredrock.cyxbs.common.event.CurrentDateInformationEvent
+import com.mredrock.cyxbs.common.mark.EventBusLifecycleSubscriber
 import com.mredrock.cyxbs.common.ui.BaseFragment
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.bean.Question
@@ -23,7 +24,7 @@ import org.greenrobot.eventbus.ThreadMode
  * Created By jay68 on 2018/8/22.
  */
 @Route(path = QA_ENTRY)
-class QuestionContainerFragment : BaseFragment(), View.OnClickListener {
+class QuestionContainerFragment : BaseFragment(), View.OnClickListener , EventBusLifecycleSubscriber {
     companion object {
         const val REQUEST_LIST_REFRESH_ACTIVITY = 0x1
     }

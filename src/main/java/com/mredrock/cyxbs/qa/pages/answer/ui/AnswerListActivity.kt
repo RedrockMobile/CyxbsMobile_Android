@@ -16,6 +16,7 @@ import com.mredrock.cyxbs.common.bean.RedrockApiWrapper
 import com.mredrock.cyxbs.common.bean.isSuccessful
 import com.mredrock.cyxbs.common.config.QA_ANSWER_LIST
 import com.mredrock.cyxbs.common.event.OpenShareQuestionEvent
+import com.mredrock.cyxbs.common.mark.EventBusLifecycleSubscriber
 import com.mredrock.cyxbs.common.ui.BaseActivity
 import com.mredrock.cyxbs.common.utils.extensions.gone
 import com.mredrock.cyxbs.common.utils.extensions.toast
@@ -41,7 +42,7 @@ import org.jetbrains.anko.longToast
 import org.jetbrains.anko.support.v4.startActivityForResult
 
 @Route(path = QA_ANSWER_LIST)
-class AnswerListActivity : BaseActivity() {
+class AnswerListActivity : BaseActivity(), EventBusLifecycleSubscriber {
     companion object {
         @JvmField
         val TAG: String = AnswerListActivity::class.java.simpleName

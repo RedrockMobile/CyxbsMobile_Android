@@ -23,6 +23,7 @@ import com.mredrock.cyxbs.common.config.IS_COMMENT
 import com.mredrock.cyxbs.common.config.NAVIGATE_FROM_WHERE
 import com.mredrock.cyxbs.common.config.QA_COMMENT_LIST
 import com.mredrock.cyxbs.common.event.OpenShareCommentEvent
+import com.mredrock.cyxbs.common.mark.EventBusLifecycleSubscriber
 import com.mredrock.cyxbs.common.ui.BaseActivity
 import com.mredrock.cyxbs.common.utils.extensions.gone
 import com.mredrock.cyxbs.common.utils.extensions.toast
@@ -49,7 +50,7 @@ import org.greenrobot.eventbus.ThreadMode
 import org.jetbrains.anko.*
 
 @Route(path = QA_COMMENT_LIST)
-class CommentListActivity : BaseActivity() {
+class CommentListActivity : BaseActivity(), EventBusLifecycleSubscriber {
     companion object {
         const val REQUEST_CODE = 0x123
         const val PARAM_QUESTION = "question"
