@@ -215,8 +215,6 @@ internal class AccountService : IAccountService {
                 notifyAllStateListeners(IUserStateService.UserState.LOGIN)
                 context.defaultSharedPreferences.editor {
                     putString(SP_KEY_USER_V2, mUserInfoEncryption.encrypt(Gson().toJson(apiWrapper.data)))
-                    //todo 适配老版本User使用，适配完成后删除
-                    putString("SP_KEY_ID_NUM", passwd)
                 }
             } else {
                 apiWrapper?.apply {
@@ -228,8 +226,6 @@ internal class AccountService : IAccountService {
         override fun logout(context: Context) {
             context.defaultSharedPreferences.editor {
                 putString(SP_KEY_USER_V2, "")
-                //todo 适配老版本User使用，适配完成后删除
-                putString("SP_KEY_ID_NUM", "")
             }
             user = null
             tokenWrapper = null
