@@ -164,9 +164,12 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>() {
         addFeedByRoute(DISCOVER_VOLUNTEER_FEED)
         //处理手机屏幕过长导致feed无法填充满下方的情况
         ll_discover_feeds.post {
-            val point = Point()
-            (context?.getSystemService(Context.WINDOW_SERVICE) as WindowManager).defaultDisplay.getSize(point)
-            ll_discover_feeds.minimumHeight = point.y - ll_discover_feeds.top
+            context?.let {
+                val point = Point()
+                (it.getSystemService(Context.WINDOW_SERVICE) as WindowManager).defaultDisplay.getSize(point)
+                ll_discover_feeds.minimumHeight = point.y - ll_discover_feeds.top
+            }
+
         }
 
     }
