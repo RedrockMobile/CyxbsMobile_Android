@@ -165,7 +165,7 @@
             app:layout_constraintStart_toStartOf="@+id/iv_discover_1"
             app:layout_constraintTop_toTopOf="@+id/iv_discover_4"
             tools:ignore="ContentDescription,MissingConstraints"
-            tools:src="@drawable/discover_ic_empty_stu_schedule" />
+            tools:src="@drawable/discover_ic_other_course" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tv_discover_3"

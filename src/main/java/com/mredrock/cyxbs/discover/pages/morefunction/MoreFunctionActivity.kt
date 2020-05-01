@@ -22,7 +22,6 @@ class MoreFunctionActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.discover_activity_more_function)
 
-
         initRv(rv_discover_more_function)
         initSettings()
     }

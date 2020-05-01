@@ -21,7 +21,6 @@ class RollerViewActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.discover_activity_roller_view)
-//        SwipeBackHelper.getCurrentPage(this).setSwipeBackEnable(false)
 
         common_toolbar.init(intent.getStringExtra("Key"))
 
