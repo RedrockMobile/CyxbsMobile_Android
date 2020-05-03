@@ -107,10 +107,8 @@ class AboutActivity(override val isFragmentActivity: Boolean = false,
     }
 
     private fun setIsUpdate() {
-        if (UpdateUtils.isUpdate(this)) {
+        UpdateUtils.checkUpdate(this) {
             mine_about_tv_already_up_to_date.text = "已是最新版本"
-        } else {
-            mine_about_tv_already_up_to_date.text = "发现新版本"
         }
     }
 
@@ -123,7 +121,7 @@ class AboutActivity(override val isFragmentActivity: Boolean = false,
 
         val intent = Intent(Intent.ACTION_SEND)
         intent.type = "text/plain"
-        intent.putExtra(Intent.EXTRA_TEXT, "掌上重邮是重邮首款校园生活类App，拥有查课表，签到，邮问等功能，记得分享给好友哦。 https://wx.idsbllp.cn/app/")
+        intent.putExtra(Intent.EXTRA_TEXT, "掌上重邮是重邮首款校园生活类App，拥有查课表，签到，邮问等功能，记得分享给好友哦。 $APP_WEBSITE")
         startActivity(Intent.createChooser(intent, "分享"))
     }
 }
