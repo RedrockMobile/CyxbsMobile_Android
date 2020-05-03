@@ -26,7 +26,7 @@ interface ApiService {
      * 上传用户信息
      */
     @FormUrlEncoded
-    @POST("/magipoke/Person/SetInfo")
+    @POST("wxapi/magipoke/Person/SetInfo")
     fun updateUserInfo(@Field("nickname") nickname: String,
                        @Field("introduction") introduction: String,
                        @Field("qq") qq: String,
@@ -38,7 +38,7 @@ interface ApiService {
      * 上传图片
      */
     @FormUrlEncoded
-    @POST("/magipoke/Person/SetInfo")
+    @POST("wxapi/magipoke/Person/SetInfo")
     fun updateUserImage(@Field("photo_thumbnail_src") photo_thumbnail_src: String,
                         @Field("photo_src") photo_src: String): Observable<RedrockApiStatus>
 
@@ -54,19 +54,19 @@ interface ApiService {
 
     //兑换商品
     @FormUrlEncoded
-    @POST("/magipoke-intergral/QA/Integral/order")
+    @POST("wxapi/magipoke-intergral/QA/Integral/order")
     fun exchangeProduct(@Field("name") name: String,
                         @Field("value") value: Int): Observable<RedrockApiStatus>
 
     //获取商品
     @FormUrlEncoded
-    @POST("/magipoke-intergral/QA/Integral/getItemList")
+    @POST("wxapi/magipoke-intergral/QA/Integral/getItemList")
     fun getProducts(@Field("page") page: Int,
                     @Field("size") size: Int = 6): Observable<RedrockApiWrapper<List<Product>>>
 
     //我的商品
     @FormUrlEncoded
-    @POST("/magipoke-intergral/QA/Integral/myRepertory")
+    @POST("wxapi/magipoke-intergral/QA/Integral/myRepertory")
     fun getMyProducts(@Field("page") page: Int,
                       @Field("size") size: Int = 6): Observable<RedrockApiWrapper<List<MyProduct>>>
 

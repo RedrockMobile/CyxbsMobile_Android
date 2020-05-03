@@ -9,7 +9,6 @@ import com.mredrock.cyxbs.common.utils.extensions.mapOrThrowApiException
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.mine.util.apiService
-import com.mredrock.cyxbs.mine.util.apiServiceForSign
 import com.mredrock.cyxbs.mine.util.extension.normalStatus
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -37,7 +36,7 @@ class EditViewModel : BaseViewModel() {
                        , photoSrc: String = userService.getAvatarImgUrl()) {
 
 
-        apiServiceForSign.updateUserInfo(nickname, introduction, qq, phone, photoThumbnailSrc, photoSrc)
+        apiService.updateUserInfo(nickname, introduction, qq, phone, photoThumbnailSrc, photoSrc)
                 .normalStatus(this)
                 .observeOn(Schedulers.io())
                 .map {
@@ -66,7 +65,7 @@ class EditViewModel : BaseViewModel() {
                     userEditService.apply {
                         setAvatarImgUrl(it.photosrc)
                     }
-                    apiServiceForSign.updateUserImage( it.thumbnail_src, it.photosrc)
+                    apiService.updateUserImage(it.thumbnail_src, it.photosrc)
                 }
                 .normalStatus(this)
                 .safeSubscribeBy(onError = { upLoadImageEvent.value = false }

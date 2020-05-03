@@ -13,7 +13,6 @@ import com.mredrock.cyxbs.common.viewmodel.event.SingleLiveEvent
 import com.mredrock.cyxbs.mine.network.model.Product
 import com.mredrock.cyxbs.mine.network.model.ScoreStatus
 import com.mredrock.cyxbs.mine.util.apiService
-import com.mredrock.cyxbs.mine.util.apiServiceForSign
 import com.mredrock.cyxbs.mine.util.extension.normalWrapper
 import io.reactivex.Observable
 import io.reactivex.functions.Function
@@ -51,7 +50,7 @@ class DailyViewModel : BaseViewModel() {
     fun loadAllData() {
         apiService.getScoreStatus()
                 .normalWrapper(this)
-                .safeSubscribeBy (
+                .safeSubscribeBy(
                         onNext = {
                             _status.postValue(it)
                         },
@@ -77,7 +76,7 @@ class DailyViewModel : BaseViewModel() {
                     return@Function apiService.getScoreStatus()
                 })
                 .normalWrapper(this)
-                .safeSubscribeBy (
+                .safeSubscribeBy(
                         onNext = {
                             _status.postValue(it)
                         },
@@ -89,9 +88,9 @@ class DailyViewModel : BaseViewModel() {
     }
 
     fun loadProduct() {
-        apiServiceForSign.getProducts(page++)
+        apiService.getProducts(page++)
                 .normalWrapper(this)
-                .safeSubscribeBy (
+                .safeSubscribeBy(
                         onNext = {
                             //由于Rxjava反射不应定能够够保证为空，当为空的说明这一页没有数据，于是停止加载
                             if (it.isEmpty()) {
@@ -116,7 +115,7 @@ class DailyViewModel : BaseViewModel() {
         //防止后端粗心的将integral设置为空，同时需要处理为小数的情况
         val productIntegral = if (product.integral.isEmpty()) 0 else product.integral.toFloat().toInt()
 
-        apiServiceForSign.exchangeProduct(product.name, productIntegral)
+        apiService.exchangeProduct(product.name, productIntegral)
                 .flatMap(Function<RedrockApiStatus, Observable<RedrockApiWrapper<ScoreStatus>>> {
                     if (it.status == 200) {
                         _exchangeEvent.postValue(true)
@@ -127,7 +126,7 @@ class DailyViewModel : BaseViewModel() {
                     return@Function apiService.getScoreStatus()
                 })
                 .normalWrapper(this)
-                .safeSubscribeBy (
+                .safeSubscribeBy(
                         onNext = {
                             _status.postValue(it)
                         },

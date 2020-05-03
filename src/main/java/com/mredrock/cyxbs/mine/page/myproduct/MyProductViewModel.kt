@@ -3,11 +3,10 @@ package com.mredrock.cyxbs.mine.page.myproduct
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
-import com.mredrock.cyxbs.common.network.ApiGeneratorForAnother
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
-import com.mredrock.cyxbs.mine.network.ApiService
 import com.mredrock.cyxbs.mine.network.model.MyProduct
+import com.mredrock.cyxbs.mine.util.apiService
 import com.mredrock.cyxbs.mine.util.extension.disposeAll
 import com.mredrock.cyxbs.mine.util.extension.normalWrapper
 import com.mredrock.cyxbs.mine.util.widget.RvFooter
@@ -17,8 +16,6 @@ import io.reactivex.disposables.Disposable
  * Created by roger on 2020/2/15
  */
 class MyProductViewModel : BaseViewModel() {
-    private val apiServiceForSign: ApiService by lazy { ApiGeneratorForAnother.getApiService(ApiService::class.java) }
-
     private val disposableForUnClaimed: MutableList<Disposable> = mutableListOf()
     private val disposableForClaimed: MutableList<Disposable> = mutableListOf()
 
@@ -38,9 +35,9 @@ class MyProductViewModel : BaseViewModel() {
         }
 
     fun loadMyProductUnclaimed() {
-        val disposable = apiServiceForSign.getMyProducts(unclaimedPage++, pageSize)
+        val disposable = apiService.getMyProducts(unclaimedPage++, pageSize)
                 .normalWrapper(this)
-                .safeSubscribeBy (
+                .safeSubscribeBy(
                         onNext = { list ->
                             if (list.isEmpty()) {
                                 if (_unclaimedList.value.isNullOrEmpty()) {
@@ -85,9 +82,9 @@ class MyProductViewModel : BaseViewModel() {
         }
 
     fun loadMyProductClaimed() {
-        val disposable = apiServiceForSign.getMyProducts(claimedPage++, pageSize)
+        val disposable = apiService.getMyProducts(claimedPage++, pageSize)
                 .normalWrapper(this)
-                .safeSubscribeBy (
+                .safeSubscribeBy(
                         onNext = { list ->
                             if (list.isEmpty()) {
                                 if (_claimedList.value.isNullOrEmpty()) {

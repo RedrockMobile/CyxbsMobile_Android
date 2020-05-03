@@ -1,7 +1,7 @@
 package com.mredrock.cyxbs.mine.page.about
 
 import androidx.lifecycle.MutableLiveData
-import com.mredrock.cyxbs.common.network.ApiGeneratorForAnother
+import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.network.CommonApiService
 import com.mredrock.cyxbs.common.utils.down.bean.DownMessage
 import com.mredrock.cyxbs.common.utils.down.params.DownMessageParams
@@ -19,7 +19,7 @@ class AboutViewModel : BaseViewModel() {
 
 
     fun getFeatureIntroduction(name: String) {
-        ApiGeneratorForAnother.getCommonApiService(CommonApiService::class.java)
+        ApiGenerator.getCommonApiService(CommonApiService::class.java)
                 .getDownMessage(DownMessageParams(name))
                 .normalWrapper(this)
                 .safeSubscribeBy(
