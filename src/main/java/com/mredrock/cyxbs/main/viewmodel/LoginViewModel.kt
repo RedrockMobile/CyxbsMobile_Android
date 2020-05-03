@@ -3,7 +3,7 @@ package com.mredrock.cyxbs.main.viewmodel
 import android.widget.Toast
 import com.mredrock.cyxbs.common.BaseApp.Companion.context
 import com.mredrock.cyxbs.common.component.CyxbsToast
-import com.mredrock.cyxbs.common.network.ApiGeneratorForAnother
+import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.network.CommonApiService
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.service.account.IAccountService
@@ -93,7 +93,7 @@ class LoginViewModel : BaseViewModel() {
 
     fun getUserAgreement(successCallBack: () -> Unit) {
         val time = System.currentTimeMillis()
-        ApiGeneratorForAnother.getApiService(CommonApiService::class.java)
+        ApiGenerator.getCommonApiService(CommonApiService::class.java)
                 .getDownMessage(DownMessageParams("zscy-main-userAgreement"))
                 .setSchedulers(observeOn = Schedulers.io())
                 .errorHandler()
