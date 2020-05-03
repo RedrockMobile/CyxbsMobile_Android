@@ -31,7 +31,7 @@ open class BaseFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        if (this is EventBusLifecycleSubscriber && EventBus.getDefault().isRegistered(this)) EventBus.getDefault().register(this)
+        if (this is EventBusLifecycleSubscriber) EventBus.getDefault().register(this)
     }
 
     override fun onPause() {

@@ -135,7 +135,7 @@ abstract class BaseActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
-        if (this is EventBusLifecycleSubscriber && EventBus.getDefault().isRegistered(this)) EventBus.getDefault().register(this)
+        if (this is EventBusLifecycleSubscriber) EventBus.getDefault().register(this)
         checkIsLogin(loginConfig, this)
         lifeCycleLog("onStart")
     }
