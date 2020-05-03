@@ -98,6 +98,13 @@ class NewsItemActivity : BaseViewModelActivity<NewsItemViewModel>(), NewsItemVie
         }
         downloadEndSize++
         if (downloadEndSize == downloadNeedSize) {
+            if (files.size < 1) {
+                AndroidSchedulers.mainThread().scheduleDirect {
+                    toast("下载失败了，请稍候重试或反馈一下")
+                    viewModel.progressDialogEvent.value = ProgressDialogEvent.DISMISS_DIALOG_EVENT
+                }
+                return
+            }
             MediaScannerConnection.scanFile(this,
                     arrayOf(files[0].parent),
                     files.map { FileTypeHelper.getMIMEType(it) }.toTypedArray(),
