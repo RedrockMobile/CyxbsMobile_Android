@@ -52,7 +52,7 @@ class NewsItemViewModel : BaseViewModel() {
                         override fun onFail(e: Throwable) {
                             listener.onDownloadEnd(pos, e = e)
                         }
-                    }, it.id)
+                    }, it.id, it.name)
                 }
             } else {
                 listener.onDownloadEnd(-1, e = Exception("permission deny"))

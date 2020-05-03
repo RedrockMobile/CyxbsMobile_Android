@@ -12,7 +12,6 @@ import retrofit2.Retrofit
 import java.io.File
 import java.io.FileOutputStream
 import java.io.InputStream
-import java.nio.charset.StandardCharsets
 
 /**
  * Author: Hosigus
@@ -21,7 +20,7 @@ import java.nio.charset.StandardCharsets
  */
 object DownloadManager {
 
-    fun download(listener: RedDownloadListener, id: String) {
+    fun download(listener: RedDownloadListener, id: String, fileName: String) {
         val client = OkHttpClient.Builder()
                 .addNetworkInterceptor(RedDownloadInterceptor(listener))
                 .build()
@@ -50,7 +49,7 @@ object DownloadManager {
                         try {
                             ins = body.byteStream()
                             val file = File(Environment.getExternalStoragePublicDirectory(DIRECTORY_DOWNLOADS),
-                                    decodeFileName(response.headers()["Content-Disposition"]))
+                                    "$fileName.${splitFileType(response.headers()["Content-Disposition"])}")
                             fos = FileOutputStream(file)
 
                             val bytes = ByteArray(1024)
@@ -68,9 +67,8 @@ object DownloadManager {
                 })
     }
 
-    // todo 后端文件名GBK编码太扯了，啥时候让后端改了
-    private fun decodeFileName(string: String?) = string?.let {
-        java.lang.String(it.substring(it.indexOf("filename=") + 9).toByteArray(StandardCharsets.ISO_8859_1), "GBK") as String
+    private fun splitFileType(string: String?) = string?.let {
+        it.substring(it.indexOf("filename="), it.length).substringAfterLast(".")
     }
 
 }
