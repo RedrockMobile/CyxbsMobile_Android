@@ -20,10 +20,10 @@ object ServiceManager {
     fun <T> getService(serviceClass: Class<T>): T = ARouter.getInstance().navigation(serviceClass)
 
     /**
-     * 通过服务名搜索服务，当同一种类型的服务有多个实现时只能使用该方式获取
+     * 通过Path搜索服务，当同一种类型的服务有多个实现时只能使用该方式获取
      *
-     * @param serviceName 实现类的路由地址
+     * @param servicePath 实现类的路由地址
      */
     @Suppress("UNCHECKED_CAST")
-    fun <T> getService(serviceName: String) = ARouter.getInstance().build(serviceName).navigation() as T
+    fun <T> getService(servicePath: String) = ARouter.getInstance().build(servicePath).navigation() as T
 }

@@ -29,9 +29,6 @@ const val USER_INFO_ENCRYPT_VERSION = 1
 //User信息存储key
 const val SP_KEY_USER_V2 = "cyxbsmobile_user_v2"
 
-@Deprecated(message = "user类结构变动较大，放弃使用该key", replaceWith = ReplaceWith("SP_KEY_USER_V2", "com.mredrock.cyxbs.common.config.SP_KEY_USER_V2"))
-const val SP_KEY_USER = "cyxbsmobile_user"
-
 const val DEFAULT_PREFERENCE_FILENAME = "share_data"
 
 //在课表上没课的地方显示备忘录
