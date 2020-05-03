@@ -53,35 +53,6 @@ object UpdateUtils {
                 })
     }
 
-    /**
-     * 用于TextView展示"已是最新版本"和"发现新版本"
-     * @return true表示已是最新版本
-     */
-    fun isUpdate(activity: AppCompatActivity): Boolean {
-        var isUpdate = true
-        ApiGenerator.getApiService(UpdateApiService::class.java)
-                .getUpdateInfo()
-                .setSchedulers()
-                .safeSubscribeBy(onError = {
-                    ApiGenerator.getApiService(Retrofit.Builder()
-                            .baseUrl("http://hongyan.cqupt.edu.cn")
-                            .addConverterFactory(SimpleXmlConverterFactory.create())
-                            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                            .build(), UpdateApiService::class.java)
-                            .getUpdateInfo()
-                            .setSchedulers()
-                            .safeSubscribeBy(onError = {
-                                it.printStackTrace()
-                            }, onNext = {
-                                isUpdate = it.versionCode <= getAppVersionCode(activity)
-                            })
-
-                }, onNext = {
-                    isUpdate = it.versionCode <= getAppVersionCode(activity)
-                })
-        return isUpdate
-    }
-
     private fun noticeUpdate(activity: AppCompatActivity, it: UpdateInfo) {
         MaterialDialog.Builder(activity)
                 .title("更新")
