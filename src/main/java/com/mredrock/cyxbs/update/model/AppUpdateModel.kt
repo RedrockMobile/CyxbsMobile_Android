@@ -65,8 +65,7 @@ object AppUpdateModel {
      * 更换备用域名尝试更新
      */
     private fun getSecondUpdateRetrofit() = Retrofit.Builder()
-//            .baseUrl("http://hongyan.cqupt.edu.cn")
-            .baseUrl("http://file.hosigus.com")
+            .baseUrl("http://hongyan.cqupt.edu.cn")
             .addConverterFactory(GsonConverterFactory.create())
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .build()
