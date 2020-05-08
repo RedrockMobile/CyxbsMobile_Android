@@ -58,3 +58,6 @@
 [submodule "lib_account"]
 	path = lib_account
 	url = git@github.com:CyxbsMobile-Android-Submodule/lib_account.git
+[submodule "lib_update"]
+	path = lib_update
+	url = git@github.com:CyxbsMobile-Android-Submodule/lib_update.git
