@@ -22,11 +22,12 @@ import com.mredrock.cyxbs.common.event.LoadCourse
 import com.mredrock.cyxbs.common.event.NotifyBottomSheetToExpandEvent
 import com.mredrock.cyxbs.common.event.RefreshQaEvent
 import com.mredrock.cyxbs.common.mark.EventBusLifecycleSubscriber
+import com.mredrock.cyxbs.common.service.ServiceManager
+import com.mredrock.cyxbs.common.service.update.AppUpdateStatus
+import com.mredrock.cyxbs.common.service.update.IAppUpdateService
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
 import com.mredrock.cyxbs.common.utils.extensions.getStatusBarHeight
-import com.mredrock.cyxbs.common.utils.update.UpdateEvent
-import com.mredrock.cyxbs.common.utils.update.UpdateUtils
 import com.mredrock.cyxbs.main.R
 import com.mredrock.cyxbs.main.utils.*
 import com.mredrock.cyxbs.main.viewmodel.MainViewModel
@@ -38,9 +39,8 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.jetbrains.anko.topPadding
 
-
 @Route(path = MAIN_MAIN)
-class MainActivity : BaseViewModelActivity<MainViewModel>() , EventBusLifecycleSubscriber {
+class MainActivity : BaseViewModelActivity<MainViewModel>(), EventBusLifecycleSubscriber {
 
     override val viewModelClass = MainViewModel::class.java
 
@@ -88,10 +88,22 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() , EventBusLifecycleS
     private fun initActivity(bundle: Bundle?) {
         InAppMessageManager.getInstance(BaseApp.context).showCardMessage(this, "课表主页面") {} //友盟插屏消息关闭之后调用，暂未写功能
         viewModel.startPage.observe(this, Observer { starPage -> viewModel.initStartPage(starPage) })
-        UpdateUtils.checkUpdate(this)//检查app是否有更新
+        initUpdate()//初始化app更新服务
         initBottom()//初始化底部导航栏
         initBottomSheetBehavior()//初始化上拉容器BottomSheet课表
         initFragments(bundle)//对四个主要的fragment进行配置
+    }
+
+    private fun initUpdate() {
+        ServiceManager.getService(IAppUpdateService::class.java).apply {
+            getUpdateStatus().observe {
+                when (it) {
+                    AppUpdateStatus.UNCHECK -> checkUpdate()
+                    AppUpdateStatus.DATED -> noticeUpdate(this@MainActivity)
+                    AppUpdateStatus.TO_BE_INSTALLED -> installUpdate(this@MainActivity)
+                }
+            }
+        }
     }
 
     private fun initBottomSheetBehavior() {
@@ -262,11 +274,6 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() , EventBusLifecycleS
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
         bottomHelper.selectTab(savedInstanceState.getInt(NAV_SELECT))
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun installUpdate(event: UpdateEvent) {
-        UpdateUtils.installApk(this, updateFile)
     }
 
     /**
