@@ -148,6 +148,7 @@ walle {
 dependencies {
     implementation project(':lib_common')
     implementation project(':lib_account')
+    implementation project(':lib_update')
     if (!isSingleModuleDebug.toBoolean()) {
         implementation project(':module_main')
         implementation project(':module_course')
