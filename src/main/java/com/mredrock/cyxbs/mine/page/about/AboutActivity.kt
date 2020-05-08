@@ -7,22 +7,19 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import com.mredrock.cyxbs.common.component.CommonDialogFragment
 import com.mredrock.cyxbs.common.config.APP_WEBSITE
-import com.mredrock.cyxbs.common.config.updateFile
-import com.mredrock.cyxbs.common.mark.EventBusLifecycleSubscriber
+import com.mredrock.cyxbs.common.service.ServiceManager
+import com.mredrock.cyxbs.common.service.update.AppUpdateStatus
+import com.mredrock.cyxbs.common.service.update.IAppUpdateService
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.extensions.toast
 import com.mredrock.cyxbs.common.utils.getAppVersionName
-import com.mredrock.cyxbs.common.utils.update.UpdateEvent
-import com.mredrock.cyxbs.common.utils.update.UpdateUtils
 import com.mredrock.cyxbs.mine.R
 import kotlinx.android.synthetic.main.mine_activity_about.*
-import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.ThreadMode
 
 
 class AboutActivity(override val isFragmentActivity: Boolean = false,
                     override val viewModelClass: Class<AboutViewModel> = AboutViewModel::class.java)
-    : BaseViewModelActivity<AboutViewModel>(), EventBusLifecycleSubscriber {
+    : BaseViewModelActivity<AboutViewModel>(){
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,10 +37,9 @@ class AboutActivity(override val isFragmentActivity: Boolean = false,
             viewModel.getFeatureIntroduction(name)
         }
 
-
         setAppVersionName()
 
-        setIsUpdate()
+        bindUpdate()
         mine_about_rl_website.setOnClickListener { clickWebsite() }
         mine_about_legal.setOnClickListener { clickLegal() }
         mine_about_rl_update.setOnClickListener { clickUpdate() }
@@ -75,8 +71,20 @@ class AboutActivity(override val isFragmentActivity: Boolean = false,
     }
 
     private fun clickUpdate() {
-        UpdateUtils.checkUpdate(this) {
-            toast("已经是最新版了哦")
+        selfUpdateCheck = true
+        ServiceManager.getService(IAppUpdateService::class.java).apply {
+            when (getUpdateStatus().value) {
+                AppUpdateStatus.DOWNLOADING -> {
+                    toast("在下了在下了,下拉可以看进度")
+                }
+                AppUpdateStatus.CANCEL -> {
+                    noticeUpdate(this@AboutActivity)
+                }
+                AppUpdateStatus.TO_BE_INSTALLED -> {
+                    installUpdate(this@AboutActivity)
+                }
+                else -> checkUpdate()
+            }
         }
     }
 
@@ -106,19 +114,43 @@ class AboutActivity(override val isFragmentActivity: Boolean = false,
         mine_about_version.text = StringBuilder("Version ").append(getAppVersionName(this@AboutActivity))
     }
 
-    private fun setIsUpdate() {
-        UpdateUtils.checkUpdate(this) {
-            mine_about_tv_already_up_to_date.text = "已是最新版本"
+    private var selfUpdateCheck = false
+    private fun bindUpdate() {
+        ServiceManager.getService(IAppUpdateService::class.java).apply {
+            getUpdateStatus().observe {
+                when (it) {
+                    AppUpdateStatus.UNCHECK -> checkUpdate()
+                    AppUpdateStatus.DATED -> {
+                        mine_about_tv_already_up_to_date.text = "发现新版本"
+                        if (selfUpdateCheck) noticeUpdate(this@AboutActivity)
+                    }
+                    AppUpdateStatus.VALID -> {
+                        mine_about_tv_already_up_to_date.text = "已是最新版本"
+                        if (selfUpdateCheck) toast("已经是最新版了哦")
+                    }
+                    AppUpdateStatus.LATER -> {
+                        mine_about_tv_already_up_to_date.text = "存在被忽略的新版本"
+                    }
+                    AppUpdateStatus.DOWNLOADING -> {
+                        mine_about_tv_already_up_to_date.text = "新版本下载中"
+                    }
+                    AppUpdateStatus.CANCEL -> {
+                        mine_about_tv_already_up_to_date.text = "更新被取消惹"
+                    }
+                    AppUpdateStatus.TO_BE_INSTALLED -> {
+                        mine_about_tv_already_up_to_date.text = ">>点我安装<<"
+                        installUpdate(this@AboutActivity)
+                    }
+                    AppUpdateStatus.ERROR -> {
+                        mine_about_tv_already_up_to_date.text = "建议再试试哟~"
+                        if (selfUpdateCheck) toast("有一股神秘力量阻拦了更新，请稍候重试或尝试反馈")
+                    }
+                }
+            }
         }
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun installUpdate(event: UpdateEvent) {
-        UpdateUtils.installApk(this, updateFile)
-    }
-
     private fun onShareClick() {
-
         val intent = Intent(Intent.ACTION_SEND)
         intent.type = "text/plain"
         intent.putExtra(Intent.EXTRA_TEXT, "掌上重邮是重邮首款校园生活类App，拥有查课表，签到，邮问等功能，记得分享给好友哦。 $APP_WEBSITE")
