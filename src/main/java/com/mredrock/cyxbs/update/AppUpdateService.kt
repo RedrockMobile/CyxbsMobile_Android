@@ -1,0 +1,117 @@
+package com.mredrock.cyxbs.update
+
+import android.Manifest
+import android.annotation.SuppressLint
+import android.content.Context
+import android.content.Intent
+import android.os.Build
+import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.LiveData
+import com.afollestad.materialdialogs.MaterialDialog
+import com.alibaba.android.arouter.facade.annotation.Route
+import com.mredrock.cyxbs.common.config.APP_UPDATE_SERVICE
+import com.mredrock.cyxbs.common.config.updateFile
+import com.mredrock.cyxbs.common.service.update.AppUpdateStatus
+import com.mredrock.cyxbs.common.service.update.IAppUpdateService
+import com.mredrock.cyxbs.common.utils.extensions.toast
+import com.mredrock.cyxbs.common.utils.extensions.uri
+import com.mredrock.cyxbs.update.component.AppUpdateDownloadService
+import com.mredrock.cyxbs.update.component.PackageInstallsFragment
+import com.mredrock.cyxbs.update.model.AppUpdateModel
+import com.tbruyelle.rxpermissions2.RxPermissions
+import io.reactivex.Observable
+import io.reactivex.subjects.PublishSubject
+
+/**
+ * Create By Hosigus at 2020/5/2
+ */
+@Route(path = APP_UPDATE_SERVICE, name = APP_UPDATE_SERVICE)
+internal class AppUpdateService : IAppUpdateService {
+    override fun getUpdateStatus(): LiveData<AppUpdateStatus> = AppUpdateModel.status
+
+    override fun checkUpdate() {
+        AppUpdateModel.checkUpdate()
+    }
+
+    override fun noticeUpdate(activity: AppCompatActivity) {
+        val info = AppUpdateModel.updateInfo ?: return
+        MaterialDialog.Builder(activity)
+                .title("更新")
+                .title("有新版本更新")
+                .content("最新版本:" + info.versionName + "\n" + info.updateContent + "\n点击点击，现在就更新一发吧~")
+                .positiveText("更新")
+                .negativeText("下次吧")
+                .onNegative { dialog, _ ->
+                    dialog.dismiss()
+                    AppUpdateModel.status.value = AppUpdateStatus.LATER
+                }
+                .onPositive { _, _ ->
+                    RxPermissions(activity).request(Manifest.permission.READ_EXTERNAL_STORAGE,
+                            Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                            .subscribe { granted ->
+                                if (granted == true) {
+                                    downloadUpdate(activity)
+                                } else {
+                                    activity.toast("没有赋予权限就不能更新哦")
+                                }
+                            }
+                }
+                .cancelable(false)
+                .show()
+    }
+
+    @SuppressLint("CheckResult")
+    override fun installUpdate(activity: AppCompatActivity) {
+        requestPackageInstallPermissions(activity).subscribe {
+            if (it != true) {
+                return@subscribe
+            }
+            try {
+                activity.startActivity(Intent(Intent.ACTION_VIEW)
+                        .addFlags(if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                            Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_GRANT_READ_URI_PERMISSION
+                        } else {
+                            Intent.FLAG_ACTIVITY_NEW_TASK
+                        })
+                        .setDataAndType(updateFile.uri, "application/vnd.android.package-archive"))
+            } catch (e: Exception) {
+                e.printStackTrace()
+                AppUpdateModel.status.value = AppUpdateStatus.ERROR
+            }
+        }
+    }
+
+    override fun init(context: Context) {}
+
+    private fun downloadUpdate(activity: AppCompatActivity) {
+        AppUpdateModel.status.value = AppUpdateStatus.DOWNLOADING
+        activity.startService(
+                Intent(activity, AppUpdateDownloadService::class.java)
+                        .putExtra("url", AppUpdateModel.updateInfo?.apkUrl ?: return))
+    }
+
+    private fun requestPackageInstallPermissions(activity: AppCompatActivity): Observable<Boolean> {
+        var fragment: PackageInstallsFragment?
+        if (activity.isFinishing) {
+            return Observable.just(false)
+        }
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O || activity.packageManager.canRequestPackageInstalls()) {
+            return Observable.just(true)
+        }
+
+        val fm = activity.supportFragmentManager
+        fragment = fm.findFragmentByTag(PackageInstallsFragment.TAG) as PackageInstallsFragment?
+        if (fragment == null) {
+            fragment = PackageInstallsFragment()
+            fm.beginTransaction()
+                    .add(fragment, PackageInstallsFragment.TAG)
+                    .commitNow()
+        }
+        if (!fragment.requesting) {
+            fragment.sub = PublishSubject.create()
+        }
+        fragment.requestPermissions()
+
+        return fragment.sub ?: Observable.just(false)
+    }
+}
