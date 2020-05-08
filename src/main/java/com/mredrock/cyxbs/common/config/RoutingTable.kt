@@ -59,3 +59,6 @@ const val FRESHMAN_ENTRY = "/freshman/entry"
 
 //账号服务
 const val ACCOUNT_SERVICE = "/account/service"
+
+// 更新服务
+const val APP_UPDATE_SERVICE = "/update/service"

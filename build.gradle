@@ -55,11 +55,15 @@ dependencies {
     api deps.rxjava.rxkotlin
     api deps.gson.runtime
 
-    api('com.squareup.retrofit2:converter-simplexml:2.7.2') {
-        exclude group: 'xpp3', module: 'xpp3'
-        exclude group: 'stax', module: 'stax-api'
-        exclude group: 'stax', module: 'stax'
-    }
+    // 由于更新的接口统一成json了，新版本就不需要这个依赖了
+    // 如果以后需要xml依赖(深思)
+    // 官方已经弃用SimpleXML改用JAXB了，建议跟上
+    // https://github.com/square/retrofit/tree/master/retrofit-converters/jaxb
+//    api('com.squareup.retrofit2:converter-simplexml:2.7.2') {
+//        exclude group: 'xpp3', module: 'xpp3'
+//        exclude group: 'stax', module: 'stax-api'
+//        exclude group: 'stax', module: 'stax'
+//    }
 
     //architecture
     api deps.lifecycle.extensions

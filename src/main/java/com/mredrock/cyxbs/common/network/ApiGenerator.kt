@@ -2,7 +2,6 @@ package com.mredrock.cyxbs.common.network
 
 import com.mredrock.cyxbs.common.BuildConfig
 import com.mredrock.cyxbs.common.config.END_POINT_REDROCK
-import com.mredrock.cyxbs.common.network.converter.QualifiedTypeConverterFactory
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.service.account.IAccountService
 import com.mredrock.cyxbs.common.service.account.IUserStateService
@@ -13,7 +12,6 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.converter.simplexml.SimpleXmlConverterFactory
 import java.util.concurrent.TimeUnit
 
 /**
@@ -47,7 +45,7 @@ object ApiGenerator {
         retrofit = Retrofit.Builder()
                 .baseUrl(END_POINT_REDROCK)
                 .client(okHttpClient)
-                .addConverterFactory(QualifiedTypeConverterFactory(GsonConverterFactory.create(), SimpleXmlConverterFactory.create()))
+                .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .build()
         commonRetrofit = commonApiService()
@@ -118,7 +116,7 @@ object ApiGenerator {
                         addInterceptor(logging)
                     }
                 }.build())
-                .addConverterFactory(QualifiedTypeConverterFactory(GsonConverterFactory.create(), SimpleXmlConverterFactory.create()))
+                .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .build()
     }

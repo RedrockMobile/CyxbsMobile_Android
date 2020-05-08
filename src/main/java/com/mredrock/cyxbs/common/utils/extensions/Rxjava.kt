@@ -10,6 +10,7 @@ import com.mredrock.cyxbs.common.network.exception.RedrockApiIllegalStateExcepti
 import io.reactivex.Observable
 import io.reactivex.Scheduler
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.annotations.CheckReturnValue
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 
@@ -20,6 +21,7 @@ import io.reactivex.schedulers.Schedulers
 /**
  * note：请放在有UI操作的操作符前（map等操作符后）, 否则将抛出异常，原因：{@see <a href="https://www.jianshu.com/p/3e5d53e891db"/>}
  */
+@CheckReturnValue
 fun <T> Observable<T>.setSchedulers(
         subscribeOn: Scheduler = Schedulers.io(),
         unsubscribeOn: Scheduler = Schedulers.io(),
