@@ -4,7 +4,6 @@ import android.content.Context
 import android.os.Environment
 import com.mredrock.cyxbs.common.BuildConfig
 import com.mredrock.cyxbs.common.network.ApiGenerator
-import com.mredrock.cyxbs.common.network.converter.QualifiedTypeConverterFactory
 import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
 import com.mredrock.cyxbs.common.utils.extensions.editor
@@ -17,7 +16,6 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.converter.simplexml.SimpleXmlConverterFactory
 import java.io.*
 import java.util.concurrent.TimeUnit
 
@@ -36,7 +34,7 @@ class MapStyleHelper(val context: Context) {
                 }
             }.build())
             .baseUrl("http://api-234.redrock.team")
-            .addConverterFactory(QualifiedTypeConverterFactory(GsonConverterFactory.create(), SimpleXmlConverterFactory.create()))
+            .addConverterFactory(GsonConverterFactory.create())
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .build() }
     fun saveMapStyle(callback: () -> Unit){
