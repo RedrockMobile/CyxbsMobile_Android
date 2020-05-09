@@ -24,6 +24,7 @@ import com.mredrock.cyxbs.common.config.*
 import com.mredrock.cyxbs.common.event.CurrentDateInformationEvent
 import com.mredrock.cyxbs.common.mark.EventBusLifecycleSubscriber
 import com.mredrock.cyxbs.common.ui.BaseViewModelFragment
+import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.discover.R
 import com.mredrock.cyxbs.discover.utils.BannerAdapter
 import com.mredrock.cyxbs.discover.utils.MoreFunctionProvider
@@ -80,7 +81,9 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>(), Eve
             }
         })
         viewModel.viewPagerInfos.observe {
+            LogUtils.d("MyTag","context ")
             if (it != null && context != null) {
+                LogUtils.d("MyTag","context is not null")
                 vp_discover_home?.adapter = BannerAdapter(context!!, it, vp_discover_home)
             }
         }
