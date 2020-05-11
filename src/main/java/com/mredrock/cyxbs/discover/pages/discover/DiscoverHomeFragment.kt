@@ -81,9 +81,7 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>(), Eve
             }
         })
         viewModel.viewPagerInfos.observe {
-            LogUtils.d("MyTag","context ")
             if (it != null && context != null) {
-                LogUtils.d("MyTag","context is not null")
                 vp_discover_home?.adapter = BannerAdapter(context!!, it, vp_discover_home)
             }
         }
