@@ -13,6 +13,6 @@ import retrofit2.http.POST
  */
 interface ApiService {
     @FormUrlEncoded
-    @POST("/MagicLoop/index.php?s=/addon/ElectricityQuery/ElectricityQuery/queryElecByRoom")
+    @POST("/wxapi/magipoke-elecquery/getElectric")
     fun getElectricityInfo(@Field("building") building: String, @Field("room") room: String): Observable<ElectricityInfo>
 }
