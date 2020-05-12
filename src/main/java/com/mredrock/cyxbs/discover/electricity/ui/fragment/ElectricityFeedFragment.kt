@@ -23,7 +23,7 @@ class ElectricityFeedFragment : BaseFeedFragment<ChargeViewModel>() {
         init()
     }
 
-    private fun init(){
+    private fun init() {
         setAdapter(ElectricityFeedUnboundAdapter())
         setTitle("电费查询")
         setOnClickListener {
@@ -37,9 +37,9 @@ class ElectricityFeedFragment : BaseFeedFragment<ChargeViewModel>() {
         viewModel.chargeInfo.observe {
             it?.let {
                 val adapter = getAdapter()
-                if(adapter is ElectricityFeedAdapter){
+                if (adapter is ElectricityFeedAdapter) {
                     adapter.refresh(it)
-                } else{
+                } else {
                     setAdapter(ElectricityFeedAdapter(it))
                 }
                 setSubtitle(it.recordTime.plus("抄表"))

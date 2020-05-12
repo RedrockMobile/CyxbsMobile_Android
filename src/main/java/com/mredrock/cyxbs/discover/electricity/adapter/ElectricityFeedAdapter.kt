@@ -23,15 +23,14 @@ class ElectricityFeedAdapter(private val elecInf: ElecInf) : BaseFeedFragment.Ad
     fun refresh(elecInf: ElecInf){
         val context = view?.context
         context?:return
-        if (elecInf.elecCost.size > 1) {
-            view?.tv_electricity_feed_fee?.text = SpannableStringBuilder(elecInf.getEleCost().plus("元")).apply {
+        if (elecInf.getAverage().length > 1) {
+            view?.tv_electricity_feed_fee?.text = SpannableStringBuilder(elecInf.getAverage().plus("元")).apply {
                 setSpan(AbsoluteSizeSpan(context.sp(36)), 0, this.length - 1, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
                 setSpan(AbsoluteSizeSpan(context.sp(13)), this.length - 1, this.length, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
             }
         }
-        var spend = "0"
         //elecSpend可能为空
-        if(elecInf.elecSpend != null)spend = elecInf.elecSpend
+        val spend = elecInf.elecSpend?:"0"
         view?.tv_electricity_feed_kilowatt?.text = SpannableStringBuilder(spend.plus("度")).apply {
             setSpan(AbsoluteSizeSpan(context.sp(36)), 0, this.length - 1, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
             setSpan(AbsoluteSizeSpan(context.sp(13)), this.length - 1, this.length, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
