@@ -30,12 +30,12 @@ public class JToolbar extends Toolbar {
     private boolean withSplitLine = true;
     private Paint paint = new Paint();
 
-
     @SuppressLint("ResourceAsColor")
     public JToolbar(Context context) {
         super(context);
         paint.setColor(R.color.commonDefaultDivideLineColor);
         paint.setAlpha(25);
+        paint.setStrokeWidth(ContextKt.dp2px(context, 1));
     }
 
     @SuppressLint("ResourceAsColor")
@@ -43,6 +43,7 @@ public class JToolbar extends Toolbar {
         super(context, attrs);
         paint.setColor(R.color.commonDefaultDivideLineColor);
         paint.setAlpha(25);
+        paint.setStrokeWidth(ContextKt.dp2px(context, 1));
     }
 
     @SuppressLint("ResourceAsColor")
@@ -50,6 +51,7 @@ public class JToolbar extends Toolbar {
         super(context, attrs, defStyleAttr);
         paint.setColor(R.color.commonDefaultDivideLineColor);
         paint.setAlpha(25);
+        paint.setStrokeWidth(ContextKt.dp2px(context, 1));
     }
 
     @Override
@@ -117,7 +119,7 @@ public class JToolbar extends Toolbar {
         //为什么这个screenWidth绘制不满一个屏幕的宽度？？？
 
         if (withSplitLine)
-            canvas.drawLine(0, getMeasuredHeight() - ContextKt.dp2px(getContext(), 1), 2 * ContextKt.getScreenWidth(getContext()), getMeasuredHeight() - ContextKt.dp2px(getContext(), 1), paint);
+            canvas.drawLine(0, getMeasuredHeight() - ContextKt.dp2px(getContext(), 0.5f), 2 * ContextKt.getScreenWidth(getContext()), getMeasuredHeight() - ContextKt.dp2px(getContext(), 0.5f), paint);
     }
 
     private void reLayoutTitleToLeft(TextView title) {
