@@ -54,7 +54,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="36dp"
         android:alpha="0"
-        android:background="@drawable/mine_shape_round_corner_brown"
+        android:background="@drawable/mine_shape_round_corner_brown_ripple"
         android:paddingStart="10dp"
         android:paddingTop="5dp"
         android:paddingEnd="10dp"
