@@ -40,7 +40,6 @@ import kotlinx.android.synthetic.main.course_load_lottie_anim.view.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import org.jetbrains.anko.support.v4.runOnUiThread
 import java.util.*
 
 /**
@@ -457,9 +456,7 @@ class CourseContainerEntryFragment : BaseViewModelFragment<CoursesViewModel>(), 
 
     override fun onStateChanged(state: IUserStateService.UserState) {
         if (state == IUserStateService.UserState.LOGIN) {
-            runOnUiThread {
-                initFragment()
-            }
+            initFragment()
         } else {
             Thread {
                 ViewModelProvider(this).get(CoursesViewModel::class.java).clearCache()
