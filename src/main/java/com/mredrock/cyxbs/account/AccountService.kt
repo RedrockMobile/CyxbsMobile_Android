@@ -21,6 +21,7 @@ import com.mredrock.cyxbs.common.service.account.*
 import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
 import com.mredrock.cyxbs.common.utils.extensions.editor
 import com.mredrock.cyxbs.common.utils.extensions.takeIfNoException
+import org.jetbrains.anko.runOnUiThread
 import retrofit2.HttpException
 
 /**
@@ -163,7 +164,9 @@ internal class AccountService : IAccountService {
                 isLogin() -> IUserStateService.UserState.LOGIN
                 else -> IUserStateService.UserState.NOT_LOGIN
             }
-            notifyAllStateListeners(state)
+            context.runOnUiThread {
+                notifyAllStateListeners(state)
+            }
         }
 
         override fun refresh(onError: () -> Unit, action: (token: String) -> Unit) {
@@ -175,7 +178,9 @@ internal class AccountService : IAccountService {
             }
             response.body()?.data?.let { data ->
                 bind(data)
-                notifyAllStateListeners(IUserStateService.UserState.LOGIN)
+                mContext.runOnUiThread {
+                    notifyAllStateListeners(IUserStateService.UserState.LOGIN)
+                }
                 mContext.defaultSharedPreferences.editor {
                     putString(SP_KEY_USER_V2, mUserInfoEncryption.encrypt(Gson().toJson(data)))
                 }
@@ -212,7 +217,9 @@ internal class AccountService : IAccountService {
             //该字段涉及到Java的反射，kotlin的机制无法完全保证不为空，需要判断一下
             if (apiWrapper?.data != null) {
                 bind(apiWrapper.data)
-                notifyAllStateListeners(IUserStateService.UserState.LOGIN)
+                mContext.runOnUiThread {
+                    notifyAllStateListeners(IUserStateService.UserState.LOGIN)
+                }
                 context.defaultSharedPreferences.editor {
                     putString(SP_KEY_USER_V2, mUserInfoEncryption.encrypt(Gson().toJson(apiWrapper.data)))
                 }
@@ -229,7 +236,9 @@ internal class AccountService : IAccountService {
             }
             user = null
             tokenWrapper = null
-            notifyAllStateListeners(IUserStateService.UserState.NOT_LOGIN)
+            mContext.runOnUiThread {
+                notifyAllStateListeners(IUserStateService.UserState.NOT_LOGIN)
+            }
         }
     }
 
