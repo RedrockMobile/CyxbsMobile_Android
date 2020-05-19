@@ -1,6 +1,7 @@
 package com.mredrock.cyxbs.discover.othercourse.pages.stusearch
 
 import android.os.Bundle
+import android.text.Editable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -46,6 +47,7 @@ class OtherCourseSearchFragment(private val type: Int) : BaseViewModelFragment<O
             if (it.isNotEmpty()) {
                 lastSearch?.let { text ->
                     viewModel.addHistory(History(text))
+
                 }
                 context?.startActivity<StuListActivity>("stu_list" to it)
             } else {
@@ -55,15 +57,15 @@ class OtherCourseSearchFragment(private val type: Int) : BaseViewModelFragment<O
     }
 
     private fun setSearch() {
-        discover_other_course_edit_search.setOnEditorActionListener { v, actionId, event ->
-            val text = discover_other_course_edit_search.text.toString()
+        et_discover_other_course_search.setOnEditorActionListener { v, actionId, event ->
+            val text = et_discover_other_course_search.text.toString()
             if (text.isEmpty()) {
                 snackbar("输入为空")
                 return@setOnEditorActionListener false
             } else {
                 viewModel.getPerson(text)
                 lastSearch = text
-
+                et_discover_other_course_search.setText("")
                 return@setOnEditorActionListener true
             }
         }

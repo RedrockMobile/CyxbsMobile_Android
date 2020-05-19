@@ -11,5 +11,5 @@ interface HistoryDao {
     fun insertHistory(history: History)
 
     @Query("SELECT * FROM History WHERE Type = :type ORDER BY historyId DESC LIMIT 0,:limit")
-    fun getHistory(type: Int, limit: Int = 15): Flowable<List<History>>
+    fun getHistory(type: Int, limit: Int = 15): Flowable<MutableList<History>>
 }

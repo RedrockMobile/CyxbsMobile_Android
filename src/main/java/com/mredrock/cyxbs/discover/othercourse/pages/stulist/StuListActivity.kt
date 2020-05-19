@@ -26,7 +26,7 @@ class StuListActivity : BaseActivity() {
         mDataBinding.stuListActivity = this
         bottomSheetBehavior = BottomSheetBehavior.from(course_bottom_sheet_content)
         val mStuList = intent.getSerializableExtra("stu_list") as List<Person>
-        if(mStuList.size>1){
+        if(mStuList.isNotEmpty()){
             if(mStuList[0].type == STUDENT_TYPE){
                 title.set("同学课表")
             }else{
