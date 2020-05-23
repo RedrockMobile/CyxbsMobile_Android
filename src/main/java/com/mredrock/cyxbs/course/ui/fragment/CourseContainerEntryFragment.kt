@@ -157,6 +157,8 @@ class CourseContainerEntryFragment : BaseViewModelFragment<CoursesViewModel>(), 
         //如果没有被添加进Activity，Fragment会抛出not attach a context的错误
         if (!isAdded) return
 
+        fl.setOnTouchListener { _, _ -> true }//处理所有未处理的点击事件，防止穿透点击或者滑动
+
         //获取从其他模块传来的数据
         arguments?.let { bundle ->
             mStuNum = bundle.getString(OTHERS_STU_NUM)
