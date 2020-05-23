@@ -24,10 +24,6 @@ class EditViewModel : BaseViewModel() {
         ServiceManager.getService(IAccountService::class.java).getUserService()
     }
 
-    private val userEditService: IUserEditorService by lazy {
-        ServiceManager.getService(IAccountService::class.java).getUserEditorService()
-    }
-
     val updateInfoEvent = MutableLiveData<Boolean>()
     val upLoadImageEvent = MutableLiveData<Boolean>()
 
@@ -41,6 +37,8 @@ class EditViewModel : BaseViewModel() {
                 .observeOn(Schedulers.io())
                 .map {
                     //setInfo请求后，本地数据需要调用refresh接口刷新并保存即时的用户信息到sp
+                    //userEditorService并没有将数据保存到文件，故退出app数据就消失了
+                    //UserEditorService没有用，不要使用，如果需要更新用户信息的话，上传相关数据到后端然后调用UserStateService的refresh()即可
                     ServiceManager.getService(IAccountService::class.java).getVerifyService().refresh(
                             onError = {
                                 updateInfoEvent.postValue(false)
@@ -62,14 +60,27 @@ class EditViewModel : BaseViewModel() {
         apiService.uploadSocialImg(requestBody, file)
                 .mapOrThrowApiException()
                 .flatMap {
-                    userEditService.apply {
-                        setAvatarImgUrl(it.photosrc)
-                    }
                     apiService.updateUserImage(it.thumbnail_src, it.photosrc)
                 }
                 .normalStatus(this)
-                .safeSubscribeBy(onError = { upLoadImageEvent.value = false }
-                        , onNext = { upLoadImageEvent.value = true })
+                .observeOn(Schedulers.io())
+                .map {
+                    //setInfo请求后，本地数据需要调用refresh接口刷新并保存即时的用户信息到sp
+                    //userEditorService并没有将数据保存到文件，故退出app数据就消失了
+                    //UserEditorService没有用，不要使用，如果需要更新用户信息的话，上传相关数据到后端然后调用UserStateService的refresh()即可
+                    ServiceManager.getService(IAccountService::class.java).getVerifyService().refresh(
+                            onError = {
+                                upLoadImageEvent.postValue(false)
+                            },
+                            action = { s: String ->
+                                upLoadImageEvent.postValue(true)
+                            }
+                    )
+                    it
+                }
+                .observeOn(AndroidSchedulers.mainThread())
+                .safeSubscribeBy(
+                )
                 .lifeCycle()
     }
 }
