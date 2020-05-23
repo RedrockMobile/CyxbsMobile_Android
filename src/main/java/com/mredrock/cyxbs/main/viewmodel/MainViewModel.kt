@@ -1,5 +1,7 @@
 package com.mredrock.cyxbs.main.viewmodel
 
+import android.view.View
+import androidx.databinding.ObservableField
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.mredrock.cyxbs.common.BaseApp.Companion.context
@@ -22,6 +24,8 @@ import java.util.*
 class MainViewModel : BaseViewModel() {
 
     val startPage: LiveData<StartPage?> = MutableLiveData()
+
+    val splashVisibility = ObservableField(View.GONE)
 
     //进入app是否直接显示课表
     var isCourseDirectShow = false

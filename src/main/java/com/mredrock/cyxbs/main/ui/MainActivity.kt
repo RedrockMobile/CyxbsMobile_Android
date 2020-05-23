@@ -3,16 +3,12 @@
 package com.mredrock.cyxbs.main.ui
 
 import android.os.Bundle
-import android.os.CountDownTimer
 import android.view.View
-import android.view.View.GONE
 import android.widget.FrameLayout
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import com.alibaba.android.arouter.facade.annotation.Route
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.bumptech.glide.request.RequestOptions
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.bean.LoginConfig
@@ -29,11 +25,15 @@ import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
 import com.mredrock.cyxbs.common.utils.extensions.getStatusBarHeight
 import com.mredrock.cyxbs.main.R
-import com.mredrock.cyxbs.main.utils.*
+import com.mredrock.cyxbs.main.databinding.MainActivityMainBinding
+import com.mredrock.cyxbs.main.utils.BottomNavigationHelper
+import com.mredrock.cyxbs.main.utils.entryContains
+import com.mredrock.cyxbs.main.utils.getFragment
+import com.mredrock.cyxbs.main.utils.isDownloadSplash
 import com.mredrock.cyxbs.main.viewmodel.MainViewModel
 import com.umeng.message.inapp.InAppMessageManager
 import kotlinx.android.synthetic.main.main_activity_main.*
-import kotlinx.android.synthetic.main.main_view_stub_splash.view.*
+import kotlinx.android.synthetic.main.main_bottom_nav.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -73,12 +73,10 @@ class MainActivity : BaseViewModelActivity<MainViewModel>(), EventBusLifecycleSu
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(R.style.MainActivityTheme)//恢复真正的主题，保证WindowBackground为主题色
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.main_activity_main)
-        //检查闪屏页是否需要显示，闪屏页现在业务逻辑相对简单，为了减少启动时不必要的开销，暂时放到这里
-        //后期，跳转逻辑复杂的话可以考虑将闪屏页独立成Activity
+        DataBindingUtil.setContentView<MainActivityMainBinding>(this, R.layout.main_activity_main).apply {
+            mainViewModel = viewModel
+        }
         checkSplash()
-        //检查是否登录，虽然BaseActivity里面也有登录检查，
-        //但是这里因为涉及到闪屏页的部分逻辑，不得不放弃BaseActivity的登录检查
         initActivity(savedInstanceState)//Activity相关初始化
     }
 
@@ -172,27 +170,11 @@ class MainActivity : BaseViewModelActivity<MainViewModel>(), EventBusLifecycleSu
 
 
     private fun checkSplash() {
-        //判断是否下载了Splash图，下载了就直接设置
+        //判断是否下载了Splash图，下载了就直接显示
         if (isDownloadSplash(this@MainActivity)) {
-            val inflate = main_activity_splash_viewStub.inflate()
-            Glide.with(this)
-                    .load(getSplashFile(this@MainActivity))
-                    .apply(RequestOptions().centerCrop().diskCacheStrategy(DiskCacheStrategy.NONE))
-                    .into(inflate.splash_view)
-            object : CountDownTimer(3000, 1000) {
-                override fun onFinish() {
-                    inflate.visibility = GONE
-                }
-                override fun onTick(millisUntilFinished: Long) {
-                    runOnUiThread {
-                        val str = "跳过 ${millisUntilFinished / 1000}"
-                        inflate.main_activity_splash_skip.text = str
-                    }
-                }
-            }.start()
-            inflate.main_activity_splash_skip.setOnClickListener {
-                inflate.visibility = GONE
-            }
+            main_activity_splash_viewStub.setOnTouchListener { _, _ -> true }//防止穿透点击
+            viewModel.splashVisibility.set(View.VISIBLE)//显示闪屏页容器
+            supportFragmentManager.beginTransaction().replace(R.id.main_activity_splash_viewStub, SplashFragment()).commit()
         }
         //检查网络有没有闪屏页，有的话下载，下次显示
         viewModel.getStartPage()
@@ -220,7 +202,6 @@ class MainActivity : BaseViewModelActivity<MainViewModel>(), EventBusLifecycleSu
                 show(courseFragment)
                 commit()
             }
-            bottomHelper.selectTab(0)
         } else {
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
             //加载课表并给课表传递值，让它不要直接加载详细的课表，只用加载现在可见的头部就好
@@ -232,9 +213,9 @@ class MainActivity : BaseViewModelActivity<MainViewModel>(), EventBusLifecycleSu
                 show(courseFragment)
                 commit()
             }
-            //加载发现
-            bottomHelper.selectTab(0)
         }
+        //加载发现
+        bottomHelper.selectTab(0)
     }
 
 

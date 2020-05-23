@@ -7,14 +7,13 @@
     </style>
     <!--    真正MainActivity的主题，如果需要对MainActivity主题进行定制，请写在下面-->
     <style name="MainActivityTheme" parent="SplashTheme">
-        <!--        切记不要将这个设置为空来优化UI绘制-->
+        <!-- 切记不要将这个设置为空来优化UI绘制,否则某些activity动画会透视到桌面，
+                但是应该除了main其他的activity都可以去掉这个置为@null-->
         <item name="android:windowBackground">@drawable/main_main_activity_window_backgroud</item>
     </style>
-
 
     <style name="LoginTextInputStyle" parent="AppTheme" tools:ignore="ResourceName">
         <item name="colorAccent">@color/levelTwoFontColor</item>
     </style>
-
 
 </resources>
