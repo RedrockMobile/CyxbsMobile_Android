@@ -5,7 +5,7 @@ import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.main.ui.MainActivity
 
 /**
- * @author  Jon
+ * @author  Jovines
  * @date  2020/4/8 23:37
  * description：用于辅助ManActivity进行一些异常重启的恢复操作的函数
  */

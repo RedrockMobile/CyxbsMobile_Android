@@ -19,6 +19,7 @@ import com.mredrock.cyxbs.common.event.NotifyBottomSheetToExpandEvent
 import com.mredrock.cyxbs.common.event.RefreshQaEvent
 import com.mredrock.cyxbs.common.mark.EventBusLifecycleSubscriber
 import com.mredrock.cyxbs.common.service.ServiceManager
+import com.mredrock.cyxbs.common.service.main.IMainService
 import com.mredrock.cyxbs.common.service.update.AppUpdateStatus
 import com.mredrock.cyxbs.common.service.update.IAppUpdateService
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
@@ -26,6 +27,7 @@ import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
 import com.mredrock.cyxbs.common.utils.extensions.getStatusBarHeight
 import com.mredrock.cyxbs.main.R
 import com.mredrock.cyxbs.main.databinding.MainActivityMainBinding
+import com.mredrock.cyxbs.main.service.MainService
 import com.mredrock.cyxbs.main.utils.BottomNavigationHelper
 import com.mredrock.cyxbs.main.utils.entryContains
 import com.mredrock.cyxbs.main.utils.getFragment
@@ -47,6 +49,9 @@ class MainActivity : BaseViewModelActivity<MainViewModel>(), EventBusLifecycleSu
     override val isFragmentActivity = true
 
     override val loginConfig = LoginConfig(isWarnUser = false)
+
+    private lateinit var mainService: IMainService
+
 
     /**
      * 这个变量切记千万不能搬到viewModel,这个变量需要跟activity同生共死
@@ -85,6 +90,7 @@ class MainActivity : BaseViewModelActivity<MainViewModel>(), EventBusLifecycleSu
      */
     private fun initActivity(bundle: Bundle?) {
         InAppMessageManager.getInstance(BaseApp.context).showCardMessage(this, "课表主页面") {} //友盟插屏消息关闭之后调用，暂未写功能
+        mainService = ServiceManager.getService(IMainService::class.java)//初始化主模块服务
         viewModel.startPage.observe(this, Observer { starPage -> viewModel.initStartPage(starPage) })
         initUpdate()//初始化app更新服务
         initBottom()//初始化底部导航栏
@@ -116,7 +122,7 @@ class MainActivity : BaseViewModelActivity<MainViewModel>(), EventBusLifecycleSu
         bottomSheetBehavior.peekHeight = bottomSheetBehavior.peekHeight + course_bottom_sheet_content.topPadding
         bottomSheetBehavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
             override fun onSlide(bottomSheet: View, slideOffset: Float) {
-                EventBus.getDefault().post(BottomSheetStateEvent(slideOffset))
+                mainService.obtainBottomSheetStateLiveData().value = slideOffset
                 ll_nav_main_container.translationY = ll_nav_main_container.height * slideOffset
             }
 
@@ -148,13 +154,16 @@ class MainActivity : BaseViewModelActivity<MainViewModel>(), EventBusLifecycleSu
 
     private fun initBottom() {
         //底部导航栏的控制初始化
-        bottomHelper = BottomNavigationHelper(arrayOf(explore, qa, mine), arrayOf(
-                R.drawable.main_ic_explore_selected,
-                R.drawable.main_ic_qa_selected,
-                R.drawable.main_ic_mine_selected), arrayOf(
-                R.drawable.main_ic_explore_unselected,
-                R.drawable.main_ic_qa_unselected,
-                R.drawable.main_ic_mine_unselected))
+        bottomHelper = BottomNavigationHelper(
+                arrayOf(explore, qa, mine),
+                arrayOf(
+                        R.drawable.main_ic_explore_selected,
+                        R.drawable.main_ic_qa_selected,
+                        R.drawable.main_ic_mine_selected),
+                arrayOf(
+                        R.drawable.main_ic_explore_unselected,
+                        R.drawable.main_ic_qa_unselected,
+                        R.drawable.main_ic_mine_unselected))
         {
             when (it) {
                 0 -> changeFragment(discoverFragment)
@@ -169,6 +178,9 @@ class MainActivity : BaseViewModelActivity<MainViewModel>(), EventBusLifecycleSu
     }
 
 
+    /**
+     * 检查闪屏页状态
+     */
     private fun checkSplash() {
         //判断是否下载了Splash图，下载了就直接显示
         if (isDownloadSplash(this@MainActivity)) {

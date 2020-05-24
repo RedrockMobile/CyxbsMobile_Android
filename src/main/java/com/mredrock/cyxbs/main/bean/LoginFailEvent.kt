@@ -1,7 +1,7 @@
 package com.mredrock.cyxbs.main.bean
 
 /**
- * @author jon
+ * @author Jovines
  * @create 2020-02-13 3:45 PM
  *
  * 描述:

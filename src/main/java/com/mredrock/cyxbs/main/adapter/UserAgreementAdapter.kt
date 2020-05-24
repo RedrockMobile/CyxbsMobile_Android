@@ -11,7 +11,7 @@ import com.mredrock.cyxbs.main.R
 import kotlinx.android.synthetic.main.main_recycle_item_user_agreement.view.*
 
 /**
- * @author jon
+ * @author Jovines
  * @create 2020-04-12 6:05 PM
  *
  * 描述:用户协议的adapter
