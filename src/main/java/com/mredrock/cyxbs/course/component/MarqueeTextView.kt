@@ -5,7 +5,7 @@ import android.util.AttributeSet
 import androidx.appcompat.widget.AppCompatTextView
 
 /**
- * @author jon
+ * @author Jovines
  * @create 2020-02-04 7:35 PM
  *
  *

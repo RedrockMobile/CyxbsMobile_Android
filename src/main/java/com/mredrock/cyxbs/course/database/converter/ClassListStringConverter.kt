@@ -3,7 +3,7 @@ package com.mredrock.cyxbs.course.database.converter
 import androidx.room.TypeConverter
 
 /**
- * @author jon
+ * @author Jovines
  * @create 2020-02-11 5:55 PM
  *
  * 描述:

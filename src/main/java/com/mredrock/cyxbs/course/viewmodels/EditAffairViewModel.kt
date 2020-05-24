@@ -18,6 +18,7 @@ import com.mredrock.cyxbs.course.network.Course
 import com.mredrock.cyxbs.course.network.CourseApiService
 import com.mredrock.cyxbs.course.rxjava.ExecuteOnceObserver
 import com.mredrock.cyxbs.course.ui.activity.AffairEditActivity
+import com.mredrock.cyxbs.course.utils.affairFilter
 import org.greenrobot.eventbus.EventBus
 
 /**
@@ -132,17 +133,14 @@ class EditAffairViewModel : BaseViewModel() {
             mCourseApiService.addAffair(id, date, postRemind, title, content)
                     .setSchedulers()
                     .errorHandler()
+                    .affairFilter()
                     .subscribe(ExecuteOnceObserver(onExecuteOnceNext = {
                         it.apply {
-                            if (info == "success" && status == 200) {
-                                //这里没有直接使用BaseViewModel里面的toastEvent
-                                //因为在弹出时有可能toastEvent中持有的context已经回收，会出现无法弹出的情况
-                                CyxbsToast.makeText(context, R.string.course_add_transaction_as_a_reminder, Toast.LENGTH_SHORT).show()
-                                // 更新课表
-                                EventBus.getDefault().post(AddAffairEvent())
-                            } else {
-                                CyxbsToast.makeText(context, R.string.course_add_transaction, Toast.LENGTH_SHORT).show()
-                            }
+                            //这里没有直接使用BaseViewModel里面的toastEvent
+                            //因为在弹出时有可能toastEvent中持有的context已经回收，会出现无法弹出的情况
+                            CyxbsToast.makeText(context, R.string.course_add_transaction_as_a_reminder, Toast.LENGTH_SHORT).show()
+                            // 更新课表
+                            EventBus.getDefault().post(AddAffairEvent())
                         }
                     }))
         } else {
@@ -150,15 +148,12 @@ class EditAffairViewModel : BaseViewModel() {
                     postRemind, title, content)
                     .setSchedulers()
                     .errorHandler()
+                    .affairFilter()
                     .subscribe(ExecuteOnceObserver(onExecuteOnceNext = {
                         it.apply {
-                            if (info == "success" && status == 200) {
-                                // 更新课表
-                                CyxbsToast.makeText(context, R.string.course_modify_transaction_successful, Toast.LENGTH_SHORT).show()
-                                EventBus.getDefault().post(ModifyAffairEvent())
-                            } else {
-                                CyxbsToast.makeText(context, R.string.course_network_error_modification_failed, Toast.LENGTH_SHORT).show()
-                            }
+                            // 更新课表
+                            CyxbsToast.makeText(context, R.string.course_modify_transaction_successful, Toast.LENGTH_SHORT).show()
+                            EventBus.getDefault().post(ModifyAffairEvent())
                         }
                     }))
         }

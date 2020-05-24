@@ -7,7 +7,7 @@ import com.mredrock.cyxbs.course.component.WeekSelectDialog
 import kotlinx.android.synthetic.main.course_week_selected_item_auto_warp.view.*
 
 /**
- * @author jon
+ * @author Jovines
  * @create 2020-01-23 1:53 PM
  *
  * 描述:

@@ -7,7 +7,7 @@ import com.mredrock.cyxbs.course.component.TimeSelectDialog
 import kotlinx.android.synthetic.main.course_time_select_auto_warp_item.view.*
 
 /**
- * @author jon
+ * @author Jovines
  * @create 2020-01-24 10:34 AM
  *
  * 描述:

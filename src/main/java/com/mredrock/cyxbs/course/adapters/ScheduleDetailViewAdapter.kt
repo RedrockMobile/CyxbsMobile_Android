@@ -25,6 +25,7 @@ import com.mredrock.cyxbs.course.network.CourseApiService
 import com.mredrock.cyxbs.course.rxjava.ExecuteOnceObserver
 import com.mredrock.cyxbs.course.ui.activity.AffairEditActivity
 import com.mredrock.cyxbs.course.utils.CourseTimeParse
+import com.mredrock.cyxbs.course.utils.affairFilter
 import kotlinx.android.synthetic.main.course_affair_detail_item.view.*
 import kotlinx.android.synthetic.main.course_course_detail_item.view.*
 import org.greenrobot.eventbus.EventBus
@@ -97,15 +98,12 @@ class ScheduleDetailViewAdapter(private val mDialog: Dialog, private val mSchedu
                 mCourseApiService.deleteAffair(itemViewInfo.courseId.toString())
                         .setSchedulers()
                         .errorHandler()
+                        .affairFilter()
                         .subscribe(ExecuteOnceObserver(onExecuteOnceNext = {
                             it.apply {
-                                if (info == "success" && status == 200) {
-                                    //用于更新UI
-                                    EventBus.getDefault().post(DeleteAffairEvent())
-                                    CyxbsToast.makeText(context, R.string.course_transaction_deleted_successfully, Toast.LENGTH_SHORT).show()
-                                } else {
-                                    CyxbsToast.makeText(context, R.string.course_transaction_deletion_failed, Toast.LENGTH_SHORT).show()
-                                }
+                                //用于更新UI
+                                EventBus.getDefault().post(DeleteAffairEvent())
+                                CyxbsToast.makeText(context, R.string.course_transaction_deleted_successfully, Toast.LENGTH_SHORT).show()
                             }
                         }))
                 mDialog.dismiss()

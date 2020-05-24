@@ -11,7 +11,7 @@ import com.mredrock.cyxbs.course.R
 import org.jetbrains.anko.dip
 
 /**
- * @author Jon
+ * @author Jovines
  * @date 2019/11/16 16:12
  * description：当天的课程背景展示
  */

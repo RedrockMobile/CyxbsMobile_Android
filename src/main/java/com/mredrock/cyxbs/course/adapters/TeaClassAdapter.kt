@@ -6,7 +6,7 @@ import com.mredrock.cyxbs.common.component.RedRockAutoWarpView
 import com.mredrock.cyxbs.course.R
 
 /**
- * @author jon
+ * @author Jovines
  * @create 2020-02-11 7:05 PM
  *
  * 描述:

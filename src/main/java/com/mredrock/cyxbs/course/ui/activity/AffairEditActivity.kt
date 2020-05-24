@@ -22,7 +22,7 @@ import com.mredrock.cyxbs.course.viewmodels.EditAffairViewModel
 import kotlinx.android.synthetic.main.course_activity_edit_affair.*
 
 /**
- * @author Jon
+ * @author Jovines
  * @date 2019/12/21 20:35
  * description：具有三个状态，添加标题，添加内容，最后修改，
  *              分别对应了Helper里面的几个切换方法

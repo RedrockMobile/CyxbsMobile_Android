@@ -17,7 +17,7 @@ import com.mredrock.cyxbs.course.viewmodels.EditAffairViewModel
 import kotlinx.android.synthetic.main.course_activity_edit_affair.*
 
 /**
- * @author Jon
+ * @author Jovines
  * @date 2020/3/20 16:27
  * description：事务Activity的Transition动画的逻辑代码,
  *              以此来使activity主要逻辑代码显得更加清晰，让activity专心处理逻辑代码

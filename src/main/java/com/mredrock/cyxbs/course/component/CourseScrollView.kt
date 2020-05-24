@@ -7,7 +7,7 @@ import android.widget.ScrollView
 import kotlin.math.abs
 
 /**
- * @author Jon
+ * @author Jovines
  * @date 2019/11/6 19:01
  * description：解决Scroll与Bottom的滑动冲突
  */

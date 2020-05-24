@@ -23,6 +23,7 @@ import com.mredrock.cyxbs.common.mark.EventBusLifecycleSubscriber
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.service.account.IAccountService
 import com.mredrock.cyxbs.common.service.account.IUserStateService
+import com.mredrock.cyxbs.common.service.main.IMainService
 import com.mredrock.cyxbs.common.ui.BaseViewModelFragment
 import com.mredrock.cyxbs.course.R
 import com.mredrock.cyxbs.course.adapters.ScheduleVPAdapter
@@ -158,6 +159,11 @@ class CourseContainerEntryFragment : BaseViewModelFragment<CoursesViewModel>(), 
         if (!isAdded) return
 
         fl.setOnTouchListener { _, _ -> true }//处理所有未处理的点击事件，防止穿透点击或者滑动
+
+        //获取主模块服务并添加bottom状态的监听
+        ServiceManager.getService(IMainService::class.java).obtainBottomSheetStateLiveData().observe(viewLifecycleOwner, Observer {
+            settingFollowBottomSheet(it)
+        })
 
         //获取从其他模块传来的数据
         arguments?.let { bundle ->
@@ -441,15 +447,6 @@ class CourseContainerEntryFragment : BaseViewModelFragment<CoursesViewModel>(), 
                 }
             }
         }
-    }
-
-
-    /**
-     * 接收main模块里BottomSheet滑动对应的头部变化
-     */
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun bottomSheetSlideStateReceive(bottomSheetStateEvent: BottomSheetStateEvent) {
-        settingFollowBottomSheet(bottomSheetStateEvent.state)
     }
 
     enum class CourseState {

@@ -111,7 +111,7 @@
     <string name="course_add_transaction">添加失败</string>
     <string name="course_add_transaction_as_a_reminder">添加成功</string>
     <string name="course_modify_transaction_successful">修改成功</string>
-    <string name="course_network_error_modification_failed">修改失败</string>
+    <string name="course_network_error_failed">操作失败</string>
     <string name="course_transaction_deleted_successfully">删除成功</string>
     <string name="course_transaction_deletion_failed">删除失败</string>
 

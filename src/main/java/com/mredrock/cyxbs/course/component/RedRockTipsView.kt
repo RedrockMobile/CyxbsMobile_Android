@@ -12,7 +12,7 @@ import com.mredrock.cyxbs.course.R
 import kotlin.math.atan
 
 /**
- * @author jon
+ * @author Jovines
  * @create 2020-02-21 1:28 PM
  *
  *

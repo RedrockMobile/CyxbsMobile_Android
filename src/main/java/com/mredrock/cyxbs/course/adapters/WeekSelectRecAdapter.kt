@@ -9,7 +9,7 @@ import com.mredrock.cyxbs.course.utils.weekSelectCheckBoxState
 
 /**
  * Created by anriku on 2018/9/9.
- * Correct by jon 2019-12-12 20:47
+ * Correct by Jovines 2019-12-12 20:47
  * 描述:
  *   这个适配用于周数选择里面的AutoWarpView的适配器
  */
