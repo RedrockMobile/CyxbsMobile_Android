@@ -1,7 +1,7 @@
 package com.mredrock.cyxbs.common.bean
 
 /**
- * @author  Jon
+ * @author  Jovines
  * @date  2020/4/7 17:39
  * @param isCheckLogin 是否需要登录检查,如果设置为false，可以自行调用[com.mredrock.cyxbs.common.ui.BaseActivity.checkIsLogin],方法进行登录检查
  * @param isWarnUser 如果没有登录，是否需要提示

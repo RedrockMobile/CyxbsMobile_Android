@@ -62,3 +62,6 @@ const val ACCOUNT_SERVICE = "/account/service"
 
 // 更新服务
 const val APP_UPDATE_SERVICE = "/update/service"
+
+//主模块服务
+const val MAIN_SERVICE = "/main/service"

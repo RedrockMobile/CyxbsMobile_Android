@@ -1,7 +1,7 @@
 package com.mredrock.cyxbs.common.event
 
 /**
- * @author jon
+ * @author Jovines
  * @create 2020-02-16 9:09 PM
  *
  * 描述:

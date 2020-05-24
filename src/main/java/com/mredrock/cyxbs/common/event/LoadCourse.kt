@@ -1,7 +1,7 @@
 package com.mredrock.cyxbs.common.event
 
 /**
- * @author jon
+ * @author Jovines
  * @create 2020-02-10 1:55 PM
  * @param isUserSee 为true就显示加载动画，否则不
  * 描述:

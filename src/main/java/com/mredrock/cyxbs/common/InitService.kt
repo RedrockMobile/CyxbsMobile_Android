@@ -17,7 +17,7 @@ import com.umeng.message.inapp.InAppMessageManager
 
 
 /**
- * @author  Jon
+ * @author  Jovines
  * @date  2020/4/6 14:05
  * description：用来做一些初始化一些所有模块都需要的第三方SDK
  */

@@ -3,7 +3,7 @@ package com.mredrock.cyxbs.common.utils
 import java.util.*
 
 /**
- * @author Jon
+ * @author Jovines
  * @date 2019/12/5 10:42
  * description：该工具类用来将阿拉伯数字转换为中文数字表达形式
  */

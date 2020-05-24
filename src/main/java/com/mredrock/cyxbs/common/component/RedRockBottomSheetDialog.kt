@@ -9,7 +9,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.mredrock.cyxbs.common.R
 
 /**
- * @author Jon
+ * @author Jovines
  * @date 2019/12/4 21:14
  * description：一个顶部有圆角，并且有轻微蓝色阴影,使用方法和标准的bottomSheetDialog一样
  * bottomSheetDialog里面要显示的View设置进去就好
