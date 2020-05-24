@@ -10,8 +10,8 @@
         <item name="l_pp_bottomBar_height">50dp</item><!--底栏的高度-->
 
         <!--图片选择页面属性-->
-        <item name="l_pp_status_bar_color">@color/colorPrimaryDark</item><!--状态栏颜色-->
-        <item name="l_pp_toolBar_background">@color/colorPrimaryDark</item><!--toolBar颜色-->
+        <item name="l_pp_status_bar_color">#788EFA</item><!--状态栏颜色-->
+        <item name="l_pp_toolBar_background">#788EFA</item><!--toolBar颜色-->
         <item name="l_pp_picker_activity_bg">#F9F9F9</item><!--activity背景颜色-->
         <item name="l_pp_toolBar_title_color">#f2f2f2</item><!--(图片选择页面)顶部toolBar字体颜色-->
         <item name="l_pp_picker_bottomBar_background">#96ffffff</item><!--底栏的颜色，如果需要毛玻璃效果，颜色加上透明度-->
