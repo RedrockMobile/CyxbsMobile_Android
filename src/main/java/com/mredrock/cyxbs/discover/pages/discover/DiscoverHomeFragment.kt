@@ -24,7 +24,6 @@ import com.mredrock.cyxbs.common.config.*
 import com.mredrock.cyxbs.common.event.CurrentDateInformationEvent
 import com.mredrock.cyxbs.common.mark.EventBusLifecycleSubscriber
 import com.mredrock.cyxbs.common.ui.BaseViewModelFragment
-import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.discover.R
 import com.mredrock.cyxbs.discover.utils.BannerAdapter
 import com.mredrock.cyxbs.discover.utils.MoreFunctionProvider

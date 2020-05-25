@@ -1,9 +1,7 @@
 package com.mredrock.cyxbs.discover.pages.discover
 
 import androidx.lifecycle.MutableLiveData
-import com.mredrock.cyxbs.common.config.END_POINT_REDROCK_VERSION_TWO
 import com.mredrock.cyxbs.common.network.ApiGenerator
-import com.mredrock.cyxbs.common.network.ApiGeneratorForAnother
 import com.mredrock.cyxbs.common.utils.extensions.mapOrThrowApiException
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
@@ -13,9 +11,6 @@ import com.mredrock.cyxbs.discover.network.Services
 import com.mredrock.cyxbs.discover.news.bean.NewsListItem
 import io.reactivex.Observable
 import io.reactivex.disposables.Disposable
-import retrofit2.Retrofit
-import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
-import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
 /**
@@ -31,7 +26,7 @@ class DiscoverHomeViewModel : BaseViewModel() {
     //标记是否未经被滑动，被滑动就取消下一次自动滚动
     var scrollFlag = true
     fun getRollInfos() {
-        ApiGeneratorForAnother.getApiService(Services::class.java)
+        ApiGenerator.getApiService(Services::class.java)
                 .getRollerViewInfo()
                 .mapOrThrowApiException()
                 .setSchedulers()
