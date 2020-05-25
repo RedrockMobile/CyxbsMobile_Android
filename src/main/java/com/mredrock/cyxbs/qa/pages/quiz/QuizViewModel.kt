@@ -5,7 +5,6 @@ import android.util.Base64
 import androidx.lifecycle.MutableLiveData
 import com.mredrock.cyxbs.common.bean.RedrockApiStatus
 import com.mredrock.cyxbs.common.network.ApiGenerator
-import com.mredrock.cyxbs.common.network.ApiGeneratorForAnother
 import com.mredrock.cyxbs.common.network.CommonApiService
 import com.mredrock.cyxbs.common.utils.down.bean.DownMessageText
 import com.mredrock.cyxbs.common.utils.down.params.DownMessageParams
@@ -80,7 +79,7 @@ class QuizViewModel : BaseViewModel() {
     }
 
     fun getRewardExplain(name: String) {
-        ApiGeneratorForAnother.getCommonApiService(CommonApiService::class.java)
+        ApiGenerator.getCommonApiService(CommonApiService::class.java)
                 .getDownMessage(DownMessageParams(name))
                 .setSchedulers()
                 .doOnError {
