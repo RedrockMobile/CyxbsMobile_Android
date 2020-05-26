@@ -37,7 +37,7 @@ const val SP_SHOW_MODE = "showMode"
 //连续签到每日提醒
 const val SP_SIGN_REMIND = "signRemind"
 
-const val APP_WEBSITE = "https://wx.idsbllp.cn/app/"
+const val APP_WEBSITE = "https://wx.redrock.team/app/"
 
 const val ABOUT_US_WEBSITE = "https://redrock.team/aboutus/"
 
