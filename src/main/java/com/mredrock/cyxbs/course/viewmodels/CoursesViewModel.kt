@@ -1,9 +1,12 @@
 package com.mredrock.cyxbs.course.viewmodels
 
 import android.view.View
+import androidx.annotation.WorkerThread
 import androidx.databinding.ObservableField
 import androidx.lifecycle.MutableLiveData
 import com.google.gson.Gson
+import com.google.gson.GsonBuilder
+import com.google.gson.reflect.TypeToken
 import com.mredrock.cyxbs.common.BaseApp.Companion.context
 import com.mredrock.cyxbs.common.config.COURSE_VERSION
 import com.mredrock.cyxbs.common.config.SP_WIDGET_NEED_FRESH
@@ -311,28 +314,25 @@ class CoursesViewModel : BaseViewModel() {
         (if (isTeaCourse) mCourseApiService.getTeaCourse(mUserNum, mUserName) else mCourseApiService.getCourse(stuNum = mUserNum, isForceFetch = isForceFetch))
                 .setSchedulers(observeOn = Schedulers.io())
                 .errorHandler()
+                //课表容错处理
+                .filter { if (courseAbnormalErrorHandling(it)) true else stopIntercept() }
                 .doOnNext {
-                    courseAbnormalErrorHandling(it) { courses ->
-                        //将从服务器中获取的课程数据存入数据库中
-                        //从网络中获取数据后先对数据库中的数据进行清除，再向其中加入数据
-                        mCoursesDatabase?.courseDao()?.deleteAllCourses()
-                        mCoursesDatabase?.courseDao()?.insertCourses(courses)
-                    }
+                    //将从服务器中获取的课程数据存入数据库中
+                    //从网络中获取数据后先对数据库中的数据进行清除，再向其中加入数据
+                    mCoursesDatabase?.courseDao()?.deleteAllCourses()
+                    mCoursesDatabase?.courseDao()?.insertCourses(courses)
                 }
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(ExecuteOnceObserver(onExecuteOnceNext = { coursesFromInternet ->
-                    if (coursesFromInternet.status == 200 || coursesFromInternet.status == 233) {
-                        updateNowWeek(coursesFromInternet.nowWeek)
-                        //课表容错处理
-                        courseAbnormalErrorHandling(coursesFromInternet, cancel = { stopIntercept() }) {
-                            courses.addAll(it)
-                            if (it.isNotEmpty() && isGetOthers.get() == false) {
-                                toastEvent.value = R.string.course_course_update_tips
-                                context.defaultSharedPreferences.editor {
-                                    //小部件缓存课表
-                                    putString(WIDGET_COURSE, Gson().toJson(coursesFromInternet))
-                                    putBoolean(SP_WIDGET_NEED_FRESH, true)
-                                }
+                    updateNowWeek(coursesFromInternet.nowWeek)
+                    coursesFromInternet?.data?.let {
+                        courses.addAll(it)
+                        if (it.isNotEmpty() && isGetOthers.get() == false) {
+                            toastEvent.value = R.string.course_course_update_tips
+                            context.defaultSharedPreferences.editor {
+                                //小部件缓存课表
+                                putString(WIDGET_COURSE, Gson().toJson(coursesFromInternet))
+                                putBoolean(SP_WIDGET_NEED_FRESH, true)
                             }
                         }
                         if (coursesFromInternet.status == 233) {
@@ -347,26 +347,37 @@ class CoursesViewModel : BaseViewModel() {
      * 课表的容错处理
      *
      * @param coursesFromInternet 直接从网络上拉取的课表数据
-     * @param action 如果网络上的数据可信就执行这个lambda
+     * 因为有一个list的序列化和字符串对比，不建议在主线程调用这个方法，所以加上这个注解
+     * 当然，你非要主线程调用那也没办法，你把注解去掉吧
      */
-    private fun courseAbnormalErrorHandling(coursesFromInternet: CourseApiWrapper<List<Course>>, cancel: () -> Unit = {}, action: (List<Course>) -> Unit) {
-        coursesFromInternet.data?.let { notNullCourses ->
-            val courseVersion = context.defaultSharedPreferences.getString("${COURSE_VERSION}${mUserNum}", "")
-            /**防止服务器里面的课表抽风,所以这个弄了这么多条件，只有满足以下条件才会去替换数据库的课表
-             * 课表版本发生了变化或者从数据库中取出的课表与网络上的课表课数不一样或者原来数据库中没有课表现在取有课表了*/
-            if (courseVersion != coursesFromInternet.version
-                    || (courses.isNotEmpty() && notNullCourses.isNotEmpty() && courses.size != notNullCourses.size)
-                    || (courses.isEmpty() && notNullCourses.isNotEmpty())) {
-                action(notNullCourses)
-                //储存课表版本
-                context.defaultSharedPreferences.editor {
-                    putString("${COURSE_VERSION}${mUserNum}", coursesFromInternet.version)
+    @WorkerThread
+    private fun courseAbnormalErrorHandling(coursesFromInternet: CourseApiWrapper<List<Course>>) =
+            coursesFromInternet.data?.let { notNullCourses ->
+                val courseVersion = context.defaultSharedPreferences.getString("${COURSE_VERSION}${mUserNum}", "")
+                //写这个主要是为了优化下，不至于每次都要序列化两个list的course
+                val compareClassScheduleStrings = fun(a: List<Course>, b: List<Course>): Boolean {
+                    //对使用@Expose进行标记了的字段进行序列化对比
+                    val gson = GsonBuilder().excludeFieldsWithoutExposeAnnotation().create()
+                    //因为我这里arrayList重写过，Gson判断类型的时候会出错，所以必须指明type
+                    val aJson = gson.toJson(a, object : TypeToken<List<Course>>() {}.type)
+                    val bJson = gson.toJson(b, object : TypeToken<List<Course>>() {}.type)
+                    return aJson == bJson
                 }
-            } else {
-                cancel()
-            }
-        }
-    }
+
+                /**防止服务器里面的课表抽风,所以这个弄了这么多条件，只有满足以下条件才会去替换数据库的课表
+                 * 课表版本发生了变化或者从数据库中取出的课表与网络上的课表课数不一样或者原来数据库中没有课表现在取有课表了*/
+                (coursesFromInternet.status == 200 || coursesFromInternet.status == 233)
+                        && (
+                        //  版本号不为空且版本号不同则更新
+                        //（版本号都更新了，如果没有具体课表那我也是没办法，如果这里再做其他的对比有可能造成显示上学期的课，所以不能做其他判断）
+                        (coursesFromInternet.version?.isNotBlank() == true && courseVersion != coursesFromInternet.version)
+                                //数据库课表不为空，网络课表不为空那么如果这两个数量不相等就直接更新，如果数量还相等那就只有比较字符串了
+                                //这么是为了防止上学期有课但是这学期就真没课了（大四）
+                                || (courses.isNotEmpty() && notNullCourses.isNotEmpty() && (courses.size != notNullCourses.size || !compareClassScheduleStrings(courses as ArrayList<Course>, notNullCourses)))
+                                //如果数据库里面的课表为空，但是网络上获取的不为空那么就更新
+                                || (courses.isEmpty() && notNullCourses.isNotEmpty())
+                        )
+            } ?: false
 
 
     /**
@@ -490,9 +501,11 @@ class CoursesViewModel : BaseViewModel() {
 
     /**
      * 获取数据完毕，不再拦截
+     * @return 返回值没啥意思，这里是被用来表示不拦截
      */
-    private fun stopIntercept() {
+    private fun stopIntercept(): Boolean {
         mIsGettingData = false
+        return false
     }
 
     fun clearCache() {

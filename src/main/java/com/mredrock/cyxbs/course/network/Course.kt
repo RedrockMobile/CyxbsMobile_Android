@@ -6,6 +6,7 @@ import androidx.room.Entity
 import androidx.room.Ignore
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
+import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 import com.mredrock.cyxbs.course.database.converter.ClassListStringConverter
 import com.mredrock.cyxbs.course.database.converter.IntListStringConverter
@@ -71,51 +72,69 @@ open class Course() : Parcelable {
     @SerializedName(value = "course_id")
     var courseId: Long = 0
 
+    @Expose
     @SerializedName(value = "course_num")
     var courseNum: String? = null
 
+    //这个注解主要是为了特殊状况下gson序列化进行字符串对比的时候会用到
+    //所以这个注解用来标注一个课程的关键信息
+    @Expose
     @SerializedName(value = "course")
     var course: String? = null
 
+    @Expose
     @SerializedName(value = "hash_day")
     var hashDay: Int = 0
 
+    @Expose
     @SerializedName(value = "hash_lesson")
     var hashLesson: Int = 0
 
+    @Expose
     @SerializedName(value = "begin_lesson")
     var beginLesson: Int = 0
 
+    @Expose
     @SerializedName(value = "day")
     var day: String? = null
 
+    @Expose
     @SerializedName(value = "lesson")
     var lesson: String? = null
 
+    @Expose
     @SerializedName(value = "teacher")
     var teacher: String? = null
 
+    @Expose
     @SerializedName(value = "classroom")
     var classroom: String? = null
 
+    @Expose
     @SerializedName(value = "rawWeek")
     var rawWeek: String? = null
 
+    @Expose
     @SerializedName(value = "weekModel")
     var weekModel: String? = null
 
+    @Expose
     @SerializedName(value = "weekBegin")
     var weekBegin: Int = 0
 
+    @Expose
     @SerializedName(value = "weekEnd")
     var weekEnd: Int = 0
 
+    @Expose
     @SerializedName(value = "type")
     var type: String? = null
 
+    @Expose
     @SerializedName(value = "period")
     var period: Int = 0
 
+    @Expose
     @TypeConverters(IntListStringConverter::class)
     @SerializedName(value = "week")
     var week: List<Int>? = mutableListOf()
