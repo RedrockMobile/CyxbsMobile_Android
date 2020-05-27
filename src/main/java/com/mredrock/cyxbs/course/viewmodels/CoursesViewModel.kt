@@ -315,8 +315,9 @@ class CoursesViewModel : BaseViewModel() {
                 .setSchedulers(observeOn = Schedulers.io())
                 .errorHandler()
                 //课表容错处理
-                .filter { if (courseAbnormalErrorHandling(it)) true else stopIntercept() }
+                .filter { if (courseAbnormalErrorHandling(it) && it.data != null) true else stopIntercept() }
                 .doOnNext {
+                    courses.addAll(it.data!!)//上面已经判断了
                     //将从服务器中获取的课程数据存入数据库中
                     //从网络中获取数据后先对数据库中的数据进行清除，再向其中加入数据
                     mCoursesDatabase?.courseDao()?.deleteAllCourses()
@@ -326,13 +327,14 @@ class CoursesViewModel : BaseViewModel() {
                 .subscribe(ExecuteOnceObserver(onExecuteOnceNext = { coursesFromInternet ->
                     updateNowWeek(coursesFromInternet.nowWeek)
                     coursesFromInternet?.data?.let {
-                        courses.addAll(it)
                         if (it.isNotEmpty() && isGetOthers.get() == false) {
                             toastEvent.value = R.string.course_course_update_tips
                             context.defaultSharedPreferences.editor {
                                 //小部件缓存课表
                                 putString(WIDGET_COURSE, Gson().toJson(coursesFromInternet))
                                 putBoolean(SP_WIDGET_NEED_FRESH, true)
+                                //储存课表版本
+                                putString("${COURSE_VERSION}${mUserNum}", coursesFromInternet.version)
                             }
                         }
                         if (coursesFromInternet.status == 233) {
