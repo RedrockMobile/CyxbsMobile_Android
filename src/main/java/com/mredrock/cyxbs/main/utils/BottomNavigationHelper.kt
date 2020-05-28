@@ -18,6 +18,10 @@ class BottomNavigationHelper(private val tabList: Array<CheckedTextView>,
     //前一个选中的位置
     var peeCheckedItemPosition = 0
 
+    //tab点击动画时长，反复调了调，就感觉180还行
+    private val animationDuration: Long = 180
+
+
     init {
         for ((i, value) in tabList.withIndex()) {
             value.onClick {
@@ -41,8 +45,7 @@ class BottomNavigationHelper(private val tabList: Array<CheckedTextView>,
         for ((p, value) in tabList.withIndex()) {
             if (p != i) {
                 value.isChecked = false
-                value.scaleX = 1f
-                value.scaleY = 1f
+                value.animate().setDuration(animationDuration).scaleX(1f).scaleY(1f)
                 value.setCompoundDrawablesWithIntrinsicBounds(0, unSelectIcons[p], 0, 0)
             }
         }
@@ -53,7 +56,7 @@ class BottomNavigationHelper(private val tabList: Array<CheckedTextView>,
         tabList[i].isChecked = true
         //增加点击动画
         ValueAnimator.ofFloat(1f,1.1f).apply {
-            duration = 400
+            duration = animationDuration
             addUpdateListener {
                 tabList[i].scaleX = it.animatedValue as Float
                 tabList[i].scaleY = it.animatedValue as Float

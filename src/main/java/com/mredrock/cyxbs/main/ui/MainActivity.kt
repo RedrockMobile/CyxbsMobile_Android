@@ -153,6 +153,7 @@ class MainActivity : BaseViewModelActivity<MainViewModel>(), EventBusLifecycleSu
     }
 
     private fun initBottom() {
+        ll_nav_main_container.setOnTouchListener { _, _ -> true }//防止穿透点击或者滑动，子View无法处理默认消耗
         //底部导航栏的控制初始化
         bottomHelper = BottomNavigationHelper(
                 arrayOf(explore, qa, mine),
