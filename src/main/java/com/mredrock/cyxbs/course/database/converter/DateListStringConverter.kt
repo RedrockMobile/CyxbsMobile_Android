@@ -32,7 +32,7 @@ class DateListStringConverter {
                 }
                 dateStrings.size > 2 -> {
                     val weeks = ArrayList<Int>()
-                    for (i in 2..(dateStrings.size - 1)) {
+                    for (i in 2 until dateStrings.size) {
                         weeks.add(dateStrings[i].toInt())
                     }
                     dates.add(Affair.Date(dateStrings[0].toInt(), dateStrings[1].toInt(), weeks))

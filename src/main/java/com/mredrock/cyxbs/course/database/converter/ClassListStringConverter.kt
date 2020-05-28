@@ -27,6 +27,7 @@ class ClassListStringConverter {
     fun stringToStrList(string: String?): List<String>? = string?.let {
         val strs = it.trim().trim('-').split("-")
         val intList = ArrayList<String>()
+        if(strs.size==1&&strs[0].isEmpty()) return@let intList//防止无元素却添加一个空字符串元素
         for (str in strs) {
             intList.add(str)
         }

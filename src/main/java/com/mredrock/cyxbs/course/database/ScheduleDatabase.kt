@@ -11,7 +11,7 @@ import com.mredrock.cyxbs.course.network.Course
  * Created by anriku on 2018/8/14.
  */
 
-@Database(entities = [Course::class, Affair::class], version = 2, exportSchema = false)
+@Database(entities = [Course::class, Affair::class], version = 4, exportSchema = false)
 abstract class ScheduleDatabase : RoomDatabase() {
 
     abstract fun affairDao(): AffairDao

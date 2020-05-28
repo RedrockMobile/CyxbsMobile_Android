@@ -139,6 +139,7 @@ open class Course() : Parcelable {
     @SerializedName(value = "week")
     var week: List<Int>? = mutableListOf()
 
+    @Expose
     @TypeConverters(ClassListStringConverter::class)
     @SerializedName(value = "classNumber")
     var classNumber: List<String> = mutableListOf()
