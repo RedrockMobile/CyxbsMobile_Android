@@ -1,33 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tool="http://schemas.android.com/tools"
+    android:padding="20dp"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:layout_height="match_parent"
+    android:background="@drawable/mine_shape_round_corner_blue">
 
-    <TextView
-        android:id="@+id/mine_about_tv_feature_title"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tool:background="#000fff">
+
+    </androidx.recyclerview.widget.RecyclerView>
+
+    <ProgressBar
+        android:id="@+id/loader"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="17dp"
-        android:textColor="@color/levelTwoFontColor"
-        android:textSize="18sp"
-        android:textStyle="bold" />
+        android:layout_gravity="center"/>
 
-    <androidx.core.widget.NestedScrollView
-        android:layout_width="match_parent"
-        android:layout_height="278dp">
-
-        <TextView
-            android:id="@+id/mine_about_tv_feature_content"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="10dp"
-            android:layout_gravity="center_horizontal"
-            android:paddingStart="25dp"
-            android:paddingEnd="25dp"
-            android:textColor="@color/levelFourFontColor"
-            android:textSize="13sp" />
-    </androidx.core.widget.NestedScrollView>
-
-</LinearLayout>
+</FrameLayout>

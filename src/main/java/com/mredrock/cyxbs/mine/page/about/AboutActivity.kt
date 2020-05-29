@@ -1,10 +1,17 @@
 package com.mredrock.cyxbs.mine.page.about
 
+import android.app.Dialog
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.mredrock.cyxbs.common.component.CommonDialogFragment
 import com.mredrock.cyxbs.common.config.APP_WEBSITE
 import com.mredrock.cyxbs.common.service.ServiceManager
@@ -14,12 +21,14 @@ import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.extensions.toast
 import com.mredrock.cyxbs.common.utils.getAppVersionName
 import com.mredrock.cyxbs.mine.R
+import com.mredrock.cyxbs.mine.util.ui.FeatureIntroAdapter
 import kotlinx.android.synthetic.main.mine_activity_about.*
+import kotlinx.android.synthetic.main.mine_layout_dialog_feature_intro.view.*
 
 
 class AboutActivity(override val isFragmentActivity: Boolean = false,
                     override val viewModelClass: Class<AboutViewModel> = AboutViewModel::class.java)
-    : BaseViewModelActivity<AboutViewModel>(){
+    : BaseViewModelActivity<AboutViewModel>() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,11 +41,6 @@ class AboutActivity(override val isFragmentActivity: Boolean = false,
                     R.drawable.mine_ic_arrow_left)
             setTitleLocationAtLeft(true)
         }
-        getAppVersionName(this@AboutActivity)?.let {
-            val name = "zscy-feature-intro-${it}"
-            viewModel.getFeatureIntroduction(name)
-        }
-
         setAppVersionName()
 
         bindUpdate()
@@ -49,25 +53,23 @@ class AboutActivity(override val isFragmentActivity: Boolean = false,
     }
 
     private fun clickFeatureIntroduction() {
-        val tag = "feature"
-        if (supportFragmentManager.findFragmentByTag(tag) == null) {
-            CommonDialogFragment().apply {
-                initView(
-                        containerRes = R.layout.mine_layout_dialog_feature_intro,
-                        onPositiveClick = { dismiss() },
-                        positiveString = "我知道了",
-                        elseFunction = { rootView ->
-                            viewModel.featureIntro.value?.let {
-                                if (it.textList.isNotEmpty()) {
-                                    val feature = it.textList.last()
-                                    rootView.findViewById<TextView>(R.id.mine_about_tv_feature_title).text = feature.title
-                                    rootView.findViewById<TextView>(R.id.mine_about_tv_feature_content).text = feature.content
-                                }
-                            }
-                        }
-                )
-            }.show(supportFragmentManager, tag)
+        val materialDialog = Dialog(this)
+        val view = LayoutInflater.from(this).inflate(R.layout.mine_layout_dialog_feature_intro, materialDialog.window?.decorView as ViewGroup, false)
+        materialDialog.setContentView(view)
+        materialDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        val featureIntroAdapter = FeatureIntroAdapter(viewModel.featureIntroList)
+        view.rv_content.adapter = featureIntroAdapter
+        view.rv_content.layoutManager = LinearLayoutManager(this@AboutActivity)
+        if (viewModel.featureIntroList.isNotEmpty()) view.loader.visibility = View.GONE
+        materialDialog.show()
+        getAppVersionName(this@AboutActivity)?.let {
+            val name = "zscy-feature-intro-${it}"
+            viewModel.getFeatureIntro(name) {
+                featureIntroAdapter.notifyDataSetChanged()
+                view.loader.visibility = View.GONE
+            }
         }
+
     }
 
     private fun clickUpdate() {
