@@ -21,9 +21,9 @@ import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.extensions.toast
 import com.mredrock.cyxbs.common.utils.getAppVersionName
 import com.mredrock.cyxbs.mine.R
-import com.mredrock.cyxbs.mine.util.ui.FeatureIntroAdapter
+import com.mredrock.cyxbs.mine.util.ui.DynamicRVAdapter
 import kotlinx.android.synthetic.main.mine_activity_about.*
-import kotlinx.android.synthetic.main.mine_layout_dialog_feature_intro.view.*
+import kotlinx.android.synthetic.main.mine_layout_dialog_recyclerview_dynamic.view.*
 
 
 class AboutActivity(override val isFragmentActivity: Boolean = false,
@@ -54,10 +54,10 @@ class AboutActivity(override val isFragmentActivity: Boolean = false,
 
     private fun clickFeatureIntroduction() {
         val materialDialog = Dialog(this)
-        val view = LayoutInflater.from(this).inflate(R.layout.mine_layout_dialog_feature_intro, materialDialog.window?.decorView as ViewGroup, false)
+        val view = LayoutInflater.from(this).inflate(R.layout.mine_layout_dialog_recyclerview_dynamic, materialDialog.window?.decorView as ViewGroup, false)
         materialDialog.setContentView(view)
         materialDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-        val featureIntroAdapter = FeatureIntroAdapter(viewModel.featureIntroList)
+        val featureIntroAdapter = DynamicRVAdapter(viewModel.featureIntroList)
         view.rv_content.adapter = featureIntroAdapter
         view.rv_content.layoutManager = LinearLayoutManager(this@AboutActivity)
         if (viewModel.featureIntroList.isNotEmpty()) view.loader.visibility = View.GONE

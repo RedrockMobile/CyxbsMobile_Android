@@ -3,22 +3,28 @@ package com.mredrock.cyxbs.mine.page.edit
 import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.app.Dialog
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.afollestad.materialdialogs.MaterialDialog
 import com.mredrock.cyxbs.common.component.CommonDialogFragment
 import com.mredrock.cyxbs.common.config.DIR_PHOTO
@@ -28,12 +34,12 @@ import com.mredrock.cyxbs.common.service.account.IUserService
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.extensions.*
 import com.mredrock.cyxbs.mine.R
-import com.mredrock.cyxbs.mine.util.extension.logr
+import com.mredrock.cyxbs.mine.util.ui.DynamicRVAdapter
 import com.yalantis.ucrop.UCrop
 import kotlinx.android.synthetic.main.mine_activity_edit_info.*
+import kotlinx.android.synthetic.main.mine_layout_dialog_recyclerview_dynamic.view.*
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
-import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import org.jetbrains.anko.textColor
 import java.io.File
@@ -50,7 +56,6 @@ class EditInfoActivity(override val isFragmentActivity: Boolean = false,
 
     private val SELECT_PICTURE = 1
     private val SELECT_CAMERA = 2
-
 
 
     private val userService: IUserService by lazy {
@@ -413,16 +418,20 @@ class EditInfoActivity(override val isFragmentActivity: Boolean = false,
             }.show(supportFragmentManager, tag)
         }
     }
+
     private fun showAgree() {
-        val tag = "agree"
-        if (supportFragmentManager.findFragmentByTag(tag) == null) {
-            CommonDialogFragment().apply {
-                initView(
-                        containerRes = R.layout.mine_layout_dialog_portrait_agreement,
-                        onPositiveClick = { dismiss() },
-                        positiveString = "我知道了"
-                )
-            }.show(supportFragmentManager, tag)
+        val materialDialog = Dialog(this)
+        val view = LayoutInflater.from(this).inflate(R.layout.mine_layout_dialog_recyclerview_dynamic, materialDialog.window?.decorView as ViewGroup, false)
+        materialDialog.setContentView(view)
+        materialDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        val featureIntroAdapter = DynamicRVAdapter(viewModel.portraitAgreementList)
+        view.rv_content.adapter = featureIntroAdapter
+        view.rv_content.layoutManager = LinearLayoutManager(this@EditInfoActivity)
+        if (viewModel.portraitAgreementList.isNotEmpty()) view.loader.visibility = View.GONE
+        materialDialog.show()
+        viewModel.getPortraitAgreement {
+            featureIntroAdapter.notifyDataSetChanged()
+            view.loader.visibility = View.GONE
         }
     }
 }

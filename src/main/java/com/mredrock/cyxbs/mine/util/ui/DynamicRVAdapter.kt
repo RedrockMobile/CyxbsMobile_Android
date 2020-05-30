@@ -14,7 +14,7 @@ import kotlinx.android.synthetic.main.mine_list_item_feature_intro.view.*
  * copy from UserAgreementAdapter
  */
 
-class FeatureIntroAdapter(private val list: List<DownMessageText>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class DynamicRVAdapter(private val list: List<DownMessageText>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return object : RecyclerView.ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.mine_list_item_feature_intro, parent, false)) {}
