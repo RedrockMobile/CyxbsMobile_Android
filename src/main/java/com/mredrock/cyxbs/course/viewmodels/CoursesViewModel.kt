@@ -312,8 +312,12 @@ class CoursesViewModel : BaseViewModel() {
      */
     private fun getCoursesDataFromInternet(isForceFetch: Boolean = false) {
         (if (isTeaCourse) mCourseApiService.getTeaCourse(mUserNum, mUserName) else mCourseApiService.getCourse(stuNum = mUserNum, isForceFetch = isForceFetch))
-                .setSchedulers(observeOn = Schedulers.io())
+                .setSchedulers()
                 .errorHandler()
+                .doOnNext {
+                    updateNowWeek(it.nowWeek)
+                }
+                .observeOn(Schedulers.io())
                 //课表容错处理
                 .filter { if (courseAbnormalErrorHandling(it) && it.data != null) true else stopIntercept() }
                 .doOnNext {
@@ -325,7 +329,6 @@ class CoursesViewModel : BaseViewModel() {
                 }
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(ExecuteOnceObserver(onExecuteOnceNext = { coursesFromInternet ->
-                    updateNowWeek(coursesFromInternet.nowWeek)
                     coursesFromInternet?.data?.let {
                         if (it.isNotEmpty() && isGetOthers.get() == false) {
                             toastEvent.value = R.string.course_course_update_tips
@@ -350,7 +353,7 @@ class CoursesViewModel : BaseViewModel() {
      *
      * @param coursesFromInternet 直接从网络上拉取的课表数据
      * 因为有一个list的序列化和字符串对比，不建议在主线程调用这个方法，所以加上这个注解
-     * 当然，你非要主线程调用那也没办法，你把注解去掉吧
+     * 当然，你非要主线程调用那也没办法，你把注解去掉吧,其实退一步说也没啥大的计算操作
      */
     @WorkerThread
     private fun courseAbnormalErrorHandling(coursesFromInternet: CourseApiWrapper<List<Course>>) =
