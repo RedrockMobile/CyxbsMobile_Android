@@ -52,7 +52,6 @@
         android:id="@+id/mine_store_my_product"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="36dp"
         android:alpha="0"
         android:background="@drawable/mine_shape_round_corner_brown_ripple"
         android:paddingStart="10dp"
@@ -62,7 +61,8 @@
         android:text="@string/mine_sign_store_my_product"
         android:textColor="@color/mine_sign_store_my_product_text_color"
         app:layout_constraintBottom_toBottomOf="@+id/mine_store_tv_title"
-        app:layout_constraintStart_toEndOf="@id/mine_store_tv_title"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/mine_store_tv_title"
         app:layout_constraintVertical_bias="0.0"
         tools:text="我的商品" />
