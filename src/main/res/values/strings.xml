@@ -114,5 +114,6 @@
     <string name="course_network_error_failed">操作失败</string>
     <string name="course_transaction_deleted_successfully">删除成功</string>
     <string name="course_transaction_deletion_failed">删除失败</string>
+    <string name="course_placeholder_string" />
 
 </resources>

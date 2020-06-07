@@ -41,7 +41,8 @@
             <FrameLayout
                 android:id="@+id/course_header"
                 android:layout_width="match_parent"
-                android:layout_height="56dp"
+                android:layout_height="wrap_content"
+                android:minHeight="56dp"
                 android:paddingTop="10dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -50,12 +51,13 @@
                 <FrameLayout
                     android:id="@+id/course_header_show"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="wrap_content">
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:id="@+id/course_current_course_container"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_height="wrap_content"
+                        android:minHeight="56dp"
                         android:paddingStart="16dp"
                         android:paddingEnd="16dp">
 
@@ -156,8 +158,9 @@
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:id="@+id/course_current_course_week_select_container"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_height="wrap_content"
                         android:animateLayoutChanges="true"
+                        android:minHeight="56dp"
                         android:paddingStart="16dp"
                         android:paddingEnd="16dp"
                         android:visibility="gone">
@@ -228,12 +231,26 @@
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/course_header_week_select_content"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:gravity="center"
+                    android:minHeight="56dp"
                     android:orientation="horizontal"
                     android:paddingStart="16dp"
                     android:paddingEnd="16dp"
                     android:visibility="gone">
+
+                    <!--    这里因为用户可能由于换了某些字体的行间距很大，
+                            所以这三种头部都由这种字体22号所占一行的高度-->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/course_placeholder_string"
+                        android:textSize="22sp"
+                        android:textStyle="bold"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintHorizontal_chainStyle="spread_inside"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
 
                     <com.google.android.material.tabs.TabLayout
                         android:id="@+id/tab_layout"

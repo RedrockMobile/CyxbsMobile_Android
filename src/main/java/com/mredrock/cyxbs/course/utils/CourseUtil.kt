@@ -36,7 +36,7 @@ fun getNowCourse(courses: List<Course>, wholeCourses: List<Course>, nowWeek: Int
     val tomorrowCourse = getTomorrowCourse(wholeCourses, nowWeek)
     return if (tomorrowCourse == null) {
         //如果明天也没课了，那么就把当前这节课显示完（例如周五最后一节课，细节）
-        if (course != null) Pair(course, "进行中...") else Pair(null, "")
+        if (course != null) Pair(course, "进行中...") else Pair(null, " ")
     } else {
         //明天有课显示明天的课程
         Pair(tomorrowCourse, "明天")

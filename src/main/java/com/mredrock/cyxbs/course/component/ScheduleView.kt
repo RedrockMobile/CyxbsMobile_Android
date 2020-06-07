@@ -198,7 +198,9 @@ class ScheduleView : ViewGroup {
                 gravity = Gravity.CENTER
                 layoutParams = textParams
             }
-            addView(mEmptyTextView)
+            if (mEmptyTextView.parent == null) {
+                addView(mEmptyTextView)
+            }
         } else if (mEmptyTextView.parent == null) {
             addView(mEmptyTextView)
         }
