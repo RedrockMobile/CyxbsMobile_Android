@@ -23,8 +23,8 @@ android {
         applicationId "com.mredrock.cyxbs"
         minSdkVersion build_versions.min_sdk
         targetSdkVersion build_versions.target_sdk
-        versionCode 58
-        versionName "6.0.0"
+        versionCode 59
+        versionName "6.0.1"
         multiDexEnabled true
 
         // LPhotoPicker
