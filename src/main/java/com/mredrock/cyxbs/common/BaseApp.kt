@@ -9,6 +9,8 @@ import android.os.Build
 import com.alibaba.android.arouter.launcher.ARouter
 import com.mredrock.cyxbs.common.utils.CrashHandler
 import com.mredrock.cyxbs.common.utils.extensions.getDarkModeStatus
+import io.reactivex.Observable
+import io.reactivex.schedulers.Schedulers
 
 
 /**
@@ -37,7 +39,10 @@ open class BaseApp : Application() {
     override fun onCreate() {
         super.onCreate()
         createChannel()
-        InitService.init(applicationContext)
+        //若以后还会有这种非必须在application启动时初始化的第三方SDK请写在InitTask中然后添加到这里的just里面
+        Observable.just(
+                initUMeng(context)
+        ).subscribeOn(Schedulers.computation()).doOnNext { it() }.subscribe()
         initRouter()//ARouter放在子线程会影响使用
         //不用放到service里面，只是debug会用到，
         //而且这是轻量级操作，不会对启动速度造成太大的影响
