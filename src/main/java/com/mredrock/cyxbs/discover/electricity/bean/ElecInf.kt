@@ -13,6 +13,6 @@ data class ElecInf(@SerializedName("elec_end") val elecEnd: String = "",
                    @SerializedName("elec_month") val elecMonth: String = "",
                    val lastmoney: String = ""):Serializable {
     fun getEleCost() = "${elecCost[0]}.${elecCost[1]}"
-    fun getAverage(): String = DecimalFormat("0.00")
-            .format(elecSpend.toDouble() / recordTime.substring(3, recordTime.length - 1).toDouble())
+    fun getAverage(): String = if(recordTime.length > 3)DecimalFormat("0.00")
+            .format(elecSpend.toDouble() / recordTime.substring(3, recordTime.length - 1).toDouble()) else "0.00"
 }
