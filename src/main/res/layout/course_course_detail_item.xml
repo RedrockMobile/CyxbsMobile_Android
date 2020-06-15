@@ -53,10 +53,9 @@
 
     <TextView
         android:id="@+id/tv_course_name"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:maxLines="1"
+        android:layout_marginHorizontal="16dp"
         android:textColor="@color/levelTwoFontColor"
         android:textSize="22sp"
         android:textStyle="bold"
@@ -66,7 +65,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0"
-        tools:text="黄龙姐姐究竟有多美" />
+        tools:text="黄龙姐姐究竟有多美黄龙姐姐究竟有多美黄龙姐姐究竟有多美" />
 
     <com.mredrock.cyxbs.common.component.RedRockAutoWarpView
         android:id="@+id/tv_course_classroom"
@@ -75,13 +74,13 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
         app:horizontalSpacing="28dp"
-        app:verticalsSpacing="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/tv_course_name"
         app:layout_constraintTop_toBottomOf="@+id/tv_course_name"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintVertical_bias="0.0"
+        app:verticalsSpacing="8dp" />
 
     <TextView
         android:id="@+id/tv_course_time"
