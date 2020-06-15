@@ -144,7 +144,7 @@ class ExamAdapter(val context: Context,
 
     private class ExamDataHelper {
         private val numArray = arrayOf("1", "2", "3", "4", "5", "6", "7")
-        private val numChineseArray = arrayOf("一", "二", "三", "四", "五", "六", "七")
+        private val numChineseArray = arrayOf("一", "二", "三", "四", "五", "六", "日")
 
         fun tryModifyData(exam: Exam): Boolean {
             if (exam.weekday.equals("0") || exam.week.equals("0")) {
