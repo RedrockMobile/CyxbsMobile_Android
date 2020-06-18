@@ -24,7 +24,7 @@ class ElectricityFeedAdapter(private val elecInf: ElecInf) : BaseFeedFragment.Ad
         val context = view?.context
         context?:return
         if (elecInf.getAverage().length > 1) {
-            view?.tv_electricity_feed_fee?.text = SpannableStringBuilder(elecInf.getAverage().plus("元")).apply {
+            view?.tv_electricity_feed_fee?.text = SpannableStringBuilder(elecInf.getEleCost().plus("元")).apply {
                 setSpan(AbsoluteSizeSpan(context.sp(36)), 0, this.length - 1, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
                 setSpan(AbsoluteSizeSpan(context.sp(13)), this.length - 1, this.length, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
             }
