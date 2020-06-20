@@ -68,7 +68,11 @@ class ExamAdapter(val context: Context,
                                 val distance = getDay(it.date)
 
                                 when {
-                                    distance >= 0 -> {
+                                    distance == 0 -> {
+                                        holder.itemView.grades_distance.text = "今天考试"
+                                        holder.itemView.grades_distance.setTextColor(Color.parseColor("#3A39D3"))
+                                    }
+                                    distance > 0 -> {
                                         holder.itemView.grades_distance.text = "还剩${distance}天考试"
                                         holder.itemView.grades_distance.setTextColor(Color.parseColor("#3A39D3"))
                                     }
@@ -182,7 +186,7 @@ class ExamAdapter(val context: Context,
             examDate.set(array[0].toInt(), array[1].toInt() - 1, array[2].toInt())
             val diff = examDate.time.time - now.time
             val day = 1000 * 24 * 60 * 60
-            return if (diff > 0) {
+            return if (diff >= 0) {
                 (diff / day).toInt()
             } else {
                 -1//-1表示考试已结束
