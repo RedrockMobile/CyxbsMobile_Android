@@ -25,6 +25,7 @@ object ApiGenerator {
     private var okHttpClient: OkHttpClient
     private var token = ""
     private var refreshToken = ""
+    private val retrofitMap by lazy { HashMap<Int, Retrofit>() }
 
     init {
         val accountService = ServiceManager.getService(IAccountService::class.java)
@@ -51,7 +52,9 @@ object ApiGenerator {
         commonRetrofit = commonApiService()
     }
 
-    private fun configureOkHttp(builder: OkHttpClient.Builder): OkHttpClient {
+    private fun configureOkHttp(builder: OkHttpClient.Builder): OkHttpClient = configureOkHttp(builder = builder, function = null)
+
+    private fun configureOkHttp(builder: OkHttpClient.Builder, function: ((builder: OkHttpClient.Builder) -> OkHttpClient.Builder)?): OkHttpClient {
         builder.apply {
             connectTimeout(DEFAULT_TIME_OUT.toLong(), TimeUnit.SECONDS)
             interceptors().add(Interceptor {
@@ -75,6 +78,7 @@ object ApiGenerator {
                 } as Response
             })
         }
+        function?.invoke(builder)
         if (BuildConfig.DEBUG) {
             val logging = HttpLoggingInterceptor()
             logging.level = HttpLoggingInterceptor.Level.BODY
@@ -125,6 +129,34 @@ object ApiGenerator {
     fun <T> getApiService(clazz: Class<T>) = retrofit.create(clazz)
 
     fun <T> getApiService(retrofit: Retrofit, clazz: Class<T>) = retrofit.create(clazz)
+
+    /**
+     *这个方法提供对OkHttp和Retrofit进行自定义的操作，通过uniqueNum可以实现不同子模块中的复用，而不需要在通用模块中添加。
+     *默认会完成部分基础设置，此处传入的两个lambda在基础设置之后执行，可以覆盖基础设置。
+     * 需要先进行注册才能使用。
+     *@throws IllegalAccessException
+     */
+    fun <T> getApiService(uniqueNum: Int, clazz: Class<T>): T {
+
+        if (retrofitMap[uniqueNum] == null) {
+            throw IllegalArgumentException()
+        }
+        return retrofitMap[uniqueNum]!!.create(clazz)
+    }
+    /*
+     *通过此方法对配置进行注册，之后即可使用uniqueNum获取service。
+     */
+    fun registerNetSettings(uniqueNum:Int,retrofitConfig: ((Retrofit.Builder) -> Retrofit.Builder)? = null, okHttpClientConfig: ((OkHttpClient.Builder) -> OkHttpClient.Builder)? = null){
+        retrofitMap[uniqueNum] = Retrofit.Builder()
+                .baseUrl(END_POINT_REDROCK)
+                .apply {
+                    retrofitConfig?.invoke(this)
+                }
+                .client(configureOkHttp(OkHttpClient.Builder(), okHttpClientConfig))
+                .addConverterFactory(GsonConverterFactory.create())
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                .build()
+    }
 
     fun <T> getCommonApiService(clazz: Class<T>) = commonRetrofit.create(clazz)
 
