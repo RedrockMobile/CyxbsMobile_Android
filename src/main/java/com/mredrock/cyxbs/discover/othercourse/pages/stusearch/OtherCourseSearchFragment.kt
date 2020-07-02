@@ -15,7 +15,8 @@ import kotlinx.android.synthetic.main.othercourse_other_course_search_fragment.*
 import org.jetbrains.anko.startActivity
 
 
-class OtherCourseSearchFragment(private val type: Int) : BaseViewModelFragment<OtherCourseSearchViewModel>() {
+class OtherCourseSearchFragment : BaseViewModelFragment<OtherCourseSearchViewModel>() {
+    private var type: Int = 0
     private var lastSearch: String? = null
     private val funcList = listOf("同学课表", "老师课表")
     fun getTitle(): String {
@@ -26,6 +27,9 @@ class OtherCourseSearchFragment(private val type: Int) : BaseViewModelFragment<O
     }
 
     fun getType(): Int = type
+    public fun setType(type :Int){
+        this.type = type
+    }
     override val viewModelClass: Class<OtherCourseSearchViewModel> = OtherCourseSearchViewModel.create(type)
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
