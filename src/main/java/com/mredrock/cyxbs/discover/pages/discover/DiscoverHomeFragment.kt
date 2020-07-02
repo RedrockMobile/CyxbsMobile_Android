@@ -47,12 +47,12 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>(), Eve
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        if(savedInstanceState == null){
+        if (savedInstanceState == null) {
             initFeeds()
         }
         initJwNews(vf_jwzx_detail, fl_discover_home_jwnews)
         initViewPager()
-        viewModel.getRollInfos()
+        viewModel.getRollInfo()
         iv_check_in.setOnClickListener {
             ARouter.getInstance().build(MINE_CHECK_IN).navigation()
         }
@@ -79,9 +79,14 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>(), Eve
                 viewModel.scrollFlag = false
             }
         })
-        viewModel.viewPagerInfos.observe {
+        vp_discover_home?.adapter = BannerAdapter(context!!, vp_discover_home)
+        viewModel.viewPagerInfo.observe {
             if (it != null && context != null) {
-                vp_discover_home?.adapter = BannerAdapter(context!!, it, vp_discover_home)
+                (vp_discover_home?.adapter as BannerAdapter).apply {
+                    urlList.clear()
+                    urlList.addAll(it)
+                    notifyDataSetChanged()
+                }
             }
         }
         viewModel.viewPagerTurner.observe {
@@ -127,7 +132,7 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>(), Eve
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 setTextColor(context.resources.getColor(R.color.menuFontColorFound, context.theme))
             } else {
-                setTextColor(ContextCompat.getColor(context,R.color.menuFontColorFound))
+                setTextColor(ContextCompat.getColor(context, R.color.menuFontColorFound))
             }
             textSize = 15f
 //            textColor = R.color.menuFontColorFound

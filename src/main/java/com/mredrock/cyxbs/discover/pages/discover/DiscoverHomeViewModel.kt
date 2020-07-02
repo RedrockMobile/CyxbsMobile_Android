@@ -18,27 +18,38 @@ import java.util.concurrent.TimeUnit
  * 2019/11/20
  */
 class DiscoverHomeViewModel : BaseViewModel() {
-    val viewPagerInfos = MutableLiveData<List<RollerViewInfo>>()
+    val viewPagerInfo = MutableLiveData<List<RollerViewInfo>>()
     val jwNews = MutableLiveData<List<NewsListItem>>()
     val viewPagerTurner = MutableLiveData<Int>()
     var disposable: Disposable? = null
+    private val retrofit: Services by lazy {
+        ApiGenerator.getApiService(1, Services::class.java)
+    }
+    init {
+        ApiGenerator.registerNetSettings(1,okHttpClientConfig = {
+            it.apply {
+                callTimeout(6, TimeUnit.SECONDS)
+                readTimeout(4, TimeUnit.SECONDS)
+                writeTimeout(4, TimeUnit.SECONDS)
+                retryOnConnectionFailure(true)
+            }
+        })
+    }
 
     //标记是否未经被滑动，被滑动就取消下一次自动滚动
     var scrollFlag = true
-    fun getRollInfos() {
-        ApiGenerator.getApiService(Services::class.java)
-                .getRollerViewInfo()
+    fun getRollInfo() {
+        retrofit.getRollerViewInfo()
                 .mapOrThrowApiException()
                 .setSchedulers()
                 .safeSubscribeBy {
-                    viewPagerInfos.value = it
+                    viewPagerInfo.value = it
                 }
                 .lifeCycle()
     }
 
     fun getJwNews(page: Int) {
-        ApiGenerator.getApiService(Services::class.java)
-                .getNewsList(page)
+        retrofit.getNewsList(page)
                 .mapOrThrowApiException()
                 .setSchedulers()
                 .safeSubscribeBy {
