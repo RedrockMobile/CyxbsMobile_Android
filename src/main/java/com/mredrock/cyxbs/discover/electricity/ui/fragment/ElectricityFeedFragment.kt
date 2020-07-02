@@ -28,8 +28,10 @@ class ElectricityFeedFragment : BaseFeedFragment<ChargeViewModel>() {
         setTitle("电费查询")
         setOnClickListener {
             parentFragmentManager.let {
-                ElectricityFeedSettingDialogFragment { id, room ->
-                    refreshCharge(id, room)
+                ElectricityFeedSettingDialogFragment().apply {
+                    refresher = { id, room ->
+                        refreshCharge(id, room)
+                    }
                 }.show(it, "ElectricityFeedSetting")
             }
 

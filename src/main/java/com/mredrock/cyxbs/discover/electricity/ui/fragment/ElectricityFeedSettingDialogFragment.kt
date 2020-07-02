@@ -1,5 +1,6 @@
 package com.mredrock.cyxbs.discover.electricity.ui.fragment
 
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -14,7 +15,8 @@ import kotlinx.android.synthetic.main.electricity_dialog_dormitory_select.*
 import kotlinx.android.synthetic.main.electricity_dialog_dormitory_select.view.*
 import org.jetbrains.anko.support.v4.defaultSharedPreferences
 
-class ElectricityFeedSettingDialogFragment(private val refresher: (id: String, room: String) -> Unit) : DialogFragment() {
+class ElectricityFeedSettingDialogFragment : DialogFragment() {
+    var refresher: ((id: String, room: String) -> Unit)? = null
     private val buildingNames by lazy(LazyThreadSafetyMode.NONE) { BUILDING_NAMES }
     private val buildingHeadNames by lazy(LazyThreadSafetyMode.NONE) { BUILDING_NAMES_HEADER }
 
@@ -24,6 +26,10 @@ class ElectricityFeedSettingDialogFragment(private val refresher: (id: String, r
         super.onCreate(savedInstanceState)
 
         setStyle(STYLE_NO_TITLE, android.R.style.Theme_Material_Dialog_MinWidth)
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -67,8 +73,11 @@ class ElectricityFeedSettingDialogFragment(private val refresher: (id: String, r
                 selectBuildingHeadPosition = wp_dormitory_head.currentItemPosition
                 selectBuildingFootPosition = wp_dormitory_foot.currentItemPosition
                 val id = BUILDING_NAMES.getValue(BUILDING_NAMES_HEADER[selectBuildingHeadPosition])[selectBuildingFootPosition].split("(")[1].split("栋")[0]
-                LogUtils.d("MyTag,com.mredrock.cyxbs.discover.electricity.ui.fragment", "id=$id,room=$room")
-                refresher.invoke(id, room)
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    LogUtils.d("MyTag","refresher:${this.accessibilityClassName}")
+                }
+                refresher?.invoke(id, room)
                 this@ElectricityFeedSettingDialogFragment.dismiss()
 
                 defaultSharedPreferences.editor {
