@@ -260,7 +260,7 @@ class DailySignActivity(override val viewModelClass: Class<DailyViewModel> = Dai
     private fun paintDivider(dividerColorArr: Array<ColorState>) {
         weekGenerator.let {
             for (i in 0..5) {
-                if (i == it.getToday() && isChecking) {
+                if (i == it.getToday() && isChecking && dividerColorArr[i] == ColorState.COLOR_BLUE) {
                     isChecking = false
                     val index = it.getToday()
                     if (index > 5) return
