@@ -18,7 +18,10 @@ import com.alibaba.android.arouter.facade.annotation.Route
 import com.mredrock.cyxbs.common.bean.WidgetCourse
 import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.common.config.*
-import com.mredrock.cyxbs.common.event.*
+import com.mredrock.cyxbs.common.event.LoadCourse
+import com.mredrock.cyxbs.common.event.NotifyBottomSheetToExpandEvent
+import com.mredrock.cyxbs.common.event.ShowModeChangeEvent
+import com.mredrock.cyxbs.common.event.WidgetCourseEvent
 import com.mredrock.cyxbs.common.mark.EventBusLifecycleSubscriber
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.service.account.IAccountService
@@ -227,9 +230,11 @@ class CourseContainerEntryFragment : BaseViewModelFragment<CoursesViewModel>(), 
                     mOnPageSelected = {
                         // 当ViewPager发生了滑动，清理课表上加备忘的View
                         EventBus.getDefault().post(DismissAddAffairViewEvent())
-                        // 当ViewPager发生了滑动，对Head上的周数进行改变
+                        // 本周提示文字是否显示
                         viewModel.isShowPresentTips.set(
                                 when (it) {
+                                    //零判断需要在最前面，应为nowWeekkennel也会为0，
+                                    // 但是整学期不需要显示本周
                                     0 -> View.GONE
                                     viewModel.nowWeek.value -> View.VISIBLE
                                     else -> View.GONE
@@ -289,6 +294,11 @@ class CourseContainerEntryFragment : BaseViewModelFragment<CoursesViewModel>(), 
         tab_layout.setupWithViewPager(inflateView.vp)
         viewModel.nowWeek.value?.let { nowWeek ->
             inflateView.vp.currentItem = nowWeek
+            viewModel.mWeekTitle.set(
+                    mWeeks[
+                            if (inflateView.vp.currentItem <= 21) inflateView.vp.currentItem else 0
+                    ]
+            )
         }
     }
 
@@ -317,7 +327,6 @@ class CourseContainerEntryFragment : BaseViewModelFragment<CoursesViewModel>(), 
             course_header_week_select_content.visibility = View.GONE
             course_header_show.visibility = View.VISIBLE
         }
-        viewModel.mWeekTitle.set("")
 
         //给整个头部设置点击事件，点击展开整个BottomSheet
         course_header.setOnClickListener {

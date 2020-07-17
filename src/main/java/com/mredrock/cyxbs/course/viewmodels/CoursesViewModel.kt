@@ -315,7 +315,7 @@ class CoursesViewModel : BaseViewModel() {
                 .setSchedulers()
                 .errorHandler()
                 .doOnNext {
-                    updateNowWeek(it.nowWeek)
+                    updateNowWeek(it.nowWeek)//涉及到UI操作，所以在UI线程
                 }
                 .observeOn(Schedulers.io())
                 //课表容错处理
@@ -482,7 +482,12 @@ class CoursesViewModel : BaseViewModel() {
 
         if (this.nowWeek.value != networkNowWeek && networkNowWeek >= 1 && networkNowWeek <= 18) {
             this.nowWeek.value = networkNowWeek
+        }else{
+            //比如要进行一次赋值，因为考虑到寒假暑假周数超出限制
+            //头部就要显示整学期字样
+            this.nowWeek.value = 0
         }
+
         nowWeek.value?.let { nowWeek ->
             val now = Calendar.getInstance()
             //这个用来判断是不是可能处于是暑假的那段时间除非大变动应该暑假绝对是5，6，7，8，9，10月当中
