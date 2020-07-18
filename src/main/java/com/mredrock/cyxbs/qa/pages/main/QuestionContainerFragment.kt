@@ -11,6 +11,7 @@ import com.mredrock.cyxbs.common.config.QA_ENTRY
 import com.mredrock.cyxbs.common.event.CurrentDateInformationEvent
 import com.mredrock.cyxbs.common.mark.EventBusLifecycleSubscriber
 import com.mredrock.cyxbs.common.ui.BaseFragment
+import com.mredrock.cyxbs.common.utils.extensions.pressToZoomOut
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.bean.Question
 import com.mredrock.cyxbs.qa.pages.question.ui.QuestionListFragment
@@ -24,7 +25,7 @@ import org.greenrobot.eventbus.ThreadMode
  * Created By jay68 on 2018/8/22.
  */
 @Route(path = QA_ENTRY)
-class QuestionContainerFragment : BaseFragment(), View.OnClickListener , EventBusLifecycleSubscriber {
+class QuestionContainerFragment : BaseFragment(), View.OnClickListener, EventBusLifecycleSubscriber {
     companion object {
         const val REQUEST_LIST_REFRESH_ACTIVITY = 0x1
     }
@@ -54,6 +55,7 @@ class QuestionContainerFragment : BaseFragment(), View.OnClickListener , EventBu
             QuizActivity.activityStart(this@QuestionContainerFragment, "学习", REQUEST_LIST_REFRESH_ACTIVITY)
             activity?.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
         }
+        btn_ask_question.pressToZoomOut()
     }
 
     override fun onClick(v: View) {
