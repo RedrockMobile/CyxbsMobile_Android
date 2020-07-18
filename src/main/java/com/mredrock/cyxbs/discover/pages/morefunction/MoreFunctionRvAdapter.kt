@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.mredrock.cyxbs.common.utils.extensions.pressToZoomOut
 import com.mredrock.cyxbs.discover.R
 import com.mredrock.cyxbs.discover.utils.MoreFunctionProvider
 import kotlinx.android.synthetic.main.discover_more_function_recycler_item.view.*
@@ -42,6 +43,7 @@ open class MoreFunctionRvAdapter(private val functions: List<MoreFunctionProvide
 
     @SuppressLint("ResourceAsColor")
     override fun onBindViewHolder(holder: MoreFunctionViewHolder, position: Int) {
+        holder.itemView.pressToZoomOut(0.9f)
         holder.itemView.iv_discover_recycler_item.setImageResource(functions[position].resource)
         holder.itemView.tv_discover_recycler_item_title.setText(functions[position].title)
         holder.itemView.tv_discover_recycler_item_detail.setText(functions[position].detail)
