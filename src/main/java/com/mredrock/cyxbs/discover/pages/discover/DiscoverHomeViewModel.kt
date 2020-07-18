@@ -28,9 +28,9 @@ class DiscoverHomeViewModel : BaseViewModel() {
     init {
         ApiGenerator.registerNetSettings(1,okHttpClientConfig = {
             it.apply {
-                callTimeout(6, TimeUnit.SECONDS)
-                readTimeout(4, TimeUnit.SECONDS)
-                writeTimeout(4, TimeUnit.SECONDS)
+                callTimeout(10, TimeUnit.SECONDS)
+                readTimeout(8, TimeUnit.SECONDS)
+                writeTimeout(8, TimeUnit.SECONDS)
                 retryOnConnectionFailure(true)
             }
         })
