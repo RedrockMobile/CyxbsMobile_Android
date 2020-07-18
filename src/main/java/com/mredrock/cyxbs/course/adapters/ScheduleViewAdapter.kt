@@ -13,6 +13,7 @@ import com.mredrock.cyxbs.common.config.SP_SHOW_MODE
 import com.mredrock.cyxbs.common.utils.ClassRoomParse
 import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.SchoolCalendar
+import com.mredrock.cyxbs.common.utils.extensions.pressToZoomOut
 import com.mredrock.cyxbs.common.utils.extensions.sharedPreferences
 import com.mredrock.cyxbs.course.R
 import com.mredrock.cyxbs.course.component.AffairBackgroundView
@@ -159,6 +160,7 @@ class ScheduleViewAdapter(private val mActivity: Activity,
 
 
     override fun initItemView(view: View, row: Int, column: Int) {
+        view.pressToZoomOut()
         //itemInfo表示当前行列的第一个schedule的信息，itemCount表示当前行列schedule的数量
         val itemViewInfo = getItemViewInfo(row, column)
         var itemCount = 1

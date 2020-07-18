@@ -28,6 +28,7 @@ import com.mredrock.cyxbs.common.service.account.IAccountService
 import com.mredrock.cyxbs.common.service.account.IUserStateService
 import com.mredrock.cyxbs.common.service.main.IMainService
 import com.mredrock.cyxbs.common.ui.BaseViewModelFragment
+import com.mredrock.cyxbs.common.utils.extensions.pressToZoomOut
 import com.mredrock.cyxbs.course.R
 import com.mredrock.cyxbs.course.adapters.ScheduleVPAdapter
 import com.mredrock.cyxbs.course.databinding.CourseFragmentCourseContainerBinding
@@ -161,7 +162,7 @@ class CourseContainerEntryFragment : BaseViewModelFragment<CoursesViewModel>(), 
         //如果没有被添加进Activity，Fragment会抛出not attach a context的错误
         if (!isAdded) return
 
-        fl.setOnTouchListener { _, _ -> true }//处理所有未处理的点击事件，防止穿透点击或者滑动
+        fl.setOnClickListener {}//处理所有未处理的点击事件，防止穿透点击或者滑动
 
         //获取主模块服务并添加bottom状态的监听
         ServiceManager.getService(IMainService::class.java).obtainBottomSheetStateLiveData().observe(viewLifecycleOwner, Observer {
@@ -249,6 +250,7 @@ class CourseContainerEntryFragment : BaseViewModelFragment<CoursesViewModel>(), 
                     inflate.vp.currentItem = it
                 }
             }
+            course_back_present_week.pressToZoomOut()
         }
 
         //如果需要直接加载课表则直接加载课表，否则为了优化性能可以当需要的时候加载
