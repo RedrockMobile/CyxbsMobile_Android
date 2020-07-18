@@ -2,7 +2,6 @@ package com.mredrock.cyxbs.mine.page.sign
 
 import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
@@ -13,11 +12,9 @@ import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.ImageView
 import android.widget.Space
 import android.widget.TextView
-import androidx.annotation.NonNull
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.Observer
-import anet.channel.util.Utils.context
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.mredrock.cyxbs.common.component.CommonDialogFragment
@@ -318,7 +315,8 @@ class DailySignActivity(override val viewModelClass: Class<DailyViewModel> = Dai
                                     },
                                     onNegativeClick = { dismiss() },
                                     elseFunction = {
-                                        it.findViewById<TextView>(R.id.mine_tv_exchange_for_sure_content).text = "这将消耗您的${product.integral}个积分，仍然要兑换吗？"
+                                        val str = "这将消耗您的${product.integral}个积分，仍然要兑换吗？"
+                                        it.findViewById<TextView>(R.id.mine_tv_exchange_for_sure_content).text = str
                                     }
                             )
                         }.show(supportFragmentManager, tag)

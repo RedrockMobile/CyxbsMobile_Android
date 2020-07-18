@@ -28,6 +28,7 @@ import com.mredrock.cyxbs.common.ui.BaseViewModelFragment
 import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
 import com.mredrock.cyxbs.common.utils.extensions.editor
 import com.mredrock.cyxbs.common.utils.extensions.loadAvatar
+import com.mredrock.cyxbs.common.utils.extensions.pressToZoomOut
 import com.mredrock.cyxbs.mine.page.about.AboutActivity
 import com.mredrock.cyxbs.mine.page.answer.AnswerActivity
 import com.mredrock.cyxbs.mine.page.ask.AskActivity
@@ -35,7 +36,6 @@ import com.mredrock.cyxbs.mine.page.comment.CommentActivity
 import com.mredrock.cyxbs.mine.page.edit.EditInfoActivity
 import com.mredrock.cyxbs.mine.page.sign.DailySignActivity
 import kotlinx.android.synthetic.main.mine_fragment_main.*
-import org.greenrobot.eventbus.EventBus
 import org.jetbrains.anko.support.v4.defaultSharedPreferences
 import org.jetbrains.anko.support.v4.startActivity
 import org.jetbrains.anko.support.v4.toast
@@ -80,6 +80,7 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
 
         mine_main_tv_about.setOnClickListener { startActivity<AboutActivity>() }
         mine_main_btn_exit.setOnClickListener { onExitClick() }
+        mine_main_btn_exit.pressToZoomOut()
         mine_main_tv_feedback.setOnClickListener { onFeedBackClick() }
         mine_main_tv_custom_widget.setOnClickListener { onSetWidgetClick() }
         mine_main_tv_redrock.setOnClickListener { clickAboutUsWebsite() }
