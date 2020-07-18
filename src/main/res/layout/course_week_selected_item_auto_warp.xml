@@ -14,7 +14,7 @@
     android:singleLine="true"
     android:textSize="15sp"
     android:textColor="@color/transactionAddPageWarpItemTextColor"
-    android:background="@drawable/course_shape_add_affair_detailed_backgroud"
+    android:background="@drawable/course_shape_add_affair_detailed_background"
     tools:text="第20周">
 
 </TextView>

@@ -7,7 +7,7 @@
 
     <TextView
         android:id="@+id/course_time"
-        android:background="@drawable/course_shape_add_affair_detailed_backgroud"
+        android:background="@drawable/course_shape_add_affair_detailed_background"
         android:textStyle="bold"
         android:layout_marginStart="2dp"
         android:layout_marginEnd="2dp"

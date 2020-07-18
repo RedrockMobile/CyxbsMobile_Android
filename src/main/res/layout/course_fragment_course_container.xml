@@ -20,7 +20,7 @@
         android:id="@+id/fl"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/course_layer_list_container_backgroud"
+        android:background="@drawable/course_layer_list_container_background"
         android:orientation="vertical"
         android:paddingTop="@dimen/course_top_distance">
 
@@ -212,7 +212,7 @@
                             android:id="@+id/course_back_present_week"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:background="@drawable/course_shape_affair_modify_button_backgroud"
+                            android:background="@drawable/course_shape_affair_modify_button_background"
                             android:paddingStart="16dp"
                             android:paddingTop="8dp"
                             android:paddingEnd="16dp"

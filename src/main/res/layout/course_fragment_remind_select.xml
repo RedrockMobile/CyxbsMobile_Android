@@ -58,7 +58,7 @@
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_marginEnd="3dp"
-            android:background="@drawable/course_shape_affair_modify_button_backgroud"
+            android:background="@drawable/course_shape_affair_modify_button_background"
             android:gravity="center_vertical"
             android:onClick="@{listeners::onSureClick}"
             android:paddingStart="40dp"

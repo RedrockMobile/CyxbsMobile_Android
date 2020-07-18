@@ -34,7 +34,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
-        android:background="@drawable/course_shape_affair_modify_button_backgroud"
+        android:background="@drawable/course_shape_affair_modify_button_background"
         android:gravity="center"
         android:text="@string/course_affair_modify"
         android:textColor="@android:color/white"
