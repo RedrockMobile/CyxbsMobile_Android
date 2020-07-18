@@ -1,6 +1,7 @@
 package com.mredrock.cyxbs.common.ui
 
 import android.app.Activity
+import android.content.pm.ActivityInfo
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
@@ -51,6 +52,8 @@ abstract class BaseActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        // 禁用横屏，现目前不需要横屏，防止发送一些错误
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         initFlag()
         lifeCycleLog("onCreate")
     }
