@@ -20,14 +20,15 @@ import java.util.concurrent.TimeUnit
 object ApiGenerator {
     private const val DEFAULT_TIME_OUT = 30
 
-    private var retrofit: Retrofit
-    private var commonRetrofit: Retrofit
-    private var okHttpClient: OkHttpClient
+    private var retrofit: Retrofit //统一添加了token到header
+    private var commonRetrofit: Retrofit // 未添加token到header
+
     private var token = ""
     private var refreshToken = ""
     private val retrofitMap by lazy { HashMap<Int, Retrofit>() }
 
     init {
+        //添加监听得到登录后的token和refreshToken,应用于初次登录或重新登录
         val accountService = ServiceManager.getService(IAccountService::class.java)
         accountService.getVerifyService().addOnStateChangedListener {
             when (it) {
@@ -42,50 +43,23 @@ object ApiGenerator {
         }
         token = accountService.getUserTokenService().getToken()
         refreshToken = accountService.getUserTokenService().getRefreshToken()
-        okHttpClient = configureOkHttp(OkHttpClient.Builder())
-        retrofit = Retrofit.Builder()
-                .baseUrl(END_POINT_REDROCK)
-                .client(okHttpClient)
-                .addConverterFactory(GsonConverterFactory.create())
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                .build()
-        commonRetrofit = commonApiService()
+        retrofit = Retrofit.Builder().apply {
+            this.defaultConfig()
+            configRetrofitBuilder {
+                it.defaultConfig()
+                it.configureOkHttp()
+            }
+        }.build()
+        commonRetrofit = Retrofit.Builder().apply {
+            this.defaultConfig()
+            configRetrofitBuilder {
+                it.apply {
+                    defaultConfig()
+                }.build()
+            }
+        }.build()
     }
 
-    private fun configureOkHttp(builder: OkHttpClient.Builder): OkHttpClient = configureOkHttp(builder = builder, function = null)
-
-    private fun configureOkHttp(builder: OkHttpClient.Builder, function: ((builder: OkHttpClient.Builder) -> OkHttpClient.Builder)?): OkHttpClient {
-        builder.apply {
-            connectTimeout(DEFAULT_TIME_OUT.toLong(), TimeUnit.SECONDS)
-            interceptors().add(Interceptor {
-                /**
-                 * 所有请求添加token到header
-                 * 在外面加一层判断，用于token未过期时，能够异步请求，不用阻塞在checkRefresh()
-                 * 如果有更好方式再改改
-                 */
-                when {
-                    refreshToken.isEmpty() || token.isEmpty() -> {
-                        token = ServiceManager.getService(IAccountService::class.java).getUserTokenService()?.getToken()
-                        refreshToken = ServiceManager.getService(IAccountService::class.java).getUserTokenService()?.getRefreshToken()
-                        it.proceed(it.request().newBuilder().header("Authorization", "Bearer $token").build())
-                    }
-                    isTokenExpired() -> {
-                        checkRefresh(it)
-                    }
-                    else -> {
-                        it.proceed(it.request().newBuilder().header("Authorization", "Bearer $token").build())
-                    }
-                } as Response
-            })
-        }
-        function?.invoke(builder)
-        if (BuildConfig.DEBUG) {
-            val logging = HttpLoggingInterceptor()
-            logging.level = HttpLoggingInterceptor.Level.BODY
-            builder.addInterceptor(logging)
-        }
-        return builder.build()
-    }
 
     @Synchronized
     private fun checkRefresh(chain: Interceptor.Chain): Response? {
@@ -109,26 +83,13 @@ object ApiGenerator {
         return response
     }
 
-    private fun commonApiService(): Retrofit {
-        return Retrofit.Builder()
-                .baseUrl(END_POINT_REDROCK)
-                .client(OkHttpClient().newBuilder().apply {
-                    connectTimeout(DEFAULT_TIME_OUT.toLong(), TimeUnit.SECONDS)
-                    if (BuildConfig.DEBUG) {
-                        val logging = HttpLoggingInterceptor()
-                        logging.level = HttpLoggingInterceptor.Level.BODY
-                        addInterceptor(logging)
-                    }
-                }.build())
-                .addConverterFactory(GsonConverterFactory.create())
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                .build()
-    }
 
     private fun isTokenExpired() = ServiceManager.getService(IAccountService::class.java).getVerifyService().isExpired()
     fun <T> getApiService(clazz: Class<T>) = retrofit.create(clazz)
 
     fun <T> getApiService(retrofit: Retrofit, clazz: Class<T>) = retrofit.create(clazz)
+
+    fun <T> getCommonApiService(clazz: Class<T>) = commonRetrofit.create(clazz)
 
     /**
      *这个方法提供对OkHttp和Retrofit进行自定义的操作，通过uniqueNum可以实现不同子模块中的复用，而不需要在通用模块中添加。
@@ -143,21 +104,89 @@ object ApiGenerator {
         }
         return retrofitMap[uniqueNum]!!.create(clazz)
     }
-    /*
-     *通过此方法对配置进行注册，之后即可使用uniqueNum获取service。
+
+    /**
+     * 通过此方法对配置进行注册，之后即可使用uniqueNum获取service。
+     * @param uniqueNum retrofit标识符
+     * @param retrofitConfig 配置Retrofit.Builder，已配置有
+     * @see GsonConverterFactory
+     * @see RxJava2CallAdapterFactory
+     * null-> 默认BaseUrl
+     * @param okHttpClientConfig 配置OkHttpClient.Builder，已配置有
+     * @see HttpLoggingInterceptor
+     * null-> 默认Timeout
+     * @param tokenNeeded 是否需要添加token请求
      */
-    fun registerNetSettings(uniqueNum:Int,retrofitConfig: ((Retrofit.Builder) -> Retrofit.Builder)? = null, okHttpClientConfig: ((OkHttpClient.Builder) -> OkHttpClient.Builder)? = null){
+    fun registerNetSettings(uniqueNum: Int, retrofitConfig: ((Retrofit.Builder) -> Retrofit.Builder)? = null, okHttpClientConfig: ((OkHttpClient.Builder) -> OkHttpClient.Builder)? = null, tokenNeeded: Boolean) {
         retrofitMap[uniqueNum] = Retrofit.Builder()
-                .baseUrl(END_POINT_REDROCK)
+                //对传入的retrofitConfig配置
                 .apply {
-                    retrofitConfig?.invoke(this)
+                    if (retrofitConfig == null)
+                        this.defaultConfig()
+                    else
+                        retrofitConfig.invoke(this)
                 }
-                .client(configureOkHttp(OkHttpClient.Builder(), okHttpClientConfig))
-                .addConverterFactory(GsonConverterFactory.create())
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                .build()
+                //对传入的okHttpClientConfig配置
+                .configRetrofitBuilder {
+                    it.apply {
+                        if (tokenNeeded)
+                            configureOkHttp()
+                        if (okHttpClientConfig == null)
+                            this.defaultConfig()
+                        else
+                            okHttpClientConfig.invoke(it)
+                    }.build()
+                }.build()
     }
 
-    fun <T> getCommonApiService(clazz: Class<T>) = commonRetrofit.create(clazz)
+    /**
+     * 现目前必须配置基本的需求，比如Log，Gson，RxJava
+     */
+    private fun Retrofit.Builder.configRetrofitBuilder(client: ((OkHttpClient.Builder) -> OkHttpClient)): Retrofit.Builder {
+        return this.client(client.invoke(OkHttpClient().newBuilder().apply {
+            if (BuildConfig.DEBUG) {
+                val logging = HttpLoggingInterceptor()
+                logging.level = HttpLoggingInterceptor.Level.BODY
+                addInterceptor(logging)
+            }
+        }))
+                .addConverterFactory(GsonConverterFactory.create())
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+    }
 
+    //默认配置
+    private fun Retrofit.Builder.defaultConfig() {
+        this.baseUrl(END_POINT_REDROCK)
+    }
+
+    //默认配置
+    private fun OkHttpClient.Builder.defaultConfig() {
+        this.connectTimeout(DEFAULT_TIME_OUT.toLong(), TimeUnit.SECONDS)
+    }
+
+    //带token请求的OkHttp配置
+    private fun OkHttpClient.Builder.configureOkHttp(): OkHttpClient {
+        return this.apply {
+            interceptors().add(Interceptor {
+                /**
+                 * 所有请求添加token到header
+                 * 在外面加一层判断，用于token未过期时，能够异步请求，不用阻塞在checkRefresh()
+                 * 如果有更好方式再改改
+                 */
+                when {
+                    refreshToken.isEmpty() || token.isEmpty() -> {
+                        token = ServiceManager.getService(IAccountService::class.java).getUserTokenService()?.getToken()
+                        refreshToken = ServiceManager.getService(IAccountService::class.java).getUserTokenService()?.getRefreshToken()
+                        it.proceed(it.request().newBuilder().header("Authorization", "Bearer $token").build())
+                    }
+                    isTokenExpired() -> {
+                        checkRefresh(it)
+                    }
+                    else -> {
+                        it.proceed(it.request().newBuilder().header("Authorization", "Bearer $token").build())
+                    }
+                } as Response
+            })
+        }.build()
+    }
 }
