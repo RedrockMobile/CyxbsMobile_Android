@@ -26,7 +26,7 @@ class MapStyleHelper(val context: Context) {
         checkFile()
         ApiGenerator.registerNetSettings(0, retrofitConfig = { builder: Retrofit.Builder ->
             builder.baseUrl(END_POINT_REDROCK_VERSION_TWO)
-        })
+        },tokenNeeded = true)
         val apiService = ApiGenerator.getApiService(0, MapService::class.java)
         apiService.getMapRes("map_A")
                 .setSchedulers()
