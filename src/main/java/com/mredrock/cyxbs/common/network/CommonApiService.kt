@@ -15,7 +15,7 @@ interface CommonApiService {
     /**
      * 下发接口，目前适用于title--content，公共可用
      * exp:
-     *  ApiGeneratorForAnother
+     *  ApiGenerator
      * .getCommonApiService(CommonApiService::class.java)
      * .getDownMessage(DownMessageParams("name"))
      */
