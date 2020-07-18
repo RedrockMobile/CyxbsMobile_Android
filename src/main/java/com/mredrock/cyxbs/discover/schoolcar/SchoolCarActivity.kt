@@ -283,7 +283,7 @@ class SchoolCarActivity : BaseActivity(), View.OnClickListener {
         var matrix = Matrix()
         matrix.postScale(scaleWidth.toFloat(), scaleHeight.toFloat())
         pointBitmap = Bitmap.createBitmap(pointBitmap, 0, 0, width, height, matrix, true)
-        var backBitmap = BitmapFactory.decodeResource(this@SchoolCarActivity.resources, R.mipmap.ic_school_car_backgroud)
+        var backBitmap = BitmapFactory.decodeResource(this@SchoolCarActivity.resources, R.mipmap.ic_school_car_background)
         width = backBitmap.width
         height = backBitmap.height
         scaleWidth = dp2px(66f) / width
