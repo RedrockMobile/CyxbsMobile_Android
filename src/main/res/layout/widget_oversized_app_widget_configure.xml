@@ -19,7 +19,7 @@
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/add_button"
         android:layout_width="wrap_content"
-        android:background="@drawable/shape_day_week_backgroud"
+        android:background="@drawable/shape_day_week_background"
         android:textColor="#ffffff"
         android:layout_gravity="center_horizontal"
         android:layout_height="wrap_content"

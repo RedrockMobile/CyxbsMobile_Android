@@ -33,7 +33,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/shape_course_backgroud"
+        android:background="@drawable/shape_course_background"
         android:paddingHorizontal="8dp"
         android:paddingBottom="8dp"
         android:orientation="vertical">
