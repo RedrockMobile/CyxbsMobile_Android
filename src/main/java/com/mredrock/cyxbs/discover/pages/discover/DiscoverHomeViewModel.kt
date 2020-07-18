@@ -25,15 +25,16 @@ class DiscoverHomeViewModel : BaseViewModel() {
     private val retrofit: Services by lazy {
         ApiGenerator.getApiService(1, Services::class.java)
     }
+
     init {
-        ApiGenerator.registerNetSettings(1,okHttpClientConfig = {
+        ApiGenerator.registerNetSettings(1, okHttpClientConfig = {
             it.apply {
                 callTimeout(10, TimeUnit.SECONDS)
                 readTimeout(8, TimeUnit.SECONDS)
                 writeTimeout(8, TimeUnit.SECONDS)
                 retryOnConnectionFailure(true)
             }
-        })
+        }, tokenNeeded = true)
     }
 
     //标记是否未经被滑动，被滑动就取消下一次自动滚动
