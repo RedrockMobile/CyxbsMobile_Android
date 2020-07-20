@@ -210,6 +210,10 @@ internal class AccountService : IAccountService {
         @WorkerThread
         override fun login(context: Context, uid: String, passwd: String) {
             val response = ApiGenerator.getCommonApiService(ApiService::class.java).login(LoginParams(uid, passwd)).execute()
+            //不同情况给用户不同的提示
+            if (response.code() == 400) {
+                throw IllegalStateException("authentication error")
+            }
             if (response.body() == null) {
                 throw HttpException(response)
             }
