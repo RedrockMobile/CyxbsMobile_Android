@@ -1,10 +1,12 @@
 package com.mredrock.cyxbs.common.network
 
+import android.util.SparseArray
 import com.mredrock.cyxbs.common.BuildConfig
 import com.mredrock.cyxbs.common.config.END_POINT_REDROCK
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.service.account.IAccountService
 import com.mredrock.cyxbs.common.service.account.IUserStateService
+import com.mredrock.cyxbs.common.utils.extensions.takeIfNoException
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.Response
@@ -25,8 +27,9 @@ object ApiGenerator {
 
     private var token = ""
     private var refreshToken = ""
-    private val retrofitMap by lazy { HashMap<Int, Retrofit>() }
+    private val retrofitMap by lazy { SparseArray<Retrofit>() }
 
+    //init对两种公共的retrofit进行配置
     init {
         //添加监听得到登录后的token和refreshToken,应用于初次登录或重新登录
         val accountService = ServiceManager.getService(IAccountService::class.java)
@@ -60,31 +63,6 @@ object ApiGenerator {
         }.build()
     }
 
-
-    @Synchronized
-    private fun checkRefresh(chain: Interceptor.Chain): Response? {
-        var response = chain.proceed(chain.request().newBuilder().header("Authorization", "Bearer $token").build())
-        /**
-         * 刷新token条件设置为，已有refreshToken，并且已经过期，也可以后端返回特定到token失效code
-         * 当第一个过期token请求接口后，改变token和refreshToken，防止同步refreshToken失效
-         * 之后进入该方法的请求，token已经刷新
-         */
-        if (refreshToken.isNotEmpty() && isTokenExpired()) {
-            ServiceManager.getService(IAccountService::class.java).getVerifyService().refresh(
-                    onError = {
-                        response.close()
-                    },
-                    action = { s: String ->
-                        response.close()
-                        response = chain.run { proceed(chain.request().newBuilder().header("Authorization", "Bearer $s").build()) }
-                    }
-            )
-        }
-        return response
-    }
-
-
-    private fun isTokenExpired() = ServiceManager.getService(IAccountService::class.java).getVerifyService().isExpired()
     fun <T> getApiService(clazz: Class<T>) = retrofit.create(clazz)
 
     fun <T> getApiService(retrofit: Retrofit, clazz: Class<T>) = retrofit.create(clazz)
@@ -118,7 +96,7 @@ object ApiGenerator {
      * @param tokenNeeded 是否需要添加token请求
      */
     fun registerNetSettings(uniqueNum: Int, retrofitConfig: ((Retrofit.Builder) -> Retrofit.Builder)? = null, okHttpClientConfig: ((OkHttpClient.Builder) -> OkHttpClient.Builder)? = null, tokenNeeded: Boolean) {
-        retrofitMap[uniqueNum] = Retrofit.Builder()
+        retrofitMap.put(uniqueNum, Retrofit.Builder()
                 //对传入的retrofitConfig配置
                 .apply {
                     if (retrofitConfig == null)
@@ -136,9 +114,10 @@ object ApiGenerator {
                         else
                             okHttpClientConfig.invoke(it)
                     }.build()
-                }.build()
+                }.build())
     }
 
+    //以下是retrofit基本配置
     /**
      * 现目前必须配置基本的需求，比如Log，Gson，RxJava
      */
@@ -189,4 +168,33 @@ object ApiGenerator {
             })
         }.build()
     }
+
+    //对token和refreshToken进行刷新
+    @Synchronized
+    private fun checkRefresh(chain: Interceptor.Chain): Response? {
+        var response = chain.proceed(chain.request().newBuilder().header("Authorization", "Bearer $token").build())
+        /**
+         * 刷新token条件设置为，已有refreshToken，并且已经过期，也可以后端返回特定到token失效code
+         * 当第一个过期token请求接口后，改变token和refreshToken，防止同步refreshToken失效
+         * 之后进入该方法的请求，token已经刷新
+         */
+        if (refreshToken.isNotEmpty() && isTokenExpired()) {
+            takeIfNoException {
+                ServiceManager.getService(IAccountService::class.java).getVerifyService().refresh(
+                        onError = {
+                            response.close()
+                        },
+                        action = { s: String ->
+                            response.close()
+                            response = chain.run { proceed(chain.request().newBuilder().header("Authorization", "Bearer $s").build()) }
+                        }
+                )
+            }
+
+        }
+        return response
+    }
+
+    //检查token是否过期
+    private fun isTokenExpired() = ServiceManager.getService(IAccountService::class.java).getVerifyService().isExpired()
 }

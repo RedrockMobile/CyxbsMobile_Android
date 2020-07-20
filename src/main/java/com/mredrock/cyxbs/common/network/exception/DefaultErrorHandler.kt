@@ -32,7 +32,7 @@ object DefaultErrorHandler : ErrorHandler {
 
             e.message.equals("student id error") -> BaseApp.context.toast("登录失败：学号不存在,请检查输入")
 
-            e.message.equals("jwzx return invaild data") -> BaseApp.context.toast("服务暂时不可用：教务在线维护中...")
+            e.message.equals("jwzx return invalid data") -> BaseApp.context.toast("服务暂时不可用：教务在线维护中...")
 
             e.message != null && BuildConfig.DEBUG -> BaseApp.context.toast("error: ${e.message}")
 

@@ -85,3 +85,9 @@ const val ACTIVITY_CLASS = "ACTIVITY_CLASS"
 const val IS_EXIT_LOGIN = "IS_EXIT_LOGIN"
 
 const val IS_PRE_FINISH = "IS_PRE_FINISH"
+
+//ApiGenerator中的retrofitMap的key
+//适用于某些接口要求，一般不需要特定的retrofit
+//命名方式module+方法
+const val SCHOOL_CAR_MAP_RES = 0
+const val DISCOVERY_ROLLER_VIEW_INFO = 1
