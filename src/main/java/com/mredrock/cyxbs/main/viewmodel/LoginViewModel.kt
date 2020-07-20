@@ -1,15 +1,15 @@
 package com.mredrock.cyxbs.main.viewmodel
 
-import android.widget.Toast
 import com.mredrock.cyxbs.common.BaseApp.Companion.context
-import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.network.CommonApiService
+import com.mredrock.cyxbs.common.network.exception.DefaultErrorHandler
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.service.account.IAccountService
 import com.mredrock.cyxbs.common.utils.down.bean.DownMessageText
 import com.mredrock.cyxbs.common.utils.down.params.DownMessageParams
 import com.mredrock.cyxbs.common.utils.extensions.errorHandler
+import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.common.utils.extensions.takeIfNoException
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
@@ -36,19 +36,19 @@ class LoginViewModel : BaseViewModel() {
         if (checkDataCorrect(stuNum, idNum)) return
         isLanding = true
         landing()
-        Observable.create<LoginState> {
-            val startTime = System.currentTimeMillis()
-            var loginState = LoginState.NotLanded
+        var isSuccess = false
+        val startTime = System.currentTimeMillis()
+        Observable.create<Boolean> {
             takeIfNoException(
                     action = {
                         val accountService = ServiceManager.getService(IAccountService::class.java)
                         accountService.getVerifyService().login(context, stuNum!!, idNum!!)
                         MobclickAgent.onProfileSignIn(accountService.getUserService().getStuNum())
-                        loginState = LoginState.LandingSuccessfully
+                        isSuccess = true
                     },
-                    doOnException = { e ->
-                        loginState = LoginState.LandingFailed
-                        e
+                    doOnException = {
+                        isSuccess = false
+                        throw it
                     },
                     doFinally = {
                         //网速太好的时候对话框只会闪一下，像bug一样
@@ -57,27 +57,28 @@ class LoginViewModel : BaseViewModel() {
                         if (curTime - startTime < waitTime) {
                             takeIfNoException {
                                 Thread.sleep(waitTime - curTime + startTime)
-                                it.onNext(loginState)
+                                it.onNext(isSuccess)
                             }
                         } else {
-                            it.onNext(loginState)
+                            it.onNext(isSuccess)
                         }
-                        isLanding = false
                     }
             )
-        }.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe {
-            when (it) {
-                LoginState.LandingSuccessfully -> successAction()
-                LoginState.LandingFailed -> {
-                    landing()
-                    CyxbsToast.makeText(context, R.string.main_login_error_prompt, Toast.LENGTH_SHORT).show()
-                }
-                else -> {
-                    //这种情况按道理来说不会出现，所以直接返回就好
-                    landing()
-                }
-            }
-        }.isDisposed
+
+
+        }.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                .safeSubscribeBy(
+                        onError = {
+                            isLanding = false
+                            landing()
+                            //交给封装的异常处理，应对不同的情况，给用户提示对应的信息
+                            DefaultErrorHandler.handle(it)
+                        },
+                        onNext = {
+                            isLanding = false
+                            if (it) successAction()
+                        }
+                ).isDisposed
     }
 
     private fun checkDataCorrect(stuNum: String?, idNum: String?): Boolean {
@@ -112,7 +113,4 @@ class LoginViewModel : BaseViewModel() {
                 ))
     }
 
-    enum class LoginState {
-        LandingSuccessfully, NotLanded, LandingFailed
-    }
 }
