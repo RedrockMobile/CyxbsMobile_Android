@@ -1,6 +1,7 @@
 package com.mredrock.cyxbs.discover.pages.discover
 
 import androidx.lifecycle.MutableLiveData
+import com.mredrock.cyxbs.common.config.DISCOVERY_ROLLER_VIEW_INFO
 import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.utils.extensions.mapOrThrowApiException
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
@@ -23,7 +24,7 @@ class DiscoverHomeViewModel : BaseViewModel() {
     val viewPagerTurner = MutableLiveData<Int>()
     var disposable: Disposable? = null
     private val retrofit: Services by lazy {
-        ApiGenerator.getApiService(1, Services::class.java)
+        ApiGenerator.getApiService(DISCOVERY_ROLLER_VIEW_INFO, Services::class.java)
     }
 
     init {
