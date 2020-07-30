@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
+import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.FrameLayout
@@ -23,10 +24,10 @@ import com.mredrock.cyxbs.common.service.account.IAccountService
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.extensions.getScreenHeight
 import com.mredrock.cyxbs.common.utils.extensions.getScreenWidth
+import com.mredrock.cyxbs.common.utils.extensions.toast
 import com.mredrock.cyxbs.discover.noclass.R
 import com.mredrock.cyxbs.discover.noclass.network.Student
 import com.mredrock.cyxbs.discover.noclass.pages.stuselect.NoClassStuSelectActivity
-import com.mredrock.cyxbs.discover.noclass.snackbar
 import kotlinx.android.synthetic.main.noclass_activity_no_class.*
 import java.io.Serializable
 
@@ -37,7 +38,7 @@ class NoClassActivity : BaseViewModelActivity<NoClassViewModel>() {
 
     override val isFragmentActivity = false
 
-    lateinit var bottomSheetBehavior: BottomSheetBehavior<FrameLayout>
+    private lateinit var bottomSheetBehavior: BottomSheetBehavior<FrameLayout>
 
     private var mStuList: MutableList<Student>? = null
     private var mAdapter: NoClassRvAdapter? = null
@@ -84,6 +85,32 @@ class NoClassActivity : BaseViewModelActivity<NoClassViewModel>() {
 
     private fun initBtn() {
         bottomSheetBehavior = BottomSheetBehavior.from(course_bottom_sheet_content)
+        bottomSheetBehavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {
+
+            }
+
+            override fun onStateChanged(bottomSheet: View, newState: Int) {
+                when (newState) {
+                    BottomSheetBehavior.STATE_EXPANDED -> {
+                        et_noclass_add_classmate.apply {
+                            clearFocus()
+                        }
+                    }
+                    BottomSheetBehavior.STATE_COLLAPSED -> {
+                        et_noclass_add_classmate.apply {
+                            isFocusable = true
+                            isFocusableInTouchMode = true
+                            requestFocus()
+                        }
+                    }
+                    else -> {
+                        //忽略
+                    }
+                }
+            }
+
+        })
         noclass_btn_query.setOnClickListener {
             val students = (noclass_rv.adapter as NoClassRvAdapter).getStuList()
             val nameList = arrayListOf<String>()
@@ -108,7 +135,7 @@ class NoClassActivity : BaseViewModelActivity<NoClassViewModel>() {
 
     private fun initStuList() {
         val user = ServiceManager.getService(IAccountService::class.java).getUserService()
-        user?.apply {
+        user.apply {
             val stu = Student()
             stu.name = getRealName()
             stu.stunum = getStuNum()
@@ -123,7 +150,7 @@ class NoClassActivity : BaseViewModelActivity<NoClassViewModel>() {
 
 
     private fun addStu(stu: Student) {
-        mAdapter!!.addStu(stu)
+        mAdapter?.addStu(stu)
     }
 
     override fun onBackPressed() {
@@ -140,7 +167,7 @@ class NoClassActivity : BaseViewModelActivity<NoClassViewModel>() {
         data ?: return
 
         if (requestCode == REQUEST_SELECT && resultCode == Activity.RESULT_OK) {
-            val stu = data.extras.getSerializable("stu") as Student
+            val stu = data.extras?.getSerializable("stu") as Student
             mAdapter!!.addStu(stu)
         }
     }
@@ -148,13 +175,13 @@ class NoClassActivity : BaseViewModelActivity<NoClassViewModel>() {
     private fun initEditText() {
         et_noclass_add_classmate.setOnEditorActionListener { v, actionId, event ->
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                val key = et_noclass_add_classmate.getText().toString().trim()
+                val key = et_noclass_add_classmate.text.toString().trim()
                 if (TextUtils.isEmpty(key)) {
-                    snackbar("输入为空")
+                    toast("输入为空")
                     return@setOnEditorActionListener true
                 }
                 doSearch(key)
-                (getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS)
+                (getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).hideSoftInputFromWindow(currentFocus?.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
                 et_noclass_add_classmate.setText("")
                 return@setOnEditorActionListener true
             }
