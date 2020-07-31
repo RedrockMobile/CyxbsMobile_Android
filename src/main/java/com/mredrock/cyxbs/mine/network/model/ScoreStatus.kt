@@ -18,7 +18,10 @@ data class ScoreStatus(
         @SerializedName("rank")
         var rank: Int,
         @SerializedName("percent")
-        var percent: String
+        var percent: String,
+        @SerializedName("can_check_in")
+        var canCheckIn: Boolean
+
 ) : Serializable {
     /**
          "integral": 1410,    积分
