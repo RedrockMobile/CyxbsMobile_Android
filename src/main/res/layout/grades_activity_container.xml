@@ -4,15 +4,23 @@
     android:id="@+id/coordinator"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/whiteBackground">
+    android:background="@color/mine_sign_store_bg">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <include
-            android:id="@+id/tool_bar"
-            layout="@layout/common_toolbar" />
+        <com.mredrock.cyxbs.common.component.JToolbar
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/mine_sign_store_bg"
+            android:fitsSystemWindows="true"
+            app:navigationIcon="@drawable/common_ic_back"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_exam_main"
@@ -21,7 +29,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tool_bar" />
+            app:layout_constraintTop_toBottomOf="@id/toolbar" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <com.mredrock.cyxbs.common.component.JCardViewPlus
