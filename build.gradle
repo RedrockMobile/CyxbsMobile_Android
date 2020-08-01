@@ -38,9 +38,9 @@ buildscript {
         classpath "com.github.ben-manes:gradle-versions-plugin:0.28.0"
     }
 
-    exec {
-        commandLine "./hooks/init.sh"
-    }
+//    exec {
+//        commandLine "./hooks/init.sh"
+//    }
 }
 
 allprojects {

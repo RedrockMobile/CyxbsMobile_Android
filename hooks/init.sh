@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 function isCmdExist() {
 	local cmd="$1"
