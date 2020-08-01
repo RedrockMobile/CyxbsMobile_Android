@@ -37,6 +37,10 @@ buildscript {
         //依赖版本检测
         classpath "com.github.ben-manes:gradle-versions-plugin:0.28.0"
     }
+
+    exec {
+        commandLine "./hooks/init.sh"
+    }
 }
 
 allprojects {
