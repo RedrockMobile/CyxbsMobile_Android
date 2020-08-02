@@ -1,0 +1,64 @@
+import java.util.regex.Pattern
+
+//这里不加W的原因是有的windows系统有的小写有的大写
+if (!System.properties['os.name'].contains('indows')) {
+    exec {
+        //非windows系统下可能需要可执行权限
+        commandLine "./hooks/init.sh"
+    }
+}
+
+def list = []
+findHooks(list, new File("${projectDir.absolutePath}/.git"))
+
+
+list.each { path ->
+    copy {
+        from "${projectDir.absolutePath}/hooks"
+        println "${projectDir.absolutePath}/hooks"
+        into "$path"
+        println "$path"
+        println "********************************"
+        rename { String fileName ->
+            fileName.replace("sh", "")
+        }
+    }
+}
+
+
+void findHooks(List list, File file) {
+    if (file == null) return
+    if (file.isDirectory() && file.name == "hooks") {
+        def matcher = Pattern.compile("\\.git.+hooks").matcher(file.absolutePath)
+        if (matcher.find()) {
+            list.add(file.absolutePath)
+        }
+    } else if (file.isDirectory()) {
+        def fileList = file.listFiles()
+        if (fileList != null) {
+            fileList.each {
+                findHooks(list, it)
+            }
+        }
+    }
+}
+
+private void restoreCache(List list) {
+    def path = "./hooks/cache/path"
+    def file = file(path)
+    if (!file.exists()) return
+    def stream = new ObjectInputStream(new FileInputStream(file))
+    list.addAll(stream.readObject() as List)
+    stream.close()
+}
+
+private void savePathList(List list) {
+    def path = "./hooks/cache/path"
+    def file = file(path)
+    if (!file.parentFile.exists()){
+        file.parentFile.mkdirs()
+    }
+    def stream = new ObjectOutputStream(new FileOutputStream(path))
+    stream.writeObject(list)
+    stream.close()
+}

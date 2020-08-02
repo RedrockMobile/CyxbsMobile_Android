@@ -6,6 +6,7 @@ apply plugin: "com.github.ben-manes.versions"
 
 buildscript {
     apply from: 'versions.gradle'
+    apply from: "githook.gradle"
 
     ext {
         lib_config = "${rootDir}/lib_config.gradle"
@@ -38,9 +39,7 @@ buildscript {
         classpath "com.github.ben-manes:gradle-versions-plugin:0.28.0"
     }
 
-//    exec {
-//        commandLine "./hooks/init.sh"
-//    }
+
 }
 
 allprojects {
