@@ -1,25 +1,31 @@
 import java.util.regex.Pattern
 
-file("${projectDir.absolutePath}/hooks").listFiles().each {f->
-    exec {
-        commandLine 'chmod', 'u+x', "$f.absolutePath"
-    }
-}
-
-def list = []
-findHooks(list, new File("${projectDir.absolutePath}/.git"))
-
-
-list.each { path ->
-    copy {
-        from "${projectDir.absolutePath}/hooks"
-        into "$path"
-        rename { String fileName ->
-            fileName.replace(".sh", "")
+//git hook 可以没有，但是构建必须无障碍
+try {
+    //判断是不是windows,不加W是因为某些版本字符串中W大小写不定
+    if (!System.properties['os.name'].contains('indows')) {
+        file("${projectDir.absolutePath}/hooks").listFiles().each { f ->
+            exec {
+                commandLine 'chmod', 'u+x', "$f.absolutePath"
+            }
         }
     }
-}
 
+    def list = []
+    findHooks(list, new File("${projectDir.absolutePath}/.git"))
+
+    list.each { path ->
+        copy {
+            from "${projectDir.absolutePath}/hooks"
+            into "$path"
+            rename { String fileName ->
+                fileName.replace(".sh", "")
+            }
+        }
+    }
+} catch (Exception e) {
+    e.printStackTrace()
+}
 
 void findHooks(List list, File file) {
     if (file == null) return
