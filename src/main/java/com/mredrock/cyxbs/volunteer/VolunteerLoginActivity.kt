@@ -46,6 +46,8 @@ class VolunteerLoginActivity : BaseActivity() {
         common_toolbar.init("完善信息")
 
         btn_volunteer_login.setOnClickListener { view: View? ->
+            if (account.isEmpty() || password.isEmpty())
+                return@setOnClickListener
             showProgressDialog()
             initUserInfo()
             if (view!!.id == R.id.btn_volunteer_login) login(account, EncryptPassword.encrypt(password))
