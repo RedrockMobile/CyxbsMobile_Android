@@ -1,10 +1,8 @@
 import java.util.regex.Pattern
 
-//这里不加W的原因是有的windows系统有的小写有的大写
-if (!System.properties['os.name'].contains('indows')) {
+file("${projectDir.absolutePath}/hooks").listFiles().each {f->
     exec {
-        //非windows系统下可能需要可执行权限
-        commandLine "./hooks/init.sh"
+        commandLine 'chmod', 'u+x', "$f.absolutePath"
     }
 }
 
@@ -20,7 +18,7 @@ list.each { path ->
         println "$path"
         println "********************************"
         rename { String fileName ->
-            fileName.replace("sh", "")
+            fileName.replace(".sh", "")
         }
     }
 }
@@ -55,7 +53,7 @@ private void restoreCache(List list) {
 private void savePathList(List list) {
     def path = "./hooks/cache/path"
     def file = file(path)
-    if (!file.parentFile.exists()){
+    if (!file.parentFile.exists()) {
         file.parentFile.mkdirs()
     }
     def stream = new ObjectOutputStream(new FileOutputStream(path))
