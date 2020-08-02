@@ -6,7 +6,8 @@ try {
     if (!System.properties['os.name'].contains('indows')) {
         file("${projectDir.absolutePath}/hooks").listFiles().each { f ->
             exec {
-                commandLine 'chmod', 'u+x', "$f.absolutePath"
+                //权限给满，主要是怕你不小心动到了这个目录，但是不知道为啥gradle就没权限删除源文件了
+                commandLine 'chmod', '777', "$f.absolutePath"
             }
         }
     }
@@ -24,7 +25,9 @@ try {
         }
     }
 } catch (Exception e) {
+    println "********git hook复制文件失败，错误信息如下********"
     e.printStackTrace()
+    println "*****************继续构建项目*******************"
 }
 
 void findHooks(List list, File file) {
