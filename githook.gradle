@@ -13,10 +13,7 @@ findHooks(list, new File("${projectDir.absolutePath}/.git"))
 list.each { path ->
     copy {
         from "${projectDir.absolutePath}/hooks"
-        println "${projectDir.absolutePath}/hooks"
         into "$path"
-        println "$path"
-        println "********************************"
         rename { String fileName ->
             fileName.replace(".sh", "")
         }
@@ -39,24 +36,4 @@ void findHooks(List list, File file) {
             }
         }
     }
-}
-
-private void restoreCache(List list) {
-    def path = "./hooks/cache/path"
-    def file = file(path)
-    if (!file.exists()) return
-    def stream = new ObjectInputStream(new FileInputStream(file))
-    list.addAll(stream.readObject() as List)
-    stream.close()
-}
-
-private void savePathList(List list) {
-    def path = "./hooks/cache/path"
-    def file = file(path)
-    if (!file.parentFile.exists()) {
-        file.parentFile.mkdirs()
-    }
-    def stream = new ObjectOutputStream(new FileOutputStream(path))
-    stream.writeObject(list)
-    stream.close()
 }
