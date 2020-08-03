@@ -28,6 +28,8 @@ interface IUserStateService {
 
     fun isExpired(): Boolean
 
+    fun isRefreshTokenExpired(): Boolean
+
     fun addOnStateChangedListener(listener: (state: UserState) -> Unit)
 
     fun addOnStateChangedListener(listener: StateListener)

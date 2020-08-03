@@ -29,6 +29,12 @@ const val USER_INFO_ENCRYPT_VERSION = 1
 //User信息存储key
 const val SP_KEY_USER_V2 = "cyxbsmobile_user_v2"
 
+//refreshToken失效时间
+const val SP_KEY_REFRESH_TOKEN_EXPIRED = "user_refresh_token_expired_time"
+
+//refreshToken 后端规定45天过期，客户端规定44天过期，以防错误，时间戳
+const val SP_REFRESH_DAY = 3801600000
+
 const val DEFAULT_PREFERENCE_FILENAME = "share_data"
 
 //在课表上没课的地方显示备忘录

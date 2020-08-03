@@ -156,7 +156,11 @@ object ApiGenerator {
                     refreshToken.isEmpty() || token.isEmpty() -> {
                         token = ServiceManager.getService(IAccountService::class.java).getUserTokenService()?.getToken()
                         refreshToken = ServiceManager.getService(IAccountService::class.java).getUserTokenService()?.getRefreshToken()
-                        it.proceed(it.request().newBuilder().header("Authorization", "Bearer $token").build())
+                        if (isTokenExpired()) {
+                            checkRefresh(it)
+                        } else {
+                            it.proceed(it.request().newBuilder().header("Authorization", "Bearer $token").build())
+                        }
                     }
                     isTokenExpired() -> {
                         checkRefresh(it)

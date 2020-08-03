@@ -207,4 +207,26 @@ abstract class BaseActivity : AppCompatActivity() {
             postcard.navigation(activity)
         }
     }
+
+    //检查refreshToken是否过期，用户是否太久未使用
+    // 以我的思路，只会出现在MainActivity
+    // 但是还是放在BaseActivity，以备其他情况
+    protected fun checkUserInfoExpired(loginConfig: LoginConfig, activity: Activity) {
+        //refreshToken过期，那么请退出重新登录
+        val userState = ServiceManager.getService(IAccountService::class.java).getVerifyService()
+        if (userState.isLogin() && userState.isRefreshTokenExpired()) {
+            //退出登录
+            CyxbsToast.makeText(activity, "身份信息已过期，请重新登录", Toast.LENGTH_LONG).show()
+            userState.logout(this)
+            //取消转场动画
+            val postcard = ARouter.getInstance().build(MAIN_LOGIN).withTransition(0, 0)
+            //如果设置了重新启动activity，则传Class过去，并关闭当前Activity
+            if (loginConfig.isFinish) {
+                postcard.withSerializable(ACTIVITY_CLASS, this::class.java)
+                activity.finish()
+            }
+            //正式开始路由
+            postcard.navigation(activity)
+        }
+    }
 }
