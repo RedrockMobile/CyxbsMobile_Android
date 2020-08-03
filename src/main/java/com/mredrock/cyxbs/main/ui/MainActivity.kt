@@ -92,6 +92,7 @@ class MainActivity : BaseViewModelActivity<MainViewModel>(), EventBusLifecycleSu
             mainViewModel = viewModel
         }
         checkSplash()
+        checkUserInfoExpired(loginConfig, this)
         initActivity(savedInstanceState)//Activity相关初始化
     }
 
@@ -107,6 +108,7 @@ class MainActivity : BaseViewModelActivity<MainViewModel>(), EventBusLifecycleSu
         initBottomSheetBehavior()//初始化上拉容器BottomSheet课表
         initFragments(bundle)//对四个主要的fragment进行配置
     }
+
 
     private fun initUpdate() {
         ServiceManager.getService(IAppUpdateService::class.java).apply {
