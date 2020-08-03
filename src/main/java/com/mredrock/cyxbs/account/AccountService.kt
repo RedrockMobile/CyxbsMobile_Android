@@ -14,7 +14,9 @@ import com.mredrock.cyxbs.account.bean.TokenWrapper
 import com.mredrock.cyxbs.account.bean.User
 import com.mredrock.cyxbs.account.utils.UserInfoEncryption
 import com.mredrock.cyxbs.common.config.ACCOUNT_SERVICE
+import com.mredrock.cyxbs.common.config.SP_KEY_REFRESH_TOKEN_EXPIRED
 import com.mredrock.cyxbs.common.config.SP_KEY_USER_V2
+import com.mredrock.cyxbs.common.config.SP_REFRESH_DAY
 import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.network.exception.RedrockApiException
 import com.mredrock.cyxbs.common.service.account.*
@@ -156,6 +158,13 @@ internal class AccountService : IAccountService {
             return expiredTime * 1000 - curTime <= 10000L
         }
 
+        override fun isRefreshTokenExpired(): Boolean {
+            val curTime = System.currentTimeMillis()
+            val expiredTime = mContext.defaultSharedPreferences.getLong(SP_KEY_REFRESH_TOKEN_EXPIRED, 0)
+            //当前时间比预期过期时间快10s，就过期了
+            return curTime - expiredTime >= 10000L
+        }
+
         fun loginFromCache(context: Context) {
             val encryptedTokenJson = context.defaultSharedPreferences.getString(SP_KEY_USER_V2, "")
             takeIfNoException { bind(TokenWrapper.fromJson(mUserInfoEncryption.decrypt(encryptedTokenJson))) }
@@ -183,6 +192,7 @@ internal class AccountService : IAccountService {
                 }
                 mContext.defaultSharedPreferences.editor {
                     putString(SP_KEY_USER_V2, mUserInfoEncryption.encrypt(Gson().toJson(data)))
+                    putLong(SP_KEY_REFRESH_TOKEN_EXPIRED, System.currentTimeMillis() + SP_REFRESH_DAY)
                 }
                 action.invoke(data.token)
             }
@@ -207,6 +217,10 @@ internal class AccountService : IAccountService {
                     }.show()
         }
 
+        /**
+         * 登录
+         * @throws IllegalStateException
+         */
         @WorkerThread
         override fun login(context: Context, uid: String, passwd: String) {
             val response = ApiGenerator.getCommonApiService(ApiService::class.java).login(LoginParams(uid, passwd)).execute()
@@ -226,6 +240,7 @@ internal class AccountService : IAccountService {
                 }
                 context.defaultSharedPreferences.editor {
                     putString(SP_KEY_USER_V2, mUserInfoEncryption.encrypt(Gson().toJson(apiWrapper.data)))
+                    putLong(SP_KEY_REFRESH_TOKEN_EXPIRED, System.currentTimeMillis() + SP_REFRESH_DAY)
                 }
             } else {
                 apiWrapper?.apply {
@@ -237,6 +252,7 @@ internal class AccountService : IAccountService {
         override fun logout(context: Context) {
             context.defaultSharedPreferences.editor {
                 putString(SP_KEY_USER_V2, "")
+                putLong(SP_KEY_REFRESH_TOKEN_EXPIRED, 0)
             }
             user = null
             tokenWrapper = null
