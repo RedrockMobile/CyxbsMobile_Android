@@ -12,7 +12,6 @@ import android.widget.Toast
 import androidx.annotation.DrawableRes
 import androidx.appcompat.app.AppCompatActivity
 import com.alibaba.android.arouter.launcher.ARouter
-import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.R
 import com.mredrock.cyxbs.common.bean.LoginConfig
 import com.mredrock.cyxbs.common.component.CyxbsToast
@@ -23,6 +22,7 @@ import com.mredrock.cyxbs.common.mark.EventBusLifecycleSubscriber
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.service.account.IAccountService
 import com.mredrock.cyxbs.common.utils.LogUtils
+import com.mredrock.cyxbs.common.utils.extensions.getDarkModeStatus
 import com.umeng.analytics.MobclickAgent
 import kotlinx.android.synthetic.main.common_toolbar.*
 import org.greenrobot.eventbus.EventBus
@@ -62,7 +62,7 @@ abstract class BaseActivity : AppCompatActivity() {
 
         when {
             Build.VERSION.SDK_INT >= 23 -> {
-                if (BaseApp.isNightMode) {
+                if (this.getDarkModeStatus()) {
                     window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                 } else {
                     window.decorView.systemUiVisibility =
@@ -139,7 +139,6 @@ abstract class BaseActivity : AppCompatActivity() {
     override fun onStart() {
         super.onStart()
         if (this is EventBusLifecycleSubscriber) EventBus.getDefault().register(this)
-        checkIsLogin(loginConfig, this)
         lifeCycleLog("onStart")
     }
 
@@ -190,6 +189,9 @@ abstract class BaseActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * 检查是否登录，因为单模块调试，需主动调用
+     */
     protected fun checkIsLogin(loginConfig: LoginConfig, activity: Activity) {
         if (!ServiceManager.getService(IAccountService::class.java).getVerifyService().isLogin() && loginConfig.isCheckLogin) {
             //取消转场动画

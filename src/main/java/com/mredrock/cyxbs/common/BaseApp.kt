@@ -8,7 +8,6 @@ import android.content.Context
 import android.os.Build
 import com.alibaba.android.arouter.launcher.ARouter
 import com.mredrock.cyxbs.common.utils.CrashHandler
-import com.mredrock.cyxbs.common.utils.extensions.getDarkModeStatus
 import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
 
@@ -21,10 +20,6 @@ open class BaseApp : Application() {
         @SuppressLint("StaticFieldLeak", "CI_StaticFieldLeak")
         lateinit var context: Context
             private set
-
-        //当前是不是黑夜模式
-        val isNightMode: Boolean
-            get() = context.getDarkModeStatus()
 
         const val foregroundService = "foreground"
         var time = 0L
