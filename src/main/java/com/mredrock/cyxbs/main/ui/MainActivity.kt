@@ -96,6 +96,12 @@ class MainActivity : BaseViewModelActivity<MainViewModel>(), EventBusLifecycleSu
         initActivity(savedInstanceState)//Activity相关初始化
     }
 
+
+    override fun onStart() {
+        super.onStart()
+        checkIsLogin(loginConfig, this)
+
+    }
     /**
      * 一些非重量级初始化操作
      */
