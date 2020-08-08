@@ -2,5 +2,5 @@
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
 
     <corners android:radius="100dp" />
-    <solid android:color="@color/courseAffairDeleteButtonBackgroundColor" />
+    <solid android:color="@color/common_course_affair_delete_button_background_color" />
 </shape>

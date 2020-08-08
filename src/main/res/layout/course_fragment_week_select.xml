@@ -28,7 +28,7 @@
             android:paddingEnd="40dp"
             android:paddingBottom="8dp"
             android:text="@string/course_sure"
-            android:textColor="@color/whiteFontColor"
+            android:textColor="@color/common_white_font_color"
             android:textSize="18dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

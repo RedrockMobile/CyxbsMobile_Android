@@ -13,7 +13,7 @@
     android:gravity="center_vertical"
     android:singleLine="true"
     android:textSize="15sp"
-    android:textColor="@color/transactionAddPageWarpItemTextColor"
+    android:textColor="@color/common_transaction_add_page_warp_item_text_color"
     android:background="@drawable/course_shape_add_affair_detailed_background"
     tools:text="第20周">
 

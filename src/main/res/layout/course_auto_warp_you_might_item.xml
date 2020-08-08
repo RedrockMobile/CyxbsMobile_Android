@@ -7,7 +7,7 @@
     android:paddingTop="6dp"
     android:paddingEnd="13dp"
     android:paddingBottom="6dp"
-    android:textColor="@color/transactionAddPageWarpItemTextColor"
+    android:textColor="@color/common_transaction_add_page_warp_item_text_color"
     android:textSize="12sp"
     tools:text="会议"
     xmlns:android="http://schemas.android.com/apk/res/android"

@@ -3,7 +3,7 @@
     <corners android:radius="100dp" />
     <gradient
         android:angle="0"
-        android:endColor="@color/courseAffairModifyButtonGradientEndColor"
-        android:startColor="@color/courseAffairModifyButtonGradientStartColor"
+        android:endColor="@color/common_course_affair_modify_button_gradient_end_color"
+        android:startColor="@color/common_course_affair_modify_button_gradient_start_color"
         android:type="linear" />
 </shape>

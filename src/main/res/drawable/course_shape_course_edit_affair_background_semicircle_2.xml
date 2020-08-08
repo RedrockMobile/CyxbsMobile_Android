@@ -5,6 +5,6 @@
     <corners android:bottomRightRadius="71dp"
         android:topRightRadius="71dp"/>
 
-    <solid android:color="@color/course_affair_bubble_color" />
+    <solid android:color="@color/common_course_affair_bubble_color" />
 
 </shape>

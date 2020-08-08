@@ -5,9 +5,9 @@
         <shape
             android:shape="rectangle">
             <gradient
-                android:endColor="@color/course_end_of_light"
+                android:endColor="@color/common_course_end_of_light"
                 android:gradientRadius="50%p"
-                android:startColor="@color/course_edit_affair_start_color_transparency"
+                android:startColor="@color/common_course_edit_affair_start_color_transparency"
                 android:type="radial" />
         </shape>
 

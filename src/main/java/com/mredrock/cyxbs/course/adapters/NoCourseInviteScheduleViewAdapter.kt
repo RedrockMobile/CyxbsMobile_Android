@@ -26,16 +26,16 @@ class NoCourseInviteScheduleViewAdapter(private val mContext: Context,
                                         private val mNameList: List<String>) : ScheduleView.Adapter() {
 
     private val mCoursesColors by lazy(LazyThreadSafetyMode.NONE) {
-        intArrayOf(ContextCompat.getColor(mContext, R.color.morningCourseColor),
-                ContextCompat.getColor(mContext, R.color.afternoonCourseColor),
-                ContextCompat.getColor(mContext, R.color.eveningCourseColor),
+        intArrayOf(ContextCompat.getColor(mContext, R.color.common_morning_course_color),
+                ContextCompat.getColor(mContext, R.color.common_afternoon_course_color),
+                ContextCompat.getColor(mContext, R.color.common_evening_course_color),
                 ContextCompat.getColor(mContext, R.color.courseCoursesOther))
     }
 
     private val mCoursesTextColors by lazy(LazyThreadSafetyMode.NONE) {
-        intArrayOf(ContextCompat.getColor(mContext, R.color.morningCourseTextColor),
-                ContextCompat.getColor(mContext, R.color.afternoonCourseTextColor),
-                ContextCompat.getColor(mContext, R.color.eveningCourseTextColor))
+        intArrayOf(ContextCompat.getColor(mContext, R.color.common_morning_course_text_color),
+                ContextCompat.getColor(mContext, R.color.common_afternoon_course_text_color),
+                ContextCompat.getColor(mContext, R.color.common_evening_course_text_color))
     }
 
     // 获取对应位置有课的学生的名字在mNameList中的index

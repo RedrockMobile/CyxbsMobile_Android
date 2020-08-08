@@ -2,6 +2,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <declare-styleable name="RedRockTipsView" tools:ignore="ResourceName">
         <attr name="tipsColor" format="color" />
-        <attr name="RedRockTipsViewStyle" format="reference" tools:ignore="ResourceName" />
+        <attr name="RedRockTipsViewStyle" format="reference"  />
     </declare-styleable>
 </resources>

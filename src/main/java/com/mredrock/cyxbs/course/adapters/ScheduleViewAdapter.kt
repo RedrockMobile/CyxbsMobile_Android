@@ -51,15 +51,15 @@ class ScheduleViewAdapter(private val mActivity: Activity,
     private lateinit var mSchedulesArray: Array<Array<MutableList<Course>?>>
 
     private val mCoursesColors by lazy(LazyThreadSafetyMode.NONE) {
-        intArrayOf(ContextCompat.getColor(mActivity, R.color.morningCourseColor),
-                ContextCompat.getColor(mActivity, R.color.afternoonCourseColor),
-                ContextCompat.getColor(mActivity, R.color.eveningCourseColor),
+        intArrayOf(ContextCompat.getColor(mActivity, R.color.common_morning_course_color),
+                ContextCompat.getColor(mActivity, R.color.common_afternoon_course_color),
+                ContextCompat.getColor(mActivity, R.color.common_evening_course_color),
                 ContextCompat.getColor(mActivity, R.color.courseCoursesOther))
     }
     private val mCoursesTextColors by lazy(LazyThreadSafetyMode.NONE) {
-        intArrayOf(ContextCompat.getColor(mActivity, R.color.morningCourseTextColor),
-                ContextCompat.getColor(mActivity, R.color.afternoonCourseTextColor),
-                ContextCompat.getColor(mActivity, R.color.eveningCourseTextColor))
+        intArrayOf(ContextCompat.getColor(mActivity, R.color.common_morning_course_text_color),
+                ContextCompat.getColor(mActivity, R.color.common_afternoon_course_text_color),
+                ContextCompat.getColor(mActivity, R.color.common_evening_course_text_color))
     }
 
     private val mDialogHelper: ScheduleDetailBottomSheetDialogHelper by lazy(LazyThreadSafetyMode.NONE) {
@@ -226,8 +226,8 @@ class ScheduleViewAdapter(private val mActivity: Activity,
                 top.text = course.course
                 bottom.text = course.classroom
             }
-            top.textColor = ContextCompat.getColor(mActivity, R.color.levelTwoFontColor)
-            bottom.textColor = ContextCompat.getColor(mActivity, R.color.levelTwoFontColor)
+            top.textColor = ContextCompat.getColor(mActivity, R.color.common_level_two_font_color)
+            bottom.textColor = ContextCompat.getColor(mActivity, R.color.common_level_two_font_color)
             mAffairBackground.visibility = View.VISIBLE
         }
     }

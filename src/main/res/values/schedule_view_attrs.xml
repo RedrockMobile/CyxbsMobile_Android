@@ -14,7 +14,7 @@
         <attr name="emptyText" format="string" />
         <attr name="emptyTextSize" format="dimension" />
         <attr name="isDisplayCourse" format="boolean" />
-        <attr name="ScheduleViewStyle" format="reference" tools:ignore="ResourceName" />
+        <attr name="ScheduleViewStyle" format="reference"  />
     </declare-styleable>
     <item name="item_position_row" type="id" tools:ignore="ResourceName" />
     <item name="item_position_column" type="id" tools:ignore="ResourceName" />

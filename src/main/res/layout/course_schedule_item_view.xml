@@ -11,7 +11,7 @@
         android:id="@+id/affair_item_background"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:backgroundStripeColor="@color/transaction_background_stripe_color" />
+        app:backgroundStripeColor="@color/common_transaction_background_stripe_color" />
 
     <LinearLayout
         android:padding="8dp"

@@ -156,7 +156,7 @@ class ScheduleDetailViewAdapter(private val mDialog: Dialog, private val mSchedu
             val value = object : RedRockAutoWarpView.Adapter() {
                 override fun getItemCount(): Int = 2
                 override fun getItemView(position: Int): View? = TextView(context).apply {
-                    textColor = ContextCompat.getColor(context, R.color.levelTwoFontColor)
+                    textColor = ContextCompat.getColor(context, R.color.common_level_two_font_color)
                     textSize = 13f
                     when (position) {
                         0 -> text = itemViewInfo.classroom

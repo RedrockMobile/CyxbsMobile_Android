@@ -10,6 +10,6 @@
         </attr>
         <attr name="offsetBetweenText" format="integer" />
 
-        <attr name="RedRockTextViewStyle" format="reference" tools:ignore="ResourceName" />
+        <attr name="RedRockTextViewStyle" format="reference"  />
     </declare-styleable>
 </resources>

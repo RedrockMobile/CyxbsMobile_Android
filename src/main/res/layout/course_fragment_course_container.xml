@@ -36,7 +36,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:tipsColor="@color/courseTableDragIndicatorBlockColor" />
+                app:tipsColor="@color/common_course_table_drag_indicator_block_color" />
 
             <FrameLayout
                 android:id="@+id/course_header"
@@ -65,7 +65,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@{coursesViewModel.tomorrowTips}"
-                            android:textColor="@color/levelTwoFontColor"
+                            android:textColor="@color/common_level_two_font_color"
                             android:textSize="8sp"
                             app:layout_constraintBottom_toTopOf="@+id/course_tv_now_course"
                             app:layout_constraintEnd_toEndOf="@+id/course_tv_now_course"
@@ -85,7 +85,7 @@
                             android:paddingEnd="15dp"
                             android:singleLine="true"
                             android:text="@{coursesViewModel.nowCourse.course}"
-                            android:textColor="@color/levelTwoFontColor"
+                            android:textColor="@color/common_level_two_font_color"
                             android:textSize="22sp"
                             android:textStyle="bold"
                             android:visibility="@{coursesViewModel.isShowCurrentSchedule}"
@@ -172,7 +172,7 @@
                             android:layout_height="wrap_content"
                             android:maxLength="8"
                             android:text="@{coursesViewModel.mWeekTitle}"
-                            android:textColor="@color/levelTwoFontColor"
+                            android:textColor="@color/common_level_two_font_color"
                             android:textSize="22sp"
                             android:textStyle="bold"
                             app:layout_constraintBottom_toBottomOf="parent"
@@ -187,7 +187,7 @@
                             android:id="@+id/course_this_week_tips_blank"
                             android:layout_width="10dp"
                             android:layout_height="0dp"
-                            android:textColor="@color/levelTwoFontColor"
+                            android:textColor="@color/common_level_two_font_color"
                             app:layout_constraintBottom_toBottomOf="@+id/course_tv_which_week"
                             app:layout_constraintStart_toEndOf="@+id/course_tv_which_week"
                             app:layout_constraintTop_toTopOf="@+id/course_tv_which_week"
@@ -201,7 +201,7 @@
                             android:drawableEnd="@drawable/course_ic_forward"
                             android:drawablePadding="5dp"
                             android:text="@string/course_now_week"
-                            android:textColor="@color/levelTwoFontColor"
+                            android:textColor="@color/common_level_two_font_color"
                             android:textSize="15sp"
                             android:visibility="@{coursesViewModel.isShowPresentTips}"
                             app:layout_constraintBaseline_toBaselineOf="@+id/course_tv_which_week"
@@ -218,7 +218,7 @@
                             android:paddingEnd="16dp"
                             android:paddingBottom="8dp"
                             android:text="@string/course_back_now_week"
-                            android:textColor="@color/whiteFontColor"
+                            android:textColor="@color/common_white_font_color"
                             android:textSize="13sp"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
@@ -263,7 +263,7 @@
                         app:tabGravity="fill"
                         app:tabIndicatorColor="@null"
                         app:tabMode="scrollable"
-                        app:tabSelectedTextColor="@color/levelTwoFontColor"
+                        app:tabSelectedTextColor="@color/common_level_two_font_color"
                         app:tabTextColor="@color/courseTabText">
 
 
