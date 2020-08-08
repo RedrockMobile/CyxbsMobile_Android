@@ -4,7 +4,7 @@
     android:id="@+id/coordinator"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/mine_sign_store_bg">
+    android:background="@color/common_mine_sign_store_bg">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -17,7 +17,7 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/mine_sign_store_bg"
+            android:background="@color/common_mine_sign_store_bg"
             android:fitsSystemWindows="true"
             app:navigationIcon="@drawable/common_ic_back"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
@@ -40,7 +40,7 @@
         app:cardCornerRadius="16dp"
         android:fitsSystemWindows="true"
         app:layout_behavior="@string/bottom_sheet_behavior"
-        app:shadowColor="@color/grades_bottom_sheet_shadow"
+        app:shadowColor="@color/common_grades_bottom_sheet_shadow"
         app:shadowFlags="top"
         app:shadowRadius="45dp">
 

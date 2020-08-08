@@ -10,7 +10,7 @@
         android:layout_marginTop="24dp"
         android:layout_marginBottom="17dp"
         android:textStyle="bold"
-        android:textColor="@color/levelTwoFontColor"
+        android:textColor="@color/common_level_two_font_color"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 </LinearLayout>

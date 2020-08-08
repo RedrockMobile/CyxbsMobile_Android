@@ -4,6 +4,6 @@
 
     <corners
         android:radius="10dp" />
-    <solid android:color="@color/grades_item_cardView_bg" />
+    <solid android:color="@color/common_grades_item_cardView_bg" />
 
 </shape>

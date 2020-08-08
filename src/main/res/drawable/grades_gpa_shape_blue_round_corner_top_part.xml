@@ -7,6 +7,6 @@
         android:bottomRightRadius="0dp"
         android:topLeftRadius="16dp"
         android:topRightRadius="16dp" />
-    <solid android:color="@color/grades_gpa_rv_list_round_corner_background" />
+    <solid android:color="@color/common_grades_gpa_rv_list_round_corner_background" />
 
 </shape>

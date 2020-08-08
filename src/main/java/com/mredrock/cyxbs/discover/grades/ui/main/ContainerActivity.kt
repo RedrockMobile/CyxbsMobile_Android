@@ -73,7 +73,7 @@ class ContainerActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.grades_activity_container)
         common_toolbar.apply {
-            setBackgroundColor(ContextCompat.getColor(this@ContainerActivity, R.color.mine_sign_store_bg))
+            setBackgroundColor(ContextCompat.getColor(this@ContainerActivity, R.color.common_mine_sign_store_bg))
             initWithSplitLine("考试与成绩",
                     false)
             setTitleLocationAtLeft(true)

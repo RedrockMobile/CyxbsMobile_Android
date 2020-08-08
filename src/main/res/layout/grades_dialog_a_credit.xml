@@ -19,7 +19,7 @@
             android:gravity="left"
             android:text="@string/grades_dialog_a_credit"
             android:paddingStart="25dp"
-            android:textColor="@color/levelTwoFontColor"
+            android:textColor="@color/common_level_two_font_color"
             android:textSize="14sp" />
 
         <TextView
@@ -29,7 +29,7 @@
             android:layout_gravity="center_vertical"
             android:layout_weight="1"
             android:gravity="left"
-            android:textColor="@color/levelTwoFontColor"
+            android:textColor="@color/common_level_two_font_color"
             android:textSize="14sp"
             tools:text="90" />
     </LinearLayout>

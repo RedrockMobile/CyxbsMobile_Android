@@ -5,7 +5,7 @@
     android:layout_marginStart="15dp"
     android:layout_marginEnd="15dp"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="@color/grades_gpa_rv_list_round_corner_background"
+    android:background="@color/common_grades_gpa_rv_list_round_corner_background"
     android:orientation="vertical">
 
     <LinearLayout
@@ -22,7 +22,7 @@
             android:gravity="left"
             android:paddingStart="25dp"
             tools:text="图形创意"
-            android:textColor="@color/levelTwoFontColor"
+            android:textColor="@color/common_level_two_font_color"
             android:textSize="14sp" />
 
         <TextView
@@ -32,7 +32,7 @@
             android:layout_weight="1"
             android:gravity="left"
             tools:text="90"
-            android:textColor="@color/levelTwoFontColor"
+            android:textColor="@color/common_level_two_font_color"
             android:textSize="14sp" />
 
         <TextView
@@ -43,7 +43,7 @@
             android:gravity="right"
             android:text="理论"
             android:paddingEnd="25dp"
-            android:textColor="@color/levelTwoFontColor"
+            android:textColor="@color/common_level_two_font_color"
             android:textSize="14sp" />
     </LinearLayout>
 
@@ -52,6 +52,6 @@
         android:layout_height="1dp"
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
-        android:src="@color/qa_answer_item_divider_color"/>
+        android:src="@color/common_qa_answer_item_divider_color"/>
 
 </LinearLayout>

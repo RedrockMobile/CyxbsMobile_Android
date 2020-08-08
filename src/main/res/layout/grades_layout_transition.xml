@@ -10,7 +10,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/grades_bottom_sheet_gpa"
-        android:textColor="@color/levelTwoFontColor"
+        android:textColor="@color/common_level_two_font_color"
         android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -38,8 +38,8 @@
         app:tabGravity="fill"
         app:tabIndicatorColor="@null"
         app:tabMode="fixed"
-        app:tabSelectedTextColor="@color/levelTwoFontColor"
-        app:tabTextColor="@color/levelTwoFontColor">
+        app:tabSelectedTextColor="@color/common_level_two_font_color"
+        app:tabTextColor="@color/common_level_two_font_color">
 
         <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"
