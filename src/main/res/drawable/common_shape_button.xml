@@ -3,6 +3,6 @@
     android:shape="rectangle">
     <corners android:radius="100dp" />
     <gradient
-        android:startColor="@color/buttonGradientStartColor"
-        android:endColor="@color/buttonGradientEndColor" />
+        android:startColor="@color/common_button_gradient_start_color"
+        android:endColor="@color/common_button_gradient_end_color" />
 </shape>

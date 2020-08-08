@@ -25,7 +25,7 @@
             android:layout_marginTop="23dp"
             android:layout_marginBottom="23dp"
             android:background="@drawable/common_dialog_btn_positive_blue"
-            android:textColor="@color/whiteFontColor"
+            android:textColor="@color/common_white_font_color"
             android:textSize="15sp" />
     </LinearLayout>
 

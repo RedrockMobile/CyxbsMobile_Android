@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <declare-styleable name="RedRockAutoWarpView" tools:ignore="ResourceName">
+    <declare-styleable name="RedRockAutoWarpView" >
         <attr name="verticalsSpacing" format="dimension" />
         <attr name="horizontalSpacing" format="dimension" />
         <attr name="maxLine" format="integer" />
@@ -11,6 +11,6 @@
         <!--        开启代表严格按照最后宽高来布局，不开启表示按照测量宽高，开启更加耗费性能，但是不是很多-->
         <!--        默认开启-->
         <attr name="strictMode" format="boolean" />
-        <attr name="RedRockAutoWarpViewStyle" format="reference" tools:ignore="ResourceName" />
+        <attr name="RedRockAutoWarpViewStyle" format="reference"  />
     </declare-styleable>
 </resources>

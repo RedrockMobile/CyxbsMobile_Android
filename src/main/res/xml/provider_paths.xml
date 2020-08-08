@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <paths xmlns:tools="http://schemas.android.com/tools"
-    tools:ignore="ResourceName">
+    >
     <!-- /storage/emulated/0/Download/${applicationId}/.beta/apk-->
     <external-path
         name="beta_external_download_path"

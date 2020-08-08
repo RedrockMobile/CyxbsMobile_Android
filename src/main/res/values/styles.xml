@@ -7,15 +7,15 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <!--        透明状态栏-->
-        <item name="statusBarBackground">@color/transparentBackground</item>
+        <item name="statusBarBackground">@color/common_transparent_background</item>
         <!--        每个Activity的Window背景，最好别设置透明或者空-->
-        <item name="android:windowBackground">@color/windowBackground</item>
+        <item name="android:windowBackground">@color/common_window_background</item>
         <!--        Transition转场动画，暂未启用-->
-        <item name="android:windowEnterTransition">@transition/fade</item>
-        <item name="android:windowExitTransition">@transition/fade</item>
-        <item name="android:windowSharedElementEnterTransition">@transition/app_transaction</item>
-        <item name="android:windowSharedElementExitTransition">@transition/app_transaction</item>
-        <item name="actionMenuTextColor">@color/levelTwoFontColor</item>
+        <item name="android:windowEnterTransition">@transition/common_fade</item>
+        <item name="android:windowExitTransition">@transition/common_fade</item>
+        <item name="android:windowSharedElementEnterTransition">@transition/common_app_transaction</item>
+        <item name="android:windowSharedElementExitTransition">@transition/common_app_transaction</item>
+        <item name="actionMenuTextColor">@color/common_level_two_font_color</item>
     </style>
 
     <style name="AppTheme.FullScreen" parent="AppTheme" tools:ignore="ResourceName">
@@ -33,7 +33,7 @@
         <!--        状态栏字体颜色，只是在安卓6.0以上可用-->
         <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
         <!--        去除dialog最底部的灰色背景-->
-        <item name="colorBackgroundFloating">@color/transparentBackground</item>
+        <item name="colorBackgroundFloating">@color/common_transparent_background</item>
         <!--        去除dialog默认白色背景-->
         <item name="android:background">@android:color/transparent</item>
         <!--        是否加遮罩（对话框出现时，背景变暗。为true则充许变暗）-->

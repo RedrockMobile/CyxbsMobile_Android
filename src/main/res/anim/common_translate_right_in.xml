@@ -2,9 +2,9 @@
 <translate xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:duration="400"
-    android:fromXDelta="0"
+    android:fromXDelta="100%"
     android:fromYDelta="0"
     android:toYDelta="0"
-    android:toXDelta="100%"
+    android:toXDelta="0"
     android:interpolator="@android:anim/decelerate_interpolator"
-    tools:ignore="ResourceName" />
+     />

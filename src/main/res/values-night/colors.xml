@@ -8,327 +8,327 @@
           并以模块名为前缀-->
 
     <!--    整体灰色背景-->
-    <color name="windowBackground" tools:ignore="ResourceName">#000000</color>
+    <color name="common_window_background">#000000</color>
     <!--    整体淡灰二级背景-->
-    <color name="secondaryWindowBackground" tools:ignore="ResourceName">#1D1D1D</color>
-    <color name="chosenBackground" tools:ignore="ResourceName">#1D1D1D</color>
+    <color name="common_secondary_window_background">#1D1D1D</color>
+    <color name="common_chosen_background">#1D1D1D</color>
 
     <!--    纯白色背景和纯白色字体-->
-    <color name="whiteBackground" tools:ignore="ResourceName">#000000</color>
-    <color name="whiteFontColor" tools:ignore="ResourceName">#ffffff</color>
+    <color name="common_white_background">#000000</color>
+    <color name="common_white_font_color">#ffffff</color>
 
-    <color name="transparentBackground" tools:ignore="ResourceName">#00000000</color>
+    <color name="common_transparent_background">#00000000</color>
 
 
     <!--    主要字体颜色分以下四种，下列按照蓝色由深到浅排序，要用自取-->
     <!--    一级字体颜色-->
-    <color name="levelOneFontColor" tools:ignore="ResourceName">#ffffff</color>
+    <color name="common_level_one_font_color">#ffffff</color>
     <!--    二级字体颜色-->
-    <color name="levelTwoFontColor" tools:ignore="ResourceName">#ffffff</color>
+    <color name="common_level_two_font_color">#ffffff</color>
     <!--    三级字体颜色-->
-    <color name="levelThreeFontColor" tools:ignore="ResourceName">#ffffff</color>
+    <color name="common_level_three_font_color">#ffffff</color>
     <!--    四级字体颜色-->
     <color name="levelFourFontColor" tools:ignore="DuplicateDefinition,ResourceName">#ffffff</color>
 
-    <color name="courseDeleteButtonTextColor" tools:ignore="ResourceName">#5b585c</color>
+    <color name="common_course_delete_button_text_color">#5b585c</color>
 
 
     <!--    底部tab未聚焦字体颜色-->
-    <color name="unFocusedFontColor" tools:ignore="ResourceName">#5b585c</color>
+    <color name="common_un_focused_font_color">#5b585c</color>
     <!--    底部tab聚焦字体颜色-->
-    <color name="focusedFontColor" tools:ignore="ResourceName">#465FFF</color>
+    <color name="common_focused_font_color">#465FFF</color>
 
 
     <!--    课表可上拉下拉标识小块背景-->
-    <color name="courseTableDragIndicatorBlockColor" tools:ignore="ResourceName">#000000</color>
+    <color name="common_course_table_drag_indicator_block_color">#000000</color>
     <!--    课表标识当天阴影-->
-    <color name="courseIdentifiesTheCurrentShadowColor" tools:ignore="ResourceName">#26000101
+    <color name="common_course_identifies_the_current_shadow_color">#26000101
     </color>
     <!--    课表课程色块颜色-->
-    <color name="morningCourseColor" tools:ignore="ResourceName">#26FFCCA1</color>
-    <color name="afternoonCourseColor" tools:ignore="ResourceName">#26FF979B</color>
-    <color name="eveningCourseColor" tools:ignore="ResourceName">#269BB2FF</color>
+    <color name="common_morning_course_color">#26FFCCA1</color>
+    <color name="common_afternoon_course_color">#26FF979B</color>
+    <color name="common_evening_course_color">#269BB2FF</color>
     <!--    课程色块内的字体颜色-->
-    <color name="morningCourseTextColor" tools:ignore="ResourceName">#F0F0F2</color>
-    <color name="afternoonCourseTextColor" tools:ignore="ResourceName">#F0F0F2</color>
-    <color name="eveningCourseTextColor" tools:ignore="ResourceName">#F0F0F2</color>
+    <color name="common_morning_course_text_color">#F0F0F2</color>
+    <color name="common_afternoon_course_text_color">#F0F0F2</color>
+    <color name="common_evening_course_text_color">#F0F0F2</color>
 
-    <color name="courseAffairYouMightRecycleItemBackgroundColor" tools:ignore="ResourceName">
+    <color name="common_course_affair_you_might_recycle_item_background_color">
         #99F2F3F7
     </color>
 
     <!--    发现教务在线方框背景-->
-    <color name="discoveryJwzxBackground" tools:ignore="ResourceName">#AFD2FB</color>
+    <color name="common_discovery_jwzx_background">#AFD2FB</color>
 
-    <color name="commonDefaultDivideLineColor">#19f8f9fc</color>
+    <color name="common_default_divide_line_color">#19f8f9fc</color>
     <!--    按钮渐变起始颜色-->
-    <color name="buttonGradientStartColor" tools:ignore="ResourceName">#4841E2</color>
+    <color name="common_button_gradient_start_color">#4841E2</color>
     <!--    按钮渐变终止颜色-->
-    <color name="buttonGradientEndColor" tools:ignore="ResourceName">#4841E2</color>
+    <color name="common_button_gradient_end_color">#4841E2</color>
 
     <!--    事务dialog删除按钮背景颜色-->
-    <color name="courseAffairDeleteButtonBackgroundColor" tools:ignore="ResourceName">#E6EFFC
+    <color name="common_course_affair_delete_button_background_color">#E6EFFC
     </color>
 
     <!--    事务dialog，修改按钮渐变颜色，这个居然和通用渐变不是一个颜色，不科学-->
-    <color name="courseAffairModifyButtonGradientStartColor" tools:ignore="ResourceName">#2921D1
+    <color name="common_course_affair_modify_button_gradient_start_color">#2921D1
     </color>
-    <color name="courseAffairModifyButtonGradientEndColor" tools:ignore="ResourceName">#5D5DF7
+    <color name="common_course_affair_modify_button_gradient_end_color">#5D5DF7
     </color>
 
     <!--    添加事务时标题-->
-    <color name="transactionHeading" tools:ignore="ResourceName">#ffffff</color>
+    <color name="common_transaction_heading">#ffffff</color>
     <!--    添加事务时周数选择时，点击后字体颜色-->
-    <color name="selectFontColorForTransactionWeeks" tools:ignore="ResourceName">#FFA192</color>
+    <color name="common_select_font_color_for_transaction_weeks">#FFA192</color>
 
 
     <!--    打字框背景颜色-->
-    <color name="writeAbleAreaBackgroundShallow" tools:ignore="ResourceName">#1F1F1F</color>
-    <color name="writeAbleAreaBackgroundDark" tools:ignore="ResourceName">#E8F0FC</color>
+    <color name="common_write_able_area_background_shallow">#1F1F1F</color>
+    <color name="common_write_able_area_background_dark">#E8F0FC</color>
 
     <!--    我的-->
     <!--    签到页面TextView颜色-->
-    <color name="blueSignTextColor" tools:ignore="ResourceName">#839BFA</color>
+    <color name="common_blue_sign_text_color">#839BFA</color>
     <!--    分割线颜色-->
-    <color name="severViewColor" tools:ignore="ResourceName">#35F8F9FC</color>
-    <color name="alphaSeverViewColor" tools:ignore="ResourceName">#39BDCCE5</color>
-    <color name="blueButton" tools:ignore="ResourceName">#2921D1</color>
+    <color name="common_sever_view_color">#35F8F9FC</color>
+    <color name="common_alpha_sever_view_color">#39BDCCE5</color>
+    <color name="common_blue_button">#2921D1</color>
 
     <!--    按钮颜色-->
-    <color name="greyButton" tools:ignore="ResourceName">#E1DFE0</color>
-    <color name="greyButtonText" tools:ignore="ResourceName">#C3C0C1</color>
-    <color name="greyText" tools:ignore="ResourceName">#C4C2C2</color>
-    <color name="switchOff" tools:ignore="ResourceName">#5A5A5A</color>
+    <color name="common_grey_button">#E1DFE0</color>
+    <color name="common_grey_button_text">#C3C0C1</color>
+    <color name="common_grey_text">#C4C2C2</color>
+    <color name="common_switch_off">#5A5A5A</color>
 
     <!--    tab_layout颜色-->
-    <color name="mine_tab_layout_text_unselected" tools:ignore="ResourceName">#9AF0F0F2</color>
-    <color name="mine_tab_layout_indicator_color" tools:ignore="ResourceName">#1AD0F2</color>
+    <color name="common_mine_tab_layout_text_unselected">#9AF0F0F2</color>
+    <color name="common_mine_tab_layout_indicator_color">#1AD0F2</color>
 
     <!--    关于板块的颜色-->
-    <color name="mine_about_text_color_normal" tools:ignore="ResourceName">#ffffff</color>
-    <color name="mine_about_text_color_up_to_date" tools:ignore="ResourceName">#48F0F0F2</color>
-    <color name="mine_about_text_color_blue" tools:ignore="ResourceName">#0BCCF0</color>
+    <color name="common_mine_about_text_color_normal">#ffffff</color>
+    <color name="common_mine_about_text_color_up_to_date">#48F0F0F2</color>
+    <color name="common_mine_about_text_color_blue">#0BCCF0</color>
     <!--    签到部分颜色-->
-    <color name="mine_sign_bg_grey" tools:ignore="ResourceName">#5A5A5A</color>
-    <color name="mine_sign_divider_grey" tools:ignore="ResourceName">#5A5A5A</color>
-    <color name="mine_sign_divider_blue" tools:ignore="ResourceName">#2CDEFF</color>
-    <color name="mine_sign_divider_blue_light" tools:ignore="ResourceName">#552CDEFF</color>
-    <color name="mine_sign_integral_text" tools:ignore="ResourceName">#4841E2</color>
-    <color name="mine_sign_ring_blue" tools:ignore="ResourceName">#2CDEFF</color>
-    <color name="mine_sign_ring_outside" tools:ignore="ResourceName">#ffffff</color>
-    <color name="mine_sign_bubble_text_color" tools:ignore="ResourceName">#1D1D1D</color>
-    <color name="mine_sign_integral_text_background" tools:ignore="ResourceName">#D4DAFF</color>
-    <color name="mine_sign_store_round_brown_background" tools:ignore="ResourceName">#5A5A5A</color>
-    <color name="mine_sign_store_line" tools:ignore="ResourceName">#E2EDFB</color>
-    <color name="mine_sign_store_item_tv_integral" tools:ignore="ResourceName">#3A34D2</color>
-    <color name="mine_sign_store_item_bg" tools:ignore="ResourceName">#2D2D2D</color>
-    <color name="mine_sign_store_bg" tools:ignore="ResourceName">#1D1D1D</color>
-    <color name="mine_sign_store_my_product_text_color" tools:ignore="ResourceName">#000001</color>
+    <color name="common_mine_sign_bg_grey">#5A5A5A</color>
+    <color name="common_mine_sign_divider_grey">#5A5A5A</color>
+    <color name="common_mine_sign_divider_blue">#2CDEFF</color>
+    <color name="common_mine_sign_divider_blue_light">#552CDEFF</color>
+    <color name="common_mine_sign_integral_text">#4841E2</color>
+    <color name="common_mine_sign_ring_blue">#2CDEFF</color>
+    <color name="common_mine_sign_ring_outside">#ffffff</color>
+    <color name="common_mine_sign_bubble_text_color">#1D1D1D</color>
+    <color name="common_mine_sign_integral_text_background">#D4DAFF</color>
+    <color name="common_mine_sign_store_round_brown_background">#5A5A5A</color>
+    <color name="common_mine_sign_store_line">#E2EDFB</color>
+    <color name="common_mine_sign_store_item_tv_integral">#3A34D2</color>
+    <color name="common_mine_sign_store_item_bg">#2D2D2D</color>
+    <color name="common_mine_sign_store_bg">#1D1D1D</color>
+    <color name="common_mine_sign_store_my_product_text_color">#000001</color>
 
     <!--    我的模块提问，回答，评论的颜色-->
-    <color name="mine_list_item_tv_content" tools:ignore="ResourceName">#A1D2D2D8</color>
-    <color name="mine_list_item_tv_disappear_at" tools:ignore="ResourceName">#6C84AB</color>
-    <color name="mine_list_item_bg_brown" tools:ignore="ResourceName">#F7DAD7</color>
-    <color name="mine_list_item_btn_text_color_accept" tools:ignore="ResourceName">#FFA192</color>
+    <color name="common_mine_list_item_tv_content">#A1D2D2D8</color>
+    <color name="common_mine_list_item_tv_disappear_at">#6C84AB</color>
+    <color name="common_mine_list_item_bg_brown">#F7DAD7</color>
+    <color name="common_mine_list_item_btn_text_color_accept">#FFA192</color>
 
     <!--    我的模块首页颜色-->
-    <color name="mine_main_btn_gradient_start" tools:ignore="ResourceName">#4841E2</color>
-    <color name="mine_main_btn_gradient_end" tools:ignore="ResourceName">#5D5DF7</color>
+    <color name="common_mine_main_btn_gradient_start">#4841E2</color>
+    <color name="common_mine_main_btn_gradient_end">#5D5DF7</color>
 
     <!--    考试成绩-->
-    <color name="grades_gpa_rv_list_round_corner_background" tools:ignore="ResourceName">#345A5A5A
+    <color name="common_grades_gpa_rv_list_round_corner_background">#345A5A5A
     </color>
-    <color name="grades_item_cardView_bg" tools:ignore="ResourceName">#813A3A3A</color>
-    <color name="grades_activity_tl_white" tools:ignore="ResourceName">#FFFFFF</color>
-    <color name="grades_activity_back_grey" tools:ignore="ResourceName">#D3D3D3</color>
-    <color name="grades_fragment_back_white" tools:ignore="ResourceName">#F6F6F6</color>
-    <color name="grades_fragment_text_color_black" tools:ignore="ResourceName">#333333</color>
-    <color name="grades_fragment_text_color_black2" tools:ignore="ResourceName">#80F0F0F2</color>
-    <color name="grades_fragment_text_color_black3" tools:ignore="ResourceName">#7BF0F0F2</color>
-    <color name="grades_fragment_item_back_grey" tools:ignore="ResourceName">#E4E4E4</color>
-    <color name="grades_item_divide" tools:ignore="ResourceName">#15315B</color>
-    <color name="grades_item_day_remain" tools:ignore="ResourceName">#0BCCF0</color>
-    <color name="grades_bottom_sheet_shadow" tools:ignore="ResourceName">#205369BC</color>
+    <color name="common_grades_item_cardView_bg">#813A3A3A</color>
+    <color name="common_grades_activity_tl_white">#FFFFFF</color>
+    <color name="common_grades_activity_back_grey">#D3D3D3</color>
+    <color name="common_grades_fragment_back_white">#F6F6F6</color>
+    <color name="common_grades_fragment_text_color_black">#333333</color>
+    <color name="common_grades_fragment_text_color_black2">#80F0F0F2</color>
+    <color name="common_grades_fragment_text_color_black3">#7BF0F0F2</color>
+    <color name="common_grades_fragment_item_back_grey">#E4E4E4</color>
+    <color name="common_grades_item_divide">#15315B</color>
+    <color name="common_grades_item_day_remain">#0BCCF0</color>
+    <color name="common_grades_bottom_sheet_shadow">#205369BC</color>
 
-    <color name="grades_gpa_normal_font_color" tools:ignore="ResourceName">#80F0F0F2</color>
+    <color name="common_grades_gpa_normal_font_color">#80F0F0F2</color>
 
-    <color name="grades_gpa_line_color" tools:ignore="ResourceName">#2921D1</color>
-    <color name="grades_gpa_dash_color" tools:ignore="ResourceName">#457C7C7C</color>
-    <color name="grades_gpa_text_color" tools:ignore="ResourceName">#50F0F0F2</color>
-    <color name="grades_gpa_circle_inside_color" tools:ignore="ResourceName">#FFFFFFFF</color>
-    <color name="grades_gpa_gradient_bottom_color" tools:ignore="ResourceName">#302D2D2D</color>
-    <color name="grades_gpa_gradient_top_color" tools:ignore="ResourceName">#81342DFF</color>
+    <color name="common_grades_gpa_line_color">#2921D1</color>
+    <color name="common_grades_gpa_dash_color">#457C7C7C</color>
+    <color name="common_grades_gpa_text_color">#50F0F0F2</color>
+    <color name="common_grades_gpa_circle_inside_color">#FFFFFFFF</color>
+    <color name="common_grades_gpa_gradient_bottom_color">#302D2D2D</color>
+    <color name="common_grades_gpa_gradient_top_color">#81342DFF</color>
 
     <!--    公共dialog背景-->
-    <color name="common_dialog_bg" tools:ignore="ResourceName">#2C2C2C</color>
+    <color name="common_dialog_bg" >#2C2C2C</color>
 
 
     <!--    邮问-->
     <!--    当前时间颜色-->
-    <color name="qa_question_current_time_color" tools:ignore="ResourceName">#5A5A5A</color>
+    <color name="common_qa_question_current_time_color">#5A5A5A</color>
     <!--    主页AppBarLayout背景颜色-->
-    <color name="qa_question_title_background_color" tools:ignore="ResourceName">#000000</color>
+    <color name="common_qa_question_title_background_color">#000000</color>
     <!--    提问时间选择颜色-->
-    <color name="qa_quiz_select_time_color" tools:ignore="ResourceName">#5A5A5A</color>
+    <color name="common_qa_quiz_select_time_color">#5A5A5A</color>
     <!--    邮问大标题-->
-    <color name="qa_main_title" tools:ignore="ResourceName">#F0F0F2</color>
+    <color name="common_qa_main_title">#F0F0F2</color>
     <!--    问题tab下标颜色-->
-    <color name="qa_question_tab_indicator_color" tools:ignore="ResourceName">#1ad0f2</color>
+    <color name="common_qa_question_tab_indicator_color">#1ad0f2</color>
     <!--    问题tab选中颜色-->
-    <color name="qa_tab_selected_color" tools:ignore="ResourceName">#F0F0F2</color>
+    <color name="common_qa_tab_selected_color">#F0F0F2</color>
     <!--    问题tab未选中颜色-->
-    <color name="qa_tab_unselected_color" tools:ignore="ResourceName">#84F0F0F2</color>
+    <color name="common_qa_tab_unselected_color">#84F0F0F2</color>
     <!--    问题JCardView背景-->
-    <color name="qa_question_list_color" tools:ignore="ResourceName">#1D1D1D</color>
+    <color name="common_qa_question_list_color">#1D1D1D</color>
     <!--    问题item的昵称颜色-->
-    <color name="qa_question_item_nickname_color" tools:ignore="ResourceName">#7CF0F0F2</color>
+    <color name="common_qa_question_item_nickname_color">#7CF0F0F2</color>
     <!--    问题item的积分奖励字体颜色-->
-    <color name="qa_question_item_reward_color" tools:ignore="ResourceName">#5A5A5A</color>
+    <color name="common_qa_question_item_reward_color">#5A5A5A</color>
     <!--    问题item的下面的各类数字颜色-->
-    <color name="qa_question_bottom_count_color" tools:ignore="ResourceName">#7CF0F0F2</color>
+    <color name="common_qa_question_bottom_count_color">#7CF0F0F2</color>
     <!--    问题item的分割线颜色-->
-    <color name="qa_question_recycler_item_divide_line_color" tools:ignore="ResourceName">#696969
+    <color name="common_qa_question_recycler_item_divide_line_color">#696969
     </color>
     <!--    评论默认header颜色-->
-    <color name="qa_comment_header_background_color" tools:ignore="ResourceName">#1D1D1D</color>
+    <color name="common_qa_comment_header_background_color">#1D1D1D</color>
     <!--    评论背景颜色-->
-    <color name="qa_comment_background_color" tools:ignore="ResourceName">#000000</color>
+    <color name="common_qa_comment_background_color">#000000</color>
     <!--    评论list背景颜色-->
-    <color name="qa_comment_list_background_color" tools:ignore="ResourceName">#1f1c1f</color>
+    <color name="common_qa_comment_list_background_color">#1f1c1f</color>
     <!--    评论header的名字颜色-->
-    <color name="qa_comment_answer_nickname_color" tools:ignore="ResourceName">#96F0F0F2</color>
+    <color name="common_qa_comment_answer_nickname_color">#96F0F0F2</color>
     <!--    评论header的创建时间颜色-->
-    <color name="qa_comment_answer_create_at_color" tools:ignore="ResourceName">#5A5A5A</color>
+    <color name="common_qa_comment_answer_create_at_color">#5A5A5A</color>
     <!--    评论header的内容颜色-->
-    <color name="qa_comment_answer_content_color" tools:ignore="ResourceName">#F0F0F2</color>
+    <color name="common_qa_comment_answer_content_color">#F0F0F2</color>
     <!--    评论item的nickname颜色-->
-    <color name="qa_comment_item_nick_name_color" tools:ignore="ResourceName">#F0F0F2</color>
+    <color name="common_qa_comment_item_nick_name_color">#F0F0F2</color>
     <!--    评论item的创建时间颜色-->
-    <color name="qa_comment_item_create_at_color" tools:ignore="ResourceName">#3FF0F0F2</color>
+    <color name="common_qa_comment_item_create_at_color">#3FF0F0F2</color>
     <!--    评论item内容颜色-->
-    <color name="qa_comment_content_color" tools:ignore="ResourceName">#7FF0F0F2</color>
+    <color name="common_qa_comment_content_color">#7FF0F0F2</color>
     <!--    评论框背景颜色-->
-    <color name="qa_comment_new_comment_text_background_color" tools:ignore="ResourceName">#515A5A5A
+    <color name="common_qa_comment_new_comment_text_background_color">#515A5A5A
     </color>
     <!--    评论JCardView3种背景颜色-->
-    <color name="qa_comment_content_first_kind_color" tools:ignore="ResourceName">#33302f</color>
-    <color name="qa_comment_content_second_kind_color" tools:ignore="ResourceName">#2d2d2f</color>
-    <color name="qa_comment_content_third_kind_color" tools:ignore="ResourceName">#332e2e</color>
+    <color name="common_qa_comment_content_first_kind_color">#33302f</color>
+    <color name="common_qa_comment_content_second_kind_color">#2d2d2f</color>
+    <color name="common_qa_comment_content_third_kind_color">#332e2e</color>
     <!--    评论底部背景颜色-->
-    <color name="qa_comment_bottom_background_color" tools:ignore="ResourceName">#2f2c2f</color>
+    <color name="common_qa_comment_bottom_background_color">#2f2c2f</color>
     <!--    回答发布时间颜色-->
-    <color name="qa_answer_publish_at_color" tools:ignore="ResourceName">#5A5A5A</color>
+    <color name="common_qa_answer_publish_at_color">#5A5A5A</color>
     <!--    回答发布toolbar分割线-->
-    <color name="qa_quiz_toolbar_divider_line_color" tools:ignore="ResourceName">#57566A</color>
+    <color name="common_qa_quiz_toolbar_divider_line_color">#57566A</color>
     <!--    提问图片选择占位图-->
-    <color name="qa_quiz_picture_empty_color" tools:ignore="ResourceName">#2C2C2C</color>
+    <color name="common_qa_quiz_picture_empty_color">#2C2C2C</color>
     <!--    提问图片选择占位图中间颜色-->
-    <color name="qa_quiz_picture_empty_centre_color" tools:ignore="ResourceName">#000101</color>
+    <color name="common_qa_quiz_picture_empty_centre_color">#000101</color>
     <!--    回答被采纳的标签颜色-->
-    <color name="qa_answer_list_adopted_color" tools:ignore="ResourceName">#000000</color>
+    <color name="common_qa_answer_list_adopted_color">#000000</color>
     <!--    回答被采纳的标签背景颜色-->
-    <color name="qa_answer_list_adopted_background_color" tools:ignore="ResourceName">#5A5A5A
+    <color name="common_qa_answer_list_adopted_background_color">#5A5A5A
     </color>
     <!--    回答header的问题内容颜色-->
-    <color name="qa_answer_list_header_content_color" tools:ignore="ResourceName">#84F0F0F2</color>
+    <color name="common_qa_answer_list_header_content_color">#84F0F0F2</color>
     <!--    回答的内容颜色-->
-    <color name="qa_answer_content_color" tools:ignore="ResourceName">#F0F0F2</color>
+    <color name="common_qa_answer_content_color">#F0F0F2</color>
     <!--    回答的回复颜色-->
-    <color name="qa_answer_comment_count_color" tools:ignore="ResourceName">#5A5A5A</color>
+    <color name="common_qa_answer_comment_count_color">#5A5A5A</color>
     <!--    回答的点赞颜色-->
-    <color name="qa_answer_praise_count_color" tools:ignore="ResourceName">#5A5A5A</color>
+    <color name="common_qa_answer_praise_count_color">#5A5A5A</color>
     <!--    回答的点赞颜色-->
-    <color name="qa_answer_item_divider_color" tools:ignore="ResourceName">#475A5A5A</color>
-    <color name="qa_answer_praised_count_color" tools:ignore="ResourceName">#2CDEFF</color>
+    <color name="common_qa_answer_item_divider_color">#475A5A5A</color>
+    <color name="common_qa_answer_praised_count_color">#2CDEFF</color>
     <!--    RecyclerView加载时的holder颜色-->
-    <color name="qa_question_item_empty_holder_color" tools:ignore="ResourceName">#5A5A5A</color>
+    <color name="common_qa_question_item_empty_holder_color">#5A5A5A</color>
     <!--    RecyclerView加载时的holder背景颜色-->
-    <color name="qa_question_item_shadow_color" tools:ignore="ResourceName">#000101</color>
+    <color name="common_qa_question_item_shadow_color">#000101</color>
     <!--    提问选择类型的背景颜色-->
-    <color name="qa_quiz_select_type_background_color" tools:ignore="ResourceName">#b25A5A5A</color>
+    <color name="common_qa_quiz_select_type_background_color">#b25A5A5A</color>
     <!--    提问选择类型的文字颜色-->
-    <color name="qa_quiz_select_type_text_color" tools:ignore="ResourceName">#000101</color>
+    <color name="common_qa_quiz_select_type_text_color">#000101</color>
     <!--    提问选中类型的文字颜色-->
-    <color name="qa_quiz_selected_type_text_color" tools:ignore="ResourceName">#000101</color>
+    <color name="common_qa_quiz_selected_type_text_color">#000101</color>
     <!--    提问时间选择器选中时间颜色-->
-    <color name="qa_quiz_time_display_color" tools:ignore="ResourceName">#29D1F1</color>
+    <color name="common_qa_quiz_time_display_color">#29D1F1</color>
     <!--    回答只有图片时-->
-    <color name="qa_answer_empty_content_color" tools:ignore="ResourceName">#29D1F1</color>
+    <color name="common_qa_answer_empty_content_color">#29D1F1</color>
     <!--    提问时间选择器时间颜色-->
-    <color name="qa_quiz_time_select_color" tools:ignore="ResourceName">#2A4E84</color>
+    <color name="common_qa_quiz_time_select_color">#2A4E84</color>
     <!--    提问选中类型的背景颜色，指定78的透明度-->
-    <color name="qa_quiz_selected_type_background_color" tools:ignore="ResourceName">#0BCCF0</color>
+    <color name="common_qa_quiz_selected_type_background_color">#0BCCF0</color>
     <!--    提问标题框和内容框的背景颜色，指定69的透明度-->
-    <color name="qa_quiz_new_text_background_color" tools:ignore="ResourceName">#b32C2C2C</color>
+    <color name="common_qa_quiz_new_text_background_color">#b32C2C2C</color>
     <!--    举报弹窗的提示文字颜色，指定61的透明度-->
-    <color name="qa_question_report_text_background_color" tools:ignore="ResourceName">#5A5A5A
+    <color name="common_qa_question_report_text_background_color">#5A5A5A
     </color>
     <!--    评论head和item间隙颜色-->
-    <color name="qa_comment_item_divider_gap_color" tools:ignore="ResourceName">#252225</color>
+    <color name="common_qa_comment_item_divider_gap_color">#252225</color>
     <!--    举报弹窗的分割线颜色，指定4的透明度-->
-    <color name="qa_question_report_divide_line_background_color" tools:ignore="ResourceName">
+    <color name="common_qa_question_report_divide_line_background_color">
         #0a15315B
     </color>
     <!--    邮问积分说明最下面的小字颜色-->
-    <color name="qa_dialog_qa_reward_description_bottom_text_color" tools:ignore="ResourceName">
+    <color name="common_qa_dialog_qa_reward_description_bottom_text_color">
         #DFDFE3
     </color>
     <!--    邮问积分说明背景颜色-->
-    <color name="qa_dialog_qa_reward_description_background_color" tools:ignore="ResourceName">
+    <color name="common_qa_dialog_qa_reward_description_background_color">
         #2C2C2C
     </color>
     <!--    提问内容文字hint颜色-->
-    <color name="qa_quiz_content_edt_hint_color" tools:ignore="ResourceName">#EAEAED</color>
+    <color name="common_qa_quiz_content_edt_hint_color">#EAEAED</color>
     <!--    回答内容文字hint颜色-->
-    <color name="qa_answer_content_edt_hint_color" tools:ignore="ResourceName">#EAEAED</color>
+    <color name="common_qa_answer_content_edt_hint_color">#EAEAED</color>
     <!--    登录下面的灰色字体-->
-    <color name="logInToTheGrayFontBelow" tools:ignore="ResourceName">#ABBCD8</color>
+    <color name="common_log_in_to_the_gray_font_below">#ABBCD8</color>
 
     <!--    添加事务下面按钮的光晕渐变结束颜色-->
-    <color name="course_end_of_light" tools:ignore="ResourceName">#006B65EF</color>
+    <color name="common_course_end_of_light">#006B65EF</color>
 
     <!--    添加事务页面的圆角shape背景-->
-    <color name="course_affair_add_background" tools:ignore="ResourceName">#2D2D2D</color>
+    <color name="common_course_affair_add_background">#2D2D2D</color>
 
     <!--    添加事务的气泡颜色-->
-    <color name="course_affair_bubble_color" tools:ignore="ResourceName">#1d1d1d</color>
+    <color name="common_course_affair_bubble_color">#1d1d1d</color>
 
 
-    <color name="curriculum_background_color" tools:ignore="ResourceName">#2D2D2D</color>
+    <color name="common_curriculum_background_color">#2D2D2D</color>
 
-    <color name="transaction_background_stripe_color" tools:ignore="ResourceName">#4d4b4c</color>
+    <color name="common_transaction_background_stripe_color">#4d4b4c</color>
 
-    <color name="main_bottom_tab_un_select" tools:ignore="ResourceName">#5A5A5A</color>
+    <color name="common_main_bottom_tab_un_select">#5A5A5A</color>
 
     <!--    发现教务在线颜色-->
-    <color name="discoverAcademicOnlineColors" tools:ignore="ResourceName">#000000</color>
-    <color name="discoverAcademicOnlineColorsBackground" tools:ignore="ResourceName">#5A5A5A</color>
+    <color name="common_discover_academic_online_colors">#000000</color>
+    <color name="common_discover_academic_online_colors_background">#5A5A5A</color>
 
     <!--    发现菜单字体颜色-->
-    <color name="menuFontColorFound" tools:ignore="ResourceName">#5A5A5A</color>
+    <color name="common_menu_font_color_found">#5A5A5A</color>
 
 
-    <color name="alphaLevelTwoFontColor" tools:ignore="ResourceName">#5A5A5A</color>
+    <color name="common_alpha_level_two_font_color">#5A5A5A</color>
 
     <!--    签到提示颜色-->
-    <color name="checkInPromptColor" tools:ignore="ResourceName">#5A5A5A</color>
+    <color name="common_check_in_prompt_color">#5A5A5A</color>
 
     <!--    关于下面声明颜色-->
-    <color name="about_colors_declared_below" tools:ignore="ResourceName">#48F0F0F2</color>
+    <color name="common_about_colors_declared_below">#48F0F0F2</color>
 
-    <color name="addTransactionToTheTimetableClickColor" tools:ignore="ResourceName">#202020</color>
+    <color name="common_add_transaction_to_the_timetable_click_color">#202020</color>
 
-    <color name="transactionAddPageWarpItemTextColor" tools:ignore="ResourceName">#737373</color>
+    <color name="common_transaction_add_page_warp_item_text_color">#737373</color>
 
 
-    <!--    <color name="transactionCompletionEditViewColor" tools:ignore="ResourceName">#efefef</color>-->
+    <!--    <color name="transactionCompletionEditViewColor" >#efefef</color>-->
     <!--没课约选择学生页面背景-->
-    <color name="no_class_select_student_page_background" tools:ignore="ResourceName">#2D2D2D
+    <color name="common_no_class_select_student_page_background">#2D2D2D
     </color>
 
-    <color name="main_activity_login_et_edited_color" tools:ignore="ResourceName">#ffffff</color>
+    <color name="common_main_activity_login_et_edited_color">#ffffff</color>
 
-    <color name="transactionCompletionEditViewColor" tools:ignore="ResourceName">#ffffff</color>
+    <color name="common_transaction_completion_edit_view_color">#ffffff</color>
 
 </resources>
 

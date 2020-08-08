@@ -9,8 +9,8 @@
             <corners android:radius="25dp" />
             <gradient
                 android:angle="45"
-                android:endColor="@color/mine_main_btn_gradient_end"
-                android:startColor="@color/mine_main_btn_gradient_start"
+                android:endColor="@color/common_mine_main_btn_gradient_end"
+                android:startColor="@color/common_mine_main_btn_gradient_start"
                 android:type="linear" />
         </shape>
     </item>

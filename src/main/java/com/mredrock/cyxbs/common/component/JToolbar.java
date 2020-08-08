@@ -33,7 +33,7 @@ public class JToolbar extends Toolbar {
     @SuppressLint("ResourceAsColor")
     public JToolbar(Context context) {
         super(context);
-        paint.setColor(R.color.commonDefaultDivideLineColor);
+        paint.setColor(R.color.common_default_divide_line_color);
         paint.setAlpha(25);
         paint.setStrokeWidth(ContextKt.dp2px(context, 1));
     }
@@ -41,7 +41,7 @@ public class JToolbar extends Toolbar {
     @SuppressLint("ResourceAsColor")
     public JToolbar(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-        paint.setColor(R.color.commonDefaultDivideLineColor);
+        paint.setColor(R.color.common_default_divide_line_color);
         paint.setAlpha(25);
         paint.setStrokeWidth(ContextKt.dp2px(context, 1));
     }
@@ -49,7 +49,7 @@ public class JToolbar extends Toolbar {
     @SuppressLint("ResourceAsColor")
     public JToolbar(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        paint.setColor(R.color.commonDefaultDivideLineColor);
+        paint.setColor(R.color.common_default_divide_line_color);
         paint.setAlpha(25);
         paint.setStrokeWidth(ContextKt.dp2px(context, 1));
     }
@@ -60,9 +60,9 @@ public class JToolbar extends Toolbar {
         mTitleTextView = getTitleTv("mTitleTextView");
         if (mTitleTextView != null) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                mTitleTextView.setTextColor(getContext().getColor(R.color.levelTwoFontColor));
+                mTitleTextView.setTextColor(getContext().getColor(R.color.common_level_two_font_color));
             } else {
-                mTitleTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.levelTwoFontColor));
+                mTitleTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.common_level_two_font_color));
             }
         }
     }
@@ -92,7 +92,7 @@ public class JToolbar extends Toolbar {
             field.setAccessible(true);
             TextView view = (TextView) field.get(this);
             view.getPaint().setFakeBoldText(true);
-            view.setTextColor(R.color.levelTwoFontColor);
+            view.setTextColor(R.color.common_level_two_font_color);
             return view;
         } catch (Exception e) {
             e.printStackTrace();
