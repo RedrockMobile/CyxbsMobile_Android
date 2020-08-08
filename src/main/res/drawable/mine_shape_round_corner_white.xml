@@ -6,6 +6,6 @@
         android:radius="16dp">
 
     </corners>
-    <solid android:color="@color/mine_sign_store_bg" />
+    <solid android:color="@color/common_mine_sign_store_bg" />
 
 </shape>

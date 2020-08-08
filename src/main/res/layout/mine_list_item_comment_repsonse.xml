@@ -24,7 +24,7 @@
         android:layout_marginStart="12dp"
         android:textSize="13sp"
         android:textStyle="bold"
-        android:textColor="@color/levelTwoFontColor"
+        android:textColor="@color/common_level_two_font_color"
         app:layout_constraintStart_toEndOf="@+id/mine_comment_iv_avatar"
         android:layout_marginTop="10dp"
         app:layout_constraintTop_toTopOf="parent"
@@ -32,7 +32,7 @@
 
     <TextView
         android:textSize="13sp"
-        android:textColor="@color/levelTwoFontColor"
+        android:textColor="@color/common_level_two_font_color"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/mine_comment_received_at_end"
@@ -46,7 +46,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:textSize="15sp"
-        android:textColor="@color/mine_list_item_tv_content"
+        android:textColor="@color/common_mine_list_item_tv_content"
         app:layout_constraintStart_toStartOf="@+id/mine_comment_tv_nickname"
         app:layout_constraintTop_toBottomOf="@+id/mine_comment_tv_nickname"
         app:layout_constraintEnd_toEndOf="parent"
@@ -61,7 +61,7 @@
         android:layout_width="0dp"
         android:layout_height="1dp"
         android:alpha="0.3"
-        android:background="@color/severViewColor"
+        android:background="@color/common_sever_view_color"
         app:layout_constraintStart_toStartOf="@id/mine_comment_tv_response"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent" />

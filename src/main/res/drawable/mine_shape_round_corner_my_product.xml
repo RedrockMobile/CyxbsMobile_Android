@@ -9,6 +9,6 @@
         android:topRightRadius="15dp">
 
     </corners>
-    <solid android:color="@color/secondaryWindowBackground" />
+    <solid android:color="@color/common_secondary_window_background" />
 
 </shape>

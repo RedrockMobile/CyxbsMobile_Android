@@ -24,7 +24,7 @@
         android:layout_centerVertical="true"
         android:layout_marginLeft="17dp"
         android:layout_toRightOf="@+id/mine_user_item_icon"
-        android:textColor="@color/levelTwoFontColor"
+        android:textColor="@color/common_level_two_font_color"
         android:textSize="15sp"
         tools:text="每日签到" />
 

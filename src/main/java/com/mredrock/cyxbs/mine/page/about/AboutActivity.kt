@@ -35,7 +35,7 @@ class AboutActivity(override val isFragmentActivity: Boolean = false,
         setContentView(R.layout.mine_activity_about)
 
         common_toolbar.apply {
-            setBackgroundColor(ContextCompat.getColor(this@AboutActivity, R.color.windowBackground))
+            setBackgroundColor(ContextCompat.getColor(this@AboutActivity, R.color.common_window_background))
             initWithSplitLine("关于掌邮",
                     false,
                     R.drawable.mine_ic_arrow_left)

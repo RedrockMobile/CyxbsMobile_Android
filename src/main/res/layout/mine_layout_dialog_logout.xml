@@ -10,7 +10,7 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="17dp"
         android:text="@string/mine_logout_title"
-        android:textColor="@color/levelTwoFontColor"
+        android:textColor="@color/common_level_two_font_color"
         android:textSize="18sp"
         android:textStyle="bold" />
 

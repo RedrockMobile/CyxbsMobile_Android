@@ -83,14 +83,14 @@ class EditInfoActivity(override val isFragmentActivity: Boolean = false,
         val userForTemporal = ServiceManager.getService(IAccountService::class.java).getUserService()
         if (checkIfInfoChange()) {
             mine_btn_info_save.apply {
-                textColor = ContextCompat.getColor(context, R.color.whiteFontColor)
+                textColor = ContextCompat.getColor(context, R.color.common_white_font_color)
                 background = ResourcesCompat.getDrawable(resources, R.drawable.common_dialog_btn_positive_blue, null)
                 text = "保存"
                 isClickable = true
             }
         } else {
             mine_btn_info_save.apply {
-                textColor = ContextCompat.getColor(context, R.color.greyButtonText)
+                textColor = ContextCompat.getColor(context, R.color.common_grey_button_text)
                 background = ResourcesCompat.getDrawable(resources, R.drawable.mine_bg_round_corner_grey, null)
                 text = "已保存"
                 isClickable = false
@@ -103,24 +103,24 @@ class EditInfoActivity(override val isFragmentActivity: Boolean = false,
         mine_tv_nickname.text = "昵称(${nickname.length}/8)"
         mine_tv_sign.text = "个性签名(${introduction.length}/20)"
         if (nickname != userForTemporal.getNickname()) {
-            mine_et_nickname.textColor = ContextCompat.getColor(this, R.color.levelTwoFontColor)
+            mine_et_nickname.textColor = ContextCompat.getColor(this, R.color.common_level_two_font_color)
         } else {
-            mine_et_nickname.textColor = ContextCompat.getColor(this, R.color.greyText)
+            mine_et_nickname.textColor = ContextCompat.getColor(this, R.color.common_grey_text)
         }
         if (introduction != userForTemporal.getIntroduction()) {
-            mine_et_introduce.textColor = ContextCompat.getColor(this, R.color.levelTwoFontColor)
+            mine_et_introduce.textColor = ContextCompat.getColor(this, R.color.common_level_two_font_color)
         } else {
-            mine_et_introduce.textColor = ContextCompat.getColor(this, R.color.greyText)
+            mine_et_introduce.textColor = ContextCompat.getColor(this, R.color.common_grey_text)
         }
         if (qq != userForTemporal.getQQ()) {
-            mine_et_qq.textColor = ContextCompat.getColor(this, R.color.levelTwoFontColor)
+            mine_et_qq.textColor = ContextCompat.getColor(this, R.color.common_level_two_font_color)
         } else {
-            mine_et_qq.textColor = ContextCompat.getColor(this, R.color.greyText)
+            mine_et_qq.textColor = ContextCompat.getColor(this, R.color.common_grey_text)
         }
         if (phone != userForTemporal.getPhone()) {
-            mine_et_phone.textColor = ContextCompat.getColor(this, R.color.levelTwoFontColor)
+            mine_et_phone.textColor = ContextCompat.getColor(this, R.color.common_level_two_font_color)
         } else {
-            mine_et_phone.textColor = ContextCompat.getColor(this, R.color.greyText)
+            mine_et_phone.textColor = ContextCompat.getColor(this, R.color.common_grey_text)
         }
     }
 
@@ -130,7 +130,7 @@ class EditInfoActivity(override val isFragmentActivity: Boolean = false,
         setContentView(R.layout.mine_activity_edit_info)
 
         common_toolbar.apply {
-            setBackgroundColor(ContextCompat.getColor(this@EditInfoActivity, R.color.windowBackground))
+            setBackgroundColor(ContextCompat.getColor(this@EditInfoActivity, R.color.common_window_background))
             initWithSplitLine("资料编辑",
                     false,
                     R.drawable.mine_ic_arrow_left,
@@ -341,7 +341,7 @@ class EditInfoActivity(override val isFragmentActivity: Boolean = false,
         val options = UCrop.Options()
         options.setCompressionFormat(Bitmap.CompressFormat.PNG)
         options.setCompressionQuality(100)
-        options.setLogoColor(ContextCompat.getColor(this, R.color.levelTwoFontColor))
+        options.setLogoColor(ContextCompat.getColor(this, R.color.common_level_two_font_color))
         options.setToolbarColor(
                 ContextCompat.getColor(this, R.color.colorPrimaryDark))
         options.setStatusBarColor(

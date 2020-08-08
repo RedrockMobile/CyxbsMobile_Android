@@ -3,7 +3,7 @@
     android:shape="oval">
 
     <solid
-        android:color="@color/mine_sign_bg_grey" />
+        android:color="@color/common_mine_sign_bg_grey" />
 
     <size
         android:width="15dp"

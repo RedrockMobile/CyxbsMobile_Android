@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="130dp"
-    android:background="@color/secondaryWindowBackground"
+    android:background="@color/common_secondary_window_background"
     xmlns:tools="http://schemas.android.com/tools">
 
     <TextView
@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:textStyle="bold"
         android:textSize="15sp"
-        android:textColor="@color/levelTwoFontColor"
+        android:textColor="@color/common_level_two_font_color"
         android:layout_marginStart="18dp"
         android:layout_marginTop="25dp"
         app:layout_constraintStart_toStartOf="parent"
@@ -23,7 +23,7 @@
     <TextView
         android:id="@+id/mine_ask_posted_tv_description"
         android:layout_width="0dp"
-        android:textColor="@color/mine_list_item_tv_content"
+        android:textColor="@color/common_mine_list_item_tv_content"
         android:textSize="15sp"
         android:maxLines="2"
         android:ellipsize="end"
@@ -39,7 +39,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="11sp"
-        android:textColor="@color/mine_list_item_tv_disappear_at"
+        android:textColor="@color/common_mine_list_item_tv_disappear_at"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="@+id/mine_ask_posted_tv_description"
         app:layout_constraintTop_toBottomOf="@+id/mine_ask_posted_tv_description"
@@ -61,7 +61,7 @@
         android:layout_height="wrap_content"
         android:alpha="0.67"
         android:layout_marginStart="4dp"
-        android:textColor="@color/qa_question_bottom_count_color"
+        android:textColor="@color/common_qa_question_bottom_count_color"
         android:textSize="11sp"
         app:layout_constraintBottom_toBottomOf="@+id/mine_ask_posted_tv_disappear_at"
         app:layout_constraintEnd_toStartOf="@+id/mine_ask_posted_tv_state"
@@ -89,7 +89,7 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:alpha="0.3"
-        android:background="@color/severViewColor"
+        android:background="@color/common_sever_view_color"
         app:layout_constraintBottom_toBottomOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

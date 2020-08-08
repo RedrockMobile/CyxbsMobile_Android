@@ -106,13 +106,13 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
                 mine_main_btn_sign.apply {
                     background = ResourcesCompat.getDrawable(resources, R.drawable.mine_bg_round_corner_grey, null)
                     text = "已签到"
-                    textColor = ContextCompat.getColor(context, R.color.greyButtonText)
+                    textColor = ContextCompat.getColor(context, R.color.common_grey_button_text)
                 }
             } else {
                 mine_main_btn_sign.apply {
                     text = "签到"
                     background = ResourcesCompat.getDrawable(resources, R.drawable.common_dialog_btn_positive_blue, null)
-                    textColor = ContextCompat.getColor(context, R.color.whiteFontColor)
+                    textColor = ContextCompat.getColor(context, R.color.common_white_font_color)
                 }
             }
         })

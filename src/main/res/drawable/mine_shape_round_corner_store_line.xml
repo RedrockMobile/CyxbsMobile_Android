@@ -3,6 +3,6 @@
     android:shape="rectangle">
 
     <corners android:radius="10dp" />
-    <solid android:color="@color/mine_sign_store_line" />
+    <solid android:color="@color/common_mine_sign_store_line" />
 
 </shape>

@@ -3,7 +3,7 @@
     android:shape="oval">
 
     <solid
-        android:color="@color/mine_sign_ring_blue" />
+        android:color="@color/common_mine_sign_ring_blue" />
 
     <size
         android:width="16dp"
@@ -13,7 +13,7 @@
         android:width="4dp"
         android:dashGap="0dp"
         android:dashWidth="10dp"
-        android:color="@color/mine_sign_ring_outside" />
+        android:color="@color/common_mine_sign_ring_outside" />
 
 
 </shape>

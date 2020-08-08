@@ -2,7 +2,7 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item>
         <shape>
-            <solid android:color="@color/secondaryWindowBackground" />
+            <solid android:color="@color/common_secondary_window_background" />
         </shape>
     </item>
     <item>
@@ -14,7 +14,7 @@
                 android:topRightRadius="0dp">
 
             </corners>
-            <solid android:color="@color/whiteBackground" />
+            <solid android:color="@color/common_white_background" />
         </shape>
     </item>
 </layer-list>

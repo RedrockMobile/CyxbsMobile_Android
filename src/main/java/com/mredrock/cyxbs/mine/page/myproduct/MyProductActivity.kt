@@ -19,7 +19,7 @@ class MyProductActivity(override val isFragmentActivity: Boolean = true) : BaseA
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setColor(window, ContextCompat.getColor(this, R.color.grades_fragment_text_color_black))
+        setColor(window, ContextCompat.getColor(this, R.color.common_grades_fragment_text_color_black))
         setContentView(R.layout.mine_activity_tablayout_my_product)
         common_toolbar.initWithSplitLine("", false, R.drawable.mine_ic_arrow_left_my_product)
         val fragmentList = listOf<Fragment>(MyProductFragment(MyProductFragment.UNCLAIMED), MyProductFragment(MyProductFragment.CLAIMED))

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/windowBackground"
+    android:background="@color/common_window_background"
     tools:context=".page.about.AboutActivity">
 
     <include
@@ -40,7 +40,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="11dp"
         android:text="@string/app_name"
-        android:textColor="@color/mine_about_text_color_normal"
+        android:textColor="@color/common_mine_about_text_color_normal"
         android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
@@ -52,7 +52,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="3dp"
-        android:textColor="@color/mine_about_text_color_normal"
+        android:textColor="@color/common_mine_about_text_color_normal"
         android:textSize="13sp"
         app:layout_constraintEnd_toEndOf="@+id/mine_about_name"
         app:layout_constraintStart_toStartOf="@+id/mine_about_name"
@@ -65,7 +65,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
         android:text="@string/mine_about_1"
-        android:textColor="@color/about_colors_declared_below"
+        android:textColor="@color/common_about_colors_declared_below"
         android:textSize="11sp"
         app:layout_constraintBottom_toTopOf="@+id/mine_about_tv_copy_right"
         app:layout_constraintEnd_toEndOf="@+id/mine_about_legal"
@@ -77,7 +77,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="30dp"
         android:text="@string/mine_about_copyright"
-        android:textColor="@color/about_colors_declared_below"
+        android:textColor="@color/common_about_colors_declared_below"
         android:textSize="11sp"
         app:layout_constraintBottom_toBottomOf="@+id/mine_about_iv"
         app:layout_constraintEnd_toEndOf="@+id/mine_about_press"
@@ -89,7 +89,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
         android:text="@string/mine_about_legal"
-        android:textColor="@color/mine_about_text_color_blue"
+        android:textColor="@color/common_mine_about_text_color_blue"
         android:textSize="11sp"
         app:layout_constraintBottom_toTopOf="@+id/mine_about_press"
         app:layout_constraintEnd_toEndOf="parent"
@@ -114,7 +114,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
             android:text="@string/mine_about_sharing"
-            android:textColor="@color/mine_about_text_color_normal"
+            android:textColor="@color/common_mine_about_text_color_normal"
             android:textSize="16sp"
             tools:text="分享" />
 
@@ -146,7 +146,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
             android:text="@string/mine_about_function_intro"
-            android:textColor="@color/mine_about_text_color_normal"
+            android:textColor="@color/common_mine_about_text_color_normal"
             android:textSize="16sp"
             tools:text="功能介绍" />
 
@@ -178,7 +178,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
             android:text="@string/mine_about_website"
-            android:textColor="@color/mine_about_text_color_normal"
+            android:textColor="@color/common_mine_about_text_color_normal"
             android:textSize="16sp" />
 
         <ImageView
@@ -209,7 +209,7 @@
             android:layout_alignParentStart="true"
             android:layout_marginStart="20dp"
             android:text="@string/mine_about_update"
-            android:textColor="@color/mine_about_text_color_normal"
+            android:textColor="@color/common_mine_about_text_color_normal"
             android:textSize="16sp" />
 
         <TextView
@@ -219,7 +219,7 @@
             android:layout_centerVertical="true"
             android:layout_marginEnd="18dp"
             android:layout_toStartOf="@id/mine_about_arrow_update"
-            android:textColor="@color/mine_about_text_color_up_to_date"
+            android:textColor="@color/common_mine_about_text_color_up_to_date"
             android:textSize="13sp"
             tools:text="已是最新版本" />
 

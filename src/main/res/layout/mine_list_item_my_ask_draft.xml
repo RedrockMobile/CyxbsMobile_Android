@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:foreground="?android:selectableItemBackground"
-    android:background="@color/secondaryWindowBackground"
+    android:background="@color/common_secondary_window_background"
     xmlns:tools="http://schemas.android.com/tools">
 
     <TextView
@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:textStyle="bold"
         android:textSize="15sp"
-        android:textColor="@color/levelTwoFontColor"
+        android:textColor="@color/common_level_two_font_color"
         android:layout_marginStart="18dp"
         android:layout_marginTop="25dp"
         app:layout_constraintStart_toStartOf="parent"
@@ -24,7 +24,7 @@
     <TextView
         android:id="@+id/mine_ask_draft_tv_description"
         android:layout_width="0dp"
-        android:textColor="@color/mine_list_item_tv_content"
+        android:textColor="@color/common_mine_list_item_tv_content"
         android:textSize="15sp"
         android:maxLines="2"
         android:ellipsize="end"
@@ -41,7 +41,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
-        android:textColor="@color/mine_list_item_tv_disappear_at"
+        android:textColor="@color/common_mine_list_item_tv_disappear_at"
         android:textSize="11sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="@+id/mine_ask_draft_tv_description"
@@ -63,7 +63,7 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:alpha="0.3"
-        android:background="@color/severViewColor"
+        android:background="@color/common_sever_view_color"
         app:layout_constraintBottom_toBottomOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
