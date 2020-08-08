@@ -5,7 +5,7 @@
     android:layout_marginBottom="1dp"
     android:layout_width="match_parent"
     android:layout_height="77dp"
-    tools:ignore="ResourceName">
+    >
 
     <ImageView
         android:id="@+id/other_course_avatar"
@@ -22,7 +22,7 @@
         android:id="@+id/discover_other_course_item_select_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/levelTwoFontColor"
+        android:textColor="@color/common_level_two_font_color"
         android:textStyle="bold"
         android:textSize="15sp"
         android:layout_marginStart="15dp"
@@ -37,7 +37,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/discover_other_course_item_select_class"
-        android:textColor="@color/levelTwoFontColor"
+        android:textColor="@color/common_level_two_font_color"
         android:textSize="13sp"
         android:layout_gravity="bottom|start"
         app:layout_constraintTop_toBottomOf="@+id/discover_other_course_item_select_name"

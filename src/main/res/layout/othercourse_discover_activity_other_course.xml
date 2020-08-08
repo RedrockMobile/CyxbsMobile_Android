@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".pages.stusearch.OtherCourseActivity"
-    tools:ignore="ResourceName">
+    >
 
     <include layout="@layout/common_toolbar"/>
 
@@ -15,16 +15,16 @@
         android:id="@+id/tl_other_course"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:background="@drawable/discover_other_course_tab_shape"
+        android:background="@drawable/othercourse_shape_tab_shape"
         app:tabTextAppearance="@style/tab_style"
-        app:tabRippleColor="@color/transparentBackground"
-        app:tabBackground="@color/transparentBackground"
-        app:tabTextColor="@color/alphaLevelTwoFontColor"
-        app:tabSelectedTextColor="@color/levelTwoFontColor"
+        app:tabRippleColor="@color/common_transparent_background"
+        app:tabBackground="@color/common_transparent_background"
+        app:tabTextColor="@color/common_alpha_level_two_font_color"
+        app:tabSelectedTextColor="@color/common_level_two_font_color"
         app:tabGravity="fill"
         app:tabIndicatorHeight="3dp"
-        app:tabIndicatorColor="@color/mine_tab_layout_indicator_color"
-        app:tabIndicator="@drawable/diacover_other_course_tab_indicator"
+        app:tabIndicatorColor="@color/common_mine_tab_layout_indicator_color"
+        app:tabIndicator="@drawable/othercourse_ic_tab_indicator"
         app:tabIndicatorFullWidth="false"
         app:tabMode="fixed" />
 

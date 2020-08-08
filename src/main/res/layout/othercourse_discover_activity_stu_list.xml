@@ -21,7 +21,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             tools:context=".pages.stulist.StuListActivity"
-            tools:ignore="ResourceName">
+            >
 
             <ImageView
                 android:id="@+id/other_course_iv_back"
@@ -42,7 +42,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:textSize="21sp"
-                android:textColor="@color/levelTwoFontColor"
+                android:textColor="@color/common_level_two_font_color"
                 android:textStyle="bold"
                 android:text="@{stuListActivity.title}"
                 app:layout_constraintTop_toTopOf="parent"
@@ -51,7 +51,7 @@
 
             <View
                 android:id="@+id/other_course_list_title_bottom_line"
-                android:background="@color/levelTwoFontColor"
+                android:background="@color/common_level_two_font_color"
                 android:alpha="0.1"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"

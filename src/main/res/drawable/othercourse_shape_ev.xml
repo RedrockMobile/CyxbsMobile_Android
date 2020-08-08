@@ -3,5 +3,5 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     tools:ignore="MissingDefaultResource">
     <corners android:radius="29dp"/>
-    <solid android:color="@color/qa_quiz_new_text_background_color"/>
+    <solid android:color="@color/common_qa_quiz_new_text_background_color"/>
 </shape>

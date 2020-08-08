@@ -6,11 +6,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".pages.stusearch.OtherCourseSearchFragment"
-    tools:ignore="ResourceName">
+    >
 
     <androidx.appcompat.widget.AppCompatEditText
         android:id="@+id/et_discover_other_course_search"
-        android:background="@drawable/discover_other_course_shape_ev"
+        android:background="@drawable/othercourse_shape_ev"
         android:layout_width="match_parent"
         android:layout_height="44dp"
         android:singleLine="true"
@@ -27,7 +27,7 @@
     <androidx.appcompat.widget.AppCompatTextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/levelTwoFontColor"
+        android:textColor="@color/common_level_two_font_color"
         android:textSize="15sp"
         android:text="历史记录"
         android:textStyle="bold"
