@@ -7,7 +7,7 @@ function setRealLastReturn() {
         realLastReturn=1
     fi
 #    如果git hook检查不再适用，且暂时没时间修改该脚本，请取消下面一行注释
-#    realLastReturn=1
+#    realLastReturn=0
 }
 
 ## blue to echo
