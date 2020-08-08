@@ -15,7 +15,7 @@ import com.mredrock.cyxbs.common.ui.BaseActivity
 import com.mredrock.cyxbs.common.utils.extensions.gone
 import com.mredrock.cyxbs.common.utils.extensions.visible
 import com.mredrock.cyxbs.redpage.R
-import kotlinx.android.synthetic.main.redpage_activity_webview.*
+import kotlinx.android.synthetic.main.redrock_home_redpage_activity_webview.*
 import org.jetbrains.anko.backgroundResource
 
 /**
@@ -29,9 +29,9 @@ class RedPageWebActivity : BaseActivity() {
     @SuppressLint("JavascriptInterface")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.redpage_activity_webview)
+        setContentView(R.layout.redrock_home_redpage_activity_webview)
         tl_redPage.init("红岩网校")
-        tl_redPage.backgroundResource = R.drawable.redrock_home_tl_bg_shape
+        tl_redPage.backgroundResource = R.drawable.redrock_home_shape_tl_bg_shape
         tl_redPage.setNavigationOnClickListener { finish() }
 
         val webSettings = wv_redPage.settings

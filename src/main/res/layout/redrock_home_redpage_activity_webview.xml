@@ -32,7 +32,7 @@
             android:layout_width="match_parent"
             android:max="100"
             android:progress="0"
-            android:progressDrawable="@drawable/redrock_home_show_pb_bg"
+            android:progressDrawable="@drawable/redrock_home_shape_show_pb_bg"
             android:background="#FFFFFF"
             android:visibility="gone" />
 
