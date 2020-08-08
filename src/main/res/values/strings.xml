@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="the_calendar_service_is_temporarily_unavailable" tools:ignore="ResourceName">校历服务暂时不可用</string>
+    <string name="calendar_the_calendar_service_is_temporarily_unavailable" >校历服务暂时不可用</string>
 </resources>
