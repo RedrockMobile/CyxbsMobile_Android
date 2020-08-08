@@ -7,7 +7,7 @@
         android:layout_width="match_parent"
         android:layout_height="30dp"
         android:paddingHorizontal="8dp"
-        android:background="@drawable/widget_bg_title">
+        android:background="@drawable/widget_shape_bg_title">
 
         <ImageView
             android:id="@+id/widget_little_refresh"
@@ -16,7 +16,7 @@
             android:layout_centerVertical="true"
             android:layout_alignParentEnd="true"
             android:padding="5dp"
-            android:src="@drawable/widget_fresh" />
+            android:src="@drawable/widget_ic_fresh" />
 
         <TextView
             android:id="@+id/widget_little_title"
@@ -33,7 +33,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/shape_course_background"
+        android:background="@drawable/widget_shape_course_background"
         android:paddingHorizontal="8dp"
         android:paddingBottom="8dp"
         android:orientation="vertical">
@@ -62,7 +62,7 @@
                 android:layout_height="25dp"
                 android:layout_gravity="center"
                 android:padding="5dp"
-                android:src="@drawable/ic_expand_less_black_24dp" />
+                android:src="@drawable/widget_ic_expand_less_black_24dp" />
         </LinearLayout>
 
 
@@ -90,7 +90,7 @@
                 android:layout_height="25dp"
                 android:layout_gravity="center"
                 android:padding="5dp"
-                android:src="@drawable/ic_expand_more_black_24dp" />
+                android:src="@drawable/widget_ic_expand_more_black_24dp" />
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

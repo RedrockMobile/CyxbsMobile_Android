@@ -4,7 +4,7 @@
     android:id="@+id/background"
     android:layout_width="match_parent"
     android:layout_height="@dimen/widget_course_item_height"
-    android:background="@drawable/shpae_course_grid_moring_item"
+    android:background="@drawable/widget_shpae_course_grid_moring_item"
     android:orientation="vertical">
 
 

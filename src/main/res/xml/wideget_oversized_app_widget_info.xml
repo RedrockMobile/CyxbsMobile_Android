@@ -6,10 +6,10 @@
     android:initialLayout="@layout/widget_oversized_app_widget"
     android:minWidth="250dp"
     android:minHeight="250dp"
-    android:previewImage="@drawable/widget_oversized_example"
+    android:previewImage="@drawable/widget_ic_oversized_example"
     android:resizeMode="vertical|horizontal"
     android:updatePeriodMillis="3600000"
     android:widgetCategory="home_screen|keyguard"
-    tools:ignore="ResourceName">
+    >
 
 </appwidget-provider>

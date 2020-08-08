@@ -479,7 +479,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
-                android:background="@drawable/widget_bg_savebt"
+                android:background="@drawable/widget_selector_bg_savebt"
                 android:padding="10dp"
                 android:text="保存"
                 android:textColor="#ffffff"

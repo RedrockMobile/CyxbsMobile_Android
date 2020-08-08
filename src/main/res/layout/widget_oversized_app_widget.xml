@@ -2,7 +2,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="10dp"
-    android:background="@drawable/shape_oversize_course_background">
+    android:background="@drawable/widget_shape_oversize_course_background">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -14,7 +14,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:visibility="invisible"
-            android:background="@drawable/shape_oversize_shadow"
+            android:background="@drawable/widget_shape_oversize_shadow"
             android:layout_weight="1"
             android:layout_marginEnd="3dp" />
 
@@ -23,7 +23,7 @@
             android:id="@+id/oversize_shadow_2"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:background="@drawable/shape_oversize_shadow"
+            android:background="@drawable/widget_shape_oversize_shadow"
             android:visibility="invisible"
             android:layout_weight="1"
             android:layout_marginEnd="3dp"/>
@@ -34,7 +34,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:visibility="invisible"
-            android:background="@drawable/shape_oversize_shadow"
+            android:background="@drawable/widget_shape_oversize_shadow"
             android:layout_weight="1"
             android:layout_marginEnd="3dp"/>
 
@@ -44,7 +44,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:visibility="invisible"
-            android:background="@drawable/shape_oversize_shadow"
+            android:background="@drawable/widget_shape_oversize_shadow"
             android:layout_weight="1"
             android:layout_marginEnd="3dp"/>
 
@@ -54,7 +54,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:visibility="invisible"
-            android:background="@drawable/shape_oversize_shadow"
+            android:background="@drawable/widget_shape_oversize_shadow"
             android:layout_weight="1"
             android:layout_marginEnd="3dp"/>
 
@@ -64,7 +64,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:visibility="invisible"
-            android:background="@drawable/shape_oversize_shadow"
+            android:background="@drawable/widget_shape_oversize_shadow"
             android:layout_weight="1"
             android:layout_marginEnd="3dp"/>
 
@@ -75,7 +75,7 @@
             android:layout_height="match_parent"
             android:visibility="invisible"
             android:layout_marginEnd="1.5dp"
-            android:background="@drawable/shape_oversize_shadow"
+            android:background="@drawable/widget_shape_oversize_shadow"
             android:layout_weight="1"/>
 
     </LinearLayout>

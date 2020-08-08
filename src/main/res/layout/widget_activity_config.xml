@@ -51,7 +51,7 @@
                         <ImageView
                             android:layout_width="80dp"
                             android:layout_height="45dp"
-                            android:src="@drawable/widget_little_trans_example" />
+                            android:src="@drawable/widget_ic_little_trans_example" />
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -79,7 +79,7 @@
                         <ImageView
                             android:layout_width="80dp"
                             android:layout_height="45dp"
-                            android:src="@drawable/widget_little_example" />
+                            android:src="@drawable/widget_ic_little_example" />
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -107,7 +107,7 @@
                         <ImageView
                             android:layout_width="80dp"
                             android:layout_height="45dp"
-                            android:src="@drawable/widget_normal_example" />
+                            android:src="@drawable/widget_ic_normal_example" />
 
                         <TextView
                             android:layout_width="wrap_content"
