@@ -194,10 +194,10 @@ class EmptyRoomActivity : BaseViewModelActivity<EmptyRoomViewModel>(), OnItemSel
                         val drawable = if (selected) ContextCompat.getDrawable(BaseApp.context, R.drawable.emptyroom_shape_query_item) else null
 //                        var color =  1
                         if (selected) {
-                            textView.textColorResource = R.color.transactionHeading
+                            textView.textColorResource = R.color.common_transaction_heading
                             textView.paint.isFakeBoldText = true
                         }else{
-                            textView.textColorResource = R.color.levelTwoFontColor
+                            textView.textColorResource = R.color.common_level_two_font_color
                             textView.paint.isFakeBoldText = false
                         }
                         textView.gravity = Gravity.CENTER

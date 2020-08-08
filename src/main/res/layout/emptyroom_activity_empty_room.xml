@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/windowBackground"
+    android:background="@color/common_window_background"
     android:fitsSystemWindows="true"
     android:orientation="vertical"
     tools:context="com.mredrock.cyxbs.discover.emptyroom.ui.EmptyRoomActivity">
@@ -56,8 +56,8 @@
         <com.mredrock.cyxbs.common.component.JCardViewPlus
             android:layout_width="0dp"
             android:layout_height="0dp"
-            app:shadowColor="@color/secondaryWindowBackground"
-            app:cardBackgroundColor="@color/secondaryWindowBackground"
+            app:shadowColor="@color/common_secondary_window_background"
+            app:cardBackgroundColor="@color/common_secondary_window_background"
             app:cardCornerRadiusUpperLeft="16dp"
             app:cardCornerRadiusUpperRight="16dp"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -95,8 +95,8 @@
             android:id="@+id/jc_building"
             android:layout_width="match_parent"
             android:layout_height="105dp"
-            app:shadowColor="@color/whiteBackground"
-            app:cardBackgroundColor="@color/whiteBackground"
+            app:shadowColor="@color/common_white_background"
+            app:cardBackgroundColor="@color/common_white_background"
             app:cardCornerRadiusUpperLeft="16dp"
             app:cardCornerRadiusUpperRight="16dp"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -125,7 +125,7 @@
             android:autoSizeTextType="uniform"
             app:tabBackground="@android:color/transparent"
             app:tabRippleColor="@android:color/transparent"
-            app:tabTextColor="@color/levelOneFontColor"
+            app:tabTextColor="@color/common_level_one_font_color"
             style="@style/emptyroom_custom"
             />
     </androidx.constraintlayout.widget.ConstraintLayout>
