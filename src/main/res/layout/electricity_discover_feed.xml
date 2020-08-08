@@ -3,8 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    tools:context="com.mredrock.cyxbs.discover.electricity.ui.fragment.ElectricityFeedFragment"
-    tools:ignore="ResourceName">
+    tools:context="com.mredrock.cyxbs.discover.electricity.ui.fragment.ElectricityFeedFragment">
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tv_electricity_feed_fee"
@@ -22,7 +21,7 @@
         android:layout_marginBottom="23dp"
         android:alpha="0.6"
         android:text="费用/本月"
-        android:textColor="@color/levelTwoFontColor"
+        android:textColor="@color/common_level_two_font_color"
         android:textSize="13sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/tv_electricity_feed_fee"
@@ -45,7 +44,7 @@
         android:layout_marginBottom="23dp"
         android:alpha="0.6"
         android:text="使用度数/本月"
-        android:textColor="@color/levelTwoFontColor"
+        android:textColor="@color/common_level_two_font_color"
         android:textSize="13sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/tv_electricity_feed_kilowatt"
