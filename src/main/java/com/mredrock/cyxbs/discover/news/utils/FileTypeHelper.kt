@@ -1,6 +1,7 @@
 package com.mredrock.cyxbs.discover.news.utils
 
 import java.io.File
+import java.util.*
 
 /**
  * Author: Hosigus
@@ -31,7 +32,7 @@ object FileTypeHelper {
             return type
         }
 
-        val end = fName.substring(dotIndex, fName.length).toLowerCase()
+        val end = fName.substring(dotIndex, fName.length).toLowerCase(Locale.getDefault())
         if (end.isBlank()) return type
         type = MIME_TABLE[end] ?: return type
         return type

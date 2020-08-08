@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_marginBottom="12dp"
-    android:background="@color/whiteBackground">
+    android:background="@color/common_white_background">
 
     <include
         layout="@layout/common_toolbar"
@@ -31,18 +31,19 @@
                 android:id="@+id/tv_time"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:textColor="@color/levelTwoFontColor"
+                android:textColor="@color/common_level_two_font_color"
                 android:alpha="0.7"
                 android:textSize="13sp"
                 android:layout_marginTop="21dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
                 tools:text="2018年10月9日" />
             <TextView
                 android:id="@+id/tv_title"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:textColor="@color/mine_about_text_color_normal"
+                android:textColor="@color/common_mine_about_text_color_normal"
                 android:textSize="18sp"
                 android:layout_marginTop="8dp"
                 android:textStyle="bold"
@@ -58,7 +59,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:lineSpacingMultiplier="1.25"
-                android:textColor="@color/levelTwoFontColor"
+                android:textColor="@color/common_level_two_font_color"
                 android:textSize="15sp"
                 android:layout_marginTop="14dp"
                 app:layout_constraintEnd_toEndOf="parent"
