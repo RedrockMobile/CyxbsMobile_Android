@@ -4,20 +4,20 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    tools:background="@color/windowBackground">
+    tools:background="@color/common_window_background">
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/windowBackground">
+        android:background="@color/common_window_background">
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tv_day"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="1dp"
-            android:textColor="@color/menuFontColorFound"
+            android:textColor="@color/common_menu_font_color_found"
             android:alpha="0.65"
             android:textSize="14sp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -32,7 +32,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:text="@string/common_explore"
-            android:textColor="@color/levelTwoFontColor"
+            android:textColor="@color/common_level_two_font_color"
             android:textSize="26sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toTopOf="@+id/discover_guideline4"
@@ -88,7 +88,7 @@
                 android:layout_marginEnd="13dp"
                 android:layout_marginBottom="2dp"
                 android:text="@string/news_jwzx"
-                android:textColor="@color/discoverAcademicOnlineColors"
+                android:textColor="@color/common_discover_academic_online_colors"
                 android:textSize="11sp" />
         </FrameLayout>
 
@@ -97,7 +97,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="14dp"
-            android:textColor="@color/levelTwoFontColor"
+            android:textColor="@color/common_level_two_font_color"
             android:textSize="15sp"
             app:layout_constraintBottom_toBottomOf="@+id/fl_discover_home_jwnews"
             app:layout_constraintEnd_toStartOf="@+id/discover_guideline2"
@@ -123,7 +123,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            android:textColor="@color/menuFontColorFound"
+            android:textColor="@color/common_menu_font_color_found"
             android:textSize="11sp"
             android:alpha="0.6"
             app:layout_constraintEnd_toEndOf="@+id/iv_discover_1"
@@ -147,7 +147,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            android:textColor="@color/menuFontColorFound"
+            android:textColor="@color/common_menu_font_color_found"
             android:textSize="11sp"
             android:alpha="0.6"
             app:layout_constraintEnd_toEndOf="@+id/iv_discover_2"
@@ -172,7 +172,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            android:textColor="@color/menuFontColorFound"
+            android:textColor="@color/common_menu_font_color_found"
             android:textSize="11sp"
             android:alpha="0.6"
             app:layout_constraintEnd_toEndOf="@+id/iv_discover_3"
@@ -198,7 +198,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            android:textColor="@color/menuFontColorFound"
+            android:textColor="@color/common_menu_font_color_found"
             android:textSize="11sp"
             android:alpha="0.6"
             app:layout_constraintEnd_toEndOf="@+id/iv_discover_4"

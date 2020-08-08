@@ -131,9 +131,9 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>(), Eve
             overScrollMode = OVER_SCROLL_IF_CONTENT_SCROLLS
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                setTextColor(context.resources.getColor(R.color.menuFontColorFound, context.theme))
+                setTextColor(context.resources.getColor(R.color.common_menu_font_color_found, context.theme))
             } else {
-                setTextColor(ContextCompat.getColor(context, R.color.menuFontColorFound))
+                setTextColor(ContextCompat.getColor(context, R.color.common_menu_font_color_found))
             }
             textSize = 15f
 //            textColor = R.color.menuFontColorFound

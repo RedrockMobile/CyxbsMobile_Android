@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <shape xmlns:tools="http://schemas.android.com/tools"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    tools:ignore="ResourceName">
+    >
     <corners android:bottomLeftRadius="16dp"
         android:topRightRadius="16dp"/>
-    <solid android:color="@color/discoverAcademicOnlineColorsBackground"/>
+    <solid android:color="@color/common_discover_academic_online_colors_background"/>
 </shape>

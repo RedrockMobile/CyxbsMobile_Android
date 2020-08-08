@@ -2,7 +2,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
 
-    <declare-styleable name="MyImageView" tools:ignore="ResourceName">
+    <declare-styleable name="MyImageView" >
         <attr name="roundWidth" format="dimension" />
         <attr name="roundHeight" format="dimension" />
     </declare-styleable>

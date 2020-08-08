@@ -4,9 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/windowBackground"
+    android:background="@color/common_window_background"
     tools:context=".pages.morefunction.MoreFunctionActivity"
-    tools:ignore="ResourceName">
+    >
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/iv_discover_more_function_back"
@@ -27,7 +27,7 @@
         android:layout_marginStart="14dp"
         android:layout_marginTop="8dp"
         android:text="@string/discover_function"
-        android:textColor="@color/levelTwoFontColor"
+        android:textColor="@color/common_level_two_font_color"
         android:textSize="34sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
