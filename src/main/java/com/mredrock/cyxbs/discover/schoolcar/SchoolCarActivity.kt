@@ -6,7 +6,6 @@ import android.content.pm.PackageManager
 import android.graphics.*
 import android.net.Uri
 import android.os.Bundle
-import android.os.Environment
 import android.view.View
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -212,7 +211,7 @@ class SchoolCarActivity : BaseActivity(), View.OnClickListener {
     }
 
     fun initLocationType() {
-        val descriptor: BitmapDescriptor = BitmapDescriptorFactory.fromResource(R.drawable.ic_school_car_search_boy)
+        val descriptor: BitmapDescriptor = BitmapDescriptorFactory.fromResource(R.drawable.schoolcar_ic_school_car_search_boy)
         locationStyle = MyLocationStyle()
         locationStyle.interval(2000)
         locationStyle.strokeWidth(0f)
@@ -275,7 +274,7 @@ class SchoolCarActivity : BaseActivity(), View.OnClickListener {
     }
 
     private fun getSmoothMakerBitmap(): Bitmap {
-        var pointBitmap = BitmapFactory.decodeResource(this@SchoolCarActivity.resources, R.mipmap.ic_school_car)
+        var pointBitmap = BitmapFactory.decodeResource(this@SchoolCarActivity.resources, R.mipmap.schoolcar_ic_school_car)
         var width = pointBitmap.width
         var height = pointBitmap.height
         var scaleWidth = dp2px(22f) / width
@@ -283,7 +282,7 @@ class SchoolCarActivity : BaseActivity(), View.OnClickListener {
         var matrix = Matrix()
         matrix.postScale(scaleWidth.toFloat(), scaleHeight.toFloat())
         pointBitmap = Bitmap.createBitmap(pointBitmap, 0, 0, width, height, matrix, true)
-        var backBitmap = BitmapFactory.decodeResource(this@SchoolCarActivity.resources, R.mipmap.ic_school_car_background)
+        var backBitmap = BitmapFactory.decodeResource(this@SchoolCarActivity.resources, R.mipmap.schoolcar_ic_school_car_background)
         width = backBitmap.width
         height = backBitmap.height
         scaleWidth = dp2px(66f) / width

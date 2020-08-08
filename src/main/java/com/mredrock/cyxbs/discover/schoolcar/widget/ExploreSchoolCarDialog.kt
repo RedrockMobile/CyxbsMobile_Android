@@ -45,20 +45,20 @@ object ExploreSchoolCarDialog {
         try {
             when (type) {
                 LOST_SERVICES -> {
-                    setLayout(activity, R.drawable.dialog_school_car_not_serve)
-                    dialog!!.window!!.setBackgroundDrawableResource(R.drawable.dialog_school_car_not_serve)
+                    setLayout(activity, R.drawable.schoolcar_ic_dialog_school_car_not_serve)
+                    dialog!!.window!!.setBackgroundDrawableResource(R.drawable.schoolcar_ic_dialog_school_car_not_serve)
                     layout.school_car_dialog_dismiss_button.setOnClickListener {
                         dialog?.dismiss()
                         activity.finish()
                     }
                 }
                 TIME_OUT -> {
-                    setLayout(activity, R.drawable.ic_school_car_search_time_out)
-                    dialog!!.window!!.setBackgroundDrawableResource(R.drawable.ic_school_car_search_time_out)
+                    setLayout(activity, R.drawable.schoolcar_ic_school_car_search_time_out)
+                    dialog!!.window!!.setBackgroundDrawableResource(R.drawable.schoolcar_ic_school_car_search_time_out)
                 }
                 NO_GPS -> {
-                    setLayout(activity, R.drawable.ic_school_car_search_no_gps)
-                    dialog?.window?.setBackgroundDrawableResource(R.drawable.ic_school_car_search_no_gps)
+                    setLayout(activity, R.drawable.schoolcar_ic_school_car_search_no_gps)
+                    dialog?.window?.setBackgroundDrawableResource(R.drawable.schoolcar_ic_school_car_search_no_gps)
                     layout.school_car_dialog_negative_button.setOnClickListener { dialog!!.cancel() }
                     layout.school_car_dialog_positive_button.setOnClickListener { dialog!!.cancel() }
                 }

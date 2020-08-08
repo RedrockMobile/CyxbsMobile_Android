@@ -5,9 +5,9 @@
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/whiteBackground"
+    android:background="@color/common_white_background"
     tools:context="com.mredrock.cyxbs.discover.schoolcar.SchoolCarActivity"
-    tools:ignore="ResourceName">
+    >
 
 
     <com.amap.api.maps.MapView
@@ -19,8 +19,8 @@
         android:id="@+id/jc_schoolCar"
         android:layout_width="0dp"
         android:layout_height="103dp"
-        app:cardBackgroundColor="@color/whiteBackground"
-        app:shadowColor="@color/whiteBackground"
+        app:cardBackgroundColor="@color/common_white_background"
+        app:shadowColor="@color/common_white_background"
         app:cardCornerRadiusUpperLeft="16dp"
         app:cardCornerRadiusUpperRight="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -35,7 +35,7 @@
         android:layout_marginTop="14dp"
         android:gravity="center"
         android:text="校车运行中"
-        android:textColor="@color/levelTwoFontColor"
+        android:textColor="@color/common_level_two_font_color"
         android:textSize="21sp"
         android:textStyle="bold"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -48,7 +48,7 @@
         android:layout_marginTop="11dp"
         android:gravity="center"
         android:text="校车营运时间：11：00-14：30、17：00-21：00"
-        android:textColor="@color/levelTwoFontColor"
+        android:textColor="@color/common_level_two_font_color"
         android:textSize="13sp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tv_carStatus" />
@@ -58,7 +58,7 @@
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:layout_marginEnd="18dp"
-        android:background="@color/whiteBackground"
+        android:background="@color/common_white_background"
         app:cardCornerRadius="90dp"
         app:cardElevation="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -68,7 +68,7 @@
     <ImageView
         android:layout_width="17.52dp"
         android:layout_height="4dp"
-        android:src="@drawable/ic_zoomout"
+        android:src="@drawable/schoolcar_ic_zoomout"
         app:layout_constraintBottom_toBottomOf="@id/cv_out"
         app:layout_constraintLeft_toLeftOf="@id/cv_out"
         app:layout_constraintRight_toRightOf="@id/cv_out"
@@ -80,7 +80,7 @@
         android:layout_height="48dp"
         android:layout_marginEnd="18dp"
         android:layout_marginBottom="18dp"
-        android:background="@color/whiteBackground"
+        android:background="@color/common_white_background"
         app:cardCornerRadius="90dp"
         app:cardElevation="0dp"
         app:layout_constraintBottom_toTopOf="@id/cv_out"
@@ -89,7 +89,7 @@
     <ImageView
         android:layout_width="17.52dp"
         android:layout_height="17.52dp"
-        android:src="@drawable/ic_zoomexpand"
+        android:src="@drawable/schoolcar_ic_zoomexpand"
         app:layout_constraintBottom_toBottomOf="@id/cv_expand"
         app:layout_constraintLeft_toLeftOf="@id/cv_expand"
         app:layout_constraintRight_toRightOf="@id/cv_expand"
@@ -101,7 +101,7 @@
         android:layout_height="48dp"
         android:layout_marginEnd="18dp"
         android:layout_marginBottom="28dp"
-        android:background="@color/whiteBackground"
+        android:background="@color/common_white_background"
         app:cardCornerRadius="90dp"
         app:cardElevation="0dp"
         app:layout_constraintBottom_toTopOf="@id/jc_schoolCar"
@@ -110,7 +110,7 @@
     <ImageView
         android:layout_width="19dp"
         android:layout_height="25.8dp"
-        android:src="@drawable/ic_positioning"
+        android:src="@drawable/schoolcar_ic_positioning"
         app:layout_constraintBottom_toBottomOf="@id/cv_positioning"
         app:layout_constraintLeft_toLeftOf="@id/cv_positioning"
         app:layout_constraintRight_toRightOf="@id/cv_positioning"
@@ -122,7 +122,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="46dp"
         android:layout_marginEnd="5dp"
-        android:src="@drawable/ic_school_car_search_orgnization_logo"
+        android:src="@drawable/schoolcar_ic_school_car_search_orgnization_logo"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -132,7 +132,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="17dp"
         android:layout_marginTop="46dp"
-        android:src="@drawable/ic_map_back"
+        android:src="@drawable/schoolcar_ic_map_back"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
