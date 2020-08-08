@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/main_text_spacing"
         android:lineSpacingExtra="@dimen/main_text_spacing"
-        android:textColor="@color/levelTwoFontColor"
+        android:textColor="@color/common_level_two_font_color"
         android:textSize="18sp"
         android:textStyle="bold"
         tools:text="标题标题" />
@@ -22,7 +22,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/main_text_spacing"
         android:lineSpacingExtra="@dimen/main_text_spacing"
-        android:textColor="@color/levelTwoFontColor"
+        android:textColor="@color/common_level_two_font_color"
         android:textSize="18sp"
         tools:text="        内容内容内容内容内容内容内容内容内容内容内容内容" />
 

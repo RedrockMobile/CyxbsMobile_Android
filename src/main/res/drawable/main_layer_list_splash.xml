@@ -6,7 +6,7 @@
     <!--白色矩形 作为背景色-->
     <item>
         <shape android:shape="rectangle">
-            <solid android:color="@color/whiteBackground" />
+            <solid android:color="@color/common_white_background" />
         </shape>
     </item>
 

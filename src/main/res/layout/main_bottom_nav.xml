@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="@dimen/main_main_bottom_navigation_height"
     android:layout_gravity="bottom"
-    android:background="@color/curriculum_background_color"
+    android:background="@color/common_curriculum_background_color"
     android:gravity="center">
 
     <CheckedTextView

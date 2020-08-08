@@ -4,7 +4,7 @@
     android:id="@+id/login_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/whiteBackground"
+    android:background="@color/common_white_background"
     tools:context=".ui.LoginActivity">
 
 
@@ -16,7 +16,7 @@
         android:layout_marginEnd="16dp"
         android:gravity="start"
         android:text="@string/main_main_welcome_speech_1"
-        android:textColor="@color/levelTwoFontColor"
+        android:textColor="@color/common_level_two_font_color"
         android:textSize="34sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -30,7 +30,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/main_welcome_speech_2"
-        android:textColor="@color/alphaLevelTwoFontColor"
+        android:textColor="@color/common_alpha_level_two_font_color"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -93,8 +93,8 @@
             android:maxLength="10"
             android:selectAllOnFocus="true"
             android:singleLine="true"
-            android:textColor="@color/main_activity_login_et_edited_color"
-            android:textColorHint="@color/main_activity_login_et_hint_color"
+            android:textColor="@color/common_main_activity_login_et_edited_color"
+            android:textColorHint="@color/common_main_activity_login_et_hint_color"
             android:textSize="14sp" />
 
     </com.google.android.material.textfield.TextInputLayout>
@@ -125,8 +125,8 @@
             android:maxLength="6"
             android:selectAllOnFocus="true"
             android:singleLine="true"
-            android:textColor="@color/main_activity_login_et_edited_color"
-            android:textColorHint="@color/main_activity_login_et_hint_color"
+            android:textColor="@color/common_main_activity_login_et_edited_color"
+            android:textColorHint="@color/common_main_activity_login_et_hint_color"
             android:textSize="14sp" />
 
     </com.google.android.material.textfield.TextInputLayout>
@@ -168,7 +168,7 @@
         android:layout_width="wrap_content"
         android:layout_height="16dp"
         android:text="@string/main_user_agreement"
-        android:textColor="@color/logInToTheGrayFontBelow"
+        android:textColor="@color/common_log_in_to_the_gray_font_below"
         android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

@@ -3,6 +3,6 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     tools:ignore="MissingDefaultResource">
 
-    <solid android:color="@color/windowBackground" />
+    <solid android:color="@color/common_window_background" />
 
 </shape>
