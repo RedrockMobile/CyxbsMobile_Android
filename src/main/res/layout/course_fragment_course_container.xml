@@ -100,7 +100,7 @@
                             android:id="@+id/tv_course_time"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:drawableStart="@drawable/course_time"
+                            android:drawableStart="@drawable/course_ic_time"
                             android:drawablePadding="5dp"
                             android:gravity="center"
                             android:text="@{coursesViewModel.nowCourseTime}"

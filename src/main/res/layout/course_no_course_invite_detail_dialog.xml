@@ -31,7 +31,7 @@
         app:layout_constraintBottom_toBottomOf="@+id/tv_time"
         app:layout_constraintStart_toStartOf="@+id/tv_is_free"
         app:layout_constraintVertical_bias="0.5"
-        app:srcCompat="@drawable/course_time" />
+        app:srcCompat="@drawable/course_ic_time" />
 
     <TextView
         android:id="@+id/tv_time"

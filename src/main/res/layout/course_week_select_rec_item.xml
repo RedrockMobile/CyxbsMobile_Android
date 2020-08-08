@@ -3,7 +3,7 @@
     android:id="@+id/cb"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="@drawable/course_week_cb_bk"
+    android:background="@drawable/course_selector_week_cb_bk"
     android:paddingStart="13dp"
     android:paddingTop="6dp"
     android:paddingEnd="13dp"
