@@ -5,18 +5,18 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/windowBackground"
+    android:background="@color/common_window_background"
     tools:context=".VolunteerRecordActivity"
-    tools:ignore="ResourceName">
+    >
     <TextView
         android:layout_width="match_parent"
         android:layout_height="20dp"
-        android:background="@drawable/volunteer_time_toolbar_background"/>
+        android:background="@drawable/volunteer_shape_time_toolbar_background"/>
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/volunteer_time_toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/volunteer_time_toolbar_background">
+        android:background="@drawable/volunteer_shape_time_toolbar_background">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -109,18 +109,18 @@
         android:layout_width="43dp"
         android:layout_height="48dp"
         android:layout_gravity="center"
-        android:src="@drawable/volunteer_refresh_animation"/>
+        android:src="@drawable/volunteer_animation_list_refresh_animation"/>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/volunteer_time_nohour">
+        android:background="@drawable/volunteer_ic_time_nohour">
 
         <androidx.viewpager.widget.ViewPager
             android:id="@+id/volunteer_view_pager"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/windowBackground" />
+            android:background="@color/common_window_background" />
 
     </LinearLayout>
 

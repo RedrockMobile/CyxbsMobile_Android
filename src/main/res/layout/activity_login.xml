@@ -4,10 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/windowBackground"
+    android:background="@color/common_window_background"
     android:orientation="vertical"
     tools:context=".VolunteerLoginActivity"
-    tools:ignore="ResourceName">
+    >
 
 
     <com.mredrock.cyxbs.common.component.JToolbar
@@ -25,7 +25,7 @@
         android:layout_height="wrap_content"
         android:adjustViewBounds="true"
         android:maxHeight="500dp"
-        android:src="@drawable/volunteer_background_login"
+        android:src="@drawable/volunteer_ic_background_login"
         tools:ignore="ContentDescription" />
 
     <com.mredrock.cyxbs.common.component.JCardViewPlus
@@ -36,8 +36,8 @@
         android:layout_marginTop="65dp"
         android:layout_marginEnd="20dp"
         android:foreground="?attr/selectableItemBackground"
-        app:cardBackgroundColor="@color/windowBackground"
-        app:shadowColor="@color/windowBackground"
+        app:cardBackgroundColor="@color/common_window_background"
+        app:shadowColor="@color/common_window_background"
         app:cardCornerRadius="2dp"
         app:horizontalContentPadding="25dp"
         app:shadowRadius="10dp"
@@ -83,7 +83,7 @@
         android:layout_marginStart="30dp"
         android:layout_marginTop="30dp"
         android:layout_marginEnd="30dp"
-        android:background="@drawable/volunteer_bg_btn_login"
+        android:background="@drawable/volunteer_shape_btn_login"
         android:text="@string/volunteer_login"
         android:textColor="@android:color/white"
         android:textSize="17sp" />

@@ -4,16 +4,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_height="wrap_content"
     android:layout_width="wrap_content"
-    tools:ignore="ResourceName">
+    >
 <LinearLayout
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/windowBackground">
+    android:background="@color/common_window_background">
 
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="centerCrop"
-        android:src="@drawable/volunteer_time_nohour"/>
+        android:src="@drawable/volunteer_ic_time_nohour"/>
 </LinearLayout></androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

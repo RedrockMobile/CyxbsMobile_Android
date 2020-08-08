@@ -5,7 +5,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:ignore="ResourceName">
+    >
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -14,7 +14,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:background="@color/windowBackground"
+                android:background="@color/common_window_background"
                 >
 
                 <androidx.cardview.widget.CardView
@@ -37,7 +37,7 @@
                             android:layout_alignParentLeft="true"
                             android:layout_alignParentStart="true"
                             android:layout_alignParentTop="true"
-                            android:src="@drawable/volunteer_time_color" />
+                            android:src="@drawable/volunteer_shape_time_color" />
 
                         <TextView
                             android:id="@+id/textview1"
@@ -93,7 +93,7 @@
                         android:layout_width="4dp"
                         android:layout_height="20dp"
                         android:scaleType="centerCrop"
-                        android:src="@drawable/volunteer_service_begin"/>
+                        android:src="@drawable/volunteer_ic_service_begin"/>
 
                     <TextView
                         android:layout_width="wrap_content"

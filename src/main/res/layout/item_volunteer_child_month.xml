@@ -9,7 +9,7 @@
     android:background="@color/volunteer_login_background"
     app:cardCornerRadius="6dp"
     app:cardElevation="1dp"
-    tools:ignore="ResourceName">
+    >
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -24,7 +24,7 @@
             <ImageView
                 android:layout_width="68dp"
                 android:layout_height="25dp"
-                android:src="@drawable/volunteer_new_date" />
+                android:src="@drawable/volunteer_ic_new_date" />
             <RelativeLayout
                 android:layout_width="59dp"
                 android:layout_height="27dp">

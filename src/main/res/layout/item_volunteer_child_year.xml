@@ -4,7 +4,7 @@
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    tools:ignore="ResourceName">
+    >
 
     <FrameLayout
         android:layout_width="50dp"
@@ -13,7 +13,7 @@
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_marginTop="0dp"
-            android:src="@drawable/volunteer_year_ic"/>
+            android:src="@drawable/volunteer_ic_year_ic"/>
         <TextView
             android:id="@+id/volunteer_time_year"
             android:layout_width="wrap_content"

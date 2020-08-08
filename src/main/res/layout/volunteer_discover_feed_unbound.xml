@@ -4,7 +4,7 @@
     android:layout_height="152dp">
     <androidx.appcompat.widget.AppCompatTextView
         android:text="还未绑定账号哦～"
-        android:textColor="@color/levelTwoFontColor"
+        android:textColor="@color/common_level_two_font_color"
         android:alpha="0.6"
         android:textSize="15sp"
         android:layout_gravity="center_vertical|center_horizontal"
