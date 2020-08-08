@@ -9,7 +9,7 @@
     android:orientation="vertical"
     android:background="@color/transparent"
     tools:context=".pages.stuselect.NoClassStuSelectActivity"
-    tools:ignore="ResourceName">
+    >
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/ll_stu_select"
@@ -23,7 +23,7 @@
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tv_noclass_stu_select_cancel"
             android:text="取消"
-            android:textColor="@color/levelTwoFontColor"
+            android:textColor="@color/common_level_two_font_color"
             android:textSize="15sp"
             android:layout_marginTop="21dp"
             android:layout_marginStart="16dp"

@@ -7,7 +7,7 @@ import android.view.Window
 import com.mredrock.cyxbs.common.ui.BaseActivity
 import com.mredrock.cyxbs.discover.noclass.R
 import com.mredrock.cyxbs.discover.noclass.network.Student
-import kotlinx.android.synthetic.main.discover_noclass_activity_stu_select.*
+import kotlinx.android.synthetic.main.noclass_activity_stu_select.*
 
 class NoClassStuSelectActivity : BaseActivity() {
     override val isFragmentActivity = false
@@ -16,7 +16,7 @@ class NoClassStuSelectActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         window.requestFeature(Window.FEATURE_CONTENT_TRANSITIONS)
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.discover_noclass_activity_stu_select)
+        setContentView(R.layout.noclass_activity_stu_select)
 
 
         initClickListener()

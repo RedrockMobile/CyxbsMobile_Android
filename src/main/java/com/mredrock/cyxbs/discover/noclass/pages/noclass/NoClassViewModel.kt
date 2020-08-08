@@ -27,7 +27,7 @@ class NoClassViewModel : BaseViewModel() {
                 .doFinally { progressDialogEvent.value = ProgressDialogEvent.DISMISS_DIALOG_EVENT }
                 .doOnSubscribe { progressDialogEvent.value = ProgressDialogEvent.SHOW_NONCANCELABLE_DIALOG_EVENT }
                 .safeSubscribeBy(onError = {
-                    toastEvent.value = R.string.emptySearchResult
+                    toastEvent.value = R.string.noclass_empty_search_result
                 }, onNext = {
                     mStuList.value = it
                 }).lifeCycle()

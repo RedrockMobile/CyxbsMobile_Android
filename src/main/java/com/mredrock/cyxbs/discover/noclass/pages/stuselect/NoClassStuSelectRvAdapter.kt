@@ -11,7 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.mredrock.cyxbs.discover.noclass.R
 import com.mredrock.cyxbs.discover.noclass.network.Student
-import kotlinx.android.synthetic.main.discover_noclass_item_rv_select.view.*
+import kotlinx.android.synthetic.main.noclass_item_rv_select.view.*
 
 /**
  * Created by zxzhu
@@ -21,7 +21,7 @@ import kotlinx.android.synthetic.main.discover_noclass_item_rv_select.view.*
 class NoClassStuSelectRvAdapter(private val mStuList: List<Student>) : RecyclerView.Adapter<NoClassStuSelectRvAdapter.StuSelectHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): StuSelectHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.discover_noclass_item_rv_select, parent, false)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.noclass_item_rv_select, parent, false)
         return StuSelectHolder(view)
     }
 

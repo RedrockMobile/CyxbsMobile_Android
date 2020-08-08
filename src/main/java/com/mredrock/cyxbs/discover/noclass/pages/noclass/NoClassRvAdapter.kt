@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.mredrock.cyxbs.discover.noclass.R
 import com.mredrock.cyxbs.discover.noclass.network.Student
 import com.mredrock.cyxbs.discover.noclass.snackbar
-import kotlinx.android.synthetic.main.discover_noclass_item_stu.view.*
+import kotlinx.android.synthetic.main.noclass_item_stu.view.*
 
 /**
  * Created by zxzhu
@@ -27,7 +27,7 @@ class NoClassRvAdapter(private val mStuList: MutableList<Student>, private val m
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
 
-        val viewStu = LayoutInflater.from(parent.context).inflate(R.layout.discover_noclass_item_stu, parent, false)
+        val viewStu = LayoutInflater.from(parent.context).inflate(R.layout.noclass_item_stu, parent, false)
         return ItemStuHolder(viewStu)
 
     }

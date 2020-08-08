@@ -36,5 +36,5 @@
         android:clickable="true"
         android:padding="3dp"
         android:scaleType="fitXY"
-        android:src="@drawable/discover_noclass_ic_delete" />
+        android:src="@drawable/noclass_ic_delete" />
 </RelativeLayout>
