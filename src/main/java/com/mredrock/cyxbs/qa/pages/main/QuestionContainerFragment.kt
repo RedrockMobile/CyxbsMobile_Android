@@ -49,7 +49,7 @@ class QuestionContainerFragment : BaseFragment(), View.OnClickListener, EventBus
         view.vp_question.offscreenPageLimit = 5
         view.tl_category.apply {
             setupWithViewPager(view.vp_question)
-            setSelectedTabIndicator(R.drawable.qa_question_tab_indicator)
+            setSelectedTabIndicator(R.drawable.qa_ic_question_tab_indicator)
         }
         btn_ask_question.setOnClickListener {
             QuizActivity.activityStart(this@QuestionContainerFragment, "学习", REQUEST_LIST_REFRESH_ACTIVITY)

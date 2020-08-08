@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/whiteBackground"
+    android:background="@color/common_white_background"
     android:fitsSystemWindows="true"
     android:orientation="vertical"
     tools:context="com.mredrock.cyxbs.qa.pages.answer.ui.AnswerActivity">
@@ -26,7 +26,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:alpha="0.1"
-                android:background="@color/qa_quiz_toolbar_divider_line_color" />
+                android:background="@color/common_qa_quiz_toolbar_divider_line_color" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:layout_width="wrap_content"
@@ -35,7 +35,7 @@
                 android:layout_marginTop="20dp"
                 android:alpha="0.64"
                 android:text="@string/qa_answer_activity_question_describe"
-                android:textColor="@color/levelTwoFontColor"
+                android:textColor="@color/common_level_two_font_color"
                 android:textSize="15sp" />
 
             <androidx.appcompat.widget.AppCompatTextView
@@ -47,7 +47,7 @@
                 android:layout_marginTop="9dp"
                 android:layout_marginEnd="20dp"
                 android:ellipsize="@null"
-                android:textColor="@color/levelTwoFontColor"
+                android:textColor="@color/common_level_two_font_color"
                 android:textSize="15sp"
                 tools:text="雪莉曾与宋茜、刘逸云(Amber)、朴善怜(Luna)和雪莉曾与宋茜、刘逸云(Amber)、朴善怜(Luna)和 郑秀晶（Krysal）组成女子流行演唱组合f(x)方" />
 
@@ -58,10 +58,10 @@
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="4dp"
                 android:layout_marginEnd="20dp"
-                android:drawableEnd="@drawable/qa_question_describe_show_more_down"
+                android:drawableEnd="@drawable/qa_ic_question_describe_show_more_down"
                 android:drawablePadding="3dp"
                 android:text="@string/qa_answer_question_detail_show_more"
-                android:textColor="@color/levelTwoFontColor"
+                android:textColor="@color/common_level_two_font_color"
                 android:textSize="11sp" />
 
             <com.mredrock.cyxbs.qa.ui.widget.NineGridView
@@ -81,7 +81,7 @@
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="12dp"
                 android:layout_marginEnd="20dp"
-                android:background="@drawable/qa_quiz_new_text_background"
+                android:background="@drawable/qa_ic_quiz_new_text_background"
                 app:ratio="0.69">
 
                 <EditText
@@ -96,8 +96,8 @@
                     android:paddingStart="15dp"
                     android:paddingTop="10dp"
                     android:paddingEnd="15dp"
-                    android:textColor="@color/levelTwoFontColor"
-                    android:textColorHint="@color/qa_quiz_content_edt_hint_color"
+                    android:textColor="@color/common_level_two_font_color"
+                    android:textColorHint="@color/common_qa_quiz_content_edt_hint_color"
                     android:textSize="16sp" />
             </com.mredrock.cyxbs.common.component.RatioLayout>
 

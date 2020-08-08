@@ -12,7 +12,7 @@
         app:cardCornerRadiusUpperLeft="16dp"
         app:cardCornerRadiusUpperRight="16dp"
         app:shadowRadius="0dp"
-        app:cardBackgroundColor="@color/whiteBackground"
+        app:cardBackgroundColor="@color/common_white_background"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -22,7 +22,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
-        android:src="@drawable/qa_dialog_reward_description"
+        android:src="@drawable/qa_ic_dialog_reward_description"
         android:layout_marginStart="20dp"
         app:layout_constraintBottom_toBottomOf="@id/tv_reward_set_title"
         app:layout_constraintTop_toTopOf="@id/tv_reward_set_title" />
@@ -33,7 +33,7 @@
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:text="@string/qa_reward_set_title_text"
-        android:textColor="@color/levelTwoFontColor"
+        android:textColor="@color/common_level_two_font_color"
         android:textSize="22sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -45,7 +45,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
         android:text="@string/qa_quiz_dialog_cancel_text"
-        android:textColor="@color/levelTwoFontColor"
+        android:textColor="@color/common_level_two_font_color"
         android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="@id/tv_reward_set_title"
         app:layout_constraintEnd_toEndOf="parent"
@@ -58,7 +58,7 @@
         android:layout_marginStart="22dp"
         android:layout_marginTop="33dp"
         android:text="@string/qa_quiz_mission_deadline_title_text"
-        android:textColor="@color/levelTwoFontColor"
+        android:textColor="@color/common_level_two_font_color"
         android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tv_reward_set_title" />
@@ -69,7 +69,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="14dp"
         tools:text="2019年10月2日5时21分"
-        android:textColor="@color/qa_quiz_time_display_color"
+        android:textColor="@color/common_qa_quiz_time_display_color"
         android:textSize="11sp"
         app:layout_constraintBottom_toBottomOf="@+id/tv_mission_deadline_title"
         app:layout_constraintEnd_toEndOf="parent"
@@ -119,7 +119,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="25dp"
-        android:background="@drawable/qa_quiz_time_select_indicator_background"
+        android:background="@drawable/qa_ic_quiz_time_select_indicator_background"
         app:layout_constraintBottom_toBottomOf="@id/rl_time_select"
         app:layout_constraintTop_toTopOf="@id/rl_time_select"
         android:layout_marginStart="30dp"
@@ -132,7 +132,7 @@
         android:layout_height="1dp"
         android:layout_marginTop="32dp"
         android:alpha="0.3"
-        android:background="@color/qa_question_recycler_item_divide_line_color"
+        android:background="@color/common_qa_question_recycler_item_divide_line_color"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/rl_time_select" />
@@ -144,7 +144,7 @@
         android:layout_marginStart="20dp"
         android:layout_marginTop="26dp"
         android:text="@string/qa_quiz_reward_set_text"
-        android:textColor="@color/levelTwoFontColor"
+        android:textColor="@color/common_level_two_font_color"
         android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/iv_reward_set_dialog_divide_line" />
@@ -157,7 +157,7 @@
         android:layout_marginEnd="14dp"
         android:alpha="0.57"
         android:gravity="center"
-        android:textColor="@color/levelTwoFontColor"
+        android:textColor="@color/common_level_two_font_color"
         android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="@id/tv_my_reward"
         app:layout_constraintEnd_toEndOf="parent"
@@ -187,7 +187,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/vp_set_reward_count"
             android:layout_centerHorizontal="true"
-            android:background="@drawable/qa_quiz_reward_select_indicator_background" />
+            android:background="@drawable/qa_ic_quiz_reward_select_indicator_background" />
     </RelativeLayout>
 
     <Button
@@ -195,9 +195,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="40dp"
-        android:background="@drawable/qa_main_have_question_btn_background"
+        android:background="@drawable/qa_shape_main_have_question_btn_background"
         android:text="@string/qa_quiz_dialog_submit"
-        android:textColor="@color/whiteFontColor"
+        android:textColor="@color/common_white_font_color"
         android:textSize="18sp"
         android:paddingStart="40dp"
         android:paddingEnd="40dp"

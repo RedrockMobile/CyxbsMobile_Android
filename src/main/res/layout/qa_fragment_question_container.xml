@@ -4,14 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:background="@color/windowBackground"
+    tools:background="@color/common_window_background"
     android:orientation="vertical"
     tools:context=".pages.main.QuestionContainerFragment">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="100dp"
-        android:background="@color/transparentBackground"
+        android:background="@color/common_transparent_background"
         app:elevation="0dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -32,7 +32,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:alpha="0.65"
-                android:textColor="@color/qa_question_current_time_color"
+                android:textColor="@color/common_qa_question_current_time_color"
                 android:textSize="10sp"
                 android:layout_gravity="top|start"
                 app:layout_constraintStart_toStartOf="parent"
@@ -47,7 +47,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="13dp"
                 android:text="@string/qa_fragment_head_title"
-                android:textColor="@color/qa_main_title"
+                android:textColor="@color/common_qa_main_title"
                 app:layout_collapseMode="parallax"
                 android:textSize="34sp"
                 android:textStyle="bold"
@@ -59,10 +59,10 @@
                 android:id="@+id/btn_ask_question"
                 android:layout_width="70dp"
                 android:layout_height="35dp"
-                android:background="@drawable/qa_main_have_question_btn_background"
+                android:background="@drawable/qa_shape_main_have_question_btn_background"
                 android:gravity="center"
                 android:text="@string/qa_fragment_head_give_question"
-                android:textColor="@color/whiteFontColor"
+                android:textColor="@color/common_white_font_color"
                 app:layout_collapseMode="parallax"
                 android:textSize="15sp"
                 android:layout_gravity="end|bottom"
@@ -87,23 +87,23 @@
             android:layout_marginTop="6dp"
             app:tabBackground="@android:color/transparent"
             app:tabGravity="fill"
-            app:tabIndicatorColor="@color/qa_question_tab_indicator_color"
+            app:tabIndicatorColor="@color/common_qa_question_tab_indicator_color"
             app:tabIndicatorFullWidth="false"
             app:tabIndicatorHeight="3dp"
             app:tabMode="fixed"
             app:tabRippleColor="@android:color/transparent"
-            app:tabSelectedTextColor="@color/qa_tab_selected_color"
-            app:tabTextColor="@color/qa_tab_unselected_color" />
+            app:tabSelectedTextColor="@color/common_qa_tab_selected_color"
+            app:tabTextColor="@color/common_qa_tab_unselected_color" />
 
         <com.mredrock.cyxbs.common.component.JCardViewPlus
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@id/tl_category"
             android:layout_marginTop="20dp"
-            app:cardBackgroundColor="@color/qa_question_list_color"
+            app:cardBackgroundColor="@color/common_qa_question_list_color"
             app:cardCornerRadiusUpperLeft="22dp"
             app:cardCornerRadiusUpperRight="22dp"
-            app:shadowColor="@color/qa_question_list_color"
+            app:shadowColor="@color/common_qa_question_list_color"
             app:shadowRadius="0dp" />
 
         <androidx.viewpager.widget.ViewPager

@@ -137,12 +137,12 @@ class AnswerActivity : BaseViewModelActivity<AnswerViewModel>(), EventBusLifecyc
                 //点击后展开，tv显示所有内容
                 if (tv_answer_question_description.maxLines == 2) {
                     tv_answer_question_description.maxLines = Int.MAX_VALUE
-                    val drawable = ContextCompat.getDrawable(this@AnswerActivity, R.drawable.qa_question_describe_show_more_up)
+                    val drawable = ContextCompat.getDrawable(this@AnswerActivity, R.drawable.qa_ic_question_describe_show_more_up)
                     setCompoundDrawablesWithIntrinsicBounds(null, null, drawable, null)
                     nine_grid_view_question.visible()
                 } else {
                     tv_answer_question_description.maxLines = 2
-                    val drawable = ContextCompat.getDrawable(this@AnswerActivity, R.drawable.qa_question_describe_show_more_down)
+                    val drawable = ContextCompat.getDrawable(this@AnswerActivity, R.drawable.qa_ic_question_describe_show_more_down)
                     setCompoundDrawablesWithIntrinsicBounds(null, null, drawable, null)
                     nine_grid_view_question.gone()
                 }
@@ -153,7 +153,7 @@ class AnswerActivity : BaseViewModelActivity<AnswerViewModel>(), EventBusLifecyc
     }
 
     private fun initImageAddView() {
-        nine_grid_view.addView(ContextCompat.getDrawable(this, R.drawable.qa_quiz_add_picture_empty)?.let { createImageViewFromVector(it) })
+        nine_grid_view.addView(ContextCompat.getDrawable(this, R.drawable.qa_ic_quiz_add_picture_empty)?.let { createImageViewFromVector(it) })
         nine_grid_view.setOnItemClickListener { _, index ->
             if (index == nine_grid_view.childCount - 1) {
                 this@AnswerActivity.selectImageFromAlbum(MAX_SELECTABLE_IMAGE_COUNT, viewModel.imageLiveData.value)
@@ -194,7 +194,7 @@ class AnswerActivity : BaseViewModelActivity<AnswerViewModel>(), EventBusLifecyc
 
     private fun createImageViewFromVector(drawable: Drawable) = ImageView(this).apply {
         scaleType = ImageView.ScaleType.CENTER
-        background = ContextCompat.getDrawable(this@AnswerActivity, R.drawable.qa_quiz_select_pic_empty_background)
+        background = ContextCompat.getDrawable(this@AnswerActivity, R.drawable.qa_shape_quiz_select_pic_empty_background)
         setImageDrawable(drawable)
     }
 

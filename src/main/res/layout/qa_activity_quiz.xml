@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/whiteBackground"
+    android:background="@color/common_white_background"
     android:fitsSystemWindows="true"
     android:orientation="vertical"
     tools:context=".pages.quiz.ui.QuizActivity">
@@ -26,7 +26,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:alpha="0.1"
-                android:background="@color/qa_quiz_toolbar_divider_line_color" />
+                android:background="@color/common_qa_quiz_toolbar_divider_line_color" />
 
             <include
                 android:id="@+id/layout_quiz_tag"
@@ -39,7 +39,7 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="15dp"
                 android:layout_marginEnd="16dp"
-                android:background="@drawable/qa_quiz_new_text_background"
+                android:background="@drawable/qa_ic_quiz_new_text_background"
                 android:gravity="center_vertical"
                 android:hint="@string/qa_question_new_question_title_hint"
                 android:inputType="text"
@@ -48,7 +48,7 @@
                 android:paddingTop="10dp"
                 android:paddingEnd="21dp"
                 android:paddingBottom="9dp"
-                android:textColorHint="@color/levelTwoFontColor"
+                android:textColorHint="@color/common_level_two_font_color"
                 android:textStyle="bold" />
 
             <com.mredrock.cyxbs.common.component.RatioLayout
@@ -57,7 +57,7 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="15dp"
                 android:layout_marginEnd="16dp"
-                android:background="@drawable/qa_quiz_new_text_background"
+                android:background="@drawable/qa_ic_quiz_new_text_background"
                 app:ratio="0.69">
 
 
@@ -74,8 +74,8 @@
                     android:paddingTop="8dp"
                     android:paddingEnd="21dp"
                     android:paddingBottom="8dp"
-                    android:textColor="@color/levelTwoFontColor"
-                    android:textColorHint="@color/qa_quiz_content_edt_hint_color"
+                    android:textColor="@color/common_level_two_font_color"
+                    android:textColorHint="@color/common_qa_quiz_content_edt_hint_color"
                     android:textSize="16sp" />
             </com.mredrock.cyxbs.common.component.RatioLayout>
 

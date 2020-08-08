@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/qa_comment_background_color"
+    android:background="@color/common_qa_comment_background_color"
     android:fitsSystemWindows="true"
     android:orientation="vertical"
     tools:context=".pages.comment.ui.CommentListActivity">
@@ -14,7 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
-        android:background="@drawable/qa_comment_header_background"
+        android:background="@drawable/qa_shape_comment_header_background"
         android:paddingTop="20dp">
 
         <ImageButton
@@ -24,7 +24,7 @@
             android:background="@null"
             android:paddingStart="20dp"
             android:paddingEnd="7dp"
-            android:src="@drawable/qa_comment_header_ic_back"
+            android:src="@drawable/qa_ic_comment_header_ic_back"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -34,7 +34,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="15dp"
-            android:textColor="@color/levelTwoFontColor"
+            android:textColor="@color/common_level_two_font_color"
             android:textSize="22sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -64,7 +64,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginBottom="8dp"
-            android:background="@color/qa_comment_list_background_color" />
+            android:background="@color/common_qa_comment_list_background_color" />
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     <include layout="@layout/qa_comment_new_publish_layout" />

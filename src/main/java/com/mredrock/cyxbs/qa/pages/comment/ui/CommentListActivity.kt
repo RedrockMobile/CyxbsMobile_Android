@@ -125,7 +125,7 @@ class CommentListActivity : BaseActivity(), EventBusLifecycleSubscriber {
             cl_toolbar_root.addView(TextView(this).apply {
                 layoutParams = qa_ib_toolbar_more.layoutParams
                 text = getString(R.string.qa_answer_show_question)
-                textColor = ContextCompat.getColor(this@CommentListActivity, R.color.levelTwoFontColor)
+                textColor = ContextCompat.getColor(this@CommentListActivity, R.color.common_level_two_font_color)
                 textSize = 15f
                 visible()
                 setOnClickListener {
@@ -152,7 +152,7 @@ class CommentListActivity : BaseActivity(), EventBusLifecycleSubscriber {
                     if (question.disappearAt.toDate().time > System.currentTimeMillis()) {
                         CommonDialog(this@CommentListActivity).apply {
                             initView(
-                                    icon = R.drawable.qa_icon_answer_accept,
+                                    icon = R.drawable.qa_ic_answer_accept,
                                     title = getString(R.string.qa_answer_whether_accept_title),
                                     firstNotice = getString(R.string.qa_answer_whether_accept_notice),
                                     secondNotice = null,

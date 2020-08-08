@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/qa_comment_header_background_color"
+    android:background="@color/common_qa_comment_header_background_color"
     android:orientation="vertical">
 
     <RelativeLayout
@@ -31,7 +31,7 @@
             android:layout_marginStart="15dp"
             android:layout_toEndOf="@+id/iv_answer_avatar"
             android:drawablePadding="3dp"
-            android:textColor="@color/qa_comment_answer_nickname_color"
+            android:textColor="@color/common_qa_comment_answer_nickname_color"
             android:textSize="14sp"
             tools:text="刘学霸" />
 
@@ -43,7 +43,7 @@
             android:layout_alignStart="@id/tv_answer_nickname"
             android:layout_marginTop="2dp"
             android:alpha="0.54"
-            android:textColor="@color/qa_comment_answer_create_at_color"
+            android:textColor="@color/common_qa_comment_answer_create_at_color"
             android:textSize="12sp"
             tools:text="2018-03-03" />
 
@@ -58,14 +58,14 @@
                 android:id="@+id/tv_adopted"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/qa_answer_adopted_background"
+                android:background="@drawable/qa_shape_answer_adopted_background"
                 android:drawablePadding="5dp"
                 android:paddingStart="10dp"
                 android:paddingTop="4dp"
                 android:paddingEnd="10dp"
                 android:paddingBottom="4dp"
                 android:text="@string/qa_answer_list_accepted"
-                android:textColor="@color/qa_answer_list_adopted_color"
+                android:textColor="@color/common_qa_answer_list_adopted_color"
                 android:textSize="12sp"
                 android:visibility="gone" />
 
@@ -73,13 +73,13 @@
                 android:id="@+id/tv_adopt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/qa_answer_adopted_background"
+                android:background="@drawable/qa_shape_answer_adopted_background"
                 android:paddingStart="10dp"
                 android:paddingTop="4dp"
                 android:paddingEnd="10dp"
                 android:paddingBottom="4dp"
                 android:text="@string/qa_answer_list_accept"
-                android:textColor="@color/qa_answer_list_adopted_color"
+                android:textColor="@color/common_qa_answer_list_adopted_color"
                 android:textSize="13sp"
                 android:visibility="visible" />
         </FrameLayout>
@@ -92,7 +92,7 @@
         android:layout_marginStart="67dp"
         android:layout_marginTop="11dp"
         android:layout_marginEnd="20dp"
-        android:textColor="@color/qa_comment_answer_content_color"
+        android:textColor="@color/common_qa_comment_answer_content_color"
         android:textSize="16sp"
         tools:text="符号A属于Rmxn表示一个m行n列的矩阵，并且矩阵A中所有的所有元素都是实数。符号x属于Rn表示一个含有n个元素的向量。符号A属于Rmxn表示一个m行n列的矩阵，并且矩阵A中所有的所有元素都是实数，符号x属于Rn表示一个含有n个元素的向量。符号A属于Rmxn表示一个m行n列的矩阵，并且矩阵A中所有的所有元素都是实数." />
 
@@ -110,6 +110,6 @@
         android:layout_width="match_parent"
         android:layout_height="3dp"
         android:layout_marginTop="20dp"
-        android:background="@color/qa_comment_item_divider_gap_color" />
+        android:background="@color/common_qa_comment_item_divider_gap_color" />
 
 </LinearLayout>

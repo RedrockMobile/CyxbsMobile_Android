@@ -30,7 +30,7 @@
             android:layout_marginStart="8dp"
             android:layout_toEndOf="@+id/iv_questioner_avatar"
             android:drawablePadding="3dp"
-            android:textColor="@color/levelTwoFontColor"
+            android:textColor="@color/common_level_two_font_color"
             android:textSize="16sp"
             tools:text="刘童鞋" />
 
@@ -41,7 +41,7 @@
             android:layout_below="@+id/tv_questioner_nickname"
             android:layout_alignStart="@+id/tv_questioner_nickname"
             android:alpha="0.67"
-            android:textColor="@color/levelTwoFontColor"
+            android:textColor="@color/common_level_two_font_color"
             android:textSize="12sp"
             tools:text="2019.8.22" />
 
@@ -53,7 +53,7 @@
             android:layout_centerVertical="true"
             android:drawableStart="@drawable/qa_ic_answer_list_reward"
             android:drawablePadding="4dp"
-            android:textColor="@color/levelTwoFontColor"
+            android:textColor="@color/common_level_two_font_color"
             android:textSize="12sp"
             tools:text="12" />
 
@@ -65,7 +65,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="15dp"
-        android:textColor="@color/qa_answer_list_header_content_color"
+        android:textColor="@color/common_qa_answer_list_header_content_color"
         android:textSize="16sp"
         tools:text="雪莉曾与宋茜、刘逸云(Amber)、朴善怜(Luna)和
 郑秀晶（Krysal）组成女子流行演唱组合f(x)，因
@@ -90,7 +90,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="7dp"
         android:text="@string/qa_answer_reply_hint"
-        android:textColor="@color/levelTwoFontColor"
+        android:textColor="@color/common_level_two_font_color"
         android:textSize="18sp"
         android:textStyle="bold" />
 

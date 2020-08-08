@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/whiteBackground"
+    android:background="@color/common_white_background"
     android:fitsSystemWindows="true"
     android:orientation="vertical"
     tools:context=".pages.answer.ui.AnswerListActivity">
@@ -21,7 +21,7 @@
             android:layout_height="1dp"
             android:layout_marginTop="12dp"
             android:alpha="0.1"
-            android:background="@color/qa_quiz_toolbar_divider_line_color" />
+            android:background="@color/common_qa_quiz_toolbar_divider_line_color" />
 
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
             android:id="@+id/swipe_refresh_layout"
@@ -45,11 +45,11 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|center_horizontal"
         android:layout_marginBottom="57dp"
-        android:background="@drawable/qa_main_have_question_btn_background"
+        android:background="@drawable/qa_shape_main_have_question_btn_background"
         android:paddingStart="40dp"
         android:paddingEnd="40dp"
         android:text="@string/qa_answer_btn_text"
-        android:textColor="@color/whiteFontColor"
+        android:textColor="@color/common_white_font_color"
         android:textSize="18sp"
         app:layout_behavior="com.mredrock.cyxbs.qa.ui.widget.ButtonScrollBehavior" />
 

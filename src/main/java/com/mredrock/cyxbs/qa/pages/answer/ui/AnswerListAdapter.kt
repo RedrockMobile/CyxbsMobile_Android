@@ -78,14 +78,14 @@ class AnswerListAdapter : BaseEndlessRvAdapter<Answer>(DIFF_CALLBACK) {
                 if (data.content.isEmpty() && data.photoUrl.isNotEmpty()) {
                     tv_answer_content.apply {
                         text = context.getString(R.string.qa_answer_photo_count, data.photoUrl.size.toString())
-                        textColor = ContextCompat.getColor(context, R.color.qa_answer_empty_content_color)
+                        textColor = ContextCompat.getColor(context, R.color.common_qa_answer_empty_content_color)
                         setOnClickListener {
                             ViewImageActivity.activityStart(context, data.photoUrl.toTypedArray(), 0)
                         }
                     }
                 } else {
                     tv_answer_content.apply {
-                        textColor = ContextCompat.getColor(context, R.color.qa_answer_content_color)
+                        textColor = ContextCompat.getColor(context, R.color.common_qa_answer_content_color)
                         text = data.content
                         setOnClickListener(null)
                         isClickable = false

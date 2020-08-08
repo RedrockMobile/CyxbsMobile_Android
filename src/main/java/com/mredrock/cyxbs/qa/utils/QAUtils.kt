@@ -15,8 +15,8 @@ internal fun TextView.setPraise(praiseNum: String?,
                                 isPraised: Boolean?,
                                 praiseIcon: Int = R.drawable.qa_ic_answer_list_praise,
                                 praisedIcon: Int = R.drawable.qa_ic_answer_list_praised,
-                                praiseColor: Int = R.color.qa_answer_praise_count_color,
-                                praisedColor: Int = R.color.qa_answer_praised_count_color) {
+                                praiseColor: Int = R.color.common_qa_answer_praise_count_color,
+                                praisedColor: Int = R.color.common_qa_answer_praised_count_color) {
     if (praiseNum != null) {
         text = praiseNum
     }
@@ -35,13 +35,13 @@ internal fun TextView.setPraise(praiseNum: String?,
 }
 
 internal fun TextView.unSelected() {
-    textColor = ContextCompat.getColor(context, R.color.qa_quiz_select_type_text_color)
+    textColor = ContextCompat.getColor(context, R.color.common_qa_quiz_select_type_text_color)
     background = ContextCompat.getDrawable(context, R.drawable.qa_selector_quiz_type_default_select)
 
 }
 
 internal fun TextView.selected() {
-    textColor = ContextCompat.getColor(context, R.color.qa_quiz_selected_type_text_color)
+    textColor = ContextCompat.getColor(context, R.color.common_qa_quiz_selected_type_text_color)
     background = ContextCompat.getDrawable(context, R.drawable.qa_selector_quiz_type_default_selected)
 
 }

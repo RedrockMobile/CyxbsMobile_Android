@@ -51,9 +51,9 @@ class CommentListRvAdapter(private val questionAnonymous: Boolean) : BaseEndless
     override fun onBindViewHolder(holder: BaseViewHolder<Comment>, position: Int) {
         super.onBindViewHolder(holder, position)
         when (position % 3) {
-            0 -> holder.itemView.findViewById<JCardViewPlus>(R.id.jCardView_comment).setCardBackgroundColor(ContextCompat.getColor(holder.itemView.context, R.color.qa_comment_content_first_kind_color))
-            1 -> holder.itemView.findViewById<JCardViewPlus>(R.id.jCardView_comment).setCardBackgroundColor(ContextCompat.getColor(holder.itemView.context, R.color.qa_comment_content_second_kind_color))
-            2 -> holder.itemView.findViewById<JCardViewPlus>(R.id.jCardView_comment).setCardBackgroundColor(ContextCompat.getColor(holder.itemView.context, R.color.qa_comment_content_third_kind_color))
+            0 -> holder.itemView.findViewById<JCardViewPlus>(R.id.jCardView_comment).setCardBackgroundColor(ContextCompat.getColor(holder.itemView.context, R.color.common_qa_comment_content_first_kind_color))
+            1 -> holder.itemView.findViewById<JCardViewPlus>(R.id.jCardView_comment).setCardBackgroundColor(ContextCompat.getColor(holder.itemView.context, R.color.common_qa_comment_content_second_kind_color))
+            2 -> holder.itemView.findViewById<JCardViewPlus>(R.id.jCardView_comment).setCardBackgroundColor(ContextCompat.getColor(holder.itemView.context, R.color.common_qa_comment_content_third_kind_color))
         }
         holder.itemView.apply {
             when {

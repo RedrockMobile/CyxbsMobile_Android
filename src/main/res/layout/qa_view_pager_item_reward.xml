@@ -10,7 +10,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:textColor="@color/qa_quiz_select_time_color"
+        android:textColor="@color/common_qa_quiz_select_time_color"
         android:textSize="64sp"
         android:textStyle="bold"
         app:autoSizeTextType="uniform"

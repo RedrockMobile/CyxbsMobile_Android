@@ -208,7 +208,7 @@ class RewardSetDialog(context: Context, rewardCount: Int, private val isFirstQui
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        window?.findViewById<View>(R.id.design_bottom_sheet)?.setBackgroundResource(R.drawable.qa_question_more_dialog_head_background)
+        window?.findViewById<View>(R.id.design_bottom_sheet)?.setBackgroundResource(R.drawable.qa_shape_question_more_dialog_head_background)
         mBehavior.peekHeight = container.measuredHeight
         mBehavior.state = BottomSheetBehavior.STATE_EXPANDED
 

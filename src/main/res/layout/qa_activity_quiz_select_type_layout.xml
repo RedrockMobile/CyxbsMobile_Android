@@ -15,7 +15,7 @@
         android:paddingEnd="10dp"
         android:paddingBottom="2dp"
         android:text="@string/qa_quiz_select_type_study"
-        android:textColor="@color/qa_quiz_selected_type_text_color"
+        android:textColor="@color/common_qa_quiz_selected_type_text_color"
         android:textSize="13sp" />
 
     <TextView
@@ -30,7 +30,7 @@
         android:paddingEnd="10dp"
         android:paddingBottom="2dp"
         android:text="@string/qa_quiz_select_type_anonymous"
-        android:textColor="@color/qa_quiz_select_type_text_color"
+        android:textColor="@color/common_qa_quiz_select_type_text_color"
         android:textSize="13sp" />
 
     <TextView
@@ -38,14 +38,14 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
         android:layout_marginTop="23dp"
-        android:background="@drawable/qa_quiz_select_type_background"
+        android:background="@drawable/qa_shape_quiz_select_type_background"
         android:gravity="center"
         android:paddingStart="10dp"
         android:paddingTop="2dp"
         android:paddingEnd="10dp"
         android:paddingBottom="2dp"
         android:text="@string/qa_quiz_select_type_life"
-        android:textColor="@color/qa_quiz_select_type_text_color"
+        android:textColor="@color/common_qa_quiz_select_type_text_color"
         android:textSize="13sp" />
 
     <TextView
@@ -53,13 +53,13 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
         android:layout_marginTop="23dp"
-        android:background="@drawable/qa_quiz_select_type_background"
+        android:background="@drawable/qa_shape_quiz_select_type_background"
         android:gravity="center"
         android:paddingStart="10dp"
         android:paddingTop="2dp"
         android:paddingEnd="10dp"
         android:paddingBottom="2dp"
         android:text="@string/qa_quiz_select_type_others"
-        android:textColor="@color/qa_quiz_select_type_text_color"
+        android:textColor="@color/common_qa_quiz_select_type_text_color"
         android:textSize="13sp" />
 </LinearLayout>

@@ -19,7 +19,7 @@ class QuizTimeNumberPicker(context: Context?, attrs: AttributeSet?) : NumberPick
     override fun addView(child: View?, index: Int, params: ViewGroup.LayoutParams?) {
         super.addView(child, index, params)
         if (child is EditText) {
-            child.setTextColor(ContextCompat.getColor(context, R.color.qa_quiz_time_select_color))
+            child.setTextColor(ContextCompat.getColor(context, R.color.common_qa_quiz_time_select_color))
             child.textSize = sp(8).toFloat()
         }
     }
