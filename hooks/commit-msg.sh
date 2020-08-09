@@ -77,7 +77,7 @@ function isDrawable() {
 #由于不能返回字符串，所以请直接使用$(getXmlFirstTag 参数)
 #切勿直接调用此函数
 function getXmlFirstTag() {
-    content=$(cat $1|tr '\n' ' ')
+    content=$(cat $1|sed  "s/\n//g" | sed ":label;N;s/\n//;b label")
     echo "$content"|sed "s/.*<[^?]\(.*\)>/\1/g"
 }
 
@@ -116,12 +116,12 @@ function handDrawable() {
             fi
         fi
     elif [[ ${suffix} = "jpg" ]] \
-        && [[ ${suffix} = "png" ]]\
-        && [[ ${suffix} = "webp" ]]\
+        || [[ ${suffix} = "png" ]]\
+        || [[ ${suffix} = "webp" ]]\
             ; then
         isFit=$(echo ${name}|sed "s/${moduleNamePrefix}_ic_.*//g")
             if ! [[ "$isFit" = "" ]]; then
-                tipsEcho $1 ${realTag}
+                tipsEcho $1 "ic"
                 returnValue=1
             fi
     fi
