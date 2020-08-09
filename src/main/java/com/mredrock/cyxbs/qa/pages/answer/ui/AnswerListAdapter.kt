@@ -3,6 +3,7 @@ package com.mredrock.cyxbs.qa.pages.answer.ui
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
+import com.mredrock.cyxbs.common.utils.extensions.doIfLogin
 import com.mredrock.cyxbs.common.utils.extensions.invisible
 import com.mredrock.cyxbs.common.utils.extensions.setAvatarImageFromUrl
 import com.mredrock.cyxbs.common.utils.extensions.visible
@@ -46,13 +47,20 @@ class AnswerListAdapter : BaseEndlessRvAdapter<Answer>(DIFF_CALLBACK) {
     override fun onBindViewHolder(holder: BaseViewHolder<Answer>, position: Int) {
         super.onBindViewHolder(holder, position)
         holder.itemView.apply {
+
             tv_answer_praise_count.setOnClickListener {
-                getItem(position)?.let { it1 -> onPraiseClickListener?.invoke(position, it1) }
+                context.doIfLogin {
+                    getItem(position)?.let { it1 -> onPraiseClickListener?.invoke(position, it1) }
+
+                }
             }
             if (getItem(position)?.isSelf == false)
-                btn_answer_more.setOnClickListener {
-                    getItem(position)?.id?.let { it1 -> onReportClickListener?.invoke(it1) }
+                context.doIfLogin {
+                    btn_answer_more.setOnClickListener {
+                        getItem(position)?.id?.let { it1 -> onReportClickListener?.invoke(it1) }
+                    }
                 }
+
         }
     }
 

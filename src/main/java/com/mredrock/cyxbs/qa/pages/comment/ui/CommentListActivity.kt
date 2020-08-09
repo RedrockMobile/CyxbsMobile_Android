@@ -25,6 +25,7 @@ import com.mredrock.cyxbs.common.config.QA_COMMENT_LIST
 import com.mredrock.cyxbs.common.event.OpenShareCommentEvent
 import com.mredrock.cyxbs.common.mark.EventBusLifecycleSubscriber
 import com.mredrock.cyxbs.common.ui.BaseActivity
+import com.mredrock.cyxbs.common.utils.extensions.doIfLogin
 import com.mredrock.cyxbs.common.utils.extensions.gone
 import com.mredrock.cyxbs.common.utils.extensions.toast
 import com.mredrock.cyxbs.common.utils.extensions.visible
@@ -242,22 +243,27 @@ class CommentListActivity : BaseActivity(), EventBusLifecycleSubscriber {
             inputType = TYPE_TEXT_FLAG_MULTI_LINE
             singleLine = false
             setOnEditorActionListener { p0, p1, p2 ->
-                if (p1 == EditorInfo.IME_ACTION_SEND) {
-                    viewModel.sendComment(et_new_comment.text.toString())
-                    et_new_comment.text = null
+                doIfLogin {
+                    if (p1 == EditorInfo.IME_ACTION_SEND) {
+                        viewModel.sendComment(et_new_comment.text.toString())
+                        et_new_comment.text = null
+                    }
                 }
                 false
             }
         }
         tv_comment_praise.apply {
             setPraise(answer.praiseNum, answer.isPraised)
-            setOnClickListener {
-                if (viewModel.isDealing) {
-                    toast(getString(R.string.qa_answer_praise_dealing))
-                } else {
-                    viewModel.clickPraiseButton()
+            doIfLogin {
+                setOnClickListener {
+                    if (viewModel.isDealing) {
+                        toast(getString(R.string.qa_answer_praise_dealing))
+                    } else {
+                        viewModel.clickPraiseButton()
+                    }
                 }
             }
+
         }
     }
 

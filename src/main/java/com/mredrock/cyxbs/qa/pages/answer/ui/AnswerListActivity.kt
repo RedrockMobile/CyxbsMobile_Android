@@ -18,6 +18,7 @@ import com.mredrock.cyxbs.common.config.QA_ANSWER_LIST
 import com.mredrock.cyxbs.common.event.OpenShareQuestionEvent
 import com.mredrock.cyxbs.common.mark.EventBusLifecycleSubscriber
 import com.mredrock.cyxbs.common.ui.BaseActivity
+import com.mredrock.cyxbs.common.utils.extensions.doIfLogin
 import com.mredrock.cyxbs.common.utils.extensions.gone
 import com.mredrock.cyxbs.common.utils.extensions.toast
 import com.mredrock.cyxbs.common.utils.extensions.visible
@@ -218,13 +219,16 @@ class AnswerListActivity : BaseActivity(), EventBusLifecycleSubscriber {
 
     private fun switchToHelper() {
         btn_answer.visible()
-        btn_answer.setOnClickListener {
-            AnswerActivity.activityStart(this@AnswerListActivity, viewModel.questionLiveData.value?.id
-                    ?: "", viewModel.questionLiveData.value?.description
-                    ?: "", viewModel.questionLiveData.value?.photoUrl
-                    ?: listOf(), REQUEST_REFRESH_LIST)
-            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
+        doIfLogin {
+            btn_answer.setOnClickListener {
+                AnswerActivity.activityStart(this@AnswerListActivity, viewModel.questionLiveData.value?.id
+                        ?: "", viewModel.questionLiveData.value?.description
+                        ?: "", viewModel.questionLiveData.value?.photoUrl
+                        ?: listOf(), REQUEST_REFRESH_LIST)
+                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
+            }
         }
+
 
     }
 

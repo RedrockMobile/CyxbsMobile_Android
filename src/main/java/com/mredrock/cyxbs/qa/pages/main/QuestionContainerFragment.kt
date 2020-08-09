@@ -11,6 +11,7 @@ import com.mredrock.cyxbs.common.config.QA_ENTRY
 import com.mredrock.cyxbs.common.event.CurrentDateInformationEvent
 import com.mredrock.cyxbs.common.mark.EventBusLifecycleSubscriber
 import com.mredrock.cyxbs.common.ui.BaseFragment
+import com.mredrock.cyxbs.common.utils.extensions.doIfLogin
 import com.mredrock.cyxbs.common.utils.extensions.pressToZoomOut
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.bean.Question
@@ -52,8 +53,11 @@ class QuestionContainerFragment : BaseFragment(), View.OnClickListener, EventBus
             setSelectedTabIndicator(R.drawable.qa_ic_question_tab_indicator)
         }
         btn_ask_question.setOnClickListener {
-            QuizActivity.activityStart(this@QuestionContainerFragment, "学习", REQUEST_LIST_REFRESH_ACTIVITY)
-            activity?.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
+            context?.doIfLogin("提问") {
+                QuizActivity.activityStart(this@QuestionContainerFragment, "学习", REQUEST_LIST_REFRESH_ACTIVITY)
+                activity?.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
+            }
+
         }
         btn_ask_question.pressToZoomOut()
     }

@@ -9,6 +9,7 @@ import android.widget.TextView
 import androidx.core.view.forEach
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.mredrock.cyxbs.common.utils.extensions.doIfLogin
 import com.mredrock.cyxbs.common.utils.extensions.visible
 import com.mredrock.cyxbs.qa.R
 import kotlinx.android.synthetic.main.qa_dialog_question_report.*
@@ -19,6 +20,7 @@ class ReportDialog(context: Context) : BottomSheetDialog(context) {
 
     var pressReport: ((String) -> Unit)? = null
     var pressQuestionIgnore: (() -> Unit)? = null
+
     @SuppressLint("InflateParams")
     private val container: View = layoutInflater.inflate(R.layout.qa_dialog_question_report, null)
 
@@ -42,7 +44,9 @@ class ReportDialog(context: Context) : BottomSheetDialog(context) {
         super.onCreate(savedInstanceState)
         window?.findViewById<View>(R.id.design_bottom_sheet)?.setBackgroundResource(android.R.color.transparent)
         mBehavior.peekHeight = container.measuredHeight
-        initReport()
+        context.doIfLogin("举报") {
+            initReport()
+        }
     }
 
     fun setType(type: String) {
