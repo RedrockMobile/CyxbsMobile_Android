@@ -1,11 +1,11 @@
 package com.mredrock.cyxbs.discover.othercourse.pages.stusearch
 
 import android.os.Bundle
-import android.text.Editable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.mredrock.cyxbs.common.ui.BaseViewModelFragment
+import com.mredrock.cyxbs.common.utils.extensions.doIfLogin
 import com.mredrock.cyxbs.discover.othercourse.AutoWrapAdapter
 import com.mredrock.cyxbs.discover.othercourse.R
 import com.mredrock.cyxbs.discover.othercourse.pages.stulist.StuListActivity
@@ -27,9 +27,10 @@ class OtherCourseSearchFragment : BaseViewModelFragment<OtherCourseSearchViewMod
     }
 
     fun getType(): Int = type
-    public fun setType(type :Int){
+    public fun setType(type: Int) {
         this.type = type
     }
+
     override val viewModelClass: Class<OtherCourseSearchViewModel> = OtherCourseSearchViewModel.create(type)
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -67,8 +68,10 @@ class OtherCourseSearchFragment : BaseViewModelFragment<OtherCourseSearchViewMod
                 snackbar("输入为空")
                 return@setOnEditorActionListener false
             } else {
-                viewModel.getPerson(text)
-                lastSearch = text
+                context?.doIfLogin {
+                    viewModel.getPerson(text)
+                    lastSearch = text
+                }
                 et_discover_other_course_search.setText("")
                 return@setOnEditorActionListener true
             }
