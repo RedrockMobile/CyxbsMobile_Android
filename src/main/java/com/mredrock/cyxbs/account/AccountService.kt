@@ -44,7 +44,7 @@ internal class AccountService : IAccountService {
 
     private var user: User? = null
     private var tokenWrapper: TokenWrapper? = null
-
+    private var isTouristMode = false
     private lateinit var mContext: Context
     override fun init(context: Context) {
         this.mContext = context
@@ -158,6 +158,8 @@ internal class AccountService : IAccountService {
             return expiredTime * 1000 - curTime <= 10000L
         }
 
+        override fun isTouristMode(): Boolean = isTouristMode
+
         override fun isRefreshTokenExpired(): Boolean {
             val curTime = System.currentTimeMillis()
             val expiredTime = mContext.defaultSharedPreferences.getLong(SP_KEY_REFRESH_TOKEN_EXPIRED, 0)
@@ -189,6 +191,7 @@ internal class AccountService : IAccountService {
                 bind(data)
                 mContext.runOnUiThread {
                     notifyAllStateListeners(IUserStateService.UserState.LOGIN)
+                    isTouristMode = false
                 }
                 mContext.defaultSharedPreferences.editor {
                     putString(SP_KEY_USER_V2, mUserInfoEncryption.encrypt(Gson().toJson(data)))
@@ -237,6 +240,7 @@ internal class AccountService : IAccountService {
                 bind(apiWrapper.data)
                 mContext.runOnUiThread {
                     notifyAllStateListeners(IUserStateService.UserState.LOGIN)
+                    isTouristMode = false
                 }
                 context.defaultSharedPreferences.editor {
                     putString(SP_KEY_USER_V2, mUserInfoEncryption.encrypt(Gson().toJson(apiWrapper.data)))
@@ -258,6 +262,14 @@ internal class AccountService : IAccountService {
             tokenWrapper = null
             mContext.runOnUiThread {
                 notifyAllStateListeners(IUserStateService.UserState.NOT_LOGIN)
+            }
+        }
+
+        //游客模式
+        override fun loginByTourist() {
+            mContext.runOnUiThread {
+                notifyAllStateListeners(IUserStateService.UserState.TOURIST)
+                isTouristMode = true
             }
         }
     }
