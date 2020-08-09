@@ -48,6 +48,21 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/course_tip">
 
+                <RelativeLayout
+                    android:id="@+id/rl_tourist_course_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:textColor="@color/common_level_three_font_color"
+                        android:text="@string/course_tourist_mode_ask_login" />
+                </RelativeLayout>
+
                 <FrameLayout
                     android:id="@+id/course_header_show"
                     android:layout_width="match_parent"

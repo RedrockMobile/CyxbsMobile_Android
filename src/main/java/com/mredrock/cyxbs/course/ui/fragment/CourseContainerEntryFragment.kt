@@ -18,17 +18,17 @@ import com.alibaba.android.arouter.facade.annotation.Route
 import com.mredrock.cyxbs.common.bean.WidgetCourse
 import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.common.config.*
-import com.mredrock.cyxbs.common.event.LoadCourse
-import com.mredrock.cyxbs.common.event.NotifyBottomSheetToExpandEvent
-import com.mredrock.cyxbs.common.event.ShowModeChangeEvent
-import com.mredrock.cyxbs.common.event.WidgetCourseEvent
+import com.mredrock.cyxbs.common.event.*
 import com.mredrock.cyxbs.common.mark.EventBusLifecycleSubscriber
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.service.account.IAccountService
 import com.mredrock.cyxbs.common.service.account.IUserStateService
 import com.mredrock.cyxbs.common.service.main.IMainService
 import com.mredrock.cyxbs.common.ui.BaseViewModelFragment
+import com.mredrock.cyxbs.common.utils.extensions.gone
+import com.mredrock.cyxbs.common.utils.extensions.invisible
 import com.mredrock.cyxbs.common.utils.extensions.pressToZoomOut
+import com.mredrock.cyxbs.common.utils.extensions.visible
 import com.mredrock.cyxbs.course.R
 import com.mredrock.cyxbs.course.adapters.ScheduleVPAdapter
 import com.mredrock.cyxbs.course.databinding.CourseFragmentCourseContainerBinding
@@ -157,8 +157,14 @@ class CourseContainerEntryFragment : BaseViewModelFragment<CoursesViewModel>(), 
      */
     private fun initFragment() {
         if (!accountService.getVerifyService().isLogin()) {
+            course_header_show.invisible()
+            rl_tourist_course_title.visible()
+            fl.setOnClickListener {}//处理所有未处理的点击事件，防止穿透点击或者滑动
+            EventBus.getDefault().postSticky(CurrentDateInformationEvent(getString(R.string.course_tourist_date_txt)))
             return
         }
+        rl_tourist_course_title.gone()
+        course_header_show.visible()
         //如果没有被添加进Activity，Fragment会抛出not attach a context的错误
         if (!isAdded) return
 
@@ -469,7 +475,11 @@ class CourseContainerEntryFragment : BaseViewModelFragment<CoursesViewModel>(), 
             initFragment()
         } else {
             Thread {
-                ViewModelProvider(this).get(CoursesViewModel::class.java).clearCache()
+                try {
+                    ViewModelProvider(this).get(CoursesViewModel::class.java).clearCache()
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
             }.start()
         }
     }
