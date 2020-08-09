@@ -10,6 +10,8 @@ import android.view.View
 import android.view.WindowManager
 import android.widget.Toast
 import com.mredrock.cyxbs.common.component.CyxbsToast
+import com.mredrock.cyxbs.common.service.ServiceManager
+import com.mredrock.cyxbs.common.service.account.IAccountService
 
 /**
  * Created by anriku on 2018/8/14.
@@ -76,3 +78,10 @@ fun Context.getStatusBarHeight(): Int {
     return resources.getDimensionPixelSize(resourceId)
 }
 
+fun Context.doIfLogin(msg: String? = "此功能", next: () -> Unit) {
+    if (ServiceManager.getService(IAccountService::class.java).getVerifyService().isLogin()) {
+        next()
+    } else {
+        ServiceManager.getService(IAccountService::class.java).getVerifyService().askLogin(this, "请先登录才能使用${msg}哦~")
+    }
+}

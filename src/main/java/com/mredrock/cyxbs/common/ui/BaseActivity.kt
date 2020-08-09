@@ -28,6 +28,7 @@ import kotlinx.android.synthetic.main.common_toolbar.*
 import org.greenrobot.eventbus.EventBus
 import org.jetbrains.anko.startActivity
 
+
 /**
  * Created By jay68 on 2018/8/9.
  */

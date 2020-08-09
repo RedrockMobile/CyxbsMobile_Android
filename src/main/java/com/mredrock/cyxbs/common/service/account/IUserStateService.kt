@@ -6,7 +6,7 @@ import androidx.annotation.WorkerThread
 
 interface IUserStateService {
     enum class UserState {
-        LOGIN, NOT_LOGIN, EXPIRED
+        LOGIN, NOT_LOGIN, EXPIRED, TOURIST
     }
 
     interface StateListener {
@@ -22,11 +22,15 @@ interface IUserStateService {
 
     fun logout(context: Context)
 
+    fun loginByTourist()
+
     fun refresh(onError: () -> Unit = {}, action: (token: String) -> Unit = { s: String -> })
 
     fun isLogin(): Boolean
 
     fun isExpired(): Boolean
+
+    fun isTouristMode(): Boolean
 
     fun isRefreshTokenExpired(): Boolean
 
