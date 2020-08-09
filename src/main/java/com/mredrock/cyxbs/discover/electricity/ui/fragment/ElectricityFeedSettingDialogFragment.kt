@@ -75,7 +75,7 @@ class ElectricityFeedSettingDialogFragment : DialogFragment() {
                 val id = BUILDING_NAMES.getValue(BUILDING_NAMES_HEADER[selectBuildingHeadPosition])[selectBuildingFootPosition].split("(")[1].split("栋")[0]
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    LogUtils.d("MyTag","refresher:${this.accessibilityClassName}")
+                    LogUtils.d("MyTag", "refresher:${this.accessibilityClassName}")
                 }
                 refresher?.invoke(id, room)
                 this@ElectricityFeedSettingDialogFragment.dismiss()
@@ -92,6 +92,8 @@ class ElectricityFeedSettingDialogFragment : DialogFragment() {
     }
 
     private fun setCorrectBuildingNum() {
+        //防止未停止就确定导致空指针
+        if (wp_dormitory_foot == null || wp_dormitory_head == null) return
         selectBuildingHeadPosition = wp_dormitory_head.currentItemPosition
         selectBuildingFootPosition = wp_dormitory_foot.currentItemPosition
         tv_dormitory_num.text = buildingNames[buildingHeadNames[selectBuildingHeadPosition]]?.get(selectBuildingFootPosition)?.substringAfter("(")?.replace(")", "")
