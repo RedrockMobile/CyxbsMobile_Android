@@ -25,10 +25,7 @@ import com.mredrock.cyxbs.common.config.*
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.service.account.IAccountService
 import com.mredrock.cyxbs.common.ui.BaseViewModelFragment
-import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
-import com.mredrock.cyxbs.common.utils.extensions.editor
-import com.mredrock.cyxbs.common.utils.extensions.loadAvatar
-import com.mredrock.cyxbs.common.utils.extensions.pressToZoomOut
+import com.mredrock.cyxbs.common.utils.extensions.*
 import com.mredrock.cyxbs.mine.page.about.AboutActivity
 import com.mredrock.cyxbs.mine.page.answer.AnswerActivity
 import com.mredrock.cyxbs.mine.page.ask.AskActivity
@@ -54,48 +51,67 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         addObserver()
-
         initView()
 
     }
 
     private fun initView() {
         //功能按钮
-        mine_main_btn_sign.setOnClickListener { startActivity<DailySignActivity>() }
-        mine_main_tv_sign.setOnClickListener { startActivity<DailySignActivity>() }
-        mine_main_question_number.setOnClickListener { startActivity<AskActivity>() }
-        mine_main_tv_question.setOnClickListener { startActivity<AskActivity>() }
-        mine_main_answer_number.setOnClickListener { startActivity<AnswerActivity>() }
-        mine_main_tv_question.setOnClickListener { startActivity<AnswerActivity>() }
-        mine_main_reply_comment_number.setOnClickListener { startActivity<CommentActivity>() }
-        mine_main_tv_reply_comment.setOnClickListener { startActivity<CommentActivity>() }
-        mine_main_cl_info_edit.setOnClickListener {
-            startActivity(
-                    Intent(context, EditInfoActivity::class.java),
-                    ActivityOptionsCompat.makeSceneTransitionAnimation(context as Activity, Pair(mine_main_avatar, "avatar")).toBundle())
-        }
-
-        mine_main_tv_praise.setOnClickListener { showPraise() }
-        mine_main_praise_number.setOnClickListener { showPraise() }
-
-        mine_main_tv_about.setOnClickListener { startActivity<AboutActivity>() }
-        mine_main_btn_exit.setOnClickListener { onExitClick() }
-        mine_main_btn_exit.pressToZoomOut()
-        mine_main_tv_feedback.setOnClickListener { onFeedBackClick() }
-        mine_main_tv_custom_widget.setOnClickListener { onSetWidgetClick() }
-        mine_main_tv_redrock.setOnClickListener { clickAboutUsWebsite() }
-
-        mine_main_switch.setOnCheckedChangeListener { _, isChecked ->
-            context?.defaultSharedPreferences?.editor {
-                if (isChecked) {
-                    putBoolean(COURSE_SHOW_STATE, true)
-                } else {
-                    putBoolean(COURSE_SHOW_STATE, false)
+        context?.apply {
+            mine_main_btn_sign.setOnClickListener { doIfLogin { startActivity<DailySignActivity>() } }
+            mine_main_tv_sign.setOnClickListener { doIfLogin { startActivity<DailySignActivity>() } }
+            mine_main_question_number.setOnClickListener { doIfLogin { startActivity<AskActivity>() } }
+            mine_main_tv_question.setOnClickListener { doIfLogin { startActivity<AskActivity>() } }
+            mine_main_answer_number.setOnClickListener { doIfLogin { startActivity<AnswerActivity>() } }
+            mine_main_tv_question.setOnClickListener { doIfLogin { startActivity<AnswerActivity>() } }
+            mine_main_reply_comment_number.setOnClickListener { doIfLogin { startActivity<CommentActivity>() } }
+            mine_main_tv_reply_comment.setOnClickListener { doIfLogin { startActivity<CommentActivity>() } }
+            mine_main_cl_info_edit.setOnClickListener {
+                doIfLogin {
+                    startActivity(
+                            Intent(context, EditInfoActivity::class.java),
+                            ActivityOptionsCompat.makeSceneTransitionAnimation(context as Activity, Pair(mine_main_avatar, "avatar")).toBundle())
                 }
             }
+
+            mine_main_tv_praise.setOnClickListener { doIfLogin { showPraise() } }
+            mine_main_praise_number.setOnClickListener { doIfLogin { showPraise() } }
+
+            mine_main_tv_about.setOnClickListener { startActivity<AboutActivity>() }
+            if (ServiceManager.getService(IAccountService::class.java).getVerifyService().isLogin()) {
+                mine_main_btn_exit.text = getString(R.string.mine_exit)
+                mine_main_btn_exit.setOnClickListener {
+                    onExitClick()
+                }
+            } else {
+                mine_main_btn_exit.text = getString(R.string.mine_login_now)
+                mine_main_btn_exit.setOnClickListener {
+                    cleanAppWidgetCache()
+                    //清除user信息，必须要在LoginStateChangeEvent之前
+                    viewModel.clearUser()
+                    //清空activity栈
+                    val flag = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+                    ARouter.getInstance().build(MAIN_LOGIN).withFlags(flag).withBoolean(IS_EXIT_LOGIN, true).navigation()
+                }
+            }
+            mine_main_btn_exit.pressToZoomOut()
+            mine_main_tv_feedback.setOnClickListener { onFeedBackClick() }
+            mine_main_tv_custom_widget.setOnClickListener { onSetWidgetClick() }
+            mine_main_tv_redrock.setOnClickListener { clickAboutUsWebsite() }
+
+            mine_main_switch.setOnCheckedChangeListener { _, isChecked ->
+                defaultSharedPreferences.editor {
+                    if (isChecked) {
+                        putBoolean(COURSE_SHOW_STATE, true)
+                    } else {
+                        putBoolean(COURSE_SHOW_STATE, false)
+                    }
+                }
+            }
+            mine_main_switch.isChecked = context?.defaultSharedPreferences?.getBoolean(COURSE_SHOW_STATE, false)
+                    ?: false
         }
-        mine_main_switch.isChecked = context?.defaultSharedPreferences?.getBoolean(COURSE_SHOW_STATE, false)
-                ?: false
+
     }
 
     @SuppressLint("SetTextI18n")
@@ -128,7 +144,9 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
 
     override fun onResume() {
         super.onResume()
-        fetchInfo()
+        if (ServiceManager.getService(IAccountService::class.java).getVerifyService().isLogin()) {
+            fetchInfo()
+        }
     }
 
     private fun fetchInfo() {
@@ -201,7 +219,7 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
 
                                 //清空activity栈
                                 val flag = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
-                                ARouter.getInstance().build(MAIN_LOGIN).withFlags(flag).withBoolean(IS_EXIT_LOGIN,true).navigation()
+                                ARouter.getInstance().build(MAIN_LOGIN).withFlags(flag).withBoolean(IS_EXIT_LOGIN, true).navigation()
                             },
                             positiveString = "退出",
                             onNegativeClick = { dismiss() }

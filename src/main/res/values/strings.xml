@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <string name="mine_user_empty_username">请填写用户名</string>
     <string name="mine_user_empty_introduce">写下你对世界想说的话，就现在</string>
@@ -18,6 +18,7 @@
     <string name="mine_about_redrock">红岩网校</string>
     <string name="mine_about">关于掌邮</string>
     <string name="mine_exit">退出登录</string>
+    <string name="mine_login_now">马上登录</string>
     <string name="mine_logout_title">退出登录</string>
     <string name="mine_logout_content">是否退出当前账号？</string>
 
