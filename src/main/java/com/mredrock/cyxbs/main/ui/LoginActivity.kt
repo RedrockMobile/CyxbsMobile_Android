@@ -23,6 +23,8 @@ import com.mredrock.cyxbs.common.config.ACTIVITY_CLASS
 import com.mredrock.cyxbs.common.config.IS_EXIT_LOGIN
 import com.mredrock.cyxbs.common.config.MAIN_LOGIN
 import com.mredrock.cyxbs.common.mark.EventBusLifecycleSubscriber
+import com.mredrock.cyxbs.common.service.ServiceManager
+import com.mredrock.cyxbs.common.service.account.IAccountService
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.main.R
 import com.mredrock.cyxbs.main.adapter.UserAgreementAdapter
@@ -96,6 +98,15 @@ class LoginActivity : BaseViewModelActivity<LoginViewModel>(), EventBusLifecycle
                 userAgreementAdapter.notifyDataSetChanged()
                 view.loader.visibility = View.GONE
             }
+        }
+        tv_tourist_mode.setOnClickListener {
+            if (!viewModel.userAgreementIsCheck) {
+                CyxbsToast.makeText(this, R.string.main_user_agreement_title, Toast.LENGTH_SHORT).show()
+            } else {
+                ServiceManager.getService(IAccountService::class.java).getVerifyService().loginByTourist()
+                startActivity(Intent(this, MainActivity::class.java))
+            }
+
         }
     }
 

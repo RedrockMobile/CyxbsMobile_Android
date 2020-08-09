@@ -19,6 +19,7 @@ import com.mredrock.cyxbs.common.event.NotifyBottomSheetToExpandEvent
 import com.mredrock.cyxbs.common.event.RefreshQaEvent
 import com.mredrock.cyxbs.common.mark.EventBusLifecycleSubscriber
 import com.mredrock.cyxbs.common.service.ServiceManager
+import com.mredrock.cyxbs.common.service.account.IAccountService
 import com.mredrock.cyxbs.common.service.main.IMainService
 import com.mredrock.cyxbs.common.service.update.AppUpdateStatus
 import com.mredrock.cyxbs.common.service.update.IAppUpdateService
@@ -99,9 +100,10 @@ class MainActivity : BaseViewModelActivity<MainViewModel>(), EventBusLifecycleSu
 
     override fun onStart() {
         super.onStart()
-        checkIsLogin(loginConfig, this)
-
+        if (!ServiceManager.getService(IAccountService::class.java).getVerifyService().isTouristMode())
+            checkIsLogin(loginConfig, this)
     }
+
     /**
      * 一些非重量级初始化操作
      */
