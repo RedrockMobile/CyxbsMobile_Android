@@ -6,6 +6,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.FrameLayout
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -13,6 +14,7 @@ import com.alibaba.android.arouter.facade.annotation.Route
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.bean.LoginConfig
+import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.common.config.*
 import com.mredrock.cyxbs.common.event.LoadCourse
 import com.mredrock.cyxbs.common.event.NotifyBottomSheetToExpandEvent
@@ -138,6 +140,7 @@ class MainActivity : BaseViewModelActivity<MainViewModel>(), EventBusLifecycleSu
          * 为了解决CoordinatorLayout定制的fitsSystemWindows在BottomSheet正完全展开时activity
          * 异常重启后fitsSystemWindows失效的问题
          */
+
         course_bottom_sheet_content.topPadding = course_bottom_sheet_content.topPadding + getStatusBarHeight()
         bottomSheetBehavior.peekHeight = bottomSheetBehavior.peekHeight + course_bottom_sheet_content.topPadding
         bottomSheetBehavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
@@ -147,6 +150,11 @@ class MainActivity : BaseViewModelActivity<MainViewModel>(), EventBusLifecycleSu
             }
 
             override fun onStateChanged(bottomSheet: View, newState: Int) {
+                if (!ServiceManager.getService(IAccountService::class.java).getVerifyService().isLogin() && newState == BottomSheetBehavior.STATE_DRAGGING) {
+                    bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+                    CyxbsToast.makeText(this@MainActivity, getString(R.string.main_tourist_course_ask_login_text), Toast.LENGTH_SHORT).show()
+                    return
+                }
                 //如果是第一次进入展开则加载详细的课表子页
                 if (isLoadCourse && bottomSheetBehavior.state == BottomSheetBehavior.STATE_EXPANDED
                         && lastState != BottomSheetBehavior.STATE_EXPANDED && !viewModel.isCourseDirectShow) {
