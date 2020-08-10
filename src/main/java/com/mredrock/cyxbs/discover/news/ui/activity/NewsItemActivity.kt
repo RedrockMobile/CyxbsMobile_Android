@@ -2,20 +2,30 @@ package com.mredrock.cyxbs.discover.news.ui.activity
 
 import android.app.AlertDialog
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.media.MediaScannerConnection
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
+import android.util.Base64
 import android.view.Menu
+import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import com.afollestad.materialdialogs.MaterialDialog
+import com.afollestad.materialdialogs.list.listItemsMultiChoice
+import com.afollestad.materialdialogs.list.listItemsSingleChoice
 import com.alibaba.android.arouter.facade.annotation.Route
+import com.mredrock.cyxbs.common.component.showPhotos
 import com.mredrock.cyxbs.common.config.DISCOVER_NEWS_ITEM
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
+import com.mredrock.cyxbs.common.utils.extensions.toast
 import com.mredrock.cyxbs.common.utils.extensions.uri
 import com.mredrock.cyxbs.common.viewmodel.event.ProgressDialogEvent
-import com.mredrock.cyxbs.common.utils.extensions.toast
 import com.mredrock.cyxbs.discover.news.R
 import com.mredrock.cyxbs.discover.news.bean.NewsAttachment
 import com.mredrock.cyxbs.discover.news.utils.FileTypeHelper
@@ -24,7 +34,10 @@ import com.mredrock.cyxbs.discover.news.viewmodel.NewsItemViewModel
 import com.tbruyelle.rxpermissions2.RxPermissions
 import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.news_activity_detail.*
+import org.jetbrains.anko.sp
 import java.io.File
+import java.util.regex.Matcher
+import java.util.regex.Pattern
 
 @Route(path = DISCOVER_NEWS_ITEM)
 class NewsItemActivity : BaseViewModelActivity<NewsItemViewModel>(), NewsItemViewModel.NewsDownloadListener {
@@ -46,32 +59,33 @@ class NewsItemActivity : BaseViewModelActivity<NewsItemViewModel>(), NewsItemVie
                 .create()
     }
 
+
     private fun showOpenFileDialog() {
-        MaterialDialog.Builder(this)
-                .items(files.map { it.name })
-                .itemsCallbackSingleChoice(-1) { _, _, which, _ ->
-                    if (which != -1) {
-                        val file = files[which]
-                        if (file.exists()) {
-                            try {
-                                startActivity(Intent(Intent.ACTION_VIEW)
-                                        .addFlags(if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                                            Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_GRANT_READ_URI_PERMISSION
-                                        } else {
-                                            Intent.FLAG_ACTIVITY_NEW_TASK
-                                        })
-                                        .setDataAndType(file.uri, FileTypeHelper.getMIMEType(file)))
-                            } catch (e: Exception) {
-                                e.printStackTrace()
-                            }
+        MaterialDialog(this).show {
+            title(text = "下载完成，打开附件")
+            positiveButton(text = "确定")
+            negativeButton(text = "取消")
+            listItemsSingleChoice(items = files.map { it.name }) { dialog, index, text ->
+                if (index != -1) {
+                    val file = files[index]
+                    if (file.exists()) {
+                        try {
+                            startActivity(Intent(Intent.ACTION_VIEW)
+                                    .addFlags(if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                                        Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_GRANT_READ_URI_PERMISSION
+                                    } else {
+                                        Intent.FLAG_ACTIVITY_NEW_TASK
+                                    })
+                                    .setDataAndType(file.uri, FileTypeHelper.getMIMEType(file)))
+                        } catch (e: Exception) {
+                            e.printStackTrace()
                         }
                     }
-                    return@itemsCallbackSingleChoice true
                 }
-                .title("下载完成，打开附件")
-                .positiveText("确定")
-                .negativeText("取消")
-                .show()
+            }
+            cornerRadius(res = R.dimen.common_corner_radius)
+
+        }
     }
 
     override fun onDownloadStart() {
@@ -135,10 +149,57 @@ class NewsItemActivity : BaseViewModelActivity<NewsItemViewModel>(), NewsItemVie
 
             tv_title.text = it.title
             tv_time.text = TimeFormatHelper.format(it.date)
-            tv_detail.text = if (it.content.length < 10 && it.content.contains("(见附件)")) {
-                intent.getStringExtra("title")
+            //tv_detail.text =
+            if (it.content.length < 10 && it.content.contains("(见附件)")) {
+                tv_detail.text = intent.getStringExtra("title")
             } else {
-                it.content
+                val s = "\\\$\\{(.*?)\\}\n"
+                val m: Matcher = Pattern.compile(s).matcher(it.content)
+                val list = mutableListOf<Bitmap>()
+                val originStreamList = mutableListOf<String>()
+                while (m.find()) {
+                    var str = m.group(1)
+                    val source = m.group(1)
+                    if (str.startsWith("data:image/png;base64")) {
+                        str = str.removePrefix("data:image/png;base64")
+                    }
+                    try {
+                        //涉及到base64解码，异常
+                        val bitmapArray = Base64.decode(str, Base64.DEFAULT)
+                        list.add(BitmapFactory.decodeByteArray(bitmapArray, 0, bitmapArray.size))
+                        originStreamList.add(source)
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+
+                }
+                val texts = it.content.split(Regex(s))
+                for ((index, value) in texts.withIndex()) {
+                    if (index == 0) {
+                        tv_detail.apply {
+                            text = value
+                            textSize = sp(5).toFloat()
+                        }
+                    } else {
+                        val textView = TextView(this).apply {
+                            layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+                            setTextColor(ContextCompat.getColor(this@NewsItemActivity, R.color.common_level_two_font_color))
+                            textSize = sp(5).toFloat()
+                            text = value
+                        }
+                        ll_content.addView(textView)
+                    }
+                    if (index >= list.size) continue
+                    val imageView = ImageView(this).apply {
+                        layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+                        setImageBitmap(list[index])
+                        scaleType = ImageView.ScaleType.CENTER_CROP
+                        setOnClickListener {
+                            showPhotos(this@NewsItemActivity, listOf(originStreamList[index]), 0)
+                        }
+                    }
+                    ll_content.addView(imageView)
+                }
             }
         })
 
@@ -161,29 +222,26 @@ class NewsItemActivity : BaseViewModelActivity<NewsItemViewModel>(), NewsItemVie
                 viewModel.toastEvent.value = R.string.news_init
                 return@setOnMenuItemClickListener false
             }
-            if (items.isEmpty()){
+            if (items.isEmpty()) {
                 viewModel.toastEvent.value = R.string.news_no_download
                 return@setOnMenuItemClickListener false
             }
-            MaterialDialog.Builder(this)
-                    .items(items.map {
-                        it.name
-                    })
-                    .itemsCallbackMultiChoice(null) { _, positions, _ ->
-                        val list = mutableListOf<NewsAttachment>()
-                        positions.forEach {
-                            list.add(items[it])
-                        }
-                        if (list.isNotEmpty()) {
-                            downloadNeedSize = list.size
-                            viewModel.download(rxPermissions, list, this)
-                        }
-                        true
+            MaterialDialog(this).show {
+                title(text = "下载附件")
+                listItemsMultiChoice(items = items.map { it.name }) { dialog, indices, _ ->
+                    val list = mutableListOf<NewsAttachment>()
+                    indices.forEach {
+                        list.add(items[it])
                     }
-                    .title("下载附件")
-                    .positiveText("确定")
-                    .negativeText("取消")
-                    .show()
+                    if (list.isNotEmpty()) {
+                        downloadNeedSize = list.size
+                        viewModel.download(rxPermissions, list, this@NewsItemActivity)
+                    }
+                }
+                positiveButton(text = "确定")
+                cornerRadius(res = R.dimen.common_corner_radius)
+
+            }
             return@setOnMenuItemClickListener false
         }
         return super.onCreateOptionsMenu(menu)
