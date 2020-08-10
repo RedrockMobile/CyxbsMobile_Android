@@ -10,10 +10,12 @@
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/iv_discover_more_function_back"
-        android:layout_width="7dp"
-        android:layout_height="14dp"
+        android:layout_width="27dp"
+        android:layout_height="34dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="48dp"
+        android:paddingHorizontal="10dp"
+        android:paddingVertical="10dp"
+        android:layout_marginTop="33dp"
         android:src="@drawable/discover_ic_more_function_back"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"

@@ -24,6 +24,7 @@ import com.mredrock.cyxbs.common.config.*
 import com.mredrock.cyxbs.common.event.CurrentDateInformationEvent
 import com.mredrock.cyxbs.common.mark.EventBusLifecycleSubscriber
 import com.mredrock.cyxbs.common.ui.BaseViewModelFragment
+import com.mredrock.cyxbs.common.utils.extensions.doIfLogin
 import com.mredrock.cyxbs.common.utils.extensions.pressToZoomOut
 import com.mredrock.cyxbs.discover.R
 import com.mredrock.cyxbs.discover.utils.BannerAdapter
@@ -55,7 +56,9 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>(), Eve
         initViewPager()
         viewModel.getRollInfo()
         iv_check_in.setOnClickListener {
-            ARouter.getInstance().build(MINE_CHECK_IN).navigation()
+            context?.doIfLogin("签到") {
+                ARouter.getInstance().build(MINE_CHECK_IN).navigation()
+            }
         }
     }
 
