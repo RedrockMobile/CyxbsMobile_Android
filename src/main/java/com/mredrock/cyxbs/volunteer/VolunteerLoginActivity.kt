@@ -137,13 +137,16 @@ class VolunteerLoginActivity : BaseActivity() {
     private fun showUnsuccessDialog(text: String) {
         runOnUiThread {
             dialog.dismiss()
-            MaterialDialog.Builder(this@VolunteerLoginActivity)
-                    .title("登录失败")
-                    .content(text)
-                    .positiveText("我知道啦")
-                    .onPositive { _, _ ->
-                        volunteer_password.setText("")
-                    }.show()
+            MaterialDialog(this).show {
+                title(text = "登录失败")
+                message(text = text)
+                positiveButton(text = "我知道啦") {
+                    volunteer_password.setText("")
+                }
+                cornerRadius(res = R.dimen.common_corner_radius)
+
+            }
+
         }
     }
 }

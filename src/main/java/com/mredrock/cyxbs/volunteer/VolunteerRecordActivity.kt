@@ -70,25 +70,20 @@ class VolunteerRecordActivity : BaseActivity(), TabLayout.OnTabSelectedListener,
         volunteer_unbind.setOnClickListener {
             val handler = Handler(Looper.getMainLooper())
             handler.post {
-                MaterialDialog.Builder(this)
-                        .title("解除账号绑定？")
-                        .content("亲，真的要取消已绑定的账号吗？")
-                        .positiveText("确定")
-                        .negativeText("取消")
-                        .callback(object : MaterialDialog.ButtonCallback() {
-                            override fun onPositive(dialog: MaterialDialog?) {
-                                super.onPositive(dialog)
-                                volunteerSP.unBindVolunteerInfo()
-                                val intent = Intent(this@VolunteerRecordActivity, VolunteerLoginActivity::class.java)
-                                startActivity(intent)
-                                finish()
-                            }
-
-                            override fun onNegative(dialog: MaterialDialog?) {
-                                super.onNegative(dialog)
-                                dialog!!.dismiss()
-                            }
-                        }).show()
+                MaterialDialog(this).show {
+                    title(text = "解除账号绑定？")
+                    message(text = "亲，真的要取消已绑定的账号吗？")
+                    positiveButton(text = "确定") {
+                        volunteerSP.unBindVolunteerInfo()
+                        val intent = Intent(this@VolunteerRecordActivity, VolunteerLoginActivity::class.java)
+                        startActivity(intent)
+                        finish()
+                    }
+                    negativeButton(text = "取消") {
+                        dismiss()
+                    }
+                    cornerRadius(res = R.dimen.common_corner_radius)
+                }
             }
         }
 
