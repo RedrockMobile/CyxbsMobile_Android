@@ -26,6 +26,10 @@ const val SP_KEY_ENCRYPT_VERSION_USER = "encrypt_version_user"
 //SharedPreferences value for encrypt version of user
 const val USER_INFO_ENCRYPT_VERSION = 1
 
+//SharedPreferences value to judge tourist login type
+
+const val IS_TOURIST = "is_tourist"
+
 //User信息存储key
 const val SP_KEY_USER_V2 = "cyxbsmobile_user_v2"
 

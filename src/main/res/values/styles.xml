@@ -16,6 +16,10 @@
         <item name="android:windowSharedElementEnterTransition">@transition/common_app_transaction</item>
         <item name="android:windowSharedElementExitTransition">@transition/common_app_transaction</item>
         <item name="actionMenuTextColor">@color/common_level_two_font_color</item>
+        <!--   Material Dialog color-->
+        <item name="md_color_title">@color/common_level_three_font_color</item>
+        <item name="md_color_content">@color/levelFourFontColor</item>
+        <item name="md_color_button_text">@color/common_level_two_font_color</item>
     </style>
 
     <style name="AppTheme.FullScreen" parent="AppTheme" tools:ignore="ResourceName">

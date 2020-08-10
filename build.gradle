@@ -102,7 +102,7 @@ dependencies {
 
 
     //杂项
-    api 'com.afollestad.material-dialogs:commons:0.9.6.0'
+    api 'com.afollestad.material-dialogs:core:3.3.0'
     api 'com.github.yalantis:ucrop:2.2.4'
     api 'com.github.chrisbanes:PhotoView:2.3.0'
     api project(path: ':push_sdk')
