@@ -5,10 +5,12 @@ import android.view.View
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.mredrock.cyxbs.common.config.DISCOVER_ELECTRICITY_FEED
 import com.mredrock.cyxbs.common.ui.BaseFeedFragment
+import com.mredrock.cyxbs.common.utils.extensions.doIfLogin
 import com.mredrock.cyxbs.discover.electricity.adapter.ElectricityFeedAdapter
 import com.mredrock.cyxbs.discover.electricity.adapter.ElectricityFeedUnboundAdapter
 import com.mredrock.cyxbs.discover.electricity.config.*
 import com.mredrock.cyxbs.discover.electricity.viewmodel.ChargeViewModel
+import com.mredrock.cyxbs.electricity.R
 import org.jetbrains.anko.support.v4.defaultSharedPreferences
 
 @Route(path = DISCOVER_ELECTRICITY_FEED)
@@ -25,16 +27,18 @@ class ElectricityFeedFragment : BaseFeedFragment<ChargeViewModel>() {
 
     private fun init() {
         setAdapter(ElectricityFeedUnboundAdapter())
-        setTitle("电费查询")
+        setTitle(getString(R.string.electricity_inquire_string))
         setOnClickListener {
-            parentFragmentManager.let {
-                ElectricityFeedSettingDialogFragment().apply {
-                    refresher = { id, room ->
-                        refreshCharge(id, room)
-                    }
-                }.show(it, "ElectricityFeedSetting")
-            }
+            context?.doIfLogin(getString(R.string.electricity_inquire_string)) {
+                parentFragmentManager.let {
+                    ElectricityFeedSettingDialogFragment().apply {
+                        refresher = { id, room ->
+                            refreshCharge(id, room)
+                        }
+                    }.show(it, "ElectricityFeedSetting")
+                }
 
+            }
         }
         viewModel.chargeInfo.observe {
             it?.let {

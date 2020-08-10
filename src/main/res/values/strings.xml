@@ -16,4 +16,6 @@
     <string name="electricity_notice_error">信息不完整或不正确</string>
     <string name="electricity_electric_view_hint">余额/量</string>
     <string name="electricity_electric_view_hint_money">元</string>
+    <string name="electricity_ask_login_string">登录后即可电费查询</string>
+    <string name="electricity_inquire_string">电费查询</string>
 </resources>
