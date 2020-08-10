@@ -8,7 +8,9 @@ import com.alibaba.android.arouter.launcher.ARouter
 import com.mredrock.cyxbs.common.config.DISCOVER_VOLUNTEER
 import com.mredrock.cyxbs.common.config.DISCOVER_VOLUNTEER_FEED
 import com.mredrock.cyxbs.common.ui.BaseFeedFragment
+import com.mredrock.cyxbs.common.utils.extensions.doIfLogin
 import com.mredrock.cyxbs.volunteer.DiscoverVolunteerFeedViewModel
+import com.mredrock.cyxbs.volunteer.R
 import com.mredrock.cyxbs.volunteer.adapter.VolunteerFeedAdapter
 import com.mredrock.cyxbs.volunteer.adapter.VolunteerFeedUnbindAdapter
 import com.mredrock.cyxbs.volunteer.widget.EncryptPassword
@@ -28,18 +30,18 @@ class DiscoverVolunteerFeedFragment : BaseFeedFragment<DiscoverVolunteerFeedView
     }
 
 
-
     private fun init() {
-        setTitle("志愿服务")
+        setTitle(getString(R.string.volunteer_service_inquire_string))
         setAdapter(VolunteerFeedUnbindAdapter())
+
         viewModel.volunteerData.observe { volunteerTime ->
 
             volunteerTime?.let {
                 val adapter = getAdapter()
-                if(adapter is VolunteerFeedAdapter){
+                if (adapter is VolunteerFeedAdapter) {
 
                     adapter.refresh(it)
-                }else{
+                } else {
                     setAdapter(VolunteerFeedAdapter(it))
                 }
 
@@ -47,7 +49,11 @@ class DiscoverVolunteerFeedFragment : BaseFeedFragment<DiscoverVolunteerFeedView
             }
 
         }
-        setOnClickListener { ARouter.getInstance().build(DISCOVER_VOLUNTEER).navigation() }
+        setOnClickListener {
+            context?.doIfLogin(getString(R.string.volunteer_service_inquire_string)) {
+                ARouter.getInstance().build(DISCOVER_VOLUNTEER).navigation()
+            }
+        }
     }
 
     override var hasTopSplitLine = true
@@ -59,7 +65,7 @@ class DiscoverVolunteerFeedFragment : BaseFeedFragment<DiscoverVolunteerFeedView
                         volunteerSP.volunteerPassword == "404")) {
 
             viewModel.loadVolunteerTime(EncryptPassword.encrypt(uid))
-        }else{
+        } else {
             setAdapter(VolunteerFeedUnbindAdapter())
         }
     }
