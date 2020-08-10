@@ -13,10 +13,7 @@ import com.mredrock.cyxbs.account.bean.RefreshParams
 import com.mredrock.cyxbs.account.bean.TokenWrapper
 import com.mredrock.cyxbs.account.bean.User
 import com.mredrock.cyxbs.account.utils.UserInfoEncryption
-import com.mredrock.cyxbs.common.config.ACCOUNT_SERVICE
-import com.mredrock.cyxbs.common.config.SP_KEY_REFRESH_TOKEN_EXPIRED
-import com.mredrock.cyxbs.common.config.SP_KEY_USER_V2
-import com.mredrock.cyxbs.common.config.SP_REFRESH_DAY
+import com.mredrock.cyxbs.common.config.*
 import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.network.exception.RedrockApiException
 import com.mredrock.cyxbs.common.service.account.*
@@ -49,6 +46,7 @@ internal class AccountService : IAccountService {
     override fun init(context: Context) {
         this.mContext = context
         (mUserStateService as UserStateService).loginFromCache(context)
+        isTouristMode = context.defaultSharedPreferences.getBoolean(IS_TOURIST, false)
     }
 
     override fun getUserService() = mUserService
@@ -192,6 +190,9 @@ internal class AccountService : IAccountService {
                 mContext.runOnUiThread {
                     notifyAllStateListeners(IUserStateService.UserState.LOGIN)
                     isTouristMode = false
+                    this.defaultSharedPreferences.editor {
+                        putBoolean(IS_TOURIST, isTouristMode)
+                    }
                 }
                 mContext.defaultSharedPreferences.editor {
                     putString(SP_KEY_USER_V2, mUserInfoEncryption.encrypt(Gson().toJson(data)))
@@ -201,23 +202,27 @@ internal class AccountService : IAccountService {
             }
         }
 
+
         @MainThread
         override fun askLogin(context: Context, reason: String) {
             if (isLogin()) {
                 return
             }
-            MaterialDialog.Builder(context)
-                    .title("是否登录?")
-                    .content(reason)
-                    .positiveText("马上去登录")
-                    .negativeText("我再看看")
-                    .onPositive { _, _ ->
-                        if (!isLogin()) {
-                            ARouter.getInstance().build("/main/login").navigation()
-                        }
-                    }.onNegative { dialog, _ ->
-                        dialog.dismiss()
-                    }.show()
+
+            MaterialDialog(context).show {
+                title(R.string.account_whether_login)
+                message(text = reason)
+                positiveButton(R.string.account_login_now) {
+                    if (!isLogin()) {
+                        ARouter.getInstance().build(MAIN_LOGIN).navigation()
+                    }
+                }
+                negativeButton(R.string.account_login_later) {
+                    dismiss()
+                }
+                cornerRadius(res = R.dimen.common_corner_radius)
+            }
+
         }
 
         /**
@@ -241,6 +246,9 @@ internal class AccountService : IAccountService {
                 mContext.runOnUiThread {
                     notifyAllStateListeners(IUserStateService.UserState.LOGIN)
                     isTouristMode = false
+                    this.defaultSharedPreferences.editor {
+                        putBoolean(IS_TOURIST, isTouristMode)
+                    }
                 }
                 context.defaultSharedPreferences.editor {
                     putString(SP_KEY_USER_V2, mUserInfoEncryption.encrypt(Gson().toJson(apiWrapper.data)))
@@ -270,6 +278,9 @@ internal class AccountService : IAccountService {
             mContext.runOnUiThread {
                 notifyAllStateListeners(IUserStateService.UserState.TOURIST)
                 isTouristMode = true
+                this.defaultSharedPreferences.editor {
+                    putBoolean(IS_TOURIST, isTouristMode)
+                }
             }
         }
     }
