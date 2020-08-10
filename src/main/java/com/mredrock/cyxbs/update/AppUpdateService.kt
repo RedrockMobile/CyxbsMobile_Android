@@ -35,29 +35,26 @@ internal class AppUpdateService : IAppUpdateService {
 
     override fun noticeUpdate(activity: AppCompatActivity) {
         val info = AppUpdateModel.updateInfo ?: return
-        MaterialDialog.Builder(activity)
-                .title("更新")
-                .title("有新版本更新")
-                .content("最新版本:" + info.versionName + "\n" + info.updateContent + "\n点击点击，现在就更新一发吧~")
-                .positiveText("更新")
-                .negativeText("下次吧")
-                .onNegative { dialog, _ ->
-                    dialog.dismiss()
-                    AppUpdateModel.status.value = AppUpdateStatus.LATER
-                }
-                .onPositive { _, _ ->
-                    RxPermissions(activity).request(Manifest.permission.READ_EXTERNAL_STORAGE,
-                            Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                            .subscribe { granted ->
-                                if (granted == true) {
-                                    downloadUpdate(activity)
-                                } else {
-                                    activity.toast("没有赋予权限就不能更新哦")
-                                }
+        MaterialDialog(activity).show {
+            title(text = "有新版本更新")
+            message(text = "最新版本:" + info.versionName + "\n" + info.updateContent + "\n点击点击，现在就更新一发吧~")
+            positiveButton(text = "更新") {
+                RxPermissions(activity).request(Manifest.permission.READ_EXTERNAL_STORAGE,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                        .subscribe { granted ->
+                            if (granted == true) {
+                                downloadUpdate(activity)
+                            } else {
+                                activity.toast("没有赋予权限就不能更新哦")
                             }
-                }
-                .cancelable(false)
-                .show()
+                        }
+            }
+            negativeButton(text = "下次吧") {
+                dismiss()
+                AppUpdateModel.status.value = AppUpdateStatus.LATER
+            }
+            cornerRadius(res=R.dimen.common_corner_radius)
+        }
     }
 
     @SuppressLint("CheckResult")
