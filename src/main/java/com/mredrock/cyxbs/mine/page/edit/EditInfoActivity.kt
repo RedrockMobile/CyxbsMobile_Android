@@ -26,6 +26,7 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.afollestad.materialdialogs.MaterialDialog
+import com.afollestad.materialdialogs.list.listItems
 import com.mredrock.cyxbs.common.component.CommonDialogFragment
 import com.mredrock.cyxbs.common.config.DIR_PHOTO
 import com.mredrock.cyxbs.common.service.ServiceManager
@@ -296,16 +297,17 @@ class EditInfoActivity(override val isFragmentActivity: Boolean = false,
                     parent.mkdirs()
                 }
                 //选择
-                MaterialDialog.Builder(this@EditInfoActivity)
-                        .items("拍照", "从相册中选择")
-                        .itemsCallback { _, _, which, _ ->
-                            if (which == 0) {
-                                getImageFromCamera()
-                            } else {
-                                getImageFromAlbum()
-                            }
+                MaterialDialog(this@EditInfoActivity).show {
+                    listItems(items = listOf("拍照", "从相册中选择")) { dialog, index, text ->
+                        if (index == 0) {
+                            getImageFromCamera()
+                        } else {
+                            getImageFromAlbum()
                         }
-                        .show()
+                    }
+                    cornerRadius(res = R.dimen.common_corner_radius)
+
+                }
             }
         }
     }
