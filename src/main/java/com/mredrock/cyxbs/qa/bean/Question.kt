@@ -103,6 +103,7 @@ data class Question(@SerializedName("reward")
 
     companion object CREATOR : Parcelable.Creator<Question> {
         const val NEW = "最新"
+        const val FRESHMAN = "迎新生"
         const val STUDY = "学习"
         const val LIFE = "生活"
         const val ANONYMOUS = "匿名"

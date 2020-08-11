@@ -25,7 +25,7 @@ class QuestionDataSource(private val kind: String) : PageKeyedDataSource<Int, Qu
     override fun loadInitial(params: LoadInitialParams<Int>, callback: LoadInitialCallback<Int, Question>) {
         //最开始加上判断，以防登录bug
         val userState = ServiceManager.getService(IAccountService::class.java).getVerifyService()
-        if (!userState.isLogin()) {
+        if (!userState.isLogin() && !userState.isTouristMode()) {
             callback.onResult(listOf(), 1, null)
             initialLoad.postValue(NetworkState.CANNOT_LOAD_WITHOUT_LOGIN)
             return

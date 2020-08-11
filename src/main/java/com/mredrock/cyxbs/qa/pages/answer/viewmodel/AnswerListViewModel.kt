@@ -62,7 +62,7 @@ class AnswerListViewModel(question: Question) : BaseViewModel() {
 
     //增加浏览量，不用显示
     fun addQuestionView() {
-        ApiGenerator.getApiService(ApiService::class.java)
+        ApiGenerator.getCommonApiService(ApiService::class.java)
                 .addView(qid)
                 .checkError()
                 .setSchedulers()

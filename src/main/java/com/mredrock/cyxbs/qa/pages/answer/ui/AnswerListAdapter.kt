@@ -55,8 +55,8 @@ class AnswerListAdapter : BaseEndlessRvAdapter<Answer>(DIFF_CALLBACK) {
                 }
             }
             if (getItem(position)?.isSelf == false)
-                context.doIfLogin {
-                    btn_answer_more.setOnClickListener {
+                btn_answer_more.setOnClickListener {
+                    context.doIfLogin {
                         getItem(position)?.id?.let { it1 -> onReportClickListener?.invoke(it1) }
                     }
                 }

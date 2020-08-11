@@ -73,7 +73,7 @@
         android:textColor="@color/common_button_gradient_start_color"
         android:textSize="19sp" />
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btn_cancel_report"
         android:layout_width="wrap_content"
         android:paddingStart="78dp"

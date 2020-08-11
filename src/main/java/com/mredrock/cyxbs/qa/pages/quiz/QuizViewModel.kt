@@ -148,7 +148,7 @@ class QuizViewModel : BaseViewModel() {
         } else {
             this.title = title
             this.content = content ?: ""
-            this.type = type ?: "学习"
+            this.type = type ?: "迎新生"
             result = true
         }
         return result

@@ -10,12 +10,13 @@ import android.util.Base64
 import android.view.KeyEvent
 import android.view.View
 import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.TextView
 import androidx.core.content.ContextCompat
+import androidx.core.view.get
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import com.alibaba.android.arouter.facade.annotation.Route
+import com.google.android.material.chip.Chip
+import com.google.android.material.chip.ChipGroup
 import com.google.gson.Gson
 import com.mredrock.cyxbs.common.config.QA_QUIZ
 import com.mredrock.cyxbs.common.event.QuestionDraftEvent
@@ -34,8 +35,6 @@ import com.mredrock.cyxbs.qa.ui.activity.ViewImageCropActivity
 import com.mredrock.cyxbs.qa.ui.widget.CommonDialog
 import com.mredrock.cyxbs.qa.utils.CHOOSE_PHOTO_REQUEST
 import com.mredrock.cyxbs.qa.utils.selectImageFromAlbum
-import com.mredrock.cyxbs.qa.utils.selected
-import com.mredrock.cyxbs.qa.utils.unSelected
 import kotlinx.android.synthetic.main.qa_activity_quiz.*
 import kotlinx.android.synthetic.main.qa_common_toolbar.*
 import org.greenrobot.eventbus.EventBus
@@ -45,7 +44,7 @@ import org.jetbrains.anko.support.v4.startActivityForResult
 import top.limuyang2.photolibrary.activity.LPhotoPickerActivity
 
 @Route(path = QA_QUIZ)
-class QuizActivity : BaseViewModelActivity<QuizViewModel>() , EventBusLifecycleSubscriber {
+class QuizActivity : BaseViewModelActivity<QuizViewModel>(), EventBusLifecycleSubscriber {
     companion object {
         const val MAX_SELECTABLE_IMAGE_COUNT = 6
         const val NOT_DRAFT_ID = "-1"
@@ -56,6 +55,7 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() , EventBusLifecycleS
         fun activityStart(fragment: Fragment, type: String, requestCode: Int) {
             fragment.startActivityForResult<QuizActivity>(requestCode, "type" to type)
         }
+
     }
 
     override val viewModelClass = QuizViewModel::class.java
@@ -67,6 +67,7 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() , EventBusLifecycleS
     private val exitDialog by lazy { createExitDialog() }
     private val rewardNotEnoughDialog by lazy { createRewardNotEnoughDialog() }
     private var rewardExplainList: List<DownMessageText> = listOf()
+    private val types = listOf(Question.FRESHMAN, Question.STUDY, Question.ANONYMOUS, Question.LIFE, Question.OTHER)
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -105,20 +106,18 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() , EventBusLifecycleS
     }
 
     private fun initTypeSelector() {
-        val tagSelector = findViewById<LinearLayout>(R.id.layout_quiz_tag)
-        val childView = Array(tagSelector.childCount) { tagSelector.getChildAt(it) as TextView }
-        if (childView.isNotEmpty()) {
-            questionType = childView[currentTypeIndex].text.toString()
+        val chipGroup = findViewById<ChipGroup>(R.id.layout_quiz_tag)
+        for ((i, value) in types.withIndex()) {
+            chipGroup.addView((layoutInflater.inflate(R.layout.qa_quiz_view_chip, chipGroup, false) as Chip).apply {
+                text = value
+                setOnClickListener {
+                    questionType = text.toString()
+                }
+            })
         }
-        for ((index, i) in childView.withIndex()) {
-            i.setOnClickListener { view ->
-                childView[currentTypeIndex].unSelected()
-                (view as TextView).selected()
-                currentTypeIndex = index
-                questionType = view.text.toString()
-            }
-        }
+        (chipGroup.getChildAt(currentTypeIndex) as Chip).isChecked = true
     }
+
 
     private fun initToolbar() {
         qa_ib_toolbar_back.setOnClickListener(View.OnClickListener {
@@ -269,17 +268,19 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() , EventBusLifecycleS
         val question = Gson().fromJson(json, Question::class.java)
         edt_quiz_title.setText(question.title)
         edt_quiz_content.setText(question.description)
-        val tagSelector = findViewById<LinearLayout>(R.id.layout_quiz_tag)
-        val childView = Array(tagSelector.childCount) { tagSelector.getChildAt(it) as TextView }
-        childView[currentTypeIndex].unSelected()
+        val chipGroup = findViewById<ChipGroup>(R.id.layout_quiz_tag)
+        if (chipGroup.childCount == 0) initTypeSelector()
+        val childView = Array(chipGroup.childCount) { chipGroup.getChildAt(it) as Chip }
+        (chipGroup[currentTypeIndex] as Chip).isChecked = false
         questionType = question.kind
         when (question.kind) {
-            getString(R.string.qa_quiz_select_type_study) -> currentTypeIndex = 0
-            getString(R.string.qa_quiz_select_type_anonymous) -> currentTypeIndex = 1
-            getString(R.string.qa_quiz_select_type_life) -> currentTypeIndex = 2
-            getString(R.string.qa_quiz_select_type_others) -> currentTypeIndex = 3
+            getString(R.string.qa_quiz_select_type_welcome_freshman) -> currentTypeIndex = 0
+            getString(R.string.qa_quiz_select_type_study) -> currentTypeIndex = 1
+            getString(R.string.qa_quiz_select_type_anonymous) -> currentTypeIndex = 2
+            getString(R.string.qa_quiz_select_type_life) -> currentTypeIndex = 3
+            getString(R.string.qa_quiz_select_type_others) -> currentTypeIndex = 4
         }
-        childView[currentTypeIndex].selected()
+        childView[currentTypeIndex].isChecked = true
         draftId = event.selfId
         if (!question.photoUrl.isNullOrEmpty()) {
             viewModel.setImageList(arrayListOf<String>().apply { addAll(question.photoUrl) })

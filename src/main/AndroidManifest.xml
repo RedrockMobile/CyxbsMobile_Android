@@ -9,7 +9,9 @@
         <activity
             android:name=".pages.comment.ui.CommentListActivity"
             android:windowSoftInputMode="adjustResize|stateHidden" />
-        <activity android:name=".pages.quiz.ui.QuizActivity" />
+        <activity
+            android:name=".pages.quiz.ui.QuizActivity"
+            android:theme="@style/QuizTheme" />
         <activity
             android:name=".pages.answer.ui.AnswerActivity"
             android:windowSoftInputMode="adjustPan" />

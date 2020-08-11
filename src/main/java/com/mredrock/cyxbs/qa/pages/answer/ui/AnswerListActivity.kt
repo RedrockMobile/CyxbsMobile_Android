@@ -118,7 +118,9 @@ class AnswerListActivity : BaseActivity(), EventBusLifecycleSubscriber {
             qa_ib_toolbar_more.gone()
         } else {
             qa_ib_toolbar_more.setOnClickListener {
-                questionReportDialog.show()
+                doIfLogin {
+                    questionReportDialog.show()
+                }
             }
         }
     }
@@ -219,8 +221,8 @@ class AnswerListActivity : BaseActivity(), EventBusLifecycleSubscriber {
 
     private fun switchToHelper() {
         btn_answer.visible()
-        doIfLogin {
-            btn_answer.setOnClickListener {
+        btn_answer.setOnClickListener {
+            doIfLogin {
                 AnswerActivity.activityStart(this@AnswerListActivity, viewModel.questionLiveData.value?.id
                         ?: "", viewModel.questionLiveData.value?.description
                         ?: "", viewModel.questionLiveData.value?.photoUrl

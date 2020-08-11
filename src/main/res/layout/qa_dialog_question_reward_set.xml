@@ -182,7 +182,7 @@
             android:layout_centerHorizontal="true"
             android:clipChildren="false" />
 
-        <ImageView
+        <androidx.appcompat.widget.AppCompatImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/vp_set_reward_count"
@@ -190,7 +190,7 @@
             android:background="@drawable/qa_ic_quiz_reward_select_indicator_background" />
     </RelativeLayout>
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/fl_quiz_submit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

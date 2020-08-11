@@ -46,6 +46,7 @@
     <string name="qa_answer_activity_question_describe">问题描述</string>
     <string name="qa_answer_question_detail_show_more">展开详情</string>
     <string name="qa_quiz_select_type_study">学习</string>
+    <string name="qa_quiz_select_type_welcome_freshman">迎新生</string>
     <string name="qa_quiz_select_type_anonymous">匿名</string>
     <string name="qa_quiz_select_type_life">生活</string>
     <string name="qa_quiz_select_type_others">其他</string>

@@ -1,6 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
+    <!-- Base application theme. -->
+    <style name="QuizTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar" tools:ignore="ResourceName">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <!--        透明状态栏-->
+        <item name="statusBarBackground">@color/common_transparent_background</item>
+        <!--        每个Activity的Window背景，最好别设置透明或者空-->
+        <item name="android:windowBackground">@color/common_window_background</item>
+    </style>
 
     <style name="qa_LPhotoTheme" parent="LPhotoTheme">
         <!--页面通用属性（图片选择、图片预览共用）-->

@@ -34,17 +34,6 @@ internal fun TextView.setPraise(praiseNum: String?,
     setCompoundDrawablesRelativeWithIntrinsicBounds(drawable, null, null, null)
 }
 
-internal fun TextView.unSelected() {
-    textColor = ContextCompat.getColor(context, R.color.common_qa_quiz_select_type_text_color)
-    background = ContextCompat.getDrawable(context, R.drawable.qa_selector_quiz_type_default_select)
-
-}
-
-internal fun TextView.selected() {
-    textColor = ContextCompat.getColor(context, R.color.common_qa_quiz_selected_type_text_color)
-    background = ContextCompat.getDrawable(context, R.drawable.qa_selector_quiz_type_default_selected)
-
-}
 
 internal fun setAdoptedTv(adoptedTv: TextView, adoptTv: TextView, isAdopted: Boolean, removeAdoptIcon: Boolean) = when {
     isAdopted -> {

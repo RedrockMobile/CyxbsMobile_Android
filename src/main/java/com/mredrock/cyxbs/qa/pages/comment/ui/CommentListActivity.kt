@@ -138,7 +138,9 @@ class CommentListActivity : BaseActivity(), EventBusLifecycleSubscriber {
         } else {
             if (!answer.isSelf) {
                 qa_ib_toolbar_more.setOnClickListener {
-                    answerReportDialog.show()
+                    doIfLogin {
+                        answerReportDialog.show()
+                    }
                 }
             } else {
                 qa_ib_toolbar_more.gone()
@@ -254,8 +256,8 @@ class CommentListActivity : BaseActivity(), EventBusLifecycleSubscriber {
         }
         tv_comment_praise.apply {
             setPraise(answer.praiseNum, answer.isPraised)
-            doIfLogin {
-                setOnClickListener {
+            setOnClickListener {
+                doIfLogin {
                     if (viewModel.isDealing) {
                         toast(getString(R.string.qa_answer_praise_dealing))
                     } else {
