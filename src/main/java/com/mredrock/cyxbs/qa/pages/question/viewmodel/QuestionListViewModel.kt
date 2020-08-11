@@ -13,7 +13,7 @@ import com.mredrock.cyxbs.qa.pages.question.model.QuestionDataSource
 /**
  * Created By jay68 on 2018/8/26.
  */
-class QuestionListViewModel(kind: String) : BaseViewModel() {
+open class QuestionListViewModel(kind: String) : BaseViewModel() {
     val questionList: LiveData<PagedList<Question>>
     val networkState: LiveData<Int>
     val initialLoad: LiveData<Int>

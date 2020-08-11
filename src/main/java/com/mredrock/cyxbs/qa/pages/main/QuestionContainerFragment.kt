@@ -19,6 +19,8 @@ import com.mredrock.cyxbs.common.utils.extensions.doIfLogin
 import com.mredrock.cyxbs.common.utils.extensions.pressToZoomOut
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.bean.Question
+import com.mredrock.cyxbs.qa.pages.question.ui.BaseQuestionListFragment
+import com.mredrock.cyxbs.qa.pages.question.ui.FreshManQuestionListFragment
 import com.mredrock.cyxbs.qa.pages.question.ui.QuestionListFragment
 import com.mredrock.cyxbs.qa.pages.quiz.ui.QuizActivity
 import kotlinx.android.synthetic.main.qa_fragment_question_container.*
@@ -36,7 +38,7 @@ class QuestionContainerFragment : BaseFragment(), View.OnClickListener, EventBus
     }
 
     private val titles = listOf(Question.NEW, Question.FRESHMAN, Question.STUDY, Question.ANONYMOUS, Question.LIFE, Question.OTHER)
-    private lateinit var childFragments: List<QuestionListFragment>
+    private lateinit var childFragments: List<BaseQuestionListFragment<*>>
 
     private lateinit var curSelectorItem: AppCompatCheckedTextView
 
@@ -48,7 +50,13 @@ class QuestionContainerFragment : BaseFragment(), View.OnClickListener, EventBus
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        childFragments = titles.map { QuestionListFragment.newInstance(it) }
+        childFragments = titles.map {
+            if (it == Question.FRESHMAN) {
+                FreshManQuestionListFragment.newInstance(it)
+            } else {
+                QuestionListFragment.newInstance(it)
+            }
+        }
         view.vp_question.adapter = QAViewPagerAdapter(childFragments, childFragmentManager)
         //预加载所有部分保证提问后所有fragment能够被通知刷新，同时保证退出账号时只加载一次对话框
         view.vp_question.offscreenPageLimit = 6

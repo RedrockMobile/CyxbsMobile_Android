@@ -1,20 +1,17 @@
-package com.mredrock.cyxbs.qa.pages.question.ui
+package com.mredrock.cyxbs.qa.pages.question.ui.adapter
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
-import com.mredrock.cyxbs.common.utils.extensions.setAvatarImageFromUrl
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.bean.Question
 import com.mredrock.cyxbs.qa.component.recycler.BaseEndlessRvAdapter
 import com.mredrock.cyxbs.qa.component.recycler.BaseViewHolder
-import com.mredrock.cyxbs.qa.utils.questionTimeDescription
-import com.mredrock.cyxbs.qa.utils.toDate
-import kotlinx.android.synthetic.main.qa_recycler_item_question.view.*
+import kotlinx.android.synthetic.main.qa_recycler_item_freshman_hot_question.view.*
 
 /**
- * Created By jay68 on 2018/8/26.
+ * Created by yyfbe, Date on 2020/8/11.
  */
-class QuestionListRvAdapter(private val onItemClickEvent: (Question) -> Unit) : BaseEndlessRvAdapter<Question>(DIFF_CALLBACK) {
+class FreshManHeaderVpAdapter(private val onItemClickEvent: (Question) -> Unit) : BaseEndlessRvAdapter<Question>(DIFF_CALLBACK) {
     companion object {
         @JvmStatic
         val DIFF_CALLBACK = object : DiffUtil.ItemCallback<Question>() {
@@ -32,17 +29,12 @@ class QuestionListRvAdapter(private val onItemClickEvent: (Question) -> Unit) : 
         onItemClickEvent.invoke(data)
     }
 
-    class QuestionViewHolder(parent: ViewGroup) : BaseViewHolder<Question>(parent, R.layout.qa_recycler_item_question) {
+    class QuestionViewHolder(parent: ViewGroup) : BaseViewHolder<Question>(parent, R.layout.qa_recycler_item_freshman_hot_question) {
         override fun refresh(data: Question?) {
             data ?: return
             itemView.apply {
-                iv_avatar.setAvatarImageFromUrl(data.photoThumbnailSrc)
-                tv_nickname.text = data.nickname
-                tv_title.text = data.title
-                tv_reward_count.text = data.reward.toString()
-                tv_answer_count.text = data.answerNum.toString()
-                tv_view_count.text = data.viewCount.toString()
-                tv_publish_at.text = questionTimeDescription(System.currentTimeMillis(), data.createdAt.toDate().time)
+                qa_freshman_hot_item_title.text = data.title
+                qa_freshman_hot_item_subtitle.text = data.description
 
             }
         }

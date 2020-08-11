@@ -108,6 +108,7 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>(), EventBusLifecycleSu
     private fun initTypeSelector() {
         val chipGroup = findViewById<ChipGroup>(R.id.layout_quiz_tag)
         for ((i, value) in types.withIndex()) {
+            if (i == 0) questionType = value
             chipGroup.addView((layoutInflater.inflate(R.layout.qa_quiz_view_chip, chipGroup, false) as Chip).apply {
                 text = value
                 setOnClickListener {

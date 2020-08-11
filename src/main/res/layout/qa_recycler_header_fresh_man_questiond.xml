@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="18dp"
+        android:text="热门解答"
+        android:textColor="@color/common_level_three_font_color"
+        android:textSize="17dp" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/vp_freshman_hot"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:orientation="horizontal"
+            android:clipChildren="false"
+            android:layout_marginStart="15dp" />
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/tv_hot_question_more"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="18dp"
+        android:text="更多想问的，立刻提问 >>"
+        android:textColor="@color/common_level_three_font_color"
+        android:textSize="10dp" />
+
+</LinearLayout>
