@@ -88,6 +88,8 @@
     <string name="qa_upload_pic_failed">图片上传失败</string>
     <string name="qa_answer_adopted_other_answer">你已采纳其他回答~</string>
     <string name="qa_answer_adopt_late">已经过了你设置的任务完成时间～</string>
+    <string name="qa_question_hot_ask_question_enter"><![CDATA[更多想问的，立刻提问 >>]]></string>
+    <string name="qa_question_hot">热门解答</string>
     <string-array name="qa_quiz_reward_explain_title">
         <item>悬赏积分是干嘛的?</item>
         <item>任务最晚完成时间是什么意思?</item>

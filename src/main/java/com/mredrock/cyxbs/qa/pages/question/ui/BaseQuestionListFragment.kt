@@ -46,7 +46,7 @@ abstract class BaseQuestionListFragment<T : QuestionListViewModel> : BaseViewMod
     protected open var headerRvAdapter: FreshManHeaderRvAdapter? = null
 
     // 判断rv是否到顶
-    private var isRvAtTop = true
+    protected var isRvAtTop = true
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -133,7 +133,7 @@ abstract class BaseQuestionListFragment<T : QuestionListViewModel> : BaseViewMod
 
 
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
-    fun refreshQuestionList(event: RefreshQaEvent) {
+    open fun refreshQuestionList(event: RefreshQaEvent) {
         if (isRvAtTop)
             viewModel.invalidateQuestionList()
         else

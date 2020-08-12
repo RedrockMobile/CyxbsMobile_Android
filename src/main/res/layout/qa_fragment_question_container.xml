@@ -76,8 +76,8 @@
                         android:id="@+id/vf_hot_search"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="14dp"
                         android:layout_gravity="center_vertical|start"
+                        android:layout_marginHorizontal="14dp"
                         android:textColor="@color/common_level_two_font_color"
                         android:textSize="15sp" />
                 </FrameLayout>
