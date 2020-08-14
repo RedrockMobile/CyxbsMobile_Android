@@ -8,339 +8,342 @@
           并以模块名为前缀-->
 
     <!--    整体灰色背景-->
-    <color name="common_window_background" >#F2F3F8</color>
+    <color name="common_window_background">#F2F3F8</color>
     <!--    整体淡灰二级背景-->
-    <color name="common_secondary_window_background" >#F8F9FC</color>
-    <color name="common_chosen_background" >#E5EAF2</color>
+    <color name="common_secondary_window_background">#F8F9FC</color>
+    <color name="common_chosen_background">#E5EAF2</color>
 
     <!--    纯白色背景和纯白色字体-->
-    <color name="common_white_background" >#ffffff</color>
-    <color name="common_white_font_color" >#ffffff</color>
+    <color name="common_white_background">#ffffff</color>
+    <color name="common_white_font_color">#ffffff</color>
 
-    <color name="common_transparent_background" >#00000000</color>
+    <color name="common_transparent_background">#00000000</color>
 
 
     <!--    主要字体颜色分以下四种，下列按照蓝色由深到浅排序，要用自取-->
     <!--    一级字体颜色-->
-    <color name="common_level_one_font_color" >#112C54</color>
+    <color name="common_level_one_font_color">#112C54</color>
     <!--    二级字体颜色-->
-    <color name="common_level_two_font_color" >#15315B</color>
+    <color name="common_level_two_font_color">#15315B</color>
     <!--    三级字体颜色-->
-    <color name="common_level_three_font_color" >#193866</color>
+    <color name="common_level_three_font_color">#193866</color>
     <!--    四级字体颜色-->
     <color name="levelFourFontColor" tools:ignore="DuplicateDefinition,ResourceName">#2A4E84</color>
 
-    <color name="common_course_delete_button_text_color" >#7CA3DF</color>
+    <color name="common_course_delete_button_text_color">#7CA3DF</color>
 
 
     <!--    底部tab未聚焦字体颜色-->
-    <color name="common_un_focused_font_color" >#AABCD8</color>
+    <color name="common_un_focused_font_color">#AABCD8</color>
     <!--    底部tab聚焦字体颜色-->
-    <color name="common_focused_font_color" >#2923D2</color>
+    <color name="common_focused_font_color">#2923D2</color>
 
     <!--    60%透明度的二级字体-->
-    <color name="common_alpha_level_two_font_color" >#9915315B</color>
+    <color name="common_alpha_level_two_font_color">#9915315B</color>
     <!--    课表可上拉下拉标识小块背景-->
-    <color name="common_course_table_drag_indicator_block_color" >#E2EDFB</color>
+    <color name="common_course_table_drag_indicator_block_color">#E2EDFB</color>
     <!--    课表标识当天阴影-->
-    <color name="common_course_identifies_the_current_shadow_color" >#93E8F0FC
+    <color name="common_course_identifies_the_current_shadow_color">#93E8F0FC
     </color>
     <!--    课表课程色块颜色-->
-    <color name="common_morning_course_color" >#F9E7D8</color>
-    <color name="common_afternoon_course_color" >#F9E3E4</color>
-    <color name="common_evening_course_color" >#DDE3F8</color>
+    <color name="common_morning_course_color">#F9E7D8</color>
+    <color name="common_afternoon_course_color">#F9E3E4</color>
+    <color name="common_evening_course_color">#DDE3F8</color>
     <!--    课程色块内的字体颜色-->
-    <color name="common_morning_course_text_color" >#FF8015</color>
-    <color name="common_afternoon_course_text_color" >#FF6262</color>
-    <color name="common_evening_course_text_color" >#4066EA</color>
+    <color name="common_morning_course_text_color">#FF8015</color>
+    <color name="common_afternoon_course_text_color">#FF6262</color>
+    <color name="common_evening_course_text_color">#4066EA</color>
 
     <!--    备忘灰色条纹-->
-    <color name="common_memo_gray_stripes" >#E8EBEF</color>
+    <color name="common_memo_gray_stripes">#E8EBEF</color>
 
-    <color name="common_course_affair_you_might_recycle_item_background_color" >
+    <color name="common_course_affair_you_might_recycle_item_background_color">
         #99F2F3F7
     </color>
 
     <!--    事务下一步按钮搭配的颜色-->
-    <color name="common_course_edit_affair_start_color_transparency" >
+    <color name="common_course_edit_affair_start_color_transparency">
         #446B65EF
     </color>
-    <color name="common_course_edit_affair_start_color" >#6B65EF</color>
+    <color name="common_course_edit_affair_start_color">#6B65EF</color>
 
     <!--    发现教务在线方框背景-->
-    <color name="common_discovery_jwzx_background" >#AFD2FB</color>
+    <color name="common_discovery_jwzx_background">#AFD2FB</color>
 
     <color name="common_default_divide_line_color">#19f8f9fc</color>
     <!--    按钮渐变起始颜色-->
-    <color name="common_button_gradient_start_color" >#4841E2</color>
+    <color name="common_button_gradient_start_color">#4841E2</color>
     <!--    按钮渐变终止颜色-->
-    <color name="common_button_gradient_end_color" >#5D5DF7</color>
+    <color name="common_button_gradient_end_color">#5D5DF7</color>
 
     <!--    事务dialog删除按钮背景颜色-->
-    <color name="common_course_affair_delete_button_background_color" >#E6EFFC
+    <color name="common_course_affair_delete_button_background_color">#E6EFFC
     </color>
 
     <!--    事务dialog，修改按钮渐变颜色，这个居然和通用渐变不是一个颜色，不科学-->
-    <color name="common_course_affair_modify_button_gradient_start_color" >#2921D1
+    <color name="common_course_affair_modify_button_gradient_start_color">#2921D1
     </color>
-    <color name="common_course_affair_modify_button_gradient_end_color" >#5D5DF7
+    <color name="common_course_affair_modify_button_gradient_end_color">#5D5DF7
     </color>
 
     <!--    添加事务时标题-->
-    <color name="common_transaction_heading" >#122D55</color>
+    <color name="common_transaction_heading">#122D55</color>
     <!--    添加事务时周数选择时，点击后字体颜色-->
-    <color name="common_select_font_color_for_transaction_weeks" >#FFA192</color>
+    <color name="common_select_font_color_for_transaction_weeks">#FFA192</color>
 
 
     <!--    打字框背景颜色-->
-    <color name="common_write_able_area_background_shallow" >#EFF4FD</color>
-    <color name="common_write_able_area_background_dark" >#E8F0FC</color>
+    <color name="common_write_able_area_background_shallow">#EFF4FD</color>
+    <color name="common_write_able_area_background_dark">#E8F0FC</color>
 
     <!--    我的-->
     <!--    签到页面TextView颜色-->
-    <color name="common_blue_sign_text_color" >#839BFA</color>
+    <color name="common_blue_sign_text_color">#839BFA</color>
     <!--    分割线颜色-->
-    <color name="common_sever_view_color" >#BDCCE5</color>
-    <color name="common_alpha_sever_view_color" >#39BDCCE5</color>
-    <color name="common_blue_button" >#2921D1</color>
+    <color name="common_sever_view_color">#BDCCE5</color>
+    <color name="common_alpha_sever_view_color">#39BDCCE5</color>
+    <color name="common_blue_button">#2921D1</color>
 
     <!--    按钮颜色-->
-    <color name="common_grey_button" >#E1DFE0</color>
-    <color name="common_grey_button_text" >#C3C0C1</color>
-    <color name="common_grey_text" >#C4C2C2</color>
-    <color name="common_switch_off" >#C3D4EE</color>
+    <color name="common_grey_button">#E1DFE0</color>
+    <color name="common_grey_button_text">#C3C0C1</color>
+    <color name="common_grey_text">#C4C2C2</color>
+    <color name="common_switch_off">#C3D4EE</color>
 
     <!--    tab_layout颜色-->
-    <color name="common_mine_tab_layout_text_unselected" >#8f15315B</color>
-    <color name="common_mine_tab_layout_indicator_color" >#1AD0F2</color>
+    <color name="common_mine_tab_layout_text_unselected">#8f15315B</color>
+    <color name="common_mine_tab_layout_indicator_color">#1AD0F2</color>
 
     <!--    关于板块的颜色-->
-    <color name="common_mine_about_text_color_normal" >#294169</color>
-    <color name="common_mine_about_text_color_up_to_date" >#80294169</color>
-    <color name="common_mine_about_text_color_blue" >#0BCCF0</color>
+    <color name="common_mine_about_text_color_normal">#294169</color>
+    <color name="common_mine_about_text_color_up_to_date">#80294169</color>
+    <color name="common_mine_about_text_color_blue">#0BCCF0</color>
     <!--    签到部分颜色-->
-    <color name="common_mine_sign_bg_grey" >#E1E6F0</color>
-    <color name="common_mine_sign_divider_grey" >#E1E6F0</color>
-    <color name="common_mine_sign_divider_blue" >#3A35D2</color>
-    <color name="common_mine_sign_divider_blue_light" >#B3E5FC</color>
-    <color name="common_mine_sign_integral_text" >#4841E2</color>
-    <color name="common_mine_sign_ring_blue" >#3A35D2</color>
-    <color name="common_mine_sign_ring_outside" >#ffffff</color>
-    <color name="common_mine_sign_bubble_text_color" >#A24841E2</color>
-    <color name="common_mine_sign_integral_text_background" >#D4DAFF</color>
-    <color name="common_mine_sign_store_round_brown_background" >#F8E2DF</color>
-    <color name="common_mine_sign_store_line" >#E2EDFB</color>
-    <color name="common_mine_sign_store_item_tv_integral" >#3A34D2</color>
-    <color name="common_mine_sign_store_item_bg" >#F0F2FB</color>
-    <color name="common_mine_sign_store_bg" >#F8F9FC</color>
-    <color name="common_mine_sign_store_my_product_text_color" >#FFA192</color>
+    <color name="common_mine_sign_bg_grey">#E1E6F0</color>
+    <color name="common_mine_sign_divider_grey">#E1E6F0</color>
+    <color name="common_mine_sign_divider_blue">#3A35D2</color>
+    <color name="common_mine_sign_divider_blue_light">#B3E5FC</color>
+    <color name="common_mine_sign_integral_text">#4841E2</color>
+    <color name="common_mine_sign_ring_blue">#3A35D2</color>
+    <color name="common_mine_sign_ring_outside">#ffffff</color>
+    <color name="common_mine_sign_bubble_text_color">#A24841E2</color>
+    <color name="common_mine_sign_integral_text_background">#D4DAFF</color>
+    <color name="common_mine_sign_store_round_brown_background">#F8E2DF</color>
+    <color name="common_mine_sign_store_line">#E2EDFB</color>
+    <color name="common_mine_sign_store_item_tv_integral">#3A34D2</color>
+    <color name="common_mine_sign_store_item_bg">#F0F2FB</color>
+    <color name="common_mine_sign_store_bg">#F8F9FC</color>
+    <color name="common_mine_sign_store_my_product_text_color">#FFA192</color>
 
     <!--    我的模块提问，回答，评论的颜色-->
-    <color name="common_mine_list_item_tv_disappear_at" >#6C84AB</color>
-    <color name="common_mine_list_item_tv_content" >#15315B</color>
-    <color name="common_mine_list_item_bg_brown" >#F7DAD7</color>
-    <color name="common_mine_list_item_btn_text_color_accept" >#FFA192</color>
+    <color name="common_mine_list_item_tv_disappear_at">#6C84AB</color>
+    <color name="common_mine_list_item_tv_content">#15315B</color>
+    <color name="common_mine_list_item_bg_brown">#F7DAD7</color>
+    <color name="common_mine_list_item_btn_text_color_accept">#FFA192</color>
 
     <!--    我的模块首页颜色-->
-    <color name="common_mine_main_btn_gradient_start" >#4841E2</color>
-    <color name="common_mine_main_btn_gradient_end" >#5D5DF7</color>
+    <color name="common_mine_main_btn_gradient_start">#4841E2</color>
+    <color name="common_mine_main_btn_gradient_end">#5D5DF7</color>
 
     <!--    考试成绩-->
-    <color name="common_grades_gpa_rv_list_round_corner_background" >#88E8F1FC
+    <color name="common_grades_gpa_rv_list_round_corner_background">#88E8F1FC
     </color>
-    <color name="common_grades_item_cardView_bg" >#E8F1FC</color>
-    <color name="common_grades_activity_tl_white" >#FFFFFF</color>
-    <color name="common_grades_activity_back_grey" >#D3D3D3</color>
-    <color name="common_grades_fragment_back_white" >#F6F6F6</color>
-    <color name="common_grades_fragment_text_color_black" >#333333</color>
-    <color name="common_grades_fragment_text_color_black2" >#666666</color>
-    <color name="common_grades_fragment_text_color_black3" >#A12A4E84</color>
-    <color name="common_grades_fragment_item_back_grey" >#E4E4E4</color>
-    <color name="common_grades_item_divide" >#15315B</color>
-    <color name="common_grades_item_day_remain" >#3A39D3</color>
-    <color name="common_grades_bottom_sheet_shadow" >#205369BC</color>
+    <color name="common_grades_item_cardView_bg">#E8F1FC</color>
+    <color name="common_grades_activity_tl_white">#FFFFFF</color>
+    <color name="common_grades_activity_back_grey">#D3D3D3</color>
+    <color name="common_grades_fragment_back_white">#F6F6F6</color>
+    <color name="common_grades_fragment_text_color_black">#333333</color>
+    <color name="common_grades_fragment_text_color_black2">#666666</color>
+    <color name="common_grades_fragment_text_color_black3">#A12A4E84</color>
+    <color name="common_grades_fragment_item_back_grey">#E4E4E4</color>
+    <color name="common_grades_item_divide">#15315B</color>
+    <color name="common_grades_item_day_remain">#3A39D3</color>
+    <color name="common_grades_bottom_sheet_shadow">#205369BC</color>
 
-    <color name="common_grades_gpa_normal_font_color" >#15315B</color>
+    <color name="common_grades_gpa_normal_font_color">#15315B</color>
 
 
-    <color name="common_grades_gpa_line_color" >#2921D1</color>
-    <color name="common_grades_gpa_dash_color" >#2915315B</color>
-    <color name="common_grades_gpa_text_color" >#A415315B</color>
-    <color name="common_grades_gpa_circle_inside_color" >#FFFFFFFF</color>
-    <color name="common_grades_gpa_gradient_bottom_color" >#66FFFFFF</color>
-    <color name="common_grades_gpa_gradient_top_color" >#44A19EFF</color>
+    <color name="common_grades_gpa_line_color">#2921D1</color>
+    <color name="common_grades_gpa_dash_color">#2915315B</color>
+    <color name="common_grades_gpa_text_color">#A415315B</color>
+    <color name="common_grades_gpa_circle_inside_color">#FFFFFFFF</color>
+    <color name="common_grades_gpa_gradient_bottom_color">#66FFFFFF</color>
+    <color name="common_grades_gpa_gradient_top_color">#44A19EFF</color>
 
     <!--    公共dialog背景-->
-    <color name="common_dialog_bg" >#FFFFFF</color>
+    <color name="common_dialog_bg">#FFFFFF</color>
 
 
     <!--    邮问-->
 
     <!--    当前时间颜色-->
-    <color name="common_qa_question_current_time_color" >#ff2a4e84</color>
+    <color name="common_qa_question_current_time_color">#ff2a4e84</color>
     <!--    主页AppBarLayout背景颜色-->
-    <color name="common_qa_question_title_background_color" >#f3f2fb</color>
+    <color name="common_qa_question_title_background_color">#f3f2fb</color>
     <!--    提问时间选择颜色-->
-    <color name="common_qa_quiz_select_time_color" >#ff2a4e84</color>
+    <color name="common_qa_quiz_select_time_color">#ff2a4e84</color>
     <!--    邮问大标题-->
-    <color name="common_qa_main_title" >#15315B</color>
+    <color name="common_qa_main_title">#15315B</color>
     <!--    问题tab下标颜色-->
-    <color name="common_qa_question_tab_indicator_color" >#1ad0f2</color>
+    <color name="common_qa_question_tab_indicator_color">#1ad0f2</color>
     <!--    问题tab选中颜色-->
-    <color name="common_qa_tab_selected_color" >#15315B</color>
+    <color name="common_qa_tab_selected_color">#15315B</color>
     <!--    问题tab未选中颜色-->
-    <color name="common_qa_tab_unselected_color" >#15315B</color>
+    <color name="common_qa_tab_unselected_color">#15315B</color>
     <!--    问题JCardView背景-->
-    <color name="common_qa_question_list_color" >#F8F9FC</color>
+    <color name="common_qa_question_list_color">#F8F9FC</color>
     <!--    问题item的昵称颜色-->
-    <color name="common_qa_question_item_nickname_color" >#555555</color>
+    <color name="common_qa_question_item_nickname_color">#15315B</color>
     <!--    问题item的积分奖励字体颜色-->
-    <color name="common_qa_question_item_reward_color" >#777777</color>
+    <color name="common_qa_question_item_reward_color">#777777</color>
+    <!--    问题item的日期字体颜色-->
+    <color name="common_qa_question_item_time_color">#2A4E84</color>
     <!--    问题item的下面的各类数字颜色-->
-    <color name="common_qa_question_bottom_count_color" >#2A4E84</color>
+    <color name="common_qa_question_bottom_count_color">#2A4E84</color>
     <!--    问题item的分割线颜色-->
-    <color name="common_qa_question_recycler_item_divide_line_color" >#BDCCE5
+    <color name="common_qa_question_recycler_item_divide_line_color">#BDCCE5
     </color>
     <!--    评论默认颜色-->
-    <color name="common_qa_comment_header_background_color" >#F8F9FD</color>
+    <color name="common_qa_comment_header_background_color">#F8F9FD</color>
     <!--    评论背景颜色-->
-    <color name="common_qa_comment_background_color" >#f0eff6</color>
+    <color name="common_qa_comment_background_color">#f0eff6</color>
     <!--    评论list背景颜色-->
-    <color name="common_qa_comment_list_background_color" >#f6fafd</color>
+    <color name="common_qa_comment_list_background_color">#f6fafd</color>
     <!--    评论header的名字颜色-->
-    <color name="common_qa_comment_answer_nickname_color" >#CC15315B</color>
+    <color name="common_qa_comment_answer_nickname_color">#CC15315B</color>
     <!--    评论header的创建时间颜色-->
-    <color name="common_qa_comment_answer_create_at_color" >#8915315B</color>
+    <color name="common_qa_comment_answer_create_at_color">#8915315B</color>
     <!--    评论header的内容颜色-->
-    <color name="common_qa_comment_answer_content_color" >#15315B</color>
+    <color name="common_qa_comment_answer_content_color">#15315B</color>
     <!--    评论item的nickname颜色-->
-    <color name="common_qa_comment_item_nick_name_color" >#15315B</color>
+    <color name="common_qa_comment_item_nick_name_color">#15315B</color>
     <!--    评论item的创建时间颜色-->
-    <color name="common_qa_comment_item_create_at_color" >#8915315B</color>
+    <color name="common_qa_comment_item_create_at_color">#8915315B</color>
     <!--    评论item内容颜色-->
-    <color name="common_qa_comment_content_color" >#7F3B4555</color>
+    <color name="common_qa_comment_content_color">#7F3B4555</color>
     <!--    评论框背景颜色-->
-    <color name="common_qa_comment_new_comment_text_background_color" >#eff4fd
+    <color name="common_qa_comment_new_comment_text_background_color">#eff4fd
     </color>
     <!--    评论JCardView3种背景颜色-->
-    <color name="common_qa_comment_content_first_kind_color" >#f8f4f0</color>
-    <color name="common_qa_comment_content_second_kind_color" >#f1f1fa</color>
-    <color name="common_qa_comment_content_third_kind_color" >#faeef4</color>
+    <color name="common_qa_comment_content_first_kind_color">#f8f4f0</color>
+    <color name="common_qa_comment_content_second_kind_color">#f1f1fa</color>
+    <color name="common_qa_comment_content_third_kind_color">#faeef4</color>
     <!--    评论底部背景颜色-->
-    <color name="common_qa_comment_bottom_background_color" >#ffffff</color>
+    <color name="common_qa_comment_bottom_background_color">#ffffff</color>
     <!--    回答发布时间颜色-->
-    <color name="common_qa_answer_publish_at_color" >#8915315B</color>
+    <color name="common_qa_answer_publish_at_color">#8915315B</color>
     <!--    回答发布toolbar分割线-->
-    <color name="common_qa_quiz_toolbar_divider_line_color" >#2A4E84</color>
+    <color name="common_qa_quiz_toolbar_divider_line_color">#2A4E84</color>
     <!--    提问图片选择占位图-->
-    <color name="common_qa_quiz_picture_empty_color" >#E8F0FC</color>
+    <color name="common_qa_quiz_picture_empty_color">#E8F0FC</color>
     <!--    提问图片选择占位图中间颜色-->
-    <color name="common_qa_quiz_picture_empty_centre_color" >#C4D1E6</color>
+    <color name="common_qa_quiz_picture_empty_centre_color">#C4D1E6</color>
     <!--    提问时间选择器选中时间颜色-->
-    <color name="common_qa_quiz_time_display_color" >#29D1F1</color>
+    <color name="common_qa_quiz_time_display_color">#29D1F1</color>
     <!--    回答只有图片时-->
-    <color name="common_qa_answer_empty_content_color" >#00BFFF</color>
+    <color name="common_qa_answer_empty_content_color">#00BFFF</color>
     <!--    提问时间选择器时间颜色-->
-    <color name="common_qa_quiz_time_select_color" >#2A4E84</color>
+    <color name="common_qa_quiz_time_select_color">#2A4E84</color>
     <!--    回答被采纳的标签颜色-->
-    <color name="common_qa_answer_list_adopted_color" >#94A6C4</color>
+    <color name="common_qa_answer_list_adopted_color">#94A6C4</color>
     <!--    回答被采纳的标签背景颜色-->
-    <color name="common_qa_answer_list_adopted_background_color" >#E8F0FC
+    <color name="common_qa_answer_list_adopted_background_color">#E8F0FC
     </color>
     <!--    回答header的问题内容颜色-->
-    <color name="common_qa_answer_list_header_content_color" >#15315B</color>
+    <color name="common_qa_answer_list_header_content_color">#15315B</color>
     <!--    回答的内容颜色-->
-    <color name="common_qa_answer_content_color" >#15315B</color>
+    <color name="common_qa_answer_content_color">#15315B</color>
     <!--    回答的回复颜色-->
-    <color name="common_qa_answer_comment_count_color" >#CC15315B</color>
+    <color name="common_qa_answer_comment_count_color">#CC15315B</color>
     <!--    回答的点赞颜色-->
-    <color name="common_qa_answer_praise_count_color" >#AABCD8</color>
+    <color name="common_qa_answer_praise_count_color">#AABCD8</color>
     <!--    回答的点赞颜色-->
-    <color name="common_qa_answer_item_divider_color" >#162A4E84</color>
-    <color name="common_qa_answer_praised_count_color" >#4841E2</color>
+    <color name="common_qa_answer_item_divider_color">#162A4E84</color>
+    <color name="common_qa_answer_praised_count_color">#4841E2</color>
     <!--    RecyclerView加载时的holder颜色-->
-    <color name="common_qa_question_item_empty_holder_color" >#E6E6E6</color>
+    <color name="common_qa_question_item_empty_holder_color">#E6E6E6</color>
     <!--    RecyclerView加载时的holder背景颜色-->
-    <color name="common_qa_question_item_shadow_color" >#ffffff</color>
+    <color name="common_qa_question_item_shadow_color">#ffffff</color>
     <!--    提问选择类型的背景颜色-->
-    <color name="common_qa_quiz_select_type_background_color" >#E8F0FC</color>
+    <color name="common_qa_quiz_select_type_background_color">#E8F0FC</color>
     <!--    提问选择类型的文字颜色-->
-    <color name="common_qa_quiz_select_type_text_color" >#94A6C4</color>
+    <color name="common_qa_quiz_select_type_text_color">#94A6C4</color>
     <!--    提问选中类型的文字颜色-->
-    <color name="common_qa_quiz_selected_type_text_color" >#FFA192</color>
+    <color name="common_qa_quiz_selected_type_text_color">#FFA192</color>
     <!--    提问选中类型的背景颜色，指定78的透明度-->
-    <color name="common_qa_quiz_selected_type_background_color" >#c3F7DAD7
+    <color name="common_qa_quiz_selected_type_background_color">#c3F7DAD7
     </color>
     <!--    提问标题框和内容框的背景颜色，指定69的透明度-->
-    <color name="common_qa_quiz_new_text_background_color" >#acE8F0FC</color>
+    <color name="common_qa_quiz_new_text_background_color">#acE8F0FC</color>
     <!--    举报弹窗的提示文字颜色，指定61的透明度-->
-    <color name="common_qa_question_report_text_background_color" >#9815315B
+    <color name="common_qa_question_report_text_background_color">#9815315B
     </color>
     <!--    举报弹窗的分割线颜色，指定4的透明度-->
-    <color name="common_qa_question_report_divide_line_background_color" >
+    <color name="common_qa_question_report_divide_line_background_color">
         #0a15315B
     </color>
     <!--    提问内容文字hint颜色-->
-    <color name="common_qa_quiz_content_edt_hint_color" >#15315B</color>
+    <color name="common_qa_quiz_content_edt_hint_color">#15315B</color>
     <!--    回答内容文字hint颜色-->
-    <color name="common_qa_answer_content_edt_hint_color" >#6315315B</color>
+    <color name="common_qa_answer_content_edt_hint_color">#6315315B</color>
     <!--    登录下面的灰色字体-->
-    <color name="common_log_in_to_the_gray_font_below" >#ABBCD8</color>
-    <!--    游客模式进入-->
-    <color name="common_log_in_by_tourist_text_color" >#4169E1</color>
-
+    <color name="common_log_in_to_the_gray_font_below">#ABBCD8</color>
+    <!--    游客模式-->
+    <color name="common_log_in_by_tourist_text_color">#ABBCD8</color>
+    <!--    游客模式进入的字体颜色-->
+    <color name="common_log_in_by_tourist_text_enter_color">#2A4E84</color>
     <!--    添加事务下面按钮的光晕渐变结束颜色-->
-    <color name="common_course_end_of_light" >#006B65EF</color>
+    <color name="common_course_end_of_light">#006B65EF</color>
 
     <!--    添加事务页面的圆角shape背景-->
-    <color name="common_course_affair_add_background" >#F2F3F7</color>
+    <color name="common_course_affair_add_background">#F2F3F7</color>
 
     <!--    添加事务的气泡颜色-->
-    <color name="common_course_affair_bubble_color" >#DFE6FF</color>
+    <color name="common_course_affair_bubble_color">#DFE6FF</color>
 
     <!--    评论head和item间隙颜色-->
-    <color name="common_qa_comment_item_divider_gap_color" >#f5f4f9</color>
+    <color name="common_qa_comment_item_divider_gap_color">#f5f4f9</color>
     <!--    邮问积分说明最下面的小字颜色-->
-    <color name="common_qa_dialog_qa_reward_description_bottom_text_color" >
+    <color name="common_qa_dialog_qa_reward_description_bottom_text_color">
         #ABBCD8
     </color>
     <!--    邮问积分说明背景颜色-->
-    <color name="common_qa_dialog_qa_reward_description_background_color" >
+    <color name="common_qa_dialog_qa_reward_description_background_color">
         #ffffff
     </color>
     <!--没课约选择学生页面背景-->
-    <color name="common_no_class_select_student_page_background" >#ffffff
+    <color name="common_no_class_select_student_page_background">#ffffff
     </color>
 
     <!--课表背景-->
-    <color name="common_curriculum_background_color" >#ffffff</color>
+    <color name="common_curriculum_background_color">#ffffff</color>
 
     <!--事务备忘条纹-->
-    <color name="common_transaction_background_stripe_color" >#FFE4E7EC</color>
+    <color name="common_transaction_background_stripe_color">#FFE4E7EC</color>
 
-    <color name="common_main_bottom_tab_un_select" >#a9bbd7</color>
+    <color name="common_main_bottom_tab_un_select">#a9bbd7</color>
 
     <!--    发现教务在线颜色-->
-    <color name="common_discover_academic_online_colors" >#ffffff</color>
-    <color name="common_discover_academic_online_colors_background" >#AFD2FB</color>
+    <color name="common_discover_academic_online_colors">#ffffff</color>
+    <color name="common_discover_academic_online_colors_background">#AFD2FB</color>
     <!--    发现菜单字体颜色-->
-    <color name="common_menu_font_color_found" >#15315B</color>
+    <color name="common_menu_font_color_found">#15315B</color>
     <!--    签到提示颜色-->
-    <color name="common_check_in_prompt_color" >#d4daff</color>
+    <color name="common_check_in_prompt_color">#d4daff</color>
 
     <!--    关于下面声明颜色-->
-    <color name="common_about_colors_declared_below" >#64294169</color>
+    <color name="common_about_colors_declared_below">#64294169</color>
 
-    <color name="common_add_transaction_to_the_timetable_click_color" >#E9EDF2</color>
+    <color name="common_add_transaction_to_the_timetable_click_color">#E9EDF2</color>
 
     <!--    事务添加页面圆角item背景-->
-    <color name="common_transaction_add_page_warp_item_text_color" >#15315B</color>
+    <color name="common_transaction_add_page_warp_item_text_color">#15315B</color>
 
-    <color name="common_transaction_completion_edit_view_color" >#15315B</color>
+    <color name="common_transaction_completion_edit_view_color">#15315B</color>
 
-    <color name="common_main_activity_login_et_edited_color" >#333333</color>
+    <color name="common_main_activity_login_et_edited_color">#333333</color>
 
-    <color name="common_main_activity_login_et_hint_color" >#999999</color>
+    <color name="common_main_activity_login_et_hint_color">#999999</color>
 
 
 </resources>

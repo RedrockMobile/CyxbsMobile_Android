@@ -63,7 +63,11 @@ object ApiGenerator {
         }.build()
     }
 
-    fun <T> getApiService(clazz: Class<T>) = retrofit.create(clazz)
+    fun <T> getApiService(clazz: Class<T>) = if (ServiceManager.getService(IAccountService::class.java).getVerifyService().isTouristMode()) {
+        getCommonApiService(clazz)
+    } else {
+        retrofit.create(clazz)
+    }
 
     fun <T> getApiService(retrofit: Retrofit, clazz: Class<T>) = retrofit.create(clazz)
 

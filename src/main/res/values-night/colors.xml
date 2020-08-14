@@ -160,7 +160,7 @@
     <color name="common_grades_gpa_gradient_top_color">#81342DFF</color>
 
     <!--    公共dialog背景-->
-    <color name="common_dialog_bg" >#2C2C2C</color>
+    <color name="common_dialog_bg">#2C2C2C</color>
 
 
     <!--    邮问-->
@@ -182,6 +182,8 @@
     <color name="common_qa_question_list_color">#1D1D1D</color>
     <!--    问题item的昵称颜色-->
     <color name="common_qa_question_item_nickname_color">#7CF0F0F2</color>
+    <!--    问题item的日期字体颜色-->
+    <color name="common_qa_question_item_time_color">#5A5A5A</color>
     <!--    问题item的积分奖励字体颜色-->
     <color name="common_qa_question_item_reward_color">#5A5A5A</color>
     <!--    问题item的下面的各类数字颜色-->
@@ -284,7 +286,9 @@
     <!--    登录下面的灰色字体-->
     <color name="common_log_in_to_the_gray_font_below">#ABBCD8</color>
     <!--    游客模式进入-->
-    <color name="common_log_in_by_tourist_text_color" >#ffffff</color>
+    <color name="common_log_in_by_tourist_text_color">#ffffff</color>
+    <!--    游客模式进入后面的字体颜色-->
+    <color name="common_log_in_by_tourist_text_enter_color">#ffffff</color>
     <!--    添加事务下面按钮的光晕渐变结束颜色-->
     <color name="common_course_end_of_light">#006B65EF</color>
 
