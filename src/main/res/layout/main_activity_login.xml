@@ -145,33 +145,47 @@
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/et_password_container"
-        app:layout_constraintVertical_bias="0.047" />
+        app:layout_constraintTop_toBottomOf="@+id/main_user_agreement"
+        app:layout_constraintVertical_bias="0.11" />
 
-    <TextView
-        android:id="@+id/tv_tourist_mode"
+
+    <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:text="@string/main_tourist_mode"
-        android:textColor="@color/common_log_in_by_tourist_text_color"
-        android:alpha="0.6"
-        android:textSize="15sp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/btn_login" />
+        app:layout_constraintTop_toBottomOf="@+id/btn_login"
+        app:layout_constraintVertical_bias="0.85">
+
+        <TextView
+            android:id="@+id/tv_tourist_mode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/main_tourist_mode"
+            android:textColor="@color/common_log_in_by_tourist_text_color"
+            android:textSize="13sp" />
+
+        <TextView
+            android:id="@+id/tv_tourist_mode_enter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@+id/tv_tourist_mode"
+            android:text="@string/main_tourist_mode_enter"
+            android:textColor="@color/common_log_in_by_tourist_text_enter_color"
+            android:textSize="13sp" />
+    </RelativeLayout>
+
 
     <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/lav_login_check"
         android:layout_width="18dp"
         android:layout_height="18dp"
-        app:layout_constraintBottom_toBottomOf="@+id/main_user_agreement"
-        app:layout_constraintEnd_toStartOf="@+id/main_user_agreement"
+        android:layout_marginTop="32dp"
         app:layout_constraintHorizontal_bias="0.929"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/main_user_agreement"
+        app:layout_constraintStart_toStartOf="@+id/tv_password_ic"
+        app:layout_constraintTop_toBottomOf="@+id/et_password_container"
         app:lottie_progress="0.39"
         app:lottie_rawRes="@raw/lottie_check_login" />
 
@@ -179,15 +193,13 @@
         android:id="@+id/main_user_agreement"
         android:layout_width="wrap_content"
         android:layout_height="16dp"
+        android:layout_marginStart="16dp"
         android:text="@string/main_user_agreement"
         android:textColor="@color/common_log_in_to_the_gray_font_below"
         android:textSize="12sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.603"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn_login"
-        app:layout_constraintVertical_bias="0.886" />
+        app:layout_constraintBottom_toBottomOf="@+id/lav_login_check"
+        app:layout_constraintStart_toEndOf="@+id/lav_login_check"
+        app:layout_constraintTop_toTopOf="@+id/lav_login_check" />
 
     <com.airbnb.lottie.LottieAnimationView
         android:layout_width="match_parent"

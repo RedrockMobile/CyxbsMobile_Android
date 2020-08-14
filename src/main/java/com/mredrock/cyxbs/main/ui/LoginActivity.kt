@@ -1,6 +1,7 @@
 package com.mredrock.cyxbs.main.ui
 
 import android.app.Dialog
+import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -11,6 +12,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.core.view.get
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -99,19 +101,25 @@ class LoginActivity : BaseViewModelActivity<LoginViewModel>(), EventBusLifecycle
                 view.loader.visibility = View.GONE
             }
         }
-        tv_tourist_mode.setOnClickListener {
+        tv_tourist_mode_enter.setOnClickListener {
             if (!viewModel.userAgreementIsCheck) {
                 CyxbsToast.makeText(this, R.string.main_user_agreement_title, Toast.LENGTH_SHORT).show()
             } else {
                 ServiceManager.getService(IAccountService::class.java).getVerifyService().loginByTourist()
                 startActivity(Intent(this, MainActivity::class.java))
+                finish()
             }
-
         }
     }
 
     private fun loginAction() {
         if (viewModel.userAgreementIsCheck) {
+            //放下键盘
+            val inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            if (inputMethodManager.isActive) {
+                inputMethodManager.hideSoftInputFromWindow(this.currentFocus?.windowToken
+                        , 0)
+            }
             viewModel.login(et_account.text?.toString(), et_password.text?.toString(), landing) {
                 //如果是点击退出按钮到达的登录页那么就默认启动mainActivity，或者唤起登录页的Activity是MainActivity就默认启动
                 if (isExitLogin != null && isExitLogin!!) {
