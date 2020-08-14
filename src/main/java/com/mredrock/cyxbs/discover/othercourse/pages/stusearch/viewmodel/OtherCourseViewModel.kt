@@ -1,4 +1,4 @@
-package com.mredrock.cyxbs.discover.othercourse.pages.stusearch
+package com.mredrock.cyxbs.discover.othercourse.pages.stusearch.viewmodel
 
 import androidx.lifecycle.MutableLiveData
 import com.mredrock.cyxbs.common.network.ApiGenerator
@@ -17,7 +17,7 @@ import com.mredrock.cyxbs.discover.othercourse.network.Student
  *   2018/10/19.
  *   enjoy it !!
  */
-class OtherCourseViewModel: BaseViewModel() {
+class OtherCourseViewModel : BaseViewModel() {
     var mStuList = MutableLiveData<List<Student>>()
 
     fun getStudent(str: String) {
@@ -27,7 +27,7 @@ class OtherCourseViewModel: BaseViewModel() {
                 .setSchedulers()
                 .doFinally { progressDialogEvent.value = ProgressDialogEvent.DISMISS_DIALOG_EVENT }
                 .doOnSubscribe { progressDialogEvent.value = ProgressDialogEvent.SHOW_NONCANCELABLE_DIALOG_EVENT }
-                .doOnErrorWithDefaultErrorHandler{
+                .doOnErrorWithDefaultErrorHandler {
                     toastEvent.value = R.string.othercourse_hint_no_person
                     true
                 }

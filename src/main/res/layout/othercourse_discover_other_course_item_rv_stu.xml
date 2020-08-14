@@ -4,8 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_marginBottom="1dp"
     android:layout_width="match_parent"
-    android:layout_height="77dp"
-    >
+    android:layout_height="77dp">
 
     <ImageView
         android:id="@+id/other_course_avatar"
@@ -43,7 +42,7 @@
         app:layout_constraintTop_toBottomOf="@+id/discover_other_course_item_select_name"
         app:layout_constraintStart_toStartOf="@+id/discover_other_course_item_select_name"
         app:layout_constraintBottom_toBottomOf="@+id/other_course_avatar"
-        tools:text="软件工程"/>
+        tools:text="软件工程" />
 
     <TextView
         android:id="@+id/other_course_tv_stu_num"
@@ -55,7 +54,7 @@
         app:layout_constraintBottom_toBottomOf="@+id/discover_other_course_item_select_name"
         app:layout_constraintStart_toEndOf="@+id/discover_other_course_item_select_name"
         app:layout_constraintHorizontal_bias="1"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <View
         android:background="@color/levelFourFontColor"
@@ -64,6 +63,6 @@
         android:layout_height="1dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="@+id/discover_other_course_item_select_name"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

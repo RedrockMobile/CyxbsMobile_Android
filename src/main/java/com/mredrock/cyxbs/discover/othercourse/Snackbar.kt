@@ -11,14 +11,14 @@ import org.jetbrains.anko.contentView
  *   2018/10/20.
  */
 
-fun Activity.snackbar(str: String, LENGTH : Int = -1) {
+fun Activity.snackbar(str: String, LENGTH: Int = -1) {
     Snackbar.make(contentView!!, str, LENGTH).show()
 }
 
-fun Fragment.snackbar(str: String, LENGTH : Int = -1) {
+fun Fragment.snackbar(str: String, LENGTH: Int = -1) {
     com.google.android.material.snackbar.Snackbar.make(view!!, str, LENGTH).show()
 }
 
-fun View.snackbar(str: String, LENGTH : Int = -1) {
+fun View.snackbar(str: String, LENGTH: Int = -1) {
     Snackbar.make(this, str, LENGTH).show()
 }

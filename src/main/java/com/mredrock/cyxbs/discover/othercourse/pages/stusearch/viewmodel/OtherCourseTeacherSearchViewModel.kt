@@ -1,4 +1,4 @@
-package com.mredrock.cyxbs.discover.othercourse.pages.stusearch
+package com.mredrock.cyxbs.discover.othercourse.pages.stusearch.viewmodel
 
 import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.utils.extensions.doOnErrorWithDefaultErrorHandler
@@ -10,13 +10,12 @@ import com.mredrock.cyxbs.discover.othercourse.R
 import com.mredrock.cyxbs.discover.othercourse.network.Person
 import com.mredrock.cyxbs.discover.othercourse.network.Services
 import com.mredrock.cyxbs.discover.othercourse.room.History
-import com.mredrock.cyxbs.discover.othercourse.room.STUDENT_TYPE
+import com.mredrock.cyxbs.discover.othercourse.room.TEACHER_TYPE
 
-class OtherCourseStudentSearchViewModel : OtherCourseSearchViewModel() {
-
+class OtherCourseTeacherSearchViewModel : OtherCourseSearchViewModel() {
     override fun getPerson(str: String) {
         ApiGenerator.getApiService(Services::class.java)
-                .getStudent(str)
+                .getTeacher(str)
                 .mapOrThrowApiException()
                 .setSchedulers()
                 .doFinally { progressDialogEvent.value = ProgressDialogEvent.DISMISS_DIALOG_EVENT }
@@ -26,8 +25,8 @@ class OtherCourseStudentSearchViewModel : OtherCourseSearchViewModel() {
                     true
                 }
                 .map {
-                    it.map { student ->
-                        Person(STUDENT_TYPE, student.stunum, student.name, student.gender, student.major, student.depart)
+                    it.map { teacher ->
+                        Person(TEACHER_TYPE, teacher.teaNum, teacher.name, teacher.gender, teacher.teaRoom, teacher.teaMajor)
                     }
                 }
                 .safeSubscribeBy {
@@ -36,11 +35,11 @@ class OtherCourseStudentSearchViewModel : OtherCourseSearchViewModel() {
     }
 
     override fun getHistory() {
-        getHistoryInternal(STUDENT_TYPE)
+        getHistoryInternal(TEACHER_TYPE)
     }
 
     override fun addHistory(history: History) {
-        history.type = STUDENT_TYPE
+        history.type = TEACHER_TYPE
         addHistoryInternal(history)
     }
 }

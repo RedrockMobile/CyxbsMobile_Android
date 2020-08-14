@@ -5,8 +5,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".pages.stusearch.OtherCourseSearchFragment"
-    >
+    tools:context=".pages.stusearch.fragment.OtherStuCourseSearchFragment">
 
     <androidx.appcompat.widget.AppCompatEditText
         android:id="@+id/et_discover_other_course_search"
@@ -33,7 +32,7 @@
         android:textStyle="bold"
         android:layout_gravity="start"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="21dp"/>
+        android:layout_marginTop="21dp" />
 
     <com.mredrock.cyxbs.common.component.RedRockAutoWarpView
         android:id="@+id/aw_other_course_fragment"
@@ -45,6 +44,6 @@
         app:horizontalSpacing="7dp"
         app:verticalsSpacing="10dp"
         app:strictMode="true"
-        app:maxLine="2"/>
+        app:maxLine="2" />
 
 </androidx.appcompat.widget.LinearLayoutCompat>

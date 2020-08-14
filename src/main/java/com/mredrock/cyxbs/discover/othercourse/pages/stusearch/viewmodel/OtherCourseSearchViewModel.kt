@@ -1,4 +1,4 @@
-package com.mredrock.cyxbs.discover.othercourse.pages.stusearch
+package com.mredrock.cyxbs.discover.othercourse.pages.stusearch.viewmodel
 
 import androidx.lifecycle.MutableLiveData
 import com.mredrock.cyxbs.common.BaseApp
@@ -35,19 +35,9 @@ abstract class OtherCourseSearchViewModel : BaseViewModel() {
                 .safeSubscribeBy {
                     database.getHistoryDao().insertHistory(it)
                 }.lifeCycle()
-        mHistory.value?.add(0,history)
+        mHistory.value?.add(0, history)
         mHistory.value = mHistory.value
     }
 
     abstract fun addHistory(history: History)
-
-    companion object Factory {
-        fun <T : OtherCourseSearchViewModel> create(type: Int): Class<T> {
-            return when (type) {
-                0 -> OtherCourseStudentSearchViewModel::class.java as Class<T>
-                1 -> OtherCourseTeacherSearchViewModel::class.java as Class<T>
-                else -> throw IllegalStateException()
-            }
-        }
-    }
 }

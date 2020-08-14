@@ -11,5 +11,5 @@ interface Services {
 
     @POST(APT_SEARCH_TEACHER)
     @FormUrlEncoded
-    fun getTeacher(@Field("teaName") teacher:String):Observable<RedrockApiWrapper<List<Teacher>>>
+    fun getTeacher(@Field("teaName") teacher: String): Observable<RedrockApiWrapper<List<Teacher>>>
 }
