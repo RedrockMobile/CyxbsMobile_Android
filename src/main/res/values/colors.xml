@@ -234,6 +234,9 @@
     <color name="common_qa_answer_publish_at_color">#8915315B</color>
     <!--    回答发布toolbar分割线-->
     <color name="common_qa_quiz_toolbar_divider_line_color">#2A4E84</color>
+    <!--    提问hint颜色-->
+    <color name="common_qa_quiz_hint_text_color">#94A6C4</color>
+
     <!--    提问图片选择占位图-->
     <color name="common_qa_quiz_picture_empty_color">#E8F0FC</color>
     <!--    提问图片选择占位图中间颜色-->
@@ -283,7 +286,7 @@
         #0a15315B
     </color>
     <!--    提问内容文字hint颜色-->
-    <color name="common_qa_quiz_content_edt_hint_color">#15315B</color>
+    <color name="common_qa_quiz_content_edt_hint_color">#94A6C4</color>
     <!--    回答内容文字hint颜色-->
     <color name="common_qa_answer_content_edt_hint_color">#6315315B</color>
     <!--    登录下面的灰色字体-->
