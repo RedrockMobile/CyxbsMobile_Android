@@ -25,7 +25,7 @@
         app:touchViewColor="@color/common_add_transaction_to_the_timetable_click_color"
         app:highlightColor="@color/common_course_identifies_the_current_shadow_color"
         app:isBanTouchView="@{coursesViewModel.isGetOthers}"
-        app:noCourseDrawable="@drawable/course_no_course"
+        app:noCourseDrawable="@drawable/common_ic_empty_holder"
         app:noGourseImageHeight="131dp"
         app:noGourseImageWidth="202dp"
         app:nowWeek="@{coursePageViewModel.nowWeek}"

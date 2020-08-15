@@ -115,7 +115,7 @@
     <string name="course_transaction_deleted_successfully">删除成功</string>
     <string name="course_transaction_deletion_failed">删除失败</string>
     <string name="course_placeholder_string" />
-    <string name="course_tourist_mode_ask_login">登录后即可体验</string>
+    <string name="course_tourist_mode_ask_login">登录后即可查看课表</string>
     <string name="course_tourist_date_txt">登录解锁更多功能~</string>
 
 </resources>

@@ -26,7 +26,7 @@
         app:highlightColor="@color/common_course_identifies_the_current_shadow_color"
         app:isDisplayCourse="false"
         app:nameList="@{noCourseInviteViewModel.nameList}"
-        app:noCourseDrawable="@drawable/course_no_course"
+        app:noCourseDrawable="@drawable/common_ic_empty_holder"
         app:noGourseImageHeight="131dp"
         app:noGourseImageWidth="202dp"
         app:nowWeek="@{nowWeek}"
