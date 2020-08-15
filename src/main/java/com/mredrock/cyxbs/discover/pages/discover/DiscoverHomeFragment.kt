@@ -12,21 +12,23 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.FrameLayout
 import android.widget.TextView
+import android.widget.Toast
 import android.widget.ViewFlipper
-import androidx.appcompat.widget.AppCompatImageView
-import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
+import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.common.config.*
 import com.mredrock.cyxbs.common.event.CurrentDateInformationEvent
 import com.mredrock.cyxbs.common.mark.EventBusLifecycleSubscriber
 import com.mredrock.cyxbs.common.ui.BaseViewModelFragment
 import com.mredrock.cyxbs.common.utils.extensions.doIfLogin
-import com.mredrock.cyxbs.common.utils.extensions.pressToZoomOut
 import com.mredrock.cyxbs.discover.R
+import com.mredrock.cyxbs.discover.pages.discover.adapter.DiscoverMoreFunctionRvAdapter
 import com.mredrock.cyxbs.discover.utils.BannerAdapter
 import com.mredrock.cyxbs.discover.utils.MoreFunctionProvider
 import kotlinx.android.synthetic.main.discover_home_fragment.*
@@ -149,23 +151,27 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>(), Eve
 
     //加载发现首页中跳转按钮
     private fun initFunctions() {
-        val functions = MoreFunctionProvider.getHomePageFunctions()
-        val imageViewList = mutableListOf<AppCompatImageView>(iv_discover_1, iv_discover_2, iv_discover_3, iv_discover_4)
-        val textViewList = mutableListOf<AppCompatTextView>(tv_discover_1, tv_discover_2, tv_discover_3, tv_discover_4)
-        for ((index, imageView) in imageViewList.withIndex()) {
-            imageView.setImageResource(functions[index].resource)
-            imageView.setOnClickListener {
-                val context = activity ?: return@setOnClickListener
-                functions[index].activityStarter.startActivity(context)
+        val functions = MoreFunctionProvider.functions
+        val picUrls = functions.map { it.resource }
+        val texts = functions.map { getString(it.title) }
+        rv_discover_more_function.apply {
+            layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+            adapter = DiscoverMoreFunctionRvAdapter(picUrls, texts) {
+                if (it == functions.size - 1) {
+                    CyxbsToast.makeText(context, R.string.discover_more_function_notice_text, Toast.LENGTH_SHORT).show()
+                } else {
+                    functions[it].activityStarter.startActivity(context)
+                }
             }
-            imageView.pressToZoomOut()
-        }
-        for ((index, textView) in textViewList.withIndex()) {
-            textView.text = context?.getText(functions[index].title)
-            textView.setOnClickListener {
-                val context = activity ?: return@setOnClickListener
-                functions[index].activityStarter.startActivity(context)
-            }
+            this.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                    super.onScrolled(recyclerView, dx, dy)
+                    val offset = computeHorizontalScrollOffset().toFloat()
+                    val range = computeHorizontalScrollRange().toFloat()
+                    val extent = computeHorizontalScrollExtent().toFloat()
+                    indicator_view_discover.doMove(offset / (range - extent))
+                }
+            })
         }
     }
 

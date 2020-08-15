@@ -17,8 +17,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="1dp"
-            android:textColor="@color/common_menu_font_color_found"
             android:alpha="0.65"
+            android:textColor="@color/common_menu_font_color_found"
             android:textSize="14sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
@@ -105,106 +105,124 @@
             app:layout_constraintTop_toTopOf="@+id/fl_discover_home_jwnews"
             tools:ignore="MissingConstraints" />
 
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/iv_discover_1"
-            android:layout_width="wrap_content"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_discover_more_function"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="2dp"
-            app:layout_constraintBottom_toBottomOf="@+id/iv_discover_4"
+            android:layout_marginTop="25dp"
             app:layout_constraintEnd_toStartOf="@+id/discover_guideline2"
-            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="@+id/discover_guideline"
-            app:layout_constraintTop_toTopOf="@+id/iv_discover_4"
-            tools:ignore="ContentDescription,MissingConstraints"
-            tools:src="@drawable/diacover_ic_empty_classroom" />
+            app:layout_constraintTop_toBottomOf="@+id/fl_discover_home_jwnews" />
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/tv_discover_1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:textColor="@color/common_menu_font_color_found"
-            android:textSize="11sp"
-            android:alpha="0.6"
-            app:layout_constraintEnd_toEndOf="@+id/iv_discover_1"
-            app:layout_constraintStart_toStartOf="@+id/iv_discover_1"
-            app:layout_constraintTop_toBottomOf="@+id/iv_discover_1" />
-
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/iv_discover_2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="@+id/iv_discover_4"
-            app:layout_constraintEnd_toEndOf="@+id/iv_discover_4"
-            app:layout_constraintHorizontal_bias="0.33"
-            app:layout_constraintStart_toStartOf="@+id/iv_discover_1"
-            app:layout_constraintTop_toTopOf="@+id/iv_discover_4"
-            tools:ignore="ContentDescription,MissingConstraints"
-            tools:src="@drawable/discover_ic_bus_track" />
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/tv_discover_2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:textColor="@color/common_menu_font_color_found"
-            android:textSize="11sp"
-            android:alpha="0.6"
-            app:layout_constraintEnd_toEndOf="@+id/iv_discover_2"
-            app:layout_constraintHorizontal_bias="0.33"
-            app:layout_constraintStart_toStartOf="@+id/iv_discover_2"
-            app:layout_constraintTop_toBottomOf="@+id/iv_discover_1" />
-
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/iv_discover_3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="@+id/iv_discover_4"
-            app:layout_constraintEnd_toEndOf="@+id/iv_discover_4"
-            app:layout_constraintHorizontal_bias="0.66"
-            app:layout_constraintStart_toStartOf="@+id/iv_discover_1"
-            app:layout_constraintTop_toTopOf="@+id/iv_discover_4"
-            tools:ignore="ContentDescription,MissingConstraints"
-            tools:src="@drawable/discover_ic_other_course" />
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/tv_discover_3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:textColor="@color/common_menu_font_color_found"
-            android:textSize="11sp"
-            android:alpha="0.6"
-            app:layout_constraintEnd_toEndOf="@+id/iv_discover_3"
-            app:layout_constraintHorizontal_bias="0.66"
-            app:layout_constraintStart_toStartOf="@+id/iv_discover_3"
-            app:layout_constraintTop_toBottomOf="@+id/iv_discover_1" />
-
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/iv_discover_4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="27dp"
-            android:layout_marginEnd="2dp"
+        <com.mredrock.cyxbs.discover.widget.IndicatorView
+            android:id="@+id/indicator_view_discover"
+            android:layout_width="29dp"
+            android:layout_height="4dp"
+            android:layout_marginTop="13dp"
             app:layout_constraintEnd_toStartOf="@+id/discover_guideline2"
-            app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toStartOf="@+id/iv_discover_1"
-            app:layout_constraintTop_toBottomOf="@+id/fl_discover_home_jwnews"
-            tools:ignore="ContentDescription,MissingConstraints"
-            tools:src="@drawable/discover_ic_more_function" />
+            app:layout_constraintStart_toStartOf="@+id/discover_guideline"
+            app:layout_constraintTop_toBottomOf="@+id/rv_discover_more_function"
+            app:progressMultiple="0.65" />
+        <!--        <androidx.appcompat.widget.AppCompatImageView-->
+        <!--            android:id="@+id/iv_discover_1"-->
+        <!--            android:layout_width="wrap_content"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:layout_marginStart="2dp"-->
+        <!--            app:layout_constraintBottom_toBottomOf="@+id/iv_discover_4"-->
+        <!--            app:layout_constraintEnd_toStartOf="@+id/discover_guideline2"-->
+        <!--            app:layout_constraintHorizontal_bias="0.0"-->
+        <!--            app:layout_constraintStart_toStartOf="@+id/discover_guideline"-->
+        <!--            app:layout_constraintTop_toTopOf="@+id/iv_discover_4"-->
+        <!--            tools:ignore="ContentDescription,MissingConstraints"-->
+        <!--            tools:src="@drawable/discover_ic_empty_classroom" />-->
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/tv_discover_4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:textColor="@color/common_menu_font_color_found"
-            android:textSize="11sp"
-            android:alpha="0.6"
-            app:layout_constraintEnd_toEndOf="@+id/iv_discover_4"
-            app:layout_constraintStart_toStartOf="@+id/iv_discover_4"
-            app:layout_constraintTop_toBottomOf="@+id/iv_discover_1"
-            tools:ignore="MissingConstraints" />
+        <!--        <androidx.appcompat.widget.AppCompatTextView-->
+        <!--            android:id="@+id/tv_discover_1"-->
+        <!--            android:layout_width="wrap_content"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:layout_marginTop="4dp"-->
+        <!--            android:textColor="@color/common_menu_font_color_found"-->
+        <!--            android:textSize="11sp"-->
+        <!--            android:alpha="0.6"-->
+        <!--            app:layout_constraintEnd_toEndOf="@+id/iv_discover_1"-->
+        <!--            app:layout_constraintStart_toStartOf="@+id/iv_discover_1"-->
+        <!--            app:layout_constraintTop_toBottomOf="@+id/iv_discover_1" />-->
+
+        <!--        <androidx.appcompat.widget.AppCompatImageView-->
+        <!--            android:id="@+id/iv_discover_2"-->
+        <!--            android:layout_width="wrap_content"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            app:layout_constraintBottom_toBottomOf="@+id/iv_discover_4"-->
+        <!--            app:layout_constraintEnd_toEndOf="@+id/iv_discover_4"-->
+        <!--            app:layout_constraintHorizontal_bias="0.33"-->
+        <!--            app:layout_constraintStart_toStartOf="@+id/iv_discover_1"-->
+        <!--            app:layout_constraintTop_toTopOf="@+id/iv_discover_4"-->
+        <!--            tools:ignore="ContentDescription,MissingConstraints"-->
+        <!--            tools:src="@drawable/discover_ic_bus_track" />-->
+
+        <!--        <androidx.appcompat.widget.AppCompatTextView-->
+        <!--            android:id="@+id/tv_discover_2"-->
+        <!--            android:layout_width="wrap_content"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:layout_marginTop="4dp"-->
+        <!--            android:textColor="@color/common_menu_font_color_found"-->
+        <!--            android:textSize="11sp"-->
+        <!--            android:alpha="0.6"-->
+        <!--            app:layout_constraintEnd_toEndOf="@+id/iv_discover_2"-->
+        <!--            app:layout_constraintHorizontal_bias="0.33"-->
+        <!--            app:layout_constraintStart_toStartOf="@+id/iv_discover_2"-->
+        <!--            app:layout_constraintTop_toBottomOf="@+id/iv_discover_1" />-->
+
+        <!--        <androidx.appcompat.widget.AppCompatImageView-->
+        <!--            android:id="@+id/iv_discover_3"-->
+        <!--            android:layout_width="wrap_content"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            app:layout_constraintBottom_toBottomOf="@+id/iv_discover_4"-->
+        <!--            app:layout_constraintEnd_toEndOf="@+id/iv_discover_4"-->
+        <!--            app:layout_constraintHorizontal_bias="0.66"-->
+        <!--            app:layout_constraintStart_toStartOf="@+id/iv_discover_1"-->
+        <!--            app:layout_constraintTop_toTopOf="@+id/iv_discover_4"-->
+        <!--            tools:ignore="ContentDescription,MissingConstraints"-->
+        <!--            tools:src="@drawable/discover_ic_other_course" />-->
+
+        <!--        <androidx.appcompat.widget.AppCompatTextView-->
+        <!--            android:id="@+id/tv_discover_3"-->
+        <!--            android:layout_width="wrap_content"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:layout_marginTop="4dp"-->
+        <!--            android:textColor="@color/common_menu_font_color_found"-->
+        <!--            android:textSize="11sp"-->
+        <!--            android:alpha="0.6"-->
+        <!--            app:layout_constraintEnd_toEndOf="@+id/iv_discover_3"-->
+        <!--            app:layout_constraintHorizontal_bias="0.66"-->
+        <!--            app:layout_constraintStart_toStartOf="@+id/iv_discover_3"-->
+        <!--            app:layout_constraintTop_toBottomOf="@+id/iv_discover_1" />-->
+
+        <!--        <androidx.appcompat.widget.AppCompatImageView-->
+        <!--            android:id="@+id/iv_discover_4"-->
+        <!--            android:layout_width="wrap_content"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:layout_marginTop="27dp"-->
+        <!--            android:layout_marginEnd="2dp"-->
+        <!--            app:layout_constraintEnd_toStartOf="@+id/discover_guideline2"-->
+        <!--            app:layout_constraintHorizontal_bias="1.0"-->
+        <!--            app:layout_constraintStart_toStartOf="@+id/iv_discover_1"-->
+        <!--            app:layout_constraintTop_toBottomOf="@+id/fl_discover_home_jwnews"-->
+        <!--            tools:ignore="ContentDescription,MissingConstraints"-->
+        <!--            tools:src="@drawable/discover_ic_more_function" />-->
+
+        <!--        <androidx.appcompat.widget.AppCompatTextView-->
+        <!--            android:id="@+id/tv_discover_4"-->
+        <!--            android:layout_width="wrap_content"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:layout_marginTop="4dp"-->
+        <!--            android:textColor="@color/common_menu_font_color_found"-->
+        <!--            android:textSize="11sp"-->
+        <!--            android:alpha="0.6"-->
+        <!--            app:layout_constraintEnd_toEndOf="@+id/iv_discover_4"-->
+        <!--            app:layout_constraintStart_toStartOf="@+id/iv_discover_4"-->
+        <!--            app:layout_constraintTop_toBottomOf="@+id/iv_discover_1"-->
+        <!--            tools:ignore="MissingConstraints" />-->
 
         <androidx.appcompat.widget.LinearLayoutCompat
             android:id="@+id/ll_discover_feeds"
@@ -216,7 +234,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_discover_1"
+            app:layout_constraintTop_toBottomOf="@+id/indicator_view_discover"
             app:showDividers="end"
             tools:ignore="MissingConstraints">
 

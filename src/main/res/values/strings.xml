@@ -25,4 +25,5 @@
 
     <string name="discover_title_more_function">更多功能</string>
     <string name="discover_detail_more_function">敬请期待</string>
+    <string name="discover_more_function_notice_text">更多功能，敬请期待</string>
 </resources>
