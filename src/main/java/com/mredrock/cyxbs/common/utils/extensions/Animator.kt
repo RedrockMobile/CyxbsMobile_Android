@@ -18,13 +18,17 @@ import kotlin.math.pow
  * 可以作用到任意的控件上
  * @param scale 该按钮按下之后缩放到原来的多少倍
  * @param rate 按下按钮到达scale的速度，值越大越快到达scale倍数
+ * @param onTouch 这里占用了onTouch监听，所以要是还想设置这个监听的话，可以通过这里来设置
+ *                自己设置会造成动画失效
  *
  * 注意：因为采用非侵入的写法，所以不能判断手指位置的坐标和不得不占用一些监听器
  *      如果你在代码中需要使用到onTouch监听，又想使用这个果冻动画可能需要自己复制代码过去
  *      因为这里有一些tag，不便于拆分
  */
-fun View.pressToZoomOut( scale: Float = 0.85f,
-                        @FloatRange(from = 1.0, to = 10.0) rate: Float = 6f) {
+fun View.pressToZoomOut(scale: Float = 0.85f,
+                        @FloatRange(from = 1.0, to = 10.0) rate: Float = 6f,
+                        onTouch: View.OnTouchListener? = null
+) {
     var progressTag = false
     val animatorList = mutableListOf<ValueAnimator>()
     this.onTouch { v, event ->
@@ -53,5 +57,6 @@ fun View.pressToZoomOut( scale: Float = 0.85f,
             }.start()
             progressTag = false
         }
+        onTouch?.onTouch(v, event)
     }
 }
