@@ -4,10 +4,9 @@ import android.animation.LayoutTransition
 import android.animation.ObjectAnimator
 import android.animation.PropertyValuesHolder
 import android.content.Context
-import android.graphics.Canvas
-import android.graphics.Color
-import android.graphics.Paint
-import android.graphics.PointF
+import android.graphics.*
+import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.Drawable
 import android.util.AttributeSet
 import android.view.Gravity
 import android.view.MotionEvent
@@ -185,10 +184,11 @@ class ScheduleView : ViewGroup {
         if (mIsEmpty && mNoCourseDrawableResId != 0) {
             // Set mEmptyTextView
             mEmptyTextView.apply {
-                val drawable = ContextCompat.getDrawable(context, mNoCourseDrawableResId)
-                drawable?.setBounds(0, 0,
-                        if (noCourseImageWidth == 0) dip(100) else noCourseImageWidth,
-                        if (noCourseImageHeight == 0) dip(100) else noCourseImageHeight)
+                //设置数据为空时显示的图片，由于这里使用的时一个textView来实现的，所以需要将位图缩放
+                val w = if (noCourseImageWidth == 0) dip(100) else noCourseImageWidth
+                val h = if (noCourseImageHeight == 0) dip(100) else noCourseImageHeight
+                val drawable = zoomImage(mNoCourseDrawableResId, w, h)
+                drawable.setBounds(0, 0, w, h)
                 setCompoundDrawablesRelativeWithIntrinsicBounds(null, drawable, null, null)
                 compoundDrawablePadding = dip(25)
                 val textParams = LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT,
@@ -426,6 +426,15 @@ class ScheduleView : ViewGroup {
             addView(touchView)
             true
         } else super.performClick()
+    }
+
+    /**
+     * 缩放图片大小
+     */
+    private fun zoomImage(resId: Int, w: Int, h: Int): Drawable {
+        val oldBmp: Bitmap = BitmapFactory.decodeResource(resources, resId)
+        val newBmp: Bitmap = Bitmap.createScaledBitmap(oldBmp, w, h, true)
+        return BitmapDrawable(resources, newBmp)
     }
 
     fun clearTouchView() {
