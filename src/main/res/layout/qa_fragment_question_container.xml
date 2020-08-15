@@ -46,41 +46,38 @@
                     tools:ignore="SmallSp"
                     tools:text="第十一周 周二" />
 
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/tv_title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="start|bottom"
-                    android:layout_marginTop="13dp"
-                    android:text="@string/qa_fragment_head_title"
-                    android:textColor="@color/common_qa_main_title"
-                    android:textSize="34sp"
-                    android:textStyle="bold"
-                    app:layout_collapseMode="parallax"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tv_current_time" />
-
-                <FrameLayout
-                    android:id="@+id/fl_qa_hot_search"
+                <RelativeLayout
+                    android:id="@+id/rl_qa_hot_search"
                     android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_marginHorizontal="10dp"
-                    android:background="@drawable/qa_shape_comment_new_publish_text_view_background"
-                    app:layout_constraintBottom_toBottomOf="@id/tv_title"
-                    app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="17dp"
+                    android:layout_marginEnd="26dp"
+                    android:background="@drawable/qa_shape_question_search_background"
                     app:layout_constraintEnd_toStartOf="@+id/btn_ask_question"
-                    app:layout_constraintStart_toEndOf="@+id/tv_title"
-                    app:layout_constraintTop_toTopOf="@id/tv_title">
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_current_time">
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/iv_question_search"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginStart="21dp"
+                        android:src="@drawable/qa_ic_question_search" />
 
                     <ViewFlipper
                         android:id="@+id/vf_hot_search"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
                         android:layout_gravity="center_vertical|start"
                         android:layout_marginHorizontal="14dp"
+                        android:layout_toEndOf="@id/iv_question_search"
+                        android:paddingTop="12dp"
+                        android:paddingBottom="12dp"
                         android:textColor="@color/common_level_two_font_color"
                         android:textSize="15sp" />
-                </FrameLayout>
+                </RelativeLayout>
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btn_ask_question"
@@ -93,9 +90,9 @@
                     android:textColor="@color/common_white_font_color"
                     android:textSize="15sp"
                     app:layout_collapseMode="parallax"
-                    app:layout_constraintBottom_toBottomOf="@+id/tv_title"
+                    app:layout_constraintBottom_toBottomOf="@+id/rl_qa_hot_search"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/tv_title" />
+                    app:layout_constraintTop_toTopOf="@+id/rl_qa_hot_search" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
@@ -126,6 +123,7 @@
             app:tabTextColor="@color/common_qa_tab_unselected_color" />
 
         <com.mredrock.cyxbs.common.component.JCardViewPlus
+            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@id/tl_category"

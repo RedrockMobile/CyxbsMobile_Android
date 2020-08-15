@@ -9,6 +9,6 @@
     android:textColor="@color/qa_selector_quiz_type_text_default_select"
     android:textSize="13sp"
     app:chipBackgroundColor="@color/qa_selector_quiz_type_default_select"
-    app:chipCornerRadius="32dp"
+    app:chipCornerRadius="30dp"
     tools:text="学习" />
 

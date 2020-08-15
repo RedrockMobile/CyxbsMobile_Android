@@ -15,6 +15,9 @@
         <activity
             android:name=".pages.answer.ui.AnswerActivity"
             android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".pages.search.ui.SearchActivity"
+            android:windowSoftInputMode="adjustResize|stateHidden" />
     </application>
 
 </manifest>

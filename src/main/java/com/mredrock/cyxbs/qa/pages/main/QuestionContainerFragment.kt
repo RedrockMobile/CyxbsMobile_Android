@@ -5,7 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.FrameLayout
+import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.ViewFlipper
 import androidx.appcompat.widget.AppCompatCheckedTextView
@@ -19,10 +19,11 @@ import com.mredrock.cyxbs.common.utils.extensions.doIfLogin
 import com.mredrock.cyxbs.common.utils.extensions.pressToZoomOut
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.bean.Question
-import com.mredrock.cyxbs.qa.pages.question.ui.BaseQuestionListFragment
-import com.mredrock.cyxbs.qa.pages.question.ui.FreshManQuestionListFragment
-import com.mredrock.cyxbs.qa.pages.question.ui.QuestionListFragment
+import com.mredrock.cyxbs.qa.pages.question.ui.fragment.BaseQuestionListFragment
+import com.mredrock.cyxbs.qa.pages.question.ui.fragment.FreshManQuestionListFragment
+import com.mredrock.cyxbs.qa.pages.question.ui.fragment.QuestionListFragment
 import com.mredrock.cyxbs.qa.pages.quiz.ui.QuizActivity
+import com.mredrock.cyxbs.qa.pages.search.ui.SearchActivity
 import kotlinx.android.synthetic.main.qa_fragment_question_container.*
 import kotlinx.android.synthetic.main.qa_fragment_question_container.view.*
 import org.greenrobot.eventbus.Subscribe
@@ -72,24 +73,23 @@ class QuestionContainerFragment : BaseFragment(), View.OnClickListener, EventBus
 
         }
         btn_ask_question.pressToZoomOut()
-        initHotSearch(vf_hot_search, fl_qa_hot_search)
+        initHotSearch(vf_hot_search, rl_qa_hot_search)
     }
 
-    private fun initHotSearch(viewFlipper: ViewFlipper, frameLayout: FrameLayout) {
+    private fun initHotSearch(viewFlipper: ViewFlipper, relativeLayout: RelativeLayout) {
         viewFlipper.removeAllViews()
         for (i in 0..6) {
             //测试数据
             viewFlipper.addView(getTextView("大家都在搜：我是${i}号"))
         }
         vf_hot_search.startFlipping()
-        viewFlipper.setOnClickListener {
+        relativeLayout.setOnClickListener {
+            SearchActivity.activityStart(this)
         }
 
         viewFlipper.setFlipInterval(6555)
         viewFlipper.setInAnimation(context, R.anim.qa_anim_hot_search_flip_in)
         viewFlipper.setOutAnimation(context, R.anim.qa_anim_hot_search_flip_out)
-        frameLayout.setOnClickListener {
-        }
     }
 
     private fun getTextView(info: String): TextView {

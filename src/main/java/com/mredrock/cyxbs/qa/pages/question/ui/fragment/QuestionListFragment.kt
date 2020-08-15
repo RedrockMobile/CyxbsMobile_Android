@@ -1,4 +1,4 @@
-package com.mredrock.cyxbs.qa.pages.question.ui
+package com.mredrock.cyxbs.qa.pages.question.ui.fragment
 
 
 import android.os.Bundle

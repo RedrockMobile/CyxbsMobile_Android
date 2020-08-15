@@ -2,7 +2,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Base application theme. -->
-    <style name="QuizTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar" tools:ignore="ResourceName">
+    <style name="QuizTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar.Bridge" tools:ignore="ResourceName">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>

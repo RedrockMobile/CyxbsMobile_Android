@@ -27,12 +27,16 @@ class RewardSetDialog(context: Context, rewardCount: Int, private val isFirstQui
     companion object {
         @JvmStatic
         val HOURS_DISPLAY_NAME = Array(24) { String.format("%02d时", it) }
+
         @JvmStatic
         val MINUTES_DISPLAY_NAME = Array(60) { String.format("%02d分", it) }
+
         @JvmStatic
         val rewardCountList = listOf(1, 2, 3, 5, 10, 15)
+
         //最大消失时间间隔（：天）
         const val MAX_DAY = 30
+
         //最小消失时间间隔(:小时)
         const val MIN_GAP_HOUR = 1
     }
@@ -47,6 +51,7 @@ class RewardSetDialog(context: Context, rewardCount: Int, private val isFirstQui
     private var day: String
     private var hour: String
     private var minute: String
+
     @SuppressLint("InflateParams")
     private val container: View = layoutInflater.inflate(R.layout.qa_dialog_question_reward_set, null)
     private val daysDisplayName: Array<String> by lazy { initDayDisplayName() }
@@ -208,7 +213,7 @@ class RewardSetDialog(context: Context, rewardCount: Int, private val isFirstQui
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        window?.findViewById<View>(R.id.design_bottom_sheet)?.setBackgroundResource(R.drawable.qa_shape_question_more_dialog_head_background)
+        window?.findViewById<View>(R.id.design_bottom_sheet)?.setBackgroundResource(android.R.color.transparent)
         mBehavior.peekHeight = container.measuredHeight
         mBehavior.state = BottomSheetBehavior.STATE_EXPANDED
 

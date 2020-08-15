@@ -143,4 +143,17 @@ interface ApiService {
     @POST("app/index.php/QA/Question/getDetailedInfo")
     fun getQuestion(@Field("question_id") qid: String): Observable<RedrockApiWrapper<Question>>
 
+    @FormUrlEncoded
+    @POST("app/index.php/QA/Question/getHotQuestion")
+    fun getHotQuestion(@Field("page")
+                       page: Int,
+                       @Field("size")
+                       size: Int = 6): Observable<RedrockApiWrapper<List<HotQA>>>
+
+    @FormUrlEncoded
+    @POST("/app/index.php/QA/Search/getKnowledgeBase")
+    fun getKnowledge(@Field("search_key")
+                     searchKey: String): Observable<RedrockApiWrapper<Knowledge>>
+
+
 }

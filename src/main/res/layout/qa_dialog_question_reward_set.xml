@@ -3,41 +3,33 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:background="@drawable/qa_shape_dialog_reward_set_header_background">
 
-    <com.mredrock.cyxbs.common.component.JCardViewPlus
-        android:id="@+id/jcv_margin"
-        android:layout_width="match_parent"
-        android:layout_height="20dp"
-        app:cardCornerRadiusUpperLeft="16dp"
-        app:cardCornerRadiusUpperRight="16dp"
-        app:shadowRadius="0dp"
-        app:cardBackgroundColor="@color/common_white_background"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:id="@+id/iv_reward_description"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
-        android:src="@drawable/qa_ic_dialog_reward_description"
         android:layout_marginStart="20dp"
+        android:src="@drawable/qa_ic_dialog_reward_description"
         app:layout_constraintBottom_toBottomOf="@id/tv_reward_set_title"
-        app:layout_constraintTop_toTopOf="@id/tv_reward_set_title" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/tv_reward_set_title"
+        app:layout_constraintVertical_bias="1.0" />
 
     <TextView
         android:id="@+id/tv_reward_set_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
         android:gravity="center_horizontal"
         android:text="@string/qa_reward_set_title_text"
         android:textColor="@color/common_level_two_font_color"
         android:textSize="22sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/jcv_margin" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/tv_quiz_dialog_cancel"
@@ -68,12 +60,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="14dp"
-        tools:text="2019年10月2日5时21分"
         android:textColor="@color/common_qa_quiz_time_display_color"
         android:textSize="11sp"
         app:layout_constraintBottom_toBottomOf="@+id/tv_mission_deadline_title"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/tv_mission_deadline_title" />
+        app:layout_constraintTop_toTopOf="@id/tv_mission_deadline_title"
+        tools:text="2019年10月2日5时21分" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/rl_time_select"
@@ -88,43 +80,43 @@
             android:id="@+id/tp_quiz_day"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/tp_quiz_hour"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/tp_quiz_hour" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <com.mredrock.cyxbs.qa.pages.quiz.ui.widget.QuizTimeNumberPicker
             android:id="@+id/tp_quiz_hour"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="40dp"
             android:layout_centerHorizontal="true"
-            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginStart="40dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@id/tp_quiz_day" />
+            app:layout_constraintStart_toEndOf="@id/tp_quiz_day"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <com.mredrock.cyxbs.qa.pages.quiz.ui.widget.QuizTimeNumberPicker
             android:id="@+id/tp_quiz_minute"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
             android:layout_centerHorizontal="true"
-            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginStart="20dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@id/tp_quiz_hour" />
+            app:layout_constraintStart_toEndOf="@id/tp_quiz_hour"
+            app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <ImageView
         android:id="@+id/iv_point"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
         android:layout_marginEnd="25dp"
         android:background="@drawable/qa_ic_quiz_time_select_indicator_background"
         app:layout_constraintBottom_toBottomOf="@id/rl_time_select"
-        app:layout_constraintTop_toTopOf="@id/rl_time_select"
-        android:layout_marginStart="30dp"
+        app:layout_constraintEnd_toStartOf="@id/rl_time_select"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/rl_time_select" />
+        app:layout_constraintTop_toTopOf="@id/rl_time_select" />
 
     <ImageView
         android:id="@+id/iv_reward_set_dialog_divide_line"
@@ -196,11 +188,11 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="40dp"
         android:background="@drawable/qa_shape_main_have_question_btn_background"
+        android:paddingStart="40dp"
+        android:paddingEnd="40dp"
         android:text="@string/qa_quiz_dialog_submit"
         android:textColor="@color/common_white_font_color"
         android:textSize="18sp"
-        android:paddingStart="40dp"
-        android:paddingEnd="40dp"
         app:layout_constraintBottom_toTopOf="@+id/gl_bottom"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

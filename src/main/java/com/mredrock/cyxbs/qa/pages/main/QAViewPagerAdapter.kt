@@ -2,7 +2,7 @@ package com.mredrock.cyxbs.qa.pages.main
 
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
-import com.mredrock.cyxbs.qa.pages.question.ui.BaseQuestionListFragment
+import com.mredrock.cyxbs.qa.pages.question.ui.fragment.BaseQuestionListFragment
 
 /**
  * Created By jay68 on 2018/8/22.

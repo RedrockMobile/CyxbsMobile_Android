@@ -48,7 +48,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingBottom="6dp"
-        android:textColor="@color/common_qa_question_item_reward_color"
+        android:textColor="@color/common_qa_question_item_time_color"
         android:textSize="11sp"
         app:layout_constraintBottom_toBottomOf="@+id/tv_nickname"
         app:layout_constraintEnd_toStartOf="@id/gl_question_end"
