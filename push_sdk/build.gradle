@@ -1,5 +1,5 @@
 apply plugin: 'com.android.library'
-
+// todo 该模块后续应考虑去除源码依赖，直接导入依赖，当初是因为有重复导包的坑才这样模块依赖的
 android {
 
     compileSdkVersion 29
