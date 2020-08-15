@@ -6,4 +6,11 @@
         <attr name="roundWidth" format="dimension" />
         <attr name="roundHeight" format="dimension" />
     </declare-styleable>
+
+    <declare-styleable name="IndicatorView">
+        <attr name="progressMultiple" format="float" />
+        <attr name="underColor" format="color" />
+        <attr name="progressColor" format="color" />
+        <attr name="endRadius" format="float" />
+    </declare-styleable>
 </resources>

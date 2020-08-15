@@ -1,4 +1,4 @@
-package com.xl.myapplication
+package com.mredrock.cyxbs.discover.widget
 
 import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
@@ -9,21 +9,23 @@ import android.os.Build
 import android.util.AttributeSet
 import android.view.View
 import androidx.annotation.RequiresApi
+import com.mredrock.cyxbs.discover.R
 
 /**
  * Created by yyfbe, Date on 2020/8/14.
  */
-class Indicator(context: Context?, attrs: AttributeSet?, defStyleAttr: Int) :
-    View(context, attrs, defStyleAttr) {
+class IndicatorView(context: Context?, attrs: AttributeSet?, defStyleAttr: Int) :
+        View(context, attrs, defStyleAttr) {
     @SuppressLint("Recycle")
     constructor(context: Context?, attrs: AttributeSet?) : this(context, attrs, 0) {
-        val ta = context?.obtainStyledAttributes(attrs, R.styleable.Indicator)
+        val ta = context?.obtainStyledAttributes(attrs, R.styleable.IndicatorView)
         if (ta != null) {
-            multiple = ta.getFloat(R.styleable.Indicator_progressMultiple, 0f)
-            underColor = ta.getColor(R.styleable.Indicator_underColor, DEFAULT_UNDER_COLOR)
-            progressColor = ta.getColor(R.styleable.Indicator_underColor, DEFAULT_PROGRESS_COLOR)
-            endRadius = ta.getFloat(R.styleable.Indicator_endRadius, DEFAULT_RADIUS)
+            multiple = ta.getFloat(R.styleable.IndicatorView_progressMultiple, 0f)
+            underColor = ta.getColor(R.styleable.IndicatorView_underColor, DEFAULT_UNDER_COLOR)
+            progressColor = ta.getColor(R.styleable.IndicatorView_underColor, DEFAULT_PROGRESS_COLOR)
+            endRadius = ta.getFloat(R.styleable.IndicatorView_endRadius, DEFAULT_RADIUS)
         }
+        ta?.recycle()
     }
 
     private var multiple = 0.5f
@@ -34,8 +36,10 @@ class Indicator(context: Context?, attrs: AttributeSet?, defStyleAttr: Int) :
     companion object {
         const val DEFAULT_UNDER_COLOR = 0xff97B7F0.toInt()
         const val DEFAULT_PROGRESS_COLOR = 0xff2923D2.toInt()
-        const val DEFAULT_HEIGHT = 10
-        const val DEFAULT_WIDTH = 30
+
+        //dp
+        const val DEFAULT_HEIGHT = 50
+        const val DEFAULT_WIDTH = 200
         const val DEFAULT_RADIUS = 50f
     }
 
@@ -79,26 +83,33 @@ class Indicator(context: Context?, attrs: AttributeSet?, defStyleAttr: Int) :
         when (MeasureSpec.getMode(widthMeasureSpec)) {
             MeasureSpec.AT_MOST -> {
                 setMeasuredDimension(
-                    MeasureSpec.makeMeasureSpec(
-                        200,
-                        MeasureSpec.EXACTLY
-                    ),
-                    heightMeasureSpec
+                        MeasureSpec.makeMeasureSpec(
+                                DEFAULT_WIDTH,
+                                MeasureSpec.EXACTLY
+                        ),
+                        heightMeasureSpec
                 )
                 mWidth = (measuredWidth - paddingStart - paddingEnd).toFloat()
+            }
+            else -> {
+                mWidth = measuredWidth.toFloat()
             }
         }
         when (MeasureSpec.getMode(heightMeasureSpec)) {
             MeasureSpec.AT_MOST -> {
                 setMeasuredDimension(
-                    widthMeasureSpec,
-                    MeasureSpec.makeMeasureSpec(
-                        50,
-                        MeasureSpec.EXACTLY
-                    )
+                        widthMeasureSpec,
+                        MeasureSpec.makeMeasureSpec(
+                                DEFAULT_HEIGHT,
+                                MeasureSpec.EXACTLY
+                        )
                 )
                 mHeight = ((measuredHeight - paddingTop - paddingBottom).toFloat())
             }
+            else -> {
+                mHeight = measuredHeight.toFloat()
+            }
+
         }
         last = mWidth * (1 - multiple)
     }
@@ -106,34 +117,37 @@ class Indicator(context: Context?, attrs: AttributeSet?, defStyleAttr: Int) :
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     private fun drawUnder(canvas: Canvas) {
         canvas.drawRoundRect(
-            0f,
-            0f,
-            mWidth.toFloat(),
-            mHeight.toFloat(),
-            endRadius,
-            endRadius,
-            paintUnder
+                0f,
+                0f,
+                mWidth.toFloat(),
+                mHeight.toFloat(),
+                endRadius,
+                endRadius,
+                paintUnder
         )
     }
 
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     private fun drawProgress(canvas: Canvas) {
         canvas.drawRoundRect(
-            progress * last,
-            0f,
-            //左边距+progress所占倍数+progress*last
-            multiple * mWidth + progress * last,
-            mHeight.toFloat(),
-            endRadius,
-            endRadius,
-            paintProgress
+                progress * last,
+                0f,
+                //左边距+progress所占倍数+progress*last
+                multiple * mWidth + progress * last,
+                mHeight.toFloat(),
+                endRadius,
+                endRadius,
+                paintProgress
         )
     }
 
-    fun doAnimation(start: Float, end: Float, _duration: Long) {
-        ObjectAnimator.ofFloat(this, "progress", start, end).apply {
-            duration = _duration
-        }.start()
+    fun doAnimation(begin: Float, stop: Float) {
+        ObjectAnimator.ofFloat(this, "progress", begin, stop).start()
+    }
+
+    fun doMove(stop: Float) {
+        progress = stop
+        invalidate()
     }
 
 }
