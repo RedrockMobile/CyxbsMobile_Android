@@ -1,11 +1,10 @@
-apply from: module_config
+apply from: config
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
+// 这里只添加确认模块独用库，添加请之前全局搜索，是否已经依赖
+// 公用库请不要添加到这里
 dependencies {
-    implementation project(':lib_common')
-    kapt deps.arouter.compiler
-
     implementation 'de.hdodenhof:circleimageview:3.1.0'
     implementation 'com.ms-square:expandableTextView:0.1.4'
     implementation 'com.github.limuyang2:LPhotoPicker:1.0.9'
