@@ -7,7 +7,6 @@ import android.app.NotificationManager
 import android.content.Context
 import android.os.Build
 import com.alibaba.android.arouter.launcher.ARouter
-import com.mredrock.cyxbs.common.utils.CrashHandler
 import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
 
@@ -41,7 +40,7 @@ open class BaseApp : Application() {
         initRouter()//ARouter放在子线程会影响使用
         //不用放到service里面，只是debug会用到，
         //而且这是轻量级操作，不会对启动速度造成太大的影响
-        CrashHandler.init(applicationContext)
+//        CrashHandler.init(applicationContext)
     }
 
     private fun initRouter() {

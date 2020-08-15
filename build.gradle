@@ -1,7 +1,4 @@
-apply from: lib_config
-apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
-
+apply from: config
 apply from: secret
 
 android.defaultConfig {
@@ -11,6 +8,9 @@ android.defaultConfig {
     })
 }
 
+// 这里添加每个模块都可能会使用到的公用库，添加之前请调研一下，该库是否会持续维护
+// 请不要把需要kapt(注解处理)声明的添加到这其中，这样不会在业务模块中生效
+// 需要添加请移步项目根目录下的config.gradle中的dependencies
 dependencies {
     api fileTree(include: ['*.jar'], dir: 'libs')
 
@@ -29,9 +29,9 @@ dependencies {
     //开发测试工具，如果需要解除注释
     //debugApi 'com.github.whataa:pandora:androidx_v2.1.0'
     //releaseApi 'com.github.whataa:pandora-no-op:v2.1.0'
-
-    //kotlin
+    //kotlin&ktx
     api deps.kotlin.runtime
+    //anko官方已经停止维护anko，并不建议使用anko todo 删除并清理它（项目中用的也不多）
     api deps.kotlin.anko
     api deps.kotlin.core
     //official ui and support library
@@ -44,7 +44,7 @@ dependencies {
     api deps.support.multidex
 
     //events and router
-    api deps.arouter.runtime
+    api deps.arouter.api
     api deps.eventbus.runtime
 
     //network
@@ -52,8 +52,8 @@ dependencies {
     api deps.glide.okhttp_integration
     api deps.okhttp.okhttp3
     api deps.okhttp.logging_interceptor
-    api deps.retrofit.rxjava2
-    api deps.retrofit.gson
+    api deps.retrofit.adapter_rxjava2
+    api deps.retrofit.converter_gson
     api deps.retrofit.runtime
     api deps.rxjava.runtime
     api deps.rxjava.rxandroid
@@ -73,15 +73,14 @@ dependencies {
     //architecture
     api deps.lifecycle.extensions
     api deps.lifecycle.viewmodel_ktx
-    api deps.lifecycle.java8
+    api deps.lifecycle.common_java8
     api deps.lifecycle.reactivestrean
-    kapt deps.lifecycle.compiler
     api deps.room.runtime
     api deps.room.rxjava
-    kapt deps.room.compiler
     api deps.paging.runtime
     api deps.paging.rxjava
     api deps.workmanager.runtime
+    api deps.workmanager.rxjava
 
     //permission
     api deps.rxpermissions.runtime
