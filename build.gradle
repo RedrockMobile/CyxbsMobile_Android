@@ -1,16 +1,11 @@
-apply from: module_config
+apply from: config
 
+// 这里只添加确认模块独用库，添加请之前全局搜索，是否已经依赖
+// 公用库请不要添加到这里
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation project(':lib_common')
     implementation 'com.madgag.spongycastle:core:1.58.0.0'
     implementation 'com.madgag.spongycastle:prov:1.58.0.0'
     implementation 'com.madgag.spongycastle:pkix:1.54.0.0'
     implementation 'com.madgag.spongycastle:pg:1.54.0.0'
-    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    kapt deps.arouter.compiler
 }
-
-
-apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
