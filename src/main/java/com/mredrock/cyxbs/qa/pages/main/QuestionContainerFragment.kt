@@ -14,11 +14,12 @@ import com.alibaba.android.arouter.facade.annotation.Route
 import com.mredrock.cyxbs.common.config.QA_ENTRY
 import com.mredrock.cyxbs.common.event.CurrentDateInformationEvent
 import com.mredrock.cyxbs.common.mark.EventBusLifecycleSubscriber
-import com.mredrock.cyxbs.common.ui.BaseFragment
+import com.mredrock.cyxbs.common.ui.BaseViewModelFragment
 import com.mredrock.cyxbs.common.utils.extensions.doIfLogin
 import com.mredrock.cyxbs.common.utils.extensions.pressToZoomOut
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.bean.Question
+import com.mredrock.cyxbs.qa.pages.main.viewmodel.QuestionContainerViewModel
 import com.mredrock.cyxbs.qa.pages.question.ui.fragment.BaseQuestionListFragment
 import com.mredrock.cyxbs.qa.pages.question.ui.fragment.FreshManQuestionListFragment
 import com.mredrock.cyxbs.qa.pages.question.ui.fragment.QuestionListFragment
@@ -33,7 +34,7 @@ import org.greenrobot.eventbus.ThreadMode
  * Created By jay68 on 2018/8/22.
  */
 @Route(path = QA_ENTRY)
-class QuestionContainerFragment : BaseFragment(), View.OnClickListener, EventBusLifecycleSubscriber {
+class QuestionContainerFragment : BaseViewModelFragment<QuestionContainerViewModel>(), View.OnClickListener, EventBusLifecycleSubscriber {
     companion object {
         const val REQUEST_LIST_REFRESH_ACTIVITY = 0x1
     }
@@ -73,15 +74,21 @@ class QuestionContainerFragment : BaseFragment(), View.OnClickListener, EventBus
 
         }
         btn_ask_question.pressToZoomOut()
+        //搜索滚动词
+        viewModel.getScrollerText()
         initHotSearch(vf_hot_search, rl_qa_hot_search)
     }
 
     private fun initHotSearch(viewFlipper: ViewFlipper, relativeLayout: RelativeLayout) {
         viewFlipper.removeAllViews()
-        for (i in 0..6) {
-            //测试数据
-            viewFlipper.addView(getTextView("大家都在搜：我是${i}号"))
+        viewModel.hotWords.observe {
+            if (it != null) {
+                for (i in it) {
+                    viewFlipper.addView(getTextView("大家都在搜：${i}"))
+                }
+            }
         }
+
         vf_hot_search.startFlipping()
         relativeLayout.setOnClickListener {
             SearchActivity.activityStart(this)
@@ -96,6 +103,7 @@ class QuestionContainerFragment : BaseFragment(), View.OnClickListener, EventBus
         return TextView(context).apply {
             text = info
             maxLines = 1
+            maxEms = 15
             overScrollMode = View.OVER_SCROLL_IF_CONTENT_SCROLLS
             setTextColor(ContextCompat.getColor(context, R.color.common_menu_font_color_found))
             textSize = 12f
@@ -120,4 +128,6 @@ class QuestionContainerFragment : BaseFragment(), View.OnClickListener, EventBus
     fun setCurrentDate(event: CurrentDateInformationEvent) {
         tv_current_time.text = event.time
     }
+
+    override val viewModelClass: Class<QuestionContainerViewModel> = QuestionContainerViewModel::class.java
 }

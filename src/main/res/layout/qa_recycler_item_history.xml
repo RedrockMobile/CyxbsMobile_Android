@@ -11,11 +11,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
+        android:textSize="20sp"
         android:text="没有人比我更懂"
+        android:alpha="0.67"
         android:textColor="@color/common_level_three_font_color" />
 
     <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/tv_history_delete"
+        android:id="@+id/iv_history_delete"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"

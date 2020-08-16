@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import com.mredrock.cyxbs.common.event.RefreshQaEvent
 import com.mredrock.cyxbs.common.utils.extensions.doIfLogin
+import com.mredrock.cyxbs.qa.pages.answer.ui.AnswerListActivity
 import com.mredrock.cyxbs.qa.pages.main.QuestionContainerFragment
 import com.mredrock.cyxbs.qa.pages.question.ui.adapter.FreshManHeaderInnerVpAdapter
 import com.mredrock.cyxbs.qa.pages.question.ui.adapter.FreshManHeaderRvAdapter
@@ -25,6 +26,8 @@ class FreshManQuestionListFragment : BaseQuestionListFragment<FreshManQuestionLi
         fun newInstance(title: String): FreshManQuestionListFragment = FreshManQuestionListFragment().apply {
             arguments = Bundle().apply { putString(FRAGMENT_TITLE, title) }
         }
+
+        const val REQUEST_CODE_TO_ANSWER_LIST = 0x4
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -36,7 +39,7 @@ class FreshManQuestionListFragment : BaseQuestionListFragment<FreshManQuestionLi
     }
 
     private val headerInnerVpAdapter = FreshManHeaderInnerVpAdapter {
-
+        viewModel.getQuestionInfo(it.questionId)
     }
     override var headerRvAdapter: FreshManHeaderRvAdapter? = FreshManHeaderRvAdapter(headerInnerVpAdapter) {
         context?.doIfLogin("提问") {
@@ -52,6 +55,11 @@ class FreshManQuestionListFragment : BaseQuestionListFragment<FreshManQuestionLi
         super.observeLoading(questionListRvAdapter, headerRvAdapter, footerRvAdapter, emptyRvAdapter)
         freshManQuestionList.observe { data ->
             headerInnerVpAdapter.submitList(data)
+        }
+        questionData.observe {
+            if (it != null) {
+                AnswerListActivity.activityStart(this@FreshManQuestionListFragment, it, REQUEST_CODE_TO_ANSWER_LIST)
+            }
         }
     }
 

@@ -1,12 +1,15 @@
 package com.mredrock.cyxbs.qa.pages.question.viewmodel
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.Transformations
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.*
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
+import com.mredrock.cyxbs.common.network.ApiGenerator
+import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
+import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
+import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.bean.HotQA
+import com.mredrock.cyxbs.qa.bean.Question
+import com.mredrock.cyxbs.qa.network.ApiService
 import com.mredrock.cyxbs.qa.pages.question.model.FreshManQuestionDataSource
 
 /**
@@ -17,6 +20,7 @@ class FreshManQuestionListViewModel(kind: String) : QuestionListViewModel(kind) 
     val freshManQuestionList: LiveData<PagedList<HotQA>>
     val freshManNetworkState: LiveData<Int>
     val freshManInitialLoad: LiveData<Int>
+    var questionData = MutableLiveData<Question>()
 
     private val factory: FreshManQuestionDataSource.Factory
 
@@ -31,6 +35,18 @@ class FreshManQuestionListViewModel(kind: String) : QuestionListViewModel(kind) 
         freshManQuestionList = LivePagedListBuilder<Int, HotQA>(factory, config).build()
         freshManNetworkState = Transformations.switchMap(factory.freshManQuestionDataSourceLiveData) { it.networkState }
         freshManInitialLoad = Transformations.switchMap(factory.freshManQuestionDataSourceLiveData) { it.initialLoad }
+    }
+
+    fun getQuestionInfo(qid: String) {
+        ApiGenerator.getApiService(ApiService::class.java)
+                .getQuestion(qid)
+                .setSchedulers()
+                .doOnError {
+                    toastEvent.value = R.string.qa_answer_load_draft_question_failed
+                }
+                .safeSubscribeBy {
+                    questionData.value = it.data
+                }
     }
 
     fun invalidateFreshManQuestionList() = freshManQuestionList.value?.dataSource?.invalidate()

@@ -32,7 +32,7 @@ class QuestionListRvAdapter(private val onItemClickEvent: (Question) -> Unit) : 
         super.onBindViewHolder(holder, position)
         if (position == 0) {
             holder.itemView.background = ContextCompat.getDrawable(holder.itemView.context, R.drawable.qa_ic_question_list_top_background)
-        }else{
+        } else {
             holder.itemView.background = ContextCompat.getDrawable(holder.itemView.context, R.color.common_qa_question_list_color)
         }
     }

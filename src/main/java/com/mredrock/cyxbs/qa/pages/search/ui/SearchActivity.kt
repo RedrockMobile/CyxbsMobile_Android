@@ -6,9 +6,11 @@ import android.os.Bundle
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.Fragment
+import com.mredrock.cyxbs.common.mark.EventBusLifecycleSubscriber
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.qa.R
-import com.mredrock.cyxbs.qa.event.SearchEvent
+import com.mredrock.cyxbs.qa.event.QASearchEvent
+import com.mredrock.cyxbs.qa.pages.search.room.QAHistory
 import com.mredrock.cyxbs.qa.pages.search.ui.fragment.QuestionSearchedFragment
 import com.mredrock.cyxbs.qa.pages.search.ui.fragment.QuestionSearchingFragment
 import com.mredrock.cyxbs.qa.pages.search.viewmodel.SearchViewModel
@@ -20,7 +22,7 @@ import org.jetbrains.anko.intentFor
 /**
  * Created by yyfbe, Date on 2020/8/12.
  */
-class SearchActivity : BaseViewModelActivity<SearchViewModel>() {
+class SearchActivity : BaseViewModelActivity<SearchViewModel>(), EventBusLifecycleSubscriber {
     override val viewModelClass: Class<SearchViewModel> = SearchViewModel::class.java
     override val isFragmentActivity: Boolean
         get() = true
@@ -37,6 +39,7 @@ class SearchActivity : BaseViewModelActivity<SearchViewModel>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.qa_activity_question_search)
+        viewModel.getHistoryFromDB()
         initView()
     }
 
@@ -44,9 +47,11 @@ class SearchActivity : BaseViewModelActivity<SearchViewModel>() {
     private fun initView() {
         tv_question_search_cancel.setOnClickListener { finish() }
         supportFragmentManager.beginTransaction().replace(R.id.fcv_question_search, questionSearchingFragment).commit()
+        rl_question_searching.setOnTouchListener { v, event -> et_question_search.onTouchEvent(event) }
         et_question_search.setOnEditorActionListener { v, actionId, event ->
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                 turnToResult(v.text.toString())
+                viewModel.insert(QAHistory(v.text.toString(), System.currentTimeMillis()))
             }
             false
         }
@@ -83,7 +88,8 @@ class SearchActivity : BaseViewModelActivity<SearchViewModel>() {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    fun startSearching(e: SearchEvent) {
+    fun startSearching(e: QASearchEvent) {
+        et_question_search.setText(e.searchKey)
         turnToResult(e.searchKey)
     }
 

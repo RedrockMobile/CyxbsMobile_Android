@@ -11,6 +11,7 @@ import com.mredrock.cyxbs.common.utils.extensions.doIfLogin
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.component.recycler.RvAdapterWrapper
 import com.mredrock.cyxbs.qa.network.NetworkState
+import com.mredrock.cyxbs.qa.pages.answer.ui.AnswerListActivity
 import com.mredrock.cyxbs.qa.pages.question.ui.adapter.QuestionListRvAdapter
 import com.mredrock.cyxbs.qa.pages.quiz.ui.QuizActivity
 import com.mredrock.cyxbs.qa.pages.search.ui.adapter.SearchResultHeaderAdapter
@@ -29,6 +30,7 @@ class QuestionSearchedFragment : BaseViewModelFragment<QuestionSearchedViewModel
     companion object {
         const val SEARCH_KEY = "searchKey"
         const val REQUEST_LIST_REFRESH_ACTIVITY = 0x3
+        const val REQUEST_CODE_TO_ANSWER_List = 0x5
     }
 
     //搜索关键词
@@ -74,10 +76,10 @@ class QuestionSearchedFragment : BaseViewModelFragment<QuestionSearchedViewModel
         val headerRvAdapter = SearchResultHeaderAdapter()
 
         val questionListRvAdapter = QuestionListRvAdapter {
-
+            AnswerListActivity.activityStart(this, it, REQUEST_CODE_TO_ANSWER_List)
         }
         val footerRvAdapter = FooterRvAdapter {
-
+            viewModel.retry()
         }
         val emptyRvAdapter = EmptyRvAdapter(getString(R.string.qa_search_no_result))
 

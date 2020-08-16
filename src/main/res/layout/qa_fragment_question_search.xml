@@ -51,38 +51,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/common_qa_search_history_item_divider_color" />
-
-        <com.google.android.material.tabs.TabLayout
-            android:id="@+id/tb_question_search"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
-            app:tabGravity="fill"
-            app:tabIndicatorColor="@color/common_qa_question_tab_indicator_color"
-            app:tabIndicatorFullWidth="false"
-            app:tabIndicatorHeight="3dp"
-            app:tabMode="auto"
-            app:tabRippleColor="@android:color/transparent"
-            app:tabSelectedTextColor="@color/common_qa_tab_selected_color"
-            app:tabTextColor="@color/common_qa_tab_unselected_color" />
-
-        <RelativeLayout
-            android:id="@+id/rl_question_searched"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <androidx.viewpager.widget.ViewPager
-                android:id="@+id/vp_question_search"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
-
-        </RelativeLayout>
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 </androidx.core.widget.NestedScrollView>

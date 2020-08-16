@@ -11,7 +11,7 @@
         android:layout_width="0dp"
         android:layout_height="36dp"
         android:layout_marginStart="21dp"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="60dp"
         android:layout_marginEnd="21dp"
         android:background="@drawable/qa_shape_question_search_background"
         app:layout_constraintEnd_toStartOf="@id/tv_question_search_cancel"

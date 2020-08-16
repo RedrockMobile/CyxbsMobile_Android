@@ -164,4 +164,7 @@ interface ApiService {
                                 page: Int,
                                 @Field("size")
                                 size: Int = 6): Observable<RedrockApiWrapper<List<Question>>>
+
+    @POST("/app/index.php/QA/Search/getHotWords")
+    fun getHotWords(): Observable<RedrockApiWrapper<HotText>>
 }
