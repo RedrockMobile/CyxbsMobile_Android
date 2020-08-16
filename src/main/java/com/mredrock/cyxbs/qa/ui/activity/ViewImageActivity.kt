@@ -36,6 +36,7 @@ class ViewImageActivity : AppCompatActivity() {
 
     private var imgUrls: Array<String>? = null
     private var position: Int = 0
+
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

@@ -4,22 +4,28 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.ViewTreeObserver
 import android.view.ViewTreeObserver.OnPreDrawListener
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mredrock.cyxbs.common.ui.BaseFragment
 import com.mredrock.cyxbs.common.utils.extensions.dp2px
 import com.mredrock.cyxbs.qa.R
+import com.mredrock.cyxbs.qa.event.SearchEvent
 import com.mredrock.cyxbs.qa.pages.search.ui.adapter.SearchHistoryRvAdapter
 import com.mredrock.cyxbs.qa.pages.search.ui.adapter.SearchHotVpAdapter
 import kotlinx.android.synthetic.main.qa_fragment_question_search.*
+import org.greenrobot.eventbus.EventBus
 
 /**
  * Created by yyfbe, Date on 2020/8/13.
  */
 class QuestionSearchingFragment : BaseFragment() {
-    private val historyRvAdapter = SearchHistoryRvAdapter()
 
+
+    private val historyRvAdapter = SearchHistoryRvAdapter {
+        EventBus.getDefault().post(SearchEvent(historyData[it]))
+    }
+
+    private val historyData = List<String>(6) { "测试用例" }
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.qa_fragment_question_search, container, false)
     }
@@ -57,6 +63,6 @@ class QuestionSearchingFragment : BaseFragment() {
             }
         })
 
-        historyRvAdapter.refreshData(List<String>(6) { "测试用例" })
+        historyRvAdapter.refreshData(historyData)
     }
 }

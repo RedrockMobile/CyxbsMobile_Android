@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:tools="http://schemas.android.com/tools">
-    <attr name="arrangementMode" format="enum" >
+<resources>
+    <attr name="arrangementMode" format="enum">
         <enum name="fill" value="0" />
         <enum name="normal" value="1" />
     </attr>
-    <declare-styleable name="NineGridView" >
+    <declare-styleable name="NineGridView">
         <attr name="arrangementMode" />
     </declare-styleable>
 </resources>

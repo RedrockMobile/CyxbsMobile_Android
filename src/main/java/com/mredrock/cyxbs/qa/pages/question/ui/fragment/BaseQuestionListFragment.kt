@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.mredrock.cyxbs.common.event.RefreshQaEvent
 import com.mredrock.cyxbs.common.mark.EventBusLifecycleSubscriber
 import com.mredrock.cyxbs.common.ui.BaseViewModelFragment
+import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.bean.Question
 import com.mredrock.cyxbs.qa.component.recycler.RvAdapterWrapper
@@ -95,7 +96,9 @@ abstract class BaseQuestionListFragment<T : QuestionListViewModel> : BaseViewMod
                             headerRvAdapter: FreshManHeaderRvAdapter?,
                             footerRvAdapter: FooterRvAdapter,
                             emptyRvAdapter: EmptyRvAdapter): QuestionListViewModel = viewModel.apply {
-        questionList.observe { questionListRvAdapter.submitList(it) }
+        questionList.observe {
+            questionListRvAdapter.submitList(it)
+        }
         networkState.observe {
             it?.run {
                 footerRvAdapter.refreshData(listOf(this))

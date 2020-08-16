@@ -8,8 +8,10 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mredrock.cyxbs.common.ui.BaseFragment
 import com.mredrock.cyxbs.qa.R
+import com.mredrock.cyxbs.qa.event.SearchEvent
 import com.mredrock.cyxbs.qa.pages.search.ui.adapter.SearchHotRvAdapter
 import kotlinx.android.synthetic.main.qa_fragment_search_hot_word_layout.*
+import org.greenrobot.eventbus.EventBus
 
 /**
  * Created by yyfbe, Date on 2020/8/13.
@@ -45,7 +47,9 @@ class SearchHotWordFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         rv_search_hot_word.apply {
             layoutManager = LinearLayoutManager(context)
-            adapter = SearchHotRvAdapter().apply {
+            adapter = SearchHotRvAdapter {
+                EventBus.getDefault().post(hotWordList?.get(it)?.let { it1 -> SearchEvent(it1) })
+            }.apply {
                 hotWordList?.let { refreshData(it) }
             }
         }

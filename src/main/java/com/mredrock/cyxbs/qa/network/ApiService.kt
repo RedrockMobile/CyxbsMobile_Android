@@ -156,4 +156,12 @@ interface ApiService {
                      searchKey: String): Observable<RedrockApiWrapper<Knowledge>>
 
 
+    @FormUrlEncoded
+    @POST("/app/index.php/QA/Search/getQuestionList")
+    fun getSearchedQuestionList(@Field("search_key")
+                                searchKey: String,
+                                @Field("page")
+                                page: Int,
+                                @Field("size")
+                                size: Int = 6): Observable<RedrockApiWrapper<List<Question>>>
 }

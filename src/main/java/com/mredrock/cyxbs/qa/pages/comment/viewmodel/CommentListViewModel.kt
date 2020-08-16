@@ -35,6 +35,7 @@ class CommentListViewModel(private val qid: String,
     val backAndRefreshAnswerEvent = SingleLiveEvent<Boolean>()
     val backAndRefreshAnswerAdoptedEvent = SingleLiveEvent<Boolean>()
     private var praiseNetworkState = NetworkState.SUCCESSFUL
+
     //防止点赞快速点击
     var isDealing = false
 

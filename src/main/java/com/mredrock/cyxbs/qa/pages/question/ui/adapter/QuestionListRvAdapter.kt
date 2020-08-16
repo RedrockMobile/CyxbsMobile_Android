@@ -1,6 +1,7 @@
 package com.mredrock.cyxbs.qa.pages.question.ui.adapter
 
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import com.mredrock.cyxbs.common.utils.extensions.setAvatarImageFromUrl
 import com.mredrock.cyxbs.qa.R
@@ -25,6 +26,16 @@ class QuestionListRvAdapter(private val onItemClickEvent: (Question) -> Unit) : 
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = QuestionViewHolder(parent)
+
+    //给问题列表首个加上背景，因为还有header，不方便加在布局
+    override fun onBindViewHolder(holder: BaseViewHolder<Question>, position: Int) {
+        super.onBindViewHolder(holder, position)
+        if (position == 0) {
+            holder.itemView.background = ContextCompat.getDrawable(holder.itemView.context, R.drawable.qa_ic_question_list_top_background)
+        }else{
+            holder.itemView.background = ContextCompat.getDrawable(holder.itemView.context, R.color.common_qa_question_list_color)
+        }
+    }
 
     override fun onItemClickListener(holder: BaseViewHolder<Question>, position: Int, data: Question) {
         super.onItemClickListener(holder, position, data)

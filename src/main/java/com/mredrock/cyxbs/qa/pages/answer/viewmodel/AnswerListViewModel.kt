@@ -38,6 +38,7 @@ class AnswerListViewModel(question: Question) : BaseViewModel() {
     private var praiseNetworkState = NetworkState.SUCCESSFUL
     val refreshPreActivityEvent = SingleLiveEvent<Int>()
     private val qid get() = questionLiveData.value!!.id
+
     //防止点赞快速点击
     var isDealing = false
 

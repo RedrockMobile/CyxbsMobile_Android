@@ -3,7 +3,6 @@ package com.mredrock.cyxbs.qa.pages.question.ui.fragment
 import android.os.Bundle
 import android.view.View
 import com.mredrock.cyxbs.common.event.RefreshQaEvent
-import com.mredrock.cyxbs.common.mark.EventBusLifecycleSubscriber
 import com.mredrock.cyxbs.common.utils.extensions.doIfLogin
 import com.mredrock.cyxbs.qa.pages.main.QuestionContainerFragment
 import com.mredrock.cyxbs.qa.pages.question.ui.adapter.FreshManHeaderInnerVpAdapter
@@ -52,9 +51,7 @@ class FreshManQuestionListFragment : BaseQuestionListFragment<FreshManQuestionLi
                                 emptyRvAdapter: EmptyRvAdapter): QuestionListViewModel = viewModel.apply {
         super.observeLoading(questionListRvAdapter, headerRvAdapter, footerRvAdapter, emptyRvAdapter)
         freshManQuestionList.observe { data ->
-            if (data == null) return@observe
             headerInnerVpAdapter.submitList(data)
-            headerRvAdapter?.refreshData(listOf(0))
         }
     }
 

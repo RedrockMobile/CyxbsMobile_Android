@@ -122,17 +122,17 @@
             app:tabSelectedTextColor="@color/common_qa_tab_selected_color"
             app:tabTextColor="@color/common_qa_tab_unselected_color" />
 
-        <com.mredrock.cyxbs.common.component.JCardViewPlus
-            android:visibility="gone"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@id/tl_category"
-            android:layout_marginTop="20dp"
-            app:cardBackgroundColor="@color/common_qa_question_list_color"
-            app:cardCornerRadiusUpperLeft="22dp"
-            app:cardCornerRadiusUpperRight="22dp"
-            app:shadowColor="@color/common_qa_question_list_color"
-            app:shadowRadius="0dp" />
+<!--        <FrameLayout-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="match_parent"-->
+<!--            android:layout_below="@id/tl_category"-->
+<!--            android:layout_marginTop="20dp"-->
+<!--            android:visibility="gone"-->
+<!--            android:background="@color/common_qa_question_list_color"-->
+<!--            app:cardCornerRadiusUpperLeft="22dp"-->
+<!--            app:cardCornerRadiusUpperRight="22dp"-->
+<!--            app:shadowColor="@color/common_qa_question_list_color"-->
+<!--            app:shadowRadius="0dp" />-->
 
         <androidx.viewpager.widget.ViewPager
             android:id="@+id/vp_question"
@@ -140,7 +140,6 @@
             android:layout_height="match_parent"
             android:layout_below="@id/tl_category"
             android:layout_marginTop="20dp"
-            android:background="@android:color/transparent"
             android:overScrollMode="never" />
     </RelativeLayout>
 

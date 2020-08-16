@@ -21,23 +21,19 @@ class FreshManHeaderInnerVpAdapter(private val onItemClickEvent: (HotQA) -> Unit
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = QuestionViewHolder(parent)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = FreshManQuestionViewHolder(parent)
 
 
     override fun onItemClickListener(holder: BaseViewHolder<HotQA>, position: Int, data: HotQA) {
         super.onItemClickListener(holder, position, data)
-        if (holder !is QuestionViewHolder) return
+        if (holder !is FreshManQuestionViewHolder) return
         onItemClickEvent.invoke(data)
     }
 
-    class QuestionViewHolder(parent: ViewGroup) : BaseViewHolder<HotQA>(parent, R.layout.qa_recycler_item_freshman_hot_question) {
+    class FreshManQuestionViewHolder(parent: ViewGroup) : BaseViewHolder<HotQA>(parent, R.layout.qa_recycler_item_freshman_hot_question) {
         override fun refresh(data: HotQA?) {
-            data ?: return
-            itemView.apply {
-                qa_freshman_hot_item_title.text = data.title
-                qa_freshman_hot_item_subtitle.text = data.description
-
-            }
+            itemView.qa_freshman_hot_item_title.text = data?.title
+            itemView.qa_freshman_hot_item_subtitle.text = data?.description
         }
 
     }

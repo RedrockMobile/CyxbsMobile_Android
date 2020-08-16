@@ -7,7 +7,7 @@
     <androidx.appcompat.widget.AppCompatTextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="18dp"
+        android:layout_marginStart="18dp"
         android:text="@string/qa_question_hot"
         android:textColor="@color/common_level_three_font_color"
         android:textSize="17dp" />
@@ -15,8 +15,9 @@
     <LinearLayout
         android:id="@+id/rl_vp_container"
         android:layout_width="match_parent"
-        android:layout_height="150dp"
+        android:layout_height="wrap_content"
         android:layout_marginHorizontal="15dp"
+        android:layout_marginTop="10.6dp"
         android:clickable="true"
         android:focusable="true"
         android:layerType="software">
@@ -24,7 +25,7 @@
         <com.mredrock.cyxbs.qa.ui.widget.QaHotRecyclerView
             android:id="@+id/rv_freshman_hot"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="wrap_content" />
     </LinearLayout>
 
     <TextView

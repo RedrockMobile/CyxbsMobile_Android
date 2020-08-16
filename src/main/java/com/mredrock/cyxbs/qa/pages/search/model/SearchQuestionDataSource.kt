@@ -6,7 +6,6 @@ import androidx.paging.PageKeyedDataSource
 import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.service.account.IAccountService
-import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.mapOrThrowApiException
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
@@ -32,7 +31,7 @@ class SearchQuestionDataSource(private val kind: String) : PageKeyedDataSource<I
             return
         }
         ApiGenerator.getApiService(ApiService::class.java)
-                .getQuestionList("匿名", 1, params.requestedLoadSize)
+                .getSearchedQuestionList(kind, 1, params.requestedLoadSize)
                 .mapOrThrowApiException()
                 .setSchedulers()
                 .doOnSubscribe { initialLoad.postValue(NetworkState.LOADING) }

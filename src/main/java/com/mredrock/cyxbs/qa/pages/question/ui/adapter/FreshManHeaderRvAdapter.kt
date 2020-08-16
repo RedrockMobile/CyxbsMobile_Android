@@ -30,6 +30,8 @@ class FreshManHeaderRvAdapter(private val adapter: FreshManHeaderInnerVpAdapter,
         }
     }
 
+    override fun getItemCount(): Int = 1
+
     class FreshManViewHolder(parent: ViewGroup) : BaseViewHolder<Int>(parent, R.layout.qa_recycler_header_fresh_man_questiond) {
         override fun refresh(data: Int?) {
         }

@@ -7,9 +7,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
 import com.mredrock.cyxbs.qa.bean.HotQA
-import com.mredrock.cyxbs.qa.bean.Question
 import com.mredrock.cyxbs.qa.pages.question.model.FreshManQuestionDataSource
-import com.mredrock.cyxbs.qa.pages.question.model.QuestionDataSource
 
 /**
  * Created by yyfbe, Date on 2020/8/11.
