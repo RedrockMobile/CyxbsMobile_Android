@@ -262,6 +262,9 @@
     <color name="common_qa_answer_praise_count_color">#AABCD8</color>
     <!--    回答的点赞颜色-->
     <color name="common_qa_answer_item_divider_color">#162A4E84</color>
+    <!--   邮问搜索-->
+    <color name="common_qa_search_history_item_divider_color">#BDCCE5</color>
+    <color name="common_qa_search_history_clean_color">#94A6C4</color>
     <color name="common_qa_answer_praised_count_color">#4841E2</color>
     <!--    RecyclerView加载时的holder颜色-->
     <color name="common_qa_question_item_empty_holder_color">#E6E6E6</color>

@@ -191,6 +191,9 @@
     <!--    问题item的分割线颜色-->
     <color name="common_qa_question_recycler_item_divide_line_color">#696969
     </color>
+    <!-- 邮问搜索-->
+    <color name="common_qa_search_history_clean_color">#696969</color>
+    <color name="common_qa_search_history_item_divider_color">#696969</color>
     <!--    评论默认header颜色-->
     <color name="common_qa_comment_header_background_color">#1D1D1D</color>
     <!--    评论背景颜色-->
