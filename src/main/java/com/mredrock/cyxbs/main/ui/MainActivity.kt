@@ -39,6 +39,7 @@ import kotlinx.android.synthetic.main.main_bottom_nav.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import org.jetbrains.anko.sdk27.coroutines.onTouch
 import org.jetbrains.anko.topPadding
 
 @Route(path = MAIN_MAIN)
@@ -125,6 +126,7 @@ class MainActivity : BaseViewModelActivity<MainViewModel>(), EventBusLifecycleSu
                     AppUpdateStatus.UNCHECK -> checkUpdate()
                     AppUpdateStatus.DATED -> noticeUpdate(this@MainActivity)
                     AppUpdateStatus.TO_BE_INSTALLED -> installUpdate(this@MainActivity)
+                    else -> Unit
                 }
             }
         }
@@ -178,7 +180,7 @@ class MainActivity : BaseViewModelActivity<MainViewModel>(), EventBusLifecycleSu
     }
 
     private fun initBottom() {
-        ll_nav_main_container.setOnTouchListener { _, _ -> true }//防止穿透点击或者滑动，子View无法处理默认消耗
+        ll_nav_main_container.onTouch { _, _ ->  }//防止穿透点击或者滑动，子View无法处理默认消耗
         //底部导航栏的控制初始化
         bottomHelper = BottomNavigationHelper(
                 arrayOf(explore, qa, mine),
@@ -210,7 +212,7 @@ class MainActivity : BaseViewModelActivity<MainViewModel>(), EventBusLifecycleSu
     private fun checkSplash() {
         //判断是否下载了Splash图，下载了就直接显示
         if (isDownloadSplash(this@MainActivity)) {
-            main_activity_splash_viewStub.setOnTouchListener { _, _ -> true }//防止穿透点击
+            main_activity_splash_viewStub.onTouch { _, _ ->  }//防止穿透点击
             viewModel.splashVisibility.set(View.VISIBLE)//显示闪屏页容器
             supportFragmentManager.beginTransaction().replace(R.id.main_activity_splash_viewStub, SplashFragment()).commit()
         }
