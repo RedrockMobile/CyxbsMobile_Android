@@ -18,5 +18,6 @@ class CommentActivity : BaseTabLayoutActivity() {
         val fragmentList = listOf<Fragment>(CommentFragment(), CommentReceivedFragment())
         val titleList = listOf<String>("发出评论", "收到评论")
         init(fragmentList, titleList)
+        isSlideable = false
     }
 }

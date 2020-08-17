@@ -18,5 +18,6 @@ class AnswerActivity(override val isFragmentActivity: Boolean = false) : BaseTab
         val fragmentList = listOf<Fragment>(AnswerPostedFm(), AnswerDraftFm())
         val titleList = listOf<String>("已回答", "草稿箱")
         init(fragmentList, titleList)
+        isSlideable = false
     }
 }
