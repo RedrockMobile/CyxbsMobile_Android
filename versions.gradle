@@ -6,7 +6,6 @@ def version_anko = '0.10.8'
 def version_core = '1.3.0'
 //official ui and support library
 def version_constraint_layout = '1.1.3'
-def version_support = '27.1.1'
 def version_multidex = '2.0.0'
 // ali
 def version_arouter = '1.5.0'
@@ -34,8 +33,7 @@ def version_dagger = '2.16'
 //permission
 def version_rxpermissions = '0.10.2'
 //umeng
-def version_umeng_common = '1.5.3'
-def version_umeng_analytics = '7.5.3'
+def version_umeng_common = '9.1.0'
 //bugly
 def version_bugly_crash_report = '3.1.9'
 def version_bugly_crash_report_upgrade = '1.3.6'
@@ -150,8 +148,13 @@ rxpermissions.runtime = "com.github.tbruyelle:rxpermissions:$version_rxpermissio
 deps.rxpermissions = rxpermissions
 
 def umeng = [:]
-umeng.common = "com.umeng.sdk:common:$version_umeng_common"
-umeng.analytics = "com.umeng.sdk:analytics:$version_umeng_analytics"
+umeng.common = "com.umeng.umsdk:common:$version_umeng_common"
+umeng.asms = 'com.umeng.umsdk:asms:1.1.3' // asms包依赖(必选)
+umeng.crash =  'com.umeng.umsdk:crash:0.0.4' // native crash包依赖(必选)
+umeng.oaid_lenovo = 'com.umeng.umsdk:oaid_lenovo:1.0.0' // (可选)
+umeng.oaid_mi = 'com.umeng.umsdk:oaid_mi:1.0.0' // (可选)
+umeng.oaid_oppo = 'com.umeng.umsdk:oaid_oppo:1.0.4' // (可选)
+umeng.oaid_vivo = 'com.umeng.umsdk:oaid_vivo:1.0.0.1' // (可选)
 deps.umeng = umeng
 
 def bugly = [:]
