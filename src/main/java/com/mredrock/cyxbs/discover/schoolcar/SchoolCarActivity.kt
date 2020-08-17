@@ -119,6 +119,7 @@ class SchoolCarActivity : BaseActivity(), View.OnClickListener {
             locationClient = AMapLocationClient(applicationContext)
             initView()
 //        }
+        isSlideable = false
     }
 
 
