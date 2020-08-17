@@ -10,7 +10,6 @@ import android.view.Menu
 import android.view.View
 import android.widget.Toast
 import androidx.annotation.DrawableRes
-import androidx.appcompat.app.AppCompatActivity
 import com.alibaba.android.arouter.launcher.ARouter
 import com.mredrock.cyxbs.common.R
 import com.mredrock.cyxbs.common.bean.LoginConfig
@@ -21,6 +20,7 @@ import com.mredrock.cyxbs.common.config.MAIN_LOGIN
 import com.mredrock.cyxbs.common.mark.EventBusLifecycleSubscriber
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.service.account.IAccountService
+import com.mredrock.cyxbs.common.slide.AbsSlideableActivity
 import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.getDarkModeStatus
 import com.umeng.analytics.MobclickAgent
@@ -32,7 +32,7 @@ import org.jetbrains.anko.startActivity
 /**
  * Created By jay68 on 2018/8/9.
  */
-abstract class BaseActivity : AppCompatActivity() {
+abstract class BaseActivity : AbsSlideableActivity() {
 
     /**
      * 这里可以开启生命周期的Log，你可以重写这个值并给值为true，
