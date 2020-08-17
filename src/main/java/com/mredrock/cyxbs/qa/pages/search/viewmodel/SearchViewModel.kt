@@ -16,6 +16,7 @@ import io.reactivex.schedulers.Schedulers
  * Created by yyfbe, Date on 2020/8/12.
  */
 class SearchViewModel : BaseViewModel() {
+    //只用于fragment加载时，首次请求，相当于从数据库拿出来的缓存
     val historyFromDB = MutableLiveData<MutableList<QAHistory>>()
     private val qaSearchHistoryDatabase: QASearchHistoryDatabase by lazy { QASearchHistoryDatabase.getDatabase(BaseApp.context) }
 
@@ -30,16 +31,12 @@ class SearchViewModel : BaseViewModel() {
     }
 
     fun delete(history: QAHistory) {
-        val dao = qaSearchHistoryDatabase.getHistoryDao()
-        Observable.create(ObservableOnSubscribe<Unit>(function = {
-            it.onNext(dao.delete(history))
-        })).setSchedulers()
-                .flatMap {
-                    dao.getHistory().toObservable().setSchedulers()
-                }
+        Observable.just(history)
+                .subscribeOn(Schedulers.io())
                 .safeSubscribeBy {
-                    historyFromDB.value = it
-                }
+                    qaSearchHistoryDatabase.getHistoryDao()
+                            .delete(history)
+                }.lifeCycle()
     }
 
     fun deleteAll() {
@@ -47,11 +44,8 @@ class SearchViewModel : BaseViewModel() {
         Observable.create(ObservableOnSubscribe<Unit>(function = {
             it.onNext(dao.deleteAll())
         })).setSchedulers()
-                .flatMap {
-                    dao.getHistory().toObservable().setSchedulers()
-                }
                 .safeSubscribeBy {
-                    historyFromDB.value = it
+                    historyFromDB.value = mutableListOf()
                 }
     }
 
@@ -59,8 +53,7 @@ class SearchViewModel : BaseViewModel() {
         Observable.just(history)
                 .subscribeOn(Schedulers.io())
                 .safeSubscribeBy {
-                    qaSearchHistoryDatabase.getHistoryDao()
-                            .update(history)
+                    qaSearchHistoryDatabase.getHistoryDao().update(history)
                 }.lifeCycle()
 
     }
@@ -69,8 +62,7 @@ class SearchViewModel : BaseViewModel() {
         Observable.just(history)
                 .subscribeOn(Schedulers.io())
                 .safeSubscribeBy {
-                    qaSearchHistoryDatabase.getHistoryDao()
-                            .insertHistory(it)
+                    qaSearchHistoryDatabase.getHistoryDao().insertHistory(it)
                 }.lifeCycle()
 
     }

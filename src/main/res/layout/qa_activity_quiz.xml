@@ -62,7 +62,7 @@
                 android:paddingTop="10dp"
                 android:paddingEnd="21dp"
                 android:paddingBottom="9dp"
-                android:textColorHint="@color/common_qa_quiz_hint_text_color"
+                android:textColorHint="@color/common_qa_common_hint_text_color"
                 android:textStyle="bold" />
 
             <com.mredrock.cyxbs.common.component.RatioLayout

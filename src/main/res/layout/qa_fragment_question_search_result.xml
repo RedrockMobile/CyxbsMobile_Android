@@ -17,8 +17,8 @@
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_no_result_ask_question"
-            android:layout_width="70dp"
-            android:layout_height="35dp"
+            android:layout_width="116dp"
+            android:layout_height="48dp"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
             android:layout_gravity="end|bottom"
@@ -27,7 +27,7 @@
             android:gravity="center"
             android:text="@string/qa_fragment_head_give_question"
             android:textColor="@color/common_white_font_color"
-            android:textSize="15sp" />
+            android:textSize="18sp" />
     </RelativeLayout>
 
 </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

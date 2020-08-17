@@ -5,6 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import com.mredrock.cyxbs.common.utils.extensions.gone
 import com.mredrock.cyxbs.common.utils.extensions.loadRedrockImage
 import com.mredrock.cyxbs.common.utils.extensions.visible
@@ -26,13 +27,13 @@ class SearchResultHeaderAdapter : BaseRvAdapter<Knowledge>() {
     class ViewHolder(parent: ViewGroup) : BaseViewHolder<Knowledge>(parent, R.layout.qa_recycler_item_header_from_knowledge) {
         private var textViews = mutableListOf<TextView>()
 
-        @SuppressLint("ResourceAsColor")
+        @SuppressLint("StringFormatMatches")
         override fun refresh(data: Knowledge?) {
             if (data == null) return
             itemView.apply {
                 tv_knowledge_base_title.text = data.title
                 tv_knowledge_base_detail.text = data.description
-                tv_knowledge_from.text = data.from
+                tv_knowledge_from.text = itemView.context.resources.getString(R.string.qa_search_knowledge_from_where, data.from)
                 context?.loadRedrockImage(data.photoUrl, iv_knowledge)
                 if (data.related.isEmpty()) {
                     cv_related.gone()
@@ -41,7 +42,7 @@ class SearchResultHeaderAdapter : BaseRvAdapter<Knowledge>() {
                     for ((index, value) in data.related.withIndex()) {
                         if (textViews.size < index + 1) {
                             val textView = View.inflate(context, R.layout.qa_view_knowledge_related, null) as TextView
-                            textView.setTextColor(R.color.common_menu_font_color_found)
+                            textView.setTextColor(ContextCompat.getColor(itemView.context, R.color.common_qa_common_hint_text_color))
                             textView.setOnClickListener { EventBus.getDefault().post(QASearchEvent(textView.text.toString())) }
                             textViews.add(textView)
                             (ll_related as LinearLayout).addView(textView)

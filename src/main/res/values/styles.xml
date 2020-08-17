@@ -13,6 +13,10 @@
         <item name="android:windowBackground">@color/common_window_background</item>
     </style>
 
+    <style name="SearchTheme" parent="AppTheme" tools:ignore="ResourceName">
+        <item name="android:windowIsTranslucent">true</item>
+    </style>
+
     <style name="qa_LPhotoTheme" parent="LPhotoTheme">
         <!--页面通用属性（图片选择、图片预览共用）-->
         <item name="l_pp_toolBar_height">56dp</item>

@@ -11,10 +11,18 @@ import kotlinx.android.synthetic.main.qa_recycler_item_history.view.*
  */
 class SearchHistoryRvAdapter(private val onHistoryClick: (Int) -> Unit, private val onCleanIconClick: ((Int) -> Unit)) : BaseRvAdapter<String>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder<String> = ViewHolder(parent)
-    override fun onItemClickListener(holder: BaseViewHolder<String>, position: Int, data: String) {
-        super.onItemClickListener(holder, position, data)
-        holder.itemView.tv_history_title.setOnClickListener { onHistoryClick(position) }
-        holder.itemView.iv_history_delete.setOnClickListener { onCleanIconClick(position) }
+
+    override fun onBindViewHolder(holder: BaseViewHolder<String>, position: Int) {
+        super.onBindViewHolder(holder, position)
+        holder.itemView.tv_history_title.setOnClickListener {
+            onHistoryClick(position)
+        }
+        holder.itemView.iv_history_delete.setOnClickListener {
+            dataList.removeAt(position)
+            notifyItemRemoved(position)
+            onCleanIconClick(position)
+
+        }
     }
 
     class ViewHolder(parent: ViewGroup) : BaseViewHolder<String>(parent, R.layout.qa_recycler_item_history) {

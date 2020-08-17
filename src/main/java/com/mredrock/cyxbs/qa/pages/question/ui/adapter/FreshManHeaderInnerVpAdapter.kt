@@ -2,6 +2,7 @@ package com.mredrock.cyxbs.qa.pages.question.ui.adapter
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
+import com.mredrock.cyxbs.common.utils.extensions.doIfLogin
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.bean.HotQA
 import com.mredrock.cyxbs.qa.component.recycler.BaseEndlessRvAdapter
@@ -27,7 +28,10 @@ class FreshManHeaderInnerVpAdapter(private val onItemClickEvent: (HotQA) -> Unit
     override fun onItemClickListener(holder: BaseViewHolder<HotQA>, position: Int, data: HotQA) {
         super.onItemClickListener(holder, position, data)
         if (holder !is FreshManQuestionViewHolder) return
-        onItemClickEvent.invoke(data)
+        holder.itemView.context.doIfLogin {
+            onItemClickEvent.invoke(data)
+        }
+
     }
 
     class FreshManQuestionViewHolder(parent: ViewGroup) : BaseViewHolder<HotQA>(parent, R.layout.qa_recycler_item_freshman_hot_question) {

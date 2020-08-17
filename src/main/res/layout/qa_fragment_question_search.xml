@@ -15,6 +15,7 @@
 
 
         <RelativeLayout
+            android:id="@+id/ll_history_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="36dp">
@@ -38,7 +39,8 @@
                 android:layout_centerVertical="true"
                 android:layout_marginEnd="21dp"
                 android:text="@string/qa_search_clean_history_all"
-                android:textColor="@color/common_qa_search_history_clean_color"
+                android:textColor="@color/common_qa_common_hint_text_color"
+                android:textSize="17.3sp"
                 tools:ignore="RelativeOverlap" />
 
         </RelativeLayout>

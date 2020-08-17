@@ -25,22 +25,24 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginStart="20dp"
+            android:transitionName="ImageView_Search"
             android:src="@drawable/qa_ic_question_search" />
 
         <androidx.appcompat.widget.AppCompatEditText
             android:id="@+id/et_question_search"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:background="@null"
             android:layout_toEndOf="@id/iv_question_searching"
+            android:background="@null"
             android:hint="搜索你想知道的"
             android:imeOptions="actionSearch"
             android:inputType="text"
             android:paddingStart="10dp"
+            android:selectAllOnFocus="true"
             android:singleLine="true"
-            android:textSize="18sp"
-            android:textColor="@color/common_level_three_font_color" />
+            android:textColor="@color/common_level_three_font_color"
+            android:textSize="18sp" />
     </RelativeLayout>
 
 

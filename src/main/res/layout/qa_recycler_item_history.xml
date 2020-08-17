@@ -1,26 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_marginStart="21dp"
     android:layout_marginEnd="21dp"
-    android:layout_marginBottom="25dp">
+    android:layout_marginBottom="25dp"
+    android:orientation="horizontal">
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tv_history_title"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:textSize="20sp"
-        android:text="没有人比我更懂"
+        android:layout_weight="1"
         android:alpha="0.67"
-        android:textColor="@color/common_level_three_font_color" />
+        tools:text="没有人比我更懂"
+        android:textColor="@color/common_level_two_font_color"
+        android:textSize="20sp" />
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/iv_history_delete"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
+        android:layout_gravity="end"
         android:src="@drawable/qa_ic_search_history_delete" />
 
-</RelativeLayout>
+</LinearLayout>

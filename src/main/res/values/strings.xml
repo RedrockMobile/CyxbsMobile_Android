@@ -32,6 +32,7 @@
     <string name="qa_quiz_error_time_too_short">设置的时间太短了哦~</string>
     <string name="qa_quiz_dialog_submit">发布</string>
     <string name="qa_quiz_reward_set_my_reward">积分剩余：%1$d</string>
+    <string name="qa_search_knowledge_from_where">来源：%1$s</string>
     <string name="qa_quiz_error_reward_not_enough">已经拿不出这么多硬币了( ﾉД`)</string>
     <string name="qa_answer_edit_content_hint">请尽可能给出明确的解决思路哦！</string>
     <string name="qa_answer_question_title">提供帮助</string>

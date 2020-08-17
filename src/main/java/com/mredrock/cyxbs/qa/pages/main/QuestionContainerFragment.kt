@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.ViewFlipper
-import androidx.appcompat.widget.AppCompatCheckedTextView
 import androidx.core.content.ContextCompat
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.mredrock.cyxbs.common.config.QA_ENTRY
@@ -20,13 +19,11 @@ import com.mredrock.cyxbs.common.utils.extensions.pressToZoomOut
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.bean.Question
 import com.mredrock.cyxbs.qa.pages.main.viewmodel.QuestionContainerViewModel
-import com.mredrock.cyxbs.qa.pages.question.ui.fragment.BaseQuestionListFragment
 import com.mredrock.cyxbs.qa.pages.question.ui.fragment.FreshManQuestionListFragment
 import com.mredrock.cyxbs.qa.pages.question.ui.fragment.QuestionListFragment
 import com.mredrock.cyxbs.qa.pages.quiz.ui.QuizActivity
 import com.mredrock.cyxbs.qa.pages.search.ui.SearchActivity
 import kotlinx.android.synthetic.main.qa_fragment_question_container.*
-import kotlinx.android.synthetic.main.qa_fragment_question_container.view.*
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
@@ -34,15 +31,21 @@ import org.greenrobot.eventbus.ThreadMode
  * Created By jay68 on 2018/8/22.
  */
 @Route(path = QA_ENTRY)
-class QuestionContainerFragment : BaseViewModelFragment<QuestionContainerViewModel>(), View.OnClickListener, EventBusLifecycleSubscriber {
+class QuestionContainerFragment : BaseViewModelFragment<QuestionContainerViewModel>(), EventBusLifecycleSubscriber {
     companion object {
         const val REQUEST_LIST_REFRESH_ACTIVITY = 0x1
     }
 
     private val titles = listOf(Question.NEW, Question.FRESHMAN, Question.STUDY, Question.ANONYMOUS, Question.LIFE, Question.OTHER)
-    private lateinit var childFragments: List<BaseQuestionListFragment<*>>
-
-    private lateinit var curSelectorItem: AppCompatCheckedTextView
+    private val childFragments by lazy(LazyThreadSafetyMode.NONE) {
+        titles.map {
+            if (it == Question.FRESHMAN) {
+                FreshManQuestionListFragment.newInstance(it)
+            } else {
+                QuestionListFragment.newInstance(it)
+            }
+        }
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -52,31 +55,43 @@ class QuestionContainerFragment : BaseViewModelFragment<QuestionContainerViewMod
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        childFragments = titles.map {
-            if (it == Question.FRESHMAN) {
-                FreshManQuestionListFragment.newInstance(it)
-            } else {
-                QuestionListFragment.newInstance(it)
-            }
-        }
-        view.vp_question.adapter = QAViewPagerAdapter(childFragments, childFragmentManager)
+        initVP()
+        askQuestionClick()
+        initScrollText()
+    }
+
+    private fun initVP() {
+        vp_question.adapter = QAViewPagerAdapter(childFragments, childFragmentManager)
         //预加载所有部分保证提问后所有fragment能够被通知刷新，同时保证退出账号时只加载一次对话框
-        view.vp_question.offscreenPageLimit = 6
-        view.tl_category.apply {
-            setupWithViewPager(view.vp_question)
+        vp_question.apply {
+            offscreenPageLimit = titles.size
+        }
+        tl_category.apply {
+            setupWithViewPager(vp_question)
             setSelectedTabIndicator(R.drawable.qa_ic_question_tab_indicator)
         }
-        btn_ask_question.setOnClickListener {
-            context?.doIfLogin("提问") {
-                QuizActivity.activityStart(this@QuestionContainerFragment, "迎新生", REQUEST_LIST_REFRESH_ACTIVITY)
-                activity?.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
-            }
+    }
 
+    private fun askQuestionClick() {
+        btn_ask_question.apply {
+            setOnClickListener {
+                turnToQuiz()
+            }
+            pressToZoomOut()
         }
-        btn_ask_question.pressToZoomOut()
+    }
+
+    private fun initScrollText() {
         //搜索滚动词
         viewModel.getScrollerText()
         initHotSearch(vf_hot_search, rl_qa_hot_search)
+    }
+
+    private fun turnToQuiz() {
+        context?.doIfLogin("提问") {
+            QuizActivity.activityStart(this@QuestionContainerFragment, "迎新生", REQUEST_LIST_REFRESH_ACTIVITY)
+            activity?.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
+        }
     }
 
     private fun initHotSearch(viewFlipper: ViewFlipper, relativeLayout: RelativeLayout) {
@@ -91,7 +106,7 @@ class QuestionContainerFragment : BaseViewModelFragment<QuestionContainerViewMod
 
         vf_hot_search.startFlipping()
         relativeLayout.setOnClickListener {
-            SearchActivity.activityStart(this)
+            SearchActivity.activityStart(this, iv_question_search)
         }
 
         viewFlipper.setFlipInterval(6555)
@@ -108,15 +123,6 @@ class QuestionContainerFragment : BaseViewModelFragment<QuestionContainerViewMod
             setTextColor(ContextCompat.getColor(context, R.color.common_menu_font_color_found))
             textSize = 12f
         }
-    }
-
-    override fun onClick(v: View) {
-        if (v == curSelectorItem) {
-            return
-        }
-        curSelectorItem.isChecked = false
-        curSelectorItem = v as AppCompatCheckedTextView
-        curSelectorItem.isChecked = true
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

@@ -3,8 +3,10 @@ package com.mredrock.cyxbs.qa.pages.search.ui
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
+import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
+import androidx.core.app.ActivityOptionsCompat
 import androidx.fragment.app.Fragment
 import com.mredrock.cyxbs.common.mark.EventBusLifecycleSubscriber
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
@@ -30,6 +32,14 @@ class SearchActivity : BaseViewModelActivity<SearchViewModel>(), EventBusLifecyc
     private val questionSearchedFragment: QuestionSearchedFragment by lazy(LazyThreadSafetyMode.NONE) { QuestionSearchedFragment() }
 
     companion object {
+        fun activityStart(fragment: Fragment, view: View) {
+            val intent = fragment.context?.intentFor<SearchActivity>()
+            fragment.startActivity(intent, fragment.activity?.let {
+                ActivityOptionsCompat.makeSceneTransitionAnimation(it, view, "ImageView_Search").apply {
+                }.toBundle()
+            })
+        }
+
         fun activityStart(fragment: Fragment) {
             val intent = fragment.context?.intentFor<SearchActivity>()
             fragment.startActivity(intent)
@@ -47,7 +57,6 @@ class SearchActivity : BaseViewModelActivity<SearchViewModel>(), EventBusLifecyc
     private fun initView() {
         tv_question_search_cancel.setOnClickListener { finish() }
         supportFragmentManager.beginTransaction().replace(R.id.fcv_question_search, questionSearchingFragment).commit()
-        rl_question_searching.setOnTouchListener { v, event -> et_question_search.onTouchEvent(event) }
         et_question_search.setOnEditorActionListener { v, actionId, event ->
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                 turnToResult(v.text.toString())
@@ -93,4 +102,7 @@ class SearchActivity : BaseViewModelActivity<SearchViewModel>(), EventBusLifecyc
         turnToResult(e.searchKey)
     }
 
+    override fun onBackPressed() {
+        supportFinishAfterTransition()
+    }
 }
