@@ -54,6 +54,7 @@ class AffairEditActivity : BaseViewModelActivity<EditAffairViewModel>() {
     private lateinit var affairTransitionAnimHelper: AffairTransitionAnimHelper
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        isSlideable = false
         super.onCreate(savedInstanceState)
         mBinding = DataBindingUtil.setContentView(this, R.layout.course_activity_edit_affair)
         mBinding.editAffairViewModel = viewModel
