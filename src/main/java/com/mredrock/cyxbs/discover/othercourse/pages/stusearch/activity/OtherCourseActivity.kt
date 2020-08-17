@@ -25,6 +25,7 @@ class OtherCourseActivity : BaseViewModelActivity<OtherCourseViewModel>() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        isSlideable = false
         super.onCreate(savedInstanceState)
         setContentView(R.layout.othercourse_discover_activity_other_course)
         common_toolbar.initWithSplitLine("查课表", false)
