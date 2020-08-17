@@ -194,6 +194,7 @@
     <!-- 邮问搜索-->
     <color name="common_qa_search_history_clean_color">#696969</color>
     <color name="common_qa_search_history_item_divider_color">#696969</color>
+    <color name="common_qa_search_layout_color">#515A5A5A</color>
     <!--    评论默认header颜色-->
     <color name="common_qa_comment_header_background_color">#1D1D1D</color>
     <!--    评论背景颜色-->
@@ -228,7 +229,7 @@
     <!--    提问图片选择占位图-->
     <color name="common_qa_quiz_picture_empty_color">#2C2C2C</color>
     <!--    提问hint颜色-->
-    <color name="common_qa_quiz_hint_text_color">#F0F0F2</color>
+    <color name="common_qa_common_hint_text_color">#F0F0F2</color>
     <!--    提问图片选择占位图中间颜色-->
     <color name="common_qa_quiz_picture_empty_centre_color">#000101</color>
     <!--    回答被采纳的标签颜色-->
