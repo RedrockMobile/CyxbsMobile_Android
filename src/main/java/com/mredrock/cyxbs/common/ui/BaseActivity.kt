@@ -145,7 +145,6 @@ abstract class BaseActivity : AbsSlideableActivity() {
 
     override fun onResume() {
         super.onResume()
-        MobclickAgent.onResume(this)
         if (!isFragmentActivity) {
             MobclickAgent.onPageStart(javaClass.name)
             LogUtils.d("UMStat", javaClass.name + " started")
@@ -155,7 +154,6 @@ abstract class BaseActivity : AbsSlideableActivity() {
 
     override fun onPause() {
         super.onPause()
-        MobclickAgent.onPause(this)
         if (!isFragmentActivity) {
             MobclickAgent.onPageEnd(javaClass.name)
             LogUtils.d("UMStat", javaClass.name + " paused")

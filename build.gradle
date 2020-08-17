@@ -87,7 +87,12 @@ dependencies {
 
     //umeng
     api deps.umeng.common
-    api deps.umeng.analytics
+    api deps.umeng.asms
+    api deps.umeng.crash
+    api deps.umeng.oaid_lenovo
+    api deps.umeng.oaid_mi
+    api deps.umeng.oaid_oppo
+    api deps.umeng.oaid_vivo
 
     //bugly
     api deps.bugly.crashreport
