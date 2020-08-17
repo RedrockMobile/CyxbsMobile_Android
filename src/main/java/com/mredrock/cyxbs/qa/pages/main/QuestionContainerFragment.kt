@@ -10,6 +10,7 @@ import android.widget.TextView
 import android.widget.ViewFlipper
 import androidx.core.content.ContextCompat
 import com.alibaba.android.arouter.facade.annotation.Route
+import com.mredrock.cyxbs.common.config.CyxbsMob
 import com.mredrock.cyxbs.common.config.QA_ENTRY
 import com.mredrock.cyxbs.common.event.CurrentDateInformationEvent
 import com.mredrock.cyxbs.common.mark.EventBusLifecycleSubscriber
@@ -23,6 +24,7 @@ import com.mredrock.cyxbs.qa.pages.question.ui.fragment.FreshManQuestionListFrag
 import com.mredrock.cyxbs.qa.pages.question.ui.fragment.QuestionListFragment
 import com.mredrock.cyxbs.qa.pages.quiz.ui.QuizActivity
 import com.mredrock.cyxbs.qa.pages.search.ui.SearchActivity
+import com.umeng.analytics.MobclickAgent
 import kotlinx.android.synthetic.main.qa_fragment_question_container.*
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -91,6 +93,7 @@ class QuestionContainerFragment : BaseViewModelFragment<QuestionContainerViewMod
         context?.doIfLogin("提问") {
             QuizActivity.activityStart(this@QuestionContainerFragment, "迎新生", REQUEST_LIST_REFRESH_ACTIVITY)
             activity?.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
+            MobclickAgent.onEvent(requireContext(),CyxbsMob.Event.CLICK_ASK)
         }
     }
 
