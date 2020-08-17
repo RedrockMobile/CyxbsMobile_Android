@@ -39,6 +39,7 @@ import com.mredrock.cyxbs.course.utils.AffairToCalendar
 import com.mredrock.cyxbs.course.utils.changeLibBeanToCourse
 import com.mredrock.cyxbs.course.viewmodels.CoursesViewModel
 import com.mredrock.cyxbs.course.viewmodels.NoCourseInviteViewModel
+import com.umeng.analytics.MobclickAgent
 import kotlinx.android.synthetic.main.course_fragment_course_container.*
 import kotlinx.android.synthetic.main.course_fragment_course_container.view.*
 import kotlinx.android.synthetic.main.course_load_lottie_anim.view.*
@@ -298,6 +299,7 @@ class CourseContainerEntryFragment : BaseViewModelFragment<CoursesViewModel>(), 
     }
 
     private fun loadViewPager() {
+        MobclickAgent.onEvent(requireContext(),CyxbsMob.Event.COURSE_SHOW)
         inflateView.vp.adapter = mScheduleAdapter
         tab_layout.setupWithViewPager(inflateView.vp)
         viewModel.nowWeek.value?.let { nowWeek ->

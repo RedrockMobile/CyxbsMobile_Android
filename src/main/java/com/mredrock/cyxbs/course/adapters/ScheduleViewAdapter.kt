@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.content.ContextCompat
+import com.mredrock.cyxbs.common.config.CyxbsMob
 import com.mredrock.cyxbs.common.config.DEFAULT_PREFERENCE_FILENAME
 import com.mredrock.cyxbs.common.config.SP_SHOW_MODE
 import com.mredrock.cyxbs.common.utils.ClassRoomParse
@@ -23,6 +24,7 @@ import com.mredrock.cyxbs.course.network.Course
 import com.mredrock.cyxbs.course.ui.ScheduleDetailBottomSheetDialogHelper
 import com.mredrock.cyxbs.course.ui.activity.AffairEditActivity
 import com.mredrock.cyxbs.course.utils.createCornerBackground
+import com.umeng.analytics.MobclickAgent
 import org.greenrobot.eventbus.EventBus
 import org.jetbrains.anko.textColor
 import java.util.*
@@ -271,6 +273,9 @@ class ScheduleViewAdapter(private val mActivity: Activity,
     private fun setItemViewOnclickListener(itemView: View, schedules: MutableList<Course>) {
         itemView.setOnClickListener {
             mDialogHelper.showDialog(schedules)
+            MobclickAgent.onEvent(itemView.context, CyxbsMob.Event.CLICK_COURSE_ITEM, mutableMapOf(
+                    Pair(CyxbsMob.Key.IS_HEAD, CyxbsMob.Value.TRUE)
+            ))
             EventBus.getDefault().post(DismissAddAffairViewEvent())
         }
     }
