@@ -25,7 +25,7 @@ abstract class QASearchHistoryDatabase : RoomDatabase() {
                 val instance = Room.databaseBuilder(
                         context.applicationContext,
                         QASearchHistoryDatabase::class.java,
-                        "History_database"
+                        "qa_history_database"
                 ).build()
                 INSTANCE = instance
                 return instance

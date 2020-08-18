@@ -8,7 +8,7 @@ import io.reactivex.Maybe
  */
 @Dao
 interface QAHistoryDao {
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertHistory(history: QAHistory)
 
     @Delete
@@ -17,9 +17,9 @@ interface QAHistoryDao {
     @Update
     fun update(history: QAHistory)
 
-    @Query("SELECT * FROM QAHistory  ORDER BY qaHistory_time DESC LIMIT 0,:limit")
+    @Query("SELECT * FROM qa_history  ORDER BY qaHistory_time DESC LIMIT 0,:limit")
     fun getHistory(limit: Int = 15): Maybe<MutableList<QAHistory>>
 
-    @Query("DELETE  FROM  QAHistory")
+    @Query("DELETE  FROM  qa_history")
     fun deleteAll()
 }
