@@ -49,7 +49,10 @@ class MainActivity : BaseViewModelActivity<MainViewModel>(), EventBusLifecycleSu
 
     override val isFragmentActivity = true
 
-    override val loginConfig = LoginConfig(isWarnUser = false)
+    override val loginConfig = LoginConfig(
+            isWarnUser = false,
+            isCheckLogin = true
+    )
 
     private lateinit var mainService: IMainService
 
@@ -94,15 +97,12 @@ class MainActivity : BaseViewModelActivity<MainViewModel>(), EventBusLifecycleSu
             mainViewModel = viewModel
         }
         checkSplash()
-        checkUserInfoExpired(loginConfig, this)
         initActivity(savedInstanceState)//Activity相关初始化
     }
 
 
     override fun onStart() {
         super.onStart()
-        if (!ServiceManager.getService(IAccountService::class.java).getVerifyService().isTouristMode())
-            checkIsLogin(loginConfig, this)
     }
 
     /**
@@ -180,7 +180,7 @@ class MainActivity : BaseViewModelActivity<MainViewModel>(), EventBusLifecycleSu
     }
 
     private fun initBottom() {
-        ll_nav_main_container.onTouch { _, _ ->  }//防止穿透点击或者滑动，子View无法处理默认消耗
+        ll_nav_main_container.onTouch { _, _ -> }//防止穿透点击或者滑动，子View无法处理默认消耗
         //底部导航栏的控制初始化
         bottomHelper = BottomNavigationHelper(
                 arrayOf(explore, qa, mine),
@@ -212,7 +212,7 @@ class MainActivity : BaseViewModelActivity<MainViewModel>(), EventBusLifecycleSu
     private fun checkSplash() {
         //判断是否下载了Splash图，下载了就直接显示
         if (isDownloadSplash(this@MainActivity)) {
-            main_activity_splash_viewStub.onTouch { _, _ ->  }//防止穿透点击
+            main_activity_splash_viewStub.onTouch { _, _ -> }//防止穿透点击
             viewModel.splashVisibility.set(View.VISIBLE)//显示闪屏页容器
             supportFragmentManager.beginTransaction().replace(R.id.main_activity_splash_viewStub, SplashFragment()).commit()
         }
