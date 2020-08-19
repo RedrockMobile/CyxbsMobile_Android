@@ -93,7 +93,7 @@ class QuestionContainerFragment : BaseViewModelFragment<QuestionContainerViewMod
         context?.doIfLogin("提问") {
             QuizActivity.activityStart(this@QuestionContainerFragment, "迎新生", REQUEST_LIST_REFRESH_ACTIVITY)
             activity?.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
-            MobclickAgent.onEvent(requireContext(),CyxbsMob.Event.CLICK_ASK)
+            MobclickAgent.onEvent(requireContext(), CyxbsMob.Event.CLICK_ASK)
         }
     }
 
@@ -123,8 +123,9 @@ class QuestionContainerFragment : BaseViewModelFragment<QuestionContainerViewMod
             maxLines = 1
             maxEms = 15
             overScrollMode = View.OVER_SCROLL_IF_CONTENT_SCROLLS
-            setTextColor(ContextCompat.getColor(context, R.color.common_menu_font_color_found))
-            textSize = 12f
+            alpha = 0.51f
+            setTextColor(ContextCompat.getColor(context, R.color.common_level_two_font_color))
+            textSize = 14f
         }
     }
 

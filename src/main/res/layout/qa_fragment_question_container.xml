@@ -23,7 +23,7 @@
             android:layout_height="match_parent"
             android:background="@null"
             android:fitsSystemWindows="true"
-            android:paddingStart="15dp"
+            android:paddingStart="20dp"
             android:paddingTop="31dp"
             android:paddingEnd="16dp"
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
@@ -98,7 +98,7 @@
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btn_ask_question"
                 android:layout_width="70dp"
-                android:layout_height="35dp"
+                android:layout_height="40dp"
                 android:layout_gravity="end|center_vertical"
                 android:layout_marginEnd="21dp"
                 android:background="@drawable/qa_shape_main_have_question_btn_background"
@@ -113,7 +113,7 @@
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tl_category"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="60dp"
             android:layout_below="@+id/ll_qa_hot"
             android:layout_marginTop="6dp"
             app:tabBackground="@android:color/transparent"
@@ -122,8 +122,6 @@
             app:tabIndicatorFullWidth="false"
             app:tabIndicatorHeight="3dp"
             app:tabMode="scrollable"
-            app:tabPaddingEnd="0dp"
-            app:tabPaddingStart="0dp"
             app:tabRippleColor="@android:color/transparent"
             app:tabSelectedTextColor="@color/common_qa_tab_selected_color"
             app:tabTextColor="@color/common_qa_tab_unselected_color" />

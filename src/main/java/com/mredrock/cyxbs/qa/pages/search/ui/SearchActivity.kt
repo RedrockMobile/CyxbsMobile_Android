@@ -48,8 +48,8 @@ class SearchActivity : BaseViewModelActivity<SearchViewModel>(), EventBusLifecyc
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        isSlideable = false
         setContentView(R.layout.qa_activity_question_search)
+        isSlideable = false
         viewModel.getHistoryFromDB()
         initView()
     }

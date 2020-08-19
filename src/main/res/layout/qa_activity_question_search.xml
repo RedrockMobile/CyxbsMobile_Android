@@ -41,8 +41,9 @@
             android:paddingStart="10dp"
             android:selectAllOnFocus="true"
             android:singleLine="true"
+            android:layout_marginEnd="10dp"
             android:textColor="@color/common_level_three_font_color"
-            android:textSize="18sp" />
+            android:textSize="16sp" />
     </RelativeLayout>
 
 

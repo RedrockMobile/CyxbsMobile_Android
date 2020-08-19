@@ -73,6 +73,7 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>(), EventBusLifecycleSu
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.qa_activity_quiz)
+        isSlideable = false
         val titles = resources.getStringArray(R.array.qa_quiz_reward_explain_title)
         val contents = resources.getStringArray(R.array.qa_quiz_reward_explain_content)
         rewardExplainList = titles.zip(contents) { title, content -> DownMessageText(title, content) }

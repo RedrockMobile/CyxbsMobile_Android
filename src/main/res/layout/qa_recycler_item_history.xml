@@ -16,7 +16,7 @@
         android:alpha="0.67"
         tools:text="没有人比我更懂"
         android:textColor="@color/common_level_two_font_color"
-        android:textSize="20sp" />
+        android:textSize="18sp" />
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/iv_history_delete"

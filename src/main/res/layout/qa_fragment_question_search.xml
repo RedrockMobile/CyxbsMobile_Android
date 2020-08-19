@@ -28,7 +28,7 @@
                 android:layout_marginStart="20dp"
                 android:text="@string/qa_search_history"
                 android:textColor="@color/common_level_three_font_color"
-                android:textSize="24sp"
+                android:textSize="22sp"
                 android:textStyle="bold" />
 
             <androidx.appcompat.widget.AppCompatTextView
@@ -40,7 +40,7 @@
                 android:layout_marginEnd="21dp"
                 android:text="@string/qa_search_clean_history_all"
                 android:textColor="@color/common_qa_common_hint_text_color"
-                android:textSize="17.3sp"
+                android:textSize="15.3sp"
                 tools:ignore="RelativeOverlap" />
 
         </RelativeLayout>
