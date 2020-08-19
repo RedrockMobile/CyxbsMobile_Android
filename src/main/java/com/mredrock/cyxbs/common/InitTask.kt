@@ -28,7 +28,6 @@ fun initUMeng(context: Context) {
     //调试模式（推荐到umeng注册测试机，避免数据污染）
     UMConfigure.setLogEnabled(BuildConfig.DEBUG)
     //友盟推送服务的接入
-    PushAgent.getInstance(BaseApp.context).onAppStart()
     val mPushAgent = PushAgent.getInstance(context)
     //注册推送服务，每次调用register方法都会回调该接口
     mPushAgent.register(object : IUmengRegisterCallback {

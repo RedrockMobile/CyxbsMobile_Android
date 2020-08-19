@@ -8,22 +8,20 @@ import android.os.Bundle
 import android.os.PersistableBundle
 import android.view.Menu
 import android.view.View
-import android.widget.Toast
 import androidx.annotation.DrawableRes
-import com.alibaba.android.arouter.launcher.ARouter
+import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.R
 import com.mredrock.cyxbs.common.bean.LoginConfig
-import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.common.component.JToolbar
-import com.mredrock.cyxbs.common.config.ACTIVITY_CLASS
-import com.mredrock.cyxbs.common.config.MAIN_LOGIN
 import com.mredrock.cyxbs.common.mark.EventBusLifecycleSubscriber
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.service.account.IAccountService
 import com.mredrock.cyxbs.common.slide.AbsSlideableActivity
 import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.getDarkModeStatus
+import com.mredrock.cyxbs.common.utils.extensions.startLoginActivity
 import com.umeng.analytics.MobclickAgent
+import com.umeng.message.PushAgent
 import kotlinx.android.synthetic.main.common_toolbar.*
 import org.greenrobot.eventbus.EventBus
 import org.jetbrains.anko.startActivity
@@ -49,12 +47,16 @@ abstract class BaseActivity : AbsSlideableActivity() {
      */
     abstract val isFragmentActivity: Boolean
 
-    protected open val loginConfig = LoginConfig()
+    // 默认不检查登陆
+    protected open val loginConfig = LoginConfig(
+            isCheckLogin = false
+    )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         // 禁用横屏，现目前不需要横屏，防止发送一些错误
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+        PushAgent.getInstance(BaseApp.context).onAppStart()
         initFlag()
         lifeCycleLog("onCreate")
     }
@@ -139,7 +141,10 @@ abstract class BaseActivity : AbsSlideableActivity() {
 
     override fun onStart() {
         super.onStart()
-        if (this is EventBusLifecycleSubscriber) EventBus.getDefault().register(this)
+        EventBus.getDefault().register(this)
+        if (!ServiceManager.getService(IAccountService::class.java).getVerifyService().isTouristMode()) {
+            checkLoginStatus()
+        }
         lifeCycleLog("onStart")
     }
 
@@ -182,52 +187,24 @@ abstract class BaseActivity : AbsSlideableActivity() {
         lifeCycleLog("onRestoreInstanceState")
     }
 
-    fun lifeCycleLog(message: String) {
+    private fun lifeCycleLog(message: String) {
         if (isOpenLifeCycleLog) {
             LogUtils.d(TAG, "${this::class.java.simpleName}\$\$${message}")
         }
     }
 
     /**
-     * 检查是否登录，因为单模块调试，需主动调用
+     * 检查是否登录，若是单模块调试且某些
      */
-    protected fun checkIsLogin(loginConfig: LoginConfig, activity: Activity) {
-        if (!ServiceManager.getService(IAccountService::class.java).getVerifyService().isLogin() && loginConfig.isCheckLogin) {
-            //取消转场动画
-            val postcard = ARouter.getInstance().build(MAIN_LOGIN).withTransition(0, 0)
-            //如果设置了重新启动activity，则传Class过去，并关闭当前Activity
-            if (loginConfig.isFinish) {
-                postcard.withSerializable(ACTIVITY_CLASS, this::class.java)
-                activity.finish()
-            }
-            //如果需要提示用户未登录
-            if (loginConfig.isWarnUser) {
-                CyxbsToast.makeText(activity, loginConfig.warnMessage, Toast.LENGTH_SHORT).show()
-            }
-            //正式开始路由
-            postcard.navigation(activity)
-        }
-    }
-
-    //检查refreshToken是否过期，用户是否太久未使用
-    // 以我的思路，只会出现在MainActivity
-    // 但是还是放在BaseActivity，以备其他情况
-    protected fun checkUserInfoExpired(loginConfig: LoginConfig, activity: Activity) {
-        //refreshToken过期，那么请退出重新登录
+    protected fun checkLoginStatus() {
         val userState = ServiceManager.getService(IAccountService::class.java).getVerifyService()
-        if (userState.isLogin() && userState.isRefreshTokenExpired()) {
-            //退出登录
-            CyxbsToast.makeText(activity, "身份信息已过期，请重新登录", Toast.LENGTH_LONG).show()
+        if (!userState.isLogin() && loginConfig.isCheckLogin) {
+            startLoginActivity(loginConfig)
+        } else if (userState.isLogin() && userState.isRefreshTokenExpired()) {
             userState.logout(this)
-            //取消转场动画
-            val postcard = ARouter.getInstance().build(MAIN_LOGIN).withTransition(0, 0)
-            //如果设置了重新启动activity，则传Class过去，并关闭当前Activity
-            if (loginConfig.isFinish) {
-                postcard.withSerializable(ACTIVITY_CLASS, this::class.java)
-                activity.finish()
-            }
-            //正式开始路由
-            postcard.navigation(activity)
+            startLoginActivity(LoginConfig(
+                    warnMessage = "身份信息已过期，请重新登录"
+            ))
         }
     }
 }
