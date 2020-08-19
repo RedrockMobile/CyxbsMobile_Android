@@ -1,11 +1,17 @@
 //除app外的所有组件的公有配置(包括lib和业务模块)
 //如需要配置app，请前往app模块
+modulesConfiguration{
+    if (isSingleModuleDebug.toBoolean()) {
+        apply plugin: 'com.android.application'
+    } else {
+        apply plugin: 'com.android.library'
+    }
+}
 
-if (isSingleModuleDebug.toBoolean()) {
-    apply plugin: 'com.android.application'
-} else {
+libsConfiguration {
     apply plugin: 'com.android.library'
 }
+
 
 apply plugin: 'kotlin-android'
 
@@ -33,7 +39,7 @@ android {
         multiDexEnabled true
     }
     //module模块独有配置
-    modulesConfiguration(project) {
+    modulesConfiguration {
         resourcePrefix "${project.getName().replaceAll("module_", "")}_"
         sourceSets {
             main {
@@ -50,7 +56,7 @@ android {
         }
     }
     //lib模块独有配置
-    libsConfiguration(project) {
+    libsConfiguration {
         resourcePrefix "${project.getName().replaceAll("lib_", "")}_"
     }
 
@@ -69,12 +75,12 @@ android {
 }
 
 //lib模块独有配置
-static def libsConfiguration(Project project, Closure closure) {
+def libsConfiguration(Closure closure) {
     if (project.name.matches("lib_.+"))
         closure()
 }
 //module模块独有配置
-static def modulesConfiguration(Project project, Closure closure) {
+def modulesConfiguration(Closure closure) {
     if (project.name.matches("module_.+"))
         closure()
 }
