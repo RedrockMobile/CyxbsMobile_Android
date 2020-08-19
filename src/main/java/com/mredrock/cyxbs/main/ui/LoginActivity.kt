@@ -107,7 +107,6 @@ class LoginActivity : BaseViewModelActivity<LoginViewModel>(), EventBusLifecycle
                 CyxbsToast.makeText(this, R.string.main_user_agreement_title, Toast.LENGTH_SHORT).show()
             } else {
                 ServiceManager.getService(IAccountService::class.java).getVerifyService().loginByTourist()
-                startActivity(Intent(this, MainActivity::class.java))
                 finish()
             }
         }
