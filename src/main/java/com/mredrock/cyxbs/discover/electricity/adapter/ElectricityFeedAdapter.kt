@@ -4,19 +4,19 @@ import android.content.Context
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.style.AbsoluteSizeSpan
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.mredrock.cyxbs.common.ui.BaseFeedFragment
+import com.mredrock.cyxbs.common.utils.extensions.sp
 import com.mredrock.cyxbs.discover.electricity.bean.ElecInf
 import com.mredrock.cyxbs.electricity.R
 import kotlinx.android.synthetic.main.electricity_discover_feed.view.*
-import org.jetbrains.anko.layoutInflater
-import org.jetbrains.anko.sp
 
 class ElectricityFeedAdapter(private val elecInf: ElecInf) : BaseFeedFragment.Adapter() {
 
     override fun onCreateView(context: Context, parent: ViewGroup): View {
-        view = context.layoutInflater.inflate(R.layout.electricity_discover_feed, parent, false)
+        view = LayoutInflater.from(context).inflate(R.layout.electricity_discover_feed, parent, false)
         refresh(elecInf)
         return view!!
     }

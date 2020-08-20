@@ -8,12 +8,12 @@ import android.view.ViewGroup
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.DialogFragment
 import com.mredrock.cyxbs.common.utils.LogUtils
+import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
 import com.mredrock.cyxbs.common.utils.extensions.editor
 import com.mredrock.cyxbs.discover.electricity.config.*
 import com.mredrock.cyxbs.electricity.R
 import kotlinx.android.synthetic.main.electricity_dialog_dormitory_select.*
 import kotlinx.android.synthetic.main.electricity_dialog_dormitory_select.view.*
-import org.jetbrains.anko.support.v4.defaultSharedPreferences
 
 class ElectricityFeedSettingDialogFragment : DialogFragment() {
     var refresher: ((id: String, room: String) -> Unit)? = null
@@ -40,9 +40,11 @@ class ElectricityFeedSettingDialogFragment : DialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        var room = defaultSharedPreferences.getString(SP_ROOM_KEY, "101") ?: "101"
-        selectBuildingHeadPosition = defaultSharedPreferences.getInt(SP_BUILDING_HEAD_KEY, 0)
-        selectBuildingFootPosition = defaultSharedPreferences.getInt(SP_BUILDING_FOOT_KEY, 0)
+        var room = context?.defaultSharedPreferences?.getString(SP_ROOM_KEY, "101") ?: "101"
+        selectBuildingHeadPosition = context?.defaultSharedPreferences?.getInt(SP_BUILDING_HEAD_KEY, 0)
+                ?: 0
+        selectBuildingFootPosition = context?.defaultSharedPreferences?.getInt(SP_BUILDING_FOOT_KEY, 0)
+                ?: 0
 
         view.apply {
             et_electricity_room_num.apply {
@@ -80,7 +82,7 @@ class ElectricityFeedSettingDialogFragment : DialogFragment() {
                 refresher?.invoke(id, room)
                 this@ElectricityFeedSettingDialogFragment.dismiss()
 
-                defaultSharedPreferences.editor {
+                context.defaultSharedPreferences.editor {
                     putInt(SP_BUILDING_HEAD_KEY, selectBuildingHeadPosition)
                     putInt(SP_BUILDING_FOOT_KEY, selectBuildingFootPosition)
                     putString(SP_ROOM_KEY, et_electricity_room_num.text.toString())
