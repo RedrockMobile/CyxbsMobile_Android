@@ -5,8 +5,8 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.util.AttributeSet
+import com.mredrock.cyxbs.common.utils.extensions.dip
 import com.mredrock.cyxbs.course.R
-import org.jetbrains.anko.dip
 
 
 /**
@@ -26,7 +26,7 @@ class SimpleDotsView : ScheduleDetailView.DotsView {
     private var mDotsViewWidth: Int = 0
     private var mDotsViewHeight: Int = 0
     private lateinit var mPaint: Paint
-    private var mDotRadius = dip(4)
+    private var mDotRadius = context.dip(4)
     private var mFirstDotLeftMargin: Int = 0
     private val mDotsColors: IntArray by lazy {
         intArrayOf(Color.parseColor("#788EFA"),
@@ -39,7 +39,7 @@ class SimpleDotsView : ScheduleDetailView.DotsView {
             field = value
             computeFirstDotLeftMargin()
         }
-    private var mDotGap: Int = dip(8)
+    private var mDotGap: Int = context.dip(8)
 
     constructor(context: Context) : super(context) {
         initDotsView()
@@ -49,8 +49,8 @@ class SimpleDotsView : ScheduleDetailView.DotsView {
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) :
             super(context, attrs, defStyleAttr) {
         val typeArray = context.obtainStyledAttributes(attrs, R.styleable.SimpleDotsView, defStyleAttr, 0)
-        mDotRadius = typeArray.getDimensionPixelSize(R.styleable.SimpleDotsView_dotRadius, dip(4))
-        mDotGap = typeArray.getDimensionPixelSize(R.styleable.SimpleDotsView_dotGap, dip(8))
+        mDotRadius = typeArray.getDimensionPixelSize(R.styleable.SimpleDotsView_dotRadius, context.dip(4))
+        mDotGap = typeArray.getDimensionPixelSize(R.styleable.SimpleDotsView_dotGap, context.dip(8))
 
         typeArray.recycle()
         initDotsView()

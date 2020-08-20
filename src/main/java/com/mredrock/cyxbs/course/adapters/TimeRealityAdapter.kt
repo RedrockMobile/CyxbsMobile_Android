@@ -8,7 +8,6 @@ import android.widget.BaseAdapter
 import androidx.core.content.ContextCompat
 import com.mredrock.cyxbs.course.R
 import kotlinx.android.synthetic.main.course_grid_course_time_item.view.*
-import org.jetbrains.anko.textColor
 import java.util.*
 
 /**
@@ -30,8 +29,8 @@ class TimeRealityAdapter(private val dayOfWeekList: Array<String>, private val d
                 ContextCompat.getColor(parent.context, R.color.common_discover_academic_online_colors)
             else
                 ContextCompat.getColor(parent.context, R.color.common_level_one_font_color)
-            course_tv_week_day.textColor = color
-            course_tv_day_of_month.textColor = color
+            course_tv_week_day.setTextColor(color)
+            course_tv_day_of_month.setTextColor(color)
         }
         return viewHolder.view
     }

@@ -7,8 +7,8 @@ import android.graphics.Paint
 import android.graphics.RectF
 import android.util.AttributeSet
 import android.view.View
+import com.mredrock.cyxbs.common.utils.extensions.dip
 import com.mredrock.cyxbs.course.R
-import org.jetbrains.anko.dip
 
 /**
  * @author Jovines
@@ -37,7 +37,7 @@ class WeekBackgroundView : View {
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs) {
         val typeArray = context.obtainStyledAttributes(attrs, R.styleable.WeekBackgroundView)
         foreground = typeArray.getColor(R.styleable.WeekBackgroundView_foreground, Color.parseColor("#000000"))
-        mElementGap = typeArray.getDimensionPixelSize(R.styleable.WeekBackgroundView_backgroundElementGap, dip(2f))
+        mElementGap = typeArray.getDimensionPixelSize(R.styleable.WeekBackgroundView_backgroundElementGap, context.dip(2f))
         bottomBackground = typeArray.getColor(R.styleable.WeekBackgroundView_bottomBackground, Color.parseColor("#00000000"))
         round = typeArray.getDimensionPixelSize(R.styleable.WeekBackgroundView_round, context.dp2pxInt(8f)).toFloat()
         typeArray.recycle()

@@ -26,7 +26,6 @@ import com.mredrock.cyxbs.course.ui.activity.AffairEditActivity
 import com.mredrock.cyxbs.course.utils.createCornerBackground
 import com.umeng.analytics.MobclickAgent
 import org.greenrobot.eventbus.EventBus
-import org.jetbrains.anko.textColor
 import java.util.*
 
 /**
@@ -221,15 +220,15 @@ class ScheduleViewAdapter(private val mActivity: Activity,
                 tag.visibility = View.VISIBLE
                 tag.background = createCornerBackground(mCoursesTextColors[course.hashLesson / 2], mActivity.resources.getDimension(R.dimen.course_schedule_tag_radius))
             }
-            top.textColor = mCoursesTextColors[index]
-            bottom.textColor = mCoursesTextColors[index]
+            top.setTextColor(mCoursesTextColors[index])
+            bottom.setTextColor(mCoursesTextColors[index])
         } else {
             if (mShowModel) {
                 top.text = course.course
                 bottom.text = course.classroom
             }
-            top.textColor = ContextCompat.getColor(mActivity, R.color.common_level_two_font_color)
-            bottom.textColor = ContextCompat.getColor(mActivity, R.color.common_level_two_font_color)
+            top.setTextColor(ContextCompat.getColor(mActivity, R.color.common_level_two_font_color))
+            bottom.setTextColor(ContextCompat.getColor(mActivity, R.color.common_level_two_font_color))
             mAffairBackground.visibility = View.VISIBLE
         }
     }

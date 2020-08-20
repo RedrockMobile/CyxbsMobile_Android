@@ -6,8 +6,8 @@ import android.graphics.Paint
 import android.graphics.RectF
 import android.util.AttributeSet
 import android.view.View
+import com.mredrock.cyxbs.common.utils.extensions.dip
 import com.mredrock.cyxbs.course.R
-import org.jetbrains.anko.dip
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -84,12 +84,12 @@ class TimeIdentificationView : View {
         super.onDraw(canvas)
         position ?: return
         update()
-        val cx = measuredWidth - dip(horizontalLineLength).toFloat()
+        val cx = measuredWidth - context.dip(horizontalLineLength).toFloat()
         val radius = 3f
-        val cy = ((measuredHeight - 2f * dip(radius)) / measuredHeight) * (measuredHeight * percentage) + dip(radius)
+        val cy = ((measuredHeight - 2f * context.dip(radius)) / measuredHeight) * (measuredHeight * percentage) + context.dip(radius)
         paint.isAntiAlias = true
-        canvas.drawCircle(cx, cy, dip(radius).toFloat(), paint)
-        rectF.set(cx, cy - dip(0.5f), cx + dip(horizontalLineLength), cy + dip(0.5f))
+        canvas.drawCircle(cx, cy, context.dip(radius).toFloat(), paint)
+        rectF.set(cx, cy - context.dip(0.5f), cx +context.dip(horizontalLineLength), cy + context.dip(0.5f))
         canvas.drawRect(rectF, paint)
     }
 

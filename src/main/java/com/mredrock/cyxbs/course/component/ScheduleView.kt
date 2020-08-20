@@ -22,11 +22,11 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.children
 import com.mredrock.cyxbs.course.R
 import com.mredrock.cyxbs.course.utils.createCornerBackground
-import org.jetbrains.anko.dip
-import org.jetbrains.anko.px2sp
-import org.jetbrains.anko.sp
 import kotlin.math.pow
 import kotlin.math.sqrt
+import com.mredrock.cyxbs.common.utils.extensions.dip
+import com.mredrock.cyxbs.common.utils.extensions.px2sp
+import com.mredrock.cyxbs.common.utils.extensions.sp
 
 /**
  * [ScheduleView] is used to display the course. The use of it is very easy. you can only implement
@@ -112,31 +112,31 @@ class ScheduleView : ViewGroup {
     private var mHighlightColor: Int = 0
     private var mNoCourseDrawableResId: Int = 0
     private var mEmptyText: String? = null
-    private var mEmptyTextSize: Int = sp(12)
+    private var mEmptyTextSize: Int = context.sp(12)
     private var noCourseImageHeight: Int = 0
     private var noCourseImageWidth: Int = 0
 
 
     constructor(context: Context) : super(context) {
-        mElementGap = dip(2f)
+        mElementGap = context.dip(2f)
         mTouchViewColor = Color.parseColor("#bdc3c7")
-        mHeightAtLowDpi = dip(620f)
+        mHeightAtLowDpi = context.dip(620f)
         initScheduleView()
     }
 
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs) {
         val typeArray = context.obtainStyledAttributes(attrs, R.styleable.ScheduleView,
                 R.attr.ScheduleViewStyle, 0)
-        mElementGap = typeArray.getDimensionPixelSize(R.styleable.ScheduleView_elementGap, dip(2f))
-        noCourseImageHeight = typeArray.getDimensionPixelSize(R.styleable.ScheduleView_noGourseImageHeight, dip(0f))
-        noCourseImageWidth = typeArray.getDimensionPixelSize(R.styleable.ScheduleView_noGourseImageWidth, dip(0f))
+        mElementGap = typeArray.getDimensionPixelSize(R.styleable.ScheduleView_elementGap, context.dip(2f))
+        noCourseImageHeight = typeArray.getDimensionPixelSize(R.styleable.ScheduleView_noGourseImageHeight, context.dip(0f))
+        noCourseImageWidth = typeArray.getDimensionPixelSize(R.styleable.ScheduleView_noGourseImageWidth, context.dip(0f))
         mTouchViewColor = typeArray.getColor(R.styleable.ScheduleView_touchViewColor, Color.parseColor("#bdc3c7"))
-        mHeightAtLowDpi = typeArray.getDimensionPixelSize(R.styleable.ScheduleView_heightAtLowDpi, dip(620f))
+        mHeightAtLowDpi = typeArray.getDimensionPixelSize(R.styleable.ScheduleView_heightAtLowDpi, context.dip(620f))
         mTouchViewDrawableResId = typeArray.getResourceId(R.styleable.ScheduleView_touchViewDrawable, 0)
         mHighlightColor = typeArray.getColor(R.styleable.ScheduleView_highlightColor, Color.parseColor("#FFFBEB"))
         mNoCourseDrawableResId = typeArray.getResourceId(R.styleable.ScheduleView_noCourseDrawable, 0)
         mEmptyText = typeArray.getString(R.styleable.ScheduleView_emptyText)
-        mEmptyTextSize = typeArray.getDimensionPixelSize(R.styleable.ScheduleView_emptyTextSize, sp(12))
+        mEmptyTextSize = typeArray.getDimensionPixelSize(R.styleable.ScheduleView_emptyTextSize, context.sp(12))
         mIsDisplayCourse = typeArray.getBoolean(R.styleable.ScheduleView_isDisplayCourse, true)
         typeArray.recycle()
         initScheduleView()
@@ -185,16 +185,16 @@ class ScheduleView : ViewGroup {
             // Set mEmptyTextView
             mEmptyTextView.apply {
                 //设置数据为空时显示的图片，由于这里使用的时一个textView来实现的，所以需要将位图缩放
-                val w = if (noCourseImageWidth == 0) dip(100) else noCourseImageWidth
-                val h = if (noCourseImageHeight == 0) dip(100) else noCourseImageHeight
+                val w = if (noCourseImageWidth == 0) context.dip(100) else noCourseImageWidth
+                val h = if (noCourseImageHeight == 0) context.dip(100) else noCourseImageHeight
                 val drawable = zoomImage(mNoCourseDrawableResId, w, h)
                 drawable.setBounds(0, 0, w, h)
                 setCompoundDrawablesRelativeWithIntrinsicBounds(null, drawable, null, null)
-                compoundDrawablePadding = dip(25)
+                compoundDrawablePadding = context.dip(25)
                 val textParams = LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT,
                         LayoutParams.WRAP_CONTENT)
                 text = mEmptyText
-                textSize = px2sp(mEmptyTextSize)
+                textSize = context.px2sp(mEmptyTextSize)
                 gravity = Gravity.CENTER
                 layoutParams = textParams
             }

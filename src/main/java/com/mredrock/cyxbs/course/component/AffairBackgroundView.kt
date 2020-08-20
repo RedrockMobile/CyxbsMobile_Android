@@ -8,8 +8,8 @@ import android.graphics.RectF
 import android.util.AttributeSet
 import android.util.DisplayMetrics
 import android.view.View
+import com.mredrock.cyxbs.common.utils.extensions.dip
 import com.mredrock.cyxbs.course.R
-import org.jetbrains.anko.dip
 import kotlin.math.max
 import kotlin.math.sqrt
 
@@ -64,7 +64,7 @@ internal class AffairBackgroundView : View {
         wholeRectF.set(-(width / 2f), (height / 2f), width / 2f, -(height / 2f))
         mPath.addRoundRect(wholeRectF, 16f, 16f, Path.Direction.CCW)
         val drawEdge = max(width, height) * sqrt(2.0)
-        val space = dip(8)
+        val space = context.dip(8)
         val num = drawEdge / (space * 2)
         canvas.translate(width / 2f, height / 2f)
         canvas.clipPath(mPath)

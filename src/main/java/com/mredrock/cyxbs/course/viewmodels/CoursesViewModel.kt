@@ -482,7 +482,7 @@ class CoursesViewModel : BaseViewModel() {
 
         if (this.nowWeek.value != networkNowWeek && networkNowWeek >= 1 && networkNowWeek <= 18) {
             this.nowWeek.value = networkNowWeek
-        }else{
+        } else {
             //比如要进行一次赋值，因为考虑到寒假暑假周数超出限制
             //头部就要显示整学期字样
             this.nowWeek.value = 0
@@ -501,6 +501,8 @@ class CoursesViewModel : BaseViewModel() {
                             else
                                 "日"
                             }"
+                //8，9月欢迎新同学
+                nowWeek == 0 && (now[Calendar.MONTH] + 1 == 8 || now[Calendar.MONTH] + 1 == 9) -> "欢迎新同学～"
                 nowWeek == 0 && isProbablySummerVacation(now[Calendar.MONTH] + 1) -> "暑假快乐鸭"
                 nowWeek == 0 && !isProbablySummerVacation(now[Calendar.MONTH] + 1) -> "寒假快乐鸭"
                 else -> "呜呼～,发生了意料之外的错误呀"

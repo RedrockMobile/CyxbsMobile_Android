@@ -29,7 +29,6 @@ import com.mredrock.cyxbs.course.utils.affairFilter
 import kotlinx.android.synthetic.main.course_affair_detail_item.view.*
 import kotlinx.android.synthetic.main.course_course_detail_item.view.*
 import org.greenrobot.eventbus.EventBus
-import org.jetbrains.anko.textColor
 
 /**
  * Created by anriku on 2018/8/21.
@@ -156,7 +155,7 @@ class ScheduleDetailViewAdapter(private val mDialog: Dialog, private val mSchedu
             val value = object : RedRockAutoWarpView.Adapter() {
                 override fun getItemCount(): Int = 2
                 override fun getItemView(position: Int): View? = TextView(context).apply {
-                    textColor = ContextCompat.getColor(context, R.color.common_level_two_font_color)
+                    setTextColor(ContextCompat.getColor(context, R.color.common_level_two_font_color))
                     textSize = 13f
                     when (position) {
                         0 -> text = itemViewInfo.classroom

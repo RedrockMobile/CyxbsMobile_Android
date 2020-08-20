@@ -9,10 +9,9 @@ import android.widget.RelativeLayout
 import androidx.annotation.LayoutRes
 import androidx.core.view.children
 import androidx.viewpager.widget.ViewPager
+import com.mredrock.cyxbs.common.utils.extensions.dip
 import com.mredrock.cyxbs.course.R
 import com.mredrock.cyxbs.course.network.Course
-import org.jetbrains.anko.alignParentBottom
-import org.jetbrains.anko.dip
 
 /**
  * Created by anriku on 2018/8/21.
@@ -86,8 +85,8 @@ class ScheduleDetailView : RelativeLayout {
         mDotsView = scheduleDetailViewAdapter.addDotsView(this)
 
         val params = LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-        params.alignParentBottom()
-        params.bottomMargin = dip(8)
+        params.addRule(ALIGN_PARENT_BOTTOM)
+        params.bottomMargin = context.dip(8)
         addView(mDotsView.apply {
             layoutParams = params
         })
