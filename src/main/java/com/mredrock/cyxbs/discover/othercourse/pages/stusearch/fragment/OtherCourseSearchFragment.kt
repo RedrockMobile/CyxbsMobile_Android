@@ -8,6 +8,7 @@ import android.widget.Toast
 import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.common.ui.BaseViewModelFragment
 import com.mredrock.cyxbs.common.utils.extensions.doIfLogin
+import com.mredrock.cyxbs.common.utils.extensions.startActivity
 import com.mredrock.cyxbs.discover.othercourse.AutoWrapAdapter
 import com.mredrock.cyxbs.discover.othercourse.R
 import com.mredrock.cyxbs.discover.othercourse.pages.stulist.StuListActivity
@@ -15,7 +16,6 @@ import com.mredrock.cyxbs.discover.othercourse.pages.stusearch.viewmodel.OtherCo
 import com.mredrock.cyxbs.discover.othercourse.room.History
 import com.mredrock.cyxbs.discover.othercourse.snackbar
 import kotlinx.android.synthetic.main.othercourse_other_course_search_fragment.*
-import org.jetbrains.anko.startActivity
 
 /**
  * Created by yyfbe, Date on 2020/8/14.
