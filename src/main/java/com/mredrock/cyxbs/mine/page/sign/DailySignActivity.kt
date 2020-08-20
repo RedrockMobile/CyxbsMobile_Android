@@ -32,7 +32,6 @@ import com.mredrock.cyxbs.mine.util.ui.ProductAdapter
 import com.mredrock.cyxbs.mine.util.widget.*
 import kotlinx.android.synthetic.main.mine_activity_daily_sign.*
 import kotlinx.android.synthetic.main.mine_layout_store_sign.*
-import org.jetbrains.anko.textColor
 
 
 /**
@@ -181,14 +180,14 @@ class DailySignActivity(override val viewModelClass: Class<DailyViewModel> = Dai
             mine_daily_sign.apply {
                 isClickable = false
                 background = ResourcesCompat.getDrawable(resources, R.drawable.mine_bg_round_corner_grey, null)
-                textColor = ContextCompat.getColor(context, R.color.common_grey_button_text)
+                setTextColor(ContextCompat.getColor(context, R.color.common_grey_button_text))
                 text = if (scoreStatus.canCheckIn) "已签到" else "签到"
             }
         } else {
             mine_daily_sign.apply {
                 isClickable = true
                 background = ResourcesCompat.getDrawable(resources, R.drawable.common_dialog_btn_positive_blue, null)
-                textColor = ContextCompat.getColor(context, R.color.common_white_font_color)
+                setTextColor(ContextCompat.getColor(context, R.color.common_white_font_color))
                 text = "签到"
             }
         }
