@@ -4,20 +4,20 @@ import android.content.Context
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.style.AbsoluteSizeSpan
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.mredrock.cyxbs.common.ui.BaseFeedFragment
+import com.mredrock.cyxbs.common.utils.extensions.sp
 import com.mredrock.cyxbs.volunteer.R
 import com.mredrock.cyxbs.volunteer.bean.VolunteerTime
 import kotlinx.android.synthetic.main.volunteer_discover_feed.view.*
-import org.jetbrains.anko.layoutInflater
-import org.jetbrains.anko.sp
 
 class VolunteerFeedAdapter(private val volunteerTime: VolunteerTime) : BaseFeedFragment.Adapter() {
 
 
     override fun onCreateView(context: Context, parent: ViewGroup): View {
-        view = context.layoutInflater.inflate(R.layout.volunteer_discover_feed, parent, false)
+        view = LayoutInflater.from(context).inflate(R.layout.volunteer_discover_feed, parent, false)
         refresh(volunteerTime)
         return view!!
     }
