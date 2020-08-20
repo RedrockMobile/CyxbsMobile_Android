@@ -7,9 +7,15 @@ import android.content.res.Configuration
 import android.content.res.Resources
 import android.graphics.Point
 import android.os.Build
+import android.os.Handler
+import android.os.Looper
 import android.view.View
+import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.Toast
+import androidx.annotation.DimenRes
+import androidx.annotation.IdRes
+import androidx.fragment.app.Fragment
 import com.alibaba.android.arouter.launcher.ARouter
 import com.mredrock.cyxbs.common.bean.LoginConfig
 import com.mredrock.cyxbs.common.component.CyxbsToast
@@ -17,6 +23,7 @@ import com.mredrock.cyxbs.common.config.ACTIVITY_CLASS
 import com.mredrock.cyxbs.common.config.MAIN_LOGIN
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.service.account.IAccountService
+import com.mredrock.cyxbs.common.utils.Internals
 
 /**
  * Created by anriku on 2018/8/14.
@@ -48,7 +55,6 @@ fun Context.getScreenWidth(): Int {
     return screenWidth
 }
 
-fun Context.dp2px(dpValue: Float) = (dpValue * resources.displayMetrics.density + 0.5f).toInt()
 
 fun Activity.setFullScreen() {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
@@ -73,6 +79,15 @@ fun Context.getDarkModeStatus(): Boolean {
     val mode = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
     return mode == Configuration.UI_MODE_NIGHT_YES
 }
+
+fun Context.longToast(message: CharSequence) = CyxbsToast
+        .makeText(this, message, Toast.LENGTH_LONG)
+        .show()
+
+fun Context.longToast(res: Int) = CyxbsToast
+        .makeText(this, res, Toast.LENGTH_LONG)
+        .show()
+
 
 /**
  * 获取状态栏高度
@@ -107,3 +122,48 @@ fun Activity.startLoginActivity(loginConfig: LoginConfig = LoginConfig(isWarnUse
     postcard.navigation(this)
     if (loginConfig.isFinish) finish() // 关闭需要放在跳转之后
 }
+
+
+//anko-bridge
+//anko不再维护，删除anko，一些从anko拿过来的扩展方法
+fun Context.dp2px(dpValue: Float) = (dpValue * resources.displayMetrics.density + 0.5f).toInt()
+
+//returns dip(dp) dimension value in pixels
+fun Context.dip(value: Int): Int = (value * resources.displayMetrics.density).toInt()
+fun Context.dip(value: Float): Int = (value * resources.displayMetrics.density).toInt()
+
+//return sp dimension value in pixels
+fun Context.sp(value: Int): Int = (value * resources.displayMetrics.scaledDensity).toInt()
+fun Context.sp(value: Float): Int = (value * resources.displayMetrics.scaledDensity).toInt()
+
+//converts px value into dip or sp
+fun Context.px2dip(px: Int): Float = px.toFloat() / resources.displayMetrics.density
+fun Context.px2sp(px: Int): Float = px.toFloat() / resources.displayMetrics.scaledDensity
+
+fun Context.dimen(@DimenRes resource: Int): Int = resources.getDimensionPixelSize(resource)
+
+
+fun Context.runOnUiThread(f: Context.() -> Unit) {
+    if (Looper.getMainLooper() === Looper.myLooper()) f() else Handler(Looper.getMainLooper()).post { f() }
+}
+
+inline fun <reified T : Activity> Context.startActivity(vararg params: Pair<String, Any?>) =
+        Internals.internalStartActivity(this, T::class.java, params)
+
+inline fun <reified T : Activity> Activity.startActivityForResult(requestCode: Int, vararg params: Pair<String, Any?>) =
+        Internals.internalStartActivityForResult(this, T::class.java, requestCode, params)
+
+inline fun <reified T : Activity> Fragment.startActivityForResult(requestCode: Int, vararg params: Pair<String, Any?>) {
+    startActivityForResult(Internals.createIntent(requireActivity(), T::class.java, params), requestCode)
+}
+
+/**
+ * Returns the content view of this Activity if set, null otherwise.
+ */
+inline val Activity.contentView: View?
+    get() = findOptional<ViewGroup>(android.R.id.content)?.getChildAt(0)
+
+inline fun <reified T : View> Activity.findOptional(@IdRes id: Int): T? = findViewById(id) as? T
+
+inline fun <reified T : Any> Context.intentFor(vararg params: Pair<String, Any?>): Intent =
+        Internals.createIntent(this, T::class.java, params)

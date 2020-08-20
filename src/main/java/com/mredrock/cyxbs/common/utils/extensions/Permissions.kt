@@ -1,12 +1,11 @@
 package com.mredrock.cyxbs.common.utils.extensions
 
 import android.content.Context
+import android.content.DialogInterface
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.tbruyelle.rxpermissions2.RxPermissions
-import org.jetbrains.anko.alert
-import org.jetbrains.anko.noButton
-import org.jetbrains.anko.yesButton
 
 /**
  * 简化运行时权限的操作
@@ -87,21 +86,26 @@ private fun performRequestPermission(context: Context,
         context.sharedPreferences(builder.tag
                 ?: permissionsRequired.toString()).getBoolean("isNeverShow", false) -> Unit
         permissionsToRequest.isEmpty() -> builder.doAfterGranted.invoke()
-        builder.reason != null -> context.alert(builder.reason!!) {
-            yesButton {
-                requestPermission(rxPermissions, builder, *permissionsToRequest.toTypedArray())
-            }
-            if (builder.isShowNeverNotice) {
-                negativeButton("不再提示") {
-                    context.sharedPreferences(builder.tag
-                            ?: permissionsRequired.toString()).editor {
-                        putBoolean("isNeverShow", true)
-                    }
+        builder.reason != null ->
+            AlertDialog.Builder(context).apply {
+                setMessage(builder.reason)
+                setPositiveButton(android.R.string.yes) { _: DialogInterface, i: Int ->
+                    requestPermission(rxPermissions, builder, *permissionsToRequest.toTypedArray())
                 }
-            } else if (builder.isShowCancelNotice) {
-                noButton {}
-            }
-        }.show()
+                if (builder.isShowNeverNotice) {
+                    setNegativeButton("不再提示") { _: DialogInterface, i: Int ->
+                        context.sharedPreferences(builder.tag
+                                ?: permissionsRequired.toString()).editor {
+                            putBoolean("isNeverShow", true)
+                        }
+                    }
+                } else if (builder.isShowCancelNotice) {
+                    setNegativeButton(android.R.string.no) { _: DialogInterface, i: Int ->
+
+                    }
+
+                }
+            }.show()
         else -> requestPermission(rxPermissions, builder, *permissionsToRequest.toTypedArray())
     }
 }

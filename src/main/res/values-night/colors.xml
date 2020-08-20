@@ -291,8 +291,7 @@
     <color name="common_qa_answer_content_edt_hint_color">#EAEAED</color>
     <!--    登录下面的灰色字体-->
     <color name="common_log_in_to_the_gray_font_below">#ABBCD8</color>
-    <!--    游客模式进入-->
-    <color name="common_log_in_by_tourist_text_color">#ffffff</color>
+
     <!--    游客模式进入后面的字体颜色-->
     <color name="common_log_in_by_tourist_text_enter_color">#ffffff</color>
     <!--    添加事务下面按钮的光晕渐变结束颜色-->

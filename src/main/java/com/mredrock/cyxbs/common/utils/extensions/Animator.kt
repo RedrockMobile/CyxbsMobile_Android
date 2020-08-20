@@ -4,7 +4,6 @@ import android.animation.ValueAnimator
 import android.view.MotionEvent
 import android.view.View
 import androidx.annotation.FloatRange
-import org.jetbrains.anko.sdk27.coroutines.onTouch
 import kotlin.math.pow
 
 /**

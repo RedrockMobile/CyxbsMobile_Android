@@ -19,12 +19,12 @@ import com.mredrock.cyxbs.common.service.account.IAccountService
 import com.mredrock.cyxbs.common.slide.AbsSlideableActivity
 import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.getDarkModeStatus
+import com.mredrock.cyxbs.common.utils.extensions.startActivity
 import com.mredrock.cyxbs.common.utils.extensions.startLoginActivity
 import com.umeng.analytics.MobclickAgent
 import com.umeng.message.PushAgent
 import kotlinx.android.synthetic.main.common_toolbar.*
 import org.greenrobot.eventbus.EventBus
-import org.jetbrains.anko.startActivity
 
 
 /**
@@ -141,7 +141,9 @@ abstract class BaseActivity : AbsSlideableActivity() {
 
     override fun onStart() {
         super.onStart()
-        EventBus.getDefault().register(this)
+        if (this is EventBusLifecycleSubscriber) {
+            EventBus.getDefault().register(this)
+        }
         if (!ServiceManager.getService(IAccountService::class.java).getVerifyService().isTouristMode()) {
             checkLoginStatus()
         }

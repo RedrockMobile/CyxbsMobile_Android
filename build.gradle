@@ -31,8 +31,6 @@ dependencies {
     //releaseApi 'com.github.whataa:pandora-no-op:v2.1.0'
     //kotlin&ktx
     api deps.kotlin.runtime
-    //anko官方已经停止维护anko，并不建议使用anko todo 删除并清理它（项目中用的也不多）
-    api deps.kotlin.anko
     api deps.kotlin.core
     //official ui and support library
     api deps.support.constraint
