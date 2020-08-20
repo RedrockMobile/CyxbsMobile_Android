@@ -19,6 +19,7 @@ import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.common.config.DISCOVER_EMPTY_ROOM
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.SchoolCalendar
+import com.mredrock.cyxbs.common.utils.extensions.dip
 import com.mredrock.cyxbs.common.utils.extensions.gone
 import com.mredrock.cyxbs.common.utils.extensions.visible
 import com.mredrock.cyxbs.discover.emptyroom.R
@@ -33,9 +34,6 @@ import com.mredrock.cyxbs.discover.emptyroom.viewmodel.EmptyRoomViewModel.Compan
 import com.mredrock.cyxbs.discover.emptyroom.viewmodel.EmptyRoomViewModel.Companion.FINISH
 import com.mredrock.cyxbs.discover.emptyroom.viewmodel.EmptyRoomViewModel.Companion.LOADING
 import kotlinx.android.synthetic.main.emptyroom_activity_empty_room.*
-import org.jetbrains.anko.dip
-import org.jetbrains.anko.textColor
-import org.jetbrains.anko.textColorResource
 import java.util.*
 
 
@@ -67,20 +65,20 @@ class EmptyRoomActivity : BaseViewModelActivity<EmptyRoomViewModel>(), OnItemSel
         initQueryingAnimator()
         initRv()
         initTab()
-        ib_emptyroom_back.setOnClickListener{
-                finish()
+        ib_emptyroom_back.setOnClickListener {
+            finish()
         }
     }
 
     private fun initTab() {
         tl_building.apply {
-            addTab(tl_building.newTab().setText("二教"),false)
-            addTab(tl_building.newTab().setText("三教"),false)
-            addTab(tl_building.newTab().setText("四教"),false)
-            addTab(tl_building.newTab().setText("五教"),false)
-            addTab(tl_building.newTab().setText("八教"),false)
+            addTab(tl_building.newTab().setText("二教"), false)
+            addTab(tl_building.newTab().setText("三教"), false)
+            addTab(tl_building.newTab().setText("四教"), false)
+            addTab(tl_building.newTab().setText("五教"), false)
+            addTab(tl_building.newTab().setText("八教"), false)
         }
-        tl_building.addOnTabSelectedListener(object :TabLayout.BaseOnTabSelectedListener<TabLayout.Tab> {
+        tl_building.addOnTabSelectedListener(object : TabLayout.BaseOnTabSelectedListener<TabLayout.Tab> {
             override fun onTabReselected(p0: TabLayout.Tab?) {
 
             }
@@ -97,15 +95,15 @@ class EmptyRoomActivity : BaseViewModelActivity<EmptyRoomViewModel>(), OnItemSel
                     val textView = TextView(applicationContext)
                     textView.paint.isFakeBoldText = true
 
-                    val drawable : Drawable? = ContextCompat.getDrawable(BaseApp.context, R.drawable.emptyroom_shape_query_item)
+                    val drawable: Drawable? = ContextCompat.getDrawable(BaseApp.context, R.drawable.emptyroom_shape_query_item)
                     textView.background = drawable
                     textView.text = p0.text
-                    textView.textColor = Color.parseColor("#112C54")
+                    textView.setTextColor(Color.parseColor("#112C54"))
                     textView.gravity = Gravity.CENTER
 //                    textView.setPadding(dip(15),dip(3),dip(15),dip(3))
 //                    textView.layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT)
-                    textView.height = dip(26)
-                    textView.width = dip(59)
+                    textView.height = this@EmptyRoomActivity.dip(26)
+                    textView.width = this@EmptyRoomActivity.dip(59)
                     p0.customView = textView
                     onItemSelectedChange()
                 }
@@ -149,7 +147,7 @@ class EmptyRoomActivity : BaseViewModelActivity<EmptyRoomViewModel>(), OnItemSel
                 ERROR -> {
                     iv_querying.gone()
                     rv_result.gone()
-                    CyxbsToast.makeText(this,"抱歉，数据获取失败",Toast.LENGTH_SHORT).show()
+                    CyxbsToast.makeText(this, "抱歉，数据获取失败", Toast.LENGTH_SHORT).show()
                 }
             }
         })
@@ -174,11 +172,11 @@ class EmptyRoomActivity : BaseViewModelActivity<EmptyRoomViewModel>(), OnItemSel
     private fun initSelectors() {
         initSelector(multi_selector_week, weekApi, 0, 0)
         initSelector(multi_selector_weekday, weekdayApi, SchoolCalendar().dayOfWeek - 1, 1)
-        initSelector(multi_selector_section, sectionApi, -1, 3,middle = dip(1))
+        initSelector(multi_selector_section, sectionApi, -1, 3, middle = dip(1))
         multi_selector_section.setMinSelectedNum(1)
     }
 
-    private fun initSelector(selector: MultiSelector, values: IntArray, defaultSelected: Int, tag: Int, isFullUp : Boolean = false, itemNumber: Int = 0, canScroll: Boolean = true, @Px head : Int = 0, @Px middle: Int = 0, @Px tail: Int =0) {
+    private fun initSelector(selector: MultiSelector, values: IntArray, defaultSelected: Int, tag: Int, isFullUp: Boolean = false, itemNumber: Int = 0, canScroll: Boolean = true, @Px head: Int = 0, @Px middle: Int = 0, @Px tail: Int = 0) {
         val initializer = ViewInitializer.Builder(this)
                 .horizontalLinearLayoutManager(canScroll)
                 .gap(dip(head), dip(middle), dip(tail))
@@ -194,17 +192,17 @@ class EmptyRoomActivity : BaseViewModelActivity<EmptyRoomViewModel>(), OnItemSel
                         val drawable = if (selected) ContextCompat.getDrawable(BaseApp.context, R.drawable.emptyroom_shape_query_item) else null
 //                        var color =  1
                         if (selected) {
-                            textView.textColorResource = R.color.common_transaction_heading
+                            textView.setTextColor(ContextCompat.getColor(this@EmptyRoomActivity, R.color.common_transaction_heading))
                             textView.paint.isFakeBoldText = true
-                        }else{
-                            textView.textColorResource = R.color.common_level_two_font_color
+                        } else {
+                            textView.setTextColor(ContextCompat.getColor(this@EmptyRoomActivity, R.color.common_level_two_font_color))
                             textView.paint.isFakeBoldText = false
                         }
                         textView.gravity = Gravity.CENTER
                         textView.background = drawable
                         textView.height = dip(26)
                     }
-                },isFullUp ,itemNumber).build()
+                }, isFullUp, itemNumber).build()
         selector.apply {
             setValues(values)
             if (defaultSelected >= 0) setSelected(defaultSelected, true)
