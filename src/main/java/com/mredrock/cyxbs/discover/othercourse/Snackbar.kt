@@ -4,7 +4,7 @@ import android.app.Activity
 import android.view.View
 import androidx.fragment.app.Fragment
 import com.google.android.material.snackbar.Snackbar
-import org.jetbrains.anko.contentView
+import com.mredrock.cyxbs.common.utils.extensions.contentView
 
 /**
  * Created by zxzhu

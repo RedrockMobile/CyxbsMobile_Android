@@ -15,8 +15,7 @@ import com.mredrock.cyxbs.discover.othercourse.pages.stusearch.viewmodel.OtherCo
 import com.mredrock.cyxbs.discover.othercourse.room.History
 import com.mredrock.cyxbs.discover.othercourse.snackbar
 import kotlinx.android.synthetic.main.othercourse_other_course_search_fragment.*
-import org.jetbrains.anko.startActivity
-
+import com.mredrock.cyxbs.common.utils.extensions.startActivity
 /**
  * Created by yyfbe, Date on 2020/8/14.
  * 抽出公共，分为两个fragment，避免fragment传参的各种问题
