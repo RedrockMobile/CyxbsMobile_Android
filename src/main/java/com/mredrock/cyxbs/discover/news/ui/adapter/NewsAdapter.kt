@@ -3,12 +3,12 @@ package com.mredrock.cyxbs.discover.news.ui.adapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.mredrock.cyxbs.common.utils.extensions.startActivity
 import com.mredrock.cyxbs.discover.news.R
 import com.mredrock.cyxbs.discover.news.bean.NewsListItem
 import com.mredrock.cyxbs.discover.news.ui.activity.NewsItemActivity
 import com.mredrock.cyxbs.discover.news.utils.TimeFormatHelper
 import kotlinx.android.synthetic.main.news_item_news.view.*
-import org.jetbrains.anko.startActivity
 
 /**
  * Author: Hosigus

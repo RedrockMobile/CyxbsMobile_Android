@@ -23,6 +23,7 @@ import com.alibaba.android.arouter.facade.annotation.Route
 import com.mredrock.cyxbs.common.component.showPhotos
 import com.mredrock.cyxbs.common.config.DISCOVER_NEWS_ITEM
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
+import com.mredrock.cyxbs.common.utils.extensions.sp
 import com.mredrock.cyxbs.common.utils.extensions.toast
 import com.mredrock.cyxbs.common.utils.extensions.uri
 import com.mredrock.cyxbs.common.viewmodel.event.ProgressDialogEvent
@@ -34,7 +35,6 @@ import com.mredrock.cyxbs.discover.news.viewmodel.NewsItemViewModel
 import com.tbruyelle.rxpermissions2.RxPermissions
 import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.news_activity_detail.*
-import org.jetbrains.anko.sp
 import java.io.File
 import java.util.regex.Matcher
 import java.util.regex.Pattern
@@ -178,13 +178,13 @@ class NewsItemActivity : BaseViewModelActivity<NewsItemViewModel>(), NewsItemVie
                     if (index == 0) {
                         tv_detail.apply {
                             text = value
-                            textSize = sp(5).toFloat()
+                            textSize = context.sp(5).toFloat()
                         }
                     } else {
                         val textView = TextView(this).apply {
                             layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
                             setTextColor(ContextCompat.getColor(this@NewsItemActivity, R.color.common_level_two_font_color))
-                            textSize = sp(5).toFloat()
+                            textSize = context.sp(5).toFloat()
                             text = value
                         }
                         ll_content.addView(textView)
