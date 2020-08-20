@@ -58,8 +58,8 @@ class LoginActivity : BaseViewModelActivity<LoginViewModel>(), EventBusLifecycle
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        isSlideable = false
         super.onCreate(savedInstanceState)
+        isSlideable = false
         ARouter.getInstance().inject(this)
         setContentView(R.layout.main_activity_login)
         initView()
@@ -107,9 +107,14 @@ class LoginActivity : BaseViewModelActivity<LoginViewModel>(), EventBusLifecycle
                 CyxbsToast.makeText(this, R.string.main_user_agreement_title, Toast.LENGTH_SHORT).show()
             } else {
                 ServiceManager.getService(IAccountService::class.java).getVerifyService().loginByTourist()
+                this.startActivity(Intent(this, MainActivity::class.java))
                 finish()
             }
         }
+    }
+
+    override fun onStart() {
+        super.onStart()
     }
 
     private fun loginAction() {

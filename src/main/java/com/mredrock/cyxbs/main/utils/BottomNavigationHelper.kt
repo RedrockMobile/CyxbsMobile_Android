@@ -2,7 +2,7 @@ package com.mredrock.cyxbs.main.utils
 
 import android.animation.ValueAnimator
 import android.widget.CheckedTextView
-import org.jetbrains.anko.sdk27.coroutines.onClick
+import com.mredrock.cyxbs.common.utils.extensions.onClick
 
 /**
  * @author  Jovines

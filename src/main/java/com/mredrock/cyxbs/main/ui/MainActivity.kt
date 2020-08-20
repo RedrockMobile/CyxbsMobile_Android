@@ -26,6 +26,8 @@ import com.mredrock.cyxbs.common.service.update.IAppUpdateService
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
 import com.mredrock.cyxbs.common.utils.extensions.getStatusBarHeight
+import com.mredrock.cyxbs.common.utils.extensions.onTouch
+import com.mredrock.cyxbs.common.utils.extensions.topPadding
 import com.mredrock.cyxbs.main.R
 import com.mredrock.cyxbs.main.databinding.MainActivityMainBinding
 import com.mredrock.cyxbs.main.utils.BottomNavigationHelper
@@ -39,8 +41,6 @@ import kotlinx.android.synthetic.main.main_bottom_nav.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import org.jetbrains.anko.sdk27.coroutines.onTouch
-import org.jetbrains.anko.topPadding
 
 @Route(path = MAIN_MAIN)
 class MainActivity : BaseViewModelActivity<MainViewModel>(), EventBusLifecycleSubscriber {
