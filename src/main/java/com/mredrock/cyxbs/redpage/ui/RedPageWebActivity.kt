@@ -16,7 +16,6 @@ import com.mredrock.cyxbs.common.utils.extensions.gone
 import com.mredrock.cyxbs.common.utils.extensions.visible
 import com.mredrock.cyxbs.redpage.R
 import kotlinx.android.synthetic.main.redrock_home_redpage_activity_webview.*
-import org.jetbrains.anko.backgroundResource
 
 /**
  * create by:Fxymine4ever
@@ -31,7 +30,7 @@ class RedPageWebActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.redrock_home_redpage_activity_webview)
         tl_redPage.init("红岩网校")
-        tl_redPage.backgroundResource = R.drawable.redrock_home_shape_tl_bg_shape
+        tl_redPage.setBackgroundResource(R.drawable.redrock_home_shape_tl_bg_shape)
         tl_redPage.setNavigationOnClickListener { finish() }
 
         val webSettings = wv_redPage.settings
