@@ -22,8 +22,10 @@ middle=${commitMsg%%]*}
 msgType=${middle#*[}
 typeArray=("fix:bug修复" "feature:需求" "optimize:优化" "release:版本升级" "style:代码格式调整，不涉及代码更改")
 typeShow=$(for i in "${typeArray[@]}" ; do printf "$i ";done)
-
-if [[ "$result" == "" ]]; then
+merge=$(echo "$commitMsg"|grep "^Merge")
+if ! [[ "$merge" == "" ]]; then
+    echo "检测到为自动merge提交信息，忽略提交格式检查"
+elif [[ "$result" == "" ]]; then
     echo "提交格式有误，标准格式为:
 [type]title
 
