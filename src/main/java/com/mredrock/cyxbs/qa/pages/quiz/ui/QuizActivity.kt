@@ -23,10 +23,7 @@ import com.mredrock.cyxbs.common.event.QuestionDraftEvent
 import com.mredrock.cyxbs.common.mark.EventBusLifecycleSubscriber
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.down.bean.DownMessageText
-import com.mredrock.cyxbs.common.utils.extensions.gone
-import com.mredrock.cyxbs.common.utils.extensions.sharedPreferences
-import com.mredrock.cyxbs.common.utils.extensions.toast
-import com.mredrock.cyxbs.common.utils.extensions.visible
+import com.mredrock.cyxbs.common.utils.extensions.*
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.bean.Question
 import com.mredrock.cyxbs.qa.pages.quiz.QuizViewModel
@@ -40,7 +37,6 @@ import kotlinx.android.synthetic.main.qa_common_toolbar.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import org.jetbrains.anko.support.v4.startActivityForResult
 import top.limuyang2.photolibrary.activity.LPhotoPickerActivity
 
 @Route(path = QA_QUIZ)

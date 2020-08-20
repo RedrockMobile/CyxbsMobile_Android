@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.content.ContextCompat
+import com.mredrock.cyxbs.common.component.showPhotos
 import com.mredrock.cyxbs.common.utils.extensions.gone
 import com.mredrock.cyxbs.common.utils.extensions.loadRedrockImage
 import com.mredrock.cyxbs.common.utils.extensions.visible
@@ -35,6 +36,11 @@ class SearchResultHeaderAdapter : BaseRvAdapter<Knowledge>() {
                 tv_knowledge_base_detail.text = data.description
                 tv_knowledge_from.text = itemView.context.resources.getString(R.string.qa_search_knowledge_from_where, data.from)
                 context?.loadRedrockImage(data.photoUrl, iv_knowledge)
+                if (data.photoUrl.isNotEmpty()) {
+                    iv_knowledge.setOnClickListener {
+                        showPhotos(itemView.context, listOf(data.photoUrl), 0)
+                    }
+                }
                 if (data.related.isEmpty()) {
                     cv_related.gone()
                 } else {
@@ -54,7 +60,4 @@ class SearchResultHeaderAdapter : BaseRvAdapter<Knowledge>() {
         }
     }
 
-    public fun hideHolder() {
-        refreshData(emptyList())
-    }
 }

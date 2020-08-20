@@ -22,6 +22,7 @@ import com.mredrock.cyxbs.common.event.AnswerDraftEvent
 import com.mredrock.cyxbs.common.mark.EventBusLifecycleSubscriber
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.extensions.gone
+import com.mredrock.cyxbs.common.utils.extensions.startActivityForResult
 import com.mredrock.cyxbs.common.utils.extensions.visible
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.bean.Content
@@ -35,7 +36,6 @@ import kotlinx.android.synthetic.main.qa_common_toolbar.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import org.jetbrains.anko.startActivityForResult
 import top.limuyang2.photolibrary.activity.LPhotoPickerActivity
 
 @Route(path = QA_ANSWER)

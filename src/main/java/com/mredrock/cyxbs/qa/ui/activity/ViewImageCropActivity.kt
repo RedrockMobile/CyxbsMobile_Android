@@ -12,16 +12,10 @@ import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.mredrock.cyxbs.common.config.DIR
-import com.mredrock.cyxbs.common.utils.extensions.gone
-import com.mredrock.cyxbs.common.utils.extensions.setFullScreen
-import com.mredrock.cyxbs.common.utils.extensions.toast
-import com.mredrock.cyxbs.common.utils.extensions.visible
+import com.mredrock.cyxbs.common.utils.extensions.*
 import com.mredrock.cyxbs.qa.R
 import com.yalantis.ucrop.UCrop
 import kotlinx.android.synthetic.main.qa_activity_view_image_crop.*
-import org.jetbrains.anko.startActivity
-import org.jetbrains.anko.startActivityForResult
-import org.jetbrains.anko.support.v4.startActivityForResult
 import java.io.File
 
 class ViewImageCropActivity : AppCompatActivity() {

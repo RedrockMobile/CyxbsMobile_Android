@@ -6,7 +6,6 @@ import androidx.core.content.ContextCompat
 import com.mredrock.cyxbs.common.utils.extensions.gone
 import com.mredrock.cyxbs.common.utils.extensions.visible
 import com.mredrock.cyxbs.qa.R
-import org.jetbrains.anko.textColor
 
 /**
  * Created By jay68 on 2018/9/30.
@@ -26,11 +25,11 @@ internal fun TextView.setPraise(praiseNum: String?,
     } else {
         ContextCompat.getDrawable(context, praiseIcon)
     }
-    textColor = if (isPraised) {
+    setTextColor(if (isPraised) {
         ContextCompat.getColor(context, praisedColor)
     } else {
         ContextCompat.getColor(context, praiseColor)
-    }
+    })
     setCompoundDrawablesRelativeWithIntrinsicBounds(drawable, null, null, null)
 }
 

@@ -10,15 +10,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager.widget.ViewPager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.mredrock.cyxbs.common.config.DIR_PHOTO
-import com.mredrock.cyxbs.common.utils.extensions.doPermissionAction
-import com.mredrock.cyxbs.common.utils.extensions.saveImage
-import com.mredrock.cyxbs.common.utils.extensions.setFullScreen
-import com.mredrock.cyxbs.common.utils.extensions.toast
+import com.mredrock.cyxbs.common.utils.extensions.*
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.ui.adapter.HackyViewPagerAdapter
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.qa_activity_view_image.*
-import org.jetbrains.anko.startActivity
 
 /**
  * Created by yyfbe, Date on 2020/3/20.

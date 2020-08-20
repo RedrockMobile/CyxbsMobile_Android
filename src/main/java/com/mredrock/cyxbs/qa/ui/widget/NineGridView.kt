@@ -7,9 +7,9 @@ import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.ImageView
 import androidx.core.view.forEach
+import com.mredrock.cyxbs.common.utils.extensions.dip
 import com.mredrock.cyxbs.common.utils.extensions.loadRedrockImage
 import com.mredrock.cyxbs.qa.R
-import org.jetbrains.anko.dip
 
 /**
  * 图片九宫格布局
@@ -35,12 +35,12 @@ class NineGridView(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : 
     /**
      * 水平方向间距
      */
-    private var horizontalGap = dip(9).toFloat()
+    private var horizontalGap = context.dip(9).toFloat()
 
     /**
      * 垂直方向间距
      */
-    private var verticalGap = dip(10).toFloat()
+    private var verticalGap = context.dip(10).toFloat()
 
     /**
      * 每个子view的宽高比

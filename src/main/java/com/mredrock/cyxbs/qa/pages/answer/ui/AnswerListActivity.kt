@@ -18,10 +18,7 @@ import com.mredrock.cyxbs.common.config.QA_ANSWER_LIST
 import com.mredrock.cyxbs.common.event.OpenShareQuestionEvent
 import com.mredrock.cyxbs.common.mark.EventBusLifecycleSubscriber
 import com.mredrock.cyxbs.common.ui.BaseActivity
-import com.mredrock.cyxbs.common.utils.extensions.doIfLogin
-import com.mredrock.cyxbs.common.utils.extensions.gone
-import com.mredrock.cyxbs.common.utils.extensions.toast
-import com.mredrock.cyxbs.common.utils.extensions.visible
+import com.mredrock.cyxbs.common.utils.extensions.*
 import com.mredrock.cyxbs.common.viewmodel.event.ProgressDialogEvent
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.bean.Answer
@@ -38,9 +35,6 @@ import kotlinx.android.synthetic.main.qa_common_toolbar.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import org.jetbrains.anko.indeterminateProgressDialog
-import org.jetbrains.anko.longToast
-import org.jetbrains.anko.support.v4.startActivityForResult
 
 @Route(path = QA_ANSWER_LIST)
 class AnswerListActivity : BaseActivity(), EventBusLifecycleSubscriber {
@@ -60,7 +54,10 @@ class AnswerListActivity : BaseActivity(), EventBusLifecycleSubscriber {
 
     private lateinit var viewModel: AnswerListViewModel
     private var progressDialog: ProgressDialog? = null
-    private fun initProgressBar() = indeterminateProgressDialog(message = "Loading...") {
+    private fun initProgressBar() = ProgressDialog(this).apply{
+        isIndeterminate = false
+        setProgressStyle(ProgressDialog.STYLE_HORIZONTAL)
+        setTitle("Loading...")
         setOnDismissListener { viewModel.onProgressDialogDismissed() }
     }
 

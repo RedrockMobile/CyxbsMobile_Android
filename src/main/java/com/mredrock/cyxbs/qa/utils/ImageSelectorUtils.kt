@@ -3,8 +3,8 @@ package com.mredrock.cyxbs.qa.utils
 import android.Manifest
 import androidx.appcompat.app.AppCompatActivity
 import com.mredrock.cyxbs.common.utils.extensions.doPermissionAction
+import com.mredrock.cyxbs.common.utils.extensions.longToast
 import com.mredrock.cyxbs.qa.R
-import org.jetbrains.anko.longToast
 import top.limuyang2.photolibrary.activity.LPhotoPickerActivity
 import top.limuyang2.photolibrary.engine.LGlideEngine
 import top.limuyang2.photolibrary.util.LPPImageType

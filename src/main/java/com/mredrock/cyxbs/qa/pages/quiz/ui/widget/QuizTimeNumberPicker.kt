@@ -7,8 +7,8 @@ import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.NumberPicker
 import androidx.core.content.ContextCompat
+import com.mredrock.cyxbs.common.utils.extensions.sp
 import com.mredrock.cyxbs.qa.R
-import org.jetbrains.anko.sp
 
 /**
  * Created By jay68 on 2018/11/27.
@@ -20,7 +20,7 @@ class QuizTimeNumberPicker(context: Context?, attrs: AttributeSet?) : NumberPick
         super.addView(child, index, params)
         if (child is EditText) {
             child.setTextColor(ContextCompat.getColor(context, R.color.common_qa_quiz_time_select_color))
-            child.textSize = sp(8).toFloat()
+            child.textSize = context.sp(8).toFloat()
         }
     }
 }

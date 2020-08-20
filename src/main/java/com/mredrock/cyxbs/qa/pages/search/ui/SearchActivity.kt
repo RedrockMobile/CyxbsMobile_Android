@@ -10,6 +10,7 @@ import androidx.core.app.ActivityOptionsCompat
 import androidx.fragment.app.Fragment
 import com.mredrock.cyxbs.common.mark.EventBusLifecycleSubscriber
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
+import com.mredrock.cyxbs.common.utils.extensions.intentFor
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.event.QASearchEvent
 import com.mredrock.cyxbs.qa.pages.search.room.QAHistory
@@ -19,7 +20,6 @@ import com.mredrock.cyxbs.qa.pages.search.viewmodel.SearchViewModel
 import kotlinx.android.synthetic.main.qa_activity_question_search.*
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import org.jetbrains.anko.intentFor
 
 /**
  * Created by yyfbe, Date on 2020/8/12.
