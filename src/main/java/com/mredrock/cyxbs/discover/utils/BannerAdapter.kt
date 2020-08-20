@@ -12,11 +12,11 @@ import com.bumptech.glide.load.MultiTransformation
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
+import com.mredrock.cyxbs.common.utils.extensions.dip
 import com.mredrock.cyxbs.discover.R
 import com.mredrock.cyxbs.discover.network.RollerViewInfo
 import com.mredrock.cyxbs.discover.pages.RollerViewActivity
 import kotlinx.android.synthetic.main.discover_viewpager_item.view.*
-import org.jetbrains.anko.dip
 
 /**
  * @author zixuan

@@ -9,10 +9,10 @@ import android.webkit.WebChromeClient
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import com.mredrock.cyxbs.common.ui.BaseActivity
+import com.mredrock.cyxbs.common.utils.extensions.startActivity
 import com.mredrock.cyxbs.discover.R
 import com.mredrock.cyxbs.discover.network.RollerViewInfo
 import kotlinx.android.synthetic.main.discover_activity_roller_view.*
-import org.jetbrains.anko.startActivity
 
 class RollerViewActivity : BaseActivity() {
     override val isFragmentActivity = false

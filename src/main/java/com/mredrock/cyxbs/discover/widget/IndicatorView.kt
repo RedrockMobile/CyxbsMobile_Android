@@ -16,7 +16,6 @@ import com.mredrock.cyxbs.discover.R
  */
 class IndicatorView(context: Context?, attrs: AttributeSet?, defStyleAttr: Int) :
         View(context, attrs, defStyleAttr) {
-    @SuppressLint("Recycle")
     constructor(context: Context?, attrs: AttributeSet?) : this(context, attrs, 0) {
         val ta = context?.obtainStyledAttributes(attrs, R.styleable.IndicatorView)
         if (ta != null) {
@@ -68,7 +67,6 @@ class IndicatorView(context: Context?, attrs: AttributeSet?, defStyleAttr: Int) 
         isAntiAlias = true
     }
 
-    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
         if (canvas != null) {
@@ -77,7 +75,6 @@ class IndicatorView(context: Context?, attrs: AttributeSet?, defStyleAttr: Int) 
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
         when (MeasureSpec.getMode(widthMeasureSpec)) {
@@ -114,7 +111,6 @@ class IndicatorView(context: Context?, attrs: AttributeSet?, defStyleAttr: Int) 
         last = mWidth * (1 - multiple)
     }
 
-    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     private fun drawUnder(canvas: Canvas) {
         canvas.drawRoundRect(
                 0f,
@@ -127,7 +123,6 @@ class IndicatorView(context: Context?, attrs: AttributeSet?, defStyleAttr: Int) 
         )
     }
 
-    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     private fun drawProgress(canvas: Canvas) {
         canvas.drawRoundRect(
                 progress * last,
