@@ -8,6 +8,9 @@ import android.widget.Toast
 import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.common.ui.BaseViewModelFragment
 import com.mredrock.cyxbs.common.utils.extensions.doIfLogin
+import com.mredrock.cyxbs.common.utils.extensions.gone
+import com.mredrock.cyxbs.common.utils.extensions.startActivity
+import com.mredrock.cyxbs.common.utils.extensions.visible
 import com.mredrock.cyxbs.discover.othercourse.AutoWrapAdapter
 import com.mredrock.cyxbs.discover.othercourse.R
 import com.mredrock.cyxbs.discover.othercourse.pages.stulist.StuListActivity
@@ -15,7 +18,7 @@ import com.mredrock.cyxbs.discover.othercourse.pages.stusearch.viewmodel.OtherCo
 import com.mredrock.cyxbs.discover.othercourse.room.History
 import com.mredrock.cyxbs.discover.othercourse.snackbar
 import kotlinx.android.synthetic.main.othercourse_other_course_search_fragment.*
-import com.mredrock.cyxbs.common.utils.extensions.startActivity
+
 /**
  * Created by yyfbe, Date on 2020/8/14.
  * 抽出公共，分为两个fragment，避免fragment传参的各种问题
@@ -49,6 +52,13 @@ abstract class OtherCourseSearchFragment<T : OtherCourseSearchViewModel> : BaseV
                 context?.let { it1 -> CyxbsToast.makeText(it1, "查无此人", Toast.LENGTH_SHORT).show() }
             }
         }
+        viewModel.mListFromHistory.observeNotNull {
+            if (it.isNotEmpty()) {
+                context?.startActivity<StuListActivity>("stu_list" to it)
+            } else {
+                context?.let { it1 -> CyxbsToast.makeText(it1, "查无此人", Toast.LENGTH_SHORT).show() }
+            }
+        }
     }
 
     private fun setSearch() {
@@ -71,9 +81,13 @@ abstract class OtherCourseSearchFragment<T : OtherCourseSearchViewModel> : BaseV
     private fun initHistory() {
         viewModel.getHistory()
         viewModel.mHistory.observe {
-            it ?: return@observe
+            if (it.isNullOrEmpty()) {
+                tv_other_course_history.gone()
+                return@observe
+            }
+            tv_other_course_history.visible()
             aw_other_course_fragment.adapter = AutoWrapAdapter(it) { text ->
-                viewModel.getPerson(text)
+                viewModel.getPerson(text, true)
             }
         }
     }

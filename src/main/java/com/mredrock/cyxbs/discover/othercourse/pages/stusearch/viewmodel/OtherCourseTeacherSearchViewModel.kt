@@ -13,7 +13,7 @@ import com.mredrock.cyxbs.discover.othercourse.room.History
 import com.mredrock.cyxbs.discover.othercourse.room.TEACHER_TYPE
 
 class OtherCourseTeacherSearchViewModel : OtherCourseSearchViewModel() {
-    override fun getPerson(str: String) {
+    override fun getPerson(str: String, fromHistory: Boolean?) {
         ApiGenerator.getApiService(Services::class.java)
                 .getTeacher(str)
                 .mapOrThrowApiException()
@@ -30,7 +30,11 @@ class OtherCourseTeacherSearchViewModel : OtherCourseSearchViewModel() {
                     }
                 }
                 .safeSubscribeBy {
-                    mList.value = it
+                    if (fromHistory == true) {
+                        mListFromHistory.value = it
+                    } else {
+                        mList.value = it
+                    }
                 }.lifeCycle()
     }
 
