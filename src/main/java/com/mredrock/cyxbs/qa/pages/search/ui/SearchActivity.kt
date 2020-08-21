@@ -13,7 +13,7 @@ import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.extensions.intentFor
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.event.QASearchEvent
-import com.mredrock.cyxbs.qa.pages.search.room.QAHistory
+import com.mredrock.cyxbs.qa.bean.QAHistory
 import com.mredrock.cyxbs.qa.pages.search.ui.fragment.QuestionSearchedFragment
 import com.mredrock.cyxbs.qa.pages.search.ui.fragment.QuestionSearchingFragment
 import com.mredrock.cyxbs.qa.pages.search.viewmodel.SearchViewModel

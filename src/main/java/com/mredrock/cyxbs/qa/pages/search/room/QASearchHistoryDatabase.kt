@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import com.mredrock.cyxbs.qa.bean.QAHistory
 
 /**
  * Created by yyfbe, Date on 2020/8/16.

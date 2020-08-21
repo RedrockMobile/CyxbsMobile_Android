@@ -5,7 +5,7 @@ import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
-import com.mredrock.cyxbs.qa.pages.search.room.QAHistory
+import com.mredrock.cyxbs.qa.bean.QAHistory
 import com.mredrock.cyxbs.qa.pages.search.room.QASearchHistoryDatabase
 import io.reactivex.Observable
 import io.reactivex.ObservableOnSubscribe
