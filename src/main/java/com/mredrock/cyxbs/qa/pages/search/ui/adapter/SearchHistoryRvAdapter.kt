@@ -1,6 +1,7 @@
 package com.mredrock.cyxbs.qa.pages.search.ui.adapter
 
 import android.view.ViewGroup
+import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.component.recycler.BaseRvAdapter
 import com.mredrock.cyxbs.qa.component.recycler.BaseViewHolder
@@ -15,12 +16,13 @@ class SearchHistoryRvAdapter(private val onHistoryClick: (Int) -> Unit, private 
     override fun onBindViewHolder(holder: BaseViewHolder<String>, position: Int) {
         super.onBindViewHolder(holder, position)
         holder.itemView.tv_history_title.setOnClickListener {
-            onHistoryClick(position)
+            onHistoryClick(holder.adapterPosition)
         }
         holder.itemView.iv_history_delete.setOnClickListener {
-            dataList.removeAt(position)
-            notifyItemRemoved(position)
-            onCleanIconClick(position)
+            val pos = holder.adapterPosition
+            dataList.removeAt(pos)
+            notifyItemRemoved(pos)
+            onCleanIconClick(pos)
 
         }
     }
