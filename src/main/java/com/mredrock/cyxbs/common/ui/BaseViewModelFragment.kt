@@ -21,9 +21,8 @@ abstract class BaseViewModelFragment<T : BaseViewModel> : BaseFragment() {
     private var progressDialog: ProgressDialog? = null
 
     private fun initProgressBar() = ProgressDialog(context).apply {
-        isIndeterminate = false
+        isIndeterminate = true
         setMessage("Loading...")
-        setProgressStyle(ProgressDialog.STYLE_HORIZONTAL)
         setOnDismissListener { viewModel.onProgressDialogDismissed() }
     }
 
