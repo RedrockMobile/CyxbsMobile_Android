@@ -10,7 +10,7 @@ def version_multidex = '2.0.0'
 def version_arouter = '1.5.0'
 def version_arouter_compiler = '1.2.2'
 def version_eventbus = '3.2.0'
-def version_hotfix = '3.2.13'
+def version_hotfix = '3.2.14'
 //network
 def version_glide = '4.11.0'
 def version_glide_okhttp_integration = '4.11.0'
@@ -153,6 +153,18 @@ umeng.oaid_lenovo = 'com.umeng.umsdk:oaid_lenovo:1.0.0' // (可选)
 umeng.oaid_mi = 'com.umeng.umsdk:oaid_mi:1.0.0' // (可选)
 umeng.oaid_oppo = 'com.umeng.umsdk:oaid_oppo:1.0.4' // (可选)
 umeng.oaid_vivo = 'com.umeng.umsdk:oaid_vivo:1.0.0.1' // (可选)
+
+//友盟push相关依赖(必须)
+umeng.push = 'com.umeng.umsdk:push:6.1.0'
+umeng.alicloud_httpdns = 'com.umeng.umsdk:alicloud-httpdns:1.2.5'
+umeng.alicloud_utils = 'com.umeng.umsdk:alicloud-utils:1.1.5'
+umeng.utdid = 'com.umeng.umsdk:utdid:1.5.2'
+umeng.alicloud_beacon = 'com.umeng.umsdk:alicloud_beacon:1.0.1'
+umeng.agoo_accs = 'com.umeng.umsdk:agoo-accs:3.3.8.8-open-fix2'
+umeng.agoo_networksdk = 'com.umeng.umsdk:agoo_networksdk:3.5.5'
+umeng.agoo_tlog = 'com.umeng.umsdk:agoo_tlog:3.0.0.17'
+umeng.agoo_tnet4android = 'com.umeng.umsdk:agoo_tnet4android:3.1.14.9'
+
 deps.umeng = umeng
 
 def bugly = [:]
