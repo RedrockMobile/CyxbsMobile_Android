@@ -10,8 +10,11 @@ import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import com.alibaba.android.arouter.launcher.ARouter
 import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.common.component.RedRockAutoWarpView
+import com.mredrock.cyxbs.common.config.COURSE_POS_TO_MAP
+import com.mredrock.cyxbs.common.config.DISCOVER_MAP
 import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.utils.Num2CN
 import com.mredrock.cyxbs.common.utils.extensions.errorHandler
@@ -158,7 +161,14 @@ class ScheduleDetailViewAdapter(private val mDialog: Dialog, private val mSchedu
                     setTextColor(ContextCompat.getColor(context, R.color.common_level_two_font_color))
                     textSize = 13f
                     when (position) {
-                        0 -> text = itemViewInfo.classroom
+                        0 -> {
+                            //教室名跳转到对应地图
+                            text = itemViewInfo.classroom
+                            setOnClickListener {
+                                //跳转到对应Map位置
+                                ARouter.getInstance().build(DISCOVER_MAP).withString(COURSE_POS_TO_MAP, itemViewInfo.classroom).navigation()
+                            }
+                        }
                         1 -> text = itemViewInfo.teacher
                     }
                 }
