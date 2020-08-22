@@ -6,8 +6,6 @@ apply plugin: 'kotlin-android-extensions'
 
 apply plugin: 'kotlin-kapt'
 
-apply plugin: 'com.aliyun.ams.emas-services'
-
 apply plugin: 'walle'
 
 
@@ -160,5 +158,8 @@ dependencies {
         implementation project(':module_redrock_home')
     }
     kapt deps.arouter.compiler
-    api deps.hotfix.runtime
+    implementation (deps.hotfix.runtime){
+        exclude (module:'alicloud-android-utdid')
+        exclude (module:'alicloud-android-utils')
+    }
 }
