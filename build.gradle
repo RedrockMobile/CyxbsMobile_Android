@@ -1,6 +1,6 @@
 apply from: config
-
-// 这里只添加确认模块独用库，添加请之前全局搜索，是否已经依赖
-// 公用库请不要添加到这里
 dependencies {
+    implementation 'com.davemorrissey.labs:subsampling-scale-image-view-androidx:3.10.0'
+    implementation 'com.google.android:flexbox:2.0.1'
+    kapt 'com.github.bumptech.glide:compiler:4.11.0'
 }

@@ -1,4 +1,4 @@
-package com.mredrock.cyxbs.discover.map
+package com.mredrock.cyxbs.discover.map.ui.activity
 
 import android.annotation.SuppressLint
 import android.app.ProgressDialog
@@ -7,18 +7,15 @@ import android.os.Bundle
 import android.webkit.WebChromeClient
 import android.webkit.WebView
 import android.webkit.WebViewClient
-import com.alibaba.android.arouter.facade.annotation.Route
-import com.mredrock.cyxbs.common.config.DISCOVER_MAP
 import com.mredrock.cyxbs.common.ui.BaseActivity
 
-@Route(path = DISCOVER_MAP)
-class MapActivity : BaseActivity() {
+class VRActivity : BaseActivity() {
     override val isFragmentActivity = false
     private lateinit var webView: WebView
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        isSlideable = false
         super.onCreate(savedInstanceState)
+        isSlideable = false
     }
 
     @SuppressLint("SetJavaScriptEnabled", "ObsoleteSdkInt")
