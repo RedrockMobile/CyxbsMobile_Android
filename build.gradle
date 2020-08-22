@@ -31,8 +31,6 @@ dependencies {
     //releaseApi 'com.github.whataa:pandora-no-op:v2.1.0'
     //kotlin&ktx
     api deps.kotlin.runtime
-    //anko官方已经停止维护anko，并不建议使用anko todo 删除并清理它（项目中用的也不多）
-    api deps.kotlin.anko
     api deps.kotlin.core
     //official ui and support library
     api deps.support.constraint
@@ -85,9 +83,24 @@ dependencies {
     //permission
     api deps.rxpermissions.runtime
 
-    //umeng
+    //友盟分析相关依赖
     api deps.umeng.common
-    api deps.umeng.analytics
+    api deps.umeng.asms
+    api deps.umeng.crash
+    api deps.umeng.oaid_lenovo
+    api deps.umeng.oaid_mi
+    api deps.umeng.oaid_oppo
+    api deps.umeng.oaid_vivo
+    //友盟push相关依赖(必须)
+    api deps.umeng.push
+    api deps.umeng.alicloud_httpdns
+    api deps.umeng.alicloud_utils
+    api deps.umeng.utdid
+    api deps.umeng.alicloud_beacon
+    api deps.umeng.agoo_accs
+    api deps.umeng.agoo_networksdk
+    api deps.umeng.agoo_tlog
+    api deps.umeng.agoo_tnet4android
 
     //bugly
     api deps.bugly.crashreport
@@ -99,11 +112,8 @@ dependencies {
     //airbnb
     api deps.airbnb.lottie
 
-
     //杂项
     api 'com.afollestad.material-dialogs:core:3.3.0'
     api 'com.github.yalantis:ucrop:2.2.4'
     api 'com.github.chrisbanes:PhotoView:2.3.0'
-    api project(path: ':push_sdk')
-
 }

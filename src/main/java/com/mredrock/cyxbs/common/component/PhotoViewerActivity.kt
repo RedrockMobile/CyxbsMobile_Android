@@ -16,8 +16,8 @@ import com.github.chrisbanes.photoview.PhotoView
 import com.mredrock.cyxbs.common.R
 import com.mredrock.cyxbs.common.ui.BaseActivity
 import com.mredrock.cyxbs.common.utils.extensions.setFullScreen
+import com.mredrock.cyxbs.common.utils.extensions.startActivity
 import kotlinx.android.synthetic.main.common_activity_photo_viewer.*
-import org.jetbrains.anko.startActivity
 
 /**
  * Create By Hosigus at 2019/8/7

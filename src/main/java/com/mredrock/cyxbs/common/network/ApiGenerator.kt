@@ -63,7 +63,7 @@ object ApiGenerator {
         }.build()
     }
 
-    fun <T> getApiService(clazz: Class<T>) = if (ServiceManager.getService(IAccountService::class.java).getVerifyService().isTouristMode()) {
+    fun <T> getApiService(clazz: Class<T>) = if (isTouristMode()) {
         getCommonApiService(clazz)
     } else {
         retrofit.create(clazz)
@@ -111,7 +111,7 @@ object ApiGenerator {
                 //对传入的okHttpClientConfig配置
                 .configRetrofitBuilder {
                     it.apply {
-                        if (tokenNeeded)
+                        if (tokenNeeded && !isTouristMode())
                             configureOkHttp()
                         if (okHttpClientConfig == null)
                             this.defaultConfig()
@@ -205,4 +205,7 @@ object ApiGenerator {
 
     //检查token是否过期
     private fun isTokenExpired() = ServiceManager.getService(IAccountService::class.java).getVerifyService().isExpired()
+
+    //是否是游客模式
+    private fun isTouristMode() = ServiceManager.getService(IAccountService::class.java).getVerifyService().isTouristMode()
 }

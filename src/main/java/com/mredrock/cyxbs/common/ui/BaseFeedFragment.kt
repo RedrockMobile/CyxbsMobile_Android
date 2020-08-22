@@ -9,7 +9,6 @@ import android.view.ViewGroup
 import com.mredrock.cyxbs.common.R
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import kotlinx.android.synthetic.main.common_fragment_base_feed.*
-import org.jetbrains.anko.textResource
 
 //module_discover 中的信息部分
 abstract class BaseFeedFragment<T : BaseViewModel> : BaseViewModelFragment<T>() {
@@ -33,7 +32,7 @@ abstract class BaseFeedFragment<T : BaseViewModel> : BaseViewModelFragment<T>() 
     }
 
     fun setTitle(res: Int) {
-        tv_feed_title.textResource = res
+        tv_feed_title.setText(res)
     }
 
     override fun onResume() {
@@ -46,7 +45,7 @@ abstract class BaseFeedFragment<T : BaseViewModel> : BaseViewModelFragment<T>() 
     }
 
     fun setSubtitle(res: Int) {
-        tv_feed_subtitle.textResource = res
+        tv_feed_subtitle.setText(res)
     }
 
     fun setAdapter(adapter: Adapter) {

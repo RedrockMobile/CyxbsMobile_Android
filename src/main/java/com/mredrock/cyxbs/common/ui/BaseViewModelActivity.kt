@@ -9,10 +9,10 @@ import androidx.lifecycle.ViewModelProvider
 import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.common.viewmodel.event.ProgressDialogEvent
-import org.jetbrains.anko.indeterminateProgressDialog
 
 /**
  * Created By jay68 on 2018/8/23.
+ * todo 更换ProgressDialog，官方已经舍弃
  */
 abstract class BaseViewModelActivity<T : BaseViewModel> : BaseActivity() {
     lateinit var viewModel: T
@@ -21,7 +21,9 @@ abstract class BaseViewModelActivity<T : BaseViewModel> : BaseActivity() {
 
     private var progressDialog: ProgressDialog? = null
 
-    private fun initProgressBar() = indeterminateProgressDialog(message = "Loading...") {
+    private fun initProgressBar() = ProgressDialog(this).apply {
+        isIndeterminate = true
+        setMessage("Loading...")
         setOnDismissListener { viewModel.onProgressDialogDismissed() }
     }
 

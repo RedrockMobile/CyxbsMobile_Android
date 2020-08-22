@@ -1,9 +1,6 @@
 package com.mredrock.cyxbs.common.ui
 
-import android.content.ClipData
-import android.content.ClipboardManager
-import android.content.Context
-import android.content.Intent
+import android.content.*
 import android.graphics.Color
 import android.os.Bundle
 import android.os.Process
@@ -11,10 +8,10 @@ import android.text.SpannableStringBuilder
 import android.text.Spanned
 import android.text.style.ForegroundColorSpan
 import android.text.style.TypefaceSpan
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import org.jetbrains.anko.alert
-import org.jetbrains.anko.appendln
-import org.jetbrains.anko.intentFor
+import com.mredrock.cyxbs.common.utils.extensions.appendln
+import com.mredrock.cyxbs.common.utils.extensions.intentFor
 import kotlin.system.exitProcess
 
 
@@ -47,9 +44,10 @@ class ExceptionActivity : AppCompatActivity() {
             appendln(deviceInfo)
             setSpan(TypefaceSpan("monospace"), 0, length, Spanned.SPAN_INCLUSIVE_INCLUSIVE)
         }
-
-        alert(sb, "哦豁，掌上重邮崩溃了！") {
-            negativeButton("复制异常信息退出") {
+        AlertDialog.Builder(this).apply {
+            setMessage(sb)
+            setTitle("哦豁，掌上重邮崩溃了！")
+            setNegativeButton("复制异常信息退出") { _: DialogInterface, i: Int ->
                 val message = "StackInfo:\n$stackInfo\ndeviceInfo:\n$deviceInfo"
                 val cm = this@ExceptionActivity.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
                 cm.primaryClip = ClipData.newPlainText("exception trace stack", message)
@@ -57,9 +55,9 @@ class ExceptionActivity : AppCompatActivity() {
                 Process.killProcess(Process.myPid())
                 exitProcess(1)
             }
-
-            isCancelable = false
+            setCancelable(false)
             setFinishOnTouchOutside(false)
         }.show()
+
     }
 }
