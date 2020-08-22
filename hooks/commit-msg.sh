@@ -97,7 +97,10 @@ function handDrawable() {
     moduleNamePrefix=$(echo $(cd $(dirname $1);pwd)|sed "s/.*\/\(.*\)\/src\/.*/\1/g")
     moduleNamePrefix=${moduleNamePrefix//"module_"/}
     moduleNamePrefix=${moduleNamePrefix//"lib_"/}
-    if [[ ${suffix} = "xml" ]]; then
+    if ! [[ $(echo $name|grep "ic_launcher") = "" ]]; then
+        # 如果检测到是app图标，放行
+        return ${returnValue}
+    elif [[ ${suffix} = "xml" ]]; then
         firstTag=$(getXmlFirstTag $1)
         if [[ ${firstTag} == "vector" ]]; then
             isFit=$(echo ${name}|sed "s/${moduleNamePrefix}_ic_.*//g")
