@@ -86,6 +86,8 @@ class QuestionContainerFragment : BaseViewModelFragment<QuestionContainerViewMod
     private fun initScrollText() {
         //搜索滚动词
         viewModel.getScrollerText()
+        val loaderView = getTextView("")
+        vf_hot_search.addView(loaderView)
         initHotSearch(vf_hot_search, rl_qa_hot_search)
     }
 
@@ -98,8 +100,8 @@ class QuestionContainerFragment : BaseViewModelFragment<QuestionContainerViewMod
     }
 
     private fun initHotSearch(viewFlipper: ViewFlipper, relativeLayout: RelativeLayout) {
-        viewFlipper.removeAllViews()
         viewModel.hotWords.observe {
+            viewFlipper.removeAllViews()
             if (it != null) {
                 for (i in it) {
                     viewFlipper.addView(getTextView("大家都在搜：${i}"))
