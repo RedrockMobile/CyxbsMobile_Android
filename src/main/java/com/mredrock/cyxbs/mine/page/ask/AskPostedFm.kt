@@ -15,7 +15,6 @@ import com.mredrock.cyxbs.mine.util.ui.BaseRVFragment
 import com.mredrock.cyxbs.mine.util.widget.RvFooter
 import kotlinx.android.synthetic.main.mine_list_item_my_ask_posted.view.*
 import org.greenrobot.eventbus.EventBus
-import org.jetbrains.anko.textColor
 
 /**
  * Created by roger on 2019/12/1
@@ -61,12 +60,12 @@ class AskPostedFm : BaseRVFragment<AskPosted>() {
         if (data.type == "已解决") {
             holder.itemView.mine_ask_posted_tv_state.background = ResourcesCompat.getDrawable(resources, R.drawable.mine_shape_round_corner_blue, null)
             context?.let {
-                holder.itemView.mine_ask_posted_tv_disappear_at.textColor = ContextCompat.getColor(it, R.color.common_mine_about_text_color_blue)
+                holder.itemView.mine_ask_posted_tv_disappear_at.setTextColor( ContextCompat.getColor(it, R.color.common_mine_about_text_color_blue))
             }
         } else {
             holder.itemView.mine_ask_posted_tv_state.background = ResourcesCompat.getDrawable(resources, R.drawable.mine_shape_round_corner_brown, null)
             context?.let {
-                holder.itemView.mine_ask_posted_tv_disappear_at.textColor = ContextCompat.getColor(it, R.color.common_mine_list_item_tv_disappear_at)
+                holder.itemView.mine_ask_posted_tv_disappear_at.setTextColor(ContextCompat.getColor(it, R.color.common_mine_list_item_tv_disappear_at))
             }
         }
         holder.itemView.setOnClickListener {

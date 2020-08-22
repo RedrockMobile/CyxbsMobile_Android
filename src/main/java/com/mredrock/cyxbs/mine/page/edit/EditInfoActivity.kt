@@ -42,7 +42,6 @@ import kotlinx.android.synthetic.main.mine_layout_dialog_recyclerview_dynamic.vi
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.toRequestBody
-import org.jetbrains.anko.textColor
 import java.io.File
 import java.io.IOException
 
@@ -84,14 +83,14 @@ class EditInfoActivity(override val isFragmentActivity: Boolean = false,
         val userForTemporal = ServiceManager.getService(IAccountService::class.java).getUserService()
         if (checkIfInfoChange()) {
             mine_btn_info_save.apply {
-                textColor = ContextCompat.getColor(context, R.color.common_white_font_color)
+                setTextColor(ContextCompat.getColor(context, R.color.common_white_font_color))
                 background = ResourcesCompat.getDrawable(resources, R.drawable.common_dialog_btn_positive_blue, null)
                 text = "保存"
                 isClickable = true
             }
         } else {
             mine_btn_info_save.apply {
-                textColor = ContextCompat.getColor(context, R.color.common_grey_button_text)
+                setTextColor(ContextCompat.getColor(context, R.color.common_grey_button_text))
                 background = ResourcesCompat.getDrawable(resources, R.drawable.mine_bg_round_corner_grey, null)
                 text = "已保存"
                 isClickable = false
@@ -104,24 +103,24 @@ class EditInfoActivity(override val isFragmentActivity: Boolean = false,
         mine_tv_nickname.text = "昵称(${nickname.length}/8)"
         mine_tv_sign.text = "个性签名(${introduction.length}/20)"
         if (nickname != userForTemporal.getNickname()) {
-            mine_et_nickname.textColor = ContextCompat.getColor(this, R.color.common_level_two_font_color)
+            mine_et_nickname.setTextColor(ContextCompat.getColor(this, R.color.common_level_two_font_color))
         } else {
-            mine_et_nickname.textColor = ContextCompat.getColor(this, R.color.common_grey_text)
+            mine_et_nickname.setTextColor(ContextCompat.getColor(this, R.color.common_grey_text))
         }
         if (introduction != userForTemporal.getIntroduction()) {
-            mine_et_introduce.textColor = ContextCompat.getColor(this, R.color.common_level_two_font_color)
+            mine_et_introduce.setTextColor(ContextCompat.getColor(this, R.color.common_level_two_font_color))
         } else {
-            mine_et_introduce.textColor = ContextCompat.getColor(this, R.color.common_grey_text)
+            mine_et_introduce.setTextColor(ContextCompat.getColor(this, R.color.common_grey_text))
         }
         if (qq != userForTemporal.getQQ()) {
-            mine_et_qq.textColor = ContextCompat.getColor(this, R.color.common_level_two_font_color)
+            mine_et_qq.setTextColor(ContextCompat.getColor(this, R.color.common_level_two_font_color))
         } else {
-            mine_et_qq.textColor = ContextCompat.getColor(this, R.color.common_grey_text)
+            mine_et_qq.setTextColor(ContextCompat.getColor(this, R.color.common_grey_text))
         }
         if (phone != userForTemporal.getPhone()) {
-            mine_et_phone.textColor = ContextCompat.getColor(this, R.color.common_level_two_font_color)
+            mine_et_phone.setTextColor(ContextCompat.getColor(this, R.color.common_level_two_font_color))
         } else {
-            mine_et_phone.textColor = ContextCompat.getColor(this, R.color.common_grey_text)
+            mine_et_phone.setTextColor(ContextCompat.getColor(this, R.color.common_grey_text))
         }
     }
 

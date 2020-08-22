@@ -12,6 +12,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityOptionsCompat
 import androidx.core.content.ContextCompat
@@ -21,6 +22,7 @@ import androidx.lifecycle.Observer
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
 import com.mredrock.cyxbs.common.component.CommonDialogFragment
+import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.common.config.*
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.service.account.IAccountService
@@ -33,10 +35,6 @@ import com.mredrock.cyxbs.mine.page.comment.CommentActivity
 import com.mredrock.cyxbs.mine.page.edit.EditInfoActivity
 import com.mredrock.cyxbs.mine.page.sign.DailySignActivity
 import kotlinx.android.synthetic.main.mine_fragment_main.*
-import org.jetbrains.anko.support.v4.defaultSharedPreferences
-import org.jetbrains.anko.support.v4.startActivity
-import org.jetbrains.anko.support.v4.toast
-import org.jetbrains.anko.textColor
 
 /**
  * Created by zzzia on 2018/8/14.
@@ -89,9 +87,7 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
                     cleanAppWidgetCache()
                     //清除user信息，必须要在LoginStateChangeEvent之前
                     viewModel.clearUser()
-                    //清空activity栈
-                    val flag = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
-                    ARouter.getInstance().build(MAIN_LOGIN).withFlags(flag).withBoolean(IS_EXIT_LOGIN, true).navigation()
+                    requireActivity().startLoginActivity()
                 }
             }
             mine_main_btn_exit.pressToZoomOut()
@@ -122,13 +118,13 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
                 mine_main_btn_sign.apply {
                     background = ResourcesCompat.getDrawable(resources, R.drawable.mine_bg_round_corner_grey, null)
                     text = "已签到"
-                    textColor = ContextCompat.getColor(context, R.color.common_grey_button_text)
+                    setTextColor(ContextCompat.getColor(context, R.color.common_grey_button_text))
                 }
             } else {
                 mine_main_btn_sign.apply {
                     text = "签到"
                     background = ResourcesCompat.getDrawable(resources, R.drawable.common_dialog_btn_positive_blue, null)
-                    textColor = ContextCompat.getColor(context, R.color.common_white_font_color)
+                    setTextColor(ContextCompat.getColor(context, R.color.common_white_font_color))
                 }
             }
         })
@@ -173,7 +169,7 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
             val clipboard = activity?.getSystemService(AppCompatActivity.CLIPBOARD_SERVICE) as ClipboardManager
             val data = ClipData.newPlainText("QQ Group", "570919844")
             clipboard.primaryClip = data
-            toast("抱歉，由于您未安装手机QQ或版本不支持，无法跳转至掌邮bug反馈群。" + "已将群号复制至您的手机剪贴板，请您手动添加")
+            context?.let { CyxbsToast.makeText(it,"抱歉，由于您未安装手机QQ或版本不支持，无法跳转至掌邮bug反馈群。" + "已将群号复制至您的手机剪贴板，请您手动添加",Toast.LENGTH_SHORT).show() }
         }
     }
 
@@ -252,7 +248,7 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
     }
 
     private fun cleanAppWidgetCache() {
-        defaultSharedPreferences.editor {
+        context?.defaultSharedPreferences?.editor {
             putString(WIDGET_COURSE, "")
             putBoolean(SP_WIDGET_NEED_FRESH, true)
         }
