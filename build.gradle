@@ -83,7 +83,7 @@ dependencies {
     //permission
     api deps.rxpermissions.runtime
 
-    //umeng
+    //友盟分析相关依赖
     api deps.umeng.common
     api deps.umeng.asms
     api deps.umeng.crash
@@ -91,6 +91,16 @@ dependencies {
     api deps.umeng.oaid_mi
     api deps.umeng.oaid_oppo
     api deps.umeng.oaid_vivo
+    //友盟push相关依赖(必须)
+    api deps.umeng.push
+    api deps.umeng.alicloud_httpdns
+    api deps.umeng.alicloud_utils
+    api deps.umeng.utdid
+    api deps.umeng.alicloud_beacon
+    api deps.umeng.agoo_accs
+    api deps.umeng.agoo_networksdk
+    api deps.umeng.agoo_tlog
+    api deps.umeng.agoo_tnet4android
 
     //bugly
     api deps.bugly.crashreport
@@ -107,6 +117,4 @@ dependencies {
     api 'com.afollestad.material-dialogs:core:3.3.0'
     api 'com.github.yalantis:ucrop:2.2.4'
     api 'com.github.chrisbanes:PhotoView:2.3.0'
-    api project(path: ':push_sdk')
-
 }
