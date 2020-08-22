@@ -78,7 +78,7 @@ class AppUpdateDownloadService : Service() {
         notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         val stopIntent = Intent(this, AppUpdateDownloadService::class.java)
         builder = NotificationCompat.Builder(this, CHANNEL_ID)
-                .setSmallIcon(R.drawable.common_app_logo)
+                .setSmallIcon(R.drawable.common_ic_app_logo)
                 .setContentTitle("掌上重邮更新中...")
                 .setContentText("0%")
                 .setProgress(100, 0, false)
