@@ -16,7 +16,6 @@ import android.widget.Toast
 import android.widget.ViewFlipper
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.alibaba.android.arouter.facade.annotation.Route
@@ -155,7 +154,6 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>(), Eve
         val picUrls = functions.map { it.resource }
         val texts = functions.map { getString(it.title) }
         rv_discover_more_function.apply {
-            layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
             adapter = DiscoverMoreFunctionRvAdapter(picUrls, texts) {
                 if (it == functions.size - 1) {
                     CyxbsToast.makeText(context, R.string.discover_more_function_notice_text, Toast.LENGTH_SHORT).show()

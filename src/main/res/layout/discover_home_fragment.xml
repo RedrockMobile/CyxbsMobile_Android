@@ -16,54 +16,55 @@
             android:id="@+id/tv_day"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="1dp"
+            android:layout_marginTop="32dp"
             android:alpha="0.65"
             android:textColor="@color/common_menu_font_color_found"
             android:textSize="14sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="@+id/discover_guideline"
-            app:layout_constraintTop_toTopOf="@+id/discover_guideline3"
+            app:layout_constraintStart_toStartOf="@+id/tv_dis"
+            app:layout_constraintTop_toTopOf="parent"
             tools:ignore="MissingConstraints" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tv_dis"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="3dp"
             android:text="@string/common_explore"
             android:textColor="@color/common_level_two_font_color"
             android:textSize="26sp"
             android:textStyle="bold"
-            app:layout_constraintBottom_toTopOf="@+id/discover_guideline4"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="@+id/tv_day"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_day"
-            app:layout_constraintVertical_bias="0.0"
             tools:ignore="MissingConstraints" />
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/iv_check_in"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="15dp"
             android:src="@drawable/discover_ic_check_in"
             app:layout_constraintBottom_toBottomOf="@+id/tv_dis"
-            app:layout_constraintEnd_toStartOf="@+id/discover_guideline2"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/tv_dis"
-            app:layout_constraintVertical_bias="0.555"
+            app:layout_constraintVertical_bias="1.0"
             tools:ignore="ContentDescription,MissingConstraints" />
 
         <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/vp_discover_home"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="15dp"
             android:orientation="horizontal"
             android:translationZ="4dp"
             app:layout_constraintDimensionRatio="2.56"
-            app:layout_constraintEnd_toStartOf="@+id/discover_guideline2"
-            app:layout_constraintStart_toStartOf="@+id/discover_guideline"
-            app:layout_constraintTop_toTopOf="@+id/discover_guideline4"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_dis"
             tools:ignore="MissingConstraints"
             tools:targetApi="lollipop" />
 
@@ -71,7 +72,7 @@
             android:id="@+id/fl_discover_home_jwnews"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
+            android:layout_marginStart="15dp"
             android:layout_marginTop="15dp"
             android:background="@drawable/discover_shape_jwzx_title"
             app:layout_constraintEnd_toStartOf="@+id/vf_jwzx_detail"
@@ -89,7 +90,8 @@
                 android:layout_marginBottom="2dp"
                 android:text="@string/news_jwzx"
                 android:textColor="@color/common_discover_academic_online_colors"
-                android:textSize="11sp" />
+                android:textSize="11sp"
+                tools:ignore="SmallSp" />
         </FrameLayout>
 
         <ViewFlipper
@@ -97,10 +99,11 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="14dp"
+            android:layout_marginEnd="15dp"
             android:textColor="@color/common_level_two_font_color"
             android:textSize="15sp"
             app:layout_constraintBottom_toBottomOf="@+id/fl_discover_home_jwnews"
-            app:layout_constraintEnd_toStartOf="@+id/discover_guideline2"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/fl_discover_home_jwnews"
             app:layout_constraintTop_toTopOf="@+id/fl_discover_home_jwnews"
             tools:ignore="MissingConstraints" />
@@ -109,18 +112,23 @@
             android:id="@+id/rv_discover_more_function"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
             android:layout_marginTop="25dp"
-            app:layout_constraintEnd_toStartOf="@+id/discover_guideline2"
-            app:layout_constraintStart_toStartOf="@+id/discover_guideline"
-            app:layout_constraintTop_toBottomOf="@+id/fl_discover_home_jwnews" />
+            android:layout_marginEnd="15dp"
+            android:orientation="horizontal"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/fl_discover_home_jwnews"
+            tools:listitem="@layout/discover_item_more_function" />
 
         <com.mredrock.cyxbs.discover.widget.IndicatorView
             android:id="@+id/indicator_view_discover"
             android:layout_width="29dp"
             android:layout_height="4dp"
             android:layout_marginTop="13dp"
-            app:layout_constraintEnd_toStartOf="@+id/discover_guideline2"
-            app:layout_constraintStart_toStartOf="@+id/discover_guideline"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/rv_discover_more_function"
             app:progressMultiple="0.65" />
         <!--        <androidx.appcompat.widget.AppCompatImageView-->
@@ -240,38 +248,6 @@
 
 
         </androidx.appcompat.widget.LinearLayoutCompat>
-
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/discover_guideline"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintGuide_percent="0.04"
-            app:layout_constraintStart_toStartOf="parent" />
-
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/discover_guideline2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintGuide_percent="0.96" />
-
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/discover_guideline4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            app:layout_constraintGuide_begin="100dp" />
-
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/discover_guideline3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            app:layout_constraintGuide_begin="31dp" />
-
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
