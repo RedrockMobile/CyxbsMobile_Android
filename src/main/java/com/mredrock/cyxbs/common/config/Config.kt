@@ -101,3 +101,6 @@ const val IS_PRE_FINISH = "IS_PRE_FINISH"
 //命名方式module+方法
 const val SCHOOL_CAR_MAP_RES = 0
 const val DISCOVERY_ROLLER_VIEW_INFO = 1
+
+//课表上课地点跳转到地图key
+const val COURSE_POS_TO_MAP = "COURSE_POS_TO_MAP"
