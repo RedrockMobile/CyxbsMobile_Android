@@ -9,22 +9,12 @@
         android:layout_width="200dp"
         android:layout_height="200dp"
         android:layout_gravity="center_horizontal"
-        android:layout_marginStart="52dp"
-        android:layout_marginTop="28dp"
-        android:layout_marginEnd="52dp"
+        android:layout_marginStart="27dp"
+        android:layout_marginEnd="27dp"
         android:src="@drawable/mine_ic_edit_exit"
         tools:layout_editor_absoluteX="27dp"
         tools:layout_editor_absoluteY="16dp" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="17dp"
-        android:text="@string/mine_exit_edit"
-        android:textColor="@color/common_level_two_font_color"
-        android:textSize="18sp"
-        android:textStyle="bold" />
 
     <TextView
         android:layout_width="wrap_content"
