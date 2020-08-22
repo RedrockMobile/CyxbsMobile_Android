@@ -43,6 +43,7 @@ import java.io.File
 class MapViewFragment : BaseFragment() {
     private lateinit var viewModel: MapViewModel
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<FrameLayout>
+
     // 两次点击按钮之间的点击间隔不能少于1000毫秒
     private val minClickDelayTime = 1000
     private var lastClickTime: Long = 0
@@ -492,6 +493,7 @@ class MapViewFragment : BaseFragment() {
         map_layout?.removeMyViews()
         super.onDestroy()
     }
+
     private fun isFastClick(): Boolean {
         var flag = false
         val curClickTime = System.currentTimeMillis()

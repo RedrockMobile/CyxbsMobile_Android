@@ -29,10 +29,10 @@ class DetailTagRvAdapter(val context: Context, private val mList: MutableList<St
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-            /**
-             * 点击动画
-             */
-            holder.tag.text = mList[position]
+        /**
+         * 点击动画
+         */
+        holder.tag.text = mList[position]
         holder.tag.setOnClickListener {
             val animator = ValueAnimator.ofFloat(1f, 1.2f, 0.8f, 1f)
             animator.duration = 500
@@ -44,7 +44,7 @@ class DetailTagRvAdapter(val context: Context, private val mList: MutableList<St
             animator.start()
         }
 
-        }
+    }
 
 
     fun setList(list: List<String>) {

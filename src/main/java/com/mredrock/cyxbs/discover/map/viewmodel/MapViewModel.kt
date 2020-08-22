@@ -358,6 +358,7 @@ class MapViewModel : BaseViewModel() {
                 }.lifeCycle()
 
     }
+
     fun getPlaceSearch(openString: String?) {
         mapApiService.placeSearch(openString ?: "-1")
                 .setSchedulers()

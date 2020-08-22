@@ -3,13 +3,14 @@
     <item android:id="@android:id/background">
         <shape>
             <corners android:radius="20dp" />
-            <solid android:color="@color/map_download_progressbar_background"/>
+            <solid android:color="@color/map_download_progressbar_background" />
         </shape>
     </item>
 
     <item android:id="@android:id/progress">
 
-        <scale android:scaleWidth="100%"
-            android:drawable="@drawable/map_shape_progress_bar_progress"   />
+        <scale
+            android:scaleWidth="100%"
+            android:drawable="@drawable/map_shape_progress_bar_progress" />
     </item>
 </layer-list>

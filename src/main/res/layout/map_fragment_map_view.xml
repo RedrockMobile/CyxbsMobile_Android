@@ -114,7 +114,7 @@
                     android:layout_marginTop="20dp"
                     android:scaleType="centerCrop"
                     android:src="@drawable/map_ic_unlock"
-                   app:layout_constraintEnd_toEndOf="@id/map_iv_compass"
+                    app:layout_constraintEnd_toEndOf="@id/map_iv_compass"
                     app:layout_constraintStart_toStartOf="@id/map_iv_compass"
                     app:layout_constraintTop_toBottomOf="@id/map_iv_compass" />
 

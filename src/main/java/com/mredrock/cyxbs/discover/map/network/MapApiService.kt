@@ -5,7 +5,6 @@ import com.mredrock.cyxbs.common.bean.RedrockApiWrapper
 import com.mredrock.cyxbs.discover.map.bean.*
 import io.reactivex.Observable
 import okhttp3.MultipartBody
-import retrofit2.Call
 import retrofit2.http.*
 
 /**
@@ -46,5 +45,5 @@ internal interface MapApiService {
 
     @FormUrlEncoded
     @POST("wxapi/magipoke-stumap/placesearch")
-    fun placeSearch(@Field("place_search") placeSearch:String):Observable<RedrockApiWrapper<PlaceSearch>>
+    fun placeSearch(@Field("place_search") placeSearch: String): Observable<RedrockApiWrapper<PlaceSearch>>
 }

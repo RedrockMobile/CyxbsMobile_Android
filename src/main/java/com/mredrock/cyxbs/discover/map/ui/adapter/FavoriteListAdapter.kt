@@ -50,7 +50,7 @@ class FavoriteListAdapter(context: Context, val viewModel: MapViewModel, private
         }
         holder.itemView.setOnClickListener {
             viewModel.showIconById.value = mList[position].placeId
-            viewModel.getPlaceDetails(mList[position].placeId,false)
+            viewModel.getPlaceDetails(mList[position].placeId, false)
             viewModel.showPopUpWindow.value = false
             viewModel.bottomSheetStatus.postValue(BottomSheetBehavior.STATE_COLLAPSED)
         }

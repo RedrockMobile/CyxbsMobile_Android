@@ -1,6 +1,5 @@
 package com.mredrock.cyxbs.discover.map.bean
 
-import android.text.style.BackgroundColorSpan
 import com.google.gson.annotations.SerializedName
 import java.io.Serializable
 

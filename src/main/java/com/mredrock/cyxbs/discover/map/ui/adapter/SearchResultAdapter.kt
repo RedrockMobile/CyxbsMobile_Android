@@ -72,7 +72,7 @@ class SearchResultAdapter(context: Context, private val viewModel: MapViewModel)
             DataSet.addSearchHistory(viewModel.searchResult[position].placeName)
             viewModel.notifySearchHistoryChange()
             viewModel.showSomePlaceIconById.value = mutableListOf(viewModel.searchResult[position].placeId)
-            viewModel.getPlaceDetails(viewModel.searchResult[position].placeId,false)
+            viewModel.getPlaceDetails(viewModel.searchResult[position].placeId, false)
             viewModel.closeSearchFragment.value = true
         }
     }

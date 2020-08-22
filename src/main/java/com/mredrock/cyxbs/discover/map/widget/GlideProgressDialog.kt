@@ -1,6 +1,5 @@
 package com.mredrock.cyxbs.discover.map.widget
 
-import android.app.ProgressDialog
 import android.content.Context
 
 //转圈圈的弹窗

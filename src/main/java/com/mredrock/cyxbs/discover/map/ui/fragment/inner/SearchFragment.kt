@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -53,7 +52,6 @@ class SearchFragment : BaseFragment() {
         super.onResume()
         openSearchHistoryFragment()
     }
-
 
 
     private fun openSearchHistoryFragment() {

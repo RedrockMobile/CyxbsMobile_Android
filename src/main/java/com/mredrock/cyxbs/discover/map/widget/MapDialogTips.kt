@@ -17,7 +17,7 @@ interface OnSelectListenerTips {
 }
 
 object MapDialogTips {
-    fun show(context: Context, title: String, content: String,cancelable:Boolean, listener: OnSelectListenerTips) {
+    fun show(context: Context, title: String, content: String, cancelable: Boolean, listener: OnSelectListenerTips) {
         val builder: AlertDialog.Builder = AlertDialog.Builder(context, R.style.map_transparent_dialog)
         val view = LayoutInflater.from(context).inflate(R.layout.map_dialog_tips, null, false)
         builder.setView(view)

@@ -1,15 +1,11 @@
 package com.mredrock.cyxbs.discover.map.ui.activity
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.lifecycle.Observer
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.mredrock.cyxbs.common.config.COURSE_POS_TO_MAP
 import com.mredrock.cyxbs.common.config.DISCOVER_MAP
-import com.mredrock.cyxbs.common.service.ServiceManager
-import com.mredrock.cyxbs.common.service.account.IAccountService
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
-import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
 import com.mredrock.cyxbs.discover.map.R
 import com.mredrock.cyxbs.discover.map.model.DataSet
 import com.mredrock.cyxbs.discover.map.ui.fragment.AllPictureFragment
@@ -21,7 +17,6 @@ import com.mredrock.cyxbs.discover.map.widget.GlideProgressDialog
 import com.mredrock.cyxbs.discover.map.widget.ProgressDialog
 import kotlinx.android.synthetic.main.map_activity_map.*
 import java.io.File
-import java.lang.Exception
 
 /**
  * 单activity模式，所有fragment在此activity下，能拿到同一个viewModel实例
@@ -50,11 +45,11 @@ class MapActivity : BaseViewModelActivity<MapViewModel>() {
          * 如果有保存路径且地图存在，则不展示dialog
          */
         try {
-            if (path == null){
-                GlideProgressDialog.show(this, "下载地图", "仅需初次载入时下载地图哦",false)
-            }else{
+            if (path == null) {
+                GlideProgressDialog.show(this, "下载地图", "仅需初次载入时下载地图哦", false)
+            } else {
                 if (!fileIsExists(path)) {
-                    GlideProgressDialog.show(this, "下载地图", "仅需初次载入时下载地图哦",false)
+                    GlideProgressDialog.show(this, "下载地图", "仅需初次载入时下载地图哦", false)
                 }
             }
         } catch (e: Exception) {

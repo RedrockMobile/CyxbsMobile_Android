@@ -20,7 +20,8 @@ object ProgressDialog {
             progressDialog?.dismiss()
         }
     }
-    fun dismiss(){
+
+    fun dismiss() {
         progressDialog?.dismiss()
     }
 }
