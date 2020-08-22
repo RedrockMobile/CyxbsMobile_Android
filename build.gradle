@@ -112,7 +112,6 @@ dependencies {
     //airbnb
     api deps.airbnb.lottie
 
-
     //杂项
     api 'com.afollestad.material-dialogs:core:3.3.0'
     api 'com.github.yalantis:ucrop:2.2.4'
