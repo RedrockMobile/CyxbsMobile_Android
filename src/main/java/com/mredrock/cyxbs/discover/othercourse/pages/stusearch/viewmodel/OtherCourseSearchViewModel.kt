@@ -13,9 +13,10 @@ import io.reactivex.schedulers.Schedulers
 
 abstract class OtherCourseSearchViewModel : BaseViewModel() {
     var mList = MutableLiveData<List<Person>>()
+    var mListFromHistory = MutableLiveData<List<Person>>()
     val mHistory = MutableLiveData<MutableList<History>>()
     protected val database: HistoryDatabase by lazy { HistoryDatabase.getDatabase(BaseApp.context) }
-    abstract fun getPerson(str: String)
+    abstract fun getPerson(str: String, fromHistory: Boolean? = false)
 
     abstract fun getHistory()
 

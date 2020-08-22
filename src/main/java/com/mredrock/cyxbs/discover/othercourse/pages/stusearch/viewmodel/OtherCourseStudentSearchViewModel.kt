@@ -14,7 +14,7 @@ import com.mredrock.cyxbs.discover.othercourse.room.STUDENT_TYPE
 
 class OtherCourseStudentSearchViewModel : OtherCourseSearchViewModel() {
 
-    override fun getPerson(str: String) {
+    override fun getPerson(str: String, fromHistory: Boolean?) {
         ApiGenerator.getApiService(Services::class.java)
                 .getStudent(str)
                 .mapOrThrowApiException()
@@ -31,9 +31,14 @@ class OtherCourseStudentSearchViewModel : OtherCourseSearchViewModel() {
                     }
                 }
                 .safeSubscribeBy {
-                    mList.value = it
+                    if (fromHistory == true) {
+                        mListFromHistory.value = it
+                    } else {
+                        mList.value = it
+                    }
                 }.lifeCycle()
     }
+
 
     override fun getHistory() {
         getHistoryInternal(STUDENT_TYPE)
