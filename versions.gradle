@@ -38,7 +38,7 @@ def version_bugly_crash_report = '3.1.9'
 def version_bugly_crash_report_upgrade = '1.3.6'
 def version_bugly_native_crash_report = '3.7.1'
 //walle
-def version_walle = '1.1.6'
+def version_walle = '1.1.7'
 //airbnb
 def version_lottie = '3.4.0'
 
