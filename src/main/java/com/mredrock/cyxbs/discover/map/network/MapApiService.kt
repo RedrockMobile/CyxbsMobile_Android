@@ -27,6 +27,9 @@ internal interface MapApiService {
     @FormUrlEncoded
     @POST("wxapi/magipoke-stumap/searchtype")
     fun getSearchType(@Field("code") code: String): Observable<RedrockApiWrapper<MutableList<String>>>
+    @FormUrlEncoded
+    @POST("wxapi/magipoke-stumap/addhot")
+    fun addHot(@Field("id") placeId: Int): Observable<RedrockApiStatus>
 
     @GET("wxapi/magipoke-stumap/rockmap/collect")
     fun getCollect(): Observable<RedrockApiWrapper<FavoritePlaceSimple>>

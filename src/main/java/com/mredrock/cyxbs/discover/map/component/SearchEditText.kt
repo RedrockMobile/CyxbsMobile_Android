@@ -54,9 +54,9 @@ class SearchEditText : androidx.appcompat.widget.AppCompatEditText {
     //显示热词字符串，需要在代码中设置进去要显示的热词
     public var hintString: String = ""
         set(value) {
-            field = value
+            field = if (value.length >= 18) value.take(18) + "..." else value
             invalidate()
-            hintWidth = paint.measureText(hintString)
+            hintWidth = paint.measureText(field)
         }
 
     private lateinit var paint: Paint

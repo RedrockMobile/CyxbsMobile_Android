@@ -51,5 +51,7 @@
     <string name="map_update_dialog_sure">立即更新</string>
     <string name="map_show_picture_fail">图片加载失败</string>
     <string name="map_open_site_id_null">未找到该地点，请手动搜索</string>
+    <string name="map_add_hot_failed">上传搜索热度失败~</string>
+
 
 </resources>

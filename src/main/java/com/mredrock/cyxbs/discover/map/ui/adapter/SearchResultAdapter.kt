@@ -70,7 +70,11 @@ class SearchResultAdapter(context: Context, private val viewModel: MapViewModel)
         holder.itemView.setOnClickListener {
             DataSet.deleteSearchHistory(viewModel.searchResult[position].placeName)
             DataSet.addSearchHistory(viewModel.searchResult[position].placeName)
+            //上传热度
+            viewModel.addHot(viewModel.searchResult[position].placeId)
+            //刷新历史记录列表
             viewModel.notifySearchHistoryChange()
+            //显示地点的大头针等
             viewModel.showSomePlaceIconById.value = mutableListOf(viewModel.searchResult[position].placeId)
             viewModel.getPlaceDetails(viewModel.searchResult[position].placeId, false)
             viewModel.closeSearchFragment.value = true
