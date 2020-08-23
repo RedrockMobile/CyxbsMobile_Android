@@ -77,7 +77,7 @@ class MapViewModel : BaseViewModel() {
     val searchResult = ObservableArrayList<PlaceItem>()
 
     //搜索记录
-    var searchHistory = mutableListOf<String>()
+    var searchHistory = MutableLiveData<MutableList<String>>(mutableListOf())
 
     //当历史记录点击，通知输入框更新
     val searchHistoryString = MutableLiveData<String>("")
@@ -327,8 +327,8 @@ class MapViewModel : BaseViewModel() {
      * 历史记录变化，从缓存中重新读取，并通知更新
      */
     fun notifySearchHistoryChange() {
-        searchHistory = DataSet.getSearchHistory() ?: mutableListOf()
-        searchHistory.reverse()
+        searchHistory.value = DataSet.getSearchHistory() ?: mutableListOf()
+        searchHistory.value!!.reverse()
     }
 
     /**

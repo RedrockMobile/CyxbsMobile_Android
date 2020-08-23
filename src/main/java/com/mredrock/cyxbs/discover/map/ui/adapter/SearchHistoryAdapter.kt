@@ -27,17 +27,18 @@ class SearchHistoryAdapter(context: Context, private val viewModel: MapViewModel
 
 
     override fun getItemCount(): Int {
-        return viewModel.searchHistory.size
+        return viewModel.searchHistory.value?.size ?: 0
+
 
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.placeName.text = viewModel.searchHistory[position]
+        holder.placeName.text = viewModel.searchHistory.value?.get(position) ?: ""
         holder.itemView.setOnClickListener {
-            viewModel.searchHistoryString.value = viewModel.searchHistory[position]
+            viewModel.searchHistoryString.value = viewModel.searchHistory.value?.get(position) ?: ""
         }
         holder.delete.setOnClickListener {
-            DataSet.deleteSearchHistory(viewModel.searchHistory[position])
+            DataSet.deleteSearchHistory(viewModel.searchHistory.value?.get(position) ?: "")
             viewModel.notifySearchHistoryChange()
             notifyDataSetChanged()
         }

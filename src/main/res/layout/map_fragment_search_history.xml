@@ -27,13 +27,14 @@
             android:id="@+id/map_tv_search_clear"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
             android:layout_marginEnd="16dp"
             android:text="@string/map_search_clear_text"
             android:textColor="@color/map_search_clear_text_color"
             android:textSize="@dimen/map_search_clear_text_size"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintBottom_toTopOf="@+id/map_rv_search_history"
+            app:layout_constraintEnd_toEndOf="parent" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/map_rv_search_history"

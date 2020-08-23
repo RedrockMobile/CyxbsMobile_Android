@@ -4,9 +4,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mredrock.cyxbs.common.ui.BaseFragment
+import com.mredrock.cyxbs.common.utils.extensions.invisible
+import com.mredrock.cyxbs.common.utils.extensions.visible
 import com.mredrock.cyxbs.discover.map.R
 import com.mredrock.cyxbs.discover.map.model.DataSet
 import com.mredrock.cyxbs.discover.map.ui.adapter.SearchHistoryAdapter
@@ -48,7 +51,13 @@ class SearchHistoryFragment : BaseFragment() {
                 }
             })
         }
-
+        viewModel.searchHistory.observe(viewLifecycleOwner, Observer {
+            if (it.size == 0) {
+                map_tv_search_clear.invisible()
+            } else {
+                map_tv_search_clear.visible()
+            }
+        })
 
     }
 

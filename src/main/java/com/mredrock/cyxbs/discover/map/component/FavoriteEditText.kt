@@ -34,7 +34,7 @@ class FavoriteEditText : androidx.appcompat.widget.AppCompatEditText {
     private var isEmpty = true
 
     private var offsetXHint = 0f
-    private var offsetXClear = 200f
+    private var offsetXClear = 300f
     private var textIsNotEmpty = false
         set(value) {
             if (value != field) {
