@@ -108,7 +108,7 @@
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btn_dialog_dormitory_confirm"
         android:layout_width="120dp"
-        android:layout_height="40dp"
+        android:layout_height="wrap_content"
         android:layout_below="@id/wp_dormitory_head"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="21dp"
