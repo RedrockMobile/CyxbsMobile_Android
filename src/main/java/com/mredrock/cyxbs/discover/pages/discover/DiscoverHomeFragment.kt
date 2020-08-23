@@ -16,6 +16,7 @@ import android.widget.Toast
 import android.widget.ViewFlipper
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.alibaba.android.arouter.facade.annotation.Route
@@ -41,11 +42,16 @@ import org.greenrobot.eventbus.ThreadMode
 
 @Route(path = DISCOVER_ENTRY)
 class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>(), EventBusLifecycleSubscriber {
+    companion object {
+        const val DISCOVER_FUNCTION_RV_STATE = "discover_function_rv_state"
+    }
+
     override val viewModelClass: Class<DiscoverHomeViewModel> = DiscoverHomeViewModel::class.java
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.discover_home_fragment, container, false)
     }
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -68,6 +74,10 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>(), Eve
         super.onResume()
         initFunctions()
         viewModel.startSwitchViewPager()
+        if (viewModel.functionRvState != null) {
+            rv_discover_more_function.layoutManager?.onRestoreInstanceState(viewModel.functionRvState)
+        }
+
     }
 
     //加载轮播图
@@ -127,7 +137,6 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>(), Eve
         }
     }
 
-    @SuppressLint("ResourceAsColor")
     private fun getTextView(info: String, id: String): TextView {
         return TextView(context).apply {
             text = info
@@ -140,11 +149,9 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>(), Eve
                 setTextColor(ContextCompat.getColor(context, R.color.common_menu_font_color_found))
             }
             textSize = 15f
-//            textColor = R.color.menuFontColorFound
             setOnClickListener {
                 ARouter.getInstance().build(DISCOVER_NEWS_ITEM).withString("id", id).navigation()
             }
-//            typeface = Typeface.DEFAULT_BOLD
         }
     }
 
@@ -154,6 +161,9 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>(), Eve
         val picUrls = functions.map { it.resource }
         val texts = functions.map { getString(it.title) }
         rv_discover_more_function.apply {
+            layoutManager = LinearLayoutManager(context).apply {
+                orientation = LinearLayoutManager.HORIZONTAL
+            }
             adapter = DiscoverMoreFunctionRvAdapter(picUrls, texts) {
                 if (it == functions.size - 1) {
                     CyxbsToast.makeText(context, R.string.discover_more_function_notice_text, Toast.LENGTH_SHORT).show()
@@ -202,10 +212,12 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>(), Eve
         tv_day.text = dataEvent.time
     }
 
+
     override fun onPause() {
         super.onPause()
         vf_jwzx_detail.stopFlipping()
         viewModel.stopPageTurner()
+        viewModel.functionRvState = rv_discover_more_function.layoutManager?.onSaveInstanceState()
     }
 
 }

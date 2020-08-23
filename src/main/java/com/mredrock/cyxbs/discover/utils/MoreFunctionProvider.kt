@@ -7,7 +7,6 @@ import com.mredrock.cyxbs.common.config.*
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.service.account.IAccountService
 import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
-import com.mredrock.cyxbs.common.utils.extensions.editor
 import com.mredrock.cyxbs.discover.R
 import java.lang.ref.SoftReference
 
@@ -63,20 +62,6 @@ object MoreFunctionProvider {
         return list
     }
 
-    //只存储前三个数据
-    fun saveHomePageFunctionsToSp(list: List<Int>) {
-        val func = homeFunctions.get()
-        if (func != null) {
-            for (i in 0..2) {
-                func[i] = functions[list[i]]
-            }
-        }
-        BaseApp.context.defaultSharedPreferences.editor {
-            putInt(HOME_PAGE_FUNCTION_1, list[0])
-            putInt(HOME_PAGE_FUNCTION_2, list[1])
-            putInt(HOME_PAGE_FUNCTION_3, list[2])
-        }
-    }
 
     class Function(var resource: Int, val title: Int, val detail: Int, val activityStarter: StartActivityAble)
     interface StartActivityAble {

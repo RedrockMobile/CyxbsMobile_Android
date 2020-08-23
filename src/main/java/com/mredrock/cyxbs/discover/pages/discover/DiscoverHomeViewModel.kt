@@ -1,5 +1,6 @@
 package com.mredrock.cyxbs.discover.pages.discover
 
+import android.os.Parcelable
 import androidx.lifecycle.MutableLiveData
 import com.mredrock.cyxbs.common.config.DISCOVERY_ROLLER_VIEW_INFO
 import com.mredrock.cyxbs.common.network.ApiGenerator
@@ -23,6 +24,7 @@ class DiscoverHomeViewModel : BaseViewModel() {
     val jwNews = MutableLiveData<List<NewsListItem>>()
     val viewPagerTurner = MutableLiveData<Int>()
     var disposable: Disposable? = null
+    var functionRvState: Parcelable? = null
     private val retrofit: Services by lazy {
         ApiGenerator.getApiService(DISCOVERY_ROLLER_VIEW_INFO, Services::class.java)
     }
