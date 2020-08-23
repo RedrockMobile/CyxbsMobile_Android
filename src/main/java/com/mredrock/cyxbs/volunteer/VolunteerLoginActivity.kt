@@ -7,8 +7,10 @@ import android.os.Bundle
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
 import com.afollestad.materialdialogs.MaterialDialog
 import com.alibaba.android.arouter.facade.annotation.Route
+import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.common.config.DISCOVER_VOLUNTEER
 import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.service.ServiceManager
@@ -46,8 +48,10 @@ class VolunteerLoginActivity : BaseActivity() {
         common_toolbar.init("完善信息")
 
         btn_volunteer_login.setOnClickListener { view: View? ->
-            if (account.isEmpty() || password.isEmpty())
+            if (volunteer_account.text.toString().isEmpty() || volunteer_password.text.toString().isEmpty()) {
+                CyxbsToast.makeText(this, "账号或密码不能为空", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
+            }
             showProgressDialog()
             initUserInfo()
             if (view!!.id == R.id.btn_volunteer_login) login(account, EncryptPassword.encrypt(password))
@@ -101,9 +105,7 @@ class VolunteerLoginActivity : BaseActivity() {
     }
 
     private fun login(account: String, encodingPassword: String) {
-        if (uid == null) {
-
-        }
+        if (uid == null) return
         ApiGenerator.getApiService(ApiService::class.java)
                 .volunteerLogin("Basic enNjeTpyZWRyb2Nrenk=", account, encodingPassword, uid!!)
                 .setSchedulers()
@@ -117,11 +119,11 @@ class VolunteerLoginActivity : BaseActivity() {
                             finish()
                         }
 
-                        INVALID_ACCOUNT -> showUnsuccessDialog("亲，输入的账号不存在哦")
+                        INVALID_ACCOUNT -> showFailedDialog("亲，输入的账号不存在哦")
 
-                        WRONG_PASSWORD -> showUnsuccessDialog("亲，输入的账号或密码有误哦")
+                        WRONG_PASSWORD -> showFailedDialog("亲，输入的账号或密码有误哦")
 
-                        FAILED -> showUnsuccessDialog("亲，登录失败哦")
+                        FAILED -> showFailedDialog("亲，登录失败哦")
                     }
 
                 }, onError = {
@@ -134,15 +136,13 @@ class VolunteerLoginActivity : BaseActivity() {
         dialog.setCancelable(false)
     }
 
-    private fun showUnsuccessDialog(text: String) {
+    private fun showFailedDialog(text: String) {
         runOnUiThread {
             dialog.dismiss()
             MaterialDialog(this).show {
                 title(text = "登录失败")
                 message(text = text)
-                positiveButton(text = "我知道啦") {
-                    volunteer_password.setText("")
-                }
+                positiveButton(text = "我知道啦")
                 cornerRadius(res = R.dimen.common_corner_radius)
 
             }
