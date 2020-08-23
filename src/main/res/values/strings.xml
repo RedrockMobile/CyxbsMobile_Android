@@ -96,6 +96,7 @@
     <string name="qa_search_clean_history_all">清除全部</string>
     <string name="qa_search_no_result">没有相关提问~</string>
     <string name="qa_search_result_related">相关知识</string>
+    <string name="qa_search_empty_content">搜索内容为空，请重新编辑~</string>
     <string-array name="qa_quiz_reward_explain_title">
         <item>悬赏积分是干嘛的?</item>
         <item>任务最晚完成时间是什么意思?</item>

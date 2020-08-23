@@ -9,8 +9,8 @@ import com.mredrock.cyxbs.common.ui.BaseViewModelFragment
 import com.mredrock.cyxbs.common.utils.extensions.gone
 import com.mredrock.cyxbs.common.utils.extensions.visible
 import com.mredrock.cyxbs.qa.R
-import com.mredrock.cyxbs.qa.event.QASearchEvent
 import com.mredrock.cyxbs.qa.bean.QAHistory
+import com.mredrock.cyxbs.qa.event.QASearchEvent
 import com.mredrock.cyxbs.qa.pages.search.ui.adapter.SearchHistoryRvAdapter
 import com.mredrock.cyxbs.qa.pages.search.viewmodel.SearchViewModel
 import kotlinx.android.synthetic.main.qa_fragment_question_search.*

@@ -15,4 +15,4 @@ data class QAHistory(
         @PrimaryKey
         val info: String,
         @ColumnInfo(name = "qaHistory_time")
-        var time: Long):Serializable
+        var time: Long) : Serializable

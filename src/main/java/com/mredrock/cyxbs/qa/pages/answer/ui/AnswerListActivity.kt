@@ -54,7 +54,7 @@ class AnswerListActivity : BaseActivity(), EventBusLifecycleSubscriber {
 
     private lateinit var viewModel: AnswerListViewModel
     private var progressDialog: ProgressDialog? = null
-    private fun initProgressBar() = ProgressDialog(this).apply{
+    private fun initProgressBar() = ProgressDialog(this).apply {
         isIndeterminate = true
         setTitle("Loading...")
         setOnDismissListener { viewModel.onProgressDialogDismissed() }

@@ -11,9 +11,10 @@ import androidx.fragment.app.Fragment
 import com.mredrock.cyxbs.common.mark.EventBusLifecycleSubscriber
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.extensions.intentFor
+import com.mredrock.cyxbs.common.utils.extensions.longToast
 import com.mredrock.cyxbs.qa.R
-import com.mredrock.cyxbs.qa.event.QASearchEvent
 import com.mredrock.cyxbs.qa.bean.QAHistory
+import com.mredrock.cyxbs.qa.event.QASearchEvent
 import com.mredrock.cyxbs.qa.pages.search.ui.fragment.QuestionSearchedFragment
 import com.mredrock.cyxbs.qa.pages.search.ui.fragment.QuestionSearchingFragment
 import com.mredrock.cyxbs.qa.pages.search.viewmodel.SearchViewModel
@@ -60,8 +61,13 @@ class SearchActivity : BaseViewModelActivity<SearchViewModel>(), EventBusLifecyc
         supportFragmentManager.beginTransaction().replace(R.id.fcv_question_search, questionSearchingFragment).commit()
         et_question_search.setOnEditorActionListener { v, actionId, event ->
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                turnToResult(v.text.toString())
-                viewModel.insert(QAHistory(v.text.toString(), System.currentTimeMillis()))
+                if (v.text.toString().isBlank()) {
+                    longToast(getString(R.string.qa_search_empty_content))
+                    v.text = ""
+                } else {
+                    turnToResult(v.text.toString())
+                    viewModel.insert(QAHistory(v.text.toString(), System.currentTimeMillis()))
+                }
             }
             false
         }

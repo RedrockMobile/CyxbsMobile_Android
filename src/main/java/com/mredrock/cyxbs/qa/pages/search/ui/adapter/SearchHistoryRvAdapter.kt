@@ -1,7 +1,6 @@
 package com.mredrock.cyxbs.qa.pages.search.ui.adapter
 
 import android.view.ViewGroup
-import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.component.recycler.BaseRvAdapter
 import com.mredrock.cyxbs.qa.component.recycler.BaseViewHolder

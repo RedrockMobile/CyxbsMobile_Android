@@ -62,6 +62,12 @@ class QuestionContainerFragment : BaseViewModelFragment<QuestionContainerViewMod
         initScrollText()
     }
 
+    override fun onResume() {
+        //再次打开刷新热词
+        super.onResume()
+        initScrollText()
+    }
+
     private fun initVP() {
         vp_question.adapter = QAViewPagerAdapter(childFragments, childFragmentManager)
         //预加载所有部分保证提问后所有fragment能够被通知刷新，同时保证退出账号时只加载一次对话框
