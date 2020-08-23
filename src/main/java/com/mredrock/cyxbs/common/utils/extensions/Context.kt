@@ -111,7 +111,6 @@ fun Activity.startLoginActivity(loginConfig: LoginConfig = LoginConfig(isWarnUse
     //取消转场动画
     val postcard = ARouter.getInstance().build(MAIN_LOGIN)
             .withTransition(0, 0)
-            .withFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
     //如果设置了重新启动activity，则传Class过去
     if (loginConfig.isFinish) postcard.withSerializable(ACTIVITY_CLASS, this::class.java)
     //如果需要提示用户未登录
