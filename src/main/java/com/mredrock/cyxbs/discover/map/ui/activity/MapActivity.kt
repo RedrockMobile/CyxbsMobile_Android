@@ -58,6 +58,9 @@ class MapActivity : BaseViewModelActivity<MapViewModel>() {
 
         //初始化viewModel
         viewModel.init()
+        /**
+         * 获取MapInfo后进行地点搜索请求
+         */
         viewModel.mapInfo.observe(this, Observer {
             viewModel.getPlaceSearch(openString)
         })

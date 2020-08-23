@@ -519,6 +519,20 @@ class MapLayout : FrameLayout, View.OnClickListener {
     }
 
     /**
+     * public的方法，传入icon的id就可以展示此icon,无地图缩放
+     */
+    fun showIconWithoutAnim(id: String) {
+        iconList.forEach {
+            val bean = it.tag as IconBean
+            val beanId = bean.id.toString()
+            if (id == beanId) {
+                showIcon(it)
+                return
+            }
+        }
+    }
+
+    /**
      * 根据多个id展示多个icon
      */
     fun showSomeIcons(ids: List<String>) {

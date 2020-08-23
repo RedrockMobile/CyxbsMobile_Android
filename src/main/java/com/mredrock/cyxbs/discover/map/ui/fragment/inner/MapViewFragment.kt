@@ -119,13 +119,26 @@ class MapViewFragment : BaseFragment() {
             }
 
         })
+        /**
+         * 监听进入地图要聚焦的地点
+         */
         viewModel.openId.observe(viewLifecycleOwner, Observer {
-            println(it)
-            if (it == "500") {
-                context?.let { MapToast.makeText(it, it.getText(R.string.map_open_site_id_null), Toast.LENGTH_SHORT).show() }
-                map_layout.setOpenSiteId(openSiteId)
-            } else {
-                viewModel.openId.value?.let { it1 -> map_layout.setOpenSiteId(it1) }
+            when (it) {
+                MapViewModel.PLACE_SEARCH_500 -> {
+                    context?.let { MapToast.makeText(it, it.getText(R.string.map_open_site_id_null), Toast.LENGTH_SHORT).show() }
+                    map_layout.setOpenSiteId(openSiteId)
+                    map_layout.showIconWithoutAnim(openSiteId)
+                }
+                MapViewModel.PLACE_SEARCH_NULL -> {
+                    map_layout.setOpenSiteId(openSiteId)
+                    map_layout.showIconWithoutAnim(openSiteId)
+                }
+                else -> {
+                    viewModel.openId.value?.let { it1 ->
+                        map_layout.setOpenSiteId(it1)
+                        map_layout.showIconWithoutAnim(it1)
+                    }
+                }
             }
         })
         /**

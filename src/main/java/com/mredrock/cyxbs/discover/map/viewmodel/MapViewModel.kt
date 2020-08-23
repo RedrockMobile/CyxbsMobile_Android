@@ -33,6 +33,14 @@ import java.io.File
  */
 
 class MapViewModel : BaseViewModel() {
+    companion object {
+        /** 从掌邮获取的数据为null*/
+        const val PLACE_SEARCH_NULL = "null"
+
+        /** 从掌邮获取的地点未找到*/
+        const val PLACE_SEARCH_500 = "500"
+    }
+
     private lateinit var mapApiService: MapApiService
 
     //网络请求得到的数据(地图基本信息接口)，如何使用：在要使用的activity或者fragment观察即可
@@ -359,6 +367,9 @@ class MapViewModel : BaseViewModel() {
 
     }
 
+    /**
+     * 进入地图获取要聚焦的点
+     */
     fun getPlaceSearch(openString: String?) {
         mapApiService.placeSearch(openString ?: "-1")
                 .setSchedulers()
@@ -372,7 +383,11 @@ class MapViewModel : BaseViewModel() {
                         bottomSheetStatus.value = BottomSheetBehavior.STATE_COLLAPSED
                     }
                     if (it.status == 500) {
-                        openId.value = "500"
+                        if (openString == null) {
+                            openId.value = PLACE_SEARCH_NULL
+                        } else {
+                            openId.value = PLACE_SEARCH_500
+                        }
                         getPlaceDetails(mapInfo.value!!.openSiteId.toString(), false)
                         bottomSheetStatus.value = BottomSheetBehavior.STATE_COLLAPSED
                     }
