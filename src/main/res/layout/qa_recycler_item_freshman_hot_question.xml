@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+    android:layout_width="168dp"
+    android:layout_height="89dp"
     android:layout_marginEnd="12dp">
 
     <ImageView
-        android:layout_width="168dp"
-        android:layout_height="89dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:src="@drawable/qa_ic_question_freshman_background" />
 
     <androidx.appcompat.widget.LinearLayoutCompat
@@ -24,9 +24,8 @@
             android:textColor="@color/common_level_three_font_color"
             android:textSize="16sp"
             android:textStyle="bold"
-            android:maxEms="5"
             android:singleLine="true"
-            tools:text="入学考试" />
+            tools:text="入学考试听说会有入学考试" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/qa_freshman_hot_item_subtitle"
@@ -35,11 +34,10 @@
             android:layout_below="@+id/qa_freshman_hot_item_title"
             android:layout_alignParentStart="true"
             android:layout_marginTop="2.6dp"
-            android:maxEms="8"
             android:singleLine="true"
             android:textColor="@color/levelFourFontColor"
             android:textSize="16sp"
-            tools:text="听说会有入学考试" />
+            tools:text="听说会有入学考试听说会有入学考试" />
     </androidx.appcompat.widget.LinearLayoutCompat>
 
 </RelativeLayout>

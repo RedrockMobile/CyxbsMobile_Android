@@ -40,7 +40,7 @@ class FooterRvAdapter(private val retryCallback: () -> Unit) : BaseRvAdapter<Int
                 NetworkState.NO_MORE_DATA, NetworkState.SUCCESSFUL -> {
                     itemView.tv_hint.visible()
                     itemView.progress_bar.gone()
-                    itemView.tv_hint.text = "没有更多内容了～"
+                    itemView.tv_hint.text = context.getString(R.string.qa_comment_list_no_more_comment)
 
                 }
                 else -> Unit

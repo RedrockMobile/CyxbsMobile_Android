@@ -113,7 +113,7 @@
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tl_category"
             android:layout_width="match_parent"
-            android:layout_height="60dp"
+            android:layout_height="wrap_content"
             android:layout_below="@+id/ll_qa_hot"
             android:layout_marginTop="6dp"
             app:tabBackground="@android:color/transparent"

@@ -33,8 +33,10 @@ class SearchActivity : BaseViewModelActivity<SearchViewModel>(), EventBusLifecyc
     private val questionSearchedFragment: QuestionSearchedFragment by lazy(LazyThreadSafetyMode.NONE) { QuestionSearchedFragment() }
 
     companion object {
-        fun activityStart(fragment: Fragment, view: View) {
-            val intent = fragment.context?.intentFor<SearchActivity>()
+        private const val SEARCH_HINT_KEY = "search_hint_key"
+        fun activityStart(fragment: Fragment, searchHint: String, view: View) {
+            val bundle = Bundle().apply { putString(SEARCH_HINT_KEY, searchHint) }
+            val intent = fragment.context?.intentFor<SearchActivity>().apply { this?.putExtras(bundle) }
             fragment.startActivity(intent, fragment.activity?.let {
                 ActivityOptionsCompat.makeSceneTransitionAnimation(it, view, "ImageView_Search").apply {
                 }.toBundle()
@@ -59,6 +61,10 @@ class SearchActivity : BaseViewModelActivity<SearchViewModel>(), EventBusLifecyc
     private fun initView() {
         tv_question_search_cancel.setOnClickListener { finish() }
         supportFragmentManager.beginTransaction().replace(R.id.fcv_question_search, questionSearchingFragment).commit()
+        val searchHint = intent.getStringExtra(SEARCH_HINT_KEY)
+        if (!searchHint.isNullOrEmpty()) {
+            et_question_search.hint = searchHint
+        }
         et_question_search.setOnEditorActionListener { v, actionId, event ->
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                 if (v.text.toString().isBlank()) {
