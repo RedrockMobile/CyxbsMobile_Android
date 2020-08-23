@@ -179,7 +179,7 @@ internal class AccountService : IAccountService {
         }
 
         override fun refresh(onError: () -> Unit, action: (token: String) -> Unit) {
-            val refreshToken = tokenWrapper?.refreshToken ?: ""
+            val refreshToken = tokenWrapper?.refreshToken ?: return
             val response = ApiGenerator.getCommonApiService(ApiService::class.java).refresh(RefreshParams(refreshToken)).execute()
             if (response.body() == null) {
                 onError.invoke()
