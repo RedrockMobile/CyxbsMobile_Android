@@ -52,6 +52,8 @@ android {
                         exclude 'debug/**'
                     }
                 }
+                // 让so文件放在libs文件夹中同样被打包，减少学弟踩坑
+                jniLibs.srcDirs = ['libs']
             }
         }
     }
@@ -69,8 +71,8 @@ android {
         jvmTarget = JavaVersion.VERSION_1_8
     }
 
-    dataBinding {
-        enabled = true
+    buildFeatures {
+        dataBinding true
     }
 }
 

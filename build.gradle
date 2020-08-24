@@ -22,6 +22,9 @@ buildscript {
 
 
         maven { url 'https://dl.bintray.com/umsdk/release' }
+        flatDir {
+            dirs 'libs' //this way we can find the .aar file in libs folder
+        }
     }
 
     dependencies {

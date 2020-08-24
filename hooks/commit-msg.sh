@@ -77,7 +77,7 @@ function getXmlFirstTag() {
 drawableFirstTips="*******************以下资源文件有问题需要解决***********************"
 function tipsEcho() {
     if ! [[ ${drawableFirstTips} == "" ]]; then
-        echo $drawableFirstTips
+        echo ${drawableFirstTips}
         drawableFirstTips=""
     fi
     tipsName=$(basename $1)
@@ -97,7 +97,7 @@ function handDrawable() {
     moduleNamePrefix=$(echo $(cd $(dirname $1);pwd)|sed "s/.*\/\(.*\)\/src\/.*/\1/g")
     moduleNamePrefix=${moduleNamePrefix//"module_"/}
     moduleNamePrefix=${moduleNamePrefix//"lib_"/}
-    if ! [[ $(echo $name|grep "ic_launcher") = "" ]]; then
+    if ! [[ $(echo ${name}|grep "ic_launcher") = "" ]]; then
         # 如果检测到是app图标，放行
         return ${returnValue}
     elif [[ ${suffix} = "xml" ]]; then
