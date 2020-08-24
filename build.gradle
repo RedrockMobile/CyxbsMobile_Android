@@ -56,8 +56,8 @@ android {
         maxProcessCount 8
     }
 
-    dataBinding {
-        enabled = true
+    buildFeatures {
+        dataBinding true
     }
 
     signingConfigs {
@@ -77,7 +77,7 @@ android {
 
             signingConfig signingConfigs.config
             ndk {
-                abiFilters 'armeabi-v7a'
+                abiFilters 'armeabi'
                 abiFilters 'x86'
             }
         }
@@ -91,7 +91,7 @@ android {
             signingConfig signingConfigs.config
 
             ndk {
-                abiFilters 'armeabi-v7a'
+                abiFilters 'armeabi'
             }
         }
     }
@@ -109,7 +109,7 @@ android {
     }
 
 
-    kotlinOptions{
+    kotlinOptions {
         jvmTarget = JavaVersion.VERSION_1_8
     }
 
@@ -132,6 +132,12 @@ android {
 
         doNotStrip '*/mips/*.so'
         doNotStrip '*/mips64/*.so'
+    }
+
+    sourceSets {
+        main {
+            jniLibs.srcDirs = ['libs']
+        }
     }
 }
 
@@ -158,8 +164,8 @@ dependencies {
         implementation project(':module_redrock_home')
     }
     kapt deps.arouter.compiler
-    implementation (deps.hotfix.runtime){
-        exclude (module:'alicloud-android-utdid')
-        exclude (module:'alicloud-android-utils')
+    implementation(deps.hotfix.runtime) {
+        exclude(module: 'alicloud-android-utdid')
+        exclude(module: 'alicloud-android-utils')
     }
 }
