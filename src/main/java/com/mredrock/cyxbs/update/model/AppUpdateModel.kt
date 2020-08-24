@@ -31,7 +31,7 @@ object AppUpdateModel {
         }
         status.value = AppUpdateStatus.CHECKING
         Observable.create<UpdateInfo> { obEmitter ->
-            ApiGenerator.getApiService(AppUpdateApiService::class.java)
+            ApiGenerator.getCommonApiService(AppUpdateApiService::class.java)
                     .getUpdateInfo()
                     .safeSubscribeBy(onError = {
                         ApiGenerator.getApiService(getSecondUpdateRetrofit(), AppUpdateApiService::class.java)
