@@ -6,7 +6,7 @@
     <!--白色矩形 作为背景色-->
     <item>
         <shape android:shape="rectangle">
-            <solid android:color="@color/common_white_background" />
+            <solid android:color="@color/common_start_page_white_color" />
         </shape>
     </item>
 
@@ -14,6 +14,6 @@
         <!--位置设置成居中-->
         <bitmap
             android:gravity="center"
-            android:src="@drawable/main_bg_splash_big" />
+            android:src="@drawable/main_ic_bg_splash_big" />
     </item>
 </layer-list>

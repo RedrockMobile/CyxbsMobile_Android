@@ -31,7 +31,7 @@ class MainViewModel : BaseViewModel() {
     var isCourseDirectShow = false
 
     fun getStartPage() {
-        ApiGenerator.getApiService(ApiService::class.java)
+        ApiGenerator.getCommonApiService(ApiService::class.java)
                 .getStartPage()
                 .mapOrThrowApiException()
                 .map {
