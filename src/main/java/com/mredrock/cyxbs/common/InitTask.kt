@@ -1,6 +1,12 @@
 package com.mredrock.cyxbs.common
 
+import android.app.Notification
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.content.Context
+import android.content.Context.NOTIFICATION_SERVICE
+import android.graphics.Color
+import androidx.core.app.NotificationCompat
 import com.meituan.android.walle.WalleChannelReader
 import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.debug
@@ -9,6 +15,8 @@ import com.umeng.commonsdk.UMConfigure
 import com.umeng.commonsdk.statistics.common.DeviceConfig
 import com.umeng.message.IUmengRegisterCallback
 import com.umeng.message.PushAgent
+import com.umeng.message.UmengMessageHandler
+import com.umeng.message.entity.UMessage
 import com.umeng.message.inapp.InAppMessageManager
 
 
@@ -40,6 +48,40 @@ fun initUMeng(context: Context) {
             LogUtils.e("友盟推送注册", "注册失败：-------->  s:$s,s1:$s1")
         }
     })
+    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+        (context.getSystemService(NOTIFICATION_SERVICE) as? NotificationManager)?.let { notificationManager ->
+            val channelId = "qa_channel"
+            val channelName: CharSequence = "邮问消息"
+            val importance = NotificationManager.IMPORTANCE_DEFAULT
+            val notificationChannel = NotificationChannel(channelId, channelName, importance)
+            notificationChannel.enableLights(true)
+            notificationChannel.lightColor = Color.RED
+            notificationChannel.lockscreenVisibility = Notification.VISIBILITY_PUBLIC
+            notificationChannel.vibrationPattern = longArrayOf(0,50,50,120,500,120)
+            notificationManager.createNotificationChannel(notificationChannel)
+        }
+    }
+
+    val messageHandler: UmengMessageHandler = object : UmengMessageHandler() {
+        override fun getNotification(context: Context, msg: UMessage): Notification {
+            return when (msg.builder_id) {
+                1 -> {
+                    val builder = NotificationCompat.Builder(BaseApp.context, "qa_channel")
+                    builder.setContentTitle(msg.title)
+                            .setContentText(msg.text)
+                            .setSmallIcon(getSmallIconId(context, msg))
+                            .setPriority(NotificationCompat.PRIORITY_HIGH)
+                            .setTicker(msg.ticker)
+                            .setAutoCancel(true)
+                    builder.build()
+                }
+                else -> super.getNotification(context,msg)
+            }
+        }
+    }
+//    mPushAgent.setNotificaitonOnForeground(true)
+//    mPushAgent.setEnableForground(context,true)
+    mPushAgent.messageHandler = messageHandler
     InAppMessageManager.getInstance(BaseApp.context).setInAppMsgDebugMode(true)
     debug {
         val deviceInfo = arrayOfNulls<String>(2)
@@ -49,3 +91,37 @@ fun initUMeng(context: Context) {
     }
 
 }
+//
+////创建通知渠道
+//@RequiresApi(api = Build.VERSION_CODES.O)
+//private fun createNotificationChannel(channelId: String, channelName: String, importance: Int) {
+//    val channel = NotificationChannel(channelId, channelName, importance)
+//    val notificationManager = getSystemService(
+//            NOTIFICATION_SERVICE) as NotificationManager?
+//    notificationManager!!.createNotificationChannel(channel)
+//}
+//
+//fun sendUpgradeMsg(view: View?) {
+//    val manager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager?
+//    val notification: Notification = Builder(this, "upgrade")
+//            .setContentTitle("升级")
+//            .setContentText("程序员终于下班了。。")
+//            .setWhen(System.currentTimeMillis())
+//            .setSmallIcon(R.mipmap.ic_launcher)
+//            .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher))
+//            .setAutoCancel(true)
+//            .build()
+//    manager!!.notify(100, notification)
+//}
+//
+//fun sendComposeMsg(view: View?) {
+//    val manager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager?
+//    val notification: Notification = NotificationCompat.Builder(this, "compose")
+//            .setContentTitle("私信")
+//            .setContentText("有人私信向你提出问题")
+//            .setWhen(System.currentTimeMillis())
+//            .setSmallIcon(R.drawable.icon)
+//            .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.icon))
+//            .build()
+//    manager!!.notify(101, notification)
+//}
