@@ -55,12 +55,6 @@ class QuestionContainerFragment : BaseViewModelFragment<QuestionContainerViewMod
     //判断是否加载过热词，首次加载fragment，会加载一次，设置true，onPause就不会加载
     // onStop设置为false，onPause就会加载
     private var isHotWordsLoaded = false
-    override var isOpenLifeCycleLog: Boolean
-        get() = true
-        set(value) {}
-    override var TAG: String
-        get() = "TTT"
-        set(value) {}
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
