@@ -3,6 +3,7 @@ package com.mredrock.cyxbs.discover.electricity.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.mredrock.cyxbs.common.bean.isSuccessful
+import com.mredrock.cyxbs.common.config.DISCOVERY_ELECTRIC
 import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.network.exception.RedrockApiException
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
@@ -10,7 +11,6 @@ import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.discover.electricity.bean.ElecInf
 import com.mredrock.cyxbs.discover.electricity.network.ApiService
-import java.util.concurrent.TimeUnit
 
 /**
  * Author: Hosigus
@@ -20,7 +20,7 @@ import java.util.concurrent.TimeUnit
 class ChargeViewModel : BaseViewModel() {
     val chargeInfo: LiveData<ElecInf> = MutableLiveData()
     private val service: ApiService by lazy {
-        ApiGenerator.getApiService(1, ApiService::class.java)
+        ApiGenerator.getApiService(DISCOVERY_ELECTRIC, ApiService::class.java)
     }
 
     fun getCharge(building: String, room: String) {

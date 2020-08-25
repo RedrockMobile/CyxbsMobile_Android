@@ -18,4 +18,5 @@
     <string name="electricity_electric_view_hint_money">元</string>
     <string name="electricity_ask_login_string">登录后即可电费查询</string>
     <string name="electricity_inquire_string">电费查询</string>
+    <string name="electricity_no_data">暂无该宿舍电费数据</string>
 </resources>

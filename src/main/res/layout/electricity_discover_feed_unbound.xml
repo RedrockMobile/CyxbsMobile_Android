@@ -2,6 +2,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="101dp">
+
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tv_electricity_no_account"
         android:layout_width="wrap_content"
@@ -10,5 +11,5 @@
         android:textColor="@color/common_level_two_font_color"
         android:alpha="0.6"
         android:text="还未绑定账号哦"
-        android:layout_gravity="center_horizontal|center_vertical"/>
+        android:layout_gravity="center_horizontal|center_vertical" />
 </FrameLayout>

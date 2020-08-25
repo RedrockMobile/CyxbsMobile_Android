@@ -41,15 +41,20 @@ class ElectricityFeedFragment : BaseFeedFragment<ChargeViewModel>() {
             }
         }
         viewModel.chargeInfo.observe {
-            it?.let {
-                val adapter = getAdapter()
-                if (adapter is ElectricityFeedAdapter) {
-                    adapter.refresh(it)
-                } else {
-                    setAdapter(ElectricityFeedAdapter(it))
-                }
+            if (it == null || it.isEmpty()) {
+                setSubtitle("")
+            } else {
                 setSubtitle(it.recordTime.plus("抄表"))
+
             }
+
+            val adapter = getAdapter()
+            if (adapter is ElectricityFeedAdapter) {
+                adapter.refresh(it)
+            } else {
+                setAdapter(ElectricityFeedAdapter(it))
+            }
+
         }
     }
 
