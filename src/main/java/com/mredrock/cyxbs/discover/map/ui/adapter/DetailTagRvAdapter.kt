@@ -1,12 +1,12 @@
 package com.mredrock.cyxbs.discover.map.ui.adapter
 
-import android.animation.ValueAnimator
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.mredrock.cyxbs.common.utils.extensions.pressToZoomOut
 import com.mredrock.cyxbs.discover.map.R
 import kotlinx.android.synthetic.main.map_recycle_item_detail_tag.view.*
 
@@ -14,8 +14,7 @@ class DetailTagRvAdapter(val context: Context, private val mList: MutableList<St
 
 
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-
-        val tag: TextView = view.map_tv_recycle_item_detail_tag
+        val tag: TextView = view.map_tv_recycle_item_detail_tag.apply { pressToZoomOut() }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -29,20 +28,7 @@ class DetailTagRvAdapter(val context: Context, private val mList: MutableList<St
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        /**
-         * 点击动画
-         */
         holder.tag.text = mList[position]
-        holder.tag.setOnClickListener {
-            val animator = ValueAnimator.ofFloat(1f, 1.2f, 0.8f, 1f)
-            animator.duration = 500
-            animator.addUpdateListener {
-                val currentValue: Float = it.animatedValue as Float
-                holder.tag.scaleX = currentValue
-                holder.tag.scaleY = currentValue
-            }
-            animator.start()
-        }
 
     }
 
