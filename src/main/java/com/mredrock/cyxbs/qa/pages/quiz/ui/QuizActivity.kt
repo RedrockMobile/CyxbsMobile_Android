@@ -10,6 +10,7 @@ import android.util.Base64
 import android.view.KeyEvent
 import android.view.View
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.view.get
 import androidx.core.widget.doAfterTextChanged
@@ -18,6 +19,7 @@ import com.alibaba.android.arouter.facade.annotation.Route
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import com.google.gson.Gson
+import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.common.config.QA_QUIZ
 import com.mredrock.cyxbs.common.event.QuestionDraftEvent
 import com.mredrock.cyxbs.common.mark.EventBusLifecycleSubscriber
@@ -132,6 +134,10 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>(), EventBusLifecycleSu
             visible()
             text = getString(R.string.qa_quiz_dialog_next)
             setOnClickListener {
+                if ((layout_quiz_tag as ChipGroup).checkedChipId == View.NO_ID) {
+                    CyxbsToast.makeText(this@QuizActivity, context.getString(R.string.qa_quiz_type_empty), Toast.LENGTH_SHORT).show()
+                    return@setOnClickListener
+                }
                 viewModel.isAnonymous = questionType == getString(R.string.qa_quiz_select_type_anonymous)
                 val result = viewModel.submitTitleAndContent(edt_quiz_title.text.toString(), edt_quiz_content.text.toString(), questionType)
                 if (result) {
