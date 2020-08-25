@@ -68,8 +68,14 @@ class SearchActivity : BaseViewModelActivity<SearchViewModel>(), EventBusLifecyc
         et_question_search.setOnEditorActionListener { v, actionId, event ->
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                 if (v.text.toString().isBlank()) {
-                    longToast(getString(R.string.qa_search_empty_content))
-                    v.text = ""
+                    if (!searchHint.isNullOrEmpty() && !v.hint.isNullOrEmpty()) {
+                        v.text = searchHint
+                        turnToResult(searchHint)
+                        viewModel.insert(QAHistory(v.text.toString(), System.currentTimeMillis()))
+                    } else {
+                        longToast(getString(R.string.qa_search_empty_content))
+                        v.text = ""
+                    }
                 } else {
                     turnToResult(v.text.toString())
                     viewModel.insert(QAHistory(v.text.toString(), System.currentTimeMillis()))
