@@ -1,12 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.appcompat.widget.AppCompatTextView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:paddingTop="7dp"
-    android:paddingBottom="7dp"
-    android:paddingStart="13dp"
-    android:paddingEnd="13dp"
-    android:textColor="@color/common_level_two_font_color"
-    android:background="@drawable/othercourse_shape_ev">
+    android:layout_height="wrap_content">
 
-</androidx.appcompat.widget.AppCompatTextView>
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tv_search_history"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/othercourse_shape_ev"
+        android:paddingStart="13dp"
+        android:paddingTop="7dp"
+        android:paddingEnd="13dp"
+        android:paddingBottom="7dp"
+        android:textColor="@color/common_level_two_font_color"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="一个名字" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/iv_search_history_delete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="@+id/tv_search_history"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/othercourse_ic_history_delete" />
+</androidx.constraintlayout.widget.ConstraintLayout>

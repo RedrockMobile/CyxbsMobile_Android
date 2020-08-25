@@ -7,8 +7,6 @@ import android.view.ViewGroup
 import android.widget.Toast
 import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.common.ui.BaseViewModelFragment
-import com.mredrock.cyxbs.common.utils.extensions.doIfLogin
-import com.mredrock.cyxbs.common.utils.extensions.startActivity
 import com.mredrock.cyxbs.common.utils.extensions.gone
 import com.mredrock.cyxbs.common.utils.extensions.startActivity
 import com.mredrock.cyxbs.common.utils.extensions.visible
@@ -69,10 +67,8 @@ abstract class OtherCourseSearchFragment<T : OtherCourseSearchViewModel> : BaseV
                 snackbar("输入为空")
                 return@setOnEditorActionListener false
             } else {
-                context?.doIfLogin {
-                    viewModel.getPerson(text)
-                    lastSearch = text
-                }
+                viewModel.getPerson(text)
+                lastSearch = text
                 et_discover_other_course_search.setText("")
                 return@setOnEditorActionListener true
             }
@@ -80,16 +76,27 @@ abstract class OtherCourseSearchFragment<T : OtherCourseSearchViewModel> : BaseV
     }
 
     private fun initHistory() {
+
         viewModel.getHistory()
         viewModel.mHistory.observe {
-            if (it.isNullOrEmpty()) {
-                tv_other_course_history.gone()
-                return@observe
+            aw_other_course_fragment.adapter = AutoWrapAdapter(it ?: listOf(),
+                    onTextClickListener = { text ->
+                        viewModel.getPerson(text, true)
+                    },
+                    onDeleteClickListener = { id ->
+                        viewModel.deleteHistory(id)
+                    }
+            )
+            when {
+                it.isNullOrEmpty() -> {
+                    tv_other_course_history.gone()
+                    aw_other_course_fragment.refreshData()
+                }
+                else -> {
+                    tv_other_course_history.visible()
+                }
             }
-            tv_other_course_history.visible()
-            aw_other_course_fragment.adapter = AutoWrapAdapter(it) { text ->
-                viewModel.getPerson(text, true)
-            }
+
         }
     }
 

@@ -21,13 +21,19 @@ abstract class OtherCourseSearchViewModel : BaseViewModel() {
     abstract fun getHistory()
 
     protected fun getHistoryInternal(type: Int) {
-        database.getHistoryDao()
-                .getHistory(type)
-                .toObservable()
-                .setSchedulers()
+        Observable.create<MutableList<History>> { emitter ->
+            database.getHistoryDao()
+                    .getHistory(type)
+                    .toObservable()
+                    .safeSubscribeBy(
+                            onError = { emitter.onError(it) },
+                            onNext = { emitter.onNext(it) }
+                    )
+        }.setSchedulers()
                 .safeSubscribeBy {
                     mHistory.value = it
-                }.lifeCycle()
+                }
+
     }
 
     protected fun addHistoryInternal(history: History) {
@@ -38,6 +44,14 @@ abstract class OtherCourseSearchViewModel : BaseViewModel() {
                 }.lifeCycle()
         mHistory.value?.add(0, history)
         mHistory.value = mHistory.value
+    }
+
+    fun deleteHistory(id: Int) {
+        Observable.just(id)
+                .subscribeOn(Schedulers.io())
+                .safeSubscribeBy {
+                    database.getHistoryDao().deleteHistory(it)
+                }.lifeCycle()
     }
 
     abstract fun addHistory(history: History)
