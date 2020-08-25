@@ -55,6 +55,7 @@
             android:id="@+id/main_activity_splash_viewStub"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="@color/common_white_background"
             android:visibility="@{mainViewModel.splashVisibility}"
             tools:visibility="gone" />
 
