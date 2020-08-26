@@ -49,7 +49,6 @@
             app:layout_constraintBottom_toBottomOf="@+id/tv_dis"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/tv_dis"
-            app:layout_constraintVertical_bias="1.0"
             tools:ignore="ContentDescription,MissingConstraints" />
 
         <androidx.viewpager2.widget.ViewPager2
