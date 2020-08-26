@@ -164,6 +164,7 @@ class ScheduleDetailViewAdapter(private val mDialog: Dialog, private val mSchedu
                         0 -> {
                             //教室名跳转到对应地图
                             text = itemViewInfo.classroom
+                            setCompoundDrawablesWithIntrinsicBounds(0,0,R.drawable.course_ic_test_temp,0)
                             setOnClickListener {
                                 //跳转到对应Map位置
                                 ARouter.getInstance().build(DISCOVER_MAP).withString(COURSE_POS_TO_MAP, itemViewInfo.classroom).navigation()
