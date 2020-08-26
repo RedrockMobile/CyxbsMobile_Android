@@ -231,7 +231,7 @@
     <!--    提问图片选择占位图-->
     <color name="common_qa_quiz_picture_empty_color">#2C2C2C</color>
     <!--    提问hint颜色-->
-    <color name="common_qa_common_hint_text_color">#F0F0F2</color>
+    <color name="common_qa_common_hint_text_color">#85F0F0F2</color>
     <!--    提问图片选择占位图中间颜色-->
     <color name="common_qa_quiz_picture_empty_centre_color">#000101</color>
     <!--    回答被采纳的标签颜色-->
@@ -318,10 +318,13 @@
 
     <!--    发现菜单字体颜色-->
     <color name="common_menu_font_color_found">#5A5A5A</color>
+    <!--    发现菜单字体颜色-->
+    <color name="discovery_function_item_color">#8C8C8C</color>
 
 
     <color name="common_alpha_level_two_font_color">#5A5A5A</color>
-
+    <!--    44%透明度的二级字体-->
+    <color name="common_alpha_forty_level_two_font_color">#705A5A5A</color>
     <!--    签到提示颜色-->
     <color name="common_check_in_prompt_color">#5A5A5A</color>
 

@@ -42,6 +42,10 @@
 
     <!--    60%透明度的二级字体-->
     <color name="common_alpha_level_two_font_color">#9915315B</color>
+
+    <!--    44%透明度的二级字体-->
+    <color name="common_alpha_forty_level_two_font_color">#7015315B</color>
+
     <!--    课表可上拉下拉标识小块背景-->
     <color name="common_course_table_drag_indicator_block_color">#E2EDFB</color>
     <!--    课表标识当天阴影-->
@@ -336,6 +340,9 @@
     <color name="common_discover_academic_online_colors_background">#AFD2FB</color>
     <!--    发现菜单字体颜色-->
     <color name="common_menu_font_color_found">#15315B</color>
+    <!--    发现菜单字体颜色-->
+    <color name="discovery_function_item_color">#15315B</color>
+
     <!--    签到提示颜色-->
     <color name="common_check_in_prompt_color">#d4daff</color>
 
