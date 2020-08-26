@@ -54,7 +54,6 @@ class QuestionContainerFragment : BaseViewModelFragment<QuestionContainerViewMod
 
     //判断是否加载过热词，首次加载fragment，会加载一次，设置true，onPause就不会加载
     // onStop设置为false，onPause就会加载
-    private var isHotWordsLoaded = false
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -70,9 +69,8 @@ class QuestionContainerFragment : BaseViewModelFragment<QuestionContainerViewMod
     }
 
     override fun onResume() {
-        //再次打开刷新热词
         super.onResume()
-        initScrollText()
+        vf_hot_search.startFlipping()
     }
 
     private fun initVP() {
@@ -97,14 +95,11 @@ class QuestionContainerFragment : BaseViewModelFragment<QuestionContainerViewMod
     }
 
     private fun initScrollText() {
-        if (isHotWordsLoaded) return
-        vf_hot_search.startFlipping()
         //搜索滚动词
         viewModel.getScrollerText()
         val loaderView = getTextView("")
         vf_hot_search.addView(loaderView)
         initHotSearch(vf_hot_search, rl_qa_hot_search)
-        isHotWordsLoaded = true
     }
 
     private fun turnToQuiz() {
@@ -168,7 +163,6 @@ class QuestionContainerFragment : BaseViewModelFragment<QuestionContainerViewMod
 
     override fun onPause() {
         super.onPause()
-        isHotWordsLoaded = false
         vf_hot_search.stopFlipping()
     }
 
