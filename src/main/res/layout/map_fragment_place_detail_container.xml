@@ -81,7 +81,6 @@
                             android:id="@+id/map_rv_detail_place_attribute"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
                             android:layout_marginEnd="24dp"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toStartOf="@+id/map_tv_detail_place_nickname"
@@ -95,10 +94,9 @@
                             android:layout_height="40dp"
                             android:paddingStart="10dp"
                             android:paddingTop="10dp"
-                            android:paddingEnd="10dp"
+
                             android:paddingBottom="10dp"
-                            app:layout_constraintBottom_toBottomOf="@+id/map_rv_detail_place_attribute"
-                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintBottom_toBottomOf="@+id/map_tv_detail_place_name"                            app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintTop_toTopOf="@+id/map_tv_detail_place_name"
                             app:srcCompat="@drawable/map_ic_no_like" />
 
@@ -110,10 +108,9 @@
                             android:textColor="@color/map_detail_place_nickname_text_color"
                             android:textSize="14sp"
                             android:visibility="visible"
-                            app:layout_constraintBottom_toBottomOf="@+id/map_rv_detail_place_attribute"
+                            app:layout_constraintBottom_toBottomOf="@+id/map_iv_detail_favorite"
                             app:layout_constraintEnd_toStartOf="@id/map_iv_detail_favorite"
-                            app:layout_constraintTop_toTopOf="@+id/map_tv_detail_place_name"
-                            tools:text="我最爱去" />
+                            app:layout_constraintTop_toTopOf="@+id/map_iv_detail_favorite" />
 
 
                     </androidx.constraintlayout.widget.ConstraintLayout>

@@ -9,10 +9,12 @@
 
     <TextView
         android:id="@+id/map_tv_search_result_place_name"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="12dp"
         android:layout_marginTop="10dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginBottom="10dp"
         android:textColor="@color/map_search_result_item_text_color"
         android:textSize="@dimen/map_search_result_item_place_name_text_size"

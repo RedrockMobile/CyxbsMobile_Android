@@ -8,6 +8,7 @@ import android.graphics.Matrix
 import android.graphics.Paint
 import android.util.AttributeSet
 import android.view.MotionEvent
+import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toBitmap
 import com.mredrock.cyxbs.common.utils.extensions.dp2px
 import com.mredrock.cyxbs.discover.map.R
@@ -76,7 +77,9 @@ class SearchEditText : androidx.appcompat.widget.AppCompatEditText {
 
     private fun init() {
         paint = Paint()
-        paint.textSize = 35f
+        val fontScale = context.resources.displayMetrics.scaledDensity
+        paint.textSize = fontScale * 14 + 0.5f //设置字号为14sp
+        paint.color = ContextCompat.getColor(context, R.color.map_search_text_color_hint)
         paint.isAntiAlias = true
         hintString = ""
 

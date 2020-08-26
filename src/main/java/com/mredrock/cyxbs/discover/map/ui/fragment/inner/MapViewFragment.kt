@@ -21,10 +21,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.ui.BaseFragment
-import com.mredrock.cyxbs.common.utils.extensions.doIfLogin
-import com.mredrock.cyxbs.common.utils.extensions.dp2px
-import com.mredrock.cyxbs.common.utils.extensions.invisible
-import com.mredrock.cyxbs.common.utils.extensions.visible
+import com.mredrock.cyxbs.common.utils.extensions.*
 import com.mredrock.cyxbs.discover.map.R
 import com.mredrock.cyxbs.discover.map.bean.IconBean
 import com.mredrock.cyxbs.discover.map.bean.PlaceItem
@@ -328,6 +325,7 @@ class MapViewFragment : BaseFragment() {
         val favoriteListAdapter = FavoriteListAdapter(requireContext(), viewModel, mutableListOf())
         mapFavoriteRecyclerView.adapter = favoriteListAdapter
         //设置“我的收藏”点击事件
+        map_ll_map_view_my_favorite.pressToZoomOut()
         map_ll_map_view_my_favorite.setOnClickListener {
             context?.doIfLogin("收藏") {
                 if (isFastClick()) {
@@ -447,8 +445,7 @@ class MapViewFragment : BaseFragment() {
                 }
 
                 override fun onAnimationEnd(p0: Animator?) {
-                    val intent = Intent(context, VRActivity::class.java)
-                    startActivity(intent)
+                    activity?.let { it1 -> VRActivity.startVRActivity(it1,viewModel.vrUrl) }
                 }
 
                 override fun onAnimationCancel(p0: Animator?) {

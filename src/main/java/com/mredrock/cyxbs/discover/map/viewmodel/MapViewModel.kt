@@ -8,7 +8,10 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.bean.isSuccessful
 import com.mredrock.cyxbs.common.network.ApiGenerator
+import com.mredrock.cyxbs.common.network.CommonApiService
+import com.mredrock.cyxbs.common.utils.down.params.DownMessageParams
 import com.mredrock.cyxbs.common.utils.extensions.doOnErrorWithDefaultErrorHandler
+import com.mredrock.cyxbs.common.utils.extensions.mapOrThrowApiException
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
@@ -39,6 +42,12 @@ class MapViewModel : BaseViewModel() {
 
         /** 从掌邮获取的地点未找到*/
         const val PLACE_SEARCH_500 = "500"
+        const val DOWN_MESSAGE_NAME = "zscy-map-vr-url"
+
+    }
+    init {
+        //优先请求，避免进入vr还没有拿到url
+        getVrUrl()
     }
 
     private lateinit var mapApiService: MapApiService
@@ -108,6 +117,10 @@ class MapViewModel : BaseViewModel() {
 
     //掌邮传过来的OpenSiteId
     val openId = MutableLiveData<String>()
+
+    //VR地图url
+    var vrUrl = ""
+
     fun init() {
 
         /**
@@ -410,6 +423,18 @@ class MapViewModel : BaseViewModel() {
                 }.lifeCycle()
     }
 
+    private fun getVrUrl() {
+        ApiGenerator.getCommonApiService(CommonApiService::class.java)
+                .getDownMessage(DownMessageParams(DOWN_MESSAGE_NAME))
+                .setSchedulers()
+                .mapOrThrowApiException()
+                .safeSubscribeBy {
+                    if (!it.textList.isNullOrEmpty()) {
+                        vrUrl = it.textList[0].content
+                    }
+                }
+
+    }
 
 }
 
