@@ -19,11 +19,6 @@ class FreshManHeaderRvAdapter(private val adapter: FreshManHeaderInnerVpAdapter,
         super.onBindViewHolder(holder, position)
         val root = holder.itemView as LinearLayout
         val recyclerView: RecyclerView = root.rv_freshman_hot
-        root.tv_hot_question_more.setOnClickListener {
-            holder.itemView.context?.doIfLogin {
-                askQuestion.invoke()
-            }
-        }
         recyclerView.adapter = adapter
         recyclerView.apply {
             layoutManager = LinearLayoutManager(root.context, LinearLayoutManager.HORIZONTAL, false)

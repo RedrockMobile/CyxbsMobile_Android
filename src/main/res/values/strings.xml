@@ -99,6 +99,7 @@
     <string name="qa_search_empty_content">搜索内容为空，请重新编辑~</string>
     <string name="qa_search_hot_word_key">大家都在搜:</string>
     <string name="qa_quiz_type_empty">类型不能为空哦～</string>
+    <string name="qa_search_ed_hint_text">搜索你想知道的</string>
     <string-array name="qa_quiz_reward_explain_title">
         <item>悬赏积分是干嘛的?</item>
         <item>任务最晚完成时间是什么意思?</item>

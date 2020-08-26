@@ -44,4 +44,8 @@
         <item name="l_pp_checkBox_stroke_width" format="dimension">2dp</item><!--（仅预览页面）圆圈边框宽度-->
         <item name="l_pp_checkBox_tick_width" format="dimension">2dp</item><!--勾勾的线条宽度-->
     </style>
+    <style name="TabLayout.TabText" parent="TextAppearance.Design.Tab">
+        <item name="android:textSize">17sp</item>
+        <item name="textAllCaps">false</item>
+    </style>
 </resources>

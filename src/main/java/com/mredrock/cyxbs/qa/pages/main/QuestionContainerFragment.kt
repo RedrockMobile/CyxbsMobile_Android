@@ -98,6 +98,7 @@ class QuestionContainerFragment : BaseViewModelFragment<QuestionContainerViewMod
 
     private fun initScrollText() {
         if (isHotWordsLoaded) return
+        vf_hot_search.startFlipping()
         //搜索滚动词
         viewModel.getScrollerText()
         val loaderView = getTextView("")
@@ -168,6 +169,7 @@ class QuestionContainerFragment : BaseViewModelFragment<QuestionContainerViewMod
     override fun onPause() {
         super.onPause()
         isHotWordsLoaded = false
+        vf_hot_search.stopFlipping()
     }
 
     override val viewModelClass: Class<QuestionContainerViewModel> = QuestionContainerViewModel::class.java

@@ -9,8 +9,9 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="18dp"
         android:text="@string/qa_question_hot"
+        android:textStyle="bold"
         android:textColor="@color/common_level_three_font_color"
-        android:textSize="17dp" />
+        android:textSize="20sp" />
 
     <LinearLayout
         android:id="@+id/rl_vp_container"
@@ -27,14 +28,4 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
     </LinearLayout>
-
-    <TextView
-        android:id="@+id/tv_hot_question_more"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="18dp"
-        android:text="@string/qa_question_hot_ask_question_enter"
-        android:textColor="@color/common_level_three_font_color"
-        android:textSize="10dp" />
-
 </LinearLayout>

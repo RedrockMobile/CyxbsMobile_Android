@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:background="@color/common_window_background">
+    tools:context=".pages.search.ui.SearchActivity">
 
     <RelativeLayout
         android:id="@+id/rl_question_searching"
@@ -35,8 +35,9 @@
             android:layout_centerVertical="true"
             android:layout_toEndOf="@id/iv_question_searching"
             android:background="@null"
-            android:hint="搜索你想知道的"
+            android:hint="@string/qa_search_ed_hint_text"
             android:imeOptions="actionSearch"
+            android:textColorHint="@color/common_qa_common_hint_text_color"
             android:inputType="text"
             android:paddingStart="10dp"
             android:selectAllOnFocus="true"

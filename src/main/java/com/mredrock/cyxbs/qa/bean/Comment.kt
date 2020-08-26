@@ -4,6 +4,26 @@ import android.os.Parcel
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
 
+
+//todo
+/*
+邮问提问
+搜索框宽
+tab字体变大
+教务在线圆角
+资料编辑
+收藏点击
+发现签到往上
+功能图标变大，图标顺序
+课表查询hint字体
+个人点击，取消整个
+邮问欢迎新同学放大
+功能夜间模式图标
+发布问题hint夜间模式颜色
+热门解答，背景图片透明度，end加一个距离
+邮问搜索hint颜色
+ */
+
 data class Comment(@SerializedName("id")
                    val id: String = "",
                    @SerializedName("is_self")
