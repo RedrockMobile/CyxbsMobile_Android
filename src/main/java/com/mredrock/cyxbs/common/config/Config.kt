@@ -47,7 +47,7 @@ const val SP_SHOW_MODE = "showMode"
 //连续签到每日提醒
 const val SP_SIGN_REMIND = "signRemind"
 
-const val APP_WEBSITE = "https://wx.redrock.team/app/"
+const val APP_WEBSITE = "https://wx.redrock.team/game/handheldcqupt-mobile/#/"
 
 const val ABOUT_US_WEBSITE = "https://redrock.team/aboutus/"
 
@@ -102,6 +102,7 @@ const val IS_PRE_FINISH = "IS_PRE_FINISH"
 const val SCHOOL_CAR_MAP_RES = 0
 const val DISCOVERY_ROLLER_VIEW_INFO = 1
 const val DISCOVERY_ELECTRIC = 1
+const val DISCOVERY_VOLUNTEER = 1
 
 //课表上课地点跳转到地图key
 const val COURSE_POS_TO_MAP = "COURSE_POS_TO_MAP"

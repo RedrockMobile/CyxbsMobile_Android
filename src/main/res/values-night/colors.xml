@@ -347,10 +347,11 @@
 
     <!--   地图模块使用的颜色-->
     <!--   搜索地点的搜索框文字颜色-->
-    <color name="map_search_text_color" tools:ignore="ResourceName">#16305C</color>
+    <color name="map_search_text_color" tools:ignore="ResourceName">#F0F0F2</color>
     <!--   搜索地点的hint文字颜色-->
     <color name="map_search_text_color_hint" tools:ignore="ResourceName">#8C8C8C</color>
-
+    <!--   搜索地点的搜索框背景颜色-->
+    <color name="map_search_edit_text_background" tools:ignore="ResourceName">#202020</color>
     <color name="map_title_text_color" tools:ignore="ResourceName">#15315B</color>
     <!--    地图可上拉下拉标识小块背景-->
     <color name="map_table_drag_indicator_block_color" tools:ignore="ResourceName">#000202</color>
@@ -395,6 +396,7 @@
 
 
     <color name="map_search_result_item_text_color" tools:ignore="ResourceName">#F0F0F2</color>
+    <color name="map_search_history_item_text_color" tools:ignore="ResourceName">#F0F0F2</color>
 
     <color name="map_dialog_tip_background_color" tools:ignore="ResourceName">#2E2E2E</color>
     <color name="map_dialog_tip_title_color" tools:ignore="ResourceName">#F0F0F2</color>
