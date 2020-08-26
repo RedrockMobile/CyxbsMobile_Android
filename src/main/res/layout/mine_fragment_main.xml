@@ -3,8 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:background="@color/common_window_background"
     android:orientation="vertical"
+    tools:background="@color/common_window_background"
     tools:context=".UserFragment">
 
     <LinearLayout
@@ -35,10 +35,10 @@
                 android:id="@+id/mine_main_username"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
                 android:text="@string/mine_user_empty_username"
                 android:textColor="@color/common_level_one_font_color"
                 android:textSize="21sp"
-                android:layout_marginTop="8dp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="@+id/mine_main_introduce"
                 app:layout_constraintTop_toTopOf="@+id/mine_main_avatar" />
@@ -48,13 +48,13 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="19dp"
+                android:layout_marginBottom="8dp"
                 android:ellipsize="end"
                 android:maxLength="20"
                 android:maxLines="1"
                 android:text="@string/mine_user_empty_introduce"
                 android:textColor="@color/common_level_one_font_color"
                 android:textSize="11sp"
-                android:layout_marginBottom="8dp"
                 app:layout_constraintBottom_toBottomOf="@+id/mine_main_avatar"
                 app:layout_constraintEnd_toStartOf="@+id/mine_main_avatar_edit"
                 app:layout_constraintStart_toEndOf="@+id/mine_main_avatar" />
@@ -71,186 +71,197 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
 
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="17dp"
+            android:layout_marginEnd="17dp"
+            android:background="@drawable/mine_shape_round_corner_main">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:background="@drawable/mine_shape_round_corner_main"
-                android:layout_width="match_parent"
+            <TextView
+                android:id="@+id/mine_main_tv_sign"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="17dp"
-                android:layout_marginEnd="17dp">
+                android:layout_marginStart="14dp"
+                android:layout_marginTop="19dp"
+                android:text="@string/mine_sing_successive_default"
+                android:textColor="@color/common_level_one_font_color"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-                <TextView
-                    android:id="@+id/mine_main_tv_sign"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="19dp"
-                    android:layout_marginStart="14dp"
-                    android:text="@string/mine_sing_successive_default"
-                    android:textColor="@color/common_level_one_font_color"
-                    android:textSize="15sp"
-                    android:textStyle="bold"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+            <Button
+                android:id="@+id/mine_main_btn_sign"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="52dp"
+                android:layout_height="28dp"
+                android:layout_gravity="end"
+                android:layout_marginEnd="14dp"
+                android:background="@drawable/common_dialog_btn_positive_blue"
+                android:text="@string/mine_sign_name"
+                android:textColor="@color/common_white_font_color"
+                android:textSize="13sp"
+                app:layout_constraintBottom_toBottomOf="@+id/mine_main_tv_sign"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/mine_main_tv_sign" />
 
-                <Button
-                    android:id="@+id/mine_main_btn_sign"
-                    style="?android:attr/borderlessButtonStyle"
-                    android:layout_width="52dp"
-                    android:layout_height="28dp"
-                    android:layout_gravity="end"
-                    android:layout_marginEnd="14dp"
-                    android:background="@drawable/common_dialog_btn_positive_blue"
-                    android:text="@string/mine_sign_name"
-                    android:textColor="@color/common_white_font_color"
-                    android:textSize="13sp"
-                    app:layout_constraintBottom_toBottomOf="@+id/mine_main_tv_sign"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/mine_main_tv_sign" />
+            <TextView
+                android:id="@+id/mine_main_question_number"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/impact_min"
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp"
+                android:text="@string/mine_number_default"
+                android:textColor="@color/levelFourFontColor"
+                android:textSize="30sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toTopOf="@+id/mine_main_tv_question"
+                app:layout_constraintEnd_toEndOf="@+id/mine_main_tv_question"
+                app:layout_constraintStart_toStartOf="@+id/mine_main_tv_question" />
 
-                <TextView
-                    android:id="@+id/mine_main_question_number"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/mine_number_default"
-                    android:paddingStart="20dp"
-                    android:paddingEnd="20dp"
-                    android:fontFamily="@font/impact_min"
-                    android:textColor="@color/levelFourFontColor"
-                    android:textSize="30sp"
-                    android:textStyle="bold"
-                    app:layout_constraintBottom_toTopOf="@+id/mine_main_tv_question"
-                    app:layout_constraintEnd_toEndOf="@+id/mine_main_tv_question"
-                    app:layout_constraintStart_toStartOf="@+id/mine_main_tv_question"
-                    />
+            <TextView
+                android:id="@+id/mine_main_answer_number"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/impact_min"
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp"
+                android:text="@string/mine_number_default"
+                android:textColor="@color/levelFourFontColor"
+                android:textSize="30sp"
+                android:textStyle="bold"
+                android:typeface="serif"
+                app:layout_constraintBottom_toTopOf="@+id/mine_main_tv_answer"
+                app:layout_constraintEnd_toEndOf="@+id/mine_main_tv_answer"
+                app:layout_constraintStart_toStartOf="@+id/mine_main_tv_answer" />
 
-                <TextView
-                    android:id="@+id/mine_main_answer_number"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/mine_number_default"
-                    android:paddingStart="20dp"
-                    android:paddingEnd="20dp"
-                    android:fontFamily="@font/impact_min"
-                    android:typeface="serif"
-                    android:textColor="@color/levelFourFontColor"
-                    android:textSize="30sp"
-                    android:textStyle="bold"
-                    app:layout_constraintBottom_toTopOf="@+id/mine_main_tv_answer"
-                    app:layout_constraintEnd_toEndOf="@+id/mine_main_tv_answer"
-                    app:layout_constraintStart_toStartOf="@+id/mine_main_tv_answer" />
+            <TextView
+                android:id="@+id/mine_main_reply_comment_number"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/impact_min"
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp"
+                android:text="@string/mine_number_default"
+                android:textColor="@color/levelFourFontColor"
+                android:textSize="30sp"
+                android:textStyle="bold"
+                android:typeface="serif"
+                app:layout_constraintBottom_toTopOf="@+id/mine_main_tv_reply_comment"
+                app:layout_constraintEnd_toEndOf="@+id/mine_main_tv_reply_comment"
+                app:layout_constraintStart_toStartOf="@+id/mine_main_tv_reply_comment" />
 
-                <TextView
-                    android:id="@+id/mine_main_reply_comment_number"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/mine_number_default"
-                    android:paddingStart="20dp"
-                    android:paddingEnd="20dp"
-                    android:textColor="@color/levelFourFontColor"
-                    android:textSize="30sp"
-                    android:fontFamily="@font/impact_min"
-                    android:typeface="serif"
-                    android:textStyle="bold"
-                    app:layout_constraintBottom_toTopOf="@+id/mine_main_tv_reply_comment"
-                    app:layout_constraintEnd_toEndOf="@+id/mine_main_tv_reply_comment"
-                    app:layout_constraintStart_toStartOf="@+id/mine_main_tv_reply_comment" />
+            <TextView
+                android:id="@+id/mine_main_praise_number"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/impact_min"
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp"
+                android:text="@string/mine_number_default"
+                android:textColor="@color/levelFourFontColor"
+                android:textSize="30sp"
+                android:textStyle="bold"
+                android:typeface="serif"
+                app:layout_constraintBottom_toTopOf="@+id/mine_main_tv_praise"
+                app:layout_constraintEnd_toEndOf="@+id/mine_main_tv_praise"
+                app:layout_constraintHorizontal_bias="0.55"
+                app:layout_constraintStart_toStartOf="@+id/mine_main_tv_praise" />
 
-                <TextView
-                    android:id="@+id/mine_main_praise_number"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/mine_number_default"
-                    android:paddingStart="20dp"
-                    android:paddingEnd="20dp"
-                    android:typeface="serif"
-                    android:textColor="@color/levelFourFontColor"
-                    android:textSize="30sp"
-                    android:fontFamily="@font/impact_min"
-                    android:textStyle="bold"
-                    app:layout_constraintBottom_toTopOf="@+id/mine_main_tv_praise"
-                    app:layout_constraintEnd_toEndOf="@+id/mine_main_tv_praise"
-                    app:layout_constraintHorizontal_bias="0.55"
-                    app:layout_constraintStart_toStartOf="@+id/mine_main_tv_praise" />
+            <TextView
+                android:id="@+id/mine_main_tv_question"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="19dp"
+                android:layout_marginTop="50dp"
+                android:layout_marginBottom="20dp"
+                android:text="@string/mine_question"
+                android:textColor="@color/levelFourFontColor"
+                android:textSize="@dimen/mine_main_small_s"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/mine_main_tv_answer"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintHorizontal_chainStyle="spread_inside"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/mine_main_tv_sign" />
 
-                <TextView
-                    android:id="@+id/mine_main_tv_question"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="50dp"
-                    android:layout_marginStart="19dp"
-                    android:layout_marginBottom="20dp"
-                    android:text="@string/mine_question"
-                    android:textColor="@color/levelFourFontColor"
-                    android:textSize="@dimen/mine_main_small_s"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintHorizontal_chainStyle="spread_inside"
-                    app:layout_constraintEnd_toStartOf="@+id/mine_main_tv_answer"
-                    app:layout_constraintHorizontal_bias="0.5"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/mine_main_tv_sign" />
+            <TextView
+                android:id="@+id/mine_main_tv_answer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/mine_answer"
+                android:textColor="@color/levelFourFontColor"
+                android:textSize="@dimen/mine_main_small_s"
+                app:layout_constraintBottom_toBottomOf="@+id/mine_main_tv_question"
+                app:layout_constraintEnd_toStartOf="@+id/mine_main_tv_reply_comment"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/mine_main_tv_question" />
 
-                <TextView
-                    android:id="@+id/mine_main_tv_answer"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/mine_answer"
-                    android:textColor="@color/levelFourFontColor"
-                    android:textSize="@dimen/mine_main_small_s"
-                    app:layout_constraintBottom_toBottomOf="@+id/mine_main_tv_question"
-                    app:layout_constraintEnd_toStartOf="@+id/mine_main_tv_reply_comment"
-                    app:layout_constraintHorizontal_bias="0.5"
-                    app:layout_constraintStart_toEndOf="@+id/mine_main_tv_question" />
+            <TextView
+                android:id="@+id/mine_main_tv_reply_comment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/mine_reply_to_comment"
+                android:textColor="@color/levelFourFontColor"
+                android:textSize="@dimen/mine_main_small_s"
+                app:layout_constraintBottom_toBottomOf="@+id/mine_main_tv_answer"
+                app:layout_constraintEnd_toStartOf="@+id/mine_main_tv_praise"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/mine_main_tv_answer" />
 
-                <TextView
-                    android:id="@+id/mine_main_tv_reply_comment"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/mine_reply_to_comment"
-                    android:textColor="@color/levelFourFontColor"
-                    android:textSize="@dimen/mine_main_small_s"
-                    app:layout_constraintBottom_toBottomOf="@+id/mine_main_tv_answer"
-                    app:layout_constraintEnd_toStartOf="@+id/mine_main_tv_praise"
-                    app:layout_constraintHorizontal_bias="0.5"
-                    app:layout_constraintStart_toEndOf="@+id/mine_main_tv_answer" />
-
-                <TextView
-                    android:id="@+id/mine_main_tv_praise"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/mine_praise"
-                    android:textColor="@color/levelFourFontColor"
-                    android:textSize="@dimen/mine_main_small_s"
-                    android:layout_marginEnd="22dp"
-                    app:layout_constraintBottom_toBottomOf="@+id/mine_main_tv_reply_comment"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.5"
-                    app:layout_constraintStart_toEndOf="@+id/mine_main_tv_reply_comment" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
+            <TextView
+                android:id="@+id/mine_main_tv_praise"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="22dp"
+                android:text="@string/mine_praise"
+                android:textColor="@color/levelFourFontColor"
+                android:textSize="@dimen/mine_main_small_s"
+                app:layout_constraintBottom_toBottomOf="@+id/mine_main_tv_reply_comment"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/mine_main_tv_reply_comment" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-
-        <com.mredrock.cyxbs.mine.util.widget.SwitchPlus
-            android:id="@+id/mine_main_switch"
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="18dp"
             android:paddingStart="16dp"
-            android:paddingEnd="20dp"
             android:paddingTop="9dp"
-            android:paddingBottom="9dp"
-            android:foreground="?android:selectableItemBackground"
-            android:text="@string/mine_show_schedule_first_launch"
-            android:thumb="@drawable/mine_bg_thumb"
-            android:track="@drawable/mine_shape_switch_track"
-            android:textColor="@color/common_level_three_font_color"
-            android:textSize="15sp" />
+            android:paddingEnd="20dp"
+            android:paddingBottom="9dp">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:layout_toStartOf="@id/mine_main_switch"
+                android:text="@string/mine_show_schedule_first_launch"
+                android:textColor="@color/common_level_three_font_color"
+                android:textSize="15sp" />
+
+            <com.mredrock.cyxbs.mine.util.widget.SwitchPlus
+                android:id="@+id/mine_main_switch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:thumb="@drawable/mine_bg_thumb"
+                android:track="@drawable/mine_shape_switch_track" />
+        </RelativeLayout>
+
 
         <TextView
             android:id="@+id/mine_main_tv_custom_widget"
-            android:foreground="?android:selectableItemBackground"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="18dp"
+            android:foreground="?android:selectableItemBackground"
             android:paddingStart="16dp"
             android:paddingTop="9dp"
             android:paddingBottom="9dp"
@@ -261,9 +272,9 @@
         <TextView
             android:id="@+id/mine_main_tv_feedback"
             android:layout_width="match_parent"
-            android:foreground="?android:selectableItemBackground"
             android:layout_height="wrap_content"
             android:layout_marginTop="18dp"
+            android:foreground="?android:selectableItemBackground"
             android:paddingStart="16dp"
             android:paddingTop="9dp"
             android:paddingBottom="9dp"
@@ -276,10 +287,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="18dp"
+            android:foreground="?android:selectableItemBackground"
             android:paddingStart="16dp"
             android:paddingTop="9dp"
             android:paddingBottom="9dp"
-            android:foreground="?android:selectableItemBackground"
             android:text="@string/mine_about_redrock"
             android:textColor="@color/common_level_three_font_color"
             android:textSize="15sp" />
@@ -289,8 +300,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="18dp"
-            android:paddingStart="16dp"
             android:foreground="?android:selectableItemBackground"
+            android:paddingStart="16dp"
             android:paddingTop="9dp"
             android:paddingBottom="9dp"
             android:text="@string/mine_about"
@@ -299,9 +310,9 @@
 
         <Button
             android:id="@+id/mine_main_btn_exit"
+            style="?android:attr/borderlessButtonStyle"
             android:layout_width="184dp"
             android:layout_height="40dp"
-            style="?android:attr/borderlessButtonStyle"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="27dp"
             android:background="@drawable/common_dialog_btn_positive_blue"
