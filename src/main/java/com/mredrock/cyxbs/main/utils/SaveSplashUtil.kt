@@ -37,7 +37,7 @@ fun downloadSplash(mUrl: String, context: Context) {
                     bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos)
                     fos.flush()
                     fos.close()
-
+                    LogUtils.d("splash_download", "Download success")
                 } catch (e: Exception) {
                     e.printStackTrace()
                 }

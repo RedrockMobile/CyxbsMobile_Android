@@ -36,6 +36,7 @@ class MainViewModel : BaseViewModel() {
                 .mapOrThrowApiException()
                 .map {
                     it.forEach { startPage ->
+                        //这儿的逻辑是只闪屏页显示一天，如果超了一天此处就不会下载，通过后端返回空的url，删除本地存储的闪屏页
                         val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.CHINA)
                         try {
                             val now = System.currentTimeMillis() / 1000
