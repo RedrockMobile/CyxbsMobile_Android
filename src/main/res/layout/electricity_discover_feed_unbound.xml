@@ -10,6 +10,6 @@
         android:textSize="15sp"
         android:textColor="@color/common_level_two_font_color"
         android:alpha="0.6"
-        android:text="还未绑定账号哦"
+        android:text="还未绑定账号哦～"
         android:layout_gravity="center_horizontal|center_vertical" />
 </FrameLayout>

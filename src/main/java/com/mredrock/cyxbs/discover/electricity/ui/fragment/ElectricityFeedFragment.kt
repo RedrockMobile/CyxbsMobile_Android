@@ -4,9 +4,13 @@ import android.os.Bundle
 import android.view.View
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.mredrock.cyxbs.common.config.DISCOVER_ELECTRICITY_FEED
+import com.mredrock.cyxbs.common.service.ServiceManager
+import com.mredrock.cyxbs.common.service.account.IAccountService
+import com.mredrock.cyxbs.common.service.account.IUserStateService
 import com.mredrock.cyxbs.common.ui.BaseFeedFragment
 import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
 import com.mredrock.cyxbs.common.utils.extensions.doIfLogin
+import com.mredrock.cyxbs.common.utils.extensions.runOnUiThread
 import com.mredrock.cyxbs.discover.electricity.adapter.ElectricityFeedAdapter
 import com.mredrock.cyxbs.discover.electricity.adapter.ElectricityFeedUnboundAdapter
 import com.mredrock.cyxbs.discover.electricity.config.*
@@ -22,8 +26,17 @@ class ElectricityFeedFragment : BaseFeedFragment<ChargeViewModel>() {
     override var hasTopSplitLine = false
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        //主要为了防止，使用游客模式，在此登录，导致的登录后状态未刷新，感觉听不规范的，游客模式之后还得统一管理
+        ServiceManager.getService(IAccountService::class.java).getVerifyService().addOnStateChangedListener {
+            if (it == IUserStateService.UserState.LOGIN) {
+                context?.runOnUiThread {
+                    setAdapter(ElectricityFeedUnboundAdapter())
+                }
+            }
+        }
         init()
     }
+
 
     private fun init() {
         setAdapter(ElectricityFeedUnboundAdapter())
