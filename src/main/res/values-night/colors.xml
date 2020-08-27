@@ -319,7 +319,9 @@
     <!--    发现菜单字体颜色-->
     <color name="common_menu_font_color_found">#5A5A5A</color>
     <!--    发现菜单字体颜色-->
-    <color name="discovery_function_item_color">#8C8C8C</color>
+    <color name="common_discovery_function_item_color">#8C8C8C</color>
+    <!--    同学课表搜索hint颜色-->
+    <color name="common_othercourse_common_hint_text_color">#85F0F0F2</color>
 
 
     <color name="common_alpha_level_two_font_color">#5A5A5A</color>
@@ -345,13 +347,14 @@
 
     <color name="common_transaction_completion_edit_view_color">#ffffff</color>
 
-    <!--   地图模块使用的颜色-->
+    <!--   地图模块使用的颜色 todo 改成统一 common前缀-->
     <!--   搜索地点的搜索框文字颜色-->
     <color name="map_search_text_color" tools:ignore="ResourceName">#F0F0F2</color>
     <!--   搜索地点的hint文字颜色-->
     <color name="map_search_text_color_hint" tools:ignore="ResourceName">#8C8C8C</color>
     <!--   搜索地点的搜索框背景颜色-->
     <color name="map_search_edit_text_background" tools:ignore="ResourceName">#202020</color>
+
     <color name="map_title_text_color" tools:ignore="ResourceName">#15315B</color>
     <!--    地图可上拉下拉标识小块背景-->
     <color name="map_table_drag_indicator_block_color" tools:ignore="ResourceName">#000202</color>
@@ -419,7 +422,6 @@
     <color name="map_dialog_transparent" tools:ignore="ResourceName">#00000000</color>
     <color name="map_download_progressbar_background" tools:ignore="ResourceName">#E7EFFD</color>
     <color name="map_download_progressbar" tools:ignore="ResourceName">#4B44E5</color>
-    <color name="map_download_text" tools:ignore="ResourceName">#F0F0F2</color>
-
+    <color name="map_download_text" tools:ignore="ResourceName"> #F0F0F2</color>
 </resources>
 
