@@ -81,7 +81,7 @@ class MapActivity : BaseViewModelActivity<MapViewModel>() {
                         transaction
                                 .show(favoriteEditFragment)
                                 .addToBackStack("favorite_edit")
-                                .commitNow()
+                                .commit()
                     } else {
                         //隐藏键盘再返回，防止发生布局变形
                         KeyboardController.hideInputKeyboard(this, map_fl_main_fragment)
@@ -89,7 +89,7 @@ class MapActivity : BaseViewModelActivity<MapViewModel>() {
                                 .setCustomAnimations(R.animator.map_slide_from_left, R.animator.map_slide_to_right, R.animator.map_slide_from_right, R.animator.map_slide_to_left)
                                 .hide(favoriteEditFragment)
                                 .show(mainFragment)
-                                .commitNow()
+                                .commit()
                         fragmentManager.popBackStack()
 
                     }
@@ -110,13 +110,13 @@ class MapActivity : BaseViewModelActivity<MapViewModel>() {
                         transaction
                                 .show(allPictureFragment)
                                 .addToBackStack("all_picture")
-                                .commitNow()
+                                .commit()
                     } else {
                         fragmentManager.beginTransaction()
                                 .setCustomAnimations(R.animator.map_slide_from_left, R.animator.map_slide_to_right, R.animator.map_slide_from_right, R.animator.map_slide_to_left)
                                 .hide(allPictureFragment)
                                 .show(mainFragment)
-                                .commitNow()
+                                .commit()
                         fragmentManager.popBackStack()
 
                     }
