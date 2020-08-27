@@ -1,6 +1,5 @@
 package com.mredrock.cyxbs.course
 
-import android.test.MoreAsserts.assertEquals
 import org.junit.Assert.assertEquals
 import org.junit.Test
 

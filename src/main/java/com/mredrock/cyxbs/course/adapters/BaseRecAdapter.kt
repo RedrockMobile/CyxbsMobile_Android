@@ -16,7 +16,7 @@ import androidx.annotation.LayoutRes
 abstract class BaseRecAdapter(protected val context: Context) :
         androidx.recyclerview.widget.RecyclerView.Adapter<BaseRecAdapter.BaseViewHolder>() {
 
-    protected val inflater: LayoutInflater = LayoutInflater.from(context)
+    private val inflater: LayoutInflater = LayoutInflater.from(context)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
         return BaseViewHolder(inflater.inflate(viewType, parent, false))

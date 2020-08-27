@@ -3,12 +3,13 @@
     <declare-styleable name="RedRockTextView" tools:ignore="ResourceName">
         <!--<attr name="strings" format="reference" />-->
         <attr name="displayedStrings" format="reference" />
+        <attr name="selectedColor" format="color" />
         <attr name="orientation" format="enum">
             <enum name="vertical" value="1" />
             <enum name="horizontal" value="0" />
         </attr>
         <attr name="offsetBetweenText" format="integer" />
 
-        <attr name="RedRockTextViewStyle" format="reference" tools:ignore="ResourceName" />
+        <attr name="RedRockTextViewStyle" format="reference"  />
     </declare-styleable>
 </resources>

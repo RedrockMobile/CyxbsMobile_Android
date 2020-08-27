@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
 
     <color name="courseLightBlue">#EEF6FD</color>
@@ -10,17 +10,6 @@
     <color name="courseCoursesNight">#81B6FE</color>
     <color name="courseCoursesOther">#bdc3c7</color>
 
-    <!--overlap course colors-->
-    <color name="courseCoursesOverlapForenoon">#f06292</color>
-    <color name="courseCoursesOverlapAfternoon">#ffca28</color>
-    <color name="courseCoursesOverlapNight">#29b6f6</color>
-
-
-    <!--affairs colors-->
-    <color name="courseAffairsForenoon">#ec407a</color>
-    <color name="courseAffairsAfternoon">#ffca28</color>
-    <color name="courseAffairsNight">#29b6f6</color>
-
 
     <!--TabLayout colors-->
     <color name="courseTabIndicatorColor">#7196FA</color>
@@ -29,12 +18,6 @@
 
     <!--course time and weekday color-->
     <color name="courseTimeAndWeekDayColor">#7097FA</color>
-
-    <!--course day of month color-->
-    <color name="courseDayOfMonthColor">#8395A4</color>
-    <color name="courseLightGray">#EFEFEF</color>
-    <color name="courseWhite">#FFFFFF</color>
-    <color name="courseCommonTvColor">#333333</color>
 
 
 </resources>

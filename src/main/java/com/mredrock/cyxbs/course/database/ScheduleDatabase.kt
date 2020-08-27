@@ -11,7 +11,7 @@ import com.mredrock.cyxbs.course.network.Course
  * Created by anriku on 2018/8/14.
  */
 
-@Database(entities = [Course::class, Affair::class], version = 1, exportSchema = false)
+@Database(entities = [Course::class, Affair::class], version = 4, exportSchema = false)
 abstract class ScheduleDatabase : RoomDatabase() {
 
     abstract fun affairDao(): AffairDao
@@ -24,19 +24,23 @@ abstract class ScheduleDatabase : RoomDatabase() {
     companion object {
         private var INSTANCE: ScheduleDatabase? = null
         //这里不弄单例模式的原因是因为他人课表和自己课表不能用同一个数据库，损失了性能但是可以节流
-        fun getDatabase(context: Context,isGetOther:Boolean,stuNum:String): ScheduleDatabase? {
+        fun getDatabase(context: Context, isGetOther: Boolean, stuNum: String): ScheduleDatabase? {
             if (INSTANCE == null) {
                 synchronized(ScheduleDatabase::class) {
                     if (INSTANCE == null) {
                         INSTANCE = Room.databaseBuilder(context,
-                                ScheduleDatabase::class.java, "schedules_database").build()
+                                ScheduleDatabase::class.java, "schedules_database")
+                                .fallbackToDestructiveMigration()
+                                .build()
                     }
                 }
             }
-            return if(isGetOther){
+            return if (isGetOther) {
                 Room.databaseBuilder(context,
-                        ScheduleDatabase::class.java, "schedules_database$stuNum").build()
-            }else{
+                        ScheduleDatabase::class.java, "schedules_database$stuNum")
+                        .fallbackToDestructiveMigration()
+                        .build()
+            } else {
                 INSTANCE
             }
         }

@@ -2,17 +2,18 @@ package com.mredrock.cyxbs.course.adapters
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.graphics.drawable.Drawable
+import android.graphics.drawable.GradientDrawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.core.content.ContextCompat
 import com.mredrock.cyxbs.common.utils.SchoolCalendar
 import com.mredrock.cyxbs.course.R
 import com.mredrock.cyxbs.course.component.ScheduleView
 import com.mredrock.cyxbs.course.network.Course
-import com.mredrock.cyxbs.course.ui.NoCourseInviteDetailDialogHelper
+import com.mredrock.cyxbs.course.ui.NoCourseInviteDetailBottomSheetDialogHelper
+import kotlinx.android.synthetic.main.course_no_course_invite_item.view.*
 import java.util.*
 
 /**
@@ -24,23 +25,26 @@ class NoCourseInviteScheduleViewAdapter(private val mContext: Context,
                                         private val mCoursesMap: Map<Int, List<Course>>,
                                         private val mNameList: List<String>) : ScheduleView.Adapter() {
 
-    companion object {
-        private const val TAG = "NoCourseInviteScheduleViewAdapter"
+    private val mCoursesColors by lazy(LazyThreadSafetyMode.NONE) {
+        intArrayOf(ContextCompat.getColor(mContext, R.color.common_morning_course_color),
+                ContextCompat.getColor(mContext, R.color.common_afternoon_course_color),
+                ContextCompat.getColor(mContext, R.color.common_evening_course_color),
+                ContextCompat.getColor(mContext, R.color.courseCoursesOther))
     }
 
-    private val mCoursesColors by lazy(LazyThreadSafetyMode.NONE) {
-        intArrayOf(ContextCompat.getColor(mContext, R.color.courseCoursesForenoon),
-                ContextCompat.getColor(mContext, R.color.courseCoursesAfternoon),
-                ContextCompat.getColor(mContext, R.color.courseCoursesNight),
-                ContextCompat.getColor(mContext, R.color.courseCoursesOther))
+    private val mCoursesTextColors by lazy(LazyThreadSafetyMode.NONE) {
+        intArrayOf(ContextCompat.getColor(mContext, R.color.common_morning_course_text_color),
+                ContextCompat.getColor(mContext, R.color.common_afternoon_course_text_color),
+                ContextCompat.getColor(mContext, R.color.common_evening_course_text_color))
     }
 
     // 获取对应位置有课的学生的名字在mNameList中的index
     private val mCoursesIndex = Array(12) { arrayOfNulls<MutableList<Int>>(7) }
+
     // 用于存储对应课表没有课的学生的名字
     private val mCommonNoCoursesNames = Array(12) { arrayOfNulls<MutableList<String>>(7) }
-    private val mNoCourseInviteDetailDialogHelper: NoCourseInviteDetailDialogHelper by lazy(LazyThreadSafetyMode.NONE) {
-        NoCourseInviteDetailDialogHelper(mContext)
+    private val mNoCourseInviteDetailDialogHelper: NoCourseInviteDetailBottomSheetDialogHelper by lazy(LazyThreadSafetyMode.NONE) {
+        NoCourseInviteDetailBottomSheetDialogHelper(mContext)
     }
 
     private val mLayoutInflater: LayoutInflater by lazy(LazyThreadSafetyMode.NONE) {
@@ -85,7 +89,7 @@ class NoCourseInviteScheduleViewAdapter(private val mContext: Context,
             for (column in 0 until 7) {
                 val indexes = mCoursesIndex[row][column]
 
-                for (i in 0 until mNameList.size) {
+                for (i in mNameList.indices) {
                     if (indexes == null || i !in indexes) {
                         if (mCommonNoCoursesNames[row][column] == null) {
                             mCommonNoCoursesNames[row][column] = mutableListOf()
@@ -100,8 +104,6 @@ class NoCourseInviteScheduleViewAdapter(private val mContext: Context,
 
     override fun getItemView(row: Int, column: Int, container: ViewGroup): View {
         val view = mLayoutInflater.inflate(R.layout.course_no_course_invite_item, container, false)
-        val tvNameList = view.findViewById<TextView>(R.id.tv_name_list)
-        val cv = view.findViewById<androidx.cardview.widget.CardView>(R.id.cv)
         val stringBuilder = StringBuilder()
         val nameList = mutableListOf<String>()
 
@@ -112,12 +114,26 @@ class NoCourseInviteScheduleViewAdapter(private val mContext: Context,
                 stringBuilder.append("\n")
             }
         }
-        tvNameList.text = stringBuilder.toString()
-        cv.setCardBackgroundColor(mCoursesColors[row / 4])
+        view.tv_name_list.text = stringBuilder.toString()
+        view.tv_name_list.setTextColor(mCoursesTextColors[row / 4])
+        view.cv.background = createBackground(mCoursesColors[row / 4])
         view.setOnClickListener {
             mNoCourseInviteDetailDialogHelper.showDialog(row, column, getNoCourseLength(row, column), nameList)
         }
         return view
+    }
+
+    /**
+     * 这个方法来制造课表item的圆角背景
+     * @param rgb 背景颜色
+     * 里面的圆角的参数是写在资源文件里的
+     */
+    private fun createBackground(rgb: Int): Drawable {
+        val drawable = GradientDrawable()
+        val courseCorner = mContext.resources.getDimension(R.dimen.course_course_item_radius)
+        drawable.cornerRadii = floatArrayOf(courseCorner, courseCorner, courseCorner, courseCorner, courseCorner, courseCorner, courseCorner, courseCorner)
+        drawable.setColor(rgb)
+        return drawable
     }
 
     override fun getItemViewInfo(row: Int, column: Int): ScheduleView.ScheduleItem? {
@@ -131,16 +147,13 @@ class NoCourseInviteScheduleViewAdapter(private val mContext: Context,
         return if ((row and 1) == 1) {
             1
         } else {
-            if (Arrays.equals(arrayOf(mCommonNoCoursesNames[row + 1][column]),
-                            arrayOf(mCommonNoCoursesNames[row][column]))) {
+            if (arrayOf(mCommonNoCoursesNames[row + 1][column]).contentEquals(arrayOf(mCommonNoCoursesNames[row][column]))) {
                 2
             } else {
                 1
             }
         }
     }
-
-    override fun setOnTouchViewClickListener(): ((ImageView) -> Unit)? = null
 
     override fun getHighLightPosition(): Int? {
         val schoolCalendar = SchoolCalendar()

@@ -1,16 +1,15 @@
 package com.mredrock.cyxbs.course.viewmodels
 
-import android.app.Application
-import android.util.SparseArray
-import android.widget.CheckBox
-import androidx.fragment.app.FragmentActivity
-import androidx.lifecycle.AndroidViewModel
+import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
-import com.mredrock.cyxbs.common.BaseApp
+import com.mredrock.cyxbs.common.BaseApp.Companion.context
+import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.common.network.ApiGenerator
+import com.mredrock.cyxbs.common.service.ServiceManager
+import com.mredrock.cyxbs.common.service.account.IAccountService
 import com.mredrock.cyxbs.common.utils.extensions.errorHandler
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
+import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.course.R
 import com.mredrock.cyxbs.course.event.AddAffairEvent
 import com.mredrock.cyxbs.course.event.ModifyAffairEvent
@@ -18,55 +17,56 @@ import com.mredrock.cyxbs.course.network.AffairHelper
 import com.mredrock.cyxbs.course.network.Course
 import com.mredrock.cyxbs.course.network.CourseApiService
 import com.mredrock.cyxbs.course.rxjava.ExecuteOnceObserver
-import com.mredrock.cyxbs.course.ui.EditAffairActivity
+import com.mredrock.cyxbs.course.ui.activity.AffairEditActivity
+import com.mredrock.cyxbs.course.utils.affairFilter
 import org.greenrobot.eventbus.EventBus
-import org.jetbrains.anko.collections.forEach
 
 /**
  * Created by anriku on 2018/9/9.
  */
+@Suppress("RemoveExplicitTypeArguments")
+class EditAffairViewModel : BaseViewModel() {
 
-class EditAffairViewModel(application: Application) : AndroidViewModel(application) {
-
-    val selectedWeekString: MutableLiveData<String> = MutableLiveData()
-    val selectedTimeString: MutableLiveData<String> = MutableLiveData()
+    //显示的字符串，提醒
     val selectedRemindString: MutableLiveData<String> = MutableLiveData()
+
     // 周一到周日的字符串数组
     val dayOfWeekArray: Array<String> by lazy(LazyThreadSafetyMode.NONE) {
-        getApplication<Application>().resources.getStringArray(R.array.course_course_day_of_week_strings)
+        context.resources.getStringArray(R.array.course_course_day_of_week_strings)
     }
-    // 课程代号字符串数组
-    val courseTimeArray: Array<String> by lazy(LazyThreadSafetyMode.NONE) {
-        getApplication<Application>().resources.getStringArray(R.array.course_time_select_strings)
-    }
+
     // 周数对应的字符串数组
     val weekArray: Array<String> by lazy(LazyThreadSafetyMode.NONE) {
-        getApplication<Application>().resources.getStringArray(R.array.course_course_weeks_strings)
+        context.resources.getStringArray(R.array.course_course_weeks_strings)
     }
+
+    //具体上课时间字符串
+    val timeArray: Array<String> by lazy(LazyThreadSafetyMode.NONE) {
+        context.resources.getStringArray(R.array.course_time_select_strings)
+    }
+
     // 提醒对应的字符串数组
     val remindArray: Array<String> by lazy(LazyThreadSafetyMode.NONE) {
-        getApplication<Application>().resources.getStringArray(R.array.course_remind_strings)
+        context.resources.getStringArray(R.array.course_remind_strings)
     }
+
     // 进行事务提交网络请求网络请求
     private val mCourseApiService by lazy(LazyThreadSafetyMode.NONE) {
         ApiGenerator.getApiService(CourseApiService::class.java)
     }
 
-    // 用于存储被选择的周数。其中key表示选择的周数在weekArray中的位置，value就是对应的CheckBox。
-    val isSelectedWeekViews: SparseArray<CheckBox> by lazy(LazyThreadSafetyMode.NONE) { SparseArray<CheckBox>(weekArray.size) }
-    // 用于存储被选择的CourseTime。其中key表示选择的时间 在courseTimeArray的位置 * 7 + dayOfWeekArray中的位置,
-    // value是对应的CheckBox。
-    val isSelectedTimeViews: SparseArray<CheckBox> by lazy(LazyThreadSafetyMode.NONE) { SparseArray<CheckBox>(7 * 6) }
-
     // 事务标题
     var title: MutableLiveData<String> = MutableLiveData()
+
     // 事务内容
     var content: MutableLiveData<String> = MutableLiveData()
 
-    // 记录要被post的课程时间和日期对
-    private val mPostClassAndDays: MutableList<Pair<Int, Int>> by lazy(LazyThreadSafetyMode.NONE) { mutableListOf<Pair<Int, Int>>() }
+    // 记录要被post的课程时间和日期对,这个有个Lint检查Kotlin的坑，所以在类上面添加了忽略检查
+    val mPostClassAndDays: MutableList<Pair<Int, Int>> by lazy(LazyThreadSafetyMode.NONE) { mutableListOf<Pair<Int, Int>>() }
+
     // 记录要被post的选择的周数
-    private val mPostWeeks: MutableList<Int> by lazy(LazyThreadSafetyMode.NONE) { mutableListOf<Int>() }
+    val mPostWeeks: MutableList<Int> by lazy(LazyThreadSafetyMode.NONE) { mutableListOf<Int>() }
+
     // 记录要被post的选择的提醒时间
     var postRemind: Int = 0
         private set
@@ -76,81 +76,43 @@ class EditAffairViewModel(application: Application) : AndroidViewModel(applicati
     var passedAffairInfo: Course? = null
 
 
+    //当前事务activity的状态，分三个状态，设置标题，内容和时间
+    var status: Status = Status.TitleStatus
+
+    var titleCandidateList = MutableLiveData<List<String>>()
+
+
     /**
      * 此方用于对[com.mredrock.cyxbs.course.ui.EditAffairActivity]进行周数选择、课程时间选择等相关内容的初始化。
      * 比如说从[com.mredrock.cyxbs.common.component.ScheduleView]中通过点击touchView、已有的事务进来要对其
      * 信息显示初始化。
      *
-     * @param activity [com.mredrock.cyxbs.course.ui.EditAffairActivity]
+     * @param editActivity [com.mredrock.cyxbs.course.ui.EditAffairActivity]
      */
-    fun initData(activity: FragmentActivity) {
-        val intent = activity.intent
+    fun initData(editActivity: AffairEditActivity) {
+        val intent = editActivity.intent
         //通过点击事务进行修改获取的数据
-        passedAffairInfo = intent.getParcelableExtra(EditAffairActivity.AFFAIR_INFO)
+        passedAffairInfo = intent.getParcelableExtra(AffairEditActivity.AFFAIR_INFO)
         //通过点击touchView进来获取的位置信息
-        val passedWeekPosition = intent.getIntExtra(EditAffairActivity.WEEK_NUM, -1)
-        val passedTimePosition = intent.getIntExtra(EditAffairActivity.TIME_NUM, -1)
+        val passedWeekPosition = intent.getIntExtra(AffairEditActivity.WEEK_NUM, -1)
+        val passedTimePosition = intent.getIntExtra(AffairEditActivity.TIME_NUM, -1)
+        getTitleCandidate()
 
         if (passedWeekPosition != -1 && passedTimePosition != -1) {
-            setWeeksSelectString(mutableListOf(passedWeekPosition))
-            setTimeSelectString(mutableListOf(passedTimePosition))
-            selectedRemindString.value = getApplication<Application>().resources.getString(R.string.course_remind_select)
+            if (passedWeekPosition == 0) {
+                for (i in 1..21) {
+                    mPostWeeks.add(i)
+                }
+            } else {
+                mPostWeeks.add(passedWeekPosition)
+            }
+            setTimeSelected(mutableListOf(passedTimePosition))
+            selectedRemindString.value = context.resources.getString(R.string.course_remind_select)
         } else if (passedAffairInfo != null) {
             setPassedAffairInfo()
         } else {
-            setDefaultInitValue()
+            selectedRemindString.value = context.resources.getString(R.string.course_remind_select)
         }
-    }
-
-    /**
-     * 直接点右上添加事务的菜单选项后的初始化
-     */
-    private fun setDefaultInitValue() {
-        selectedWeekString.value = getApplication<Application>().resources.getString(R.string.course_week_select)
-        selectedTimeString.value = getApplication<Application>().resources.getString(R.string.course_time_select)
-        selectedRemindString.value = getApplication<Application>().resources.getString(R.string.course_remind_select)
-    }
-
-    /**
-     * 进行绑定设置，在周数、时间和提醒改变后将其存储到对应将要被上传的属性中。
-     *
-     * @param activity 该ViewModel所依赖的Activity。这里只是将FragmentActivity作为参数，因此不用担心内存泄漏的问题。
-     */
-    fun observeWork(activity: FragmentActivity) {
-        // 周数确定后真正要上传的数据存储
-        selectedWeekString.observe(activity, Observer {
-            // 将旧的存储的数据清理掉
-            mPostWeeks.clear()
-            isSelectedWeekViews.forEach { key, _ ->
-                //key == 0也就是全学期的情况
-                if (key == 0) {
-                    for (i in 1..(weekArray.size - 1)) {
-                        mPostWeeks.add(i)
-                    }
-                    return@Observer
-                }
-                mPostWeeks.add(key)
-            }
-        })
-
-        // 时间确定后真正要上传的数据的存储
-        selectedTimeString.observe(activity, Observer {
-            // 将旧的存储的数据清理掉
-            mPostClassAndDays.clear()
-            isSelectedTimeViews.forEach { key, _ ->
-                val classX: Int = key / 7
-                val day: Int = key - classX * 7
-                mPostClassAndDays.add(Pair(classX, day))
-            }
-        })
-
-        // 提醒确定后真正要上传的数据的存储
-        selectedRemindString.observe(activity, Observer {
-            val remindStrings = activity.resources.getStringArray(R.array.course_remind_strings)
-            val position = remindStrings.indexOf(it)
-
-            setThePostRemind(position)
-        })
     }
 
 
@@ -161,34 +123,55 @@ class EditAffairViewModel(application: Application) : AndroidViewModel(applicati
      * @param title 事务标题
      * @param content 事务内容
      */
-    fun postOrModifyAffair(activity: FragmentActivity, title: String, content: String) {
-        BaseApp.user ?: return
-
-        val stuNum = BaseApp.user!!.stuNum ?: return
-        val idNum = BaseApp.user!!.idNum ?: return
+    fun postOrModifyAffair(title: String, content: String) {
+        ServiceManager.getService(IAccountService::class.java).getUserService()
         val date = AffairHelper.generateAffairDateString(mPostClassAndDays, mPostWeeks)
 
         if (passedAffairInfo == null) {
             val id = AffairHelper.generateAffairId()
 
-            mCourseApiService.addAffair(id, stuNum, idNum, date, postRemind, title, content)
+            mCourseApiService.addAffair(id, date, postRemind, title, content)
                     .setSchedulers()
                     .errorHandler()
+                    .affairFilter()
                     .subscribe(ExecuteOnceObserver(onExecuteOnceNext = {
-                        activity.finish()
-                        // 更新课表
-                        EventBus.getDefault().post(AddAffairEvent())
+                        it.apply {
+                            //这里没有直接使用BaseViewModel里面的toastEvent
+                            //因为在弹出时有可能toastEvent中持有的context已经回收，会出现无法弹出的情况
+                            CyxbsToast.makeText(context, R.string.course_add_transaction_as_a_reminder, Toast.LENGTH_SHORT).show()
+                            // 更新课表
+                            EventBus.getDefault().post(AddAffairEvent())
+                        }
                     }))
         } else {
-            mCourseApiService.modifyAffair(passedAffairInfo!!.courseId.toString(), stuNum, idNum, date,
+            mCourseApiService.modifyAffair(passedAffairInfo!!.courseId.toString(), date,
                     postRemind, title, content)
                     .setSchedulers()
                     .errorHandler()
+                    .affairFilter()
                     .subscribe(ExecuteOnceObserver(onExecuteOnceNext = {
-                        activity.finish()
-                        EventBus.getDefault().post(ModifyAffairEvent())
+                        it.apply {
+                            // 更新课表
+                            CyxbsToast.makeText(context, R.string.course_modify_transaction_successful, Toast.LENGTH_SHORT).show()
+                            EventBus.getDefault().post(ModifyAffairEvent())
+                        }
                     }))
         }
+    }
+
+
+    /**
+     * 获取事务标题候选
+     */
+    private fun getTitleCandidate() {
+        mCourseApiService.getTitleCandidate()
+                .setSchedulers()
+                .errorHandler()
+                .subscribe(ExecuteOnceObserver(onExecuteOnceNext = { candidate ->
+                    if (candidate.status == 200) {
+                        titleCandidateList.value = candidate.data
+                    }
+                }))
     }
 
 
@@ -196,7 +179,7 @@ class EditAffairViewModel(application: Application) : AndroidViewModel(applicati
      * 此方法用于根据提醒的的位置来设置对应的将要post的提醒值
      * @param position 对应的[remindArray]的位置
      */
-    private fun setThePostRemind(position: Int) {
+    fun setThePostRemind(position: Int) {
         when (position) {
             0 -> {
                 postRemind = 0
@@ -223,14 +206,12 @@ class EditAffairViewModel(application: Application) : AndroidViewModel(applicati
      * 此方法用于对要被修改的事务的信息进行重现显示。
      */
     private fun setPassedAffairInfo() {
-        val passedWeekPositions = mutableListOf<Int>()
         // 对Week数据重现
         passedAffairInfo?.week?.let {
             for (week in it) {
-                passedWeekPositions.add(week)
+                mPostWeeks.add(week)
             }
         }
-        setWeeksSelectString(passedWeekPositions)
 
         // 对CourseTime数据重现
         val passedTimePositions = mutableListOf<Int>()
@@ -239,13 +220,13 @@ class EditAffairViewModel(application: Application) : AndroidViewModel(applicati
                 passedTimePositions.add(date.classX * 7 + date.day)
             }
         }
-        setTimeSelectString(passedTimePositions)
+        setTimeSelected(passedTimePositions)
 
         // 对提醒时间重现
         val remindTime = passedAffairInfo?.affairTime
-        if (remindTime == null){
-            selectedRemindString.value = getApplication<Application>().resources.getString(R.string.course_remind_select)
-        }else{
+        if (remindTime == null) {
+            selectedRemindString.value = context.resources.getString(R.string.course_remind_select)
+        } else {
             setRemindSelectString(getRemindPosition(remindTime.toInt()))
         }
 
@@ -269,87 +250,16 @@ class EditAffairViewModel(application: Application) : AndroidViewModel(applicati
     }
 
     /**
-     * 此方法用于在[com.mredrock.cyxbs.course.ui.WeekSelectDialogFragment]完成选择后设置[selectedWeekString]
-     */
-    fun setWeekSelectStringFromFragment() {
-        val weekNumbers = mutableListOf<Int>()
-        isSelectedWeekViews.forEach { key, _ ->
-            weekNumbers.add(key)
-        }
-        setWeeksSelectString(weekNumbers)
-    }
-
-
-    /**
-     * 此方法用于在[com.mredrock.cyxbs.course.ui.TimeSelectDialogFragment]完成选择后调用设置[selectedTimeString]
-     */
-    fun setTimeSelectStringFromFragment() {
-        val timeNumbers = mutableListOf<Int>()
-        isSelectedTimeViews.forEach { key, _ ->
-            timeNumbers.add(key)
-        }
-        setTimeSelectString(timeNumbers)
-    }
-
-
-    /**
-     * 此方法用于根据传入的课程字符串的的position List来生成对应的字符串
-     *
-     * @param weeksPositions 传入的一系列课程字符串的position
-     */
-    private fun setWeeksSelectString(weeksPositions: List<Int>) {
-        // 添加字符串头
-        val selectedWeekStringBuilder = StringBuilder().apply {
-            append("第")
-        }
-
-        for ((index, position) in weeksPositions.withIndex()) {
-            // key == 0也就是整学期的情况
-            if (position == 0) {
-                // 在进行选择周数完成、进行事务修改初始化的时候将isSelectedWeekViews位置记下。但是checkBox此时
-                // 不用了因此传入null。特别是在周数选择完成的时候就对其CheckBox进行释放了。
-                isSelectedWeekViews.put(position, null)
-                // 设置周数显示的字符串
-                selectedWeekString.value = weekArray[position]
-                return
-            }
-            isSelectedWeekViews.put(position, null)
-
-            selectedWeekStringBuilder.append(position)
-            if (index != weeksPositions.size - 1) {
-                selectedWeekStringBuilder.append(",")
-            }
-        }
-        // 添加字符串尾
-        selectedWeekStringBuilder.append("周")
-        selectedWeekString.value = selectedWeekStringBuilder.toString()
-    }
-
-
-    /**
-     * 此方法用于根据传入的选择的课程时间来生成对应的课程选择的字符串。
      *
      * @param timeSelectPositions 对应的课程字符串的position
      */
-    private fun setTimeSelectString(timeSelectPositions: List<Int>) {
-        val timeStringBuilder = StringBuilder()
-
-        for ((index, position) in timeSelectPositions.withIndex()) {
-            // 在进行选择课程时间完成、进行事务修改初始化的时候将isSelectedTimeViews位置记下。但是checkBox此时
-            // 不用了因此传入null。特别是在课程时间选择完成的时候就对其CheckBox进行释放了。
-            isSelectedTimeViews.put(position, null)
+    private fun setTimeSelected(timeSelectPositions: List<Int>) {
+        for (position in timeSelectPositions) {
             // 获取选择的课程时间的行列位置
             val row: Int = position / 7
-            val column: Int = position - row * 7
-
-            timeStringBuilder.append("${dayOfWeekArray[column]}${courseTimeArray[row]}")
-
-            if (index != timeSelectPositions.size - 1) {
-                timeStringBuilder.append(",")
-            }
+            val column: Int = position % 7
+            mPostClassAndDays.add(Pair(row, column))
         }
-
-        selectedTimeString.value = timeStringBuilder.toString()
     }
 
     /**
@@ -358,5 +268,10 @@ class EditAffairViewModel(application: Application) : AndroidViewModel(applicati
      */
     fun setRemindSelectString(position: Int) {
         selectedRemindString.value = remindArray[position]
+    }
+
+
+    enum class Status {
+        TitleStatus, ContentStatus, AllDoneStatus
     }
 }

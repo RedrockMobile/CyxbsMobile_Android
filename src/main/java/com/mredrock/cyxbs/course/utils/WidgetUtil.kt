@@ -8,7 +8,7 @@ import com.mredrock.cyxbs.course.network.Course
  * time: 2019/3/17
  */
 //将lib模块的WidgetBean转换为course模块Course，WidgetBean相当于中介
-fun changeLibBeanToCourse(widgetCourse: WidgetCourse.DataBean):Course{
+fun changeLibBeanToCourse(widgetCourse: WidgetCourse.DataBean): Course {
     val mCourse = Course()
     mCourse.customType = 0
     mCourse.affairTime = null

@@ -23,23 +23,20 @@ class CourseTimeParse(private val mClassX: Int, private val mPeriod: Int = 2) {
         else -> Time("00", "00")
     }
 
-    fun parseEndCourseTime(): Time {
-        val endClassX = mClassX + mPeriod  - 1
-        return when (endClassX) {
-            0 -> Time("8", "45")
-            1 -> Time("9", "40")
-            2 -> Time("11", "00")
-            3 -> Time("11", "55")
-            4 -> Time("14", "45")
-            5 -> Time("15", "40")
-            6 -> Time("17", "00")
-            7 -> Time("17", "55")
-            8 -> Time("19", "45")
-            9 -> Time("20", "40")
-            10 -> Time("21", "35")
-            11 -> Time("22", "30")
-            else -> Time("00", "00")
-        }
+    fun parseEndCourseTime(): Time = when (mClassX + mPeriod - 1) {
+        0 -> Time("8", "45")
+        1 -> Time("9", "40")
+        2 -> Time("11", "00")
+        3 -> Time("11", "55")
+        4 -> Time("14", "45")
+        5 -> Time("15", "40")
+        6 -> Time("17", "00")
+        7 -> Time("17", "55")
+        8 -> Time("19", "45")
+        9 -> Time("20", "40")
+        10 -> Time("21", "35")
+        11 -> Time("22", "30")
+        else -> Time("00", "00")
     }
 
     class Time(val hour: String, val minute: String) {

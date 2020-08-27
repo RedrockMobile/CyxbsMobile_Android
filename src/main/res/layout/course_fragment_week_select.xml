@@ -6,73 +6,49 @@
     <data>
 
         <variable
-            name="listeners"
-            type="com.mredrock.cyxbs.course.ui.WeekSelectDialogFragment.WeekSelectListeners" />
-
-        <variable
-            name="recAdapter"
-            type="com.mredrock.cyxbs.course.adapters.WeekSelectRecAdapter" />
+            name="fragment"
+            type="com.mredrock.cyxbs.course.component.WeekSelectDialog" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <ImageView
-            android:id="@+id/iv_cancel"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_marginStart="3dp"
-            android:background="?android:attr/selectableItemBackground"
-            android:cropToPadding="true"
-            android:onClick="@{listeners::onCancelClick}"
-            android:padding="18dp"
-            android:scaleType="centerInside"
-            android:src="@drawable/course_ic_cancel"
-            app:layout_constraintBottom_toTopOf="@id/view_separate"
-            app:layout_constraintDimensionRatio="1:1"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:ignore="ContentDescription" />
+        android:layout_height="wrap_content"
+        android:paddingTop="22dp">
 
         <TextView
             android:id="@+id/tv_sure"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_marginEnd="3dp"
-            android:background="?android:attr/selectableItemBackground"
+            android:layout_marginBottom="42dp"
+            android:background="@drawable/course_shape_affair_modify_button_background"
             android:gravity="center_vertical"
-            android:onClick="@{listeners::onSureClick}"
-            android:padding="15dp"
+            android:paddingStart="40dp"
+            android:paddingTop="8dp"
+            android:paddingEnd="40dp"
+            android:paddingBottom="8dp"
             android:text="@string/course_sure"
-            android:textColor="@color/colorAccent"
-            android:textSize="15sp"
-            app:layout_constraintBottom_toTopOf="@id/view_separate"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:textColor="@color/common_white_font_color"
+            android:textSize="18dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
-        <View
-            android:id="@+id/view_separate"
-            android:layout_width="0dp"
-            android:layout_height="1dp"
-            android:layout_marginTop="50dp"
-            android:background="@color/courseLightGray"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv"
-            android:layout_width="0dp"
+        <com.mredrock.cyxbs.common.component.RedRockAutoWarpView
+            android:id="@+id/course_auto"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:adapter="@{recAdapter}"
-            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="16dp"
+            app:horizontalSpacing="8dp"
+            app:layout_constraintBottom_toTopOf="@+id/tv_sure"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/view_separate"
-            app:spanCount="3">
+            app:layout_constraintTop_toTopOf="parent"
+            app:verticalsSpacing="10dp">
 
-        </androidx.recyclerview.widget.RecyclerView>
+        </com.mredrock.cyxbs.common.component.RedRockAutoWarpView>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

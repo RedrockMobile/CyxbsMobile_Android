@@ -28,7 +28,7 @@ object AffairHelper {
     /**
      * This function is used to generate a affair [Affair.Date] list.
      */
-    fun generateAffairDate(classAndDays: List<Pair<Int, Int>>, weeks: List<Int>): List<Affair.Date>{
+    fun generateAffairDate(classAndDays: List<Pair<Int, Int>>, weeks: List<Int>): List<Affair.Date> {
         val dates = mutableListOf<Affair.Date>()
         for (classAndDay in classAndDays) {
             dates.add(Affair.Date(classAndDay.first, classAndDay.second, weeks))

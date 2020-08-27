@@ -6,14 +6,13 @@ import android.graphics.Paint
 import android.graphics.Rect
 import android.util.AttributeSet
 import android.view.ViewGroup
-import android.widget.TextView
+import androidx.appcompat.widget.AppCompatTextView
 import com.mredrock.cyxbs.course.R
 
 /**
  * This is a TextView which display the text like cy's course column or week column. There are
  * three custom attrs. It doesn't adaptive multiline text, because I think it is not necessary
  *
- * @attr [R.styleable.RedRockTextView_strings] this attr is used to get a array of string from displayedStrings.xml
  * @attr [R.styleable.RedRockTextView_orientation] this attr is used to set the orientation of the RedRockTextView
  * @attr [R.styleable.RedRockTextView_offsetBetweenText] this attr is used to set the gap between the texts
  *
@@ -22,11 +21,9 @@ import com.mredrock.cyxbs.course.R
  *
  * Created by anriku on 2018/8/14.
  */
-class RedRockTextView : TextView {
+class RedRockTextView : AppCompatTextView {
 
     companion object {
-        private const val TAG = "RedRockTextView"
-
         const val HORIZONTAL = 0
         const val VERTICAL = 1
     }
@@ -34,8 +31,12 @@ class RedRockTextView : TextView {
     private val mPaint: Paint by lazy {
         Paint(Paint.ANTI_ALIAS_FLAG or Paint.LINEAR_TEXT_FLAG)
     }
+    private val selectTextPaint: Paint by lazy {
+        Paint()
+    }
     private var mElementWidth: Float = 0f
     private var mElementHeight: Float = 0f
+
     //record a CharSequence bounds
     private lateinit var mTextBounds: ArrayList<Rect>
 
@@ -47,11 +48,20 @@ class RedRockTextView : TextView {
         }
 
     private var mOrientation: Int = HORIZONTAL
-    var offsetBetweenText = 0
+    private var offsetBetweenText = 0
         set(value) {
             field = value
             invalidate()
         }
+
+
+    var position: Int? = null
+        set(value) {
+            field = value
+            invalidate()
+        }
+
+    var selectColor = 0xffffff
 
     constructor(context: Context) : super(context) {
         initRedRockTextView()
@@ -72,6 +82,7 @@ class RedRockTextView : TextView {
         mOrientation = typedArray.getInt(R.styleable.RedRockTextView_orientation, HORIZONTAL)
         offsetBetweenText = typedArray.getDimensionPixelSize(R.styleable.RedRockTextView_offsetBetweenText,
                 0)
+        selectColor = typedArray.getColor(R.styleable.RedRockTextView_selectedColor, 0xffffff)
         typedArray.recycle()
 
         initRedRockTextView()
@@ -85,6 +96,8 @@ class RedRockTextView : TextView {
 
         //getTextSize
         mPaint.textSize = textSize
+        selectTextPaint.set(mPaint)
+        selectTextPaint.color = selectColor
     }
 
 
@@ -163,7 +176,6 @@ class RedRockTextView : TextView {
 
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
-
         if (mOrientation == HORIZONTAL) {
             mElementHeight = measuredHeight.toFloat() - paddingTop - paddingBottom
             mElementWidth = (measuredWidth.toFloat() - paddingLeft - paddingRight -
@@ -175,7 +187,7 @@ class RedRockTextView : TextView {
                         paddingLeft + offsetBetweenText * i
                 val drawY = (mElementHeight - (-mPaint.ascent() + mPaint.descent())) / 2 -
                         mPaint.ascent() + paddingTop
-                canvas?.drawText(displayedStrings[i].toString(), drawX, drawY, mPaint)
+                canvas?.drawText(displayedStrings[i].toString(), drawX, drawY, if (position != null && position == i) selectTextPaint else mPaint)
             }
         } else {
             mElementWidth = measuredWidth.toFloat() - paddingLeft - paddingRight
@@ -187,7 +199,7 @@ class RedRockTextView : TextView {
                 val drawY = (mElementHeight - (-mPaint.ascent() + mPaint.descent())) / 2 -
                         mPaint.ascent() + mElementHeight * i + paddingTop + offsetBetweenText * i
 
-                canvas?.drawText(displayedStrings[i].toString(), drawX, drawY, mPaint)
+                canvas?.drawText(displayedStrings[i].toString(), drawX, drawY, if (position != null && position == i) selectTextPaint else mPaint)
             }
         }
     }

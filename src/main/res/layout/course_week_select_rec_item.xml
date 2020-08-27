@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <CheckBox xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/cb"
-    android:layout_width="match_parent"
-    android:layout_height="32dp"
-    android:layout_marginTop="8dp"
-    android:layout_marginBottom="8dp"
-    android:layout_marginLeft="13dp"
-    android:layout_marginRight="13dp"
-    android:background="@drawable/course_week_cb_bk"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/course_selector_week_cb_bk"
+    android:paddingStart="13dp"
+    android:paddingTop="6dp"
+    android:paddingEnd="13dp"
+    android:paddingBottom="6dp"
+    android:textColor="@color/common_transaction_add_page_warp_item_text_color"
     android:button="@null"
     android:gravity="center"
-    android:textColor="@color/course_week_cb_text_color"
-    android:textSize="13sp" />
+    android:textSize="12sp" />
 

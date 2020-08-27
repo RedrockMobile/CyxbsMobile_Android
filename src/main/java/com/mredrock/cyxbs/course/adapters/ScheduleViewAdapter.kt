@@ -1,39 +1,42 @@
 package com.mredrock.cyxbs.course.adapters
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.ContextCompat
+import com.mredrock.cyxbs.common.config.CyxbsMob
 import com.mredrock.cyxbs.common.config.DEFAULT_PREFERENCE_FILENAME
 import com.mredrock.cyxbs.common.config.SP_SHOW_MODE
+import com.mredrock.cyxbs.common.utils.ClassRoomParse
 import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.SchoolCalendar
+import com.mredrock.cyxbs.common.utils.extensions.pressToZoomOut
 import com.mredrock.cyxbs.common.utils.extensions.sharedPreferences
 import com.mredrock.cyxbs.course.R
+import com.mredrock.cyxbs.course.component.AffairBackgroundView
 import com.mredrock.cyxbs.course.component.ScheduleView
 import com.mredrock.cyxbs.course.event.DismissAddAffairViewEvent
 import com.mredrock.cyxbs.course.network.Course
-import com.mredrock.cyxbs.course.ui.EditAffairActivity
-import com.mredrock.cyxbs.course.ui.ScheduleDetailDialogHelper
-import com.mredrock.cyxbs.course.utils.ClassRoomParse
-import com.mredrock.cyxbs.course.utils.RippleDrawableUtil
+import com.mredrock.cyxbs.course.ui.ScheduleDetailBottomSheetDialogHelper
+import com.mredrock.cyxbs.course.ui.activity.AffairEditActivity
+import com.mredrock.cyxbs.course.utils.createCornerBackground
+import com.umeng.analytics.MobclickAgent
 import org.greenrobot.eventbus.EventBus
 import java.util.*
 
 /**
- * @param mContext [Context]
+ * @param mActivity [Context]
  * @param mNowWeek 表示当前的周数
  * @param mSchedules 表示显示的数据
  * @param mIsBanTouchView 是否禁用在空白处的点击
  *
  * Created by anriku on 2018/8/14.
  */
-class ScheduleViewAdapter(private val mContext: Context,
+class ScheduleViewAdapter(private val mActivity: Activity,
                           private val mNowWeek: Int,
                           private val mSchedules: List<Course>,
                           private val mIsBanTouchView: Boolean) :
@@ -44,46 +47,39 @@ class ScheduleViewAdapter(private val mContext: Context,
         private const val NOT_LONG_COURSE = -1
     }
 
-    private var mInflater: LayoutInflater = LayoutInflater.from(mContext)
-    private val mShowModel = mContext.sharedPreferences(DEFAULT_PREFERENCE_FILENAME).getBoolean(SP_SHOW_MODE, true)
-    private val mSchedulesArray = Array(6) { arrayOfNulls<MutableList<Course>>(7) }
+    private var mInflater: LayoutInflater = LayoutInflater.from(mActivity)
+    private val mShowModel = mActivity.sharedPreferences(DEFAULT_PREFERENCE_FILENAME).getBoolean(SP_SHOW_MODE, true)
+    private lateinit var mSchedulesArray: Array<Array<MutableList<Course>?>>
 
     private val mCoursesColors by lazy(LazyThreadSafetyMode.NONE) {
-        intArrayOf(ContextCompat.getColor(mContext, R.color.courseCoursesForenoon),
-                ContextCompat.getColor(mContext, R.color.courseCoursesAfternoon),
-                ContextCompat.getColor(mContext, R.color.courseCoursesNight),
-                ContextCompat.getColor(mContext, R.color.courseCoursesOther))
+        intArrayOf(ContextCompat.getColor(mActivity, R.color.common_morning_course_color),
+                ContextCompat.getColor(mActivity, R.color.common_afternoon_course_color),
+                ContextCompat.getColor(mActivity, R.color.common_evening_course_color),
+                ContextCompat.getColor(mActivity, R.color.courseCoursesOther))
     }
-    private val mCoursesOverlapColors by lazy(LazyThreadSafetyMode.NONE) {
-        intArrayOf(ContextCompat.getColor(mContext, R.color.courseCoursesOverlapForenoon),
-                ContextCompat.getColor(mContext, R.color.courseCoursesOverlapAfternoon),
-                ContextCompat.getColor(mContext, R.color.courseCoursesOverlapNight))
-    }
-
-    private val mAffairsColors by lazy(LazyThreadSafetyMode.NONE) {
-        intArrayOf(ContextCompat.getColor(mContext, R.color.courseAffairsForenoon),
-                ContextCompat.getColor(mContext, R.color.courseAffairsAfternoon),
-                ContextCompat.getColor(mContext, R.color.courseAffairsNight))
+    private val mCoursesTextColors by lazy(LazyThreadSafetyMode.NONE) {
+        intArrayOf(ContextCompat.getColor(mActivity, R.color.common_morning_course_text_color),
+                ContextCompat.getColor(mActivity, R.color.common_afternoon_course_text_color),
+                ContextCompat.getColor(mActivity, R.color.common_evening_course_text_color))
     }
 
-    private val mRightTopTags by lazy(LazyThreadSafetyMode.NONE) {
-        arrayOf(ContextCompat.getDrawable(mContext, R.mipmap.course_ic_corner_right_top_green),
-                ContextCompat.getDrawable(mContext, R.mipmap.course_ic_corner_right_top_blue),
-                ContextCompat.getDrawable(mContext, R.mipmap.course_ic_corner_right_top_yellow),
-                ContextCompat.getDrawable(mContext, R.mipmap.course_ic_corner_right_top))
-    }
-    private val mRippleColor = Color.GRAY
-
-    private val mDialogHelper: ScheduleDetailDialogHelper by lazy(LazyThreadSafetyMode.NONE) {
-        ScheduleDetailDialogHelper(mContext)
+    private val mDialogHelper: ScheduleDetailBottomSheetDialogHelper by lazy(LazyThreadSafetyMode.NONE) {
+        ScheduleDetailBottomSheetDialogHelper(mActivity)
     }
 
     private lateinit var mTop: TextView
     private lateinit var mBottom: TextView
-    private lateinit var mBackground: ImageView
-    private lateinit var mTag: ImageView
+    private lateinit var mBackground: View
+    private lateinit var mTag: View
+    private lateinit var mAffairBackground: AffairBackgroundView
+
 
     init {
+        addCourse()
+        sortCourse()
+    }
+
+    override fun notifyDataChange() {
         addCourse()
         sortCourse()
     }
@@ -91,7 +87,15 @@ class ScheduleViewAdapter(private val mContext: Context,
     /**
      * 这个方法用于进行课程的添加
      */
+    @Suppress("RemoveExplicitTypeArguments")//下面的MutableList<Course>，lint检查不需要写，但是不写编译不了
     private fun addCourse() {
+        mSchedulesArray = Array(6) { arrayOfNulls<MutableList<Course>>(7) }
+        //下方复用代码，忽视就好
+        fun initSchedulesArray(row: Int, column: Int) {
+            if (mSchedulesArray[row][column] == null) {
+                mSchedulesArray[row][column] = mutableListOf()
+            }
+        }
         for (course in mSchedules) {
             val row = course.hashLesson
             val column = course.hashDay
@@ -99,19 +103,16 @@ class ScheduleViewAdapter(private val mContext: Context,
             //如果是整学期将所有数据返回
             if (mNowWeek == 0) {
                 if (course.customType == Course.COURSE) {
-                    if (mSchedulesArray[row][column] == null) {
-                        mSchedulesArray[row][column] = mutableListOf()
-                    }
+                    initSchedulesArray(row, column)
                     mSchedulesArray[row][column]?.add(course)
                 }
                 continue
             }
             //如果不是整学期的做如下判断
             course.week?.let {
+                //如果本周在这个课所在的周数list当中
                 if (mNowWeek in it) {
-                    if (mSchedulesArray[row][column] == null) {
-                        mSchedulesArray[row][column] = mutableListOf()
-                    }
+                    initSchedulesArray(row, column)
                     mSchedulesArray[row][column]?.add(course)
                 }
             }
@@ -136,66 +137,65 @@ class ScheduleViewAdapter(private val mContext: Context,
     /**
      * 如果[mIsBanTouchView]为true禁止mTouchView；反之就返回添加事务的事件。
      */
-    override fun setOnTouchViewClickListener(): ((ImageView) -> Unit)? {
+    override fun onTouchViewClick(view: View, position: ScheduleView.TouchPositionData): (() -> Unit)? {
         if (mIsBanTouchView) {
             return null
         } else {
-            return { touchView ->
-                touchView.setOnClickListener {
-                    mContext.startActivity(Intent(mContext, EditAffairActivity::class.java).apply {
-                        putExtra(EditAffairActivity.WEEK_NUM, mNowWeek)
-                        putExtra(EditAffairActivity.TIME_NUM, (touchView.tag ?: 0) as Int)
-                    })
-                }
+            return {
+                mActivity.startActivity(Intent(mActivity, AffairEditActivity::class.java).apply {
+                    putExtra(AffairEditActivity.WEEK_NUM, mNowWeek)
+                    putExtra(AffairEditActivity.TIME_NUM, (position.position))
+                })
             }
         }
     }
 
     /**
      * 在ScheduleView中通过getItemViewInfo方法获取当前行列有schedule信息后，才会调用此方法
-     *
      * @param row 行
      * @param column 列
      * @param container [ScheduleView]
-     *
      * @return 添加的View
      */
-    override fun getItemView(row: Int, column: Int, container: ViewGroup): View {
-        val itemView = mInflater.inflate(R.layout.course_schedule_item_view, container, false)
+    override fun getItemView(row: Int, column: Int, container: ViewGroup): View = mInflater.inflate(R.layout.course_schedule_item_view, container, false)
+
+
+    override fun initItemView(view: View, row: Int, column: Int) {
+        view.pressToZoomOut()
         //itemInfo表示当前行列的第一个schedule的信息，itemCount表示当前行列schedule的数量
         val itemViewInfo = getItemViewInfo(row, column)
         var itemCount = 1
         mSchedulesArray[row][column]?.let {
-            itemCount = it.size
-            setItemViewOnclickListener(itemView, it)
+            val courseList = it.toMutableList()
+            if ((row == 0 || row == 2 || row == 4) && it[0].period > 2) {
+                mSchedulesArray[row + 1][column]?.let { list ->
+                    courseList.addAll(list)
+                }
+            }
+            itemCount = courseList.size
+            setItemViewOnclickListener(view, courseList)
         }
 
-        mTop = itemView.findViewById(R.id.top)
-        mBottom = itemView.findViewById(R.id.bottom)
-        mBackground = itemView.findViewById(R.id.background)
-        mTag = itemView.findViewById(R.id.tag)
-
-        val isOverlap: Boolean = if (row == 1 || row == 3 || row == 5) {
-            mSchedulesArray[row - 1][column]?.get(0)?.period ?: NOT_LONG_COURSE == 4
-        } else {
-            false
-        }
+        mTop = view.findViewById(R.id.top)
+        mBottom = view.findViewById(R.id.bottom)
+        mBackground = view.findViewById(R.id.background)
+        mTag = view.findViewById(R.id.tag)
+        mTag.visibility = View.GONE
+        mAffairBackground = view.findViewById(R.id.affair_item_background)
 
         itemViewInfo?.let {
             when {
                 row <= 1 -> {
-                    setItemView(mSchedulesArray[row][column]!![0], 0, itemCount, isOverlap)
+                    setItemView(mSchedulesArray[row][column]!![0], 0, itemCount)
                 }
                 row <= 3 -> {
-                    setItemView(mSchedulesArray[row][column]!![0], 1, itemCount, isOverlap)
+                    setItemView(mSchedulesArray[row][column]!![0], 1, itemCount)
                 }
                 row <= 5 -> {
-                    setItemView(mSchedulesArray[row][column]!![0], 2, itemCount, isOverlap)
+                    setItemView(mSchedulesArray[row][column]!![0], 2, itemCount)
                 }
             }
         }
-
-        return itemView
     }
 
     /**
@@ -205,7 +205,7 @@ class ScheduleViewAdapter(private val mContext: Context,
      * @param index 表示取那个颜色
      * @param itemCount 表示该位置Course的数量
      */
-    private fun setItemView(course: Course, index: Int, itemCount: Int, isOverlap: Boolean) {
+    private fun setItemView(course: Course, index: Int, itemCount: Int) {
         val top = mTop
         val bottom = mBottom
         val tag = mTag
@@ -214,33 +214,42 @@ class ScheduleViewAdapter(private val mContext: Context,
         if (course.customType == Course.COURSE) {
             top.text = course.course
             bottom.text = ClassRoomParse.parseClassRoom(course.classroom ?: "")
-            if (isOverlap) {
-                background.background = RippleDrawableUtil.getRippleDrawable(mRippleColor, mCoursesOverlapColors[index])
-            } else {
-                background.background = RippleDrawableUtil.getRippleDrawable(mRippleColor, mCoursesColors[index])
-            }
+            background.background = createCornerBackground(mCoursesColors[index], mActivity.resources.getDimension(R.dimen.course_course_item_radius))
+            mAffairBackground.visibility = View.GONE
             if (itemCount > 1) {
-                LogUtils.d(TAG, itemCount.toString())
-                tag.setImageDrawable(mRightTopTags[3])
+                tag.visibility = View.VISIBLE
+                tag.background = createCornerBackground(mCoursesTextColors[course.hashLesson / 2], mActivity.resources.getDimension(R.dimen.course_schedule_tag_radius))
             }
+            top.setTextColor(mCoursesTextColors[index])
+            bottom.setTextColor(mCoursesTextColors[index])
         } else {
-            if (!mShowModel) {
-                tag.setImageDrawable(mRightTopTags[index])
-            } else {
+            if (mShowModel) {
                 top.text = course.course
                 bottom.text = course.classroom
             }
-            background.background = RippleDrawableUtil.getRippleDrawable(mRippleColor, mAffairsColors[index])
+            top.setTextColor(ContextCompat.getColor(mActivity, R.color.common_level_two_font_color))
+            bottom.setTextColor(ContextCompat.getColor(mActivity, R.color.common_level_two_font_color))
+            mAffairBackground.visibility = View.VISIBLE
         }
     }
 
 
+    /**
+     * 获取当前课程位置上的高度信息
+     * @param
+     */
     override fun getItemViewInfo(row: Int, column: Int): ScheduleView.ScheduleItem? {
+        val isOverlap: Boolean = if (row == 1 || row == 3 || row == 5) {
+            mSchedulesArray[row - 1][column]?.get(0)?.period ?: NOT_LONG_COURSE == 4 ||
+                    mSchedulesArray[row - 1][column]?.get(0)?.period ?: NOT_LONG_COURSE == 3
+        } else {
+            false
+        }
         val schedules = mSchedulesArray[row][column]
-        return if (schedules == null || schedules.size == 0) {
+        return if (schedules == null || schedules.size == 0 || isOverlap) {
             null
         } else {
-            ScheduleView.ScheduleItem(itemHeight = schedules[0].period)
+            ScheduleView.ScheduleItem(itemHeight = schedules[0].period, uniqueSign = schedules[0])
         }
     }
 
@@ -263,6 +272,9 @@ class ScheduleViewAdapter(private val mContext: Context,
     private fun setItemViewOnclickListener(itemView: View, schedules: MutableList<Course>) {
         itemView.setOnClickListener {
             mDialogHelper.showDialog(schedules)
+            MobclickAgent.onEvent(itemView.context, CyxbsMob.Event.CLICK_COURSE_ITEM, mutableMapOf(
+                    Pair(CyxbsMob.Key.IS_HEAD, CyxbsMob.Value.TRUE)
+            ))
             EventBus.getDefault().post(DismissAddAffairViewEvent())
         }
     }
@@ -276,11 +288,10 @@ class ScheduleViewAdapter(private val mContext: Context,
          * @param front 现在排在前面的Course
          */
         override fun compare(behind: Course, front: Course): Int {
-            if ((front.period >= behind.period && front.customType < behind.customType)||(front.period > behind.period && front.customType <= behind.customType)) {
+            if ((front.period >= behind.period && front.customType < behind.customType) || (front.period > behind.period && front.customType <= behind.customType)) {
                 return 1
             }
             return -1
         }
     }
-
 }
