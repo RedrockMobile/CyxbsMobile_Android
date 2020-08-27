@@ -50,7 +50,7 @@ class VolunteerRecordActivity : BaseActivity(), TabLayout.OnTabSelectedListener,
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_volunteer_record)
-
+        isSlideable=false
         initToolbar()
         initOnClickLisenter()
         initData()

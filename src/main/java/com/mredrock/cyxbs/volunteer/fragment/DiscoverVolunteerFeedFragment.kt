@@ -7,8 +7,12 @@ import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
 import com.mredrock.cyxbs.common.config.DISCOVER_VOLUNTEER
 import com.mredrock.cyxbs.common.config.DISCOVER_VOLUNTEER_FEED
+import com.mredrock.cyxbs.common.service.ServiceManager
+import com.mredrock.cyxbs.common.service.account.IAccountService
+import com.mredrock.cyxbs.common.service.account.IUserStateService
 import com.mredrock.cyxbs.common.ui.BaseFeedFragment
 import com.mredrock.cyxbs.common.utils.extensions.doIfLogin
+import com.mredrock.cyxbs.common.utils.extensions.runOnUiThread
 import com.mredrock.cyxbs.volunteer.DiscoverVolunteerFeedViewModel
 import com.mredrock.cyxbs.volunteer.R
 import com.mredrock.cyxbs.volunteer.adapter.VolunteerFeedAdapter
@@ -25,7 +29,13 @@ class DiscoverVolunteerFeedFragment : BaseFeedFragment<DiscoverVolunteerFeedView
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        ServiceManager.getService(IAccountService::class.java).getVerifyService().addOnStateChangedListener {
+            if (it == IUserStateService.UserState.LOGIN) {
+                context?.runOnUiThread {
+                    setAdapter(VolunteerFeedUnbindAdapter())
+                }
+            }
+        }
         init()
     }
 
@@ -66,7 +76,7 @@ class DiscoverVolunteerFeedFragment : BaseFeedFragment<DiscoverVolunteerFeedView
 
             viewModel.loadVolunteerTime(EncryptPassword.encrypt(uid))
         } else {
-            setAdapter(VolunteerFeedUnbindAdapter())
+            return
         }
     }
 
