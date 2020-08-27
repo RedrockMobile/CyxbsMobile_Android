@@ -94,7 +94,8 @@ class SchoolCalendarPlus : SchoolCalendar() {
         return weekOfTerm >= 20 || weekOfTerm < 0
     }
 
-    fun isWinterVacation() : Boolean {
-        return super.month < 5
+    //是否是上学期（即秋季学期），否则是下学期（春季学期）
+    fun isFirstSemester() : Boolean {
+        return firstDay[Calendar.MONTH] > 6
     }
 }

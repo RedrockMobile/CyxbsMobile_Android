@@ -167,7 +167,9 @@ class DailySignActivity(override val viewModelClass: Class<DailyViewModel> = Dai
         val schoolCalendarPlus = SchoolCalendarPlus()
         val pair = schoolCalendarPlus.getYearPair()
         mine_daily_tv_year.text = "${pair.first}-${pair.second}"
-        mine_daily_tv_week.text = "上学期第${schoolCalendarPlus.getChineseWeek()}周"
+        val isFirstSemester = if (schoolCalendarPlus.isFirstSemester()) "上" else "下"
+
+        mine_daily_tv_week.text = "${isFirstSemester}学期第${schoolCalendarPlus.getChineseWeek()}周"
         mine_daily_dayCount.text = "已连续打卡${scoreStatus.serialDays}天"
         mine_daily_tv_ranking_percentage.text = "超过${scoreStatus.percent}的邮子"
         if (scoreStatus.canCheckIn && scoreStatus.isChecked) {
