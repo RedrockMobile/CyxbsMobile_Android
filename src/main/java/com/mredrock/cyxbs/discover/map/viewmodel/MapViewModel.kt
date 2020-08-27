@@ -45,6 +45,7 @@ class MapViewModel : BaseViewModel() {
         const val DOWN_MESSAGE_NAME = "zscy-map-vr-url"
 
     }
+
     init {
         //优先请求，避免进入vr还没有拿到url
         getVrUrl()

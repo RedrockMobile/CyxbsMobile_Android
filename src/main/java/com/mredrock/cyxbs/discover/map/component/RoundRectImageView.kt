@@ -16,8 +16,8 @@ class RoundRectImageView : AppCompatImageView {
      *
      * 这两个都是画圆的半径
      */
-    private var roundWidth = 20
-    private var roundHeight = 20
+    private var roundWidth = 10
+    private var roundHeight = 10
     private var paint2: Paint? = null
 
     constructor(context: Context, attrs: AttributeSet?, defStyle: Int) : super(context, attrs, defStyle) {

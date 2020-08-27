@@ -3,7 +3,6 @@ package com.mredrock.cyxbs.discover.map.ui.fragment.inner
 import android.animation.Animator
 import android.animation.ValueAnimator
 import android.annotation.SuppressLint
-import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -445,7 +444,7 @@ class MapViewFragment : BaseFragment() {
                 }
 
                 override fun onAnimationEnd(p0: Animator?) {
-                    activity?.let { it1 -> VRActivity.startVRActivity(it1,viewModel.vrUrl) }
+                    activity?.let { it1 -> VRActivity.startVRActivity(it1, viewModel.vrUrl) }
                 }
 
                 override fun onAnimationCancel(p0: Animator?) {

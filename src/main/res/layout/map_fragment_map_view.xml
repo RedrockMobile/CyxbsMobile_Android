@@ -22,13 +22,14 @@
             <LinearLayout
                 android:id="@+id/map_ll_map_view_my_favorite"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+                android:layout_height="54dp"
                 android:layout_marginEnd="8dp"
+                android:clickable="true"
+                android:focusable="true"
                 android:gravity="center_horizontal"
                 android:orientation="vertical"
                 android:paddingStart="4dp"
-                android:paddingTop="4dp"
+                android:paddingTop="8dp"
                 android:paddingEnd="4dp"
                 android:paddingBottom="4dp"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -54,7 +55,7 @@
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:layout_marginStart="8dp"
-                android:paddingStart="15dp"
+                android:paddingStart="8dp"
                 android:paddingEnd="1dp"
                 app:layout_constraintBottom_toBottomOf="@+id/map_ll_map_view_my_favorite"
                 app:layout_constraintEnd_toStartOf="@+id/map_view_divider"
@@ -73,7 +74,6 @@
                     android:id="@+id/map_layout"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
-                    android:layout_marginTop="8dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.0"
@@ -92,7 +92,7 @@
                     android:src="@drawable/map_ic_vr"
                     app:layout_constraintBottom_toBottomOf="@+id/map_iv_compass"
                     app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/map_iv_compass"  />
+                    app:layout_constraintTop_toTopOf="@+id/map_iv_compass" />
 
                 <com.mredrock.cyxbs.discover.map.component.ClickView
                     android:id="@+id/map_iv_compass"
@@ -129,7 +129,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/map_rv_symbol_places"
-                tools:background="@color/windowBackground"
+                tools:background="@color/common_white_background"
                 tools:context=".ui.MainActivity">
 
                 <FrameLayout

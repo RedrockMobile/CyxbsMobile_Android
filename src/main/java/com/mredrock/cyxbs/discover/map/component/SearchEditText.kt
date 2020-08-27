@@ -25,7 +25,7 @@ class SearchEditText : androidx.appcompat.widget.AppCompatEditText {
         resources.getDrawable(R.drawable.map_ic_search_clear, null).toBitmap()
     }
     private val searchBitmap: Bitmap by lazy {
-        imageScale(resources.getDrawable(R.drawable.map_ic_search, null).toBitmap(), 40, 40)
+        imageScale(resources.getDrawable(R.drawable.map_ic_search_edit_text_icon, null).toBitmap(), 40, 40)
     }
 
     private var isEmpty = true

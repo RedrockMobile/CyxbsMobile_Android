@@ -60,7 +60,7 @@ class SearchFragment : BaseFragment() {
             transaction?.add(R.id.map_fl_search_fragment, searchHistoryFragment)
         }
         transaction?.hide(searchResultFragment)
-        transaction?.show(searchHistoryFragment)?.commit()
+        transaction?.show(searchHistoryFragment)?.commitNow()
     }
 
 

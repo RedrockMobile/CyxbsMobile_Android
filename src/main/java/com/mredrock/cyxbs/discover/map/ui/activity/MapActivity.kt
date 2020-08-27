@@ -64,7 +64,7 @@ class MapActivity : BaseViewModelActivity<MapViewModel>() {
         viewModel.mapInfo.observe(this, Observer {
             viewModel.getPlaceSearch(openString)
         })
-        fragmentManager.beginTransaction().add(R.id.map_fl_main_fragment, mainFragment).show(mainFragment).commit()
+        fragmentManager.beginTransaction().add(R.id.map_fl_main_fragment, mainFragment).show(mainFragment).commitNow()
 
 
         //控制收藏页面是否显示
@@ -81,7 +81,7 @@ class MapActivity : BaseViewModelActivity<MapViewModel>() {
                         transaction
                                 .show(favoriteEditFragment)
                                 .addToBackStack("favorite_edit")
-                                .commit()
+                                .commitNow()
                     } else {
                         //隐藏键盘再返回，防止发生布局变形
                         KeyboardController.hideInputKeyboard(this, map_fl_main_fragment)
@@ -89,7 +89,7 @@ class MapActivity : BaseViewModelActivity<MapViewModel>() {
                                 .setCustomAnimations(R.animator.map_slide_from_left, R.animator.map_slide_to_right, R.animator.map_slide_from_right, R.animator.map_slide_to_left)
                                 .hide(favoriteEditFragment)
                                 .show(mainFragment)
-                                .commit()
+                                .commitNow()
                         fragmentManager.popBackStack()
 
                     }
@@ -110,13 +110,13 @@ class MapActivity : BaseViewModelActivity<MapViewModel>() {
                         transaction
                                 .show(allPictureFragment)
                                 .addToBackStack("all_picture")
-                                .commit()
+                                .commitNow()
                     } else {
                         fragmentManager.beginTransaction()
                                 .setCustomAnimations(R.animator.map_slide_from_left, R.animator.map_slide_to_right, R.animator.map_slide_from_right, R.animator.map_slide_to_left)
                                 .hide(allPictureFragment)
                                 .show(mainFragment)
-                                .commit()
+                                .commitNow()
                         fragmentManager.popBackStack()
 
                     }
