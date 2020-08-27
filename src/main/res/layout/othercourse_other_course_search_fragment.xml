@@ -18,7 +18,9 @@
         android:layout_marginStart="18dp"
         android:layout_marginEnd="18dp"
         android:layout_marginTop="30dp"
+        android:textColor="@color/common_level_two_font_color"
         android:hint="@string/othercourse_hint_input_key"
+        android:textColorHint="@color/common_othercourse_common_hint_text_color"
         android:inputType="text"
         android:imeOptions="actionSearch" />
 
