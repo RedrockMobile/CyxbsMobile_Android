@@ -20,8 +20,6 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="10dp"
         android:text="@string/mine_logout_content"
-        android:paddingStart="88dp"
-        android:paddingEnd="88dp"
         android:textColor="@color/levelFourFontColor"
         android:textSize="13sp" />
 
