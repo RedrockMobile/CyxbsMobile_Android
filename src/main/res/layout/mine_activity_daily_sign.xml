@@ -55,7 +55,9 @@
             android:textSize="34sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="@+id/mine_daily_tv_year"
-            app:layout_constraintTop_toBottomOf="@+id/mine_daily_tv_year" />
+            app:layout_constraintTop_toBottomOf="@+id/mine_daily_tv_year"
+            android:paddingEnd="40dp"
+            tools:text="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"/>
 
 
         <ImageView

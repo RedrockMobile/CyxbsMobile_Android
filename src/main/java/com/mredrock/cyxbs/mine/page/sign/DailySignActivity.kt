@@ -5,6 +5,7 @@ import android.annotation.SuppressLint
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
+import android.view.Gravity
 import android.view.View
 import android.view.Window
 import android.view.WindowManager
@@ -15,6 +16,9 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.Observer
+import androidx.transition.Slide
+import androidx.transition.TransitionManager
+import androidx.transition.TransitionSet
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.mredrock.cyxbs.common.component.CommonDialogFragment
@@ -32,6 +36,7 @@ import com.mredrock.cyxbs.mine.util.ui.ProductAdapter
 import com.mredrock.cyxbs.mine.util.widget.*
 import kotlinx.android.synthetic.main.mine_activity_daily_sign.*
 import kotlinx.android.synthetic.main.mine_layout_store_sign.*
+import kotlin.math.abs
 
 
 /**
@@ -167,9 +172,13 @@ class DailySignActivity(override val viewModelClass: Class<DailyViewModel> = Dai
         val schoolCalendarPlus = SchoolCalendarPlus()
         val pair = schoolCalendarPlus.getYearPair()
         mine_daily_tv_year.text = "${pair.first}-${pair.second}"
-        val isFirstSemester = if (schoolCalendarPlus.isFirstSemester()) "上" else "下"
-
-        mine_daily_tv_week.text = "${isFirstSemester}学期第${schoolCalendarPlus.getChineseWeek()}周"
+        val isFirstSemester = if (schoolCalendarPlus.isFirstSemester()) "秋" else "春"
+        val dayOfTerm = schoolCalendarPlus.dayOfTerm
+        if (dayOfTerm < 0) {
+            mine_daily_tv_week.text = "距离${isFirstSemester}学期开学还有${abs(dayOfTerm)}天"
+        } else {
+            mine_daily_tv_week.text = "${isFirstSemester}学期第${schoolCalendarPlus.getChineseWeek()}周"
+        }
         mine_daily_dayCount.text = "已连续打卡${scoreStatus.serialDays}天"
         mine_daily_tv_ranking_percentage.text = "超过${scoreStatus.percent}的邮子"
         if (scoreStatus.canCheckIn && scoreStatus.isChecked) {
