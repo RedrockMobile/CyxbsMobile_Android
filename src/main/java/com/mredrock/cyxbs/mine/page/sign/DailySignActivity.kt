@@ -183,6 +183,8 @@ class DailySignActivity(override val viewModelClass: Class<DailyViewModel> = Dai
         mine_daily_tv_ranking_percentage.text = "超过${scoreStatus.percent}的邮子"
         if (scoreStatus.canCheckIn && scoreStatus.isChecked) {
             mine_daily_tv_ranking.text = "今日第${scoreStatus.rank}位打卡"
+        } else if (scoreStatus.canCheckIn && !scoreStatus.isChecked) {
+            mine_daily_tv_ranking.text = "还没有打卡哦"
         } else {
             mine_daily_tv_ranking.text = "寒暑假不可签到呢(●'ᴗ'σ)σணღ*"
         }
