@@ -36,18 +36,21 @@ class GpAGraph : View {
     }
 
     private var background: Int? = null
+
     //默认的宽高
     private val mWidth: Int = dp2px(100)
     private val mHeight: Int = dp2px(100)
 
     private lateinit var path: Path
     private lateinit var pathBlue: Path
+
     //顶部和底部预留的高度
     private val bottomHeight = dp2px(50)
-    private val topHeight = dp2px(25)
+    private val topHeight = dp2px(45)
 
     private var segHeight: Int = 0
     private var segWidth: Int = 0
+
     //Paint
     private lateinit var dashPaint: Paint
     private lateinit var gpaPaint: Paint
@@ -66,6 +69,7 @@ class GpAGraph : View {
 
 
     private lateinit var linearGradient: LinearGradient
+
     //用户点击的是textArray中的第几个。例如用户点击"大一上"，touchPoint则为0
     private var touchPoint: Int? = null
     private val textArray = arrayListOf("大一上", "大一下", "大二上", "大二下", "大三上", "大三下", "大四上", "大四下")
@@ -78,6 +82,8 @@ class GpAGraph : View {
 
     //映射规则
     private var mappingRule: GraphRule = DefaultMappingRule()
+
+    private lateinit var bubble: Bitmap
 
 
     private fun init() {
@@ -111,6 +117,8 @@ class GpAGraph : View {
         mappingData = originalData.map {
             mappingRule.mappingRule(it)
         }
+
+        bubble = BitmapFactory.decodeResource(resources, R.drawable.grades_ic_bubble)
 
     }
 
@@ -210,7 +218,8 @@ class GpAGraph : View {
         touchPoint?.let {
             if (mappingData.size >= it + 1) {
                 textPaint.textSize = dp2px(14).toFloat()
-                canvas.drawText(originalData[it].toString(), (it + 1) * segWidth.toFloat(), -1 * mappingData[it] * segHeight.toFloat() - dp2px(13), textPaint)
+                canvas.drawBitmap(bubble, (it + 1) * segWidth.toFloat() - bubble.width / 2, -1 * mappingData[it] * segHeight.toFloat() - dp2px(24) - bubble.height / 2, textPaint)
+                canvas.drawText(originalData[it].toString(), (it + 1) * segWidth.toFloat(), -1 * mappingData[it] * segHeight.toFloat() - dp2px(21), textPaint)
             }
         }
     }
@@ -259,9 +268,9 @@ class GpAGraph : View {
                     mLastY?.let { lastY ->
                         val deltaX = x - lastX
                         val deltaY = y - lastY
-                        if (abs(deltaY) - abs(deltaX) > 0.000001F && !childNeed) {
+                        if (2 * abs(deltaY) - abs(deltaX) > 0.000001F && !childNeed) {
                             parent.requestDisallowInterceptTouchEvent(false)
-                        } else if (abs(deltaY) - abs(deltaX) <= 0.000001F) {
+                        } else if (2 * abs(deltaY) - abs(deltaX) <= 0.000001F) {
                             parent.requestDisallowInterceptTouchEvent(true)
                             childNeed = true
                         }

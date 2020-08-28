@@ -23,7 +23,6 @@ import com.mredrock.cyxbs.discover.grades.R
 import com.mredrock.cyxbs.discover.grades.bean.Exam
 import com.mredrock.cyxbs.discover.grades.bean.analyze.isSuccessful
 import com.mredrock.cyxbs.discover.grades.ui.adapter.ExamAdapter
-import com.mredrock.cyxbs.discover.grades.ui.adapter.GradesShowAdapter
 import com.mredrock.cyxbs.discover.grades.ui.fragment.BindFragment
 import com.mredrock.cyxbs.discover.grades.ui.fragment.GPAFragment
 import com.mredrock.cyxbs.discover.grades.ui.viewModel.ContainerViewModel
@@ -67,7 +66,6 @@ class ContainerActivity : BaseActivity() {
 
     //grades
     private lateinit var parent: View
-    private lateinit var adapter: GradesShowAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
