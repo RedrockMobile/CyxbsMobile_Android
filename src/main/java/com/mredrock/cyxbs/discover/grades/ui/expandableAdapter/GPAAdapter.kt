@@ -299,8 +299,6 @@ class GPAAdapter(
             RANK -> {
                 val list = gpaData.termGrade.map {
                     it.rank
-                }.filter {
-                    it != "0"
                 }
                 gpaGraph.setRule(object : AverageRule(list) {
                     override fun mappingRule(old: String): Float {

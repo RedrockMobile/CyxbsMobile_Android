@@ -3,36 +3,37 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="34dp"
-        android:layout_margin="10dp"
-        android:orientation="horizontal">
-
+        android:layout_margin="10dp">
+        
         <TextView
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="7"
-            android:gravity="left"
+            android:layout_marginStart="25dp"
             android:text="@string/grades_dialog_a_credit"
-            android:paddingStart="25dp"
             android:textColor="@color/common_level_two_font_color"
-            android:textSize="14sp" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:textSize="14sp"
+            tools:text="图形创意" />
 
         <TextView
             android:id="@+id/tv_a_credit_score"
-            android:layout_width="0dp"
+            android:layout_width="50dp"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="1"
-            android:gravity="left"
             android:textColor="@color/common_level_two_font_color"
             android:textSize="14sp"
-            tools:text="90" />
-    </LinearLayout>
+            tools:text="90"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <include
         android:id="@+id/grades_compulsory"
