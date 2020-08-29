@@ -31,8 +31,8 @@ class SearchHistoryFragment : BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(requireActivity()).get(MapViewModel::class.java)
 
-        map_rv_search_history.layoutManager = LinearLayoutManager(requireContext())
-        adapter = SearchHistoryAdapter(requireContext(), viewModel)
+        map_rv_search_history.layoutManager = LinearLayoutManager(context)
+        adapter = context?.let { SearchHistoryAdapter(it, viewModel) } ?: return
         map_rv_search_history.adapter = adapter
 
 
@@ -40,7 +40,8 @@ class SearchHistoryFragment : BaseFragment() {
 
 
         map_tv_search_clear.setOnClickListener {
-            MapDialog.show(requireContext(), "提示", resources.getString(R.string.map_search_history_clear_tip), object : OnSelectListener {
+            if (context == null) return@setOnClickListener
+            MapDialog.show(context!!, "提示", resources.getString(R.string.map_search_history_clear_tip), object : OnSelectListener {
                 override fun onDeny() {
                 }
 

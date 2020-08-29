@@ -46,10 +46,8 @@ class ShowPictureFragment : BaseFragment() {
             dialog.setProgressStyle(android.app.ProgressDialog.STYLE_HORIZONTAL)
             dialog.setMessage(BaseApp.context.getString(R.string.map_picture_loading))
             dialog.setCancelable(true)
-            dialog.show()
             ProgressInterceptor.addListener(url, object : ProgressListener {
                 override fun onProgress(progress: Int) {
-                    dialog.progress = progress
                 }
             })
             context?.let {
@@ -58,24 +56,26 @@ class ShowPictureFragment : BaseFragment() {
                         .into(SubsamplingScaleImageViewShowPictureTarget(it, map_iv_show_picture, dialog, url))
             }
             map_iv_show_picture.setOnLongClickListener {
-                MapDialog.show(requireContext(), "保存图片", "是否保存图片到本地？", object : OnSelectListener {
-                    override fun onDeny() {
-                    }
+                context?.let { it1 ->
+                    MapDialog.show(it1, "保存图片", "是否保存图片到本地？", object : OnSelectListener {
+                        override fun onDeny() {
+                        }
 
-                    override fun onPositive() {
+                        override fun onPositive() {
 
-                        (context as AppCompatActivity).doPermissionAction(Manifest.permission.WRITE_EXTERNAL_STORAGE) {
-                            doAfterGranted {
-                                Glide.with(BaseApp.context).asBitmap().load(url).into(object : SimpleTarget<Bitmap>() {
-                                    override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
-                                        saveImage(resource)
+                            (context as AppCompatActivity).doPermissionAction(Manifest.permission.WRITE_EXTERNAL_STORAGE) {
+                                doAfterGranted {
+                                    Glide.with(BaseApp.context).asBitmap().load(url).into(object : SimpleTarget<Bitmap>() {
+                                        override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
+                                            saveImage(resource)
+                                        }
                                     }
+                                    )
                                 }
-                                )
                             }
                         }
-                    }
-                })
+                    })
+                }
 
                 true
             }

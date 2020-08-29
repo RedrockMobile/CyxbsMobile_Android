@@ -96,19 +96,21 @@ class MapViewFragment : BaseFragment() {
              * 地图不存在则直接下载地图
              */
             if (data.pictureVersion != version && path != null && fileIsExists(path)) {
-                UpdateMapDialog.show(requireContext(), BaseApp.context.getString(R.string.map_update_title),
-                        BaseApp.context.getString(R.string.map_update_message),
-                        object : OnUpdateSelectListener {
-                            override fun onDeny() {
-                                map_layout.setUrl("noUpdate")
-                            }
+                context?.let {
+                    UpdateMapDialog.show(it, BaseApp.context.getString(R.string.map_update_title),
+                            BaseApp.context.getString(R.string.map_update_message),
+                            object : OnUpdateSelectListener {
+                                override fun onDeny() {
+                                    map_layout.setUrl("noUpdate")
+                                }
 
-                            override fun onPositive() {
-                                deleteFile(path)
-                                DataSet.savePictureVersion(data.pictureVersion)
-                                map_layout.setUrl(data.mapUrl)
-                            }
-                        })
+                                override fun onPositive() {
+                                    deleteFile(path)
+                                    DataSet.savePictureVersion(data.pictureVersion)
+                                    map_layout.setUrl(data.mapUrl)
+                                }
+                            })
+                }
             } else {
                 DataSet.savePictureVersion(data.pictureVersion)
                 map_layout.setUrl(data.mapUrl)
@@ -315,13 +317,13 @@ class MapViewFragment : BaseFragment() {
          * （弹窗）
          */
 
-        val popView = View.inflate(requireContext(), R.layout.map_pop_window_favorite_list, null)
+        val popView = View.inflate(context, R.layout.map_pop_window_favorite_list, null)
         val popupWindow = PopupWindow(popView, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
         popupWindow.isOutsideTouchable = true
 
         val mapFavoriteRecyclerView = popView.findViewById<RecyclerView>(R.id.map_rv_favorite_list)
-        mapFavoriteRecyclerView.layoutManager = LinearLayoutManager(requireContext())
-        val favoriteListAdapter = FavoriteListAdapter(requireContext(), viewModel, mutableListOf())
+        mapFavoriteRecyclerView.layoutManager = LinearLayoutManager(context)
+        val favoriteListAdapter = context?.let { FavoriteListAdapter(it, viewModel, mutableListOf()) }
         mapFavoriteRecyclerView.adapter = favoriteListAdapter
         //设置“我的收藏”点击事件
         map_ll_map_view_my_favorite.pressToZoomOut()
@@ -404,7 +406,7 @@ class MapViewFragment : BaseFragment() {
                 viewLifecycleOwner,
                 Observer {
                     //更新favoriteList数据
-                    favoriteListAdapter.setList(it)
+                    favoriteListAdapter?.setList(it)
                 }
         )
 

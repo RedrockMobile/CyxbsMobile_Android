@@ -7,9 +7,6 @@ import android.view.View
 import android.widget.ProgressBar
 import android.widget.TextView
 import com.mredrock.cyxbs.discover.map.R
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 
 /**
  *@author zhangzhe
@@ -62,9 +59,7 @@ class CustomProgressDialog : Dialog {
         val progressValue: TextView = customProgressDialog!!.findViewById<View>(R.id.map_tv_download_progress_value) as TextView
         progressBar.progress = progress
         val value = "$progress%"
-        GlobalScope.launch(Dispatchers.Main) {
-            progressValue.text = value
-        }
+        progressValue.text = value
     }
 
     companion object {

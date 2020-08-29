@@ -1,5 +1,6 @@
 package com.mredrock.cyxbs.discover.map.ui.activity
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.lifecycle.Observer
 import com.alibaba.android.arouter.facade.annotation.Route
@@ -64,7 +65,7 @@ class MapActivity : BaseViewModelActivity<MapViewModel>() {
         viewModel.mapInfo.observe(this, Observer {
             viewModel.getPlaceSearch(openString)
         })
-        fragmentManager.beginTransaction().add(R.id.map_fl_main_fragment, mainFragment).show(mainFragment).commitNow()
+        fragmentManager.beginTransaction().add(R.id.map_fl_main_fragment, mainFragment).show(mainFragment).commit()
 
 
         //控制收藏页面是否显示
@@ -137,6 +138,11 @@ class MapActivity : BaseViewModelActivity<MapViewModel>() {
         ProgressDialog.hide()
         GlideProgressDialog.hide()
         super.onDestroy()
+    }
+
+    @SuppressLint("MissingSuperCall")
+    override fun onSaveInstanceState(outState: Bundle) {
+        //super.onSaveInstanceState(outState)
     }
 
     //判断文件是否存在

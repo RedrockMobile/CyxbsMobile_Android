@@ -32,9 +32,9 @@ class SearchResultFragment : BaseFragment() {
         viewModel = ViewModelProvider(requireActivity()).get(MapViewModel::class.java)
 
 
-        val searchResultAdapter = SearchResultAdapter(requireContext(), viewModel)
+        val searchResultAdapter = context?.let { SearchResultAdapter(it, viewModel) }
         map_rv_search_result.adapter = searchResultAdapter
-        map_rv_search_result.layoutManager = LinearLayoutManager(requireContext())
+        map_rv_search_result.layoutManager = LinearLayoutManager(context)
 
 
 

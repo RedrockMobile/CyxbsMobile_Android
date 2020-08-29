@@ -28,9 +28,6 @@ import com.mredrock.cyxbs.discover.map.widget.GlideApp
 import com.mredrock.cyxbs.discover.map.widget.GlideProgressDialog
 import com.mredrock.cyxbs.discover.map.widget.ProgressInterceptor
 import com.mredrock.cyxbs.discover.map.widget.ProgressListener
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import java.io.File
 import kotlin.math.sqrt
 
@@ -129,15 +126,11 @@ class MapLayout : FrameLayout, View.OnClickListener {
             override fun onUrlGet() {
                 when (url) {
                     "loadFail" -> {
-                        GlobalScope.launch(Dispatchers.Main) {
-                            MapToast.makeText(context, BaseApp.context.getString(R.string.map_use_local_map_data), Toast.LENGTH_SHORT).show()
-                        }
+                        MapToast.makeText(context, BaseApp.context.getString(R.string.map_use_local_map_data), Toast.LENGTH_SHORT).show()
                         val path = DataSet.getPath()
                         try {
                             if (path != null && File(path).exists()) {
-                                GlobalScope.launch(Dispatchers.Main) {
-                                    subsamplingScaleImageView.setImage(ImageSource.uri(Uri.fromFile(File(path))))
-                                }
+                                subsamplingScaleImageView.setImage(ImageSource.uri(Uri.fromFile(File(path))))
                             }
                             GlideProgressDialog.hide()
                         } catch (e: Exception) {
@@ -149,9 +142,7 @@ class MapLayout : FrameLayout, View.OnClickListener {
                         val path = DataSet.getPath()
                         try {
                             if (path != null && File(path).exists()) {
-                                GlobalScope.launch(Dispatchers.Main) {
-                                    subsamplingScaleImageView.setImage(ImageSource.uri(Uri.fromFile(File(path))))
-                                }
+                                subsamplingScaleImageView.setImage(ImageSource.uri(Uri.fromFile(File(path))))
                             }
                             GlideProgressDialog.hide()
                         } catch (e: Exception) {
@@ -256,9 +247,7 @@ class MapLayout : FrameLayout, View.OnClickListener {
         subsamplingScaleImageView.setOnClickListener {
             var count = 0
             if (isLock) {
-                GlobalScope.launch(Dispatchers.Main) {
-                    MapToast.makeText(context, BaseApp.context.getString(R.string.map_please_unlock), Toast.LENGTH_SHORT).show()
-                }
+                MapToast.makeText(context, BaseApp.context.getString(R.string.map_please_unlock), Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
             iconList.forEach { icon ->

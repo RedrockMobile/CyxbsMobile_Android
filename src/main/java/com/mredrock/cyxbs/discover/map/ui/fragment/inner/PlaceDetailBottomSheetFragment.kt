@@ -201,7 +201,8 @@ class PlaceDetailBottomSheetFragment : BaseFragment() {
                 return
             }
         }
-        MapDialog.show(requireContext(), BaseApp.context.resources.getString(R.string.map_share_picture_title), BaseApp.context.resources.getString(R.string.map_share_picture), object : OnSelectListener {
+        context?.let {
+            MapDialog.show(it, BaseApp.context.resources.getString(R.string.map_share_picture_title), BaseApp.context.resources.getString(R.string.map_share_picture), object : OnSelectListener {
             override fun onDeny() {
             }
 
@@ -209,6 +210,7 @@ class PlaceDetailBottomSheetFragment : BaseFragment() {
                 selectPic()
             }
         })
+        }
     }
 
     override fun onActivityResult(
@@ -222,7 +224,7 @@ class PlaceDetailBottomSheetFragment : BaseFragment() {
             val filePathColumn =
                     arrayOf(MediaStore.Images.Media.DATA)
             val cursor: Cursor? =
-                    selectedImage?.let { requireContext().contentResolver.query(it, filePathColumn, null, null, null) }
+                    selectedImage?.let { context?.contentResolver?.query(it, filePathColumn, null, null, null) }
             cursor?.moveToFirst()
             val columnIndex = cursor?.getColumnIndex(filePathColumn[0])
             val imgPath = columnIndex?.let { cursor.getString(it) }
@@ -230,8 +232,8 @@ class PlaceDetailBottomSheetFragment : BaseFragment() {
             /**
              * 上传图片
              */
-            ProgressDialog.show(requireContext(), BaseApp.context.resources.getString(R.string.map_upload_picture_running), BaseApp.context.resources.getString(R.string.map_please_a_moment_text), false)
-            viewModel.uploadPicture(imgPath, requireContext())
+            context?.let { ProgressDialog.show(it, BaseApp.context.resources.getString(R.string.map_upload_picture_running), BaseApp.context.resources.getString(R.string.map_please_a_moment_text), false) }
+            context?.let { viewModel.uploadPicture(imgPath, it) }
         }
     }
 

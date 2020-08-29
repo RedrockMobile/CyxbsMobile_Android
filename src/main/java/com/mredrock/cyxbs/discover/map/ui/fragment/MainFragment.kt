@@ -111,7 +111,7 @@ class MainFragment : BaseFragment() {
     fun closeSearchFragment() {
         viewModel.isClickSymbol.value = false
         map_et_search.setText("")
-        KeyboardController.hideInputKeyboard(requireContext(), map_et_search)
+        context?.let { KeyboardController.hideInputKeyboard(it, map_et_search) }
         val transaction = manager?.beginTransaction()?.setCustomAnimations(R.animator.map_slide_from_left, R.animator.map_slide_to_right, R.animator.map_slide_from_right, R.animator.map_slide_to_left)
         transaction?.hide(searchFragment)
         transaction?.show(mapViewFragment)?.commit()

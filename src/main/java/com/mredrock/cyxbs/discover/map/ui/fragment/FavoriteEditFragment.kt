@@ -36,17 +36,19 @@ class FavoriteEditFragment : BaseFragment() {
 
 
         map_tv_favorite_cancel_favorite.setOnClickListener {
-            MapDialog.show(requireContext(), resources.getString(R.string.map_favorite_delete_title), resources.getString(R.string.map_favorite_delete), object : OnSelectListener {
-                override fun onDeny() {
-                }
+            context?.let { it1 ->
+                MapDialog.show(it1, resources.getString(R.string.map_favorite_delete_title), resources.getString(R.string.map_favorite_delete), object : OnSelectListener {
+                    override fun onDeny() {
+                    }
 
-                override fun onPositive() {
-                    viewModel.fragmentFavoriteEditIsShowing.value = false
-                    viewModel.deleteCollect(viewModel.showingPlaceId)
-                    ProgressDialog.show(requireActivity(), BaseApp.context.getString(R.string.map_please_a_moment_text), BaseApp.context.getString(R.string.map_collect_cancelling), false)
+                    override fun onPositive() {
+                        viewModel.fragmentFavoriteEditIsShowing.value = false
+                        viewModel.deleteCollect(viewModel.showingPlaceId)
+                        ProgressDialog.show(requireActivity(), BaseApp.context.getString(R.string.map_please_a_moment_text), BaseApp.context.getString(R.string.map_collect_cancelling), false)
 
-                }
-            })
+                    }
+                })
+            }
         }
         map_tv_favorite_accept.setOnClickListener {
             if (map_et_favorite_nickname.length() != 0) {
