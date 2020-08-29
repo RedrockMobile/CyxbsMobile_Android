@@ -36,7 +36,7 @@ class SplashFragment : BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         Glide.with(this)
-                .load(getSplashFile(requireContext()))
+                .load(context?.let { getSplashFile(it) })
                 .apply(RequestOptions().centerCrop().diskCacheStrategy(DiskCacheStrategy.NONE))
                 .into(splash_view)
         object : CountDownTimer(3000, 1000) {
