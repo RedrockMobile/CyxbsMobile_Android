@@ -12,3 +12,4 @@
 ./key-cyxbs
 local_helper
 secret.gradle
+./hooks/cache

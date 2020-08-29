@@ -1,0 +1,48 @@
+import java.util.regex.Pattern
+
+//git hook 可以没有，但是构建必须无障碍
+try {
+    //判断是不是windows,不加W是因为某些版本字符串中W大小写不定
+    if (!System.properties['os.name'].contains('indows')) {
+        file("${projectDir.absolutePath}/hooks").listFiles().each { f ->
+            exec {
+                //权限给满，主要是怕你不小心动到了这个目录，但是不知道为啥gradle就没权限删除源文件了
+                commandLine 'chmod', '777', "$f.absolutePath"
+            }
+        }
+    }
+
+    def list = []
+    findHooks(list, new File("${projectDir.absolutePath}/.git"))
+
+    list.each { path ->
+        copy {
+            from "${projectDir.absolutePath}/hooks"
+            into "$path"
+            rename { String fileName ->
+                fileName.replace(".sh", "")
+            }
+        }
+    }
+} catch (Exception e) {
+    println "********git hook复制文件失败，错误信息如下********"
+    e.printStackTrace()
+    println "*****************继续构建项目*******************"
+}
+
+void findHooks(List list, File file) {
+    if (file == null) return
+    if (file.isDirectory() && file.name == "hooks") {
+        def matcher = Pattern.compile("\\.git.+hooks").matcher(file.absolutePath)
+        if (matcher.find()) {
+            list.add(file.absolutePath)
+        }
+    } else if (file.isDirectory()) {
+        def fileList = file.listFiles()
+        if (fileList != null) {
+            fileList.each {
+                findHooks(list, it)
+            }
+        }
+    }
+}
