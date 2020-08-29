@@ -4,7 +4,7 @@
     android:padding="20dp"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/main_login_shape_background">
+    android:background="@drawable/main_shape_login_background">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_content"

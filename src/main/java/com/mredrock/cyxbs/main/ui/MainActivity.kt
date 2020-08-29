@@ -24,11 +24,13 @@ import com.mredrock.cyxbs.common.service.main.IMainService
 import com.mredrock.cyxbs.common.service.update.AppUpdateStatus
 import com.mredrock.cyxbs.common.service.update.IAppUpdateService
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
+import com.mredrock.cyxbs.common.utils.debug
 import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
 import com.mredrock.cyxbs.common.utils.extensions.getStatusBarHeight
 import com.mredrock.cyxbs.common.utils.extensions.onTouch
 import com.mredrock.cyxbs.common.utils.extensions.topPadding
 import com.mredrock.cyxbs.main.R
+import com.mredrock.cyxbs.main.components.DebugDataDialog
 import com.mredrock.cyxbs.main.databinding.MainActivityMainBinding
 import com.mredrock.cyxbs.main.utils.BottomNavigationHelper
 import com.mredrock.cyxbs.main.utils.entryContains
@@ -201,6 +203,14 @@ class MainActivity : BaseViewModelActivity<MainViewModel>(), EventBusLifecycleSu
                     changeFragment(qaFragment)
                 }
                 2 -> changeFragment(mineFragment)
+            }
+        }
+
+        // 长按我的展现测试数据
+        debug {
+            mine.setOnLongClickListener {
+                DebugDataDialog(this).show()
+                true
             }
         }
     }
