@@ -5,39 +5,56 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    tools:context=".ui.BaseFeedFragment"
-    >
+    tools:context=".ui.BaseFeedFragment">
 
     <include
-        layout="@layout/common_splite_line"
         android:id="@+id/feed_split_line"
+        layout="@layout/common_splite_line"
         android:visibility="gone" />
 
     <FrameLayout
-        android:layout_marginTop="26dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="26dp">
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/tv_feed_title"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="18sp"
-            android:textColor="@color/common_level_two_font_color"
-            android:textStyle="bold"
             android:layout_gravity="start|center_vertical"
-            android:layout_marginStart="14dp"
-            tools:text="电费查询" />
+            android:orientation="vertical">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_feed_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="14dp"
+                android:textColor="@color/common_level_two_font_color"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                tools:text="电费查询" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_feed_second_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="14dp"
+                android:layout_marginTop="5dp"
+                android:visibility="gone"
+                android:textColor="@color/common_level_two_font_color"
+                android:textSize="8sp" />
+
+        </LinearLayout>
+
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tv_feed_subtitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="10sp"
-            android:textColor="@color/common_level_two_font_color"
-            android:alpha="0.54"
             android:layout_gravity="end|center_vertical"
             android:layout_marginEnd="15dp"
+            android:alpha="0.54"
+            android:textColor="@color/common_level_two_font_color"
+            android:textSize="10sp"
             tools:text="2019.8.22抄表" />
     </FrameLayout>
 

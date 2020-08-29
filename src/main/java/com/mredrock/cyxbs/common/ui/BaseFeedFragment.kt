@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.mredrock.cyxbs.common.R
+import com.mredrock.cyxbs.common.utils.extensions.visible
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import kotlinx.android.synthetic.main.common_fragment_base_feed.*
 
@@ -33,6 +34,11 @@ abstract class BaseFeedFragment<T : BaseViewModel> : BaseViewModelFragment<T>() 
 
     fun setTitle(res: Int) {
         tv_feed_title.setText(res)
+    }
+
+    fun setSecondTitle(name: String) {
+        tv_feed_second_title.visible()
+        tv_feed_second_title.text = name
     }
 
     override fun onResume() {

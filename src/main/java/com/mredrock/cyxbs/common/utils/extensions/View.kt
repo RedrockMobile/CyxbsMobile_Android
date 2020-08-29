@@ -1,8 +1,7 @@
 package com.mredrock.cyxbs.common.utils.extensions
 
+import android.annotation.SuppressLint
 import android.view.View
-import kotlinx.coroutines.*
-import kotlin.coroutines.CoroutineContext
 
 /**
  * Created By jay68 on 2018/8/13.
@@ -18,28 +17,26 @@ fun View.visible() {
 fun View.invisible() {
     visibility = View.INVISIBLE
 }
+
+@SuppressLint("ClickableViewAccessibility")
 fun View.onTouch(
-        context: CoroutineContext = Dispatchers.Main,
         returnValue: Boolean = false,
-        handler: suspend CoroutineScope.(v: View, event: android.view.MotionEvent) -> Unit
+        handler: (v: View, event: android.view.MotionEvent) -> Unit
 ) {
     setOnTouchListener { v, event ->
-        GlobalScope.launch(context, CoroutineStart.DEFAULT) {
-            handler(v, event)
-        }
+        handler(v, event)
         returnValue
     }
 }
+
 fun View.onClick(
-        context: CoroutineContext = Dispatchers.Main,
-        handler: suspend CoroutineScope.(v:View?) -> Unit
+        handler: (v: View?) -> Unit
 ) {
     setOnClickListener { v ->
-        GlobalScope.launch(context, CoroutineStart.DEFAULT) {
-            handler(v)
-        }
+        handler(v)
     }
 }
+
 var View.leftPadding: Int
     inline get() = paddingLeft
     set(value) = setPadding(value, paddingTop, paddingRight, paddingBottom)
