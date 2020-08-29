@@ -41,6 +41,7 @@ class ElectricityFeedFragment : BaseFeedFragment<ChargeViewModel>() {
     private fun init() {
         setAdapter(ElectricityFeedUnboundAdapter())
         setTitle(getString(R.string.electricity_inquire_string))
+        setSecondTitle(getString(R.string.electricity_free_count))
         setOnClickListener {
             context?.doIfLogin(getString(R.string.electricity_inquire_string)) {
                 parentFragmentManager.let {
