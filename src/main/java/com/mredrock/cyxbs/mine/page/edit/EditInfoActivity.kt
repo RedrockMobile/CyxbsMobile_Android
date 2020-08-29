@@ -27,7 +27,6 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.list.listItems
-import com.mredrock.cyxbs.common.component.CommonDialogFragment
 import com.mredrock.cyxbs.common.config.DIR_PHOTO
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.service.account.IAccountService
@@ -135,11 +134,7 @@ class EditInfoActivity(override val isFragmentActivity: Boolean = false,
                     false,
                     R.drawable.mine_ic_arrow_left,
                     View.OnClickListener {
-                        if (checkIfInfoChange()) {
-                            showExit()
-                        } else {
-                            finishAfterTransition()
-                        }
+                        finishAfterTransition()
                     })
             setTitleLocationAtLeft(true)
         }
@@ -150,14 +145,6 @@ class EditInfoActivity(override val isFragmentActivity: Boolean = false,
         initViewAndData()
 
         setTextChangeListener()
-    }
-
-    override fun onBackPressed() {
-        if (checkIfInfoChange()) {
-            showExit()
-        } else {
-            super.onBackPressed()
-        }
     }
 
     private fun initViewAndData() {
@@ -214,18 +201,13 @@ class EditInfoActivity(override val isFragmentActivity: Boolean = false,
     }
 
     private fun saveInfo() {
-        val nickname = mine_et_nickname.text.toString()
-        val introduction = mine_et_introduce.text.toString()
-        val qq = mine_et_qq.text.toString()
-        val phone = mine_et_phone.text.toString()
+        val nickname = mine_et_nickname.text.toString() ?: ""
+        val introduction = mine_et_introduce.text.toString() ?: ""
+        val qq = mine_et_qq.text.toString() ?: ""
+        val phone = mine_et_phone.text.toString() ?: ""
 
         //数据没有改变，不进行网络请求
         if (!checkIfInfoChange()) {
-            return
-        }
-
-        if (nickname.isEmpty() || introduction.isEmpty() || qq.isEmpty() || phone.isEmpty()) {
-            toast("信息不能为空")
             return
         }
         viewModel.updateUserInfo(nickname, introduction, qq, phone)
@@ -406,19 +388,6 @@ class EditInfoActivity(override val isFragmentActivity: Boolean = false,
         }
     }
 
-    private fun showExit() {
-        val tag = "exit"
-        if (supportFragmentManager.findFragmentByTag(tag) == null) {
-            CommonDialogFragment().apply {
-                initView(
-                        containerRes = R.layout.mine_layout_dialog_edit,
-                        onPositiveClick = { finish() },
-                        onNegativeClick = { dismiss() },
-                        positiveString = "退出"
-                )
-            }.show(supportFragmentManager, tag)
-        }
-    }
 
     private fun showAgree() {
         val materialDialog = Dialog(this)

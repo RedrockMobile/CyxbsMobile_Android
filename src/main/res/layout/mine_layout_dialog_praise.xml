@@ -12,9 +12,7 @@
         android:layout_marginTop="5dp"
         android:layout_marginStart="27dp"
         android:layout_marginEnd="27dp"
-        android:src="@drawable/mine_ic_praise"
-        tools:layout_editor_absoluteX="27dp"
-        tools:layout_editor_absoluteY="16dp" />
+        android:src="@drawable/mine_ic_praise"/>
 
     <TextView
         android:id="@+id/mine_dialog_tv_praise"
@@ -22,8 +20,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:textColor="@color/levelFourFontColor"
-        android:textSize="13sp"
-        tools:layout_editor_absoluteX="107dp"
-        tools:layout_editor_absoluteY="374dp" />
+        android:textSize="13sp"/>
 
 </LinearLayout>

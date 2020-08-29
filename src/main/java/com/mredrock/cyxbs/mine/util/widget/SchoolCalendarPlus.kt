@@ -88,12 +88,6 @@ class SchoolCalendarPlus : SchoolCalendar() {
         } else sb.toString()
     }
 
-    //判断是否是在寒暑假
-    fun isInVacation() : Boolean {
-        val weekOfTerm = super.weekOfTerm
-        return weekOfTerm >= 20 || weekOfTerm < 0
-    }
-
     //是否是上学期（即秋季学期），否则是下学期（春季学期）
     fun isFirstSemester() : Boolean {
         return firstDay[Calendar.MONTH] > 6
