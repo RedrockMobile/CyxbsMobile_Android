@@ -39,6 +39,8 @@
         android:textColor="@color/common_qa_question_item_nickname_color"
         android:textSize="13sp"
         app:layout_constraintBottom_toTopOf="@+id/tv_title"
+        app:layout_constraintEnd_toStartOf="@+id/tv_publish_at"
+        app:layout_constraintHorizontal_bias="0"
         app:layout_constraintStart_toEndOf="@id/iv_avatar"
         app:layout_constraintTop_toTopOf="@id/iv_avatar"
         tools:text="刘童鞋" />

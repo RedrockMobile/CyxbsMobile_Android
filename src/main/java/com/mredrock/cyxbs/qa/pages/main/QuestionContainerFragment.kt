@@ -106,7 +106,7 @@ class QuestionContainerFragment : BaseViewModelFragment<QuestionContainerViewMod
         context?.doIfLogin("提问") {
             QuizActivity.activityStart(this@QuestionContainerFragment, "迎新生", REQUEST_LIST_REFRESH_ACTIVITY)
             activity?.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
-            MobclickAgent.onEvent(requireContext(), CyxbsMob.Event.CLICK_ASK)
+            MobclickAgent.onEvent(context, CyxbsMob.Event.CLICK_ASK)
         }
     }
 
