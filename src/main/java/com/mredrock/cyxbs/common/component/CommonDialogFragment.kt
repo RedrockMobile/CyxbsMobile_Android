@@ -3,6 +3,7 @@ package com.mredrock.cyxbs.common.component
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,6 +14,7 @@ import androidx.fragment.app.DialogFragment
 import com.mredrock.cyxbs.common.R
 import com.mredrock.cyxbs.common.utils.extensions.gone
 import kotlinx.android.synthetic.main.common_dialog.*
+
 
 /**
  * Created by roger on 2020/2/2
@@ -42,9 +44,11 @@ class CommonDialogFragment() : DialogFragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         dialog?.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        val v = inflater.inflate(R.layout.common_dialog, dialog?.window?.findViewById(android.R.id.content) ?: container, false)
         dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-
-        val v = inflater.inflate(R.layout.common_dialog, container, false)
+        val dm = DisplayMetrics()
+        activity?.windowManager?.defaultDisplay?.getMetrics(dm)
+        dialog?.window?.setLayout((dm.widthPixels * 0.75).toInt(), ViewGroup.LayoutParams.WRAP_CONTENT)
         containerRes?.let {
             v.findViewById<FrameLayout>(R.id.common_dialog_container).addView(LayoutInflater.from(context).inflate(it, null))
         }
