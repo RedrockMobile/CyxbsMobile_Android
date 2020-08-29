@@ -8,8 +8,10 @@ import android.content.Context.NOTIFICATION_SERVICE
 import android.graphics.Color
 import androidx.core.app.NotificationCompat
 import com.meituan.android.walle.WalleChannelReader
+import com.mredrock.cyxbs.common.config.DebugDataModel
 import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.debug
+import com.mredrock.cyxbs.common.utils.extensions.runOnUiThread
 import com.umeng.analytics.MobclickAgent
 import com.umeng.commonsdk.UMConfigure
 import com.umeng.commonsdk.statistics.common.DeviceConfig
@@ -18,6 +20,7 @@ import com.umeng.message.PushAgent
 import com.umeng.message.UmengMessageHandler
 import com.umeng.message.entity.UMessage
 import com.umeng.message.inapp.InAppMessageManager
+import java.lang.Exception
 
 
 /**
@@ -39,13 +42,21 @@ fun initUMeng(context: Context) {
     val mPushAgent = PushAgent.getInstance(context)
     //注册推送服务，每次调用register方法都会回调该接口
     mPushAgent.register(object : IUmengRegisterCallback {
+        // 这些回调是在子线程
         override fun onSuccess(deviceToken: String) {
-            //注册成功会返回deviceToken deviceToken是推送消息的唯一标志
-            LogUtils.i("友盟推送注册", "注册成功：deviceToken：-------->  $deviceToken")
+            debug {
+                context.runOnUiThread {
+                    DebugDataModel.umPushDeviceId.value = deviceToken
+                }
+                //注册成功会返回deviceToken deviceToken是推送消息的唯一标志
+                LogUtils.i("友盟推送注册", "注册成功：deviceToken：-------->  $deviceToken")
+            }
         }
 
         override fun onFailure(s: String, s1: String) {
-            LogUtils.e("友盟推送注册", "注册失败：-------->  s:$s,s1:$s1")
+            debug {
+                LogUtils.e("友盟推送注册", "注册失败：-------->  s:$s,s1:$s1")
+            }
         }
     })
     if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
@@ -79,7 +90,7 @@ fun initUMeng(context: Context) {
             }
         }
     }
-//    mPushAgent.setNotificaitonOnForeground(true)
+    mPushAgent.setNotificaitonOnForeground(true)
 //    mPushAgent.setEnableForground(context,true)
     mPushAgent.messageHandler = messageHandler
     InAppMessageManager.getInstance(BaseApp.context).setInAppMsgDebugMode(true)
@@ -87,9 +98,10 @@ fun initUMeng(context: Context) {
         val deviceInfo = arrayOfNulls<String>(2)
         deviceInfo[0] = DeviceConfig.getDeviceIdForGeneral(BaseApp.context)
         deviceInfo[1] = DeviceConfig.getMac(BaseApp.context)
-        LogUtils.d("UM设备测试信息：", """{"device_id":"${deviceInfo[0]}","mac":"${deviceInfo[1]}"}""")
+        val msg = """{"device_id":"${deviceInfo[0]}","mac":"${deviceInfo[1]}"}"""
+        DebugDataModel.umAnalyzeDeviceData.value = msg
+        LogUtils.d("UM设备测试信息：", msg)
     }
-
 }
 //
 ////创建通知渠道
