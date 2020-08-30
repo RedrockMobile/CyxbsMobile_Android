@@ -211,8 +211,8 @@ class EditInfoActivity(override val isFragmentActivity: Boolean = false,
             return
         }
 
-        if (nickname.isEmpty()) {
-            toast("昵称不能为空")
+        if (nickname.isEmpty() || introduction.isEmpty() || qq.isEmpty() || phone.isEmpty()) {
+            toast("信息不能为空")
             return
         }
         viewModel.updateUserInfo(nickname, introduction, qq, phone)
