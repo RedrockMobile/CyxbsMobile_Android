@@ -125,6 +125,7 @@
     <color name="common_mine_about_text_color_up_to_date">#80294169</color>
     <color name="common_mine_about_text_color_blue">#0BCCF0</color>
     <!--    签到部分颜色-->
+    <color name="common_mine_sign_btn_ripple">#0D47A1</color>
     <color name="common_mine_sign_bg_grey">#E1E6F0</color>
     <color name="common_mine_sign_divider_grey">#E1E6F0</color>
     <color name="common_mine_sign_divider_blue">#3A35D2</color>

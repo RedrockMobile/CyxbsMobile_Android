@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <ripple xmlns:android="http://schemas.android.com/apk/res/android"
-    android:color="?attr/colorControlHighlight">
+    android:color="@color/common_mine_sign_btn_ripple">
     <item>
         <shape android:shape="rectangle">
             <!-- 设置矩形的四个角为弧形 -->
