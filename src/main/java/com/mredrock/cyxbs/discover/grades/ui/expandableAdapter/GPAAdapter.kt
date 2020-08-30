@@ -302,7 +302,7 @@ class GPAAdapter(
                 }
                 gpaGraph.setRule(object : AverageRule(list) {
                     override fun mappingRule(old: String): Float {
-                        return 4 - super.mappingRule(old)
+                        return 4.5f - super.mappingRule(old)
                     }
                 })
                 gpaGraph.setData(list)
