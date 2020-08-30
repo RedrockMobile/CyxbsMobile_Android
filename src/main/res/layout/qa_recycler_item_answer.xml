@@ -16,9 +16,10 @@
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/iv_answer_avatar"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
             android:layout_marginTop="18dp"
+            android:padding="5dp"
             android:scaleType="centerCrop"
             android:src="@drawable/common_default_avatar"
             android:transitionName="answer_avatar" />
@@ -81,6 +82,7 @@
                 android:paddingTop="10dp"
                 android:paddingBottom="10dp"
                 android:textColor="@color/common_qa_answer_content_color"
+                android:textIsSelectable="true"
                 android:textSize="14sp"
                 tools:text="是的，公式是没有问题，但是你第三步那个代入方式是错误的，不应该用x的负5次方是的，公式是没有问题，但是你第三步那个代入方式是错误的，不应该是这样" />
 

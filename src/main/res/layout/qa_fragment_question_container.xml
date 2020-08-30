@@ -88,8 +88,8 @@
                     android:layout_marginStart="10dp"
                     android:layout_marginEnd="14dp"
                     android:layout_toEndOf="@id/iv_question_search"
-                    android:paddingTop="12dp"
-                    android:paddingBottom="12dp"
+                    android:paddingTop="14dp"
+                    android:paddingBottom="14dp"
                     android:textColor="@color/common_level_two_font_color"
                     android:textSize="15sp" />
 

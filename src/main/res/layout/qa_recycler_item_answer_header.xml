@@ -66,6 +66,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginEnd="15dp"
         android:textColor="@color/common_qa_answer_list_header_content_color"
+        android:textIsSelectable="true"
         android:textSize="16sp"
         tools:text="雪莉曾与宋茜、刘逸云(Amber)、朴善怜(Luna)和
 郑秀晶（Krysal）组成女子流行演唱组合f(x)，因

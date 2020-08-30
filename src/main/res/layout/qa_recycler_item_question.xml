@@ -66,6 +66,7 @@
         android:gravity="start"
         android:singleLine="true"
         android:textColor="@color/common_level_two_font_color"
+        android:textIsSelectable="true"
         android:textSize="16sp"
         app:layout_constraintEnd_toStartOf="@id/gl_question_end"
         app:layout_constraintStart_toEndOf="@id/gl_question_start"
