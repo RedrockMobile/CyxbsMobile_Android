@@ -33,7 +33,7 @@
 
         <TextView
             android:id="@+id/device_id"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/main_shape_debug_text_bg"
             android:padding="8dp"
@@ -49,7 +49,7 @@
 
         <TextView
             android:id="@+id/umeng_analyzes_device_data"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/main_shape_debug_text_bg"
             android:padding="8dp"
