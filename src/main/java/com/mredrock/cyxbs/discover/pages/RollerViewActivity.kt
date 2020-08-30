@@ -3,9 +3,9 @@ package com.mredrock.cyxbs.discover.pages
 import android.annotation.SuppressLint
 import android.app.ProgressDialog
 import android.content.Context
-import android.os.Build
 import android.os.Bundle
 import android.webkit.WebChromeClient
+import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import com.mredrock.cyxbs.common.ui.BaseActivity
@@ -29,15 +29,16 @@ class RollerViewActivity : BaseActivity() {
         dialog.show()
 
         val url = intent.getStringExtra("URL")
-        discover_web_view.settings.javaScriptEnabled = true
-        discover_web_view.settings.domStorageEnabled = true
-        discover_web_view.settings.useWideViewPort = true
-        discover_web_view.settings.loadWithOverviewMode = true
-        discover_web_view.settings.setSupportZoom(true)
-        discover_web_view.settings.builtInZoomControls = true
-        discover_web_view.settings.displayZoomControls = false
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            discover_web_view.settings.mediaPlaybackRequiresUserGesture = false
+        discover_web_view.settings.apply {
+            javaScriptEnabled = true
+            domStorageEnabled = true
+            useWideViewPort = true
+            loadWithOverviewMode = true
+            setSupportZoom(true)
+            builtInZoomControls = true
+            displayZoomControls = false
+            mixedContentMode = WebSettings.MIXED_CONTENT_ALWAYS_ALLOW
+            mediaPlaybackRequiresUserGesture = false
         }
         discover_web_view.loadUrl(url)
         discover_web_view.webChromeClient = object : WebChromeClient() {
