@@ -3,7 +3,6 @@ package com.mredrock.cyxbs.discover.electricity.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.mredrock.cyxbs.common.bean.isSuccessful
-import com.mredrock.cyxbs.common.config.DISCOVERY_ELECTRIC
 import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.network.exception.RedrockApiException
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
@@ -20,11 +19,26 @@ import com.mredrock.cyxbs.discover.electricity.network.ApiService
 class ChargeViewModel : BaseViewModel() {
     val chargeInfo: LiveData<ElecInf> = MutableLiveData()
     private val service: ApiService by lazy {
-        ApiGenerator.getApiService(DISCOVERY_ELECTRIC, ApiService::class.java)
+        ApiGenerator.getApiService(ApiService::class.java)
     }
 
     fun getCharge(building: String, room: String) {
         service.getElectricityInfo(building, room)
+                .map {
+                    if (it.isSuccessful) {
+                        it.elecInf
+                    } else {
+                        throw RedrockApiException(it.info, it.status)
+                    }
+                }
+                .setSchedulers()
+                .safeSubscribeBy {
+                    (chargeInfo as MutableLiveData).value = it
+                }.lifeCycle()
+    }
+
+    fun preGetCharge() {
+        service.getElectricityInfo()
                 .map {
                     if (it.isSuccessful) {
                         it.elecInf

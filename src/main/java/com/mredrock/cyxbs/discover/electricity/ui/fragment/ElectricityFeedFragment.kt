@@ -13,6 +13,7 @@ import com.mredrock.cyxbs.common.utils.extensions.doIfLogin
 import com.mredrock.cyxbs.common.utils.extensions.runOnUiThread
 import com.mredrock.cyxbs.discover.electricity.adapter.ElectricityFeedAdapter
 import com.mredrock.cyxbs.discover.electricity.adapter.ElectricityFeedUnboundAdapter
+import com.mredrock.cyxbs.discover.electricity.bean.ElecInf
 import com.mredrock.cyxbs.discover.electricity.config.*
 import com.mredrock.cyxbs.discover.electricity.viewmodel.ChargeViewModel
 import com.mredrock.cyxbs.electricity.R
@@ -39,6 +40,10 @@ class ElectricityFeedFragment : BaseFeedFragment<ChargeViewModel>() {
 
 
     private fun init() {
+        if (ServiceManager.getService(IAccountService::class.java).getVerifyService().isLogin()) {
+            //首先无参数请求电费，后端返回上一次绑定的数据
+            viewModel.preGetCharge()
+        }
         setAdapter(ElectricityFeedUnboundAdapter())
         setTitle(getString(R.string.electricity_inquire_string))
         setSecondTitle(getString(R.string.electricity_free_count))
@@ -55,20 +60,23 @@ class ElectricityFeedFragment : BaseFeedFragment<ChargeViewModel>() {
             }
         }
         viewModel.chargeInfo.observe {
-            if (it == null || it.isEmpty()) {
-                setSubtitle("")
-            } else {
-                setSubtitle(it.recordTime.plus("抄表"))
+            handleData(it)
+        }
+    }
 
-            }
+    private fun handleData(it: ElecInf?) {
+        if (it == null || it.isEmpty()) {
+            setSubtitle("")
+        } else {
+            setSubtitle(it.recordTime.plus("抄表"))
 
-            val adapter = getAdapter()
-            if (adapter is ElectricityFeedAdapter) {
-                adapter.refresh(it)
-            } else {
-                setAdapter(ElectricityFeedAdapter(it))
-            }
+        }
 
+        val adapter = getAdapter()
+        if (adapter is ElectricityFeedAdapter) {
+            adapter.refresh(it)
+        } else {
+            setAdapter(ElectricityFeedAdapter(it))
         }
     }
 
