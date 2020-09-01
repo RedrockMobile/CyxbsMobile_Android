@@ -16,7 +16,10 @@ import com.mredrock.cyxbs.account.utils.UserInfoEncryption
 import com.mredrock.cyxbs.common.config.*
 import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.network.exception.RedrockApiException
+import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.service.account.*
+import com.mredrock.cyxbs.common.service.discover.electricity.IElectricityService
+import com.mredrock.cyxbs.common.service.discover.volunteer.IVolunteerService
 import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
 import com.mredrock.cyxbs.common.utils.extensions.editor
 import com.mredrock.cyxbs.common.utils.extensions.runOnUiThread
@@ -265,15 +268,9 @@ internal class AccountService : IAccountService {
             context.defaultSharedPreferences.editor {
                 putString(SP_KEY_USER_V2, "")
                 putLong(SP_KEY_REFRESH_TOKEN_EXPIRED, 0)
-                //todo 以下三个来自志愿服务，退出登录需要删除，很不规范，之后重构志愿服务
-                remove("account")
-                remove("password")
-                remove("uid")
-                //todo 以下三个来自电费，退出登录后需要删除，很不规范，这版实在来不及重新设计了
-                remove("select_building_head_position")
-                remove("select_building_foot_position")
-                remove("select_room_position")
             }
+            ServiceManager.getService(IElectricityService::class.java).clearSP()
+            ServiceManager.getService(IVolunteerService::class.java).clearSP()
             user = null
             tokenWrapper = null
             mContext.runOnUiThread {
