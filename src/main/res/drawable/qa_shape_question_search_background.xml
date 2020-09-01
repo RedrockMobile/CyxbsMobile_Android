@@ -4,8 +4,8 @@
     <solid android:color="@color/common_qa_search_layout_color" />
 
     <corners
-        android:topLeftRadius="29dp"
-        android:topRightRadius="29dp"
         android:bottomLeftRadius="29dp"
-        android:bottomRightRadius="29dp" />
+        android:bottomRightRadius="29dp"
+        android:topLeftRadius="29dp"
+        android:topRightRadius="29dp" />
 </shape>

@@ -12,11 +12,9 @@ import com.mredrock.cyxbs.qa.bean.Answer
 import com.mredrock.cyxbs.qa.component.recycler.BaseEndlessRvAdapter
 import com.mredrock.cyxbs.qa.component.recycler.BaseViewHolder
 import com.mredrock.cyxbs.qa.ui.activity.ViewImageActivity
-import com.mredrock.cyxbs.qa.utils.setInvisibleCondition
-import com.mredrock.cyxbs.qa.utils.setPraise
-import com.mredrock.cyxbs.qa.utils.setVisibleCondition
-import com.mredrock.cyxbs.qa.utils.timeDescription
+import com.mredrock.cyxbs.qa.utils.*
 import kotlinx.android.synthetic.main.qa_recycler_item_answer.view.*
+
 
 /**
  * Created By jay68 on 2018/9/30.
@@ -86,7 +84,7 @@ class AnswerListAdapter : BaseEndlessRvAdapter<Answer>(DIFF_CALLBACK) {
                     tv_answer_content.apply {
                         text = context.getString(R.string.qa_answer_photo_count, data.photoUrl.size.toString())
                         setTextColor(ContextCompat.getColor(context, R.color.common_qa_answer_empty_content_color))
-                        setOnClickListener {
+                        setSelectableTextViewClick {
                             ViewImageActivity.activityStart(context, data.photoUrl.toTypedArray(), 0)
                         }
                     }
@@ -94,8 +92,9 @@ class AnswerListAdapter : BaseEndlessRvAdapter<Answer>(DIFF_CALLBACK) {
                     tv_answer_content.apply {
                         setTextColor(ContextCompat.getColor(context, R.color.common_qa_answer_content_color))
                         text = data.content
-                        setOnClickListener(null)
-                        isClickable = false
+                        setSelectableTextViewClick {
+                            onItemClickListener?.invoke(data)
+                        }
                     }
                 }
                 tv_answer_publish_at.text = timeDescription(System.currentTimeMillis(), data.createdAt)
@@ -105,4 +104,5 @@ class AnswerListAdapter : BaseEndlessRvAdapter<Answer>(DIFF_CALLBACK) {
             }
         }
     }
+
 }

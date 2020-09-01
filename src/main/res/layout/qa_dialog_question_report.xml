@@ -8,10 +8,10 @@
         android:id="@+id/tv_report"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@drawable/qa_shape_question_more_dialog_head_background"
         android:gravity="center"
         android:paddingTop="16dp"
         android:paddingBottom="18dp"
-        android:background="@drawable/qa_shape_question_more_dialog_head_background"
         android:text="@string/qa_question_report_text"
         android:textColor="@color/common_qa_question_report_text_background_color"
         android:textSize="14sp" />

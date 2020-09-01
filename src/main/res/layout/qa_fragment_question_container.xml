@@ -15,7 +15,8 @@
         android:background="@color/common_transparent_background"
         app:elevation="0dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
         <com.google.android.material.appbar.CollapsingToolbarLayout
             android:id="@+id/collapsing_toolbar_layout"
@@ -66,8 +67,8 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:layout_marginEnd="40dp"
                 android:layout_marginStart="20dp"
+                android:layout_marginEnd="40dp"
                 android:layout_weight="1"
                 android:background="@drawable/qa_shape_question_search_background">
 
@@ -88,8 +89,8 @@
                     android:layout_marginStart="10dp"
                     android:layout_marginEnd="14dp"
                     android:layout_toEndOf="@id/iv_question_search"
-                    android:paddingTop="14dp"
-                    android:paddingBottom="14dp"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp"
                     android:textColor="@color/common_level_two_font_color"
                     android:textSize="15sp" />
 
@@ -123,9 +124,9 @@
             app:tabIndicatorFullWidth="false"
             app:tabIndicatorHeight="3dp"
             app:tabMode="scrollable"
-            app:tabTextAppearance="@style/TabLayout.TabText"
             app:tabRippleColor="@android:color/transparent"
             app:tabSelectedTextColor="@color/common_qa_tab_selected_color"
+            app:tabTextAppearance="@style/TabLayout.TabText"
             app:tabTextColor="@color/common_qa_tab_unselected_color" />
 
         <androidx.viewpager.widget.ViewPager

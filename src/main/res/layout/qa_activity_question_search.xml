@@ -25,25 +25,25 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginStart="20dp"
-            android:transitionName="ImageView_Search"
-            android:src="@drawable/qa_ic_question_search" />
+            android:src="@drawable/qa_ic_question_search"
+            android:transitionName="ImageView_Search" />
 
         <androidx.appcompat.widget.AppCompatEditText
             android:id="@+id/et_question_search"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
+            android:layout_marginEnd="10dp"
             android:layout_toEndOf="@id/iv_question_searching"
             android:background="@null"
             android:hint="@string/qa_search_ed_hint_text"
             android:imeOptions="actionSearch"
-            android:textColorHint="@color/common_qa_common_hint_text_color"
             android:inputType="text"
             android:paddingStart="10dp"
             android:selectAllOnFocus="true"
             android:singleLine="true"
-            android:layout_marginEnd="10dp"
             android:textColor="@color/common_level_three_font_color"
+            android:textColorHint="@color/common_qa_common_hint_text_color"
             android:textSize="16sp" />
     </RelativeLayout>
 
@@ -54,8 +54,8 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="20dp"
         android:text="@string/qa_question_search_cancel"
-        android:textSize="18sp"
         android:textColor="@color/common_level_three_font_color"
+        android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="@+id/rl_question_searching"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/rl_question_searching" />

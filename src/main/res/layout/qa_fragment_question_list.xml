@@ -11,7 +11,7 @@
         android:id="@+id/rv_question_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:overScrollMode="never"
-        android:paddingBottom="20dp"/>
+        android:overScrollMode="never" />
+
 
 </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

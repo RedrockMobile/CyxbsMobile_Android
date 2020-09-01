@@ -9,9 +9,9 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="18dp"
         android:text="@string/qa_question_hot"
-        android:textStyle="bold"
         android:textColor="@color/common_level_three_font_color"
-        android:textSize="20sp" />
+        android:textSize="20sp"
+        android:textStyle="bold" />
 
     <LinearLayout
         android:id="@+id/rl_vp_container"

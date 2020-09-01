@@ -41,8 +41,8 @@
                 android:layout_marginTop="20dp"
                 android:layout_marginEnd="20dp"
                 android:alpha="0.68"
-                android:textIsSelectable="true"
                 android:textColor="@color/common_level_two_font_color"
+                android:textIsSelectable="true"
                 app:layout_constraintEnd_toStartOf="@+id/iv_knowledge"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_knowledge_base_title"
@@ -58,8 +58,8 @@
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="20dp"
                 android:layout_marginBottom="20dp"
-                android:textSize="14.6sp"
                 android:textColor="@color/common_qa_common_hint_text_color"
+                android:textSize="14.6sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_knowledge_base_detail"
@@ -69,8 +69,8 @@
                 android:id="@+id/iv_knowledge"
                 android:layout_width="100dp"
                 android:layout_height="0dp"
-                android:scaleType="centerInside"
                 android:layout_marginEnd="20dp"
+                android:scaleType="centerInside"
                 app:layout_constraintBottom_toBottomOf="@id/tv_knowledge_from"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@id/tv_knowledge_base_title" />
@@ -99,9 +99,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
                 android:layout_marginBottom="4dp"
-                android:textSize="20sp"
                 android:text="@string/qa_search_result_related"
-                android:textColor="@color/common_level_two_font_color" />
+                android:textColor="@color/common_level_two_font_color"
+                android:textSize="20sp" />
         </LinearLayout>
 
 

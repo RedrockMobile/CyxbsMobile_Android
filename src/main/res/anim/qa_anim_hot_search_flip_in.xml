@@ -3,8 +3,8 @@
     android:duration="500"
     android:startOffset="250">
     <translate
-        android:toYDelta="0.0"
-        android:fromYDelta="100.0%p" />
+        android:fromYDelta="100.0%p"
+        android:toYDelta="0.0" />
 
 
 </set>

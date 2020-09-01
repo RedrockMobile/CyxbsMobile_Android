@@ -69,20 +69,20 @@
         android:paddingTop="16dp"
         android:paddingBottom="16dp"
         android:text="@string/qa_report_ignore_text"
-        android:visibility="gone"
         android:textColor="@color/common_button_gradient_start_color"
-        android:textSize="19sp" />
+        android:textSize="19sp"
+        android:visibility="gone" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btn_cancel_report"
         android:layout_width="wrap_content"
-        android:paddingStart="78dp"
-        android:paddingEnd="78dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="16dp"
         android:background="@drawable/qa_shape_main_have_question_btn_background"
         android:gravity="center"
+        android:paddingStart="78dp"
+        android:paddingEnd="78dp"
         android:text="@string/qa_report_dialog_cancel_text"
         android:textColor="@color/common_white_font_color"
         android:textSize="18sp" />
