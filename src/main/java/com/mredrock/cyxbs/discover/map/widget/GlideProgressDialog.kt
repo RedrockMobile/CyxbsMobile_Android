@@ -4,8 +4,6 @@ import android.app.Activity
 import android.content.Context
 import android.view.KeyEvent
 
-//转圈圈的弹窗
-
 object GlideProgressDialog {
     private var dialog: CustomProgressDialog? = null
 

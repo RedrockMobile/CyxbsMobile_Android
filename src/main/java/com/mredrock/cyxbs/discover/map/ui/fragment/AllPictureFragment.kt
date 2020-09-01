@@ -109,18 +109,7 @@ class AllPictureFragment : BaseFragment() {
         })
 
         map_tv_all_picture_share.setOnClickListener {
-            context?.doIfLogin("分享") {
-                doPermissionAction(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA) {
-                    reason = BaseApp.context.resources.getString(R.string.map_require_permission_tips)
-                    doAfterGranted {
-                        uploadPicture()
-                    }
-                    doAfterRefused {
-                        uploadPicture()
-                    }
-                }
-            }
-
+            context?.let { it1 -> viewModel.sharePicture(it1, this) }
         }
 
     }
@@ -136,62 +125,9 @@ class AllPictureFragment : BaseFragment() {
     }
 
 
-    /**
-     * 上传图片
-     */
 
-    fun uploadPicture() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (BaseApp.context.checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED ||
-                    BaseApp.context.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED ||
-                    BaseApp.context.checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED
-            ) {
-                CyxbsToast.makeText(BaseApp.context, BaseApp.context.resources.getString(R.string.map_no_permission_store), Toast.LENGTH_LONG).show()
-                return
-            }
-        }
-        context?.let {
-            MapDialog.show(it, BaseApp.context.getString(R.string.map_share_picture_title), BaseApp.context.resources.getString(R.string.map_share_picture), object : OnSelectListener {
-            override fun onDeny() {
-            }
 
-            override fun onPositive() {
-                selectPic()
-            }
-        })
-        }
-    }
 
-    override fun onActivityResult(
-            requestCode: Int,
-            resultCode: Int,
-            data: Intent?
-    ) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == 11 && resultCode == Activity.RESULT_OK) {
-            val selectedImage = data!!.data
-            val filePathColumn =
-                    arrayOf(MediaStore.Images.Media.DATA)
-            val cursor: Cursor? =
-                    selectedImage?.let { context?.contentResolver?.query(it, filePathColumn, null, null, null) }
-            cursor?.moveToFirst()
-            val columnIndex = cursor?.getColumnIndex(filePathColumn[0])
-            val imgPath = columnIndex?.let { cursor.getString(it) }
-            cursor?.close()
-            /**
-             * 上传图片
-             */
-            context?.let { ProgressDialog.show(it, BaseApp.context.resources.getString(R.string.map_upload_picture_running), BaseApp.context.resources.getString(R.string.map_please_a_moment_text), false) }
-            context?.let { viewModel.uploadPicture(imgPath, it) }
-        }
-    }
 
-    private fun selectPic() {
-        val galleryIntent = Intent(
-                Intent.ACTION_PICK,
-                MediaStore.Images.Media.EXTERNAL_CONTENT_URI
-        )
-        startActivityForResult(galleryIntent, 11)
-    }
 
 }

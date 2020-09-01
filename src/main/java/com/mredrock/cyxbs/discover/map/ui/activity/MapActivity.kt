@@ -1,9 +1,14 @@
 package com.mredrock.cyxbs.discover.map.ui.activity
 
 import android.annotation.SuppressLint
+import android.app.Activity
+import android.content.Intent
+import android.database.Cursor
 import android.os.Bundle
+import android.provider.MediaStore
 import androidx.lifecycle.Observer
 import com.alibaba.android.arouter.facade.annotation.Route
+import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.config.COURSE_POS_TO_MAP
 import com.mredrock.cyxbs.common.config.DISCOVER_MAP
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
@@ -155,5 +160,29 @@ class MapActivity : BaseViewModelActivity<MapViewModel>() {
             return false
         }
         return true
+    }
+
+    override fun onActivityResult(
+            requestCode: Int,
+            resultCode: Int,
+            data: Intent?
+    ) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == 11 && resultCode == Activity.RESULT_OK) {
+            val selectedImage = data!!.data
+            val filePathColumn =
+                    arrayOf(MediaStore.Images.Media.DATA)
+            val cursor: Cursor? =
+                    selectedImage?.let { contentResolver?.query(it, filePathColumn, null, null, null) }
+            cursor?.moveToFirst()
+            val columnIndex = cursor?.getColumnIndex(filePathColumn[0])
+            val imgPath = columnIndex?.let { cursor.getString(it) }
+            cursor?.close()
+            /**
+             * 上传图片
+             */
+            ProgressDialog.show(this, BaseApp.context.resources.getString(R.string.map_upload_picture_running), BaseApp.context.resources.getString(R.string.map_please_a_moment_text), false)
+            viewModel.uploadPicture(imgPath, this)
+        }
     }
 }

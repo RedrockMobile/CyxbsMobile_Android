@@ -1,28 +1,31 @@
 package com.mredrock.cyxbs.discover.map.viewmodel
 
+import android.Manifest
+import android.app.Activity
 import android.content.Context
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.os.Build
+import android.provider.MediaStore
 import android.widget.Toast
 import androidx.databinding.ObservableArrayList
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.bean.isSuccessful
+import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.network.CommonApiService
 import com.mredrock.cyxbs.common.utils.down.params.DownMessageParams
-import com.mredrock.cyxbs.common.utils.extensions.doOnErrorWithDefaultErrorHandler
-import com.mredrock.cyxbs.common.utils.extensions.mapOrThrowApiException
-import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
-import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
+import com.mredrock.cyxbs.common.utils.extensions.*
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.discover.map.R
 import com.mredrock.cyxbs.discover.map.bean.*
 import com.mredrock.cyxbs.discover.map.component.MapToast
 import com.mredrock.cyxbs.discover.map.model.DataSet
 import com.mredrock.cyxbs.discover.map.network.MapApiService
-import com.mredrock.cyxbs.discover.map.widget.MapDialogTips
-import com.mredrock.cyxbs.discover.map.widget.OnSelectListenerTips
-import com.mredrock.cyxbs.discover.map.widget.ProgressDialog
+import com.mredrock.cyxbs.discover.map.widget.*
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -435,6 +438,49 @@ class MapViewModel : BaseViewModel() {
                     }
                 }
 
+    }
+
+    fun selectPic(activity: Activity) {
+        val galleryIntent = Intent(
+                Intent.ACTION_PICK,
+                MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+        )
+        activity.startActivityForResult(galleryIntent, 11)
+    }
+
+    fun sharePicture(context: Context, fragment: Fragment){
+        context.doIfLogin("分享") {
+            fragment.doPermissionAction(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA) {
+                reason = BaseApp.context.resources.getString(R.string.map_require_permission_tips)
+                doAfterGranted {
+                    requireSharePermission(context, fragment)
+                }
+                doAfterRefused {
+                    requireSharePermission(context, fragment)
+                }
+            }
+        }
+    }
+    private fun requireSharePermission(context: Context, fragment: Fragment) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (BaseApp.context.checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED ||
+                    BaseApp.context.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED ||
+                    BaseApp.context.checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED
+            ) {
+                CyxbsToast.makeText(BaseApp.context, BaseApp.context.resources.getString(R.string.map_no_permission_store), Toast.LENGTH_LONG).show()
+                return
+            }
+        }
+        context.let {
+            MapDialog.show(it, BaseApp.context.resources.getString(R.string.map_share_picture_title), BaseApp.context.resources.getString(R.string.map_share_picture), object : OnSelectListener {
+                override fun onDeny() {
+                }
+
+                override fun onPositive() {
+                    fragment.activity?.let { it1 -> selectPic(it1) }
+                }
+            })
+        }
     }
 
 }
