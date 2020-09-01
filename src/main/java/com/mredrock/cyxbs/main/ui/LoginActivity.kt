@@ -107,8 +107,18 @@ class LoginActivity : BaseViewModelActivity<LoginViewModel>(), EventBusLifecycle
                 CyxbsToast.makeText(this, R.string.main_user_agreement_title, Toast.LENGTH_SHORT).show()
             } else {
                 ServiceManager.getService(IAccountService::class.java).getVerifyService().loginByTourist()
-                this.startActivity(Intent(this, MainActivity::class.java))
-                finish()
+                //如果是点击退出按钮到达的登录页那么就默认启动mainActivity，或者唤起登录页的Activity是MainActivity就默认启动
+                if (isExitLogin != null && isExitLogin!!) {
+                    startActivity(Intent(this, MainActivity::class.java))
+                    finish()
+                } else {
+                    if (targetActivity != null) {
+                        startActivity(Intent(this, targetActivity))
+                        finish()
+                    } else {
+                        finish()
+                    }
+                }
             }
         }
     }
