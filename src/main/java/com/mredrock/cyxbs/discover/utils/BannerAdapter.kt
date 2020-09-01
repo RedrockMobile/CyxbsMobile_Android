@@ -36,7 +36,7 @@ class BannerAdapter(private val context: Context, private val viewPager: ViewPag
 
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        val url = if(urlList.size != 0) urlList[position % urlList.size] else null
+        val url = if (urlList.size != 0) urlList[position % urlList.size] else null
         Glide.with(context)
                 .load(url?.picture_url)
                 .apply(RequestOptions()

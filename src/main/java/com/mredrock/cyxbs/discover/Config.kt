@@ -8,8 +8,10 @@ package com.mredrock.cyxbs.discover
 
 //sharedPreference
 const val SP_HIDING_DISCOVER = "discover_hiding"
+
 //sharedPreference_key
 const val KEY_SP_HIDING_DISCOVER = "hide_num_"
+
 //检查是否更新key
 const val KEY_SP_HIDING_DISCOVER_UPDATE = "hiding_update"
 

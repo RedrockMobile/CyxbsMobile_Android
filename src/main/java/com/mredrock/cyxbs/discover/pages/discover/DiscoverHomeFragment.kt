@@ -1,6 +1,5 @@
 package com.mredrock.cyxbs.discover.pages.discover
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Point
 import android.os.Build
@@ -22,9 +21,15 @@ import androidx.viewpager2.widget.ViewPager2
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
 import com.mredrock.cyxbs.common.component.CyxbsToast
-import com.mredrock.cyxbs.common.config.*
+import com.mredrock.cyxbs.common.config.DISCOVER_ENTRY
+import com.mredrock.cyxbs.common.config.DISCOVER_NEWS
+import com.mredrock.cyxbs.common.config.DISCOVER_NEWS_ITEM
+import com.mredrock.cyxbs.common.config.MINE_CHECK_IN
 import com.mredrock.cyxbs.common.event.CurrentDateInformationEvent
 import com.mredrock.cyxbs.common.mark.EventBusLifecycleSubscriber
+import com.mredrock.cyxbs.common.service.ServiceManager
+import com.mredrock.cyxbs.common.service.discover.electricity.IElectricityService
+import com.mredrock.cyxbs.common.service.discover.volunteer.IVolunteerService
 import com.mredrock.cyxbs.common.ui.BaseViewModelFragment
 import com.mredrock.cyxbs.common.utils.extensions.doIfLogin
 import com.mredrock.cyxbs.discover.R
@@ -184,8 +189,8 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>(), Eve
     }
 
     private fun initFeeds() {
-        addFeedByRoute(DISCOVER_ELECTRICITY_FEED)
-        addFeedByRoute(DISCOVER_VOLUNTEER_FEED)
+        addFeedFragment(ServiceManager.getService(IElectricityService::class.java).getElectricityFeed())
+        addFeedFragment(ServiceManager.getService(IVolunteerService::class.java).getVolunteerFeed())
         //处理手机屏幕过长导致feed无法填充满下方的情况
         ll_discover_feeds.post {
             context?.let {
@@ -196,10 +201,6 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>(), Eve
 
         }
 
-    }
-
-    private fun addFeedByRoute(route: String) {
-        addFeedFragment(ARouter.getInstance().build(route).navigation() as Fragment)
     }
 
     private fun addFeedFragment(fragment: Fragment) {

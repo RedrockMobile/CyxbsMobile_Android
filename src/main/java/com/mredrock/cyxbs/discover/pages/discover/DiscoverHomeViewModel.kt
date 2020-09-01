@@ -8,9 +8,9 @@ import com.mredrock.cyxbs.common.utils.extensions.mapOrThrowApiException
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
+import com.mredrock.cyxbs.discover.bean.NewsListItem
 import com.mredrock.cyxbs.discover.network.RollerViewInfo
 import com.mredrock.cyxbs.discover.network.Services
-import com.mredrock.cyxbs.discover.news.bean.NewsListItem
 import io.reactivex.Observable
 import io.reactivex.disposables.Disposable
 import java.util.concurrent.TimeUnit

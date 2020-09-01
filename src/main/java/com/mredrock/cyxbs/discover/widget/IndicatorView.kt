@@ -1,14 +1,11 @@
 package com.mredrock.cyxbs.discover.widget
 
 import android.animation.ObjectAnimator
-import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
-import android.os.Build
 import android.util.AttributeSet
 import android.view.View
-import androidx.annotation.RequiresApi
 import com.mredrock.cyxbs.discover.R
 
 /**

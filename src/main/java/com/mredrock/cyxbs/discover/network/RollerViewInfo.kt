@@ -14,7 +14,7 @@ class RollerViewInfo : Serializable {
      * keyword : test
      */
 
-    var picture_url: String? = null 
+    var picture_url: String? = null
     var picture_goto_url: String? = null
     var keyword: String? = null
 }

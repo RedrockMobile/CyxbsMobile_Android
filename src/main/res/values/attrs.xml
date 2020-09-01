@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
 
 
-    <declare-styleable name="MyImageView" >
+    <declare-styleable name="MyImageView">
         <attr name="roundWidth" format="dimension" />
         <attr name="roundHeight" format="dimension" />
     </declare-styleable>
