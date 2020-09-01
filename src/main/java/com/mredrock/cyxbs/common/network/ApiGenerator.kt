@@ -6,6 +6,7 @@ import com.mredrock.cyxbs.common.config.END_POINT_REDROCK
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.service.account.IAccountService
 import com.mredrock.cyxbs.common.service.account.IUserStateService
+import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.takeIfNoException
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
@@ -45,6 +46,7 @@ object ApiGenerator {
             }
         }
         token = accountService.getUserTokenService().getToken()
+        LogUtils.d("tokenTag", token)
         refreshToken = accountService.getUserTokenService().getRefreshToken()
         retrofit = Retrofit.Builder().apply {
             this.defaultConfig()
