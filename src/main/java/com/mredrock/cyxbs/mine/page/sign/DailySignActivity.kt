@@ -158,6 +158,7 @@ class DailySignActivity(override val viewModelClass: Class<DailyViewModel> = Dai
         mine_store_rv.addItemDecoration(SpaceDecoration(dp2px(8f)))
         mine_store_my_product.setOnClickListener {
             startActivity<MyProductActivity>()
+            overridePendingTransition(R.anim.mine_slide_in_from_bottom_with_bezier, R.anim.mine_scale_fade_out_with_bezier)
         }
     }
 

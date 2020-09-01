@@ -49,4 +49,9 @@ class MyProductActivity(override val isFragmentActivity: Boolean = true) : BaseA
             window.statusBarColor = color
         }
     }
+
+    override fun finish() {
+        super.finish()
+        overridePendingTransition(R.anim.mine_scale_fade_in_with_bezier, R.anim.mine_slide_fade_out_to_bottom_with_bezier)
+    }
 }
