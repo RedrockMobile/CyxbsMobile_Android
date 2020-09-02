@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="emptyroom_custom" parent="Widget.Design.TabLayout">
+        <item name="tabPaddingStart">9dp</item>
+        <item name="tabPaddingEnd">9dp</item>
+    </style>
+</resources>
