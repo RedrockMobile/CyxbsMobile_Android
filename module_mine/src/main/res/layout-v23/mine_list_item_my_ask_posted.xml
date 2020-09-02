@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="130dp"
+    android:foreground="?android:selectableItemBackground"
+    android:background="@color/common_secondary_window_background"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <TextView
+        android:id="@+id/mine_ask_posted_tv_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:textSize="15sp"
+        android:textColor="@color/common_level_two_font_color"
+        android:layout_marginStart="18dp"
+        android:layout_marginTop="25dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="这道题不好做" />
+
+    <TextView
+        android:id="@+id/mine_ask_posted_tv_description"
+        android:layout_width="0dp"
+        android:textColor="@color/common_mine_list_item_tv_content"
+        android:textSize="15sp"
+        android:maxLines="2"
+        android:ellipsize="end"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="9dp"
+        app:layout_constraintEnd_toEndOf="@+id/mine_ask_posted_tv_state"
+        app:layout_constraintStart_toStartOf="@+id/mine_ask_posted_tv_title"
+        app:layout_constraintTop_toBottomOf="@+id/mine_ask_posted_tv_title"
+        tools:text="我在沈阳sssssssssssssssssssssssssssssssssssssssssssssssssssssss的放子大范德萨分" />
+
+    <TextView
+        android:id="@+id/mine_ask_posted_tv_disappear_at"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="11sp"
+        android:textColor="@color/common_mine_list_item_tv_disappear_at"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/mine_ask_posted_tv_description"
+        app:layout_constraintTop_toBottomOf="@+id/mine_ask_posted_tv_description"
+        tools:text="2019.12.1" />
+
+    <ImageView
+        android:id="@+id/mine_imageview2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="50dp"
+        android:src="@drawable/mine_ic_sign_diamond"
+        app:layout_constraintBottom_toBottomOf="@+id/mine_ask_posted_tv_state"
+        app:layout_constraintEnd_toStartOf="@+id/mine_ask_posted_tv_state"
+        app:layout_constraintTop_toTopOf="@+id/mine_ask_posted_tv_state" />
+
+    <TextView
+        android:id="@+id/mine_ask_posted_tv_integral"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:alpha="0.67"
+        android:layout_marginStart="4dp"
+        android:textColor="@color/common_qa_question_bottom_count_color"
+        android:textSize="11sp"
+        app:layout_constraintBottom_toBottomOf="@+id/mine_ask_posted_tv_disappear_at"
+        app:layout_constraintEnd_toStartOf="@+id/mine_ask_posted_tv_state"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/mine_imageview2"
+        app:layout_constraintTop_toTopOf="@+id/mine_ask_posted_tv_state"
+        tools:text="20" />
+
+    <TextView
+        android:id="@+id/mine_ask_posted_tv_state"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="20dp"
+        android:textSize="11sp"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp"
+        android:paddingTop="3dp"
+        android:paddingBottom="3dp"
+        android:background="@drawable/mine_shape_round_corner_brown"
+        app:layout_constraintBottom_toBottomOf="@+id/mine_ask_posted_tv_disappear_at"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:text="未解决" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:alpha="0.3"
+        android:background="@color/common_sever_view_color"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

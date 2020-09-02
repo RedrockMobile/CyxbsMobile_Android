@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/common_secondary_window_background"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <TextView
+        android:id="@+id/mine_answer_posted_tv_content"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:maxLines="2"
+        android:textColor="@color/common_mine_list_item_tv_content"
+        android:textSize="15sp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="15dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginEnd="10dp"
+        tools:text="ssssssssssssssssssssssssssssssssssssss的放子大范德萨分" />
+
+    <TextView
+        android:id="@+id/mine_answer_posted_tv_disappear_at"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="16dp"
+        android:textColor="@color/common_mine_list_item_tv_disappear_at"
+        android:textSize="11sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/mine_answer_posted_tv_content"
+        app:layout_constraintTop_toBottomOf="@+id/mine_answer_posted_tv_content"
+        tools:text="2019.12.1" />
+
+    <ImageView
+        android:id="@+id/mine_imageview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="50dp"
+        android:src="@drawable/mine_ic_sign_diamond"
+        app:layout_constraintBottom_toBottomOf="@+id/mine_answer_posted_tv_state"
+        app:layout_constraintEnd_toStartOf="@+id/mine_answer_posted_tv_state"
+        app:layout_constraintTop_toTopOf="@+id/mine_answer_posted_tv_state" />
+
+    <TextView
+        android:id="@+id/mine_answer_posted_tv_integral"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:alpha="0.67"
+        android:layout_marginStart="4dp"
+        android:textColor="@color/common_qa_question_bottom_count_color"
+        android:textSize="11sp"
+        app:layout_constraintBottom_toBottomOf="@+id/mine_answer_posted_tv_state"
+        app:layout_constraintEnd_toStartOf="@+id/mine_answer_posted_tv_state"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/mine_imageview"
+        app:layout_constraintTop_toTopOf="@+id/mine_answer_posted_tv_state"
+        tools:text="20" />
+
+    <TextView
+        android:id="@+id/mine_answer_posted_tv_state"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="20dp"
+        android:background="@drawable/mine_shape_round_corner_brown"
+        android:paddingStart="10dp"
+        android:paddingTop="3dp"
+        android:paddingEnd="10dp"
+        android:textColor="@color/common_mine_list_item_btn_text_color_accept"
+        android:paddingBottom="3dp"
+        android:textSize="11sp"
+        app:layout_constraintBottom_toBottomOf="@+id/mine_answer_posted_tv_disappear_at"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/mine_answer_posted_tv_disappear_at"
+        tools:text="未采纳" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:alpha="0.3"
+        android:background="@color/common_sever_view_color"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
