@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          xmlns:tools="http://schemas.android.com/tools"
+          package="com.mredrock.cyxbs.schoolcar">
+
+    <application tools:ignore="GoogleAppIndexingWarning">
+        <activity android:name="com.mredrock.cyxbs.discover.schoolcar.SchoolCarActivity"
+            android:launchMode="singleTop"/>
+        <meta-data
+            android:name="com.amap.api.v2.apikey"
+            android:value="${amap_apikey}"/>
+
+        <service android:name="com.amap.api.location.APSService" />
+    </application>
+
+</manifest>
