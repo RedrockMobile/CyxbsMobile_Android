@@ -299,7 +299,7 @@ class CourseContainerEntryFragment : BaseViewModelFragment<CoursesViewModel>(), 
     }
 
     private fun loadViewPager() {
-        MobclickAgent.onEvent(requireContext(),CyxbsMob.Event.COURSE_SHOW)
+        MobclickAgent.onEvent(context,CyxbsMob.Event.COURSE_SHOW)
         inflateView.vp.adapter = mScheduleAdapter
         tab_layout.setupWithViewPager(inflateView.vp)
         viewModel.nowWeek.value?.let { nowWeek ->

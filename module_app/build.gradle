@@ -22,10 +22,9 @@ android {
         applicationId "com.mredrock.cyxbs"
         minSdkVersion build_versions.min_sdk
         targetSdkVersion build_versions.target_sdk
-        versionCode 60
-        versionName "6.0.2"
+        versionCode version_code
+        versionName version_name
         multiDexEnabled true
-
         // LPhotoPicker
         renderscriptTargetApi build_versions.target_sdk
         renderscriptSupportModeEnabled true
@@ -159,6 +158,16 @@ dependencies {
         implementation project(':module_course')
         implementation project(':module_qa')
         implementation project(':module_discover')
+        implementation project(':module_noclass')
+        implementation project(':module_map')
+        implementation project(':module_othercourse')
+        implementation project(':module_calendar')
+        implementation project(':module_electricity')
+        implementation project(':module_emptyroom')
+        implementation project(':module_grades')
+        implementation project(':module_news')
+        implementation project(':module_schoolcar')
+        implementation project(':module_volunteer')
         implementation project(':module_mine')
         implementation project(':module_widget')
         implementation project(':module_redrock_home')
