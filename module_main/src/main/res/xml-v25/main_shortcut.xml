@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+    <shortcut
+        android:enabled="true" 
+        android:icon="@drawable/main_ic_stu_schedule"
+        android:shortcutDisabledMessage="@string/main_shortcut_cancel"
+        android:shortcutId="course"
+        android:shortcutLongLabel="@string/main_course_long_name"
+        android:shortcutShortLabel="@string/main_course_short_name">
+
+    <intent
+        android:action="com.mredrock.cyxbs.action.COURSE"
+        android:targetClass="com.mredrock.cyxbs.main.ui.MainActivity"
+        android:targetPackage="com.mredrock.cyxbs" />
+    <categories android:name="android.shortcut.conversation" />
+    </shortcut>
+
+    <shortcut
+        android:enabled="true"
+        android:icon="@drawable/main_ic_grade"
+        android:shortcutDisabledMessage="@string/main_shortcut_cancel"
+        android:shortcutId="grade"
+        android:shortcutLongLabel="@string/main_grade_long_name"
+        android:shortcutShortLabel="@string/main_grade_short_name">
+
+        <intent
+            android:action="android.intent.action.EXAM"
+            android:targetClass="com.mredrock.cyxbs.discover.grades.ui.main.ContainerActivity"
+            android:targetPackage="com.mredrock.cyxbs" />
+        <categories android:name="android.shortcut.conversation" />
+    </shortcut>
+
+    <shortcut
+        android:enabled="true"
+        android:icon="@drawable/main_ic_school_car"
+        android:shortcutDisabledMessage="@string/main_shortcut_cancel"
+        android:shortcutId="schoolCar"
+        android:shortcutLongLabel="@string/main_school_car_long_name"
+        android:shortcutShortLabel="@string/main_school_car_short_name">
+
+        <intent
+            android:action="android.intent.action.SCHOOLCAR"
+            android:targetClass="com.mredrock.cyxbs.discover.schoolcar.SchoolCarActivity"
+            android:targetPackage="com.mredrock.cyxbs" />
+        <categories android:name="android.shortcut.conversation" />
+    </shortcut>
+
+    <shortcut
+        android:enabled="true"
+        android:icon="@drawable/main_ic_empty_room"
+        android:shortcutDisabledMessage="@string/main_shortcut_cancel"
+        android:shortcutId="emptyRoom"
+        android:shortcutLongLabel="@string/main_empty_room_long_name"
+        android:shortcutShortLabel="@string/main_empty_room_short_name">
+
+        <intent
+            android:action="android.intent.action.EMPTYROOM"
+            android:targetClass="com.mredrock.cyxbs.discover.emptyroom.ui.EmptyRoomActivity"
+            android:targetPackage="com.mredrock.cyxbs" />
+        <categories android:name="android.shortcut.conversation" />
+    </shortcut>
+
+</shortcuts>
