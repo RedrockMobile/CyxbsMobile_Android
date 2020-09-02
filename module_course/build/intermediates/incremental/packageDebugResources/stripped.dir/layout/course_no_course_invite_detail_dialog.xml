@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tool="http://schemas.android.com/tools"
+    android:paddingTop="22dp"
+    android:paddingBottom="44dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/tv_is_free"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:gravity="center_vertical"
+        android:text="@string/course_they_are_free"
+        android:textColor="@color/common_level_two_font_color"
+        android:textStyle="bold"
+        android:textSize="22sp"
+        android:layout_marginStart="16dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+
+    <ImageView
+        android:id="@+id/iv_time"
+        android:layout_width="12dp"
+        android:layout_height="12dp"
+        android:layout_marginEnd="4dp"
+        android:scaleType="fitCenter"
+        app:layout_constraintTop_toTopOf="@+id/tv_time"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_time"
+        app:layout_constraintStart_toStartOf="@+id/tv_is_free"
+        app:layout_constraintVertical_bias="0.5"
+        app:srcCompat="@drawable/course_ic_time" />
+
+    <TextView
+        android:id="@+id/tv_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:text="@string/course_time"
+        android:textColor="@color/common_level_two_font_color"
+        android:textSize="15sp"
+        android:alpha="0.8"
+        app:layout_constraintStart_toEndOf="@+id/iv_time"
+        app:layout_constraintTop_toBottomOf="@+id/tv_is_free" />
+
+    <TextView
+        android:id="@+id/tv_day_of_week"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginLeft="16dp"
+        android:alpha="0.8"
+        android:textColor="@color/common_level_two_font_color"
+        android:textSize="15sp"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_time"
+        app:layout_constraintLeft_toRightOf="@id/tv_time"
+        app:layout_constraintRight_toLeftOf="@id/tv_course_time"
+        app:layout_constraintTop_toTopOf="@+id/tv_time"
+        tool:text="周一" />
+
+    <TextView
+        android:id="@+id/tv_course_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginLeft="8dp"
+        android:alpha="0.8"
+        android:textColor="@color/common_level_two_font_color"
+        android:textSize="15sp"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_day_of_week"
+        app:layout_constraintLeft_toRightOf="@id/tv_day_of_week"
+        app:layout_constraintTop_toTopOf="@+id/tv_day_of_week"
+        tool:text="1~2节" />
+
+
+    <TextView
+        android:id="@+id/tv_specific_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:alpha="0.8"
+        android:textColor="@color/common_level_two_font_color"
+        android:textSize="15sp"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_course_time"
+        app:layout_constraintStart_toEndOf="@+id/tv_course_time"
+        app:layout_constraintTop_toTopOf="@+id/tv_course_time"
+        tool:Text="2:00 ~ 3:40 pm"
+        tool:text="8:00~9:40 am" />
+
+    <TextView
+        android:id="@+id/tv_people"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/course_little_friend"
+        android:textColor="@color/common_level_two_font_color"
+        android:textSize="15sp"
+        android:alpha="0.8"
+        app:layout_constraintStart_toStartOf="@+id/iv_time"
+        app:layout_constraintTop_toBottomOf="@+id/tv_time" />
+
+    <TextView
+        android:id="@+id/tv_people_count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:textColor="@color/common_level_two_font_color"
+        android:textSize="15sp"
+        android:alpha="0.8"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_people"
+        app:layout_constraintStart_toEndOf="@+id/tv_people"
+        app:layout_constraintTop_toTopOf="@+id/tv_people"
+        tool:text="共计21人" />
+
+
+    <com.mredrock.cyxbs.common.component.RedRockAutoWarpView
+        android:id="@+id/rv_people"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginRight="16dp"
+        android:minHeight="16dp"
+        app:horizontalSpacing="8dp"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_people_count"
+        app:verticalsSpacing="8dp" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

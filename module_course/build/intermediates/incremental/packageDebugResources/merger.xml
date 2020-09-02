@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merger version="3" xmlns:ns1="http://schemas.android.com/tools"><dataSet aapt-namespace="http://schemas.android.com/apk/res-auto" config="main$Generated" generated="true" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="/Users/admin/AndroidStudioProjects/CyxbsMobile_Android/module_course/src/main/res"/><source path="/Users/admin/AndroidStudioProjects/CyxbsMobile_Android/module_course/build/generated/res/rs/debug"/><source path="/Users/admin/AndroidStudioProjects/CyxbsMobile_Android/module_course/build/generated/res/resValues/debug"/></dataSet><dataSet aapt-namespace="http://schemas.android.com/apk/res-auto" config="main" generated-set="main$Generated" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="/Users/admin/AndroidStudioProjects/CyxbsMobile_Android/module_course/src/main/res"><file name="course_nest_sc_enter" path="/Users/admin/AndroidStudioProjects/CyxbsMobile_Android/module_course/src/main/res/anim/course_nest_sc_enter.xml" qualifiers="" type="anim"/><file name="course_item_show_anim" path="/Users/admin/AndroidStudioProjects/CyxbsMobile_Android/module_course/src/main/res/anim/course_item_show_anim.xml" qualifiers="" type="anim"/><file name="course_layer_list_container_background" path="/Users/admin/AndroidStudioProjects/CyxbsMobile_Android/module_course/src/main/res/drawable-v23/course_layer_list_container_background.xml" qualifiers="v23" type="drawable"/><file name="course_transaction" path="/Users/admin/AndroidStudioProjects/CyxbsMobile_Android/module_course/src/main/res/transition/course_transaction.xml" qualifiers="" type="transition"/><file name="course_ic_time" path="/Users/admin/AndroidStudioProjects/CyxbsMobile_Android/module_course/src/main/res/drawable-night/course_ic_time.xml" qualifiers="night-v8" type="drawable"/><file name="course_landmark" path="/Users/admin/AndroidStudioProjects/CyxbsMobile_Android/module_course/src/main/res/drawable-night/course_landmark.xml" qualifiers="night-v8" type="drawable"/><file name="course_ic_add_circle_white" path="/Users/admin/AndroidStudioProjects/CyxbsMobile_Android/module_course/src/main/res/drawable/course_ic_add_circle_white.xml" qualifiers="" type="drawable"/><file name="course_layer_list_container_background" path="/Users/admin/AndroidStudioProjects/CyxbsMobile_Android/module_course/src/main/res/drawable/course_layer_list_container_background.xml" qualifiers="" type="drawable"/><file name="course_ic_edit_affair_button" path="/Users/admin/AndroidStudioProjects/CyxbsMobile_Android/module_course/src/main/res/drawable/course_ic_edit_affair_button.xml" qualifiers="" type="drawable"/><file name="course_ic_time_cancel" path="/Users/admin/AndroidStudioProjects/CyxbsMobile_Android/module_course/src/main/res/drawable/course_ic_time_cancel.xml" qualifiers="" type="drawable"/><file name="course_ic_test_temp" path="/Users/admin/AndroidStudioProjects/CyxbsMobile_Android/module_course/src/main/res/drawable/course_ic_test_temp.xml" qualifiers="" type="drawable"/><file name="course_shape_you_might_background" path="/Users/admin/AndroidStudioProjects/CyxbsMobile_Android/module_course/src/main/res/drawable/course_shape_you_might_background.xml" qualifiers="" type="drawable"/><file name="course_ic_cancel" path="/Users/admin/AndroidStudioProjects/CyxbsMobile_Android/module_course/src/main/res/drawable/course_ic_cancel.xml" qualifiers="" type="drawable"/><file name="course_shape_affair_edit_tilte" path="/Users/admin/AndroidStudioProjects/CyxbsMobile_Android/module_course/src/main/res/drawable/course_shape_affair_edit_tilte.xml" qualifiers="" type="drawable"/><file name="course_ic_affair_sure_add" path="/Users/admin/AndroidStudioProjects/CyxbsMobile_Android/module_course/src/main/res/drawable/course_ic_affair_sure_add.xml" qualifiers="" type="drawable"/><file name="course_layer_list_affair_edit_button_background" path="/Users/admin/AndroidStudioProjects/CyxbsMobile_Android/module_course/src/main/res/drawable/course_layer_list_affair_edit_button_background.xml" qualifiers="" type="drawable"/><file name="course_ic_time" path="/Users/admin/AndroidStudioProjects/CyxbsMobile_Android/module_course/src/main/res/drawable/course_ic_time.xml" qualifiers="" type="drawable"/><file name="course_shape_conflict_tips" path="/Users/admin/AndroidStudioProjects/CyxbsMobile_Android/module_course/src/main/res/drawable/course_shape_conflict_tips.xml" qualifiers="" type="drawable"/><file name="course_shape_affair_modify_button_background" path="/Users/admin/AndroidStudioProjects/CyxbsMobile_Android/module_course/src/main/res/drawable/course_shape_affair_modify_button_background.xml" qualifiers="" type="drawable"/><file name="course_shape_course_edit_affair_background" path="/Users/admin/AndroidStudioProjects/CyxbsMobile_Android/module_course/src/main/res/drawable/course_shape_course_edit_affair_background.xml" qualifiers="" type="drawable"/><file name="course_landmark" path="/Users/admin/AndroidStudioProjects/CyxbsMobile_Android/module_course/src/main/res/drawable/course_landmark.xml" qualifiers="" type="drawable"/><file name="course_ic_back" path="/Users/admin/AndroidStudioProjects/CyxbsMobile_Android/module_course/src/main/res/drawable/course_ic_back.xml" qualifiers="" type="drawable"/><file name="course_layer_list_affair_edit_button" path="/Users/admin/AndroidStudioProjects/CyxbsMobile_Android/module_course/src/main/res/drawable/course_layer_list_affair_edit_button.xml" qualifiers="" type="drawable"/><file name="course_shape_course_edit_affair_background_semicircle_4" path="/Users/admin/AndroidStudioProjects/CyxbsMobile_Android/module_course/src/main/res/drawable/course_shape_course_edit_affair_background_semicircle_4.xml" qualifiers="" type="drawable"/><file name="course_shape_affair_delete_button" path="/Users/admin/AndroidStudioProjects/CyxbsMobile_Android/module_course/src/main/res/drawable/course_shape_affair_delete_button.xml" qualifiers="" type="drawable"/><file name="course_ic_forward" path="/Users/admin/AndroidStudioProjects/CyxbsMobile_Android/module_course/src/main/res/drawable/course_ic_forward.xml" qualifiers="" type="drawable"/><file name="course_shape_add_affair_detailed_background" path="/Users/admin/AndroidStudioProjects/CyxbsMobile_Android/module_course/src/main/res/drawable/course_shape_add_affair_detailed_background.xml" qualifiers="" type="drawable"/><file name="course_selector_week_cb_bk" path="/Users/admin/AndroidStudioProjects/CyxbsMobile_Android/module_course/src/main/res/drawable/course_selector_week_cb_bk.xml" qualifiers="" type="drawable"/><file name="course_shape_course_edit_affair_background_semicircle_2" path="/Users/admin/AndroidStudioProjects/CyxbsMobile_Android/module_course/src/main/res/drawable/course_shape_course_edit_affair_background_semicircle_2.xml" qualifiers="" type="drawable"/><file name="course_affair_time_add" path="/Users/admin/AndroidStudioProjects/CyxbsMobile_Android/module_course/src/main/res/layout/course_affair_time_add.xml" qualifiers="" type="layout"/><file name="course_no_course_invite_detail_dialog" path="/Users/admin/AndroidStudioProjects/CyxbsMobile_Android/module_course/src/main/res/layout/course_no_course_invite_detail_dialog.xml" qualifiers="" type="layout"/><file name="course_fragment_course" path="/Users/admin/AndroidStudioProjects/CyxbsMobile_Android/module_course/src/main/res/layout/course_fragment_course.xml" qualifiers="" type="layout"/><file name="course_time_select_auto_warp_item" path="/Users/admin/AndroidStudioProjects/CyxbsMobile_Android/module_course/src/main/res/layout/course_time_select_auto_warp_item.xml" qualifiers="" type="layout"/><file name="course_grid_course_time_item" path="/Users/admin/AndroidStudioProjects/CyxbsMobile_Android/module_course/src/main/res/layout/course_grid_course_time_item.xml" qualifiers="" type="layout"/><file name="course_fragment_course_container" path="/Users/admin/AndroidStudioProjects/CyxbsMobile_Android/module_course/src/main/res/layout/course_fragment_course_container.xml" qualifiers="" type="layout"/><file name="course_load_lottie_anim" path="/Users/admin/AndroidStudioProjects/CyxbsMobile_Android/module_course/src/main/res/layout/course_load_lottie_anim.xml" qualifiers="" type="layout"/><file name="course_student_list_rec_item" path="/Users/admin/AndroidStudioProjects/CyxbsMobile_Android/module_course/src/main/res/layout/course_student_list_rec_item.xml" qualifiers="" type="layout"/><file name="course_week_selected_item_auto_warp" path="/Users/admin/AndroidStudioProjects/CyxbsMobile_Android/module_course/src/main/res/layout/course_week_selected_item_auto_warp.xml" qualifiers="" type="layout"/><file name="course_no_course_invite_item" path="/Users/admin/AndroidStudioProjects/CyxbsMobile_Android/module_course/src/main/res/layout/course_no_course_invite_item.xml" qualifiers="" type="layout"/><file name="course_schedule_item_view" path="/Users/admin/AndroidStudioProjects/CyxbsMobile_Android/module_course/src/main/res/layout/course_schedule_item_view.xml" qualifiers="" type="layout"/><file name="course_course_detail_item" path="/Users/admin/AndroidStudioProjects/CyxbsMobile_Android/module_course/src/main/res/layout/course_course_detail_item.xml" qualifiers="" type="layout"/><file name="course_no_class_invite_schedule" path="/Users/admin/AndroidStudioProjects/CyxbsMobile_Android/module_course/src/main/res/layout/course_no_class_invite_schedule.xml" qualifiers="" type="layout"/><file name="course_affair_detail_item" path="/Users/admin/AndroidStudioProjects/CyxbsMobile_Android/module_course/src/main/res/layout/course_affair_detail_item.xml" qualifiers="" type="layout"/><file name="course_activity_edit_affair" path="/Users/admin/AndroidStudioProjects/CyxbsMobile_Android/module_course/src/main/res/layout/course_activity_edit_affair.xml" qualifiers="" type="layout"/><file name="course_auto_warp_you_might_item" path="/Users/admin/AndroidStudioProjects/CyxbsMobile_Android/module_course/src/main/res/layout/course_auto_warp_you_might_item.xml" qualifiers="" type="layout"/><file name="course_name_list_rec_item" path="/Users/admin/AndroidStudioProjects/CyxbsMobile_Android/module_course/src/main/res/layout/course_name_list_rec_item.xml" qualifiers="" type="layout"/><file name="course_dialog_schedule_detail" path="/Users/admin/AndroidStudioProjects/CyxbsMobile_Android/module_course/src/main/res/layout/course_dialog_schedule_detail.xml" qualifiers="" type="layout"/><file name="course_fragment_remind_select" path="/Users/admin/AndroidStudioProjects/CyxbsMobile_Android/module_course/src/main/res/layout/course_fragment_remind_select.xml" qualifiers="" type="layout"/><file name="course_week_select_rec_item" path="/Users/admin/AndroidStudioProjects/CyxbsMobile_Android/module_course/src/main/res/layout/course_week_select_rec_item.xml" qualifiers="" type="layout"/><file name="course_fragment_time_select" path="/Users/admin/AndroidStudioProjects/CyxbsMobile_Android/module_course/src/main/res/layout/course_fragment_time_select.xml" qualifiers="" type="layout"/><file name="course_fragment_week_select" path="/Users/admin/AndroidStudioProjects/CyxbsMobile_Android/module_course/src/main/res/layout/course_fragment_week_select.xml" qualifiers="" type="layout"/><file name="course_ordinary_schedule" path="/Users/admin/AndroidStudioProjects/CyxbsMobile_Android/module_course/src/main/res/layout/course_ordinary_schedule.xml" qualifiers="" type="layout"/><file name="course_ic_course_type" path="/Users/admin/AndroidStudioProjects/CyxbsMobile_Android/module_course/src/main/res/mipmap-xxhdpi/course_ic_course_type.webp" qualifiers="xxhdpi-v4" type="mipmap"/><file path="/Users/admin/AndroidStudioProjects/CyxbsMobile_Android/module_course/src/main/res/values/colors.xml" qualifiers=""><color name="courseLightBlue">#EEF6FD</color><color name="courseCoursesForenoon">#FF89A5</color><color name="courseCoursesAfternoon">#FFBF7B</color><color name="courseCoursesNight">#81B6FE</color><color name="courseCoursesOther">#bdc3c7</color><color name="courseTabIndicatorColor">#7196FA</color><color name="courseTabText">#999999</color><color name="courseTabTextColorBlack">#666666</color><color name="courseTimeAndWeekDayColor">#7097FA</color></file><file path="/Users/admin/AndroidStudioProjects/CyxbsMobile_Android/module_course/src/main/res/values/red_rock_tips_view.xml" qualifiers=""><declare-styleable name="RedRockTipsView" ns1:ignore="ResourceName">
+        <attr format="color" name="tipsColor"/>
+        <attr format="reference" name="RedRockTipsViewStyle"/>
+    </declare-styleable></file><file path="/Users/admin/AndroidStudioProjects/CyxbsMobile_Android/module_course/src/main/res/values/dimens.xml" qualifiers=""><dimen name="course_course_month_height">50dp</dimen><dimen name="course_course_month_width">33dp</dimen><dimen name="course_course_item_radius">8dp</dimen><dimen name="course_schedule_tag_radius">3dp</dimen><dimen name="course_column_text_size">11sp</dimen><dimen name="course_top_and_left_text_size">12sp</dimen><dimen name="course_tab_layout_height">39dp</dimen><dimen name="course_edit_affair_tv_size">21sp</dimen><dimen name="course_stu_list_activity_tv_size">10sp</dimen><dimen name="course_dialog_padding_top">20dp</dimen><dimen name="course_shadow_height">47dp</dimen><dimen name="course_top_distance">15dp</dimen><dimen name="course_edit_affair_button_circle">20dp</dimen><dimen name="course_item_gap">2dp</dimen></file><file path="/Users/admin/AndroidStudioProjects/CyxbsMobile_Android/module_course/src/main/res/values/schedule_view_attrs.xml" qualifiers=""><declare-styleable name="ScheduleView" ns1:ignore="ResourceName">
+        
+        <attr format="dimension" name="elementGap"/>
+        
+        <attr format="dimension" name="noGourseImageHeight"/>
+        <attr format="dimension" name="noGourseImageWidth"/>
+        <attr format="color" name="touchViewColor"/>
+        <attr format="dimension" name="heightAtLowDpi"/>
+        <attr format="reference" name="touchViewDrawable"/>
+        <attr format="color" name="highlightColor"/>
+        <attr format="reference" name="noCourseDrawable"/>
+        <attr format="string" name="emptyText"/>
+        <attr format="dimension" name="emptyTextSize"/>
+        <attr format="boolean" name="isDisplayCourse"/>
+        <attr format="reference" name="ScheduleViewStyle"/>
+    </declare-styleable><item name="item_position_row" ns1:ignore="ResourceName" type="id"/><item name="item_position_column" ns1:ignore="ResourceName" type="id"/><item name="item_info" ns1:ignore="ResourceName" type="id"/><item name="childTop" ns1:ignore="ResourceName" type="id"/><item name="childLeft" ns1:ignore="ResourceName" type="id"/><item name="childBottom" ns1:ignore="ResourceName" type="id"/><item name="childRight" ns1:ignore="ResourceName" type="id"/><item name="touchPosition" ns1:ignore="ResourceName" type="id"/></file><file path="/Users/admin/AndroidStudioProjects/CyxbsMobile_Android/module_course/src/main/res/values/refresh_view_attrs.xml" qualifiers=""><attr format="float" name="course_lineLength"/><attr format="float" name="course_startPointRatio"/></file><file path="/Users/admin/AndroidStudioProjects/CyxbsMobile_Android/module_course/src/main/res/values/styles.xml" qualifiers=""><style name="course_BottomSheetDialogTheme" parent="Theme.Design.BottomSheetDialog">
+        
+        <item name="android:windowFrame">@null</item>
+        
+        <item name="android:windowIsFloating">true</item>
+
+        <item name="android:windowIsTranslucent">true</item>
+        
+        <item name="android:windowLightStatusBar" ns1:targetApi="m">true</item>
+        
+        <item name="colorBackgroundFloating">@color/common_transparent_background</item>
+        
+        <item name="android:background">@android:color/transparent</item>
+        
+        <item name="android:backgroundDimEnabled">false</item>
+    </style></file><file path="/Users/admin/AndroidStudioProjects/CyxbsMobile_Android/module_course/src/main/res/values/flexible_number_picker_attrs.xml" qualifiers=""><declare-styleable name="FlexibleNumberPicker" ns1:ignore="ResourceName">
+        <attr format="color" name="selectorBkColor"/>
+        <attr format="color" name="selectorWheelPaintColor"/>
+        <attr format="boolean" name="isSelectionDividerShow"/>
+
+        <attr format="reference" name="FlexibleNumberPickerStyle"/>
+    </declare-styleable></file><file path="/Users/admin/AndroidStudioProjects/CyxbsMobile_Android/module_course/src/main/res/values/red_rock_text_view_attrs.xml" qualifiers=""><declare-styleable name="RedRockTextView" ns1:ignore="ResourceName">
+        
+        <attr format="reference" name="displayedStrings"/>
+        <attr format="color" name="selectedColor"/>
+        <attr format="enum" name="orientation">
+            <enum name="vertical" value="1"/>
+            <enum name="horizontal" value="0"/>
+        </attr>
+        <attr format="integer" name="offsetBetweenText"/>
+
+        <attr format="reference" name="RedRockTextViewStyle"/>
+    </declare-styleable></file><file path="/Users/admin/AndroidStudioProjects/CyxbsMobile_Android/module_course/src/main/res/values/time_identification.xml" qualifiers=""><declare-styleable name="TimeIdentificationView" ns1:ignore="ResourceName">
+        <attr format="color" name="color"/>
+        <attr format="reference" name="TimeIdentificationViewStyle"/>
+    </declare-styleable></file><file path="/Users/admin/AndroidStudioProjects/CyxbsMobile_Android/module_course/src/main/res/values/affair_backgroud_view.xml" qualifiers=""><declare-styleable name="AffairBackgroundView" ns1:ignore="ResourceName">
+        <attr format="color" name="backgroundStripeColor"/>
+        <attr format="reference" name="AffairBackgroundViewStyle" ns1:ignore="ResourceName"/>
+    </declare-styleable></file><file path="/Users/admin/AndroidStudioProjects/CyxbsMobile_Android/module_course/src/main/res/values/simple_dots_view_attrs.xml" qualifiers=""><declare-styleable name="SimpleDotsView" ns1:ignore="ResourceName">
+        <attr format="dimension" name="dotRadius"/>
+        <attr format="dimension" name="dotGap"/>
+
+        <attr format="reference" name="SimpleDotsViewStyle"/>
+    </declare-styleable></file><file path="/Users/admin/AndroidStudioProjects/CyxbsMobile_Android/module_course/src/main/res/values/strings.xml" qualifiers=""><string name="course_sure">确定</string><string name="course_empty_course_text">一片寂静 </string><string name="course_all_week">整学期</string><string name="course_now_week">(本周)</string><string name="course_little_friend">小伙伴</string><string name="course_they_are_free">集合！！ 出发</string><string name="course_title_is_null">掌友，标题不能为空哟！</string><string name="course_week_is_not_select">掌友，请选择周数</string><string name="course_time_is_not_select">掌友，请选时间</string><string name="course_use_cache">教务在线当前不可用\n正使用红岩网校工作站缓存课表</string><string name="course_fail_get_calendar_id">获取CalendarId失败，无法向日历中添加备忘提醒。请检查你的日历是否进行了登录！</string><string name="course_refuse_calendar_permission">向日历中添加备忘提醒需要获取日历相关的权限哟，拒绝了将无法按时提醒你哟！</string><string name="course_calendar_permission_reason">要想向日历中添加备忘提醒，就得允许当前权限哟！</string><string-array name="course_course_day_of_week_strings">
+        <item>周一</item>
+        <item>周二</item>
+        <item>周三</item>
+        <item>周四</item>
+        <item>周五</item>
+        <item>周六</item>
+        <item>周日</item>
+    </string-array><string-array name="course_course_time_strings">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+        <item>9</item>
+        <item>10</item>
+        <item>11</item>
+        <item>12</item>
+    </string-array><string-array name="course_time_select_strings">
+        <item>一二节课</item>
+        <item>三四节课</item>
+        <item>五六节课</item>
+        <item>七八节课</item>
+        <item>九十节课</item>
+        <item>十一十二节课</item>
+    </string-array><string-array name="course_course_weeks_strings">
+        <item>整学期</item>
+        <item>第一周</item>
+        <item>第二周</item>
+        <item>第三周</item>
+        <item>第四周</item>
+        <item>第五周</item>
+        <item>第六周</item>
+        <item>第七周</item>
+        <item>第八周</item>
+        <item>第九周</item>
+        <item>第十周</item>
+        <item>第十一周</item>
+        <item>第十二周</item>
+        <item>第十三周</item>
+        <item>第十四周</item>
+        <item>第十五周</item>
+        <item>第十六周</item>
+        <item>第十七周</item>
+        <item>第十八周</item>
+        <item>第十九周</item>
+        <item>第二十周</item>
+        <item>第二十一周</item>
+    </string-array><string-array name="course_remind_strings">
+        <item>不提醒</item>
+        <item>提前五分钟</item>
+        <item>提前十分钟</item>
+        <item>提前二十分钟</item>
+        <item>提前三十分钟</item>
+        <item>提前一个小时</item>
+    </string-array><string name="course_affair_modify">修改</string><string name="course_affair_delete">删除</string><string name="course_time">时间</string><string name="course_time_select">选择时间</string><string name="course_remind_select">不提醒</string><string name="course_course_detail_cycle">周期</string><string name="course_course_details_time">时间</string><string name="course_course_details_credit">课程类型</string><string name="course_title_for_your_affair1">为你的行程添加</string><string name="course_title_for_your_affair2">一个标题</string><string name="course_title_for_your_affair3">具体内容</string><string name="course_course_update_tips">你的课表可能发生了变化请留意</string><string name="course_class_taught">所教班级</string><string name="course_no_class_recently">今天和明天都没课咯～</string><string name="course_back_now_week">回到本周</string><string name="course_add_transaction">添加失败</string><string name="course_add_transaction_as_a_reminder">添加成功</string><string name="course_modify_transaction_successful">修改成功</string><string name="course_network_error_failed">操作失败</string><string name="course_transaction_deleted_successfully">删除成功</string><string name="course_transaction_deletion_failed">删除失败</string><string name="course_placeholder_string"/><string name="course_tourist_mode_ask_login">登录后即可查看课表</string><string name="course_tourist_date_txt">登录解锁更多功能~</string></file><file path="/Users/admin/AndroidStudioProjects/CyxbsMobile_Android/module_course/src/main/res/values/week_background_view_atts.xml" qualifiers=""><declare-styleable name="WeekBackgroundView" ns1:ignore="ResourceName">
+        <attr format="color" name="foreground"/>
+        <attr format="dimension" name="backgroundElementGap"/>
+        <attr format="color" name="bottomBackground"/>
+        <attr format="dimension" name="round"/>
+    </declare-styleable></file><file name="course_loader" path="/Users/admin/AndroidStudioProjects/CyxbsMobile_Android/module_course/src/main/res/raw/course_loader.json" qualifiers="" type="raw"/></source><source path="/Users/admin/AndroidStudioProjects/CyxbsMobile_Android/module_course/build/generated/res/rs/debug"/><source path="/Users/admin/AndroidStudioProjects/CyxbsMobile_Android/module_course/build/generated/res/resValues/debug"/></dataSet><dataSet aapt-namespace="http://schemas.android.com/apk/res-auto" config="debug$Generated" generated="true" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="/Users/admin/AndroidStudioProjects/CyxbsMobile_Android/module_course/src/debug/res"/></dataSet><dataSet aapt-namespace="http://schemas.android.com/apk/res-auto" config="debug" generated-set="debug$Generated" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="/Users/admin/AndroidStudioProjects/CyxbsMobile_Android/module_course/src/debug/res"/></dataSet><mergedItems><configuration qualifiers=""><declare-styleable name="WeekBackgroundView" ns1:ignore="ResourceName">
+        <attr format="color" name="foreground"/>
+        <attr format="dimension" name="backgroundElementGap"/>
+        <attr format="color" name="bottomBackground"/>
+        <attr format="dimension" name="round"/>
+    </declare-styleable><declare-styleable name="AffairBackgroundView" ns1:ignore="ResourceName">
+        <attr format="color" name="backgroundStripeColor"/>
+        <attr format="reference" name="AffairBackgroundViewStyle" ns1:ignore="ResourceName"/>
+    </declare-styleable><declare-styleable name="TimeIdentificationView" ns1:ignore="ResourceName">
+        <attr format="color" name="color"/>
+        <attr format="reference" name="TimeIdentificationViewStyle"/>
+    </declare-styleable><declare-styleable name="RedRockTipsView" ns1:ignore="ResourceName">
+        <attr format="color" name="tipsColor"/>
+        <attr format="reference" name="RedRockTipsViewStyle"/>
+    </declare-styleable><declare-styleable name="SimpleDotsView" ns1:ignore="ResourceName">
+        <attr format="dimension" name="dotRadius"/>
+        <attr format="dimension" name="dotGap"/>
+
+        <attr format="reference" name="SimpleDotsViewStyle"/>
+    </declare-styleable><declare-styleable name="FlexibleNumberPicker" ns1:ignore="ResourceName">
+        <attr format="color" name="selectorBkColor"/>
+        <attr format="color" name="selectorWheelPaintColor"/>
+        <attr format="boolean" name="isSelectionDividerShow"/>
+
+        <attr format="reference" name="FlexibleNumberPickerStyle"/>
+    </declare-styleable><declare-styleable name="RedRockTextView" ns1:ignore="ResourceName">
+        
+        <attr format="reference" name="displayedStrings"/>
+        <attr format="color" name="selectedColor"/>
+        <attr format="enum" name="orientation">
+            <enum name="vertical" value="1"/>
+            <enum name="horizontal" value="0"/>
+        </attr>
+        <attr format="integer" name="offsetBetweenText"/>
+
+        <attr format="reference" name="RedRockTextViewStyle"/>
+    </declare-styleable><declare-styleable name="ScheduleView" ns1:ignore="ResourceName">
+        
+        <attr format="dimension" name="elementGap"/>
+        
+        <attr format="dimension" name="noGourseImageHeight"/>
+        <attr format="dimension" name="noGourseImageWidth"/>
+        <attr format="color" name="touchViewColor"/>
+        <attr format="dimension" name="heightAtLowDpi"/>
+        <attr format="reference" name="touchViewDrawable"/>
+        <attr format="color" name="highlightColor"/>
+        <attr format="reference" name="noCourseDrawable"/>
+        <attr format="string" name="emptyText"/>
+        <attr format="dimension" name="emptyTextSize"/>
+        <attr format="boolean" name="isDisplayCourse"/>
+        <attr format="reference" name="ScheduleViewStyle"/>
+    </declare-styleable></configuration></mergedItems></merger>
