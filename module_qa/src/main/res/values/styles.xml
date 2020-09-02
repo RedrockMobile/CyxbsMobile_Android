@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- Base application theme. -->
+    <style name="QuizTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar.Bridge" tools:ignore="ResourceName">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <!--        透明状态栏-->
+        <item name="statusBarBackground">@color/common_transparent_background</item>
+        <!--        每个Activity的Window背景，最好别设置透明或者空-->
+        <item name="android:windowBackground">@color/common_window_background</item>
+    </style>
+
+    <style name="SearchTheme" parent="AppTheme" tools:ignore="ResourceName">
+        <item name="android:windowIsTranslucent">true</item>
+    </style>
+
+    <style name="qa_LPhotoTheme" parent="LPhotoTheme">
+        <!--页面通用属性（图片选择、图片预览共用）-->
+        <item name="l_pp_toolBar_height">56dp</item>
+        <item name="l_pp_toolBar_backIcon">@drawable/common_ic_back</item><!--返回按钮资源-->
+        <item name="l_pp_toolBar_title_size">16sp</item><!--toolBar上字体大小-->
+        <item name="l_pp_bottomBar_height">50dp</item><!--底栏的高度-->
+
+        <!--图片选择页面属性-->
+        <item name="l_pp_status_bar_color">#788EFA</item><!--状态栏颜色-->
+        <item name="l_pp_toolBar_background">#788EFA</item><!--toolBar颜色-->
+        <item name="l_pp_picker_activity_bg">#F9F9F9</item><!--activity背景颜色-->
+        <item name="l_pp_toolBar_title_color">#f2f2f2</item><!--(图片选择页面)顶部toolBar字体颜色-->
+        <item name="l_pp_picker_bottomBar_background">#96ffffff</item><!--底栏的颜色，如果需要毛玻璃效果，颜色加上透明度-->
+        <item name="l_pp_picker_bottomBar_enabled_text_color">#333333</item><!--底部按钮启用时的颜色-->
+        <item name="l_pp_picker_bottomBar_unEnabled_text_color">#acacac</item><!--底栏按钮关闭时的颜色-->
+
+        <!--图片分割线宽度-->
+        <item name="l_pp_picker_segmenting_line_width">2dp</item>
+
+        <!--圆形选择框样式（图片选择、图片预览共用，有特别说明的除外）-->
+        <item name="l_pp_checkBox_color_tick" format="color">#00FF7F</item><!--勾勾颜色-->
+        <item name="l_pp_checkBox_duration" format="integer">100</item><!--动画时间-->
+        <item name="l_pp_checkBox_color_checked" format="color">@color/colorPrimary
+        </item><!--选择后的背景色-->
+        <item name="l_pp_checkBox_stroke_width" format="dimension">2dp</item><!--（仅预览页面）圆圈边框宽度-->
+        <item name="l_pp_checkBox_tick_width" format="dimension">2dp</item><!--勾勾的线条宽度-->
+    </style>
+
+    <style name="TabLayout.TabText" parent="TextAppearance.Design.Tab">
+        <item name="android:textSize">17sp</item>
+        <item name="textAllCaps">false</item>
+    </style>
+</resources>

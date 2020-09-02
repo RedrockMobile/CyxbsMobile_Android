@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="21dp"
+    android:layout_marginEnd="21dp"
+    android:layout_marginBottom="25dp"
+    android:orientation="horizontal">
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tv_history_title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:alpha="0.67"
+        android:singleLine="true"
+        android:textColor="@color/common_level_two_font_color"
+        android:textSize="18sp"
+        tools:text="没有人比我更懂" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/iv_history_delete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:src="@drawable/qa_ic_search_history_delete" />
+
+</LinearLayout>

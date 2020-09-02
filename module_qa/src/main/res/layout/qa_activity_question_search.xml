@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".pages.search.ui.SearchActivity">
+
+    <RelativeLayout
+        android:id="@+id/rl_question_searching"
+        android:layout_width="0dp"
+        android:layout_height="36dp"
+        android:layout_marginStart="21dp"
+        android:layout_marginTop="60dp"
+        android:layout_marginEnd="21dp"
+        android:background="@drawable/qa_shape_question_search_background"
+        app:layout_constraintEnd_toStartOf="@id/tv_question_search_cancel"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_question_searching"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="20dp"
+            android:src="@drawable/qa_ic_question_search"
+            android:transitionName="ImageView_Search" />
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/et_question_search"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="10dp"
+            android:layout_toEndOf="@id/iv_question_searching"
+            android:background="@null"
+            android:hint="@string/qa_search_ed_hint_text"
+            android:imeOptions="actionSearch"
+            android:inputType="text"
+            android:paddingStart="10dp"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:textColor="@color/common_level_three_font_color"
+            android:textColorHint="@color/common_qa_common_hint_text_color"
+            android:textSize="16sp" />
+    </RelativeLayout>
+
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tv_question_search_cancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="20dp"
+        android:text="@string/qa_question_search_cancel"
+        android:textColor="@color/common_level_three_font_color"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@+id/rl_question_searching"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/rl_question_searching" />
+
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/fcv_question_search"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/rl_question_searching" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
