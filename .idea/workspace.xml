@@ -6,36 +6,12 @@
     </shared>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2fd151e9-8fa5-43ec-9b9a-9a62ac4fca9f" name="Default Changelist" comment="[optimize]">
-      <change afterPath="$PROJECT_DIR$/lib_account/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib_update/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/module_app/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/module_course/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/module_volunteer/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/module_widget/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib_common/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/lib_common/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/module_calendar/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/module_calendar/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/module_discover/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/module_discover/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/module_electricity/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/module_electricity/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/module_emptyroom/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/module_emptyroom/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/module_grades/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/module_grades/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/module_main/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/module_main/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/module_map/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/module_map/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/module_mine/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/module_mine/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/module_news/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/module_news/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/module_noclass/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/module_noclass/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/module_othercourse/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/module_othercourse/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/module_qa/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/module_qa/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/module_redrock_home/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/module_redrock_home/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/module_schoolcar/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/module_schoolcar/.gitignore" afterDir="false" />
-    </list>
+    <list default="true" id="22927470-bcf1-4cf7-bd82-4eb2fb9d8aaa" name="Default Changelist" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="ExecutionTargetManager" SELECTED_TARGET="sswcl7nbbu49sgov" />
   <component name="ExternalProjectsData">
     <projectState path="$PROJECT_DIR$">
       <ProjectState />
@@ -44,12 +20,7 @@
   <component name="ExternalProjectsManager">
     <system id="GRADLE">
       <state>
-        <projects_view>
-          <tree_state>
-            <expand />
-            <select />
-          </tree_state>
-        </projects_view>
+        <projects_view />
       </state>
     </system>
   </component>
@@ -71,18 +42,21 @@
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/module_widget" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="project.structure.last.edited" value="Modules" />
+    <property name="project.structure.proportion" value="0.17" />
+    <property name="project.structure.side.proportion" value="0.2" />
   </component>
   <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$" />
+    </key>
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$" />
       <recent name="$PROJECT_DIR$/module_widget" />
       <recent name="$PROJECT_DIR$/module_volunteer" />
       <recent name="$PROJECT_DIR$/module_schoolcar" />
       <recent name="$PROJECT_DIR$/module_redrock_home" />
-      <recent name="$PROJECT_DIR$/module_qa" />
-    </key>
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$" />
     </key>
   </component>
   <component name="RunManager">
@@ -166,6 +140,10 @@
     <option name="LAST_COMMIT_MESSAGE" value="Merge branch 'merge' of github.com:CyxbsMobile-Android-Submodule/module_widget into merge&#10;&#10;# Conflicts:&#10;#&#9;.gitignore&#10;#&#9;src/main/.DS_Store&#10;#&#9;src/main/res/.DS_Store" />
   </component>
   <component name="WindowStateProjectService">
+    <state x="365" y="275" key="#PSD" timestamp="1599058433108">
+      <screen x="0" y="23" width="1680" height="1027" />
+    </state>
+    <state x="365" y="275" key="#PSD/0.23.1680.1027@0.23.1680.1027" timestamp="1599058433108" />
     <state x="264" y="71" key="CommitChangelistDialog2" timestamp="1599057925518">
       <screen x="0" y="23" width="1680" height="1027" />
     </state>
@@ -174,9 +152,13 @@
       <screen x="0" y="23" width="1680" height="1027" />
     </state>
     <state x="550" y="259" key="MultipleFileMergeDialog/0.23.1680.1027@0.23.1680.1027" timestamp="1599056916307" />
-    <state x="440" y="277" key="Vcs.Push.Dialog.v2" timestamp="1599057977183">
+    <state x="586" y="265" key="RollbackChangesDialog" timestamp="1599058457126">
       <screen x="0" y="23" width="1680" height="1027" />
     </state>
-    <state x="440" y="277" key="Vcs.Push.Dialog.v2/0.23.1680.1027@0.23.1680.1027" timestamp="1599057977183" />
+    <state x="586" y="265" key="RollbackChangesDialog/0.23.1680.1027@0.23.1680.1027" timestamp="1599058457126" />
+    <state x="440" y="277" key="Vcs.Push.Dialog.v2" timestamp="1599058553520">
+      <screen x="0" y="23" width="1680" height="1027" />
+    </state>
+    <state x="440" y="277" key="Vcs.Push.Dialog.v2/0.23.1680.1027@0.23.1680.1027" timestamp="1599058553520" />
   </component>
 </project>
