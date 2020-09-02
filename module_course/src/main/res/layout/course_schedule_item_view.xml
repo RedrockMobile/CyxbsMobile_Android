@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/background"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:cardCornerRadius="@dimen/course_course_item_radius">
+
+    <com.mredrock.cyxbs.course.component.AffairBackgroundView
+        android:id="@+id/affair_item_background"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:backgroundStripeColor="@color/common_transaction_background_stripe_color" />
+
+    <LinearLayout
+        android:padding="8dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/top"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top"
+            android:ellipsize="end"
+            android:gravity="center_horizontal|top"
+            android:maxLines="3"
+            android:textSize="@dimen/course_column_text_size"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0"
+            tools:text="黄龙姐姐女装教学黄龙姐姐女装教学" />
+
+<!--        为了保证内容优先原则，显示了三排课程名称如果还有剩余空间，
+            那么可以用来显示内容
+            有可能会有一行的一半文字被遮挡
+            如果完全使用gravity虽然可以在布局上完成需求，
+            但是一旦出现这种情况，下方的文字由于gravity-bottom
+            被遮挡的是最上面一行,看起来怪怪的
+            -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <TextView
+            android:id="@+id/bottom"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:ellipsize="end"
+            android:gravity="center_horizontal"
+            android:textSize="@dimen/course_column_text_size"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/top"
+            app:layout_constraintVertical_bias="1.0"
+            tools:text="红岩网校红岩网校红岩网校" />
+
+    </LinearLayout>
+
+    <View
+        android:id="@+id/tag"
+        android:layout_width="8dp"
+        android:layout_height="3dp"
+        android:layout_gravity="end|top"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="5dp"
+        android:background="@drawable/course_shape_conflict_tips"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0" />
+
+</FrameLayout>

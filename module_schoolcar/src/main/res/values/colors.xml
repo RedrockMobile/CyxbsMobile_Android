@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="schoolcar_colorPrimary">#3F51B5</color>
+    <color name="schoolcar_colorPrimaryDark">#303F9F</color>
+    <color name="schoolcar_colorAccent">#FF4081</color>
+
+    <color name="schoolcar_white">#ffffff</color>
+    <color name="schoolcar_explore_school_car_toolbar">#74b9fa</color>
+    <color name="schoolcar_explore_school_car_right">#95b5f7</color>
+</resources>

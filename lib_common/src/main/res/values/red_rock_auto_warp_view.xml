@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <declare-styleable name="RedRockAutoWarpView" >
+        <attr name="verticalsSpacing" format="dimension" />
+        <attr name="horizontalSpacing" format="dimension" />
+        <attr name="maxLine" format="integer" />
+        <attr name="maxColumn" format="integer" />
+
+        <!--        严格模式，部分View测量的宽高与Draw之后的宽高是不一样的，-->
+        <!--        例如TextView存在内容过长自动换行的问题，然后会导致布局出现问题-->
+        <!--        开启代表严格按照最后宽高来布局，不开启表示按照测量宽高，开启更加耗费性能，但是不是很多-->
+        <!--        默认开启-->
+        <attr name="strictMode" format="boolean" />
+        <attr name="RedRockAutoWarpViewStyle" format="reference"  />
+    </declare-styleable>
+</resources>

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.mredrock.cyxbs.widget">
+
+    <application android:theme="@style/AppTheme">
+        <activity android:name=".widget.page.normal.NormalSelectActivity"
+            android:theme="@style/widget_Theme">
+
+        </activity>
+        <activity android:name=".widget.page.ConfigActivity" />
+        <activity
+            android:name=".widget.page.trans.TransConfigActivity"
+            android:windowSoftInputMode="adjustPan" />
+        <activity android:name=".widget.page.little.LittleConfigActivity" />
+        <activity android:name=".widget.page.normal.NormalConfigActivity" />
+
+        <receiver
+            android:name=".widget.little.LittleWidget"
+            android:label="课程显示(小)">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_little" />
+        </receiver>
+        <receiver
+            android:name=".widget.little.LittleTransWidget"
+            android:label="课程透明显示(小)">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_little_trans" />
+        </receiver>
+        <receiver
+            android:name=".widget.normal.NormalWidget"
+            android:label="课程显示(大)">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_normal" />
+        </receiver>
+
+        <service
+            android:name=".service.GridWidgetService"
+            android:permission="android.permission.BIND_REMOTEVIEWS">
+
+        </service>
+
+        <receiver
+            android:name=".widget.oversize.OversizedAppWidget"
+            android:label="超大小部件">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/wideget_oversized_app_widget_info" />
+        </receiver>
+
+        <activity
+            android:name=".widget.page.oversized.OversizedAppWidgetConfigureActivity"
+            android:theme="@style/widget_Theme">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
+            </intent-filter>
+        </activity>
+    </application>
+
+</manifest>

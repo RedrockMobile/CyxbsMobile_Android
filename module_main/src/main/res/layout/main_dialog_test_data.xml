@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="debugModel"
+            type="com.mredrock.cyxbs.common.config.DebugDataModel" />
+
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/main_shape_test_data_backgroud"
+        android:orientation="vertical"
+        android:padding="10dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/main_long_press_to_copy"
+            android:textSize="18sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/main_umeng_push_device_id"
+            android:textStyle="bold" />
+
+
+        <TextView
+            android:id="@+id/device_id"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/main_shape_debug_text_bg"
+            android:padding="8dp"
+            android:text="@{debugModel.umPushDeviceId}"
+            tools:text="设备id" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/main_umeng_analyzes_device_data"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/umeng_analyzes_device_data"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/main_shape_debug_text_bg"
+            android:padding="8dp"
+            android:text="@{debugModel.umAnalyzeDeviceData}"
+            tools:text="设备id" />
+
+    </LinearLayout>
+</layout>

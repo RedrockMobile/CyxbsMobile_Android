@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="GradleMigrationSettings" migrationVersion="1" />
+  <component name="GradleSettings">
+    <option name="linkedExternalProjectsSettings">
+      <GradleProjectSettings>
+        <option name="testRunner" value="PLATFORM" />
+        <option name="distributionType" value="DEFAULT_WRAPPED" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="gradleJvm" value="11" />
+        <option name="modules">
+          <set>
+            <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/lib_account" />
+            <option value="$PROJECT_DIR$/lib_common" />
+            <option value="$PROJECT_DIR$/lib_update" />
+            <option value="$PROJECT_DIR$/module_app" />
+            <option value="$PROJECT_DIR$/module_calendar" />
+            <option value="$PROJECT_DIR$/module_course" />
+            <option value="$PROJECT_DIR$/module_discover" />
+            <option value="$PROJECT_DIR$/module_electricity" />
+            <option value="$PROJECT_DIR$/module_emptyroom" />
+            <option value="$PROJECT_DIR$/module_grades" />
+            <option value="$PROJECT_DIR$/module_main" />
+            <option value="$PROJECT_DIR$/module_map" />
+            <option value="$PROJECT_DIR$/module_mine" />
+            <option value="$PROJECT_DIR$/module_news" />
+            <option value="$PROJECT_DIR$/module_noclass" />
+            <option value="$PROJECT_DIR$/module_othercourse" />
+            <option value="$PROJECT_DIR$/module_qa" />
+            <option value="$PROJECT_DIR$/module_redrock_home" />
+            <option value="$PROJECT_DIR$/module_schoolcar" />
+            <option value="$PROJECT_DIR$/module_volunteer" />
+            <option value="$PROJECT_DIR$/module_widget" />
+          </set>
+        </option>
+        <option name="resolveModulePerSourceSet" value="false" />
+      </GradleProjectSettings>
+    </option>
+  </component>
+</project>

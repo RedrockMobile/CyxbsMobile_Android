@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:foreground="?android:selectableItemBackground"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+    <TextView
+        android:id="@+id/mine_comment_tv_at"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:alpha="0.7"
+        android:textSize="13sp"
+        android:textColor="@color/common_mine_about_text_color_normal"
+        android:text="@string/mine_comment_at_start"
+        app:layout_constraintStart_toStartOf="@+id/mine_comment_tv_content"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <TextView
+        android:id="@+id/mine_comment_tv_at_who"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:alpha="0.7"
+        android:textColor="@color/common_mine_about_text_color_normal"
+        android:textSize="13sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/mine_comment_tv_at"
+        app:layout_constraintStart_toEndOf="@+id/mine_comment_tv_at"
+        app:layout_constraintTop_toTopOf="@+id/mine_comment_tv_at"
+        tools:text="张树洞" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/mine_comment_at_end"
+        android:alpha="0.7"
+        android:textColor="@color/common_mine_about_text_color_normal"
+        android:textSize="13sp"
+        app:layout_constraintBottom_toBottomOf="@+id/mine_comment_tv_at_who"
+        app:layout_constraintStart_toEndOf="@+id/mine_comment_tv_at_who"
+        app:layout_constraintTop_toTopOf="@+id/mine_comment_tv_at_who" />
+
+    <TextView
+        android:id="@+id/mine_comment_tv_content"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"
+        android:layout_marginBottom="20dp"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:layout_marginTop="11dp"
+        android:textSize="16sp"
+        android:textColor="@color/common_mine_list_item_tv_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/mine_comment_tv_at"
+        tools:text="房子房子房子房子房子房子房子房子房子房子房子房子房子房子房子房子房子房子房子房子房子房子房子房子" />
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:alpha="0.3"
+        android:background="@color/common_sever_view_color"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:layout_editor_absoluteX="13dp"
+        tools:layout_editor_absoluteY="103dp" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

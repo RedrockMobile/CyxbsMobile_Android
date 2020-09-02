@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <dimen name="mine_main_small_s" >10sp</dimen>
+    <dimen name="mine_main_medium" >18sp</dimen>
+    <dimen name="mine_main_medium_l" >22sp</dimen>
+</resources>

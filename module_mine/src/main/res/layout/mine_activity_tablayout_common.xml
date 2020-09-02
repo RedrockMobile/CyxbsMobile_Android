@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".page.ask.AskActivity">
+
+    <include
+        android:id="@+id/mine_tl_toolbar"
+        layout="@layout/common_toolbar" />
+
+    <FrameLayout
+        android:id="@+id/mine_tl_fl"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/mine_shape_round_corner_tab_layout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/mine_tl_toolbar">
+
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/mine_tl_tablayout"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            app:tabIndicator="@drawable/mine_ic_me_indicator"
+            app:tabIndicatorColor="@color/common_mine_tab_layout_indicator_color"
+            app:tabIndicatorFullWidth="false"
+            app:tabIndicatorHeight="3dp"
+            app:tabMode="fixed"
+            app:tabRippleColor="@null"
+            app:tabSelectedTextColor="@color/common_level_two_font_color"
+            app:tabTextAppearance="@style/mine_tablayout_text_appearance"
+            app:tabTextColor="@color/common_mine_tab_layout_text_unselected" />
+    </FrameLayout>
+
+
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/mine_tl_view_pager"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@color/common_secondary_window_background"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/mine_tl_fl" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

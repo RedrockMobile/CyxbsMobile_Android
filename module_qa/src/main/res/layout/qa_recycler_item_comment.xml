@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="25dp">
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/qa_guideline_avatar_start"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.05" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/qa_guideline_content_start"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.17" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/qa_guideline_avatar_end"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.95" />
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/iv_comment_avatar"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_marginTop="17dp"
+        android:scaleType="centerCrop"
+        app:layout_constraintStart_toStartOf="@+id/qa_guideline_avatar_start"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:src="@drawable/common_default_avatar" />
+
+    <com.mredrock.cyxbs.common.component.JCardViewPlus
+        android:id="@+id/jCardView_comment"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:cardCornerRadiusLowerLeft="30dp"
+        app:cardCornerRadiusLowerRight="30dp"
+        app:cardCornerRadiusUpperLeft="3dp"
+        app:cardCornerRadiusUpperRight="30dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/qa_guideline_avatar_end"
+        app:layout_constraintStart_toEndOf="@+id/qa_guideline_content_start"
+        app:layout_constraintTop_toTopOf="parent"
+        app:shadowColor="@color/common_qa_comment_list_background_color">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="18dp"
+            android:layout_marginEnd="13sp">
+
+            <TextView
+                android:id="@+id/tv_comment_nickname"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_marginTop="17dp"
+                android:textColor="@color/common_qa_comment_item_nick_name_color"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                tools:text="往后余生" />
+
+            <TextView
+                android:id="@+id/tv_comment_create_at"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@+id/tv_comment_nickname"
+                android:layout_alignBottom="@+id/tv_comment_nickname"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="12dp"
+                android:gravity="center"
+                android:textColor="@color/common_qa_comment_item_create_at_color"
+                android:textSize="11sp"
+                tools:text="19:00" />
+
+            <TextView
+                android:id="@+id/tv_comment_content"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tv_comment_nickname"
+                android:layout_marginTop="10dp"
+                android:textColor="@color/common_qa_comment_content_color"
+                android:textIsSelectable="true"
+                android:textSize="13sp"
+                tools:text="是的，公式是没有问题，但是你第三步那个代入方式是错误的，不应该用x的负5次方是的5次方是的5次方是。是的，公式是没有问题，但是你第三步那个代入方式是错误的，不应该用x的负5次方是的5次方是的5次方是。" />
+
+            <ImageButton
+                android:id="@+id/ib_comment_item_more"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tv_comment_content"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="7dp"
+                android:layout_marginEnd="7dp"
+                android:layout_marginBottom="10dp"
+                android:background="@null"
+                android:paddingStart="10dp"
+                android:paddingEnd="5dp"
+                android:paddingBottom="5dp"
+                android:src="@drawable/qa_ic_answer_more" />
+        </RelativeLayout>
+
+    </com.mredrock.cyxbs.common.component.JCardViewPlus>
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/ll_feed"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    tools:context=".ui.BaseFeedFragment">
+
+    <include
+        android:id="@+id/feed_split_line"
+        layout="@layout/common_splite_line"
+        android:visibility="gone" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="26dp">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start|center_vertical"
+            android:orientation="vertical">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_feed_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="14dp"
+                android:textColor="@color/common_level_two_font_color"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                tools:text="电费查询" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_feed_second_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="14dp"
+                android:layout_marginTop="5dp"
+                android:visibility="gone"
+                android:textColor="@color/common_level_two_font_color"
+                android:textSize="8sp" />
+
+        </LinearLayout>
+
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_feed_subtitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end|center_vertical"
+            android:layout_marginEnd="15dp"
+            android:alpha="0.54"
+            android:textColor="@color/common_level_two_font_color"
+            android:textSize="10sp"
+            tools:text="2019.8.22抄表" />
+    </FrameLayout>
+
+
+</androidx.appcompat.widget.LinearLayoutCompat>

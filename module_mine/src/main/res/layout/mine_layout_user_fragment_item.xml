@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingBottom="15dp"
+    android:paddingLeft="19dp"
+    android:paddingRight="17dp"
+    android:paddingTop="17dp"
+    tools:ignore="RtlHardcoded">
+
+    <ImageView
+        android:id="@+id/mine_user_item_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="1dp"
+        android:layout_centerVertical="true"
+        tools:src="@drawable/mine_ic_me_sign" />
+
+    <TextView
+        android:id="@+id/mine_user_item_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="17dp"
+        android:layout_toRightOf="@+id/mine_user_item_icon"
+        android:textColor="@color/common_level_two_font_color"
+        android:textSize="15sp"
+        tools:text="每日签到" />
+
+    <ImageView
+        android:id="@+id/mine_user_item_remindIcon"
+        android:layout_width="7dp"
+        android:layout_height="7dp"
+        android:layout_marginLeft="6dp"
+        android:layout_toRightOf="@+id/mine_user_item_title"
+        android:scaleType="fitXY"
+        android:src="@drawable/mine_ic_me_remind_icon"
+        android:visibility="gone"
+        tools:visibility="visible" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="8dp"
+        android:src="@drawable/mine_ic_me_arrow" />
+</RelativeLayout>

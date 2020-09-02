@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/common_white_background"
+    android:orientation="vertical">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/common_qa_question_report_divide_line_background_color" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:paddingTop="16dp"
+        android:paddingBottom="16dp"
+        android:text="@string/qa_report_rubbish_text"
+        android:textColor="@color/common_level_two_font_color"
+        android:textSize="19sp" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tv_report_type_useless"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:paddingTop="16dp"
+        android:paddingBottom="16dp"
+        android:text="@string/qa_report_useless_question_text"
+        android:textColor="@color/common_level_two_font_color"
+        android:textSize="19sp" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:paddingTop="16dp"
+        android:paddingBottom="16dp"
+        android:text="@string/qa_report_illegal_text"
+        android:textColor="@color/common_level_two_font_color"
+        android:textSize="19sp" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:paddingTop="16dp"
+        android:paddingBottom="16dp"
+        android:text="@string/qa_report_infringement_text"
+        android:textColor="@color/common_level_two_font_color"
+        android:textSize="19sp" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:paddingTop="16dp"
+        android:paddingBottom="16dp"
+        android:text="@string/qa_report_other_text"
+        android:textColor="@color/common_level_two_font_color"
+        android:textSize="19sp" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tv_question_ignore"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:paddingTop="16dp"
+        android:paddingBottom="16dp"
+        android:text="@string/qa_report_ignore_text"
+        android:textColor="@color/common_button_gradient_start_color"
+        android:textSize="19sp"
+        android:visibility="gone" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_cancel_report"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/qa_shape_main_have_question_btn_background"
+        android:gravity="center"
+        android:paddingStart="78dp"
+        android:paddingEnd="78dp"
+        android:text="@string/qa_report_dialog_cancel_text"
+        android:textColor="@color/common_white_font_color"
+        android:textSize="18sp" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tv_explain"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="14dp"
+        android:layout_marginBottom="39dp"
+        android:alpha="0.61"
+        android:text="@string/qa_report_explain"
+        android:textColor="@color/common_level_two_font_color"
+        android:textSize="12sp" />
+</LinearLayout>

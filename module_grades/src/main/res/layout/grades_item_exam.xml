@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <com.mredrock.cyxbs.discover.grades.ui.custom.DashGapLine
+        android:id="@+id/iv_exam_circle"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/gl_exam_guideline"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/gl_exam_guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.12" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/gl_exam_end_guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="1" />
+
+    <TextView
+        android:id="@+id/tv_exam_day_of_week"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:drawablePadding="5dp"
+        android:text=""
+        android:textColor="@color/common_level_two_font_color"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        app:layout_constraintLeft_toRightOf="@id/gl_exam_guideline"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="十一周周一" />
+
+    <TextView
+        android:id="@+id/grades_distance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="30dp"
+        android:textColor="@color/common_grades_item_day_remain"
+        android:textSize="13sp"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_exam_day_of_week"
+        app:layout_constraintRight_toLeftOf="@id/gl_exam_end_guideline"
+        app:layout_constraintTop_toTopOf="@id/tv_exam_day_of_week"
+        tools:text="还剩5天考试" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/grades_constraintlayout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:background="@drawable/grades_exam_shape_round"
+        android:padding="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/gl_exam_end_guideline"
+        app:layout_constraintStart_toStartOf="@id/gl_exam_guideline"
+        app:layout_constraintTop_toBottomOf="@id/tv_exam_day_of_week">
+
+        <TextView
+            android:id="@+id/tv_exam_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="13dp"
+            android:layout_marginTop="15dp"
+            android:textColor="@color/common_level_two_font_color"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@+id/tv_exam_kind"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="品牌形象塑顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶造" />
+
+        <TextView
+            android:id="@+id/tv_exam_kind"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:layout_marginEnd="18dp"
+            android:textColor="@color/common_level_two_font_color"
+            android:textSize="13sp"
+            app:layout_constraintBaseline_toBaselineOf="@id/tv_exam_name"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="半期" />
+
+
+        <TextView
+            android:id="@+id/tv_exam_month"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="18dp"
+            android:layout_marginTop="6dp"
+            android:drawableStart="@drawable/grades_time"
+            android:drawablePadding="10dp"
+            android:textColor="@color/common_grades_fragment_text_color_black2"
+            android:textSize="14sp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_exam_name"
+            tools:text="12月" />
+
+        <TextView
+            android:id="@+id/tv_exam_day_of_month"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="132dp"
+            android:textSize="14sp"
+            android:textColor="@color/common_grades_fragment_text_color_black2"
+            app:layout_constraintBottom_toBottomOf="@id/tv_exam_month"
+            app:layout_constraintLeft_toRightOf="@id/tv_exam_month"
+            app:layout_constraintTop_toTopOf="@id/tv_exam_month"
+            tools:text="27号" />
+
+        <View
+            android:id="@+id/view_exam_divide"
+            android:layout_width="0.1dp"
+            android:layout_height="8dp"
+            android:layout_marginStart="9dp"
+            android:background="@color/common_grades_item_divide"
+            app:layout_constraintBottom_toBottomOf="@id/tv_exam_day_of_month"
+            app:layout_constraintLeft_toRightOf="@id/tv_exam_day_of_month"
+            app:layout_constraintTop_toTopOf="@id/tv_exam_day_of_month" />
+
+        <TextView
+            android:id="@+id/tv_exam_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="9dp"
+            android:textColor="@color/common_grades_fragment_text_color_black2"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="@id/view_exam_divide"
+            app:layout_constraintLeft_toRightOf="@id/view_exam_divide"
+            app:layout_constraintTop_toTopOf="@id/view_exam_divide"
+            tools:text="10:10-12:10" />
+
+        <TextView
+            android:id="@+id/tv_exam_location"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="18dp"
+            android:layout_marginTop="9dp"
+            android:layout_marginBottom="22dp"
+            android:drawableStart="@drawable/grades_exam_location"
+            android:drawablePadding="10dp"
+            android:textColor="@color/common_grades_fragment_text_color_black2"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_exam_month"
+            tools:text="3109场" />
+
+        <View
+            android:id="@+id/view_location_divide"
+            android:layout_width="0.1dp"
+            android:layout_height="8dp"
+            android:layout_marginStart="9dp"
+            android:background="@color/common_grades_item_divide"
+            app:layout_constraintBottom_toBottomOf="@id/tv_exam_location"
+            app:layout_constraintLeft_toRightOf="@id/tv_exam_location"
+            app:layout_constraintTop_toTopOf="@id/tv_exam_location" />
+
+        <TextView
+            android:id="@+id/tv_exam_location_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="9dp"
+            android:textColor="@color/common_grades_fragment_text_color_black2"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="@id/view_location_divide"
+            app:layout_constraintLeft_toRightOf="@id/view_location_divide"
+            app:layout_constraintTop_toTopOf="@id/view_location_divide"
+            tools:text="47号" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

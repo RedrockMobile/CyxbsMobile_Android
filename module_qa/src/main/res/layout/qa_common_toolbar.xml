@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.appbar.AppBarLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/common_white_background"
+    app:elevation="0dp">
+
+    <androidx.appcompat.widget.Toolbar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fitsSystemWindows="true">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="17dp"
+            android:layout_marginEnd="17dp"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/qa_ib_toolbar_back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_gravity="center_vertical"
+                android:background="@null"
+                android:paddingStart="10dp"
+                android:paddingEnd="4dp"
+                android:src="@drawable/qa_ic_toolbar_back" />
+
+            <TextView
+                android:id="@+id/qa_tv_toolbar_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="19dp"
+                android:layout_toStartOf="@id/qa_ib_toolbar_more"
+                android:layout_toEndOf="@id/qa_ib_toolbar_back"
+                android:textColor="@color/common_level_two_font_color"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                tools:text="评论（2）" />
+
+            <ImageButton
+                android:id="@+id/qa_ib_toolbar_more"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_gravity="center_vertical"
+                android:background="@drawable/qa_ic_toolbar_more" />
+
+            <TextView
+                android:id="@+id/qa_tv_toolbar_right"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:textColor="@color/levelFourFontColor"
+                android:textSize="18sp"
+                android:visibility="gone"
+                tools:text="下一步" />
+        </RelativeLayout>
+    </androidx.appcompat.widget.Toolbar>
+</com.google.android.material.appbar.AppBarLayout>

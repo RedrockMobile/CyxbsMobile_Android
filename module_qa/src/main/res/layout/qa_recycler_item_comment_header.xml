@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/common_qa_comment_header_background_color"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="18dp"
+        android:layout_marginEnd="16dp">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/iv_answer_avatar"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:scaleType="centerCrop"
+            android:transitionName="answer_avatar"
+            tools:src="@drawable/common_default_avatar" />
+
+        <TextView
+            android:id="@+id/tv_answer_nickname"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_toEndOf="@+id/iv_answer_avatar"
+            android:drawablePadding="3dp"
+            android:textColor="@color/common_qa_comment_answer_nickname_color"
+            android:textSize="14sp"
+            tools:text="刘学霸" />
+
+        <TextView
+            android:id="@+id/tv_answer_create_at"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_answer_nickname"
+            android:layout_alignStart="@id/tv_answer_nickname"
+            android:layout_marginTop="2dp"
+            android:alpha="0.54"
+            android:textColor="@color/common_qa_comment_answer_create_at_color"
+            android:textSize="12sp"
+            tools:text="2018-03-03" />
+
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            tools:ignore="RelativeOverlap">
+
+            <TextView
+                android:id="@+id/tv_adopted"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/qa_shape_answer_adopted_background"
+                android:drawablePadding="5dp"
+                android:paddingStart="10dp"
+                android:paddingTop="4dp"
+                android:paddingEnd="10dp"
+                android:paddingBottom="4dp"
+                android:text="@string/qa_answer_list_accepted"
+                android:textColor="@color/common_qa_answer_list_adopted_color"
+                android:textSize="12sp"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/tv_adopt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/qa_shape_answer_adopted_background"
+                android:paddingStart="10dp"
+                android:paddingTop="4dp"
+                android:paddingEnd="10dp"
+                android:paddingBottom="4dp"
+                android:text="@string/qa_answer_list_accept"
+                android:textColor="@color/common_qa_answer_list_adopted_color"
+                android:textSize="13sp"
+                android:visibility="visible" />
+        </FrameLayout>
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/tv_answer_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="67dp"
+        android:layout_marginTop="11dp"
+        android:layout_marginEnd="20dp"
+        android:textColor="@color/common_qa_comment_answer_content_color"
+        android:textIsSelectable="true"
+        android:textSize="16sp"
+        tools:text="符号A属于Rmxn表示一个m行n列的矩阵，并且矩阵A中所有的所有元素都是实数。符号x属于Rn表示一个含有n个元素的向量。符号A属于Rmxn表示一个m行n列的矩阵，并且矩阵A中所有的所有元素都是实数，符号x属于Rn表示一个含有n个元素的向量。符号A属于Rmxn表示一个m行n列的矩阵，并且矩阵A中所有的所有元素都是实数." />
+
+    <com.mredrock.cyxbs.qa.ui.widget.NineGridView
+        android:id="@+id/ngv_answer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="16dp"
+        android:paddingTop="19dp"
+        android:paddingEnd="16dp"
+        android:paddingBottom="19dp"
+        app:arrangementMode="fill" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="3dp"
+        android:layout_marginTop="20dp"
+        android:background="@color/common_qa_comment_item_divider_gap_color" />
+
+</LinearLayout>
