@@ -29,9 +29,6 @@ import com.mredrock.cyxbs.discover.map.widget.*
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
-import top.limuyang2.photolibrary.activity.LPhotoPickerActivity
-import top.limuyang2.photolibrary.engine.LGlideEngine
-import top.limuyang2.photolibrary.util.LPPImageType
 import java.io.File
 
 
@@ -49,7 +46,7 @@ class MapViewModel : BaseViewModel() {
         /** 从掌邮获取的地点未找到*/
         const val PLACE_SEARCH_500 = "500"
         const val DOWN_MESSAGE_NAME = "zscy-map-vr-url"
-        
+
         /** 图片选择的requestCode*/
         const val PICTURE_SELECT = 11
 

@@ -6,7 +6,6 @@ import android.content.Intent
 import android.database.Cursor
 import android.os.Bundle
 import android.provider.MediaStore
-import android.util.Log
 import androidx.lifecycle.Observer
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.mredrock.cyxbs.common.BaseApp
@@ -23,7 +22,6 @@ import com.mredrock.cyxbs.discover.map.viewmodel.MapViewModel
 import com.mredrock.cyxbs.discover.map.widget.GlideProgressDialog
 import com.mredrock.cyxbs.discover.map.widget.ProgressDialog
 import kotlinx.android.synthetic.main.map_activity_map.*
-import top.limuyang2.photolibrary.activity.LPhotoPickerActivity
 import java.io.File
 
 /**
@@ -193,7 +191,7 @@ class MapActivity : BaseViewModelActivity<MapViewModel>() {
             }
             /**
              * 上传图片
-             * 只需把路径列表pictureList传入，contex传入即可
+             * 只需把路径列表pictureList传入，context传入即可
              */
             ProgressDialog.show(this, BaseApp.context.resources.getString(R.string.map_upload_picture_running), BaseApp.context.resources.getString(R.string.map_please_a_moment_text), false)
             viewModel.uploadPicture(pictureList, this)
