@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="coursesViewModel"
+            type="com.mredrock.cyxbs.course.viewmodels.CoursesViewModel" />
+
+        <variable
+            name="coursePageViewModel"
+            type="com.mredrock.cyxbs.course.viewmodels.CoursePageViewModel" />
+
+    </data>
+
+    <com.mredrock.cyxbs.course.component.ScheduleView
+        android:id="@+id/schedule_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:animateLayoutChanges="true"
+        app:elementGap="@dimen/course_item_gap"
+        app:emptyText="@string/course_empty_course_text"
+        app:emptyTextSize="14sp"
+        app:touchViewColor="@color/common_add_transaction_to_the_timetable_click_color"
+        app:highlightColor="@color/common_course_identifies_the_current_shadow_color"
+        app:isBanTouchView="@{coursesViewModel.isGetOthers}"
+        app:noCourseDrawable="@drawable/common_ic_empty_holder"
+        app:noGourseImageHeight="131dp"
+        app:noGourseImageWidth="202dp"
+        app:nowWeek="@{coursePageViewModel.nowWeek}"
+        app:schedules="@{coursesViewModel.allCoursesData}"
+        app:touchViewDrawable="@drawable/course_ic_add_circle_white">
+
+    </com.mredrock.cyxbs.course.component.ScheduleView>
+</layout>
