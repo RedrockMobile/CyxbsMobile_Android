@@ -29,6 +29,9 @@ import com.mredrock.cyxbs.discover.map.widget.*
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
+import top.limuyang2.photolibrary.activity.LPhotoPickerActivity
+import top.limuyang2.photolibrary.engine.LGlideEngine
+import top.limuyang2.photolibrary.util.LPPImageType
 import java.io.File
 
 
@@ -46,6 +49,9 @@ class MapViewModel : BaseViewModel() {
         /** 从掌邮获取的地点未找到*/
         const val PLACE_SEARCH_500 = "500"
         const val DOWN_MESSAGE_NAME = "zscy-map-vr-url"
+        
+        /** 图片选择的requestCode*/
+        const val PICTURE_SELECT = 11
 
     }
 
@@ -341,7 +347,7 @@ class MapViewModel : BaseViewModel() {
     }
 
     /**
-     * 历史记录变化，从缓存中重新读取，并通知更新
+     * 搜索历史记录变化，从缓存中重新读取，并通知更新
      */
     fun notifySearchHistoryChange() {
         searchHistory.value = DataSet.getSearchHistory() ?: mutableListOf()
@@ -349,43 +355,9 @@ class MapViewModel : BaseViewModel() {
     }
 
     /**
-     * 上传图片
-     */
-
-    fun uploadPicture(imgPath: String?, context: Context) {
-        if (imgPath == null) {
-            return
-        }
-        val file = File(imgPath)
-        val requestFile: RequestBody = RequestBody.create("image/jpeg".toMediaTypeOrNull(), file)
-        val fileNameByTimeStamp: String = System.currentTimeMillis().toString() + ".jpg"
-        val body: MultipartBody.Part = MultipartBody.Part.createFormData("file", fileNameByTimeStamp, requestFile)
-        val params: MutableMap<String, Int> = HashMap()
-        params["place_id"] = showingPlaceId.toInt()
-
-        mapApiService.uploadPicture(body, params)
-                .setSchedulers()
-                .doOnErrorWithDefaultErrorHandler {
-                    ProgressDialog.hide()
-                    MapToast.makeText(BaseApp.context, R.string.map_upload_picture_failed_network, Toast.LENGTH_LONG).show()
-                    true
-                }
-                .safeSubscribeBy {
-                    ProgressDialog.hide()
-                    if (it.isSuccessful) {
-                        MapDialogTips.show(context, context.resources.getString(R.string.map_upload_picture_success_title), context.resources.getString(R.string.map_upload_picture_success_content), true, object : OnSelectListenerTips {
-                            override fun onPositive() {}
-                        })
-                    } else {
-                        MapToast.makeText(BaseApp.context, R.string.map_upload_picture_failed_server, Toast.LENGTH_LONG).show()
-
-                    }
-                }.lifeCycle()
-
-    }
-
-    /**
      * 进入地图获取要聚焦的点
+     * @param openString 从其他activity的intent过来传的数据。
+     * 通过该数据请求服务器（服务器解析该string），返回一个地点id并放大显示
      */
     fun getPlaceSearch(openString: String?) {
         mapApiService.placeSearch(openString ?: "-1")
@@ -413,6 +385,7 @@ class MapViewModel : BaseViewModel() {
 
     /**
      * 上传搜索热度
+     * 由于搜索是本地搜索，所以如果要添加搜索的热度，则必须上传
      * @param placeId 增加该地点的搜索量
      */
     fun addHot(placeId: String) {
@@ -427,6 +400,10 @@ class MapViewModel : BaseViewModel() {
                 }.lifeCycle()
     }
 
+    /**
+     * 获得vr界面的链接
+     */
+
     private fun getVrUrl() {
         ApiGenerator.getCommonApiService(CommonApiService::class.java)
                 .getDownMessage(DownMessageParams(DOWN_MESSAGE_NAME))
@@ -440,13 +417,68 @@ class MapViewModel : BaseViewModel() {
 
     }
 
+    /**
+     * 上传图片
+     * @param imgPath 要上传图片的路径列表
+     * @param context 用于显示dialog
+     */
+
+    fun uploadPicture(imgPath: ArrayList<String>, context: Context) {
+        val fileList = imgPath.map { File(it) }
+        val pictureTotal = fileList.size
+        var uploadSuccessCount = 0
+        var uploadFailedCount = 0
+        for (file in fileList){
+            val requestFile: RequestBody = RequestBody.create("image/jpeg".toMediaTypeOrNull(), file)
+            val fileNameByTimeStamp: String = System.currentTimeMillis().toString() + "${file.name}.jpg"
+            val body: MultipartBody.Part = MultipartBody.Part.createFormData("file", fileNameByTimeStamp, requestFile)
+            val params: MutableMap<String, Int> = HashMap()
+            params["place_id"] = showingPlaceId.toInt()
+
+            mapApiService.uploadPicture(body, params)
+                    .setSchedulers()
+                    .doFinally {
+                        if(uploadFailedCount + uploadSuccessCount == pictureTotal){
+                            ProgressDialog.hide()
+                            MapDialogTips.show(context, context.resources.getString(R.string.map_upload_picture_success_title), context.resources.getString(R.string.map_upload_picture_success_content) + "\n上传成功数量：$uploadSuccessCount\n上传失败数量：$uploadFailedCount", true, object : OnSelectListenerTips {
+                                override fun onPositive() {}
+                            })
+                        }
+                    }
+                    .doOnErrorWithDefaultErrorHandler {
+                        uploadFailedCount ++
+                        true
+                    }
+                    .safeSubscribeBy {
+                        if (it.isSuccessful) {
+                            uploadSuccessCount ++
+                        } else {
+                            uploadFailedCount ++
+                        }
+                    }.lifeCycle()
+        }
+
+    }
+
+    /**
+     * 打开图片选择器
+     * @param activity 用于intent
+     */
+
     fun selectPic(activity: Activity) {
         val galleryIntent = Intent(
                 Intent.ACTION_PICK,
                 MediaStore.Images.Media.EXTERNAL_CONTENT_URI
         )
-        activity.startActivityForResult(galleryIntent, 11)
+        activity.startActivityForResult(galleryIntent, PICTURE_SELECT)
     }
+
+    /**
+     * 分享图片逻辑
+     * 判断是否登录了
+     * @param context 用于判断是否登录
+     * @param fragment 供requireSharePermission方法使用
+     */
 
     fun sharePicture(context: Context, fragment: Fragment){
         context.doIfLogin("分享") {
@@ -461,6 +493,14 @@ class MapViewModel : BaseViewModel() {
             }
         }
     }
+
+    /**
+     * 获取分享权限逻辑
+     * @param context 获取权限用
+     * @param fragment 用于获得fragment依附的activity（这里是MapActivity），
+     * 去调用selectPic(activity)方法，以至于用intent，打开的activity返回后，
+     * 回到的是MapActivity的onActivityResult方法
+     */
     private fun requireSharePermission(context: Context, fragment: Fragment) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (BaseApp.context.checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED ||

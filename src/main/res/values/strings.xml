@@ -32,7 +32,7 @@
     <string name="map_please_a_moment_text">请稍后</string>
     <string name="map_upload_picture_failed_network">上传失败，网络似乎有问题</string>
     <string name="map_upload_picture_failed_server">上传失败，服务器错误</string>
-    <string name="map_upload_picture_success_title">上传成功</string>
+    <string name="map_upload_picture_success_title">上传完成</string>
     <string name="map_upload_picture_success_content">上传的优质照片如果审核通过了，就可以在这里看到啦~</string>
     <string name="map_require_permission_tips">访问相册需要权限</string>
     <string name="map_collect_adding">正在添加收藏</string>

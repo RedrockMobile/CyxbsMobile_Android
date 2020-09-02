@@ -6,6 +6,7 @@ import android.content.Intent
 import android.database.Cursor
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Log
 import androidx.lifecycle.Observer
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.mredrock.cyxbs.common.BaseApp
@@ -22,6 +23,7 @@ import com.mredrock.cyxbs.discover.map.viewmodel.MapViewModel
 import com.mredrock.cyxbs.discover.map.widget.GlideProgressDialog
 import com.mredrock.cyxbs.discover.map.widget.ProgressDialog
 import kotlinx.android.synthetic.main.map_activity_map.*
+import top.limuyang2.photolibrary.activity.LPhotoPickerActivity
 import java.io.File
 
 /**
@@ -168,7 +170,13 @@ class MapActivity : BaseViewModelActivity<MapViewModel>() {
             data: Intent?
     ) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == 11 && resultCode == Activity.RESULT_OK) {
+        if (requestCode == MapViewModel.PICTURE_SELECT && resultCode == Activity.RESULT_OK) {
+            /**
+             * 从图片选择框选择照片后
+             */
+            val pictureList = ArrayList<String>()
+
+            //以下经历一些处理获得真实路径
             val selectedImage = data!!.data
             val filePathColumn =
                     arrayOf(MediaStore.Images.Media.DATA)
@@ -178,11 +186,17 @@ class MapActivity : BaseViewModelActivity<MapViewModel>() {
             val columnIndex = cursor?.getColumnIndex(filePathColumn[0])
             val imgPath = columnIndex?.let { cursor.getString(it) }
             cursor?.close()
+
+            //传到路径列表中
+            if (imgPath != null) {
+                pictureList.add(imgPath)
+            }
             /**
              * 上传图片
+             * 只需把路径列表pictureList传入，contex传入即可
              */
             ProgressDialog.show(this, BaseApp.context.resources.getString(R.string.map_upload_picture_running), BaseApp.context.resources.getString(R.string.map_please_a_moment_text), false)
-            viewModel.uploadPicture(imgPath, this)
+            viewModel.uploadPicture(pictureList, this)
         }
     }
 }
