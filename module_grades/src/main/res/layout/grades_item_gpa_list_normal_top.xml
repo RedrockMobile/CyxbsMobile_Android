@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="125dp"
+    android:layout_marginStart="15dp"
+    android:layout_marginEnd="15dp">
+
+    <ImageView
+        android:id="@+id/grades_imageview5"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="9dp"
+        android:src="@drawable/grades_gpa_shape_blue_round_corner_top_part"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/grades_gpa_list_tv_term" />
+
+    <TextView
+        android:id="@+id/grades_gpa_list_tv_term"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="28dp"
+        android:layout_marginTop="10dp"
+        android:textColor="@color/common_level_two_font_color"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="2018-2019第一学期" />
+
+    <TextView
+        android:id="@+id/grades_gpa_list_tv_average_credit_num"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="@string/grades_bottom_sheet_gpa_number_default"
+        android:textColor="@color/common_level_two_font_color"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@+id/grades_gpa_list_tv_average_credit"
+        app:layout_constraintStart_toStartOf="@+id/grades_gpa_list_tv_average_credit"
+        app:layout_constraintTop_toBottomOf="@+id/grades_gpa_list_tv_term"
+        tools:text="3.4" />
+
+    <TextView
+        android:id="@+id/grades_gpa_list_tv_average_grades_num"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/grades_bottom_sheet_gpa_number_default"
+        android:textColor="@color/common_level_two_font_color"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@+id/grades_gpa_list_tv_average_grades"
+        app:layout_constraintStart_toStartOf="@+id/grades_gpa_list_tv_average_grades"
+        app:layout_constraintTop_toTopOf="@+id/grades_gpa_list_tv_average_credit_num"
+        tools:text="98" />
+
+    <TextView
+        android:id="@+id/grades_gpa_list_tv_average_rank_num"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/grades_bottom_sheet_gpa_number_default"
+        android:textColor="@color/common_level_two_font_color"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@+id/grades_gpa_list_tv_average_rank"
+        app:layout_constraintStart_toStartOf="@+id/grades_gpa_list_tv_average_rank"
+        app:layout_constraintTop_toTopOf="@+id/grades_gpa_list_tv_average_grades_num"
+        tools:text="1024" />
+
+    <TextView
+        android:id="@+id/grades_gpa_list_tv_average_credit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:text="@string/grades_bottom_sheet_gpa_rv_average_gpa"
+        android:textColor="@color/common_grades_gpa_normal_font_color"
+        app:layout_constraintEnd_toStartOf="@+id/grades_gpa_list_tv_average_grades"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/grades_gpa_list_tv_average_credit_num" />
+
+    <TextView
+        android:id="@+id/grades_gpa_list_tv_average_grades"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/grades_bottom_sheet_gpa_rv_average_grades"
+        android:textColor="@color/common_grades_gpa_normal_font_color"
+        app:layout_constraintEnd_toStartOf="@+id/grades_gpa_list_tv_average_rank"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/grades_gpa_list_tv_average_credit"
+        app:layout_constraintTop_toTopOf="@+id/grades_gpa_list_tv_average_credit" />
+
+    <TextView
+        android:id="@+id/grades_gpa_list_tv_average_rank"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/grades_bottom_sheet_gpa_rv_average_rank"
+        android:textColor="@color/common_grades_gpa_normal_font_color"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/grades_gpa_list_tv_average_grades"
+        app:layout_constraintTop_toTopOf="@+id/grades_gpa_list_tv_average_grades" />
+
+
+    <ImageView
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:src="@color/common_qa_answer_item_divider_color"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/grades_imageview5"
+        app:layout_constraintStart_toStartOf="@+id/grades_imageview5" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
