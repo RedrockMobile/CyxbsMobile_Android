@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+    <data>
+
+        <variable
+            name="coursesViewModel"
+            type="com.mredrock.cyxbs.course.viewmodels.CoursesViewModel" />
+
+        <variable
+            name="coursePageViewModel"
+            type="com.mredrock.cyxbs.course.viewmodels.CoursePageViewModel" />
+    </data>
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+        <TextView
+            android:id="@+id/tv_course_month"
+            android:layout_width="@dimen/course_course_month_width"
+            android:layout_height="@dimen/course_course_month_height"
+            android:gravity="center"
+            android:textColor="@color/common_level_one_font_color"
+            android:textSize="@dimen/course_column_text_size"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:month="@{coursePageViewModel.month}"
+            app:nowWeek="@{coursePageViewModel.nowWeek}" />
+
+        <com.mredrock.cyxbs.course.component.WeekBackgroundView
+            android:id="@+id/week_back_ground_view"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:backgroundElementGap="2dp"
+            app:bottomBackground="@color/common_course_identifies_the_current_shadow_color"
+            app:foreground="@color/levelFourFontColor"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_course_month"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/tv_course_month"
+            app:layout_constraintTop_toTopOf="@+id/tv_course_month"
+            app:round="8dp" />
+
+        <GridView
+            android:id="@+id/gv_time_reality"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/course_course_month_height"
+            android:paddingEnd="@dimen/course_item_gap"
+            android:paddingStart="@dimen/course_item_gap"
+            android:animateLayoutChanges="true"
+            android:gravity="center"
+            android:horizontalSpacing="2dp"
+            android:numColumns="7"
+            app:layout_constraintBottom_toBottomOf="@id/tv_course_month"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/tv_course_month"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <com.mredrock.cyxbs.course.component.CourseScrollView
+            android:id="@+id/course_sv"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:scrollbars="none"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_course_month">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <com.mredrock.cyxbs.course.component.RedRockTextView
+                    android:id="@+id/red_rock_tv_course_time"
+                    android:layout_width="@dimen/course_course_month_width"
+                    android:layout_height="0dp"
+                    android:textColor="@color/common_level_one_font_color"
+                    android:textSize="@dimen/course_column_text_size"
+                    app:displayedStrings="@array/course_course_time_strings"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:orientation="vertical" />
+
+
+                <com.mredrock.cyxbs.course.component.TimeIdentificationView
+                    android:id="@+id/course_tiv"
+                    android:layout_width="@dimen/course_course_month_width"
+                    android:layout_height="0dp"
+                    app:color="@color/levelFourFontColor"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:orientation="vertical" />
+
+
+                <FrameLayout
+                    android:id="@+id/course_schedule_container"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toEndOf="@+id/red_rock_tv_course_time"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.0" />
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        </com.mredrock.cyxbs.course.component.CourseScrollView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

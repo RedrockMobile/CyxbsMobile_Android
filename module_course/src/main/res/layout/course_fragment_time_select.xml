@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="listeners"
+            type="com.mredrock.cyxbs.course.component.TimeSelectDialog.TimeSelectListeners" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="33dp"
+        android:paddingBottom="33dp">
+
+        <com.super_rabbit.wheel_picker.WheelPicker
+            android:id="@+id/affair_week_day_select"
+            android:layout_width="wrap_content"
+            android:layout_height="230dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/affair_time_select"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:selectedTextColor="@color/common_menu_font_color_found"
+            app:textSize="16sp"
+            app:wheelItemCount="5" />
+
+        <com.super_rabbit.wheel_picker.WheelPicker
+            android:id="@+id/affair_time_select"
+            android:layout_width="wrap_content"
+            android:layout_height="230dp"
+            app:layout_constraintBottom_toBottomOf="@+id/affair_week_day_select"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/affair_week_day_select"
+            app:selectedTextColor="@color/common_menu_font_color_found"
+            app:textSize="16sp"
+            app:wheelItemCount="5" />
+
+
+        <ImageView
+            android:id="@+id/tv_sure"
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:layout_marginEnd="3dp"
+            android:background="?android:attr/selectableItemBackground"
+            android:gravity="center_vertical"
+            android:onClick="@{listeners::onSureClick}"
+            android:text="@string/course_sure"
+            app:layout_constraintBottom_toBottomOf="@+id/affair_time_select"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/affair_time_select"
+            app:layout_constraintTop_toTopOf="@+id/affair_time_select"
+            app:srcCompat="@drawable/course_ic_affair_sure_add" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

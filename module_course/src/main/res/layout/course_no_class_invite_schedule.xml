@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+
+        <variable
+            name="nowWeek"
+            type="int" />
+
+        <variable
+            name="noCourseInviteViewModel"
+            type="com.mredrock.cyxbs.course.viewmodels.NoCourseInviteViewModel" />
+
+    </data>
+
+    <com.mredrock.cyxbs.course.component.ScheduleView
+        android:id="@+id/schedule_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:animateLayoutChanges="true"
+        app:elementGap="2dp"
+        app:emptyText="@string/course_empty_course_text"
+        app:emptyTextSize="14sp"
+        app:highlightColor="@color/common_course_identifies_the_current_shadow_color"
+        app:isDisplayCourse="false"
+        app:nameList="@{noCourseInviteViewModel.nameList}"
+        app:noCourseDrawable="@drawable/common_ic_empty_holder"
+        app:noGourseImageHeight="131dp"
+        app:noGourseImageWidth="202dp"
+        app:nowWeek="@{nowWeek}"
+        app:studentsCourseMap="@{noCourseInviteViewModel.studentsCourseMap}"
+        app:touchViewDrawable="@drawable/course_ic_add_circle_white">
+
+    </com.mredrock.cyxbs.course.component.ScheduleView>
+</layout>

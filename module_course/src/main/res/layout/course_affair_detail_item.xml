@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:paddingTop="@dimen/course_dialog_padding_top"
+    android:paddingBottom="@dimen/course_dialog_padding_top"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/tv_affair_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:textColor="@color/common_level_two_font_color"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        android:maxLines="1"
+        app:layout_constraintBottom_toBottomOf="@+id/acb_delete"
+        app:layout_constraintEnd_toStartOf="@+id/acb_delete"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/acb_delete"
+        app:layout_constraintVertical_bias="1.0"
+        tools:text="去图书馆" />
+
+    <TextView
+        android:id="@+id/acb_modify"
+        android:paddingTop="6dp"
+        android:paddingStart="13dp"
+        android:paddingBottom="6dp"
+        android:paddingEnd="13dp"
+        android:transitionName=""
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/course_shape_affair_modify_button_background"
+        android:gravity="center"
+        android:text="@string/course_affair_modify"
+        android:textColor="@android:color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0" />
+
+
+    <TextView
+        android:id="@+id/acb_delete"
+        android:paddingTop="6dp"
+        android:paddingStart="13dp"
+        android:paddingBottom="6dp"
+        android:paddingEnd="13dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="13dp"
+        android:textSize="15sp"
+        android:background="@drawable/course_shape_affair_delete_button"
+        android:gravity="center"
+        android:text="@string/course_affair_delete"
+        android:textColor="@color/common_course_delete_button_text_color"
+        app:layout_constraintBottom_toBottomOf="@+id/acb_modify"
+        app:layout_constraintEnd_toStartOf="@+id/acb_modify"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/acb_modify"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <TextView
+        android:id="@+id/tv_course_cycle"
+        android:layout_width="wrap_content"
+        android:textColor="@color/common_level_two_font_color"
+        android:textSize="13sp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        tools:text="第十周 周五"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/tv_affair_name"
+        app:layout_constraintTop_toBottomOf="@+id/tv_affair_name"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <TextView
+        android:id="@+id/tv_course_exact_time"
+        android:layout_width="wrap_content"
+        android:textColor="@color/common_level_two_font_color"
+        android:textSize="13sp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        tools:text="第一二节课"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_course_cycle"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/tv_course_cycle"
+        app:layout_constraintTop_toTopOf="@+id/tv_course_cycle" />
+
+
+
+    <TextView
+        android:id="@+id/tv_affair_detail"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:minHeight="140dp"
+        android:layout_marginTop="20dp"
+        android:gravity="top|start"
+        android:textColor="@color/common_level_two_font_color"
+        android:textSize="15sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/acb_modify"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/tv_course_cycle"
+        app:layout_constraintTop_toBottomOf="@+id/tv_course_cycle"
+        app:layout_constraintVertical_bias="0.0"
+        tools:text="努力学习" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

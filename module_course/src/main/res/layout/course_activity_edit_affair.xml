@@ -1,0 +1,346 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <!--    这个布局有些小复杂每个约束都是设计好的，配合动画-->
+
+    <data>
+
+        <variable
+            name="editAffairViewModel"
+            type="com.mredrock.cyxbs.course.viewmodels.EditAffairViewModel" />
+
+    </data>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/common_white_background">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <View
+                android:id="@+id/course_view"
+                android:layout_width="128dp"
+                android:layout_height="128dp"
+                android:background="@drawable/course_shape_course_edit_affair_background_semicircle_4"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.0" />
+
+            <View
+                android:id="@+id/course_view2"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@drawable/course_shape_course_edit_affair_background"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@+id/course_view"
+                app:layout_constraintStart_toStartOf="@+id/course_view"
+                app:layout_constraintTop_toBottomOf="@+id/course_view" />
+
+            <View
+                android:id="@+id/course_view3"
+                android:layout_width="71dp"
+                android:layout_height="142dp"
+                android:background="@drawable/course_shape_course_edit_affair_background_semicircle_2"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/course_view2" />
+
+            <View
+                android:id="@+id/course_view333"
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:background="@drawable/course_shape_course_edit_affair_background"
+                app:layout_constraintBottom_toBottomOf="@+id/course_view3"
+                app:layout_constraintEnd_toStartOf="@+id/course_view2"
+                app:layout_constraintHorizontal_bias="0.11"
+                app:layout_constraintStart_toEndOf="@+id/course_view3"
+                app:layout_constraintTop_toBottomOf="@+id/course_view2"
+                app:layout_constraintVertical_bias="0.30" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/course_affair_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="18dp">
+
+            <ImageView
+                android:id="@+id/course_back"
+                android:layout_width="8dp"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:fitsSystemWindows="true"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.0"
+                app:srcCompat="@drawable/course_ic_back"
+                tools:ignore="ContentDescription" />
+
+
+            <TextView
+                android:id="@+id/course_textview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxLines="1"
+                android:text="@string/course_title_for_your_affair1"
+                android:textColor="@color/common_transaction_heading"
+                android:textSize="34sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.25" />
+
+            <TextView
+                android:id="@+id/tv_title_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:maxLines="1"
+                android:text="@string/course_title_for_your_affair2"
+                android:textColor="@color/common_transaction_heading"
+                android:textSize="34sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@+id/course_textview"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintHorizontal_weight="2"
+                app:layout_constraintStart_toStartOf="@+id/course_textview"
+                app:layout_constraintTop_toBottomOf="@+id/course_textview"
+                app:layout_constraintVertical_bias="0.0" />
+
+            <TextView
+                android:id="@+id/tv_title_tips"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxLines="1"
+                android:text=""
+                android:textColor="@color/common_transaction_heading"
+                android:textSize="15sp"
+                app:layout_constraintBottom_toBottomOf="@+id/tv_title_text"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toEndOf="@+id/tv_title_text"
+                app:layout_constraintTop_toTopOf="@+id/tv_title_text" />
+
+            <TextView
+                android:id="@+id/tv_content_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:maxLines="1"
+                android:text="@string/course_title_for_your_affair3"
+                android:textColor="@color/common_transaction_heading"
+                android:textSize="34sp"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="@+id/course_textview"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintHorizontal_weight="2"
+                app:layout_constraintStart_toStartOf="@+id/course_textview"
+                app:layout_constraintTop_toBottomOf="@+id/course_textview"
+                app:layout_constraintVertical_bias="0.0" />
+
+
+            <TextView
+                android:id="@+id/tv_content"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:maxLines="1"
+                android:textColor="@color/common_transaction_heading"
+                android:textSize="34sp"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="@+id/course_textview"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintHorizontal_weight="2"
+                app:layout_constraintStart_toStartOf="@+id/course_textview"
+                app:layout_constraintTop_toBottomOf="@+id/course_textview"
+                app:layout_constraintVertical_bias="0.0" />
+
+
+            <EditText
+                android:id="@+id/et_content_input"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/course_shape_affair_edit_tilte"
+                android:gravity="center_vertical"
+                android:imeOptions="actionNext"
+                android:inputType="text"
+                android:maxEms="250"
+                android:maxLength="180"
+                android:maxLines="1"
+                android:paddingStart="18dp"
+                android:paddingTop="12dp"
+                android:paddingEnd="18dp"
+                android:paddingBottom="12dp"
+                android:textColor="@color/common_transaction_completion_edit_view_color"
+                android:textColorHint="@color/common_transaction_completion_edit_view_color"
+                android:textSize="@dimen/course_edit_affair_tv_size"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_weight="8"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/course_textview"
+                app:layout_constraintTop_toBottomOf="@+id/tv_title_text"
+                app:layout_constraintVertical_bias="0.04000002"
+                tools:ignore="Autofill,LabelFor" />
+
+
+            <EditText
+                android:id="@+id/et_title"
+                android:layout_width="0dp"
+                android:layout_height="55dp"
+                android:background="@null"
+                android:gravity="center_vertical"
+                android:maxLines="1"
+                android:paddingHorizontal="2dp"
+                android:text="@{editAffairViewModel.title}"
+                android:textColor="@color/common_level_two_font_color"
+                android:textColorHint="@color/common_level_two_font_color"
+                android:textSize="34sp"
+                android:textStyle="bold"
+                android:visibility="gone"
+                app:layout_constraintBottom_toTopOf="@+id/et_content_input"
+                app:layout_constraintEnd_toEndOf="@+id/et_content_input"
+                app:layout_constraintStart_toStartOf="@+id/et_content_input"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="1.0"
+                tools:ignore="Autofill,LabelFor,TextFields" />
+
+            <androidx.core.widget.NestedScrollView
+                android:id="@+id/course_affair_sv"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/et_content_input"
+                app:layout_constraintVertical_bias="0.0">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/course_affair_bottom_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:minHeight="300dp">
+
+                    <com.mredrock.cyxbs.common.component.RedRockAutoWarpView
+                        android:id="@+id/rv_you_might"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:paddingStart="4dp"
+                        android:paddingTop="18dp"
+                        android:paddingEnd="4dp"
+                        android:paddingBottom="15dp"
+                        app:horizontalSpacing="7dp"
+                        app:layout_constraintBottom_toTopOf="@+id/course_view22"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintVertical_bias="0.0"
+                        app:maxLine="2"
+                        app:verticalsSpacing="8dp">
+
+                    </com.mredrock.cyxbs.common.component.RedRockAutoWarpView>
+
+                    <com.mredrock.cyxbs.common.component.RedRockAutoWarpView
+                        android:id="@+id/tv_week_select"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:paddingHorizontal="4dp"
+                        android:paddingTop="16dp"
+                        android:paddingBottom="0dp"
+                        android:visibility="gone"
+                        app:horizontalSpacing="8dp"
+                        app:layout_constraintBottom_toBottomOf="@+id/course_next_step"
+                        app:layout_constraintBottom_toTopOf="@+id/course_view22"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.0"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintVertical_bias="0.0"
+                        app:verticalsSpacing="8dp" />
+
+                    <com.mredrock.cyxbs.common.component.RedRockAutoWarpView
+                        android:id="@+id/tv_time_select"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="20dp"
+                        android:paddingBottom="20dp"
+                        android:visibility="gone"
+                        app:horizontalSpacing="10dp"
+                        app:layout_constraintBottom_toTopOf="@+id/course_view22"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.0"
+                        app:layout_constraintStart_toStartOf="@+id/tv_week_select"
+                        app:layout_constraintTop_toBottomOf="@+id/tv_week_select"
+                        app:layout_constraintVertical_bias="0.0"
+                        app:verticalsSpacing="8dp" />
+
+                    <TextView
+                        android:id="@+id/tv_remind_select"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/course_shape_add_affair_detailed_background"
+                        android:ellipsize="middle"
+                        android:gravity="center_vertical"
+                        android:paddingStart="13dp"
+                        android:paddingTop="9dp"
+                        android:paddingEnd="13dp"
+                        android:paddingBottom="9dp"
+                        android:singleLine="true"
+                        android:text="@{editAffairViewModel.selectedRemindString}"
+                        android:textColor="@color/common_transaction_add_page_warp_item_text_color"
+                        android:textSize="15sp"
+                        android:textStyle="bold"
+                        android:visibility="gone"
+                        app:layout_constraintBottom_toTopOf="@+id/course_view22"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.0"
+                        app:layout_constraintStart_toStartOf="@+id/tv_time_select"
+                        app:layout_constraintTop_toBottomOf="@+id/tv_time_select"
+                        app:layout_constraintVertical_bias="0.0" />
+
+                    <View
+                        android:id="@+id/course_next_step"
+                        android:layout_width="66dp"
+                        android:layout_height="66dp"
+                        android:background="@drawable/course_layer_list_affair_edit_button"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintVertical_bias="1.0" />
+
+                    <View
+                        android:id="@+id/course_view22"
+                        android:layout_width="132dp"
+                        android:layout_height="97dp"
+                        android:background="@drawable/course_layer_list_affair_edit_button_background"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="@+id/course_next_step"
+                        app:layout_constraintVertical_bias="0.0" />
+
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </androidx.core.widget.NestedScrollView>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </FrameLayout>
+</layout>
