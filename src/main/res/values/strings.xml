@@ -52,5 +52,6 @@
     <string name="map_show_picture_fail">图片加载失败</string>
     <string name="map_open_site_id_null">未找到该地点，请手动搜索</string>
     <string name="map_add_hot_failed">上传搜索热度失败~</string>
-
+    <string name="map_show_picture_save">保存图片</string>
+    <string name="map_show_picture_content">是否保存图片到本地？</string>
 </resources>
