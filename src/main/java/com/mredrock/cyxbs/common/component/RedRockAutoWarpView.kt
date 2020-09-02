@@ -4,7 +4,6 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.FrameLayout
 import com.mredrock.cyxbs.common.R
 
@@ -19,24 +18,17 @@ import com.mredrock.cyxbs.common.R
  *      我留有属性来设置子项的横向距离和纵向距离具体请看该自定义View的属性配置xml文件
  */
 class RedRockAutoWarpView : FrameLayout {
+
     var adapter: Adapter? = null
         set(value) {
             field = value
-            adapter?.context = context
-            adapter?.view = this
-            if (adapter?.getItemCount() ?: 0 == 0) {
-                return
+            value?.let { adapter ->
+                adapter.context = context
+                adapter.view = this
+                refreshData()
             }
-            refreshData()
-            requestLayout()
         }
 
-
-    /**
-     * 开启严格模式，默认开启，若是不开启严格模式子项行与行之间可能无法保证正常显示，
-     * 若是子项只是宽度不同，可以在属性里面关闭，可优化部分性能（有大量子项时）
-     */
-    private var isStrict = true
 
     /**
      * 最大行数，默认-1无限制
@@ -44,163 +36,185 @@ class RedRockAutoWarpView : FrameLayout {
     private var maxLine = -1
 
 
-    private var maxColumn = -1
-
     /**
      * 子项的左右间距和上下间距
      */
     private var spacingH: Int = 0
-    private var spacingV: Int = 0
 
+    private var spacingV: Int = 0
 
     constructor(context: Context) : super(context)
 
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs) {
-        val typedArray = context.obtainStyledAttributes(attrs,
-                R.styleable.RedRockAutoWarpView, R.attr.RedRockAutoWarpViewStyle, 0)
-        spacingH = typedArray.getDimension(R.styleable.RedRockAutoWarpView_horizontalSpacing, 0f).toInt()
-        spacingV = typedArray.getDimension(R.styleable.RedRockAutoWarpView_verticalsSpacing, 0f).toInt()
-        isStrict = typedArray.getBoolean(R.styleable.RedRockAutoWarpView_strictMode, true)
+        val typedArray = context.obtainStyledAttributes(
+                attrs,
+                R.styleable.RedRockAutoWarpView, R.attr.RedRockAutoWarpViewStyle, 0
+        )
+        spacingH =
+                typedArray.getDimension(R.styleable.RedRockAutoWarpView_horizontalSpacing, 0f).toInt()
+        spacingV =
+                typedArray.getDimension(R.styleable.RedRockAutoWarpView_verticalsSpacing, 0f).toInt()
         maxLine = typedArray.getInteger(R.styleable.RedRockAutoWarpView_maxLine, -1)
-        maxColumn = typedArray.getInteger(R.styleable.RedRockAutoWarpView_maxColumn, -1)
         typedArray.recycle()
     }
 
-    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
+    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(
+            context,
+            attrs,
+            defStyleAttr
+    )
+
+    constructor(
+            context: Context,
+            attrs: AttributeSet?,
+            defStyleAttr: Int,
+            defStyleRes: Int
+    ) : super(context, attrs, defStyleAttr, defStyleRes)
+
+    val measureColumnUsedHeights = mutableListOf<Int>()
 
 
-    /**
-     * 关键函数，用于将所有的子项添加到该View当中
-     */
-    private fun addItemView() {
+    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+        if (adapter == null) {
+            super.onMeasure(widthMeasureSpec, heightMeasureSpec)
+        } else {
+            val mWidth = MeasureSpec.getSize(widthMeasureSpec) - paddingStart - paddingEnd
+            //每一行的最大高度
+            adapter?.let {
+                //当前是第几排[从0计数]
+                var row = 0
+                //横向已经用的宽度
+                var rowUsedWith = 0
+                var i = 0
+                while (i < childCount) {
+                    val itemView = getChildAt(i)
+                    itemView.measure(
+                            MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED),
+                            MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED)
+                    )
+                    val itemWith: Int = itemView.measuredWidth
+                    val itemHeight: Int = itemView.measuredHeight
+                    val remainingWidth = mWidth - rowUsedWith
 
-        /**
-         * 下面复用代码
-         */
-        fun setLayoutP(layoutParams: LayoutParams, column: Int, rowUsedHeights: MutableList<Int>, columnUsedWith: Int) {
-            layoutParams.topMargin = (if (column == 0) 0 else {//如果当前是第一排，则为0
-                //不是0则加上上面所有的行的最大高度，如果当前item是当前行第一个，这不用减去当前行，不是则减去当前行
-                rowUsedHeights.sum() - if (columnUsedWith == 0) 0 else rowUsedHeights[column]
-                //如果设置了上下间隔则加上间隔
-            }) + spacingV * (rowUsedHeights.size - if (columnUsedWith == 0) 0 else 1)
-            layoutParams.leftMargin = if (columnUsedWith == 0) 0 else columnUsedWith
+                    if (itemWith >= remainingWidth && rowUsedWith != 0) {
+                        row++
+                        if (row == maxLine) break
+                        rowUsedWith = 0
+                        continue
+                    }
+
+                    if (rowUsedWith == 0 && row + 1 > measureColumnUsedHeights.size) {
+                        measureColumnUsedHeights.add(itemHeight)
+                    } else {
+                        if (measureColumnUsedHeights[row] < itemHeight) {
+                            measureColumnUsedHeights[row] = itemHeight
+                        }
+                    }
+                    val realWith = if (itemWith > measuredWidth) {
+                        measuredWidth
+                    } else {
+                        itemWith
+                    }
+
+                    //记录横向所用宽度
+                    rowUsedWith += realWith + spacingH
+                    i++
+                }
+            }
+            setMeasuredDimension(
+                    MeasureSpec.getSize(widthMeasureSpec),
+                    measureColumnUsedHeights.sum() + spacingH * (measureColumnUsedHeights.count() - 1) + paddingTop + paddingBottom
+            )
         }
 
-        adapter?.let { adapter ->
-            //当前是第几排[从0计数]
-            var column = 0
-            //横向已经用的宽度
-            var rowUsedWith = 0
-            //每一行的最大高度
-            val rowUsedHeights = mutableListOf<Int>()
-            var i = 0
-            while (i < adapter.getItemCount()) {
-                val itemId = adapter.getItemId(i)
-                val itemView = if (itemId != null) LayoutInflater.from(context).inflate(itemId, this, false) else adapter.getItemView(i)
-                itemView ?: throw NullPointerException("item为空，请检查是否复写getItemId或者getItemView中的其中一个")
-                clearMargin(itemView)//清除外边距，以免影响item实际大小
-                adapter.initItem(itemView, i)
-                itemView.measure(MeasureSpec.makeMeasureSpec(0,
-                        MeasureSpec.UNSPECIFIED), MeasureSpec.makeMeasureSpec(0,
-                        MeasureSpec.UNSPECIFIED))
-                val itemWith: Int = itemView.measuredWidth
-                val itemHeight: Int = itemView.measuredHeight
-                val layoutParams = itemView.layoutParams as LayoutParams
+    }
 
-                if (measuredWidth - rowUsedWith >= itemWith || rowUsedWith == 0) {
-                    setLayoutP(layoutParams, column, rowUsedHeights, rowUsedWith)
-                } else {
-                    column++
+    override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
+        if (adapter == null) {
+            super.onLayout(changed, left, top, right, bottom)
+        } else {
+            adapter?.let {
+                //当前是第几排[从0计数]
+                var row = 0
+                //横向已经用的宽度
+                var rowUsedWith = 0
+                var columnUsedHeight = 0
+                //每一行的最大高度
+                val columnUsedHeights = mutableListOf<Int>()
+                val horizontalPadding = paddingStart + paddingEnd
+                val availableWidth = measuredWidth - horizontalPadding
+                var i = 0
+                while (i < childCount) {
+                    val itemView = getChildAt(i)
+                    val itemWith: Int = itemView.measuredWidth
+                    val itemHeight: Int = itemView.measuredHeight
+                    val remainingWidth = availableWidth - rowUsedWith
+                    var realWith: Int
 
-                    //如果maxLine等于-1则默认包含所有子项。
-                    if (maxLine != -1 && column == maxLine) {
-                        break
-                    }
-                    rowUsedWith = 0
-                    setLayoutP(layoutParams, column, rowUsedHeights, rowUsedWith)
-                }
-
-                if (rowUsedWith == 0 && column + 1 > rowUsedHeights.size) {
-                    rowUsedHeights.add(itemHeight)
-                } else {
-                    if (rowUsedHeights[column] < itemHeight) {
-                        rowUsedHeights[column] = itemHeight
-                    }
-                }
-                //记录横向所用宽度
-                rowUsedWith += itemWith + spacingH
-
-                addView(itemView)
-                i++
-            }
-
-            if (isStrict) {
-                getChildAt(childCount - 1).addOnLayoutChangeListener { _, _, _, _, _, _, _, _, _ ->
-                    var column1 = 0
-                    var rowUsedWith1 = 0
-                    val rowUsedHeights1 = mutableListOf<Int>()
-                    var j = 0
-                    while (j < adapter.getItemCount()) {
-                        val itemView = getChildAt(j)
-                        j++
-                        itemView ?: continue
-                        val itemWith: Int = itemView.width
-                        val itemHeight: Int = itemView.height
-                        val layoutParams = itemView.layoutParams as LayoutParams
-
-                        if (measuredWidth - rowUsedWith1 >= itemWith + spacingH || rowUsedWith1 == 0) {
-                            setLayoutP(layoutParams, column1, rowUsedHeights1, rowUsedWith1)
+                    if (itemWith >= remainingWidth && rowUsedWith != 0) {
+                        row++
+                        if (row == maxLine) break
+                        columnUsedHeight =
+                                columnUsedHeights.sum() + spacingV * columnUsedHeights.count()
+                        rowUsedWith = 0
+                        continue
+                    } else {
+                        realWith = if (itemWith > availableWidth) {
+                            availableWidth
                         } else {
-                            column1++
-                            if (maxLine != -1 && column == maxLine) {
-                                break
-                            }
-                            rowUsedWith1 = 0
-                            setLayoutP(layoutParams, column1, rowUsedHeights1, rowUsedWith1)
+                            itemWith
                         }
 
-                        //从第一行开始，记录
-                        if (rowUsedWith1 == 0 && column1 + 1 > rowUsedHeights1.size) {
-                            rowUsedHeights1.add(itemHeight)
-                        } else {
-                            if (rowUsedHeights1[column1] < itemHeight) {
-                                rowUsedHeights1[column1] = itemHeight
-                            }
+                        val centerTop = ((measureColumnUsedHeights.getOrElse(row) { 0 } - itemHeight) / 2).run {
+                            if (this >= 0)
+                                this
+                            else 0
                         }
-                        //记录横向所用宽度
-                        rowUsedWith1 += itemWith + spacingH
-                        itemView.layoutParams = layoutParams
-
+                        itemView.layout(
+                                paddingStart + rowUsedWith,
+                                centerTop + paddingTop + columnUsedHeight,
+                                paddingStart + rowUsedWith + realWith,
+                                centerTop + paddingTop + columnUsedHeight + itemHeight
+                        )
                     }
+
+                    if (rowUsedWith == 0 && row + 1 > columnUsedHeights.size) {
+                        columnUsedHeights.add(itemHeight)
+                    } else {
+                        if (columnUsedHeights[row] < itemHeight) {
+                            columnUsedHeights[row] = itemHeight
+                        }
+                    }
+
+                    //记录横向所用宽度
+                    rowUsedWith += realWith + spacingH
+                    i++
                 }
             }
+
         }
     }
 
-    /**
-     * 数据发生更改，刷新数据
-     */
     fun refreshData() {
         removeAllViews()
-        if (adapter?.getItemCount() != 0) {
-            addItemView()
+        val itemCount = adapter?.getItemCount() ?: 0
+        if (itemCount != 0) {
+            adapter?.let { addItemView(itemCount, it) }
         }
     }
 
-    /**
-     * 清除view的外边距
-     */
-    private fun clearMargin(itemView: View) {
-        val layoutParams = if (itemView.layoutParams != null) itemView.layoutParams as LayoutParams
-        else {
-            LayoutParams(LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply {
-                itemView.layoutParams = this
-            }
+    private fun addItemView(
+            count: Int,
+            adapter: Adapter
+    ) {
+        for (i in 0 until count) {
+            val itemId = adapter.getItemId(i)
+            val itemView = if (itemId != null)
+                LayoutInflater.from(context).inflate(itemId, this, false)
+            else adapter.getItemView(i)
+            itemView?.let { adapter.initItem(it, i) }
+            addView(itemView)
         }
-        layoutParams.rightMargin = 0
-        layoutParams.leftMargin = 0
-        layoutParams.topMargin = 0
-        layoutParams.bottomMargin = 0
     }
 
     /**
@@ -220,9 +234,7 @@ class RedRockAutoWarpView : FrameLayout {
         }
 
         open fun getItemId(position: Int): Int? {
-            return if (getItemId() == null) {
-                null
-            } else getItemId()
+            return getItemId()
         }
 
         open fun getItemView(position: Int): View? = null
