@@ -1,5 +1,101 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="2fd151e9-8fa5-43ec-9b9a-9a62ac4fca9f" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/module_widget/build.gradle" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/module_widget/src/androidTest/java/com/mredrock/cyxbs/widget/ExampleInstrumentedTest.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/module_widget/src/main/AndroidManifest.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/module_widget/src/main/java/com/mredrock/cyxbs/widget/bean/CourseStatus.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/module_widget/src/main/java/com/mredrock/cyxbs/widget/service/GridWidgetService.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/module_widget/src/main/java/com/mredrock/cyxbs/widget/util/ApiService.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/module_widget/src/main/java/com/mredrock/cyxbs/widget/util/TimeUtil.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/module_widget/src/main/java/com/mredrock/cyxbs/widget/util/Util.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/module_widget/src/main/java/com/mredrock/cyxbs/widget/widget/little/BaseLittleWidget.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/module_widget/src/main/java/com/mredrock/cyxbs/widget/widget/little/LittleTransWidget.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/module_widget/src/main/java/com/mredrock/cyxbs/widget/widget/little/LittleWidget.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/module_widget/src/main/java/com/mredrock/cyxbs/widget/widget/normal/NormalWidget.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/module_widget/src/main/java/com/mredrock/cyxbs/widget/widget/oversize/OversizedAppWidget.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/module_widget/src/main/java/com/mredrock/cyxbs/widget/widget/page/ConfigActivity.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/module_widget/src/main/java/com/mredrock/cyxbs/widget/widget/page/little/LittleConfigActivity.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/module_widget/src/main/java/com/mredrock/cyxbs/widget/widget/page/normal/NormalConfigActivity.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/module_widget/src/main/java/com/mredrock/cyxbs/widget/widget/page/normal/NormalSelectActivity.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/module_widget/src/main/java/com/mredrock/cyxbs/widget/widget/page/oversized/OversizedAppWidgetConfigureActivity.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/module_widget/src/main/java/com/mredrock/cyxbs/widget/widget/page/trans/TransConfig.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/module_widget/src/main/java/com/mredrock/cyxbs/widget/widget/page/trans/TransConfigActivity.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/module_widget/src/main/module/AndroidManifest.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/module_widget/src/main/res/drawable-v24/widget_ic_back.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/module_widget/src/main/res/drawable-v24/widget_ic_fresh.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/module_widget/src/main/res/drawable-v24/widget_ic_front.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/module_widget/src/main/res/drawable-v24/widget_ic_little_example.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/module_widget/src/main/res/drawable-v24/widget_ic_little_trans_example.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/module_widget/src/main/res/drawable/widget_ic_back.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/module_widget/src/main/res/drawable/widget_ic_expand_less_black_24dp.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/module_widget/src/main/res/drawable/widget_ic_expand_more_black_24dp.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/module_widget/src/main/res/drawable/widget_ic_fresh.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/module_widget/src/main/res/drawable/widget_ic_front.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/module_widget/src/main/res/drawable/widget_ic_keyboard_arrow_down_black_24dp.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/module_widget/src/main/res/drawable/widget_ic_keyboard_arrow_up_black_24dp.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/module_widget/src/main/res/drawable/widget_ic_little_example.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/module_widget/src/main/res/drawable/widget_ic_little_trans_example.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/module_widget/src/main/res/drawable/widget_ic_normal_example.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/module_widget/src/main/res/drawable/widget_ic_oversized_example.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/module_widget/src/main/res/drawable/widget_selector_bg_savebt.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/module_widget/src/main/res/drawable/widget_shape_bg_title.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/module_widget/src/main/res/drawable/widget_shape_course_background.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/module_widget/src/main/res/drawable/widget_shape_day_week_background.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/module_widget/src/main/res/drawable/widget_shape_normal_course_background.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/module_widget/src/main/res/drawable/widget_shape_oversize_config.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/module_widget/src/main/res/drawable/widget_shape_oversize_course_background.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/module_widget/src/main/res/drawable/widget_shape_oversize_shadow.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/module_widget/src/main/res/drawable/widget_shpae_course_grid_afternoon_item.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/module_widget/src/main/res/drawable/widget_shpae_course_grid_moring_item.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/module_widget/src/main/res/drawable/widget_shpae_course_grid_nigth_item.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/module_widget/src/main/res/layout/widget_activity_config.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/module_widget/src/main/res/layout/widget_activity_little_config.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/module_widget/src/main/res/layout/widget_activity_normal_config.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/module_widget/src/main/res/layout/widget_activity_normal_select.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/module_widget/src/main/res/layout/widget_activity_trans_config.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/module_widget/src/main/res/layout/widget_grid_view_afternoon_item.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/module_widget/src/main/res/layout/widget_grid_view_day_of_week_item.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/module_widget/src/main/res/layout/widget_grid_view_day_of_week_selected_item.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/module_widget/src/main/res/layout/widget_grid_view_item_blank.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/module_widget/src/main/res/layout/widget_grid_view_item_half_afternoon.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/module_widget/src/main/res/layout/widget_grid_view_item_half_moring.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/module_widget/src/main/res/layout/widget_grid_view_item_half_night.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/module_widget/src/main/res/layout/widget_grid_view_moring_item.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/module_widget/src/main/res/layout/widget_grid_view_night_item.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/module_widget/src/main/res/layout/widget_little.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/module_widget/src/main/res/layout/widget_little_trans.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/module_widget/src/main/res/layout/widget_normal.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/module_widget/src/main/res/layout/widget_oversized_app_widget.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/module_widget/src/main/res/layout/widget_oversized_app_widget_configure.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/module_widget/src/main/res/values/colors.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/module_widget/src/main/res/values/dimens.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/module_widget/src/main/res/values/strings.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/module_widget/src/main/res/values/styles.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/module_widget/src/main/res/xml/wideget_oversized_app_widget_info.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/module_widget/src/main/res/xml/widget_little.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/module_widget/src/main/res/xml/widget_little_trans.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/module_widget/src/main/res/xml/widget_normal.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/module_widget/src/test/java/com/mredrock/cyxbs/widget/ExampleUnitTest.kt" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ExternalProjectsManager">
+    <system id="GRADLE">
+      <state>
+        <projects_view>
+          <tree_state>
+            <expand />
+            <select />
+          </tree_state>
+        </projects_view>
+      </state>
+    </system>
+  </component>
   <component name="MavenImportPreferences">
     <option name="generalSettings">
       <MavenGeneralSettings>
@@ -7,8 +103,23 @@
       </MavenGeneralSettings>
     </option>
   </component>
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <servers />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="550" y="259" key="MultipleFileMergeDialog" timestamp="1599056916307">
+      <screen x="0" y="23" width="1680" height="1027" />
+    </state>
+    <state x="550" y="259" key="MultipleFileMergeDialog/0.23.1680.1027@0.23.1680.1027" timestamp="1599056916307" />
   </component>
 </project>
