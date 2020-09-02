@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="23dp"
+    android:background="@color/volunteer_login_background"
+    app:cardCornerRadius="6dp"
+    app:cardElevation="1dp"
+    >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp">
+
+            <ImageView
+                android:layout_width="68dp"
+                android:layout_height="25dp"
+                android:src="@drawable/volunteer_ic_new_date" />
+            <RelativeLayout
+                android:layout_width="59dp"
+                android:layout_height="27dp">
+
+                <TextView
+                    android:id="@+id/volunteer_time_day"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:gravity="center"
+                    android:text="mm-dd"
+                    android:textColor="@color/volunteer_login_background" />
+            </RelativeLayout>
+        </FrameLayout>
+
+        <TextView
+            android:id="@+id/volunteer_time_content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="13dp"
+            android:layout_marginTop="5dp"
+            android:gravity="center_vertical"
+            android:text="活动"
+            android:textColor="@color/volunteer_colour_title_text"
+            android:textSize="15sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="13dp"
+            android:layout_marginTop="13dp"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="17dp"
+                android:layout_gravity="top"
+                android:src="@mipmap/volunteer_address" />
+
+            <TextView
+                android:id="@+id/volunteer_time_address"
+                android:layout_width="0dp"
+                android:layout_weight= "19"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top"
+                android:layout_marginLeft="2dp"
+                android:layout_marginStart="3dp"
+                android:text="地点"
+                android:textSize="12dp" />
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_weight="8"
+                android:layout_marginLeft="3dp"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/volunteer_time_hour"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="3sp"
+                    android:layout_marginRight="8dp"
+                    android:layout_toRightOf="@id/volunteer_time_image"
+                    android:text="小时"
+                    android:textColor="@color/volunteer_time_left"
+                    android:textSize="12dp" />
+                <ImageView
+                    android:id="@+id/volunteer_time_image"
+                    android:layout_width="12dp"
+                    android:layout_height="12dp"
+                    android:layout_centerVertical="true"
+                    android:scaleType="fitXY"
+                    android:src="@mipmap/volunteer_time_ic" />
+            </RelativeLayout>
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="13dp" />
+
+    </LinearLayout>
+</androidx.cardview.widget.CardView>
