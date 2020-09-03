@@ -6,12 +6,27 @@
     </shared>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="22927470-bcf1-4cf7-bd82-4eb2fb9d8aaa" name="Default Changelist" comment="" />
+    <list default="true" id="32c4d1fa-9637-448a-90dc-45b17d890c88" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/lib_common/libs/photolibrary-2.5.aar" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib_common/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/lib_common/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib_common/src/main/res/values-night/colors.xml" beforeDir="false" afterPath="$PROJECT_DIR$/lib_common/src/main/res/values-night/colors.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib_common/src/main/res/values/colors.xml" beforeDir="false" afterPath="$PROJECT_DIR$/lib_common/src/main/res/values/colors.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib_common/src/main/res/values/styles.xml" beforeDir="false" afterPath="$PROJECT_DIR$/lib_common/src/main/res/values/styles.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/module_map/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/module_map/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/module_qa/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/module_qa/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/module_qa/src/main/java/com/mredrock/cyxbs/qa/pages/answer/ui/AnswerActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/module_qa/src/main/java/com/mredrock/cyxbs/qa/pages/answer/ui/AnswerActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/module_qa/src/main/java/com/mredrock/cyxbs/qa/pages/quiz/ui/QuizActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/module_qa/src/main/java/com/mredrock/cyxbs/qa/pages/quiz/ui/QuizActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/module_qa/src/main/java/com/mredrock/cyxbs/qa/utils/ImageSelectorUtils.kt" beforeDir="false" afterPath="$PROJECT_DIR$/module_qa/src/main/java/com/mredrock/cyxbs/qa/utils/ImageSelectorUtils.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/module_qa/src/main/res/values/styles.xml" beforeDir="false" afterPath="$PROJECT_DIR$/module_qa/src/main/res/values/styles.xml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="ExecutionTargetManager" SELECTED_TARGET="3453449" />
   <component name="ExternalProjectsData">
     <projectState path="$PROJECT_DIR$">
       <ProjectState />
@@ -42,21 +57,22 @@
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/lib_common/libs" />
     <property name="project.structure.last.edited" value="Modules" />
     <property name="project.structure.proportion" value="0.17" />
     <property name="project.structure.side.proportion" value="0.2" />
+    <property name="settings.editor.selected.configurable" value="Errors" />
   </component>
   <component name="RecentsManager">
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$" />
-    </key>
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/lib_common/libs" />
       <recent name="$PROJECT_DIR$" />
       <recent name="$PROJECT_DIR$/module_widget" />
       <recent name="$PROJECT_DIR$/module_volunteer" />
       <recent name="$PROJECT_DIR$/module_schoolcar" />
-      <recent name="$PROJECT_DIR$/module_redrock_home" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$" />
     </key>
   </component>
   <component name="RunManager">
@@ -156,9 +172,21 @@
       <screen x="0" y="23" width="1680" height="1027" />
     </state>
     <state x="586" y="265" key="RollbackChangesDialog/0.23.1680.1027@0.23.1680.1027" timestamp="1599058457126" />
+    <state x="461" y="140" key="SettingsEditor" timestamp="1599103790895">
+      <screen x="0" y="23" width="1920" height="956" />
+    </state>
+    <state x="461" y="140" key="SettingsEditor/0.23.1920.956@0.23.1920.956" timestamp="1599103790895" />
     <state x="440" y="277" key="Vcs.Push.Dialog.v2" timestamp="1599058553520">
       <screen x="0" y="23" width="1680" height="1027" />
     </state>
     <state x="440" y="277" key="Vcs.Push.Dialog.v2/0.23.1680.1027@0.23.1680.1027" timestamp="1599058553520" />
+    <state x="604" y="242" width="712" height="518" key="find.popup" timestamp="1599101966333">
+      <screen x="0" y="23" width="1920" height="956" />
+    </state>
+    <state x="604" y="242" width="712" height="518" key="find.popup/0.23.1920.956@0.23.1920.956" timestamp="1599101966333" />
+    <state x="625" y="233" width="670" height="676" key="search.everywhere.popup" timestamp="1599103787486">
+      <screen x="0" y="23" width="1920" height="956" />
+    </state>
+    <state x="625" y="233" width="670" height="676" key="search.everywhere.popup/0.23.1920.956@0.23.1920.956" timestamp="1599103787486" />
   </component>
 </project>
