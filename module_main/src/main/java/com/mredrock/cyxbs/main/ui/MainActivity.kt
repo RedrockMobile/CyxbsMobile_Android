@@ -103,10 +103,6 @@ class MainActivity : BaseViewModelActivity<MainViewModel>(), EventBusLifecycleSu
     }
 
 
-    override fun onStart() {
-        super.onStart()
-    }
-
     /**
      * 一些非重量级初始化操作
      */

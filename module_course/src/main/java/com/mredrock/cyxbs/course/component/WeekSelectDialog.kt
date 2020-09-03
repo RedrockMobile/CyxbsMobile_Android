@@ -14,7 +14,7 @@ import com.mredrock.cyxbs.course.utils.weekSelectCheckBoxState
  * Created by anriku on 2018/9/8.
  */
 
-class WeekSelectDialog(context: Context, val weekSelectAdapter: RedRockAutoWarpView.Adapter?, val mPostWeeks: MutableList<Int>) : RedRockBottomSheetDialog(context) {
+class WeekSelectDialog(context: Context, val weekSelect: RedRockAutoWarpView, val mPostWeeks: MutableList<Int>) : RedRockBottomSheetDialog(context) {
 
     private var mBinding: CourseFragmentWeekSelectBinding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.course_fragment_week_select,
             null, false)
@@ -36,7 +36,7 @@ class WeekSelectDialog(context: Context, val weekSelectAdapter: RedRockAutoWarpV
                     mPostWeeks.add(k)
                 }
             }
-            weekSelectAdapter?.view?.refreshData()
+            weekSelect.refreshData()
             dismiss()
         }
         setContentView(mBinding.root)
