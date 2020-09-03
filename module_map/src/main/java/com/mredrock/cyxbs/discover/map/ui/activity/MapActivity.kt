@@ -4,14 +4,17 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.database.Cursor
+import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Log
 import androidx.lifecycle.Observer
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.config.COURSE_POS_TO_MAP
 import com.mredrock.cyxbs.common.config.DISCOVER_MAP
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
+import com.mredrock.cyxbs.common.utils.extensions.getAbsolutePath
 import com.mredrock.cyxbs.discover.map.R
 import com.mredrock.cyxbs.discover.map.model.DataSet
 import com.mredrock.cyxbs.discover.map.ui.fragment.AllPictureFragment
@@ -22,6 +25,7 @@ import com.mredrock.cyxbs.discover.map.viewmodel.MapViewModel
 import com.mredrock.cyxbs.discover.map.widget.GlideProgressDialog
 import com.mredrock.cyxbs.discover.map.widget.ProgressDialog
 import kotlinx.android.synthetic.main.map_activity_map.*
+import top.limuyang2.photolibrary.LPhotoHelper
 import java.io.File
 
 /**
@@ -172,29 +176,22 @@ class MapActivity : BaseViewModelActivity<MapViewModel>() {
             /**
              * 从图片选择框选择照片后
              */
-            val pictureList = ArrayList<String>()
+            val pictureList = ArrayList((LPhotoHelper.getSelectedPhotos(data)).map {
+                it.toString()
+            })
+            //上面获得的是UriString，转换下
+            val pictureListPath = ArrayList<String>()
+            pictureList.forEach { pictureListPath.add(Uri.parse(it).getAbsolutePath(this)) }
 
-            //以下经历一些处理获得真实路径
-            val selectedImage = data!!.data
-            val filePathColumn =
-                    arrayOf(MediaStore.Images.Media.DATA)
-            val cursor: Cursor? =
-                    selectedImage?.let { contentResolver?.query(it, filePathColumn, null, null, null) }
-            cursor?.moveToFirst()
-            val columnIndex = cursor?.getColumnIndex(filePathColumn[0])
-            val imgPath = columnIndex?.let { cursor.getString(it) }
-            cursor?.close()
-
-            //传到路径列表中
-            if (imgPath != null) {
-                pictureList.add(imgPath)
-            }
+            Log.d("sandyzhang",pictureListPath.toString())
             /**
              * 上传图片
              * 只需把路径列表pictureList传入，context传入即可
              */
             ProgressDialog.show(this, BaseApp.context.resources.getString(R.string.map_upload_picture_running), BaseApp.context.resources.getString(R.string.map_please_a_moment_text), false)
-            viewModel.uploadPicture(pictureList, this)
+            viewModel.uploadPicture(pictureListPath, this)
         }
     }
+
+
 }
