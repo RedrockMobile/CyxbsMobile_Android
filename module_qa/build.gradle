@@ -6,7 +6,4 @@ apply plugin: 'kotlin-android-extensions'
 // 公用库请不要添加到这里
 dependencies {
     implementation 'de.hdodenhof:circleimageview:3.1.0'
-    implementation('com.github.limuyang2:LPhotoPicker:1.0.9') {
-        exclude group: 'com.davemorrissey.labs'
-    }
 }

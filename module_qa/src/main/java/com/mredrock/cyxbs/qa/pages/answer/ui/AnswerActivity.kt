@@ -3,9 +3,8 @@ package com.mredrock.cyxbs.qa.pages.answer.ui
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.graphics.drawable.Drawable
+import android.net.Uri
 import android.os.Bundle
 import android.text.TextUtils
 import android.util.Base64
@@ -36,7 +35,7 @@ import kotlinx.android.synthetic.main.qa_common_toolbar.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import top.limuyang2.photolibrary.activity.LPhotoPickerActivity
+import top.limuyang2.photolibrary.LPhotoHelper
 
 @Route(path = QA_ANSWER)
 class AnswerActivity : BaseViewModelActivity<AnswerViewModel>(), EventBusLifecycleSubscriber {
@@ -173,9 +172,8 @@ class AnswerActivity : BaseViewModelActivity<AnswerViewModel>(), EventBusLifecyc
                     nine_grid_view.removeView(view)
                     continue
                 }
-                val bitmap = BitmapFactory.decodeFile(selectedImageFiles[i])
-                if (bitmap != null) {
-                    (view as ImageView).setImageBitmap(bitmap)
+                if (selectedImageFiles[i].isNotEmpty()) {
+                    (view as ImageView).setImageURI(Uri.parse(selectedImageFiles[i]))
                     viewModel.checkInvalid(false)
                 } else viewModel.checkInvalid(true)
             }
@@ -183,9 +181,8 @@ class AnswerActivity : BaseViewModelActivity<AnswerViewModel>(), EventBusLifecyc
             selectedImageFiles.asSequence()
                     .filterIndexed { index, _ -> index >= nine_grid_view.childCount - 1 }
                     .forEach {
-                        val bitmap = BitmapFactory.decodeFile(it)
-                        if (bitmap != null) {
-                            nine_grid_view.addView(createImageView(bitmap), nine_grid_view.childCount - 1)
+                        if (it.isNotEmpty()) {
+                            nine_grid_view.addView(createImageView(Uri.parse(it)), nine_grid_view.childCount - 1)
                             viewModel.checkInvalid(false)
                         } else viewModel.checkInvalid(true)
                     }
@@ -205,16 +202,18 @@ class AnswerActivity : BaseViewModelActivity<AnswerViewModel>(), EventBusLifecyc
         }
 
         when (requestCode) {
-            CHOOSE_PHOTO_REQUEST -> viewModel.setImageList(LPhotoPickerActivity.getSelectedPhotos(data))
+            CHOOSE_PHOTO_REQUEST -> viewModel.setImageList(ArrayList((LPhotoHelper.getSelectedPhotos(data)).map {
+                it.toString()
+            }))
             ViewImageCropActivity.DEFAULT_RESULT_CODE -> viewModel.setImageList(viewModel.imageLiveData.value!!.apply {
                 set(viewModel.editingImgPos, data.getStringExtra(ViewImageCropActivity.EXTRA_NEW_PATH))
             })
         }
     }
 
-    private fun createImageView(bitmap: Bitmap) = ImageView(this).apply {
+    private fun createImageView(uri: Uri) = ImageView(this).apply {
         scaleType = ImageView.ScaleType.CENTER_CROP
-        setImageBitmap(bitmap)
+        setImageURI(uri)
     }
 
 

@@ -1,10 +1,6 @@
 *.iml
 .gradle
-.idea
 /local.properties
-/.idea/libraries
-/.idea/modules.xml
-/.idea/workspace.xml
 .DS_Store
 /build
 /captures
@@ -13,3 +9,4 @@
 local_helper
 secret.gradle
 ./hooks/cache
+/.idea/

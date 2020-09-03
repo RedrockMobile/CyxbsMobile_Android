@@ -46,6 +46,9 @@
     <!--    44%透明度的二级字体-->
     <color name="common_alpha_forty_level_two_font_color">#7015315B</color>
 
+    <!--    图片选择器状态栏和toolbar颜色-->
+    <color name="common_photo_select_status_color">#788EFA</color>
+
     <!--    课表可上拉下拉标识小块背景-->
     <color name="common_course_table_drag_indicator_block_color">#E2EDFB</color>
     <!--    课表标识当天阴影-->
