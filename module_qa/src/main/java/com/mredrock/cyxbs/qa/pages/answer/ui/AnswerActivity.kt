@@ -20,6 +20,7 @@ import com.mredrock.cyxbs.common.config.QA_ANSWER
 import com.mredrock.cyxbs.common.event.AnswerDraftEvent
 import com.mredrock.cyxbs.common.mark.EventBusLifecycleSubscriber
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
+import com.mredrock.cyxbs.common.utils.extensions.getAbsolutePath
 import com.mredrock.cyxbs.common.utils.extensions.gone
 import com.mredrock.cyxbs.common.utils.extensions.startActivityForResult
 import com.mredrock.cyxbs.common.utils.extensions.visible
@@ -202,9 +203,16 @@ class AnswerActivity : BaseViewModelActivity<AnswerViewModel>(), EventBusLifecyc
         }
 
         when (requestCode) {
-            CHOOSE_PHOTO_REQUEST -> viewModel.setImageList(ArrayList((LPhotoHelper.getSelectedPhotos(data)).map {
-                it.toString()
-            }))
+            CHOOSE_PHOTO_REQUEST ->{
+                val imageListUri = ArrayList((LPhotoHelper.getSelectedPhotos(data)).map {
+                    it.toString()
+                })
+                val imageListAbsolutePath = ArrayList<String>()
+                imageListUri.forEach { imageListAbsolutePath.add(Uri.parse(it).getAbsolutePath(this)) }
+                viewModel.setImageList(imageListAbsolutePath)
+            }
+
+
             ViewImageCropActivity.DEFAULT_RESULT_CODE -> viewModel.setImageList(viewModel.imageLiveData.value!!.apply {
                 set(viewModel.editingImgPos, data.getStringExtra(ViewImageCropActivity.EXTRA_NEW_PATH))
             })

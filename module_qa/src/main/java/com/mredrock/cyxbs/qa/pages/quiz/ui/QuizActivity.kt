@@ -216,9 +216,12 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>(), EventBusLifecycleSu
         when (requestCode) {
             CHOOSE_PHOTO_REQUEST -> {
 //                val dataList : ArrayList<String> = ArrayList((LPhotoHelper.getSelectedPhotos(data))
-                viewModel.setImageList(ArrayList((LPhotoHelper.getSelectedPhotos(data)).map {
+                val imageListUri = ArrayList((LPhotoHelper.getSelectedPhotos(data)).map {
                     it.toString()
-                }))
+                })
+                val imageListAbsolutePath = ArrayList<String>()
+                imageListUri.forEach { imageListAbsolutePath.add(Uri.parse(it).getAbsolutePath(this)) }
+                viewModel.setImageList(imageListAbsolutePath)
             }
             ViewImageCropActivity.DEFAULT_RESULT_CODE -> viewModel.setImageList(viewModel.imageLiveData.value!!.apply {
                 set(viewModel.editingImgPos, data.getStringExtra(ViewImageCropActivity.EXTRA_NEW_PATH))
