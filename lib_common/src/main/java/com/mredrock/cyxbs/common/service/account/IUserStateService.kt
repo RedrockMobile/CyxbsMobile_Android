@@ -6,7 +6,7 @@ import androidx.annotation.WorkerThread
 
 interface IUserStateService {
     enum class UserState {
-        LOGIN, NOT_LOGIN, EXPIRED, TOURIST
+        LOGIN, NOT_LOGIN, EXPIRED, TOURIST, REFRESH
     }
 
     interface StateListener {

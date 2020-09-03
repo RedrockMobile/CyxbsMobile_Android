@@ -191,7 +191,7 @@ internal class AccountService : IAccountService {
             response.body()?.data?.let { data ->
                 bind(data)
                 mContext.runOnUiThread {
-                    notifyAllStateListeners(IUserStateService.UserState.LOGIN)
+                    notifyAllStateListeners(IUserStateService.UserState.REFRESH)
                     isTouristMode = false
                     this.defaultSharedPreferences.editor {
                         putBoolean(IS_TOURIST, isTouristMode)
