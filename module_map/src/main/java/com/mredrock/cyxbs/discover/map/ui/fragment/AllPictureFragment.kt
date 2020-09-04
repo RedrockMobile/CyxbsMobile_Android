@@ -4,14 +4,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.os.bundleOf
-import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.SCROLL_STATE_IDLE
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.mredrock.cyxbs.common.ui.BaseFragment
 import com.mredrock.cyxbs.discover.map.R
+import com.mredrock.cyxbs.discover.map.ui.activity.ShowPictureActivity
 import com.mredrock.cyxbs.discover.map.ui.adapter.AllPictureRvAdapter
 import com.mredrock.cyxbs.discover.map.viewmodel.MapViewModel
 import kotlinx.android.synthetic.main.map_fragment_all_picture.*
@@ -21,8 +20,6 @@ class AllPictureFragment : BaseFragment() {
     private lateinit var viewModel: MapViewModel
     private lateinit var allPictureAdapter: AllPictureRvAdapter
     private val imageData = mutableListOf<String>()
-    private val manager: FragmentManager?
-        get() = activity?.supportFragmentManager
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.map_fragment_all_picture, container, false)
@@ -39,13 +36,14 @@ class AllPictureFragment : BaseFragment() {
 
         allPictureAdapter.setOnItemClickListener(object : AllPictureRvAdapter.OnItemClickListener {
             override fun onItemClick(position: Int) {
-                val transaction = manager?.beginTransaction()?.setCustomAnimations(
-                        R.animator.map_slide_from_right,
-                        R.animator.map_slide_to_left,
-                        R.animator.map_slide_from_left,
-                        R.animator.map_slide_to_right)
-                transaction?.add(R.id.map_root_all_picture, ShowPictureFragment::class.java, bundleOf(Pair("picturePosition", position)))
-                transaction?.addToBackStack("showPicture")?.commit()
+//                val transaction = manager?.beginTransaction()?.setCustomAnimations(
+//                        R.animator.map_slide_from_right,
+//                        R.animator.map_slide_to_left,
+//                        R.animator.map_slide_from_left,
+//                        R.animator.map_slide_to_right)
+//                transaction?.add(R.id.map_root_all_picture, ShowPictureFragment::class.java, bundleOf(Pair("picturePosition", position)))
+//                transaction?.addToBackStack("showPicture")?.commit()
+                ShowPictureActivity.activityStart(activity, ArrayList(viewModel.placeDetails.value?.images?: listOf()), position)
             }
 
         })

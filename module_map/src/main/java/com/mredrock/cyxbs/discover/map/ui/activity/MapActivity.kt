@@ -3,11 +3,8 @@ package com.mredrock.cyxbs.discover.map.ui.activity
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
-import android.database.Cursor
 import android.net.Uri
 import android.os.Bundle
-import android.provider.MediaStore
-import android.util.Log
 import androidx.lifecycle.Observer
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.mredrock.cyxbs.common.BaseApp
@@ -183,7 +180,6 @@ class MapActivity : BaseViewModelActivity<MapViewModel>() {
             val pictureListPath = ArrayList<String>()
             pictureList.forEach { pictureListPath.add(Uri.parse(it).getAbsolutePath(this)) }
 
-            Log.d("sandyzhang",pictureListPath.toString())
             /**
              * 上传图片
              * 只需把路径列表pictureList传入，context传入即可
