@@ -3,10 +3,9 @@ package com.mredrock.cyxbs.discover.map.viewmodel
 import android.Manifest
 import android.app.Activity
 import android.content.Context
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
-import android.provider.MediaStore
+import android.util.Log
 import android.widget.Toast
 import androidx.databinding.ObservableArrayList
 import androidx.fragment.app.Fragment
@@ -29,6 +28,8 @@ import com.mredrock.cyxbs.discover.map.widget.*
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
+import top.limuyang2.photolibrary.LPhotoHelper
+import top.limuyang2.photolibrary.util.LPPImageType
 import java.io.File
 
 
@@ -48,7 +49,7 @@ class MapViewModel : BaseViewModel() {
         const val DOWN_MESSAGE_NAME = "zscy-map-vr-url"
 
         /** 图片选择的requestCode*/
-        const val PICTURE_SELECT = 11
+        const val PICTURE_SELECT = 0x1024
 
     }
 
@@ -425,10 +426,12 @@ class MapViewModel : BaseViewModel() {
         val pictureTotal = fileList.size
         var uploadSuccessCount = 0
         var uploadFailedCount = 0
-        for (file in fileList){
+        for (i in fileList.indices){
+            val file = fileList[i]
             val requestFile: RequestBody = RequestBody.create("image/jpeg".toMediaTypeOrNull(), file)
-            val fileNameByTimeStamp: String = System.currentTimeMillis().toString() + "${file.name}.jpg"
-            val body: MultipartBody.Part = MultipartBody.Part.createFormData("file", fileNameByTimeStamp, requestFile)
+            val fileName: String = System.currentTimeMillis().toString() + "${i}.jpg"
+            val body: MultipartBody.Part = MultipartBody.Part.createFormData("file", fileName, requestFile)
+            Log.e("sandyzhang",fileName)
             val params: MutableMap<String, Int> = HashMap()
             params["place_id"] = showingPlaceId.toInt()
 
@@ -463,11 +466,17 @@ class MapViewModel : BaseViewModel() {
      */
 
     fun selectPic(activity: Activity) {
-        val galleryIntent = Intent(
-                Intent.ACTION_PICK,
-                MediaStore.Images.Media.EXTERNAL_CONTENT_URI
-        )
-        activity.startActivityForResult(galleryIntent, PICTURE_SELECT)
+        LPhotoHelper.Builder()
+                .maxChooseCount(9) //最多选几个
+                .columnsNumber(3) //每行显示几列图片
+                .imageType(LPPImageType.ofAll()) // 文件类型
+                .pauseOnScroll(false) // 是否滑动暂停加载图片显示
+                .isSingleChoose(false) // 是否是单选
+                .isOpenLastAlbum(false) // 是否直接打开最后一次选择的相册
+                .selectedPhotos(ArrayList())
+                .theme(R.style.common_LPhotoTheme)
+                .build()
+                .start(activity, PICTURE_SELECT)
     }
 
     /**
