@@ -38,7 +38,7 @@ class AffairEditActivity : BaseViewModelActivity<EditAffairViewModel>() {
 
     //周数选择BottomSheetDialog
     private val mWeekSelectDialog: WeekSelectDialog by lazy(LazyThreadSafetyMode.NONE) {
-        WeekSelectDialog(this, tv_week_select.adapter, viewModel.mPostWeeks)
+        WeekSelectDialog(this, tv_week_select, viewModel.mPostWeeks)
     }
 
     //时间选择BottomSheetDialog
