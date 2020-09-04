@@ -10,5 +10,8 @@
         <activity
             android:name=".ui.activity.VRActivity"
             android:launchMode="singleTop" />
+        <activity
+            android:name=".ui.activity.ShowPictureActivity"
+            android:launchMode="singleTop"/>
     </application>
 </manifest>

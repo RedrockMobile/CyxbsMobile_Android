@@ -5,7 +5,6 @@ import android.app.Activity
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
-import android.util.Log
 import android.widget.Toast
 import androidx.databinding.ObservableArrayList
 import androidx.fragment.app.Fragment
@@ -431,7 +430,6 @@ class MapViewModel : BaseViewModel() {
             val requestFile: RequestBody = RequestBody.create("image/jpeg".toMediaTypeOrNull(), file)
             val fileName: String = System.currentTimeMillis().toString() + "${i}.jpg"
             val body: MultipartBody.Part = MultipartBody.Part.createFormData("file", fileName, requestFile)
-            Log.e("sandyzhang",fileName)
             val params: MutableMap<String, Int> = HashMap()
             params["place_id"] = showingPlaceId.toInt()
 
