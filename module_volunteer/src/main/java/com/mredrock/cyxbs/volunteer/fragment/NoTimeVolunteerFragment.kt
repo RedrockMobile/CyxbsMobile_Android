@@ -5,9 +5,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import com.mredrock.cyxbs.common.ui.BaseFragment
 import com.mredrock.cyxbs.volunteer.R
 
-class NoTimeVolunteerFragment : Fragment() {
+class NoTimeVolunteerFragment : BaseFragment() {
 
     internal var view: View? = null
     private val currentY: Float = 0.toFloat()

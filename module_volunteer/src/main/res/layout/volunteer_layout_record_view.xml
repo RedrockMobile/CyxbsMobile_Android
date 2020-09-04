@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="20dp">
+
+    <TextView
+        android:id="@+id/tv_volunteer_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        tools:text="欢迎你，赵潘"
+        android:textColor="@color/common_level_three_font_color"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toStartOf="@+id/volunteer_textview"
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_volunteer_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="17dp"
+        tools:text="志愿者编号：500112100455122"
+        android:textColor="@color/common_level_three_font_color"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="@id/tv_volunteer_name"
+        app:layout_constraintTop_toBottomOf="@id/tv_volunteer_name" />
+
+    <TextView
+        android:id="@+id/volunteer_textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="20dp"
+        android:text="切换绑定"
+        android:textColor="@color/common_level_three_font_color"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="@id/tv_volunteer_name"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/tv_volunteer_name" />
+
+    <FrameLayout
+        android:id="@+id/fl_volunteer_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="15dp"
+        android:background="@drawable/volunteer_ic_volunteer_feed_background"
+        app:layout_constraintEnd_toStartOf="@+id/volunteer_guideline"
+        app:layout_constraintHorizontal_bias="1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_volunteer_id">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_volunteer_total_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textColor="@color/levelFourFontColor"
+            tools:text="18" />
+    </FrameLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:text="总时长"
+        android:textColor="@color/common_level_three_font_color"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="@id/fl_volunteer_time"
+        app:layout_constraintStart_toStartOf="@id/fl_volunteer_time"
+        app:layout_constraintTop_toBottomOf="@id/fl_volunteer_time" />
+
+    <FrameLayout
+        android:id="@+id/fl_volunteer_times"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="40dp"
+        android:background="@drawable/volunteer_ic_volunteer_feed_background"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintStart_toStartOf="@+id/volunteer_guideline2"
+        app:layout_constraintTop_toBottomOf="@id/tv_volunteer_id">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_volunteer_total_times"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textColor="@color/levelFourFontColor"
+            tools:text="18" />
+    </FrameLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:text="项目数"
+        android:textColor="@color/common_level_three_font_color"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="@id/fl_volunteer_times"
+        app:layout_constraintStart_toStartOf="@id/fl_volunteer_times"
+        app:layout_constraintTop_toBottomOf="@id/fl_volunteer_times" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/volunteer_guideline"
+        android:layout_width="1dp"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.3" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/volunteer_guideline2"
+        android:layout_width="1dp"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.7" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

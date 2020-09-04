@@ -6,12 +6,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import com.mredrock.cyxbs.common.mark.EventBusLifecycleSubscriber
+import com.mredrock.cyxbs.common.ui.BaseFragment
 import com.mredrock.cyxbs.volunteer.R
 import com.mredrock.cyxbs.volunteer.adapter.VolunteerRecyclerAdapter
 import com.mredrock.cyxbs.volunteer.bean.VolunteerTime
 import kotlinx.android.synthetic.main.fragment_volunteer_time.view.*
 
-class AllVolunteerFragment : Fragment() {
+class AllVolunteerFragment : BaseFragment() {
     private var holeTime: TextView? = null
     private var mAdapter: VolunteerRecyclerAdapter? = null
 
@@ -24,7 +26,7 @@ class AllVolunteerFragment : Fragment() {
             holeTime = volunteer_time_number
             volunteer_time_number.text = allHour
 
-            mAdapter = VolunteerRecyclerAdapter(null, context!!, yearList, recordBeanList)
+            mAdapter = VolunteerRecyclerAdapter(null, context, yearList, recordBeanList)
             volunteer_time_recycler.apply {
                 isNestedScrollingEnabled = false
                 adapter = mAdapter

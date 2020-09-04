@@ -1,4 +1,4 @@
-package com.mredrock.cyxbs.volunteer
+package com.mredrock.cyxbs.volunteer.viewmodel
 
 import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.utils.LogUtils
@@ -7,6 +7,7 @@ import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.common.viewmodel.event.SingleLiveEvent
 import com.mredrock.cyxbs.volunteer.bean.VolunteerTime
+import com.mredrock.cyxbs.volunteer.config.Config.Authorization
 import com.mredrock.cyxbs.volunteer.network.ApiService
 
 class DiscoverVolunteerFeedViewModel : BaseViewModel() {
@@ -16,7 +17,7 @@ class DiscoverVolunteerFeedViewModel : BaseViewModel() {
     }
 
     fun loadVolunteerTime(uid: String) {
-        apiService.getVolunteerRecord("Basic enNjeTpyZWRyb2Nrenk=", uid)
+        apiService.getVolunteerRecord(Authorization, uid)
                 .setSchedulers()
                 .safeSubscribeBy(onNext = { volunteerTime: VolunteerTime ->
                     volunteerData.value = volunteerTime

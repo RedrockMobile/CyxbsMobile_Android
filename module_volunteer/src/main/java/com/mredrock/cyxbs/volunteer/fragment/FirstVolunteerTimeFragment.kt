@@ -6,11 +6,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import com.mredrock.cyxbs.common.ui.BaseFragment
 import com.mredrock.cyxbs.volunteer.R
 import com.mredrock.cyxbs.volunteer.adapter.VolunteerRecyclerAdapter
 import com.mredrock.cyxbs.volunteer.bean.VolunteerTime
 
-class FirstVolunteerTimeFragment : Fragment(){
+class FirstVolunteerTimeFragment : BaseFragment(){
 
     internal lateinit var view: View
     private lateinit var holeTime: TextView

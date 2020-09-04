@@ -39,4 +39,7 @@ class VolunteerTimeSP(private val mActivity: Activity) {
         editor.putString("uid", "404")
         editor.commit()
     }
+
+    fun isBind() = !(volunteerUid == "404" || volunteerAccount == "404" ||
+            volunteerPassword == "404")
 }

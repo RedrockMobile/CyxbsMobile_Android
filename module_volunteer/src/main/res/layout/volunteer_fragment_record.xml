@@ -107,12 +107,6 @@
         app:tabSelectedTextColor="@color/volunteer_time_left"
         app:tabTextColor="@color/volunteer_tab_text" />
 
-    <ImageView
-        android:id="@+id/volunteer_refresh"
-        android:layout_width="43dp"
-        android:layout_height="48dp"
-        android:layout_gravity="center"
-        android:src="@drawable/volunteer_animation_list_refresh_animation" />
 
     <LinearLayout
         android:layout_width="match_parent"

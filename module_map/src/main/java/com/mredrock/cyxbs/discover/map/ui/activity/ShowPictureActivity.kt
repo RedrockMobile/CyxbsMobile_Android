@@ -9,6 +9,7 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager.widget.ViewPager
+import anet.channel.util.Utils.context
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.SimpleTarget
 import com.bumptech.glide.request.transition.Transition
@@ -68,9 +69,10 @@ class ShowPictureActivity : AppCompatActivity() {
          */
         adapter.setMyOnPhotoLongClickListener(object : MyImageAdapter.OnPhotoLongClickListener {
             override fun onPhotoLongClick(url: String) {
-                MapDialog.show(this@ShowPictureActivity
-                        , getString(R.string.map_show_picture_save),
-                        getString(R.string.map_show_picture_content)
+                context ?: return
+                MapDialog.show(context!!
+                        , context!!.getString(R.string.map_show_picture_save),
+                        context!!.getString(R.string.map_show_picture_content)
                         , object : OnSelectListener {
                     override fun onDeny() {
                     }

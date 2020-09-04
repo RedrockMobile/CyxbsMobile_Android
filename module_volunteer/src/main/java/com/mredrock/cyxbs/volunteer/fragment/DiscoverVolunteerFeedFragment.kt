@@ -13,7 +13,7 @@ import com.mredrock.cyxbs.common.service.account.IUserStateService
 import com.mredrock.cyxbs.common.ui.BaseFeedFragment
 import com.mredrock.cyxbs.common.utils.extensions.doIfLogin
 import com.mredrock.cyxbs.common.utils.extensions.runOnUiThread
-import com.mredrock.cyxbs.volunteer.DiscoverVolunteerFeedViewModel
+import com.mredrock.cyxbs.volunteer.viewmodel.DiscoverVolunteerFeedViewModel
 import com.mredrock.cyxbs.volunteer.R
 import com.mredrock.cyxbs.volunteer.adapter.VolunteerFeedAdapter
 import com.mredrock.cyxbs.volunteer.adapter.VolunteerFeedUnbindAdapter

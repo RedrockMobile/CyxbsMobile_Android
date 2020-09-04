@@ -4,33 +4,30 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    tools:context=".fragment.DiscoverVolunteerFeedFragment"
-    >
+    tools:context=".fragment.DiscoverVolunteerFeedFragment">
 
 
-
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/tv_volunteer_feed_total_time"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        tools:text="18"
-        android:textColor="@color/levelFourFontColor"
-        app:layout_constraintBottom_toBottomOf="@+id/iv_volunteer_feed"
-        app:layout_constraintEnd_toEndOf="@+id/iv_volunteer_feed"
-        app:layout_constraintStart_toStartOf="@+id/iv_volunteer_feed"
-        app:layout_constraintTop_toTopOf="@+id/iv_volunteer_feed" />
-
-    <androidx.appcompat.widget.AppCompatImageView
+    <FrameLayout
         android:id="@+id/iv_volunteer_feed"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="15dp"
         android:layout_marginBottom="23dp"
-        android:src="@drawable/volunteer_ic_volunteer_feed_background"
-        android:layout_marginStart="15dp"
+        android:background="@drawable/volunteer_ic_volunteer_feed_background"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_volunteer_feed_total_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textColor="@color/levelFourFontColor"
+            tools:text="18" />
+    </FrameLayout>
 
 
     <androidx.appcompat.widget.AppCompatTextView
@@ -67,11 +64,11 @@
         android:layout_marginStart="23dp"
         android:layout_marginTop="4dp"
         android:alpha="0.8"
-        android:textSize="13sp"
         android:textColor="@color/common_level_two_font_color"
-        tools:text="5小时"
+        android:textSize="13sp"
         app:layout_constraintStart_toEndOf="@+id/iv_volunteer_feed"
-        app:layout_constraintTop_toBottomOf="@+id/tv_volunteer_feed_activity_name" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_volunteer_feed_activity_name"
+        tools:text="5小时" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tv_volunteer_feed_activity_address"
