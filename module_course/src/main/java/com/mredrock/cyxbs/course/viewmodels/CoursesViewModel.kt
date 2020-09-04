@@ -319,7 +319,11 @@ class CoursesViewModel : BaseViewModel() {
                 }
                 .observeOn(Schedulers.io())
                 //课表容错处理
-                .filter { if (courseAbnormalErrorHandling(it) && it.data != null) true else stopIntercept() }
+                .filter {
+                    if (courseAbnormalErrorHandling(it) && it.data != null)
+                        true
+                    else stopIntercept()
+                }
                 .doOnNext {
                     courses.addAll(it.data!!)//上面已经判断了
                     //将从服务器中获取的课程数据存入数据库中
@@ -351,6 +355,8 @@ class CoursesViewModel : BaseViewModel() {
     /**
      * 课表的容错处理
      *
+     * @return 返回true代表不拦截，可以进行后续代码，更新网络课表到本地
+     *
      * @param coursesFromInternet 直接从网络上拉取的课表数据
      * 因为有一个list的序列化和字符串对比，不建议在主线程调用这个方法，所以加上这个注解
      * 当然，你非要主线程调用那也没办法，你把注解去掉吧,其实退一步说也没啥大的计算操作
@@ -369,6 +375,7 @@ class CoursesViewModel : BaseViewModel() {
                     return aJson == bJson
                 }
 
+                // todo 如果后面哪个学弟能和后端的同学商量一起将这里的逻辑部分转移到服务端那才是最好的，这些东西写在客户端一旦出错，很难动态改
                 /**防止服务器里面的课表抽风,所以这个弄了这么多条件，只有满足以下条件才会去替换数据库的课表
                  * 课表版本发生了变化或者从数据库中取出的课表与网络上的课表课数不一样或者原来数据库中没有课表现在取有课表了*/
                 (coursesFromInternet.status == 200 || coursesFromInternet.status == 233)
@@ -416,13 +423,16 @@ class CoursesViewModel : BaseViewModel() {
      * 但此时就可能出现同步问题，最明显的影响就是获取了所有的数据但是没有进入第一个判断语句，从而导致不能显示课表
      * 实测，出现这种问题的概率很大，在我这几天尽百次的打开当中其中有4次出现了未进入第一个判断语句从到导致
      * [courses]有数据，但是[allCoursesData]没有，课表无法显示
+     *
+     * todo 这里要是哪个学弟和后端同学协调改造一下后端课表将这块内容集成到一个接口里面感觉，课表这里老学长接口设计得太💩了
+     * 导致客户端这边有大量的不必要操作，而且还容易出错
      */
     @Synchronized
     private fun isGetAllData(index: Int) {
         if (!mIsGettingData) return
         mDataGetStatus[index] = true
         if (mDataGetStatus[0] && mDataGetStatus[1]) {
-            //第一种情况没啥好讲的，第二种是为了规避那种本身就没有课的大四学生，
+            // 第一种情况没啥好讲的，第二种是为了规避那种本身就没有课的大四学生，
             // 没课也可以正常显示课表，如果有课也出现了第二种情况那么说明后端出啥问题了或者上面的容错机制还不够完善
             if (courses.isNotEmpty() || (courses.isEmpty() && affairs.isNotEmpty())) {
                 //这里没有直接set，所以不能引起所绑定的监听

@@ -475,7 +475,7 @@ class CourseContainerEntryFragment : BaseViewModelFragment<CoursesViewModel>(), 
     override fun onStateChanged(state: IUserStateService.UserState) {
         if (state == IUserStateService.UserState.LOGIN) {
             initFragment()
-        } else {
+        } else if (state == IUserStateService.UserState.NOT_LOGIN) {
             Thread {
                 try {
                     ViewModelProvider(this).get(CoursesViewModel::class.java).clearCache()
