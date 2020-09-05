@@ -15,7 +15,7 @@
         tools:text="欢迎你，赵潘"
         android:textColor="@color/common_level_three_font_color"
         android:textSize="20sp"
-        app:layout_constraintEnd_toStartOf="@+id/volunteer_textview"
+        app:layout_constraintEnd_toStartOf="@+id/tv_volunteer_logout"
         app:layout_constraintHorizontal_bias="0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -32,7 +32,7 @@
         app:layout_constraintTop_toBottomOf="@id/tv_volunteer_name" />
 
     <TextView
-        android:id="@+id/volunteer_textview"
+        android:id="@+id/tv_volunteer_logout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="20dp"

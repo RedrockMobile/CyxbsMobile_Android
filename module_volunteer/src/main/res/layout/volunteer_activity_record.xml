@@ -81,7 +81,8 @@
             <androidx.viewpager.widget.ViewPager
                 android:id="@+id/vp_volunteer_category"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
                 android:layout_marginTop="20dp"
                 android:overScrollMode="never" />
 

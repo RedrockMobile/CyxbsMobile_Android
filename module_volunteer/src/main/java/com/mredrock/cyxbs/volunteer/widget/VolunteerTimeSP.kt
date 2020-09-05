@@ -3,12 +3,13 @@ package com.mredrock.cyxbs.volunteer.widget
 import android.app.Activity
 import android.content.Context
 import android.content.SharedPreferences
+import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
 
 /**
  * Created by glossimar on 2018/10/24.
  */
 
-class VolunteerTimeSP(private val mActivity: Activity) {
+class VolunteerTimeSP(private val mContext: Context) {
     private val sharedPref: SharedPreferences
     private val editor: SharedPreferences.Editor
 
@@ -22,7 +23,7 @@ class VolunteerTimeSP(private val mActivity: Activity) {
         get() = sharedPref.getString("password", "404")
 
     init {
-        sharedPref = mActivity.getSharedPreferences("VolunteerTimeInfo", Context.MODE_PRIVATE)
+        sharedPref = mContext.defaultSharedPreferences
         editor = sharedPref.edit()
     }
 
@@ -37,6 +38,13 @@ class VolunteerTimeSP(private val mActivity: Activity) {
         editor.putString("account", "404")
         editor.putString("password", "404")
         editor.putString("uid", "404")
+        editor.commit()
+    }
+
+    fun removeVolunteerInfo() {
+        editor.remove("account")
+        editor.remove("password")
+        editor.remove("uid")
         editor.commit()
     }
 

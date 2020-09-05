@@ -31,7 +31,7 @@ class VolunteerRecyclerAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val v = LayoutInflater.from(parent.context).inflate(R.layout.item_volunteer_child_year, parent, false)
+        val v = LayoutInflater.from(parent.context).inflate(R.layout.volunteer_item_volunteer_child_year, parent, false)
         return ViewHolder(v)
     }
 

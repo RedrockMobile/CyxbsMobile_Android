@@ -49,7 +49,8 @@ class ChargeViewModel : BaseViewModel() {
                 .setSchedulers()
                 .safeSubscribeBy {
                     (chargeInfo as MutableLiveData).value = it
-                }.lifeCycle()
+                }
+                .lifeCycle()
     }
 
 }

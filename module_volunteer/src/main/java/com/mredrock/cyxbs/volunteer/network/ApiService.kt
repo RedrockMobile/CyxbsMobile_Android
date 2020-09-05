@@ -1,12 +1,12 @@
 package com.mredrock.cyxbs.volunteer.network
 
+import com.mredrock.cyxbs.common.bean.RedrockApiWrapper
+import com.mredrock.cyxbs.volunteer.bean.VolunteerAffair
+import com.mredrock.cyxbs.volunteer.bean.VolunteerAffairDetail
 import com.mredrock.cyxbs.volunteer.bean.VolunteerLogin
 import com.mredrock.cyxbs.volunteer.bean.VolunteerTime
 import io.reactivex.Observable
-import retrofit2.http.Field
-import retrofit2.http.FormUrlEncoded
-import retrofit2.http.Header
-import retrofit2.http.POST
+import retrofit2.http.*
 
 interface ApiService {
     @FormUrlEncoded
@@ -21,4 +21,11 @@ interface ApiService {
     fun getVolunteerRecord(@Header("Authorization") authorization: String,
                            @Field("uid") uid: String): Observable<VolunteerTime>
 
+    @GET("")
+    fun getVolunteerAffair(): Observable<RedrockApiWrapper<List<VolunteerAffair>>>
+
+
+    @FormUrlEncoded
+    @POST("")
+    fun getVolunteerAffairDetail(@Field("id") id: Int): Observable<RedrockApiWrapper<VolunteerAffairDetail>>
 }

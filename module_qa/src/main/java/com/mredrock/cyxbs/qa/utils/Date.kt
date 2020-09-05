@@ -31,7 +31,7 @@ fun questionTimeDescription(current: Long, other: Long): String {
     val differ = abs(other - current)
     return when {
         differ < oneHour / 2 -> "刚刚"
-        differ < oneDay -> "今天"
+        differ < oneDay - other % oneDay -> "今天"
         else -> {
             val format = SimpleDateFormat("yyyy-MM-dd", Locale.CHINA)
             format.format(Date(other))

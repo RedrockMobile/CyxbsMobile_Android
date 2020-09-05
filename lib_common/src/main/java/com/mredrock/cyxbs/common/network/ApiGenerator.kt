@@ -160,8 +160,8 @@ object ApiGenerator {
                  */
                 when {
                     refreshToken.isEmpty() || token.isEmpty() -> {
-                        token = ServiceManager.getService(IAccountService::class.java).getUserTokenService()?.getToken()
-                        refreshToken = ServiceManager.getService(IAccountService::class.java).getUserTokenService()?.getRefreshToken()
+                        token = ServiceManager.getService(IAccountService::class.java).getUserTokenService().getToken()
+                        refreshToken = ServiceManager.getService(IAccountService::class.java).getUserTokenService().getRefreshToken()
                         if (isTokenExpired()) {
                             checkRefresh(it)
                         } else {

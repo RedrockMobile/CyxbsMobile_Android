@@ -1,5 +1,6 @@
 package com.mredrock.cyxbs.volunteer.service
 
+import android.app.Activity
 import android.content.Context
 import androidx.fragment.app.Fragment
 import com.alibaba.android.arouter.facade.annotation.Route
@@ -9,6 +10,7 @@ import com.mredrock.cyxbs.common.config.VOLUNTEER_SERVICE
 import com.mredrock.cyxbs.common.service.discover.volunteer.IVolunteerService
 import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
 import com.mredrock.cyxbs.common.utils.extensions.editor
+import com.mredrock.cyxbs.volunteer.widget.VolunteerTimeSP
 
 /**
  * Created by yyfbe, Date on 2020/8/31.
@@ -21,10 +23,8 @@ class VolunteerService : IVolunteerService {
     }
 
     override fun clearSP() {
-        mContext?.defaultSharedPreferences?.editor {
-            remove("account")
-            remove("password")
-            remove("uid")
+        mContext?.let {
+            VolunteerTimeSP(it).removeVolunteerInfo()
         }
     }
 

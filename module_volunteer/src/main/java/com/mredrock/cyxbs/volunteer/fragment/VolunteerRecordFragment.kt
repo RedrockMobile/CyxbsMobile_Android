@@ -59,14 +59,13 @@ class VolunteerRecordFragment : BaseFragment(), EventBusLifecycleSubscriber {
         super.onViewCreated(view, savedInstanceState)
         initializeYears()
         initObserve()
-        initOnClickListener()
         setTabLayout()
     }
 
     /**
      * 对点击事件进行绑定
      */
-    private fun initOnClickListener() {
+//    private fun initOnClickListener() {
 //        volunteer_unbind.setOnClickListener {
 //            val handler = Handler(Looper.getMainLooper())
 //            handler.post {
@@ -88,44 +87,44 @@ class VolunteerRecordFragment : BaseFragment(), EventBusLifecycleSubscriber {
 //            }
 //        }
 
-        volunteer_time_title.setOnClickListener {
-            if (volunteer_time_tab.visibility == View.VISIBLE) {
-                volunteer_time_tab.visibility = View.GONE
-                volunteer_unshow_image.visibility = View.VISIBLE
-//                volunteer_unshow_image.visibility = View.GONE
-            } else if (volunteer_time_tab.visibility == View.GONE) {
-                volunteer_time_tab.visibility = View.VISIBLE
-                volunteer_unshow_image.visibility = View.GONE
+//        volunteer_time_title.setOnClickListener {
+//            if (volunteer_time_tab.visibility == View.VISIBLE) {
+//                volunteer_time_tab.visibility = View.GONE
 //                volunteer_unshow_image.visibility = View.VISIBLE
-            }
-        }
+////                volunteer_unshow_image.visibility = View.GONE
+//            } else if (volunteer_time_tab.visibility == View.GONE) {
+//                volunteer_time_tab.visibility = View.VISIBLE
+//                volunteer_unshow_image.visibility = View.GONE
+////                volunteer_unshow_image.visibility = View.VISIBLE
+//            }
+//        }
 
 //        volunteer_time_back.setOnClickListener { finish() }
 
-        volunteer_show_image.setOnClickListener {
-            if (volunteer_time_tab.visibility == View.VISIBLE) {
-                volunteer_time_tab.visibility = View.GONE
-                volunteer_unshow_image.visibility = View.VISIBLE
-//                volunteer_unshow_image.visibility = View.GONE
-            } else if (volunteer_time_tab.visibility == View.GONE) {
-                volunteer_time_tab.visibility = View.VISIBLE
-                volunteer_unshow_image.visibility = View.GONE
+//        volunteer_show_image.setOnClickListener {
+//            if (volunteer_time_tab.visibility == View.VISIBLE) {
+//                volunteer_time_tab.visibility = View.GONE
 //                volunteer_unshow_image.visibility = View.VISIBLE
-            }
-        }
-
-        volunteer_unshow_image.setOnClickListener {
-            if (volunteer_time_tab.visibility == View.VISIBLE) {
-                volunteer_time_tab.visibility = View.GONE
-                volunteer_unshow_image.visibility = View.VISIBLE
+////                volunteer_unshow_image.visibility = View.GONE
+//            } else if (volunteer_time_tab.visibility == View.GONE) {
+//                volunteer_time_tab.visibility = View.VISIBLE
 //                volunteer_unshow_image.visibility = View.GONE
-            } else if (volunteer_time_tab.visibility == View.GONE) {
-                volunteer_time_tab.visibility = View.VISIBLE
-                volunteer_unshow_image.visibility = View.GONE
+////                volunteer_unshow_image.visibility = View.VISIBLE
+//            }
+//        }
+//
+//        volunteer_unshow_image.setOnClickListener {
+//            if (volunteer_time_tab.visibility == View.VISIBLE) {
+//                volunteer_time_tab.visibility = View.GONE
 //                volunteer_unshow_image.visibility = View.VISIBLE
-            }
-        }
-    }
+////                volunteer_unshow_image.visibility = View.GONE
+//            } else if (volunteer_time_tab.visibility == View.GONE) {
+//                volunteer_time_tab.visibility = View.VISIBLE
+//                volunteer_unshow_image.visibility = View.GONE
+////                volunteer_unshow_image.visibility = View.VISIBLE
+//            }
+//        }
+//    }
 
     private fun initializeYears() {
         val calendar = Calendar.getInstance()

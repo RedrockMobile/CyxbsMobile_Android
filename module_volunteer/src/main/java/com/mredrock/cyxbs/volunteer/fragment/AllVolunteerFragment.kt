@@ -5,13 +5,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.fragment.app.Fragment
-import com.mredrock.cyxbs.common.mark.EventBusLifecycleSubscriber
 import com.mredrock.cyxbs.common.ui.BaseFragment
 import com.mredrock.cyxbs.volunteer.R
 import com.mredrock.cyxbs.volunteer.adapter.VolunteerRecyclerAdapter
 import com.mredrock.cyxbs.volunteer.bean.VolunteerTime
-import kotlinx.android.synthetic.main.fragment_volunteer_time.view.*
+import kotlinx.android.synthetic.main.volunteer_fragment_volunteer_time.view.*
 
 class AllVolunteerFragment : BaseFragment() {
     private var holeTime: TextView? = null
@@ -22,7 +20,7 @@ class AllVolunteerFragment : BaseFragment() {
     private var recordBeanList: MutableList<MutableList<VolunteerTime.RecordBean>> = mutableListOf()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_volunteer_time, container, false).apply {
+        return inflater.inflate(R.layout.volunteer_fragment_volunteer_time, container, false).apply {
             holeTime = volunteer_time_number
             volunteer_time_number.text = allHour
 

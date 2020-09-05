@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.fragment.app.Fragment
 import com.mredrock.cyxbs.common.ui.BaseFragment
 import com.mredrock.cyxbs.volunteer.R
 import com.mredrock.cyxbs.volunteer.adapter.VolunteerRecyclerAdapter
@@ -23,7 +22,7 @@ class FirstVolunteerTimeFragment : BaseFragment(){
     private lateinit var recordBeanList: MutableList<VolunteerTime.RecordBean>
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        view = inflater.inflate(R.layout.fragment_volunteer_time, container, false)
+        view = inflater.inflate(R.layout.volunteer_fragment_volunteer_time, container, false)
         holeTime = view.findViewById<View>(R.id.volunteer_time_number) as TextView
         recyclerView = view.findViewById<View>(R.id.volunteer_time_recycler) as androidx.recyclerview.widget.RecyclerView
         yearList = mutableListOf()

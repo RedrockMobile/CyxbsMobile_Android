@@ -19,7 +19,7 @@ import com.mredrock.cyxbs.volunteer.event.VolunteerLoginEvent
 import com.mredrock.cyxbs.volunteer.viewmodel.VolunteerLoginViewModel
 import com.mredrock.cyxbs.volunteer.widget.EncryptPassword
 import com.mredrock.cyxbs.volunteer.widget.VolunteerTimeSP
-import kotlinx.android.synthetic.main.activity_login.*
+import kotlinx.android.synthetic.main.volunteer_activity_login.*
 import org.greenrobot.eventbus.EventBus
 
 @Route(path = DISCOVER_VOLUNTEER)
@@ -43,7 +43,7 @@ class VolunteerLoginActivity : BaseViewModelActivity<VolunteerLoginViewModel>() 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_login)
+        setContentView(R.layout.volunteer_activity_login)
         initObserve()
         volunteerSP = VolunteerTimeSP(this)
         val user = ServiceManager.getService(IAccountService::class.java).getUserService()
@@ -59,7 +59,7 @@ class VolunteerLoginActivity : BaseViewModelActivity<VolunteerLoginViewModel>() 
             }
         }
         et_volunteer_account.setText("unbelievable3")
-        et_volunteer_password.setText("xE3L3RG7.Wugaad")
+        et_volunteer_password.setText("")
         btn_volunteer_login.setOnClickListener {
             loginAction()
         }
