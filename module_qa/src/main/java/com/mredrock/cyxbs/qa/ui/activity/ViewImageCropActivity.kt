@@ -66,8 +66,8 @@ class ViewImageCropActivity : AppCompatActivity() {
         Glide.with(this)
                 .load(imgResPath)
                 .apply(RequestOptions()
-                        .placeholder(com.mredrock.cyxbs.common.R.drawable.common_place_holder)
-                        .error(com.mredrock.cyxbs.common.R.drawable.common_place_holder))
+                        .placeholder(com.mredrock.cyxbs.common.R.drawable.common_ic_place_holder)
+                        .error(com.mredrock.cyxbs.common.R.drawable.common_ic_place_holder))
                 .into(iv)
     }
 
@@ -116,8 +116,8 @@ class ViewImageCropActivity : AppCompatActivity() {
             imgResPath = cropResultFilePath?.absolutePath ?: ""
             Glide.with(this)
                     .load(imgResPath)
-                    .apply(RequestOptions().placeholder(com.mredrock.cyxbs.common.R.drawable.common_place_holder)
-                            .error(com.mredrock.cyxbs.common.R.drawable.common_place_holder))
+                    .apply(RequestOptions().placeholder(com.mredrock.cyxbs.common.R.drawable.common_ic_place_holder)
+                            .error(com.mredrock.cyxbs.common.R.drawable.common_ic_place_holder))
                     .into(iv)
             setResult(Activity.RESULT_OK, Intent().putExtra(EXTRA_NEW_PATH, imgResPath))
         } else {

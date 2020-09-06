@@ -15,8 +15,8 @@ import com.mredrock.cyxbs.common.config.BASE_NORMAL_IMG_URL
  */
 fun Context.loadRedrockImage(rowUrl: String?,
                              imageView: ImageView,
-                             @DrawableRes placeholder: Int = R.drawable.common_place_holder,
-                             @DrawableRes error: Int = R.drawable.common_place_holder) {
+                             @DrawableRes placeholder: Int = R.drawable.common_ic_place_holder,
+                             @DrawableRes error: Int = R.drawable.common_ic_place_holder) {
     val url = when {
         rowUrl.isNullOrEmpty() -> {
             imageView.setImageResource(error)
