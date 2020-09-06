@@ -18,7 +18,7 @@
 
         <ImageView
             android:scaleType="centerCrop"
-            android:src="@drawable/common_place_holder"
+            android:src="@drawable/common_ic_place_holder"
             android:id="@+id/mine_sign_store_item_iv"
             android:layout_width="match_parent"
             android:layout_height="152dp" />
