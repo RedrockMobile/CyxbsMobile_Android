@@ -153,12 +153,16 @@ class CoursesViewModel : BaseViewModel() {
 
     // 表示今天是在第几周。
     var nowWeek = MutableLiveData<Int>().apply {
-        SchoolCalendar().weekOfTerm.let {
+        val schoolCalendar = SchoolCalendar()
+        schoolCalendar.weekOfTerm.let {
             value = if (it in 1..21) {
                 it
             } else {
                 0
             }
+        }
+        value?.let {
+            sendTopText(schoolCalendar.firstDay, it)
         }
     }
 
@@ -493,26 +497,30 @@ class CoursesViewModel : BaseViewModel() {
         }
 
         nowWeek.value?.let { nowWeek ->
-            val now = Calendar.getInstance()
-            //这个用来判断是不是可能处于是暑假的那段时间除非大变动应该暑假绝对是5，6，7，8，9，10月当中
-            val isProbablySummerVacation: (Int) -> Boolean = { listOf(5, 6, 7, 8, 9, 10).contains(it) }
-            val time = when {
-                now.timeInMillis >= firstDay.timeInMillis && nowWeek != 0 ->
-                    "第${Num2CN.number2ChineseNumber(nowWeek.toLong())}周 " +
-                            "周${
+            sendTopText(firstDay, nowWeek)
+        }
+    }
+
+    private fun sendTopText(firstDay: Calendar, nowWeek: Int) {
+        val now = Calendar.getInstance()
+        //这个用来判断是不是可能处于是暑假的那段时间除非大变动应该暑假绝对是5，6，7，8，9，10月当中
+        val isProbablySummerVacation: (Int) -> Boolean = { listOf(5, 6, 7, 8, 9, 10).contains(it) }
+        val time = when {
+            now.timeInMillis >= firstDay.timeInMillis && nowWeek != 0 ->
+                "第${Num2CN.number2ChineseNumber(nowWeek.toLong())}周 " +
+                        "周${
                             if (now[Calendar.DAY_OF_WEEK] != 1)
                                 Num2CN.number2ChineseNumber(now[Calendar.DAY_OF_WEEK] - 1.toLong())
                             else
                                 "日"
-                            }"
-                //8，9月欢迎新同学
-                nowWeek == 0 && (now[Calendar.MONTH] + 1 == 8 || now[Calendar.MONTH] + 1 == 9) -> "欢迎新同学～"
-                nowWeek == 0 && isProbablySummerVacation(now[Calendar.MONTH] + 1) -> "暑假快乐鸭"
-                nowWeek == 0 && !isProbablySummerVacation(now[Calendar.MONTH] + 1) -> "寒假快乐鸭"
-                else -> "呜呼～,发生了意料之外的错误呀"
-            }
-            EventBus.getDefault().postSticky(CurrentDateInformationEvent(time))
+                        }"
+            //8，9月欢迎新同学
+            nowWeek == 0 && (now[Calendar.MONTH] + 1 == 8 || now[Calendar.MONTH] + 1 == 9) -> "欢迎新同学～"
+            nowWeek == 0 && isProbablySummerVacation(now[Calendar.MONTH] + 1) -> "暑假快乐鸭"
+            nowWeek == 0 && !isProbablySummerVacation(now[Calendar.MONTH] + 1) -> "寒假快乐鸭"
+            else -> "呜呼～,发生了意料之外的错误呀"
         }
+        EventBus.getDefault().postSticky(CurrentDateInformationEvent(time))
     }
 
     /**
