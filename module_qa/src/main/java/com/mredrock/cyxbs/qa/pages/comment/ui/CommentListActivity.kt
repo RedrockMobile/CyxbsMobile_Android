@@ -318,4 +318,9 @@ class CommentListActivity : BaseActivity(), EventBusLifecycleSubscriber {
             progressDialog?.dismiss()
         }
     }
+
+    override fun finish() {
+        super.finish()
+        overridePendingTransition(R.anim.common_scale_fade_in_with_bezier, R.anim.common_slide_fade_out_to_bottom_with_bezier)
+    }
 }

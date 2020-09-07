@@ -1,138 +1,152 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/common_white_background"
-    android:orientation="vertical">
+    android:background="@color/common_white_background">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/iv_answer_avatar"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="15dp"
+        android:padding="5dp"
+        android:scaleType="centerCrop"
+        android:layout_marginTop="15dp"
+        android:src="@drawable/common_default_avatar"
+        android:transitionName="answer_avatar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_answer_nickname"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="9dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="9dp">
+        android:textColor="@color/common_qa_answer_list_header_content_color"
+        android:textSize="13sp"
+        android:layout_marginStart="15dp"
+        app:layout_constraintStart_toEndOf="@+id/iv_answer_avatar"
+        app:layout_constraintTop_toTopOf="@+id/iv_answer_avatar"
+        tools:text="刘童鞋" />
 
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/iv_answer_avatar"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
-            android:layout_marginTop="18dp"
-            android:padding="5dp"
-            android:scaleType="centerCrop"
-            android:src="@drawable/common_default_avatar"
-            android:transitionName="answer_avatar" />
+    <TextView
+        android:id="@+id/tv_answer_publish_at"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:textColor="@color/common_qa_answer_publish_at_color"
+        android:textSize="11sp"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_answer_avatar"
+        app:layout_constraintStart_toStartOf="@+id/tv_answer_nickname"
+        app:layout_constraintTop_toBottomOf="@+id/tv_answer_nickname"
+        tools:text="19:00" />
 
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_alignTop="@+id/iv_answer_avatar"
-            android:layout_alignBottom="@+id/iv_answer_avatar"
-            android:layout_marginStart="15dp"
-            android:layout_toEndOf="@+id/iv_answer_avatar">
-
-            <TextView
-                android:id="@+id/tv_answer_nickname"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/common_qa_answer_list_header_content_color"
-                android:textSize="13sp"
-                tools:text="刘童鞋" />
-
-            <TextView
-                android:id="@+id/tv_answer_publish_at"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom"
-                android:textColor="@color/common_qa_answer_publish_at_color"
-                android:textSize="11sp"
-                tools:text="19:00" />
+    <TextView
+        android:id="@+id/tv_adopted"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|center_vertical"
+        android:background="@drawable/qa_shape_answer_adopted_background"
+        android:paddingStart="10dp"
+        android:paddingTop="4dp"
+        android:paddingEnd="10dp"
+        android:paddingBottom="4dp"
+        android:layout_marginEnd="15dp"
+        android:text="@string/qa_answer_list_accepted"
+        android:textColor="@color/common_qa_answer_list_adopted_color"
+        android:textSize="12sp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_answer_avatar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/iv_answer_avatar"
+        tools:visibility="visible" />
 
 
-            <TextView
-                android:id="@+id/tv_adopted"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end|center_vertical"
-                android:background="@drawable/qa_shape_answer_adopted_background"
-                android:paddingStart="10dp"
-                android:paddingTop="4dp"
-                android:paddingEnd="10dp"
-                android:paddingBottom="4dp"
-                android:text="@string/qa_answer_list_accepted"
-                android:textColor="@color/common_qa_answer_list_adopted_color"
-                android:textSize="12sp"
-                android:visibility="gone"
-                tools:visibility="visible" />
-        </FrameLayout>
+    <TextView
+        android:id="@+id/tv_answer_content"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="30dp"
+        android:ellipsize="end"
+        android:maxLines="3"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:textColor="@color/common_qa_answer_content_color"
+        android:textIsSelectable="true"
+        android:textSize="14sp"
+        android:layout_marginBottom="40dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/btn_answer_more"
+        app:layout_constraintStart_toStartOf="@+id/tv_answer_publish_at"
+        app:layout_constraintTop_toBottomOf="@+id/iv_answer_avatar"
+        tools:text="是的，公式是没有问题，但是你第三步那个代入方式是错误的，不应该用x的负5次方是的，公式是没有问题，但是你第三步那个代入方式是错误的，不应该是这样" />
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/iv_answer_avatar"
-            android:layout_marginStart="15dp"
-            android:layout_toEndOf="@id/iv_answer_avatar"
-            android:orientation="vertical">
+    <ImageButton
+        android:id="@+id/btn_answer_more"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@null"
+        android:padding="30dp"
+        android:paddingStart="10dp"
+        android:src="@drawable/qa_ic_answer_more"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_answer_praise_count_image"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/tv_answer_praise_count_image" />
 
-            <TextView
-                android:id="@+id/tv_answer_content"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingTop="10dp"
-                android:paddingBottom="10dp"
-                android:textColor="@color/common_qa_answer_content_color"
-                android:textIsSelectable="true"
-                android:textSize="14sp"
-                tools:text="是的，公式是没有问题，但是你第三步那个代入方式是错误的，不应该用x的负5次方是的，公式是没有问题，但是你第三步那个代入方式是错误的，不应该是这样" />
+    <TextView
+        android:id="@+id/tv_answer_reply_count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:alpha="0.8"
+        android:drawableEnd="@drawable/qa_ic_answer_list_comment"
+        android:drawablePadding="7dp"
+        android:textColor="@color/common_level_two_font_color"
+        android:textSize="10sp"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_answer_praise_count_image"
+        app:layout_constraintStart_toStartOf="@+id/tv_answer_publish_at"
+        app:layout_constraintTop_toTopOf="@+id/tv_answer_praise_count_image"
+        tools:text="5条回复" />
 
-            <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-
-                <ImageButton
-                    android:id="@+id/btn_answer_more"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    android:background="@null"
-                    android:paddingStart="10dp"
-                    android:paddingEnd="4dp"
-                    android:src="@drawable/qa_ic_answer_more" />
-
-                <TextView
-                    android:id="@+id/tv_answer_reply_count"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:alpha="0.8"
-                    android:drawableEnd="@drawable/qa_ic_answer_list_comment"
-                    android:drawablePadding="7dp"
-                    android:textColor="@color/common_level_two_font_color"
-                    android:textSize="10sp"
-                    tools:text="5条回复" />
-
-                <TextView
-                    android:id="@+id/tv_answer_praise_count"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="10dp"
-                    android:layout_toStartOf="@+id/btn_answer_more"
-                    android:drawableStart="@drawable/qa_ic_answer_list_praise"
-                    android:drawablePadding="5dp"
-                    android:gravity="center_vertical"
-                    android:textColor="@color/common_qa_answer_praise_count_color"
-                    android:textSize="9sp"
-                    tools:text="25" />
-            </RelativeLayout>
-
-        </LinearLayout>
-    </RelativeLayout>
+    <TextView
+        android:id="@+id/tv_answer_praise_count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingStart="40dp"
+        android:layout_toStartOf="@+id/btn_answer_more"
+        android:paddingEnd="15dp"
+        android:paddingTop="20dp"
+        android:paddingBottom="20dp"
+        android:textColor="@color/common_qa_answer_praise_count_color"
+        android:textSize="11sp"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_answer_praise_count_image"
+        app:layout_constraintEnd_toStartOf="@+id/btn_answer_more"
+        app:layout_constraintTop_toTopOf="@+id/tv_answer_praise_count_image"
+        tools:text="25" />
 
     <ImageView
+        android:id="@+id/qa_imageview"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_marginTop="10dp"
-        android:background="@color/common_qa_answer_item_divider_color" />
-</LinearLayout>
+        android:background="@color/common_qa_answer_item_divider_color"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <com.mredrock.cyxbs.qa.ui.widget.likeview.LikeView
+        android:id="@+id/tv_answer_praise_count_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:checkedColor="#323FD9"
+        app:checkedLikeIconRes="@drawable/qa_ic_answer_list_praised"
+        app:cirRadius="14dp"
+        app:cycleTime="1000"
+        android:layout_marginEnd="7dp"
+        app:defaultColor="#ffcccccc"
+        app:defaultLikeIconRes="@drawable/qa_ic_answer_list_praise"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/btn_answer_more"
+        app:ringColor="#323FD9" />
+</androidx.constraintlayout.widget.ConstraintLayout>

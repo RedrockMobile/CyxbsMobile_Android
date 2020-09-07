@@ -130,7 +130,7 @@ class AnswerListActivity : BaseActivity(), EventBusLifecycleSubscriber {
             onItemClickListener = {
                 if (viewModel.questionLiveData.value != null) {
                     CommentListActivity.activityStart(this@AnswerListActivity, viewModel.questionLiveData.value!!, it)
-                    overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
+                    overridePendingTransition(R.anim.common_slide_in_from_bottom_with_bezier, R.anim.common_scale_fade_out_with_bezier)
                 }
             }
             onPraiseClickListener = { i: Int, answer: Answer ->
