@@ -20,7 +20,7 @@ class SearchHistoryRvAdapter(private val onHistoryClick: (Int) -> Unit, private 
         holder.itemView.iv_history_delete.setOnClickListener {
             val pos = holder.adapterPosition
             dataList.removeAt(pos)
-            notifyItemRemoved(pos)
+            notifyDataSetChanged()
             onCleanIconClick(pos)
 
         }
