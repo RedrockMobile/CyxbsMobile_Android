@@ -32,13 +32,6 @@ class OversizedAppWidget : AppWidgetProvider() {
             deleteTitlePref(context, appWidgetId)
         }
     }
-
-    override fun onEnabled(context: Context) {
-    }
-
-    override fun onDisabled(context: Context) {
-    }
-
 }
 
 internal fun updateAppWidget(context: Context, appWidgetManager: AppWidgetManager, appWidgetId: Int) {

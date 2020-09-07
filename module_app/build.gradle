@@ -43,6 +43,7 @@ android {
         secret.buildConfigField.forEach({ k, v ->
             buildConfigField("String", k, v)
         })
+
         ndk {
             abiFilters 'armeabi'
         }
