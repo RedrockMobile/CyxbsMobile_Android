@@ -314,9 +314,6 @@ class CoursesViewModel : BaseViewModel() {
         (if (isTeaCourse) mCourseApiService.getTeaCourse(mUserNum, mUserName) else mCourseApiService.getCourse(stuNum = mUserNum, isForceFetch = isForceFetch))
                 .setSchedulers()
                 .errorHandler()
-                .doOnNext {
-                    updateNowWeek(it.nowWeek)//涉及到UI操作，所以在UI线程
-                }
                 .observeOn(Schedulers.io())
                 //课表容错处理
                 .filter {
@@ -334,6 +331,7 @@ class CoursesViewModel : BaseViewModel() {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(ExecuteOnceObserver(onExecuteOnceNext = { coursesFromInternet ->
                     coursesFromInternet?.data?.let {
+                        updateNowWeek(coursesFromInternet.nowWeek)//涉及到UI操作，所以在UI线程
                         if (it.isNotEmpty() && isGetOthers.get() == false) {
                             toastEvent.value = R.string.course_course_update_tips
                             context.defaultSharedPreferences.editor {
@@ -490,12 +488,8 @@ class CoursesViewModel : BaseViewModel() {
         }
         schoolCalendarUpdated.value = true
 
-        if (this.nowWeek.value != networkNowWeek && networkNowWeek >= 1 && networkNowWeek <= 18) {
+        if (this.nowWeek.value != networkNowWeek && networkNowWeek in 1..21) {
             this.nowWeek.value = networkNowWeek
-        } else {
-            //比如要进行一次赋值，因为考虑到寒假暑假周数超出限制
-            //头部就要显示整学期字样
-            this.nowWeek.value = 0
         }
 
         nowWeek.value?.let { nowWeek ->
