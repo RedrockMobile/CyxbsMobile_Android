@@ -58,6 +58,19 @@ dependencies {
     api deps.rxjava.rxkotlin
     api deps.gson.runtime
 
+    // rxbinding
+    api deps.rxbinding.runtime
+    api deps.rxbinding.core
+    api deps.rxbinding.appcompat
+    api deps.rxbinding.drawerlayout
+    api deps.rxbinding.leanback
+    api deps.rxbinding.recyclerview
+    api deps.rxbinding.slidingpanelayout
+    api deps.rxbinding.swiperefreshlayout
+    api deps.rxbinding.viewpager
+    api deps.rxbinding.viewpager2
+    api deps.rxbinding.material
+
     // 由于更新的接口统一成json了，新版本就不需要这个依赖了
     // 如果以后需要xml依赖(深思)
     // 官方已经弃用SimpleXML改用JAXB了，建议跟上

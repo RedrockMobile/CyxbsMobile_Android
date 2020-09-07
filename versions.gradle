@@ -30,6 +30,7 @@ def version_retrofit = '2.7.2'
 def version_rxjava = '2.2.19'
 def version_rxandroid = '2.1.1'
 def version_rxkotlin = '2.4.0'
+def version_rxbinding = '4.0.0'
 def version_gson = '2.8.6'
 //architecture
 def version_lifecycle = '2.2.0'
@@ -103,6 +104,21 @@ rxjava.rxandroid = "io.reactivex.rxjava2:rxandroid:$version_rxandroid"
 rxjava.rxkotlin = "io.reactivex.rxjava2:rxkotlin:$version_rxkotlin"
 deps.rxjava = rxjava
 
+def rxbinding = [:]
+rxbinding.runtime = "com.jakewharton.rxbinding4:rxbinding:$version_rxbinding"
+rxbinding.core = "com.jakewharton.rxbinding4:rxbinding-core:$version_rxbinding"
+rxbinding.appcompat = "com.jakewharton.rxbinding4:rxbinding-appcompat:$version_rxbinding"
+rxbinding.drawerlayout = "com.jakewharton.rxbinding4:rxbinding-drawerlayout:$version_rxbinding"
+rxbinding.leanback = "com.jakewharton.rxbinding4:rxbinding-leanback:$version_rxbinding"
+rxbinding.recyclerview = "com.jakewharton.rxbinding4:rxbinding-recyclerview:$version_rxbinding"
+rxbinding.slidingpanelayout = "com.jakewharton.rxbinding4:rxbinding-slidingpanelayout:$version_rxbinding"
+rxbinding.swiperefreshlayout = "com.jakewharton.rxbinding4:rxbinding-swiperefreshlayout:$version_rxbinding"
+rxbinding.viewpager = "com.jakewharton.rxbinding4:rxbinding-viewpager:$version_rxbinding"
+rxbinding.viewpager2 = "com.jakewharton.rxbinding4:rxbinding-viewpager2:$version_rxbinding"
+rxbinding.material = "com.jakewharton.rxbinding4:rxbinding-material:$version_rxbinding"
+deps.rxbinding = rxbinding
+
+
 def gson = [:]
 gson.runtime = "com.google.code.gson:gson:$version_gson"
 deps.gson = gson
@@ -150,7 +166,7 @@ deps.rxpermissions = rxpermissions
 def umeng = [:]
 umeng.common = "com.umeng.umsdk:common:$version_umeng_common"
 umeng.asms = 'com.umeng.umsdk:asms:1.1.3' // asms包依赖(必选)
-umeng.crash =  'com.umeng.umsdk:crash:0.0.4' // native crash包依赖(必选)
+umeng.crash = 'com.umeng.umsdk:crash:0.0.4' // native crash包依赖(必选)
 umeng.oaid_lenovo = 'com.umeng.umsdk:oaid_lenovo:1.0.0' // (可选)
 umeng.oaid_mi = 'com.umeng.umsdk:oaid_mi:1.0.0' // (可选)
 umeng.oaid_oppo = 'com.umeng.umsdk:oaid_oppo:1.0.4' // (可选)
