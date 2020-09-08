@@ -25,22 +25,21 @@ class VolunteerAffairFragment : BaseViewModelFragment<VolunteerAffairViewModel>(
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val volunteerAffair = VolunteerAffair(1, "荧光夜跑护跑活动",
-                "通过帮助和引导同学们参与到夜跑项目中来，充当裁判，判断他们是否合格", 111111, 11111
-        )
+        viewModel.getVolunteerAffair()
         swl_volunteer_affair.setOnRefreshListener {
             viewModel.getVolunteerAffair()
         }
-        //todo 测试数据
         rl_volunteer_affair.layoutManager = LinearLayoutManager(context)
-        rl_volunteer_affair.adapter = VolunteerAffairAdapter(listOf<VolunteerAffair>(volunteerAffair)) {
-            viewModel.getVolunteerAffairDetail(it)
-            viewModel.volunteerAffairDetail.value = VolunteerAffairDetail("cccc", "荧光夜跑护跑活动",
-                    "通过帮助和引导同学们参与到夜跑项目中来，充当裁判，判断他们是否合格", 111111, "111")
-        }
         viewModel.volunteerAffairs.observe {
             swl_volunteer_affair.isRefreshing = false
-//            rl_volunteer_affair.adapter = VolunteerSchoolAdapter(it ?: return@observe)
+            val adapter = rl_volunteer_affair.adapter
+            if (adapter == null) {
+                rl_volunteer_affair.adapter = VolunteerAffairAdapter(it ?: return@observe) { id ->
+                    viewModel.getVolunteerAffairDetail(id)
+                }
+            } else {
+                it?.let { list -> (adapter as VolunteerAffairAdapter).refreshData(list) }
+            }
         }
         viewModel.volunteerAffairDetail.observe { data ->
             if (context == null) return@observe
@@ -50,6 +49,8 @@ class VolunteerAffairFragment : BaseViewModelFragment<VolunteerAffairViewModel>(
                         volunteerAffairBottomSheetDialog?.refresh(data)
                     }
                 }
+            } else {
+                data?.let { volunteerAffairBottomSheetDialog?.refresh(it) }
             }
             volunteerAffairBottomSheetDialog?.show()
         }

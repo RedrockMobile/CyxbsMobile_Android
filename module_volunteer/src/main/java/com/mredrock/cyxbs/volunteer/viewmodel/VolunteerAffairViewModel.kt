@@ -19,7 +19,6 @@ class VolunteerAffairViewModel : BaseViewModel() {
 
     val volunteerAffairDetail = MutableLiveData<VolunteerAffairDetail>()
     fun getVolunteerAffair() {
-        return
         ApiGenerator.getApiService(ApiService::class.java)
                 .getVolunteerAffair()
                 .setSchedulers()
@@ -30,7 +29,6 @@ class VolunteerAffairViewModel : BaseViewModel() {
     }
 
     fun getVolunteerAffairDetail(id: Int) {
-        return
         ApiGenerator.getApiService(ApiService::class.java)
                 .getVolunteerAffairDetail(id)
                 .setSchedulers()

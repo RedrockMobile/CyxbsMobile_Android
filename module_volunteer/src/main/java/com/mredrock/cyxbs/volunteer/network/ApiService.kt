@@ -21,11 +21,11 @@ interface ApiService {
     fun getVolunteerRecord(@Header("Authorization") authorization: String,
                            @Field("uid") uid: String): Observable<VolunteerTime>
 
-    @GET("")
+    @GET("/wxapi/cyb-volunteer/volunteer/activities")
     fun getVolunteerAffair(): Observable<RedrockApiWrapper<List<VolunteerAffair>>>
 
 
     @FormUrlEncoded
-    @POST("")
+    @POST("/wxapi/cyb-volunteer/volunteer/activity/info")
     fun getVolunteerAffairDetail(@Field("id") id: Int): Observable<RedrockApiWrapper<VolunteerAffairDetail>>
 }

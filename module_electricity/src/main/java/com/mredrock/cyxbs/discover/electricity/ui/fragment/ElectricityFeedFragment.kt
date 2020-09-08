@@ -17,6 +17,7 @@ import com.mredrock.cyxbs.discover.electricity.bean.ElecInf
 import com.mredrock.cyxbs.discover.electricity.config.*
 import com.mredrock.cyxbs.discover.electricity.viewmodel.ChargeViewModel
 import com.mredrock.cyxbs.electricity.R
+import kotlinx.android.synthetic.main.electricity_discover_feed_unbound.view.*
 
 @Route(path = DISCOVER_ELECTRICITY_FEED)
 class ElectricityFeedFragment : BaseFeedFragment<ChargeViewModel>() {
@@ -61,6 +62,16 @@ class ElectricityFeedFragment : BaseFeedFragment<ChargeViewModel>() {
         }
         viewModel.chargeInfo.observe {
             handleData(it)
+        }
+        //首次默认加载失败，说明账号有问题
+        viewModel.loadFailed.observe {
+            if (it == null) return@observe
+            val adapter = getAdapter()
+            if (adapter is ElectricityFeedUnboundAdapter) {
+                adapter.apply {
+                    view?.tv_electricity_no_account?.text = getString(R.string.electricity_unbind)
+                }
+            }
         }
 
     }

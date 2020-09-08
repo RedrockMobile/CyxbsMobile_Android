@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import com.mredrock.cyxbs.common.component.RedRockBottomSheetDialog
 import com.mredrock.cyxbs.volunteer.R
 import com.mredrock.cyxbs.volunteer.bean.VolunteerAffairDetail
+import kotlinx.android.synthetic.main.volunteer_layout_volunteer_affair_detail.*
 
 /**
  * Created by yyfbe, Date on 2020/9/5.
@@ -17,6 +18,6 @@ class VolunteerAffairBottomSheetDialog(context: Context) : RedRockBottomSheetDia
 
 
     fun refresh(volunteerAffairDetail: VolunteerAffairDetail) {
-
+        tv_title.text = volunteerAffairDetail.description
     }
 }
