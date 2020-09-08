@@ -49,7 +49,7 @@ class MainViewModel : BaseViewModel() {
                             LogUtils.e("SplashViewModel", "parse time failed", e)
                         }
                     }
-                    throw RedrockApiException("no start page found.")
+                    null
                 }
                 .setSchedulers()
                 .safeSubscribeBy(onError = {
