@@ -108,35 +108,32 @@ class NormalWidget : AppWidgetProvider() {
             }
         }
         if (intent.action == "btn.start.com") {
-            if (!ServiceManager.getService(IAccountService::class.java).getVerifyService().isLogin()) {
-                CyxbsToast.makeText(context, "请登录之后再点击查看详细信息", Toast.LENGTH_SHORT).show()
-            } else {
-                list = gson.fromJson(context.defaultSharedPreferences.getString(courseData, ""), object : TypeToken<ArrayList<CourseStatus.Course>>() {}.type)
-                val newList = mutableListOf<WidgetCourse.DataBean>()
-                list.forEach {
-                    newList.add(changeCourseToWidgetCourse(it))
+            list = gson.fromJson(context.defaultSharedPreferences.getString(courseData, ""), object : TypeToken<ArrayList<CourseStatus.Course>>() {}.type)
+            val newList = mutableListOf<WidgetCourse.DataBean>()
+            list.forEach {
+                newList.add(changeCourseToWidgetCourse(it))
+            }
+            when (rId) {
+                R.id.widget_normal_layout1 -> {
+                    startOperation(newList.filter { it.hash_lesson == 0 }[0])
                 }
-                when (rId) {
-                    R.id.widget_normal_layout1 -> {
-                        startOperation(newList.filter { it.hash_lesson == 0 }[0])
-                    }
-                    R.id.widget_normal_layout2 -> {
-                        startOperation(newList.filter { it.hash_lesson == 1 }[0])
-                    }
-                    R.id.widget_normal_layout3 -> {
-                        startOperation(newList.filter { it.hash_lesson == 2 }[0])
-                    }
-                    R.id.widget_normal_layout4 -> {
-                        startOperation(newList.filter { it.hash_lesson == 3 }[0])
-                    }
-                    R.id.widget_normal_layout5 -> {
-                        startOperation(newList.filter { it.hash_lesson == 4 }[0])
-                    }
-                    R.id.widget_normal_layout6 -> {
-                        startOperation(newList.filter { it.hash_lesson == 5 }[0])
-                    }
+                R.id.widget_normal_layout2 -> {
+                    startOperation(newList.filter { it.hash_lesson == 1 }[0])
+                }
+                R.id.widget_normal_layout3 -> {
+                    startOperation(newList.filter { it.hash_lesson == 2 }[0])
+                }
+                R.id.widget_normal_layout4 -> {
+                    startOperation(newList.filter { it.hash_lesson == 3 }[0])
+                }
+                R.id.widget_normal_layout5 -> {
+                    startOperation(newList.filter { it.hash_lesson == 4 }[0])
+                }
+                R.id.widget_normal_layout6 -> {
+                    startOperation(newList.filter { it.hash_lesson == 5 }[0])
                 }
             }
+
         }
     }
 

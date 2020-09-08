@@ -32,8 +32,7 @@ class GridWidgetService : RemoteViewsService() {
 
         private fun initCourse() {
             val json = mContext.defaultSharedPreferences.getString(WIDGET_COURSE, "")
-            val courses = Gson().fromJson(json, CourseStatus::class.java).data
-                    ?: return
+            val courses = Gson().fromJson(json, CourseStatus::class.java)?.data ?: return
             val schoolCalendar = SchoolCalendar()
 
             //下方复用代码，忽视就好

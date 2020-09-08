@@ -6,13 +6,18 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.widget.Toast
 import androidx.annotation.IdRes
 import com.alibaba.android.arouter.launcher.ARouter
 import com.google.gson.Gson
+import com.mredrock.cyxbs.common.BaseApp.Companion.context
 import com.mredrock.cyxbs.common.bean.WidgetCourse
+import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.common.config.MAIN_MAIN
 import com.mredrock.cyxbs.common.config.WIDGET_COURSE
 import com.mredrock.cyxbs.common.event.WidgetCourseEvent
+import com.mredrock.cyxbs.common.service.ServiceManager
+import com.mredrock.cyxbs.common.service.account.IAccountService
 import com.mredrock.cyxbs.common.utils.SchoolCalendar
 import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
 import com.mredrock.cyxbs.common.utils.extensions.editor
@@ -217,6 +222,10 @@ fun changeCourseToWidgetCourse(courseStatusBean: CourseStatus.Course): WidgetCou
 }
 
 fun startOperation(dataBean: WidgetCourse.DataBean) {
-    ARouter.getInstance().build(MAIN_MAIN).navigation()
-    EventBus.getDefault().postSticky(WidgetCourseEvent(mutableListOf(dataBean)))
+    if (!ServiceManager.getService(IAccountService::class.java).getVerifyService().isLogin()) {
+        CyxbsToast.makeText(context, "请登录之后再点击查看详细信息", Toast.LENGTH_SHORT).show()
+    } else {
+        ARouter.getInstance().build(MAIN_MAIN).navigation()
+        EventBus.getDefault().postSticky(WidgetCourseEvent(mutableListOf(dataBean)))
+    }
 }

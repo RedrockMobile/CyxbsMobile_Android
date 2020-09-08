@@ -38,69 +38,73 @@ fun initUMeng(context: Context) {
     MobclickAgent.setPageCollectionMode(MobclickAgent.PageMode.AUTO)
     //调试模式（推荐到umeng注册测试机，避免数据污染）
     UMConfigure.setLogEnabled(BuildConfig.DEBUG)
-    //友盟推送服务的接入
-    val mPushAgent = PushAgent.getInstance(context)
-    //注册推送服务，每次调用register方法都会回调该接口
-    mPushAgent.register(object : IUmengRegisterCallback {
-        // 这些回调是在子线程
-        override fun onSuccess(deviceToken: String) {
-            debug {
-                context.runOnUiThread {
-                    DebugDataModel.umPushDeviceId.value = deviceToken
+    try {
+        //友盟推送服务的接入
+        val mPushAgent = PushAgent.getInstance(context)
+        //注册推送服务，每次调用register方法都会回调该接口
+        mPushAgent.register(object : IUmengRegisterCallback {
+            // 这些回调是在子线程
+            override fun onSuccess(deviceToken: String) {
+                debug {
+                    context.runOnUiThread {
+                        DebugDataModel.umPushDeviceId.value = deviceToken
+                    }
+                    //注册成功会返回deviceToken deviceToken是推送消息的唯一标志
+                    LogUtils.i("友盟推送注册", "注册成功：deviceToken：-------->  $deviceToken")
                 }
-                //注册成功会返回deviceToken deviceToken是推送消息的唯一标志
-                LogUtils.i("友盟推送注册", "注册成功：deviceToken：-------->  $deviceToken")
+            }
+
+            override fun onFailure(s: String, s1: String) {
+                debug {
+                    LogUtils.e("友盟推送注册", "注册失败：-------->  s:$s,s1:$s1")
+                }
+            }
+        })
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            (context.getSystemService(NOTIFICATION_SERVICE) as? NotificationManager)?.let { notificationManager ->
+                val channelId = "qa_channel"
+                val channelName: CharSequence = "邮问消息"
+                val importance = NotificationManager.IMPORTANCE_DEFAULT
+                val notificationChannel = NotificationChannel(channelId, channelName, importance)
+                notificationChannel.enableLights(true)
+                notificationChannel.lightColor = Color.RED
+                notificationChannel.lockscreenVisibility = Notification.VISIBILITY_PUBLIC
+                notificationChannel.vibrationPattern = longArrayOf(0, 50, 50, 120, 500, 120)
+                notificationManager.createNotificationChannel(notificationChannel)
             }
         }
 
-        override fun onFailure(s: String, s1: String) {
-            debug {
-                LogUtils.e("友盟推送注册", "注册失败：-------->  s:$s,s1:$s1")
-            }
-        }
-    })
-    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-        (context.getSystemService(NOTIFICATION_SERVICE) as? NotificationManager)?.let { notificationManager ->
-            val channelId = "qa_channel"
-            val channelName: CharSequence = "邮问消息"
-            val importance = NotificationManager.IMPORTANCE_DEFAULT
-            val notificationChannel = NotificationChannel(channelId, channelName, importance)
-            notificationChannel.enableLights(true)
-            notificationChannel.lightColor = Color.RED
-            notificationChannel.lockscreenVisibility = Notification.VISIBILITY_PUBLIC
-            notificationChannel.vibrationPattern = longArrayOf(0,50,50,120,500,120)
-            notificationManager.createNotificationChannel(notificationChannel)
-        }
-    }
-
-    val messageHandler: UmengMessageHandler = object : UmengMessageHandler() {
-        override fun getNotification(context: Context, msg: UMessage): Notification {
-            return when (msg.builder_id) {
-                1 -> {
-                    val builder = NotificationCompat.Builder(BaseApp.context, "qa_channel")
-                    builder.setContentTitle(msg.title)
-                            .setContentText(msg.text)
-                            .setSmallIcon(getSmallIconId(context, msg))
-                            .setPriority(NotificationCompat.PRIORITY_HIGH)
-                            .setTicker(msg.ticker)
-                            .setAutoCancel(true)
-                    builder.build()
+        val messageHandler: UmengMessageHandler = object : UmengMessageHandler() {
+            override fun getNotification(context: Context, msg: UMessage): Notification {
+                return when (msg.builder_id) {
+                    1 -> {
+                        val builder = NotificationCompat.Builder(BaseApp.context, "qa_channel")
+                        builder.setContentTitle(msg.title)
+                                .setContentText(msg.text)
+                                .setSmallIcon(getSmallIconId(context, msg))
+                                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                                .setTicker(msg.ticker)
+                                .setAutoCancel(true)
+                        builder.build()
+                    }
+                    else -> super.getNotification(context, msg)
                 }
-                else -> super.getNotification(context,msg)
             }
         }
-    }
-    mPushAgent.setNotificaitonOnForeground(true)
+        mPushAgent.setNotificaitonOnForeground(true)
 //    mPushAgent.setEnableForground(context,true)
-    mPushAgent.messageHandler = messageHandler
-    InAppMessageManager.getInstance(BaseApp.context).setInAppMsgDebugMode(true)
-    debug {
-        val deviceInfo = arrayOfNulls<String>(2)
-        deviceInfo[0] = DeviceConfig.getDeviceIdForGeneral(BaseApp.context)
-        deviceInfo[1] = DeviceConfig.getMac(BaseApp.context)
-        val msg = """{"device_id":"${deviceInfo[0]}","mac":"${deviceInfo[1]}"}"""
-        DebugDataModel.umAnalyzeDeviceData.value = msg
-        LogUtils.d("UM设备测试信息：", msg)
+        mPushAgent.messageHandler = messageHandler
+        InAppMessageManager.getInstance(BaseApp.context).setInAppMsgDebugMode(true)
+        debug {
+            val deviceInfo = arrayOfNulls<String>(2)
+            deviceInfo[0] = DeviceConfig.getDeviceIdForGeneral(BaseApp.context)
+            deviceInfo[1] = DeviceConfig.getMac(BaseApp.context)
+            val msg = """{"device_id":"${deviceInfo[0]}","mac":"${deviceInfo[1]}"}"""
+            DebugDataModel.umAnalyzeDeviceData.value = msg
+            LogUtils.d("UM设备测试信息：", msg)
+        }
+    } catch (e: Throwable) {
+        e.printStackTrace()
     }
 }
 //
