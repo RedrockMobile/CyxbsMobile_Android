@@ -11,13 +11,10 @@ import android.view.View
 import android.widget.RemoteViews
 import android.widget.Toast
 import androidx.annotation.IdRes
-import com.alibaba.android.arouter.launcher.ARouter
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.mredrock.cyxbs.common.bean.WidgetCourse
 import com.mredrock.cyxbs.common.component.CyxbsToast
-import com.mredrock.cyxbs.common.config.MAIN_MAIN
-import com.mredrock.cyxbs.common.event.WidgetCourseEvent
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.service.account.IAccountService
 import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
@@ -25,7 +22,6 @@ import com.mredrock.cyxbs.common.utils.extensions.editor
 import com.mredrock.cyxbs.widget.R
 import com.mredrock.cyxbs.widget.bean.CourseStatus
 import com.mredrock.cyxbs.widget.util.*
-import org.greenrobot.eventbus.EventBus
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -156,12 +152,6 @@ class NormalWidget : AppWidgetProvider() {
             return 8 + (offsetTime - i2) % 7 - dayOfWeek
         }
         return offsetTime
-    }
-
-
-    private fun startOperation(dataBean: WidgetCourse.DataBean) {
-        ARouter.getInstance().build(MAIN_MAIN).navigation()
-        EventBus.getDefault().postSticky(WidgetCourseEvent(mutableListOf(dataBean)))
     }
 
 
