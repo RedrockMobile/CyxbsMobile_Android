@@ -13,6 +13,8 @@ object CyxbsMob {
         const val CLICK_ASK = "click_ask"
         const val SWITCH_QA_PAGE = "switch_qa_page"
         const val BOTTOM_TAB_CLICK = "bottom_tab_click"
+        const val CLICK_QA_QUESTION = "click_qa_question"
+        const val QA_SEARCH = "qa_search"
     }
 
     object Key {

@@ -8,6 +8,7 @@ import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import androidx.core.app.ActivityOptionsCompat
 import androidx.fragment.app.Fragment
+import com.mredrock.cyxbs.common.config.CyxbsMob
 import com.mredrock.cyxbs.common.mark.EventBusLifecycleSubscriber
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.extensions.intentFor
@@ -18,6 +19,7 @@ import com.mredrock.cyxbs.qa.event.QASearchEvent
 import com.mredrock.cyxbs.qa.pages.search.ui.fragment.QuestionSearchedFragment
 import com.mredrock.cyxbs.qa.pages.search.ui.fragment.QuestionSearchingFragment
 import com.mredrock.cyxbs.qa.pages.search.viewmodel.SearchViewModel
+import com.umeng.analytics.MobclickAgent
 import kotlinx.android.synthetic.main.qa_activity_question_search.*
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -80,6 +82,7 @@ class SearchActivity : BaseViewModelActivity<SearchViewModel>(), EventBusLifecyc
                     turnToResult(v.text.toString())
                     viewModel.insert(QAHistory(v.text.toString(), System.currentTimeMillis()))
                 }
+                MobclickAgent.onEvent(this, CyxbsMob.Event.QA_SEARCH)
             }
             false
         }
