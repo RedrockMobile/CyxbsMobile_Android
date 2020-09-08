@@ -7,17 +7,21 @@ package com.mredrock.cyxbs.common.config
  */
 object CyxbsMob {
 
-    object Event{
+    object Event {
         const val COURSE_SHOW = "course_show"
         const val CLICK_COURSE_ITEM = "click_course_item"
         const val CLICK_ASK = "click_ask"
+        const val SWITCH_QA_PAGE = "switch_qa_page"
+        const val BOTTOM_TAB_CLICK = "bottom_tab_click"
     }
 
-    object Key{
+    object Key {
         const val IS_HEAD = "is_head"
+        const val QA_PAGE = "qa_page"
+        const val TAB_INDEX = "tab_index"
     }
 
-    object Value{
+    object Value {
         const val TRUE = "true"
         const val FALSE = "false"
     }
