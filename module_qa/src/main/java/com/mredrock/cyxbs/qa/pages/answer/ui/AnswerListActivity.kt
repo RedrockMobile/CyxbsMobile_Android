@@ -135,7 +135,6 @@ class AnswerListActivity : BaseActivity(), EventBusLifecycleSubscriber {
             }
             onPraiseClickListener = { i: Int, answer: Answer ->
                 if (viewModel.isDealing) {
-                    toast(getString(R.string.qa_answer_praise_dealing))
                 } else {
                     viewModel.clickPraiseButton(i, answer)
                     viewModel.apply {
@@ -223,7 +222,6 @@ class AnswerListActivity : BaseActivity(), EventBusLifecycleSubscriber {
                         ?: "", viewModel.questionLiveData.value?.description
                         ?: "", viewModel.questionLiveData.value?.photoUrl
                         ?: listOf(), REQUEST_REFRESH_LIST)
-                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
             }
         }
 

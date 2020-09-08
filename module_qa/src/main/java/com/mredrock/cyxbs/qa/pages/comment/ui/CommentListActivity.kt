@@ -257,7 +257,6 @@ class CommentListActivity : BaseActivity(), EventBusLifecycleSubscriber {
             setOnClickListener {
                 doIfLogin {
                     if (viewModel.isDealing) {
-                        toast(getString(R.string.qa_answer_praise_dealing))
                     } else {
                         viewModel.clickPraiseButton()
                     }
