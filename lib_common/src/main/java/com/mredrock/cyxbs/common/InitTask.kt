@@ -29,16 +29,18 @@ import java.lang.Exception
  */
 
 fun initUMeng(context: Context) {
-    val channel = WalleChannelReader.getChannel(context, "debug")
-    UMConfigure.init(context, BuildConfig.UM_APP_KEY, channel, UMConfigure.DEVICE_TYPE_PHONE,
-            BuildConfig.UM_PUSH_SECRET)
+    // 这里在小部件的进程初始化的时候注册友盟推送会概率性抛异常，这里这个其实不用初始化友盟推送
+    // 所以可以直接捕获异常并不做任何处理
+    try {
+        val channel = WalleChannelReader.getChannel(context, "debug")
+        UMConfigure.init(context, BuildConfig.UM_APP_KEY, channel, UMConfigure.DEVICE_TYPE_PHONE,
+                BuildConfig.UM_PUSH_SECRET)
 //    MobclickAgent.setScenarioType(context, MobclickAgent.EScenarioType.E_UM_NORMAL)
 //    MobclickAgent.openActivityDurationTrack(false)
-    // 选用AUTO页面采集模式,则不用在activity中调用MobclickAgent.onResume(this)|MobclickAgent.onPause(this)
-    MobclickAgent.setPageCollectionMode(MobclickAgent.PageMode.AUTO)
-    //调试模式（推荐到umeng注册测试机，避免数据污染）
-    UMConfigure.setLogEnabled(BuildConfig.DEBUG)
-    try {
+        // 选用AUTO页面采集模式,则不用在activity中调用MobclickAgent.onResume(this)|MobclickAgent.onPause(this)
+        MobclickAgent.setPageCollectionMode(MobclickAgent.PageMode.AUTO)
+        //调试模式（推荐到umeng注册测试机，避免数据污染）
+        UMConfigure.setLogEnabled(BuildConfig.DEBUG)
         //友盟推送服务的接入
         val mPushAgent = PushAgent.getInstance(context)
         //注册推送服务，每次调用register方法都会回调该接口
