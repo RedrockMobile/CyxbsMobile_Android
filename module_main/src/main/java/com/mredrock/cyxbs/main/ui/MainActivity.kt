@@ -84,20 +84,20 @@ class MainActivity : BaseViewModelActivity<MainViewModel>(), EventBusLifecycleSu
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(R.style.MainActivityTheme)//恢复真正的主题，保证WindowBackground为主题色
         super.onCreate(savedInstanceState)
-        /**
-         * 关于这个判断，用于从文件或者其他非launcher打开->按home->点击launcher热启动导致多了一个
-         * flag，导致新建this
-         * 由于取消了SplashActivity，如果MainActivity的lunchMode为singleTas，热启动会导致所有出栈
-         * 改为了singleTop
-         * @see android.content.Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT
-         */
-        if ((intent.flags and Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT) != 0) {
-            finish()
-            return
-        }
         DataBindingUtil.setContentView<MainActivityMainBinding>(this, R.layout.main_activity_main).apply {
             mainViewModel = viewModel
         }
+//        /**
+//         * 关于这个判断，用于从文件或者其他非launcher打开->按home->点击launcher热启动导致多了一个
+//         * flag，导致新建this
+//         * 由于取消了SplashActivity，如果MainActivity的lunchMode为singleTas，热启动会导致所有出栈
+//         * 改为了singleTop
+//         * @see android.content.Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT
+//         */
+//        if ((intent.flags and Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT) != 0) {
+//            finish()
+//            return
+//        }
         checkSplash()
         initActivity(savedInstanceState)//Activity相关初始化
     }
