@@ -97,7 +97,6 @@ class QuestionSearchedFragment : BaseViewModelFragment<QuestionSearchedViewModel
         btn_no_result_ask_question.setOnClickListener {
             context?.doIfLogin("提问") {
                 QuizActivity.activityStart(this, "迎新生", REQUEST_LIST_REFRESH_ACTIVITY)
-                activity?.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
                 this.onDetach()
                 activity?.finish()
             }

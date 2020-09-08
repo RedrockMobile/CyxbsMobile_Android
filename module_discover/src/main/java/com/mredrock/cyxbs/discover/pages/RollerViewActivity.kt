@@ -8,6 +8,7 @@ import android.webkit.WebChromeClient
 import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import com.mredrock.cyxbs.common.BuildConfig
 import com.mredrock.cyxbs.common.ui.BaseActivity
 import com.mredrock.cyxbs.common.utils.extensions.startActivity
 import com.mredrock.cyxbs.discover.R
@@ -22,8 +23,10 @@ class RollerViewActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.discover_activity_roller_view)
 
-        common_toolbar.init(intent.getStringExtra("Key"))
+        if (BuildConfig.DEBUG) WebView.setWebContentsDebuggingEnabled(true)
 
+        common_toolbar.init(intent.getStringExtra("Key"))
+        isSlideable = false
         val dialog = ProgressDialog(this)
         dialog.setMessage("加载中...")
         dialog.show()
@@ -55,6 +58,22 @@ class RollerViewActivity : BaseActivity() {
                 return super.shouldOverrideUrlLoading(view, url)
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        discover_web_view.resumeTimers()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        discover_web_view.pauseTimers()
+    }
+
+
+    override fun onDestroy() {
+        super.onDestroy()
+        discover_web_view.destroy()
     }
 
     companion object {

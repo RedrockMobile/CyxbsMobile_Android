@@ -241,10 +241,6 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>(), EventBusLifecycleSu
         setImageURI(uri)
     }
 
-    override fun onBackPressed() {
-        super.onBackPressed()
-    }
-
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             if (exitDialog.isShowing) {

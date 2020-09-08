@@ -5,7 +5,6 @@ import android.annotation.SuppressLint
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
-import android.view.Gravity
 import android.view.View
 import android.view.Window
 import android.view.WindowManager
@@ -16,9 +15,6 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.Observer
-import androidx.transition.Slide
-import androidx.transition.TransitionManager
-import androidx.transition.TransitionSet
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.mredrock.cyxbs.common.component.CommonDialogFragment
@@ -158,7 +154,7 @@ class DailySignActivity(override val viewModelClass: Class<DailyViewModel> = Dai
         mine_store_rv.addItemDecoration(SpaceDecoration(dp2px(8f)))
         mine_store_my_product.setOnClickListener {
             startActivity<MyProductActivity>()
-            overridePendingTransition(R.anim.mine_slide_in_from_bottom_with_bezier, R.anim.mine_scale_fade_out_with_bezier)
+            overridePendingTransition(R.anim.common_slide_in_from_bottom_with_bezier, R.anim.common_scale_fade_out_with_bezier)
         }
     }
 

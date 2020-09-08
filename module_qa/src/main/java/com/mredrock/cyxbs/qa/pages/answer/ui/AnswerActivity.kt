@@ -73,12 +73,10 @@ class AnswerActivity : BaseViewModelActivity<AnswerViewModel>(), EventBusLifecyc
                 }
                 setResult(Activity.RESULT_OK)
                 finish()
-                overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right)
             }
         }
         viewModel.backAndFinishActivityEvent.observeNotNull {
             finish()
-            overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right)
         }
         viewModel.questionData.observeNotNull {
             initView(it.description, it.photoUrl)
@@ -89,7 +87,6 @@ class AnswerActivity : BaseViewModelActivity<AnswerViewModel>(), EventBusLifecyc
         qa_ib_toolbar_back.setOnClickListener(View.OnClickListener {
             if (edt_answer_content.text.isNullOrEmpty() && draftId == NOT_DRAFT_ID) {
                 finish()
-                overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right)
                 return@OnClickListener
             }
             exitDialog.show()
@@ -232,11 +229,6 @@ class AnswerActivity : BaseViewModelActivity<AnswerViewModel>(), EventBusLifecyc
         }
     }
 
-    override fun onBackPressed() {
-        super.onBackPressed()
-        overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right)
-
-    }
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         if (keyCode == KeyEvent.KEYCODE_BACK) {

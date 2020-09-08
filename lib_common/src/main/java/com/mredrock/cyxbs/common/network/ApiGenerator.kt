@@ -36,7 +36,7 @@ object ApiGenerator {
         val accountService = ServiceManager.getService(IAccountService::class.java)
         accountService.getVerifyService().addOnStateChangedListener {
             when (it) {
-                IUserStateService.UserState.LOGIN, IUserStateService.UserState.REFRESH-> {
+                IUserStateService.UserState.LOGIN, IUserStateService.UserState.REFRESH -> {
                     token = accountService.getUserTokenService().getToken()
                     refreshToken = accountService.getUserTokenService().getRefreshToken()
                 }
