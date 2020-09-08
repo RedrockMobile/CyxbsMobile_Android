@@ -414,7 +414,7 @@ class ScheduleView : ViewGroup {
                 5
             } else this
         }
-        return if (touchClickListener != null && !mIsEmpty && !isClick && adapter?.getItemViewInfo(clickHashY, clickHashX) == null) {
+        return if (touchClickListener != null && !isClick && adapter?.getItemViewInfo(clickHashY, clickHashX) == null) {
             clearTouchView()
             (touchView.getTag(R.id.touchPosition) as TouchPositionData).position = (clickHashY) * 7 + clickHashX
             // Compute the mTouchView's LayoutParams.
