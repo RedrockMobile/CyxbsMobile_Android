@@ -67,7 +67,6 @@ abstract class BaseQuestionListFragment<T : QuestionListViewModel> : BaseViewMod
         super.onViewCreated(view, savedInstanceState)
         val questionListRvAdapter = QuestionListRvAdapter {
             AnswerListActivity.activityStart(this, it, QuestionContainerFragment.REQUEST_LIST_REFRESH_ACTIVITY)
-            activity?.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
         }
         val footerRvAdapter = FooterRvAdapter { viewModel.retry() }
         val emptyRvAdapter = EmptyRvAdapter(getString(R.string.qa_question_list_empty_hint))
