@@ -12,6 +12,7 @@ import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
 import com.mredrock.cyxbs.common.utils.extensions.editor
 import com.mredrock.cyxbs.widget.R
 import com.mredrock.cyxbs.widget.service.GridWidgetService
+import com.mredrock.cyxbs.widget.service.GridWidgetService.Companion.getCourse
 import com.mredrock.cyxbs.widget.util.changeCourseToWidgetCourse
 import com.mredrock.cyxbs.widget.util.getClickIntent
 import com.mredrock.cyxbs.widget.util.getClickPendingIntent
@@ -43,7 +44,7 @@ class OversizedAppWidget : AppWidgetProvider() {
         intent ?: return
         when (intent.action) {
             "btn.start.com" -> {
-                val courseStatusBean = GridWidgetService.courseMap[intent.getIntExtra("POSITION", -1)]
+                val courseStatusBean = getCourse(intent.getIntExtra("POSITION", -1))
                 courseStatusBean?.let {
                     startOperation(
                             changeCourseToWidgetCourse(courseStatusBean))
