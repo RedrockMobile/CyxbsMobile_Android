@@ -11,6 +11,23 @@ import androidx.viewpager.widget.ViewPager
 class HackyViewPager(context: Context, attrs: AttributeSet?) : ViewPager(context, attrs) {
 
     constructor(context: Context) : this(context, null)
+    override fun onInterceptTouchEvent(ev: MotionEvent?): Boolean {
+        try {
+            return super.onInterceptTouchEvent(ev)
+        } catch (e: IllegalArgumentException) {
+            e.printStackTrace()
+        }
+        return false
+    }
+
+    override fun onTouchEvent(ev: MotionEvent?): Boolean {
+        try {
+            return super.onTouchEvent(ev)
+        } catch (e: IllegalArgumentException) {
+            e.printStackTrace()
+        }
+        return false
+    }
 
     override fun onInterceptHoverEvent(event: MotionEvent?): Boolean {
         return try {

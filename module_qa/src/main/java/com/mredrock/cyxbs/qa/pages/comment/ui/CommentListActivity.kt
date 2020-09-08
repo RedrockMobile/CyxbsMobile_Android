@@ -257,7 +257,6 @@ class CommentListActivity : BaseActivity(), EventBusLifecycleSubscriber {
             setOnClickListener {
                 doIfLogin {
                     if (viewModel.isDealing) {
-                        toast(getString(R.string.qa_answer_praise_dealing))
                     } else {
                         viewModel.clickPraiseButton()
                     }
@@ -317,5 +316,10 @@ class CommentListActivity : BaseActivity(), EventBusLifecycleSubscriber {
         if (progressDialog?.isShowing == true) {
             progressDialog?.dismiss()
         }
+    }
+
+    override fun finish() {
+        super.finish()
+        overridePendingTransition(R.anim.common_scale_fade_in_with_bezier, R.anim.common_slide_fade_out_to_bottom_with_bezier)
     }
 }
