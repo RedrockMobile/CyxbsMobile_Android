@@ -41,7 +41,7 @@ class SplashFragment : BaseFragment() {
                 .into(splash_view)
         object : CountDownTimer(3000, 1000) {
             override fun onFinish() {
-                viewModel.splashVisibility.set(View.GONE)
+                viewModel.splashVisibility.value = View.GONE
             }
 
             override fun onTick(millisUntilFinished: Long) {
@@ -52,7 +52,7 @@ class SplashFragment : BaseFragment() {
             }
         }.start()
         main_activity_splash_skip.setOnClickListener {
-            viewModel.splashVisibility.set(View.GONE)
+            viewModel.splashVisibility.value = View.GONE
         }
     }
 

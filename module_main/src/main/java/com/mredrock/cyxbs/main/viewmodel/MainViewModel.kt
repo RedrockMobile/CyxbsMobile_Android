@@ -25,7 +25,7 @@ class MainViewModel : BaseViewModel() {
 
     val startPage: LiveData<StartPage?> = MutableLiveData()
 
-    val splashVisibility = ObservableField(View.GONE)
+    val splashVisibility = MutableLiveData(View.GONE)
 
     //进入app是否直接显示课表
     var isCourseDirectShow = false
