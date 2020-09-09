@@ -12,6 +12,7 @@ class CourseStatus : Serializable {
     companion object {
         @Ignore
         const val COURSE = 0
+
         @Ignore
         const val AFFAIR = 1
     }
@@ -52,44 +53,44 @@ class CourseStatus : Serializable {
                 '}'.toString()
     }
 
-    class Course : Serializable {
-        /**
-         * hash_day : 0
-         * hash_lesson : 1
-         * begin_lesson : 3
-         * day : 星期一
-         * lesson : 三四节
-         * course : 飞盘中级
-         * course_num : A1090030
-         * teacher : 王燕妮
-         * classroom : 待定
-         * rawWeek : 1-15周单周
-         * weekModel : single
-         * weekBegin : 1
-         * weekEnd : 15
-         * week : [1,3,5,7,9,11,13,15]
-         * type : 必修
-         * period : 2
-         */
+    data class Course(
+            /**
+             * hash_day : 0
+             * hash_lesson : 1
+             * begin_lesson : 3
+             * day : 星期一
+             * lesson : 三四节
+             * course : 飞盘中级
+             * course_num : A1090030
+             * teacher : 王燕妮
+             * classroom : 待定
+             * rawWeek : 1-15周单周
+             * weekModel : single
+             * weekBegin : 1
+             * weekEnd : 15
+             * week : [1,3,5,7,9,11,13,15]
+             * type : 必修
+             * period : 2
+             */
 
-        var hash_day: Int = 0
-        var hash_lesson: Int = 0
-        var begin_lesson: Int = 0
-        var day: String? = null
-        var lesson: String? = null
-        var course: String? = null
-        var course_num: String? = null
-        var teacher: String? = null
-        var classroom: String? = null
-        var rawWeek: String? = null
-        var weekModel: String? = null
-        var weekBegin: Int = 0
-        var weekEnd: Int = 0
-        var type: String? = null
-        var period: Int = 0
-        var week: List<Int>? = null
-        var customType: Int = 0
-
+            var hash_day: Int = 0,
+            var hash_lesson: Int = 0,
+            var begin_lesson: Int = 0,
+            var day: String? = null,
+            var lesson: String? = null,
+            var course: String? = null,
+            var course_num: String? = null,
+            var teacher: String? = null,
+            var classroom: String? = null,
+            var rawWeek: String? = null,
+            var weekModel: String? = null,
+            var weekBegin: Int = 0,
+            var weekEnd: Int = 0,
+            var type: String? = null,
+            var period: Int = 0,
+            var week: List<Int>? = null,
+            var customType: Int = 0
+    ) : Serializable {
 
         override fun toString(): String {
             return "DataBean{" +
