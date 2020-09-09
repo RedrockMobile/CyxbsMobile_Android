@@ -37,6 +37,7 @@ import com.mredrock.cyxbs.main.utils.entryContains
 import com.mredrock.cyxbs.main.utils.getFragment
 import com.mredrock.cyxbs.main.utils.isDownloadSplash
 import com.mredrock.cyxbs.main.viewmodel.MainViewModel
+import com.umeng.analytics.MobclickAgent
 import com.umeng.message.inapp.InAppMessageManager
 import kotlinx.android.synthetic.main.main_activity_main.*
 import kotlinx.android.synthetic.main.main_bottom_nav.*
@@ -191,6 +192,9 @@ class MainActivity : BaseViewModelActivity<MainViewModel>(), EventBusLifecycleSu
                         R.drawable.main_ic_qa_unselected,
                         R.drawable.main_ic_mine_unselected))
         {
+            MobclickAgent.onEvent(this, CyxbsMob.Event.BOTTOM_TAB_CLICK, mutableMapOf(
+                    Pair(CyxbsMob.Key.TAB_INDEX, it.toString())
+            ))
             when (it) {
                 0 -> changeFragment(discoverFragment)
                 1 -> {
