@@ -27,8 +27,6 @@ open class BaseFragment : Fragment() {
     //当然，你要定义自己的TAG方便在Log里面找也可以重写这个
     open protected var TAG: String = this::class.java.simpleName
 
-    private var isStarted = false
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         if (this is EventBusLifecycleSubscriber) EventBus.getDefault().register(this)
@@ -68,8 +66,7 @@ open class BaseFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
-        if (openStatistics && !isStarted) {
-            isStarted = true
+        if (openStatistics) {
             MobclickAgent.onPageStart(javaClass.name)
             LogUtils.d("UMStat", javaClass.name + " started")
         }
@@ -83,8 +80,7 @@ open class BaseFragment : Fragment() {
 
     override fun onStop() {
         super.onStop()
-        if (openStatistics && isStarted) {
-            isStarted = false
+        if (openStatistics) {
             MobclickAgent.onPageEnd(javaClass.name)
             LogUtils.d("UMStat", javaClass.name + " paused")
         }
