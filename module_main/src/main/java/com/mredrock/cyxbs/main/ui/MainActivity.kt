@@ -85,6 +85,8 @@ class MainActivity : BaseViewModelActivity<MainViewModel>(), EventBusLifecycleSu
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(R.style.MainActivityTheme)//恢复真正的主题，保证WindowBackground为主题色
         super.onCreate(savedInstanceState)
+        // 暂时不要在mainActivity里面使用dataBinding，会有一个量级较大的闪退
+        setContentView(R.layout.main_activity_main)
         /**
          * 关于这个判断，用于从文件或者其他非launcher打开->按home->点击launcher热启动导致多了一个
          * flag，导致新建this
@@ -95,9 +97,6 @@ class MainActivity : BaseViewModelActivity<MainViewModel>(), EventBusLifecycleSu
         if ((intent.flags and Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT) != 0) {
             finish()
             return
-        }
-        DataBindingUtil.setContentView<MainActivityMainBinding>(this, R.layout.main_activity_main).apply {
-            mainViewModel = viewModel
         }
         checkSplash()
         initActivity(savedInstanceState)//Activity相关初始化
@@ -220,6 +219,9 @@ class MainActivity : BaseViewModelActivity<MainViewModel>(), EventBusLifecycleSu
      * 检查闪屏页状态
      */
     private fun checkSplash() {
+        viewModel.splashVisibility.observe(this, Observer {
+            main_activity_splash_viewStub.visibility = it
+        })
         //判断是否下载了Splash图，下载了就直接显示
         if (isDownloadSplash(this@MainActivity)) {
             if (!ServiceManager.getService(IAccountService::class.java).getVerifyService().isLogin() && !ServiceManager.getService(IAccountService::class.java).getVerifyService().isTouristMode()) {
@@ -228,7 +230,7 @@ class MainActivity : BaseViewModelActivity<MainViewModel>(), EventBusLifecycleSu
                 return
             }
             main_activity_splash_viewStub.onTouch { _, _ -> }//防止穿透点击
-            viewModel.splashVisibility.set(View.VISIBLE)//显示闪屏页容器
+            viewModel.splashVisibility.value = View.VISIBLE//显示闪屏页容器
             supportFragmentManager.beginTransaction().replace(R.id.main_activity_splash_viewStub, SplashFragment()).commit()
         }
         //检查网络有没有闪屏页，有的话下载，下次显示
