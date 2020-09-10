@@ -27,8 +27,6 @@ open class BaseFragment : Fragment() {
     //当然，你要定义自己的TAG方便在Log里面找也可以重写这个
     open protected var TAG: String = this::class.java.simpleName
 
-    private var isStarted = false
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         if (this is EventBusLifecycleSubscriber) EventBus.getDefault().register(this)
@@ -38,29 +36,12 @@ open class BaseFragment : Fragment() {
         super.onPause()
         lifeCycleLog("onPause")
         //在退出当前页面时需要手动调用setUserVisibleHint方法
-        userVisibleHint = false
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         lifeCycleLog("onDestroyView")
         if (this is EventBusLifecycleSubscriber && EventBus.getDefault().isRegistered(this)) EventBus.getDefault().unregister(this)
-    }
-
-    override fun setUserVisibleHint(isVisibleToUser: Boolean) {
-        super.setUserVisibleHint(isVisibleToUser)
-        if (!openStatistics) {
-            return
-        }
-        if (!isStarted && isVisibleToUser) {
-            isStarted = true
-            MobclickAgent.onPageStart(javaClass.name)
-            LogUtils.d("UMStat", javaClass.name + " started")
-        } else if (isStarted) {
-            isStarted = false
-            MobclickAgent.onPageEnd(javaClass.name)
-            LogUtils.d("UMStat", javaClass.name + " paused")
-        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -85,6 +66,10 @@ open class BaseFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
+        if (openStatistics) {
+            MobclickAgent.onPageStart(javaClass.name)
+            LogUtils.d("UMStat", javaClass.name + " started")
+        }
         lifeCycleLog("onStart")
     }
 
@@ -95,6 +80,10 @@ open class BaseFragment : Fragment() {
 
     override fun onStop() {
         super.onStop()
+        if (openStatistics) {
+            MobclickAgent.onPageEnd(javaClass.name)
+            LogUtils.d("UMStat", javaClass.name + " paused")
+        }
         lifeCycleLog("onStop")
     }
 
