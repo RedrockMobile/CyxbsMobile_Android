@@ -33,6 +33,7 @@ class AnswerListAdapter : BaseEndlessRvAdapter<Answer>(DIFF_CALLBACK) {
     var onReportClickListener: ((String) -> Unit)? = null
     var onItemClickListener: ((Answer) -> Unit)? = null
 
+    private var shouldAnimateSet: MutableSet<Int> = HashSet()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = AnswerViewHolder(parent)
 
@@ -44,10 +45,26 @@ class AnswerListAdapter : BaseEndlessRvAdapter<Answer>(DIFF_CALLBACK) {
     override fun onBindViewHolder(holder: BaseViewHolder<Answer>, position: Int) {
         super.onBindViewHolder(holder, position)
         holder.itemView.apply {
+            if (shouldAnimateSet.contains(position) && getItem(position)?.isPraised == true) {
+                tv_answer_praise_count_image.isChecked = true
+                shouldAnimateSet.remove(position)
+            } else {
+                getItem(position)?.isPraised?.let {
+                    tv_answer_praise_count_image.setCheckedWithoutAnimator(it)
+                }
+            }
 
             tv_answer_praise_count.setOnClickListener {
                 context.doIfLogin {
-                    getItem(position)?.let { it1 -> onPraiseClickListener?.invoke(position, it1) }
+                    getItem(position)?.let { it1 ->
+                        onPraiseClickListener?.invoke(position, it1)
+                        if (holder !is AnswerViewHolder) {
+                            return@let
+                        }
+                        if (getItem(position)?.isPraised == false) {
+                            shouldAnimateSet.add(position)
+                        }
+                    }
 
                 }
             }
@@ -99,7 +116,13 @@ class AnswerListAdapter : BaseEndlessRvAdapter<Answer>(DIFF_CALLBACK) {
                 }
                 tv_answer_publish_at.text = timeDescription(System.currentTimeMillis(), data.createdAt)
                 tv_answer_reply_count.text = context.getString(R.string.qa_answer_reply_count, data.commentNum)
-                tv_answer_praise_count.setPraise(data.praiseNum, data.isPraised)
+                tv_answer_praise_count.text = data.praiseNum
+
+                tv_answer_praise_count.setTextColor(if (data.isPraised) {
+                    ContextCompat.getColor(context, R.color.common_qa_answer_praised_count_color)
+                } else {
+                    ContextCompat.getColor(context, R.color.common_qa_answer_praise_count_color)
+                })
 
             }
         }

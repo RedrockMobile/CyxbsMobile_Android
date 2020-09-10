@@ -9,12 +9,14 @@ import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.ViewFlipper
 import androidx.core.content.ContextCompat
+import androidx.viewpager.widget.ViewPager
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.mredrock.cyxbs.common.config.CyxbsMob
 import com.mredrock.cyxbs.common.config.QA_ENTRY
 import com.mredrock.cyxbs.common.event.CurrentDateInformationEvent
 import com.mredrock.cyxbs.common.mark.EventBusLifecycleSubscriber
 import com.mredrock.cyxbs.common.ui.BaseViewModelFragment
+import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.doIfLogin
 import com.mredrock.cyxbs.common.utils.extensions.pressToZoomOut
 import com.mredrock.cyxbs.qa.R
@@ -74,10 +76,26 @@ class QuestionContainerFragment : BaseViewModelFragment<QuestionContainerViewMod
     }
 
     private fun initVP() {
-        vp_question.adapter = QAViewPagerAdapter(childFragments, childFragmentManager)
+        val qaViewPagerAdapter = QAViewPagerAdapter(childFragments, childFragmentManager)
+        vp_question.adapter = qaViewPagerAdapter
         //预加载所有部分保证提问后所有fragment能够被通知刷新，同时保证退出账号时只加载一次对话框
         vp_question.apply {
             offscreenPageLimit = titles.size
+            addOnPageChangeListener(object : ViewPager.OnPageChangeListener{
+                override fun onPageScrollStateChanged(state: Int) {
+                }
+
+                override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
+                }
+
+                override fun onPageSelected(position: Int) {
+
+                    MobclickAgent.onEvent(requireContext(),CyxbsMob.Event.SWITCH_QA_PAGE, mutableMapOf(
+                            Pair(CyxbsMob.Key.QA_PAGE ,qaViewPagerAdapter.getPageTitle(position))
+                    ))
+                }
+
+            })
         }
         tl_category.apply {
             setupWithViewPager(vp_question)
@@ -105,7 +123,6 @@ class QuestionContainerFragment : BaseViewModelFragment<QuestionContainerViewMod
     private fun turnToQuiz() {
         context?.doIfLogin("提问") {
             QuizActivity.activityStart(this@QuestionContainerFragment, "迎新生", REQUEST_LIST_REFRESH_ACTIVITY)
-            activity?.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
             MobclickAgent.onEvent(context, CyxbsMob.Event.CLICK_ASK)
         }
     }

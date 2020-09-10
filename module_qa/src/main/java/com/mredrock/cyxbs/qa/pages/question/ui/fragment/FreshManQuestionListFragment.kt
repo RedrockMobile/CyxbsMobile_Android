@@ -44,7 +44,6 @@ class FreshManQuestionListFragment : BaseQuestionListFragment<FreshManQuestionLi
     override var headerRvAdapter: FreshManHeaderRvAdapter? = FreshManHeaderRvAdapter(headerInnerVpAdapter) {
         context?.doIfLogin("提问") {
             QuizActivity.activityStart(this, "迎新生", QuestionContainerFragment.REQUEST_LIST_REFRESH_ACTIVITY)
-            activity?.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
         }
     }
     override val viewModelClass: Class<FreshManQuestionListViewModel> = FreshManQuestionListViewModel::class.java

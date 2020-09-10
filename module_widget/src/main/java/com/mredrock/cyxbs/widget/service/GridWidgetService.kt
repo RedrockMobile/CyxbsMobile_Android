@@ -5,6 +5,7 @@ import android.content.Intent
 import android.widget.RemoteViews
 import android.widget.RemoteViewsService
 import com.google.gson.Gson
+import com.mredrock.cyxbs.common.BaseApp.Companion.context
 import com.mredrock.cyxbs.common.config.WIDGET_COURSE
 import com.mredrock.cyxbs.common.utils.ClassRoomParse
 import com.mredrock.cyxbs.common.utils.Num2CN
@@ -12,21 +13,22 @@ import com.mredrock.cyxbs.common.utils.SchoolCalendar
 import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
 import com.mredrock.cyxbs.widget.R
 import com.mredrock.cyxbs.widget.bean.CourseStatus
+import com.mredrock.cyxbs.widget.util.getClickPendingIntent
 
 
 class GridWidgetService : RemoteViewsService() {
-    override fun onGetViewFactory(intent: Intent): RemoteViewsFactory {
-        return GridRemoteViewsFactory(this, intent)
-    }
 
-    private inner class GridRemoteViewsFactory(val mContext: Context, val intent: Intent) : RemoteViewsFactory {
+    companion object {
 
-        private val mSchedulesArray = Array(6) { arrayOfNulls<MutableList<CourseStatus.Course>>(7) }
+        fun getCourse(position: Int): CourseStatus.Course? {
+            val mPosition = position - 7
+            return makeSchedules()?.let { it[mPosition / 7][mPosition % 7]?.get(0) }
+        }
 
-        private fun initCourse() {
-            val json = mContext.defaultSharedPreferences.getString(WIDGET_COURSE, "")
-            val courses = Gson().fromJson(json, CourseStatus::class.java).data
-                    ?: return
+        private fun makeSchedules(): Array<Array<MutableList<CourseStatus.Course>?>>? {
+            val mSchedulesArray = Array(6) { arrayOfNulls<MutableList<CourseStatus.Course>>(7) }
+            val json = context.defaultSharedPreferences.getString(WIDGET_COURSE, "")
+            val courses = Gson().fromJson(json, CourseStatus::class.java)?.data ?: return null
             val schoolCalendar = SchoolCalendar()
 
             //下方复用代码，忽视就好
@@ -57,7 +59,7 @@ class GridWidgetService : RemoteViewsService() {
                         //针对三节课做处理
                         if (course.period == 3) {
                             initSchedulesArray(row + 1, column)
-                            mSchedulesArray[row + 1][column]?.add(CourseStatus.Course().apply { period = 1 })
+                            mSchedulesArray[row + 1][column]?.add(course.copy().apply { period = 1 })
                         } else if (course.period == 4) {
                             initSchedulesArray(row + 1, column)
                             mSchedulesArray[row + 1][column]?.add(course)
@@ -65,8 +67,21 @@ class GridWidgetService : RemoteViewsService() {
                     }
                 }
             }
+            return mSchedulesArray
         }
+    }
 
+    override fun onGetViewFactory(intent: Intent): RemoteViewsFactory {
+        return GridRemoteViewsFactory(this, intent)
+    }
+
+    private inner class GridRemoteViewsFactory(val mContext: Context, val intent: Intent) : RemoteViewsFactory {
+
+        private var mSchedulesArray: Array<Array<MutableList<CourseStatus.Course>?>>? = null
+
+        private fun initCourse() {
+            mSchedulesArray = makeSchedules()
+        }
 
         override fun getViewAt(position: Int): RemoteViews? {
             //获取当前时间
@@ -80,28 +95,32 @@ class GridWidgetService : RemoteViewsService() {
                 //返回对应的item
                 return RemoteViews(mContext.packageName, id).apply {
                     setTextViewText(R.id.tv_day_of_week, "周${
-                    if (position != 6) Num2CN.number2ChineseNumber((position + 1).toLong()) else "日"
+                        if (position != 6) Num2CN.number2ChineseNumber((position + 1).toLong()) else "日"
                     }")
                 }
             }
-            val mPosition = position - 7
-            val course = mSchedulesArray[mPosition / 7][mPosition % 7]?.get(0)
-            if (course == null) {
-                return RemoteViews(mContext.packageName, R.layout.widget_grid_view_item_blank)
-            } else {
-                val remoteViews = when {
-                    mPosition < 14 && course.period == 1 -> RemoteViews(mContext.packageName, R.layout.widget_grid_view_item_half_moring)
-                    mPosition < 14 -> RemoteViews(mContext.packageName, R.layout.widget_grid_view_moring_item)
-                    mPosition < 28 && course.period == 1 -> RemoteViews(mContext.packageName, R.layout.widget_grid_view_item_half_afternoon)
-                    mPosition < 28 -> RemoteViews(mContext.packageName, R.layout.widget_grid_view_afternoon_item)
-                    course.period == 1 -> RemoteViews(mContext.packageName, R.layout.widget_grid_view_item_half_night)
-                    else -> RemoteViews(mContext.packageName, R.layout.widget_grid_view_night_item)
+            mSchedulesArray?.let { mSchedulesArray ->
+                val mPosition = position - 7
+                val course = mSchedulesArray[mPosition / 7][mPosition % 7]?.get(0)
+                if (course == null) {
+                    return RemoteViews(mContext.packageName, R.layout.widget_grid_view_item_blank)
+                } else {
+                    val remoteViews = when {
+                        mPosition < 14 && course.period == 1 -> RemoteViews(mContext.packageName, R.layout.widget_grid_view_item_half_moring)
+                        mPosition < 14 -> RemoteViews(mContext.packageName, R.layout.widget_grid_view_moring_item)
+                        mPosition < 28 && course.period == 1 -> RemoteViews(mContext.packageName, R.layout.widget_grid_view_item_half_afternoon)
+                        mPosition < 28 -> RemoteViews(mContext.packageName, R.layout.widget_grid_view_afternoon_item)
+                        course.period == 1 -> RemoteViews(mContext.packageName, R.layout.widget_grid_view_item_half_night)
+                        else -> RemoteViews(mContext.packageName, R.layout.widget_grid_view_night_item)
+                    }
+                    remoteViews.setTextViewText(R.id.top, "${course.course}")
+                    remoteViews.setTextViewText(R.id.bottom, ClassRoomParse.parseClassRoom(course.classroom
+                            ?: ""))
+                    remoteViews.setOnClickFillInIntent(R.id.background, Intent().putExtra("POSITION", position))
+                    return remoteViews
                 }
-                remoteViews.setTextViewText(R.id.top, "${course.course}")
-                remoteViews.setTextViewText(R.id.bottom, ClassRoomParse.parseClassRoom(course.classroom
-                        ?: ""))
-                return remoteViews
             }
+            return null
         }
 
         /**

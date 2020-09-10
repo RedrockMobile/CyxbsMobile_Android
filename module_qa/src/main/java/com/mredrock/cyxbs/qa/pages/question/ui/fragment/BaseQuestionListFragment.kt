@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.mredrock.cyxbs.common.config.CyxbsMob
 import com.mredrock.cyxbs.common.event.RefreshQaEvent
 import com.mredrock.cyxbs.common.mark.EventBusLifecycleSubscriber
 import com.mredrock.cyxbs.common.ui.BaseViewModelFragment
@@ -23,6 +24,7 @@ import com.mredrock.cyxbs.qa.pages.question.ui.adapter.QuestionListRvAdapter
 import com.mredrock.cyxbs.qa.pages.question.viewmodel.QuestionListViewModel
 import com.mredrock.cyxbs.qa.ui.adapter.EmptyRvAdapter
 import com.mredrock.cyxbs.qa.ui.adapter.FooterRvAdapter
+import com.umeng.analytics.MobclickAgent
 import kotlinx.android.synthetic.main.qa_fragment_question_list.*
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -68,6 +70,9 @@ abstract class BaseQuestionListFragment<T : QuestionListViewModel> : BaseViewMod
         val questionListRvAdapter = QuestionListRvAdapter {
             AnswerListActivity.activityStart(this, it, QuestionContainerFragment.REQUEST_LIST_REFRESH_ACTIVITY)
             activity?.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
+            MobclickAgent.onEvent(requireContext(), CyxbsMob.Event.CLICK_QA_QUESTION, mutableMapOf(
+                    Pair(CyxbsMob.Key.QA_PAGE, title)
+            ))
         }
         val footerRvAdapter = FooterRvAdapter { viewModel.retry() }
         val emptyRvAdapter = EmptyRvAdapter(getString(R.string.qa_question_list_empty_hint))

@@ -76,14 +76,6 @@ class RollerViewActivity : BaseActivity() {
         discover_web_view.destroy()
     }
 
-    override fun onBackPressed() {
-        if (discover_web_view.canGoBack()) {
-            discover_web_view.goBack()
-        } else {
-            super.onBackPressed()
-        }
-    }
-
     companion object {
 
         fun startRollerViewActivity(info: RollerViewInfo, context: Context) {

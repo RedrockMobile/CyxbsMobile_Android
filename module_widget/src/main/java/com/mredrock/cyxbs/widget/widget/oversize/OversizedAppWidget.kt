@@ -7,10 +7,16 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.RemoteViews
+import android.widget.Toast
 import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
 import com.mredrock.cyxbs.common.utils.extensions.editor
 import com.mredrock.cyxbs.widget.R
 import com.mredrock.cyxbs.widget.service.GridWidgetService
+import com.mredrock.cyxbs.widget.service.GridWidgetService.Companion.getCourse
+import com.mredrock.cyxbs.widget.util.changeCourseToWidgetCourse
+import com.mredrock.cyxbs.widget.util.getClickIntent
+import com.mredrock.cyxbs.widget.util.getClickPendingIntent
+import com.mredrock.cyxbs.widget.util.startOperation
 import com.mredrock.cyxbs.widget.widget.page.oversized.deleteTitlePref
 import java.util.*
 
@@ -30,6 +36,20 @@ class OversizedAppWidget : AppWidgetProvider() {
     override fun onDeleted(context: Context, appWidgetIds: IntArray) {
         for (appWidgetId in appWidgetIds) {
             deleteTitlePref(context, appWidgetId)
+        }
+    }
+
+    override fun onReceive(context: Context?, intent: Intent?) {
+        super.onReceive(context, intent)
+        intent ?: return
+        when (intent.action) {
+            "btn.start.com" -> {
+                val courseStatusBean = getCourse(intent.getIntExtra("POSITION", -1))
+                courseStatusBean?.let {
+                    startOperation(
+                            changeCourseToWidgetCourse(courseStatusBean))
+                }
+            }
         }
     }
 
@@ -57,6 +77,8 @@ internal fun updateAppWidget(context: Context, appWidgetManager: AppWidgetManage
         context.defaultSharedPreferences.editor { putInt("type", ++int) }
         type = int.toString()
     }
+    remoteViews.setPendingIntentTemplate(R.id.grid_course_widget,
+            getClickIntent(context, appWidgetId, R.id.grid_course_widget, 3, "btn.start.com", OversizedAppWidget::class.java))
     remoteViews.setRemoteAdapter(R.id.grid_course_widget, intent)
     appWidgetManager.updateAppWidget(appWidgetId, remoteViews)
 }
