@@ -1,15 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="23dp"
     android:background="@color/volunteer_login_background"
     app:cardCornerRadius="6dp"
-    app:cardElevation="1dp"
-    >
+    app:cardElevation="1dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -25,6 +22,7 @@
                 android:layout_width="68dp"
                 android:layout_height="25dp"
                 android:src="@drawable/volunteer_ic_new_date" />
+
             <RelativeLayout
                 android:layout_width="59dp"
                 android:layout_height="27dp">
@@ -69,7 +67,7 @@
             <TextView
                 android:id="@+id/volunteer_time_address"
                 android:layout_width="0dp"
-                android:layout_weight= "19"
+                android:layout_weight="19"
                 android:layout_height="wrap_content"
                 android:layout_gravity="top"
                 android:layout_marginLeft="2dp"
@@ -96,6 +94,7 @@
                     android:text="小时"
                     android:textColor="@color/volunteer_time_left"
                     android:textSize="12dp" />
+
                 <ImageView
                     android:id="@+id/volunteer_time_image"
                     android:layout_width="12dp"

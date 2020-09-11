@@ -1,10 +1,7 @@
 package com.mredrock.cyxbs.volunteer.network
 
 import com.mredrock.cyxbs.common.bean.RedrockApiWrapper
-import com.mredrock.cyxbs.volunteer.bean.VolunteerAffair
-import com.mredrock.cyxbs.volunteer.bean.VolunteerAffairDetail
-import com.mredrock.cyxbs.volunteer.bean.VolunteerLogin
-import com.mredrock.cyxbs.volunteer.bean.VolunteerTime
+import com.mredrock.cyxbs.volunteer.bean.*
 import io.reactivex.Observable
 import retrofit2.http.*
 
@@ -28,4 +25,8 @@ interface ApiService {
     @FormUrlEncoded
     @POST("/wxapi/cyb-volunteer/volunteer/activity/info")
     fun getVolunteerAffairDetail(@Field("id") id: Int): Observable<RedrockApiWrapper<VolunteerAffairDetail>>
+
+    @FormUrlEncoded
+    @POST("wxapi/volunteer-message/judge")
+    fun judgeBind(@Field("uid") id: String): Observable<VolunteerJudge>
 }

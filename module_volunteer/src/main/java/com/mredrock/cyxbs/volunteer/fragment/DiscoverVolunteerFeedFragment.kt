@@ -18,9 +18,8 @@ import com.mredrock.cyxbs.volunteer.R
 import com.mredrock.cyxbs.volunteer.adapter.VolunteerFeedAdapter
 import com.mredrock.cyxbs.volunteer.adapter.VolunteerFeedUnbindAdapter
 import com.mredrock.cyxbs.volunteer.event.VolunteerLoginEvent
+import com.mredrock.cyxbs.volunteer.event.VolunteerLogoutEvent
 import com.mredrock.cyxbs.volunteer.viewmodel.DiscoverVolunteerFeedViewModel
-import com.mredrock.cyxbs.volunteer.widget.EncryptPassword
-import com.mredrock.cyxbs.volunteer.widget.VolunteerTimeSP
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -34,9 +33,11 @@ class DiscoverVolunteerFeedFragment : BaseFeedFragment<DiscoverVolunteerFeedView
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        //对登录状态判断
         if (ServiceManager.getService(IAccountService::class.java).getVerifyService().isLogin()) {
             setAdapter(VolunteerFeedUnbindAdapter())
         }
+        //设置监听，用于游客->登录
         ServiceManager.getService(IAccountService::class.java).getVerifyService().addOnStateChangedListener {
             if (it == IUserStateService.UserState.LOGIN) {
                 context?.runOnUiThread {
@@ -53,11 +54,12 @@ class DiscoverVolunteerFeedFragment : BaseFeedFragment<DiscoverVolunteerFeedView
         setAdapter(VolunteerFeedUnbindAdapter())
 
         viewModel.volunteerData.observe { volunteerTime ->
-
+            //当data变化了，那说明用户主动再登录了
+            viewModel.requestUnBind = false
+            //改变了，刷新
             volunteerTime?.let {
                 val adapter = getAdapter()
                 if (adapter is VolunteerFeedAdapter) {
-
                     adapter.refresh(it)
                 } else {
                     setAdapter(VolunteerFeedAdapter(it))
@@ -87,22 +89,18 @@ class DiscoverVolunteerFeedFragment : BaseFeedFragment<DiscoverVolunteerFeedView
     }
 
     override var hasTopSplitLine = true
+
+    //onResume
     override fun onRefresh() {
-        //首先判断是否登录
+        //首先判断是否登录，没登录，那直接return
         if (!ServiceManager.getService(IAccountService::class.java).getVerifyService().isLogin()) {
             return
         }
-
-        val volunteerSP = VolunteerTimeSP(context ?: return)
-        val uid = volunteerSP.volunteerUid
-        //再判断是否存有sp，因为有可能重新登录后vm中数据不为空
-        if (!volunteerSP.isBind()) return
-
+        //再判断vm是否有数据，有数据直接加载，再return
         if (viewModel.volunteerData.value != null) {
             viewModel.volunteerData.value?.let {
                 val adapter = getAdapter()
                 if (adapter is VolunteerFeedAdapter) {
-
                     adapter.refresh(it)
                 } else {
                     setAdapter(VolunteerFeedAdapter(it))
@@ -111,20 +109,37 @@ class DiscoverVolunteerFeedFragment : BaseFeedFragment<DiscoverVolunteerFeedView
             }
             return
         }
-        viewModel.loadVolunteerTime(EncryptPassword.encrypt(uid))
-        val adapter = getAdapter()
-        if (adapter is VolunteerFeedUnbindAdapter) {
-            adapter.refresh("查询中...")
+        if (viewModel.requestUnBind) {
+            val adapter = getAdapter()
+            if (adapter is VolunteerFeedUnbindAdapter) {
+                adapter.refresh(getString(R.string.volunteer_unbind))
+            } else {
+                setAdapter(VolunteerFeedUnbindAdapter())
+            }
+            return
         }
-
+        //再判断是否绑定，没有绑定，就请求。能到这里，说明vm已经没有数据了
+        if (!viewModel.isBind) {
+            viewModel.loadVolunteerTime(ServiceManager.getService(IAccountService::class.java).getUserService().getStuNum())
+            val adapter = getAdapter()
+            if (adapter is VolunteerFeedUnbindAdapter) {
+                adapter.refresh("查询中...")
+            }
+        }
     }
 
-    //用于首次登录志愿者后的数据后传给发现首页刷新
+    //用于首次登录志愿者后的数据后传给发现首页刷新，把数据给vm
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     fun getVolunteerTime(volunteerLoginEvent: VolunteerLoginEvent) {
         if (viewModel.volunteerData.value == null && !viewModel.isQuerying) {
             viewModel.volunteerData.value = volunteerLoginEvent.volunteerTime
         }
+    }
+
+    //用于处理VolunteerRecordActivity的取消绑定事件，清除vm数据，并重设adapter
+    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
+    fun unbindVolunteer(volunteerLogoutEvent: VolunteerLogoutEvent) {
+        viewModel.unbind()
     }
 
 

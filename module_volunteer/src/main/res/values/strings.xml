@@ -2,7 +2,8 @@
 <resources>
     <string name="volunteer_hint_input_account">请输入中国志愿者服务网账号</string>
     <string name="volunteer_hint_input_pwd">请输入密码</string>
-    <string name="volunteer_login">登 录</string>
+    <string name="volunteer_login">立 即 绑 定</string>
     <string name="volunteer_ask_login_string">登录后即可志愿服务查询</string>
     <string name="volunteer_service_inquire_string">志愿服务</string>
+    <string name="volunteer_unbind">还未绑定账号哦～</string>
 </resources>

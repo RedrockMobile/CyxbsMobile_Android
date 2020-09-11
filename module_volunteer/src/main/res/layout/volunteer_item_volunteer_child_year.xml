@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="horizontal"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    >
+    android:layout_height="wrap_content">
 
     <FrameLayout
         android:layout_width="50dp"
         android:layout_height="match_parent">
+
         <ImageView
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_marginTop="0dp"
-            android:src="@drawable/volunteer_ic_year_ic"/>
+            android:src="@drawable/volunteer_ic_year_ic" />
+
         <TextView
             android:id="@+id/volunteer_time_year"
             android:layout_width="wrap_content"
@@ -21,23 +21,26 @@
             android:text="2017"
             android:textColor="@color/volunteer_login_background"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="15dp"/>
+            android:layout_marginTop="15dp" />
+
         <TextView
             android:id="@+id/volunteer_time_divider_line"
             android:layout_width="2dp"
             android:layout_height="match_parent"
             android:background="@color/volunteer_time_left"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="46dp"/>
+            android:layout_marginTop="46dp" />
+
         <View
             android:layout_width="23dp"
             android:layout_height="23dp"
             android:background="#fff"
             android:layout_gravity="bottom|center"
             android:visibility="gone"
-            android:layout_marginTop="46dp"/>
+            android:layout_marginTop="46dp" />
 
     </FrameLayout>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/volunteer_time_child_recycler"
         android:layout_width="match_parent"

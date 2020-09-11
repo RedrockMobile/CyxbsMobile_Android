@@ -10,7 +10,7 @@ import com.mredrock.cyxbs.volunteer.R
 import com.mredrock.cyxbs.volunteer.adapter.VolunteerRecyclerAdapter
 import com.mredrock.cyxbs.volunteer.bean.VolunteerTime
 
-class FirstVolunteerTimeFragment : BaseFragment(){
+class FirstVolunteerTimeFragment : BaseFragment() {
 
     internal lateinit var view: View
     private lateinit var holeTime: TextView
@@ -33,7 +33,7 @@ class FirstVolunteerTimeFragment : BaseFragment(){
     private fun initData() {
         var holeHour = 0
         for (i in recordBeanList.indices) {
-            val nowHour = java.lang.Double.parseDouble(recordBeanList[i].hours?:"0.0").toInt()
+            val nowHour = java.lang.Double.parseDouble(recordBeanList[i].hours ?: "0.0").toInt()
             holeHour += nowHour
         }
         val holeHourString = holeHour.toString()

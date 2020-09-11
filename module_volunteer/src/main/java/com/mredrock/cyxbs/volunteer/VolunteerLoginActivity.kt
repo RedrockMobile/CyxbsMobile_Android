@@ -18,7 +18,6 @@ import com.mredrock.cyxbs.common.utils.extensions.visible
 import com.mredrock.cyxbs.volunteer.event.VolunteerLoginEvent
 import com.mredrock.cyxbs.volunteer.viewmodel.VolunteerLoginViewModel
 import com.mredrock.cyxbs.volunteer.widget.EncryptPassword
-import com.mredrock.cyxbs.volunteer.widget.VolunteerTimeSP
 import kotlinx.android.synthetic.main.volunteer_activity_login.*
 import org.greenrobot.eventbus.EventBus
 
@@ -31,56 +30,26 @@ class VolunteerLoginActivity : BaseViewModelActivity<VolunteerLoginViewModel>() 
         const val WRONG_PASSWORD: Int = 3
     }
 
-    private var uid: String = ""
-    private var account: String = ""
-    private var password: String = ""
-
-    //判断是否需要存入sp
-    private var userInfoChanged = false
-    private lateinit var volunteerSP: VolunteerTimeSP
-
     override val isFragmentActivity: Boolean = false
 
+    //进入登录页面，说明发现页的vm中志愿数据为空，或者用户主动接触绑定
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.volunteer_activity_login)
         initObserve()
-        volunteerSP = VolunteerTimeSP(this)
-        val user = ServiceManager.getService(IAccountService::class.java).getUserService()
-        uid = user.getStuNum()
-        if (volunteerSP.isBind()) {
-            displayLottie()
-            account = volunteerSP.volunteerAccount
-            password = volunteerSP.volunteerPassword
-            uid = volunteerSP.volunteerUid
-            viewModel.login(volunteerSP.volunteerAccount, EncryptPassword.encrypt(volunteerSP.volunteerPassword), volunteerSP.volunteerUid) {
-                CyxbsToast.makeText(this, "服务暂时不可使用~", Toast.LENGTH_SHORT).show()
-                stopLottie()
-            }
-        }
         et_volunteer_account.setText("unbelievable3")
-        et_volunteer_password.setText("")
+        et_volunteer_password.setText("jNbYHRsdXQ2EFrq")
         btn_volunteer_login.setOnClickListener {
             loginAction()
         }
         useSoftKeyboard()
     }
 
-    private fun initUserInfo() {
-        account = et_volunteer_account.text.toString()
-        password = et_volunteer_password.text.toString()
-        userInfoChanged = true
-    }
 
     private fun useSoftKeyboard() {
         et_volunteer_password.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_GO) {
                 loginAction()
-                val inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-                if (inputMethodManager.isActive) {
-                    inputMethodManager.hideSoftInputFromWindow(this@VolunteerLoginActivity.currentFocus?.windowToken
-                            ?: return@setOnEditorActionListener false, 0)
-                }
                 return@setOnEditorActionListener true
             }
             return@setOnEditorActionListener false
@@ -94,10 +63,14 @@ class VolunteerLoginActivity : BaseViewModelActivity<VolunteerLoginViewModel>() 
             return
         }
         displayLottie()
-        initUserInfo()
-        viewModel.login(account, EncryptPassword.encrypt(password), uid) {
+        val uid = ServiceManager.getService(IAccountService::class.java).getUserService().getStuNum()
+        viewModel.login(et_volunteer_account.text.toString(), EncryptPassword.encrypt(et_volunteer_password.text.toString()), uid) {
             CyxbsToast.makeText(this, "服务暂时不可使用~", Toast.LENGTH_SHORT).show()
             stopLottie()
+        }
+        val inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        if (inputMethodManager.isActive) {
+            inputMethodManager.hideSoftInputFromWindow(this@VolunteerLoginActivity.currentFocus?.windowToken, 0)
         }
     }
 
@@ -105,7 +78,6 @@ class VolunteerLoginActivity : BaseViewModelActivity<VolunteerLoginViewModel>() 
     private fun failedAction(text: String) {
         stopLottie()
         CyxbsToast.makeText(this, text, Toast.LENGTH_SHORT).show()
-        userInfoChanged = false
     }
 
     private fun initObserve() {
@@ -113,9 +85,6 @@ class VolunteerLoginActivity : BaseViewModelActivity<VolunteerLoginViewModel>() 
             it ?: return@observe
             when (it) {
                 VolunteerLoginActivity.BIND_SUCCESS -> {
-                    if (userInfoChanged) {
-                        volunteerSP.bindVolunteerInfo(account, password, uid)
-                    }
                 }
 
                 INVALID_ACCOUNT, WRONG_PASSWORD -> failedAction("亲，输入的账号或密码有误哦")

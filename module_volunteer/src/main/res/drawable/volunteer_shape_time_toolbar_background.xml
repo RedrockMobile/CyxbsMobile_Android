@@ -3,5 +3,5 @@
     <gradient
         android:angle="0"
         android:endColor="@color/volunteer_time_toolbar_right"
-        android:startColor="@color/volunteer_time_toolbar_left"/>
+        android:startColor="@color/volunteer_time_toolbar_left" />
 </shape>

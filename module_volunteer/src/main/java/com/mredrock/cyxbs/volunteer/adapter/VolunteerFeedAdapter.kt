@@ -23,7 +23,7 @@ class VolunteerFeedAdapter(private val volunteerTime: VolunteerTime) : BaseFeedF
     }
 
     fun refresh(volunteerTime: VolunteerTime) {
-        val context = view?.context?:return
+        val context = view?.context ?: return
         view?.let {
             it.tv_volunteer_feed_total_time.text = SpannableStringBuilder(volunteerTime.hours?.toInt().toString().plus("时"))
                     .apply {

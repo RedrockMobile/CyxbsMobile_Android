@@ -8,8 +8,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.mredrock.cyxbs.common.ui.BaseViewModelFragment
 import com.mredrock.cyxbs.volunteer.R
 import com.mredrock.cyxbs.volunteer.adapter.VolunteerAffairAdapter
-import com.mredrock.cyxbs.volunteer.bean.VolunteerAffair
-import com.mredrock.cyxbs.volunteer.bean.VolunteerAffairDetail
 import com.mredrock.cyxbs.volunteer.viewmodel.VolunteerAffairViewModel
 import com.mredrock.cyxbs.volunteer.widget.VolunteerAffairBottomSheetDialog
 import kotlinx.android.synthetic.main.volunteer_fragment_volunteer_affair.*

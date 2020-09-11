@@ -32,7 +32,8 @@ class VolunteerAffairAdapter(private var dataList: List<VolunteerAffair>, privat
         }
         holder.textView.text = dataList[position].name
     }
-    fun refreshData(newList: List<VolunteerAffair>){
+
+    fun refreshData(newList: List<VolunteerAffair>) {
         this.dataList = newList
         this.notifyDataSetChanged()
     }

@@ -2,10 +2,10 @@ package com.mredrock.cyxbs.volunteer.bean
 
 import java.io.Serializable
 
-data class VolunteerTime(var code : String?,
-                         var msg : String?,
-                         var hours : Double?,
-                         var record : MutableList<RecordBean>?) :Serializable{
+data class VolunteerTime(var code: String?,
+                         var msg: String?,
+                         var hours: Double?,
+                         var record: MutableList<RecordBean>?) : Serializable {
     /**
      * code : 0
      * msg : success
@@ -22,14 +22,14 @@ data class VolunteerTime(var code : String?,
                 '}'.toString()
     }
 
-    data class RecordBean( var hours : String?,
-                           var content : String?,
-                           var start_time : String?,
-                           var title : String?,
-                           var addWay : String?,
-                           var status : String?,
-                           var server_group : String?,
-                           var uid : String?) : Serializable {
+    data class RecordBean(var hours: String?,
+                          var content: String?,
+                          var start_time: String?,
+                          var title: String?,
+                          var addWay: String?,
+                          var status: String?,
+                          var server_group: String?,
+                          var uid: String?) : Serializable {
         /**
          * hours : 2.0
          * content : 系统导入 三下乡志愿者

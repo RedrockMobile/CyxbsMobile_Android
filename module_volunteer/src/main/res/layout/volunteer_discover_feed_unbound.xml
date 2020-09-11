@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical|center_horizontal"
         android:alpha="0.6"
-        android:text="还未绑定账号哦～"
+        android:text="@string/volunteer_unbind"
         android:textColor="@color/common_level_two_font_color"
         android:textSize="15sp" />
 </FrameLayout>

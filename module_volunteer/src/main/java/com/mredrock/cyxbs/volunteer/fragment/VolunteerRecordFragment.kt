@@ -6,10 +6,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import com.google.android.material.tabs.TabLayout
 import com.mredrock.cyxbs.common.mark.EventBusLifecycleSubscriber
 import com.mredrock.cyxbs.common.ui.BaseFragment
@@ -18,7 +16,6 @@ import com.mredrock.cyxbs.volunteer.adapter.VolunteerFragmentAdapter
 import com.mredrock.cyxbs.volunteer.bean.VolunteerTime
 import com.mredrock.cyxbs.volunteer.event.VolunteerLoginEvent
 import com.mredrock.cyxbs.volunteer.viewmodel.VolunteerRecordViewModel
-import kotlinx.android.synthetic.main.volunteer_activity_record.*
 import kotlinx.android.synthetic.main.volunteer_fragment_record.*
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -34,7 +31,8 @@ class VolunteerRecordFragment : BaseFragment(), EventBusLifecycleSubscriber {
 
     private val fragmentList by lazy(LazyThreadSafetyMode.NONE) { ArrayList<Fragment>() }
 
-    private var volunteerTime : VolunteerTime? = null
+    private var volunteerTime: VolunteerTime? = null
+
     //每个key都对应的该用户key所对应的那一年的所有时长信息
     //用来加入每一年的信息
     //用来储存年份

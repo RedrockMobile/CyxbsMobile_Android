@@ -15,7 +15,7 @@ class VolunteerRecyclerAdapter(
         private var allList: MutableList<MutableList<VolunteerTime.RecordBean>>?
 ) : androidx.recyclerview.widget.RecyclerView.Adapter<VolunteerRecyclerAdapter.ViewHolder>() {
 
-    fun updaeList(yList: MutableList<String>,aList: MutableList<MutableList<VolunteerTime.RecordBean>>?) {
+    fun updaeList(yList: MutableList<String>, aList: MutableList<MutableList<VolunteerTime.RecordBean>>?) {
         yearList = yList
         allList = aList
         notifyDataSetChanged()
