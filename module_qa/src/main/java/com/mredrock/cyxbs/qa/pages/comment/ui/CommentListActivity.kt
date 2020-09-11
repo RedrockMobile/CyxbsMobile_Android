@@ -6,8 +6,10 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.InputType.TYPE_TEXT_FLAG_MULTI_LINE
 import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
@@ -121,8 +123,11 @@ class CommentListActivity : BaseActivity(), EventBusLifecycleSubscriber {
         val commentNub = answer.commentNum
         qa_tv_toolbar_title.text = baseContext.getString(R.string.qa_comment_list_comment_count, commentNub)
         if (intent.getIntExtra(NAVIGATE_FROM_WHERE, IS_COMMENT) == IS_ANSWER) {
+            val lay = qa_ib_toolbar_more.layoutParams
+            lay.width = ViewGroup.LayoutParams.WRAP_CONTENT
+            lay.height = ViewGroup.LayoutParams.WRAP_CONTENT
             cl_toolbar_root.addView(TextView(this).apply {
-                layoutParams = qa_ib_toolbar_more.layoutParams
+                layoutParams = lay
                 text = getString(R.string.qa_answer_show_question)
                 setTextColor(ContextCompat.getColor(this@CommentListActivity, R.color.common_level_two_font_color))
                 textSize = 15f
