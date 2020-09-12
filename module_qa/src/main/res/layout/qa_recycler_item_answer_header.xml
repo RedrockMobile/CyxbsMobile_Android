@@ -85,22 +85,11 @@
         android:paddingBottom="19dp"
         app:arrangementMode="fill" />
 
-    <ImageView
-        android:id="@+id/qa_imageview"
-        android:layout_marginTop="19dp"
-        android:layout_marginBottom="11dp"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/common_qa_answer_item_divider_color"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="7dp"
+        android:layout_marginTop="28dp"
         android:text="@string/qa_answer_reply_hint"
         android:textColor="@color/common_level_two_font_color"
         android:textSize="18sp"
