@@ -1,3 +1,4 @@
+include ':photolibrary-2.5'
 include ':module_app', ':lib_common', ':module_main', ':lib_account', ':lib_update',   //特殊模块
         ':module_course', ':module_qa', ':module_discover', ':module_mine', //主业务模块
         ':module_othercourse', ':module_noclass', ':module_map',

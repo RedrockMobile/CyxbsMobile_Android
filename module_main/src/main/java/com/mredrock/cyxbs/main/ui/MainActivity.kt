@@ -31,7 +31,6 @@ import com.mredrock.cyxbs.common.utils.extensions.onTouch
 import com.mredrock.cyxbs.common.utils.extensions.topPadding
 import com.mredrock.cyxbs.main.R
 import com.mredrock.cyxbs.main.components.DebugDataDialog
-import com.mredrock.cyxbs.main.databinding.MainActivityMainBinding
 import com.mredrock.cyxbs.main.utils.BottomNavigationHelper
 import com.mredrock.cyxbs.main.utils.entryContains
 import com.mredrock.cyxbs.main.utils.getFragment

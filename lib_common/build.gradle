@@ -12,7 +12,7 @@ android.defaultConfig {
 // 请不要把需要kapt(注解处理)声明的添加到这其中，这样不会在业务模块中生效
 // 需要添加请移步项目根目录下的config.gradle中的dependencies
 dependencies {
-    api fileTree(include: ['*.jar','*.aar'], dir: 'libs')
+    api fileTree(include: ['*.jar'], dir: 'libs')
 
     // copy if need Unit Testing
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
@@ -119,4 +119,5 @@ dependencies {
     //目前打进的aar，手动添加图片选择器所需依赖
     api 'com.davemorrissey.labs:subsampling-scale-image-view:3.10.0'
     api 'com.github.mmin18:realtimeblurview:1.2.1'
+    api project(path: ':photolibrary-2.5')
 }
