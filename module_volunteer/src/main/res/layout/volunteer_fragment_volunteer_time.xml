@@ -1,125 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-    <androidx.core.widget.NestedScrollView
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_marginStart="18dp"
+        android:layout_marginEnd="18dp"
+        android:paddingBottom="18dp">
 
-        <LinearLayout
+        <TextView
+            android:id="@+id/tv_volunteer_record_year"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/common_level_three_font_color"
+            android:drawableEnd="@drawable/volunteer_ic_record_arrow_down"
+            android:drawablePadding="6dp"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/tv_volunteer_record_year_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/common_volunteer_sign_up_way"
+            android:layout_alignParentEnd="true"
+            android:textSize="16sp"
+            tools:text="23小时" />
+    </RelativeLayout>
+
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/srl_refresh"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/volunteer_time_recycler"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:background="@color/common_window_background">
+            android:layout_marginLeft="28dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginRight="28dp" />
 
-            <androidx.cardview.widget.CardView
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="200dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                app:cardCornerRadius="5dp"
-                app:cardElevation="5dp"
-                android:layout_marginTop="20dp">
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-                    <ImageView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_alignParentLeft="true"
-                        android:layout_alignParentStart="true"
-                        android:layout_alignParentTop="true"
-                        android:src="@drawable/volunteer_shape_time_color" />
-
-                    <TextView
-                        android:id="@+id/textview1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerHorizontal="true"
-                        android:layout_marginTop="50dp"
-                        android:text="时长"
-                        android:textColor="@color/volunteer_pager_background"
-                        android:textSize="30dp" />
-
-                    <RelativeLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:layout_below="@+id/textview1"
-                        android:layout_centerHorizontal="true"
-                        android:layout_marginTop="10dp">
-
-                        <TextView
-                            android:id="@+id/volunteer_time_number"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="33"
-                            android:textColor="@color/volunteer_pager_background"
-                            android:textSize="50dp"
-
-                            />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="小时"
-                            android:textColor="@color/volunteer_pager_background"
-                            android:textSize="32dp"
-
-                            android:layout_alignBaseline="@+id/volunteer_time_number"
-                            android:layout_alignBottom="@+id/volunteer_time_number"
-                            android:layout_toRightOf="@+id/volunteer_time_number"
-                            android:layout_toEndOf="@+id/volunteer_time_number" />
-
-                    </RelativeLayout>
-
-                </RelativeLayout>
-
-            </androidx.cardview.widget.CardView>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginLeft="20dp"
-                android:layout_marginTop="20dp">
-
-                <ImageView
-                    android:layout_width="4dp"
-                    android:layout_height="20dp"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/volunteer_ic_service_begin" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:text="服务记录"
-                    android:textSize="18dp" />
-
-            </LinearLayout>
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/volunteer_time_recycler"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="30dp" />
-
-        </LinearLayout>
-
-    </androidx.core.widget.NestedScrollView>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 </LinearLayout>

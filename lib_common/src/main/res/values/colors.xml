@@ -366,7 +366,15 @@
 
     <color name="common_main_activity_login_et_hint_color">#999999</color>
 
-
+    <!-- 志愿服务-->
+    <color name="common_volunteer_record_item_cardView_bg">#E8F1FC</color>
+    <color name="common_volunteer_affair_sign_up_end_t0">#FF6262</color>
+    <color name="common_volunteer_affair_sign_up_end_t1">#3A39D3</color>
+    <!--   志愿item的“时”字颜色-->
+    <color name="common_volunteer_record_item_value">#2A4E84</color>
+    <!--todo 没有夜间颜色-->
+    <color name="common_volunteer_sign_up_way">#3A39D3</color>
+    <color name="common_volunteer_affair_detail_divide_line">#2A4E84</color>
     <!--   地图模块使用的颜色-->
     <!--   搜索地点的搜索框文字颜色-->
     <color name="map_search_text_color" tools:ignore="ResourceName">#16305C</color>
@@ -442,7 +450,7 @@
     <color name="map_dialog_transparent" tools:ignore="ResourceName">#00000000</color>
     <color name="map_download_progressbar_background" tools:ignore="ResourceName">#E7EFFD</color>
     <color name="map_download_progressbar" tools:ignore="ResourceName">#4B44E5</color>
-    <color name="map_download_text" tools:ignore="ResourceName"> #132F5B</color>
+    <color name="map_download_text" tools:ignore="ResourceName">#132F5B</color>
 
 </resources>
 

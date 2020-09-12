@@ -1,5 +1,6 @@
 package com.mredrock.cyxbs.volunteer.viewmodel
 
+import androidx.lifecycle.MutableLiveData
 import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.network.exception.RedrockApiIllegalStateException
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
@@ -7,42 +8,28 @@ import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.common.viewmodel.event.SingleLiveEvent
 import com.mredrock.cyxbs.volunteer.bean.VolunteerTime
-import com.mredrock.cyxbs.volunteer.config.Config.Authorization
 import com.mredrock.cyxbs.volunteer.network.ApiService
 
 class DiscoverVolunteerFeedViewModel : BaseViewModel() {
-    val volunteerData = SingleLiveEvent<VolunteerTime>()
+    val volunteerData = MutableLiveData<VolunteerTime>()
     var isQuerying: Boolean = false
     val loadFailed = SingleLiveEvent<Boolean>()
     var isBind = false
 
     //是否用户主动退出
     var requestUnBind = false
-    private val apiService: ApiService by lazy {
-        ApiGenerator.getApiService(ApiService::class.java)
-    }
 
-//    fun judgeBind(uid: String) {
-//        apiService.judgeBind(uid)
-//                .setSchedulers()
-//                .doOnError {
-//                    isBind.value = false
-//                }
-//                .safeSubscribeBy {
-//                    isBind.value = it.code == 0
-//                }
-//    }
-
-    fun loadVolunteerTime(uid: String) {
+    fun loadVolunteerTime() {
         isQuerying = true
-        apiService.judgeBind(uid)
-                .setSchedulers()
+        requestUnBind = false
+        ApiGenerator.getApiService(ApiService::class.java).judgeBind()
                 .flatMap {
                     if (it.code != 0) {
                         throw RedrockApiIllegalStateException()
                     }
-                    apiService.getVolunteerRecord(Authorization, uid)
+                    ApiGenerator.getApiService(ApiService::class.java).getVolunteerRecord()
                 }
+                .setSchedulers()
                 .doOnError {
                     loadFailed.value = true
                     isQuerying = false

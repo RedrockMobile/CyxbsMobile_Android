@@ -9,8 +9,6 @@ import androidx.core.view.iterator
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.common.config.DISCOVER_VOLUNTEER
-import com.mredrock.cyxbs.common.service.ServiceManager
-import com.mredrock.cyxbs.common.service.account.IAccountService
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.extensions.gone
 import com.mredrock.cyxbs.common.utils.extensions.invisible
@@ -63,8 +61,7 @@ class VolunteerLoginActivity : BaseViewModelActivity<VolunteerLoginViewModel>() 
             return
         }
         displayLottie()
-        val uid = ServiceManager.getService(IAccountService::class.java).getUserService().getStuNum()
-        viewModel.login(et_volunteer_account.text.toString(), EncryptPassword.encrypt(et_volunteer_password.text.toString()), uid) {
+        viewModel.login(et_volunteer_account.text.toString(), EncryptPassword.encrypt(et_volunteer_password.text.toString())) {
             CyxbsToast.makeText(this, "服务暂时不可使用~", Toast.LENGTH_SHORT).show()
             stopLottie()
         }

@@ -40,19 +40,13 @@ class VolunteerAffairFragment : BaseViewModelFragment<VolunteerAffairViewModel>(
             }
         }
         viewModel.volunteerAffairDetail.observe { data ->
-            if (context == null) return@observe
+            if (context == null || data == null) return@observe
             if (volunteerAffairBottomSheetDialog == null) {
-                volunteerAffairBottomSheetDialog = VolunteerAffairBottomSheetDialog(context!!).apply {
-                    if (data != null) {
-                        volunteerAffairBottomSheetDialog?.refresh(data)
-                    }
-                }
-            } else {
-                data?.let { volunteerAffairBottomSheetDialog?.refresh(it) }
+                volunteerAffairBottomSheetDialog = VolunteerAffairBottomSheetDialog(context!!)
             }
             volunteerAffairBottomSheetDialog?.show()
+            volunteerAffairBottomSheetDialog?.refresh(data)
         }
-
     }
 
     override val viewModelClass: Class<VolunteerAffairViewModel>

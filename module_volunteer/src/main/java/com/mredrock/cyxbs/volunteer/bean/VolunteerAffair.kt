@@ -18,5 +18,7 @@ class VolunteerAffair(
         @SerializedName("date")
         val date: Long = 0L,
         @SerializedName("last_date")
-        val lastDate: Long = 0L
+        val lastDate: Long = 0L,
+        @SerializedName("hour")
+        val hour: String = ""
 ) : Serializable

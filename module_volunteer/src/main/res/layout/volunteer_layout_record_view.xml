@@ -4,56 +4,20 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="20dp">
+    android:background="@color/common_window_background">
 
-    <TextView
-        android:id="@+id/tv_volunteer_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="20dp"
-        tools:text="欢迎你，赵潘"
-        android:textColor="@color/common_level_three_font_color"
-        android:textSize="20sp"
-        app:layout_constraintEnd_toStartOf="@+id/tv_volunteer_logout"
-        app:layout_constraintHorizontal_bias="0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/tv_volunteer_id"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="17dp"
-        tools:text="志愿者编号：500112100455122"
-        android:textColor="@color/common_level_three_font_color"
-        android:textSize="16sp"
-        app:layout_constraintStart_toStartOf="@id/tv_volunteer_name"
-        app:layout_constraintTop_toBottomOf="@id/tv_volunteer_name" />
-
-    <TextView
-        android:id="@+id/tv_volunteer_logout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="20dp"
-        android:text="切换绑定"
-        android:textColor="@color/common_level_three_font_color"
-        android:textSize="16sp"
-        app:layout_constraintBottom_toBottomOf="@id/tv_volunteer_name"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/tv_volunteer_name" />
-
-    <FrameLayout
+    <LinearLayout
         android:id="@+id/fl_volunteer_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="40dp"
         android:layout_marginTop="15dp"
-        android:background="@drawable/volunteer_ic_volunteer_feed_background"
+        android:orientation="horizontal"
         app:layout_constraintEnd_toStartOf="@+id/volunteer_guideline"
         app:layout_constraintHorizontal_bias="1"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_volunteer_id">
+        app:layout_constraintTop_toTopOf="parent">
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tv_volunteer_total_time"
@@ -61,8 +25,18 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:textColor="@color/levelFourFontColor"
+            android:textSize="25sp"
             tools:text="18" />
-    </FrameLayout>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_marginStart="8dp"
+            android:text="时"
+            android:textColor="@color/levelFourFontColor"
+            android:textSize="16sp" />
+    </LinearLayout>
 
     <TextView
         android:layout_width="wrap_content"
@@ -75,17 +49,17 @@
         app:layout_constraintStart_toStartOf="@id/fl_volunteer_time"
         app:layout_constraintTop_toBottomOf="@id/fl_volunteer_time" />
 
-    <FrameLayout
+    <LinearLayout
         android:id="@+id/fl_volunteer_times"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="15dp"
         android:layout_marginEnd="40dp"
-        android:background="@drawable/volunteer_ic_volunteer_feed_background"
+        android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0"
         app:layout_constraintStart_toStartOf="@+id/volunteer_guideline2"
-        app:layout_constraintTop_toBottomOf="@id/tv_volunteer_id">
+        app:layout_constraintTop_toTopOf="parent">
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tv_volunteer_total_times"
@@ -93,8 +67,18 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:textColor="@color/levelFourFontColor"
+            android:textSize="25sp"
             tools:text="18" />
-    </FrameLayout>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginStart="8dp"
+            android:text="次"
+            android:textColor="@color/levelFourFontColor"
+            android:textSize="16sp" />
+    </LinearLayout>
 
     <TextView
         android:layout_width="wrap_content"

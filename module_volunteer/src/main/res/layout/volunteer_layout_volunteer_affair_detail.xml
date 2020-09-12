@@ -2,17 +2,139 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:paddingStart="20dp"
+    android:paddingEnd="20dp"
+    android:paddingBottom="14dp"
     tools:ignore="MissingDefaultResource">
 
     <TextView
-        android:id="@+id/tv_title"
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:gravity="center_horizontal"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:id="@+id/tv_volunteer_affair_detail_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:textColor="@color/common_level_three_font_color"
+        android:textSize="28sp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="荧光夜跑活动" />
+
+    <TextView
+        android:id="@+id/tv_volunteer_affair_detail_description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:alpha="0.6"
+        android:textColor="@color/common_level_three_font_color"
+        android:textSize="17sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_volunteer_affair_detail_title"
+        tools:text="通过帮助和引导同学们参与到夜跑项目中来，充当裁判...." />
+
+    <TextView
+        android:id="@+id/tv_volunteer_affair_detail_sign_up_end"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:alpha="0.8"
+        android:textColor="@color/common_level_three_font_color"
+        android:textSize="20sp"
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_volunteer_affair_detail_description"
+        android:text="@string/volunteer_activity_sign_in_time" />
+
+    <TextView
+        android:id="@+id/tv_volunteer_affair_detail_sign_up_end_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:alpha="0.8"
+        android:textColor="@color/common_level_three_font_color"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1"
+        app:layout_constraintStart_toEndOf="@id/tv_volunteer_affair_detail_sign_up_end"
+        app:layout_constraintTop_toBottomOf="@id/tv_volunteer_affair_detail_description"
+        tools:text="2020.09.30" />
+
+    <TextView
+        android:id="@+id/tv_volunteer_affair_detail_service_end"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:alpha="0.8"
+        android:textColor="@color/common_level_three_font_color"
+        android:textSize="20sp"
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_volunteer_affair_detail_sign_up_end"
+        android:text="@string/volunteer_activity_server_time" />
+
+    <TextView
+        android:id="@+id/tv_volunteer_affair_detail_service_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:alpha="0.8"
+        android:textColor="@color/common_level_three_font_color"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1"
+        app:layout_constraintStart_toEndOf="@id/tv_volunteer_affair_detail_service_end"
+        app:layout_constraintTop_toBottomOf="@id/tv_volunteer_affair_detail_sign_up_end_time"
+        tools:text="2020.09.30" />
+
+    <TextView
+        android:id="@+id/tv_volunteer_affair_detail_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:alpha="0.8"
+        android:textColor="@color/common_level_three_font_color"
+        android:textSize="20sp"
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_volunteer_affair_detail_service_end"
+        android:text="@string/volunteer_activity_value" />
+
+    <TextView
+        android:id="@+id/tv_volunteer_affair_detail_time_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:alpha="0.8"
+        android:textColor="@color/common_level_three_font_color"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1"
+        app:layout_constraintStart_toEndOf="@id/tv_volunteer_affair_detail_value"
+        app:layout_constraintTop_toBottomOf="@id/tv_volunteer_affair_detail_service_time"
+        tools:text="2020.09.30" />
+
+    <View
+        android:id="@+id/view_divide_line"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="32dp"
+        android:alpha="0.1"
+        android:background="@color/common_volunteer_affair_detail_divide_line"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_volunteer_affair_detail_value" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/view_divide_line"
+        android:textColor="@color/common_volunteer_sign_up_way"
+        android:text="@string/volunteer_string_sign_up_way" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -6,4 +6,10 @@
     <string name="volunteer_ask_login_string">登录后即可志愿服务查询</string>
     <string name="volunteer_service_inquire_string">志愿服务</string>
     <string name="volunteer_unbind">还未绑定账号哦～</string>
+    <string name="volunteer_string_sign_up_way">可前往微信小程序：重邮帮参与该志愿服务的报名</string>
+    <string name="volunteer_string_hours_all">共%s小时</string>
+    <string name="volunteer_activity_sign_in_time">报名截至时间</string>
+    <string name="volunteer_activity_server_time">志愿服务时间</string>
+    <string name="volunteer_activity_value">志愿服务时长</string>
+
 </resources>

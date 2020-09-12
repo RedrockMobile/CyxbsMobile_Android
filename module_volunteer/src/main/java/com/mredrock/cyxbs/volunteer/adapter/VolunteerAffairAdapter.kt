@@ -15,7 +15,6 @@ class VolunteerAffairAdapter(private var dataList: List<VolunteerAffair>, privat
 
 
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val textView = view.tv_test
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VolunteerAffairAdapter.ViewHolder {
@@ -27,10 +26,15 @@ class VolunteerAffairAdapter(private var dataList: List<VolunteerAffair>, privat
     }
 
     override fun onBindViewHolder(holder: VolunteerAffairAdapter.ViewHolder, position: Int) {
+        holder.itemView.apply {
+            tv_volunteer_affair_title.text = dataList[position].name
+            tv_volunteer_affair_reward.text = dataList[position].hour
+            tv_volunteer_affair_start_time.text = dataList[position].date.toString()
+            tv_volunteer_affair_sign_up_end.text = dataList[position].lastDate.toString()
+        }
         holder.itemView.setOnClickListener {
             onItemClick(dataList[position].id)
         }
-        holder.textView.text = dataList[position].name
     }
 
     fun refreshData(newList: List<VolunteerAffair>) {

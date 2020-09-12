@@ -8,9 +8,7 @@ import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.volunteer.VolunteerLoginActivity
 import com.mredrock.cyxbs.volunteer.bean.VolunteerTime
-import com.mredrock.cyxbs.volunteer.config.Config.Authorization
 import com.mredrock.cyxbs.volunteer.network.ApiService
-import com.mredrock.cyxbs.volunteer.widget.EncryptPassword
 
 /**
  * Created by yyfbe, Date on 2020/9/3.
@@ -18,15 +16,14 @@ import com.mredrock.cyxbs.volunteer.widget.EncryptPassword
 class VolunteerLoginViewModel : BaseViewModel() {
     var loginCode = MutableLiveData<Int>()
     var volunteerTime = MutableLiveData<VolunteerTime>()
-    fun login(account: String, encodingPassword: String, uid: String?, onError: () -> Unit) {
-        if (uid.isNullOrEmpty()) return
+    fun login(account: String, encodingPassword: String, onError: () -> Unit) {
         ApiGenerator.getApiService(ApiService::class.java)
-                .volunteerLogin("Basic enNjeTpyZWRyb2Nrenk=", account, encodingPassword, uid)
+                .volunteerLogin(account, encodingPassword)
                 .flatMap {
                     loginCode.postValue(it.code)
                     if (it.code == VolunteerLoginActivity.BIND_SUCCESS) {
                         ApiGenerator.getApiService(ApiService::class.java)
-                                .getVolunteerRecord(Authorization, EncryptPassword.encrypt(uid))
+                                .getVolunteerRecord()
                     } else {
                         throw RedrockApiException("response code not correct")
                     }

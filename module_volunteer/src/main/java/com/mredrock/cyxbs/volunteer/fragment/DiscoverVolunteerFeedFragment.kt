@@ -55,7 +55,6 @@ class DiscoverVolunteerFeedFragment : BaseFeedFragment<DiscoverVolunteerFeedView
 
         viewModel.volunteerData.observe { volunteerTime ->
             //当data变化了，那说明用户主动再登录了
-            viewModel.requestUnBind = false
             //改变了，刷新
             volunteerTime?.let {
                 val adapter = getAdapter()
@@ -118,9 +117,9 @@ class DiscoverVolunteerFeedFragment : BaseFeedFragment<DiscoverVolunteerFeedView
             }
             return
         }
-        //再判断是否绑定，没有绑定，就请求。能到这里，说明vm已经没有数据了
+        //再判断是否绑定，绑定，就请求。能到这里，说明vm已经没有数据了
         if (!viewModel.isBind) {
-            viewModel.loadVolunteerTime(ServiceManager.getService(IAccountService::class.java).getUserService().getStuNum())
+            viewModel.loadVolunteerTime()
             val adapter = getAdapter()
             if (adapter is VolunteerFeedUnbindAdapter) {
                 adapter.refresh("查询中...")

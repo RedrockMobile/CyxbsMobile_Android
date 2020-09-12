@@ -18,6 +18,10 @@ class VolunteerAffairBottomSheetDialog(context: Context) : RedRockBottomSheetDia
 
 
     fun refresh(volunteerAffairDetail: VolunteerAffairDetail) {
-        tv_title.text = volunteerAffairDetail.description
+        tv_volunteer_affair_detail_title.text = volunteerAffairDetail.name
+        tv_volunteer_affair_detail_description.text = volunteerAffairDetail.description
+        tv_volunteer_affair_detail_sign_up_end_time.text = volunteerAffairDetail.lastDate.toString()
+        tv_volunteer_affair_detail_service_time.text = volunteerAffairDetail.date.toString()
+        tv_volunteer_affair_detail_time_value.text = volunteerAffairDetail.hour
     }
 }

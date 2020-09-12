@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:background="@color/common_window_background"
+    android:orientation="vertical"
+    tools:context=".VolunteerRecordActivity">
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/ll_toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -16,6 +19,7 @@
             android:id="@+id/iv_back"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
             android:layout_gravity="center_vertical"
             android:layout_marginStart="20dp"
             android:src="@drawable/common_ic_back" />
@@ -23,12 +27,26 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
             android:layout_gravity="center_vertical"
             android:layout_marginStart="20dp"
+            android:layout_toEndOf="@id/iv_back"
             android:text="志愿查询"
             android:textColor="@color/common_level_three_font_color"
             android:textSize="20sp" />
-    </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_volunteer_logout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="20dp"
+            android:text="切换绑定"
+            android:textColor="@color/common_level_three_font_color"
+            android:textSize="16sp" />
+
+    </RelativeLayout>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
@@ -56,6 +74,7 @@
         </com.google.android.material.appbar.AppBarLayout>
 
         <LinearLayout
+            android:id="@+id/volunteer_linearlayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="10dp"
@@ -67,24 +86,36 @@
                 android:id="@+id/tl_volunteer_category"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
+                android:background="@drawable/volunteer_shape_tab"
                 app:tabBackground="@android:color/transparent"
-                app:tabGravity="fill"
+                app:tabGravity="center"
                 app:tabIndicatorColor="@color/common_qa_question_tab_indicator_color"
                 app:tabIndicatorFullWidth="false"
                 app:tabIndicatorHeight="3dp"
-                app:tabMode="scrollable"
+                app:tabMaxWidth="100dp"
+                app:tabMinWidth="100dp"
+                app:tabMode="fixed"
                 app:tabRippleColor="@android:color/transparent"
                 app:tabSelectedTextColor="@color/common_qa_tab_selected_color"
+                app:tabTextAppearance="@style/TabLayout.TabText"
                 app:tabTextColor="@color/common_qa_tab_unselected_color" />
 
-            <androidx.viewpager.widget.ViewPager
-                android:id="@+id/vp_volunteer_category"
-                android:layout_width="match_parent"
+
+            <FrameLayout
+                android:layout_width="wrap_content"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:layout_marginTop="20dp"
-                android:overScrollMode="never" />
+                android:background="#f8f9fc">
+
+                <androidx.viewpager.widget.ViewPager
+                    android:id="@+id/vp_volunteer_category"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/volunteer_shape_record_view_pager"
+                    android:overScrollMode="never"
+                    android:paddingTop="20dp" />
+
+            </FrameLayout>
 
         </LinearLayout>
     </androidx.coordinatorlayout.widget.CoordinatorLayout>

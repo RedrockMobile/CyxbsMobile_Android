@@ -1,10 +1,13 @@
 package com.mredrock.cyxbs.volunteer.bean
 
+import com.google.gson.annotations.SerializedName
 import java.io.Serializable
 
 data class VolunteerTime(var code: String?,
                          var msg: String?,
+                         @SerializedName("hours")
                          var hours: Double?,
+                         @SerializedName("record")
                          var record: MutableList<RecordBean>?) : Serializable {
     /**
      * code : 0
@@ -22,14 +25,21 @@ data class VolunteerTime(var code: String?,
                 '}'.toString()
     }
 
-    data class RecordBean(var hours: String?,
-                          var content: String?,
-                          var start_time: String?,
-                          var title: String?,
-                          var addWay: String?,
-                          var status: String?,
-                          var server_group: String?,
-                          var uid: String?) : Serializable {
+    data class RecordBean(
+            @SerializedName("hours")
+            var hours: String?,
+            @SerializedName("content")
+            var content: String?,
+            @SerializedName("start_time")
+            var start_time: String?,
+            @SerializedName("title")
+            var title: String?,
+            @SerializedName("addWay")
+            var addWay: String?,
+            @SerializedName("server_group")
+            var server_group: String?,
+            @SerializedName("orgId")
+            var uid: String?) : Serializable {
         /**
          * hours : 2.0
          * content : 系统导入 三下乡志愿者
@@ -48,11 +58,11 @@ data class VolunteerTime(var code: String?,
                     ", start_time='" + start_time + '\''.toString() +
                     ", title='" + title + '\''.toString() +
                     ", addWay='" + addWay + '\''.toString() +
-                    ", status='" + status + '\''.toString() +
                     ", server_group='" + server_group + '\''.toString() +
                     ", uid='" + uid + '\''.toString() +
                     '}'.toString()
         }
     }
+
 
 }

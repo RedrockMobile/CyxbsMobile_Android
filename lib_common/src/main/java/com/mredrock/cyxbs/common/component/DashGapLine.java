@@ -1,4 +1,4 @@
-package com.mredrock.cyxbs.discover.grades.ui.custom;
+package com.mredrock.cyxbs.common.component;
 
 
 import android.content.Context;
@@ -14,7 +14,7 @@ import android.view.ViewGroup;
 
 import androidx.annotation.Nullable;
 
-import com.mredrock.cyxbs.discover.grades.utils.baseRv.DrawUtilKt;
+import static com.mredrock.cyxbs.common.utils.extensions.ContextKt.dp2px;
 
 
 public class DashGapLine extends View {
@@ -25,7 +25,7 @@ public class DashGapLine extends View {
     private int mWidth = 100;//默认的
     private int mHeight = 100;
 
-    private int radius = (int) DrawUtilKt.dp2px(getContext(),7);
+    private int radius = (int) dp2px(getContext(),7);
 
     private boolean lineVisible = true;
     private int defaultCircleColor = Color.parseColor("#2921D1");
@@ -50,7 +50,7 @@ public class DashGapLine extends View {
     public void init(){
         circle = new Paint(Paint.ANTI_ALIAS_FLAG);
         circle.setColor(defaultCircleColor);
-        circle.setStrokeWidth(DrawUtilKt.dp2px(getContext(),5));
+        circle.setStrokeWidth(dp2px(getContext(),5));
         circle.setStyle(Paint.Style.STROKE);
 
         gap = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -89,7 +89,7 @@ public class DashGapLine extends View {
         //draw circle
         int centerX = getWidth() / 2;
         //stroke为5，所以说要加上
-        canvas.drawCircle(centerX, radius + DrawUtilKt.dp2px(getContext(),5), radius, circle);
+        canvas.drawCircle(centerX, radius + dp2px(getContext(),5), radius, circle);
         //draw gap
         if(lineVisible){
             mPath.reset();
