@@ -111,7 +111,7 @@
         android:id="@+id/tv_answer_praise_count"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingStart="40dp"
+        android:paddingStart="60dp"
         android:layout_toStartOf="@+id/btn_answer_more"
         android:paddingEnd="15dp"
         android:paddingTop="20dp"
@@ -121,7 +121,7 @@
         app:layout_constraintBottom_toBottomOf="@+id/tv_answer_praise_count_image"
         app:layout_constraintEnd_toStartOf="@+id/btn_answer_more"
         app:layout_constraintTop_toTopOf="@+id/tv_answer_praise_count_image"
-        tools:text="25" />
+        tools:text="222222222225" />
 
     <ImageView
         android:id="@+id/qa_imageview"
@@ -144,6 +144,6 @@
         app:defaultColor="#ffcccccc"
         app:defaultLikeIconRes="@drawable/qa_ic_answer_list_praise"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/btn_answer_more"
+        app:layout_constraintStart_toStartOf="@+id/tv_answer_praise_count"
         app:ringColor="#323FD9" />
 </androidx.constraintlayout.widget.ConstraintLayout>
