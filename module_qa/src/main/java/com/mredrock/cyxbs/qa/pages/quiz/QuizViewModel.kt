@@ -1,7 +1,9 @@
 package com.mredrock.cyxbs.qa.pages.quiz
 
 import android.annotation.SuppressLint
+import android.net.Uri
 import android.util.Base64
+import androidx.core.net.toFile
 import androidx.lifecycle.MutableLiveData
 import com.mredrock.cyxbs.common.bean.RedrockApiStatus
 import com.mredrock.cyxbs.common.network.ApiGenerator
@@ -27,6 +29,7 @@ import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import java.io.File
+import java.net.URI
 
 
 /**

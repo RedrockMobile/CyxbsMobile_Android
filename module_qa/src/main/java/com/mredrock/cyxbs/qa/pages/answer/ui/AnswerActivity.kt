@@ -195,10 +195,6 @@ class AnswerActivity : BaseViewModelActivity<AnswerViewModel>(), EventBusLifecyc
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode != Activity.RESULT_OK || data == null) {
-            return
-        }
-
         when (requestCode) {
             CHOOSE_PHOTO_REQUEST ->{
                 val imageListUri = ArrayList((LPhotoHelper.getSelectedPhotos(data)).map {
@@ -210,9 +206,12 @@ class AnswerActivity : BaseViewModelActivity<AnswerViewModel>(), EventBusLifecyc
             }
 
 
-            ViewImageCropActivity.DEFAULT_RESULT_CODE -> viewModel.setImageList(viewModel.imageLiveData.value!!.apply {
-                set(viewModel.editingImgPos, data.getStringExtra(ViewImageCropActivity.EXTRA_NEW_PATH))
-            })
+            ViewImageCropActivity.DEFAULT_RESULT_CODE -> {
+                viewModel.setImageList(viewModel.imageLiveData.value!!.apply {
+                    removeAt(viewModel.editingImgPos)
+                })
+            }
+
         }
     }
 

@@ -20,4 +20,6 @@
     <string name="electricity_inquire_string">电费查询</string>
     <string name="electricity_no_data">暂无该宿舍电费数据</string>
     <string name="electricity_free_count">（每月有一定免费额度）</string>
+    <string name="electricity_unbind">先选择寝室吧~</string>
+    <string name="electricity_searching">查询中...</string>
 </resources>
