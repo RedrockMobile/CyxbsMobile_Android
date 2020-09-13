@@ -23,10 +23,13 @@
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tv_volunteer_feed_total_time"
             android:layout_width="wrap_content"
+            android:autoSizeTextType="uniform"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/impact_min"
             android:layout_gravity="center"
             android:textColor="@color/levelFourFontColor"
-            tools:text="18" />
+            tools:text="18"
+            tools:targetApi="o" />
     </FrameLayout>
 
 

@@ -12,7 +12,7 @@
         android:id="@+id/ll_toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="50dp"
         android:layout_marginBottom="10dp">
 
         <ImageView
@@ -22,7 +22,8 @@
             android:layout_centerVertical="true"
             android:layout_gravity="center_vertical"
             android:layout_marginStart="20dp"
-            android:src="@drawable/common_ic_back" />
+            android:padding="5dp"
+            android:src="@drawable/volunteer_ic_back" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -31,7 +32,7 @@
             android:layout_gravity="center_vertical"
             android:layout_marginStart="20dp"
             android:layout_toEndOf="@id/iv_back"
-            android:text="志愿查询"
+            android:text="@string/volunteer_title"
             android:textColor="@color/common_level_three_font_color"
             android:textSize="20sp" />
 
@@ -44,7 +45,7 @@
             android:layout_marginEnd="20dp"
             android:text="切换绑定"
             android:textColor="@color/common_level_three_font_color"
-            android:textSize="16sp" />
+            android:textSize="12sp" />
 
     </RelativeLayout>
 
@@ -56,8 +57,8 @@
         <com.google.android.material.appbar.AppBarLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:elevation="0dp"
             android:layout_below="@id/ll_toolbar"
+            app:elevation="0dp"
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
             <com.google.android.material.appbar.CollapsingToolbarLayout
@@ -93,8 +94,8 @@
                 app:tabIndicatorColor="@color/common_qa_question_tab_indicator_color"
                 app:tabIndicatorFullWidth="false"
                 app:tabIndicatorHeight="3dp"
-                app:tabMaxWidth="100dp"
-                app:tabMinWidth="100dp"
+                app:tabMaxWidth="150dp"
+                app:tabMinWidth="150dp"
                 app:tabMode="fixed"
                 app:tabRippleColor="@android:color/transparent"
                 app:tabSelectedTextColor="@color/common_qa_tab_selected_color"
@@ -106,7 +107,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:background="#f8f9fc">
+                android:background="@color/common_volunteer_main_vp_background">
 
                 <androidx.viewpager.widget.ViewPager
                     android:id="@+id/vp_volunteer_category"
@@ -114,7 +115,7 @@
                     android:layout_height="match_parent"
                     android:background="@drawable/volunteer_shape_record_view_pager"
                     android:overScrollMode="never"
-                    android:paddingTop="20dp" />
+                    android:paddingTop="15dp" />
 
             </FrameLayout>
 

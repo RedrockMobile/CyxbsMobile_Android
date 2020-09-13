@@ -4,9 +4,14 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
 import android.util.SparseArray
-import android.view.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.view.animation.AnimationUtils
+import android.widget.PopupWindow
 import android.widget.TextView
-import androidx.appcompat.widget.PopupMenu
+import android.widget.ViewSwitcher
+import androidx.core.content.ContextCompat
 import androidx.core.util.containsKey
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -14,7 +19,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.mredrock.cyxbs.common.mark.EventBusLifecycleSubscriber
 import com.mredrock.cyxbs.common.ui.BaseFragment
+import com.mredrock.cyxbs.common.utils.extensions.dp2px
 import com.mredrock.cyxbs.volunteer.R
+import com.mredrock.cyxbs.volunteer.adapter.PopupWindowRvAdapter
 import com.mredrock.cyxbs.volunteer.adapter.VolunteerRecordAdapter
 import com.mredrock.cyxbs.volunteer.bean.VolunteerTime
 import com.mredrock.cyxbs.volunteer.event.VolunteerLoginEvent
@@ -27,7 +34,7 @@ import org.greenrobot.eventbus.ThreadMode
 /**
  * Created by yyfbe, Date on 2020/9/4.
  */
-class VolunteerRecordFragment : BaseFragment(), EventBusLifecycleSubscriber, PopupMenu.OnMenuItemClickListener {
+class VolunteerRecordFragment : BaseFragment(), EventBusLifecycleSubscriber, ViewSwitcher.ViewFactory {
 
     //last当前，first最早的一年
     private val firstYear by lazy(LazyThreadSafetyMode.NONE) { mutableListOf<VolunteerTime.RecordBean>() }
@@ -48,6 +55,8 @@ class VolunteerRecordFragment : BaseFragment(), EventBusLifecycleSubscriber, Pop
     private var lastYearValue = 0f
     private var viewModel: VolunteerRecordViewModel? = null
 
+    //目前定位到的年份
+    private var currentIndexYear = 0
     private val yearsMap by lazy(LazyThreadSafetyMode.NONE) { SparseArray<MutableList<VolunteerTime.RecordBean>>() }
     private val years: List<Int> by lazy(LazyThreadSafetyMode.NONE) {
         listOf(
@@ -70,6 +79,7 @@ class VolunteerRecordFragment : BaseFragment(), EventBusLifecycleSubscriber, Pop
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initView()
+        initSwitch()
         initObserve()
     }
 
@@ -80,20 +90,28 @@ class VolunteerRecordFragment : BaseFragment(), EventBusLifecycleSubscriber, Pop
                     super.onScrolled(recyclerView, dx, dy)
                     when ((layoutManager as LinearLayoutManager).findFirstCompletelyVisibleItemPosition()) {
                         firstYearIndex -> {
-                            tv_volunteer_record_year.text = years[3].toString()
+                            if (currentIndexYear == 0) return
+                            currentIndexYear = 0
+                            swc_volunteer_record_year.setText(getString(R.string.volunteer_string_year, years[3].toString()))
                             tv_volunteer_record_year_time.text = resources.getString(R.string.volunteer_string_hours_all, firstYearValue.toString())
                         }
                         secondYearIndex, firstYearIndex - 1 -> {
-                            tv_volunteer_record_year.text = years[2].toString()
+                            if (currentIndexYear == 1) return
+                            currentIndexYear = 1
+                            swc_volunteer_record_year.setText(getString(R.string.volunteer_string_year, years[2].toString()))
                             tv_volunteer_record_year_time.text = resources.getString(R.string.volunteer_string_hours_all, secondYearValue.toString())
                         }
                         thirdYearIndex, secondYearIndex - 1 -> {
-                            tv_volunteer_record_year.text = years[1].toString()
+                            if (currentIndexYear == 3) return
+                            currentIndexYear = 3
+                            swc_volunteer_record_year.setText(getString(R.string.volunteer_string_year, years[1].toString()))
                             tv_volunteer_record_year_time.text = resources.getString(R.string.volunteer_string_hours_all, thirdYearValue.toString())
                         }
                         lastYearIndex, thirdYearIndex - 1 -> {
-                            tv_volunteer_record_year.text = years[0].toString()
-                            tv_volunteer_record_year_time.text = resources.getString(R.string.volunteer_string_hours_all, secondYearValue.toString())
+                            if (currentIndexYear == 4) return
+                            currentIndexYear = 4
+                            swc_volunteer_record_year.setText(getString(R.string.volunteer_string_year, years[0].toString()))
+                            tv_volunteer_record_year_time.text = resources.getString(R.string.volunteer_string_hours_all, lastYearValue.toString())
                         }
                     }
 
@@ -157,7 +175,7 @@ class VolunteerRecordFragment : BaseFragment(), EventBusLifecycleSubscriber, Pop
             }
             recyclerViewListener()
             tv_volunteer_record_year_time.text = resources.getString(R.string.volunteer_string_hours_all, lastYearValue)
-            showPopup(tv_volunteer_record_year)
+            showPopup()
         })
     }
 
@@ -173,61 +191,71 @@ class VolunteerRecordFragment : BaseFragment(), EventBusLifecycleSubscriber, Pop
         viewModel?.volunteerTime?.value = volunteerLoginEvent.volunteerTime
     }
 
-    private fun showPopup(v: View) {
-        val popup = PopupMenu(context ?: return, v)
-        val inflater: MenuInflater = popup.menuInflater
-        inflater.inflate(R.menu.volunteer_menu_record_years, popup.menu)
-        popup.menu.apply {
-            //对没有数据的year不展示选项
-            for ((index, i) in years.withIndex()) {
-                if (yearsMap.containsKey(i)) {
-                    getItem(index).isVisible = true
-                    getItem(index).title = i.toString()
-                } else {
-                    getItem(index).isVisible = false
-
-                }
+    private fun showPopup() {
+        val displayList = mutableListOf<String>()
+        for (i in years) {
+            if (yearsMap.containsKey(i)) {
+                displayList.add(i.toString())
             }
         }
-        popup.setOnMenuItemClickListener(this)
-        (v as TextView).text = popup.menu.getItem(0).title
-        v.setOnClickListener {
-            popup.show()
+        val popupView = View.inflate(context, R.layout.volunteer_layout_pop_year_menu, null)
+        val popupWindow = PopupWindow(popupView, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+        popupWindow.isOutsideTouchable = true
+        popupView.findViewById<RecyclerView>(R.id.rl_pop_menu_year).apply {
+            layoutManager = LinearLayoutManager(context)
+            adapter = PopupWindowRvAdapter(displayList) {
+                swc_volunteer_record_year.setText(it)
+                onPopupMenuItemClick(it)
+                popupWindow.dismiss()
+            }
+        }
+
+        ll_volunteer_record_year.setOnClickListener {
+            context ?: return@setOnClickListener
+            if (!popupWindow.isShowing) {
+                popupWindow.showAsDropDown(swc_volunteer_record_year,context!!.dp2px(-8f),0)
+                popupWindow.update()
+            } else {
+                popupWindow.dismiss()
+            }
         }
 
     }
 
-    override fun onMenuItemClick(item: MenuItem?): Boolean {
-        tv_volunteer_record_year.text = item?.title
+    private fun onPopupMenuItemClick(title: String) {
+        swc_volunteer_record_year.setText(getString(R.string.volunteer_string_year, title))
         val mLayoutManager = volunteer_time_recycler.layoutManager as LinearLayoutManager
-        when (item?.title) {
+        when (title) {
             DateUtils.thisYear().toString() -> {
                 //加上判断，以防出错时使用了默认-1
                 if (lastYearIndex >= 0) {
                     mLayoutManager.scrollToPositionWithOffset(lastYearIndex, 0)
+//                    volunteer_time_recycler.smoothScrollToPosition(lastYearIndex)
                     tv_volunteer_record_year_time.text = resources.getString(R.string.volunteer_string_hours_all, lastYearValue.toString())
                 }
             }
             (DateUtils.thisYear() - 1).toString() -> {
                 if (thirdYearIndex >= 0) {
                     mLayoutManager.scrollToPositionWithOffset(thirdYearIndex, 0)
+//                    volunteer_time_recycler.smoothScrollToPosition(thirdYearIndex)
                     tv_volunteer_record_year_time.text = resources.getString(R.string.volunteer_string_hours_all, thirdYearValue.toString())
                 }
             }
             (DateUtils.thisYear() - 2).toString() -> {
                 if (secondYearIndex >= 0) {
                     mLayoutManager.scrollToPositionWithOffset(secondYearIndex, 0)
+//                    volunteer_time_recycler.smoothScrollToPosition(secondYearIndex)
                     tv_volunteer_record_year_time.text = resources.getString(R.string.volunteer_string_hours_all, secondYearValue.toString())
                 }
             }
             (DateUtils.thisYear() - 3).toString() -> {
                 if (firstYearIndex >= 0) {
                     mLayoutManager.scrollToPositionWithOffset(firstYearIndex, 0)
+//                    volunteer_time_recycler.smoothScrollToPosition(firstYearIndex)
                     tv_volunteer_record_year_time.text = resources.getString(R.string.volunteer_string_hours_all, firstYearValue.toString())
                 }
             }
         }
-        return true
     }
 
     private fun reset() {
@@ -239,5 +267,21 @@ class VolunteerRecordFragment : BaseFragment(), EventBusLifecycleSubscriber, Pop
         thirdYear.clear()
         secondYear.clear()
         firstYear.clear()
+    }
+
+    private fun initSwitch() {
+        // 设置转换动画，这里引用系统自带动画
+        val inAnim = AnimationUtils.loadAnimation(context, R.anim.volunteer_anim_text_switcher_in)
+        swc_volunteer_record_year.inAnimation = inAnim
+        // 设置ViewSwitcher.ViewFactory
+        swc_volunteer_record_year.setFactory(this)
+    }
+
+    override fun makeView(): View {
+        val textView = TextView(context)
+        context ?: return textView
+        textView.textSize = context!!.dp2px(5f).toFloat()
+        textView.setTextColor(ContextCompat.getColor(context!!, R.color.common_level_three_font_color))
+        return textView
     }
 }

@@ -2,23 +2,9 @@
 
     <!-- Base application theme. -->
 
-    <style name="VolunteerEditText" parent="Theme.AppCompat.DayNight">
-        <item name="colorControlNormal">@color/volunteer_edit_Normal</item>
-        <item name="colorControlActivated">@color/volunteer_edit_activated</item>
-        <item name="android:textSize">14sp</item>
-        <item name="android:textCursorDrawable">@drawable/volunteer_shape_cursor_color</item>
-        <item name="android:textColorHint">@color/common_level_two_font_color</item>
-        <item name="hintTextColor">@color/common_level_two_font_color</item>
-        <item name="android:textColor">@color/common_level_two_font_color</item>
-        <item name="android:maxLines">1</item>
-        <item name="android:singleLine">true</item>
-        <item name="android:imeOptions">actionGo</item>
-        <item name="android:drawablePadding">16dp</item>
-        <item name="android:cursorVisible">true</item>
-    </style>
-
     <style name="TabLayout.TabText" parent="TextAppearance.Design.Tab">
         <item name="android:textSize">17sp</item>
         <item name="textAllCaps">false</item>
     </style>
+
 </resources>

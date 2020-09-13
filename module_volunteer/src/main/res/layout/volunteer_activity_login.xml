@@ -25,6 +25,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
+                android:padding="5dp"
                 android:src="@drawable/volunteer_ic_back" />
 
             <TextView
@@ -32,8 +33,8 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_marginStart="15dp"
-                android:layout_toRightOf="@+id/iv_back"
-                android:text="志愿查询"
+                android:layout_toEndOf="@+id/iv_back"
+                android:text="@string/volunteer_title"
                 android:textColor="@color/common_level_three_font_color"
                 android:textSize="20sp" />
         </RelativeLayout>

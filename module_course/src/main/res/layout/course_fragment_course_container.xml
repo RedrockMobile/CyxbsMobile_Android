@@ -89,7 +89,7 @@
                             tools:ignore="SmallSp" />
 
 
-                        <com.mredrock.cyxbs.course.component.MarqueeTextView
+                        <com.mredrock.cyxbs.common.utils.extensions.MarqueeTextView
                             android:id="@+id/course_tv_now_course"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
@@ -141,7 +141,7 @@
                             app:layout_constraintStart_toEndOf="@+id/tv_course_time"
                             app:layout_constraintTop_toTopOf="parent">
 
-                            <com.mredrock.cyxbs.course.component.MarqueeTextView
+                            <com.mredrock.cyxbs.common.utils.extensions.MarqueeTextView
                                 android:id="@+id/tv_course_place"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"

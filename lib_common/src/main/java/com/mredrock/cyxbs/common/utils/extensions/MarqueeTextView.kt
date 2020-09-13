@@ -1,17 +1,10 @@
-package com.mredrock.cyxbs.course.component
+package com.mredrock.cyxbs.common.utils.extensions
 
 import android.content.Context
 import android.util.AttributeSet
 import androidx.appcompat.widget.AppCompatTextView
 
-/**
- * @author Jovines
- * @create 2020-02-04 7:35 PM
- *
- *
- * 描述:一个跑马灯TextView
- */
-internal class MarqueeTextView : AppCompatTextView {
+class MarqueeTextView: AppCompatTextView {
     constructor(context: Context?) : super(context)
     constructor(context: Context?, attrs: AttributeSet?) : super(
             context,

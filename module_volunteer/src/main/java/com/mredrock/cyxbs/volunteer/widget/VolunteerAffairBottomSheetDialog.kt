@@ -5,6 +5,8 @@ import android.view.LayoutInflater
 import com.mredrock.cyxbs.common.component.RedRockBottomSheetDialog
 import com.mredrock.cyxbs.volunteer.R
 import com.mredrock.cyxbs.volunteer.bean.VolunteerAffairDetail
+import com.mredrock.cyxbs.volunteer.utils.DateUtils
+import com.mredrock.cyxbs.volunteer.utils.DateUtils.stamp2Date
 import kotlinx.android.synthetic.main.volunteer_layout_volunteer_affair_detail.*
 
 /**
@@ -20,8 +22,8 @@ class VolunteerAffairBottomSheetDialog(context: Context) : RedRockBottomSheetDia
     fun refresh(volunteerAffairDetail: VolunteerAffairDetail) {
         tv_volunteer_affair_detail_title.text = volunteerAffairDetail.name
         tv_volunteer_affair_detail_description.text = volunteerAffairDetail.description
-        tv_volunteer_affair_detail_sign_up_end_time.text = volunteerAffairDetail.lastDate.toString()
-        tv_volunteer_affair_detail_service_time.text = volunteerAffairDetail.date.toString()
+        tv_volunteer_affair_detail_sign_up_end_time.text = DateUtils.stamp2Date(volunteerAffairDetail.lastDate)
+        tv_volunteer_affair_detail_service_time.text = stamp2Date(volunteerAffairDetail.date)
         tv_volunteer_affair_detail_time_value.text = volunteerAffairDetail.hour
     }
 }

@@ -9,13 +9,19 @@
     android:paddingBottom="14dp"
     tools:ignore="MissingDefaultResource">
 
-    <TextView
+    <com.mredrock.cyxbs.common.utils.extensions.MarqueeTextView
         android:id="@+id/tv_volunteer_affair_detail_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:ellipsize="marquee"
+        android:focusable="true"
+        android:singleLine="true"
+        android:marqueeRepeatLimit="-1"
         android:layout_marginTop="30dp"
         android:textColor="@color/common_level_three_font_color"
-        android:textSize="28sp"
+
+        android:textSize="25sp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0"
         app:layout_constraintStart_toStartOf="parent"
@@ -29,7 +35,7 @@
         android:layout_marginTop="8dp"
         android:alpha="0.6"
         android:textColor="@color/common_level_three_font_color"
-        android:textSize="17sp"
+        android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0"
         app:layout_constraintStart_toStartOf="parent"
@@ -42,12 +48,13 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
         android:alpha="0.8"
+        android:text="@string/volunteer_activity_sign_in_time"
         android:textColor="@color/common_level_three_font_color"
-        android:textSize="20sp"
+        android:textSize="15sp"
+        android:textStyle="bold"
         app:layout_constraintHorizontal_bias="0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_volunteer_affair_detail_description"
-        android:text="@string/volunteer_activity_sign_in_time" />
+        app:layout_constraintTop_toBottomOf="@id/tv_volunteer_affair_detail_description" />
 
     <TextView
         android:id="@+id/tv_volunteer_affair_detail_sign_up_end_time"
@@ -56,7 +63,8 @@
         android:layout_marginTop="32dp"
         android:alpha="0.8"
         android:textColor="@color/common_level_three_font_color"
-        android:textSize="20sp"
+        android:textSize="15sp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1"
         app:layout_constraintStart_toEndOf="@id/tv_volunteer_affair_detail_sign_up_end"
@@ -69,12 +77,13 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
         android:alpha="0.8"
+        android:text="@string/volunteer_activity_server_time"
         android:textColor="@color/common_level_three_font_color"
-        android:textSize="20sp"
+        android:textSize="15sp"
+        android:textStyle="bold"
         app:layout_constraintHorizontal_bias="0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_volunteer_affair_detail_sign_up_end"
-        android:text="@string/volunteer_activity_server_time" />
+        app:layout_constraintTop_toBottomOf="@id/tv_volunteer_affair_detail_sign_up_end" />
 
     <TextView
         android:id="@+id/tv_volunteer_affair_detail_service_time"
@@ -83,7 +92,8 @@
         android:layout_marginTop="32dp"
         android:alpha="0.8"
         android:textColor="@color/common_level_three_font_color"
-        android:textSize="20sp"
+        android:textSize="15sp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1"
         app:layout_constraintStart_toEndOf="@id/tv_volunteer_affair_detail_service_end"
@@ -96,12 +106,13 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
         android:alpha="0.8"
+        android:text="@string/volunteer_activity_value"
         android:textColor="@color/common_level_three_font_color"
-        android:textSize="20sp"
+        android:textSize="15sp"
+        android:textStyle="bold"
         app:layout_constraintHorizontal_bias="0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_volunteer_affair_detail_service_end"
-        android:text="@string/volunteer_activity_value" />
+        app:layout_constraintTop_toBottomOf="@id/tv_volunteer_affair_detail_service_end" />
 
     <TextView
         android:id="@+id/tv_volunteer_affair_detail_time_value"
@@ -110,7 +121,8 @@
         android:layout_marginTop="32dp"
         android:alpha="0.8"
         android:textColor="@color/common_level_three_font_color"
-        android:textSize="20sp"
+        android:textSize="15sp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1"
         app:layout_constraintStart_toEndOf="@id/tv_volunteer_affair_detail_value"
@@ -133,8 +145,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view_divide_line"
+        android:text="@string/volunteer_string_sign_up_way"
         android:textColor="@color/common_volunteer_sign_up_way"
-        android:text="@string/volunteer_string_sign_up_way" />
+        android:textSize="15sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/view_divide_line" />
 </androidx.constraintlayout.widget.ConstraintLayout>

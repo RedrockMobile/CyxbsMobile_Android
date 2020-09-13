@@ -374,6 +374,7 @@
     <color name="common_volunteer_record_item_value">#2A4E84</color>
     <!--todo 没有夜间颜色-->
     <color name="common_volunteer_sign_up_way">#3A39D3</color>
+    <color name="common_volunteer_main_vp_background">#f8f9fc</color>
     <color name="common_volunteer_affair_detail_divide_line">#2A4E84</color>
     <!--   地图模块使用的颜色-->
     <!--   搜索地点的搜索框文字颜色-->

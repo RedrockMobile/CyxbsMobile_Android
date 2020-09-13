@@ -39,12 +39,13 @@ class VolunteerRecordActivity : BaseViewModelActivity<VolunteerRecordViewModel>(
     }
 
     private fun initView() {
-        vp_volunteer_category.adapter = VolunteerMainFragmentAdapter(supportFragmentManager, listOf(VolunteerRecordFragment(), VolunteerAffairFragment()), listOf("志愿记录", "校内志愿"))
+        vp_volunteer_category.adapter = VolunteerMainFragmentAdapter(supportFragmentManager, listOf(VolunteerRecordFragment(), VolunteerAffairFragment()), listOf(getString(R.string.volunteer_string_tab_record), getString(R.string.volunteer_string_tab_activity)))
         tl_volunteer_category.setupWithViewPager(vp_volunteer_category)
         tl_volunteer_category.setSelectedTabIndicator(R.drawable.volunteer_ic_question_tab_indicator)
 
         iv_back.setOnClickListener { finish() }
         tv_volunteer_logout.setOnClickListener {
+            viewModel.unBindAccount()
             ARouter.getInstance().build(DISCOVER_VOLUNTEER).navigation()
             EventBus.getDefault().postSticky(VolunteerLogoutEvent())
             finish()

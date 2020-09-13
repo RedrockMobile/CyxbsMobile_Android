@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingBottom="20dp">
+    android:paddingTop="10dp"
+    android:paddingBottom="10dp">
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/volunteer_guideline3"
@@ -25,17 +26,17 @@
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toTopOf="@id/cl_volunteer_record_item"
-        app:layout_constraintEnd_toEndOf="@id/volunteer_guideline3" />
+        app:layout_constraintEnd_toEndOf="@id/volunteer_guideline3"
+        app:layout_constraintTop_toTopOf="@id/cl_volunteer_record_item" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tv_volunteer_record_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/common_level_three_font_color"
-        android:textSize="20sp"
-        app:layout_constraintStart_toStartOf="@+id/dgl_volunteer_record"
         android:layout_marginStart="18dp"
+        android:textColor="@color/common_level_three_font_color"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="@+id/dgl_volunteer_record"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="10月28日" />
 
@@ -45,9 +46,9 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="6.6dp"
         android:background="@drawable/volunteer_shape_record_item"
+        android:paddingStart="20dp"
         android:paddingTop="20dp"
         android:paddingBottom="20dp"
-        android:paddingStart="20dp"
         app:layout_constraintEnd_toStartOf="@id/volunteer_guideline4"
         app:layout_constraintHorizontal_bias="0"
         app:layout_constraintStart_toEndOf="@id/volunteer_guideline3"
@@ -57,28 +58,30 @@
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tv_volunteer_item_title"
             android:layout_width="0dp"
-            android:textColor="@color/common_level_three_font_color"
             android:layout_height="wrap_content"
-            android:text="2019-2020年第二学期学长学姐帮帮忙志愿服务"
+            android:layout_marginEnd="30dp"
+            android:textColor="@color/common_level_three_font_color"
+            android:textSize="18sp"
+            android:textStyle="bold"
             app:layout_constraintEnd_toStartOf="@id/tv_volunteer_item_value"
             app:layout_constraintHorizontal_bias="0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:textSize="22sp" />
+            tools:text="2019-2020年第二学期学长学姐帮帮忙志愿服务" />
 
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tv_volunteer_item_value"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            tools:text="8"
+            android:layout_marginEnd="5dp"
+            android:fontFamily="@font/impact_min"
             android:textColor="@color/common_level_three_font_color"
             android:textSize="40sp"
             android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="@+id/tv_volunteer_item_title"
             app:layout_constraintEnd_toStartOf="@+id/volunteer_hour_text_view"
-            app:layout_constraintTop_toTopOf="@id/tv_volunteer_item_title" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="8" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/volunteer_hour_text_view"
@@ -96,15 +99,15 @@
 
         <TextView
             android:id="@+id/tv_volunteer_item_pos"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:textColor="@color/common_level_three_font_color"
             android:alpha="0.8"
             android:drawableStart="@drawable/volunteer_ic_record_item_pos"
             android:drawablePadding="8dp"
-            android:textSize="17sp"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:textColor="@color/common_level_three_font_color"
+            android:textSize="15sp"
+            app:layout_constraintEnd_toEndOf="@id/tv_volunteer_item_value"
             app:layout_constraintHorizontal_bias="0"
             app:layout_constraintStart_toStartOf="@id/tv_volunteer_item_title"
             app:layout_constraintTop_toBottomOf="@id/tv_volunteer_item_title"
@@ -112,17 +115,16 @@
 
         <TextView
             android:id="@+id/tv_volunteer_item_group"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
-            android:layout_marginEnd="20dp"
+            android:alpha="0.8"
             android:drawableStart="@drawable/volunteer_ic_record_item_group"
             android:drawablePadding="8dp"
-            android:textSize="17sp"
             android:textColor="@color/common_level_three_font_color"
-            android:alpha="0.8"
+            android:textSize="15sp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toEndOf="@id/tv_volunteer_item_value"
             app:layout_constraintHorizontal_bias="0"
             app:layout_constraintStart_toStartOf="@id/tv_volunteer_item_title"
             app:layout_constraintTop_toBottomOf="@id/tv_volunteer_item_pos"

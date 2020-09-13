@@ -11,7 +11,7 @@ interface ApiService {
     @FormUrlEncoded
     @POST("/wxapi/volunteer-message/binding")
     fun volunteerLogin(@Field("account") account: String,
-                       @Field("password") password: String): Observable<VolunteerLogin>
+                       @Field("password") password: String): Observable<VolunteerBase>
 
     @POST("/wxapi/volunteer-message/select")
     fun getVolunteerRecord(): Observable<VolunteerTime>
@@ -26,4 +26,7 @@ interface ApiService {
 
     @POST("/wxapi/volunteer-message/judge")
     fun judgeBind(): Observable<VolunteerJudge>
+
+    @POST("/wxapi/volunteer-message/unbinding")
+    fun unbindVolunteerAccount(): Observable<VolunteerBase>
 }
