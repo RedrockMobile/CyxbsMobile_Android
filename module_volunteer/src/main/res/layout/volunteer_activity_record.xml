@@ -56,6 +56,7 @@
         <com.google.android.material.appbar.AppBarLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            app:elevation="0dp"
             android:layout_below="@id/ll_toolbar"
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
@@ -63,8 +64,8 @@
                 android:id="@+id/collapsing_toolbar_layout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@null"
                 android:fitsSystemWindows="true"
+                app:elevation="0dp"
                 app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
                 <include layout="@layout/volunteer_layout_record_view" />

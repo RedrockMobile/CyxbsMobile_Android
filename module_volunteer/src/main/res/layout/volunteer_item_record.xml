@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:paddingBottom="20dp">
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/volunteer_guideline3"
@@ -31,7 +32,6 @@
         android:id="@+id/tv_volunteer_record_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
         android:textColor="@color/common_level_three_font_color"
         android:textSize="20sp"
         app:layout_constraintStart_toStartOf="@+id/dgl_volunteer_record"

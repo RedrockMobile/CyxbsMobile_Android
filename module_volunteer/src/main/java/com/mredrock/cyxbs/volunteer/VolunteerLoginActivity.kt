@@ -40,6 +40,7 @@ class VolunteerLoginActivity : BaseViewModelActivity<VolunteerLoginViewModel>() 
         btn_volunteer_login.setOnClickListener {
             loginAction()
         }
+        iv_back.setOnClickListener { finish() }
         useSoftKeyboard()
     }
 

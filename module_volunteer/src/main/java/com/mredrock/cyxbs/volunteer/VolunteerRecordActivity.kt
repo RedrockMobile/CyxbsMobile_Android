@@ -43,6 +43,7 @@ class VolunteerRecordActivity : BaseViewModelActivity<VolunteerRecordViewModel>(
         tl_volunteer_category.setupWithViewPager(vp_volunteer_category)
         tl_volunteer_category.setSelectedTabIndicator(R.drawable.volunteer_ic_question_tab_indicator)
 
+        iv_back.setOnClickListener { finish() }
         tv_volunteer_logout.setOnClickListener {
             ARouter.getInstance().build(DISCOVER_VOLUNTEER).navigation()
             EventBus.getDefault().postSticky(VolunteerLogoutEvent())
