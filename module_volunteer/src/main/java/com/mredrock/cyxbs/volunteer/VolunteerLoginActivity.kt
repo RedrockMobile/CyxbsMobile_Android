@@ -35,8 +35,6 @@ class VolunteerLoginActivity : BaseViewModelActivity<VolunteerLoginViewModel>() 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.volunteer_activity_login)
         initObserve()
-        et_volunteer_account.setText("unbelievable3")
-        et_volunteer_password.setText("jNbYHRsdXQ2EFrq")
         btn_volunteer_login.setOnClickListener {
             loginAction()
         }
