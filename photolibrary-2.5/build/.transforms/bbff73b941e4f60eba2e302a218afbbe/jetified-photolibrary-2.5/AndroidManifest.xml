@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="top.limuyang2.photolibrary"
+    android:versionCode="1"
+    android:versionName="2.5" >
+
+    <uses-sdk
+        android:minSdkVersion="17"
+        android:targetSdkVersion="29" />
+
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_MEDIA_LOCATION" />
+
+    <application>
+        <provider
+            android:name="top.limuyang2.photolibrary.util.LPhotoFileProvider"
+            android:authorities="${applicationId}.l_photo_picker.file_provider"
+            android:exported="false"
+            android:grantUriPermissions="true" >
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/l_photo_picker_file_paths" />
+        </provider>
+
+        <!-- 图片选择界面 -->
+        <activity
+            android:name="top.limuyang2.photolibrary.activity.LPhotoPickerActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden" />
+        <activity
+            android:name="top.limuyang2.photolibrary.activity.LPhotoPickerPreviewActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden" />
+        <activity
+            android:name="top.limuyang2.photolibrary.activity.LPhotoFolderActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden" />
+    </application>
+
+</manifest>
