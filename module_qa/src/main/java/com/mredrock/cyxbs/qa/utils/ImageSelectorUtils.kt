@@ -18,23 +18,23 @@ const val CHOOSE_PHOTO_REQUEST = 0x1024
 fun AppCompatActivity.selectImageFromAlbum(maxCount: Int, selected: ArrayList<String>?) {
     doPermissionAction(Manifest.permission.WRITE_EXTERNAL_STORAGE) {
         doAfterGranted {
-            val selectedList: ArrayList<Uri>? = if (selected.isNullOrEmpty()) {
-                null
-            } else {
-                ArrayList<Uri>(selected?.map { Uri.parse(it) })
-            }
-            LPhotoHelper.Builder()
-                    .maxChooseCount(maxCount) //最多选几个
-                    .columnsNumber(3) //每行显示几列图片
-                    .imageType(LPPImageType.ofAll()) // 文件类型
-                    .pauseOnScroll(false) // 是否滑动暂停加载图片显示
-                    .isSingleChoose(false) // 是否是单选
-                    .isOpenLastAlbum(false) // 是否直接打开最后一次选择的相册
-                    .selectedPhotos(selectedList)
-                    .theme(R.style.common_LPhotoTheme)
-                    .build()
-                    .start(this@selectImageFromAlbum, CHOOSE_PHOTO_REQUEST)
+        val selectedList: ArrayList<Uri>? = if (selected.isNullOrEmpty()) {
+            null
+        } else {
+            ArrayList<Uri>(selected?.map { Uri.parse(it) })
         }
+        LPhotoHelper.Builder()
+                .maxChooseCount(maxCount) //最多选几个
+                .columnsNumber(3) //每行显示几列图片
+                .imageType(LPPImageType.ofAll()) // 文件类型
+                .pauseOnScroll(false) // 是否滑动暂停加载图片显示
+                .isSingleChoose(false) // 是否是单选
+                .isOpenLastAlbum(false) // 是否直接打开最后一次选择的相册
+                .selectedPhotos(selectedList)
+                .theme(R.style.common_LPhotoTheme)
+                .build()
+                .start(this@selectImageFromAlbum, CHOOSE_PHOTO_REQUEST)
+    }
         doAfterRefused {
             longToast("访问相册失败，原因：未授权")
         }
