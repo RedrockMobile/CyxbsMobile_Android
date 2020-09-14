@@ -14,6 +14,7 @@ import com.mredrock.cyxbs.volunteer.event.VolunteerLogoutEvent
 import com.mredrock.cyxbs.volunteer.fragment.VolunteerAffairFragment
 import com.mredrock.cyxbs.volunteer.fragment.VolunteerRecordFragment
 import com.mredrock.cyxbs.volunteer.viewmodel.VolunteerRecordViewModel
+import com.mredrock.cyxbs.volunteer.widget.LogoutDialog
 import kotlinx.android.synthetic.main.volunteer_activity_record.*
 import kotlinx.android.synthetic.main.volunteer_layout_record_view.*
 import org.greenrobot.eventbus.EventBus
@@ -45,10 +46,12 @@ class VolunteerRecordActivity : BaseViewModelActivity<VolunteerRecordViewModel>(
 
         iv_back.setOnClickListener { finish() }
         tv_volunteer_logout.setOnClickListener {
-            viewModel.unBindAccount()
-            ARouter.getInstance().build(DISCOVER_VOLUNTEER).navigation()
-            EventBus.getDefault().postSticky(VolunteerLogoutEvent())
-            finish()
+            LogoutDialog.show(this , {} , {
+                viewModel.unBindAccount()
+                ARouter.getInstance().build(DISCOVER_VOLUNTEER).navigation()
+                EventBus.getDefault().postSticky(VolunteerLogoutEvent())
+                finish()
+            })
         }
     }
 

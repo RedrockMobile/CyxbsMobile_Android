@@ -7,4 +7,8 @@
         <item name="textAllCaps">false</item>
     </style>
 
+    <style name="volunteer_transparent_dialog" parent="Theme.AppCompat.Dialog">
+        <item name="android:windowBackground">@color/common_volunteer_dialog_transparent</item>
+    </style>
+
 </resources>

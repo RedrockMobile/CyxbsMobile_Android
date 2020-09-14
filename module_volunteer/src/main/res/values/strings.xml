@@ -22,5 +22,10 @@
     <string name="volunteer_string_times">项目数</string>
     <string name="volunteer_string_tab_record">志愿记录</string>
     <string name="volunteer_string_tab_activity">志愿活动</string>
+    <string name="volunteer_change_binding">切换绑定</string>
+    <string name="volunteer_dialog_unbind">取消绑定</string>
+    <string name="volunteer_dialog_weather_logout">是否取消志愿者账号绑定？</string>
+    <string name="volunteer_dialog_confirm">确定</string>
+    <string name="volunteer_dialog_cancel">取消</string>
 
 </resources>
