@@ -69,8 +69,8 @@ class ShowPictureActivity : AppCompatActivity() {
         adapter.setMyOnPhotoLongClickListener(object : MyImageAdapter.OnPhotoLongClickListener {
             override fun onPhotoLongClick(url: String) {
                 MapDialog.show(this@ShowPictureActivity
-                        , getString(R.string.map_show_picture_save),
-                        getString(R.string.map_show_picture_content)
+                        , getString(R.string.map_show_picture_save)
+                        , getString(R.string.map_show_picture_content)
                         , object : OnSelectListener {
                     override fun onDeny() {
                     }

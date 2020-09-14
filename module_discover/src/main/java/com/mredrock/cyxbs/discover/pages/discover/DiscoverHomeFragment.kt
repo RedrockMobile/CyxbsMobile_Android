@@ -99,7 +99,7 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>(), Eve
                 viewModel.scrollFlag = false
             }
         })
-        vp_discover_home?.adapter = BannerAdapter(context!!, vp_discover_home)
+        vp_discover_home?.adapter = context?.let { BannerAdapter(it, vp_discover_home) }
         viewModel.viewPagerInfo.observe {
             if (it != null && context != null) {
                 (vp_discover_home?.adapter as BannerAdapter).apply {
