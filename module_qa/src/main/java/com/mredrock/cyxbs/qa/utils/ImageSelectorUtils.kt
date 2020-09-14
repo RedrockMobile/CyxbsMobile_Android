@@ -17,6 +17,7 @@ const val CHOOSE_PHOTO_REQUEST = 0x1024
 
 fun AppCompatActivity.selectImageFromAlbum(maxCount: Int, selected: ArrayList<String>?) {
     doPermissionAction(Manifest.permission.WRITE_EXTERNAL_STORAGE) {
+        doAfterGranted {
         val selectedList: ArrayList<Uri>? = if (selected.isNullOrEmpty()) {
             null
         } else {
@@ -33,7 +34,7 @@ fun AppCompatActivity.selectImageFromAlbum(maxCount: Int, selected: ArrayList<St
                 .theme(R.style.common_LPhotoTheme)
                 .build()
                 .start(this@selectImageFromAlbum, CHOOSE_PHOTO_REQUEST)
-
+    }
         doAfterRefused {
             longToast("访问相册失败，原因：未授权")
         }
