@@ -59,14 +59,11 @@ class VolunteerLoginActivity : BaseViewModelActivity<VolunteerLoginViewModel>() 
             CyxbsToast.makeText(this, "账号或密码不能为空", Toast.LENGTH_SHORT).show()
             return
         }
+        (getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).hideSoftInputFromWindow(currentFocus?.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
         displayLottie()
         viewModel.login(et_volunteer_account.text.toString(), EncryptPassword.encrypt(et_volunteer_password.text.toString())) {
             CyxbsToast.makeText(this, "服务暂时不可使用~", Toast.LENGTH_SHORT).show()
             stopLottie()
-        }
-        val inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        if (inputMethodManager.isActive) {
-            inputMethodManager.hideSoftInputFromWindow(this@VolunteerLoginActivity.currentFocus?.windowToken, 0)
         }
     }
 

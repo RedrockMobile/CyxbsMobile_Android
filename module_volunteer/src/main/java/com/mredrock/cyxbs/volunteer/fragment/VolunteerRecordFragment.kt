@@ -174,7 +174,24 @@ class VolunteerRecordFragment : BaseFragment(), EventBusLifecycleSubscriber, Vie
                 }
             }
             recyclerViewListener()
-            tv_volunteer_record_year_time.text = resources.getString(R.string.volunteer_string_hours_all, lastYearValue)
+            val displayTime: String = when {
+                lastYearValue > 0 -> {
+                    lastYearValue.toString()
+                }
+                thirdYearValue > 0 -> {
+                    thirdYearValue.toString()
+                }
+                secondYearValue > 0 -> {
+                    secondYearValue.toString()
+                }
+                firstYearValue > 0 -> {
+                    firstYearValue.toString()
+                }
+                else -> {
+                    it.hours.toString()
+                }
+            }
+            tv_volunteer_record_year_time.text = resources.getString(R.string.volunteer_string_hours_all, displayTime)
             showPopup()
         })
     }
@@ -213,7 +230,7 @@ class VolunteerRecordFragment : BaseFragment(), EventBusLifecycleSubscriber, Vie
         ll_volunteer_record_year.setOnClickListener {
             context ?: return@setOnClickListener
             if (!popupWindow.isShowing) {
-                popupWindow.showAsDropDown(swc_volunteer_record_year,context!!.dp2px(-8f),0)
+                popupWindow.showAsDropDown(swc_volunteer_record_year, context!!.dp2px(-8f), 0)
                 popupWindow.update()
             } else {
                 popupWindow.dismiss()
