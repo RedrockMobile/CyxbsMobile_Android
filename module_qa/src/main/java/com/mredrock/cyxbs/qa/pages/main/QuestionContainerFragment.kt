@@ -149,6 +149,7 @@ class QuestionContainerFragment : BaseViewModelFragment<QuestionContainerViewMod
                 }
             }
             SearchActivity.activityStart(this, hotWord.toString(), iv_question_search)
+            MobclickAgent.onEvent(context, CyxbsMob.Event.QA_SEARCH_RECOMMEND)
         }
 
         viewFlipper.setFlipInterval(6555)
