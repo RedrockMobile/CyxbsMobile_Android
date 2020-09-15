@@ -102,14 +102,14 @@ class VolunteerRecordFragment : BaseFragment(), EventBusLifecycleSubscriber, Vie
                             tv_volunteer_record_year_time.text = resources.getString(R.string.volunteer_string_hours_all, secondYearValue.toString())
                         }
                         thirdYearIndex, secondYearIndex - 1 -> {
-                            if (currentIndexYear == 3) return
-                            currentIndexYear = 3
+                            if (currentIndexYear == 2) return
+                            currentIndexYear = 2
                             swc_volunteer_record_year.setText(getString(R.string.volunteer_string_year, years[1].toString()))
                             tv_volunteer_record_year_time.text = resources.getString(R.string.volunteer_string_hours_all, thirdYearValue.toString())
                         }
                         lastYearIndex, thirdYearIndex - 1 -> {
-                            if (currentIndexYear == 4) return
-                            currentIndexYear = 4
+                            if (currentIndexYear == 3) return
+                            currentIndexYear = 3
                             swc_volunteer_record_year.setText(getString(R.string.volunteer_string_year, years[0].toString()))
                             tv_volunteer_record_year_time.text = resources.getString(R.string.volunteer_string_hours_all, lastYearValue.toString())
                         }
