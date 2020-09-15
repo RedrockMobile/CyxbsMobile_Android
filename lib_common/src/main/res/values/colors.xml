@@ -380,7 +380,6 @@
     <color name="common_volunteer_button_negative_color">#C3D4EE</color>
     <!--取消绑定的确认以及取消按钮字体颜色-->
     <color name="common_volunteer_cancel_text_color">#FFFFFF</color>
-    <!--todo 没有夜间颜色-->
     <color name="common_volunteer_sign_up_way">#3A39D3</color>
     <color name="common_volunteer_main_vp_background">#f8f9fc</color>
     <color name="common_volunteer_affair_detail_divide_line">#2A4E84</color>

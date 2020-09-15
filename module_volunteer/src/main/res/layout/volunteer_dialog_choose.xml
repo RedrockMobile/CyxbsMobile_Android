@@ -38,7 +38,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:text="@string/volunteer_dialog_weather_logout"
-        android:textColor="@color/common_volunteer_record_item_value"
+        android:textColor="@color/common_volunteer_dialog_second_text"
         android:textSize="12sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.495"
