@@ -354,7 +354,7 @@
     <color name="common_volunteer_dialog_second_text">#5A5A5A</color>
     <!--   志愿item的“时”字颜色-->
     <color name="common_volunteer_record_item_value">#2A4E84</color>
-    <color name="common_volunteer_main_vp_background">#4d4b4c</color>
+    <color name="common_volunteer_main_vp_background">#363636</color>
     <color name="common_volunteer_sign_up_way">#465FFF</color>
     <color name="common_volunteer_affair_detail_divide_line">#7C7C7C</color>
     <!--   地图模块使用的颜色 todo 改成统一 common前缀-->
