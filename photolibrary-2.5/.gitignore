@@ -1,0 +1,12 @@
+*.iml
+.gradle
+/local.properties
+.DS_Store
+/build
+/captures
+.externalNativeBuild
+./key-cyxbs
+local_helper
+secret.gradle
+./hooks/cache
+/.idea/
