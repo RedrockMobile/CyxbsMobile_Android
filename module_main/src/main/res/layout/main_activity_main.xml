@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:id="@+id/content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:animateLayoutChanges="true"
+        android:fitsSystemWindows="true"
+        tools:background="@color/common_window_background"
+        tools:context=".ui.MainActivity">
+
+        <FrameLayout
+            android:id="@+id/other_fragment_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingBottom="94dp"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+        <FrameLayout
+            android:id="@+id/course_bottom_sheet_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:behavior_peekHeight="@dimen/main_main_bottom_navigation_height_twice_as_much"
+            app:layout_behavior="@string/bottom_sheet_behavior">
+
+        </FrameLayout>
+
+        <include layout="@layout/main_bottom_nav" />
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+    <!--    这里没有把节气闪屏或引导放在CoordinatorLayout里面的最后的原因
+            是因为虽然CoordinatorLayout拥有几乎和FrameLayout类似的布局方式，但是由于这里使用到了
+            bottomSheet的原因，在CoordinatorLayout中如果bottomSheet后面还有布局，那么只要那块布局显示过
+            无论后面是不是被隐藏了，那块区域bottomSheet都不会相应滑动手势
+            你可以在课表bottomSheet完全展开后滑动底部tab还未隐藏时的上下滑动进行验证
+            或者在CoordinatorLayout最后添加一个宽高都match_parent控件进行验证-->
+    <FrameLayout
+        android:id="@+id/main_activity_splash_viewStub"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/common_white_background"
+        tools:visibility="gone" />
+
+</FrameLayout>
+

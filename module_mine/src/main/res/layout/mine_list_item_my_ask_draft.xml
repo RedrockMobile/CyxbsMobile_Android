@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:foreground="?android:selectableItemBackground"
+    android:background="@color/common_secondary_window_background"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <TextView
+        android:id="@+id/mine_ask_draft_tv_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:textSize="15sp"
+        android:textColor="@color/common_level_two_font_color"
+        android:layout_marginStart="18dp"
+        android:layout_marginTop="25dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="这道题不好做" />
+
+    <TextView
+        android:id="@+id/mine_ask_draft_tv_description"
+        android:layout_width="0dp"
+        android:textColor="@color/common_mine_list_item_tv_content"
+        android:textSize="15sp"
+        android:maxLines="2"
+        android:ellipsize="end"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="9dp"
+        app:layout_constraintEnd_toEndOf="@id/mine_ask_draft_iv_garbage"
+        app:layout_constraintStart_toStartOf="@+id/mine_ask_draft_tv_title"
+        app:layout_constraintTop_toBottomOf="@+id/mine_ask_draft_tv_title"
+        tools:text="我在沈阳" />
+
+    <TextView
+        android:id="@+id/mine_ask_draft_tv_lastedit_at"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:textColor="@color/common_mine_list_item_tv_disappear_at"
+        android:textSize="11sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/mine_ask_draft_tv_description"
+        app:layout_constraintTop_toBottomOf="@id/mine_ask_draft_tv_description"
+        tools:text="2019.12.1" />
+
+    <ImageView
+        android:id="@+id/mine_ask_draft_iv_garbage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="15dp"
+        android:padding="10dp"
+        android:src="@drawable/mine_ic_draft_garbage"
+        app:layout_constraintBottom_toBottomOf="@id/mine_ask_draft_tv_lastedit_at"
+        app:layout_constraintTop_toTopOf="@id/mine_ask_draft_tv_lastedit_at"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:alpha="0.3"
+        android:background="@color/common_sever_view_color"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

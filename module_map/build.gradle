@@ -1,0 +1,5 @@
+apply from: config
+dependencies {
+    api 'com.google.android:flexbox:2.0.1'
+    kapt 'com.github.bumptech.glide:compiler:4.11.0'
+}

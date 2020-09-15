@@ -1,0 +1,30 @@
+<resources>
+    <string name="grades_no_exam_history">暂无考试记录~</string>
+    <string name="grades_main_init_exam">考试安排</string>
+    <string name="grades_no_grades_history">"无法获取成绩信息"</string>
+
+    <!--    bind-->
+    <string name="grades_bottom_sheet_bind_title">若要查询成绩，请输入您的统一认证码</string>
+    <string name="grades_bottom_sheet_bind_ids_num">统一认证码</string>
+    <string name="grades_bottom_sheet_bind_ids_password">密码</string>
+    <string name="grades_bottom_sheet_bind_btn">确认绑定</string>
+    <string name="grades_bottom_sheet_bind_success">绑定成功</string>
+    <string name="grades_bottom_sheet_bind_fail">绑定失败</string>
+    <!--gpa-->
+    <string name="grades_bottom_sheet_title">学分成绩</string>
+    <string name="grades_bottom_sheet_gpa">平均绩点</string>
+    <string name="grades_bottom_sheet_gpa_a_credit_title">A学分</string>
+    <string name="grades_bottom_sheet_gpa_b_credit_title">B学分</string>
+    <string name="grades_bottom_sheet_gpa_term_grades_title">学期成绩</string>
+    <string name="grades_bottom_sheet_gpa_number_default">--</string>
+
+    <!--    gpa下面的recyclerview里的item-->
+    <string name="grades_bottom_sheet_gpa_rv_average_gpa">平均绩点</string>
+    <string name="grades_bottom_sheet_gpa_rv_average_grades">平均成绩</string>
+    <string name="grades_bottom_sheet_gpa_rv_average_rank">平均排名</string>
+    <string name="grades_bottom_sheet_gpa_rv_grades_list_detail">查看各科成绩</string>
+
+    <!--    dialog-->
+    <string name="grades_dialog_a_credit">A学分</string>
+
+</resources>

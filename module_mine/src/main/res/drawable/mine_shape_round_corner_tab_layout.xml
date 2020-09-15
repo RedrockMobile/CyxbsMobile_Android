@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape>
+            <solid android:color="@color/common_secondary_window_background" />
+        </shape>
+    </item>
+    <item>
+        <shape>
+            <corners
+                android:bottomLeftRadius="30dp"
+                android:bottomRightRadius="30dp"
+                android:topLeftRadius="0dp"
+                android:topRightRadius="0dp">
+
+            </corners>
+            <solid android:color="@color/common_white_background" />
+        </shape>
+    </item>
+</layer-list>

@@ -1,0 +1,52 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="36dp"
+    android:height="36.5dp"
+    android:viewportWidth="36"
+    android:viewportHeight="36.5">
+    <path
+        android:fillColor="#2923d2"
+        android:fillType="evenOdd"
+        android:pathData="M16.68,6.266a9.9,9.9 0,1 1,-9.863 9.9A9.882,9.882 0,0 1,16.68 6.266Z" />
+    <path
+        android:fillColor="#2923d2"
+        android:fillType="evenOdd"
+        android:pathData="M29.335,24.272a4.343,4.343 0,1 1,-4.328 4.343A4.335,4.335 0,0 1,29.335 24.272Z" />
+    <path
+        android:fillColor="#00000000"
+        android:fillType="evenOdd"
+        android:pathData="M21.894,17.232a9.384,9.384 0,1 1,-9.343 9.384A9.363,9.363 0,0 1,21.894 17.232Z"
+        android:strokeWidth="1"
+        android:strokeColor="#ff46b9" />
+    <path
+        android:fillColor="#2cdeff"
+        android:fillType="evenOdd"
+        android:pathData="M6.228,25.314a3.125,3.125 0,1 1,-3.114 3.125A3.119,3.119 0,0 1,6.228 25.314Z" />
+    <path
+        android:fillColor="#f7cec8"
+        android:fillType="evenOdd"
+        android:pathData="M4.673,0 L-0.001,7.999L9.345,7.999Z" />
+    <path
+        android:fillColor="#00000000"
+        android:fillType="evenOdd"
+        android:pathData="M26.656,8.195L36,8.195"
+        android:strokeWidth="1"
+        android:strokeColor="#ff46b9" />
+    <path
+        android:fillColor="#00000000"
+        android:fillType="evenOdd"
+        android:pathData="M31.328,3.523L31.328,12.867"
+        android:strokeWidth="1"
+        android:strokeColor="#ff46b9" />
+    <path
+        android:fillColor="#00000000"
+        android:fillType="evenOdd"
+        android:pathData="M28.0245,4.8915L34.6317,11.4987"
+        android:strokeWidth="1"
+        android:strokeColor="#ff46b9" />
+    <path
+        android:fillColor="#00000000"
+        android:fillType="evenOdd"
+        android:pathData="M34.6315,4.8915L28.0243,11.4987"
+        android:strokeWidth="1"
+        android:strokeColor="#ff46b9" />
+</vector>

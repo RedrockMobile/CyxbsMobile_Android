@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="remindStrings"
+            type="String[]" />
+
+        <variable
+            name="listeners"
+            type="com.mredrock.cyxbs.course.component.RemindSelectDialog.RemindSelectListeners" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/iv_cancel"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:visibility="gone"
+            android:layout_marginStart="3dp"
+            android:background="?android:attr/selectableItemBackground"
+            android:cropToPadding="true"
+            android:onClick="@{listeners::onCancelClick}"
+            android:padding="18dp"
+            android:scaleType="centerInside"
+            app:srcCompat="@drawable/course_ic_cancel"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="ContentDescription" />
+
+
+        <com.mredrock.cyxbs.course.component.FlexibleNumberPicker
+            android:id="@+id/red_rock_np"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:isSelectionDividerShow="false"
+            android:layout_marginTop="32dp"
+            android:layout_marginBottom="32dp"
+            app:selectorBkColor="@color/common_white_background"
+            app:selectorWheelPaintColor="@color/common_level_two_font_color"
+            app:layout_constraintBottom_toTopOf="@+id/tv_sure"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:values="@{remindStrings}">
+
+        </com.mredrock.cyxbs.course.component.FlexibleNumberPicker>
+
+        <TextView
+            android:id="@+id/tv_sure"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_marginEnd="3dp"
+            android:background="@drawable/course_shape_affair_modify_button_background"
+            android:gravity="center_vertical"
+            android:onClick="@{listeners::onSureClick}"
+            android:paddingStart="40dp"
+            android:paddingEnd="40dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:layout_marginBottom="42dp"
+            android:text="@string/course_sure"
+            android:textColor="@color/common_white_font_color"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

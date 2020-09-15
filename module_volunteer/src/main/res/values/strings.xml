@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="volunteer_hint_input_account">请输入中国志愿者服务网账号</string>
+    <string name="volunteer_hint_input_pwd">请输入密码</string>
+    <string name="volunteer_login">立 即 绑 定</string>
+    <string name="volunteer_ask_login_string">登录后即可志愿服务查询</string>
+    <string name="volunteer_service_inquire_string">志愿服务</string>
+    <string name="volunteer_unbind">还未绑定账号哦～</string>
+    <string name="volunteer_string_sign_up_way">可前往微信小程序：重邮帮参与该志愿服务的报名</string>
+    <string name="volunteer_string_hours_all">共%s小时</string>
+    <string name="volunteer_string_year">%s年</string>
+    <string name="volunteer_server_time">志愿服务时间: %s</string>
+    <string name="volunteer_value">志愿时长: %s</string>
+    <string name="volunteer_sign_up_end_time">距报名结束：%s天</string>
+    <string name="volunteer_activity_sign_in_time">报名截至时间</string>
+    <string name="volunteer_activity_server_time">志愿服务时间</string>
+    <string name="volunteer_activity_value">志愿服务时长</string>
+    <string name="volunteer_title">志愿查询</string>
+    <string name="volunteer_string_time">时</string>
+    <string name="volunteer_string_all_time_text">总时长</string>
+    <string name="volunteer_string_times_text">次</string>
+    <string name="volunteer_string_times">项目数</string>
+    <string name="volunteer_string_tab_record">志愿记录</string>
+    <string name="volunteer_string_tab_activity">志愿活动</string>
+    <string name="volunteer_change_binding">切换绑定</string>
+    <string name="volunteer_dialog_unbind">取消绑定</string>
+    <string name="volunteer_dialog_weather_logout">是否取消志愿者账号绑定？</string>
+    <string name="volunteer_dialog_confirm">确定</string>
+    <string name="volunteer_dialog_cancel">取消</string>
+
+</resources>

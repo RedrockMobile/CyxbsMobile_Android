@@ -1,0 +1,8 @@
+<resources>
+    <string name="news_hint_download">下载附件</string>
+    <string name="news_jwzx">教务在线</string>
+    <string name="news_init_error">没有找到这个新闻呢</string>
+    <string name="news_download_error">下载出错了</string>
+    <string name="news_init">新闻加载中</string>
+    <string name="news_no_download">暂无需要下载的附件</string>
+</resources>

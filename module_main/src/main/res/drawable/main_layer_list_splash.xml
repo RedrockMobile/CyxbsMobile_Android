@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android"
+    android:opacity="opaque">
+    <!--opaque 防止在启动的时候出现背景的闪烁 -->
+
+
+    <!--白色矩形 作为背景色-->
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="@color/common_start_page_white_color" />
+        </shape>
+    </item>
+    <item android:bottom="40dp">
+        <!--位置设置成底部-->
+        <bitmap
+            android:gravity="bottom"
+            android:src="@drawable/main_ic_bg_splash_big"
+
+            />
+    </item>
+</layer-list>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.mredrock.cyxbs.volunteer">
+
+    <application>
+        <activity
+            android:name=".VolunteerLoginActivity"
+            android:launchMode="singleTop" />
+        <activity
+            android:name=".VolunteerRecordActivity"
+            android:launchMode="singleTop" />
+    </application>
+
+</manifest>

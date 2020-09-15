@@ -1,0 +1,123 @@
+apply from: config
+apply from: secret
+
+android.defaultConfig {
+    manifestPlaceholders = secret.manifestPlaceholders
+    secret.buildConfigField.forEach({ k, v ->
+        buildConfigField("String", k, v)
+    })
+}
+
+// 这里添加每个模块都可能会使用到的公用库，添加之前请调研一下，该库是否会持续维护
+// 请不要把需要kapt(注解处理)声明的添加到这其中，这样不会在业务模块中生效
+// 需要添加请移步项目根目录下的config.gradle中的dependencies
+dependencies {
+    api fileTree(include: ['*.jar'], dir: 'libs')
+
+    // copy if need Unit Testing
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    testImplementation 'junit:junit:4.13'
+    androidTestImplementation 'androidx.test:core:1.2.0'
+    androidTestImplementation 'androidx.test:runner:1.2.0'
+    androidTestImplementation 'androidx.test:rules:1.2.0'
+
+    //上线之前如果需要检测是否有内存泄漏，直接解除注释，然后安装debug版本的掌邮
+    // 就会附带一个LeakCanary的app来检测是否有内存泄漏
+    //debugApi 'com.squareup.leakcanary:leakcanary-android:2.2'
+
+    //https://github.com/whataa/pandora
+    //开发测试工具，如果需要解除注释
+    //debugApi 'com.github.whataa:pandora:androidx_v2.1.0'
+    //releaseApi 'com.github.whataa:pandora-no-op:v2.1.0'
+    //kotlin&ktx
+    api deps.kotlin.runtime
+    api deps.kotlin.core
+    //official ui and support library
+    api deps.support.constraint
+    api deps.support.app_compat
+    api deps.support.recyclerview
+    api deps.support.cardview
+    api deps.support.design
+    api deps.support.v4
+    api deps.support.multidex
+
+    //events and router
+    api deps.arouter.api
+    api deps.eventbus.runtime
+
+    //network
+    api deps.glide.runtime
+    api deps.glide.okhttp_integration
+    api deps.okhttp.okhttp3
+    api deps.okhttp.logging_interceptor
+    api deps.retrofit.adapter_rxjava2
+    api deps.retrofit.converter_gson
+    api deps.retrofit.runtime
+    api deps.rxjava.runtime
+    api deps.rxjava.rxandroid
+    api deps.rxjava.rxkotlin
+    api deps.gson.runtime
+
+    // 由于更新的接口统一成json了，新版本就不需要这个依赖了
+    // 如果以后需要xml依赖(深思)
+    // 官方已经弃用SimpleXML改用JAXB了，建议跟上
+    // https://github.com/square/retrofit/tree/master/retrofit-converters/jaxb
+//    api('com.squareup.retrofit2:converter-simplexml:2.7.2') {
+//        exclude group: 'xpp3', module: 'xpp3'
+//        exclude group: 'stax', module: 'stax-api'
+//        exclude group: 'stax', module: 'stax'
+//    }
+
+    //architecture
+    api deps.lifecycle.extensions
+    api deps.lifecycle.viewmodel_ktx
+    api deps.lifecycle.common_java8
+    api deps.lifecycle.reactivestrean
+    api deps.room.runtime
+    api deps.room.rxjava
+    api deps.paging.runtime
+    api deps.paging.rxjava
+    api deps.workmanager.runtime
+    api deps.workmanager.rxjava
+
+    //permission
+    api deps.rxpermissions.runtime
+
+    //友盟分析相关依赖
+    api deps.umeng.common
+    api deps.umeng.asms
+    api deps.umeng.crash
+    api deps.umeng.oaid_lenovo
+    api deps.umeng.oaid_mi
+    api deps.umeng.oaid_oppo
+    api deps.umeng.oaid_vivo
+    //友盟push相关依赖(必须)
+    api deps.umeng.push
+    api deps.umeng.alicloud_httpdns
+    api deps.umeng.alicloud_utils
+    api deps.umeng.utdid
+    api deps.umeng.alicloud_beacon
+    api deps.umeng.agoo_accs
+    api deps.umeng.agoo_networksdk
+    api deps.umeng.agoo_tlog
+    api deps.umeng.agoo_tnet4android
+
+    //bugly
+    api deps.bugly.crashreport
+    api deps.bugly.nativecrashreport
+
+    // walle
+    api deps.walle.runtime
+
+    //airbnb
+    api deps.airbnb.lottie
+
+    //杂项
+    api 'com.afollestad.material-dialogs:core:3.3.0'
+    api 'com.github.yalantis:ucrop:2.2.4'
+    api 'com.github.chrisbanes:PhotoView:2.3.0'
+    //目前打进的aar，手动添加图片选择器所需依赖
+    api 'com.davemorrissey.labs:subsampling-scale-image-view:3.10.0'
+    api 'com.github.mmin18:realtimeblurview:1.2.1'
+    api project(path: ':photolibrary-2.5')
+}

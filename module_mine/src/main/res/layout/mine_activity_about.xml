@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/common_window_background"
+    tools:context=".page.about.AboutActivity">
+
+    <include
+        android:id="@+id/mine_about_toolbar"
+        layout="@layout/common_toolbar" />
+
+    <ImageView
+        android:id="@+id/mine_about_iv"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="40dp"
+        android:src="@drawable/mine_shape_round_corner_about"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/mine_about_version"
+        app:layout_constraintVertical_bias="0.0"
+        tools:layout_editor_absoluteX="0dp" />
+
+    <ImageView
+        android:id="@+id/mine_about_logo"
+        android:layout_width="96dp"
+        android:layout_height="96dp"
+        android:src="@drawable/common_ic_app_logo"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/mine_about_toolbar"
+        app:layout_constraintVertical_bias="0.08"
+        tools:ignore="ContentDescription" />
+
+    <TextView
+        android:id="@+id/mine_about_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="11dp"
+        android:text="@string/app_name"
+        android:textColor="@color/common_mine_about_text_color_normal"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/mine_about_logo" />
+
+    <TextView
+        android:id="@+id/mine_about_version"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="3dp"
+        android:textColor="@color/common_mine_about_text_color_normal"
+        android:textSize="13sp"
+        app:layout_constraintEnd_toEndOf="@+id/mine_about_name"
+        app:layout_constraintStart_toStartOf="@+id/mine_about_name"
+        app:layout_constraintTop_toBottomOf="@+id/mine_about_name" />
+
+
+    <TextView
+        android:id="@+id/mine_about_press"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:text="@string/mine_about_1"
+        android:textColor="@color/common_about_colors_declared_below"
+        android:textSize="11sp"
+        app:layout_constraintBottom_toTopOf="@+id/mine_about_tv_copy_right"
+        app:layout_constraintEnd_toEndOf="@+id/mine_about_legal"
+        app:layout_constraintStart_toStartOf="@+id/mine_about_legal" />
+
+    <TextView
+        android:id="@+id/mine_about_tv_copy_right"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="30dp"
+        android:text="@string/mine_about_copyright"
+        android:textColor="@color/common_about_colors_declared_below"
+        android:textSize="11sp"
+        app:layout_constraintBottom_toBottomOf="@+id/mine_about_iv"
+        app:layout_constraintEnd_toEndOf="@+id/mine_about_press"
+        app:layout_constraintStart_toStartOf="@+id/mine_about_press" />
+
+    <TextView
+        android:id="@+id/mine_about_legal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:text="@string/mine_about_legal"
+        android:textColor="@color/common_mine_about_text_color_blue"
+        android:textSize="11sp"
+        app:layout_constraintBottom_toTopOf="@+id/mine_about_press"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+
+    <RelativeLayout
+        android:id="@+id/mine_about_rl_share"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:foreground="?android:selectableItemBackground"
+        android:paddingTop="9dp"
+        android:paddingBottom="9dp"
+        app:layout_constraintBottom_toBottomOf="@+id/mine_about_rl_function"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintVertical_bias="0.3"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/mine_about_iv">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:text="@string/mine_about_sharing"
+            android:textColor="@color/common_mine_about_text_color_normal"
+            android:textSize="16sp"
+            tools:text="分享" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="11dp"
+            android:src="@drawable/mine_ic_arrow_right" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/mine_about_rl_function"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:foreground="?android:selectableItemBackground"
+        android:paddingTop="9dp"
+        android:paddingBottom="9dp"
+        app:layout_constraintBottom_toTopOf="@+id/mine_about_rl_website"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/mine_about_rl_share">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:text="@string/mine_about_function_intro"
+            android:textColor="@color/common_mine_about_text_color_normal"
+            android:textSize="16sp"
+            tools:text="功能介绍" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="11dp"
+            android:src="@drawable/mine_ic_arrow_right" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/mine_about_rl_website"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:foreground="?android:selectableItemBackground"
+        android:paddingTop="9dp"
+        android:paddingBottom="9dp"
+        app:layout_constraintBottom_toTopOf="@+id/mine_about_rl_update"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/mine_about_rl_function">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:text="@string/mine_about_website"
+            android:textColor="@color/common_mine_about_text_color_normal"
+            android:textSize="16sp" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="11dp"
+            android:src="@drawable/mine_ic_arrow_right" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/mine_about_rl_update"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:foreground="?android:selectableItemBackground"
+        android:paddingTop="9dp"
+        android:paddingBottom="9dp"
+        android:layout_marginBottom="50dp"
+        app:layout_constraintBottom_toTopOf="@+id/mine_about_legal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/mine_about_rl_website">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="20dp"
+            android:text="@string/mine_about_update"
+            android:textColor="@color/common_mine_about_text_color_normal"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/mine_about_tv_already_up_to_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="18dp"
+            android:layout_toStartOf="@id/mine_about_arrow_update"
+            android:textColor="@color/common_mine_about_text_color_up_to_date"
+            android:textSize="13sp"
+            tools:text="已是最新版本" />
+
+        <ImageView
+            android:id="@+id/mine_about_arrow_update"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="11dp"
+            android:src="@drawable/mine_ic_arrow_right" />
+    </RelativeLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

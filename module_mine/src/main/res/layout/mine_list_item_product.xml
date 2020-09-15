@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/mine_shape_round_corner_store_item_bg">
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/mine_sign_store_item_cv"
+        android:layout_width="0dp"
+        app:cardElevation="0dp"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:scaleType="centerCrop"
+            android:src="@drawable/common_ic_place_holder"
+            android:id="@+id/mine_sign_store_item_iv"
+            android:layout_width="match_parent"
+            android:layout_height="152dp" />
+    </androidx.cardview.widget.CardView>
+
+    <TextView
+        android:id="@+id/mine_sign_store_item_tv_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/mine_sign_store_item_name_default"
+        android:textColor="@color/common_level_two_font_color"
+        android:textSize="13sp"
+        app:layout_constraintStart_toStartOf="@+id/mine_sign_store_item_tv_count"
+        app:layout_constraintTop_toBottomOf="@+id/mine_sign_store_item_cv" />
+
+    <TextView
+        android:id="@+id/mine_sign_store_item_tv_count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:alpha="0.58"
+        android:text="@string/mine_sign_store_item_count_default"
+        android:textColor="@color/common_level_two_font_color"
+        android:textSize="10sp"
+        app:layout_constraintStart_toStartOf="@+id/mine_sign_store_item_iv_diamond"
+        app:layout_constraintTop_toBottomOf="@+id/mine_sign_store_item_tv_title" />
+
+    <ImageView
+        android:id="@+id/mine_sign_store_item_iv_diamond"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:src="@drawable/mine_ic_sign_diamond"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/mine_sign_store_item_tv_count" />
+
+    <TextView
+        android:id="@+id/mine_sign_store_item_tv__integral"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/mine_sign_store_item_integral_default"
+        android:textColor="@color/common_mine_sign_store_item_tv_integral"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/mine_sign_store_item_iv_diamond"
+        app:layout_constraintStart_toEndOf="@+id/mine_sign_store_item_iv_diamond"
+        app:layout_constraintTop_toTopOf="@+id/mine_sign_store_item_iv_diamond" />
+
+    <Button
+        android:id="@+id/mine_sign_store_item_btn_exchange"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="12dp"
+        android:background="@drawable/common_dialog_btn_positive_blue"
+        android:minWidth="47dp"
+        android:minHeight="24dp"
+        android:text="@string/mine_sign_store_item_exchange"
+        style="?android:attr/borderlessButtonStyle"
+        android:textColor="@color/common_white_font_color"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="@+id/mine_sign_store_item_iv_diamond"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/mine_sign_store_item_iv_diamond" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,292 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/common_window_background"
+    tools:context=".page.edit.EditInfoActivity">
+
+    <include
+        android:id="@+id/mine_et_toolbar"
+        layout="@layout/common_toolbar" />
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/mine_et_toolbar"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="600dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginBottom="20dp"
+                android:background="@drawable/mine_shape_round_corner_edit"
+                android:focusable="true"
+                android:focusableInTouchMode="true">
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="12dp"
+                    android:alpha="0.19"
+                    android:background="@color/common_sever_view_color"
+                    app:layout_constraintEnd_toStartOf="@+id/mine_guideline_left"
+                    app:layout_constraintStart_toStartOf="@+id/mine_guideline_right"
+                    app:layout_constraintTop_toBottomOf="@+id/mine_et_introduce" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="11dp"
+                    android:alpha="0.19"
+                    android:background="@color/common_sever_view_color"
+                    app:layout_constraintEnd_toStartOf="@+id/mine_guideline_left"
+                    app:layout_constraintStart_toStartOf="@+id/mine_guideline_right"
+                    app:layout_constraintTop_toBottomOf="@+id/mine_et_phone" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="11dp"
+                    android:alpha="0.19"
+                    android:background="@color/common_sever_view_color"
+                    app:layout_constraintEnd_toStartOf="@+id/mine_guideline_left"
+                    app:layout_constraintStart_toStartOf="@+id/mine_guideline_right"
+                    app:layout_constraintTop_toBottomOf="@+id/mine_et_qq" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="12dp"
+                    android:alpha="0.19"
+                    android:background="@color/common_sever_view_color"
+                    app:layout_constraintEnd_toStartOf="@+id/mine_guideline_left"
+                    app:layout_constraintStart_toStartOf="@+id/mine_guideline_right"
+                    app:layout_constraintTop_toBottomOf="@+id/mine_et_nickname" />
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/mine_edit_et_avatar"
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
+                    android:layout_marginTop="17dp"
+                    android:src="@drawable/mine_avatar_default_img"
+                    android:transitionName="avatar"
+                    app:layout_constraintStart_toStartOf="@+id/mine_guideline_right"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageView
+                    android:id="@+id/mine_edit_iv_agreement"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/mine_iv_avatar_question_mark"
+                    app:layout_constraintBottom_toBottomOf="@+id/mine_edit_et_avatar"
+                    app:layout_constraintEnd_toStartOf="@+id/mine_guideline_left"
+                    app:layout_constraintTop_toTopOf="@+id/mine_edit_et_avatar" />
+
+                <TextView
+                    android:id="@+id/mine_tv_nickname"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:text="@string/mine_nickname"
+                    android:textColor="@color/common_level_two_font_color"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toTopOf="@+id/mine_tv_sign"
+                    app:layout_constraintStart_toStartOf="@+id/mine_tv_sign"
+                    app:layout_constraintTop_toTopOf="@+id/mine_edit_et_avatar" />
+
+                <EditText
+                    android:id="@+id/mine_et_nickname"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:background="@null"
+                    android:ellipsize="end"
+                    android:hint="@string/mine_nickname_default"
+                    android:inputType="text"
+                    android:maxLength="8"
+                    android:maxLines="1"
+                    android:textColorHint="@color/common_alpha_forty_level_two_font_color"
+                    android:textSize="15sp"
+                    app:layout_constraintEnd_toStartOf="@+id/mine_guideline_left"
+                    app:layout_constraintStart_toStartOf="@+id/mine_tv_nickname"
+                    app:layout_constraintTop_toBottomOf="@+id/mine_tv_nickname" />
+
+                <TextView
+                    android:id="@+id/mine_tv_sign"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/mine_introduce"
+                    android:textColor="@color/common_level_two_font_color"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toTopOf="@+id/mine_tv_qq"
+                    app:layout_constraintStart_toStartOf="@+id/mine_tv_qq"
+                    app:layout_constraintTop_toBottomOf="@+id/mine_tv_nickname" />
+
+                <EditText
+                    android:id="@+id/mine_et_introduce"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:background="@null"
+                    android:ellipsize="end"
+                    android:hint="@string/mine_introduce_default"
+                    android:inputType="text"
+                    android:maxLength="20"
+                    android:maxLines="1"
+                    android:textColorHint="@color/common_alpha_forty_level_two_font_color"
+                    android:textSize="15sp"
+                    app:layout_constraintEnd_toStartOf="@+id/mine_guideline_left"
+                    app:layout_constraintStart_toStartOf="@+id/mine_tv_sign"
+                    app:layout_constraintTop_toBottomOf="@+id/mine_tv_sign" />
+
+                <TextView
+                    android:id="@+id/mine_tv_qq"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/mine_qq"
+                    android:textColor="@color/common_level_two_font_color"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toTopOf="@+id/mine_tv_phone"
+                    app:layout_constraintStart_toStartOf="@+id/mine_tv_phone"
+                    app:layout_constraintTop_toBottomOf="@+id/mine_tv_sign" />
+
+                <EditText
+                    android:id="@+id/mine_et_qq"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:background="@null"
+                    android:ellipsize="end"
+                    android:hint="@string/mine_info_default"
+                    android:inputType="number"
+                    android:lines="1"
+                    android:maxLength="16"
+                    android:maxLines="1"
+                    android:textColorHint="@color/common_alpha_forty_level_two_font_color"
+                    android:textSize="15sp"
+                    app:layout_constraintEnd_toStartOf="@+id/mine_guideline_left"
+                    app:layout_constraintStart_toStartOf="@+id/mine_tv_qq"
+                    app:layout_constraintTop_toBottomOf="@+id/mine_tv_qq" />
+
+                <TextView
+                    android:id="@+id/mine_tv_phone"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/mine_phone"
+                    android:textColor="@color/common_level_two_font_color"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toTopOf="@+id/mine_tv_college"
+                    app:layout_constraintStart_toStartOf="@+id/mine_tv_college"
+                    app:layout_constraintTop_toBottomOf="@+id/mine_tv_qq" />
+
+                <EditText
+                    android:id="@+id/mine_et_phone"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:background="@null"
+                    android:ellipsize="end"
+                    android:hint="@string/mine_info_default"
+                    android:inputType="phone"
+                    android:lines="1"
+                    android:maxLength="11"
+                    android:maxLines="1"
+                    android:textColor="@color/common_level_two_font_color"
+                    android:textColorHint="@color/common_alpha_forty_level_two_font_color"
+                    android:textSize="15sp"
+                    app:layout_constraintEnd_toStartOf="@+id/mine_guideline_left"
+                    app:layout_constraintStart_toStartOf="@+id/mine_tv_phone"
+                    app:layout_constraintTop_toBottomOf="@+id/mine_tv_phone" />
+
+                <TextView
+                    android:id="@+id/mine_tv_college"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/mine_college"
+                    android:textColor="@color/common_level_two_font_color"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toTopOf="@id/mine_btn_info_save"
+                    app:layout_constraintStart_toStartOf="@+id/mine_guideline_right"
+                    app:layout_constraintTop_toBottomOf="@+id/mine_tv_phone" />
+
+                <TextView
+                    android:id="@+id/mine_tv_college_concrete"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/common_level_two_font_color"
+                    android:textSize="13sp"
+                    android:gravity="end"
+                    app:layout_constraintBottom_toBottomOf="@+id/mine_tv_college"
+                    app:layout_constraintEnd_toStartOf="@+id/mine_guideline_left"
+                    app:layout_constraintStart_toEndOf="@+id/mine_tv_college"
+                    app:layout_constraintTop_toTopOf="@+id/mine_tv_college"
+                    tools:text="计算机科学与技术" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:alpha="0.29"
+                    android:text="@string/mine_info_contact"
+                    android:textColor="@color/common_level_two_font_color"
+                    android:textSize="11sp"
+                    app:layout_constraintBottom_toTopOf="@+id/mine_btn_info_save"
+                    app:layout_constraintEnd_toStartOf="@+id/mine_guideline_left"
+                    app:layout_constraintTop_toBottomOf="@+id/mine_tv_college_concrete" />
+
+
+                <androidx.constraintlayout.widget.Guideline
+                    android:id="@+id/mine_guideline_left"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintGuide_percent="0.95" />
+
+                <Button
+                    android:id="@+id/mine_btn_info_save"
+                    style="?android:attr/borderlessButtonStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:background="@drawable/mine_bg_round_corner_grey"
+                    android:clickable="false"
+                    android:minWidth="120dp"
+                    android:minHeight="40dp"
+                    android:text="@string/mine_info_save"
+                    android:textColor="@color/common_grey_button_text"
+                    android:textSize="@dimen/mine_main_medium"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/mine_tv_college_concrete" />
+
+                <androidx.constraintlayout.widget.Guideline
+                    android:id="@+id/mine_guideline_right"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    app:layout_constraintGuide_begin="19dp" />
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </LinearLayout>
+
+
+    </androidx.core.widget.NestedScrollView>
+
+
+</RelativeLayout>

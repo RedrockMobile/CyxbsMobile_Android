@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <dimen name="main_main_bottom_navigation_height">60dp</dimen>
+<!--    下面这个值是上面的值加上60dp（nav的高度）在加10（bottomSheet展开时距离顶部的距离）的值，更改时务必同时更改-->
+    <dimen name="main_main_bottom_navigation_height_twice_as_much">130dp</dimen>
+    <dimen name="main_bottom_text_size">10sp</dimen>
+    <dimen name="main_text_spacing">10dp</dimen>
+</resources>

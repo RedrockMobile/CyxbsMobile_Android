@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/volunteer_shape_dialog_back">
+
+    <ImageView
+        android:id="@+id/volunteer_imageview"
+        android:layout_width="150dp"
+        android:layout_height="108dp"
+        android:layout_marginStart="21dp"
+        android:layout_marginTop="40dp"
+        android:src="@drawable/volunteer_ic_dialog_pic"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.406"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_volunteer_dialog1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="22dp"
+        android:text="@string/volunteer_dialog_unbind"
+        android:textColor="@color/common_level_two_font_color"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/volunteer_imageview" />
+
+
+    <TextView
+        android:id="@+id/tv_volunteer_dialog2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="@string/volunteer_dialog_weather_logout"
+        android:textColor="@color/common_volunteer_dialog_second_text"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.495"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_volunteer_dialog1" />
+
+    <TextView
+        android:id="@+id/tv_volunteer_dialog_cancel_logout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="26dp"
+        android:layout_marginTop="45dp"
+        android:layout_marginEnd="12dp"
+        android:layout_marginBottom="26dp"
+        android:background="@drawable/volunteer_shape_negative_choose"
+        android:text="@string/volunteer_dialog_cancel"
+        android:textColor="@color/common_volunteer_cancel_text_color"
+        android:textSize="15sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/tv_volunteer_dialog_confirm_logout"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_volunteer_dialog2" />
+
+    <TextView
+        android:id="@+id/tv_volunteer_dialog_confirm_logout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="45dp"
+        android:layout_marginEnd="26dp"
+        android:layout_marginBottom="26dp"
+        android:background="@drawable/volunteer_shape_postive_choose"
+        android:text="@string/volunteer_dialog_confirm"
+        android:textSize="15sp"
+        android:textColor="@color/common_volunteer_cancel_text_color"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/tv_volunteer_dialog_cancel_logout"
+        app:layout_constraintTop_toBottomOf="@+id/tv_volunteer_dialog2"
+        app:layout_constraintVertical_bias="1.0" />
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,14 @@
+<resources>
+
+    <!-- Base application theme. -->
+
+    <style name="TabLayout.TabText" parent="TextAppearance.Design.Tab">
+        <item name="android:textSize">17sp</item>
+        <item name="textAllCaps">false</item>
+    </style>
+
+    <style name="volunteer_transparent_dialog" parent="Theme.AppCompat.Dialog">
+        <item name="android:windowBackground">@color/common_volunteer_dialog_transparent</item>
+    </style>
+
+</resources>

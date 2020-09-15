@@ -1,0 +1,30 @@
+<resources>
+    <string name="main_activity_login_account_hint">请输入学号</string>
+    <string name="main_activity_login_password_hint">身份证后六位/2020级输入统一认证码后六位</string>
+    <string name="main_activity_login_btn_login">登 录</string>
+    <string name="main_activity_login_not_input_account">请检查一下学号吧，似乎有点问题</string>
+    <string name="main_activity_login_not_input_password">请检查一下密码吧，似乎有点问题</string>
+
+    <string name="main_course_long_name">我的课表</string>
+    <string name="main_course_short_name">课表</string>
+    <string name="main_school_car_long_name">校车查询</string>
+    <string name="main_school_car_short_name">校车</string>
+    <string name="main_empty_room_long_name">空教室查询</string>
+    <string name="main_empty_room_short_name">空教室</string>
+    <string name="main_grade_long_name">考试安排查询</string>
+    <string name="main_grade_short_name">考试</string>
+    <string name="main_shortcut_cancel">暂时无法使用哦</string>
+
+    <string name="main_user_agreement">同意《掌上重邮用户协议》</string>
+    <string name="main_user_agreement_title">请先同意用户协议吧</string>
+    <string name="main_login_error_prompt">登录失败，请检查一下用户名和密码是否正确</string>
+    <string name="main_welcome_speech_2">您好，欢迎来到掌上重邮！</string>
+    <string name="main_main_welcome_speech_1">登录</string>
+
+    <string name="main_tourist_mode">没有学号么？</string>
+    <string name="main_tourist_mode_enter">游客模式吧</string>
+    <string name="main_tourist_course_ask_login_text">登录后就可查看课表~</string>
+    <string name="main_umeng_push_device_id">友盟推送设备id：</string>
+    <string name="main_long_press_to_copy">长按复制</string>
+    <string name="main_umeng_analyzes_device_data">友盟分析设备数据：</string>
+</resources>
