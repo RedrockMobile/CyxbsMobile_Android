@@ -17,6 +17,7 @@ import com.mredrock.cyxbs.discover.electricity.bean.ElecInf
 import com.mredrock.cyxbs.discover.electricity.config.*
 import com.mredrock.cyxbs.discover.electricity.viewmodel.ChargeViewModel
 import com.mredrock.cyxbs.electricity.R
+import kotlinx.android.synthetic.main.electricity_discover_feed_unbound.view.*
 
 @Route(path = DISCOVER_ELECTRICITY_FEED)
 class ElectricityFeedFragment : BaseFeedFragment<ChargeViewModel>() {
@@ -28,6 +29,9 @@ class ElectricityFeedFragment : BaseFeedFragment<ChargeViewModel>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         //主要为了防止，使用游客模式，在此登录，导致的登录后状态未刷新，感觉听不规范的，游客模式之后还得统一管理
+        if (ServiceManager.getService(IAccountService::class.java).getVerifyService().isLogin()) {
+            setAdapter(ElectricityFeedUnboundAdapter())
+        }
         ServiceManager.getService(IAccountService::class.java).getVerifyService().addOnStateChangedListener {
             if (it == IUserStateService.UserState.LOGIN) {
                 context?.runOnUiThread {
@@ -40,19 +44,15 @@ class ElectricityFeedFragment : BaseFeedFragment<ChargeViewModel>() {
 
 
     private fun init() {
-        if (ServiceManager.getService(IAccountService::class.java).getVerifyService().isLogin()) {
-            //首先无参数请求电费，后端返回上一次绑定的数据
-            viewModel.preGetCharge()
-        }
+
         setAdapter(ElectricityFeedUnboundAdapter())
         setTitle(getString(R.string.electricity_inquire_string))
-        setSecondTitle(getString(R.string.electricity_free_count))
         setOnClickListener {
             context?.doIfLogin(getString(R.string.electricity_inquire_string)) {
                 parentFragmentManager.let {
                     ElectricityFeedSettingDialogFragment().apply {
                         refresher = { id, room ->
-                            refreshCharge(id, room)
+                            viewModel.getCharge(id, room)
                         }
                     }.show(it, "ElectricityFeedSetting")
                 }
@@ -62,6 +62,17 @@ class ElectricityFeedFragment : BaseFeedFragment<ChargeViewModel>() {
         viewModel.chargeInfo.observe {
             handleData(it)
         }
+        //首次默认加载失败，说明账号有问题
+        viewModel.loadFailed.observe {
+            if (it == null) return@observe
+            val adapter = getAdapter()
+            if (adapter is ElectricityFeedUnboundAdapter) {
+                adapter.apply {
+                    view?.tv_electricity_no_account?.text = getString(R.string.electricity_unbind)
+                }
+            }
+        }
+
     }
 
     private fun handleData(it: ElecInf?) {
@@ -81,20 +92,26 @@ class ElectricityFeedFragment : BaseFeedFragment<ChargeViewModel>() {
     }
 
     override fun onRefresh() {
-        val pos = context?.defaultSharedPreferences?.getInt(SP_BUILDING_HEAD_KEY, -1)
-
-        if (pos == -1) {
+        if (!ServiceManager.getService(IAccountService::class.java).getVerifyService().isLogin()) {
             return
         }
-        val id = BUILDING_NAMES.getValue(BUILDING_NAMES_HEADER[pos!!])[context?.defaultSharedPreferences?.getInt(SP_BUILDING_FOOT_KEY, -1)!!].split("(")[1].split("栋")[0]
-        val room = context?.defaultSharedPreferences!!.getString(SP_ROOM_KEY, "") ?: ""
+        if (viewModel.chargeInfo.value != null) {
+            handleData(viewModel.chargeInfo.value)
+        } else {
+            val pos = context?.defaultSharedPreferences?.getInt(SP_BUILDING_HEAD_KEY, -1)
 
-        refreshCharge(id, room)
+            if (pos == -1) {
+                viewModel.preGetCharge()
+                return
+            }
+            val id = BUILDING_NAMES.getValue(BUILDING_NAMES_HEADER[pos!!])[context?.defaultSharedPreferences?.getInt(SP_BUILDING_FOOT_KEY, -1)!!].split("(")[1].split("栋")[0]
+            val room = context?.defaultSharedPreferences!!.getString(SP_ROOM_KEY, "") ?: ""
+            if (id.isEmpty() || room.isEmpty()) {
+                viewModel.preGetCharge()
+            } else {
+                viewModel.getCharge(id, room)
+            }
+        }
     }
-
-    private fun refreshCharge(id: String, room: String) {
-        viewModel.getCharge(id, room)
-    }
-
 
 }

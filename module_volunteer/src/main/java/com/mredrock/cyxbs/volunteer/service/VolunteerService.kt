@@ -7,8 +7,8 @@ import com.alibaba.android.arouter.launcher.ARouter
 import com.mredrock.cyxbs.common.config.DISCOVER_VOLUNTEER_FEED
 import com.mredrock.cyxbs.common.config.VOLUNTEER_SERVICE
 import com.mredrock.cyxbs.common.service.discover.volunteer.IVolunteerService
-import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
-import com.mredrock.cyxbs.common.utils.extensions.editor
+import com.mredrock.cyxbs.volunteer.event.VolunteerLogoutEvent
+import org.greenrobot.eventbus.EventBus
 
 /**
  * Created by yyfbe, Date on 2020/8/31.
@@ -21,10 +21,8 @@ class VolunteerService : IVolunteerService {
     }
 
     override fun clearSP() {
-        mContext?.defaultSharedPreferences?.editor {
-            remove("account")
-            remove("password")
-            remove("uid")
+        mContext?.let {
+            EventBus.getDefault().postSticky(VolunteerLogoutEvent())
         }
     }
 

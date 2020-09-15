@@ -15,6 +15,7 @@ object CyxbsMob {
         const val BOTTOM_TAB_CLICK = "bottom_tab_click"
         const val CLICK_QA_QUESTION = "click_qa_question"
         const val QA_SEARCH = "qa_search"
+        const val QA_SEARCH_RECOMMEND = "qa_search_recommend"
     }
 
     object Key {

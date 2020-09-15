@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/volunteer_shape_record_item"
+    android:layout_marginStart="25dp"
+    android:layout_marginEnd="25dp"
+    android:paddingStart="20dp"
+    android:paddingTop="20dp"
+    android:paddingEnd="20dp"
+    android:paddingBottom="20dp">
+
+    <TextView
+        android:id="@+id/tv_volunteer_affair_title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:layout_marginEnd="30dp"
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintEnd_toStartOf="@id/tv_volunteer_affair_sign_up_end"
+        android:textColor="@color/common_level_three_font_color"
+        android:singleLine="true"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="红领巾志愿活动" />
+
+    <TextView
+        android:id="@+id/tv_volunteer_affair_reward"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/common_level_three_font_color"
+        android:textSize="15sp"
+        android:alpha="0.69"
+        app:layout_constraintStart_toStartOf="@+id/tv_volunteer_affair_title"
+        app:layout_constraintTop_toBottomOf="@+id/tv_volunteer_affair_title"
+        android:layout_marginTop="8dp"
+        tools:text="志愿时长：" />
+
+    <TextView
+        android:id="@+id/tv_volunteer_affair_start_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/common_level_three_font_color"
+        android:textSize="15sp"
+        android:alpha="0.69"
+        app:layout_constraintStart_toStartOf="@+id/tv_volunteer_affair_reward"
+        app:layout_constraintTop_toBottomOf="@+id/tv_volunteer_affair_reward"
+        android:layout_marginTop="8dp"
+        tools:text="志愿服务时间：2020.09.10" />
+
+    <TextView
+        android:id="@+id/tv_volunteer_affair_sign_up_end"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="14sp"
+        tools:text="距报名结束：1天"
+        android:textColor="@color/common_volunteer_affair_sign_up_end_t0"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/tv_volunteer_affair_title" />
+</androidx.constraintlayout.widget.ConstraintLayout>

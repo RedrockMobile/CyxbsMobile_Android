@@ -7,7 +7,7 @@
     android:background="?selectableItemBackground"
     android:clickable="true">
 
-    <com.mredrock.cyxbs.discover.map.component.MarqueeTextView
+    <com.mredrock.cyxbs.common.utils.extensions.MarqueeTextView
         android:id="@+id/map_tv_favorite_list_item_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

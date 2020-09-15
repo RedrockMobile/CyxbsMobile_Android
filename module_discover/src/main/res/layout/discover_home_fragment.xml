@@ -87,7 +87,7 @@
                 android:layout_marginTop="2dp"
                 android:layout_marginEnd="13dp"
                 android:layout_marginBottom="2dp"
-                android:text="@string/news_jwzx"
+                android:text="@string/discover_news_jwzx"
                 android:textColor="@color/common_discover_academic_online_colors"
                 android:textSize="11sp"
                 tools:ignore="SmallSp" />

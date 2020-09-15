@@ -23,7 +23,7 @@ class VolunteerFeedAdapter(private val volunteerTime: VolunteerTime) : BaseFeedF
     }
 
     fun refresh(volunteerTime: VolunteerTime) {
-        val context = view?.context?:return
+        val context = view?.context ?: return
         view?.let {
             it.tv_volunteer_feed_total_time.text = SpannableStringBuilder(volunteerTime.hours?.toInt().toString().plus("时"))
                     .apply {
@@ -35,7 +35,9 @@ class VolunteerFeedAdapter(private val volunteerTime: VolunteerTime) : BaseFeedF
                 return
             }
             it.tv_volunteer_feed_activity_name.text = volunteerTime.record?.get(0)?.title
-            it.tv_volunteer_feed_activity_date.text = volunteerTime.record?.get(0)?.start_time?.substring(0, 10)
+            if (!volunteerTime.record?.get(0)?.start_time.isNullOrEmpty() && volunteerTime.record?.get(0)?.start_time?.length!! > 10) {
+                it.tv_volunteer_feed_activity_date.text = volunteerTime.record?.get(0)?.start_time?.substring(0, 10)
+            }
             it.tv_volunteer_feed_activity_time.text = volunteerTime.record?.get(0)?.hours.plus("小时")
             it.tv_volunteer_feed_activity_address.text = volunteerTime.record?.get(0)?.server_group
         }
