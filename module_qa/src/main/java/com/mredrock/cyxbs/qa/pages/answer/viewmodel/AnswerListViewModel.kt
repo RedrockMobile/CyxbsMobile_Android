@@ -22,47 +22,65 @@ import com.mredrock.cyxbs.qa.pages.answer.model.AnswerDataSource
 /**
  * Created By jay68 on 2018/9/27.
  */
-class AnswerListViewModel(question: Question) : BaseViewModel() {
+class AnswerListViewModel(private val questionId: String) : BaseViewModel() {
     val bottomViewEvent = MutableLiveData<Boolean?>()
-    val answerPagedList: LiveData<PagedList<Answer>>
+    var answerPagedList: LiveData<PagedList<Answer>>? = null
     val questionLiveData = MutableLiveData<Question>()
     val backAndRefreshPreActivityEvent = SingleLiveEvent<Boolean>()
     val reportQuestionEvent = SingleLiveEvent<Boolean>()
     val reportAnswerEvent = SingleLiveEvent<Boolean>()
     val ignoreEvent = SingleLiveEvent<Boolean>()
+    val question = MutableLiveData<Question>()
 
-    val networkState: LiveData<Int>
-    val initialLoad: LiveData<Int>
+    var networkState: LiveData<Int>? = null
+    var initialLoad: LiveData<Int>? = null
     private var myRewardCount = 0
 
     private var praiseNetworkState = NetworkState.SUCCESSFUL
     val refreshPreActivityEvent = SingleLiveEvent<Int>()
-    private val qid get() = questionLiveData.value!!.id
 
     //防止点赞快速点击
     var isDealing = false
 
-    private val factory: AnswerDataSource.Factory
+    private var factory: AnswerDataSource.Factory? = null
 
     init {
-        val initNum = if (question.answerNum in 1..5) question.answerNum else 6
-        val config = PagedList.Config.Builder()
-                .setEnablePlaceholders(false)
-                .setPrefetchDistance(3)
-                .setPageSize(initNum)
-                .setInitialLoadSizeHint(initNum)
-                .build()
-        factory = AnswerDataSource.Factory(question.id)
-        answerPagedList = LivePagedListBuilder<Int, Answer>(factory, config).build()
-        networkState = Transformations.switchMap(factory.answerDataSourceLiveData) { it.networkState }
-        initialLoad = Transformations.switchMap(factory.answerDataSourceLiveData) { it.initialLoad }
+        ApiGenerator.getApiService(ApiService::class.java)
+                .getQuestion(questionId)
+                .setSchedulers()
+                .mapOrThrowApiException()
+                .safeSubscribeBy { data ->
+                    this.question.value = data
+                    val initNum = if (data.answerNum in 1..5) data.answerNum else 6
+                    val config = PagedList.Config.Builder()
+                            .setEnablePlaceholders(false)
+                            .setPrefetchDistance(3)
+                            .setPageSize(initNum)
+                            .setInitialLoadSizeHint(initNum)
+                            .build()
+                    factory = AnswerDataSource.Factory(questionId)
+                    answerPagedList = LivePagedListBuilder<Int, Answer>(factory!!, config).build()
+                    networkState = Transformations.switchMap(factory!!.answerDataSourceLiveData) { it.networkState }
+                    initialLoad = Transformations.switchMap(factory!!.answerDataSourceLiveData) { it.initialLoad }
 
-        questionLiveData.value = question
-        bottomViewEvent.value = question.isSelf
+                    questionLiveData.value = data
+                    bottomViewEvent.value = data.isSelf
+                }
+
+    }
+
+    fun getQuestion(id: String) {
+        ApiGenerator.getApiService(ApiService::class.java)
+                .getQuestion(id)
+                .setSchedulers()
+                .mapOrThrowApiException()
+                .safeSubscribeBy {
+                    question.value = it
+                }
     }
 
     //增加浏览量，不用显示
-    fun addQuestionView() {
+    fun addQuestionView(qid: String) {
         ApiGenerator.getApiService(ApiService::class.java)
                 .addView(qid)
                 .checkError()
@@ -73,7 +91,7 @@ class AnswerListViewModel(question: Question) : BaseViewModel() {
                 .safeSubscribeBy { LogUtils.d("add QuestionView Success", it.toString()) }
     }
 
-    fun reportQuestion(reportType: String) {
+    fun reportQuestion(qid: String, reportType: String) {
         progressDialogEvent.value = ProgressDialogEvent.SHOW_NONCANCELABLE_DIALOG_EVENT
         ApiGenerator.getApiService(ApiService::class.java)
                 .reportQuestion(qid, reportType)
@@ -109,9 +127,9 @@ class AnswerListViewModel(question: Question) : BaseViewModel() {
                 .safeSubscribeBy { myRewardCount = it.integral }
     }
 
-    fun invalidate() = factory.answerDataSourceLiveData.value?.invalidate()
+    fun invalidate() = factory?.answerDataSourceLiveData?.value?.invalidate()
 
-    fun retry() = factory.answerDataSourceLiveData.value?.retry()
+    fun retry() = factory?.answerDataSourceLiveData?.value?.retry()
 
 
     fun ignoreQuestion() {
@@ -165,11 +183,11 @@ class AnswerListViewModel(question: Question) : BaseViewModel() {
                 .lifeCycle()
     }
 
-    class Factory(private val question: Question) : ViewModelProvider.Factory {
+    class Factory(private val questionId: String) : ViewModelProvider.Factory {
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
             @Suppress("UNCHECKED_CAST")
             if (modelClass.isAssignableFrom(AnswerListViewModel::class.java)) {
-                return AnswerListViewModel(question) as T
+                return AnswerListViewModel(questionId) as T
             } else {
                 throw IllegalArgumentException("ViewModel Not Found.")
             }
