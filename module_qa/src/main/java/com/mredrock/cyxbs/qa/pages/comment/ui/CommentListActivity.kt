@@ -133,7 +133,7 @@ class CommentListActivity : BaseActivity(), EventBusLifecycleSubscriber {
                 textSize = 15f
                 visible()
                 setOnClickListener {
-                    this@CommentListActivity.startActivity<AnswerListActivity>(AnswerListActivity.PARAM_QUESTION to question)
+                    this@CommentListActivity.startActivity<AnswerListActivity>(AnswerListActivity.PARAM_QUESTION_ID to question.id)
                     this@CommentListActivity.finish()
                 }
             })

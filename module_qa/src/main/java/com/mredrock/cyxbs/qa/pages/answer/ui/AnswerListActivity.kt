@@ -10,10 +10,6 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.alibaba.android.arouter.facade.annotation.Route
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
-import com.mredrock.cyxbs.common.bean.RedrockApiWrapper
-import com.mredrock.cyxbs.common.bean.isSuccessful
 import com.mredrock.cyxbs.common.config.QA_ANSWER_LIST
 import com.mredrock.cyxbs.common.event.OpenShareQuestionEvent
 import com.mredrock.cyxbs.common.mark.EventBusLifecycleSubscriber
@@ -42,13 +38,13 @@ class AnswerListActivity : BaseActivity(), EventBusLifecycleSubscriber {
         @JvmField
         val TAG: String = AnswerListActivity::class.java.simpleName
 
-        const val PARAM_QUESTION = "question"
+        const val PARAM_QUESTION_ID = "question_id"
         const val REQUEST_REFRESH_LIST = 0x2
         const val REQUEST_REFRESH_QUESTION_ADOPTED = "adopted"
         const val REQUEST_REFRESH_ANSWER_REFRESH = "answerRefresh"
 
-        fun activityStart(fragment: Fragment, question: Question, requestCode: Int) {
-            fragment.startActivityForResult<AnswerListActivity>(requestCode, PARAM_QUESTION to question)
+        fun activityStart(fragment: Fragment, questionId: String, requestCode: Int) {
+            fragment.startActivityForResult<AnswerListActivity>(requestCode, PARAM_QUESTION_ID to questionId)
         }
     }
 
@@ -68,13 +64,13 @@ class AnswerListActivity : BaseActivity(), EventBusLifecycleSubscriber {
     private lateinit var emptyRvAdapter: EmptyRvAdapter
     private lateinit var questionReportDialog: ReportDialog
 
+    private var questionId = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.qa_activity_answer_list)
-        if (intent.getParcelableExtra<Question>(PARAM_QUESTION) != null) {
-            initViewModel(intent.getParcelableExtra(PARAM_QUESTION))
-            initView(intent.getParcelableExtra(PARAM_QUESTION))
-            viewModel.addQuestionView()
+        questionId = intent.getStringExtra(PARAM_QUESTION_ID)
+        if (questionId.isNotEmpty()) {
+            initViewModel(questionId)
         }
     }
 
@@ -85,8 +81,8 @@ class AnswerListActivity : BaseActivity(), EventBusLifecycleSubscriber {
         }
     }
 
-    private fun initViewModel(question: Question) {
-        viewModel = ViewModelProvider(this, AnswerListViewModel.Factory(question)).get(AnswerListViewModel::class.java)
+    private fun initViewModel(questionId: String) {
+        viewModel = ViewModelProvider(this, AnswerListViewModel.Factory(questionId)).get(AnswerListViewModel::class.java)
         viewModel.apply {
             toastEvent.observe { str -> str?.let { toast(it) } }
             longToastEvent.observe { str -> str?.let { longToast(it) } }
@@ -98,6 +94,12 @@ class AnswerListActivity : BaseActivity(), EventBusLifecycleSubscriber {
                 } else if (it == ProgressDialogEvent.DISMISS_DIALOG_EVENT && progressDialog?.isShowing != false) {
                     progressDialog?.dismiss()
                 }
+            }
+            question.observe {
+                it ?: return@observe
+                initView(it)
+                viewModel.getQuestion(questionId)
+                viewModel.addQuestionView(questionId)
             }
         }
     }
@@ -186,12 +188,12 @@ class AnswerListActivity : BaseActivity(), EventBusLifecycleSubscriber {
                 else -> switchToHelper()
             }
         }
-        answerPagedList.observeNotNull {
+        answerPagedList?.observeNotNull {
             answerListAdapter.submitList(it)
         }
-        networkState.observeNotNull { footerRvAdapter.refreshData(listOf(it)) }
+        networkState?.observeNotNull { footerRvAdapter.refreshData(listOf(it)) }
 
-        initialLoad.observe {
+        initialLoad?.observe {
             when (it) {
                 NetworkState.LOADING -> {
                     swipe_refresh_layout.isRefreshing = true
@@ -231,7 +233,7 @@ class AnswerListActivity : BaseActivity(), EventBusLifecycleSubscriber {
     private fun createQuestionReportDialog() = ReportDialog(this@AnswerListActivity).apply {
         setType(resources.getStringArray(R.array.qa_title_type)[0])
         pressReport = {
-            viewModel.reportQuestion(it)
+            viewModel.reportQuestion(questionId, it)
         }
         viewModel.reportQuestionEvent.observeNotNull {
             dismiss()
@@ -268,28 +270,17 @@ class AnswerListActivity : BaseActivity(), EventBusLifecycleSubscriber {
 
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     fun openShareQuestion(event: OpenShareQuestionEvent) {
-        if (intent.getParcelableExtra<Question>(PARAM_QUESTION) != null) {
+        if (intent.getStringExtra(PARAM_QUESTION_ID) != null) {
             EventBus.getDefault().removeStickyEvent(event)
         } else {
-            var questionWrapper: RedrockApiWrapper<Question>? = null
-            try {
-                questionWrapper = Gson().fromJson<RedrockApiWrapper<Question>>(event.questionJson,
-                        object : TypeToken<RedrockApiWrapper<Question>>() {}.type)
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-
-            if (questionWrapper == null) {
+            val questionId = event.questionId
+            if (questionId.isEmpty()) {
                 toast(getString(R.string.qa_question_from_mine_loading_error))
                 finish()
-            } else if (!questionWrapper.isSuccessful) {
-                toast(questionWrapper.info
-                        ?: getString(R.string.qa_loading_from_mine_unknown_error))
-                finish()
             } else {
-                initViewModel(questionWrapper.data)
-                initView(questionWrapper.data)
-                viewModel.addQuestionView()
+                initViewModel(questionId)
+                viewModel.getQuestion(questionId)
+                viewModel.addQuestionView(questionId)
             }
         }
     }
