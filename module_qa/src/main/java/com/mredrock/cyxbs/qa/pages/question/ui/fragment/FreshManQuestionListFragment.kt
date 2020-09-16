@@ -57,7 +57,7 @@ class FreshManQuestionListFragment : BaseQuestionListFragment<FreshManQuestionLi
         }
         questionData.observe {
             if (it != null) {
-                AnswerListActivity.activityStart(this@FreshManQuestionListFragment, it, REQUEST_CODE_TO_ANSWER_LIST)
+                AnswerListActivity.activityStart(this@FreshManQuestionListFragment, it.id, REQUEST_CODE_TO_ANSWER_LIST)
             }
         }
     }

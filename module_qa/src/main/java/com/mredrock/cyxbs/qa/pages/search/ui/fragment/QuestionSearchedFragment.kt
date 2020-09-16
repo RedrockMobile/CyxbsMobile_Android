@@ -76,7 +76,7 @@ class QuestionSearchedFragment : BaseViewModelFragment<QuestionSearchedViewModel
         val headerRvAdapter = SearchResultHeaderAdapter()
 
         val questionListRvAdapter = QuestionListRvAdapter {
-            AnswerListActivity.activityStart(this, it, REQUEST_CODE_TO_ANSWER_List)
+            AnswerListActivity.activityStart(this, it.id, REQUEST_CODE_TO_ANSWER_List)
         }
         val footerRvAdapter = FooterRvAdapter {
             viewModel.retry()

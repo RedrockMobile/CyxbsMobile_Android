@@ -68,7 +68,7 @@ abstract class BaseQuestionListFragment<T : QuestionListViewModel> : BaseViewMod
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val questionListRvAdapter = QuestionListRvAdapter {
-            AnswerListActivity.activityStart(this, it, QuestionContainerFragment.REQUEST_LIST_REFRESH_ACTIVITY)
+            AnswerListActivity.activityStart(this, it.id, QuestionContainerFragment.REQUEST_LIST_REFRESH_ACTIVITY)
             activity?.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
             MobclickAgent.onEvent(requireContext(), CyxbsMob.Event.CLICK_QA_QUESTION, mutableMapOf(
                     Pair(CyxbsMob.Key.QA_PAGE, title)
