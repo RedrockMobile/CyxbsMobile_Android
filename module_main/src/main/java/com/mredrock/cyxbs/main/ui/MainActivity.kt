@@ -46,6 +46,8 @@ import org.greenrobot.eventbus.ThreadMode
 
 @Route(path = MAIN_MAIN)
 class MainActivity : BaseViewModelActivity<MainViewModel>(), EventBusLifecycleSubscriber {
+    override var isOpenLifeCycleLog = true
+
 
     override val viewModelClass = MainViewModel::class.java
 
@@ -92,7 +94,7 @@ class MainActivity : BaseViewModelActivity<MainViewModel>(), EventBusLifecycleSu
          * @see android.content.Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT
          */
         if ((intent.flags and Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT) != 0) {
-            finish()
+            finish()//保证不新建一个Activity
             return
         }
         DataBindingUtil.setContentView<MainActivityMainBinding>(this, R.layout.main_activity_main).apply {
@@ -109,7 +111,7 @@ class MainActivity : BaseViewModelActivity<MainViewModel>(), EventBusLifecycleSu
     private fun initActivity(bundle: Bundle?) {
         InAppMessageManager.getInstance(BaseApp.context).showCardMessage(this, "课表主页面") {} //友盟插屏消息关闭之后调用，暂未写功能
         mainService = ServiceManager.getService(IMainService::class.java)//初始化主模块服务
-        viewModel.startPage.observe(this, Observer { starPage -> viewModel.initStartPage(starPage) })
+        viewModel.startPage.observe(this, Observer { starPage -> viewModel.initStartPage(starPage) })//加载开始界面
         initUpdate()//初始化app更新服务
         initBottom()//初始化底部导航栏
         initBottomSheetBehavior()//初始化上拉容器BottomSheet课表
@@ -218,7 +220,14 @@ class MainActivity : BaseViewModelActivity<MainViewModel>(), EventBusLifecycleSu
     private fun checkSplash() {
         //判断是否下载了Splash图，下载了就直接显示
         if (isDownloadSplash(this@MainActivity)) {
-            if (!ServiceManager.getService(IAccountService::class.java).getVerifyService().isLogin() && !ServiceManager.getService(IAccountService::class.java).getVerifyService().isTouristMode()) {
+            if (
+                    !ServiceManager
+                            .getService(IAccountService::class.java)
+                            .getVerifyService().isLogin()
+                    &&
+                    !ServiceManager
+                            .getService(IAccountService::class.java)
+                            .getVerifyService().isTouristMode()) {//未登录且不是游客模式
                 //表示，已经下载了，但是用户主动退出登录
                 //这里判断的依据是防止onCreate()加载了闪屏页fragment，onStart()跳转到登录Activity，MainActivity被销毁，fragment没有activity
                 return

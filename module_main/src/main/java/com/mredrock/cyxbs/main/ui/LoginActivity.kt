@@ -48,6 +48,8 @@ class LoginActivity : BaseViewModelActivity<LoginViewModel>(), EventBusLifecycle
 
     override val loginConfig = LoginConfig(isCheckLogin = false)
 
+    override var isOpenLifeCycleLog = true
+
     @JvmField
     @Autowired(name = ACTIVITY_CLASS)
     var targetActivity: Class<*>? = null

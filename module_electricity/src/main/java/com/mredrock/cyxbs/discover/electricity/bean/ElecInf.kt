@@ -12,7 +12,14 @@ data class ElecInf(@SerializedName("elec_end") val elecEnd: String = "",
                    @SerializedName("record_time") val recordTime: String = "",
                    @SerializedName("elec_month") val elecMonth: String = "",
                    val lastmoney: String = "") : Serializable {
-    fun getEleCost() = "${elecCost[0]}.${elecCost[1]}"
+    fun getEleCost() :String{
+        //后端数据存在电费为0时返回值为{"0"}而不是{"0","0"}的情况，故加上是否越界的判断
+        return if (elecCost.size < 2){
+            "0.0"
+        } else {
+            "${elecCost[0]}.${elecCost[1]}"
+        }
+    }
     fun getAverage(): String = if (recordTime.length > 3) DecimalFormat("0.00")
             .format(elecSpend.toDouble() / recordTime.substring(3, recordTime.length - 1).toDouble()) else "0.00"
 

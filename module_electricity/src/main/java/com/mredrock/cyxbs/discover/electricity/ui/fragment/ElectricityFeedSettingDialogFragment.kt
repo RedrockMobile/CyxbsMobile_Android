@@ -16,7 +16,7 @@ import kotlinx.android.synthetic.main.electricity_dialog_dormitory_select.*
 import kotlinx.android.synthetic.main.electricity_dialog_dormitory_select.view.*
 
 class ElectricityFeedSettingDialogFragment : DialogFragment() {
-    var refresher: ((id: String, room: String) -> Unit)? = null
+    var refresher: ((id: String, room: String) -> Unit)? = null//好像Id表示楼栋代码号，room表示宿舍号，也就是输入这两个信息，以及输入了信息之后要做什么
     private val buildingNames by lazy(LazyThreadSafetyMode.NONE) { BUILDING_NAMES }
     private val buildingHeadNames by lazy(LazyThreadSafetyMode.NONE) { BUILDING_NAMES_HEADER }
 
@@ -79,7 +79,7 @@ class ElectricityFeedSettingDialogFragment : DialogFragment() {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     LogUtils.d("MyTag", "refresher:${this.accessibilityClassName}")
                 }
-                refresher?.invoke(id, room)
+                refresher?.invoke(id, room)//执行刷新所需的操作
                 this@ElectricityFeedSettingDialogFragment.dismiss()
 
                 context.defaultSharedPreferences.editor {

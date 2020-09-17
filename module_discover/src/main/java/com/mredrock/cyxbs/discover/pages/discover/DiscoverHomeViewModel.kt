@@ -19,10 +19,12 @@ import java.util.concurrent.TimeUnit
  * @author zixuan
  * 2019/11/20
  */
+
+//此处配置Banner的轮播与否
 class DiscoverHomeViewModel : BaseViewModel() {
-    val viewPagerInfo = MutableLiveData<List<RollerViewInfo>>()
-    val jwNews = MutableLiveData<List<NewsListItem>>()
-    val viewPagerTurner = MutableLiveData<Int>()
+    val viewPagerInfo = MutableLiveData<List<RollerViewInfo>>()//banner基本信息
+    val jwNews = MutableLiveData<List<NewsListItem>>()//教务新闻
+    val viewPagerTurner = MutableLiveData<Int>()//ViewPager轮播的触发标志，每4秒递增1
     var disposable: Disposable? = null
     var functionRvState: Parcelable? = null
     private val retrofit: Services by lazy {
@@ -42,6 +44,7 @@ class DiscoverHomeViewModel : BaseViewModel() {
 
     //标记是否未经被滑动，被滑动就取消下一次自动滚动
     var scrollFlag = true
+    //获取banner信息
     fun getRollInfo() {
         retrofit.getRollerViewInfo()
                 .mapOrThrowApiException()
@@ -52,6 +55,7 @@ class DiscoverHomeViewModel : BaseViewModel() {
                 .lifeCycle()
     }
 
+    //获取教务新闻
     fun getJwNews(page: Int) {
         retrofit.getNewsList(page)
                 .mapOrThrowApiException()

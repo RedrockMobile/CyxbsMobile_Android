@@ -14,12 +14,12 @@ import com.mredrock.cyxbs.common.utils.extensions.visible
 import com.mredrock.cyxbs.discover.electricity.bean.ElecInf
 import com.mredrock.cyxbs.electricity.R
 import kotlinx.android.synthetic.main.electricity_discover_feed.view.*
-
+//adapter中会设置View的Create方法
 class ElectricityFeedAdapter(private val elecInf: ElecInf?) : BaseFeedFragment.Adapter() {
 
     override fun onCreateView(context: Context, parent: ViewGroup): View {
         view = LayoutInflater.from(context).inflate(R.layout.electricity_discover_feed, parent, false)
-        refresh(elecInf)
+        refresh(elecInf)//刷新时OOB
         return view!!
     }
 

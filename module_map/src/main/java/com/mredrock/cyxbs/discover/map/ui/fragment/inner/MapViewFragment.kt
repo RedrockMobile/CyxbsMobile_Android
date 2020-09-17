@@ -111,7 +111,7 @@ class MapViewFragment : BaseFragment() {
                                 }
                             })
                 }
-            } else {
+            } else {//地图不存在
                 DataSet.savePictureVersion(data.pictureVersion)
                 map_layout.setUrl(data.mapUrl)
             }

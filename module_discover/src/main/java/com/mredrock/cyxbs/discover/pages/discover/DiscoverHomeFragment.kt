@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Point
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.OVER_SCROLL_IF_CONTENT_SCROLLS
@@ -44,7 +45,7 @@ import org.greenrobot.eventbus.ThreadMode
  * @author zixuan
  * 2019/11/20
  */
-
+//是否轮播在这里设置
 @Route(path = DISCOVER_ENTRY)
 class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>(), EventBusLifecycleSubscriber {
     companion object {
@@ -66,8 +67,8 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>(), Eve
         }
         initJwNews(vf_jwzx_detail, fl_discover_home_jwnews)
         initViewPager()
-        viewModel.getRollInfo()
-        iv_check_in.setOnClickListener {
+        viewModel.getRollInfo()//表示获取banner信息
+        iv_check_in.setOnClickListener {//签到按钮
             context?.doIfLogin("签到") {
                 ARouter.getInstance().build(MINE_CHECK_IN).navigation()
             }
@@ -96,15 +97,17 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>(), Eve
 
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
-                viewModel.scrollFlag = false
+                viewModel.scrollFlag = false//被拖拽设置为否，默认为true，即默认状态为自动轮播，当处于被拉拽之后就设置为false
             }
         })
-        vp_discover_home?.adapter = BannerAdapter(context!!, vp_discover_home)
+        vp_discover_home?.adapter = BannerAdapter(context!!, vp_discover_home)//配置主界面ViewPager2的Adapter
         viewModel.viewPagerInfo.observe {
+            //此处的list会在网络请求之中发生改变，并且在这里被监听到变化
+            //即在此处进行adapter数据的刷新
             if (it != null && context != null) {
                 (vp_discover_home?.adapter as BannerAdapter).apply {
                     urlList.clear()
-                    urlList.addAll(it)
+                    urlList.addAll(it)//此处获取到的轮播为4个
                     notifyDataSetChanged()
                 }
             }
@@ -113,6 +116,7 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>(), Eve
             if (viewModel.scrollFlag) {
                 vp_discover_home.currentItem += 1
             }
+            //每次轮播一次，都会自动更改为可以进行正常的轮播
             viewModel.scrollFlag = true
         }
     }
@@ -189,6 +193,8 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>(), Eve
     }
 
     private fun initFeeds() {
+        //貌似电费以及志愿者活动是在dis之中进行加载和处理的
+        //最下面的linerLayout是承载这俩Fragment的
         addFeedFragment(ServiceManager.getService(IElectricityService::class.java).getElectricityFeed())
         addFeedFragment(ServiceManager.getService(IVolunteerService::class.java).getVolunteerFeed())
         //处理手机屏幕过长导致feed无法填充满下方的情况
@@ -196,7 +202,7 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>(), Eve
             context?.let {
                 val point = Point()
                 (it.getSystemService(Context.WINDOW_SERVICE) as WindowManager).defaultDisplay.getSize(point)
-                ll_discover_feeds.minimumHeight = point.y - ll_discover_feeds.top
+                ll_discover_feeds.minimumHeight = point.y - ll_discover_feeds.top//最小为屏幕的高度减去ll的上方的高度
             }
 
         }

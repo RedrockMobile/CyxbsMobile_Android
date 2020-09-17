@@ -118,9 +118,11 @@ class TransConfigActivity(override val isFragmentActivity: Boolean = false) : Ba
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                if (s == null) return
+                if (s?.isEmpty()!!) return
                 s.replace(Regex("[^(a-fA-F0-9#)]"), "")
-                if (s.first() == '#' && (s.length == 7 || s.length == 9)) {
+                if (s.first() == '#'
+                        && (s.length == 7
+                                || s.length == 9)) {
                     try {
                         val color = Color.parseColor(s.toString())
                         colorView.setBackgroundColor(color)

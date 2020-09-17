@@ -16,6 +16,8 @@ import com.mredrock.cyxbs.discover.electricity.network.ApiService
  * Date: 2018/9/28 19:30
  * Description: com.mredrock.cyxbs.electricity.viewmodel
  */
+
+//通过ViewModel请求获得ChargeInf，进一步通过refresh进行重新加载数据
 class ChargeViewModel : BaseViewModel() {
     val chargeInfo: LiveData<ElecInf> = MutableLiveData()
     private val service: ApiService by lazy {
@@ -26,6 +28,7 @@ class ChargeViewModel : BaseViewModel() {
         service.getElectricityInfo(building, room)
                 .map {
                     if (it.isSuccessful) {
+                        //将ElectricityInfo转化为eleInf
                         it.elecInf
                     } else {
                         throw RedrockApiException(it.info, it.status)

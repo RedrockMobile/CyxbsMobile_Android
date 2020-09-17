@@ -24,10 +24,12 @@ class ElectricityFeedFragment : BaseFeedFragment<ChargeViewModel>() {
 
     override val viewModelClass: Class<ChargeViewModel> = ChargeViewModel::class.java
 
-    override var hasTopSplitLine = false
+    override var hasTopSplitLine = false//在志愿时长之上，故没有顶部分割线
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         //主要为了防止，使用游客模式，在此登录，导致的登录后状态未刷新，感觉听不规范的，游客模式之后还得统一管理
+        //即使用游客模式进入MainActivity，结果在查询电费的时候进行了登录
+        //在游客模式之中点击电费会弹出登录界面，而在这个界面中登录将引起用户状态的改变
         ServiceManager.getService(IAccountService::class.java).getVerifyService().addOnStateChangedListener {
             if (it == IUserStateService.UserState.LOGIN) {
                 context?.runOnUiThread {
@@ -47,14 +49,17 @@ class ElectricityFeedFragment : BaseFeedFragment<ChargeViewModel>() {
         setAdapter(ElectricityFeedUnboundAdapter())
         setTitle(getString(R.string.electricity_inquire_string))
         setSecondTitle(getString(R.string.electricity_free_count))
-        setOnClickListener {
+        setOnClickListener {//点击之后展示设置楼栋的画面
             context?.doIfLogin(getString(R.string.electricity_inquire_string)) {
+                //此处的parentFragmentManager为DiscoverFragment对应的Manager
                 parentFragmentManager.let {
+                    //此处的方法为已经登录之后的操作
+                    //此处的DialogFragment为设置宿舍位置的Fragment
                     ElectricityFeedSettingDialogFragment().apply {
                         refresher = { id, room ->
                             refreshCharge(id, room)
                         }
-                    }.show(it, "ElectricityFeedSetting")
+                    }.show(it, "ElectricityFeedSetting")//dialogFragment的show方法
                 }
 
             }
@@ -74,7 +79,7 @@ class ElectricityFeedFragment : BaseFeedFragment<ChargeViewModel>() {
 
         val adapter = getAdapter()
         if (adapter is ElectricityFeedAdapter) {
-            adapter.refresh(it)
+            adapter.refresh(it)//重新刷新
         } else {
             setAdapter(ElectricityFeedAdapter(it))
         }
@@ -93,7 +98,7 @@ class ElectricityFeedFragment : BaseFeedFragment<ChargeViewModel>() {
     }
 
     private fun refreshCharge(id: String, room: String) {
-        viewModel.getCharge(id, room)
+        viewModel.getCharge(id, room)//viewModel获取电费，通过mvvm架构进行刷新
     }
 
 

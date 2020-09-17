@@ -1,6 +1,7 @@
 package com.mredrock.cyxbs.widget.widget.page.trans
 
 import android.content.Context
+import android.widget.EditText
 import com.mredrock.cyxbs.common.utils.extensions.editor
 import com.mredrock.cyxbs.common.utils.extensions.sharedPreferences
 
