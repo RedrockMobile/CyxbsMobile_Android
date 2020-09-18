@@ -12,7 +12,6 @@ import com.mredrock.cyxbs.common.viewmodel.event.SingleLiveEvent
 import com.mredrock.cyxbs.mine.R
 import com.mredrock.cyxbs.mine.network.model.AskDraft
 import com.mredrock.cyxbs.mine.network.model.AskPosted
-import com.mredrock.cyxbs.mine.network.model.NavigateData
 import com.mredrock.cyxbs.mine.util.apiService
 import com.mredrock.cyxbs.mine.util.extension.disposeAll
 import com.mredrock.cyxbs.mine.util.extension.normalWrapper
@@ -129,24 +128,6 @@ class AskViewModel : BaseViewModel() {
         _askDraft.value = mutableListOf()
     }
 
-    //Question跳转请求的对象
-    val navigateEvent = SingleLiveEvent<NavigateData>()
-
-    fun getQuestion(qid: Int) {
-        apiService.getQuestion(qid.toString())
-                .setSchedulers()
-                .safeSubscribeBy (
-                        onNext = {
-                            //NavigateData不需要answerId字段
-                            val navigateData = NavigateData(qid, -1, it.string())
-                            navigateEvent.postValue(navigateData)
-                        },
-                        onError = {
-                            BaseApp.context.toast("获取提问信息失败")
-                        }
-                )
-                .lifeCycle()
-    }
 
     fun deleteDraftById(id: Int) {
         apiService.deleteDraftById(id)

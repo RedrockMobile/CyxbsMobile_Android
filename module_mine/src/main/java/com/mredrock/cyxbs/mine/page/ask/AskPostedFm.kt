@@ -7,14 +7,13 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.alibaba.android.arouter.launcher.ARouter
+import com.mredrock.cyxbs.common.config.QA_PARAM_QUESTION_ID
 import com.mredrock.cyxbs.common.config.QA_ANSWER_LIST
-import com.mredrock.cyxbs.common.event.OpenShareQuestionEvent
 import com.mredrock.cyxbs.mine.R
 import com.mredrock.cyxbs.mine.network.model.AskPosted
 import com.mredrock.cyxbs.mine.util.ui.BaseRVFragment
 import com.mredrock.cyxbs.mine.util.widget.RvFooter
 import kotlinx.android.synthetic.main.mine_list_item_my_ask_posted.view.*
-import org.greenrobot.eventbus.EventBus
 
 /**
  * Created by roger on 2019/12/1
@@ -34,10 +33,6 @@ class AskPostedFm : BaseRVFragment<AskPosted>() {
         })
         viewModel.eventOnAskPosted.observe(viewLifecycleOwner, Observer {
             setState(it)
-        })
-        viewModel.navigateEvent.observe(viewLifecycleOwner, Observer {
-            EventBus.getDefault().postSticky(OpenShareQuestionEvent(it.data))
-            ARouter.getInstance().build(QA_ANSWER_LIST).navigation()
         })
     }
 
@@ -60,7 +55,7 @@ class AskPostedFm : BaseRVFragment<AskPosted>() {
         if (data.type == "已解决") {
             holder.itemView.mine_ask_posted_tv_state.background = ResourcesCompat.getDrawable(resources, R.drawable.mine_shape_round_corner_blue, null)
             context?.let {
-                holder.itemView.mine_ask_posted_tv_disappear_at.setTextColor( ContextCompat.getColor(it, R.color.common_mine_about_text_color_blue))
+                holder.itemView.mine_ask_posted_tv_disappear_at.setTextColor(ContextCompat.getColor(it, R.color.common_mine_about_text_color_blue))
             }
         } else {
             holder.itemView.mine_ask_posted_tv_state.background = ResourcesCompat.getDrawable(resources, R.drawable.mine_shape_round_corner_brown, null)
@@ -69,7 +64,7 @@ class AskPostedFm : BaseRVFragment<AskPosted>() {
             }
         }
         holder.itemView.setOnClickListener {
-            viewModel.getQuestion(data.questionId)
+            ARouter.getInstance().build(QA_ANSWER_LIST).withString(QA_PARAM_QUESTION_ID, data.questionId.toString()).navigation()
         }
     }
 

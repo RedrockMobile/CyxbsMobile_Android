@@ -30,11 +30,9 @@ class AnswerListViewModel(private val questionId: String) : BaseViewModel() {
     val reportQuestionEvent = SingleLiveEvent<Boolean>()
     val reportAnswerEvent = SingleLiveEvent<Boolean>()
     val ignoreEvent = SingleLiveEvent<Boolean>()
-    val question = MutableLiveData<Question>()
 
     var networkState: LiveData<Int>? = null
     var initialLoad: LiveData<Int>? = null
-    private var myRewardCount = 0
 
     private var praiseNetworkState = NetworkState.SUCCESSFUL
     val refreshPreActivityEvent = SingleLiveEvent<Int>()
@@ -50,7 +48,7 @@ class AnswerListViewModel(private val questionId: String) : BaseViewModel() {
                 .setSchedulers()
                 .mapOrThrowApiException()
                 .safeSubscribeBy { data ->
-                    this.question.value = data
+                    //要先从问题，拿到回答数，再来配置paging加载
                     val initNum = if (data.answerNum in 1..5) data.answerNum else 6
                     val config = PagedList.Config.Builder()
                             .setEnablePlaceholders(false)
@@ -69,20 +67,10 @@ class AnswerListViewModel(private val questionId: String) : BaseViewModel() {
 
     }
 
-    fun getQuestion(id: String) {
-        ApiGenerator.getApiService(ApiService::class.java)
-                .getQuestion(id)
-                .setSchedulers()
-                .mapOrThrowApiException()
-                .safeSubscribeBy {
-                    question.value = it
-                }
-    }
-
     //增加浏览量，不用显示
-    fun addQuestionView(qid: String) {
+    fun addQuestionView() {
         ApiGenerator.getApiService(ApiService::class.java)
-                .addView(qid)
+                .addView(questionId)
                 .checkError()
                 .setSchedulers()
                 .doOnError {
@@ -91,10 +79,10 @@ class AnswerListViewModel(private val questionId: String) : BaseViewModel() {
                 .safeSubscribeBy { LogUtils.d("add QuestionView Success", it.toString()) }
     }
 
-    fun reportQuestion(qid: String, reportType: String) {
+    fun reportQuestion(reportType: String) {
         progressDialogEvent.value = ProgressDialogEvent.SHOW_NONCANCELABLE_DIALOG_EVENT
         ApiGenerator.getApiService(ApiService::class.java)
-                .reportQuestion(qid, reportType)
+                .reportQuestion(questionId, reportType)
                 .setSchedulers()
                 .checkError()
                 .doFinally { progressDialogEvent.value = ProgressDialogEvent.DISMISS_DIALOG_EVENT }
@@ -117,14 +105,6 @@ class AnswerListViewModel(private val questionId: String) : BaseViewModel() {
                     toastEvent.value = R.string.qa_hint_report_success
                     reportAnswerEvent.value = true
                 }
-    }
-
-    fun getMyReward() {
-        ApiGenerator.getApiService(ApiService::class.java)
-                .getScoreStatus()
-                .setSchedulers()
-                .mapOrThrowApiException()
-                .safeSubscribeBy { myRewardCount = it.integral }
     }
 
     fun invalidate() = factory?.answerDataSourceLiveData?.value?.invalidate()

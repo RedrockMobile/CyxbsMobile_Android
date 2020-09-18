@@ -11,8 +11,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.mredrock.cyxbs.common.config.QA_ANSWER_LIST
-import com.mredrock.cyxbs.common.event.OpenShareQuestionEvent
-import com.mredrock.cyxbs.common.mark.EventBusLifecycleSubscriber
+import com.mredrock.cyxbs.common.config.QA_PARAM_QUESTION_ID
 import com.mredrock.cyxbs.common.ui.BaseActivity
 import com.mredrock.cyxbs.common.utils.extensions.*
 import com.mredrock.cyxbs.common.viewmodel.event.ProgressDialogEvent
@@ -28,27 +27,23 @@ import com.mredrock.cyxbs.qa.ui.adapter.EmptyRvAdapter
 import com.mredrock.cyxbs.qa.ui.adapter.FooterRvAdapter
 import kotlinx.android.synthetic.main.qa_activity_answer_list.*
 import kotlinx.android.synthetic.main.qa_common_toolbar.*
-import org.greenrobot.eventbus.EventBus
-import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.ThreadMode
 
+//需要自定义viewModel加载时机，所有不能继承BaseViewModelActivity
 @Route(path = QA_ANSWER_LIST)
-class AnswerListActivity : BaseActivity(), EventBusLifecycleSubscriber {
+class AnswerListActivity : BaseActivity() {
     companion object {
         @JvmField
         val TAG: String = AnswerListActivity::class.java.simpleName
 
-        const val PARAM_QUESTION_ID = "question_id"
         const val REQUEST_REFRESH_LIST = 0x2
         const val REQUEST_REFRESH_QUESTION_ADOPTED = "adopted"
         const val REQUEST_REFRESH_ANSWER_REFRESH = "answerRefresh"
 
         fun activityStart(fragment: Fragment, questionId: String, requestCode: Int) {
-            fragment.startActivityForResult<AnswerListActivity>(requestCode, PARAM_QUESTION_ID to questionId)
+            fragment.startActivityForResult<AnswerListActivity>(requestCode, QA_PARAM_QUESTION_ID to questionId)
         }
     }
 
-    private lateinit var viewModel: AnswerListViewModel
     private var progressDialog: ProgressDialog? = null
     private fun initProgressBar() = ProgressDialog(this).apply {
         isIndeterminate = true
@@ -58,6 +53,7 @@ class AnswerListActivity : BaseActivity(), EventBusLifecycleSubscriber {
 
     override val isFragmentActivity = false
 
+    private lateinit var viewModel: AnswerListViewModel
     private lateinit var headerAdapter: AnswerListHeaderAdapter
     private lateinit var answerListAdapter: AnswerListAdapter
     private lateinit var footerRvAdapter: FooterRvAdapter
@@ -68,8 +64,8 @@ class AnswerListActivity : BaseActivity(), EventBusLifecycleSubscriber {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.qa_activity_answer_list)
-        questionId = intent.getStringExtra(PARAM_QUESTION_ID)
-        if (questionId.isNotEmpty()) {
+        if (intent.getStringExtra(QA_PARAM_QUESTION_ID) != null) {
+            questionId = intent.getStringExtra(QA_PARAM_QUESTION_ID)
             initViewModel(questionId)
         }
     }
@@ -95,11 +91,10 @@ class AnswerListActivity : BaseActivity(), EventBusLifecycleSubscriber {
                     progressDialog?.dismiss()
                 }
             }
-            question.observe {
+            questionLiveData.observe {
                 it ?: return@observe
                 initView(it)
-                viewModel.getQuestion(questionId)
-                viewModel.addQuestionView(questionId)
+                viewModel.addQuestionView()
             }
         }
     }
@@ -136,8 +131,7 @@ class AnswerListActivity : BaseActivity(), EventBusLifecycleSubscriber {
                 }
             }
             onPraiseClickListener = { i: Int, answer: Answer ->
-                if (viewModel.isDealing) {
-                } else {
+                if (!viewModel.isDealing) {
                     viewModel.clickPraiseButton(i, answer)
                     viewModel.apply {
                         refreshPreActivityEvent.observeNotNull {
@@ -175,8 +169,6 @@ class AnswerListActivity : BaseActivity(), EventBusLifecycleSubscriber {
     })
 
     private fun observeListChangeEvent() = viewModel.apply {
-        getMyReward()
-
         questionLiveData.observeNotNull {
             headerAdapter.refreshData(listOf(it))
         }
@@ -233,7 +225,7 @@ class AnswerListActivity : BaseActivity(), EventBusLifecycleSubscriber {
     private fun createQuestionReportDialog() = ReportDialog(this@AnswerListActivity).apply {
         setType(resources.getStringArray(R.array.qa_title_type)[0])
         pressReport = {
-            viewModel.reportQuestion(questionId, it)
+            viewModel.reportQuestion(it)
         }
         viewModel.reportQuestionEvent.observeNotNull {
             dismiss()
@@ -267,21 +259,4 @@ class AnswerListActivity : BaseActivity(), EventBusLifecycleSubscriber {
         }
     }
 
-
-    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
-    fun openShareQuestion(event: OpenShareQuestionEvent) {
-        if (intent.getStringExtra(PARAM_QUESTION_ID) != null) {
-            EventBus.getDefault().removeStickyEvent(event)
-        } else {
-            val questionId = event.questionId
-            if (questionId.isEmpty()) {
-                toast(getString(R.string.qa_question_from_mine_loading_error))
-                finish()
-            } else {
-                initViewModel(questionId)
-                viewModel.getQuestion(questionId)
-                viewModel.addQuestionView(questionId)
-            }
-        }
-    }
 }
