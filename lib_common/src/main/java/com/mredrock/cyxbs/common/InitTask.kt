@@ -6,9 +6,17 @@ import android.app.NotificationManager
 import android.content.Context
 import android.content.Context.NOTIFICATION_SERVICE
 import android.graphics.Color
+import android.net.Uri
+import android.widget.Toast
 import androidx.core.app.NotificationCompat
+import com.alibaba.android.arouter.launcher.ARouter
+import com.google.gson.JsonParser
 import com.meituan.android.walle.WalleChannelReader
 import com.mredrock.cyxbs.common.config.DebugDataModel
+import com.mredrock.cyxbs.common.config.QA_ANSWER_LIST
+import com.mredrock.cyxbs.common.service.ServiceManager
+import com.mredrock.cyxbs.common.service.account.IAccountService
+import com.mredrock.cyxbs.common.service.account.IUserStateService
 import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.debug
 import com.mredrock.cyxbs.common.utils.extensions.runOnUiThread
@@ -18,9 +26,9 @@ import com.umeng.commonsdk.statistics.common.DeviceConfig
 import com.umeng.message.IUmengRegisterCallback
 import com.umeng.message.PushAgent
 import com.umeng.message.UmengMessageHandler
+import com.umeng.message.UmengNotificationClickHandler
 import com.umeng.message.entity.UMessage
 import com.umeng.message.inapp.InAppMessageManager
-import java.lang.Exception
 
 
 /**
@@ -43,6 +51,8 @@ fun initUMeng(context: Context) {
         UMConfigure.setLogEnabled(BuildConfig.DEBUG)
         //友盟推送服务的接入
         val mPushAgent = PushAgent.getInstance(context)
+        mPushAgent.setNotificaitonOnForeground(true)
+        mPushAgent.setEnableForground(context, true)
         //注册推送服务，每次调用register方法都会回调该接口
         mPushAgent.register(object : IUmengRegisterCallback {
             // 这些回调是在子线程
@@ -66,12 +76,12 @@ fun initUMeng(context: Context) {
             (context.getSystemService(NOTIFICATION_SERVICE) as? NotificationManager)?.let { notificationManager ->
                 val channelId = "qa_channel"
                 val channelName: CharSequence = "邮问消息"
-                val importance = NotificationManager.IMPORTANCE_DEFAULT
+                val importance = NotificationManager.IMPORTANCE_HIGH
                 val notificationChannel = NotificationChannel(channelId, channelName, importance)
                 notificationChannel.enableLights(true)
-                notificationChannel.lightColor = Color.RED
+                notificationChannel.lightColor = Color.GREEN
                 notificationChannel.lockscreenVisibility = Notification.VISIBILITY_PUBLIC
-                notificationChannel.vibrationPattern = longArrayOf(0, 50, 50, 120, 500, 120)
+                notificationChannel.vibrationPattern = longArrayOf(0, 1000, 500, 500)
                 notificationManager.createNotificationChannel(notificationChannel)
             }
         }
@@ -84,7 +94,7 @@ fun initUMeng(context: Context) {
                         builder.setContentTitle(msg.title)
                                 .setContentText(msg.text)
                                 .setSmallIcon(getSmallIconId(context, msg))
-                                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                                .setPriority(NotificationCompat.PRIORITY_MAX)
                                 .setTicker(msg.ticker)
                                 .setAutoCancel(true)
                         builder.build()
@@ -93,8 +103,31 @@ fun initUMeng(context: Context) {
                 }
             }
         }
-        mPushAgent.setNotificaitonOnForeground(true)
-//    mPushAgent.setEnableForground(context,true)
+        val notificationClickHandler: UmengNotificationClickHandler = object : UmengNotificationClickHandler() {
+            override fun dealWithCustomAction(context: Context, msg: UMessage) {
+                val question_id = "question_id"
+                ARouter.getInstance().build(QA_ANSWER_LIST).withString(question_id, JsonParser.parseString(msg.custom).asJsonObject.get(question_id).asString).navigation()
+                Toast.makeText(context, msg.custom, Toast.LENGTH_LONG).show()
+            }
+        }
+        mPushAgent.notificationClickHandler = notificationClickHandler
+
+        var studentID = ServiceManager.getService(IAccountService::class.java).getUserService().getStuNum()
+        mPushAgent.addAlias(studentID, "cyxbs") { _, _ -> }
+        ServiceManager.getService(IAccountService::class.java).getVerifyService().addOnStateChangedListener {
+            when (it) {
+                IUserStateService.UserState.LOGIN -> {
+                    studentID = ServiceManager.getService(IAccountService::class.java).getUserService().getStuNum()
+                    mPushAgent.addAlias(studentID, "cyxbs") { _, _ -> }
+                }
+                IUserStateService.UserState.NOT_LOGIN -> {
+                    mPushAgent.deleteAlias(studentID, "cyxbs") { _, _ -> }
+                }
+                else -> {
+                }
+            }
+        }
+
         mPushAgent.messageHandler = messageHandler
         InAppMessageManager.getInstance(BaseApp.context).setInAppMsgDebugMode(true)
         debug {
@@ -109,37 +142,3 @@ fun initUMeng(context: Context) {
         e.printStackTrace()
     }
 }
-//
-////创建通知渠道
-//@RequiresApi(api = Build.VERSION_CODES.O)
-//private fun createNotificationChannel(channelId: String, channelName: String, importance: Int) {
-//    val channel = NotificationChannel(channelId, channelName, importance)
-//    val notificationManager = getSystemService(
-//            NOTIFICATION_SERVICE) as NotificationManager?
-//    notificationManager!!.createNotificationChannel(channel)
-//}
-//
-//fun sendUpgradeMsg(view: View?) {
-//    val manager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager?
-//    val notification: Notification = Builder(this, "upgrade")
-//            .setContentTitle("升级")
-//            .setContentText("程序员终于下班了。。")
-//            .setWhen(System.currentTimeMillis())
-//            .setSmallIcon(R.mipmap.ic_launcher)
-//            .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher))
-//            .setAutoCancel(true)
-//            .build()
-//    manager!!.notify(100, notification)
-//}
-//
-//fun sendComposeMsg(view: View?) {
-//    val manager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager?
-//    val notification: Notification = NotificationCompat.Builder(this, "compose")
-//            .setContentTitle("私信")
-//            .setContentText("有人私信向你提出问题")
-//            .setWhen(System.currentTimeMillis())
-//            .setSmallIcon(R.drawable.icon)
-//            .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.icon))
-//            .build()
-//    manager!!.notify(101, notification)
-//}
