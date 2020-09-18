@@ -35,8 +35,8 @@ open class BaseApp : Application() {
         super.onCreate()
         createChannel()
         //若以后还会有这种非必须在application启动时初始化的第三方SDK请写在InitTask中然后添加到这里的just里面
-        initUMeng(context)
         initRouter()//ARouter放在子线程会影响使用
+        initUMeng(context)
         //不用放到service里面，只是debug会用到，
         //而且这是轻量级操作，不会对启动速度造成太大的影响
 //        CrashHandler.init(applicationContext)
