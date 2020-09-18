@@ -9,7 +9,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.widget.TextView
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
@@ -20,10 +19,7 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.mredrock.cyxbs.common.bean.RedrockApiWrapper
 import com.mredrock.cyxbs.common.bean.isSuccessful
-import com.mredrock.cyxbs.common.config.IS_ANSWER
-import com.mredrock.cyxbs.common.config.IS_COMMENT
-import com.mredrock.cyxbs.common.config.NAVIGATE_FROM_WHERE
-import com.mredrock.cyxbs.common.config.QA_COMMENT_LIST
+import com.mredrock.cyxbs.common.config.*
 import com.mredrock.cyxbs.common.event.OpenShareCommentEvent
 import com.mredrock.cyxbs.common.mark.EventBusLifecycleSubscriber
 import com.mredrock.cyxbs.common.ui.BaseActivity
@@ -133,7 +129,7 @@ class CommentListActivity : BaseActivity(), EventBusLifecycleSubscriber {
                 textSize = 15f
                 visible()
                 setOnClickListener {
-                    this@CommentListActivity.startActivity<AnswerListActivity>(AnswerListActivity.PARAM_QUESTION_ID to question.id)
+                    this@CommentListActivity.startActivity<AnswerListActivity>(QA_PARAM_QUESTION_ID to question.id)
                     this@CommentListActivity.finish()
                 }
             })
