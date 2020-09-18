@@ -106,4 +106,4 @@ const val DISCOVERY_ROLLER_VIEW_INFO = 1
 const val COURSE_POS_TO_MAP = "COURSE_POS_TO_MAP"
 
 //qa进入回答列表传入的问题id的key
-const val QA_PARAM_QUESTION_ID = "qa_question_id"
+const val QA_PARAM_QUESTION_ID = "question_id"
