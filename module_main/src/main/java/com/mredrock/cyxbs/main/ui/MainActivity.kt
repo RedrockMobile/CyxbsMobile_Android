@@ -270,8 +270,10 @@ class MainActivity : BaseViewModelActivity<MainViewModel>(), EventBusLifecycleSu
                 commit()
             }
         }
+        // 这玩意是干嘛呢？从内部协议跳转时需要的,详情请看飞书文档
+        val tabIndex = intent.getStringExtra(TAB_INDEX).toIntOrNull()
         //加载发现
-        bottomHelper.selectTab(0)
+        bottomHelper.selectTab(tabIndex ?: 0)
     }
 
 

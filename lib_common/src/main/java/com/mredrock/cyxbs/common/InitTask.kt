@@ -6,7 +6,6 @@ import android.app.NotificationManager
 import android.content.Context
 import android.content.Context.NOTIFICATION_SERVICE
 import android.graphics.Color
-import android.net.Uri
 import android.widget.Toast
 import androidx.core.app.NotificationCompat
 import com.alibaba.android.arouter.launcher.ARouter
@@ -20,6 +19,7 @@ import com.mredrock.cyxbs.common.service.account.IUserStateService
 import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.debug
 import com.mredrock.cyxbs.common.utils.extensions.runOnUiThread
+import com.mredrock.cyxbs.common.utils.jump.JumpProtocol
 import com.umeng.analytics.MobclickAgent
 import com.umeng.commonsdk.UMConfigure
 import com.umeng.commonsdk.statistics.common.DeviceConfig
@@ -105,9 +105,10 @@ fun initUMeng(context: Context) {
         }
         val notificationClickHandler: UmengNotificationClickHandler = object : UmengNotificationClickHandler() {
             override fun dealWithCustomAction(context: Context, msg: UMessage) {
-                val question_id = "question_id"
-                ARouter.getInstance().build(QA_ANSWER_LIST).withString(question_id, JsonParser.parseString(msg.custom).asJsonObject.get(question_id).asString).navigation()
-                Toast.makeText(context, msg.custom, Toast.LENGTH_LONG).show()
+                val asJsonObject = JsonParser.parseString(msg.custom).asJsonObject
+                asJsonObject.get("uri")?.let {
+                    JumpProtocol.start(it.asString)
+                }
             }
         }
         mPushAgent.notificationClickHandler = notificationClickHandler
