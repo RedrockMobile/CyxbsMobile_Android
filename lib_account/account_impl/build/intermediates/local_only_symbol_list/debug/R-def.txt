@@ -1,0 +1,5 @@
+R_DEF: Internal format may change without notice
+local
+string account_login_later
+string account_login_now
+string account_whether_login

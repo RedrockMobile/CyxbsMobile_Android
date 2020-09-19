@@ -5,8 +5,8 @@ import android.view.View
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.mredrock.cyxbs.common.config.DISCOVER_ELECTRICITY_FEED
 import com.mredrock.cyxbs.common.service.ServiceManager
-import com.mredrock.cyxbs.common.service.account.IAccountService
-import com.mredrock.cyxbs.common.service.account.IUserStateService
+import com.mredrock.cyxbs.account.IAccountService
+import com.mredrock.cyxbs.account.IUserStateService
 import com.mredrock.cyxbs.common.ui.BaseFeedFragment
 import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
 import com.mredrock.cyxbs.common.utils.extensions.doIfLogin

@@ -1,0 +1,26 @@
+{
+  "version": 1,
+  "applicationId": "com.mredrock.cyxbs.account",
+  "variantType": "LIBRARY",
+  "elements": [
+    {
+      "outputType": {
+        "type": "MERGED_MANIFESTS"
+      },
+      "apkData": {
+        "type": "MAIN",
+        "splits": [],
+        "versionCode": -1,
+        "outputFile": "lib_account-debug.aar",
+        "fullName": "debug",
+        "baseName": "debug",
+        "dirName": ""
+      },
+      "path": "../../library_manifest/debug/AndroidManifest.xml",
+      "properties": {
+        "packageId": "com.mredrock.cyxbs.account",
+        "split": ""
+      }
+    }
+  ]
+}

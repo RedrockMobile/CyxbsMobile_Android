@@ -16,8 +16,8 @@ import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.bean.LoginConfig
 import com.mredrock.cyxbs.common.config.DISCOVER_GRADES
 import com.mredrock.cyxbs.common.service.ServiceManager
-import com.mredrock.cyxbs.common.service.account.IAccountService
-import com.mredrock.cyxbs.common.service.account.IUserService
+import com.mredrock.cyxbs.account.IAccountService
+import com.mredrock.cyxbs.account.IUserService
 import com.mredrock.cyxbs.common.ui.BaseActivity
 import com.mredrock.cyxbs.discover.grades.R
 import com.mredrock.cyxbs.discover.grades.bean.Exam

@@ -1,0 +1,25 @@
+-- Merging decision tree log ---
+manifest
+ADDED from /Users/zixuan/AndroidStudioProjects/CyxbsMobile_Android/lib_account/src/main/AndroidManifest.xml:2:1-50
+INJECTED from /Users/zixuan/AndroidStudioProjects/CyxbsMobile_Android/lib_account/src/main/AndroidManifest.xml:2:1-50
+INJECTED from /Users/zixuan/AndroidStudioProjects/CyxbsMobile_Android/lib_account/src/main/AndroidManifest.xml:2:1-50
+	package
+		ADDED from /Users/zixuan/AndroidStudioProjects/CyxbsMobile_Android/lib_account/src/main/AndroidManifest.xml:2:11-47
+		INJECTED from /Users/zixuan/AndroidStudioProjects/CyxbsMobile_Android/lib_account/src/main/AndroidManifest.xml
+		INJECTED from /Users/zixuan/AndroidStudioProjects/CyxbsMobile_Android/lib_account/src/main/AndroidManifest.xml
+	xmlns:android
+		ADDED from /Users/zixuan/AndroidStudioProjects/CyxbsMobile_Android/lib_account/src/main/AndroidManifest.xml:2:1-50
+uses-sdk
+INJECTED from /Users/zixuan/AndroidStudioProjects/CyxbsMobile_Android/lib_account/src/main/AndroidManifest.xml reason: use-sdk injection requested
+INJECTED from /Users/zixuan/AndroidStudioProjects/CyxbsMobile_Android/lib_account/src/main/AndroidManifest.xml
+INJECTED from /Users/zixuan/AndroidStudioProjects/CyxbsMobile_Android/lib_account/src/main/AndroidManifest.xml
+INJECTED from /Users/zixuan/AndroidStudioProjects/CyxbsMobile_Android/lib_account/src/main/AndroidManifest.xml
+INJECTED from /Users/zixuan/AndroidStudioProjects/CyxbsMobile_Android/lib_account/src/main/AndroidManifest.xml
+	android:targetSdkVersion
+		INJECTED from /Users/zixuan/AndroidStudioProjects/CyxbsMobile_Android/lib_account/src/main/AndroidManifest.xml
+		ADDED from /Users/zixuan/AndroidStudioProjects/CyxbsMobile_Android/lib_account/src/main/AndroidManifest.xml
+		INJECTED from /Users/zixuan/AndroidStudioProjects/CyxbsMobile_Android/lib_account/src/main/AndroidManifest.xml
+	android:minSdkVersion
+		INJECTED from /Users/zixuan/AndroidStudioProjects/CyxbsMobile_Android/lib_account/src/main/AndroidManifest.xml
+		ADDED from /Users/zixuan/AndroidStudioProjects/CyxbsMobile_Android/lib_account/src/main/AndroidManifest.xml
+		INJECTED from /Users/zixuan/AndroidStudioProjects/CyxbsMobile_Android/lib_account/src/main/AndroidManifest.xml

@@ -15,7 +15,7 @@ import com.mredrock.cyxbs.common.bean.LoginConfig
 import com.mredrock.cyxbs.common.component.JToolbar
 import com.mredrock.cyxbs.common.mark.EventBusLifecycleSubscriber
 import com.mredrock.cyxbs.common.service.ServiceManager
-import com.mredrock.cyxbs.common.service.account.IAccountService
+import com.mredrock.cyxbs.account.IAccountService
 import com.mredrock.cyxbs.common.slide.AbsSlideableActivity
 import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.getDarkModeStatus
