@@ -126,7 +126,7 @@ class AnswerListActivity : BaseActivity() {
         answerListAdapter = AnswerListAdapter().apply {
             onItemClickListener = {
                 if (viewModel.questionLiveData.value != null) {
-                    CommentListActivity.activityStart(this@AnswerListActivity, viewModel.questionLiveData.value!!, it)
+                    CommentListActivity.activityStart(this@AnswerListActivity, it.id)
                     overridePendingTransition(R.anim.common_slide_in_from_bottom_with_bezier, R.anim.common_scale_fade_out_with_bezier)
                 }
             }

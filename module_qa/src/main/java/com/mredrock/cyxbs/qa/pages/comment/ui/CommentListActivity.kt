@@ -15,19 +15,12 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.alibaba.android.arouter.facade.annotation.Route
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
-import com.mredrock.cyxbs.common.bean.RedrockApiWrapper
-import com.mredrock.cyxbs.common.bean.isSuccessful
 import com.mredrock.cyxbs.common.config.*
-import com.mredrock.cyxbs.common.event.OpenShareCommentEvent
-import com.mredrock.cyxbs.common.mark.EventBusLifecycleSubscriber
 import com.mredrock.cyxbs.common.ui.BaseActivity
 import com.mredrock.cyxbs.common.utils.extensions.*
 import com.mredrock.cyxbs.common.viewmodel.event.ProgressDialogEvent
 import com.mredrock.cyxbs.qa.R
-import com.mredrock.cyxbs.qa.bean.Answer
-import com.mredrock.cyxbs.qa.bean.Question
+import com.mredrock.cyxbs.qa.bean.AnswerDetail
 import com.mredrock.cyxbs.qa.component.recycler.RvAdapterWrapper
 import com.mredrock.cyxbs.qa.network.NetworkState
 import com.mredrock.cyxbs.qa.pages.answer.ui.AnswerListActivity
@@ -37,26 +30,18 @@ import com.mredrock.cyxbs.qa.ui.adapter.EmptyRvAdapter
 import com.mredrock.cyxbs.qa.ui.adapter.FooterRvAdapter
 import com.mredrock.cyxbs.qa.ui.widget.CommonDialog
 import com.mredrock.cyxbs.qa.utils.setPraise
-import com.mredrock.cyxbs.qa.utils.toDate
 import kotlinx.android.synthetic.main.qa_activity_comment_list.*
 import kotlinx.android.synthetic.main.qa_comment_new_publish_layout.*
-import org.greenrobot.eventbus.EventBus
-import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.ThreadMode
 
 @Route(path = QA_COMMENT_LIST)
-class CommentListActivity : BaseActivity(), EventBusLifecycleSubscriber {
+class CommentListActivity : BaseActivity() {
     companion object {
         const val REQUEST_CODE = 0x123
-        const val PARAM_QUESTION = "question"
-        const val PARAM_ANSWER = "answer"
 
         fun activityStart(activity: Activity,
-                          question: Question,
-                          answer: Answer) {
+                          answerId: String) {
             activity.startActivityForResult<CommentListActivity>(REQUEST_CODE,
-                    PARAM_QUESTION to question,
-                    PARAM_ANSWER to answer)
+                    QA_PARAM_ANSWER_ID to answerId)
 
         }
     }
@@ -78,26 +63,22 @@ class CommentListActivity : BaseActivity(), EventBusLifecycleSubscriber {
     private lateinit var commentListRvAdapter: CommentListRvAdapter
     private lateinit var answerReportDialog: ReportDialog
 
-    private lateinit var answer: Answer
-    private lateinit var question: Question
+    private var answer: AnswerDetail? = null
 
+    private var aid = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.qa_activity_comment_list)
         intentBack = Intent()
-        if (intent.getParcelableExtra<Question>(PARAM_QUESTION) != null && intent.getParcelableExtra<Answer>(PARAM_ANSWER) != null) {
-            answer = intent.getParcelableExtra(PARAM_ANSWER)
-            question = intent.getParcelableExtra(PARAM_QUESTION)
-            initViewModel(question.id, answer)
-            initToolbar()
-            initRv(!question.isSelf, question.isAnonymous)
-            initCommentSheet()
+        if (intent.getStringExtra(QA_PARAM_ANSWER_ID) != null) {
+            aid = intent.getStringExtra(QA_PARAM_ANSWER_ID)
+            initViewModel(aid)
         }
     }
 
-    private fun initViewModel(questionId: String, answer: Answer) {
-        viewModel = ViewModelProvider(this, CommentListViewModel.Factory(questionId, answer)).get(CommentListViewModel::class.java)
+    private fun initViewModel(aid: String) {
+        viewModel = ViewModelProvider(this, CommentListViewModel.Factory(aid)).get(CommentListViewModel::class.java)
         viewModel.apply {
             toastEvent.observe { str -> str?.let { toast(it) } }
             longToastEvent.observe { str -> str?.let { longToast(it) } }
@@ -110,14 +91,22 @@ class CommentListActivity : BaseActivity(), EventBusLifecycleSubscriber {
                     progressDialog?.dismiss()
                 }
             }
+            answerLiveData.observeNotNull {
+                answer = it
+                qa_tv_toolbar_title.text = baseContext.getString(R.string.qa_comment_list_comment_count, it.commentNum.toString())
+                initRv(it.answerOwner, it.questionIsAnonymous)
+                initToolbar(it)
+                headerAdapter.refreshData(listOf(it))
+                observeListChangeEvent()
+            }
         }
         answerReportDialog = createAnswerReportDialog()
     }
 
-    private fun initToolbar() {
+    private fun initToolbar(answer: AnswerDetail) {
         qa_ib_toolbar_back.setOnClickListener { finish() }
         val commentNub = answer.commentNum
-        qa_tv_toolbar_title.text = baseContext.getString(R.string.qa_comment_list_comment_count, commentNub)
+        qa_tv_toolbar_title.text = baseContext.getString(R.string.qa_comment_list_comment_count, commentNub.toString())
         if (intent.getIntExtra(NAVIGATE_FROM_WHERE, IS_COMMENT) == IS_ANSWER) {
             val lay = qa_ib_toolbar_more.layoutParams
             lay.width = ViewGroup.LayoutParams.WRAP_CONTENT
@@ -129,13 +118,13 @@ class CommentListActivity : BaseActivity(), EventBusLifecycleSubscriber {
                 textSize = 15f
                 visible()
                 setOnClickListener {
-                    this@CommentListActivity.startActivity<AnswerListActivity>(QA_PARAM_QUESTION_ID to question.id)
+                    this@CommentListActivity.startActivity<AnswerListActivity>(QA_PARAM_QUESTION_ID to answer.questionId)
                     this@CommentListActivity.finish()
                 }
             })
             qa_ib_toolbar_more.gone()
         } else {
-            if (!answer.isSelf) {
+            if (!answer.answerOwner) {
                 qa_ib_toolbar_more.setOnClickListener {
                     doIfLogin {
                         answerReportDialog.show()
@@ -148,10 +137,11 @@ class CommentListActivity : BaseActivity(), EventBusLifecycleSubscriber {
     }
 
     private fun initRv(showAdoptIcon: Boolean, questionAnonymous: Boolean) {
+        if (answer == null) return
         headerAdapter = CommentListHeaderRvAdapter(showAdoptIcon).apply {
             onAdoptClickListener = { aId ->
-                if (!question.hasAdoptedAnswer) {
-                    if (question.disappearAt.toDate().time > System.currentTimeMillis()) {
+                if (answer!!.answerIsAdopted) {
+                    if (answer!!.disappearAt > System.currentTimeMillis()) {
                         CommonDialog(this@CommentListActivity).apply {
                             initView(
                                     icon = R.drawable.qa_ic_answer_accept,
@@ -192,7 +182,6 @@ class CommentListActivity : BaseActivity(), EventBusLifecycleSubscriber {
             adapter = adapterWrapper
         }
         swipe_refresh_layout.setOnRefreshListener { viewModel.invalidateCommentList() }
-        observeListChangeEvent()
     }
 
 
@@ -204,10 +193,6 @@ class CommentListActivity : BaseActivity(), EventBusLifecycleSubscriber {
     })
 
     private fun observeListChangeEvent() = viewModel.apply {
-        answerLiveData.observeNotNull {
-            qa_tv_toolbar_title.text = baseContext.getString(R.string.qa_comment_list_comment_count, it.commentNum)
-            headerAdapter.refreshData(listOf(it))
-        }
         backAndRefreshAnswerAdoptedEvent.observeNotNull {
             intentBack.putExtra(AnswerListActivity.REQUEST_REFRESH_QUESTION_ADOPTED, 1)
             setResult(Activity.RESULT_OK, intentBack)
@@ -218,11 +203,16 @@ class CommentListActivity : BaseActivity(), EventBusLifecycleSubscriber {
         }
 
 
-        commentList.observe { commentListRvAdapter.submitList(it) }
+        commentList?.observeNotNull {
+            commentListRvAdapter.submitList(it)
+        }
 
-        networkState.observeNotNull { footerRvAdapter.refreshData(listOf(it)) }
+        networkState?.observeNotNull {
+            footerRvAdapter.refreshData(listOf(it))
+        }
 
-        initialLoad.observe {
+        initialLoad?.observe {
+            it ?: return@observe
             when (it) {
                 NetworkState.LOADING -> {
                     swipe_refresh_layout.isRefreshing = true
@@ -235,7 +225,10 @@ class CommentListActivity : BaseActivity(), EventBusLifecycleSubscriber {
             }
         }
         praiseEvent.observeNotNull {
-            tv_comment_praise.setPraise(answerLiveData.value?.praiseNum, answerLiveData.value?.isPraised)
+            tv_comment_praise.setPraise(answerLiveData.value?.praiseNum.toString(), answerLiveData.value?.answerIsPraised)
+        }
+        questionData.observe {
+
         }
     }
 
@@ -254,11 +247,10 @@ class CommentListActivity : BaseActivity(), EventBusLifecycleSubscriber {
             }
         }
         tv_comment_praise.apply {
-            setPraise(answer.praiseNum, answer.isPraised)
+            setPraise(answer?.praiseNum.toString(), answer?.answerIsPraised)
             setOnClickListener {
                 doIfLogin {
-                    if (viewModel.isDealing) {
-                    } else {
+                    if (!viewModel.isDealing) {
                         viewModel.clickPraiseButton()
                     }
                 }
@@ -274,41 +266,6 @@ class CommentListActivity : BaseActivity(), EventBusLifecycleSubscriber {
         }
         viewModel.reportAnswerEvent.observeNotNull {
             dismiss()
-        }
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
-    fun openShareComment(event: OpenShareCommentEvent) {
-        if (intent.getParcelableExtra<Question>(PARAM_QUESTION) != null && intent.getParcelableExtra<Question>(PARAM_ANSWER) != null) {
-            EventBus.getDefault().removeStickyEvent(event)
-        } else {
-            var answerWrapper: RedrockApiWrapper<Answer>? = null
-
-            try {
-                answerWrapper = Gson().fromJson<RedrockApiWrapper<Answer>>(event.answerJson,
-                        object : TypeToken<RedrockApiWrapper<Answer>>() {}.type)
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-
-            if (answerWrapper == null) {
-                toast(getString(R.string.qa_answer_from_mine_loading_error))
-                finish()
-            } else if (!answerWrapper.isSuccessful) {
-                toast(answerWrapper.info ?: getString(R.string.qa_loading_from_mine_unknown_error))
-                finish()
-            } else {
-                answer = answerWrapper.data
-                initViewModel(event.questionId, answerWrapper.data)
-                viewModel.getQuestionInfo()
-                viewModel.questionData.observe {
-                    if (it == null) finish()
-                    question = it!!
-                    initRv(!it.isSelf, it.isAnonymous)
-                    initToolbar()
-                    initCommentSheet()
-                }
-            }
         }
     }
 

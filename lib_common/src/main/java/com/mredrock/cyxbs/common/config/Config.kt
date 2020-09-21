@@ -107,3 +107,6 @@ const val COURSE_POS_TO_MAP = "COURSE_POS_TO_MAP"
 
 //qa进入回答列表传入的问题id的key
 const val QA_PARAM_QUESTION_ID = "question_id"
+
+//qa进入评论列表传入的问题id的key
+const val QA_PARAM_ANSWER_ID = "answer_id"

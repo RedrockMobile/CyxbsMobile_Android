@@ -143,6 +143,10 @@ interface ApiService {
     @POST("app/index.php/QA/Question/getDetailedInfo")
     fun getQuestion(@Field("question_id") qid: String): Observable<RedrockApiWrapper<Question>>
 
+    @FormUrlEncoded()
+    @POST("app/index.php/QA/Answer/getAnswer")
+    fun getAnswer(@Field("answer_id") answerId: String): Observable<RedrockApiWrapper<AnswerDetail>>
+
     @FormUrlEncoded
     @POST("app/index.php/QA/Question/getHotQuestion")
     fun getHotQuestion(@Field("page")

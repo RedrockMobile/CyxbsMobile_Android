@@ -8,13 +8,12 @@ import com.alibaba.android.arouter.launcher.ARouter
 import com.mredrock.cyxbs.common.config.IS_COMMENT
 import com.mredrock.cyxbs.common.config.NAVIGATE_FROM_WHERE
 import com.mredrock.cyxbs.common.config.QA_COMMENT_LIST
-import com.mredrock.cyxbs.common.event.OpenShareCommentEvent
+import com.mredrock.cyxbs.common.config.QA_PARAM_ANSWER_ID
 import com.mredrock.cyxbs.mine.R
 import com.mredrock.cyxbs.mine.network.model.Comment
 import com.mredrock.cyxbs.mine.util.ui.BaseRVFragment
 import com.mredrock.cyxbs.mine.util.widget.RvFooter
 import kotlinx.android.synthetic.main.mine_list_item_comment_comment.view.*
-import org.greenrobot.eventbus.EventBus
 
 /**
  * Created by roger on 2019/12/5
@@ -37,8 +36,7 @@ class CommentFragment : BaseRVFragment<Comment>() {
             setNewData(it)
         })
         viewModel.navigateEventOnComment.observe(viewLifecycleOwner, Observer {
-            EventBus.getDefault().postSticky(OpenShareCommentEvent(it.qid.toString(), it.data))
-            ARouter.getInstance().build(QA_COMMENT_LIST).withInt(NAVIGATE_FROM_WHERE, IS_COMMENT).navigation()
+            ARouter.getInstance().build(QA_COMMENT_LIST).withInt(NAVIGATE_FROM_WHERE, IS_COMMENT).withString(QA_PARAM_ANSWER_ID, it.id.toString()).navigation()
         })
     }
 
