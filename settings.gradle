@@ -1,3 +1,5 @@
+include ':module_main:main_impl'
+include ':module_main:main_api'
 include ':lib_update:update_impl'
 include ':lib_update:update_api'
 include ':lib_account:account_impl'

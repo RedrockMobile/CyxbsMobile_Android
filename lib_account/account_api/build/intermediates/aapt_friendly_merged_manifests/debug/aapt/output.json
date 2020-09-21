@@ -12,7 +12,7 @@
         "splits": [],
         "versionCode": 1,
         "versionName": "1.0",
-        "outputFile": "account_api-debug.aar",
+        "outputFile": "account_impl-debug.aar",
         "fullName": "debug",
         "baseName": "debug",
         "dirName": ""

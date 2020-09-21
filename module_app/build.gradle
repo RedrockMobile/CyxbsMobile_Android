@@ -154,7 +154,7 @@ dependencies {
     implementation project(':lib_account:account_impl')
     implementation project(':lib_update:update_impl')
     if (!isSingleModuleDebug.toBoolean()) {
-        implementation project(':module_main')
+        implementation project(':module_main:main_impl')
         implementation project(':module_course')
         implementation project(':module_qa')
         implementation project(':module_discover')

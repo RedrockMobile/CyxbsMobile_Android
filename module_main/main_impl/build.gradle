@@ -1,0 +1,14 @@
+apply from: config
+
+dependencies {
+    implementation project(':module_main:main_api')
+}
+android {
+    defaultConfig {
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments = [AROUTER_MODULE_NAME: project.getName()]
+            }
+        }
+    }
+}
