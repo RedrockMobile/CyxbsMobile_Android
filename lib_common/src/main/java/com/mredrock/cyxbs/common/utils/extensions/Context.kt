@@ -20,7 +20,7 @@ import com.alibaba.android.arouter.launcher.ARouter
 import com.mredrock.cyxbs.common.bean.LoginConfig
 import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.common.config.ACTIVITY_CLASS
-import com.mredrock.cyxbs.common.config.MAIN_LOGIN
+import com.mredrock.cyxbs.main.MAIN_LOGIN
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.account.IAccountService
 import com.mredrock.cyxbs.common.utils.Internals

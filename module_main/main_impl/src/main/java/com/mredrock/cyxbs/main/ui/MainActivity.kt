@@ -29,6 +29,7 @@ import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
 import com.mredrock.cyxbs.common.utils.extensions.getStatusBarHeight
 import com.mredrock.cyxbs.common.utils.extensions.onTouch
 import com.mredrock.cyxbs.common.utils.extensions.topPadding
+import com.mredrock.cyxbs.main.MAIN_MAIN
 import com.mredrock.cyxbs.main.R
 import com.mredrock.cyxbs.main.components.DebugDataDialog
 import com.mredrock.cyxbs.main.utils.BottomNavigationHelper
