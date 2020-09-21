@@ -121,4 +121,5 @@ dependencies {
     api 'com.github.mmin18:realtimeblurview:1.2.1'
     api project(path: ':photolibrary-2.5')
     api project(":lib_account:account_api")
+    api project(":lib_update:update_api")
 }

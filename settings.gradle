@@ -1,3 +1,5 @@
+include ':lib_update:update_impl'
+include ':lib_update:update_api'
 include ':lib_account:account_impl'
 include ':lib_account:account_api'
 include ':photolibrary-2.5'

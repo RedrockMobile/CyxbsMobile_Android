@@ -21,8 +21,8 @@ import com.mredrock.cyxbs.common.mark.EventBusLifecycleSubscriber
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.account.IAccountService
 import com.mredrock.cyxbs.common.service.main.IMainService
-import com.mredrock.cyxbs.common.service.update.AppUpdateStatus
-import com.mredrock.cyxbs.common.service.update.IAppUpdateService
+import com.mredrock.cyxbs.update.AppUpdateStatus
+import com.mredrock.cyxbs.update.IAppUpdateService
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.debug
 import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences

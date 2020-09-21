@@ -1,4 +1,4 @@
-package com.mredrock.cyxbs.common.service.update
+package com.mredrock.cyxbs.update
 
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.LiveData
