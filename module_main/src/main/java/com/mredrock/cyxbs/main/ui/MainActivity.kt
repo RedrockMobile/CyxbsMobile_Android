@@ -6,7 +6,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.FrameLayout
-import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import com.alibaba.android.arouter.facade.annotation.Route
@@ -30,7 +29,7 @@ import com.mredrock.cyxbs.common.utils.extensions.getStatusBarHeight
 import com.mredrock.cyxbs.common.utils.extensions.onTouch
 import com.mredrock.cyxbs.common.utils.extensions.topPadding
 import com.mredrock.cyxbs.main.R
-import com.mredrock.cyxbs.main.components.DebugDataDialog
+import com.mredrock.cyxbs.main.debug.DebugActivity
 import com.mredrock.cyxbs.main.utils.BottomNavigationHelper
 import com.mredrock.cyxbs.main.utils.entryContains
 import com.mredrock.cyxbs.main.utils.getFragment
@@ -207,7 +206,7 @@ class MainActivity : BaseViewModelActivity<MainViewModel>(), EventBusLifecycleSu
         // 长按我的展现测试数据
         debug {
             mine.setOnLongClickListener {
-                DebugDataDialog(this).show()
+                startActivity<DebugActivity>()
                 true
             }
         }
@@ -271,7 +270,7 @@ class MainActivity : BaseViewModelActivity<MainViewModel>(), EventBusLifecycleSu
             }
         }
         // 这玩意是干嘛呢？从内部协议跳转时需要的,详情请看飞书文档
-        val tabIndex = intent.getStringExtra(TAB_INDEX).toIntOrNull()
+        val tabIndex = intent.getStringExtra(TAB_INDEX)?.toIntOrNull()
         //加载发现
         bottomHelper.selectTab(tabIndex ?: 0)
     }

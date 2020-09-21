@@ -41,7 +41,7 @@ class OtherCourseActivity : BaseViewModelActivity<OtherCourseViewModel>() {
         }.attach()
 
         // 内部跳转协议参数处理
-        val tabIndex = intent.getStringExtra(TAB_INDEX).toIntOrNull()
+        val tabIndex = intent.getStringExtra(TAB_INDEX)?.toIntOrNull()
         tabIndex?.let { vp_other_course.setCurrentItem(it, false) }
     }
 }
