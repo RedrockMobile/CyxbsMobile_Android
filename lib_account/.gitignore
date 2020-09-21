@@ -6,5 +6,5 @@
 /.idea/workspace.xml
 .DS_Store
 /build
-api/build
-implimention/build
+account_api/build
+account_impl/build
