@@ -20,7 +20,7 @@ import com.mredrock.cyxbs.common.config.DISCOVER_NO_CLASS
 import com.mredrock.cyxbs.common.config.STU_NAME_LIST
 import com.mredrock.cyxbs.common.config.STU_NUM_LIST
 import com.mredrock.cyxbs.common.service.ServiceManager
-import com.mredrock.cyxbs.common.service.account.IAccountService
+import com.mredrock.cyxbs.account.IAccountService
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.extensions.getScreenHeight
 import com.mredrock.cyxbs.common.utils.extensions.getScreenWidth

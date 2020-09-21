@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.mredrock.cyxbs.common.service.ServiceManager
-import com.mredrock.cyxbs.common.service.account.IAccountService
+import com.mredrock.cyxbs.account.IAccountService
 import com.mredrock.cyxbs.common.ui.BaseFeedFragment
 import com.mredrock.cyxbs.volunteer.R
 import kotlinx.android.synthetic.main.volunteer_discover_feed_unbound.view.*

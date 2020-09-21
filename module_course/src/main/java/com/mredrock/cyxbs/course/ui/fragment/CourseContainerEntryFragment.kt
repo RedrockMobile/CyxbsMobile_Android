@@ -21,9 +21,9 @@ import com.mredrock.cyxbs.common.config.*
 import com.mredrock.cyxbs.common.event.*
 import com.mredrock.cyxbs.common.mark.EventBusLifecycleSubscriber
 import com.mredrock.cyxbs.common.service.ServiceManager
-import com.mredrock.cyxbs.common.service.account.IAccountService
-import com.mredrock.cyxbs.common.service.account.IUserStateService
-import com.mredrock.cyxbs.common.service.main.IMainService
+import com.mredrock.cyxbs.account.IAccountService
+import com.mredrock.cyxbs.account.IUserStateService
+import com.mredrock.cyxbs.main.IMainService
 import com.mredrock.cyxbs.common.ui.BaseViewModelFragment
 import com.mredrock.cyxbs.common.utils.extensions.gone
 import com.mredrock.cyxbs.common.utils.extensions.invisible

@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="account_whether_login">是否登录?</string>
-    <string name="account_login_now">马上去登录</string>
-    <string name="account_login_later">我再看看</string>
-</resources>
