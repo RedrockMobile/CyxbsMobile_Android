@@ -4,5 +4,6 @@
 
     <application>
         <activity android:name="com.mredrock.cyxbs.discover.grades.ui.main.ContainerActivity" />
+        <activity android:name=".ui.main.BindActivity" />
     </application>
 </manifest>

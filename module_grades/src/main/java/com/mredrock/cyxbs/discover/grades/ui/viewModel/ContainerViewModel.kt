@@ -30,6 +30,12 @@ class ContainerViewModel : BaseViewModel() {
         const val ERROR = "10010"
     }
 
+    //监听从bindactivity回来containerativity方便用户观看成绩则将bottom展开，如果是在本来在containeractivity则折叠
+    val bottomStateListener = MutableLiveData<Boolean>()
+    fun isContainerActivity() {
+        bottomStateListener.postValue(false)
+    }
+
     val examData = MutableLiveData<List<Exam>>()
     private val apiService = ApiGenerator.getApiService(ApiService::class.java)
     fun loadData(stuNum: String) {
@@ -66,8 +72,9 @@ class ContainerViewModel : BaseViewModel() {
                 .setSchedulers()
                 .safeSubscribeBy(
                         onNext = {
-                            BaseApp.context.toast(R.string.grades_bottom_sheet_bind_success)
                             replaceBindFragmentToGPAFragment.postValue(true)
+                            bottomStateListener.postValue(true)
+                            BaseApp.context.toast(R.string.grades_bottom_sheet_bind_success)
                             isAnimating = false
                         },
                         onError = {
