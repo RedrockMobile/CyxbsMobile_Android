@@ -116,6 +116,13 @@ class ContainerActivity : BaseActivity() {
                 viewModel.getAnalyzeData()
             }
         })
+        viewModel.bottomStateListener.observe(this@ContainerActivity, Observer {
+            if (it == true) {
+                val behavior = BottomSheetBehavior.from(fl_grades_bottom_sheet)
+                if(behavior.state==BottomSheetBehavior.STATE_COLLAPSED)
+                behavior.state = BottomSheetBehavior.STATE_EXPANDED
+            }
+        })
         viewModel.analyzeData.observe(this@ContainerActivity, Observer {
             if (it != null && it.isSuccessful) {
                 if (typeOfFragment != IS_GPA_FRAGMENT) {
@@ -131,13 +138,6 @@ class ContainerActivity : BaseActivity() {
                 }
             }
 
-        })
-        viewModel.bottomStateListener.observe(this@ContainerActivity, Observer {
-            if (it == true) {
-                val behavior = BottomSheetBehavior.from(fl_grades_bottom_sheet)
-                if (behavior.state == BottomSheetBehavior.STATE_COLLAPSED)
-                    behavior.state = BottomSheetBehavior.STATE_EXPANDED
-            }
         })
     }
 
