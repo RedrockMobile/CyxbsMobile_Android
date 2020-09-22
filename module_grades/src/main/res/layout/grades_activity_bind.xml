@@ -1,22 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/grades_constraint_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
+    <com.mredrock.cyxbs.common.component.JToolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/common_mine_sign_store_bg"
+        android:fitsSystemWindows="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:navigationIcon="@drawable/common_ic_back"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
     <TextView
         android:id="@+id/grades_textview2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="15dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="150dp"
+        android:text="@string/grades_bottom_sheet_bind_title"
         android:textColor="@color/common_level_two_font_color"
         android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:text="@string/grades_bottom_sheet_bind_title" />
+        app:layout_constraintTop_toTopOf="parent" />
 
 
     <ImageView
@@ -118,13 +129,13 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:visibility="gone"
-        app:lottie_loop="true"
-        app:lottie_autoPlay="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:lottie_fileName="bubble.json" />
+        app:lottie_autoPlay="true"
+        app:lottie_fileName="bubble.json"
+        app:lottie_loop="true" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

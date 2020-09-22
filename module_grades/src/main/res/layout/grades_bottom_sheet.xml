@@ -2,18 +2,27 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:background="@color/common_secondary_window_background"
     android:clickable="true"
-    android:focusable="true"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:focusable="true">
+
+    <com.mredrock.cyxbs.course.component.RedRockTipsView
+        android:id="@+id/course_tip"
+        android:layout_width="40dp"
+        android:layout_height="20dp"
+        android:layout_gravity="center_horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:tipsColor="@color/common_course_table_drag_indicator_block_color" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/fl_grades_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:paddingTop="13dp"
         app:layout_constraintTop_toTopOf="parent">
 
         <de.hdodenhof.circleimageview.CircleImageView
@@ -21,7 +30,8 @@
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_marginStart="30dp"
-            android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="16dp"
             android:background="@drawable/common_default_avatar"
             app:layout_constraintBottom_toBottomOf="@id/view_grades_line"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -40,7 +50,7 @@
             tools:text="王尼玛" />
 
         <TextView
-            android:id="@+id/tv_grades_college"
+            android:id="@+id/tv_grades_stuNum"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="14dp"
@@ -48,19 +58,6 @@
             android:textSize="12sp"
             app:layout_constraintBottom_toBottomOf="@id/iv_grades_avatar"
             app:layout_constraintLeft_toRightOf="@id/iv_grades_avatar"
-            tools:text="传媒艺术学院" />
-
-
-        <TextView
-            android:id="@+id/tv_grades_stuNum"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/common_grades_fragment_text_color_black3"
-            android:textSize="12sp"
-            android:layout_marginEnd="15dp"
-            app:layout_constraintBottom_toBottomOf="@+id/tv_grades_name"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/tv_grades_name"
             tools:text="2017211111" />
 
         <View
@@ -69,10 +66,27 @@
             android:layout_height="0.3dp"
             android:layout_marginTop="10dp"
             android:background="@color/common_grades_fragment_text_color_black3"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            app:layout_constraintStart_toStartOf="parent" />
 
+        <TextView
+            android:id="@+id/tv_grades_no_bind"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="20dp"
+            android:background="@drawable/grades_exam_shape_round"
+            android:paddingStart="10dp"
+            android:paddingTop="5dp"
+            android:paddingEnd="10dp"
+            android:paddingBottom="5dp"
+            android:text="@string/grades_no_bind_stdNum"
+            android:textSize="12sp"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <FrameLayout
