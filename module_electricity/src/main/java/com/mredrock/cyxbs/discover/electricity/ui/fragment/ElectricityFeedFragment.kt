@@ -18,6 +18,8 @@ import com.mredrock.cyxbs.discover.electricity.config.*
 import com.mredrock.cyxbs.discover.electricity.viewmodel.ChargeViewModel
 import com.mredrock.cyxbs.electricity.R
 import kotlinx.android.synthetic.main.electricity_discover_feed_unbound.view.*
+import com.mredrock.cyxbs.common.utils.extensions.*
+
 
 @Route(path = DISCOVER_ELECTRICITY_FEED)
 class ElectricityFeedFragment : BaseFeedFragment<ChargeViewModel>() {

@@ -14,6 +14,8 @@ import com.mredrock.cyxbs.discover.electricity.config.*
 import com.mredrock.cyxbs.electricity.R
 import kotlinx.android.synthetic.main.electricity_dialog_dormitory_select.*
 import kotlinx.android.synthetic.main.electricity_dialog_dormitory_select.view.*
+import com.mredrock.cyxbs.common.utils.extensions.*
+
 
 class ElectricityFeedSettingDialogFragment : DialogFragment() {
     var refresher: ((id: String, room: String) -> Unit)? = null
@@ -71,7 +73,7 @@ class ElectricityFeedSettingDialogFragment : DialogFragment() {
             }
             wp_dormitory_foot.setOnItemSelectedListener { _, _, _ -> setCorrectBuildingNum() }
 
-            btn_dialog_dormitory_confirm.setOnClickListener {
+            btn_dialog_dormitory_confirm.setOnSingleClickListener {
                 selectBuildingHeadPosition = wp_dormitory_head.currentItemPosition
                 selectBuildingFootPosition = wp_dormitory_foot.currentItemPosition
                 val id = BUILDING_NAMES.getValue(BUILDING_NAMES_HEADER[selectBuildingHeadPosition])[selectBuildingFootPosition].split("(")[1].split("栋")[0]

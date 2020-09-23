@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import com.mredrock.cyxbs.common.utils.SchoolCalendar
+import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.course.R
 import com.mredrock.cyxbs.course.component.ScheduleView
 import com.mredrock.cyxbs.course.network.Course
@@ -117,7 +118,7 @@ class NoCourseInviteScheduleViewAdapter(private val mContext: Context,
         view.tv_name_list.text = stringBuilder.toString()
         view.tv_name_list.setTextColor(mCoursesTextColors[row / 4])
         view.cv.background = createBackground(mCoursesColors[row / 4])
-        view.setOnClickListener {
+        view.setOnSingleClickListener {
             mNoCourseInviteDetailDialogHelper.showDialog(row, column, getNoCourseLength(row, column), nameList)
         }
         return view

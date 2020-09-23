@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
+import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.course.R
 import com.mredrock.cyxbs.course.adapters.TimeSelectedAdapter
 import com.mredrock.cyxbs.course.adapters.WeekSelectedAdapter
@@ -67,12 +68,12 @@ class AffairEditActivity : BaseViewModelActivity<EditAffairViewModel>() {
         viewModel.initData(this)
         tv_week_select.adapter = WeekSelectedAdapter(viewModel.mPostWeeks, mWeekSelectDialog)
         tv_time_select.adapter = TimeSelectedAdapter(viewModel.mPostClassAndDays, mTimeSelectDialog)
-        tv_remind_select.setOnClickListener {
+        tv_remind_select.setOnSingleClickListener {
             if (!mRemindSelectDialog.isShowing) {
                 mRemindSelectDialog.show()
             }
         }
-        course_next_step.setOnClickListener {
+        course_next_step.setOnSingleClickListener {
             forward()
         }
         et_content_input.setOnEditorActionListener(object : TextView.OnEditorActionListener {
@@ -95,7 +96,7 @@ class AffairEditActivity : BaseViewModelActivity<EditAffairViewModel>() {
             viewModel.setThePostRemind(position)
         })
 
-        course_back.setOnClickListener { finish() }
+        course_back.setOnSingleClickListener { finish() }
         //必须在ViewModel的initData之后执行
         if (viewModel.passedAffairInfo != null) {
             affairTransitionAnimHelper.modifyPageLayout()

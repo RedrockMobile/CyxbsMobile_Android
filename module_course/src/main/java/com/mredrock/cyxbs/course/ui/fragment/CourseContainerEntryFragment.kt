@@ -47,6 +47,8 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import java.util.*
+import com.mredrock.cyxbs.common.utils.extensions.*
+
 
 /**
  * Created by anriku on 2018/8/16.
@@ -160,7 +162,7 @@ class CourseContainerEntryFragment : BaseViewModelFragment<CoursesViewModel>(), 
         if (!accountService.getVerifyService().isLogin()) {
             course_header_show.invisible()
             rl_tourist_course_title.visible()
-            fl.setOnClickListener {}//处理所有未处理的点击事件，防止穿透点击或者滑动
+            fl.setOnSingleClickListener {}//处理所有未处理的点击事件，防止穿透点击或者滑动
             EventBus.getDefault().postSticky(CurrentDateInformationEvent(getString(R.string.course_tourist_date_txt)))
             return
         }
@@ -169,7 +171,7 @@ class CourseContainerEntryFragment : BaseViewModelFragment<CoursesViewModel>(), 
         //如果没有被添加进Activity，Fragment会抛出not attach a context的错误
         if (!isAdded) return
 
-        fl.setOnClickListener {}//处理所有未处理的点击事件，防止穿透点击或者滑动
+        fl.setOnSingleClickListener {}//处理所有未处理的点击事件，防止穿透点击或者滑动
 
         //获取主模块服务并添加bottom状态的监听
         ServiceManager.getService(IMainService::class.java).obtainBottomSheetStateLiveData().observe(viewLifecycleOwner, Observer {
@@ -252,7 +254,7 @@ class CourseContainerEntryFragment : BaseViewModelFragment<CoursesViewModel>(), 
                         viewModel.mWeekTitle.set(mWeeks[it])
                     })
             //回到本周按钮的点击事件
-            course_back_present_week.setOnClickListener {
+            course_back_present_week.setOnSingleClickListener {
                 viewModel.nowWeek.value?.let {
                     inflate.vp.currentItem = it
                 }
@@ -275,7 +277,7 @@ class CourseContainerEntryFragment : BaseViewModelFragment<CoursesViewModel>(), 
 
         //获取到ViewModel后进行一些初始化操作
         viewModel.courseState = courseState
-        course_tv_now_course.setOnClickListener {
+        course_tv_now_course.setOnSingleClickListener {
             viewModel.nowCourse.get()?.let { course ->
                 mDialogHelper.showDialog(MutableList(1) { course })
             }
@@ -329,17 +331,17 @@ class CourseContainerEntryFragment : BaseViewModelFragment<CoursesViewModel>(), 
             course_header_show.visibility = View.GONE
         }
 
-        course_tv_which_week.setOnClickListener { isShow() }
-        course_this_week_tips.setOnClickListener { isShow() }
+        course_tv_which_week.setOnSingleClickListener { isShow() }
+        course_this_week_tips.setOnSingleClickListener { isShow() }
 
-        course_header_back.setOnClickListener {
+        course_header_back.setOnSingleClickListener {
             TransitionManager.beginDelayedTransition(fl, Slide().apply { slideEdge = Gravity.START })
             course_header_week_select_content.visibility = View.GONE
             course_header_show.visibility = View.VISIBLE
         }
 
         //给整个头部设置点击事件，点击展开整个BottomSheet
-        course_header.setOnClickListener {
+        course_header.setOnSingleClickListener {
             EventBus.getDefault().post(NotifyBottomSheetToExpandEvent(true))
         }
     }

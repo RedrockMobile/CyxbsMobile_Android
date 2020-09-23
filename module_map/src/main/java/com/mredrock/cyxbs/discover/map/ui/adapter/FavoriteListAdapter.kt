@@ -12,6 +12,8 @@ import com.mredrock.cyxbs.discover.map.R
 import com.mredrock.cyxbs.discover.map.bean.FavoritePlace
 import com.mredrock.cyxbs.discover.map.viewmodel.MapViewModel
 import kotlinx.android.synthetic.main.map_recycle_item_favorite_list.view.*
+import com.mredrock.cyxbs.common.utils.extensions.*
+
 
 /**
  *@author zhangzhe
@@ -48,7 +50,7 @@ class FavoriteListAdapter(context: Context, val viewModel: MapViewModel, private
         } else {
             holder.line.visible()
         }
-        holder.itemView.setOnClickListener {
+        holder.itemView.setOnSingleClickListener {
             viewModel.showIconById.value = mList[position].placeId
             viewModel.getPlaceDetails(mList[position].placeId, false)
             viewModel.showPopUpWindow.value = false

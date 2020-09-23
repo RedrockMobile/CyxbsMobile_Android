@@ -17,6 +17,8 @@ import com.mredrock.cyxbs.discover.R
 import com.mredrock.cyxbs.discover.network.RollerViewInfo
 import com.mredrock.cyxbs.discover.pages.RollerViewActivity
 import kotlinx.android.synthetic.main.discover_viewpager_item.view.*
+import com.mredrock.cyxbs.common.utils.extensions.*
+
 
 /**
  * @author zixuan
@@ -47,7 +49,7 @@ class BannerAdapter(private val context: Context, private val viewPager: ViewPag
         val targetUrl = url?.picture_goto_url
         targetUrl ?: return
         if (targetUrl.startsWith("http")) {
-            holder.itemView.setOnClickListener {
+            holder.itemView.setOnSingleClickListener {
                 RollerViewActivity.startRollerViewActivity(url, holder.itemView.context)
             }
         }

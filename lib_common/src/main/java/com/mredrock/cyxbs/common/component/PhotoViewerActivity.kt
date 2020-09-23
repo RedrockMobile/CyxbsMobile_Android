@@ -18,6 +18,7 @@ import com.mredrock.cyxbs.common.ui.BaseActivity
 import com.mredrock.cyxbs.common.utils.extensions.setFullScreen
 import com.mredrock.cyxbs.common.utils.extensions.startActivity
 import kotlinx.android.synthetic.main.common_activity_photo_viewer.*
+import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
 
 /**
  * Create By Hosigus at 2019/8/7
@@ -66,7 +67,7 @@ open class PhotoViewerActivity : BaseActivity() {
                 } else {
                     mImgManager.load(mData).thumbnail(thumbnail).into(this)
                 }
-                setOnClickListener { onPhotoClick(mData, mPos) }
+                setOnSingleClickListener { onPhotoClick(mData, mPos) }
                 setOnLongClickListener { onLongClick(mData, mPos) }
             }
         }

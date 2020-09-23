@@ -15,6 +15,8 @@ import com.mredrock.cyxbs.mine.util.ui.BaseRVFragment
 import com.mredrock.cyxbs.mine.util.widget.RvFooter
 import kotlinx.android.synthetic.main.mine_list_item_comment_comment.view.*
 import org.greenrobot.eventbus.EventBus
+import com.mredrock.cyxbs.common.utils.extensions.*
+
 
 /**
  * Created by roger on 2019/12/5
@@ -54,7 +56,7 @@ class CommentFragment : BaseRVFragment<Comment>() {
     override fun bindDataHolder(holder: androidx.recyclerview.widget.RecyclerView.ViewHolder, position: Int, data: Comment) {
         holder.itemView.mine_comment_tv_at_who.text = data.answerer
         holder.itemView.mine_comment_tv_content.text = data.commentContent
-        holder.itemView.setOnClickListener {
+        holder.itemView.setOnSingleClickListener {
             //点击评论的item实际上也是跳转到具体的回答页面
             viewModel.getAnswerFromComment(data.questionId, data.answerId)
         }

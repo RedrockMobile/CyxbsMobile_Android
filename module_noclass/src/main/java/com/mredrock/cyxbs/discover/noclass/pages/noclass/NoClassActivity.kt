@@ -30,6 +30,8 @@ import com.mredrock.cyxbs.discover.noclass.network.Student
 import com.mredrock.cyxbs.discover.noclass.pages.stuselect.NoClassStuSelectActivity
 import kotlinx.android.synthetic.main.noclass_activity_no_class.*
 import java.io.Serializable
+import com.mredrock.cyxbs.common.utils.extensions.*
+
 
 @Route(path = DISCOVER_NO_CLASS)
 class NoClassActivity : BaseViewModelActivity<NoClassViewModel>() {
@@ -112,7 +114,7 @@ class NoClassActivity : BaseViewModelActivity<NoClassViewModel>() {
             }
 
         })
-        noclass_btn_query.setOnClickListener {
+        noclass_btn_query.setOnSingleClickListener {
             val students = (noclass_rv.adapter as NoClassRvAdapter).getStuList()
             val nameList = arrayListOf<String>()
             val numList = arrayListOf<String>()
