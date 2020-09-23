@@ -33,7 +33,7 @@ class MyImageAdapter(private val imageUrls: MutableList<String>?
         Glide.with(context)
                 .download(GlideUrl(url))
                 .into(SubsamplingScaleImageViewShowPictureTarget(context, subsamplingScaleImageView))
-        subsamplingScaleImageView.setSingleOnClickListener {
+        subsamplingScaleImageView.setOnSingleClickListener {
             onPhotoClickListener?.onPhotoClick()
         }
         subsamplingScaleImageView.setOnLongClickListener {

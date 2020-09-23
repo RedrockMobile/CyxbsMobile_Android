@@ -12,8 +12,8 @@ abstract class BaseEndlessRvAdapter<T>(diffCallback: DiffUtil.ItemCallback<T>) :
     override fun onBindViewHolder(holder: BaseViewHolder<T>, position: Int) {
         val data = getItem(position)    //if a nul, placeholder is at the specified position
         holder.refresh(data)
-        holder.itemView.setSingleOnClickListener {
-            data ?: return@setSingleOnClickListener
+        holder.itemView.setOnSingleClickListener {
+            data ?: return@setOnSingleClickListener
             onItemClickListener(holder, position, data)
         }
     }

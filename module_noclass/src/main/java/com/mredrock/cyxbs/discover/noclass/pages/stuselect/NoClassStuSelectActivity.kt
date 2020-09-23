@@ -35,7 +35,7 @@ class NoClassStuSelectActivity : BaseActivity() {
 
     fun initClickListener() {
 
-        tv_noclass_stu_select_cancel.setSingleOnClickListener {
+        tv_noclass_stu_select_cancel.setOnSingleClickListener {
             finish()
         }
     }

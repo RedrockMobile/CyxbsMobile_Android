@@ -42,7 +42,7 @@ class MainFragment : BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(requireActivity()).get(MapViewModel::class.java)
         initMapViewFragment()
-        map_iv_back.setSingleOnClickListener {
+        map_iv_back.setOnSingleClickListener {
             if (manager?.backStackEntryCount ?: 0 == 0) {
                 //此处填写退出MapActivity的逻辑
                 activity?.finish()
@@ -51,7 +51,7 @@ class MainFragment : BaseFragment() {
             }
         }
         //当搜索框被点击，打开搜索Fragment
-        map_et_search.setSingleOnClickListener {
+        map_et_search.setOnSingleClickListener {
             viewModel.unCheck.value = true
             openSearchFragment()
         }

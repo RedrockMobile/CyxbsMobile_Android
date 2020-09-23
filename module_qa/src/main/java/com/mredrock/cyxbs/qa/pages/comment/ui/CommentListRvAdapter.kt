@@ -65,7 +65,7 @@ class CommentListRvAdapter(private val questionAnonymous: Boolean) : BaseEndless
                 }
                 else -> {
                     ib_comment_item_more.visible()
-                    ib_comment_item_more.setSingleOnClickListener {
+                    ib_comment_item_more.setOnSingleClickListener {
                         context?.doIfLogin {
                             onReportClickListener?.invoke((getItem(position) as Comment).id)
                         }

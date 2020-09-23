@@ -93,7 +93,7 @@ class AnswerActivity : BaseViewModelActivity<AnswerViewModel>(), EventBusLifecyc
         qa_tv_toolbar_right.apply {
             visible()
             text = getString(R.string.qa_answer_btn_text)
-            setSingleOnClickListener {
+            setOnSingleClickListener {
                 viewModel.submitAnswer(edt_answer_content.text.toString())
             }
         }
@@ -127,7 +127,7 @@ class AnswerActivity : BaseViewModelActivity<AnswerViewModel>(), EventBusLifecyc
         }
 
         tv_answer_question_detail_show_more.apply {
-            setSingleOnClickListener {
+            setOnSingleClickListener {
                 //点击后展开，tv显示所有内容
                 if (tv_answer_question_description.maxLines == 2) {
                     tv_answer_question_description.maxLines = Int.MAX_VALUE

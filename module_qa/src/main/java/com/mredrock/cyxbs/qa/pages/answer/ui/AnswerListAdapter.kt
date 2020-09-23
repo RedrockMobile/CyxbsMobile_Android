@@ -51,7 +51,7 @@ class AnswerListAdapter : BaseEndlessRvAdapter<Answer>(DIFF_CALLBACK) {
                 }
             }
 
-            tv_answer_praise_count.setSingleOnClickListener {
+            tv_answer_praise_count.setOnSingleClickListener {
                 context.doIfLogin {
                     getItem(position)?.let { it1 ->
                         onPraiseClickListener?.invoke(position, it1)

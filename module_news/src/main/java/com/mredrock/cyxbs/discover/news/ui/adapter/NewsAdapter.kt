@@ -69,7 +69,7 @@ class NewsAdapter(private val loadMore: () -> Unit) : androidx.recyclerview.widg
 
         protected open fun View.init(news: NewsListItem?) {
             news ?: return
-            setSingleOnClickListener {
+            setOnSingleClickListener {
                 context.startActivity<NewsItemActivity>("id" to news.id, "title" to news.title)
             }
             tv_time.text = TimeFormatHelper.format(news.date)

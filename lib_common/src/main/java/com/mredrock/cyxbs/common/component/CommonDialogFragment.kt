@@ -60,11 +60,11 @@ class CommonDialogFragment() : DialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         common_dialog_btn_positive.apply {
-            setSingleOnClickListener { onPositiveClick?.invoke() }
+            setOnSingleClickListener { onPositiveClick?.invoke() }
             text = positiveString
         }
         onNegativeClick ?: common_dialog_btn_negative.gone()
-        common_dialog_btn_negative.setSingleOnClickListener { onNegativeClick?.invoke() }
+        common_dialog_btn_negative.setOnSingleClickListener { onNegativeClick?.invoke() }
 
         elseFunction?.invoke(view)
     }

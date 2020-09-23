@@ -69,7 +69,7 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>(), Eve
         initJwNews(vf_jwzx_detail, fl_discover_home_jwnews)
         initViewPager()
         viewModel.getRollInfo()
-        iv_check_in.setSingleOnClickListener {
+        iv_check_in.setOnSingleClickListener {
             context?.doIfLogin("签到") {
                 ARouter.getInstance().build(MINE_CHECK_IN).navigation()
             }
@@ -130,7 +130,7 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>(), Eve
             }
         }
 
-        viewFlipper.setSingleOnClickListener {
+        viewFlipper.setOnSingleClickListener {
             ARouter.getInstance().build(DISCOVER_NEWS_ITEM).withString("id", viewFlipper.focusedChild.tag as String).navigation()
         }
 
@@ -139,7 +139,7 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>(), Eve
         viewFlipper.setOutAnimation(context, R.anim.discover_text_out_anim)
         viewModel.getJwNews(1)
 
-        frameLayout.setSingleOnClickListener {
+        frameLayout.setOnSingleClickListener {
             ARouter.getInstance().build(DISCOVER_NEWS).navigation()
         }
     }
@@ -156,7 +156,7 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>(), Eve
                 setTextColor(ContextCompat.getColor(context, R.color.common_menu_font_color_found))
             }
             textSize = 15f
-            setSingleOnClickListener {
+            setOnSingleClickListener {
                 ARouter.getInstance().build(DISCOVER_NEWS_ITEM).withString("id", id).navigation()
             }
         }

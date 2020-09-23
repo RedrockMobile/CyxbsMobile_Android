@@ -73,7 +73,7 @@ class ElectricityFeedSettingDialogFragment : DialogFragment() {
             }
             wp_dormitory_foot.setOnItemSelectedListener { _, _, _ -> setCorrectBuildingNum() }
 
-            btn_dialog_dormitory_confirm.setSingleOnClickListener {
+            btn_dialog_dormitory_confirm.setOnSingleClickListener {
                 selectBuildingHeadPosition = wp_dormitory_head.currentItemPosition
                 selectBuildingFootPosition = wp_dormitory_foot.currentItemPosition
                 val id = BUILDING_NAMES.getValue(BUILDING_NAMES_HEADER[selectBuildingHeadPosition])[selectBuildingFootPosition].split("(")[1].split("栋")[0]

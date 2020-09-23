@@ -114,7 +114,7 @@ class NoClassActivity : BaseViewModelActivity<NoClassViewModel>() {
             }
 
         })
-        noclass_btn_query.setSingleOnClickListener {
+        noclass_btn_query.setOnSingleClickListener {
             val students = (noclass_rv.adapter as NoClassRvAdapter).getStuList()
             val nameList = arrayListOf<String>()
             val numList = arrayListOf<String>()

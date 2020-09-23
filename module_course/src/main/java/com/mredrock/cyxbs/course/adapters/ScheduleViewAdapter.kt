@@ -27,7 +27,7 @@ import com.mredrock.cyxbs.course.utils.createCornerBackground
 import com.umeng.analytics.MobclickAgent
 import org.greenrobot.eventbus.EventBus
 import java.util.*
-import com.mredrock.cyxbs.common.utils.extensions.setSingleOnClickListener
+import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
 
 /**
  * @param mActivity [Context]
@@ -271,7 +271,7 @@ class ScheduleViewAdapter(private val mActivity: Activity,
      * @param schedules 课程信息
      */
     private fun setItemViewOnclickListener(itemView: View, schedules: MutableList<Course>) {
-        itemView.setSingleOnClickListener {
+        itemView.setOnSingleClickListener {
             mDialogHelper.showDialog(schedules)
             MobclickAgent.onEvent(itemView.context, CyxbsMob.Event.CLICK_COURSE_ITEM, mutableMapOf(
                     Pair(CyxbsMob.Key.IS_HEAD, CyxbsMob.Value.TRUE)

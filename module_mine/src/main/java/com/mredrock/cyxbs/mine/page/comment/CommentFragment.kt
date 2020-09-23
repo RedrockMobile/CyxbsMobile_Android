@@ -56,7 +56,7 @@ class CommentFragment : BaseRVFragment<Comment>() {
     override fun bindDataHolder(holder: androidx.recyclerview.widget.RecyclerView.ViewHolder, position: Int, data: Comment) {
         holder.itemView.mine_comment_tv_at_who.text = data.answerer
         holder.itemView.mine_comment_tv_content.text = data.commentContent
-        holder.itemView.setSingleOnClickListener {
+        holder.itemView.setOnSingleClickListener {
             //点击评论的item实际上也是跳转到具体的回答页面
             viewModel.getAnswerFromComment(data.questionId, data.answerId)
         }

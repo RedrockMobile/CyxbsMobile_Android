@@ -61,7 +61,7 @@ class MyProductFragment(private val type: Int = UNCLAIMED) : BaseRVFragment<MyPr
         holder.itemView.mine_my_product_title.text = if (data.name.isNotEmpty()) data.name else "--"
         holder.itemView.mine_my_product_integral.text = if (data.integral.toString().isNotEmpty()) data.integral.toString() else "0"
         holder.itemView.mine_my_product_iv.setImageFromUrl(data.photoSrc)
-        holder.itemView.setSingleOnClickListener {
+        holder.itemView.setOnSingleClickListener {
             showDialog()
         }
 

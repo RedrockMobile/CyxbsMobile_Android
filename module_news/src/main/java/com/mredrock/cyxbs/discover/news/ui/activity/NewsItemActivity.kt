@@ -23,7 +23,7 @@ import com.alibaba.android.arouter.facade.annotation.Route
 import com.mredrock.cyxbs.common.component.showPhotos
 import com.mredrock.cyxbs.common.config.DISCOVER_NEWS_ITEM
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
-import com.mredrock.cyxbs.common.utils.extensions.setSingleOnClickListener
+import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.common.utils.extensions.sp
 import com.mredrock.cyxbs.common.utils.extensions.toast
 import com.mredrock.cyxbs.common.utils.extensions.uri
@@ -196,7 +196,7 @@ class NewsItemActivity : BaseViewModelActivity<NewsItemViewModel>(), NewsItemVie
                         layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
                         setImageBitmap(list[index])
                         scaleType = ImageView.ScaleType.CENTER_CROP
-                        setSingleOnClickListener {
+                        setOnSingleClickListener {
                             showPhotos(this@NewsItemActivity, listOf(originStreamList[index]), 0)
                         }
                     }

@@ -50,7 +50,7 @@ class FavoriteListAdapter(context: Context, val viewModel: MapViewModel, private
         } else {
             holder.line.visible()
         }
-        holder.itemView.setSingleOnClickListener {
+        holder.itemView.setOnSingleClickListener {
             viewModel.showIconById.value = mList[position].placeId
             viewModel.getPlaceDetails(mList[position].placeId, false)
             viewModel.showPopUpWindow.value = false

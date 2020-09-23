@@ -71,7 +71,7 @@ abstract class BaseFeedFragment<T : BaseViewModel> : BaseViewModelFragment<T>() 
     fun getAdapter() = adapter
 
     fun setOnClickListener(listener: () -> Unit) {
-        ll_feed.setSingleOnClickListener { listener.invoke() }
+        ll_feed.setOnSingleClickListener { listener.invoke() }
     }
 
     abstract fun onRefresh()

@@ -103,14 +103,14 @@ class AnswerListActivity : BaseActivity() {
         initRv()
         //设置标题
         qa_tv_toolbar_title.text = question.title
-        qa_ib_toolbar_back.setSingleOnClickListener { finish() }
+        qa_ib_toolbar_back.setOnSingleClickListener { finish() }
         observeListChangeEvent()
         questionReportDialog = createQuestionReportDialog()
         if (question.isSelf) {
             //不展示更多功能
             qa_ib_toolbar_more.gone()
         } else {
-            qa_ib_toolbar_more.setSingleOnClickListener {
+            qa_ib_toolbar_more.setOnSingleClickListener {
                 doIfLogin {
                     questionReportDialog.show()
                 }
@@ -210,7 +210,7 @@ class AnswerListActivity : BaseActivity() {
 
     private fun switchToHelper() {
         btn_answer.visible()
-        btn_answer.setSingleOnClickListener {
+        btn_answer.setOnSingleClickListener {
             doIfLogin {
                 AnswerActivity.activityStart(this@AnswerListActivity, viewModel.questionLiveData.value?.id
                         ?: "", viewModel.questionLiveData.value?.description

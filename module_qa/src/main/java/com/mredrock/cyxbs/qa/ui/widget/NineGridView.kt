@@ -122,7 +122,7 @@ class NineGridView(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : 
 
     override fun addView(child: View?, index: Int, params: ViewGroup.LayoutParams?) {
         super.addView(child, index, params)
-        child?.setSingleOnClickListener {
+        child?.setOnSingleClickListener {
             for (i in 0 until childCount) {
                 if (getChildAt(i) == it) {
                     onItemClickListener?.invoke(child, i)

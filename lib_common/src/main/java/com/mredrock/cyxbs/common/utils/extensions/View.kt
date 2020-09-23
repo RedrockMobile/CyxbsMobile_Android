@@ -33,7 +33,7 @@ fun View.onTouch(
 fun View.onClick(
         handler: (v: View?) -> Unit
 ) {
-    setSingleOnClickListener { v ->
+    setOnSingleClickListener { v ->
         handler(v)
     }
 }
@@ -42,7 +42,7 @@ fun View.onClick(
  * @param interval 毫秒为单位，点击间隔小于这个值监听事件无法生效
  * @param click 具体的点击事件
  */
-fun View.setSingleOnClickListener(interval: Long = 500, click: (View) -> Unit) {
+fun View.setOnSingleClickListener(interval: Long = 500, click: (View) -> Unit) {
     setOnClickListener {
         val tag = getTag(R.id.common_view_click_time) as? Long
         if (System.currentTimeMillis() - (tag ?: 0L) > interval) {

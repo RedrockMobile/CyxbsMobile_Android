@@ -30,7 +30,7 @@ class DiscoverMoreFunctionRvAdapter(private val picUrls: List<Int>, private val 
 
 
     override fun onBindViewHolder(holder: MoreFunctionViewHolder, position: Int) {
-        holder.itemView.setSingleOnClickListener {
+        holder.itemView.setOnSingleClickListener {
             it?.pressToZoomOut()
             onItemClick(position)
         }

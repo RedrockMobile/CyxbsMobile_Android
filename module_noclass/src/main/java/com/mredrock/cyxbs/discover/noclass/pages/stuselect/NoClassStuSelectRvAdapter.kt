@@ -33,7 +33,7 @@ class NoClassStuSelectRvAdapter(private val mStuList: List<Student>) : RecyclerV
     override fun onBindViewHolder(holder: StuSelectHolder, position: Int) {
         holder.itemView.noclass_item_select_name.text = mStuList[position].name
         holder.itemView.noclass_item_select_class.text = mStuList[position].major + " " + mStuList[position].stunum
-        holder.itemView.setSingleOnClickListener {
+        holder.itemView.setOnSingleClickListener {
             val intent = Intent()
             val bundle = Bundle()
             bundle.putSerializable("stu", mStuList[position])

@@ -53,7 +53,7 @@ class CommentReceivedFragment : BaseRVFragment<CommentReceived>() {
         holder.itemView.context.loadAvatar(data.commenterImageUrl, holder.itemView.mine_comment_iv_avatar)
         holder.itemView.mine_comment_tv_nickname.text = data.commenterNickname
         holder.itemView.mine_comment_tv_response.text = data.commentContent
-        holder.itemView.setSingleOnClickListener {
+        holder.itemView.setOnSingleClickListener {
             //点击评论的item实际上也是跳转到具体的回答页面
             viewModel.getAnswerFromReComment(data.questionId, data.answerId)
         }

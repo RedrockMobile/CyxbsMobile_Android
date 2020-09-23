@@ -69,7 +69,7 @@ class AnswerPostedFm : BaseRVFragment<AnswerPosted>() {
                 holder.itemView.mine_answer_posted_tv_disappear_at.setTextColor(ContextCompat.getColor(it, R.color.common_mine_list_item_tv_disappear_at))
             }
         }
-        holder.itemView.setSingleOnClickListener {
+        holder.itemView.setOnSingleClickListener {
             viewModel.getAnswer(data.questionId, data.answerId)
         }
     }

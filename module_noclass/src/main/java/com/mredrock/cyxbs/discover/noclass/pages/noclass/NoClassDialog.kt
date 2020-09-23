@@ -55,7 +55,7 @@ class NoClassDialog(context: Context) : Dialog(context), View.OnClickListener {
         setContentView(R.layout.noclass_dialog_add)
         discover_no_class_btn_cancel.setOnClickListener(this)
         discover_no_class_btn_confirm.setOnClickListener(this)
-        discover_no_class_btn_delete_dialog.setSingleOnClickListener { discover_no_class_edit_dialog.text.clear() }
+        discover_no_class_btn_delete_dialog.setOnSingleClickListener { discover_no_class_edit_dialog.text.clear() }
         discover_no_class_edit_dialog.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {}
 

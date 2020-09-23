@@ -68,7 +68,7 @@ class EmptyRoomActivity : BaseViewModelActivity<EmptyRoomViewModel>(), OnItemSel
         initQueryingAnimator()
         initRv()
         initTab()
-        ib_emptyroom_back.setSingleOnClickListener {
+        ib_emptyroom_back.setOnSingleClickListener {
             finish()
         }
     }

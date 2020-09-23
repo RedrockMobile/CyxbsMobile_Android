@@ -39,7 +39,7 @@ class CommentListHeaderRvAdapter(
                     ViewImageActivity.activityStart(context, data.photoUrl.toTypedArray(), index)
                 }
                 setAdoptedTv(tv_adopted, tv_adopt, data.isAdopted, removeAdoptIcon)
-                tv_adopt.setSingleOnClickListener {
+                tv_adopt.setOnSingleClickListener {
                     onAdoptClickListener?.invoke(data.id)
                 }
             }

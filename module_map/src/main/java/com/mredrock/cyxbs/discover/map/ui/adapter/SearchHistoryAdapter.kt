@@ -9,7 +9,7 @@ import com.mredrock.cyxbs.discover.map.R
 import com.mredrock.cyxbs.discover.map.model.DataSet
 import com.mredrock.cyxbs.discover.map.viewmodel.MapViewModel
 import kotlinx.android.synthetic.main.map_recycle_item_search_history.view.*
-import com.mredrock.cyxbs.common.utils.extensions.setSingleOnClickListener
+import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
 
 /**
  *@author zhangzhe
@@ -35,10 +35,10 @@ class SearchHistoryAdapter(context: Context, private val viewModel: MapViewModel
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.placeName.text = viewModel.searchHistory.value?.get(position) ?: ""
-        holder.itemView.setSingleOnClickListener {
+        holder.itemView.setOnSingleClickListener {
             viewModel.searchHistoryString.value = viewModel.searchHistory.value?.get(position) ?: ""
         }
-        holder.delete.setSingleOnClickListener {
+        holder.delete.setOnSingleClickListener {
             DataSet.deleteSearchHistory(viewModel.searchHistory.value?.get(position) ?: "")
             viewModel.notifySearchHistoryChange()
             notifyDataSetChanged()

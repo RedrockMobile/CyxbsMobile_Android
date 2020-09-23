@@ -5,7 +5,7 @@ import com.mredrock.cyxbs.common.component.RedRockAutoWarpView
 import com.mredrock.cyxbs.course.R
 import com.mredrock.cyxbs.course.component.TimeSelectDialog
 import kotlinx.android.synthetic.main.course_time_select_auto_warp_item.view.*
-import com.mredrock.cyxbs.common.utils.extensions.setSingleOnClickListener
+import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
 
 /**
  * @author Jovines
@@ -46,7 +46,7 @@ class TimeSelectedAdapter(private val timeList: MutableList<Pair<Int, Int>>, pri
                 item.course_time.text = context.resources.getString(R.string.course_time_select)
                 item.affair_iv_cancel.visibility = View.GONE
             } else {
-                item.setSingleOnClickListener {
+                item.setOnSingleClickListener {
                     if (!mTimeSelectDialog.isShowing) {
                         mTimeSelectDialog.show()
                     }
@@ -54,7 +54,7 @@ class TimeSelectedAdapter(private val timeList: MutableList<Pair<Int, Int>>, pri
             }
         } else {
             if (position == timeList.size) {
-                item.setSingleOnClickListener {
+                item.setOnSingleClickListener {
                     if (!mTimeSelectDialog.isShowing) {
                         mTimeSelectDialog.show()
                     }
@@ -63,7 +63,7 @@ class TimeSelectedAdapter(private val timeList: MutableList<Pair<Int, Int>>, pri
                 val time = "${dayOfWeekArray[timeList[position].first]} ${timeArray[timeList[position].second]}"
                 item.apply {
                     course_time.text = time
-                    affair_iv_cancel.setSingleOnClickListener {
+                    affair_iv_cancel.setOnSingleClickListener {
                         timeList.removeAt(position)
                         view.refreshData()
                     }

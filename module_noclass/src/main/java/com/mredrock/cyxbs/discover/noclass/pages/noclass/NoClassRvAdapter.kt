@@ -36,7 +36,7 @@ class NoClassRvAdapter(private val mStuList: MutableList<Student>, private val m
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         holder.itemView.no_course_name.text = mStuList[position].name
-        holder.itemView.no_course_delete.setSingleOnClickListener { removeStu(holder) }
+        holder.itemView.no_course_delete.setOnSingleClickListener { removeStu(holder) }
         holder.itemView.no_course_school_id.text = mStuList[position].stunum
 
     }

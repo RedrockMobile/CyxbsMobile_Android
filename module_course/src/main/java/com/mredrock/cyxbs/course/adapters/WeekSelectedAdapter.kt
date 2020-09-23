@@ -5,7 +5,7 @@ import com.mredrock.cyxbs.common.component.RedRockAutoWarpView
 import com.mredrock.cyxbs.course.R
 import com.mredrock.cyxbs.course.component.WeekSelectDialog
 import kotlinx.android.synthetic.main.course_week_selected_item_auto_warp.view.*
-import com.mredrock.cyxbs.common.utils.extensions.setSingleOnClickListener
+import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
 
 /**
  * @author Jovines
@@ -30,7 +30,7 @@ class WeekSelectedAdapter(private val weekSelectedList: List<Int>, private val w
     override fun initItem(item: View, position: Int) {
         item.course_tv_week_item.apply {
             text = if (weekSelectedList.isEmpty()) "请选择周数" else if (weekSelectedList.size == 21) "整学期" else "第${weekSelectedList[position]}周"
-            setSingleOnClickListener {
+            setOnSingleClickListener {
                 if (!weekSelectDialog.isShowing) {
                     weekSelectDialog.show()
                 }

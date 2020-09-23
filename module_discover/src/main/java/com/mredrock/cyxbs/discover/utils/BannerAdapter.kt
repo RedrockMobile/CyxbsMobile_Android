@@ -49,7 +49,7 @@ class BannerAdapter(private val context: Context, private val viewPager: ViewPag
         val targetUrl = url?.picture_goto_url
         targetUrl ?: return
         if (targetUrl.startsWith("http")) {
-            holder.itemView.setSingleOnClickListener {
+            holder.itemView.setOnSingleClickListener {
                 RollerViewActivity.startRollerViewActivity(url, holder.itemView.context)
             }
         }

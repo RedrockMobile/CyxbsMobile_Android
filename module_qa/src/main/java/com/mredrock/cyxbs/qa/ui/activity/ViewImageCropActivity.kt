@@ -51,13 +51,13 @@ class ViewImageCropActivity : AppCompatActivity() {
         needResult = intent.getBooleanExtra(NEED_RESULT, false)
         imgResPath = intent.getStringExtra(IMG_RES_PATH)?:""
 
-        tv_delete.setSingleOnClickListener {
+        tv_delete.setOnSingleClickListener {
             setResult(DELETE_CODE)
             finish()
         }
         if (needResult) {
             tv_edit.visible()
-            tv_edit.setSingleOnClickListener {
+            tv_edit.setOnSingleClickListener {
                 startCropActivity()
                 tv_delete.gone()
             }

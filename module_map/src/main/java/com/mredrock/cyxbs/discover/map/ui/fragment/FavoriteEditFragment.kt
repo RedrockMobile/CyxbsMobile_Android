@@ -31,13 +31,13 @@ class FavoriteEditFragment : BaseFragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProvider(requireActivity()).get(MapViewModel::class.java)
-        map_tv_favorite_cancel.setSingleOnClickListener {
+        map_tv_favorite_cancel.setOnSingleClickListener {
             viewModel.fragmentFavoriteEditIsShowing.value = false
         }
 
 
 
-        map_tv_favorite_cancel_favorite.setSingleOnClickListener {
+        map_tv_favorite_cancel_favorite.setOnSingleClickListener {
             context?.let { it1 ->
                 MapDialog.show(it1, resources.getString(R.string.map_favorite_delete_title), resources.getString(R.string.map_favorite_delete), object : OnSelectListener {
                     override fun onDeny() {
@@ -52,7 +52,7 @@ class FavoriteEditFragment : BaseFragment() {
                 })
             }
         }
-        map_tv_favorite_accept.setSingleOnClickListener {
+        map_tv_favorite_accept.setOnSingleClickListener {
             if (map_et_favorite_nickname.length() != 0) {
                 viewModel.fragmentFavoriteEditIsShowing.value = false
                 ProgressDialog.show(requireActivity(), BaseApp.context.getString(R.string.map_please_a_moment_text), BaseApp.context.getString(R.string.map_collect_adding), false)
