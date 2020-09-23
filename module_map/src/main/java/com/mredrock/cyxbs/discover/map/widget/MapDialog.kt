@@ -3,6 +3,7 @@ package com.mredrock.cyxbs.discover.map.widget
 import android.content.Context
 import android.view.LayoutInflater
 import androidx.appcompat.app.AlertDialog
+import com.mredrock.cyxbs.common.utils.extensions.setSingleOnClickListener
 import com.mredrock.cyxbs.discover.map.R
 import kotlinx.android.synthetic.main.map_dialog_choose.view.*
 
@@ -29,7 +30,7 @@ object MapDialog {
         val dialog = builder.create()
         dialog.show()
 
-        view.map_tv_tip_deny.setOnClickListener {
+        view.map_tv_tip_deny.setSingleOnClickListener {
             listener.onDeny()
             dialog.dismiss()
         }

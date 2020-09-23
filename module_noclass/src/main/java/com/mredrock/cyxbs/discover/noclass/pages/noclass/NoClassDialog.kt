@@ -14,6 +14,8 @@ import com.mredrock.cyxbs.common.utils.extensions.gone
 import com.mredrock.cyxbs.common.utils.extensions.visible
 import com.mredrock.cyxbs.discover.noclass.R
 import kotlinx.android.synthetic.main.noclass_dialog_add.*
+import com.mredrock.cyxbs.common.utils.extensions.*
+
 
 /**
  * Created by zxzhu
@@ -53,7 +55,7 @@ class NoClassDialog(context: Context) : Dialog(context), View.OnClickListener {
         setContentView(R.layout.noclass_dialog_add)
         discover_no_class_btn_cancel.setOnClickListener(this)
         discover_no_class_btn_confirm.setOnClickListener(this)
-        discover_no_class_btn_delete_dialog.setOnClickListener { discover_no_class_edit_dialog.text.clear() }
+        discover_no_class_btn_delete_dialog.setSingleOnClickListener { discover_no_class_edit_dialog.text.clear() }
         discover_no_class_edit_dialog.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {}
 

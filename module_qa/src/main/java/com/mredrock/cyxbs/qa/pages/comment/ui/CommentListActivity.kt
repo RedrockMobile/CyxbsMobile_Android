@@ -43,6 +43,8 @@ import kotlinx.android.synthetic.main.qa_comment_new_publish_layout.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import com.mredrock.cyxbs.common.utils.extensions.*
+
 
 @Route(path = QA_COMMENT_LIST)
 class CommentListActivity : BaseActivity(), EventBusLifecycleSubscriber {
@@ -87,8 +89,8 @@ class CommentListActivity : BaseActivity(), EventBusLifecycleSubscriber {
         setContentView(R.layout.qa_activity_comment_list)
         intentBack = Intent()
         if (intent.getParcelableExtra<Question>(PARAM_QUESTION) != null && intent.getParcelableExtra<Answer>(PARAM_ANSWER) != null) {
-            answer = intent.getParcelableExtra(PARAM_ANSWER)
-            question = intent.getParcelableExtra(PARAM_QUESTION)
+            answer = intent.getParcelableExtra(PARAM_ANSWER)?:return
+            question = intent.getParcelableExtra(PARAM_QUESTION)?:return
             initViewModel(question.id, answer)
             initToolbar()
             initRv(!question.isSelf, question.isAnonymous)
@@ -115,7 +117,7 @@ class CommentListActivity : BaseActivity(), EventBusLifecycleSubscriber {
     }
 
     private fun initToolbar() {
-        qa_ib_toolbar_back.setOnClickListener { finish() }
+        qa_ib_toolbar_back.setSingleOnClickListener { finish() }
         val commentNub = answer.commentNum
         qa_tv_toolbar_title.text = baseContext.getString(R.string.qa_comment_list_comment_count, commentNub)
         if (intent.getIntExtra(NAVIGATE_FROM_WHERE, IS_COMMENT) == IS_ANSWER) {
@@ -128,7 +130,7 @@ class CommentListActivity : BaseActivity(), EventBusLifecycleSubscriber {
                 setTextColor(ContextCompat.getColor(this@CommentListActivity, R.color.common_level_two_font_color))
                 textSize = 15f
                 visible()
-                setOnClickListener {
+                setSingleOnClickListener {
                     this@CommentListActivity.startActivity<AnswerListActivity>(QA_PARAM_QUESTION_ID to question.id)
                     this@CommentListActivity.finish()
                 }
@@ -136,7 +138,7 @@ class CommentListActivity : BaseActivity(), EventBusLifecycleSubscriber {
             qa_ib_toolbar_more.gone()
         } else {
             if (!answer.isSelf) {
-                qa_ib_toolbar_more.setOnClickListener {
+                qa_ib_toolbar_more.setSingleOnClickListener {
                     doIfLogin {
                         answerReportDialog.show()
                     }
@@ -255,7 +257,7 @@ class CommentListActivity : BaseActivity(), EventBusLifecycleSubscriber {
         }
         tv_comment_praise.apply {
             setPraise(answer.praiseNum, answer.isPraised)
-            setOnClickListener {
+            setSingleOnClickListener {
                 doIfLogin {
                     if (viewModel.isDealing) {
                     } else {

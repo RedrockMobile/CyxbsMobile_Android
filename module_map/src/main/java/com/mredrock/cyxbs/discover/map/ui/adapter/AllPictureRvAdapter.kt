@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.mredrock.cyxbs.common.utils.extensions.setImageFromUrl
+import com.mredrock.cyxbs.common.utils.extensions.setSingleOnClickListener
 import com.mredrock.cyxbs.discover.map.R
 import com.mredrock.cyxbs.discover.map.component.RoundRectImageView
 import kotlinx.android.synthetic.main.map_recycle_item_all_picture.view.*
@@ -31,7 +32,7 @@ class AllPictureRvAdapter(val context: Context, private val mList: MutableList<S
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
         holder.imageView.setImageFromUrl(mList[position])
-        holder.imageView.setOnClickListener {
+        holder.imageView.setSingleOnClickListener {
             onItemClickListener?.onItemClick(position)
         }
 

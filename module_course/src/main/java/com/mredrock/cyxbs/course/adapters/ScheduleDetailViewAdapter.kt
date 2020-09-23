@@ -32,6 +32,7 @@ import com.mredrock.cyxbs.course.utils.affairFilter
 import kotlinx.android.synthetic.main.course_affair_detail_item.view.*
 import kotlinx.android.synthetic.main.course_course_detail_item.view.*
 import org.greenrobot.eventbus.EventBus
+import com.mredrock.cyxbs.common.utils.extensions.setSingleOnClickListener
 
 /**
  * Created by anriku on 2018/8/21.
@@ -89,14 +90,14 @@ class ScheduleDetailViewAdapter(private val mDialog: Dialog, private val mSchedu
             tv_course_exact_time.text = courseOfDay[itemViewInfo.hashLesson]
             tv_affair_name.text = itemViewInfo.course
             tv_affair_detail.text = itemViewInfo.classroom
-            acb_modify.setOnClickListener {
+            acb_modify.setSingleOnClickListener {
                 val activity = (mDialog.context as ContextThemeWrapper).baseContext as Activity
                 activity.startActivity(Intent(activity, AffairEditActivity::class.java).apply {
                     putExtra(AffairEditActivity.AFFAIR_INFO, itemViewInfo)
                 })
                 mDialog.dismiss()
             }
-            acb_delete.setOnClickListener {
+            acb_delete.setSingleOnClickListener {
                 mCourseApiService.deleteAffair(itemViewInfo.courseId.toString())
                         .setSchedulers()
                         .errorHandler()
@@ -165,7 +166,7 @@ class ScheduleDetailViewAdapter(private val mDialog: Dialog, private val mSchedu
                             //教室名跳转到对应地图
                             text = itemViewInfo.classroom
                             setCompoundDrawablesWithIntrinsicBounds(0,0,R.drawable.course_ic_test_temp,0)
-                            setOnClickListener {
+                            setSingleOnClickListener {
                                 //跳转到对应Map位置
                                 ARouter.getInstance().build(DISCOVER_MAP).withString(COURSE_POS_TO_MAP, itemViewInfo.classroom).navigation()
                             }

@@ -16,6 +16,8 @@ import com.mredrock.cyxbs.mine.util.ui.BaseRVFragment
 import com.mredrock.cyxbs.mine.util.widget.RvFooter
 import kotlinx.android.synthetic.main.mine_list_item_comment_repsonse.view.*
 import org.greenrobot.eventbus.EventBus
+import com.mredrock.cyxbs.common.utils.extensions.*
+
 
 /**
  * Created by roger on 2020/2/10
@@ -51,7 +53,7 @@ class CommentReceivedFragment : BaseRVFragment<CommentReceived>() {
         holder.itemView.context.loadAvatar(data.commenterImageUrl, holder.itemView.mine_comment_iv_avatar)
         holder.itemView.mine_comment_tv_nickname.text = data.commenterNickname
         holder.itemView.mine_comment_tv_response.text = data.commentContent
-        holder.itemView.setOnClickListener {
+        holder.itemView.setSingleOnClickListener {
             //点击评论的item实际上也是跳转到具体的回答页面
             viewModel.getAnswerFromReComment(data.questionId, data.answerId)
         }

@@ -13,6 +13,7 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.mredrock.cyxbs.common.utils.extensions.invisible
+import com.mredrock.cyxbs.common.utils.extensions.setSingleOnClickListener
 import com.mredrock.cyxbs.common.utils.extensions.visible
 import com.mredrock.cyxbs.discover.map.R
 import com.mredrock.cyxbs.discover.map.bean.InfoItem
@@ -46,7 +47,7 @@ class SymbolRvAdapter(val context: Context, val viewModel: MapViewModel, private
             holder.hot.invisible()
         }
         holder.symbol.text = mList[position].title
-        holder.symbol.setOnClickListener { v ->
+        holder.symbol.setSingleOnClickListener { v ->
             viewModel.unCheck.value = false
             /**
              * 二次点击取消选择
@@ -68,7 +69,7 @@ class SymbolRvAdapter(val context: Context, val viewModel: MapViewModel, private
                     viewModel.isClickSymbol.value = false
                     //清除所有标签
                     viewModel.showSomePlaceIconById.value = mutableListOf()
-                    return@setOnClickListener
+                    return@setSingleOnClickListener
                 }
             }
             /**

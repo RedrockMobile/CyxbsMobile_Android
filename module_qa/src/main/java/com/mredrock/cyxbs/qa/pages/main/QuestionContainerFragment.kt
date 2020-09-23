@@ -30,6 +30,7 @@ import com.umeng.analytics.MobclickAgent
 import kotlinx.android.synthetic.main.qa_fragment_question_container.*
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import com.mredrock.cyxbs.common.utils.extensions.setSingleOnClickListener
 
 /**
  * Created By jay68 on 2018/8/22.
@@ -105,7 +106,7 @@ class QuestionContainerFragment : BaseViewModelFragment<QuestionContainerViewMod
 
     private fun askQuestionClick() {
         btn_ask_question.apply {
-            setOnClickListener {
+            setSingleOnClickListener {
                 turnToQuiz()
             }
             pressToZoomOut()
@@ -138,7 +139,7 @@ class QuestionContainerFragment : BaseViewModelFragment<QuestionContainerViewMod
         }
 
         vf_hot_search.startFlipping()
-        relativeLayout.setOnClickListener {
+        relativeLayout.setSingleOnClickListener {
             val hotWord = StringBuilder()
             vf_hot_search.run {
                 val allHotWord = (getChildAt(displayedChild) as TextView).text.toString()

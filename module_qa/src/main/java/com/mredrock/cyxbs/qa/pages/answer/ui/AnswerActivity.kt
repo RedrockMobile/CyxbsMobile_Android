@@ -20,10 +20,7 @@ import com.mredrock.cyxbs.common.config.QA_ANSWER
 import com.mredrock.cyxbs.common.event.AnswerDraftEvent
 import com.mredrock.cyxbs.common.mark.EventBusLifecycleSubscriber
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
-import com.mredrock.cyxbs.common.utils.extensions.getAbsolutePath
-import com.mredrock.cyxbs.common.utils.extensions.gone
-import com.mredrock.cyxbs.common.utils.extensions.startActivityForResult
-import com.mredrock.cyxbs.common.utils.extensions.visible
+import com.mredrock.cyxbs.common.utils.extensions.*
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.bean.Content
 import com.mredrock.cyxbs.qa.pages.answer.viewmodel.AnswerViewModel
@@ -96,7 +93,7 @@ class AnswerActivity : BaseViewModelActivity<AnswerViewModel>(), EventBusLifecyc
         qa_tv_toolbar_right.apply {
             visible()
             text = getString(R.string.qa_answer_btn_text)
-            setOnClickListener {
+            setSingleOnClickListener {
                 viewModel.submitAnswer(edt_answer_content.text.toString())
             }
         }
@@ -130,7 +127,7 @@ class AnswerActivity : BaseViewModelActivity<AnswerViewModel>(), EventBusLifecyc
         }
 
         tv_answer_question_detail_show_more.apply {
-            setOnClickListener {
+            setSingleOnClickListener {
                 //点击后展开，tv显示所有内容
                 if (tv_answer_question_description.maxLines == 2) {
                     tv_answer_question_description.maxLines = Int.MAX_VALUE
@@ -196,7 +193,7 @@ class AnswerActivity : BaseViewModelActivity<AnswerViewModel>(), EventBusLifecyc
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         when (requestCode) {
-            CHOOSE_PHOTO_REQUEST ->{
+            CHOOSE_PHOTO_REQUEST -> {
                 val imageListUri = ArrayList((LPhotoHelper.getSelectedPhotos(data)).map {
                     it.toString()
                 })
@@ -225,7 +222,7 @@ class AnswerActivity : BaseViewModelActivity<AnswerViewModel>(), EventBusLifecyc
         return if (intent.getStringExtra("qid") == null) {
             AnswerViewModel.Factory("-1")
         } else {
-            AnswerViewModel.Factory(intent.getStringExtra("qid"))
+            AnswerViewModel.Factory(intent.getStringExtra("qid") ?: "")
         }
     }
 
@@ -272,16 +269,10 @@ class AnswerActivity : BaseViewModelActivity<AnswerViewModel>(), EventBusLifecyc
     }
 
     private fun createExitDialog() = CommonDialog(this).apply {
-        initView(icon = R.drawable.qa_ic_quiz_quit_edit
-                , title = getString(R.string.qa_answer_dialog_exit_text)
-                , firstNotice = getString(R.string.qa_answer_publish_dialog_exit_subtitle_text)
-                , secondNotice = null
-                , buttonText = getString(R.string.qa_common_dialog_exit)
-                , confirmListener = View.OnClickListener {
+        initView(icon = R.drawable.qa_ic_quiz_quit_edit, title = getString(R.string.qa_answer_dialog_exit_text), firstNotice = getString(R.string.qa_answer_publish_dialog_exit_subtitle_text), secondNotice = null, buttonText = getString(R.string.qa_common_dialog_exit), confirmListener = View.OnClickListener {
             saveDraft()
             dismiss()
-        }
-                , cancelListener = View.OnClickListener {
+        }, cancelListener = View.OnClickListener {
             dismiss()
         })
     }

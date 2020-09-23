@@ -6,6 +6,7 @@ import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.component.RedRockAutoWarpView
 import com.mredrock.cyxbs.course.R
 import com.mredrock.cyxbs.course.utils.weekSelectCheckBoxState
+import com.mredrock.cyxbs.common.utils.extensions.setSingleOnClickListener
 
 /**
  * Created by anriku on 2018/9/9.
@@ -43,7 +44,7 @@ class WeekSelectRecAdapter(private val mPostWeeks: MutableList<Int>) : RedRockAu
             }
         }
         if (position == 0) {
-            checkBox.setOnClickListener {
+            checkBox.setSingleOnClickListener {
                 weekSelectCheckBoxState(checkBox, context)
                 if (checkBox.isChecked) {
                     for ((k, v) in checkBoxMap) {
@@ -55,7 +56,7 @@ class WeekSelectRecAdapter(private val mPostWeeks: MutableList<Int>) : RedRockAu
                 }
             }
         } else {
-            checkBox.setOnClickListener {
+            checkBox.setSingleOnClickListener {
                 weekSelectCheckBoxState(checkBox, context)
                 checkBoxMap[0]?.apply {
                     isChecked = false

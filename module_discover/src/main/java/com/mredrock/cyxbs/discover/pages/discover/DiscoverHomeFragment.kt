@@ -39,6 +39,8 @@ import com.mredrock.cyxbs.discover.utils.MoreFunctionProvider
 import kotlinx.android.synthetic.main.discover_home_fragment.*
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import com.mredrock.cyxbs.common.utils.extensions.*
+
 
 /**
  * @author zixuan
@@ -67,7 +69,7 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>(), Eve
         initJwNews(vf_jwzx_detail, fl_discover_home_jwnews)
         initViewPager()
         viewModel.getRollInfo()
-        iv_check_in.setOnClickListener {
+        iv_check_in.setSingleOnClickListener {
             context?.doIfLogin("签到") {
                 ARouter.getInstance().build(MINE_CHECK_IN).navigation()
             }
@@ -128,7 +130,7 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>(), Eve
             }
         }
 
-        viewFlipper.setOnClickListener {
+        viewFlipper.setSingleOnClickListener {
             ARouter.getInstance().build(DISCOVER_NEWS_ITEM).withString("id", viewFlipper.focusedChild.tag as String).navigation()
         }
 
@@ -137,7 +139,7 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>(), Eve
         viewFlipper.setOutAnimation(context, R.anim.discover_text_out_anim)
         viewModel.getJwNews(1)
 
-        frameLayout.setOnClickListener {
+        frameLayout.setSingleOnClickListener {
             ARouter.getInstance().build(DISCOVER_NEWS).navigation()
         }
     }
@@ -154,7 +156,7 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>(), Eve
                 setTextColor(ContextCompat.getColor(context, R.color.common_menu_font_color_found))
             }
             textSize = 15f
-            setOnClickListener {
+            setSingleOnClickListener {
                 ARouter.getInstance().build(DISCOVER_NEWS_ITEM).withString("id", id).navigation()
             }
         }

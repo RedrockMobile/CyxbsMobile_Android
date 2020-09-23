@@ -10,6 +10,8 @@ import com.mredrock.cyxbs.discover.noclass.R
 import com.mredrock.cyxbs.discover.noclass.network.Student
 import com.mredrock.cyxbs.discover.noclass.snackbar
 import kotlinx.android.synthetic.main.noclass_item_stu.view.*
+import com.mredrock.cyxbs.common.utils.extensions.*
+
 
 /**
  * Created by zxzhu
@@ -34,7 +36,7 @@ class NoClassRvAdapter(private val mStuList: MutableList<Student>, private val m
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         holder.itemView.no_course_name.text = mStuList[position].name
-        holder.itemView.no_course_delete.setOnClickListener { removeStu(holder) }
+        holder.itemView.no_course_delete.setSingleOnClickListener { removeStu(holder) }
         holder.itemView.no_course_school_id.text = mStuList[position].stunum
 
     }

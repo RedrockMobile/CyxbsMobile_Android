@@ -9,6 +9,8 @@ import com.mredrock.cyxbs.discover.news.bean.NewsListItem
 import com.mredrock.cyxbs.discover.news.ui.activity.NewsItemActivity
 import com.mredrock.cyxbs.discover.news.utils.TimeFormatHelper
 import kotlinx.android.synthetic.main.news_item_news.view.*
+import com.mredrock.cyxbs.common.utils.extensions.*
+
 
 /**
  * Author: Hosigus
@@ -67,7 +69,7 @@ class NewsAdapter(private val loadMore: () -> Unit) : androidx.recyclerview.widg
 
         protected open fun View.init(news: NewsListItem?) {
             news ?: return
-            setOnClickListener {
+            setSingleOnClickListener {
                 context.startActivity<NewsItemActivity>("id" to news.id, "title" to news.title)
             }
             tv_time.text = TimeFormatHelper.format(news.date)

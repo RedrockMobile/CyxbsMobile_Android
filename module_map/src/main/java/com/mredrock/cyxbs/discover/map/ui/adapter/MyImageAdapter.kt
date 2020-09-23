@@ -8,6 +8,8 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.model.GlideUrl
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
 import com.mredrock.cyxbs.discover.map.util.SubsamplingScaleImageViewShowPictureTarget
+import com.mredrock.cyxbs.common.utils.extensions.*
+
 
 
 class MyImageAdapter(private val imageUrls: MutableList<String>?
@@ -31,7 +33,7 @@ class MyImageAdapter(private val imageUrls: MutableList<String>?
         Glide.with(context)
                 .download(GlideUrl(url))
                 .into(SubsamplingScaleImageViewShowPictureTarget(context, subsamplingScaleImageView))
-        subsamplingScaleImageView.setOnClickListener {
+        subsamplingScaleImageView.setSingleOnClickListener {
             onPhotoClickListener?.onPhotoClick()
         }
         subsamplingScaleImageView.setOnLongClickListener {

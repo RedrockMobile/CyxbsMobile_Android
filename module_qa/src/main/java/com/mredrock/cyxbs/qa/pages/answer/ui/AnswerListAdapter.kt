@@ -3,10 +3,7 @@ package com.mredrock.cyxbs.qa.pages.answer.ui
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
-import com.mredrock.cyxbs.common.utils.extensions.doIfLogin
-import com.mredrock.cyxbs.common.utils.extensions.invisible
-import com.mredrock.cyxbs.common.utils.extensions.setAvatarImageFromUrl
-import com.mredrock.cyxbs.common.utils.extensions.visible
+import com.mredrock.cyxbs.common.utils.extensions.*
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.bean.Answer
 import com.mredrock.cyxbs.qa.component.recycler.BaseEndlessRvAdapter
@@ -54,7 +51,7 @@ class AnswerListAdapter : BaseEndlessRvAdapter<Answer>(DIFF_CALLBACK) {
                 }
             }
 
-            tv_answer_praise_count.setOnClickListener {
+            tv_answer_praise_count.setSingleOnClickListener {
                 context.doIfLogin {
                     getItem(position)?.let { it1 ->
                         onPraiseClickListener?.invoke(position, it1)

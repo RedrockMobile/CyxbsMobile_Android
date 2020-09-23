@@ -19,6 +19,7 @@ import com.mredrock.cyxbs.qa.pages.search.viewmodel.QuestionSearchedViewModel
 import com.mredrock.cyxbs.qa.ui.adapter.EmptyRvAdapter
 import com.mredrock.cyxbs.qa.ui.adapter.FooterRvAdapter
 import kotlinx.android.synthetic.main.qa_fragment_question_search_result.*
+import com.mredrock.cyxbs.common.utils.extensions.setSingleOnClickListener
 
 /**
  * Created by yyfbe, Date on 2020/8/13.
@@ -94,7 +95,7 @@ class QuestionSearchedFragment : BaseViewModelFragment<QuestionSearchedViewModel
         }
         rv_searched_question.layoutManager = LinearLayoutManager(context)
         rv_searched_question.adapter = adapterWrapper
-        btn_no_result_ask_question.setOnClickListener {
+        btn_no_result_ask_question.setSingleOnClickListener {
             context?.doIfLogin("提问") {
                 QuizActivity.activityStart(this, "迎新生", REQUEST_LIST_REFRESH_ACTIVITY)
                 this.onDetach()

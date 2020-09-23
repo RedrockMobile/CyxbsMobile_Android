@@ -14,6 +14,8 @@ import androidx.fragment.app.DialogFragment
 import com.mredrock.cyxbs.common.R
 import com.mredrock.cyxbs.common.utils.extensions.gone
 import kotlinx.android.synthetic.main.common_dialog.*
+import com.mredrock.cyxbs.common.utils.extensions.*
+
 
 
 /**
@@ -58,11 +60,11 @@ class CommonDialogFragment() : DialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         common_dialog_btn_positive.apply {
-            setOnClickListener { onPositiveClick?.invoke() }
+            setSingleOnClickListener { onPositiveClick?.invoke() }
             text = positiveString
         }
         onNegativeClick ?: common_dialog_btn_negative.gone()
-        common_dialog_btn_negative.setOnClickListener { onNegativeClick?.invoke() }
+        common_dialog_btn_negative.setSingleOnClickListener { onNegativeClick?.invoke() }
 
         elseFunction?.invoke(view)
     }

@@ -22,6 +22,7 @@ import kotlinx.android.synthetic.main.qa_dialog_question_reward_set.*
 import java.util.*
 import kotlin.math.abs
 import kotlin.math.pow
+import com.mredrock.cyxbs.common.utils.extensions.setSingleOnClickListener
 
 class RewardSetDialog(context: Context, rewardCount: Int, private val isFirstQuiz: Boolean, private val contentList: List<DownMessageText>) : BottomSheetDialog(context) {
     companion object {
@@ -103,9 +104,9 @@ class RewardSetDialog(context: Context, rewardCount: Int, private val isFirstQui
             currentItem = 3
         }
         rl_reward_picker.setOnTouchListener { v, event -> vp_set_reward_count.onTouchEvent(event) }
-        iv_reward_description.setOnClickListener { RewardDescriptionDialog(context, contentList).show() }
+        iv_reward_description.setSingleOnClickListener { RewardDescriptionDialog(context, contentList).show() }
         tv_my_reward_count.text = context.resources.getString(R.string.qa_quiz_reward_set_my_reward, myRewardCount)
-        tv_quiz_dialog_cancel.setOnClickListener { cancel() }
+        tv_quiz_dialog_cancel.setSingleOnClickListener { cancel() }
 
     }
 
@@ -159,7 +160,7 @@ class RewardSetDialog(context: Context, rewardCount: Int, private val isFirstQui
                 tv_mission_deadline_detail.text = "$day $hour $minute"
             }
         }
-        fl_quiz_submit.setOnClickListener {
+        fl_quiz_submit.setSingleOnClickListener {
             onSubmitButtonClickListener("${daysCommitName[tp_quiz_day.value]} ${tp_quiz_hour.value}时${tp_quiz_minute.value}分", rewardCountList[vp_set_reward_count.currentItem])
         }
     }

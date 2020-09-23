@@ -17,6 +17,8 @@ import com.mredrock.cyxbs.discover.map.ui.fragment.inner.SearchFragment
 import com.mredrock.cyxbs.discover.map.util.KeyboardController
 import com.mredrock.cyxbs.discover.map.viewmodel.MapViewModel
 import kotlinx.android.synthetic.main.map_fragment_main.*
+import com.mredrock.cyxbs.common.utils.extensions.*
+
 
 //该MainFragment使用FragmentTransaction管理两个Fragment
 
@@ -40,7 +42,7 @@ class MainFragment : BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(requireActivity()).get(MapViewModel::class.java)
         initMapViewFragment()
-        map_iv_back.setOnClickListener {
+        map_iv_back.setSingleOnClickListener {
             if (manager?.backStackEntryCount ?: 0 == 0) {
                 //此处填写退出MapActivity的逻辑
                 activity?.finish()
@@ -49,7 +51,7 @@ class MainFragment : BaseFragment() {
             }
         }
         //当搜索框被点击，打开搜索Fragment
-        map_et_search.setOnClickListener {
+        map_et_search.setSingleOnClickListener {
             viewModel.unCheck.value = true
             openSearchFragment()
         }

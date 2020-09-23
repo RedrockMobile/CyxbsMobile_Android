@@ -10,6 +10,8 @@ import com.mredrock.cyxbs.qa.ui.activity.ViewImageActivity
 import com.mredrock.cyxbs.qa.utils.setAdoptedTv
 import com.mredrock.cyxbs.qa.utils.timeDescription
 import kotlinx.android.synthetic.main.qa_recycler_item_comment_header.view.*
+import com.mredrock.cyxbs.common.utils.extensions.*
+
 
 /**
  * Created By jay68 on 2018/10/8.
@@ -37,7 +39,7 @@ class CommentListHeaderRvAdapter(
                     ViewImageActivity.activityStart(context, data.photoUrl.toTypedArray(), index)
                 }
                 setAdoptedTv(tv_adopted, tv_adopt, data.isAdopted, removeAdoptIcon)
-                tv_adopt.setOnClickListener {
+                tv_adopt.setSingleOnClickListener {
                     onAdoptClickListener?.invoke(data.id)
                 }
             }
