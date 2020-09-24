@@ -6,7 +6,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import com.mredrock.cyxbs.account.IAccountService
 import com.mredrock.cyxbs.common.mark.EventBusLifecycleSubscriber
+import com.mredrock.cyxbs.common.mark.LoginStatusSubscriber
+import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.utils.LogUtils
 import com.umeng.analytics.MobclickAgent
 import org.greenrobot.eventbus.EventBus
@@ -30,6 +33,9 @@ open class BaseFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         if (this is EventBusLifecycleSubscriber) EventBus.getDefault().register(this)
+        val verifyService = ServiceManager.getService(IAccountService::class.java).getVerifyService()
+        if (this is LoginStatusSubscriber && verifyService.isLogin()) initOnLoginMode()
+        if (this is LoginStatusSubscriber && verifyService.isTouristMode()) initOnTouristMode()
     }
 
     override fun onPause() {
@@ -42,6 +48,9 @@ open class BaseFragment : Fragment() {
         super.onDestroyView()
         lifeCycleLog("onDestroyView")
         if (this is EventBusLifecycleSubscriber && EventBus.getDefault().isRegistered(this)) EventBus.getDefault().unregister(this)
+        val verifyService = ServiceManager.getService(IAccountService::class.java).getVerifyService()
+        if (this is LoginStatusSubscriber && verifyService.isLogin()) destroyOnLoginMode()
+        if (this is LoginStatusSubscriber && verifyService.isTouristMode()) destroyOnTouristMode()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

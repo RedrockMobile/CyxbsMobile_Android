@@ -8,14 +8,16 @@ import android.os.Bundle
 import android.os.PersistableBundle
 import android.view.Menu
 import android.view.View
+import android.view.ViewGroup
 import androidx.annotation.DrawableRes
+import com.mredrock.cyxbs.account.IAccountService
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.R
 import com.mredrock.cyxbs.common.bean.LoginConfig
 import com.mredrock.cyxbs.common.component.JToolbar
 import com.mredrock.cyxbs.common.mark.EventBusLifecycleSubscriber
+import com.mredrock.cyxbs.common.mark.LoginStatusSubscriber
 import com.mredrock.cyxbs.common.service.ServiceManager
-import com.mredrock.cyxbs.account.IAccountService
 import com.mredrock.cyxbs.common.slide.AbsSlideableActivity
 import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.getDarkModeStatus
@@ -59,6 +61,13 @@ abstract class BaseActivity : AbsSlideableActivity() {
         PushAgent.getInstance(BaseApp.context).onAppStart()
         initFlag()
         lifeCycleLog("onCreate")
+    }
+
+    override fun setContentView(view: View?, params: ViewGroup.LayoutParams?) {
+        super.setContentView(view, params)
+        val verifyService = ServiceManager.getService(IAccountService::class.java).getVerifyService()
+        if (this is LoginStatusSubscriber && verifyService.isLogin()) initOnLoginMode()
+        if (this is LoginStatusSubscriber && verifyService.isTouristMode()) initOnTouristMode()
     }
 
     private fun initFlag() {
@@ -177,6 +186,9 @@ abstract class BaseActivity : AbsSlideableActivity() {
     override fun onDestroy() {
         super.onDestroy()
         lifeCycleLog("onDestroy")
+        val verifyService = ServiceManager.getService(IAccountService::class.java).getVerifyService()
+        if (this is LoginStatusSubscriber && verifyService.isLogin()) destroyOnLoginMode()
+        if (this is LoginStatusSubscriber && verifyService.isTouristMode()) destroyOnTouristMode()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
