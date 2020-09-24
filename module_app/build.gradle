@@ -151,10 +151,10 @@ walle {
 
 dependencies {
     implementation project(':lib_common')
-    implementation project(':lib_account:account_impl')
-    implementation project(':lib_update:update_impl')
+    implementation project(':lib_account')
+    implementation project(':lib_update')
     if (!isSingleModuleDebug.toBoolean()) {
-        implementation project(':module_main:main_impl')
+        implementation project(':module_main')
         implementation project(':module_course')
         implementation project(':module_qa')
         implementation project(':module_discover')

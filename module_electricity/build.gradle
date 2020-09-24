@@ -4,7 +4,7 @@ apply from: config
 // 公用库请不要添加到这里
 dependencies {
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-
+    implementation project(':module_electricity:api_electricity')
     implementation 'androidx.navigation:navigation-fragment:2.1.0-beta02'
     implementation 'androidx.navigation:navigation-ui:2.1.0-beta02'
     implementation "cn.aigestudio.wheelpicker:WheelPicker:1.1.3"

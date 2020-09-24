@@ -6,9 +6,9 @@ import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
 import com.mredrock.cyxbs.common.config.DISCOVER_ELECTRICITY_FEED
 import com.mredrock.cyxbs.common.config.ELECTRICITY_SERVICE
-import com.mredrock.cyxbs.common.service.discover.electricity.IElectricityService
 import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
 import com.mredrock.cyxbs.common.utils.extensions.editor
+import com.mredrock.cyxbs.discover.electricity.IElectricityService
 
 /**
  * Created by yyfbe, Date on 2020/8/31.
