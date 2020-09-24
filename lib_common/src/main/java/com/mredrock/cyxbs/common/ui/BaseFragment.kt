@@ -7,8 +7,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.mredrock.cyxbs.account.IAccountService
+import com.mredrock.cyxbs.common.mark.ActionLoginStatusSubscriber
 import com.mredrock.cyxbs.common.mark.EventBusLifecycleSubscriber
-import com.mredrock.cyxbs.common.mark.LoginStatusSubscriber
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.utils.LogUtils
 import com.umeng.analytics.MobclickAgent
@@ -30,12 +30,19 @@ open class BaseFragment : Fragment() {
     //当然，你要定义自己的TAG方便在Log里面找也可以重写这个
     open protected var TAG: String = this::class.java.simpleName
 
+    // 只做本地封装使用
+    private var baseBundle: Bundle? = null
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        baseBundle = savedInstanceState
         if (this is EventBusLifecycleSubscriber) EventBus.getDefault().register(this)
         val verifyService = ServiceManager.getService(IAccountService::class.java).getVerifyService()
-        if (this is LoginStatusSubscriber && verifyService.isLogin()) initOnLoginMode()
-        if (this is LoginStatusSubscriber && verifyService.isTouristMode()) initOnTouristMode()
+        if (this is ActionLoginStatusSubscriber) {
+            if (verifyService.isLogin()) initOnLoginMode(baseBundle)
+            if (verifyService.isTouristMode()) initOnTouristMode(baseBundle)
+            if (verifyService.isLogin()||verifyService.isTouristMode()) initPage(verifyService.isLogin(),baseBundle)
+        }
     }
 
     override fun onPause() {
@@ -49,8 +56,11 @@ open class BaseFragment : Fragment() {
         lifeCycleLog("onDestroyView")
         if (this is EventBusLifecycleSubscriber && EventBus.getDefault().isRegistered(this)) EventBus.getDefault().unregister(this)
         val verifyService = ServiceManager.getService(IAccountService::class.java).getVerifyService()
-        if (this is LoginStatusSubscriber && verifyService.isLogin()) destroyOnLoginMode()
-        if (this is LoginStatusSubscriber && verifyService.isTouristMode()) destroyOnTouristMode()
+        if (this is ActionLoginStatusSubscriber) {
+            if (verifyService.isLogin()) destroyOnLoginMode()
+            if (verifyService.isTouristMode()) destroyOnTouristMode()
+            if (verifyService.isLogin()||verifyService.isTouristMode()) destroyPage(verifyService.isLogin())
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

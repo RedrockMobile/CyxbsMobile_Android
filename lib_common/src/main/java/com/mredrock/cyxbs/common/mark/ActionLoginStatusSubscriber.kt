@@ -1,5 +1,7 @@
 package com.mredrock.cyxbs.common.mark
 
+import android.os.Bundle
+
 /**
  * @author Jovines
  * create 2020-09-24 10:01 AM
@@ -15,17 +17,24 @@ package com.mredrock.cyxbs.common.mark
  *
  *              使用java8的接口默认实现对应的kotlin版本，见到默认实现不要觉得奇怪
  */
-interface LoginStatusSubscriber {
+interface ActionLoginStatusSubscriber {
 
     /**
      * 可以在这里处理相关初始化操作
      */
-    fun initOnLoginMode() {}
-    fun initOnTouristMode() {}
+    fun initOnLoginMode(savedInstanceState: Bundle?) {}
+    fun initOnTouristMode(savedInstanceState: Bundle?) {}
+
+    /**
+     * @param isLoginElseTourist 登陆模式为true  游客模式为false
+     * 某些场景下可能大部分初始化操作都是相似只需要少量区分不适宜分方法时实现这个方法
+     */
+    fun initPage(isLoginElseTourist: Boolean,savedInstanceState: Bundle?) {}
 
     /**
      * 可以在这里处理对应模式的页面摧毁的一些操作
      */
     fun destroyOnLoginMode() {}
     fun destroyOnTouristMode() {}
+    fun destroyPage(isLoginElseTourist: Boolean) {}
 }
