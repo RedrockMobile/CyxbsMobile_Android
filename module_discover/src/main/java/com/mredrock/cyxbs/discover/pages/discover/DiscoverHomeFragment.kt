@@ -28,18 +28,18 @@ import com.mredrock.cyxbs.common.config.MINE_CHECK_IN
 import com.mredrock.cyxbs.common.event.CurrentDateInformationEvent
 import com.mredrock.cyxbs.common.mark.EventBusLifecycleSubscriber
 import com.mredrock.cyxbs.common.service.ServiceManager
-import com.mredrock.cyxbs.discover.electricity.IElectricityService
-import com.mredrock.cyxbs.volunteer.IVolunteerService
 import com.mredrock.cyxbs.common.ui.BaseViewModelFragment
 import com.mredrock.cyxbs.common.utils.extensions.doIfLogin
+import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.discover.R
+import com.mredrock.cyxbs.discover.electricity.IElectricityService
 import com.mredrock.cyxbs.discover.pages.discover.adapter.DiscoverMoreFunctionRvAdapter
 import com.mredrock.cyxbs.discover.utils.BannerAdapter
 import com.mredrock.cyxbs.discover.utils.MoreFunctionProvider
+import com.mredrock.cyxbs.volunteer.IVolunteerService
 import kotlinx.android.synthetic.main.discover_home_fragment.*
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import com.mredrock.cyxbs.common.utils.extensions.*
 
 
 /**
@@ -191,8 +191,8 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>(), Eve
     }
 
     private fun initFeeds() {
-        addFeedFragment(ServiceManager.getService(com.mredrock.cyxbs.discover.electricity.IElectricityService::class.java).getElectricityFeed())
-        addFeedFragment(ServiceManager.getService(com.mredrock.cyxbs.volunteer.IVolunteerService::class.java).getVolunteerFeed())
+        addFeedFragment(ServiceManager.getService(IElectricityService::class.java).getElectricityFeed())
+        addFeedFragment(ServiceManager.getService(IVolunteerService::class.java).getVolunteerFeed())
         //处理手机屏幕过长导致feed无法填充满下方的情况
         ll_discover_feeds.post {
             context?.let {

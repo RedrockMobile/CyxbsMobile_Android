@@ -67,7 +67,7 @@ abstract class BaseActivity : AbsSlideableActivity() {
         lifeCycleLog("onCreate")
     }
 
-    // 两个方法都要监听
+    // 在setContentView之后进行操作
     override fun setContentView(view: View?) { super.setContentView(view); notificationInit() }
     private fun notificationInit() {
         val verifyService = ServiceManager.getService(IAccountService::class.java).getVerifyService()

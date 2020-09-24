@@ -12,7 +12,6 @@ buildscript {
         config = "${rootDir}/config.gradle"
         api_config = "${rootDir}/api_config.gradle"
         secret = "${rootDir}/secret.gradle"
-        kotlin_version = '1.3.72'
     }
 
     repositories {
