@@ -22,7 +22,6 @@ class StuListActivity : BaseActivity() {
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        isSlideable = false
         super.onCreate(savedInstanceState)
         mDataBinding = DataBindingUtil.setContentView(this, R.layout.othercourse_discover_activity_stu_list)
         mDataBinding.stuListActivity = this

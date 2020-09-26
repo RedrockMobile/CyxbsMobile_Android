@@ -45,7 +45,6 @@ class MapActivity : BaseViewModelActivity<MapViewModel>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.map_activity_map)
-        isSlideable = false
         val openString = intent.getStringExtra(COURSE_POS_TO_MAP)
         val path = DataSet.getPath()
         /**

@@ -18,7 +18,6 @@ import kotlinx.android.synthetic.main.mine_activity_tablayout_common.*
 class MyProductActivity(override val isFragmentActivity: Boolean = true) : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        isSlideable =false
         super.onCreate(savedInstanceState)
         setColor(window, ContextCompat.getColor(this, R.color.common_grades_fragment_text_color_black))
         setContentView(R.layout.mine_activity_tablayout_my_product)

@@ -57,7 +57,6 @@ class EmptyRoomActivity : BaseViewModelActivity<EmptyRoomViewModel>(), OnItemSel
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.emptyroom_activity_empty_room)
-        isSlideable = false
         init()
     }
 
