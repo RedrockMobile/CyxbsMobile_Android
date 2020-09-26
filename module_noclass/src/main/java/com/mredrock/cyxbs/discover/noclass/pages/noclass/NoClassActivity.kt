@@ -53,7 +53,6 @@ class NoClassActivity : BaseViewModelActivity<NoClassViewModel>() {
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        isSlideable = false
         super.onCreate(savedInstanceState)
         setContentView(R.layout.noclass_activity_no_class)
 

@@ -17,6 +17,5 @@ class AskActivity(override val isFragmentActivity: Boolean = false) : BaseTabLay
         val fragmentList = listOf<Fragment>(AskPostedFm(), AskDraftFm())
         val titleList = listOf("已发布", "草稿箱")
         init(fragmentList, titleList)
-        isSlideable = false
     }
 }

@@ -38,7 +38,6 @@ class VRActivity : BaseActivity() {
                 putString(VR_URL_SP, url)
             }
         }
-        isSlideable = false
     }
 
     @SuppressLint("SetJavaScriptEnabled", "ObsoleteSdkInt")

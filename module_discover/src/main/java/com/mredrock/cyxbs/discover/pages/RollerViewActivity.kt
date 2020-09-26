@@ -26,7 +26,6 @@ class RollerViewActivity : BaseActivity() {
         if (BuildConfig.DEBUG) WebView.setWebContentsDebuggingEnabled(true)
 
         common_toolbar.init(intent.getStringExtra("Key"))
-        isSlideable = false
         val dialog = ProgressDialog(this)
         dialog.setMessage("加载中...")
         dialog.show()

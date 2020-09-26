@@ -59,7 +59,6 @@ class LoginActivity : BaseViewModelActivity<LoginViewModel>(), EventBusLifecycle
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        isSlideable = false
         ARouter.getInstance().inject(this)
         setContentView(R.layout.main_activity_login)
         initView()
