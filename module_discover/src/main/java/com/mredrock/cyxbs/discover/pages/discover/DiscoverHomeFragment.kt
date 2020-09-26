@@ -21,6 +21,7 @@ import androidx.viewpager2.widget.ViewPager2
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
 import com.mredrock.cyxbs.common.component.CyxbsToast
+import com.mredrock.cyxbs.common.component.SpacesHorizontalItemDecoration
 import com.mredrock.cyxbs.common.config.DISCOVER_ENTRY
 import com.mredrock.cyxbs.common.config.DISCOVER_NEWS
 import com.mredrock.cyxbs.common.config.DISCOVER_NEWS_ITEM
@@ -30,6 +31,7 @@ import com.mredrock.cyxbs.common.mark.EventBusLifecycleSubscriber
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.ui.BaseViewModelFragment
 import com.mredrock.cyxbs.common.utils.extensions.doIfLogin
+import com.mredrock.cyxbs.common.utils.extensions.dp2px
 import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.discover.R
 import com.mredrock.cyxbs.discover.electricity.IElectricityService
@@ -168,6 +170,7 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>(), Eve
         val picUrls = functions.map { it.resource }
         val texts = functions.map { getString(it.title) }
         rv_discover_more_function.apply {
+            SpacesHorizontalItemDecoration(context.dp2px(50F)).attach(this)
             layoutManager = LinearLayoutManager(context).apply {
                 orientation = LinearLayoutManager.HORIZONTAL
             }
