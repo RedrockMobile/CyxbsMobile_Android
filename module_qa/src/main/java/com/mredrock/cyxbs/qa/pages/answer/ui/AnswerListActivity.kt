@@ -68,6 +68,7 @@ class AnswerListActivity : BaseActivity() {
             questionId = intent.getStringExtra(QA_PARAM_QUESTION_ID) ?: ""
             initViewModel(questionId)
         }
+        swipe_refresh_layout.isRefreshing = true
     }
 
     override fun onDestroy() {
