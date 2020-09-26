@@ -41,15 +41,14 @@ class ExamAdapter(val context: Context,
     }
 
     @SuppressLint("SetTextI18n")
-    override fun onBinds(holder: BaseHolder, t: MutableList<Exam>?, position: Int, viewType: Int) {
+    override fun onBinds(holder: BaseHolder, list: MutableList<Exam>?, position: Int, viewType: Int) {
+        list ?: return
         when (viewType) {
             NORMAL -> {
                 //减一是因为要删除Header的占位
-                t?.get(position - 1).let { it ->
-
-                    it?.let {
+                list[position - 1].let { it ->
+                    it.let {
                         if (it.week?.toInt() != 0) {
-
                             val drawableTime = ResourcesCompat.getDrawable(context.resources, R.drawable.grades_time, null)
                             drawableTime?.setBounds(0, 0, 30, 30)
                             holder.itemView.tv_exam_month.setCompoundDrawables(drawableTime, null, null, null)
@@ -87,10 +86,13 @@ class ExamAdapter(val context: Context,
                                 }
                                 holder.itemView.tv_exam_kind.text = it.type ?: ""
                                 it.week?.let { week ->
-                                    holder.itemView.tv_exam_day_of_week.text = String.format("%s周周%s", getChineseWeek(week.toInt() - 1), it.chineseWeekday ?: "--")
+                                    holder.itemView.tv_exam_day_of_week.text = String.format("%s周周%s", getChineseWeek(week.toInt() - 1), it.chineseWeekday
+                                            ?: "--")
                                 }
-                                holder.itemView.tv_exam_day_of_month.text = String.format("%s" + "号", schoolCalendar?.day ?: "--")
-                                holder.itemView.tv_exam_month.text = String.format("%s月", schoolCalendar?.month ?: "--")
+                                holder.itemView.tv_exam_day_of_month.text = String.format("%s" + "号", schoolCalendar?.day
+                                        ?: "--")
+                                holder.itemView.tv_exam_month.text = String.format("%s月", schoolCalendar?.month
+                                        ?: "--")
                             } else {
                                 holder.itemView.tv_exam_day_of_week.text = String.format("%s周周%s", "-", "-")
                                 holder.itemView.tv_exam_day_of_month.text = String.format("%s" + "号", "-")
@@ -115,11 +117,11 @@ class ExamAdapter(val context: Context,
                     }
                 }
 
-                t?.let { t ->
-                    //要去除header的占位
-                    if (position - 1 == t.size - 1) {
-                        holder.itemView.iv_exam_circle.setLineVisible(false)
-                    }
+                //要去除header的占位
+                if (position - 1 == list.size - 1) {
+                    holder.itemView.iv_exam_circle.setLineVisible(false)
+                } else {
+                    holder.itemView.iv_exam_circle.setLineVisible(true)
                 }
             }
         }
@@ -127,7 +129,7 @@ class ExamAdapter(val context: Context,
 
     /**
      * 需要做一个防止数组越界的处理
-    */
+     */
     private fun getChineseWeek(week: Int): String {
         val array = listOf("第一", "第二", "第三", "第四", "第五", "第六", "第七", "第八",
                 "第九", "第十", "十一", "十二", "十三", "十四", "十五",
