@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.mredrock.cyxbs.common.utils.extensions.setImageFromUrl
 import com.mredrock.cyxbs.mine.R
 import com.mredrock.cyxbs.mine.network.model.Product
+import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
 
 /**
  * Created by roger on 2019/11/28
@@ -63,7 +64,7 @@ class ProductAdapter : ListAdapter<Product, ProductAdapter.ProductViewHolder>(Pr
         holder.count.text = "仅剩${product.count}"
         holder.integral.text = if (product.integral.isNotEmpty()) product.integral else "0"
         holder.iv.setImageFromUrl(product.src)
-        holder.exchange.setOnClickListener {
+        holder.exchange.setOnSingleClickListener {
             onExChangeClick?.invoke(product, position)
         }
 

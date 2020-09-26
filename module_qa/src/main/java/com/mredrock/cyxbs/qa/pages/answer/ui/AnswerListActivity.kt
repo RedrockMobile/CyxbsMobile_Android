@@ -65,9 +65,10 @@ class AnswerListActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.qa_activity_answer_list)
         if (intent.getStringExtra(QA_PARAM_QUESTION_ID) != null) {
-            questionId = intent.getStringExtra(QA_PARAM_QUESTION_ID)
+            questionId = intent.getStringExtra(QA_PARAM_QUESTION_ID) ?: ""
             initViewModel(questionId)
         }
+        swipe_refresh_layout.isRefreshing = true
     }
 
     override fun onDestroy() {
@@ -103,14 +104,14 @@ class AnswerListActivity : BaseActivity() {
         initRv()
         //设置标题
         qa_tv_toolbar_title.text = question.title
-        qa_ib_toolbar_back.setOnClickListener { finish() }
+        qa_ib_toolbar_back.setOnSingleClickListener { finish() }
         observeListChangeEvent()
         questionReportDialog = createQuestionReportDialog()
         if (question.isSelf) {
             //不展示更多功能
             qa_ib_toolbar_more.gone()
         } else {
-            qa_ib_toolbar_more.setOnClickListener {
+            qa_ib_toolbar_more.setOnSingleClickListener {
                 doIfLogin {
                     questionReportDialog.show()
                 }
@@ -210,7 +211,7 @@ class AnswerListActivity : BaseActivity() {
 
     private fun switchToHelper() {
         btn_answer.visible()
-        btn_answer.setOnClickListener {
+        btn_answer.setOnSingleClickListener {
             doIfLogin {
                 AnswerActivity.activityStart(this@AnswerListActivity, viewModel.questionLiveData.value?.id
                         ?: "", viewModel.questionLiveData.value?.description

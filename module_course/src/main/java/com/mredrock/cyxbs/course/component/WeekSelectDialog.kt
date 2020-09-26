@@ -9,6 +9,7 @@ import com.mredrock.cyxbs.course.R
 import com.mredrock.cyxbs.course.adapters.WeekSelectRecAdapter
 import com.mredrock.cyxbs.course.databinding.CourseFragmentWeekSelectBinding
 import com.mredrock.cyxbs.course.utils.weekSelectCheckBoxState
+import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
 
 /**
  * Created by anriku on 2018/9/8.
@@ -23,7 +24,7 @@ class WeekSelectDialog(context: Context, val weekSelect: RedRockAutoWarpView, va
     init {
         mBinding.courseAuto.adapter = adapter
         mBinding.fragment = this
-        mBinding.tvSure.setOnClickListener {
+        mBinding.tvSure.setOnSingleClickListener {
             mPostWeeks.clear()
             for ((k, v) in adapter.checkBoxMap) {
                 if (v.isChecked) {

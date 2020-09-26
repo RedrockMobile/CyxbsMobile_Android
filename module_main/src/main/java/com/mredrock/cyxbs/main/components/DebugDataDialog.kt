@@ -14,8 +14,9 @@ import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.common.config.DebugDataModel
+import com.mredrock.cyxbs.main.BR.debugModel
 import com.mredrock.cyxbs.main.R
-import com.mredrock.cyxbs.main.databinding.MainDialogTestDataBinding
+import com.mredrock.cyxbs.main.databinding.MainDialogTestDataBindingImpl
 import kotlinx.android.synthetic.main.main_dialog_test_data.*
 
 
@@ -30,7 +31,7 @@ class DebugDataDialog(context: Context) : Dialog(context) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val view = DataBindingUtil.inflate<MainDialogTestDataBinding>(
+        val view = DataBindingUtil.inflate<MainDialogTestDataBindingImpl>(
                 LayoutInflater.from(context),
                 R.layout.main_dialog_test_data,
                 window?.decorView as ViewGroup,
@@ -42,7 +43,7 @@ class DebugDataDialog(context: Context) : Dialog(context) {
         initDialog(view)
     }
 
-    private fun initDialog(view: MainDialogTestDataBinding) {
+    private fun initDialog(view: MainDialogTestDataBindingImpl) {
         view.apply {
             device_id.setOnLongClickListener {
                 textViewToClipboard(device_id)

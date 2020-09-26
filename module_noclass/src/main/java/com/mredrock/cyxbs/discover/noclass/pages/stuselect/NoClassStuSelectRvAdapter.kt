@@ -12,6 +12,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.mredrock.cyxbs.discover.noclass.R
 import com.mredrock.cyxbs.discover.noclass.network.Student
 import kotlinx.android.synthetic.main.noclass_item_rv_select.view.*
+import com.mredrock.cyxbs.common.utils.extensions.*
+
 
 /**
  * Created by zxzhu
@@ -31,7 +33,7 @@ class NoClassStuSelectRvAdapter(private val mStuList: List<Student>) : RecyclerV
     override fun onBindViewHolder(holder: StuSelectHolder, position: Int) {
         holder.itemView.noclass_item_select_name.text = mStuList[position].name
         holder.itemView.noclass_item_select_class.text = mStuList[position].major + " " + mStuList[position].stunum
-        holder.itemView.setOnClickListener {
+        holder.itemView.setOnSingleClickListener {
             val intent = Intent()
             val bundle = Bundle()
             bundle.putSerializable("stu", mStuList[position])

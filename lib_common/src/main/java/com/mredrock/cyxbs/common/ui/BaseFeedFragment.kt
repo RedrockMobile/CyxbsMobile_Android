@@ -10,6 +10,8 @@ import com.mredrock.cyxbs.common.R
 import com.mredrock.cyxbs.common.utils.extensions.visible
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import kotlinx.android.synthetic.main.common_fragment_base_feed.*
+import com.mredrock.cyxbs.common.utils.extensions.*
+
 
 //module_discover 中的信息部分
 abstract class BaseFeedFragment<T : BaseViewModel> : BaseViewModelFragment<T>() {
@@ -69,7 +71,7 @@ abstract class BaseFeedFragment<T : BaseViewModel> : BaseViewModelFragment<T>() 
     fun getAdapter() = adapter
 
     fun setOnClickListener(listener: () -> Unit) {
-        ll_feed.setOnClickListener { listener.invoke() }
+        ll_feed.setOnSingleClickListener { listener.invoke() }
     }
 
     abstract fun onRefresh()

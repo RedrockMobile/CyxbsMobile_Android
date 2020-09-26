@@ -20,7 +20,7 @@ import com.mredrock.cyxbs.common.config.DISCOVER_NO_CLASS
 import com.mredrock.cyxbs.common.config.STU_NAME_LIST
 import com.mredrock.cyxbs.common.config.STU_NUM_LIST
 import com.mredrock.cyxbs.common.service.ServiceManager
-import com.mredrock.cyxbs.common.service.account.IAccountService
+import com.mredrock.cyxbs.account.IAccountService
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.extensions.getScreenHeight
 import com.mredrock.cyxbs.common.utils.extensions.getScreenWidth
@@ -30,6 +30,8 @@ import com.mredrock.cyxbs.discover.noclass.network.Student
 import com.mredrock.cyxbs.discover.noclass.pages.stuselect.NoClassStuSelectActivity
 import kotlinx.android.synthetic.main.noclass_activity_no_class.*
 import java.io.Serializable
+import com.mredrock.cyxbs.common.utils.extensions.*
+
 
 @Route(path = DISCOVER_NO_CLASS)
 class NoClassActivity : BaseViewModelActivity<NoClassViewModel>() {
@@ -51,7 +53,6 @@ class NoClassActivity : BaseViewModelActivity<NoClassViewModel>() {
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        isSlideable = false
         super.onCreate(savedInstanceState)
         setContentView(R.layout.noclass_activity_no_class)
 
@@ -112,7 +113,7 @@ class NoClassActivity : BaseViewModelActivity<NoClassViewModel>() {
             }
 
         })
-        noclass_btn_query.setOnClickListener {
+        noclass_btn_query.setOnSingleClickListener {
             val students = (noclass_rv.adapter as NoClassRvAdapter).getStuList()
             val nameList = arrayListOf<String>()
             val numList = arrayListOf<String>()

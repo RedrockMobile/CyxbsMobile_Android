@@ -12,6 +12,8 @@ import com.mredrock.cyxbs.mine.network.model.MyProduct
 import com.mredrock.cyxbs.mine.util.ui.BaseRVFragment
 import com.mredrock.cyxbs.mine.util.widget.RvFooter
 import kotlinx.android.synthetic.main.mine_list_item_my_product.view.*
+import com.mredrock.cyxbs.common.utils.extensions.*
+
 
 /**
  * Created by roger on 2020/2/15
@@ -59,7 +61,7 @@ class MyProductFragment(private val type: Int = UNCLAIMED) : BaseRVFragment<MyPr
         holder.itemView.mine_my_product_title.text = if (data.name.isNotEmpty()) data.name else "--"
         holder.itemView.mine_my_product_integral.text = if (data.integral.toString().isNotEmpty()) data.integral.toString() else "0"
         holder.itemView.mine_my_product_iv.setImageFromUrl(data.photoSrc)
-        holder.itemView.setOnClickListener {
+        holder.itemView.setOnSingleClickListener {
             showDialog()
         }
 

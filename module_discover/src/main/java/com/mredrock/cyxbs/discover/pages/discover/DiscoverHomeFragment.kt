@@ -21,6 +21,7 @@ import androidx.viewpager2.widget.ViewPager2
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
 import com.mredrock.cyxbs.common.component.CyxbsToast
+import com.mredrock.cyxbs.common.component.SpacesHorizontalItemDecoration
 import com.mredrock.cyxbs.common.config.DISCOVER_ENTRY
 import com.mredrock.cyxbs.common.config.DISCOVER_NEWS
 import com.mredrock.cyxbs.common.config.DISCOVER_NEWS_ITEM
@@ -28,17 +29,20 @@ import com.mredrock.cyxbs.common.config.MINE_CHECK_IN
 import com.mredrock.cyxbs.common.event.CurrentDateInformationEvent
 import com.mredrock.cyxbs.common.mark.EventBusLifecycleSubscriber
 import com.mredrock.cyxbs.common.service.ServiceManager
-import com.mredrock.cyxbs.common.service.discover.electricity.IElectricityService
-import com.mredrock.cyxbs.common.service.discover.volunteer.IVolunteerService
 import com.mredrock.cyxbs.common.ui.BaseViewModelFragment
 import com.mredrock.cyxbs.common.utils.extensions.doIfLogin
+import com.mredrock.cyxbs.common.utils.extensions.dp2px
+import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.discover.R
+import com.mredrock.cyxbs.discover.electricity.IElectricityService
 import com.mredrock.cyxbs.discover.pages.discover.adapter.DiscoverMoreFunctionRvAdapter
 import com.mredrock.cyxbs.discover.utils.BannerAdapter
 import com.mredrock.cyxbs.discover.utils.MoreFunctionProvider
+import com.mredrock.cyxbs.volunteer.IVolunteerService
 import kotlinx.android.synthetic.main.discover_home_fragment.*
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+
 
 /**
  * @author zixuan
@@ -67,7 +71,7 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>(), Eve
         initJwNews(vf_jwzx_detail, fl_discover_home_jwnews)
         initViewPager()
         viewModel.getRollInfo()
-        iv_check_in.setOnClickListener {
+        iv_check_in.setOnSingleClickListener {
             context?.doIfLogin("签到") {
                 ARouter.getInstance().build(MINE_CHECK_IN).navigation()
             }
@@ -128,7 +132,7 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>(), Eve
             }
         }
 
-        viewFlipper.setOnClickListener {
+        viewFlipper.setOnSingleClickListener {
             ARouter.getInstance().build(DISCOVER_NEWS_ITEM).withString("id", viewFlipper.focusedChild.tag as String).navigation()
         }
 
@@ -137,7 +141,7 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>(), Eve
         viewFlipper.setOutAnimation(context, R.anim.discover_text_out_anim)
         viewModel.getJwNews(1)
 
-        frameLayout.setOnClickListener {
+        frameLayout.setOnSingleClickListener {
             ARouter.getInstance().build(DISCOVER_NEWS).navigation()
         }
     }
@@ -154,7 +158,7 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>(), Eve
                 setTextColor(ContextCompat.getColor(context, R.color.common_menu_font_color_found))
             }
             textSize = 15f
-            setOnClickListener {
+            setOnSingleClickListener {
                 ARouter.getInstance().build(DISCOVER_NEWS_ITEM).withString("id", id).navigation()
             }
         }
@@ -166,6 +170,7 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>(), Eve
         val picUrls = functions.map { it.resource }
         val texts = functions.map { getString(it.title) }
         rv_discover_more_function.apply {
+            SpacesHorizontalItemDecoration(context.dp2px(50F)).attach(this)
             layoutManager = LinearLayoutManager(context).apply {
                 orientation = LinearLayoutManager.HORIZONTAL
             }

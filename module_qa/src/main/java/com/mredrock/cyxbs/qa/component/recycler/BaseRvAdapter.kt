@@ -1,5 +1,8 @@
 package com.mredrock.cyxbs.qa.component.recycler
 
+import com.mredrock.cyxbs.common.utils.extensions.*
+
+
 /**
  * Created By jay68 on 2018/8/26.
  */
@@ -13,7 +16,7 @@ abstract class BaseRvAdapter<T> : androidx.recyclerview.widget.RecyclerView.Adap
             return
         }
         holder.refresh(dataList[position])
-        holder.itemView.setOnClickListener { onItemClickListener(holder, position, dataList[position]) }
+        holder.itemView.setOnSingleClickListener { onItemClickListener(holder, position, dataList[position]) }
     }
 
     protected open fun onItemClickListener(holder: BaseViewHolder<T>, position: Int, data: T) = Unit

@@ -6,29 +6,28 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.FrameLayout
-import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.mredrock.cyxbs.account.IAccountService
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.bean.LoginConfig
 import com.mredrock.cyxbs.common.config.*
 import com.mredrock.cyxbs.common.event.LoadCourse
 import com.mredrock.cyxbs.common.event.NotifyBottomSheetToExpandEvent
 import com.mredrock.cyxbs.common.event.RefreshQaEvent
+import com.mredrock.cyxbs.common.mark.ActionLoginStatusSubscriber
 import com.mredrock.cyxbs.common.mark.EventBusLifecycleSubscriber
 import com.mredrock.cyxbs.common.service.ServiceManager
-import com.mredrock.cyxbs.common.service.account.IAccountService
-import com.mredrock.cyxbs.common.service.main.IMainService
-import com.mredrock.cyxbs.common.service.update.AppUpdateStatus
-import com.mredrock.cyxbs.common.service.update.IAppUpdateService
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.debug
 import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
 import com.mredrock.cyxbs.common.utils.extensions.getStatusBarHeight
 import com.mredrock.cyxbs.common.utils.extensions.onTouch
 import com.mredrock.cyxbs.common.utils.extensions.topPadding
+import com.mredrock.cyxbs.main.IMainService
+import com.mredrock.cyxbs.main.MAIN_MAIN
 import com.mredrock.cyxbs.main.R
 import com.mredrock.cyxbs.main.components.DebugDataDialog
 import com.mredrock.cyxbs.main.utils.BottomNavigationHelper
@@ -36,6 +35,8 @@ import com.mredrock.cyxbs.main.utils.entryContains
 import com.mredrock.cyxbs.main.utils.getFragment
 import com.mredrock.cyxbs.main.utils.isDownloadSplash
 import com.mredrock.cyxbs.main.viewmodel.MainViewModel
+import com.mredrock.cyxbs.update.AppUpdateStatus
+import com.mredrock.cyxbs.update.IAppUpdateService
 import com.umeng.analytics.MobclickAgent
 import com.umeng.message.inapp.InAppMessageManager
 import kotlinx.android.synthetic.main.main_activity_main.*
@@ -45,7 +46,8 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
 @Route(path = MAIN_MAIN)
-class MainActivity : BaseViewModelActivity<MainViewModel>(), EventBusLifecycleSubscriber {
+class MainActivity : BaseViewModelActivity<MainViewModel>(),
+        EventBusLifecycleSubscriber, ActionLoginStatusSubscriber {
 
     override val viewModelClass = MainViewModel::class.java
 
@@ -86,6 +88,10 @@ class MainActivity : BaseViewModelActivity<MainViewModel>(), EventBusLifecycleSu
         super.onCreate(savedInstanceState)
         // 暂时不要在mainActivity里面使用dataBinding，会有一个量级较大的闪退
         setContentView(R.layout.main_activity_main)
+    }
+
+
+    override fun initPage(isLoginElseTourist: Boolean, savedInstanceState: Bundle?) {
         /**
          * 关于这个判断，用于从文件或者其他非launcher打开->按home->点击launcher热启动导致多了一个
          * flag，导致新建this
@@ -98,21 +104,13 @@ class MainActivity : BaseViewModelActivity<MainViewModel>(), EventBusLifecycleSu
             return
         }
         checkSplash()
-        initActivity(savedInstanceState)//Activity相关初始化
-    }
-
-
-    /**
-     * 一些非重量级初始化操作
-     */
-    private fun initActivity(bundle: Bundle?) {
         InAppMessageManager.getInstance(BaseApp.context).showCardMessage(this, "课表主页面") {} //友盟插屏消息关闭之后调用，暂未写功能
         mainService = ServiceManager.getService(IMainService::class.java)//初始化主模块服务
         viewModel.startPage.observe(this, Observer { starPage -> viewModel.initStartPage(starPage) })
         initUpdate()//初始化app更新服务
         initBottom()//初始化底部导航栏
         initBottomSheetBehavior()//初始化上拉容器BottomSheet课表
-        initFragments(bundle)//对四个主要的fragment进行配置
+        initFragments(isLoginElseTourist, savedInstanceState)//对四个主要的fragment进行配置
     }
 
 
@@ -237,15 +235,15 @@ class MainActivity : BaseViewModelActivity<MainViewModel>(), EventBusLifecycleSu
     }
 
 
-    private fun initFragments(bundle: Bundle?) {
+    private fun initFragments(isLoginElseTourist: Boolean, bundle: Bundle?) {
         //取得是否优先显示课表的设置
         viewModel.isCourseDirectShow = defaultSharedPreferences.getBoolean(COURSE_SHOW_STATE, false)
         //如果为异常启动，则可以取得选中状态
         bundle?.getInt(BOTTOM_SHEET_STATE)?.let { viewModel.isCourseDirectShow = it == BottomSheetBehavior.STATE_EXPANDED }
         (bundle?.getSerializable(PAGE_CLASS_TAG) as? HashMap<String, String>)?.let { mainPageLoadedFragmentClassList = it }
-        val isShortcut = intent.action == FAST
         lastState = if (viewModel.isCourseDirectShow) BottomSheetBehavior.STATE_EXPANDED else BottomSheetBehavior.STATE_COLLAPSED
-        if (viewModel.isCourseDirectShow || isShortcut) {
+        val isShortcut = intent.action == FAST
+        if ((viewModel.isCourseDirectShow || isShortcut)&&isLoginElseTourist) {
             intent.action = ""
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
             ll_nav_main_container.translationY = 10000f

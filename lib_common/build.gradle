@@ -120,4 +120,9 @@ dependencies {
     api 'com.davemorrissey.labs:subsampling-scale-image-view:3.10.0'
     api 'com.github.mmin18:realtimeblurview:1.2.1'
     api project(path: ':photolibrary-2.5')
+    api project(":lib_account:api_account")
+    api project(":lib_update:api_update")
+    api project(":module_main:api_main")
+    api project(':module_electricity:api_electricity')
+    api project(':module_volunteer:api_volunteer')
 }

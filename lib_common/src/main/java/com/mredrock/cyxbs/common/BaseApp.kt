@@ -7,9 +7,6 @@ import android.app.NotificationManager
 import android.content.Context
 import android.os.Build
 import com.alibaba.android.arouter.launcher.ARouter
-import com.mredrock.cyxbs.common.slide.ActivityStack
-import io.reactivex.Observable
-import io.reactivex.schedulers.Schedulers
 
 
 /**
@@ -40,8 +37,6 @@ open class BaseApp : Application() {
         //不用放到service里面，只是debug会用到，
         //而且这是轻量级操作，不会对启动速度造成太大的影响
 //        CrashHandler.init(applicationContext)
-
-        ActivityStack.init(applicationContext as Application)
     }
 
     private fun initRouter() {

@@ -8,6 +8,8 @@ import com.mredrock.cyxbs.common.ui.BaseActivity
 import com.mredrock.cyxbs.discover.noclass.R
 import com.mredrock.cyxbs.discover.noclass.network.Student
 import kotlinx.android.synthetic.main.noclass_activity_stu_select.*
+import com.mredrock.cyxbs.common.utils.extensions.*
+
 
 class NoClassStuSelectActivity : BaseActivity() {
     override val isFragmentActivity = false
@@ -33,7 +35,7 @@ class NoClassStuSelectActivity : BaseActivity() {
 
     fun initClickListener() {
 
-        tv_noclass_stu_select_cancel.setOnClickListener {
+        tv_noclass_stu_select_cancel.setOnSingleClickListener {
             finish()
         }
     }

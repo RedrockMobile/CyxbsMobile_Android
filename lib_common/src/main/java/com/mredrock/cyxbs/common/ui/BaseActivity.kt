@@ -9,14 +9,15 @@ import android.os.PersistableBundle
 import android.view.Menu
 import android.view.View
 import androidx.annotation.DrawableRes
+import androidx.appcompat.app.AppCompatActivity
+import com.mredrock.cyxbs.account.IAccountService
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.R
 import com.mredrock.cyxbs.common.bean.LoginConfig
 import com.mredrock.cyxbs.common.component.JToolbar
+import com.mredrock.cyxbs.common.mark.ActionLoginStatusSubscriber
 import com.mredrock.cyxbs.common.mark.EventBusLifecycleSubscriber
 import com.mredrock.cyxbs.common.service.ServiceManager
-import com.mredrock.cyxbs.common.service.account.IAccountService
-import com.mredrock.cyxbs.common.slide.AbsSlideableActivity
 import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.getDarkModeStatus
 import com.mredrock.cyxbs.common.utils.extensions.startActivity
@@ -30,7 +31,7 @@ import org.greenrobot.eventbus.EventBus
 /**
  * Created By jay68 on 2018/8/9.
  */
-abstract class BaseActivity : AbsSlideableActivity() {
+abstract class BaseActivity : AppCompatActivity() {
 
     /**
      * 这里可以开启生命周期的Log，你可以重写这个值并给值为true，
@@ -52,13 +53,30 @@ abstract class BaseActivity : AbsSlideableActivity() {
             isCheckLogin = false
     )
 
+    // 只在这里做封装处理
+    private var baseBundle: Bundle? = null
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        baseBundle = savedInstanceState
         // 禁用横屏，现目前不需要横屏，防止发送一些错误
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         PushAgent.getInstance(BaseApp.context).onAppStart()
         initFlag()
         lifeCycleLog("onCreate")
+    }
+
+    // 在setContentView之后进行操作
+    override fun setContentView(view: View?) { super.setContentView(view); notificationInit() }
+    override fun setContentView(layoutResID: Int) { super.setContentView(layoutResID);notificationInit() }
+    private fun notificationInit() {
+        val verifyService = ServiceManager.getService(IAccountService::class.java).getVerifyService()
+        if (this is ActionLoginStatusSubscriber) {
+            if (verifyService.isLogin()) initOnLoginMode(baseBundle)
+            if (verifyService.isTouristMode()) initOnTouristMode(baseBundle)
+            if (verifyService.isLogin() || verifyService.isTouristMode()) initPage(verifyService.isLogin(), baseBundle)
+        }
     }
 
     private fun initFlag() {
@@ -177,6 +195,12 @@ abstract class BaseActivity : AbsSlideableActivity() {
     override fun onDestroy() {
         super.onDestroy()
         lifeCycleLog("onDestroy")
+        val verifyService = ServiceManager.getService(IAccountService::class.java).getVerifyService()
+        if (this is ActionLoginStatusSubscriber) {
+            if (verifyService.isLogin()) destroyOnLoginMode()
+            if (verifyService.isTouristMode()) destroyOnTouristMode()
+            if (verifyService.isLogin()||verifyService.isTouristMode()) destroyPage(verifyService.isLogin())
+        }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

@@ -49,15 +49,15 @@ class ViewImageCropActivity : AppCompatActivity() {
         setFullScreen()
 
         needResult = intent.getBooleanExtra(NEED_RESULT, false)
-        imgResPath = intent.getStringExtra(IMG_RES_PATH)
+        imgResPath = intent.getStringExtra(IMG_RES_PATH)?:""
 
-        tv_delete.setOnClickListener {
+        tv_delete.setOnSingleClickListener {
             setResult(DELETE_CODE)
             finish()
         }
         if (needResult) {
             tv_edit.visible()
-            tv_edit.setOnClickListener {
+            tv_edit.setOnSingleClickListener {
                 startCropActivity()
                 tv_delete.gone()
             }

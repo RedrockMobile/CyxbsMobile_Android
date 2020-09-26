@@ -16,7 +16,7 @@ import androidx.core.app.NotificationCompat
 import com.mredrock.cyxbs.common.R
 import com.mredrock.cyxbs.common.config.updateFile
 import com.mredrock.cyxbs.common.config.updateFilePath
-import com.mredrock.cyxbs.common.service.update.AppUpdateStatus
+import com.mredrock.cyxbs.update.AppUpdateStatus
 import com.mredrock.cyxbs.common.utils.extensions.toast
 import com.mredrock.cyxbs.update.model.AppUpdateModel
 import java.io.File
