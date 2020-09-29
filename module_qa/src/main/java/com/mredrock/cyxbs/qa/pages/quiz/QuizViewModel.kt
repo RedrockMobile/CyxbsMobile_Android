@@ -21,6 +21,7 @@ import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.bean.QuizResult
 import com.mredrock.cyxbs.qa.network.ApiService
 import com.mredrock.cyxbs.qa.pages.quiz.ui.dialog.RewardSetDialog
+import com.mredrock.cyxbs.qa.utils.RetryWithDelay
 import com.mredrock.cyxbs.qa.utils.isNullOrEmpty
 import com.mredrock.cyxbs.qa.utils.toDate
 import com.mredrock.cyxbs.qa.utils.toFormatString
@@ -125,6 +126,7 @@ class QuizViewModel : BaseViewModel() {
         return true
     }
 
+
     private fun uploadPic(qid: String, files: List<File>): Observable<RedrockApiStatus> {
         val builder = MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
@@ -137,6 +139,7 @@ class QuizViewModel : BaseViewModel() {
         }
         return ApiGenerator.getApiService(ApiService::class.java)
                 .uploadQuestionPic(builder.build().parts)
+                .retryWhen(RetryWithDelay(3, 3000))
                 .setSchedulers()
                 .checkError()
     }

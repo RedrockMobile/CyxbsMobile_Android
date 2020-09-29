@@ -16,6 +16,7 @@ import com.mredrock.cyxbs.common.viewmodel.event.SingleLiveEvent
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.bean.Question
 import com.mredrock.cyxbs.qa.network.ApiService
+import com.mredrock.cyxbs.qa.utils.RetryWithDelay
 import com.mredrock.cyxbs.qa.utils.isNullOrEmpty
 import io.reactivex.Observable
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -80,6 +81,7 @@ class AnswerViewModel(var qid: String) : BaseViewModel() {
         }
         return ApiGenerator.getApiService(ApiService::class.java)
                 .uploadAnswerPic(builder.build().parts)
+                .retryWhen(RetryWithDelay(3, 3000))
                 .setSchedulers()
                 .checkError()
     }
