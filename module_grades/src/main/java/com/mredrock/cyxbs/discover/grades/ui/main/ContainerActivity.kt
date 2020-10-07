@@ -104,7 +104,6 @@ class ContainerActivity : BaseActivity() {
 
     override fun onStart() {
         super.onStart()
-        initExam()
         initBottomSheet()
         initObserver()
         viewModel.getAnalyzeData()
