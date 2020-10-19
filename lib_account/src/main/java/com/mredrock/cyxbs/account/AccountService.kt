@@ -62,6 +62,10 @@ internal class AccountService : IAccountService {
     override fun getUserEditorService() = mUserEditorService
     override fun getUserTokenService(): IUserTokenService = mUserTokenSerVice
     private fun bind(tokenWrapper: TokenWrapper) {
+        //保证bind绑定的是有效的数据，避免被覆盖
+        if (tokenWrapper.isEmptyData()) {
+            return
+        }
         val encryptedUserJson = tokenWrapper.token.split(".")[0]
         this.tokenWrapper = tokenWrapper
         this.user = User.fromJson(String(Base64.decode(encryptedUserJson, Base64.DEFAULT)))
