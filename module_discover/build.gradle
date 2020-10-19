@@ -4,5 +4,8 @@ apply from: config
 // 公用库请不要添加到这里
 dependencies {
     implementation "androidx.viewpager2:viewpager2:1.0.0"
+    implementation project(':module_electricity:api_electricity')
+    implementation project(':module_volunteer:api_volunteer')
+    implementation project(':lib_account:api_account')
 
 }
