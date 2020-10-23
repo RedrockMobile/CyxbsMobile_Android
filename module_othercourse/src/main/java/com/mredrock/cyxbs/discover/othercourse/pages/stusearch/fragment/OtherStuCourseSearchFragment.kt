@@ -4,5 +4,4 @@ import com.mredrock.cyxbs.discover.othercourse.pages.stusearch.viewmodel.OtherCo
 
 
 class OtherStuCourseSearchFragment : OtherCourseSearchFragment<OtherCourseStudentSearchViewModel>() {
-    override val viewModelClass: Class<OtherCourseStudentSearchViewModel> = OtherCourseStudentSearchViewModel::class.java
 }

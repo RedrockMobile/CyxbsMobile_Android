@@ -36,7 +36,6 @@ import com.mredrock.cyxbs.common.utils.extensions.*
 @Route(path = DISCOVER_NO_CLASS)
 class NoClassActivity : BaseViewModelActivity<NoClassViewModel>() {
 
-    override val viewModelClass = NoClassViewModel::class.java
 
     override val isFragmentActivity = false
 

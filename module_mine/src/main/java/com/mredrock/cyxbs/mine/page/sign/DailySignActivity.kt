@@ -41,8 +41,7 @@ import kotlin.math.abs
  * 每日签到
  */
 @Route(path = MINE_CHECK_IN)
-class DailySignActivity(override val viewModelClass: Class<DailyViewModel> = DailyViewModel::class.java
-                        , override val isFragmentActivity: Boolean = false)
+class DailySignActivity( override val isFragmentActivity: Boolean = false)
     : BaseViewModelActivity<DailyViewModel>() {
 
     private var objectAnimator: ObjectAnimator? = null

@@ -184,5 +184,4 @@ class QuestionContainerFragment : BaseViewModelFragment<QuestionContainerViewMod
         vf_hot_search.stopFlipping()
     }
 
-    override val viewModelClass: Class<QuestionContainerViewModel> = QuestionContainerViewModel::class.java
 }

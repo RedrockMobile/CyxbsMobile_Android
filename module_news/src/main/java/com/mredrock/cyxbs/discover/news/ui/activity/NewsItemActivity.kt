@@ -133,7 +133,6 @@ class NewsItemActivity : BaseViewModelActivity<NewsItemViewModel>(), NewsItemVie
         }
     }
 
-    override val viewModelClass = NewsItemViewModel::class.java
     override val isFragmentActivity = false
 
     private lateinit var rxPermissions: RxPermissions

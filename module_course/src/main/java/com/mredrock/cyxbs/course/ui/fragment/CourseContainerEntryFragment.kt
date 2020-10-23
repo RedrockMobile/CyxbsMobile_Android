@@ -60,7 +60,6 @@ class CourseContainerEntryFragment : BaseViewModelFragment<CoursesViewModel>(), 
 
     private var courseState = CourseState.OrdinaryCourse
 
-    override val viewModelClass: Class<CoursesViewModel> = CoursesViewModel::class.java
 
 
     //如果是在获取老师课表下面两值不为空

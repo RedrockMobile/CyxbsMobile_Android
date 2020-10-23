@@ -26,8 +26,7 @@ import kotlinx.android.synthetic.main.mine_activity_about.*
 import kotlinx.android.synthetic.main.mine_layout_dialog_recyclerview_dynamic.view.*
 
 
-class AboutActivity(override val isFragmentActivity: Boolean = false,
-                    override val viewModelClass: Class<AboutViewModel> = AboutViewModel::class.java)
+class AboutActivity(override val isFragmentActivity: Boolean = false)
     : BaseViewModelActivity<AboutViewModel>() {
 
     override fun onCreate(savedInstanceState: Bundle?) {

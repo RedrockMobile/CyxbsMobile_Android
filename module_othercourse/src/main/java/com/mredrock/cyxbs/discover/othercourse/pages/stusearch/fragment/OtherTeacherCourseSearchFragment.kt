@@ -6,5 +6,4 @@ import com.mredrock.cyxbs.discover.othercourse.pages.stusearch.viewmodel.OtherCo
  * Created by yyfbe, Date on 2020/8/14.
  */
 class OtherTeacherCourseSearchFragment : OtherCourseSearchFragment<OtherCourseTeacherSearchViewModel>() {
-    override val viewModelClass: Class<OtherCourseTeacherSearchViewModel> = OtherCourseTeacherSearchViewModel::class.java
 }

@@ -48,7 +48,4 @@ class VolunteerAffairFragment : BaseViewModelFragment<VolunteerAffairViewModel>(
             volunteerAffairBottomSheetDialog?.refresh(data)
         }
     }
-
-    override val viewModelClass: Class<VolunteerAffairViewModel>
-        get() = VolunteerAffairViewModel::class.java
 }

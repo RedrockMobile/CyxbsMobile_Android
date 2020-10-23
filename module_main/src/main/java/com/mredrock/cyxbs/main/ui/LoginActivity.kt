@@ -42,7 +42,6 @@ class LoginActivity : BaseViewModelActivity<LoginViewModel>(), EventBusLifecycle
 
     override val isFragmentActivity = false
 
-    override val viewModelClass = LoginViewModel::class.java
 
     private val lottieProgress = 0.39f
 
