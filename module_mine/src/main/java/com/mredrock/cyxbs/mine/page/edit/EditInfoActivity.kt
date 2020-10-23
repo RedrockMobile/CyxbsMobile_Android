@@ -49,8 +49,7 @@ import java.io.IOException
  * Created by zzzia on 2018/8/14.
  * 编辑个人信息
  */
-class EditInfoActivity(override val isFragmentActivity: Boolean = false,
-                       override val viewModelClass: Class<EditViewModel> = EditViewModel::class.java)
+class EditInfoActivity(override val isFragmentActivity: Boolean = false)
     : BaseViewModelActivity<EditViewModel>() {
 
     private val SELECT_PICTURE = 1

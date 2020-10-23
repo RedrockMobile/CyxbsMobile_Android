@@ -80,5 +80,4 @@ class QuestionSearchingFragment : BaseViewModelFragment<SearchViewModel>() {
         }
     }
 
-    override val viewModelClass: Class<SearchViewModel> = SearchViewModel::class.java
 }

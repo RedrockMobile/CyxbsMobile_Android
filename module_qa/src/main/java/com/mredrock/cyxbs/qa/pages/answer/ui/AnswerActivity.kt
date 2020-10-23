@@ -46,7 +46,6 @@ class AnswerActivity : BaseViewModelActivity<AnswerViewModel>(), EventBusLifecyc
         }
     }
 
-    override val viewModelClass = AnswerViewModel::class.java
 
     override val isFragmentActivity = false
 

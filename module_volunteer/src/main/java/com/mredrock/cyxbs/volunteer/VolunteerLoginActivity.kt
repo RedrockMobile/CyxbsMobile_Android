@@ -115,7 +115,4 @@ class VolunteerLoginActivity : BaseViewModelActivity<VolunteerLoginViewModel>() 
         }
     }
 
-    override val viewModelClass: Class<VolunteerLoginViewModel>
-        get() = VolunteerLoginViewModel::class.java
-
 }

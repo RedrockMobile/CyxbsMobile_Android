@@ -49,7 +49,6 @@ import org.greenrobot.eventbus.ThreadMode
 class MainActivity : BaseViewModelActivity<MainViewModel>(),
         EventBusLifecycleSubscriber, ActionLoginStatusSubscriber {
 
-    override val viewModelClass = MainViewModel::class.java
 
     override val isFragmentActivity = true
 
