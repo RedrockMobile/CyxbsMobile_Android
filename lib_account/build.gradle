@@ -2,4 +2,8 @@ apply from: config
 
 dependencies {
     implementation project(':lib_account:api_account')
+    //TODO account不应该依赖业务模块，应该去除
+    implementation project(':module_electricity:api_electricity')
+    implementation project(':module_volunteer:api_volunteer')
+    implementation project(':module_main:api_main')
 }

@@ -4,6 +4,9 @@ apply from: config
 // 公用库请不要添加到这里
 dependencies {
     implementation 'com.super_rabbit.wheel_picker:NumberPicker:1.0.1'
+    implementation project(':lib_account:api_account')
+    implementation project(':module_main:api_main')
+
 }
 android {
     defaultConfig {
