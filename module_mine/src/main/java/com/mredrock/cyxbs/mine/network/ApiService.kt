@@ -152,4 +152,29 @@ interface ApiService {
     fun getAnswer(
             @Field("answer_id") answer_id: String): Observable<ResponseBody>
 
+    /**
+     * 修改密码
+     * 调用此方法必须处于登录状态
+     */
+    @FormUrlEncoded
+    @POST("/user/password/personal")
+    fun changePassword(
+            @Field("origin_password") origin_password : String ,
+            @Field("new_password") new_password: String): Observable<RedrockApiStatus>
+
+    /**
+     * 设置密保问题答案
+     */
+    @FormUrlEncoded
+    @POST("/user/bind/question")
+    fun setSecurityQuestionAnswer(
+            @Field("id") id: Int , //问题的id
+            @Field("content") content : String): Observable<RedrockApiStatus>//答案的主体内容
+
+    /**
+     * 获取所有的密保问题
+     */
+    @FormUrlEncoded
+    @GET("/user/question")
+    fun getAllSecurityQuestions(): Observable<RedrockApiWrapper<List<SecurityQuestion>>>
 }

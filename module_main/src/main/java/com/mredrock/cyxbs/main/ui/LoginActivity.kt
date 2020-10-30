@@ -44,7 +44,7 @@ class LoginActivity : BaseViewModelActivity<LoginViewModel>(), EventBusLifecycle
 
     override val viewModelClass = LoginViewModel::class.java
 
-    private val lottieProgress = 0.39f
+    private val lottieProgress = 0.39f//点击同意用户协议时的动画的时间
 
     override val loginConfig = LoginConfig(isCheckLogin = false)
 
