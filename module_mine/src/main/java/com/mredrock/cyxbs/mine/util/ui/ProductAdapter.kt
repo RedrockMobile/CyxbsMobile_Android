@@ -67,7 +67,5 @@ class ProductAdapter : ListAdapter<Product, ProductAdapter.ProductViewHolder>(Pr
         holder.exchange.setOnSingleClickListener {
             onExChangeClick?.invoke(product, position)
         }
-
     }
-
 }
