@@ -3,20 +3,32 @@
     package="com.mredrock.cyxbs.mine">
 
     <application android:theme="@style/AppTheme">
-        <activity android:name=".page.myproduct.MyProductActivity"
-            android:launchMode="singleTop"/>
-        <activity android:name=".page.edit.EditInfoActivity"
-            android:screenOrientation="portrait"
+        <activity android:name=".page.security.activity.SetPasswordProtectActivity"></activity>
+        <activity android:name=".page.security.activity.ChangPasswordActivity" />
+        <activity
+            android:name=".page.security.activity.SecurityActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".page.myproduct.MyProductActivity"
             android:launchMode="singleTop" />
-        <activity android:name=".page.sign.DailySignActivity"
+        <activity
+            android:name=".page.edit.EditInfoActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".page.sign.DailySignActivity"
             android:launchMode="singleTop" />
-        <activity android:name=".page.answer.AnswerActivity"
+        <activity
+            android:name=".page.answer.AnswerActivity"
             android:launchMode="singleTop" />
-        <activity android:name=".page.ask.AskActivity"
+        <activity
+            android:name=".page.ask.AskActivity"
             android:launchMode="singleTop" />
-        <activity android:name=".page.comment.CommentActivity"
+        <activity
+            android:name=".page.comment.CommentActivity"
             android:launchMode="singleTop" />
-        <activity android:name=".page.about.AboutActivity"
+        <activity
+            android:name=".page.about.AboutActivity"
             android:launchMode="singleTop" />
         <activity
             android:name="com.yalantis.ucrop.UCropActivity"

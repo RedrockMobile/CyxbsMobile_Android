@@ -70,7 +70,7 @@
     <string name="mine_draft_delete_failed">删除失败</string>
 
 
-    <!--    评论-->
+    <!--评论-->
     <string name="mine_comment_at_start">你评论了 </string>
     <string name="mine_comment_at_end"> 的回答</string>
     <string name="mine_comment_received_at_end"> 评论了你的回答</string>
@@ -85,6 +85,22 @@
     <string name="mine_about_1">红岩网校工作站出品</string>
     <string name="mine_about_copyright">CopyRight © 2015&#8211;2020 All Rights Reserved</string>
     <string name="mine_sign_store_back">store back</string>
+
+    <!--密码与安全-->
+    <string name="mine_security_change_pass_word">修改密码</string>
+    <string name="mine_security_change_secret_security">修改密保</string>
+    <string name="mine_security_change_binding_mail">修改绑定邮箱</string>
+    <string name="mine_security_dialog_tip">温馨提示</string>
+    <string name="mine_security_please_input_password">请输入旧密码</string>
+    <string name="mine_security_forget_password">忘记密码？</string>
+    <string name="mine_security_next">下一步</string>
+    <string name="mine_security_set_password_protect">设置密保</string>
+    <string name="mine_security_your_password_protect_question">你的保密问题是：</string>
+    <string name="mine_security_sel_question">选择一个密保问题</string>
+    <string name="mine_security_answer_to_question">你的问题的回答是</string>
+    <string name="mine_security_your_best_friend_name">你最好的朋友的名字是？</string>
+    <string name="mine_security_input_answer_hint">请输入密保问题的答案（由2–16位字符组成）</string>
+    <string name="mine_security_confirm">确 定</string>
 
 
 </resources>

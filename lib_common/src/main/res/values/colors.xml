@@ -155,6 +155,9 @@
     <color name="common_mine_main_btn_gradient_start">#4841E2</color>
     <color name="common_mine_main_btn_gradient_end">#5D5DF7</color>
 
+    <!--     我的模块的账号安全部分-->
+    <color name="common_mine_security_divide_line">#F8F9FC</color>
+
     <!--    考试成绩-->
     <color name="common_grades_gpa_rv_list_round_corner_background">#88E8F1FC
     </color>
