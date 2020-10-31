@@ -8,7 +8,6 @@
         <activity android:name=".page.security.activity.ChangPasswordActivity" />
         <activity
             android:name=".page.security.activity.SecurityActivity"
-            android:label="@string/title_activity_security"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".page.myproduct.MyProductActivity"

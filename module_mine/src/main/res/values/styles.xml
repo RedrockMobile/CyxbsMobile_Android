@@ -18,7 +18,7 @@
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
     <style name="transparent_dialog" parent="Theme.AppCompat.Dialog">
-        <item name="android:windowBackground">#00000000</item>
+        <item name="android:windowBackground">@null</item>
     </style>
 
 </resources>

@@ -11,6 +11,7 @@ import com.mredrock.cyxbs.common.component.RedRockBottomSheetDialog
  * Time: 2020-10-29 15:06
  * describe: 设置密保问题时选择问题用的sheetDialog
  */
+/*
 class SelQuestionDialog : RedRockBottomSheetDialog() {
 
-}
+}*/
