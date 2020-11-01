@@ -18,4 +18,12 @@ class ChangePasswordViewModel : BaseViewModel() {
     val showSecondInputIcon = ObservableField<Boolean>(false)
     //是否展示第一行的*/
 
+    //旧密码是否输入正确
+    var originPassWordIsCorrect=ObservableField<Boolean>(false)
+
+
+    //检查旧密码输入是否相同
+    fun originPassWordCheck(originPassword:String?){
+
+    }
 }

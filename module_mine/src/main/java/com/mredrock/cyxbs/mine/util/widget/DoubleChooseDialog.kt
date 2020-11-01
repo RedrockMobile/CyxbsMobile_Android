@@ -10,7 +10,6 @@ class DoubleChooseDialog (context: Context?, theme : Int) : Dialog(context!! , t
         private var doubleChooseDialog: DoubleChooseDialog? = null
         fun createDialog(context: Context?): DoubleChooseDialog? {
             doubleChooseDialog = DoubleChooseDialog(context, R.style.transparent_dialog)
-            doubleChooseDialog?.setContentView()
             doubleChooseDialog?.window?.attributes?.gravity = Gravity.CENTER
             return doubleChooseDialog
         }

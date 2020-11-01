@@ -34,6 +34,7 @@ import com.mredrock.cyxbs.mine.page.answer.AnswerActivity
 import com.mredrock.cyxbs.mine.page.ask.AskActivity
 import com.mredrock.cyxbs.mine.page.comment.CommentActivity
 import com.mredrock.cyxbs.mine.page.edit.EditInfoActivity
+import com.mredrock.cyxbs.mine.page.security.activity.ChangPasswordActivity
 import com.mredrock.cyxbs.mine.page.sign.DailySignActivity
 import kotlinx.android.synthetic.main.mine_fragment_main.*
 
@@ -55,6 +56,7 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
     private fun initView() {
         //功能按钮
         context?.apply {
+            mine_main_tv_security.setOnClickListener { doIfLogin { startActivity<ChangPasswordActivity>() } }
             mine_main_btn_sign.setOnClickListener { doIfLogin { startActivity<DailySignActivity>() } }
             mine_main_tv_sign.setOnClickListener { doIfLogin { startActivity<DailySignActivity>() } }
             mine_main_question_number.setOnClickListener { doIfLogin { startActivity<AskActivity>() } }
