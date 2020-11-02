@@ -8,15 +8,6 @@ import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
  * Time: 2020-10-31 1:33
  */
 class ChangePasswordViewModel : BaseViewModel() {
-    /*//是否展示第一行的眼睛图标
-    val showFirstEyeIcon = ObservableField<Boolean>(false)
-    //是否展示第二行的眼睛图标
-    val showSecondEyeIcon = ObservableField<Boolean>(false)
-    //是否展示第二行的editText
-    val showSecondEditText = ObservableField<Boolean>(false)
-    //是否展示第二行的输入行前图标
-    val showSecondInputIcon = ObservableField<Boolean>(false)
-    //是否展示第一行的*/
 
     //旧密码是否输入正确
     var originPassWordIsCorrect=ObservableField<Boolean>(false)
@@ -26,4 +17,5 @@ class ChangePasswordViewModel : BaseViewModel() {
     fun originPassWordCheck(originPassword:String?){
 
     }
+
 }

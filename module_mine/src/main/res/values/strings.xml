@@ -92,7 +92,7 @@
     <string name="mine_security_change_secret_security">修改密保</string>
     <string name="mine_security_change_binding_mail">修改绑定邮箱</string>
     <string name="mine_security_dialog_tip">温馨提示</string>
-    <string name="mine_security_please_input_password">请再次输入6位以上新密码</string>
+    <string name="mine_security_please_input_password">请再输入6位以上新密码</string>
     <string name="mine_security_forget_password">忘记密码？</string>
     <string name="mine_security_next">下一步</string>
     <string name="mine_security_set_password_protect">设置密保</string>
