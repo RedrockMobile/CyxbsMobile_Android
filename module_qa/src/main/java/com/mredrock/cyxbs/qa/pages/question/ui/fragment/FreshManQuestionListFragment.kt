@@ -46,7 +46,6 @@ class FreshManQuestionListFragment : BaseQuestionListFragment<FreshManQuestionLi
             QuizActivity.activityStart(this, "迎新生", QuestionContainerFragment.REQUEST_LIST_REFRESH_ACTIVITY)
         }
     }
-    override val viewModelClass: Class<FreshManQuestionListViewModel> = FreshManQuestionListViewModel::class.java
     override fun observeLoading(questionListRvAdapter: QuestionListRvAdapter,
                                 headerRvAdapter: FreshManHeaderRvAdapter?,
                                 footerRvAdapter: FooterRvAdapter,

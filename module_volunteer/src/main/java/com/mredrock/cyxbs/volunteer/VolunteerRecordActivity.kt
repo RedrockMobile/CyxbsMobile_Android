@@ -64,8 +64,4 @@ class VolunteerRecordActivity : BaseViewModelActivity<VolunteerRecordViewModel>(
 
     }
 
-    override val viewModelClass: Class<VolunteerRecordViewModel>
-        get() = VolunteerRecordViewModel::class.java
-
-
 }

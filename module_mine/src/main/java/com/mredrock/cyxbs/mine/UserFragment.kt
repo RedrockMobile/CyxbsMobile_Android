@@ -34,6 +34,7 @@ import com.mredrock.cyxbs.mine.page.answer.AnswerActivity
 import com.mredrock.cyxbs.mine.page.ask.AskActivity
 import com.mredrock.cyxbs.mine.page.comment.CommentActivity
 import com.mredrock.cyxbs.mine.page.edit.EditInfoActivity
+import com.mredrock.cyxbs.mine.page.security.activity.ChangPasswordActivity
 import com.mredrock.cyxbs.mine.page.security.activity.SetPasswordProtectActivity
 import com.mredrock.cyxbs.mine.page.sign.DailySignActivity
 import kotlinx.android.synthetic.main.mine_fragment_main.*
@@ -45,8 +46,6 @@ import kotlinx.android.synthetic.main.mine_fragment_main.*
 @SuppressLint("SetTextI18n")
 @Route(path = MINE_ENTRY)
 class UserFragment : BaseViewModelFragment<UserViewModel>() {
-    override val viewModelClass: Class<UserViewModel>
-        get() = UserViewModel::class.java
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -58,9 +57,10 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
     private fun initView() {
         //功能按钮
         context?.apply {
-            mine_main_btn_sign.setOnClickListener { doIfLogin { /*startActivity<DailySignActivity>()*/
-                startActivity(Intent(this , SetPasswordProtectActivity::class.java))
+            mine_main_btn_sign.setOnClickListener { doIfLogin { startActivity<DailySignActivity>()
             } }
+            mine_main_tv_security.setOnClickListener { doIfLogin { ChangPasswordActivity.actionStart(this,ChangPasswordActivity.TYPE_START_FROM_OTHERS)} }
+            mine_main_btn_sign.setOnClickListener { doIfLogin { startActivity<DailySignActivity>() } }
             mine_main_tv_sign.setOnClickListener { doIfLogin { startActivity<DailySignActivity>() } }
             mine_main_question_number.setOnClickListener { doIfLogin { startActivity<AskActivity>() } }
             mine_main_tv_question.setOnClickListener { doIfLogin { startActivity<AskActivity>() } }

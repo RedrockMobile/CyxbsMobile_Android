@@ -25,7 +25,6 @@ import com.mredrock.cyxbs.common.utils.extensions.*
 class ElectricityFeedFragment : BaseFeedFragment<ChargeViewModel>() {
 
 
-    override val viewModelClass: Class<ChargeViewModel> = ChargeViewModel::class.java
 
     override var hasTopSplitLine = false
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

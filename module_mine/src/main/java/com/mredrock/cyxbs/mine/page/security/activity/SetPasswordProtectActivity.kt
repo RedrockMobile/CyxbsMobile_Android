@@ -1,5 +1,4 @@
 package com.mredrock.cyxbs.mine.page.security.activity
-
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -22,7 +21,6 @@ import kotlinx.android.synthetic.main.mine_activity_set_password_protect.*
 class SetPasswordProtectActivity : BaseViewModelActivity<SetPasswordProtectViewModel>() {
 
     override val isFragmentActivity = false
-    override val viewModelClass = SetPasswordProtectViewModel::class.java
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

@@ -16,4 +16,6 @@ internal data class TokenWrapper(
     companion object {
         fun fromJson(json: String) = Gson().fromJson(json, TokenWrapper::class.java)
     }
+
+    fun isEmptyData() = refreshToken.isEmpty() || token.isEmpty()
 }

@@ -35,7 +35,6 @@ class AffairEditActivity : BaseViewModelActivity<EditAffairViewModel>() {
         get() = true
 
     private lateinit var mBinding: CourseActivityEditAffairBinding
-    override val viewModelClass: Class<EditAffairViewModel> = EditAffairViewModel::class.java
 
     //周数选择BottomSheetDialog
     private val mWeekSelectDialog: WeekSelectDialog by lazy(LazyThreadSafetyMode.NONE) {

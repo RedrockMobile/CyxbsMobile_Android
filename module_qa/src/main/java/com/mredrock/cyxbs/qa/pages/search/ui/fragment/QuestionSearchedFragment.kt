@@ -25,8 +25,6 @@ import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
  * Created by yyfbe, Date on 2020/8/13.
  */
 class QuestionSearchedFragment : BaseViewModelFragment<QuestionSearchedViewModel>() {
-    override val viewModelClass: Class<QuestionSearchedViewModel>
-        get() = QuestionSearchedViewModel::class.java
 
     companion object {
         const val SEARCH_KEY = "searchKey"

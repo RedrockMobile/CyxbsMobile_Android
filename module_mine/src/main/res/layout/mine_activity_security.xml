@@ -43,7 +43,7 @@
         tools:layout_editor_absoluteX="1dp">
 
         <LinearLayout
-            android:id="@+id/ll_change_password"
+            android:id="@+id/mine_ll_change_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="26dp"
@@ -72,7 +72,7 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/ll_change_secret_security"
+        android:id="@+id/mine_ll_change_secret_security"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="34dp"
@@ -101,9 +101,9 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/ll_change_binding_mail"
-            android:layout_width="match_parent"
+            android:id="@+id/mine_ll_change_binding_mail"
             android:layout_height="wrap_content"
+            android:layout_width="match_parent"
             android:layout_marginTop="34dp"
             android:orientation="horizontal">
 
@@ -128,7 +128,5 @@
                 android:layout_marginEnd="16dp"
                 android:src="@drawable/mine_ic_left_arrow_triple" />
         </LinearLayout>
-
-
     </LinearLayout>
 </LinearLayout>
