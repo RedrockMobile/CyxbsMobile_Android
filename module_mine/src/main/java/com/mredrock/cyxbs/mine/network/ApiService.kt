@@ -174,7 +174,7 @@ interface ApiService {
     /**
      * 获取所有的密保问题
      */
-    @FormUrlEncoded
+    //@FormUrlEncoded
     @GET("/user/question")
     fun getAllSecurityQuestions(): Observable<RedrockApiWrapper<List<SecurityQuestion>>>
 }
