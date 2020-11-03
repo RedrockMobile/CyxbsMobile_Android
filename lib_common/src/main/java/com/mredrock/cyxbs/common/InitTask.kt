@@ -6,13 +6,10 @@ import android.app.NotificationManager
 import android.content.Context
 import android.content.Context.NOTIFICATION_SERVICE
 import android.graphics.Color
-import android.widget.Toast
 import androidx.core.app.NotificationCompat
-import com.alibaba.android.arouter.launcher.ARouter
 import com.google.gson.JsonParser
 import com.meituan.android.walle.WalleChannelReader
 import com.mredrock.cyxbs.common.config.DebugDataModel
-import com.mredrock.cyxbs.common.config.QA_ANSWER_LIST
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.account.IAccountService
 import com.mredrock.cyxbs.account.IUserStateService
@@ -105,8 +102,8 @@ fun initUMeng(context: Context) {
         }
         val notificationClickHandler: UmengNotificationClickHandler = object : UmengNotificationClickHandler() {
             override fun dealWithCustomAction(context: Context, msg: UMessage) {
-                val asJsonObject = JsonParser.parseString(msg.custom).asJsonObject
-                asJsonObject.get("uri")?.let {
+                val data = JsonParser.parseString(msg.custom).asJsonObject
+                data.get("uri")?.let {
                     JumpProtocol.start(it.asString)
                 }
             }

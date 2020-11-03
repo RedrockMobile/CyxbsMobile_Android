@@ -1,15 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
-
-    <data>
-
-        <variable
-            name="debugModel"
-            type="com.mredrock.cyxbs.common.config.DebugDataModel" />
-
-    </data>
 
     <ScrollView
         android:layout_width="match_parent"
@@ -49,7 +40,6 @@
                     android:layout_height="wrap_content"
                     android:background="@drawable/main_shape_debug_text_bg"
                     android:padding="8dp"
-                    android:text="@{debugModel.umPushDeviceId}"
                     tools:text="设备id" />
 
                 <TextView
@@ -65,7 +55,6 @@
                     android:layout_height="wrap_content"
                     android:background="@drawable/main_shape_debug_text_bg"
                     android:padding="8dp"
-                    android:text="@{debugModel.umAnalyzeDeviceData}"
                     tools:text="设备id" />
 
             </LinearLayout>
@@ -86,7 +75,11 @@
                 <EditText
                     android:id="@+id/et_unified_protocol_jump"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:hint="@string/main_uri_cyxbs_redrock_team"
+                    android:importantForAutofill="no"
+                    android:inputType="textUri"
+                    tools:ignore="LabelFor" />
 
                 <Button
                     android:id="@+id/button_start_jumping"

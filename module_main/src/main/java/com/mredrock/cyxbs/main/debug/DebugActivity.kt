@@ -6,29 +6,35 @@ import android.content.Context
 import android.os.Bundle
 import android.widget.TextView
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
-import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.Observer
 import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.common.config.DebugDataModel
 import com.mredrock.cyxbs.common.ui.BaseActivity
 import com.mredrock.cyxbs.common.utils.jump.JumpProtocol
 import com.mredrock.cyxbs.main.R
-import com.mredrock.cyxbs.main.databinding.MainActivityDebugBinding
 import kotlinx.android.synthetic.main.main_activity_debug.*
 
-class DebugActivity : AppCompatActivity() {
+class DebugActivity : BaseActivity() {
 
-//    override val isFragmentActivity = false
+    override val isFragmentActivity = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        DataBindingUtil.setContentView<MainActivityDebugBinding>(this, R.layout.main_activity_debug).apply {
-            debugModel = DebugDataModel
-        }
+        setContentView(R.layout.main_activity_debug)
         initActivity()
     }
 
     private fun initActivity() {
+
+
+        DebugDataModel.umPushDeviceId.observe(this, Observer {
+            device_id.text = it ?: ""
+        })
+
+        DebugDataModel.umAnalyzeDeviceData.observe(this, Observer {
+            umeng_analyzes_device_data.text = it ?: ""
+        })
+
         device_id.setOnLongClickListener {
             textViewToClipboard(device_id)
             true
@@ -59,5 +65,4 @@ class DebugActivity : AppCompatActivity() {
         cm?.primaryClip = mClipData
         CyxbsToast.makeText(this, "复制成功", Toast.LENGTH_SHORT).show()
     }
-
 }

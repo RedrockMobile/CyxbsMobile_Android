@@ -40,7 +40,6 @@ open class BaseApp : Application() {
         //而且这是轻量级操作，不会对启动速度造成太大的影响
 //        CrashHandler.init(applicationContext)
         JumpProtocol.register("cyxbs")
-        ActivityStack.init(applicationContext as Application)
     }
 
     private fun initRouter() {

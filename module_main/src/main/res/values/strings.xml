@@ -29,4 +29,5 @@
     <string name="main_umeng_analyzes_device_data">友盟分析设备数据：</string>
     <string name="main_unified_protocol_jump">统一协议跳转</string>
     <string name="main_jump">跳转</string>
+    <string name="main_uri_cyxbs_redrock_team">协议uri:cyxbs://redrock.team/xxxxx</string>
 </resources>
