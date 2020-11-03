@@ -43,8 +43,8 @@ abstract class BaseActivity : AppCompatActivity() {
     protected open var TAG: String = this::class.java.simpleName
 
     /**
-     * service for umeng
-     * set true if this activity consist of fragments.
+     * 如果这个页面是服务于fragment的那么继承之后请将这个值赋值为true
+     * 为了防止友盟统计重复页面统计
      */
     abstract val isFragmentActivity: Boolean
 

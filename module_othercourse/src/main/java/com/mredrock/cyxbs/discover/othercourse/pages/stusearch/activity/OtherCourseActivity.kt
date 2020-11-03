@@ -4,6 +4,7 @@ import android.os.Bundle
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.google.android.material.tabs.TabLayoutMediator
 import com.mredrock.cyxbs.common.config.DISCOVER_OTHER_COURSE
+import com.mredrock.cyxbs.common.config.TAB_INDEX
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.discover.othercourse.OtherCourseViewPagerAdapter
 import com.mredrock.cyxbs.discover.othercourse.R
@@ -37,5 +38,8 @@ class OtherCourseActivity : BaseViewModelActivity<OtherCourseViewModel>() {
             }
         }.attach()
 
+        // 内部跳转协议参数处理
+        val tabIndex = intent.getStringExtra(TAB_INDEX)?.toIntOrNull()
+        tabIndex?.let { vp_other_course.setCurrentItem(it, false) }
     }
 }
