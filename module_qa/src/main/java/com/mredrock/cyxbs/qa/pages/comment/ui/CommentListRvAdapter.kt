@@ -14,6 +14,8 @@ import com.mredrock.cyxbs.qa.component.recycler.BaseEndlessRvAdapter
 import com.mredrock.cyxbs.qa.component.recycler.BaseViewHolder
 import com.mredrock.cyxbs.qa.utils.timeDescription
 import kotlinx.android.synthetic.main.qa_recycler_item_comment.view.*
+import com.mredrock.cyxbs.common.utils.extensions.*
+
 
 /**
  * Created By jay68 on 2018/10/8.
@@ -63,7 +65,7 @@ class CommentListRvAdapter(private val questionAnonymous: Boolean) : BaseEndless
                 }
                 else -> {
                     ib_comment_item_more.visible()
-                    ib_comment_item_more.setOnClickListener {
+                    ib_comment_item_more.setOnSingleClickListener {
                         context?.doIfLogin {
                             onReportClickListener?.invoke((getItem(position) as Comment).id)
                         }

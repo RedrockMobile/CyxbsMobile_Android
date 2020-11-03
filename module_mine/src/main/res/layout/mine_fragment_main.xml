@@ -105,7 +105,6 @@
                 app:layout_constraintBottom_toBottomOf="@+id/mine_main_tv_sign"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/mine_main_tv_sign" />
-
             <TextView
                 android:id="@+id/mine_main_question_number"
                 android:layout_width="wrap_content"
@@ -116,7 +115,6 @@
                 android:text="@string/mine_number_default"
                 android:textColor="@color/levelFourFontColor"
                 android:textSize="30sp"
-                android:textStyle="bold"
                 app:layout_constraintBottom_toTopOf="@+id/mine_main_tv_question"
                 app:layout_constraintEnd_toEndOf="@+id/mine_main_tv_question"
                 app:layout_constraintStart_toStartOf="@+id/mine_main_tv_question" />
@@ -131,8 +129,6 @@
                 android:text="@string/mine_number_default"
                 android:textColor="@color/levelFourFontColor"
                 android:textSize="30sp"
-                android:textStyle="bold"
-                android:typeface="serif"
                 app:layout_constraintBottom_toTopOf="@+id/mine_main_tv_answer"
                 app:layout_constraintEnd_toEndOf="@+id/mine_main_tv_answer"
                 app:layout_constraintStart_toStartOf="@+id/mine_main_tv_answer" />
@@ -147,8 +143,6 @@
                 android:text="@string/mine_number_default"
                 android:textColor="@color/levelFourFontColor"
                 android:textSize="30sp"
-                android:textStyle="bold"
-                android:typeface="serif"
                 app:layout_constraintBottom_toTopOf="@+id/mine_main_tv_reply_comment"
                 app:layout_constraintEnd_toEndOf="@+id/mine_main_tv_reply_comment"
                 app:layout_constraintStart_toStartOf="@+id/mine_main_tv_reply_comment" />
@@ -163,8 +157,6 @@
                 android:text="@string/mine_number_default"
                 android:textColor="@color/levelFourFontColor"
                 android:textSize="30sp"
-                android:textStyle="bold"
-                android:typeface="serif"
                 app:layout_constraintBottom_toTopOf="@+id/mine_main_tv_praise"
                 app:layout_constraintEnd_toEndOf="@+id/mine_main_tv_praise"
                 app:layout_constraintHorizontal_bias="0.55"

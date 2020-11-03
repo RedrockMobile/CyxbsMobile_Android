@@ -6,4 +6,9 @@ dependencies {
 
     implementation 'de.hdodenhof:circleimageview:3.1.0'
     implementation 'com.kyleduo.switchbutton:library:2.0.0'
+    implementation project(':lib_account:api_account')
+    implementation project(':module_main:api_main')
+    implementation project(':lib_update:api_update')
+
+
 }

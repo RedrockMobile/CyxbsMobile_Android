@@ -12,6 +12,7 @@ import com.mredrock.cyxbs.discover.map.bean.PlaceItem
 import com.mredrock.cyxbs.discover.map.model.DataSet
 import com.mredrock.cyxbs.discover.map.viewmodel.MapViewModel
 import kotlinx.android.synthetic.main.map_recycle_item_search_result.view.*
+import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
 
 /**
  *@author zhangzhe
@@ -67,7 +68,7 @@ class SearchResultAdapter(context: Context, private val viewModel: MapViewModel)
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.placeName.text = viewModel.searchResult[position].placeName
-        holder.itemView.setOnClickListener {
+        holder.itemView.setOnSingleClickListener {
             DataSet.deleteSearchHistory(viewModel.searchResult[position].placeName)
             DataSet.addSearchHistory(viewModel.searchResult[position].placeName)
             //上传热度

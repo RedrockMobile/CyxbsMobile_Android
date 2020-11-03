@@ -8,6 +8,8 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.mredrock.cyxbs.common.utils.extensions.pressToZoomOut
 import com.mredrock.cyxbs.discover.R
+import com.mredrock.cyxbs.common.utils.extensions.*
+
 
 /**
  * Created by yyfbe, Date on 2020/8/14.
@@ -28,7 +30,7 @@ class DiscoverMoreFunctionRvAdapter(private val picUrls: List<Int>, private val 
 
 
     override fun onBindViewHolder(holder: MoreFunctionViewHolder, position: Int) {
-        holder.itemView.setOnClickListener {
+        holder.itemView.setOnSingleClickListener {
             it?.pressToZoomOut()
             onItemClick(position)
         }

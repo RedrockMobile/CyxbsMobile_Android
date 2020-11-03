@@ -34,7 +34,6 @@ class VolunteerRecordActivity : BaseViewModelActivity<VolunteerRecordViewModel>(
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.volunteer_activity_record)
-        isSlideable = false
         initObserve()
         initView()
     }
@@ -64,9 +63,5 @@ class VolunteerRecordActivity : BaseViewModelActivity<VolunteerRecordViewModel>(
         })
 
     }
-
-    override val viewModelClass: Class<VolunteerRecordViewModel>
-        get() = VolunteerRecordViewModel::class.java
-
 
 }

@@ -16,7 +16,6 @@ import com.mredrock.cyxbs.common.config.QA_ENTRY
 import com.mredrock.cyxbs.common.event.CurrentDateInformationEvent
 import com.mredrock.cyxbs.common.mark.EventBusLifecycleSubscriber
 import com.mredrock.cyxbs.common.ui.BaseViewModelFragment
-import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.doIfLogin
 import com.mredrock.cyxbs.common.utils.extensions.pressToZoomOut
 import com.mredrock.cyxbs.qa.R
@@ -30,6 +29,7 @@ import com.umeng.analytics.MobclickAgent
 import kotlinx.android.synthetic.main.qa_fragment_question_container.*
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
 
 /**
  * Created By jay68 on 2018/8/22.
@@ -105,7 +105,7 @@ class QuestionContainerFragment : BaseViewModelFragment<QuestionContainerViewMod
 
     private fun askQuestionClick() {
         btn_ask_question.apply {
-            setOnClickListener {
+            setOnSingleClickListener {
                 turnToQuiz()
             }
             pressToZoomOut()
@@ -138,7 +138,7 @@ class QuestionContainerFragment : BaseViewModelFragment<QuestionContainerViewMod
         }
 
         vf_hot_search.startFlipping()
-        relativeLayout.setOnClickListener {
+        relativeLayout.setOnSingleClickListener {
             val hotWord = StringBuilder()
             vf_hot_search.run {
                 val allHotWord = (getChildAt(displayedChild) as TextView).text.toString()
@@ -184,5 +184,4 @@ class QuestionContainerFragment : BaseViewModelFragment<QuestionContainerViewMod
         vf_hot_search.stopFlipping()
     }
 
-    override val viewModelClass: Class<QuestionContainerViewModel> = QuestionContainerViewModel::class.java
 }

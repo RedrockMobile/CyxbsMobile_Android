@@ -13,17 +13,20 @@ import com.mredrock.cyxbs.account.bean.RefreshParams
 import com.mredrock.cyxbs.account.bean.TokenWrapper
 import com.mredrock.cyxbs.account.bean.User
 import com.mredrock.cyxbs.account.utils.UserInfoEncryption
-import com.mredrock.cyxbs.common.config.*
+import com.mredrock.cyxbs.common.config.IS_TOURIST
+import com.mredrock.cyxbs.common.config.SP_KEY_REFRESH_TOKEN_EXPIRED
+import com.mredrock.cyxbs.common.config.SP_KEY_USER_V2
+import com.mredrock.cyxbs.common.config.SP_REFRESH_DAY
 import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.network.exception.RedrockApiException
 import com.mredrock.cyxbs.common.service.ServiceManager
-import com.mredrock.cyxbs.common.service.account.*
-import com.mredrock.cyxbs.common.service.discover.electricity.IElectricityService
-import com.mredrock.cyxbs.common.service.discover.volunteer.IVolunteerService
 import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
 import com.mredrock.cyxbs.common.utils.extensions.editor
 import com.mredrock.cyxbs.common.utils.extensions.runOnUiThread
 import com.mredrock.cyxbs.common.utils.extensions.takeIfNoException
+import com.mredrock.cyxbs.discover.electricity.IElectricityService
+import com.mredrock.cyxbs.main.MAIN_LOGIN
+import com.mredrock.cyxbs.volunteer.IVolunteerService
 import retrofit2.HttpException
 
 /**
@@ -59,6 +62,10 @@ internal class AccountService : IAccountService {
     override fun getUserEditorService() = mUserEditorService
     override fun getUserTokenService(): IUserTokenService = mUserTokenSerVice
     private fun bind(tokenWrapper: TokenWrapper) {
+        //保证bind绑定的是有效的数据，避免被覆盖
+        if (tokenWrapper.isEmptyData()) {
+            return
+        }
         val encryptedUserJson = tokenWrapper.token.split(".")[0]
         this.tokenWrapper = tokenWrapper
         this.user = User.fromJson(String(Base64.decode(encryptedUserJson, Base64.DEFAULT)))

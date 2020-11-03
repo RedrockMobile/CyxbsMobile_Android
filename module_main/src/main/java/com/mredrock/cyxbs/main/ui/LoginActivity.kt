@@ -23,11 +23,11 @@ import com.mredrock.cyxbs.common.bean.LoginConfig
 import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.common.config.ACTIVITY_CLASS
 import com.mredrock.cyxbs.common.config.IS_EXIT_LOGIN
-import com.mredrock.cyxbs.common.config.MAIN_LOGIN
 import com.mredrock.cyxbs.common.mark.EventBusLifecycleSubscriber
 import com.mredrock.cyxbs.common.service.ServiceManager
-import com.mredrock.cyxbs.common.service.account.IAccountService
+import com.mredrock.cyxbs.account.IAccountService
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
+import com.mredrock.cyxbs.main.MAIN_LOGIN
 import com.mredrock.cyxbs.main.R
 import com.mredrock.cyxbs.main.adapter.UserAgreementAdapter
 import com.mredrock.cyxbs.main.bean.LoginFailEvent
@@ -42,7 +42,6 @@ class LoginActivity : BaseViewModelActivity<LoginViewModel>(), EventBusLifecycle
 
     override val isFragmentActivity = false
 
-    override val viewModelClass = LoginViewModel::class.java
 
     private val lottieProgress = 0.39f
 
@@ -59,7 +58,6 @@ class LoginActivity : BaseViewModelActivity<LoginViewModel>(), EventBusLifecycle
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        isSlideable = false
         ARouter.getInstance().inject(this)
         setContentView(R.layout.main_activity_login)
         initView()

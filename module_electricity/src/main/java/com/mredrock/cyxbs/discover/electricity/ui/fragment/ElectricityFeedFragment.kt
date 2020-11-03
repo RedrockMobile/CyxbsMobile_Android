@@ -5,8 +5,8 @@ import android.view.View
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.mredrock.cyxbs.common.config.DISCOVER_ELECTRICITY_FEED
 import com.mredrock.cyxbs.common.service.ServiceManager
-import com.mredrock.cyxbs.common.service.account.IAccountService
-import com.mredrock.cyxbs.common.service.account.IUserStateService
+import com.mredrock.cyxbs.account.IAccountService
+import com.mredrock.cyxbs.account.IUserStateService
 import com.mredrock.cyxbs.common.ui.BaseFeedFragment
 import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
 import com.mredrock.cyxbs.common.utils.extensions.doIfLogin
@@ -18,12 +18,13 @@ import com.mredrock.cyxbs.discover.electricity.config.*
 import com.mredrock.cyxbs.discover.electricity.viewmodel.ChargeViewModel
 import com.mredrock.cyxbs.electricity.R
 import kotlinx.android.synthetic.main.electricity_discover_feed_unbound.view.*
+import com.mredrock.cyxbs.common.utils.extensions.*
+
 
 @Route(path = DISCOVER_ELECTRICITY_FEED)
 class ElectricityFeedFragment : BaseFeedFragment<ChargeViewModel>() {
 
 
-    override val viewModelClass: Class<ChargeViewModel> = ChargeViewModel::class.java
 
     override var hasTopSplitLine = false
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

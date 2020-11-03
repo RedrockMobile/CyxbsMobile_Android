@@ -33,7 +33,7 @@
             app:layout_constraintEnd_toEndOf="@+id/tv_electricity_feed_fee"
             app:layout_constraintStart_toStartOf="@+id/tv_electricity_feed_fee"
             app:layout_constraintTop_toBottomOf="@+id/tv_electricity_feed_fee" />
-z
+
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tv_electricity_feed_kilowatt"
             android:layout_width="wrap_content"

@@ -1,3 +1,9 @@
+include ':module_volunteer:api_volunteer'
+include ':module_electricity:api_electricity'
+include ':module_main:api_main'
+include ':lib_update:api_update'
+include ':lib_account:api_account'
+
 include ':photolibrary-2.5'
 include ':module_app', ':lib_common', ':module_main', ':lib_account', ':lib_update',   //特殊模块
         ':module_course', ':module_qa', ':module_discover', ':module_mine', //主业务模块

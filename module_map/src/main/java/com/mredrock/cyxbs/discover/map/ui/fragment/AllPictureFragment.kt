@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.SCROLL_STATE_IDLE
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.mredrock.cyxbs.common.ui.BaseFragment
+import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.discover.map.R
 import com.mredrock.cyxbs.discover.map.ui.activity.ShowPictureActivity
 import com.mredrock.cyxbs.discover.map.ui.adapter.AllPictureRvAdapter
@@ -50,7 +51,7 @@ class AllPictureFragment : BaseFragment() {
 
         map_rv_all_picture.adapter = allPictureAdapter
 
-        map_iv_all_picture_back.setOnClickListener {
+        map_iv_all_picture_back.setOnSingleClickListener {
             viewModel.fragmentAllPictureIsShowing.value = false
         }
 
@@ -91,7 +92,7 @@ class AllPictureFragment : BaseFragment() {
             }
         })
 
-        map_tv_all_picture_share.setOnClickListener {
+        map_tv_all_picture_share.setOnSingleClickListener {
             context?.let { it1 -> viewModel.sharePicture(it1, this) }
         }
 

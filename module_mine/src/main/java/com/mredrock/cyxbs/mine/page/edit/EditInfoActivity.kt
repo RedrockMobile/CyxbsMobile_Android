@@ -29,8 +29,8 @@ import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.list.listItems
 import com.mredrock.cyxbs.common.config.DIR_PHOTO
 import com.mredrock.cyxbs.common.service.ServiceManager
-import com.mredrock.cyxbs.common.service.account.IAccountService
-import com.mredrock.cyxbs.common.service.account.IUserService
+import com.mredrock.cyxbs.account.IAccountService
+import com.mredrock.cyxbs.account.IUserService
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.extensions.*
 import com.mredrock.cyxbs.mine.R
@@ -49,8 +49,7 @@ import java.io.IOException
  * Created by zzzia on 2018/8/14.
  * 编辑个人信息
  */
-class EditInfoActivity(override val isFragmentActivity: Boolean = false,
-                       override val viewModelClass: Class<EditViewModel> = EditViewModel::class.java)
+class EditInfoActivity(override val isFragmentActivity: Boolean = false)
     : BaseViewModelActivity<EditViewModel>() {
 
     private val SELECT_PICTURE = 1

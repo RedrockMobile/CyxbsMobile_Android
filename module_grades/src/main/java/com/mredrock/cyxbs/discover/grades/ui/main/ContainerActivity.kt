@@ -16,14 +16,15 @@ import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.bean.LoginConfig
 import com.mredrock.cyxbs.common.config.DISCOVER_GRADES
 import com.mredrock.cyxbs.common.service.ServiceManager
-import com.mredrock.cyxbs.common.service.account.IAccountService
-import com.mredrock.cyxbs.common.service.account.IUserService
+import com.mredrock.cyxbs.account.IAccountService
+import com.mredrock.cyxbs.account.IUserService
 import com.mredrock.cyxbs.common.ui.BaseActivity
+import com.mredrock.cyxbs.common.utils.extensions.pressToZoomOut
 import com.mredrock.cyxbs.discover.grades.R
 import com.mredrock.cyxbs.discover.grades.bean.Exam
 import com.mredrock.cyxbs.discover.grades.bean.analyze.isSuccessful
 import com.mredrock.cyxbs.discover.grades.ui.adapter.ExamAdapter
-import com.mredrock.cyxbs.discover.grades.ui.fragment.BindFragment
+import com.mredrock.cyxbs.discover.grades.ui.fragment.NoBindFragment
 import com.mredrock.cyxbs.discover.grades.ui.fragment.GPAFragment
 import com.mredrock.cyxbs.discover.grades.ui.viewModel.ContainerViewModel
 import com.mredrock.cyxbs.discover.grades.utils.extension.dp2px
@@ -39,6 +40,7 @@ import kotlinx.android.synthetic.main.grades_bottom_sheet.view.*
 
 @Route(path = DISCOVER_GRADES)
 class ContainerActivity : BaseActivity() {
+
     companion object {
         @JvmStatic
         val UNDEFINED = 1
@@ -87,12 +89,21 @@ class ContainerActivity : BaseActivity() {
         initExam()
         initBottomSheet()
         initObserver()
+        viewModel.isContainerActivity()
         viewModel.getAnalyzeData()
     }
 
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
         initExam()
+        initBottomSheet()
+        initObserver()
+        viewModel.isContainerActivity()
+        viewModel.getAnalyzeData()
+    }
+
+    override fun onStart() {
+        super.onStart()
         initBottomSheet()
         initObserver()
         viewModel.getAnalyzeData()
@@ -104,21 +115,29 @@ class ContainerActivity : BaseActivity() {
                 viewModel.getAnalyzeData()
             }
         })
+        viewModel.bottomStateListener.observe(this@ContainerActivity, Observer {
+            if (it == true) {
+                val behavior = BottomSheetBehavior.from(fl_grades_bottom_sheet)
+                if(behavior.state==BottomSheetBehavior.STATE_COLLAPSED)
+                behavior.state = BottomSheetBehavior.STATE_EXPANDED
+            }
+        })
         viewModel.analyzeData.observe(this@ContainerActivity, Observer {
             if (it != null && it.isSuccessful) {
                 if (typeOfFragment != IS_GPA_FRAGMENT) {
                     typeOfFragment = IS_GPA_FRAGMENT
+                    tv_grades_no_bind.visibility = View.INVISIBLE
                     replaceFragment(GPAFragment())
                 }
             } else {
                 if (typeOfFragment != IS_BIND_FRAGMENT) {
                     typeOfFragment = IS_BIND_FRAGMENT
-                    replaceFragment(BindFragment())
+                    tv_grades_no_bind.visibility = View.VISIBLE
+                    replaceFragment(NoBindFragment())
                 }
             }
 
         })
-
     }
 
     private fun initExam() {
@@ -157,8 +176,12 @@ class ContainerActivity : BaseActivity() {
     private fun initHeader() {
         Glide.with(BaseApp.context).load(user.getAvatarImgUrl()).into(parent.iv_grades_avatar)
         parent.tv_grades_stuNum.text = user.getStuNum()
-        parent.tv_grades_college.text = user.getCollege()
         parent.tv_grades_name.text = user.getRealName()
+        tv_grades_no_bind.setOnClickListener {
+            it.pressToZoomOut()
+            val intent = Intent(this, BindActivity::class.java)
+            this.startActivity(intent)
+        }
     }
 
     private fun replaceFragment(fragment: Fragment) {

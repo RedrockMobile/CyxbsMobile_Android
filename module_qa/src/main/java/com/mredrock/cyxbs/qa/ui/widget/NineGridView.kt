@@ -10,6 +10,8 @@ import androidx.core.view.forEach
 import com.mredrock.cyxbs.common.utils.extensions.dip
 import com.mredrock.cyxbs.common.utils.extensions.loadRedrockImage
 import com.mredrock.cyxbs.qa.R
+import com.mredrock.cyxbs.common.utils.extensions.*
+
 
 /**
  * 图片九宫格布局
@@ -120,7 +122,7 @@ class NineGridView(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : 
 
     override fun addView(child: View?, index: Int, params: ViewGroup.LayoutParams?) {
         super.addView(child, index, params)
-        child?.setOnClickListener {
+        child?.setOnSingleClickListener {
             for (i in 0 until childCount) {
                 if (getChildAt(i) == it) {
                     onItemClickListener?.invoke(child, i)

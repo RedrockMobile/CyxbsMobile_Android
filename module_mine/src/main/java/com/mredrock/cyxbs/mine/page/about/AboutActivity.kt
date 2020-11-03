@@ -15,8 +15,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.mredrock.cyxbs.common.component.CommonDialogFragment
 import com.mredrock.cyxbs.common.config.APP_WEBSITE
 import com.mredrock.cyxbs.common.service.ServiceManager
-import com.mredrock.cyxbs.common.service.update.AppUpdateStatus
-import com.mredrock.cyxbs.common.service.update.IAppUpdateService
+import com.mredrock.cyxbs.update.AppUpdateStatus
+import com.mredrock.cyxbs.update.IAppUpdateService
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.extensions.toast
 import com.mredrock.cyxbs.common.utils.getAppVersionName
@@ -26,8 +26,7 @@ import kotlinx.android.synthetic.main.mine_activity_about.*
 import kotlinx.android.synthetic.main.mine_layout_dialog_recyclerview_dynamic.view.*
 
 
-class AboutActivity(override val isFragmentActivity: Boolean = false,
-                    override val viewModelClass: Class<AboutViewModel> = AboutViewModel::class.java)
+class AboutActivity(override val isFragmentActivity: Boolean = false)
     : BaseViewModelActivity<AboutViewModel>() {
 
     override fun onCreate(savedInstanceState: Bundle?) {

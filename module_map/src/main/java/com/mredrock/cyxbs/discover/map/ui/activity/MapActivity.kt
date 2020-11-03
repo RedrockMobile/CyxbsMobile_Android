@@ -35,7 +35,6 @@ import java.io.File
 @Route(path = DISCOVER_MAP)
 class MapActivity : BaseViewModelActivity<MapViewModel>() {
     override val isFragmentActivity = false
-    override val viewModelClass = MapViewModel::class.java
     private val fragmentManager = supportFragmentManager
     private val mainFragment = MainFragment()
     private val favoriteEditFragment = FavoriteEditFragment()
@@ -45,22 +44,13 @@ class MapActivity : BaseViewModelActivity<MapViewModel>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.map_activity_map)
-        isSlideable = false
         val openString = intent.getStringExtra(COURSE_POS_TO_MAP)
         val path = DataSet.getPath()
         /**
          * 如果有保存路径且地图存在，则不展示dialog
          */
-        try {
-            if (path == null) {
-                GlideProgressDialog.show(this, "下载地图", "仅需初次载入时下载地图哦", false)
-            } else {
-                if (!fileIsExists(path)) {
-                    GlideProgressDialog.show(this, "下载地图", "仅需初次载入时下载地图哦", false)
-                }
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
+        if (path == null || !fileIsExists(path)) {
+            GlideProgressDialog.show(this, BaseApp.context.getString(R.string.map_download_title), BaseApp.context.getString(R.string.map_download_message), false)
         }
 
         //初始化viewModel

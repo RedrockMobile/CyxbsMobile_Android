@@ -35,6 +35,8 @@ import com.mredrock.cyxbs.discover.emptyroom.viewmodel.EmptyRoomViewModel.Compan
 import com.mredrock.cyxbs.discover.emptyroom.viewmodel.EmptyRoomViewModel.Companion.LOADING
 import kotlinx.android.synthetic.main.emptyroom_activity_empty_room.*
 import java.util.*
+import com.mredrock.cyxbs.common.utils.extensions.*
+
 
 
 @Route(path = DISCOVER_EMPTY_ROOM)
@@ -49,13 +51,11 @@ class EmptyRoomActivity : BaseViewModelActivity<EmptyRoomViewModel>(), OnItemSel
     private var resultAdapter: EmptyRoomResultAdapter? = null
     private lateinit var queryAnimator: ObjectAnimator
 
-    override val viewModelClass = EmptyRoomViewModel::class.java
     override val isFragmentActivity = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.emptyroom_activity_empty_room)
-        isSlideable = false
         init()
     }
 
@@ -66,7 +66,7 @@ class EmptyRoomActivity : BaseViewModelActivity<EmptyRoomViewModel>(), OnItemSel
         initQueryingAnimator()
         initRv()
         initTab()
-        ib_emptyroom_back.setOnClickListener {
+        ib_emptyroom_back.setOnSingleClickListener {
             finish()
         }
     }

@@ -3,7 +3,7 @@ package com.mredrock.cyxbs.update.model
 import androidx.lifecycle.MutableLiveData
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.network.ApiGenerator
-import com.mredrock.cyxbs.common.service.update.AppUpdateStatus
+import com.mredrock.cyxbs.update.AppUpdateStatus
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.common.utils.getAppVersionCode

@@ -18,6 +18,8 @@ import com.mredrock.cyxbs.mine.util.ui.BaseRVFragment
 import com.mredrock.cyxbs.mine.util.widget.RvFooter
 import kotlinx.android.synthetic.main.mine_list_item_my_answer_posted.view.*
 import org.greenrobot.eventbus.EventBus
+import com.mredrock.cyxbs.common.utils.extensions.*
+
 
 /**
  * Created by roger on 2019/12/3
@@ -67,7 +69,7 @@ class AnswerPostedFm : BaseRVFragment<AnswerPosted>() {
                 holder.itemView.mine_answer_posted_tv_disappear_at.setTextColor(ContextCompat.getColor(it, R.color.common_mine_list_item_tv_disappear_at))
             }
         }
-        holder.itemView.setOnClickListener {
+        holder.itemView.setOnSingleClickListener {
             viewModel.getAnswer(data.questionId, data.answerId)
         }
     }

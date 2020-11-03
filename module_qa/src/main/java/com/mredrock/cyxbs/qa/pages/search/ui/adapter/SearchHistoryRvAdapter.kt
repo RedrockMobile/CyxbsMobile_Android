@@ -5,6 +5,7 @@ import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.component.recycler.BaseRvAdapter
 import com.mredrock.cyxbs.qa.component.recycler.BaseViewHolder
 import kotlinx.android.synthetic.main.qa_recycler_item_history.view.*
+import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
 
 /**
  * Created by yyfbe, Date on 2020/8/13.
@@ -14,10 +15,10 @@ class SearchHistoryRvAdapter(private val onHistoryClick: (Int) -> Unit, private 
 
     override fun onBindViewHolder(holder: BaseViewHolder<String>, position: Int) {
         super.onBindViewHolder(holder, position)
-        holder.itemView.tv_history_title.setOnClickListener {
+        holder.itemView.tv_history_title.setOnSingleClickListener {
             onHistoryClick(holder.adapterPosition)
         }
-        holder.itemView.iv_history_delete.setOnClickListener {
+        holder.itemView.iv_history_delete.setOnSingleClickListener {
             val pos = holder.adapterPosition
             dataList.removeAt(pos)
             notifyDataSetChanged()

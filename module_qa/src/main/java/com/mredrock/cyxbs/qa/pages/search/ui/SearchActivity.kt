@@ -28,7 +28,6 @@ import org.greenrobot.eventbus.ThreadMode
  * Created by yyfbe, Date on 2020/8/12.
  */
 class SearchActivity : BaseViewModelActivity<SearchViewModel>(), EventBusLifecycleSubscriber {
-    override val viewModelClass: Class<SearchViewModel> = SearchViewModel::class.java
     override val isFragmentActivity: Boolean
         get() = true
     private val questionSearchingFragment: QuestionSearchingFragment by lazy(LazyThreadSafetyMode.NONE) { QuestionSearchingFragment() }
@@ -54,7 +53,6 @@ class SearchActivity : BaseViewModelActivity<SearchViewModel>(), EventBusLifecyc
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.qa_activity_question_search)
-        isSlideable = false
         viewModel.getHistoryFromDB()
         initView()
     }

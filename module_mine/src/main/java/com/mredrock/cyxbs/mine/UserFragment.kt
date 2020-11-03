@@ -25,9 +25,10 @@ import com.mredrock.cyxbs.common.component.CommonDialogFragment
 import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.common.config.*
 import com.mredrock.cyxbs.common.service.ServiceManager
-import com.mredrock.cyxbs.common.service.account.IAccountService
+import com.mredrock.cyxbs.account.IAccountService
 import com.mredrock.cyxbs.common.ui.BaseViewModelFragment
 import com.mredrock.cyxbs.common.utils.extensions.*
+import com.mredrock.cyxbs.main.MAIN_LOGIN
 import com.mredrock.cyxbs.mine.page.about.AboutActivity
 import com.mredrock.cyxbs.mine.page.answer.AnswerActivity
 import com.mredrock.cyxbs.mine.page.ask.AskActivity
@@ -43,8 +44,6 @@ import kotlinx.android.synthetic.main.mine_fragment_main.*
 @SuppressLint("SetTextI18n")
 @Route(path = MINE_ENTRY)
 class UserFragment : BaseViewModelFragment<UserViewModel>() {
-    override val viewModelClass: Class<UserViewModel>
-        get() = UserViewModel::class.java
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)

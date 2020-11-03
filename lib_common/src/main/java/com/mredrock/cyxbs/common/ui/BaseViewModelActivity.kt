@@ -1,3 +1,5 @@
+@file:Suppress("UNCHECKED_CAST")
+
 package com.mredrock.cyxbs.common.ui
 
 import android.app.ProgressDialog
@@ -9,6 +11,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.common.viewmodel.event.ProgressDialogEvent
+import java.lang.reflect.ParameterizedType
 
 /**
  * Created By jay68 on 2018/8/23.
@@ -16,8 +19,6 @@ import com.mredrock.cyxbs.common.viewmodel.event.ProgressDialogEvent
  */
 abstract class BaseViewModelActivity<T : BaseViewModel> : BaseActivity() {
     lateinit var viewModel: T
-
-    protected abstract val viewModelClass: Class<T>
 
     private var progressDialog: ProgressDialog? = null
 
@@ -30,6 +31,7 @@ abstract class BaseViewModelActivity<T : BaseViewModel> : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val viewModelFactory = getViewModelFactory()
+        val viewModelClass = (javaClass.genericSuperclass as ParameterizedType).actualTypeArguments[0] as Class<T>
         viewModel = if (viewModelFactory != null) {
             ViewModelProvider(this, viewModelFactory).get(viewModelClass)
         } else {

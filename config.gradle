@@ -83,7 +83,7 @@ def libsConfiguration(Closure closure) {
 }
 //module模块独有配置
 def modulesConfiguration(Closure closure) {
-    if (project.name.matches("module_.+"))
+    if (project.name.matches("module_.+")||project.name.matches(".+_impl"))
         closure()
 }
 
