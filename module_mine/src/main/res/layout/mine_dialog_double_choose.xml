@@ -47,7 +47,7 @@
         app:layout_constraintTop_toBottomOf="@+id/mine_textview" />
 
     <Button
-        android:id="@+id/mine_button"
+        android:id="@+id/mine_bt_security_dialog_set_protect"
         android:layout_width="96dp"
         android:layout_height="34dp"
         android:layout_marginStart="23dp"
@@ -62,7 +62,7 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
-        android:id="@+id/mine_button2"
+        android:id="@+id/mine_bt_security_dialog_binding_email"
         android:layout_width="96dp"
         android:layout_height="34dp"
         android:layout_marginEnd="23dp"
@@ -70,7 +70,7 @@
         android:background="@drawable/mine_shape_round_cornor_purple_blue"
         android:letterSpacing="0.1"
         android:lineSpacingExtra="21dp"
-        android:text="绑定密码"
+        android:text="绑定邮箱"
         android:textColor="#FFFFFF"
         android:textSize="15sp"
         app:layout_constraintBottom_toBottomOf="parent"

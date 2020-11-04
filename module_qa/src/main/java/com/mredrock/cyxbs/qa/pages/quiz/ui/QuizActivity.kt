@@ -56,7 +56,6 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>(), EventBusLifecycleSu
 
     }
 
-    override val viewModelClass = QuizViewModel::class.java
     override val isFragmentActivity = false
     private var currentTypeIndex = 0
     private var draftId = NOT_DRAFT_ID

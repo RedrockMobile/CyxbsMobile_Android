@@ -34,7 +34,8 @@ import com.mredrock.cyxbs.mine.page.answer.AnswerActivity
 import com.mredrock.cyxbs.mine.page.ask.AskActivity
 import com.mredrock.cyxbs.mine.page.comment.CommentActivity
 import com.mredrock.cyxbs.mine.page.edit.EditInfoActivity
-import com.mredrock.cyxbs.mine.page.security.activity.SecurityActivity
+import com.mredrock.cyxbs.mine.page.security.activity.ChangPasswordActivity
+import com.mredrock.cyxbs.mine.page.security.activity.SetPasswordProtectActivity
 import com.mredrock.cyxbs.mine.page.sign.DailySignActivity
 import kotlinx.android.synthetic.main.mine_fragment_main.*
 
@@ -45,9 +46,7 @@ import kotlinx.android.synthetic.main.mine_fragment_main.*
 @SuppressLint("SetTextI18n")
 @Route(path = MINE_ENTRY)
 class UserFragment : BaseViewModelFragment<UserViewModel>() {
-    override val viewModelClass: Class<UserViewModel>
-        get() = UserViewModel::class.java
-
+    //TODO 判断一下是否是游客模式，如果是游客模式，账号与安全就GONE掉
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         addObserver()
@@ -58,6 +57,8 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
     private fun initView() {
         //功能按钮
         context?.apply {
+            mine_main_btn_sign.setOnClickListener { doIfLogin { startActivity<DailySignActivity>() } }
+            mine_main_tv_security.setOnClickListener { doIfLogin { ChangPasswordActivity.actionStart(this,ChangPasswordActivity.TYPE_START_FROM_OTHERS)} }
             mine_main_btn_sign.setOnClickListener { doIfLogin { startActivity<DailySignActivity>() } }
             mine_main_tv_sign.setOnClickListener { doIfLogin { startActivity<DailySignActivity>() } }
             mine_main_question_number.setOnClickListener { doIfLogin { startActivity<AskActivity>() } }
@@ -93,9 +94,6 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
                 }
             }
             mine_main_btn_exit.pressToZoomOut()
-            mine_main_tv_security.setOnClickListener {
-                startActivity(Intent(activity, SecurityActivity::class.java))
-            }
             mine_main_tv_feedback.setOnClickListener { onFeedBackClick() }
             mine_main_tv_custom_widget.setOnClickListener { onSetWidgetClick() }
             mine_main_tv_redrock.setOnClickListener { clickAboutUsWebsite() }

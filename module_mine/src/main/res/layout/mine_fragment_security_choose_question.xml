@@ -22,7 +22,7 @@
         android:background="@color/common_default_divide_line_color"/>
 
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/mine_rv_security_choose_question"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="34dp"/>
+        android:layout_height="match_parent" />
 </LinearLayout>

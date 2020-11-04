@@ -5,19 +5,18 @@ import android.os.Bundle
 import com.mredrock.cyxbs.common.ui.BaseActivity
 import com.mredrock.cyxbs.mine.R
 import kotlinx.android.synthetic.main.mine_activity_security.*
-
 /**
  * Author: RayleighZ
  * Time: 2020-10-29 15:06
  */
-class SecurityActivity : BaseActivity(){
+class SecurityActivity : BaseActivity() {
 
     override val isFragmentActivity = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.mine_activity_security)
-
+        setSupportActionBar(findViewById(R.id.toolbar))
         mine_ll_change_binding_mail.setOnClickListener {//修改绑定邮箱
             val intent = Intent(this , BindEmailActivity::class.java)
             startActivity(intent)

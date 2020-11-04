@@ -3,7 +3,9 @@
     package="com.mredrock.cyxbs.mine">
 
     <application android:theme="@style/AppTheme">
-        <activity android:name=".page.security.activity.BindEmailActivity"></activity>
+        <activity android:name=".page.security.activity.FindPasswordActivity"/>
+        <activity android:name=".page.security.activity.ForgetPasswordActivity"/>
+        <activity android:name=".page.security.activity.BindEmailActivity" />
         <activity android:name=".page.security.activity.SetPasswordProtectActivity" />
         <activity android:name=".page.security.activity.ChangPasswordActivity" />
         <activity

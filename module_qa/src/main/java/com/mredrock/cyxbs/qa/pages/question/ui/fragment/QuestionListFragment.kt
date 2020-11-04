@@ -14,6 +14,5 @@ class QuestionListFragment : BaseQuestionListFragment<QuestionListViewModel>() {
         }
     }
 
-    override val viewModelClass: Class<QuestionListViewModel> = QuestionListViewModel::class.java
     override fun getViewModelFactory() = QuestionListViewModel.Factory(title)
 }
