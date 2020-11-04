@@ -46,7 +46,7 @@ import kotlinx.android.synthetic.main.mine_fragment_main.*
 @SuppressLint("SetTextI18n")
 @Route(path = MINE_ENTRY)
 class UserFragment : BaseViewModelFragment<UserViewModel>() {
-
+    //TODO 判断一下是否是游客模式，如果是游客模式，账号与安全就GONE掉
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         addObserver()
@@ -57,8 +57,7 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
     private fun initView() {
         //功能按钮
         context?.apply {
-            mine_main_btn_sign.setOnClickListener { doIfLogin { startActivity<DailySignActivity>()
-            } }
+            mine_main_btn_sign.setOnClickListener { doIfLogin { startActivity<DailySignActivity>() } }
             mine_main_tv_security.setOnClickListener { doIfLogin { ChangPasswordActivity.actionStart(this,ChangPasswordActivity.TYPE_START_FROM_OTHERS)} }
             mine_main_btn_sign.setOnClickListener { doIfLogin { startActivity<DailySignActivity>() } }
             mine_main_tv_sign.setOnClickListener { doIfLogin { startActivity<DailySignActivity>() } }
