@@ -177,4 +177,21 @@ interface ApiService {
     @FormUrlEncoded
     @GET("/user/question")
     fun getAllSecurityQuestions(): Observable<RedrockApiWrapper<List<SecurityQuestion>>>
+
+    /**
+     * 获取Email验证码
+     */
+    @FormUrlEncoded
+    @POST("/user/bind/email/code")
+    fun getEmailCode(
+            @Field("email") email: String): Observable<RedrockApiWrapper<EmailCode>>
+
+    /**
+     * 验证Email验证码
+     */
+    @FormUrlEncoded
+    @POST("/user/bind/email/code")
+    fun confirmEmailCode(
+            @Field("email") email: String, //问题的id
+            @Field("code") code : String): Observable<RedrockApiStatus>
 }

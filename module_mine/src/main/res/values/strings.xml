@@ -15,6 +15,7 @@
     <string name="mine_show_schedule_first_launch">启动APP时最先显示课表页面</string>
     <string name="mine_custom_icon">自定义桌面小图标</string>
     <string name="mine_feedback_suggestion">意见与反馈</string>
+    <string name="mine_security">账号与安全</string>
     <string name="mine_about_redrock">红岩网校</string>
     <string name="mine_about">关于掌邮</string>
     <string name="mine_exit">退出登录</string>
@@ -110,4 +111,12 @@
     <string name="mine_security_change_password">修改密码</string>
     <string name="mine_security_new_password_uncorrect">新密码不符合要求，请重新输入</string>
     <string name="mine_security_retype">确认密码和新密码不符，请重新输入</string>
+    <string name="mine_security_bind_email_next">下一步</string>
+    <string name="mine_security_bind_email_yes">确定</string>
+    <string name="mine_security_bind_email_sent_to_your_email">已向你的邮箱发送了一条验证码</string>
+    <string name="mine_security_bind_email_resend">重新发送</string>
+    <string name="mine_security_bind_email_bind_succeed">验证成功</string>
+    <string name="mine_security_bind_email_bind_failed">验证失败</string>
+    <string name="mine_security_bind_email_please_input_code">请输入验证码</string>
+    <string name="mine_security_bind_email_code_expire">验证码已过期</string>
 </resources>
