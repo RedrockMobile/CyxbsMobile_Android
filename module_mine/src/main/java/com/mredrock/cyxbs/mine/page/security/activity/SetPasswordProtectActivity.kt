@@ -1,5 +1,6 @@
 package com.mredrock.cyxbs.mine.page.security.activity
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.WindowManager
@@ -9,7 +10,7 @@ import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.mine.R
 import com.mredrock.cyxbs.mine.databinding.MineActivitySetPasswordProtectBinding
-import com.mredrock.cyxbs.mine.page.security.fragment.SelQuestionDialog
+import com.mredrock.cyxbs.mine.util.ui.SelQuestionDialog
 import com.mredrock.cyxbs.mine.page.security.viewmodel.SetPasswordProtectViewModel
 import kotlinx.android.synthetic.main.mine_activity_set_password_protect.*
 
@@ -21,6 +22,12 @@ import kotlinx.android.synthetic.main.mine_activity_set_password_protect.*
 class SetPasswordProtectActivity : BaseViewModelActivity<SetPasswordProtectViewModel>() {
 
     override val isFragmentActivity = false
+
+    companion object{
+        fun start(context : Context){
+            context.startActivity(Intent(context , SetPasswordProtectActivity::class.java))
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

@@ -6,14 +6,17 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.text.method.HideReturnsTransformationMethod
 import android.text.method.PasswordTransformationMethod
-import android.util.Log
 import android.view.View
 import androidx.core.content.ContextCompat
-import com.mredrock.cyxbs.common.BaseApp
+import com.mredrock.cyxbs.account.IAccountService
+import com.mredrock.cyxbs.account.IUserService
+import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
-import com.mredrock.cyxbs.common.utils.extensions.toast
+import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.mine.R
 import com.mredrock.cyxbs.mine.page.security.viewmodel.ChangePasswordViewModel
+import com.mredrock.cyxbs.mine.util.ui.ChooseFindTypeDialog
+import com.mredrock.cyxbs.mine.util.ui.DoubleChooseDialog
 import kotlinx.android.synthetic.main.mine_activity_change_password.*
 
 /**
@@ -39,11 +42,11 @@ class ChangPasswordActivity : BaseViewModelActivity<ChangePasswordViewModel>() {
         }
     }
 
-    var isline2ShowPassword = false//是否显示密码
+    private var isLine2ShowPassword = false//是否显示密码
 
-    var isline1ShowPassword = false//是否显示密码
+    private var isLine1ShowPassword = false//是否显示密码
 
-    var isClik=false//按钮是否能点击
+    var isClick=false//按钮是否能点击
 
     var isOriginView=true//是否是在第一个界面
 
@@ -51,9 +54,17 @@ class ChangPasswordActivity : BaseViewModelActivity<ChangePasswordViewModel>() {
         super.onCreate(savedInstanceState)
         val type=intent.getIntExtra("startType",4)
         initView(type)
+        //TODO:测试界面用
+        //FindPasswordActivity.start(this , FIND_PASSWORD_BY_EMAIL)
+        /*ChooseFindTypeDialog.showDialog(
+                this,
+                hasEmailBinding = true,
+                hasSecurityQuestion = false
+        )*/
+        DoubleChooseDialog.show(this)
     }
 
-    fun initView(type: Int){
+    private fun initView(type: Int){
         when(type){
             TYPE_START_FROM_MINE->{
                 setContentView(R.layout.mine_activity_change_password)
@@ -109,7 +120,7 @@ class ChangPasswordActivity : BaseViewModelActivity<ChangePasswordViewModel>() {
         }
     }
 
-    fun setToolBar(type: Int) {
+    private fun setToolBar(type: Int) {
         when (type) {
             TYPE_OLD_PASSWORDS -> {
                 common_toolbar.apply {
@@ -138,33 +149,33 @@ class ChangPasswordActivity : BaseViewModelActivity<ChangePasswordViewModel>() {
         }
     }
 
-    fun InitEvent() {
-        mine_security_secondinput_password.setTransformationMethod(PasswordTransformationMethod.getInstance())//不显示密码
-        mine_security_firstinput_password.setTransformationMethod(PasswordTransformationMethod.getInstance())//不显示密码
+    private fun InitEvent() {
+        mine_security_secondinput_password.transformationMethod = PasswordTransformationMethod.getInstance()//不显示密码
+        mine_security_firstinput_password.transformationMethod = PasswordTransformationMethod.getInstance()//不显示密码
         mine_iv_security_change_paswword_line2_eye.setOnClickListener {
-            if (isline2ShowPassword) {
+            if (isLine2ShowPassword) {
                 mine_iv_security_change_paswword_line2_eye.setImageResource(R.drawable.mine_ic_close_eye)
-                mine_security_firstinput_password.setTransformationMethod(PasswordTransformationMethod.getInstance())//不显示密码
+                mine_security_firstinput_password.transformationMethod = PasswordTransformationMethod.getInstance()//不显示密码
                 mine_security_firstinput_password.setSelection(mine_security_firstinput_password.text!!.length)
-                isline2ShowPassword = false
+                isLine2ShowPassword = false
             } else {
                 mine_iv_security_change_paswword_line2_eye.setImageResource(R.drawable.mine_ic_open_eye)
-                mine_security_firstinput_password.setTransformationMethod(HideReturnsTransformationMethod.getInstance())//显示密码
+                mine_security_firstinput_password.transformationMethod = HideReturnsTransformationMethod.getInstance()//显示密码
                 mine_security_firstinput_password.setSelection(mine_security_firstinput_password.text!!.length)
-                isline2ShowPassword = true
+                isLine2ShowPassword = true
             }
         }
         mine_iv_security_change_paswword_line1_eye.setOnClickListener {
-            if (isline1ShowPassword) {
+            if (isLine1ShowPassword) {
                 mine_iv_security_change_paswword_line1_eye.setImageResource(R.drawable.mine_ic_close_eye)
-                mine_security_secondinput_password.setTransformationMethod(PasswordTransformationMethod.getInstance())//不显示密码
+                mine_security_secondinput_password.transformationMethod = PasswordTransformationMethod.getInstance()//不显示密码
                 mine_security_secondinput_password.setSelection(mine_security_secondinput_password.text!!.length)
-                isline1ShowPassword = false
+                isLine1ShowPassword = false
             } else {
                 mine_iv_security_change_paswword_line1_eye.setImageResource(R.drawable.mine_ic_open_eye)
-                mine_security_secondinput_password.setTransformationMethod(HideReturnsTransformationMethod.getInstance())//显示密码
+                mine_security_secondinput_password.transformationMethod = HideReturnsTransformationMethod.getInstance()//显示密码
                 mine_security_secondinput_password.setSelection(mine_security_secondinput_password.text!!.length)
-                isline1ShowPassword = true
+                isLine1ShowPassword = true
             }
         }
         mine_security_firstinput_password.addTextChangedListener(object :TextWatcher{
@@ -173,13 +184,13 @@ class ChangPasswordActivity : BaseViewModelActivity<ChangePasswordViewModel>() {
                     if (p0?.length!!>0){
 //                            Log.d("zt","1")
                             changeButtonColorType(TYPE_COLOR_NIGHT_BUTTON)
-                            isClik=true
+                            isClick=true
                             mine_iv_security_change_paswword_line2_eye.visibility=View.VISIBLE
                     }else{
 //                        Log.d("zt","2")
                         mine_iv_security_change_paswword_line2_eye.visibility=View.GONE
                         changeButtonColorType(TYPE_COLOR_LIGHT_BUTTON)
-                        isClik=false
+                        isClick=false
                     }
                 }else{
                     //第二个界面的逻辑
@@ -191,12 +202,12 @@ class ChangPasswordActivity : BaseViewModelActivity<ChangePasswordViewModel>() {
 //                                Log.d("zt","3")
                                 mine_tv_security_tip_line2.visibility = View.VISIBLE
                                 changeButtonColorType(TYPE_COLOR_LIGHT_BUTTON)
-                                isClik=false
+                                isClick=false
                             } else {
 //                                Log.d("zt","4")
                                 mine_tv_security_tip_line2.visibility = View.GONE
                                 changeButtonColorType(TYPE_COLOR_NIGHT_BUTTON)
-                                isClik = true
+                                isClick = true
                             }
                         }
                         mine_iv_security_change_paswword_line2_eye.visibility = View.VISIBLE
@@ -204,7 +215,7 @@ class ChangPasswordActivity : BaseViewModelActivity<ChangePasswordViewModel>() {
 //                        Log.d("zt","5")
                         mine_iv_security_change_paswword_line2_eye.visibility = View.GONE
                         changeButtonColorType(TYPE_COLOR_LIGHT_BUTTON)
-                        isClik=false
+                        isClick=false
                     }
                 }
             }
@@ -224,13 +235,13 @@ class ChangPasswordActivity : BaseViewModelActivity<ChangePasswordViewModel>() {
                         if (mine_security_secondinput_password.text.toString() != mine_security_firstinput_password.text.toString()) {
                             mine_tv_security_tip_line2.visibility = View.VISIBLE
                             changeButtonColorType(TYPE_COLOR_LIGHT_BUTTON)
-                            isClik=false
+                            isClick=false
 //                            Log.d("zt","6")
                         } else {
 //                            Log.d("zt","7")
                             mine_tv_security_tip_line2.visibility = View.GONE
                             changeButtonColorType(TYPE_COLOR_NIGHT_BUTTON)
-                            isClik=true
+                            isClick=true
                         }
                         mine_iv_security_change_paswword_line1_eye.visibility=View.VISIBLE
                     } else {
@@ -238,7 +249,7 @@ class ChangPasswordActivity : BaseViewModelActivity<ChangePasswordViewModel>() {
                         mine_tv_security_tip_line2.visibility = View.GONE
                         mine_iv_security_change_paswword_line1_eye.visibility=View.GONE
                         changeButtonColorType(TYPE_COLOR_LIGHT_BUTTON)
-                        isClik=false
+                        isClick=false
                     }
                 }
             }
@@ -250,7 +261,7 @@ class ChangPasswordActivity : BaseViewModelActivity<ChangePasswordViewModel>() {
             }
         })
         mine_bt_security_change_password_confirm.setOnClickListener {
-            if (isClik) {
+            if (isClick) {
                 if (isOriginView) {
                     //旧密码检测的网络请求
 

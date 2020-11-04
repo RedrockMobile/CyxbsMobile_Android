@@ -113,5 +113,9 @@
     <string name="mine_security_change_password">修改密码</string>
     <string name="mine_security_new_password_uncorrect">新密码不符合要求，请重新输入</string>
     <string name="mine_security_retype">确认密码和新密码不符，请重新输入</string>
->>>>>>> 5266d12c6abe0d4527bef0747332159b73c5a052
+    <string name="mine_security_your_password_question_is">你的密保问题是</string>
+    <string name="mine_security_answer_to_your_question_is">你的问题答案是：</string>
+    <string name="mine__security_please_input_answer">请输入密保问题的答案（由2-16位字符组成）</string>
+    <string name="mine_security_contract_us">验证失败？联系我们</string>
+    >>>>>>> 5266d12c6abe0d4527bef0747332159b73c5a052
 </resources>

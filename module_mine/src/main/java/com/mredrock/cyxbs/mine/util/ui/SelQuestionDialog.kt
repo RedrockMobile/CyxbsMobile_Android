@@ -1,4 +1,4 @@
-package com.mredrock.cyxbs.mine.page.security.fragment
+package com.mredrock.cyxbs.mine.util.ui
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater

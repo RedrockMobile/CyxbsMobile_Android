@@ -1,5 +1,7 @@
 package com.mredrock.cyxbs.mine.network
 
+import androidx.databinding.ObservableBoolean
+import androidx.databinding.ObservableField
 import com.mredrock.cyxbs.common.bean.RedrockApiStatus
 import com.mredrock.cyxbs.common.bean.RedrockApiWrapper
 import com.mredrock.cyxbs.mine.network.model.*
@@ -174,7 +176,36 @@ interface ApiService {
     /**
      * 获取所有的密保问题
      */
-    //@FormUrlEncoded
     @GET("/user/question")
     fun getAllSecurityQuestions(): Observable<RedrockApiWrapper<List<SecurityQuestion>>>
+
+    /**
+     * 发送绑邮箱的验证码
+     */
+    @FormUrlEncoded
+    @POST("/user/bind/email/code")
+    fun sendEmailConfirmCode(
+            @Field("email") email: String
+    ): Observable<RedrockApiWrapper<ConfirmCode>>
+
+    /**
+     * 验证邮箱验证码是否正确
+     */
+    @FormUrlEncoded
+    @POST("/user/bind/email")
+    fun confirmEmailCodeWithoutLogin(
+            @Field("email")
+            email: String,
+            @Field("code")
+            code: String
+    ): Observable<RedrockApiStatus>
+
+    //TODO:接口文档没有更新，数据可能后期需要修改
+    @FormUrlEncoded
+    @POST("/user/valid/email/code")
+    fun sendConfirmCodeWithoutLogin(
+            @Field("email")
+            email: String
+    ): Observable<RedrockApiWrapper<ConfirmCode>>
+
 }
