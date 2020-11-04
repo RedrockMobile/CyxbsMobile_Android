@@ -96,7 +96,6 @@
     <string name="mine_security_please_input_password">请再输入6位以上新密码</string>
     <string name="mine_security_forget_password">忘记密码？</string>
     <string name="mine_security_next">下一步</string>
-    <string name="mine_security_set_password_protect">设置密保</string>
     <string name="mine_security_your_password_protect_question">你的保密问题是：</string>
     <string name="mine_security_sel_question">选择一个密保问题</string>
     <string name="mine_security_answer_to_question">你的问题的回答是</string>
@@ -115,7 +114,8 @@
     <string name="mine_security_retype">确认密码和新密码不符，请重新输入</string>
     <string name="mine_security_your_password_question_is">你的密保问题是</string>
     <string name="mine_security_answer_to_your_question_is">你的问题答案是：</string>
-    <string name="mine__security_please_input_answer">请输入密保问题的答案（由2-16位字符组成）</string>
+    <string name="mine__security_please_input_answer">请输入密保问题的答案（由2–16位字符组成）</string>
     <string name="mine_security_contract_us">验证失败？联系我们</string>
-    >>>>>>> 5266d12c6abe0d4527bef0747332159b73c5a052
+    <string name="mine_security_please_set_protect_or_bind_email">为了您的账号安全，请设置密保/绑定邮箱</string>
+    <string name="mine_security_set_password_protect">设置密保</string>
 </resources>

@@ -213,4 +213,16 @@
         app:lottie_loop="true"
         app:lottie_rawRes="@raw/login_loging" />
 
+    <TextView
+        android:id="@+id/tv_main_forget_password"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="22dp"
+        android:text="@string/main_activity_login_forget_password"
+        android:textColor="@color/common_log_in_to_the_gray_font_below"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="@+id/main_user_agreement"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/main_user_agreement" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

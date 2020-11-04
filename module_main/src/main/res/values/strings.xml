@@ -4,6 +4,7 @@
     <string name="main_activity_login_btn_login">登 录</string>
     <string name="main_activity_login_not_input_account">请检查一下学号吧，似乎有点问题</string>
     <string name="main_activity_login_not_input_password">请检查一下密码吧，似乎有点问题</string>
+    <string name="main_activity_login_forget_password">忘记密码？</string>
 
     <string name="main_course_long_name">我的课表</string>
     <string name="main_course_short_name">课表</string>

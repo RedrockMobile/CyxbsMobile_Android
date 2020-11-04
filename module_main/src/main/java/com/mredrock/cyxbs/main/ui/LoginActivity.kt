@@ -26,6 +26,7 @@ import com.mredrock.cyxbs.common.config.IS_EXIT_LOGIN
 import com.mredrock.cyxbs.common.mark.EventBusLifecycleSubscriber
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.account.IAccountService
+import com.mredrock.cyxbs.common.config.MINE_FORGET_PASSWORD
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.main.MAIN_LOGIN
 import com.mredrock.cyxbs.main.R
@@ -118,6 +119,10 @@ class LoginActivity : BaseViewModelActivity<LoginViewModel>(), EventBusLifecycle
                     }
                 }
             }
+        }
+        //跳转到忘记密码模块
+        tv_main_forget_password.setOnClickListener {
+            ARouter.getInstance().build(MINE_FORGET_PASSWORD).navigation()
         }
     }
 
