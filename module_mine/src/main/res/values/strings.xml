@@ -89,6 +89,7 @@
     <!--密码与安全-->
 
     <string name="mine_security_change_pass_word_hint">重设密码</string>
+    <string name="mine_security_forget_pass_word_hint">请再次输入学号</string>
     <string name="mine_security_change_pass_word">修改密码</string>
     <string name="mine_security_change_secret_security">修改密保</string>
     <string name="mine_security_change_binding_mail">修改绑定邮箱</string>
@@ -118,4 +119,6 @@
     <string name="mine_security_contract_us">验证失败？联系我们</string>
     <string name="mine_security_please_set_protect_or_bind_email">为了您的账号安全，请设置密保/绑定邮箱</string>
     <string name="mine_security_set_password_protect">设置密保</string>
+    <string name="mine_security_default_password_hint">你的密码未曾修改，请试试初始密码:身份证后六位/2020级为统一认证码后六位</string>
+    <string name="mine_Security_relogin">重新登录</string>
 </resources>

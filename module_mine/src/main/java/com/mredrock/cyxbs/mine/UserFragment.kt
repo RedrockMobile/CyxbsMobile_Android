@@ -34,8 +34,7 @@ import com.mredrock.cyxbs.mine.page.answer.AnswerActivity
 import com.mredrock.cyxbs.mine.page.ask.AskActivity
 import com.mredrock.cyxbs.mine.page.comment.CommentActivity
 import com.mredrock.cyxbs.mine.page.edit.EditInfoActivity
-import com.mredrock.cyxbs.mine.page.security.activity.ChangPasswordActivity
-import com.mredrock.cyxbs.mine.page.security.activity.SetPasswordProtectActivity
+import com.mredrock.cyxbs.mine.page.security.activity.SecurityActivity
 import com.mredrock.cyxbs.mine.page.sign.DailySignActivity
 import kotlinx.android.synthetic.main.mine_fragment_main.*
 
@@ -46,7 +45,7 @@ import kotlinx.android.synthetic.main.mine_fragment_main.*
 @SuppressLint("SetTextI18n")
 @Route(path = MINE_ENTRY)
 class UserFragment : BaseViewModelFragment<UserViewModel>() {
-
+    //TODO 判断一下是否是游客模式，如果是游客模式，账号与安全就GONE掉
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         addObserver()
@@ -57,61 +56,62 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
     private fun initView() {
         //功能按钮
         context?.apply {
-            mine_main_btn_sign.setOnClickListener { doIfLogin { startActivity<DailySignActivity>()
-            } }
-            mine_main_tv_security.setOnClickListener { doIfLogin { ChangPasswordActivity.actionStart(this,ChangPasswordActivity.TYPE_START_FROM_OTHERS)} }
             mine_main_btn_sign.setOnClickListener { doIfLogin { startActivity<DailySignActivity>() } }
-            mine_main_tv_sign.setOnClickListener { doIfLogin { startActivity<DailySignActivity>() } }
-            mine_main_question_number.setOnClickListener { doIfLogin { startActivity<AskActivity>() } }
-            mine_main_tv_question.setOnClickListener { doIfLogin { startActivity<AskActivity>() } }
-            mine_main_answer_number.setOnClickListener { doIfLogin { startActivity<AnswerActivity>() } }
-            mine_main_tv_question.setOnClickListener { doIfLogin { startActivity<AnswerActivity>() } }
-            mine_main_reply_comment_number.setOnClickListener { doIfLogin { startActivity<CommentActivity>() } }
-            mine_main_tv_reply_comment.setOnClickListener { doIfLogin { startActivity<CommentActivity>() } }
-            mine_main_cl_info_edit.setOnClickListener {
-                doIfLogin {
-                    startActivity(
-                            Intent(context, EditInfoActivity::class.java),
-                            ActivityOptionsCompat.makeSceneTransitionAnimation(context as Activity, Pair(mine_main_avatar, "avatar")).toBundle())
-                }
-            }
-
-            mine_main_tv_praise.setOnClickListener { doIfLogin { showPraise() } }
-            mine_main_praise_number.setOnClickListener { doIfLogin { showPraise() } }
-
-            mine_main_tv_about.setOnClickListener { startActivity<AboutActivity>() }
-            if (ServiceManager.getService(IAccountService::class.java).getVerifyService().isLogin()) {
-                mine_main_btn_exit.text = getString(R.string.mine_exit)
-                mine_main_btn_exit.setOnClickListener {
-                    onExitClick()
-                }
-            } else {
-                mine_main_btn_exit.text = getString(R.string.mine_login_now)
-                mine_main_btn_exit.setOnClickListener {
-                    cleanAppWidgetCache()
-                    //清除user信息，必须要在LoginStateChangeEvent之前
-                    viewModel.clearUser()
-                    requireActivity().startLoginActivity()
-                }
-            }
-            mine_main_btn_exit.pressToZoomOut()
-            mine_main_tv_feedback.setOnClickListener { onFeedBackClick() }
-            mine_main_tv_custom_widget.setOnClickListener { onSetWidgetClick() }
-            mine_main_tv_redrock.setOnClickListener { clickAboutUsWebsite() }
-
-            mine_main_switch.setOnCheckedChangeListener { _, isChecked ->
-                defaultSharedPreferences.editor {
-                    if (isChecked) {
-                        putBoolean(COURSE_SHOW_STATE, true)
-                    } else {
-                        putBoolean(COURSE_SHOW_STATE, false)
+            mine_main_tv_security.setOnClickListener {
+                doIfLogin { startActivity<SecurityActivity>() }
+                mine_main_btn_sign.setOnClickListener { doIfLogin { startActivity<DailySignActivity>() } }
+                mine_main_tv_sign.setOnClickListener { doIfLogin { startActivity<DailySignActivity>() } }
+                mine_main_question_number.setOnClickListener { doIfLogin { startActivity<AskActivity>() } }
+                mine_main_tv_question.setOnClickListener { doIfLogin { startActivity<AskActivity>() } }
+                mine_main_answer_number.setOnClickListener { doIfLogin { startActivity<AnswerActivity>() } }
+                mine_main_tv_question.setOnClickListener { doIfLogin { startActivity<AnswerActivity>() } }
+                mine_main_reply_comment_number.setOnClickListener { doIfLogin { startActivity<CommentActivity>() } }
+                mine_main_tv_reply_comment.setOnClickListener { doIfLogin { startActivity<CommentActivity>() } }
+                mine_main_cl_info_edit.setOnClickListener {
+                    doIfLogin {
+                        startActivity(
+                                Intent(context, EditInfoActivity::class.java),
+                                ActivityOptionsCompat.makeSceneTransitionAnimation(context as Activity, Pair(mine_main_avatar, "avatar")).toBundle())
                     }
                 }
-            }
-            mine_main_switch.isChecked = context?.defaultSharedPreferences?.getBoolean(COURSE_SHOW_STATE, false)
-                    ?: false
-        }
 
+                mine_main_tv_praise.setOnClickListener { doIfLogin { showPraise() } }
+                mine_main_praise_number.setOnClickListener { doIfLogin { showPraise() } }
+
+                mine_main_tv_about.setOnClickListener { startActivity<AboutActivity>() }
+                if (ServiceManager.getService(IAccountService::class.java).getVerifyService().isLogin()) {
+                    mine_main_btn_exit.text = getString(R.string.mine_exit)
+                    mine_main_btn_exit.setOnClickListener {
+                        onExitClick()
+                    }
+                } else {
+                    mine_main_btn_exit.text = getString(R.string.mine_login_now)
+                    mine_main_btn_exit.setOnClickListener {
+                        cleanAppWidgetCache()
+                        //清除user信息，必须要在LoginStateChangeEvent之前
+                        viewModel.clearUser()
+                        requireActivity().startLoginActivity()
+                    }
+                }
+                mine_main_btn_exit.pressToZoomOut()
+                mine_main_tv_feedback.setOnClickListener { onFeedBackClick() }
+                mine_main_tv_custom_widget.setOnClickListener { onSetWidgetClick() }
+                mine_main_tv_redrock.setOnClickListener { clickAboutUsWebsite() }
+
+                mine_main_switch.setOnCheckedChangeListener { _, isChecked ->
+                    defaultSharedPreferences.editor {
+                        if (isChecked) {
+                            putBoolean(COURSE_SHOW_STATE, true)
+                        } else {
+                            putBoolean(COURSE_SHOW_STATE, false)
+                        }
+                    }
+                }
+                mine_main_switch.isChecked = context?.defaultSharedPreferences?.getBoolean(COURSE_SHOW_STATE, false)
+                        ?: false
+            }
+
+        }
     }
 
     @SuppressLint("SetTextI18n")
@@ -173,7 +173,7 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
             val clipboard = activity?.getSystemService(AppCompatActivity.CLIPBOARD_SERVICE) as ClipboardManager
             val data = ClipData.newPlainText("QQ Group", "570919844")
             clipboard.primaryClip = data
-            context?.let { CyxbsToast.makeText(it,"抱歉，由于您未安装手机QQ或版本不支持，无法跳转至掌邮bug反馈群。" + "已将群号复制至您的手机剪贴板，请您手动添加",Toast.LENGTH_SHORT).show() }
+            context?.let { CyxbsToast.makeText(it, "抱歉，由于您未安装手机QQ或版本不支持，无法跳转至掌邮bug反馈群。" + "已将群号复制至您的手机剪贴板，请您手动添加", Toast.LENGTH_SHORT).show() }
         }
     }
 
@@ -240,8 +240,10 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
                             onPositiveClick = { dismiss() },
                             positiveString = "确定",
                             elseFunction = { view ->
-                                view.findViewById<TextView>(R.id.mine_dialog_tv_praise).text = "你一共获得${viewModel.qaNumber.value?.praiseNumber
-                                        ?: 0}个赞"
+                                view.findViewById<TextView>(R.id.mine_dialog_tv_praise).text = "你一共获得${
+                                    viewModel.qaNumber.value?.praiseNumber
+                                            ?: 0
+                                }个赞"
                             }
                     )
                 }.show(act.supportFragmentManager, tag)

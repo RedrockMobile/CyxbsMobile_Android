@@ -208,4 +208,28 @@ interface ApiService {
             email: String
     ): Observable<RedrockApiWrapper<ConfirmCode>>
 
+    /*
+     * 判断旧密码是否正确
+     */
+    @FormUrlEncoded
+    @POST
+    fun originPassWordCheck(
+            @Field("password")password:String):Observable<RedrockApiStatus>
+
+    /**
+     * 检查是否绑定信息
+     */
+    @FormUrlEncoded
+    @POST
+    fun checkBinding(
+            @Field("stu_num")stu_num:String):Observable<RedrockApiWrapper<BindingResponse>>
+
+    /**
+     * 检查是否为默认密码
+     */
+    @FormUrlEncoded
+    @POST
+    fun checkDefaultPassword(
+            @Field("stu_num")stu_num:String):Observable<RedrockApiStatus>
+
 }

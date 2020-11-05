@@ -4,9 +4,10 @@
 
     <application android:theme="@style/AppTheme">
         <activity android:name=".page.security.activity.FindPasswordActivity"/>
-        <activity android:name=".page.security.activity.SetPasswordProtectActivity" />
+        <activity android:name=".page.security.activity.ForgetPasswordActivity"/>
         <activity android:name=".page.security.activity.BindEmailActivity" />
-        <activity android:name=".page.security.activity.ChangPasswordActivity" />
+        <activity android:name=".page.security.activity.SetPasswordProtectActivity" />
+        <activity android:name=".page.security.activity.ChangePasswordActivity" />
         <activity
             android:name=".page.security.activity.SecurityActivity"
             android:theme="@style/AppTheme.NoActionBar" />
