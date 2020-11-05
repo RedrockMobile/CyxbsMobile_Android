@@ -262,6 +262,19 @@
             android:textSize="15sp" />
 
         <TextView
+            android:id="@+id/mine_main_tv_security"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:foreground="?android:selectableItemBackground"
+            android:paddingStart="16dp"
+            android:paddingTop="9dp"
+            android:paddingBottom="9dp"
+            android:text="@string/mine_security"
+            android:textColor="@color/common_level_three_font_color"
+            android:textSize="15sp" />
+
+        <TextView
             android:id="@+id/mine_main_tv_feedback"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
