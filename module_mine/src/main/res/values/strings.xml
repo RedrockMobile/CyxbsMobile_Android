@@ -90,7 +90,7 @@
     <!--密码与安全-->
 
     <string name="mine_security_change_pass_word_hint">重设密码</string>
-    <string name="mine_security_forget_pass_word_hint">请再次输入学号</string>
+    <string name="mine_security_forget_pass_word_hint">请输入学号</string>
     <string name="mine_security_change_pass_word">修改密码</string>
     <string name="mine_security_change_secret_security">修改密保</string>
     <string name="mine_security_change_binding_mail">修改绑定邮箱</string>

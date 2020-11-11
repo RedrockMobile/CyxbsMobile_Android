@@ -14,14 +14,20 @@ import com.mredrock.cyxbs.mine.page.security.viewmodel.ForgetPasswordViewModel
 import com.mredrock.cyxbs.mine.util.ui.ChooseFindTypeDialog
 import com.mredrock.cyxbs.mine.util.ui.DefaultPasswordHintDialog
 import kotlinx.android.synthetic.main.mine_activity_forget_password.*
+
+/**
+ * Author: SpreadWater
+ * Time: 2020-10-29 15:06
+ * describe: 在登陆界面点击忘记密码跳转到的界面
+ */
 @Route(path = MINE_FORGET_PASSWORD)
 class ForgetPasswordActivity : BaseViewModelActivity<ForgetPasswordViewModel>() {
     override val isFragmentActivity = false
+    private var stuNumber = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.mine_activity_forget_password)
-
         common_toolbar.apply {
             setBackgroundColor(ContextCompat.getColor(this@ForgetPasswordActivity, R.color.common_white_background))
             initWithSplitLine("忘记密码",
@@ -34,16 +40,17 @@ class ForgetPasswordActivity : BaseViewModelActivity<ForgetPasswordViewModel>() 
         }
         viewModel.defaultPassword.observe(this, Observer {
             if (it){
-                DefaultPasswordHintDialog.show(this, ForgetPasswordActivity())
+                //展示为默认密码的dialog
+                DefaultPasswordHintDialog.show(this, this)
             }else{
                 viewModel.checkBinding(stu_num = ServiceManager.getService(IAccountService::class.java).getUserService().getStuNum())
-
-                ChooseFindTypeDialog.showDialog(this, viewModel.bindingEmail.value!!, viewModel.bindingPasswordProtect.value!!,this)
+                //展示不同的找回密码方式的dialog
+                ChooseFindTypeDialog.showDialog(this, viewModel.bindingEmail.value!!, viewModel.bindingPasswordProtect.value!!,this, true, stuNumber)
             }
         })
         mine_security_bt_forget_password_confirm.setOnClickListener {
-            val stu_num=ServiceManager.getService(IAccountService::class.java).getUserService().getStuNum()
-            viewModel.checkDefaultPassword(stu_num)
+            stuNumber = mine_security_et_foreget_password.text.toString()
+            viewModel.checkDefaultPassword(stuNumber)
         }
     }
 }

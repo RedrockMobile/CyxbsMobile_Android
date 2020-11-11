@@ -6,7 +6,6 @@ import android.view.Gravity
 import android.widget.TextView
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.ui.BaseActivity
-import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.extensions.toast
 import com.mredrock.cyxbs.mine.R
 import com.mredrock.cyxbs.mine.page.security.activity.FindPasswordActivity
@@ -20,7 +19,8 @@ import com.mredrock.cyxbs.mine.page.security.activity.FindPasswordActivity.Compa
 class ChooseFindTypeDialog(context: Context?, theme: Int) : Dialog(context, theme) {
     companion object {
         private var chooseFindTypeDialog: ChooseFindTypeDialog? = null
-        fun showDialog(context: Context?, hasEmailBinding: Boolean, hasSecurityQuestion: Boolean,activity:BaseActivity) {
+        //此处函数将来可以优化，目前必须要传递一个学号进来
+        fun showDialog(context: Context?, hasEmailBinding: Boolean, hasSecurityQuestion: Boolean, activity: BaseActivity, isFromLogin: Boolean, stuNumber: String) {
             if (context == null) return
             if (chooseFindTypeDialog == null) {
                 chooseFindTypeDialog = ChooseFindTypeDialog(context, R.style.transparent_dialog)
@@ -33,24 +33,32 @@ class ChooseFindTypeDialog(context: Context?, theme: Int) : Dialog(context, them
                 //当点击通过邮箱找回的按钮时
                 if (hasEmailBinding) {
                     //启动邮箱找回模块
-                    FindPasswordActivity.start(context, FIND_PASSWORD_BY_EMAIL)
+                    if (isFromLogin) {
+                        FindPasswordActivity.startFromLogin(context, FIND_PASSWORD_BY_EMAIL, stuNumber)
+                    } else {
+                        FindPasswordActivity.startFromMine(context, FIND_PASSWORD_BY_EMAIL)
+                    }
                     chooseFindTypeDialog!!.hide()
-                    activity.finish()
                 } else {
                     //弹出toast提示没有进行密码绑定
                     BaseApp.context.toast("您好像还没有绑定邮箱")
                 }
+                activity.finish()
             }
             tvProtect.setOnClickListener {
                 //当点击通过密保找回时
-                if (hasSecurityQuestion){
+                if (hasSecurityQuestion) {
                     //启动密保找回模块
-                    FindPasswordActivity.start(context, FIND_PASSWORD_BY_SECURITY_QUESTION)
+                    if (isFromLogin) {
+                        FindPasswordActivity.startFromLogin(context, FIND_PASSWORD_BY_SECURITY_QUESTION, stuNumber)
+                    } else {
+                        FindPasswordActivity.startFromMine(context, FIND_PASSWORD_BY_SECURITY_QUESTION)
+                    }
                     chooseFindTypeDialog!!.hide()
-                    activity.finish()
                 } else {
                     BaseApp.context.toast("您好像还没有设置密保问题")
                 }
+                activity.finish()
             }
             chooseFindTypeDialog!!.show()
         }

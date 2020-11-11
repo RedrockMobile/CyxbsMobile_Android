@@ -1,9 +1,7 @@
 package com.mredrock.cyxbs.mine.page.security.viewmodel
 
 import android.util.Log
-import androidx.databinding.ObservableField
 import androidx.lifecycle.MutableLiveData
-import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.BaseApp.Companion.context
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.toast
@@ -52,11 +50,10 @@ class ChangePasswordViewModel : BaseViewModel() {
 
     //进行新密码的传入
     fun newPassWordInput(origin_password: String, new_password: String) {
-        apiService.changePassword(origin_password, new_password)
+        apiService.resetPassword(origin_password, new_password)
                 .safeSubscribeBy(onNext = {
                     when (it.status) {
                         10000 -> {
-                            //TODO这里进行toast提示
                             inputNewPasswordCorrect.value = true
                             context.toast("修改密码成功！")
                         }
@@ -71,6 +68,29 @@ class ChangePasswordViewModel : BaseViewModel() {
                         10020 -> {
                             inputNewPasswordCorrect.value = false
                             context.toast("新旧密码重复！")
+                        }
+                    }
+                }, onError = {
+                    context.toast("对不起，目前无法修改密码")
+                })
+    }
+
+    //在未登录的条件下修改密码（需要随机数）
+    fun resetPasswordFromLogin(origin_password: String, new_password: String, code: Int) {
+        apiService.resetPasswordFromLogin(origin_password, new_password, code)
+                .safeSubscribeBy(onNext = {
+                    when (it.status) {
+                        10000 -> {
+                            inputNewPasswordCorrect.value = true
+                            context.toast("修改密码成功！")
+                        }
+                        10003 -> {
+                            inputNewPasswordCorrect.value = false
+                            context.toast("后端返回的认证码存在问题，修改失败")
+                        }
+                        10004 -> {
+                            inputNewPasswordCorrect.value = false
+                            context.toast("密码格式有问题！")
                         }
                     }
                 }, onError = {

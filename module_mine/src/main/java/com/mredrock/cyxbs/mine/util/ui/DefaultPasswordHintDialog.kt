@@ -25,6 +25,9 @@ class DefaultPasswordHintDialog(context: Context,them:Int) :Dialog(context,them)
             val relogin= defaultPasswordHintDialog!!.findViewById<Button>(R.id.mine_security_bt_relogin)
             relogin.setOnClickListener {
                 defaultPasswordHintDialog!!.hide()
+            }
+            //修改：将原本的只在按钮监听事件中finish activity变更为在cancel的监听事件中finish activity
+            defaultPasswordHintDialog!!.setOnCancelListener {
                 activity.finish()
             }
         }

@@ -154,24 +154,46 @@ interface ApiService {
     fun getAnswer(
             @Field("answer_id") answer_id: String): Observable<ResponseBody>
 
+
+    /**
+     * 说明：修改密码模块的接口存在两种情况
+     * 即来自登陆界面以及来自个人界面
+     * 接口方法中以FormLogin结尾的就是自登陆界面时需要调用的接口
+     * 反之就是自个人界面调用的接口
+     */
+
     /**
      * 修改密码
      * 调用此方法必须处于登录状态
+     * 故不需要传递认证int进来
      */
     @FormUrlEncoded
     @POST("/user/password/personal")
-    fun changePassword(
-            @Field("origin_password") origin_password : String ,
+    fun resetPassword(
+            @Field("origin_password") origin_password: String,
             @Field("new_password") new_password: String): Observable<RedrockApiStatus>
 
     /**
+     * 修改密码
+     * 调用此方法时处于登陆界面
+     */
+    @FormUrlEncoded
+    @POST("/user/password/valid")
+    fun resetPasswordFromLogin(
+            @Field("stu_num") stu_num: String,
+            @Field("new_password") new_password: String,
+            @Field("code") code: Int
+    ): Observable<RedrockApiStatus>
+
+    /**
      * 设置密保问题答案
+     * 必须在个人界面中调用此方法
      */
     @FormUrlEncoded
     @POST("/user/bind/question")
     fun setSecurityQuestionAnswer(
-            @Field("id") id: Int , //问题的id
-            @Field("content") content : String): Observable<RedrockApiStatus>//答案的主体内容
+            @Field("id") id: Int, //问题的id
+            @Field("content") content: String): Observable<RedrockApiStatus>//答案的主体内容
 
     /**
      * 获取所有的密保问题
@@ -181,6 +203,7 @@ interface ApiService {
 
     /**
      * 获取Email验证码
+     * 此接口用于绑定邮箱时向此邮箱发送验证码
      */
     @FormUrlEncoded
     @POST("/user/bind/email/code")
@@ -189,41 +212,70 @@ interface ApiService {
 
     /**
      * 验证Email验证码
+     * 此接口用于绑定邮箱时验证验证码是否正确
      */
     @FormUrlEncoded
     @POST("/user/bind/email/code")
     fun confirmEmailCode(
             @Field("email") email: String, //问题的id
-            @Field("code") code : String): Observable<RedrockApiStatus>
+            @Field("code") code: String): Observable<RedrockApiStatus>
 
     /**
-     * 发送绑邮箱的验证码
+     * 向绑定的邮箱发送找回密码用的验证码
+     * （自登陆界面，需要传递学号进来）
      */
     @FormUrlEncoded
-    @POST("/user/bind/email/code")
-    fun sendEmailConfirmCode(
-            @Field("email") email: String
+    @POST("/user/valid/email/code")
+    fun getEmailFindPasswordCode(
+            @Field("stu_num") stu_num: String
     ): Observable<RedrockApiWrapper<ConfirmCode>>
 
     /**
      * 验证邮箱验证码是否正确
+     * 来自登陆界面
+     * 此处的返回值中不一定含有data字段
+     * 需要根据返回值的status判断是否拥有data字段
+     * 邮箱需要通过其他接口获取
+     * TODO: 就目前接口文档看来，登陆与否使用的找回密码的接口是完全相同的
+     * 没有进行data字段的解析
      */
     @FormUrlEncoded
-    @POST("/user/bind/email")
-    fun confirmEmailCodeWithoutLogin(
-            @Field("email")
-            email: String,
-            @Field("code")
-            code: String
-    ): Observable<RedrockApiStatus>
+    @POST("/user/valid/email")
+    fun confirmCodeWithoutLogin(
+            @Field("email") email: String,
+            @Field("code") code: Int
+    ): Observable<RedrockApiWrapper<String>>
 
-    //TODO:接口文档没有更新，数据可能后期需要修改
+    /**
+     * 获取用户邮箱地址
+     * 没有进行用户数据的解析
+     * 根据不同的status，不一定会有data字段
+     */
     @FormUrlEncoded
-    @POST("/user/valid/email/code")
-    fun sendConfirmCodeWithoutLogin(
-            @Field("email")
-            email: String
-    ): Observable<RedrockApiWrapper<ConfirmCode>>
+    @POST("/user/bind/email/detail")
+    fun getUserEmail(
+            @Field("stu_num") stu_num: String
+    ): Observable<RedrockApiWrapper<String>>
+
+    /**
+     * 获取学生的密保问题
+     */
+    @FormUrlEncoded
+    @POST("/user/bind/question/detail")
+    fun getUserQuestion(
+            @Field("stu_num") stu_num: String
+    ): Observable<RedrockApiWrapper<List<SecurityQuestion>>>
+
+    /**
+     * 验证密保问题的回答是否正确
+     */
+    @FormUrlEncoded
+    @POST("/user/valid/question")
+    fun confirmAnswer(
+            @Field("stu_num") stu_num: String,
+            @Field("question_id") question_id: Int,
+            @Field("content") content: String
+    ):Observable<RedrockApiWrapper<String>>
 
     /*
      * 判断旧密码是否正确
@@ -231,15 +283,15 @@ interface ApiService {
     @FormUrlEncoded
     @POST
     fun originPassWordCheck(
-            @Field("password")password:String):Observable<RedrockApiStatus>
+            @Field("password") password: String): Observable<RedrockApiStatus>
 
     /**
      * 检查是否绑定信息
      */
     @FormUrlEncoded
-    @POST
+    @POST("/user/bind/is")
     fun checkBinding(
-            @Field("stu_num")stu_num:String):Observable<RedrockApiWrapper<BindingResponse>>
+            @Field("stu_num") stu_num: String): Observable<RedrockApiWrapper<BindingResponse>>
 
     /**
      * 检查是否为默认密码
@@ -247,5 +299,5 @@ interface ApiService {
     @FormUrlEncoded
     @POST
     fun checkDefaultPassword(
-            @Field("stu_num")stu_num:String):Observable<RedrockApiStatus>
+            @Field("stu_num") stu_num: String): Observable<RedrockApiStatus>
 }

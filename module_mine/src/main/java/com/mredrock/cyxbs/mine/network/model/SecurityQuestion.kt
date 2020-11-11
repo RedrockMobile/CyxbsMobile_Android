@@ -1,6 +1,7 @@
 package com.mredrock.cyxbs.mine.network.model
 
 import com.google.gson.annotations.SerializedName
+import java.io.Serializable
 
 /**
  * @date 2020-10-29
@@ -12,4 +13,4 @@ data class SecurityQuestion (
         val id : Int,
         @SerializedName("content")
         val content : String
-)
+) : Serializable
