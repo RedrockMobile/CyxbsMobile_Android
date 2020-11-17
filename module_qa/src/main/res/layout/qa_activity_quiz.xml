@@ -27,52 +27,14 @@
                 android:layout_height="1dp"
                 android:alpha="0.1"
                 android:background="@color/common_qa_quiz_toolbar_divider_line_color" />
-
-            <HorizontalScrollView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:overScrollMode="never"
-                android:scrollbars="none">
-
-                <com.google.android.material.chip.ChipGroup
-                    android:id="@+id/layout_quiz_tag"
-                    style="@style/Widget.MaterialComponents.ChipGroup"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingHorizontal="16dp"
-                    app:chipSpacingHorizontal="20dp"
-                    app:singleLine="true"
-                    app:singleSelection="true" />
-            </HorizontalScrollView>
-
-            <androidx.appcompat.widget.AppCompatEditText
-                android:id="@+id/edt_quiz_title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginEnd="16dp"
-                android:background="@drawable/qa_ic_quiz_new_text_background"
-                android:gravity="center_vertical"
-                android:hint="@string/qa_question_new_question_title_hint"
-                android:inputType="text"
-                android:maxLength="12"
-                android:paddingStart="21dp"
-                android:paddingTop="10dp"
-                android:paddingEnd="21dp"
-                android:paddingBottom="9dp"
-                android:textColorHint="@color/common_qa_common_hint_text_color"
-                android:textStyle="bold" />
-
             <com.mredrock.cyxbs.common.component.RatioLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="15dp"
                 android:layout_marginEnd="16dp"
-                android:background="@drawable/qa_ic_quiz_new_text_background"
-                app:ratio="0.69">
+                android:background="@color/common_white_background"
+                app:ratio="0.4">
 
 
                 <androidx.appcompat.widget.AppCompatEditText
@@ -97,12 +59,42 @@
                 android:id="@+id/nine_grid_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
                 android:paddingStart="16dp"
                 android:paddingTop="6dp"
                 android:paddingEnd="16dp"
                 android:paddingBottom="19dp" />
 
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="请选择一个圈子"
+                android:textColor="@color/common_grades_fragment_text_color_black"
+                android:textSize="18dp"
+                android:padding="5dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="5dp"
+                android:layout_marginBottom="10dp"
+                />
+            <com.mredrock.cyxbs.common.component.RedRockAutoWarpView
+                android:id="@+id/map_rrv_place_detail_label"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="15dp"
+                android:paddingTop="8dp"
+                android:paddingEnd="10dp"
+                android:paddingBottom="8dp"
+                app:horizontalSpacing="7dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/map_ll_divider"
+                app:layout_constraintVertical_bias="0.101"
+                app:verticalsSpacing="8dp">
 
+            </com.mredrock.cyxbs.common.component.RedRockAutoWarpView>
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 </androidx.appcompat.widget.LinearLayoutCompat>

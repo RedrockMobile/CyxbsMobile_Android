@@ -17,7 +17,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="17dp"
             android:layout_marginEnd="17dp"
-            android:layout_marginBottom="15dp"
+            android:layout_marginBottom="10dp"
             android:orientation="horizontal">
 
             <ImageButton
@@ -34,24 +34,31 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_marginStart="17dp"
+                android:layout_marginStart="100dp"
                 android:layout_marginEnd="17dp"
                 android:layout_toStartOf="@id/qa_ib_toolbar_more"
                 android:layout_toEndOf="@id/qa_ib_toolbar_back"
                 android:textColor="@color/common_level_two_font_color"
                 android:textSize="22sp"
                 android:textStyle="bold"
-                tools:text="评论（2）" />
+                tools:text="发布动态" />
 
-            <ImageButton
+            <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/qa_ib_toolbar_more"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
-                android:background="?attr/selectableItemBackgroundBorderless"
+                android:text="发布"
+                android:paddingStart="12dp"
+                android:paddingEnd="12dp"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp"
+                android:textColor="@color/common_grades_fragment_text_color_black"
+                android:textSize="18dp"
+                android:background="@drawable/qa_shape_quiz_select_pic_empty_background"
                 android:layout_gravity="center_vertical"
-                android:src="@drawable/qa_ic_toolbar_more_2" />
+              />
 
             <TextView
                 android:id="@+id/qa_tv_toolbar_right"

@@ -11,8 +11,6 @@ import com.mredrock.cyxbs.common.utils.extensions.doIfLogin
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.component.recycler.RvAdapterWrapper
 import com.mredrock.cyxbs.qa.network.NetworkState
-import com.mredrock.cyxbs.qa.pages.answer.ui.AnswerListActivity
-import com.mredrock.cyxbs.qa.pages.question.ui.adapter.QuestionListRvAdapter
 import com.mredrock.cyxbs.qa.pages.quiz.ui.QuizActivity
 import com.mredrock.cyxbs.qa.pages.search.ui.adapter.SearchResultHeaderAdapter
 import com.mredrock.cyxbs.qa.pages.search.viewmodel.QuestionSearchedViewModel
@@ -74,25 +72,15 @@ class QuestionSearchedFragment : BaseViewModelFragment<QuestionSearchedViewModel
         viewModel.getKnowledge(searchKey)
         val headerRvAdapter = SearchResultHeaderAdapter()
 
-        val questionListRvAdapter = QuestionListRvAdapter {
-            AnswerListActivity.activityStart(this, it.id, REQUEST_CODE_TO_ANSWER_List)
-        }
         val footerRvAdapter = FooterRvAdapter {
             viewModel.retry()
         }
         val emptyRvAdapter = EmptyRvAdapter(getString(R.string.qa_search_no_result))
 
-        val adapterWrapper = RvAdapterWrapper(
-                normalAdapter = questionListRvAdapter,
-                headerAdapter = headerRvAdapter,
-                emptyAdapter = emptyRvAdapter,
-                footerAdapter = footerRvAdapter
-        )
         swipe_refresh_layout_searching.setOnRefreshListener {
             viewModel.invalidateQuestionList()
         }
         rv_searched_question.layoutManager = LinearLayoutManager(context)
-        rv_searched_question.adapter = adapterWrapper
         btn_no_result_ask_question.setOnSingleClickListener {
             context?.doIfLogin("提问") {
                 QuizActivity.activityStart(this, "迎新生", REQUEST_LIST_REFRESH_ACTIVITY)
@@ -100,46 +88,7 @@ class QuestionSearchedFragment : BaseViewModelFragment<QuestionSearchedViewModel
                 activity?.finish()
             }
         }
-        observeLoading(questionListRvAdapter, headerRvAdapter, footerRvAdapter, emptyRvAdapter)
     }
 
     override fun getViewModelFactory() = QuestionSearchedViewModel.Factory(searchKey)
-
-    private fun observeLoading(questionListRvAdapter: QuestionListRvAdapter,
-                               headerRvAdapter: SearchResultHeaderAdapter,
-                               footerRvAdapter: FooterRvAdapter,
-                               emptyRvAdapter: EmptyRvAdapter) = viewModel.apply {
-        viewModel.apply {
-            questionList.observe {
-                questionListRvAdapter.submitList(it)
-            }
-            networkState.observe {
-                it?.run {
-                    footerRvAdapter.refreshData(listOf(this))
-                }
-            }
-
-            initialLoad.observe {
-                when (it) {
-                    NetworkState.LOADING -> {
-                        swipe_refresh_layout_searching.isRefreshing = true
-                        emptyRvAdapter.showHolder(3)
-                    }
-                    NetworkState.CANNOT_LOAD_WITHOUT_LOGIN -> {
-                        swipe_refresh_layout_searching.isRefreshing = false
-                    }
-                    else -> {
-                        swipe_refresh_layout_searching.isRefreshing = false
-                        emptyRvAdapter.hideHolder()
-                    }
-                }
-            }
-            knowledge.observe {
-                if (it != null) {
-                    headerRvAdapter.refreshData(listOf(it))
-                    rv_searched_question.smoothScrollToPosition(0)
-                }
-            }
-        }
-    }
 }

@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="false"
+    android:orientation="vertical"
+    tools:background="@color/common_window_background"
+    tools:context=".pages.dynamic.ui.fragment.DynamicFragment">
+
+    <RelativeLayout
+        android:id="@+id/rl_qa_hot_search"
+        android:layout_width="300dp"
+        android:layout_height="36dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="40dp"
+        android:background="@drawable/qa_shape_question_search_background">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_question_search"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="21dp"
+            android:src="@drawable/qa_ic_question_search" />
+
+        <ViewFlipper
+            android:id="@+id/vf_hot_search"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center_vertical|start"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="14dp"
+            android:layout_toEndOf="@id/iv_question_search"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:textColor="@color/common_level_two_font_color"
+            android:textSize="14sp" />
+    </RelativeLayout>
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="70dp"
+        android:background="@color/common_transparent_background"
+        app:elevation="0dp"
+        app:layout_scrollFlags="scroll|exitUntilCollapsed">
+        <com.google.android.material.appbar.CollapsingToolbarLayout
+            android:id="@+id/collapsing_toolbar_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@null"
+            android:fitsSystemWindows="true"
+            android:paddingStart="20dp"
+            android:paddingEnd="16dp"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed">
+            <androidx.recyclerview.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:id="@+id/rv_dynamic_List"
+                />
+        </com.google.android.material.appbar.CollapsingToolbarLayout>
+    </com.google.android.material.appbar.AppBarLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_marginTop="180dp">
+        <androidx.appcompat.widget.AppCompatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="推荐"
+            android:layout_marginStart="10dp"
+            android:textColor="@color/common_grades_fragment_text_color_black"
+            android:textSize="20sp"/>
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_marginTop="10dp"
+            android:id="@+id/rv_circles_List"
+            />
+    </LinearLayout>
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:id="@+id/bt_to_quiz"
+        android:layout_gravity="bottom|right"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="80dp"
+        />
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

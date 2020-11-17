@@ -1,4 +1,4 @@
-package com.mredrock.cyxbs.qa.pages.question.model
+package com.mredrock.cyxbs.qa.pages.dynamic.model
 
 import androidx.lifecycle.MutableLiveData
 import androidx.paging.DataSource
@@ -9,20 +9,20 @@ import com.mredrock.cyxbs.account.IAccountService
 import com.mredrock.cyxbs.common.utils.extensions.mapOrThrowApiException
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
-import com.mredrock.cyxbs.qa.bean.HotQA
+import com.mredrock.cyxbs.qa.bean.Question
 import com.mredrock.cyxbs.qa.network.ApiService
 import com.mredrock.cyxbs.qa.network.NetworkState
 
 /**
- * Created by yyfbe, Date on 2020/8/12.
+ * Created By jay68 on 2018/9/20.
  */
-class FreshManQuestionDataSource : PageKeyedDataSource<Int, HotQA>() {
+class QuestionDataSource(private val kind: String) : PageKeyedDataSource<Int, Question>() {
     val networkState = MutableLiveData<Int>()
     val initialLoad = MutableLiveData<Int>()
 
     private var failedRequest: (() -> Unit)? = null
 
-    override fun loadInitial(params: LoadInitialParams<Int>, callback: LoadInitialCallback<Int, HotQA>) {
+    override fun loadInitial(params: LoadInitialParams<Int>, callback: LoadInitialCallback<Int, Question>) {
         //最开始加上判断，以防登录bug
         val userState = ServiceManager.getService(IAccountService::class.java).getVerifyService()
         if (!userState.isLogin() && !userState.isTouristMode()) {
@@ -31,7 +31,7 @@ class FreshManQuestionDataSource : PageKeyedDataSource<Int, HotQA>() {
             return
         }
         ApiGenerator.getApiService(ApiService::class.java)
-                .getHotQuestion(1, params.requestedLoadSize)
+                .getQuestionList(kind, 1, params.requestedLoadSize)
                 .mapOrThrowApiException()
                 .setSchedulers()
                 .doOnSubscribe { initialLoad.postValue(NetworkState.LOADING) }
@@ -46,9 +46,9 @@ class FreshManQuestionDataSource : PageKeyedDataSource<Int, HotQA>() {
                 }
     }
 
-    override fun loadAfter(params: LoadParams<Int>, callback: LoadCallback<Int, HotQA>) {
+    override fun loadAfter(params: LoadParams<Int>, callback: LoadCallback<Int, Question>) {
         ApiGenerator.getApiService(ApiService::class.java)
-                .getHotQuestion(params.key, params.requestedLoadSize)
+                .getQuestionList(kind, params.key, params.requestedLoadSize)
                 .mapOrThrowApiException()
                 .setSchedulers()
                 .doOnSubscribe { networkState.postValue(NetworkState.LOADING) }
@@ -67,15 +67,15 @@ class FreshManQuestionDataSource : PageKeyedDataSource<Int, HotQA>() {
         failedRequest?.invoke()
     }
 
-    override fun loadBefore(params: LoadParams<Int>, callback: LoadCallback<Int, HotQA>) = Unit
+    override fun loadBefore(params: LoadParams<Int>, callback: LoadCallback<Int, Question>) = Unit
 
-    class Factory : DataSource.Factory<Int, HotQA>() {
-        val freshManQuestionDataSourceLiveData = MutableLiveData<FreshManQuestionDataSource>()
+    class Factory(private val kind: String) : DataSource.Factory<Int, Question>() {
+        val questionDataSourceLiveData = MutableLiveData<QuestionDataSource>()
 
-        override fun create(): FreshManQuestionDataSource {
-            val freshManQuestionDataSource = FreshManQuestionDataSource()
-            freshManQuestionDataSourceLiveData.postValue(freshManQuestionDataSource)
-            return freshManQuestionDataSource
+        override fun create(): QuestionDataSource {
+            val questionDataSource = QuestionDataSource(kind)
+            questionDataSourceLiveData.postValue(questionDataSource)
+            return questionDataSource
         }
     }
 }

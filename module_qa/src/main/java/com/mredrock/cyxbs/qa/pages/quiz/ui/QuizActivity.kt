@@ -10,16 +10,10 @@ import android.util.Base64
 import android.view.KeyEvent
 import android.view.View
 import android.widget.ImageView
-import android.widget.Toast
 import androidx.core.content.ContextCompat
-import androidx.core.view.get
-import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import com.alibaba.android.arouter.facade.annotation.Route
-import com.google.android.material.chip.Chip
-import com.google.android.material.chip.ChipGroup
 import com.google.gson.Gson
-import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.common.config.QA_QUIZ
 import com.mredrock.cyxbs.common.event.QuestionDraftEvent
 import com.mredrock.cyxbs.common.mark.EventBusLifecycleSubscriber
@@ -29,7 +23,6 @@ import com.mredrock.cyxbs.common.utils.extensions.*
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.bean.Question
 import com.mredrock.cyxbs.qa.pages.quiz.QuizViewModel
-import com.mredrock.cyxbs.qa.pages.quiz.ui.dialog.RewardSetDialog
 import com.mredrock.cyxbs.qa.ui.activity.ViewImageCropActivity
 import com.mredrock.cyxbs.qa.ui.widget.CommonDialog
 import com.mredrock.cyxbs.qa.utils.CHOOSE_PHOTO_REQUEST
@@ -74,7 +67,6 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>(), EventBusLifecycleSu
         val contents = resources.getStringArray(R.array.qa_quiz_reward_explain_content)
         rewardExplainList = titles.zip(contents) { title, content -> DownMessageText(title, content) }
         isFirstQuiz = sharedPreferences(FIRST_QUIZ).getBoolean(FIRST_QUIZ_SP_KEY, true)
-        initTypeSelector()
         initToolbar()
         initImageAddView()
         viewModel.getMyReward() //优先初始化积分和说明，避免用户等待
@@ -93,31 +85,13 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>(), EventBusLifecycleSu
         viewModel.finishActivityEvent.observeNotNull {
             finish()
         }
-        edt_quiz_title.doAfterTextChanged {
-            if (edt_quiz_title.text.toString().length == QUIZ_TITLE_MAX) {
-                toast(R.string.qa_quiz_title_text_size_toast)
-            }
-        }
-    }
 
-    private fun initTypeSelector() {
-        val chipGroup = findViewById<ChipGroup>(R.id.layout_quiz_tag)
-        for ((i, value) in types.withIndex()) {
-            if (i == 0) questionType = value
-            chipGroup.addView((layoutInflater.inflate(R.layout.qa_quiz_view_chip, chipGroup, false) as Chip).apply {
-                text = value
-                setOnClickListener {
-                    questionType = text.toString()
-                }
-            })
-        }
-        (chipGroup.getChildAt(currentTypeIndex) as Chip).isChecked = true
     }
 
 
     private fun initToolbar() {
         qa_ib_toolbar_back.setOnClickListener(View.OnClickListener {
-            if (edt_quiz_title.text.isNullOrEmpty() && edt_quiz_content.text.isNullOrEmpty() && draftId == NOT_DRAFT_ID) {
+            if (edt_quiz_content.text.isNullOrEmpty() && draftId == NOT_DRAFT_ID) {
                 finish()
                 return@OnClickListener
             }
@@ -129,26 +103,6 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>(), EventBusLifecycleSu
             visible()
             text = getString(R.string.qa_quiz_dialog_next)
             setOnClickListener {
-                if ((layout_quiz_tag as ChipGroup).checkedChipId == View.NO_ID) {
-                    CyxbsToast.makeText(this@QuizActivity, context.getString(R.string.qa_quiz_type_empty), Toast.LENGTH_SHORT).show()
-                    return@setOnClickListener
-                }
-                viewModel.isAnonymous = questionType == getString(R.string.qa_quiz_select_type_anonymous)
-                val result = viewModel.submitTitleAndContent(edt_quiz_title.text.toString(), edt_quiz_content.text.toString(), questionType)
-                if (result) {
-                    if (!viewModel.rewardExplainList.isNullOrEmpty()) rewardExplainList = viewModel.rewardExplainList
-                    RewardSetDialog(this@QuizActivity, viewModel.myRewardCount, isFirstQuiz, rewardExplainList).apply {
-                        onSubmitButtonClickListener = { time: String, reward: Int ->
-                            if (viewModel.setDisAppearTime(time)) {
-                                if (viewModel.quiz(reward)) {
-                                    dismiss()
-                                } else {
-                                    rewardNotEnoughDialog.show()
-                                }
-                            }
-                        }
-                    }.show()
-                }
             }
         }
     }
@@ -245,7 +199,7 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>(), EventBusLifecycleSu
             if (exitDialog.isShowing) {
                 return super.onKeyDown(keyCode, event)
             }
-            return if (edt_quiz_content.text.isNullOrEmpty() && edt_quiz_title.text.isNullOrEmpty() && draftId == NOT_DRAFT_ID) {
+            return if (edt_quiz_content.text.isNullOrEmpty() && draftId == NOT_DRAFT_ID) {
                 super.onKeyDown(keyCode, event)
             } else {
                 exitDialog.show()
@@ -256,11 +210,11 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>(), EventBusLifecycleSu
     }
 
     private fun saveDraft() {
-        if (draftId == NOT_DRAFT_ID) {
-            viewModel.addItemToDraft(edt_quiz_title.text.toString(), edt_quiz_content.text.toString(), questionType)
-        } else {
-            viewModel.updateDraftItem(edt_quiz_title.text.toString(), edt_quiz_content.text.toString(), draftId, questionType)
-        }
+//        if (draftId == NOT_DRAFT_ID) {
+//            viewModel.addItemToDraft( edt_quiz_content.text.toString(), questionType)
+//        } else {
+//            viewModel.updateDraftItem( edt_quiz_content.text.toString(), draftId, questionType)
+//        }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
@@ -271,21 +225,7 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>(), EventBusLifecycleSu
         }
         val json = String(Base64.decode(event.jsonString, Base64.DEFAULT))
         val question = Gson().fromJson(json, Question::class.java)
-        edt_quiz_title.setText(question.title)
         edt_quiz_content.setText(question.description)
-        val chipGroup = findViewById<ChipGroup>(R.id.layout_quiz_tag)
-        if (chipGroup.childCount == 0) initTypeSelector()
-        val childView = Array(chipGroup.childCount) { chipGroup.getChildAt(it) as Chip }
-        (chipGroup[currentTypeIndex] as Chip).isChecked = false
-        questionType = question.kind
-        when (question.kind) {
-            getString(R.string.qa_quiz_select_type_welcome_freshman) -> currentTypeIndex = 0
-            getString(R.string.qa_quiz_select_type_study) -> currentTypeIndex = 1
-            getString(R.string.qa_quiz_select_type_anonymous) -> currentTypeIndex = 2
-            getString(R.string.qa_quiz_select_type_life) -> currentTypeIndex = 3
-            getString(R.string.qa_quiz_select_type_others) -> currentTypeIndex = 4
-        }
-        childView[currentTypeIndex].isChecked = true
         draftId = event.selfId
         if (!question.photoUrl.isNullOrEmpty()) {
             viewModel.setImageList(arrayListOf<String>().apply { addAll(question.photoUrl) })
@@ -293,30 +233,18 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>(), EventBusLifecycleSu
     }
 
     private fun createExitDialog() = CommonDialog(this).apply {
-        initView(icon = R.drawable.qa_ic_quiz_quit_edit
-                , title = getString(R.string.qa_quiz_dialog_exit_text)
-                , firstNotice = getString(R.string.qa_quiz_dialog_not_save_text)
-                , secondNotice = null
-                , buttonText = getString(R.string.qa_common_dialog_exit)
-                , confirmListener = View.OnClickListener {
+        initView(icon = R.drawable.qa_ic_quiz_quit_edit, title = getString(R.string.qa_quiz_dialog_exit_text), firstNotice = getString(R.string.qa_quiz_dialog_not_save_text), secondNotice = null, buttonText = getString(R.string.qa_common_dialog_exit), confirmListener = View.OnClickListener {
             saveDraft()
             dismiss()
-        }
-                , cancelListener = View.OnClickListener {
+        }, cancelListener = View.OnClickListener {
             dismiss()
         })
     }
 
     private fun createRewardNotEnoughDialog() = CommonDialog(this).apply {
-        initView(icon = R.drawable.qa_ic_quiz_notice_reward_not_enough
-                , title = getString(R.string.qa_quiz_reward_not_enough_text)
-                , firstNotice = getString(R.string.qa_quiz_reward_more_text)
-                , secondNotice = getString(R.string.qa_quiz_down_reward_get_more_text)
-                , buttonText = getString(R.string.qa_quiz_dialog_sure)
-                , confirmListener = View.OnClickListener {
+        initView(icon = R.drawable.qa_ic_quiz_notice_reward_not_enough, title = getString(R.string.qa_quiz_reward_not_enough_text), firstNotice = getString(R.string.qa_quiz_reward_more_text), secondNotice = getString(R.string.qa_quiz_down_reward_get_more_text), buttonText = getString(R.string.qa_quiz_dialog_sure), confirmListener = View.OnClickListener {
             dismiss()
-        }
-                , cancelListener = null)
+        }, cancelListener = null)
     }
 
     override fun onPause() {

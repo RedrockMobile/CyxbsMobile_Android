@@ -1,9 +1,7 @@
 package com.mredrock.cyxbs.qa.pages.quiz
 
 import android.annotation.SuppressLint
-import android.net.Uri
 import android.util.Base64
-import androidx.core.net.toFile
 import androidx.lifecycle.MutableLiveData
 import com.mredrock.cyxbs.common.bean.RedrockApiStatus
 import com.mredrock.cyxbs.common.network.ApiGenerator
@@ -20,7 +18,6 @@ import com.mredrock.cyxbs.common.viewmodel.event.SingleLiveEvent
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.bean.QuizResult
 import com.mredrock.cyxbs.qa.network.ApiService
-import com.mredrock.cyxbs.qa.pages.quiz.ui.dialog.RewardSetDialog
 import com.mredrock.cyxbs.qa.utils.isNullOrEmpty
 import com.mredrock.cyxbs.qa.utils.toDate
 import com.mredrock.cyxbs.qa.utils.toFormatString
@@ -29,7 +26,6 @@ import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import java.io.File
-import java.net.URI
 
 
 /**
@@ -62,16 +58,16 @@ class QuizViewModel : BaseViewModel() {
     }
 
 
-    fun setDisAppearTime(rawTime: String): Boolean {
-        val date = rawTime.toDate("yyyy-MM-dd HH时mm分")
-        //计算与当前时间差，不允许低于TimePickDialog.MIN_GAP_HOUR定义的值，允许5分钟误差/
-        if (date.time - System.currentTimeMillis() < RewardSetDialog.MIN_GAP_HOUR * 3600000 - 300000) {
-            longToastEvent.value = R.string.qa_quiz_error_time_too_short
-            return false
-        }
-        disappearTime = date.toFormatString("yyyy-MM-dd HH:mm:ss")
-        return true
-    }
+//    fun setDisAppearTime(rawTime: String): Boolean {
+//        val date = rawTime.toDate("yyyy-MM-dd HH时mm分")
+//        //计算与当前时间差，不允许低于TimePickDialog.MIN_GAP_HOUR定义的值，允许5分钟误差/
+//        if (date.time - System.currentTimeMillis() < RewardSetDialog.MIN_GAP_HOUR * 3600000 - 300000) {
+//            longToastEvent.value = R.string.qa_quiz_error_time_too_short
+//            return false
+//        }
+//        disappearTime = date.toFormatString("yyyy-MM-dd HH:mm:ss")
+//        return true
+//    }
 
     fun getMyReward() {
         ApiGenerator.getApiService(ApiService::class.java)
@@ -157,7 +153,7 @@ class QuizViewModel : BaseViewModel() {
         return result
     }
 
-    fun addItemToDraft(title: String?, content: String?, type: String?) {
+    fun addItemToDraft( content: String?, type: String?) {
         if (title.isNullOrBlank() && content.isNullOrBlank()) {
             return
         }
@@ -178,7 +174,7 @@ class QuizViewModel : BaseViewModel() {
                 .lifeCycle()
     }
 
-    fun updateDraftItem(title: String?, content: String?, id: String, type: String?) {
+    fun updateDraftItem(content: String?, id: String, type: String?) {
         if (title.isNullOrEmpty() && content.isNullOrEmpty()) {
             deleteDraft(id)
         }

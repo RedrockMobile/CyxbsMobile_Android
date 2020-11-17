@@ -1,22 +1,25 @@
-package com.mredrock.cyxbs.qa.pages.question.viewmodel
+package com.mredrock.cyxbs.qa.pages.dynamic.viewmodel
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.Transformations
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.*
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
+import com.mredrock.cyxbs.common.network.ApiGenerator
+import com.mredrock.cyxbs.common.utils.extensions.mapOrThrowApiException
+import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
+import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.qa.bean.Question
-import com.mredrock.cyxbs.qa.pages.question.model.QuestionDataSource
+import com.mredrock.cyxbs.qa.network.ApiService
+import com.mredrock.cyxbs.qa.pages.dynamic.model.QuestionDataSource
 
 /**
  * Created By jay68 on 2018/8/26.
  */
 open class QuestionListViewModel(kind: String) : BaseViewModel() {
-    val questionList: LiveData<PagedList<Question>>
+    val dynamicList: LiveData<PagedList<Question>>
     val networkState: LiveData<Int>
     val initialLoad: LiveData<Int>
+    var hotWords = MutableLiveData<List<String>>()
 
     private val factory: QuestionDataSource.Factory
 
@@ -28,12 +31,22 @@ open class QuestionListViewModel(kind: String) : BaseViewModel() {
                 .setInitialLoadSizeHint(6)
                 .build()
         factory = QuestionDataSource.Factory(kind)
-        questionList = LivePagedListBuilder<Int, Question>(factory, config).build()
+        dynamicList = LivePagedListBuilder<Int, Question>(factory, config).build()
         networkState = Transformations.switchMap(factory.questionDataSourceLiveData) { it.networkState }
         initialLoad = Transformations.switchMap(factory.questionDataSourceLiveData) { it.initialLoad }
     }
 
-    fun invalidateQuestionList() = questionList.value?.dataSource?.invalidate()
+    fun getScrollerText() {
+        ApiGenerator.getApiService(ApiService::class.java)
+                .getHotWords()
+                .mapOrThrowApiException()
+                .setSchedulers()
+                .safeSubscribeBy { texts ->
+                    hotWords.value = texts.scrollerHotWord
+                }
+    }
+
+    fun invalidateQuestionList() = dynamicList.value?.dataSource?.invalidate()
 
     fun retry() = factory.questionDataSourceLiveData.value?.retry()
 
