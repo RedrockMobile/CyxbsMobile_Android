@@ -17,7 +17,7 @@ import kotlinx.android.synthetic.main.news_activity_list.*
  */
 @Route(path = DISCOVER_NEWS)
 class NewsListActivity : BaseViewModelActivity<NewsListViewModel>() {
-    override val isFragmentActivity = false
+
 
     private lateinit var adapter: NewsAdapter
 

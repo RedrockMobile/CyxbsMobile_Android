@@ -4,7 +4,7 @@ import android.os.Bundle
 import com.mredrock.cyxbs.common.ui.BaseActivity
 import com.mredrock.cyxbs.widget.R
 
-class NormalConfigActivity(override val isFragmentActivity: Boolean = false) : BaseActivity() {
+class NormalConfigActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

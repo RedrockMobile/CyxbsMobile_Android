@@ -47,7 +47,7 @@ class AnswerActivity : BaseViewModelActivity<AnswerViewModel>(), EventBusLifecyc
     }
 
 
-    override val isFragmentActivity = false
+
 
     private var draftId: String = NOT_DRAFT_ID
 

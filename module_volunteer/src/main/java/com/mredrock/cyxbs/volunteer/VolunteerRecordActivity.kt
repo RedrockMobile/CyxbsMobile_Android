@@ -22,7 +22,7 @@ import org.greenrobot.eventbus.EventBus
 
 @Route(path = DISCOVER_VOLUNTEER_RECORD)
 class VolunteerRecordActivity : BaseViewModelActivity<VolunteerRecordViewModel>() {
-    override val isFragmentActivity: Boolean = false
+
 
 
     companion object {

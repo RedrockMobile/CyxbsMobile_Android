@@ -9,7 +9,7 @@ import com.mredrock.cyxbs.mine.util.ui.BaseTabLayoutActivity
  * Created by zzzia on 2018/8/14.
  * 问一问
  */
-class AskActivity(override val isFragmentActivity: Boolean = false) : BaseTabLayoutActivity() {
+class AskActivity : BaseTabLayoutActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

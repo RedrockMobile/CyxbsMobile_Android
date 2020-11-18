@@ -14,8 +14,6 @@ import com.mredrock.cyxbs.discover.othercourse.room.STUDENT_TYPE
 import kotlinx.android.synthetic.main.othercourse_discover_activity_stu_list.*
 
 class StuListActivity : BaseActivity() {
-    override val isFragmentActivity: Boolean
-        get() = false
     var title: ObservableField<String> = ObservableField("")
     lateinit var mDataBinding: OthercourseDiscoverActivityStuListBinding
     lateinit var bottomSheetBehavior: BottomSheetBehavior<FrameLayout>

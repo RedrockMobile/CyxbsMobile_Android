@@ -22,7 +22,7 @@ import kotlinx.android.synthetic.main.widget_activity_trans_config.*
  * 透明版设置
  * 写了一天辣鸡代码，等你们优化了
  */
-class TransConfigActivity(override val isFragmentActivity: Boolean = false) : BaseActivity() {
+class TransConfigActivity : BaseActivity() {
 
     private val userConfig by lazy {
         val config = TransConfig.getUserConfig(this@TransConfigActivity)

@@ -5,8 +5,6 @@ import com.mredrock.cyxbs.common.ui.BaseActivity
 import com.mredrock.cyxbs.qa.R
 
 class MainActivity : BaseActivity() {
-    override val isFragmentActivity: Boolean
-        get() = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

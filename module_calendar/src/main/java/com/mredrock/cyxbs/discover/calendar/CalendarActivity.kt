@@ -78,5 +78,5 @@ class CalendarActivity : BaseActivity() {
     }
 
 
-    override val isFragmentActivity = false
+
 }

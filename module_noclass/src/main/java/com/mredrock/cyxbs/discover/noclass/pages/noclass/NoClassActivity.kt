@@ -37,7 +37,7 @@ import com.mredrock.cyxbs.common.utils.extensions.*
 class NoClassActivity : BaseViewModelActivity<NoClassViewModel>() {
 
 
-    override val isFragmentActivity = false
+
 
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<FrameLayout>
 

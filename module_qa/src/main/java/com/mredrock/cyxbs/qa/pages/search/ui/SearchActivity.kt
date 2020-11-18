@@ -28,8 +28,6 @@ import org.greenrobot.eventbus.ThreadMode
  * Created by yyfbe, Date on 2020/8/12.
  */
 class SearchActivity : BaseViewModelActivity<SearchViewModel>(), EventBusLifecycleSubscriber {
-    override val isFragmentActivity: Boolean
-        get() = true
     private val questionSearchingFragment: QuestionSearchingFragment by lazy(LazyThreadSafetyMode.NONE) { QuestionSearchingFragment() }
     private val questionSearchedFragment: QuestionSearchedFragment by lazy(LazyThreadSafetyMode.NONE) { QuestionSearchedFragment() }
 

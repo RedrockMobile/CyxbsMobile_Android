@@ -34,7 +34,7 @@ import java.io.File
 
 @Route(path = DISCOVER_MAP)
 class MapActivity : BaseViewModelActivity<MapViewModel>() {
-    override val isFragmentActivity = false
+
     private val fragmentManager = supportFragmentManager
     private val mainFragment = MainFragment()
     private val favoriteEditFragment = FavoriteEditFragment()

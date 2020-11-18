@@ -16,7 +16,7 @@ import kotlinx.android.synthetic.main.othercourse_discover_activity_other_course
 @Route(path = DISCOVER_OTHER_COURSE)
 class OtherCourseActivity : BaseViewModelActivity<OtherCourseViewModel>() {
 
-    override val isFragmentActivity = true
+
     private val otherCourseStuSearchFragment by lazy(LazyThreadSafetyMode.NONE) {
         OtherStuCourseSearchFragment()
     }

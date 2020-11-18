@@ -12,7 +12,7 @@ import com.mredrock.cyxbs.common.utils.extensions.*
 
 
 class NoClassStuSelectActivity : BaseActivity() {
-    override val isFragmentActivity = false
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
