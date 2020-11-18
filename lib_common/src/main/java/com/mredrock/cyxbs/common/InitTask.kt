@@ -90,7 +90,7 @@ fun initUMeng(context: Context) {
                         val builder = NotificationCompat.Builder(BaseApp.context, "qa_channel")
                         builder.setContentTitle(msg.title)
                                 .setContentText(msg.text)
-                                .setSmallIcon(getSmallIconId(context, msg))
+                                .setSmallIcon(R.drawable.ic_app_notifacation)
                                 .setPriority(NotificationCompat.PRIORITY_MAX)
                                 .setTicker(msg.ticker)
                                 .setAutoCancel(true)
