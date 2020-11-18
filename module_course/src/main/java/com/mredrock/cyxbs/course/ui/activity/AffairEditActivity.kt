@@ -31,9 +31,6 @@ import kotlinx.android.synthetic.main.course_activity_edit_affair.*
 
 class AffairEditActivity : BaseViewModelActivity<EditAffairViewModel>() {
 
-    override val isFragmentActivity: Boolean
-        get() = true
-
     private lateinit var mBinding: CourseActivityEditAffairBinding
 
     //周数选择BottomSheetDialog

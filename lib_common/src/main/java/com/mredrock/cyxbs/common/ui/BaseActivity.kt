@@ -42,11 +42,6 @@ abstract class BaseActivity : AppCompatActivity() {
     //当然，你要定义自己的TAG方便在Log里面找也可以重写这个
     protected open var TAG: String = this::class.java.simpleName
 
-    /**
-     * 如果这个页面是服务于fragment的那么继承之后请将这个值赋值为true
-     * 为了防止友盟统计重复页面统计
-     */
-    abstract val isFragmentActivity: Boolean
 
     // 默认不检查登陆
     protected open val loginConfig = LoginConfig(
@@ -170,19 +165,11 @@ abstract class BaseActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        if (!isFragmentActivity) {
-            MobclickAgent.onPageStart(javaClass.name)
-            LogUtils.d("UMStat", javaClass.name + " started")
-        }
         lifeCycleLog("onResume")
     }
 
     override fun onPause() {
         super.onPause()
-        if (!isFragmentActivity) {
-            MobclickAgent.onPageEnd(javaClass.name)
-            LogUtils.d("UMStat", javaClass.name + " paused")
-        }
         lifeCycleLog("onPause")
     }
 

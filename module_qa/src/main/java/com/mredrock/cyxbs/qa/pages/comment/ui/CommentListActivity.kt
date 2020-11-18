@@ -71,7 +71,7 @@ class CommentListActivity : BaseActivity(), EventBusLifecycleSubscriber {
         setOnDismissListener { viewModel.onProgressDialogDismissed() }
     }
 
-    override val isFragmentActivity = false
+
 
     private lateinit var headerAdapter: CommentListHeaderRvAdapter
     private lateinit var emptyRvAdapter: EmptyRvAdapter

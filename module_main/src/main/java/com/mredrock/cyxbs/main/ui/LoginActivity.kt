@@ -40,7 +40,7 @@ import org.greenrobot.eventbus.ThreadMode
 @Route(path = MAIN_LOGIN)
 class LoginActivity : BaseViewModelActivity<LoginViewModel>(), EventBusLifecycleSubscriber {
 
-    override val isFragmentActivity = false
+
 
 
     private val lottieProgress = 0.39f

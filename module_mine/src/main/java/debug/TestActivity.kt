@@ -7,8 +7,6 @@ import com.mredrock.cyxbs.mine.UserFragment
 import kotlinx.android.synthetic.main.mine_activity_main.*
 
 class TestActivity : BaseActivity() {
-    override val isFragmentActivity: Boolean
-        get() = false
 
     private val mainFragment = UserFragment()
 

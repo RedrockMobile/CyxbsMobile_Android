@@ -28,7 +28,7 @@ class VolunteerLoginActivity : BaseViewModelActivity<VolunteerLoginViewModel>() 
         const val WRONG_PASSWORD: Int = 3
     }
 
-    override val isFragmentActivity: Boolean = false
+
 
     //进入登录页面，说明发现页的vm中志愿数据为空，或者用户主动接触绑定
     override fun onCreate(savedInstanceState: Bundle?) {

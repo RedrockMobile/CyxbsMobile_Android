@@ -51,7 +51,7 @@ class EmptyRoomActivity : BaseViewModelActivity<EmptyRoomViewModel>(), OnItemSel
     private var resultAdapter: EmptyRoomResultAdapter? = null
     private lateinit var queryAnimator: ObjectAnimator
 
-    override val isFragmentActivity = false
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

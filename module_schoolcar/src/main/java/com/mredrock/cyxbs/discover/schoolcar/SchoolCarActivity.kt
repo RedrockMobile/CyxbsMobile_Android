@@ -74,7 +74,7 @@ class SchoolCarActivity : BaseActivity(), View.OnClickListener {
     lateinit var aMap: AMap
     private lateinit var smoothMarker: SmoothMoveMarker
     private lateinit var locationStyle: MyLocationStyle
-    override val isFragmentActivity = false
+
 
     //申请权限
     private val permissions = arrayOf(

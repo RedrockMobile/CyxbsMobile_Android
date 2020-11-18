@@ -40,8 +40,6 @@ fun initUMeng(context: Context) {
         val channel = WalleChannelReader.getChannel(context, "debug")
         UMConfigure.init(context, BuildConfig.UM_APP_KEY, channel, UMConfigure.DEVICE_TYPE_PHONE,
                 BuildConfig.UM_PUSH_SECRET)
-//    MobclickAgent.setScenarioType(context, MobclickAgent.EScenarioType.E_UM_NORMAL)
-//    MobclickAgent.openActivityDurationTrack(false)
         // 选用AUTO页面采集模式,则不用在activity中调用MobclickAgent.onResume(this)|MobclickAgent.onPause(this)
         MobclickAgent.setPageCollectionMode(MobclickAgent.PageMode.AUTO)
         //调试模式（推荐到umeng注册测试机，避免数据污染）

@@ -15,7 +15,7 @@ import com.mredrock.cyxbs.mine.util.ui.TabPagerAdapter
 import kotlinx.android.synthetic.main.mine_activity_tablayout_common.*
 
 
-class MyProductActivity(override val isFragmentActivity: Boolean = true) : BaseActivity() {
+class MyProductActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

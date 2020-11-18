@@ -50,8 +50,6 @@ class MainActivity : BaseViewModelActivity<MainViewModel>(),
         EventBusLifecycleSubscriber, ActionLoginStatusSubscriber {
 
 
-    override val isFragmentActivity = true
-
     override val loginConfig = LoginConfig(
             isWarnUser = false,
             isCheckLogin = true

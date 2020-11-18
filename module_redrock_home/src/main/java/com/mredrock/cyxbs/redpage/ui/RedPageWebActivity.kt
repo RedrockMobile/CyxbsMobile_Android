@@ -23,7 +23,7 @@ import kotlinx.android.synthetic.main.redrock_home_redpage_activity_webview.*
  */
 @Route(path = REDROCK_HOME_ENTRY)
 class RedPageWebActivity : BaseActivity() {
-    override val isFragmentActivity: Boolean = false
+
 
     @SuppressLint("JavascriptInterface")
     override fun onCreate(savedInstanceState: Bundle?) {

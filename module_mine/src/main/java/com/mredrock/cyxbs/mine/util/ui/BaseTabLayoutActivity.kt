@@ -11,7 +11,7 @@ import kotlinx.android.synthetic.main.mine_activity_tablayout_common.*
 /**
  * Created by roger on 2019/12/3
  */
-abstract class BaseTabLayoutActivity(override val isFragmentActivity: Boolean = false) : BaseActivity() {
+abstract class BaseTabLayoutActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
