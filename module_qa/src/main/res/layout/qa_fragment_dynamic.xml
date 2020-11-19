@@ -48,47 +48,67 @@
         android:background="@color/common_transparent_background"
         app:elevation="0dp"
         app:layout_scrollFlags="scroll|exitUntilCollapsed">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_my_notice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginBottom="5dp"
+            android:text="我的关注"
+            android:textColor="#15315B"
+            android:textSize="15sp"
+            android:visibility="gone" />
+
         <com.google.android.material.appbar.CollapsingToolbarLayout
             android:id="@+id/collapsing_toolbar_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@null"
             android:fitsSystemWindows="true"
-            android:paddingStart="20dp"
-            android:paddingEnd="16dp"
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
+
             <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_circles_List"
                 android:layout_width="match_parent"
-                android:layout_height="100dp"
-                android:id="@+id/rv_dynamic_List"
-                />
+                android:layout_height="100dp" />
         </com.google.android.material.appbar.CollapsingToolbarLayout>
     </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="190dp"
+        android:text="推荐"
+        android:textColor="#15315B"
+        android:textSize="20sp" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:layout_marginTop="180dp">
-        <androidx.appcompat.widget.AppCompatTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="推荐"
-            android:layout_marginStart="10dp"
-            android:textColor="@color/common_grades_fragment_text_color_black"
-            android:textSize="20sp"/>
-        <androidx.recyclerview.widget.RecyclerView
+        android:layout_marginTop="225dp"
+        android:orientation="vertical">
+
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/swipe_refresh_layout"
             android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:layout_marginTop="10dp"
-            android:id="@+id/rv_circles_List"
-            />
+            android:layout_height="match_parent">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_dynamic_List"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:layout_marginTop="10dp" />
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
     </LinearLayout>
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
+
+    <ImageView
+        android:id="@+id/bt_to_quiz"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:id="@+id/bt_to_quiz"
         android:layout_gravity="bottom|right"
         android:layout_marginEnd="20dp"
         android:layout_marginBottom="80dp"
-        />
+        android:background="@drawable/qa_ic_send_dynamic" />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

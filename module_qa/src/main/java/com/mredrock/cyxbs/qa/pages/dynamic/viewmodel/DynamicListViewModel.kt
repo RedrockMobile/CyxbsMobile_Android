@@ -9,18 +9,19 @@ import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.qa.bean.Question
+import com.mredrock.cyxbs.qa.bean.TestData
 import com.mredrock.cyxbs.qa.network.ApiService
 import com.mredrock.cyxbs.qa.pages.dynamic.model.QuestionDataSource
 
 /**
  * Created By jay68 on 2018/8/26.
  */
-open class QuestionListViewModel(kind: String) : BaseViewModel() {
+open class DynamicListViewModel(kind: String) : BaseViewModel() {
     val dynamicList: LiveData<PagedList<Question>>
     val networkState: LiveData<Int>
     val initialLoad: LiveData<Int>
     var hotWords = MutableLiveData<List<String>>()
-
+    val circlesItem = MutableLiveData<List<TestData>>()
     private val factory: QuestionDataSource.Factory
 
     init {
@@ -34,6 +35,16 @@ open class QuestionListViewModel(kind: String) : BaseViewModel() {
         dynamicList = LivePagedListBuilder<Int, Question>(factory, config).build()
         networkState = Transformations.switchMap(factory.questionDataSourceLiveData) { it.networkState }
         initialLoad = Transformations.switchMap(factory.questionDataSourceLiveData) { it.initialLoad }
+    }
+
+    fun getCirCleData() {
+        val list = ArrayList<TestData>()
+//        list.add(TestData("更多关注", "0", "0"))
+//        list.add(TestData("更多关注", "0", "0"))
+//        list.add(TestData("更多关注", "0", "0"))
+//        list.add(TestData("更多关注", "0", "0"))
+//        list.add(TestData("更多关注", "0", "0"))
+        circlesItem.value = list
     }
 
     fun getScrollerText() {
@@ -53,8 +64,8 @@ open class QuestionListViewModel(kind: String) : BaseViewModel() {
     class Factory(private val kind: String) : ViewModelProvider.Factory {
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
             @Suppress("UNCHECKED_CAST")
-            if (modelClass.isAssignableFrom(QuestionListViewModel::class.java)) {
-                return QuestionListViewModel(kind) as T
+            if (modelClass.isAssignableFrom(DynamicListViewModel::class.java)) {
+                return DynamicListViewModel(kind) as T
             } else {
                 throw IllegalArgumentException("ViewModel Not Found.")
             }

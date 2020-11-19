@@ -18,7 +18,7 @@
     <string name="qa_comment_dialog_error_input_hint">请先输入有效内容哦~</string>
     <string name="qa_service_error_hint">服务器错误，请稍后再试，或您已执行该操作</string>
     <string name="qa_question_ignore_success">已忽略该问题</string>
-    <string name="qa_quiz_dialog_next">下一步</string>
+    <string name="qa_quiz_dialog_next">发布</string>
     <string name="qa_quiz_content_hint">分享你的新鲜事~</string>
     <string name="qa_quiz_dialog_sure">确定</string>
     <string name="qa_common_dialog_exit">保存并退出</string>
@@ -58,7 +58,7 @@
     <string name="qa_question_report_text">举报该问题</string>
     <string name="qa_answer_report_text">举报该回答</string>
     <string name="qa_comment_report_text">举报该评论</string>
-    <string name="qa_quiz_toolbar_title_text">提问</string>
+    <string name="qa_quiz_toolbar_title_text">发布动态</string>
     <string name="qa_quiz_dialog_exit_text">退 出 编 辑</string>
     <string name="qa_answer_dialog_exit_text">退 出 回 答</string>
     <string name="qa_answer_publish_dialog_exit_subtitle_text">你的内容还未保存，是否退出？</string>

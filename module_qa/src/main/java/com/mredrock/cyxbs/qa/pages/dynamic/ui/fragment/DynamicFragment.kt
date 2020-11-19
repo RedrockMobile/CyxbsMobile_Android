@@ -1,5 +1,6 @@
 package com.mredrock.cyxbs.qa.pages.dynamic.ui.fragment
 
+import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,18 +9,30 @@ import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.ViewFlipper
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.mredrock.cyxbs.common.config.CyxbsMob
 import com.mredrock.cyxbs.common.config.QA_ENTRY
+import com.mredrock.cyxbs.common.event.RefreshQaEvent
 import com.mredrock.cyxbs.common.ui.BaseViewModelFragment
 import com.mredrock.cyxbs.common.utils.extensions.doIfLogin
 import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.qa.R
-import com.mredrock.cyxbs.qa.pages.dynamic.viewmodel.QuestionListViewModel
+import com.mredrock.cyxbs.qa.component.recycler.RvAdapterWrapper
+import com.mredrock.cyxbs.qa.network.NetworkState
+import com.mredrock.cyxbs.qa.pages.dynamic.ui.adapter.CirclesAdapter
+import com.mredrock.cyxbs.qa.pages.dynamic.ui.adapter.DynamicAdapter
+import com.mredrock.cyxbs.qa.pages.dynamic.viewmodel.DynamicListViewModel
 import com.mredrock.cyxbs.qa.pages.quiz.ui.QuizActivity
 import com.mredrock.cyxbs.qa.pages.search.ui.SearchActivity
+import com.mredrock.cyxbs.qa.ui.adapter.EmptyRvAdapter
+import com.mredrock.cyxbs.qa.ui.adapter.FooterRvAdapter
 import com.umeng.analytics.MobclickAgent
 import kotlinx.android.synthetic.main.qa_fragment_dynamic.*
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 
 /**
  * @Author: xgl
@@ -28,7 +41,7 @@ import kotlinx.android.synthetic.main.qa_fragment_dynamic.*
  * @Date: 2020/11/16 22:07
  */
 @Route(path = QA_ENTRY)
-class DynamicFragment : BaseViewModelFragment<QuestionListViewModel>() {
+class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>() {
     companion object {
         const val REQUEST_LIST_REFRESH_ACTIVITY = 0x1
 
@@ -36,10 +49,13 @@ class DynamicFragment : BaseViewModelFragment<QuestionListViewModel>() {
         const val HOT_WORD_HEAD_LENGTH = 6
     }
 
+    // 判断rv是否到顶
+    protected var isRvAtTop = true
 
     //判断是否加载过热词，首次加载fragment，会加载一次，设置true，onPause就不会加载
     // onStop设置为false，onPause就会加载
 
+    override fun getViewModelFactory() = DynamicListViewModel.Factory("迎新生")
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
 
@@ -54,6 +70,86 @@ class DynamicFragment : BaseViewModelFragment<QuestionListViewModel>() {
     }
 
     private fun initDrnamics() {
+        val dynamicListRvAdapter = DynamicAdapter {
+
+        }
+        val footerRvAdapter = FooterRvAdapter { viewModel.retry() }
+        val emptyRvAdapter = EmptyRvAdapter(getString(R.string.qa_question_list_empty_hint))
+        val adapterWrapper = RvAdapterWrapper(
+                normalAdapter = dynamicListRvAdapter,
+                emptyAdapter = emptyRvAdapter,
+                footerAdapter = footerRvAdapter
+        )
+        val circlesAdapter = CirclesAdapter()
+        val linearLayoutManager = LinearLayoutManager(context)
+        linearLayoutManager.orientation = LinearLayoutManager.HORIZONTAL
+        rv_circles_List.apply {
+            layoutManager = linearLayoutManager
+            adapter = circlesAdapter
+        }
+        viewModel.getCirCleData()
+        viewModel.circlesItem.observe {
+            if (it != null) {
+                if (it.isNotEmpty()) {
+                    tv_my_notice.visibility = View.VISIBLE
+                    circlesAdapter.addData(it as ArrayList)
+                }
+            }
+        }
+        observeLoading(dynamicListRvAdapter, footerRvAdapter, emptyRvAdapter)
+        rv_dynamic_List.apply {
+            layoutManager = LinearLayoutManager(context)
+            adapter = adapterWrapper
+            addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                    super.onScrollStateChanged(recyclerView, newState)
+                    isRvAtTop = !recyclerView.canScrollVertically(-1)
+                }
+            })
+        }
+
+        swipe_refresh_layout.setOnRefreshListener { viewModel.invalidateQuestionList() }
+    }
+
+    open fun observeLoading(dynamicListRvAdapter: DynamicAdapter,
+                            footerRvAdapter: FooterRvAdapter,
+                            emptyRvAdapter: EmptyRvAdapter): DynamicListViewModel = viewModel.apply {
+        dynamicList.observe {
+            dynamicListRvAdapter.submitList(it)
+        }
+        networkState.observe {
+            it?.run {
+                footerRvAdapter.refreshData(listOf(this))
+            }
+        }
+
+        initialLoad.observe {
+            when (it) {
+                NetworkState.LOADING -> {
+                    swipe_refresh_layout.isRefreshing = true
+                    (rv_dynamic_List.adapter as? RvAdapterWrapper)?.apply {
+
+                    }
+                    emptyRvAdapter.showHolder(3)
+                }
+                NetworkState.CANNOT_LOAD_WITHOUT_LOGIN -> {
+                    swipe_refresh_layout.isRefreshing = false
+                }
+                else -> {
+                    swipe_refresh_layout.isRefreshing = false
+                    emptyRvAdapter.hideHolder()
+                }
+            }
+        }
+    }
+
+
+    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
+    open fun refreshQuestionList(event: RefreshQaEvent) {
+        if (isRvAtTop)
+            viewModel.invalidateQuestionList()
+        else
+            rv_dynamic_List.smoothScrollToPosition(0)
 
     }
 

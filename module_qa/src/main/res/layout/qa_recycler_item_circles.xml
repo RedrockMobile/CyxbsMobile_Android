@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:paddingStart="15dp"
+    android:paddingEnd="15dp"
+    android:orientation="vertical">
+
+    <com.mredrock.cyxbs.qa.ui.widget.ImageViewAddCount
+        android:id="@+id/iv_circle_item"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:background="@drawable/qa_circle_demo"
+        android:padding="12dp"
+        android:scaleType="centerCrop"
+        android:layout_gravity="center_horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="5dp"
+        android:text="更多圈子"
+        android:paddingTop="3dp"
+        android:paddingBottom="3dp"
+        android:id="@+id/tv_circle_name"
+        android:textColor="#15315B"
+        android:textSize="13sp" />
+</LinearLayout>

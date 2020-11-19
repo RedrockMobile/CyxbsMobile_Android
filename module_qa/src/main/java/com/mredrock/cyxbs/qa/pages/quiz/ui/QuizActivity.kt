@@ -22,6 +22,7 @@ import com.mredrock.cyxbs.common.utils.down.bean.DownMessageText
 import com.mredrock.cyxbs.common.utils.extensions.*
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.bean.Question
+import com.mredrock.cyxbs.qa.pages.dynamic.ui.adapter.CircleLabelAdapter
 import com.mredrock.cyxbs.qa.pages.quiz.QuizViewModel
 import com.mredrock.cyxbs.qa.ui.activity.ViewImageCropActivity
 import com.mredrock.cyxbs.qa.ui.widget.CommonDialog
@@ -37,7 +38,7 @@ import top.limuyang2.photolibrary.LPhotoHelper
 @Route(path = QA_QUIZ)
 class QuizActivity : BaseViewModelActivity<QuizViewModel>(), EventBusLifecycleSubscriber {
     companion object {
-        const val MAX_SELECTABLE_IMAGE_COUNT = 6
+        const val MAX_SELECTABLE_IMAGE_COUNT = 8
         const val NOT_DRAFT_ID = "-1"
         const val FIRST_QUIZ = "cyxbs_quiz_is_first_time"
         const val FIRST_QUIZ_SP_KEY = "isFirstTimeQuiz"
@@ -69,6 +70,16 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>(), EventBusLifecycleSu
         isFirstQuiz = sharedPreferences(FIRST_QUIZ).getBoolean(FIRST_QUIZ_SP_KEY, true)
         initToolbar()
         initImageAddView()
+        val circleLabelData = ArrayList<String>()
+        circleLabelData.add("#校园周边")
+        circleLabelData.add("#海底捞")
+        circleLabelData.add("#学习")
+        circleLabelData.add("#运动")
+        circleLabelData.add("#兴趣")
+        circleLabelData.add("#问答")
+        circleLabelData.add("#其他")
+        val circleLabelAdapter = CircleLabelAdapter(circleLabelData)
+        qa_rv_dynamic_label.adapter = circleLabelAdapter
         viewModel.getMyReward() //优先初始化积分和说明，避免用户等待
         viewModel.getRewardExplain(DOWN_MESSAGE_NAME)
         viewModel.backAndRefreshPreActivityEvent.observeNotNull {

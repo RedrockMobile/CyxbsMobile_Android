@@ -27,6 +27,7 @@
                 android:layout_height="1dp"
                 android:alpha="0.1"
                 android:background="@color/common_qa_quiz_toolbar_divider_line_color" />
+
             <com.mredrock.cyxbs.common.component.RatioLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
@@ -35,7 +36,6 @@
                 android:layout_marginEnd="16dp"
                 android:background="@color/common_white_background"
                 app:ratio="0.4">
-
 
                 <androidx.appcompat.widget.AppCompatEditText
                     android:id="@+id/edt_quiz_content"
@@ -55,6 +55,16 @@
                     android:textSize="16sp" />
             </com.mredrock.cyxbs.common.component.RatioLayout>
 
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_edit_num"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:layout_marginEnd="15dp"
+                android:text="0/500"
+                android:textColor="@color/common_qa_quiz_content_edt_hint_color"
+                android:textSize="10sp" />
+
             <com.mredrock.cyxbs.qa.ui.widget.NineGridView
                 android:id="@+id/nine_grid_view"
                 android:layout_width="match_parent"
@@ -69,31 +79,24 @@
             <androidx.appcompat.widget.AppCompatTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="请选择一个圈子"
-                android:textColor="@color/common_grades_fragment_text_color_black"
-                android:textSize="18dp"
-                android:padding="5dp"
-                android:layout_marginTop="10dp"
                 android:layout_marginStart="5dp"
+                android:layout_marginTop="10dp"
                 android:layout_marginBottom="10dp"
-                />
+                android:padding="5dp"
+                android:text="请选择一个圈子"
+                android:textColor="#15315B"
+                android:textSize="18sp" />
+
             <com.mredrock.cyxbs.common.component.RedRockAutoWarpView
-                android:id="@+id/map_rrv_place_detail_label"
+                android:id="@+id/qa_rv_dynamic_label"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingStart="15dp"
-                android:paddingTop="8dp"
-                android:paddingEnd="10dp"
-                android:paddingBottom="8dp"
+                android:paddingStart="10dp"
+                android:paddingTop="5dp"
+                android:paddingEnd="5dp"
+                android:paddingBottom="10dp"
                 app:horizontalSpacing="7dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/map_ll_divider"
-                app:layout_constraintVertical_bias="0.101"
                 app:verticalsSpacing="8dp">
-
             </com.mredrock.cyxbs.common.component.RedRockAutoWarpView>
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>

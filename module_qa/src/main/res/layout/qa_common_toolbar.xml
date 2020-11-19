@@ -34,14 +34,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_marginStart="100dp"
+                android:layout_marginStart="90dp"
                 android:layout_marginEnd="17dp"
                 android:layout_toStartOf="@id/qa_ib_toolbar_more"
                 android:layout_toEndOf="@id/qa_ib_toolbar_back"
-                android:textColor="@color/common_level_two_font_color"
+                android:textColor="#15315B"
                 android:textSize="22sp"
-                android:textStyle="bold"
-                tools:text="发布动态" />
+                android:textStyle="bold" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/qa_ib_toolbar_more"
@@ -49,14 +48,13 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
-                android:text="发布"
                 android:paddingStart="12dp"
                 android:paddingEnd="12dp"
                 android:paddingTop="5dp"
                 android:paddingBottom="5dp"
-                android:textColor="@color/common_grades_fragment_text_color_black"
-                android:textSize="18dp"
-                android:background="@drawable/qa_shape_quiz_select_pic_empty_background"
+                android:textColor="@color/common_white_background"
+                android:textSize="18sp"
+                android:background="@drawable/qa_shape_main_have_question_btn_background"
                 android:layout_gravity="center_vertical"
               />
 
