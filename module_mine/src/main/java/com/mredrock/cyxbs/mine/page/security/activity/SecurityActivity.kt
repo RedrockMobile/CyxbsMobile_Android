@@ -36,14 +36,13 @@ class SecurityActivity : BaseActivity() {
         setSupportActionBar(findViewById(R.id.toolbar))
         //TODO:测试用
         if (/*canClick*/true) {
-            mine_ll_change_binding_mail.setOnClickListener {//修改绑定邮箱
+            mine_ll_change_binding_mail.setOnClickListener {//绑定邮箱
                 val intent = Intent(this, BindEmailActivity::class.java)
                 startActivity(intent)
             }
 
-            mine_ll_change_secret_security.setOnClickListener {//修改密保
-                val intent = Intent(this, SetPasswordProtectActivity::class.java)
-                startActivity(intent)
+            mine_ll_change_secret_security.setOnClickListener {//密保
+                SetPasswordProtectActivity.start(this)
             }
 
             mine_ll_change_password.setOnClickListener {//修改密码

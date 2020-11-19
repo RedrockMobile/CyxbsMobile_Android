@@ -2,9 +2,11 @@ package com.mredrock.cyxbs.mine.util.ui
 
 import android.app.Dialog
 import android.content.Context
+import android.content.Intent
 import android.view.Gravity
 import android.widget.Button
 import com.mredrock.cyxbs.mine.R
+import com.mredrock.cyxbs.mine.page.security.activity.BindEmailActivity
 import com.mredrock.cyxbs.mine.page.security.activity.SetPasswordProtectActivity
 import com.mredrock.cyxbs.mine.page.security.viewmodel.FindPasswordViewModel
 
@@ -24,7 +26,7 @@ class DoubleChooseDialog(context: Context?, theme: Int) : Dialog(context!!, them
                 doubleChooseDialog!!.hide()
             }
             buttonToBindingEmail.setOnClickListener {
-                //TODO:尚未Merge齐哥的部分，暂时不添加跳转
+                context.startActivity(Intent(context, BindEmailActivity::class.java))
                 doubleChooseDialog!!.hide()
             }
             doubleChooseDialog!!.show()

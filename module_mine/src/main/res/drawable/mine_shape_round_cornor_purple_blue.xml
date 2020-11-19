@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
     <corners android:radius="100dp"/>
-    <!--TODO:没有适配深色模式-->
     <gradient
         android:gradientRadius="60"
-        android:endColor="#4841E2"
-        android:startColor="#5D5DF7" />
+        android:endColor="@color/common_button_gradient_start_color"
+        android:startColor="@color/common_button_gradient_end_color" />
 </shape>

@@ -18,16 +18,20 @@ import kotlinx.android.synthetic.main.mine_activity_forget_password.*
 /**
  * Author: SpreadWater
  * Time: 2020-10-29 15:06
- * describe: 在登陆界面点击忘记密码跳转到的界面
+ * describe: 在登陆界面点击忘记密码跳转到的界面，
+ * 执行输入学号检测是否是原始密码的功能，
+ * 剩余的找回密码的逻辑由FindPasswordActivity执行
  */
 @Route(path = MINE_FORGET_PASSWORD)
 class ForgetPasswordActivity : BaseViewModelActivity<ForgetPasswordViewModel>() {
     override val isFragmentActivity = false
     private var stuNumber = ""
+    private var canClick = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.mine_activity_forget_password)
+        //配置toolBar
         common_toolbar.apply {
             setBackgroundColor(ContextCompat.getColor(this@ForgetPasswordActivity, R.color.common_white_background))
             initWithSplitLine("忘记密码",
@@ -38,7 +42,9 @@ class ForgetPasswordActivity : BaseViewModelActivity<ForgetPasswordViewModel>() 
                     })
             setTitleLocationAtLeft(true)
         }
+        //监听是否为默认密码
         viewModel.defaultPassword.observe(this, Observer {
+            canClick = true//允许进行点击事件
             if (it){
                 //展示为默认密码的dialog
                 DefaultPasswordHintDialog.show(this, this)
@@ -49,8 +55,11 @@ class ForgetPasswordActivity : BaseViewModelActivity<ForgetPasswordViewModel>() 
             }
         })
         mine_security_bt_forget_password_confirm.setOnClickListener {
-            stuNumber = mine_security_et_foreget_password.text.toString()
-            viewModel.checkDefaultPassword(stuNumber)
+            if (canClick){
+                canClick = false//网络请求结束之前不允许进行新的请求
+                stuNumber = mine_security_et_foreget_password.text.toString()
+                viewModel.checkDefaultPassword(stuNumber)
+            }
         }
     }
 }

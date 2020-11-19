@@ -33,7 +33,7 @@ class ChooseFindTypeDialog(context: Context?, theme: Int) : Dialog(context, them
                 //当点击通过邮箱找回的按钮时
                 if (hasEmailBinding) {
                     //启动邮箱找回模块
-                    if (isFromLogin) {
+                    if (isFromLogin) {//是否已经登陆
                         FindPasswordActivity.startFromLogin(context, FIND_PASSWORD_BY_EMAIL, stuNumber)
                     } else {
                         FindPasswordActivity.startFromMine(context, FIND_PASSWORD_BY_EMAIL)
@@ -49,7 +49,7 @@ class ChooseFindTypeDialog(context: Context?, theme: Int) : Dialog(context, them
                 //当点击通过密保找回时
                 if (hasSecurityQuestion) {
                     //启动密保找回模块
-                    if (isFromLogin) {
+                    if (isFromLogin) {//是否已经登陆
                         FindPasswordActivity.startFromLogin(context, FIND_PASSWORD_BY_SECURITY_QUESTION, stuNumber)
                     } else {
                         FindPasswordActivity.startFromMine(context, FIND_PASSWORD_BY_SECURITY_QUESTION)

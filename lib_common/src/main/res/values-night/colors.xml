@@ -141,6 +141,8 @@
 
     <!--    我的模块账号与安全部分-->
     <color name="common_mine_security_binding_tip">#5A5A5A</color>
+    <color name="common_mine_security_content_edt_hint_color">#85F0F0F2</color>
+    <color name="common_mine_security_question_edt_back_color">#b32C2C2C</color>
     <!--    考试成绩-->
     <color name="common_grades_gpa_rv_list_round_corner_background">#345A5A5A
     </color>

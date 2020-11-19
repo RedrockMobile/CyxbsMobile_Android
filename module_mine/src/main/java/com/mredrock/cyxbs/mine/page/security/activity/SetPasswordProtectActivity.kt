@@ -2,6 +2,8 @@ package com.mredrock.cyxbs.mine.page.security.activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.WindowManager
 import androidx.core.content.ContextCompat
@@ -64,8 +66,38 @@ class SetPasswordProtectActivity : BaseViewModelActivity<SetPasswordProtectViewM
         }
 
         //确定设置密保的点击事件
+        val context : Context = this//用于匿名内部类
+        mine_edt_security_answer.addTextChangedListener(
+                object : TextWatcher{
+                    override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+
+                    }
+
+                    override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+
+                    }
+
+                    override fun afterTextChanged(s: Editable?) {
+                        s?.let {
+                            when{
+                                it.length < 2 ->{
+                                    viewModel.tipForInputNum.set("请至少输入2个字符")
+                                    mine_bt_security_set_protectconfirm.background = ContextCompat.getDrawable( context , R.drawable.mine_shape_round_corner_light_blue)
+                                }
+                                it.length > 16 ->{
+                                    viewModel.tipForInputNum.set("请至多输入16个字符")
+                                    mine_bt_security_set_protectconfirm.background = ContextCompat.getDrawable( context , R.drawable.mine_shape_round_corner_light_blue)
+                                }
+                                else ->{
+                                    viewModel.tipForInputNum.set("")
+                                    mine_bt_security_set_protectconfirm.background = ContextCompat.getDrawable( context , R.drawable.mine_shape_round_cornor_purple_blue)
+                                }
+                            }
+                        }
+                    }
+                }
+        )
         mine_bt_security_set_protectconfirm.setOnClickListener{
-            mine_bt_security_set_protectconfirm.background = ContextCompat.getDrawable(this , R.drawable.mine_shape_round_cornor_purple_blue)
             viewModel.setSecurityQA()
         }
     }

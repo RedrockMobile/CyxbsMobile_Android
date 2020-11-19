@@ -281,7 +281,7 @@ interface ApiService {
      * 判断旧密码是否正确
      */
     @FormUrlEncoded
-    @POST
+    @POST("/user/judge/password")
     fun originPassWordCheck(
             @Field("password") password: String): Observable<RedrockApiStatus>
 
@@ -297,7 +297,7 @@ interface ApiService {
      * 检查是否为默认密码
      */
     @FormUrlEncoded
-    @POST
+    @POST("/user/judge/origin")
     fun checkDefaultPassword(
             @Field("stu_num") stu_num: String): Observable<RedrockApiStatus>
 }

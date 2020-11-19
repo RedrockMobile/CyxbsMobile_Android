@@ -21,8 +21,6 @@ import kotlinx.android.synthetic.main.mine_activity_find_password.*
  */
 class FindPasswordActivity : BaseViewModelActivity<FindPasswordViewModel>() {
 
-    //TODO:顶部ToolBar返回按钮的颜色以及大小需要改变
-    //TODO:字符串尚未写入String文件
     //TODO:ViewModel中尚未做关于是否来自登陆界面的适配
     override val isFragmentActivity = false
 
@@ -65,9 +63,10 @@ class FindPasswordActivity : BaseViewModelActivity<FindPasswordViewModel>() {
         )
         binding.viewModel = viewModel
         setContentView(binding.root)
+        //设置toolBar
         common_toolbar.apply {
             this.initWithSplitLine(
-                    "找回密码"
+                    context.getString(R.string.mine_security_find_password)
             )
         }
 
@@ -94,10 +93,10 @@ class FindPasswordActivity : BaseViewModelActivity<FindPasswordViewModel>() {
                     this.layoutParams.height = context.dp2px(41f)
                 }
                 //更改title和hint的提示字符
-                mine_et_security_find.hint = "请输入验证码"
-                mine_tv_security_find_first_title.text = "你的保密邮箱是，请点击获取验证码"
+                mine_et_security_find.hint = getString(R.string.mine_security_please_type_in_confirm_code)
+                mine_tv_security_find_first_title.text = getString(R.string.mine_security_click_to_get_confirm_code)
                 //设置点击获取验证码的text
-                viewModel.timerText.set("获取验证码")
+                viewModel.timerText.set(getString(R.string.mine_security_get_confirm_code))
                 //接下来配置页面的点击事件以及相关逻辑
                 //点击获取验证码(内部含有倒计时)
                 mine_tv_security_find_send_confirm_code.setOnClickListener {

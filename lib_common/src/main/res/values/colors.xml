@@ -157,6 +157,10 @@
 
     <!--     我的模块的账号安全部分-->
     <color name="common_mine_security_binding_tip">#2A4E84</color>
+    <color name="common_mine_security_content_edt_hint_color">#94A6C4</color>
+    <!--69%透明度的打字框背景颜色-->
+    <color name="common_mine_security_question_edt_back_color">#E8F0FC</color>
+    <color name="common_mine_security_light_button_back_color">#C3D4EE</color>
     <!--     TODO:尚未适配深色模式-->
     <color name="common_mine_security_divide_line">#F8F9FC</color>
     <color name="common_mine_security_two_front_color_64_percent">#5c15315B</color>

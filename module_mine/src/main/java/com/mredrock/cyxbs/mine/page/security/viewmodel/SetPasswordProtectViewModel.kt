@@ -72,29 +72,19 @@ class SetPasswordProtectViewModel : BaseViewModel() {
     }
 
     fun setSecurityQA() {
-        //如果输入的答案数字少于2或者大于16
-        when {
-            securityAnswer.get()?.length!! < 2 -> {
-                LogUtils.d("SecurityActivity" , "字符数过少")
-                tipForInputNum.set("请至少输入2个字符")
-            }
-            securityAnswer.get()?.length!! > 16 -> {
-                LogUtils.d("SecurityActivity" , "字符数过多")
-                tipForInputNum.set("请至多输入16个字符")
-            }
-            else -> {
-                tipForInputNum.set("")
-                apiService.setSecurityQuestionAnswer(
-                        id = securityQuestionId,
-                        content = securityAnswer.get().toString())
-                        .safeSubscribeBy(
-                                onNext = {
-                                    if (it.status == 10000) {
-                                        context.toast("恭喜您，设置成功")
-                                    }
+        //如果输入的答案字数合理
+        if (securityAnswer.get()?.length!! in 2..17){
+            tipForInputNum.set("")
+            apiService.setSecurityQuestionAnswer(
+                    id = securityQuestionId,
+                    content = securityAnswer.get().toString())
+                    .safeSubscribeBy(
+                            onNext = {
+                                if (it.status == 10000) {
+                                    context.toast("恭喜您，设置成功")
                                 }
-                        )
-            }
+                            }
+                    )
         }
     }
 }
