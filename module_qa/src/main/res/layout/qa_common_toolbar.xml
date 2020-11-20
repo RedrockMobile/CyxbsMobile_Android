@@ -48,15 +48,13 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
+                android:layout_gravity="center_vertical"
                 android:paddingStart="12dp"
-                android:paddingEnd="12dp"
                 android:paddingTop="5dp"
+                android:paddingEnd="12dp"
                 android:paddingBottom="5dp"
                 android:textColor="@color/common_white_background"
-                android:textSize="18sp"
-                android:background="@drawable/qa_shape_main_have_question_btn_background"
-                android:layout_gravity="center_vertical"
-              />
+                android:textSize="18sp" />
 
             <TextView
                 android:id="@+id/qa_tv_toolbar_right"
@@ -64,10 +62,15 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
-                android:textColor="@color/levelFourFontColor"
-                android:textSize="18sp"
+                android:background="@drawable/qa_shape_main_have_question_btn_background"
+                android:paddingStart="12dp"
+                android:paddingTop="5dp"
+                android:paddingEnd="12dp"
+                android:paddingBottom="5dp"
+                android:textColor="@color/common_white_background"
+                android:textSize="15sp"
                 android:visibility="gone"
-                tools:text="下一步" />
+                tools:text="发布" />
         </RelativeLayout>
     </androidx.appcompat.widget.Toolbar>
 </com.google.android.material.appbar.AppBarLayout>

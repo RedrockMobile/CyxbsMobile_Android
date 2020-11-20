@@ -17,9 +17,8 @@
         <item name="android:windowIsTranslucent">true</item>
     </style>
 
-    <style name="TabLayout.TabText" parent="TextAppearance.Design.Tab">
-        <item name="android:textSize">18sp</item>
-        <item name="android:textColor">@color/common_level_three_font_color</item>
-        <item name="textAllCaps">false</item>
+    <style name="BottomInAndOutStyle" tools:ignore="ResourceName">
+        <item name="android:windowEnterAnimation">@anim/qa_anim_draft_dialog_in</item>
+        <item name="android:windowExitAnimation">@anim/qa_anim_draft_dialog_out</item>
     </style>
 </resources>

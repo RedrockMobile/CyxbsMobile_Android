@@ -138,14 +138,17 @@ class NineGridView(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : 
     fun setImages(urls: List<String>) {
         repeat(childCount) {
             if (it < urls.size) {
-                context.loadRedrockImage(urls[it], getChildAt(it) as ImageView)
+                context.loadRedrockImage(urls[it], getChildAt(it) as RectangleView)
+            } else if (urls.isNullOrEmpty()) {
+                //邮问改版图片错乱进行了修改，不知道其他地方会不会出问题
+                removeAllViews()
             } else {
                 removeViewAt(it)
             }
         }
 
         for (i in childCount until urls.size) {
-            this.addView(ImageView(context).apply {
+            this.addView(RectangleView(context).apply {
                 scaleType = ImageView.ScaleType.CENTER_CROP
                 context.loadRedrockImage(urls[i], this@apply)
             }, childCount)

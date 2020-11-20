@@ -1,36 +1,41 @@
 package com.mredrock.cyxbs.qa.pages.dynamic.ui.adapter
 
-import android.animation.ValueAnimator
+import android.content.Context
+import android.view.LayoutInflater
 import android.view.View
-import com.mredrock.cyxbs.common.component.RedRockAutoWarpView
-import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
+import android.view.ViewGroup
+import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
+import com.mredrock.cyxbs.common.utils.extensions.pressToZoomOut
 import com.mredrock.cyxbs.qa.R
-import kotlinx.android.synthetic.main.qa_recycler_item_dynamic_label.view.*
 
 
-class CircleLabelAdapter(val labelList: ArrayList<String>) : RedRockAutoWarpView.Adapter() {
+class CircleLabelAdapter(val context: Context, private val mList: MutableList<String>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+
+
+    inner class CircleLabel(view: View) : RecyclerView.ViewHolder(view) {
+        val dynamicLabel: TextView = view.findViewById(R.id.tv_dynamic_label)
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CircleLabel {
+        val view = LayoutInflater.from(parent.context)
+                .inflate(R.layout.qa_recycler_item_dynamic_label, parent, false)
+        return CircleLabel(view)
+    }
+
     override fun getItemCount(): Int {
-        return labelList.size
+        return mList.size
     }
 
-    override fun getItemId(position: Int): Int {
-        return R.layout.qa_recycler_item_dynamic_label
+    fun setList(list: List<String>) {
+        mList.clear()
+        mList.addAll(list)
+        notifyDataSetChanged()
     }
 
-    override fun initItem(item: View, position: Int) {
-        item.tv_dynamic_label.apply {
-            text = labelList[position]
-        }
-        //点击动画效果
-        item.tv_dynamic_label.setOnSingleClickListener {
-            val animScale = ValueAnimator.ofFloat(1f, 0.8f, 1f)
-            animScale.duration = 500
-            animScale.addUpdateListener {
-                item.tv_dynamic_label.scaleX = it.animatedValue as Float
-                item.tv_dynamic_label.scaleY = it.animatedValue as Float
-            }
-            animScale.start()
-        }
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        val viewHolder = holder as CircleLabel
+        viewHolder.dynamicLabel.text = mList[position]
+        viewHolder.dynamicLabel.pressToZoomOut()
     }
-
 }

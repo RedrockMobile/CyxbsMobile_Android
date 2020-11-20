@@ -3,7 +3,9 @@ package com.mredrock.cyxbs.qa.pages.dynamic.ui.adapter
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
+import com.mredrock.cyxbs.common.utils.extensions.doIfLogin
 import com.mredrock.cyxbs.common.utils.extensions.setAvatarImageFromUrl
+import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.bean.Question
 import com.mredrock.cyxbs.qa.component.recycler.BaseEndlessRvAdapter
@@ -29,6 +31,7 @@ class DynamicAdapter(private val onItemClickEvent: (Question) -> Unit) : BaseEnd
         }
     }
 
+    private var shouldAnimateSet: MutableSet<Int> = HashSet()
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = DynamicViewHolder(parent)
 
     //给问题列表首个加上背景，因为还有header，不方便加在布局
@@ -37,6 +40,33 @@ class DynamicAdapter(private val onItemClickEvent: (Question) -> Unit) : BaseEnd
         if (position == 0) {
             holder.itemView.background = ContextCompat.getDrawable(holder.itemView.context, R.drawable.qa_ic_question_list_top_background)
         } else {
+            holder.itemView.apply {
+//                if (shouldAnimateSet.contains(position) && getItem(position)?.isPraised == true) {
+//                    tv_dynamic_praise_count_image.isChecked = true
+//                    shouldAnimateSet.remove(position)
+//                } else {
+//                    getItem(position)?.isPraised?.let {
+//                        tv_dynamic_praise_count_image.setCheckedWithoutAnimator(it)
+//                    }
+//                }
+                tv_dynamic_praise_count_image.setOnSingleClickListener {
+                    tv_dynamic_praise_count_image.toggle()
+                }
+//                tv_dynamic_praise_count.setOnSingleClickListener {
+//                    context.doIfLogin {
+//                        getItem(position)?.let { it1 ->
+//                            onPraiseClickListener?.invoke(position, it1)
+//                            if (holder !is AnswerViewHolder) {
+//                                return@let
+//                            }
+//                            if (getItem(position)?.isPraised == false) {
+//                                shouldAnimateSet.add(position)
+//                            }
+//                        }
+//
+//                    }
+//                }
+            }
             holder.itemView.background = ContextCompat.getDrawable(holder.itemView.context, R.color.common_qa_question_list_color)
         }
     }
@@ -55,7 +85,23 @@ class DynamicAdapter(private val onItemClickEvent: (Question) -> Unit) : BaseEnd
                 tv_nickname.text = data.nickname
                 tv_title.text = data.title
                 tv_publish_at.text = questionTimeDescription(System.currentTimeMillis(), data.createdAt.toDate().time)
-                nine_grid_view_dynamic.setImages(data.photoUrl)
+                //解决图片错乱的问题
+                if (data.photoUrl.isNullOrEmpty())
+                    nine_grid_view_dynamic.setImages(emptyList())
+                else {
+                    val tag = nine_grid_view_dynamic.tag
+                    if (null == tag || tag == data.photoUrl) {
+                        val tagStore = nine_grid_view_dynamic.tag
+                        nine_grid_view_dynamic.setImages(data.photoUrl)
+                        nine_grid_view_dynamic.tag = tagStore
+                    } else {
+                        val tagStore = data.photoUrl
+                        nine_grid_view_dynamic.tag = null
+                        nine_grid_view_dynamic.setImages(emptyList())
+                        nine_grid_view_dynamic.setImages(data.photoUrl)
+                        nine_grid_view_dynamic.tag = tagStore
+                    }
+                }
                 nine_grid_view_dynamic.setOnItemClickListener { _, index ->
                     ViewImageActivity.activityStart(context, data.photoUrl.toTypedArray(), index)
                 }

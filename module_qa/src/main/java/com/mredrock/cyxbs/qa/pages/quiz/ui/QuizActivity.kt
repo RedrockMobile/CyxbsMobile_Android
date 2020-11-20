@@ -2,7 +2,6 @@ package com.mredrock.cyxbs.qa.pages.quiz.ui
 
 import android.app.Activity
 import android.content.Intent
-import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
@@ -12,8 +11,12 @@ import android.view.View
 import android.widget.ImageView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.alibaba.android.arouter.facade.annotation.Route
+import com.google.android.flexbox.FlexWrap
+import com.google.android.flexbox.FlexboxLayoutManager
 import com.google.gson.Gson
+import com.mredrock.cyxbs.common.BaseApp.Companion.context
 import com.mredrock.cyxbs.common.config.QA_QUIZ
 import com.mredrock.cyxbs.common.event.QuestionDraftEvent
 import com.mredrock.cyxbs.common.mark.EventBusLifecycleSubscriber
@@ -51,14 +54,11 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>(), EventBusLifecycleSu
     }
 
     override val isFragmentActivity = false
-    private var currentTypeIndex = 0
     private var draftId = NOT_DRAFT_ID
     private var questionType: String = ""
     private var isFirstQuiz: Boolean = true
     private val exitDialog by lazy { createExitDialog() }
-    private val rewardNotEnoughDialog by lazy { createRewardNotEnoughDialog() }
     private var rewardExplainList: List<DownMessageText> = listOf()
-    private val types = listOf(Question.FRESHMAN, Question.STUDY, Question.ANONYMOUS, Question.LIFE, Question.OTHER)
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -78,9 +78,12 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>(), EventBusLifecycleSu
         circleLabelData.add("#兴趣")
         circleLabelData.add("#问答")
         circleLabelData.add("#其他")
-        val circleLabelAdapter = CircleLabelAdapter(circleLabelData)
-        qa_rv_dynamic_label.adapter = circleLabelAdapter
-        viewModel.getMyReward() //优先初始化积分和说明，避免用户等待
+        val circleLabelAdapter = CircleLabelAdapter(context, mutableListOf())
+        val flexBoxManager = FlexboxLayoutManager(context)
+        flexBoxManager.flexWrap = FlexWrap.WRAP
+        rv_label_list.layoutManager = flexBoxManager
+        rv_label_list.adapter = circleLabelAdapter
+        circleLabelAdapter.setList(circleLabelData)
         viewModel.getRewardExplain(DOWN_MESSAGE_NAME)
         viewModel.backAndRefreshPreActivityEvent.observeNotNull {
             if (it) {
@@ -114,6 +117,7 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>(), EventBusLifecycleSu
             visible()
             text = getString(R.string.qa_quiz_dialog_next)
             setOnClickListener {
+                exitDialog.show()
             }
         }
     }
@@ -175,7 +179,6 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>(), EventBusLifecycleSu
         }
         when (requestCode) {
             CHOOSE_PHOTO_REQUEST -> {
-//                val dataList : ArrayList<String> = ArrayList((LPhotoHelper.getSelectedPhotos(data))
                 val imageListUri = ArrayList((LPhotoHelper.getSelectedPhotos(data)).map {
                     it.toString()
                 })
@@ -193,11 +196,6 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>(), EventBusLifecycleSu
         scaleType = ImageView.ScaleType.CENTER
         background = ContextCompat.getDrawable(this@QuizActivity, R.drawable.qa_shape_quiz_select_pic_empty_background)
         setImageDrawable(drawable)
-    }
-
-    private fun createImageView(bitmap: Bitmap) = ImageView(this).apply {
-        scaleType = ImageView.ScaleType.CENTER_CROP
-        setImageBitmap(bitmap)
     }
 
     private fun createImageView(uri: Uri) = ImageView(this).apply {
@@ -221,11 +219,11 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>(), EventBusLifecycleSu
     }
 
     private fun saveDraft() {
-//        if (draftId == NOT_DRAFT_ID) {
-//            viewModel.addItemToDraft( edt_quiz_content.text.toString(), questionType)
-//        } else {
-//            viewModel.updateDraftItem( edt_quiz_content.text.toString(), draftId, questionType)
-//        }
+        if (draftId == NOT_DRAFT_ID) {
+            viewModel.addItemToDraft(edt_quiz_content.text.toString(), questionType)
+        } else {
+            viewModel.updateDraftItem(edt_quiz_content.text.toString(), draftId, questionType)
+        }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
@@ -244,24 +242,24 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>(), EventBusLifecycleSu
     }
 
     private fun createExitDialog() = CommonDialog(this).apply {
-        initView(icon = R.drawable.qa_ic_quiz_quit_edit, title = getString(R.string.qa_quiz_dialog_exit_text), firstNotice = getString(R.string.qa_quiz_dialog_not_save_text), secondNotice = null, buttonText = getString(R.string.qa_common_dialog_exit), confirmListener = View.OnClickListener {
+        initView( title = getString(R.string.qa_quiz_dialog_exit_text), saveText = "保存", noSaveText = "不保存", cancelText = "取消", saveListener = View.OnClickListener {
             saveDraft()
+            dismiss()
+        }, noSaveListener = View.OnClickListener {
+            noSaveDraft()
             dismiss()
         }, cancelListener = View.OnClickListener {
             dismiss()
         })
     }
 
-    private fun createRewardNotEnoughDialog() = CommonDialog(this).apply {
-        initView(icon = R.drawable.qa_ic_quiz_notice_reward_not_enough, title = getString(R.string.qa_quiz_reward_not_enough_text), firstNotice = getString(R.string.qa_quiz_reward_more_text), secondNotice = getString(R.string.qa_quiz_down_reward_get_more_text), buttonText = getString(R.string.qa_quiz_dialog_sure), confirmListener = View.OnClickListener {
-            dismiss()
-        }, cancelListener = null)
+    private fun noSaveDraft() {
+
     }
 
     override fun onPause() {
         //防止内存泄漏
         exitDialog.dismiss()
-        rewardNotEnoughDialog.dismiss()
         super.onPause()
     }
 }

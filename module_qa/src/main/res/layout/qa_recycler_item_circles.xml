@@ -11,7 +11,7 @@
         android:id="@+id/iv_circle_item"
         android:layout_width="60dp"
         android:layout_height="60dp"
-        android:background="@drawable/qa_circle_demo"
+        android:background="@drawable/qa_ic_circle_demo"
         android:padding="12dp"
         android:scaleType="centerCrop"
         android:layout_gravity="center_horizontal"
