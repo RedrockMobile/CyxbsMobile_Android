@@ -107,7 +107,6 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>() {
                 }
             })
         }
-
         swipe_refresh_layout.setOnRefreshListener { viewModel.invalidateQuestionList() }
     }
 

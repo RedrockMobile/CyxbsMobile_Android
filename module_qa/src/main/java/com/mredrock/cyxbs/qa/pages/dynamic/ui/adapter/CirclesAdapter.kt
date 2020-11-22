@@ -17,6 +17,7 @@ import com.mredrock.cyxbs.common.BaseApp.Companion.context
 import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.bean.TestData
+import com.mredrock.cyxbs.qa.pages.square.ui.CircleSquareActivity
 import com.mredrock.cyxbs.qa.ui.widget.ImageViewAddCount
 import java.util.zip.Inflater
 
@@ -85,6 +86,9 @@ class CirclesAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                 viewHolder.iv_circle.apply {
                     setHaveMessage(true)
                     setMessageBum(50)
+                }
+                viewHolder.iv_circle.setOnClickListener {
+//                    changeToActivity(CircleSquareActivity())
                 }
                 viewHolder.tv_circle_name.text = circlesItemList[position].circleName
             }

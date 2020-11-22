@@ -17,7 +17,7 @@ import de.hdodenhof.circleimageview.CircleImageView
  * @Description:
  * @Date: 2020/11/19 12:48
  */
-class ImageViewAddCount(context: Context?, attrs: AttributeSet?) : androidx.appcompat.widget.AppCompatImageView(context, attrs) {
+class ImageViewAddCount(context: Context?, attrs: AttributeSet?) : androidx.appcompat.widget.AppCompatImageView(context!!, attrs) {
     private var paint: Paint? = null
     private var textPaint: TextPaint? = null
 

@@ -11,7 +11,7 @@ class RectangleView @JvmOverloads constructor(
     context: Context?,
     attrs: AttributeSet? = null,
     defStyle: Int = 0
-) : AppCompatImageView(context, attrs, defStyle) {
+) : AppCompatImageView(context!!, attrs, defStyle) {
     private val paint: Paint
 
     /**

@@ -3,28 +3,17 @@
     package="com.mredrock.cyxbs.qa">
 
     <application android:theme="@style/AppTheme">
+        <activity android:name=".pages.square.ui.CircleSquareActivity"></activity>
         <activity
             android:name=".ui.activity.ViewImageCropActivity"
             android:launchMode="singleTask" />
-
         <activity
             android:name=".ui.activity.ViewImageActivity"
             android:launchMode="singleTask" />
         <activity
-            android:name=".pages.answer.ui.AnswerListActivity"
-            android:launchMode="singleTop" />
-        <activity
-            android:name=".pages.comment.ui.CommentListActivity"
-            android:launchMode="singleTop"
-            android:windowSoftInputMode="adjustResize|stateHidden" />
-        <activity
             android:name=".pages.quiz.ui.QuizActivity"
             android:launchMode="singleTop"
             android:theme="@style/QuizTheme" />
-        <activity
-            android:name=".pages.answer.ui.AnswerActivity"
-            android:launchMode="singleTop"
-            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".pages.search.ui.SearchActivity"
             android:launchMode="singleTop"

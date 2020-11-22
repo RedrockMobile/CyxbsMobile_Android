@@ -1,4 +1,4 @@
-package com.mredrock.cyxbs.qa.pages.dynamic.ui.adapter
+package com.mredrock.cyxbs.qa.pages.square.ui.adapter
 
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
@@ -9,18 +9,20 @@ import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.bean.Question
 import com.mredrock.cyxbs.qa.component.recycler.BaseEndlessRvAdapter
 import com.mredrock.cyxbs.qa.component.recycler.BaseViewHolder
+import com.mredrock.cyxbs.qa.pages.dynamic.ui.adapter.DynamicAdapter
+import com.mredrock.cyxbs.qa.pages.dynamic.ui.adapter.DynamicAdapter.Companion.DIFF_CALLBACK
 import com.mredrock.cyxbs.qa.ui.activity.ViewImageActivity
 import com.mredrock.cyxbs.qa.utils.questionTimeDescription
 import com.mredrock.cyxbs.qa.utils.toDate
 import kotlinx.android.synthetic.main.qa_recycler_item_dynamic.view.*
 
 /**
- * @Author: xgl
- * @ClassName: DynamicAdapter
- * @Description:
- * @Date: 2020/11/17 20:11
+ *@Date 2020-11-22
+ *@Time 20:12
+ *@author SpreadWater
+ *@description  圈子详情页的adapter
  */
-class DynamicAdapter(private val onItemClickEvent: (Question) -> Unit) : BaseEndlessRvAdapter<Question>(DIFF_CALLBACK as DiffUtil.ItemCallback<Question>) {
+class CircleDetailAdapter(private val onItemClickEvent: (Question) -> Unit) : BaseEndlessRvAdapter<Question>(DIFF_CALLBACK as DiffUtil.ItemCallback<Question>) {
     companion object {
         @JvmStatic
         val DIFF_CALLBACK = object : DiffUtil.ItemCallback<Question>() {
@@ -29,9 +31,6 @@ class DynamicAdapter(private val onItemClickEvent: (Question) -> Unit) : BaseEnd
             override fun areContentsTheSame(oldItem: Question, newItem: Question) = oldItem == newItem
         }
     }
-
-    private var shouldAnimateSet: MutableSet<Int> = HashSet()
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = DynamicViewHolder(parent)
 
     //给问题列表首个加上背景，因为还有header，不方便加在布局
     override fun onBindViewHolder(holder: BaseViewHolder<Question>, position: Int) {
@@ -48,13 +47,14 @@ class DynamicAdapter(private val onItemClickEvent: (Question) -> Unit) : BaseEnd
         }
     }
 
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = CircleDetailViewHolder(parent)
+
     override fun onItemClickListener(holder: BaseViewHolder<Question>, position: Int, data: Question) {
         super.onItemClickListener(holder, position, data)
-        if (holder !is DynamicViewHolder) return
+        if (holder !is CircleDetailViewHolder) return
         onItemClickEvent.invoke(data)
     }
-
-    class DynamicViewHolder(parent: ViewGroup) : BaseViewHolder<Question>(parent, R.layout.qa_recycler_item_dynamic) {
+    class CircleDetailViewHolder(parent: ViewGroup) : BaseViewHolder<Question>(parent, R.layout.qa_recycler_item_dynamic) {
         private var photoUrls = ArrayList<String>()
         private var count = 0
         override fun refresh(data: Question?) {

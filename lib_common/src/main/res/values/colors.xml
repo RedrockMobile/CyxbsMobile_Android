@@ -366,6 +366,12 @@
 
     <color name="common_main_activity_login_et_hint_color">#999999</color>
 
+    <color name="common_qa_detail_line_color">#F1F3F8</color>
+    <color name="common_qa_detail_parise_number_color">#ABBCD9</color>
+    <color name="common_qa_detail_title_color">#112C57</color>
+    <color name="common_qa_detail_time_color">#556C89</color>
+    <color name="common_qa_detail_nick_name_color">#0B2551</color>
+    <color name="common_qa_circle_square_person_number_color">#748BB0</color>
     <!-- 志愿服务-->
     <color name="common_volunteer_record_item_cardView_bg">#E8F1FC</color>
     <color name="common_volunteer_affair_sign_up_end_t0">#FF6262</color>
