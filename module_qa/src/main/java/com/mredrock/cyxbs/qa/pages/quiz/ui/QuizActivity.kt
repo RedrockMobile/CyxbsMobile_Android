@@ -2,16 +2,20 @@ package com.mredrock.cyxbs.qa.pages.quiz.ui
 
 import android.app.Activity
 import android.content.Intent
+import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextUtils
+import android.text.TextWatcher
 import android.util.Base64
 import android.view.KeyEvent
 import android.view.View
 import android.widget.ImageView
 import androidx.core.content.ContextCompat
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.google.android.flexbox.FlexWrap
 import com.google.android.flexbox.FlexboxLayoutManager
@@ -24,11 +28,14 @@ import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.down.bean.DownMessageText
 import com.mredrock.cyxbs.common.utils.extensions.*
 import com.mredrock.cyxbs.qa.R
+import com.mredrock.cyxbs.qa.R.drawable.qa_shape_send_dynamic_btn_blue_background
+import com.mredrock.cyxbs.qa.R.drawable.qa_shape_send_dynamic_btn_grey_background
 import com.mredrock.cyxbs.qa.bean.Question
 import com.mredrock.cyxbs.qa.pages.dynamic.ui.adapter.CircleLabelAdapter
 import com.mredrock.cyxbs.qa.pages.quiz.QuizViewModel
 import com.mredrock.cyxbs.qa.ui.activity.ViewImageCropActivity
-import com.mredrock.cyxbs.qa.ui.widget.CommonDialog
+import com.mredrock.cyxbs.qa.ui.widget.DraftDialog
+import com.mredrock.cyxbs.qa.ui.widget.RectangleView
 import com.mredrock.cyxbs.qa.utils.CHOOSE_PHOTO_REQUEST
 import com.mredrock.cyxbs.qa.utils.selectImageFromAlbum
 import kotlinx.android.synthetic.main.qa_activity_quiz.*
@@ -45,7 +52,6 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>(), EventBusLifecycleSu
         const val NOT_DRAFT_ID = "-1"
         const val FIRST_QUIZ = "cyxbs_quiz_is_first_time"
         const val FIRST_QUIZ_SP_KEY = "isFirstTimeQuiz"
-        const val QUIZ_TITLE_MAX = 12
         const val DOWN_MESSAGE_NAME = "zscy-qa-reward-explain"
         fun activityStart(fragment: Fragment, type: String, requestCode: Int) {
             fragment.startActivityForResult<QuizActivity>(requestCode, "type" to type)
@@ -70,6 +76,7 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>(), EventBusLifecycleSu
         isFirstQuiz = sharedPreferences(FIRST_QUIZ).getBoolean(FIRST_QUIZ_SP_KEY, true)
         initToolbar()
         initImageAddView()
+        initEditListener()
         val circleLabelData = ArrayList<String>()
         circleLabelData.add("#校园周边")
         circleLabelData.add("#海底捞")
@@ -102,14 +109,45 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>(), EventBusLifecycleSu
 
     }
 
+    private fun initEditListener() {
+        edt_quiz_content.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(
+                    charSequence: CharSequence,
+                    i: Int,
+                    i1: Int,
+                    i2: Int
+            ) {
+            }
+
+            override fun onTextChanged(
+                    charSequence: CharSequence,
+                    i: Int,
+                    i1: Int,
+                    i2: Int
+            ) {
+                if (!TextUtils.isEmpty(charSequence) && charSequence.length > 2) {
+                    qa_tv_toolbar_right.setBackgroundResource(qa_shape_send_dynamic_btn_blue_background)
+                    tv_edit_num.text = charSequence.length.toString() + "/500"
+
+                } else {
+                    qa_tv_toolbar_right.setBackgroundResource(qa_shape_send_dynamic_btn_grey_background)
+                    tv_edit_num.text = charSequence.length.toString() + "/500"
+                }
+            }
+
+            override fun afterTextChanged(editable: Editable) {}
+        })
+    }
+
 
     private fun initToolbar() {
         qa_ib_toolbar_back.setOnClickListener(View.OnClickListener {
             if (edt_quiz_content.text.isNullOrEmpty() && draftId == NOT_DRAFT_ID) {
                 finish()
                 return@OnClickListener
+            } else {
+                exitDialog.show()
             }
-            exitDialog.show()
         })
         qa_tv_toolbar_title.text = getString(R.string.qa_quiz_toolbar_title_text)
         qa_ib_toolbar_more.gone()
@@ -117,13 +155,12 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>(), EventBusLifecycleSu
             visible()
             text = getString(R.string.qa_quiz_dialog_next)
             setOnClickListener {
-                exitDialog.show()
             }
         }
     }
 
     private fun initImageAddView() {
-        nine_grid_view.addView(ContextCompat.getDrawable(this, R.drawable.qa_ic_quiz_add_picture_empty)?.let { createImageViewFromVector(it) })
+        nine_grid_view.addView(ContextCompat.getDrawable(this, R.drawable.qa_ic_add_images)?.let { createImageViewFromVector(it) })
         nine_grid_view.setOnItemClickListener { _, index ->
             if (index == nine_grid_view.childCount - 1) {
                 this@QuizActivity.selectImageFromAlbum(MAX_SELECTABLE_IMAGE_COUNT, viewModel.imageLiveData.value)
@@ -192,13 +229,13 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>(), EventBusLifecycleSu
         }
     }
 
-    private fun createImageViewFromVector(drawable: Drawable) = ImageView(this).apply {
+    private fun createImageViewFromVector(drawable: Drawable) = RectangleView(this).apply {
         scaleType = ImageView.ScaleType.CENTER
         background = ContextCompat.getDrawable(this@QuizActivity, R.drawable.qa_shape_quiz_select_pic_empty_background)
         setImageDrawable(drawable)
     }
 
-    private fun createImageView(uri: Uri) = ImageView(this).apply {
+    private fun createImageView(uri: Uri) = RectangleView(this).apply {
         scaleType = ImageView.ScaleType.CENTER_CROP
         setImageURI(uri)
     }
@@ -241,8 +278,8 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>(), EventBusLifecycleSu
         }
     }
 
-    private fun createExitDialog() = CommonDialog(this).apply {
-        initView( title = getString(R.string.qa_quiz_dialog_exit_text), saveText = "保存", noSaveText = "不保存", cancelText = "取消", saveListener = View.OnClickListener {
+    private fun createExitDialog() = DraftDialog(this).apply {
+        initView(title = getString(R.string.qa_quiz_dialog_exit_text), saveText = "保存", noSaveText = "不保存", cancelText = "取消", saveListener = View.OnClickListener {
             saveDraft()
             dismiss()
         }, noSaveListener = View.OnClickListener {
@@ -254,7 +291,7 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>(), EventBusLifecycleSu
     }
 
     private fun noSaveDraft() {
-
+        finish()
     }
 
     override fun onPause() {

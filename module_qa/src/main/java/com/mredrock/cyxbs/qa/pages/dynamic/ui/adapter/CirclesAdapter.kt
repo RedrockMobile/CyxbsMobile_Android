@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.view.drawToBitmap
 import androidx.recyclerview.widget.RecyclerView
@@ -38,8 +39,8 @@ class CirclesAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     }
 
     class CirclesItem(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val iv_circle_item: ImageViewAddCount = itemView.findViewById(R.id.iv_circle_item)
-        val iv_circle_name: AppCompatTextView = itemView.findViewById(R.id.tv_circle_name)
+        val iv_circle: ImageViewAddCount = itemView.findViewById(R.id.iv_circle)
+        val tv_circle_name: TextView = itemView.findViewById(R.id.tv_circle_name)
     }
 
     override fun getItemViewType(position: Int): Int {
@@ -81,17 +82,17 @@ class CirclesAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
             HAVE_CIRCLE -> {
                 val viewHolder = holder as CirclesItem
-                viewHolder.iv_circle_item.apply {
+                viewHolder.iv_circle.apply {
                     setHaveMessage(true)
                     setMessageBum(50)
                 }
-                viewHolder.iv_circle_name.text = circlesItemList[position].circleName
+                viewHolder.tv_circle_name.text = circlesItemList[position].circleName
             }
         }
     }
 
     override fun getItemCount(): Int {
-        return circlesItemList.size + 1
+        return circlesItemList.size
     }
 
     private fun changeToActivity(activity: Activity) {

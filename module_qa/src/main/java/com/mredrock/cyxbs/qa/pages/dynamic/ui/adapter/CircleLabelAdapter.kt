@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.mredrock.cyxbs.common.utils.extensions.pressToZoomOut
+import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.qa.R
 
 
@@ -14,7 +15,7 @@ class CircleLabelAdapter(val context: Context, private val mList: MutableList<St
 
 
     inner class CircleLabel(view: View) : RecyclerView.ViewHolder(view) {
-        val dynamicLabel: TextView = view.findViewById(R.id.tv_dynamic_label)
+        val tv_dynamic_label: TextView = view.findViewById(R.id.tv_dynamic_label)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CircleLabel {
@@ -35,7 +36,11 @@ class CircleLabelAdapter(val context: Context, private val mList: MutableList<St
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val viewHolder = holder as CircleLabel
-        viewHolder.dynamicLabel.text = mList[position]
-        viewHolder.dynamicLabel.pressToZoomOut()
+        viewHolder.tv_dynamic_label.text = mList[position]
+        viewHolder.tv_dynamic_label.setOnSingleClickListener {
+            it.setBackgroundResource(R.drawable.qa_shape_common_label_text_view_background2)
+        }
     }
+
+
 }

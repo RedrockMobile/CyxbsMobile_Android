@@ -1,6 +1,7 @@
 package com.mredrock.cyxbs.qa.ui.widget
 
 import android.content.Context
+import android.media.Image
 import android.util.AttributeSet
 import android.view.View
 import android.view.ViewGroup
@@ -135,15 +136,43 @@ class NineGridView(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : 
         onItemClickListener = listener
     }
 
-    fun setImages(urls: List<String>) {
+    fun setNormalImages(urls: List<String>) {
         repeat(childCount) {
-            if (it < urls.size) {
-                context.loadRedrockImage(urls[it], getChildAt(it) as RectangleView)
-            } else if (urls.isNullOrEmpty()) {
-                //邮问改版图片错乱进行了修改，不知道其他地方会不会出问题
-                removeAllViews()
-            } else {
-                removeViewAt(it)
+            when {
+                it < urls.size -> {
+                    context.loadRedrockImage(urls[it], getChildAt(it) as ImageView)
+                }
+                urls.isNullOrEmpty() -> {
+                    //邮问改版图片错乱进行了修改，不知道其他地方会不会出问题
+                    removeAllViews()
+                }
+                else -> {
+                    removeViewAt(it)
+                }
+            }
+        }
+
+        for (i in childCount until urls.size) {
+            this.addView(ImageView(context).apply {
+                scaleType = ImageView.ScaleType.CENTER_CROP
+                context.loadRedrockImage(urls[i], this@apply)
+            }, childCount)
+        }
+    }
+
+    fun setRectangleImages(urls: List<String>) {
+        repeat(childCount) {
+            when {
+                it < urls.size -> {
+                    context.loadRedrockImage(urls[it], getChildAt(it) as RectangleView)
+                }
+                urls.isNullOrEmpty() -> {
+                    //邮问改版图片错乱进行了修改，不知道其他地方会不会出问题
+                    removeAllViews()
+                }
+                else -> {
+                    removeViewAt(it)
+                }
             }
         }
 

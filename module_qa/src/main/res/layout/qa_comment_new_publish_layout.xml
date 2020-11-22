@@ -41,7 +41,7 @@
             android:id="@+id/et_new_comment"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:background="@drawable/qa_shape_comment_new_publish_text_view_background"
+            android:background="@drawable/qa_shape_common_label_text_view_background"
             android:hint="@string/qa_comment_new_comment_text_view_hint"
             android:imeOptions="actionSend"
             android:paddingStart="20dp"

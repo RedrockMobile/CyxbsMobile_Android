@@ -39,11 +39,11 @@ open class DynamicListViewModel(kind: String) : BaseViewModel() {
 
     fun getCirCleData() {
         val list = ArrayList<TestData>()
-//        list.add(TestData("更多关注", "0", "0"))
-//        list.add(TestData("更多关注", "0", "0"))
-//        list.add(TestData("更多关注", "0", "0"))
-//        list.add(TestData("更多关注", "0", "0"))
-//        list.add(TestData("更多关注", "0", "0"))
+        list.add(TestData("更多关注", "0", "0"))
+        list.add(TestData("更多关注", "0", "0"))
+        list.add(TestData("更多关注", "0", "0"))
+        list.add(TestData("更多关注", "0", "0"))
+        list.add(TestData("更多关注", "0", "0"))
         circlesItem.value = list
     }
 

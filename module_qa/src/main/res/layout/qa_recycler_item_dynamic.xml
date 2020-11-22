@@ -97,16 +97,14 @@
         android:paddingTop="19dp"
         android:paddingEnd="15dp"
         android:paddingBottom="19dp"
-        app:arrangementMode="fill"
         app:layout_constraintEnd_toStartOf="@+id/tv_dynamic_count"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_title" />
-
     <androidx.appcompat.widget.AppCompatTextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:background="@drawable/qa_shape_comment_new_publish_text_view_background"
+        android:background="@drawable/qa_shape_common_label_text_view_background"
         android:paddingStart="8dp"
         android:paddingTop="5dp"
         android:paddingEnd="8dp"

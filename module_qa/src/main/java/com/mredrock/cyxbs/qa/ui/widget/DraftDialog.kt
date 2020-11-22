@@ -6,20 +6,18 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.view.Gravity
 import android.view.View
-import android.view.Window
 import android.view.WindowManager
-import androidx.annotation.DrawableRes
 import com.mredrock.cyxbs.qa.R
-import kotlinx.android.synthetic.main.qa_common_dialog.*
+import kotlinx.android.synthetic.main.qa_draft_dialog.*
 
 
 /**
  * Create by yyfbe at 2020-01-25
- * 只适合qa的几个相似dialog
+ * 草稿dialog
  */
-class CommonDialog(context: Context) : Dialog(context) {
+class DraftDialog(context: Context) : Dialog(context) {
     init {
-        setContentView(R.layout.qa_common_dialog)
+        setContentView(R.layout.qa_draft_dialog)
         window?.apply {
             decorView.setPadding(0, 0, 0, 0)
             val lp: WindowManager.LayoutParams = attributes

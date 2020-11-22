@@ -23,7 +23,7 @@
             android:layout_centerHorizontal="true"
             android:layout_gravity="end|bottom"
             android:layout_marginBottom="72dp"
-            android:background="@drawable/qa_shape_main_have_question_btn_background"
+            android:background="@drawable/qa_shape_send_dynamic_btn_blue_background"
             android:gravity="center"
             android:text="@string/qa_fragment_head_give_question"
             android:textColor="@color/common_white_font_color"

@@ -3,7 +3,6 @@ package com.mredrock.cyxbs.qa.pages.dynamic.ui.adapter
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
-import com.mredrock.cyxbs.common.utils.extensions.doIfLogin
 import com.mredrock.cyxbs.common.utils.extensions.setAvatarImageFromUrl
 import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.qa.R
@@ -41,31 +40,10 @@ class DynamicAdapter(private val onItemClickEvent: (Question) -> Unit) : BaseEnd
             holder.itemView.background = ContextCompat.getDrawable(holder.itemView.context, R.drawable.qa_ic_question_list_top_background)
         } else {
             holder.itemView.apply {
-//                if (shouldAnimateSet.contains(position) && getItem(position)?.isPraised == true) {
-//                    tv_dynamic_praise_count_image.isChecked = true
-//                    shouldAnimateSet.remove(position)
-//                } else {
-//                    getItem(position)?.isPraised?.let {
-//                        tv_dynamic_praise_count_image.setCheckedWithoutAnimator(it)
-//                    }
-//                }
+
                 tv_dynamic_praise_count_image.setOnSingleClickListener {
                     tv_dynamic_praise_count_image.toggle()
                 }
-//                tv_dynamic_praise_count.setOnSingleClickListener {
-//                    context.doIfLogin {
-//                        getItem(position)?.let { it1 ->
-//                            onPraiseClickListener?.invoke(position, it1)
-//                            if (holder !is AnswerViewHolder) {
-//                                return@let
-//                            }
-//                            if (getItem(position)?.isPraised == false) {
-//                                shouldAnimateSet.add(position)
-//                            }
-//                        }
-//
-//                    }
-//                }
             }
             holder.itemView.background = ContextCompat.getDrawable(holder.itemView.context, R.color.common_qa_question_list_color)
         }
@@ -78,27 +56,31 @@ class DynamicAdapter(private val onItemClickEvent: (Question) -> Unit) : BaseEnd
     }
 
     class DynamicViewHolder(parent: ViewGroup) : BaseViewHolder<Question>(parent, R.layout.qa_recycler_item_dynamic) {
+        private var photoUrls = ArrayList<String>()
+        private var count = 0
         override fun refresh(data: Question?) {
             data ?: return
             itemView.apply {
                 iv_avatar.setAvatarImageFromUrl(data.photoThumbnailSrc)
                 tv_nickname.text = data.nickname
                 tv_title.text = data.title
+                tv_dynamic_praise_count.text = 999.toString()
+                tv_dynamic_count.text = 999.toString()
                 tv_publish_at.text = questionTimeDescription(System.currentTimeMillis(), data.createdAt.toDate().time)
                 //解决图片错乱的问题
                 if (data.photoUrl.isNullOrEmpty())
-                    nine_grid_view_dynamic.setImages(emptyList())
+                    nine_grid_view_dynamic.setRectangleImages(emptyList())
                 else {
                     val tag = nine_grid_view_dynamic.tag
                     if (null == tag || tag == data.photoUrl) {
                         val tagStore = nine_grid_view_dynamic.tag
-                        nine_grid_view_dynamic.setImages(data.photoUrl)
+                        nine_grid_view_dynamic.setRectangleImages(setPhotoUrls(data.photoUrl))
                         nine_grid_view_dynamic.tag = tagStore
                     } else {
                         val tagStore = data.photoUrl
                         nine_grid_view_dynamic.tag = null
-                        nine_grid_view_dynamic.setImages(emptyList())
-                        nine_grid_view_dynamic.setImages(data.photoUrl)
+                        nine_grid_view_dynamic.setRectangleImages(emptyList())
+                        nine_grid_view_dynamic.setRectangleImages(setPhotoUrls(data.photoUrl))
                         nine_grid_view_dynamic.tag = tagStore
                     }
                 }
@@ -108,5 +90,14 @@ class DynamicAdapter(private val onItemClickEvent: (Question) -> Unit) : BaseEnd
             }
         }
 
+        fun setPhotoUrls(photoUrl: List<String>): ArrayList<String> {
+            photoUrls.clear()
+            for (it in photoUrl)
+                if (count < 3) {
+                    this.photoUrls.add(it)
+                    count++
+                }
+            return photoUrls
+        }
     }
 }

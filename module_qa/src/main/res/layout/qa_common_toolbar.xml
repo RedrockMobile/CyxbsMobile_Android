@@ -62,7 +62,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
-                android:background="@drawable/qa_shape_main_have_question_btn_background"
+                android:background="@drawable/qa_shape_send_dynamic_btn_grey_background"
                 android:paddingStart="12dp"
                 android:paddingTop="5dp"
                 android:paddingEnd="12dp"
