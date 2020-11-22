@@ -11,7 +11,7 @@ import com.mredrock.cyxbs.common.utils.extensions.gone
 import com.mredrock.cyxbs.common.utils.extensions.loadRedrockImage
 import com.mredrock.cyxbs.common.utils.extensions.visible
 import com.mredrock.cyxbs.qa.R
-import com.mredrock.cyxbs.qa.bean.Knowledge
+import com.mredrock.cyxbs.qa.beannew.Knowledge
 import com.mredrock.cyxbs.qa.component.recycler.BaseRvAdapter
 import com.mredrock.cyxbs.qa.component.recycler.BaseViewHolder
 import com.mredrock.cyxbs.qa.event.QASearchEvent

@@ -1,4 +1,4 @@
-package com.mredrock.cyxbs.qa.bean
+package com.mredrock.cyxbs.qa.beannew
 
 import android.os.Parcel
 import android.os.Parcelable

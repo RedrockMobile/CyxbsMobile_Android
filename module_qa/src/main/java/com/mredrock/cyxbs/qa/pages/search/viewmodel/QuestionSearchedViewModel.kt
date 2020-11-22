@@ -8,7 +8,7 @@ import com.mredrock.cyxbs.common.utils.extensions.mapOrThrowApiException
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
-import com.mredrock.cyxbs.qa.bean.Knowledge
+import com.mredrock.cyxbs.qa.beannew.Knowledge
 import com.mredrock.cyxbs.qa.bean.Question
 import com.mredrock.cyxbs.qa.network.ApiService
 import com.mredrock.cyxbs.qa.pages.search.model.SearchQuestionDataSource

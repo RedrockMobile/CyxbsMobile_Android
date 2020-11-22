@@ -19,8 +19,6 @@ import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.bean.QuizResult
 import com.mredrock.cyxbs.qa.network.ApiService
 import com.mredrock.cyxbs.qa.utils.isNullOrEmpty
-import com.mredrock.cyxbs.qa.utils.toDate
-import com.mredrock.cyxbs.qa.utils.toFormatString
 import io.reactivex.Observable
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
