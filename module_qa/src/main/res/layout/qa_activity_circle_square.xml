@@ -6,10 +6,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/common_window_background"
-    android:fitsSystemWindows="true"
+    android:fitsSystemWindows="false"
     android:orientation="vertical"
-    tools:context=".pages.square.ui.CircleSquareActivity">
-
+    tools:context=".pages.square.ui.activity.CircleSquareActivity">
     <include
         android:id="@+id/qa_circle_square_toolbar"
         layout="@layout/qa_common_toolbar" />
@@ -17,7 +16,7 @@
         android:id="@+id/rv_circle_square"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/qa_circle_square_toolbar"
-        app:layout_constraintLeft_toLeftOf="parent"/>
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/qa_circle_square_toolbar"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -2,24 +2,17 @@ package com.mredrock.cyxbs.qa.pages.dynamic.ui.adapter
 
 import android.app.Activity
 import android.content.Intent
-import android.media.Image
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.appcompat.widget.AppCompatTextView
-import androidx.core.view.drawToBitmap
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.mredrock.cyxbs.common.BaseApp.Companion.context
 import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.bean.TestData
-import com.mredrock.cyxbs.qa.pages.square.ui.CircleSquareActivity
 import com.mredrock.cyxbs.qa.ui.widget.ImageViewAddCount
-import java.util.zip.Inflater
 
 /**
  * @Author: xgl

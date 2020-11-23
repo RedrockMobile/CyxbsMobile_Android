@@ -21,4 +21,10 @@
         <item name="android:windowEnterAnimation">@anim/qa_anim_draft_dialog_in</item>
         <item name="android:windowExitAnimation">@anim/qa_anim_draft_dialog_out</item>
     </style>
+
+    <style name="tab_style" tools:ignore="ResourceName">
+        <item name="android:textSize">18sp</item>
+
+        <item name="android:unselectedAlpha">0.6</item>
+    </style>
 </resources>

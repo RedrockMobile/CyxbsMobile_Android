@@ -1,8 +1,7 @@
-package com.mredrock.cyxbs.qa.pages.square.ui
+package com.mredrock.cyxbs.qa.pages.square.ui.activity
 
 import android.os.Bundle
 import android.view.View
-import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.extensions.gone
@@ -38,7 +37,7 @@ class CircleSquareActivity : BaseViewModelActivity<CirecleSquareViewModel>() {
         rv_circle_square.apply {
             layoutManager=LinearLayoutManager(context)
             adapter=CircleSquareAdapter().apply {
-                refreshData(list)
+                addData(list)
             }
         }
     }
