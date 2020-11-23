@@ -1,10 +1,8 @@
 package com.mredrock.cyxbs.qa.ui.widget
 
+import android.annotation.SuppressLint
 import android.content.Context
-import android.graphics.Canvas
-import android.graphics.Color
-import android.graphics.Paint
-import android.graphics.Point
+import android.graphics.*
 import android.media.Image
 import android.text.TextPaint
 import android.util.AttributeSet
@@ -46,11 +44,12 @@ class ImageViewAddCount(context: Context?, attrs: AttributeSet?) : androidx.appc
         textPaint?.apply {
             style = Paint.Style.FILL
             color = 0xffffffff.toInt()
-            textSize = 35F
+            textSize = 30F
             isAntiAlias = true
         }
     }
 
+    @SuppressLint("DrawAllocation")
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
         if (!isHaveMessage)
@@ -61,7 +60,16 @@ class ImageViewAddCount(context: Context?, attrs: AttributeSet?) : androidx.appc
             }
 
             NUMBER_POINT -> {
-                canvas?.drawCircle((width - paddingRight).toFloat(), paddingTop.toFloat(), paddingRight.toFloat(), paint)
+                if (messageNumber in 1..9)
+                    canvas?.drawCircle((width - paddingRight).toFloat(), paddingTop.toFloat(), paddingRight.toFloat(), paint)
+                else if (messageNumber in 10..99) {
+                    val rect = RectF()
+                    rect.left = width - (paddingLeft * 2.5).toFloat()
+                    rect.right = width.toFloat()
+                    rect.bottom = (paddingTop * 1.8).toFloat()
+                    rect.top = 0f
+                    canvas?.drawRoundRect(rect, 28f, 28f, paint)
+                }
                 var showText = ""
                 if (messageNumber in 1..99)
                     showText = messageNumber.toString() + ""
@@ -69,8 +77,8 @@ class ImageViewAddCount(context: Context?, attrs: AttributeSet?) : androidx.appc
                     showText = "99+"
                 }
                 val textWidth = textPaint?.measureText(showText)
-                var x = width - paddingRight - textWidth!!/2
-                var y = (paddingTop + textPaint?.fontMetrics?.bottom!! * 1.5).toFloat()
+                var x = (width - paddingRight * 1.2 - textWidth!! / 2).toFloat()
+                var y = (paddingTop + textPaint?.fontMetrics?.bottom!! * 1.1).toFloat()
                 canvas?.drawText(showText, x, y, textPaint)
             }
 

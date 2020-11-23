@@ -18,6 +18,7 @@ class CircleLabelAdapter(val context: Context, private val mList: MutableList<St
         val tv_dynamic_label: TextView = view.findViewById(R.id.tv_dynamic_label)
     }
 
+    private val positionSet = HashSet<Int>()
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CircleLabel {
         val view = LayoutInflater.from(parent.context)
                 .inflate(R.layout.qa_recycler_item_dynamic_label, parent, false)
@@ -37,10 +38,16 @@ class CircleLabelAdapter(val context: Context, private val mList: MutableList<St
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val viewHolder = holder as CircleLabel
         viewHolder.tv_dynamic_label.text = mList[position]
+        //目前简单实现了一个单选逻辑，逻辑上有点没绕过来，后面在优化吧
+        if (positionSet.contains(position)) {
+            viewHolder.tv_dynamic_label.setBackgroundResource(R.drawable.qa_shape_common_label_text_view_background2)
+            positionSet.clear()
+        } else {
+            viewHolder.tv_dynamic_label.setBackgroundResource(R.drawable.qa_shape_common_label_text_view_background)
+        }
         viewHolder.tv_dynamic_label.setOnSingleClickListener {
-            it.setBackgroundResource(R.drawable.qa_shape_common_label_text_view_background2)
+            positionSet.add(position)
+            notifyDataSetChanged()
         }
     }
-
-
 }

@@ -1,18 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="wrap_content"
+    android:layout_width="100dp"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:paddingStart="15dp"
-    android:paddingTop="10dp"
-    android:paddingEnd="15dp">
+    android:paddingTop="10dp">
 
     <com.mredrock.cyxbs.qa.ui.widget.ImageViewAddCount
         android:id="@+id/iv_circle"
         android:layout_width="60dp"
         android:layout_height="60dp"
-        android:layout_gravity="center_horizontal"
+        android:layout_gravity="center"
         android:background="@drawable/qa_ic_circle_demo"
         android:padding="10dp"
         android:scaleType="centerCrop"
