@@ -4,9 +4,6 @@ import android.os.Parcel
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
 
-/**
- * Created by yyfbe, Date on 2020/8/13.
- */
 class Knowledge(
         @SerializedName("id")
         var id: Int = 0,

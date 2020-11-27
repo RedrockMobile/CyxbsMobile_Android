@@ -2,11 +2,6 @@ package com.mredrock.cyxbs.qa.beannew
 
 import com.google.gson.annotations.SerializedName
 
-/**
- *@author zhangzhe
- *@date 2020/11/22
- *@description
- */
 
 data class SearchResult(
         @SerializedName("knowledge")

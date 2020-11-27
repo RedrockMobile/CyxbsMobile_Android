@@ -82,7 +82,7 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@id/qa_gl_dynamic_start"
         app:layout_constraintTop_toBottomOf="@id/qa_iv_dynamic_avatar"
-        tools:text="标题标题标题标题标题标题标题标题标题标题标题标题标题" />
+        tools:text="约不约约不约约不约约不约约不约约不约约不约约不约约不约约不约约不约约不约约不约约不约约不约约不约约不约约不约约不约约不约" />
 
     <com.mredrock.cyxbs.qa.ui.widget.NineGridView
         android:id="@+id/qa_dynamic_nine_grid_view"

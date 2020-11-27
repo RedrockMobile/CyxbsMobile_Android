@@ -6,48 +6,46 @@
     android:layout_height="match_parent"
     android:background="@color/common_white_background">
 
-    <include
-        android:id="@+id/qa_include_detail"
-        layout="@layout/qa_common_toolbar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/qa_detail_swipe_refresh_layout"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/qa_include_detail">
+        app:layout_constraintTop_toBottomOf="@id/qa_include_toolbar">
 
         <androidx.coordinatorlayout.widget.CoordinatorLayout
             android:layout_width="0dp"
             android:layout_height="0dp">
 
-
-            <com.google.android.material.appbar.CollapsingToolbarLayout
-                android:id="@+id/collapsing_toolbar_layout"
+            <com.google.android.material.appbar.AppBarLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@null"
-                android:fitsSystemWindows="true"
+                android:background="@color/common_transparent_background"
+                app:elevation="0dp"
                 app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
-                <include
-                    layout="@layout/qa_recycler_item_dynamic"
+                <com.google.android.material.appbar.CollapsingToolbarLayout
+                    android:id="@+id/collapsing_toolbar_layout"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-            </com.google.android.material.appbar.CollapsingToolbarLayout>
+                    android:layout_height="wrap_content"
+                    android:background="@null"
+                    android:fitsSystemWindows="true"
+                    app:layout_scrollFlags="scroll|exitUntilCollapsed">
+
+                    <include
+                        layout="@layout/qa_recycler_item_dynamic"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+                </com.google.android.material.appbar.CollapsingToolbarLayout>
+            </com.google.android.material.appbar.AppBarLayout>
 
             <LinearLayout
+                android:id="@+id/qa_ll_reply"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="200dp"
                 android:orientation="vertical"
                 app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
@@ -68,6 +66,16 @@
                     android:layout_height="match_parent"
                     tools:listitem="@layout/qa_recycler_item_dynamic_reply" />
             </LinearLayout>
+
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+    <include
+        android:id="@+id/qa_include_toolbar"
+        layout="@layout/qa_common_toolbar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
