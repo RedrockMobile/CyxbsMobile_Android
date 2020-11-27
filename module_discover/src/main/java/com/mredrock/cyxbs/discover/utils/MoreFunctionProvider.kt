@@ -1,11 +1,13 @@
 package com.mredrock.cyxbs.discover.utils
 
 import android.content.Context
+import android.widget.Toast
 import com.alibaba.android.arouter.launcher.ARouter
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.config.*
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.account.IAccountService
+import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
 import com.mredrock.cyxbs.discover.R
 import java.lang.ref.SoftReference
@@ -76,6 +78,12 @@ object MoreFunctionProvider {
 
     class StartActivityAfterLogin(private val msg: String, private val routing: String) : StartActivityAble {
         override fun startActivity(context: Context) {
+            //下面的第一个if是禁止研究生使用"我的考试"功能，等到支持后删去即可
+            if (ServiceManager.getService(IAccountService::class.java).getUserService().getStuNum()[0].toUpperCase() == 'S' &&
+                    msg == "我的考试" && routing == DISCOVER_GRADES) {
+                CyxbsToast.makeText(context, "此功能暂未开放，敬请期待", Toast.LENGTH_LONG).show()
+                return
+            }
             if (ServiceManager.getService(IAccountService::class.java).getVerifyService().isLogin()) {
                 ARouter.getInstance().build(routing).navigation()
             } else {

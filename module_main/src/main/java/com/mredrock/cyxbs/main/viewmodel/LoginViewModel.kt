@@ -1,11 +1,12 @@
 package com.mredrock.cyxbs.main.viewmodel
 
+import anet.channel.util.StringUtils
+import com.mredrock.cyxbs.account.IAccountService
 import com.mredrock.cyxbs.common.BaseApp.Companion.context
 import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.network.CommonApiService
 import com.mredrock.cyxbs.common.network.exception.DefaultErrorHandler
 import com.mredrock.cyxbs.common.service.ServiceManager
-import com.mredrock.cyxbs.account.IAccountService
 import com.mredrock.cyxbs.common.utils.down.bean.DownMessageText
 import com.mredrock.cyxbs.common.utils.down.params.DownMessageParams
 import com.mredrock.cyxbs.common.utils.extensions.errorHandler
@@ -19,6 +20,7 @@ import com.umeng.analytics.MobclickAgent
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import java.util.regex.Pattern
 
 /**
  * Created By jay68 on 2018/8/12.
@@ -82,7 +84,7 @@ class LoginViewModel : BaseViewModel() {
     }
 
     private fun checkDataCorrect(stuNum: String?, idNum: String?): Boolean {
-        if ((stuNum?.length ?: 0) < 10) {
+        if (!(isGraduateStudentNum(stuNum) || isUndergraduateStudentNum(stuNum))) {
             toastEvent.value = R.string.main_activity_login_not_input_account
             return true
         } else if ((idNum?.length ?: 0) < 6) {
@@ -90,6 +92,18 @@ class LoginViewModel : BaseViewModel() {
             return true
         }
         return false
+    }
+
+    //判断是不是研究生学号
+    private fun isGraduateStudentNum(stuNum: String?): Boolean {
+        val pattern: Pattern = Pattern.compile("^[Ss][0-9]{9}\$")
+        return pattern.matcher(stuNum).matches() && ((stuNum?.length ?: 0) == 10)
+    }
+
+    //判断是不是本科生学号
+    private fun isUndergraduateStudentNum(str: String?): Boolean {
+        val pattern: Pattern = Pattern.compile("[0-9]*")
+        return pattern.matcher(str).matches() && ((str?.length ?: 0) == 10)
     }
 
     fun getUserAgreement(successCallBack: () -> Unit) {
