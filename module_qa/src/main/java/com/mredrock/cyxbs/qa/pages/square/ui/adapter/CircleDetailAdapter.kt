@@ -9,8 +9,6 @@ import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.bean.Question
 import com.mredrock.cyxbs.qa.component.recycler.BaseEndlessRvAdapter
 import com.mredrock.cyxbs.qa.component.recycler.BaseViewHolder
-import com.mredrock.cyxbs.qa.pages.dynamic.ui.adapter.DynamicAdapter
-import com.mredrock.cyxbs.qa.pages.dynamic.ui.adapter.DynamicAdapter.Companion.DIFF_CALLBACK
 import com.mredrock.cyxbs.qa.ui.activity.ViewImageActivity
 import com.mredrock.cyxbs.qa.utils.questionTimeDescription
 import com.mredrock.cyxbs.qa.utils.toDate
@@ -39,8 +37,8 @@ class CircleDetailAdapter(private val onItemClickEvent: (Question) -> Unit) : Ba
             holder.itemView.background = ContextCompat.getDrawable(holder.itemView.context, R.drawable.qa_ic_question_list_top_background)
         } else {
             holder.itemView.apply {
-                tv_dynamic_praise_count_image.setOnSingleClickListener {
-                    tv_dynamic_praise_count_image.toggle()
+                qa_iv_dynamic_praise_count_image.setOnSingleClickListener {
+                    qa_iv_dynamic_praise_count_image.toggle()
                 }
             }
             holder.itemView.background = ContextCompat.getDrawable(holder.itemView.context, R.color.common_qa_question_list_color)
@@ -60,30 +58,30 @@ class CircleDetailAdapter(private val onItemClickEvent: (Question) -> Unit) : Ba
         override fun refresh(data: Question?) {
             data ?: return
             itemView.apply {
-                iv_avatar.setAvatarImageFromUrl(data.photoThumbnailSrc)
-                tv_nickname.text = data.nickname
-                tv_title.text = data.title
-                tv_dynamic_praise_count.text = 999.toString()
-                tv_dynamic_count.text = 999.toString()
-                tv_publish_at.text = questionTimeDescription(System.currentTimeMillis(), data.createdAt.toDate().time)
+                qa_iv_dynamic_avatar.setAvatarImageFromUrl(data.photoThumbnailSrc)
+                qa_tv_dynamic_nickname.text = data.nickname
+                qa_tv_dynamic_content.text = data.title
+                qa_tv_dynamic_praise_count.text = 999.toString()
+                qa_tv_dynamic_count.text = 999.toString()
+                qa_tv_dynamic_publish_at.text = questionTimeDescription(System.currentTimeMillis(), data.createdAt.toDate().time)
                 //解决图片错乱的问题
                 if (data.photoUrl.isNullOrEmpty())
-                    nine_grid_view_dynamic.setRectangleImages(emptyList())
+                    qa_dynamic_nine_grid_view.setRectangleImages(emptyList())
                 else {
-                    val tag = nine_grid_view_dynamic.tag
+                    val tag = qa_dynamic_nine_grid_view.tag
                     if (null == tag || tag == data.photoUrl) {
-                        val tagStore = nine_grid_view_dynamic.tag
-                        nine_grid_view_dynamic.setRectangleImages(setPhotoUrls(data.photoUrl))
-                        nine_grid_view_dynamic.tag = tagStore
+                        val tagStore = qa_dynamic_nine_grid_view.tag
+                        qa_dynamic_nine_grid_view.setRectangleImages(setPhotoUrls(data.photoUrl))
+                        qa_dynamic_nine_grid_view.tag = tagStore
                     } else {
                         val tagStore = data.photoUrl
-                        nine_grid_view_dynamic.tag = null
-                        nine_grid_view_dynamic.setRectangleImages(emptyList())
-                        nine_grid_view_dynamic.setRectangleImages(setPhotoUrls(data.photoUrl))
-                        nine_grid_view_dynamic.tag = tagStore
+                        qa_dynamic_nine_grid_view.tag = null
+                        qa_dynamic_nine_grid_view.setRectangleImages(emptyList())
+                        qa_dynamic_nine_grid_view.setRectangleImages(setPhotoUrls(data.photoUrl))
+                        qa_dynamic_nine_grid_view.tag = tagStore
                     }
                 }
-                nine_grid_view_dynamic.setOnItemClickListener { _, index ->
+                qa_dynamic_nine_grid_view.setOnItemClickListener { _, index ->
                     ViewImageActivity.activityStart(context, data.photoUrl.toTypedArray(), index)
                 }
             }

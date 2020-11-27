@@ -14,7 +14,7 @@ class RewardExplainAdapter : BaseRvAdapter<DownMessageText>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder<DownMessageText> = RewardExplainViewHolder(parent)
     class RewardExplainViewHolder(parent: ViewGroup) : BaseViewHolder<DownMessageText>(parent, R.layout.qa_recycler_item_reward_explain) {
         override fun refresh(data: DownMessageText?) {
-            itemView.tv_title.text = data?.title
+            itemView.qa_tv_reply_content.text = data?.title
             itemView.tv_content.text = data?.content
         }
 

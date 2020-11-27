@@ -8,30 +8,30 @@
     android:paddingTop="21dp">
 
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/gl_question_start"
+        android:id="@+id/qa_gl_dynamic_start"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:orientation="vertical"
         app:layout_constraintGuide_percent="0.04" />
 
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/gl_question_end"
+        android:id="@+id/qa_gl_dynamic_end"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:orientation="vertical"
         app:layout_constraintGuide_percent="0.96" />
 
     <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/iv_avatar"
-        android:layout_width="32dp"
-        android:layout_height="32dp"
+        android:id="@+id/qa_iv_dynamic_avatar"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:scaleType="centerCrop"
         android:src="@drawable/common_default_avatar"
-        app:layout_constraintStart_toEndOf="@id/gl_question_start"
+        app:layout_constraintStart_toEndOf="@id/qa_gl_dynamic_start"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
-        android:id="@+id/iv_more_tips"
+        android:id="@+id/qa_iv_dynamic_more_tips"
         android:layout_width="18dp"
         android:layout_height="5dp"
         android:layout_marginTop="2dp"
@@ -42,68 +42,62 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/tv_nickname"
+        android:id="@+id/qa_tv_dynamic_nickname"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="9dp"
-        android:layout_toEndOf="@id/iv_avatar"
-        android:paddingBottom="6dp"
+        android:layout_marginStart="15dp"
+        android:layout_toEndOf="@id/qa_iv_dynamic_avatar"
         android:textColor="@color/common_qa_question_item_nickname_color"
-        android:textSize="13sp"
-        app:layout_constraintBottom_toTopOf="@+id/tv_title"
-        app:layout_constraintEnd_toStartOf="@+id/tv_publish_at"
-        app:layout_constraintHorizontal_bias="0.003"
-        app:layout_constraintStart_toEndOf="@id/iv_avatar"
-        app:layout_constraintTop_toTopOf="@id/iv_avatar"
-        app:layout_constraintVertical_bias="0.0"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toEndOf="@id/qa_iv_dynamic_avatar"
+        app:layout_constraintTop_toTopOf="@+id/qa_iv_dynamic_avatar"
         tools:text="刘童鞋" />
 
     <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/tv_publish_at"
+        android:id="@+id/qa_tv_dynamic_publish_at"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="270dp"
-        android:paddingBottom="6dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="8dp"
         android:textColor="@color/common_qa_question_item_time_color"
-        android:textSize="11sp"
 
-        app:layout_constraintEnd_toStartOf="@id/gl_question_end"
-        app:layout_constraintTop_toBottomOf="@+id/tv_nickname"
+        android:textSize="11sp"
+        app:layout_constraintBottom_toBottomOf="@+id/qa_iv_dynamic_avatar"
+        app:layout_constraintStart_toEndOf="@+id/qa_iv_dynamic_avatar"
+        app:layout_constraintTop_toBottomOf="@+id/qa_tv_dynamic_nickname"
         tools:text="2019.8.22" />
 
     <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/tv_title"
+        android:id="@+id/qa_tv_dynamic_content"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="15dp"
         android:ellipsize="end"
         android:gravity="start"
-        android:singleLine="true"
+        android:singleLine="false"
         android:textColor="@color/common_level_two_font_color"
         android:textSize="16sp"
-        app:layout_constraintEnd_toStartOf="@id/gl_question_end"
+        app:layout_constraintEnd_toStartOf="@id/qa_gl_dynamic_end"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toEndOf="@id/gl_question_start"
-        app:layout_constraintTop_toBottomOf="@id/iv_avatar"
+        app:layout_constraintStart_toEndOf="@id/qa_gl_dynamic_start"
+        app:layout_constraintTop_toBottomOf="@id/qa_iv_dynamic_avatar"
         tools:text="标题标题标题标题标题标题标题标题标题标题标题标题标题" />
 
     <com.mredrock.cyxbs.qa.ui.widget.NineGridView
-        android:id="@+id/nine_grid_view_dynamic"
-        android:layout_width="match_parent"
+        android:id="@+id/qa_dynamic_nine_grid_view"
+        android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="10dp"
-        android:paddingStart="15dp"
-        android:paddingTop="19dp"
-        android:paddingEnd="15dp"
-        android:paddingBottom="19dp"
-        app:layout_constraintEnd_toStartOf="@+id/tv_dynamic_count"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_title" />
+        android:layout_marginTop="11dp"
+        app:layout_constraintEnd_toStartOf="@+id/qa_gl_dynamic_end"
+        app:layout_constraintStart_toStartOf="@+id/qa_gl_dynamic_start"
+        app:layout_constraintTop_toBottomOf="@+id/qa_tv_dynamic_content" />
+
     <androidx.appcompat.widget.AppCompatTextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
+        android:layout_marginTop="12dp"
         android:background="@drawable/qa_shape_common_label_text_view_background"
         android:paddingStart="8dp"
         android:paddingTop="5dp"
@@ -111,83 +105,81 @@
         android:paddingBottom="5dp"
         android:text="#校园周边"
         android:textSize="10sp"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/nine_grid_view_dynamic"
-        app:layout_constraintVertical_bias="0.189" />
+        app:layout_constraintTop_toBottomOf="@+id/qa_dynamic_nine_grid_view" />
 
     <com.mredrock.cyxbs.qa.ui.widget.likeview.LikeView
-        android:id="@+id/tv_dynamic_praise_count_image"
+        android:id="@+id/qa_iv_dynamic_praise_count_image"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="26dp"
+        android:layout_marginBottom="8dp"
         app:checkedColor="#323FD9"
         app:checkedLikeIconRes="@drawable/qa_ic_answer_list_praised"
         app:cirRadius="14dp"
         app:cycleTime="1000"
         app:defaultColor="#ffcccccc"
         app:defaultLikeIconRes="@drawable/qa_ic_answer_list_praise"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/tv_dynamic_count"
-        app:layout_constraintHorizontal_bias="0.982"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/nine_grid_view_dynamic"
-        app:layout_constraintVertical_bias="0.0"
+        app:layout_constraintBottom_toBottomOf="@id/qa_tv_dynamic_count"
+        app:layout_constraintEnd_toStartOf="@+id/qa_tv_dynamic_count"
+        app:layout_constraintTop_toTopOf="@+id/qa_tv_dynamic_count"
         app:ringColor="#323FD9" />
 
     <TextView
-        android:id="@+id/tv_dynamic_praise_count"
+        android:id="@+id/qa_tv_dynamic_praise_count"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="28dp"
         android:layout_marginEnd="8dp"
-        android:layout_toStartOf="@+id/tv_dynamic_count"
-        android:paddingTop="25dp"
-        android:paddingBottom="20dp"
+        android:layout_toStartOf="@+id/qa_tv_dynamic_count"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
         android:textColor="@color/common_qa_question_bottom_count_color"
         android:textSize="11sp"
-        app:layout_constraintBottom_toBottomOf="@+id/tv_dynamic_praise_count_image"
-        app:layout_constraintEnd_toStartOf="@+id/tv_dynamic_count"
-        app:layout_constraintTop_toTopOf="@+id/tv_dynamic_praise_count_image"
-        app:layout_constraintVertical_bias="0.588"
+        app:layout_constraintBottom_toBottomOf="@+id/qa_tv_dynamic_count"
+        app:layout_constraintEnd_toStartOf="@+id/qa_tv_dynamic_count"
+        app:layout_constraintStart_toStartOf="@+id/qa_iv_dynamic_praise_count_image"
+        app:layout_constraintTop_toTopOf="@+id/qa_tv_dynamic_count"
         tools:text="999" />
 
     <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/tv_dynamic_count"
+        android:id="@+id/qa_tv_dynamic_count"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="248dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginEnd="26dp"
         android:drawableStart="@drawable/qa_ic_comment_count"
         android:drawablePadding="4dp"
         android:gravity="center_vertical"
         android:textColor="@color/common_qa_question_bottom_count_color"
         android:textSize="11sp"
-        app:layout_constraintStart_toEndOf="@id/gl_question_start"
-        app:layout_constraintTop_toBottomOf="@id/nine_grid_view_dynamic"
+        app:layout_constraintBottom_toBottomOf="@+id/qa_iv_dynamic_share"
+        app:layout_constraintEnd_toStartOf="@+id/qa_iv_dynamic_share"
+        app:layout_constraintTop_toTopOf="@+id/qa_iv_dynamic_share"
         tools:text="201" />
 
     <ImageView
-        android:id="@+id/iv_dynamic_share"
+        android:id="@+id/qa_iv_dynamic_share"
         android:layout_width="20dp"
         android:layout_height="20dp"
-        android:layout_marginTop="32dp"
         android:layout_marginEnd="10dp"
         android:background="@drawable/qa_ic_dynamic_share"
         android:drawablePadding="4dp"
         android:gravity="center_vertical"
         android:textColor="@color/common_qa_question_bottom_count_color"
         android:textSize="11sp"
-        app:layout_constraintEnd_toStartOf="@id/gl_question_end"
-        app:layout_constraintTop_toBottomOf="@id/nine_grid_view_dynamic"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/qa_gl_dynamic_end"
+        app:layout_constraintTop_toBottomOf="@+id/qa_dynamic_nine_grid_view"
         tools:text="201" />
 
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_marginTop="20dp"
         android:alpha="0.1"
         android:background="@color/common_qa_question_recycler_item_divide_line_color"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_dynamic_count" />
+        app:layout_constraintTop_toBottomOf="@id/qa_iv_dynamic_praise_count_image" />
 </androidx.constraintlayout.widget.ConstraintLayout>

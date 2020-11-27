@@ -38,7 +38,7 @@ class DraftDialog(context: Context) : Dialog(context) {
             saveListener: View.OnClickListener,
             noSaveListener: View.OnClickListener,
             cancelListener: View.OnClickListener?) {
-        tv_title.text = title
+        qa_tv_reply_content.text = title
         tv_save.text = saveText
         tv_no_save.text = noSaveText
         tv_cancel.text = cancelText

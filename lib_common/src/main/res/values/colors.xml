@@ -26,7 +26,7 @@
     <!--    一级字体颜色-->
     <color name="common_level_one_font_color">#112C54</color>
     <!--    二级字体颜色-->
-    <color name="common_level_two_font_color">#15315B</color>
+    <color name="common_level_two_font_color">#112C57</color>
     <!--    三级字体颜色-->
     <color name="common_level_three_font_color">#193866</color>
     <!--    四级字体颜色-->
@@ -203,11 +203,11 @@
     <!--    问题JCardView背景-->
     <color name="common_qa_question_list_color">#F8F9FC</color>
     <!--    问题item的昵称颜色-->
-    <color name="common_qa_question_item_nickname_color">#15315B</color>
+    <color name="common_qa_question_item_nickname_color">#0B2551</color>
     <!--    问题item的积分奖励字体颜色-->
     <color name="common_qa_question_item_reward_color">#777777</color>
     <!--    问题item的日期字体颜色-->
-    <color name="common_qa_question_item_time_color">#2A4E84</color>
+    <color name="common_qa_question_item_time_color">#556C89</color>
     <!--    问题item的下面的各类数字颜色-->
     <color name="common_qa_question_bottom_count_color">#2A4E84</color>
     <!--    问题item的分割线颜色-->

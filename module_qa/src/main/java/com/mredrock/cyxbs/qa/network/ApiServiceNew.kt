@@ -2,7 +2,6 @@ package com.mredrock.cyxbs.qa.network
 
 import com.mredrock.cyxbs.common.bean.RedrockApiStatus
 import com.mredrock.cyxbs.common.bean.RedrockApiWrapper
-import com.mredrock.cyxbs.qa.bean.*
 import com.mredrock.cyxbs.qa.beannew.*
 import io.reactivex.Observable
 import okhttp3.MultipartBody
@@ -97,5 +96,4 @@ interface ApiServiceNew {
     fun deleteId(@Field("id")
                  id: String
     ): Observable<RedrockApiStatus>
-
 }

@@ -13,7 +13,7 @@
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="75dp"
+        android:layout_marginTop="76dp"
         android:background="@color/common_transparent_background"
         app:elevation="0dp"
         app:layout_scrollFlags="scroll|exitUntilCollapsed">
@@ -35,11 +35,13 @@
                 android:textColor="#15315B"
                 android:textSize="15sp"
                 android:visibility="visible" />
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_circles_List"
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
-                android:layout_marginTop="20dp" />
+                android:layout_marginTop="20dp"
+                tools:listitem="@layout/qa_recycler_item_circles" />
         </com.google.android.material.appbar.CollapsingToolbarLayout>
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -111,7 +113,8 @@
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rv_dynamic_List"
                     android:layout_width="match_parent"
-                    android:layout_height="100dp" />
+                    android:layout_height="100dp"
+                    tools:listitem="@layout/qa_recycler_item_dynamic" />
             </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
         </LinearLayout>
     </RelativeLayout>
