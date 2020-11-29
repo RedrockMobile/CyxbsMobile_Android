@@ -51,8 +51,9 @@ const val APP_WEBSITE = "https://wx.redrock.team/game/handheldcqupt-mobile/#/"
 
 const val ABOUT_US_WEBSITE = "https://redrock.team/aboutus/"
 
-//小控件课表
+//小控件课表及事务
 const val WIDGET_COURSE = "course_widget"
+const val WIDGET_AFFAIR = "course_affair"
 const val SP_WIDGET_NEED_FRESH = "sharepreference_widget_need_fresh"
 
 //课表辨别是查同学课表的key
