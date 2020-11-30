@@ -7,7 +7,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.RemoteViews
-import android.widget.Toast
 import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
 import com.mredrock.cyxbs.common.utils.extensions.editor
 import com.mredrock.cyxbs.widget.R
@@ -15,13 +14,15 @@ import com.mredrock.cyxbs.widget.service.GridWidgetService
 import com.mredrock.cyxbs.widget.service.GridWidgetService.Companion.getCourse
 import com.mredrock.cyxbs.widget.util.changeCourseToWidgetCourse
 import com.mredrock.cyxbs.widget.util.getClickIntent
-import com.mredrock.cyxbs.widget.util.getClickPendingIntent
 import com.mredrock.cyxbs.widget.util.startOperation
 import com.mredrock.cyxbs.widget.widget.page.oversized.deleteTitlePref
 import java.util.*
 
-
+/**
+ * 超大小部件
+ */
 class OversizedAppWidget : AppWidgetProvider() {
+
 
     override fun onUpdate(context: Context, appWidgetManager: AppWidgetManager, appWidgetIds: IntArray) {
         for (appWidgetId in appWidgetIds) {
@@ -43,6 +44,7 @@ class OversizedAppWidget : AppWidgetProvider() {
         super.onReceive(context, intent)
         intent ?: return
         when (intent.action) {
+            /** 点击事件*/
             "btn.start.com" -> {
                 val courseStatusBean = getCourse(intent.getIntExtra("POSITION", -1))
                 courseStatusBean?.let {

@@ -10,6 +10,7 @@ import com.google.gson.reflect.TypeToken
 import com.mredrock.cyxbs.common.BaseApp.Companion.context
 import com.mredrock.cyxbs.common.config.COURSE_VERSION
 import com.mredrock.cyxbs.common.config.SP_WIDGET_NEED_FRESH
+import com.mredrock.cyxbs.common.config.WIDGET_AFFAIR
 import com.mredrock.cyxbs.common.config.WIDGET_COURSE
 import com.mredrock.cyxbs.common.event.CurrentDateInformationEvent
 import com.mredrock.cyxbs.common.network.ApiGenerator
@@ -411,6 +412,11 @@ class CoursesViewModel : BaseViewModel() {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(ExecuteOnceObserver(onExecuteOnceNext = { affairsCourse ->
                     affairsCourse ?: return@ExecuteOnceObserver
+                    context.defaultSharedPreferences.editor {
+                        //小部件缓存事务
+                        putString(WIDGET_AFFAIR, Gson().toJson(affairsCourse))
+                        putBoolean(SP_WIDGET_NEED_FRESH, true)
+                    }
                     EventBus.getDefault().post(AffairFromInternetEvent(affairsCourse))
                     affairs.addAll(affairsCourse)
                 }, onExecuteOnFinal = { isGetAllData(AFFAIR_TAG) }))

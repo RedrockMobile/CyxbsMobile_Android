@@ -63,6 +63,15 @@ class CourseFragment : BaseFragment(), EventBusLifecycleSubscriber {
         initFragment()
     }
 
+    override fun onStart() {
+        super.onStart()
+        scheduleView.adapterChangeListener = {
+            val position = scheduleView.adapter?.getHighLightPosition()
+            week_back_ground_view.position = position
+            gv_time_reality.adapter = TimeRealityAdapter(resources.getStringArray(R.array.course_course_day_of_week_strings), mCoursePageViewModel.daysOfMonth, position)
+            course_tiv.position = position
+        }
+    }
     private fun initFragment() {
         mBinding.lifecycleOwner = this
         mWeek = arguments?.getInt(WEEK_NUM) ?: 0
@@ -102,12 +111,7 @@ class CourseFragment : BaseFragment(), EventBusLifecycleSubscriber {
             }
         }
 
-        scheduleView.adapterChangeListener = {
-            val position = scheduleView.adapter?.getHighLightPosition()
-            week_back_ground_view.position = position
-            gv_time_reality.adapter = TimeRealityAdapter(resources.getStringArray(R.array.course_course_day_of_week_strings), mCoursePageViewModel.daysOfMonth, position)
-            course_tiv.position = position
-        }
+
 
         mCoursesViewModel.nowWeek.value?.let {
             if (it != mWeek || !mCoursesViewModel.isFirstLoadItemAnim) {
