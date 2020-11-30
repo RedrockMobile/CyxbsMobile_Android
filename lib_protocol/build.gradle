@@ -1,0 +1,6 @@
+apply from: config
+
+dependencies {
+    implementation project(':lib_protocol:api_protocol')
+
+}

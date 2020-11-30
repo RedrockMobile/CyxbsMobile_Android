@@ -1,3 +1,5 @@
+include ':lib_protocol:api_protocol'
+include ':lib_protocol'
 include ':module_volunteer:api_volunteer'
 include ':module_electricity:api_electricity'
 include ':module_main:api_main'
