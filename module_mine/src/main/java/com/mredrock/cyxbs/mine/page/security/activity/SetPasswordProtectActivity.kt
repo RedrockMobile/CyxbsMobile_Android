@@ -1,4 +1,5 @@
 package com.mredrock.cyxbs.mine.page.security.activity
+
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -8,10 +9,13 @@ import android.view.LayoutInflater
 import android.view.WindowManager
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
+import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.LogUtils
+import com.mredrock.cyxbs.common.utils.extensions.toast
 import com.mredrock.cyxbs.mine.R
 import com.mredrock.cyxbs.mine.databinding.MineActivitySetPasswordProtectBinding
+import com.mredrock.cyxbs.mine.page.security.util.AnswerTextWatcher
 import com.mredrock.cyxbs.mine.util.ui.SelQuestionDialog
 import com.mredrock.cyxbs.mine.page.security.viewmodel.SetPasswordProtectViewModel
 import kotlinx.android.synthetic.main.mine_activity_set_password_protect.*
@@ -25,9 +29,13 @@ class SetPasswordProtectActivity : BaseViewModelActivity<SetPasswordProtectViewM
 
     override val isFragmentActivity = false
 
-    companion object{
-        fun start(context : Context){
-            context.startActivity(Intent(context , SetPasswordProtectActivity::class.java))
+    lateinit var selQuestionDialog: SelQuestionDialog
+
+    var canClick = false
+
+    companion object {
+        fun start(context: Context) {
+            context.startActivity(Intent(context, SetPasswordProtectActivity::class.java))
         }
     }
 
@@ -48,57 +56,43 @@ class SetPasswordProtectActivity : BaseViewModelActivity<SetPasswordProtectViewM
 
         //网络请求获取密保问题
         viewModel.getSecurityQuestions {
-            LogUtils.d("SecurityActivity", it.toString())
+            canClick = true
+            //加载sheetDialog，设置展开和消失的阴影
+            selQuestionDialog = SelQuestionDialog(this, viewModel.listOfSecurityQuestion) {
+                mine_tv_security_question.text = viewModel.listOfSecurityQuestion[it].content
+                viewModel.securityQuestionId = viewModel.listOfSecurityQuestion[it].id
+                setBackGroundShadowOrShadow()
+            }
+
+            mine_tv_security_question.text = viewModel.listOfSecurityQuestion[0].content
+            viewModel.securityQuestionId = viewModel.listOfSecurityQuestion[0].id
+
+            selQuestionDialog.setOnCancelListener {
+                setBackGroundShadowOrShadow()
+            }
         }
 
-        //加载sheetDialog，设置展开和消失的阴影
-        val selQuestionDialog = SelQuestionDialog(this, viewModel.listOfSecurityQuestion) {
-            mine_tv_security_question.text = viewModel.listOfSecurityQuestion[it].content
-            setBackGroundShadowOrShadow()
-        }
+
         mine_ll_sel_question_show.setOnClickListener {
-            selQuestionDialog.show()
-            setBackGroundShadowOrShadow()
+            if (canClick){
+                selQuestionDialog.show()
+                setBackGroundShadowOrShadow()
+            } else {
+                BaseApp.context.toast("正在执行网络请求，请稍候")
+            }
         }
 
-        selQuestionDialog.setOnCancelListener {
-            setBackGroundShadowOrShadow()
-        }
+
+
+        mine_edt_security_answer.addTextChangedListener(
+                AnswerTextWatcher(viewModel.tipForInputNum, mine_bt_security_set_protectconfirm, this)
+        )
 
         //确定设置密保的点击事件
-        val context : Context = this//用于匿名内部类
-        mine_edt_security_answer.addTextChangedListener(
-                object : TextWatcher{
-                    override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-
-                    }
-
-                    override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-
-                    }
-
-                    override fun afterTextChanged(s: Editable?) {
-                        s?.let {
-                            when{
-                                it.length < 2 ->{
-                                    viewModel.tipForInputNum.set("请至少输入2个字符")
-                                    mine_bt_security_set_protectconfirm.background = ContextCompat.getDrawable( context , R.drawable.mine_shape_round_corner_light_blue)
-                                }
-                                it.length > 16 ->{
-                                    viewModel.tipForInputNum.set("请至多输入16个字符")
-                                    mine_bt_security_set_protectconfirm.background = ContextCompat.getDrawable( context , R.drawable.mine_shape_round_corner_light_blue)
-                                }
-                                else ->{
-                                    viewModel.tipForInputNum.set("")
-                                    mine_bt_security_set_protectconfirm.background = ContextCompat.getDrawable( context , R.drawable.mine_shape_round_cornor_purple_blue)
-                                }
-                            }
-                        }
-                    }
-                }
-        )
-        mine_bt_security_set_protectconfirm.setOnClickListener{
-            viewModel.setSecurityQA()
+        mine_bt_security_set_protectconfirm.setOnClickListener {
+            viewModel.setSecurityQA{
+                finish()
+            }
         }
     }
 

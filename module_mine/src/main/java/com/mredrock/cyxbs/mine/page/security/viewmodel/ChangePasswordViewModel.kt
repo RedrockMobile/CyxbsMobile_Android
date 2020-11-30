@@ -4,8 +4,10 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.mredrock.cyxbs.common.BaseApp.Companion.context
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
+import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.common.utils.extensions.toast
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
+import com.mredrock.cyxbs.mine.network.model.StuNumBody
 import com.mredrock.cyxbs.mine.util.apiService
 
 /**
@@ -32,6 +34,7 @@ class ChangePasswordViewModel : BaseViewModel() {
     //检查旧密码输入是否相同
     fun originPassWordCheck(originPassword: String) {
         apiService.originPassWordCheck(originPassword)
+                .setSchedulers()
                 .safeSubscribeBy(onNext = {
                     if (it.status == 10000) {
                         originPassWordIsCorrect.value = true
@@ -51,6 +54,7 @@ class ChangePasswordViewModel : BaseViewModel() {
     //进行新密码的传入
     fun newPassWordInput(origin_password: String, new_password: String) {
         apiService.resetPassword(origin_password, new_password)
+                .setSchedulers()
                 .safeSubscribeBy(onNext = {
                     when (it.status) {
                         10000 -> {
@@ -78,6 +82,7 @@ class ChangePasswordViewModel : BaseViewModel() {
     //在未登录的条件下修改密码（需要随机数）
     fun resetPasswordFromLogin(origin_password: String, new_password: String, code: Int) {
         apiService.resetPasswordFromLogin(origin_password, new_password, code)
+                .setSchedulers()
                 .safeSubscribeBy(onNext = {
                     when (it.status) {
                         10000 -> {

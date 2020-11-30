@@ -2,8 +2,11 @@ package com.mredrock.cyxbs.mine.page.security.viewmodel
 
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
+import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
+import com.mredrock.cyxbs.mine.network.ApiService
+import com.mredrock.cyxbs.mine.network.model.StuNumBody
 import com.mredrock.cyxbs.mine.util.apiService
 
 /**
@@ -38,7 +41,7 @@ class ForgetPasswordViewModel :BaseViewModel() {
     }
     //检查是否绑定信息
     fun checkBinding(stu_num: String) {
-        apiService.checkBinding(stu_num)
+        ApiGenerator.getCommonApiService(ApiService::class.java).checkBinding(stu_num)
                 .safeSubscribeBy(onNext = {
                     if (it.status == 10000) {
                         //设置信息绑定的情况

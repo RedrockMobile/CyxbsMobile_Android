@@ -168,7 +168,7 @@ interface ApiService {
      * 故不需要传递认证int进来
      */
     @FormUrlEncoded
-    @POST("/user/password/personal")
+    @POST("/wxapi/user-secret/user/password/personal")
     fun resetPassword(
             @Field("origin_password") origin_password: String,
             @Field("new_password") new_password: String): Observable<RedrockApiStatus>
@@ -178,7 +178,7 @@ interface ApiService {
      * 调用此方法时处于登陆界面
      */
     @FormUrlEncoded
-    @POST("/user/password/valid")
+    @POST("/wxapi/user-secret/user/password/valid")
     fun resetPasswordFromLogin(
             @Field("stu_num") stu_num: String,
             @Field("new_password") new_password: String,
@@ -190,7 +190,7 @@ interface ApiService {
      * 必须在个人界面中调用此方法
      */
     @FormUrlEncoded
-    @POST("/user/bind/question")
+    @POST("/wxapi/user-secret/user/bind/question")
     fun setSecurityQuestionAnswer(
             @Field("id") id: Int, //问题的id
             @Field("content") content: String): Observable<RedrockApiStatus>//答案的主体内容
@@ -198,7 +198,7 @@ interface ApiService {
     /**
      * 获取所有的密保问题
      */
-    @GET("/user/question")
+    @GET("/wxapi/user-secret/user/question")
     fun getAllSecurityQuestions(): Observable<RedrockApiWrapper<List<SecurityQuestion>>>
 
     /**
@@ -206,7 +206,7 @@ interface ApiService {
      * 此接口用于绑定邮箱时向此邮箱发送验证码
      */
     @FormUrlEncoded
-    @POST("/user/bind/email/code")
+    @POST("/wxapi/user-secret/user/bind/email/code")
     fun getEmailCode(
             @Field("email") email: String): Observable<RedrockApiWrapper<EmailCode>>
 
@@ -215,7 +215,7 @@ interface ApiService {
      * 此接口用于绑定邮箱时验证验证码是否正确
      */
     @FormUrlEncoded
-    @POST("/user/bind/email/code")
+    @POST("/wxapi/user-secret/user/bind/email/code")
     fun confirmEmailCode(
             @Field("email") email: String, //问题的id
             @Field("code") code: String): Observable<RedrockApiStatus>
@@ -225,9 +225,9 @@ interface ApiService {
      * （自登陆界面，需要传递学号进来）
      */
     @FormUrlEncoded
-    @POST("/user/valid/email/code")
+    @POST("/wxapi/user-secret/user/valid/email/code")
     fun getEmailFindPasswordCode(
-            @Field("stu_num") stu_num: String
+            @Body stuNumBody: StuNumBody
     ): Observable<RedrockApiWrapper<ConfirmCode>>
 
     /**
@@ -240,7 +240,7 @@ interface ApiService {
      * 没有进行data字段的解析
      */
     @FormUrlEncoded
-    @POST("/user/valid/email")
+    @POST("/wxapi/user-secret/user/valid/email")
     fun confirmCodeWithoutLogin(
             @Field("email") email: String,
             @Field("code") code: Int
@@ -252,36 +252,35 @@ interface ApiService {
      * 根据不同的status，不一定会有data字段
      */
     @FormUrlEncoded
-    @POST("/user/bind/email/detail")
+    @POST("/wxapi/user-secret/user/bind/email/detail")
     fun getUserEmail(
-            @Field("stu_num") stu_num: String
+            @Field ("stu_num") stu_num: String
     ): Observable<RedrockApiWrapper<String>>
 
     /**
      * 获取学生的密保问题
      */
     @FormUrlEncoded
-    @POST("/user/bind/question/detail")
-    fun getUserQuestion(
-            @Field("stu_num") stu_num: String
+    @POST("/wxapi/user-secret/user/bind/question/detail")
+    fun getUserQuestion(@Field ("stu_num") stu_num: String
     ): Observable<RedrockApiWrapper<List<SecurityQuestion>>>
 
     /**
      * 验证密保问题的回答是否正确
      */
     @FormUrlEncoded
-    @POST("/user/valid/question")
+    @POST("/wxapi/user-secret/user/valid/question")
     fun confirmAnswer(
             @Field("stu_num") stu_num: String,
             @Field("question_id") question_id: Int,
             @Field("content") content: String
-    ):Observable<RedrockApiWrapper<String>>
+    ): Observable<RedrockApiWrapper<String>>
 
     /*
      * 判断旧密码是否正确
      */
     @FormUrlEncoded
-    @POST("/user/judge/password")
+    @POST("/wxapi/user-secret/user/judge/password")
     fun originPassWordCheck(
             @Field("password") password: String): Observable<RedrockApiStatus>
 
@@ -289,15 +288,13 @@ interface ApiService {
      * 检查是否绑定信息
      */
     @FormUrlEncoded
-    @POST("/user/bind/is")
-    fun checkBinding(
-            @Field("stu_num") stu_num: String): Observable<RedrockApiWrapper<BindingResponse>>
+    @POST("/wxapi/user-secret/user/bind/is")
+    fun checkBinding(@Field ("stu_num") stu_num: String): Observable<RedrockApiWrapper<BindingResponse>>
 
     /**
      * 检查是否为默认密码
      */
     @FormUrlEncoded
-    @POST("/user/judge/origin")
-    fun checkDefaultPassword(
-            @Field("stu_num") stu_num: String): Observable<RedrockApiStatus>
+    @POST("/wxapi/user-secret/user/judge/origin")
+    fun checkDefaultPassword(@Field ("stu_num") stu_num: String): Observable<RedrockApiStatus>
 }

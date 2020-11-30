@@ -9,6 +9,7 @@ import com.mredrock.cyxbs.account.IAccountService
 import com.mredrock.cyxbs.common.config.MINE_FORGET_PASSWORD
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
+import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.mine.R
 import com.mredrock.cyxbs.mine.page.security.viewmodel.ForgetPasswordViewModel
 import com.mredrock.cyxbs.mine.util.ui.ChooseFindTypeDialog
@@ -56,9 +57,13 @@ class ForgetPasswordActivity : BaseViewModelActivity<ForgetPasswordViewModel>() 
         })
         mine_security_bt_forget_password_confirm.setOnClickListener {
             if (canClick){
-                canClick = false//网络请求结束之前不允许进行新的请求
+                //TODO:测试用
+                LogUtils.d("ForgetPasswordActivity" , "点击了")
+
+                ChooseFindTypeDialog.showDialog(this, true, true,this, true, stuNumber)
+                /*canClick = false//网络请求结束之前不允许进行新的请求
                 stuNumber = mine_security_et_foreget_password.text.toString()
-                viewModel.checkDefaultPassword(stuNumber)
+                viewModel.checkDefaultPassword(stuNumber)*/
             }
         }
     }

@@ -10,9 +10,9 @@
     tools:ignore="ResourceName">
 
     <LinearLayout
-        android:layout_marginTop="39dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="39dp">
 
         <ImageView
             android:id="@+id/mine_iv_security_back"
@@ -27,9 +27,9 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="11dp"
             android:text="账号和安全"
-            android:textStyle="bold"
             android:textColor="@color/common_level_two_font_color"
-            android:textSize="21sp"/>
+            android:textSize="21sp"
+            android:textStyle="bold" />
     </LinearLayout>
 
     <LinearLayout

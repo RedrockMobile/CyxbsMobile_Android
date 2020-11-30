@@ -15,7 +15,7 @@ class DoubleChooseDialog(context: Context?, theme: Int) : Dialog(context!!, them
         private var doubleChooseDialog: DoubleChooseDialog? = null
         fun show(context: Context?) {
             if (context == null) return
-            if (doubleChooseDialog == null) {
+            if (doubleChooseDialog == null || doubleChooseDialog?.context != context) {
                 doubleChooseDialog = DoubleChooseDialog(context, R.style.transparent_dialog)
             }
             doubleChooseDialog!!.setContentView(R.layout.mine_dialog_double_choose)

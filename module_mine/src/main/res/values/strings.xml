@@ -89,6 +89,7 @@
 
     <!--密码与安全-->
 
+    <!--TODO:清除相同的字符-->
     <string name="mine_security_change_pass_word_hint">重设密码</string>
     <string name="mine_security_forget_pass_word_hint">请输入学号</string>
     <string name="mine_security_change_pass_word">修改密码</string>

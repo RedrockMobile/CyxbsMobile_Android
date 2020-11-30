@@ -18,7 +18,7 @@ class DefaultPasswordHintDialog(context: Context,them:Int) :Dialog(context,them)
         private var defaultPasswordHintDialog:DefaultPasswordHintDialog?=null
         fun show(context: Context?,activity: BaseActivity){
             if (context == null) return
-            if (defaultPasswordHintDialog==null){
+            if (defaultPasswordHintDialog==null || defaultPasswordHintDialog?.context != context){
                 defaultPasswordHintDialog= DefaultPasswordHintDialog(context, R.style.transparent_dialog)
             }
             defaultPasswordHintDialog!!.setContentView(R.layout.mine_dialog_default_password_hint)

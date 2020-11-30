@@ -22,7 +22,7 @@ class ChooseFindTypeDialog(context: Context?, theme: Int) : Dialog(context, them
         //此处函数将来可以优化，目前必须要传递一个学号进来
         fun showDialog(context: Context?, hasEmailBinding: Boolean, hasSecurityQuestion: Boolean, activity: BaseActivity, isFromLogin: Boolean, stuNumber: String) {
             if (context == null) return
-            if (chooseFindTypeDialog == null) {
+            if (chooseFindTypeDialog == null || (context != chooseFindTypeDialog?.context)) {
                 chooseFindTypeDialog = ChooseFindTypeDialog(context, R.style.transparent_dialog)
                 chooseFindTypeDialog!!.setContentView(R.layout.mine_dialog_choose_find_type)
                 chooseFindTypeDialog!!.window?.attributes?.gravity = Gravity.CENTER
@@ -39,11 +39,11 @@ class ChooseFindTypeDialog(context: Context?, theme: Int) : Dialog(context, them
                         FindPasswordActivity.startFromMine(context, FIND_PASSWORD_BY_EMAIL)
                     }
                     chooseFindTypeDialog!!.hide()
+                    activity.finish()
                 } else {
                     //弹出toast提示没有进行密码绑定
                     BaseApp.context.toast("您好像还没有绑定邮箱")
                 }
-                activity.finish()
             }
             tvProtect.setOnClickListener {
                 //当点击通过密保找回时
@@ -55,10 +55,10 @@ class ChooseFindTypeDialog(context: Context?, theme: Int) : Dialog(context, them
                         FindPasswordActivity.startFromMine(context, FIND_PASSWORD_BY_SECURITY_QUESTION)
                     }
                     chooseFindTypeDialog!!.hide()
+                    activity.finish()
                 } else {
                     BaseApp.context.toast("您好像还没有设置密保问题")
                 }
-                activity.finish()
             }
             chooseFindTypeDialog!!.show()
         }

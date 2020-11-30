@@ -4,9 +4,11 @@ import androidx.databinding.ObservableField
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
+import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.common.utils.extensions.toast
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.mine.network.model.SecurityQuestion
+import com.mredrock.cyxbs.mine.network.model.StuNumBody
 import com.mredrock.cyxbs.mine.util.apiService
 import org.json.JSONObject
 import java.lang.Exception
@@ -81,8 +83,10 @@ class FindPasswordViewModel : BaseViewModel() {
         if (canClickSendCode) {
             apiService.getEmailFindPasswordCode(
                     //用户的学号
-                    stuNumber
-            ).safeSubscribeBy(
+                    StuNumBody(stuNumber)
+            )
+                    .setSchedulers()
+                    .safeSubscribeBy(
                     onError = {
                         BaseApp.context.toast("对不起，验证码发送失败")
                     },
@@ -117,7 +121,9 @@ class FindPasswordViewModel : BaseViewModel() {
             apiService.confirmCodeWithoutLogin(
                     email,
                     inputText.get()!!.toInt()
-            ).safeSubscribeBy(
+            )
+                    .setSchedulers()
+                    .safeSubscribeBy(
                     onError = {
                         BaseApp.context.toast("验证失败")
                         canClickNext = true
@@ -140,6 +146,7 @@ class FindPasswordViewModel : BaseViewModel() {
     //获取用户的绑定邮箱，虽然不需要在其他接口中使用，但需要给用户展示
     fun getBindingEmail() {
         apiService.getUserEmail(stuNumber)
+                .setSchedulers()
                 .safeSubscribeBy(
                         onNext = {
                             if (it.status == 10000) {
@@ -179,6 +186,7 @@ class FindPasswordViewModel : BaseViewModel() {
     //获取用户的密保问题信息
     fun getUserQuestion() {
         apiService.getUserQuestion(stuNumber)
+                .setSchedulers()
                 .safeSubscribeBy(
                         onNext = {
                             if (it.status == 1000) {
@@ -210,7 +218,7 @@ class FindPasswordViewModel : BaseViewModel() {
             if(inputText.get()!!.length<2){
                 firstTipText.set("请至少输入两个字符")
                 return
-            } else if (inputText.get()!!.length >16){
+            } else if (inputText.get()!!.length >=16){
                 firstTipText.set("输入已达上限")
                 return
             }
@@ -220,7 +228,9 @@ class FindPasswordViewModel : BaseViewModel() {
                     stuNumber,
                     question.id,//这里canClick就一定是成功获取了question的，可以不用担心空指针
                     inputText.get()!!
-            ).safeSubscribeBy(
+            )
+                    .setSchedulers()
+                    .safeSubscribeBy(
                     onError = {
                         BaseApp.context.toast("验证密保问题失败")
                         canClickNext = true
@@ -240,7 +250,7 @@ class FindPasswordViewModel : BaseViewModel() {
                             }
                         }
                     }
-            )
+            ).lifeCycle()
         }
     }
 }
