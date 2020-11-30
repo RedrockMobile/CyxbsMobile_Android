@@ -46,9 +46,7 @@
                     android:hint="@string/qa_quiz_content_hint"
                     android:inputType="textMultiLine"
                     android:maxLength="200"
-                    android:paddingStart="21dp"
                     android:paddingTop="8dp"
-                    android:paddingEnd="21dp"
                     android:paddingBottom="8dp"
                     android:textColor="@color/common_level_two_font_color"
                     android:textColorHint="@color/common_qa_quiz_content_edt_hint_color"
@@ -75,7 +73,11 @@
                 android:paddingTop="6dp"
                 android:paddingEnd="16dp"
                 android:paddingBottom="19dp" />
-
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:alpha="0.1"
+                android:background="@color/common_qa_quiz_toolbar_divider_line_color" />
             <androidx.appcompat.widget.AppCompatTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
