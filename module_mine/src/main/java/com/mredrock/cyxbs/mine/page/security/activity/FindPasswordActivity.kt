@@ -10,6 +10,7 @@ import androidx.databinding.DataBindingUtil
 import com.mredrock.cyxbs.account.IAccountService
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
+import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.dp2px
 import com.mredrock.cyxbs.mine.R
 import com.mredrock.cyxbs.mine.databinding.MineActivityFindPasswordBinding
@@ -24,8 +25,6 @@ import kotlinx.android.synthetic.main.mine_activity_find_password.*
  */
 class FindPasswordActivity : BaseViewModelActivity<FindPasswordViewModel>() {
 
-    //TODO:ViewModel中尚未做关于是否来自登陆界面的适配
-    //TODO:适配新逻辑下的输入问题
     override val isFragmentActivity = false
 
     //在此activity以及ViewModel中统一使用这个stuNumber来获取学号，以方便整体修改
@@ -75,7 +74,7 @@ class FindPasswordActivity : BaseViewModelActivity<FindPasswordViewModel>() {
         }
 
         //首先判断是否是自登陆界面来到的这里，如果是，就刷新当前的stuNumber
-        isFromLogin = intent.getBooleanExtra("is_from_login", false)
+        isFromLogin = intent.getBooleanExtra("is_form_login", false)
         if (isFromLogin) {
             stuNumber = intent.getStringExtra("stu_number")
         }
@@ -128,6 +127,7 @@ class FindPasswordActivity : BaseViewModelActivity<FindPasswordViewModel>() {
                 )
                 mine_bt_security_find_next.setOnClickListener {
                     viewModel.confirmAnswer{
+                        ChangePasswordActivity.startFormLogin(this, stuNumber, it)
                         finish()
                     }
                 }

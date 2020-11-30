@@ -10,6 +10,6 @@ import java.io.Serializable
 data class EmailCode(
         @SerializedName("code")
         val code: Int,
-        @SerializedName("expire_time")
+        @SerializedName("expired_time")
         val expireTime: Int
 ) : Serializable

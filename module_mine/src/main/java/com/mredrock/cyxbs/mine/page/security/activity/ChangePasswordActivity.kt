@@ -75,14 +75,6 @@ class ChangePasswordActivity : BaseViewModelActivity<ChangePasswordViewModel>() 
         super.onCreate(savedInstanceState)
         val type = intent.getIntExtra("startType", 4)
         initView(type)
-        /*//TODO:测试界面用
-        //FindPasswordActivity.start(this , FIND_PASSWORD_BY_EMAIL)
-        *//*ChooseFindTypeDialog.showDialog(
-                this,
-                hasEmailBinding = true,
-                hasSecurityQuestion = false
-        )*//*
-        DoubleChooseDialog.show(this)*/
     }
 
     private fun initView(type: Int) {
@@ -141,7 +133,7 @@ class ChangePasswordActivity : BaseViewModelActivity<ChangePasswordViewModel>() 
                 mine_iv_security_change_paswword_line2_eye.visibility = View.GONE
                 mine_tv_security_tip_line1.visibility = View.GONE
                 mine_tv_security_tip_line2.visibility = View.GONE
-                mine_security_firstinput_password.hint = getString(R.string.mine_security_pleace_type_new_words)
+                mine_security_firstinput_password.hint = getString(R.string.mine_security_please_type_new_words)
                 mine_security_tv_forget_password.visibility = View.GONE
             }
         }
@@ -321,11 +313,12 @@ class ChangePasswordActivity : BaseViewModelActivity<ChangePasswordViewModel>() 
                     //旧密码检测的网络请求
                     Log.d("zt", "2")
                     viewModel.originPassWordCheck(mine_security_firstinput_password.text.toString())
+                    Log.d("zt",mine_security_firstinput_password.text.toString()+"!")
                 } else {
                     //填写新密码的界面，跳转到上传新密码
                     if (isFromLogin){
                         if(code!=-1){
-                            viewModel.resetPasswordFromLogin(originPassword,mine_security_firstinput_password.text.toString(),code)
+                            viewModel.resetPasswordFromLogin(stuNum,mine_security_firstinput_password.text.toString(),code)
                         } else {
                             BaseApp.context.toast("后端返回的认证码存在问题，修改失败")
                         }
@@ -336,14 +329,20 @@ class ChangePasswordActivity : BaseViewModelActivity<ChangePasswordViewModel>() 
             }
         }
         mine_security_tv_forget_password.setOnClickListener {
-            viewModel.checkDefaultPassword(stuNum)
-            if (viewModel.isDefaultPassword.value!!) {
-                //如果是默认密码
-                this.toast(getString(R.string.mine_security_default_password_hint))
-            } else {
-                viewModel.checkBinding(stuNum)
-                //此处的dialog需要传递来源，是来自登陆界面还是来自个人界面
-                ChooseFindTypeDialog.showDialog(this, viewModel.bindingEmail.value!!, viewModel.bindingPasswordProtect.value!!, this, isFromLogin, stuNum)
+            LogUtils.d("RayleighZ","在点击")
+            viewModel.checkDefaultPassword(stuNum){
+                LogUtils.d("RayleighZ","请求完毕")
+
+                if (viewModel.isDefaultPassword.value!!) {
+                    //如果是默认密码
+                    this.toast(getString(R.string.mine_security_default_password_hint))
+                } else {
+                    LogUtils.d("RayleighZ","非默认")
+                    viewModel.checkBinding(stuNum){
+                        //此处的dialog需要传递来源，是来自登陆界面还是来自个人界面
+                        ChooseFindTypeDialog.showDialog(this, viewModel.bindingEmail.value!!, viewModel.bindingPasswordProtect.value!!, this, isFromLogin, stuNum)
+                    }
+                }
             }
         }
     }

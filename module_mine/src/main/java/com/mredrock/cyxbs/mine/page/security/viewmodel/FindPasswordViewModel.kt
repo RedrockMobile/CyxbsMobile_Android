@@ -1,5 +1,6 @@
 package com.mredrock.cyxbs.mine.page.security.viewmodel
 
+import android.util.Log
 import androidx.databinding.ObservableField
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.utils.LogUtils
@@ -44,8 +45,8 @@ class FindPasswordViewModel : BaseViewModel() {
     //用户的学号
     var stuNumber = ""
 
-    //之后用于重置密码的验证码
-    var code = 0
+    //过期时间
+    var expiredTime = 0;
 
     //获取的用户问题
     lateinit var question: SecurityQuestion
@@ -60,7 +61,6 @@ class FindPasswordViewModel : BaseViewModel() {
             while (lastTime > -1) {
 
                 timerText.set("正在发送(${lastTime})")
-                LogUtils.d("SendConfirmCode", "正在倒计时")
                 try {
                     lastTime--
                     Thread.sleep(1000)
@@ -75,7 +75,6 @@ class FindPasswordViewModel : BaseViewModel() {
     }
 
     //启动倒计时以及网络请求
-    //TODO:尚未配置网络请求
     //此处需要防止暴击，在lastTime未归零之前不允许点击
     //可能存在线程安全问题
     fun sendConfirmCodeAndStartBackTimer() {
@@ -83,7 +82,7 @@ class FindPasswordViewModel : BaseViewModel() {
         if (canClickSendCode) {
             apiService.getEmailFindPasswordCode(
                     //用户的学号
-                    StuNumBody(stuNumber)
+                    stuNumber
             )
                     .setSchedulers()
                     .safeSubscribeBy(
@@ -94,8 +93,9 @@ class FindPasswordViewModel : BaseViewModel() {
                         when (it.status) {
                             10000 -> {
                                 //发送成功
-                                code = it.data.code
+                                expiredTime = it.data.expired_time
                                 BaseApp.context.toast("已向你的邮箱发送了一条验证码")
+                                Thread(clockRunnable).start()
                             }
                             10008 -> {
                                 BaseApp.context.toast("邮箱信息错误")
@@ -112,6 +112,10 @@ class FindPasswordViewModel : BaseViewModel() {
     //校验找回邮箱的验证码
     fun confirmCode(onSuccess: (code : Int) -> Unit) {
         if (canClickNext) {
+            if (expiredTime < System.currentTimeMillis() / 1000){
+                BaseApp.context.toast("验证码过期")
+                return
+            }
             if (inputText.get() == null) {
                 //输入验证码为空，弹出提示
                 BaseApp.context.toast("验证码错误")
@@ -119,6 +123,7 @@ class FindPasswordViewModel : BaseViewModel() {
             }
             canClickNext = false
             apiService.confirmCodeWithoutLogin(
+                    stuNumber,
                     email,
                     inputText.get()!!.toInt()
             )
@@ -130,9 +135,8 @@ class FindPasswordViewModel : BaseViewModel() {
                     },
                     onNext = {
                         if (it.status == 10000) {
-                            code = JSONObject(it.data).getInt("code")
                             //回调
-                            onSuccess(code)
+                            onSuccess(it.data.code)
                             //因为这里下一步就要去跳转页面了，没有必要再将canClickNext设置为true
                         } else if (it.status == 10007) {
                             BaseApp.context.toast("验证码错误")
@@ -150,7 +154,7 @@ class FindPasswordViewModel : BaseViewModel() {
                 .safeSubscribeBy(
                         onNext = {
                             if (it.status == 10000) {
-                                email = JSONObject(it.data).getString("email")
+                                email = it.data.email
                                 if (email == null || email == "") {
                                     BaseApp.context.toast("返回邮箱为空")
                                 } else {
@@ -189,7 +193,7 @@ class FindPasswordViewModel : BaseViewModel() {
                 .setSchedulers()
                 .safeSubscribeBy(
                         onNext = {
-                            if (it.status == 1000) {
+                            if (it.status == 10000) {
                                 //目前仅仅有一个密保问题
                                 //后端为了拓展将这里的返回值设计成了一个集合
                                 //就目前而言这个集合应该之后一个值
@@ -201,14 +205,14 @@ class FindPasswordViewModel : BaseViewModel() {
                             }
                         },
                         onError = {
-                            BaseApp.context.toast("获取密保问题失败")
+                            BaseApp.context.toast(it.toString())
                         }
                 )
 
     }
 
     //验证用户输入的密保问题是否正确
-    fun confirmAnswer(onSuccess: () -> Unit) {
+    fun confirmAnswer(onSuccess: (code: Int) -> Unit) {
         if (canClickNext) {
             if (inputText.get() == null){
                 //展示最少输入两个字符
@@ -246,7 +250,7 @@ class FindPasswordViewModel : BaseViewModel() {
                                 canClickNext = true
                             }
                             10000 ->{//正确
-                                onSuccess()
+                                onSuccess(it.data.code)
                             }
                         }
                     }

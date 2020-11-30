@@ -82,7 +82,6 @@ class SecurityActivity : BaseViewModelActivity<SecurityActivityViewModel>() {
         }
     }
 
-    //TODO:尚未测试刷新数据的可行性
     override fun onResume() {
         super.onResume()
         viewModel.checkBinding {  }//刷新数据

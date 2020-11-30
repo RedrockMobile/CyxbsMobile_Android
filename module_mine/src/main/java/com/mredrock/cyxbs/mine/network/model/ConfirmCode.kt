@@ -11,6 +11,6 @@ import java.io.Serializable
 class ConfirmCode(
         @SerializedName("code")
         val code : Int,
-        @SerializedName("expire_time")
-        val expire_time : Int
+        @SerializedName("expired_time")
+        val expired_time : Int
 ) : Serializable

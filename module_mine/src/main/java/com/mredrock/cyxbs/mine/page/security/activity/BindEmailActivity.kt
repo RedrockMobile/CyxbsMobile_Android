@@ -93,7 +93,6 @@ class BindEmailActivity : BaseActivity() {
                 showUserEmail = showUserEmail.substring(0, 2) + starString + showUserEmail.substring(atLocation - 2, showUserEmail.length)
             }
             tv_bind_email_top_tips.text = "掌邮向你的邮箱${showUserEmail}发送了验证码"
-            tv_bind_email_top_tips.setTextColor(Color.parseColor("#15315B"))
             btn_bind_email_next.text = "确定"
             et_bind_email.setText("")
             tv_bind_email_send_code.visible()

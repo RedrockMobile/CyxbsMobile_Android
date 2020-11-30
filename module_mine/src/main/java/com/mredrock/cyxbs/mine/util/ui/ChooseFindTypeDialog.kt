@@ -6,6 +6,7 @@ import android.view.Gravity
 import android.widget.TextView
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.ui.BaseActivity
+import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.toast
 import com.mredrock.cyxbs.mine.R
 import com.mredrock.cyxbs.mine.page.security.activity.FindPasswordActivity
@@ -40,6 +41,7 @@ class ChooseFindTypeDialog(context: Context?, theme: Int) : Dialog(context, them
                     }
                     chooseFindTypeDialog!!.hide()
                     activity.finish()
+                    chooseFindTypeDialog!!.dismiss()
                 } else {
                     //弹出toast提示没有进行密码绑定
                     BaseApp.context.toast("您好像还没有绑定邮箱")
@@ -56,6 +58,7 @@ class ChooseFindTypeDialog(context: Context?, theme: Int) : Dialog(context, them
                     }
                     chooseFindTypeDialog!!.hide()
                     activity.finish()
+                    chooseFindTypeDialog!!.dismiss()
                 } else {
                     BaseApp.context.toast("您好像还没有设置密保问题")
                 }

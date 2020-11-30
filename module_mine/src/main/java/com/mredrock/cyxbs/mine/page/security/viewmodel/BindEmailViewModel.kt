@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.common.network.ApiGenerator
+import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
@@ -41,11 +42,17 @@ class BindEmailViewModel : BaseViewModel() {
         ApiGenerator.getApiService(ApiService::class.java)
                 .confirmEmailCode(email, code)
                 .setSchedulers()
-                .safeSubscribeBy {
-                    if (it.status == 200) {
-                        mldConfirmIsSucceed.value = true
-                    } else {
-                        CyxbsToast.makeText(BaseApp.context, "请求失败", Toast.LENGTH_LONG).show()
+                .safeSubscribeBy{
+                    when(it.status){
+                        10000->{
+                            mldConfirmIsSucceed.value = true
+                        }
+                        10007->{
+                            CyxbsToast.makeText(BaseApp.context, "验证码错误", Toast.LENGTH_LONG).show()
+                        }
+                        else->{
+                            CyxbsToast.makeText(BaseApp.context, "请求失败", Toast.LENGTH_LONG).show()
+                        }
                     }
                 }.lifeCycle()
     }
