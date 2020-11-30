@@ -27,4 +27,8 @@
 
         <item name="android:unselectedAlpha">0.6</item>
     </style>
+
+    <style name="qa_transparent_dialog" parent="Theme.AppCompat.Dialog" tools:ignore="ResourceName">
+        <item name="android:windowBackground">@null</item>
+    </style>
 </resources>

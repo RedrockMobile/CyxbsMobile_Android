@@ -1,7 +1,12 @@
 package com.mredrock.cyxbs.qa.pages.square.ui.fragment
 
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import com.mredrock.cyxbs.common.ui.BaseViewModelFragment
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
+import com.mredrock.cyxbs.qa.R
 
 /**
  *@Date 2020-11-23
@@ -10,5 +15,16 @@ import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
  *@description  用于最新和热门的fragment的基类
  */
 abstract class BaseCircleDetailFragment<T:BaseViewModel>:BaseViewModelFragment<T>() {
-        //TODO 展示最新和热门的fragment
+    //TODO 通过viewModel去获取最新和热门的数据。
+
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
+                              savedInstanceState: Bundle?): View? {
+        return inflater.inflate(R.layout.qa_fragment_last_hot, container, false)
+
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+    }
 }

@@ -40,7 +40,7 @@
     <string name="qa_crop">裁剪</string>
     <string name="qa_crop_delete">删除</string>
     <string name="qa_fragment_head_title">邮问</string>
-    <string name="qa_fragment_head_give_question">提 问</string>
+    <string name="qa_fragment_head_give_question">去提问</string>
     <string name="qa_comment_new_comment_text_view_hint">发布评论</string>
     <string name="qa_answer_btn_text">回答</string>
     <string name="qa_question_new_question_title_hint">输入标题</string>

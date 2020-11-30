@@ -9,7 +9,7 @@
     android:fitsSystemWindows="false"
     android:orientation="vertical"
     tools:context=".pages.square.ui.activity.CircleDetailActivity">
-    <!--- TODO 外部调下背景色-->
+
     <include
         android:id="@+id/qa_circle_detail_toolbar"
         layout="@layout/qa_common_toolbar" />
@@ -33,9 +33,11 @@
             <include layout="@layout/qa_recycler_item_circle_square" />
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
+
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/qa_cs_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
@@ -45,8 +47,8 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:background="@drawable/qa_shape_tab_shape"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintLeft_toLeftOf="@id/qa_cs_layout"
+            app:layout_constraintTop_toTopOf="@id/qa_cs_layout"
             app:tabBackground="@color/common_transparent_background"
             app:tabGravity="fill"
             app:tabIndicator="@drawable/qa_ic_tab_indicator"
@@ -58,10 +60,13 @@
             app:tabSelectedTextColor="@color/common_level_two_font_color"
             app:tabTextAppearance="@style/tab_style"
             app:tabTextColor="@color/common_alpha_level_two_font_color" />
+
         <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/qa_vp_circle_detail"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            app:layout_constraintLeft_toLeftOf="@id/qa_cs_layout"
+            app:layout_constraintTop_toBottomOf="@id/qa_circle_detail_tab"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

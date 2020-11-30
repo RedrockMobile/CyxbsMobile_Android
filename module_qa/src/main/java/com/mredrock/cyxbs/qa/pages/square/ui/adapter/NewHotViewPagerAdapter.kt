@@ -11,6 +11,7 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
  *@description
  */
 class NewHotViewPagerAdapter(fragmentActivity: FragmentActivity, private val fragments: List<Fragment>) : FragmentStateAdapter(fragmentActivity) {
+
     override fun getItemCount(): Int = 2
 
     override fun createFragment(position: Int): Fragment {
