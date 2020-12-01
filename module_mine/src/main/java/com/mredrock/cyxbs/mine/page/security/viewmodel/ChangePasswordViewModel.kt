@@ -25,7 +25,7 @@ class ChangePasswordViewModel : BaseViewModel() {
     var inputNewPasswordCorrect = MutableLiveData<Boolean>()
 
     //新密码上传格式是否正确
-    var inputNewPasswordFormat=MutableLiveData<Int>()
+    var inputNewPasswordFormat = MutableLiveData<Int>()
 
     //是否绑定邮箱
     var bindingEmail = MutableLiveData<Boolean>()
@@ -43,15 +43,10 @@ class ChangePasswordViewModel : BaseViewModel() {
                 .safeSubscribeBy(onNext = {
                     if (it.status == 10000) {
                         originPassWordIsCorrect.value = true
-                        Log.d("zt", "3")
-                        Log.d("zt", "旧密码输入正确")
                     } else {
                         originPassWordIsCorrect.value = false
-                        Log.d("zt",it.status.toString())
-                        Log.d("zt", "4")
                     }
                 }, onError = {
-                    Log.d("zt", "5")
                     context.toast("对不起，目前无法修改密码")
                 })
     }
@@ -64,22 +59,22 @@ class ChangePasswordViewModel : BaseViewModel() {
                     when (it.status) {
                         10000 -> {
                             inputNewPasswordCorrect.value = true
-                            inputNewPasswordFormat.value=10000
+                            inputNewPasswordFormat.value = 10000
                             context.toast("修改密码成功！")
                         }
                         10002 -> {
                             inputNewPasswordCorrect.value = false
-                            inputNewPasswordFormat.value=10002
+                            inputNewPasswordFormat.value = 10002
                             context.toast("原密码错误！")
                         }
                         10004 -> {
                             inputNewPasswordCorrect.value = false
-                            inputNewPasswordFormat.value=10004
+                            inputNewPasswordFormat.value = 10004
                             context.toast("密码格式有问题！")
                         }
                         10020 -> {
                             inputNewPasswordCorrect.value = false
-                            inputNewPasswordFormat.value=10020
+                            inputNewPasswordFormat.value = 10020
                             context.toast("新旧密码重复！")
                         }
                     }
@@ -125,28 +120,25 @@ class ChangePasswordViewModel : BaseViewModel() {
                         bindingPasswordProtect.value = it.data.question_is == 1
                         onSuccess()
                     } else {
-                        Log.d("zt", "检查绑定失败")
+                        context.toast("检查绑定失败")
                     }
                 }, onError = {
-                    Log.d("zt", "检查绑定失败！")
+                    context.toast("检查绑定失败")
                 })
     }
 
     //检查是否为默认密码
-    fun checkDefaultPassword(stu_num: String, onSuccess:()->Unit) {
+    fun checkDefaultPassword(stu_num: String, onSuccess: () -> Unit) {
         apiService.checkDefaultPassword(stu_num)
                 .setSchedulers()
                 .safeSubscribeBy(onNext = {
                     if (it.status == 10000) {
                         isDefaultPassword.value = true
-                        Log.d("zt", "原密码正确")
                     } else {
                         isDefaultPassword.value = false
-                        Log.d("zt", "原密码错误")
                     }
                     onSuccess()
                 }, onError = {
-                    Log.d("zt", "检查原密码出现错误")
                     Log.d("zt", it.toString())
                 })
     }
