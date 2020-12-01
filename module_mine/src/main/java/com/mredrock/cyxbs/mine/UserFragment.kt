@@ -179,7 +179,6 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
                                 cleanAppWidgetCache()
                                 //清除user信息，必须要在LoginStateChangeEvent之前
                                 viewModel.clearUser()
-
                                 //清空activity栈
                                 val flag = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
                                 ARouter.getInstance().build(MAIN_LOGIN).withFlags(flag).withBoolean(IS_EXIT_LOGIN, true).navigation()

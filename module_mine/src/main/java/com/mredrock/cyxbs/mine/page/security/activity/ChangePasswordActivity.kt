@@ -322,7 +322,6 @@ class ChangePasswordActivity : BaseViewModelActivity<ChangePasswordViewModel>() 
                 } else {
                     //填写新密码的界面，跳转到上传新密码
                     if (isFromLogin) {
-                        LogUtils.d("ChangePasswordRay", "TextSize is ${mine_security_firstinput_password.text!!.length}")
                         if (code != -1) {
                             if (mine_security_firstinput_password.text!!.length in 6.0..16.0) {
                                 //字数格式要求满足的情况下进行网络请求
@@ -335,7 +334,6 @@ class ChangePasswordActivity : BaseViewModelActivity<ChangePasswordViewModel>() 
                             BaseApp.context.toast("后端返回的认证码存在问题，修改失败")
                         }
                     } else {
-                        LogUtils.d("ChangePasswordRay", "TextSize is ${mine_security_firstinput_password.text!!.length}")
                         if (mine_security_firstinput_password.text!!.length in 6.0..16.0) {
                             //字数格式要求满足的情况下进行网络请求
                             viewModel.newPassWordInput(originPassword, mine_security_firstinput_password.text.toString())

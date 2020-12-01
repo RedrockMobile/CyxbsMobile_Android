@@ -18,7 +18,6 @@
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/mine_ic_dialog" />
 
-    <!--TODO: 没有适配颜色-->
     <TextView
         android:id="@+id/mine_textview"
         android:layout_width="wrap_content"

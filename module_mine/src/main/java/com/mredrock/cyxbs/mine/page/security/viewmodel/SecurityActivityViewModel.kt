@@ -24,17 +24,13 @@ class SecurityActivityViewModel : BaseViewModel() {
     var isBindingEmail = false
 
     fun checkBinding(onSuccess: ()-> Unit){
-        LogUtils.d("SecurityActivityRay", "这波已经check了")
-
         apiService.checkBinding(
                 ServiceManager.getService(IAccountService::class.java).getUserService().getStuNum()
         ).setSchedulers().safeSubscribeBy(
                 onError = {
-                    LogUtils.d("SecurityActivityRay", it.toString())
                     BaseApp.context.toast("对不起，获取是否绑定邮箱和密保失败")
                 },
                 onNext = {
-                    LogUtils.d("SecurityActivityRay", "email_is = ${it.data.email_is}")
                     val bindingResponse = it.data
                     isBindingEmail = bindingResponse.email_is != 0
                     isSetProtect = bindingResponse.question_is != 0
