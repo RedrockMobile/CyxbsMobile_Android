@@ -41,17 +41,18 @@ class ChangePasswordActivity : BaseViewModelActivity<ChangePasswordViewModel>() 
         const val TYPE_START_FROM_MINE = 4//从个人页面跳转到修改密码页面
         const val TYPE_START_FROM_OTHERS = 5//从密保和邮箱界面跳转
         const val TYPE_FORM_LOGIN_ACTIVITY_WITH_STU_NUMBER = 6//从登陆界面跳转过来，并且传递了学号进来
+        const val INPUT_NEW_PASSWORD_FORMAT_IS_CORRECT = 10002
         fun actionStart(context: Context, startType: Int) {
             val intent = Intent(context, ChangePasswordActivity::class.java)
             intent.putExtra("startType", startType)
             context.startActivity(intent)
         }
 
-        fun startFormLogin(context: Context, stuNumber: String , code : Int) {
+        fun startFormLogin(context: Context, stuNumber: String, code: Int) {
             val intent = Intent(context, ChangePasswordActivity::class.java)
             intent.putExtra("startType", TYPE_FORM_LOGIN_ACTIVITY_WITH_STU_NUMBER)
             intent.putExtra("stuNumber", stuNumber)
-            intent.putExtra("code" , code)
+            intent.putExtra("code", code)
             context.startActivity(intent)
         }
     }
@@ -106,7 +107,7 @@ class ChangePasswordActivity : BaseViewModelActivity<ChangePasswordViewModel>() 
                 setToolBar(TYPE_NEW_PASSWORD)
                 //将此处的学号更新为自外界传递进来的学号
                 stuNum = intent.getStringExtra("stuNumber")
-                code = intent.getIntExtra("code" , -1)
+                code = intent.getIntExtra("code", -1)
                 isFromLogin = true
                 LogUtils.d("zt", stuNum)
                 initEvent()
@@ -224,6 +225,13 @@ class ChangePasswordActivity : BaseViewModelActivity<ChangePasswordViewModel>() 
                 } else {
                     //第二个界面的逻辑
                     if (p0?.length!! > 0) {
+                        //检查输入密码是否符合长度要求
+                        if (p0?.length!! >= 6 && p0?.length!! <= 16) {
+                            mine_tv_security_tip_line1.visibility = View.GONE
+                        } else {
+                            mine_tv_security_tip_line1.visibility = View.VISIBLE
+                            isClick = false
+                        }
                         if (mine_security_secondinput_password.text?.isNotEmpty()!!) {
                             //第二个不为空才去检查
                             if (mine_security_secondinput_password.text.toString() != mine_security_firstinput_password.text.toString()) {
@@ -290,6 +298,10 @@ class ChangePasswordActivity : BaseViewModelActivity<ChangePasswordViewModel>() 
         viewModel.inputNewPasswordCorrect.observe(this, Observer {
             if (it) {
                 this.finish()
+            } else {
+                if (viewModel.inputNewPasswordFormat.value == INPUT_NEW_PASSWORD_FORMAT_IS_CORRECT) {
+                    mine_tv_security_tip_line1.visibility = View.VISIBLE
+                }
             }
         })
         //观察旧密码是否正确， 若正确就切换到下一个界面
@@ -314,12 +326,12 @@ class ChangePasswordActivity : BaseViewModelActivity<ChangePasswordViewModel>() 
                     //旧密码检测的网络请求
                     Log.d("zt", "2")
                     viewModel.originPassWordCheck(mine_security_firstinput_password.text.toString())
-                    Log.d("zt",mine_security_firstinput_password.text.toString()+"!")
+                    Log.d("zt", mine_security_firstinput_password.text.toString() + "!")
                 } else {
                     //填写新密码的界面，跳转到上传新密码
-                    if (isFromLogin){
-                        if(code!=-1){
-                            viewModel.resetPasswordFromLogin(stuNum,mine_security_firstinput_password.text.toString(),code)
+                    if (isFromLogin) {
+                        if (code != -1) {
+                            viewModel.resetPasswordFromLogin(stuNum, mine_security_firstinput_password.text.toString(), code)
                         } else {
                             BaseApp.context.toast("后端返回的认证码存在问题，修改失败")
                         }
@@ -330,12 +342,12 @@ class ChangePasswordActivity : BaseViewModelActivity<ChangePasswordViewModel>() 
             }
         }
         mine_security_tv_forget_password.setOnSingleClickListener {
-            viewModel.checkDefaultPassword(stuNum){
+            viewModel.checkDefaultPassword(stuNum) {
                 if (viewModel.isDefaultPassword.value!!) {
                     //如果是默认密码
                     this.toast(getString(R.string.mine_security_default_password_hint))
                 } else {
-                    viewModel.checkBinding(stuNum){
+                    viewModel.checkBinding(stuNum) {
                         //此处的dialog需要传递来源，是来自登陆界面还是来自个人界面
                         ChooseFindTypeDialog.showDialog(this, viewModel.bindingEmail.value!!, viewModel.bindingPasswordProtect.value!!, this, isFromLogin, stuNum)
                     }

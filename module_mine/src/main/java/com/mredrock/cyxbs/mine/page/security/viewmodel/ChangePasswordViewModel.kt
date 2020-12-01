@@ -24,6 +24,9 @@ class ChangePasswordViewModel : BaseViewModel() {
     //新密码上传是否成功
     var inputNewPasswordCorrect = MutableLiveData<Boolean>()
 
+    //新密码上传格式是否正确
+    var inputNewPasswordFormat=MutableLiveData<Int>()
+
     //是否绑定邮箱
     var bindingEmail = MutableLiveData<Boolean>()
 
@@ -61,18 +64,22 @@ class ChangePasswordViewModel : BaseViewModel() {
                     when (it.status) {
                         10000 -> {
                             inputNewPasswordCorrect.value = true
+                            inputNewPasswordFormat.value=10000
                             context.toast("修改密码成功！")
                         }
                         10002 -> {
                             inputNewPasswordCorrect.value = false
+                            inputNewPasswordFormat.value=10002
                             context.toast("原密码错误！")
                         }
                         10004 -> {
                             inputNewPasswordCorrect.value = false
+                            inputNewPasswordFormat.value=10004
                             context.toast("密码格式有问题！")
                         }
                         10020 -> {
                             inputNewPasswordCorrect.value = false
+                            inputNewPasswordFormat.value=10020
                             context.toast("新旧密码重复！")
                         }
                     }
