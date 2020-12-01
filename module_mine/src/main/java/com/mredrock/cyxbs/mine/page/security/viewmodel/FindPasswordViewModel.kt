@@ -110,7 +110,7 @@ class FindPasswordViewModel : BaseViewModel() {
     }
 
     //校验找回邮箱的验证码
-    fun confirmCode(onSuccess: (code : Int) -> Unit) {
+    fun confirmCode(onSuccess: (code : Int) -> Unit, onField: ()->Unit) {
         if (canClickNext) {
             if (expiredTime < System.currentTimeMillis() / 1000){
                 BaseApp.context.toast("验证码过期")
@@ -130,7 +130,7 @@ class FindPasswordViewModel : BaseViewModel() {
                     .setSchedulers()
                     .safeSubscribeBy(
                     onError = {
-                        BaseApp.context.toast("验证失败")
+                        BaseApp.context.toast("验证失败，原因为$it")
                         canClickNext = true
                     },
                     onNext = {
@@ -140,6 +140,7 @@ class FindPasswordViewModel : BaseViewModel() {
                             //因为这里下一步就要去跳转页面了，没有必要再将canClickNext设置为true
                         } else if (it.status == 10007) {
                             BaseApp.context.toast("验证码错误")
+                            onField()
                             canClickNext = true
                         }
                     }

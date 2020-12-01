@@ -18,7 +18,7 @@ import com.mredrock.cyxbs.mine.util.apiService
  */
 class SetPasswordProtectViewModel : BaseViewModel() {
     //密保问题的题目
-    val securityQuestionContent = ObservableField<String>(context.getString(R.string.mine_security_your_best_friend_name))
+    val securityQuestionContent = ObservableField<String>("")
 
     //密保问题的答案（由用户键入）
     val securityAnswer = ObservableField<String>()

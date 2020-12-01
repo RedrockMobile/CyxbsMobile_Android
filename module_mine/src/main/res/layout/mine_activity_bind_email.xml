@@ -109,7 +109,7 @@
             android:id="@+id/tv_bind_email_contact_us"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/mine_security_tell_us"
+            android:text="@string/mine_security_contract_us"
             android:textColor="#ABBCD8"
             android:textSize="12sp" />
     </LinearLayout>

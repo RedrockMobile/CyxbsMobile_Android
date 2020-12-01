@@ -43,7 +43,7 @@ class FindPasswordActivity : BaseViewModelActivity<FindPasswordViewModel>() {
             intent.putExtra("type", type)
             intent.putExtra("stu_number", stuNumber)
             //是否是从登陆界面过来的（是否已经登陆，将影响学号的获取）
-            intent.putExtra("is_form_login", true)
+            intent.putExtra("is_from_login", true)
             context.startActivity(intent)
         }
 
@@ -52,7 +52,7 @@ class FindPasswordActivity : BaseViewModelActivity<FindPasswordViewModel>() {
             val intent = Intent(context, FindPasswordActivity::class.java)
             intent.putExtra("type", type)
             //是否是从登陆界面过来的（是否已经登陆，将影响学号的获取）
-            intent.putExtra("is_form_login", false)
+            intent.putExtra("is_from_login", false)
             context.startActivity(intent)
         }
 
@@ -77,7 +77,7 @@ class FindPasswordActivity : BaseViewModelActivity<FindPasswordViewModel>() {
         }
 
         //首先判断是否是自登陆界面来到的这里，如果是，就刷新当前的stuNumber
-        isFromLogin = intent.getBooleanExtra("is_form_login", false)
+        isFromLogin = intent.getBooleanExtra("is_from_login", false)
         if (isFromLogin) {
             stuNumber = intent.getStringExtra("stu_number")
         }
@@ -115,14 +115,19 @@ class FindPasswordActivity : BaseViewModelActivity<FindPasswordViewModel>() {
                 }
                 //点击下一步以判断验证码是否正确
                 mine_bt_security_find_next.setOnSingleClickListener {
-                    viewModel.confirmCode {
-                        if (isFromLogin) {
-                            ChangePasswordActivity.startFormLogin(this, stuNumber, it)
-                        } else {
-                            ChangePasswordActivity.actionStart(this, ChangePasswordActivity.TYPE_NEW_PASSWORD)
-                        }
-                        finish()
-                    }
+                    viewModel.confirmCode(
+                            onSuccess = {
+                                if (isFromLogin) {
+                                    ChangePasswordActivity.startFormLogin(this, stuNumber, it)
+                                } else {
+                                    ChangePasswordActivity.actionStart(this, ChangePasswordActivity.TYPE_START_FROM_OTHERS)
+                                }
+                                finish()
+                            },
+                            onField = {
+                                viewModel.firstTipText.set("验证码有误或过期，请重新获取")
+                            }
+                    )
                 }
             }
             FIND_PASSWORD_BY_SECURITY_QUESTION -> {
@@ -134,7 +139,7 @@ class FindPasswordActivity : BaseViewModelActivity<FindPasswordViewModel>() {
                         AnswerTextWatcher(viewModel.firstTipText, mine_bt_security_find_next, this)
                 )
                 mine_bt_security_find_next.setOnSingleClickListener {
-                    viewModel.confirmAnswer{
+                    viewModel.confirmAnswer {
                         ChangePasswordActivity.startFormLogin(this, stuNumber, it)
                         finish()
                     }

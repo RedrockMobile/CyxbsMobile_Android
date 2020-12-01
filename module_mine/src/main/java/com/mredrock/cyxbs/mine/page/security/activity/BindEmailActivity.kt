@@ -61,9 +61,9 @@ class BindEmailActivity : BaseActivity() {
         btn_bind_email_next.setOnSingleClickListener {
             if (btn_bind_email_next.text == getString(R.string.mine_security_bind_email_next)) {
                 sendCode()
-            } else if (btn_bind_email_next.text == getString(R.string.mine_security_bind_email_yes)) {
+            } else if (btn_bind_email_next.text == getString(R.string.mine_security_confirm)) {
                 if (et_bind_email.text.toString() == "") {
-                    CyxbsToast.makeText(this, getString(R.string.mine_security_bind_email_please_input_code), Toast.LENGTH_SHORT).show()
+                    CyxbsToast.makeText(this, getString(R.string.mine_security_please_type_new_words), Toast.LENGTH_SHORT).show()
                 } else if (et_bind_email.text.toString() == viewModel.code.toString() &&
                         System.currentTimeMillis() / 1000 <= viewModel.expireTime) {
                     viewModel.confirmCode(email, viewModel.code.toString())
@@ -111,7 +111,7 @@ class BindEmailActivity : BaseActivity() {
                 }
                 runOnUiThread {
                     tv_bind_email_send_code.isEnabled = true
-                    tv_bind_email_send_code.text = getString(R.string.mine_security_bind_email_resend)
+                    tv_bind_email_send_code.text = getString(R.string.mine_security_resend)
                 }
             }.start()
         } else {
@@ -125,34 +125,4 @@ class BindEmailActivity : BaseActivity() {
         val m: Matcher = p.matcher(strEmail)
         return m.matches()
     }
-
-    /****************
-     *
-     * 发起添加群流程。群号：掌上重邮反馈群(570919844) 的 key 为： DXvamN9Ox1Kthaab1N_0w7s5N3aUYVIf
-     * 调用 joinQQGroup(DXvamN9Ox1Kthaab1N_0w7s5N3aUYVIf) 即可发起手Q客户端申请加群 掌上重邮反馈群(570919844)
-     *
-     * @param key 由官网生成的key
-     * @return 返回true表示呼起手Q成功，返回fals表示呼起失败
-     *//*
-    private fun joinQQGroup(key: String): Boolean {
-        val intent = Intent()
-        intent.data = Uri.parse("mqqopensdkapi://bizAgent/qm/qr?url=http%3A%2F%2Fqm.qq.com%2Fcgi-bin%2Fqm%2Fqr%3Ffrom%3Dapp%26p%3Dandroid%26k%3D$key")
-        // 此Flag可根据具体产品需要自定义，如设置，则在加群界面按返回，返回手Q主界面，不设置，按返回会返回到呼起产品界面    //intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        return try {
-            startActivity(intent)
-            true
-        } catch (e: Exception) {
-            // 未安装手Q或安装的版本不支持
-            false
-        }
-    }
-
-    private fun onFeedBackClick() {
-        if (!joinQQGroup("DXvamN9Ox1Kthaab1N_0w7s5N3aUYVIf")) {
-            val clipboard = getSystemService(AppCompatActivity.CLIPBOARD_SERVICE) as ClipboardManager
-            val data = ClipData.newPlainText("QQ Group", "570919844")
-            clipboard.primaryClip = data
-            CyxbsToast.makeText(this, "抱歉，由于您未安装手机QQ或版本不支持，无法跳转至掌邮bug反馈群。" + "已将群号复制至您的手机剪贴板，请您手动添加", Toast.LENGTH_SHORT).show()
-        }
-    }*/
 }

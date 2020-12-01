@@ -89,7 +89,6 @@
 
     <!--密码与安全-->
 
-    <!--TODO:清除相同的字符-->
     <string name="mine_security_change_pass_word_hint">重设密码</string>
     <string name="mine_security_forget_pass_word_hint">请输入学号</string>
     <string name="mine_security_change_pass_word">修改密码</string>
@@ -103,36 +102,32 @@
     <string name="mine_security_sel_question">选择一个密保问题</string>
     <string name="mine_security_answer_to_question">你的问题的回答是</string>
     <string name="mine_security_your_best_friend_name"> </string>
-    <string name="mine_security_input_answer_hint">请输入密保问题的答案（由2–16位字符组成）</string>
     <string name="mine_security_confirm">确定</string>
     <string name="mine_security_bind_email">绑定邮箱</string>
     <string name="mine_security_type_in_email_address">请输入邮箱地址：</string>
     <string name="mine_security_type_in_old_password">请输入旧密码</string>
     <string name="mine_security_resend">重新发送</string>
-    <string name="mine_security_tell_us">验证失败？联系我们</string>
     <string name="mine_security_please_type_correct_address">请输入正确的邮箱地址</string>
     <string name="mine_security_please_type_new_words">请输入6–16位新密码</string>
     <string name="mine_security_change_password">修改密码</string>
-    <string name="mine_security_new_password_uncorrect">新密码不符合要求，请重新输入</string>
+    <string name="mine_security_new_password_incorrect">新密码不符合要求，请重新输入</string>
     <string name="mine_security_retype">确认密码和新密码不符，请重新输入</string>
     <string name="mine_security_bind_email_next">下一步</string>
-    <string name="mine_security_bind_email_yes">确定</string>6
     <string name="mine_security_bind_email_sent_to_your_email">已向你的邮箱发送了一条验证码</string>
-    <string name="mine_security_bind_email_resend">重新发送</string>
     <string name="mine_security_bind_email_bind_succeed">验证成功</string>
     <string name="mine_security_bind_email_bind_failed">验证失败</string>
-    <string name="mine_security_bind_email_please_input_code">请输入验证码</string>
     <string name="mine_security_bind_email_code_expire">验证码已过期</string>
     <string name="mine_security_your_password_question_is">你的密保问题是</string>
     <string name="mine_security_answer_to_your_question_is">你的问题答案是：</string>
-    <string name="mine__security_please_input_answer">请输入密保问题的答案（由2–16位字符组成）</string>
+    <string name="mine_security_please_input_answer">请输入密保问题的答案（由2–16位字符组成）</string>
     <string name="mine_security_contract_us">验证失败？联系我们</string>
     <string name="mine_security_please_set_protect_or_bind_email">为了您的账号安全，请设置密保/绑定邮箱</string>
     <string name="mine_security_set_password_protect">设置密保</string>
     <string name="mine_security_default_password_hint">你的密码未曾修改，请试试初始密码:身份证后六位/2020级为统一认证码后六位</string>
-    <string name="mine_Security_relogin">重新登录</string>
+    <string name="mine_security_relogin">重新登录</string>
     <string name="mine_security_find_password">找回密码</string>
     <string name="mine_security_please_type_in_confirm_code">请输入验证码</string>
     <string name="mine_security_click_to_get_confirm_code">你的保密邮箱是，请点击获取验证码</string>
     <string name="mine_security_get_confirm_code">获取验证码</string>
+    <string name="mine_security_out_of_date_or_wrong">验证码有误或过期，请重新获取</string>
 </resources>
