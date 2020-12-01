@@ -13,7 +13,6 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="39dp">
 
-        <!--TODO：SVG图标没有更新-->
         <ImageView
             android:id="@+id/iv_bind_email_back"
             android:layout_width="9.01dp"

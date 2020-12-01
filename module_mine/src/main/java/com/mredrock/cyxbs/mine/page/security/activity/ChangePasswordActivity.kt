@@ -16,6 +16,7 @@ import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.LogUtils
 import androidx.lifecycle.Observer
 import com.mredrock.cyxbs.common.BaseApp
+import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.common.utils.extensions.toast
 import com.mredrock.cyxbs.mine.R
 import com.mredrock.cyxbs.mine.page.security.viewmodel.ChangePasswordViewModel
@@ -182,7 +183,7 @@ class ChangePasswordActivity : BaseViewModelActivity<ChangePasswordViewModel>() 
     private fun initEvent() {
         mine_security_secondinput_password.transformationMethod = PasswordTransformationMethod.getInstance()//不显示密码
         mine_security_firstinput_password.transformationMethod = PasswordTransformationMethod.getInstance()//不显示密码
-        mine_iv_security_change_paswword_line2_eye.setOnClickListener {
+        mine_iv_security_change_paswword_line2_eye.setOnSingleClickListener {
             if (isLine2ShowPassword) {
                 mine_iv_security_change_paswword_line2_eye.setImageResource(R.drawable.mine_ic_close_eye)
                 mine_security_firstinput_password.transformationMethod = PasswordTransformationMethod.getInstance()//不显示密码
@@ -195,7 +196,7 @@ class ChangePasswordActivity : BaseViewModelActivity<ChangePasswordViewModel>() 
                 isLine2ShowPassword = true
             }
         }
-        mine_iv_security_change_paswword_line1_eye.setOnClickListener {
+        mine_iv_security_change_paswword_line1_eye.setOnSingleClickListener {
             if (isLine1ShowPassword) {
                 mine_iv_security_change_paswword_line1_eye.setImageResource(R.drawable.mine_ic_close_eye)
                 mine_security_secondinput_password.transformationMethod = PasswordTransformationMethod.getInstance()//不显示密码
@@ -307,7 +308,7 @@ class ChangePasswordActivity : BaseViewModelActivity<ChangePasswordViewModel>() 
                 this.toast("旧密码错误!")
             }
         })
-        mine_bt_security_change_password_confirm.setOnClickListener {
+        mine_bt_security_change_password_confirm.setOnSingleClickListener {
             if (isClick) {
                 if (isOriginView) {
                     //旧密码检测的网络请求
@@ -328,16 +329,12 @@ class ChangePasswordActivity : BaseViewModelActivity<ChangePasswordViewModel>() 
                 }
             }
         }
-        mine_security_tv_forget_password.setOnClickListener {
-            LogUtils.d("RayleighZ","在点击")
+        mine_security_tv_forget_password.setOnSingleClickListener {
             viewModel.checkDefaultPassword(stuNum){
-                LogUtils.d("RayleighZ","请求完毕")
-
                 if (viewModel.isDefaultPassword.value!!) {
                     //如果是默认密码
                     this.toast(getString(R.string.mine_security_default_password_hint))
                 } else {
-                    LogUtils.d("RayleighZ","非默认")
                     viewModel.checkBinding(stuNum){
                         //此处的dialog需要传递来源，是来自登陆界面还是来自个人界面
                         ChooseFindTypeDialog.showDialog(this, viewModel.bindingEmail.value!!, viewModel.bindingPasswordProtect.value!!, this, isFromLogin, stuNum)

@@ -3,12 +3,10 @@ package com.mredrock.cyxbs.mine.util.ui
 import android.app.Dialog
 import android.content.Context
 import android.content.Intent
-import android.view.Gravity
 import android.widget.Button
 import com.mredrock.cyxbs.mine.R
 import com.mredrock.cyxbs.mine.page.security.activity.BindEmailActivity
 import com.mredrock.cyxbs.mine.page.security.activity.SetPasswordProtectActivity
-import com.mredrock.cyxbs.mine.page.security.viewmodel.FindPasswordViewModel
 
 class DoubleChooseDialog(context: Context?, theme: Int) : Dialog(context!!, theme) {
     companion object {
@@ -22,7 +20,7 @@ class DoubleChooseDialog(context: Context?, theme: Int) : Dialog(context!!, them
             val buttonToBindingEmail = doubleChooseDialog!!.findViewById<Button>(R.id.mine_bt_security_dialog_binding_email)
             val buttonToSetPasswordProtect = doubleChooseDialog!!.findViewById<Button>(R.id.mine_bt_security_dialog_set_protect)
             buttonToSetPasswordProtect.setOnClickListener {
-                SetPasswordProtectActivity.start(context)
+                SetPasswordProtectActivity.actionStart(context)
                 doubleChooseDialog!!.hide()
             }
             buttonToBindingEmail.setOnClickListener {

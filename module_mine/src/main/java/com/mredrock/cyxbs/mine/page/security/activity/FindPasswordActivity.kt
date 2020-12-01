@@ -6,15 +6,18 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
+import android.view.View
 import androidx.databinding.DataBindingUtil
 import com.mredrock.cyxbs.account.IAccountService
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.dp2px
+import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.mine.R
 import com.mredrock.cyxbs.mine.databinding.MineActivityFindPasswordBinding
 import com.mredrock.cyxbs.mine.page.security.util.AnswerTextWatcher
+import com.mredrock.cyxbs.mine.page.security.util.Jump2QQHelper
 import com.mredrock.cyxbs.mine.page.security.viewmodel.FindPasswordViewModel
 import kotlinx.android.synthetic.main.mine_activity_find_password.*
 
@@ -35,7 +38,7 @@ class FindPasswordActivity : BaseViewModelActivity<FindPasswordViewModel>() {
 
     companion object {
         //自登陆界面而来
-        fun startFromLogin(context: Context, type: Int, stuNumber: String) {
+        fun actionStartFromLogin(context: Context, type: Int, stuNumber: String) {
             val intent = Intent(context, FindPasswordActivity::class.java)
             intent.putExtra("type", type)
             intent.putExtra("stu_number", stuNumber)
@@ -45,7 +48,7 @@ class FindPasswordActivity : BaseViewModelActivity<FindPasswordViewModel>() {
         }
 
         //从个人界面而来（已经登陆的状态）
-        fun startFromMine(context: Context, type: Int) {
+        fun actionStartFromMine(context: Context, type: Int) {
             val intent = Intent(context, FindPasswordActivity::class.java)
             intent.putExtra("type", type)
             //是否是从登陆界面过来的（是否已经登陆，将影响学号的获取）
@@ -83,6 +86,10 @@ class FindPasswordActivity : BaseViewModelActivity<FindPasswordViewModel>() {
         viewModel.stuNumber = stuNumber
         //更改页面样式
         turnPageType(type)
+        //联系我们的点击事件
+        mine_tv_security_find_contract_us.setOnSingleClickListener {
+            Jump2QQHelper.onFeedBackClick(this)
+        }
     }
 
     private fun turnPageType(type: Int) {
@@ -98,15 +105,16 @@ class FindPasswordActivity : BaseViewModelActivity<FindPasswordViewModel>() {
                 //更改title和hint的提示字符
                 mine_et_security_find.hint = getString(R.string.mine_security_please_type_in_confirm_code)
                 mine_tv_security_find_first_title.text = getString(R.string.mine_security_click_to_get_confirm_code)
+                mine_tv_security_second_title.visibility = View.GONE
                 //设置点击获取验证码的text
                 viewModel.timerText.set(getString(R.string.mine_security_get_confirm_code))
                 //接下来配置页面的点击事件以及相关逻辑
                 //点击获取验证码(内部含有倒计时)
-                mine_tv_security_find_send_confirm_code.setOnClickListener {
+                mine_tv_security_find_send_confirm_code.setOnSingleClickListener {
                     viewModel.sendConfirmCodeAndStartBackTimer()
                 }
                 //点击下一步以判断验证码是否正确
-                mine_bt_security_find_next.setOnClickListener {
+                mine_bt_security_find_next.setOnSingleClickListener {
                     viewModel.confirmCode {
                         if (isFromLogin) {
                             ChangePasswordActivity.startFormLogin(this, stuNumber, it)
@@ -125,12 +133,13 @@ class FindPasswordActivity : BaseViewModelActivity<FindPasswordViewModel>() {
                 mine_et_security_find.addTextChangedListener(
                         AnswerTextWatcher(viewModel.firstTipText, mine_bt_security_find_next, this)
                 )
-                mine_bt_security_find_next.setOnClickListener {
+                mine_bt_security_find_next.setOnSingleClickListener {
                     viewModel.confirmAnswer{
                         ChangePasswordActivity.startFormLogin(this, stuNumber, it)
                         finish()
                     }
                 }
+                mine_tv_security_second_title.visibility = View.VISIBLE
             }
         }
     }

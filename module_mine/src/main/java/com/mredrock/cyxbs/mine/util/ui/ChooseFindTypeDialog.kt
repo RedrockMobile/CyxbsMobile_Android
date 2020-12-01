@@ -6,7 +6,6 @@ import android.view.Gravity
 import android.widget.TextView
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.ui.BaseActivity
-import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.toast
 import com.mredrock.cyxbs.mine.R
 import com.mredrock.cyxbs.mine.page.security.activity.FindPasswordActivity
@@ -35,9 +34,9 @@ class ChooseFindTypeDialog(context: Context?, theme: Int) : Dialog(context, them
                 if (hasEmailBinding) {
                     //启动邮箱找回模块
                     if (isFromLogin) {//是否已经登陆
-                        FindPasswordActivity.startFromLogin(context, FIND_PASSWORD_BY_EMAIL, stuNumber)
+                        FindPasswordActivity.actionStartFromLogin(context, FIND_PASSWORD_BY_EMAIL, stuNumber)
                     } else {
-                        FindPasswordActivity.startFromMine(context, FIND_PASSWORD_BY_EMAIL)
+                        FindPasswordActivity.actionStartFromMine(context, FIND_PASSWORD_BY_EMAIL)
                     }
                     chooseFindTypeDialog!!.hide()
                     activity.finish()
@@ -52,9 +51,9 @@ class ChooseFindTypeDialog(context: Context?, theme: Int) : Dialog(context, them
                 if (hasSecurityQuestion) {
                     //启动密保找回模块
                     if (isFromLogin) {//是否已经登陆
-                        FindPasswordActivity.startFromLogin(context, FIND_PASSWORD_BY_SECURITY_QUESTION, stuNumber)
+                        FindPasswordActivity.actionStartFromLogin(context, FIND_PASSWORD_BY_SECURITY_QUESTION, stuNumber)
                     } else {
-                        FindPasswordActivity.startFromMine(context, FIND_PASSWORD_BY_SECURITY_QUESTION)
+                        FindPasswordActivity.actionStartFromMine(context, FIND_PASSWORD_BY_SECURITY_QUESTION)
                     }
                     chooseFindTypeDialog!!.hide()
                     activity.finish()

@@ -10,6 +10,7 @@ import com.mredrock.cyxbs.common.config.MINE_FORGET_PASSWORD
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.LogUtils
+import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.mine.R
 import com.mredrock.cyxbs.mine.page.security.viewmodel.ForgetPasswordViewModel
 import com.mredrock.cyxbs.mine.util.ui.ChooseFindTypeDialog
@@ -58,7 +59,7 @@ class ForgetPasswordActivity : BaseViewModelActivity<ForgetPasswordViewModel>() 
                 }
             }
         })
-        mine_security_bt_forget_password_confirm.setOnClickListener {
+        mine_security_bt_forget_password_confirm.setOnSingleClickListener {
             if (canClick){
                 stuNumber = mine_security_et_forget_password.text.toString()
                 if (stuNumber!=""&&stuNumber!=null){

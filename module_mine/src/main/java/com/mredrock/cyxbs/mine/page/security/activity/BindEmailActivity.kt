@@ -16,6 +16,7 @@ import com.mredrock.cyxbs.common.utils.extensions.gone
 import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.common.utils.extensions.visible
 import com.mredrock.cyxbs.mine.R
+import com.mredrock.cyxbs.mine.page.security.util.Jump2QQHelper
 import com.mredrock.cyxbs.mine.page.security.viewmodel.BindEmailViewModel
 import kotlinx.android.synthetic.main.mine_activity_bind_email.*
 import java.util.regex.Matcher
@@ -50,7 +51,7 @@ class BindEmailActivity : BaseActivity() {
         }
 
         tv_bind_email_contact_us.setOnSingleClickListener {
-            onFeedBackClick()
+            Jump2QQHelper.onFeedBackClick(this)
         }
 
         tv_bind_email_send_code.setOnSingleClickListener {
@@ -132,7 +133,7 @@ class BindEmailActivity : BaseActivity() {
      *
      * @param key 由官网生成的key
      * @return 返回true表示呼起手Q成功，返回fals表示呼起失败
-     */
+     *//*
     private fun joinQQGroup(key: String): Boolean {
         val intent = Intent()
         intent.data = Uri.parse("mqqopensdkapi://bizAgent/qm/qr?url=http%3A%2F%2Fqm.qq.com%2Fcgi-bin%2Fqm%2Fqr%3Ffrom%3Dapp%26p%3Dandroid%26k%3D$key")
@@ -153,5 +154,5 @@ class BindEmailActivity : BaseActivity() {
             clipboard.primaryClip = data
             CyxbsToast.makeText(this, "抱歉，由于您未安装手机QQ或版本不支持，无法跳转至掌邮bug反馈群。" + "已将群号复制至您的手机剪贴板，请您手动添加", Toast.LENGTH_SHORT).show()
         }
-    }
+    }*/
 }

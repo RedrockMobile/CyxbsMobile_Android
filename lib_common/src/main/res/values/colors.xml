@@ -167,7 +167,7 @@
     <color name="common_mine_security_dialog_back_color">#ffffff</color>
     <!--     TODO:尚未适配深色模式-->
     <color name="common_mine_security_divide_line">#F8F9FC</color>
-    <color name="common_mine_security_two_front_color_64_percent">#5c15315B</color>
+    <color name="common_mine_security_two_front_color_64_percent">#A315315B</color>
     <color name="common_mine_security_send_message_color">#4B45E5</color>
     <color name="common_mine_security_line_under_edit_text">#707070</color>
 

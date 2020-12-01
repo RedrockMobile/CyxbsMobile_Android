@@ -12,6 +12,7 @@ import androidx.databinding.DataBindingUtil
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.LogUtils
+import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.common.utils.extensions.toast
 import com.mredrock.cyxbs.mine.R
 import com.mredrock.cyxbs.mine.databinding.MineActivitySetPasswordProtectBinding
@@ -34,7 +35,7 @@ class SetPasswordProtectActivity : BaseViewModelActivity<SetPasswordProtectViewM
     var canClick = false
 
     companion object {
-        fun start(context: Context) {
+        fun actionStart(context: Context) {
             context.startActivity(Intent(context, SetPasswordProtectActivity::class.java))
         }
     }
@@ -73,7 +74,7 @@ class SetPasswordProtectActivity : BaseViewModelActivity<SetPasswordProtectViewM
         }
 
 
-        mine_ll_sel_question_show.setOnClickListener {
+        mine_ll_sel_question_show.setOnSingleClickListener {
             if (canClick){
                 selQuestionDialog.show()
                 setBackGroundShadowOrShadow()
@@ -82,14 +83,13 @@ class SetPasswordProtectActivity : BaseViewModelActivity<SetPasswordProtectViewM
             }
         }
 
-
-
+        //对editText输入进行监听
         mine_edt_security_answer.addTextChangedListener(
                 AnswerTextWatcher(viewModel.tipForInputNum, mine_bt_security_set_protectconfirm, this)
         )
 
         //确定设置密保的点击事件
-        mine_bt_security_set_protectconfirm.setOnClickListener {
+        mine_bt_security_set_protectconfirm.setOnSingleClickListener {
             viewModel.setSecurityQA{
                 finish()
             }
