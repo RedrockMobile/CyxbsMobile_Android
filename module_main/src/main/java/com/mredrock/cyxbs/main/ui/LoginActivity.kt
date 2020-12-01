@@ -26,8 +26,10 @@ import com.mredrock.cyxbs.common.config.IS_EXIT_LOGIN
 import com.mredrock.cyxbs.common.mark.EventBusLifecycleSubscriber
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.account.IAccountService
+import com.mredrock.cyxbs.common.BaseApp.Companion.context
 import com.mredrock.cyxbs.common.config.MINE_FORGET_PASSWORD
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
+import com.mredrock.cyxbs.common.utils.extensions.toast
 import com.mredrock.cyxbs.main.MAIN_LOGIN
 import com.mredrock.cyxbs.main.R
 import com.mredrock.cyxbs.main.adapter.UserAgreementAdapter

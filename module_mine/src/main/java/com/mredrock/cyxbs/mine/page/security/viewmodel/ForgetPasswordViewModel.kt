@@ -4,13 +4,10 @@ package com.mredrock.cyxbs.mine.page.security.viewmodel
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.mredrock.cyxbs.common.BaseApp
-import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.common.utils.extensions.toast
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
-import com.mredrock.cyxbs.mine.network.ApiService
-import com.mredrock.cyxbs.mine.network.model.StuNumBody
 import com.mredrock.cyxbs.mine.util.apiService
 
 /**
@@ -29,13 +26,14 @@ class ForgetPasswordViewModel : BaseViewModel() {
     var bindingPasswordProtect = MutableLiveData<Boolean>()
 
     //检查是否为默认密码
-    fun checkDefaultPassword(stu_num: String) {
+    fun checkDefaultPassword(stu_num: String,onError:()->Unit) {
         apiService.checkDefaultPassword(stu_num)
                 .setSchedulers()
                 .safeSubscribeBy(onNext = {
                     defaultPassword.value = it.status == 10000
                 }, onError = {
                     BaseApp.context.toast(it.toString())
+                    onError()
                 })
     }
 

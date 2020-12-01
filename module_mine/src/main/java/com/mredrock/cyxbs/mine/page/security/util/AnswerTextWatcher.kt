@@ -13,7 +13,9 @@ import com.mredrock.cyxbs.mine.R
  * Time: 2020-11-19 21:34
  * Describe: 本模块输入问题的答案的泛用性TextWatcher
  */
-class AnswerTextWatcher(private val tipOF: ObservableField<String>, val button: Button, val context: Context) : TextWatcher {
+open class AnswerTextWatcher(private val tipOF: ObservableField<String>, val button: Button, val context: Context) : TextWatcher {
+    open val min = 2
+    open val max = 16
     override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
     }
 
@@ -23,11 +25,11 @@ class AnswerTextWatcher(private val tipOF: ObservableField<String>, val button: 
     override fun afterTextChanged(s: Editable?) {
         s?.let {
             when{
-                it.length < 2 ->{
+                it.length < min ->{
                     tipOF.set("请至少输入2个字符")
                     button.background = ContextCompat.getDrawable( context , R.drawable.mine_shape_round_corner_light_blue)
                 }
-                it.length >= 16 ->{
+                it.length >= max ->{
                     tipOF.set("输入已达上限")
                 }
                 else ->{

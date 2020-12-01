@@ -1,6 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <ImageView
+        android:id="@+id/common_dialog_background"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/common_dialog_btn_negative"
+        android:src="@drawable/common_shape_round_corner_dialog"
+        android:orientation="vertical" />
+
+
+    <FrameLayout
+        android:id="@+id/common_dialog_container"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        app:layout_constraintStart_toStartOf="@id/common_dialog_background"
+        app:layout_constraintEnd_toEndOf="@id/common_dialog_background"
+        app:layout_constraintTop_toTopOf="@id/common_dialog_background">
+    </FrameLayout>
+
+    <Button
+        android:id="@+id/common_dialog_btn_positive"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="34dp"
+        android:paddingHorizontal="5dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="12dp"
+        android:background="@drawable/common_dialog_btn_positive_blue"
+        android:textColor="@color/common_white_font_color"
+        android:textSize="15sp"
+        android:text="退出"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/common_dialog_container"
+        app:layout_constraintBottom_toTopOf="@id/common_dialog_btn_negative"/>
+
+    <ImageView
+        android:id="@+id/common_dialog_btn_negative"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/common_dialog_negative"
+        app:layout_constraintTop_toBottomOf="@id/common_dialog_background"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,6 +1,7 @@
 package com.mredrock.cyxbs.mine.page.security.viewmodel
 
 import android.util.Log
+import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
 import com.mredrock.cyxbs.common.BaseApp.Companion.context
 import com.mredrock.cyxbs.common.utils.LogUtils
@@ -81,14 +82,13 @@ class ChangePasswordViewModel : BaseViewModel() {
 
     //在未登录的条件下修改密码（需要随机数）
     fun resetPasswordFromLogin(stu_num: String, new_password: String, code: Int) {
-        LogUtils.d("RayleighZ", "")
         apiService.resetPasswordFromLogin(stu_num, new_password, code)
                 .setSchedulers()
                 .safeSubscribeBy(onNext = {
                     when (it.status) {
                         10000 -> {
                             inputNewPasswordCorrect.value = true
-                            context.toast("修改密码成功！")
+                            //修改成功的toast要在主界面弹出，不然只会闪一下
                         }
                         10003 -> {
                             inputNewPasswordCorrect.value = false

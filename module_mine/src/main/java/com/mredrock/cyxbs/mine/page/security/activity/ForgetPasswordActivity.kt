@@ -5,11 +5,8 @@ import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import com.alibaba.android.arouter.facade.annotation.Route
-import com.mredrock.cyxbs.account.IAccountService
 import com.mredrock.cyxbs.common.config.MINE_FORGET_PASSWORD
-import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
-import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.mine.R
 import com.mredrock.cyxbs.mine.page.security.viewmodel.ForgetPasswordViewModel
@@ -32,7 +29,7 @@ class ForgetPasswordActivity : BaseViewModelActivity<ForgetPasswordViewModel>() 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.mine_activity_forget_password)
-        mine_pb_security.visibility = View.GONE
+        mine_pb_security_forget.visibility = View.GONE
         //配置toolBar
         common_toolbar.apply {
             setBackgroundColor(ContextCompat.getColor(this@ForgetPasswordActivity, R.color.common_white_background))
@@ -52,7 +49,7 @@ class ForgetPasswordActivity : BaseViewModelActivity<ForgetPasswordViewModel>() 
                 DefaultPasswordHintDialog.show(this, this)
             }else{
                 viewModel.checkBinding(stuNumber){
-                    mine_pb_security.visibility = View.GONE
+                    mine_pb_security_forget.visibility = View.GONE
                     //展示不同的找回密码方式的dialog
                     ChooseFindTypeDialog.showDialog(this, viewModel.bindingEmail.value!!, viewModel.bindingPasswordProtect.value!!,this, true, stuNumber)
                 }
@@ -62,8 +59,10 @@ class ForgetPasswordActivity : BaseViewModelActivity<ForgetPasswordViewModel>() 
             if (canClick){
                 stuNumber = mine_security_et_forget_password.text.toString()
                 if (stuNumber!=""&&stuNumber!=null){
-                    mine_pb_security.visibility = View.VISIBLE
-                    viewModel.checkDefaultPassword(stuNumber)
+                    mine_pb_security_forget.visibility = View.VISIBLE
+                    viewModel.checkDefaultPassword(stuNumber){
+                        mine_pb_security_forget.visibility = View.GONE
+                    }
                     canClick = false//网络请求结束之前不允许进行新的请求
                 }
             }

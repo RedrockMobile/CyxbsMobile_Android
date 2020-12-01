@@ -2,6 +2,7 @@ package com.mredrock.cyxbs.mine.page.security.activity
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener

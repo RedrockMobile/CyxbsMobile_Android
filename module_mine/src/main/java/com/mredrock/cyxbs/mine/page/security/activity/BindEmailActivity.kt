@@ -117,7 +117,6 @@ class BindEmailActivity : BaseActivity() {
                     }
                 }.start()
             }
-
         } else {
             tv_bind_email_tips.visible()
         }

@@ -8,10 +8,12 @@ import android.text.TextWatcher
 import android.text.method.HideReturnsTransformationMethod
 import android.text.method.PasswordTransformationMethod
 import android.view.View
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import com.mredrock.cyxbs.account.IAccountService
 import com.mredrock.cyxbs.common.BaseApp
+import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.LogUtils
@@ -288,7 +290,7 @@ class ChangePasswordActivity : BaseViewModelActivity<ChangePasswordViewModel>() 
         //检查新密码是否上传成功！
         viewModel.inputNewPasswordCorrect.observe(this, Observer {
             if (it) {
-                this.finish()
+                CyxbsToast.makeText(this, "重置密码成功！由于账号互通，重邮帮小程序的密码也会一起更改哦~", Toast.LENGTH_SHORT).show()
             } else {
                 if (viewModel.inputNewPasswordFormat.value == INPUT_NEW_PASSWORD_FORMAT_IS_CORRECT) {
                     mine_tv_security_tip_line1.visibility = View.VISIBLE
@@ -346,7 +348,9 @@ class ChangePasswordActivity : BaseViewModelActivity<ChangePasswordViewModel>() 
             }
         }
         mine_security_tv_forget_password.setOnSingleClickListener {
+            mine_pb_security_change_password.visibility = View.VISIBLE
             viewModel.checkDefaultPassword(stuNum) {
+                mine_pb_security_change_password.visibility = View.GONE
                 if (viewModel.isDefaultPassword.value!!) {
                     //如果是默认密码
                     this.toast(getString(R.string.mine_security_default_password_hint))

@@ -7,6 +7,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
+import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import com.mredrock.cyxbs.account.IAccountService
 import com.mredrock.cyxbs.common.service.ServiceManager
@@ -110,6 +111,19 @@ class FindPasswordActivity : BaseViewModelActivity<FindPasswordViewModel>() {
                 mine_tv_security_find_send_confirm_code.setOnSingleClickListener {
                     viewModel.sendConfirmCodeAndStartBackTimer()
                 }
+
+                mine_et_security_find.addTextChangedListener(
+                        object :AnswerTextWatcher(viewModel.firstTipText, mine_bt_security_find_next, this){
+                            override fun afterTextChanged(s: Editable?) {
+                                if (s?.length != 6){
+                                    button.background = ContextCompat.getDrawable( context , R.drawable.mine_shape_round_corner_light_blue)
+                                } else {
+                                    button.background = ContextCompat.getDrawable( context , R.drawable.mine_shape_round_cornor_purple_blue)
+                                }
+                            }
+                        }
+                )
+
                 //点击下一步以判断验证码是否正确
                 mine_bt_security_find_next.setOnSingleClickListener {
                     viewModel.confirmCode(
