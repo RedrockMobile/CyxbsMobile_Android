@@ -27,9 +27,6 @@ import kotlinx.android.synthetic.main.mine_activity_find_password.*
  * describe: 找回密码的活动
  */
 class FindPasswordActivity : BaseViewModelActivity<FindPasswordViewModel>() {
-
-    override val isFragmentActivity = false
-
     //在此activity以及ViewModel中统一使用这个stuNumber来获取学号，以方便整体修改
     private var stuNumber = ServiceManager.getService(IAccountService::class.java).getUserService().getStuNum()
 

@@ -25,8 +25,6 @@ import kotlinx.android.synthetic.main.grades_activity_bind.*
  * @Date: 2020/9/13 19:17
  */
 class BindActivity : BaseActivity() {
-    override val isFragmentActivity: Boolean
-        get() = false
     private lateinit var viewModel: ContainerViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {

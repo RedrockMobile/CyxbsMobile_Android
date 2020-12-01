@@ -26,7 +26,6 @@ import kotlinx.android.synthetic.main.mine_activity_forget_password.*
  */
 @Route(path = MINE_FORGET_PASSWORD)
 class ForgetPasswordActivity : BaseViewModelActivity<ForgetPasswordViewModel>() {
-    override val isFragmentActivity = false
     private var stuNumber = ""
     private var canClick = true
 

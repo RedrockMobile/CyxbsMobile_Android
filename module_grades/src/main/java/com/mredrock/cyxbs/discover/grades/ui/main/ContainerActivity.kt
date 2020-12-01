@@ -57,8 +57,6 @@ class ContainerActivity : BaseActivity() {
     //区分FrameLayout内的fragment的type：未确定，BindFragment，或GPAFragment
     private var typeOfFragment = UNDEFINED
 
-    //exam
-    override val isFragmentActivity = true
     private lateinit var viewModel: ContainerViewModel
     private val user: IUserService by lazy {
         ServiceManager.getService(IAccountService::class.java).getUserService()

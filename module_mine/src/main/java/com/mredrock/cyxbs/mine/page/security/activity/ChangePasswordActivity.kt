@@ -7,21 +7,19 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.text.method.HideReturnsTransformationMethod
 import android.text.method.PasswordTransformationMethod
-import android.util.Log
 import android.view.View
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.Observer
 import com.mredrock.cyxbs.account.IAccountService
+import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.LogUtils
-import androidx.lifecycle.Observer
-import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.common.utils.extensions.toast
 import com.mredrock.cyxbs.mine.R
 import com.mredrock.cyxbs.mine.page.security.viewmodel.ChangePasswordViewModel
 import com.mredrock.cyxbs.mine.util.ui.ChooseFindTypeDialog
-import com.mredrock.cyxbs.mine.util.ui.DoubleChooseDialog
 import kotlinx.android.synthetic.main.mine_activity_change_password.*
 
 /**
@@ -29,8 +27,6 @@ import kotlinx.android.synthetic.main.mine_activity_change_password.*
  * Time: 2020-10-29 15:06
  */
 class ChangePasswordActivity : BaseViewModelActivity<ChangePasswordViewModel>() {
-
-    override val isFragmentActivity = false
 
     companion object {
         //下面的常量是转化页面形态的标识量
@@ -41,17 +37,18 @@ class ChangePasswordActivity : BaseViewModelActivity<ChangePasswordViewModel>() 
         const val TYPE_START_FROM_MINE = 4//从个人页面跳转到修改密码页面
         const val TYPE_START_FROM_OTHERS = 5//从密保和邮箱界面跳转
         const val TYPE_FORM_LOGIN_ACTIVITY_WITH_STU_NUMBER = 6//从登陆界面跳转过来，并且传递了学号进来
+        const val INPUT_NEW_PASSWORD_FORMAT_IS_CORRECT = 10002
         fun actionStart(context: Context, startType: Int) {
             val intent = Intent(context, ChangePasswordActivity::class.java)
             intent.putExtra("startType", startType)
             context.startActivity(intent)
         }
 
-        fun startFormLogin(context: Context, stuNumber: String , code : Int) {
+        fun startFormLogin(context: Context, stuNumber: String, code: Int) {
             val intent = Intent(context, ChangePasswordActivity::class.java)
             intent.putExtra("startType", TYPE_FORM_LOGIN_ACTIVITY_WITH_STU_NUMBER)
             intent.putExtra("stuNumber", stuNumber)
-            intent.putExtra("code" , code)
+            intent.putExtra("code", code)
             context.startActivity(intent)
         }
     }
@@ -85,7 +82,6 @@ class ChangePasswordActivity : BaseViewModelActivity<ChangePasswordViewModel>() 
                 setToolBar(TYPE_OLD_PASSWORDS)
                 changePageType(TYPE_OLD_PASSWORDS)
                 changeButtonColorType(TYPE_COLOR_LIGHT_BUTTON)
-                LogUtils.d("zt", stuNum)
                 initEvent()
             }
             TYPE_START_FROM_OTHERS -> {
@@ -106,9 +102,8 @@ class ChangePasswordActivity : BaseViewModelActivity<ChangePasswordViewModel>() 
                 setToolBar(TYPE_NEW_PASSWORD)
                 //将此处的学号更新为自外界传递进来的学号
                 stuNum = intent.getStringExtra("stuNumber")
-                code = intent.getIntExtra("code" , -1)
+                code = intent.getIntExtra("code", -1)
                 isFromLogin = true
-                LogUtils.d("zt", stuNum)
                 initEvent()
             }
         }
@@ -211,6 +206,7 @@ class ChangePasswordActivity : BaseViewModelActivity<ChangePasswordViewModel>() 
         }
         mine_security_firstinput_password.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(p0: Editable?) {
+                mine_tv_security_tip_line1.visibility = View.GONE
                 if (isOriginView) {
                     if (p0?.length!! > 0) {
                         changeButtonColorType(TYPE_COLOR_NIGHT_BUTTON)
@@ -224,6 +220,9 @@ class ChangePasswordActivity : BaseViewModelActivity<ChangePasswordViewModel>() 
                 } else {
                     //第二个界面的逻辑
                     if (p0?.length!! > 0) {
+                        if (p0?.length!! in 6..16) {
+                            mine_tv_security_tip_line1.visibility = View.GONE
+                        }
                         if (mine_security_secondinput_password.text?.isNotEmpty()!!) {
                             //第二个不为空才去检查
                             if (mine_security_secondinput_password.text.toString() != mine_security_firstinput_password.text.toString()) {
@@ -255,6 +254,7 @@ class ChangePasswordActivity : BaseViewModelActivity<ChangePasswordViewModel>() 
         })
         mine_security_secondinput_password.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(p0: Editable?) {
+                mine_tv_security_tip_line1.visibility = View.GONE
                 //判断两次输入的字符串是否相同
                 if (!isOriginView) {
                     if (p0?.length!! > 0) {
@@ -262,7 +262,6 @@ class ChangePasswordActivity : BaseViewModelActivity<ChangePasswordViewModel>() 
                             mine_tv_security_tip_line2.visibility = View.VISIBLE
                             changeButtonColorType(TYPE_COLOR_LIGHT_BUTTON)
                             isClick = false
-//                            Log.d("zt","6")
                         } else {
                             mine_tv_security_tip_line2.visibility = View.GONE
                             changeButtonColorType(TYPE_COLOR_NIGHT_BUTTON)
@@ -290,6 +289,10 @@ class ChangePasswordActivity : BaseViewModelActivity<ChangePasswordViewModel>() 
         viewModel.inputNewPasswordCorrect.observe(this, Observer {
             if (it) {
                 this.finish()
+            } else {
+                if (viewModel.inputNewPasswordFormat.value == INPUT_NEW_PASSWORD_FORMAT_IS_CORRECT) {
+                    mine_tv_security_tip_line1.visibility = View.VISIBLE
+                }
             }
         })
         //观察旧密码是否正确， 若正确就切换到下一个界面
@@ -302,40 +305,53 @@ class ChangePasswordActivity : BaseViewModelActivity<ChangePasswordViewModel>() 
                 setToolBar(TYPE_NEW_PASSWORD)
                 mine_security_firstinput_password.setText("")
                 isOriginView = false
-                Log.d("zt", "9")
             } else {
-                Log.d("zt", "1")
                 this.toast("旧密码错误!")
             }
         })
         mine_bt_security_change_password_confirm.setOnSingleClickListener {
             if (isClick) {
+                if (mine_security_firstinput_password.text == null){
+                    return@setOnSingleClickListener
+                }
                 if (isOriginView) {
                     //旧密码检测的网络请求
-                    Log.d("zt", "2")
                     viewModel.originPassWordCheck(mine_security_firstinput_password.text.toString())
-                    Log.d("zt",mine_security_firstinput_password.text.toString()+"!")
                 } else {
                     //填写新密码的界面，跳转到上传新密码
-                    if (isFromLogin){
-                        if(code!=-1){
-                            viewModel.resetPasswordFromLogin(stuNum,mine_security_firstinput_password.text.toString(),code)
+                    if (isFromLogin) {
+                        LogUtils.d("ChangePasswordRay", "TextSize is ${mine_security_firstinput_password.text!!.length}")
+                        if (code != -1) {
+                            if (mine_security_firstinput_password.text!!.length in 6.0..16.0) {
+                                //字数格式要求满足的情况下进行网络请求
+                                viewModel.resetPasswordFromLogin(stuNum, mine_security_firstinput_password.text.toString(), code)
+                                mine_tv_security_tip_line1.visibility = View.GONE
+                            } else {
+                                mine_tv_security_tip_line1.visibility = View.VISIBLE
+                            }
                         } else {
                             BaseApp.context.toast("后端返回的认证码存在问题，修改失败")
                         }
                     } else {
-                        viewModel.newPassWordInput(originPassword, mine_security_firstinput_password.text.toString())
+                        LogUtils.d("ChangePasswordRay", "TextSize is ${mine_security_firstinput_password.text!!.length}")
+                        if (mine_security_firstinput_password.text!!.length in 6.0..16.0) {
+                            //字数格式要求满足的情况下进行网络请求
+                            viewModel.newPassWordInput(originPassword, mine_security_firstinput_password.text.toString())
+                            mine_tv_security_tip_line1.visibility = View.GONE
+                        } else {
+                            mine_tv_security_tip_line1.visibility = View.VISIBLE
+                        }
                     }
                 }
             }
         }
         mine_security_tv_forget_password.setOnSingleClickListener {
-            viewModel.checkDefaultPassword(stuNum){
+            viewModel.checkDefaultPassword(stuNum) {
                 if (viewModel.isDefaultPassword.value!!) {
                     //如果是默认密码
                     this.toast(getString(R.string.mine_security_default_password_hint))
                 } else {
-                    viewModel.checkBinding(stuNum){
+                    viewModel.checkBinding(stuNum) {
                         //此处的dialog需要传递来源，是来自登陆界面还是来自个人界面
                         ChooseFindTypeDialog.showDialog(this, viewModel.bindingEmail.value!!, viewModel.bindingPasswordProtect.value!!, this, isFromLogin, stuNum)
                     }

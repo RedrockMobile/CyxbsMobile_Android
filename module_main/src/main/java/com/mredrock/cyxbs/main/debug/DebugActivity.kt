@@ -16,7 +16,7 @@ import kotlinx.android.synthetic.main.main_activity_debug.*
 
 class DebugActivity : BaseActivity() {
 
-    override val isFragmentActivity = false
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

@@ -18,8 +18,6 @@ import kotlinx.android.synthetic.main.mine_activity_security.*
  */
 class SecurityActivity : BaseViewModelActivity<SecurityActivityViewModel>() {
 
-    override val isFragmentActivity = false
-
     //在网络请求返回绑定结果之前不允许进行点击
 
     override fun onCreate(savedInstanceState: Bundle?) {

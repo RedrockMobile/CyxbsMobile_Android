@@ -1,3 +1,4 @@
+
 package com.mredrock.cyxbs.mine.page.security.viewmodel
 
 import android.util.Log
@@ -18,8 +19,8 @@ import com.mredrock.cyxbs.mine.util.apiService
  *@author SpreadWater
  *@description
  */
-class ForgetPasswordViewModel :BaseViewModel() {
-    var defaultPassword=MutableLiveData<Boolean>()
+class ForgetPasswordViewModel : BaseViewModel() {
+    var defaultPassword = MutableLiveData<Boolean>()
 
     //是否绑定邮箱
     var bindingEmail = MutableLiveData<Boolean>()
@@ -32,20 +33,14 @@ class ForgetPasswordViewModel :BaseViewModel() {
         apiService.checkDefaultPassword(stu_num)
                 .setSchedulers()
                 .safeSubscribeBy(onNext = {
-                    if (it.status == 10000) {
-                        defaultPassword.value = true
-                        Log.d("zt", "为默认密码")
-                    } else {
-                        defaultPassword.value = false
-                        Log.d("zt", "不是默认密码")
-                    }
+                    defaultPassword.value = it.status == 10000
                 }, onError = {
-                    Log.d("zt", "检查默认密码出现错误")
                     BaseApp.context.toast(it.toString())
                 })
     }
+
     //检查是否绑定信息
-    fun checkBinding(stu_num: String, onSucceed: ()->Unit) {
+    fun checkBinding(stu_num: String, onSucceed: () -> Unit) {
         apiService.checkBinding(stu_num)
                 .setSchedulers()
                 .safeSubscribeBy(onNext = {

@@ -28,7 +28,7 @@ fun showPhotos(context: Context, photoList: List<String>, pos: Int = 0) {
 }
 
 open class PhotoViewerActivity : BaseActivity() {
-    override val isFragmentActivity = false
+
 
     protected lateinit var mImgManager: RequestManager
     protected lateinit var mAdapter: PagerAdapter

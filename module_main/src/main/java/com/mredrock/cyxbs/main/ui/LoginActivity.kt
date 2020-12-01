@@ -41,8 +41,6 @@ import org.greenrobot.eventbus.ThreadMode
 @Route(path = MAIN_LOGIN)
 class LoginActivity : BaseViewModelActivity<LoginViewModel>(), EventBusLifecycleSubscriber {
 
-    override val isFragmentActivity = false
-
 
     private val lottieProgress = 0.39f//点击同意用户协议时的动画的时间
 
@@ -179,5 +177,4 @@ class LoginActivity : BaseViewModelActivity<LoginViewModel>(), EventBusLifecycle
     fun landingError(loginFailEvent: LoginFailEvent) {
         landing()
     }
-
 }

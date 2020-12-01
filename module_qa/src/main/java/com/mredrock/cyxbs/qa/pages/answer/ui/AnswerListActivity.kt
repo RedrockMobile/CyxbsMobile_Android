@@ -51,7 +51,7 @@ class AnswerListActivity : BaseActivity() {
         setOnDismissListener { viewModel.onProgressDialogDismissed() }
     }
 
-    override val isFragmentActivity = false
+
 
     private lateinit var viewModel: AnswerListViewModel
     private lateinit var headerAdapter: AnswerListHeaderAdapter

@@ -14,7 +14,7 @@ import com.mredrock.cyxbs.common.utils.extensions.editor
 import com.mredrock.cyxbs.common.utils.extensions.startActivity
 
 class VRActivity : BaseActivity() {
-    override val isFragmentActivity = false
+
     private lateinit var webView: WebView
 
 

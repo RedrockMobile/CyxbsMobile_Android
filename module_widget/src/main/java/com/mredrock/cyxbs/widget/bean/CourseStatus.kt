@@ -64,7 +64,7 @@ class CourseStatus : Serializable {
              * course_num : A1090030
              * teacher : 王燕妮
              * classroom : 待定
-             * rawWeek : 1-15周单周
+             * rawWeek : 1-15   周单周
              * weekModel : single
              * weekBegin : 1
              * weekEnd : 15

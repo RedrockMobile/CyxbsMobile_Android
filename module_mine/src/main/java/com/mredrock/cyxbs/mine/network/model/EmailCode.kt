@@ -8,8 +8,6 @@ import java.io.Serializable
  * 接收的邮箱验证码
  */
 data class EmailCode(
-        @SerializedName("code")
-        val code: Int,
         @SerializedName("expired_time")
-        val expireTime: Int
+        val expiredTime: Int
 ) : Serializable

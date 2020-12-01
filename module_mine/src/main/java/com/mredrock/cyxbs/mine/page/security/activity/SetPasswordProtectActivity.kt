@@ -27,9 +27,6 @@ import kotlinx.android.synthetic.main.mine_activity_set_password_protect.*
  * describe: 设置密保的活动
  */
 class SetPasswordProtectActivity : BaseViewModelActivity<SetPasswordProtectViewModel>() {
-
-    override val isFragmentActivity = false
-
     lateinit var selQuestionDialog: SelQuestionDialog
 
     var canClick = false

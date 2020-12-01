@@ -16,7 +16,7 @@ import com.mredrock.cyxbs.discover.network.RollerViewInfo
 import kotlinx.android.synthetic.main.discover_activity_roller_view.*
 
 class RollerViewActivity : BaseActivity() {
-    override val isFragmentActivity = false
+
 
     @SuppressLint("ObsoleteSdkInt", "SetJavaScriptEnabled")
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -17,7 +17,7 @@ import kotlinx.android.synthetic.main.widget_activity_config.*
  * 设置主页面
  */
 @Route(path = WIDGET_SETTING)
-class ConfigActivity(override val isFragmentActivity: Boolean = false) : BaseActivity() {
+class ConfigActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
