@@ -57,7 +57,6 @@ class ChangePasswordViewModel : BaseViewModel() {
                         10000 -> {
                             inputNewPasswordCorrect.value = true
                             inputNewPasswordFormat.value = 10000
-                            context.toast("修改密码成功！")
                         }
                         10002 -> {
                             inputNewPasswordCorrect.value = false

@@ -291,6 +291,7 @@ class ChangePasswordActivity : BaseViewModelActivity<ChangePasswordViewModel>() 
         viewModel.inputNewPasswordCorrect.observe(this, Observer {
             if (it) {
                 CyxbsToast.makeText(this, "重置密码成功！由于账号互通，重邮帮小程序的密码也会一起更改哦~", Toast.LENGTH_SHORT).show()
+                finish()
             } else {
                 if (viewModel.inputNewPasswordFormat.value == INPUT_NEW_PASSWORD_FORMAT_IS_CORRECT) {
                     mine_tv_security_tip_line1.visibility = View.VISIBLE
