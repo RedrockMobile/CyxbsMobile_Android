@@ -293,7 +293,7 @@ class ChangePasswordActivity : BaseViewModelActivity<ChangePasswordViewModel>() 
                 CyxbsToast.makeText(this, "重置密码成功！由于账号互通，重邮帮小程序的密码也会一起更改哦~", Toast.LENGTH_SHORT).show()
                 finish()
             } else {
-                if (viewModel.inputNewPasswordFormat.value == INPUT_NEW_PASSWORD_FORMAT_IS_CORRECT) {
+                if (viewModel.inputNewPasswordFormat== INPUT_NEW_PASSWORD_FORMAT_IS_CORRECT) {
                     mine_tv_security_tip_line1.visibility = View.VISIBLE
                 }
             }
@@ -350,13 +350,13 @@ class ChangePasswordActivity : BaseViewModelActivity<ChangePasswordViewModel>() 
             mine_pb_security_change_password.visibility = View.VISIBLE
             viewModel.checkDefaultPassword(stuNum) {
                 mine_pb_security_change_password.visibility = View.GONE
-                if (viewModel.isDefaultPassword.value!!) {
+                if (viewModel.isDefaultPassword) {
                     //如果是默认密码
                     this.toast(getString(R.string.mine_security_default_password_hint))
                 } else {
                     viewModel.checkBinding(stuNum) {
                         //此处的dialog需要传递来源，是来自登陆界面还是来自个人界面
-                        ChooseFindTypeDialog.showDialog(this, viewModel.bindingEmail.value!!, viewModel.bindingPasswordProtect.value!!, this, isFromLogin, stuNum)
+                        ChooseFindTypeDialog.showDialog(this, viewModel.bindingEmail, viewModel.bindingPasswordProtect, this, isFromLogin, stuNum)
                     }
                 }
             }

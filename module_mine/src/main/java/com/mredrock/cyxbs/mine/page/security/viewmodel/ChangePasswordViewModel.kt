@@ -26,16 +26,16 @@ class ChangePasswordViewModel : BaseViewModel() {
     var inputNewPasswordCorrect = MutableLiveData<Boolean>()
 
     //新密码上传格式是否正确
-    var inputNewPasswordFormat = MutableLiveData<Int>()
+    var inputNewPasswordFormat :Int=0
 
     //是否绑定邮箱
-    var bindingEmail = MutableLiveData<Boolean>()
+    var bindingEmail :Boolean=false
 
     //是否绑定密保
-    var bindingPasswordProtect = MutableLiveData<Boolean>()
+    var bindingPasswordProtect :Boolean=false
 
     //是否为默认密码
-    var isDefaultPassword = MutableLiveData<Boolean>()
+    var isDefaultPassword :Boolean=false
 
     //检查旧密码输入是否相同
     fun originPassWordCheck(originPassword: String) {
@@ -56,21 +56,21 @@ class ChangePasswordViewModel : BaseViewModel() {
                     when (it.status) {
                         10000 -> {
                             inputNewPasswordCorrect.value = true
-                            inputNewPasswordFormat.value = 10000
+                            inputNewPasswordFormat = 10000
                         }
                         10002 -> {
                             inputNewPasswordCorrect.value = false
-                            inputNewPasswordFormat.value = 10002
+                            inputNewPasswordFormat= 10002
                             context.toast("原密码错误！")
                         }
                         10004 -> {
                             inputNewPasswordCorrect.value = false
-                            inputNewPasswordFormat.value = 10004
+                            inputNewPasswordFormat= 10004
                             context.toast("密码格式有问题！")
                         }
                         10020 -> {
                             inputNewPasswordCorrect.value = false
-                            inputNewPasswordFormat.value = 10020
+                            inputNewPasswordFormat = 10020
                             context.toast("新旧密码重复！")
                         }
                     }
@@ -111,8 +111,8 @@ class ChangePasswordViewModel : BaseViewModel() {
                 .safeSubscribeBy(onNext = {
                     if (it.status == 10000) {
                         //设置信息绑定的情况
-                        bindingEmail.value = it.data.email_is == 1
-                        bindingPasswordProtect.value = it.data.question_is == 1
+                        bindingEmail= it.data.email_is == 1
+                        bindingPasswordProtect = it.data.question_is == 1
                         onSuccess()
                     } else {
                         context.toast("检查绑定失败")
@@ -127,7 +127,7 @@ class ChangePasswordViewModel : BaseViewModel() {
         apiService.checkDefaultPassword(stu_num)
                 .setSchedulers()
                 .safeSubscribeBy(onNext = {
-                    isDefaultPassword.value = it.status == 10000
+                    isDefaultPassword = it.status == 10000
                     onSuccess()
                 }, onError = {
                     Log.d("zt", it.toString())
