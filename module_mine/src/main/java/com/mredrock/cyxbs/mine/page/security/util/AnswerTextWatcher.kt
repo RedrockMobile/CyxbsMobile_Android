@@ -24,17 +24,17 @@ open class AnswerTextWatcher(private val tipOF: ObservableField<String>, val but
 
     override fun afterTextChanged(s: Editable?) {
         s?.let {
-            when{
-                it.length < min ->{
+            when {
+                it.length < min -> {
                     tipOF.set("请至少输入2个字符")
-                    button.background = ContextCompat.getDrawable( context , R.drawable.mine_shape_round_corner_light_blue)
+                    button.background = ContextCompat.getDrawable(context, R.drawable.mine_shape_round_corner_light_blue)
                 }
-                it.length >= max ->{
+                it.length >= max -> {
                     tipOF.set("输入已达上限")
                 }
-                else ->{
+                else -> {
                     tipOF.set("")
-                    button.background = ContextCompat.getDrawable( context , R.drawable.mine_shape_round_cornor_purple_blue)
+                    button.background = ContextCompat.getDrawable(context, R.drawable.mine_shape_round_cornor_purple_blue)
                 }
             }
         }

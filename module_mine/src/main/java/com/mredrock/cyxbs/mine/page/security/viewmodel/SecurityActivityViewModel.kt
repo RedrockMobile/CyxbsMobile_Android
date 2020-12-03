@@ -2,15 +2,11 @@ package com.mredrock.cyxbs.mine.page.security.viewmodel
 
 import com.mredrock.cyxbs.account.IAccountService
 import com.mredrock.cyxbs.common.BaseApp
-import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.service.ServiceManager
-import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.common.utils.extensions.toast
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
-import com.mredrock.cyxbs.mine.network.ApiService
-import com.mredrock.cyxbs.mine.network.model.StuNumBody
 import com.mredrock.cyxbs.mine.util.apiService
 
 /**
@@ -23,7 +19,7 @@ class SecurityActivityViewModel : BaseViewModel() {
     var isSetProtect = false
     var isBindingEmail = false
 
-    fun checkBinding(onSuccess: ()-> Unit){
+    fun checkBinding(onSuccess: () -> Unit) {
         apiService.checkBinding(
                 ServiceManager.getService(IAccountService::class.java).getUserService().getStuNum()
         ).setSchedulers().safeSubscribeBy(

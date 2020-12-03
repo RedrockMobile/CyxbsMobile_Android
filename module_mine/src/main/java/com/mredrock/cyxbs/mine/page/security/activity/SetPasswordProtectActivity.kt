@@ -3,22 +3,19 @@ package com.mredrock.cyxbs.mine.page.security.activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.WindowManager
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
-import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.common.utils.extensions.toast
 import com.mredrock.cyxbs.mine.R
 import com.mredrock.cyxbs.mine.databinding.MineActivitySetPasswordProtectBinding
 import com.mredrock.cyxbs.mine.page.security.util.AnswerTextWatcher
-import com.mredrock.cyxbs.mine.util.ui.SelQuestionDialog
 import com.mredrock.cyxbs.mine.page.security.viewmodel.SetPasswordProtectViewModel
+import com.mredrock.cyxbs.mine.util.ui.SelQuestionDialog
 import kotlinx.android.synthetic.main.mine_activity_set_password_protect.*
 
 /**
@@ -72,7 +69,7 @@ class SetPasswordProtectActivity : BaseViewModelActivity<SetPasswordProtectViewM
 
 
         mine_ll_sel_question_show.setOnSingleClickListener {
-            if (canClick){
+            if (canClick) {
                 selQuestionDialog.show()
                 setBackGroundShadowOrShadow()
             } else {
@@ -87,7 +84,7 @@ class SetPasswordProtectActivity : BaseViewModelActivity<SetPasswordProtectViewM
 
         //确定设置密保的点击事件
         mine_bt_security_set_protectconfirm.setOnSingleClickListener {
-            viewModel.setSecurityQA{
+            viewModel.setSecurityQA {
                 finish()
             }
         }

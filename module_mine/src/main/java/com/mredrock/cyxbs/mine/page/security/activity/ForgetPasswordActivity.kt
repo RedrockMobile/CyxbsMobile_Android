@@ -44,23 +44,23 @@ class ForgetPasswordActivity : BaseViewModelActivity<ForgetPasswordViewModel>() 
         //监听是否为默认密码
         viewModel.defaultPassword.observe(this, Observer {
             canClick = true//允许进行点击事件
-            if (it){
+            if (it) {
                 //展示为默认密码的dialog
                 DefaultPasswordHintDialog.show(this, this)
-            }else{
-                viewModel.checkBinding(stuNumber){
+            } else {
+                viewModel.checkBinding(stuNumber) {
                     mine_pb_security_forget.visibility = View.GONE
                     //展示不同的找回密码方式的dialog
-                    ChooseFindTypeDialog.showDialog(this, viewModel.bindingEmail.value!!, viewModel.bindingPasswordProtect.value!!,this, true, stuNumber)
+                    ChooseFindTypeDialog.showDialog(this, viewModel.bindingEmail.value!!, viewModel.bindingPasswordProtect.value!!, this, true, stuNumber)
                 }
             }
         })
         mine_security_bt_forget_password_confirm.setOnSingleClickListener {
-            if (canClick){
+            if (canClick) {
                 stuNumber = mine_security_et_forget_password.text.toString()
-                if (stuNumber!=""&&stuNumber!=null){
+                if (stuNumber != "" && stuNumber != null) {
                     mine_pb_security_forget.visibility = View.VISIBLE
-                    viewModel.checkDefaultPassword(stuNumber){
+                    viewModel.checkDefaultPassword(stuNumber) {
                         mine_pb_security_forget.visibility = View.GONE
                     }
                     canClick = false//网络请求结束之前不允许进行新的请求

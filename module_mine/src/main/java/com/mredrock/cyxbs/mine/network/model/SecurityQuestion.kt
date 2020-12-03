@@ -8,9 +8,9 @@ import java.io.Serializable
  * @author Sca RayleighZ
  * describe: 密保问题的bean类，网络请求用
  */
-data class SecurityQuestion (
+data class SecurityQuestion(
         @SerializedName("id")
-        val id : Int,
+        val id: Int,
         @SerializedName("content")
-        val content : String
+        val content: String
 ) : Serializable

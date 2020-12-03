@@ -1,14 +1,12 @@
 package com.mredrock.cyxbs.mine.page.security.viewmodel
 
 import androidx.databinding.ObservableField
-import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.BaseApp.Companion.context
 import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.common.utils.extensions.toast
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
-import com.mredrock.cyxbs.mine.R
 import com.mredrock.cyxbs.mine.network.model.SecurityQuestion
 import com.mredrock.cyxbs.mine.util.apiService
 
@@ -47,9 +45,9 @@ class SetPasswordProtectViewModel : BaseViewModel() {
                 )
     }
 
-    fun setSecurityQA(onSucceed: ()->Unit) {
+    fun setSecurityQA(onSucceed: () -> Unit) {
         //如果输入的答案字数合理
-        if (securityAnswer.get()?.length!! in 2..17){
+        if (securityAnswer.get()?.length!! in 2..17) {
             tipForInputNum.set("")
             LogUtils.d("SetProtectViewModel", "id = $securityQuestionId, content = ${securityAnswer.get().toString()}")
             apiService.setSecurityQuestionAnswer(

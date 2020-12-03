@@ -10,4 +10,4 @@ import java.io.Serializable
 data class ConfirmQuestion(
         @SerializedName("code")
         val code: Int
-): Serializable
+) : Serializable

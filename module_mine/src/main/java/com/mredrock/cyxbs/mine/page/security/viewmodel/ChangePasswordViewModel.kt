@@ -1,17 +1,13 @@
 package com.mredrock.cyxbs.mine.page.security.viewmodel
 
 import android.util.Log
-import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
 import com.mredrock.cyxbs.common.BaseApp.Companion.context
-import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.common.utils.extensions.toast
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
-import com.mredrock.cyxbs.mine.network.model.StuNumBody
 import com.mredrock.cyxbs.mine.util.apiService
-import com.mredrock.cyxbs.mine.util.extension.logr
 
 /**
  * Author: SpreadWater
@@ -26,16 +22,16 @@ class ChangePasswordViewModel : BaseViewModel() {
     var inputNewPasswordCorrect = MutableLiveData<Boolean>()
 
     //新密码上传格式是否正确
-    var inputNewPasswordFormat :Int=0
+    var inputNewPasswordFormat: Int = 0
 
     //是否绑定邮箱
-    var bindingEmail :Boolean=false
+    var bindingEmail: Boolean = false
 
     //是否绑定密保
-    var bindingPasswordProtect :Boolean=false
+    var bindingPasswordProtect: Boolean = false
 
     //是否为默认密码
-    var isDefaultPassword :Boolean=false
+    var isDefaultPassword: Boolean = false
 
     //检查旧密码输入是否相同
     fun originPassWordCheck(originPassword: String) {
@@ -60,12 +56,12 @@ class ChangePasswordViewModel : BaseViewModel() {
                         }
                         10002 -> {
                             inputNewPasswordCorrect.value = false
-                            inputNewPasswordFormat= 10002
+                            inputNewPasswordFormat = 10002
                             context.toast("原密码错误！")
                         }
                         10004 -> {
                             inputNewPasswordCorrect.value = false
-                            inputNewPasswordFormat= 10004
+                            inputNewPasswordFormat = 10004
                             context.toast("密码格式有问题！")
                         }
                         10020 -> {
@@ -111,7 +107,7 @@ class ChangePasswordViewModel : BaseViewModel() {
                 .safeSubscribeBy(onNext = {
                     if (it.status == 10000) {
                         //设置信息绑定的情况
-                        bindingEmail= it.data.email_is == 1
+                        bindingEmail = it.data.email_is == 1
                         bindingPasswordProtect = it.data.question_is == 1
                         onSuccess()
                     } else {

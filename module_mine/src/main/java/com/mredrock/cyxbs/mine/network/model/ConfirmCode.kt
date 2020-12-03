@@ -10,7 +10,7 @@ import java.io.Serializable
  */
 class ConfirmCode(
         @SerializedName("code")
-        val code : Int,
+        val code: Int,
         @SerializedName("expired_time")
-        val expired_time : Int
+        val expired_time: Int
 ) : Serializable

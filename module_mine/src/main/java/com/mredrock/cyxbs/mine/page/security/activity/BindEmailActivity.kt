@@ -1,19 +1,12 @@
 package com.mredrock.cyxbs.mine.page.security.activity
 
-import android.content.ClipData
-import android.content.ClipboardManager
-import android.content.Intent
-import android.graphics.Color
-import android.net.Uri
 import android.os.Bundle
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.common.ui.BaseActivity
-import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.gone
 import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.common.utils.extensions.toast
@@ -79,7 +72,7 @@ class BindEmailActivity : BaseActivity() {
         if (isEmail(userEmail) || email != "") {
             if (email == "") email = userEmail
             else showUserEmail = email
-            viewModel.getCode(email){
+            viewModel.getCode(email) {
                 BaseApp.context.toast("已向你的邮箱发送了一条验证码")
                 val atLocation = showUserEmail.indexOf("@")
                 when {

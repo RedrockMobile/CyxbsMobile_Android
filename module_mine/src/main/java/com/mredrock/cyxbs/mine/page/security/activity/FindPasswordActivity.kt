@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
-import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import androidx.core.content.ContextCompat
@@ -12,7 +11,6 @@ import androidx.databinding.DataBindingUtil
 import com.mredrock.cyxbs.account.IAccountService
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
-import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.dp2px
 import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.mine.R
@@ -113,12 +111,12 @@ class FindPasswordActivity : BaseViewModelActivity<FindPasswordViewModel>() {
                 }
 
                 mine_et_security_find.addTextChangedListener(
-                        object :AnswerTextWatcher(viewModel.firstTipText, mine_bt_security_find_next, this){
+                        object : AnswerTextWatcher(viewModel.firstTipText, mine_bt_security_find_next, this) {
                             override fun afterTextChanged(s: Editable?) {
-                                if (s?.length != 6){
-                                    button.background = ContextCompat.getDrawable( context , R.drawable.mine_shape_round_corner_light_blue)
+                                if (s?.length != 6) {
+                                    button.background = ContextCompat.getDrawable(context, R.drawable.mine_shape_round_corner_light_blue)
                                 } else {
-                                    button.background = ContextCompat.getDrawable( context , R.drawable.mine_shape_round_cornor_purple_blue)
+                                    button.background = ContextCompat.getDrawable(context, R.drawable.mine_shape_round_cornor_purple_blue)
                                 }
                             }
                         }

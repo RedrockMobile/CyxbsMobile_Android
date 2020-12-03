@@ -1,18 +1,13 @@
 package com.mredrock.cyxbs.mine.page.security.viewmodel
 
-import android.util.Log
 import androidx.databinding.ObservableField
 import com.mredrock.cyxbs.common.BaseApp
-import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.common.utils.extensions.toast
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.mine.network.model.SecurityQuestion
-import com.mredrock.cyxbs.mine.network.model.StuNumBody
 import com.mredrock.cyxbs.mine.util.apiService
-import org.json.JSONObject
-import java.lang.Exception
 
 /**
  * Author: RayleighZ
@@ -86,33 +81,33 @@ class FindPasswordViewModel : BaseViewModel() {
             )
                     .setSchedulers()
                     .safeSubscribeBy(
-                    onError = {
-                        BaseApp.context.toast("对不起，验证码发送失败")
-                    },
-                    onNext = {
-                        when (it.status) {
-                            10000 -> {
-                                //发送成功
-                                expiredTime = it.data.expired_time
-                                BaseApp.context.toast("已向你的邮箱发送了一条验证码")
-                                Thread(clockRunnable).start()
+                            onError = {
+                                BaseApp.context.toast("对不起，验证码发送失败")
+                            },
+                            onNext = {
+                                when (it.status) {
+                                    10000 -> {
+                                        //发送成功
+                                        expiredTime = it.data.expired_time
+                                        BaseApp.context.toast("已向你的邮箱发送了一条验证码")
+                                        Thread(clockRunnable).start()
+                                    }
+                                    10008 -> {
+                                        BaseApp.context.toast("邮箱信息错误")
+                                    }
+                                    10009 -> {
+                                        BaseApp.context.toast("发送次数已达上限，请十分钟后再次尝试")
+                                    }
+                                }
                             }
-                            10008 -> {
-                                BaseApp.context.toast("邮箱信息错误")
-                            }
-                            10009 -> {
-                                BaseApp.context.toast("发送次数已达上限，请十分钟后再次尝试")
-                            }
-                        }
-                    }
-            )
+                    )
         }
     }
 
     //校验找回邮箱的验证码
-    fun confirmCode(onSuccess: (code : Int) -> Unit, onField: ()->Unit) {
+    fun confirmCode(onSuccess: (code: Int) -> Unit, onField: () -> Unit) {
         if (canClickNext) {
-            if (expiredTime < System.currentTimeMillis() / 1000){
+            if (expiredTime < System.currentTimeMillis() / 1000) {
                 BaseApp.context.toast("验证码过期")
                 return
             }
@@ -129,22 +124,22 @@ class FindPasswordViewModel : BaseViewModel() {
             )
                     .setSchedulers()
                     .safeSubscribeBy(
-                    onError = {
-                        BaseApp.context.toast("验证失败，原因为$it")
-                        canClickNext = true
-                    },
-                    onNext = {
-                        if (it.status == 10000) {
-                            //回调
-                            onSuccess(it.data.code)
-                            //因为这里下一步就要去跳转页面了，没有必要再将canClickNext设置为true
-                        } else if (it.status == 10007) {
-                            BaseApp.context.toast("验证码错误")
-                            onField()
-                            canClickNext = true
-                        }
-                    }
-            )
+                            onError = {
+                                BaseApp.context.toast("验证失败，原因为$it")
+                                canClickNext = true
+                            },
+                            onNext = {
+                                if (it.status == 10000) {
+                                    //回调
+                                    onSuccess(it.data.code)
+                                    //因为这里下一步就要去跳转页面了，没有必要再将canClickNext设置为true
+                                } else if (it.status == 10007) {
+                                    BaseApp.context.toast("验证码错误")
+                                    onField()
+                                    canClickNext = true
+                                }
+                            }
+                    )
         }
     }
 
@@ -215,15 +210,15 @@ class FindPasswordViewModel : BaseViewModel() {
     //验证用户输入的密保问题是否正确
     fun confirmAnswer(onSuccess: (code: Int) -> Unit) {
         if (canClickNext) {
-            if (inputText.get() == null){
+            if (inputText.get() == null) {
                 //展示最少输入两个字符
                 firstTipText.set("请至少输入两个字符")
                 return
             }
-            if(inputText.get()!!.length<2){
+            if (inputText.get()!!.length < 2) {
                 firstTipText.set("请至少输入两个字符")
                 return
-            } else if (inputText.get()!!.length >=16){
+            } else if (inputText.get()!!.length >= 16) {
                 firstTipText.set("输入已达上限")
                 return
             }
@@ -236,26 +231,26 @@ class FindPasswordViewModel : BaseViewModel() {
             )
                     .setSchedulers()
                     .safeSubscribeBy(
-                    onError = {
-                        BaseApp.context.toast("验证密保问题失败")
-                        canClickNext = true
-                    },
-                    onNext = {
-                        when(it.status){
-                            10006 ->{//用户尝试次数已经达到上限
-                                BaseApp.context.toast("输入次数已达上限，请10分钟后再次尝试")
+                            onError = {
+                                BaseApp.context.toast("验证密保问题失败")
                                 canClickNext = true
+                            },
+                            onNext = {
+                                when (it.status) {
+                                    10006 -> {//用户尝试次数已经达到上限
+                                        BaseApp.context.toast("输入次数已达上限，请10分钟后再次尝试")
+                                        canClickNext = true
+                                    }
+                                    10005 -> {//密码错误
+                                        BaseApp.context.toast("答案错误，请重新输入")
+                                        canClickNext = true
+                                    }
+                                    10000 -> {//正确
+                                        onSuccess(it.data.code)
+                                    }
+                                }
                             }
-                            10005 ->{//密码错误
-                                BaseApp.context.toast("答案错误，请重新输入")
-                                canClickNext = true
-                            }
-                            10000 ->{//正确
-                                onSuccess(it.data.code)
-                            }
-                        }
-                    }
-            ).lifeCycle()
+                    ).lifeCycle()
         }
     }
 }

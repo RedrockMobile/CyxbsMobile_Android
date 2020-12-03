@@ -12,13 +12,13 @@ import com.mredrock.cyxbs.mine.network.model.SecurityQuestion
  * @date 2020-11-01
  * @author Sca RayleighZ
  */
-class SelQuestionRVAdapter (val list : List<SecurityQuestion> , val onItemClick : (Int) -> Unit) : RecyclerView.Adapter<SelQuestionRVAdapter.InnerViewHolder>() {
-    class InnerViewHolder(itemView : View) : RecyclerView.ViewHolder(itemView) {
+class SelQuestionRVAdapter(val list: List<SecurityQuestion>, val onItemClick: (Int) -> Unit) : RecyclerView.Adapter<SelQuestionRVAdapter.InnerViewHolder>() {
+    class InnerViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         var textView: TextView = itemView.findViewById(R.id.mine_tv_security_question_item)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): InnerViewHolder {
-        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.mine_item_security_sel_question, parent , false)
+        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.mine_item_security_sel_question, parent, false)
         return InnerViewHolder(itemView)
     }
 

@@ -19,6 +19,7 @@ import com.mredrock.cyxbs.mine.page.security.activity.FindPasswordActivity.Compa
 class ChooseFindTypeDialog(context: Context?, theme: Int) : Dialog(context, theme) {
     companion object {
         private var chooseFindTypeDialog: ChooseFindTypeDialog? = null
+
         //此处函数将来可以优化，目前必须要传递一个学号进来
         fun showDialog(context: Context?, hasEmailBinding: Boolean, hasSecurityQuestion: Boolean, activity: BaseActivity, isFromLogin: Boolean, stuNumber: String) {
             if (context == null) return

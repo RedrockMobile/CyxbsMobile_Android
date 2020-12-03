@@ -9,7 +9,6 @@ import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.common.utils.extensions.toast
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
-import com.mredrock.cyxbs.mine.R
 import com.mredrock.cyxbs.mine.network.ApiService
 
 class BindEmailViewModel : BaseViewModel() {

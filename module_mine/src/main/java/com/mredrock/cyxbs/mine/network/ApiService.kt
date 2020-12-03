@@ -1,7 +1,5 @@
 package com.mredrock.cyxbs.mine.network
 
-import androidx.databinding.ObservableBoolean
-import androidx.databinding.ObservableField
 import com.mredrock.cyxbs.common.bean.RedrockApiStatus
 import com.mredrock.cyxbs.common.bean.RedrockApiWrapper
 import com.mredrock.cyxbs.mine.network.model.*
@@ -227,7 +225,7 @@ interface ApiService {
     @FormUrlEncoded
     @POST("/wxapi/user-secret/user/valid/email/code")
     fun getEmailFindPasswordCode(
-            @Field("stu_num")stu_num: String
+            @Field("stu_num") stu_num: String
     ): Observable<RedrockApiWrapper<ConfirmCode>>
 
     /**
@@ -242,7 +240,7 @@ interface ApiService {
     @FormUrlEncoded
     @POST("/wxapi/user-secret/user/valid/email")
     fun confirmCodeWithoutLogin(
-            @Field("stu_num")stu_num: String,
+            @Field("stu_num") stu_num: String,
             @Field("email") email: String,
             @Field("code") code: Int
     ): Observable<RedrockApiWrapper<ConfirmQuestion>>
@@ -254,7 +252,7 @@ interface ApiService {
      */
     @FormUrlEncoded
     @POST("/wxapi/user-secret/user/bind/email/detail")
-    fun getUserEmail(@Field ("stu_num") stu_num: String
+    fun getUserEmail(@Field("stu_num") stu_num: String
     ): Observable<RedrockApiWrapper<Email>>
 
     /**
@@ -262,7 +260,7 @@ interface ApiService {
      */
     @FormUrlEncoded
     @POST("/wxapi/user-secret/user/bind/question/detail")
-    fun getUserQuestion(@Field ("stu_num") stu_num: String
+    fun getUserQuestion(@Field("stu_num") stu_num: String
     ): Observable<RedrockApiWrapper<List<SecurityQuestion>>>
 
     /**
@@ -289,12 +287,12 @@ interface ApiService {
      */
     @FormUrlEncoded
     @POST("/wxapi/user-secret/user/bind/is")
-    fun checkBinding(@Field ("stu_num") stu_num: String): Observable<RedrockApiWrapper<BindingResponse>>
+    fun checkBinding(@Field("stu_num") stu_num: String): Observable<RedrockApiWrapper<BindingResponse>>
 
     /**
      * 检查是否为默认密码
      */
     @FormUrlEncoded
     @POST("/wxapi/user-secret/user/judge/origin")
-    fun checkDefaultPassword(@Field ("stu_num") stu_num: String): Observable<RedrockApiStatus>
+    fun checkDefaultPassword(@Field("stu_num") stu_num: String): Observable<RedrockApiStatus>
 }

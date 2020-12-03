@@ -7,7 +7,7 @@ import java.io.Serializable
  * Author: RayleighZ
  * Time: 2020-11-30 21:29
  */
-data class Email (
+data class Email(
         @SerializedName("email")
         val email: String
-): Serializable
+) : Serializable

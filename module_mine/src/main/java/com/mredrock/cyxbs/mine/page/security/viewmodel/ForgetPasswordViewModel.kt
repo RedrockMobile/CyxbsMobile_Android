@@ -1,4 +1,3 @@
-
 package com.mredrock.cyxbs.mine.page.security.viewmodel
 
 import android.util.Log
@@ -26,7 +25,7 @@ class ForgetPasswordViewModel : BaseViewModel() {
     var bindingPasswordProtect = MutableLiveData<Boolean>()
 
     //检查是否为默认密码
-    fun checkDefaultPassword(stu_num: String,onError:()->Unit) {
+    fun checkDefaultPassword(stu_num: String, onError: () -> Unit) {
         apiService.checkDefaultPassword(stu_num)
                 .setSchedulers()
                 .safeSubscribeBy(onNext = {

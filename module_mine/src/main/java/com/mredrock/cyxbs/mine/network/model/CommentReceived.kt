@@ -20,9 +20,9 @@ data class CommentReceived(
         val commenterImageUrl: String
 ) : Serializable
 /**
-         "question_id": 1152,
-        "answer_id": 1586,
-        "comment_content": "评论",
-        "commenter_nickname": "v",
-        "commenter_imageurl": "https://cyxbsmobile.redrock.team/cyxbsMobile/Public/photo/1573791066_238431583.png"
+"question_id": 1152,
+"answer_id": 1586,
+"comment_content": "评论",
+"commenter_nickname": "v",
+"commenter_imageurl": "https://cyxbsmobile.redrock.team/cyxbsMobile/Public/photo/1573791066_238431583.png"
  */
