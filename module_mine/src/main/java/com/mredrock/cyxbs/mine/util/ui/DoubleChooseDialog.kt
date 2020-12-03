@@ -8,7 +8,7 @@ import com.mredrock.cyxbs.mine.R
 import com.mredrock.cyxbs.mine.page.security.activity.BindEmailActivity
 import com.mredrock.cyxbs.mine.page.security.activity.SetPasswordProtectActivity
 
-class DoubleChooseDialog(context: Context?, theme: Int) : Dialog(context!!, theme) {
+class DoubleChooseDialog(context: Context?, theme: Int) : Dialog(context, theme) {
     companion object {
         fun show(context: Context?) {
             if (context == null) return

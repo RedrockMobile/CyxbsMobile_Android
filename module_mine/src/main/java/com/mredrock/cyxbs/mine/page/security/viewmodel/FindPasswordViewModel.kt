@@ -121,7 +121,7 @@ class FindPasswordViewModel : BaseViewModel() {
                 apiService.confirmCodeWithoutLogin(
                         stuNumber,
                         email,
-                        inputText.get()!!.toInt()
+                        it.toInt()
                 )
                         .setSchedulers()
                         .safeSubscribeBy(
