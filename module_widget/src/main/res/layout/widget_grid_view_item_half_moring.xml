@@ -13,7 +13,7 @@
         android:gravity="center"
         android:padding="@dimen/widget_course_margin"
         android:text="@string/widget_three_lesson_tips"
-        android:textColor="#FF8015"
+        android:textColor="@color/widget_morning_text_color"
         android:textSize="@dimen/widget_course_text_size" />
 
 </FrameLayout>
