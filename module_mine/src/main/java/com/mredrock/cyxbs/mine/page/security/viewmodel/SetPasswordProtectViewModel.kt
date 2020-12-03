@@ -47,24 +47,26 @@ class SetPasswordProtectViewModel : BaseViewModel() {
 
     fun setSecurityQA(onSucceed: () -> Unit) {
         //如果输入的答案字数合理
-        if (securityAnswer.get()?.length!! in 2..17) {
-            tipForInputNum.set("")
-            LogUtils.d("SetProtectViewModel", "id = $securityQuestionId, content = ${securityAnswer.get().toString()}")
-            apiService.setSecurityQuestionAnswer(
-                    id = securityQuestionId,
-                    content = securityAnswer.get().toString())
-                    .setSchedulers()
-                    .safeSubscribeBy(
-                            onNext = {
-                                if (it.status == 10000) {
-                                    context.toast("恭喜您，设置成功")
-                                    onSucceed()
+        securityAnswer.get()?.length?.let {length ->
+            if (length in 2..17) {
+                tipForInputNum.set("")
+                LogUtils.d("SetProtectViewModel", "id = $securityQuestionId, content = ${securityAnswer.get().toString()}")
+                apiService.setSecurityQuestionAnswer(
+                        id = securityQuestionId,
+                        content = securityAnswer.get().toString())
+                        .setSchedulers()
+                        .safeSubscribeBy(
+                                onNext = {
+                                    if (it.status == 10000) {
+                                        context.toast("恭喜您，设置成功")
+                                        onSucceed()
+                                    }
+                                },
+                                onError = {
+                                    context.toast(it.toString())
                                 }
-                            },
-                            onError = {
-                                context.toast(it.toString())
-                            }
-                    )
+                        )
+            }
         }
     }
 }

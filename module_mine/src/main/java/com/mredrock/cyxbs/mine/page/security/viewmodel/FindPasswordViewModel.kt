@@ -117,29 +117,31 @@ class FindPasswordViewModel : BaseViewModel() {
                 return
             }
             canClickNext = false
-            apiService.confirmCodeWithoutLogin(
-                    stuNumber,
-                    email,
-                    inputText.get()!!.toInt()
-            )
-                    .setSchedulers()
-                    .safeSubscribeBy(
-                            onError = {
-                                BaseApp.context.toast("验证失败，原因为$it")
-                                canClickNext = true
-                            },
-                            onNext = {
-                                if (it.status == 10000) {
-                                    //回调
-                                    onSuccess(it.data.code)
-                                    //因为这里下一步就要去跳转页面了，没有必要再将canClickNext设置为true
-                                } else if (it.status == 10007) {
-                                    BaseApp.context.toast("验证码错误")
-                                    onField()
+            inputText.get()?.let {
+                apiService.confirmCodeWithoutLogin(
+                        stuNumber,
+                        email,
+                        inputText.get()!!.toInt()
+                )
+                        .setSchedulers()
+                        .safeSubscribeBy(
+                                onError = {
+                                    BaseApp.context.toast("验证失败，原因为$it")
                                     canClickNext = true
+                                },
+                                onNext = {
+                                    if (it.status == 10000) {
+                                        //回调
+                                        onSuccess(it.data.code)
+                                        //因为这里下一步就要去跳转页面了，没有必要再将canClickNext设置为true
+                                    } else if (it.status == 10007) {
+                                        BaseApp.context.toast("验证码错误")
+                                        onField()
+                                        canClickNext = true
+                                    }
                                 }
-                            }
-                    )
+                        )
+            }
         }
     }
 
@@ -215,42 +217,44 @@ class FindPasswordViewModel : BaseViewModel() {
                 firstTipText.set("请至少输入两个字符")
                 return
             }
-            if (inputText.get()!!.length < 2) {
-                firstTipText.set("请至少输入两个字符")
-                return
-            } else if (inputText.get()!!.length >= 16) {
-                firstTipText.set("输入已达上限")
-                return
-            }
-            //输入情况正常以后，允许进行正常的网络请求
-            canClickNext = false//防暴击
-            apiService.confirmAnswer(
-                    stuNumber,
-                    question.id,//这里canClick就一定是成功获取了question的，可以不用担心空指针
-                    inputText.get()!!
-            )
-                    .setSchedulers()
-                    .safeSubscribeBy(
-                            onError = {
-                                BaseApp.context.toast("验证密保问题失败")
-                                canClickNext = true
-                            },
-                            onNext = {
-                                when (it.status) {
-                                    10006 -> {//用户尝试次数已经达到上限
-                                        BaseApp.context.toast("输入次数已达上限，请10分钟后再次尝试")
-                                        canClickNext = true
-                                    }
-                                    10005 -> {//密码错误
-                                        BaseApp.context.toast("答案错误，请重新输入")
-                                        canClickNext = true
-                                    }
-                                    10000 -> {//正确
-                                        onSuccess(it.data.code)
+            inputText.get()?.let {
+                if (it.length < 2) {
+                    firstTipText.set("请至少输入两个字符")
+                    return
+                } else if (it.length >= 16) {
+                    firstTipText.set("输入已达上限")
+                    return
+                }
+                //输入情况正常以后，允许进行正常的网络请求
+                canClickNext = false//防暴击
+                apiService.confirmAnswer(
+                        stuNumber,
+                        question.id,//这里canClick就一定是成功获取了question的，可以不用担心空指针
+                        it
+                )
+                        .setSchedulers()
+                        .safeSubscribeBy(
+                                onError = {
+                                    BaseApp.context.toast("验证密保问题失败")
+                                    canClickNext = true
+                                },
+                                onNext = { cq ->
+                                    when (cq.status) {
+                                        10006 -> {//用户尝试次数已经达到上限
+                                            BaseApp.context.toast("输入次数已达上限，请10分钟后再次尝试")
+                                            canClickNext = true
+                                        }
+                                        10005 -> {//密码错误
+                                            BaseApp.context.toast("答案错误，请重新输入")
+                                            canClickNext = true
+                                        }
+                                        10000 -> {//正确
+                                            onSuccess(cq.data.code)
+                                        }
                                     }
                                 }
-                            }
-                    ).lifeCycle()
+                        ).lifeCycle()
+            }
         }
     }
 }

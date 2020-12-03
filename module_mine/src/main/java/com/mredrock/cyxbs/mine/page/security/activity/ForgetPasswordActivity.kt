@@ -51,7 +51,11 @@ class ForgetPasswordActivity : BaseViewModelActivity<ForgetPasswordViewModel>() 
                 viewModel.checkBinding(stuNumber) {
                     mine_pb_security_forget.visibility = View.GONE
                     //展示不同的找回密码方式的dialog
-                    ChooseFindTypeDialog.showDialog(this, viewModel.bindingEmail.value!!, viewModel.bindingPasswordProtect.value!!, this, true, stuNumber)
+                    viewModel.bindingEmail.value?.let {
+                        viewModel.bindingPasswordProtect.value?.let {
+                            ChooseFindTypeDialog.showDialog(this, viewModel.bindingEmail.value!!, viewModel.bindingPasswordProtect.value!!, this, true, stuNumber)
+                        }
+                    }
                 }
             }
         })

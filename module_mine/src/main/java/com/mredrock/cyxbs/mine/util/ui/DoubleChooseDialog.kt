@@ -10,24 +10,21 @@ import com.mredrock.cyxbs.mine.page.security.activity.SetPasswordProtectActivity
 
 class DoubleChooseDialog(context: Context?, theme: Int) : Dialog(context!!, theme) {
     companion object {
-        private var doubleChooseDialog: DoubleChooseDialog? = null
         fun show(context: Context?) {
             if (context == null) return
-            if (doubleChooseDialog == null || doubleChooseDialog?.context != context) {
-                doubleChooseDialog = DoubleChooseDialog(context, R.style.transparent_dialog)
-            }
-            doubleChooseDialog!!.setContentView(R.layout.mine_dialog_double_choose)
-            val buttonToBindingEmail = doubleChooseDialog!!.findViewById<Button>(R.id.mine_bt_security_dialog_binding_email)
-            val buttonToSetPasswordProtect = doubleChooseDialog!!.findViewById<Button>(R.id.mine_bt_security_dialog_set_protect)
+            val doubleChooseDialog = DoubleChooseDialog(context, R.style.transparent_dialog)
+            doubleChooseDialog.setContentView(R.layout.mine_dialog_double_choose)
+            val buttonToBindingEmail = doubleChooseDialog.findViewById<Button>(R.id.mine_bt_security_dialog_binding_email)
+            val buttonToSetPasswordProtect = doubleChooseDialog.findViewById<Button>(R.id.mine_bt_security_dialog_set_protect)
             buttonToSetPasswordProtect.setOnClickListener {
                 SetPasswordProtectActivity.actionStart(context)
-                doubleChooseDialog!!.hide()
+                doubleChooseDialog.hide()
             }
             buttonToBindingEmail.setOnClickListener {
                 context.startActivity(Intent(context, BindEmailActivity::class.java))
-                doubleChooseDialog!!.hide()
+                doubleChooseDialog.hide()
             }
-            doubleChooseDialog!!.show()
+            doubleChooseDialog.show()
         }
     }
 }

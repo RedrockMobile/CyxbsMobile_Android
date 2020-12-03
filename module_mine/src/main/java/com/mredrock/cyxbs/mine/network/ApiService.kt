@@ -234,8 +234,6 @@ interface ApiService {
      * 此处的返回值中不一定含有data字段
      * 需要根据返回值的status判断是否拥有data字段
      * 邮箱需要通过其他接口获取
-     * TODO: 就目前接口文档看来，登陆与否使用的找回密码的接口是完全相同的
-     * 没有进行data字段的解析
      */
     @FormUrlEncoded
     @POST("/wxapi/user-secret/user/valid/email")

@@ -18,18 +18,14 @@ import com.mredrock.cyxbs.mine.page.security.activity.FindPasswordActivity.Compa
  */
 class ChooseFindTypeDialog(context: Context?, theme: Int) : Dialog(context, theme) {
     companion object {
-        private var chooseFindTypeDialog: ChooseFindTypeDialog? = null
-
         //此处函数将来可以优化，目前必须要传递一个学号进来
         fun showDialog(context: Context?, hasEmailBinding: Boolean, hasSecurityQuestion: Boolean, activity: BaseActivity, isFromLogin: Boolean, stuNumber: String) {
             if (context == null) return
-            if (chooseFindTypeDialog == null || (context != chooseFindTypeDialog?.context)) {
-                chooseFindTypeDialog = ChooseFindTypeDialog(context, R.style.transparent_dialog)
-                chooseFindTypeDialog!!.setContentView(R.layout.mine_dialog_choose_find_type)
-                chooseFindTypeDialog!!.window?.attributes?.gravity = Gravity.CENTER
-            }
-            val tvEmail = chooseFindTypeDialog!!.findViewById<TextView>(R.id.mine_tv_dialog_choose_type_email)
-            val tvProtect = chooseFindTypeDialog!!.findViewById<TextView>(R.id.mine_tv_dialog_choose_type_protect)
+            val chooseFindTypeDialog = ChooseFindTypeDialog(context, R.style.transparent_dialog)
+            chooseFindTypeDialog.setContentView(R.layout.mine_dialog_choose_find_type)
+            chooseFindTypeDialog.window?.attributes?.gravity = Gravity.CENTER
+            val tvEmail = chooseFindTypeDialog.findViewById<TextView>(R.id.mine_tv_dialog_choose_type_email)
+            val tvProtect = chooseFindTypeDialog.findViewById<TextView>(R.id.mine_tv_dialog_choose_type_protect)
             tvEmail.setOnClickListener {
                 //当点击通过邮箱找回的按钮时
                 if (hasEmailBinding) {
@@ -39,9 +35,9 @@ class ChooseFindTypeDialog(context: Context?, theme: Int) : Dialog(context, them
                     } else {
                         FindPasswordActivity.actionStartFromMine(context, FIND_PASSWORD_BY_EMAIL)
                     }
-                    chooseFindTypeDialog!!.hide()
+                    chooseFindTypeDialog.hide()
                     activity.finish()
-                    chooseFindTypeDialog!!.dismiss()
+                    chooseFindTypeDialog.dismiss()
                 } else {
                     //弹出toast提示没有进行密码绑定
                     BaseApp.context.toast("您好像还没有绑定邮箱")
@@ -56,14 +52,14 @@ class ChooseFindTypeDialog(context: Context?, theme: Int) : Dialog(context, them
                     } else {
                         FindPasswordActivity.actionStartFromMine(context, FIND_PASSWORD_BY_SECURITY_QUESTION)
                     }
-                    chooseFindTypeDialog!!.hide()
+                    chooseFindTypeDialog.hide()
                     activity.finish()
-                    chooseFindTypeDialog!!.dismiss()
+                    chooseFindTypeDialog.dismiss()
                 } else {
                     BaseApp.context.toast("您好像还没有设置密保问题")
                 }
             }
-            chooseFindTypeDialog!!.show()
+            chooseFindTypeDialog.show()
         }
     }
 }

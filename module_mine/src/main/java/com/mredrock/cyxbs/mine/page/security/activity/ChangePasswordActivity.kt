@@ -184,12 +184,16 @@ class ChangePasswordActivity : BaseViewModelActivity<ChangePasswordViewModel>() 
             if (isLine2ShowPassword) {
                 mine_iv_security_change_paswword_line2_eye.setImageResource(R.drawable.mine_ic_close_eye)
                 mine_security_firstinput_password.transformationMethod = PasswordTransformationMethod.getInstance()//不显示密码
-                mine_security_firstinput_password.setSelection(mine_security_firstinput_password.text!!.length)
+                mine_security_firstinput_password.text?.let {
+                    mine_security_firstinput_password.setSelection(it.length)
+                }
                 isLine2ShowPassword = false
             } else {
                 mine_iv_security_change_paswword_line2_eye.setImageResource(R.drawable.mine_ic_open_eye)
                 mine_security_firstinput_password.transformationMethod = HideReturnsTransformationMethod.getInstance()//显示密码
-                mine_security_firstinput_password.setSelection(mine_security_firstinput_password.text!!.length)
+                mine_security_firstinput_password.text?.let {
+                    mine_security_firstinput_password.setSelection(it.length)
+                }
                 isLine2ShowPassword = true
             }
         }
@@ -197,52 +201,60 @@ class ChangePasswordActivity : BaseViewModelActivity<ChangePasswordViewModel>() 
             if (isLine1ShowPassword) {
                 mine_iv_security_change_paswword_line1_eye.setImageResource(R.drawable.mine_ic_close_eye)
                 mine_security_secondinput_password.transformationMethod = PasswordTransformationMethod.getInstance()//不显示密码
-                mine_security_secondinput_password.setSelection(mine_security_secondinput_password.text!!.length)
+                mine_security_firstinput_password.text?.let {
+                    mine_security_secondinput_password.setSelection(it.length)
+                }
                 isLine1ShowPassword = false
             } else {
                 mine_iv_security_change_paswword_line1_eye.setImageResource(R.drawable.mine_ic_open_eye)
                 mine_security_secondinput_password.transformationMethod = HideReturnsTransformationMethod.getInstance()//显示密码
-                mine_security_secondinput_password.setSelection(mine_security_secondinput_password.text!!.length)
+                mine_security_firstinput_password.text?.let {
+                    mine_security_secondinput_password.setSelection(it.length)
+                }
                 isLine1ShowPassword = true
             }
         }
         mine_security_firstinput_password.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(p0: Editable?) {
                 mine_tv_security_tip_line1.visibility = View.GONE
-                if (isOriginView) {
-                    if (p0?.length!! > 0) {
-                        changeButtonColorType(TYPE_COLOR_NIGHT_BUTTON)
-                        isClick = true
-                        mine_iv_security_change_paswword_line2_eye.visibility = View.VISIBLE
-                    } else {
-                        mine_iv_security_change_paswword_line2_eye.visibility = View.GONE
-                        changeButtonColorType(TYPE_COLOR_LIGHT_BUTTON)
-                        isClick = false
-                    }
-                } else {
-                    //第二个界面的逻辑
-                    if (p0?.length!! > 0) {
-                        if (p0?.length!! in 6..16) {
-                            mine_tv_security_tip_line1.visibility = View.GONE
+                p0?.length?.let {
+                    if (isOriginView) {
+                        if (p0.isNotEmpty()) {
+                            changeButtonColorType(TYPE_COLOR_NIGHT_BUTTON)
+                            isClick = true
+                            mine_iv_security_change_paswword_line2_eye.visibility = View.VISIBLE
+                        } else {
+                            mine_iv_security_change_paswword_line2_eye.visibility = View.GONE
+                            changeButtonColorType(TYPE_COLOR_LIGHT_BUTTON)
+                            isClick = false
                         }
-                        if (mine_security_secondinput_password.text?.isNotEmpty()!!) {
-                            //第二个不为空才去检查
-                            if (mine_security_secondinput_password.text.toString() != mine_security_firstinput_password.text.toString()) {
-                                //用于防止第二个输入框输入了，用于再次修改第一个输入框
-                                mine_tv_security_tip_line2.visibility = View.VISIBLE
-                                changeButtonColorType(TYPE_COLOR_LIGHT_BUTTON)
-                                isClick = false
-                            } else {
-                                mine_tv_security_tip_line2.visibility = View.GONE
-                                changeButtonColorType(TYPE_COLOR_NIGHT_BUTTON)
-                                isClick = true
+                    } else {
+                        //第二个界面的逻辑
+                        if (p0.isNotEmpty()) {
+                            if (p0.length in 6..16) {
+                                mine_tv_security_tip_line1.visibility = View.GONE
                             }
+                            mine_security_secondinput_password.text?.isNotEmpty()?.let {
+                                if (it) {
+                                    //第二个不为空才去检查
+                                    if (mine_security_secondinput_password.text.toString() != mine_security_firstinput_password.text.toString()) {
+                                        //用于防止第二个输入框输入了，用于再次修改第一个输入框
+                                        mine_tv_security_tip_line2.visibility = View.VISIBLE
+                                        changeButtonColorType(TYPE_COLOR_LIGHT_BUTTON)
+                                        isClick = false
+                                    } else {
+                                        mine_tv_security_tip_line2.visibility = View.GONE
+                                        changeButtonColorType(TYPE_COLOR_NIGHT_BUTTON)
+                                        isClick = true
+                                    }
+                                }
+                            }
+                            mine_iv_security_change_paswword_line2_eye.visibility = View.VISIBLE
+                        } else {
+                            mine_iv_security_change_paswword_line2_eye.visibility = View.GONE
+                            changeButtonColorType(TYPE_COLOR_LIGHT_BUTTON)
+                            isClick = false
                         }
-                        mine_iv_security_change_paswword_line2_eye.visibility = View.VISIBLE
-                    } else {
-                        mine_iv_security_change_paswword_line2_eye.visibility = View.GONE
-                        changeButtonColorType(TYPE_COLOR_LIGHT_BUTTON)
-                        isClick = false
                     }
                 }
             }
@@ -258,23 +270,25 @@ class ChangePasswordActivity : BaseViewModelActivity<ChangePasswordViewModel>() 
             override fun afterTextChanged(p0: Editable?) {
                 mine_tv_security_tip_line1.visibility = View.GONE
                 //判断两次输入的字符串是否相同
-                if (!isOriginView) {
-                    if (p0?.length!! > 0) {
-                        if (mine_security_secondinput_password.text.toString() != mine_security_firstinput_password.text.toString()) {
-                            mine_tv_security_tip_line2.visibility = View.VISIBLE
-                            changeButtonColorType(TYPE_COLOR_LIGHT_BUTTON)
-                            isClick = false
+                p0?.length?.let {
+                    if (!isOriginView) {
+                        if (p0.length > 0) {
+                            if (mine_security_secondinput_password.text.toString() != mine_security_firstinput_password.text.toString()) {
+                                mine_tv_security_tip_line2.visibility = View.VISIBLE
+                                changeButtonColorType(TYPE_COLOR_LIGHT_BUTTON)
+                                isClick = false
+                            } else {
+                                mine_tv_security_tip_line2.visibility = View.GONE
+                                changeButtonColorType(TYPE_COLOR_NIGHT_BUTTON)
+                                isClick = true
+                            }
+                            mine_iv_security_change_paswword_line1_eye.visibility = View.VISIBLE
                         } else {
                             mine_tv_security_tip_line2.visibility = View.GONE
-                            changeButtonColorType(TYPE_COLOR_NIGHT_BUTTON)
-                            isClick = true
+                            mine_iv_security_change_paswword_line1_eye.visibility = View.GONE
+                            changeButtonColorType(TYPE_COLOR_LIGHT_BUTTON)
+                            isClick = false
                         }
-                        mine_iv_security_change_paswword_line1_eye.visibility = View.VISIBLE
-                    } else {
-                        mine_tv_security_tip_line2.visibility = View.GONE
-                        mine_iv_security_change_paswword_line1_eye.visibility = View.GONE
-                        changeButtonColorType(TYPE_COLOR_LIGHT_BUTTON)
-                        isClick = false
                     }
                 }
             }
@@ -322,25 +336,27 @@ class ChangePasswordActivity : BaseViewModelActivity<ChangePasswordViewModel>() 
                     viewModel.originPassWordCheck(mine_security_firstinput_password.text.toString())
                 } else {
                     //填写新密码的界面，跳转到上传新密码
-                    if (isFromLogin) {
-                        if (code != -1) {
-                            if (mine_security_firstinput_password.text!!.length in 6.0..16.0) {
+                    mine_security_firstinput_password.text?.let {
+                        if (isFromLogin) {
+                            if (code != -1) {
+                                if (it.length in 6.0..16.0) {
+                                    //字数格式要求满足的情况下进行网络请求
+                                    viewModel.resetPasswordFromLogin(stuNum, mine_security_firstinput_password.text.toString(), code)
+                                    mine_tv_security_tip_line1.visibility = View.GONE
+                                } else {
+                                    mine_tv_security_tip_line1.visibility = View.VISIBLE
+                                }
+                            } else {
+                                BaseApp.context.toast("后端返回的认证码存在问题，修改失败")
+                            }
+                        } else {
+                            if (it.length in 6.0..16.0) {
                                 //字数格式要求满足的情况下进行网络请求
-                                viewModel.resetPasswordFromLogin(stuNum, mine_security_firstinput_password.text.toString(), code)
+                                viewModel.newPassWordInput(originPassword, mine_security_firstinput_password.text.toString())
                                 mine_tv_security_tip_line1.visibility = View.GONE
                             } else {
                                 mine_tv_security_tip_line1.visibility = View.VISIBLE
                             }
-                        } else {
-                            BaseApp.context.toast("后端返回的认证码存在问题，修改失败")
-                        }
-                    } else {
-                        if (mine_security_firstinput_password.text!!.length in 6.0..16.0) {
-                            //字数格式要求满足的情况下进行网络请求
-                            viewModel.newPassWordInput(originPassword, mine_security_firstinput_password.text.toString())
-                            mine_tv_security_tip_line1.visibility = View.GONE
-                        } else {
-                            mine_tv_security_tip_line1.visibility = View.VISIBLE
                         }
                     }
                 }
