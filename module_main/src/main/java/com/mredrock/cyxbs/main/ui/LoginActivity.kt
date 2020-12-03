@@ -29,6 +29,7 @@ import com.mredrock.cyxbs.account.IAccountService
 import com.mredrock.cyxbs.common.BaseApp.Companion.context
 import com.mredrock.cyxbs.common.config.MINE_FORGET_PASSWORD
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
+import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.toast
 import com.mredrock.cyxbs.main.MAIN_LOGIN
 import com.mredrock.cyxbs.main.R
@@ -135,8 +136,7 @@ class LoginActivity : BaseViewModelActivity<LoginViewModel>(), EventBusLifecycle
             //放下键盘
             val inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             if (inputMethodManager.isActive) {
-                inputMethodManager.hideSoftInputFromWindow(this.currentFocus?.windowToken
-                        , 0)
+                inputMethodManager.hideSoftInputFromWindow(this.currentFocus?.windowToken, 0)
             }
             viewModel.login(et_account.text?.toString(), et_password.text?.toString(), landing) {
                 //如果是点击退出按钮到达的登录页那么就默认启动mainActivity，或者唤起登录页的Activity是MainActivity就默认启动

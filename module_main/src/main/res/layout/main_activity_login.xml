@@ -106,6 +106,8 @@
         android:layout_width="0dp"
         android:layout_height="50dp"
         android:gravity="bottom"
+        android:focusable="true"
+        android:clickable="true"
         app:layout_constraintBottom_toBottomOf="@+id/tv_password_ic"
         app:layout_constraintEnd_toEndOf="@+id/et_account_container"
         app:layout_constraintStart_toStartOf="@+id/et_account_container"
