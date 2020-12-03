@@ -4,6 +4,6 @@
     >
 
     <corners android:radius="8dp" />
-    <solid android:color="@color/common_transaction_background_stripe_color" />
+    <solid android:color="#FFE4E7EC" />
 
 </shape>

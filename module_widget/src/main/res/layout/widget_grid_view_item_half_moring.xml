@@ -8,7 +8,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="@dimen/widget_course_item_height_half"
-        android:background="@drawable/widget_shpae_course_grid_moring_item"
+        android:background="@drawable/widget_shape_course_grid_moring_item"
         android:ellipsize="end"
         android:gravity="center"
         android:padding="@dimen/widget_course_margin"

@@ -70,7 +70,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="3"
-            android:background="@drawable/widget_shpae_course_grid_moring_item"
+            android:background="@drawable/widget_shape_course_grid_moring_item"
             android:orientation="vertical">
 
             <TextView
@@ -118,7 +118,7 @@
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_columnWeight="1"
-        android:background="@drawable/widget_shpae_course_grid_moring_item"
+        android:background="@drawable/widget_shape_course_grid_moring_item"
         android:orientation="vertical"
         android:layout_margin="2dp">
 
@@ -159,7 +159,7 @@
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_columnWeight="1"
-        android:background="@drawable/widget_shpae_course_grid_moring_item"
+        android:background="@drawable/widget_shape_course_grid_moring_item"
         android:orientation="vertical"
         android:layout_margin="2dp">
 
@@ -212,7 +212,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="3"
-            android:background="@drawable/widget_shpae_course_grid_afternoon_item"
+            android:background="@drawable/widget_shape_course_grid_afternoon_item"
             android:orientation="vertical">
 
             <TextView
@@ -261,7 +261,7 @@
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_columnWeight="1"
-        android:background="@drawable/widget_shpae_course_grid_afternoon_item"
+        android:background="@drawable/widget_shape_course_grid_afternoon_item"
         android:orientation="vertical"
         android:layout_margin="2dp">
 
@@ -302,7 +302,7 @@
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_columnWeight="1"
-        android:background="@drawable/widget_shpae_course_grid_afternoon_item"
+        android:background="@drawable/widget_shape_course_grid_afternoon_item"
         android:orientation="vertical"
         android:layout_margin="2dp">
 
@@ -357,7 +357,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="3"
-            android:background="@drawable/widget_shpae_course_grid_nigth_item"
+            android:background="@drawable/widget_shape_course_grid_nigth_item"
             android:orientation="vertical">
 
             <TextView
@@ -407,7 +407,7 @@
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_columnWeight="1"
-        android:background="@drawable/widget_shpae_course_grid_nigth_item"
+        android:background="@drawable/widget_shape_course_grid_nigth_item"
         android:orientation="vertical"
         android:layout_margin="2dp">
 
@@ -448,7 +448,7 @@
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_columnWeight="1"
-        android:background="@drawable/widget_shpae_course_grid_nigth_item"
+        android:background="@drawable/widget_shape_course_grid_nigth_item"
         android:orientation="vertical"
         android:layout_margin="2dp">
 
