@@ -17,7 +17,7 @@ import com.mredrock.cyxbs.qa.R
  * 2020/12/4
  */
 
-class OptionalPopWindow internal constructor(val context: Context?) : PopupWindow(context) {
+class OptionalPopWindow private constructor(val context: Context?) : PopupWindow(context) {
 
     companion object {
         private val TAG = OptionalPopWindow::class.java.name
@@ -30,8 +30,6 @@ class OptionalPopWindow internal constructor(val context: Context?) : PopupWindo
     }
 
     init {
-        height = ViewGroup.LayoutParams.WRAP_CONTENT
-        width = ViewGroup.LayoutParams.WRAP_CONTENT
         isOutsideTouchable = true
         isFocusable = true
         setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
