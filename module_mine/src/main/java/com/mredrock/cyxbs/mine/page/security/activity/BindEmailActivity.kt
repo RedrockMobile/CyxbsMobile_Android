@@ -39,8 +39,8 @@ class BindEmailActivity : BaseActivity() {
             btn_bind_email_next.isEnabled = true
         })
 
-        iv_bind_email_back.setOnSingleClickListener {
-            finish()
+        common_toolbar.apply {
+            initWithSplitLine("绑定邮箱")
         }
 
         tv_bind_email_contact_us.setOnSingleClickListener {
