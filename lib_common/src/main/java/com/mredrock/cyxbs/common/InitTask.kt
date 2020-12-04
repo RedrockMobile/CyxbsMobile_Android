@@ -11,8 +11,8 @@ import com.google.gson.JsonParser
 import com.meituan.android.walle.WalleChannelReader
 import com.mredrock.cyxbs.common.config.DebugDataModel
 import com.mredrock.cyxbs.common.service.ServiceManager
-import com.mredrock.cyxbs.account.IAccountService
-import com.mredrock.cyxbs.account.IUserStateService
+import com.mredrock.cyxbs.api.account.IAccountService
+import com.mredrock.cyxbs.api.account.IUserStateService
 import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.debug
 import com.mredrock.cyxbs.common.utils.extensions.runOnUiThread

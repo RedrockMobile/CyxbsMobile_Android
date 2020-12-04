@@ -4,8 +4,8 @@ import android.util.SparseArray
 import com.mredrock.cyxbs.common.BuildConfig
 import com.mredrock.cyxbs.common.config.END_POINT_REDROCK
 import com.mredrock.cyxbs.common.service.ServiceManager
-import com.mredrock.cyxbs.account.IAccountService
-import com.mredrock.cyxbs.account.IUserStateService
+import com.mredrock.cyxbs.api.account.IAccountService
+import com.mredrock.cyxbs.api.account.IUserStateService
 import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.takeIfNoException
 import okhttp3.Interceptor

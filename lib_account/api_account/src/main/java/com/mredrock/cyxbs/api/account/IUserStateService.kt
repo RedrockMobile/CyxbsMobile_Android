@@ -1,4 +1,4 @@
-package com.mredrock.cyxbs.account
+package com.mredrock.cyxbs.api.account
 
 import android.content.Context
 import androidx.annotation.MainThread

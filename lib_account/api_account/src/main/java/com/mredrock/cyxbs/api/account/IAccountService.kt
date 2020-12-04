@@ -1,4 +1,4 @@
-package com.mredrock.cyxbs.account
+package com.mredrock.cyxbs.api.account
 
 import com.alibaba.android.arouter.facade.template.IProvider
 

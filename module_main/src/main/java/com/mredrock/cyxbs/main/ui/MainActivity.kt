@@ -10,7 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.mredrock.cyxbs.account.IAccountService
+import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.bean.LoginConfig
 import com.mredrock.cyxbs.common.config.*
@@ -26,7 +26,7 @@ import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
 import com.mredrock.cyxbs.common.utils.extensions.getStatusBarHeight
 import com.mredrock.cyxbs.common.utils.extensions.onTouch
 import com.mredrock.cyxbs.common.utils.extensions.topPadding
-import com.mredrock.cyxbs.main.IMainService
+import com.mredrock.cyxbs.api.main.IMainService
 import com.mredrock.cyxbs.main.MAIN_MAIN
 import com.mredrock.cyxbs.main.R
 import com.mredrock.cyxbs.main.debug.DebugActivity
@@ -35,8 +35,8 @@ import com.mredrock.cyxbs.main.utils.entryContains
 import com.mredrock.cyxbs.main.utils.getFragment
 import com.mredrock.cyxbs.main.utils.isDownloadSplash
 import com.mredrock.cyxbs.main.viewmodel.MainViewModel
-import com.mredrock.cyxbs.update.AppUpdateStatus
-import com.mredrock.cyxbs.update.IAppUpdateService
+import com.mredrock.cyxbs.api.update.AppUpdateStatus
+import com.mredrock.cyxbs.api.update.IAppUpdateService
 import com.umeng.analytics.MobclickAgent
 import com.umeng.message.inapp.InAppMessageManager
 import kotlinx.android.synthetic.main.main_activity_main.*

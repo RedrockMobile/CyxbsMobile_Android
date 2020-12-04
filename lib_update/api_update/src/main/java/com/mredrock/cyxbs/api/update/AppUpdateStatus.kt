@@ -1,4 +1,4 @@
-package com.mredrock.cyxbs.update
+package com.mredrock.cyxbs.api.update
 
 /**
  * Create By Hosigus at 2020/5/2
