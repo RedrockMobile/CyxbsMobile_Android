@@ -80,7 +80,7 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>() {
                 emptyAdapter = emptyRvAdapter,
                 footerAdapter = footerRvAdapter
         )
-        val circlesAdapter = CirclesAdapter()
+        val circlesAdapter = this.activity?.let { CirclesAdapter(it) }
         val linearLayoutManager = LinearLayoutManager(context)
         linearLayoutManager.orientation = LinearLayoutManager.HORIZONTAL
         rv_circles_List.apply {
@@ -92,7 +92,7 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>() {
             if (it != null) {
                 if (it.isNotEmpty()) {
                     tv_my_notice.visibility = View.VISIBLE
-                    circlesAdapter.addData(it as ArrayList)
+                    circlesAdapter?.addData(it as ArrayList)
                 }
             }
         }

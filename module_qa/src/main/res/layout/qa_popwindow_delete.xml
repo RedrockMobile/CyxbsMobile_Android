@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/qa_shape_dialog_notice_my_reward_not_enough_background">
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:layout_width="132dp"
+        android:layout_height="35dp"
+        android:background="@drawable/qa_shape_dialog_notice_my_reward_not_enough_background"
+        android:text="删除"
+        android:textColor="@color/common_level_one_font_color" />
+
+
+</LinearLayout>
