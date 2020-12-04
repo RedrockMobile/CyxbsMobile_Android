@@ -1,13 +1,12 @@
-package com.mredrock.cyxbs.mine.network.model
+package com.mredrock.cyxbs.main.bean
 
 import com.google.gson.annotations.SerializedName
 import java.io.Serializable
 
 /**
- *@Date 2020-11-02
- *@Time 21:17
- *@author SpreadWater
- *@description 用于接收是否绑定信息的基类
+ * Author: RayleighZ
+ * Time: 2020-12-05 1:30
+ * describe: 检查用户是否绑定邮箱和密码的返回值
  */
 class BindingResponse(
         @SerializedName("question_is")

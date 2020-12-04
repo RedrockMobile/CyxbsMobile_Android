@@ -4,8 +4,11 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import com.alibaba.android.arouter.facade.annotation.Route
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.component.CyxbsToast
+import com.mredrock.cyxbs.common.config.MINE_BIND_EMAIL
+import com.mredrock.cyxbs.common.config.MINE_FORGET_PASSWORD
 import com.mredrock.cyxbs.common.ui.BaseActivity
 import com.mredrock.cyxbs.common.utils.extensions.gone
 import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
@@ -17,7 +20,7 @@ import com.mredrock.cyxbs.mine.page.security.viewmodel.BindEmailViewModel
 import kotlinx.android.synthetic.main.mine_activity_bind_email.*
 import java.util.regex.Matcher
 import java.util.regex.Pattern
-
+@Route(path = MINE_BIND_EMAIL)
 class BindEmailActivity : BaseActivity() {
     private val viewModel by lazy { ViewModelProvider(this).get(BindEmailViewModel::class.java) }
     var email = ""
