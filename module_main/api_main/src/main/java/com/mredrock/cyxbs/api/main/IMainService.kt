@@ -1,4 +1,4 @@
-package com.mredrock.cyxbs.main
+package com.mredrock.cyxbs.api.main
 
 import androidx.lifecycle.MutableLiveData
 import com.alibaba.android.arouter.facade.template.IProvider

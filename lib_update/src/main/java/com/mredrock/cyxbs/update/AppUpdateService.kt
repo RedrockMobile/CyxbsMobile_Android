@@ -11,8 +11,8 @@ import com.afollestad.materialdialogs.MaterialDialog
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.mredrock.cyxbs.common.config.APP_UPDATE_SERVICE
 import com.mredrock.cyxbs.common.config.updateFile
-import com.mredrock.cyxbs.update.AppUpdateStatus
-import com.mredrock.cyxbs.update.IAppUpdateService
+import com.mredrock.cyxbs.api.update.AppUpdateStatus
+import com.mredrock.cyxbs.api.update.IAppUpdateService
 import com.mredrock.cyxbs.common.utils.extensions.toast
 import com.mredrock.cyxbs.common.utils.extensions.uri
 import com.mredrock.cyxbs.update.component.AppUpdateDownloadService

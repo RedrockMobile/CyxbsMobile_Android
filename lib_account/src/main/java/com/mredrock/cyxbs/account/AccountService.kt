@@ -13,6 +13,7 @@ import com.mredrock.cyxbs.account.bean.RefreshParams
 import com.mredrock.cyxbs.account.bean.TokenWrapper
 import com.mredrock.cyxbs.account.bean.User
 import com.mredrock.cyxbs.account.utils.UserInfoEncryption
+import com.mredrock.cyxbs.api.account.*
 import com.mredrock.cyxbs.common.config.IS_TOURIST
 import com.mredrock.cyxbs.common.config.SP_KEY_REFRESH_TOKEN_EXPIRED
 import com.mredrock.cyxbs.common.config.SP_KEY_USER_V2
@@ -24,9 +25,9 @@ import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
 import com.mredrock.cyxbs.common.utils.extensions.editor
 import com.mredrock.cyxbs.common.utils.extensions.runOnUiThread
 import com.mredrock.cyxbs.common.utils.extensions.takeIfNoException
-import com.mredrock.cyxbs.discover.electricity.IElectricityService
+import com.mredrock.cyxbs.api.electricity.IElectricityService
 import com.mredrock.cyxbs.main.MAIN_LOGIN
-import com.mredrock.cyxbs.volunteer.IVolunteerService
+import com.mredrock.cyxbs.api.volunteer.IVolunteerService
 import retrofit2.HttpException
 
 /**

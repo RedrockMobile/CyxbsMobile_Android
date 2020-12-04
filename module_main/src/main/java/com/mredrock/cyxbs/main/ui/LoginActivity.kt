@@ -25,7 +25,7 @@ import com.mredrock.cyxbs.common.config.ACTIVITY_CLASS
 import com.mredrock.cyxbs.common.config.IS_EXIT_LOGIN
 import com.mredrock.cyxbs.common.mark.EventBusLifecycleSubscriber
 import com.mredrock.cyxbs.common.service.ServiceManager
-import com.mredrock.cyxbs.account.IAccountService
+import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.main.MAIN_LOGIN
 import com.mredrock.cyxbs.main.R
