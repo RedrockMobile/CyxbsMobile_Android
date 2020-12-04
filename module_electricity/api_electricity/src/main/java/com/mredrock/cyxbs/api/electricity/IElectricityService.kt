@@ -1,4 +1,4 @@
-package com.mredrock.cyxbs.discover.electricity
+package com.mredrock.cyxbs.api.electricity
 
 import androidx.fragment.app.Fragment
 import com.alibaba.android.arouter.facade.template.IProvider

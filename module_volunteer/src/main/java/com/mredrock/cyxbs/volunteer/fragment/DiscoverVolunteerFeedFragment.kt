@@ -4,8 +4,8 @@ import android.os.Bundle
 import android.view.View
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
-import com.mredrock.cyxbs.account.IAccountService
-import com.mredrock.cyxbs.account.IUserStateService
+import com.mredrock.cyxbs.api.account.IAccountService
+import com.mredrock.cyxbs.api.account.IUserStateService
 import com.mredrock.cyxbs.common.config.DISCOVER_VOLUNTEER
 import com.mredrock.cyxbs.common.config.DISCOVER_VOLUNTEER_FEED
 import com.mredrock.cyxbs.common.config.DISCOVER_VOLUNTEER_RECORD

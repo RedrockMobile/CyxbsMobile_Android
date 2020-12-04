@@ -1,8 +1,8 @@
 package com.mredrock.cyxbs.mine.page.security.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.mredrock.cyxbs.common.BaseApp.Companion.context
+import com.mredrock.cyxbs.common.utils.extensions.doOnErrorWithDefaultErrorHandler
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.common.utils.extensions.toast
@@ -36,19 +36,25 @@ class ChangePasswordViewModel : BaseViewModel() {
     //检查旧密码输入是否相同
     fun originPassWordCheck(originPassword: String) {
         apiService.originPassWordCheck(originPassword)
+                .doOnErrorWithDefaultErrorHandler {
+                    context.toast(it.toString())
+                    true
+                }
                 .setSchedulers()
-                .safeSubscribeBy(onNext = {
+                .safeSubscribeBy {
                     originPassWordIsCorrect.value = it.status == 10000
-                }, onError = {
-                    context.toast("对不起，目前无法修改密码")
-                })
+                }
     }
 
     //进行新密码的传入
     fun newPassWordInput(origin_password: String, new_password: String) {
         apiService.resetPassword(origin_password, new_password)
                 .setSchedulers()
-                .safeSubscribeBy(onNext = {
+                .doOnErrorWithDefaultErrorHandler {
+                    context.toast("对不起，目前无法修改密码，原因为:$it")
+                    true
+                }
+                .safeSubscribeBy {
                     when (it.status) {
                         10000 -> {
                             inputNewPasswordCorrect.value = true
@@ -70,16 +76,18 @@ class ChangePasswordViewModel : BaseViewModel() {
                             context.toast("新旧密码重复！")
                         }
                     }
-                }, onError = {
-                    context.toast("对不起，目前无法修改密码")
-                })
+                }
     }
 
     //在未登录的条件下修改密码（需要随机数）
     fun resetPasswordFromLogin(stu_num: String, new_password: String, code: Int) {
         apiService.resetPasswordFromLogin(stu_num, new_password, code)
                 .setSchedulers()
-                .safeSubscribeBy(onNext = {
+                .doOnErrorWithDefaultErrorHandler {
+                    context.toast(it.toString())
+                    true
+                }
+                .safeSubscribeBy {
                     when (it.status) {
                         10000 -> {
                             inputNewPasswordCorrect.value = true
@@ -94,17 +102,18 @@ class ChangePasswordViewModel : BaseViewModel() {
                             context.toast("密码格式有问题！")
                         }
                     }
-                }, onError = {
-                    context.toast("对不起，目前无法修改密码")
-                    context.toast(it.toString())
-                })
+                }
     }
 
     //检查是否绑定信息
     fun checkBinding(stu_num: String, onSuccess: () -> Unit) {
         apiService.checkBinding(stu_num)
                 .setSchedulers()
-                .safeSubscribeBy(onNext = {
+                .doOnErrorWithDefaultErrorHandler {
+                    context.toast(it.toString())
+                    true
+                }
+                .safeSubscribeBy {
                     if (it.status == 10000) {
                         //设置信息绑定的情况
                         bindingEmail = it.data.email_is == 1
@@ -113,21 +122,20 @@ class ChangePasswordViewModel : BaseViewModel() {
                     } else {
                         context.toast("检查绑定失败")
                     }
-                }, onError = {
-                    context.toast("检查绑定失败")
-                })
+                }
     }
 
     //检查是否为默认密码
     fun checkDefaultPassword(stu_num: String, onSuccess: () -> Unit) {
         apiService.checkDefaultPassword(stu_num)
                 .setSchedulers()
-                .safeSubscribeBy(onNext = {
+                .doOnErrorWithDefaultErrorHandler {
+                    context.toast(it.toString())
+                    true
+                }
+                .safeSubscribeBy {
                     isDefaultPassword = it.status == 10000
                     onSuccess()
-                }, onError = {
-                    Log.d("zt", it.toString())
-                })
+                }
     }
-
 }

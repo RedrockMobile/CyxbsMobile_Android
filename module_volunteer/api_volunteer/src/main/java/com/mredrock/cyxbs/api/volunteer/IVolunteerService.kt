@@ -1,4 +1,4 @@
-package com.mredrock.cyxbs.volunteer
+package com.mredrock.cyxbs.api.volunteer
 
 import androidx.fragment.app.Fragment
 import com.alibaba.android.arouter.facade.template.IProvider

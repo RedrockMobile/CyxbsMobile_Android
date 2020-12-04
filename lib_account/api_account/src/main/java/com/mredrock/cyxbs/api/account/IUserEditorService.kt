@@ -1,4 +1,4 @@
-package com.mredrock.cyxbs.account
+package com.mredrock.cyxbs.api.account
 
 interface IUserEditorService {
     fun setNickname(nickname: String)

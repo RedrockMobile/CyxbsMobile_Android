@@ -34,11 +34,11 @@ import com.mredrock.cyxbs.common.utils.extensions.doIfLogin
 import com.mredrock.cyxbs.common.utils.extensions.dp2px
 import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.discover.R
-import com.mredrock.cyxbs.discover.electricity.IElectricityService
+import com.mredrock.cyxbs.api.electricity.IElectricityService
 import com.mredrock.cyxbs.discover.pages.discover.adapter.DiscoverMoreFunctionRvAdapter
 import com.mredrock.cyxbs.discover.utils.BannerAdapter
 import com.mredrock.cyxbs.discover.utils.MoreFunctionProvider
-import com.mredrock.cyxbs.volunteer.IVolunteerService
+import com.mredrock.cyxbs.api.volunteer.IVolunteerService
 import kotlinx.android.synthetic.main.discover_home_fragment.*
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode

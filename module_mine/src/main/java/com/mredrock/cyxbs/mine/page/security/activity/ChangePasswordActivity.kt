@@ -11,7 +11,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
-import com.mredrock.cyxbs.account.IAccountService
+import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.common.service.ServiceManager

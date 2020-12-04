@@ -3,6 +3,7 @@ package com.mredrock.cyxbs.mine.page.security.viewmodel
 import androidx.databinding.ObservableField
 import com.mredrock.cyxbs.common.BaseApp.Companion.context
 import com.mredrock.cyxbs.common.utils.LogUtils
+import com.mredrock.cyxbs.common.utils.extensions.doOnErrorWithDefaultErrorHandler
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.common.utils.extensions.toast
@@ -33,21 +34,19 @@ class SetPasswordProtectViewModel : BaseViewModel() {
     fun getSecurityQuestions(onQuestionLoaded: (List<SecurityQuestion>?) -> Unit) {
         apiService.getAllSecurityQuestions()
                 .setSchedulers()
-                .safeSubscribeBy(
-                        onNext = {
-                            listOfSecurityQuestion = it.data
-                            onQuestionLoaded(listOfSecurityQuestion)
-                        },
-                        onError = {
-                            it.message?.let { it1 -> LogUtils.d("SecurityActivity", it1) }
-                            context.toast("获取密保问题失败")
-                        }
-                )
+                .doOnErrorWithDefaultErrorHandler {
+                    context.toast("获取密保问题失败")
+                    true
+                }
+                .safeSubscribeBy {
+                    listOfSecurityQuestion = it.data
+                    onQuestionLoaded(listOfSecurityQuestion)
+                }
     }
 
     fun setSecurityQA(onSucceed: () -> Unit) {
         //如果输入的答案字数合理
-        securityAnswer.get()?.length?.let {length ->
+        securityAnswer.get()?.length?.let { length ->
             if (length in 2..17) {
                 tipForInputNum.set("")
                 LogUtils.d("SetProtectViewModel", "id = $securityQuestionId, content = ${securityAnswer.get().toString()}")
@@ -55,17 +54,16 @@ class SetPasswordProtectViewModel : BaseViewModel() {
                         id = securityQuestionId,
                         content = securityAnswer.get().toString())
                         .setSchedulers()
-                        .safeSubscribeBy(
-                                onNext = {
-                                    if (it.status == 10000) {
-                                        context.toast("恭喜您，设置成功")
-                                        onSucceed()
-                                    }
-                                },
-                                onError = {
-                                    context.toast(it.toString())
-                                }
-                        )
+                        .doOnErrorWithDefaultErrorHandler {
+                            context.toast(it.toString())
+                            true
+                        }
+                        .safeSubscribeBy {
+                            if (it.status == 10000) {
+                                context.toast("恭喜您，设置成功")
+                                onSucceed()
+                            }
+                        }
             }
         }
     }

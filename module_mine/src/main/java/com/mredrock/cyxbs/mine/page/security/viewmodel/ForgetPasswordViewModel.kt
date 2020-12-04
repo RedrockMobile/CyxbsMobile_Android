@@ -1,8 +1,10 @@
 package com.mredrock.cyxbs.mine.page.security.viewmodel
 
 import android.util.Log
+import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
 import com.mredrock.cyxbs.common.BaseApp
+import com.mredrock.cyxbs.common.utils.extensions.doOnErrorWithDefaultErrorHandler
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.common.utils.extensions.toast
@@ -28,29 +30,33 @@ class ForgetPasswordViewModel : BaseViewModel() {
     fun checkDefaultPassword(stu_num: String, onError: () -> Unit) {
         apiService.checkDefaultPassword(stu_num)
                 .setSchedulers()
-                .safeSubscribeBy(onNext = {
-                    defaultPassword.value = it.status == 10000
-                }, onError = {
+                .doOnErrorWithDefaultErrorHandler {
                     BaseApp.context.toast(it.toString())
                     onError()
-                })
+                    true
+                }
+                .safeSubscribeBy {
+                    defaultPassword.value = it.status == 10000
+                }
     }
 
     //检查是否绑定信息
     fun checkBinding(stu_num: String, onSucceed: () -> Unit) {
         apiService.checkBinding(stu_num)
                 .setSchedulers()
-                .safeSubscribeBy(onNext = {
+                .doOnErrorWithDefaultErrorHandler {
+                    BaseApp.context.toast(it.toString())
+                    true
+                }
+                .safeSubscribeBy {
                     if (it.status == 10000) {
                         //设置信息绑定的情况
                         bindingEmail.value = it.data.email_is == 1
                         bindingPasswordProtect.value = it.data.question_is == 1
                         onSucceed()
                     } else {
-                        Log.d("zt", "检查绑定失败")
+                        BaseApp.context.toast("检查绑定失败")
                     }
-                }, onError = {
-                    Log.d("zt", "检查绑定失败！")
-                })
+                }
     }
 }

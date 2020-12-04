@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.common.network.ApiGenerator
+import com.mredrock.cyxbs.common.utils.extensions.doOnErrorWithDefaultErrorHandler
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.common.utils.extensions.toast
@@ -20,6 +21,10 @@ class BindEmailViewModel : BaseViewModel() {
     fun getCode(email: String, onSuccess: () -> Unit) {
         ApiGenerator.getApiService(ApiService::class.java)
                 .getEmailCode(email)
+                .doOnErrorWithDefaultErrorHandler {
+                    BaseApp.context.toast(it.toString())
+                    true
+                }
                 .setSchedulers()
                 .safeSubscribeBy {
                     when (it.status) {
@@ -42,23 +47,22 @@ class BindEmailViewModel : BaseViewModel() {
         ApiGenerator.getApiService(ApiService::class.java)
                 .confirmEmailCode(email, code)
                 .setSchedulers()
-                .safeSubscribeBy(
-                        onNext = {
-                            when (it.status) {
-                                10000 -> {
-                                    mldConfirmIsSucceed.value = true
-                                }
-                                10007 -> {
-                                    CyxbsToast.makeText(BaseApp.context, "验证码错误", Toast.LENGTH_LONG).show()
-                                }
-                                else -> {
-                                    CyxbsToast.makeText(BaseApp.context, "请求失败", Toast.LENGTH_LONG).show()
-                                }
-                            }
-                        },
-                        onError = {
-                            BaseApp.context.toast(it.toString())
+                .doOnErrorWithDefaultErrorHandler {
+                    BaseApp.context.toast(it.toString())
+                    true
+                }
+                .safeSubscribeBy {
+                    when (it.status) {
+                        10000 -> {
+                            mldConfirmIsSucceed.value = true
                         }
-                ).lifeCycle()
+                        10007 -> {
+                            CyxbsToast.makeText(BaseApp.context, "验证码错误", Toast.LENGTH_LONG).show()
+                        }
+                        else -> {
+                            CyxbsToast.makeText(BaseApp.context, "请求失败", Toast.LENGTH_LONG).show()
+                        }
+                    }
+                }.lifeCycle()
     }
 }

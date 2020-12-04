@@ -1,4 +1,4 @@
-package com.mredrock.cyxbs.discover.electricity
+package com.mredrock.cyxbs.api.volunteer
 
 /**
  * 路由表命名规则：
@@ -9,9 +9,11 @@ package com.mredrock.cyxbs.discover.electricity
  * </ul>
  */
 
+const val DISCOVER_VOLUNTEER = "/volunteer/discover/entry"
+const val DISCOVER_VOLUNTEER_RECORD = "/volunteer/discover/record"
 
-//查电费在发现页面的展示信息
-const val DISCOVER_ELECTRICITY_FEED = "/electricity/discover/feed"
+//志愿服务在发现页的展示信息
+const val DISCOVER_VOLUNTEER_FEED = "/volunteer/discover/feed"
 
 //电费模块服务
-const val ELECTRICITY_SERVICE = "/electricity/service"
+const val VOLUNTEER_SERVICE = "/volunteer/service"

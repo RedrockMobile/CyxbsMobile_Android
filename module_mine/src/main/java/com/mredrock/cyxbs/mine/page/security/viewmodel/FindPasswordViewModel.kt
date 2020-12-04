@@ -2,6 +2,7 @@ package com.mredrock.cyxbs.mine.page.security.viewmodel
 
 import androidx.databinding.ObservableField
 import com.mredrock.cyxbs.common.BaseApp
+import com.mredrock.cyxbs.common.utils.extensions.doOnErrorWithDefaultErrorHandler
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.common.utils.extensions.toast
@@ -80,27 +81,27 @@ class FindPasswordViewModel : BaseViewModel() {
                     stuNumber
             )
                     .setSchedulers()
-                    .safeSubscribeBy(
-                            onError = {
-                                BaseApp.context.toast("对不起，验证码发送失败")
-                            },
-                            onNext = {
-                                when (it.status) {
-                                    10000 -> {
-                                        //发送成功
-                                        expiredTime = it.data.expired_time
-                                        BaseApp.context.toast("已向你的邮箱发送了一条验证码")
-                                        Thread(clockRunnable).start()
-                                    }
-                                    10008 -> {
-                                        BaseApp.context.toast("邮箱信息错误")
-                                    }
-                                    10009 -> {
-                                        BaseApp.context.toast("发送次数已达上限，请十分钟后再次尝试")
-                                    }
-                                }
+                    .doOnErrorWithDefaultErrorHandler {
+                        BaseApp.context.toast("对不起，验证码发送失败，原因为:$it")
+                        true
+                    }
+                    .safeSubscribeBy {
+                        when (it.status) {
+                            10000 -> {
+                                //发送成功
+                                expiredTime = it.data.expired_time
+                                BaseApp.context.toast("已向你的邮箱发送了一条验证码")
+                                Thread(clockRunnable).start()
                             }
-                    )
+                            10008 -> {
+                                BaseApp.context.toast("邮箱信息错误")
+                            }
+                            10009 -> {
+                                BaseApp.context.toast("发送次数已达上限，请十分钟后再次尝试")
+                            }
+                        }
+                    }
+
         }
     }
 
@@ -124,17 +125,21 @@ class FindPasswordViewModel : BaseViewModel() {
                         it.toInt()
                 )
                         .setSchedulers()
+                        .doOnErrorWithDefaultErrorHandler { error ->
+                            BaseApp.context.toast("验证失败，原因为$error")
+                            canClickNext = true
+                            true
+                        }
                         .safeSubscribeBy(
                                 onError = {
-                                    BaseApp.context.toast("验证失败，原因为$it")
-                                    canClickNext = true
+
                                 },
-                                onNext = {
-                                    if (it.status == 10000) {
+                                onNext = { cq ->
+                                    if (cq.status == 10000) {
                                         //回调
-                                        onSuccess(it.data.code)
+                                        onSuccess(cq.data.code)
                                         //因为这里下一步就要去跳转页面了，没有必要再将canClickNext设置为true
-                                    } else if (it.status == 10007) {
+                                    } else if (cq.status == 10007) {
                                         BaseApp.context.toast("验证码错误")
                                         onField()
                                         canClickNext = true
@@ -149,63 +154,61 @@ class FindPasswordViewModel : BaseViewModel() {
     fun getBindingEmail() {
         apiService.getUserEmail(stuNumber)
                 .setSchedulers()
-                .safeSubscribeBy(
-                        onNext = {
-                            if (it.status == 10000) {
-                                email = it.data.email
-                                if (email == null || email == "") {
-                                    BaseApp.context.toast("返回邮箱为空")
-                                } else {
-                                    //下面是抄的齐哥的邮箱加密策略
-                                    val atLocation = email.indexOf("@")
-                                    var showUserEmail = email
-                                    when {
-                                        atLocation in 2..4 -> {
-                                            showUserEmail = showUserEmail.substring(0, 1) + "*" + showUserEmail.substring(2, showUserEmail.length)
-                                        }
-                                        atLocation == 5 -> {
-                                            showUserEmail = showUserEmail.substring(0, 2) + "**" + showUserEmail.substring(4, showUserEmail.length)
-                                        }
-                                        atLocation > 5 -> {
-                                            var starString = ""
-                                            for (i in 0 until atLocation - 4) starString += "*"
-                                            showUserEmail = showUserEmail.substring(0, 2) + starString + showUserEmail.substring(atLocation - 2, showUserEmail.length)
-                                        }
-                                    }
-                                    emailAddressOrQuestion.set(showUserEmail)
-                                    canClickNext = true//数据加载完毕，允许用户点击next
+                .doOnErrorWithDefaultErrorHandler {
+                    BaseApp.context.toast("获取邮箱信息失败，原因为$it")
+                    true
+                }
+                .safeSubscribeBy {
+                    if (it.status == 10000) {
+                        email = it.data.email
+                        if (email == null || email == "") {
+                            BaseApp.context.toast("返回邮箱为空")
+                        } else {
+                            //下面是抄的齐哥的邮箱加密策略
+                            val atLocation = email.indexOf("@")
+                            var showUserEmail = email
+                            when {
+                                atLocation in 2..4 -> {
+                                    showUserEmail = showUserEmail.substring(0, 1) + "*" + showUserEmail.substring(2, showUserEmail.length)
                                 }
-                            } else if (it.status == 10024) {
-                                BaseApp.context.toast("你尚未绑定邮箱")
+                                atLocation == 5 -> {
+                                    showUserEmail = showUserEmail.substring(0, 2) + "**" + showUserEmail.substring(4, showUserEmail.length)
+                                }
+                                atLocation > 5 -> {
+                                    var starString = ""
+                                    for (i in 0 until atLocation - 4) starString += "*"
+                                    showUserEmail = showUserEmail.substring(0, 2) + starString + showUserEmail.substring(atLocation - 2, showUserEmail.length)
+                                }
                             }
-                        },
-                        onError = {
-                            BaseApp.context.toast("获取邮箱信息失败")
+                            emailAddressOrQuestion.set(showUserEmail)
+                            canClickNext = true//数据加载完毕，允许用户点击next
                         }
-                )
+                    } else if (it.status == 10024) {
+                        BaseApp.context.toast("你尚未绑定邮箱")
+                    }
+                }
     }
 
     //获取用户的密保问题信息
     fun getUserQuestion() {
         apiService.getUserQuestion(stuNumber)
                 .setSchedulers()
-                .safeSubscribeBy(
-                        onNext = {
-                            if (it.status == 10000) {
-                                //目前仅仅有一个密保问题
-                                //后端为了拓展将这里的返回值设计成了一个集合
-                                //就目前而言这个集合应该之后一个值
-                                question = it.data[0]
-                                emailAddressOrQuestion.set(it.data[0].content)
-                                canClickNext = true//数据加载完毕，允许用户点击下一步
-                            } else {
-                                BaseApp.context.toast("您还没有设置密保")
-                            }
-                        },
-                        onError = {
-                            BaseApp.context.toast(it.toString())
-                        }
-                )
+                .doOnErrorWithDefaultErrorHandler {
+                    BaseApp.context.toast("服务器君打盹了,$it")
+                    true
+                }
+                .safeSubscribeBy {
+                    if (it.status == 10000) {
+                        //目前仅仅有一个密保问题
+                        //后端为了拓展将这里的返回值设计成了一个集合
+                        //就目前而言这个集合应该之后一个值
+                        question = it.data[0]
+                        emailAddressOrQuestion.set(it.data[0].content)
+                        canClickNext = true//数据加载完毕，允许用户点击下一步
+                    } else {
+                        BaseApp.context.toast("您还没有设置密保")
+                    }
+                }
 
     }
 
@@ -233,27 +236,26 @@ class FindPasswordViewModel : BaseViewModel() {
                         it
                 )
                         .setSchedulers()
-                        .safeSubscribeBy(
-                                onError = {
-                                    BaseApp.context.toast("验证密保问题失败")
+                        .doOnErrorWithDefaultErrorHandler { exception ->
+                            BaseApp.context.toast("验证密保问题失败，原因为:$exception")
+                            canClickNext = true
+                            true
+                        }
+                        .safeSubscribeBy { cq ->
+                            when (cq.status) {
+                                10006 -> {//用户尝试次数已经达到上限
+                                    BaseApp.context.toast("输入次数已达上限，请10分钟后再次尝试")
                                     canClickNext = true
-                                },
-                                onNext = { cq ->
-                                    when (cq.status) {
-                                        10006 -> {//用户尝试次数已经达到上限
-                                            BaseApp.context.toast("输入次数已达上限，请10分钟后再次尝试")
-                                            canClickNext = true
-                                        }
-                                        10005 -> {//密码错误
-                                            BaseApp.context.toast("答案错误，请重新输入")
-                                            canClickNext = true
-                                        }
-                                        10000 -> {//正确
-                                            onSuccess(cq.data.code)
-                                        }
-                                    }
                                 }
-                        ).lifeCycle()
+                                10005 -> {//密码错误
+                                    BaseApp.context.toast("答案错误，请重新输入")
+                                    canClickNext = true
+                                }
+                                10000 -> {//正确
+                                    onSuccess(cq.data.code)
+                                }
+                            }
+                        }.lifeCycle()
             }
         }
     }
