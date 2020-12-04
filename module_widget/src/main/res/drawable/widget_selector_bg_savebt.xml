@@ -6,7 +6,7 @@
             <!-- 圆角半径 -->
             <corners android:radius="10dp" />
             <!-- 填充颜色 -->
-            <solid android:color="#58B1FC" />
+            <solid android:color="@color/widget_colorAccent" />
 
         </shape>
     </item>
@@ -17,7 +17,7 @@
             <!-- 圆角半径 -->
             <corners android:radius="10dp" />
             <!-- 填充颜色 -->
-            <solid android:color="#58B1FC" />
+            <solid android:color="@color/widget_colorAccent" />
         </shape>
     </item>
 
@@ -27,7 +27,7 @@
             <!-- 圆角半径 -->
             <corners android:radius="10dp" />
             <!-- 填充颜色 -->
-            <solid android:color="#51a1e4" />
+            <solid android:color="@color/widget_colorAccent_select" />
         </shape>
     </item>
 </selector>

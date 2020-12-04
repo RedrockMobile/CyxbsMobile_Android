@@ -65,7 +65,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="0.5dp"
                         android:layout_marginStart="10dp"
-                        android:background="#e7e7e7" />
+                        android:background="@color/widget_config_line" />
 
                     <LinearLayout
                         android:id="@+id/widget_config_littleLayout"
@@ -93,7 +93,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="0.5dp"
                         android:layout_marginStart="10dp"
-                        android:background="#e7e7e7" />
+                        android:background="@color/widget_config_line" />
 
                     <LinearLayout
                         android:id="@+id/widget_config_normalLayout"
