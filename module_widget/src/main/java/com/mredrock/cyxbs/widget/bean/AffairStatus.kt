@@ -1,7 +1,9 @@
 package com.mredrock.cyxbs.widget.bean
 
+import java.io.Serializable
 
-class AffairStatus : ArrayList<AffairStatusItem>()
+
+class AffairStatus : Serializable, ArrayList<AffairStatusItem>()
 
 data class AffairStatusItem(
         val affairDates: List<AffairDate>,
@@ -19,10 +21,10 @@ data class AffairStatusItem(
         val week: List<Int>,
         val weekBegin: Int,
         val weekEnd: Int
-)
+) : Serializable
 
 data class AffairDate(
         val `class`: Int,
         val day: Int,
         val week: List<Int>
-)
+) : Serializable
