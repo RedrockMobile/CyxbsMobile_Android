@@ -1,15 +1,21 @@
 package com.mredrock.cyxbs.qa.pages.dynamic.ui.adapter
 
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.DiffUtil
+import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.utils.extensions.setAvatarImageFromUrl
 import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
+import com.mredrock.cyxbs.common.viewmodel.event.SingleLiveEvent
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.bean.Question
 import com.mredrock.cyxbs.qa.component.recycler.BaseEndlessRvAdapter
 import com.mredrock.cyxbs.qa.component.recycler.BaseViewHolder
 import com.mredrock.cyxbs.qa.ui.activity.ViewImageActivity
+import com.mredrock.cyxbs.qa.ui.widget.NineGridView
+import com.mredrock.cyxbs.qa.ui.widget.OptionalPopWindow
 import com.mredrock.cyxbs.qa.utils.questionTimeDescription
 import com.mredrock.cyxbs.qa.utils.toDate
 import kotlinx.android.synthetic.main.qa_recycler_item_dynamic.view.*
@@ -55,11 +61,19 @@ class DynamicAdapter(private val onItemClickEvent: (Question) -> Unit) : BaseEnd
     }
 
     class DynamicViewHolder(parent: ViewGroup) : BaseViewHolder<Question>(parent, R.layout.qa_recycler_item_dynamic) {
-        private var photoUrls = ArrayList<String>()
-        private var count = 0
         override fun refresh(data: Question?) {
             data ?: return
             itemView.apply {
+                qa_iv_dynamic_more_tips_clicked.setOnSingleClickListener {
+                    OptionalPopWindow.Builder().with(context)
+                            .addOptionAndCallback("删除") {
+                                Toast.makeText(BaseApp.context, "点击了删除", Toast.LENGTH_SHORT).show()
+                            }.addOptionAndCallback("关注") {
+                                Toast.makeText(BaseApp.context, "点击了关注", Toast.LENGTH_SHORT).show()
+                            }.addOptionAndCallback("举报") {
+                                Toast.makeText(BaseApp.context, "点击了举报", Toast.LENGTH_SHORT).show()
+                            }.show(it, OptionalPopWindow.AlignMode.RIGHT, 0)
+                }
                 qa_iv_dynamic_avatar.setAvatarImageFromUrl(data.photoThumbnailSrc)
                 qa_tv_dynamic_nickname.text = data.nickname
                 qa_tv_dynamic_content.text = data.title
@@ -73,13 +87,13 @@ class DynamicAdapter(private val onItemClickEvent: (Question) -> Unit) : BaseEnd
                     val tag = qa_dynamic_nine_grid_view.tag
                     if (null == tag || tag == data.photoUrl) {
                         val tagStore = qa_dynamic_nine_grid_view.tag
-                        qa_dynamic_nine_grid_view.setRectangleImages(setPhotoUrls(data.photoUrl))
+                        qa_dynamic_nine_grid_view.setImages(data.photoUrl,NineGridView.MODE_IMAGE_THREE_SIZE,NineGridView.ImageMode.MODE_IMAGE_RECTANGLE)
                         qa_dynamic_nine_grid_view.tag = tagStore
                     } else {
                         val tagStore = data.photoUrl
                         qa_dynamic_nine_grid_view.tag = null
-                        qa_dynamic_nine_grid_view.setRectangleImages(emptyList())
-                        qa_dynamic_nine_grid_view.setRectangleImages(setPhotoUrls(data.photoUrl))
+                        qa_dynamic_nine_grid_view.setImages(emptyList(),NineGridView.MODE_IMAGE_THREE_SIZE,NineGridView.ImageMode.MODE_IMAGE_RECTANGLE)
+                        qa_dynamic_nine_grid_view.setImages(data.photoUrl,NineGridView.MODE_IMAGE_THREE_SIZE,NineGridView.ImageMode.MODE_IMAGE_RECTANGLE)
                         qa_dynamic_nine_grid_view.tag = tagStore
                     }
                 }
@@ -87,16 +101,6 @@ class DynamicAdapter(private val onItemClickEvent: (Question) -> Unit) : BaseEnd
                     ViewImageActivity.activityStart(context, data.photoUrl.toTypedArray(), index)
                 }
             }
-        }
-
-        fun setPhotoUrls(photoUrl: List<String>): ArrayList<String> {
-            photoUrls.clear()
-            for (it in photoUrl)
-                if (count < 3) {
-                    this.photoUrls.add(it)
-                    count++
-                }
-            return photoUrls
         }
     }
 }

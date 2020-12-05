@@ -17,7 +17,7 @@ import com.mredrock.cyxbs.qa.R
  * 2020/12/4
  */
 
-class OptionalPopWindow private constructor(val context: Context?) : PopupWindow(context) {
+class OptionalPopWindow internal constructor(val context: Context?) : PopupWindow(context) {
 
     companion object {
         private val TAG = OptionalPopWindow::class.java.name

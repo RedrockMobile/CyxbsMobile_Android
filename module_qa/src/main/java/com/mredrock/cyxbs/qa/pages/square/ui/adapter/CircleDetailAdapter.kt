@@ -10,6 +10,7 @@ import com.mredrock.cyxbs.qa.bean.Question
 import com.mredrock.cyxbs.qa.component.recycler.BaseEndlessRvAdapter
 import com.mredrock.cyxbs.qa.component.recycler.BaseViewHolder
 import com.mredrock.cyxbs.qa.ui.activity.ViewImageActivity
+import com.mredrock.cyxbs.qa.ui.widget.NineGridView
 import com.mredrock.cyxbs.qa.utils.questionTimeDescription
 import com.mredrock.cyxbs.qa.utils.toDate
 import kotlinx.android.synthetic.main.qa_recycler_item_dynamic.view.*
@@ -52,9 +53,9 @@ class CircleDetailAdapter(private val onItemClickEvent: (Question) -> Unit) : Ba
         if (holder !is CircleDetailViewHolder) return
         onItemClickEvent.invoke(data)
     }
+
     class CircleDetailViewHolder(parent: ViewGroup) : BaseViewHolder<Question>(parent, R.layout.qa_recycler_item_dynamic) {
         private var photoUrls = ArrayList<String>()
-        private var count = 0
         override fun refresh(data: Question?) {
             data ?: return
             itemView.apply {
@@ -71,13 +72,13 @@ class CircleDetailAdapter(private val onItemClickEvent: (Question) -> Unit) : Ba
                     val tag = qa_dynamic_nine_grid_view.tag
                     if (null == tag || tag == data.photoUrl) {
                         val tagStore = qa_dynamic_nine_grid_view.tag
-                        qa_dynamic_nine_grid_view.setRectangleImages(setPhotoUrls(data.photoUrl))
+                        qa_dynamic_nine_grid_view.setImages(data.photoUrl,NineGridView.MODE_IMAGE_THREE_SIZE, NineGridView.ImageMode.MODE_IMAGE_RECTANGLE)
                         qa_dynamic_nine_grid_view.tag = tagStore
                     } else {
                         val tagStore = data.photoUrl
                         qa_dynamic_nine_grid_view.tag = null
-                        qa_dynamic_nine_grid_view.setRectangleImages(emptyList())
-                        qa_dynamic_nine_grid_view.setRectangleImages(setPhotoUrls(data.photoUrl))
+                        qa_dynamic_nine_grid_view.setImages(emptyList(),NineGridView.MODE_IMAGE_THREE_SIZE, NineGridView.ImageMode.MODE_IMAGE_RECTANGLE)
+                        qa_dynamic_nine_grid_view.setImages(data.photoUrl,NineGridView.MODE_IMAGE_THREE_SIZE, NineGridView.ImageMode.MODE_IMAGE_RECTANGLE)
                         qa_dynamic_nine_grid_view.tag = tagStore
                     }
                 }
@@ -89,6 +90,7 @@ class CircleDetailAdapter(private val onItemClickEvent: (Question) -> Unit) : Ba
 
         fun setPhotoUrls(photoUrl: List<String>): ArrayList<String> {
             photoUrls.clear()
+            var count = 0
             for (it in photoUrl)
                 if (count < 3) {
                     this.photoUrls.add(it)

@@ -28,8 +28,7 @@ import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.down.bean.DownMessageText
 import com.mredrock.cyxbs.common.utils.extensions.*
 import com.mredrock.cyxbs.qa.R
-import com.mredrock.cyxbs.qa.R.drawable.qa_shape_send_dynamic_btn_blue_background
-import com.mredrock.cyxbs.qa.R.drawable.qa_shape_send_dynamic_btn_grey_background
+import com.mredrock.cyxbs.qa.R.drawable.*
 import com.mredrock.cyxbs.qa.bean.Question
 import com.mredrock.cyxbs.qa.pages.dynamic.ui.adapter.CircleLabelAdapter
 import com.mredrock.cyxbs.qa.pages.quiz.QuizViewModel
@@ -107,6 +106,12 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>(), EventBusLifecycleSu
             finish()
         }
 
+        tv_is_checked_to_show_origin_image.apply {
+            isChecked = false
+            setOnSingleClickListener {
+                isChecked = !isChecked
+            }
+        }
     }
 
     private fun initEditListener() {

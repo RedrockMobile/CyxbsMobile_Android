@@ -73,11 +73,27 @@
                 android:paddingTop="6dp"
                 android:paddingEnd="16dp"
                 android:paddingBottom="19dp" />
+
+            <CheckedTextView
+                android:id="@+id/tv_is_checked_to_show_origin_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableLeft="?android:attr/listChoiceIndicatorSingle"
+                android:filterTouchesWhenObscured="true"
+                android:focusableInTouchMode="true"
+                android:gravity="center_vertical"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
+                android:text="原图"
+                android:textColor="@color/common_qa_quiz_content_edt_hint_color"
+                android:textSize="18sp" />
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:alpha="0.1"
                 android:background="@color/common_qa_quiz_toolbar_divider_line_color" />
+
             <androidx.appcompat.widget.AppCompatTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

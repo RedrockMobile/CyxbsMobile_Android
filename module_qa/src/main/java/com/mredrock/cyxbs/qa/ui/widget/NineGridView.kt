@@ -22,7 +22,16 @@ class NineGridView(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : 
     companion object {
         const val MODE_FILL = 0
         const val MODE_NORMAL = 1
+        const val MODE_IMAGE_NORMAL_SIZE =9
+        const val MODE_IMAGE_THREE_SIZE =3
     }
+
+    enum class ImageMode {
+        MODE_IMAGE_NORMAL,//普通照片
+        MODE_IMAGE_RECTANGLE//圆角照片
+    }
+
+
 
     /**
      * 图片的排列方式
@@ -158,6 +167,28 @@ class NineGridView(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : 
                 context.loadRedrockImage(urls[i], this@apply)
             }, childCount)
         }
+    }
+
+    fun setImages(urls: List<String>, countSize: Int, imageShape: ImageMode) {
+        when (imageShape) {
+            ImageMode.MODE_IMAGE_RECTANGLE -> {
+                setRectangleImages(setShowPhotoSize(urls, countSize))
+            }
+            ImageMode.MODE_IMAGE_NORMAL -> {
+                setNormalImages(setShowPhotoSize(urls, countSize))
+            }
+        }
+    }
+
+    fun setShowPhotoSize(photoUrl: List<String>, countSize: Int): ArrayList<String> {
+        val photoUrls = ArrayList<String>()
+        var count = 0
+        for (it in photoUrl)
+            if (count < countSize) {
+                photoUrls.add(it)
+                count++
+            }
+        return photoUrls
     }
 
     fun setRectangleImages(urls: List<String>) {
