@@ -49,10 +49,10 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: debug_apk
-          path: app/build/outputs/apk/debug/app-debug.apk
+          path: module_app/build/outputs/apk/debug/module_app-debug.apk
           retention-days: 15
       - name: Display the path
         run: |
-          file = open("app/build/outputs/apk/debug/app-debug.apk")
+          file = open("module_app/build/outputs/apk/debug/module_app-debug.apk")
           print(file.name)
         shell: python
