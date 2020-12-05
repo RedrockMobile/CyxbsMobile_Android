@@ -27,20 +27,20 @@ jobs:
       - name: create secret file
         run: python ./.github/scripts/create_secret.py "$BUGLY_APP_ID" "$SOPHIX_APP_ID" "$SOPHIX_APP_SECRET" "$SOPHIX_RSA" "$UM_APP_KEY" "$UM_PUSH_SECRET" "$UM_SHARE_SINA_APP_KEY" "$UM_SHARE_SINA_APP_SECRET" "$UM_SHARE_QQ_ZONE_APP_ID" "$UM_SHARE_QQ_ZONE_APP_SECRET" "$amap_apikey" "$RELEASE_KEY_ALIAS" "$RELEASE_KEY_PASSWORD" "$RELEASE_STORE_PASSWORD"
         env: 
-          BUGLY_APP_ID:${{secrets.BUGLY_APP_ID}}
-          SOPHIX_APP_ID :${{secrets.SOPHIX_APP_ID }}
-          SOPHIX_APP_SECRET:${{secrets.SOPHIX_APP_SECRET}}
-          SOPHIX_RSA:${{secrets.SOPHIX_RSA}}
-          UM_APP_KEY:${{secrets.UM_APP_KEY}}
-          UM_PUSH_SECRET:${{secrets.UM_PUSH_SECRET}}
-          UM_SHARE_SINA_APP_KEY:${{secrets.UM_SHARE_SINA_APP_KEY}}
-          UM_SHARE_SINA_APP_SECRET:${{secrets.UM_SHARE_SINA_APP_SECRET}}
-          UM_SHARE_QQ_ZONE_APP_ID:${{secrets.UM_SHARE_QQ_ZONE_APP_ID}}
-          UM_SHARE_QQ_ZONE_APP_SECRET:${{secrets.UM_SHARE_QQ_ZONE_APP_SECRET}}
-          amap_apikey:${{secrets.amap_apikey}}
-          RELEASE_KEY_ALIAS:${{secrets.RELEASE_KEY_ALIAS}}
-          RELEASE_KEY_PASSWORD:${{secrets.RELEASE_KEY_PASSWORD}}
-          RELEASE_STORE_PASSWORD:${{secrets.RELEASE_STORE_PASSWORD}}
+          BUGLY_APP_ID: ${{secrets.BUGLY_APP_ID}}
+          SOPHIX_APP_ID: ${{secrets.SOPHIX_APP_ID }}
+          SOPHIX_APP_SECRET: ${{secrets.SOPHIX_APP_SECRET}}
+          SOPHIX_RSA: ${{secrets.SOPHIX_RSA}}
+          UM_APP_KEY: ${{secrets.UM_APP_KEY}}
+          UM_PUSH_SECRET: ${{secrets.UM_PUSH_SECRET}}
+          UM_SHARE_SINA_APP_KEY: ${{secrets.UM_SHARE_SINA_APP_KEY}}
+          UM_SHARE_SINA_APP_SECRET: ${{secrets.UM_SHARE_SINA_APP_SECRET}}
+          UM_SHARE_QQ_ZONE_APP_ID: ${{secrets.UM_SHARE_QQ_ZONE_APP_ID}}
+          UM_SHARE_QQ_ZONE_APP_SECRET: ${{secrets.UM_SHARE_QQ_ZONE_APP_SECRET}}
+          amap_apikey: ${{secrets.amap_apikey}}
+          RELEASE_KEY_ALIAS: ${{secrets.RELEASE_KEY_ALIAS}}
+          RELEASE_KEY_PASSWORD: ${{secrets.RELEASE_KEY_PASSWORD}}
+          RELEASE_STORE_PASSWORD: ${{secrets.RELEASE_STORE_PASSWORD}}
       
       - name: Build with Gradle
         run: ./gradlew assembleRelease
