@@ -41,14 +41,23 @@ jobs:
           RELEASE_KEY_ALIAS: ${{secrets.RELEASE_KEY_ALIAS}}
           RELEASE_KEY_PASSWORD: ${{secrets.RELEASE_KEY_PASSWORD}}
           RELEASE_STORE_PASSWORD: ${{secrets.RELEASE_STORE_PASSWORD}}
-      
+
+      - uses: actions/cache@v2
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
       - name: Build with Gradle
         run: ./gradlew assembleRelease
         
       - name: Archive production artifacts
         uses: actions/upload-artifact@v2
         with:
-          name: debug_apk
+          name: result_apk
           path: module_app/build/outputs/apk/release/module_app-release.apk
           retention-days: 15
       - name: Display the path
