@@ -2,15 +2,21 @@
 
 package com.mredrock.cyxbs.main.ui
 
+import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.FrameLayout
+import androidx.appcompat.widget.AppCompatButton
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import com.alibaba.android.arouter.facade.annotation.Route
+import com.alibaba.android.arouter.launcher.ARouter
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.mredrock.cyxbs.api.account.IAccountService
+import com.mredrock.cyxbs.api.main.IMainService
+import com.mredrock.cyxbs.api.update.AppUpdateStatus
+import com.mredrock.cyxbs.api.update.IAppUpdateService
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.bean.LoginConfig
 import com.mredrock.cyxbs.common.config.*
@@ -26,7 +32,6 @@ import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
 import com.mredrock.cyxbs.common.utils.extensions.getStatusBarHeight
 import com.mredrock.cyxbs.common.utils.extensions.onTouch
 import com.mredrock.cyxbs.common.utils.extensions.topPadding
-import com.mredrock.cyxbs.api.main.IMainService
 import com.mredrock.cyxbs.main.MAIN_MAIN
 import com.mredrock.cyxbs.main.R
 import com.mredrock.cyxbs.main.debug.DebugActivity
@@ -35,8 +40,6 @@ import com.mredrock.cyxbs.main.utils.entryContains
 import com.mredrock.cyxbs.main.utils.getFragment
 import com.mredrock.cyxbs.main.utils.isDownloadSplash
 import com.mredrock.cyxbs.main.viewmodel.MainViewModel
-import com.mredrock.cyxbs.api.update.AppUpdateStatus
-import com.mredrock.cyxbs.api.update.IAppUpdateService
 import com.umeng.analytics.MobclickAgent
 import com.umeng.message.inapp.InAppMessageManager
 import kotlinx.android.synthetic.main.main_activity_main.*
@@ -108,6 +111,26 @@ class MainActivity : BaseViewModelActivity<MainViewModel>(),
         initBottom()//初始化底部导航栏
         initBottomSheetBehavior()//初始化上拉容器BottomSheet课表
         initFragments(isLoginElseTourist, savedInstanceState)//对四个主要的fragment进行配置
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP_MR1) {
+            if (referrer != null && referrer?.toString() == "android-app://com.mredrock.cyxbs") {
+                //如果来自登陆界面，则进行是否设置密保的判断
+                viewModel.checkBindingEmail(ServiceManager.getService(IAccountService::class.java).getUserService().getStuNum()) {
+                    val bindingEmailDialog = Dialog(this, R.style.transparent_dialog)
+                    bindingEmailDialog.setContentView(R.layout.main_dialog_bind_email)
+                    val confirm = bindingEmailDialog.findViewById<AppCompatButton>(R.id.main_bt_bind_email_confirm)
+                    val cancel = bindingEmailDialog.findViewById<AppCompatButton>(R.id.main_bt_bind_email_cancel)
+                    confirm.setOnClickListener {
+                        //跳转到修改密码界面
+                        ARouter.getInstance().build(MINE_BIND_EMAIL).navigation()
+                        bindingEmailDialog.dismiss()
+                    }
+                    cancel.setOnClickListener {
+                        bindingEmailDialog.dismiss()
+                    }
+                    bindingEmailDialog.show()
+                }
+            }
+        }
     }
 
 
@@ -240,7 +263,7 @@ class MainActivity : BaseViewModelActivity<MainViewModel>(),
         (bundle?.getSerializable(PAGE_CLASS_TAG) as? HashMap<String, String>)?.let { mainPageLoadedFragmentClassList = it }
         lastState = if (viewModel.isCourseDirectShow) BottomSheetBehavior.STATE_EXPANDED else BottomSheetBehavior.STATE_COLLAPSED
         val isShortcut = intent.action == FAST
-        if ((viewModel.isCourseDirectShow || isShortcut)&&isLoginElseTourist) {
+        if ((viewModel.isCourseDirectShow || isShortcut) && isLoginElseTourist) {
             intent.action = ""
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
             ll_nav_main_container.translationY = 10000f

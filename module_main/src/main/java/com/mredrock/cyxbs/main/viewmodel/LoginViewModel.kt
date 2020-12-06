@@ -1,11 +1,11 @@
 package com.mredrock.cyxbs.main.viewmodel
 
+import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.common.BaseApp.Companion.context
 import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.network.CommonApiService
 import com.mredrock.cyxbs.common.network.exception.DefaultErrorHandler
 import com.mredrock.cyxbs.common.service.ServiceManager
-import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.common.utils.down.bean.DownMessageText
 import com.mredrock.cyxbs.common.utils.down.params.DownMessageParams
 import com.mredrock.cyxbs.common.utils.extensions.errorHandler

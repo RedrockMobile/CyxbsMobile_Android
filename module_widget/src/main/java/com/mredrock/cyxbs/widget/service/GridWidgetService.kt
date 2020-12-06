@@ -2,9 +2,11 @@ package com.mredrock.cyxbs.widget.service
 
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import android.widget.RemoteViews
 import android.widget.RemoteViewsService
 import com.google.gson.Gson
+import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.BaseApp.Companion.context
 import com.mredrock.cyxbs.common.config.WIDGET_AFFAIR
 import com.mredrock.cyxbs.common.config.WIDGET_COURSE
@@ -12,6 +14,7 @@ import com.mredrock.cyxbs.common.utils.ClassRoomParse
 import com.mredrock.cyxbs.common.utils.Num2CN
 import com.mredrock.cyxbs.common.utils.SchoolCalendar
 import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
+import com.mredrock.cyxbs.common.utils.extensions.toast
 import com.mredrock.cyxbs.widget.R
 import com.mredrock.cyxbs.widget.bean.AffairStatus
 import com.mredrock.cyxbs.widget.bean.CourseStatus

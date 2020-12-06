@@ -515,10 +515,10 @@ class CoursesViewModel : BaseViewModel() {
             now.timeInMillis >= firstDay.timeInMillis && nowWeek != 0 ->
                 "第${Num2CN.number2ChineseNumber(nowWeek.toLong())}周 " +
                         "周${
-                            if (now[Calendar.DAY_OF_WEEK] != 1)
-                                Num2CN.number2ChineseNumber(now[Calendar.DAY_OF_WEEK] - 1.toLong())
-                            else
-                                "日"
+                        if (now[Calendar.DAY_OF_WEEK] != 1)
+                            Num2CN.number2ChineseNumber(now[Calendar.DAY_OF_WEEK] - 1.toLong())
+                        else
+                            "日"
                         }"
             //8，9月欢迎新同学
             nowWeek == 0 && (now[Calendar.MONTH] + 1 == 8 || now[Calendar.MONTH] + 1 == 9) -> "欢迎新同学～"
