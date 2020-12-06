@@ -68,6 +68,8 @@ def send_message(token, chat_id, content_):
 APP_ID = sys.argv[1]
 APP_SECRET = sys.argv[2]
 run_id = sys.argv[3]
+pr_title = sys.argv[4]
+pr_body = sys.argv[5]
 token = get_tenant_access_token()
 url = "https://github.com/RedrockMobile/CyxbsMobile_Android/actions/runs/"+run_id
 
@@ -87,6 +89,18 @@ content = {
                         "tag": "a",
                         "text": url,
                         "href": url
+                    }
+                ],
+                [
+                    {
+                        "tag": "text",
+                        "text": pr_title
+                    }
+                ],
+                [
+                    {
+                        "tag": "text",
+                        "text": pr_body
                     }
                 ]
             ]
