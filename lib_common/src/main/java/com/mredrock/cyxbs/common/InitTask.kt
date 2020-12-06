@@ -33,6 +33,7 @@ import com.umeng.message.inapp.InAppMessageManager
  * description : 一些第三方库的初始化操作写在这
  */
 
+
 fun initUMeng(context: Context) {
     // 这里在小部件的进程初始化的时候注册友盟推送会概率性抛异常，这里这个其实不用初始化友盟推送
     // 所以可以直接捕获异常并不做任何处理
