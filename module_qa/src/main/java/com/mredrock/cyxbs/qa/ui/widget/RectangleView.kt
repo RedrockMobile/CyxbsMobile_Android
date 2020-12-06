@@ -1,17 +1,31 @@
 package com.mredrock.cyxbs.qa.ui.widget
 
+import android.R.attr
 import android.content.Context
 import android.graphics.*
+import android.text.TextPaint
 import android.util.AttributeSet
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.core.graphics.drawable.toBitmap
 
+
 class RectangleView @JvmOverloads constructor(
-    context: Context?,
-    attrs: AttributeSet? = null,
-    defStyle: Int = 0
+        context: Context?,
+        attrs: AttributeSet? = null,
+        defStyle: Int = 0
 ) : AppCompatImageView(context!!, attrs, defStyle) {
-    private val paint: Paint
+    private var paint: Paint = Paint()
+    private var textPaint: TextPaint = TextPaint()
+    private var imageCount: Int = 0
+
+    init {
+        textPaint.apply {
+            style = Paint.Style.FILL
+            color = 0xffffffff.toInt()
+            textSize = 100F
+            isAntiAlias = true
+        }
+    }
 
     /**
      * 绘制圆角矩形图片
@@ -22,11 +36,19 @@ class RectangleView @JvmOverloads constructor(
             val bitmap = drawable.toBitmap()
             val b = getRoundBitmap(bitmap, 20)
             val rectSrc =
-                Rect(0, 0, b.width, b.height)
+                    Rect(0, 0, b.width, b.height)
             val rectDest =
-                Rect(0, 0, width, height)
+                    Rect(0, 0, width, height)
             paint.reset()
             canvas.drawBitmap(b, rectSrc, rectDest, paint)
+            if (imageCount > 0) {
+                var showText = "+$imageCount"
+                val textWidth = textPaint.measureText(showText)
+                var x = width / 2 - textWidth / 2
+                var y = height / 2 + textPaint.fontMetrics.bottom
+                textPaint.bgColor = Color.BLACK
+                canvas.drawText(showText, x, y, textPaint)
+            }
         } else {
             super.onDraw(canvas)
         }
@@ -39,13 +61,13 @@ class RectangleView @JvmOverloads constructor(
      */
     private fun getRoundBitmap(bitmap: Bitmap, roundPx: Int): Bitmap {
         val output = Bitmap.createBitmap(
-            bitmap.width,
-            bitmap.height, Bitmap.Config.ARGB_8888
+                bitmap.width,
+                bitmap.height, Bitmap.Config.ARGB_8888
         )
         val canvas = Canvas(output)
         val color = -0xbdbdbe
         val rect =
-            Rect(0, 0, bitmap.width, bitmap.height)
+                Rect(0, 0, bitmap.width, bitmap.height)
         val rectF = RectF(rect)
         paint.isAntiAlias = true
         canvas.drawARGB(0, 0, 0, 0)
@@ -57,7 +79,9 @@ class RectangleView @JvmOverloads constructor(
         return output
     }
 
-    init {
-        paint = Paint()
+    fun setAddImageCount(imageCount: Int) {
+        this.imageCount = imageCount
+        invalidate()
     }
+
 }

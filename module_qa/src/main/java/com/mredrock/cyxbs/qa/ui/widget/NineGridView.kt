@@ -1,17 +1,14 @@
 package com.mredrock.cyxbs.qa.ui.widget
 
 import android.content.Context
-import android.media.Image
 import android.util.AttributeSet
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.ImageView
 import androidx.core.view.forEach
-import com.mredrock.cyxbs.common.utils.extensions.dip
-import com.mredrock.cyxbs.common.utils.extensions.loadRedrockImage
-import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.common.utils.extensions.*
+import com.mredrock.cyxbs.qa.R
 
 
 /**
@@ -22,8 +19,8 @@ class NineGridView(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : 
     companion object {
         const val MODE_FILL = 0
         const val MODE_NORMAL = 1
-        const val MODE_IMAGE_NORMAL_SIZE =9
-        const val MODE_IMAGE_THREE_SIZE =3
+        const val MODE_IMAGE_NORMAL_SIZE = 9
+        const val MODE_IMAGE_THREE_SIZE = 3
     }
 
     enum class ImageMode {
@@ -31,6 +28,11 @@ class NineGridView(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : 
         MODE_IMAGE_RECTANGLE//圆角照片
     }
 
+    /**
+     * 邮问改版判断图片剪掉3张后剩下的图片数
+     */
+
+    private var imageCount = 0
 
 
     /**
@@ -152,11 +154,7 @@ class NineGridView(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : 
                     context.loadRedrockImage(urls[it], getChildAt(it) as ImageView)
                 }
                 urls.isNullOrEmpty() -> {
-                    //邮问改版图片错乱进行了修改，不知道其他地方会不会出问题
                     removeAllViews()
-                }
-                else -> {
-                    removeViewAt(it)
                 }
             }
         }
@@ -170,9 +168,10 @@ class NineGridView(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : 
     }
 
     fun setImages(urls: List<String>, countSize: Int, imageShape: ImageMode) {
+        imageCount = urls.size - MODE_IMAGE_THREE_SIZE
         when (imageShape) {
             ImageMode.MODE_IMAGE_RECTANGLE -> {
-                setRectangleImages(setShowPhotoSize(urls, countSize))
+                setRectangleImages(setShowPhotoSize(urls, countSize), imageCount)
             }
             ImageMode.MODE_IMAGE_NORMAL -> {
                 setNormalImages(setShowPhotoSize(urls, countSize))
@@ -191,27 +190,26 @@ class NineGridView(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : 
         return photoUrls
     }
 
-    fun setRectangleImages(urls: List<String>) {
+    fun setRectangleImages(urls: List<String>, imageCounts: Int) {
         repeat(childCount) {
             when {
                 it < urls.size -> {
                     context.loadRedrockImage(urls[it], getChildAt(it) as RectangleView)
                 }
                 urls.isNullOrEmpty() -> {
-                    //邮问改版图片错乱进行了修改，不知道其他地方会不会出问题
                     removeAllViews()
-                }
-                else -> {
-                    removeViewAt(it)
                 }
             }
         }
-
         for (i in childCount until urls.size) {
-            this.addView(RectangleView(context).apply {
+            val view = RectangleView(context).apply {
                 scaleType = ImageView.ScaleType.CENTER_CROP
                 context.loadRedrockImage(urls[i], this@apply)
-            }, childCount)
+            }
+            if (i == 2 && imageCounts > 0) {
+                view.setAddImageCount(imageCount)
+            }
+            this.addView(view, childCount)
         }
     }
 }

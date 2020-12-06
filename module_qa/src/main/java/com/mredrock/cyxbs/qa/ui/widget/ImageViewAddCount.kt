@@ -56,7 +56,6 @@ class ImageViewAddCount(context: Context?, attrs: AttributeSet?) : androidx.appc
             return
         when (pointMode) {
             NO_POINT -> {
-
             }
 
             NUMBER_POINT -> {
@@ -84,7 +83,6 @@ class ImageViewAddCount(context: Context?, attrs: AttributeSet?) : androidx.appc
 
             ONLY_POINT -> {
                 canvas?.drawCircle((width - paddingRight).toFloat(), paddingTop.toFloat(), paddingRight.toFloat(), paint)
-
             }
         }
     }

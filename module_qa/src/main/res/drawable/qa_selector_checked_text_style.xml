@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:drawable="@drawable/qa_ic_check_show_origin_image" android:state_pressed="true" />
-    <item android:drawable="@drawable/qa_ic_no_check_show_origin_image" android:state_pressed="false" />
-</selector>

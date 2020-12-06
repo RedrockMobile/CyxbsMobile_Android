@@ -37,11 +37,6 @@ class CircleDetailAdapter(private val onItemClickEvent: (Question) -> Unit) : Ba
         if (position == 0) {
             holder.itemView.background = ContextCompat.getDrawable(holder.itemView.context, R.drawable.qa_ic_question_list_top_background)
         } else {
-            holder.itemView.apply {
-                qa_iv_dynamic_praise_count_image.setOnSingleClickListener {
-                    qa_iv_dynamic_praise_count_image.toggle()
-                }
-            }
             holder.itemView.background = ContextCompat.getDrawable(holder.itemView.context, R.color.common_qa_question_list_color)
         }
     }
@@ -67,20 +62,23 @@ class CircleDetailAdapter(private val onItemClickEvent: (Question) -> Unit) : Ba
                 qa_tv_dynamic_publish_at.text = questionTimeDescription(System.currentTimeMillis(), data.createdAt.toDate().time)
                 //解决图片错乱的问题
                 if (data.photoUrl.isNullOrEmpty())
-                    qa_dynamic_nine_grid_view.setRectangleImages(emptyList())
+                    qa_dynamic_nine_grid_view.setRectangleImages(emptyList(), NineGridView.MODE_IMAGE_THREE_SIZE)
                 else {
                     val tag = qa_dynamic_nine_grid_view.tag
                     if (null == tag || tag == data.photoUrl) {
                         val tagStore = qa_dynamic_nine_grid_view.tag
-                        qa_dynamic_nine_grid_view.setImages(data.photoUrl,NineGridView.MODE_IMAGE_THREE_SIZE, NineGridView.ImageMode.MODE_IMAGE_RECTANGLE)
+                        qa_dynamic_nine_grid_view.setImages(data.photoUrl, NineGridView.MODE_IMAGE_THREE_SIZE, NineGridView.ImageMode.MODE_IMAGE_RECTANGLE)
                         qa_dynamic_nine_grid_view.tag = tagStore
                     } else {
                         val tagStore = data.photoUrl
                         qa_dynamic_nine_grid_view.tag = null
-                        qa_dynamic_nine_grid_view.setImages(emptyList(),NineGridView.MODE_IMAGE_THREE_SIZE, NineGridView.ImageMode.MODE_IMAGE_RECTANGLE)
-                        qa_dynamic_nine_grid_view.setImages(data.photoUrl,NineGridView.MODE_IMAGE_THREE_SIZE, NineGridView.ImageMode.MODE_IMAGE_RECTANGLE)
+                        qa_dynamic_nine_grid_view.setRectangleImages(emptyList(), NineGridView.MODE_IMAGE_THREE_SIZE)
+                        qa_dynamic_nine_grid_view.setImages(data.photoUrl, NineGridView.MODE_IMAGE_THREE_SIZE, NineGridView.ImageMode.MODE_IMAGE_RECTANGLE)
                         qa_dynamic_nine_grid_view.tag = tagStore
                     }
+                }
+                qa_iv_dynamic_praise_count_image.setOnSingleClickListener {
+                    qa_iv_dynamic_praise_count_image.toggle()
                 }
                 qa_dynamic_nine_grid_view.setOnItemClickListener { _, index ->
                     ViewImageActivity.activityStart(context, data.photoUrl.toTypedArray(), index)
