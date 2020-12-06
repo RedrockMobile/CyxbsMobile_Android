@@ -188,5 +188,4 @@ class ScheduleDetailViewAdapter(private val mDialog: Dialog, private val mSchedu
             }
         }
     }
-
 }

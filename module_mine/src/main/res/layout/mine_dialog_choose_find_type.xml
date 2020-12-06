@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:background="@drawable/mine_shape_dialog_back"
+    android:layout_width="255dp"
+    android:layout_height="141dp">
+
+    <TextView
+        android:id="@+id/mine_tv_dialog_choose_type_email"
+        android:layout_width="match_parent"
+        android:layout_height="71dp"
+        android:layout_gravity="center"
+        android:text="邮箱找回"
+        android:gravity="center"
+        android:textColor="@color/common_level_two_font_color"
+        android:textSize="18sp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/common_default_divide_line_color"/>
+
+    <TextView
+        android:id="@+id/mine_tv_dialog_choose_type_protect"
+        android:layout_width="match_parent"
+        android:layout_height="69dp"
+        android:layout_gravity="center"
+        android:text="密保找回"
+        android:gravity="center"
+        android:textColor="@color/common_level_two_font_color"
+        android:textSize="18sp" />
+
+</LinearLayout>

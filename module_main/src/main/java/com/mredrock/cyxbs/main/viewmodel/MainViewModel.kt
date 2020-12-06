@@ -1,12 +1,10 @@
 package com.mredrock.cyxbs.main.viewmodel
 
 import android.view.View
-import androidx.databinding.ObservableField
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.mredrock.cyxbs.common.BaseApp.Companion.context
 import com.mredrock.cyxbs.common.network.ApiGenerator
-import com.mredrock.cyxbs.common.network.exception.RedrockApiException
 import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.*
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
@@ -87,5 +85,21 @@ class MainViewModel : BaseViewModel() {
         }
     }
 
+    fun checkBindingEmail(stuNum: String?, onWithoutEmailBinding: () -> Unit) {
+        stuNum?.let {
+            ApiGenerator.getCommonApiService(ApiService::class.java)
+                    .checkBinding(it)
+                    .setSchedulers()
+                    .doOnErrorWithDefaultErrorHandler { error ->
+                        context.toast(error.toString())
+                        true
+                    }
+                    .safeSubscribeBy { bindingInfo ->
+                        if (bindingInfo.status == 10000 && bindingInfo.data.email_is == 0) {//如果尚未绑定邮箱
+                            onWithoutEmailBinding()
+                        }
+                    }
+        }
+    }
 
 }

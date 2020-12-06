@@ -20,7 +20,7 @@ import java.util.*
  */
 class LittleTransWidget : BaseLittleWidget() {
 
-    override fun getLayoutResId(): Int {
+    override fun getLayoutResId(): Int {//获取当前小工具适配的ID
         return R.layout.widget_little_trans
     }
 

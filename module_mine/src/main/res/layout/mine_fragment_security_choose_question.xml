@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--在外部layout设置z轴高度，实现阴影效果-->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="18dp"
+        android:layout_marginTop="16dp"
+        android:textColor="@color/common_level_two_font_color"
+        android:text="@string/mine_security_sel_question"/>
+    
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="18dp"
+        android:background="@color/common_default_divide_line_color"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/mine_rv_security_choose_question"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+</LinearLayout>

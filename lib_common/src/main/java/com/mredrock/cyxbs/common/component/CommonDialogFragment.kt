@@ -12,6 +12,7 @@ import android.widget.FrameLayout
 import androidx.annotation.LayoutRes
 import androidx.fragment.app.DialogFragment
 import com.mredrock.cyxbs.common.R
+import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.gone
 import kotlinx.android.synthetic.main.common_dialog.*
 import com.mredrock.cyxbs.common.utils.extensions.*
