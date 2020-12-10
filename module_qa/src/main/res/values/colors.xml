@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="qa_full_screen_pic_indicator_color">#ffffff</color>
-
-
+    <color name="qa_picture_black_80">#80000000</color>
     <color name="qa_crop_logo">#f0000000</color>
 
 </resources>

@@ -1,11 +1,15 @@
 package com.mredrock.cyxbs.qa.ui.widget
 
 import android.content.Context
+import android.graphics.ColorMatrix
+import android.graphics.ColorMatrixColorFilter
+import android.graphics.PorterDuff
 import android.util.AttributeSet
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.ImageView
+import androidx.core.content.ContextCompat
 import androidx.core.view.forEach
 import com.mredrock.cyxbs.common.utils.extensions.*
 import com.mredrock.cyxbs.qa.R
@@ -156,6 +160,9 @@ class NineGridView(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : 
                 urls.isNullOrEmpty() -> {
                     removeAllViews()
                 }
+                else -> {
+                    removeAllViews()
+                }
             }
         }
 
@@ -199,7 +206,11 @@ class NineGridView(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : 
                 urls.isNullOrEmpty() -> {
                     removeAllViews()
                 }
+                else -> {
+                    removeAllViews()
+                }
             }
+
         }
         for (i in childCount until urls.size) {
             val view = RectangleView(context).apply {
@@ -207,6 +218,7 @@ class NineGridView(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : 
                 context.loadRedrockImage(urls[i], this@apply)
             }
             if (i == 2 && imageCounts > 0) {
+                view.setShowMask()
                 view.setAddImageCount(imageCount)
             }
             this.addView(view, childCount)

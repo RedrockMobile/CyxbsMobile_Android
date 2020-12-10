@@ -80,7 +80,7 @@ class DynamicAdapter(private val onItemClickEvent: (Question) -> Unit) : BaseEnd
                 qa_tv_dynamic_publish_at.text = questionTimeDescription(System.currentTimeMillis(), data.createdAt.toDate().time)
                 //解决图片错乱的问题
                 if (data.photoUrl.isNullOrEmpty())
-                    qa_dynamic_nine_grid_view.setRectangleImages(emptyList(),NineGridView.MODE_IMAGE_THREE_SIZE)
+                    qa_dynamic_nine_grid_view.setRectangleImages(emptyList(), NineGridView.MODE_IMAGE_THREE_SIZE)
                 else {
                     val tag = qa_dynamic_nine_grid_view.tag
                     if (null == tag || tag == data.photoUrl) {

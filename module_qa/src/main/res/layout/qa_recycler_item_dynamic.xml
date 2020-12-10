@@ -129,9 +129,9 @@
         app:cycleTime="1000"
         app:defaultColor="#ffcccccc"
         app:defaultLikeIconRes="@drawable/qa_ic_answer_list_praise"
-        app:layout_constraintBottom_toBottomOf="@id/qa_tv_dynamic_count"
-        app:layout_constraintEnd_toStartOf="@+id/qa_tv_dynamic_count"
-        app:layout_constraintTop_toTopOf="@+id/qa_tv_dynamic_count"
+        app:layout_constraintBottom_toBottomOf="@id/qa_iv_dynamic_count"
+        app:layout_constraintEnd_toStartOf="@+id/qa_iv_dynamic_count"
+        app:layout_constraintTop_toTopOf="@+id/qa_iv_dynamic_count"
         app:ringColor="#323FD9" />
 
     <TextView
@@ -145,26 +145,36 @@
         android:paddingBottom="10dp"
         android:textColor="@color/common_qa_question_bottom_count_color"
         android:textSize="11sp"
+        app:layout_constraintBottom_toBottomOf="@+id/qa_iv_dynamic_count"
+        app:layout_constraintEnd_toStartOf="@+id/qa_iv_dynamic_count"
+        app:layout_constraintStart_toStartOf="@+id/qa_iv_dynamic_praise_count_image"
+        app:layout_constraintTop_toTopOf="@+id/qa_iv_dynamic_count"
+        tools:text="999" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/qa_iv_dynamic_count"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginEnd="6dp"
+        android:background="@drawable/qa_ic_dynamic_comment_count"
+        android:textColor="@color/common_qa_question_bottom_count_color"
         app:layout_constraintBottom_toBottomOf="@+id/qa_tv_dynamic_count"
         app:layout_constraintEnd_toStartOf="@+id/qa_tv_dynamic_count"
-        app:layout_constraintStart_toStartOf="@+id/qa_iv_dynamic_praise_count_image"
-        app:layout_constraintTop_toTopOf="@+id/qa_tv_dynamic_count"
-        tools:text="999" />
+        app:layout_constraintTop_toTopOf="@+id/qa_tv_dynamic_count" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/qa_tv_dynamic_count"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        android:drawableStart="@drawable/qa_ic_comment_count"
-        android:drawablePadding="4dp"
-        android:gravity="center_vertical"
+        android:text="201"
         android:textColor="@color/common_qa_question_bottom_count_color"
         android:textSize="11sp"
+        android:layout_marginEnd="16dp"
         app:layout_constraintBottom_toBottomOf="@+id/qa_iv_dynamic_share"
         app:layout_constraintEnd_toStartOf="@+id/qa_iv_dynamic_share"
         app:layout_constraintTop_toTopOf="@+id/qa_iv_dynamic_share"
-        tools:text="201" />
+
+        />
 
     <ImageView
         android:id="@+id/qa_iv_dynamic_share"

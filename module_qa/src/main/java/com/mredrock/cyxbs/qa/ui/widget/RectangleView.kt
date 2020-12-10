@@ -1,6 +1,6 @@
 package com.mredrock.cyxbs.qa.ui.widget
 
-import android.R.attr
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.*
 import android.text.TextPaint
@@ -10,13 +10,19 @@ import androidx.core.graphics.drawable.toBitmap
 
 
 class RectangleView @JvmOverloads constructor(
-        context: Context?,
+        context: Context,
         attrs: AttributeSet? = null,
         defStyle: Int = 0
-) : AppCompatImageView(context!!, attrs, defStyle) {
+) : AppCompatImageView(context, attrs, defStyle) {
     private var paint: Paint = Paint()
     private var textPaint: TextPaint = TextPaint()
     private var imageCount: Int = 0
+
+    //是否显示蒙版
+    private var isShowMask = false
+
+    //蒙版色值
+    private val maskColor = Color.parseColor("#80000000")
 
     init {
         textPaint.apply {
@@ -25,6 +31,11 @@ class RectangleView @JvmOverloads constructor(
             textSize = 100F
             isAntiAlias = true
         }
+    }
+
+    fun setShowMask() {
+        isShowMask = true
+        invalidate()
     }
 
     /**
@@ -46,7 +57,6 @@ class RectangleView @JvmOverloads constructor(
                 val textWidth = textPaint.measureText(showText)
                 var x = width / 2 - textWidth / 2
                 var y = height / 2 + textPaint.fontMetrics.bottom
-                textPaint.bgColor = Color.BLACK
                 canvas.drawText(showText, x, y, textPaint)
             }
         } else {
@@ -72,13 +82,16 @@ class RectangleView @JvmOverloads constructor(
         paint.isAntiAlias = true
         canvas.drawARGB(0, 0, 0, 0)
         paint.color = color
-        val x = bitmap.width
         canvas.drawRoundRect(rectF, roundPx.toFloat(), roundPx.toFloat(), paint)
         paint.xfermode = PorterDuffXfermode(PorterDuff.Mode.SRC_IN)
         canvas.drawBitmap(bitmap, rect, rect, paint)
+        if (isShowMask) {
+            canvas.drawColor(maskColor)
+        }
         return output
     }
 
+    @SuppressLint("ResourceType")
     fun setAddImageCount(imageCount: Int) {
         this.imageCount = imageCount
         invalidate()
