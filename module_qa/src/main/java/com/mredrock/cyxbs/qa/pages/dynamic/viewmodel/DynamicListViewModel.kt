@@ -8,8 +8,8 @@ import com.mredrock.cyxbs.common.utils.extensions.mapOrThrowApiException
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
-import com.mredrock.cyxbs.qa.bean.Question
 import com.mredrock.cyxbs.qa.bean.TestData
+import com.mredrock.cyxbs.qa.beannew.Dynamic
 import com.mredrock.cyxbs.qa.network.ApiService
 import com.mredrock.cyxbs.qa.pages.dynamic.model.QuestionDataSource
 
@@ -17,7 +17,7 @@ import com.mredrock.cyxbs.qa.pages.dynamic.model.QuestionDataSource
  * Created By jay68 on 2018/8/26.
  */
 open class DynamicListViewModel(kind: String) : BaseViewModel() {
-    val dynamicList: LiveData<PagedList<Question>>
+    val dynamicList: LiveData<PagedList<Dynamic>>
     val networkState: LiveData<Int>
     val initialLoad: LiveData<Int>
     var hotWords = MutableLiveData<List<String>>()
@@ -32,7 +32,7 @@ open class DynamicListViewModel(kind: String) : BaseViewModel() {
                 .setInitialLoadSizeHint(6)
                 .build()
         factory = QuestionDataSource.Factory(kind)
-        dynamicList = LivePagedListBuilder<Int, Question>(factory, config).build()
+        dynamicList = LivePagedListBuilder<Int, Dynamic>(factory, config).build()
         networkState = Transformations.switchMap(factory.questionDataSourceLiveData) { it.networkState }
         initialLoad = Transformations.switchMap(factory.questionDataSourceLiveData) { it.initialLoad }
     }

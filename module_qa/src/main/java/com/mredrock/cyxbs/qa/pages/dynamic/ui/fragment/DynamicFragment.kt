@@ -1,6 +1,5 @@
 package com.mredrock.cyxbs.qa.pages.dynamic.ui.fragment
 
-import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,7 +8,6 @@ import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.ViewFlipper
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.alibaba.android.arouter.facade.annotation.Route
@@ -55,7 +53,7 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>() {
     //判断是否加载过热词，首次加载fragment，会加载一次，设置true，onPause就不会加载
     // onStop设置为false，onPause就会加载
 
-    override fun getViewModelFactory() = DynamicListViewModel.Factory("迎新生")
+    override fun getViewModelFactory() = DynamicListViewModel.Factory("main")
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
 
