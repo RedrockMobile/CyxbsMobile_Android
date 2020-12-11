@@ -25,8 +25,8 @@ class CircleSquareActivity : BaseViewModelActivity<CirecleSquareViewModel>() {
                 finish()
                 return@OnClickListener
         })
+//        TODO 为啥这个title居中不了
         qa_tv_toolbar_title.text = "圈子广场"
-        qa_ib_toolbar_more.gone()
     }
     private fun initView(){
 
@@ -36,9 +36,10 @@ class CircleSquareActivity : BaseViewModelActivity<CirecleSquareViewModel>() {
         }
         rv_circle_square.apply {
             layoutManager=LinearLayoutManager(context)
-            adapter=CircleSquareAdapter().apply {
+            adapter=CircleSquareAdapter(this@CircleSquareActivity).apply {
                 addData(list)
             }
         }
+
     }
 }

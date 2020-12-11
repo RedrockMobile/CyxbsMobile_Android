@@ -1,5 +1,6 @@
 package com.mredrock.cyxbs.qa.pages.square.ui.fragment
 
+import com.mredrock.cyxbs.qa.pages.dynamic.viewmodel.DynamicListViewModel
 import com.mredrock.cyxbs.qa.pages.square.viewmodel.CircleDetailLastNewViewModel
 
 /**
@@ -8,5 +9,5 @@ import com.mredrock.cyxbs.qa.pages.square.viewmodel.CircleDetailLastNewViewModel
  *@author SpreadWater
  *@description
  */
-class LastNewFragment :BaseCircleDetailFragment<CircleDetailLastNewViewModel>() {
+class LastNewFragment :BaseCircleDetailFragment<DynamicListViewModel>() {
 }

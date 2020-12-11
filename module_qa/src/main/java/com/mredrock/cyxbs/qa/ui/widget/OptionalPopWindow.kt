@@ -128,5 +128,4 @@ class OptionalPopWindow internal constructor(val context: Context?) : PopupWindo
         animator.start()
     }
 
-
 }

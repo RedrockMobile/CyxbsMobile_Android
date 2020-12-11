@@ -17,7 +17,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="33dp"
-        android:text="没有相关内容~" />
+        android:text="没有相关内容哦~" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/qa_btn_no_result_ask_question"

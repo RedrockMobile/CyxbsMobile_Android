@@ -1,10 +1,17 @@
 package com.mredrock.cyxbs.qa.pages.square.ui.adapter
 
+import android.app.Activity
+import android.content.Context
+import android.content.Intent
 import android.view.ViewGroup
+import com.mredrock.cyxbs.common.BaseApp
+import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.bean.CircleSquare
 import com.mredrock.cyxbs.qa.component.recycler.BaseRvAdapter
 import com.mredrock.cyxbs.qa.component.recycler.BaseViewHolder
+import com.mredrock.cyxbs.qa.pages.square.ui.activity.CircleDetailActivity
+import com.mredrock.cyxbs.qa.pages.square.ui.activity.CircleSquareActivity
 import kotlinx.android.synthetic.main.qa_recycler_item_circle_square.view.*
 
 /**
@@ -13,7 +20,7 @@ import kotlinx.android.synthetic.main.qa_recycler_item_circle_square.view.*
  *@author SpreadWater
  *@description
  */
-class CircleSquareAdapter() :BaseRvAdapter<CircleSquare>() {
+class CircleSquareAdapter(val circleSquareActivity: CircleSquareActivity) :BaseRvAdapter<CircleSquare>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder<CircleSquare>  = CircleSquareViewHolder(parent)
     class CircleSquareViewHolder(parent:ViewGroup):BaseViewHolder<CircleSquare>(parent, R.layout.qa_recycler_item_circle_square){
         override fun refresh(data: CircleSquare?) {
@@ -22,5 +29,21 @@ class CircleSquareAdapter() :BaseRvAdapter<CircleSquare>() {
             itemView.tv_circle_square_person_number.text=data?.cirecle_person_number.toString()+"个成员"
             itemView.btn_circle_square_concern.text="+关注"
         }
+    }
+
+    override fun onItemClickListener(holder: BaseViewHolder<CircleSquare>, position: Int, data: CircleSquare) {
+        super.onItemClickListener(holder, position, data)
+        holder.itemView.btn_circle_square_concern.setOnSingleClickListener {
+            //todo 关注的网络请求,改变背景颜色
+        }
+        holder.itemView.setOnSingleClickListener {
+            //todo 跳转到圈子详情的页面
+            changeToActivity(CircleDetailActivity())
+            circleSquareActivity.finish()
+        }
+    }
+    private fun changeToActivity(activity: Activity) {
+        val intent = Intent(BaseApp.context, activity::class.java)
+        BaseApp.context.startActivity(intent)
     }
 }
