@@ -9,14 +9,14 @@ import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
  * @Date: 2020/11/27 23:52
  */
 
-open class DynamicDetailViewModel(kind: String) : BaseViewModel() {
+open class DynamicDetailViewModel : BaseViewModel() {
 
 
-    class Factory(private val kind: String) : ViewModelProvider.Factory {
+    class Factory() : ViewModelProvider.Factory {
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
             @Suppress("UNCHECKED_CAST")
-            if (modelClass.isAssignableFrom(DynamicListViewModel::class.java)) {
-                return DynamicListViewModel(kind) as T
+            if (modelClass.isAssignableFrom(DynamicDetailViewModel::class.java)) {
+                return DynamicDetailViewModel() as T
             } else {
                 throw IllegalArgumentException("ViewModel Not Found.")
             }

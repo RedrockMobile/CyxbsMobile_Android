@@ -20,6 +20,7 @@ import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.component.recycler.RvAdapterWrapper
 import com.mredrock.cyxbs.qa.network.NetworkState
+import com.mredrock.cyxbs.qa.pages.dynamic.ui.activity.DynamicDetailActivity
 import com.mredrock.cyxbs.qa.pages.dynamic.ui.adapter.CirclesAdapter
 import com.mredrock.cyxbs.qa.pages.dynamic.ui.adapter.DynamicAdapter
 import com.mredrock.cyxbs.qa.pages.dynamic.viewmodel.DynamicListViewModel
@@ -63,13 +64,13 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initScrollText()
-        initDrnamics()
+        initDynamic()
         initClick()
     }
 
-    private fun initDrnamics() {
-        val dynamicListRvAdapter = DynamicAdapter {
-
+    private fun initDynamic() {
+        val dynamicListRvAdapter = DynamicAdapter { dynamic, view ->
+            DynamicDetailActivity.activityStart(this, view, dynamic)
         }
         val footerRvAdapter = FooterRvAdapter { viewModel.retry() }
         val emptyRvAdapter = EmptyRvAdapter(getString(R.string.qa_question_list_empty_hint))

@@ -1,7 +1,9 @@
 package com.mredrock.cyxbs.qa.pages.dynamic.ui.adapter
 
+import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import com.mredrock.cyxbs.common.BaseApp
@@ -24,7 +26,7 @@ import kotlinx.android.synthetic.main.qa_recycler_item_dynamic.view.*
  * @Description:
  * @Date: 2020/11/17 20:11
  */
-class DynamicAdapter(private val onItemClickEvent: (Dynamic) -> Unit) : BaseEndlessRvAdapter<Dynamic>(DIFF_CALLBACK as DiffUtil.ItemCallback<Dynamic>) {
+class DynamicAdapter(private val onItemClickEvent: (Dynamic, View) -> Unit) : BaseEndlessRvAdapter<Dynamic>(DIFF_CALLBACK as DiffUtil.ItemCallback<Dynamic>) {
     companion object {
         @JvmStatic
         val DIFF_CALLBACK = object : DiffUtil.ItemCallback<Dynamic>() {
@@ -53,7 +55,7 @@ class DynamicAdapter(private val onItemClickEvent: (Dynamic) -> Unit) : BaseEndl
     override fun onItemClickListener(holder: BaseViewHolder<Dynamic>, position: Int, data: Dynamic) {
         super.onItemClickListener(holder, position, data)
         if (holder !is DynamicViewHolder) return
-        onItemClickEvent.invoke(data)
+        onItemClickEvent.invoke(data, holder.itemView.findViewById<ConstraintLayout>(R.id.qa_ctl_dynamic))
     }
 
     class DynamicViewHolder(parent: ViewGroup) : BaseViewHolder<Dynamic>(parent, R.layout.qa_recycler_item_dynamic) {
