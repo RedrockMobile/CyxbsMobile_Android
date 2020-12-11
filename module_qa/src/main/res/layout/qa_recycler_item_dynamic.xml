@@ -103,6 +103,7 @@
         app:layout_constraintTop_toBottomOf="@+id/qa_tv_dynamic_content" />
 
     <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/qa_tv_dynamic_topic"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -112,10 +113,10 @@
         android:paddingTop="5dp"
         android:paddingEnd="8dp"
         android:paddingBottom="5dp"
-        android:text="#校园周边"
         android:textSize="10sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/qa_dynamic_nine_grid_view" />
+        app:layout_constraintTop_toBottomOf="@+id/qa_dynamic_nine_grid_view"
+        tools:text="#校园周边" />
 
     <com.mredrock.cyxbs.qa.ui.widget.likeview.LikeView
         android:id="@+id/qa_iv_dynamic_praise_count_image"
@@ -129,9 +130,9 @@
         app:cycleTime="1000"
         app:defaultColor="#ffcccccc"
         app:defaultLikeIconRes="@drawable/qa_ic_answer_list_praise"
-        app:layout_constraintBottom_toBottomOf="@id/qa_iv_dynamic_count"
-        app:layout_constraintEnd_toStartOf="@+id/qa_iv_dynamic_count"
-        app:layout_constraintTop_toTopOf="@+id/qa_iv_dynamic_count"
+        app:layout_constraintBottom_toBottomOf="@id/qa_iv_dynamic_comment_count"
+        app:layout_constraintEnd_toStartOf="@+id/qa_iv_dynamic_comment_count"
+        app:layout_constraintTop_toTopOf="@+id/qa_iv_dynamic_comment_count"
         app:ringColor="#323FD9" />
 
     <TextView
@@ -140,36 +141,36 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="50dp"
         android:layout_marginEnd="12dp"
-        android:layout_toStartOf="@+id/qa_tv_dynamic_count"
+        android:layout_toStartOf="@+id/qa_tv_dynamic_comment_count"
         android:paddingTop="10dp"
         android:paddingBottom="10dp"
         android:textColor="@color/common_qa_question_bottom_count_color"
         android:textSize="11sp"
-        app:layout_constraintBottom_toBottomOf="@+id/qa_iv_dynamic_count"
-        app:layout_constraintEnd_toStartOf="@+id/qa_iv_dynamic_count"
+        app:layout_constraintBottom_toBottomOf="@+id/qa_iv_dynamic_comment_count"
+        app:layout_constraintEnd_toStartOf="@+id/qa_iv_dynamic_comment_count"
         app:layout_constraintStart_toStartOf="@+id/qa_iv_dynamic_praise_count_image"
-        app:layout_constraintTop_toTopOf="@+id/qa_iv_dynamic_count"
+        app:layout_constraintTop_toTopOf="@+id/qa_iv_dynamic_comment_count"
         tools:text="999" />
 
     <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/qa_iv_dynamic_count"
+        android:id="@+id/qa_iv_dynamic_comment_count"
         android:layout_width="20dp"
         android:layout_height="20dp"
         android:layout_marginEnd="6dp"
         android:background="@drawable/qa_ic_dynamic_comment_count"
         android:textColor="@color/common_qa_question_bottom_count_color"
-        app:layout_constraintBottom_toBottomOf="@+id/qa_tv_dynamic_count"
-        app:layout_constraintEnd_toStartOf="@+id/qa_tv_dynamic_count"
-        app:layout_constraintTop_toTopOf="@+id/qa_tv_dynamic_count" />
+        app:layout_constraintBottom_toBottomOf="@+id/qa_tv_dynamic_comment_count"
+        app:layout_constraintEnd_toStartOf="@+id/qa_tv_dynamic_comment_count"
+        app:layout_constraintTop_toTopOf="@+id/qa_tv_dynamic_comment_count" />
 
     <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/qa_tv_dynamic_count"
+        android:id="@+id/qa_tv_dynamic_comment_count"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
         android:text="201"
         android:textColor="@color/common_qa_question_bottom_count_color"
         android:textSize="11sp"
-        android:layout_marginEnd="16dp"
         app:layout_constraintBottom_toBottomOf="@+id/qa_iv_dynamic_share"
         app:layout_constraintEnd_toStartOf="@+id/qa_iv_dynamic_share"
         app:layout_constraintTop_toTopOf="@+id/qa_iv_dynamic_share"

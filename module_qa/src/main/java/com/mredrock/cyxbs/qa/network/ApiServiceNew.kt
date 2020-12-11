@@ -11,7 +11,7 @@ import retrofit2.http.*
  * Created By jay68 on 2018/8/26.
  */
 interface ApiServiceNew {
-    @POST("/app/index.php/QA/new/getDynamicList")
+    @POST("/wxapi/magipoke-loop/post/getDynamicList")
     @FormUrlEncoded
     fun getDynamicList(@Field("topic")
                        topic: String,
@@ -20,24 +20,24 @@ interface ApiServiceNew {
                        @Field("size")
                        size: Int = 6): Observable<RedrockApiWrapper<List<Dynamic>>>
 
-    @POST("/app/index.php/QA/new/getFollowedTopic")
+    @POST("/wxapi/magipoke-loop/new/getFollowedTopic")
     @FormUrlEncoded
     fun getFollowedTopic(): Observable<RedrockApiWrapper<List<Topic>>>
 
-    @POST("/app/index.php/QA/new/getTopicGround")
+    @POST("/wxapi/magipoke-loop/ground/getTopicGround")
     @FormUrlEncoded
     fun getTopicGround(): Observable<RedrockApiWrapper<List<Topic>>>
 
-    @POST("/app/index.php/QA/new/getSearchHotWord")
+    @POST("/wxapi/magipoke-loop/search/getSearchHotWord")
     @FormUrlEncoded
     fun getSearchHotWord(): Observable<RedrockApiWrapper<List<String>>>
 
-    @POST("/app/index.php/QA/new/getSearchResult")
+    @POST("/wxapi/magipoke-loop/search/getSearchResult")
     @FormUrlEncoded
     fun getSearchResult(@Field("search_content")
                         searchContent: String): Observable<RedrockApiWrapper<SearchResult>>
 
-    @POST("/app/index.php/QA/new/releaseDynamic")
+    @POST("/wxapi/magipoke-loop/post/releaseDynamic")
     @FormUrlEncoded
     fun releaseDynamic(@Field("content")
                        content: String,
@@ -59,7 +59,7 @@ interface ApiServiceNew {
     fun uploadQuestionPic(@Part parts: List<MultipartBody.Part>, @PartMap params: Map<String, String>): Observable<RedrockApiStatus>
 
 
-    @POST("/app/index.php/QA/new/releaseComment")
+    @POST("/wxapi/magipoke-loop/comment/releaseComment")
     @FormUrlEncoded
     fun releaseComment(@Field("content")
                        content: String,
@@ -67,7 +67,7 @@ interface ApiServiceNew {
                        replyId: String
     ): Observable<RedrockApiWrapper<CommentReleaseResult>>
 
-    @POST("/app/index.php/QA/new/praise")
+    @POST("/wxapi/magipoke-loop/comment/praise")
     @FormUrlEncoded
     fun praise(@Field("id")
                replyId: String
@@ -85,13 +85,19 @@ interface ApiServiceNew {
                         uid: String
     ): Observable<RedrockApiStatus>
 
-    @POST("/app/index.php/QA/new/report")
+    @POST("/wxapi/magipoke-loop/ground/followTopicGround")
+    @FormUrlEncoded
+    fun followTopicGround(@Field("topic_id")
+                          topicId: String
+    ): Observable<RedrockApiStatus>
+
+    @POST("/wxapi/magipoke-loop/comment/report")
     @FormUrlEncoded
     fun report(@Field("id")
                id: String
     ): Observable<RedrockApiStatus>
 
-    @POST("/app/index.php/QA/new/deleteId")
+    @POST("/wxapi/magipoke-loop/comment/deleteId")
     @FormUrlEncoded
     fun deleteId(@Field("id")
                  id: String

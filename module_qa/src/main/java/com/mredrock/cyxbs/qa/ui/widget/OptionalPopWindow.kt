@@ -109,7 +109,7 @@ class OptionalPopWindow internal constructor(val context: Context?) : PopupWindo
      * 窗口显示，窗口背景透明度渐变动画
      */
     private fun showBackgroundAnimator() {
-        val animator = ValueAnimator.ofFloat(1.0f, 0.2f)
+        val animator = ValueAnimator.ofFloat(1.0f, 0.5f)
         animator.addUpdateListener { animation ->
             val alpha = animation.animatedValue as Float
             setWindowBackgroundAlpha(alpha)
@@ -119,7 +119,7 @@ class OptionalPopWindow internal constructor(val context: Context?) : PopupWindo
     }
 
     private fun hideBackgroundAnimator() {
-        val animator = ValueAnimator.ofFloat(0.2f, 1.0f)
+        val animator = ValueAnimator.ofFloat(0.5f, 1.0f)
         animator.addUpdateListener { animation ->
             val alpha = animation.animatedValue as Float
             setWindowBackgroundAlpha(alpha)

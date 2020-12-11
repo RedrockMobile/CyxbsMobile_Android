@@ -58,7 +58,7 @@ class CircleDetailAdapter(private val onItemClickEvent: (Question) -> Unit) : Ba
                 qa_tv_dynamic_nickname.text = data.nickname
                 qa_tv_dynamic_content.text = data.title
                 qa_tv_dynamic_praise_count.text = 999.toString()
-                qa_tv_dynamic_count.text = 999.toString()
+                qa_tv_dynamic_comment_count.text = 999.toString()
                 qa_tv_dynamic_publish_at.text = questionTimeDescription(System.currentTimeMillis(), data.createdAt.toDate().time)
                 //解决图片错乱的问题
                 if (data.photoUrl.isNullOrEmpty())
