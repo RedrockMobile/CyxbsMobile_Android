@@ -4,6 +4,8 @@ import android.annotation.SuppressLint
 import android.graphics.drawable.Drawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.transition.Slide
+import android.view.Gravity
 import android.view.View
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.tabs.TabLayoutMediator
@@ -22,7 +24,7 @@ import kotlinx.android.synthetic.main.qa_recycler_item_circle_square.view.*
 
 class CircleDetailActivity : BaseViewModelActivity<CircleDetailViewModel>() {
     override val isFragmentActivity = true
-    private var toolbarTitle="校园周边"
+    private var toolbarTitle = "校园周边"
 
     private val lastNewFragment by lazy(LazyThreadSafetyMode.NONE) {
         LastNewFragment()
@@ -34,12 +36,16 @@ class CircleDetailActivity : BaseViewModelActivity<CircleDetailViewModel>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.qa_activity_circle_detail)
-        qa_vp_circle_detail.adapter=NewHotViewPagerAdapter(this, listOf(lastNewFragment,hotFragment))
+        qa_vp_circle_detail.adapter = NewHotViewPagerAdapter(this, listOf(lastNewFragment, hotFragment))
+        window.enterTransition = Slide(Gravity.END).apply { duration = 500 }
         initTab()
         initView()
         initClick()
     }
-
+    override fun onBackPressed() {
+        window.returnTransition = Slide(Gravity.END).apply { duration = 500 }
+        super.onBackPressed()
+    }
     private fun initClick() {
         qa_circle_detail_iv_back.setOnSingleClickListener {
             finish()
@@ -47,10 +53,10 @@ class CircleDetailActivity : BaseViewModelActivity<CircleDetailViewModel>() {
     }
 
     private fun initView() {
-        tv_circle_square_name.text="校园周边"
-        tv_circle_square_descriprion.text="重邮也有猫猫图鉴啦，欢迎大家一起来分享你看见的猫猫~"
-        tv_circle_square_person_number.text=477.toString()+"个成员"
-         btn_circle_square_concern.text="+关注"
+        tv_circle_square_name.text = toolbarTitle
+        tv_circle_square_descriprion.text = "重邮也有猫猫图鉴啦，欢迎大家一起来分享你看见的猫猫~"
+        tv_circle_square_person_number.text = 477.toString() + "个成员"
+        btn_circle_square_concern.text = "+关注"
     }
 
 

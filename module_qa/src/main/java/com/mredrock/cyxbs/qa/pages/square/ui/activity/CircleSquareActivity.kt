@@ -25,7 +25,6 @@ class CircleSquareActivity : BaseViewModelActivity<CirecleSquareViewModel>() {
                 finish()
                 return@OnClickListener
         })
-//        TODO 为啥这个title居中不了
         qa_tv_toolbar_title.text = "圈子广场"
     }
     private fun initView(){

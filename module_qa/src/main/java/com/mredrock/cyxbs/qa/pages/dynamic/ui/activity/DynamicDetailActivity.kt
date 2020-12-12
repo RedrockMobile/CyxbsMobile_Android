@@ -58,10 +58,7 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.qa_fragment_dynamic_detail)
         window.enterTransition = Slide(Gravity.END).apply { duration = 500 }
-
-
         qa_tv_toolbar_title.text = resources.getText(R.string.qa_dynamic_detail_title_text)
-
         initDynamic()
         initReplyList()
 
