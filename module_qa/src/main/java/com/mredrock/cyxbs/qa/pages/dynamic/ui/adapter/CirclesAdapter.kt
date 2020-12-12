@@ -11,14 +11,15 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
-import com.mredrock.cyxbs.common.BaseApp.Companion.context
+import com.mredrock.cyxbs.common.BaseApp
+import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.qa.R
-import com.mredrock.cyxbs.qa.bean.TestData
-import com.mredrock.cyxbs.qa.pages.square.ui.activity.CircleDetailActivity
+import com.mredrock.cyxbs.qa.beannew.Topic
+
 import com.mredrock.cyxbs.qa.pages.square.ui.activity.CircleSquareActivity
 import com.mredrock.cyxbs.qa.ui.widget.ImageViewAddCount
-import com.mredrock.cyxbs.qa.ui.widget.OptionalPopWindow
+import kotlinx.android.synthetic.main.qa_recycler_item_no_circles.view.*
 
 
 /**
@@ -33,7 +34,7 @@ class CirclesAdapter(val mContext: Context) : RecyclerView.Adapter<RecyclerView.
         const val HAVE_CIRCLE = 1
     }
 
-    private val circlesItemList = ArrayList<TestData>()
+    private val circlesItemList = ArrayList<Topic>()
 
     class NoCircleItem(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val iv_add_circles: ImageView = itemView.findViewById(R.id.iv_add_circles)
@@ -77,7 +78,8 @@ class CirclesAdapter(val mContext: Context) : RecyclerView.Adapter<RecyclerView.
         when (getItemViewType(position)) {
             NO_CIRCLE -> {
                 val viewHolder = holder as NoCircleItem
-                viewHolder.iv_add_circles.setOnSingleClickListener {
+                viewHolder.itemView.setOnSingleClickListener {
+                    changeToActivity(CircleSquareActivity())
                 }
             }
 
@@ -87,39 +89,34 @@ class CirclesAdapter(val mContext: Context) : RecyclerView.Adapter<RecyclerView.
                     setHaveMessage(true)
                     setMessageBum(50)
                 }
-                viewHolder.iv_circle.setOnClickListener {
-
-//                    OptionalPopWindow.Builder().with(mContext)
-//                            .addOptionAndCallback("删除") {
-//                                Toast.makeText(context, "点击了删除", Toast.LENGTH_SHORT).show()
-//                            }.addOptionAndCallback("关注") {
-//                                Toast.makeText(context, "点击了关注", Toast.LENGTH_SHORT).show()
-//                            }.addOptionAndCallback("举报") {
-//                                Toast.makeText(context, "点击了举报", Toast.LENGTH_SHORT).show()
-//                            }.show(it, OptionalPopWindow.AlignMode.MIDDLE, 20)
-
+                viewHolder.itemView.setOnClickListener {
                     changeToActivity(CircleSquareActivity())
                 }
-                viewHolder.tv_circle_name.text = circlesItemList[position].circleName
+                viewHolder.tv_circle_name.text = circlesItemList[position - 1].topicName
+                viewHolder.iv_circle.apply {
+                }
             }
         }
     }
 
-    override fun getItemCount(): Int {
-        return circlesItemList.size
-    }
-
     private fun changeToActivity(activity: Activity) {
-        val intent = Intent(context, activity::class.java)
-        context.startActivity(intent)
+        val intent = Intent(BaseApp.context, activity::class.java)
+        BaseApp.context.startActivity(intent)
     }
 
-    fun addData(newDataLists: List<TestData>) {
+    override fun getItemCount(): Int {
+        return circlesItemList.size + 1
+    }
+
+    fun addData(newDataLists: List<Topic>) {
         circlesItemList.clear()
-        initRefreshImages(newDataLists)
+        if (!newDataLists.isNullOrEmpty()) {
+            circlesItemList.addAll(newDataLists)
+        }
+        notifyDataSetChanged()
     }
 
-    fun initRefreshImages(dataLists: List<TestData>) {
+    fun initRefreshImages(dataLists: List<Topic>) {
         circlesItemList.addAll(dataLists)
         notifyDataSetChanged()
     }

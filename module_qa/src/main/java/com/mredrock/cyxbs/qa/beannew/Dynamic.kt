@@ -44,7 +44,18 @@ data class Dynamic(@SerializedName("post_id")
                    var pics: List<String> = mutableListOf()
 
 ) : Parcelable {
-    val isPraised get() = _isPraised == 1
+
+    var isPraised
+        get() = _isPraised == 1
+        set(value) = when {
+            value == isPraised -> Unit
+            value -> {
+                _isPraised = 1
+            }
+            else -> {
+                _isPraised = 0
+            }
+        }
     val isSelf get() = _isSelf == 1
 
     constructor(parcel: Parcel) : this(

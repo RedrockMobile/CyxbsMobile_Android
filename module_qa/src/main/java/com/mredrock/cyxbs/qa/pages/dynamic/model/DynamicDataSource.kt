@@ -16,7 +16,7 @@ import com.mredrock.cyxbs.qa.network.NetworkState
 /**
  * Created By jay68 on 2018/9/20.
  */
-class QuestionDataSource(private val kind: String) : PageKeyedDataSource<Int, Dynamic>() {
+class DynamicDataSource(private val kind: String) : PageKeyedDataSource<Int, Dynamic>() {
     val networkState = MutableLiveData<Int>()
     val initialLoad = MutableLiveData<Int>()
 
@@ -70,12 +70,12 @@ class QuestionDataSource(private val kind: String) : PageKeyedDataSource<Int, Dy
     override fun loadBefore(params: LoadParams<Int>, callback: LoadCallback<Int, Dynamic>) = Unit
 
     class Factory(private val kind: String) : DataSource.Factory<Int, Dynamic>() {
-        val questionDataSourceLiveData = MutableLiveData<QuestionDataSource>()
+        val dynamicDataSourceLiveData = MutableLiveData<DynamicDataSource>()
 
-        override fun create(): QuestionDataSource {
-            val questionDataSource = QuestionDataSource(kind)
-            questionDataSourceLiveData.postValue(questionDataSource)
-            return questionDataSource
+        override fun create(): DynamicDataSource {
+            val dynamicDataSource = DynamicDataSource(kind)
+            dynamicDataSourceLiveData.postValue(dynamicDataSource)
+            return dynamicDataSource
         }
     }
 }

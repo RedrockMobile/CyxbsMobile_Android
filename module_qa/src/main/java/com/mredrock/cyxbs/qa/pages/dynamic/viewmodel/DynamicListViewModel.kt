@@ -4,14 +4,21 @@ import androidx.lifecycle.*
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
 import com.mredrock.cyxbs.common.network.ApiGenerator
+import com.mredrock.cyxbs.common.utils.LogUtils
+import com.mredrock.cyxbs.common.utils.extensions.checkError
 import com.mredrock.cyxbs.common.utils.extensions.mapOrThrowApiException
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
+import com.mredrock.cyxbs.common.viewmodel.event.SingleLiveEvent
 import com.mredrock.cyxbs.qa.bean.TestData
 import com.mredrock.cyxbs.qa.beannew.Dynamic
+import com.mredrock.cyxbs.qa.beannew.Topic
 import com.mredrock.cyxbs.qa.network.ApiService
-import com.mredrock.cyxbs.qa.pages.dynamic.model.QuestionDataSource
+import com.mredrock.cyxbs.qa.network.ApiServiceNew
+import com.mredrock.cyxbs.qa.network.NetworkState
+import com.mredrock.cyxbs.qa.pages.dynamic.model.DynamicDataSource
+import retrofit2.http.Field
 
 /**
  * Created By jay68 on 2018/8/26.
@@ -21,8 +28,13 @@ open class DynamicListViewModel(kind: String) : BaseViewModel() {
     val networkState: LiveData<Int>
     val initialLoad: LiveData<Int>
     var hotWords = MutableLiveData<List<String>>()
-    val circlesItem = MutableLiveData<List<TestData>>()
-    private val factory: QuestionDataSource.Factory
+    var myCircle = MutableLiveData<List<Topic>>()
+    private val factory: DynamicDataSource.Factory
+    private var praiseNetworkState = NetworkState.SUCCESSFUL
+    val refreshPreActivityEvent = SingleLiveEvent<Int>()
+
+    //防止点赞快速点击
+    var isDealing = false
 
     init {
         val config = PagedList.Config.Builder()
@@ -31,20 +43,59 @@ open class DynamicListViewModel(kind: String) : BaseViewModel() {
                 .setPageSize(6)
                 .setInitialLoadSizeHint(6)
                 .build()
-        factory = QuestionDataSource.Factory(kind)
+        factory = DynamicDataSource.Factory(kind)
         dynamicList = LivePagedListBuilder<Int, Dynamic>(factory, config).build()
-        networkState = Transformations.switchMap(factory.questionDataSourceLiveData) { it.networkState }
-        initialLoad = Transformations.switchMap(factory.questionDataSourceLiveData) { it.initialLoad }
+        networkState = Transformations.switchMap(factory.dynamicDataSourceLiveData) { it.networkState }
+        initialLoad = Transformations.switchMap(factory.dynamicDataSourceLiveData) { it.initialLoad }
     }
 
-    fun getCirCleData() {
-        val list = ArrayList<TestData>()
-        list.add(TestData("更多关注", "0", "0"))
-        list.add(TestData("更多关注", "0", "0"))
-        list.add(TestData("更多关注", "0", "0"))
-        list.add(TestData("更多关注", "0", "0"))
-        list.add(TestData("更多关注", "0", "0"))
-        circlesItem.value = list
+    fun getMyCirCleData() {
+        ApiGenerator.getApiService(ApiServiceNew::class.java)
+                .getFollowedTopic()
+                .mapOrThrowApiException()
+                .setSchedulers()
+                .safeSubscribeBy {
+                    myCircle.value = it
+                }
+    }
+
+
+
+    fun clickPraiseButton(position: Int, dynamic: Dynamic) {
+        fun Boolean.toInt() = 1.takeIf { this@toInt } ?: -1
+
+        if (praiseNetworkState == NetworkState.LOADING) {
+//            toastEvent.value =
+            return
+        }
+        ApiGenerator.getApiService(ApiService::class.java)
+                .run {
+                    if (dynamic.isPraised) {
+                        cancelPraiseAnswer(dynamic.postId)
+                    } else {
+                        praiseAnswer(dynamic.postId)
+                    }
+                }
+                .doOnSubscribe { isDealing = true }
+                .checkError()
+                .setSchedulers()
+                .doOnError {
+//                    toastEvent.value = R.string.qa_service_error_hint
+                    isDealing = false
+                }
+                .doFinally {
+                    praiseNetworkState = NetworkState.SUCCESSFUL
+                }
+                .safeSubscribeBy {
+                    isDealing = false
+                    dynamic.apply {
+                        val state = !isPraised
+                        praiseCount = dynamic.praiseCount + state.toInt()
+                        isPraised = state
+                    }
+                    refreshPreActivityEvent.value = position
+                }
+                .lifeCycle()
     }
 
     fun getScrollerText() {
@@ -59,7 +110,7 @@ open class DynamicListViewModel(kind: String) : BaseViewModel() {
 
     fun invalidateQuestionList() = dynamicList.value?.dataSource?.invalidate()
 
-    fun retry() = factory.questionDataSourceLiveData.value?.retry()
+    fun retry() = factory.dynamicDataSourceLiveData.value?.retry()
 
     class Factory(private val kind: String) : ViewModelProvider.Factory {
         override fun <T : ViewModel> create(modelClass: Class<T>): T {

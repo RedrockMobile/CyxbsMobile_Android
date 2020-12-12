@@ -19,7 +19,7 @@ import com.mredrock.cyxbs.qa.pages.dynamic.viewmodel.DynamicDetailViewModel
 import com.mredrock.cyxbs.qa.ui.activity.ViewImageActivity
 import com.mredrock.cyxbs.qa.ui.widget.NineGridView
 import com.mredrock.cyxbs.qa.ui.widget.OptionalPopWindow
-import com.mredrock.cyxbs.qa.utils.questionTimeDescription
+import com.mredrock.cyxbs.qa.utils.dynamicTimeDescription
 import com.mredrock.cyxbs.qa.utils.toDate
 import kotlinx.android.synthetic.main.qa_common_toolbar.*
 import kotlinx.android.synthetic.main.qa_fragment_dynamic_detail.*
@@ -93,7 +93,7 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
         qa_tv_dynamic_content.text = dynamic.content
         qa_tv_dynamic_praise_count.text = dynamic.praiseCount.toString()
         qa_tv_dynamic_comment_count.text = dynamic.commentCount.toString()
-        qa_tv_dynamic_publish_at.text = questionTimeDescription(System.currentTimeMillis(), dynamic.publishTime.toString().toDate().time)
+        qa_tv_dynamic_publish_at.text = dynamicTimeDescription(System.currentTimeMillis(), dynamic.publishTime.toString().toDate().time)
         //解决图片错乱的问题
         if (dynamic.pics.isNullOrEmpty())
             qa_dynamic_nine_grid_view.setRectangleImages(emptyList(), NineGridView.MODE_IMAGE_NORMAL_SIZE)

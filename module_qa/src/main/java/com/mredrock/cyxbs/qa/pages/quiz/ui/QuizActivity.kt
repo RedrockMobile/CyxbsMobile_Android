@@ -51,7 +51,6 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>(), EventBusLifecycleSu
         const val NOT_DRAFT_ID = "-1"
         const val FIRST_QUIZ = "cyxbs_quiz_is_first_time"
         const val FIRST_QUIZ_SP_KEY = "isFirstTimeQuiz"
-        const val DOWN_MESSAGE_NAME = "zscy-qa-reward-explain"
         fun activityStart(fragment: Fragment, type: String, requestCode: Int) {
             fragment.startActivityForResult<QuizActivity>(requestCode, "type" to type)
         }
@@ -60,18 +59,15 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>(), EventBusLifecycleSu
 
     override val isFragmentActivity = false
     private var draftId = NOT_DRAFT_ID
-    private var questionType: String = ""
+    private var dynamicType: String = ""
     private var isFirstQuiz: Boolean = true
     private val exitDialog by lazy { createExitDialog() }
-    private var rewardExplainList: List<DownMessageText> = listOf()
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.qa_activity_quiz)
         val titles = resources.getStringArray(R.array.qa_quiz_reward_explain_title)
         val contents = resources.getStringArray(R.array.qa_quiz_reward_explain_content)
-        rewardExplainList = titles.zip(contents) { title, content -> DownMessageText(title, content) }
         isFirstQuiz = sharedPreferences(FIRST_QUIZ).getBoolean(FIRST_QUIZ_SP_KEY, true)
         initToolbar()
         initImageAddView()
@@ -84,20 +80,23 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>(), EventBusLifecycleSu
         circleLabelData.add("#兴趣")
         circleLabelData.add("#问答")
         circleLabelData.add("#其他")
-        val circleLabelAdapter = CircleLabelAdapter(context, mutableListOf())
+        val circleLabelAdapter = CircleLabelAdapter(context, mutableListOf()).apply {
+            onLabelClickListener = {
+                dynamicType = it
+            }
+        }
         val flexBoxManager = FlexboxLayoutManager(context)
         flexBoxManager.flexWrap = FlexWrap.WRAP
         rv_label_list.layoutManager = flexBoxManager
         rv_label_list.adapter = circleLabelAdapter
         circleLabelAdapter.setList(circleLabelData)
-        viewModel.getRewardExplain(DOWN_MESSAGE_NAME)
         viewModel.backAndRefreshPreActivityEvent.observeNotNull {
             if (it) {
                 if (draftId != NOT_DRAFT_ID) {
                     viewModel.deleteDraft(draftId)
                 }
                 val data = Intent()
-                data.putExtra("type", questionType)
+                data.putExtra("type", dynamicType)
                 setResult(Activity.RESULT_OK, data)
                 finish()
             }
@@ -150,9 +149,8 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>(), EventBusLifecycleSu
             if (edt_quiz_content.text.isNullOrEmpty() && draftId == NOT_DRAFT_ID) {
                 finish()
                 return@OnClickListener
-            } else {
-                exitDialog.show()
             }
+            exitDialog.show()
         })
         qa_tv_toolbar_title.text = getString(R.string.qa_quiz_toolbar_title_text)
         qa_ib_toolbar_more.gone()
@@ -160,12 +158,16 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>(), EventBusLifecycleSu
             visible()
             text = getString(R.string.qa_quiz_dialog_next)
             setOnClickListener {
+                val result = viewModel.submitTitleAndContent(dynamicType, edt_quiz_content.text.toString())
+                if (result) {
+
+                }
             }
         }
     }
 
     private fun initImageAddView() {
-        nine_grid_view.addView(ContextCompat.getDrawable(this, R.drawable.qa_ic_add_images)?.let { createImageViewFromVector(it) })
+        nine_grid_view.addView(ContextCompat.getDrawable(this, qa_ic_add_images)?.let { createImageViewFromVector(it) })
         nine_grid_view.setOnItemClickListener { _, index ->
             if (index == nine_grid_view.childCount - 1) {
                 this@QuizActivity.selectImageFromAlbum(MAX_SELECTABLE_IMAGE_COUNT, viewModel.imageLiveData.value)
@@ -262,9 +264,9 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>(), EventBusLifecycleSu
 
     private fun saveDraft() {
         if (draftId == NOT_DRAFT_ID) {
-            viewModel.addItemToDraft(edt_quiz_content.text.toString(), questionType)
+            viewModel.addItemToDraft(edt_quiz_content.text.toString(), dynamicType)
         } else {
-            viewModel.updateDraftItem(edt_quiz_content.text.toString(), draftId, questionType)
+            viewModel.updateDraftItem(edt_quiz_content.text.toString(), draftId, dynamicType)
         }
     }
 

@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
-import com.mredrock.cyxbs.common.utils.extensions.gone
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.bean.CircleSquare
 import com.mredrock.cyxbs.qa.pages.square.ui.adapter.CircleSquareAdapter
@@ -35,7 +34,7 @@ class CircleSquareActivity : BaseViewModelActivity<CirecleSquareViewModel>() {
         }
         rv_circle_square.apply {
             layoutManager=LinearLayoutManager(context)
-            adapter=CircleSquareAdapter(this@CircleSquareActivity).apply {
+            adapter=CircleSquareAdapter().apply {
                 addData(list)
             }
         }

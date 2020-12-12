@@ -22,7 +22,7 @@
     <string name="qa_quiz_content_hint">分享你的新鲜事~</string>
     <string name="qa_quiz_dialog_sure">确定</string>
     <string name="qa_common_dialog_exit">保存</string>
-    <string name="qa_quiz_hint_title_empty">标题不能为空哦~</string>
+    <string name="qa_quiz_hint_title_empty">圈子不能为空哦~</string>
     <string name="qa_hint_content_empty">内容不能为空哦~</string>
     <string name="qa_quiz_save_failed">抱歉暂时没有存入草稿箱呢…</string>
     <string name="qa_quiz_update_failed">抱歉暂时没有更新草稿箱呢…</string>

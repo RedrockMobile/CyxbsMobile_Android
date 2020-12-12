@@ -124,7 +124,7 @@
         android:id="@+id/qa_iv_dynamic_praise_count_image"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="12dp"
+        android:layout_marginEnd="10dp"
         android:layout_marginBottom="5dp"
         app:checkedColor="#323FD9"
         app:checkedLikeIconRes="@drawable/qa_ic_answer_list_praised"

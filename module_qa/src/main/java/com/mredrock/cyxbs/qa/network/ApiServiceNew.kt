@@ -20,17 +20,20 @@ interface ApiServiceNew {
                        @Field("size")
                        size: Int = 6): Observable<RedrockApiWrapper<List<Dynamic>>>
 
-    @POST("/wxapi/magipoke-loop/new/getFollowedTopic")
-    @FormUrlEncoded
+    @GET("/wxapi/magipoke-loop/new/getFollowedTopic")
     fun getFollowedTopic(): Observable<RedrockApiWrapper<List<Topic>>>
 
     @POST("/wxapi/magipoke-loop/ground/getTopicGround")
     @FormUrlEncoded
-    fun getTopicGround(): Observable<RedrockApiWrapper<List<Topic>>>
+    fun getTopicGround(@Field("topic_name")
+                       topic_name: String, @Field("instruction")
+                       instruction: String): Observable<RedrockApiWrapper<List<Topic>>>
 
     @POST("/wxapi/magipoke-loop/search/getSearchHotWord")
     @FormUrlEncoded
-    fun getSearchHotWord(): Observable<RedrockApiWrapper<List<String>>>
+    fun getSearchHotWord(@Field("topic_name")
+                         topic_name: String, @Field("search_content")
+                         searchContent: String): Observable<RedrockApiWrapper<List<String>>>
 
     @POST("/wxapi/magipoke-loop/search/getSearchResult")
     @FormUrlEncoded
@@ -56,7 +59,7 @@ interface ApiServiceNew {
      */
     @POST("app/index.php/QA/new/Question/uploadPicture")
     @Multipart
-    fun uploadQuestionPic(@Part parts: List<MultipartBody.Part>, @PartMap params: Map<String, String>): Observable<RedrockApiStatus>
+    fun uploadQuestionPic(@Part parts: List<MultipartBody.Part>): Observable<RedrockApiStatus>
 
 
     @POST("/wxapi/magipoke-loop/comment/releaseComment")

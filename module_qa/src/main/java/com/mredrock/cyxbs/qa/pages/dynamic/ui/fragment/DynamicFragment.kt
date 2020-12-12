@@ -8,14 +8,18 @@ import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.ViewFlipper
 import androidx.core.content.ContextCompat
+import androidx.core.view.marginTop
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.mredrock.cyxbs.common.config.CyxbsMob
 import com.mredrock.cyxbs.common.config.QA_ENTRY
 import com.mredrock.cyxbs.common.event.RefreshQaEvent
+import com.mredrock.cyxbs.common.mark.EventBusLifecycleSubscriber
 import com.mredrock.cyxbs.common.ui.BaseViewModelFragment
+import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.doIfLogin
+import com.mredrock.cyxbs.common.utils.extensions.dp2px
 import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.component.recycler.RvAdapterWrapper
@@ -30,6 +34,8 @@ import com.mredrock.cyxbs.qa.ui.adapter.EmptyRvAdapter
 import com.mredrock.cyxbs.qa.ui.adapter.FooterRvAdapter
 import com.umeng.analytics.MobclickAgent
 import kotlinx.android.synthetic.main.qa_fragment_dynamic.*
+import kotlinx.android.synthetic.main.qa_recycler_item_dynamic.*
+import kotlinx.android.synthetic.main.qa_recycler_item_dynamic.view.*
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
@@ -40,7 +46,7 @@ import org.greenrobot.eventbus.ThreadMode
  * @Date: 2020/11/16 22:07
  */
 @Route(path = QA_ENTRY)
-class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>() {
+class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), EventBusLifecycleSubscriber {
     companion object {
         const val REQUEST_LIST_REFRESH_ACTIVITY = 0x1
 
@@ -64,13 +70,23 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initScrollText()
-        initDynamic()
+        initDynamics()
         initClick()
     }
 
-    private fun initDynamic() {
+
+    private fun initDynamics() {
         val dynamicListRvAdapter = DynamicAdapter { dynamic, view ->
             DynamicDetailActivity.activityStart(this, view, dynamic)
+            initClick()
+        }.apply {
+            onPraiseClickListener = { position, dynamic ->
+
+            }
+
+            onPopWindowClickListener={ string,postId->
+
+            }
         }
         val footerRvAdapter = FooterRvAdapter { viewModel.retry() }
         val emptyRvAdapter = EmptyRvAdapter(getString(R.string.qa_question_list_empty_hint))
@@ -86,13 +102,11 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>() {
             layoutManager = linearLayoutManager
             adapter = circlesAdapter
         }
-        viewModel.getCirCleData()
-        viewModel.circlesItem.observe {
-            if (it != null) {
-                if (it.isNotEmpty()) {
-                    tv_my_notice.visibility = View.VISIBLE
-                    circlesAdapter?.addData(it as ArrayList)
-                }
+        viewModel.getMyCirCleData()
+        viewModel.myCircle.observe {
+            if (!it.isNullOrEmpty()) {
+                tv_my_notice.visibility = View.VISIBLE
+                circlesAdapter?.addData(it)
             }
         }
         observeLoading(dynamicListRvAdapter, footerRvAdapter, emptyRvAdapter)
@@ -106,7 +120,9 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>() {
                 }
             })
         }
-        swipe_refresh_layout.setOnRefreshListener { viewModel.invalidateQuestionList() }
+        swipe_refresh_layout.setOnRefreshListener {
+            viewModel.invalidateQuestionList()
+        }
     }
 
     open fun observeLoading(dynamicListRvAdapter: DynamicAdapter,
@@ -173,7 +189,7 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>() {
 
     private fun turnToQuiz() {
         context?.doIfLogin("提问") {
-            QuizActivity.activityStart(this, "迎新生", REQUEST_LIST_REFRESH_ACTIVITY)
+            QuizActivity.activityStart(this, "发动态", REQUEST_LIST_REFRESH_ACTIVITY)
             MobclickAgent.onEvent(context, CyxbsMob.Event.CLICK_ASK)
         }
     }

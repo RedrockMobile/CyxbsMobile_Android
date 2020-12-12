@@ -8,6 +8,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.qa.R
+import com.mredrock.cyxbs.qa.beannew.Dynamic
 
 
 class CircleLabelAdapter(val context: Context, private val mList: MutableList<String>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -34,17 +35,20 @@ class CircleLabelAdapter(val context: Context, private val mList: MutableList<St
         notifyDataSetChanged()
     }
 
+    var onLabelClickListener: ((String) -> Unit)? = null
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val viewHolder = holder as CircleLabel
         viewHolder.tv_dynamic_label.text = mList[position]
         //目前简单实现了一个单选逻辑，逻辑上有点没绕过来，后面在优化吧
         if (positionSet.contains(position)) {
             viewHolder.tv_dynamic_label.setBackgroundResource(R.drawable.qa_shape_common_label_text_view_background2)
+
             positionSet.clear()
         } else {
             viewHolder.tv_dynamic_label.setBackgroundResource(R.drawable.qa_shape_common_label_text_view_background)
         }
         viewHolder.tv_dynamic_label.setOnSingleClickListener {
+            onLabelClickListener?.invoke(mList[position])
             positionSet.add(position)
             notifyDataSetChanged()
         }
