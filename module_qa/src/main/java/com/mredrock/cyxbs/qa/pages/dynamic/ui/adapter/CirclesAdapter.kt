@@ -28,7 +28,7 @@ import kotlinx.android.synthetic.main.qa_recycler_item_no_circles.view.*
  * @Description:
  * @Date: 2020/11/18 23:18
  */
-class CirclesAdapter(val mContext: Context) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class CirclesAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     companion object {
         const val NO_CIRCLE = 0
         const val HAVE_CIRCLE = 1
@@ -82,17 +82,16 @@ class CirclesAdapter(val mContext: Context) : RecyclerView.Adapter<RecyclerView.
                     changeToActivity(CircleSquareActivity())
                 }
             }
-
             HAVE_CIRCLE -> {
                 val viewHolder = holder as CirclesItem
                 viewHolder.iv_circle.apply {
                     setHaveMessage(true)
-                    setMessageBum(50)
+                    setMessageBum(circlesItemList[position].newMesCount)
                 }
                 viewHolder.itemView.setOnClickListener {
                     changeToActivity(CircleSquareActivity())
                 }
-                viewHolder.tv_circle_name.text = circlesItemList[position - 1].topicName
+                viewHolder.tv_circle_name.text = circlesItemList[position].topicName
                 viewHolder.iv_circle.apply {
                 }
             }
@@ -105,14 +104,16 @@ class CirclesAdapter(val mContext: Context) : RecyclerView.Adapter<RecyclerView.
     }
 
     override fun getItemCount(): Int {
-        return circlesItemList.size + 1
+        return if (circlesItemList.size == 0)
+            1
+        else
+            circlesItemList.size
+
     }
 
     fun addData(newDataLists: List<Topic>) {
         circlesItemList.clear()
-        if (!newDataLists.isNullOrEmpty()) {
-            circlesItemList.addAll(newDataLists)
-        }
+        circlesItemList.addAll(newDataLists)
         notifyDataSetChanged()
     }
 

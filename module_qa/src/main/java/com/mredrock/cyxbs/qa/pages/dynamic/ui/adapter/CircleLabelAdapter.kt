@@ -8,10 +8,10 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.qa.R
-import com.mredrock.cyxbs.qa.beannew.Dynamic
+import com.mredrock.cyxbs.qa.beannew.Topic
 
 
-class CircleLabelAdapter(val context: Context, private val mList: MutableList<String>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class CircleLabelAdapter(val context: Context, private val mList: MutableList<Topic>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
 
     inner class CircleLabel(view: View) : RecyclerView.ViewHolder(view) {
@@ -29,7 +29,7 @@ class CircleLabelAdapter(val context: Context, private val mList: MutableList<St
         return mList.size
     }
 
-    fun setList(list: List<String>) {
+    fun setList(list: List<Topic>) {
         mList.clear()
         mList.addAll(list)
         notifyDataSetChanged()
@@ -38,7 +38,7 @@ class CircleLabelAdapter(val context: Context, private val mList: MutableList<St
     var onLabelClickListener: ((String) -> Unit)? = null
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val viewHolder = holder as CircleLabel
-        viewHolder.tv_dynamic_label.text = mList[position]
+        viewHolder.tv_dynamic_label.text = mList[position].topicName
         //目前简单实现了一个单选逻辑，逻辑上有点没绕过来，后面在优化吧
         if (positionSet.contains(position)) {
             viewHolder.tv_dynamic_label.setBackgroundResource(R.drawable.qa_shape_common_label_text_view_background2)
@@ -48,7 +48,7 @@ class CircleLabelAdapter(val context: Context, private val mList: MutableList<St
             viewHolder.tv_dynamic_label.setBackgroundResource(R.drawable.qa_shape_common_label_text_view_background)
         }
         viewHolder.tv_dynamic_label.setOnSingleClickListener {
-            onLabelClickListener?.invoke(mList[position])
+            onLabelClickListener?.invoke(mList[position].topicName)
             positionSet.add(position)
             notifyDataSetChanged()
         }

@@ -7,6 +7,7 @@ import androidx.lifecycle.MutableLiveData
 import com.mredrock.cyxbs.common.bean.RedrockApiStatus
 import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.network.CommonApiService
+import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.down.bean.DownMessageText
 import com.mredrock.cyxbs.common.utils.down.params.DownMessageParams
 import com.mredrock.cyxbs.common.utils.extensions.checkError
@@ -18,6 +19,7 @@ import com.mredrock.cyxbs.common.viewmodel.event.ProgressDialogEvent
 import com.mredrock.cyxbs.common.viewmodel.event.SingleLiveEvent
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.bean.QuizResult
+import com.mredrock.cyxbs.qa.beannew.Topic
 import com.mredrock.cyxbs.qa.network.ApiService
 import com.mredrock.cyxbs.qa.network.ApiServiceNew
 import com.mredrock.cyxbs.qa.utils.isNullOrEmpty
@@ -37,7 +39,7 @@ class QuizViewModel : BaseViewModel() {
     val imageLiveData = MutableLiveData<ArrayList<String>>()
     val backAndRefreshPreActivityEvent = SingleLiveEvent<Boolean>()
     val finishActivityEvent = MutableLiveData<Boolean>()
-
+    var allCircle = MutableLiveData<List<Topic>>()
     var editingImgPos = -1
         private set
     var myRewardCount = 0
@@ -59,16 +61,21 @@ class QuizViewModel : BaseViewModel() {
         imageLiveData.value = imageList
     }
 
-    fun submitDynamic(stuNum: String) {
-        if (content.isBlank() && imageLiveData.value.isNullOrEmpty()) {
-            toastEvent.value = R.string.qa_hint_content_empty
-            return
-        }
+    fun getAllCirCleData(topic_name: String, instruction: String) {
+        ApiGenerator.getApiService(ApiServiceNew::class.java)
+                .getTopicGround(topic_name, instruction)
+                .mapOrThrowApiException()
+                .setSchedulers()
+                .safeSubscribeBy {
+                    allCircle.value = it
+                }
+    }
+
+
+    fun submitDynamic() {
         progressDialogEvent.value = ProgressDialogEvent.SHOW_NONCANCELABLE_DIALOG_EVENT
         val builder = MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
-                .addFormDataPart("stdNum", "stdNum")
-                .addFormDataPart("stdNum", stuNum)
                 .addFormDataPart("content", content)
                 .addFormDataPart("topic_id", type)
         if (!imageLiveData.value.isNullOrEmpty()) {
@@ -81,27 +88,27 @@ class QuizViewModel : BaseViewModel() {
                 val name = "photo" + (index + 1)
                 builder.addFormDataPart(name, file.name, imageBody)
             }
-            ApiGenerator.getApiService(ApiServiceNew::class.java)
-                    .uploadQuestionPic(builder.build().parts)
-                    .setSchedulers()
-                    .checkError()
-                    .doFinally { progressDialogEvent.value = ProgressDialogEvent.DISMISS_DIALOG_EVENT }
-                    .doOnError {
-                        toastEvent.value = R.string.qa_upload_pic_failed
-                        backAndRefreshPreActivityEvent.value = true
-                    }
-                    .safeSubscribeBy {
-                        toastEvent.value = R.string.qa_answer_submit_successfully_text
-                        backAndRefreshPreActivityEvent.value = true
-                    }
         }
+        ApiGenerator.getApiService(ApiServiceNew::class.java)
+                .releaseDynamic(builder.build().parts)
+                .mapOrThrowApiException()
+                .setSchedulers()
+                .doFinally { progressDialogEvent.value = ProgressDialogEvent.DISMISS_DIALOG_EVENT }
+                .doOnError {
+                    toastEvent.value = R.string.qa_upload_pic_failed
+                    backAndRefreshPreActivityEvent.value = true
+                }
+                .safeSubscribeBy {
+                    toastEvent.value = R.string.qa_answer_submit_successfully_text
+                    backAndRefreshPreActivityEvent.value = true
+                }.lifeCycle()
     }
 
     fun submitTitleAndContent(type: String, content: String): Boolean {
         var result = false
         if (type.isNullOrBlank()) {
             toastEvent.value = R.string.qa_quiz_hint_title_empty
-        } else if (content.isNullOrBlank() && imageLiveData.value.isNullOrEmpty()) {
+        } else if (content.isNullOrBlank()) {
             toastEvent.value = R.string.qa_hint_content_empty
         } else {
             this.content = content

@@ -20,7 +20,7 @@ interface ApiServiceNew {
                        @Field("size")
                        size: Int = 6): Observable<RedrockApiWrapper<List<Dynamic>>>
 
-    @GET("/wxapi/magipoke-loop/new/getFollowedTopic")
+    @GET("/wxapi/magipoke-loop/ground/getFollowedTopic")
     fun getFollowedTopic(): Observable<RedrockApiWrapper<List<Topic>>>
 
     @POST("/wxapi/magipoke-loop/ground/getTopicGround")
@@ -40,14 +40,6 @@ interface ApiServiceNew {
     fun getSearchResult(@Field("search_content")
                         searchContent: String): Observable<RedrockApiWrapper<SearchResult>>
 
-    @POST("/wxapi/magipoke-loop/post/releaseDynamic")
-    @FormUrlEncoded
-    fun releaseDynamic(@Field("content")
-                       content: String,
-                       @Field("topic_id")
-                       topicId: String
-    ): Observable<RedrockApiWrapper<DynamicReleaseResult>>
-
     /**
      * params存一个<"id", "帖子id">的键值对MutableMap<String, String>
      *     example:
@@ -57,9 +49,10 @@ interface ApiServiceNew {
      *     example:
      *
      */
-    @POST("app/index.php/QA/new/Question/uploadPicture")
+
+    @POST("/wxapi/magipoke-loop/post/releaseDynamic")
     @Multipart
-    fun uploadQuestionPic(@Part parts: List<MultipartBody.Part>): Observable<RedrockApiStatus>
+    fun releaseDynamic(@Part parts: List<MultipartBody.Part>): Observable<RedrockApiWrapper<DynamicReleaseResult>>
 
 
     @POST("/wxapi/magipoke-loop/comment/releaseComment")
@@ -71,8 +64,7 @@ interface ApiServiceNew {
     ): Observable<RedrockApiWrapper<CommentReleaseResult>>
 
     @POST("/wxapi/magipoke-loop/comment/praise")
-    @FormUrlEncoded
-    fun praise(@Field("id")
+    fun praise(@Query("id")
                replyId: String
     ): Observable<RedrockApiStatus>
 

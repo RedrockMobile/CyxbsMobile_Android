@@ -11,14 +11,13 @@ import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.common.viewmodel.event.SingleLiveEvent
-import com.mredrock.cyxbs.qa.bean.TestData
+import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.beannew.Dynamic
 import com.mredrock.cyxbs.qa.beannew.Topic
 import com.mredrock.cyxbs.qa.network.ApiService
 import com.mredrock.cyxbs.qa.network.ApiServiceNew
 import com.mredrock.cyxbs.qa.network.NetworkState
 import com.mredrock.cyxbs.qa.pages.dynamic.model.DynamicDataSource
-import retrofit2.http.Field
 
 /**
  * Created By jay68 on 2018/8/26.
@@ -55,45 +54,83 @@ open class DynamicListViewModel(kind: String) : BaseViewModel() {
                 .mapOrThrowApiException()
                 .setSchedulers()
                 .safeSubscribeBy {
+                    LogUtils.d("topic",it.toString())
                     myCircle.value = it
                 }
     }
 
 
+    fun ignore(postId: Int) {
+        ApiGenerator.getApiService(ApiServiceNew::class.java)
+                .ignoreUid(postId.toString())
+                .setSchedulers()
+                .safeSubscribeBy {
+                    if (it.status == 200)
+                        toastEvent.value = R.string.qa_ignore_dynamic
+                    else
+                        toastEvent.value = R.string.qa_ignore_dynamic_failure
+                }
+
+    }
+
+    fun followCircle(topic: String) {
+        ApiGenerator.getApiService(ApiServiceNew::class.java)
+                .followTopicGround(topic)
+                .setSchedulers()
+                .safeSubscribeBy {
+                    if (it.status == 200)
+                        toastEvent.value = R.string.qa_follow_circle
+                    else
+                        toastEvent.value = R.string.qa_follow_circle_failure
+                }
+    }
+
+    fun report(postId: Int) {
+        ApiGenerator.getApiService(ApiServiceNew::class.java)
+                .report(postId.toString())
+                .setSchedulers()
+                .safeSubscribeBy {
+                    if (it.status == 200)
+                        toastEvent.value = R.string.qa_report_dynamic
+                    else
+                        toastEvent.value = R.string.qa_report_dynamic_failure
+                }
+    }
 
     fun clickPraiseButton(position: Int, dynamic: Dynamic) {
         fun Boolean.toInt() = 1.takeIf { this@toInt } ?: -1
-
         if (praiseNetworkState == NetworkState.LOADING) {
 //            toastEvent.value =
             return
         }
-        ApiGenerator.getApiService(ApiService::class.java)
+        ApiGenerator.getApiService(ApiServiceNew::class.java)
                 .run {
                     if (dynamic.isPraised) {
-                        cancelPraiseAnswer(dynamic.postId)
+                        praise(dynamic.postId)
                     } else {
-                        praiseAnswer(dynamic.postId)
+                        praise(dynamic.postId)
                     }
                 }
                 .doOnSubscribe { isDealing = true }
                 .checkError()
                 .setSchedulers()
                 .doOnError {
-//                    toastEvent.value = R.string.qa_service_error_hint
+                    toastEvent.value = R.string.qa_service_error_hint
                     isDealing = false
                 }
                 .doFinally {
                     praiseNetworkState = NetworkState.SUCCESSFUL
                 }
                 .safeSubscribeBy {
-                    isDealing = false
-                    dynamic.apply {
-                        val state = !isPraised
-                        praiseCount = dynamic.praiseCount + state.toInt()
-                        isPraised = state
+                    if (it.status == 200) {
+                        isDealing = false
+                        dynamic.apply {
+                            val state = !isPraised
+                            praiseCount = dynamic.praiseCount + state.toInt()
+                            isPraised = state
+                        }
+                        refreshPreActivityEvent.value = position
                     }
-                    refreshPreActivityEvent.value = position
                 }
                 .lifeCycle()
     }

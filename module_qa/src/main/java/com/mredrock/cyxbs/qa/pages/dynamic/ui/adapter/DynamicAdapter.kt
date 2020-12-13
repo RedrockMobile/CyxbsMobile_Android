@@ -39,12 +39,12 @@ class DynamicAdapter(private val onItemClickEvent: (Dynamic, View) -> Unit) : Ba
 
         @JvmStatic
         val PIC_URL_BASE = "https://cyxbsmobile.redrock.team/app/index.php" // 临时前缀
-        val DELETE = "屏蔽此人"
+        val IGNORE = "屏蔽此人"
         val NOTICE = "关注圈子"
         val REPORT = "举报"
     }
 
-    var onPopWindowClickListener: ((String, Int) -> Unit)? = null
+    var onPopWindowClickListener: ((String, String) -> Unit)? = null
     var onPraiseClickListener: ((Int, Dynamic) -> Unit)? = null
     private var shouldAnimateSet: MutableSet<Int> = HashSet()
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = DynamicViewHolder(parent)
@@ -63,12 +63,12 @@ class DynamicAdapter(private val onItemClickEvent: (Dynamic, View) -> Unit) : Ba
             qa_iv_dynamic_more_tips_clicked.setOnSingleClickListener {
                 OptionalPopWindow.Builder().with(context)
                         .addOptionAndCallback(NOTICE) {
-                            getItem(position)?.let { it1 -> onPopWindowClickListener?.invoke(NOTICE, it1.postId.toInt()) }
+                            getItem(position)?.let { it1 -> onPopWindowClickListener?.invoke(NOTICE, it1.topic) }
                         }
-                        .addOptionAndCallback(DELETE) {
-                            getItem(position)?.let { it1 -> onPopWindowClickListener?.invoke(DELETE, it1.postId.toInt()) }
+                        .addOptionAndCallback(IGNORE) {
+//                            getItem(position)?.let { it1 -> onPopWindowClickListener?.invoke(IGNORE, it1.postId.toInt()) }
                         }.addOptionAndCallback(REPORT) {
-                            getItem(position)?.let { it1 -> onPopWindowClickListener?.invoke(REPORT, it1.postId.toInt()) }
+//                            getItem(position)?.let { it1 -> onPopWindowClickListener?.invoke(REPORT, it1.postId.toInt()) }
 
                         }.show(it, OptionalPopWindow.AlignMode.RIGHT, 0)
             }
@@ -112,7 +112,7 @@ class DynamicAdapter(private val onItemClickEvent: (Dynamic, View) -> Unit) : Ba
                     qa_dynamic_nine_grid_view.setRectangleImages(emptyList(), NineGridView.MODE_IMAGE_THREE_SIZE)
                 else {
                     data.pics.map {
-                        PIC_URL_BASE + it
+                        it
                     }.apply {
                         val tag = qa_dynamic_nine_grid_view.tag
                         if (null == tag || tag == this) {
@@ -130,7 +130,7 @@ class DynamicAdapter(private val onItemClickEvent: (Dynamic, View) -> Unit) : Ba
 
                 }
                 qa_dynamic_nine_grid_view.setOnItemClickListener { _, index ->
-                    ViewImageActivity.activityStart(context, data.pics.map { PIC_URL_BASE + it }.toTypedArray(), index)
+                    ViewImageActivity.activityStart(context, data.pics.map { it }.toTypedArray(), index)
                 }
             }
         }

@@ -4,22 +4,18 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.RelativeLayout
-import android.widget.TextView
-import android.widget.ViewFlipper
+import android.widget.*
 import androidx.core.content.ContextCompat
-import androidx.core.view.marginTop
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.alibaba.android.arouter.facade.annotation.Route
+import com.google.android.material.appbar.CollapsingToolbarLayout
 import com.mredrock.cyxbs.common.config.CyxbsMob
 import com.mredrock.cyxbs.common.config.QA_ENTRY
 import com.mredrock.cyxbs.common.event.RefreshQaEvent
 import com.mredrock.cyxbs.common.mark.EventBusLifecycleSubscriber
 import com.mredrock.cyxbs.common.ui.BaseViewModelFragment
-import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.doIfLogin
-import com.mredrock.cyxbs.common.utils.extensions.dp2px
 import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.component.recycler.RvAdapterWrapper
@@ -38,6 +34,7 @@ import kotlinx.android.synthetic.main.qa_recycler_item_dynamic.*
 import kotlinx.android.synthetic.main.qa_recycler_item_dynamic.view.*
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+
 
 /**
  * @Author: xgl
@@ -81,11 +78,25 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), EventBusL
             initClick()
         }.apply {
             onPraiseClickListener = { position, dynamic ->
-
+                viewModel.clickPraiseButton(position, dynamic)
+                viewModel.refreshPreActivityEvent.observeNotNull {
+                    notifyItemChanged(it)
+                }
             }
+            onPopWindowClickListener = { string, topicName ->
+                when (string) {
+                    DynamicAdapter.IGNORE -> {
+                        //还无接口
+//                        viewModel.ignore(postId)
+                    }
+                    DynamicAdapter.REPORT -> {
+//                        viewModel.report(postId)
+                    }
 
-            onPopWindowClickListener={ string,postId->
-
+                    DynamicAdapter.NOTICE -> {
+                        viewModel.followCircle(topicName)
+                    }
+                }
             }
         }
         val footerRvAdapter = FooterRvAdapter { viewModel.retry() }
@@ -95,7 +106,7 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), EventBusL
                 emptyAdapter = emptyRvAdapter,
                 footerAdapter = footerRvAdapter
         )
-        val circlesAdapter = this.activity?.let { CirclesAdapter(it) }
+        val circlesAdapter = this.activity?.let { CirclesAdapter() }
         val linearLayoutManager = LinearLayoutManager(context)
         linearLayoutManager.orientation = LinearLayoutManager.HORIZONTAL
         rv_circles_List.apply {
@@ -105,10 +116,19 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), EventBusL
         viewModel.getMyCirCleData()
         viewModel.myCircle.observe {
             if (!it.isNullOrEmpty()) {
+                val layoutParams = CollapsingToolbarLayout.LayoutParams(rv_circles_List.layoutParams)
+                layoutParams.topMargin = 70
+                layoutParams.bottomMargin = 30
+                rv_circles_List.layoutParams = layoutParams
                 tv_my_notice.visibility = View.VISIBLE
                 circlesAdapter?.addData(it)
+            } else {
+                val layoutParams = CollapsingToolbarLayout.LayoutParams(rv_circles_List.layoutParams)
+                layoutParams.bottomMargin = 30
+                rv_circles_List.layoutParams = layoutParams
             }
         }
+
         observeLoading(dynamicListRvAdapter, footerRvAdapter, emptyRvAdapter)
         rv_dynamic_List.apply {
             layoutManager = LinearLayoutManager(context)
@@ -120,6 +140,8 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), EventBusL
                 }
             })
         }
+
+
         swipe_refresh_layout.setOnRefreshListener {
             viewModel.invalidateQuestionList()
         }

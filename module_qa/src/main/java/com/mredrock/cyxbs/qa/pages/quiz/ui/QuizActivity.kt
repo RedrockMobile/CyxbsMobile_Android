@@ -2,7 +2,6 @@ package com.mredrock.cyxbs.qa.pages.quiz.ui
 
 import android.app.Activity
 import android.content.Intent
-import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
@@ -10,11 +9,11 @@ import android.text.Editable
 import android.text.TextUtils
 import android.text.TextWatcher
 import android.util.Base64
+import android.util.Log
 import android.view.KeyEvent
 import android.view.View
 import android.widget.ImageView
 import androidx.core.content.ContextCompat
-import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.google.android.flexbox.FlexWrap
@@ -25,7 +24,7 @@ import com.mredrock.cyxbs.common.config.QA_QUIZ
 import com.mredrock.cyxbs.common.event.QuestionDraftEvent
 import com.mredrock.cyxbs.common.mark.EventBusLifecycleSubscriber
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
-import com.mredrock.cyxbs.common.utils.down.bean.DownMessageText
+import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.*
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.R.drawable.*
@@ -66,20 +65,10 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>(), EventBusLifecycleSu
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.qa_activity_quiz)
-        val titles = resources.getStringArray(R.array.qa_quiz_reward_explain_title)
-        val contents = resources.getStringArray(R.array.qa_quiz_reward_explain_content)
         isFirstQuiz = sharedPreferences(FIRST_QUIZ).getBoolean(FIRST_QUIZ_SP_KEY, true)
         initToolbar()
         initImageAddView()
         initEditListener()
-        val circleLabelData = ArrayList<String>()
-        circleLabelData.add("#校园周边")
-        circleLabelData.add("#海底捞")
-        circleLabelData.add("#学习")
-        circleLabelData.add("#运动")
-        circleLabelData.add("#兴趣")
-        circleLabelData.add("#问答")
-        circleLabelData.add("#其他")
         val circleLabelAdapter = CircleLabelAdapter(context, mutableListOf()).apply {
             onLabelClickListener = {
                 dynamicType = it
@@ -89,15 +78,20 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>(), EventBusLifecycleSu
         flexBoxManager.flexWrap = FlexWrap.WRAP
         rv_label_list.layoutManager = flexBoxManager
         rv_label_list.adapter = circleLabelAdapter
-        circleLabelAdapter.setList(circleLabelData)
+
+        viewModel.getAllCirCleData("问答圈", "test1")
+        viewModel.allCircle.observe {
+            if (!it.isNullOrEmpty())
+                circleLabelAdapter.setList(it)
+        }
         viewModel.backAndRefreshPreActivityEvent.observeNotNull {
             if (it) {
-                if (draftId != NOT_DRAFT_ID) {
-                    viewModel.deleteDraft(draftId)
-                }
-                val data = Intent()
-                data.putExtra("type", dynamicType)
-                setResult(Activity.RESULT_OK, data)
+//                if (draftId != NOT_DRAFT_ID) {
+//                    viewModel.deleteDraft(draftId)
+//                }
+//                val data = Intent()
+//                data.putExtra("type", dynamicType)
+//                setResult(Activity.RESULT_OK, data)
                 finish()
             }
         }
@@ -160,7 +154,7 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>(), EventBusLifecycleSu
             setOnClickListener {
                 val result = viewModel.submitTitleAndContent(dynamicType, edt_quiz_content.text.toString())
                 if (result) {
-
+                    viewModel.submitDynamic()
                 }
             }
         }

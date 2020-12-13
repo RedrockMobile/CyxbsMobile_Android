@@ -56,7 +56,7 @@
         android:id="@+id/qa_tv_dynamic_nickname"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="15dp"
+        android:layout_marginStart="10dp"
         android:layout_toEndOf="@id/qa_iv_dynamic_avatar"
         android:textColor="@color/common_qa_question_item_nickname_color"
         android:textSize="15sp"
@@ -69,7 +69,7 @@
         android:id="@+id/qa_tv_dynamic_publish_at"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="15dp"
+        android:layout_marginStart="10dp"
         android:layout_marginTop="8dp"
         android:textColor="@color/common_qa_question_item_time_color"
 
@@ -124,7 +124,7 @@
         android:id="@+id/qa_iv_dynamic_praise_count_image"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="10dp"
+        android:layout_marginEnd="12dp"
         android:layout_marginBottom="5dp"
         app:checkedColor="#323FD9"
         app:checkedLikeIconRes="@drawable/qa_ic_answer_list_praised"
@@ -179,11 +179,12 @@
 
         />
 
-    <ImageView
+    <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/qa_iv_dynamic_share"
         android:layout_width="20dp"
         android:layout_height="20dp"
         android:layout_marginEnd="10dp"
+        android:layout_marginTop="20dp"
         android:background="@drawable/qa_ic_dynamic_share"
         android:drawablePadding="4dp"
         android:gravity="center_vertical"
@@ -194,7 +195,7 @@
         app:layout_constraintTop_toBottomOf="@+id/qa_dynamic_nine_grid_view"
         tools:text="201" />
 
-    <ImageView
+    <androidx.appcompat.widget.AppCompatImageView
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:alpha="0.1"

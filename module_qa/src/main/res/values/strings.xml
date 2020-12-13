@@ -74,7 +74,7 @@
     <string name="qa_report_ignore_text">屏蔽该问题</string>
     <string name="qa_report_dialog_cancel_text">取消</string>
     <string name="qa_report_explain">举报成功获得积分</string>
-    <string name="qa_answer_submit_successfully_text">您已提交成功</string>
+    <string name="qa_answer_submit_successfully_text">发布动态成功</string>
     <string name="qa_reward_description_bottom_text">条款详见《掌上重邮用户协议》</string>
     <string name="qa_comment_list_no_comment_hint">还没有评论哦~</string>
     <string name="qa_comment_list_no_more_comment">没有更多内容了～</string>
@@ -83,7 +83,7 @@
     <string name="qa_comment_anonymous_text">匿名用户</string>
     <string name="qa_pic_save_alert_dialog_title">是否保存</string>
     <string name="qa_pic_save_alert_dialog_message">这张图片将保存到手机</string>
-    <string name="qa_upload_pic_failed">图片上传失败</string>
+    <string name="qa_upload_pic_failed">发布动态失败</string>
     <string name="qa_answer_adopted_other_answer">你已采纳其他回答~</string>
     <string name="qa_answer_adopt_late">已经过了你设置的任务完成时间～</string>
     <string name="qa_question_hot_ask_question_enter"><![CDATA[更多想问的，立刻提问 >>]]></string>
@@ -99,13 +99,12 @@
     <string name="qa_search_ed_hint_text">搜索你想知道的</string>
 
     <string name="qa_dynamic_detail_title_text">详细</string>
-
-    <string-array name="qa_quiz_reward_explain_title">
-        <item>悬赏积分是干嘛的?</item>
-        <item>任务最晚完成时间是什么意思?</item>
-        <item>如何评判优质回答?</item>
-        <item>如果任务最晚完成时间内没有回答?</item>
-    </string-array>
+    <string name="qa_ignore_dynamic">屏蔽成功</string>
+    <string name="qa_ignore_dynamic_failure">屏蔽失败，请检查你的网络</string>
+    <string name="qa_report_dynamic">举报成功</string>
+    <string name="qa_report_dynamic_failure">举报失败</string>
+    <string name="qa_follow_circle">关注圈子成功</string>
+    <string name="qa_follow_circle_failure">关注圈子失败</string>
     <string-array name="qa_quiz_reward_explain_content">
         <item>为了营造邮问社区的良好氛围，使你的问题得到及时的解答，你将通过您获取的积分来进行提问，而你选取的优质回答将获得你的悬赏积分。</item>
         <item>如上所诉，你可以主动对您获取的回答进行采纳，将你的积分悬赏给该用户；但是如果你没有及时对用户的回答进行采纳，且你的提问已经超过了任务最晚完成时间，这个时候我们将对你所提问的所有回答进行查看，选出最有价值的回答，将你的积分悬赏给该用户。</item>

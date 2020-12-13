@@ -8,7 +8,6 @@
     android:orientation="vertical"
     tools:background="@color/common_window_background"
     tools:context=".pages.dynamic.ui.fragment.DynamicFragment">
-
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -33,12 +32,13 @@
                 android:textColor="@color/common_qa_question_item_nickname_color"
                 android:textSize="18sp"
                 android:textStyle="bold"
-                android:visibility="gone" />
+                android:text="我的关注"
+                android:visibility="invisible" />
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_circles_List"
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
-                android:layout_marginTop="20dp"
                 tools:listitem="@layout/qa_recycler_item_circles" />
         </com.google.android.material.appbar.CollapsingToolbarLayout>
     </com.google.android.material.appbar.AppBarLayout>
@@ -88,11 +88,17 @@
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:alpha="0.1"
+            android:background="@color/common_qa_quiz_toolbar_divider_line_color" />
+
         <androidx.appcompat.widget.AppCompatTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="25dp"
             android:text="推荐"
             android:textColor="@color/common_qa_question_item_nickname_color"
             android:textSize="18sp"
@@ -101,7 +107,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="40dp"
+            android:layout_marginTop="60dp"
             android:background="@color/common_white_background"
             android:orientation="vertical">
 
