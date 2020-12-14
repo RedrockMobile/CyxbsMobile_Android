@@ -8,24 +8,28 @@ import android.view.View
 import android.widget.Toast
 import androidx.core.app.ActivityOptionsCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.extensions.setAvatarImageFromUrl
 import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.beannew.Dynamic
+import com.mredrock.cyxbs.qa.component.recycler.RvAdapterWrapper
 import com.mredrock.cyxbs.qa.config.CommentConfig
-import com.mredrock.cyxbs.qa.pages.dynamic.ui.adapter.DynamicAdapter
+import com.mredrock.cyxbs.qa.network.NetworkState
+import com.mredrock.cyxbs.qa.pages.dynamic.ui.adapter.CommentListAdapter
 import com.mredrock.cyxbs.qa.pages.dynamic.viewmodel.DynamicDetailViewModel
 import com.mredrock.cyxbs.qa.ui.activity.ViewImageActivity
+import com.mredrock.cyxbs.qa.ui.adapter.EmptyRvAdapter
+import com.mredrock.cyxbs.qa.ui.adapter.FooterRvAdapter
 import com.mredrock.cyxbs.qa.ui.widget.NineGridView
 import com.mredrock.cyxbs.qa.ui.widget.OptionalPopWindow
 import com.mredrock.cyxbs.qa.utils.dynamicTimeDescription
-import com.mredrock.cyxbs.qa.utils.toDate
 import kotlinx.android.synthetic.main.qa_common_toolbar.*
 import kotlinx.android.synthetic.main.qa_fragment_dynamic_detail.*
 import kotlinx.android.synthetic.main.qa_recycler_item_dynamic.*
-import retrofit2.http.DELETE
 
 /**
  * @Author: sandyz987
@@ -48,10 +52,18 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
         }
     }
 
+    private val getCommentList: () -> Unit = {
+        viewModel.getCommentList(dynamic.postId)
+    }
+
     override val isFragmentActivity = false
 
     override fun getViewModelFactory() = DynamicDetailViewModel.Factory()
 
+    private val commentListRvAdapter = CommentListAdapter(listOf(), {})
+
+    private val emptyRvAdapter by lazy { EmptyRvAdapter(getString(R.string.qa_comment_list_empty_hint)) }
+    private val footerRvAdapter = FooterRvAdapter { getCommentList }
 
     lateinit var dynamic: Dynamic
 
@@ -61,11 +73,40 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
         setContentView(R.layout.qa_fragment_dynamic_detail)
         window.enterTransition = Slide(Gravity.END).apply { duration = 500 }
         qa_tv_toolbar_title.text = resources.getText(R.string.qa_dynamic_detail_title_text)
+        initObserve()
         initDynamic()
         initReplyList()
 
+
         qa_ib_toolbar_back.setOnSingleClickListener {
             onBackPressed()
+        }
+    }
+
+    private fun initObserve() {
+        viewModel.commentList.observe(this, Observer {
+            commentListRvAdapter.refreshData(it)
+        })
+        viewModel.loadStatus.observe(this, Observer {
+            it?.run {
+                footerRvAdapter.refreshData(listOf(this))
+            }
+        })
+
+        viewModel.loadStatus.observe {
+            when (it) {
+                NetworkState.LOADING -> {
+                    qa_detail_swipe_refresh_layout.isRefreshing = true
+                    emptyRvAdapter.showHolder(3)
+                }
+                NetworkState.CANNOT_LOAD_WITHOUT_LOGIN -> {
+                    qa_detail_swipe_refresh_layout.isRefreshing = false
+                }
+                else -> {
+                    qa_detail_swipe_refresh_layout.isRefreshing = false
+                    emptyRvAdapter.hideHolder()
+                }
+            }
         }
     }
 
@@ -95,16 +136,15 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
         qa_tv_dynamic_content.text = dynamic.content
         qa_tv_dynamic_praise_count.text = dynamic.praiseCount.toString()
         qa_tv_dynamic_comment_count.text = dynamic.commentCount.toString()
-        qa_tv_dynamic_publish_at.text = dynamicTimeDescription(System.currentTimeMillis(), dynamic.publishTime.toString().toDate().time)
-        //解决图片错乱的问题
+        qa_tv_dynamic_publish_at.text = dynamicTimeDescription(System.currentTimeMillis(), dynamic.publishTime * 1000)
         if (dynamic.pics.isNullOrEmpty())
-            qa_dynamic_nine_grid_view.setRectangleImages(emptyList(), NineGridView.MODE_IMAGE_NORMAL_SIZE)
+            qa_dynamic_nine_grid_view.setRectangleImages(emptyList(), NineGridView.MODE_IMAGE_THREE_SIZE)
         else {
             dynamic.pics.apply {
                 val tag = qa_dynamic_nine_grid_view.tag
                 if (null == tag || tag == this) {
                     val tagStore = qa_dynamic_nine_grid_view.tag
-                    qa_dynamic_nine_grid_view.setImages(this, NineGridView.MODE_IMAGE_NORMAL_SIZE, NineGridView.ImageMode.MODE_IMAGE_RECTANGLE)
+                    qa_dynamic_nine_grid_view.setImages(this, NineGridView.MODE_IMAGE_THREE_SIZE, NineGridView.ImageMode.MODE_IMAGE_RECTANGLE)
                     qa_dynamic_nine_grid_view.tag = tagStore
                 } else {
                     val tagStore = this
@@ -123,10 +163,23 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
 
 
     private fun initReplyList() {
-        collapsing_toolbar_layout.post {
-            // 将回复布局的顶部重置到帖子底下
-//            qa_ll_reply.top = collapsing_toolbar_layout.height
-//            qa_ll_reply.invalidate()
+
+        qa_detail_swipe_refresh_layout.setOnRefreshListener {
+            viewModel.commentList.postValue(listOf())
+            getCommentList.invoke()
+        }
+
+        getCommentList.invoke()
+
+        qa_rv_reply_list.apply {
+            layoutManager = LinearLayoutManager(context)
+
+            val adapterWrapper = RvAdapterWrapper(
+                    normalAdapter = commentListRvAdapter,
+                    emptyAdapter = emptyRvAdapter,
+                    footerAdapter = footerRvAdapter
+            )
+            adapter = adapterWrapper
         }
     }
 

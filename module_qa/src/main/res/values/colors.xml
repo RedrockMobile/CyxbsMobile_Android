@@ -6,5 +6,6 @@
     <color name="qa_draft_dialog_text">#15315B</color>
     <color name="qa_draft_dialog_divide">#F1F3F8</color>
     <color name="qa_likeview_color">#ffcccccc</color>
+    <color name="qa_reply_bottom_sheet_color">#F1F3F8</color>
 
 </resources>

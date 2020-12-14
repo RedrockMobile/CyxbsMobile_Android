@@ -113,7 +113,7 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/qa_rv_reply"
         android:layout_width="0dp"
-        android:layout_height="100dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="11dp"
         app:layout_constraintEnd_toStartOf="@+id/qa_gl_reply_end"
         app:layout_constraintStart_toStartOf="@+id/qa_tv_reply_content"

@@ -7,7 +7,6 @@ import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.beannew.Dynamic
 import com.mredrock.cyxbs.qa.component.recycler.BaseRvAdapter
 import com.mredrock.cyxbs.qa.component.recycler.BaseViewHolder
-import com.mredrock.cyxbs.qa.pages.dynamic.ui.adapter.DynamicAdapter
 import com.mredrock.cyxbs.qa.ui.activity.ViewImageActivity
 import com.mredrock.cyxbs.qa.ui.widget.NineGridView
 import com.mredrock.cyxbs.qa.utils.dynamicTimeDescription
@@ -38,7 +37,7 @@ class SearchResultHeaderAdapter(private val onItemClickEvent: (Dynamic) -> Unit)
                 qa_tv_dynamic_content.text = data.content
                 qa_tv_dynamic_praise_count.text = data.praiseCount.toString()
                 qa_tv_dynamic_comment_count.text = data.commentCount.toString()
-                qa_tv_dynamic_publish_at.text = dynamicTimeDescription(System.currentTimeMillis(), data.publishTime)
+                qa_tv_dynamic_publish_at.text = dynamicTimeDescription(System.currentTimeMillis(), data.publishTime * 1000)
                 //解决图片错乱的问题
                 if (data.pics.isNullOrEmpty())
                     qa_dynamic_nine_grid_view.setRectangleImages(emptyList(), NineGridView.MODE_IMAGE_THREE_SIZE)

@@ -1,5 +1,6 @@
 <resources>
     <string name="qa_question_list_empty_hint">还没有动态哦~</string>
+    <string name="qa_comment_list_empty_hint">还没有回复哦~</string>
     <string name="qa_loading_error">加载出错了，点击重试吧~</string>
     <string name="qa_question_from_mine_loading_error">无法识别问题,可能问题已过期</string>
     <string name="qa_answer_from_mine_loading_error">无法识别回答,可能回答已过期</string>
@@ -62,7 +63,7 @@
     <string name="qa_search_hot_word_key">大家都在搜:</string>
     <string name="qa_quiz_type_empty">类型不能为空哦～</string>
     <string name="qa_search_ed_hint_text">搜索你想知道的</string>
-
+    <string name="qa_reply_et_hint_text">说点什么吧，万一火了呢</string>
     <string name="qa_dynamic_detail_title_text">详细</string>
     <string name="qa_ignore_dynamic">屏蔽成功</string>
     <string name="qa_ignore_dynamic_failure">屏蔽失败，请检查你的网络</string>

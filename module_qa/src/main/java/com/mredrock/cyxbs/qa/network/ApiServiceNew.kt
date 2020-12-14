@@ -96,4 +96,9 @@ interface ApiServiceNew {
     fun deleteId(@Field("id")
                  id: String
     ): Observable<RedrockApiStatus>
+
+    @GET("/wxapi/magipoke-loop/comment/getallcomment")
+    fun getComment(@Query("post_id")
+                   postId: String
+    ): Observable<RedrockApiWrapper<List<CommentOuter>>>
 }

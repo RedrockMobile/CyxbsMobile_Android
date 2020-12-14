@@ -1,6 +1,5 @@
 package com.mredrock.cyxbs.qa.pages.square.ui.adapter
 
-import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
@@ -9,11 +8,9 @@ import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.beannew.Dynamic
 import com.mredrock.cyxbs.qa.component.recycler.BaseEndlessRvAdapter
 import com.mredrock.cyxbs.qa.component.recycler.BaseViewHolder
-import com.mredrock.cyxbs.qa.pages.dynamic.ui.adapter.DynamicAdapter
 import com.mredrock.cyxbs.qa.ui.activity.ViewImageActivity
 import com.mredrock.cyxbs.qa.ui.widget.NineGridView
 import com.mredrock.cyxbs.qa.utils.dynamicTimeDescription
-import com.mredrock.cyxbs.qa.utils.toDate
 import kotlinx.android.synthetic.main.qa_recycler_item_dynamic.view.*
 
 /**
@@ -62,7 +59,7 @@ class CircleDetailAdapter(private val onItemClickEvent: (Dynamic) -> Unit) : Bas
                 qa_tv_dynamic_content.text = data.content
                 qa_tv_dynamic_praise_count.text = 999.toString()
                 qa_tv_dynamic_comment_count.text = 999.toString()
-                qa_tv_dynamic_publish_at.text = dynamicTimeDescription(System.currentTimeMillis(), data.publishTime)
+                qa_tv_dynamic_publish_at.text = dynamicTimeDescription(System.currentTimeMillis(), data.publishTime * 1000)
 
                 if (data.pics.isNullOrEmpty())
                     qa_dynamic_nine_grid_view.setRectangleImages(emptyList(), NineGridView.MODE_IMAGE_THREE_SIZE)

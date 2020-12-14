@@ -3,11 +3,8 @@ package com.mredrock.cyxbs.qa.pages.dynamic.ui.adapter
 
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
-import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.utils.extensions.doIfLogin
 import com.mredrock.cyxbs.common.utils.extensions.setAvatarImageFromUrl
 import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
@@ -22,7 +19,6 @@ import com.mredrock.cyxbs.qa.ui.activity.ViewImageActivity
 import com.mredrock.cyxbs.qa.ui.widget.NineGridView
 import com.mredrock.cyxbs.qa.ui.widget.OptionalPopWindow
 import com.mredrock.cyxbs.qa.utils.dynamicTimeDescription
-import com.mredrock.cyxbs.qa.utils.toDate
 import kotlinx.android.synthetic.main.qa_recycler_item_dynamic.view.*
 
 /**
@@ -103,7 +99,7 @@ class DynamicAdapter(private val onItemClickEvent: (Dynamic, View) -> Unit) : Ba
                 qa_tv_dynamic_content.text = data.content
                 qa_tv_dynamic_praise_count.text = data.praiseCount.toString()
                 qa_tv_dynamic_comment_count.text = data.commentCount.toString()
-                qa_tv_dynamic_publish_at.text = dynamicTimeDescription(System.currentTimeMillis(), data.publishTime)
+                qa_tv_dynamic_publish_at.text = dynamicTimeDescription(System.currentTimeMillis(), data.publishTime * 1000)
                 //解决图片错乱的问题
                 if (data.pics.isNullOrEmpty())
                     qa_dynamic_nine_grid_view.setRectangleImages(emptyList(), NineGridView.MODE_IMAGE_THREE_SIZE)

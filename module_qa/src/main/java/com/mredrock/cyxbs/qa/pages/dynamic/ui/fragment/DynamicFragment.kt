@@ -4,7 +4,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.RelativeLayout
+import android.widget.TextView
+import android.widget.ViewFlipper
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -33,8 +35,6 @@ import com.mredrock.cyxbs.qa.ui.adapter.EmptyRvAdapter
 import com.mredrock.cyxbs.qa.ui.adapter.FooterRvAdapter
 import com.umeng.analytics.MobclickAgent
 import kotlinx.android.synthetic.main.qa_fragment_dynamic.*
-import kotlinx.android.synthetic.main.qa_recycler_item_dynamic.*
-import kotlinx.android.synthetic.main.qa_recycler_item_dynamic.view.*
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
@@ -154,7 +154,7 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), EventBusL
 
     override fun onStart() {
         super.onStart()
-        viewModel.invalidateQuestionList()
+        //viewModel.invalidateQuestionList()
         viewModel.getMyCirCleData()
     }
 
