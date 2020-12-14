@@ -1,4 +1,4 @@
-package com.mredrock.cyxbs.qa.pages.dynamic.ui.adapter
+package com.mredrock.cyxbs.qa.pages.quiz.ui.adpter
 
 import android.content.Context
 import android.view.LayoutInflater

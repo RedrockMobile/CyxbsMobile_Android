@@ -12,7 +12,7 @@ import kotlinx.android.synthetic.main.qa_draft_dialog.*
 
 
 /**
- * Create by yyfbe at 2020-01-25
+ * Create by xgl at 2020-12-14
  * 草稿dialog
  */
 class DraftDialog(context: Context) : Dialog(context) {

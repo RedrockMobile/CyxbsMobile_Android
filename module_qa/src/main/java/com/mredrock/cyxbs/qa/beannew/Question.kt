@@ -1,9 +1,13 @@
-package com.mredrock.cyxbs.qa.bean
+package com.mredrock.cyxbs.qa.beannew
 
 import android.os.Parcel
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
 
+/*
+    create by xgl
+    由于草稿接口没改进行bean类迁移，不要删除
+ */
 data class Question(@SerializedName("reward")
                     var reward: Int = 0,
 

@@ -19,6 +19,9 @@ import com.mredrock.cyxbs.common.utils.extensions.doIfLogin
 import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.component.recycler.RvAdapterWrapper
+import com.mredrock.cyxbs.qa.config.CommentConfig.IGNORE
+import com.mredrock.cyxbs.qa.config.CommentConfig.NOTICE
+import com.mredrock.cyxbs.qa.config.CommentConfig.REPORT
 import com.mredrock.cyxbs.qa.network.NetworkState
 import com.mredrock.cyxbs.qa.pages.dynamic.ui.activity.DynamicDetailActivity
 import com.mredrock.cyxbs.qa.pages.dynamic.ui.adapter.CirclesAdapter
@@ -85,15 +88,15 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), EventBusL
             }
             onPopWindowClickListener = { string, topicName ->
                 when (string) {
-                    DynamicAdapter.IGNORE -> {
+                    IGNORE -> {
                         //还无接口
 //                        viewModel.ignore(postId)
                     }
-                    DynamicAdapter.REPORT -> {
+                    REPORT -> {
 //                        viewModel.report(postId)
                     }
 
-                    DynamicAdapter.NOTICE -> {
+                    NOTICE -> {
                         viewModel.followCircle(topicName)
                     }
                 }
@@ -144,6 +147,7 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), EventBusL
 
         swipe_refresh_layout.setOnRefreshListener {
             viewModel.invalidateQuestionList()
+            viewModel.getMyCirCleData()
         }
     }
 
@@ -163,9 +167,6 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), EventBusL
             when (it) {
                 NetworkState.LOADING -> {
                     swipe_refresh_layout.isRefreshing = true
-                    (rv_dynamic_List.adapter as? RvAdapterWrapper)?.apply {
-
-                    }
                     emptyRvAdapter.showHolder(3)
                 }
                 NetworkState.CANNOT_LOAD_WITHOUT_LOGIN -> {
@@ -177,16 +178,6 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), EventBusL
                 }
             }
         }
-    }
-
-
-    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
-    open fun refreshQuestionList(event: RefreshQaEvent) {
-        if (isRvAtTop)
-            viewModel.invalidateQuestionList()
-        else
-            rv_dynamic_List.smoothScrollToPosition(0)
-
     }
 
     private fun initClick() {
@@ -258,6 +249,14 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), EventBusL
         }
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
+    open fun refreshQuestionList(event: RefreshQaEvent) {
+        if (isRvAtTop)
+            viewModel.invalidateQuestionList()
+        else
+            rv_dynamic_List.smoothScrollToPosition(0)
+
+    }
 
     override fun onPause() {
         super.onPause()

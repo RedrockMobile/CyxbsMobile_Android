@@ -14,6 +14,7 @@ import com.mredrock.cyxbs.common.utils.extensions.setAvatarImageFromUrl
 import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.beannew.Dynamic
+import com.mredrock.cyxbs.qa.config.CommentConfig
 import com.mredrock.cyxbs.qa.pages.dynamic.ui.adapter.DynamicAdapter
 import com.mredrock.cyxbs.qa.pages.dynamic.viewmodel.DynamicDetailViewModel
 import com.mredrock.cyxbs.qa.ui.activity.ViewImageActivity
@@ -24,6 +25,7 @@ import com.mredrock.cyxbs.qa.utils.toDate
 import kotlinx.android.synthetic.main.qa_common_toolbar.*
 import kotlinx.android.synthetic.main.qa_fragment_dynamic_detail.*
 import kotlinx.android.synthetic.main.qa_recycler_item_dynamic.*
+import retrofit2.http.DELETE
 
 /**
  * @Author: sandyz987
@@ -76,18 +78,18 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
         dynamic = intent.getParcelableExtra("dynamicItem")
         qa_iv_dynamic_more_tips_clicked.setOnSingleClickListener {
             OptionalPopWindow.Builder().with(this)
-                    .addOptionAndCallback("删除") {
-                        Toast.makeText(BaseApp.context, "点击了删除", Toast.LENGTH_SHORT).show()
-                    }.addOptionAndCallback("关注") {
+                    .addOptionAndCallback(CommentConfig.IGNORE) {
+                        Toast.makeText(BaseApp.context, "点击了屏蔽", Toast.LENGTH_SHORT).show()
+                    }.addOptionAndCallback(CommentConfig.NOTICE) {
                         Toast.makeText(BaseApp.context, "点击了关注", Toast.LENGTH_SHORT).show()
-                    }.addOptionAndCallback("举报") {
+                    }.addOptionAndCallback(CommentConfig.REPORT) {
                         Toast.makeText(BaseApp.context, "点击了举报", Toast.LENGTH_SHORT).show()
                     }.show(it, OptionalPopWindow.AlignMode.RIGHT, 0)
         }
         qa_iv_dynamic_praise_count_image.setOnSingleClickListener {
             qa_iv_dynamic_praise_count_image.toggle()
         }
-        qa_iv_dynamic_avatar.setAvatarImageFromUrl(DynamicAdapter.PIC_URL_BASE + dynamic.avatar)
+        qa_iv_dynamic_avatar.setAvatarImageFromUrl(dynamic.avatar)
         qa_tv_dynamic_topic.text = dynamic.topic
         qa_tv_dynamic_nickname.text = dynamic.nickName
         qa_tv_dynamic_content.text = dynamic.content
@@ -98,9 +100,7 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
         if (dynamic.pics.isNullOrEmpty())
             qa_dynamic_nine_grid_view.setRectangleImages(emptyList(), NineGridView.MODE_IMAGE_NORMAL_SIZE)
         else {
-            dynamic.pics.map {
-                DynamicAdapter.PIC_URL_BASE + it
-            }.apply {
+            dynamic.pics.apply {
                 val tag = qa_dynamic_nine_grid_view.tag
                 if (null == tag || tag == this) {
                     val tagStore = qa_dynamic_nine_grid_view.tag
@@ -117,7 +117,7 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
 
         }
         qa_dynamic_nine_grid_view.setOnItemClickListener { _, index ->
-            ViewImageActivity.activityStart(this, dynamic.pics.map { DynamicAdapter.PIC_URL_BASE + it }.toTypedArray(), index)
+            ViewImageActivity.activityStart(this, dynamic.pics.map { it }.toTypedArray(), index)
         }
     }
 

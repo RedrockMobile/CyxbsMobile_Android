@@ -1,4 +1,4 @@
-package com.mredrock.cyxbs.qa.pages.quiz.ui.widget
+package com.mredrock.cyxbs.qa.ui.widget
 
 import android.content.Context
 import android.util.AttributeSet

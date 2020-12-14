@@ -32,7 +32,7 @@
                 android:textColor="@color/common_qa_question_item_nickname_color"
                 android:textSize="18sp"
                 android:textStyle="bold"
-                android:text="我的关注"
+                android:text="@string/qa_my_follow_circle"
                 android:visibility="invisible" />
 
             <androidx.recyclerview.widget.RecyclerView
@@ -51,7 +51,7 @@
 
         <RelativeLayout
             android:id="@+id/rl_qa_hot_search"
-            android:layout_width="300dp"
+            android:layout_width="340dp"
             android:layout_height="36dp"
             android:layout_marginStart="30dp"
             android:layout_marginTop="20dp"
@@ -98,8 +98,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            android:layout_marginTop="25dp"
-            android:text="推荐"
+            android:layout_marginTop="20dp"
+            android:text="@string/qa_dynamic_recommend"
             android:textColor="@color/common_qa_question_item_nickname_color"
             android:textSize="18sp"
             android:textStyle="bold" />
@@ -107,8 +107,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="60dp"
-            android:background="@color/common_white_background"
+            android:layout_marginTop="50dp"
+            android:background="@drawable/qa_shape_comment_header_background"
             android:orientation="vertical">
 
             <androidx.swiperefreshlayout.widget.SwipeRefreshLayout

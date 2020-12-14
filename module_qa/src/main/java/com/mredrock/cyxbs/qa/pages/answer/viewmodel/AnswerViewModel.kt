@@ -14,7 +14,7 @@ import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.common.viewmodel.event.ProgressDialogEvent
 import com.mredrock.cyxbs.common.viewmodel.event.SingleLiveEvent
 import com.mredrock.cyxbs.qa.R
-import com.mredrock.cyxbs.qa.bean.Question
+import com.mredrock.cyxbs.qa.beannew.Question
 import com.mredrock.cyxbs.qa.network.ApiService
 import com.mredrock.cyxbs.qa.utils.isNullOrEmpty
 import io.reactivex.Observable

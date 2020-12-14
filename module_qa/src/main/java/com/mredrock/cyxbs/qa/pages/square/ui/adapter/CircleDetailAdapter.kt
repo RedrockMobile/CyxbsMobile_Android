@@ -67,9 +67,7 @@ class CircleDetailAdapter(private val onItemClickEvent: (Dynamic) -> Unit) : Bas
                 if (data.pics.isNullOrEmpty())
                     qa_dynamic_nine_grid_view.setRectangleImages(emptyList(), NineGridView.MODE_IMAGE_THREE_SIZE)
                 else {
-                    data.pics.map {
-                        DynamicAdapter.PIC_URL_BASE + it
-                    }.apply {
+                    data.pics.apply {
                         val tag = qa_dynamic_nine_grid_view.tag
                         if (null == tag || tag == data.pics) {
                             val tagStore = qa_dynamic_nine_grid_view.tag
@@ -84,7 +82,7 @@ class CircleDetailAdapter(private val onItemClickEvent: (Dynamic) -> Unit) : Bas
                         }
                     }
                     qa_dynamic_nine_grid_view.setOnItemClickListener { _, index ->
-                        ViewImageActivity.activityStart(context, data.pics.map { PIC_URL_BASE + it }.toTypedArray(), index)
+                        ViewImageActivity.activityStart(context, data.pics.map{ it }.toTypedArray(), index)
                     }
                 }
             }

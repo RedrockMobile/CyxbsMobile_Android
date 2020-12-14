@@ -1,5 +1,4 @@
 <resources>
-    <string name="qa_question_item_reward">%1$d积分</string>
     <string name="qa_question_list_empty_hint">还没有动态哦~</string>
     <string name="qa_loading_error">加载出错了，点击重试吧~</string>
     <string name="qa_question_from_mine_loading_error">无法识别问题,可能问题已过期</string>
@@ -9,9 +8,6 @@
     <string name="qa_answer_reply_count">%1$s条回复</string>
     <string name="qa_answer_photo_count">查看%1$s张照片</string>
     <string name="qa_answer_list_accepted">已解决</string>
-    <string name="qa_answer_list_accept">采纳</string>
-    <string name="qa_answer_whether_accept_title">是否采纳该回答?</string>
-    <string name="qa_answer_whether_accept_notice">采纳后他将获得你的悬赏积分</string>
     <string name="qa_answer_list_no_answer_hint">还没有回答哦~</string>
     <string name="qa_comment_list_comment_count">评论（%1$s）</string>
     <string name="qa_comment_list_comment_loading_hint">努力加载中，请不要多次点击哦~</string>
@@ -29,12 +25,7 @@
     <string name="qa_quiz_save_success">成功存入草稿箱~</string>
     <string name="qa_quiz_update_success">成功更新草稿箱~</string>
     <string name="qa_answer_load_draft_question_failed">问题加载失败</string>
-    <string name="qa_quiz_error_time_too_short">设置的时间太短了哦~</string>
     <string name="qa_quiz_dialog_submit">发布</string>
-    <string name="qa_quiz_reward_set_my_reward">积分剩余：%1$d</string>
-    <string name="qa_search_knowledge_from_where">来源：%1$s</string>
-    <string name="qa_quiz_error_reward_not_enough">已经拿不出这么多硬币了( ﾉД`)</string>
-    <string name="qa_answer_edit_content_hint">请尽可能给出明确的解决思路哦！</string>
     <string name="qa_answer_question_title">提供帮助</string>
     <string name="qa_hint_report_success">举报成功，会尽快为您处理</string>
     <string name="qa_crop">裁剪</string>
@@ -43,16 +34,6 @@
     <string name="qa_fragment_head_give_question">去提问</string>
     <string name="qa_comment_new_comment_text_view_hint">发布评论</string>
     <string name="qa_answer_btn_text">回答</string>
-    <string name="qa_question_new_question_title_hint">输入标题</string>
-    <string name="qa_answer_activity_question_describe">问题描述</string>
-    <string name="qa_answer_question_detail_show_more">展开详情</string>
-    <string name="qa_quiz_select_type_study">学习</string>
-    <string name="qa_quiz_select_type_welcome_freshman">迎新生</string>
-    <string name="qa_quiz_select_type_anonymous">匿名</string>
-    <string name="qa_quiz_select_type_life">生活</string>
-    <string name="qa_quiz_select_type_others">其他</string>
-    <string name="qa_quiz_reward_set_text">悬赏积分</string>
-    <string name="qa_quiz_mission_deadline_title_text">任务最晚完成时间</string>
     <string name="qa_quiz_dialog_cancel_text">取消</string>
     <string name="qa_reward_set_title_text">积分设置</string>
     <string name="qa_question_report_text">举报该问题</string>
@@ -61,21 +42,8 @@
     <string name="qa_quiz_toolbar_title_text">发布动态</string>
     <string name="qa_quiz_dialog_exit_text">是否保存草稿</string>
     <string name="qa_answer_dialog_exit_text">退 出 回 答</string>
-    <string name="qa_quiz_reward_more_text">你的悬赏积分超过你拥有积分了</string>
-    <string name="qa_quiz_down_reward_get_more_text">降低悬赏积分或者去赚取更多积分吧~</string>
-    <string name="qa_quiz_reward_not_enough_text">积 分 不 够</string>
-    <string name="qa_report_rubbish_text">垃圾广告信息</string>
-    <string name="qa_report_useless_question_text">无用提问</string>
-    <string name="qa_report_useless_answer_text">无用回答</string>
-    <string name="qa_report_useless_comment_text">无用评论</string>
-    <string name="qa_report_illegal_text">煽动信息、造谣</string>
-    <string name="qa_report_infringement_text">侵权信息</string>
-    <string name="qa_report_other_text">其他</string>
-    <string name="qa_report_ignore_text">屏蔽该问题</string>
     <string name="qa_report_dialog_cancel_text">取消</string>
-    <string name="qa_report_explain">举报成功获得积分</string>
     <string name="qa_answer_submit_successfully_text">发布动态成功</string>
-    <string name="qa_reward_description_bottom_text">条款详见《掌上重邮用户协议》</string>
     <string name="qa_comment_list_no_comment_hint">还没有评论哦~</string>
     <string name="qa_comment_list_no_more_comment">没有更多内容了～</string>
     <string name="qa_answer_show_question">查看问题</string>
@@ -85,9 +53,6 @@
     <string name="qa_pic_save_alert_dialog_message">这张图片将保存到手机</string>
     <string name="qa_upload_pic_failed">发布动态失败</string>
     <string name="qa_answer_adopted_other_answer">你已采纳其他回答~</string>
-    <string name="qa_answer_adopt_late">已经过了你设置的任务完成时间～</string>
-    <string name="qa_question_hot_ask_question_enter"><![CDATA[更多想问的，立刻提问 >>]]></string>
-    <string name="qa_question_hot">热门解答</string>
     <string name="qa_question_search_cancel">取消</string>
     <string name="qa_search_history">历史记录</string>
     <string name="qa_search_clean_history_all">清除全部</string>
@@ -105,13 +70,18 @@
     <string name="qa_report_dynamic_failure">举报失败</string>
     <string name="qa_follow_circle">关注圈子成功</string>
     <string name="qa_follow_circle_failure">关注圈子失败</string>
-    <string-array name="qa_quiz_reward_explain_content">
-        <item>为了营造邮问社区的良好氛围，使你的问题得到及时的解答，你将通过您获取的积分来进行提问，而你选取的优质回答将获得你的悬赏积分。</item>
-        <item>如上所诉，你可以主动对您获取的回答进行采纳，将你的积分悬赏给该用户；但是如果你没有及时对用户的回答进行采纳，且你的提问已经超过了任务最晚完成时间，这个时候我们将对你所提问的所有回答进行查看，选出最有价值的回答，将你的积分悬赏给该用户。</item>
-        <item>优质回答的首要判断条件是用户自行选择进行采纳的用户，若用户在任务最短完成时间内没有进行采纳，且该提问下已有回答，这时候首要判断机制为：获得最高赞回答数的回答为该提问的优质回答。</item>
-        <item>若存在这种情况的话，我们将对您设置的悬赏积分退还至您的账户。</item>
-    </string-array>
-    <string-array name="qa_title_type">
+    <string name="qa_draft_dialog_no_save">不保存</string>
+    <string name="qa_draft_dialog_cancel">取消</string>
+    <string name="qa_edit_dynamic_num">0/500</string>
+    <string name="qa_choose_one_circle">请选择一个圈子</string>
+    <string name="qa_dynamic_recommend">推荐</string>
+    <string name="qa_my_follow_circle">我的关注</string>
+    <string name="qa_recycler_item_dynamic_name">刘童鞋</string>
+    <string name="qa_recycler_item_dynamic_time">2019.8.22</string>
+    <string name="qa_recycler_item_dynamic_label">#校园周边</string>
+    <string name="qa_question_hot">热门解答</string>
+    <string name="qa_answer_list_accept">采纳</string>
+    <string name="qa_search_knowledge_from_where">来源：%1$s</string>    <string-array name="qa_title_type">
         <item>问题</item>
         <item>回答</item>
         <item>评论</item>

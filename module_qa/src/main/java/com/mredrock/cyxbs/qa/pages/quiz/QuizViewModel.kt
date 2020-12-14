@@ -42,14 +42,9 @@ class QuizViewModel : BaseViewModel() {
     var allCircle = MutableLiveData<List<Topic>>()
     var editingImgPos = -1
         private set
-    var myRewardCount = 0
-        private set
-    var isAnonymous = false
-    var rewardExplainList: List<DownMessageText> = listOf()
     private var type: String = ""
     private var title: String = ""
     private var content: String = ""
-    private var disappearTime: String = ""
     private val isInvalidList = arrayListOf<Boolean>()
 
     fun tryEditImg(pos: Int): String? {

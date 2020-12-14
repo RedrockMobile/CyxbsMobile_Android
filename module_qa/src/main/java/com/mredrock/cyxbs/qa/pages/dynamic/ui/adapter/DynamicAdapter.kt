@@ -15,6 +15,9 @@ import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.beannew.Dynamic
 import com.mredrock.cyxbs.qa.component.recycler.BaseEndlessRvAdapter
 import com.mredrock.cyxbs.qa.component.recycler.BaseViewHolder
+import com.mredrock.cyxbs.qa.config.CommentConfig.IGNORE
+import com.mredrock.cyxbs.qa.config.CommentConfig.NOTICE
+import com.mredrock.cyxbs.qa.config.CommentConfig.REPORT
 import com.mredrock.cyxbs.qa.ui.activity.ViewImageActivity
 import com.mredrock.cyxbs.qa.ui.widget.NineGridView
 import com.mredrock.cyxbs.qa.ui.widget.OptionalPopWindow
@@ -36,12 +39,6 @@ class DynamicAdapter(private val onItemClickEvent: (Dynamic, View) -> Unit) : Ba
 
             override fun areContentsTheSame(oldItem: Dynamic, newItem: Dynamic) = oldItem == newItem
         }
-
-        @JvmStatic
-        val PIC_URL_BASE = "https://cyxbsmobile.redrock.team/app/index.php" // 临时前缀
-        val IGNORE = "屏蔽此人"
-        val NOTICE = "关注圈子"
-        val REPORT = "举报"
     }
 
     var onPopWindowClickListener: ((String, String) -> Unit)? = null
@@ -100,12 +97,12 @@ class DynamicAdapter(private val onItemClickEvent: (Dynamic, View) -> Unit) : Ba
         override fun refresh(data: Dynamic?) {
             data ?: return
             itemView.apply {
-                qa_iv_dynamic_avatar.setAvatarImageFromUrl(PIC_URL_BASE + data.avatar)
-                qa_tv_dynamic_topic.text = data.topic
+                qa_iv_dynamic_avatar.setAvatarImageFromUrl(data.avatar)
+                qa_tv_dynamic_topic.text = "#" + data.topic
                 qa_tv_dynamic_nickname.text = data.nickName + "xx"
                 qa_tv_dynamic_content.text = data.content
-                qa_tv_dynamic_praise_count.text = data.praiseCount.toString()
-                qa_tv_dynamic_comment_count.text = data.commentCount.toString()
+                qa_tv_dynamic_praise_count.text = data.praiseCount.toString()+999
+                qa_tv_dynamic_comment_count.text = data.commentCount.toString()+999
                 qa_tv_dynamic_publish_at.text = dynamicTimeDescription(System.currentTimeMillis(), data.publishTime)
                 //解决图片错乱的问题
                 if (data.pics.isNullOrEmpty())

@@ -4,6 +4,7 @@ import com.mredrock.cyxbs.common.bean.RedrockApiStatus
 import com.mredrock.cyxbs.common.bean.RedrockApiWrapper
 import com.mredrock.cyxbs.qa.bean.*
 import com.mredrock.cyxbs.qa.beannew.Knowledge
+import com.mredrock.cyxbs.qa.beannew.Question
 import io.reactivex.Observable
 import okhttp3.MultipartBody
 import retrofit2.http.*

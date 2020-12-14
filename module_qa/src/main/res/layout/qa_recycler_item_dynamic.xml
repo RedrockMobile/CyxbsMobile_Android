@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/common_white_background"
+    android:background="@drawable/qa_shape_comment_header_background"
     android:id="@+id/qa_ctl_dynamic"
     android:transitionName="dynamicItem"
     android:paddingTop="21dp">
@@ -63,21 +63,19 @@
         android:textStyle="bold"
         app:layout_constraintStart_toEndOf="@id/qa_iv_dynamic_avatar"
         app:layout_constraintTop_toTopOf="@+id/qa_iv_dynamic_avatar"
-        tools:text="刘童鞋" />
+        tools:text="@string/qa_recycler_item_dynamic_name" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/qa_tv_dynamic_publish_at"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
-        android:layout_marginTop="8dp"
         android:textColor="@color/common_qa_question_item_time_color"
-
         android:textSize="11sp"
         app:layout_constraintBottom_toBottomOf="@+id/qa_iv_dynamic_avatar"
         app:layout_constraintStart_toEndOf="@+id/qa_iv_dynamic_avatar"
         app:layout_constraintTop_toBottomOf="@+id/qa_tv_dynamic_nickname"
-        tools:text="2019.8.22" />
+        tools:text="@string/qa_recycler_item_dynamic_time" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/qa_tv_dynamic_content"
@@ -99,7 +97,7 @@
         android:id="@+id/qa_dynamic_nine_grid_view"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="11dp"
+        android:layout_marginTop="10dp"
         app:layout_constraintEnd_toStartOf="@+id/qa_gl_dynamic_end"
         app:layout_constraintStart_toStartOf="@+id/qa_gl_dynamic_start"
         app:layout_constraintTop_toBottomOf="@+id/qa_tv_dynamic_content" />
@@ -109,7 +107,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="5dp"
         android:background="@drawable/qa_shape_common_label_text_view_background"
         android:paddingStart="8dp"
         android:paddingTop="5dp"
@@ -118,19 +116,19 @@
         android:textSize="10sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/qa_dynamic_nine_grid_view"
-        tools:text="#校园周边" />
+        tools:text="@string/qa_recycler_item_dynamic_label" />
 
     <com.mredrock.cyxbs.qa.ui.widget.likeview.LikeView
         android:id="@+id/qa_iv_dynamic_praise_count_image"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="12dp"
         android:layout_marginBottom="5dp"
+        android:layout_marginEnd="15dp"
         app:checkedColor="#323FD9"
         app:checkedLikeIconRes="@drawable/qa_ic_answer_list_praised"
         app:cirRadius="14dp"
         app:cycleTime="1000"
-        app:defaultColor="#ffcccccc"
+        app:defaultColor="@color/qa_likeview_color"
         app:defaultLikeIconRes="@drawable/qa_ic_answer_list_praise"
         app:layout_constraintBottom_toBottomOf="@id/qa_iv_dynamic_comment_count"
         app:layout_constraintEnd_toStartOf="@+id/qa_iv_dynamic_comment_count"
@@ -142,10 +140,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="50dp"
-        android:layout_marginEnd="12dp"
+        android:layout_marginEnd="8dp"
         android:layout_toStartOf="@+id/qa_tv_dynamic_comment_count"
-        android:paddingTop="10dp"
-        android:paddingBottom="10dp"
         android:textColor="@color/common_qa_question_bottom_count_color"
         android:textSize="11sp"
         app:layout_constraintBottom_toBottomOf="@+id/qa_iv_dynamic_comment_count"
@@ -169,14 +165,13 @@
         android:id="@+id/qa_tv_dynamic_comment_count"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
+        android:layout_marginEnd="14dp"
         android:text="201"
         android:textColor="@color/common_qa_question_bottom_count_color"
         android:textSize="11sp"
         app:layout_constraintBottom_toBottomOf="@+id/qa_iv_dynamic_share"
         app:layout_constraintEnd_toStartOf="@+id/qa_iv_dynamic_share"
         app:layout_constraintTop_toTopOf="@+id/qa_iv_dynamic_share"
-
         />
 
     <androidx.appcompat.widget.AppCompatImageView

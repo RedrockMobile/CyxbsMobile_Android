@@ -9,7 +9,6 @@ import android.text.Editable
 import android.text.TextUtils
 import android.text.TextWatcher
 import android.util.Base64
-import android.util.Log
 import android.view.KeyEvent
 import android.view.View
 import android.widget.ImageView
@@ -21,21 +20,21 @@ import com.google.android.flexbox.FlexboxLayoutManager
 import com.google.gson.Gson
 import com.mredrock.cyxbs.common.BaseApp.Companion.context
 import com.mredrock.cyxbs.common.config.QA_QUIZ
-import com.mredrock.cyxbs.common.event.QuestionDraftEvent
+import com.mredrock.cyxbs.common.event.DynamicDraftEvent
 import com.mredrock.cyxbs.common.mark.EventBusLifecycleSubscriber
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
-import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.*
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.R.drawable.*
-import com.mredrock.cyxbs.qa.bean.Question
-import com.mredrock.cyxbs.qa.pages.dynamic.ui.adapter.CircleLabelAdapter
+import com.mredrock.cyxbs.qa.beannew.Question
+import com.mredrock.cyxbs.qa.pages.quiz.ui.adpter.CircleLabelAdapter
 import com.mredrock.cyxbs.qa.pages.quiz.QuizViewModel
 import com.mredrock.cyxbs.qa.ui.activity.ViewImageCropActivity
 import com.mredrock.cyxbs.qa.ui.widget.DraftDialog
 import com.mredrock.cyxbs.qa.ui.widget.RectangleView
 import com.mredrock.cyxbs.qa.utils.CHOOSE_PHOTO_REQUEST
 import com.mredrock.cyxbs.qa.utils.selectImageFromAlbum
+import kotlinx.android.synthetic.main.qa_activity_question_search.*
 import kotlinx.android.synthetic.main.qa_activity_quiz.*
 import kotlinx.android.synthetic.main.qa_common_toolbar.*
 import org.greenrobot.eventbus.EventBus
@@ -86,12 +85,12 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>(), EventBusLifecycleSu
         }
         viewModel.backAndRefreshPreActivityEvent.observeNotNull {
             if (it) {
-//                if (draftId != NOT_DRAFT_ID) {
-//                    viewModel.deleteDraft(draftId)
-//                }
-//                val data = Intent()
-//                data.putExtra("type", dynamicType)
-//                setResult(Activity.RESULT_OK, data)
+                if (draftId != NOT_DRAFT_ID) {
+                    viewModel.deleteDraft(draftId)
+                }
+                val data = Intent()
+                data.putExtra("type", dynamicType)
+                setResult(Activity.RESULT_OK, data)
                 finish()
             }
         }
@@ -265,7 +264,7 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>(), EventBusLifecycleSu
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
-    fun loadDraft(event: QuestionDraftEvent) {
+    fun loadDraft(event: DynamicDraftEvent) {
         if (intent.getStringExtra("type") != null) {
             EventBus.getDefault().removeStickyEvent(event)
             return
@@ -284,15 +283,11 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>(), EventBusLifecycleSu
             saveDraft()
             dismiss()
         }, noSaveListener = View.OnClickListener {
-            noSaveDraft()
             dismiss()
+            finish()
         }, cancelListener = View.OnClickListener {
             dismiss()
         })
-    }
-
-    private fun noSaveDraft() {
-        finish()
     }
 
     override fun onPause() {
