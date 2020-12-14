@@ -33,25 +33,35 @@ class RectangleView @JvmOverloads constructor(
         }
     }
 
-    fun setShowMask() {
-        isShowMask = true
-        invalidate()
-    }
-
     /**
      * 绘制圆角矩形图片
      */
+    @SuppressLint("DrawAllocation")
     override fun onDraw(canvas: Canvas) {
         val drawable = drawable
         if (null != drawable) {
+            if (width > 20 && height > 20) {
+                val path = Path()
+                path.moveTo(20f, 0f)
+                path.lineTo((width - 20).toFloat(), 0f)
+                path.quadTo(width.toFloat(), 0f, width.toFloat(), 20f)
+                path.lineTo(width.toFloat(), (height - 20).toFloat())
+                path.quadTo(width.toFloat(), height.toFloat(), (width - 20).toFloat(), height.toFloat())
+                path.lineTo(20f, height.toFloat())
+                path.quadTo(0f, height.toFloat(), 0f, (height - 20).toFloat())
+                path.lineTo(0f, 20f)
+                path.quadTo(0f, 0f, 20f, 0f)
+                canvas.clipPath(path)
+            }
             val bitmap = drawable.toBitmap()
-            val b = getRoundBitmap(bitmap, 20)
             val rectSrc =
-                    Rect(0, 0, b.width, b.height)
+                    Rect(0, 0, bitmap.width, bitmap.height)
             val rectDest =
                     Rect(0, 0, width, height)
             paint.reset()
-            canvas.drawBitmap(b, rectSrc, rectDest, paint)
+            canvas.drawBitmap(bitmap, rectSrc, rectDest, paint)
+            if (isShowMask)
+                canvas.drawColor(maskColor)
             if (imageCount > 0) {
                 var showText = "+$imageCount"
                 val textWidth = textPaint.measureText(showText)
@@ -64,31 +74,9 @@ class RectangleView @JvmOverloads constructor(
         }
     }
 
-    /**
-     * 获取圆角矩形图片
-     * @param bitmap
-     * @param roundPx 设置弧度.
-     */
-    private fun getRoundBitmap(bitmap: Bitmap, roundPx: Int): Bitmap {
-        val output = Bitmap.createBitmap(
-                bitmap.width,
-                bitmap.height, Bitmap.Config.ARGB_8888
-        )
-        val canvas = Canvas(output)
-        val color = -0xbdbdbe
-        val rect =
-                Rect(0, 0, bitmap.width, bitmap.height)
-        val rectF = RectF(rect)
-        paint.isAntiAlias = true
-        canvas.drawARGB(0, 0, 0, 0)
-        paint.color = color
-        canvas.drawRoundRect(rectF, roundPx.toFloat(), roundPx.toFloat(), paint)
-        paint.xfermode = PorterDuffXfermode(PorterDuff.Mode.SRC_IN)
-        canvas.drawBitmap(bitmap, rect, rect, paint)
-        if (isShowMask) {
-            canvas.drawColor(maskColor)
-        }
-        return output
+    fun setShowMask() {
+        isShowMask = true
+        invalidate()
     }
 
     @SuppressLint("ResourceType")

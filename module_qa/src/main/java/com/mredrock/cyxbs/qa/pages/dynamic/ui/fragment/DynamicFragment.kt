@@ -151,6 +151,13 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), EventBusL
         }
     }
 
+
+    override fun onStart() {
+        super.onStart()
+        viewModel.invalidateQuestionList()
+        viewModel.getMyCirCleData()
+    }
+
     open fun observeLoading(dynamicListRvAdapter: DynamicAdapter,
                             footerRvAdapter: FooterRvAdapter,
                             emptyRvAdapter: EmptyRvAdapter): DynamicListViewModel = viewModel.apply {
@@ -262,5 +269,6 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), EventBusL
         super.onPause()
         vf_hot_search.stopFlipping()
     }
+
 
 }

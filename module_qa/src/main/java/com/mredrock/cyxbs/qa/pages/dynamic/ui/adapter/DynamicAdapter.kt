@@ -101,8 +101,8 @@ class DynamicAdapter(private val onItemClickEvent: (Dynamic, View) -> Unit) : Ba
                 qa_tv_dynamic_topic.text = "#" + data.topic
                 qa_tv_dynamic_nickname.text = data.nickName + "xx"
                 qa_tv_dynamic_content.text = data.content
-                qa_tv_dynamic_praise_count.text = data.praiseCount.toString()+999
-                qa_tv_dynamic_comment_count.text = data.commentCount.toString()+999
+                qa_tv_dynamic_praise_count.text = data.praiseCount.toString()
+                qa_tv_dynamic_comment_count.text = data.commentCount.toString()
                 qa_tv_dynamic_publish_at.text = dynamicTimeDescription(System.currentTimeMillis(), data.publishTime)
                 //解决图片错乱的问题
                 if (data.pics.isNullOrEmpty())
