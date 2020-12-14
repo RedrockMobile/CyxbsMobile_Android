@@ -3,7 +3,7 @@ package com.mredrock.cyxbs.qa.pages.dynamic.ui.adapter
 import android.view.ViewGroup
 import com.mredrock.cyxbs.common.utils.extensions.setAvatarImageFromUrl
 import com.mredrock.cyxbs.qa.R
-import com.mredrock.cyxbs.qa.beannew.CommentOuter
+import com.mredrock.cyxbs.qa.beannew.Comment
 import com.mredrock.cyxbs.qa.component.recycler.BaseRvAdapter
 import com.mredrock.cyxbs.qa.component.recycler.BaseViewHolder
 import com.mredrock.cyxbs.qa.ui.widget.NineGridView
@@ -16,20 +16,20 @@ import kotlinx.android.synthetic.main.qa_recycler_item_dynamic_reply.view.*
  *@description
  */
 
-class CommentListAdapter(replyList: List<CommentOuter>, onItemClickEvent: () -> Unit) : BaseRvAdapter<CommentOuter>() {
+class CommentListAdapter(replyList: List<Comment>, onItemClickEvent: () -> Unit) : BaseRvAdapter<Comment>() {
 
     init {
         refreshData(replyList)
     }
 
-    override public fun refreshData(dataCollection: Collection<CommentOuter>) {
+    override public fun refreshData(dataCollection: Collection<Comment>) {
         super.refreshData(dataCollection)
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder<CommentOuter> = CommentViewHolder(parent)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder<Comment> = CommentViewHolder(parent)
 
-    class CommentViewHolder(parent: ViewGroup) : BaseViewHolder<CommentOuter>(parent, R.layout.qa_recycler_item_dynamic_reply) {
-        override fun refresh(data: CommentOuter?) {
+    class CommentViewHolder(parent: ViewGroup) : BaseViewHolder<Comment>(parent, R.layout.qa_recycler_item_dynamic_reply) {
+        override fun refresh(data: Comment?) {
             data ?: return
             itemView.apply {
                 qa_tv_reply_nickname.text = data.nickName
@@ -63,7 +63,7 @@ class CommentListAdapter(replyList: List<CommentOuter>, onItemClickEvent: () -> 
         }
     }
 
-    override fun onBindViewHolder(holder: BaseViewHolder<CommentOuter>, position: Int) {
+    override fun onBindViewHolder(holder: BaseViewHolder<Comment>, position: Int) {
         super.onBindViewHolder(holder, position)
 
     }

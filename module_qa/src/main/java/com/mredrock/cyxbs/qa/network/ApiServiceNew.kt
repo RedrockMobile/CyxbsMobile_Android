@@ -100,5 +100,5 @@ interface ApiServiceNew {
     @GET("/wxapi/magipoke-loop/comment/getallcomment")
     fun getComment(@Query("post_id")
                    postId: String
-    ): Observable<RedrockApiWrapper<List<CommentOuter>>>
+    ): Observable<RedrockApiWrapper<List<Comment>>>
 }
