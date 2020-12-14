@@ -20,8 +20,9 @@ import kotlinx.android.synthetic.main.qa_recycler_item_circle_square.view.*
  *@author SpreadWater
  *@description
  */
-class CircleSquareAdapter() : BaseRvAdapter<CircleSquare>() {
+class CircleSquareAdapter : BaseRvAdapter<CircleSquare>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder<CircleSquare> = CircleSquareViewHolder(parent)
+
     class CircleSquareViewHolder(parent: ViewGroup) : BaseViewHolder<CircleSquare>(parent, R.layout.qa_recycler_item_circle_square) {
         override fun refresh(data: CircleSquare?) {
             itemView.tv_circle_square_name.text = data?.circle_name

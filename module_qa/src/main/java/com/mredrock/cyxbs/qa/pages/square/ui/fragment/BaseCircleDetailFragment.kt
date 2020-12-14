@@ -9,8 +9,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.mredrock.cyxbs.common.ui.BaseViewModelFragment
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.qa.R
+import com.mredrock.cyxbs.qa.component.recycler.RvAdapterWrapper
+import com.mredrock.cyxbs.qa.network.NetworkState
 import com.mredrock.cyxbs.qa.pages.dynamic.viewmodel.DynamicListViewModel
 import com.mredrock.cyxbs.qa.pages.square.ui.adapter.CircleDetailAdapter
+import com.mredrock.cyxbs.qa.ui.adapter.EmptyRvAdapter
+import com.mredrock.cyxbs.qa.ui.adapter.FooterRvAdapter
+import kotlinx.android.synthetic.main.qa_fragment_dynamic.*
 import kotlinx.android.synthetic.main.qa_fragment_last_hot.*
 
 /**
@@ -19,24 +24,61 @@ import kotlinx.android.synthetic.main.qa_fragment_last_hot.*
  *@author SpreadWater
  *@description  用于最新和热门的fragment的基类
  */
-abstract class BaseCircleDetailFragment<T: DynamicListViewModel>:BaseViewModelFragment<T>() {
+abstract class BaseCircleDetailFragment<T : DynamicListViewModel> : BaseViewModelFragment<T>() {
     //TODO 通过viewModel去获取最新和热门的数据。
     override fun getViewModelFactory() = DynamicListViewModel.Factory("main")
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        return  inflater.inflate(R.layout.qa_fragment_last_hot, container, false)
+        return inflater.inflate(R.layout.qa_fragment_last_hot, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val adapter=CircleDetailAdapter{
-            
-        }
-        qa_rv_circle_detail_last_hot.adapter=adapter
-        qa_rv_circle_detail_last_hot.layoutManager=LinearLayoutManager(context)
-        viewModel.dynamicList.observe{
-            adapter.submitList(it)
+        initDynamic()
+    }
 
+    private fun initDynamic() {
+        val dynamicListRvAdapter = CircleDetailAdapter {
         }
+        val footerRvAdapter = FooterRvAdapter { viewModel.retry() }
+        val emptyRvAdapter = EmptyRvAdapter(getString(R.string.qa_question_list_empty_hint))
+        val adapterWrapper = RvAdapterWrapper(
+                normalAdapter = dynamicListRvAdapter,
+                emptyAdapter = emptyRvAdapter,
+                footerAdapter = footerRvAdapter
+        )
+        qa_rv_circle_detail_last_hot.adapter = adapterWrapper
+        qa_rv_circle_detail_last_hot.layoutManager = LinearLayoutManager(context)
+
+        qa_hot_last_swipe_refresh_layout.setOnRefreshListener {
+            viewModel.invalidateQuestionList()
+        }
+        viewModel.dynamicList.observe {
+            dynamicListRvAdapter.submitList(it)
+        }
+        viewModel.networkState.observe {
+            it?.run {
+                footerRvAdapter.refreshData(listOf(this))
+            }
+        }
+        viewModel.initialLoad.observe {
+            when (it) {
+                NetworkState.LOADING -> {
+                    qa_hot_last_swipe_refresh_layout.isRefreshing = true
+                    (qa_rv_circle_detail_last_hot.adapter as? RvAdapterWrapper)?.apply {
+
+                    }
+                    emptyRvAdapter.showHolder(3)
+                }
+                NetworkState.CANNOT_LOAD_WITHOUT_LOGIN -> {
+                    qa_hot_last_swipe_refresh_layout.isRefreshing = false
+                }
+                else -> {
+                    qa_hot_last_swipe_refresh_layout.isRefreshing = false
+                    emptyRvAdapter.hideHolder()
+                }
+            }
+        }
+
     }
 }

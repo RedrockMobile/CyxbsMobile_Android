@@ -52,6 +52,7 @@ class CircleDetailActivity : BaseViewModelActivity<CircleDetailViewModel>() {
         }
     }
 
+    @SuppressLint("SetTextI18n")
     private fun initView() {
         tv_circle_square_name.text = toolbarTitle
         tv_circle_square_descriprion.text = "重邮也有猫猫图鉴啦，欢迎大家一起来分享你看见的猫猫~"

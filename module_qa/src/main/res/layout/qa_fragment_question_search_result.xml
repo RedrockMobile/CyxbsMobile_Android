@@ -1,10 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/swipe_refresh_layout_searching"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/qa_tv_knowledge"
+        android:visibility="gone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:layout_marginLeft="16sp"
+        android:text="邮问知识库"
+        android:textColor="@color/common_level_two_font_color"
+        android:textSize="18sp"/>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/qa_rv_knowledge"
+        android:visibility="gone"
+        android:layout_marginTop="17dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layoutDirection="ltr"
+        android:paddingStart="16dp"
+        android:paddingTop="5dp"
+        android:paddingEnd="10dp"
+        android:paddingBottom="5dp"/>
+    <View
+        android:id="@+id/qa_line"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:visibility="gone"
+        android:background="@color/common_window_background"
+        android:layout_marginTop="25dp"/>
 
-    <RelativeLayout
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/qa_tv_contract_content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="25dp"
+        android:layout_marginBottom="20dp"
+        android:visibility="gone"
+        android:text="相关动态"
+        android:textColor="@color/common_level_two_font_color"
+        android:textSize="18sp" />
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_refresh_layout_searching"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -13,21 +54,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp" />
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
-
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/btn_no_result_ask_question"
-            android:layout_width="116dp"
-            android:layout_height="48dp"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:layout_gravity="end|bottom"
-            android:layout_marginBottom="72dp"
-            android:background="@drawable/qa_shape_send_dynamic_btn_blue_background"
-            android:gravity="center"
-            android:text="@string/qa_fragment_head_give_question"
-            android:textColor="@color/common_white_font_color"
-            android:textSize="18sp" />
-    </RelativeLayout>
-
-</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+</LinearLayout>

@@ -35,9 +35,8 @@ interface ApiServiceNew {
                          topic_name: String, @Field("search_content")
                          searchContent: String): Observable<RedrockApiWrapper<List<String>>>
 
-    @POST("/wxapi/magipoke-loop/search/getSearchResult")
-    @FormUrlEncoded
-    fun getSearchResult(@Field("search_content")
+    @GET("/wxapi/magipoke-loop/search/getSearchResult")
+    fun getSearchResult(@Query("key")
                         searchContent: String): Observable<RedrockApiWrapper<SearchResult>>
 
     /**

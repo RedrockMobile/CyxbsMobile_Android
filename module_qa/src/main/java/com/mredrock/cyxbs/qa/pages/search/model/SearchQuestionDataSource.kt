@@ -34,7 +34,8 @@ class SearchQuestionDataSource(private val kind: String) : PageKeyedDataSource<I
                 .getSearchedQuestionList(kind, 1, params.requestedLoadSize)
                 .mapOrThrowApiException()
                 .setSchedulers()
-                .doOnSubscribe { initialLoad.postValue(NetworkState.LOADING) }
+                .doOnSubscribe {
+                    initialLoad.postValue(NetworkState.LOADING) }
                 .doOnError {
                     initialLoad.value = NetworkState.FAILED
                     failedRequest = { loadInitial(params, callback) }
