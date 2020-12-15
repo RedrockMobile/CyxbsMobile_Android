@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/common_white_background"
+    android:background="@drawable/qa_ripple_comment_background_ripple"
     android:paddingTop="9dp">
 
     <androidx.constraintlayout.widget.Guideline

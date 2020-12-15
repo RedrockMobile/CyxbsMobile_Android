@@ -22,9 +22,10 @@ class CommentListAdapter(replyList: List<Comment>, onItemClickEvent: () -> Unit)
         refreshData(replyList)
     }
 
-    override public fun refreshData(dataCollection: Collection<Comment>) {
-        super.refreshData(dataCollection)
+    override fun onItemClickListener(holder: BaseViewHolder<Comment>, position: Int, data: Comment) {
+        super.onItemClickListener(holder, position, data)
     }
+
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder<Comment> = CommentViewHolder(parent)
 

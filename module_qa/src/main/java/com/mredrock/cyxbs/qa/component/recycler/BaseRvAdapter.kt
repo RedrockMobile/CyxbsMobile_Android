@@ -1,6 +1,6 @@
 package com.mredrock.cyxbs.qa.component.recycler
 
-import com.mredrock.cyxbs.common.utils.extensions.*
+import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
 
 
 /**
@@ -17,9 +17,15 @@ abstract class BaseRvAdapter<T> : androidx.recyclerview.widget.RecyclerView.Adap
         }
         holder.refresh(dataList[position])
         holder.itemView.setOnSingleClickListener { onItemClickListener(holder, position, dataList[position]) }
+        holder.itemView.setOnLongClickListener {
+            onItemLongClickListener(holder, position, dataList[position])
+            true
+        }
     }
 
     protected open fun onItemClickListener(holder: BaseViewHolder<T>, position: Int, data: T) = Unit
+
+    protected open fun onItemLongClickListener(holder: BaseViewHolder<T>, position: Int, data: T) = Unit
 
     open fun refreshData(dataCollection: Collection<T>) {
         notifyItemRangeRemoved(0, dataList.size)
