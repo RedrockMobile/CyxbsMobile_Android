@@ -1,6 +1,8 @@
 package com.mredrock.cyxbs.qa.pages.dynamic.ui.adapter
 
 import android.view.ViewGroup
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.mredrock.cyxbs.common.utils.extensions.setAvatarImageFromUrl
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.beannew.Comment
@@ -22,9 +24,9 @@ class CommentListAdapter(replyList: List<Comment>, onItemClickEvent: () -> Unit)
         refreshData(replyList)
     }
 
-    override fun onItemClickListener(holder: BaseViewHolder<Comment>, position: Int, data: Comment) {
-        super.onItemClickListener(holder, position, data)
-    }
+//    val managerMap: HashMap<CommentViewHolder, RecyclerView.LayoutManager> by lazy {
+//        HashMap<CommentViewHolder, RecyclerView.LayoutManager>()
+//    }
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder<Comment> = CommentViewHolder(parent)
@@ -60,14 +62,26 @@ class CommentListAdapter(replyList: List<Comment>, onItemClickEvent: () -> Unit)
                     }
 
                 }
+
+                if (qa_rv_reply.layoutManager == null) {
+                    qa_rv_reply.layoutManager = LinearLayoutManager(context)
+                }
+                if (qa_rv_reply.adapter == null) {
+                    qa_rv_reply.adapter = ReplyListAdapter()
+                }
+                if (data.replyList.isNullOrEmpty()) {
+                    (qa_rv_reply.adapter as ReplyListAdapter).refreshData(listOf())
+                } else {
+                    (qa_rv_reply.adapter as ReplyListAdapter).refreshData(data.replyList.take(3))
+                }
             }
         }
     }
 
-    override fun onBindViewHolder(holder: BaseViewHolder<Comment>, position: Int) {
-        super.onBindViewHolder(holder, position)
-
-    }
+//    override fun onViewDetachedFromWindow(holder: BaseViewHolder<Comment>) {
+//
+//        super.onViewDetachedFromWindow(holder)
+//    }
 
 
 }

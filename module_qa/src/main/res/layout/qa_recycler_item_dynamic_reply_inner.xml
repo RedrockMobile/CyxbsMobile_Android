@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/qa_ripple_comment_background_ripple"
+    android:background="@drawable/qa_ripple_reply_background_ripple"
     android:paddingTop="9dp">
 
     <androidx.constraintlayout.widget.Guideline
@@ -19,12 +19,13 @@
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.96" />
+        app:layout_constraintGuide_percent="1" />
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/qa_iv_reply_inner_avatar"
         android:layout_width="20dp"
         android:layout_height="20dp"
+        android:layout_marginStart="10dp"
         android:scaleType="centerCrop"
         android:src="@drawable/common_default_avatar"
         app:layout_constraintStart_toEndOf="@id/qa_gl_reply_inner_start"
@@ -49,6 +50,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="11dp"
+        android:layout_marginEnd="10dp"
         android:layout_marginBottom="9dp"
         android:ellipsize="end"
         android:gravity="start"
@@ -81,6 +83,7 @@
         android:id="@+id/qa_tv_reply_inner_praise_count"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="10dp"
         android:layout_toStartOf="@+id/tv_dynamic_count"
         android:paddingTop="10dp"
         android:paddingBottom="10dp"

@@ -11,7 +11,7 @@ data class Comment(@SerializedName("comment_id")
                    @SerializedName("from_nickname")
                    var fromNickname: String = "",
 
-                   @SerializedName("id_praised")
+                   @SerializedName("is_praised")
                    var isPraised: Boolean = false,
 
                    @SerializedName("avatar")

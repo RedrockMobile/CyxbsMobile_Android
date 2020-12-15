@@ -110,13 +110,13 @@
         app:layout_constraintTop_toTopOf="@+id/qa_iv_reply_avatar"
         tools:text="999" />
 
-    <androidx.recyclerview.widget.RecyclerView
+    <com.mredrock.cyxbs.qa.ui.widget.ReplyInnerRecyclerView
         android:id="@+id/qa_rv_reply"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="11dp"
         app:layout_constraintEnd_toStartOf="@+id/qa_gl_reply_end"
-        app:layout_constraintStart_toStartOf="@+id/qa_tv_reply_content"
+        app:layout_constraintStart_toEndOf="@+id/qa_iv_reply_avatar"
         app:layout_constraintTop_toBottomOf="@+id/qa_reply_nine_grid_view"
         tools:listitem="@layout/qa_recycler_item_dynamic_reply_inner" />
 
