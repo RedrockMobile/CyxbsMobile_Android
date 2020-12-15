@@ -70,6 +70,7 @@
     <string name="qa_report_dynamic">举报成功</string>
     <string name="qa_report_dynamic_failure">举报失败</string>
     <string name="qa_follow_circle">关注圈子成功</string>
+    <string name="qa_unfollow_circle">取消关注圈子成功</string>
     <string name="qa_follow_circle_failure">关注圈子失败</string>
     <string name="qa_draft_dialog_no_save">不保存</string>
     <string name="qa_draft_dialog_cancel">取消</string>

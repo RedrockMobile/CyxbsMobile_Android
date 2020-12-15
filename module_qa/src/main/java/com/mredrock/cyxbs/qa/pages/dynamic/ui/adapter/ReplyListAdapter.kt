@@ -39,8 +39,6 @@ class ReplyListAdapter() : BaseRvAdapter<Comment>() {
                 qa_tv_reply_inner_praise_count.text = data.praiseCount.toString()
                 qa_iv_reply_inner_praise_count_image.isChecked = data.isPraised
                 qa_iv_reply_inner_avatar.setAvatarImageFromUrl(data.avatar)
-
-
             }
         }
     }

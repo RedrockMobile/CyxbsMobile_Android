@@ -101,4 +101,5 @@ interface ApiServiceNew {
     fun getComment(@Query("post_id")
                    postId: String
     ): Observable<RedrockApiWrapper<List<Comment>>>
+
 }

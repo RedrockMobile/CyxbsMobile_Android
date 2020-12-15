@@ -1,19 +1,33 @@
 package com.mredrock.cyxbs.qa.pages.square.viewmodel
 
+import androidx.lifecycle.MutableLiveData
 import com.mredrock.cyxbs.common.network.ApiGenerator
+import com.mredrock.cyxbs.common.utils.extensions.mapOrThrowApiException
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.qa.R
+import com.mredrock.cyxbs.qa.beannew.Topic
 import com.mredrock.cyxbs.qa.network.ApiServiceNew
 
 /**
- *@Date 2020-11-23
- *@Time 21:10
+ *@Date 2020-11-19
+ *@Time 19:44
  *@author SpreadWater
  *@description
  */
-class CircleDetailViewModel : BaseViewModel() {
+class CircleSquareViewModel : BaseViewModel() {
+
+    var allCircle = MutableLiveData<List<Topic>>()
+    fun getAllCirCleData(topic_name: String, instruction: String) {
+        ApiGenerator.getApiService(ApiServiceNew::class.java)
+                .getTopicGround(topic_name, instruction)
+                .mapOrThrowApiException()
+                .setSchedulers()
+                .safeSubscribeBy {
+                    allCircle.value = it
+                }
+    }
 
     fun followTopic(topicName: String, followState: Boolean) {
         ApiGenerator.getApiService(ApiServiceNew::class.java)
@@ -33,5 +47,6 @@ class CircleDetailViewModel : BaseViewModel() {
                         toastEvent.value = R.string.qa_follow_circle
                     }
                 }
-    }
+            }
+
 }

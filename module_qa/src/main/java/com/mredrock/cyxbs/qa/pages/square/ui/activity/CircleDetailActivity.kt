@@ -1,31 +1,41 @@
 package com.mredrock.cyxbs.qa.pages.square.ui.activity
 
 import android.annotation.SuppressLint
-import android.graphics.drawable.Drawable
-import androidx.appcompat.app.AppCompatActivity
+import android.content.Intent
 import android.os.Bundle
 import android.transition.Slide
 import android.view.Gravity
 import android.view.View
-import com.google.android.material.appbar.AppBarLayout
+import androidx.core.app.ActivityOptionsCompat
+import androidx.core.content.ContextCompat.startActivity
 import com.google.android.material.tabs.TabLayoutMediator
+import com.mredrock.cyxbs.common.BaseApp.Companion.context
+import com.mredrock.cyxbs.common.ui.BaseActivity
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
-import com.mredrock.cyxbs.common.utils.extensions.gone
 import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.qa.R
+import com.mredrock.cyxbs.qa.beannew.Topic
 import com.mredrock.cyxbs.qa.pages.square.ui.adapter.NewHotViewPagerAdapter
 import com.mredrock.cyxbs.qa.pages.square.ui.fragment.HotFragment
 import com.mredrock.cyxbs.qa.pages.square.ui.fragment.LastNewFragment
 import com.mredrock.cyxbs.qa.pages.square.viewmodel.CircleDetailViewModel
 import kotlinx.android.synthetic.main.qa_activity_circle_detail.*
-import kotlinx.android.synthetic.main.qa_common_toolbar.*
 import kotlinx.android.synthetic.main.qa_recycler_item_circle_square.*
-import kotlinx.android.synthetic.main.qa_recycler_item_circle_square.view.*
 
 class CircleDetailActivity : BaseViewModelActivity<CircleDetailViewModel>() {
+    companion object {
+        fun activityStart(activity: BaseActivity, topicItemView: View, data: Topic) {
+            activity.let {
+                val opt = ActivityOptionsCompat.makeSceneTransitionAnimation(it, topicItemView, "topicItem")
+                val intent = Intent(context, CircleDetailActivity::class.java)
+                intent.putExtra("topicItem", data)
+                it.window.exitTransition = Slide(Gravity.START).apply { duration = 500 }
+                startActivity(activity,intent,opt.toBundle())
+            }
+        }
+    }
     override val isFragmentActivity = true
-    private var toolbarTitle = "校园周边"
-
+    lateinit var topic: Topic
     private val lastNewFragment by lazy(LazyThreadSafetyMode.NONE) {
         LastNewFragment()
     }
@@ -36,8 +46,8 @@ class CircleDetailActivity : BaseViewModelActivity<CircleDetailViewModel>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.qa_activity_circle_detail)
-        qa_vp_circle_detail.adapter = NewHotViewPagerAdapter(this, listOf(lastNewFragment, hotFragment))
         window.enterTransition = Slide(Gravity.END).apply { duration = 500 }
+        qa_vp_circle_detail.adapter = NewHotViewPagerAdapter(this, listOf(lastNewFragment, hotFragment))
         initTab()
         initView()
         initClick()
@@ -50,16 +60,33 @@ class CircleDetailActivity : BaseViewModelActivity<CircleDetailViewModel>() {
         qa_circle_detail_iv_back.setOnSingleClickListener {
             finish()
         }
+        btn_circle_square_concern.setOnClickListener {
+            if (topic._isFollow.equals(1)){
+                //关注的状态下点击，取消关注
+                viewModel.followTopic(topic.topicName,topic._isFollow.equals(1))
+                btn_circle_square_concern.background=context.getDrawable(R.drawable.qa_shape_send_dynamic_btn_blue_background)
+                topic._isFollow=0
+            }else{
+                viewModel.followTopic(topic.topicName,topic._isFollow.equals(1))
+                btn_circle_square_concern.background=context.getDrawable(R.drawable.qa_shape_send_dynamic_btn_grey_background)
+                topic._isFollow=1
+            }
+        }
     }
 
-    @SuppressLint("SetTextI18n")
+    @SuppressLint("SetTextI18n", "UseCompatLoadingForDrawables")
     private fun initView() {
-        tv_circle_square_name.text = toolbarTitle
-        tv_circle_square_descriprion.text = "重邮也有猫猫图鉴啦，欢迎大家一起来分享你看见的猫猫~"
-        tv_circle_square_person_number.text = 477.toString() + "个成员"
+        topic=intent.getParcelableExtra("topicItem")
+        tv_circle_square_name.text = topic.topicName
+        tv_circle_square_descriprion.text = topic.introduction
+        tv_circle_square_person_number.text = topic.newMesCount.toString() + "个成员"
         btn_circle_square_concern.text = "+关注"
+        if (topic._isFollow.equals(1)){
+            btn_circle_square_concern.background=context.getDrawable(R.drawable.qa_shape_send_dynamic_btn_grey_background)
+        }else{
+            btn_circle_square_concern.background=context.getDrawable(R.drawable.qa_shape_send_dynamic_btn_blue_background)
+        }
     }
-
 
     private fun initTab() {
         TabLayoutMediator(qa_circle_detail_tab, qa_vp_circle_detail) { tab, position ->
@@ -69,5 +96,4 @@ class CircleDetailActivity : BaseViewModelActivity<CircleDetailViewModel>() {
             }
         }.attach()
     }
-
 }

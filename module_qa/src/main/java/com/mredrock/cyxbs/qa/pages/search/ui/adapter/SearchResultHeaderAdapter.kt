@@ -2,6 +2,7 @@ package com.mredrock.cyxbs.qa.pages.search.ui.adapter
 
 import android.annotation.SuppressLint
 import android.view.ViewGroup
+import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.setAvatarImageFromUrl
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.beannew.Dynamic
@@ -27,7 +28,6 @@ class SearchResultHeaderAdapter(private val onItemClickEvent: (Dynamic) -> Unit)
 
     class ViewHolder(parent: ViewGroup) : BaseViewHolder<Dynamic>(parent, R.layout.qa_recycler_item_dynamic) {
 
-        @SuppressLint("StringFormatMatches")
         override fun refresh(data: Dynamic?) {
             if (data == null) return
             itemView.apply {
@@ -38,6 +38,7 @@ class SearchResultHeaderAdapter(private val onItemClickEvent: (Dynamic) -> Unit)
                 qa_tv_dynamic_praise_count.text = data.praiseCount.toString()
                 qa_tv_dynamic_comment_count.text = data.commentCount.toString()
                 qa_tv_dynamic_publish_at.text = dynamicTimeDescription(System.currentTimeMillis(), data.publishTime * 1000)
+                LogUtils.d("zt",data.pics.toString())
                 //解决图片错乱的问题
                 if (data.pics.isNullOrEmpty())
                     qa_dynamic_nine_grid_view.setRectangleImages(emptyList(), NineGridView.MODE_IMAGE_THREE_SIZE)
@@ -50,12 +51,14 @@ class SearchResultHeaderAdapter(private val onItemClickEvent: (Dynamic) -> Unit)
                             val tagStore = qa_dynamic_nine_grid_view.tag
                             qa_dynamic_nine_grid_view.setImages(this, NineGridView.MODE_IMAGE_THREE_SIZE, NineGridView.ImageMode.MODE_IMAGE_RECTANGLE)
                             qa_dynamic_nine_grid_view.tag = tagStore
+                            LogUtils.d("zt","111111测试"+this.get(0))
                         } else {
                             val tagStore = this
                             qa_dynamic_nine_grid_view.tag = null
                             qa_dynamic_nine_grid_view.setRectangleImages(emptyList(), NineGridView.MODE_IMAGE_THREE_SIZE)
                             qa_dynamic_nine_grid_view.setImages(this, NineGridView.MODE_IMAGE_THREE_SIZE, NineGridView.ImageMode.MODE_IMAGE_RECTANGLE)
                             qa_dynamic_nine_grid_view.tag = tagStore
+                            LogUtils.d("zt","111111测试"+this.get(0))
                         }
                     }
 

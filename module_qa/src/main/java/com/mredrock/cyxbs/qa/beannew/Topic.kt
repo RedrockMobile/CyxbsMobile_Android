@@ -21,15 +21,13 @@ data class Topic(@SerializedName("topic_id")
                  val newMesCount: Int = 0,
 
                  @SerializedName("is_follow")
-                 private val _isFollow: Int = 0,
+                 var _isFollow: Int = 0,
 
                  @SerializedName("introduction")
                  var introduction: String = ""
 
 ) : Parcelable {
 
-
-    val isFollow get() = _isFollow == 1
 
     constructor(parcel: Parcel) : this(
             parcel.readString(),

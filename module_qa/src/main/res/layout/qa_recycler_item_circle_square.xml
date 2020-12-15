@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/qa_ctl_topic"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginTop="5dp"
+    android:focusable="true"
+    android:clickable="true"
     android:background="@color/common_window_background"
+    android:transitionName="topicItem"
     android:orientation="vertical">
 
     <de.hdodenhof.circleimageview.CircleImageView
@@ -30,6 +35,8 @@
         android:paddingEnd="8dp"
         android:textColor="@color/common_white_font_color"
         android:textSize="13sp"
+        android:focusable="true"
+        android:clickable="true"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="+关注" />
@@ -62,7 +69,7 @@
         android:id="@+id/tv_circle_square_descriprion"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="15dp"
+        android:layout_marginStart="18dp"
         android:layout_marginTop="20dp"
         android:layout_marginBottom="25dp"
         android:textColor="@color/common_level_two_font_color"
