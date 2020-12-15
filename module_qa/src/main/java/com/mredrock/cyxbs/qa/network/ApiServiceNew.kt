@@ -63,8 +63,9 @@ interface ApiServiceNew {
     ): Observable<RedrockApiWrapper<CommentReleaseResult>>
 
     @POST("/wxapi/magipoke-loop/comment/praise")
-    fun praise(@Query("id")
-               replyId: String
+    @FormUrlEncoded
+    fun praise(@Field("id")
+               replyId: String, @Field("model") model: String
     ): Observable<RedrockApiStatus>
 
     @POST("/app/index.php/QA/new/ignoreUid")
@@ -81,14 +82,13 @@ interface ApiServiceNew {
 
     @POST("/wxapi/magipoke-loop/ground/followTopicGround")
     @FormUrlEncoded
-    fun followTopicGround(@Field("topic_id")
-                          topicId: String
+    fun followTopicGround(@Field("topic_name") topicName: String
     ): Observable<RedrockApiStatus>
 
     @POST("/wxapi/magipoke-loop/comment/report")
     @FormUrlEncoded
     fun report(@Field("id")
-               id: String
+               id: String, @Field("model") model: String, @Field("content") content: String
     ): Observable<RedrockApiStatus>
 
     @POST("/wxapi/magipoke-loop/comment/deleteId")

@@ -37,7 +37,7 @@ class DynamicAdapter(private val onItemClickEvent: (Dynamic, View) -> Unit) : Ba
         }
     }
 
-    var onPopWindowClickListener: ((String, String) -> Unit)? = null
+    var onPopWindowClickListener: ((String, Dynamic) -> Unit)? = null
     var onPraiseClickListener: ((Int, Dynamic) -> Unit)? = null
     private var shouldAnimateSet: MutableSet<Int> = HashSet()
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = DynamicViewHolder(parent)
@@ -56,12 +56,12 @@ class DynamicAdapter(private val onItemClickEvent: (Dynamic, View) -> Unit) : Ba
             qa_iv_dynamic_more_tips_clicked.setOnSingleClickListener {
                 OptionalPopWindow.Builder().with(context)
                         .addOptionAndCallback(NOTICE) {
-                            getItem(position)?.let { it1 -> onPopWindowClickListener?.invoke(NOTICE, it1.topic) }
+                            getItem(position)?.let { it1 -> onPopWindowClickListener?.invoke(NOTICE, it1) }
                         }
                         .addOptionAndCallback(IGNORE) {
-//                            getItem(position)?.let { it1 -> onPopWindowClickListener?.invoke(IGNORE, it1.postId.toInt()) }
+                            getItem(position)?.let { it1 -> onPopWindowClickListener?.invoke(IGNORE, it1) }
                         }.addOptionAndCallback(REPORT) {
-//                            getItem(position)?.let { it1 -> onPopWindowClickListener?.invoke(REPORT, it1.postId.toInt()) }
+                            getItem(position)?.let { it1 -> onPopWindowClickListener?.invoke(REPORT, it1) }
 
                         }.show(it, OptionalPopWindow.AlignMode.RIGHT, 0)
             }

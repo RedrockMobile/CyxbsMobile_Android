@@ -92,6 +92,8 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:alpha="0.1"
+            android:id="@+id/view_divide"
+            android:visibility="gone"
             android:background="@color/common_qa_quiz_toolbar_divider_line_color" />
 
         <androidx.appcompat.widget.AppCompatTextView

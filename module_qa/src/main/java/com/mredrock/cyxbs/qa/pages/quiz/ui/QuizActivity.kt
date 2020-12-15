@@ -15,10 +15,9 @@ import android.widget.ImageView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.alibaba.android.arouter.facade.annotation.Route
-import com.google.android.flexbox.FlexWrap
-import com.google.android.flexbox.FlexboxLayoutManager
+import com.google.android.material.chip.Chip
+import com.google.android.material.chip.ChipGroup
 import com.google.gson.Gson
-import com.mredrock.cyxbs.common.BaseApp.Companion.context
 import com.mredrock.cyxbs.common.config.QA_QUIZ
 import com.mredrock.cyxbs.common.event.DynamicDraftEvent
 import com.mredrock.cyxbs.common.mark.EventBusLifecycleSubscriber
@@ -27,7 +26,6 @@ import com.mredrock.cyxbs.common.utils.extensions.*
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.R.drawable.*
 import com.mredrock.cyxbs.qa.beannew.Question
-import com.mredrock.cyxbs.qa.pages.quiz.ui.adpter.CircleLabelAdapter
 import com.mredrock.cyxbs.qa.pages.quiz.QuizViewModel
 import com.mredrock.cyxbs.qa.ui.activity.ViewImageCropActivity
 import com.mredrock.cyxbs.qa.ui.widget.DraftDialog
@@ -55,6 +53,7 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>(), EventBusLifecycleSu
 
     }
 
+    private var currentTypeIndex = 0
     override val isFragmentActivity = false
     private var draftId = NOT_DRAFT_ID
     private var dynamicType: String = ""
@@ -68,21 +67,7 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>(), EventBusLifecycleSu
         initToolbar()
         initImageAddView()
         initEditListener()
-        val circleLabelAdapter = CircleLabelAdapter(context, mutableListOf()).apply {
-            onLabelClickListener = {
-                dynamicType = it
-            }
-        }
-        val flexBoxManager = FlexboxLayoutManager(context)
-        flexBoxManager.flexWrap = FlexWrap.WRAP
-        rv_label_list.layoutManager = flexBoxManager
-        rv_label_list.adapter = circleLabelAdapter
-
-        viewModel.getAllCirCleData("问答圈", "test1")
-        viewModel.allCircle.observe {
-            if (!it.isNullOrEmpty())
-                circleLabelAdapter.setList(it)
-        }
+        initTypeSelector()
         viewModel.backAndRefreshPreActivityEvent.observeNotNull {
             if (it) {
                 if (draftId != NOT_DRAFT_ID) {
@@ -102,6 +87,24 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>(), EventBusLifecycleSu
             isChecked = false
             setOnSingleClickListener {
                 isChecked = !isChecked
+            }
+        }
+    }
+
+    private fun initTypeSelector() {
+        viewModel.getAllCirCleData("问答圈", "test1")
+        viewModel.allCircle.observe {
+            if (!it.isNullOrEmpty()) {
+                val chipGroup = findViewById<ChipGroup>(R.id.layout_quiz_tag)
+                for ((i, value) in it.withIndex()) {
+                    if (i == 0) dynamicType = value.topicName
+                    chipGroup.addView((layoutInflater.inflate(R.layout.qa_quiz_view_chip, chipGroup, false) as Chip).apply {
+                        text = value.topicName
+                        setOnClickListener {
+                            dynamicType = "#$text"
+                        }
+                    })
+                }
             }
         }
     }

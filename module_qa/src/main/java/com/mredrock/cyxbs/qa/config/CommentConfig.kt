@@ -10,4 +10,6 @@ object CommentConfig {
     val IGNORE = "屏蔽此人"
     val NOTICE = "关注圈子"
     val REPORT = "举报"
+    val REPORTMODEL="0"
+    val PRAISEMODEL="1"
 }

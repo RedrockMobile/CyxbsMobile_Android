@@ -14,6 +14,7 @@ import com.mredrock.cyxbs.common.viewmodel.event.SingleLiveEvent
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.beannew.Dynamic
 import com.mredrock.cyxbs.qa.beannew.Topic
+import com.mredrock.cyxbs.qa.config.CommentConfig
 import com.mredrock.cyxbs.qa.network.ApiService
 import com.mredrock.cyxbs.qa.network.ApiServiceNew
 import com.mredrock.cyxbs.qa.network.NetworkState
@@ -54,15 +55,15 @@ open class DynamicListViewModel(kind: String) : BaseViewModel() {
                 .mapOrThrowApiException()
                 .setSchedulers()
                 .safeSubscribeBy {
-                    LogUtils.d("topic",it.toString())
+                    LogUtils.d("topic", it.toString())
                     myCircle.value = it
                 }
     }
 
 
-    fun ignore(postId: Int) {
+    fun ignore(postId: String) {
         ApiGenerator.getApiService(ApiServiceNew::class.java)
-                .ignoreUid(postId.toString())
+                .ignoreUid(postId)
                 .setSchedulers()
                 .safeSubscribeBy {
                     if (it.status == 200)
@@ -73,9 +74,9 @@ open class DynamicListViewModel(kind: String) : BaseViewModel() {
 
     }
 
-    fun followCircle(topic: String) {
+    fun followCircle(topicName: String) {
         ApiGenerator.getApiService(ApiServiceNew::class.java)
-                .followTopicGround(topic)
+                .followTopicGround(topicName)
                 .setSchedulers()
                 .safeSubscribeBy {
                     if (it.status == 200)
@@ -85,9 +86,9 @@ open class DynamicListViewModel(kind: String) : BaseViewModel() {
                 }
     }
 
-    fun report(postId: Int) {
+    fun report(postId: String, content: String) {
         ApiGenerator.getApiService(ApiServiceNew::class.java)
-                .report(postId.toString())
+                .report(postId, CommentConfig.REPORTMODEL, content)
                 .setSchedulers()
                 .safeSubscribeBy {
                     if (it.status == 200)
@@ -106,9 +107,9 @@ open class DynamicListViewModel(kind: String) : BaseViewModel() {
         ApiGenerator.getApiService(ApiServiceNew::class.java)
                 .run {
                     if (dynamic.isPraised) {
-                        praise(dynamic.postId)
+                        praise(dynamic.postId, CommentConfig.PRAISEMODEL)
                     } else {
-                        praise(dynamic.postId)
+                        praise(dynamic.postId, CommentConfig.PRAISEMODEL)
                     }
                 }
                 .doOnSubscribe { isDealing = true }

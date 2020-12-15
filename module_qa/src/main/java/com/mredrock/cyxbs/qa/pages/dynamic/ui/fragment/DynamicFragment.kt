@@ -86,18 +86,19 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), EventBusL
                     notifyItemChanged(it)
                 }
             }
-            onPopWindowClickListener = { string, topicName ->
+
+            onPopWindowClickListener = { string, dynamic ->
                 when (string) {
                     IGNORE -> {
-                        //还无接口
-//                        viewModel.ignore(postId)
+                        viewModel.ignore(dynamic.postId)
                     }
                     REPORT -> {
-//                        viewModel.report(postId)
+                        viewModel.report(dynamic.postId, dynamic.content)
                     }
 
                     NOTICE -> {
-                        viewModel.followCircle(topicName)
+                        viewModel.followCircle(dynamic.topic)
+                        viewModel.getMyCirCleData()
                     }
                 }
             }
@@ -124,10 +125,12 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), EventBusL
                 layoutParams.bottomMargin = 30
                 rv_circles_List.layoutParams = layoutParams
                 tv_my_notice.visibility = View.VISIBLE
+                view_divide.visibility = View.VISIBLE
                 circlesAdapter?.addData(it)
             } else {
                 val layoutParams = CollapsingToolbarLayout.LayoutParams(rv_circles_List.layoutParams)
                 layoutParams.bottomMargin = 30
+                view_divide.visibility = View.VISIBLE
                 rv_circles_List.layoutParams = layoutParams
             }
         }
@@ -151,12 +154,6 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), EventBusL
         }
     }
 
-
-    override fun onStart() {
-        super.onStart()
-        //viewModel.invalidateQuestionList()
-        viewModel.getMyCirCleData()
-    }
 
     open fun observeLoading(dynamicListRvAdapter: DynamicAdapter,
                             footerRvAdapter: FooterRvAdapter,
