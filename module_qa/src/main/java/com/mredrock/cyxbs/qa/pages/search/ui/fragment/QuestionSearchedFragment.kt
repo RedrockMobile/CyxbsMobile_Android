@@ -23,7 +23,6 @@ import com.mredrock.cyxbs.qa.pages.search.ui.adapter.SearchResultHeaderAdapter
 import com.mredrock.cyxbs.qa.pages.search.viewmodel.QuestionSearchedViewModel
 import kotlinx.android.synthetic.main.qa_fragment_question_search_result.*
 import kotlinx.android.synthetic.main.qa_item_search_no_result.*
-import kotlinx.android.synthetic.main.qa_recycler_item_comment.*
 
 /**
  * Created by yyfbe, Date on 2020/8/13.
@@ -127,6 +126,7 @@ class QuestionSearchedFragment : BaseViewModelFragment<QuestionSearchedViewModel
             viewModel.getSearchDynamic(searchKey)
         }
         viewModel.searchedDynamic.observe {
+
             if (it != null) {
                 headerRvAdapter?.refreshData(it)
             }

@@ -1,17 +1,20 @@
 package com.mredrock.cyxbs.qa.pages.square.ui.activity
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.transition.Slide
 import android.view.Gravity
 import android.view.View
+import androidx.core.app.ActivityCompat.startActivityForResult
 import androidx.core.app.ActivityOptionsCompat
 import androidx.core.content.ContextCompat.startActivity
 import com.google.android.material.tabs.TabLayoutMediator
 import com.mredrock.cyxbs.common.BaseApp.Companion.context
 import com.mredrock.cyxbs.common.ui.BaseActivity
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
+import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.beannew.Topic
@@ -24,13 +27,14 @@ import kotlinx.android.synthetic.main.qa_recycler_item_circle_square.*
 
 class CircleDetailActivity : BaseViewModelActivity<CircleDetailViewModel>() {
     companion object {
+        val RESULT_CODE=1
         fun activityStart(activity: BaseActivity, topicItemView: View, data: Topic) {
             activity.let {
                 val opt = ActivityOptionsCompat.makeSceneTransitionAnimation(it, topicItemView, "topicItem")
                 val intent = Intent(context, CircleDetailActivity::class.java)
                 intent.putExtra("topicItem", data)
                 it.window.exitTransition = Slide(Gravity.START).apply { duration = 500 }
-                startActivity(activity,intent,opt.toBundle())
+                startActivityForResult(activity,intent, RESULT_CODE,opt.toBundle())
             }
         }
     }
@@ -54,10 +58,20 @@ class CircleDetailActivity : BaseViewModelActivity<CircleDetailViewModel>() {
     }
     override fun onBackPressed() {
         window.returnTransition = Slide(Gravity.END).apply { duration = 500 }
+        val intent=Intent()
+        intent.putExtra("topic_return",topic)
+        setResult(Activity.RESULT_OK,intent)
+        LogUtils.d("zt","3")
+        LogUtils.d("zt","返回的top"+topic)
+        finish()
         super.onBackPressed()
     }
+    @SuppressLint("UseCompatLoadingForDrawables")
     private fun initClick() {
         qa_circle_detail_iv_back.setOnSingleClickListener {
+            val intent=Intent()
+            intent.putExtra("topic_return",topic)
+            setResult(Activity.RESULT_OK,intent)
             finish()
         }
         btn_circle_square_concern.setOnClickListener {

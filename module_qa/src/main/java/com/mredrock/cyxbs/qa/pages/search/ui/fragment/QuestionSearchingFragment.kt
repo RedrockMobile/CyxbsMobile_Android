@@ -48,6 +48,7 @@ class QuestionSearchingFragment : BaseViewModelFragment<SearchViewModel>() {
             })
 
     private var historyDataList = mutableListOf<QAHistory>()
+    private var hotSearchAdqapter: SearchHotRvAdapter? = null
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.qa_fragment_question_search, container, false)
     }
@@ -60,14 +61,8 @@ class QuestionSearchingFragment : BaseViewModelFragment<SearchViewModel>() {
     }
 
     private fun initView() {
-        //TODO 热门搜索的内容填充
-        val circleLabelData = ArrayList<String>()
-        circleLabelData.add("校庆")
-        circleLabelData.add("啦啦操比赛")
-        circleLabelData.add("话剧表演")
-        circleLabelData.add("奖学金")
-        circleLabelData.add("红岩网校")
-        circleLabelData.add("建模")
+        viewModel.getSearchHotWord()
+
         rv_question_search_history.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = historyRvAdapter
@@ -75,13 +70,20 @@ class QuestionSearchingFragment : BaseViewModelFragment<SearchViewModel>() {
         tv_question_search_history_clear.setOnClickListener {
             viewModel.deleteAll()
         }
+
         val flexBoxManager = FlexboxLayoutManager(BaseApp.context)
         flexBoxManager.flexWrap = FlexWrap.WRAP
         rv_hot_search_tab_list.layoutManager = flexBoxManager
-        rv_hot_search_tab_list.adapter = SearchHotRvAdapter({
+        hotSearchAdapter = SearchHotRvAdapter({
             EventBus.getDefault().post(QASearchEvent(it))
-        }).apply {
-            addData(circleLabelData)
+        })
+
+        rv_hot_search_tab_list.adapter = hotSearchAdapter
+
+        viewModel.searchHotWords.observe {
+            if (it != null) {
+                hotSearchAdapter?.refreshData(it)
+            }
         }
     }
 

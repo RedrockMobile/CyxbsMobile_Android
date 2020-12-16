@@ -2,6 +2,7 @@ package com.mredrock.cyxbs.qa.pages.square.viewmodel
 
 import androidx.lifecycle.MutableLiveData
 import com.mredrock.cyxbs.common.network.ApiGenerator
+import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.mapOrThrowApiException
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
@@ -25,7 +26,9 @@ class CircleSquareViewModel : BaseViewModel() {
                 .mapOrThrowApiException()
                 .setSchedulers()
                 .safeSubscribeBy {
-                    allCircle.value = it
+                    LogUtils.d("zt","1")
+                    LogUtils.d("zt",it.toString())
+                    allCircle.postValue(it)
                 }
     }
 

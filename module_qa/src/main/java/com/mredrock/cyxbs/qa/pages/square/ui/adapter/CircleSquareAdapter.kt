@@ -22,7 +22,7 @@ import kotlinx.android.synthetic.main.qa_recycler_item_circle_square.view.*
  *@author SpreadWater
  *@description
  */
-class CircleSquareAdapter(val viewmodel: CircleSquareViewModel, private val onItemClickEvent: (Topic, View) -> Unit) : BaseRvAdapter<Topic>() {
+class CircleSquareAdapter(val viewmodel: CircleSquareViewModel, private val onItemClickEvent: (Topic, View,Int) -> Unit) : BaseRvAdapter<Topic>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder<Topic> = CircleSquareViewHolder(parent)
 
@@ -48,7 +48,7 @@ class CircleSquareAdapter(val viewmodel: CircleSquareViewModel, private val onIt
     override fun onItemClickListener(holder: BaseViewHolder<Topic>, position: Int, data: Topic) {
         super.onItemClickListener(holder, position, data)
         onItemClickEvent.invoke(data,
-                holder.itemView.findViewById<ConstraintLayout>(R.id.qa_ctl_topic) )
+                holder.itemView.findViewById<ConstraintLayout>(R.id.qa_ctl_topic),position )
     }
 
     @SuppressLint("UseCompatLoadingForDrawables")
