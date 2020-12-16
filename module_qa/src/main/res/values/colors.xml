@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="qa_full_screen_pic_indicator_color">#ffffff</color>
-    <color name="qa_picture_black_80">#80000000</color>
-    <color name="qa_crop_logo">#f0000000</color>
-    <color name="qa_draft_dialog_text">#15315B</color>
-    <color name="qa_draft_dialog_divide">#F1F3F8</color>
+    <color name="qa_picture_black_80_color">#80000000</color>
+    <color name="qa_crop_logo_color">#f0000000</color>
+    <color name="qa_draft_dialog_text_color">#15315B</color>
+    <color name="qa_draft_dialog_divide_color">#F1F3F8</color>
     <color name="qa_likeview_color">#ffcccccc</color>
-    <color name="qa_reply_bottom_sheet_color">#F1F3F8</color>
+    <color name="qa_reply_bottom_sheet_background_color">#F1F3F8</color>
+    <color name="qa_reply_popwindow_background_color">#E1E9F6</color>
+    <color name="qa_reply_popwindow_text_color">#15315B</color>
 
 </resources>

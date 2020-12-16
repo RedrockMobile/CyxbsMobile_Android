@@ -232,8 +232,7 @@
     <!--    评论item内容颜色-->
     <color name="common_qa_comment_content_color">#7F3B4555</color>
     <!--    评论框背景颜色-->
-    <color name="common_qa_comment_new_comment_text_background_color">#eff4fd
-    </color>
+    <color name="common_qa_comment_new_comment_text_background_color">#eff4fd</color>
     <!--    评论JCardView3种背景颜色-->
     <color name="common_qa_comment_content_first_kind_color">#f8f4f0</color>
     <color name="common_qa_comment_content_second_kind_color">#f1f1fa</color>

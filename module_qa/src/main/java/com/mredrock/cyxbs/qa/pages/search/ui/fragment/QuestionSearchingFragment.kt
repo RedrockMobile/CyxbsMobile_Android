@@ -48,7 +48,7 @@ class QuestionSearchingFragment : BaseViewModelFragment<SearchViewModel>() {
             })
 
     private var historyDataList = mutableListOf<QAHistory>()
-    private var hotSearchAdqapter: SearchHotRvAdapter? = null
+    private var hotSearchAdapter: SearchHotRvAdapter? = null
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.qa_fragment_question_search, container, false)
     }
@@ -74,9 +74,9 @@ class QuestionSearchingFragment : BaseViewModelFragment<SearchViewModel>() {
         val flexBoxManager = FlexboxLayoutManager(BaseApp.context)
         flexBoxManager.flexWrap = FlexWrap.WRAP
         rv_hot_search_tab_list.layoutManager = flexBoxManager
-        hotSearchAdapter = SearchHotRvAdapter({
+        hotSearchAdapter = SearchHotRvAdapter {
             EventBus.getDefault().post(QASearchEvent(it))
-        })
+        }
 
         rv_hot_search_tab_list.adapter = hotSearchAdapter
 

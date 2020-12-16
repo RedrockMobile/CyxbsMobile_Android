@@ -1,4 +1,4 @@
-package com.mredrock.cyxbs.discover.map.util
+package com.mredrock.cyxbs.qa.utils
 
 import android.content.Context
 import android.view.View

@@ -2,7 +2,6 @@ package com.mredrock.cyxbs.qa.pages.dynamic.ui.adapter
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.mredrock.cyxbs.common.utils.extensions.setAvatarImageFromUrl
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.beannew.Comment
@@ -18,20 +17,29 @@ import kotlinx.android.synthetic.main.qa_recycler_item_dynamic_reply.view.*
  *@description
  */
 
-class CommentListAdapter(replyList: List<Comment>, onItemClickEvent: () -> Unit) : BaseRvAdapter<Comment>() {
+class CommentListAdapter(
+        private val onItemClickEvent: (nickname: String, replyId: String) -> Unit,
+        private val onReplyInnerClickEvent: (nickname: String, replyId: String) -> Unit,
+        private val onItemLongClickEvent: (comment: Comment) -> Unit,
+        private val onReplyInnerLongClickEvent: (comment: Comment) -> Unit
+) : BaseRvAdapter<Comment>() {
 
-    init {
-        refreshData(replyList)
-    }
 
 //    val managerMap: HashMap<CommentViewHolder, RecyclerView.LayoutManager> by lazy {
 //        HashMap<CommentViewHolder, RecyclerView.LayoutManager>()
 //    }
 
+    override fun onItemClickListener(holder: BaseViewHolder<Comment>, position: Int, data: Comment) {
+        onItemClickEvent.invoke(data.nickName, data.commentId)
+    }
+
+    override fun onItemLongClickListener(holder: BaseViewHolder<Comment>, position: Int, data: Comment) {
+        onItemLongClickEvent.invoke(data)
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder<Comment> = CommentViewHolder(parent)
 
-    class CommentViewHolder(parent: ViewGroup) : BaseViewHolder<Comment>(parent, R.layout.qa_recycler_item_dynamic_reply) {
+    inner class CommentViewHolder(parent: ViewGroup) : BaseViewHolder<Comment>(parent, R.layout.qa_recycler_item_dynamic_reply) {
         override fun refresh(data: Comment?) {
             data ?: return
             itemView.apply {
@@ -67,7 +75,7 @@ class CommentListAdapter(replyList: List<Comment>, onItemClickEvent: () -> Unit)
                     qa_rv_reply.layoutManager = LinearLayoutManager(context)
                 }
                 if (qa_rv_reply.adapter == null) {
-                    qa_rv_reply.adapter = ReplyListAdapter()
+                    qa_rv_reply.adapter = ReplyListAdapter(onReplyInnerClickEvent, onReplyInnerLongClickEvent)
                 }
                 if (data.replyList.isNullOrEmpty()) {
                     (qa_rv_reply.adapter as ReplyListAdapter).refreshData(listOf())

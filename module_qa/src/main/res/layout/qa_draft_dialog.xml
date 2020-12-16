@@ -15,14 +15,14 @@
         android:paddingTop="10dp"
         android:paddingBottom="10dp"
         android:text="@string/qa_quiz_dialog_exit_text"
-        android:textColor="@color/qa_draft_dialog_text"
+        android:textColor="@color/qa_draft_dialog_text_color"
         android:textSize="14sp"
         app:layout_constraintTop_toTopOf="parent"
         tools:layout_editor_absoluteX="0dp" />
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/qa_draft_dialog_divide"
+        android:background="@color/qa_draft_dialog_divide_color"
         app:layout_constraintBottom_toBottomOf="@+id/tv_save"
         app:layout_constraintTop_toTopOf="@+id/qa_tv_reply_content" />
 
@@ -34,7 +34,7 @@
         android:paddingTop="10dp"
         android:paddingBottom="10dp"
         android:text="@string/qa_common_dialog_exit"
-        android:textColor="@color/qa_draft_dialog_text"
+        android:textColor="@color/qa_draft_dialog_text_color"
         android:textSize="18sp"
         app:layout_constraintTop_toBottomOf="@+id/qa_tv_reply_content"
         tools:layout_editor_absoluteX="0dp" />
@@ -42,7 +42,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/qa_draft_dialog_divide"
+        android:background="@color/qa_draft_dialog_divide_color"
         app:layout_constraintBottom_toBottomOf="@+id/tv_no_save"
         app:layout_constraintTop_toTopOf="@+id/tv_save" />
 
@@ -54,7 +54,7 @@
         android:paddingTop="10dp"
         android:paddingBottom="10dp"
         android:text="@string/qa_draft_dialog_no_save"
-        android:textColor="@color/qa_draft_dialog_text"
+        android:textColor="@color/qa_draft_dialog_text_color"
         android:textSize="18sp"
         app:layout_constraintTop_toBottomOf="@+id/tv_save"
         tools:layout_editor_absoluteX="16dp" />
@@ -62,7 +62,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="5dp"
-        android:background="@color/qa_draft_dialog_divide"
+        android:background="@color/qa_draft_dialog_divide_color"
         app:layout_constraintBottom_toBottomOf="@+id/tv_no_save"
         app:layout_constraintTop_toBottomOf="@+id/tv_no_save" />
 
@@ -75,7 +75,7 @@
         android:paddingTop="10dp"
         android:paddingBottom="10dp"
         android:text="@string/qa_draft_dialog_cancel"
-        android:textColor="@color/qa_draft_dialog_text"
+        android:textColor="@color/qa_draft_dialog_text_color"
         android:textSize="18sp"
         app:layout_constraintTop_toBottomOf="@+id/tv_no_save"
         tools:layout_editor_absoluteX="0dp" />

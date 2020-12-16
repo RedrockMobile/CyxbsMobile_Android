@@ -12,6 +12,7 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
+import com.mredrock.cyxbs.common.utils.extensions.dp2px
 import com.mredrock.cyxbs.common.utils.extensions.setAvatarImageFromUrl
 import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.qa.R
@@ -26,9 +27,11 @@ import com.mredrock.cyxbs.qa.ui.adapter.EmptyRvAdapter
 import com.mredrock.cyxbs.qa.ui.adapter.FooterRvAdapter
 import com.mredrock.cyxbs.qa.ui.widget.NineGridView
 import com.mredrock.cyxbs.qa.ui.widget.OptionalPopWindow
+import com.mredrock.cyxbs.qa.ui.widget.ReplyPopWindow
+import com.mredrock.cyxbs.qa.utils.KeyboardController
 import com.mredrock.cyxbs.qa.utils.dynamicTimeDescription
+import kotlinx.android.synthetic.main.qa_activity_dynamic_detail.*
 import kotlinx.android.synthetic.main.qa_common_toolbar.*
-import kotlinx.android.synthetic.main.qa_fragment_dynamic_detail.*
 import kotlinx.android.synthetic.main.qa_recycler_item_dynamic.*
 
 /**
@@ -60,7 +63,25 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
 
     override fun getViewModelFactory() = DynamicDetailViewModel.Factory()
 
-    private val commentListRvAdapter = CommentListAdapter(listOf(), {})
+    private val commentListRvAdapter = CommentListAdapter(
+            onItemClickEvent = { _, _ ->
+
+            },
+            onReplyInnerClickEvent = { nickname, replyId ->
+                KeyboardController.showInputKeyboard(this, qa_et_reply)
+                ReplyPopWindow.with(this)
+                ReplyPopWindow.setReplyName(nickname)
+                ReplyPopWindow.setDismissEvent {
+
+                }
+                ReplyPopWindow.show(qa_et_reply, ReplyPopWindow.AlignMode.LEFT, this.dp2px(6f))
+            },
+            onItemLongClickEvent = { _ ->
+
+            },
+            onReplyInnerLongClickEvent = { _ ->
+
+            })
 
     private val emptyRvAdapter by lazy { EmptyRvAdapter(getString(R.string.qa_comment_list_empty_hint)) }
     private val footerRvAdapter = FooterRvAdapter { getCommentList }
@@ -70,7 +91,7 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.qa_fragment_dynamic_detail)
+        setContentView(R.layout.qa_activity_dynamic_detail)
         window.enterTransition = Slide(Gravity.END).apply { duration = 500 }
         qa_tv_toolbar_title.text = resources.getText(R.string.qa_dynamic_detail_title_text)
         initObserve()
@@ -111,6 +132,7 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
     }
 
     override fun onBackPressed() {
+        ReplyPopWindow.dismiss()
         window.returnTransition = Slide(Gravity.END).apply { duration = 500 }
         super.onBackPressed()
     }
