@@ -3,18 +3,22 @@ package com.mredrock.cyxbs.qa.pages.dynamic.ui.activity
 import android.content.Intent
 import android.os.Bundle
 import android.transition.Slide
+import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.widget.Toast
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.app.ActivityOptionsCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.appbar.AppBarLayout
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.extensions.dp2px
 import com.mredrock.cyxbs.common.utils.extensions.setAvatarImageFromUrl
 import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
+import com.mredrock.cyxbs.common.utils.extensions.toast
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.beannew.Dynamic
 import com.mredrock.cyxbs.qa.component.recycler.RvAdapterWrapper
@@ -28,6 +32,7 @@ import com.mredrock.cyxbs.qa.ui.adapter.FooterRvAdapter
 import com.mredrock.cyxbs.qa.ui.widget.NineGridView
 import com.mredrock.cyxbs.qa.ui.widget.OptionalPopWindow
 import com.mredrock.cyxbs.qa.ui.widget.ReplyPopWindow
+import com.mredrock.cyxbs.qa.ui.widget.ScrollCommentListBehavior
 import com.mredrock.cyxbs.qa.utils.KeyboardController
 import com.mredrock.cyxbs.qa.utils.dynamicTimeDescription
 import kotlinx.android.synthetic.main.qa_activity_dynamic_detail.*
@@ -56,7 +61,7 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
     }
 
     private val getCommentList: () -> Unit = {
-        viewModel.getCommentList(dynamic.postId)
+        viewModel.refreshCommentList(dynamic.postId, qa_rv_comment_list, "0")
     }
 
     override val isFragmentActivity = false
@@ -64,17 +69,13 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
     override fun getViewModelFactory() = DynamicDetailViewModel.Factory()
 
     private val commentListRvAdapter = CommentListAdapter(
-            onItemClickEvent = { _, _ ->
-
+            onItemClickEvent = { commentId ->
+                KeyboardController.showInputKeyboard(this, qa_et_reply)
+                viewModel.replyInfo.value = Pair("", commentId)
             },
             onReplyInnerClickEvent = { nickname, replyId ->
                 KeyboardController.showInputKeyboard(this, qa_et_reply)
-                ReplyPopWindow.with(this)
-                ReplyPopWindow.setReplyName(nickname)
-                ReplyPopWindow.setDismissEvent {
-
-                }
-                ReplyPopWindow.show(qa_et_reply, ReplyPopWindow.AlignMode.LEFT, this.dp2px(6f))
+                viewModel.replyInfo.value = Pair(nickname, replyId)
             },
             onItemLongClickEvent = { _ ->
 
@@ -87,6 +88,8 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
     private val footerRvAdapter = FooterRvAdapter { getCommentList }
 
     lateinit var dynamic: Dynamic
+
+    private val behavior by lazy { ScrollCommentListBehavior() }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -102,17 +105,29 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
         qa_ib_toolbar_back.setOnSingleClickListener {
             onBackPressed()
         }
+
+        qa_btn_send.setOnSingleClickListener {
+            viewModel.releaseComment(dynamic.postId, qa_et_reply.text.toString())
+        }
     }
 
     private fun initObserve() {
         viewModel.commentList.observe(this, Observer {
-            commentListRvAdapter.refreshData(it)
+            Log.e("sandyzhang"," ===================================")
+            if (it != null) {
+                commentListRvAdapter.refreshData(it)
+                Log.d("sandyzhang", "========="+viewModel.position.toString())
+                qa_rv_comment_list.smoothScrollToPosition(viewModel.position)
+//                behavior.
+            }
         })
-        viewModel.loadStatus.observe(this, Observer {
+
+
+        viewModel.loadStatus.observe {
             it?.run {
                 footerRvAdapter.refreshData(listOf(this))
             }
-        })
+        }
 
         viewModel.loadStatus.observe {
             when (it) {
@@ -129,6 +144,32 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
                 }
             }
         }
+        viewModel.replyInfo.observe {
+            it?.apply {
+                if (it.second.isNotEmpty()){
+                    ReplyPopWindow.with(this@DynamicDetailActivity)
+                    ReplyPopWindow.setReplyName(it.first)
+                    ReplyPopWindow.setOnClickEvent {
+                        viewModel.replyInfo.value = Pair("", "")
+                    }
+                    ReplyPopWindow.show(qa_et_reply, ReplyPopWindow.AlignMode.LEFT, this@DynamicDetailActivity.dp2px(6f))
+                } else {
+                    if (ReplyPopWindow.isShowing()) {
+                        ReplyPopWindow.dismiss()
+                    }
+                }
+
+            }
+        }
+        viewModel.commentReleaseResult.observe {
+            toast(it.toString())
+            viewModel.replyInfo.value = Pair("", "")
+            qa_et_reply.setText("")
+            KeyboardController.hideInputKeyboard(this, qa_et_reply)
+
+            viewModel.refreshCommentList(dynamic.postId, qa_rv_comment_list, (it?.commentId?: 0).toString())
+
+        }
     }
 
     override fun onBackPressed() {
@@ -138,6 +179,11 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
     }
 
     private fun initDynamic() {
+
+        // 设置behavior
+        val layoutParams = qa_ll_reply.layoutParams as CoordinatorLayout.LayoutParams
+        layoutParams.behavior = behavior
+
         dynamic = intent.getParcelableExtra("dynamicItem")
         qa_iv_dynamic_more_tips_clicked.setOnSingleClickListener {
             OptionalPopWindow.Builder().with(this)
@@ -187,13 +233,13 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
     private fun initReplyList() {
 
         qa_detail_swipe_refresh_layout.setOnRefreshListener {
-            viewModel.commentList.postValue(listOf())
+            viewModel.commentList.value = listOf()
             getCommentList.invoke()
         }
 
         getCommentList.invoke()
 
-        qa_rv_reply_list.apply {
+        qa_rv_comment_list.apply {
             layoutManager = LinearLayoutManager(context)
 
             val adapterWrapper = RvAdapterWrapper(

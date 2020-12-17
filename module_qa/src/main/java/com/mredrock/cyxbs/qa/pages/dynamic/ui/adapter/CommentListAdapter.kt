@@ -1,5 +1,6 @@
 package com.mredrock.cyxbs.qa.pages.dynamic.ui.adapter
 
+import android.util.Log
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mredrock.cyxbs.common.utils.extensions.setAvatarImageFromUrl
@@ -18,7 +19,7 @@ import kotlinx.android.synthetic.main.qa_recycler_item_dynamic_reply.view.*
  */
 
 class CommentListAdapter(
-        private val onItemClickEvent: (nickname: String, replyId: String) -> Unit,
+        private val onItemClickEvent: (commentId: String) -> Unit,
         private val onReplyInnerClickEvent: (nickname: String, replyId: String) -> Unit,
         private val onItemLongClickEvent: (comment: Comment) -> Unit,
         private val onReplyInnerLongClickEvent: (comment: Comment) -> Unit
@@ -30,7 +31,7 @@ class CommentListAdapter(
 //    }
 
     override fun onItemClickListener(holder: BaseViewHolder<Comment>, position: Int, data: Comment) {
-        onItemClickEvent.invoke(data.nickName, data.commentId)
+        onItemClickEvent.invoke(data.commentId)
     }
 
     override fun onItemLongClickListener(holder: BaseViewHolder<Comment>, position: Int, data: Comment) {

@@ -32,18 +32,14 @@ class ReplyListAdapter(private val onReplyInnerClickEvent: (nickname: String, re
             data ?: return
             itemView.apply {
                 qa_tv_reply_inner_nickname.text = data.nickName
-                val test = "张三"
-                if (test.isNullOrEmpty()) {
+                if (data.fromNickname.isEmpty()) {
                     qa_tv_reply_inner_content.text = data.content
                 } else {
-                    val s = "回复 <font color=\"#0000FF\">@${test}</font> : ${data.content}"
-                    qa_tv_reply_inner_content.text = Html.fromHtml(s, FROM_HTML_MODE_COMPACT)
-
-                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-                        val s = "回复 <font color=\"#0000FF\">@${test}</font> : ${data.content}"
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                        val s = "回复 <font color=\"#0000FF\">@${data.fromNickname}</font> : ${data.content}"
                         qa_tv_reply_inner_content.text = Html.fromHtml(s, FROM_HTML_MODE_COMPACT)
                     } else {
-                        qa_tv_reply_inner_content.text = "回复 @${test} : "
+                        qa_tv_reply_inner_content.text = "回复 @${data.fromNickname} : "
                     }
                 }
                 qa_tv_reply_inner_praise_count.text = data.praiseCount.toString()

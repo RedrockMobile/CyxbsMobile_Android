@@ -55,6 +55,8 @@ interface ApiServiceNew {
     @FormUrlEncoded
     fun releaseComment(@Field("content")
                        content: String,
+                       @Field("post_id")
+                       postId: String,
                        @Field("reply_id")
                        replyId: String
     ): Observable<RedrockApiWrapper<CommentReleaseResult>>

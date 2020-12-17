@@ -77,10 +77,9 @@ object ReplyPopWindow {
         replyPopWindow?.showAsDropDown(view, offsetX, -(offsetYReverse + View.MeasureSpec.getSize(mainView!!.measuredHeight) + view.height), Gravity.START)
     }
 
-    fun setDismissEvent(callback: () -> Unit) {
+    fun setOnClickEvent(callback: () -> Unit) {
         mainView?.findViewById<ImageView>(R.id.qa_iv_reply_popwindow_dismiss)?.setOnSingleClickListener {
             callback.invoke()
-            replyPopWindow?.dismiss()
         }
     }
 
@@ -90,6 +89,8 @@ object ReplyPopWindow {
         }
         replyPopWindow?.dismiss()
     }
+
+    fun isShowing() = replyPopWindow?.isShowing?: false
 
 
 }
