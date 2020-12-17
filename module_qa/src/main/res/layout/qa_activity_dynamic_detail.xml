@@ -28,6 +28,7 @@
         app:layout_constraintTop_toBottomOf="@+id/qa_include_toolbar">
 
         <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/qa_appbar_dynamic"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/common_transparent_background"

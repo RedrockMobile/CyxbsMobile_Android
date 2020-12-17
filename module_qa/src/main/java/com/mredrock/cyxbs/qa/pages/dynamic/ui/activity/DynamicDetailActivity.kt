@@ -3,7 +3,6 @@ package com.mredrock.cyxbs.qa.pages.dynamic.ui.activity
 import android.content.Intent
 import android.os.Bundle
 import android.transition.Slide
-import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.widget.Toast
@@ -32,7 +31,6 @@ import com.mredrock.cyxbs.qa.ui.adapter.FooterRvAdapter
 import com.mredrock.cyxbs.qa.ui.widget.NineGridView
 import com.mredrock.cyxbs.qa.ui.widget.OptionalPopWindow
 import com.mredrock.cyxbs.qa.ui.widget.ReplyPopWindow
-import com.mredrock.cyxbs.qa.ui.widget.ScrollCommentListBehavior
 import com.mredrock.cyxbs.qa.utils.KeyboardController
 import com.mredrock.cyxbs.qa.utils.dynamicTimeDescription
 import kotlinx.android.synthetic.main.qa_activity_dynamic_detail.*
@@ -89,7 +87,7 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
 
     lateinit var dynamic: Dynamic
 
-    private val behavior by lazy { ScrollCommentListBehavior() }
+    private val behavior by lazy { AppBarLayout.ScrollingViewBehavior() }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -113,12 +111,14 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
 
     private fun initObserve() {
         viewModel.commentList.observe(this, Observer {
-            Log.e("sandyzhang"," ===================================")
             if (it != null) {
                 commentListRvAdapter.refreshData(it)
-                Log.d("sandyzhang", "========="+viewModel.position.toString())
                 qa_rv_comment_list.smoothScrollToPosition(viewModel.position)
-//                behavior.
+                if (viewModel.position != 0) {
+                    qa_appbar_dynamic.setExpanded(false, true)
+                } else {
+                    qa_appbar_dynamic.setExpanded(true, false)
+                }
             }
         })
 

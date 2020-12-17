@@ -1,9 +1,7 @@
 package com.mredrock.cyxbs.qa.ui.widget
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
-import android.view.MotionEvent
 import androidx.recyclerview.widget.RecyclerView
 
 class ReplyInnerRecyclerView : RecyclerView {
@@ -15,9 +13,5 @@ class ReplyInnerRecyclerView : RecyclerView {
     init {
         isNestedScrollingEnabled = false
     }
-//    override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
-//        parent.requestDisallowInterceptTouchEvent(true)
-//        return super.dispatchTouchEvent(ev)
-//    }
 
 }

@@ -1,6 +1,5 @@
 package com.mredrock.cyxbs.qa.pages.dynamic.ui.adapter
 
-import android.util.Log
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mredrock.cyxbs.common.utils.extensions.setAvatarImageFromUrl
@@ -81,7 +80,7 @@ class CommentListAdapter(
                 if (data.replyList.isNullOrEmpty()) {
                     (qa_rv_reply.adapter as ReplyListAdapter).refreshData(listOf())
                 } else {
-                    (qa_rv_reply.adapter as ReplyListAdapter).refreshData(data.replyList.take(3))
+                    (qa_rv_reply.adapter as ReplyListAdapter).refreshData(data.replyList.takeLast(3))
                 }
             }
         }
