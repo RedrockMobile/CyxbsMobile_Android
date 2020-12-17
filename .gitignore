@@ -10,3 +10,4 @@ local_helper
 secret.gradle
 ./hooks/cache
 /.idea/
+*.log
