@@ -9,5 +9,9 @@
     <color name="qa_reply_bottom_sheet_background_color">#F1F3F8</color>
     <color name="qa_reply_popwindow_background_color">#E1E9F6</color>
     <color name="qa_reply_popwindow_text_color">#15315B</color>
+    <color name="qa_dialog_tip_text_color">#0C3573</color>
+    <color name="qa_dialog_tip_div_view_background_color">#E2E8EE</color>
+    <color name="qa_dialog_tip_background_color">#FFFFFF</color>
+    <color name="qa_dialog_top_report_et_text_color">#0C3573</color>
 
 </resources>

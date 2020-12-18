@@ -1,6 +1,5 @@
 package com.mredrock.cyxbs.qa.pages.dynamic.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -14,10 +13,9 @@ import com.mredrock.cyxbs.qa.beannew.Comment
 import com.mredrock.cyxbs.qa.beannew.CommentReleaseResult
 import com.mredrock.cyxbs.qa.network.ApiServiceNew
 import com.mredrock.cyxbs.qa.network.NetworkState
-import com.mredrock.cyxbs.qa.pages.dynamic.ui.adapter.ReplyListAdapter
 
 /**
- * @Author: sandyz987
+ * @Author: zhangzhe
  * @Date: 2020/11/27 23:52
  */
 
@@ -61,7 +59,6 @@ open class DynamicDetailViewModel : BaseViewModel() {
         }
         for (i in dataList.indices) {
             // 如果是直接回复
-            Log.d("sandyzhang", "commentId: $commentId, data:${dataList[i].commentId}")
             if (dataList[i].commentId == commentId){
                 return i
             }

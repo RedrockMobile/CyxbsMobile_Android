@@ -1,23 +1,21 @@
 package com.mredrock.cyxbs.qa.pages.dynamic.ui.activity
 
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.transition.Slide
 import android.view.Gravity
 import android.view.View
-import android.widget.Toast
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.app.ActivityOptionsCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.appbar.AppBarLayout
-import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
-import com.mredrock.cyxbs.common.utils.extensions.dp2px
-import com.mredrock.cyxbs.common.utils.extensions.setAvatarImageFromUrl
-import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
-import com.mredrock.cyxbs.common.utils.extensions.toast
+import com.mredrock.cyxbs.common.utils.extensions.*
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.beannew.Dynamic
 import com.mredrock.cyxbs.qa.component.recycler.RvAdapterWrapper
@@ -28,17 +26,16 @@ import com.mredrock.cyxbs.qa.pages.dynamic.viewmodel.DynamicDetailViewModel
 import com.mredrock.cyxbs.qa.ui.activity.ViewImageActivity
 import com.mredrock.cyxbs.qa.ui.adapter.EmptyRvAdapter
 import com.mredrock.cyxbs.qa.ui.adapter.FooterRvAdapter
-import com.mredrock.cyxbs.qa.ui.widget.NineGridView
-import com.mredrock.cyxbs.qa.ui.widget.OptionalPopWindow
-import com.mredrock.cyxbs.qa.ui.widget.ReplyPopWindow
+import com.mredrock.cyxbs.qa.ui.widget.*
 import com.mredrock.cyxbs.qa.utils.KeyboardController
 import com.mredrock.cyxbs.qa.utils.dynamicTimeDescription
 import kotlinx.android.synthetic.main.qa_activity_dynamic_detail.*
 import kotlinx.android.synthetic.main.qa_common_toolbar.*
 import kotlinx.android.synthetic.main.qa_recycler_item_dynamic.*
 
+
 /**
- * @Author: sandyz987
+ * @Author: zhangzhe
  * @Date: 2020/11/27 23:07
  */
 
@@ -66,6 +63,8 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
 
     override fun getViewModelFactory() = DynamicDetailViewModel.Factory()
 
+
+    // 评论点击的逻辑
     private val commentListRvAdapter = CommentListAdapter(
             onItemClickEvent = { commentId ->
                 KeyboardController.showInputKeyboard(this, qa_et_reply)
@@ -75,10 +74,64 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
                 KeyboardController.showInputKeyboard(this, qa_et_reply)
                 viewModel.replyInfo.value = Pair(nickname, replyId)
             },
-            onItemLongClickEvent = { _ ->
+            onItemLongClickEvent = { comment, itemView ->
+                // 消除回复弹窗
+                viewModel.replyInfo.value = Pair("", "")
+
+                val optionPopWindow = OptionalPopWindow.Builder().with(this)
+                        .addOptionAndCallback(CommentConfig.REPLY) {
+                            KeyboardController.showInputKeyboard(this, qa_et_reply)
+                            viewModel.replyInfo.value = Pair(comment.nickName, comment.commentId)
+                        }.addOptionAndCallback(CommentConfig.COPY) {
+                            val cm: ClipboardManager = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                            val mClipData = ClipData.newPlainText("掌上重邮帖子内容", comment.content)
+                            cm.primaryClip = mClipData
+                            toast("已复制到剪切板")
+                        }
+                if (dynamic.isSelf || comment.isSelf) {
+                    optionPopWindow.addOptionAndCallback(CommentConfig.DELETE){
+                        QaDialog.show(this, resources.getString(R.string.qa_dialog_tip_delete_comment_text), {}) {
+                            toast("点击了删除")
+                        }
+                    }
+                } else {
+                    optionPopWindow.addOptionAndCallback(CommentConfig.REPORT) {
+                        QaReportDialog.show(this) {
+                            toast("点击了举报")
+                        }
+                    }
+                }
+                optionPopWindow.show(itemView, OptionalPopWindow.AlignMode.CENTER, 0)
 
             },
-            onReplyInnerLongClickEvent = { _ ->
+            onReplyInnerLongClickEvent = { comment, itemView ->
+                // 消除回复弹窗
+                viewModel.replyInfo.value = Pair("", "")
+
+                val optionPopWindow = OptionalPopWindow.Builder().with(this)
+                        .addOptionAndCallback(CommentConfig.REPLY) {
+                            KeyboardController.showInputKeyboard(this, qa_et_reply)
+                            viewModel.replyInfo.value = Pair(comment.nickName, comment.replyId)
+                        }.addOptionAndCallback(CommentConfig.COPY) {
+                            val cm: ClipboardManager = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                            val mClipData = ClipData.newPlainText("掌上重邮帖子内容", comment.content)
+                            cm.primaryClip = mClipData
+                            toast("已复制到剪切板")
+                        }
+                if (dynamic.isSelf || comment.isSelf) {
+                    optionPopWindow.addOptionAndCallback(CommentConfig.DELETE){
+                        QaDialog.show(this, resources.getString(R.string.qa_dialog_tip_delete_comment_text), {}) {
+                            toast("点击了删除")
+                        }
+                    }
+                } else {
+                    optionPopWindow.addOptionAndCallback(CommentConfig.REPORT) {
+                        QaReportDialog.show(this) {
+                            toast("点击了举报")
+                        }
+                    }
+                }
+                optionPopWindow.show(itemView, OptionalPopWindow.AlignMode.CENTER, 0)
 
             })
 
@@ -162,12 +215,12 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
             }
         }
         viewModel.commentReleaseResult.observe {
-            toast(it.toString())
             viewModel.replyInfo.value = Pair("", "")
             qa_et_reply.setText("")
             KeyboardController.hideInputKeyboard(this, qa_et_reply)
 
-            viewModel.refreshCommentList(dynamic.postId, qa_rv_comment_list, (it?.commentId?: 0).toString())
+            viewModel.refreshCommentList(dynamic.postId, qa_rv_comment_list, (it?.commentId
+                    ?: 0).toString())
 
         }
     }
@@ -185,15 +238,41 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
         layoutParams.behavior = behavior
 
         dynamic = intent.getParcelableExtra("dynamicItem")
+
+        qa_tv_reply_title.setOnClickListener {
+            KeyboardController.showInputKeyboard(this, qa_et_reply)
+        }
+
+
         qa_iv_dynamic_more_tips_clicked.setOnSingleClickListener {
-            OptionalPopWindow.Builder().with(this)
-                    .addOptionAndCallback(CommentConfig.IGNORE) {
-                        Toast.makeText(BaseApp.context, "点击了屏蔽", Toast.LENGTH_SHORT).show()
-                    }.addOptionAndCallback(CommentConfig.NOTICE) {
-                        Toast.makeText(BaseApp.context, "点击了关注", Toast.LENGTH_SHORT).show()
-                    }.addOptionAndCallback(CommentConfig.REPORT) {
-                        Toast.makeText(BaseApp.context, "点击了举报", Toast.LENGTH_SHORT).show()
-                    }.show(it, OptionalPopWindow.AlignMode.RIGHT, 0)
+
+            // 消除回复弹窗
+            viewModel.replyInfo.value = Pair("", "")
+
+            val optionPopWindow = OptionalPopWindow.Builder().with(this)
+                    .addOptionAndCallback(CommentConfig.REPLY) {
+                        KeyboardController.showInputKeyboard(this, qa_et_reply)
+                        viewModel.replyInfo.value = Pair("", "")
+                    }.addOptionAndCallback(CommentConfig.COPY) {
+                        val cm: ClipboardManager = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                        val mClipData = ClipData.newPlainText("掌上重邮帖子内容", dynamic.content)
+                        cm.primaryClip = mClipData
+                        toast("已复制到剪切板")
+                    }
+            if (dynamic.isSelf) {
+                optionPopWindow.addOptionAndCallback(CommentConfig.DELETE){
+                    QaDialog.show(this, resources.getString(R.string.qa_dialog_tip_delete_comment_text), {}) {
+                        toast("点击了删除")
+                    }
+                }
+            } else {
+                optionPopWindow.addOptionAndCallback(CommentConfig.REPORT) {
+                    QaReportDialog.show(this) {
+                        toast("点击了举报")
+                    }
+                }
+            }
+            optionPopWindow.show(it, OptionalPopWindow.AlignMode.RIGHT, 0)
         }
         qa_iv_dynamic_praise_count_image.setOnSingleClickListener {
             qa_iv_dynamic_praise_count_image.toggle()

@@ -8,7 +8,7 @@ import okhttp3.MultipartBody
 import retrofit2.http.*
 
 /**
- * Created By sandyz987 2020/12/1
+ * Created By zhangzhe 2020/12/1
  */
 interface ApiServiceNew {
     @POST("/wxapi/magipoke-loop/post/getDynamicList")

@@ -13,7 +13,7 @@ import com.mredrock.cyxbs.common.utils.extensions.gone
 import com.mredrock.cyxbs.qa.R
 
 /**
- * created by sandyz987, SpreadWater
+ * created by zhangzhe, SpreadWater
  * 2020/12/4
  */
 
@@ -26,7 +26,8 @@ class OptionalPopWindow private constructor(val context: Context?) : PopupWindow
     enum class AlignMode {
         LEFT,  // 左对齐
         RIGHT, // 右对齐
-        MIDDLE // 居中
+        MIDDLE,// 居中
+        CENTER // 在目标视图的正中间
     }
 
     init {
@@ -54,8 +55,8 @@ class OptionalPopWindow private constructor(val context: Context?) : PopupWindow
             val view = LayoutInflater.from(context).inflate(R.layout.qa_popwindow_option_normal, null, false)
             view.findViewById<TextView>(R.id.qa_popwindow_tv_option).text = optionText
             view.findViewById<TextView>(R.id.qa_popwindow_tv_option).setOnClickListener {
-                onClickCallback()
                 optionalPopWindow!!.dismiss()
+                onClickCallback()
             }
             childCount++
             (mainView as LinearLayout).addView(view)
@@ -78,15 +79,23 @@ class OptionalPopWindow private constructor(val context: Context?) : PopupWindow
             // 先测量mainView，以免取到measuredWidth为0
             mainView!!.measure(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
             // 这样就可以根据布局的大小去计算是居中还是左右对齐了
-            val offsetX = when (alignMode) {
+            val offsetXt = when (alignMode) {
                 AlignMode.MIDDLE -> -(View.MeasureSpec.getSize(mainView!!.measuredWidth) - view.width) / 2
                 AlignMode.LEFT -> 0
                 AlignMode.RIGHT -> -(View.MeasureSpec.getSize(mainView!!.measuredWidth) - view.width)
+                AlignMode.CENTER -> -(View.MeasureSpec.getSize(mainView!!.measuredWidth) - view.width) / 2
             }
+
+            // 如果是正中间，则修改Y坐标为正中间
+            var offsetYt = offsetY
+            if (alignMode == AlignMode.CENTER) {
+                offsetYt = -(View.MeasureSpec.getSize(mainView!!.measuredHeight) + view.height) / 2
+            }
+
             // 隐藏最后一个选项的分割线
             (mainView as LinearLayout).getChildAt((mainView as LinearLayout).childCount - 1).findViewById<View>(R.id.qa_divide_line).gone()
             // 显示弹窗
-            optionalPopWindow!!.showAsDropDown(view, offsetX, offsetY, Gravity.START)
+            optionalPopWindow!!.showAsDropDown(view, offsetXt, offsetYt, Gravity.START)
             optionalPopWindow!!.showBackgroundAnimator()
             optionalPopWindow!!.setOnDismissListener {
                 optionalPopWindow!!.hideBackgroundAnimator()

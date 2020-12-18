@@ -26,8 +26,10 @@ object KeyboardController {
      * 弹起键盘
      */
     fun showInputKeyboard(context: Context, v: View?) {
-        v?.requestFocus()
-        val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        imm.showSoftInput(v, 0)
+        v?.postDelayed({
+            v.requestFocus()
+            val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.showSoftInput(v, 0)
+        }, 100)
     }
 }

@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.os.Build
 import android.text.Html
 import android.text.Html.FROM_HTML_MODE_COMPACT
+import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.annotation.RequiresApi
@@ -21,7 +22,7 @@ import kotlinx.android.synthetic.main.qa_recycler_item_dynamic_reply_inner.view.
  *@description
  */
 
-class ReplyListAdapter(private val onReplyInnerClickEvent: (nickname: String, replyId: String) -> Unit, private val onReplyInnerLongClickEvent: (comment: Comment) -> Unit) : BaseRvAdapter<Comment>() {
+class ReplyListAdapter(private val onReplyInnerClickEvent: (nickname: String, replyId: String) -> Unit, private val onReplyInnerLongClickEvent: (comment: Comment, itemView: View) -> Unit) : BaseRvAdapter<Comment>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder<Comment> = ReplyViewHolder(parent)
 
 
@@ -51,12 +52,10 @@ class ReplyListAdapter(private val onReplyInnerClickEvent: (nickname: String, re
 
     override fun onItemClickListener(holder: BaseViewHolder<Comment>, position: Int, data: Comment) {
         onReplyInnerClickEvent.invoke(data.nickName, data.commentId)
-        Toast.makeText(BaseApp.context, "${data.nickName}, ${data.commentId}", Toast.LENGTH_SHORT).show()
     }
 
-    override fun onItemLongClickListener(holder: BaseViewHolder<Comment>, position: Int, data: Comment) {
-        onReplyInnerLongClickEvent.invoke(data)
-        Toast.makeText(BaseApp.context, data.toString(), Toast.LENGTH_SHORT).show()
+    override fun onItemLongClickListener(holder: BaseViewHolder<Comment>, position: Int, data: Comment, itemView: View) {
+        onReplyInnerLongClickEvent.invoke(data, itemView)
     }
 
 

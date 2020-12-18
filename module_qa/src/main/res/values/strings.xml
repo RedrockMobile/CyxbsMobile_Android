@@ -64,6 +64,7 @@
     <string name="qa_quiz_type_empty">类型不能为空哦～</string>
     <string name="qa_search_ed_hint_text">搜索你想知道的</string>
     <string name="qa_reply_et_hint_text">说点什么吧，万一火了呢</string>
+    <string name="qa_report_hint_text">150字以内</string>
     <string name="qa_dynamic_detail_title_text">详细</string>
     <string name="qa_ignore_dynamic">屏蔽成功</string>
     <string name="qa_ignore_dynamic_failure">屏蔽失败，请检查你的网络</string>
@@ -88,4 +89,10 @@
         <item>回答</item>
         <item>评论</item>
     </string-array>
+    
+    <string name="qa_dialog_tip_positive_text">确定</string>
+    <string name="qa_dialog_tip_deny_text">取消</string>
+    <string name="qa_dialog_tip_delete_comment_text">确定删除此条动态吗？</string>
+    <string name="qa_dialog_tip_report_text">填写举报理由</string>
+    
 </resources>
