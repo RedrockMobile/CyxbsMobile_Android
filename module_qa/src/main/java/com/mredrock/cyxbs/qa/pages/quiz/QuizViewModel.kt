@@ -61,9 +61,12 @@ class QuizViewModel : BaseViewModel() {
                 .getTopicGround(topic_name, instruction)
                 .mapOrThrowApiException()
                 .setSchedulers()
+                .doOnError {
+                    toastEvent.value = R.string.qa_follow_circle_failure
+                }
                 .safeSubscribeBy {
                     allCircle.value = it
-                }
+                }.lifeCycle()
     }
 
 
@@ -96,14 +99,14 @@ class QuizViewModel : BaseViewModel() {
                 .safeSubscribeBy {
                     toastEvent.value = R.string.qa_answer_submit_successfully_text
                     backAndRefreshPreActivityEvent.value = true
-                }.lifeCycle()
+                }
     }
 
     fun submitTitleAndContent(type: String, content: String): Boolean {
         var result = false
-        if (type.isNullOrBlank()) {
+        if (type.isBlank()) {
             toastEvent.value = R.string.qa_quiz_hint_title_empty
-        } else if (content.isNullOrBlank()) {
+        } else if (content.isBlank()) {
             toastEvent.value = R.string.qa_hint_content_empty
         } else {
             this.content = content

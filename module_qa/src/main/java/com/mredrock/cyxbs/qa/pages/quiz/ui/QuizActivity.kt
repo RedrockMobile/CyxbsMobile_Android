@@ -1,5 +1,6 @@
 package com.mredrock.cyxbs.qa.pages.quiz.ui
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.graphics.drawable.Drawable
@@ -9,9 +10,11 @@ import android.text.Editable
 import android.text.TextUtils
 import android.text.TextWatcher
 import android.util.Base64
+import android.util.Log
 import android.view.KeyEvent
 import android.view.View
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.alibaba.android.arouter.facade.annotation.Route
@@ -22,6 +25,7 @@ import com.mredrock.cyxbs.common.config.QA_QUIZ
 import com.mredrock.cyxbs.common.event.DynamicDraftEvent
 import com.mredrock.cyxbs.common.mark.EventBusLifecycleSubscriber
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
+import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.*
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.R.drawable.*
@@ -53,7 +57,6 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>(), EventBusLifecycleSu
 
     }
 
-    private var currentTypeIndex = 0
     override val isFragmentActivity = false
     private var draftId = NOT_DRAFT_ID
     private var dynamicType: String = ""
@@ -68,6 +71,7 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>(), EventBusLifecycleSu
         initImageAddView()
         initEditListener()
         initTypeSelector()
+
         viewModel.backAndRefreshPreActivityEvent.observeNotNull {
             if (it) {
                 if (draftId != NOT_DRAFT_ID) {
@@ -79,35 +83,42 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>(), EventBusLifecycleSu
                 finish()
             }
         }
+
         viewModel.finishActivityEvent.observeNotNull {
             finish()
         }
-
-        tv_is_checked_to_show_origin_image.apply {
-            isChecked = false
-            setOnSingleClickListener {
-                isChecked = !isChecked
-            }
-        }
     }
 
+
+    //发布页标签单选
+    @SuppressLint("SetTextI18n")
     private fun initTypeSelector() {
         viewModel.getAllCirCleData("问答圈", "test1")
         viewModel.allCircle.observe {
             if (!it.isNullOrEmpty()) {
                 val chipGroup = findViewById<ChipGroup>(R.id.layout_quiz_tag)
-                for ((i, value) in it.withIndex()) {
-                    if (i == 0) dynamicType = value.topicName
+                for (circleData in it.withIndex()) {
                     chipGroup.addView((layoutInflater.inflate(R.layout.qa_quiz_view_chip, chipGroup, false) as Chip).apply {
-                        text = value.topicName
-                        setOnClickListener {
-                            dynamicType = "#$text"
+                        text = "#" + circleData.value.topicName
+                        setOnCheckedChangeListener { view, checked ->
+                            if (checked) {
+                                val type = StringBuffer(text.toString())
+                                type.deleteCharAt(0)
+                                dynamicType = type.toString()
+                                LogUtils.d("checked", "xuanzhong")
+                            } else {
+                                dynamicType = ""
+                                LogUtils.d("checked", "weixuanzhong")
+
+                            }
                         }
                     })
                 }
             }
         }
     }
+
+    //动态监听内容文字变化
 
     private fun initEditListener() {
         edt_quiz_content.addTextChangedListener(object : TextWatcher {

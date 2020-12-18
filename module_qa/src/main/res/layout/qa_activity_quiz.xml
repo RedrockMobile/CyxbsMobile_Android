@@ -74,20 +74,6 @@
                 android:paddingEnd="16dp"
                 android:paddingBottom="6dp" />
 
-            <CheckedTextView
-                android:id="@+id/tv_is_checked_to_show_origin_image"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:drawableLeft="@drawable/qa_selector_judge_is_show_origin_images"
-                android:gravity="center_vertical"
-                android:paddingStart="16dp"
-                android:paddingTop="6dp"
-                android:paddingEnd="16dp"
-                android:paddingBottom="6dp"
-                android:text=" 原图"
-                android:textColor="@color/common_qa_quiz_content_edt_hint_color"
-                android:textSize="18sp" />
-
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
