@@ -93,7 +93,9 @@ interface ApiServiceNew {
     @POST("/wxapi/magipoke-loop/comment/deleteId")
     @FormUrlEncoded
     fun deleteId(@Field("id")
-                 id: String
+                 id: String,
+                 @Field("model")
+                 model: String
     ): Observable<RedrockApiStatus>
 
     @GET("/wxapi/magipoke-loop/comment/getallcomment")

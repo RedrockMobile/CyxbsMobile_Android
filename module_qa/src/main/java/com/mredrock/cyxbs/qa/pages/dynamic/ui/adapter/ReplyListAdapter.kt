@@ -22,7 +22,7 @@ import kotlinx.android.synthetic.main.qa_recycler_item_dynamic_reply_inner.view.
  *@description
  */
 
-class ReplyListAdapter(private val onReplyInnerClickEvent: (nickname: String, replyId: String) -> Unit, private val onReplyInnerLongClickEvent: (comment: Comment, itemView: View) -> Unit) : BaseRvAdapter<Comment>() {
+class ReplyListAdapter(private val onReplyInnerClickEvent: (nickname: String, commentId: String) -> Unit, private val onReplyInnerLongClickEvent: (comment: Comment, itemView: View) -> Unit) : BaseRvAdapter<Comment>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder<Comment> = ReplyViewHolder(parent)
 
 

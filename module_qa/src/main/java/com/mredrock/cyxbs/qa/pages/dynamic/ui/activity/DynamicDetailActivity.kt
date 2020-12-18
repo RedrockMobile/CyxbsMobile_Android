@@ -55,14 +55,21 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
         }
     }
 
-    private val getCommentList: () -> Unit = {
-        viewModel.refreshCommentList(dynamic.postId, qa_rv_comment_list, "0")
-    }
+    private val emptyRvAdapter by lazy { EmptyRvAdapter(getString(R.string.qa_comment_list_empty_hint)) }
+
+    private val footerRvAdapter = FooterRvAdapter { getCommentList }
+
+    lateinit var dynamic: Dynamic
+
+    private val behavior by lazy { AppBarLayout.ScrollingViewBehavior() }
 
     override val isFragmentActivity = false
 
     override fun getViewModelFactory() = DynamicDetailViewModel.Factory()
 
+    private val getCommentList: () -> Unit = {
+        viewModel.refreshCommentList(dynamic.postId, "0")
+    }
 
     // 评论点击的逻辑
     private val commentListRvAdapter = CommentListAdapter(
@@ -70,9 +77,9 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
                 KeyboardController.showInputKeyboard(this, qa_et_reply)
                 viewModel.replyInfo.value = Pair("", commentId)
             },
-            onReplyInnerClickEvent = { nickname, replyId ->
+            onReplyInnerClickEvent = { nickname, commentId ->
                 KeyboardController.showInputKeyboard(this, qa_et_reply)
-                viewModel.replyInfo.value = Pair(nickname, replyId)
+                viewModel.replyInfo.value = Pair(nickname, commentId)
             },
             onItemLongClickEvent = { comment, itemView ->
                 // 消除回复弹窗
@@ -92,6 +99,7 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
                     optionPopWindow.addOptionAndCallback(CommentConfig.DELETE){
                         QaDialog.show(this, resources.getString(R.string.qa_dialog_tip_delete_comment_text), {}) {
                             toast("点击了删除")
+                            viewModel.deleteId(comment.commentId, "1")
                         }
                     }
                 } else {
@@ -111,7 +119,7 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
                 val optionPopWindow = OptionalPopWindow.Builder().with(this)
                         .addOptionAndCallback(CommentConfig.REPLY) {
                             KeyboardController.showInputKeyboard(this, qa_et_reply)
-                            viewModel.replyInfo.value = Pair(comment.nickName, comment.replyId)
+                            viewModel.replyInfo.value = Pair(comment.nickName, comment.commentId)
                         }.addOptionAndCallback(CommentConfig.COPY) {
                             val cm: ClipboardManager = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
                             val mClipData = ClipData.newPlainText("掌上重邮帖子内容", comment.content)
@@ -122,6 +130,7 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
                     optionPopWindow.addOptionAndCallback(CommentConfig.DELETE){
                         QaDialog.show(this, resources.getString(R.string.qa_dialog_tip_delete_comment_text), {}) {
                             toast("点击了删除")
+                            viewModel.deleteId(comment.commentId, "1")
                         }
                     }
                 } else {
@@ -135,12 +144,6 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
 
             })
 
-    private val emptyRvAdapter by lazy { EmptyRvAdapter(getString(R.string.qa_comment_list_empty_hint)) }
-    private val footerRvAdapter = FooterRvAdapter { getCommentList }
-
-    lateinit var dynamic: Dynamic
-
-    private val behavior by lazy { AppBarLayout.ScrollingViewBehavior() }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -219,7 +222,7 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
             qa_et_reply.setText("")
             KeyboardController.hideInputKeyboard(this, qa_et_reply)
 
-            viewModel.refreshCommentList(dynamic.postId, qa_rv_comment_list, (it?.commentId
+            viewModel.refreshCommentList(dynamic.postId, (it?.commentId
                     ?: 0).toString())
 
         }
@@ -238,6 +241,10 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
         layoutParams.behavior = behavior
 
         dynamic = intent.getParcelableExtra("dynamicItem")
+        viewModel.dynamicLiveData.value = intent.getParcelableExtra("dynamicItem")
+        viewModel.dynamicLiveData.observe {
+            dynamic = it!!
+        }
 
         qa_tv_reply_title.setOnClickListener {
             KeyboardController.showInputKeyboard(this, qa_et_reply)
@@ -263,6 +270,7 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
                 optionPopWindow.addOptionAndCallback(CommentConfig.DELETE){
                     QaDialog.show(this, resources.getString(R.string.qa_dialog_tip_delete_comment_text), {}) {
                         toast("点击了删除")
+                        viewModel.deleteId(dynamic.postId, "0")
                     }
                 }
             } else {

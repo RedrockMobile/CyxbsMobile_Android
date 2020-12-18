@@ -3,7 +3,6 @@ package com.mredrock.cyxbs.qa.pages.dynamic.viewmodel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.RecyclerView
 import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.utils.extensions.mapOrThrowApiException
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
@@ -11,6 +10,7 @@ import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.qa.beannew.Comment
 import com.mredrock.cyxbs.qa.beannew.CommentReleaseResult
+import com.mredrock.cyxbs.qa.beannew.Dynamic
 import com.mredrock.cyxbs.qa.network.ApiServiceNew
 import com.mredrock.cyxbs.qa.network.NetworkState
 
@@ -27,12 +27,14 @@ open class DynamicDetailViewModel : BaseViewModel() {
 
     val replyInfo = MutableLiveData<Pair<String, String>>()
 
+    val dynamicLiveData = MutableLiveData<Dynamic>()
+
     var position = 0
 
     val commentReleaseResult = MutableLiveData<CommentReleaseResult>()
 
 
-    fun refreshCommentList(postId: String, rv: RecyclerView, commentId: String) {
+    fun refreshCommentList(postId: String, commentId: String) {
         ApiGenerator.getApiService(ApiServiceNew::class.java)
                 .getComment(postId)
                 .mapOrThrowApiException()
@@ -87,6 +89,21 @@ open class DynamicDetailViewModel : BaseViewModel() {
                 }
                 .safeSubscribeBy {
                     commentReleaseResult.postValue(it)
+                }
+    }
+
+    fun deleteId(id: String, model: String) {
+        ApiGenerator.getApiService(ApiServiceNew::class.java)
+                .deleteId(id, model)
+                .setSchedulers()
+                .doOnSubscribe {
+
+                }
+                .doOnError {
+
+                }
+                .safeSubscribeBy {
+                    refreshCommentList(dynamicLiveData.value?.postId?: "0", "0")
                 }
     }
 
