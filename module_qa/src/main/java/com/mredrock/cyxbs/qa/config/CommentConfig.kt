@@ -7,12 +7,12 @@ package com.mredrock.cyxbs.qa.config
  * @Date: 2020/12/14 15:18
  */
 object CommentConfig {
-    val IGNORE = "屏蔽此人"
-    val NOTICE = "关注圈子"
-    val REPORT = "举报"
-    val REPLY = "回复"
-    val COPY = "复制"
-    val DELETE = "删除"
-    val REPORTMODEL="0"
-    val PRAISEMODEL="1"
+    const val IGNORE = "屏蔽此人"
+    const val NOTICE = "关注圈子"
+    const val REPORT = "举报"
+    const val REPLY = "回复"
+    const val COPY = "复制"
+    const val DELETE = "删除"
+    const val REPORT_MODEL = "0"
+    const val PRAISE_MODEL = "1"
 }

@@ -4,6 +4,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mredrock.cyxbs.common.utils.extensions.setAvatarImageFromUrl
+import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.beannew.Comment
 import com.mredrock.cyxbs.qa.component.recycler.BaseRvAdapter
@@ -46,7 +47,7 @@ class CommentListAdapter(
             itemView.apply {
                 qa_tv_reply_nickname.text = data.nickName
                 qa_tv_reply_publish_at.text = dynamicTimeDescription(System.currentTimeMillis(), data.publishTime * 1000)
-                qa_tv_reply_praise_count.text = data.praiseCount.toString()
+
                 qa_tv_reply_content.text = data.content
                 qa_iv_reply_praise_count_image.isChecked = data.isPraised
                 qa_iv_reply_avatar.setAvatarImageFromUrl(data.avatar)
@@ -82,6 +83,10 @@ class CommentListAdapter(
                     (qa_rv_reply.adapter as ReplyListAdapter).refreshData(listOf())
                 } else {
                     (qa_rv_reply.adapter as ReplyListAdapter).refreshData(data.replyList.takeLast(3))
+                }
+                qa_iv_reply_praise_count_image.registerLikeView(data.commentId, "0", data.isPraised, data.praiseCount)
+                qa_iv_reply_praise_count_image.setOnSingleClickListener {
+                    qa_iv_reply_praise_count_image.click()
                 }
             }
         }

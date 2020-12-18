@@ -88,7 +88,7 @@ open class DynamicListViewModel(kind: String) : BaseViewModel() {
 
     fun report(postId: String, content: String) {
         ApiGenerator.getApiService(ApiServiceNew::class.java)
-                .report(postId, CommentConfig.REPORTMODEL, content)
+                .report(postId, CommentConfig.REPORT_MODEL, content)
                 .setSchedulers()
                 .safeSubscribeBy {
                     if (it.status == 200)
@@ -107,9 +107,9 @@ open class DynamicListViewModel(kind: String) : BaseViewModel() {
         ApiGenerator.getApiService(ApiServiceNew::class.java)
                 .run {
                     if (dynamic.isPraised) {
-                        praise(dynamic.postId, CommentConfig.PRAISEMODEL)
+                        praise(dynamic.postId, CommentConfig.PRAISE_MODEL)
                     } else {
-                        praise(dynamic.postId, CommentConfig.PRAISEMODEL)
+                        praise(dynamic.postId, CommentConfig.PRAISE_MODEL)
                     }
                 }
                 .doOnSubscribe { isDealing = true }

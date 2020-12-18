@@ -1,0 +1,156 @@
+package com.mredrock.cyxbs.qa.ui.widget.likeview
+
+import android.content.Context
+import android.graphics.Canvas
+import android.os.Build
+import android.text.TextPaint
+import android.util.AttributeSet
+import com.mredrock.cyxbs.common.network.ApiGenerator
+import com.mredrock.cyxbs.common.utils.extensions.*
+import com.mredrock.cyxbs.qa.R
+import com.mredrock.cyxbs.qa.network.ApiServiceNew
+
+/**
+ *@author zhangzhe
+ *@date 2020/12/19
+ *@description 采用观察者模式，观察点赞的变化
+ */
+class LikeViewSlim : LikeView {
+    constructor(context: Context) : super(context)
+    constructor(context: Context, attrs: AttributeSet) : super(context, attrs)
+    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
+
+    companion object {
+        /**
+         *  存放对应id和model的帖子/评论的点赞数和是否点赞
+         *  Map的键：id和model的拼接，用“-”连接，如“15-1”表示id为15的帖子，“20-0”表示id为20的动态
+         *  Map的值：Pair第一个参数：点赞数；第二个参数：是否点赞
+         */
+        private val likeMap = HashMap<String, Pair<Int, Boolean>?>()
+        private val observer = HashMap<String, ArrayList<LikeViewSlim>?>()
+    }
+
+
+    private var isLoading = false
+    private var praiseCount = 0
+    private var id = ""
+    private var model = "0"
+    private var isPraised = false
+
+    private val textPaint = TextPaint()
+
+    init {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            textPaint.color = resources.getColor(R.color.common_qa_question_bottom_count_color, null)
+        } else {
+            textPaint.color = resources.getColor(R.color.common_qa_question_bottom_count_color)
+        }
+
+        textPaint.textSize = context.sp(11).toFloat()
+        textPaint.isAntiAlias = true
+    }
+
+
+    // 改变默认尺寸方便画点赞数
+    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+        var width = MeasureSpec.getSize(heightMeasureSpec)
+        val mode = MeasureSpec.EXACTLY
+        width += 500
+        val w = MeasureSpec.makeMeasureSpec(width, mode)
+        super.onMeasure(w, heightMeasureSpec)
+    }
+
+
+    override fun onDraw(canvas: Canvas?) {
+        val fontMetrics = textPaint.fontMetrics
+        val offsetY: Float = (fontMetrics.bottom - fontMetrics.top) / 2 - fontMetrics.bottom
+        canvas?.drawText(praiseCount.toString(), width / 2f + context.dp2px(18f), height / 2f + offsetY, textPaint)
+        canvas?.translate(0f, -7f)
+        super.onDraw(canvas)
+    }
+
+    /**
+     * 传入id和model，注册LikeView的监听，并且自动取消原来的监听
+     */
+    fun registerLikeView(id: String, model: String, isPraised: Boolean, praiseCount: Int) {
+        if (id == "0") {
+            throw IllegalStateException("id must not be 0")
+        }
+
+        // 取消原先的订阅
+        observer["${this.id}-${this.model}"]?.remove(this)
+
+        this.id = id
+        this.model = model
+
+        // 查询map中是否有记录
+        if (likeMap["$id-$model"] == null) {
+            // 如果map中没有记录，则新建
+            this.praiseCount = praiseCount
+            this.isPraised = isPraised
+            likeMap["$id-$model"] = Pair(praiseCount, isPraised)
+        } else {
+            // 如果map中有记录，则不管函数传进来的isPraised和praiseCount，用map里现存的
+            this.praiseCount = likeMap["$id-$model"]?.first ?: 0
+            this.isPraised = likeMap["$id-$model"]?.second ?: false
+        }
+
+        // 注册订阅者
+        if (observer["${this.id}-${this.model}"] == null) {
+            observer["${this.id}-${this.model}"] = arrayListOf(this)
+        } else {
+            observer["${this.id}-${this.model}"]?.add(this)
+        }
+
+        isChecked = this.isPraised
+        invalidate()
+    }
+
+    // 根据id和model去map中寻找对应的“帖子/动态”点赞数和是否点赞
+    fun notifyData() {
+        isPraised = likeMap["$id-$model"]?.second ?: false
+        praiseCount = likeMap["$id-$model"]?.first ?: 0
+        isChecked = isPraised
+        invalidate()
+    }
+
+
+    fun click() {
+        val tmpId = this.id
+        val tmpModel = this.model
+        val originIsPraised = isPraised
+        val originPraiseCount = praiseCount
+
+        if (isLoading) return
+        isLoading = true
+
+        if (isPraised) {
+            isPraised = false
+            praiseCount -= 1
+        } else {
+            isPraised = true
+            praiseCount += 1
+        }
+        isChecked = isPraised
+        likeMap["$tmpId-$tmpModel"] = Pair(praiseCount, isPraised)
+        invalidate()
+        ApiGenerator.getApiService(ApiServiceNew::class.java)
+                .praise(tmpId, tmpModel)
+                .checkError()
+                .setSchedulers()
+                .doOnError {
+                    // 如果失败，则通知所有订阅了的view，回到原始状态
+                    likeMap["$tmpId-$tmpModel"] = Pair(originPraiseCount, originIsPraised)
+                    observer["$tmpId-$tmpModel"]?.forEach {
+                        it.notifyData()
+                    }
+                }.doFinally {
+                    isLoading = false
+                }.safeSubscribeBy {
+                    // 如果成功，则保持
+                }
+
+    }
+
+
+}

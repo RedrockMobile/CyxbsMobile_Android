@@ -90,13 +90,11 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
                             KeyboardController.showInputKeyboard(this, qa_et_reply)
                             viewModel.replyInfo.value = Pair(comment.nickName, comment.commentId)
                         }.addOptionAndCallback(CommentConfig.COPY) {
-                            val cm: ClipboardManager = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-                            val mClipData = ClipData.newPlainText("掌上重邮帖子内容", comment.content)
-                            cm.primaryClip = mClipData
+                            copyText(comment.content)
                             toast("已复制到剪切板")
                         }
                 if (dynamic.isSelf || comment.isSelf) {
-                    optionPopWindow.addOptionAndCallback(CommentConfig.DELETE){
+                    optionPopWindow.addOptionAndCallback(CommentConfig.DELETE) {
                         QaDialog.show(this, resources.getString(R.string.qa_dialog_tip_delete_comment_text), {}) {
                             toast("点击了删除")
                             viewModel.deleteId(comment.commentId, "1")
@@ -121,13 +119,11 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
                             KeyboardController.showInputKeyboard(this, qa_et_reply)
                             viewModel.replyInfo.value = Pair(comment.nickName, comment.commentId)
                         }.addOptionAndCallback(CommentConfig.COPY) {
-                            val cm: ClipboardManager = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-                            val mClipData = ClipData.newPlainText("掌上重邮帖子内容", comment.content)
-                            cm.primaryClip = mClipData
+                            copyText(comment.content)
                             toast("已复制到剪切板")
                         }
                 if (dynamic.isSelf || comment.isSelf) {
-                    optionPopWindow.addOptionAndCallback(CommentConfig.DELETE){
+                    optionPopWindow.addOptionAndCallback(CommentConfig.DELETE) {
                         QaDialog.show(this, resources.getString(R.string.qa_dialog_tip_delete_comment_text), {}) {
                             toast("点击了删除")
                             viewModel.deleteId(comment.commentId, "1")
@@ -261,9 +257,7 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
                         KeyboardController.showInputKeyboard(this, qa_et_reply)
                         viewModel.replyInfo.value = Pair("", "")
                     }.addOptionAndCallback(CommentConfig.COPY) {
-                        val cm: ClipboardManager = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-                        val mClipData = ClipData.newPlainText("掌上重邮帖子内容", dynamic.content)
-                        cm.primaryClip = mClipData
+                        copyText(dynamic.content)
                         toast("已复制到剪切板")
                     }
             if (dynamic.isSelf) {
@@ -336,6 +330,13 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
             )
             adapter = adapterWrapper
         }
+    }
+
+
+    private fun copyText(content: String) {
+        val cm: ClipboardManager = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+        val mClipData = ClipData.newPlainText("掌上重邮帖子内容", content)
+        cm.primaryClip = mClipData
     }
 
 

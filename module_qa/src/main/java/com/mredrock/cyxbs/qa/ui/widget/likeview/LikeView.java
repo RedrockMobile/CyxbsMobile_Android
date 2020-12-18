@@ -17,7 +17,6 @@ import android.view.animation.LinearInterpolator;
 import android.view.animation.OvershootInterpolator;
 import android.widget.Checkable;
 
-
 import androidx.annotation.Nullable;
 
 import com.mredrock.cyxbs.qa.R;
@@ -160,6 +159,7 @@ public class LikeView extends View implements Checkable {
         dotR = mRadius / mDotSizeScale;
         mDotColors =DEFAULT_DOT_COLORS;
     }
+
 
     @Override
     protected void onDraw(Canvas canvas) {

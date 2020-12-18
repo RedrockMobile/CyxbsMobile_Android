@@ -118,11 +118,10 @@
         app:layout_constraintTop_toBottomOf="@+id/qa_dynamic_nine_grid_view"
         tools:text="@string/qa_recycler_item_dynamic_label" />
 
-    <com.mredrock.cyxbs.qa.ui.widget.likeview.LikeView
+    <com.mredrock.cyxbs.qa.ui.widget.likeview.LikeViewSlim
         android:id="@+id/qa_iv_dynamic_praise_count_image"
-        android:layout_width="wrap_content"
+        android:layout_width="40dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="5dp"
         android:layout_marginEnd="5dp"
         app:checkedColor="#323FD9"
         app:checkedLikeIconRes="@drawable/qa_ic_answer_list_praised"
@@ -139,13 +138,10 @@
         android:id="@+id/qa_tv_dynamic_praise_count"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="50dp"
-        android:layout_marginEnd="8dp"
         android:layout_toStartOf="@+id/qa_tv_dynamic_comment_count"
         android:textColor="@color/common_qa_question_bottom_count_color"
         android:textSize="11sp"
         app:layout_constraintBottom_toBottomOf="@+id/qa_iv_dynamic_comment_count"
-        app:layout_constraintEnd_toStartOf="@+id/qa_iv_dynamic_comment_count"
         app:layout_constraintStart_toStartOf="@+id/qa_iv_dynamic_praise_count_image"
         app:layout_constraintTop_toTopOf="@+id/qa_iv_dynamic_comment_count"
         tools:text="999" />
