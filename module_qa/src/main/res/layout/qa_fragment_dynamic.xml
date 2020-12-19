@@ -122,7 +122,7 @@
                     android:id="@+id/rv_dynamic_List"
                     android:layout_width="match_parent"
                     android:layout_height="100dp"
-                    tools:listitem="@layout/qa_recycler_item_dynamic" />
+                    tools:listitem="@layout/qa_recycler_item_dynamic_header" />
             </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
         </LinearLayout>
     </RelativeLayout>

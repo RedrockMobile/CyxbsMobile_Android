@@ -9,6 +9,7 @@ import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.utils.extensions.*
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.network.ApiServiceNew
+import java.lang.ref.WeakReference
 
 /**
  *@author zhangzhe
@@ -27,7 +28,7 @@ class LikeViewSlim : LikeView {
          *  Map的值：Pair第一个参数：点赞数；第二个参数：是否点赞
          */
         private val likeMap = HashMap<String, Pair<Int, Boolean>?>()
-        private val observer = HashMap<String, ArrayList<LikeViewSlim>?>()
+        private val observer = HashMap<String, ArrayList<WeakReference<LikeViewSlim>>?>()
     }
 
 
@@ -36,6 +37,9 @@ class LikeViewSlim : LikeView {
     private var id = ""
     private var model = "0"
     private var isPraised = false
+
+    // 对View的持有为弱引用，防止内存泄漏
+    private var weakP: WeakReference<LikeViewSlim>? = null
 
     private val textPaint = TextPaint()
 
@@ -78,7 +82,7 @@ class LikeViewSlim : LikeView {
         }
 
         // 取消原先的订阅
-        observer["${this.id}-${this.model}"]?.remove(this)
+        observer["${this.id}-${this.model}"]?.remove(weakP)
 
         this.id = id
         this.model = model
@@ -96,22 +100,34 @@ class LikeViewSlim : LikeView {
         }
 
         // 注册订阅者
+        weakP = WeakReference(this)
         if (observer["${this.id}-${this.model}"] == null) {
-            observer["${this.id}-${this.model}"] = arrayListOf(this)
-        } else {
-            observer["${this.id}-${this.model}"]?.add(this)
+            observer["${this.id}-${this.model}"] = arrayListOf()
         }
+        observer["${this.id}-${this.model}"]?.add(weakP!!)
 
         setCheckedWithoutAnimator(this.isPraised)
         invalidate()
     }
 
     // 根据id和model去map中寻找对应的“帖子/动态”点赞数和是否点赞
-    fun notifyData() {
+    private fun notifyData() {
         isPraised = likeMap["$id-$model"]?.second ?: false
         praiseCount = likeMap["$id-$model"]?.first ?: 0
         setCheckedWithoutAnimator(this.isPraised)
         invalidate()
+    }
+
+    // 通知订阅者
+    private fun sendBroadcast(key: String) {
+        observer[key]?.forEach {
+            if (it.get() == null) {
+                // 如果view已经被回收，则删除订阅（弱引用）
+                observer[key]?.remove(it)
+            } else {
+                it.get()?.notifyData()
+            }
+        }
     }
 
 
@@ -141,13 +157,12 @@ class LikeViewSlim : LikeView {
                 .doOnError {
                     // 如果失败，则通知所有订阅了的view，回到原始状态
                     likeMap["$tmpId-$tmpModel"] = Pair(originPraiseCount, originIsPraised)
-                    observer["$tmpId-$tmpModel"]?.forEach {
-                        it.notifyData()
-                    }
+                    sendBroadcast("$tmpId-$tmpModel")
                 }.doFinally {
                     isLoading = false
                 }.safeSubscribeBy {
                     // 如果成功，则保持
+                    sendBroadcast("$tmpId-$tmpModel")
                 }
 
     }

@@ -11,7 +11,7 @@ import com.mredrock.cyxbs.qa.component.recycler.BaseViewHolder
 import com.mredrock.cyxbs.qa.ui.activity.ViewImageActivity
 import com.mredrock.cyxbs.qa.ui.widget.NineGridView
 import com.mredrock.cyxbs.qa.utils.dynamicTimeDescription
-import kotlinx.android.synthetic.main.qa_recycler_item_dynamic.view.*
+import kotlinx.android.synthetic.main.qa_recycler_item_dynamic_header.view.*
 
 /**
  *@Date 2020-11-22
@@ -50,7 +50,7 @@ class CircleDetailAdapter(private val onItemClickEvent: (Dynamic) -> Unit) : Bas
         onItemClickEvent.invoke(data)
     }
 
-    class CircleDetailViewHolder(parent: ViewGroup) : BaseViewHolder<Dynamic>(parent, R.layout.qa_recycler_item_dynamic) {
+    class CircleDetailViewHolder(parent: ViewGroup) : BaseViewHolder<Dynamic>(parent, R.layout.qa_recycler_item_dynamic_header) {
         override fun refresh(data: Dynamic?) {
             data ?: return
             itemView.apply {

@@ -31,8 +31,8 @@ import com.mredrock.cyxbs.qa.utils.KeyboardController
 import com.mredrock.cyxbs.qa.utils.dynamicTimeDescription
 import kotlinx.android.synthetic.main.qa_activity_dynamic_detail.*
 import kotlinx.android.synthetic.main.qa_common_toolbar.*
-import kotlinx.android.synthetic.main.qa_recycler_item_dynamic.*
-import kotlinx.android.synthetic.main.qa_recycler_item_dynamic.view.*
+import kotlinx.android.synthetic.main.qa_recycler_item_dynamic_header.*
+import kotlinx.android.synthetic.main.qa_recycler_item_dynamic_header.view.*
 
 
 /**

@@ -1,6 +1,5 @@
 package com.mredrock.cyxbs.qa.pages.search.ui.adapter
 
-import android.annotation.SuppressLint
 import android.view.ViewGroup
 import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.setAvatarImageFromUrl
@@ -11,7 +10,7 @@ import com.mredrock.cyxbs.qa.component.recycler.BaseViewHolder
 import com.mredrock.cyxbs.qa.ui.activity.ViewImageActivity
 import com.mredrock.cyxbs.qa.ui.widget.NineGridView
 import com.mredrock.cyxbs.qa.utils.dynamicTimeDescription
-import kotlinx.android.synthetic.main.qa_recycler_item_dynamic.view.*
+import kotlinx.android.synthetic.main.qa_recycler_item_dynamic_header.view.*
 
 /**
  * Created by yyfbe, Date on 2020/8/13.
@@ -26,7 +25,7 @@ class SearchResultHeaderAdapter(private val onItemClickEvent: (Dynamic) -> Unit)
 
     }
 
-    class ViewHolder(parent: ViewGroup) : BaseViewHolder<Dynamic>(parent, R.layout.qa_recycler_item_dynamic) {
+    class ViewHolder(parent: ViewGroup) : BaseViewHolder<Dynamic>(parent, R.layout.qa_recycler_item_dynamic_header) {
 
         override fun refresh(data: Dynamic?) {
             if (data == null) return

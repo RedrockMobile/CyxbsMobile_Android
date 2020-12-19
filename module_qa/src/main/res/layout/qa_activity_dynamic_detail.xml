@@ -44,7 +44,7 @@
                 app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
                 <include
-                    layout="@layout/qa_recycler_item_dynamic"
+                    layout="@layout/qa_recycler_item_dynamic_header"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
             </com.google.android.material.appbar.CollapsingToolbarLayout>
