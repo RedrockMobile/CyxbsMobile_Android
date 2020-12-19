@@ -28,6 +28,7 @@ import com.mredrock.cyxbs.qa.config.CommentConfig.NOTICE
 import com.mredrock.cyxbs.qa.config.CommentConfig.REPORT
 import com.mredrock.cyxbs.qa.config.RequestResultCode.DYNAMIC_DETAIL_REQUEST
 import com.mredrock.cyxbs.qa.config.RequestResultCode.NEED_REFRESH_RESULT
+import com.mredrock.cyxbs.qa.config.RequestResultCode.RELEASE_DYNAMIC_ACTIVITY_REQUEST
 import com.mredrock.cyxbs.qa.network.NetworkState
 import com.mredrock.cyxbs.qa.pages.dynamic.ui.activity.DynamicDetailActivity
 import com.mredrock.cyxbs.qa.pages.dynamic.ui.adapter.CirclesAdapter
@@ -292,7 +293,7 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), EventBusL
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         when (requestCode) {
-            // 动态详细
+            // 从动态详细返回
             DYNAMIC_DETAIL_REQUEST -> {
                 if (resultCode == NEED_REFRESH_RESULT) {
                     // 需要刷新 则 刷新显示动态
@@ -303,8 +304,15 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), EventBusL
                     dynamicListRvAdapter.notifyDataSetChanged()
                 }
             }
+            // 从发动态返回
+            RELEASE_DYNAMIC_ACTIVITY_REQUEST -> {
+                if (resultCode == NEED_REFRESH_RESULT) {
+                    // 需要刷新 则 刷新显示动态
+                    viewModel.invalidateQuestionList()
+                    viewModel.getMyCirCleData()
 
-
+                }
+            }
         }
     }
 

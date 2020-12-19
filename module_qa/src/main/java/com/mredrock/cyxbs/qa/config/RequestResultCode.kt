@@ -7,11 +7,22 @@ package com.mredrock.cyxbs.qa.config
  */
 
 object RequestResultCode {
-    // request
+    /**
+     * request
+     */
+    // 去详细界面的请求
     const val DYNAMIC_DETAIL_REQUEST = 1
 
+    // 发帖子的请求
+    const val RELEASE_DYNAMIC_ACTIVITY_REQUEST = 2
 
-    // result
+    // 发回复的请求
+    const val RELEASE_COMMENT_ACTIVITY_REQUEST = 3
+
+    /**
+     * result
+     */
+    // 需要刷新动态首页
     const val NEED_REFRESH_RESULT = 1
 
 }

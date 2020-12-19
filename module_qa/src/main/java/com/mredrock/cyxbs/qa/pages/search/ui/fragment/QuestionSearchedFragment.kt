@@ -15,6 +15,7 @@ import com.mredrock.cyxbs.common.utils.extensions.doIfLogin
 import com.mredrock.cyxbs.common.utils.extensions.gone
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.component.recycler.RvAdapterWrapper
+import com.mredrock.cyxbs.qa.config.RequestResultCode.RELEASE_DYNAMIC_ACTIVITY_REQUEST
 import com.mredrock.cyxbs.qa.network.NetworkState
 import com.mredrock.cyxbs.qa.pages.quiz.ui.QuizActivity
 import com.mredrock.cyxbs.qa.pages.search.ui.adapter.SearchKnowledgeAdapter
@@ -22,7 +23,6 @@ import com.mredrock.cyxbs.qa.pages.search.ui.adapter.SearchNoResultAdapter
 import com.mredrock.cyxbs.qa.pages.search.ui.adapter.SearchResultHeaderAdapter
 import com.mredrock.cyxbs.qa.pages.search.viewmodel.QuestionSearchedViewModel
 import kotlinx.android.synthetic.main.qa_fragment_question_search_result.*
-import kotlinx.android.synthetic.main.qa_item_search_no_result.*
 
 /**
  * Created by yyfbe, Date on 2020/8/13.
@@ -31,8 +31,6 @@ class QuestionSearchedFragment : BaseViewModelFragment<QuestionSearchedViewModel
 
     companion object {
         const val SEARCH_KEY = "searchKey"
-        const val REQUEST_LIST_REFRESH_ACTIVITY = 0x3
-        const val REQUEST_CODE_TO_ANSWER_List = 0x5
     }
 
     //搜索关键词
@@ -95,7 +93,7 @@ class QuestionSearchedFragment : BaseViewModelFragment<QuestionSearchedViewModel
         }
         emptyRvAdapter = SearchNoResultAdapter(getString(R.string.qa_search_no_result)){
             context?.doIfLogin("提问") {
-                QuizActivity.activityStart(this, "发动态", REQUEST_LIST_REFRESH_ACTIVITY)
+                QuizActivity.activityStart(this, "发动态", RELEASE_DYNAMIC_ACTIVITY_REQUEST)
                 this.onDetach()
                 activity?.finish()
             }

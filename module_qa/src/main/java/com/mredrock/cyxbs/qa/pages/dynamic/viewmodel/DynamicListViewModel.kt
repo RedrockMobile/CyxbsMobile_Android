@@ -115,14 +115,13 @@ open class DynamicListViewModel(kind: String) : BaseViewModel() {
                 .deleteId(id, model)
                 .setSchedulers()
                 .doOnSubscribe {
-                    deleteTips.value = true
                 }
                 .doOnError {
                     toastEvent.value = R.string.qa_delete_dynamic_failure
                     deleteTips.value = false
                 }
                 .safeSubscribeBy {
-
+                    deleteTips.value = true
                 }
     }
 

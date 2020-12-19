@@ -101,7 +101,6 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
                 if (dynamic._isSelf == 1 || comment.isSelf) {
                     optionPopWindow.addOptionAndCallback(CommentConfig.DELETE) {
                         QaDialog.show(this, resources.getString(R.string.qa_dialog_tip_delete_comment_text), {}) {
-                            toast("点击了删除")
                             viewModel.deleteId(comment.commentId, "1")
                         }
                     }
@@ -276,7 +275,6 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
             if (dynamic._isSelf == 1) {
                 optionPopWindow.addOptionAndCallback(CommentConfig.DELETE) {
                     QaDialog.show(this, resources.getString(R.string.qa_dialog_tip_delete_comment_text), {}) {
-                        toast("点击了删除")
                         viewModel.deleteId(dynamic.postId, "0")
                     }
                 }

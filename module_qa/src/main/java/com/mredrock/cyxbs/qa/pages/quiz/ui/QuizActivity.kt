@@ -10,11 +10,9 @@ import android.text.Editable
 import android.text.TextUtils
 import android.text.TextWatcher
 import android.util.Base64
-import android.util.Log
 import android.view.KeyEvent
 import android.view.View
 import android.widget.ImageView
-import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.alibaba.android.arouter.facade.annotation.Route
@@ -30,6 +28,7 @@ import com.mredrock.cyxbs.common.utils.extensions.*
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.R.drawable.*
 import com.mredrock.cyxbs.qa.beannew.Question
+import com.mredrock.cyxbs.qa.config.RequestResultCode.NEED_REFRESH_RESULT
 import com.mredrock.cyxbs.qa.pages.quiz.QuizViewModel
 import com.mredrock.cyxbs.qa.ui.activity.ViewImageCropActivity
 import com.mredrock.cyxbs.qa.ui.widget.DraftDialog
@@ -77,9 +76,7 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>(), EventBusLifecycleSu
                 if (draftId != NOT_DRAFT_ID) {
                     viewModel.deleteDraft(draftId)
                 }
-                val data = Intent()
-                data.putExtra("type", dynamicType)
-                setResult(Activity.RESULT_OK, data)
+                setResult(NEED_REFRESH_RESULT)
                 finish()
             }
         }
