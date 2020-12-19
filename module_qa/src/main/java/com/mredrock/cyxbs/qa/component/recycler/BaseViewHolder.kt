@@ -16,4 +16,5 @@ abstract class BaseViewHolder<T>(itemView: View) : androidx.recyclerview.widget.
     protected val context: Context = itemView.context
 
     abstract fun refresh(data: T?)
+
 }

@@ -1,10 +1,12 @@
 package com.mredrock.cyxbs.qa.pages.dynamic.ui.adapter
 
 
+import android.content.Context
 import android.view.View
 import android.view.ViewGroup
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.DiffUtil
+import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.setAvatarImageFromUrl
 import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.qa.R
@@ -12,6 +14,7 @@ import com.mredrock.cyxbs.qa.beannew.Dynamic
 import com.mredrock.cyxbs.qa.component.recycler.BaseEndlessRvAdapter
 import com.mredrock.cyxbs.qa.component.recycler.BaseViewHolder
 import com.mredrock.cyxbs.qa.config.CommentConfig
+import com.mredrock.cyxbs.qa.config.CommentConfig.DELETE
 import com.mredrock.cyxbs.qa.config.CommentConfig.IGNORE
 import com.mredrock.cyxbs.qa.config.CommentConfig.NOTICE
 import com.mredrock.cyxbs.qa.config.CommentConfig.REPORT
@@ -19,6 +22,7 @@ import com.mredrock.cyxbs.qa.config.CommentConfig.UNNOTICE
 import com.mredrock.cyxbs.qa.ui.activity.ViewImageActivity
 import com.mredrock.cyxbs.qa.ui.widget.NineGridView
 import com.mredrock.cyxbs.qa.ui.widget.OptionalPopWindow
+import com.mredrock.cyxbs.qa.ui.widget.ShareDialog
 import com.mredrock.cyxbs.qa.utils.dynamicTimeDescription
 import kotlinx.android.synthetic.main.qa_recycler_item_dynamic_header.view.*
 
@@ -28,7 +32,7 @@ import kotlinx.android.synthetic.main.qa_recycler_item_dynamic_header.view.*
  * @Description:
  * @Date: 2020/11/17 20:11
  */
-class DynamicAdapter(private val onItemClickEvent: (Dynamic, View) -> Unit) : BaseEndlessRvAdapter<Dynamic>(DIFF_CALLBACK as DiffUtil.ItemCallback<Dynamic>) {
+class DynamicAdapter(val context: Context?, private val onItemClickEvent: (Dynamic, View) -> Unit) : BaseEndlessRvAdapter<Dynamic>(DIFF_CALLBACK as DiffUtil.ItemCallback<Dynamic>) {
     companion object {
         @JvmStatic
         val DIFF_CALLBACK = object : DiffUtil.ItemCallback<Dynamic>() {
@@ -39,8 +43,6 @@ class DynamicAdapter(private val onItemClickEvent: (Dynamic, View) -> Unit) : Ba
     }
 
     var onPopWindowClickListener: ((String, Dynamic) -> Unit)? = null
-    var onPraiseClickListener: ((Int, Dynamic) -> Unit)? = null
-    private var shouldAnimateSet: MutableSet<Int> = HashSet()
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = DynamicViewHolder(parent)
 
     override fun onBindViewHolder(holder: BaseViewHolder<Dynamic>, position: Int) {
@@ -48,25 +50,33 @@ class DynamicAdapter(private val onItemClickEvent: (Dynamic, View) -> Unit) : Ba
         holder.itemView.apply {
             qa_iv_dynamic_more_tips_clicked.setOnSingleClickListener { view ->
                 getItem(position)?.let { dynamic ->
-                    if (dynamic._isFollowTopic == 0) {
-                        OptionalPopWindow.Builder().with(context)
-                                .addOptionAndCallback(NOTICE) {
-                                    onPopWindowClickListener?.invoke(NOTICE, dynamic)
-                                }
-                                .addOptionAndCallback(IGNORE) {
-                                    onPopWindowClickListener?.invoke(IGNORE, dynamic)
-                                }.addOptionAndCallback(REPORT) {
-                                    onPopWindowClickListener?.invoke(REPORT, dynamic)
-                                }.show(view, OptionalPopWindow.AlignMode.RIGHT, 0)
+                    LogUtils.d("tag", dynamic._isSelf.toString())
+                    if (dynamic._isSelf == 0) {
+                        if (dynamic._isFollowTopic == 0) {
+                            OptionalPopWindow.Builder().with(context)
+                                    .addOptionAndCallback(NOTICE) {
+                                        onPopWindowClickListener?.invoke(NOTICE, dynamic)
+                                    }
+                                    .addOptionAndCallback(IGNORE) {
+                                        onPopWindowClickListener?.invoke(IGNORE, dynamic)
+                                    }.addOptionAndCallback(REPORT) {
+                                        onPopWindowClickListener?.invoke(REPORT, dynamic)
+                                    }.show(view, OptionalPopWindow.AlignMode.RIGHT, 0)
+                        } else {
+                            OptionalPopWindow.Builder().with(context)
+                                    .addOptionAndCallback(UNNOTICE) {
+                                        onPopWindowClickListener?.invoke(NOTICE, dynamic)
+                                    }
+                                    .addOptionAndCallback(IGNORE) {
+                                        onPopWindowClickListener?.invoke(IGNORE, dynamic)
+                                    }.addOptionAndCallback(REPORT) {
+                                        onPopWindowClickListener?.invoke(REPORT, dynamic)
+                                    }.show(view, OptionalPopWindow.AlignMode.RIGHT, 0)
+                        }
                     } else {
                         OptionalPopWindow.Builder().with(context)
-                                .addOptionAndCallback(UNNOTICE) {
-                                    onPopWindowClickListener?.invoke(NOTICE, dynamic)
-                                }
-                                .addOptionAndCallback(IGNORE) {
-                                    onPopWindowClickListener?.invoke(IGNORE, dynamic)
-                                }.addOptionAndCallback(REPORT) {
-                                    onPopWindowClickListener?.invoke(REPORT, dynamic)
+                                .addOptionAndCallback(DELETE) {
+                                    onPopWindowClickListener?.invoke(DELETE, dynamic)
                                 }.show(view, OptionalPopWindow.AlignMode.RIGHT, 0)
                     }
                 }
@@ -88,9 +98,18 @@ class DynamicAdapter(private val onItemClickEvent: (Dynamic, View) -> Unit) : Ba
                 qa_iv_dynamic_praise_count_image.setOnSingleClickListener {
                     qa_iv_dynamic_praise_count_image.click()
                 }
+                qa_iv_dynamic_share.setOnSingleClickListener {
+                    ShareDialog(context).apply {
+                        initView(onCancelListener = View.OnClickListener {
+                            dismiss()
+                        }, onClickListener = View.OnClickListener {
+
+                        })
+                    }.show()
+                }
                 qa_iv_dynamic_avatar.setAvatarImageFromUrl(data.avatar)
                 qa_tv_dynamic_topic.text = "#" + data.topic
-                qa_tv_dynamic_nickname.text = data.nickName + "xx"
+                qa_tv_dynamic_nickname.text = data.nickName
                 qa_tv_dynamic_content.text = data.content
                 qa_tv_dynamic_comment_count.text = data.commentCount.toString()
                 qa_tv_dynamic_publish_at.text = dynamicTimeDescription(System.currentTimeMillis(), data.publishTime * 1000)

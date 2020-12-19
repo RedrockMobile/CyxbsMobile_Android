@@ -32,6 +32,7 @@ open class DynamicListViewModel(kind: String) : BaseViewModel() {
     private val factory: DynamicDataSource.Factory
     val followCircle = MutableLiveData<Boolean>()
     val ignorePeople = MutableLiveData<Boolean>()
+    val deleteTips = MutableLiveData<Boolean>()
 
     //防止点赞快速点击
     var isDealing = false
@@ -110,6 +111,22 @@ open class DynamicListViewModel(kind: String) : BaseViewModel() {
                 .safeSubscribeBy {
                     if (it.status == 200)
                         toastEvent.value = R.string.qa_report_dynamic
+                }
+    }
+
+    fun deleteId(id: String, model: String) {
+        ApiGenerator.getApiService(ApiServiceNew::class.java)
+                .deleteId(id, model)
+                .setSchedulers()
+                .doOnSubscribe {
+                    deleteTips.value = true
+                }
+                .doOnError {
+                    toastEvent.value = R.string.qa_delete_dynamic_failure
+                    deleteTips.value = false
+                }
+                .safeSubscribeBy {
+
                 }
     }
 

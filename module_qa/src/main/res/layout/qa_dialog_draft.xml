@@ -7,7 +7,7 @@
     android:background="@drawable/qa_layer_list_draft_dialog_background">
 
     <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/qa_tv_reply_content"
+        android:id="@+id/qa_tv_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
@@ -24,7 +24,7 @@
         android:layout_height="1dp"
         android:background="@color/qa_draft_dialog_divide_color"
         app:layout_constraintBottom_toBottomOf="@+id/tv_save"
-        app:layout_constraintTop_toTopOf="@+id/qa_tv_reply_content" />
+        app:layout_constraintTop_toTopOf="@+id/qa_tv_title" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tv_save"
@@ -36,7 +36,7 @@
         android:text="@string/qa_common_dialog_exit"
         android:textColor="@color/qa_draft_dialog_text_color"
         android:textSize="18sp"
-        app:layout_constraintTop_toBottomOf="@+id/qa_tv_reply_content"
+        app:layout_constraintTop_toBottomOf="@+id/qa_tv_title"
         tools:layout_editor_absoluteX="0dp" />
 
     <View

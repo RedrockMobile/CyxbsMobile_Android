@@ -8,17 +8,17 @@ import android.view.Gravity
 import android.view.View
 import android.view.WindowManager
 import com.mredrock.cyxbs.qa.R
-import kotlinx.android.synthetic.main.qa_dialog_draft.*
-
-
+import kotlinx.android.synthetic.main.qa_dialog_share.*
 
 /**
- * Create by xgl at 2020-12-14
- * 草稿dialog
+ * @Author: xgl
+ * @ClassName: ShareDialog
+ * @Description:
+ * @Date: 2020/12/19 13:10
  */
-class DraftDialog(context: Context) : Dialog(context) {
+class ShareDialog(context: Context) : Dialog(context) {
     init {
-        setContentView(R.layout.qa_dialog_draft)
+        setContentView(R.layout.qa_dialog_share)
         window?.apply {
             decorView.setPadding(0, 0, 0, 0)
             val lp: WindowManager.LayoutParams = attributes
@@ -32,19 +32,9 @@ class DraftDialog(context: Context) : Dialog(context) {
     }
 
     fun initView(
-            title: String,
-            saveText: String,
-            noSaveText: String?,
-            cancelText: String,
-            saveListener: View.OnClickListener,
-            noSaveListener: View.OnClickListener,
-            cancelListener: View.OnClickListener?) {
-        qa_tv_title.text = title
-        tv_save.text = saveText
-        tv_no_save.text = noSaveText
-        tv_cancel.text = cancelText
-        tv_save.setOnClickListener(saveListener)
-        tv_no_save.setOnClickListener(noSaveListener)
-        tv_cancel.setOnClickListener(cancelListener)
+            onClickListener: View.OnClickListener,
+            onCancelListener: View.OnClickListener
+    ) {
+        qa_tv_cancel.setOnClickListener(onCancelListener)
     }
 }

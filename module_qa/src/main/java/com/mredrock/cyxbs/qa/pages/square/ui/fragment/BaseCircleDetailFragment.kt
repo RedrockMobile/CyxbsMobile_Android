@@ -5,14 +5,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.ui.BaseViewModelFragment
-import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.beannew.Dynamic
 import com.mredrock.cyxbs.qa.component.recycler.RvAdapterWrapper
-import com.mredrock.cyxbs.qa.config.CommentConfig
 import com.mredrock.cyxbs.qa.config.CommentConfig.IGNORE
 import com.mredrock.cyxbs.qa.config.CommentConfig.NOTICE
 import com.mredrock.cyxbs.qa.config.CommentConfig.REPORT
@@ -20,11 +17,9 @@ import com.mredrock.cyxbs.qa.network.NetworkState
 import com.mredrock.cyxbs.qa.pages.dynamic.ui.activity.DynamicDetailActivity
 import com.mredrock.cyxbs.qa.pages.dynamic.ui.adapter.DynamicAdapter
 import com.mredrock.cyxbs.qa.pages.dynamic.viewmodel.DynamicListViewModel
-import com.mredrock.cyxbs.qa.pages.square.ui.adapter.CircleDetailAdapter
 import com.mredrock.cyxbs.qa.ui.adapter.EmptyRvAdapter
 import com.mredrock.cyxbs.qa.ui.adapter.FooterRvAdapter
 import com.mredrock.cyxbs.qa.ui.widget.QaReportDialog
-import kotlinx.android.synthetic.main.qa_fragment_dynamic.*
 import kotlinx.android.synthetic.main.qa_fragment_last_hot.*
 
 /**
@@ -50,7 +45,7 @@ abstract class BaseCircleDetailFragment<T : DynamicListViewModel> : BaseViewMode
     }
 
     private fun initDynamic() {
-        val dynamicListRvAdapter = DynamicAdapter { dynamic, view ->
+        val dynamicListRvAdapter = DynamicAdapter(context) { dynamic, view ->
             DynamicDetailActivity.activityStart(this, view, dynamic)
         }.apply {
             onPopWindowClickListener = { string, dynamic ->

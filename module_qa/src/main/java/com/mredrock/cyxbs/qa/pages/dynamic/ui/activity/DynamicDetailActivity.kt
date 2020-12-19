@@ -94,7 +94,7 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
                             copyText(comment.content)
                             toast("已复制到剪切板")
                         }
-                if (dynamic.isSelf || comment.isSelf) {
+                if (dynamic._isSelf == 1 || comment.isSelf) {
                     optionPopWindow.addOptionAndCallback(CommentConfig.DELETE) {
                         QaDialog.show(this, resources.getString(R.string.qa_dialog_tip_delete_comment_text), {}) {
                             toast("点击了删除")
@@ -123,7 +123,7 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
                             copyText(comment.content)
                             toast("已复制到剪切板")
                         }
-                if (dynamic.isSelf || comment.isSelf) {
+                if (dynamic._isSelf == 1 || comment.isSelf) {
                     optionPopWindow.addOptionAndCallback(CommentConfig.DELETE) {
                         QaDialog.show(this, resources.getString(R.string.qa_dialog_tip_delete_comment_text), {}) {
                             toast("点击了删除")
@@ -260,7 +260,7 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
                         copyText(dynamic.content)
                         toast("已复制到剪切板")
                     }
-            if (dynamic.isSelf) {
+            if (dynamic._isSelf == 1) {
                 optionPopWindow.addOptionAndCallback(CommentConfig.DELETE) {
                     QaDialog.show(this, resources.getString(R.string.qa_dialog_tip_delete_comment_text), {}) {
                         toast("点击了删除")

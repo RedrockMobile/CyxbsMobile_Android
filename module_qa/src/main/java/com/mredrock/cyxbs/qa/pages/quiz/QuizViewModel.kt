@@ -23,6 +23,7 @@ import java.io.File
 
 /**
  * Created By jay68 on 2018/8/26.
+ * rebuild By xgl
  */
 class QuizViewModel : BaseViewModel() {
     val imageLiveData = MutableLiveData<ArrayList<String>>()
@@ -51,7 +52,7 @@ class QuizViewModel : BaseViewModel() {
                 .mapOrThrowApiException()
                 .setSchedulers()
                 .doOnError {
-                    toastEvent.value = R.string.qa_follow_circle_failure
+                    toastEvent.value = R.string.qa_get_circle_data_failure
                 }
                 .safeSubscribeBy {
                     allCircle.value = it

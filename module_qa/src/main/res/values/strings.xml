@@ -97,5 +97,8 @@
     <string name="qa_cancel_circle_failure">取消关注圈子失败</string>
     <string name="qa_cancel_circle">取消关注圈子成功</string>
     <string name="qa_get_circle_data_failure">获取圈子信息失败</string>
+    <string name="qa_delete_dynamic_failure">删除动态失败</string>
+    <string name="qa_dialog_cancel">取消</string>
+    <string name="qa_dialog_share_text">分享</string>
 
 </resources>
