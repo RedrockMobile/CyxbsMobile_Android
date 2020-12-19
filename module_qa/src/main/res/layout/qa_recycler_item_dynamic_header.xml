@@ -114,6 +114,7 @@
         android:paddingEnd="8dp"
         android:paddingBottom="5dp"
         android:textSize="10sp"
+        android:textColor="@color/common_qa_question_bottom_count_color"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/qa_dynamic_nine_grid_view"
         tools:text="@string/qa_recycler_item_dynamic_label" />

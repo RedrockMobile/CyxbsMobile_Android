@@ -16,6 +16,7 @@ import com.mredrock.cyxbs.qa.beannew.Topic
 
 import com.mredrock.cyxbs.qa.pages.square.ui.activity.CircleSquareActivity
 import com.mredrock.cyxbs.qa.ui.widget.ImageViewAddCount
+import kotlinx.android.synthetic.main.qa_recycler_item_circles.view.*
 
 
 /**
@@ -80,15 +81,16 @@ class CirclesAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
             }
             HAVE_CIRCLE -> {
                 val viewHolder = holder as CirclesItem
-                viewHolder.iv_circle.apply {
-                    setHaveMessage(true)
-                    setMessageBum(circlesItemList[position].newMesCount)
-                }
-                viewHolder.itemView.setOnClickListener {
-                    changeToActivity(CircleSquareActivity())
-                }
-                viewHolder.tv_circle_name.text = circlesItemList[position].topicName
-                viewHolder.iv_circle.apply {
+                viewHolder.itemView.apply {
+                    setOnSingleClickListener {
+                        iv_circle.setHaveMessage(false)
+                        changeToActivity(CircleSquareActivity())
+                    }
+                    iv_circle.apply {
+                        setHaveMessage(true)
+                        setMessageBum(circlesItemList[position].newMesCount)
+                    }
+                    tv_circle_name.text = circlesItemList[position].topicName
                 }
             }
         }

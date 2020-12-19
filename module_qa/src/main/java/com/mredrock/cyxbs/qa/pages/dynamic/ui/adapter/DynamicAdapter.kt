@@ -108,7 +108,7 @@ class DynamicAdapter(val context: Context?, private val onItemClickEvent: (Dynam
                     }.show()
                 }
                 qa_iv_dynamic_avatar.setAvatarImageFromUrl(data.avatar)
-                qa_tv_dynamic_topic.text = "#" + data.topic
+                qa_tv_dynamic_topic.text = "# " + data.topic
                 qa_tv_dynamic_nickname.text = data.nickName
                 qa_tv_dynamic_content.text = data.content
                 qa_tv_dynamic_comment_count.text = data.commentCount.toString()

@@ -82,7 +82,6 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), EventBusL
 
 
     private fun initDynamics() {
-        var deletePosition = -1
         dynamicListRvAdapter =
                 DynamicAdapter(context) { dynamic, view ->
                     DynamicDetailActivity.activityStart(this, view, dynamic)
@@ -107,7 +106,6 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), EventBusL
                                 this@DynamicFragment.activity?.let { it1 ->
                                     QaDialog.show(it1, resources.getString(R.string.qa_dialog_tip_delete_comment_text), {}) {
                                         viewModel.deleteId(dynamic.postId, "0")
-                                        deletePosition = position
                                     }
                                 }
                             }
@@ -116,11 +114,11 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), EventBusL
                 }
 
         viewModel.deleteTips.observe {
-            if (deletePosition != -1)
-                dynamicListRvAdapter.notifyItemRemoved(deletePosition)
+            viewModel.invalidateQuestionList()
         }
         viewModel.followCircle.observe {
             viewModel.getMyCirCleData()
+            viewModel.invalidateQuestionList()
         }
 
         val footerRvAdapter = FooterRvAdapter { viewModel.retry() }

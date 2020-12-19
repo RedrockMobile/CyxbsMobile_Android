@@ -301,7 +301,7 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
 
     private fun refreshDynamic() {
         qa_iv_dynamic_avatar.setAvatarImageFromUrl(dynamic.avatar)
-        qa_tv_dynamic_topic.text = "#" + dynamic.topic
+        qa_tv_dynamic_topic.text = "# " + dynamic.topic
         qa_tv_dynamic_nickname.text = dynamic.nickName
         qa_tv_dynamic_content.text = dynamic.content
         qa_tv_dynamic_comment_count.text = dynamic.commentCount.toString()
