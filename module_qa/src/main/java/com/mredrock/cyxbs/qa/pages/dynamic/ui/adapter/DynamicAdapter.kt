@@ -18,7 +18,7 @@ import com.mredrock.cyxbs.qa.config.CommentConfig.DELETE
 import com.mredrock.cyxbs.qa.config.CommentConfig.IGNORE
 import com.mredrock.cyxbs.qa.config.CommentConfig.NOTICE
 import com.mredrock.cyxbs.qa.config.CommentConfig.REPORT
-import com.mredrock.cyxbs.qa.config.CommentConfig.UNNOTICE
+import com.mredrock.cyxbs.qa.config.CommentConfig.UN_NOTICE
 import com.mredrock.cyxbs.qa.ui.activity.ViewImageActivity
 import com.mredrock.cyxbs.qa.ui.widget.NineGridView
 import com.mredrock.cyxbs.qa.ui.widget.OptionalPopWindow
@@ -64,7 +64,7 @@ class DynamicAdapter(val context: Context?, private val onItemClickEvent: (Dynam
                                     }.show(view, OptionalPopWindow.AlignMode.RIGHT, 0)
                         } else {
                             OptionalPopWindow.Builder().with(context)
-                                    .addOptionAndCallback(UNNOTICE) {
+                                    .addOptionAndCallback(UN_NOTICE) {
                                         onPopWindowClickListener?.invoke(NOTICE, dynamic)
                                     }
                                     .addOptionAndCallback(IGNORE) {
@@ -94,7 +94,7 @@ class DynamicAdapter(val context: Context?, private val onItemClickEvent: (Dynam
         override fun refresh(data: Dynamic?) {
             data ?: return
             itemView.apply {
-                qa_iv_dynamic_praise_count_image.registerLikeView(data.postId, CommentConfig.PRAISEMODEL, data.isPraised, data.praiseCount)
+                qa_iv_dynamic_praise_count_image.registerLikeView(data.postId, CommentConfig.PRAISE_MODEL_DYNAMIC, data.isPraised, data.praiseCount)
                 qa_iv_dynamic_praise_count_image.setOnSingleClickListener {
                     qa_iv_dynamic_praise_count_image.click()
                 }

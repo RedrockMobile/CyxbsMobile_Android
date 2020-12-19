@@ -4,6 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:clipChildren="false"
+    android:clipToPadding="false"
     android:background="@drawable/qa_ripple_comment_background_ripple"
     android:paddingTop="21dp">
 
@@ -104,6 +106,8 @@
         app:layout_constraintEnd_toStartOf="@+id/qa_gl_reply_end"
         app:layout_constraintStart_toEndOf="@+id/qa_iv_reply_avatar"
         app:layout_constraintTop_toBottomOf="@+id/qa_reply_nine_grid_view"
+        android:clipChildren="false"
+        android:clipToPadding="false"
         tools:listitem="@layout/qa_recycler_item_dynamic_reply_inner" />
 
     <ImageView

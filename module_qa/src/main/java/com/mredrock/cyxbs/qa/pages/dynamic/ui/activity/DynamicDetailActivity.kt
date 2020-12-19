@@ -276,7 +276,7 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
             }
             optionPopWindow.show(it, OptionalPopWindow.AlignMode.RIGHT, 0)
         }
-        qa_iv_dynamic_praise_count_image.registerLikeView(dynamic.postId, CommentConfig.PRAISEMODEL, dynamic.isPraised, dynamic.praiseCount)
+        qa_iv_dynamic_praise_count_image.registerLikeView(dynamic.postId, CommentConfig.PRAISE_MODEL_DYNAMIC, dynamic.isPraised, dynamic.praiseCount)
         qa_iv_dynamic_praise_count_image.setOnSingleClickListener {
             qa_iv_dynamic_praise_count_image.click()
         }

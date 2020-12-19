@@ -9,6 +9,7 @@ import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.beannew.Comment
 import com.mredrock.cyxbs.qa.component.recycler.BaseRvAdapter
 import com.mredrock.cyxbs.qa.component.recycler.BaseViewHolder
+import com.mredrock.cyxbs.qa.config.CommentConfig
 import com.mredrock.cyxbs.qa.ui.widget.NineGridView
 import com.mredrock.cyxbs.qa.utils.dynamicTimeDescription
 import kotlinx.android.synthetic.main.qa_recycler_item_dynamic_reply.view.*
@@ -84,7 +85,7 @@ class CommentListAdapter(
                 } else {
                     (qa_rv_reply.adapter as ReplyListAdapter).refreshData(data.replyList.takeLast(3))
                 }
-                qa_iv_reply_praise_count_image.registerLikeView(data.commentId, "0", data.isPraised, data.praiseCount)
+                qa_iv_reply_praise_count_image.registerLikeView(data.commentId, CommentConfig.PRAISE_MODEL_COMMENT, data.isPraised, data.praiseCount)
                 qa_iv_reply_praise_count_image.setOnSingleClickListener {
                     qa_iv_reply_praise_count_image.click()
                 }

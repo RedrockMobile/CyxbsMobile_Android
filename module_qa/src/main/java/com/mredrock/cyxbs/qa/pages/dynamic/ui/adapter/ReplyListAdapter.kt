@@ -6,14 +6,14 @@ import android.text.Html
 import android.text.Html.FROM_HTML_MODE_COMPACT
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.annotation.RequiresApi
-import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.utils.extensions.setAvatarImageFromUrl
+import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.beannew.Comment
 import com.mredrock.cyxbs.qa.component.recycler.BaseRvAdapter
 import com.mredrock.cyxbs.qa.component.recycler.BaseViewHolder
+import com.mredrock.cyxbs.qa.config.CommentConfig
 import kotlinx.android.synthetic.main.qa_recycler_item_dynamic_reply_inner.view.*
 
 /**
@@ -43,8 +43,10 @@ class ReplyListAdapter(private val onReplyInnerClickEvent: (nickname: String, co
                         qa_tv_reply_inner_content.text = "回复 @${data.fromNickname} : "
                     }
                 }
-                qa_tv_reply_inner_praise_count.text = data.praiseCount.toString()
-                qa_iv_reply_inner_praise_count_image.isChecked = data.isPraised
+                qa_iv_reply_inner_praise_count_image.registerLikeView(data.commentId, CommentConfig.PRAISE_MODEL_COMMENT, data.isPraised, data.praiseCount)
+                qa_iv_reply_inner_praise_count_image.setOnSingleClickListener {
+                    qa_iv_reply_inner_praise_count_image.click()
+                }
                 qa_iv_reply_inner_avatar.setAvatarImageFromUrl(data.avatar)
             }
         }

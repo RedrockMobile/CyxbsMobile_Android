@@ -4,6 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:clipChildren="false"
+    android:clipToPadding="false"
     android:background="@drawable/qa_ripple_reply_background_ripple"
     android:paddingTop="9dp">
 
@@ -64,7 +66,7 @@
         app:layout_constraintTop_toBottomOf="@id/qa_iv_reply_inner_avatar"
         tools:text="菜还瘾大？" />
 
-    <com.mredrock.cyxbs.qa.ui.widget.likeview.LikeView
+    <com.mredrock.cyxbs.qa.ui.widget.likeview.LikeViewSlim
         android:id="@+id/qa_iv_reply_inner_praise_count_image"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -74,24 +76,9 @@
         app:cycleTime="1000"
         app:defaultColor="#ffcccccc"
         app:defaultLikeIconRes="@drawable/qa_ic_answer_list_praise"
-        app:layout_constraintBottom_toBottomOf="@+id/qa_tv_reply_inner_praise_count"
+        app:layout_constraintBottom_toBottomOf="@+id/qa_tv_reply_inner_nickname"
         app:layout_constraintEnd_toStartOf="@+id/qa_gl_reply_inner_end"
-        app:layout_constraintTop_toTopOf="@+id/qa_tv_reply_inner_praise_count"
+        app:layout_constraintTop_toTopOf="@+id/qa_tv_reply_inner_nickname"
         app:ringColor="#323FD9" />
-
-    <TextView
-        android:id="@+id/qa_tv_reply_inner_praise_count"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="10dp"
-        android:layout_toStartOf="@+id/tv_dynamic_count"
-        android:paddingTop="10dp"
-        android:paddingBottom="10dp"
-        android:textColor="@color/common_qa_question_bottom_count_color"
-        android:textSize="11sp"
-        app:layout_constraintBottom_toBottomOf="@+id/qa_iv_reply_inner_avatar"
-        app:layout_constraintEnd_toStartOf="@+id/qa_gl_reply_inner_end"
-        app:layout_constraintTop_toTopOf="@+id/qa_iv_reply_inner_avatar"
-        tools:text="999" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -137,6 +137,8 @@ class LikeViewSlim : LikeView {
         val originIsPraised = isPraised
         val originPraiseCount = praiseCount
 
+        sendBroadcast("$tmpId-$tmpModel")
+
         if (isLoading) return
         isLoading = true
 
