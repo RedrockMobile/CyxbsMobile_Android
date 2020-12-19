@@ -11,9 +11,11 @@ import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.common.viewmodel.event.ProgressDialogEvent
 import com.mredrock.cyxbs.common.viewmodel.event.SingleLiveEvent
 import com.mredrock.cyxbs.qa.R
+import com.mredrock.cyxbs.qa.beannew.CommentReleaseResult
 import com.mredrock.cyxbs.qa.beannew.Topic
 import com.mredrock.cyxbs.qa.network.ApiService
 import com.mredrock.cyxbs.qa.network.ApiServiceNew
+import com.mredrock.cyxbs.qa.network.NetworkState
 import com.mredrock.cyxbs.qa.utils.isNullOrEmpty
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
@@ -36,7 +38,7 @@ class QuizViewModel : BaseViewModel() {
     private var title: String = ""
     private var content: String = ""
     private val isInvalidList = arrayListOf<Boolean>()
-
+    val commentReleaseResult = MutableLiveData<CommentReleaseResult>()
     fun tryEditImg(pos: Int): String? {
         editingImgPos = pos
         return imageLiveData.value?.get(pos)
@@ -175,5 +177,19 @@ class QuizViewModel : BaseViewModel() {
 
     fun resetInvalid() {
         isInvalidList.clear()
+    }
+
+    fun releaseComment(postId: String, content: String, replyId: String) {
+        ApiGenerator.getApiService(ApiServiceNew::class.java)
+                .releaseComment(content, postId, replyId)
+                .mapOrThrowApiException()
+                .setSchedulers()
+                .doOnSubscribe {
+                }
+                .doOnError {
+                }
+                .safeSubscribeBy {
+                    commentReleaseResult.postValue(it)
+                }
     }
 }

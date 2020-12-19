@@ -20,11 +20,14 @@ import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.beannew.Dynamic
 import com.mredrock.cyxbs.qa.component.recycler.RvAdapterWrapper
 import com.mredrock.cyxbs.qa.config.CommentConfig
+import com.mredrock.cyxbs.qa.config.RequestResultCode
 import com.mredrock.cyxbs.qa.config.RequestResultCode.DYNAMIC_DETAIL_REQUEST
 import com.mredrock.cyxbs.qa.config.RequestResultCode.NEED_REFRESH_RESULT
+import com.mredrock.cyxbs.qa.config.RequestResultCode.RELEASE_COMMENT_ACTIVITY_REQUEST
 import com.mredrock.cyxbs.qa.network.NetworkState
 import com.mredrock.cyxbs.qa.pages.dynamic.ui.adapter.CommentListAdapter
 import com.mredrock.cyxbs.qa.pages.dynamic.viewmodel.DynamicDetailViewModel
+import com.mredrock.cyxbs.qa.pages.quiz.ui.QuizActivity
 import com.mredrock.cyxbs.qa.ui.activity.ViewImageActivity
 import com.mredrock.cyxbs.qa.ui.adapter.EmptyRvAdapter
 import com.mredrock.cyxbs.qa.ui.adapter.FooterRvAdapter
@@ -153,6 +156,9 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
         initDynamic()
         initReplyList()
 
+        qa_iv_select_pic.setOnSingleClickListener {
+            startActivityForResult<QuizActivity>(RELEASE_COMMENT_ACTIVITY_REQUEST)
+        }
 
         qa_ib_toolbar_back.setOnSingleClickListener {
             onBackPressed()

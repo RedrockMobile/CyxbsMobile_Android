@@ -29,7 +29,7 @@ object QaDialog {
             onDeny.invoke()
             dialog.dismiss()
         }
-        view.qa_tv_tip_positive.setOnClickListener {
+        view.qa_tv_tip_positive.setOnSingleClickListener {
             onPositive.invoke()
             dialog.dismiss()
         }

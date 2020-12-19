@@ -28,7 +28,9 @@ import com.mredrock.cyxbs.common.utils.extensions.*
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.R.drawable.*
 import com.mredrock.cyxbs.qa.beannew.Question
+import com.mredrock.cyxbs.qa.config.RequestResultCode
 import com.mredrock.cyxbs.qa.config.RequestResultCode.NEED_REFRESH_RESULT
+import com.mredrock.cyxbs.qa.config.RequestResultCode.RELEASE_COMMENT_ACTIVITY_REQUEST
 import com.mredrock.cyxbs.qa.pages.quiz.QuizViewModel
 import com.mredrock.cyxbs.qa.ui.activity.ViewImageCropActivity
 import com.mredrock.cyxbs.qa.ui.widget.DraftDialog
@@ -82,6 +84,7 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>(), EventBusLifecycleSu
         }
 
         viewModel.finishActivityEvent.observeNotNull {
+            setResult(NEED_REFRESH_RESULT)
             finish()
         }
     }
@@ -102,11 +105,8 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>(), EventBusLifecycleSu
                                 val type = StringBuffer(text.toString())
                                 type.deleteCharAt(0)
                                 dynamicType = type.toString()
-                                LogUtils.d("checked", "xuanzhong")
                             } else {
                                 dynamicType = ""
-                                LogUtils.d("checked", "weixuanzhong")
-
                             }
                         }
                     })
@@ -133,7 +133,7 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>(), EventBusLifecycleSu
                     i1: Int,
                     i2: Int
             ) {
-                if (!TextUtils.isEmpty(charSequence) && charSequence.length > 2) {
+                if (!TextUtils.isEmpty(charSequence) && charSequence.length > 0) {
                     qa_tv_toolbar_right.setBackgroundResource(qa_shape_send_dynamic_btn_blue_background)
                     tv_edit_num.text = charSequence.length.toString() + "/500"
 
@@ -237,6 +237,12 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>(), EventBusLifecycleSu
             ViewImageCropActivity.DEFAULT_RESULT_CODE -> viewModel.setImageList(viewModel.imageLiveData.value!!.apply {
                 set(viewModel.editingImgPos, data.getStringExtra(ViewImageCropActivity.EXTRA_NEW_PATH))
             })
+//            RELEASE_COMMENT_ACTIVITY_REQUEST -> {
+//                tv_choose_circle.visibility = View.INVISIBLE
+//                layout_quiz_tag.visibility = View.INVISIBLE
+//                //从评论页过来通过改变草稿id改变是否出现草稿
+//                draftId = "0"
+//            }
         }
     }
 

@@ -82,12 +82,13 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), EventBusL
 
 
     private fun initDynamics() {
+        var deletePosition = -1
         dynamicListRvAdapter =
                 DynamicAdapter(context) { dynamic, view ->
                     DynamicDetailActivity.activityStart(this, view, dynamic)
                     initClick()
                 }.apply {
-                    onPopWindowClickListener = { string, dynamic ->
+                    onPopWindowClickListener = { position, string, dynamic ->
                         when (string) {
                             IGNORE -> {
                                 viewModel.ignore(dynamic)
@@ -106,26 +107,25 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), EventBusL
                                 this@DynamicFragment.activity?.let { it1 ->
                                     QaDialog.show(it1, resources.getString(R.string.qa_dialog_tip_delete_comment_text), {}) {
                                         viewModel.deleteId(dynamic.postId, "0")
+                                        deletePosition = position
                                     }
                                 }
                             }
                         }
                     }
                 }
-        viewModel.ignorePeople.observeNotNull {
-            viewModel.invalidateQuestionList()
+
+        viewModel.deleteTips.observe {
+            if (deletePosition != -1)
+                dynamicListRvAdapter.notifyItemRemoved(deletePosition)
         }
-        viewModel.followCircle.observeNotNull {
+        viewModel.followCircle.observe {
             viewModel.getMyCirCleData()
-            viewModel.invalidateQuestionList()
-        }
-        viewModel.deleteTips.observeNotNull {
-            viewModel.invalidateQuestionList()
         }
 
         val footerRvAdapter = FooterRvAdapter { viewModel.retry() }
         val emptyRvAdapter = EmptyRvAdapter(getString(R.string.qa_question_list_empty_hint))
-        val adapterWrapper = dynamicListRvAdapter?.let {
+        val adapterWrapper = dynamicListRvAdapter.let {
             RvAdapterWrapper(
                     normalAdapter = it,
                     emptyAdapter = emptyRvAdapter,
@@ -135,12 +135,12 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), EventBusL
         val circlesAdapter = this.activity?.let { CirclesAdapter() }
         val linearLayoutManager = LinearLayoutManager(context)
         linearLayoutManager.orientation = LinearLayoutManager.HORIZONTAL
-        rv_circles_List.apply{
+        rv_circles_List.apply {
             layoutManager = linearLayoutManager
             adapter = circlesAdapter
         }
         viewModel.getMyCirCleData()
-        viewModel.myCircle.observe{
+        viewModel.myCircle.observe {
             if (!it.isNullOrEmpty()) {
                 val layoutParams = CollapsingToolbarLayout.LayoutParams(rv_circles_List.layoutParams)
                 layoutParams.topMargin = 70
@@ -157,10 +157,8 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), EventBusL
             }
         }
 
-        if (dynamicListRvAdapter != null) {
-            observeLoading(dynamicListRvAdapter, footerRvAdapter, emptyRvAdapter)
-        }
-        rv_dynamic_List.apply{
+        observeLoading(dynamicListRvAdapter, footerRvAdapter, emptyRvAdapter)
+        rv_dynamic_List.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = adapterWrapper
             addOnScrollListener(object : RecyclerView.OnScrollListener() {
@@ -172,7 +170,7 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), EventBusL
         }
 
 
-        swipe_refresh_layout.setOnRefreshListener{
+        swipe_refresh_layout.setOnRefreshListener {
             viewModel.invalidateQuestionList()
             viewModel.getMyCirCleData()
         }

@@ -10,6 +10,7 @@ import com.mredrock.cyxbs.common.ui.BaseViewModelFragment
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.beannew.Dynamic
 import com.mredrock.cyxbs.qa.component.recycler.RvAdapterWrapper
+import com.mredrock.cyxbs.qa.config.CommentConfig
 import com.mredrock.cyxbs.qa.config.CommentConfig.IGNORE
 import com.mredrock.cyxbs.qa.config.CommentConfig.NOTICE
 import com.mredrock.cyxbs.qa.config.CommentConfig.REPORT
@@ -19,6 +20,7 @@ import com.mredrock.cyxbs.qa.pages.dynamic.ui.adapter.DynamicAdapter
 import com.mredrock.cyxbs.qa.pages.dynamic.viewmodel.DynamicListViewModel
 import com.mredrock.cyxbs.qa.ui.adapter.EmptyRvAdapter
 import com.mredrock.cyxbs.qa.ui.adapter.FooterRvAdapter
+import com.mredrock.cyxbs.qa.ui.widget.QaDialog
 import com.mredrock.cyxbs.qa.ui.widget.QaReportDialog
 import kotlinx.android.synthetic.main.qa_fragment_last_hot.*
 
@@ -48,21 +50,31 @@ abstract class BaseCircleDetailFragment<T : DynamicListViewModel> : BaseViewMode
         val dynamicListRvAdapter = DynamicAdapter(context) { dynamic, view ->
             DynamicDetailActivity.activityStart(this, view, dynamic)
         }.apply {
-            onPopWindowClickListener = { string, dynamic ->
+            onPopWindowClickListener = { position, string, dynamic ->
                 when (string) {
                     IGNORE -> {
                         viewModel.ignore(dynamic)
                     }
                     REPORT -> {
-                        QaReportDialog.show(BaseApp.context) { reportContent ->
-                            viewModel.report(dynamic, reportContent)
+                        this@BaseCircleDetailFragment.activity?.let {
+                            QaReportDialog.show(it) { reportContent ->
+                                viewModel.report(dynamic, reportContent)
+                            }
                         }
                     }
-
                     NOTICE -> {
                         viewModel.followCircle(dynamic)
-                        viewModel.getMyCirCleData()
                     }
+                    CommentConfig.DELETE -> {
+                        this@BaseCircleDetailFragment.activity?.let { it1 ->
+                            QaDialog.show(it1, resources.getString(R.string.qa_dialog_tip_delete_comment_text), {}) {
+                                viewModel.deleteId(dynamic.postId, "0")
+                            }
+                        }
+                    }
+                }
+                viewModel.deleteTips.observeNotNull {
+                    notifyItemRemoved(position)
                 }
             }
         }

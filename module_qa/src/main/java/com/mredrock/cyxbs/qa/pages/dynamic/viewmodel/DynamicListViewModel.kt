@@ -114,8 +114,6 @@ open class DynamicListViewModel(kind: String) : BaseViewModel() {
         ApiGenerator.getApiService(ApiServiceNew::class.java)
                 .deleteId(id, model)
                 .setSchedulers()
-                .doOnSubscribe {
-                }
                 .doOnError {
                     toastEvent.value = R.string.qa_delete_dynamic_failure
                     deleteTips.value = false

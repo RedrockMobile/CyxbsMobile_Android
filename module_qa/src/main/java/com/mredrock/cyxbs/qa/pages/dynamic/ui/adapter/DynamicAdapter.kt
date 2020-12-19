@@ -42,7 +42,7 @@ class DynamicAdapter(val context: Context?, private val onItemClickEvent: (Dynam
         }
     }
 
-    var onPopWindowClickListener: ((String, Dynamic) -> Unit)? = null
+    var onPopWindowClickListener: ((Int,String, Dynamic) -> Unit)? = null
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = DynamicViewHolder(parent)
 
     override fun onBindViewHolder(holder: BaseViewHolder<Dynamic>, position: Int) {
@@ -55,28 +55,28 @@ class DynamicAdapter(val context: Context?, private val onItemClickEvent: (Dynam
                         if (dynamic._isFollowTopic == 0) {
                             OptionalPopWindow.Builder().with(context)
                                     .addOptionAndCallback(NOTICE) {
-                                        onPopWindowClickListener?.invoke(NOTICE, dynamic)
+                                        onPopWindowClickListener?.invoke(position,NOTICE, dynamic)
                                     }
                                     .addOptionAndCallback(IGNORE) {
-                                        onPopWindowClickListener?.invoke(IGNORE, dynamic)
+                                        onPopWindowClickListener?.invoke(position,IGNORE, dynamic)
                                     }.addOptionAndCallback(REPORT) {
-                                        onPopWindowClickListener?.invoke(REPORT, dynamic)
+                                        onPopWindowClickListener?.invoke(position,REPORT, dynamic)
                                     }.show(view, OptionalPopWindow.AlignMode.RIGHT, 0)
                         } else {
                             OptionalPopWindow.Builder().with(context)
                                     .addOptionAndCallback(UN_NOTICE) {
-                                        onPopWindowClickListener?.invoke(NOTICE, dynamic)
+                                        onPopWindowClickListener?.invoke(position,NOTICE, dynamic)
                                     }
                                     .addOptionAndCallback(IGNORE) {
-                                        onPopWindowClickListener?.invoke(IGNORE, dynamic)
+                                        onPopWindowClickListener?.invoke(position,IGNORE, dynamic)
                                     }.addOptionAndCallback(REPORT) {
-                                        onPopWindowClickListener?.invoke(REPORT, dynamic)
+                                        onPopWindowClickListener?.invoke(position,REPORT, dynamic)
                                     }.show(view, OptionalPopWindow.AlignMode.RIGHT, 0)
                         }
                     } else {
                         OptionalPopWindow.Builder().with(context)
                                 .addOptionAndCallback(DELETE) {
-                                    onPopWindowClickListener?.invoke(DELETE, dynamic)
+                                    onPopWindowClickListener?.invoke(position,DELETE, dynamic)
                                 }.show(view, OptionalPopWindow.AlignMode.RIGHT, 0)
                     }
                 }
