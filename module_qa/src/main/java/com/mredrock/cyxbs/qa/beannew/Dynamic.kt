@@ -9,7 +9,7 @@ data class Dynamic(@SerializedName("post_id")
                    var postId: String = "",
 
                    @SerializedName("is_follow_topic")
-                   private var _isFollowTopic: Int = 0,
+                   var _isFollowTopic: Int = 0,
 
                    @SerializedName("is_praised")
                    private var _isPraised: Int = 0,
@@ -56,6 +56,17 @@ data class Dynamic(@SerializedName("post_id")
                 _isPraised = 0
             }
         }
+//    var isFollowTopic
+//        get() = _isFollowTopic == 1
+//        set(value) = when {
+//            value == isFollowTopic-> Unit
+//            value -> {
+//                _isFollowTopic = 1
+//            }
+//            else -> {
+//                _isFollowTopic = 0
+//            }
+//        }
     val isSelf get() = _isSelf == 1
 
     constructor(parcel: Parcel) : this(

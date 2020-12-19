@@ -67,7 +67,7 @@ interface ApiServiceNew {
                replyId: String, @Field("model") model: String
     ): Observable<RedrockApiStatus>
 
-    @POST("/app/index.php/QA/new/ignoreUid")
+    @POST("/wxapi/magipoke-loop/ignore/addIgnoreUid")
     @FormUrlEncoded
     fun ignoreUid(@Field("uid")
                   uid: String

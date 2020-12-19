@@ -5,6 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.DiffUtil
+import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.doIfLogin
 import com.mredrock.cyxbs.common.utils.extensions.setAvatarImageFromUrl
 import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
@@ -12,14 +13,17 @@ import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.beannew.Dynamic
 import com.mredrock.cyxbs.qa.component.recycler.BaseEndlessRvAdapter
 import com.mredrock.cyxbs.qa.component.recycler.BaseViewHolder
+import com.mredrock.cyxbs.qa.config.CommentConfig
 import com.mredrock.cyxbs.qa.config.CommentConfig.IGNORE
 import com.mredrock.cyxbs.qa.config.CommentConfig.NOTICE
 import com.mredrock.cyxbs.qa.config.CommentConfig.REPORT
+import com.mredrock.cyxbs.qa.config.CommentConfig.UNNOTICE
 import com.mredrock.cyxbs.qa.ui.activity.ViewImageActivity
 import com.mredrock.cyxbs.qa.ui.widget.NineGridView
 import com.mredrock.cyxbs.qa.ui.widget.OptionalPopWindow
 import com.mredrock.cyxbs.qa.utils.dynamicTimeDescription
 import kotlinx.android.synthetic.main.qa_recycler_item_dynamic.view.*
+import kotlinx.android.synthetic.main.qa_recycler_item_dynamic_reply.view.*
 
 /**
  * @Author: xgl
@@ -45,39 +49,29 @@ class DynamicAdapter(private val onItemClickEvent: (Dynamic, View) -> Unit) : Ba
     override fun onBindViewHolder(holder: BaseViewHolder<Dynamic>, position: Int) {
         super.onBindViewHolder(holder, position)
         holder.itemView.apply {
-            if (shouldAnimateSet.contains(position) && getItem(position)?.isPraised == true) {
-                qa_iv_dynamic_praise_count_image.isChecked = true
-                shouldAnimateSet.remove(position)
-            } else {
-                getItem(position)?.isPraised?.let {
-                    qa_iv_dynamic_praise_count_image.setCheckedWithoutAnimator(it)
-                }
-            }
-            qa_iv_dynamic_more_tips_clicked.setOnSingleClickListener {
-                OptionalPopWindow.Builder().with(context)
-                        .addOptionAndCallback(NOTICE) {
-                            getItem(position)?.let { it1 -> onPopWindowClickListener?.invoke(NOTICE, it1) }
-                        }
-                        .addOptionAndCallback(IGNORE) {
-                            getItem(position)?.let { it1 -> onPopWindowClickListener?.invoke(IGNORE, it1) }
-                        }.addOptionAndCallback(REPORT) {
-                            getItem(position)?.let { it1 -> onPopWindowClickListener?.invoke(REPORT, it1) }
-
-                        }.show(it, OptionalPopWindow.AlignMode.RIGHT, 0)
-            }
-
-            qa_iv_dynamic_praise_count_image.setOnSingleClickListener {
-                context.doIfLogin {
-                    getItem(position)?.let { it1 ->
-                        onPraiseClickListener?.invoke(position, it1)
-                        if (holder !is DynamicViewHolder) {
-                            return@let
-                        }
-                        if (getItem(position)?.isPraised == false) {
-                            shouldAnimateSet.add(position)
-                        }
+            qa_iv_dynamic_more_tips_clicked.setOnSingleClickListener { view ->
+                getItem(position)?.let { dynamic ->
+                    if (dynamic._isFollowTopic == 0) {
+                        OptionalPopWindow.Builder().with(context)
+                                .addOptionAndCallback(NOTICE) {
+                                    onPopWindowClickListener?.invoke(NOTICE, dynamic)
+                                }
+                                .addOptionAndCallback(IGNORE) {
+                                    onPopWindowClickListener?.invoke(IGNORE, dynamic)
+                                }.addOptionAndCallback(REPORT) {
+                                    onPopWindowClickListener?.invoke(REPORT, dynamic)
+                                }.show(view, OptionalPopWindow.AlignMode.RIGHT, 0)
+                    } else {
+                        OptionalPopWindow.Builder().with(context)
+                                .addOptionAndCallback(UNNOTICE) {
+                                    onPopWindowClickListener?.invoke(NOTICE, dynamic)
+                                }
+                                .addOptionAndCallback(IGNORE) {
+                                    onPopWindowClickListener?.invoke(IGNORE, dynamic)
+                                }.addOptionAndCallback(REPORT) {
+                                    onPopWindowClickListener?.invoke(REPORT, dynamic)
+                                }.show(view, OptionalPopWindow.AlignMode.RIGHT, 0)
                     }
-
                 }
             }
         }
@@ -93,11 +87,14 @@ class DynamicAdapter(private val onItemClickEvent: (Dynamic, View) -> Unit) : Ba
         override fun refresh(data: Dynamic?) {
             data ?: return
             itemView.apply {
+                qa_iv_dynamic_praise_count_image.registerLikeView(data.postId, CommentConfig.PRAISEMODEL, data.isPraised, data.praiseCount)
+                qa_iv_dynamic_praise_count_image.setOnSingleClickListener {
+                    qa_iv_dynamic_praise_count_image.click()
+                }
                 qa_iv_dynamic_avatar.setAvatarImageFromUrl(data.avatar)
                 qa_tv_dynamic_topic.text = "#" + data.topic
                 qa_tv_dynamic_nickname.text = data.nickName + "xx"
                 qa_tv_dynamic_content.text = data.content
-                qa_tv_dynamic_praise_count.text = data.praiseCount.toString()
                 qa_tv_dynamic_comment_count.text = data.commentCount.toString()
                 qa_tv_dynamic_publish_at.text = dynamicTimeDescription(System.currentTimeMillis(), data.publishTime * 1000)
                 //解决图片错乱的问题

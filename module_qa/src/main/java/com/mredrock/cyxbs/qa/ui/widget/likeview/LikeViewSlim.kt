@@ -102,7 +102,7 @@ class LikeViewSlim : LikeView {
             observer["${this.id}-${this.model}"]?.add(this)
         }
 
-        isChecked = this.isPraised
+        setCheckedWithoutAnimator(this.isPraised)
         invalidate()
     }
 
@@ -110,7 +110,7 @@ class LikeViewSlim : LikeView {
     fun notifyData() {
         isPraised = likeMap["$id-$model"]?.second ?: false
         praiseCount = likeMap["$id-$model"]?.first ?: 0
-        isChecked = isPraised
+        setCheckedWithoutAnimator(this.isPraised)
         invalidate()
     }
 

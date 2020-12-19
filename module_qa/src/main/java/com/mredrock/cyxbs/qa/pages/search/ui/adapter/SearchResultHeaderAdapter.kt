@@ -35,10 +35,8 @@ class SearchResultHeaderAdapter(private val onItemClickEvent: (Dynamic) -> Unit)
                 qa_tv_dynamic_topic.text = "#" + data.topic
                 qa_tv_dynamic_nickname.text = data.nickName + "xx"
                 qa_tv_dynamic_content.text = data.content
-                qa_tv_dynamic_praise_count.text = data.praiseCount.toString()
                 qa_tv_dynamic_comment_count.text = data.commentCount.toString()
                 qa_tv_dynamic_publish_at.text = dynamicTimeDescription(System.currentTimeMillis(), data.publishTime * 1000)
-                LogUtils.d("zt",data.pics.toString())
                 //解决图片错乱的问题
                 if (data.pics.isNullOrEmpty())
                     qa_dynamic_nine_grid_view.setRectangleImages(emptyList(), NineGridView.MODE_IMAGE_THREE_SIZE)

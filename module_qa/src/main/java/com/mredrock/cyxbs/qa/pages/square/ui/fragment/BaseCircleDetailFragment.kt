@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.ui.BaseViewModelFragment
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.qa.R
@@ -22,6 +23,7 @@ import com.mredrock.cyxbs.qa.pages.dynamic.viewmodel.DynamicListViewModel
 import com.mredrock.cyxbs.qa.pages.square.ui.adapter.CircleDetailAdapter
 import com.mredrock.cyxbs.qa.ui.adapter.EmptyRvAdapter
 import com.mredrock.cyxbs.qa.ui.adapter.FooterRvAdapter
+import com.mredrock.cyxbs.qa.ui.widget.QaReportDialog
 import kotlinx.android.synthetic.main.qa_fragment_dynamic.*
 import kotlinx.android.synthetic.main.qa_fragment_last_hot.*
 
@@ -48,27 +50,22 @@ abstract class BaseCircleDetailFragment<T : DynamicListViewModel> : BaseViewMode
     }
 
     private fun initDynamic() {
-        val dynamicListRvAdapter = DynamicAdapter {dynamic, view ->
+        val dynamicListRvAdapter = DynamicAdapter { dynamic, view ->
             DynamicDetailActivity.activityStart(this, view, dynamic)
         }.apply {
-            onPraiseClickListener = { position, dynamic ->
-                viewModel.clickPraiseButton(position, dynamic)
-                viewModel.refreshPreActivityEvent.observeNotNull {
-                    notifyItemChanged(it)
-                }
-            }
-
             onPopWindowClickListener = { string, dynamic ->
                 when (string) {
                     IGNORE -> {
-                        viewModel.ignore(dynamic.postId)
+                        viewModel.ignore(dynamic)
                     }
                     REPORT -> {
-                        viewModel.report(dynamic.postId, dynamic.content)
+                        QaReportDialog.show(BaseApp.context) { reportContent ->
+                            viewModel.report(dynamic, reportContent)
+                        }
                     }
 
                     NOTICE -> {
-                        viewModel.followCircle(dynamic.topic)
+                        viewModel.followCircle(dynamic)
                         viewModel.getMyCirCleData()
                     }
                 }

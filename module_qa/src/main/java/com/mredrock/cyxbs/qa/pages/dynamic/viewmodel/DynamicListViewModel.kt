@@ -32,6 +32,8 @@ open class DynamicListViewModel(kind: String) : BaseViewModel() {
     private val factory: DynamicDataSource.Factory
     private var praiseNetworkState = NetworkState.SUCCESSFUL
     val refreshPreActivityEvent = SingleLiveEvent<Int>()
+    val followCircle = MutableLiveData<Boolean>()
+    val ignorePeople = MutableLiveData<Boolean>()
 
     //防止点赞快速点击
     var isDealing = false
@@ -54,86 +56,63 @@ open class DynamicListViewModel(kind: String) : BaseViewModel() {
                 .getFollowedTopic()
                 .mapOrThrowApiException()
                 .setSchedulers()
+                .doOnError {
+                    toastEvent.value = R.string.qa_get_circle_data_failure
+                }
                 .safeSubscribeBy {
-                    LogUtils.d("topic", it.toString())
                     myCircle.value = it
                 }
     }
 
 
-    fun ignore(postId: String) {
+    fun ignore(dynamic: Dynamic) {
         ApiGenerator.getApiService(ApiServiceNew::class.java)
-                .ignoreUid(postId)
-                .setSchedulers()
-                .safeSubscribeBy {
-                    if (it.status == 200)
-                        toastEvent.value = R.string.qa_ignore_dynamic
-                    else
-                        toastEvent.value = R.string.qa_ignore_dynamic_failure
-                }
-
-    }
-
-    fun followCircle(topicName: String) {
-        ApiGenerator.getApiService(ApiServiceNew::class.java)
-                .followTopicGround(topicName)
-                .setSchedulers()
-                .safeSubscribeBy {
-                    if (it.status == 200)
-                        toastEvent.value = R.string.qa_follow_circle
-                    else
-                        toastEvent.value = R.string.qa_follow_circle_failure
-                }
-    }
-
-    fun report(postId: String, content: String) {
-        ApiGenerator.getApiService(ApiServiceNew::class.java)
-                .report(postId, CommentConfig.REPORT_MODEL, content)
-                .setSchedulers()
-                .safeSubscribeBy {
-                    if (it.status == 200)
-                        toastEvent.value = R.string.qa_report_dynamic
-                    else
-                        toastEvent.value = R.string.qa_report_dynamic_failure
-                }
-    }
-
-    fun clickPraiseButton(position: Int, dynamic: Dynamic) {
-        fun Boolean.toInt() = 1.takeIf { this@toInt } ?: -1
-        if (praiseNetworkState == NetworkState.LOADING) {
-//            toastEvent.value =
-            return
-        }
-        ApiGenerator.getApiService(ApiServiceNew::class.java)
-                .run {
-                    if (dynamic.isPraised) {
-                        praise(dynamic.postId, CommentConfig.PRAISE_MODEL)
-                    } else {
-                        praise(dynamic.postId, CommentConfig.PRAISE_MODEL)
-                    }
-                }
-                .doOnSubscribe { isDealing = true }
-                .checkError()
+                .ignoreUid(dynamic.postId)
                 .setSchedulers()
                 .doOnError {
-                    toastEvent.value = R.string.qa_service_error_hint
-                    isDealing = false
+                    toastEvent.value = R.string.qa_ignore_dynamic_failure
+                    ignorePeople.value = false
                 }
-                .doFinally {
-                    praiseNetworkState = NetworkState.SUCCESSFUL
+                .doOnSubscribe {
+                    ignorePeople.value = true
                 }
                 .safeSubscribeBy {
                     if (it.status == 200) {
-                        isDealing = false
-                        dynamic.apply {
-                            val state = !isPraised
-                            praiseCount = dynamic.praiseCount + state.toInt()
-                            isPraised = state
-                        }
-                        refreshPreActivityEvent.value = position
+                        toastEvent.value = R.string.qa_ignore_dynamic
                     }
                 }
-                .lifeCycle()
+
+    }
+
+    fun followCircle(dynamic: Dynamic) {
+        ApiGenerator.getApiService(ApiServiceNew::class.java)
+                .followTopicGround(dynamic.topic)
+                .setSchedulers()
+                .doOnError {
+                    if (dynamic._isFollowTopic == 1)
+                        toastEvent.value = R.string.qa_cancel_circle_failure
+                    else
+                        toastEvent.value = R.string.qa_follow_circle_failure
+                    followCircle.value = false
+                }
+                .safeSubscribeBy {
+                    if (it.status == 200) {
+                        followCircle.value = true
+                    }
+                }
+    }
+
+    fun report(dynamic: Dynamic, content: String) {
+        ApiGenerator.getApiService(ApiServiceNew::class.java)
+                .report(dynamic.postId, CommentConfig.REPORTMODEL, content)
+                .setSchedulers()
+                .doOnError {
+                    toastEvent.value = R.string.qa_report_dynamic_failure
+                }
+                .safeSubscribeBy {
+                    if (it.status == 200)
+                        toastEvent.value = R.string.qa_report_dynamic
+                }
     }
 
     fun getScrollerText() {

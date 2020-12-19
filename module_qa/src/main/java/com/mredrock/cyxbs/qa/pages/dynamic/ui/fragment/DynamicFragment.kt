@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.google.android.material.appbar.CollapsingToolbarLayout
+import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.config.CyxbsMob
 import com.mredrock.cyxbs.common.config.QA_ENTRY
 import com.mredrock.cyxbs.common.event.RefreshQaEvent
@@ -33,7 +34,10 @@ import com.mredrock.cyxbs.qa.pages.quiz.ui.QuizActivity
 import com.mredrock.cyxbs.qa.pages.search.ui.SearchActivity
 import com.mredrock.cyxbs.qa.ui.adapter.EmptyRvAdapter
 import com.mredrock.cyxbs.qa.ui.adapter.FooterRvAdapter
+import com.mredrock.cyxbs.qa.ui.widget.QaReportDialog
 import com.umeng.analytics.MobclickAgent
+import kotlinx.android.synthetic.main.qa_dialog_report.*
+import kotlinx.android.synthetic.main.qa_dialog_report.view.*
 import kotlinx.android.synthetic.main.qa_fragment_dynamic.*
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -80,25 +84,27 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), EventBusL
             DynamicDetailActivity.activityStart(this, view, dynamic)
             initClick()
         }.apply {
-            onPraiseClickListener = { position, dynamic ->
-                viewModel.clickPraiseButton(position, dynamic)
-                viewModel.refreshPreActivityEvent.observeNotNull {
-                    notifyItemChanged(it)
-                }
-            }
-
             onPopWindowClickListener = { string, dynamic ->
                 when (string) {
                     IGNORE -> {
-                        viewModel.ignore(dynamic.postId)
+                        viewModel.ignore(dynamic)
+                        viewModel.ignorePeople.observeNotNull {
+                            viewModel.invalidateQuestionList()
+                        }
                     }
                     REPORT -> {
-                        viewModel.report(dynamic.postId, dynamic.content)
+                        this@DynamicFragment.activity?.let {
+                            QaReportDialog.show(it) { reportContent ->
+                                viewModel.report(dynamic, reportContent)
+                            }
+                        }
                     }
-
                     NOTICE -> {
-                        viewModel.followCircle(dynamic.topic)
-                        viewModel.getMyCirCleData()
+                        viewModel.followCircle(dynamic)
+                        viewModel.followCircle.observeNotNull {
+                            viewModel.getMyCirCleData()
+                            viewModel.invalidateQuestionList()
+                        }
                     }
                 }
             }

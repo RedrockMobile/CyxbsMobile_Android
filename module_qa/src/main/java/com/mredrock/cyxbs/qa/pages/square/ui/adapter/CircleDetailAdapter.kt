@@ -57,7 +57,7 @@ class CircleDetailAdapter(private val onItemClickEvent: (Dynamic) -> Unit) : Bas
                 qa_iv_dynamic_avatar.setAvatarImageFromUrl(data.avatar)
                 qa_tv_dynamic_nickname.text = data.nickName
                 qa_tv_dynamic_content.text = data.content
-                qa_tv_dynamic_praise_count.text = 999.toString()
+//                qa_tv_dynamic_praise_count.text = 999.toString()
                 qa_tv_dynamic_comment_count.text = 999.toString()
                 qa_tv_dynamic_publish_at.text = dynamicTimeDescription(System.currentTimeMillis(), data.publishTime * 1000)
 

@@ -32,6 +32,7 @@ import com.mredrock.cyxbs.qa.utils.dynamicTimeDescription
 import kotlinx.android.synthetic.main.qa_activity_dynamic_detail.*
 import kotlinx.android.synthetic.main.qa_common_toolbar.*
 import kotlinx.android.synthetic.main.qa_recycler_item_dynamic.*
+import kotlinx.android.synthetic.main.qa_recycler_item_dynamic.view.*
 
 
 /**
@@ -141,7 +142,6 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
             })
 
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.qa_activity_dynamic_detail)
@@ -198,7 +198,7 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
         }
         viewModel.replyInfo.observe {
             it?.apply {
-                if (it.second.isNotEmpty()){
+                if (it.second.isNotEmpty()) {
                     ReplyPopWindow.with(this@DynamicDetailActivity)
                     ReplyPopWindow.setReplyName(it.first)
                     ReplyPopWindow.setOnClickEvent {
@@ -261,7 +261,7 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
                         toast("已复制到剪切板")
                     }
             if (dynamic.isSelf) {
-                optionPopWindow.addOptionAndCallback(CommentConfig.DELETE){
+                optionPopWindow.addOptionAndCallback(CommentConfig.DELETE) {
                     QaDialog.show(this, resources.getString(R.string.qa_dialog_tip_delete_comment_text), {}) {
                         toast("点击了删除")
                         viewModel.deleteId(dynamic.postId, "0")
@@ -276,14 +276,14 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
             }
             optionPopWindow.show(it, OptionalPopWindow.AlignMode.RIGHT, 0)
         }
+        qa_iv_dynamic_praise_count_image.registerLikeView(dynamic.postId, CommentConfig.PRAISEMODEL, dynamic.isPraised, dynamic.praiseCount)
         qa_iv_dynamic_praise_count_image.setOnSingleClickListener {
-            qa_iv_dynamic_praise_count_image.toggle()
+            qa_iv_dynamic_praise_count_image.click()
         }
         qa_iv_dynamic_avatar.setAvatarImageFromUrl(dynamic.avatar)
-        qa_tv_dynamic_topic.text = dynamic.topic
+        qa_tv_dynamic_topic.text = "#" + dynamic.topic
         qa_tv_dynamic_nickname.text = dynamic.nickName
         qa_tv_dynamic_content.text = dynamic.content
-        qa_tv_dynamic_praise_count.text = dynamic.praiseCount.toString()
         qa_tv_dynamic_comment_count.text = dynamic.commentCount.toString()
         qa_tv_dynamic_publish_at.text = dynamicTimeDescription(System.currentTimeMillis(), dynamic.publishTime * 1000)
         if (dynamic.pics.isNullOrEmpty())

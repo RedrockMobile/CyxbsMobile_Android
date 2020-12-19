@@ -134,17 +134,17 @@
         app:layout_constraintTop_toTopOf="@+id/qa_iv_dynamic_comment_count"
         app:ringColor="#323FD9" />
 
-    <TextView
-        android:id="@+id/qa_tv_dynamic_praise_count"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toStartOf="@+id/qa_tv_dynamic_comment_count"
-        android:textColor="@color/common_qa_question_bottom_count_color"
-        android:textSize="11sp"
-        app:layout_constraintBottom_toBottomOf="@+id/qa_iv_dynamic_comment_count"
-        app:layout_constraintStart_toStartOf="@+id/qa_iv_dynamic_praise_count_image"
-        app:layout_constraintTop_toTopOf="@+id/qa_iv_dynamic_comment_count"
-        tools:text="999" />
+<!--    <TextView-->
+<!--        android:id="@+id/qa_tv_dynamic_praise_count"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_toStartOf="@+id/qa_tv_dynamic_comment_count"-->
+<!--        android:textColor="@color/common_qa_question_bottom_count_color"-->
+<!--        android:textSize="11sp"-->
+<!--        app:layout_constraintBottom_toBottomOf="@+id/qa_iv_dynamic_comment_count"-->
+<!--        app:layout_constraintStart_toStartOf="@+id/qa_iv_dynamic_praise_count_image"-->
+<!--        app:layout_constraintTop_toTopOf="@+id/qa_iv_dynamic_comment_count"-->
+<!--        tools:text="999" />-->
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/qa_iv_dynamic_comment_count"

@@ -15,7 +15,7 @@ import kotlinx.android.synthetic.main.qa_dialog_report.view.*
 
 
 object QaReportDialog {
-    fun show(context: Context, onPositive: () -> Unit) {
+    fun show(context: Context, onPositive: (String) -> Unit) {
         val builder: AlertDialog.Builder = AlertDialog.Builder(context, R.style.qa_transparent_dialog)
         val view = LayoutInflater.from(context).inflate(R.layout.qa_dialog_report, null, false)
         builder.setView(view)
@@ -28,7 +28,7 @@ object QaReportDialog {
             dialog.dismiss()
         }
         view.qa_tv_tip_positive.setOnClickListener {
-            onPositive.invoke()
+            onPositive.invoke(view.qa_tv_tip_text.toString())
             dialog.dismiss()
         }
     }
