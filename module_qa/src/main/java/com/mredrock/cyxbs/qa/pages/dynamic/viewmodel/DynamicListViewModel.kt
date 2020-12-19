@@ -30,8 +30,6 @@ open class DynamicListViewModel(kind: String) : BaseViewModel() {
     var hotWords = MutableLiveData<List<String>>()
     var myCircle = MutableLiveData<List<Topic>>()
     private val factory: DynamicDataSource.Factory
-    private var praiseNetworkState = NetworkState.SUCCESSFUL
-    val refreshPreActivityEvent = SingleLiveEvent<Int>()
     val followCircle = MutableLiveData<Boolean>()
     val ignorePeople = MutableLiveData<Boolean>()
 
