@@ -8,6 +8,7 @@ import com.mredrock.cyxbs.common.utils.extensions.mapOrThrowApiException
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
+import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.beannew.Comment
 import com.mredrock.cyxbs.qa.beannew.CommentReleaseResult
 import com.mredrock.cyxbs.qa.beannew.Dynamic
@@ -33,6 +34,8 @@ open class DynamicDetailViewModel : BaseViewModel() {
 
     val commentReleaseResult = MutableLiveData<CommentReleaseResult>()
 
+    val deleteDynamic = MutableLiveData<Boolean>()
+
 
     fun refreshCommentList(postId: String, commentId: String) {
         ApiGenerator.getApiService(ApiServiceNew::class.java)
@@ -51,6 +54,18 @@ open class DynamicDetailViewModel : BaseViewModel() {
                     position = findCommentByCommentId(list.reversed(), commentId)
 
 
+                }
+
+        ApiGenerator.getApiService(ApiServiceNew::class.java)
+                .getPostInfo(postId)
+                .mapOrThrowApiException()
+                .setSchedulers()
+                .doOnSubscribe {
+                }
+                .doOnError {
+                }
+                .safeSubscribeBy {
+                    dynamicLiveData.postValue(it)
                 }
     }
     // 回复后，滑动到刚刚回复的comment下
@@ -100,10 +115,11 @@ open class DynamicDetailViewModel : BaseViewModel() {
 
                 }
                 .doOnError {
-
+                    toastEvent.value = R.string.qa_detail_delete_dynamic_fail_text
                 }
                 .safeSubscribeBy {
                     refreshCommentList(dynamicLiveData.value?.postId?: "0", "0")
+                    deleteDynamic.postValue(true)
                 }
     }
 

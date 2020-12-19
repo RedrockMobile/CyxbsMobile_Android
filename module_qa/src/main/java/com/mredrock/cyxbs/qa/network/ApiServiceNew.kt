@@ -103,4 +103,9 @@ interface ApiServiceNew {
                    postId: String
     ): Observable<RedrockApiWrapper<List<Comment>>>
 
+    @GET("/wxapi/magipoke-loop/post/getPostInfo")
+    fun getPostInfo(@Query("id")
+                    postId: String
+    ): Observable<RedrockApiWrapper<Dynamic>>
+
 }

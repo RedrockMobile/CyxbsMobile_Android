@@ -3,7 +3,6 @@ package com.mredrock.cyxbs.qa.beannew
 import android.os.Parcel
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
-import com.mredrock.cyxbs.common.utils.LogUtils
 
 data class Dynamic(@SerializedName("post_id")
                    var postId: String = "",
@@ -38,7 +37,7 @@ data class Dynamic(@SerializedName("post_id")
                    val content: String = "",
 
                    @SerializedName("comment_count")
-                   val commentCount: Int = 0,
+                   var commentCount: Int = 0,
 
                    @SerializedName("pics")
                    var pics: List<String> = mutableListOf()

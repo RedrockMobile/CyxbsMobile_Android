@@ -83,7 +83,7 @@ class CommentListAdapter(
                 if (data.replyList.isNullOrEmpty()) {
                     (qa_rv_reply.adapter as ReplyListAdapter).refreshData(listOf())
                 } else {
-                    (qa_rv_reply.adapter as ReplyListAdapter).refreshData(data.replyList.takeLast(3))
+                    (qa_rv_reply.adapter as ReplyListAdapter).refreshData(data.replyList)
                 }
                 qa_iv_reply_praise_count_image.registerLikeView(data.commentId, CommentConfig.PRAISE_MODEL_COMMENT, data.isPraised, data.praiseCount)
                 qa_iv_reply_praise_count_image.setOnSingleClickListener {

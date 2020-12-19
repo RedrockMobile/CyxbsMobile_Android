@@ -20,6 +20,8 @@ import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.beannew.Dynamic
 import com.mredrock.cyxbs.qa.component.recycler.RvAdapterWrapper
 import com.mredrock.cyxbs.qa.config.CommentConfig
+import com.mredrock.cyxbs.qa.config.RequestResultCode.DYNAMIC_DETAIL_REQUEST
+import com.mredrock.cyxbs.qa.config.RequestResultCode.NEED_REFRESH_RESULT
 import com.mredrock.cyxbs.qa.network.NetworkState
 import com.mredrock.cyxbs.qa.pages.dynamic.ui.adapter.CommentListAdapter
 import com.mredrock.cyxbs.qa.pages.dynamic.viewmodel.DynamicDetailViewModel
@@ -43,14 +45,16 @@ import kotlinx.android.synthetic.main.qa_recycler_item_dynamic_header.view.*
 class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
 
     companion object {
+        var dynamicOrigin: Dynamic? = null
         fun activityStart(fragment: Fragment, dynamicItem: View, data: Dynamic) {
             fragment.apply {
                 activity?.let {
                     val opt = ActivityOptionsCompat.makeSceneTransitionAnimation(it, dynamicItem, "dynamicItem")
                     val intent = Intent(context, DynamicDetailActivity::class.java)
-                    intent.putExtra("dynamicItem", data)
+//                    intent.putExtra("dynamicItem", data)
+                    dynamicOrigin = data
                     it.window.exitTransition = Slide(Gravity.START).apply { duration = 500 }
-                    startActivity(intent, opt.toBundle())
+                    startActivityForResult(intent, DYNAMIC_DETAIL_REQUEST, opt.toBundle())
                 }
             }
         }
@@ -60,7 +64,7 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
 
     private val footerRvAdapter = FooterRvAdapter { getCommentList }
 
-    lateinit var dynamic: Dynamic
+    public lateinit var dynamic: Dynamic
 
     private val behavior by lazy { AppBarLayout.ScrollingViewBehavior() }
 
@@ -126,7 +130,6 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
                 if (dynamic._isSelf == 1 || comment.isSelf) {
                     optionPopWindow.addOptionAndCallback(CommentConfig.DELETE) {
                         QaDialog.show(this, resources.getString(R.string.qa_dialog_tip_delete_comment_text), {}) {
-                            toast("点击了删除")
                             viewModel.deleteId(comment.commentId, "1")
                         }
                     }
@@ -222,6 +225,12 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
                     ?: 0).toString())
 
         }
+        viewModel.deleteDynamic.observe {
+            // 通知主页面刷新
+            toast(R.string.qa_detail_delete_dynamic_success_text)
+            setResult(NEED_REFRESH_RESULT)
+            finish()
+        }
     }
 
     override fun onBackPressed() {
@@ -236,11 +245,15 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
         val layoutParams = qa_ll_reply.layoutParams as CoordinatorLayout.LayoutParams
         layoutParams.behavior = behavior
 
-        dynamic = intent.getParcelableExtra("dynamicItem")
-        viewModel.dynamicLiveData.value = intent.getParcelableExtra("dynamicItem")
+//        dynamic = intent.getParcelableExtra("dynamicItem")
+        dynamic = dynamicOrigin!!
+        viewModel.dynamicLiveData.value = dynamicOrigin!!
         viewModel.dynamicLiveData.observe {
             dynamic = it!!
+            dynamicOrigin?.commentCount = it.commentCount
+            refreshDynamic()
         }
+        refreshDynamic()
 
         qa_tv_reply_title.setOnClickListener {
             KeyboardController.showInputKeyboard(this, qa_et_reply)
@@ -280,6 +293,9 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
         qa_iv_dynamic_praise_count_image.setOnSingleClickListener {
             qa_iv_dynamic_praise_count_image.click()
         }
+    }
+
+    private fun refreshDynamic() {
         qa_iv_dynamic_avatar.setAvatarImageFromUrl(dynamic.avatar)
         qa_tv_dynamic_topic.text = "#" + dynamic.topic
         qa_tv_dynamic_nickname.text = dynamic.nickName

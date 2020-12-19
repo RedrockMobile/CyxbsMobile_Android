@@ -1,5 +1,6 @@
 package com.mredrock.cyxbs.qa.pages.dynamic.ui.fragment
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -25,6 +26,8 @@ import com.mredrock.cyxbs.qa.config.CommentConfig.DELETE
 import com.mredrock.cyxbs.qa.config.CommentConfig.IGNORE
 import com.mredrock.cyxbs.qa.config.CommentConfig.NOTICE
 import com.mredrock.cyxbs.qa.config.CommentConfig.REPORT
+import com.mredrock.cyxbs.qa.config.RequestResultCode.DYNAMIC_DETAIL_REQUEST
+import com.mredrock.cyxbs.qa.config.RequestResultCode.NEED_REFRESH_RESULT
 import com.mredrock.cyxbs.qa.network.NetworkState
 import com.mredrock.cyxbs.qa.pages.dynamic.ui.activity.DynamicDetailActivity
 import com.mredrock.cyxbs.qa.pages.dynamic.ui.adapter.CirclesAdapter
@@ -61,6 +64,7 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), EventBusL
 
     // 判断rv是否到顶
     protected var isRvAtTop = true
+    lateinit var dynamicListRvAdapter: DynamicAdapter
     override fun getViewModelFactory() = DynamicListViewModel.Factory("main")
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -77,7 +81,7 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), EventBusL
 
 
     private fun initDynamics() {
-        val dynamicListRvAdapter =
+        dynamicListRvAdapter =
                 DynamicAdapter(context) { dynamic, view ->
                     DynamicDetailActivity.activityStart(this, view, dynamic)
                     initClick()
@@ -286,5 +290,22 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), EventBusL
         vf_hot_search.stopFlipping()
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        when (requestCode) {
+            // 动态详细
+            DYNAMIC_DETAIL_REQUEST -> {
+                if (resultCode == NEED_REFRESH_RESULT) {
+                    // 需要刷新 则 刷新显示动态
+                    viewModel.invalidateQuestionList()
+                    viewModel.getMyCirCleData()
+                } else {
+                    // 不需要刷新，则更新当前的dynamic为详细页的dynamic（避免出现评论数目不一致的问题）
+                    dynamicListRvAdapter.notifyDataSetChanged()
+                }
+            }
+
+
+        }
+    }
 
 }
