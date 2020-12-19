@@ -120,13 +120,22 @@ class LikeViewSlim : LikeView {
 
     // 通知订阅者
     private fun sendBroadcast(key: String) {
-        observer[key]?.forEach {
-            if (it.get() == null) {
-                // 如果view已经被回收，则删除订阅（弱引用）
-                observer[key]?.remove(it)
-            } else {
-                it.get()?.notifyData()
+        observer[key]?.apply {
+            val itr = observer[key]!!.iterator()
+            while (itr.hasNext()) {
+                val weakR = itr.next()
+                if (weakR.get() == null) {
+                    // 如果view已经被回收，则删除订阅（弱引用）
+                    itr.remove()
+                } else {
+                    weakR.get()?.notifyData()
+                }
             }
+        }
+
+
+        observer[key]?.forEach {
+
         }
     }
 
