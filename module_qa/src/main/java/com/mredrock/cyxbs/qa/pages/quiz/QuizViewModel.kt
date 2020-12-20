@@ -1,8 +1,10 @@
 package com.mredrock.cyxbs.qa.pages.quiz
 
+import android.app.ProgressDialog
 import android.util.Base64
 import androidx.lifecycle.MutableLiveData
 import com.mredrock.cyxbs.common.network.ApiGenerator
+import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.checkError
 import com.mredrock.cyxbs.common.utils.extensions.mapOrThrowApiException
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
@@ -63,11 +65,11 @@ class QuizViewModel : BaseViewModel() {
 
 
     fun submitDynamic() {
-        progressDialogEvent.value = ProgressDialogEvent.SHOW_NONCANCELABLE_DIALOG_EVENT
         val builder = MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
                 .addFormDataPart("content", content)
                 .addFormDataPart("topic_id", type)
+        LogUtils.d("imageLiveData",imageLiveData.value.toString())
         if (!imageLiveData.value.isNullOrEmpty()) {
             val files = imageLiveData.value!!.asSequence()
                     .map { File(it) }

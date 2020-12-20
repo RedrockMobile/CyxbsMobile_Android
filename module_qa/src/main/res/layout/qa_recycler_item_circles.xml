@@ -7,7 +7,7 @@
     android:paddingTop="10dp">
 
     <com.mredrock.cyxbs.qa.ui.widget.ImageViewAddCount
-        android:id="@+id/iv_circle"
+        android:id="@+id/qa_iv_circle"
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:layout_gravity="center"
@@ -19,7 +19,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/tv_circle_name"
+        android:id="@+id/qa_tv_circle_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"

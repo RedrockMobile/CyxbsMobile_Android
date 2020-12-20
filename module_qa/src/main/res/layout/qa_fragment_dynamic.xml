@@ -25,7 +25,7 @@
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
             <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/tv_my_notice"
+                android:id="@+id/qa_tv_my_notice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
@@ -36,7 +36,7 @@
                 android:visibility="invisible" />
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rv_circles_List"
+                android:id="@+id/qa_rv_circles_List"
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
                 tools:listitem="@layout/qa_recycler_item_circles" />
@@ -119,7 +119,7 @@
                 android:layout_height="match_parent">
 
                 <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rv_dynamic_List"
+                    android:id="@+id/qa_rv_dynamic_List"
                     android:layout_width="match_parent"
                     android:layout_height="100dp"
                     tools:listitem="@layout/qa_recycler_item_dynamic_header" />
@@ -128,7 +128,7 @@
     </RelativeLayout>
 
     <ImageView
-        android:id="@+id/bt_to_quiz"
+        android:id="@+id/qa_bt_to_quiz"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_gravity="bottom|right"

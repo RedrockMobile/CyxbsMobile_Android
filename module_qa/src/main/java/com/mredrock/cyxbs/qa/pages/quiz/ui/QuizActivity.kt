@@ -2,6 +2,7 @@ package com.mredrock.cyxbs.qa.pages.quiz.ui
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.app.ProgressDialog
 import android.content.Intent
 import android.graphics.drawable.Drawable
 import android.net.Uri
@@ -58,6 +59,7 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>(), EventBusLifecycleSu
 
     }
 
+    private var progressDialog: ProgressDialog? = null
     override val isFragmentActivity = false
     private var draftId = NOT_DRAFT_ID
     private var dynamicType: String = ""
@@ -79,6 +81,7 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>(), EventBusLifecycleSu
                     viewModel.deleteDraft(draftId)
                 }
                 setResult(NEED_REFRESH_RESULT)
+                progressDialog?.dismiss()
                 finish()
             }
         }
@@ -99,11 +102,11 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>(), EventBusLifecycleSu
                 val chipGroup = findViewById<ChipGroup>(R.id.layout_quiz_tag)
                 for (circleData in it.withIndex()) {
                     chipGroup.addView((layoutInflater.inflate(R.layout.qa_quiz_view_chip, chipGroup, false) as Chip).apply {
-                        text = "#" + circleData.value.topicName
+                        text = "# " + circleData.value.topicName
                         setOnCheckedChangeListener { view, checked ->
                             if (checked) {
                                 val type = StringBuffer(text.toString())
-                                type.deleteCharAt(0)
+                                type.delete(0, 2)
                                 dynamicType = type.toString()
                             } else {
                                 dynamicType = ""
@@ -132,15 +135,13 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>(), EventBusLifecycleSu
                     i: Int,
                     i1: Int,
                     i2: Int
-            ) {
-                if (!TextUtils.isEmpty(charSequence) && charSequence.length > 0) {
-                    qa_tv_toolbar_right.setBackgroundResource(qa_shape_send_dynamic_btn_blue_background)
-                    tv_edit_num.text = charSequence.length.toString() + "/500"
+            ) = if (!TextUtils.isEmpty(charSequence) && charSequence.isNotEmpty()) {
+                qa_tv_toolbar_right.setBackgroundResource(qa_shape_send_dynamic_btn_blue_background)
+                tv_edit_num.text = charSequence.length.toString() + "/500"
 
-                } else {
-                    qa_tv_toolbar_right.setBackgroundResource(qa_shape_send_dynamic_btn_grey_background)
-                    tv_edit_num.text = charSequence.length.toString() + "/500"
-                }
+            } else {
+                qa_tv_toolbar_right.setBackgroundResource(qa_shape_send_dynamic_btn_grey_background)
+                tv_edit_num.text = charSequence.length.toString() + "/500"
             }
 
             override fun afterTextChanged(editable: Editable) {}
@@ -156,6 +157,11 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>(), EventBusLifecycleSu
             }
             exitDialog.show()
         })
+        progressDialog = ProgressDialog(this)
+        progressDialog?.apply {
+            setMessage("加载中...")
+            setCanceledOnTouchOutside(false)
+        }
         qa_tv_toolbar_title.text = getString(R.string.qa_quiz_toolbar_title_text)
         qa_ib_toolbar_more.gone()
         qa_tv_toolbar_right.apply {
@@ -164,6 +170,7 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>(), EventBusLifecycleSu
             setOnClickListener {
                 val result = viewModel.submitTitleAndContent(dynamicType, edt_quiz_content.text.toString())
                 if (result) {
+                    progressDialog?.show()
                     viewModel.submitDynamic()
                 }
             }
@@ -174,7 +181,7 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>(), EventBusLifecycleSu
         nine_grid_view.addView(ContextCompat.getDrawable(this, qa_ic_add_images)?.let { createImageViewFromVector(it) })
         nine_grid_view.setOnItemClickListener { _, index ->
             if (index == nine_grid_view.childCount - 1) {
-                this@QuizActivity.selectImageFromAlbum(MAX_SELECTABLE_IMAGE_COUNT, viewModel.imageLiveData.value)
+                this@QuizActivity.selectImageFromAlbum(MAX_SELECTABLE_IMAGE_COUNT)
             } else {
                 ViewImageCropActivity.activityStartForResult(this@QuizActivity, viewModel.tryEditImg(index)
                         ?: return@setOnItemClickListener)
