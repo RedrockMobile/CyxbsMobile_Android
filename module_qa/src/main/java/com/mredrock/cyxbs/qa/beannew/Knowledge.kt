@@ -18,9 +18,7 @@ class Knowledge(
         @SerializedName("photo_url")
         var photoUrl: String = "",
         @SerializedName("from")
-        var from: String = "",
-        @SerializedName("related_info")
-        var related: List<RelatedKnowledge>
+        var from: String = ""
 ) : Parcelable {
     constructor(parcel: Parcel) : this(
             parcel.readInt(),
@@ -29,8 +27,7 @@ class Knowledge(
             parcel.readString(),
             parcel.readString(),
             parcel.readString(),
-            parcel.readString(),
-            parcel.createTypedArrayList(RelatedKnowledge)) {
+            parcel.readString()) {
     }
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
@@ -41,7 +38,6 @@ class Knowledge(
         parcel.writeString(description)
         parcel.writeString(photoUrl)
         parcel.writeString(from)
-        parcel.writeTypedList(related)
     }
 
     override fun describeContents(): Int {

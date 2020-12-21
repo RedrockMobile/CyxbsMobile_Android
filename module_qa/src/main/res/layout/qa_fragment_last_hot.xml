@@ -9,6 +9,7 @@
         android:layout_height="match_parent">
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/qa_rv_circle_detail_last_hot"
+        android:background="@color/common_white_background"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

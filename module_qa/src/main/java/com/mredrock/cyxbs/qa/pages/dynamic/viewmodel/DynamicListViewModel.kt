@@ -21,6 +21,7 @@ import com.mredrock.cyxbs.qa.pages.dynamic.model.DynamicDataSource
  */
 open class DynamicListViewModel(kind: String) : BaseViewModel() {
     val dynamicList: LiveData<PagedList<Dynamic>>
+
     val networkState: LiveData<Int>
     val initialLoad: LiveData<Int>
     var hotWords = MutableLiveData<List<String>>()

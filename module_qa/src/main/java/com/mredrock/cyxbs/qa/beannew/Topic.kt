@@ -20,6 +20,9 @@ data class Topic(@SerializedName("topic_id")
                  @SerializedName("new_mes_count")
                  val newMesCount: Int = 0,
 
+                 @SerializedName("follow_count")
+                 val follow_count: Int = 0,
+
                  @SerializedName("is_follow")
                  var _isFollow: Int = 0,
 
@@ -35,6 +38,7 @@ data class Topic(@SerializedName("topic_id")
             parcel.readString(),
             parcel.readInt(),
             parcel.readInt(),
+            parcel.readInt(),
             parcel.readString()
     )
 
@@ -43,6 +47,7 @@ data class Topic(@SerializedName("topic_id")
         parcel.writeString(topicLogo)
         parcel.writeString(topicName)
         parcel.writeInt(newMesCount)
+        parcel.writeInt(follow_count)
         parcel.writeInt(_isFollow)
         parcel.writeString(introduction)
     }

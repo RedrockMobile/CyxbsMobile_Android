@@ -32,7 +32,7 @@ class CircleSquareAdapter(val viewmodel: CircleSquareViewModel, private val onIt
         override fun refresh(data: Topic?) {
             itemView.tv_circle_square_name.text = data?.topicName
             itemView.tv_circle_square_descriprion.text = data?.introduction
-            itemView.tv_circle_square_person_number.text = data?.newMesCount.toString() + "个成员"
+            itemView.tv_circle_square_person_number.text = data?.follow_count.toString() + "个成员"
             itemView.btn_circle_square_concern.text = "+关注"
             if (data?._isFollow!=null) {
                 if (data._isFollow.equals(1)) {

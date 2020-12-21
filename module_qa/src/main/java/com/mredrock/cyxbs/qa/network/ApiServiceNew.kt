@@ -32,10 +32,15 @@ interface ApiServiceNew {
     @GET("/wxapi/magipoke-loop/search/getSearchHotWord")
     fun getSearchHotWord(): Observable<RedrockApiWrapper<SearchHotWord>>
 
-    @GET("/wxapi/magipoke-loop/search/getSearchResult")
+    @GET("/wxapi/magipoke-loop/search/searchPost")
     fun getSearchResult(@Query("key")
-                        searchContent: String): Observable<RedrockApiWrapper<SearchResult>>
-
+                        searchContent: String,
+                        @Query("page") page: Int,
+                        @Query("size") size: Int): Observable<RedrockApiWrapper<List<Dynamic>>>
+    @GET("/wxapi/magipoke-loop/search/searchKnowledge")
+    fun getSearchKnowledge(@Query("key")searchKey:String,
+                            @Query("page")page: Int,
+                           @Query("size")size: Int):Observable<RedrockApiWrapper<List<Knowledge>>>
     /**
      * params存一个<"id", "帖子id">的键值对MutableMap<String, String>
      *     example:

@@ -57,7 +57,7 @@
     <string name="qa_question_search_cancel">取消</string>
     <string name="qa_search_history">历史记录</string>
     <string name="qa_search_clean_history_all">清除全部</string>
-    <string name="qa_search_no_result">没有相关提问~</string>
+    <string name="qa_search_no_result">没有相关动态~</string>
     <string name="qa_search_result_related">相关知识</string>
     <string name="qa_search_empty_content">搜索内容为空，请重新编辑~</string>
     <string name="qa_search_hot_word_key">大家都在搜:</string>

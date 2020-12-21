@@ -70,7 +70,6 @@ class CircleDetailActivity : BaseViewModelActivity<CircleDetailViewModel>() {
     private fun initClick() {
         qa_circle_detail_iv_back.setOnSingleClickListener {
             val intent=Intent()
-            intent.putExtra("topic_return",topic)
             setResult(Activity.RESULT_OK,intent)
             finish()
         }
@@ -91,9 +90,10 @@ class CircleDetailActivity : BaseViewModelActivity<CircleDetailViewModel>() {
     @SuppressLint("SetTextI18n", "UseCompatLoadingForDrawables")
     private fun initView() {
         topic=intent.getParcelableExtra("topicItem")
+        LogUtils.d("zt",topic.toString())
         tv_circle_square_name.text = topic.topicName
         tv_circle_square_descriprion.text = topic.introduction
-        tv_circle_square_person_number.text = topic.newMesCount.toString() + "个成员"
+        tv_circle_square_person_number.text = topic.follow_count.toString() + "个成员"
         btn_circle_square_concern.text = "+关注"
         if (topic._isFollow.equals(1)){
             btn_circle_square_concern.background=context.getDrawable(R.drawable.qa_shape_send_dynamic_btn_grey_background)
