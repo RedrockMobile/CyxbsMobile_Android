@@ -8,6 +8,7 @@
     android:orientation="vertical"
     tools:background="@color/common_window_background"
     tools:context=".pages.dynamic.ui.fragment.DynamicFragment">
+
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -29,10 +30,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
+                android:text="@string/qa_my_follow_circle"
                 android:textColor="@color/common_qa_question_item_nickname_color"
                 android:textSize="18sp"
                 android:textStyle="bold"
-                android:text="@string/qa_my_follow_circle"
                 android:visibility="invisible" />
 
             <androidx.recyclerview.widget.RecyclerView
@@ -89,12 +90,12 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <View
+            android:id="@+id/view_divide"
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:alpha="0.1"
-            android:id="@+id/view_divide"
-            android:visibility="gone"
-            android:background="@color/common_qa_quiz_toolbar_divider_line_color" />
+            android:background="@color/common_qa_quiz_toolbar_divider_line_color"
+            android:visibility="gone" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:layout_width="wrap_content"
@@ -127,12 +128,12 @@
         </LinearLayout>
     </RelativeLayout>
 
-    <ImageView
+    <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/qa_bt_to_quiz"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_gravity="bottom|right"
         android:layout_marginEnd="20dp"
-        android:layout_marginBottom="80dp"
+        android:layout_marginBottom="60dp"
         android:background="@drawable/qa_ic_send_dynamic" />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

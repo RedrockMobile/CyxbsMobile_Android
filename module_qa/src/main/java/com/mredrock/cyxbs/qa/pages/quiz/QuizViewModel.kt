@@ -1,14 +1,14 @@
 package com.mredrock.cyxbs.qa.pages.quiz
 
 import android.app.ProgressDialog
+import android.content.Context
 import android.util.Base64
 import androidx.lifecycle.MutableLiveData
+import com.mredrock.cyxbs.common.BaseApp
+import com.mredrock.cyxbs.common.BaseApp.Companion.context
 import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.utils.LogUtils
-import com.mredrock.cyxbs.common.utils.extensions.checkError
-import com.mredrock.cyxbs.common.utils.extensions.mapOrThrowApiException
-import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
-import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
+import com.mredrock.cyxbs.common.utils.extensions.*
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.common.viewmodel.event.ProgressDialogEvent
 import com.mredrock.cyxbs.common.viewmodel.event.SingleLiveEvent
@@ -18,6 +18,7 @@ import com.mredrock.cyxbs.qa.beannew.Topic
 import com.mredrock.cyxbs.qa.network.ApiService
 import com.mredrock.cyxbs.qa.network.ApiServiceNew
 import com.mredrock.cyxbs.qa.network.NetworkState
+import com.mredrock.cyxbs.qa.pages.dynamic.model.TopicDataSet
 import com.mredrock.cyxbs.qa.utils.isNullOrEmpty
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
@@ -60,16 +61,18 @@ class QuizViewModel : BaseViewModel() {
                 }
                 .safeSubscribeBy {
                     allCircle.value = it
+                    it.forEach {
+                        TopicDataSet.storageTopicData(it)
+                    }
                 }.lifeCycle()
     }
-
 
     fun submitDynamic() {
         val builder = MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
                 .addFormDataPart("content", content)
                 .addFormDataPart("topic_id", type)
-        LogUtils.d("imageLiveData",imageLiveData.value.toString())
+        LogUtils.d("imageLiveData", imageLiveData.value.toString())
         if (!imageLiveData.value.isNullOrEmpty()) {
             val files = imageLiveData.value!!.asSequence()
                     .map { File(it) }

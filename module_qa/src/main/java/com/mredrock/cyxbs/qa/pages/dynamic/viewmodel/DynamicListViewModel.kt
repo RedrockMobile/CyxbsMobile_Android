@@ -1,16 +1,20 @@
 package com.mredrock.cyxbs.qa.pages.dynamic.viewmodel
 
+import android.content.Context
+import android.content.SharedPreferences
+import android.provider.Settings.Global.putString
+import android.util.Log
 import androidx.lifecycle.*
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
+import com.mredrock.cyxbs.common.BaseApp.Companion.context
 import com.mredrock.cyxbs.common.network.ApiGenerator
-import com.mredrock.cyxbs.common.utils.extensions.mapOrThrowApiException
-import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
-import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
+import com.mredrock.cyxbs.common.utils.extensions.*
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.beannew.Dynamic
 import com.mredrock.cyxbs.qa.beannew.Topic
+import com.mredrock.cyxbs.qa.beannew.TopicMessage
 import com.mredrock.cyxbs.qa.config.CommentConfig
 import com.mredrock.cyxbs.qa.network.ApiService
 import com.mredrock.cyxbs.qa.network.ApiServiceNew
@@ -27,9 +31,9 @@ open class DynamicListViewModel(kind: String) : BaseViewModel() {
     var hotWords = MutableLiveData<List<String>>()
     var myCircle = MutableLiveData<List<Topic>>()
     private val factory: DynamicDataSource.Factory
-    val followCircle = MutableLiveData<Boolean>()
     val ignorePeople = MutableLiveData<Boolean>()
     val deleteTips = MutableLiveData<Boolean>()
+    val topicMessageList = MutableLiveData<List<TopicMessage>>()
 
     //防止点赞快速点击
     var isDealing = false
@@ -57,9 +61,36 @@ open class DynamicListViewModel(kind: String) : BaseViewModel() {
                 }
                 .safeSubscribeBy {
                     myCircle.value = it
+                    it.forEach {
+
+                    }
                 }
     }
 
+    fun getTopicMessages() {
+        //获取当前时间戳
+        val timeStamp = System.currentTimeMillis() / 1000
+        Log.d("xxxxx", timeStamp.toString())
+        ApiGenerator.getApiService(ApiServiceNew::class.java)
+                .getTopicMessage(timeStamp.toString())
+                .mapOrThrowApiException()
+                .setSchedulers()
+                .doOnError {
+                    toastEvent.value = R.string.qa_topic_message_failure
+                }
+                .safeSubscribeBy {
+                    topicMessageList.value = it
+                    it.forEach { topicMessage ->
+                        context.loadTopicMessage(topicMessage.topic_id, topicMessage.post_count)
+                    }
+                }
+    }
+
+    fun Context.loadTopicMessage(key: String, value: Int) {
+        sharedPreferences("topicMessage").editor {
+            putInt(key, value)
+        }
+    }
 
     fun ignore(dynamic: Dynamic) {
         ApiGenerator.getApiService(ApiServiceNew::class.java)
@@ -80,23 +111,6 @@ open class DynamicListViewModel(kind: String) : BaseViewModel() {
 
     }
 
-    fun followCircle(dynamic: Dynamic) {
-        ApiGenerator.getApiService(ApiServiceNew::class.java)
-                .followTopicGround(dynamic.topic)
-                .setSchedulers()
-                .doOnError {
-                    if (dynamic._isFollowTopic == 1)
-                        toastEvent.value = R.string.qa_cancel_circle_failure
-                    else
-                        toastEvent.value = R.string.qa_follow_circle_failure
-                    followCircle.value = false
-                }
-                .safeSubscribeBy {
-                    if (it.status == 200) {
-                        followCircle.value = true
-                    }
-                }
-    }
 
     fun report(dynamic: Dynamic, content: String) {
         ApiGenerator.getApiService(ApiServiceNew::class.java)

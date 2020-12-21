@@ -122,9 +122,6 @@ class QuestionSearchedFragment : BaseViewModelFragment<QuestionSearchedViewModel
                             }
                         }
                     }
-                    CommentConfig.NOTICE -> {
-                        viewModel.followCircle(dynamic)
-                    }
                     CommentConfig.DELETE -> {
                         activity?.let { it1 ->
                             QaDialog.show(it1, resources.getString(R.string.qa_dialog_tip_delete_comment_text), {}) {

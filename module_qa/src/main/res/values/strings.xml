@@ -102,5 +102,6 @@
     <string name="qa_dialog_share_text">分享</string>
     <string name="qa_detail_delete_dynamic_fail_text">删除动态失败</string>
     <string name="qa_detail_delete_dynamic_success_text">删除动态成功</string>
+    <string name="qa_topic_message_failure">获取未读圈子消息失败</string>
 
 </resources>

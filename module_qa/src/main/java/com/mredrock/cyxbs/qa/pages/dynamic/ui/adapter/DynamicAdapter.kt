@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.DiffUtil
-import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.setAvatarImageFromUrl
 import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.qa.R
@@ -16,9 +15,7 @@ import com.mredrock.cyxbs.qa.component.recycler.BaseViewHolder
 import com.mredrock.cyxbs.qa.config.CommentConfig
 import com.mredrock.cyxbs.qa.config.CommentConfig.DELETE
 import com.mredrock.cyxbs.qa.config.CommentConfig.IGNORE
-import com.mredrock.cyxbs.qa.config.CommentConfig.NOTICE
 import com.mredrock.cyxbs.qa.config.CommentConfig.REPORT
-import com.mredrock.cyxbs.qa.config.CommentConfig.UN_NOTICE
 import com.mredrock.cyxbs.qa.ui.activity.ViewImageActivity
 import com.mredrock.cyxbs.qa.ui.widget.NineGridView
 import com.mredrock.cyxbs.qa.ui.widget.OptionalPopWindow
@@ -42,40 +39,38 @@ class DynamicAdapter(val context: Context?, private val onItemClickEvent: (Dynam
         }
     }
 
-    var onPopWindowClickListener: ((Int,String, Dynamic) -> Unit)? = null
+    var onTopicListener: ((String,View) -> Unit)? = null
+    var onPopWindowClickListener: ((Int, String, Dynamic) -> Unit)? = null
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = DynamicViewHolder(parent)
 
     override fun onBindViewHolder(holder: BaseViewHolder<Dynamic>, position: Int) {
         super.onBindViewHolder(holder, position)
         holder.itemView.apply {
+            qa_tv_dynamic_topic.setOnSingleClickListener {
+                getItem(position)?.topic?.let { it1 -> onTopicListener?.invoke(it1,it) }
+            }
             qa_iv_dynamic_more_tips_clicked.setOnSingleClickListener { view ->
                 getItem(position)?.let { dynamic ->
                     if (dynamic._isSelf == 0) {
                         if (dynamic._isFollowTopic == 0) {
                             OptionalPopWindow.Builder().with(context)
-                                    .addOptionAndCallback(NOTICE) {
-                                        onPopWindowClickListener?.invoke(position,NOTICE, dynamic)
-                                    }
                                     .addOptionAndCallback(IGNORE) {
-                                        onPopWindowClickListener?.invoke(position,IGNORE, dynamic)
+                                        onPopWindowClickListener?.invoke(position, IGNORE, dynamic)
                                     }.addOptionAndCallback(REPORT) {
-                                        onPopWindowClickListener?.invoke(position,REPORT, dynamic)
+                                        onPopWindowClickListener?.invoke(position, REPORT, dynamic)
                                     }.show(view, OptionalPopWindow.AlignMode.RIGHT, 0)
                         } else {
                             OptionalPopWindow.Builder().with(context)
-                                    .addOptionAndCallback(UN_NOTICE) {
-                                        onPopWindowClickListener?.invoke(position,NOTICE, dynamic)
-                                    }
                                     .addOptionAndCallback(IGNORE) {
-                                        onPopWindowClickListener?.invoke(position,IGNORE, dynamic)
+                                        onPopWindowClickListener?.invoke(position, IGNORE, dynamic)
                                     }.addOptionAndCallback(REPORT) {
-                                        onPopWindowClickListener?.invoke(position,REPORT, dynamic)
+                                        onPopWindowClickListener?.invoke(position, REPORT, dynamic)
                                     }.show(view, OptionalPopWindow.AlignMode.RIGHT, 0)
                         }
                     } else {
                         OptionalPopWindow.Builder().with(context)
                                 .addOptionAndCallback(DELETE) {
-                                    onPopWindowClickListener?.invoke(position,DELETE, dynamic)
+                                    onPopWindowClickListener?.invoke(position, DELETE, dynamic)
                                 }.show(view, OptionalPopWindow.AlignMode.RIGHT, 0)
                     }
                 }
@@ -132,7 +127,6 @@ class DynamicAdapter(val context: Context?, private val onItemClickEvent: (Dynam
                             qa_dynamic_nine_grid_view.tag = tagStore
                         }
                     }
-
                 }
                 qa_dynamic_nine_grid_view.setOnItemClickListener { _, index ->
                     ViewImageActivity.activityStart(context, data.pics.map { it }.toTypedArray(), index)

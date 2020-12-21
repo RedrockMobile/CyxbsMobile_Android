@@ -12,7 +12,6 @@ import com.mredrock.cyxbs.qa.beannew.Dynamic
 import com.mredrock.cyxbs.qa.component.recycler.RvAdapterWrapper
 import com.mredrock.cyxbs.qa.config.CommentConfig
 import com.mredrock.cyxbs.qa.config.CommentConfig.IGNORE
-import com.mredrock.cyxbs.qa.config.CommentConfig.NOTICE
 import com.mredrock.cyxbs.qa.config.CommentConfig.REPORT
 import com.mredrock.cyxbs.qa.network.NetworkState
 import com.mredrock.cyxbs.qa.pages.dynamic.ui.activity.DynamicDetailActivity
@@ -62,9 +61,7 @@ abstract class BaseCircleDetailFragment<T : DynamicListViewModel> : BaseViewMode
                             }
                         }
                     }
-                    NOTICE -> {
-                        viewModel.followCircle(dynamic)
-                    }
+
                     CommentConfig.DELETE -> {
                         this@BaseCircleDetailFragment.activity?.let { it1 ->
                             QaDialog.show(it1, resources.getString(R.string.qa_dialog_tip_delete_comment_text), {}) {

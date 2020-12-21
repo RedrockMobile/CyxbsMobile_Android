@@ -17,25 +17,28 @@ import com.mredrock.cyxbs.common.config.CyxbsMob
 import com.mredrock.cyxbs.common.config.QA_ENTRY
 import com.mredrock.cyxbs.common.event.RefreshQaEvent
 import com.mredrock.cyxbs.common.mark.EventBusLifecycleSubscriber
+import com.mredrock.cyxbs.common.ui.BaseActivity
 import com.mredrock.cyxbs.common.ui.BaseViewModelFragment
 import com.mredrock.cyxbs.common.utils.extensions.doIfLogin
 import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
+import com.mredrock.cyxbs.common.utils.extensions.startActivityForResult
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.component.recycler.RvAdapterWrapper
 import com.mredrock.cyxbs.qa.config.CommentConfig.DELETE
 import com.mredrock.cyxbs.qa.config.CommentConfig.IGNORE
-import com.mredrock.cyxbs.qa.config.CommentConfig.NOTICE
 import com.mredrock.cyxbs.qa.config.CommentConfig.REPORT
 import com.mredrock.cyxbs.qa.config.RequestResultCode.DYNAMIC_DETAIL_REQUEST
 import com.mredrock.cyxbs.qa.config.RequestResultCode.NEED_REFRESH_RESULT
 import com.mredrock.cyxbs.qa.config.RequestResultCode.RELEASE_DYNAMIC_ACTIVITY_REQUEST
 import com.mredrock.cyxbs.qa.network.NetworkState
+import com.mredrock.cyxbs.qa.pages.dynamic.model.TopicDataSet
 import com.mredrock.cyxbs.qa.pages.dynamic.ui.activity.DynamicDetailActivity
 import com.mredrock.cyxbs.qa.pages.dynamic.ui.adapter.CirclesAdapter
 import com.mredrock.cyxbs.qa.pages.dynamic.ui.adapter.DynamicAdapter
 import com.mredrock.cyxbs.qa.pages.dynamic.viewmodel.DynamicListViewModel
 import com.mredrock.cyxbs.qa.pages.quiz.ui.QuizActivity
 import com.mredrock.cyxbs.qa.pages.search.ui.SearchActivity
+import com.mredrock.cyxbs.qa.pages.square.ui.activity.CircleDetailActivity
 import com.mredrock.cyxbs.qa.ui.adapter.EmptyRvAdapter
 import com.mredrock.cyxbs.qa.ui.adapter.FooterRvAdapter
 import com.mredrock.cyxbs.qa.ui.widget.QaDialog
@@ -87,6 +90,9 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), EventBusL
                     DynamicDetailActivity.activityStart(this, view, dynamic)
                     initClick()
                 }.apply {
+                    onTopicListener = { topic, view ->
+                        TopicDataSet.getTopicData(topic)?.let { CircleDetailActivity.activityStart(this@DynamicFragment.activity as BaseActivity, view, it) }
+                    }
                     onPopWindowClickListener = { position, string, dynamic ->
                         when (string) {
                             IGNORE -> {
@@ -98,9 +104,6 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), EventBusL
                                         viewModel.report(dynamic, reportContent)
                                     }
                                 }
-                            }
-                            NOTICE -> {
-                                viewModel.followCircle(dynamic)
                             }
                             DELETE -> {
                                 this@DynamicFragment.activity?.let { it1 ->
@@ -117,10 +120,6 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), EventBusL
             viewModel.invalidateQuestionList()
         }
         viewModel.deleteTips.observe {
-            viewModel.invalidateQuestionList()
-        }
-        viewModel.followCircle.observe {
-            viewModel.getMyCirCleData()
             viewModel.invalidateQuestionList()
         }
 
@@ -140,6 +139,12 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), EventBusL
             layoutManager = linearLayoutManager
             adapter = circlesAdapter
         }
+        viewModel.getTopicMessages()
+        viewModel.topicMessageList.observe {
+            if (it != null) {
+                circlesAdapter?.addTopicMessageData(it)
+            }
+        }
         viewModel.getMyCirCleData()
         viewModel.myCircle.observe {
             if (!it.isNullOrEmpty()) {
@@ -149,7 +154,7 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), EventBusL
                 qa_rv_circles_List.layoutParams = layoutParams
                 qa_tv_my_notice.visibility = View.VISIBLE
                 view_divide.visibility = View.VISIBLE
-                circlesAdapter?.addData(it)
+                circlesAdapter?.addCircleData(it)
             } else {
                 val layoutParams = CollapsingToolbarLayout.LayoutParams(qa_rv_circles_List.layoutParams)
                 layoutParams.bottomMargin = 30

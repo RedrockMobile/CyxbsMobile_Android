@@ -9,8 +9,6 @@ package com.mredrock.cyxbs.qa.config
 object CommentConfig {
 
     const val IGNORE = "屏蔽此人"
-    const val NOTICE = "关注圈子"
-    const val UN_NOTICE = "取消关注"
     const val REPORT = "举报"
     const val REPLY = "回复"
     const val COPY = "复制"

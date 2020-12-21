@@ -37,10 +37,15 @@ interface ApiServiceNew {
                         searchContent: String,
                         @Query("page") page: Int,
                         @Query("size") size: Int): Observable<RedrockApiWrapper<List<Dynamic>>>
+
     @GET("/wxapi/magipoke-loop/search/searchKnowledge")
-    fun getSearchKnowledge(@Query("key")searchKey:String,
-                            @Query("page")page: Int,
-                           @Query("size")size: Int):Observable<RedrockApiWrapper<List<Knowledge>>>
+    fun getSearchKnowledge(@Query("key") searchKey: String,
+                           @Query("page") page: Int,
+                           @Query("size") size: Int): Observable<RedrockApiWrapper<List<Knowledge>>>
+
+    @GET("/wxapi/magipoke-loop/ground/getUnreadCount")
+    fun getTopicMessage(@Query("last") last: String): Observable<RedrockApiWrapper<List<TopicMessage>>>
+
     /**
      * params存一个<"id", "帖子id">的键值对MutableMap<String, String>
      *     example:

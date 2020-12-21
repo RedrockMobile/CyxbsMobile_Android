@@ -27,17 +27,18 @@ import kotlinx.android.synthetic.main.qa_recycler_item_circle_square.*
 
 class CircleDetailActivity : BaseViewModelActivity<CircleDetailViewModel>() {
     companion object {
-        val RESULT_CODE=1
+        val RESULT_CODE = 1
         fun activityStart(activity: BaseActivity, topicItemView: View, data: Topic) {
             activity.let {
                 val opt = ActivityOptionsCompat.makeSceneTransitionAnimation(it, topicItemView, "topicItem")
                 val intent = Intent(context, CircleDetailActivity::class.java)
                 intent.putExtra("topicItem", data)
                 it.window.exitTransition = Slide(Gravity.START).apply { duration = 500 }
-                startActivityForResult(activity,intent, RESULT_CODE,opt.toBundle())
+                startActivityForResult(activity, intent, RESULT_CODE, opt.toBundle())
             }
         }
     }
+
     override val isFragmentActivity = true
     lateinit var topic: Topic
     private val lastNewFragment by lazy(LazyThreadSafetyMode.NONE) {
@@ -56,49 +57,51 @@ class CircleDetailActivity : BaseViewModelActivity<CircleDetailViewModel>() {
         initView()
         initClick()
     }
+
     override fun onBackPressed() {
         window.returnTransition = Slide(Gravity.END).apply { duration = 500 }
-        val intent=Intent()
-        intent.putExtra("topic_return",topic)
-        setResult(Activity.RESULT_OK,intent)
-        LogUtils.d("zt","3")
-        LogUtils.d("zt","返回的top"+topic)
+        val intent = Intent()
+        intent.putExtra("topic_return", topic)
+        setResult(Activity.RESULT_OK, intent)
+        LogUtils.d("zt", "3")
+        LogUtils.d("zt", "返回的top" + topic)
         finish()
         super.onBackPressed()
     }
+
     @SuppressLint("UseCompatLoadingForDrawables")
     private fun initClick() {
         qa_circle_detail_iv_back.setOnSingleClickListener {
-            val intent=Intent()
-            setResult(Activity.RESULT_OK,intent)
+            val intent = Intent()
+            intent.putExtra("topic_return", topic)
+            setResult(Activity.RESULT_OK, intent)
             finish()
         }
         btn_circle_square_concern.setOnClickListener {
-            if (topic._isFollow.equals(1)){
+            if (topic._isFollow.equals(1)) {
                 //关注的状态下点击，取消关注
-                viewModel.followTopic(topic.topicName,topic._isFollow.equals(1))
-                btn_circle_square_concern.background=context.getDrawable(R.drawable.qa_shape_send_dynamic_btn_blue_background)
-                topic._isFollow=0
-            }else{
-                viewModel.followTopic(topic.topicName,topic._isFollow.equals(1))
-                btn_circle_square_concern.background=context.getDrawable(R.drawable.qa_shape_send_dynamic_btn_grey_background)
-                topic._isFollow=1
+                viewModel.followTopic(topic.topicName, topic._isFollow.equals(1))
+                btn_circle_square_concern.background = context.getDrawable(R.drawable.qa_shape_send_dynamic_btn_blue_background)
+                topic._isFollow = 0
+            } else {
+                viewModel.followTopic(topic.topicName, topic._isFollow.equals(1))
+                btn_circle_square_concern.background = context.getDrawable(R.drawable.qa_shape_send_dynamic_btn_grey_background)
+                topic._isFollow = 1
             }
         }
     }
 
     @SuppressLint("SetTextI18n", "UseCompatLoadingForDrawables")
     private fun initView() {
-        topic=intent.getParcelableExtra("topicItem")
-        LogUtils.d("zt",topic.toString())
+        topic = intent.getParcelableExtra("topicItem")
         tv_circle_square_name.text = topic.topicName
         tv_circle_square_descriprion.text = topic.introduction
         tv_circle_square_person_number.text = topic.follow_count.toString() + "个成员"
         btn_circle_square_concern.text = "+关注"
-        if (topic._isFollow.equals(1)){
-            btn_circle_square_concern.background=context.getDrawable(R.drawable.qa_shape_send_dynamic_btn_grey_background)
-        }else{
-            btn_circle_square_concern.background=context.getDrawable(R.drawable.qa_shape_send_dynamic_btn_blue_background)
+        if (topic._isFollow.equals(1)) {
+            btn_circle_square_concern.background = context.getDrawable(R.drawable.qa_shape_send_dynamic_btn_grey_background)
+        } else {
+            btn_circle_square_concern.background = context.getDrawable(R.drawable.qa_shape_send_dynamic_btn_blue_background)
         }
     }
 

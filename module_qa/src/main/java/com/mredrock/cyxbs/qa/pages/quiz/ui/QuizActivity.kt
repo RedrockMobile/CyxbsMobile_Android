@@ -29,9 +29,7 @@ import com.mredrock.cyxbs.common.utils.extensions.*
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.R.drawable.*
 import com.mredrock.cyxbs.qa.beannew.Question
-import com.mredrock.cyxbs.qa.config.RequestResultCode
 import com.mredrock.cyxbs.qa.config.RequestResultCode.NEED_REFRESH_RESULT
-import com.mredrock.cyxbs.qa.config.RequestResultCode.RELEASE_COMMENT_ACTIVITY_REQUEST
 import com.mredrock.cyxbs.qa.pages.quiz.QuizViewModel
 import com.mredrock.cyxbs.qa.ui.activity.ViewImageCropActivity
 import com.mredrock.cyxbs.qa.ui.widget.DraftDialog
@@ -96,20 +94,21 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>(), EventBusLifecycleSu
     //发布页标签单选
     @SuppressLint("SetTextI18n")
     private fun initTypeSelector() {
+        val hashSet = HashSet<String>()
         viewModel.getAllCirCleData("问答圈", "test1")
         viewModel.allCircle.observe {
             if (!it.isNullOrEmpty()) {
                 val chipGroup = findViewById<ChipGroup>(R.id.layout_quiz_tag)
-                for (circleData in it.withIndex()) {
+                for (topic in it.withIndex()) {
                     chipGroup.addView((layoutInflater.inflate(R.layout.qa_quiz_view_chip, chipGroup, false) as Chip).apply {
-                        text = "# " + circleData.value.topicName
-                        setOnCheckedChangeListener { view, checked ->
-                            if (checked) {
-                                val type = StringBuffer(text.toString())
-                                type.delete(0, 2)
-                                dynamicType = type.toString()
-                            } else {
+                        text = "# " + topic.value.topicName
+                        setOnSingleClickListener {
+                            if (hashSet.contains(getTopicText(text.toString()))) {
                                 dynamicType = ""
+                                hashSet.remove(getTopicText(text.toString()))
+                            } else {
+                                dynamicType = getTopicText(text.toString())
+                                hashSet.add(getTopicText(text.toString()))
                             }
                         }
                     })
@@ -118,6 +117,12 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>(), EventBusLifecycleSu
         }
     }
 
+    //圈子名前加#，但是请求的时候不带#
+    private fun getTopicText(text: String): String {
+        val type = StringBuffer(text)
+        type.delete(0, 2)
+        return type.toString()
+    }
     //动态监听内容文字变化
 
     private fun initEditListener() {

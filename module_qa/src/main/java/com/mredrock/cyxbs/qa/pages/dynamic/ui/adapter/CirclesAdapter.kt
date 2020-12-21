@@ -11,8 +11,10 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
+import com.mredrock.cyxbs.common.utils.extensions.sharedPreferences
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.beannew.Topic
+import com.mredrock.cyxbs.qa.beannew.TopicMessage
 
 import com.mredrock.cyxbs.qa.pages.square.ui.activity.CircleSquareActivity
 import com.mredrock.cyxbs.qa.ui.widget.ImageViewAddCount
@@ -32,6 +34,7 @@ class CirclesAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     }
 
     private val circlesItemList = ArrayList<Topic>()
+    private val topicMessageList = ArrayList<TopicMessage>()
 
     class NoCircleItem(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val iv_add_circles: ImageView = itemView.findViewById(R.id.qa_iv_add_circles)
@@ -87,8 +90,7 @@ class CirclesAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                         changeToActivity(CircleSquareActivity())
                     }
                     qa_iv_circle.apply {
-                        setHaveMessage(true)
-                        setMessageBum(circlesItemList[position].newMesCount)
+
                     }
                     qa_tv_circle_name.text = circlesItemList[position].topicName
                 }
@@ -109,15 +111,14 @@ class CirclesAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     }
 
-    fun addData(newDataLists: List<Topic>) {
+    fun addCircleData(newData: List<Topic>) {
         circlesItemList.clear()
-        circlesItemList.addAll(newDataLists)
+        circlesItemList.addAll(newData)
         notifyDataSetChanged()
     }
 
-    fun initRefreshImages(dataLists: List<Topic>) {
-        circlesItemList.addAll(dataLists)
-        notifyDataSetChanged()
+    fun addTopicMessageData(newTopicMessageData: List<TopicMessage>) {
+        topicMessageList.clear()
+        topicMessageList.addAll(newTopicMessageData)
     }
-
 }
