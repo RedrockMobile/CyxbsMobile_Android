@@ -34,12 +34,12 @@ class CirclesAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private val circlesItemList = ArrayList<Topic>()
 
     class NoCircleItem(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val iv_add_circles: ImageView = itemView.findViewById(R.id.iv_add_circles)
+        val iv_add_circles: ImageView = itemView.findViewById(R.id.qa_iv_add_circles)
     }
 
     class CirclesItem(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val iv_circle: ImageViewAddCount = itemView.findViewById(R.id.iv_circle)
-        val tv_circle_name: TextView = itemView.findViewById(R.id.tv_circle_name)
+        val iv_circle: ImageViewAddCount = itemView.findViewById(R.id.qa_iv_circle)
+        val tv_circle_name: TextView = itemView.findViewById(R.id.qa_tv_circle_name)
     }
 
     override fun getItemViewType(position: Int): Int {
@@ -83,14 +83,14 @@ class CirclesAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                 val viewHolder = holder as CirclesItem
                 viewHolder.itemView.apply {
                     setOnSingleClickListener {
-                        iv_circle.setHaveMessage(false)
+                        qa_iv_circle.setHaveMessage(false)
                         changeToActivity(CircleSquareActivity())
                     }
-                    iv_circle.apply {
+                    qa_iv_circle.apply {
                         setHaveMessage(true)
                         setMessageBum(circlesItemList[position].newMesCount)
                     }
-                    tv_circle_name.text = circlesItemList[position].topicName
+                    qa_tv_circle_name.text = circlesItemList[position].topicName
                 }
             }
         }

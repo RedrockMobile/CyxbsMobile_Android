@@ -113,6 +113,9 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), EventBusL
                     }
                 }
 
+        viewModel.ignorePeople.observe {
+            viewModel.invalidateQuestionList()
+        }
         viewModel.deleteTips.observe {
             viewModel.invalidateQuestionList()
         }
@@ -133,30 +136,30 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), EventBusL
         val circlesAdapter = this.activity?.let { CirclesAdapter() }
         val linearLayoutManager = LinearLayoutManager(context)
         linearLayoutManager.orientation = LinearLayoutManager.HORIZONTAL
-        rv_circles_List.apply {
+        qa_rv_circles_List.apply {
             layoutManager = linearLayoutManager
             adapter = circlesAdapter
         }
         viewModel.getMyCirCleData()
         viewModel.myCircle.observe {
             if (!it.isNullOrEmpty()) {
-                val layoutParams = CollapsingToolbarLayout.LayoutParams(rv_circles_List.layoutParams)
+                val layoutParams = CollapsingToolbarLayout.LayoutParams(qa_rv_circles_List.layoutParams)
                 layoutParams.topMargin = 70
                 layoutParams.bottomMargin = 30
-                rv_circles_List.layoutParams = layoutParams
-                tv_my_notice.visibility = View.VISIBLE
+                qa_rv_circles_List.layoutParams = layoutParams
+                qa_tv_my_notice.visibility = View.VISIBLE
                 view_divide.visibility = View.VISIBLE
                 circlesAdapter?.addData(it)
             } else {
-                val layoutParams = CollapsingToolbarLayout.LayoutParams(rv_circles_List.layoutParams)
+                val layoutParams = CollapsingToolbarLayout.LayoutParams(qa_rv_circles_List.layoutParams)
                 layoutParams.bottomMargin = 30
                 view_divide.visibility = View.VISIBLE
-                rv_circles_List.layoutParams = layoutParams
+                qa_rv_circles_List.layoutParams = layoutParams
             }
         }
 
         observeLoading(dynamicListRvAdapter, footerRvAdapter, emptyRvAdapter)
-        rv_dynamic_List.apply {
+        qa_rv_dynamic_List.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = adapterWrapper
             addOnScrollListener(object : RecyclerView.OnScrollListener() {
@@ -205,7 +208,7 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), EventBusL
     }
 
     private fun initClick() {
-        bt_to_quiz.setOnSingleClickListener {
+        qa_bt_to_quiz.setOnSingleClickListener {
             turnToQuiz()
         }
     }
@@ -278,7 +281,7 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), EventBusL
         if (isRvAtTop)
             viewModel.invalidateQuestionList()
         else
-            rv_dynamic_List.smoothScrollToPosition(0)
+            qa_rv_dynamic_List.smoothScrollToPosition(0)
 
     }
 

@@ -40,11 +40,11 @@ class DraftDialog(context: Context) : Dialog(context) {
             noSaveListener: View.OnClickListener,
             cancelListener: View.OnClickListener?) {
         qa_tv_title.text = title
-        tv_save.text = saveText
-        tv_no_save.text = noSaveText
-        tv_cancel.text = cancelText
-        tv_save.setOnClickListener(saveListener)
-        tv_no_save.setOnClickListener(noSaveListener)
-        tv_cancel.setOnClickListener(cancelListener)
+        qa_tv_save.text = saveText
+        qa_tv_no_save.text = noSaveText
+        qa_tv_cancel.text = cancelText
+        qa_tv_save.setOnClickListener(saveListener)
+        qa_tv_no_save.setOnClickListener(noSaveListener)
+        qa_tv_cancel.setOnClickListener(cancelListener)
     }
 }

@@ -50,7 +50,6 @@ class DynamicAdapter(val context: Context?, private val onItemClickEvent: (Dynam
         holder.itemView.apply {
             qa_iv_dynamic_more_tips_clicked.setOnSingleClickListener { view ->
                 getItem(position)?.let { dynamic ->
-                    LogUtils.d("tag", dynamic._isSelf.toString())
                     if (dynamic._isSelf == 0) {
                         if (dynamic._isFollowTopic == 0) {
                             OptionalPopWindow.Builder().with(context)
