@@ -8,7 +8,7 @@ data class Dynamic(@SerializedName("post_id")
                    var postId: String = "",
 
                    @SerializedName("is_follow_topic")
-                   var _isFollowTopic: Int = 0,
+                   var isFollowTopic: Int = 0,
 
                    @SerializedName("is_praised")
                    private var _isPraised: Int = 0,
@@ -20,7 +20,7 @@ data class Dynamic(@SerializedName("post_id")
                    val nickName: String = "",
 
                    @SerializedName("is_self")
-                   val _isSelf: Int = 0,
+                   val isSelf: Int = 0,
 
                    @SerializedName("praise_count")
                    var praiseCount: Int = 0,
@@ -72,11 +72,11 @@ data class Dynamic(@SerializedName("post_id")
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeString(postId)
-        parcel.writeInt(_isFollowTopic)
+        parcel.writeInt(isFollowTopic)
         parcel.writeInt(_isPraised)
         parcel.writeString(avatar)
         parcel.writeString(nickName)
-        parcel.writeInt(_isSelf)
+        parcel.writeInt(isSelf)
         parcel.writeInt(praiseCount)
         parcel.writeString(topic)
         parcel.writeLong(publishTime)

@@ -92,16 +92,21 @@
 
     <string name="qa_dialog_tip_positive_text">确定</string>
     <string name="qa_dialog_tip_deny_text">取消</string>
-    <string name="qa_dialog_tip_delete_comment_text">确定删除此条动态吗？</string>
+    <string name="qa_dialog_tip_delete_dynamic_text">确定删除此条动态吗？</string>
+    <string name="qa_dialog_tip_delete_comment_text">确定删除此条评论吗？</string>
     <string name="qa_dialog_tip_report_text">填写举报理由</string>
     <string name="qa_cancel_circle_failure">取消关注圈子失败</string>
     <string name="qa_cancel_circle">取消关注圈子成功</string>
     <string name="qa_get_circle_data_failure">获取圈子信息失败</string>
     <string name="qa_delete_dynamic_failure">删除动态失败</string>
+    <string name="qa_delete_comment_failure">删除评论失败</string>
     <string name="qa_dialog_cancel">取消</string>
     <string name="qa_dialog_share_text">分享</string>
     <string name="qa_detail_delete_dynamic_fail_text">删除动态失败</string>
+    <string name="qa_detail_delete_comment_fail_text">删除评论失败</string>
     <string name="qa_detail_delete_dynamic_success_text">删除动态成功</string>
+    <string name="qa_detail_delete_comment_success_text">删除评论成功</string>
+
     <string name="qa_topic_message_failure">获取未读圈子消息失败</string>
 
 </resources>

@@ -1,5 +1,6 @@
 package com.mredrock.cyxbs.qa.pages.dynamic.ui.activity
 
+import android.annotation.SuppressLint
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
@@ -20,10 +21,8 @@ import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.beannew.Dynamic
 import com.mredrock.cyxbs.qa.component.recycler.RvAdapterWrapper
 import com.mredrock.cyxbs.qa.config.CommentConfig
-import com.mredrock.cyxbs.qa.config.RequestResultCode
 import com.mredrock.cyxbs.qa.config.RequestResultCode.DYNAMIC_DETAIL_REQUEST
 import com.mredrock.cyxbs.qa.config.RequestResultCode.NEED_REFRESH_RESULT
-import com.mredrock.cyxbs.qa.config.RequestResultCode.RELEASE_COMMENT_ACTIVITY_REQUEST
 import com.mredrock.cyxbs.qa.network.NetworkState
 import com.mredrock.cyxbs.qa.pages.dynamic.ui.adapter.CommentListAdapter
 import com.mredrock.cyxbs.qa.pages.dynamic.viewmodel.DynamicDetailViewModel
@@ -61,13 +60,15 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
                 }
             }
         }
+        val DYNAMIC_DELETE = "0"
+        val COMMENT_DELETE = "1"
     }
 
     private val emptyRvAdapter by lazy { EmptyRvAdapter(getString(R.string.qa_comment_list_empty_hint)) }
 
     private val footerRvAdapter = FooterRvAdapter { getCommentList }
 
-    public lateinit var dynamic: Dynamic
+    lateinit var dynamic: Dynamic
 
     private val behavior by lazy { AppBarLayout.ScrollingViewBehavior() }
 
@@ -101,10 +102,10 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
                             copyText(comment.content)
                             toast("已复制到剪切板")
                         }
-                if (dynamic._isSelf == 1 || comment.isSelf) {
+                if (dynamic.isSelf == 1 || comment.isSelf) {
                     optionPopWindow.addOptionAndCallback(CommentConfig.DELETE) {
                         QaDialog.show(this, resources.getString(R.string.qa_dialog_tip_delete_comment_text), {}) {
-                            viewModel.deleteId(comment.commentId, "1")
+                            viewModel.deleteId(comment.commentId, COMMENT_DELETE)
                         }
                     }
                 } else {
@@ -129,10 +130,10 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
                             copyText(comment.content)
                             toast("已复制到剪切板")
                         }
-                if (dynamic._isSelf == 1 || comment.isSelf) {
+                if (dynamic.isSelf == 1 || comment.isSelf) {
                     optionPopWindow.addOptionAndCallback(CommentConfig.DELETE) {
                         QaDialog.show(this, resources.getString(R.string.qa_dialog_tip_delete_comment_text), {}) {
-                            viewModel.deleteId(comment.commentId, "1")
+                            viewModel.deleteId(comment.commentId, COMMENT_DELETE)
                         }
                     }
                 } else {
@@ -235,7 +236,6 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
         }
         viewModel.deleteDynamic.observe {
             // 通知主页面刷新
-            toast(R.string.qa_detail_delete_dynamic_success_text)
             setResult(NEED_REFRESH_RESULT)
             finish()
         }
@@ -281,10 +281,10 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
                         copyText(dynamic.content)
                         toast("已复制到剪切板")
                     }
-            if (dynamic._isSelf == 1) {
+            if (dynamic.isSelf == 1) {
                 optionPopWindow.addOptionAndCallback(CommentConfig.DELETE) {
-                    QaDialog.show(this, resources.getString(R.string.qa_dialog_tip_delete_comment_text), {}) {
-                        viewModel.deleteId(dynamic.postId, "0")
+                    QaDialog.show(this, resources.getString(R.string.qa_dialog_tip_delete_dynamic_text), {}) {
+                        viewModel.deleteId(dynamic.postId, DYNAMIC_DELETE)
                     }
                 }
             } else {
@@ -302,6 +302,7 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
         }
     }
 
+    @SuppressLint("SetTextI18n")
     private fun refreshDynamic() {
         qa_iv_dynamic_avatar.setAvatarImageFromUrl(dynamic.avatar)
         qa_tv_dynamic_topic.text = "# " + dynamic.topic

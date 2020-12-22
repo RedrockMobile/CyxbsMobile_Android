@@ -14,6 +14,7 @@ import com.mredrock.cyxbs.qa.beannew.CommentReleaseResult
 import com.mredrock.cyxbs.qa.beannew.Dynamic
 import com.mredrock.cyxbs.qa.network.ApiServiceNew
 import com.mredrock.cyxbs.qa.network.NetworkState
+import com.mredrock.cyxbs.qa.pages.dynamic.ui.activity.DynamicDetailActivity
 
 /**
  * @Author: zhangzhe
@@ -115,11 +116,27 @@ open class DynamicDetailViewModel : BaseViewModel() {
 
                 }
                 .doOnError {
-                    toastEvent.value = R.string.qa_detail_delete_dynamic_fail_text
+                    when (model) {
+                        DynamicDetailActivity.DYNAMIC_DELETE -> {
+                            toastEvent.value = R.string.qa_detail_delete_dynamic_fail_text
+                        }
+                        DynamicDetailActivity.COMMENT_DELETE -> {
+                            toastEvent.value = R.string.qa_detail_delete_comment_fail_text
+                        }
+                    }
                 }
                 .safeSubscribeBy {
                     refreshCommentList(dynamicLiveData.value?.postId?: "0", "0")
-                    deleteDynamic.postValue(true)
+
+                    when (model) {
+                        DynamicDetailActivity.DYNAMIC_DELETE -> {
+                            deleteDynamic.postValue(true)
+                            toastEvent.value = R.string.qa_detail_delete_dynamic_success_text
+                        }
+                        DynamicDetailActivity.COMMENT_DELETE -> {
+                            toastEvent.value = R.string.qa_detail_delete_comment_success_text
+                        }
+                    }
                 }
     }
 
