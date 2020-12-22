@@ -56,7 +56,7 @@ class CircleSquareActivity : BaseViewModelActivity<CircleSquareViewModel>() {
     private fun initView() {
         adapter = CircleSquareAdapter(viewModel){topic, view,position->
             mPosition=position
-            CircleDetailActivity.activityStart(this,view,topic)
+            CircleDetailActivity.activityStartFromSquare(this,view,topic)
         }
         rv_circle_square.layoutManager = LinearLayoutManager(context)
         rv_circle_square.adapter = adapter

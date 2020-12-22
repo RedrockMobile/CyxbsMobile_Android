@@ -104,6 +104,7 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>(), EventBusLifecycleSu
                         text = "# " + topic.value.topicName
                         setOnSingleClickListener {
                             if (hashSet.contains(getTopicText(text.toString()))) {
+
                                 dynamicType = ""
                                 hashSet.remove(getTopicText(text.toString()))
                             } else {

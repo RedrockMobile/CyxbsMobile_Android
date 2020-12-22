@@ -22,6 +22,7 @@ class DynamicDataSource(private val kind: String) : PageKeyedDataSource<Int, Dyn
 
     private var failedRequest: (() -> Unit)? = null
 
+
     override fun loadInitial(params: LoadInitialParams<Int>, callback: LoadInitialCallback<Int, Dynamic>) {
         //最开始加上判断，以防登录bug
         val userState = ServiceManager.getService(IAccountService::class.java).getVerifyService()

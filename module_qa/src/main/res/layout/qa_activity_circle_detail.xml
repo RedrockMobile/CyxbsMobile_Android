@@ -27,11 +27,12 @@
             android:src="@drawable/qa_ic_arrow_left" />
 
         <TextView
+            android:id="@+id/qa_detail_tv_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_gravity="center_vertical"
-            android:layout_marginStart="140dp"
+            android:layout_marginStart="4dp"
             android:layout_toEndOf="@+id/qa_circle_detail_iv_back"
             android:text="校园周边"
             android:textColor="@color/common_level_three_font_color"

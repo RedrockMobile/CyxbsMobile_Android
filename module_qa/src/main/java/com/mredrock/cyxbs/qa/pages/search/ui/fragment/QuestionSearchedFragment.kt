@@ -2,6 +2,7 @@ package com.mredrock.cyxbs.qa.pages.search.ui.fragment
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,6 +22,7 @@ import com.mredrock.cyxbs.qa.network.NetworkState
 import com.mredrock.cyxbs.qa.pages.dynamic.ui.activity.DynamicDetailActivity
 import com.mredrock.cyxbs.qa.pages.dynamic.ui.adapter.DynamicAdapter
 import com.mredrock.cyxbs.qa.pages.quiz.ui.QuizActivity
+import com.mredrock.cyxbs.qa.pages.search.model.SearchQuestionDataSource.Companion.SEARCHRESULT
 import com.mredrock.cyxbs.qa.pages.search.ui.adapter.SearchKnowledgeAdapter
 import com.mredrock.cyxbs.qa.pages.search.ui.adapter.SearchNoResultAdapter
 import com.mredrock.cyxbs.qa.pages.search.ui.adapter.SearchResultHeaderAdapter
@@ -28,6 +30,7 @@ import com.mredrock.cyxbs.qa.pages.search.viewmodel.QuestionSearchedViewModel
 import com.mredrock.cyxbs.qa.ui.adapter.FooterRvAdapter
 import com.mredrock.cyxbs.qa.ui.widget.QaDialog
 import com.mredrock.cyxbs.qa.ui.widget.QaReportDialog
+import com.mredrock.cyxbs.qa.utils.isNullOrEmpty
 import kotlinx.android.synthetic.main.qa_fragment_question_search_result.*
 
 /**
@@ -80,19 +83,23 @@ class QuestionSearchedFragment : BaseViewModelFragment<QuestionSearchedViewModel
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initInitialView()
-        viewModel.searchKey = searchKey
-        swipe_refresh_layout_searching.isRefreshing = true
-        emptyRvAdapter?.showHolder(3)
         initResultView()
         viewModel.isCreateOver.observe {
             if (it != null) {
                 if (it) {
                     //加载完成
-                    LogUtils.d("zt", "加载完成！")
-                    swipe_refresh_layout_searching.isRefreshing = false
-                    emptyRvAdapter?.hideHolder()
-                    if (viewModel.questionList.value!=null){
-                        qa_tv_contract_content.visibility=View.VISIBLE
+                    if (SEARCHRESULT||viewModel.isKnowledge){
+                        //有数据的刷新
+                        swipe_refresh_layout_searching.isRefreshing = false
+                        emptyRvAdapter?.showResultRefreshHolder()
+                    }else{
+                        //没有数据的刷新
+                        swipe_refresh_layout_searching.isRefreshing = false
+                        emptyRvAdapter?.showNOResultRefreshHolder()
+                    }
+                    if (SEARCHRESULT) {
+                        LogUtils.d("zt", "搜索数据不为空")
+                        qa_tv_contract_content.visibility = View.VISIBLE
                     }
                     if (viewModel.isKnowledge) {
                         //知识库不为空时候显示
@@ -147,8 +154,9 @@ class QuestionSearchedFragment : BaseViewModelFragment<QuestionSearchedViewModel
         )
         rv_searched_question.layoutManager = LinearLayoutManager(context)
         rv_searched_question.adapter = adapterWrapper
-
-
+        viewModel.searchKey = searchKey
+        swipe_refresh_layout_searching.isRefreshing = true
+        emptyRvAdapter?.showInitialHolder(3)
     }
 
     private fun initResultView() {
@@ -166,14 +174,22 @@ class QuestionSearchedFragment : BaseViewModelFragment<QuestionSearchedViewModel
                     swipe_refresh_layout_searching.isRefreshing = true
                     (rv_searched_question.adapter as? RvAdapterWrapper)?.apply {
                     }
-                    emptyRvAdapter?.showHolder(3)
+
+                    emptyRvAdapter?.showInitialHolder(3)
                 }
                 NetworkState.CANNOT_LOAD_WITHOUT_LOGIN -> {
                     swipe_refresh_layout_searching.isRefreshing = false
                 }
                 else -> {
-                    swipe_refresh_layout_searching.isRefreshing = false
-                    emptyRvAdapter?.hideHolder()
+                    if (SEARCHRESULT||viewModel.isKnowledge){
+                        //有数据的刷新
+                        swipe_refresh_layout_searching.isRefreshing = false
+                        emptyRvAdapter?.showResultRefreshHolder()
+                    }else{
+                        //没有数据的刷新
+                        swipe_refresh_layout_searching.isRefreshing = false
+                        emptyRvAdapter?.showNOResultRefreshHolder()
+                    }
                 }
             }
         }
@@ -188,7 +204,7 @@ class QuestionSearchedFragment : BaseViewModelFragment<QuestionSearchedViewModel
         }
 
         viewModel.knowledge.observe {
-            if (it != null) {
+            if (!it.isNullOrEmpty()) {
                 val flexBoxManager = FlexboxLayoutManager(BaseApp.context)
                 flexBoxManager.flexWrap = FlexWrap.WRAP
                 qa_rv_knowledge.layoutManager = flexBoxManager
@@ -196,10 +212,11 @@ class QuestionSearchedFragment : BaseViewModelFragment<QuestionSearchedViewModel
                 qa_rv_knowledge.adapter = SearchKnowledgeAdapter {
                     //邮问知识库的调用
                 }.apply {
-                    addData(it)
+                    if (it != null) {
+                        addData(it)
+                    }
                 }
             } else {
-                LogUtils.d("zt", "知识数据库为空")
                 qa_rv_knowledge.gone()
                 qa_line.gone()
                 qa_tv_knowledge.gone()

@@ -91,7 +91,7 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), EventBusL
                     initClick()
                 }.apply {
                     onTopicListener = { topic, view ->
-                        TopicDataSet.getTopicData(topic)?.let { CircleDetailActivity.activityStart(this@DynamicFragment.activity as BaseActivity, view, it) }
+                        TopicDataSet.getTopicData(topic)?.let { CircleDetailActivity.activityStartFromSquare(this@DynamicFragment.activity as BaseActivity, view, it) }
                     }
                     onPopWindowClickListener = { position, string, dynamic ->
                         when (string) {
@@ -119,6 +119,11 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), EventBusL
         viewModel.ignorePeople.observe {
             viewModel.invalidateQuestionList()
         }
+
+        viewModel.deleteTips.observe {
+
+            viewModel.invalidateQuestionList()
+        }
         viewModel.deleteTips.observe {
             viewModel.invalidateQuestionList()
         }
@@ -132,7 +137,11 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), EventBusL
                     footerAdapter = footerRvAdapter
             )
         }
-        val circlesAdapter = this.activity?.let { CirclesAdapter() }
+        val circlesAdapter = this.activity?.let {
+            CirclesAdapter { topic, view ->
+                CircleDetailActivity.activityStartFromCircle(this, view, topic)
+            }
+        }
         val linearLayoutManager = LinearLayoutManager(context)
         linearLayoutManager.orientation = LinearLayoutManager.HORIZONTAL
         qa_rv_circles_List.apply {

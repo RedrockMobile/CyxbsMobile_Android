@@ -1,5 +1,6 @@
 package com.mredrock.cyxbs.qa.pages.search.model
 
+import android.view.View
 import androidx.lifecycle.MutableLiveData
 import androidx.paging.DataSource
 import androidx.paging.PageKeyedDataSource
@@ -14,6 +15,7 @@ import com.mredrock.cyxbs.qa.beannew.Dynamic
 import com.mredrock.cyxbs.qa.network.ApiService
 import com.mredrock.cyxbs.qa.network.ApiServiceNew
 import com.mredrock.cyxbs.qa.network.NetworkState
+import com.mredrock.cyxbs.qa.utils.isNullOrEmpty
 
 /**
  * Created by yyfbe, Date on 2020/8/13.
@@ -24,6 +26,9 @@ class SearchQuestionDataSource(private val kind: String) : PageKeyedDataSource<I
     val initialLoad = MutableLiveData<Int>()
     val isCreateOver=MutableLiveData<Boolean>()
     private var failedRequest: (() -> Unit)? = null
+    companion object{
+        var SEARCHRESULT=false//暴露给外面是否有数据的变量
+    }
 
     override fun loadInitial(params: LoadInitialParams<Int>, callback: LoadInitialCallback<Int, Dynamic>) {
         //最开始加上判断，以防登录bug
@@ -45,17 +50,17 @@ class SearchQuestionDataSource(private val kind: String) : PageKeyedDataSource<I
                 }
                 .safeSubscribeBy { list ->
                     initialLoad.value = NetworkState.SUCCESSFUL
-                    isCreateOver.value=true
-                    LogUtils.d("zt","动态搜索完成1")
+                    SEARCHRESULT=!list.isNullOrEmpty()
                     val nextPageKey = 2.takeUnless { (list.size < params.requestedLoadSize) }
                     callback.onResult(list, 1, nextPageKey)
+                    isCreateOver.value=true
                 }
 
     }
 
     override fun loadAfter(params: LoadParams<Int>, callback: LoadCallback<Int, Dynamic>) {
         ApiGenerator.getApiService(ApiServiceNew::class.java)
-                .getSearchResult("test", params.key, params.requestedLoadSize)
+                .getSearchResult(kind, params.key, params.requestedLoadSize)
                 .mapOrThrowApiException()
                 .setSchedulers()
                 .doOnSubscribe { networkState.postValue(NetworkState.LOADING) }
@@ -65,10 +70,10 @@ class SearchQuestionDataSource(private val kind: String) : PageKeyedDataSource<I
                 }
                 .safeSubscribeBy { list ->
                     networkState.value = NetworkState.SUCCESSFUL
-                    isCreateOver.value=true
-                    LogUtils.d("zt","动态搜索完成2")
+                    SEARCHRESULT=!list.isNullOrEmpty()
                     val adjacentPageKey = (params.key + 1).takeUnless { list.size < params.requestedLoadSize }
                     callback.onResult(list, adjacentPageKey)
+                    isCreateOver.value=true
                 }
     }
 

@@ -26,7 +26,6 @@ class CircleSquareViewModel : BaseViewModel() {
                 .mapOrThrowApiException()
                 .setSchedulers()
                 .safeSubscribeBy {
-                    LogUtils.d("zt",it.toString())
                     allCircle.postValue(it)
                 }
     }

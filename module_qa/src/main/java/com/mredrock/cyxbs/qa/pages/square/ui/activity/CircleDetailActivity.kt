@@ -10,7 +10,9 @@ import android.view.View
 import androidx.core.app.ActivityCompat.startActivityForResult
 import androidx.core.app.ActivityOptionsCompat
 import androidx.core.content.ContextCompat.startActivity
+import androidx.fragment.app.Fragment
 import com.google.android.material.tabs.TabLayoutMediator
+import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.BaseApp.Companion.context
 import com.mredrock.cyxbs.common.ui.BaseActivity
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
@@ -28,13 +30,24 @@ import kotlinx.android.synthetic.main.qa_recycler_item_circle_square.*
 class CircleDetailActivity : BaseViewModelActivity<CircleDetailViewModel>() {
     companion object {
         val RESULT_CODE = 1
-        fun activityStart(activity: BaseActivity, topicItemView: View, data: Topic) {
+        fun activityStartFromSquare(activity: BaseActivity, topicItemView: View, data: Topic) {
             activity.let {
                 val opt = ActivityOptionsCompat.makeSceneTransitionAnimation(it, topicItemView, "topicItem")
                 val intent = Intent(context, CircleDetailActivity::class.java)
                 intent.putExtra("topicItem", data)
                 it.window.exitTransition = Slide(Gravity.START).apply { duration = 500 }
                 startActivityForResult(activity, intent, RESULT_CODE, opt.toBundle())
+            }
+        }
+        fun activityStartFromCircle(fragment: Fragment,topicItemView: View,data: Topic){
+            fragment.apply {
+                activity?.let {
+                    val opt = ActivityOptionsCompat.makeSceneTransitionAnimation(it, topicItemView, "topicItem")
+                    val intent = Intent(BaseApp.context, CircleDetailActivity::class.java)
+                    intent.putExtra("topicItem", data)
+                    it.window.exitTransition = Slide(Gravity.START).apply { duration = 500 }
+                    startActivity(intent,opt.toBundle())
+                }
             }
         }
     }
@@ -98,6 +111,7 @@ class CircleDetailActivity : BaseViewModelActivity<CircleDetailViewModel>() {
         tv_circle_square_descriprion.text = topic.introduction
         tv_circle_square_person_number.text = topic.follow_count.toString() + "个成员"
         btn_circle_square_concern.text = "+关注"
+        qa_detail_tv_title.text=topic.topicName
         if (topic._isFollow.equals(1)) {
             btn_circle_square_concern.background = context.getDrawable(R.drawable.qa_shape_send_dynamic_btn_grey_background)
         } else {

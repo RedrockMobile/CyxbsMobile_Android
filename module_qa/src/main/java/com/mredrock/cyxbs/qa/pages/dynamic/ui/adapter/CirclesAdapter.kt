@@ -7,12 +7,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.common.utils.extensions.sharedPreferences
 import com.mredrock.cyxbs.qa.R
+import com.mredrock.cyxbs.qa.beannew.Dynamic
 import com.mredrock.cyxbs.qa.beannew.Topic
 import com.mredrock.cyxbs.qa.beannew.TopicMessage
 
@@ -27,7 +30,7 @@ import kotlinx.android.synthetic.main.qa_recycler_item_circles.view.*
  * @Description:
  * @Date: 2020/11/18 23:18
  */
-class CirclesAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class CirclesAdapter(private val onItemClickEvent: (Topic,View) -> Unit) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     companion object {
         const val NO_CIRCLE = 0
         const val HAVE_CIRCLE = 1
@@ -87,10 +90,11 @@ class CirclesAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                 viewHolder.itemView.apply {
                     setOnSingleClickListener {
                         qa_iv_circle.setHaveMessage(false)
-                        changeToActivity(CircleSquareActivity())
+                        onItemClickEvent(circlesItemList[position],viewHolder.itemView.findViewById<LinearLayout>(R.id.qa_ll_topic))
                     }
                     qa_iv_circle.apply {
-
+                        setHaveMessage(true)
+                        setMessageBum(circlesItemList[position].newMesCount)
                     }
                     qa_tv_circle_name.text = circlesItemList[position].topicName
                 }

@@ -30,7 +30,6 @@ import kotlinx.android.synthetic.main.qa_fragment_last_hot.*
  *@description  用于最新和热门的fragment的基类
  */
 abstract class BaseCircleDetailFragment<T : DynamicListViewModel> : BaseViewModelFragment<T>() {
-    //TODO 通过viewModel去获取最新和热门的数据。
     var onPopWindowClickListener: ((String, Dynamic) -> Unit)? = null
     var onPraiseClickListener: ((Int, Dynamic) -> Unit)? = null
 
