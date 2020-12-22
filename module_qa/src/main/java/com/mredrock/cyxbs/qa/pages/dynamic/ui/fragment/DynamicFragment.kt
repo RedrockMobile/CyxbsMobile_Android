@@ -19,6 +19,7 @@ import com.mredrock.cyxbs.common.event.RefreshQaEvent
 import com.mredrock.cyxbs.common.mark.EventBusLifecycleSubscriber
 import com.mredrock.cyxbs.common.ui.BaseActivity
 import com.mredrock.cyxbs.common.ui.BaseViewModelFragment
+import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.doIfLogin
 import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.common.utils.extensions.startActivityForResult
@@ -148,13 +149,19 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), EventBusL
             layoutManager = linearLayoutManager
             adapter = circlesAdapter
         }
-        viewModel.getTopicMessages()
+
+        //获取用户进入圈子详情退出的时间，去请求从而刷新未读消息
+        if (!TopicDataSet.getOutCirCleDetailTime().isNullOrEmpty()) {
+            LogUtils.d("outTime", TopicDataSet.getOutCirCleDetailTime().toString())
+            TopicDataSet.getOutCirCleDetailTime()?.let { viewModel.getTopicMessages(it) }
+        }
         viewModel.topicMessageList.observe {
             if (it != null) {
                 circlesAdapter?.addTopicMessageData(it)
             }
         }
         viewModel.getMyCirCleData()
+
         viewModel.myCircle.observe {
             if (!it.isNullOrEmpty()) {
                 val layoutParams = CollapsingToolbarLayout.LayoutParams(qa_rv_circles_List.layoutParams)
@@ -186,6 +193,10 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), EventBusL
 
 
         swipe_refresh_layout.setOnRefreshListener {
+            if (!TopicDataSet.getOutCirCleDetailTime().isNullOrEmpty()) {
+                LogUtils.d("swipeOutTime", TopicDataSet.getOutCirCleDetailTime().toString())
+                TopicDataSet.getOutCirCleDetailTime()?.let { viewModel.getTopicMessages(it) }
+            }
             viewModel.invalidateQuestionList()
             viewModel.getMyCirCleData()
         }

@@ -1,13 +1,8 @@
 package com.mredrock.cyxbs.qa.pages.dynamic.viewmodel
 
-import android.content.Context
-import android.content.SharedPreferences
-import android.provider.Settings.Global.putString
-import android.util.Log
 import androidx.lifecycle.*
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
-import com.mredrock.cyxbs.common.BaseApp.Companion.context
 import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.utils.extensions.*
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
@@ -19,13 +14,13 @@ import com.mredrock.cyxbs.qa.config.CommentConfig
 import com.mredrock.cyxbs.qa.network.ApiService
 import com.mredrock.cyxbs.qa.network.ApiServiceNew
 import com.mredrock.cyxbs.qa.pages.dynamic.model.DynamicDataSource
+import com.mredrock.cyxbs.qa.pages.dynamic.model.TopicDataSet
 
 /**
  * Created By jay68 on 2018/8/26.
  */
 open class DynamicListViewModel(kind: String) : BaseViewModel() {
     val dynamicList: LiveData<PagedList<Dynamic>>
-
     val networkState: LiveData<Int>
     val initialLoad: LiveData<Int>
     var hotWords = MutableLiveData<List<String>>()
@@ -62,17 +57,14 @@ open class DynamicListViewModel(kind: String) : BaseViewModel() {
                 .safeSubscribeBy {
                     myCircle.value = it
                     it.forEach {
-
+                        TopicDataSet.storageTopicData(it)
                     }
                 }
     }
 
-    fun getTopicMessages() {
-        //获取当前时间戳
-        val timeStamp = System.currentTimeMillis() / 1000
-        Log.d("xxxxx", timeStamp.toString())
+    fun getTopicMessages(timeStamp: String) {
         ApiGenerator.getApiService(ApiServiceNew::class.java)
-                .getTopicMessage(timeStamp.toString())
+                .getTopicMessage(timeStamp)
                 .mapOrThrowApiException()
                 .setSchedulers()
                 .doOnError {
@@ -80,16 +72,7 @@ open class DynamicListViewModel(kind: String) : BaseViewModel() {
                 }
                 .safeSubscribeBy {
                     topicMessageList.value = it
-                    it.forEach { topicMessage ->
-                        context.loadTopicMessage(topicMessage.topic_id, topicMessage.post_count)
-                    }
                 }
-    }
-
-    fun Context.loadTopicMessage(key: String, value: Int) {
-        sharedPreferences("topicMessage").editor {
-            putInt(key, value)
-        }
     }
 
     fun ignore(dynamic: Dynamic) {
@@ -105,7 +88,7 @@ open class DynamicListViewModel(kind: String) : BaseViewModel() {
                 }
                 .safeSubscribeBy {
                     if (it.status == 200) {
-                        toastEvent.value = R.string.qa_ignore_dynamic
+                        toastEvent.value = R.string.qa_ignore_dynamic_success
                     }
                 }
 
@@ -114,14 +97,14 @@ open class DynamicListViewModel(kind: String) : BaseViewModel() {
 
     fun report(dynamic: Dynamic, content: String) {
         ApiGenerator.getApiService(ApiServiceNew::class.java)
-                .report(dynamic.postId, CommentConfig.REPORT_MODEL, content)
+                .report(dynamic.postId, CommentConfig.REPORT_DYNAMIC_MODEL, content)
                 .setSchedulers()
                 .doOnError {
                     toastEvent.value = R.string.qa_report_dynamic_failure
                 }
                 .safeSubscribeBy {
                     if (it.status == 200)
-                        toastEvent.value = R.string.qa_report_dynamic
+                        toastEvent.value = R.string.qa_report_dynamic_success
                 }
     }
 

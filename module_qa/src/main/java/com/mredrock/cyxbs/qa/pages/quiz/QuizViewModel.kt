@@ -65,9 +65,6 @@ class QuizViewModel : BaseViewModel() {
                 }
                 .safeSubscribeBy {
                     allCircle.value = it
-                    it.forEach {
-                        TopicDataSet.storageTopicData(it)
-                    }
                 }.lifeCycle()
     }
 
@@ -76,7 +73,6 @@ class QuizViewModel : BaseViewModel() {
                 .setType(MultipartBody.FORM)
                 .addFormDataPart("content", content)
                 .addFormDataPart("topic_id", type)
-        LogUtils.d("imageLiveData", imageLiveData.value.toString())
         if (!imageLiveData.value.isNullOrEmpty()) {
             val files = imageLiveData.value!!.asSequence()
                     .map { File(it) }

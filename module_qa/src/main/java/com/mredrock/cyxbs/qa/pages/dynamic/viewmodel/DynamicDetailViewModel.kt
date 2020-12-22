@@ -12,8 +12,10 @@ import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.beannew.Comment
 import com.mredrock.cyxbs.qa.beannew.CommentReleaseResult
 import com.mredrock.cyxbs.qa.beannew.Dynamic
+import com.mredrock.cyxbs.qa.config.CommentConfig
 import com.mredrock.cyxbs.qa.network.ApiServiceNew
 import com.mredrock.cyxbs.qa.network.NetworkState
+import com.mredrock.cyxbs.qa.pages.dynamic.ui.activity.DynamicDetailActivity
 
 /**
  * @Author: zhangzhe
@@ -115,11 +117,54 @@ open class DynamicDetailViewModel : BaseViewModel() {
 
                 }
                 .doOnError {
-                    toastEvent.value = R.string.qa_detail_delete_dynamic_fail_text
+                    when (model) {
+                        DynamicDetailActivity.DYNAMIC_DELETE -> {
+                            toastEvent.value = R.string.qa_detail_delete_dynamic_failure_text
+                        }
+                        DynamicDetailActivity.COMMENT_DELETE -> {
+                            toastEvent.value = R.string.qa_detail_delete_comment_failure_text
+                        }
+                    }
                 }
                 .safeSubscribeBy {
                     refreshCommentList(dynamicLiveData.value?.postId?: "0", "0")
-                    deleteDynamic.postValue(true)
+
+                    when (model) {
+                        DynamicDetailActivity.DYNAMIC_DELETE -> {
+                            deleteDynamic.postValue(true)
+                            toastEvent.value = R.string.qa_detail_delete_dynamic_success_text
+                        }
+                        DynamicDetailActivity.COMMENT_DELETE -> {
+                            toastEvent.value = R.string.qa_detail_delete_comment_success_text
+                        }
+                    }
+                }
+    }
+
+    fun report(id: String, content: String, model: String) {
+        ApiGenerator.getApiService(ApiServiceNew::class.java)
+                .report(id, CommentConfig.REPORT_DYNAMIC_MODEL, content)
+                .setSchedulers()
+                .doOnError {
+                    when (model) {
+                        CommentConfig.REPORT_DYNAMIC_MODEL -> {
+                            toastEvent.value = R.string.qa_report_dynamic_failure
+                        }
+                        CommentConfig.REPORT_COMMENT_MODEL-> {
+                            toastEvent.value = R.string.qa_report_comment_failure
+                        }
+                    }
+                }
+                .safeSubscribeBy {
+                    if (it.status == 200)
+                        when (model) {
+                            CommentConfig.REPORT_DYNAMIC_MODEL -> {
+                                toastEvent.value = R.string.qa_report_dynamic_success
+                            }
+                            CommentConfig.REPORT_COMMENT_MODEL-> {
+                                toastEvent.value = R.string.qa_report_comment_success
+                            }
+                        }
                 }
     }
 

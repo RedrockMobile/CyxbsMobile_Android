@@ -51,8 +51,8 @@ class DynamicAdapter(val context: Context?, private val onItemClickEvent: (Dynam
             }
             qa_iv_dynamic_more_tips_clicked.setOnSingleClickListener { view ->
                 getItem(position)?.let { dynamic ->
-                    if (dynamic._isSelf == 0) {
-                        if (dynamic._isFollowTopic == 0) {
+                    if (dynamic.isSelf == 0) {
+                        if (dynamic.isFollowTopic == 0) {
                             OptionalPopWindow.Builder().with(context)
                                     .addOptionAndCallback(IGNORE) {
                                         onPopWindowClickListener?.invoke(position, IGNORE, dynamic)

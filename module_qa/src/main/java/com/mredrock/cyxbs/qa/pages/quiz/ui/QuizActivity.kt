@@ -63,11 +63,17 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>(), EventBusLifecycleSu
     private var dynamicType: String = ""
     private var isFirstQuiz: Boolean = true
     private val exitDialog by lazy { createExitDialog() }
-
+    private var isComment = ""
+    private var commentContent = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.qa_activity_quiz)
         isFirstQuiz = sharedPreferences(FIRST_QUIZ).getBoolean(FIRST_QUIZ_SP_KEY, true)
+        if (!intent.getStringExtra("isComment").isNullOrEmpty()) {
+            isComment = intent.getStringExtra("isComment")
+            if (!intent.getStringExtra("commentContent").isNullOrEmpty())
+                commentContent = intent.getStringExtra("commentContent")
+        }
         initToolbar()
         initImageAddView()
         initEditListener()
@@ -75,7 +81,7 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>(), EventBusLifecycleSu
 
         viewModel.backAndRefreshPreActivityEvent.observeNotNull {
             if (it) {
-                if (draftId != NOT_DRAFT_ID) {
+                if (draftId != NOT_DRAFT_ID && draftId != isComment) {
                     viewModel.deleteDraft(draftId)
                 }
                 setResult(NEED_REFRESH_RESULT)
@@ -98,7 +104,7 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>(), EventBusLifecycleSu
         viewModel.getAllCirCleData("问答圈", "test1")
         viewModel.allCircle.observe {
             if (!it.isNullOrEmpty()) {
-                val chipGroup = findViewById<ChipGroup>(R.id.layout_quiz_tag)
+                val chipGroup = findViewById<ChipGroup>(R.id.qa_layout_quiz_tag)
                 for (topic in it.withIndex()) {
                     chipGroup.addView((layoutInflater.inflate(R.layout.qa_quiz_view_chip, chipGroup, false) as Chip).apply {
                         text = "# " + topic.value.topicName
@@ -127,7 +133,7 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>(), EventBusLifecycleSu
     //动态监听内容文字变化
 
     private fun initEditListener() {
-        edt_quiz_content.addTextChangedListener(object : TextWatcher {
+        qa_edt_quiz_content.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(
                     charSequence: CharSequence,
                     i: Int,
@@ -143,11 +149,11 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>(), EventBusLifecycleSu
                     i2: Int
             ) = if (!TextUtils.isEmpty(charSequence) && charSequence.isNotEmpty()) {
                 qa_tv_toolbar_right.setBackgroundResource(qa_shape_send_dynamic_btn_blue_background)
-                tv_edit_num.text = charSequence.length.toString() + "/500"
+                qa_tv_edit_num.text = charSequence.length.toString() + "/500"
 
             } else {
                 qa_tv_toolbar_right.setBackgroundResource(qa_shape_send_dynamic_btn_grey_background)
-                tv_edit_num.text = charSequence.length.toString() + "/500"
+                qa_tv_edit_num.text = charSequence.length.toString() + "/500"
             }
 
             override fun afterTextChanged(editable: Editable) {}
@@ -157,7 +163,7 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>(), EventBusLifecycleSu
 
     private fun initToolbar() {
         qa_ib_toolbar_back.setOnClickListener(View.OnClickListener {
-            if (edt_quiz_content.text.isNullOrEmpty() && draftId == NOT_DRAFT_ID) {
+            if (qa_edt_quiz_content.text.isNullOrEmpty() && draftId == NOT_DRAFT_ID || draftId == isComment) {
                 finish()
                 return@OnClickListener
             }
@@ -168,13 +174,21 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>(), EventBusLifecycleSu
             setMessage("加载中...")
             setCanceledOnTouchOutside(false)
         }
-        qa_tv_toolbar_title.text = getString(R.string.qa_quiz_toolbar_title_text)
+        if (isComment == "1") {
+            qa_tv_toolbar_title.text = "发布评论"
+            qa_tv_choose_circle.visibility = View.GONE
+            qa_layout_quiz_tag.visibility = View.GONE
+            draftId = isComment
+            qa_edt_quiz_content.setText(commentContent)
+        } else {
+            qa_tv_toolbar_title.text = getString(R.string.qa_quiz_toolbar_title_text)
+        }
         qa_ib_toolbar_more.gone()
         qa_tv_toolbar_right.apply {
             visible()
             text = getString(R.string.qa_quiz_dialog_next)
             setOnClickListener {
-                val result = viewModel.submitTitleAndContent(dynamicType, edt_quiz_content.text.toString())
+                val result = viewModel.submitTitleAndContent(dynamicType, qa_edt_quiz_content.text.toString())
                 if (result) {
                     progressDialog?.show()
                     viewModel.submitDynamic()
@@ -250,12 +264,6 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>(), EventBusLifecycleSu
             ViewImageCropActivity.DEFAULT_RESULT_CODE -> viewModel.setImageList(viewModel.imageLiveData.value!!.apply {
                 set(viewModel.editingImgPos, data.getStringExtra(ViewImageCropActivity.EXTRA_NEW_PATH))
             })
-//            RELEASE_COMMENT_ACTIVITY_REQUEST -> {
-//                tv_choose_circle.visibility = View.INVISIBLE
-//                layout_quiz_tag.visibility = View.INVISIBLE
-//                //从评论页过来通过改变草稿id改变是否出现草稿
-//                draftId = "0"
-//            }
         }
     }
 
@@ -275,7 +283,7 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>(), EventBusLifecycleSu
             if (exitDialog.isShowing) {
                 return super.onKeyDown(keyCode, event)
             }
-            return if (edt_quiz_content.text.isNullOrEmpty() && draftId == NOT_DRAFT_ID) {
+            return if (qa_edt_quiz_content.text.isNullOrEmpty() && draftId == NOT_DRAFT_ID || draftId == isComment) {
                 super.onKeyDown(keyCode, event)
             } else {
                 exitDialog.show()
@@ -287,9 +295,9 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>(), EventBusLifecycleSu
 
     private fun saveDraft() {
         if (draftId == NOT_DRAFT_ID) {
-            viewModel.addItemToDraft(edt_quiz_content.text.toString(), dynamicType)
+            viewModel.addItemToDraft(qa_edt_quiz_content.text.toString(), dynamicType)
         } else {
-            viewModel.updateDraftItem(edt_quiz_content.text.toString(), draftId, dynamicType)
+            viewModel.updateDraftItem(qa_edt_quiz_content.text.toString(), draftId, dynamicType)
         }
     }
 
@@ -301,7 +309,7 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>(), EventBusLifecycleSu
         }
         val json = String(Base64.decode(event.jsonString, Base64.DEFAULT))
         val question = Gson().fromJson(json, Question::class.java)
-        edt_quiz_content.setText(question.description)
+        qa_edt_quiz_content.setText(question.description)
         draftId = event.selfId
         if (!question.photoUrl.isNullOrEmpty()) {
             viewModel.setImageList(arrayListOf<String>().apply { addAll(question.photoUrl) })

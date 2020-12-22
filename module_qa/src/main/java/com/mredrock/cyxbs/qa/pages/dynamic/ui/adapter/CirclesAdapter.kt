@@ -18,6 +18,7 @@ import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.beannew.Dynamic
 import com.mredrock.cyxbs.qa.beannew.Topic
 import com.mredrock.cyxbs.qa.beannew.TopicMessage
+import com.mredrock.cyxbs.qa.pages.dynamic.model.TopicDataSet
 
 import com.mredrock.cyxbs.qa.pages.square.ui.activity.CircleSquareActivity
 import com.mredrock.cyxbs.qa.ui.widget.ImageViewAddCount
@@ -89,12 +90,15 @@ class CirclesAdapter(private val onItemClickEvent: (Topic,View) -> Unit) : Recyc
                 val viewHolder = holder as CirclesItem
                 viewHolder.itemView.apply {
                     setOnSingleClickListener {
+                        //用户点进圈子item进入详情就应该置消息为已读，刷新后才会显示
                         qa_iv_circle.setHaveMessage(false)
                         onItemClickEvent(circlesItemList[position],viewHolder.itemView.findViewById<LinearLayout>(R.id.qa_ll_topic))
                     }
                     qa_iv_circle.apply {
-                        setHaveMessage(true)
-                        setMessageBum(circlesItemList[position].newMesCount)
+                        if (!topicMessageList.isNullOrEmpty()) {
+                            setHaveMessage(true)
+                            setMessageBum(topicMessageList[position].post_count)
+                        }
                     }
                     qa_tv_circle_name.text = circlesItemList[position].topicName
                 }
@@ -124,5 +128,6 @@ class CirclesAdapter(private val onItemClickEvent: (Topic,View) -> Unit) : Recyc
     fun addTopicMessageData(newTopicMessageData: List<TopicMessage>) {
         topicMessageList.clear()
         topicMessageList.addAll(newTopicMessageData)
+        notifyDataSetChanged()
     }
 }

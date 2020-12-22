@@ -1,6 +1,5 @@
 package com.mredrock.cyxbs.qa.pages.search.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.*
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
@@ -13,13 +12,9 @@ import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.qa.R
 
 import com.mredrock.cyxbs.qa.beannew.Knowledge
-import com.mredrock.cyxbs.qa.beannew.Question
 import com.mredrock.cyxbs.qa.beannew.Dynamic
-import com.mredrock.cyxbs.qa.beannew.SearchResult
 import com.mredrock.cyxbs.qa.config.CommentConfig
-import com.mredrock.cyxbs.qa.network.ApiService
 import com.mredrock.cyxbs.qa.network.ApiServiceNew
-import com.mredrock.cyxbs.qa.network.NetworkState
 import com.mredrock.cyxbs.qa.pages.search.model.SearchQuestionDataSource
 
 
@@ -86,7 +81,7 @@ class QuestionSearchedViewModel(var searchKey: String) : BaseViewModel() {
                 }
                 .safeSubscribeBy {
                     if (it.status == 200) {
-                        toastEvent.value = R.string.qa_ignore_dynamic
+                        toastEvent.value = R.string.qa_ignore_dynamic_success
                     }
                 }
 
@@ -97,7 +92,7 @@ class QuestionSearchedViewModel(var searchKey: String) : BaseViewModel() {
                 .followTopicGround(dynamic.topic)
                 .setSchedulers()
                 .doOnError {
-                    if (dynamic._isFollowTopic == 1)
+                    if (dynamic.isFollowTopic == 1)
                         toastEvent.value = R.string.qa_cancel_circle_failure
                     else
                         toastEvent.value = R.string.qa_follow_circle_failure
@@ -112,14 +107,14 @@ class QuestionSearchedViewModel(var searchKey: String) : BaseViewModel() {
 
     fun report(dynamic: Dynamic, content: String) {
         ApiGenerator.getApiService(ApiServiceNew::class.java)
-                .report(dynamic.postId, CommentConfig.REPORT_MODEL, content)
+                .report(dynamic.postId, CommentConfig.REPORT_DYNAMIC_MODEL, content)
                 .setSchedulers()
                 .doOnError {
                     toastEvent.value = R.string.qa_report_dynamic_failure
                 }
                 .safeSubscribeBy {
                     if (it.status == 200)
-                        toastEvent.value = R.string.qa_report_dynamic
+                        toastEvent.value = R.string.qa_report_dynamic_success
                 }
     }
 
