@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="255dp"
+        android:layout_height="329dp"
+        android:background="@drawable/main_shape_dialog_back">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/main_iv_sleep_man"
+            android:layout_width="150dp"
+            android:layout_height="108dp"
+            android:layout_marginStart="63dp"
+            android:layout_marginTop="40dp"
+            android:layout_marginEnd="42dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/main_ic_sleep_man" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/main_tv_bind_email_tip_tile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="90dp"
+            android:layout_marginTop="22dp"
+            android:layout_marginEnd="90dp"
+            android:text="@string/main_dialog_bind_email_tip_title"
+            android:textColor="@color/common_level_two_font_color"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/main_iv_sleep_man" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/main_tv_bind_email_tip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="@string/main_dialog_bind_email_tip_content"
+            android:textColor="#2A4E84"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/main_tv_bind_email_tip_tile" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/main_bt_bind_email_cancel"
+            android:layout_width="96dp"
+            android:layout_height="34dp"
+            android:layout_marginStart="23dp"
+            android:layout_marginBottom="29dp"
+            android:background="@drawable/main_shape_round_corner_bt_light"
+            android:letterSpacing="0.1"
+            android:lineSpacingExtra="21dp"
+            android:text="@string/main_dialog_bind_email_cancel"
+            android:textColor="@color/common_white_font_color"
+            android:textSize="15sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/main_bt_bind_email_confirm"
+            android:layout_width="96dp"
+            android:layout_height="34dp"
+            android:layout_marginEnd="23dp"
+            android:layout_marginBottom="29dp"
+            android:background="@drawable/main_shape_round_corner_bt_deep"
+            android:letterSpacing="0.1"
+            android:lineSpacingExtra="21dp"
+            android:text="@string/main_dialog_bind_email_confirm"
+            android:textColor="@color/common_white_font_color"
+            android:textSize="15sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

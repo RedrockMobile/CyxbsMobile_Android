@@ -139,9 +139,17 @@
     <color name="common_mine_main_btn_gradient_start">#4841E2</color>
     <color name="common_mine_main_btn_gradient_end">#5D5DF7</color>
 
+    <!--    我的模块账号与安全部分-->
+    <color name="common_mine_security_binding_tip">#5A5A5A</color>
+    <color name="common_mine_security_content_edt_hint_color">#85F0F0F2</color>
+    <color name="common_mine_security_question_edt_back_color">#b32C2C2C</color>
+    <color name="common_mine_security_two_front_color_64_percent">#D2D2D8</color>
+    <color name="common_mine_security_password_front_icon_main">#ffffff</color>
+    <color name="common_mine_security_password_front_icon_less">#ffffff</color>
+    <color name="common_mine_security_deep_back_color">#ffffff</color>
+    <color name="common_mine_security_dialog_back_color">#2e2e2e</color>
     <!--    考试成绩-->
-    <color name="common_grades_gpa_rv_list_round_corner_background">#345A5A5A
-    </color>
+    <color name="common_grades_gpa_rv_list_round_corner_background">#345A5A5A</color>
     <color name="common_grades_item_cardView_bg">#813A3A3A</color>
     <color name="common_grades_activity_tl_white">#FFFFFF</color>
     <color name="common_grades_activity_back_grey">#D3D3D3</color>

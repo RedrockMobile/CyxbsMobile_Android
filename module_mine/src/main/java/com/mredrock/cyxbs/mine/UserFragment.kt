@@ -25,7 +25,7 @@ import com.mredrock.cyxbs.common.component.CommonDialogFragment
 import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.common.config.*
 import com.mredrock.cyxbs.common.service.ServiceManager
-import com.mredrock.cyxbs.account.IAccountService
+import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.common.ui.BaseViewModelFragment
 import com.mredrock.cyxbs.common.utils.extensions.*
 import com.mredrock.cyxbs.main.MAIN_LOGIN
@@ -34,6 +34,8 @@ import com.mredrock.cyxbs.mine.page.answer.AnswerActivity
 import com.mredrock.cyxbs.mine.page.ask.AskActivity
 import com.mredrock.cyxbs.mine.page.comment.CommentActivity
 import com.mredrock.cyxbs.mine.page.edit.EditInfoActivity
+import com.mredrock.cyxbs.mine.page.security.activity.SecurityActivity
+import com.mredrock.cyxbs.mine.page.security.util.Jump2QQHelper
 import com.mredrock.cyxbs.mine.page.sign.DailySignActivity
 import kotlinx.android.synthetic.main.mine_fragment_main.*
 
@@ -44,17 +46,17 @@ import kotlinx.android.synthetic.main.mine_fragment_main.*
 @SuppressLint("SetTextI18n")
 @Route(path = MINE_ENTRY)
 class UserFragment : BaseViewModelFragment<UserViewModel>() {
-
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         addObserver()
         initView()
-
     }
 
     private fun initView() {
         //功能按钮
         context?.apply {
+            mine_main_btn_sign.setOnClickListener { doIfLogin { startActivity<DailySignActivity>() } }
+            mine_main_tv_security.setOnSingleClickListener { doIfLogin { startActivity<SecurityActivity>() } }
             mine_main_btn_sign.setOnClickListener { doIfLogin { startActivity<DailySignActivity>() } }
             mine_main_tv_sign.setOnClickListener { doIfLogin { startActivity<DailySignActivity>() } }
             mine_main_question_number.setOnClickListener { doIfLogin { startActivity<AskActivity>() } }
@@ -90,7 +92,7 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
                 }
             }
             mine_main_btn_exit.pressToZoomOut()
-            mine_main_tv_feedback.setOnClickListener { onFeedBackClick() }
+            mine_main_tv_feedback.setOnClickListener { Jump2QQHelper.onFeedBackClick(this) }
             mine_main_tv_custom_widget.setOnClickListener { onSetWidgetClick() }
             mine_main_tv_redrock.setOnClickListener { clickAboutUsWebsite() }
 
@@ -106,7 +108,6 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
             mine_main_switch.isChecked = context?.defaultSharedPreferences?.getBoolean(COURSE_SHOW_STATE, false)
                     ?: false
         }
-
     }
 
     @SuppressLint("SetTextI18n")
@@ -162,39 +163,6 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
             inflater.inflate(R.layout.mine_fragment_main, container, false)
 
-
-    private fun onFeedBackClick() {
-        if (!joinQQGroup("DXvamN9Ox1Kthaab1N_0w7s5N3aUYVIf")) {
-            val clipboard = activity?.getSystemService(AppCompatActivity.CLIPBOARD_SERVICE) as ClipboardManager
-            val data = ClipData.newPlainText("QQ Group", "570919844")
-            clipboard.primaryClip = data
-            context?.let { CyxbsToast.makeText(it,"抱歉，由于您未安装手机QQ或版本不支持，无法跳转至掌邮bug反馈群。" + "已将群号复制至您的手机剪贴板，请您手动添加",Toast.LENGTH_SHORT).show() }
-        }
-    }
-
-
-    /****************
-     *
-     * 发起添加群流程。群号：掌上重邮反馈群(570919844) 的 key 为： DXvamN9Ox1Kthaab1N_0w7s5N3aUYVIf
-     * 调用 joinQQGroup(DXvamN9Ox1Kthaab1N_0w7s5N3aUYVIf) 即可发起手Q客户端申请加群 掌上重邮反馈群(570919844)
-     *
-     * @param key 由官网生成的key
-     * @return 返回true表示呼起手Q成功，返回fals表示呼起失败
-     */
-    private fun joinQQGroup(key: String): Boolean {
-        val intent = Intent()
-        intent.data = Uri.parse("mqqopensdkapi://bizAgent/qm/qr?url=http%3A%2F%2Fqm.qq.com%2Fcgi-bin%2Fqm%2Fqr%3Ffrom%3Dapp%26p%3Dandroid%26k%3D$key")
-        // 此Flag可根据具体产品需要自定义，如设置，则在加群界面按返回，返回手Q主界面，不设置，按返回会返回到呼起产品界面    //intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        return try {
-            startActivity(intent)
-            true
-        } catch (e: Exception) {
-            // 未安装手Q或安装的版本不支持
-            false
-        }
-    }
-
-
     private fun onSetWidgetClick() {
         ARouter.getInstance().build(WIDGET_SETTING).navigation()
     }
@@ -211,7 +179,6 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
                                 cleanAppWidgetCache()
                                 //清除user信息，必须要在LoginStateChangeEvent之前
                                 viewModel.clearUser()
-
                                 //清空activity栈
                                 val flag = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
                                 ARouter.getInstance().build(MAIN_LOGIN).withFlags(flag).withBoolean(IS_EXIT_LOGIN, true).navigation()
@@ -235,8 +202,10 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
                             onPositiveClick = { dismiss() },
                             positiveString = "确定",
                             elseFunction = { view ->
-                                view.findViewById<TextView>(R.id.mine_dialog_tv_praise).text = "你一共获得${viewModel.qaNumber.value?.praiseNumber
-                                        ?: 0}个赞"
+                                view.findViewById<TextView>(R.id.mine_dialog_tv_praise).text = "你一共获得${
+                                    viewModel.qaNumber.value?.praiseNumber
+                                            ?: 0
+                                }个赞"
                             }
                     )
                 }.show(act.supportFragmentManager, tag)

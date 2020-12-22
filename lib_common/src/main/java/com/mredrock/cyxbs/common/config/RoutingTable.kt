@@ -38,6 +38,10 @@ const val DISCOVER_NEWS_ITEM = "/news/discover/item"
 
 //签到页
 const val MINE_CHECK_IN = "/check_in/mine/entry"
+// 个人界面的确认密码模块
+const val MINE_FORGET_PASSWORD = "/forget_password/mine/entry"
+// 个人界面的绑定邮箱模块
+const val MINE_BIND_EMAIL = "/bind_email/mine/entry"
 
 // NoCourseInviteActivity
 const val COURSE_NO_COURSE_INVITE = "/course/no_course_invite_activity"
@@ -59,8 +63,6 @@ const val QA_COMMENT_LIST = "/comment_list/qa/entry"
 
 // 迎新专题
 const val FRESHMAN_ENTRY = "/freshman/entry"
-
-
 
 // 更新服务
 const val APP_UPDATE_SERVICE = "/update/service"

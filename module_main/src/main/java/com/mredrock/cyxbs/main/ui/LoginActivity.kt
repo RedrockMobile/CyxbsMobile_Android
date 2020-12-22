@@ -19,13 +19,14 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.alibaba.android.arouter.facade.annotation.Autowired
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
+import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.common.bean.LoginConfig
 import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.common.config.ACTIVITY_CLASS
 import com.mredrock.cyxbs.common.config.IS_EXIT_LOGIN
+import com.mredrock.cyxbs.common.config.MINE_FORGET_PASSWORD
 import com.mredrock.cyxbs.common.mark.EventBusLifecycleSubscriber
 import com.mredrock.cyxbs.common.service.ServiceManager
-import com.mredrock.cyxbs.account.IAccountService
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.main.MAIN_LOGIN
 import com.mredrock.cyxbs.main.R
@@ -41,9 +42,7 @@ import org.greenrobot.eventbus.ThreadMode
 class LoginActivity : BaseViewModelActivity<LoginViewModel>(), EventBusLifecycleSubscriber {
 
 
-
-
-    private val lottieProgress = 0.39f
+    private val lottieProgress = 0.39f//点击同意用户协议时的动画的时间
 
     override val loginConfig = LoginConfig(isCheckLogin = false)
 
@@ -119,6 +118,10 @@ class LoginActivity : BaseViewModelActivity<LoginViewModel>(), EventBusLifecycle
                 }
             }
         }
+        //跳转到忘记密码模块
+        tv_main_forget_password.setOnClickListener {
+            ARouter.getInstance().build(MINE_FORGET_PASSWORD).navigation()
+        }
     }
 
     override fun onStart() {
@@ -130,8 +133,7 @@ class LoginActivity : BaseViewModelActivity<LoginViewModel>(), EventBusLifecycle
             //放下键盘
             val inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             if (inputMethodManager.isActive) {
-                inputMethodManager.hideSoftInputFromWindow(this.currentFocus?.windowToken
-                        , 0)
+                inputMethodManager.hideSoftInputFromWindow(this.currentFocus?.windowToken, 0)
             }
             viewModel.login(et_account.text?.toString(), et_password.text?.toString(), landing) {
                 //如果是点击退出按钮到达的登录页那么就默认启动mainActivity，或者唤起登录页的Activity是MainActivity就默认启动
@@ -174,5 +176,4 @@ class LoginActivity : BaseViewModelActivity<LoginViewModel>(), EventBusLifecycle
     fun landingError(loginFailEvent: LoginFailEvent) {
         landing()
     }
-
 }

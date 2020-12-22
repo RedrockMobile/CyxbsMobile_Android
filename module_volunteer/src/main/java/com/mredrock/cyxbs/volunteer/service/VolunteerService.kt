@@ -6,7 +6,7 @@ import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
 import com.mredrock.cyxbs.common.config.DISCOVER_VOLUNTEER_FEED
 import com.mredrock.cyxbs.common.config.VOLUNTEER_SERVICE
-import com.mredrock.cyxbs.volunteer.IVolunteerService
+import com.mredrock.cyxbs.api.volunteer.IVolunteerService
 import com.mredrock.cyxbs.volunteer.event.VolunteerLogoutEvent
 import org.greenrobot.eventbus.EventBus
 
@@ -14,7 +14,7 @@ import org.greenrobot.eventbus.EventBus
  * Created by yyfbe, Date on 2020/8/31.
  */
 @Route(path = VOLUNTEER_SERVICE, name = VOLUNTEER_SERVICE)
-class VolunteerService : com.mredrock.cyxbs.volunteer.IVolunteerService {
+class VolunteerService : IVolunteerService {
     private var mContext: Context? = null
     override fun getVolunteerFeed(): Fragment {
         return ARouter.getInstance().build(DISCOVER_VOLUNTEER_FEED).navigation() as Fragment

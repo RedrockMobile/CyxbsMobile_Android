@@ -106,6 +106,8 @@
         android:layout_width="0dp"
         android:layout_height="50dp"
         android:gravity="bottom"
+        android:focusable="true"
+        android:clickable="true"
         app:layout_constraintBottom_toBottomOf="@+id/tv_password_ic"
         app:layout_constraintEnd_toEndOf="@+id/et_account_container"
         app:layout_constraintStart_toStartOf="@+id/et_account_container"
@@ -122,7 +124,7 @@
             android:hint="@string/main_activity_login_password_hint"
             android:imeOptions="actionSend"
             android:inputType="textPassword"
-            android:maxLength="6"
+            android:maxLength="16"
             android:selectAllOnFocus="true"
             android:singleLine="true"
             android:textColor="@color/common_main_activity_login_et_edited_color"
@@ -212,5 +214,17 @@
         app:lottie_autoPlay="true"
         app:lottie_loop="true"
         app:lottie_rawRes="@raw/login_loging" />
+
+    <TextView
+        android:id="@+id/tv_main_forget_password"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="22dp"
+        android:text="@string/main_activity_login_forget_password"
+        android:textColor="@color/common_log_in_to_the_gray_font_below"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="@+id/main_user_agreement"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/main_user_agreement" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

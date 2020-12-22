@@ -87,7 +87,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="0.5dp"
                         android:layout_marginStart="10dp"
-                        android:background="#e7e7e7" />
+                        android:background="@color/widget_config_line" />
 
                     <RelativeLayout
                         android:id="@+id/widget_config_trans_courseColorLayout"
@@ -137,7 +137,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="0.5dp"
                         android:layout_marginLeft="10dp"
-                        android:background="#e7e7e7" />
+                        android:background="@color/widget_config_line" />
 
                     <RelativeLayout
                         android:id="@+id/widget_config_trans_roomColorLayout"
@@ -282,7 +282,7 @@
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="0.5dp"
-                        android:background="#e7e7e7" />
+                        android:background="@color/widget_config_line" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -317,7 +317,7 @@
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="0.5dp"
-                        android:background="#e7e7e7" />
+                        android:background="@color/widget_config_line" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -414,7 +414,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="0.5dp"
                         android:layout_marginStart="10dp"
-                        android:background="#e7e7e7" />
+                        android:background="@color/widget_config_line" />
 
                     <FrameLayout
                         android:id="@+id/widget_config_trans_default_black"
@@ -445,7 +445,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="0.5dp"
                         android:layout_marginStart="10dp"
-                        android:background="#e7e7e7" />
+                        android:background="@color/widget_config_line" />
 
                     <FrameLayout
                         android:id="@+id/widget_config_trans_default_pink"

@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/common_white_background"
+    android:orientation="vertical"
+    tools:context=".page.security.activity.BindEmailActivity">
+
+    <include
+        android:id="@+id/mine_toolbar_bind_email"
+        layout="@layout/common_toolbar" />
+
+    <TextView
+        android:id="@+id/tv_bind_email_top_tips"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="20dp"
+        android:textColor="@color/common_mine_security_two_front_color_64_percent"
+        android:text="@string/mine_security_type_in_email_address"
+        android:textSize="15sp" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="41dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/mine_shape_round_corner_light_purple">
+
+        <EditText
+            android:id="@+id/et_bind_email"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginStart="15dp"
+            android:layout_marginEnd="15dp"
+            android:background="@null"
+            android:singleLine="true"
+            android:textColor="@color/common_level_two_font_color"
+            android:textSize="15sp"
+            app:layout_constraintEnd_toStartOf="@id/tv_bind_email_send_code"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_bind_email_send_code"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginEnd="17dp"
+            android:layout_weight="4"
+            android:text="@string/mine_security_resend"
+            android:textColor="@color/common_mine_security_send_message_color"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="21dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="17dp">
+
+        <TextView
+            android:id="@+id/tv_bind_email_tips"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/mine_security_please_type_correct_address"
+            android:textColor="@color/common_mine_about_text_color_blue"
+            android:textSize="12sp"
+            android:visibility="gone" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <TextView
+            android:id="@+id/tv_bind_email_contact_us"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/mine_security_contract_us"
+            android:textColor="#ABBCD8"
+            android:textSize="12sp" />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btn_bind_email_next"
+        android:layout_width="280dp"
+        android:layout_height="52dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="195dp"
+        android:background="@drawable/mine_shape_round_cornor_purple_blue"
+        android:letterSpacing="0.1"
+        android:text="@string/mine_security_bind_email_next"
+        android:textColor="@color/common_white_font_color"
+        android:textSize="18sp" />
+
+</LinearLayout>

@@ -11,8 +11,8 @@ import com.google.gson.JsonParser
 import com.meituan.android.walle.WalleChannelReader
 import com.mredrock.cyxbs.common.config.DebugDataModel
 import com.mredrock.cyxbs.common.service.ServiceManager
-import com.mredrock.cyxbs.account.IAccountService
-import com.mredrock.cyxbs.account.IUserStateService
+import com.mredrock.cyxbs.api.account.IAccountService
+import com.mredrock.cyxbs.api.account.IUserStateService
 import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.debug
 import com.mredrock.cyxbs.common.utils.extensions.runOnUiThread
@@ -32,6 +32,7 @@ import com.umeng.message.inapp.InAppMessageManager
  * Created by Jovines on 2020/06/09 15:19
  * description : 一些第三方库的初始化操作写在这
  */
+
 
 fun initUMeng(context: Context) {
     // 这里在小部件的进程初始化的时候注册友盟推送会概率性抛异常，这里这个其实不用初始化友盟推送
@@ -88,7 +89,7 @@ fun initUMeng(context: Context) {
                         val builder = NotificationCompat.Builder(BaseApp.context, "qa_channel")
                         builder.setContentTitle(msg.title)
                                 .setContentText(msg.text)
-                                .setSmallIcon(R.drawable.ic_app_notifacation)
+                                .setSmallIcon(R.drawable.common_ic_app_notifacation)
                                 .setPriority(NotificationCompat.PRIORITY_MAX)
                                 .setTicker(msg.ticker)
                                 .setAutoCancel(true)

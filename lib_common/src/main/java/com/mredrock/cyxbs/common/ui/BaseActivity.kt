@@ -10,7 +10,7 @@ import android.view.Menu
 import android.view.View
 import androidx.annotation.DrawableRes
 import androidx.appcompat.app.AppCompatActivity
-import com.mredrock.cyxbs.account.IAccountService
+import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.R
 import com.mredrock.cyxbs.common.bean.LoginConfig
@@ -22,7 +22,6 @@ import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.getDarkModeStatus
 import com.mredrock.cyxbs.common.utils.extensions.startActivity
 import com.mredrock.cyxbs.common.utils.extensions.startLoginActivity
-import com.umeng.analytics.MobclickAgent
 import com.umeng.message.PushAgent
 import kotlinx.android.synthetic.main.common_toolbar.*
 import org.greenrobot.eventbus.EventBus
