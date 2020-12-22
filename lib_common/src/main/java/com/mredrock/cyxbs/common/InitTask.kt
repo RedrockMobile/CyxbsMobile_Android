@@ -13,10 +13,10 @@ import com.mredrock.cyxbs.common.config.DebugDataModel
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.api.account.IUserStateService
+import com.mredrock.cyxbs.api.protocol.api.IProtocolService
 import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.debug
 import com.mredrock.cyxbs.common.utils.extensions.runOnUiThread
-import com.mredrock.cyxbs.common.utils.jump.JumpProtocol
 import com.umeng.analytics.MobclickAgent
 import com.umeng.commonsdk.UMConfigure
 import com.umeng.commonsdk.statistics.common.DeviceConfig
@@ -103,7 +103,8 @@ fun initUMeng(context: Context) {
             override fun dealWithCustomAction(context: Context, msg: UMessage) {
                 val data = JsonParser.parseString(msg.custom).asJsonObject
                 data.get("uri")?.let {
-                    JumpProtocol.start(it.asString)
+                    ServiceManager.getService(IProtocolService::class.java).jump(it.asString)
+
                 }
             }
         }

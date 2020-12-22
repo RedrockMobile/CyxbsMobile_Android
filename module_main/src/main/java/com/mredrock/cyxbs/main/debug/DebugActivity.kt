@@ -7,10 +7,11 @@ import android.os.Bundle
 import android.widget.TextView
 import android.widget.Toast
 import androidx.lifecycle.Observer
+import com.mredrock.cyxbs.api.protocol.api.IProtocolService
 import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.common.config.DebugDataModel
+import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.ui.BaseActivity
-import com.mredrock.cyxbs.common.utils.jump.JumpProtocol
 import com.mredrock.cyxbs.main.R
 import kotlinx.android.synthetic.main.main_activity_debug.*
 
@@ -25,7 +26,6 @@ class DebugActivity : BaseActivity() {
     }
 
     private fun initActivity() {
-
 
         DebugDataModel.umPushDeviceId.observe(this, Observer {
             device_id.text = it ?: ""
@@ -48,7 +48,7 @@ class DebugActivity : BaseActivity() {
         button_start_jumping.setOnClickListener {
             val text = et_unified_protocol_jump.text.toString()
             if (text.matches(Regex(".+://.+(/.+)?"))) {
-                JumpProtocol.start(text)
+                ServiceManager.getService(IProtocolService::class.java).jump(text)
             } else {
                 Toast.makeText(this, "格式不正确", Toast.LENGTH_SHORT).show()
             }
