@@ -66,10 +66,12 @@
     <string name="qa_reply_et_hint_text">说点什么吧，万一火了呢</string>
     <string name="qa_report_hint_text">150字以内</string>
     <string name="qa_dynamic_detail_title_text">详细</string>
-    <string name="qa_ignore_dynamic">屏蔽成功</string>
-    <string name="qa_ignore_dynamic_failure">屏蔽失败，请检查你的网络</string>
-    <string name="qa_report_dynamic">举报成功</string>
-    <string name="qa_report_dynamic_failure">举报失败，请检查你的网络</string>
+    <string name="qa_ignore_dynamic_success">屏蔽成功</string>
+    <string name="qa_ignore_dynamic_failure">屏蔽失败</string>
+    <string name="qa_report_dynamic_success">举报动态成功</string>
+    <string name="qa_report_dynamic_failure">举报动态失败</string>
+    <string name="qa_report_comment_success">举报评论成功</string>
+    <string name="qa_report_comment_failure">举报评论失败</string>
     <string name="qa_follow_circle">关注圈子成功</string>
     <string name="qa_unfollow_circle">取消关注圈子成功</string>
     <string name="qa_follow_circle_failure">关注圈子失败</string>
@@ -102,8 +104,8 @@
     <string name="qa_delete_comment_failure">删除评论失败</string>
     <string name="qa_dialog_cancel">取消</string>
     <string name="qa_dialog_share_text">分享</string>
-    <string name="qa_detail_delete_dynamic_fail_text">删除动态失败</string>
-    <string name="qa_detail_delete_comment_fail_text">删除评论失败</string>
+    <string name="qa_detail_delete_dynamic_failure_text">删除动态失败</string>
+    <string name="qa_detail_delete_comment_failure_text">删除评论失败</string>
     <string name="qa_detail_delete_dynamic_success_text">删除动态成功</string>
     <string name="qa_detail_delete_comment_success_text">删除评论成功</string>
 

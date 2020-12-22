@@ -81,7 +81,7 @@ class QuestionSearchedViewModel(var searchKey: String) : BaseViewModel() {
                 }
                 .safeSubscribeBy {
                     if (it.status == 200) {
-                        toastEvent.value = R.string.qa_ignore_dynamic
+                        toastEvent.value = R.string.qa_ignore_dynamic_success
                     }
                 }
 
@@ -107,14 +107,14 @@ class QuestionSearchedViewModel(var searchKey: String) : BaseViewModel() {
 
     fun report(dynamic: Dynamic, content: String) {
         ApiGenerator.getApiService(ApiServiceNew::class.java)
-                .report(dynamic.postId, CommentConfig.REPORT_MODEL, content)
+                .report(dynamic.postId, CommentConfig.REPORT_DYNAMIC_MODEL, content)
                 .setSchedulers()
                 .doOnError {
                     toastEvent.value = R.string.qa_report_dynamic_failure
                 }
                 .safeSubscribeBy {
                     if (it.status == 200)
-                        toastEvent.value = R.string.qa_report_dynamic
+                        toastEvent.value = R.string.qa_report_dynamic_success
                 }
     }
 

@@ -1,13 +1,8 @@
 package com.mredrock.cyxbs.qa.pages.dynamic.viewmodel
 
-import android.content.Context
-import android.content.SharedPreferences
-import android.provider.Settings.Global.putString
-import android.util.Log
 import androidx.lifecycle.*
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
-import com.mredrock.cyxbs.common.BaseApp.Companion.context
 import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.utils.extensions.*
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
@@ -93,7 +88,7 @@ open class DynamicListViewModel(kind: String) : BaseViewModel() {
                 }
                 .safeSubscribeBy {
                     if (it.status == 200) {
-                        toastEvent.value = R.string.qa_ignore_dynamic
+                        toastEvent.value = R.string.qa_ignore_dynamic_success
                     }
                 }
 
@@ -102,14 +97,14 @@ open class DynamicListViewModel(kind: String) : BaseViewModel() {
 
     fun report(dynamic: Dynamic, content: String) {
         ApiGenerator.getApiService(ApiServiceNew::class.java)
-                .report(dynamic.postId, CommentConfig.REPORT_MODEL, content)
+                .report(dynamic.postId, CommentConfig.REPORT_DYNAMIC_MODEL, content)
                 .setSchedulers()
                 .doOnError {
                     toastEvent.value = R.string.qa_report_dynamic_failure
                 }
                 .safeSubscribeBy {
                     if (it.status == 200)
-                        toastEvent.value = R.string.qa_report_dynamic
+                        toastEvent.value = R.string.qa_report_dynamic_success
                 }
     }
 

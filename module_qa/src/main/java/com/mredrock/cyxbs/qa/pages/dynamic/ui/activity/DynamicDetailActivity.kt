@@ -111,7 +111,7 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
                 } else {
                     optionPopWindow.addOptionAndCallback(CommentConfig.REPORT) {
                         QaReportDialog.show(this) {
-                            toast("点击了举报")
+                            viewModel.report(comment.commentId, it, CommentConfig.REPORT_COMMENT_MODEL)
                         }
                     }
                 }
@@ -139,7 +139,7 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
                 } else {
                     optionPopWindow.addOptionAndCallback(CommentConfig.REPORT) {
                         QaReportDialog.show(this) {
-                            toast("点击了举报")
+                            viewModel.report(comment.commentId, it, CommentConfig.REPORT_COMMENT_MODEL)
                         }
                     }
                 }
@@ -170,6 +170,10 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
 
         qa_btn_send.setOnSingleClickListener {
             viewModel.releaseComment(dynamic.postId, qa_et_reply.text.toString())
+        }
+        qa_iv_dynamic_comment_count.setOnSingleClickListener {
+            KeyboardController.showInputKeyboard(this, qa_et_reply)
+            viewModel.replyInfo.value = Pair("", "")
         }
     }
 
@@ -289,8 +293,8 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
                 }
             } else {
                 optionPopWindow.addOptionAndCallback(CommentConfig.REPORT) {
-                    QaReportDialog.show(this) {
-                        toast("点击了举报")
+                    QaReportDialog.show(this) { reportText ->
+                        viewModel.report(dynamic.postId, reportText, CommentConfig.REPORT_DYNAMIC_MODEL)
                     }
                 }
             }
