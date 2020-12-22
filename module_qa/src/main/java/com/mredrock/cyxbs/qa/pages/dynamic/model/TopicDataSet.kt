@@ -31,4 +31,19 @@ object TopicDataSet {
             gson.fromJson(s1, Topic::class.java)
         }
     }
+
+    fun storageTopicTime(timeStamp: String) {
+        sharedPreferences.editor {
+            putString("outTime", timeStamp)
+        }
+    }
+
+    fun getOutCirCleDetailTime(): String? {
+        val outTime = sharedPreferences.getString("outTime", "")
+        return if (outTime == "") {
+            null
+        } else {
+            outTime
+        }
+    }
 }

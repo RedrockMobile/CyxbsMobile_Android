@@ -157,7 +157,10 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
         initReplyList()
 
         qa_iv_select_pic.setOnSingleClickListener {
-            startActivityForResult<QuizActivity>(RELEASE_COMMENT_ACTIVITY_REQUEST)
+            val intent = Intent(this, QuizActivity::class.java)
+            intent.putExtra("isComment", "1")
+            intent.putExtra("commentContent", qa_et_reply.text.toString())
+            startActivity(intent)
         }
 
         qa_ib_toolbar_back.setOnSingleClickListener {

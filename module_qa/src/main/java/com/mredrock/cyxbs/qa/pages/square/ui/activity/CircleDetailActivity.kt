@@ -18,6 +18,7 @@ import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.beannew.Topic
+import com.mredrock.cyxbs.qa.pages.dynamic.model.TopicDataSet
 import com.mredrock.cyxbs.qa.pages.square.ui.adapter.NewHotViewPagerAdapter
 import com.mredrock.cyxbs.qa.pages.square.ui.fragment.HotFragment
 import com.mredrock.cyxbs.qa.pages.square.ui.fragment.LastNewFragment
@@ -112,5 +113,11 @@ class CircleDetailActivity : BaseViewModelActivity<CircleDetailViewModel>() {
                 1 -> tab.text = "热门"
             }
         }.attach()
+    }
+
+    override fun finish() {
+        super.finish()
+        val timeStamp = System.currentTimeMillis() / 1000
+        TopicDataSet.storageTopicTime(timeStamp.toString())
     }
 }

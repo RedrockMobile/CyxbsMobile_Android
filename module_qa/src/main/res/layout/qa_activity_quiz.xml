@@ -38,7 +38,7 @@
                 app:ratio="0.4">
 
                 <androidx.appcompat.widget.AppCompatEditText
-                    android:id="@+id/edt_quiz_content"
+                    android:id="@+id/qa_edt_quiz_content"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@null"
@@ -54,7 +54,7 @@
             </com.mredrock.cyxbs.common.component.RatioLayout>
 
             <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/tv_edit_num"
+                android:id="@+id/qa_tv_edit_num"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="right"
@@ -84,7 +84,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
-                android:id="@+id/tv_choose_circle"
+                android:id="@+id/qa_tv_choose_circle"
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="10dp"
                 android:padding="5dp"
@@ -93,7 +93,7 @@
                 android:textSize="18sp" />
 
             <com.google.android.material.chip.ChipGroup
-                android:id="@+id/layout_quiz_tag"
+                android:id="@+id/qa_layout_quiz_tag"
                 style="@style/Widget.MaterialComponents.ChipGroup"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

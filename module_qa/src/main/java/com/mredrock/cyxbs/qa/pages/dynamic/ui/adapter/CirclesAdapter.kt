@@ -15,6 +15,7 @@ import com.mredrock.cyxbs.common.utils.extensions.sharedPreferences
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.beannew.Topic
 import com.mredrock.cyxbs.qa.beannew.TopicMessage
+import com.mredrock.cyxbs.qa.pages.dynamic.model.TopicDataSet
 
 import com.mredrock.cyxbs.qa.pages.square.ui.activity.CircleSquareActivity
 import com.mredrock.cyxbs.qa.ui.widget.ImageViewAddCount
@@ -86,11 +87,15 @@ class CirclesAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                 val viewHolder = holder as CirclesItem
                 viewHolder.itemView.apply {
                     setOnSingleClickListener {
+                        //用户点进圈子item进入详情就应该置消息为已读，刷新后才会显示
                         qa_iv_circle.setHaveMessage(false)
                         changeToActivity(CircleSquareActivity())
                     }
                     qa_iv_circle.apply {
-
+                        if (!topicMessageList.isNullOrEmpty()) {
+                            setHaveMessage(true)
+                            setMessageBum(topicMessageList[position].post_count)
+                        }
                     }
                     qa_tv_circle_name.text = circlesItemList[position].topicName
                 }
@@ -120,5 +125,6 @@ class CirclesAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     fun addTopicMessageData(newTopicMessageData: List<TopicMessage>) {
         topicMessageList.clear()
         topicMessageList.addAll(newTopicMessageData)
+        notifyDataSetChanged()
     }
 }

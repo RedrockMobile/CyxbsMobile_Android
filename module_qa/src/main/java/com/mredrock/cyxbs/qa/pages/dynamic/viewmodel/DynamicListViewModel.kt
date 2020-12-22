@@ -19,13 +19,13 @@ import com.mredrock.cyxbs.qa.config.CommentConfig
 import com.mredrock.cyxbs.qa.network.ApiService
 import com.mredrock.cyxbs.qa.network.ApiServiceNew
 import com.mredrock.cyxbs.qa.pages.dynamic.model.DynamicDataSource
+import com.mredrock.cyxbs.qa.pages.dynamic.model.TopicDataSet
 
 /**
  * Created By jay68 on 2018/8/26.
  */
 open class DynamicListViewModel(kind: String) : BaseViewModel() {
     val dynamicList: LiveData<PagedList<Dynamic>>
-
     val networkState: LiveData<Int>
     val initialLoad: LiveData<Int>
     var hotWords = MutableLiveData<List<String>>()
@@ -62,17 +62,14 @@ open class DynamicListViewModel(kind: String) : BaseViewModel() {
                 .safeSubscribeBy {
                     myCircle.value = it
                     it.forEach {
-
+                        TopicDataSet.storageTopicData(it)
                     }
                 }
     }
 
-    fun getTopicMessages() {
-        //获取当前时间戳
-        val timeStamp = System.currentTimeMillis() / 1000
-        Log.d("xxxxx", timeStamp.toString())
+    fun getTopicMessages(timeStamp: String) {
         ApiGenerator.getApiService(ApiServiceNew::class.java)
-                .getTopicMessage(timeStamp.toString())
+                .getTopicMessage(timeStamp)
                 .mapOrThrowApiException()
                 .setSchedulers()
                 .doOnError {
@@ -80,16 +77,7 @@ open class DynamicListViewModel(kind: String) : BaseViewModel() {
                 }
                 .safeSubscribeBy {
                     topicMessageList.value = it
-                    it.forEach { topicMessage ->
-                        context.loadTopicMessage(topicMessage.topic_id, topicMessage.post_count)
-                    }
                 }
-    }
-
-    fun Context.loadTopicMessage(key: String, value: Int) {
-        sharedPreferences("topicMessage").editor {
-            putInt(key, value)
-        }
     }
 
     fun ignore(dynamic: Dynamic) {
