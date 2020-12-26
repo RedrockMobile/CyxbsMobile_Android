@@ -15,6 +15,7 @@ import com.mredrock.cyxbs.qa.component.recycler.BaseRvAdapter
 import com.mredrock.cyxbs.qa.component.recycler.BaseViewHolder
 import com.mredrock.cyxbs.qa.config.CommentConfig
 import kotlinx.android.synthetic.main.qa_recycler_item_dynamic_reply_inner.view.*
+import kotlinx.android.synthetic.main.qa_recycler_item_dynamic_reply_show_more.view.*
 
 /**
  *@author zhangzhe
@@ -22,8 +23,34 @@ import kotlinx.android.synthetic.main.qa_recycler_item_dynamic_reply_inner.view.
  *@description
  */
 
-class ReplyListAdapter(private val onReplyInnerClickEvent: (nickname: String, commentId: String) -> Unit, private val onReplyInnerLongClickEvent: (comment: Comment, itemView: View) -> Unit) : BaseRvAdapter<Comment>() {
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder<Comment> = ReplyViewHolder(parent)
+class ReplyListAdapter(private val onReplyInnerClickEvent: (nickname: String, commentId: String) -> Unit, private val onReplyInnerLongClickEvent: (comment: Comment, itemView: View) -> Unit, private val onMoreClickEvent: () -> Unit) : BaseRvAdapter<Comment>() {
+
+    override fun getItemCount(): Int {
+        return if (dataList.size > 3) 4 else super.getItemCount()
+    }
+
+    override fun onBindViewHolder(holder: BaseViewHolder<Comment>, position: Int) {
+        if (position == 3) {
+            holder.refresh(null)
+            holder.itemView.setOnSingleClickListener { onMoreClickEvent.invoke() }
+        } else {
+            super.onBindViewHolder(holder, position)
+        }
+    }
+
+    override fun getItemViewType(position: Int): Int {
+        return when (position) {
+            3 -> 1
+            else -> 0
+        }
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder<Comment> {
+        return when (viewType) {
+            0 -> ReplyViewHolder(parent)
+            else -> MoreViewHolder(parent)
+        }
+    }
 
 
     inner class ReplyViewHolder(parent: ViewGroup) : BaseViewHolder<Comment>(parent, R.layout.qa_recycler_item_dynamic_reply_inner) {
@@ -52,12 +79,29 @@ class ReplyListAdapter(private val onReplyInnerClickEvent: (nickname: String, co
         }
     }
 
+    inner class MoreViewHolder(parent: ViewGroup) : BaseViewHolder<Comment>(parent, R.layout.qa_recycler_item_dynamic_reply_show_more) {
+        @SuppressLint("SetTextI18n")
+        @RequiresApi(Build.VERSION_CODES.N)
+        override fun refresh(data: Comment?) {
+            itemView.apply {
+                qa_tv_reply_show_more.text = "共${dataList.size}条回复 >"
+            }
+        }
+    }
+
     override fun onItemClickListener(holder: BaseViewHolder<Comment>, position: Int, data: Comment) {
         onReplyInnerClickEvent.invoke(data.nickName, data.commentId)
     }
 
     override fun onItemLongClickListener(holder: BaseViewHolder<Comment>, position: Int, data: Comment, itemView: View) {
         onReplyInnerLongClickEvent.invoke(data, itemView)
+    }
+
+    override fun refreshData(dataCollection: Collection<Comment>) {
+        notifyItemRangeRemoved(0, dataList.size)
+        dataList.clear()
+        dataList.addAll(dataCollection.sortedBy { it.praiseCount }.reversed())
+        notifyItemRangeInserted(0, dataList.size)
     }
 
 

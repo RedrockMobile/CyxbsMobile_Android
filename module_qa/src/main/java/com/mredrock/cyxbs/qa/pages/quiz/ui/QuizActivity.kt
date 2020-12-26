@@ -24,7 +24,6 @@ import com.mredrock.cyxbs.common.config.QA_QUIZ
 import com.mredrock.cyxbs.common.event.DynamicDraftEvent
 import com.mredrock.cyxbs.common.mark.EventBusLifecycleSubscriber
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
-import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.*
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.R.drawable.*
@@ -71,12 +70,16 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>(), EventBusLifecycleSu
         super.onCreate(savedInstanceState)
         setContentView(R.layout.qa_activity_quiz)
         isFirstQuiz = sharedPreferences(FIRST_QUIZ).getBoolean(FIRST_QUIZ_SP_KEY, true)
+
+
+
         if (!intent.getStringExtra("isComment").isNullOrEmpty()) {
             isComment = intent.getStringExtra("isComment")
             if (!intent.getStringExtra("commentContent").isNullOrEmpty())
                 commentContent = intent.getStringExtra("commentContent")
             if (!intent.getStringExtra("replyId").isNullOrEmpty()){
                 replyId = intent.getStringExtra("replyId")
+                nine_grid_view.gone()
             }
             if (!intent.getStringExtra("postId").isNullOrEmpty()){
                 postId = intent.getStringExtra("postId")
@@ -100,7 +103,7 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>(), EventBusLifecycleSu
 
         viewModel.finishReleaseCommentEvent.observeNotNull {
             if (it) {
-                setResult(NEED_REFRESH_RESULT)
+                setResult(NEED_REFRESH_RESULT, Intent().apply { putExtra("text", "") })
                 finish()
             }
         }
@@ -175,6 +178,7 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>(), EventBusLifecycleSu
     }
 
 
+    @SuppressLint("SetTextI18n")
     private fun initToolbar() {
         qa_ib_toolbar_back.setOnClickListener(View.OnClickListener {
             if (qa_edt_quiz_content.text.isNullOrEmpty() && draftId == NOT_DRAFT_ID || draftId == isComment) {
@@ -190,6 +194,9 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>(), EventBusLifecycleSu
         }
         if (isComment == "1") {
             qa_tv_toolbar_title.text = "发布评论"
+            if (!intent.getStringExtra("replyNickname").isNullOrEmpty()) {
+                qa_tv_toolbar_title.text = "回复 @" + intent.getStringExtra("replyNickname")
+            }
             qa_tv_choose_circle.visibility = View.GONE
             qa_layout_quiz_tag.visibility = View.GONE
             draftId = isComment
@@ -351,5 +358,10 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>(), EventBusLifecycleSu
         //防止内存泄漏
         exitDialog.dismiss()
         super.onPause()
+    }
+
+    override fun onBackPressed() {
+        setResult(-1, Intent().apply { putExtra("text", qa_edt_quiz_content.text.toString()) })
+        super.onBackPressed()
     }
 }

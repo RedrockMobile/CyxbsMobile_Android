@@ -96,9 +96,12 @@ open class DynamicDetailViewModel : BaseViewModel() {
 
     fun releaseComment(postId: String, content: String) {
         ApiGenerator.getApiService(ApiServiceNew::class.java)
-                .releaseComment(content, postId, replyInfo.value?.second?: "")
+                .releaseComment(content, postId, replyInfo.value?.second ?: "")
                 .mapOrThrowApiException()
                 .setSchedulers()
+                .doOnSubscribe {
+                    progressDialogEvent.value = ProgressDialogEvent.SHOW_NONCANCELABLE_DIALOG_EVENT
+                }
                 .doFinally {
                     progressDialogEvent.value = ProgressDialogEvent.DISMISS_DIALOG_EVENT
                 }
@@ -114,6 +117,9 @@ open class DynamicDetailViewModel : BaseViewModel() {
         ApiGenerator.getApiService(ApiServiceNew::class.java)
                 .deleteId(id, model)
                 .setSchedulers()
+                .doOnSubscribe {
+                    progressDialogEvent.value = ProgressDialogEvent.SHOW_NONCANCELABLE_DIALOG_EVENT
+                }
                 .doFinally {
                     progressDialogEvent.value = ProgressDialogEvent.DISMISS_DIALOG_EVENT
                 }
@@ -146,6 +152,9 @@ open class DynamicDetailViewModel : BaseViewModel() {
         ApiGenerator.getApiService(ApiServiceNew::class.java)
                 .report(id, CommentConfig.REPORT_DYNAMIC_MODEL, content)
                 .setSchedulers()
+                .doOnSubscribe {
+                    progressDialogEvent.value = ProgressDialogEvent.SHOW_NONCANCELABLE_DIALOG_EVENT
+                }
                 .doFinally {
                     progressDialogEvent.value = ProgressDialogEvent.DISMISS_DIALOG_EVENT
                 }

@@ -10,6 +10,7 @@ import com.mredrock.cyxbs.qa.beannew.Comment
 import com.mredrock.cyxbs.qa.component.recycler.BaseRvAdapter
 import com.mredrock.cyxbs.qa.component.recycler.BaseViewHolder
 import com.mredrock.cyxbs.qa.config.CommentConfig
+import com.mredrock.cyxbs.qa.ui.activity.ViewImageActivity
 import com.mredrock.cyxbs.qa.ui.widget.NineGridView
 import com.mredrock.cyxbs.qa.utils.dynamicTimeDescription
 import kotlinx.android.synthetic.main.qa_recycler_item_dynamic_reply.view.*
@@ -55,9 +56,7 @@ class CommentListAdapter(
                 if (data.pics.isNullOrEmpty())
                     qa_reply_nine_grid_view.setRectangleImages(emptyList(), NineGridView.MODE_IMAGE_THREE_SIZE)
                 else {
-                    data.pics!!.map {
-                        it
-                    }.apply {
+                    data.pics!!.apply {
                         val tag = qa_reply_nine_grid_view.tag
                         if (null == tag || tag == this) {
                             val tagStore = qa_reply_nine_grid_view.tag
@@ -70,6 +69,9 @@ class CommentListAdapter(
                             qa_reply_nine_grid_view.setImages(this, NineGridView.MODE_IMAGE_THREE_SIZE, NineGridView.ImageMode.MODE_IMAGE_RECTANGLE)
                             qa_reply_nine_grid_view.tag = tagStore
                         }
+                        qa_reply_nine_grid_view.setOnItemClickListener { _, index ->
+                            ViewImageActivity.activityStart(context, this.toTypedArray(), index)
+                        }
                     }
 
                 }
@@ -78,7 +80,7 @@ class CommentListAdapter(
                     qa_rv_reply.layoutManager = LinearLayoutManager(context)
                 }
                 if (qa_rv_reply.adapter == null) {
-                    qa_rv_reply.adapter = ReplyListAdapter(onReplyInnerClickEvent, onReplyInnerLongClickEvent)
+                    qa_rv_reply.adapter = ReplyListAdapter(onReplyInnerClickEvent, onReplyInnerLongClickEvent, {})
                 }
                 if (data.replyList.isNullOrEmpty()) {
                     (qa_rv_reply.adapter as ReplyListAdapter).refreshData(listOf())
