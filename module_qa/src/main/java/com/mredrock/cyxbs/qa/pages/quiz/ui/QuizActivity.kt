@@ -65,6 +65,8 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>(), EventBusLifecycleSu
     private val exitDialog by lazy { createExitDialog() }
     private var isComment = ""
     private var commentContent = ""
+    private var replyId = ""
+    private var postId = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.qa_activity_quiz)
@@ -73,6 +75,12 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>(), EventBusLifecycleSu
             isComment = intent.getStringExtra("isComment")
             if (!intent.getStringExtra("commentContent").isNullOrEmpty())
                 commentContent = intent.getStringExtra("commentContent")
+            if (!intent.getStringExtra("replyId").isNullOrEmpty()){
+                replyId = intent.getStringExtra("replyId")
+            }
+            if (!intent.getStringExtra("postId").isNullOrEmpty()){
+                postId = intent.getStringExtra("postId")
+            }
         }
         initToolbar()
         initImageAddView()
@@ -90,8 +98,14 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>(), EventBusLifecycleSu
             }
         }
 
+        viewModel.finishReleaseCommentEvent.observeNotNull {
+            if (it) {
+                setResult(NEED_REFRESH_RESULT)
+                finish()
+            }
+        }
+
         viewModel.finishActivityEvent.observeNotNull {
-            setResult(NEED_REFRESH_RESULT)
             finish()
         }
     }
@@ -188,10 +202,15 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>(), EventBusLifecycleSu
             visible()
             text = getString(R.string.qa_quiz_dialog_next)
             setOnClickListener {
-                val result = viewModel.submitTitleAndContent(dynamicType, qa_edt_quiz_content.text.toString())
-                if (result) {
+                if (isComment == "") {
+                    val result = viewModel.submitTitleAndContent(dynamicType, qa_edt_quiz_content.text.toString())
+                    if (result) {
+                        progressDialog?.show()
+                        viewModel.submitDynamic()
+                    }
+                } else {
                     progressDialog?.show()
-                    viewModel.submitDynamic()
+                    viewModel.submitComment(postId, qa_edt_quiz_content.text.toString(), replyId)
                 }
             }
         }

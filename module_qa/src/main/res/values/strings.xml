@@ -44,7 +44,8 @@
     <string name="qa_quiz_dialog_exit_text">是否保存草稿</string>
     <string name="qa_answer_dialog_exit_text">退 出 回 答</string>
     <string name="qa_report_dialog_cancel_text">取消</string>
-    <string name="qa_answer_submit_successfully_text">发布动态成功</string>
+    <string name="qa_release_dynamic_success">发布动态成功</string>
+    <string name="qa_release_comment_success">发布评论成功</string>
     <string name="qa_comment_list_no_comment_hint">还没有评论哦~</string>
     <string name="qa_comment_list_no_more_comment">没有更多内容了～</string>
     <string name="qa_answer_show_question">查看问题</string>
@@ -52,7 +53,8 @@
     <string name="qa_comment_anonymous_text">匿名用户</string>
     <string name="qa_pic_save_alert_dialog_title">是否保存</string>
     <string name="qa_pic_save_alert_dialog_message">这张图片将保存到手机</string>
-    <string name="qa_upload_pic_failed">发布动态失败</string>
+    <string name="qa_release_dynamic_failure">发布动态失败</string>
+    <string name="qa_release_comment_failure">发布评论失败</string>
     <string name="qa_answer_adopted_other_answer">你已采纳其他回答~</string>
     <string name="qa_question_search_cancel">取消</string>
     <string name="qa_search_history">历史记录</string>

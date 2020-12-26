@@ -60,6 +60,9 @@ interface ApiServiceNew {
     @Multipart
     fun releaseDynamic(@Part parts: List<MultipartBody.Part>): Observable<RedrockApiWrapper<DynamicReleaseResult>>
 
+    @POST("/wxapi/magipoke-loop/comment/releaseComment")
+    @Multipart
+    fun releaseComment(@Part parts: List<MultipartBody.Part>): Observable<RedrockApiWrapper<CommentReleaseResult>>
 
     @POST("/wxapi/magipoke-loop/comment/releaseComment")
     @FormUrlEncoded

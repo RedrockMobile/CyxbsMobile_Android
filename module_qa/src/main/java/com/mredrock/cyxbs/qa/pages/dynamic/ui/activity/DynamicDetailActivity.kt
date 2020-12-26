@@ -21,6 +21,7 @@ import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.beannew.Dynamic
 import com.mredrock.cyxbs.qa.component.recycler.RvAdapterWrapper
 import com.mredrock.cyxbs.qa.config.CommentConfig
+import com.mredrock.cyxbs.qa.config.RequestResultCode
 import com.mredrock.cyxbs.qa.config.RequestResultCode.DYNAMIC_DETAIL_REQUEST
 import com.mredrock.cyxbs.qa.config.RequestResultCode.NEED_REFRESH_RESULT
 import com.mredrock.cyxbs.qa.network.NetworkState
@@ -158,10 +159,11 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
         initReplyList()
 
         qa_iv_select_pic.setOnSingleClickListener {
-            val intent = Intent(this, QuizActivity::class.java)
-            intent.putExtra("isComment", "1")
-            intent.putExtra("commentContent", qa_et_reply.text.toString())
-            startActivity(intent)
+            Intent(this, QuizActivity::class.java).apply {
+                putExtra("isComment", "1")
+                putExtra("commentContent", qa_et_reply.text.toString())
+                startActivityForResult(this, RequestResultCode.RELEASE_COMMENT_ACTIVITY_REQUEST)
+            }
         }
 
         qa_ib_toolbar_back.setOnSingleClickListener {
@@ -367,5 +369,17 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
         cm.primaryClip = mClipData
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        when (requestCode) {
+            // 从动态详细返回
+            RequestResultCode.RELEASE_COMMENT_ACTIVITY_REQUEST -> {
+                if (resultCode == NEED_REFRESH_RESULT) {
+                    // 需要刷新 则 刷新显示动态
+                    viewModel.refreshCommentList(dynamic.postId, "0")
+                }
+            }
+        }
+    }
 
 }

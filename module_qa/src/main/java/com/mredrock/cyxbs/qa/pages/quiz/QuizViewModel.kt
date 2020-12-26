@@ -1,13 +1,8 @@
 package com.mredrock.cyxbs.qa.pages.quiz
 
-import android.app.ProgressDialog
-import android.content.Context
 import android.util.Base64
 import androidx.lifecycle.MutableLiveData
-import com.mredrock.cyxbs.common.BaseApp
-import com.mredrock.cyxbs.common.BaseApp.Companion.context
 import com.mredrock.cyxbs.common.network.ApiGenerator
-import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.*
 import com.mredrock.cyxbs.common.utils.extensions.checkError
 import com.mredrock.cyxbs.common.utils.extensions.mapOrThrowApiException
@@ -21,8 +16,6 @@ import com.mredrock.cyxbs.qa.beannew.CommentReleaseResult
 import com.mredrock.cyxbs.qa.beannew.Topic
 import com.mredrock.cyxbs.qa.network.ApiService
 import com.mredrock.cyxbs.qa.network.ApiServiceNew
-import com.mredrock.cyxbs.qa.network.NetworkState
-import com.mredrock.cyxbs.qa.pages.dynamic.model.TopicDataSet
 import com.mredrock.cyxbs.qa.utils.isNullOrEmpty
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
@@ -38,6 +31,7 @@ class QuizViewModel : BaseViewModel() {
     val imageLiveData = MutableLiveData<ArrayList<String>>()
     val backAndRefreshPreActivityEvent = SingleLiveEvent<Boolean>()
     val finishActivityEvent = MutableLiveData<Boolean>()
+    val finishReleaseCommentEvent = MutableLiveData<Boolean>()
     var allCircle = MutableLiveData<List<Topic>>()
     var editingImgPos = -1
         private set
@@ -45,7 +39,6 @@ class QuizViewModel : BaseViewModel() {
     private var title: String = ""
     private var content: String = ""
     private val isInvalidList = arrayListOf<Boolean>()
-    val commentReleaseResult = MutableLiveData<CommentReleaseResult>()
     fun tryEditImg(pos: Int): String? {
         editingImgPos = pos
         return imageLiveData.value?.get(pos)
@@ -90,11 +83,11 @@ class QuizViewModel : BaseViewModel() {
                 .setSchedulers()
                 .doFinally { progressDialogEvent.value = ProgressDialogEvent.DISMISS_DIALOG_EVENT }
                 .doOnError {
-                    toastEvent.value = R.string.qa_upload_pic_failed
+                    toastEvent.value = R.string.qa_release_dynamic_failure
                     backAndRefreshPreActivityEvent.value = true
                 }
                 .safeSubscribeBy {
-                    toastEvent.value = R.string.qa_answer_submit_successfully_text
+                    toastEvent.value = R.string.qa_release_dynamic_success
                     backAndRefreshPreActivityEvent.value = true
                 }
     }
@@ -184,17 +177,35 @@ class QuizViewModel : BaseViewModel() {
         isInvalidList.clear()
     }
 
-    fun releaseComment(postId: String, content: String, replyId: String) {
+    fun submitComment(postId: String, content: String, replyId: String) {
+        val builder = MultipartBody.Builder()
+                .setType(MultipartBody.FORM)
+                .addFormDataPart("content", content)
+                .addFormDataPart("post_id", postId)
+                .addFormDataPart("reply_id", replyId)
+        if (!imageLiveData.value.isNullOrEmpty()) {
+            val files = imageLiveData.value!!.asSequence()
+                    .map { File(it) }
+                    .toList()
+            files.forEachIndexed { index, file ->
+                val suffix = file.name.substring(file.name.lastIndexOf(".") + 1)
+                val imageBody = RequestBody.create("image/$suffix".toMediaTypeOrNull(), file)
+                val name = "photo" + (index + 1)
+                builder.addFormDataPart(name, file.name, imageBody)
+            }
+        }
         ApiGenerator.getApiService(ApiServiceNew::class.java)
-                .releaseComment(content, postId, replyId)
+                .releaseComment(builder.build().parts)
                 .mapOrThrowApiException()
                 .setSchedulers()
-                .doOnSubscribe {
-                }
+                .doFinally { progressDialogEvent.value = ProgressDialogEvent.DISMISS_DIALOG_EVENT }
                 .doOnError {
+                    toastEvent.value = R.string.qa_release_comment_failure
+                    finishReleaseCommentEvent.value = false
                 }
                 .safeSubscribeBy {
-                    commentReleaseResult.postValue(it)
+                    toastEvent.value = R.string.qa_release_comment_success
+                    finishReleaseCommentEvent.value = true
                 }
     }
 }
