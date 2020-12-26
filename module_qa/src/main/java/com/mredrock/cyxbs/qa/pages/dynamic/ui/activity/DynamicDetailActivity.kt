@@ -1,6 +1,7 @@
 package com.mredrock.cyxbs.qa.pages.dynamic.ui.activity
 
 import android.annotation.SuppressLint
+import android.app.ProgressDialog
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
@@ -69,6 +70,8 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
 
     private val footerRvAdapter = FooterRvAdapter { getCommentList }
 
+    private var progressDialog: ProgressDialog? = null
+
     lateinit var dynamic: Dynamic
 
     private val behavior by lazy { AppBarLayout.ScrollingViewBehavior() }
@@ -106,12 +109,14 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
                 if (dynamic.isSelf == 1 || comment.isSelf) {
                     optionPopWindow.addOptionAndCallback(CommentConfig.DELETE) {
                         QaDialog.show(this, resources.getString(R.string.qa_dialog_tip_delete_comment_text), {}) {
+                            progressDialog?.show()
                             viewModel.deleteId(comment.commentId, COMMENT_DELETE)
                         }
                     }
                 } else {
                     optionPopWindow.addOptionAndCallback(CommentConfig.REPORT) {
                         QaReportDialog.show(this) {
+                            progressDialog?.show()
                             viewModel.report(comment.commentId, it, CommentConfig.REPORT_COMMENT_MODEL)
                         }
                     }
@@ -134,12 +139,14 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
                 if (dynamic.isSelf == 1 || comment.isSelf) {
                     optionPopWindow.addOptionAndCallback(CommentConfig.DELETE) {
                         QaDialog.show(this, resources.getString(R.string.qa_dialog_tip_delete_comment_text), {}) {
+                            progressDialog?.show()
                             viewModel.deleteId(comment.commentId, COMMENT_DELETE)
                         }
                     }
                 } else {
                     optionPopWindow.addOptionAndCallback(CommentConfig.REPORT) {
                         QaReportDialog.show(this) {
+                            progressDialog?.show()
                             viewModel.report(comment.commentId, it, CommentConfig.REPORT_COMMENT_MODEL)
                         }
                     }
@@ -171,6 +178,7 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
         }
 
         qa_btn_send.setOnSingleClickListener {
+            progressDialog?.show()
             viewModel.releaseComment(dynamic.postId, qa_et_reply.text.toString())
         }
         qa_iv_dynamic_comment_count.setOnSingleClickListener {
@@ -259,7 +267,7 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
         val layoutParams = qa_ll_reply.layoutParams as CoordinatorLayout.LayoutParams
         layoutParams.behavior = behavior
 
-//        dynamic = intent.getParcelableExtra("dynamicItem")
+
         dynamic = dynamicOrigin!!
         viewModel.dynamicLiveData.value = dynamicOrigin!!
         viewModel.dynamicLiveData.observe {
@@ -290,12 +298,14 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
             if (dynamic.isSelf == 1) {
                 optionPopWindow.addOptionAndCallback(CommentConfig.DELETE) {
                     QaDialog.show(this, resources.getString(R.string.qa_dialog_tip_delete_dynamic_text), {}) {
+                        progressDialog?.show()
                         viewModel.deleteId(dynamic.postId, DYNAMIC_DELETE)
                     }
                 }
             } else {
                 optionPopWindow.addOptionAndCallback(CommentConfig.REPORT) {
                     QaReportDialog.show(this) { reportText ->
+                        progressDialog?.show()
                         viewModel.report(dynamic.postId, reportText, CommentConfig.REPORT_DYNAMIC_MODEL)
                     }
                 }
@@ -305,6 +315,12 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
         qa_iv_dynamic_praise_count_image.registerLikeView(dynamic.postId, CommentConfig.PRAISE_MODEL_DYNAMIC, dynamic.isPraised, dynamic.praiseCount)
         qa_iv_dynamic_praise_count_image.setOnSingleClickListener {
             qa_iv_dynamic_praise_count_image.click()
+        }
+
+        progressDialog = ProgressDialog(this)
+        progressDialog?.apply {
+            setMessage("加载中...")
+            setCanceledOnTouchOutside(false)
         }
     }
 

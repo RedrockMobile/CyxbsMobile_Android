@@ -8,6 +8,7 @@ import com.mredrock.cyxbs.common.utils.extensions.mapOrThrowApiException
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
+import com.mredrock.cyxbs.common.viewmodel.event.ProgressDialogEvent
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.beannew.Comment
 import com.mredrock.cyxbs.qa.beannew.CommentReleaseResult
@@ -98,8 +99,8 @@ open class DynamicDetailViewModel : BaseViewModel() {
                 .releaseComment(content, postId, replyInfo.value?.second?: "")
                 .mapOrThrowApiException()
                 .setSchedulers()
-                .doOnSubscribe {
-
+                .doFinally {
+                    progressDialogEvent.value = ProgressDialogEvent.DISMISS_DIALOG_EVENT
                 }
                 .doOnError {
 
@@ -113,8 +114,8 @@ open class DynamicDetailViewModel : BaseViewModel() {
         ApiGenerator.getApiService(ApiServiceNew::class.java)
                 .deleteId(id, model)
                 .setSchedulers()
-                .doOnSubscribe {
-
+                .doFinally {
+                    progressDialogEvent.value = ProgressDialogEvent.DISMISS_DIALOG_EVENT
                 }
                 .doOnError {
                     when (model) {
@@ -145,6 +146,9 @@ open class DynamicDetailViewModel : BaseViewModel() {
         ApiGenerator.getApiService(ApiServiceNew::class.java)
                 .report(id, CommentConfig.REPORT_DYNAMIC_MODEL, content)
                 .setSchedulers()
+                .doFinally {
+                    progressDialogEvent.value = ProgressDialogEvent.DISMISS_DIALOG_EVENT
+                }
                 .doOnError {
                     when (model) {
                         CommentConfig.REPORT_DYNAMIC_MODEL -> {
