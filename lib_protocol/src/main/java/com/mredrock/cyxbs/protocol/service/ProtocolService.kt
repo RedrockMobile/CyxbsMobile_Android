@@ -1,7 +1,6 @@
 package com.mredrock.cyxbs.protocol.service
 
 import android.content.Context
-import android.content.Intent
 import android.net.Uri
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
@@ -41,9 +40,7 @@ class ProtocolService : IProtocolService {
                 build.navigation(BaseApp.context)
             }
             "http", "https" -> {
-                context?.startActivity(Intent(context, WebContainerActivity::class.java).apply {
-                    putExtra(WebContainerActivity.URI, uri)
-                })
+                context?.let { WebContainerActivity.loadWebPage(it, uri) }
             }
         }
     }

@@ -1,24 +1,31 @@
 package com.mredrock.cyxbs.protocol.activity
 
 import android.app.ProgressDialog
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.webkit.WebChromeClient
 import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
-import androidx.appcompat.app.AppCompatActivity
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.mredrock.cyxbs.common.ui.BaseActivity
-import com.mredrock.cyxbs.protocol.config.PROTOCOL_WEB_CONTAINER
 import com.mredrock.cyxbs.protocol.R
+import com.mredrock.cyxbs.protocol.config.PROTOCOL_WEB_CONTAINER
 import kotlinx.android.synthetic.main.protocol_activity_web_container.*
 
 
 @Route(path = PROTOCOL_WEB_CONTAINER)
 class WebContainerActivity : BaseActivity() {
 
-    companion object{
+    companion object {
         const val URI = "uri"
+
+        fun loadWebPage(context: Context, uri: String) {
+            context.startActivity(Intent(context, WebContainerActivity::class.java).apply {
+                putExtra(URI, uri)
+            })
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
