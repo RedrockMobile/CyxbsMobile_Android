@@ -2,53 +2,32 @@ package com.mredrock.cyxbs.protocol.activity
 
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
-import android.widget.Toast
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.databinding.DataBindingUtil
 import com.mredrock.cyxbs.api.protocol.api.IProtocolService
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.protocol.R
+import com.mredrock.cyxbs.protocol.databinding.ProtocolActivityReceiveBinding
 
 class ReceiveActivity : AppCompatActivity() {
 
-    companion object {
-        const val TAG = "ReceiveActivityTAG"
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_receive)
+        val contentView = DataBindingUtil.setContentView<ProtocolActivityReceiveBinding>(this, R.layout.protocol_activity_receive)
+        contentView.isShow = View.GONE
         val uri: Uri? = intent.data
         if (uri != null) {
-            // 完整的url信息
-            val url: String = uri.toString()
-            Log.e(TAG, "url: $uri")
-            // scheme部分
-            val scheme: String = uri.scheme
-            Log.e(TAG, "scheme: $scheme")
-            // host部分
-            val host: String = uri.host
-            Log.e(TAG, "host: $host")
-            //port部分
-            val port: Int = uri.port
-            Log.e(TAG, "host: $port")
-            // 访问路劲
-            val path: String = uri.path
-            Log.e(TAG, "path: $path")
+            // 能够唤起这个activity就说明这个uri是符合规范的，所以这里只需要判定一下path是否存在
+            val path: String = uri.path ?: ""
             if (path.isBlank()) {
-                // tod
-                Toast.makeText(this, "找不到该页面", Toast.LENGTH_SHORT).show()
+                contentView.isShow = View.VISIBLE
                 return
+            } else {
+                // 跳转
+                ServiceManager.getService(IProtocolService::class.java).jump(uri.toString())
+                finish()
             }
-            val pathSegments: List<String> = uri.pathSegments
-            // Query部分
-            val query: String = uri.query
-            Log.e(TAG, "query: $query")
-            //获取指定参数值
-//            val goodsId: String = uri.getQueryParameter("goodsId")
-//            Log.e(TAG, "goodsId: $goodsId")
-            ServiceManager.getService(IProtocolService::class.java).jump(uri.toString())
-            finish()
         }
     }
 }
