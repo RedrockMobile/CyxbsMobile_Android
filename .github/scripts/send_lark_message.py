@@ -65,18 +65,20 @@ def send_message(token, chat_id, content_):
         print("send message error, code = ", code, ", msg =", rsp_dict.get("msg", ""))
 
 
-APP_ID = sys.argv[1]
-APP_SECRET = sys.argv[2]
-run_id = sys.argv[3]
-pr_title = sys.argv[4]
-pr_body = sys.argv[5]
+# start or success、failure、cancelled  skipped
+type = sys.argv[1]
+APP_ID = sys.argv[2]
+APP_SECRET = sys.argv[3]
+run_id = sys.argv[4]
+pr_title = sys.argv[5]
+pr_body = sys.argv[6]
 token = get_tenant_access_token()
 url = "https://github.com/RedrockMobile/CyxbsMobile_Android/actions/runs/"+run_id
 
 content = {
     "post": {
         "zh_cn": {
-            "title": "Pull Request自动打包完成",
+            "title": "掌邮自动打包"+type,
             "content": [
                 [
                     {
