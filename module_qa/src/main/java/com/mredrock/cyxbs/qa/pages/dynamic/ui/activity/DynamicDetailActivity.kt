@@ -7,7 +7,9 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.transition.Slide
+import android.util.Log
 import android.view.Gravity
+import android.view.MotionEvent
 import android.view.View
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.app.ActivityOptionsCompat
@@ -38,6 +40,7 @@ import kotlinx.android.synthetic.main.qa_activity_dynamic_detail.*
 import kotlinx.android.synthetic.main.qa_common_toolbar.*
 import kotlinx.android.synthetic.main.qa_recycler_item_dynamic_header.*
 import kotlinx.android.synthetic.main.qa_recycler_item_dynamic_header.view.*
+import kotlin.math.abs
 
 
 /**
@@ -77,6 +80,9 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
 
     override fun getViewModelFactory() = DynamicDetailViewModel.Factory()
 
+    private var lastTouchX = -100f
+    private var lastTouchY = -100f
+
     private val getCommentList: () -> Unit = {
         viewModel.refreshCommentList(dynamic.postId, "0")
     }
@@ -84,11 +90,9 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
     // 评论点击的逻辑
     private val commentListRvAdapter = CommentListAdapter(
             onItemClickEvent = { commentId ->
-                KeyboardController.showInputKeyboard(this, qa_et_reply)
                 viewModel.replyInfo.value = Pair("", commentId)
             },
             onReplyInnerClickEvent = { nickname, commentId ->
-                KeyboardController.showInputKeyboard(this, qa_et_reply)
                 viewModel.replyInfo.value = Pair(nickname, commentId)
             },
             onItemLongClickEvent = { comment, itemView ->
@@ -97,7 +101,6 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
 
                 val optionPopWindow = OptionalPopWindow.Builder().with(this)
                         .addOptionAndCallback(CommentConfig.REPLY) {
-                            KeyboardController.showInputKeyboard(this, qa_et_reply)
                             viewModel.replyInfo.value = Pair(comment.nickName, comment.commentId)
                         }.addOptionAndCallback(CommentConfig.COPY) {
                             copyText(comment.content)
@@ -125,7 +128,6 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
 
                 val optionPopWindow = OptionalPopWindow.Builder().with(this)
                         .addOptionAndCallback(CommentConfig.REPLY) {
-                            KeyboardController.showInputKeyboard(this, qa_et_reply)
                             viewModel.replyInfo.value = Pair(comment.nickName, comment.commentId)
                         }.addOptionAndCallback(CommentConfig.COPY) {
                             copyText(comment.content)
@@ -146,9 +148,12 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
                 }
                 optionPopWindow.show(itemView, OptionalPopWindow.AlignMode.CENTER, 0)
 
-            })
+            },
+            onMoreReplyClickEvent = {replyList -> ReplyDetailActivity.activityStart(this, viewModel, replyList) }
+    )
 
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.qa_activity_dynamic_detail)
@@ -179,6 +184,10 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
         qa_iv_dynamic_comment_count.setOnSingleClickListener {
             KeyboardController.showInputKeyboard(this, qa_et_reply)
             viewModel.replyInfo.value = Pair("", "")
+        }
+        qa_coordinatorlayout.onReplyCancelEvent = {
+            viewModel.replyInfo.value = Pair("", "")
+            KeyboardController.hideInputKeyboard(this, qa_et_reply)
         }
     }
 
@@ -220,6 +229,8 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
         viewModel.replyInfo.observe {
             it?.apply {
                 if (it.second.isNotEmpty()) {
+                    qa_coordinatorlayout.isReplyEdit = true
+                    KeyboardController.showInputKeyboard(this@DynamicDetailActivity, qa_et_reply)
                     ReplyPopWindow.with(this@DynamicDetailActivity)
                     ReplyPopWindow.setReplyName(it.first)
                     ReplyPopWindow.setOnClickEvent {

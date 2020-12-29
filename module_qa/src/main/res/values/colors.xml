@@ -13,5 +13,9 @@
     <color name="qa_dialog_tip_div_view_background_color">#E2E8EE</color>
     <color name="qa_dialog_tip_background_color">#FFFFFF</color>
     <color name="qa_dialog_top_report_et_text_color">#0C3573</color>
+    <color name="qa_reply_detail_nickname_text_color">#15315B</color>
+    <color name="qa_reply_detail_date_text_color">#748BB0</color>
+    <color name="qa_reply_detail_content_text_color">#15315B</color>
+
 
 </resources>

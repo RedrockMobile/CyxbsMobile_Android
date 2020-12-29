@@ -3,7 +3,9 @@
     package="com.mredrock.cyxbs.qa">
 
     <application android:theme="@style/AppTheme">
-        <activity android:name=".pages.square.ui.activity.CircleDetailActivity"></activity>
+        <activity android:name=".pages.dynamic.ui.activity.ReplyDetailActivity"
+            android:launchMode="singleTop"/>
+        <activity android:name=".pages.square.ui.activity.CircleDetailActivity" />
         <activity android:name=".pages.square.ui.activity.CircleSquareActivity" />
         <activity
             android:name=".ui.activity.ViewImageCropActivity"
@@ -20,7 +22,6 @@
             android:launchMode="singleTop"
             android:theme="@style/SearchTheme"
             android:windowSoftInputMode="adjustResize|stateVisible" />
-
         <activity android:name=".pages.dynamic.ui.activity.DynamicDetailActivity" />
     </application>
 

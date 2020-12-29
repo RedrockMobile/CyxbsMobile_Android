@@ -25,7 +25,8 @@ class CommentListAdapter(
         private val onItemClickEvent: (commentId: String) -> Unit,
         private val onReplyInnerClickEvent: (nickname: String, replyId: String) -> Unit,
         private val onItemLongClickEvent: (comment: Comment, view: View) -> Unit,
-        private val onReplyInnerLongClickEvent: (comment: Comment, view: View) -> Unit
+        private val onReplyInnerLongClickEvent: (comment: Comment, view: View) -> Unit,
+        private val onMoreReplyClickEvent: (replyList: List<Comment>) -> Unit
 ) : BaseRvAdapter<Comment>() {
 
 
@@ -84,8 +85,11 @@ class CommentListAdapter(
                 }
                 if (data.replyList.isNullOrEmpty()) {
                     (qa_rv_reply.adapter as ReplyListAdapter).refreshData(listOf())
+                    (qa_rv_reply.adapter as ReplyListAdapter).onMoreClickEvent = {}
+
                 } else {
                     (qa_rv_reply.adapter as ReplyListAdapter).refreshData(data.replyList)
+                    (qa_rv_reply.adapter as ReplyListAdapter).onMoreClickEvent = {onMoreReplyClickEvent.invoke(data.replyList)}
                 }
                 qa_iv_reply_praise_count_image.registerLikeView(data.commentId, CommentConfig.PRAISE_MODEL_COMMENT, data.isPraised, data.praiseCount)
                 qa_iv_reply_praise_count_image.setOnSingleClickListener {

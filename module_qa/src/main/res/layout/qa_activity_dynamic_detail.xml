@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:fitsSystemWindows="true"
+    android:id="@+id/qa_ctl_dynamic_detail"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/common_white_background">
+    android:background="@color/common_white_background"
+    android:fitsSystemWindows="true">
 
 
     <include
@@ -18,13 +18,13 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <androidx.coordinatorlayout.widget.CoordinatorLayout
+    <com.mredrock.cyxbs.qa.ui.widget.CoordinatorLayoutTouch
         android:id="@+id/qa_coordinatorlayout"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/qa_constraint_reply"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/qa_constraint_reply"
         app:layout_constraintTop_toBottomOf="@+id/qa_include_toolbar">
 
         <com.google.android.material.appbar.AppBarLayout
@@ -83,7 +83,7 @@
 
         </LinearLayout>
 
-    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+    </com.mredrock.cyxbs.qa.ui.widget.CoordinatorLayoutTouch>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/qa_constraint_reply"
