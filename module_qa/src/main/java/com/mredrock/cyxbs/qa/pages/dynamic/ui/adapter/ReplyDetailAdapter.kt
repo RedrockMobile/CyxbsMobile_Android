@@ -25,7 +25,7 @@ import kotlinx.android.synthetic.main.qa_recycler_item_dynamic_reply_detail.view
  *@description
  */
 
-class ReplyDetailAdapter(private val onReplyInnerClickEvent: (nickname: String, commentId: String) -> Unit, private val onReplyInnerLongClickEvent: (comment: Comment, itemView: View) -> Unit, private val onReplyMoreDetailClickEvent: (replyIdScreen: String) -> Unit) : BaseRvAdapter<Comment>() {
+class ReplyDetailAdapter(private val isReplyDetail: Boolean, private val onReplyInnerClickEvent: (nickname: String, commentId: String) -> Unit, private val onReplyInnerLongClickEvent: (comment: Comment, itemView: View) -> Unit, private val onReplyMoreDetailClickEvent: (replyIdScreen: String) -> Unit) : BaseRvAdapter<Comment>() {
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder<Comment> = ReplyViewHolder(parent)
@@ -53,6 +53,9 @@ class ReplyDetailAdapter(private val onReplyInnerClickEvent: (nickname: String, 
                     qa_tv_reply_detail_show_detail.setOnSingleClickListener {
                         onReplyMoreDetailClickEvent.invoke(data.replyId)
                     }
+                }
+                if (isReplyDetail) {
+                    qa_tv_reply_detail_show_detail.gone()
                 }
                 qa_iv_reply_detail_praise_count_image.registerLikeView(data.commentId, CommentConfig.PRAISE_MODEL_COMMENT, data.isPraised, data.praiseCount)
                 qa_iv_reply_detail_praise_count_image.setOnSingleClickListener {

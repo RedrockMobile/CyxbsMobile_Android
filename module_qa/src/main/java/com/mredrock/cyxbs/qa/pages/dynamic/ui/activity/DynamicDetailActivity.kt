@@ -52,15 +52,15 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
                 activity?.let {
                     val opt = ActivityOptionsCompat.makeSceneTransitionAnimation(it, dynamicItem, "dynamicItem")
                     val intent = Intent(context, DynamicDetailActivity::class.java)
-//                    intent.putExtra("dynamicItem", data)
                     dynamicOrigin = data
                     it.window.exitTransition = Slide(Gravity.START).apply { duration = 500 }
                     startActivityForResult(intent, DYNAMIC_DETAIL_REQUEST, opt.toBundle())
                 }
             }
         }
-        val DYNAMIC_DELETE = "0"
-        val COMMENT_DELETE = "1"
+
+        const val DYNAMIC_DELETE = "0"
+        const val COMMENT_DELETE = "1"
     }
 
     private val emptyRvAdapter by lazy { EmptyRvAdapter(getString(R.string.qa_comment_list_empty_hint)) }
@@ -75,8 +75,6 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
 
     override fun getViewModelFactory() = DynamicDetailViewModel.Factory()
 
-    private var lastTouchX = -100f
-    private var lastTouchY = -100f
 
     private fun refreshCommentList() {
         viewModel.refreshCommentList(dynamic.postId, "-1")
@@ -255,7 +253,11 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
     }
 
     override fun onBackPressed() {
-        ReplyPopWindow.dismiss()
+        if (ReplyPopWindow.isShowing()) {
+            ReplyPopWindow.dismiss()
+            return
+        }
+
         window.returnTransition = Slide(Gravity.END).apply { duration = 500 }
         super.onBackPressed()
     }

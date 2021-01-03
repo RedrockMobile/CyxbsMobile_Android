@@ -34,12 +34,12 @@ import kotlinx.android.synthetic.main.qa_common_toolbar.*
 
 class ReplyDetailActivity : AppCompatActivity() {
     // 要展示的回复的id
-    var commentId: String = "-1"
+    private var commentId: String = "-1"
 
     /**
      * 筛选条件：只显示：昵称或者回复人为
      */
-    var replyIdScreen: String? = null
+    private var replyIdScreen: String? = null
 
     companion object {
         var viewModel: DynamicDetailViewModel? = null
@@ -64,37 +64,7 @@ class ReplyDetailActivity : AppCompatActivity() {
 
     private val footerRvAdapter = FooterRvAdapter { refresh() }
 
-    private val replyDetailAdapter = ReplyDetailAdapter(
-            onReplyInnerClickEvent = { nickname, commentId ->
-                startActivity(Intent(this, DynamicDetailActivity::class.java))
-                viewModel?.replyInfo?.value = Pair(nickname, commentId)
-            },
-            onReplyInnerLongClickEvent = { comment, itemView ->
-                val optionPopWindow = OptionalPopWindow.Builder().with(this)
-                        .addOptionAndCallback(CommentConfig.REPLY) {
-                            viewModel?.replyInfo?.value = Pair(comment.nickName, comment.commentId)
-                        }.addOptionAndCallback(CommentConfig.COPY) {
-                            ClipboardController.copyText(this, comment.content)
-                        }
-                if (viewModel?.dynamicLiveData?.value?.isSelf == 1 || comment.isSelf) {
-                    optionPopWindow.addOptionAndCallback(CommentConfig.DELETE) {
-                        QaDialog.show(this, resources.getString(R.string.qa_dialog_tip_delete_comment_text), {}) {
-                            viewModel?.deleteId(comment.commentId, DynamicDetailActivity.COMMENT_DELETE)
-                        }
-                    }
-                } else {
-                    optionPopWindow.addOptionAndCallback(CommentConfig.REPORT) {
-                        QaReportDialog.show(this) {
-                            viewModel?.report(comment.commentId, it, CommentConfig.REPORT_COMMENT_MODEL)
-                        }
-                    }
-                }
-                optionPopWindow.show(itemView, OptionalPopWindow.AlignMode.CENTER, 0)
-            },
-            onReplyMoreDetailClickEvent = { replyIdScreen ->
-                activityStart(this, viewModel!!, commentId, replyIdScreen)
-            }
-    )
+    private var replyDetailAdapter: ReplyDetailAdapter? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -128,7 +98,7 @@ class ReplyDetailActivity : AppCompatActivity() {
                     }
                 }
             }
-            dataList?.toMutableList()?.let { replyDetailAdapter.refreshData(it) }
+            dataList?.toMutableList()?.let { replyDetailAdapter?.refreshData(it) }
             qa_reply_detail_swipe_refresh.isRefreshing = false
         })
     }
@@ -139,12 +109,44 @@ class ReplyDetailActivity : AppCompatActivity() {
             refresh()
         }
 
+        replyDetailAdapter = ReplyDetailAdapter(
+                isReplyDetail = !replyIdScreen.isNullOrEmpty(),
+                onReplyInnerClickEvent = { nickname, commentId ->
+                    startActivity(Intent(this, DynamicDetailActivity::class.java))
+                    viewModel?.replyInfo?.value = Pair(nickname, commentId)
+                },
+                onReplyInnerLongClickEvent = { comment, itemView ->
+                    val optionPopWindow = OptionalPopWindow.Builder().with(this)
+                            .addOptionAndCallback(CommentConfig.REPLY) {
+                                viewModel?.replyInfo?.value = Pair(comment.nickName, comment.commentId)
+                            }.addOptionAndCallback(CommentConfig.COPY) {
+                                ClipboardController.copyText(this, comment.content)
+                            }
+                    if (viewModel?.dynamicLiveData?.value?.isSelf == 1 || comment.isSelf) {
+                        optionPopWindow.addOptionAndCallback(CommentConfig.DELETE) {
+                            QaDialog.show(this, resources.getString(R.string.qa_dialog_tip_delete_comment_text), {}) {
+                                viewModel?.deleteId(comment.commentId, DynamicDetailActivity.COMMENT_DELETE)
+                            }
+                        }
+                    } else {
+                        optionPopWindow.addOptionAndCallback(CommentConfig.REPORT) {
+                            QaReportDialog.show(this) {
+                                viewModel?.report(comment.commentId, it, CommentConfig.REPORT_COMMENT_MODEL)
+                            }
+                        }
+                    }
+                    optionPopWindow.show(itemView, OptionalPopWindow.AlignMode.CENTER, 0)
+                },
+                onReplyMoreDetailClickEvent = { replyIdScreen ->
+                    activityStart(this, viewModel!!, commentId, replyIdScreen)
+                }
+        )
 
         qa_reply_detail_rv_reply_list.apply {
             layoutManager = LinearLayoutManager(context)
 
             val adapterWrapper = RvAdapterWrapper(
-                    normalAdapter = replyDetailAdapter,
+                    normalAdapter = replyDetailAdapter!!,
                     emptyAdapter = emptyRvAdapter,
                     footerAdapter = footerRvAdapter
             )
