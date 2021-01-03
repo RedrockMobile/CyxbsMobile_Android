@@ -34,12 +34,12 @@ import kotlinx.android.synthetic.main.qa_common_toolbar.*
 
 class ReplyDetailActivity : AppCompatActivity() {
     // 要展示的回复的id
-    var commentId: String = "-1"
+    private var commentId: String = "-1"
 
     /**
      * 筛选条件：只显示：昵称或者回复人为
      */
-    var replyIdScreen: String? = null
+    private var replyIdScreen: String? = null
 
     companion object {
         var viewModel: DynamicDetailViewModel? = null
