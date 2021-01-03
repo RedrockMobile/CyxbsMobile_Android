@@ -4,10 +4,28 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@drawable/qa_ripple_reply_background_ripple"
     android:clipChildren="false"
     android:clipToPadding="false"
-    android:background="@drawable/qa_ripple_reply_background_ripple"
-    android:paddingTop="9dp">
+    android:paddingTop="9dp"
+    android:paddingBottom="16dp">
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/qa_tv_reply_detail_content"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="11dp"
+        android:layout_marginEnd="10dp"
+        android:ellipsize="end"
+        android:gravity="start"
+        android:singleLine="false"
+        android:textColor="@color/qa_reply_detail_content_text_color"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toStartOf="@id/qa_gl_reply_detail_end"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/qa_tv_reply_detail_nickname"
+        app:layout_constraintTop_toBottomOf="@id/qa_iv_reply_detail_avatar"
+        tools:text="菜还瘾大？" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/qa_tv_reply_detail_date"
@@ -63,23 +81,20 @@
         tools:text="那个男人" />
 
     <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/qa_tv_reply_detail_content"
+        android:id="@+id/qa_tv_reply_detail_show_detail"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="11dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginBottom="16dp"
+        android:layout_marginTop="8dp"
+        android:visibility="gone"
+        android:background="@drawable/qa_ripple_reply_background_ripple"
         android:ellipsize="end"
         android:gravity="start"
         android:singleLine="false"
-        android:textColor="@color/qa_reply_detail_content_text_color"
-        android:textSize="16sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/qa_gl_reply_detail_end"
-        app:layout_constraintHorizontal_bias="0.0"
+        android:text="@string/qa_reply_detail_show_detail_text"
+        android:textColor="@color/qa_reply_detail_show_detail_text_color"
+        android:textSize="12sp"
         app:layout_constraintStart_toStartOf="@+id/qa_tv_reply_detail_nickname"
-        app:layout_constraintTop_toBottomOf="@id/qa_iv_reply_detail_avatar"
-        tools:text="菜还瘾大？" />
+        app:layout_constraintTop_toBottomOf="@+id/qa_tv_reply_detail_content" />
 
     <com.mredrock.cyxbs.qa.ui.widget.likeview.LikeViewSlim
         android:id="@+id/qa_iv_reply_detail_praise_count_image"

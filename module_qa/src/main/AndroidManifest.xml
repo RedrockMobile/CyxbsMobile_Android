@@ -22,7 +22,9 @@
             android:launchMode="singleTop"
             android:theme="@style/SearchTheme"
             android:windowSoftInputMode="adjustResize|stateVisible" />
-        <activity android:name=".pages.dynamic.ui.activity.DynamicDetailActivity" />
+        <activity
+            android:name=".pages.dynamic.ui.activity.DynamicDetailActivity"
+            android:launchMode="singleTask" />
     </application>
 
 </manifest>

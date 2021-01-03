@@ -1,15 +1,10 @@
 package com.mredrock.cyxbs.qa.pages.dynamic.ui.activity
 
 import android.annotation.SuppressLint
-import android.content.ClipData
-import android.content.ClipboardManager
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.transition.Slide
-import android.util.Log
 import android.view.Gravity
-import android.view.MotionEvent
 import android.view.View
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.app.ActivityOptionsCompat
@@ -34,13 +29,13 @@ import com.mredrock.cyxbs.qa.ui.activity.ViewImageActivity
 import com.mredrock.cyxbs.qa.ui.adapter.EmptyRvAdapter
 import com.mredrock.cyxbs.qa.ui.adapter.FooterRvAdapter
 import com.mredrock.cyxbs.qa.ui.widget.*
+import com.mredrock.cyxbs.qa.utils.ClipboardController
 import com.mredrock.cyxbs.qa.utils.KeyboardController
 import com.mredrock.cyxbs.qa.utils.dynamicTimeDescription
 import kotlinx.android.synthetic.main.qa_activity_dynamic_detail.*
 import kotlinx.android.synthetic.main.qa_common_toolbar.*
 import kotlinx.android.synthetic.main.qa_recycler_item_dynamic_header.*
 import kotlinx.android.synthetic.main.qa_recycler_item_dynamic_header.view.*
-import kotlin.math.abs
 
 
 /**
@@ -70,7 +65,7 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
 
     private val emptyRvAdapter by lazy { EmptyRvAdapter(getString(R.string.qa_comment_list_empty_hint)) }
 
-    private val footerRvAdapter = FooterRvAdapter { getCommentList }
+    private val footerRvAdapter = FooterRvAdapter { refreshCommentList() }
 
     lateinit var dynamic: Dynamic
 
@@ -83,14 +78,14 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
     private var lastTouchX = -100f
     private var lastTouchY = -100f
 
-    private val getCommentList: () -> Unit = {
-        viewModel.refreshCommentList(dynamic.postId, "0")
+    private fun refreshCommentList() {
+        viewModel.refreshCommentList(dynamic.postId, "-1")
     }
 
     // 评论点击的逻辑
     private val commentListRvAdapter = CommentListAdapter(
-            onItemClickEvent = { commentId ->
-                viewModel.replyInfo.value = Pair("", commentId)
+            onItemClickEvent = { nickname, commentId ->
+                viewModel.replyInfo.value = Pair(nickname, commentId)
             },
             onReplyInnerClickEvent = { nickname, commentId ->
                 viewModel.replyInfo.value = Pair(nickname, commentId)
@@ -103,8 +98,7 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
                         .addOptionAndCallback(CommentConfig.REPLY) {
                             viewModel.replyInfo.value = Pair(comment.nickName, comment.commentId)
                         }.addOptionAndCallback(CommentConfig.COPY) {
-                            copyText(comment.content)
-                            toast("已复制到剪切板")
+                            ClipboardController.copyText(this, comment.content)
                         }
                 if (dynamic.isSelf == 1 || comment.isSelf) {
                     optionPopWindow.addOptionAndCallback(CommentConfig.DELETE) {
@@ -130,8 +124,7 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
                         .addOptionAndCallback(CommentConfig.REPLY) {
                             viewModel.replyInfo.value = Pair(comment.nickName, comment.commentId)
                         }.addOptionAndCallback(CommentConfig.COPY) {
-                            copyText(comment.content)
-                            toast("已复制到剪切板")
+                            ClipboardController.copyText(this, comment.content)
                         }
                 if (dynamic.isSelf == 1 || comment.isSelf) {
                     optionPopWindow.addOptionAndCallback(CommentConfig.DELETE) {
@@ -149,7 +142,7 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
                 optionPopWindow.show(itemView, OptionalPopWindow.AlignMode.CENTER, 0)
 
             },
-            onMoreReplyClickEvent = {replyList -> ReplyDetailActivity.activityStart(this, viewModel, replyList) }
+            onMoreReplyClickEvent = { commentId -> ReplyDetailActivity.activityStart(this, viewModel, commentId, null) }
     )
 
 
@@ -195,8 +188,8 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
         viewModel.commentList.observe(this, Observer {
             if (it != null) {
                 commentListRvAdapter.refreshData(it)
-                qa_rv_comment_list.smoothScrollToPosition(viewModel.position)
-                if (viewModel.position != 0) {
+                if (viewModel.position != -1) {
+                    qa_rv_comment_list.smoothScrollToPosition(viewModel.position)
                     qa_appbar_dynamic.setExpanded(false, true)
                 } else {
                     qa_appbar_dynamic.setExpanded(true, false)
@@ -251,7 +244,7 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
             KeyboardController.hideInputKeyboard(this, qa_et_reply)
 
             viewModel.refreshCommentList(dynamic.postId, (it?.commentId
-                    ?: 0).toString())
+                    ?: -1).toString())
 
         }
         viewModel.deleteDynamic.observe {
@@ -298,8 +291,7 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
                         KeyboardController.showInputKeyboard(this, qa_et_reply)
                         viewModel.replyInfo.value = Pair("", "")
                     }.addOptionAndCallback(CommentConfig.COPY) {
-                        copyText(dynamic.content)
-                        toast("已复制到剪切板")
+                        ClipboardController.copyText(this, dynamic.content)
                     }
             if (dynamic.isSelf == 1) {
                 optionPopWindow.addOptionAndCallback(CommentConfig.DELETE) {
@@ -360,10 +352,10 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
 
         qa_detail_swipe_refresh_layout.setOnRefreshListener {
             viewModel.commentList.value = listOf()
-            getCommentList.invoke()
+            refreshCommentList()
         }
 
-        getCommentList.invoke()
+        refreshCommentList()
 
         qa_rv_comment_list.apply {
             layoutManager = LinearLayoutManager(context)
@@ -378,11 +370,7 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
     }
 
 
-    private fun copyText(content: String) {
-        val cm: ClipboardManager = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-        val mClipData = ClipData.newPlainText("掌上重邮帖子内容", content)
-        cm.primaryClip = mClipData
-    }
+
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -391,7 +379,7 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
             RequestResultCode.RELEASE_COMMENT_ACTIVITY_REQUEST -> {
                 if (resultCode == NEED_REFRESH_RESULT) {
                     // 需要刷新 则 刷新显示动态
-                    viewModel.refreshCommentList(dynamic.postId, "0")
+                    viewModel.refreshCommentList(dynamic.postId, "-1")
                     viewModel.replyInfo.value = Pair("", "")
                 }
                 data?.getStringExtra("text")?.let {

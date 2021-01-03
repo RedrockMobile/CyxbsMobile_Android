@@ -16,6 +16,6 @@
     <color name="qa_reply_detail_nickname_text_color">#15315B</color>
     <color name="qa_reply_detail_date_text_color">#748BB0</color>
     <color name="qa_reply_detail_content_text_color">#15315B</color>
-
+    <color name="qa_reply_detail_show_detail_text_color">#919191</color>
 
 </resources>

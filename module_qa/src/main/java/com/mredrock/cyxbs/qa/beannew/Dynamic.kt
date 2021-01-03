@@ -16,7 +16,7 @@ data class Dynamic(@SerializedName("post_id")
                    @SerializedName("avatar")
                    val avatar: String = "",
 
-                   @SerializedName("nick_name")
+                   @SerializedName("nickname")
                    val nickName: String = "",
 
                    @SerializedName("is_self")
