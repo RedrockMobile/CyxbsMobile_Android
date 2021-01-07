@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.mredrock.cyxbs.protocol">
+
+    <application>
+        <activity
+            android:name=".activity.ReceiveActivity"
+            android:exported="true">
+            <intent-filter>
+                <category android:name="android.intent.category.DEFAULT" />
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data
+                    android:host="redrock.team"
+                    android:scheme="cyxbs" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".activity.WebContainerActivity" />
+    </application>
+</manifest>

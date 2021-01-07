@@ -153,6 +153,7 @@ dependencies {
     implementation project(':lib_common')
     implementation project(':lib_account')
     implementation project(':lib_update')
+    implementation project(':lib_protocol')
     if (!isSingleModuleDebug.toBoolean()) {
         implementation project(':module_main')
         implementation project(':module_course')

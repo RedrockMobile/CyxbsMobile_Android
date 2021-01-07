@@ -122,7 +122,7 @@ dependencies {
     api project(path: ':photolibrary-2.5')
 
 
-    //TODO lib_common不应该依赖这两个模块，后续应该去除这些依赖
     implementation project(":module_main:api_main")
     implementation project(":lib_account:api_account")
+    implementation project(":lib_protocol:api_protocol")
 }
