@@ -23,7 +23,7 @@ import kotlinx.android.synthetic.main.qa_recycler_item_dynamic_reply_show_more.v
  *@description
  */
 
-class ReplyListAdapter(private val onReplyInnerClickEvent: (nickname: String, commentId: String) -> Unit, private val onReplyInnerLongClickEvent: (comment: Comment, itemView: View) -> Unit, private val onMoreClickEvent: () -> Unit) : BaseRvAdapter<Comment>() {
+class ReplyListAdapter(private val onReplyInnerClickEvent: (nickname: String, commentId: String) -> Unit, private val onReplyInnerLongClickEvent: (comment: Comment, itemView: View) -> Unit, var onMoreClickEvent: () -> Unit) : BaseRvAdapter<Comment>() {
 
     override fun getItemCount(): Int {
         return if (dataList.size > 3) 4 else super.getItemCount()

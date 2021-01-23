@@ -19,6 +19,9 @@ object RequestResultCode {
     // 发回复的请求
     const val RELEASE_COMMENT_ACTIVITY_REQUEST = 3
 
+    // 去回复详细的界面的请求
+    const val REPLY_DETAIL_REQUEST = 4
+
     /**
      * result
      */

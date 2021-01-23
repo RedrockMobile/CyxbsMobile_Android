@@ -75,7 +75,7 @@ open class DynamicDetailViewModel : BaseViewModel() {
     private fun findCommentByCommentId(dataList: List<Comment>, commentId: String): Int {
 
         if (commentId == ""){
-            return 0
+            return -1
         }
         for (i in dataList.indices) {
             // 如果是直接回复
@@ -91,7 +91,7 @@ open class DynamicDetailViewModel : BaseViewModel() {
                 }
             }
         }
-        return 0
+        return -1
     }
 
     fun releaseComment(postId: String, content: String) {
@@ -134,7 +134,7 @@ open class DynamicDetailViewModel : BaseViewModel() {
                     }
                 }
                 .safeSubscribeBy {
-                    refreshCommentList(dynamicLiveData.value?.postId?: "0", "0")
+                    refreshCommentList(dynamicLiveData.value?.postId ?: "0", "-1")
 
                     when (model) {
                         DynamicDetailActivity.DYNAMIC_DELETE -> {
