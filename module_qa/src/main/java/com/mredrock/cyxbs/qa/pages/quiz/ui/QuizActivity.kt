@@ -70,9 +70,6 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>(), EventBusLifecycleSu
         super.onCreate(savedInstanceState)
         setContentView(R.layout.qa_activity_quiz)
         isFirstQuiz = sharedPreferences(FIRST_QUIZ).getBoolean(FIRST_QUIZ_SP_KEY, true)
-
-
-
         if (!intent.getStringExtra("isComment").isNullOrEmpty()) {
             isComment = intent.getStringExtra("isComment")
             if (!intent.getStringExtra("commentContent").isNullOrEmpty())

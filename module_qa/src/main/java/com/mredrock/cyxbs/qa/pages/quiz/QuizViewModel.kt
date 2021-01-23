@@ -81,7 +81,6 @@ class QuizViewModel : BaseViewModel() {
                 .releaseDynamic(builder.build().parts)
                 .mapOrThrowApiException()
                 .setSchedulers()
-                .doFinally { progressDialogEvent.value = ProgressDialogEvent.DISMISS_DIALOG_EVENT }
                 .doOnError {
                     toastEvent.value = R.string.qa_release_dynamic_failure
                     backAndRefreshPreActivityEvent.value = true

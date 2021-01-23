@@ -17,7 +17,7 @@ import com.mredrock.cyxbs.qa.pages.dynamic.model.DynamicDataSource
 import com.mredrock.cyxbs.qa.pages.dynamic.model.TopicDataSet
 
 /**
- * Created By jay68 on 2018/8/26.
+ * Created By  on 2018/8/26.
  */
 open class DynamicListViewModel(kind: String) : BaseViewModel() {
     val dynamicList: LiveData<PagedList<Dynamic>>
@@ -29,9 +29,6 @@ open class DynamicListViewModel(kind: String) : BaseViewModel() {
     val ignorePeople = MutableLiveData<Boolean>()
     val deleteTips = MutableLiveData<Boolean>()
     val topicMessageList = MutableLiveData<List<TopicMessage>>()
-
-    //防止点赞快速点击
-    var isDealing = false
 
     init {
         val config = PagedList.Config.Builder()
