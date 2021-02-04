@@ -90,7 +90,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:background="@color/qa_reply_bottom_sheet_background_color"
+        android:background="@color/common_qa_reply_bottom_sheet_background_color"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">

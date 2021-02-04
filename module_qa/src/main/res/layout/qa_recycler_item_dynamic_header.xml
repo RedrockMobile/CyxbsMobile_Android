@@ -127,7 +127,7 @@
         app:checkedLikeIconRes="@drawable/qa_ic_answer_list_praised"
         app:cirRadius="14dp"
         app:cycleTime="1000"
-        app:defaultColor="@color/qa_likeview_color"
+        app:defaultColor="@color/common_qa_likeview_color"
         app:defaultLikeIconRes="@drawable/qa_ic_answer_list_praise"
         app:layout_constraintBottom_toBottomOf="@id/qa_iv_dynamic_comment_count"
         app:layout_constraintEnd_toStartOf="@+id/qa_iv_dynamic_comment_count"
