@@ -15,7 +15,7 @@
         android:paddingEnd="10dp"
         android:paddingBottom="5dp"
         android:text="#校园周边"
-        android:textColor="@color/common_qa_question_bottom_count_color" />
+        android:textColor="@color/qa_question_bottom_count_color" />
 
 
 </LinearLayout>

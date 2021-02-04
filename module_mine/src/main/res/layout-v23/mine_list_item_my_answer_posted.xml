@@ -53,7 +53,7 @@
         android:layout_height="wrap_content"
         android:alpha="0.67"
         android:layout_marginStart="4dp"
-        android:textColor="@color/common_qa_question_bottom_count_color"
+        android:textColor="@color/qa_question_bottom_count_color"
         android:textSize="11sp"
         app:layout_constraintBottom_toBottomOf="@+id/mine_answer_posted_tv_state"
         app:layout_constraintEnd_toStartOf="@+id/mine_answer_posted_tv_state"

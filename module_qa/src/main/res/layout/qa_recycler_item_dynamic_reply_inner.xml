@@ -39,7 +39,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
         android:layout_toEndOf="@id/qa_iv_reply_inner_avatar"
-        android:textColor="@color/common_qa_question_item_nickname_color"
+        android:textColor="@color/qa_question_item_nickname_color"
         android:textSize="13sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/qa_iv_reply_inner_avatar"

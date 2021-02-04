@@ -43,7 +43,7 @@
             android:selectAllOnFocus="true"
             android:singleLine="true"
             android:textColor="@color/common_level_three_font_color"
-            android:textColorHint="@color/common_qa_common_hint_text_color"
+            android:textColorHint="@color/qa_common_hint_text_color"
             android:textSize="16sp" />
     </RelativeLayout>
 

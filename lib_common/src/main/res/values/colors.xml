@@ -28,7 +28,7 @@
     <!--    二级字体颜色-->
     <color name="common_level_two_font_color">#112C57</color>
     <!--    三级字体颜色-->
-    <color name="common_level_three_font_color">#193866</color>
+    <color name="common_level_three_font_color">#15315B</color>
     <!--    四级字体颜色-->
     <color name="levelFourFontColor" tools:ignore="DuplicateDefinition,ResourceName">#2A4E84</color>
 
@@ -212,6 +212,20 @@
     <color name="common_about_colors_declared_below">#64294169</color>
 
     <color name="common_add_transaction_to_the_timetable_click_color">#E9EDF2</color>
+    <!--    登录下面的灰色字体-->
+    <color name="common_log_in_to_the_gray_font_below">#ABBCD8</color>
+
+    <!--    游客模式进入的字体颜色-->
+    <color name="common_log_in_by_tourist_text_enter_color">#2A4E84</color>
+    <!--    添加事务下面按钮的光晕渐变结束颜色-->
+    <color name="common_course_end_of_light">#006B65EF</color>
+
+    <!--    添加事务页面的圆角shape背景-->
+    <color name="common_course_affair_add_background">#F2F3F7</color>
+
+    <!--    添加事务的气泡颜色-->
+    <color name="common_course_affair_bubble_color">#DFE6FF</color>
+
 
     <!--    事务添加页面圆角item背景-->
     <color name="common_transaction_add_page_warp_item_text_color">#15315B</color>
@@ -222,12 +236,6 @@
 
     <color name="common_main_activity_login_et_hint_color">#999999</color>
 
-    <color name="common_qa_detail_line_color">#F1F3F8</color>
-    <color name="common_qa_detail_parise_number_color">#ABBCD9</color>
-    <color name="common_qa_detail_title_color">#112C57</color>
-    <color name="common_qa_detail_time_color">#556C89</color>
-    <color name="common_qa_detail_nick_name_color">#0B2551</color>
-    <color name="common_qa_circle_square_person_number_color">#748BB0</color>
     <!-- 志愿服务-->
     <color name="common_volunteer_record_item_cardView_bg">#E8F1FC</color>
     <color name="common_volunteer_affair_sign_up_end_t0">#FF6262</color>
@@ -321,169 +329,6 @@
     <color name="map_download_progressbar_background" tools:ignore="ResourceName">#E7EFFD</color>
     <color name="map_download_progressbar" tools:ignore="ResourceName">#4B44E5</color>
     <color name="map_download_text" tools:ignore="ResourceName">#132F5B</color>
-
-    <!--    邮问颜色-->
-    <!--    邮问-->
-
-    <!--    当前时间颜色-->
-    <color name="common_qa_question_current_time_color">#ff2a4e84</color>
-    <!--    主页AppBarLayout背景颜色-->
-    <color name="common_qa_question_title_background_color">#f3f2fb</color>
-    <!--    提问时间选择颜色-->
-    <color name="common_qa_quiz_select_time_color">#ff2a4e84</color>
-    <!--    邮问大标题-->
-    <color name="common_qa_main_title">#15315B</color>
-    <!--    问题tab下标颜色-->
-    <color name="common_qa_question_tab_indicator_color">#1ad0f2</color>
-    <!--    问题tab选中颜色-->
-    <color name="common_qa_tab_selected_color">#15315B</color>
-    <!--    问题tab未选中颜色-->
-    <color name="common_qa_tab_unselected_color">#15315B</color>
-    <!--    问题JCardView背景-->
-    <color name="common_qa_question_list_color">#F8F9FC</color>
-    <!--    问题item的昵称颜色-->
-    <color name="common_qa_question_item_nickname_color">#0B2551</color>
-    <!--    问题item的积分奖励字体颜色-->
-    <color name="common_qa_question_item_reward_color">#777777</color>
-    <!--    问题item的日期字体颜色-->
-    <color name="common_qa_question_item_time_color">#556C89</color>
-    <!--    问题item的下面的各类数字颜色-->
-    <color name="common_qa_question_bottom_count_color">#2A4E84</color>
-    <!--    问题item的分割线颜色-->
-    <color name="common_qa_question_recycler_item_divide_line_color">#BDCCE5
-    </color>
-    <!--    评论默认颜色-->
-    <color name="common_qa_comment_header_background_color">#F8F9FD</color>
-    <!--    评论背景颜色-->
-    <color name="common_qa_comment_background_color">#f0eff6</color>
-    <!--    评论list背景颜色-->
-    <color name="common_qa_comment_list_background_color">#f6fafd</color>
-    <!--    评论header的名字颜色-->
-    <color name="common_qa_comment_answer_nickname_color">#CC15315B</color>
-    <!--    评论header的创建时间颜色-->
-    <color name="common_qa_comment_answer_create_at_color">#8915315B</color>
-    <!--    评论header的内容颜色-->
-    <color name="common_qa_comment_answer_content_color">#15315B</color>
-    <!--    评论item的nickname颜色-->
-    <color name="common_qa_comment_item_nick_name_color">#15315B</color>
-    <!--    评论item的创建时间颜色-->
-    <color name="common_qa_comment_item_create_at_color">#8915315B</color>
-    <!--    评论item内容颜色-->
-    <color name="common_qa_comment_content_color">#7F3B4555</color>
-    <!--    评论框背景颜色-->
-    <color name="common_qa_comment_new_comment_text_background_color">#eff4fd</color>
-    <!--    评论JCardView3种背景颜色-->
-    <color name="common_qa_comment_content_first_kind_color">#f8f4f0</color>
-    <color name="common_qa_comment_content_second_kind_color">#f1f1fa</color>
-    <color name="common_qa_comment_content_third_kind_color">#faeef4</color>
-    <!--    评论底部背景颜色-->
-    <color name="common_qa_comment_bottom_background_color">#ffffff</color>
-    <!--    回答发布时间颜色-->
-    <color name="common_qa_answer_publish_at_color">#8915315B</color>
-    <!--    回答发布toolbar分割线-->
-    <color name="common_qa_quiz_toolbar_divider_line_color">#2A4E84</color>
-    <!--    提问hint颜色-->
-    <color name="common_qa_common_hint_text_color">#94A6C4</color>
-
-    <!--    提问图片选择占位图-->
-    <color name="common_qa_quiz_picture_empty_color">#E8F0FC</color>
-    <!--    提问图片选择占位图中间颜色-->
-    <color name="common_qa_quiz_picture_empty_centre_color">#C4D1E6</color>
-    <!--    提问时间选择器选中时间颜色-->
-    <color name="common_qa_quiz_time_display_color">#29D1F1</color>
-    <!--    回答只有图片时-->
-    <color name="common_qa_answer_empty_content_color">#00BFFF</color>
-    <!--    提问时间选择器时间颜色-->
-    <color name="common_qa_quiz_time_select_color">#2A4E84</color>
-    <!--    回答被采纳的标签颜色-->
-    <color name="common_qa_answer_list_adopted_color">#94A6C4</color>
-    <!--    回答被采纳的标签背景颜色-->
-    <color name="common_qa_answer_list_adopted_background_color">#E8F0FC
-    </color>
-    <!--    回答header的问题内容颜色-->
-    <color name="common_qa_answer_list_header_content_color">#15315B</color>
-    <!--    回答的内容颜色-->
-    <color name="common_qa_answer_content_color">#15315B</color>
-    <!--    回答的回复颜色-->
-    <color name="common_qa_answer_comment_count_color">#CC15315B</color>
-    <!--    回答的点赞颜色-->
-    <color name="common_qa_answer_praise_count_color">#AABCD8</color>
-    <!--    回答的点赞颜色-->
-    <color name="common_qa_answer_item_divider_color">#162A4E84</color>
-    <!--   邮问搜索-->
-    <color name="common_qa_search_history_item_divider_color">#BDCCE5</color>
-    <color name="common_qa_search_history_clean_color">#94A6C4</color>
-    <color name="common_qa_search_layout_color">#ffffff</color>
-    <color name="common_qa_answer_praised_count_color">#4841E2</color>
-    <!--    RecyclerView加载时的holder颜色-->
-    <color name="common_qa_question_item_empty_holder_color">#E6E6E6</color>
-    <!--    RecyclerView加载时的holder背景颜色-->
-    <color name="common_qa_question_item_shadow_color">#ffffff</color>
-    <!--    提问选择类型的背景颜色-->
-    <color name="common_qa_quiz_select_type_background_color">#E8F0FC</color>
-    <!--    提问选择类型的文字颜色-->
-    <color name="common_qa_quiz_select_type_text_color">#94A6C4</color>
-    <!--    提问选中类型的文字颜色-->
-    <color name="common_qa_quiz_selected_type_text_color">#FFA192</color>
-    <!--    提问选中类型的背景颜色，指定78的透明度-->
-    <color name="common_qa_quiz_selected_type_background_color">#c3F7DAD7
-    </color>
-    <!--    提问标题框和内容框的背景颜色，指定69的透明度-->
-    <color name="common_qa_quiz_new_text_background_color">#acE8F0FC</color>
-    <!--    举报弹窗的提示文字颜色，指定61的透明度-->
-    <color name="common_qa_question_report_text_background_color">#9815315B
-    </color>
-    <!--    举报弹窗的分割线颜色，指定4的透明度-->
-    <color name="common_qa_question_report_divide_line_background_color">
-        #0a15315B
-    </color>
-    <!--    提问内容文字hint颜色-->
-    <color name="common_qa_quiz_content_edt_hint_color">#94A6C4</color>
-    <!--    回答内容文字hint颜色-->
-    <color name="common_qa_answer_content_edt_hint_color">#6315315B</color>
-    <!--    登录下面的灰色字体-->
-    <color name="common_log_in_to_the_gray_font_below">#ABBCD8</color>
-
-    <!--    游客模式进入的字体颜色-->
-    <color name="common_log_in_by_tourist_text_enter_color">#2A4E84</color>
-    <!--    添加事务下面按钮的光晕渐变结束颜色-->
-    <color name="common_course_end_of_light">#006B65EF</color>
-
-    <!--    添加事务页面的圆角shape背景-->
-    <color name="common_course_affair_add_background">#F2F3F7</color>
-
-    <!--    添加事务的气泡颜色-->
-    <color name="common_course_affair_bubble_color">#DFE6FF</color>
-
-    <!--    评论head和item间隙颜色-->
-    <color name="common_qa_comment_item_divider_gap_color">#f5f4f9</color>
-    <!--    邮问积分说明最下面的小字颜色-->
-    <color name="common_qa_dialog_qa_reward_description_bottom_text_color">
-        #ABBCD8
-    </color>
-    <!--    邮问积分说明背景颜色-->
-    <color name="common_qa_dialog_qa_reward_description_background_color">
-        #ffffff
-    </color>
-
-
-    <color name="common_qa_full_screen_pic_indicator_color">#ffffff</color>
-    <color name="common_qa_picture_black_80_color">#80000000</color>
-    <color name="common_qa_crop_logo_color">#f0000000</color>
-    <color name="common_qa_draft_dialog_text_color">#15315B</color>
-    <color name="common_qa_draft_dialog_divide_color">#F1F3F8</color>
-    <color name="common_qa_likeview_color">#ffcccccc</color>
-    <color name="common_qa_reply_bottom_sheet_background_color">#F1F3F8</color>
-    <color name="common_qa_reply_popwindow_background_color">#E1E9F6</color>
-    <color name="common_qa_reply_popwindow_text_color">#15315B</color>
-    <color name="common_qa_dialog_tip_text_color">#0C3573</color>
-    <color name="common_qa_dialog_tip_div_view_background_color">#E2E8EE</color>
-    <color name="common_qa_dialog_tip_background_color">#FFFFFF</color>
-    <color name="common_qa_dialog_top_report_et_text_color">#0C3573</color>
-    <color name="common_qa_reply_detail_nickname_text_color">#15315B</color>
-    <color name="common_qa_reply_detail_date_text_color">#748BB0</color>
-    <color name="common_qa_reply_detail_content_text_color">#15315B</color>
-    <color name="common_qa_reply_detail_show_detail_text_color">#919191</color>
 
 
 </resources>

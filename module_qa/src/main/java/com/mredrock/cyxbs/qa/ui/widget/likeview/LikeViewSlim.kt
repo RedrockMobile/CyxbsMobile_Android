@@ -45,9 +45,9 @@ class LikeViewSlim : LikeView {
 
     init {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            textPaint.color = resources.getColor(R.color.common_qa_question_bottom_count_color, null)
+            textPaint.color = resources.getColor(R.color.qa_question_bottom_count_color, null)
         } else {
-            textPaint.color = resources.getColor(R.color.common_qa_question_bottom_count_color)
+            textPaint.color = resources.getColor(R.color.qa_question_bottom_count_color)
         }
 
         textPaint.textSize = context.sp(11).toFloat()

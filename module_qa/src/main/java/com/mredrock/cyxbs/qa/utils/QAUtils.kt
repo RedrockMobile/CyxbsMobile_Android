@@ -14,8 +14,8 @@ internal fun TextView.setPraise(praiseNum: String?,
                                 isPraised: Boolean?,
                                 praiseIcon: Int = R.drawable.qa_ic_answer_list_praise,
                                 praisedIcon: Int = R.drawable.qa_ic_answer_list_praised,
-                                praiseColor: Int = R.color.common_qa_answer_praise_count_color,
-                                praisedColor: Int = R.color.common_qa_answer_praised_count_color) {
+                                praiseColor: Int = R.color.qa_answer_praise_count_color,
+                                praisedColor: Int = R.color.qa_answer_praised_count_color) {
     if (praiseNum != null) {
         text = praiseNum
     }

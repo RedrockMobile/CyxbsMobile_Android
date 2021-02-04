@@ -20,7 +20,7 @@
         android:layout_marginTop="29dp"
         android:layout_marginEnd="76dp"
         android:gravity="center_horizontal"
-        android:textColor="@color/common_qa_dialog_tip_text_color"
+        android:textColor="@color/qa_dialog_tip_text_color"
         android:textSize="15sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -65,7 +65,7 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_marginTop="29dp"
-        android:background="@color/common_qa_dialog_tip_div_view_background_color"
+        android:background="@color/qa_dialog_tip_div_view_background_color"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/qa_tv_tip_text" />
