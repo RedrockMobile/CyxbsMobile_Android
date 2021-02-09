@@ -22,8 +22,8 @@ import kotlinx.android.synthetic.main.qa_recycler_item_dynamic_reply.view.*
  */
 
 class CommentListAdapter(
-        private val onItemClickEvent: (nickname: String, commentId: String) -> Unit,
-        private val onReplyInnerClickEvent: (nickname: String, replyId: String) -> Unit,
+        private val onItemClickEvent: (comment: Comment) -> Unit,
+        private val onReplyInnerClickEvent: (comment: Comment) -> Unit,
         private val onItemLongClickEvent: (comment: Comment, view: View) -> Unit,
         private val onReplyInnerLongClickEvent: (comment: Comment, view: View) -> Unit,
         private val onMoreReplyClickEvent: (replyList: String) -> Unit
@@ -35,7 +35,7 @@ class CommentListAdapter(
 //    }
 
     override fun onItemClickListener(holder: BaseViewHolder<Comment>, position: Int, data: Comment) {
-        onItemClickEvent.invoke(data.nickName, data.commentId)
+        onItemClickEvent.invoke(data)
     }
 
     override fun onItemLongClickListener(holder: BaseViewHolder<Comment>, position: Int, data: Comment, itemView: View) {

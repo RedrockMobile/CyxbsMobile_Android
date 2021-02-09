@@ -46,10 +46,11 @@ object ReplyPopWindow {
         replyPopWindow!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
     }
 
-    fun setReplyName(name: String) {
+    fun setReplyName(name: String, content: String) {
 
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-            val s = "回复 <font color=\"#0000FF\">@${name}</font>"
+            // 构成要显示在reply_popwindow上的文字
+            val s = "回复 <font color=\"#0000FF\">@${name}</font> : ${content.take(6) + if (content.length > 6) "..." else ""}"
             mainView?.findViewById<TextView>(R.id.qa_tv_reply_popwindow_name)?.text = Html.fromHtml(s, Html.FROM_HTML_MODE_COMPACT)
         } else {
             mainView?.findViewById<TextView>(R.id.qa_tv_reply_popwindow_name)?.text = "回复 @${name}"

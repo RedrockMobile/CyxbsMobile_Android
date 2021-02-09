@@ -16,6 +16,7 @@ import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.extensions.*
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.beannew.Dynamic
+import com.mredrock.cyxbs.qa.beannew.ReplyInfo
 import com.mredrock.cyxbs.qa.component.recycler.RvAdapterWrapper
 import com.mredrock.cyxbs.qa.config.CommentConfig
 import com.mredrock.cyxbs.qa.config.RequestResultCode
@@ -82,19 +83,19 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
 
     // 评论点击的逻辑
     private val commentListRvAdapter = CommentListAdapter(
-            onItemClickEvent = { nickname, commentId ->
-                viewModel.replyInfo.value = Pair(nickname, commentId)
+            onItemClickEvent = { comment ->
+                viewModel.replyInfo.value = ReplyInfo(comment.nickName, comment.content, comment.commentId)
             },
-            onReplyInnerClickEvent = { nickname, commentId ->
-                viewModel.replyInfo.value = Pair(nickname, commentId)
+            onReplyInnerClickEvent = { comment ->
+                viewModel.replyInfo.value = ReplyInfo(comment.nickName, comment.content, comment.commentId)
             },
             onItemLongClickEvent = { comment, itemView ->
                 // 消除回复弹窗
-                viewModel.replyInfo.value = Pair("", "")
+                viewModel.replyInfo.value = ReplyInfo("", "", "")
 
                 val optionPopWindow = OptionalPopWindow.Builder().with(this)
                         .addOptionAndCallback(CommentConfig.REPLY) {
-                            viewModel.replyInfo.value = Pair(comment.nickName, comment.commentId)
+                            viewModel.replyInfo.value = ReplyInfo(comment.nickName, comment.content, comment.commentId)
                         }.addOptionAndCallback(CommentConfig.COPY) {
                             ClipboardController.copyText(this, comment.content)
                         }
@@ -116,11 +117,11 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
             },
             onReplyInnerLongClickEvent = { comment, itemView ->
                 // 消除回复弹窗
-                viewModel.replyInfo.value = Pair("", "")
+                viewModel.replyInfo.value = ReplyInfo("", "", "")
 
                 val optionPopWindow = OptionalPopWindow.Builder().with(this)
                         .addOptionAndCallback(CommentConfig.REPLY) {
-                            viewModel.replyInfo.value = Pair(comment.nickName, comment.commentId)
+                            viewModel.replyInfo.value = ReplyInfo(comment.nickName, comment.content, comment.commentId)
                         }.addOptionAndCallback(CommentConfig.COPY) {
                             ClipboardController.copyText(this, comment.content)
                         }
@@ -158,9 +159,9 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
             Intent(this, QuizActivity::class.java).apply {
                 putExtra("isComment", "1")
                 putExtra("postId", dynamic.postId)
-                putExtra("replyId", viewModel.replyInfo.value?.second ?: "")
+                putExtra("replyId", viewModel.replyInfo.value?.replyId ?: "")
                 putExtra("commentContent", qa_et_reply.text.toString())
-                putExtra("replyNickname", viewModel.replyInfo.value?.first ?: "")
+                putExtra("replyNickname", viewModel.replyInfo.value?.nickname ?: "")
                 startActivityForResult(this, RequestResultCode.RELEASE_COMMENT_ACTIVITY_REQUEST)
             }
         }
@@ -174,10 +175,10 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
         }
         qa_iv_dynamic_comment_count.setOnSingleClickListener {
             KeyboardController.showInputKeyboard(this, qa_et_reply)
-            viewModel.replyInfo.value = Pair("", "")
+            viewModel.replyInfo.value = ReplyInfo("", "", "")
         }
         qa_coordinatorlayout.onReplyCancelEvent = {
-            viewModel.replyInfo.value = Pair("", "")
+            viewModel.replyInfo.value = ReplyInfo("", "", "")
             KeyboardController.hideInputKeyboard(this, qa_et_reply)
         }
     }
@@ -218,14 +219,14 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
             }
         }
         viewModel.replyInfo.observe {
-            it?.apply {
-                if (it.second.isNotEmpty()) {
+            it?.let {
+                if (it.replyId.isNotEmpty()) {
                     qa_coordinatorlayout.isReplyEdit = true
                     KeyboardController.showInputKeyboard(this@DynamicDetailActivity, qa_et_reply)
                     ReplyPopWindow.with(this@DynamicDetailActivity)
-                    ReplyPopWindow.setReplyName(it.first)
+                    ReplyPopWindow.setReplyName(it.nickname, it.content)
                     ReplyPopWindow.setOnClickEvent {
-                        viewModel.replyInfo.value = Pair("", "")
+                        viewModel.replyInfo.value = ReplyInfo("", "", "")
                     }
                     ReplyPopWindow.show(qa_et_reply, ReplyPopWindow.AlignMode.LEFT, this@DynamicDetailActivity.dp2px(6f))
                 } else {
@@ -237,7 +238,7 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
             }
         }
         viewModel.commentReleaseResult.observe {
-            viewModel.replyInfo.value = Pair("", "")
+            viewModel.replyInfo.value = ReplyInfo("", "", "")
             qa_et_reply.setText("")
             KeyboardController.hideInputKeyboard(this, qa_et_reply)
 
@@ -286,12 +287,12 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
         qa_iv_dynamic_more_tips_clicked.setOnSingleClickListener {
 
             // 消除回复弹窗
-            viewModel.replyInfo.value = Pair("", "")
+            viewModel.replyInfo.value = ReplyInfo("", "", "")
 
             val optionPopWindow = OptionalPopWindow.Builder().with(this)
                     .addOptionAndCallback(CommentConfig.REPLY) {
                         KeyboardController.showInputKeyboard(this, qa_et_reply)
-                        viewModel.replyInfo.value = Pair("", "")
+                        viewModel.replyInfo.value = ReplyInfo("", "", "")
                     }.addOptionAndCallback(CommentConfig.COPY) {
                         ClipboardController.copyText(this, dynamic.content)
                     }
@@ -382,7 +383,7 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
                 if (resultCode == NEED_REFRESH_RESULT) {
                     // 需要刷新 则 刷新显示动态
                     viewModel.refreshCommentList(dynamic.postId, "-1")
-                    viewModel.replyInfo.value = Pair("", "")
+                    viewModel.replyInfo.value = ReplyInfo("", "", "")
                 }
                 data?.getStringExtra("text")?.let {
                     qa_et_reply.setText(it)

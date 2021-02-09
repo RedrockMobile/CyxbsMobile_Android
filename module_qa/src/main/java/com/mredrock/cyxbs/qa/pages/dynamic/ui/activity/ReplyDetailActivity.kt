@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.beannew.Comment
+import com.mredrock.cyxbs.qa.beannew.ReplyInfo
 import com.mredrock.cyxbs.qa.component.recycler.RvAdapterWrapper
 import com.mredrock.cyxbs.qa.config.CommentConfig
 import com.mredrock.cyxbs.qa.config.RequestResultCode
@@ -37,7 +38,7 @@ class ReplyDetailActivity : AppCompatActivity() {
     private var commentId: String = "-1"
 
     /**
-     * 筛选条件：只显示：昵称或者回复人为
+     * 筛选条件：只显示：commentId或者replyId == replyIdScreen 的贴子
      */
     private var replyIdScreen: String? = null
 
@@ -111,14 +112,14 @@ class ReplyDetailActivity : AppCompatActivity() {
 
         replyDetailAdapter = ReplyDetailAdapter(
                 isReplyDetail = !replyIdScreen.isNullOrEmpty(),
-                onReplyInnerClickEvent = { nickname, commentId ->
+                onReplyInnerClickEvent = { comment ->
                     startActivity(Intent(this, DynamicDetailActivity::class.java))
-                    viewModel?.replyInfo?.value = Pair(nickname, commentId)
+                    viewModel?.replyInfo?.value = ReplyInfo(comment.nickName, comment.content, comment.commentId)
                 },
                 onReplyInnerLongClickEvent = { comment, itemView ->
                     val optionPopWindow = OptionalPopWindow.Builder().with(this)
                             .addOptionAndCallback(CommentConfig.REPLY) {
-                                viewModel?.replyInfo?.value = Pair(comment.nickName, comment.commentId)
+                                viewModel?.replyInfo?.value = ReplyInfo(comment.nickName, comment.content, comment.commentId)
                             }.addOptionAndCallback(CommentConfig.COPY) {
                                 ClipboardController.copyText(this, comment.content)
                             }
