@@ -84,4 +84,8 @@
     <color name="qa_reply_bottom_sheet_edittext_hint_color">#94A6C4</color>
     <color name="qa_dynamic_detail_title_text_color">#F0F0F2</color>
     <color name="qa_circle_label_text_color">#15315B</color>
+    <!--    回复详细显示“回复”文字的header的背景颜色-->
+    <color name="qa_reply_detail_header_background_color">#F0F0F0</color>
+    <!--    小回复布局的背景颜色-->
+    <color name="qa_reply_inner_background_color">#88FFFFFF</color>
 </resources>

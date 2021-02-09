@@ -2,13 +2,20 @@ package com.mredrock.cyxbs.qa.pages.dynamic.ui.activity
 
 import android.app.Activity
 import android.content.Intent
+import android.graphics.Canvas
+import android.graphics.Paint
+import android.graphics.Rect
 import android.os.Bundle
 import android.transition.Slide
 import android.view.Gravity
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.mredrock.cyxbs.common.utils.extensions.dp2px
 import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
+import com.mredrock.cyxbs.common.utils.extensions.sp
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.beannew.Comment
 import com.mredrock.cyxbs.qa.beannew.ReplyInfo
@@ -25,6 +32,7 @@ import com.mredrock.cyxbs.qa.ui.widget.QaReportDialog
 import com.mredrock.cyxbs.qa.utils.ClipboardController
 import kotlinx.android.synthetic.main.qa_activity_reply_detail.*
 import kotlinx.android.synthetic.main.qa_common_toolbar.*
+import kotlin.math.max
 
 
 /**
@@ -36,6 +44,33 @@ import kotlinx.android.synthetic.main.qa_common_toolbar.*
 class ReplyDetailActivity : AppCompatActivity() {
     // 要展示的回复的id
     private var commentId: String = "-1"
+
+    // 增加回复的header
+    private var itemDecoration = object : RecyclerView.ItemDecoration() {
+        override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
+            if (parent.getChildAdapterPosition(view) == 0) {
+                outRect.set(0, 0, 0, dp2px(40f))
+            } else {
+                outRect.set(0, 0, 0, 0)
+            }
+        }
+
+        override fun onDrawOver(c: Canvas, parent: RecyclerView, state: RecyclerView.State) {
+            val height = dp2px(40f) // header高度
+            val topY = max((parent.layoutManager?.findViewByPosition(1)?.top?.toFloat()
+                    ?: 0f) - height, 0f)
+
+            c.drawRect(Rect(0, topY.toInt(), parent.width, topY.toInt() + height), Paint().apply {
+                color = resources.getColor(R.color.qa_reply_detail_header_background_color)
+                isAntiAlias = true
+            })
+            c.drawText("回复", dp2px(12f).toFloat(), topY + dp2px(26f), Paint().apply {
+                textSize = sp(16).toFloat()
+                isAntiAlias = true
+                color = resources.getColor(R.color.common_level_one_font_color)
+            })
+        }
+    }
 
     /**
      * 筛选条件：只显示：commentId或者replyId == replyIdScreen 的贴子
@@ -76,8 +111,9 @@ class ReplyDetailActivity : AppCompatActivity() {
         commentId = intent.getStringExtra("commentId")
 
         initToolbar()
-        initReplyList()
         initObserver()
+        initReplyList()
+
     }
 
     private fun initObserver() {
@@ -101,6 +137,12 @@ class ReplyDetailActivity : AppCompatActivity() {
             }
             dataList?.toMutableList()?.let { replyDetailAdapter?.refreshData(it) }
             qa_reply_detail_swipe_refresh.isRefreshing = false
+
+            if (!replyIdScreen.isNullOrEmpty() && (dataList?.size ?: 0) >= 1) {
+                qa_reply_detail_rv_reply_list.addItemDecoration(itemDecoration)
+            } else {
+                qa_reply_detail_rv_reply_list.removeItemDecoration(itemDecoration)
+            }
         })
     }
 
@@ -153,7 +195,9 @@ class ReplyDetailActivity : AppCompatActivity() {
             )
             adapter = adapterWrapper
         }
+
     }
+
     private fun initToolbar() {
         qa_tv_toolbar_title.text = resources.getText(R.string.qa_reply_detail_title_text)
         qa_ib_toolbar_back.setOnSingleClickListener {
