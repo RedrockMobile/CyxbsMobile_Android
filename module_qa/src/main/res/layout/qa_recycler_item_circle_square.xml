@@ -59,7 +59,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="11dp"
         android:layout_marginTop="9dp"
-        android:textColor="@color/common_qa_circle_square_person_number_color"
+        android:textColor="@color/qa_circle_square_person_number_color"
         android:textSize="11sp"
         app:layout_constraintLeft_toRightOf="@id/iv_circle_square"
         app:layout_constraintTop_toBottomOf="@id/tv_circle_square_name"

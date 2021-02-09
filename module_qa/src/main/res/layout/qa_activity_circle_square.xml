@@ -17,11 +17,13 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_circle_square"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/qa_circle_square_toolbar"/>
+        app:layout_constraintTop_toBottomOf="@id/qa_circle_square_toolbar"
+        tools:listitem="@layout/qa_recycler_item_circle_square" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

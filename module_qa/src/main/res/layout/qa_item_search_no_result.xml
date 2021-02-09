@@ -13,9 +13,9 @@
         android:layout_marginStart="5dp"
         android:layout_marginEnd="5dp"
         android:visibility="gone"
-        app:cardBackgroundColor="@color/common_qa_question_item_shadow_color"
+        app:cardBackgroundColor="@color/qa_question_item_shadow_color"
         app:horizontalContentPadding="16dp"
-        app:shadowColor="@color/common_qa_question_item_shadow_color"
+        app:shadowColor="@color/qa_question_item_shadow_color"
         app:shadowRadius="10dp"
         app:verticalContentPadding="20dp">
 
@@ -34,7 +34,7 @@
                     android:layout_height="30dp"
                     android:layout_centerVertical="true"
                     android:scaleType="centerCrop"
-                    android:src="@color/common_qa_question_item_empty_holder_color" />
+                    android:src="@color/qa_question_item_empty_holder_color" />
 
                 <View
                     android:id="@+id/top"
@@ -42,7 +42,7 @@
                     android:layout_height="13dp"
                     android:layout_marginStart="7dp"
                     android:layout_toEndOf="@id/civ"
-                    android:background="@color/common_qa_question_item_empty_holder_color" />
+                    android:background="@color/qa_question_item_empty_holder_color" />
 
                 <View
                     android:layout_width="61dp"
@@ -50,14 +50,14 @@
                     android:layout_below="@id/top"
                     android:layout_alignStart="@id/top"
                     android:layout_marginTop="6dp"
-                    android:background="@color/common_qa_question_item_empty_holder_color" />
+                    android:background="@color/qa_question_item_empty_holder_color" />
 
                 <View
                     android:layout_width="51dp"
                     android:layout_height="13dp"
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
-                    android:background="@color/common_qa_question_item_empty_holder_color" />
+                    android:background="@color/qa_question_item_empty_holder_color" />
             </RelativeLayout>
 
             <LinearLayout
@@ -71,26 +71,26 @@
                     android:layout_height="17dp"
                     android:layout_marginTop="10dp"
                     android:layout_weight="5"
-                    android:background="@color/common_qa_question_item_empty_holder_color" />
+                    android:background="@color/qa_question_item_empty_holder_color" />
             </LinearLayout>
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="14dp"
                 android:layout_marginTop="7dp"
-                android:background="@color/common_qa_question_item_empty_holder_color" />
+                android:background="@color/qa_question_item_empty_holder_color" />
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="14dp"
                 android:layout_marginTop="7dp"
-                android:background="@color/common_qa_question_item_empty_holder_color" />
+                android:background="@color/qa_question_item_empty_holder_color" />
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="14dp"
                 android:layout_marginTop="7dp"
-                android:background="@color/common_qa_question_item_empty_holder_color" />
+                android:background="@color/qa_question_item_empty_holder_color" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -103,7 +103,7 @@
                     android:layout_height="14dp"
                     android:layout_marginTop="10dp"
                     android:layout_weight="1"
-                    android:background="@color/common_qa_question_item_empty_holder_color" />
+                    android:background="@color/qa_question_item_empty_holder_color" />
             </LinearLayout>
         </LinearLayout>
     </com.mredrock.cyxbs.common.component.JCardViewPlus>

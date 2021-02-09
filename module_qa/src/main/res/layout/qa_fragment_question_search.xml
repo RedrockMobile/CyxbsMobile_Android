@@ -39,7 +39,7 @@
             android:layout_height="1dp"
             android:layout_marginTop="25dp"
             android:alpha="0.1"
-            android:background="@color/common_qa_quiz_toolbar_divider_line_color" />
+            android:background="@color/qa_quiz_toolbar_divider_line_color" />
 
         <RelativeLayout
             android:id="@+id/ll_history_title"
@@ -66,7 +66,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginEnd="16dp"
                 android:text="@string/qa_search_clean_history_all"
-                android:textColor="@color/common_qa_common_hint_text_color"
+                android:textColor="@color/qa_common_hint_text_color"
                 android:textSize="15.3sp"
                 tools:ignore="RelativeOverlap" />
 

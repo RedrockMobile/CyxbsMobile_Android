@@ -29,6 +29,6 @@
         android:paddingTop="3dp"
         android:paddingBottom="3dp"
         android:text="更多圈子"
-        android:textColor="#15315B"
+        android:textColor="@color/qa_circle_label_text_color"
         android:textSize="13sp" />
 </LinearLayout>

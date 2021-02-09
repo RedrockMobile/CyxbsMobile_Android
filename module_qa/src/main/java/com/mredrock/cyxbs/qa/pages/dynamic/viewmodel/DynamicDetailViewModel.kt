@@ -13,6 +13,7 @@ import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.beannew.Comment
 import com.mredrock.cyxbs.qa.beannew.CommentReleaseResult
 import com.mredrock.cyxbs.qa.beannew.Dynamic
+import com.mredrock.cyxbs.qa.beannew.ReplyInfo
 import com.mredrock.cyxbs.qa.config.CommentConfig
 import com.mredrock.cyxbs.qa.network.ApiServiceNew
 import com.mredrock.cyxbs.qa.network.NetworkState
@@ -29,7 +30,7 @@ open class DynamicDetailViewModel : BaseViewModel() {
 
     val loadStatus = MutableLiveData<Int>()
 
-    val replyInfo = MutableLiveData<Pair<String, String>>()
+    val replyInfo = MutableLiveData<ReplyInfo>()
 
     val dynamicLiveData = MutableLiveData<Dynamic>()
 
@@ -96,7 +97,7 @@ open class DynamicDetailViewModel : BaseViewModel() {
 
     fun releaseComment(postId: String, content: String) {
         ApiGenerator.getApiService(ApiServiceNew::class.java)
-                .releaseComment(content, postId, replyInfo.value?.second ?: "")
+                .releaseComment(content, postId, replyInfo.value?.replyId ?: "")
                 .mapOrThrowApiException()
                 .setSchedulers()
                 .doOnSubscribe {

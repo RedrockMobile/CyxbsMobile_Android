@@ -45,9 +45,9 @@ class LikeViewSlim : LikeView {
 
     init {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            textPaint.color = resources.getColor(R.color.common_qa_question_bottom_count_color, null)
+            textPaint.color = resources.getColor(R.color.qa_question_bottom_count_color, null)
         } else {
-            textPaint.color = resources.getColor(R.color.common_qa_question_bottom_count_color)
+            textPaint.color = resources.getColor(R.color.qa_question_bottom_count_color)
         }
 
         textPaint.textSize = context.sp(11).toFloat()
@@ -92,11 +92,14 @@ class LikeViewSlim : LikeView {
             // 如果map中没有记录，则新建
             this.praiseCount = praiseCount
             this.isPraised = isPraised
-            likeMap["$id-$model"] = Pair(praiseCount, isPraised)
+            likeMap["$id-$model"] = Pair(this.praiseCount, this.isPraised)
         } else {
-            // 如果map中有记录，则不管函数传进来的isPraised和praiseCount，用map里现存的
-            this.praiseCount = likeMap["$id-$model"]?.first ?: 0
+
             this.isPraised = likeMap["$id-$model"]?.second ?: false
+            // 如果map中有记录是否点赞。则根据外部传来的真实点赞值（除了自己），加上自己是否点赞
+            this.praiseCount = praiseCount + (if (isPraised) -1 else 0) + (if (this.isPraised) 1 else 0) // likeMap["$id-$model"]?.first ?: 0
+
+            likeMap["$id-$model"] = Pair(this.praiseCount, this.isPraised)
         }
 
         // 注册订阅者
