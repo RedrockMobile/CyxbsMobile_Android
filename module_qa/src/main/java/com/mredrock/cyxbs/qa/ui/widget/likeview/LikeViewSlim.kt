@@ -16,10 +16,9 @@ import java.lang.ref.WeakReference
  *@date 2020/12/19
  *@description 采用观察者模式，观察点赞的变化
  */
-class LikeViewSlim : LikeView {
-    constructor(context: Context) : super(context)
-    constructor(context: Context, attrs: AttributeSet) : super(context, attrs)
-    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
+class LikeViewSlim @JvmOverloads constructor(
+        context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
+) : LikeView(context, attrs, defStyleAttr) {
 
     companion object {
         /**

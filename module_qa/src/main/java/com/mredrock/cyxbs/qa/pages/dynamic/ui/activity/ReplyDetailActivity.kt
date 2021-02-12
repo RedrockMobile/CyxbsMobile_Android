@@ -164,13 +164,16 @@ class ReplyDetailActivity : AppCompatActivity() {
                             }.addOptionAndCallback(CommentConfig.COPY) {
                                 ClipboardController.copyText(this, comment.content)
                             }
+                    // 如果总动态是自己发的，或者该评论是自己的，则可以删除（可以控评）
                     if (viewModel?.dynamicLiveData?.value?.isSelf == 1 || comment.isSelf) {
                         optionPopWindow.addOptionAndCallback(CommentConfig.DELETE) {
                             QaDialog.show(this, resources.getString(R.string.qa_dialog_tip_delete_comment_text), {}) {
                                 viewModel?.deleteId(comment.commentId, DynamicDetailActivity.COMMENT_DELETE)
                             }
                         }
-                    } else {
+                    }
+                    // 如果回复不是自己的，就可以举报
+                    if (!comment.isSelf) {
                         optionPopWindow.addOptionAndCallback(CommentConfig.REPORT) {
                             QaReportDialog.show(this) {
                                 viewModel?.report(comment.commentId, it, CommentConfig.REPORT_COMMENT_MODEL)

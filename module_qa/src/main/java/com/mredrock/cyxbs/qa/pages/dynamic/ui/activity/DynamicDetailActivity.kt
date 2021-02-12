@@ -13,7 +13,6 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.appbar.AppBarLayout
-import com.mredrock.cyxbs.common.BaseApp.Companion.context
 import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.extensions.*
@@ -132,13 +131,16 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
                         }.addOptionAndCallback(CommentConfig.COPY) {
                             ClipboardController.copyText(this, comment.content)
                         }
+                // 如果总动态是自己发的，或者该评论是自己的，则可以删除（可以控评）
                 if (dynamic.isSelf == 1 || comment.isSelf) {
                     optionPopWindow.addOptionAndCallback(CommentConfig.DELETE) {
                         QaDialog.show(this, resources.getString(R.string.qa_dialog_tip_delete_comment_text), {}) {
                             viewModel.deleteId(comment.commentId, COMMENT_DELETE)
                         }
                     }
-                } else {
+                }
+                // 如果回复不是自己的，就可以举报
+                if (!comment.isSelf) {
                     optionPopWindow.addOptionAndCallback(CommentConfig.REPORT) {
                         QaReportDialog.show(this) {
                             viewModel.report(comment.commentId, it, CommentConfig.REPORT_COMMENT_MODEL)
@@ -324,13 +326,13 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
                     }.addOptionAndCallback(CommentConfig.COPY) {
                         ClipboardController.copyText(this, dynamic.content)
                     }
-            if (dynamic.isSelf == 1) {
+            if (dynamic.isSelf == 1) { // 如果帖子是自己的，则可以删除
                 optionPopWindow.addOptionAndCallback(CommentConfig.DELETE) {
                     QaDialog.show(this, resources.getString(R.string.qa_dialog_tip_delete_dynamic_text), {}) {
                         viewModel.deleteId(dynamic.postId, DYNAMIC_DELETE)
                     }
                 }
-            } else {
+            } else { // 如果是别人的帖子，则可以举报
                 optionPopWindow.addOptionAndCallback(CommentConfig.REPORT) {
                     QaReportDialog.show(this) { reportText ->
                         viewModel.report(dynamic.postId, reportText, CommentConfig.REPORT_DYNAMIC_MODEL)
