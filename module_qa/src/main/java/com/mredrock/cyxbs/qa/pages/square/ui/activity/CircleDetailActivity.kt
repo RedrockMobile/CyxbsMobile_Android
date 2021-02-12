@@ -19,8 +19,14 @@ import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.qa.R
+import com.mredrock.cyxbs.qa.beannew.Dynamic
 import com.mredrock.cyxbs.qa.beannew.Topic
+import com.mredrock.cyxbs.qa.config.CommentConfig
+import com.mredrock.cyxbs.qa.config.RequestResultCode
+import com.mredrock.cyxbs.qa.config.RequestResultCode.NEED_REFRESH_RESULT
+import com.mredrock.cyxbs.qa.config.RequestResultCode.RESULT_CODE
 import com.mredrock.cyxbs.qa.pages.dynamic.model.TopicDataSet
+import com.mredrock.cyxbs.qa.pages.dynamic.ui.activity.DynamicDetailActivity
 import com.mredrock.cyxbs.qa.pages.square.ui.adapter.NewHotViewPagerAdapter
 import com.mredrock.cyxbs.qa.pages.square.ui.fragment.HotFragment
 import com.mredrock.cyxbs.qa.pages.square.ui.fragment.LastNewFragment
@@ -30,7 +36,6 @@ import kotlinx.android.synthetic.main.qa_recycler_item_circle_square.*
 
 class CircleDetailActivity : BaseViewModelActivity<CircleDetailViewModel>() {
     companion object {
-        val RESULT_CODE = 1
         fun activityStartFromSquare(activity: BaseActivity, topicItemView: View, data: Topic) {
             activity.let {
                 val opt = ActivityOptionsCompat.makeSceneTransitionAnimation(it, topicItemView, "topicItem")
@@ -40,14 +45,15 @@ class CircleDetailActivity : BaseViewModelActivity<CircleDetailViewModel>() {
                 startActivityForResult(activity, intent, RESULT_CODE, opt.toBundle())
             }
         }
-        fun activityStartFromCircle(fragment: Fragment,topicItemView: View,data: Topic){
+
+        fun activityStartFromCircle(fragment: Fragment, topicItemView: View, data: Topic) {
             fragment.apply {
                 activity?.let {
                     val opt = ActivityOptionsCompat.makeSceneTransitionAnimation(it, topicItemView, "topicItem")
                     val intent = Intent(BaseApp.context, CircleDetailActivity::class.java)
                     intent.putExtra("topicItem", data)
                     it.window.exitTransition = Slide(Gravity.START).apply { duration = 500 }
-                    startActivity(intent,opt.toBundle())
+                    startActivityForResult(intent, RequestResultCode.DYNAMIC_DETAIL_REQUEST, opt.toBundle())
                 }
             }
         }
@@ -79,6 +85,7 @@ class CircleDetailActivity : BaseViewModelActivity<CircleDetailViewModel>() {
         setResult(Activity.RESULT_OK, intent)
         LogUtils.d("zt", "3")
         LogUtils.d("zt", "返回的top" + topic)
+        setResult(NEED_REFRESH_RESULT)
         finish()
         super.onBackPressed()
     }
@@ -112,7 +119,7 @@ class CircleDetailActivity : BaseViewModelActivity<CircleDetailViewModel>() {
         tv_circle_square_descriprion.text = topic.introduction
         tv_circle_square_person_number.text = topic.follow_count.toString() + "个成员"
         btn_circle_square_concern.text = "+关注"
-        qa_detail_tv_title.text=topic.topicName
+        qa_detail_tv_title.text = topic.topicName
         if (topic._isFollow.equals(1)) {
             btn_circle_square_concern.background = context.getDrawable(R.drawable.qa_shape_send_dynamic_btn_grey_background)
         } else {

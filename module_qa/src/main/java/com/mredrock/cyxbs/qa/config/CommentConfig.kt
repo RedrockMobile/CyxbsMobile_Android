@@ -2,7 +2,7 @@ package com.mredrock.cyxbs.qa.config
 
 /**
  * @Author: xgl
- * @ClassName: CommenConfig
+ * @ClassName: CommentConfig
  * @Description:
  * @Date: 2020/12/14 15:18
  */
@@ -17,4 +17,11 @@ object CommentConfig {
     const val REPORT_COMMENT_MODEL = "1"
     const val PRAISE_MODEL_DYNAMIC = "1"
     const val PRAISE_MODEL_COMMENT = "2"
+    const val APP_ID="101933868"
+    const val APP_NAME="掌上重邮"
+    const val QQ_FRIEND = "0"
+    const val QQ_ZONE = "1"
+    const val WECHAT = "2"
+    const val FRIEND_CIRCLE = "3"
+    const val COPY_LINK = "4"
 }

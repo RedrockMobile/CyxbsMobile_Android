@@ -11,4 +11,5 @@ dependencies {
     implementation 'de.hdodenhof:circleimageview:3.1.0'
     implementation project(':lib_account:api_account')
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    implementation 'com.tencent.tauth:qqopensdk:3.52.0'
 }

@@ -88,11 +88,11 @@ class QuestionSearchedFragment : BaseViewModelFragment<QuestionSearchedViewModel
             if (it != null) {
                 if (it) {
                     //加载完成
-                    if (SEARCHRESULT||viewModel.isKnowledge){
+                    if (SEARCHRESULT || viewModel.isKnowledge) {
                         //有数据的刷新
                         swipe_refresh_layout_searching.isRefreshing = false
                         emptyRvAdapter?.showResultRefreshHolder()
-                    }else{
+                    } else {
                         //没有数据的刷新
                         swipe_refresh_layout_searching.isRefreshing = false
                         emptyRvAdapter?.showNOResultRefreshHolder()
@@ -114,7 +114,7 @@ class QuestionSearchedFragment : BaseViewModelFragment<QuestionSearchedViewModel
 
     private fun initInitialView() {
         viewModel.getKnowledge(searchKey)
-        dynamicListRvAdapter = DynamicAdapter(context) { dynamic, view ->
+        dynamicListRvAdapter = DynamicAdapter(this.requireContext()) { dynamic, view ->
             DynamicDetailActivity.activityStart(this, view, dynamic)
         }.apply {
             onPopWindowClickListener = { position, string, dynamic ->
@@ -181,11 +181,11 @@ class QuestionSearchedFragment : BaseViewModelFragment<QuestionSearchedViewModel
                     swipe_refresh_layout_searching.isRefreshing = false
                 }
                 else -> {
-                    if (SEARCHRESULT||viewModel.isKnowledge){
+                    if (SEARCHRESULT || viewModel.isKnowledge) {
                         //有数据的刷新
                         swipe_refresh_layout_searching.isRefreshing = false
                         emptyRvAdapter?.showResultRefreshHolder()
-                    }else{
+                    } else {
                         //没有数据的刷新
                         swipe_refresh_layout_searching.isRefreshing = false
                         emptyRvAdapter?.showNOResultRefreshHolder()

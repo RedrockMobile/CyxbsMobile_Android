@@ -6,12 +6,15 @@ import android.os.Bundle
 import android.transition.Slide
 import android.view.Gravity
 import android.view.View
+import android.widget.Toast
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.app.ActivityOptionsCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.appbar.AppBarLayout
+import com.mredrock.cyxbs.common.BaseApp.Companion.context
+import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.extensions.*
 import com.mredrock.cyxbs.qa.R
@@ -32,7 +35,9 @@ import com.mredrock.cyxbs.qa.ui.adapter.FooterRvAdapter
 import com.mredrock.cyxbs.qa.ui.widget.*
 import com.mredrock.cyxbs.qa.utils.ClipboardController
 import com.mredrock.cyxbs.qa.utils.KeyboardController
+import com.mredrock.cyxbs.qa.utils.ShareUtils
 import com.mredrock.cyxbs.qa.utils.dynamicTimeDescription
+import com.tencent.tauth.Tencent
 import kotlinx.android.synthetic.main.qa_activity_dynamic_detail.*
 import kotlinx.android.synthetic.main.qa_common_toolbar.*
 import kotlinx.android.synthetic.main.qa_recycler_item_dynamic_header.*
@@ -73,6 +78,8 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
     private val behavior by lazy { AppBarLayout.ScrollingViewBehavior() }
 
     override val isFragmentActivity = false
+
+    private var mTencent: Tencent? = null
 
     override fun getViewModelFactory() = DynamicDetailViewModel.Factory()
 
@@ -154,7 +161,7 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
         initObserve()
         initDynamic()
         initReplyList()
-
+        mTencent = Tencent.createInstance(CommentConfig.APP_ID, this)
         qa_iv_select_pic.setOnSingleClickListener {
             Intent(this, QuizActivity::class.java).apply {
                 putExtra("isComment", "1")
@@ -258,8 +265,8 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
             ReplyPopWindow.dismiss()
             return
         }
-
         window.returnTransition = Slide(Gravity.END).apply { duration = 500 }
+        finish()
         super.onBackPressed()
     }
 
@@ -283,6 +290,27 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
             KeyboardController.showInputKeyboard(this, qa_et_reply)
         }
 
+        qa_iv_dynamic_share.setOnSingleClickListener {
+            ShareDialog(it.context).apply {
+                initView(onCancelListener = View.OnClickListener {
+                    dismiss()
+                }, qqshare = View.OnClickListener {
+                    mTencent?.let { it1 -> ShareUtils.qqShare(it1, this@DynamicDetailActivity, dynamic.topic, dynamic.content, "https://cn.bing.com/", "") }
+                }, qqZoneShare = View.OnClickListener {
+                    mTencent?.let { it1 -> ShareUtils.qqQzoneShare(it1, this@DynamicDetailActivity, dynamic.topic, dynamic.content, "https://cn.bing.com/", ArrayList()) }
+
+                }, weChatShare = View.OnClickListener {
+                    CyxbsToast.makeText(context, R.string.qa_share_wechat_text, Toast.LENGTH_SHORT).show()
+
+                }, friendShipCircle = View.OnClickListener {
+                    CyxbsToast.makeText(context, R.string.qa_share_wechat_text, Toast.LENGTH_SHORT).show()
+
+                }, copylink = View.OnClickListener {
+                    ClipboardController.copyText(this@DynamicDetailActivity, "https://cn.bing.com/")
+
+                })
+            }.show()
+        }
 
         qa_iv_dynamic_more_tips_clicked.setOnSingleClickListener {
 
@@ -371,8 +399,6 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
             adapter = adapterWrapper
         }
     }
-
-
 
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

@@ -4,7 +4,7 @@
     package="com.mredrock.cyxbs.qa">
 
     <application
-        android:name="debug.App"
+        android:name="debug.MainActivity"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
         <activity
@@ -17,15 +17,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".pages.answer.ui.AnswerListActivity" />
-        <activity
-            android:name=".pages.comment.ui.CommentListActivity"
-            android:windowSoftInputMode="adjustPan" />
         <activity android:name=".pages.quiz.ui.QuizActivity" />
-        <activity
-            android:name=".pages.answer.ui.AnswerActivity"
-            android:windowSoftInputMode="adjustPan" />
-        <activity android:name=".pages.report.ui.ReportActivity"></activity>
     </application>
 
 </manifest>

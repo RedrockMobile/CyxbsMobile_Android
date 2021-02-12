@@ -41,6 +41,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
+            android:id="@+id/qa_ll_share_qq_zone"
             android:orientation="vertical"
             android:paddingStart="10dp"
             android:paddingEnd="10dp">
@@ -48,13 +49,13 @@
             <androidx.appcompat.widget.AppCompatImageView
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:src="@drawable/qa_ic_wechat" />
+                android:src="@drawable/qa_ic_qqzone" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingTop="5dp"
-                android:text="QQ空间"
+                android:text="@string/qa_dialog_share_qqzone"
                 android:textColor="@color/qa_draft_dialog_text_color"
                 android:textSize="11sp" />
         </LinearLayout>
@@ -63,6 +64,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
+            android:id="@+id/qa_ll_share_friend_circle"
             android:orientation="vertical"
             android:paddingStart="10dp"
             android:paddingEnd="10dp">
@@ -76,7 +78,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingTop="5dp"
-                android:text="朋友圈"
+                android:text="@string/qa_dialog_share_friend_circle"
                 android:textColor="@color/qa_draft_dialog_text_color"
                 android:textSize="11sp" />
         </LinearLayout>
@@ -85,6 +87,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
+            android:id="@+id/qa_ll_share_qq"
             android:orientation="vertical"
             android:paddingStart="5dp"
             android:paddingEnd="5dp">
@@ -98,7 +101,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingTop="5dp"
-                android:text="QQ"
+                android:text="@string/qa_dialog_share_qq"
                 android:textColor="@color/qa_draft_dialog_text_color"
                 android:textSize="11sp" />
         </LinearLayout>
@@ -108,6 +111,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:orientation="vertical"
+            android:id="@+id/qa_ll_share_wechat"
             android:paddingStart="10dp"
             android:paddingEnd="10dp">
 
@@ -120,7 +124,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingTop="5dp"
-                android:text="微信好友"
+                android:text="@string/qa_dialog_share_wechat_friend"
                 android:textColor="@color/qa_draft_dialog_text_color"
                 android:textSize="11sp" />
         </LinearLayout>
@@ -130,6 +134,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:orientation="vertical"
+            android:id="@+id/qa_ll_share_copy_link"
             android:paddingStart="10dp"
             android:paddingEnd="10dp">
 
@@ -142,7 +147,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingTop="5dp"
-                android:text="复制链接"
+                android:text="@string/qa_dialog_share_copy_link"
                 android:textColor="@color/qa_draft_dialog_text_color"
                 android:textSize="11sp" />
         </LinearLayout>

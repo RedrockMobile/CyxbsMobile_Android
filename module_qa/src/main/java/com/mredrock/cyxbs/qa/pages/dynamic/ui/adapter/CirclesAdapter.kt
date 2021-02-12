@@ -125,6 +125,11 @@ class CirclesAdapter(private val onItemClickEvent: (Topic,View) -> Unit) : Recyc
         notifyDataSetChanged()
     }
 
+    fun noticeChangeCircleData() {
+        circlesItemList.clear()
+        notifyDataSetChanged()
+    }
+
     fun addTopicMessageData(newTopicMessageData: List<TopicMessage>) {
         topicMessageList.clear()
         topicMessageList.addAll(newTopicMessageData)

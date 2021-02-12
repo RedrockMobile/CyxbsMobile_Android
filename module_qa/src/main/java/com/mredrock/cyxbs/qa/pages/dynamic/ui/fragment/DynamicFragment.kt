@@ -7,27 +7,34 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.RelativeLayout
 import android.widget.TextView
+import android.widget.Toast
 import android.widget.ViewFlipper
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.google.android.material.appbar.CollapsingToolbarLayout
+import com.mredrock.cyxbs.common.BaseApp
+import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.common.config.CyxbsMob
 import com.mredrock.cyxbs.common.config.QA_ENTRY
 import com.mredrock.cyxbs.common.event.RefreshQaEvent
 import com.mredrock.cyxbs.common.mark.EventBusLifecycleSubscriber
-import com.mredrock.cyxbs.common.ui.BaseActivity
 import com.mredrock.cyxbs.common.ui.BaseViewModelFragment
 import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.doIfLogin
 import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
-import com.mredrock.cyxbs.common.utils.extensions.startActivityForResult
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.component.recycler.RvAdapterWrapper
+import com.mredrock.cyxbs.qa.config.CommentConfig
+import com.mredrock.cyxbs.qa.config.CommentConfig.COPY_LINK
 import com.mredrock.cyxbs.qa.config.CommentConfig.DELETE
+import com.mredrock.cyxbs.qa.config.CommentConfig.FRIEND_CIRCLE
 import com.mredrock.cyxbs.qa.config.CommentConfig.IGNORE
+import com.mredrock.cyxbs.qa.config.CommentConfig.QQ_FRIEND
+import com.mredrock.cyxbs.qa.config.CommentConfig.QQ_ZONE
 import com.mredrock.cyxbs.qa.config.CommentConfig.REPORT
+import com.mredrock.cyxbs.qa.config.CommentConfig.WECHAT
 import com.mredrock.cyxbs.qa.config.RequestResultCode.DYNAMIC_DETAIL_REQUEST
 import com.mredrock.cyxbs.qa.config.RequestResultCode.NEED_REFRESH_RESULT
 import com.mredrock.cyxbs.qa.config.RequestResultCode.RELEASE_DYNAMIC_ACTIVITY_REQUEST
@@ -40,14 +47,22 @@ import com.mredrock.cyxbs.qa.pages.dynamic.viewmodel.DynamicListViewModel
 import com.mredrock.cyxbs.qa.pages.quiz.ui.QuizActivity
 import com.mredrock.cyxbs.qa.pages.search.ui.SearchActivity
 import com.mredrock.cyxbs.qa.pages.square.ui.activity.CircleDetailActivity
+import com.mredrock.cyxbs.qa.qqconnect.BaseUiListener
 import com.mredrock.cyxbs.qa.ui.adapter.EmptyRvAdapter
 import com.mredrock.cyxbs.qa.ui.adapter.FooterRvAdapter
 import com.mredrock.cyxbs.qa.ui.widget.QaDialog
 import com.mredrock.cyxbs.qa.ui.widget.QaReportDialog
+import com.mredrock.cyxbs.qa.ui.widget.ShareDialog
+import com.mredrock.cyxbs.qa.utils.ClipboardController
+import com.mredrock.cyxbs.qa.utils.ShareUtils
+import com.tencent.connect.share.QQShare
+import com.tencent.connect.share.QzoneShare
+import com.tencent.tauth.Tencent
 import com.umeng.analytics.MobclickAgent
 import kotlinx.android.synthetic.main.qa_dialog_report.*
 import kotlinx.android.synthetic.main.qa_dialog_report.view.*
 import kotlinx.android.synthetic.main.qa_fragment_dynamic.*
+import kotlinx.android.synthetic.main.qa_recycler_item_dynamic_header.view.*
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
@@ -67,6 +82,9 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), EventBusL
         const val HOT_WORD_HEAD_LENGTH = 6
     }
 
+    private var isSendDynamic = false
+    private var mTencent: Tencent? = null
+
     // 判断rv是否到顶
     protected var isRvAtTop = true
     lateinit var dynamicListRvAdapter: DynamicAdapter
@@ -82,17 +100,29 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), EventBusL
         initScrollText()
         initDynamics()
         initClick()
+        mTencent = Tencent.createInstance(CommentConfig.APP_ID, this.requireContext())
     }
 
 
     private fun initDynamics() {
         dynamicListRvAdapter =
-                DynamicAdapter(context) { dynamic, view ->
+                DynamicAdapter(this.requireContext()) { dynamic, view ->
                     DynamicDetailActivity.activityStart(this, view, dynamic)
                     initClick()
                 }.apply {
+
+                    onShareClickListener = { dynamic, mode ->
+                        when (mode) {
+                            QQ_FRIEND ->
+                                mTencent?.let { it1 -> ShareUtils.qqShare(it1, this@DynamicFragment, dynamic.topic, dynamic.content, "https://cn.bing.com/", "") }
+                            QQ_ZONE ->
+                                mTencent?.let { it1 -> ShareUtils.qqQzoneShare(it1, this@DynamicFragment, dynamic.topic, dynamic.content, "https://cn.bing.com/", ArrayList()) }
+                            COPY_LINK ->
+                                ClipboardController.copyText(this@DynamicFragment.requireContext(), "https://cn.bing.com/")
+                        }
+                    }
                     onTopicListener = { topic, view ->
-                        TopicDataSet.getTopicData(topic)?.let { CircleDetailActivity.activityStart(this@DynamicFragment.activity as BaseActivity, view, it) }
+                        TopicDataSet.getTopicData(topic)?.let { CircleDetailActivity.activityStartFromCircle(this@DynamicFragment, view, it) }
                     }
                     onPopWindowClickListener = { position, string, dynamic ->
                         when (string) {
@@ -120,10 +150,6 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), EventBusL
         viewModel.ignorePeople.observe {
             viewModel.invalidateQuestionList()
         }
-        viewModel.deleteTips.observe {
-            viewModel.invalidateQuestionList()
-        }
-
         val footerRvAdapter = FooterRvAdapter { viewModel.retry() }
         val emptyRvAdapter = EmptyRvAdapter(getString(R.string.qa_question_list_empty_hint))
         val adapterWrapper = RvAdapterWrapper(
@@ -131,7 +157,11 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), EventBusL
                 emptyAdapter = emptyRvAdapter,
                 footerAdapter = footerRvAdapter
         )
-        val circlesAdapter = this.activity?.let { CirclesAdapter() }
+        val circlesAdapter = this.activity?.let {
+            CirclesAdapter { topic, view ->
+                CircleDetailActivity.activityStartFromCircle(this, view, topic)
+            }
+        }
         val linearLayoutManager = LinearLayoutManager(context)
         linearLayoutManager.orientation = LinearLayoutManager.HORIZONTAL
         qa_rv_circles_List.apply {
@@ -163,7 +193,9 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), EventBusL
             } else {
                 val layoutParams = CollapsingToolbarLayout.LayoutParams(qa_rv_circles_List.layoutParams)
                 layoutParams.bottomMargin = 30
+                circlesAdapter?.noticeChangeCircleData()
                 view_divide.visibility = View.VISIBLE
+                qa_tv_my_notice.visibility = View.INVISIBLE
                 qa_rv_circles_List.layoutParams = layoutParams
             }
         }
@@ -206,6 +238,12 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), EventBusL
 
         initialLoad.observe {
             when (it) {
+                NetworkState.SUCCESSFUL ->
+                    isSendDynamic = true
+                NetworkState.FAILED ->
+                    isSendDynamic = false
+            }
+            when (it) {
                 NetworkState.LOADING -> {
                     swipe_refresh_layout.isRefreshing = true
                     emptyRvAdapter.showHolder(3)
@@ -223,7 +261,11 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), EventBusL
 
     private fun initClick() {
         qa_bt_to_quiz.setOnSingleClickListener {
-            turnToQuiz()
+            if (isSendDynamic)
+                turnToQuiz()
+            else {
+                CyxbsToast.makeText(this.activity, R.string.qa_server_go_out, Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
@@ -242,6 +284,7 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), EventBusL
     }
 
     private fun turnToQuiz() {
+
         context?.doIfLogin("提问") {
             QuizActivity.activityStart(this, "发动态", REQUEST_LIST_REFRESH_ACTIVITY)
             MobclickAgent.onEvent(context, CyxbsMob.Event.CLICK_ASK)

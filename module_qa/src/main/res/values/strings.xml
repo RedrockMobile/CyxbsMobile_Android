@@ -115,4 +115,11 @@
     <string name="qa_topic_message_failure">获取未读圈子消息失败</string>
     <string name="qa_reply_detail_title_text">回复</string>
     <string name="qa_reply_detail_show_detail_text">查看对话</string>
+    <string name="qa_server_go_out">信息加载完成后，才能够发动态</string>
+    <string name="qa_dialog_share_qq">QQ</string>
+    <string name="qa_dialog_share_friend_circle">朋友圈</string>
+    <string name="qa_dialog_share_wechat_friend">微信好友</string>
+    <string name="qa_dialog_share_copy_link">复制链接</string>
+    <string name="qa_dialog_share_qqzone">QQ空间</string>
+    <string name="qa_share_wechat_text">微信权限,我们正在争取中</string>
 </resources>

@@ -34,7 +34,7 @@
                 android:textColor="@color/qa_question_item_nickname_color"
                 android:textSize="18sp"
                 android:textStyle="bold"
-                android:visibility="invisible" />
+                android:visibility="gone" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/qa_rv_circles_List"

@@ -21,6 +21,9 @@ import com.mredrock.cyxbs.qa.ui.adapter.EmptyRvAdapter
 import com.mredrock.cyxbs.qa.ui.adapter.FooterRvAdapter
 import com.mredrock.cyxbs.qa.ui.widget.QaDialog
 import com.mredrock.cyxbs.qa.ui.widget.QaReportDialog
+import com.mredrock.cyxbs.qa.utils.ClipboardController
+import com.mredrock.cyxbs.qa.utils.ShareUtils
+import com.tencent.tauth.Tencent
 import kotlinx.android.synthetic.main.qa_fragment_last_hot.*
 
 /**
@@ -32,6 +35,7 @@ import kotlinx.android.synthetic.main.qa_fragment_last_hot.*
 abstract class BaseCircleDetailFragment<T : DynamicListViewModel> : BaseViewModelFragment<T>() {
     var onPopWindowClickListener: ((String, Dynamic) -> Unit)? = null
     var onPraiseClickListener: ((Int, Dynamic) -> Unit)? = null
+    private var mTencent: Tencent? = null
 
     override fun getViewModelFactory() = DynamicListViewModel.Factory("main")
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -42,12 +46,24 @@ abstract class BaseCircleDetailFragment<T : DynamicListViewModel> : BaseViewMode
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initDynamic()
+        mTencent = Tencent.createInstance(CommentConfig.APP_ID, this.requireContext())
     }
 
     private fun initDynamic() {
-        val dynamicListRvAdapter = DynamicAdapter(context) { dynamic, view ->
+        val dynamicListRvAdapter = DynamicAdapter(this.requireContext()) { dynamic, view ->
             DynamicDetailActivity.activityStart(this, view, dynamic)
         }.apply {
+
+            onShareClickListener = { dynamic, mode ->
+                when (mode) {
+                    CommentConfig.QQ_FRIEND ->
+                        mTencent?.let { it1 -> ShareUtils.qqShare(it1, this@BaseCircleDetailFragment, dynamic.topic, dynamic.content, "https://cn.bing.com/", "") }
+                    CommentConfig.QQ_ZONE ->
+                        mTencent?.let { it1 -> ShareUtils.qqQzoneShare(it1, this@BaseCircleDetailFragment, dynamic.topic, dynamic.content, "https://cn.bing.com/", ArrayList()) }
+                    CommentConfig.COPY_LINK ->
+                        ClipboardController.copyText(this@BaseCircleDetailFragment.requireContext(), "https://cn.bing.com/")
+                }
+            }
             onPopWindowClickListener = { position, string, dynamic ->
                 when (string) {
                     IGNORE -> {

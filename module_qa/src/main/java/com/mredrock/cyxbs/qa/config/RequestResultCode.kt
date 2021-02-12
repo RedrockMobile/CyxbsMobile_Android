@@ -27,5 +27,6 @@ object RequestResultCode {
      */
     // 需要刷新动态首页
     const val NEED_REFRESH_RESULT = 1
+    const val RESULT_CODE = 1
 
 }

@@ -4,13 +4,19 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import androidx.core.app.ActivityOptionsCompat
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mredrock.cyxbs.common.BaseApp.Companion.context
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.LogUtils
+import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.qa.R
+import com.mredrock.cyxbs.qa.beannew.Dynamic
 import com.mredrock.cyxbs.qa.beannew.Topic
-import com.mredrock.cyxbs.qa.pages.square.ui.activity.CircleDetailActivity.Companion.RESULT_CODE
+import com.mredrock.cyxbs.qa.config.RequestResultCode
+import com.mredrock.cyxbs.qa.config.RequestResultCode.NEED_REFRESH_RESULT
+import com.mredrock.cyxbs.qa.config.RequestResultCode.RESULT_CODE
 import com.mredrock.cyxbs.qa.pages.square.ui.adapter.CircleSquareAdapter
 import com.mredrock.cyxbs.qa.pages.square.viewmodel.CircleSquareViewModel
 import kotlinx.android.synthetic.main.qa_activity_circle_square.*
@@ -19,9 +25,22 @@ import java.util.ArrayList
 
 class CircleSquareActivity : BaseViewModelActivity<CircleSquareViewModel>() {
     var adapter: CircleSquareAdapter? = null
-    var mPosition=0//记录当前item的位置
-    var topicList=ArrayList<Topic>()
+    var mPosition = 0//记录当前item的位置
+    var topicList = ArrayList<Topic>()
     override val isFragmentActivity = false
+
+    companion object {
+        fun activityStart(fragment: Fragment, dynamicItem: View, data: Dynamic) {
+            fragment.apply {
+                activity?.let {
+                    val opt = ActivityOptionsCompat.makeSceneTransitionAnimation(it, dynamicItem, "dynamicItem")
+                    val intent = Intent(context, CircleSquareActivity::class.java)
+                    startActivityForResult(intent, RequestResultCode.DYNAMIC_DETAIL_REQUEST, opt.toBundle())
+                }
+            }
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.qa_activity_circle_square)
@@ -31,14 +50,11 @@ class CircleSquareActivity : BaseViewModelActivity<CircleSquareViewModel>() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        when(requestCode){
-            RESULT_CODE->if (resultCode== Activity.RESULT_OK){
-                val resultTopic=data?.getParcelableExtra<Topic>("topic_return")
-                LogUtils.d("zt","4")
-                LogUtils.d("zt","接收到的top"+resultTopic)
+        when (requestCode) {
+            RESULT_CODE -> if (resultCode == Activity.RESULT_OK) {
+                val resultTopic = data?.getParcelableExtra<Topic>("topic_return")
                 if (resultTopic != null) {
-                    topicList.set(mPosition,resultTopic)
-                    LogUtils.d("zt","toplist中对应位置的topic"+topicList.toString())
+                    topicList[mPosition] = resultTopic
                     topicList.let { adapter?.refreshData(it) }
                 }
             }
@@ -46,24 +62,24 @@ class CircleSquareActivity : BaseViewModelActivity<CircleSquareViewModel>() {
     }
 
     private fun initToolbar() {
-        qa_ib_toolbar_back.setOnClickListener(View.OnClickListener {
+        qa_ib_toolbar_back.setOnSingleClickListener {
+            setResult(NEED_REFRESH_RESULT)
             finish()
-            return@OnClickListener
-        })
+        }
         qa_tv_toolbar_title.text = "圈子广场"
     }
 
     private fun initView() {
-        adapter = CircleSquareAdapter(viewModel){topic, view,position->
-            mPosition=position
-            CircleDetailActivity.activityStartFromSquare(this,view,topic)
+        adapter = CircleSquareAdapter(viewModel) { topic, view, position ->
+            mPosition = position
+            CircleDetailActivity.activityStartFromSquare(this, view, topic)
         }
         rv_circle_square.layoutManager = LinearLayoutManager(context)
         rv_circle_square.adapter = adapter
         viewModel.getAllCirCleData("问答圈", "test1")
         viewModel.allCircle.observe {
             if (it != null) {
-                LogUtils.d("zt","2")
+                LogUtils.d("zt", "2")
                 adapter?.refreshData(it)
                 topicList.addAll(it)
             }
