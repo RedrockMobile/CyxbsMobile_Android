@@ -13,6 +13,7 @@ import android.widget.PopupWindow
 import android.widget.TextView
 import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.qa.R
+import java.lang.ref.WeakReference
 
 /**
  * created by zhangzhe
@@ -27,23 +28,23 @@ object ReplyPopWindow {
         MIDDLE // 居中
     }
 
-    private var replyPopWindow: PopupWindow? = null
-    private var context: Context? = null
-    private var mainView: View? = null
+    private var replyPopWindow: WeakReference<PopupWindow>? = null
+    private var context: WeakReference<Context>? = null
+    private var mainView: WeakReference<View>? = null
 
 
     fun with(context: Context) {
-        if (replyPopWindow?.isShowing == true) {
-            replyPopWindow?.dismiss()
+        if (replyPopWindow?.get()?.isShowing == true) {
+            replyPopWindow?.get()?.dismiss()
         }
-        replyPopWindow = PopupWindow(context)
-        this.context = context
-        replyPopWindow?.apply {
+        replyPopWindow = WeakReference(PopupWindow(context))
+        this.context = WeakReference(context)
+        replyPopWindow?.get()?.apply {
             isOutsideTouchable = false
             isFocusable = false
         }
-        mainView = LayoutInflater.from(context).inflate(R.layout.qa_popwindow_reply, null, false)
-        replyPopWindow!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        mainView = WeakReference(LayoutInflater.from(context).inflate(R.layout.qa_popwindow_reply, null, false))
+        replyPopWindow?.get()?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
     }
 
     fun setReplyName(name: String, content: String) {
@@ -51,47 +52,47 @@ object ReplyPopWindow {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
             // 构成要显示在reply_popwindow上的文字
             val s = "回复 <font color=\"#0000FF\">@${name}</font> : ${content.take(6) + if (content.length > 6) "..." else ""}"
-            mainView?.findViewById<TextView>(R.id.qa_tv_reply_popwindow_name)?.text = Html.fromHtml(s, Html.FROM_HTML_MODE_COMPACT)
+            mainView?.get()?.findViewById<TextView>(R.id.qa_tv_reply_popwindow_name)?.text = Html.fromHtml(s, Html.FROM_HTML_MODE_COMPACT)
         } else {
-            mainView?.findViewById<TextView>(R.id.qa_tv_reply_popwindow_name)?.text = "回复 @${name}"
+            mainView?.get()?.findViewById<TextView>(R.id.qa_tv_reply_popwindow_name)?.text = "回复 @${name}"
         }
     }
 
     fun show(view: View, alignMode: AlignMode, offsetYReverse: Int) {
-        if (replyPopWindow?.isShowing == true) {
+        if (replyPopWindow?.get()?.isShowing == true) {
             return
         }
         if (mainView == null || context == null) {
             throw IllegalStateException("IllegalState!")
         }
-        replyPopWindow?.contentView = mainView
+        replyPopWindow?.get()?.contentView = mainView?.get()
 
         // 先测量mainView，以免取到measuredWidth为0
-        mainView!!.measure(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+        mainView?.get()?.measure(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
         // 这样就可以根据布局的大小去计算是居中还是左右对齐了
         val offsetX = when (alignMode) {
-            AlignMode.MIDDLE -> -(View.MeasureSpec.getSize(mainView!!.measuredWidth) - view.width) / 2
+            AlignMode.MIDDLE -> -(View.MeasureSpec.getSize(mainView?.get()!!.measuredWidth) - view.width) / 2
             AlignMode.LEFT -> 0
-            AlignMode.RIGHT -> -(View.MeasureSpec.getSize(mainView!!.measuredWidth) - view.width)
+            AlignMode.RIGHT -> -(View.MeasureSpec.getSize(mainView?.get()!!.measuredWidth) - view.width)
         }
         // 显示弹窗
-        replyPopWindow?.showAsDropDown(view, offsetX, -(offsetYReverse + View.MeasureSpec.getSize(mainView!!.measuredHeight) + view.height), Gravity.START)
+        replyPopWindow?.get()?.showAsDropDown(view, offsetX, -(offsetYReverse + View.MeasureSpec.getSize(mainView?.get()!!.measuredHeight) + view.height), Gravity.START)
     }
 
     fun setOnClickEvent(callback: () -> Unit) {
-        mainView?.findViewById<ImageView>(R.id.qa_iv_reply_popwindow_dismiss)?.setOnSingleClickListener {
+        mainView?.get()?.findViewById<ImageView>(R.id.qa_iv_reply_popwindow_dismiss)?.setOnSingleClickListener {
             callback.invoke()
         }
     }
 
     fun dismiss() {
-        if (replyPopWindow?.isShowing == false) {
+        if (replyPopWindow?.get()?.isShowing == false) {
             return
         }
-        replyPopWindow?.dismiss()
+        replyPopWindow?.get()?.dismiss()
     }
 
-    fun isShowing() = replyPopWindow?.isShowing?: false
+    fun isShowing() = replyPopWindow?.get()?.isShowing ?: false
 
 
 }

@@ -1,9 +1,11 @@
 package com.mredrock.cyxbs.qa.pages.dynamic.ui.adapter
 
 import android.annotation.SuppressLint
+import android.graphics.Color
 import android.os.Build
-import android.text.Html
-import android.text.Html.FROM_HTML_MODE_COMPACT
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.style.ForegroundColorSpan
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
@@ -55,7 +57,6 @@ class ReplyListAdapter(private val onReplyInnerClickEvent: (comment: Comment) ->
 
     inner class ReplyViewHolder(parent: ViewGroup) : BaseViewHolder<Comment>(parent, R.layout.qa_recycler_item_dynamic_reply_inner) {
         @SuppressLint("SetTextI18n")
-        @RequiresApi(Build.VERSION_CODES.N)
         override fun refresh(data: Comment?) {
             data ?: return
             itemView.apply {
@@ -64,8 +65,15 @@ class ReplyListAdapter(private val onReplyInnerClickEvent: (comment: Comment) ->
                     qa_tv_reply_inner_content.text = data.content
                 } else {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                        val s = "回复 <font color=\"#0000FF\">@${data.fromNickname}</font> : ${data.content}"
-                        qa_tv_reply_inner_content.text = Html.fromHtml(s, FROM_HTML_MODE_COMPACT)
+                        // 回复时，被回复人名称显示颜色
+                        val span = SpannableString("回复 @${data.fromNickname} : ${data.content}").apply {
+                            setSpan(
+                                    ForegroundColorSpan(Color.BLUE),
+                                    3, 3 + data.fromNickname.length + 1,
+                                    Spannable.SPAN_INCLUSIVE_EXCLUSIVE
+                            )
+                        }
+                        qa_tv_reply_inner_content.text = span
                     } else {
                         qa_tv_reply_inner_content.text = "回复 @${data.fromNickname} : "
                     }
