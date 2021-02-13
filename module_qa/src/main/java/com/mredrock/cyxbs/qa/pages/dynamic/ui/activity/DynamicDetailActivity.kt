@@ -50,7 +50,7 @@ import kotlinx.android.synthetic.main.qa_recycler_item_dynamic_header.view.*
 
 class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
     companion object {
-        var dynamicOrigin: Dynamic? = null // 由于使用点赞等功能，保存一个Dynamic的引用
+        var dynamicOrigin: Dynamic? = null // 由于点赞数、发帖数会改变，故保存一个Dynamic的引用
 
         // 有共享元素动画的启动
         fun activityStart(fragment: Fragment, dynamicItem: View, data: Dynamic) {
@@ -85,8 +85,6 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
 
     private val footerRvAdapter = FooterRvAdapter { refreshCommentList() }
 
-    lateinit var dynamic: Dynamic
-
     private val behavior by lazy { AppBarLayout.ScrollingViewBehavior() }
 
     override val isFragmentActivity = false
@@ -118,7 +116,7 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
                         }.addOptionAndCallback(CommentConfig.COPY) {
                             ClipboardController.copyText(this, comment.content)
                         }
-                if (dynamic.isSelf == 1 || comment.isSelf) {
+                if (viewModel.dynamic.value?.isSelf == 1 || comment.isSelf) {
                     optionPopWindow.addOptionAndCallback(CommentConfig.DELETE) {
                         QaDialog.show(this, resources.getString(R.string.qa_dialog_tip_delete_comment_text), {}) {
                             viewModel.deleteId(comment.commentId, COMMENT_DELETE)
@@ -145,7 +143,7 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
                             ClipboardController.copyText(this, comment.content)
                         }
                 // 如果总动态是自己发的，或者该评论是自己的，则可以删除（可以控评）
-                if (dynamic.isSelf == 1 || comment.isSelf) {
+                if (viewModel.dynamic.value?.isSelf == 1 || comment.isSelf) {
                     optionPopWindow.addOptionAndCallback(CommentConfig.DELETE) {
                         QaDialog.show(this, resources.getString(R.string.qa_dialog_tip_delete_comment_text), {}) {
                             viewModel.deleteId(comment.commentId, COMMENT_DELETE)
@@ -171,16 +169,25 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.qa_activity_dynamic_detail)
+        // 设置进入动画
         window.enterTransition = Slide(Gravity.END).apply { duration = 500 }
+        // 设置标题
         qa_tv_toolbar_title.text = resources.getText(R.string.qa_dynamic_detail_title_text)
+        // 注册
+        mTencent = Tencent.createInstance(CommentConfig.APP_ID, this)
+
         initObserve()
         initDynamic()
         initReplyList()
-        mTencent = Tencent.createInstance(CommentConfig.APP_ID, this)
+        initOnClickListener()
+
+    }
+
+    private fun initOnClickListener() {
         qa_iv_select_pic.setOnSingleClickListener {
             Intent(this, QuizActivity::class.java).apply {
                 putExtra("isComment", "1")
-                putExtra("postId", dynamic.postId)
+                putExtra("postId", viewModel.dynamic.value?.postId)
                 putExtra("replyId", viewModel.replyInfo.value?.replyId ?: "")
                 putExtra("commentContent", qa_et_reply.text.toString())
                 putExtra("replyNickname", viewModel.replyInfo.value?.nickname ?: "")
@@ -193,7 +200,7 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
         }
 
         qa_btn_send.setOnSingleClickListener {
-            viewModel.releaseComment(dynamic.postId, qa_et_reply.text.toString())
+            viewModel.releaseComment(viewModel.dynamic.value!!.postId, qa_et_reply.text.toString())
         }
         qa_iv_dynamic_comment_count.setOnSingleClickListener {
             KeyboardController.showInputKeyboard(this, qa_et_reply)
@@ -273,17 +280,13 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
             setResult(NEED_REFRESH_RESULT)
             finish()
         }
+        viewModel.dynamic.observe {
+            // 有人发帖了，修改原引用的评论数
+            dynamicOrigin?.commentCount = it!!.commentCount
+            refreshDynamic()
+        }
     }
 
-    override fun onBackPressed() {
-        if (ReplyPopWindow.isShowing()) {
-            ReplyPopWindow.dismiss()
-            return
-        }
-        window.returnTransition = Slide(Gravity.END).apply { duration = 500 }
-        dynamicOrigin = null
-        super.onBackPressed()
-    }
 
     private fun initDynamic() {
 
@@ -297,28 +300,18 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
                 postId = intent.getStringExtra("post_id")
             }
         }
-        dynamic = dynamicOrigin!!
-        viewModel.dynamicLiveData.value = dynamicOrigin!!
-        viewModel.dynamicLiveData.observe {
-            dynamic = it!!
-            // 有人发帖了，修改原引用的评论数
-            dynamicOrigin?.commentCount = it.commentCount
-            refreshDynamic()
-        }
-        refreshDynamic()
+        viewModel.dynamic.value = dynamicOrigin!!
 
-        qa_tv_reply_title.setOnClickListener {
-            KeyboardController.showInputKeyboard(this, qa_et_reply)
-        }
+
 
         qa_iv_dynamic_share.setOnSingleClickListener {
             ShareDialog(it.context).apply {
                 initView(onCancelListener = View.OnClickListener {
                     dismiss()
                 }, qqshare = View.OnClickListener {
-                    mTencent?.let { it1 -> ShareUtils.qqShare(it1, this@DynamicDetailActivity, dynamic.topic, dynamic.content, "https://cn.bing.com/", "") }
+                    mTencent?.let { it1 -> ShareUtils.qqShare(it1, this@DynamicDetailActivity, viewModel.dynamic.value!!.topic, viewModel.dynamic.value!!.content, "https://cn.bing.com/", "") }
                 }, qqZoneShare = View.OnClickListener {
-                    mTencent?.let { it1 -> ShareUtils.qqQzoneShare(it1, this@DynamicDetailActivity, dynamic.topic, dynamic.content, "https://cn.bing.com/", ArrayList()) }
+                    mTencent?.let { it1 -> ShareUtils.qqQzoneShare(it1, this@DynamicDetailActivity, viewModel.dynamic.value!!.topic, viewModel.dynamic.value!!.content, "https://cn.bing.com/", ArrayList()) }
 
                 }, weChatShare = View.OnClickListener {
                     CyxbsToast.makeText(context, R.string.qa_share_wechat_text, Toast.LENGTH_SHORT).show()
@@ -343,62 +336,29 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
                         KeyboardController.showInputKeyboard(this, qa_et_reply)
                         viewModel.replyInfo.value = ReplyInfo("", "", "")
                     }.addOptionAndCallback(CommentConfig.COPY) {
-                        ClipboardController.copyText(this, dynamic.content)
+                        ClipboardController.copyText(this, viewModel.dynamic.value!!.content)
                     }
-            if (dynamic.isSelf == 1) { // 如果帖子是自己的，则可以删除
+            if (viewModel.dynamic.value?.isSelf == 1) { // 如果帖子是自己的，则可以删除
                 optionPopWindow.addOptionAndCallback(CommentConfig.DELETE) {
                     QaDialog.show(this, resources.getString(R.string.qa_dialog_tip_delete_dynamic_text), {}) {
-                        viewModel.deleteId(dynamic.postId, DYNAMIC_DELETE)
+                        viewModel.deleteId(viewModel.dynamic.value!!.postId, DYNAMIC_DELETE)
                     }
                 }
             } else { // 如果是别人的帖子，则可以举报
                 optionPopWindow.addOptionAndCallback(CommentConfig.REPORT) {
                     QaReportDialog.show(this) { reportText ->
-                        viewModel.report(dynamic.postId, reportText, CommentConfig.REPORT_DYNAMIC_MODEL)
+                        viewModel.report(viewModel.dynamic.value!!.postId, reportText, CommentConfig.REPORT_DYNAMIC_MODEL)
                     }
                 }
             }
             optionPopWindow.show(it, OptionalPopWindow.AlignMode.RIGHT, 0)
         }
-        qa_iv_dynamic_praise_count_image.registerLikeView(dynamic.postId, CommentConfig.PRAISE_MODEL_DYNAMIC, dynamic.isPraised, dynamic.praiseCount)
+        qa_iv_dynamic_praise_count_image.registerLikeView(viewModel.dynamic.value!!.postId, CommentConfig.PRAISE_MODEL_DYNAMIC, viewModel.dynamic.value!!.isPraised, viewModel.dynamic.value!!.praiseCount)
         qa_iv_dynamic_praise_count_image.setOnSingleClickListener {
             qa_iv_dynamic_praise_count_image.click()
         }
 
     }
-
-    @SuppressLint("SetTextI18n")
-    private fun refreshDynamic() {
-        qa_iv_dynamic_avatar.setAvatarImageFromUrl(dynamic.avatar)
-        qa_tv_dynamic_topic.text = "# " + dynamic.topic
-        qa_tv_dynamic_nickname.text = dynamic.nickName
-        qa_tv_dynamic_content.text = dynamic.content
-        qa_tv_dynamic_comment_count.text = dynamic.commentCount.toString()
-        qa_tv_dynamic_publish_at.text = dynamicTimeDescription(System.currentTimeMillis(), dynamic.publishTime * 1000)
-        if (dynamic.pics.isNullOrEmpty())
-            qa_dynamic_nine_grid_view.setRectangleImages(emptyList(), NineGridView.MODE_IMAGE_THREE_SIZE)
-        else {
-            dynamic.pics.apply {
-                val tag = qa_dynamic_nine_grid_view.tag
-                if (null == tag || tag == this) {
-                    val tagStore = qa_dynamic_nine_grid_view.tag
-                    qa_dynamic_nine_grid_view.setImages(this, NineGridView.MODE_IMAGE_THREE_SIZE, NineGridView.ImageMode.MODE_IMAGE_RECTANGLE)
-                    qa_dynamic_nine_grid_view.tag = tagStore
-                } else {
-                    val tagStore = this
-                    qa_dynamic_nine_grid_view.tag = null
-                    qa_dynamic_nine_grid_view.setRectangleImages(emptyList(), NineGridView.MODE_IMAGE_THREE_SIZE)
-                    qa_dynamic_nine_grid_view.setImages(this, NineGridView.MODE_IMAGE_NORMAL_SIZE, NineGridView.ImageMode.MODE_IMAGE_RECTANGLE)
-                    qa_dynamic_nine_grid_view.tag = tagStore
-                }
-            }
-
-        }
-        qa_dynamic_nine_grid_view.setOnItemClickListener { _, index ->
-            ViewImageActivity.activityStart(this, dynamic.pics.map { it }.toTypedArray(), index)
-        }
-    }
-
 
     private fun initReplyList() {
 
@@ -419,6 +379,48 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
             )
             adapter = adapterWrapper
         }
+    }
+
+    @SuppressLint("SetTextI18n")
+    private fun refreshDynamic() {
+        qa_iv_dynamic_avatar.setAvatarImageFromUrl(viewModel.dynamic.value?.avatar)
+        qa_tv_dynamic_topic.text = "# " + viewModel.dynamic.value?.topic
+        qa_tv_dynamic_nickname.text = viewModel.dynamic.value?.nickName
+        qa_tv_dynamic_content.text = viewModel.dynamic.value?.content
+        qa_tv_dynamic_comment_count.text = viewModel.dynamic.value?.commentCount.toString()
+        qa_tv_dynamic_publish_at.text = dynamicTimeDescription(System.currentTimeMillis(), viewModel.dynamic.value!!.publishTime * 1000)
+        if (viewModel.dynamic.value?.pics.isNullOrEmpty())
+            qa_dynamic_nine_grid_view.setRectangleImages(emptyList(), NineGridView.MODE_IMAGE_THREE_SIZE)
+        else {
+            viewModel.dynamic.value?.pics?.apply {
+                val tag = qa_dynamic_nine_grid_view.tag
+                if (null == tag || tag == this) {
+                    val tagStore = qa_dynamic_nine_grid_view.tag
+                    qa_dynamic_nine_grid_view.setImages(this, NineGridView.MODE_IMAGE_THREE_SIZE, NineGridView.ImageMode.MODE_IMAGE_RECTANGLE)
+                    qa_dynamic_nine_grid_view.tag = tagStore
+                } else {
+                    val tagStore = this
+                    qa_dynamic_nine_grid_view.tag = null
+                    qa_dynamic_nine_grid_view.setRectangleImages(emptyList(), NineGridView.MODE_IMAGE_THREE_SIZE)
+                    qa_dynamic_nine_grid_view.setImages(this, NineGridView.MODE_IMAGE_NORMAL_SIZE, NineGridView.ImageMode.MODE_IMAGE_RECTANGLE)
+                    qa_dynamic_nine_grid_view.tag = tagStore
+                }
+            }
+
+        }
+        qa_dynamic_nine_grid_view.setOnItemClickListener { _, index ->
+            ViewImageActivity.activityStart(this, viewModel.dynamic.value!!.pics.map { it }.toTypedArray(), index)
+        }
+    }
+
+    override fun onBackPressed() {
+        if (ReplyPopWindow.isShowing()) {
+            ReplyPopWindow.dismiss()
+            return
+        }
+        window.returnTransition = Slide(Gravity.END).apply { duration = 500 }
+        dynamicOrigin = null
+        super.onBackPressed()
     }
 
 

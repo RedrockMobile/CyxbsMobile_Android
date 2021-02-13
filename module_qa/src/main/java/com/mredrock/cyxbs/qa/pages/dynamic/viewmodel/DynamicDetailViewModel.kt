@@ -32,7 +32,7 @@ open class DynamicDetailViewModel : BaseViewModel() {
 
     val replyInfo = MutableLiveData<ReplyInfo>()
 
-    val dynamicLiveData = MutableLiveData<Dynamic>()
+    val dynamic = MutableLiveData<Dynamic>()
 
     var position = 0
 
@@ -69,7 +69,7 @@ open class DynamicDetailViewModel : BaseViewModel() {
                 .doOnError {
                 }
                 .safeSubscribeBy {
-                    dynamicLiveData.postValue(it)
+                    dynamic.postValue(it)
                 }
     }
     // 回复后，滑动到刚刚回复的comment下
@@ -135,7 +135,7 @@ open class DynamicDetailViewModel : BaseViewModel() {
                     }
                 }
                 .safeSubscribeBy {
-                    refreshCommentList(dynamicLiveData.value?.postId ?: "0", "-1")
+                    refreshCommentList(dynamic.value?.postId ?: "0", "-1")
 
                     when (model) {
                         DynamicDetailActivity.DYNAMIC_DELETE -> {

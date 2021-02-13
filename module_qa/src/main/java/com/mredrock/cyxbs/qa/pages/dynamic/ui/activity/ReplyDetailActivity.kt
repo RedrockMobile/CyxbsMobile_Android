@@ -139,7 +139,8 @@ class ReplyDetailActivity : AppCompatActivity() {
             qa_reply_detail_swipe_refresh.isRefreshing = false
 
             qa_reply_detail_rv_reply_list.removeItemDecoration(itemDecoration)
-            if (!replyIdScreen.isNullOrEmpty() && (dataList?.size ?: 0) >= 1) {
+            if (!replyIdScreen.isNullOrEmpty() && (dataList?.size
+                            ?: 0) > 1 && dataList?.get(0)?.commentId == replyIdScreen) {
                 qa_reply_detail_rv_reply_list.addItemDecoration(itemDecoration)
             }
         })
@@ -165,7 +166,7 @@ class ReplyDetailActivity : AppCompatActivity() {
                                 ClipboardController.copyText(this, comment.content)
                             }
                     // 如果总动态是自己发的，或者该评论是自己的，则可以删除（可以控评）
-                    if (viewModel?.dynamicLiveData?.value?.isSelf == 1 || comment.isSelf) {
+                    if (viewModel?.dynamic?.value?.isSelf == 1 || comment.isSelf) {
                         optionPopWindow.addOptionAndCallback(CommentConfig.DELETE) {
                             QaDialog.show(this, resources.getString(R.string.qa_dialog_tip_delete_comment_text), {}) {
                                 viewModel?.deleteId(comment.commentId, DynamicDetailActivity.COMMENT_DELETE)
@@ -209,6 +210,6 @@ class ReplyDetailActivity : AppCompatActivity() {
 
 
     fun refresh() {
-        viewModel?.refreshCommentList(viewModel?.dynamicLiveData?.value?.postId ?: "-1", "-1")
+        viewModel?.refreshCommentList(viewModel?.dynamic?.value?.postId ?: "-1", "-1")
     }
 }
