@@ -46,6 +46,7 @@ import top.limuyang2.photolibrary.LPhotoHelper
 @Route(path = QA_QUIZ)
 class QuizActivity : BaseViewModelActivity<QuizViewModel>(), EventBusLifecycleSubscriber {
     companion object {
+        const val MAX_CONTENT_SIZE = 500
         const val MAX_SELECTABLE_IMAGE_COUNT = 8
         const val NOT_DRAFT_ID = "-1"
         const val FIRST_QUIZ = "cyxbs_quiz_is_first_time"
@@ -56,6 +57,7 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>(), EventBusLifecycleSu
 
     }
 
+    private var quizContent = ""
     private var progressDialog: ProgressDialog? = null
     override val isFragmentActivity = false
     private var draftId = NOT_DRAFT_ID
@@ -74,11 +76,11 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>(), EventBusLifecycleSu
             isComment = intent.getStringExtra("isComment")
             if (!intent.getStringExtra("commentContent").isNullOrEmpty())
                 commentContent = intent.getStringExtra("commentContent")
-            if (!intent.getStringExtra("replyId").isNullOrEmpty()){
+            if (!intent.getStringExtra("replyId").isNullOrEmpty()) {
                 replyId = intent.getStringExtra("replyId")
                 nine_grid_view.gone()
             }
-            if (!intent.getStringExtra("postId").isNullOrEmpty()){
+            if (!intent.getStringExtra("postId").isNullOrEmpty()) {
                 postId = intent.getStringExtra("postId")
             }
         }
@@ -160,11 +162,13 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>(), EventBusLifecycleSu
                     i: Int,
                     i1: Int,
                     i2: Int
-            ) = if (!TextUtils.isEmpty(charSequence) && charSequence.isNotEmpty()) {
+            ) = if (!TextUtils.isEmpty(charSequence) && charSequence.isNotEmpty() && charSequence.length <= MAX_CONTENT_SIZE) {
+                quizContent = charSequence.toString()
                 qa_tv_toolbar_right.setBackgroundResource(qa_shape_send_dynamic_btn_blue_background)
                 qa_tv_edit_num.text = charSequence.length.toString() + "/500"
 
             } else {
+                qa_edt_quiz_content.setText(quizContent)
                 qa_tv_toolbar_right.setBackgroundResource(qa_shape_send_dynamic_btn_grey_background)
                 qa_tv_edit_num.text = charSequence.length.toString() + "/500"
             }
@@ -206,14 +210,14 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>(), EventBusLifecycleSu
             text = getString(R.string.qa_quiz_dialog_next)
             setOnClickListener {
                 if (isComment == "") {
-                    val result = viewModel.submitTitleAndContent(dynamicType, qa_edt_quiz_content.text.toString())
+                    val result = viewModel.submitTitleAndContent(dynamicType, quizContent)
                     if (result) {
                         progressDialog?.show()
                         viewModel.submitDynamic()
                     }
                 } else {
                     progressDialog?.show()
-                    viewModel.submitComment(postId, qa_edt_quiz_content.text.toString(), replyId)
+                    viewModel.submitComment(postId, quizContent, replyId)
                 }
             }
         }
@@ -317,9 +321,9 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>(), EventBusLifecycleSu
 
     private fun saveDraft() {
         if (draftId == NOT_DRAFT_ID) {
-            viewModel.addItemToDraft(qa_edt_quiz_content.text.toString(), dynamicType)
+            viewModel.addItemToDraft(quizContent, dynamicType)
         } else {
-            viewModel.updateDraftItem(qa_edt_quiz_content.text.toString(), draftId, dynamicType)
+            viewModel.updateDraftItem(quizContent, draftId, dynamicType)
         }
     }
 

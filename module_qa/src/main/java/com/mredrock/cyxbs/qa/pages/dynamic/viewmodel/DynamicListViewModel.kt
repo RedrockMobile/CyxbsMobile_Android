@@ -17,7 +17,7 @@ import com.mredrock.cyxbs.qa.pages.dynamic.model.DynamicDataSource
 import com.mredrock.cyxbs.qa.pages.dynamic.model.TopicDataSet
 
 /**
- * Created By  on 2018/8/26.
+ * rebuild by xgl 2021/2/13
  */
 open class DynamicListViewModel(kind: String) : BaseViewModel() {
     val dynamicList: LiveData<PagedList<Dynamic>>
@@ -78,7 +78,6 @@ open class DynamicListViewModel(kind: String) : BaseViewModel() {
                 .setSchedulers()
                 .doOnError {
                     toastEvent.value = R.string.qa_ignore_dynamic_failure
-                    ignorePeople.value = false
                 }
                 .doOnSubscribe {
                     ignorePeople.value = true
@@ -111,10 +110,10 @@ open class DynamicListViewModel(kind: String) : BaseViewModel() {
                 .setSchedulers()
                 .doOnError {
                     toastEvent.value = R.string.qa_delete_dynamic_failure
-                    deleteTips.value = false
                 }
                 .safeSubscribeBy {
                     deleteTips.value = true
+                    toastEvent.value = R.string.qa_delete_dynamic_success
                 }
     }
 

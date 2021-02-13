@@ -148,7 +148,13 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), EventBusL
                 }
 
         viewModel.ignorePeople.observe {
-            viewModel.invalidateQuestionList()
+            if (it == true)
+                viewModel.invalidateQuestionList()
+        }
+
+        viewModel.deleteTips.observe {
+            if (it == true)
+                viewModel.invalidateQuestionList()
         }
         val footerRvAdapter = FooterRvAdapter { viewModel.retry() }
         val emptyRvAdapter = EmptyRvAdapter(getString(R.string.qa_question_list_empty_hint))

@@ -2,12 +2,12 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/qa_ctl_dynamic"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/qa_shape_comment_header_background"
-    android:id="@+id/qa_ctl_dynamic"
-    android:transitionName="dynamicItem"
-    android:paddingTop="21dp">
+    android:paddingTop="21dp"
+    android:transitionName="dynamicItem">
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/qa_gl_dynamic_start"
@@ -84,7 +84,7 @@
         android:layout_marginTop="15dp"
         android:ellipsize="end"
         android:gravity="start"
-        android:singleLine="false"
+        android:maxLines="4"
         android:textColor="@color/qa_dynamic_content_text_color"
         android:textSize="16sp"
         app:layout_constraintEnd_toStartOf="@id/qa_gl_dynamic_end"
@@ -155,15 +155,14 @@
         android:textSize="11sp"
         app:layout_constraintBottom_toBottomOf="@+id/qa_iv_dynamic_share"
         app:layout_constraintEnd_toStartOf="@+id/qa_iv_dynamic_share"
-        app:layout_constraintTop_toTopOf="@+id/qa_iv_dynamic_share"
-        />
+        app:layout_constraintTop_toTopOf="@+id/qa_iv_dynamic_share" />
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/qa_iv_dynamic_share"
         android:layout_width="20dp"
         android:layout_height="20dp"
-        android:layout_marginEnd="10dp"
         android:layout_marginTop="20dp"
+        android:layout_marginEnd="10dp"
         android:background="@drawable/qa_ic_dynamic_share"
         android:drawablePadding="4dp"
         android:gravity="center_vertical"

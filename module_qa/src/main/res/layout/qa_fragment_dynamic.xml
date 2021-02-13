@@ -52,7 +52,7 @@
 
         <RelativeLayout
             android:id="@+id/rl_qa_hot_search"
-            android:layout_width="340dp"
+            android:layout_width="360dp"
             android:layout_height="36dp"
             android:layout_marginStart="30dp"
             android:layout_marginTop="20dp"

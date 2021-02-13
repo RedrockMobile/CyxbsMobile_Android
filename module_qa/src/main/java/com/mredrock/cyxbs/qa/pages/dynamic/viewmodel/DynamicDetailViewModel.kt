@@ -127,10 +127,10 @@ open class DynamicDetailViewModel : BaseViewModel() {
                 .doOnError {
                     when (model) {
                         DynamicDetailActivity.DYNAMIC_DELETE -> {
-                            toastEvent.value = R.string.qa_detail_delete_dynamic_failure_text
+                            toastEvent.value = R.string.qa_delete_dynamic_failure
                         }
                         DynamicDetailActivity.COMMENT_DELETE -> {
-                            toastEvent.value = R.string.qa_detail_delete_comment_failure_text
+                            toastEvent.value = R.string.qa_delete_comment_failure
                         }
                     }
                 }
@@ -140,10 +140,10 @@ open class DynamicDetailViewModel : BaseViewModel() {
                     when (model) {
                         DynamicDetailActivity.DYNAMIC_DELETE -> {
                             deleteDynamic.postValue(true)
-                            toastEvent.value = R.string.qa_detail_delete_dynamic_success_text
+                            toastEvent.value = R.string.qa_delete_dynamic_success
                         }
                         DynamicDetailActivity.COMMENT_DELETE -> {
-                            toastEvent.value = R.string.qa_detail_delete_comment_success_text
+                            toastEvent.value = R.string.qa_delete_comment_success
                         }
                     }
                 }

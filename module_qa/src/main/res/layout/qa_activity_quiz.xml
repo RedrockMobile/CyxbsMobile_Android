@@ -40,14 +40,15 @@
                 <androidx.appcompat.widget.AppCompatEditText
                     android:id="@+id/qa_edt_quiz_content"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:background="@null"
                     android:gravity="start"
                     android:hint="@string/qa_quiz_content_hint"
                     android:inputType="textMultiLine"
-                    android:maxLength="200"
+                    android:maxHeight="200dp"
                     android:paddingTop="8dp"
                     android:paddingBottom="8dp"
+                    android:scrollbars="vertical"
                     android:textColor="@color/common_level_two_font_color"
                     android:textColorHint="@color/qa_quiz_content_edt_hint_color"
                     android:textSize="16sp" />
@@ -81,10 +82,10 @@
                 android:background="@color/qa_quiz_toolbar_divider_line_color" />
 
             <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/qa_tv_choose_circle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
-                android:id="@+id/qa_tv_choose_circle"
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="10dp"
                 android:padding="5dp"
