@@ -122,7 +122,8 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
                             viewModel.deleteId(comment.commentId, COMMENT_DELETE)
                         }
                     }
-                } else {
+                }
+                if (!comment.isSelf) {
                     optionPopWindow.addOptionAndCallback(CommentConfig.REPORT) {
                         QaReportDialog.show(this) {
                             viewModel.report(comment.commentId, it, CommentConfig.REPORT_COMMENT_MODEL)
