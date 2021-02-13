@@ -49,9 +49,10 @@ import kotlinx.android.synthetic.main.qa_recycler_item_dynamic_header.view.*
  */
 
 class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
-
     companion object {
-        var dynamicOrigin: Dynamic? = null
+        var dynamicOrigin: Dynamic? = null // 由于使用点赞等功能，保存一个Dynamic的引用
+
+        // 有共享元素动画的启动
         fun activityStart(fragment: Fragment, dynamicItem: View, data: Dynamic) {
             fragment.apply {
                 activity?.let {
@@ -60,6 +61,18 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
                     dynamicOrigin = data
                     it.window.exitTransition = Slide(Gravity.START).apply { duration = 500 }
                     startActivityForResult(intent, DYNAMIC_DETAIL_REQUEST, opt.toBundle())
+                }
+            }
+        }
+
+        // 根据postId启动
+        fun activityStart(fragment: Fragment, postId: String) {
+            fragment.apply {
+                activity?.let {
+                    val intent = Intent(context, DynamicDetailActivity::class.java)
+                    intent.putExtra("post_id", postId)
+                    it.window.exitTransition = Slide(Gravity.START).apply { duration = 500 }
+                    startActivityForResult(intent, DYNAMIC_DETAIL_REQUEST)
                 }
             }
         }
@@ -84,7 +97,7 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
 
 
     private fun refreshCommentList() {
-        viewModel.refreshCommentList(dynamic.postId, "-1")
+        viewModel.refreshCommentList(dynamicOrigin!!.postId, "-1")
     }
 
     // 评论点击的逻辑
@@ -251,7 +264,7 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
             qa_et_reply.setText("")
             KeyboardController.hideInputKeyboard(this, qa_et_reply)
 
-            viewModel.refreshCommentList(dynamic.postId, (it?.commentId
+            viewModel.refreshCommentList(dynamicOrigin!!.postId, (it?.commentId
                     ?: -1).toString())
 
         }
@@ -268,7 +281,7 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
             return
         }
         window.returnTransition = Slide(Gravity.END).apply { duration = 500 }
-        finish()
+        dynamicOrigin = null
         super.onBackPressed()
     }
 
@@ -279,10 +292,16 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
         layoutParams.behavior = behavior
 
 
+        if (dynamicOrigin == null) {
+            dynamicOrigin = Dynamic().apply {
+                postId = intent.getStringExtra("post_id")
+            }
+        }
         dynamic = dynamicOrigin!!
         viewModel.dynamicLiveData.value = dynamicOrigin!!
         viewModel.dynamicLiveData.observe {
             dynamic = it!!
+            // 有人发帖了，修改原引用的评论数
             dynamicOrigin?.commentCount = it.commentCount
             refreshDynamic()
         }
@@ -410,7 +429,7 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
             RequestResultCode.RELEASE_COMMENT_ACTIVITY_REQUEST -> {
                 if (resultCode == NEED_REFRESH_RESULT) {
                     // 需要刷新 则 刷新显示动态
-                    viewModel.refreshCommentList(dynamic.postId, "-1")
+                    viewModel.refreshCommentList(dynamicOrigin!!.postId, "-1")
                     viewModel.replyInfo.value = ReplyInfo("", "", "")
                 }
                 data?.getStringExtra("text")?.let {
