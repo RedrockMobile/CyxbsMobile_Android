@@ -60,10 +60,14 @@ class CircleSquareAdapter(val viewmodel: CircleSquareViewModel, private val onIt
                 viewmodel.followTopic(dataList[position].topicName, dataList[position]._isFollow.equals(1))
                 holder.itemView.btn_circle_square_concern.background = context.getDrawable(R.drawable.qa_shape_send_dynamic_btn_blue_background)
                 dataList[position]._isFollow=0
+                dataList[position].follow_count=dataList[position].follow_count-1
+                notifyDataSetChanged()
             } else {
                 viewmodel.followTopic(dataList[position].topicName, dataList[position]._isFollow.equals(1))
                 holder.itemView.btn_circle_square_concern.background = context.getDrawable(R.drawable.qa_shape_send_dynamic_btn_grey_background)
                 dataList[position]._isFollow=1
+                dataList[position].follow_count=dataList[position].follow_count+1
+                notifyDataSetChanged()
             }
         }
     }

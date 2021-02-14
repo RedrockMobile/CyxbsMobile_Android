@@ -19,6 +19,7 @@ import com.mredrock.cyxbs.qa.beannew.Dynamic
 import com.mredrock.cyxbs.qa.beannew.Topic
 import com.mredrock.cyxbs.qa.beannew.TopicMessage
 import com.mredrock.cyxbs.qa.pages.dynamic.model.TopicDataSet
+import com.mredrock.cyxbs.qa.pages.dynamic.ui.fragment.DynamicFragment
 
 import com.mredrock.cyxbs.qa.pages.square.ui.activity.CircleSquareActivity
 import com.mredrock.cyxbs.qa.ui.widget.ImageViewAddCount
@@ -31,7 +32,7 @@ import kotlinx.android.synthetic.main.qa_recycler_item_circles.view.*
  * @Description:
  * @Date: 2020/11/18 23:18
  */
-class CirclesAdapter(private val onItemClickEvent: (Topic,View) -> Unit) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class CirclesAdapter(private val onItemClickEvent: (Topic,View) -> Unit,private val fragment: DynamicFragment) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     companion object {
         const val NO_CIRCLE = 0
         const val HAVE_CIRCLE = 1
@@ -83,7 +84,7 @@ class CirclesAdapter(private val onItemClickEvent: (Topic,View) -> Unit) : Recyc
             NO_CIRCLE -> {
                 val viewHolder = holder as NoCircleItem
                 viewHolder.itemView.setOnSingleClickListener {
-                    changeToActivity(CircleSquareActivity())
+                    CircleSquareActivity.activityStartFromDynamic(fragment)
                 }
             }
             HAVE_CIRCLE -> {
@@ -104,11 +105,6 @@ class CirclesAdapter(private val onItemClickEvent: (Topic,View) -> Unit) : Recyc
                 }
             }
         }
-    }
-
-    private fun changeToActivity(activity: Activity) {
-        val intent = Intent(BaseApp.context, activity::class.java)
-        BaseApp.context.startActivity(intent)
     }
 
     override fun getItemCount(): Int {

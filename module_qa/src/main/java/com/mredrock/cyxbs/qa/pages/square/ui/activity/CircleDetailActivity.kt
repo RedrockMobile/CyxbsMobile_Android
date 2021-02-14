@@ -83,8 +83,6 @@ class CircleDetailActivity : BaseViewModelActivity<CircleDetailViewModel>() {
         val intent = Intent()
         intent.putExtra("topic_return", topic)
         setResult(Activity.RESULT_OK, intent)
-        LogUtils.d("zt", "3")
-        LogUtils.d("zt", "返回的top" + topic)
         setResult(NEED_REFRESH_RESULT)
         finish()
         super.onBackPressed()
@@ -93,9 +91,11 @@ class CircleDetailActivity : BaseViewModelActivity<CircleDetailViewModel>() {
     @SuppressLint("UseCompatLoadingForDrawables")
     private fun initClick() {
         qa_circle_detail_iv_back.setOnSingleClickListener {
+            window.returnTransition = Slide(Gravity.END).apply { duration = 500 }
             val intent = Intent()
             intent.putExtra("topic_return", topic)
             setResult(Activity.RESULT_OK, intent)
+            setResult(NEED_REFRESH_RESULT)
             finish()
         }
         btn_circle_square_concern.setOnClickListener {

@@ -164,9 +164,9 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), EventBusL
                 footerAdapter = footerRvAdapter
         )
         val circlesAdapter = this.activity?.let {
-            CirclesAdapter { topic, view ->
+            CirclesAdapter( { topic, view ->
                 CircleDetailActivity.activityStartFromCircle(this, view, topic)
-            }
+            },this)
         }
         val linearLayoutManager = LinearLayoutManager(context)
         linearLayoutManager.orientation = LinearLayoutManager.HORIZONTAL

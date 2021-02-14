@@ -2,7 +2,11 @@ package com.mredrock.cyxbs.qa.pages.search.ui
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
+import android.view.DragAndDropPermissions
+import android.view.DragEvent
+import android.view.Menu
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
@@ -41,11 +45,6 @@ class SearchActivity : BaseViewModelActivity<SearchViewModel>(), EventBusLifecyc
                 ActivityOptionsCompat.makeSceneTransitionAnimation(it, view, "ImageView_Search").apply {
                 }.toBundle()
             })
-        }
-
-        fun activityStart(fragment: Fragment) {
-            val intent = fragment.context?.intentFor<SearchActivity>()
-            fragment.startActivity(intent)
         }
     }
 

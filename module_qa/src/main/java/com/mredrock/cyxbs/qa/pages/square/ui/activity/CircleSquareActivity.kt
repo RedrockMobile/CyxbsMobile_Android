@@ -4,13 +4,17 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import androidx.core.app.ActivityCompat.startActivityForResult
 import androidx.core.app.ActivityOptionsCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.BaseApp.Companion.context
+import com.mredrock.cyxbs.common.ui.BaseActivity
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
+import com.mredrock.cyxbs.common.utils.extensions.startActivityForResult
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.beannew.Dynamic
 import com.mredrock.cyxbs.qa.beannew.Topic
@@ -30,12 +34,11 @@ class CircleSquareActivity : BaseViewModelActivity<CircleSquareViewModel>() {
     override val isFragmentActivity = false
 
     companion object {
-        fun activityStart(fragment: Fragment, dynamicItem: View, data: Dynamic) {
+        fun activityStartFromDynamic(fragment: Fragment) {
             fragment.apply {
                 activity?.let {
-                    val opt = ActivityOptionsCompat.makeSceneTransitionAnimation(it, dynamicItem, "dynamicItem")
-                    val intent = Intent(context, CircleSquareActivity::class.java)
-                    startActivityForResult(intent, RequestResultCode.DYNAMIC_DETAIL_REQUEST, opt.toBundle())
+                    val intent=Intent(BaseApp.context, CircleSquareActivity::class.java)
+                    startActivityForResult(intent,RequestResultCode.DYNAMIC_DETAIL_REQUEST)
                 }
             }
         }
@@ -61,6 +64,12 @@ class CircleSquareActivity : BaseViewModelActivity<CircleSquareViewModel>() {
         }
     }
 
+    override fun onBackPressed() {
+        setResult(NEED_REFRESH_RESULT)
+        finish()
+        super.onBackPressed()
+    }
+
     private fun initToolbar() {
         qa_ib_toolbar_back.setOnSingleClickListener {
             setResult(NEED_REFRESH_RESULT)
@@ -79,7 +88,6 @@ class CircleSquareActivity : BaseViewModelActivity<CircleSquareViewModel>() {
         viewModel.getAllCirCleData("问答圈", "test1")
         viewModel.allCircle.observe {
             if (it != null) {
-                LogUtils.d("zt", "2")
                 adapter?.refreshData(it)
                 topicList.addAll(it)
             }
