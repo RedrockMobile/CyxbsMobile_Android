@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <dimen name="grid_expected_size" tools:ignore="ResourceName">120dp</dimen>
+    <dimen name="item_margin_horizontal" tools:ignore="ResourceName">24dp</dimen>
+    <dimen name="item_margin_vertical" tools:ignore="ResourceName">8dp</dimen>
+</resources>

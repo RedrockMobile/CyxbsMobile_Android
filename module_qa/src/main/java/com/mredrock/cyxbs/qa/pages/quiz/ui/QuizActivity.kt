@@ -14,16 +14,20 @@ import android.util.Base64
 import android.view.KeyEvent
 import android.view.View
 import android.widget.ImageView
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import com.google.gson.Gson
+import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.common.config.QA_QUIZ
 import com.mredrock.cyxbs.common.event.DynamicDraftEvent
 import com.mredrock.cyxbs.common.mark.EventBusLifecycleSubscriber
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
+import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.*
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.R.drawable.*
@@ -47,7 +51,7 @@ import top.limuyang2.photolibrary.LPhotoHelper
 class QuizActivity : BaseViewModelActivity<QuizViewModel>(), EventBusLifecycleSubscriber {
     companion object {
         const val MAX_CONTENT_SIZE = 500
-        const val MAX_SELECTABLE_IMAGE_COUNT = 8
+        const val MAX_SELECTABLE_IMAGE_COUNT = 9
         const val NOT_DRAFT_ID = "-1"
         const val FIRST_QUIZ = "cyxbs_quiz_is_first_time"
         const val FIRST_QUIZ_SP_KEY = "isFirstTimeQuiz"
@@ -227,6 +231,7 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>(), EventBusLifecycleSu
         nine_grid_view.addView(ContextCompat.getDrawable(this, qa_ic_add_images)?.let { createImageViewFromVector(it) })
         nine_grid_view.setOnItemClickListener { _, index ->
             if (index == nine_grid_view.childCount - 1) {
+
                 this@QuizActivity.selectImageFromAlbum(MAX_SELECTABLE_IMAGE_COUNT)
             } else {
                 ViewImageCropActivity.activityStartForResult(this@QuizActivity, viewModel.tryEditImg(index)
@@ -280,12 +285,18 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>(), EventBusLifecycleSu
         }
         when (requestCode) {
             CHOOSE_PHOTO_REQUEST -> {
-                val imageListUri = ArrayList((LPhotoHelper.getSelectedPhotos(data)).map {
+                val imageListUri = ArrayList(LPhotoHelper.getSelectedPhotos(data)).map {
                     it.toString()
-                })
+                }
                 val imageListAbsolutePath = ArrayList<String>()
                 imageListUri.forEach { imageListAbsolutePath.add(Uri.parse(it).getAbsolutePath(this)) }
-                viewModel.setImageList(imageListAbsolutePath)
+                //为再次进入图库保存以前添加的图片，进行的逻辑
+                if (viewModel.lastImageLiveData.size + imageListAbsolutePath.size <= 8)
+                    viewModel.lastImageLiveData.addAll(imageListAbsolutePath)
+                else {
+                    CyxbsToast.makeText(this, "请重新选择图片，一次性只能够发布8张图片", Toast.LENGTH_SHORT).show()
+                }
+                viewModel.setImageList(viewModel.lastImageLiveData)
             }
             ViewImageCropActivity.DEFAULT_RESULT_CODE -> viewModel.setImageList(viewModel.imageLiveData.value!!.apply {
                 set(viewModel.editingImgPos, data.getStringExtra(ViewImageCropActivity.EXTRA_NEW_PATH))
@@ -295,7 +306,7 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>(), EventBusLifecycleSu
 
     private fun createImageViewFromVector(drawable: Drawable) = RectangleView(this).apply {
         scaleType = ImageView.ScaleType.CENTER
-        background = ContextCompat.getDrawable(this@QuizActivity, R.drawable.qa_shape_quiz_select_pic_empty_background)
+        background = ContextCompat.getDrawable(this@QuizActivity, qa_shape_quiz_select_pic_empty_background)
         setImageDrawable(drawable)
     }
 

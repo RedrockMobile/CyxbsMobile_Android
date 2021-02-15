@@ -29,6 +29,8 @@ import java.io.File
  */
 class QuizViewModel : BaseViewModel() {
     val imageLiveData = MutableLiveData<ArrayList<String>>()
+     //为再次进入图库保存以前添加的图片，进行的逻辑
+    val lastImageLiveData = ArrayList<String>()
     val backAndRefreshPreActivityEvent = SingleLiveEvent<Boolean>()
     val finishActivityEvent = MutableLiveData<Boolean>()
     val finishReleaseCommentEvent = MutableLiveData<Boolean>()
