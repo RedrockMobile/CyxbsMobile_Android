@@ -88,7 +88,7 @@ class CircleDetailActivity : BaseViewModelActivity<CircleDetailViewModel>() {
         super.onBackPressed()
     }
 
-    @SuppressLint("UseCompatLoadingForDrawables")
+    @SuppressLint("UseCompatLoadingForDrawables", "SetTextI18n")
     private fun initClick() {
         qa_circle_detail_iv_back.setOnSingleClickListener {
             window.returnTransition = Slide(Gravity.END).apply { duration = 500 }
@@ -103,10 +103,14 @@ class CircleDetailActivity : BaseViewModelActivity<CircleDetailViewModel>() {
                 //关注的状态下点击，取消关注
                 viewModel.followTopic(topic.topicName, topic._isFollow.equals(1))
                 btn_circle_square_concern.background = context.getDrawable(R.drawable.qa_shape_send_dynamic_btn_blue_background)
+                topic.follow_count=topic.follow_count-1
+                tv_circle_square_person_number.text = topic.follow_count.toString()+ "个成员"
                 topic._isFollow = 0
             } else {
                 viewModel.followTopic(topic.topicName, topic._isFollow.equals(1))
                 btn_circle_square_concern.background = context.getDrawable(R.drawable.qa_shape_send_dynamic_btn_grey_background)
+                topic.follow_count=topic.follow_count+1
+                tv_circle_square_person_number.text = topic.follow_count.toString()+ "个成员"
                 topic._isFollow = 1
             }
         }

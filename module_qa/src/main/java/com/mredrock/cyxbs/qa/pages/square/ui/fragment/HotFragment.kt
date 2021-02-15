@@ -9,4 +9,5 @@ import com.mredrock.cyxbs.qa.pages.dynamic.viewmodel.DynamicListViewModel
  *@description
  */
 class HotFragment :BaseCircleDetailFragment<DynamicListViewModel>() {
+    override fun getViewModelFactory() = DynamicListViewModel.Factory("hot")
 }

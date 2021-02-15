@@ -88,7 +88,7 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), EventBusL
     // 判断rv是否到顶
     protected var isRvAtTop = true
     lateinit var dynamicListRvAdapter: DynamicAdapter
-    override fun getViewModelFactory() = DynamicListViewModel.Factory("main")
+    override fun getViewModelFactory() = DynamicListViewModel.Factory("recommend")
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
 

@@ -11,13 +11,12 @@ import retrofit2.http.*
  * Created By zhangzhe 2020/12/1
  */
 interface ApiServiceNew {
-    @POST("/wxapi/magipoke-loop/post/getDynamicList")
-    @FormUrlEncoded
-    fun getDynamicList(@Field("topic")
-                       topic: String,
-                       @Field("page")
+    @GET("/wxapi/magipoke-loop/post/getMainPage")
+    fun getDynamicList(@Query("type")
+                       type: String,
+                       @Query("page")
                        page: Int,
-                       @Field("size")
+                       @Query("size")
                        size: Int = 6): Observable<RedrockApiWrapper<List<Dynamic>>>
 
     @GET("/wxapi/magipoke-loop/ground/getFollowedTopic")

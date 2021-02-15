@@ -63,21 +63,26 @@
         android:textSize="11sp"
         app:layout_constraintLeft_toRightOf="@id/iv_circle_square"
         app:layout_constraintTop_toBottomOf="@id/tv_circle_square_name"
-        tools:text="475个成员" />
+        tools:text="475个成员"
+        tools:ignore="SmallSp" />
 
     <TextView
         android:id="@+id/tv_circle_square_descriprion"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="18dp"
         android:layout_marginTop="20dp"
+        android:layout_marginStart="15dp"
         android:layout_marginBottom="25dp"
         android:textColor="@color/common_level_two_font_color"
         android:textSize="13sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/btn_circle_square_concern"
+        app:layout_constraintHorizontal_bias="0.02"
+        app:layout_constraintStart_toStartOf="@+id/iv_circle_square"
         app:layout_constraintTop_toBottomOf="@id/iv_circle_square"
+        app:layout_constraintVertical_bias="1.0"
         tools:text="重邮也有猫猫图鉴啦，欢迎大家一起来分享你看见的猫猫~" />
+
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"

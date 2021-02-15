@@ -33,8 +33,7 @@ import kotlinx.android.synthetic.main.qa_fragment_last_hot.*
  *@description  用于最新和热门的fragment的基类
  */
 abstract class BaseCircleDetailFragment<T : DynamicListViewModel> : BaseViewModelFragment<T>() {
-    var onPopWindowClickListener: ((String, Dynamic) -> Unit)? = null
-    var onPraiseClickListener: ((Int, Dynamic) -> Unit)? = null
+
     private var mTencent: Tencent? = null
 
     override fun getViewModelFactory() = DynamicListViewModel.Factory("main")
@@ -53,7 +52,6 @@ abstract class BaseCircleDetailFragment<T : DynamicListViewModel> : BaseViewMode
         val dynamicListRvAdapter = DynamicAdapter(this.requireContext()) { dynamic, view ->
             DynamicDetailActivity.activityStart(this, view, dynamic)
         }.apply {
-
             onShareClickListener = { dynamic, mode ->
                 when (mode) {
                     CommentConfig.QQ_FRIEND ->
@@ -116,7 +114,6 @@ abstract class BaseCircleDetailFragment<T : DynamicListViewModel> : BaseViewMode
                 NetworkState.LOADING -> {
                     qa_hot_last_swipe_refresh_layout.isRefreshing = true
                     (qa_rv_circle_detail_last_hot.adapter as? RvAdapterWrapper)?.apply {
-
                     }
                     emptyRvAdapter.showHolder(3)
                 }
@@ -129,6 +126,5 @@ abstract class BaseCircleDetailFragment<T : DynamicListViewModel> : BaseViewMode
                 }
             }
         }
-
     }
 }
