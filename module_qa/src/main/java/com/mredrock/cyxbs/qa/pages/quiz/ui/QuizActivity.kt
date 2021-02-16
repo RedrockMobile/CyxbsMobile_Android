@@ -49,6 +49,7 @@ import top.limuyang2.photolibrary.LPhotoHelper
 
 @Route(path = QA_QUIZ)
 class QuizActivity : BaseViewModelActivity<QuizViewModel>(), EventBusLifecycleSubscriber {
+
     companion object {
         const val MAX_CONTENT_SIZE = 500
         const val MAX_SELECTABLE_IMAGE_COUNT = 9
@@ -58,7 +59,6 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>(), EventBusLifecycleSu
         fun activityStart(fragment: Fragment, type: String, requestCode: Int) {
             fragment.startActivityForResult<QuizActivity>(requestCode, "type" to type)
         }
-
     }
 
     private var quizContent = ""
@@ -72,6 +72,7 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>(), EventBusLifecycleSu
     private var commentContent = ""
     private var replyId = ""
     private var postId = ""
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.qa_activity_quiz)
@@ -88,6 +89,7 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>(), EventBusLifecycleSu
                 postId = intent.getStringExtra("postId")
             }
         }
+
         initToolbar()
         initImageAddView()
         initEditListener()
@@ -166,7 +168,7 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>(), EventBusLifecycleSu
                     i: Int,
                     i1: Int,
                     i2: Int
-            ) = if (!TextUtils.isEmpty(charSequence) && charSequence.isNotEmpty() && charSequence.length <= MAX_CONTENT_SIZE) {
+            ) = if (charSequence.length <= MAX_CONTENT_SIZE) {
                 quizContent = charSequence.toString()
                 qa_tv_toolbar_right.setBackgroundResource(qa_shape_send_dynamic_btn_blue_background)
                 qa_tv_edit_num.text = charSequence.length.toString() + "/500"
@@ -174,7 +176,6 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>(), EventBusLifecycleSu
             } else {
                 qa_edt_quiz_content.setText(quizContent)
                 qa_tv_toolbar_right.setBackgroundResource(qa_shape_send_dynamic_btn_grey_background)
-                qa_tv_edit_num.text = charSequence.length.toString() + "/500"
             }
 
             override fun afterTextChanged(editable: Editable) {}
