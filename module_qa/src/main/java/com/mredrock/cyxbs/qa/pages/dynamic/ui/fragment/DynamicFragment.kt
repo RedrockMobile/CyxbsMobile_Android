@@ -105,10 +105,10 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), EventBusL
 
 
     private fun initDynamics() {
+        viewModel.getAllCirCleData("问答圈", "test1")
         dynamicListRvAdapter =
                 DynamicAdapter(this.requireContext()) { dynamic, view ->
                     DynamicDetailActivity.activityStart(this, view, dynamic)
-                    initClick()
                 }.apply {
 
                     onShareClickListener = { dynamic, mode ->
@@ -164,9 +164,9 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), EventBusL
                 footerAdapter = footerRvAdapter
         )
         val circlesAdapter = this.activity?.let {
-            CirclesAdapter( { topic, view ->
+            CirclesAdapter({ topic, view ->
                 CircleDetailActivity.activityStartFromCircle(this, view, topic)
-            },this)
+            }, this)
         }
         val linearLayoutManager = LinearLayoutManager(context)
         linearLayoutManager.orientation = LinearLayoutManager.HORIZONTAL

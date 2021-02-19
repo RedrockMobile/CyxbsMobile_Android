@@ -53,6 +53,15 @@ open class DynamicListViewModel(kind: String) : BaseViewModel() {
                 }
                 .safeSubscribeBy {
                     myCircle.value = it
+                }
+    }
+
+    fun getAllCirCleData(topic_name: String, instruction: String) {
+        ApiGenerator.getApiService(ApiServiceNew::class.java)
+                .getTopicGround(topic_name, instruction)
+                .mapOrThrowApiException()
+                .setSchedulers()
+                .safeSubscribeBy { it ->
                     it.forEach {
                         TopicDataSet.storageTopicData(it)
                     }
