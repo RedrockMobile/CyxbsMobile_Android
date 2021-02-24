@@ -359,6 +359,7 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), EventBusL
             DYNAMIC_DETAIL_REQUEST -> {
                 if (resultCode == NEED_REFRESH_RESULT) {
                     // 需要刷新 则 刷新显示动态
+                    viewModel.getAllCirCleData("问答圈", "test1")
                     viewModel.invalidateQuestionList()
                     viewModel.getMyCirCleData()
                 } else {
@@ -370,6 +371,7 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), EventBusL
             RELEASE_DYNAMIC_ACTIVITY_REQUEST -> {
                 if (resultCode == NEED_REFRESH_RESULT) {
                     // 需要刷新 则 刷新显示动态
+                    viewModel.getAllCirCleData("问答圈", "test1")
                     viewModel.invalidateQuestionList()
                     viewModel.getMyCirCleData()
 

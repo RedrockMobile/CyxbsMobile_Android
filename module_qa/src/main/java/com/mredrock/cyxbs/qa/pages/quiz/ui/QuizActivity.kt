@@ -114,6 +114,7 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>(), EventBusLifecycleSu
         }
 
         viewModel.finishActivityEvent.observeNotNull {
+            progressDialog?.dismiss()
             finish()
         }
     }
@@ -122,7 +123,6 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>(), EventBusLifecycleSu
     //发布页标签单选
     @SuppressLint("SetTextI18n")
     private fun initTypeSelector() {
-        val hashSet = HashSet<String>()
         viewModel.getAllCirCleData("问答圈", "test1")
         viewModel.allCircle.observe {
             if (!it.isNullOrEmpty()) {
@@ -130,13 +130,12 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>(), EventBusLifecycleSu
                 for (topic in it.withIndex()) {
                     chipGroup.addView((layoutInflater.inflate(R.layout.qa_quiz_view_chip, chipGroup, false) as Chip).apply {
                         text = "# " + topic.value.topicName
-                        setOnSingleClickListener {
-                            if (hashSet.contains(getTopicText(text.toString()))) {
+                        setOnClickListener {
+                            LogUtils.d("tagtag", dynamicType)
+                            if (dynamicType == getTopicText(text.toString())) {
                                 dynamicType = ""
-                                hashSet.remove(getTopicText(text.toString()))
                             } else {
                                 dynamicType = getTopicText(text.toString())
-                                hashSet.add(getTopicText(text.toString()))
                             }
                         }
                     })
@@ -332,6 +331,7 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>(), EventBusLifecycleSu
     }
 
     private fun saveDraft() {
+        progressDialog?.show()
         if (draftId == NOT_DRAFT_ID) {
             viewModel.addItemToDraft(quizContent, dynamicType)
         } else {
