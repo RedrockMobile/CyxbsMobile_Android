@@ -1,5 +1,6 @@
 package com.mredrock.cyxbs.qa.pages.square.ui.fragment
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,8 +12,12 @@ import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.beannew.Dynamic
 import com.mredrock.cyxbs.qa.component.recycler.RvAdapterWrapper
 import com.mredrock.cyxbs.qa.config.CommentConfig
+import com.mredrock.cyxbs.qa.config.CommentConfig.DELETE
 import com.mredrock.cyxbs.qa.config.CommentConfig.IGNORE
 import com.mredrock.cyxbs.qa.config.CommentConfig.REPORT
+import com.mredrock.cyxbs.qa.config.RequestResultCode
+import com.mredrock.cyxbs.qa.config.RequestResultCode.DYNAMIC_DETAIL_REQUEST
+import com.mredrock.cyxbs.qa.config.RequestResultCode.RELEASE_DYNAMIC_ACTIVITY_REQUEST
 import com.mredrock.cyxbs.qa.network.NetworkState
 import com.mredrock.cyxbs.qa.pages.dynamic.ui.activity.DynamicDetailActivity
 import com.mredrock.cyxbs.qa.pages.dynamic.ui.adapter.DynamicAdapter
@@ -35,7 +40,7 @@ import kotlinx.android.synthetic.main.qa_fragment_last_hot.*
 abstract class BaseCircleDetailFragment<T : DynamicListViewModel> : BaseViewModelFragment<T>() {
 
     private var mTencent: Tencent? = null
-
+    lateinit var dynamicListRvAdapter: DynamicAdapter
     override fun getViewModelFactory() = DynamicListViewModel.Factory("main")
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -49,7 +54,7 @@ abstract class BaseCircleDetailFragment<T : DynamicListViewModel> : BaseViewMode
     }
 
     private fun initDynamic() {
-        val dynamicListRvAdapter = DynamicAdapter(this.requireContext()) { dynamic, view ->
+        dynamicListRvAdapter = DynamicAdapter(this.requireContext()) { dynamic, view ->
             DynamicDetailActivity.activityStart(this, view, dynamic)
         }.apply {
             onShareClickListener = { dynamic, mode ->
@@ -75,7 +80,7 @@ abstract class BaseCircleDetailFragment<T : DynamicListViewModel> : BaseViewMode
                         }
                     }
 
-                    CommentConfig.DELETE -> {
+                    DELETE -> {
                         this@BaseCircleDetailFragment.activity?.let { it1 ->
                             QaDialog.show(it1, resources.getString(R.string.qa_dialog_tip_delete_comment_text), {}) {
                                 viewModel.deleteId(dynamic.postId, "0")
@@ -84,7 +89,12 @@ abstract class BaseCircleDetailFragment<T : DynamicListViewModel> : BaseViewMode
                     }
                 }
                 viewModel.deleteTips.observeNotNull {
-                    notifyItemRemoved(position)
+                    if (it == true)
+                        viewModel.invalidateQuestionList()
+                }
+                viewModel.ignorePeople.observe {
+                    if (it == true)
+                        viewModel.invalidateQuestionList()
                 }
             }
         }
@@ -123,6 +133,27 @@ abstract class BaseCircleDetailFragment<T : DynamicListViewModel> : BaseViewMode
                 else -> {
                     qa_hot_last_swipe_refresh_layout.isRefreshing = false
                     emptyRvAdapter.hideHolder()
+                }
+            }
+        }
+    }
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        when (requestCode) {
+            // 从动态详细返回
+            DYNAMIC_DETAIL_REQUEST -> {
+                if (resultCode == RequestResultCode.NEED_REFRESH_RESULT) {
+                    // 需要刷新 则 刷新显示动态
+                    viewModel.invalidateQuestionList()
+                } else {
+                    // 不需要刷新，则更新当前的dynamic为详细页的dynamic（避免出现评论数目不一致的问题）
+                    dynamicListRvAdapter.notifyDataSetChanged()
+                }
+            }
+            // 从发动态返回
+            RELEASE_DYNAMIC_ACTIVITY_REQUEST -> {
+                if (resultCode == RequestResultCode.NEED_REFRESH_RESULT) {
+                    // 需要刷新 则 刷新显示动态
+                    viewModel.invalidateQuestionList()
                 }
             }
         }
