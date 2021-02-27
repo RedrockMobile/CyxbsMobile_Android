@@ -48,6 +48,6 @@ class CircleSquareViewModel : BaseViewModel() {
                         toastEvent.value = R.string.qa_follow_circle
                     }
                 }
-            }
+    }
 
 }

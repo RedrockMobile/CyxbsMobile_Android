@@ -1,6 +1,7 @@
 package com.mredrock.cyxbs.qa.pages.search.ui.fragment
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -17,8 +18,19 @@ import com.mredrock.cyxbs.common.utils.extensions.gone
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.component.recycler.RvAdapterWrapper
 import com.mredrock.cyxbs.qa.config.CommentConfig
+import com.mredrock.cyxbs.qa.config.CommentConfig.COPY_LINK
+import com.mredrock.cyxbs.qa.config.CommentConfig.DELETE
+import com.mredrock.cyxbs.qa.config.CommentConfig.IGNORE
+import com.mredrock.cyxbs.qa.config.CommentConfig.QQ_FRIEND
+import com.mredrock.cyxbs.qa.config.CommentConfig.QQ_ZONE
+import com.mredrock.cyxbs.qa.config.CommentConfig.REPORT
+import com.mredrock.cyxbs.qa.config.RequestResultCode
+import com.mredrock.cyxbs.qa.config.RequestResultCode.DYNAMIC_DETAIL_REQUEST
+import com.mredrock.cyxbs.qa.config.RequestResultCode.NEED_REFRESH_RESULT
 import com.mredrock.cyxbs.qa.config.RequestResultCode.RELEASE_DYNAMIC_ACTIVITY_REQUEST
 import com.mredrock.cyxbs.qa.network.NetworkState
+import com.mredrock.cyxbs.qa.network.NetworkState.Companion.CANNOT_LOAD_WITHOUT_LOGIN
+import com.mredrock.cyxbs.qa.network.NetworkState.Companion.LOADING
 import com.mredrock.cyxbs.qa.pages.dynamic.ui.activity.DynamicDetailActivity
 import com.mredrock.cyxbs.qa.pages.dynamic.ui.adapter.DynamicAdapter
 import com.mredrock.cyxbs.qa.pages.quiz.ui.QuizActivity
@@ -30,7 +42,10 @@ import com.mredrock.cyxbs.qa.pages.search.viewmodel.QuestionSearchedViewModel
 import com.mredrock.cyxbs.qa.ui.adapter.FooterRvAdapter
 import com.mredrock.cyxbs.qa.ui.widget.QaDialog
 import com.mredrock.cyxbs.qa.ui.widget.QaReportDialog
+import com.mredrock.cyxbs.qa.utils.ClipboardController
+import com.mredrock.cyxbs.qa.utils.ShareUtils
 import com.mredrock.cyxbs.qa.utils.isNullOrEmpty
+import com.tencent.tauth.Tencent
 import kotlinx.android.synthetic.main.qa_fragment_question_search_result.*
 
 /**
@@ -41,7 +56,7 @@ class QuestionSearchedFragment : BaseViewModelFragment<QuestionSearchedViewModel
     companion object {
         const val SEARCH_KEY = "searchKey"
     }
-
+    private var mTencent: Tencent? = null
     //搜索关键词
     private var searchKey = ""
     lateinit var dynamicListRvAdapter: DynamicAdapter
@@ -57,6 +72,7 @@ class QuestionSearchedFragment : BaseViewModelFragment<QuestionSearchedViewModel
     }
 
     override fun getViewModelFactory() = QuestionSearchedViewModel.Factory(searchKey)
+
     override fun onAttach(context: Context) {
         super.onAttach(context)
         searchKey = arguments?.getString(SEARCH_KEY) ?: searchKey
@@ -84,6 +100,7 @@ class QuestionSearchedFragment : BaseViewModelFragment<QuestionSearchedViewModel
         super.onViewCreated(view, savedInstanceState)
         initInitialView()
         initResultView()
+        mTencent = Tencent.createInstance(CommentConfig.APP_ID, this.requireContext())
         viewModel.isCreateOver.observe {
             if (it != null) {
                 if (it) {
@@ -117,19 +134,29 @@ class QuestionSearchedFragment : BaseViewModelFragment<QuestionSearchedViewModel
         dynamicListRvAdapter = DynamicAdapter(this.requireContext()) { dynamic, view ->
             DynamicDetailActivity.activityStart(this, view, dynamic)
         }.apply {
+            onShareClickListener = { dynamic, mode ->
+                when (mode) {
+                    QQ_FRIEND ->
+                        mTencent?.let { it1 -> ShareUtils.qqShare(it1, this@QuestionSearchedFragment, dynamic.topic, dynamic.content, "https://cn.bing.com/", "") }
+                    QQ_ZONE ->
+                        mTencent?.let { it1 -> ShareUtils.qqQzoneShare(it1, this@QuestionSearchedFragment, dynamic.topic, dynamic.content, "https://cn.bing.com/", ArrayList()) }
+                    COPY_LINK ->
+                        ClipboardController.copyText(this@QuestionSearchedFragment.requireContext(), "https://cn.bing.com/")
+                }
+            }
             onPopWindowClickListener = { position, string, dynamic ->
                 when (string) {
-                    CommentConfig.IGNORE -> {
+                    IGNORE -> {
                         viewModel.ignore(dynamic)
                     }
-                    CommentConfig.REPORT -> {
+                   REPORT -> {
                         activity?.let {
                             QaReportDialog.show(it) { reportContent ->
                                 viewModel.report(dynamic, reportContent)
                             }
                         }
                     }
-                    CommentConfig.DELETE -> {
+                    DELETE -> {
                         activity?.let { it1 ->
                             QaDialog.show(it1, resources.getString(R.string.qa_dialog_tip_delete_comment_text), {}) {
                                 viewModel.deleteId(dynamic.postId, "0")
@@ -170,14 +197,14 @@ class QuestionSearchedFragment : BaseViewModelFragment<QuestionSearchedViewModel
         }
         viewModel.initialLoad.observe {
             when (it) {
-                NetworkState.LOADING -> {
+                LOADING -> {
                     swipe_refresh_layout_searching.isRefreshing = true
                     (rv_searched_question.adapter as? RvAdapterWrapper)?.apply {
                     }
 
                     emptyRvAdapter?.showInitialHolder(3)
                 }
-                NetworkState.CANNOT_LOAD_WITHOUT_LOGIN -> {
+                CANNOT_LOAD_WITHOUT_LOGIN -> {
                     swipe_refresh_layout_searching.isRefreshing = false
                 }
                 else -> {
@@ -197,9 +224,11 @@ class QuestionSearchedFragment : BaseViewModelFragment<QuestionSearchedViewModel
             viewModel.invalidateSearchQuestionList()
         }
         viewModel.deleteTips.observe {
+            if (it == true)
             viewModel.invalidateSearchQuestionList()
         }
-        viewModel.followCircle.observe {
+        viewModel.ignorePeople.observe{
+            if (it == true)
             viewModel.invalidateSearchQuestionList()
         }
 
@@ -208,7 +237,6 @@ class QuestionSearchedFragment : BaseViewModelFragment<QuestionSearchedViewModel
                 val flexBoxManager = FlexboxLayoutManager(BaseApp.context)
                 flexBoxManager.flexWrap = FlexWrap.WRAP
                 qa_rv_knowledge.layoutManager = flexBoxManager
-
                 qa_rv_knowledge.adapter = SearchKnowledgeAdapter {
                     //邮问知识库的调用
                 }.apply {
@@ -220,6 +248,20 @@ class QuestionSearchedFragment : BaseViewModelFragment<QuestionSearchedViewModel
                 qa_rv_knowledge.gone()
                 qa_line.gone()
                 qa_tv_knowledge.gone()
+            }
+        }
+    }
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        when (requestCode) {
+            // 从动态详细返回
+            DYNAMIC_DETAIL_REQUEST -> {
+                if (resultCode == NEED_REFRESH_RESULT) {
+                    // 需要刷新 则 刷新显示动态
+                    viewModel.invalidateSearchQuestionList()
+                } else {
+                    // 不需要刷新，则更新当前的dynamic为详细页的dynamic（避免出现评论数目不一致的问题）
+                    dynamicListRvAdapter.notifyDataSetChanged()
+                }
             }
         }
     }

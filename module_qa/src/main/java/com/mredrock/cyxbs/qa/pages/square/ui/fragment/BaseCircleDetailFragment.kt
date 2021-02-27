@@ -12,16 +12,22 @@ import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.beannew.Dynamic
 import com.mredrock.cyxbs.qa.component.recycler.RvAdapterWrapper
 import com.mredrock.cyxbs.qa.config.CommentConfig
+import com.mredrock.cyxbs.qa.config.CommentConfig.COPY_LINK
 import com.mredrock.cyxbs.qa.config.CommentConfig.DELETE
 import com.mredrock.cyxbs.qa.config.CommentConfig.IGNORE
+import com.mredrock.cyxbs.qa.config.CommentConfig.QQ_FRIEND
+import com.mredrock.cyxbs.qa.config.CommentConfig.QQ_ZONE
 import com.mredrock.cyxbs.qa.config.CommentConfig.REPORT
 import com.mredrock.cyxbs.qa.config.RequestResultCode
 import com.mredrock.cyxbs.qa.config.RequestResultCode.DYNAMIC_DETAIL_REQUEST
 import com.mredrock.cyxbs.qa.config.RequestResultCode.RELEASE_DYNAMIC_ACTIVITY_REQUEST
 import com.mredrock.cyxbs.qa.network.NetworkState
+import com.mredrock.cyxbs.qa.network.NetworkState.Companion.CANNOT_LOAD_WITHOUT_LOGIN
+import com.mredrock.cyxbs.qa.network.NetworkState.Companion.LOADING
 import com.mredrock.cyxbs.qa.pages.dynamic.ui.activity.DynamicDetailActivity
 import com.mredrock.cyxbs.qa.pages.dynamic.ui.adapter.DynamicAdapter
 import com.mredrock.cyxbs.qa.pages.dynamic.viewmodel.DynamicListViewModel
+import com.mredrock.cyxbs.qa.pages.square.viewmodel.CircleDetailViewModel
 import com.mredrock.cyxbs.qa.ui.adapter.EmptyRvAdapter
 import com.mredrock.cyxbs.qa.ui.adapter.FooterRvAdapter
 import com.mredrock.cyxbs.qa.ui.widget.QaDialog
@@ -37,11 +43,13 @@ import kotlinx.android.synthetic.main.qa_fragment_last_hot.*
  *@author SpreadWater
  *@description  用于最新和热门的fragment的基类
  */
-abstract class BaseCircleDetailFragment<T : DynamicListViewModel> : BaseViewModelFragment<T>() {
+abstract class BaseCircleDetailFragment<T : CircleDetailViewModel> : BaseViewModelFragment<T>() {
 
     private var mTencent: Tencent? = null
     lateinit var dynamicListRvAdapter: DynamicAdapter
-    override fun getViewModelFactory() = DynamicListViewModel.Factory("main")
+
+    override fun getViewModelFactory() = CircleDetailViewModel.Factory("main",1)
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.qa_fragment_last_hot, container, false)
@@ -59,11 +67,11 @@ abstract class BaseCircleDetailFragment<T : DynamicListViewModel> : BaseViewMode
         }.apply {
             onShareClickListener = { dynamic, mode ->
                 when (mode) {
-                    CommentConfig.QQ_FRIEND ->
+                    QQ_FRIEND ->
                         mTencent?.let { it1 -> ShareUtils.qqShare(it1, this@BaseCircleDetailFragment, dynamic.topic, dynamic.content, "https://cn.bing.com/", "") }
-                    CommentConfig.QQ_ZONE ->
+                    QQ_ZONE ->
                         mTencent?.let { it1 -> ShareUtils.qqQzoneShare(it1, this@BaseCircleDetailFragment, dynamic.topic, dynamic.content, "https://cn.bing.com/", ArrayList()) }
-                    CommentConfig.COPY_LINK ->
+                    COPY_LINK ->
                         ClipboardController.copyText(this@BaseCircleDetailFragment.requireContext(), "https://cn.bing.com/")
                 }
             }
@@ -88,15 +96,15 @@ abstract class BaseCircleDetailFragment<T : DynamicListViewModel> : BaseViewMode
                         }
                     }
                 }
-                viewModel.deleteTips.observeNotNull {
-                    if (it == true)
-                        viewModel.invalidateQuestionList()
-                }
-                viewModel.ignorePeople.observe {
-                    if (it == true)
-                        viewModel.invalidateQuestionList()
-                }
             }
+        }
+        viewModel.deleteTips.observeNotNull {
+            if (it == true)
+                viewModel.invalidateQuestionList()
+        }
+        viewModel.ignorePeople.observe {
+            if (it == true)
+                viewModel.invalidateQuestionList()
         }
         val footerRvAdapter = FooterRvAdapter { viewModel.retry() }
         val emptyRvAdapter = EmptyRvAdapter(getString(R.string.qa_question_list_empty_hint))
@@ -111,7 +119,7 @@ abstract class BaseCircleDetailFragment<T : DynamicListViewModel> : BaseViewMode
         qa_hot_last_swipe_refresh_layout.setOnRefreshListener {
             viewModel.invalidateQuestionList()
         }
-        viewModel.dynamicList.observe {
+        viewModel.circleDynamicList.observe {
             dynamicListRvAdapter.submitList(it)
         }
         viewModel.networkState.observe {
@@ -121,13 +129,13 @@ abstract class BaseCircleDetailFragment<T : DynamicListViewModel> : BaseViewMode
         }
         viewModel.initialLoad.observe {
             when (it) {
-                NetworkState.LOADING -> {
+                LOADING -> {
                     qa_hot_last_swipe_refresh_layout.isRefreshing = true
                     (qa_rv_circle_detail_last_hot.adapter as? RvAdapterWrapper)?.apply {
                     }
                     emptyRvAdapter.showHolder(3)
                 }
-                NetworkState.CANNOT_LOAD_WITHOUT_LOGIN -> {
+                CANNOT_LOAD_WITHOUT_LOGIN -> {
                     qa_hot_last_swipe_refresh_layout.isRefreshing = false
                 }
                 else -> {

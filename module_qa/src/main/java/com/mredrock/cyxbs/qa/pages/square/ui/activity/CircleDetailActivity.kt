@@ -11,6 +11,7 @@ import androidx.core.app.ActivityCompat.startActivityForResult
 import androidx.core.app.ActivityOptionsCompat
 import androidx.core.content.ContextCompat.startActivity
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.tabs.TabLayoutMediator
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.BaseApp.Companion.context
@@ -35,7 +36,9 @@ import kotlinx.android.synthetic.main.qa_activity_circle_detail.*
 import kotlinx.android.synthetic.main.qa_recycler_item_circle_square.*
 
 class CircleDetailActivity : BaseViewModelActivity<CircleDetailViewModel>() {
+
     companion object {
+
         fun activityStartFromSquare(activity: BaseActivity, topicItemView: View, data: Topic) {
             activity.let {
                 val opt = ActivityOptionsCompat.makeSceneTransitionAnimation(it, topicItemView, "topicItem")
@@ -60,21 +63,25 @@ class CircleDetailActivity : BaseViewModelActivity<CircleDetailViewModel>() {
     }
 
     override val isFragmentActivity = true
+
+    override fun getViewModelFactory()=CircleDetailViewModel.Factory("main",1)
+
     lateinit var topic: Topic
+
     private val lastNewFragment by lazy(LazyThreadSafetyMode.NONE) {
-        LastNewFragment()
+        LastNewFragment(topic.topicId.toInt())
     }
     private val hotFragment by lazy(LazyThreadSafetyMode.NONE) {
-        HotFragment()
+        HotFragment(topic.topicId.toInt())
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.qa_activity_circle_detail)
         window.enterTransition = Slide(Gravity.END).apply { duration = 500 }
+        initView()
         qa_vp_circle_detail.adapter = NewHotViewPagerAdapter(this, listOf(lastNewFragment, hotFragment))
         initTab()
-        initView()
         initClick()
     }
 

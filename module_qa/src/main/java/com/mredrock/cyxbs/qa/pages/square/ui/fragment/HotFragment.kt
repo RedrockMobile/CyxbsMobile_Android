@@ -1,6 +1,7 @@
 package com.mredrock.cyxbs.qa.pages.square.ui.fragment
 
 import com.mredrock.cyxbs.qa.pages.dynamic.viewmodel.DynamicListViewModel
+import com.mredrock.cyxbs.qa.pages.square.viewmodel.CircleDetailViewModel
 
 /**
  *@Date 2020-11-23
@@ -8,6 +9,6 @@ import com.mredrock.cyxbs.qa.pages.dynamic.viewmodel.DynamicListViewModel
  *@author SpreadWater
  *@description
  */
-class HotFragment :BaseCircleDetailFragment<DynamicListViewModel>() {
-    override fun getViewModelFactory() = DynamicListViewModel.Factory("hot")
+class HotFragment(private val loop:Int) :BaseCircleDetailFragment<CircleDetailViewModel>() {
+    override fun getViewModelFactory() = CircleDetailViewModel.Factory("hot",loop)
 }

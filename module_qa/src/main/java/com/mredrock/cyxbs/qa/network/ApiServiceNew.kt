@@ -11,6 +11,17 @@ import retrofit2.http.*
  * Created By zhangzhe 2020/12/1
  */
 interface ApiServiceNew {
+    //圈子详情里面的最新和热门帖子的接口
+    @GET("/wxapi/magipoke-loop/post/getLoopPage")
+    fun getCircleDynamicList(@Query("loop")
+                             loop: Int,
+                             @Query("page")
+                             page: Int,
+                             @Query("size")
+                             size: Int = 6,
+                             @Query("type")
+                             type: String):Observable<RedrockApiWrapper<List<Dynamic>>>
+
     @GET("/wxapi/magipoke-loop/post/getMainPage")
     fun getDynamicList(@Query("type")
                        type: String,

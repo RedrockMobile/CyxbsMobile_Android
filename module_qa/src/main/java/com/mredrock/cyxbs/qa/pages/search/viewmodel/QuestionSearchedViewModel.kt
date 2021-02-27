@@ -27,9 +27,8 @@ class QuestionSearchedViewModel(var searchKey: String) : BaseViewModel() {
     var knowledge = MutableLiveData<List<Knowledge>>()
 
 
-    val ignorePeople = MutableLiveData<Boolean>()
-    val deleteTips = MutableLiveData<Boolean>()
-    val followCircle = MutableLiveData<Boolean>()
+    val ignorePeople = MutableLiveData<Boolean>()//屏蔽
+    val deleteTips = MutableLiveData<Boolean>()//删除动态
 
     val networkState: LiveData<Int>
     val initialLoad: LiveData<Int>
@@ -87,23 +86,6 @@ class QuestionSearchedViewModel(var searchKey: String) : BaseViewModel() {
 
     }
 
-    fun followCircle(dynamic: Dynamic) {
-        ApiGenerator.getApiService(ApiServiceNew::class.java)
-                .followTopicGround(dynamic.topic)
-                .setSchedulers()
-                .doOnError {
-                    if (dynamic.isFollowTopic == 1)
-                        toastEvent.value = R.string.qa_cancel_circle_failure
-                    else
-                        toastEvent.value = R.string.qa_follow_circle_failure
-                    followCircle.value = false
-                }
-                .safeSubscribeBy {
-                    if (it.status == 200) {
-                        followCircle.value = true
-                    }
-                }
-    }
 
     fun report(dynamic: Dynamic, content: String) {
         ApiGenerator.getApiService(ApiServiceNew::class.java)
