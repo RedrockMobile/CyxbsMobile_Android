@@ -12,7 +12,7 @@ data class Topic(@SerializedName("topic_id")
                  var topicId: String = "",
 
                  @SerializedName("topic_logo")
-                 private var topicLogo: String = "",
+                 var topicLogo: String = "",
 
                  @SerializedName("topic_name")
                  val topicName: String = "",

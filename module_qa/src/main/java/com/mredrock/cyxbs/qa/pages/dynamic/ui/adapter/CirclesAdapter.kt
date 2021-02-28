@@ -11,7 +11,10 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.mredrock.cyxbs.common.BaseApp
+import com.mredrock.cyxbs.common.utils.LogUtils
+import com.mredrock.cyxbs.common.utils.extensions.setAvatarImageFromUrl
 import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.common.utils.extensions.sharedPreferences
 import com.mredrock.cyxbs.qa.R
@@ -95,7 +98,9 @@ class CirclesAdapter(private val onItemClickEvent: (Topic,View) -> Unit,private 
                         qa_iv_circle.setHaveMessage(false)
                         onItemClickEvent(circlesItemList[position],viewHolder.itemView.findViewById<LinearLayout>(R.id.qa_ll_topic))
                     }
+
                     qa_iv_circle.apply {
+                        setAvatarImageFromUrl(circlesItemList[position].topicLogo)
                         if (!topicMessageList.isNullOrEmpty()) {
                             setHaveMessage(true)
                             setMessageBum(topicMessageList[position].post_count)
