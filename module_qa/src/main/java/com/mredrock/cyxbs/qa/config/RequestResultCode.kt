@@ -27,6 +27,9 @@ object RequestResultCode {
      */
     // 需要刷新动态首页
     const val NEED_REFRESH_RESULT = 1
-    const val RESULT_CODE = 1
+    const val RESULT_CODE = 5
 
+        /*
+        启动的位置来源，用于圈子详情设置不同的setResult
+        */
 }

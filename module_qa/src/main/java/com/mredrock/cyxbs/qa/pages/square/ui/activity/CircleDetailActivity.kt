@@ -24,6 +24,7 @@ import com.mredrock.cyxbs.qa.beannew.Dynamic
 import com.mredrock.cyxbs.qa.beannew.Topic
 import com.mredrock.cyxbs.qa.config.CommentConfig
 import com.mredrock.cyxbs.qa.config.RequestResultCode
+import com.mredrock.cyxbs.qa.config.RequestResultCode.DYNAMIC_DETAIL_REQUEST
 import com.mredrock.cyxbs.qa.config.RequestResultCode.NEED_REFRESH_RESULT
 import com.mredrock.cyxbs.qa.config.RequestResultCode.RESULT_CODE
 import com.mredrock.cyxbs.qa.pages.dynamic.model.TopicDataSet
@@ -34,10 +35,12 @@ import com.mredrock.cyxbs.qa.pages.square.ui.fragment.LastNewFragment
 import com.mredrock.cyxbs.qa.pages.square.viewmodel.CircleDetailViewModel
 import kotlinx.android.synthetic.main.qa_activity_circle_detail.*
 import kotlinx.android.synthetic.main.qa_recycler_item_circle_square.*
+import kotlin.properties.Delegates
 
 class CircleDetailActivity : BaseViewModelActivity<CircleDetailViewModel>() {
 
     companion object {
+        private var startPosition=0
 
         fun activityStartFromSquare(activity: BaseActivity, topicItemView: View, data: Topic) {
             activity.let {
@@ -45,6 +48,7 @@ class CircleDetailActivity : BaseViewModelActivity<CircleDetailViewModel>() {
                 val intent = Intent(context, CircleDetailActivity::class.java)
                 intent.putExtra("topicItem", data)
                 it.window.exitTransition = Slide(Gravity.START).apply { duration = 500 }
+                startPosition= RESULT_CODE
                 startActivityForResult(activity, intent, RESULT_CODE, opt.toBundle())
             }
         }
@@ -56,7 +60,8 @@ class CircleDetailActivity : BaseViewModelActivity<CircleDetailViewModel>() {
                     val intent = Intent(BaseApp.context, CircleDetailActivity::class.java)
                     intent.putExtra("topicItem", data)
                     it.window.exitTransition = Slide(Gravity.START).apply { duration = 500 }
-                    startActivityForResult(intent, RequestResultCode.DYNAMIC_DETAIL_REQUEST, opt.toBundle())
+                    startPosition= DYNAMIC_DETAIL_REQUEST
+                    startActivityForResult(intent, DYNAMIC_DETAIL_REQUEST, opt.toBundle())
                 }
             }
         }
@@ -87,10 +92,17 @@ class CircleDetailActivity : BaseViewModelActivity<CircleDetailViewModel>() {
 
     override fun onBackPressed() {
         window.returnTransition = Slide(Gravity.END).apply { duration = 500 }
-        val intent = Intent()
-        intent.putExtra("topic_return", topic)
-        setResult(Activity.RESULT_OK, intent)
-        setResult(NEED_REFRESH_RESULT)
+        LogUtils.d("zt",topic.toString())
+        when(startPosition){
+            RESULT_CODE->{
+                val intent = Intent()
+                intent.putExtra("topic_return", topic)
+                setResult(Activity.RESULT_OK, intent)
+            }
+            DYNAMIC_DETAIL_REQUEST->{
+                setResult(NEED_REFRESH_RESULT)
+            }
+        }
         finish()
         super.onBackPressed()
     }
@@ -99,10 +111,16 @@ class CircleDetailActivity : BaseViewModelActivity<CircleDetailViewModel>() {
     private fun initClick() {
         qa_circle_detail_iv_back.setOnSingleClickListener {
             window.returnTransition = Slide(Gravity.END).apply { duration = 500 }
-            val intent = Intent()
-            intent.putExtra("topic_return", topic)
-            setResult(Activity.RESULT_OK, intent)
-            setResult(NEED_REFRESH_RESULT)
+            when(startPosition){
+                RESULT_CODE->{
+                    val intent = Intent()
+                    intent.putExtra("topic_return", topic)
+                    setResult(Activity.RESULT_OK, intent)
+                }
+                DYNAMIC_DETAIL_REQUEST->{
+                    setResult(NEED_REFRESH_RESULT)
+                }
+            }
             finish()
         }
         btn_circle_square_concern.setOnClickListener {
