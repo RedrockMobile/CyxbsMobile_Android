@@ -365,11 +365,11 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), EventBusL
             // 从动态详细返回
             DYNAMIC_DETAIL_REQUEST -> {
                 if (resultCode == NEED_REFRESH_RESULT) {
-                    // 需要刷新 则 刷新显示动态
+                    // 需要刷新则刷新显示动态
                     viewModel.getAllCirCleData("问答圈", "test1")
                     //获取用户进入圈子详情退出的时间，去请求从而刷新未读消息
-                    viewModel.getMyCirCleData()
                     refreshTopicMessage()
+                    viewModel.getMyCirCleData()
                     viewModel.invalidateQuestionList()
                 } else {
                     // 不需要刷新，则更新当前的dynamic为详细页的dynamic（避免出现评论数目不一致的问题）
@@ -382,10 +382,9 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), EventBusL
                     // 需要刷新 则 刷新显示动态
                     viewModel.getAllCirCleData("问答圈", "test1")
                     //获取用户进入圈子详情退出的时间，去请求从而刷新未读消息
-                    viewModel.getMyCirCleData()
                     refreshTopicMessage()
+                    viewModel.getMyCirCleData()
                     viewModel.invalidateQuestionList()
-
                 }
             }
         }

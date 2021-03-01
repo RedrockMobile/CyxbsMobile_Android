@@ -35,12 +35,14 @@ import kotlinx.android.synthetic.main.qa_recycler_item_circles.view.*
  * @Description:
  * @Date: 2020/11/18 23:18
  */
-class CirclesAdapter(private val onItemClickEvent: (Topic,View) -> Unit,private val fragment: DynamicFragment) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class CirclesAdapter(private val onItemClickEvent: (Topic, View) -> Unit, private val fragment: DynamicFragment) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     companion object {
         const val NO_CIRCLE = 0
         const val HAVE_CIRCLE = 1
     }
 
+    //解决圈子消息更新返回太快导致圈子信息还没更新造成数组溢出问题
+    private var flag = false
     private val circlesItemList = ArrayList<Topic>()
     private val topicMessageList = ArrayList<TopicMessage>()
 
@@ -96,7 +98,7 @@ class CirclesAdapter(private val onItemClickEvent: (Topic,View) -> Unit,private 
                     setOnSingleClickListener {
                         //用户点进圈子item进入详情就应该置消息为已读，刷新后才会显示
                         qa_iv_circle.setHaveMessage(false)
-                        onItemClickEvent(circlesItemList[position],viewHolder.itemView.findViewById<LinearLayout>(R.id.qa_ll_topic))
+                        onItemClickEvent(circlesItemList[position], viewHolder.itemView.findViewById<LinearLayout>(R.id.qa_ll_topic))
                     }
 
                     qa_iv_circle.apply {
@@ -134,6 +136,5 @@ class CirclesAdapter(private val onItemClickEvent: (Topic,View) -> Unit,private 
     fun addTopicMessageData(newTopicMessageData: List<TopicMessage>) {
         topicMessageList.clear()
         topicMessageList.addAll(newTopicMessageData)
-        notifyDataSetChanged()
     }
 }
