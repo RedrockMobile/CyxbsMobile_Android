@@ -181,12 +181,10 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), EventBusL
         }
 
         //获取用户进入圈子详情退出的时间，去请求从而刷新未读消息
-        if (!TopicDataSet.getOutCirCleDetailTime().isNullOrEmpty()) {
-            LogUtils.d("outTime", TopicDataSet.getOutCirCleDetailTime().toString())
-            TopicDataSet.getOutCirCleDetailTime()?.let { viewModel.getTopicMessages(it) }
-        }
+        refreshTopicMessage()
         viewModel.topicMessageList.observe {
             if (it != null) {
+                LogUtils.d("tagtag", it.toString())
                 circlesAdapter?.addTopicMessageData(it)
             }
         }
@@ -225,15 +223,19 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), EventBusL
 
 
         swipe_refresh_layout.setOnRefreshListener {
-            if (!TopicDataSet.getOutCirCleDetailTime().isNullOrEmpty()) {
-                LogUtils.d("swipeOutTime", TopicDataSet.getOutCirCleDetailTime().toString())
-                TopicDataSet.getOutCirCleDetailTime()?.let { viewModel.getTopicMessages(it) }
-            }
+            refreshTopicMessage()
             viewModel.invalidateQuestionList()
             viewModel.getMyCirCleData()
         }
     }
 
+    fun refreshTopicMessage() {
+        //获取用户进入圈子详情退出的时间，去请求从而刷新未读消息
+        if (!TopicDataSet.getOutCirCleDetailTime().isNullOrEmpty()) {
+            LogUtils.d("outTime", TopicDataSet.getOutCirCleDetailTime().toString())
+            TopicDataSet.getOutCirCleDetailTime()?.let { viewModel.getTopicMessages(it) }
+        }
+    }
 
     open fun observeLoading(dynamicListRvAdapter: DynamicAdapter,
                             footerRvAdapter: FooterRvAdapter,
@@ -365,8 +367,10 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), EventBusL
                 if (resultCode == NEED_REFRESH_RESULT) {
                     // 需要刷新 则 刷新显示动态
                     viewModel.getAllCirCleData("问答圈", "test1")
-                    viewModel.invalidateQuestionList()
+                    //获取用户进入圈子详情退出的时间，去请求从而刷新未读消息
                     viewModel.getMyCirCleData()
+                    refreshTopicMessage()
+                    viewModel.invalidateQuestionList()
                 } else {
                     // 不需要刷新，则更新当前的dynamic为详细页的dynamic（避免出现评论数目不一致的问题）
                     dynamicListRvAdapter.notifyDataSetChanged()
@@ -377,8 +381,10 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), EventBusL
                 if (resultCode == NEED_REFRESH_RESULT) {
                     // 需要刷新 则 刷新显示动态
                     viewModel.getAllCirCleData("问答圈", "test1")
-                    viewModel.invalidateQuestionList()
+                    //获取用户进入圈子详情退出的时间，去请求从而刷新未读消息
                     viewModel.getMyCirCleData()
+                    refreshTopicMessage()
+                    viewModel.invalidateQuestionList()
 
                 }
             }

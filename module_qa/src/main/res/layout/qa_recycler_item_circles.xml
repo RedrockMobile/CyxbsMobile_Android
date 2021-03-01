@@ -2,10 +2,12 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/qa_ll_topic"
-    android:layout_width="100dp"
+    android:layout_width="wrap_content"
     android:transitionName="topicItem"
     android:layout_height="wrap_content"
     android:orientation="vertical"
+    android:paddingStart="15dp"
+    android:paddingEnd="15dp"
     android:paddingTop="10dp">
 
     <com.mredrock.cyxbs.qa.ui.widget.ImageViewAddCount
@@ -14,7 +16,6 @@
         android:layout_height="60dp"
         android:layout_gravity="center"
         android:background="@drawable/qa_ic_circle_demo"
-        android:padding="10dp"
         android:scaleType="centerCrop"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
