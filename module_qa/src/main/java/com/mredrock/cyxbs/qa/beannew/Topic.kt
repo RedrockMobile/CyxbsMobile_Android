@@ -27,7 +27,9 @@ data class Topic(@SerializedName("topic_id")
                  var _isFollow: Int = 0,
 
                  @SerializedName("introduction")
-                 var introduction: String = ""
+                 var introduction: String = "",
+                 @SerializedName("post_count")
+                 var post_count: Int = 0
 
 ) : Parcelable {
 

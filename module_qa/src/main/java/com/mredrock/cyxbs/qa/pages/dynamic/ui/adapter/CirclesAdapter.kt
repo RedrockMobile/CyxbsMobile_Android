@@ -41,8 +41,6 @@ class CirclesAdapter(private val onItemClickEvent: (Topic, View) -> Unit, privat
         const val HAVE_CIRCLE = 1
     }
 
-    //解决圈子消息更新返回太快导致圈子信息还没更新造成数组溢出问题
-    private var flag = false
     private val circlesItemList = ArrayList<Topic>()
     private val topicMessageList = ArrayList<TopicMessage>()
 
@@ -96,16 +94,16 @@ class CirclesAdapter(private val onItemClickEvent: (Topic, View) -> Unit, privat
                 val viewHolder = holder as CirclesItem
                 viewHolder.itemView.apply {
                     setOnSingleClickListener {
-                        //用户点进圈子item进入详情就应该置消息为已读，刷新后才会显示
-                        qa_iv_circle.setHaveMessage(false)
+                        circlesItemList[position].post_count = 0
                         onItemClickEvent(circlesItemList[position], viewHolder.itemView.findViewById<LinearLayout>(R.id.qa_ll_topic))
                     }
 
                     qa_iv_circle.apply {
                         setAvatarImageFromUrl(circlesItemList[position].topicLogo)
-                        if (!topicMessageList.isNullOrEmpty()) {
-                            setHaveMessage(true)
-                            setMessageBum(topicMessageList[position].post_count)
+                        setHaveMessage(true)
+                        topicMessageList.forEach { topicMessage ->
+                            if (circlesItemList[position].topicId == topicMessage.topic_id)
+                                setMessageBum(topicMessage.post_count)
                         }
                     }
                     qa_tv_circle_name.text = circlesItemList[position].topicName
@@ -133,10 +131,10 @@ class CirclesAdapter(private val onItemClickEvent: (Topic, View) -> Unit, privat
         notifyDataSetChanged()
     }
 
+
     fun addTopicMessageData(newTopicMessageData: List<TopicMessage>) {
         topicMessageList.clear()
-        //给发现更多进行一个message匹配
-        topicMessageList.add(TopicMessage(0,"0"))
         topicMessageList.addAll(newTopicMessageData)
+        notifyDataSetChanged()
     }
 }

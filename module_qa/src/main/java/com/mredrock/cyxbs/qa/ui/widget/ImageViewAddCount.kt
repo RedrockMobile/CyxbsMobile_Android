@@ -76,7 +76,7 @@ class ImageViewAddCount(context: Context?, attrs: AttributeSet?) : androidx.appc
                     showText = "99+"
                 }
                 val textWidth = textPaint?.measureText(showText)
-                var x = (width - paddingRight * 1.1 - textWidth!! / 2).toFloat()
+                var x = (width - paddingRight * 1.05 - textWidth!! / 2).toFloat()
                 var y = (paddingTop + textPaint?.fontMetrics?.bottom!! * 1.1).toFloat()
                 canvas?.drawText(showText, x, y, textPaint)
             }
