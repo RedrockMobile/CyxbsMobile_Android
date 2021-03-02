@@ -50,6 +50,7 @@ import com.mredrock.cyxbs.qa.pages.dynamic.viewmodel.DynamicListViewModel
 import com.mredrock.cyxbs.qa.pages.quiz.ui.QuizActivity
 import com.mredrock.cyxbs.qa.pages.search.ui.SearchActivity
 import com.mredrock.cyxbs.qa.pages.square.ui.activity.CircleDetailActivity
+import com.mredrock.cyxbs.qa.pages.square.ui.activity.CircleSquareActivity
 import com.mredrock.cyxbs.qa.qqconnect.BaseUiListener
 import com.mredrock.cyxbs.qa.ui.adapter.EmptyRvAdapter
 import com.mredrock.cyxbs.qa.ui.adapter.FooterRvAdapter
@@ -170,7 +171,10 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), EventBusL
         )
         val circlesAdapter = this.activity?.let {
             CirclesAdapter({ topic, view ->
-                CircleDetailActivity.activityStartFromCircle(this, view, topic)
+                if (topic.topicId == "0") {
+                    CircleSquareActivity.activityStartFromDynamic(this)
+                } else
+                    CircleDetailActivity.activityStartFromCircle(this, view, topic)
             }, this)
         }
         val linearLayoutManager = LinearLayoutManager(context)
@@ -184,7 +188,6 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), EventBusL
         refreshTopicMessage()
         viewModel.topicMessageList.observe {
             if (it != null) {
-                LogUtils.d("tagtag", it.toString())
                 circlesAdapter?.addTopicMessageData(it)
             }
         }

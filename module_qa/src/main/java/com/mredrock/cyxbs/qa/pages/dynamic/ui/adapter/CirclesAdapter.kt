@@ -135,6 +135,8 @@ class CirclesAdapter(private val onItemClickEvent: (Topic, View) -> Unit, privat
 
     fun addTopicMessageData(newTopicMessageData: List<TopicMessage>) {
         topicMessageList.clear()
+        //给发现更多进行一个message匹配
+        topicMessageList.add(TopicMessage(0,"0"))
         topicMessageList.addAll(newTopicMessageData)
     }
 }
