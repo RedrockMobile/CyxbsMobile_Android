@@ -7,6 +7,7 @@ import androidx.appcompat.content.res.AppCompatResources.getDrawable
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.mredrock.cyxbs.common.BaseApp.Companion.context
 import com.mredrock.cyxbs.common.utils.LogUtils
+import com.mredrock.cyxbs.common.utils.extensions.setAvatarImageFromUrl
 import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.beannew.Dynamic
@@ -30,6 +31,7 @@ class CircleSquareAdapter(val viewmodel: CircleSquareViewModel, private val onIt
     class CircleSquareViewHolder(parent: ViewGroup) : BaseViewHolder<Topic>(parent, R.layout.qa_recycler_item_circle_square) {
         @SuppressLint("UseCompatLoadingForDrawables", "SetTextI18n")
         override fun refresh(data: Topic?) {
+            itemView.iv_circle_square.setAvatarImageFromUrl(data?.topicLogo)
             itemView.tv_circle_square_name.text = data?.topicName
             itemView.tv_circle_square_descriprion.text = data?.introduction
             itemView.tv_circle_square_person_number.text = data?.follow_count.toString() + "个成员"

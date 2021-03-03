@@ -18,6 +18,7 @@ import com.mredrock.cyxbs.common.BaseApp.Companion.context
 import com.mredrock.cyxbs.common.ui.BaseActivity
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.LogUtils
+import com.mredrock.cyxbs.common.utils.extensions.setAvatarImageFromUrl
 import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.beannew.Dynamic
@@ -144,6 +145,7 @@ class CircleDetailActivity : BaseViewModelActivity<CircleDetailViewModel>() {
     @SuppressLint("SetTextI18n", "UseCompatLoadingForDrawables")
     private fun initView() {
         topic = intent.getParcelableExtra("topicItem")
+        iv_circle_square.setAvatarImageFromUrl(topic.topicLogo)
         tv_circle_square_name.text = topic.topicName
         tv_circle_square_descriprion.text = topic.introduction
         tv_circle_square_person_number.text = topic.follow_count.toString() + "个成员"
