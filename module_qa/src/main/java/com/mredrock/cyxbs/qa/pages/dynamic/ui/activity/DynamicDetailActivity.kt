@@ -40,7 +40,6 @@ import com.tencent.tauth.Tencent
 import kotlinx.android.synthetic.main.qa_activity_dynamic_detail.*
 import kotlinx.android.synthetic.main.qa_common_toolbar.*
 import kotlinx.android.synthetic.main.qa_recycler_item_dynamic_header.*
-import kotlinx.android.synthetic.main.qa_recycler_item_dynamic_header.view.*
 
 
 /**
