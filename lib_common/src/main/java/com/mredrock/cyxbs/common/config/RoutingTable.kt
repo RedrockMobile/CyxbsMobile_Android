@@ -78,3 +78,6 @@ const val ELECTRICITY_SERVICE = "/electricity/service"
 
 //电费模块服务
 const val VOLUNTEER_SERVICE = "/volunteer/service"
+
+//换肤
+const val SKIN_ENTRY = "/skin/entry"

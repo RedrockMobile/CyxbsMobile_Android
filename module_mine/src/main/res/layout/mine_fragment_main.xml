@@ -313,6 +313,19 @@
             android:textColor="@color/common_level_three_font_color"
             android:textSize="15sp" />
 
+        <TextView
+            android:id="@+id/mine_main_tv_skin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:foreground="?android:selectableItemBackground"
+            android:paddingStart="16dp"
+            android:paddingTop="9dp"
+            android:paddingBottom="9dp"
+            android:text="换肤"
+            android:textColor="@color/common_level_three_font_color"
+            android:textSize="15sp" />
+
         <Button
             android:id="@+id/mine_main_btn_exit"
             style="?android:attr/borderlessButtonStyle"

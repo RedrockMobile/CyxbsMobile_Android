@@ -3,8 +3,6 @@ package com.mredrock.cyxbs.mine
 
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.content.ClipData
-import android.content.ClipboardManager
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -12,8 +10,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityOptionsCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
@@ -22,7 +18,6 @@ import androidx.lifecycle.Observer
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
 import com.mredrock.cyxbs.common.component.CommonDialogFragment
-import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.common.config.*
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.api.account.IAccountService
@@ -65,6 +60,7 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
             mine_main_tv_question.setOnClickListener { doIfLogin { startActivity<AnswerActivity>() } }
             mine_main_reply_comment_number.setOnClickListener { doIfLogin { startActivity<CommentActivity>() } }
             mine_main_tv_reply_comment.setOnClickListener { doIfLogin { startActivity<CommentActivity>() } }
+            mine_main_tv_skin.setOnClickListener { ARouter.getInstance().build(SKIN_ENTRY).navigation() }
             mine_main_cl_info_edit.setOnClickListener {
                 doIfLogin {
                     startActivity(

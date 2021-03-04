@@ -1,3 +1,4 @@
+include ':module_skin'
 include ':lib_protocol:api_protocol'
 include ':lib_protocol'
 include ':module_volunteer:api_volunteer'

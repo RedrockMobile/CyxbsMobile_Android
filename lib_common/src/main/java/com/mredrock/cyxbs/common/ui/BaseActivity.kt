@@ -18,6 +18,8 @@ import com.mredrock.cyxbs.common.component.JToolbar
 import com.mredrock.cyxbs.common.mark.ActionLoginStatusSubscriber
 import com.mredrock.cyxbs.common.mark.EventBusLifecycleSubscriber
 import com.mredrock.cyxbs.common.service.ServiceManager
+import com.mredrock.cyxbs.common.skin.MySkinFactory
+import com.mredrock.cyxbs.common.skin.SkinManager
 import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.getDarkModeStatus
 import com.mredrock.cyxbs.common.utils.extensions.startActivity
@@ -50,9 +52,19 @@ abstract class BaseActivity : AppCompatActivity() {
     // 只在这里做封装处理
     private var baseBundle: Bundle? = null
 
+    protected var mSkinFactory: MySkinFactory? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        SkinManager.instance.init(this)
+        mSkinFactory = MySkinFactory()
+        layoutInflater.factory = mSkinFactory
         super.onCreate(savedInstanceState)
+        /**添加皮肤更新监听  */
+        SkinManager.instance.addSkinUpdateListener(object : SkinManager.SkinUpdateListener{
+            override fun onSkinUpdate() {
+                mSkinFactory!!.apply()
+            }
+        })
         baseBundle = savedInstanceState
         // 禁用横屏，现目前不需要横屏，防止发送一些错误
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
