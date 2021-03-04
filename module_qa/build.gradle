@@ -3,7 +3,11 @@ apply from: config
 // 这里只添加确认模块独用库，添加请之前全局搜索，是否已经依赖
 // 公用库请不要添加到这里
 dependencies {
+    api 'com.google.android:flexbox:2.0.1'
+    implementation 'androidx.appcompat:appcompat:1.2.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.2'
     implementation 'de.hdodenhof:circleimageview:3.1.0'
     implementation project(':lib_account:api_account')
-
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    implementation 'com.tencent.tauth:qqopensdk:3.52.0'
 }

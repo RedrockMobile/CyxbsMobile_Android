@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ripple xmlns:android="http://schemas.android.com/apk/res/android"
+    android:color="#C5C5C5">
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="@color/qa_reply_inner_background_color" />
+            <corners android:radius="10dp" />
+        </shape>
+    </item>
+    <item android:drawable="@drawable/qa_shape_reply_background" />
+</ripple>

@@ -104,10 +104,7 @@ const val SCHOOL_CAR_MAP_RES = 0
 const val DISCOVERY_ROLLER_VIEW_INFO = 1
 
 //课表上课地点跳转到地图key
-const val COURSE_POS_TO_MAP = "course_pos_to_map"
+const val COURSE_POS_TO_MAP = "COURSE_POS_TO_MAP"
 
 //qa进入回答列表传入的问题id的key
 const val QA_PARAM_QUESTION_ID = "question_id"
-
-// tab索引
-const val TAB_INDEX = "tab_index"

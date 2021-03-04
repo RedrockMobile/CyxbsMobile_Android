@@ -1,19 +1,22 @@
 package com.mredrock.cyxbs.qa.pages.quiz.ui
 
+import android.annotation.SuppressLint
 import android.app.Activity
+import android.app.ProgressDialog
 import android.content.Intent
-import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextUtils
+import android.text.TextWatcher
 import android.util.Base64
 import android.view.KeyEvent
 import android.view.View
 import android.widget.ImageView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.core.view.get
-import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.google.android.material.chip.Chip
@@ -21,19 +24,22 @@ import com.google.android.material.chip.ChipGroup
 import com.google.gson.Gson
 import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.common.config.QA_QUIZ
-import com.mredrock.cyxbs.common.event.QuestionDraftEvent
+import com.mredrock.cyxbs.common.event.DynamicDraftEvent
 import com.mredrock.cyxbs.common.mark.EventBusLifecycleSubscriber
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
-import com.mredrock.cyxbs.common.utils.down.bean.DownMessageText
+import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.*
 import com.mredrock.cyxbs.qa.R
-import com.mredrock.cyxbs.qa.bean.Question
+import com.mredrock.cyxbs.qa.R.drawable.*
+import com.mredrock.cyxbs.qa.beannew.Question
+import com.mredrock.cyxbs.qa.config.RequestResultCode.NEED_REFRESH_RESULT
 import com.mredrock.cyxbs.qa.pages.quiz.QuizViewModel
-import com.mredrock.cyxbs.qa.pages.quiz.ui.dialog.RewardSetDialog
 import com.mredrock.cyxbs.qa.ui.activity.ViewImageCropActivity
-import com.mredrock.cyxbs.qa.ui.widget.CommonDialog
+import com.mredrock.cyxbs.qa.ui.widget.DraftDialog
+import com.mredrock.cyxbs.qa.ui.widget.RectangleView
 import com.mredrock.cyxbs.qa.utils.CHOOSE_PHOTO_REQUEST
 import com.mredrock.cyxbs.qa.utils.selectImageFromAlbum
+import kotlinx.android.synthetic.main.qa_activity_question_search.*
 import kotlinx.android.synthetic.main.qa_activity_quiz.*
 import kotlinx.android.synthetic.main.qa_common_toolbar.*
 import org.greenrobot.eventbus.EventBus
@@ -43,121 +49,191 @@ import top.limuyang2.photolibrary.LPhotoHelper
 
 @Route(path = QA_QUIZ)
 class QuizActivity : BaseViewModelActivity<QuizViewModel>(), EventBusLifecycleSubscriber {
+
     companion object {
-        const val MAX_SELECTABLE_IMAGE_COUNT = 6
+        const val MAX_CONTENT_SIZE = 500
+        const val MAX_SELECTABLE_IMAGE_COUNT = 9
         const val NOT_DRAFT_ID = "-1"
         const val FIRST_QUIZ = "cyxbs_quiz_is_first_time"
         const val FIRST_QUIZ_SP_KEY = "isFirstTimeQuiz"
-        const val QUIZ_TITLE_MAX = 12
-        const val DOWN_MESSAGE_NAME = "zscy-qa-reward-explain"
         fun activityStart(fragment: Fragment, type: String, requestCode: Int) {
             fragment.startActivityForResult<QuizActivity>(requestCode, "type" to type)
         }
-
     }
 
 
-    private var currentTypeIndex = 0
+    private var quizContent = ""
+    private var progressDialog: ProgressDialog? = null
+//    override val isFragmentActivity = false
     private var draftId = NOT_DRAFT_ID
-    private var questionType: String = ""
+    private var dynamicType: String = ""
     private var isFirstQuiz: Boolean = true
     private val exitDialog by lazy { createExitDialog() }
-    private val rewardNotEnoughDialog by lazy { createRewardNotEnoughDialog() }
-    private var rewardExplainList: List<DownMessageText> = listOf()
-    private val types = listOf(Question.FRESHMAN, Question.STUDY, Question.ANONYMOUS, Question.LIFE, Question.OTHER)
-
+    private var isComment = ""
+    private var commentContent = ""
+    private var replyId = ""
+    private var postId = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.qa_activity_quiz)
-        val titles = resources.getStringArray(R.array.qa_quiz_reward_explain_title)
-        val contents = resources.getStringArray(R.array.qa_quiz_reward_explain_content)
-        rewardExplainList = titles.zip(contents) { title, content -> DownMessageText(title, content) }
         isFirstQuiz = sharedPreferences(FIRST_QUIZ).getBoolean(FIRST_QUIZ_SP_KEY, true)
-        initTypeSelector()
+        if (!intent.getStringExtra("isComment").isNullOrEmpty()) {
+            isComment = intent.getStringExtra("isComment")
+            if (!intent.getStringExtra("commentContent").isNullOrEmpty())
+                commentContent = intent.getStringExtra("commentContent")
+            if (!intent.getStringExtra("replyId").isNullOrEmpty()) {
+                replyId = intent.getStringExtra("replyId")
+                nine_grid_view.gone()
+            }
+            if (!intent.getStringExtra("postId").isNullOrEmpty()) {
+                postId = intent.getStringExtra("postId")
+            }
+        }
+
         initToolbar()
         initImageAddView()
-        viewModel.getMyReward() //优先初始化积分和说明，避免用户等待
-        viewModel.getRewardExplain(DOWN_MESSAGE_NAME)
+        initEditListener()
+        initTypeSelector()
+
         viewModel.backAndRefreshPreActivityEvent.observeNotNull {
             if (it) {
-                if (draftId != NOT_DRAFT_ID) {
+                if (draftId != NOT_DRAFT_ID && draftId != isComment) {
                     viewModel.deleteDraft(draftId)
                 }
-                val data = Intent()
-                data.putExtra("type", questionType)
-                setResult(Activity.RESULT_OK, data)
+                setResult(NEED_REFRESH_RESULT)
+                progressDialog?.dismiss()
                 finish()
             }
         }
+
+        viewModel.finishReleaseCommentEvent.observeNotNull {
+            if (it) {
+                setResult(NEED_REFRESH_RESULT, Intent().apply { putExtra("text", "") })
+                finish()
+            }
+        }
+
         viewModel.finishActivityEvent.observeNotNull {
+            progressDialog?.dismiss()
             finish()
         }
-        edt_quiz_title.doAfterTextChanged {
-            if (edt_quiz_title.text.toString().length == QUIZ_TITLE_MAX) {
-                toast(R.string.qa_quiz_title_text_size_toast)
+    }
+
+
+    //发布页标签单选
+    @SuppressLint("SetTextI18n")
+    private fun initTypeSelector() {
+        viewModel.getAllCirCleData("问答圈", "test1")
+        viewModel.allCircle.observe {
+            if (!it.isNullOrEmpty()) {
+                val chipGroup = findViewById<ChipGroup>(R.id.qa_layout_quiz_tag)
+                for (topic in it.withIndex()) {
+                    chipGroup.addView((layoutInflater.inflate(R.layout.qa_quiz_view_chip, chipGroup, false) as Chip).apply {
+                        text = "# " + topic.value.topicName
+                        setOnClickListener {
+                            LogUtils.d("tagtag", dynamicType)
+                            if (dynamicType == getTopicText(text.toString())) {
+                                dynamicType = ""
+                            } else {
+                                dynamicType = getTopicText(text.toString())
+                            }
+                        }
+                    })
+                }
             }
         }
     }
 
-    private fun initTypeSelector() {
-        val chipGroup = findViewById<ChipGroup>(R.id.layout_quiz_tag)
-        for ((i, value) in types.withIndex()) {
-            if (i == 0) questionType = value
-            chipGroup.addView((layoutInflater.inflate(R.layout.qa_quiz_view_chip, chipGroup, false) as Chip).apply {
-                text = value
-                setOnClickListener {
-                    questionType = text.toString()
-                }
-            })
-        }
-        (chipGroup.getChildAt(currentTypeIndex) as Chip).isChecked = true
+    //圈子名前加#，但是请求的时候不带#
+    private fun getTopicText(text: String): String {
+        val type = StringBuffer(text)
+        type.delete(0, 2)
+        return type.toString()
+    }
+    //动态监听内容文字变化
+
+    private fun initEditListener() {
+        qa_edt_quiz_content.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(
+                    charSequence: CharSequence,
+                    i: Int,
+                    i1: Int,
+                    i2: Int
+            ) {
+            }
+
+            override fun onTextChanged(
+                    charSequence: CharSequence,
+                    i: Int,
+                    i1: Int,
+                    i2: Int
+            ) = if (charSequence.length <= MAX_CONTENT_SIZE) {
+                quizContent = charSequence.toString()
+                qa_tv_toolbar_right.setBackgroundResource(qa_shape_send_dynamic_btn_blue_background)
+                qa_tv_edit_num.text = charSequence.length.toString() + "/500"
+
+            } else {
+                qa_edt_quiz_content.setText(quizContent)
+                qa_tv_toolbar_right.setBackgroundResource(qa_shape_send_dynamic_btn_grey_background)
+            }
+
+            override fun afterTextChanged(editable: Editable) {}
+        })
     }
 
 
+    @SuppressLint("SetTextI18n")
     private fun initToolbar() {
         qa_ib_toolbar_back.setOnClickListener(View.OnClickListener {
-            if (edt_quiz_title.text.isNullOrEmpty() && edt_quiz_content.text.isNullOrEmpty() && draftId == NOT_DRAFT_ID) {
+            if (qa_edt_quiz_content.text.isNullOrEmpty() && draftId == NOT_DRAFT_ID || draftId == isComment) {
                 finish()
                 return@OnClickListener
             }
             exitDialog.show()
         })
-        qa_tv_toolbar_title.text = getString(R.string.qa_quiz_toolbar_title_text)
+        progressDialog = ProgressDialog(this)
+        progressDialog?.apply {
+            setMessage("加载中...")
+            setCanceledOnTouchOutside(false)
+        }
+        if (isComment == "1") {
+            qa_tv_toolbar_title.text = "发布评论"
+            if (!intent.getStringExtra("replyNickname").isNullOrEmpty()) {
+                qa_tv_toolbar_title.text = "回复 @" + intent.getStringExtra("replyNickname")
+            }
+            qa_tv_choose_circle.visibility = View.GONE
+            qa_layout_quiz_tag.visibility = View.GONE
+            draftId = isComment
+            qa_edt_quiz_content.setText(commentContent)
+        } else {
+            qa_tv_toolbar_title.text = getString(R.string.qa_quiz_toolbar_title_text)
+        }
         qa_ib_toolbar_more.gone()
         qa_tv_toolbar_right.apply {
             visible()
             text = getString(R.string.qa_quiz_dialog_next)
             setOnClickListener {
-                if ((layout_quiz_tag as ChipGroup).checkedChipId == View.NO_ID) {
-                    CyxbsToast.makeText(this@QuizActivity, context.getString(R.string.qa_quiz_type_empty), Toast.LENGTH_SHORT).show()
-                    return@setOnClickListener
-                }
-                viewModel.isAnonymous = questionType == getString(R.string.qa_quiz_select_type_anonymous)
-                val result = viewModel.submitTitleAndContent(edt_quiz_title.text.toString(), edt_quiz_content.text.toString(), questionType)
-                if (result) {
-                    if (!viewModel.rewardExplainList.isNullOrEmpty()) rewardExplainList = viewModel.rewardExplainList
-                    RewardSetDialog(this@QuizActivity, viewModel.myRewardCount, isFirstQuiz, rewardExplainList).apply {
-                        onSubmitButtonClickListener = { time: String, reward: Int ->
-                            if (viewModel.setDisAppearTime(time)) {
-                                if (viewModel.quiz(reward)) {
-                                    dismiss()
-                                } else {
-                                    rewardNotEnoughDialog.show()
-                                }
-                            }
-                        }
-                    }.show()
+                if (isComment == "") {
+                    val result = viewModel.submitTitleAndContent(dynamicType, quizContent)
+                    if (result) {
+                        progressDialog?.show()
+                        viewModel.submitDynamic()
+                    }
+                } else {
+                    progressDialog?.show()
+                    viewModel.submitComment(postId, quizContent, replyId)
                 }
             }
         }
     }
 
     private fun initImageAddView() {
-        nine_grid_view.addView(ContextCompat.getDrawable(this, R.drawable.qa_ic_quiz_add_picture_empty)?.let { createImageViewFromVector(it) })
+        nine_grid_view.addView(ContextCompat.getDrawable(this, qa_ic_add_images)?.let { createImageViewFromVector(it) })
         nine_grid_view.setOnItemClickListener { _, index ->
             if (index == nine_grid_view.childCount - 1) {
-                this@QuizActivity.selectImageFromAlbum(MAX_SELECTABLE_IMAGE_COUNT, viewModel.imageLiveData.value)
+
+                this@QuizActivity.selectImageFromAlbum(MAX_SELECTABLE_IMAGE_COUNT)
             } else {
                 ViewImageCropActivity.activityStartForResult(this@QuizActivity, viewModel.tryEditImg(index)
                         ?: return@setOnItemClickListener)
@@ -210,13 +286,18 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>(), EventBusLifecycleSu
         }
         when (requestCode) {
             CHOOSE_PHOTO_REQUEST -> {
-//                val dataList : ArrayList<String> = ArrayList((LPhotoHelper.getSelectedPhotos(data))
-                val imageListUri = ArrayList((LPhotoHelper.getSelectedPhotos(data)).map {
+                val imageListUri = ArrayList(LPhotoHelper.getSelectedPhotos(data)).map {
                     it.toString()
-                })
+                }
                 val imageListAbsolutePath = ArrayList<String>()
                 imageListUri.forEach { imageListAbsolutePath.add(Uri.parse(it).getAbsolutePath(this)) }
-                viewModel.setImageList(imageListAbsolutePath)
+                //为再次进入图库保存以前添加的图片，进行的逻辑
+                if (viewModel.lastImageLiveData.size + imageListAbsolutePath.size <= 8)
+                    viewModel.lastImageLiveData.addAll(imageListAbsolutePath)
+                else {
+                    CyxbsToast.makeText(this, "请重新选择图片，一次性只能够发布8张图片", Toast.LENGTH_SHORT).show()
+                }
+                viewModel.setImageList(viewModel.lastImageLiveData)
             }
             ViewImageCropActivity.DEFAULT_RESULT_CODE -> viewModel.setImageList(viewModel.imageLiveData.value!!.apply {
                 set(viewModel.editingImgPos, data.getStringExtra(ViewImageCropActivity.EXTRA_NEW_PATH))
@@ -224,18 +305,13 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>(), EventBusLifecycleSu
         }
     }
 
-    private fun createImageViewFromVector(drawable: Drawable) = ImageView(this).apply {
+    private fun createImageViewFromVector(drawable: Drawable) = RectangleView(this).apply {
         scaleType = ImageView.ScaleType.CENTER
-        background = ContextCompat.getDrawable(this@QuizActivity, R.drawable.qa_shape_quiz_select_pic_empty_background)
+        background = ContextCompat.getDrawable(this@QuizActivity, qa_shape_quiz_select_pic_empty_background)
         setImageDrawable(drawable)
     }
 
-    private fun createImageView(bitmap: Bitmap) = ImageView(this).apply {
-        scaleType = ImageView.ScaleType.CENTER_CROP
-        setImageBitmap(bitmap)
-    }
-
-    private fun createImageView(uri: Uri) = ImageView(this).apply {
+    private fun createImageView(uri: Uri) = RectangleView(this).apply {
         scaleType = ImageView.ScaleType.CENTER_CROP
         setImageURI(uri)
     }
@@ -245,7 +321,7 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>(), EventBusLifecycleSu
             if (exitDialog.isShowing) {
                 return super.onKeyDown(keyCode, event)
             }
-            return if (edt_quiz_content.text.isNullOrEmpty() && edt_quiz_title.text.isNullOrEmpty() && draftId == NOT_DRAFT_ID) {
+            return if (qa_edt_quiz_content.text.isNullOrEmpty() && draftId == NOT_DRAFT_ID || draftId == isComment) {
                 super.onKeyDown(keyCode, event)
             } else {
                 exitDialog.show()
@@ -256,73 +332,49 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>(), EventBusLifecycleSu
     }
 
     private fun saveDraft() {
+        progressDialog?.show()
         if (draftId == NOT_DRAFT_ID) {
-            viewModel.addItemToDraft(edt_quiz_title.text.toString(), edt_quiz_content.text.toString(), questionType)
+            viewModel.addItemToDraft(quizContent, dynamicType)
         } else {
-            viewModel.updateDraftItem(edt_quiz_title.text.toString(), edt_quiz_content.text.toString(), draftId, questionType)
+            viewModel.updateDraftItem(quizContent, draftId, dynamicType)
         }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
-    fun loadDraft(event: QuestionDraftEvent) {
+    fun loadDraft(event: DynamicDraftEvent) {
         if (intent.getStringExtra("type") != null) {
             EventBus.getDefault().removeStickyEvent(event)
             return
         }
         val json = String(Base64.decode(event.jsonString, Base64.DEFAULT))
         val question = Gson().fromJson(json, Question::class.java)
-        edt_quiz_title.setText(question.title)
-        edt_quiz_content.setText(question.description)
-        val chipGroup = findViewById<ChipGroup>(R.id.layout_quiz_tag)
-        if (chipGroup.childCount == 0) initTypeSelector()
-        val childView = Array(chipGroup.childCount) { chipGroup.getChildAt(it) as Chip }
-        (chipGroup[currentTypeIndex] as Chip).isChecked = false
-        questionType = question.kind
-        when (question.kind) {
-            getString(R.string.qa_quiz_select_type_welcome_freshman) -> currentTypeIndex = 0
-            getString(R.string.qa_quiz_select_type_study) -> currentTypeIndex = 1
-            getString(R.string.qa_quiz_select_type_anonymous) -> currentTypeIndex = 2
-            getString(R.string.qa_quiz_select_type_life) -> currentTypeIndex = 3
-            getString(R.string.qa_quiz_select_type_others) -> currentTypeIndex = 4
-        }
-        childView[currentTypeIndex].isChecked = true
+        qa_edt_quiz_content.setText(question.description)
         draftId = event.selfId
         if (!question.photoUrl.isNullOrEmpty()) {
             viewModel.setImageList(arrayListOf<String>().apply { addAll(question.photoUrl) })
         }
     }
 
-    private fun createExitDialog() = CommonDialog(this).apply {
-        initView(icon = R.drawable.qa_ic_quiz_quit_edit
-                , title = getString(R.string.qa_quiz_dialog_exit_text)
-                , firstNotice = getString(R.string.qa_quiz_dialog_not_save_text)
-                , secondNotice = null
-                , buttonText = getString(R.string.qa_common_dialog_exit)
-                , confirmListener = View.OnClickListener {
+    private fun createExitDialog() = DraftDialog(this).apply {
+        initView(title = getString(R.string.qa_quiz_dialog_exit_text), saveText = "保存", noSaveText = "不保存", cancelText = "取消", saveListener = View.OnClickListener {
             saveDraft()
             dismiss()
-        }
-                , cancelListener = View.OnClickListener {
+        }, noSaveListener = View.OnClickListener {
+            dismiss()
+            finish()
+        }, cancelListener = View.OnClickListener {
             dismiss()
         })
-    }
-
-    private fun createRewardNotEnoughDialog() = CommonDialog(this).apply {
-        initView(icon = R.drawable.qa_ic_quiz_notice_reward_not_enough
-                , title = getString(R.string.qa_quiz_reward_not_enough_text)
-                , firstNotice = getString(R.string.qa_quiz_reward_more_text)
-                , secondNotice = getString(R.string.qa_quiz_down_reward_get_more_text)
-                , buttonText = getString(R.string.qa_quiz_dialog_sure)
-                , confirmListener = View.OnClickListener {
-            dismiss()
-        }
-                , cancelListener = null)
     }
 
     override fun onPause() {
         //防止内存泄漏
         exitDialog.dismiss()
-        rewardNotEnoughDialog.dismiss()
         super.onPause()
+    }
+
+    override fun onBackPressed() {
+        setResult(-1, Intent().apply { putExtra("text", qa_edt_quiz_content.text.toString()) })
+        super.onBackPressed()
     }
 }

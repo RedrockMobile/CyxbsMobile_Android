@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:clipChildren="false"
+    android:clipToPadding="false"
+    android:background="@drawable/qa_ripple_reply_background_ripple"
+    android:paddingTop="9dp">
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/qa_gl_reply_inner_start"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/qa_gl_reply_inner_end"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="1" />
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/qa_iv_reply_inner_avatar"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginStart="10dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/common_default_avatar"
+        app:layout_constraintStart_toEndOf="@id/qa_gl_reply_inner_start"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/qa_tv_reply_inner_nickname"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_toEndOf="@id/qa_iv_reply_inner_avatar"
+        android:textColor="@color/qa_reply_detail_nickname_text_color"
+        android:textSize="13sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/qa_iv_reply_inner_avatar"
+        app:layout_constraintStart_toEndOf="@id/qa_iv_reply_inner_avatar"
+        app:layout_constraintTop_toTopOf="@id/qa_iv_reply_inner_avatar"
+        tools:text="那个男人" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/qa_tv_reply_inner_content"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="11dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="9dp"
+        android:ellipsize="end"
+        android:gravity="start"
+        android:singleLine="false"
+        android:textColor="@color/qa_reply_detail_content_text_color"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/qa_gl_reply_inner_end"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/qa_tv_reply_inner_nickname"
+        app:layout_constraintTop_toBottomOf="@id/qa_iv_reply_inner_avatar"
+        tools:text="菜还瘾大？" />
+
+    <com.mredrock.cyxbs.qa.ui.widget.likeview.LikeViewSlim
+        android:id="@+id/qa_iv_reply_inner_praise_count_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:checkedColor="#323FD9"
+        app:checkedLikeIconRes="@drawable/qa_ic_answer_list_praised"
+        app:cirRadius="14dp"
+        app:cycleTime="1000"
+        app:defaultColor="#ffcccccc"
+        app:defaultLikeIconRes="@drawable/qa_ic_answer_list_praise"
+        app:layout_constraintBottom_toBottomOf="@+id/qa_tv_reply_inner_nickname"
+        app:layout_constraintEnd_toStartOf="@+id/qa_gl_reply_inner_end"
+        app:layout_constraintTop_toTopOf="@+id/qa_tv_reply_inner_nickname"
+        app:ringColor="#323FD9" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

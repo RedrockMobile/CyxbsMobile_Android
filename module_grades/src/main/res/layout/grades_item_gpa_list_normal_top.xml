@@ -109,7 +109,7 @@
     <ImageView
         android:layout_width="0dp"
         android:layout_height="1dp"
-        android:src="@color/common_qa_answer_item_divider_color"
+        android:src="@color/qa_answer_item_divider_color"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/grades_imageview5"
         app:layout_constraintStart_toStartOf="@+id/grades_imageview5" />

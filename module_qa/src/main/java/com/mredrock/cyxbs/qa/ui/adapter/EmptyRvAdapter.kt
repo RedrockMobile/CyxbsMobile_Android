@@ -37,9 +37,7 @@ class EmptyRvAdapter(private val hint: String) : BaseRvAdapter<Boolean>() {
             } else {
                 itemView.card_holder.visible()
                 itemView.tv_hint.gone()
-                itemView.tv_hint.gone()
                 itemView.iv_hint.gone()
-
             }
         }
     }

@@ -8,15 +8,15 @@
 
     <RelativeLayout
         android:id="@+id/rl_question_searching"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="36dp"
-        android:layout_marginStart="21dp"
+        android:layout_marginStart="49dp"
         android:layout_marginTop="60dp"
-        android:layout_marginEnd="21dp"
+        android:layout_marginEnd="16dp"
         android:background="@drawable/qa_shape_question_search_background"
-        app:layout_constraintEnd_toStartOf="@id/tv_question_search_cancel"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/qa_iv_search_back"
         app:layout_constraintTop_toTopOf="parent">
 
         <androidx.appcompat.widget.AppCompatImageView
@@ -30,7 +30,7 @@
 
         <androidx.appcompat.widget.AppCompatEditText
             android:id="@+id/et_question_search"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginEnd="10dp"
@@ -43,22 +43,19 @@
             android:selectAllOnFocus="true"
             android:singleLine="true"
             android:textColor="@color/common_level_three_font_color"
-            android:textColorHint="@color/common_qa_common_hint_text_color"
+            android:textColorHint="@color/qa_common_hint_text_color"
             android:textSize="16sp" />
     </RelativeLayout>
 
-
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/tv_question_search_cancel"
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/qa_iv_search_back"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="20dp"
-        android:text="@string/qa_question_search_cancel"
-        android:textColor="@color/common_level_three_font_color"
-        android:textSize="18sp"
+        android:src="@drawable/common_ic_back"
+        android:layout_marginStart="16dp"
         app:layout_constraintBottom_toBottomOf="@+id/rl_question_searching"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/rl_question_searching" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/rl_question_searching"/>
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fcv_question_search"

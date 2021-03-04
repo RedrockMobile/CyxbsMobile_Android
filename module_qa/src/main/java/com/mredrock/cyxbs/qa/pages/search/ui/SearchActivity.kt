@@ -2,7 +2,11 @@ package com.mredrock.cyxbs.qa.pages.search.ui
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
+import android.view.DragAndDropPermissions
+import android.view.DragEvent
+import android.view.Menu
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
@@ -30,7 +34,6 @@ import org.greenrobot.eventbus.ThreadMode
 class SearchActivity : BaseViewModelActivity<SearchViewModel>(), EventBusLifecycleSubscriber {
     private val questionSearchingFragment: QuestionSearchingFragment by lazy(LazyThreadSafetyMode.NONE) { QuestionSearchingFragment() }
     private val questionSearchedFragment: QuestionSearchedFragment by lazy(LazyThreadSafetyMode.NONE) { QuestionSearchedFragment() }
-
     companion object {
         private const val SEARCH_HINT_KEY = "search_hint_key"
         fun activityStart(fragment: Fragment, searchHint: String, view: View) {
@@ -40,11 +43,6 @@ class SearchActivity : BaseViewModelActivity<SearchViewModel>(), EventBusLifecyc
                 ActivityOptionsCompat.makeSceneTransitionAnimation(it, view, "ImageView_Search").apply {
                 }.toBundle()
             })
-        }
-
-        fun activityStart(fragment: Fragment) {
-            val intent = fragment.context?.intentFor<SearchActivity>()
-            fragment.startActivity(intent)
         }
     }
 
@@ -57,7 +55,7 @@ class SearchActivity : BaseViewModelActivity<SearchViewModel>(), EventBusLifecyc
 
     @SuppressLint("ClickableViewAccessibility")
     private fun initView() {
-        tv_question_search_cancel.setOnClickListener { finish() }
+        qa_iv_search_back.setOnClickListener { finish() }
         supportFragmentManager.beginTransaction().replace(R.id.fcv_question_search, questionSearchingFragment).commit()
         val searchHint = intent.getStringExtra(SEARCH_HINT_KEY)
         if (!searchHint.isNullOrEmpty()) {

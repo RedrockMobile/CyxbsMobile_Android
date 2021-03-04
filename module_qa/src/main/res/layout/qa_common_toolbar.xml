@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.appbar.AppBarLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.appbar.AppBarLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/qa_ab_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/common_white_background"
@@ -17,7 +19,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="17dp"
             android:layout_marginEnd="17dp"
-            android:layout_marginBottom="15dp"
+            android:layout_marginBottom="10dp"
             android:orientation="horizontal">
 
             <ImageButton
@@ -33,25 +35,30 @@
                 android:id="@+id/qa_tv_toolbar_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginStart="17dp"
-                android:layout_marginEnd="17dp"
-                android:layout_toStartOf="@id/qa_ib_toolbar_more"
-                android:layout_toEndOf="@id/qa_ib_toolbar_back"
-                android:textColor="@color/common_level_two_font_color"
-                android:textSize="22sp"
-                android:textStyle="bold"
-                tools:text="评论（2）" />
-
-            <ImageButton
-                android:id="@+id/qa_ib_toolbar_more"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_alignParentStart="true"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
-                android:background="?attr/selectableItemBackgroundBorderless"
+                android:layout_marginStart="40dp"
+                tools:text="标题"
+                android:layout_marginEnd="40dp"
+                android:gravity="center_horizontal|center_vertical"
+                android:textColor="@color/common_level_two_font_color"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/qa_ib_toolbar_more"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
                 android:layout_gravity="center_vertical"
-                android:src="@drawable/qa_ic_toolbar_more_2" />
+                android:paddingStart="12dp"
+                android:paddingTop="5dp"
+                android:paddingEnd="12dp"
+                android:paddingBottom="5dp"
+                android:textColor="@color/common_white_background"
+                android:textSize="18sp" />
 
             <TextView
                 android:id="@+id/qa_tv_toolbar_right"
@@ -59,10 +66,15 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
-                android:textColor="@color/levelFourFontColor"
-                android:textSize="18sp"
+                android:background="@drawable/qa_shape_send_dynamic_btn_grey_background"
+                android:paddingStart="12dp"
+                android:paddingTop="5dp"
+                android:paddingEnd="12dp"
+                android:paddingBottom="5dp"
+                android:textColor="@color/common_white_background"
+                android:textSize="15sp"
                 android:visibility="gone"
-                tools:text="下一步" />
+                tools:text="发布" />
         </RelativeLayout>
     </androidx.appcompat.widget.Toolbar>
 </com.google.android.material.appbar.AppBarLayout>

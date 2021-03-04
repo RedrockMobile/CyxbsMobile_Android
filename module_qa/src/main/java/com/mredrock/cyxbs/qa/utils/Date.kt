@@ -24,7 +24,7 @@ fun String.toDate(format: String = "yyyy-MM-dd HH:mm:ss"): Date {
     return Date()
 }
 
-fun questionTimeDescription(current: Long, other: Long): String {
+fun dynamicTimeDescription(current: Long, other: Long): String {
     val oneMinute = 60000
     val oneHour = 60 * oneMinute
     val oneDay = 24 * oneHour

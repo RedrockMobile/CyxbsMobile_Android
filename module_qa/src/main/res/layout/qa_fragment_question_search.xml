@@ -7,18 +7,45 @@
     android:orientation="vertical"
     android:paddingBottom="30dp">
 
-
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
+        <androidx.appcompat.widget.AppCompatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="30dp"
+            android:text="热门搜索"
+            android:textColor="@color/common_level_three_font_color"
+            android:textSize="22sp"
+            android:textStyle="bold" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_hot_search_tab_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="8dp"
+            android:layoutDirection="ltr"
+            android:paddingStart="10dp"
+            android:paddingTop="5dp"
+            android:paddingEnd="10dp"
+            android:paddingBottom="5dp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="25dp"
+            android:alpha="0.1"
+            android:background="@color/qa_quiz_toolbar_divider_line_color" />
 
         <RelativeLayout
             android:id="@+id/ll_history_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="36dp">
+            android:layout_marginTop="25dp">
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/tv_question_search_history"
@@ -37,9 +64,9 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
-                android:layout_marginEnd="21dp"
+                android:layout_marginEnd="16dp"
                 android:text="@string/qa_search_clean_history_all"
-                android:textColor="@color/common_qa_common_hint_text_color"
+                android:textColor="@color/qa_common_hint_text_color"
                 android:textSize="15.3sp"
                 tools:ignore="RelativeOverlap" />
 
@@ -52,7 +79,6 @@
             android:layout_marginTop="20dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
-
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 </androidx.core.widget.NestedScrollView>

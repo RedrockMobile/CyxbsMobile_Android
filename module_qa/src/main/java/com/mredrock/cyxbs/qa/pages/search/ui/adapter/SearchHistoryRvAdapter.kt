@@ -23,7 +23,6 @@ class SearchHistoryRvAdapter(private val onHistoryClick: (Int) -> Unit, private 
             dataList.removeAt(pos)
             notifyDataSetChanged()
             onCleanIconClick(pos)
-
         }
     }
 

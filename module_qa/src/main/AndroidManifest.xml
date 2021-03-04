@@ -3,33 +3,44 @@
     package="com.mredrock.cyxbs.qa">
 
     <application android:theme="@style/AppTheme">
+        <activity android:name=".pages.dynamic.ui.activity.ReplyDetailActivity"
+            android:launchMode="singleTop"/>
+        <activity android:name=".pages.square.ui.activity.CircleDetailActivity" />
+        <activity android:name=".pages.square.ui.activity.CircleSquareActivity" />
         <activity
             android:name=".ui.activity.ViewImageCropActivity"
             android:launchMode="singleTask" />
-
         <activity
             android:name=".ui.activity.ViewImageActivity"
             android:launchMode="singleTask" />
-        <activity
-            android:name=".pages.answer.ui.AnswerListActivity"
-            android:launchMode="singleTop" />
-        <activity
-            android:name=".pages.comment.ui.CommentListActivity"
-            android:launchMode="singleTop"
-            android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
             android:name=".pages.quiz.ui.QuizActivity"
             android:launchMode="singleTop"
             android:theme="@style/QuizTheme" />
         <activity
-            android:name=".pages.answer.ui.AnswerActivity"
-            android:launchMode="singleTop"
-            android:windowSoftInputMode="adjustPan" />
-        <activity
             android:name=".pages.search.ui.SearchActivity"
             android:launchMode="singleTop"
             android:theme="@style/SearchTheme"
             android:windowSoftInputMode="adjustResize|stateVisible" />
+        <activity
+            android:name=".pages.dynamic.ui.activity.DynamicDetailActivity"
+            android:launchMode="singleTask" />
+        <activity
+            android:name="com.tencent.tauth.AuthActivity"
+            android:noHistory="true"
+            android:launchMode="singleTask" >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="101933868" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.tencent.connect.common.AssistActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="behind"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
     </application>
 
 </manifest>
