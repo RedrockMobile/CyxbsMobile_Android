@@ -5,6 +5,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.flexbox.FlexWrap
+import com.google.android.flexbox.FlexboxLayoutManager
+import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.ui.BaseViewModelFragment
 import com.mredrock.cyxbs.common.utils.extensions.gone
 import com.mredrock.cyxbs.common.utils.extensions.visible
@@ -12,6 +15,7 @@ import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.bean.QAHistory
 import com.mredrock.cyxbs.qa.event.QASearchEvent
 import com.mredrock.cyxbs.qa.pages.search.ui.adapter.SearchHistoryRvAdapter
+import com.mredrock.cyxbs.qa.pages.search.ui.adapter.SearchHotRvAdapter
 import com.mredrock.cyxbs.qa.pages.search.viewmodel.SearchViewModel
 import kotlinx.android.synthetic.main.qa_fragment_question_search.*
 import org.greenrobot.eventbus.EventBus
@@ -44,6 +48,7 @@ class QuestionSearchingFragment : BaseViewModelFragment<SearchViewModel>() {
             })
 
     private var historyDataList = mutableListOf<QAHistory>()
+    private var hotSearchAdapter: SearchHotRvAdapter? = null
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.qa_fragment_question_search, container, false)
     }
@@ -56,12 +61,29 @@ class QuestionSearchingFragment : BaseViewModelFragment<SearchViewModel>() {
     }
 
     private fun initView() {
+        viewModel.getSearchHotWord()
+
         rv_question_search_history.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = historyRvAdapter
         }
         tv_question_search_history_clear.setOnClickListener {
             viewModel.deleteAll()
+        }
+
+        val flexBoxManager = FlexboxLayoutManager(BaseApp.context)
+        flexBoxManager.flexWrap = FlexWrap.WRAP
+        rv_hot_search_tab_list.layoutManager = flexBoxManager
+        hotSearchAdapter = SearchHotRvAdapter {
+            EventBus.getDefault().post(QASearchEvent(it))
+        }
+
+        rv_hot_search_tab_list.adapter = hotSearchAdapter
+
+        viewModel.searchHotWords.observe {
+            if (it != null) {
+                hotSearchAdapter?.refreshData(it)
+            }
         }
     }
 

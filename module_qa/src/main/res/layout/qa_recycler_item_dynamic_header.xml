@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/qa_ctl_dynamic"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/qa_shape_comment_header_background"
+    android:paddingTop="21dp"
+    android:transitionName="dynamicItem">
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/qa_gl_dynamic_start"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.04" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/qa_gl_dynamic_end"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.96" />
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/qa_iv_dynamic_avatar"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/common_default_avatar"
+        app:layout_constraintStart_toEndOf="@id/qa_gl_dynamic_start"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/qa_iv_dynamic_more_tips"
+        android:layout_width="18dp"
+        android:layout_height="5dp"
+        android:layout_marginTop="14dp"
+        android:background="@drawable/qa_ic_more_tips"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.918"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/qa_iv_dynamic_more_tips_clicked"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.931"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/qa_tv_dynamic_nickname"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_toEndOf="@id/qa_iv_dynamic_avatar"
+        android:textColor="@color/qa_dynamic_nickname_text_color"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toEndOf="@id/qa_iv_dynamic_avatar"
+        app:layout_constraintTop_toTopOf="@+id/qa_iv_dynamic_avatar"
+        tools:text="@string/qa_recycler_item_dynamic_name" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/qa_tv_dynamic_publish_at"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:textColor="@color/qa_dynamic_time_text_color"
+        android:textSize="11sp"
+        app:layout_constraintBottom_toBottomOf="@+id/qa_iv_dynamic_avatar"
+        app:layout_constraintStart_toEndOf="@+id/qa_iv_dynamic_avatar"
+        app:layout_constraintTop_toBottomOf="@+id/qa_tv_dynamic_nickname"
+        tools:text="@string/qa_recycler_item_dynamic_time" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/qa_tv_dynamic_content"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:ellipsize="end"
+        android:gravity="start"
+        android:maxLines="4"
+        android:textColor="@color/qa_dynamic_content_text_color"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toStartOf="@id/qa_gl_dynamic_end"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@id/qa_gl_dynamic_start"
+        app:layout_constraintTop_toBottomOf="@id/qa_iv_dynamic_avatar"
+        tools:text="约不约约不约约不约约不约约不约约不约约不约约不约约不约约不约约不约约不约约不约约不约约不约约不约约不约约不约约不约约不约" />
+
+    <com.mredrock.cyxbs.qa.ui.widget.NineGridView
+        android:id="@+id/qa_dynamic_nine_grid_view"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="10dp"
+        app:layout_constraintEnd_toStartOf="@+id/qa_gl_dynamic_end"
+        app:layout_constraintStart_toStartOf="@+id/qa_gl_dynamic_start"
+        app:layout_constraintTop_toBottomOf="@+id/qa_tv_dynamic_content" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/qa_tv_dynamic_topic"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/qa_shape_common_label_text_view_background"
+        android:paddingStart="8dp"
+        android:paddingTop="5dp"
+        android:paddingEnd="8dp"
+        android:paddingBottom="5dp"
+        android:textColor="@color/qa_dynamic_circle_text_color"
+        android:textSize="10sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/qa_dynamic_nine_grid_view"
+        tools:text="@string/qa_recycler_item_dynamic_label" />
+
+    <com.mredrock.cyxbs.qa.ui.widget.likeview.LikeViewSlim
+        android:id="@+id/qa_iv_dynamic_praise_count_image"
+        android:layout_width="40dp"
+        android:layout_height="wrap_content"
+        app:checkedColor="#323FD9"
+        app:checkedLikeIconRes="@drawable/qa_ic_answer_list_praised"
+        app:cirRadius="14dp"
+        app:cycleTime="1000"
+        app:defaultColor="@color/qa_likeview_color"
+        app:defaultLikeIconRes="@drawable/qa_ic_answer_list_praise"
+        app:layout_constraintBottom_toBottomOf="@id/qa_iv_dynamic_comment_count"
+        app:layout_constraintEnd_toStartOf="@+id/qa_iv_dynamic_comment_count"
+        app:layout_constraintTop_toTopOf="@+id/qa_iv_dynamic_comment_count"
+        app:ringColor="#323FD9" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/qa_iv_dynamic_comment_count"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginEnd="8dp"
+        android:background="@drawable/qa_ic_dynamic_comment_count"
+        android:textColor="@color/qa_question_bottom_count_color"
+        app:layout_constraintBottom_toBottomOf="@+id/qa_tv_dynamic_comment_count"
+        app:layout_constraintEnd_toStartOf="@+id/qa_tv_dynamic_comment_count"
+        app:layout_constraintTop_toTopOf="@+id/qa_tv_dynamic_comment_count" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/qa_tv_dynamic_comment_count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="14dp"
+        android:text="201"
+        android:textColor="@color/qa_question_bottom_count_color"
+        android:textSize="11sp"
+        app:layout_constraintBottom_toBottomOf="@+id/qa_iv_dynamic_share"
+        app:layout_constraintEnd_toStartOf="@+id/qa_iv_dynamic_share"
+        app:layout_constraintTop_toTopOf="@+id/qa_iv_dynamic_share" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/qa_iv_dynamic_share"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="10dp"
+        android:background="@drawable/qa_ic_dynamic_share"
+        android:drawablePadding="4dp"
+        android:gravity="center_vertical"
+        android:textColor="@color/qa_question_bottom_count_color"
+        android:textSize="11sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/qa_gl_dynamic_end"
+        app:layout_constraintTop_toBottomOf="@+id/qa_dynamic_nine_grid_view"
+        tools:text="201" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:alpha="0.1"
+        android:background="@color/qa_question_recycler_item_divide_line_color"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/qa_iv_dynamic_praise_count_image" />
+</androidx.constraintlayout.widget.ConstraintLayout>

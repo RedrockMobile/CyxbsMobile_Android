@@ -37,6 +37,7 @@ abstract class BaseViewModelFragment<T : BaseViewModel> : BaseFragment() {
         } else {
             ViewModelProvider(this).get(viewModelClass)
         }
+        
         viewModel.apply {
             toastEvent.observe { str -> str?.let { CyxbsToast.makeText(context, it, Toast.LENGTH_SHORT).show() } }
             longToastEvent.observe { str -> str?.let { CyxbsToast.makeText(context, it, Toast.LENGTH_LONG).show() } }

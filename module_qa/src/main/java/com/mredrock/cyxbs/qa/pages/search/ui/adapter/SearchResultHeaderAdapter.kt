@@ -1,64 +1,69 @@
 package com.mredrock.cyxbs.qa.pages.search.ui.adapter
 
-import android.annotation.SuppressLint
-import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
-import android.widget.TextView
-import androidx.core.content.ContextCompat
-import com.mredrock.cyxbs.common.component.showPhotos
-import com.mredrock.cyxbs.common.utils.extensions.gone
-import com.mredrock.cyxbs.common.utils.extensions.loadRedrockImage
-import com.mredrock.cyxbs.common.utils.extensions.visible
+import com.mredrock.cyxbs.common.utils.LogUtils
+import com.mredrock.cyxbs.common.utils.extensions.setAvatarImageFromUrl
 import com.mredrock.cyxbs.qa.R
-import com.mredrock.cyxbs.qa.bean.Knowledge
+import com.mredrock.cyxbs.qa.beannew.Dynamic
 import com.mredrock.cyxbs.qa.component.recycler.BaseRvAdapter
 import com.mredrock.cyxbs.qa.component.recycler.BaseViewHolder
-import com.mredrock.cyxbs.qa.event.QASearchEvent
-import kotlinx.android.synthetic.main.qa_recycler_item_header_from_knowledge.view.*
-import org.greenrobot.eventbus.EventBus
-import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
+import com.mredrock.cyxbs.qa.ui.activity.ViewImageActivity
+import com.mredrock.cyxbs.qa.ui.widget.NineGridView
+import com.mredrock.cyxbs.qa.utils.dynamicTimeDescription
+import kotlinx.android.synthetic.main.qa_recycler_item_dynamic_header.view.*
 
 /**
  * Created by yyfbe, Date on 2020/8/13.
  */
-class SearchResultHeaderAdapter : BaseRvAdapter<Knowledge>() {
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder<Knowledge> = ViewHolder(parent)
+class SearchResultHeaderAdapter(private val onItemClickEvent: (Dynamic) -> Unit) : BaseRvAdapter<Dynamic>() {
 
 
-    class ViewHolder(parent: ViewGroup) : BaseViewHolder<Knowledge>(parent, R.layout.qa_recycler_item_header_from_knowledge) {
-        private var textViews = mutableListOf<TextView>()
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder<Dynamic> = ViewHolder(parent)
+    override fun onItemClickListener(holder: BaseViewHolder<Dynamic>, position: Int, data: Dynamic) {
+        super.onItemClickListener(holder, position, data)
+        onItemClickEvent.invoke(data)
 
-        @SuppressLint("StringFormatMatches")
-        override fun refresh(data: Knowledge?) {
+    }
+
+    class ViewHolder(parent: ViewGroup) : BaseViewHolder<Dynamic>(parent, R.layout.qa_recycler_item_dynamic_header) {
+
+        override fun refresh(data: Dynamic?) {
             if (data == null) return
             itemView.apply {
-                tv_knowledge_base_title.text = data.title
-                tv_knowledge_base_detail.text = data.description
-                tv_knowledge_from.text = itemView.context.resources.getString(R.string.qa_search_knowledge_from_where, data.from)
-                context?.loadRedrockImage(data.photoUrl, iv_knowledge)
-                if (data.photoUrl.isNotEmpty()) {
-                    iv_knowledge.setOnSingleClickListener {
-                        showPhotos(itemView.context, listOf(data.photoUrl), 0)
-                    }
-                }
-                if (data.related.isEmpty()) {
-                    cv_related.gone()
-                } else {
-                    cv_related.visible()
-                    for ((index, value) in data.related.withIndex()) {
-                        if (textViews.size < index + 1) {
-                            val textView = View.inflate(context, R.layout.qa_view_knowledge_related, null) as TextView
-                            textView.setTextColor(ContextCompat.getColor(itemView.context, R.color.common_qa_common_hint_text_color))
-                            textView.setOnSingleClickListener { EventBus.getDefault().post(QASearchEvent(textView.text.toString())) }
-                            textViews.add(textView)
-                            (ll_related as LinearLayout).addView(textView)
+                qa_iv_dynamic_avatar.setAvatarImageFromUrl(data.avatar)
+                qa_tv_dynamic_topic.text = "#" + data.topic
+                qa_tv_dynamic_nickname.text = data.nickName + "xx"
+                qa_tv_dynamic_content.text = data.content
+                qa_tv_dynamic_comment_count.text = data.commentCount.toString()
+                qa_tv_dynamic_publish_at.text = dynamicTimeDescription(System.currentTimeMillis(), data.publishTime * 1000)
+                //解决图片错乱的问题
+                if (data.pics.isNullOrEmpty())
+                    qa_dynamic_nine_grid_view.setRectangleImages(emptyList(), NineGridView.MODE_IMAGE_THREE_SIZE)
+                else {
+                    data.pics.map {
+                        it
+                    }.apply {
+                        val tag = qa_dynamic_nine_grid_view.tag
+                        if (null == tag || tag == this) {
+                            val tagStore = qa_dynamic_nine_grid_view.tag
+                            qa_dynamic_nine_grid_view.setImages(this, NineGridView.MODE_IMAGE_THREE_SIZE, NineGridView.ImageMode.MODE_IMAGE_RECTANGLE)
+                            qa_dynamic_nine_grid_view.tag = tagStore
+                            LogUtils.d("zt","111111测试"+this.get(0))
+                        } else {
+                            val tagStore = this
+                            qa_dynamic_nine_grid_view.tag = null
+                            qa_dynamic_nine_grid_view.setRectangleImages(emptyList(), NineGridView.MODE_IMAGE_THREE_SIZE)
+                            qa_dynamic_nine_grid_view.setImages(this, NineGridView.MODE_IMAGE_THREE_SIZE, NineGridView.ImageMode.MODE_IMAGE_RECTANGLE)
+                            qa_dynamic_nine_grid_view.tag = tagStore
+                            LogUtils.d("zt","111111测试"+this.get(0))
                         }
-                        textViews[index].text = value.title
                     }
+
+                }
+                qa_dynamic_nine_grid_view.setOnItemClickListener { _, index ->
+                    ViewImageActivity.activityStart(context, data.pics.map { it }.toTypedArray(), index)
                 }
             }
         }
     }
-
 }

@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/common_window_background"
+    android:orientation="vertical"
+    tools:context=".pages.square.ui.activity.CircleDetailActivity">
+
+    <RelativeLayout
+        android:id="@+id/qa_circle_detail_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:layout_marginBottom="10dp">
+
+        <ImageView
+            android:id="@+id/qa_circle_detail_iv_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="20dp"
+            android:padding="5dp"
+            android:src="@drawable/qa_ic_arrow_left" />
+
+        <TextView
+            android:id="@+id/qa_detail_tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="22dp"
+            android:layout_toEndOf="@+id/qa_circle_detail_iv_back"
+            android:text="校园周边"
+            android:textColor="@color/common_level_three_font_color"
+            android:textSize="20sp" />
+
+    </RelativeLayout>
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.google.android.material.appbar.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/common_transparent_background"
+            app:elevation="0dp"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed">
+
+            <com.google.android.material.appbar.CollapsingToolbarLayout
+                android:id="@+id/qa_circle_detail_collapsing_toolbar_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@null"
+                android:fitsSystemWindows="true"
+                app:layout_scrollFlags="scroll|exitUntilCollapsed">
+            <include
+                layout="@layout/qa_recycler_item_circle_square"/>
+
+            </com.google.android.material.appbar.CollapsingToolbarLayout>
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/qa_cs_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+            <com.google.android.material.tabs.TabLayout
+                android:id="@+id/qa_circle_detail_tab"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@drawable/qa_shape_tab_shape"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintLeft_toLeftOf="@id/qa_cs_layout"
+                app:layout_constraintTop_toTopOf="@id/qa_cs_layout"
+                app:tabBackground="@color/common_transparent_background"
+                app:tabGravity="fill"
+                app:tabIndicator="@drawable/qa_ic_tab_indicator"
+                app:tabIndicatorColor="@color/common_mine_tab_layout_indicator_color"
+                app:tabIndicatorFullWidth="false"
+                app:tabIndicatorHeight="3dp"
+                app:tabMode="fixed"
+                app:tabRippleColor="@color/common_transparent_background"
+                app:tabSelectedTextColor="@color/common_level_two_font_color"
+                app:tabTextAppearance="@style/tab_style"
+                app:tabTextColor="@color/common_alpha_level_two_font_color" />
+
+            <androidx.viewpager2.widget.ViewPager2
+                android:id="@+id/qa_vp_circle_detail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:overScrollMode="never"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintLeft_toLeftOf="@id/qa_cs_layout"
+                app:layout_constraintTop_toBottomOf="@id/qa_circle_detail_tab" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+</androidx.appcompat.widget.LinearLayoutCompat>

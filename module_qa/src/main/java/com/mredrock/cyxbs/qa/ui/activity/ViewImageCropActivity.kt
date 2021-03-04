@@ -94,7 +94,7 @@ class ViewImageCropActivity : AppCompatActivity() {
 
     private fun startCropActivity() = UCrop.of(Uri.fromFile(File(imgResPath)), getNewResultUri())
             .withOptions(UCrop.Options().apply {
-                setLogoColor(ContextCompat.getColor(this@ViewImageCropActivity, R.color.qa_crop_logo))
+                setLogoColor(ContextCompat.getColor(this@ViewImageCropActivity, R.color.qa_crop_logo_color))
                 setToolbarColor(
                         ContextCompat.getColor(this@ViewImageCropActivity, R.color.colorPrimaryDark))
                 setStatusBarColor(
