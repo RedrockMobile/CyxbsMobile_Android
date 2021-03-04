@@ -1,7 +1,15 @@
 package com.mredrock.cyxbs.qa.pages.dynamic.ui.activity
 
+import android.animation.ArgbEvaluator
+import android.animation.LayoutTransition
+import android.animation.ValueAnimator
 import android.annotation.SuppressLint
+import android.app.Activity
+import android.content.Context
 import android.content.Intent
+import android.content.res.Configuration
+import android.graphics.Color
+import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.transition.Slide
 import android.view.Gravity
@@ -12,8 +20,12 @@ import androidx.core.app.ActivityOptionsCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.alibaba.android.arouter.facade.annotation.Route
 import com.google.android.material.appbar.AppBarLayout
+import com.mredrock.cyxbs.common.BaseApp.Companion.context
 import com.mredrock.cyxbs.common.component.CyxbsToast
+import com.mredrock.cyxbs.common.config.QA_DYNAMIC_DETAIL
+import com.mredrock.cyxbs.common.config.QA_ENTRY
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.extensions.*
 import com.mredrock.cyxbs.qa.R
@@ -47,20 +59,27 @@ import kotlinx.android.synthetic.main.qa_recycler_item_dynamic_header.view.*
  * @Author: zhangzhe
  * @Date: 2020/11/27 23:07
  */
-
+@Route(path = QA_DYNAMIC_DETAIL)
 class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
     companion object {
         var dynamicOrigin: Dynamic? = null // 由于点赞数、发帖数会改变，故保存一个Dynamic的引用
 
         // 有共享元素动画的启动
-        fun activityStart(fragment: Fragment, dynamicItem: View, data: Dynamic) {
-            fragment.apply {
-                activity?.let {
+        fun activityStart(page: Any?, dynamicItem: View, data: Dynamic) {
+
+            page.apply {
+                var activity : Activity? = null
+                if (page is Fragment){
+                    activity = page.activity
+                } else if (page is Activity) {
+                    activity = page
+                }
+                activity?.let { it ->
                     val opt = ActivityOptionsCompat.makeSceneTransitionAnimation(it, dynamicItem, "dynamicItem")
-                    val intent = Intent(context, DynamicDetailActivity::class.java)
+                    val intent = Intent(it, DynamicDetailActivity::class.java)
                     dynamicOrigin = data
                     it.window.exitTransition = Slide(Gravity.START).apply { duration = 500 }
-                    startActivityForResult(intent, DYNAMIC_DETAIL_REQUEST, opt.toBundle())
+                    it.startActivityForResult(intent, DYNAMIC_DETAIL_REQUEST, opt.toBundle())
                 }
             }
         }
@@ -90,6 +109,8 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
 //    override val isFragmentActivity = false
 
     private var mTencent: Tencent? = null
+
+    private var haveShareItem = false
 
     override fun getViewModelFactory() = DynamicDetailViewModel.Factory()
 
@@ -177,11 +198,34 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
         // 注册
         mTencent = Tencent.createInstance(CommentConfig.APP_ID, this)
 
+        //判断是否有共享元素
+        haveShareItem = dynamicOrigin != null
+
+        initChangeColorAnimator("#1D1D1D","#000000")
         initObserve()
         initDynamic()
         initReplyList()
         initOnClickListener()
 
+    }
+
+    private fun initChangeColorAnimator(startColor: String, endColor:String){
+        if (haveShareItem){
+            val flag = context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+            if (flag == Configuration.UI_MODE_NIGHT_YES){//如果是深色模式
+                //因为视觉图颜色不一样的缘故，这里要在转场动画的同时添加一个变色动画
+                val colorStart = Color.parseColor(startColor)
+                val colorFinal = Color.parseColor(endColor)
+                val va = ValueAnimator.ofInt(colorStart,colorFinal)
+                va.setEvaluator(ArgbEvaluator())
+                va.duration = 500
+                va.addUpdateListener { vav ->
+                    val gd = qa_ctl_dynamic.background as GradientDrawable
+                    gd.setColor(vav.animatedValue as Int)
+                }
+                va.start()
+            }
+        }
     }
 
     private fun initOnClickListener() {
@@ -419,6 +463,8 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
             ReplyPopWindow.dismiss()
             return
         }
+
+        initChangeColorAnimator("#000000","#1D1D1D")
         window.returnTransition = Slide(Gravity.END).apply { duration = 500 }
         dynamicOrigin = null
         super.onBackPressed()
@@ -441,5 +487,4 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
             }
         }
     }
-
 }

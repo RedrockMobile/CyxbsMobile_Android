@@ -1,19 +1,18 @@
 package com.mredrock.cyxbs.mine
 
 
+import android.animation.ValueAnimator
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.content.ClipData
-import android.content.ClipboardManager
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.DecelerateInterpolator
 import android.widget.TextView
-import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityOptionsCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
@@ -22,20 +21,18 @@ import androidx.lifecycle.Observer
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
 import com.mredrock.cyxbs.common.component.CommonDialogFragment
-import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.common.config.*
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.api.account.IAccountService
+import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.ui.BaseViewModelFragment
+import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.*
 import com.mredrock.cyxbs.main.MAIN_LOGIN
-import com.mredrock.cyxbs.mine.page.about.AboutActivity
-import com.mredrock.cyxbs.mine.page.answer.AnswerActivity
 import com.mredrock.cyxbs.mine.page.ask.AskActivity
 import com.mredrock.cyxbs.mine.page.comment.CommentActivity
 import com.mredrock.cyxbs.mine.page.edit.EditInfoActivity
-import com.mredrock.cyxbs.mine.page.security.activity.SecurityActivity
-import com.mredrock.cyxbs.mine.page.security.util.Jump2QQHelper
+import com.mredrock.cyxbs.mine.page.setting.SettingActivity
 import com.mredrock.cyxbs.mine.page.sign.DailySignActivity
 import kotlinx.android.synthetic.main.mine_fragment_main.*
 
@@ -46,6 +43,10 @@ import kotlinx.android.synthetic.main.mine_fragment_main.*
 @SuppressLint("SetTextI18n")
 @Route(path = MINE_ENTRY)
 class UserFragment : BaseViewModelFragment<UserViewModel>() {
+
+    override var isOpenLifeCycleLog = true
+    override var TAG = "RayleighZ"
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         addObserver()
@@ -56,15 +57,16 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
         //功能按钮
         context?.apply {
             mine_main_btn_sign.setOnClickListener { doIfLogin { startActivity<DailySignActivity>() } }
-            mine_main_tv_security.setOnSingleClickListener { doIfLogin { startActivity<SecurityActivity>() } }
+//            mine_main_tv_security.setOnSingleClickListener { doIfLogin { startActivity<SecurityActivity>() } }
             mine_main_btn_sign.setOnClickListener { doIfLogin { startActivity<DailySignActivity>() } }
             mine_main_tv_sign.setOnClickListener { doIfLogin { startActivity<DailySignActivity>() } }
-            mine_main_question_number.setOnClickListener { doIfLogin { startActivity<AskActivity>() } }
-            mine_main_tv_question.setOnClickListener { doIfLogin { startActivity<AskActivity>() } }
-            mine_main_answer_number.setOnClickListener { doIfLogin { startActivity<AnswerActivity>() } }
-            mine_main_tv_question.setOnClickListener { doIfLogin { startActivity<AnswerActivity>() } }
-            mine_main_reply_comment_number.setOnClickListener { doIfLogin { startActivity<CommentActivity>() } }
+            mine_main_tv_dynamic_number.setOnClickListener { doIfLogin { jump(QA_DYNAMIC_MINE) } }
+//            mine_main_tv_dynamic.setOnClickListener { doIfLogin { startActivity<AskActivity>() } }
+//            mine_main_answer_number.setOnClickListener { doIfLogin { startActivity<AnswerActivity>() } }
+//            mine_main_tv_dynamic.setOnClickListener { doIfLogin { startActivity<AnswerActivity>() } }
+            mine_main_tv_comment_number.setOnClickListener { doIfLogin { startActivity<CommentActivity>() } }
             mine_main_tv_reply_comment.setOnClickListener { doIfLogin { startActivity<CommentActivity>() } }
+            mine_main_fm_setting.setOnClickListener { doIfLogin { startActivity<SettingActivity>() } }
             mine_main_cl_info_edit.setOnClickListener {
                 doIfLogin {
                     startActivity(
@@ -74,39 +76,40 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
             }
 
             mine_main_tv_praise.setOnClickListener { doIfLogin { showPraise() } }
-            mine_main_praise_number.setOnClickListener { doIfLogin { showPraise() } }
+            mine_main_tv_praise_number.setOnClickListener { doIfLogin { showPraise() } }
 
-            mine_main_tv_about.setOnClickListener { startActivity<AboutActivity>() }
-            if (ServiceManager.getService(IAccountService::class.java).getVerifyService().isLogin()) {
-                mine_main_btn_exit.text = getString(R.string.mine_exit)
-                mine_main_btn_exit.setOnClickListener {
-                    onExitClick()
-                }
-            } else {
-                mine_main_btn_exit.text = getString(R.string.mine_login_now)
-                mine_main_btn_exit.setOnClickListener {
-                    cleanAppWidgetCache()
-                    //清除user信息，必须要在LoginStateChangeEvent之前
-                    viewModel.clearUser()
-                    requireActivity().startLoginActivity()
-                }
-            }
-            mine_main_btn_exit.pressToZoomOut()
-            mine_main_tv_feedback.setOnClickListener { Jump2QQHelper.onFeedBackClick(this) }
-            mine_main_tv_custom_widget.setOnClickListener { onSetWidgetClick() }
-            mine_main_tv_redrock.setOnClickListener { clickAboutUsWebsite() }
+//            mine_main_tv_about.setOnClickListener { startActivity<AboutActivity>() }
+//            if (ServiceManager.getService(IAccountService::class.java).getVerifyService().isLogin()) {
+//                mine_main_btn_exit.text = getString(R.string.mine_exit)
+//                mine_main_btn_exit.setOnClickListener {
+//                    onExitClick()
+//                }
+//            } else {
+//                mine_main_btn_exit.text = getString(R.string.mine_login_now)
+//                mine_main_btn_exit.setOnClickListener {
+//                    cleanAppWidgetCache()
+//                    //清除user信息，必须要在LoginStateChangeEvent之前
+//                    viewModel.clearUser()
+//                    requireActivity().startLoginActivity()
+//                }
+//            }
+//            mine_main_btn_exit.pressToZoomOut()
+//            mine_main_tv_feedback.setOnClickListener { onFeedBackClick() }
+//            mine_main_tv_custom_widget.setOnClickListener { onSetWidgetClick() }
+//            mine_main_tv_redrock.setOnClickListener { clickAboutUsWebsite() }
+//
+//            mine_main_switch.setOnCheckedChangeListener { _, isChecked ->
+//                defaultSharedPreferences.editor {
+//                    if (isChecked) {
+//                        putBoolean(COURSE_SHOW_STATE, true)
+//                    } else {
+//                        putBoolean(COURSE_SHOW_STATE, false)
+//                    }
+//                }
+//            }
+//            mine_main_switch.isChecked = context?.defaultSharedPreferences?.getBoolean(COURSE_SHOW_STATE, false)
+//                    ?: false
 
-            mine_main_switch.setOnCheckedChangeListener { _, isChecked ->
-                defaultSharedPreferences.editor {
-                    if (isChecked) {
-                        putBoolean(COURSE_SHOW_STATE, true)
-                    } else {
-                        putBoolean(COURSE_SHOW_STATE, false)
-                    }
-                }
-            }
-            mine_main_switch.isChecked = context?.defaultSharedPreferences?.getBoolean(COURSE_SHOW_STATE, false)
-                    ?: false
         }
     }
 
@@ -128,13 +131,61 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
                 }
             }
         })
-        viewModel.qaNumber.observe(viewLifecycleOwner, Observer {
+        viewModel.userCount.observe(viewLifecycleOwner, Observer { it ->
             //可能会出现部分number为负数的情况，客户端需要处理（虽然是后端的锅）
-            fun getNumber(number: Int): String = if (number >= 0) number.toString() else "0"
-            mine_main_question_number.text = getNumber(it.askPostedNumber)
-            mine_main_answer_number.text = getNumber(it.answerPostedNumber)
-            mine_main_reply_comment_number.text = getNumber(it.commentNumber)
-            mine_main_praise_number.text = getNumber(it.praiseNumber)
+            mine_main_tv_dynamic_number.text = viewModel.getNumber(it.dynamicCount)
+            mine_main_tv_comment_number.text = viewModel.getNumber(it.commentCount)
+            mine_main_tv_praise_number.text = viewModel.getNumber(it.praiseCount)
+            //由于视觉给的字体不是等宽的，其中数字"1"的宽度明显小于其他数字的宽度，要对此进行单独的处理
+            //基本规则是：基础距离是17dp，非1字体+15dp，1则+12dp
+            viewModel.setLeftMargin(mine_main_tv_uncheck_comment_count, it.commentCount)
+            viewModel.setLeftMargin(mine_main_tv_uncheck_praise_count, it.praiseCount)
+            val animator = ValueAnimator.ofFloat(0f, 1f)
+            animator.duration = 200
+            animator.interpolator = DecelerateInterpolator()
+            animator.addUpdateListener { va ->
+                mine_main_tv_dynamic_number.scaleY = va.animatedValue as Float
+                mine_main_tv_comment_number.scaleY = va.animatedValue as Float
+                mine_main_tv_praise_number.scaleY = va.animatedValue as Float
+            }
+            animator.start()
+            //在这里再请求unChecked的红点仅仅是为了好看，让动画显得更加流畅
+            viewModel.getUserUncheckCount()
+        })
+
+        viewModel.userUncheckCount.observe(viewLifecycleOwner, Observer { it ->
+            fun setViewWidthAndText(textView: TextView, count: Int) {
+                if (count == 0) return
+                textView.visibility = View.VISIBLE
+                textView.text = viewModel.getNumber(count)
+                val width = when {
+                    count > 99 -> {
+                        26.5f
+                    }
+                    count in 10..99 -> {
+                        21.3f
+                    }
+                    else -> {
+                        16f
+                    }
+                }
+                val lp = textView.layoutParams as ConstraintLayout.LayoutParams
+                lp.width = BaseApp.context.dip(width)
+                textView.layoutParams = lp
+                //加上一个逐渐变大弹出的动画
+                val animator = ValueAnimator.ofFloat(0f, 1f)
+                animator.duration = 200
+                animator.addUpdateListener { va ->
+                    textView.scaleX = va.animatedValue as Float
+                    textView.scaleY = va.animatedValue as Float
+                }
+                animator.interpolator = DecelerateInterpolator()
+                animator.start()
+                LogUtils.d("RayleighZ", count.toString())
+            }
+
+            setViewWidthAndText(mine_main_tv_uncheck_praise_count, it.uncheckPraiseCount)
+            setViewWidthAndText(mine_main_tv_uncheck_comment_count, it.uncheckCommentCount)
         })
     }
 
@@ -148,6 +199,7 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
     private fun fetchInfo() {
         viewModel.getScoreStatus()
         viewModel.getQANumber()
+        viewModel.getUserCount()
         refreshUserLayout()
     }
 
@@ -157,7 +209,7 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
         context?.loadAvatar(userService.getAvatarImgUrl(), mine_main_avatar)
         mine_main_username.text = if (userService.getNickname().isBlank()) getString(R.string.mine_user_empty_username) else userService.getNickname()
         mine_main_introduce.text = if (userService.getIntroduction().isBlank()) getString(R.string.mine_user_empty_introduce) else userService.getIntroduction()
-        mine_main_btn_exit.visibility = View.VISIBLE
+//        mine_main_btn_exit.visibility = View.VISIBLE
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
@@ -225,5 +277,9 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
     private fun clickAboutUsWebsite() {
         val intent = Intent(Intent.ACTION_VIEW, Uri.parse(ABOUT_US_WEBSITE))
         startActivity(intent)
+    }
+
+    private fun jump(path: String){
+        ARouter.getInstance().build(path).navigation()
     }
 }

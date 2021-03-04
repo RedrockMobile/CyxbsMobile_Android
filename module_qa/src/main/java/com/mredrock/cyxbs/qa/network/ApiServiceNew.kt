@@ -131,4 +131,42 @@ interface ApiServiceNew {
                     postId: String
     ): Observable<RedrockApiWrapper<Dynamic>>
 
+    /**
+     * 获取用户收到的回复
+     */
+    @FormUrlEncoded
+    @POST("/wxapi/magipoke-loop/user/replyme")
+    fun getUserReplay(
+            @Field("page") page: Int,
+            @Field("size") size: Int,
+            @Field("type") type: Int
+    ): Observable<RedrockApiWrapper<List<CommentWrapper>>>
+
+    /**
+     * 获取用户收到的点赞
+     */
+    @FormUrlEncoded
+    @POST("/wxapi/magipoke-loop/user/praisedme")
+    fun getUserPraise(
+            @Field("page") page: Int,
+            @Field("size") size: Int,
+            @Field("type") type: Int
+    ): Observable<RedrockApiWrapper<List<CommentWrapper>>>
+
+    /**
+     * 获取被屏蔽的用户
+     */
+    @FormUrlEncoded
+    @POST("/wxapi/magipoke-loop/user/getIgnoreUid")
+    fun getIgnoreUid(): Observable<List<Praise>>
+
+    /**
+     * 获取用户动态
+     */
+    @GET("/wxapi/magipoke-loop/user/getUserPostList")
+    fun getUserDynamic(
+            @Query("page") page: Int,
+            @Query("size") size: Int
+    ): Observable<RedrockApiWrapper<List<Dynamic>>>
+
 }

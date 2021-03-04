@@ -105,13 +105,15 @@
                 app:layout_constraintBottom_toBottomOf="@+id/mine_main_tv_sign"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/mine_main_tv_sign" />
+
             <TextView
-                android:id="@+id/mine_main_question_number"
+                android:id="@+id/mine_main_tv_dynamic_number"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/impact_min"
                 android:paddingStart="20dp"
                 android:paddingEnd="20dp"
+                android:gravity="center"
                 android:text="@string/mine_number_default"
                 android:textColor="@color/levelFourFontColor"
                 android:textSize="30sp"
@@ -120,21 +122,7 @@
                 app:layout_constraintStart_toStartOf="@+id/mine_main_tv_question" />
 
             <TextView
-                android:id="@+id/mine_main_answer_number"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/impact_min"
-                android:paddingStart="20dp"
-                android:paddingEnd="20dp"
-                android:text="@string/mine_number_default"
-                android:textColor="@color/levelFourFontColor"
-                android:textSize="30sp"
-                app:layout_constraintBottom_toTopOf="@+id/mine_main_tv_answer"
-                app:layout_constraintEnd_toEndOf="@+id/mine_main_tv_answer"
-                app:layout_constraintStart_toStartOf="@+id/mine_main_tv_answer" />
-
-            <TextView
-                android:id="@+id/mine_main_reply_comment_number"
+                android:id="@+id/mine_main_tv_comment_number"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/impact_min"
@@ -148,7 +136,7 @@
                 app:layout_constraintStart_toStartOf="@+id/mine_main_tv_reply_comment" />
 
             <TextView
-                android:id="@+id/mine_main_praise_number"
+                android:id="@+id/mine_main_tv_praise_number"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/impact_min"
@@ -166,30 +154,17 @@
                 android:id="@+id/mine_main_tv_question"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="19dp"
+                android:layout_marginStart="50dp"
                 android:layout_marginTop="50dp"
-                android:layout_marginBottom="20dp"
-                android:text="@string/mine_question"
+                android:layout_marginBottom="27dp"
+                android:text="@string/mine_dynamic"
                 android:textColor="@color/levelFourFontColor"
                 android:textSize="@dimen/mine_main_small_s"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/mine_main_tv_answer"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintHorizontal_chainStyle="spread_inside"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/mine_main_tv_sign" />
-
-            <TextView
-                android:id="@+id/mine_main_tv_answer"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/mine_answer"
-                android:textColor="@color/levelFourFontColor"
-                android:textSize="@dimen/mine_main_small_s"
-                app:layout_constraintBottom_toBottomOf="@+id/mine_main_tv_question"
-                app:layout_constraintEnd_toStartOf="@+id/mine_main_tv_reply_comment"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/mine_main_tv_question" />
 
             <TextView
                 android:id="@+id/mine_main_tv_reply_comment"
@@ -198,69 +173,120 @@
                 android:text="@string/mine_reply_to_comment"
                 android:textColor="@color/levelFourFontColor"
                 android:textSize="@dimen/mine_main_small_s"
-                app:layout_constraintBottom_toBottomOf="@+id/mine_main_tv_answer"
+                app:layout_constraintBottom_toBottomOf="@+id/mine_main_tv_question"
                 app:layout_constraintEnd_toStartOf="@+id/mine_main_tv_praise"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/mine_main_tv_answer" />
+                app:layout_constraintStart_toEndOf="@+id/mine_main_tv_question" />
 
             <TextView
                 android:id="@+id/mine_main_tv_praise"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="22dp"
+                android:layout_marginEnd="51dp"
                 android:text="@string/mine_praise"
                 android:textColor="@color/levelFourFontColor"
                 android:textSize="@dimen/mine_main_small_s"
                 app:layout_constraintBottom_toBottomOf="@+id/mine_main_tv_reply_comment"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/mine_main_tv_reply_comment" />
+                app:layout_constraintHorizontal_bias="0.5" />
+
+            <TextView
+                android:id="@+id/mine_main_tv_uncheck_comment_count"
+                android:layout_width="26.5dp"
+                android:layout_height="16dp"
+                android:layout_marginStart="62dp"
+                android:layout_marginBottom="23dp"
+                android:background="@drawable/mine_shape_round_corner_red_point"
+                android:gravity="center"
+                android:text="@string/mine_number_default"
+                android:visibility="gone"
+                android:textColor="@color/common_white_font_color"
+                android:textSize="10sp"
+                app:layout_constraintBottom_toBottomOf="@+id/mine_main_tv_comment_number"
+                app:layout_constraintStart_toStartOf="@+id/mine_main_tv_comment_number" />
+
+            <TextView
+                android:id="@+id/mine_main_tv_uncheck_praise_count"
+                android:layout_width="21.3dp"
+                android:layout_height="16dp"
+                android:layout_marginStart="41dp"
+                android:layout_marginBottom="23dp"
+                android:background="@drawable/mine_shape_round_corner_red_point"
+                android:gravity="center"
+                android:text="@string/mine_number_default"
+                android:visibility="gone"
+                android:textColor="@color/common_white_font_color"
+                android:textSize="10sp"
+                app:layout_constraintBottom_toBottomOf="@+id/mine_main_tv_praise_number"
+                app:layout_constraintStart_toStartOf="@+id/mine_main_tv_praise_number" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
+        <!--点击事件需要设置在外部的frameLayout上-->
 
-        <RelativeLayout
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="18dp"
-            android:paddingStart="16dp"
-            android:paddingTop="9dp"
-            android:paddingEnd="20dp"
-            android:paddingBottom="9dp">
-
-            <androidx.appcompat.widget.AppCompatTextView
+            android:layout_height="36dp"
+            android:id="@+id/mine_main_fm_point_store"
+            android:layout_marginTop="44.7dp">
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_centerVertical="true"
-                android:layout_toStartOf="@id/mine_main_switch"
-                android:text="@string/mine_show_schedule_first_launch"
+                android:text="积分商城"
                 android:textColor="@color/common_level_three_font_color"
-                android:textSize="15sp" />
+                android:textSize="15sp"
+                android:layout_marginStart="16dp"
+                android:layout_gravity="center_vertical"/>
+            <ImageView
+                android:layout_width="6dp"
+                android:layout_height="12.5dp"
+                android:layout_gravity="end|center_vertical"
+                android:layout_marginEnd="25.5dp"
+                android:src="@drawable/mine_ic_arrow_right"/>
+        </FrameLayout>
 
-            <com.mredrock.cyxbs.mine.util.widget.SwitchPlus
-                android:id="@+id/mine_main_switch"
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="36dp"
+            android:id="@+id/mine_main_fm_setting"
+            android:layout_marginTop="12.5dp">
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-                android:thumb="@drawable/mine_bg_thumb"
-                android:track="@drawable/mine_shape_switch_track" />
-        </RelativeLayout>
+                android:text="设置"
+                android:textColor="@color/common_level_three_font_color"
+                android:textSize="15sp"
+                android:layout_marginStart="16dp"
+                android:layout_gravity="center_vertical"/>
+            <ImageView
+                android:layout_width="6dp"
+                android:layout_height="12.5dp"
+                android:layout_gravity="end|center_vertical"
+                android:layout_marginEnd="25.5dp"
+                android:src="@drawable/mine_ic_arrow_right"/>
+        </FrameLayout>
 
-
-        <TextView
-            android:id="@+id/mine_main_tv_custom_widget"
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="18dp"
-            android:foreground="?android:selectableItemBackground"
-            android:paddingStart="16dp"
-            android:paddingTop="9dp"
-            android:paddingBottom="9dp"
-            android:text="@string/mine_custom_icon"
-            android:textColor="@color/common_level_three_font_color"
-            android:textSize="15sp" />
+            android:layout_height="36dp"
+            android:id="@+id/mine_main_fm_about_us"
+            android:layout_marginTop="12.5dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="关于我们"
+                android:textColor="@color/common_level_three_font_color"
+                android:textSize="15sp"
+                android:layout_marginStart="16dp"
+                android:layout_gravity="center_vertical"/>
+            <ImageView
+                android:layout_width="6dp"
+                android:layout_height="12.5dp"
+                android:layout_gravity="end|center_vertical"
+                android:layout_marginEnd="25.5dp"
+                android:src="@drawable/mine_ic_arrow_right"/>
+        </FrameLayout>
 
+        <!--<TextView
+=======
         <TextView
             android:id="@+id/mine_main_tv_security"
             android:layout_width="match_parent"
@@ -275,6 +301,7 @@
             android:textSize="15sp" />
 
         <TextView
+>>>>>>> 086357b472e0829bf18e56602486afc6440569a6
             android:id="@+id/mine_main_tv_feedback"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -311,19 +338,7 @@
             android:paddingBottom="9dp"
             android:text="@string/mine_about"
             android:textColor="@color/common_level_three_font_color"
-            android:textSize="15sp" />
-
-        <Button
-            android:id="@+id/mine_main_btn_exit"
-            style="?android:attr/borderlessButtonStyle"
-            android:layout_width="184dp"
-            android:layout_height="40dp"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="27dp"
-            android:background="@drawable/common_dialog_btn_positive_blue"
-            android:text="@string/mine_exit"
-            android:textColor="@color/common_white_font_color"
-            android:textSize="18sp" />
+            android:textSize="15sp" />-->
 
         <Space
             android:layout_width="match_parent"

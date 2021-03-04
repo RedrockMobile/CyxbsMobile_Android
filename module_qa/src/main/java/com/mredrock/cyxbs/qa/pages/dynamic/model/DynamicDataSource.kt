@@ -31,6 +31,26 @@ class DynamicDataSource(private val kind: String) : PageKeyedDataSource<Int, Dyn
             initialLoad.postValue(NetworkState.CANNOT_LOAD_WITHOUT_LOGIN)
             return
         }
+        //此处是接口设计时没有考虑太好，个人dynamic接口与其他的dynamic接口分开了
+        //故需要做一次判断，如果将来有可能可以合并两个接口以减少冗余
+        if (kind == "mine"){
+            ApiGenerator.getApiService(ApiServiceNew::class.java)
+                    .getUserDynamic(1, params.requestedLoadSize)
+                    .mapOrThrowApiException()
+                    .setSchedulers()
+                    .doOnSubscribe { initialLoad.postValue(NetworkState.LOADING) }
+                    .doOnError {
+                        initialLoad.value = NetworkState.FAILED
+                        failedRequest = { loadInitial(params, callback) }
+                    }
+                    .safeSubscribeBy {
+                        list ->
+                        initialLoad.value = NetworkState.SUCCESSFUL
+                        val nextPageKey = 2.takeUnless { (list.size < params.requestedLoadSize) }
+                        callback.onResult(list, 1, nextPageKey)
+                    }
+            return
+        }
         ApiGenerator.getApiService(ApiServiceNew::class.java)
                 .getDynamicList(kind, 1, params.requestedLoadSize)
                 .mapOrThrowApiException()
