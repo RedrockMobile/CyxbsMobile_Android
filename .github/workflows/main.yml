@@ -88,7 +88,7 @@ jobs:
         run: pip install beautifulsoup4
 
       - name: Send lark message
-        run: python ./.github/scripts/send_lark_message.py "${{needs.build.result}}" "$LARK_BOT_APP_ID" "$LARK_BOT_APP_SECRET" "$GITHUB_RUN_ID" "$TITLE" "$BODY"
+        run: python ./.github/scripts/send_lark_message.py "${{job.status}}" "$LARK_BOT_APP_ID" "$LARK_BOT_APP_SECRET" "$GITHUB_RUN_ID" "$TITLE" "$BODY"
         env:
           LARK_BOT_APP_ID: ${{secrets.LARK_BOT_APP_ID}}
           LARK_BOT_APP_SECRET: ${{secrets.LARK_BOT_APP_SECRET}}
