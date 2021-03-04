@@ -37,6 +37,7 @@ jobs:
   build:
 
     runs-on: macos-latest
+    continue-on-error: true
 
     steps:
       - uses: actions/checkout@v2
@@ -81,7 +82,6 @@ jobs:
 
       - name: Build with Gradle
         run: ./gradlew assembleRelease
-        continue-on-error: true
 
       - name: Archive production artifacts
         uses: actions/upload-artifact@v2
