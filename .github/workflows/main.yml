@@ -81,7 +81,19 @@ jobs:
             ${{ runner.os }}-gradle-
 
       - name: Build with Gradle
+        continue-on-error: true
         run: ./gradlew assembleRelease
+        
+      - name: Install python dependence
+        run: pip install beautifulsoup4
+
+      - name: Send lark message
+        run: python ./.github/scripts/send_lark_message.py "${{needs.build.result}}" "$LARK_BOT_APP_ID" "$LARK_BOT_APP_SECRET" "$GITHUB_RUN_ID" "$TITLE" "$BODY"
+        env:
+          LARK_BOT_APP_ID: ${{secrets.LARK_BOT_APP_ID}}
+          LARK_BOT_APP_SECRET: ${{secrets.LARK_BOT_APP_SECRET}}
+          TITLE:  ${{ github.event.pull_request.title }}
+          BODY:  ${{ github.event.pull_request.body}}
 
       - name: Archive production artifacts
         uses: actions/upload-artifact@v2
@@ -89,16 +101,8 @@ jobs:
           name: result_apk
           path: module_app/build/outputs/apk/release/module_app-release.apk
           retention-days: 15
-  send_message:
-    runs-on: macos-latest
-    needs: build
-    steps:
-      - uses: actions/checkout@v2
-        with:
-          ref: ${{ github.event.pull_request.head.sha }}
-      - name: Set up Python
-        uses: actions/setup-python@v2
-        with:
+
+   
           python-version: '3.7'
 
       - name: Install python dependence
