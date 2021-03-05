@@ -96,6 +96,10 @@ open class DynamicDetailViewModel : BaseViewModel() {
     }
 
     fun releaseComment(postId: String, content: String) {
+        if (content.isBlank()) {
+            toastEvent.value = R.string.qa_hint_content_empty
+            return
+        }
         ApiGenerator.getApiService(ApiServiceNew::class.java)
                 .releaseComment(content, postId, replyInfo.value?.replyId ?: "")
                 .mapOrThrowApiException()

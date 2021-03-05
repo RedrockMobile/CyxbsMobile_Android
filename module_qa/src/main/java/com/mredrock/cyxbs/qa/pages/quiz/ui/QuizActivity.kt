@@ -7,14 +7,14 @@ import android.content.Intent
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
+import android.text.InputFilter
 import android.util.Base64
 import android.view.KeyEvent
 import android.view.View
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.google.android.material.chip.Chip
@@ -60,26 +60,29 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>(), EventBusLifecycleSu
     }
 
 
-    private var quizContent = ""
     private var progressDialog: ProgressDialog? = null
-//    override val isFragmentActivity = false
+
+    //    override val isFragmentActivity = false
     private var draftId = NOT_DRAFT_ID
     private var dynamicType: String = ""
     private var isFirstQuiz: Boolean = true
     private val exitDialog by lazy { createExitDialog() }
     private var isComment = ""
-    private var commentContent = ""
     private var replyId = ""
     private var postId = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.qa_activity_quiz)
+
+        initEditListener()
+
         isFirstQuiz = sharedPreferences(FIRST_QUIZ).getBoolean(FIRST_QUIZ_SP_KEY, true)
         if (!intent.getStringExtra("isComment").isNullOrEmpty()) {
             isComment = intent.getStringExtra("isComment")
-            if (!intent.getStringExtra("commentContent").isNullOrEmpty())
-                commentContent = intent.getStringExtra("commentContent")
+            if (!intent.getStringExtra("commentContent").isNullOrEmpty()) {
+                qa_edt_quiz_content.setText(intent.getStringExtra("commentContent"))
+            }
             if (!intent.getStringExtra("replyId").isNullOrEmpty()) {
                 replyId = intent.getStringExtra("replyId")
                 nine_grid_view.gone()
@@ -91,7 +94,6 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>(), EventBusLifecycleSu
 
         initToolbar()
         initImageAddView()
-        initEditListener()
         initTypeSelector()
 
         viewModel.backAndRefreshPreActivityEvent.observeNotNull {
@@ -151,33 +153,23 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>(), EventBusLifecycleSu
     }
     //动态监听内容文字变化
 
+    @SuppressLint("SetTextI18n")
     private fun initEditListener() {
-        qa_edt_quiz_content.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(
-                    charSequence: CharSequence,
-                    i: Int,
-                    i1: Int,
-                    i2: Int
-            ) {
+        qa_edt_quiz_content.filters = arrayOf(
+                object : InputFilter.LengthFilter(
+                        MAX_CONTENT_SIZE) {}
+        )
+        qa_edt_quiz_content.doOnTextChanged { text, _, _, _ ->
+            text?.let {
+                qa_tv_edit_num.text = "${text.length}/$MAX_CONTENT_SIZE"
+                if (text.length in 1..MAX_CONTENT_SIZE) {
+                    qa_tv_toolbar_right.setBackgroundResource(qa_shape_send_dynamic_btn_blue_background)
+                } else {
+                    qa_tv_toolbar_right.setBackgroundResource(qa_shape_send_dynamic_btn_grey_background)
+                }
             }
+        }
 
-            override fun onTextChanged(
-                    charSequence: CharSequence,
-                    i: Int,
-                    i1: Int,
-                    i2: Int
-            ) = if (charSequence.length <= MAX_CONTENT_SIZE) {
-                quizContent = charSequence.toString()
-                qa_tv_toolbar_right.setBackgroundResource(qa_shape_send_dynamic_btn_blue_background)
-                qa_tv_edit_num.text = charSequence.length.toString() + "/500"
-
-            } else {
-                qa_edt_quiz_content.setText(quizContent)
-                qa_tv_toolbar_right.setBackgroundResource(qa_shape_send_dynamic_btn_grey_background)
-            }
-
-            override fun afterTextChanged(editable: Editable) {}
-        })
     }
 
 
@@ -203,7 +195,6 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>(), EventBusLifecycleSu
             qa_tv_choose_circle.visibility = View.GONE
             qa_layout_quiz_tag.visibility = View.GONE
             draftId = isComment
-            qa_edt_quiz_content.setText(commentContent)
         } else {
             qa_tv_toolbar_title.text = getString(R.string.qa_quiz_toolbar_title_text)
         }
@@ -213,14 +204,13 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>(), EventBusLifecycleSu
             text = getString(R.string.qa_quiz_dialog_next)
             setOnClickListener {
                 if (isComment == "") {
-                    val result = viewModel.submitTitleAndContent(dynamicType, quizContent)
-                    if (result) {
+                    if (viewModel.checkTitleAndContent(dynamicType, qa_edt_quiz_content.text.toString())) {
                         progressDialog?.show()
                         viewModel.submitDynamic()
                     }
                 } else {
                     progressDialog?.show()
-                    viewModel.submitComment(postId, quizContent, replyId)
+                    viewModel.submitComment(postId, qa_edt_quiz_content.text.toString(), replyId)
                 }
             }
         }
@@ -332,9 +322,9 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>(), EventBusLifecycleSu
     private fun saveDraft() {
         progressDialog?.show()
         if (draftId == NOT_DRAFT_ID) {
-            viewModel.addItemToDraft(quizContent, dynamicType)
+            viewModel.addItemToDraft(qa_edt_quiz_content.text.toString(), dynamicType)
         } else {
-            viewModel.updateDraftItem(quizContent, draftId, dynamicType)
+            viewModel.updateDraftItem(qa_edt_quiz_content.text.toString(), draftId, dynamicType)
         }
     }
 

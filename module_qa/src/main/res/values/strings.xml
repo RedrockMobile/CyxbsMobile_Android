@@ -66,7 +66,7 @@
     <string name="qa_quiz_type_empty">类型不能为空哦～</string>
     <string name="qa_search_ed_hint_text">搜索你想知道的</string>
     <string name="qa_reply_et_hint_text">说点什么吧，万一火了呢</string>
-    <string name="qa_report_hint_text">150字以内</string>
+    <string name="qa_report_hint_text">150字以内(选填)</string>
     <string name="qa_dynamic_detail_title_text">详细</string>
     <string name="qa_ignore_dynamic_success">屏蔽成功</string>
     <string name="qa_ignore_dynamic_failure">屏蔽失败</string>
