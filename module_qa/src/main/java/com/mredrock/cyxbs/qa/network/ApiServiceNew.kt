@@ -158,7 +158,7 @@ interface ApiServiceNew {
      */
     @FormUrlEncoded
     @POST("/wxapi/magipoke-loop/user/getIgnoreUid")
-    fun getIgnoreUid(): Observable<List<Praise>>
+    fun getIgnoreUid(): Observable<List<Ignore>>
 
     /**
      * 获取用户动态

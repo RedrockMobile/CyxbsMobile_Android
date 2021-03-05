@@ -89,4 +89,9 @@
     <color name="qa_reply_detail_header_background_color">#F0F0F0</color>
     <!--    小回复布局的背景颜色-->
     <color name="qa_reply_inner_background_color">#88FFFFFF</color>
+    <!--TODO:适配深色模式-->
+    <!--    屏蔽的人item的背景颜色-->
+    <color name="qa_ignore_item_background_color">#F1F3F8</color>
+    <!--    被回复的语句的颜色-->
+    <color name="qa_my_comment_item_from_color">#556C8B</color>
 </resources>

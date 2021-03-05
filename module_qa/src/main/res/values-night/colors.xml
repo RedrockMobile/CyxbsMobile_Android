@@ -89,4 +89,6 @@
     <color name="qa_reply_detail_header_background_color">#031430</color>
     <!--    小回复布局的背景颜色-->
     <color name="qa_reply_inner_background_color">#88000000</color>
+    <!--    屏蔽的人item的背景颜色-->
+    <color name="qa_ignore_item_background_color">#000000</color>
 </resources>
