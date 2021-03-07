@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.google.android.material.appbar.CollapsingToolbarLayout
+import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.common.config.CyxbsMob
@@ -87,6 +88,7 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), EventBusL
 
     private var isSendDynamic = false
     private var mTencent: Tencent? = null
+    private var token: String? = null
 
     // 判断rv是否到顶
     protected var isRvAtTop = true
@@ -104,8 +106,8 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), EventBusL
         initDynamics()
         initClick()
         mTencent = Tencent.createInstance(CommentConfig.APP_ID, this.requireContext())
-//        val accountService = ServiceManager.getService(IAccountService::class.java)
-//        token=accountService.getUserTokenService().getToken()
+        val accountService = ServiceManager.getService(IAccountService::class.java)
+        token = accountService.getUserTokenService().getToken()
     }
 
 
@@ -119,9 +121,9 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), EventBusL
                     onShareClickListener = { dynamic, mode ->
                         when (mode) {
                             QQ_FRIEND ->
-                                mTencent?.let { it1 -> ShareUtils.qqShare(it1, this@DynamicFragment, dynamic.topic, dynamic.content, "https://cn.bing.com/", "") }
+                                mTencent?.let { it1 -> ShareUtils.qqShare(it1, this@DynamicFragment, dynamic.topic, dynamic.content, "https://wx.redrock.team/game/zscy-youwen-share/#/dynamic?id=${dynamic.postId}&id_token=${token}", "") }
                             QQ_ZONE ->
-                                mTencent?.let { it1 -> ShareUtils.qqQzoneShare(it1, this@DynamicFragment, dynamic.topic, dynamic.content, "https://cn.bing.com/", ArrayList()) }
+                                mTencent?.let { it1 -> ShareUtils.qqQzoneShare(it1, this@DynamicFragment, dynamic.topic, dynamic.content, "https://wx.redrock.team/game/zscy-youwen-share/#/dynamic?id=${dynamic.postId}&id_token=\${token}", ArrayList()) }
                             COPY_LINK ->
                                 ClipboardController.copyText(this@DynamicFragment.requireContext(), "https://cn.bing.com/")
                         }
