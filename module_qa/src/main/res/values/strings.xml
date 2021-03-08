@@ -123,4 +123,5 @@
     <string name="qa_share_wechat_text">微信权限,我们正在争取中</string>
     <string name="qa_dialog_report_text">举报字数已到达150字</string>
     <string name="qa_my_comment_reply_your_comment">回复了你的评论</string>
+    <string name="qa_my_comment_no_reply">暂时还没有回复哦</string>
 </resources>

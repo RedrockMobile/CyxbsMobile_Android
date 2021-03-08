@@ -148,6 +148,9 @@
     <color name="common_mine_security_password_front_icon_less">#ffffff</color>
     <color name="common_mine_security_deep_back_color">#ffffff</color>
     <color name="common_mine_security_dialog_back_color">#2e2e2e</color>
+
+    <!--     我的模块设置部分颜色-->
+    <color name="common_mine_setting_common_back_color">#000000</color>
     <!--    考试成绩-->
     <color name="common_grades_gpa_rv_list_round_corner_background">#345A5A5A</color>
     <color name="common_grades_item_cardView_bg">#813A3A3A</color>

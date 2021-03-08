@@ -34,18 +34,18 @@ class AboutActivity : BaseViewModelActivity<AboutViewModel>() {
 
         common_toolbar.apply {
             setBackgroundColor(ContextCompat.getColor(this@AboutActivity, R.color.common_window_background))
-            initWithSplitLine("关于掌邮",
+            initWithSplitLine("关于我们",
                     false,
                     R.drawable.mine_ic_arrow_left)
-            setTitleLocationAtLeft(true)
+            setTitleLocationAtLeft(false)
         }
         setAppVersionName()
 
         bindUpdate()
         mine_about_rl_website.setOnClickListener { clickWebsite() }
         mine_about_legal.setOnClickListener { clickLegal() }
-        mine_about_rl_update.setOnClickListener { clickUpdate() }
         mine_about_rl_share.setOnClickListener { onShareClick() }
+        mine_about_rl_update.setOnClickListener { clickUpdate() }
 
         mine_about_rl_function.setOnClickListener { clickFeatureIntroduction() }
     }

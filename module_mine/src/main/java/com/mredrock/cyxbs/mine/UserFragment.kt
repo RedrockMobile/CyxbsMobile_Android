@@ -20,6 +20,7 @@ import androidx.core.util.Pair
 import androidx.lifecycle.Observer
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.mredrock.cyxbs.common.component.CommonDialogFragment
 import com.mredrock.cyxbs.common.config.*
 import com.mredrock.cyxbs.common.service.ServiceManager
@@ -29,6 +30,7 @@ import com.mredrock.cyxbs.common.ui.BaseViewModelFragment
 import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.*
 import com.mredrock.cyxbs.main.MAIN_LOGIN
+import com.mredrock.cyxbs.mine.page.about.AboutActivity
 import com.mredrock.cyxbs.mine.page.ask.AskActivity
 import com.mredrock.cyxbs.mine.page.comment.CommentActivity
 import com.mredrock.cyxbs.mine.page.edit.EditInfoActivity
@@ -43,8 +45,6 @@ import kotlinx.android.synthetic.main.mine_fragment_main.*
 @SuppressLint("SetTextI18n")
 @Route(path = MINE_ENTRY)
 class UserFragment : BaseViewModelFragment<UserViewModel>() {
-
-    override var isOpenLifeCycleLog = true
     override var TAG = "RayleighZ"
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -57,14 +57,16 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
         //功能按钮
         context?.apply {
             mine_main_btn_sign.setOnClickListener { doIfLogin { startActivity<DailySignActivity>() } }
+            mine_main_fm_point_store.setOnClickListener { doIfLogin { DailySignActivity.actionStart(this, BottomSheetBehavior.STATE_EXPANDED) } }
 //            mine_main_tv_security.setOnSingleClickListener { doIfLogin { startActivity<SecurityActivity>() } }
             mine_main_btn_sign.setOnClickListener { doIfLogin { startActivity<DailySignActivity>() } }
-            mine_main_tv_sign.setOnClickListener { doIfLogin { startActivity<DailySignActivity>() } }
+            mine_main_tv_sign.setOnClickListener { doIfLogin { DailySignActivity.actionStart(this, BottomSheetBehavior.STATE_COLLAPSED)} }
             mine_main_tv_dynamic_number.setOnClickListener { doIfLogin { jump(QA_DYNAMIC_MINE) } }
+            mine_main_fm_about_us.setOnClickListener {  }
 //            mine_main_tv_dynamic.setOnClickListener { doIfLogin { startActivity<AskActivity>() } }
 //            mine_main_answer_number.setOnClickListener { doIfLogin { startActivity<AnswerActivity>() } }
 //            mine_main_tv_dynamic.setOnClickListener { doIfLogin { startActivity<AnswerActivity>() } }
-            mine_main_tv_comment_number.setOnClickListener { doIfLogin { startActivity<CommentActivity>() } }
+            mine_main_tv_comment_number.setOnClickListener { doIfLogin { jump(QA_MY_COMMENT) } }
             mine_main_tv_reply_comment.setOnClickListener { doIfLogin { startActivity<CommentActivity>() } }
             mine_main_fm_setting.setOnClickListener { doIfLogin { startActivity<SettingActivity>() } }
             mine_main_cl_info_edit.setOnClickListener {
@@ -77,6 +79,7 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
 
             mine_main_tv_praise.setOnClickListener { doIfLogin { showPraise() } }
             mine_main_tv_praise_number.setOnClickListener { doIfLogin { showPraise() } }
+            mine_main_fm_about_us.setOnClickListener { startActivity<AboutActivity>() }
 
 //            mine_main_tv_about.setOnClickListener { startActivity<AboutActivity>() }
 //            if (ServiceManager.getService(IAccountService::class.java).getVerifyService().isLogin()) {

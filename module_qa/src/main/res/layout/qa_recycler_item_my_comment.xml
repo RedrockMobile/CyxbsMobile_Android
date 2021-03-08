@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/qa_cl_my_comment_item"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/qa_ignore_item_background_color"
@@ -72,7 +73,7 @@
         tools:text="Do you like Van 游戏" />
 
     <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/qa_iv_my_comment_"
+        android:id="@+id/qa_iv_my_comment_item_reply"
         android:layout_width="20.35dp"
         android:layout_height="20.35dp"
         android:layout_marginBottom="26dp"
@@ -83,12 +84,12 @@
         app:srcCompat="@drawable/qa_ic_dynamic_comment_count" />
 
     <ImageView
-        android:id="@+id/qa_imageview2"
+        android:id="@+id/qa_iv_my_comment_item_praise"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="44dp"
         android:layout_marginTop="15dp"
-        app:layout_constraintStart_toEndOf="@+id/qa_iv_my_comment_"
+        app:layout_constraintStart_toEndOf="@+id/qa_iv_my_comment_item_reply"
         app:layout_constraintTop_toBottomOf="@+id/qa_tv_my_comment_from"
         app:srcCompat="@drawable/qa_ic_answer_list_praise" />
 

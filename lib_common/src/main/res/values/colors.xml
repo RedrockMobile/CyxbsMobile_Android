@@ -154,10 +154,14 @@
     <!--    我的模块首页颜色-->
     <color name="common_mine_main_btn_gradient_start">#4841E2</color>
     <color name="common_mine_main_btn_gradient_end">#5D5DF7</color>
+    <color name="common_mine_main_btn_positive_blue">#3D35E1</color>
 
     <!--     我的模块的账号安全部分-->
     <color name="common_mine_security_binding_tip">#2A4E84</color>
     <color name="common_mine_security_content_edt_hint_color">#94A6C4</color>
+
+    <!--     我的模块设置部分颜色-->
+    <color name="common_mine_setting_common_back_color">#F1F3F8</color>
     <!--69%透明度的打字框背景颜色-->
     <color name="common_mine_security_question_edt_back_color">#E8F0FC</color>
     <color name="common_mine_security_light_button_back_color">#C3D4EE</color>

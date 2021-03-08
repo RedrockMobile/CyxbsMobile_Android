@@ -56,17 +56,16 @@
                 android:textColor="@color/common_level_one_font_color"
                 android:textSize="11sp"
                 app:layout_constraintBottom_toBottomOf="@+id/mine_main_avatar"
-                app:layout_constraintEnd_toStartOf="@+id/mine_main_avatar_edit"
                 app:layout_constraintStart_toEndOf="@+id/mine_main_avatar" />
 
             <ImageView
                 android:id="@+id/mine_main_avatar_edit"
                 android:layout_width="17dp"
                 android:layout_height="17dp"
-                android:layout_marginEnd="17dp"
                 android:src="@drawable/mine_setting_info_btn"
-                app:layout_constraintBottom_toBottomOf="@+id/mine_main_introduce"
-                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginStart="14.5dp"
+                app:layout_constraintBottom_toBottomOf="@+id/mine_main_username"
+                app:layout_constraintStart_toEndOf="@+id/mine_main_username"
                 app:layout_constraintTop_toTopOf="@+id/mine_main_username" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 

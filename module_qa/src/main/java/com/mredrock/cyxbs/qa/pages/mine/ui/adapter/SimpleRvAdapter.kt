@@ -18,7 +18,7 @@ class SimpleRvAdapter<T: Serializable>(
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>(){
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val itemView = LayoutInflater.from(parent.context).inflate(itemResId, parent,false)
-        val constructor =  viewHolderClass.getConstructor(View::class.java)
+        val constructor = viewHolderClass.getConstructor(View::class.java)
         return constructor.newInstance(itemView)
     }
 

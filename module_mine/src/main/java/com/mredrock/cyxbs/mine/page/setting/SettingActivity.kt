@@ -1,15 +1,25 @@
 package com.mredrock.cyxbs.mine.page.setting
 
+import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
+import androidx.core.content.ContextCompat
 import com.alibaba.android.arouter.launcher.ARouter
+import com.mredrock.cyxbs.api.account.IAccountService
+import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.BaseApp.Companion.context
-import com.mredrock.cyxbs.common.config.COURSE_SHOW_STATE
-import com.mredrock.cyxbs.common.config.WIDGET_SETTING
+import com.mredrock.cyxbs.common.component.CommonDialogFragment
+import com.mredrock.cyxbs.common.config.*
+import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.ui.BaseActivity
 import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
+import com.mredrock.cyxbs.common.utils.extensions.doIfLogin
 import com.mredrock.cyxbs.common.utils.extensions.editor
+import com.mredrock.cyxbs.main.MAIN_LOGIN
 import com.mredrock.cyxbs.mine.R
+import com.mredrock.cyxbs.mine.page.security.activity.SecurityActivity
 import kotlinx.android.synthetic.main.mine_activity_setting.*
+import kotlinx.android.synthetic.main.mine_activity_tablayout_my_product.view.*
 
 class SettingActivity : BaseActivity() {
 
@@ -21,9 +31,13 @@ class SettingActivity : BaseActivity() {
         setContentView(R.layout.mine_activity_setting)
 
         //初始化toolbar
-        mine_setting_toolbar.withSplitLine(true)
-        mine_setting_toolbar.setTitleLocationAtLeft(false)
 
+        mine_setting_toolbar.toolbar.apply {
+            withSplitLine(true)
+            setTitleLocationAtLeft(false)
+            setBackgroundColor(ContextCompat.getColor(this@SettingActivity, R.color.common_mine_setting_common_back_color))
+            title = "设置"
+        }
         //启动App优先显示课表
         mine_setting_switch.setOnCheckedChangeListener { _, isChecked ->
             defaultSharedPreferences.editor {
@@ -43,7 +57,38 @@ class SettingActivity : BaseActivity() {
         }
 
         //账号安全
-        //TODO:合并dev分支
+        mine_setting_fm_security.setOnClickListener { doIfLogin { startActivity<SecurityActivity>() } }
         //屏蔽此人
+
+        //退出登录
+        mine_setting_btn_exit.setOnClickListener { doIfLogin { onExitClick() } }
+    }
+
+    private fun onExitClick() {
+        val tag = "exit"
+        if (this.supportFragmentManager.findFragmentByTag(tag) == null) {
+            CommonDialogFragment().apply {
+                initView(
+                        containerRes = R.layout.mine_layout_dialog_logout,
+                        onPositiveClick = {
+                            cleanAppWidgetCache()
+                            //清除user信息，必须要在LoginStateChangeEvent之前
+                            ServiceManager.getService(IAccountService::class.java).getVerifyService().logout(BaseApp.context)
+                            //清空activity栈
+                            val flag = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+                            ARouter.getInstance().build(MAIN_LOGIN).withFlags(flag).withBoolean(IS_EXIT_LOGIN, true).navigation()
+                        },
+                        positiveString = "退出",
+                        onNegativeClick = { dismiss() }
+                )
+            }.show(this.supportFragmentManager, tag)
+        }
+    }
+
+    private fun cleanAppWidgetCache() {
+        context?.defaultSharedPreferences?.editor {
+            putString(WIDGET_COURSE, "")
+            putBoolean(SP_WIDGET_NEED_FRESH, true)
+        }
     }
 }

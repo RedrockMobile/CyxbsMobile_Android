@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
+    android:background="@color/common_mine_setting_common_back_color"
     tools:context=".page.setting.SettingActivity">
 
     <LinearLayout
@@ -12,12 +13,9 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <com.mredrock.cyxbs.common.component.JToolbar
+        <include
             android:id="@+id/mine_setting_toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:fitsSystemWindows="true"
-            app:title="设置" />
+            layout="@layout/common_toolbar" />
 
         <FrameLayout
             android:layout_width="match_parent"
