@@ -125,7 +125,7 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), EventBusL
                             QQ_ZONE ->
                                 mTencent?.let { it1 -> ShareUtils.qqQzoneShare(it1, this@DynamicFragment, dynamic.topic, dynamic.content, "https://wx.redrock.team/game/zscy-youwen-share/#/dynamic?id=${dynamic.postId}&id_token=\${token}", ArrayList()) }
                             COPY_LINK ->
-                                ClipboardController.copyText(this@DynamicFragment.requireContext(), "https://cn.bing.com/")
+                                ClipboardController.copyText(this@DynamicFragment.requireContext(), "https://wx.redrock.team/game/zscy-youwen-share/#/dynamic?id=${dynamic.postId}&id_token=\${token}")
                         }
                     }
                     onTopicListener = { topic, view ->

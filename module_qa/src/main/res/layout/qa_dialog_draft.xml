@@ -54,7 +54,7 @@
         android:paddingTop="10dp"
         android:paddingBottom="10dp"
         android:text="@string/qa_draft_dialog_no_save"
-        android:textColor="@color/qa_draft_dialog_text_color"
+        android:textColor="@color/qa_draft_dialog_text_red_color"
         android:textSize="18sp"
         app:layout_constraintTop_toBottomOf="@+id/qa_tv_save"
         tools:layout_editor_absoluteX="16dp" />
