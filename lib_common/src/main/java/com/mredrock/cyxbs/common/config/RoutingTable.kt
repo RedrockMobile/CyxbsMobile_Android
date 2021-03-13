@@ -63,6 +63,8 @@ const val QA_COMMENT_LIST = "/comment_list/qa/entry"
 const val QA_DYNAMIC_DETAIL = "/dynamic_detail/qa/entry"
 const val QA_DYNAMIC_MINE = "/dynamic_mine/qa/entry"
 const val QA_MY_COMMENT = "/my_comment/qa/entry"
+const val QA_MY_IGNORE = "/my_ignore/qa/entry"
+const val QA_MY_PRAISE = "/my_praise/qa/entry"
 
 // 迎新专题
 const val FRESHMAN_ENTRY = "/freshman/entry"

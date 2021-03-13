@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/qa_cl_my_comment_item"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="@color/qa_ignore_item_background_color"
+    android:id="@+id/qa_cl_my_comment_item"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:background="@color/qa_ignore_item_background_color">
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/qa_circle_iv_my_comment_item_avatar"
@@ -33,23 +33,26 @@
         android:id="@+id/qa_tv_my_comment_item_tip_and_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="5.5dp"
+        android:text="@string/qa_my_comment_reply_your_comment"
         android:textColor="@color/qa_reply_detail_date_text_color"
         android:textSize="11sp"
-        android:layout_marginBottom="5.5dp"
         app:layout_constraintBottom_toBottomOf="@+id/qa_circle_iv_my_comment_item_avatar"
-        app:layout_constraintStart_toStartOf="@+id/qa_tv_my_comment_item_nickname"
-        android:text="@string/qa_my_comment_reply_your_comment" />
+        app:layout_constraintStart_toStartOf="@+id/qa_tv_my_comment_item_nickname" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/qa_tv_my_comment_item_comment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="13.5dp"
         android:textColor="@color/common_level_three_font_color"
         android:textSize="15sp"
+        android:maxEms="18"
+        android:maxLines="1"
+        android:ellipsize="end"
         app:layout_constraintStart_toStartOf="@+id/qa_tv_my_comment_item_tip_and_date"
         app:layout_constraintTop_toBottomOf="@+id/qa_tv_my_comment_item_tip_and_date"
-        android:layout_marginTop="13.5dp"
-        tools:text="woc，已经冲了"/>
+        tools:text="woc，已经冲了, 这都不冲？？？？？？？？？？？？？？" />
 
     <View
         android:layout_width="2dp"
@@ -66,31 +69,40 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="6dp"
         android:layout_marginTop="12dp"
+        android:maxEms="18"
+        android:maxLines="1"
+        android:ellipsize="end"
         android:textColor="@color/qa_my_comment_item_from_color"
         android:textSize="12sp"
         app:layout_constraintStart_toStartOf="@+id/qa_tv_my_comment_item_comment"
         app:layout_constraintTop_toBottomOf="@+id/qa_tv_my_comment_item_comment"
-        tools:text="Do you like Van 游戏" />
+        tools:text="Do you like Van 游戏, Axl Rose Axl Rose Axl Rose Axl Rose Axl Rose Axl Rose Axl Rose Axl Rose Axl Rose Axl Rose Axl Rose " />
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/qa_iv_my_comment_item_reply"
         android:layout_width="20.35dp"
         android:layout_height="20.35dp"
-        android:layout_marginBottom="26dp"
         android:layout_marginTop="20dp"
+        android:layout_marginBottom="26dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="@+id/qa_tv_my_comment_item_comment"
         app:layout_constraintTop_toBottomOf="@+id/qa_tv_my_comment_from"
         app:srcCompat="@drawable/qa_ic_dynamic_comment_count" />
 
-    <ImageView
-        android:id="@+id/qa_iv_my_comment_item_praise"
+    <com.mredrock.cyxbs.qa.ui.widget.likeview.LikeView
+        android:layout_marginStart="20dp"
+        android:id="@+id/qa_like_view_my_comment_item_praise"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="44dp"
-        android:layout_marginTop="15dp"
+        app:checkedColor="#323FD9"
+        app:cirRadius="14dp"
+        app:checkedLikeIconRes="@drawable/qa_ic_answer_list_praised"
+        app:cycleTime="1000"
+        app:defaultColor="@color/qa_likeview_color"
+        app:defaultLikeIconRes="@drawable/qa_ic_answer_list_praise"
         app:layout_constraintStart_toEndOf="@+id/qa_iv_my_comment_item_reply"
-        app:layout_constraintTop_toBottomOf="@+id/qa_tv_my_comment_from"
+        app:layout_constraintTop_toTopOf="@+id/qa_iv_my_comment_item_reply"
+        app:layout_constraintBottom_toBottomOf="@id/qa_iv_my_comment_item_reply"
         app:srcCompat="@drawable/qa_ic_answer_list_praise" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

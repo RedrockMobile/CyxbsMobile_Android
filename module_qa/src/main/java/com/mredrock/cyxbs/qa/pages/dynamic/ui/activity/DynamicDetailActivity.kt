@@ -1,11 +1,9 @@
 package com.mredrock.cyxbs.qa.pages.dynamic.ui.activity
 
 import android.animation.ArgbEvaluator
-import android.animation.LayoutTransition
 import android.animation.ValueAnimator
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
 import android.graphics.Color
@@ -25,7 +23,6 @@ import com.google.android.material.appbar.AppBarLayout
 import com.mredrock.cyxbs.common.BaseApp.Companion.context
 import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.common.config.QA_DYNAMIC_DETAIL
-import com.mredrock.cyxbs.common.config.QA_ENTRY
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.extensions.*
 import com.mredrock.cyxbs.qa.R
@@ -68,8 +65,8 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
         fun activityStart(page: Any?, dynamicItem: View, data: Dynamic) {
 
             page.apply {
-                var activity : Activity? = null
-                if (page is Fragment){
+                var activity: Activity? = null
+                if (page is Fragment) {
                     activity = page.activity
                 } else if (page is Activity) {
                     activity = page
@@ -85,13 +82,21 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
         }
 
         // 根据postId启动
-        fun activityStart(fragment: Fragment, postId: String) {
-            fragment.apply {
+        fun activityStart(page: Any?, postId: String) {
+
+            var activity: Activity? = null
+            if (page is Fragment) {
+                activity = page.activity
+            } else if (page is Activity) {
+                activity = page
+            }
+
+            activity.apply {
                 activity?.let {
                     val intent = Intent(context, DynamicDetailActivity::class.java)
                     intent.putExtra("post_id", postId)
                     it.window.exitTransition = Slide(Gravity.START).apply { duration = 500 }
-                    startActivityForResult(intent, DYNAMIC_DETAIL_REQUEST)
+                    it.startActivityForResult(intent, DYNAMIC_DETAIL_REQUEST)
                 }
             }
         }
@@ -201,7 +206,7 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
         //判断是否有共享元素
         haveShareItem = dynamicOrigin != null
 
-        initChangeColorAnimator("#1D1D1D","#000000")
+        initChangeColorAnimator("#1D1D1D", "#000000")
         initObserve()
         initDynamic()
         initReplyList()
@@ -209,14 +214,14 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
 
     }
 
-    private fun initChangeColorAnimator(startColor: String, endColor:String){
-        if (haveShareItem){
-            val flag = context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
-            if (flag == Configuration.UI_MODE_NIGHT_YES){//如果是深色模式
+    private fun initChangeColorAnimator(startColor: String, endColor: String) {
+        val isDarkMode = context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES
+        if (haveShareItem) {
+            if (isDarkMode) {//如果是深色模式
                 //因为视觉图颜色不一样的缘故，这里要在转场动画的同时添加一个变色动画
                 val colorStart = Color.parseColor(startColor)
                 val colorFinal = Color.parseColor(endColor)
-                val va = ValueAnimator.ofInt(colorStart,colorFinal)
+                val va = ValueAnimator.ofInt(colorStart, colorFinal)
                 va.setEvaluator(ArgbEvaluator())
                 va.duration = 500
                 va.addUpdateListener { vav ->
@@ -225,16 +230,20 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
                 }
                 va.start()
             }
+        } else if (isDarkMode) {
+            //如果是深色模式，就直接变色，不加动画
+            val gd = qa_ctl_dynamic.background as GradientDrawable
+            gd.setColor(Color.parseColor(endColor))
         }
     }
 
     private fun initOnClickListener() {
-        qa_iv_select_pic.setOnSingleClickListener {
+        qa_iv_my_comment_select_pic.setOnSingleClickListener {
             Intent(this, QuizActivity::class.java).apply {
                 putExtra("isComment", "1")
                 putExtra("postId", viewModel.dynamic.value?.postId)
                 putExtra("replyId", viewModel.replyInfo.value?.replyId ?: "")
-                putExtra("commentContent", qa_et_reply.text.toString())
+                putExtra("commentContent", qa_et_my_comment_reply.text.toString())
                 putExtra("replyNickname", viewModel.replyInfo.value?.nickname ?: "")
                 startActivityForResult(this, RequestResultCode.RELEASE_COMMENT_ACTIVITY_REQUEST)
             }
@@ -244,16 +253,16 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
             onBackPressed()
         }
 
-        qa_btn_send.setOnSingleClickListener {
-            viewModel.releaseComment(viewModel.dynamic.value!!.postId, qa_et_reply.text.toString())
+        qa_btn_my_comment_send.setOnSingleClickListener {
+            viewModel.releaseComment(viewModel.dynamic.value!!.postId, qa_et_my_comment_reply.text.toString())
         }
         qa_iv_dynamic_comment_count.setOnSingleClickListener {
-            KeyboardController.showInputKeyboard(this, qa_et_reply)
+            KeyboardController.showInputKeyboard(this, qa_et_my_comment_reply)
             viewModel.replyInfo.value = ReplyInfo("", "", "")
         }
         qa_coordinatorlayout.onReplyCancelEvent = {
             viewModel.replyInfo.value = ReplyInfo("", "", "")
-            KeyboardController.hideInputKeyboard(this, qa_et_reply)
+            KeyboardController.hideInputKeyboard(this, qa_et_my_comment_reply)
         }
     }
 
@@ -296,13 +305,13 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
             it?.let {
                 if (it.replyId.isNotEmpty()) {
                     qa_coordinatorlayout.isReplyEdit = true
-                    KeyboardController.showInputKeyboard(this@DynamicDetailActivity, qa_et_reply)
+                    KeyboardController.showInputKeyboard(this@DynamicDetailActivity, qa_et_my_comment_reply)
                     ReplyPopWindow.with(this@DynamicDetailActivity)
                     ReplyPopWindow.setReplyName(it.nickname, it.content)
                     ReplyPopWindow.setOnClickEvent {
                         viewModel.replyInfo.value = ReplyInfo("", "", "")
                     }
-                    ReplyPopWindow.show(qa_et_reply, ReplyPopWindow.AlignMode.LEFT, this@DynamicDetailActivity.dp2px(6f))
+                    ReplyPopWindow.show(qa_et_my_comment_reply, ReplyPopWindow.AlignMode.LEFT, this@DynamicDetailActivity.dp2px(6f))
                 } else {
                     if (ReplyPopWindow.isShowing()) {
                         ReplyPopWindow.dismiss()
@@ -313,8 +322,8 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
         }
         viewModel.commentReleaseResult.observe {
             viewModel.replyInfo.value = ReplyInfo("", "", "")
-            qa_et_reply.setText("")
-            KeyboardController.hideInputKeyboard(this, qa_et_reply)
+            qa_et_my_comment_reply.setText("")
+            KeyboardController.hideInputKeyboard(this, qa_et_my_comment_reply)
 
             viewModel.refreshCommentList(dynamicOrigin!!.postId, (it?.commentId
                     ?: -1).toString())
@@ -332,6 +341,14 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
         }
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        //修改详情的背景颜色
+        if (context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES){
+            val gd = qa_ctl_dynamic.background as GradientDrawable
+            gd.setColor(Color.parseColor("#1D1D1D"))
+        }
+    }
 
     private fun initDynamic() {
 
@@ -378,7 +395,7 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
 
             val optionPopWindow = OptionalPopWindow.Builder().with(this)
                     .addOptionAndCallback(CommentConfig.REPLY) {
-                        KeyboardController.showInputKeyboard(this, qa_et_reply)
+                        KeyboardController.showInputKeyboard(this, qa_et_my_comment_reply)
                         viewModel.replyInfo.value = ReplyInfo("", "", "")
                     }.addOptionAndCallback(CommentConfig.COPY) {
                         ClipboardController.copyText(this, viewModel.dynamic.value!!.content)
@@ -464,7 +481,9 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
             return
         }
 
-        initChangeColorAnimator("#000000","#1D1D1D")
+        if (haveShareItem) {
+            initChangeColorAnimator("#000000", "#1D1D1D")
+        }
         window.returnTransition = Slide(Gravity.END).apply { duration = 500 }
         dynamicOrigin = null
         super.onBackPressed()
@@ -482,7 +501,7 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
                     viewModel.replyInfo.value = ReplyInfo("", "", "")
                 }
                 data?.getStringExtra("text")?.let {
-                    qa_et_reply.setText(it)
+                    qa_et_my_comment_reply.setText(it)
                 }
             }
         }

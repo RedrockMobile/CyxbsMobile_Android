@@ -62,8 +62,8 @@
                 android:id="@+id/mine_main_avatar_edit"
                 android:layout_width="17dp"
                 android:layout_height="17dp"
-                android:src="@drawable/mine_setting_info_btn"
                 android:layout_marginStart="14.5dp"
+                android:src="@drawable/mine_setting_info_btn"
                 app:layout_constraintBottom_toBottomOf="@+id/mine_main_username"
                 app:layout_constraintStart_toEndOf="@+id/mine_main_username"
                 app:layout_constraintTop_toTopOf="@+id/mine_main_username" />
@@ -110,15 +110,15 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/impact_min"
+                android:gravity="center"
                 android:paddingStart="20dp"
                 android:paddingEnd="20dp"
-                android:gravity="center"
                 android:text="@string/mine_number_default"
                 android:textColor="@color/levelFourFontColor"
                 android:textSize="30sp"
-                app:layout_constraintBottom_toTopOf="@+id/mine_main_tv_question"
-                app:layout_constraintEnd_toEndOf="@+id/mine_main_tv_question"
-                app:layout_constraintStart_toStartOf="@+id/mine_main_tv_question" />
+                app:layout_constraintBottom_toTopOf="@+id/mine_main_tv_dynamic"
+                app:layout_constraintEnd_toEndOf="@+id/mine_main_tv_dynamic"
+                app:layout_constraintStart_toStartOf="@+id/mine_main_tv_dynamic" />
 
             <TextView
                 android:id="@+id/mine_main_tv_comment_number"
@@ -130,9 +130,9 @@
                 android:text="@string/mine_number_default"
                 android:textColor="@color/levelFourFontColor"
                 android:textSize="30sp"
-                app:layout_constraintBottom_toTopOf="@+id/mine_main_tv_reply_comment"
-                app:layout_constraintEnd_toEndOf="@+id/mine_main_tv_reply_comment"
-                app:layout_constraintStart_toStartOf="@+id/mine_main_tv_reply_comment" />
+                app:layout_constraintBottom_toTopOf="@+id/mine_main_tv_comment"
+                app:layout_constraintEnd_toEndOf="@+id/mine_main_tv_comment"
+                app:layout_constraintStart_toStartOf="@+id/mine_main_tv_comment" />
 
             <TextView
                 android:id="@+id/mine_main_tv_praise_number"
@@ -150,7 +150,7 @@
                 app:layout_constraintStart_toStartOf="@+id/mine_main_tv_praise" />
 
             <TextView
-                android:id="@+id/mine_main_tv_question"
+                android:id="@+id/mine_main_tv_dynamic"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="50dp"
@@ -166,15 +166,15 @@
                 app:layout_constraintTop_toBottomOf="@+id/mine_main_tv_sign" />
 
             <TextView
-                android:id="@+id/mine_main_tv_reply_comment"
+                android:id="@+id/mine_main_tv_comment"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/mine_reply_to_comment"
                 android:textColor="@color/levelFourFontColor"
                 android:textSize="@dimen/mine_main_small_s"
-                app:layout_constraintBottom_toBottomOf="@+id/mine_main_tv_question"
+                app:layout_constraintBottom_toBottomOf="@+id/mine_main_tv_dynamic"
                 app:layout_constraintEnd_toStartOf="@+id/mine_main_tv_praise"
-                app:layout_constraintStart_toEndOf="@+id/mine_main_tv_question" />
+                app:layout_constraintStart_toEndOf="@+id/mine_main_tv_dynamic" />
 
             <TextView
                 android:id="@+id/mine_main_tv_praise"
@@ -184,7 +184,7 @@
                 android:text="@string/mine_praise"
                 android:textColor="@color/levelFourFontColor"
                 android:textSize="@dimen/mine_main_small_s"
-                app:layout_constraintBottom_toBottomOf="@+id/mine_main_tv_reply_comment"
+                app:layout_constraintBottom_toBottomOf="@+id/mine_main_tv_comment"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5" />
 
@@ -197,9 +197,9 @@
                 android:background="@drawable/mine_shape_round_corner_red_point"
                 android:gravity="center"
                 android:text="@string/mine_number_default"
-                android:visibility="gone"
                 android:textColor="@color/common_white_font_color"
                 android:textSize="10sp"
+                android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="@+id/mine_main_tv_comment_number"
                 app:layout_constraintStart_toStartOf="@+id/mine_main_tv_comment_number" />
 
@@ -212,9 +212,9 @@
                 android:background="@drawable/mine_shape_round_corner_red_point"
                 android:gravity="center"
                 android:text="@string/mine_number_default"
-                android:visibility="gone"
                 android:textColor="@color/common_white_font_color"
                 android:textSize="10sp"
+                android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="@+id/mine_main_tv_praise_number"
                 app:layout_constraintStart_toStartOf="@+id/mine_main_tv_praise_number" />
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -222,66 +222,72 @@
         <!--点击事件需要设置在外部的frameLayout上-->
 
         <FrameLayout
+            android:id="@+id/mine_main_fm_point_store"
             android:layout_width="match_parent"
             android:layout_height="36dp"
-            android:id="@+id/mine_main_fm_point_store"
             android:layout_marginTop="44.7dp">
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="16dp"
                 android:text="积分商城"
                 android:textColor="@color/common_level_three_font_color"
-                android:textSize="15sp"
-                android:layout_marginStart="16dp"
-                android:layout_gravity="center_vertical"/>
+                android:textSize="15sp" />
+
             <ImageView
                 android:layout_width="6dp"
                 android:layout_height="12.5dp"
                 android:layout_gravity="end|center_vertical"
                 android:layout_marginEnd="25.5dp"
-                android:src="@drawable/mine_ic_arrow_right"/>
+                android:src="@drawable/mine_ic_arrow_right" />
         </FrameLayout>
 
         <FrameLayout
+            android:id="@+id/mine_main_fm_setting"
             android:layout_width="match_parent"
             android:layout_height="36dp"
-            android:id="@+id/mine_main_fm_setting"
             android:layout_marginTop="12.5dp">
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="16dp"
                 android:text="设置"
                 android:textColor="@color/common_level_three_font_color"
-                android:textSize="15sp"
-                android:layout_marginStart="16dp"
-                android:layout_gravity="center_vertical"/>
+                android:textSize="15sp" />
+
             <ImageView
                 android:layout_width="6dp"
                 android:layout_height="12.5dp"
                 android:layout_gravity="end|center_vertical"
                 android:layout_marginEnd="25.5dp"
-                android:src="@drawable/mine_ic_arrow_right"/>
+                android:src="@drawable/mine_ic_arrow_right" />
         </FrameLayout>
 
         <FrameLayout
+            android:id="@+id/mine_main_fm_about_us"
             android:layout_width="match_parent"
             android:layout_height="36dp"
-            android:id="@+id/mine_main_fm_about_us"
             android:layout_marginTop="12.5dp">
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="16dp"
                 android:text="关于我们"
                 android:textColor="@color/common_level_three_font_color"
-                android:textSize="15sp"
-                android:layout_marginStart="16dp"
-                android:layout_gravity="center_vertical"/>
+                android:textSize="15sp" />
+
             <ImageView
                 android:layout_width="6dp"
                 android:layout_height="12.5dp"
                 android:layout_gravity="end|center_vertical"
                 android:layout_marginEnd="25.5dp"
-                android:src="@drawable/mine_ic_arrow_right"/>
+                android:src="@drawable/mine_ic_arrow_right" />
         </FrameLayout>
 
         <!--<TextView

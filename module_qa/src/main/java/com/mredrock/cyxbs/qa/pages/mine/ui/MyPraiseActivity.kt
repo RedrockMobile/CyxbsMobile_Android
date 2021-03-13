@@ -1,67 +1,70 @@
 package com.mredrock.cyxbs.qa.pages.mine.ui
 
+import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.WrapperListAdapter
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.alibaba.android.arouter.facade.annotation.Route
-import com.bumptech.glide.Glide
-import com.mredrock.cyxbs.common.config.QA_MY_IGNORE
+import com.mredrock.cyxbs.common.config.QA_ANSWER
+import com.mredrock.cyxbs.common.config.QA_MY_PRAISE
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
-import com.mredrock.cyxbs.common.utils.extensions.setAvatarImageFromUrl
 import com.mredrock.cyxbs.qa.R
-import com.mredrock.cyxbs.qa.beannew.Ignore
 import com.mredrock.cyxbs.qa.component.recycler.RvAdapterWrapper
 import com.mredrock.cyxbs.qa.network.NetworkState
-import com.mredrock.cyxbs.qa.pages.mine.ui.adapter.MyIgnoreRvAdapter
-import com.mredrock.cyxbs.qa.pages.mine.ui.adapter.SimpleRvAdapter
-import com.mredrock.cyxbs.qa.pages.mine.ui.adapter.viewholder.MyIgnoreViewHolder
-import com.mredrock.cyxbs.qa.pages.mine.viewmodel.MyIgnoreViewModel
+import com.mredrock.cyxbs.qa.pages.mine.ui.adapter.MyPraiseRvAdapter
+import com.mredrock.cyxbs.qa.pages.mine.viewmodel.MyPraiseViewModel
 import com.mredrock.cyxbs.qa.ui.adapter.EmptyRvAdapter
 import com.mredrock.cyxbs.qa.ui.adapter.FooterRvAdapter
-import kotlinx.android.synthetic.main.qa_activity_my_ignore_people.*
+import kotlinx.android.synthetic.main.qa_activity_my_comment.*
 import kotlinx.android.synthetic.main.qa_activity_my_praise.*
+import kotlinx.android.synthetic.main.qa_common_toolbar.view.*
 
-@Route(path = QA_MY_IGNORE)
-class MyIgnorePeopleActivity : BaseViewModelActivity<MyIgnoreViewModel>() {
-    lateinit var myIgnoreRvAdapter: MyIgnoreRvAdapter
-    lateinit var emptyRvAdapter: EmptyRvAdapter
-    lateinit var footerRvAdapter: FooterRvAdapter
+@Route(path = QA_MY_PRAISE)
+class MyPraiseActivity : BaseViewModelActivity<MyPraiseViewModel>() {
+
+    private lateinit var myPraiseRvAdapter: MyPraiseRvAdapter
+    private lateinit var footerRvAdapter: FooterRvAdapter
+    private lateinit var emptyRvAdapter: EmptyRvAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.qa_activity_my_ignore_people)
+        setContentView(R.layout.qa_activity_my_praise)
         initView()
         initObserve()
         initClick()
     }
 
-    private fun initView() {
-        myIgnoreRvAdapter = MyIgnoreRvAdapter()
+    private fun initView(){
+        //初始化toolBar
+        qa_tb_my_praise.qa_tv_toolbar_title.text = "收到的赞"
+
+        //加载RecyclerView
+        myPraiseRvAdapter = MyPraiseRvAdapter(this)
+        emptyRvAdapter = EmptyRvAdapter("暂时没有收到赞哦")
         footerRvAdapter = FooterRvAdapter { viewModel.retry() }
-        emptyRvAdapter = EmptyRvAdapter("暂时还没有屏蔽的人哦")
 
         val adapterWrapper = RvAdapterWrapper(
-                normalAdapter = myIgnoreRvAdapter,
-                footerAdapter = footerRvAdapter,
-                emptyAdapter = emptyRvAdapter
+                normalAdapter = myPraiseRvAdapter,
+                emptyAdapter = emptyRvAdapter,
+                footerAdapter = footerRvAdapter
         )
 
-        qa_rv_my_ignore.adapter = adapterWrapper
-
+        qa_rv_my_praise.adapter = adapterWrapper
+        qa_rv_my_praise.layoutManager = LinearLayoutManager(this)
         //设置分割线
         val divider = DividerItemDecoration(this, DividerItemDecoration.VERTICAL)
         ContextCompat.getDrawable(this,R.drawable.qa_shape_divide_line)?.let {
             divider.setDrawable(it)
         }
-        qa_rv_my_ignore.addItemDecoration(divider)
-        qa_rv_my_ignore.layoutManager = LinearLayoutManager(this)
+        qa_rv_my_praise.addItemDecoration(divider)
     }
 
     private fun initObserve(){
         //观察List是否变化
-        viewModel.ignoreList.observe {
-            myIgnoreRvAdapter.submitList(it)
+        viewModel.praiseList.observe {
+            myPraiseRvAdapter.submitList(it)
         }
 
         //观察网络状态
@@ -75,16 +78,16 @@ class MyIgnorePeopleActivity : BaseViewModelActivity<MyIgnoreViewModel>() {
         viewModel.initialLoad.observe {
             when(it){
                 NetworkState.LOADING -> {
-                    qa_swl_my_ignore.isRefreshing = true
-                    (qa_rv_my_ignore.adapter as? RvAdapterWrapper)?.apply {
+                    qa_swl_my_praise.isRefreshing = true
+                    (qa_rv_my_praise.adapter as? RvAdapterWrapper)?.apply {
                     }
                     emptyRvAdapter.showHolder(3)
                 }
                 NetworkState.CANNOT_LOAD_WITHOUT_LOGIN -> {
-                    qa_swl_my_ignore.isRefreshing = false
+                    qa_swl_my_praise.isRefreshing = false
                 }
                 else -> {
-                    qa_swl_my_ignore.isRefreshing = false
+                    qa_swl_my_praise.isRefreshing = false
                     emptyRvAdapter.hideHolder()
                 }
             }
@@ -92,8 +95,9 @@ class MyIgnorePeopleActivity : BaseViewModelActivity<MyIgnoreViewModel>() {
     }
 
     private fun initClick(){
-        qa_swl_my_ignore.setOnRefreshListener {
-            viewModel.invalidateList()
+        qa_swl_my_praise.setOnRefreshListener {
+            viewModel.invalidateCWList()
         }
     }
+
 }

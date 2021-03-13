@@ -151,14 +151,17 @@ interface ApiServiceNew {
             @Field("page") page: Int,
             @Field("size") size: Int,
             @Field("type") type: Int
-    ): Observable<RedrockApiWrapper<List<CommentWrapper>>>
+    ): Observable<RedrockApiWrapper<List<Praise>>>
 
     /**
      * 获取被屏蔽的用户
      */
     @FormUrlEncoded
     @POST("/wxapi/magipoke-loop/user/getIgnoreUid")
-    fun getIgnoreUid(): Observable<List<Ignore>>
+    fun getIgnoreUid(
+            @Field("page") page: Int,
+            @Field("size") size: Int
+    ): Observable<RedrockApiWrapper<List<Ignore>>>
 
     /**
      * 获取用户动态

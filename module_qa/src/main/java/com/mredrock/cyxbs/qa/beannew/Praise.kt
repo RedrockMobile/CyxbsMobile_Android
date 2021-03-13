@@ -8,6 +8,8 @@ import java.io.Serializable
  * @author Sca RayleighZ
  */
 data class Praise(
+        @SerializedName("id")
+        val id: Int,
         @SerializedName("type")
         val type: Int,
         @SerializedName("time")

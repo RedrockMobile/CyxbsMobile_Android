@@ -4,9 +4,9 @@ import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.service.ServiceManager
-import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.*
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
@@ -16,12 +16,18 @@ import com.mredrock.cyxbs.mine.network.model.UserCount
 import com.mredrock.cyxbs.mine.network.model.UserUncheckCount
 import com.mredrock.cyxbs.mine.util.apiService
 import com.mredrock.cyxbs.mine.util.extension.normalWrapper
+import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
+
 
 /**
  * Created by zia on 2018/8/26.
  */
 class UserViewModel : BaseViewModel() {
 
+    companion object {
+        const val UNCHECK_PRAISE_KEY = "mine/uncheck_praise"
+        const val UNCHECK_COMMENT_KEY = "mine/uncheck_comment"
+    }
 
     private val _status = MutableLiveData<ScoreStatus>()//签到状态
     val status: LiveData<ScoreStatus>
@@ -72,7 +78,7 @@ class UserViewModel : BaseViewModel() {
                 .safeSubscribeBy(
                         onNext = {
                             if (_userCount.value == null || it.data != _userCount.value)
-                            _userCount.postValue(it.data)
+                                _userCount.postValue(it.data)
                         },
                         onError = {
                             BaseApp.context.toast("请求异常:${it.message}")
@@ -80,14 +86,18 @@ class UserViewModel : BaseViewModel() {
                 )
     }
 
-    fun getUserUncheckCount() {
-        val curTime = System.currentTimeMillis()
-        apiService.getUncheckCount(curTime)
+    fun getUserUncheckCount(type: Int) {
+        LogUtils.d("RayleighZ", "requestForUncheckCount")
+        val sp = BaseApp.context.defaultSharedPreferences
+        val lastCheckTimeStamp = if (type == 1) sp.getLong(UNCHECK_COMMENT_KEY, 0L) else sp.getLong(UNCHECK_PRAISE_KEY, 0L)
+        apiService.getUncheckCount(
+                lastCheckTimeStamp,
+                type
+        )
                 .setSchedulers()
                 .doOnErrorWithDefaultErrorHandler { true }
                 .safeSubscribeBy(
                         onNext = {
-                            if (_userUncheckCount.value == null || it.data != _userUncheckCount.value)
                                 _userUncheckCount.postValue(it.data)
                         },
                         onError = {
@@ -124,6 +134,17 @@ class UserViewModel : BaseViewModel() {
         number in 0..99 -> number.toString()
         number > 99 -> "99+"
         else -> "0"
+    }
+
+    fun saveCheckTimeStamp(type: Int){
+        BaseApp.context.defaultSharedPreferences.editor {
+            if (type == 1){//刷新未读回复数的本地记录时间戳
+                putLong(UNCHECK_COMMENT_KEY,System.currentTimeMillis()/1000)
+            } else if (type == 2){//刷新点赞数的本地记录时间戳
+                putLong(UNCHECK_PRAISE_KEY,System.currentTimeMillis()/1000)
+            }
+            apply()
+        }
     }
 
     /**

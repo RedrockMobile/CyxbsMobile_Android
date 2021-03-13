@@ -21,18 +21,16 @@ import androidx.lifecycle.Observer
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.mredrock.cyxbs.api.account.IAccountService
+import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.component.CommonDialogFragment
 import com.mredrock.cyxbs.common.config.*
 import com.mredrock.cyxbs.common.service.ServiceManager
-import com.mredrock.cyxbs.api.account.IAccountService
-import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.ui.BaseViewModelFragment
 import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.*
 import com.mredrock.cyxbs.main.MAIN_LOGIN
 import com.mredrock.cyxbs.mine.page.about.AboutActivity
-import com.mredrock.cyxbs.mine.page.ask.AskActivity
-import com.mredrock.cyxbs.mine.page.comment.CommentActivity
 import com.mredrock.cyxbs.mine.page.edit.EditInfoActivity
 import com.mredrock.cyxbs.mine.page.setting.SettingActivity
 import com.mredrock.cyxbs.mine.page.sign.DailySignActivity
@@ -47,28 +45,33 @@ import kotlinx.android.synthetic.main.mine_fragment_main.*
 class UserFragment : BaseViewModelFragment<UserViewModel>() {
     override var TAG = "RayleighZ"
 
+    override var isOpenLifeCycleLog: Boolean
+        get() = true
+        set(value) {}
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         addObserver()
         initView()
+//        val token = ServiceManager.getService(IAccountService::class.java).getUserTokenService().getToken()
+//        LogUtils.d("RayleighZ", token)
     }
 
     private fun initView() {
         //功能按钮
         context?.apply {
             mine_main_btn_sign.setOnClickListener { doIfLogin { startActivity<DailySignActivity>() } }
-            mine_main_fm_point_store.setOnClickListener { doIfLogin { DailySignActivity.actionStart(this, BottomSheetBehavior.STATE_EXPANDED) } }
-//            mine_main_tv_security.setOnSingleClickListener { doIfLogin { startActivity<SecurityActivity>() } }
             mine_main_btn_sign.setOnClickListener { doIfLogin { startActivity<DailySignActivity>() } }
-            mine_main_tv_sign.setOnClickListener { doIfLogin { DailySignActivity.actionStart(this, BottomSheetBehavior.STATE_COLLAPSED)} }
-            mine_main_tv_dynamic_number.setOnClickListener { doIfLogin { jump(QA_DYNAMIC_MINE) } }
-            mine_main_fm_about_us.setOnClickListener {  }
-//            mine_main_tv_dynamic.setOnClickListener { doIfLogin { startActivity<AskActivity>() } }
-//            mine_main_answer_number.setOnClickListener { doIfLogin { startActivity<AnswerActivity>() } }
-//            mine_main_tv_dynamic.setOnClickListener { doIfLogin { startActivity<AnswerActivity>() } }
-            mine_main_tv_comment_number.setOnClickListener { doIfLogin { jump(QA_MY_COMMENT) } }
-            mine_main_tv_reply_comment.setOnClickListener { doIfLogin { startActivity<CommentActivity>() } }
-            mine_main_fm_setting.setOnClickListener { doIfLogin { startActivity<SettingActivity>() } }
+            mine_main_fm_setting.setOnSingleClickListener { doIfLogin { startActivity<SettingActivity>() } }
+            mine_main_fm_about_us.setOnSingleClickListener { doIfLogin { startActivity<AboutActivity>() } }
+            mine_main_fm_point_store.setOnClickListener { doIfLogin { DailySignActivity.actionStart(this, BottomSheetBehavior.STATE_EXPANDED) } }
+            mine_main_tv_sign.setOnClickListener { doIfLogin { DailySignActivity.actionStart(this, BottomSheetBehavior.STATE_COLLAPSED) } }
+            mine_main_tv_dynamic_number.setOnSingleClickListener { doIfLogin { jump(QA_DYNAMIC_MINE) } }
+            mine_main_tv_dynamic.setOnSingleClickListener { doIfLogin { jump(QA_DYNAMIC_MINE) } }
+            mine_main_tv_comment_number.setOnSingleClickListener { doIfLogin { jumpAndSaveTime(QA_MY_COMMENT, 1) } }
+            mine_main_tv_praise_number.setOnSingleClickListener { doIfLogin { jumpAndSaveTime(QA_MY_PRAISE, 2) } }
+            mine_main_tv_comment.setOnSingleClickListener { doIfLogin { jumpAndSaveTime(QA_MY_COMMENT, 1) } }
+            mine_main_tv_praise.setOnSingleClickListener { doIfLogin { jumpAndSaveTime(QA_MY_PRAISE, 2) } }
             mine_main_cl_info_edit.setOnClickListener {
                 doIfLogin {
                     startActivity(
@@ -76,11 +79,6 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
                             ActivityOptionsCompat.makeSceneTransitionAnimation(context as Activity, Pair(mine_main_avatar, "avatar")).toBundle())
                 }
             }
-
-            mine_main_tv_praise.setOnClickListener { doIfLogin { showPraise() } }
-            mine_main_tv_praise_number.setOnClickListener { doIfLogin { showPraise() } }
-            mine_main_fm_about_us.setOnClickListener { startActivity<AboutActivity>() }
-
 //            mine_main_tv_about.setOnClickListener { startActivity<AboutActivity>() }
 //            if (ServiceManager.getService(IAccountService::class.java).getVerifyService().isLogin()) {
 //                mine_main_btn_exit.text = getString(R.string.mine_exit)
@@ -153,12 +151,30 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
             }
             animator.start()
             //在这里再请求unChecked的红点仅仅是为了好看，让动画显得更加流畅
-            viewModel.getUserUncheckCount()
+            viewModel.getUserUncheckCount(1)
+            viewModel.getUserUncheckCount(2)
         })
 
-        viewModel.userUncheckCount.observe(viewLifecycleOwner, Observer { it ->
+        viewModel.userUncheckCount.observe(viewLifecycleOwner, Observer {
             fun setViewWidthAndText(textView: TextView, count: Int) {
-                if (count == 0) return
+                LogUtils.d(TAG, "count = $count")
+                if (count == 0) {
+                    //如果当前的数值已经归零，就不操作了
+                    if (textView.text == "0") return
+                    textView.text = "0"
+                    //加上一个逐渐变大弹出的动画
+                    val animator = ValueAnimator.ofFloat(1f, 0f)
+                    animator.duration = 200
+                    animator.addUpdateListener { va ->
+                        textView.scaleX = va.animatedValue as Float
+                        textView.scaleY = va.animatedValue as Float
+                    }
+                    animator.interpolator = DecelerateInterpolator()
+                    animator.start()
+                    return
+                }
+                //如果前后数字没有变化就不进行刷新
+                if (textView.text == count.toString()) return
                 textView.visibility = View.VISIBLE
                 textView.text = viewModel.getNumber(count)
                 val width = when {
@@ -184,11 +200,10 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
                 }
                 animator.interpolator = DecelerateInterpolator()
                 animator.start()
-                LogUtils.d("RayleighZ", count.toString())
             }
 
-            setViewWidthAndText(mine_main_tv_uncheck_praise_count, it.uncheckPraiseCount)
-            setViewWidthAndText(mine_main_tv_uncheck_comment_count, it.uncheckCommentCount)
+            it.uncheckPraiseCount?.let { uncheckPraise -> setViewWidthAndText(mine_main_tv_uncheck_praise_count, uncheckPraise) }
+            it.uncheckCommentCount?.let { uncheckComment -> setViewWidthAndText(mine_main_tv_uncheck_comment_count, uncheckComment) }
         })
     }
 
@@ -203,6 +218,8 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
         viewModel.getScoreStatus()
         viewModel.getQANumber()
         viewModel.getUserCount()
+        viewModel.getUserUncheckCount(1)
+        viewModel.getUserUncheckCount(2)
         refreshUserLayout()
     }
 
@@ -282,7 +299,12 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
         startActivity(intent)
     }
 
-    private fun jump(path: String){
+    private fun jump(path: String) {
         ARouter.getInstance().build(path).navigation()
+    }
+
+    private fun jumpAndSaveTime(path: String, type: Int){
+        viewModel.saveCheckTimeStamp(type)
+        jump(path)
     }
 }

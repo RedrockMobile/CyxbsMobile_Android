@@ -23,9 +23,6 @@ import kotlinx.android.synthetic.main.mine_activity_tablayout_my_product.view.*
 
 class SettingActivity : BaseActivity() {
 
-    /*override val isFragmentActivity: Boolean
-        get() = false*/
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.mine_activity_setting)
@@ -37,6 +34,7 @@ class SettingActivity : BaseActivity() {
             setTitleLocationAtLeft(false)
             setBackgroundColor(ContextCompat.getColor(this@SettingActivity, R.color.common_mine_setting_common_back_color))
             title = "设置"
+
         }
         //启动App优先显示课表
         mine_setting_switch.setOnCheckedChangeListener { _, isChecked ->
@@ -59,7 +57,7 @@ class SettingActivity : BaseActivity() {
         //账号安全
         mine_setting_fm_security.setOnClickListener { doIfLogin { startActivity<SecurityActivity>() } }
         //屏蔽此人
-
+        mine_setting_fm_shield_person.setOnClickListener { doIfLogin { ARouter.getInstance().build(QA_MY_IGNORE).navigation() } }
         //退出登录
         mine_setting_btn_exit.setOnClickListener { doIfLogin { onExitClick() } }
     }

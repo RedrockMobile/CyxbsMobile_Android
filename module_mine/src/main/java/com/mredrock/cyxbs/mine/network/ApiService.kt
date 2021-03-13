@@ -303,9 +303,12 @@ interface ApiService {
     /**
      * 获取未查看的评论和点赞数
      * Tip: 此处是静态请求，不能使用@Field注解
+     * type = 1:评论
+     * type = 2:点赞
      */
     @GET("/wxapi/magipoke-loop/user/uncheckedMessage")
     fun getUncheckCount(
-            @Query("time") timeStamp: Long
+            @Query("time") timeStamp: Long,
+            @Query("type") type: Int
     ):Observable<RedrockApiWrapper<UserUncheckCount>>
 }
