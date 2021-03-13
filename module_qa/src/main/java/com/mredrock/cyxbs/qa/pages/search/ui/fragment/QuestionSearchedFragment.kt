@@ -3,7 +3,6 @@ package com.mredrock.cyxbs.qa.pages.search.ui.fragment
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -24,11 +23,9 @@ import com.mredrock.cyxbs.qa.config.CommentConfig.IGNORE
 import com.mredrock.cyxbs.qa.config.CommentConfig.QQ_FRIEND
 import com.mredrock.cyxbs.qa.config.CommentConfig.QQ_ZONE
 import com.mredrock.cyxbs.qa.config.CommentConfig.REPORT
-import com.mredrock.cyxbs.qa.config.RequestResultCode
 import com.mredrock.cyxbs.qa.config.RequestResultCode.DYNAMIC_DETAIL_REQUEST
 import com.mredrock.cyxbs.qa.config.RequestResultCode.NEED_REFRESH_RESULT
 import com.mredrock.cyxbs.qa.config.RequestResultCode.RELEASE_DYNAMIC_ACTIVITY_REQUEST
-import com.mredrock.cyxbs.qa.network.NetworkState
 import com.mredrock.cyxbs.qa.network.NetworkState.Companion.CANNOT_LOAD_WITHOUT_LOGIN
 import com.mredrock.cyxbs.qa.network.NetworkState.Companion.LOADING
 import com.mredrock.cyxbs.qa.pages.dynamic.ui.activity.DynamicDetailActivity
@@ -37,7 +34,6 @@ import com.mredrock.cyxbs.qa.pages.quiz.ui.QuizActivity
 import com.mredrock.cyxbs.qa.pages.search.model.SearchQuestionDataSource.Companion.SEARCHRESULT
 import com.mredrock.cyxbs.qa.pages.search.ui.adapter.SearchKnowledgeAdapter
 import com.mredrock.cyxbs.qa.pages.search.ui.adapter.SearchNoResultAdapter
-import com.mredrock.cyxbs.qa.pages.search.ui.adapter.SearchResultHeaderAdapter
 import com.mredrock.cyxbs.qa.pages.search.viewmodel.QuestionSearchedViewModel
 import com.mredrock.cyxbs.qa.ui.adapter.FooterRvAdapter
 import com.mredrock.cyxbs.qa.ui.widget.QaDialog

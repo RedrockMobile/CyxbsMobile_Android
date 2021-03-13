@@ -1,5 +1,8 @@
 package com.mredrock.cyxbs.mine
 
+import android.animation.ValueAnimator
+import android.view.View
+import android.view.animation.DecelerateInterpolator
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.LiveData
@@ -77,7 +80,6 @@ class UserViewModel : BaseViewModel() {
                 .doOnErrorWithDefaultErrorHandler { true }
                 .safeSubscribeBy(
                         onNext = {
-                            if (_userCount.value == null || it.data != _userCount.value)
                                 _userCount.postValue(it.data)
                         },
                         onError = {
@@ -104,6 +106,64 @@ class UserViewModel : BaseViewModel() {
                             BaseApp.context.toast("请求异常:${it.message}")
                         }
                 )
+    }
+
+    //思考了一下，这里view的引用应该会随着函数调用的结束出栈，所以不会引起内存泄漏
+    fun judgeChangedAndSetText(textView: TextView, count: Int){
+        if (textView.text == count.toString()) return
+        textView.text = getNumber(count)
+        val animator = ValueAnimator.ofFloat(0f, 1f)
+        animator.duration = 200
+        animator.interpolator = DecelerateInterpolator()
+        animator.addUpdateListener { va ->
+            textView.scaleY = va.animatedValue as Float
+        }
+        animator.start()
+    }
+
+    fun setViewWidthAndText(textView: TextView, count: Int) {
+        if (count == 0) {
+            //如果当前的数值已经归零，就不操作了
+            if (textView.text == "0") return
+            textView.text = "0"
+            //加上一个逐渐变大弹出的动画
+            val animator = ValueAnimator.ofFloat(1f, 0f)
+            animator.duration = 200
+            animator.addUpdateListener { va ->
+                textView.scaleX = va.animatedValue as Float
+                textView.scaleY = va.animatedValue as Float
+            }
+            animator.interpolator = DecelerateInterpolator()
+            animator.start()
+            return
+        }
+        //如果前后数字没有变化就不进行刷新
+        if (textView.text == count.toString()) return
+        textView.visibility = View.VISIBLE
+        textView.text = getNumber(count)
+        val width = when {
+            count > 99 -> {
+                26.5f
+            }
+            count in 10..99 -> {
+                21.3f
+            }
+            else -> {
+                16f
+            }
+        }
+        val lp = textView.layoutParams as ConstraintLayout.LayoutParams
+        lp.width = BaseApp.context.dip(width)
+        textView.layoutParams = lp
+        //加上一个逐渐变大弹出的动画
+        val animator = ValueAnimator.ofFloat(0f, 1f)
+        animator.duration = 200
+        animator.addUpdateListener { va ->
+            textView.scaleX = va.animatedValue as Float
+            textView.scaleY = va.animatedValue as Float
+        }
+        animator.interpolator = DecelerateInterpolator()
+        animator.start()
     }
 
     fun setLeftMargin(textView: TextView, count: Int) {

@@ -53,12 +53,6 @@ class MyPraiseActivity : BaseViewModelActivity<MyPraiseViewModel>() {
 
         qa_rv_my_praise.adapter = adapterWrapper
         qa_rv_my_praise.layoutManager = LinearLayoutManager(this)
-        //设置分割线
-        val divider = DividerItemDecoration(this, DividerItemDecoration.VERTICAL)
-        ContextCompat.getDrawable(this,R.drawable.qa_shape_divide_line)?.let {
-            divider.setDrawable(it)
-        }
-        qa_rv_my_praise.addItemDecoration(divider)
     }
 
     private fun initObserve(){

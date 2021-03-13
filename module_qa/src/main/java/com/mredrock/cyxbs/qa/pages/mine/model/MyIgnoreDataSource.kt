@@ -4,6 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.paging.DataSource
 import androidx.paging.PageKeyedDataSource
 import com.mredrock.cyxbs.common.network.ApiGenerator
+import com.mredrock.cyxbs.common.network.exception.RedrockApiIllegalStateException
 import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.mapOrThrowApiException
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
@@ -34,19 +35,23 @@ class MyIgnoreDataSource : PageKeyedDataSource<Int,Ignore>() {
 
     override fun loadInitial(params: LoadInitialParams<Int>, callback: LoadInitialCallback<Int, Ignore>) {
         ApiGenerator.getApiService(ApiServiceNew::class.java)
-                .getIgnoreUid(1, 10)
+                .getIgnoreUid(1, 6)
                 .mapOrThrowApiException()
                 .setSchedulers()
                 .doOnSubscribe { networkState.postValue(NetworkState.LOADING) }
                 .doOnError {
-                    networkState.postValue(NetworkState.FAILED)
-                    failedRequest = {
-                        loadInitial(params, callback)
+                    if (it is RedrockApiIllegalStateException){
+                        networkState.postValue(NetworkState.NO_MORE_DATA)
+                    } else {
+                        networkState.postValue(NetworkState.FAILED)
+                        failedRequest = { loadInitial(params, callback) }
                     }
                 }
                 .safeSubscribeBy { list ->
-                    initialLoad.value = NetworkState.SUCCESSFUL
-                    val nextPageKey = 1.takeUnless { (list.size < params.requestedLoadSize) }
+                    initialLoad.postValue(NetworkState.SUCCESSFUL)
+                    networkState.postValue(NetworkState.SUCCESSFUL)
+                    LogUtils.d("RayleighZ","已经通知请求Success")
+                    val nextPageKey = 2.takeUnless { (list.size < params.requestedLoadSize) }
                     callback.onResult(list, 1, nextPageKey)
                 }
     }
@@ -54,19 +59,23 @@ class MyIgnoreDataSource : PageKeyedDataSource<Int,Ignore>() {
     override fun loadBefore(params: LoadParams<Int>, callback: LoadCallback<Int, Ignore>) = Unit
 
     override fun loadAfter(params: LoadParams<Int>, callback: LoadCallback<Int, Ignore>) {
+        LogUtils.d("RayleighZ","正在进行二次请求")
         ApiGenerator.getApiService(ApiServiceNew::class.java)
-                .getIgnoreUid(params.key, 10)
+                .getIgnoreUid(params.key, 6)
                 .mapOrThrowApiException()
                 .setSchedulers()
                 .doOnSubscribe { networkState.postValue(NetworkState.LOADING) }
                 .doOnError {
-                    networkState.postValue(NetworkState.FAILED)
-                    failedRequest = {
-                        loadAfter(params, callback)
+                    if (it is RedrockApiIllegalStateException){
+                        networkState.postValue(NetworkState.NO_MORE_DATA)
+                    } else {
+                        networkState.postValue(NetworkState.FAILED)
+                        failedRequest = { loadAfter(params, callback) }
                     }
                 }
                 .safeSubscribeBy { list ->
-                    initialLoad.value = NetworkState.SUCCESSFUL
+                    initialLoad.postValue(NetworkState.SUCCESSFUL)
+                    networkState.postValue(NetworkState.SUCCESSFUL)
                     val adjacentPageKet = (params.key + 1).takeUnless { (list.size < params.requestedLoadSize) }
                     callback.onResult(list, adjacentPageKet)
                 }

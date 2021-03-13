@@ -5,22 +5,17 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.alibaba.android.arouter.facade.annotation.Route
-import com.bumptech.glide.Glide
 import com.mredrock.cyxbs.common.config.QA_MY_IGNORE
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
-import com.mredrock.cyxbs.common.utils.extensions.setAvatarImageFromUrl
+import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.qa.R
-import com.mredrock.cyxbs.qa.beannew.Ignore
 import com.mredrock.cyxbs.qa.component.recycler.RvAdapterWrapper
 import com.mredrock.cyxbs.qa.network.NetworkState
 import com.mredrock.cyxbs.qa.pages.mine.ui.adapter.MyIgnoreRvAdapter
-import com.mredrock.cyxbs.qa.pages.mine.ui.adapter.SimpleRvAdapter
-import com.mredrock.cyxbs.qa.pages.mine.ui.adapter.viewholder.MyIgnoreViewHolder
 import com.mredrock.cyxbs.qa.pages.mine.viewmodel.MyIgnoreViewModel
 import com.mredrock.cyxbs.qa.ui.adapter.EmptyRvAdapter
 import com.mredrock.cyxbs.qa.ui.adapter.FooterRvAdapter
 import kotlinx.android.synthetic.main.qa_activity_my_ignore_people.*
-import kotlinx.android.synthetic.main.qa_activity_my_praise.*
 
 @Route(path = QA_MY_IGNORE)
 class MyIgnorePeopleActivity : BaseViewModelActivity<MyIgnoreViewModel>() {
@@ -48,13 +43,6 @@ class MyIgnorePeopleActivity : BaseViewModelActivity<MyIgnoreViewModel>() {
         )
 
         qa_rv_my_ignore.adapter = adapterWrapper
-
-        //设置分割线
-        val divider = DividerItemDecoration(this, DividerItemDecoration.VERTICAL)
-        ContextCompat.getDrawable(this,R.drawable.qa_shape_divide_line)?.let {
-            divider.setDrawable(it)
-        }
-        qa_rv_my_ignore.addItemDecoration(divider)
         qa_rv_my_ignore.layoutManager = LinearLayoutManager(this)
     }
 
@@ -66,6 +54,7 @@ class MyIgnorePeopleActivity : BaseViewModelActivity<MyIgnoreViewModel>() {
 
         //观察网络状态
         viewModel.networkState.observe {
+            LogUtils.d("RayleighZ","刷新网络状态，data is $it")
             it?.run {
                 footerRvAdapter.refreshData(listOf(this))
             }
@@ -76,8 +65,7 @@ class MyIgnorePeopleActivity : BaseViewModelActivity<MyIgnoreViewModel>() {
             when(it){
                 NetworkState.LOADING -> {
                     qa_swl_my_ignore.isRefreshing = true
-                    (qa_rv_my_ignore.adapter as? RvAdapterWrapper)?.apply {
-                    }
+                    (qa_rv_my_ignore.adapter as? RvAdapterWrapper)?.apply {}
                     emptyRvAdapter.showHolder(3)
                 }
                 NetworkState.CANNOT_LOAD_WITHOUT_LOGIN -> {

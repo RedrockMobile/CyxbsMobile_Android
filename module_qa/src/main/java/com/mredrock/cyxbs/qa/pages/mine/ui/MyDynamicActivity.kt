@@ -26,7 +26,6 @@ import com.mredrock.cyxbs.qa.utils.ShareUtils
 import com.tencent.tauth.Tencent
 import kotlinx.android.synthetic.main.qa_activity_my_dynamic.*
 import kotlinx.android.synthetic.main.qa_common_toolbar.*
-import kotlinx.android.synthetic.main.qa_fragment_dynamic.*
 
 @Route(path = QA_DYNAMIC_MINE)
 class MyDynamicActivity : BaseViewModelActivity<MyDynamicViewModel>() {

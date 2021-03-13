@@ -26,4 +26,9 @@ class MyIgnoreRvAdapter: BaseEndlessRvAdapter<Ignore>(DIFF_CALLBACK) {
         val item = LayoutInflater.from(parent.context).inflate(R.layout.qa_recycler_item_ignore, parent, false)
         return MyIgnoreViewHolder(item)
     }
+
+    override fun onBindViewHolder(holder: BaseViewHolder<Ignore>, position: Int) {
+        super.onBindViewHolder(holder, position)
+        //TODO: 设置点击事件
+    }
 }

@@ -5,6 +5,7 @@ import androidx.paging.DataSource
 import androidx.paging.PageKeyedDataSource
 import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.common.network.ApiGenerator
+import com.mredrock.cyxbs.common.network.exception.RedrockApiIllegalStateException
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.mapOrThrowApiException
@@ -50,45 +51,20 @@ class MyCommentDataSource : PageKeyedDataSource<Int, CommentWrapper>() {
                 .setSchedulers()
                 .doOnSubscribe { networkState.postValue(NetworkState.LOADING) }
                 .doOnError {
-                    networkState.postValue(NetworkState.FAILED)
-                    LogUtils.d("RayleighZ", it.toString())
-                    failedRequest = { loadInitial(params, callback) }
+                    if (it is RedrockApiIllegalStateException){
+                        networkState.postValue(NetworkState.NO_MORE_DATA)
+                    } else {
+                        networkState.postValue(NetworkState.FAILED)
+                        failedRequest = { loadInitial(params, callback) }
+                    }
                 }
                 .safeSubscribeBy { list ->
-                    initialLoad.value = NetworkState.SUCCESSFUL
+                    initialLoad.postValue(NetworkState.SUCCESSFUL)
+                    networkState.postValue(NetworkState.SUCCESSFUL)
                     if (list.isNotEmpty()){//如果这个集合是空的，不予以返回，因为这里还不能确定后面是否为空
                         callback.onResult(list, 1, 1)
                     }
-//                    val nextPageKey = 1.takeUnless { (list.size < params.requestedLoadSize) }
-//                    LogUtils.d("RayleighZ", "onSuccess, need to success = ${type1IsOver && type2IsOver}")
                 }
-
-//        ApiGenerator.getApiService(ApiServiceNew::class.java)
-//                .getUserReplay(
-//                        1,
-//                        params.requestedLoadSize,
-//                        2
-//                )
-//                .mapOrThrowApiException()
-//                .setSchedulers()
-//                .doOnSubscribe { networkState.postValue(NetworkState.LOADING) }
-//                .doOnError {
-//                    networkState.postValue(NetworkState.FAILED)
-//                    LogUtils.d("RayleighZ", it.toString())
-//                    failedRequest = { loadInitial(params, callback) }
-//                }
-//                .safeSubscribeBy { list ->
-//                    initialLoad.value = NetworkState.SUCCESSFUL
-//                    val nextPageKey = 2.takeUnless { (list.size < params.requestedLoadSize) }
-//                    cwList.addAll(list)
-//                    LogUtils.d("RayleighZ", "onSuccess size = ${list.size}")
-////                    LogUtils.d("RayleighZ", "onSuccess, need to success = ${type1IsOver && type2IsOver}")
-//                    type2IsOver = true
-//                    callback.onResult(list, 1, nextPageKey)
-////                    if (type2IsOver && type2IsOver) {
-////                        callback.onResult(list, 1, nextPageKey)
-////                    }
-//                }
     }
 
     override fun loadBefore(params: LoadParams<Int>, callback: LoadCallback<Int, CommentWrapper>) = Unit
@@ -105,12 +81,17 @@ class MyCommentDataSource : PageKeyedDataSource<Int, CommentWrapper>() {
                 .setSchedulers()
                 .doOnSubscribe { networkState.postValue(NetworkState.LOADING) }
                 .doOnError {
-                    networkState.postValue(NetworkState.FAILED)
-                    failedRequest = { loadAfter(params, callback) }
+                    if (it is RedrockApiIllegalStateException){
+                        networkState.postValue(NetworkState.NO_MORE_DATA)
+                    } else {
+                        networkState.postValue(NetworkState.FAILED)
+                        failedRequest = { loadAfter(params, callback) }
+                    }
                 }
                 .safeSubscribeBy { list ->
                     needAddKey = !needAddKey
-                    networkState.value = NetworkState.SUCCESSFUL
+                    networkState.postValue(NetworkState.SUCCESSFUL)
+                    initialLoad.postValue(NetworkState.SUCCESSFUL)
                     val adjacentPageKey = if (needAddKey) params.key + 1 else params.key
                     if (list.size < params.requestedLoadSize) {
                         //adjacentPageKey为null是加载的结束标志
@@ -124,34 +105,9 @@ class MyCommentDataSource : PageKeyedDataSource<Int, CommentWrapper>() {
                         return@safeSubscribeBy
                     }
                     callback.onResult(list, adjacentPageKey)
-//                    val adjacentPageKey = (params.key + 1).takeUnless { list.size < params.requestedLoadSize || !needAddKey }
 
                 }
 
-//        ApiGenerator.getApiService(ApiServiceNew::class.java)
-//                .getUserReplay(
-//                        params.key,
-//                        params.requestedLoadSize,
-//                        2
-//                )
-//                .mapOrThrowApiException()
-//                .setSchedulers()
-//                .doOnSubscribe { networkState.postValue(NetworkState.LOADING) }
-//                .doOnError {
-//                    networkState.postValue(NetworkState.FAILED)
-//                    LogUtils.d("RayleighZ", it.toString())
-//                    failedRequest = { loadAfter(params, callback) }
-//                }
-//                .safeSubscribeBy { list ->
-//                    networkState.value = NetworkState.SUCCESSFUL
-//                    val adjacentPageKey = (params.key + 1).takeUnless { list.size < params.requestedLoadSize }
-//                    type2IsOver = true
-//                    LogUtils.d("RayleighZ", "onSuccess, need to success = ${type1IsOver && type2IsOver}")
-//                    callback.onResult(list, adjacentPageKey)
-////                    if (type1IsOver && type2IsOver){
-////                        callback.onResult(list, adjacentPageKey)
-////                    }
-//                }
     }
 
     fun retry() = failedRequest?.invoke()

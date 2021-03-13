@@ -32,9 +32,10 @@ class MyPraiseRvAdapter(val activity: Activity): BaseEndlessRvAdapter<Praise>(DI
 
     override fun onBindViewHolder(holder: BaseViewHolder<Praise>, position: Int) {
         super.onBindViewHolder(holder, position)
-        //TODO:设置点击事件
-        holder.itemView.setOnSingleClickListener {
-//            DynamicDetailActivity.activityStart()
+        getItem(position)?.apply {
+            holder.itemView.setOnSingleClickListener {
+                DynamicDetailActivity.activityStart(activity ,this.id)
+            }
         }
     }
 

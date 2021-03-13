@@ -9,9 +9,7 @@ import android.view.Gravity
 import android.view.View
 import androidx.core.app.ActivityCompat.startActivityForResult
 import androidx.core.app.ActivityOptionsCompat
-import androidx.core.content.ContextCompat.startActivity
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.tabs.TabLayoutMediator
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.BaseApp.Companion.context
@@ -21,22 +19,17 @@ import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.setAvatarImageFromUrl
 import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.qa.R
-import com.mredrock.cyxbs.qa.beannew.Dynamic
 import com.mredrock.cyxbs.qa.beannew.Topic
-import com.mredrock.cyxbs.qa.config.CommentConfig
-import com.mredrock.cyxbs.qa.config.RequestResultCode
 import com.mredrock.cyxbs.qa.config.RequestResultCode.DYNAMIC_DETAIL_REQUEST
 import com.mredrock.cyxbs.qa.config.RequestResultCode.NEED_REFRESH_RESULT
 import com.mredrock.cyxbs.qa.config.RequestResultCode.RESULT_CODE
 import com.mredrock.cyxbs.qa.pages.dynamic.model.TopicDataSet
-import com.mredrock.cyxbs.qa.pages.dynamic.ui.activity.DynamicDetailActivity
 import com.mredrock.cyxbs.qa.pages.square.ui.adapter.NewHotViewPagerAdapter
 import com.mredrock.cyxbs.qa.pages.square.ui.fragment.HotFragment
 import com.mredrock.cyxbs.qa.pages.square.ui.fragment.LastNewFragment
 import com.mredrock.cyxbs.qa.pages.square.viewmodel.CircleDetailViewModel
 import kotlinx.android.synthetic.main.qa_activity_circle_detail.*
 import kotlinx.android.synthetic.main.qa_recycler_item_circle_square.*
-import kotlin.properties.Delegates
 
 class CircleDetailActivity : BaseViewModelActivity<CircleDetailViewModel>() {
 

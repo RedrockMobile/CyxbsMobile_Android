@@ -8,17 +8,13 @@ import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.network.ApiGenerator
-import com.mredrock.cyxbs.common.ui.BaseActivity
 import com.mredrock.cyxbs.common.utils.extensions.doOnErrorWithDefaultErrorHandler
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.common.utils.extensions.toast
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
-import com.mredrock.cyxbs.qa.beannew.CommentWrapper
 import com.mredrock.cyxbs.qa.beannew.Ignore
 import com.mredrock.cyxbs.qa.network.ApiServiceNew
-import com.mredrock.cyxbs.qa.pages.mine.model.BaseDataSource
-import com.mredrock.cyxbs.qa.pages.mine.model.MyCommentDataSource
 import com.mredrock.cyxbs.qa.pages.mine.model.MyIgnoreDataSource
 
 /**

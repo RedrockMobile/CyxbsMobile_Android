@@ -16,7 +16,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:background="@color/qa_ignore_item_background_color"
-        app:layout_constraintBottom_toTopOf="@+id/qa_constraint_reply"
+        app:layout_constraintBottom_toTopOf="@+id/qa_cl_my_comment_reply"
         app:layout_constraintTop_toBottomOf="@+id/qa_tb_my_comment">
 
         <androidx.recyclerview.widget.RecyclerView

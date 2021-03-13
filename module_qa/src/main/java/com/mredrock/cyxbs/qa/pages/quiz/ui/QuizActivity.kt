@@ -8,14 +8,12 @@ import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
 import android.text.Editable
-import android.text.TextUtils
 import android.text.TextWatcher
 import android.util.Base64
 import android.view.KeyEvent
 import android.view.View
 import android.widget.ImageView
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.alibaba.android.arouter.facade.annotation.Route
@@ -39,7 +37,6 @@ import com.mredrock.cyxbs.qa.ui.widget.DraftDialog
 import com.mredrock.cyxbs.qa.ui.widget.RectangleView
 import com.mredrock.cyxbs.qa.utils.CHOOSE_PHOTO_REQUEST
 import com.mredrock.cyxbs.qa.utils.selectImageFromAlbum
-import kotlinx.android.synthetic.main.qa_activity_question_search.*
 import kotlinx.android.synthetic.main.qa_activity_quiz.*
 import kotlinx.android.synthetic.main.qa_common_toolbar.*
 import org.greenrobot.eventbus.EventBus

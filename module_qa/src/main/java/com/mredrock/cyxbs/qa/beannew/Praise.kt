@@ -9,7 +9,7 @@ import java.io.Serializable
  */
 data class Praise(
         @SerializedName("id")
-        val id: Int,
+        val id: String,
         @SerializedName("type")
         val type: Int,
         @SerializedName("time")

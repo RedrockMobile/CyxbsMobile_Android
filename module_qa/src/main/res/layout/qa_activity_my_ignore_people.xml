@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/common_white_background"
     tools:context=".pages.mine.ui.MyIgnorePeopleActivity">
 
     <include layout="@layout/qa_common_toolbar"
@@ -12,15 +13,17 @@
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/qa_swl_my_ignore"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        android:background="@color/common_white_background"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/qa_tb_activity_ignore"
-        android:background="@color/qa_ignore_item_background_color"
         tools:layout_editor_absoluteX="0dp">
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/qa_rv_my_ignore"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:listitem="@layout/qa_recycler_item_ignore"/>
+            tools:listitem="@layout/qa_recycler_item_ignore" />
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

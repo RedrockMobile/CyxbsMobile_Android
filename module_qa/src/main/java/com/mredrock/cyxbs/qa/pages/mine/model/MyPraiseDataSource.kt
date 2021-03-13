@@ -5,6 +5,7 @@ import androidx.paging.DataSource
 import androidx.paging.PageKeyedDataSource
 import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.common.network.ApiGenerator
+import com.mredrock.cyxbs.common.network.exception.RedrockApiIllegalStateException
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.mapOrThrowApiException
@@ -50,13 +51,16 @@ class MyPraiseDataSource : PageKeyedDataSource<Int, Praise>() {
                 .setSchedulers()
                 .doOnSubscribe { networkState.postValue(NetworkState.LOADING) }
                 .doOnError {
-                    networkState.postValue(NetworkState.FAILED)
-                    failedRequest = { loadInitial(params, callback) }
+                    if (it is RedrockApiIllegalStateException){
+                        networkState.postValue(NetworkState.NO_MORE_DATA)
+                    } else {
+                        networkState.postValue(NetworkState.FAILED)
+                        failedRequest = { loadInitial(params, callback) }
+                    }
                 }
                 .safeSubscribeBy { list ->
-                    initialLoad.value = NetworkState.SUCCESSFUL
-//                    val nextPageKey = 1.takeUnless { (list.size < params.requestedLoadSize) }
-//                    LogUtils.d("RayleighZ", "onSuccess, need to success = ${type1IsOver && type2IsOver}")
+                    networkState.postValue(NetworkState.SUCCESSFUL)
+                    initialLoad.postValue(NetworkState.SUCCESSFUL)
                     callback.onResult(list, 1, 1)
                 }
     }
@@ -75,12 +79,17 @@ class MyPraiseDataSource : PageKeyedDataSource<Int, Praise>() {
                 .setSchedulers()
                 .doOnSubscribe { networkState.postValue(NetworkState.LOADING) }
                 .doOnError {
-                    networkState.postValue(NetworkState.FAILED)
-                    failedRequest = { loadAfter(params, callback) }
+                    if (it is RedrockApiIllegalStateException){
+                        networkState.postValue(NetworkState.NO_MORE_DATA)
+                    } else {
+                        networkState.postValue(NetworkState.FAILED)
+                        failedRequest = { loadAfter(params, callback) }
+                    }
                 }
                 .safeSubscribeBy { list ->
                     needAddKey = !needAddKey
-                    networkState.value = NetworkState.SUCCESSFUL
+                    networkState.postValue(NetworkState.SUCCESSFUL)
+                    initialLoad.postValue(NetworkState.SUCCESSFUL)
                     val adjacentPageKey = if (needAddKey) params.key + 1 else params.key
                     if (list.size < params.requestedLoadSize) {
                         //adjacentPageKey为null是加载的结束标志
@@ -94,7 +103,6 @@ class MyPraiseDataSource : PageKeyedDataSource<Int, Praise>() {
                         return@safeSubscribeBy
                     }
                     callback.onResult(list, adjacentPageKey)
-//                    val adjacentPageKey = (params.key + 1).takeUnless { list.size < params.requestedLoadSize || !needAddKey }
                 }
     }
 
