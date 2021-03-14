@@ -132,7 +132,6 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>(), EventBusLifecycleSu
                     chipGroup.addView((layoutInflater.inflate(R.layout.qa_quiz_view_chip, chipGroup, false) as Chip).apply {
                         text = "# " + topic.value.topicName
                         setOnClickListener {
-                            LogUtils.d("tagtag", dynamicType)
                             if (dynamicType == getTopicText(text.toString())) {
                                 dynamicType = ""
                             } else {

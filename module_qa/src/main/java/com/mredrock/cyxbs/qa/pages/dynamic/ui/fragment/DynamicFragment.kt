@@ -206,7 +206,6 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), EventBusL
                 circlesAdapter?.addCircleData(it)
             } else {
                 val layoutParams = CollapsingToolbarLayout.LayoutParams(qa_rv_circles_List.layoutParams)
-                layoutParams.bottomMargin = 30
                 circlesAdapter?.noticeChangeCircleData()
                 view_divide.visibility = View.VISIBLE
                 qa_tv_my_notice.visibility = View.INVISIBLE

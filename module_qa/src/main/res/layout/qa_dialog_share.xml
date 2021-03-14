@@ -168,7 +168,7 @@
         android:paddingBottom="10dp"
         android:layout_marginBottom="20dp"
         android:text="@string/qa_dialog_cancel"
-        android:textColor="@color/qa_draft_dialog_text_color"
+        android:textColor="@color/qa_dialog_share_cancel_text_color"
         android:textSize="14sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@id/qa_ll_share_ivs"

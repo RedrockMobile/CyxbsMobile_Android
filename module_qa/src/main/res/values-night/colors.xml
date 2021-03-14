@@ -32,9 +32,9 @@
     <!--    提问选择类型的背景颜色-->
     <color name="qa_quiz_select_type_background_color">#F1F3F8</color>
     <!--    提问选择类型的文字颜色-->
-    <color name="qa_quiz_select_type_text_color">#F1F3F8</color>
+    <color name="qa_quiz_select_type_text_color">#556C89</color>
     <!--    提问选中类型的文字颜色-->
-    <color name="qa_quiz_selected_type_text_color">#556C89</color>
+    <color name="qa_quiz_selected_type_text_color">#FF9C8D</color>
     <!--    提问选中类型的背景颜色，指定78的透明度-->
     <color name="qa_quiz_selected_type_background_color">#F7DAD7</color>
     <!--    提问标题框和内容框的背景颜色，指定69的透明度-->
@@ -89,4 +89,7 @@
     <color name="qa_reply_detail_header_background_color">#031430</color>
     <!--    小回复布局的背景颜色-->
     <color name="qa_reply_inner_background_color">#88000000</color>
+    <color name="qa_dialog_report_cancel_text_color">#ffffff</color>
+    <color name="qa_dialog_share_cancel_text_color">#94A6C4</color>
+    <color name="qa_item_no_circles_text_color">#556C89</color>
 </resources>
