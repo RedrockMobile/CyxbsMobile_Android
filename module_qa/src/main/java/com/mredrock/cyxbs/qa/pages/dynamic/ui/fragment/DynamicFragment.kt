@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.google.android.material.appbar.CollapsingToolbarLayout
+import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.common.config.CyxbsMob
@@ -117,13 +118,16 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), EventBusL
                 }.apply {
 
                     onShareClickListener = { dynamic, mode ->
+                        val token = ServiceManager.getService(IAccountService::class.java).getUserTokenService().getToken()
+                        val url = "https://wx.redrock.team/game/zscy-youwen-share/#/dynamic?id=${dynamic.postId}&id_token=$token"
                         when (mode) {
                             QQ_FRIEND ->
-                                mTencent?.let { it1 -> ShareUtils.qqShare(it1, this@DynamicFragment, dynamic.topic, dynamic.content, "https://cn.bing.com/", "") }
+                                mTencent?.let { it1 -> ShareUtils.qqShare(it1, this@DynamicFragment, dynamic.topic, dynamic.content, url, "") }
                             QQ_ZONE ->
-                                mTencent?.let { it1 -> ShareUtils.qqQzoneShare(it1, this@DynamicFragment, dynamic.topic, dynamic.content, "https://cn.bing.com/", ArrayList()) }
-                            COPY_LINK ->
-                                ClipboardController.copyText(this@DynamicFragment.requireContext(), "https://cn.bing.com/")
+                                mTencent?.let { it1 -> ShareUtils.qqQzoneShare(it1, this@DynamicFragment, dynamic.topic, dynamic.content, url, ArrayList()) }
+                            COPY_LINK ->{
+                                ClipboardController.copyText(this@DynamicFragment.requireContext(), url)
+                            }
                         }
                     }
                     onTopicListener = { topic, view ->

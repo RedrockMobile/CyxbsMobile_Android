@@ -20,11 +20,16 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.google.android.material.appbar.AppBarLayout
+import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.common.BaseApp.Companion.context
 import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.common.config.QA_DYNAMIC_DETAIL
+import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
-import com.mredrock.cyxbs.common.utils.extensions.*
+import com.mredrock.cyxbs.common.utils.LogUtils
+import com.mredrock.cyxbs.common.utils.extensions.dp2px
+import com.mredrock.cyxbs.common.utils.extensions.setAvatarImageFromUrl
+import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.beannew.Dynamic
 import com.mredrock.cyxbs.qa.beannew.ReplyInfo
@@ -49,7 +54,6 @@ import com.tencent.tauth.Tencent
 import kotlinx.android.synthetic.main.qa_activity_dynamic_detail.*
 import kotlinx.android.synthetic.main.qa_common_toolbar.*
 import kotlinx.android.synthetic.main.qa_recycler_item_dynamic_header.*
-import kotlinx.android.synthetic.main.qa_recycler_item_dynamic_header.view.*
 
 
 /**
@@ -196,6 +200,13 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.qa_activity_dynamic_detail)
+
+        LogUtils.d("RayleighZ", intent.toString())
+        intent.extras?.apply {
+            val postId = getString("id")
+            intent.putExtra("post_id",postId)
+        }
+
         // 设置进入动画
         window.enterTransition = Slide(Gravity.END).apply { duration = 500 }
         // 设置标题
@@ -344,7 +355,7 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
     override fun onDestroy() {
         super.onDestroy()
         //修改详情的背景颜色
-        if (context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES){
+        if (context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES) {
             val gd = qa_ctl_dynamic.background as GradientDrawable
             gd.setColor(Color.parseColor("#1D1D1D"))
         }
@@ -366,26 +377,29 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
 
 
 
-        qa_iv_dynamic_share.setOnSingleClickListener {
-            ShareDialog(it.context).apply {
-                initView(onCancelListener = View.OnClickListener {
-                    dismiss()
-                }, qqshare = View.OnClickListener {
-                    mTencent?.let { it1 -> ShareUtils.qqShare(it1, this@DynamicDetailActivity, viewModel.dynamic.value!!.topic, viewModel.dynamic.value!!.content, "https://cn.bing.com/", "") }
-                }, qqZoneShare = View.OnClickListener {
-                    mTencent?.let { it1 -> ShareUtils.qqQzoneShare(it1, this@DynamicDetailActivity, viewModel.dynamic.value!!.topic, viewModel.dynamic.value!!.content, "https://cn.bing.com/", ArrayList()) }
+        qa_iv_dynamic_share.setOnSingleClickListener {view ->
+            viewModel.dynamic.value?.let {dynamic ->
+                ShareDialog(view.context).apply {
+                    val token = ServiceManager.getService(IAccountService::class.java).getUserTokenService().getToken()
+                    val url = "https://wx.redrock.team/game/zscy-youwen-share/#/dynamic?id=${dynamic.postId}&id_token=$token"
+                    initView(onCancelListener = View.OnClickListener {
+                        dismiss()
+                    }, qqshare = View.OnClickListener {
+                        mTencent?.let { it1 -> ShareUtils.qqShare(it1, this@DynamicDetailActivity, dynamic.topic, dynamic.content, url, "") }
+                    }, qqZoneShare = View.OnClickListener {
+                        mTencent?.let { it1 -> ShareUtils.qqQzoneShare(it1, this@DynamicDetailActivity, dynamic.topic, dynamic.content, url, ArrayList()) }
 
-                }, weChatShare = View.OnClickListener {
-                    CyxbsToast.makeText(context, R.string.qa_share_wechat_text, Toast.LENGTH_SHORT).show()
+                    }, weChatShare = View.OnClickListener {
+                        CyxbsToast.makeText(context, R.string.qa_share_wechat_text, Toast.LENGTH_SHORT).show()
 
-                }, friendShipCircle = View.OnClickListener {
-                    CyxbsToast.makeText(context, R.string.qa_share_wechat_text, Toast.LENGTH_SHORT).show()
+                    }, friendShipCircle = View.OnClickListener {
+                        CyxbsToast.makeText(context, R.string.qa_share_wechat_text, Toast.LENGTH_SHORT).show()
 
-                }, copylink = View.OnClickListener {
-                    ClipboardController.copyText(this@DynamicDetailActivity, "https://cn.bing.com/")
-
-                })
-            }.show()
+                    }, copylink = View.OnClickListener {
+                        ClipboardController.copyText(this@DynamicDetailActivity, url)
+                    })
+                }.show()
+            }
         }
 
         qa_iv_dynamic_more_tips_clicked.setOnSingleClickListener {

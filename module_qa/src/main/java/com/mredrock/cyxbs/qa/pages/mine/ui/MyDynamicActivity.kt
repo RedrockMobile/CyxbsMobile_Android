@@ -5,7 +5,9 @@ import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.alibaba.android.arouter.facade.annotation.Route
+import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.common.config.QA_DYNAMIC_MINE
+import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.qa.R
@@ -54,13 +56,16 @@ class MyDynamicActivity : BaseViewModelActivity<MyDynamicViewModel>() {
                 }.apply {
 
                     onShareClickListener = { dynamic, mode ->
+                        val token = ServiceManager.getService(IAccountService::class.java).getUserTokenService().getToken()
+                        val url = "https://wx.redrock.team/game/zscy-youwen-share/#/dynamic?id=${dynamic.postId}?id_token=$token"
                         when (mode) {
                             CommentConfig.QQ_FRIEND ->
-                                mTencent?.let { it1 -> ShareUtils.qqShare(it1, this@MyDynamicActivity, dynamic.topic, dynamic.content, "https://cn.bing.com/", "") }
+                                mTencent?.let { it1 -> ShareUtils.qqShare(it1, this@MyDynamicActivity, dynamic.topic, dynamic.content, url, "") }
                             CommentConfig.QQ_ZONE ->
-                                mTencent?.let { it1 -> ShareUtils.qqQzoneShare(it1, this@MyDynamicActivity, dynamic.topic, dynamic.content, "https://cn.bing.com/", ArrayList()) }
-                            CommentConfig.COPY_LINK ->
-                                ClipboardController.copyText(this@MyDynamicActivity, "https://cn.bing.com/")
+                                mTencent?.let { it1 -> ShareUtils.qqQzoneShare(it1, this@MyDynamicActivity, dynamic.topic, dynamic.content, url, ArrayList()) }
+                            CommentConfig.COPY_LINK ->{
+                                ClipboardController.copyText(this@MyDynamicActivity, url)
+                            }
                         }
                     }
                     onPopWindowClickListener = { position, string, dynamic ->

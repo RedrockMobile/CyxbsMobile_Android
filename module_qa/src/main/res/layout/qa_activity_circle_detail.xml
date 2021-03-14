@@ -38,6 +38,15 @@
             android:textColor="@color/common_level_three_font_color"
             android:textSize="20sp" />
 
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/qa_iv_circle_detail_share"
+            android:layout_width="20.5dp"
+            android:layout_height="20.5dp"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginEnd="16dp"
+            android:src="@drawable/qa_ic_dynamic_share" />
+
     </RelativeLayout>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
