@@ -53,6 +53,7 @@ class MyPraiseDataSource : PageKeyedDataSource<Int, Praise>() {
                 .doOnError {
                     if (it is RedrockApiIllegalStateException){
                         networkState.postValue(NetworkState.NO_MORE_DATA)
+                        initialLoad.postValue(NetworkState.SUCCESSFUL)
                     } else {
                         networkState.postValue(NetworkState.FAILED)
                         failedRequest = { loadInitial(params, callback) }
@@ -81,6 +82,7 @@ class MyPraiseDataSource : PageKeyedDataSource<Int, Praise>() {
                 .doOnError {
                     if (it is RedrockApiIllegalStateException){
                         networkState.postValue(NetworkState.NO_MORE_DATA)
+                        initialLoad.postValue(NetworkState.SUCCESSFUL)
                     } else {
                         networkState.postValue(NetworkState.FAILED)
                         failedRequest = { loadAfter(params, callback) }

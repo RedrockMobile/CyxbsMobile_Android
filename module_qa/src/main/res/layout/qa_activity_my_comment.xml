@@ -11,6 +11,12 @@
         android:id="@+id/qa_tb_my_comment"
         layout="@layout/qa_common_toolbar" />
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/qa_mine_common_divide_line"
+        app:layout_constraintBottom_toBottomOf="@+id/qa_tb_my_comment" />
+
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/qa_swl_my_comment"
         android:layout_width="match_parent"

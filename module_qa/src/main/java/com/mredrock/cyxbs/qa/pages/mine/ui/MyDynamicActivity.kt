@@ -10,6 +10,7 @@ import com.mredrock.cyxbs.common.config.QA_DYNAMIC_MINE
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.LogUtils
+import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.component.recycler.RvAdapterWrapper
 import com.mredrock.cyxbs.qa.config.CommentConfig
@@ -44,6 +45,9 @@ class MyDynamicActivity : BaseViewModelActivity<MyDynamicViewModel>() {
 
     private fun initView(){
         qa_tv_toolbar_title.text = "动态"
+        qa_ib_toolbar_back.setOnSingleClickListener {
+            onBackPressed()
+        }
         qa_my_dynamic_toolbar.setBackgroundColor(Color.TRANSPARENT)
     }
 

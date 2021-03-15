@@ -203,6 +203,7 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
 
         LogUtils.d("RayleighZ", intent.toString())
         intent.extras?.apply {
+            if (!getBoolean("isFromReceive")) return@apply
             val postId = getString("id")
             intent.putExtra("post_id",postId)
         }

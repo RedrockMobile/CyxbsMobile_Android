@@ -9,7 +9,6 @@
     android:paddingBottom="10dp"
     android:orientation="horizontal">
 
-    <!--TODO:字体颜色修改 #60718D-->
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tv_history_title"
         android:layout_width="0dp"
@@ -17,7 +16,7 @@
         android:layout_weight="1"
         android:alpha="0.67"
         android:singleLine="true"
-        android:textColor="@color/common_level_two_font_color"
+        android:textColor="@color/qa_search_history_text_color"
         android:textSize="15sp"
         tools:text="没有人比我更懂" />
 

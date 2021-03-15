@@ -84,7 +84,7 @@
         android:layout_height="20.35dp"
         android:layout_marginTop="20dp"
         android:layout_marginBottom="26dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/qa_view_comment_divide_line"
         app:layout_constraintStart_toStartOf="@+id/qa_tv_my_comment_item_comment"
         app:layout_constraintTop_toBottomOf="@+id/qa_tv_my_comment_from"
         app:srcCompat="@drawable/qa_ic_dynamic_comment_count" />
@@ -104,5 +104,12 @@
         app:layout_constraintTop_toTopOf="@+id/qa_iv_my_comment_item_reply"
         app:layout_constraintBottom_toBottomOf="@id/qa_iv_my_comment_item_reply"
         app:srcCompat="@drawable/qa_ic_answer_list_praise" />
+
+    <View
+        android:id="@+id/qa_view_comment_divide_line"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/qa_mine_common_divide_line"
+        app:layout_constraintBottom_toBottomOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

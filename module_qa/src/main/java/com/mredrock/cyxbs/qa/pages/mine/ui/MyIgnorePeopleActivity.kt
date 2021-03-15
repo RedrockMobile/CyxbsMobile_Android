@@ -1,13 +1,12 @@
 package com.mredrock.cyxbs.qa.pages.mine.ui
 
 import android.os.Bundle
-import androidx.core.content.ContextCompat
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.mredrock.cyxbs.common.config.QA_MY_IGNORE
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.LogUtils
+import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.component.recycler.RvAdapterWrapper
 import com.mredrock.cyxbs.qa.network.NetworkState
@@ -16,6 +15,7 @@ import com.mredrock.cyxbs.qa.pages.mine.viewmodel.MyIgnoreViewModel
 import com.mredrock.cyxbs.qa.ui.adapter.EmptyRvAdapter
 import com.mredrock.cyxbs.qa.ui.adapter.FooterRvAdapter
 import kotlinx.android.synthetic.main.qa_activity_my_ignore_people.*
+import kotlinx.android.synthetic.main.qa_common_toolbar.*
 
 @Route(path = QA_MY_IGNORE)
 class MyIgnorePeopleActivity : BaseViewModelActivity<MyIgnoreViewModel>() {
@@ -32,7 +32,12 @@ class MyIgnorePeopleActivity : BaseViewModelActivity<MyIgnoreViewModel>() {
     }
 
     private fun initView() {
-        myIgnoreRvAdapter = MyIgnoreRvAdapter()
+
+        qa_tv_toolbar_title.text = "屏蔽的人"
+        qa_ib_toolbar_back.setOnSingleClickListener {
+            onBackPressed()
+        }
+        myIgnoreRvAdapter = MyIgnoreRvAdapter(viewModel)
         footerRvAdapter = FooterRvAdapter { viewModel.retry() }
         emptyRvAdapter = EmptyRvAdapter("暂时还没有屏蔽的人哦")
 

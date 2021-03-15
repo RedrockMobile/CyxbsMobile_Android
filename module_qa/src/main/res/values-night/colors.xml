@@ -85,10 +85,13 @@
     <color name="qa_reply_bottom_sheet_edittext_hint_color">#838384</color>
     <color name="qa_dynamic_detail_title_text_color">#F0F0F2</color>
     <color name="qa_circle_label_text_color">#838384</color>
+    <color name="qa_search_history_text_color">#838384</color>
     <!--    回复详细显示“回复”文字的header的背景颜色-->
     <color name="qa_reply_detail_header_background_color">#031430</color>
     <!--    小回复布局的背景颜色-->
     <color name="qa_reply_inner_background_color">#88000000</color>
     <!--    屏蔽的人item的背景颜色-->
     <color name="qa_ignore_item_background_color">#000000</color>
+    <!--    QA个人界面泛用式分割线颜色-->
+    <color name="qa_mine_common_divide_line">#252525</color>
 </resources>

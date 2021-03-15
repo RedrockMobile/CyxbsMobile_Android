@@ -10,24 +10,29 @@ import android.view.View
 import android.widget.Toast
 import androidx.core.app.ActivityCompat.startActivityForResult
 import androidx.core.app.ActivityOptionsCompat
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
+import com.alibaba.android.arouter.facade.annotation.Route
 import com.google.android.material.tabs.TabLayoutMediator
 import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.BaseApp.Companion.context
 import com.mredrock.cyxbs.common.component.CyxbsToast
+import com.mredrock.cyxbs.common.config.QA_CIRCLE_DETAIL
+import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.ui.BaseActivity
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.LogUtils
-import com.mredrock.cyxbs.common.utils.extensions.setAvatarImageFromUrl
-import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
+import com.mredrock.cyxbs.common.utils.extensions.*
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.beannew.Topic
 import com.mredrock.cyxbs.qa.config.CommentConfig
 import com.mredrock.cyxbs.qa.config.RequestResultCode.DYNAMIC_DETAIL_REQUEST
 import com.mredrock.cyxbs.qa.config.RequestResultCode.NEED_REFRESH_RESULT
 import com.mredrock.cyxbs.qa.config.RequestResultCode.RESULT_CODE
+import com.mredrock.cyxbs.qa.network.ApiServiceNew
 import com.mredrock.cyxbs.qa.pages.dynamic.model.TopicDataSet
 import com.mredrock.cyxbs.qa.pages.square.ui.adapter.NewHotViewPagerAdapter
 import com.mredrock.cyxbs.qa.pages.square.ui.fragment.HotFragment
@@ -40,10 +45,11 @@ import com.tencent.tauth.Tencent
 import kotlinx.android.synthetic.main.qa_activity_circle_detail.*
 import kotlinx.android.synthetic.main.qa_recycler_item_circle_square.*
 
+@Route(path = QA_CIRCLE_DETAIL)
 class CircleDetailActivity : BaseViewModelActivity<CircleDetailViewModel>() {
 
     companion object {
-        private var startPosition=0
+        private var startPosition = 0
 
         fun activityStartFromSquare(activity: BaseActivity, topicItemView: View, data: Topic) {
             activity.let {
@@ -51,7 +57,7 @@ class CircleDetailActivity : BaseViewModelActivity<CircleDetailViewModel>() {
                 val intent = Intent(context, CircleDetailActivity::class.java)
                 intent.putExtra("topicItem", data)
                 it.window.exitTransition = Slide(Gravity.START).apply { duration = 500 }
-                startPosition= RESULT_CODE
+                startPosition = RESULT_CODE
                 startActivityForResult(activity, intent, RESULT_CODE, opt.toBundle())
             }
         }
@@ -63,7 +69,7 @@ class CircleDetailActivity : BaseViewModelActivity<CircleDetailViewModel>() {
                     val intent = Intent(BaseApp.context, CircleDetailActivity::class.java)
                     intent.putExtra("topicItem", data)
                     it.window.exitTransition = Slide(Gravity.START).apply { duration = 500 }
-                    startPosition= DYNAMIC_DETAIL_REQUEST
+                    startPosition = DYNAMIC_DETAIL_REQUEST
                     startActivityForResult(intent, DYNAMIC_DETAIL_REQUEST, opt.toBundle())
                 }
             }
@@ -72,9 +78,17 @@ class CircleDetailActivity : BaseViewModelActivity<CircleDetailViewModel>() {
 
     private var mTencent: Tencent? = null
 
+    private var isFormReceive = false
+
 //    override val isFragmentActivity = true
 
-    override fun getViewModelFactory()=CircleDetailViewModel.Factory("main",1)
+    override fun getViewModelFactory(): ViewModelProvider.Factory? {
+        var loop = 1
+        intent.extras?.apply {
+            loop = getInt("id")
+        }
+        return CircleDetailViewModel.Factory("main", loop)
+    }
 
     lateinit var topic: Topic
 
@@ -88,28 +102,65 @@ class CircleDetailActivity : BaseViewModelActivity<CircleDetailViewModel>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.qa_activity_circle_detail)
+        intent.extras?.apply { //在目前情况下，属于是自receive跳转的情况，所以需要再度请求圈子信息
+            val id = getString("id")
+            isFormReceive = getBoolean("isFromReceive")
+            if (!isFormReceive) return@apply
+            ApiGenerator.getApiService(ApiServiceNew::class.java)
+                    .getTopicGround("问答圈", "test1")
+                    .mapOrThrowApiException()
+                    .setSchedulers()
+                    .doOnErrorWithDefaultErrorHandler { true }
+                    .safeSubscribeBy(
+                            onNext = {
+                                topic = it[id.toInt() - 1]
+                                iv_circle_square.setAvatarImageFromUrl(topic.topicLogo)
+                                tv_circle_square_name.text = topic.topicName
+                                tv_circle_square_descriprion.text = topic.introduction
+                                tv_circle_square_person_number.text = topic.follow_count.toString() + "个成员"
+                                btn_circle_square_concern.text = "+关注"
+                                qa_detail_tv_title.text = topic.topicName
+                                if (topic._isFollow.equals(1)) {
+                                    btn_circle_square_concern.background = ContextCompat.getDrawable(context, R.drawable.qa_shape_send_dynamic_btn_grey_background)
+                                } else {
+                                    btn_circle_square_concern.background = ContextCompat.getDrawable(context, R.drawable.qa_shape_send_dynamic_btn_blue_background)
+                                }
+                                qa_vp_circle_detail.adapter = NewHotViewPagerAdapter(this@CircleDetailActivity, listOf(lastNewFragment, hotFragment))
+                                initTab()
+                                initClick()
+                            },
+                            onError = {
+                                context.toast("获取圈子信息失败")
+                                LogUtils.d("RayleighZ",it.toString())
+                            }
+                    )
+        }
         mTencent = Tencent.createInstance(CommentConfig.APP_ID, this)
         window.enterTransition = Slide(Gravity.END).apply { duration = 500 }
         initView()
-        qa_vp_circle_detail.adapter = NewHotViewPagerAdapter(this, listOf(lastNewFragment, hotFragment))
-        initTab()
-        initClick()
+        if (!isFormReceive){
+            qa_vp_circle_detail.adapter = NewHotViewPagerAdapter(this, listOf(lastNewFragment, hotFragment))
+            initTab()
+            initClick()
+        }
     }
 
     override fun onBackPressed() {
         window.returnTransition = Slide(Gravity.END).apply { duration = 500 }
-        LogUtils.d("zt",topic.toString())
-        when(startPosition){
-            RESULT_CODE->{
-                val intent = Intent()
-                intent.putExtra("topic_return", topic)
-                setResult(Activity.RESULT_OK, intent)
+        if (!isFormReceive){
+            LogUtils.d("zt", topic.toString())
+            when (startPosition) {
+                RESULT_CODE -> {
+                    val intent = Intent()
+                    intent.putExtra("topic_return", topic)
+                    setResult(Activity.RESULT_OK, intent)
+                }
+                DYNAMIC_DETAIL_REQUEST -> {
+                    setResult(NEED_REFRESH_RESULT)
+                }
             }
-            DYNAMIC_DETAIL_REQUEST->{
-                setResult(NEED_REFRESH_RESULT)
-            }
+            finish()
         }
-        finish()
         super.onBackPressed()
     }
 
@@ -117,13 +168,13 @@ class CircleDetailActivity : BaseViewModelActivity<CircleDetailViewModel>() {
     private fun initClick() {
         qa_circle_detail_iv_back.setOnSingleClickListener {
             window.returnTransition = Slide(Gravity.END).apply { duration = 500 }
-            when(startPosition){
-                RESULT_CODE->{
+            when (startPosition) {
+                RESULT_CODE -> {
                     val intent = Intent()
                     intent.putExtra("topic_return", topic)
                     setResult(Activity.RESULT_OK, intent)
                 }
-                DYNAMIC_DETAIL_REQUEST->{
+                DYNAMIC_DETAIL_REQUEST -> {
                     setResult(NEED_REFRESH_RESULT)
                 }
             }
@@ -134,14 +185,14 @@ class CircleDetailActivity : BaseViewModelActivity<CircleDetailViewModel>() {
                 //关注的状态下点击，取消关注
                 viewModel.followTopic(topic.topicName, topic._isFollow.equals(1))
                 btn_circle_square_concern.background = context.getDrawable(R.drawable.qa_shape_send_dynamic_btn_blue_background)
-                topic.follow_count=topic.follow_count-1
-                tv_circle_square_person_number.text = topic.follow_count.toString()+ "个成员"
+                topic.follow_count = topic.follow_count - 1
+                tv_circle_square_person_number.text = topic.follow_count.toString() + "个成员"
                 topic._isFollow = 0
             } else {
                 viewModel.followTopic(topic.topicName, topic._isFollow.equals(1))
                 btn_circle_square_concern.background = context.getDrawable(R.drawable.qa_shape_send_dynamic_btn_grey_background)
-                topic.follow_count=topic.follow_count+1
-                tv_circle_square_person_number.text = topic.follow_count.toString()+ "个成员"
+                topic.follow_count = topic.follow_count + 1
+                tv_circle_square_person_number.text = topic.follow_count.toString() + "个成员"
                 topic._isFollow = 1
             }
         }
@@ -173,17 +224,19 @@ class CircleDetailActivity : BaseViewModelActivity<CircleDetailViewModel>() {
 
     @SuppressLint("SetTextI18n", "UseCompatLoadingForDrawables")
     private fun initView() {
-        topic = intent.getParcelableExtra("topicItem")
-        iv_circle_square.setAvatarImageFromUrl(topic.topicLogo)
-        tv_circle_square_name.text = topic.topicName
-        tv_circle_square_descriprion.text = topic.introduction
-        tv_circle_square_person_number.text = topic.follow_count.toString() + "个成员"
-        btn_circle_square_concern.text = "+关注"
-        qa_detail_tv_title.text = topic.topicName
-        if (topic._isFollow.equals(1)) {
-            btn_circle_square_concern.background = context.getDrawable(R.drawable.qa_shape_send_dynamic_btn_grey_background)
-        } else {
-            btn_circle_square_concern.background = context.getDrawable(R.drawable.qa_shape_send_dynamic_btn_blue_background)
+        if (!isFormReceive) {
+            topic = intent.getParcelableExtra("topicItem")
+            iv_circle_square.setAvatarImageFromUrl(topic.topicLogo)
+            tv_circle_square_name.text = topic.topicName
+            tv_circle_square_descriprion.text = topic.introduction
+            tv_circle_square_person_number.text = topic.follow_count.toString() + "个成员"
+            btn_circle_square_concern.text = "+关注"
+            qa_detail_tv_title.text = topic.topicName
+            if (topic._isFollow.equals(1)) {
+                btn_circle_square_concern.background = context.getDrawable(R.drawable.qa_shape_send_dynamic_btn_grey_background)
+            } else {
+                btn_circle_square_concern.background = context.getDrawable(R.drawable.qa_shape_send_dynamic_btn_blue_background)
+            }
         }
     }
 

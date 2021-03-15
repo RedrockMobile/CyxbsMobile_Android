@@ -40,8 +40,11 @@ class MyIgnoreDataSource : PageKeyedDataSource<Int,Ignore>() {
                 .setSchedulers()
                 .doOnSubscribe { networkState.postValue(NetworkState.LOADING) }
                 .doOnError {
+                    LogUtils.d("RayleighZ","init 失败, 原因为 = $it")
                     if (it is RedrockApiIllegalStateException){
+                        LogUtils.d("RayleighZ", "data = null, already back no data")
                         networkState.postValue(NetworkState.NO_MORE_DATA)
+                        initialLoad.postValue(NetworkState.SUCCESSFUL)
                     } else {
                         networkState.postValue(NetworkState.FAILED)
                         failedRequest = { loadInitial(params, callback) }
@@ -66,8 +69,10 @@ class MyIgnoreDataSource : PageKeyedDataSource<Int,Ignore>() {
                 .setSchedulers()
                 .doOnSubscribe { networkState.postValue(NetworkState.LOADING) }
                 .doOnError {
+                    LogUtils.d("RayleighZ","load 失败, 原因为 = $it")
                     if (it is RedrockApiIllegalStateException){
                         networkState.postValue(NetworkState.NO_MORE_DATA)
+                        initialLoad.postValue(NetworkState.SUCCESSFUL)
                     } else {
                         networkState.postValue(NetworkState.FAILED)
                         failedRequest = { loadAfter(params, callback) }

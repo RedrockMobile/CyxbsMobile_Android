@@ -16,7 +16,7 @@
         android:layout_marginBottom="20dp"
         android:scaleType="centerCrop"
         android:src="@drawable/common_default_avatar"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/qa_view_my_ignore_divide_line"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -57,5 +57,12 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:id="@+id/qa_view_my_ignore_divide_line"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:background="@color/qa_mine_common_divide_line"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -9,7 +9,9 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.flexbox.FlexWrap
 import com.google.android.flexbox.FlexboxLayoutManager
+import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.common.BaseApp
+import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.ui.BaseViewModelFragment
 import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.doIfLogin
@@ -131,13 +133,18 @@ class QuestionSearchedFragment : BaseViewModelFragment<QuestionSearchedViewModel
             DynamicDetailActivity.activityStart(this, view, dynamic)
         }.apply {
             onShareClickListener = { dynamic, mode ->
+                val token = ServiceManager.getService(IAccountService::class.java).getUserTokenService().getToken()
+                val url = "https://wx.redrock.team/game/zscy-youwen-share/#/dynamic?id=${dynamic.postId}?id_token=$token"
                 when (mode) {
                     QQ_FRIEND ->
-                        mTencent?.let { it1 -> ShareUtils.qqShare(it1, this@QuestionSearchedFragment, dynamic.topic, dynamic.content, "https://cn.bing.com/", "") }
+                        mTencent?.let { it1 -> ShareUtils.qqShare(it1, this@QuestionSearchedFragment, dynamic.topic, dynamic.content, url, "") }
                     QQ_ZONE ->
-                        mTencent?.let { it1 -> ShareUtils.qqQzoneShare(it1, this@QuestionSearchedFragment, dynamic.topic, dynamic.content, "https://cn.bing.com/", ArrayList()) }
-                    COPY_LINK ->
-                        ClipboardController.copyText(this@QuestionSearchedFragment.requireContext(), "https://cn.bing.com/")
+                        mTencent?.let { it1 -> ShareUtils.qqQzoneShare(it1, this@QuestionSearchedFragment, dynamic.topic, dynamic.content, url, ArrayList()) }
+                    COPY_LINK ->{
+                        this@QuestionSearchedFragment.context?.let {
+                            ClipboardController.copyText(it, url)
+                        }
+                    }
                 }
             }
             onPopWindowClickListener = { position, string, dynamic ->

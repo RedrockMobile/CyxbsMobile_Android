@@ -1,5 +1,6 @@
 package com.mredrock.cyxbs.qa.pages.mine.ui
 
+import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.WrapperListAdapter
@@ -10,6 +11,7 @@ import com.alibaba.android.arouter.facade.annotation.Route
 import com.mredrock.cyxbs.common.config.QA_ANSWER
 import com.mredrock.cyxbs.common.config.QA_MY_PRAISE
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
+import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.component.recycler.RvAdapterWrapper
 import com.mredrock.cyxbs.qa.network.NetworkState
@@ -19,6 +21,7 @@ import com.mredrock.cyxbs.qa.ui.adapter.EmptyRvAdapter
 import com.mredrock.cyxbs.qa.ui.adapter.FooterRvAdapter
 import kotlinx.android.synthetic.main.qa_activity_my_comment.*
 import kotlinx.android.synthetic.main.qa_activity_my_praise.*
+import kotlinx.android.synthetic.main.qa_common_toolbar.*
 import kotlinx.android.synthetic.main.qa_common_toolbar.view.*
 
 @Route(path = QA_MY_PRAISE)
@@ -38,7 +41,11 @@ class MyPraiseActivity : BaseViewModelActivity<MyPraiseViewModel>() {
 
     private fun initView(){
         //初始化toolBar
-        qa_tb_my_praise.qa_tv_toolbar_title.text = "收到的赞"
+        qa_tv_toolbar_title.text = "收到的赞"
+        qa_ib_toolbar_back.setOnSingleClickListener {
+            onBackPressed()
+        }
+        qa_tb_my_praise.setBackgroundColor(Color.TRANSPARENT)
 
         //加载RecyclerView
         myPraiseRvAdapter = MyPraiseRvAdapter(this)
