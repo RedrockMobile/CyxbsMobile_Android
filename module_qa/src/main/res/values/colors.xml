@@ -101,4 +101,6 @@
     <color name="qa_dialog_report_cancel_text_color">#ffffff</color>
     <color name="qa_dialog_share_cancel_text_color">#94A6C4</color>
     <color name="qa_item_no_circles_text_color">#556C89</color>
+    <color name="qa_mine_content_front_line_color">#E2E8EE</color>
+    <color name="qa_reply_icon_color">#abbcd9</color>
 </resources>

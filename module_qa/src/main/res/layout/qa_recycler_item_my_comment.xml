@@ -9,8 +9,8 @@
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/qa_circle_iv_my_comment_item_avatar"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="24dp"
         android:src="@drawable/common_default_avatar"
@@ -21,8 +21,7 @@
         android:id="@+id/qa_tv_my_comment_item_nickname"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="12dp"
-        android:layout_marginTop="7dp"
+        android:layout_marginStart="10dp"
         android:textColor="@color/common_level_three_font_color"
         android:textSize="13sp"
         app:layout_constraintStart_toEndOf="@+id/qa_circle_iv_my_comment_item_avatar"
@@ -33,12 +32,12 @@
         android:id="@+id/qa_tv_my_comment_item_tip_and_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="5.5dp"
         android:text="@string/qa_my_comment_reply_your_comment"
         android:textColor="@color/qa_reply_detail_date_text_color"
         android:textSize="11sp"
         app:layout_constraintBottom_toBottomOf="@+id/qa_circle_iv_my_comment_item_avatar"
-        app:layout_constraintStart_toStartOf="@+id/qa_tv_my_comment_item_nickname" />
+        app:layout_constraintStart_toStartOf="@+id/qa_tv_my_comment_item_nickname"
+        app:layout_constraintTop_toBottomOf="@+id/qa_tv_my_comment_item_nickname" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/qa_tv_my_comment_item_comment"
@@ -57,7 +56,7 @@
     <View
         android:layout_width="2dp"
         android:layout_height="13dp"
-        android:background="#E2E8EE"
+        android:background="@drawable/qa_shape_mine_content_front_line"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="@+id/qa_tv_my_comment_from"
         app:layout_constraintStart_toStartOf="@+id/qa_tv_my_comment_item_comment"
@@ -90,15 +89,16 @@
         app:srcCompat="@drawable/qa_ic_dynamic_comment_count" />
 
     <com.mredrock.cyxbs.qa.ui.widget.likeview.LikeView
-        android:layout_marginStart="20dp"
+        android:layout_marginStart="16dp"
         android:id="@+id/qa_like_view_my_comment_item_praise"
-        android:layout_width="wrap_content"
+        android:layout_width="40dp"
         android:layout_height="wrap_content"
         app:checkedColor="#323FD9"
         app:cirRadius="14dp"
         app:checkedLikeIconRes="@drawable/qa_ic_answer_list_praised"
         app:cycleTime="1000"
         app:defaultColor="@color/qa_likeview_color"
+        android:layout_marginBottom="6dp"
         app:defaultLikeIconRes="@drawable/qa_ic_answer_list_praise"
         app:layout_constraintStart_toEndOf="@+id/qa_iv_my_comment_item_reply"
         app:layout_constraintTop_toTopOf="@+id/qa_iv_my_comment_item_reply"

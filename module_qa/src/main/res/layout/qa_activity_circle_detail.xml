@@ -93,7 +93,7 @@
                 app:tabIndicatorColor="@color/common_mine_tab_layout_indicator_color"
                 app:tabIndicatorFullWidth="false"
                 app:tabIndicatorHeight="3dp"
-                app:tabMode="fixed"
+                app:tabMode="scrollable"
                 app:tabRippleColor="@color/common_transparent_background"
                 app:tabSelectedTextColor="@color/common_level_two_font_color"
                 app:tabTextAppearance="@style/tab_style"
