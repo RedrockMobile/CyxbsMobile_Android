@@ -23,7 +23,7 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: '3.7'
-
+          
       - name: Install python dependence
         run: pip install beautifulsoup4
 
@@ -34,9 +34,11 @@ jobs:
           LARK_BOT_APP_SECRET: ${{secrets.LARK_BOT_APP_SECRET}}
           TITLE:  ${{ github.event.pull_request.title }}
           BODY:  ${{ github.event.pull_request.body}}
+          
   build:
 
     runs-on: macos-latest
+    continue-on-error: true
 
     steps:
       - uses: actions/checkout@v2
@@ -88,7 +90,9 @@ jobs:
           name: result_apk
           path: module_app/build/outputs/apk/release/module_app-release.apk
           retention-days: 15
+          
   send_message:
+    if: always()
     runs-on: macos-latest
     needs: build
     steps:

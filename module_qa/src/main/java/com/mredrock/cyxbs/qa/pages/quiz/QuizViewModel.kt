@@ -13,7 +13,6 @@ import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.common.viewmodel.event.ProgressDialogEvent
 import com.mredrock.cyxbs.common.viewmodel.event.SingleLiveEvent
 import com.mredrock.cyxbs.qa.R
-import com.mredrock.cyxbs.qa.beannew.CommentReleaseResult
 import com.mredrock.cyxbs.qa.beannew.Topic
 import com.mredrock.cyxbs.qa.network.ApiService
 import com.mredrock.cyxbs.qa.network.ApiServiceNew
@@ -94,7 +93,7 @@ class QuizViewModel : BaseViewModel() {
                 }
     }
 
-    fun submitTitleAndContent(type: String, content: String): Boolean {
+    fun checkTitleAndContent(type: String, content: String): Boolean {
         var result = false
         if (type.isBlank()) {
             toastEvent.value = R.string.qa_quiz_hint_title_empty

@@ -88,6 +88,7 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), EventBusL
 
     private var isSendDynamic = false
     private var mTencent: Tencent? = null
+    private var token: String? = null
 
     // 判断rv是否到顶
     protected var isRvAtTop = true
@@ -105,8 +106,8 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), EventBusL
         initDynamics()
         initClick()
         mTencent = Tencent.createInstance(CommentConfig.APP_ID, this.requireContext())
-//        val accountService = ServiceManager.getService(IAccountService::class.java)
-//        token=accountService.getUserTokenService().getToken()
+        val accountService = ServiceManager.getService(IAccountService::class.java)
+        token = accountService.getUserTokenService().getToken()
     }
 
 
@@ -208,7 +209,6 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), EventBusL
                 circlesAdapter?.addCircleData(it)
             } else {
                 val layoutParams = CollapsingToolbarLayout.LayoutParams(qa_rv_circles_List.layoutParams)
-                layoutParams.bottomMargin = 30
                 circlesAdapter?.noticeChangeCircleData()
                 view_divide.visibility = View.VISIBLE
                 qa_tv_my_notice.visibility = View.INVISIBLE
