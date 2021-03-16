@@ -3,6 +3,7 @@ package com.mredrock.cyxbs.qa.pages.search.ui.fragment
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,6 +18,7 @@ import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.doIfLogin
 import com.mredrock.cyxbs.common.utils.extensions.gone
 import com.mredrock.cyxbs.qa.R
+import com.mredrock.cyxbs.qa.beannew.Knowledge
 import com.mredrock.cyxbs.qa.component.recycler.RvAdapterWrapper
 import com.mredrock.cyxbs.qa.config.CommentConfig
 import com.mredrock.cyxbs.qa.config.CommentConfig.COPY_LINK
@@ -25,6 +27,7 @@ import com.mredrock.cyxbs.qa.config.CommentConfig.IGNORE
 import com.mredrock.cyxbs.qa.config.CommentConfig.QQ_FRIEND
 import com.mredrock.cyxbs.qa.config.CommentConfig.QQ_ZONE
 import com.mredrock.cyxbs.qa.config.CommentConfig.REPORT
+import com.mredrock.cyxbs.qa.config.RequestResultCode.ClickKnowledge
 import com.mredrock.cyxbs.qa.config.RequestResultCode.DYNAMIC_DETAIL_REQUEST
 import com.mredrock.cyxbs.qa.config.RequestResultCode.NEED_REFRESH_RESULT
 import com.mredrock.cyxbs.qa.config.RequestResultCode.RELEASE_DYNAMIC_ACTIVITY_REQUEST
@@ -36,6 +39,7 @@ import com.mredrock.cyxbs.qa.pages.quiz.ui.QuizActivity
 import com.mredrock.cyxbs.qa.pages.search.model.SearchQuestionDataSource.Companion.SEARCHRESULT
 import com.mredrock.cyxbs.qa.pages.search.ui.adapter.SearchKnowledgeAdapter
 import com.mredrock.cyxbs.qa.pages.search.ui.adapter.SearchNoResultAdapter
+import com.mredrock.cyxbs.qa.pages.search.ui.adapter.SearchResultHeaderAdapter
 import com.mredrock.cyxbs.qa.pages.search.viewmodel.QuestionSearchedViewModel
 import com.mredrock.cyxbs.qa.ui.adapter.FooterRvAdapter
 import com.mredrock.cyxbs.qa.ui.widget.QaDialog
@@ -51,6 +55,7 @@ import kotlinx.android.synthetic.main.qa_fragment_question_search_result.*
  */
 class QuestionSearchedFragment : BaseViewModelFragment<QuestionSearchedViewModel>() {
 
+
     companion object {
         const val SEARCH_KEY = "searchKey"
     }
@@ -58,6 +63,7 @@ class QuestionSearchedFragment : BaseViewModelFragment<QuestionSearchedViewModel
     //搜索关键词
     private var searchKey = ""
     lateinit var dynamicListRvAdapter: DynamicAdapter
+    var knowledges:List<Knowledge> ?=null
     var emptyRvAdapter: SearchNoResultAdapter? = null
     var footerRvAdapter: FooterRvAdapter? = null
 
@@ -91,7 +97,6 @@ class QuestionSearchedFragment : BaseViewModelFragment<QuestionSearchedViewModel
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putString(SEARCH_KEY, searchKey)
-
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -118,9 +123,18 @@ class QuestionSearchedFragment : BaseViewModelFragment<QuestionSearchedViewModel
                     }
                     if (viewModel.isKnowledge) {
                         //知识库不为空时候显示
-                        qa_line.visibility = View.VISIBLE
-                        qa_rv_knowledge.visibility = View.VISIBLE
-                        qa_tv_knowledge.visibility = View.VISIBLE
+                        if (ClickKnowledge){
+                            qa_line.gone()
+                            qa_tv_knowledge.gone()
+                        }else{
+                            Log.d("RayT","555555555555555555555")
+                            qa_line.visibility = View.VISIBLE
+                            qa_rv_knowledge.visibility = View.VISIBLE
+                            qa_tv_knowledge.visibility = View.VISIBLE
+                        }
+                    }else{
+                        qa_line.gone()
+                        qa_tv_knowledge.gone()
                     }
                 }
             }
@@ -224,7 +238,15 @@ class QuestionSearchedFragment : BaseViewModelFragment<QuestionSearchedViewModel
             }
         }
         swipe_refresh_layout_searching.setOnRefreshListener {
-            viewModel.invalidateSearchQuestionList()
+            if(ClickKnowledge){
+                //点击知识库时的刷新
+                viewModel.invalidateSearchQuestionList()
+                qa_line.gone()
+                qa_tv_knowledge.gone()
+            }else{
+                viewModel.invalidateSearchQuestionList()
+            }
+
         }
         viewModel.deleteTips.observe {
             if (it == true)
@@ -237,17 +259,26 @@ class QuestionSearchedFragment : BaseViewModelFragment<QuestionSearchedViewModel
 
         viewModel.knowledge.observe {
             if (!it.isNullOrEmpty()) {
+                knowledges=it
                 val flexBoxManager = FlexboxLayoutManager(BaseApp.context)
                 flexBoxManager.flexWrap = FlexWrap.WRAP
                 qa_rv_knowledge.layoutManager = flexBoxManager
                 qa_rv_knowledge.adapter = SearchKnowledgeAdapter {
                     //邮问知识库的调用
+                    if (knowledges!=null){
+                        ClickKnowledge=true
+                        qa_rv_knowledge.adapter=SearchResultHeaderAdapter(knowledges!!.get(it))
+                        qa_rv_knowledge.layoutManager=LinearLayoutManager(BaseApp.context)
+                        qa_line.gone()
+                        qa_tv_knowledge.gone()
+                    }
                 }.apply {
                     if (it != null) {
                         addData(it)
                     }
                 }
             } else {
+                Log.d("RATy","6666666666")
                 qa_rv_knowledge.gone()
                 qa_line.gone()
                 qa_tv_knowledge.gone()

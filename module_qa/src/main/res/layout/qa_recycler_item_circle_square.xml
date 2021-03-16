@@ -9,7 +9,7 @@
     android:layout_marginTop="5dp"
     android:focusable="true"
     android:clickable="true"
-    android:background="@color/common_window_background"
+    android:background="@color/qa_quiz_select_type_background_color"
     android:transitionName="topicItem"
     android:orientation="vertical">
 
@@ -17,8 +17,8 @@
         android:id="@+id/iv_circle_square"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="15dp"
-        android:layout_marginTop="26dp"
+        android:layout_marginStart="15.5dp"
+        android:layout_marginTop="26.5dp"
         android:scaleType="centerCrop"
         android:src="@drawable/common_default_avatar"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -31,15 +31,15 @@
         android:layout_marginTop="35dp"
         android:layout_marginEnd="16dp"
         android:background="@drawable/qa_shape_send_dynamic_btn_blue_background"
-        android:paddingStart="13dp"
-        android:paddingEnd="8dp"
+        android:gravity="center_horizontal|center_vertical"
         android:textColor="@color/common_white_font_color"
         android:textSize="13sp"
         android:focusable="true"
         android:clickable="true"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="+关注" />
+        tools:text="+关注"
+        tools:ignore="RtlSymmetry" />
 
     <TextView
         android:id="@+id/tv_circle_square_name"
@@ -47,7 +47,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="11dp"
         android:layout_marginTop="32dp"
-        android:textColor="@color/common_level_two_font_color"
+        android:textColor="@color/qa_tab_selected_color"
         android:textSize="15sp"
         app:layout_constraintLeft_toRightOf="@id/iv_circle_square"
         app:layout_constraintTop_toTopOf="parent"
@@ -57,8 +57,8 @@
         android:id="@+id/tv_circle_square_person_number"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="11dp"
-        android:layout_marginTop="9dp"
+        android:layout_marginStart="10.5dp"
+        android:layout_marginTop="9.5dp"
         android:textColor="@color/qa_circle_square_person_number_color"
         android:textSize="11sp"
         app:layout_constraintLeft_toRightOf="@id/iv_circle_square"
@@ -71,9 +71,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:layout_marginStart="15dp"
+        android:layout_marginStart="15.5dp"
         android:layout_marginBottom="25dp"
-        android:textColor="@color/common_level_two_font_color"
+        android:layout_marginEnd="41.5dp"
+        android:textColor="@color/qa_tab_selected_color"
         android:textSize="13sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/btn_circle_square_concern"
@@ -86,7 +87,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/common_window_background"
+        android:background="@color/qa_mine_common_divide_line"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

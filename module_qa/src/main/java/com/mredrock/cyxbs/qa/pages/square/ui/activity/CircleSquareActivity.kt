@@ -1,11 +1,13 @@
 package com.mredrock.cyxbs.qa.pages.square.ui.activity
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.core.app.ActivityCompat.startActivityForResult
 import androidx.core.app.ActivityOptionsCompat
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mredrock.cyxbs.common.BaseApp
@@ -31,7 +33,6 @@ class CircleSquareActivity : BaseViewModelActivity<CircleSquareViewModel>() {
     var adapter: CircleSquareAdapter? = null
     var mPosition = 0//记录当前item的位置
     var topicList = ArrayList<Topic>()
-//    override val isFragmentActivity = false
 
     companion object {
         fun activityStartFromDynamic(fragment: Fragment) {
@@ -70,12 +71,14 @@ class CircleSquareActivity : BaseViewModelActivity<CircleSquareViewModel>() {
         super.onBackPressed()
     }
 
+    @SuppressLint("UseCompatLoadingForDrawables")
     private fun initToolbar() {
         qa_ib_toolbar_back.setOnSingleClickListener {
             setResult(NEED_REFRESH_RESULT)
-            finish()
+            onBackPressed()
         }
-        qa_tv_toolbar_title.text = "圈子广场"
+        qa_tv_toolbar_title.text = resources.getText(R.string.qa_square_title)
+        qa_circle_square_toolbar.background= ContextCompat.getDrawable(context,R.color.qa_dynamic_circle_background_color)
     }
 
     private fun initView() {
