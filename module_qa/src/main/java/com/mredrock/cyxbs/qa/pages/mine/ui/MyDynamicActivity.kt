@@ -121,7 +121,6 @@ class MyDynamicActivity : BaseViewModelActivity<MyDynamicViewModel>() {
         qa_rv_my_dynamic.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = adapterWrapper
-            addItemDecoration(DividerItemDecoration(this@MyDynamicActivity, DividerItemDecoration.VERTICAL))
             addOnScrollListener(object : RecyclerView.OnScrollListener() {
                 override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                     super.onScrollStateChanged(recyclerView, newState)
