@@ -8,15 +8,16 @@
     android:clickable="true"
     android:focusable="true">
 
-    <com.mredrock.cyxbs.course.component.RedRockTipsView
-        android:id="@+id/course_tip"
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/iv_grade_tip"
         android:layout_width="40dp"
-        android:layout_height="20dp"
+        android:layout_height="8dp"
         android:layout_gravity="center_horizontal"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/common_shape_tip"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:tipsColor="@color/common_course_table_drag_indicator_block_color" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/fl_grades_header"

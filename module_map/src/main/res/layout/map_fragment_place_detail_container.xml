@@ -21,15 +21,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <com.mredrock.cyxbs.discover.map.component.RedRockTipsView
-                android:id="@+id/map_tip"
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/course_tip"
                 android:layout_width="40dp"
-                android:layout_height="20dp"
+                android:layout_height="8dp"
                 android:layout_gravity="center_horizontal"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:tipsColor="@color/map_table_drag_indicator_block_color" />
+                android:layout_marginTop="8dp"
+                android:background="@drawable/common_shape_tip"
+              />
 
             <LinearLayout
                 android:layout_width="match_parent"
