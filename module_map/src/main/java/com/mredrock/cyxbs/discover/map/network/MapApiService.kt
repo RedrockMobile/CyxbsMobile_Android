@@ -14,40 +14,40 @@ import retrofit2.http.*
  */
 
 internal interface MapApiService {
-    @GET("wxapi/magipoke-stumap/basic")
+    @GET("/magipoke-stumap/basic")
     fun getMapInfo(): Observable<RedrockApiWrapper<MapInfo>>
 
     @FormUrlEncoded
-    @POST("wxapi/magipoke-stumap/detailsite")
+    @POST("/magipoke-stumap/detailsite")
     fun getPlaceDetails(@Field("place_id") placeId: String): Observable<RedrockApiWrapper<PlaceDetails>>
 
-    @GET("wxapi/magipoke-stumap/button")
+    @GET("/magipoke-stumap/button")
     fun getButtonInfo(): Observable<RedrockApiWrapper<ButtonInfo>>
 
     @FormUrlEncoded
-    @POST("wxapi/magipoke-stumap/searchtype")
+    @POST("/magipoke-stumap/searchtype")
     fun getSearchType(@Field("code") code: String): Observable<RedrockApiWrapper<MutableList<String>>>
 
     @FormUrlEncoded
-    @POST("wxapi/magipoke-stumap/addhot")
+    @POST("/magipoke-stumap/addhot")
     fun addHot(@Field("id") placeId: Int): Observable<RedrockApiStatus>
 
-    @GET("wxapi/magipoke-stumap/rockmap/collect")
+    @GET("/magipoke-stumap/rockmap/collect")
     fun getCollect(): Observable<RedrockApiWrapper<FavoritePlaceSimple>>
 
     @FormUrlEncoded
-    @PATCH("wxapi/magipoke-stumap/rockmap/addkeep")
+    @PATCH("/magipoke-stumap/rockmap/addkeep")
     fun addCollect(@Field("place_id") placeId: String): Observable<RedrockApiStatus>
 
     @Multipart
-    @HTTP(method = "DELETE", path = "wxapi/magipoke-stumap/rockmap/deletekeep", hasBody = true)
+    @HTTP(method = "DELETE", path = "/magipoke-stumap/rockmap/deletekeep", hasBody = true)
     fun deleteCollect(@Part("place_id") placeId: Int): Observable<RedrockApiStatus>
 
     @Multipart
-    @POST("wxapi/magipoke-stumap/rockmap/upload")
+    @POST("/magipoke-stumap/rockmap/upload")
     fun uploadPicture(@Part photo: MultipartBody.Part, @PartMap params: Map<String, Int>): Observable<RedrockApiStatus>
 
     @FormUrlEncoded
-    @POST("wxapi/magipoke-stumap/placesearch")
+    @POST("/magipoke-stumap/placesearch")
     fun placeSearch(@Field("place_search") placeSearch: String): Observable<RedrockApiWrapper<PlaceSearch>>
 }

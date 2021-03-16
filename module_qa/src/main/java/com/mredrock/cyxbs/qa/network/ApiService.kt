@@ -16,21 +16,21 @@ interface ApiService {
     /**
      * 草稿箱
      */
-    @POST("wxapi/magipoke-draft/User/addItemInDraft")
+    @POST("/magipoke-draft/User/addItemInDraft")
     @FormUrlEncoded
     fun addItemToDraft(@Field("type") type: String,
                        @Field("content") content: String,
                        @Field("target_id") id: String): Observable<RedrockApiStatus>
 
-    @POST("wxapi/magipoke-draft/User/updateItemInDraft")
+    @POST("/magipoke-draft/User/updateItemInDraft")
     @FormUrlEncoded
     fun updateDraft(@Field("content") content: String,
                     @Field("id") id: String): Observable<RedrockApiStatus>
 
-    @POST("wxapi/magipoke-draft/User/deleteItemInDraft")
+    @POST("/magipoke-draft/User/deleteItemInDraft")
     @FormUrlEncoded
     fun deleteDraft(@Field("id") id: String): Observable<RedrockApiStatus>
 
-    @POST("/app/index.php/QA/Search/getHotWords")
+    @POST("/magipoke-loop/search/getSearchHotWord")
     fun getHotWords(): Observable<RedrockApiWrapper<HotText>>
 }

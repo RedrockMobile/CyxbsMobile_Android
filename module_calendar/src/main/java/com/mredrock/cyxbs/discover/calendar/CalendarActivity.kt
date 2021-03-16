@@ -29,7 +29,7 @@ class CalendarActivity : BaseActivity() {
                 .diskCacheStrategy(DiskCacheStrategy.DATA)
                 .skipMemoryCache(true)
         Glide.with(this)
-                .load("$END_POINT_REDROCK/234/newapi/schoolCalendar")
+                .load("$END_POINT_REDROCK/renewapi/schoolCalendar")
                 .apply(request)
                 .into(object : DrawableImageViewTarget(iv_calendar) {
                     override fun onResourceReady(resource: Drawable, transition: Transition<in Drawable>?) {

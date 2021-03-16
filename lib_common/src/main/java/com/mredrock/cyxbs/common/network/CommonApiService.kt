@@ -20,7 +20,7 @@ interface CommonApiService {
      * .getDownMessage(DownMessageParams("name"))
      */
     @Headers("Content-Type: application/json")
-    @POST("wxapi/magipoke-text/text/get")
+    @POST("/magipoke-text/text/get")
     fun getDownMessage(@Body downMessageParams: DownMessageParams): Observable<RedrockApiWrapper<DownMessage>>
 
 }

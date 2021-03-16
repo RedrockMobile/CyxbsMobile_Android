@@ -100,17 +100,19 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
             }
         })
         viewModel.userCount.observe(viewLifecycleOwner, Observer {
-            //可能会出现部分number为负数的情况，客户端需要处理（虽然是后端的锅）
-            viewModel.judgeChangedAndSetText(mine_main_tv_dynamic_number, it.dynamicCount)
-            viewModel.judgeChangedAndSetText(mine_main_tv_comment_number, it.commentCount)
-            viewModel.judgeChangedAndSetText(mine_main_tv_praise_number, it.praiseCount)
-            //由于视觉给的字体不是等宽的，其中数字"1"的宽度明显小于其他数字的宽度，要对此进行单独的处理
-            //基本规则是：基础距离是17dp，非1字体+15dp，1则+12dp
-            viewModel.setLeftMargin(mine_main_tv_uncheck_comment_count, it.commentCount)
-            viewModel.setLeftMargin(mine_main_tv_uncheck_praise_count, it.praiseCount)
-            //在这里再请求unChecked的红点仅仅是为了好看，让动画显得更加流畅
-            viewModel.getUserUncheckCount(1)
-            viewModel.getUserUncheckCount(2)
+            it?.let {
+                //可能会出现部分number为负数的情况，客户端需要处理（虽然是后端的锅）
+                viewModel.judgeChangedAndSetText(mine_main_tv_dynamic_number, it.dynamicCount)
+                viewModel.judgeChangedAndSetText(mine_main_tv_comment_number, it.commentCount)
+                viewModel.judgeChangedAndSetText(mine_main_tv_praise_number, it.praiseCount)
+                //由于视觉给的字体不是等宽的，其中数字"1"的宽度明显小于其他数字的宽度，要对此进行单独的处理
+                //基本规则是：基础距离是17dp，非1字体+15dp，1则+12dp
+                viewModel.setLeftMargin(mine_main_tv_uncheck_comment_count, it.commentCount)
+                viewModel.setLeftMargin(mine_main_tv_uncheck_praise_count, it.praiseCount)
+                //在这里再请求unChecked的红点仅仅是为了好看，让动画显得更加流畅
+                viewModel.getUserUncheckCount(1)
+                viewModel.getUserUncheckCount(2)
+            }
         })
 
         viewModel.userUncheckCount.observe(viewLifecycleOwner, Observer {
@@ -129,7 +131,7 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
 
     private fun fetchInfo() {
         viewModel.getScoreStatus()
-        viewModel.getQANumber()
+//        viewModel.getQANumber()
         viewModel.getUserCount()
 //        viewModel.getUserUncheckCount(1)
 //        viewModel.getUserUncheckCount(2)

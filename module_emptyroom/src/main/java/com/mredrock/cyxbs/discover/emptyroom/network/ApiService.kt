@@ -11,7 +11,7 @@ import retrofit2.http.POST
  */
 interface ApiService {
     @FormUrlEncoded
-    @POST("/234/newapi/roomEmpty")
+    @POST("/renewapi/roomEmpty")
     fun getEmptyRooms(@Field("week") week: Int,
                       @Field("weekDayNum") weekday: Int,
                       @Field("buildNum") buildNum: Int,

@@ -20,7 +20,7 @@ interface ApiService {
      * 获取考试信息（不含补考）
      */
     @FormUrlEncoded
-    @POST("/api/examSchedule")
+    @POST("/renewapi/examSchedule")
     fun getExam(@Field("stuNum") stuNum: String): Observable<RedrockApiWrapper<List<Exam>>>
 
     /**
@@ -30,10 +30,10 @@ interface ApiService {
     @POST("/api/examReexam")
     fun getReExam(@Field("stuNum") stu: String): Observable<RedrockApiWrapper<List<Exam>>>
 
-    @POST("wxapi/magipoke/ids/bind")
+    @POST("/magipoke/ids/bind")
     fun bindIds(@Body idsBean: IdsBean) : Observable<IdsStatus>
 
-    @GET("wxapi/magipoke/gpa")
+    @GET("/magipoke/gpa")
     fun getAnalyzeData(): Observable<GPAStatus>
 
 }

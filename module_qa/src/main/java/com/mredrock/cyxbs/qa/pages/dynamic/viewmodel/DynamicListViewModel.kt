@@ -127,12 +127,12 @@ open class DynamicListViewModel(kind: String) : BaseViewModel() {
     }
 
     fun getScrollerText() {
-        ApiGenerator.getApiService(ApiService::class.java)
-                .getHotWords()
+        ApiGenerator.getApiService(ApiServiceNew::class.java)
+                .getSearchHotWord()
                 .mapOrThrowApiException()
                 .setSchedulers()
                 .safeSubscribeBy { texts ->
-                    hotWords.value = texts.scrollerHotWord
+                    hotWords.value = texts.hotWords
                 }
     }
 

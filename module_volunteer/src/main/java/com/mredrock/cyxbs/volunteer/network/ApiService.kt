@@ -9,24 +9,24 @@ import retrofit2.http.POST
 
 interface ApiService {
     @FormUrlEncoded
-    @POST("/wxapi/volunteer-message/binding")
+    @POST("/volunteer-message/binding")
     fun volunteerLogin(@Field("account") account: String,
                        @Field("password") password: String): Observable<VolunteerBase>
 
-    @POST("/wxapi/volunteer-message/select")
+    @POST("/volunteer-message/select")
     fun getVolunteerRecord(): Observable<VolunteerTime>
 
-    @POST("/wxapi/cyb-volunteer/volunteer/activity/info/new")
+    @POST("/cyb-volunteer/volunteer/activity/info/new")
     fun getVolunteerAffair(): Observable<RedrockApiWrapper<List<VolunteerAffair>>>
 
 
     @FormUrlEncoded
-    @POST("/wxapi/cyb-volunteer/volunteer/activity/info")
+    @POST("/cyb-volunteer/volunteer/activity/info")
     fun getVolunteerAffairDetail(@Field("id") id: Int): Observable<RedrockApiWrapper<VolunteerAffairDetail>>
 
-    @POST("/wxapi/volunteer-message/judge")
+    @POST("/volunteer-message/judge")
     fun judgeBind(): Observable<VolunteerJudge>
 
-    @POST("/wxapi/volunteer-message/unbinding")
+    @POST("/volunteer-message/unbinding")
     fun unbindVolunteerAccount(): Observable<VolunteerBase>
 }
