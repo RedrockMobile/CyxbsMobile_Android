@@ -8,7 +8,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.FrameLayout
 import androidx.appcompat.widget.AppCompatButton
-import androidx.fragment.app.Fragment
+import androidx.fragment.app.commit
 import androidx.lifecycle.Observer
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
@@ -34,10 +34,9 @@ import com.mredrock.cyxbs.common.utils.extensions.onTouch
 import com.mredrock.cyxbs.common.utils.extensions.topPadding
 import com.mredrock.cyxbs.main.MAIN_MAIN
 import com.mredrock.cyxbs.main.R
+import com.mredrock.cyxbs.main.adapter.MainAdapter
 import com.mredrock.cyxbs.main.components.DebugDataDialog
 import com.mredrock.cyxbs.main.utils.BottomNavigationHelper
-import com.mredrock.cyxbs.main.utils.entryContains
-import com.mredrock.cyxbs.main.utils.getFragment
 import com.mredrock.cyxbs.main.utils.isDownloadSplash
 import com.mredrock.cyxbs.main.viewmodel.MainViewModel
 import com.umeng.analytics.MobclickAgent
@@ -60,7 +59,6 @@ class MainActivity : BaseViewModelActivity<MainViewModel>(),
 
     private lateinit var mainService: IMainService
 
-
     /**
      * 这个变量切记千万不能搬到viewModel,这个变量需要跟activity同生共死
      * 以保障activity异常重启时，这个值会被刷新，activity异常销毁重启viewModel仍在
@@ -68,20 +66,9 @@ class MainActivity : BaseViewModelActivity<MainViewModel>(),
     private var isLoadCourse = true
     var lastState = BottomSheetBehavior.STATE_COLLAPSED
 
-    //这个变量主要是做标志使用，防止Activity异常重启造成的Fragment多次加载
-    var mainPageLoadedFragmentClassList = HashMap<String, String>()
-
-
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<FrameLayout>
 
     private lateinit var bottomHelper: BottomNavigationHelper
-
-
-    //四个需要组装的fragment(懒加载)
-    private val courseFragment: Fragment by lazy(LazyThreadSafetyMode.NONE) { getFragment(COURSE_ENTRY, this) }
-    private val discoverFragment: Fragment by lazy(LazyThreadSafetyMode.NONE) { getFragment(DISCOVER_ENTRY, this) }
-    private val qaFragment: Fragment by lazy(LazyThreadSafetyMode.NONE) { getFragment(QA_ENTRY, this) }
-    private val mineFragment: Fragment by lazy(LazyThreadSafetyMode.NONE) { getFragment(MINE_ENTRY, this) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(R.style.MainActivityTheme)//恢复真正的主题，保证WindowBackground为主题色
@@ -195,31 +182,18 @@ class MainActivity : BaseViewModelActivity<MainViewModel>(),
     }
 
     private fun initBottom() {
+        // ViewPager2默认模式OFFSCREEN_PAGE_LIMIT_DEFAULT为懒加载模式
+        main_view_pager.adapter = MainAdapter(this)
+        main_view_pager.isUserInputEnabled = false
         ll_nav_main_container.onTouch { _, _ -> }//防止穿透点击或者滑动，子View无法处理默认消耗
         //底部导航栏的控制初始化
-        bottomHelper = BottomNavigationHelper(
-                arrayOf(explore, qa, mine),
-                arrayOf(
-                        R.drawable.main_ic_explore_selected,
-                        R.drawable.main_ic_qa_selected,
-                        R.drawable.main_ic_mine_selected),
-                arrayOf(
-                        R.drawable.main_ic_explore_unselected,
-                        R.drawable.main_ic_qa_unselected,
-                        R.drawable.main_ic_mine_unselected))
-        {
+        bottomHelper = BottomNavigationHelper(arrayOf(explore, qa, mine)) {
             MobclickAgent.onEvent(this, CyxbsMob.Event.BOTTOM_TAB_CLICK, mutableMapOf(
                     Pair(CyxbsMob.Key.TAB_INDEX, it.toString())
             ))
-            when (it) {
-                0 -> changeFragment(discoverFragment)
-                1 -> {
-                    //点击Tab刷新邮问
-                    if (bottomHelper.peeCheckedItemPosition == 1) EventBus.getDefault().post(RefreshQaEvent())
-                    changeFragment(qaFragment)
-                }
-                2 -> changeFragment(mineFragment)
-            }
+            if (it == 1 && bottomHelper.peeCheckedItemPosition == 1)
+                EventBus.getDefault().post(RefreshQaEvent())
+            main_view_pager.setCurrentItem(it, false)
         }
 
         // 长按我的展现测试数据
@@ -260,66 +234,39 @@ class MainActivity : BaseViewModelActivity<MainViewModel>(),
         viewModel.isCourseDirectShow = defaultSharedPreferences.getBoolean(COURSE_SHOW_STATE, false)
         //如果为异常启动，则可以取得选中状态
         bundle?.getInt(BOTTOM_SHEET_STATE)?.let { viewModel.isCourseDirectShow = it == BottomSheetBehavior.STATE_EXPANDED }
-        (bundle?.getSerializable(PAGE_CLASS_TAG) as? HashMap<String, String>)?.let { mainPageLoadedFragmentClassList = it }
         lastState = if (viewModel.isCourseDirectShow) BottomSheetBehavior.STATE_EXPANDED else BottomSheetBehavior.STATE_COLLAPSED
         val isShortcut = intent.action == FAST
         if ((viewModel.isCourseDirectShow || isShortcut) && isLoginElseTourist) {
             intent.action = ""
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
             ll_nav_main_container.translationY = 10000f
+            val courseFragment = supportFragmentManager.findFragmentByTag(COURSE_ENTRY)
+                    ?: ServiceManager.getService(COURSE_ENTRY)
             courseFragment.arguments = Bundle().apply { putString(COURSE_DIRECT_LOAD, TRUE) }
             //加载课表，并在滑动下拉课表容器中添加整个课表
-            supportFragmentManager.beginTransaction().apply {
-                if (supportFragmentManager.fragments.entryContains(COURSE_ENTRY, this@MainActivity) == null) {
-                    add(R.id.course_bottom_sheet_content, courseFragment)
-                }
+            supportFragmentManager.commit {
+                replace(R.id.course_bottom_sheet_content, courseFragment, COURSE_ENTRY)
                 show(courseFragment)
-                commit()
             }
         } else {
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
             //加载课表并给课表传递值，让它不要直接加载详细的课表，只用加载现在可见的头部就好
+            val courseFragment = supportFragmentManager.findFragmentByTag(COURSE_ENTRY)
+                    ?: ServiceManager.getService(COURSE_ENTRY)
             courseFragment.arguments = Bundle().apply { putString(COURSE_DIRECT_LOAD, FALSE) }
-            supportFragmentManager.beginTransaction().apply {
-                if (supportFragmentManager.fragments.entryContains(COURSE_ENTRY, this@MainActivity) == null) {
-                    add(R.id.course_bottom_sheet_content, courseFragment)
-                }
+            supportFragmentManager.commit {
+                replace(R.id.course_bottom_sheet_content, courseFragment, COURSE_ENTRY)
                 show(courseFragment)
-                commit()
             }
         }
         //加载发现
         bottomHelper.selectTab(0)
     }
 
-
-    /**
-     * 进行显示页面的切换
-     * @param fragment 用来切换的fragment
-     */
-    private fun changeFragment(fragment: Fragment) {
-        val transition = supportFragmentManager.beginTransaction()
-        //遍历隐藏已经加载的fragment
-        mainPageLoadedFragmentClassList.filter { COURSE_ENTRY != it.key }.forEach {
-            val fragment1 = supportFragmentManager.fragments.entryContains(it.key, this)
-            if (fragment1 != null) {
-                transition.hide(fragment1)
-            }
-        }
-        //如果这个fragment从来没有加载过，则进行添加
-        if (!supportFragmentManager.fragments.contains(fragment)) {
-            transition.add(R.id.other_fragment_container, fragment)
-        }
-        transition.show(fragment)
-        transition.commit()
-    }
-
-
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putInt(BOTTOM_SHEET_STATE, bottomSheetBehavior.state)
         outState.putInt(NAV_SELECT, bottomHelper.peeCheckedItemPosition)
-        outState.putSerializable(PAGE_CLASS_TAG, mainPageLoadedFragmentClassList)
     }
 
     /**

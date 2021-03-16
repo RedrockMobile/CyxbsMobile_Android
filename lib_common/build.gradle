@@ -40,6 +40,7 @@ dependencies {
     api deps.support.design
     api deps.support.v4
     api deps.support.multidex
+    api deps.support.fragment
 
     //events and router
     api deps.arouter.api
