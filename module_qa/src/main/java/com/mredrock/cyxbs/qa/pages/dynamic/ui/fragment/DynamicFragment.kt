@@ -212,7 +212,6 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), EventBusL
         qa_rv_dynamic_List.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = adapterWrapper
-            addItemDecoration(DividerItemDecoration(this@DynamicFragment.activity, DividerItemDecoration.VERTICAL))
             addOnScrollListener(object : RecyclerView.OnScrollListener() {
                 override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                     super.onScrollStateChanged(recyclerView, newState)
