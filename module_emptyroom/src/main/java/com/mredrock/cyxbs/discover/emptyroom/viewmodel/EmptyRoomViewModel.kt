@@ -2,6 +2,7 @@ package com.mredrock.cyxbs.discover.emptyroom.viewmodel
 
 import androidx.lifecycle.MutableLiveData
 import com.mredrock.cyxbs.common.network.ApiGenerator
+import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.mapOrThrowApiException
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
@@ -38,6 +39,7 @@ class EmptyRoomViewModel : BaseViewModel() {
 
     fun getData(week: Int, weekday: Int, building: Int, section: List<Int>) {
         val tag = section.joinToString(",", " ", " ").replace(" ", "")
+        LogUtils.d("RayleighZ", "section = $section, tag = $tag")
         if (section.isEmpty()) {
             status.value = DEFAULT
             return
