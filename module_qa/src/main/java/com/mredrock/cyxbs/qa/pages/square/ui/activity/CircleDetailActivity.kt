@@ -159,7 +159,6 @@ class CircleDetailActivity : BaseViewModelActivity<CircleDetailViewModel>() {
                     setResult(NEED_REFRESH_RESULT)
                 }
             }
-            finish()
         }
         super.onBackPressed()
     }

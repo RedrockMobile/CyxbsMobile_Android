@@ -1,17 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/qa_ctl_topic"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginTop="5dp"
-    android:focusable="true"
-    android:clickable="true"
     android:background="@color/qa_quiz_select_type_background_color"
-    android:transitionName="topicItem"
-    android:orientation="vertical">
+    android:clickable="true"
+    android:focusable="true"
+    android:orientation="vertical"
+    android:transitionName="topicItem">
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/iv_circle_square"
@@ -31,26 +30,26 @@
         android:layout_marginTop="35dp"
         android:layout_marginEnd="16dp"
         android:background="@drawable/qa_shape_send_dynamic_btn_blue_background"
+        android:clickable="true"
+        android:focusable="true"
         android:gravity="center_horizontal|center_vertical"
         android:textColor="@color/common_white_font_color"
         android:textSize="13sp"
-        android:focusable="true"
-        android:clickable="true"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="+关注"
-        tools:ignore="RtlSymmetry" />
+        tools:ignore="RtlSymmetry"
+        tools:text="+关注" />
 
     <TextView
         android:id="@+id/tv_circle_square_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="11dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginStart="10.5dp"
+        android:layout_marginTop="5dp"
         android:textColor="@color/qa_tab_selected_color"
         android:textSize="15sp"
         app:layout_constraintLeft_toRightOf="@id/iv_circle_square"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/iv_circle_square"
         tools:text="高级学术交流中心" />
 
     <TextView
@@ -59,21 +58,23 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="10.5dp"
         android:layout_marginTop="9.5dp"
+        android:layout_marginBottom="4.5dp"
         android:textColor="@color/qa_circle_square_person_number_color"
         android:textSize="11sp"
-        app:layout_constraintLeft_toRightOf="@id/iv_circle_square"
-        app:layout_constraintTop_toBottomOf="@id/tv_circle_square_name"
-        tools:text="475个成员"
-        tools:ignore="SmallSp" />
+        app:layout_constraintBottom_toBottomOf="@+id/iv_circle_square"
+        app:layout_constraintStart_toEndOf="@+id/iv_circle_square"
+        app:layout_constraintTop_toBottomOf="@+id/tv_circle_square_name"
+        tools:ignore="SmallSp"
+        tools:text="475个成员" />
 
     <TextView
         android:id="@+id/tv_circle_square_descriprion"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
         android:layout_marginStart="15.5dp"
-        android:layout_marginBottom="25dp"
+        android:layout_marginTop="20dp"
         android:layout_marginEnd="41.5dp"
+        android:layout_marginBottom="25dp"
         android:textColor="@color/qa_tab_selected_color"
         android:textSize="13sp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -88,6 +89,6 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="@color/qa_mine_common_divide_line"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
