@@ -16,8 +16,8 @@
         android:id="@+id/iv_circle_square"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="15.5dp"
-        android:layout_marginTop="26.5dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="24dp"
         android:scaleType="centerCrop"
         android:src="@drawable/common_default_avatar"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -44,19 +44,19 @@
         android:id="@+id/tv_circle_square_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10.5dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="24dp"
         android:textColor="@color/qa_tab_selected_color"
         android:textSize="15sp"
         app:layout_constraintLeft_toRightOf="@id/iv_circle_square"
-        app:layout_constraintTop_toTopOf="@+id/iv_circle_square"
+        app:layout_constraintTop_toTopOf="parent"
         tools:text="高级学术交流中心" />
 
     <TextView
         android:id="@+id/tv_circle_square_person_number"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10.5dp"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="9.5dp"
         android:layout_marginBottom="4.5dp"
         android:textColor="@color/qa_circle_square_person_number_color"
@@ -64,6 +64,7 @@
         app:layout_constraintBottom_toBottomOf="@+id/iv_circle_square"
         app:layout_constraintStart_toEndOf="@+id/iv_circle_square"
         app:layout_constraintTop_toBottomOf="@+id/tv_circle_square_name"
+        app:layout_constraintVertical_bias="1.0"
         tools:ignore="SmallSp"
         tools:text="475个成员" />
 
