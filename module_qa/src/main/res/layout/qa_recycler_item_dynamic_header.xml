@@ -75,7 +75,8 @@
         app:layout_constraintBottom_toBottomOf="@+id/qa_iv_dynamic_avatar"
         app:layout_constraintStart_toEndOf="@+id/qa_iv_dynamic_avatar"
         app:layout_constraintTop_toBottomOf="@+id/qa_tv_dynamic_nickname"
-        tools:text="@string/qa_recycler_item_dynamic_time" />
+        tools:text="@string/qa_recycler_item_dynamic_time"
+        tools:ignore="SmallSp" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/qa_tv_dynamic_content"
@@ -176,7 +177,7 @@
     <androidx.appcompat.widget.AppCompatImageView
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:alpha="0.1"
+        android:alpha="0.5"
         android:background="@color/qa_question_recycler_item_divide_line_color"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

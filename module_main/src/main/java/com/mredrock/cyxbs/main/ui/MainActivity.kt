@@ -214,13 +214,17 @@ class MainActivity : BaseViewModelActivity<MainViewModel>(),
                     Pair(CyxbsMob.Key.TAB_INDEX, it.toString())
             ))
             when (it) {
-                0 -> changeFragment(discoverFragment)
+                0 -> {
+                    changeFragment(discoverFragment)
+                }
                 1 -> {
                     //点击Tab刷新邮问
                     if (bottomHelper.peeCheckedItemPosition == 1) EventBus.getDefault().post(RefreshQaEvent())
                     changeFragment(qaFragment)
                 }
-                2 -> changeFragment(mineFragment)
+                2 -> {
+                    changeFragment(mineFragment)
+                }
             }
         }
 
