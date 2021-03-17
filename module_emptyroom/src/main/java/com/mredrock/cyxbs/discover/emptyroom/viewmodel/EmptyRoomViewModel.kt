@@ -7,6 +7,7 @@ import com.mredrock.cyxbs.common.utils.extensions.mapOrThrowApiException
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
+import com.mredrock.cyxbs.discover.emptyroom.bean.EmptyClassRoom
 import com.mredrock.cyxbs.discover.emptyroom.bean.EmptyRoom
 import com.mredrock.cyxbs.discover.emptyroom.network.ApiService
 import com.mredrock.cyxbs.discover.emptyroom.utils.EmptyConverter
@@ -19,7 +20,7 @@ import java.util.concurrent.TimeUnit
  */
 
 class EmptyRoomViewModel : BaseViewModel() {
-    var rooms: MutableLiveData<List<EmptyRoom>> = MutableLiveData()
+    var rooms: MutableLiveData<List<EmptyClassRoom>> = MutableLiveData()
     var status: MutableLiveData<Int> = MutableLiveData()
 
     private var d: Disposable? = null
@@ -53,9 +54,9 @@ class EmptyRoomViewModel : BaseViewModel() {
                 .safeSubscribeBy(
                         onNext = {
                             status.value = FINISH
-                            val converter = EmptyConverter()
-                            converter.setEmptyData(it)
-                            rooms.value = converter.convert()
+//                            val converter = EmptyConverter()
+//                            converter.setEmptyData(it)
+                            rooms.value = it
                         },
                         onError = {
                             status.value = ERROR
