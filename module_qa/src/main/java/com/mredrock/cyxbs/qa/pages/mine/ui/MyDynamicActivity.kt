@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.common.config.QA_DYNAMIC_MINE
+import com.mredrock.cyxbs.common.config.getBaseUrl
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.LogUtils
@@ -61,7 +62,7 @@ class MyDynamicActivity : BaseViewModelActivity<MyDynamicViewModel>() {
 
                     onShareClickListener = { dynamic, mode ->
                         val token = ServiceManager.getService(IAccountService::class.java).getUserTokenService().getToken()
-                        val url = "https://wx.redrock.team/game/zscy-youwen-share/#/dynamic?id=${dynamic.postId}?id_token=$token"
+                        val url = "${getBaseUrl()}/zscy-youwen-share/#/dynamic?id=${dynamic.postId}?id_token=$token"
                         when (mode) {
                             CommentConfig.QQ_FRIEND ->
                                 mTencent?.let { it1 -> ShareUtils.qqShare(it1, this@MyDynamicActivity, dynamic.topic, dynamic.content, url, "") }

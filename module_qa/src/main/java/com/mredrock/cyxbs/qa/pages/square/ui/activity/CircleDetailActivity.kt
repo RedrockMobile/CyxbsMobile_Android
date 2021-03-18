@@ -20,6 +20,7 @@ import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.BaseApp.Companion.context
 import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.common.config.QA_CIRCLE_DETAIL
+import com.mredrock.cyxbs.common.config.getBaseUrl
 import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.ui.BaseActivity
@@ -199,7 +200,7 @@ class CircleDetailActivity : BaseViewModelActivity<CircleDetailViewModel>() {
 
         qa_iv_circle_detail_share.setOnSingleClickListener {
             val token = ServiceManager.getService(IAccountService::class.java).getUserTokenService().getToken()
-            val url = "https://wx.redrock.team/game/zscy-youwen-share/#/quanzi?id=${topic.topicId}&id_token=$token"
+            val url = "${getBaseUrl()}/zscy-youwen-share/#/quanzi?id=${topic.topicId}&id_token=$token"
             ShareDialog(it.context).apply {
                 initView(onCancelListener = View.OnClickListener {
                     dismiss()

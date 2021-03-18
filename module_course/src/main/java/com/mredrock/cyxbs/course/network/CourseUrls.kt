@@ -9,7 +9,7 @@ object CourseUrls {
     const val API_GET_COURSE = "/renewapi/kebiao"
 
     //老师课表
-    const val API_GET_TEA_COURSE = "/magipoke-teaKb/api/teaKb"
+    const val API_GET_TEA_COURSE = "/magipoke-teakb/api/teaKb"
 
     //事务
     const val API_GET_AFFAIR = "/magipoke-reminder/Person/getTransaction"

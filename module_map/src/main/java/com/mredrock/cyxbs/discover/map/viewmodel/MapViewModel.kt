@@ -15,6 +15,7 @@ import com.mredrock.cyxbs.common.bean.isSuccessful
 import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.network.CommonApiService
+import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.down.params.DownMessageParams
 import com.mredrock.cyxbs.common.utils.extensions.*
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
@@ -391,6 +392,7 @@ class MapViewModel : BaseViewModel() {
                     true
                 }
                 .safeSubscribeBy {
+                    LogUtils.d("RayleighZ", it.status.toString())
                     if (!it.isSuccessful) {
                         MapToast.makeText(BaseApp.context, BaseApp.context.getString(R.string.map_add_hot_failed), Toast.LENGTH_SHORT).show()
                     }

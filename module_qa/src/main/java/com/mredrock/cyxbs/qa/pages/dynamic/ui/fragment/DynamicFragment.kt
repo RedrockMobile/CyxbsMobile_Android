@@ -19,6 +19,7 @@ import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.common.config.CyxbsMob
 import com.mredrock.cyxbs.common.config.QA_ENTRY
+import com.mredrock.cyxbs.common.config.getBaseUrl
 import com.mredrock.cyxbs.common.event.RefreshQaEvent
 import com.mredrock.cyxbs.common.mark.EventBusLifecycleSubscriber
 import com.mredrock.cyxbs.common.network.ApiGenerator
@@ -120,7 +121,7 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), EventBusL
 
                     onShareClickListener = { dynamic, mode ->
                         val token = ServiceManager.getService(IAccountService::class.java).getUserTokenService().getToken()
-                        val url = "https://wx.redrock.team/game/zscy-youwen-share/#/dynamic?id=${dynamic.postId}&id_token=$token"
+                        val url = "${getBaseUrl()}/zscy-youwen-share/#/dynamic?id=${dynamic.postId}&id_token=$token"
                         when (mode) {
                             QQ_FRIEND ->
                                 mTencent?.let { it1 -> ShareUtils.qqShare(it1, this@DynamicFragment, dynamic.topic, dynamic.content, url, "") }
