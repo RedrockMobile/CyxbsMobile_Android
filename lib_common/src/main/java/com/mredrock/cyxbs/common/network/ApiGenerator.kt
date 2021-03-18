@@ -189,7 +189,7 @@ object ApiGenerator {
          * 当第一个过期token请求接口后，改变token和refreshToken，防止同步refreshToken失效
          * 之后进入该方法的请求，token已经刷新
          */
-        if (refreshToken.isNotEmpty() && isTokenExpired()) {
+        if (refreshToken.isNotEmpty() && isTokenExpired() || response.code == 403) {
             takeIfNoException {
                 ServiceManager.getService(IAccountService::class.java).getVerifyService().refresh(
                         onError = {
