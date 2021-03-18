@@ -11,6 +11,7 @@ import android.webkit.*
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.mredrock.cyxbs.common.config.END_POINT_REDROCK
 import com.mredrock.cyxbs.common.config.REDROCK_HOME_ENTRY
+import com.mredrock.cyxbs.common.config.getBaseUrl
 import com.mredrock.cyxbs.common.ui.BaseActivity
 import com.mredrock.cyxbs.common.utils.extensions.gone
 import com.mredrock.cyxbs.common.utils.extensions.visible
@@ -42,7 +43,7 @@ class RedPageWebActivity : BaseActivity() {
 
         wv_redPage.apply {
 
-            loadUrl("$END_POINT_REDROCK/app/Public/index/")
+            loadUrl("${getBaseUrl()}/app/Public/index/")
             addJavascriptInterface(this, "android")
             webChromeClient = mWebChromeClient
             webViewClient = mWebViewClient

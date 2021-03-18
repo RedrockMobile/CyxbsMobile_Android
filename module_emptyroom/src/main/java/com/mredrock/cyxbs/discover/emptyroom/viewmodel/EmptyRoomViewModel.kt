@@ -59,6 +59,7 @@ class EmptyRoomViewModel : BaseViewModel() {
                             rooms.value = it
                         },
                         onError = {
+                            LogUtils.d("RayleighZ", it.toString())
                             status.value = ERROR
                         })
         d?.lifeCycle()

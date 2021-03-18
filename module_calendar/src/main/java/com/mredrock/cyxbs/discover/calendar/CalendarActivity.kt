@@ -16,6 +16,7 @@ import com.mredrock.cyxbs.calendar.R
 import com.mredrock.cyxbs.common.utils.extensions.getDarkModeStatus
 import com.mredrock.cyxbs.common.config.DISCOVER_CALENDAR
 import com.mredrock.cyxbs.common.config.END_POINT_REDROCK
+import com.mredrock.cyxbs.common.config.getBaseUrl
 import com.mredrock.cyxbs.common.ui.BaseActivity
 import kotlinx.android.synthetic.main.calendar_activity_main.*
 
@@ -29,7 +30,7 @@ class CalendarActivity : BaseActivity() {
                 .diskCacheStrategy(DiskCacheStrategy.DATA)
                 .skipMemoryCache(true)
         Glide.with(this)
-                .load("$END_POINT_REDROCK/renewapi/schoolCalendar")
+                .load("${getBaseUrl()}/renewapi/schoolCalendar")
                 .apply(request)
                 .into(object : DrawableImageViewTarget(iv_calendar) {
                     override fun onResourceReady(resource: Drawable, transition: Transition<in Drawable>?) {

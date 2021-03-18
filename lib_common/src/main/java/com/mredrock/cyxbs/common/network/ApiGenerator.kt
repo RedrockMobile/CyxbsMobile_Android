@@ -6,6 +6,7 @@ import com.mredrock.cyxbs.common.config.END_POINT_REDROCK
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.api.account.IUserStateService
+import com.mredrock.cyxbs.common.config.getBaseUrl
 import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.takeIfNoException
 import okhttp3.Interceptor
@@ -141,7 +142,7 @@ object ApiGenerator {
 
     //默认配置
     private fun Retrofit.Builder.defaultConfig() {
-        this.baseUrl(END_POINT_REDROCK)
+        this.baseUrl(getBaseUrl())
     }
 
     //默认配置
