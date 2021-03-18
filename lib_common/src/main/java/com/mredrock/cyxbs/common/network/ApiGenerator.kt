@@ -1,14 +1,17 @@
 package com.mredrock.cyxbs.common.network
 
 import android.util.SparseArray
+import android.widget.Toast
 import com.mredrock.cyxbs.common.BuildConfig
 import com.mredrock.cyxbs.common.config.END_POINT_REDROCK
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.api.account.IUserStateService
+import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.config.getBaseUrl
 import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.takeIfNoException
+import com.mredrock.cyxbs.common.utils.extensions.toast
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.Response
@@ -159,6 +162,9 @@ object ApiGenerator {
                  * 在外面加一层判断，用于token未过期时，能够异步请求，不用阻塞在checkRefresh()
                  * 如果有更好方式再改改
                  */
+                val response = it.proceed(it.request().newBuilder().header("Authorization", "Bearer $token").build())
+                val code = response.code
+                response.close()
                 when {
                     refreshToken.isEmpty() || token.isEmpty() -> {
                         token = ServiceManager.getService(IAccountService::class.java).getUserTokenService().getToken()
@@ -170,6 +176,10 @@ object ApiGenerator {
                         }
                     }
                     isTokenExpired() -> {
+                        checkRefresh(it)
+                    }
+                    code == 403 ->{
+                        LogUtils.d("RayleighZ","403")
                         checkRefresh(it)
                     }
                     else -> {
@@ -189,13 +199,17 @@ object ApiGenerator {
          * 当第一个过期token请求接口后，改变token和refreshToken，防止同步refreshToken失效
          * 之后进入该方法的请求，token已经刷新
          */
-        if (refreshToken.isNotEmpty() && isTokenExpired() || response.code == 403) {
+        if (refreshToken.isNotEmpty() && (isTokenExpired() || response.code == 403)) {
+            LogUtils.d("RayleighZ", "On The Way Refresh")
             takeIfNoException {
                 ServiceManager.getService(IAccountService::class.java).getVerifyService().refresh(
                         onError = {
+                            LogUtils.d("RayleighZ","Token Refresh Fucked")
+                            BaseApp.context.toast("登陆认证失败，请重新登陆")
                             response.close()
                         },
                         action = { s: String ->
+                            LogUtils.d("RayleighZ","Token Refresh Done")
                             response.close()
                             response = chain.run { proceed(chain.request().newBuilder().header("Authorization", "Bearer $s").build()) }
                         }
