@@ -94,6 +94,7 @@ class QuizViewModel : BaseViewModel() {
                     backAndRefreshPreActivityEvent.value = true
                 }
                 .safeSubscribeBy {
+                    LogUtils.d("RayJoe", "输出一条请求")
                     toastEvent.value = R.string.qa_release_dynamic_success
                     backAndRefreshPreActivityEvent.value = true
                 }
