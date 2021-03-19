@@ -52,11 +52,11 @@
 
         <RelativeLayout
             android:id="@+id/rl_qa_hot_search"
-            android:layout_width="360dp"
+            android:layout_width="match_parent"
             android:layout_height="36dp"
-            android:layout_marginStart="30dp"
+            android:layout_marginStart="16dp"
             android:layout_marginTop="20dp"
-            android:layout_marginEnd="40dp"
+            android:layout_marginEnd="16dp"
             android:background="@drawable/qa_shape_question_search_background">
 
             <androidx.appcompat.widget.AppCompatImageView

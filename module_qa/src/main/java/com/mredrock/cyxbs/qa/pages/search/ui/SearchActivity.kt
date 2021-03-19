@@ -80,7 +80,7 @@ class SearchActivity : BaseViewModelActivity<SearchViewModel>(), EventBusLifecyc
                         v.text = ""
                     }
                 } else {
-                    searchText = v.text as String
+                    searchText = v.text.toString()
                     turnToResult(v.text.toString())
                     viewModel.insert(QAHistory(v.text.toString(), System.currentTimeMillis()))
                 }

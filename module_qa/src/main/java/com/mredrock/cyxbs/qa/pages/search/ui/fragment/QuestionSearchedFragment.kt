@@ -121,7 +121,6 @@ class QuestionSearchedFragment : BaseViewModelFragment<QuestionSearchedViewModel
                         emptyRvAdapter?.showNOResultRefreshHolder()
                     }
                     if (SEARCHRESULT) {
-                        LogUtils.d("zt", "搜索数据不为空")
                         qa_tv_contract_content.visibility = View.VISIBLE
                     }
                     if (viewModel.isKnowledge) {
@@ -130,7 +129,6 @@ class QuestionSearchedFragment : BaseViewModelFragment<QuestionSearchedViewModel
                             qa_line.gone()
                             qa_tv_knowledge.gone()
                         }else{
-                            Log.d("RayT","555555555555555555555")
                             qa_line.visibility = View.VISIBLE
                             qa_rv_knowledge.visibility = View.VISIBLE
                             qa_tv_knowledge.visibility = View.VISIBLE
@@ -266,10 +264,14 @@ class QuestionSearchedFragment : BaseViewModelFragment<QuestionSearchedViewModel
                 val adapterSearchResultHeader=SearchResultHeaderAdapter(adapterKnowledge,qa_rv_knowledge)
 
                 adapterKnowledge.searchResultHeaderAdapter=adapterSearchResultHeader
-                knowledges?.let { it1 -> adapterKnowledge.addData(it1) }
+                val flexBoxManager = FlexboxLayoutManager(BaseApp.context)
+                flexBoxManager.flexWrap = FlexWrap.WRAP
+                qa_rv_knowledge.layoutManager=flexBoxManager
                 qa_rv_knowledge.adapter = adapterKnowledge
+                knowledges?.let { it1 ->
+                    adapterKnowledge.addData(it1)
+                }
             } else {
-                Log.d("RATy","6666666666")
                 qa_rv_knowledge.gone()
                 qa_line.gone()
                 qa_tv_knowledge.gone()
