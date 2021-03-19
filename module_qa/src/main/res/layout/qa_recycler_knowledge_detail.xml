@@ -4,30 +4,31 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginHorizontal="20dp"
+    android:layout_marginStart="5dp"
+    android:layout_marginEnd="5dp"
     android:layout_marginBottom="20dp"
     android:orientation="vertical">
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
         app:cardBackgroundColor="@color/qa_question_list_color"
         app:cardCornerRadius="10dp"
         app:cardElevation="0dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:background="@color/common_white_background">
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/tv_knowledge_base_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginStart="18dp"
+                android:layout_marginTop="25dp"
                 android:textColor="@color/common_level_two_font_color"
-                android:textSize="20sp"
+                android:textSize="16sp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -37,14 +38,15 @@
                 android:id="@+id/tv_knowledge_base_detail"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="20dp"
-                android:layout_marginEnd="20dp"
+                android:layout_marginStart="18dp"
+                android:layout_marginTop="14dp"
+                android:layout_marginEnd="16dp"
                 android:alpha="0.68"
-                android:textColor="@color/common_level_two_font_color"
+                android:textColor="@color/qa_quiz_select_type_text_color"
+                android:textSize="13sp"
                 android:textIsSelectable="true"
-                app:layout_constraintEnd_toStartOf="@+id/iv_knowledge"
                 app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_knowledge_base_title"
                 tools:text="如上所诉，你可以主动对您获取的回答进行采纳，将你的积分悬赏给该用户
                 ；但是如果你没有及时对用户的回答进行采纳，
@@ -64,16 +66,25 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_knowledge_base_detail"
                 tools:text="来源：邮问知识库" />
-
             <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/iv_knowledge"
-                android:layout_width="100dp"
-                android:layout_height="0dp"
-                android:layout_marginEnd="20dp"
-                android:scaleType="centerInside"
-                app:layout_constraintBottom_toBottomOf="@id/tv_knowledge_from"
+                android:id="@+id/qa_knowledge_cancle"
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:src="@drawable/qa_ic_cancle_knowledge"
+                app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@id/tv_knowledge_base_title" />
+                android:layout_marginTop="27dp"
+                android:layout_marginEnd="16dp"/>
+
+<!--            <androidx.appcompat.widget.AppCompatImageView-->
+<!--                android:id="@+id/iv_knowledge"-->
+<!--                android:layout_width="100dp"-->
+<!--                android:layout_height="0dp"-->
+<!--                android:layout_marginEnd="20dp"-->
+<!--                android:scaleType="centerInside"-->
+<!--                app:layout_constraintBottom_toBottomOf="@id/tv_knowledge_from"-->
+<!--                app:layout_constraintEnd_toEndOf="parent"-->
+<!--                app:layout_constraintTop_toTopOf="@id/tv_knowledge_base_title" />-->
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
 
