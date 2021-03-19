@@ -62,7 +62,7 @@ class MyDynamicActivity : BaseViewModelActivity<MyDynamicViewModel>() {
 
                     onShareClickListener = { dynamic, mode ->
                         val token = ServiceManager.getService(IAccountService::class.java).getUserTokenService().getToken()
-                        val url = "${getBaseUrl()}/zscy-youwen-share/#/dynamic?id=${dynamic.postId}?id_token=$token"
+                        val url = "https://fe-prod.redrock.team/zscy-youwen-share/#/dynamic?id=${dynamic.postId}?id_token=$token"
                         when (mode) {
                             CommentConfig.QQ_FRIEND ->
                                 mTencent?.let { it1 -> ShareUtils.qqShare(it1, this@MyDynamicActivity, dynamic.topic, dynamic.content, url, "") }
