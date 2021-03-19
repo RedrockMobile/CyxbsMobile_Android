@@ -161,9 +161,6 @@ object ApiGenerator {
                  * 在外面加一层判断，用于token未过期时，能够异步请求，不用阻塞在checkRefresh()
                  * 如果有更好方式再改改
                  */
-                val response = it.proceed(it.request().newBuilder().header("Authorization", "Bearer $token").build())
-                val code = response.code
-                response.close()
                 when {
                     refreshToken.isEmpty() || token.isEmpty() -> {
                         token = ServiceManager.getService(IAccountService::class.java).getUserTokenService().getToken()
@@ -177,11 +174,13 @@ object ApiGenerator {
                     isTokenExpired() -> {
                         checkRefresh(it)
                     }
-                    code == 403 ->{
-                        checkRefresh(it)
-                    }
                     else -> {
-                        it.proceed(it.request().newBuilder().header("Authorization", "Bearer $token").build())
+                        //HttpStatus判断
+                        val response = it.proceed(it.request().newBuilder().header("Authorization", "Bearer $token").build())
+                        when(response.code){
+                            403 -> { checkRefresh(it) }
+                            else -> { response }
+                        }
                     }
                 } as Response
             })
