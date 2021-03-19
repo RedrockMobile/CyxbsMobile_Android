@@ -17,6 +17,7 @@ import com.mredrock.cyxbs.common.ui.BaseViewModelFragment
 import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.doIfLogin
 import com.mredrock.cyxbs.common.utils.extensions.gone
+import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.beannew.Knowledge
 import com.mredrock.cyxbs.qa.component.recycler.RvAdapterWrapper
@@ -49,6 +50,7 @@ import com.mredrock.cyxbs.qa.utils.ShareUtils
 import com.mredrock.cyxbs.qa.utils.isNullOrEmpty
 import com.tencent.tauth.Tencent
 import kotlinx.android.synthetic.main.qa_fragment_question_search_result.*
+import kotlinx.android.synthetic.main.qa_recycler_knowledge_detail.*
 
 /**
  * Created by yyfbe, Date on 2020/8/13.
@@ -246,7 +248,6 @@ class QuestionSearchedFragment : BaseViewModelFragment<QuestionSearchedViewModel
             }else{
                 viewModel.invalidateSearchQuestionList()
             }
-
         }
         viewModel.deleteTips.observe {
             if (it == true)
@@ -260,23 +261,12 @@ class QuestionSearchedFragment : BaseViewModelFragment<QuestionSearchedViewModel
         viewModel.knowledge.observe {
             if (!it.isNullOrEmpty()) {
                 knowledges=it
-                val flexBoxManager = FlexboxLayoutManager(BaseApp.context)
-                flexBoxManager.flexWrap = FlexWrap.WRAP
-                qa_rv_knowledge.layoutManager = flexBoxManager
-                qa_rv_knowledge.adapter = SearchKnowledgeAdapter {
-                    //邮问知识库的调用
-                    if (knowledges!=null){
-                        ClickKnowledge=true
-                        qa_rv_knowledge.adapter=SearchResultHeaderAdapter(knowledges!!.get(it))
-                        qa_rv_knowledge.layoutManager=LinearLayoutManager(BaseApp.context)
-                        qa_line.gone()
-                        qa_tv_knowledge.gone()
-                    }
-                }.apply {
-                    if (it != null) {
-                        addData(it)
-                    }
-                }
+                val adapterKnowledge=SearchKnowledgeAdapter(qa_rv_knowledge)
+                val adapterSearchResultHeader=SearchResultHeaderAdapter(adapterKnowledge,qa_rv_knowledge)
+
+                adapterKnowledge.searchResultHeaderAdapter=adapterSearchResultHeader
+                knowledges?.let { it1 -> adapterKnowledge.addData(it1) }
+                qa_rv_knowledge.adapter = adapterKnowledge
             } else {
                 Log.d("RATy","6666666666")
                 qa_rv_knowledge.gone()
