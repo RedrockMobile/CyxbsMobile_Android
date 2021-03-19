@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.DragAndDropPermissions
 import android.view.DragEvent
 import android.view.Menu
@@ -19,6 +20,8 @@ import com.mredrock.cyxbs.common.utils.extensions.intentFor
 import com.mredrock.cyxbs.common.utils.extensions.longToast
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.bean.QAHistory
+import com.mredrock.cyxbs.qa.config.RequestResultCode
+import com.mredrock.cyxbs.qa.config.RequestResultCode.ClickKnowledge
 import com.mredrock.cyxbs.qa.event.QASearchEvent
 import com.mredrock.cyxbs.qa.pages.search.ui.fragment.QuestionSearchedFragment
 import com.mredrock.cyxbs.qa.pages.search.ui.fragment.QuestionSearchingFragment
@@ -34,6 +37,9 @@ import org.greenrobot.eventbus.ThreadMode
 class SearchActivity : BaseViewModelActivity<SearchViewModel>(), EventBusLifecycleSubscriber {
     private val questionSearchingFragment: QuestionSearchingFragment by lazy(LazyThreadSafetyMode.NONE) { QuestionSearchingFragment() }
     private val questionSearchedFragment: QuestionSearchedFragment by lazy(LazyThreadSafetyMode.NONE) { QuestionSearchedFragment() }
+
+    var searchText = "test"//用于保存搜索的数据
+
     companion object {
         private const val SEARCH_HINT_KEY = "search_hint_key"
         fun activityStart(fragment: Fragment, searchHint: String, view: View) {
@@ -66,6 +72,7 @@ class SearchActivity : BaseViewModelActivity<SearchViewModel>(), EventBusLifecyc
                 if (v.text.toString().isBlank()) {
                     if (!searchHint.isNullOrEmpty() && !v.hint.isNullOrEmpty()) {
                         v.text = searchHint
+                        searchText = searchHint
                         turnToResult(searchHint)
                         viewModel.insert(QAHistory(v.text.toString(), System.currentTimeMillis()))
                     } else {
@@ -73,6 +80,7 @@ class SearchActivity : BaseViewModelActivity<SearchViewModel>(), EventBusLifecyc
                         v.text = ""
                     }
                 } else {
+                    searchText = v.text as String
                     turnToResult(v.text.toString())
                     viewModel.insert(QAHistory(v.text.toString(), System.currentTimeMillis()))
                 }
@@ -107,18 +115,27 @@ class SearchActivity : BaseViewModelActivity<SearchViewModel>(), EventBusLifecyc
             questionSearchedFragment.arguments = bundle
             supportFragmentManager.beginTransaction().replace(R.id.fcv_question_search, questionSearchedFragment).commit()
         }
-
         (getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).hideSoftInputFromWindow(currentFocus?.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
-
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun startSearching(e: QASearchEvent) {
         et_question_search.setText(e.searchKey)
+        searchText = e.searchKey
         turnToResult(e.searchKey)
     }
 
     override fun onBackPressed() {
-        supportFinishAfterTransition()
+        //如果邮问知识库被点击状态下的加载，就是恢复原来的知识库列表
+        if (ClickKnowledge) {
+            ClickKnowledge = false
+            val bundle = Bundle()
+            bundle.putString(QuestionSearchedFragment.SEARCH_KEY, searchText)
+            val searchedFragment= QuestionSearchedFragment()
+            searchedFragment.arguments=bundle
+            supportFragmentManager.beginTransaction().replace(R.id.fcv_question_search, searchedFragment).commit()
+        } else {
+            supportFinishAfterTransition()
+        }
     }
 }

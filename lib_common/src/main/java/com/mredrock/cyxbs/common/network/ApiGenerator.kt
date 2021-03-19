@@ -3,7 +3,6 @@ package com.mredrock.cyxbs.common.network
 import android.util.SparseArray
 import android.widget.Toast
 import com.mredrock.cyxbs.common.BuildConfig
-import com.mredrock.cyxbs.common.config.END_POINT_REDROCK
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.api.account.IUserStateService
@@ -179,7 +178,6 @@ object ApiGenerator {
                         checkRefresh(it)
                     }
                     code == 403 ->{
-                        LogUtils.d("RayleighZ","403")
                         checkRefresh(it)
                     }
                     else -> {
@@ -200,16 +198,13 @@ object ApiGenerator {
          * 之后进入该方法的请求，token已经刷新
          */
         if (refreshToken.isNotEmpty() && (isTokenExpired() || response.code == 403)) {
-            LogUtils.d("RayleighZ", "On The Way Refresh")
             takeIfNoException {
                 ServiceManager.getService(IAccountService::class.java).getVerifyService().refresh(
                         onError = {
-                            LogUtils.d("RayleighZ","Token Refresh Fucked")
-                            BaseApp.context.toast("登陆认证失败，请重新登陆")
+                            //TODO: 强制下线
                             response.close()
                         },
                         action = { s: String ->
-                            LogUtils.d("RayleighZ","Token Refresh Done")
                             response.close()
                             response = chain.run { proceed(chain.request().newBuilder().header("Authorization", "Bearer $s").build()) }
                         }

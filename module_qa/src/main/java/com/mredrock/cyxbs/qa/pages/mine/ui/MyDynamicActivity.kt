@@ -2,6 +2,7 @@ package com.mredrock.cyxbs.qa.pages.mine.ui
 
 import android.graphics.Color
 import android.os.Bundle
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.alibaba.android.arouter.facade.annotation.Route
@@ -44,7 +45,7 @@ class MyDynamicActivity : BaseViewModelActivity<MyDynamicViewModel>() {
         initDynamics()
     }
 
-    private fun initView(){
+    private fun initView() {
         qa_tv_toolbar_title.text = "动态"
         qa_ib_toolbar_back.setOnSingleClickListener {
             onBackPressed()
@@ -68,7 +69,7 @@ class MyDynamicActivity : BaseViewModelActivity<MyDynamicViewModel>() {
                                 mTencent?.let { it1 -> ShareUtils.qqShare(it1, this@MyDynamicActivity, dynamic.topic, dynamic.content, url, "") }
                             CommentConfig.QQ_ZONE ->
                                 mTencent?.let { it1 -> ShareUtils.qqQzoneShare(it1, this@MyDynamicActivity, dynamic.topic, dynamic.content, url, ArrayList()) }
-                            CommentConfig.COPY_LINK ->{
+                            CommentConfig.COPY_LINK -> {
                                 ClipboardController.copyText(this@MyDynamicActivity, url)
                             }
                         }

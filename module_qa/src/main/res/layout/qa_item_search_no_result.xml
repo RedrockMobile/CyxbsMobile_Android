@@ -133,13 +133,14 @@
             android:textSize="12sp" />
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_no_result_ask_question"
-            android:layout_width="116dp"
-            android:layout_height="48dp"
+            android:layout_width="111dp"
+            android:layout_height="34dp"
             android:layout_gravity="center_horizontal"
+            android:gravity="center"
             android:background="@drawable/qa_shape_send_dynamic_btn_blue_background"
             android:text="@string/qa_fragment_head_give_question"
             android:textColor="@color/common_white_font_color"
             android:layout_marginTop="91dp"
-            android:textSize="18sp" />
+            android:textSize="15sp" />
     </LinearLayout>
 </FrameLayout>

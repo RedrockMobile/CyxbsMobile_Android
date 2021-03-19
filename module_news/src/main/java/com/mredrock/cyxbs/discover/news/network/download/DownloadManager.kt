@@ -2,7 +2,6 @@ package com.mredrock.cyxbs.discover.news.network.download
 
 import android.os.Environment
 import android.os.Environment.DIRECTORY_DOWNLOADS
-import com.mredrock.cyxbs.common.config.END_POINT_REDROCK
 import com.mredrock.cyxbs.common.config.getBaseUrl
 import com.mredrock.cyxbs.discover.news.network.ApiService
 import okhttp3.OkHttpClient

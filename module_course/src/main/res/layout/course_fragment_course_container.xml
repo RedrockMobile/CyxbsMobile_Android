@@ -28,15 +28,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <com.mredrock.cyxbs.course.component.RedRockTipsView
+            <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/course_tip"
                 android:layout_width="40dp"
-                android:layout_height="20dp"
+                android:layout_height="8dp"
                 android:layout_gravity="center_horizontal"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/common_shape_tip"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:tipsColor="@color/common_course_table_drag_indicator_block_color" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <FrameLayout
                 android:id="@+id/course_header"
@@ -59,8 +60,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerHorizontal="true"
-                        android:textColor="@color/common_level_three_font_color"
-                        android:text="@string/course_tourist_mode_ask_login" />
+                        android:text="@string/course_tourist_mode_ask_login"
+                        android:textColor="@color/common_level_three_font_color" />
                 </RelativeLayout>
 
                 <FrameLayout
@@ -162,11 +163,11 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/course_no_class_recently"
+                            android:textColor="@color/levelFourFontColor"
                             android:visibility="@{coursesViewModel.isShowCurrentNoCourseTip}"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
-                            android:textColor="@color/levelFourFontColor"
                             app:layout_constraintTop_toTopOf="parent" />
 
                     </androidx.constraintlayout.widget.ConstraintLayout>

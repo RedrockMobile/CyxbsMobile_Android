@@ -15,7 +15,6 @@ import com.bumptech.glide.request.transition.Transition
 import com.mredrock.cyxbs.calendar.R
 import com.mredrock.cyxbs.common.utils.extensions.getDarkModeStatus
 import com.mredrock.cyxbs.common.config.DISCOVER_CALENDAR
-import com.mredrock.cyxbs.common.config.END_POINT_REDROCK
 import com.mredrock.cyxbs.common.config.getBaseUrl
 import com.mredrock.cyxbs.common.ui.BaseActivity
 import kotlinx.android.synthetic.main.calendar_activity_main.*

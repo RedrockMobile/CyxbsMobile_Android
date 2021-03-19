@@ -42,18 +42,12 @@ import kotlinx.android.synthetic.main.mine_fragment_main.*
 @SuppressLint("SetTextI18n")
 @Route(path = MINE_ENTRY)
 class UserFragment : BaseViewModelFragment<UserViewModel>() {
-    override var TAG = "RayleighZ"
 
-    override var isOpenLifeCycleLog: Boolean
-        get() = false
-        set(value) {}
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         addObserver()
         initView()
-//        val token = ServiceManager.getService(IAccountService::class.java).getUserTokenService().getToken()
-//        LogUtils.d("RayleighZ", token)
     }
 
     private fun initView() {
@@ -116,9 +110,11 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
         })
 
         viewModel.userUncheckCount.observe(viewLifecycleOwner, Observer {
-            LogUtils.d("RayleighZ","正在刷新未读消息数")
-            it.uncheckPraiseCount?.let { uncheckPraise -> viewModel.setViewWidthAndText(mine_main_tv_uncheck_praise_count, uncheckPraise) }
-            it.uncheckCommentCount?.let { uncheckComment -> viewModel.setViewWidthAndText(mine_main_tv_uncheck_comment_count, uncheckComment) }
+            it?.let {
+                LogUtils.d("RayleighZ","正在刷新未读消息数")
+                it.uncheckPraiseCount?.let { uncheckPraise -> viewModel.setViewWidthAndText(mine_main_tv_uncheck_praise_count, uncheckPraise) }
+                it.uncheckCommentCount?.let { uncheckComment -> viewModel.setViewWidthAndText(mine_main_tv_uncheck_comment_count, uncheckComment) }
+            }
         })
     }
 
@@ -131,10 +127,7 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
 
     private fun fetchInfo() {
         viewModel.getScoreStatus()
-//        viewModel.getQANumber()
         viewModel.getUserCount()
-//        viewModel.getUserUncheckCount(1)
-//        viewModel.getUserUncheckCount(2)
         refreshUserLayout()
     }
 
@@ -144,75 +137,10 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
         context?.loadAvatar(userService.getAvatarImgUrl(), mine_main_avatar)
         mine_main_username.text = if (userService.getNickname().isBlank()) getString(R.string.mine_user_empty_username) else userService.getNickname()
         mine_main_introduce.text = if (userService.getIntroduction().isBlank()) getString(R.string.mine_user_empty_introduce) else userService.getIntroduction()
-//        mine_main_btn_exit.visibility = View.VISIBLE
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
             inflater.inflate(R.layout.mine_fragment_main, container, false)
-
-    private fun onSetWidgetClick() {
-        ARouter.getInstance().build(WIDGET_SETTING).navigation()
-    }
-
-
-    private fun onExitClick() {
-        val tag = "exit"
-        activity?.let { act ->
-            if (act.supportFragmentManager.findFragmentByTag(tag) == null) {
-                CommonDialogFragment().apply {
-                    initView(
-                            containerRes = R.layout.mine_layout_dialog_logout,
-                            onPositiveClick = {
-                                cleanAppWidgetCache()
-                                //清除user信息，必须要在LoginStateChangeEvent之前
-                                viewModel.clearUser()
-                                //清空activity栈
-                                val flag = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
-                                ARouter.getInstance().build(MAIN_LOGIN).withFlags(flag).withBoolean(IS_EXIT_LOGIN, true).navigation()
-                            },
-                            positiveString = "退出",
-                            onNegativeClick = { dismiss() }
-                    )
-                }.show(act.supportFragmentManager, tag)
-            }
-
-        }
-    }
-
-    private fun showPraise() {
-        val tag = "praise"
-        activity?.let { act ->
-            if (act.supportFragmentManager.findFragmentByTag(tag) == null) {
-                CommonDialogFragment().apply {
-                    initView(
-                            containerRes = R.layout.mine_layout_dialog_praise,
-                            onPositiveClick = { dismiss() },
-                            positiveString = "确定",
-                            elseFunction = { view ->
-                                view.findViewById<TextView>(R.id.mine_dialog_tv_praise).text = "你一共获得${
-                                    viewModel.qaNumber.value?.praiseNumber
-                                            ?: 0
-                                }个赞"
-                            }
-                    )
-                }.show(act.supportFragmentManager, tag)
-            }
-
-        }
-
-    }
-
-    private fun cleanAppWidgetCache() {
-        context?.defaultSharedPreferences?.editor {
-            putString(WIDGET_COURSE, "")
-            putBoolean(SP_WIDGET_NEED_FRESH, true)
-        }
-    }
-
-    private fun clickAboutUsWebsite() {
-        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(ABOUT_US_WEBSITE))
-        startActivity(intent)
-    }
 
     private fun jump(path: String) {
         ARouter.getInstance().build(path).navigation()

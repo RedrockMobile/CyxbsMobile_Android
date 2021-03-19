@@ -6,7 +6,7 @@
     android:fitsSystemWindows="true"
     android:background="@color/common_grades_fragment_text_color_black"
     android:layout_height="match_parent"
-    tools:context=".page.ask.AskActivity">
+    tools:context=".page.myproduct.MyProductActivity">
 
 
 

@@ -8,10 +8,7 @@
     android:layout_marginLeft="30dp"
     android:layout_marginRight="30dp"
     android:background="@drawable/qa_shape_dialog_tip_background"
-    app:layout_constraintBottom_toBottomOf="parent"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toTopOf="parent">
+    >
 
     <androidx.appcompat.widget.AppCompatEditText
         android:id="@+id/qa_et_report"
