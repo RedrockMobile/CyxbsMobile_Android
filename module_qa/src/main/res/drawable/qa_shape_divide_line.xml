@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
-    <solid android:color="@color/qa_answer_item_divider_color"/>
+    <solid android:color="@color/qa_question_recycler_item_divide_line_color"/>
     <size android:height="1dp"/>
 </shape>

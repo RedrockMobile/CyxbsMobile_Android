@@ -7,7 +7,7 @@
     <!--    问题item的下面的各类数字颜色-->
     <color name="qa_question_bottom_count_color">#838384</color>
     <!--    问题item的分割线颜色-->
-    <color name="qa_question_recycler_item_divide_line_color">#BDCCE5</color>
+    <color name="qa_question_recycler_item_divide_line_color">#252525</color>
     <!--    评论list背景颜色-->
     <color name="qa_comment_list_background_color">#f6fafd</color>
     <!--    评论底部背景颜色-->
@@ -30,7 +30,7 @@
     <!--    RecyclerView加载时的holder背景颜色-->
     <color name="qa_question_item_shadow_color">#ffffff</color>
     <!--    提问选择类型的背景颜色-->
-    <color name="qa_quiz_select_type_background_color">#F1F3F8</color>
+    <color name="qa_quiz_select_type_background_color">#000000</color>
     <!--    提问选择类型的文字颜色-->
     <color name="qa_quiz_select_type_text_color">#556C89</color>
     <!--    提问选中类型的文字颜色-->

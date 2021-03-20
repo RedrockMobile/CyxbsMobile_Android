@@ -123,6 +123,7 @@ abstract class BaseCircleDetailFragment<T : CircleDetailViewModel> : BaseViewMod
         )
         qa_rv_circle_detail_last_hot.adapter = adapterWrapper
         qa_rv_circle_detail_last_hot.layoutManager = LinearLayoutManager(context)
+        //手动添加分割线
 
         qa_hot_last_swipe_refresh_layout.setOnRefreshListener {
             viewModel.invalidateQuestionList()

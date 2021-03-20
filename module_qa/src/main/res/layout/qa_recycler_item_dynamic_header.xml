@@ -177,7 +177,6 @@
     <androidx.appcompat.widget.AppCompatImageView
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:alpha="0.5"
         android:background="@color/qa_question_recycler_item_divide_line_color"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

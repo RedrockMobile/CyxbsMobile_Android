@@ -86,10 +86,10 @@
         app:layout_constraintVertical_bias="1.0"
         tools:text="重邮也有猫猫图鉴啦，欢迎大家一起来分享你看见的猫猫~" />
 
-    <View
+<!--    <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="@color/qa_mine_common_divide_line"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent" />-->
 </androidx.constraintlayout.widget.ConstraintLayout>

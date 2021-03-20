@@ -6,7 +6,7 @@
 
     <TextView
         android:id="@+id/qa_popwindow_tv_option"
-        android:layout_width="138dp"
+        android:layout_width="178dp"
         android:layout_height="29dp"
         android:background="#00ffffff"
         android:gravity="center_horizontal|center_vertical"
