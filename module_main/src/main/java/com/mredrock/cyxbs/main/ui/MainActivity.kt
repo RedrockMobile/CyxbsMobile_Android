@@ -78,6 +78,7 @@ class MainActivity : BaseViewModelActivity<MainViewModel>(),
 
     private lateinit var bottomHelper: BottomNavigationHelper
 
+    private var isQa = false
 
     //四个需要组装的fragment(懒加载)
     private val courseFragment: Fragment by lazy(LazyThreadSafetyMode.NONE) { getFragment(COURSE_ENTRY, this) }
@@ -163,7 +164,8 @@ class MainActivity : BaseViewModelActivity<MainViewModel>(),
         bottomSheetBehavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
             override fun onSlide(bottomSheet: View, slideOffset: Float) {
                 mainService.obtainBottomSheetStateLiveData().value = slideOffset
-                ll_nav_main_container.translationY = ll_nav_main_container.height * slideOffset
+                if (!isQa && slideOffset >= 0)
+                    ll_nav_main_container.translationY = ll_nav_main_container.height * slideOffset
             }
 
             override fun onStateChanged(bottomSheet: View, newState: Int) {
@@ -216,13 +218,19 @@ class MainActivity : BaseViewModelActivity<MainViewModel>(),
             when (it) {
                 0 -> {
                     changeFragment(discoverFragment)
+                    isQa = false
+                    bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
                 }
                 1 -> {
                     //点击Tab刷新邮问
+                    isQa = true
+                    bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
                     if (bottomHelper.peeCheckedItemPosition == 1) EventBus.getDefault().post(RefreshQaEvent())
                     changeFragment(qaFragment)
                 }
                 2 -> {
+                    isQa = false
+                    bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
                     changeFragment(mineFragment)
                 }
             }

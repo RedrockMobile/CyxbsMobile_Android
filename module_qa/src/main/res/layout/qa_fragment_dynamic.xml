@@ -135,6 +135,6 @@
         android:layout_height="65dp"
         android:layout_gravity="bottom|right"
         android:layout_marginEnd="20dp"
-        android:layout_marginBottom="65dp"
+        android:layout_marginBottom="120dp"
         android:background="@drawable/qa_ic_send_dynamic" />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
