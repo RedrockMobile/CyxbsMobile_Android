@@ -6,7 +6,7 @@ package com.mredrock.cyxbs.course.network
 object CourseUrls {
 
     // 课程
-    const val API_GET_COURSE = "/renewapi/kebiao"
+    const val API_GET_COURSE = "/magipoke-jwzx/kebiao"
 
     //老师课表
     const val API_GET_TEA_COURSE = "/magipoke-teakb/api/teaKb"
