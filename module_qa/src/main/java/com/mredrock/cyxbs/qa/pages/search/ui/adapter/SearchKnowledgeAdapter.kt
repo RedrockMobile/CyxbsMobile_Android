@@ -1,6 +1,9 @@
 package com.mredrock.cyxbs.qa.pages.search.ui.adapter
 
 import android.view.ViewGroup
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.beannew.Knowledge
 import com.mredrock.cyxbs.qa.component.recycler.BaseRvAdapter
@@ -13,7 +16,9 @@ import kotlinx.android.synthetic.main.qa_recycler_item_dynamic_label.view.*
  *@author SpreadWater
  *@description
  */
-class SearchKnowledgeAdapter(private val onItemClick: (Int) -> Unit) : BaseRvAdapter<Knowledge>() {
+class SearchKnowledgeAdapter( val recyclerView: RecyclerView) : BaseRvAdapter<Knowledge>() {
+    var searchResultHeaderAdapter: SearchResultHeaderAdapter?=null
+
     class ViewHolder(parent: ViewGroup) : BaseViewHolder<Knowledge>(parent, R.layout.qa_recycler_item_dynamic_label) {
         override fun refresh(data: Knowledge?) {
            itemView.tv_dynamic_label.text=data?.title ?: ""
@@ -22,7 +27,11 @@ class SearchKnowledgeAdapter(private val onItemClick: (Int) -> Unit) : BaseRvAda
 
     override fun onItemClickListener(holder: BaseViewHolder<Knowledge>, position: Int, data: Knowledge) {
         super.onItemClickListener(holder, position, data)
-        onItemClick(position)
+        holder.itemView.setOnClickListener {
+            searchResultHeaderAdapter?.knowledge=data
+            recyclerView.adapter=searchResultHeaderAdapter
+            recyclerView.layoutManager=LinearLayoutManager(BaseApp.context)
+        }
     }
 
 
