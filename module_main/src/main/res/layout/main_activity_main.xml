@@ -19,17 +19,14 @@
             android:id="@+id/other_fragment_container"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:paddingBottom="94dp"
             app:layout_behavior="@string/appbar_scrolling_view_behavior" />
-
         <FrameLayout
             android:id="@+id/course_bottom_sheet_content"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:behavior_hideable="true"
             app:behavior_peekHeight="@dimen/main_main_bottom_navigation_height_twice_as_much"
+            app:behavior_hideable="true"
             app:layout_behavior="@string/bottom_sheet_behavior">
-
         </FrameLayout>
 
         <include layout="@layout/main_bottom_nav" />
