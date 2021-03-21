@@ -34,6 +34,7 @@ class ProtocolService : IProtocolService {
         when (scheme) {
             mScheme -> {
                 val build = ARouter.getInstance().build(path)
+                build.withBoolean("isFromReceive", true)
                 for (mutableEntry in queryMap) {
                     build.withString(mutableEntry.key, mutableEntry.value)
                 }

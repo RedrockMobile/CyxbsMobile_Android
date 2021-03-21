@@ -6,7 +6,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.common.BaseApp
+import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.ui.BaseViewModelFragment
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.beannew.Dynamic
@@ -66,13 +68,18 @@ abstract class BaseCircleDetailFragment<T : CircleDetailViewModel> : BaseViewMod
             DynamicDetailActivity.activityStart(this, view, dynamic)
         }.apply {
             onShareClickListener = { dynamic, mode ->
+                val token = ServiceManager.getService(IAccountService::class.java).getUserTokenService().getToken()
+                val url = "https://wx.redrock.team/game/zscy-youwen-share/#/dynamic?id=${dynamic.postId}?id_token=$token"
                 when (mode) {
                     QQ_FRIEND ->
-                        mTencent?.let { it1 -> ShareUtils.qqShare(it1, this@BaseCircleDetailFragment, dynamic.topic, dynamic.content, "https://cn.bing.com/", "") }
+                        mTencent?.let { it1 -> ShareUtils.qqShare(it1, this@BaseCircleDetailFragment, dynamic.topic, dynamic.content, url, "") }
                     QQ_ZONE ->
-                        mTencent?.let { it1 -> ShareUtils.qqQzoneShare(it1, this@BaseCircleDetailFragment, dynamic.topic, dynamic.content, "https://cn.bing.com/", ArrayList()) }
-                    COPY_LINK ->
-                        ClipboardController.copyText(this@BaseCircleDetailFragment.requireContext(), "https://cn.bing.com/")
+                        mTencent?.let { it1 -> ShareUtils.qqQzoneShare(it1, this@BaseCircleDetailFragment, dynamic.topic, dynamic.content, url, ArrayList()) }
+                    COPY_LINK ->{
+                        this@BaseCircleDetailFragment.context?.let {
+                            ClipboardController.copyText(it, url)
+                        }
+                    }
                 }
             }
             onPopWindowClickListener = { position, string, dynamic ->

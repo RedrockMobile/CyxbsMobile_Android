@@ -52,6 +52,6 @@
         android:layout_height="1dp"
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
-        android:src="@color/qa_answer_item_divider_color"/>
+        android:src="@color/common_grades_gpa_child_bottom_line"/>
 
 </LinearLayout>

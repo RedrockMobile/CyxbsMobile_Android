@@ -1,7 +1,13 @@
 package com.mredrock.cyxbs.qa.pages.dynamic.ui.activity
 
+import android.animation.ArgbEvaluator
+import android.animation.ValueAnimator
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Intent
+import android.content.res.Configuration
+import android.graphics.Color
+import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.transition.Slide
 import android.view.Gravity
@@ -12,10 +18,18 @@ import androidx.core.app.ActivityOptionsCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.alibaba.android.arouter.facade.annotation.Route
 import com.google.android.material.appbar.AppBarLayout
+import com.mredrock.cyxbs.api.account.IAccountService
+import com.mredrock.cyxbs.common.BaseApp.Companion.context
 import com.mredrock.cyxbs.common.component.CyxbsToast
+import com.mredrock.cyxbs.common.config.QA_DYNAMIC_DETAIL
+import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
-import com.mredrock.cyxbs.common.utils.extensions.*
+import com.mredrock.cyxbs.common.utils.LogUtils
+import com.mredrock.cyxbs.common.utils.extensions.dp2px
+import com.mredrock.cyxbs.common.utils.extensions.setAvatarImageFromUrl
+import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.beannew.Dynamic
 import com.mredrock.cyxbs.qa.beannew.ReplyInfo
@@ -40,39 +54,53 @@ import com.tencent.tauth.Tencent
 import kotlinx.android.synthetic.main.qa_activity_dynamic_detail.*
 import kotlinx.android.synthetic.main.qa_common_toolbar.*
 import kotlinx.android.synthetic.main.qa_recycler_item_dynamic_header.*
-import kotlinx.android.synthetic.main.qa_recycler_item_dynamic_header.view.*
 
 
 /**
  * @Author: zhangzhe
  * @Date: 2020/11/27 23:07
  */
-
+@Route(path = QA_DYNAMIC_DETAIL)
 class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
     companion object {
         var dynamicOrigin: Dynamic? = null // 由于点赞数、发帖数会改变，故保存一个Dynamic的引用
 
         // 有共享元素动画的启动
-        fun activityStart(fragment: Fragment, dynamicItem: View, data: Dynamic) {
-            fragment.apply {
-                activity?.let {
+        fun activityStart(page: Any?, dynamicItem: View, data: Dynamic) {
+
+            page.apply {
+                var activity: Activity? = null
+                if (page is Fragment) {
+                    activity = page.activity
+                } else if (page is Activity) {
+                    activity = page
+                }
+                activity?.let { it ->
                     val opt = ActivityOptionsCompat.makeSceneTransitionAnimation(it, dynamicItem, "dynamicItem")
-                    val intent = Intent(context, DynamicDetailActivity::class.java)
+                    val intent = Intent(it, DynamicDetailActivity::class.java)
                     dynamicOrigin = data
                     it.window.exitTransition = Slide(Gravity.START).apply { duration = 500 }
-                    startActivityForResult(intent, DYNAMIC_DETAIL_REQUEST, opt.toBundle())
+                    it.startActivityForResult(intent, DYNAMIC_DETAIL_REQUEST, opt.toBundle())
                 }
             }
         }
 
         // 根据postId启动
-        fun activityStart(fragment: Fragment, postId: String) {
-            fragment.apply {
+        fun activityStart(page: Any?, postId: String) {
+
+            var activity: Activity? = null
+            if (page is Fragment) {
+                activity = page.activity
+            } else if (page is Activity) {
+                activity = page
+            }
+
+            activity.apply {
                 activity?.let {
                     val intent = Intent(context, DynamicDetailActivity::class.java)
                     intent.putExtra("post_id", postId)
                     it.window.exitTransition = Slide(Gravity.START).apply { duration = 500 }
-                    startActivityForResult(intent, DYNAMIC_DETAIL_REQUEST)
+                    it.startActivityForResult(intent, DYNAMIC_DETAIL_REQUEST)
                 }
             }
         }
@@ -90,6 +118,8 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
 //    override val isFragmentActivity = false
 
     private var mTencent: Tencent? = null
+
+    private var haveShareItem = false
 
     override fun getViewModelFactory() = DynamicDetailViewModel.Factory()
 
@@ -170,6 +200,14 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.qa_activity_dynamic_detail)
+
+        LogUtils.d("RayleighZ", intent.toString())
+        intent.extras?.apply {
+            if (!getBoolean("isFromReceive")) return@apply
+            val postId = getString("id")
+            intent.putExtra("post_id",postId)
+        }
+
         // 设置进入动画
         window.enterTransition = Slide(Gravity.END).apply { duration = 500 }
         // 设置标题
@@ -177,6 +215,10 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
         // 注册
         mTencent = Tencent.createInstance(CommentConfig.APP_ID, this)
 
+        //判断是否有共享元素
+        haveShareItem = dynamicOrigin != null
+
+        initChangeColorAnimator("#1D1D1D", "#000000")
         initObserve()
         initDynamic()
         initReplyList()
@@ -184,13 +226,36 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
 
     }
 
+    private fun initChangeColorAnimator(startColor: String, endColor: String) {
+        val isDarkMode = context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES
+        if (haveShareItem) {
+            if (isDarkMode) {//如果是深色模式
+                //因为视觉图颜色不一样的缘故，这里要在转场动画的同时添加一个变色动画
+                val colorStart = Color.parseColor(startColor)
+                val colorFinal = Color.parseColor(endColor)
+                val va = ValueAnimator.ofInt(colorStart, colorFinal)
+                va.setEvaluator(ArgbEvaluator())
+                va.duration = 500
+                va.addUpdateListener { vav ->
+                    val gd = qa_ctl_dynamic.background as GradientDrawable
+                    gd.setColor(vav.animatedValue as Int)
+                }
+                va.start()
+            }
+        } else if (isDarkMode) {
+            //如果是深色模式，就直接变色，不加动画
+            val gd = qa_ctl_dynamic.background as GradientDrawable
+            gd.setColor(Color.parseColor(endColor))
+        }
+    }
+
     private fun initOnClickListener() {
-        qa_iv_select_pic.setOnSingleClickListener {
+        qa_iv_my_comment_select_pic.setOnSingleClickListener {
             Intent(this, QuizActivity::class.java).apply {
                 putExtra("isComment", "1")
                 putExtra("postId", viewModel.dynamic.value?.postId)
                 putExtra("replyId", viewModel.replyInfo.value?.replyId ?: "")
-                putExtra("commentContent", qa_et_reply.text.toString())
+                putExtra("commentContent", qa_et_my_comment_reply.text.toString())
                 putExtra("replyNickname", viewModel.replyInfo.value?.nickname ?: "")
                 startActivityForResult(this, RequestResultCode.RELEASE_COMMENT_ACTIVITY_REQUEST)
             }
@@ -200,16 +265,16 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
             onBackPressed()
         }
 
-        qa_btn_send.setOnSingleClickListener {
-            viewModel.releaseComment(viewModel.dynamic.value!!.postId, qa_et_reply.text.toString())
+        qa_btn_my_comment_send.setOnSingleClickListener {
+            viewModel.releaseComment(viewModel.dynamic.value!!.postId, qa_et_my_comment_reply.text.toString())
         }
         qa_iv_dynamic_comment_count.setOnSingleClickListener {
-            KeyboardController.showInputKeyboard(this, qa_et_reply)
+            KeyboardController.showInputKeyboard(this, qa_et_my_comment_reply)
             viewModel.replyInfo.value = ReplyInfo("", "", "")
         }
         qa_coordinatorlayout.onReplyCancelEvent = {
             viewModel.replyInfo.value = ReplyInfo("", "", "")
-            KeyboardController.hideInputKeyboard(this, qa_et_reply)
+            KeyboardController.hideInputKeyboard(this, qa_et_my_comment_reply)
         }
     }
 
@@ -252,13 +317,13 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
             it?.let {
                 if (it.replyId.isNotEmpty()) {
                     qa_coordinatorlayout.isReplyEdit = true
-                    KeyboardController.showInputKeyboard(this@DynamicDetailActivity, qa_et_reply)
+                    KeyboardController.showInputKeyboard(this@DynamicDetailActivity, qa_et_my_comment_reply)
                     ReplyPopWindow.with(this@DynamicDetailActivity)
                     ReplyPopWindow.setReplyName(it.nickname, it.content)
                     ReplyPopWindow.setOnClickEvent {
                         viewModel.replyInfo.value = ReplyInfo("", "", "")
                     }
-                    ReplyPopWindow.show(qa_et_reply, ReplyPopWindow.AlignMode.LEFT, this@DynamicDetailActivity.dp2px(6f))
+                    ReplyPopWindow.show(qa_et_my_comment_reply, ReplyPopWindow.AlignMode.LEFT, this@DynamicDetailActivity.dp2px(6f))
                 } else {
                     if (ReplyPopWindow.isShowing()) {
                         ReplyPopWindow.dismiss()
@@ -269,8 +334,8 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
         }
         viewModel.commentReleaseResult.observe {
             viewModel.replyInfo.value = ReplyInfo("", "", "")
-            qa_et_reply.setText("")
-            KeyboardController.hideInputKeyboard(this, qa_et_reply)
+            qa_et_my_comment_reply.setText("")
+            KeyboardController.hideInputKeyboard(this, qa_et_my_comment_reply)
 
             viewModel.refreshCommentList(dynamicOrigin!!.postId, (it?.commentId
                     ?: -1).toString())
@@ -288,6 +353,14 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
         }
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        //修改详情的背景颜色
+        if (context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES) {
+            val gd = qa_ctl_dynamic.background as GradientDrawable
+            gd.setColor(Color.parseColor("#1D1D1D"))
+        }
+    }
 
     private fun initDynamic() {
 
@@ -305,26 +378,29 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
 
 
 
-        qa_iv_dynamic_share.setOnSingleClickListener {
-            ShareDialog(it.context).apply {
-                initView(onCancelListener = View.OnClickListener {
-                    dismiss()
-                }, qqshare = View.OnClickListener {
-                    mTencent?.let { it1 -> ShareUtils.qqShare(it1, this@DynamicDetailActivity, viewModel.dynamic.value!!.topic, viewModel.dynamic.value!!.content, "https://cn.bing.com/", "") }
-                }, qqZoneShare = View.OnClickListener {
-                    mTencent?.let { it1 -> ShareUtils.qqQzoneShare(it1, this@DynamicDetailActivity, viewModel.dynamic.value!!.topic, viewModel.dynamic.value!!.content, "https://cn.bing.com/", ArrayList()) }
+        qa_iv_dynamic_share.setOnSingleClickListener {view ->
+            viewModel.dynamic.value?.let {dynamic ->
+                ShareDialog(view.context).apply {
+                    val token = ServiceManager.getService(IAccountService::class.java).getUserTokenService().getToken()
+                    val url = "https://wx.redrock.team/game/zscy-youwen-share/#/dynamic?id=${dynamic.postId}&id_token=$token"
+                    initView(onCancelListener = View.OnClickListener {
+                        dismiss()
+                    }, qqshare = View.OnClickListener {
+                        mTencent?.let { it1 -> ShareUtils.qqShare(it1, this@DynamicDetailActivity, dynamic.topic, dynamic.content, url, "") }
+                    }, qqZoneShare = View.OnClickListener {
+                        mTencent?.let { it1 -> ShareUtils.qqQzoneShare(it1, this@DynamicDetailActivity, dynamic.topic, dynamic.content, url, ArrayList()) }
 
-                }, weChatShare = View.OnClickListener {
-                    CyxbsToast.makeText(context, R.string.qa_share_wechat_text, Toast.LENGTH_SHORT).show()
+                    }, weChatShare = View.OnClickListener {
+                        CyxbsToast.makeText(context, R.string.qa_share_wechat_text, Toast.LENGTH_SHORT).show()
 
-                }, friendShipCircle = View.OnClickListener {
-                    CyxbsToast.makeText(context, R.string.qa_share_wechat_text, Toast.LENGTH_SHORT).show()
+                    }, friendShipCircle = View.OnClickListener {
+                        CyxbsToast.makeText(context, R.string.qa_share_wechat_text, Toast.LENGTH_SHORT).show()
 
-                }, copylink = View.OnClickListener {
-                    ClipboardController.copyText(this@DynamicDetailActivity, "https://cn.bing.com/")
-
-                })
-            }.show()
+                    }, copylink = View.OnClickListener {
+                        ClipboardController.copyText(this@DynamicDetailActivity, url)
+                    })
+                }.show()
+            }
         }
 
         qa_iv_dynamic_more_tips_clicked.setOnSingleClickListener {
@@ -334,7 +410,7 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
 
             val optionPopWindow = OptionalPopWindow.Builder().with(this)
                     .addOptionAndCallback(CommentConfig.REPLY) {
-                        KeyboardController.showInputKeyboard(this, qa_et_reply)
+                        KeyboardController.showInputKeyboard(this, qa_et_my_comment_reply)
                         viewModel.replyInfo.value = ReplyInfo("", "", "")
                     }.addOptionAndCallback(CommentConfig.COPY) {
                         ClipboardController.copyText(this, viewModel.dynamic.value!!.content)
@@ -419,6 +495,10 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
             ReplyPopWindow.dismiss()
             return
         }
+
+        if (haveShareItem) {
+            initChangeColorAnimator("#000000", "#1D1D1D")
+        }
         window.returnTransition = Slide(Gravity.END).apply { duration = 500 }
         dynamicOrigin = null
         super.onBackPressed()
@@ -436,10 +516,9 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
                     viewModel.replyInfo.value = ReplyInfo("", "", "")
                 }
                 data?.getStringExtra("text")?.let {
-                    qa_et_reply.setText(it)
+                    qa_et_my_comment_reply.setText(it)
                 }
             }
         }
     }
-
 }

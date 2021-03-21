@@ -10,20 +10,19 @@ import android.widget.TextView
 import android.widget.Toast
 import android.widget.ViewFlipper
 import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.google.android.material.appbar.CollapsingToolbarLayout
-import com.mredrock.cyxbs.common.BaseApp
+import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.common.config.CyxbsMob
 import com.mredrock.cyxbs.common.config.QA_ENTRY
 import com.mredrock.cyxbs.common.event.RefreshQaEvent
 import com.mredrock.cyxbs.common.mark.EventBusLifecycleSubscriber
-import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.ui.BaseViewModelFragment
-import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.doIfLogin
 import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.qa.R
@@ -31,12 +30,10 @@ import com.mredrock.cyxbs.qa.component.recycler.RvAdapterWrapper
 import com.mredrock.cyxbs.qa.config.CommentConfig
 import com.mredrock.cyxbs.qa.config.CommentConfig.COPY_LINK
 import com.mredrock.cyxbs.qa.config.CommentConfig.DELETE
-import com.mredrock.cyxbs.qa.config.CommentConfig.FRIEND_CIRCLE
 import com.mredrock.cyxbs.qa.config.CommentConfig.IGNORE
 import com.mredrock.cyxbs.qa.config.CommentConfig.QQ_FRIEND
 import com.mredrock.cyxbs.qa.config.CommentConfig.QQ_ZONE
 import com.mredrock.cyxbs.qa.config.CommentConfig.REPORT
-import com.mredrock.cyxbs.qa.config.CommentConfig.WECHAT
 import com.mredrock.cyxbs.qa.config.RequestResultCode.DYNAMIC_DETAIL_REQUEST
 import com.mredrock.cyxbs.qa.config.RequestResultCode.NEED_REFRESH_RESULT
 import com.mredrock.cyxbs.qa.config.RequestResultCode.RELEASE_DYNAMIC_ACTIVITY_REQUEST
@@ -50,16 +47,12 @@ import com.mredrock.cyxbs.qa.pages.quiz.ui.QuizActivity
 import com.mredrock.cyxbs.qa.pages.search.ui.SearchActivity
 import com.mredrock.cyxbs.qa.pages.square.ui.activity.CircleDetailActivity
 import com.mredrock.cyxbs.qa.pages.square.ui.activity.CircleSquareActivity
-import com.mredrock.cyxbs.qa.qqconnect.BaseUiListener
 import com.mredrock.cyxbs.qa.ui.adapter.EmptyRvAdapter
 import com.mredrock.cyxbs.qa.ui.adapter.FooterRvAdapter
 import com.mredrock.cyxbs.qa.ui.widget.QaDialog
 import com.mredrock.cyxbs.qa.ui.widget.QaReportDialog
-import com.mredrock.cyxbs.qa.ui.widget.ShareDialog
 import com.mredrock.cyxbs.qa.utils.ClipboardController
 import com.mredrock.cyxbs.qa.utils.ShareUtils
-import com.tencent.connect.share.QQShare
-import com.tencent.connect.share.QzoneShare
 import com.tencent.tauth.Tencent
 import com.umeng.analytics.MobclickAgent
 import kotlinx.android.synthetic.main.qa_dialog_report.*
@@ -87,6 +80,7 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), EventBusL
 
     private var isSendDynamic = false
     private var mTencent: Tencent? = null
+    private var token: String? = null
 
     // 判断rv是否到顶
     protected var isRvAtTop = true
@@ -104,8 +98,8 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), EventBusL
         initDynamics()
         initClick()
         mTencent = Tencent.createInstance(CommentConfig.APP_ID, this.requireContext())
-//        val accountService = ServiceManager.getService(IAccountService::class.java)
-//        token=accountService.getUserTokenService().getToken()
+        val accountService = ServiceManager.getService(IAccountService::class.java)
+        token = accountService.getUserTokenService().getToken()
     }
 
 
@@ -117,13 +111,16 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), EventBusL
                 }.apply {
 
                     onShareClickListener = { dynamic, mode ->
+                        val token = ServiceManager.getService(IAccountService::class.java).getUserTokenService().getToken()
+                        val url = "https://wx.redrock.team/game/zscy-youwen-share/#/dynamic?id=${dynamic.postId}&id_token=$token"
                         when (mode) {
                             QQ_FRIEND ->
-                                mTencent?.let { it1 -> ShareUtils.qqShare(it1, this@DynamicFragment, dynamic.topic, dynamic.content, "https://cn.bing.com/", "") }
+                                mTencent?.let { it1 -> ShareUtils.qqShare(it1, this@DynamicFragment, dynamic.topic, dynamic.content, url, "") }
                             QQ_ZONE ->
-                                mTencent?.let { it1 -> ShareUtils.qqQzoneShare(it1, this@DynamicFragment, dynamic.topic, dynamic.content, "https://cn.bing.com/", ArrayList()) }
-                            COPY_LINK ->
-                                ClipboardController.copyText(this@DynamicFragment.requireContext(), "https://cn.bing.com/")
+                                mTencent?.let { it1 -> ShareUtils.qqQzoneShare(it1, this@DynamicFragment, dynamic.topic, dynamic.content, url, ArrayList()) }
+                            COPY_LINK -> {
+                                ClipboardController.copyText(this@DynamicFragment.requireContext(), url)
+                            }
                         }
                     }
                     onTopicListener = { topic, view ->
@@ -204,7 +201,6 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), EventBusL
                 circlesAdapter?.addCircleData(it)
             } else {
                 val layoutParams = CollapsingToolbarLayout.LayoutParams(qa_rv_circles_List.layoutParams)
-                layoutParams.bottomMargin = 30
                 circlesAdapter?.noticeChangeCircleData()
                 view_divide.visibility = View.VISIBLE
                 qa_tv_my_notice.visibility = View.INVISIBLE

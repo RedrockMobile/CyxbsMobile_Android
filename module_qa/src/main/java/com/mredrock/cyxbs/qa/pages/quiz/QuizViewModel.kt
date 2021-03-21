@@ -1,8 +1,12 @@
 package com.mredrock.cyxbs.qa.pages.quiz
 
 import android.util.Base64
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Transformations
+import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.network.ApiGenerator
+import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.*
 import com.mredrock.cyxbs.common.utils.extensions.checkError
 import com.mredrock.cyxbs.common.utils.extensions.mapOrThrowApiException
@@ -11,8 +15,9 @@ import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.common.viewmodel.event.ProgressDialogEvent
 import com.mredrock.cyxbs.common.viewmodel.event.SingleLiveEvent
+import com.mredrock.cyxbs.mine.network.model.DynamicDraft
 import com.mredrock.cyxbs.qa.R
-import com.mredrock.cyxbs.qa.beannew.CommentReleaseResult
+import com.mredrock.cyxbs.qa.beannew.Dynamic
 import com.mredrock.cyxbs.qa.beannew.Topic
 import com.mredrock.cyxbs.qa.network.ApiService
 import com.mredrock.cyxbs.qa.network.ApiServiceNew
@@ -29,7 +34,8 @@ import java.io.File
  */
 class QuizViewModel : BaseViewModel() {
     val imageLiveData = MutableLiveData<ArrayList<String>>()
-     //为再次进入图库保存以前添加的图片，进行的逻辑
+
+    //为再次进入图库保存以前添加的图片，进行的逻辑
     val lastImageLiveData = ArrayList<String>()
     val backAndRefreshPreActivityEvent = SingleLiveEvent<Boolean>()
     val finishActivityEvent = MutableLiveData<Boolean>()
@@ -93,7 +99,7 @@ class QuizViewModel : BaseViewModel() {
                 }
     }
 
-    fun submitTitleAndContent(type: String, content: String): Boolean {
+    fun checkTitleAndContent(type: String, content: String): Boolean {
         var result = false
         if (type.isBlank()) {
             toastEvent.value = R.string.qa_quiz_hint_title_empty

@@ -1,6 +1,7 @@
 package com.mredrock.cyxbs.qa.ui.adapter
 
 import android.view.ViewGroup
+import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.gone
 import com.mredrock.cyxbs.common.utils.extensions.visible
 import com.mredrock.cyxbs.qa.R

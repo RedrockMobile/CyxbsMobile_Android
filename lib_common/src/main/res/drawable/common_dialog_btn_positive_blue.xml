@@ -7,11 +7,12 @@
             <!-- 设置矩形的四个角为弧形 -->
             <!-- android:radius 弧形的半径 -->
             <corners android:radius="25dp" />
-            <gradient
+            <solid android:color="@color/common_mine_main_btn_positive_blue"/>
+            <!--<gradient
                 android:angle="45"
                 android:endColor="@color/common_mine_main_btn_gradient_end"
                 android:startColor="@color/common_mine_main_btn_gradient_start"
-                android:type="linear" />
+                android:type="linear" />-->
         </shape>
     </item>
 </ripple>

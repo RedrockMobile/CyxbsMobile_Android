@@ -27,8 +27,8 @@ dependencies {
 
     //https://github.com/whataa/pandora
     //开发测试工具，如果需要解除注释
-    //debugApi 'com.github.whataa:pandora:androidx_v2.1.0'
-    //releaseApi 'com.github.whataa:pandora-no-op:v2.1.0'
+//    debugApi 'com.github.whataa:pandora:androidx_v2.1.0'
+//    releaseApi 'com.github.whataa:pandora-no-op:v2.1.0'
     //kotlin&ktx
     api deps.kotlin.runtime
     api deps.kotlin.core
@@ -40,6 +40,7 @@ dependencies {
     api deps.support.design
     api deps.support.v4
     api deps.support.multidex
+    api deps.support.fragment
 
     //events and router
     api deps.arouter.api

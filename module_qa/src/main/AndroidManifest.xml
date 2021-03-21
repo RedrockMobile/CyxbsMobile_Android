@@ -3,8 +3,13 @@
     package="com.mredrock.cyxbs.qa">
 
     <application android:theme="@style/AppTheme">
-        <activity android:name=".pages.dynamic.ui.activity.ReplyDetailActivity"
-            android:launchMode="singleTop"/>
+        <activity android:name=".pages.mine.ui.MyPraiseActivity"></activity>
+        <activity android:name=".pages.mine.ui.MyCommentActivity" />
+        <activity android:name=".pages.mine.ui.MyIgnorePeopleActivity" />
+        <activity android:name=".pages.mine.ui.MyDynamicActivity" />
+        <activity
+            android:name=".pages.dynamic.ui.activity.ReplyDetailActivity"
+            android:launchMode="singleTop" />
         <activity android:name=".pages.square.ui.activity.CircleDetailActivity" />
         <activity android:name=".pages.square.ui.activity.CircleSquareActivity" />
         <activity
@@ -27,12 +32,14 @@
             android:launchMode="singleTask" />
         <activity
             android:name="com.tencent.tauth.AuthActivity"
-            android:noHistory="true"
-            android:launchMode="singleTask" >
+            android:launchMode="singleTask"
+            android:noHistory="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
+
                 <data android:scheme="101933868" />
             </intent-filter>
         </activity>

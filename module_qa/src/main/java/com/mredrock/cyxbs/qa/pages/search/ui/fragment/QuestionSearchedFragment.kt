@@ -10,12 +10,16 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.flexbox.FlexWrap
 import com.google.android.flexbox.FlexboxLayoutManager
+import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.common.BaseApp
+import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.ui.BaseViewModelFragment
 import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.doIfLogin
 import com.mredrock.cyxbs.common.utils.extensions.gone
+import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.qa.R
+import com.mredrock.cyxbs.qa.beannew.Knowledge
 import com.mredrock.cyxbs.qa.component.recycler.RvAdapterWrapper
 import com.mredrock.cyxbs.qa.config.CommentConfig
 import com.mredrock.cyxbs.qa.config.CommentConfig.COPY_LINK
@@ -24,11 +28,10 @@ import com.mredrock.cyxbs.qa.config.CommentConfig.IGNORE
 import com.mredrock.cyxbs.qa.config.CommentConfig.QQ_FRIEND
 import com.mredrock.cyxbs.qa.config.CommentConfig.QQ_ZONE
 import com.mredrock.cyxbs.qa.config.CommentConfig.REPORT
-import com.mredrock.cyxbs.qa.config.RequestResultCode
+import com.mredrock.cyxbs.qa.config.RequestResultCode.ClickKnowledge
 import com.mredrock.cyxbs.qa.config.RequestResultCode.DYNAMIC_DETAIL_REQUEST
 import com.mredrock.cyxbs.qa.config.RequestResultCode.NEED_REFRESH_RESULT
 import com.mredrock.cyxbs.qa.config.RequestResultCode.RELEASE_DYNAMIC_ACTIVITY_REQUEST
-import com.mredrock.cyxbs.qa.network.NetworkState
 import com.mredrock.cyxbs.qa.network.NetworkState.Companion.CANNOT_LOAD_WITHOUT_LOGIN
 import com.mredrock.cyxbs.qa.network.NetworkState.Companion.LOADING
 import com.mredrock.cyxbs.qa.pages.dynamic.ui.activity.DynamicDetailActivity
@@ -47,11 +50,13 @@ import com.mredrock.cyxbs.qa.utils.ShareUtils
 import com.mredrock.cyxbs.qa.utils.isNullOrEmpty
 import com.tencent.tauth.Tencent
 import kotlinx.android.synthetic.main.qa_fragment_question_search_result.*
+import kotlinx.android.synthetic.main.qa_recycler_knowledge_detail.*
 
 /**
  * Created by yyfbe, Date on 2020/8/13.
  */
 class QuestionSearchedFragment : BaseViewModelFragment<QuestionSearchedViewModel>() {
+
 
     companion object {
         const val SEARCH_KEY = "searchKey"
@@ -60,6 +65,7 @@ class QuestionSearchedFragment : BaseViewModelFragment<QuestionSearchedViewModel
     //搜索关键词
     private var searchKey = ""
     lateinit var dynamicListRvAdapter: DynamicAdapter
+    var knowledges:List<Knowledge> ?=null
     var emptyRvAdapter: SearchNoResultAdapter? = null
     var footerRvAdapter: FooterRvAdapter? = null
 
@@ -93,7 +99,6 @@ class QuestionSearchedFragment : BaseViewModelFragment<QuestionSearchedViewModel
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putString(SEARCH_KEY, searchKey)
-
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -120,9 +125,18 @@ class QuestionSearchedFragment : BaseViewModelFragment<QuestionSearchedViewModel
                     }
                     if (viewModel.isKnowledge) {
                         //知识库不为空时候显示
-                        qa_line.visibility = View.VISIBLE
-                        qa_rv_knowledge.visibility = View.VISIBLE
-                        qa_tv_knowledge.visibility = View.VISIBLE
+                        if (ClickKnowledge){
+                            qa_line.gone()
+                            qa_tv_knowledge.gone()
+                        }else{
+                            Log.d("RayT","555555555555555555555")
+                            qa_line.visibility = View.VISIBLE
+                            qa_rv_knowledge.visibility = View.VISIBLE
+                            qa_tv_knowledge.visibility = View.VISIBLE
+                        }
+                    }else{
+                        qa_line.gone()
+                        qa_tv_knowledge.gone()
                     }
                 }
             }
@@ -135,13 +149,18 @@ class QuestionSearchedFragment : BaseViewModelFragment<QuestionSearchedViewModel
             DynamicDetailActivity.activityStart(this, view, dynamic)
         }.apply {
             onShareClickListener = { dynamic, mode ->
+                val token = ServiceManager.getService(IAccountService::class.java).getUserTokenService().getToken()
+                val url = "https://wx.redrock.team/game/zscy-youwen-share/#/dynamic?id=${dynamic.postId}?id_token=$token"
                 when (mode) {
                     QQ_FRIEND ->
-                        mTencent?.let { it1 -> ShareUtils.qqShare(it1, this@QuestionSearchedFragment, dynamic.topic, dynamic.content, "https://cn.bing.com/", "") }
+                        mTencent?.let { it1 -> ShareUtils.qqShare(it1, this@QuestionSearchedFragment, dynamic.topic, dynamic.content, url, "") }
                     QQ_ZONE ->
-                        mTencent?.let { it1 -> ShareUtils.qqQzoneShare(it1, this@QuestionSearchedFragment, dynamic.topic, dynamic.content, "https://cn.bing.com/", ArrayList()) }
-                    COPY_LINK ->
-                        ClipboardController.copyText(this@QuestionSearchedFragment.requireContext(), "https://cn.bing.com/")
+                        mTencent?.let { it1 -> ShareUtils.qqQzoneShare(it1, this@QuestionSearchedFragment, dynamic.topic, dynamic.content, url, ArrayList()) }
+                    COPY_LINK ->{
+                        this@QuestionSearchedFragment.context?.let {
+                            ClipboardController.copyText(it, url)
+                        }
+                    }
                 }
             }
             onPopWindowClickListener = { position, string, dynamic ->
@@ -221,7 +240,14 @@ class QuestionSearchedFragment : BaseViewModelFragment<QuestionSearchedViewModel
             }
         }
         swipe_refresh_layout_searching.setOnRefreshListener {
-            viewModel.invalidateSearchQuestionList()
+            if(ClickKnowledge){
+                //点击知识库时的刷新
+                viewModel.invalidateSearchQuestionList()
+                qa_line.gone()
+                qa_tv_knowledge.gone()
+            }else{
+                viewModel.invalidateSearchQuestionList()
+            }
         }
         viewModel.deleteTips.observe {
             if (it == true)
@@ -234,17 +260,15 @@ class QuestionSearchedFragment : BaseViewModelFragment<QuestionSearchedViewModel
 
         viewModel.knowledge.observe {
             if (!it.isNullOrEmpty()) {
-                val flexBoxManager = FlexboxLayoutManager(BaseApp.context)
-                flexBoxManager.flexWrap = FlexWrap.WRAP
-                qa_rv_knowledge.layoutManager = flexBoxManager
-                qa_rv_knowledge.adapter = SearchKnowledgeAdapter {
-                    //邮问知识库的调用
-                }.apply {
-                    if (it != null) {
-                        addData(it)
-                    }
-                }
+                knowledges=it
+                val adapterKnowledge=SearchKnowledgeAdapter(qa_rv_knowledge)
+                val adapterSearchResultHeader=SearchResultHeaderAdapter(adapterKnowledge,qa_rv_knowledge)
+
+                adapterKnowledge.searchResultHeaderAdapter=adapterSearchResultHeader
+                knowledges?.let { it1 -> adapterKnowledge.addData(it1) }
+                qa_rv_knowledge.adapter = adapterKnowledge
             } else {
+                Log.d("RATy","6666666666")
                 qa_rv_knowledge.gone()
                 qa_line.gone()
                 qa_tv_knowledge.gone()

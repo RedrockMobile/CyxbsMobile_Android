@@ -2,6 +2,8 @@ package com.mredrock.cyxbs.mine.page.sign
 
 import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
+import android.content.Context
+import android.content.Intent
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
@@ -44,6 +46,8 @@ import kotlin.math.abs
 class DailySignActivity : BaseViewModelActivity<DailyViewModel>() {
 
     private var objectAnimator: ObjectAnimator? = null
+    private var onStartBottomStatus = BottomSheetBehavior.STATE_COLLAPSED
+    private var requestPointStore = false
 
     private val dividerResArr: Array<Stick> by lazy {
         arrayOf(mine_daily_v_divider_mon_tue,
@@ -79,6 +83,14 @@ class DailySignActivity : BaseViewModelActivity<DailyViewModel>() {
         ProductAdapter()
     }
 
+    companion object{
+        fun actionStart(context: Context, bottomSheetStatus: Int){
+            val intent = Intent(context, DailySignActivity::class.java)
+            intent.putExtra("status", bottomSheetStatus)
+            context.startActivity(intent)
+        }
+    }
+
 
     //通过一个标志位，来判断刷新divider的时候是否需要动画，
     //当为true时，表明用户点击了签到按钮导致的UI刷新，这时候需要动画，
@@ -87,6 +99,10 @@ class DailySignActivity : BaseViewModelActivity<DailyViewModel>() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        intent?.apply {
+            onStartBottomStatus = getIntExtra("status", BottomSheetBehavior.STATE_COLLAPSED)
+            requestPointStore = onStartBottomStatus == BottomSheetBehavior.STATE_EXPANDED
+        }
         setTransparent(window)
         setContentView(R.layout.mine_activity_daily_sign)
         common_toolbar.initWithSplitLine("", false)
@@ -219,6 +235,7 @@ class DailySignActivity : BaseViewModelActivity<DailyViewModel>() {
         mine_store_arrow_left.setOnClickListener {
             behavior.state = BottomSheetBehavior.STATE_COLLAPSED
         }
+        behavior.state = onStartBottomStatus//设置bottomSheet的展开状态
         behavior.peekHeight = dp2px(95f + 30f)
         behavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
             override fun onSlide(p0: View, p1: Float) {
@@ -361,7 +378,7 @@ class DailySignActivity : BaseViewModelActivity<DailyViewModel>() {
 
     override fun onBackPressed() {
         val behavior = BottomSheetBehavior.from(mine_sign_fl)
-        if (behavior.state == BottomSheetBehavior.STATE_EXPANDED) {
+        if (behavior.state == BottomSheetBehavior.STATE_EXPANDED && !requestPointStore) {
             behavior.state = BottomSheetBehavior.STATE_COLLAPSED
         } else {
             super.onBackPressed()

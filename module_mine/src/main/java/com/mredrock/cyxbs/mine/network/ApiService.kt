@@ -293,4 +293,22 @@ interface ApiService {
     @FormUrlEncoded
     @POST("/wxapi/user-secret/user/judge/origin")
     fun checkDefaultPassword(@Field("stu_num") stu_num: String): Observable<RedrockApiStatus>
+
+    /**
+     * 获取用户的动态、评论、获赞数
+     */
+    @GET("/wxapi/magipoke-loop/user/getUserCount")
+    fun getUserCount():Observable<RedrockApiWrapper<UserCount>>
+
+    /**
+     * 获取未查看的评论和点赞数
+     * Tip: 此处是静态请求，不能使用@Field注解
+     * type = 1:评论
+     * type = 2:点赞
+     */
+    @GET("/wxapi/magipoke-loop/user/uncheckedMessage")
+    fun getUncheckCount(
+            @Query("time") timeStamp: Long,
+            @Query("type") type: Int
+    ):Observable<RedrockApiWrapper<UserUncheckCount>>
 }

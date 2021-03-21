@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/common_white_background">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/qa_circle_iv_ignore_avatar"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/common_default_avatar"
+        app:layout_constraintBottom_toTopOf="@+id/qa_view_my_ignore_divide_line"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/qa_tv_ignore_item_nickname"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="7dp"
+        android:layout_marginTop="4dp"
+        tools:text="林其彳亍"
+        android:textColor="@color/common_level_three_font_color"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toEndOf="@+id/qa_circle_iv_ignore_avatar"
+        app:layout_constraintTop_toTopOf="@+id/qa_circle_iv_ignore_avatar" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/qa_tv_ignore_item_user_assign"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="4dp"
+        android:textColor="@color/qa_circle_square_person_number_color"
+        android:textSize="11sp"
+        app:layout_constraintBottom_toBottomOf="@+id/qa_circle_iv_ignore_avatar"
+        app:layout_constraintStart_toStartOf="@+id/qa_tv_ignore_item_nickname"
+        tools:text="彳亍，yyds" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/qa_btn_ignore_item_anti_ignore"
+        android:layout_width="89.5dp"
+        android:layout_height="28dp"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/qa_shape_send_dynamic_btn_blue_background"
+        android:gravity="center"
+        android:text="@string/qa_recycler_item_anti_ignore"
+        android:textColor="@color/common_white_font_color"
+        android:textSize="13sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:id="@+id/qa_view_my_ignore_divide_line"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:background="@color/qa_mine_common_divide_line"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

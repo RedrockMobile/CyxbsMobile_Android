@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/qa_cl_my_comment_item"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/qa_ignore_item_background_color">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/qa_circle_iv_my_comment_item_avatar"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="24dp"
+        android:src="@drawable/common_default_avatar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/qa_tv_my_comment_item_nickname"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:textColor="@color/common_level_three_font_color"
+        android:textSize="13sp"
+        app:layout_constraintStart_toEndOf="@+id/qa_circle_iv_my_comment_item_avatar"
+        app:layout_constraintTop_toTopOf="@+id/qa_circle_iv_my_comment_item_avatar"
+        tools:text="林其彳亍" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/qa_tv_my_comment_item_tip_and_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/qa_my_comment_reply_your_comment"
+        android:textColor="@color/qa_reply_detail_date_text_color"
+        android:textSize="11sp"
+        app:layout_constraintBottom_toBottomOf="@+id/qa_circle_iv_my_comment_item_avatar"
+        app:layout_constraintStart_toStartOf="@+id/qa_tv_my_comment_item_nickname"
+        app:layout_constraintTop_toBottomOf="@+id/qa_tv_my_comment_item_nickname" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/qa_tv_my_comment_item_comment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="13.5dp"
+        android:textColor="@color/common_level_three_font_color"
+        android:textSize="15sp"
+        android:maxEms="18"
+        android:maxLines="1"
+        android:ellipsize="end"
+        app:layout_constraintStart_toStartOf="@+id/qa_tv_my_comment_item_tip_and_date"
+        app:layout_constraintTop_toBottomOf="@+id/qa_tv_my_comment_item_tip_and_date"
+        tools:text="woc，已经冲了, 这都不冲？？？？？？？？？？？？？？" />
+
+    <View
+        android:layout_width="2dp"
+        android:layout_height="13dp"
+        android:background="@drawable/qa_shape_mine_content_front_line"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="@+id/qa_tv_my_comment_from"
+        app:layout_constraintStart_toStartOf="@+id/qa_tv_my_comment_item_comment"
+        app:layout_constraintTop_toTopOf="@+id/qa_tv_my_comment_from" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/qa_tv_my_comment_from"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="6dp"
+        android:layout_marginTop="12dp"
+        android:maxEms="18"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:textColor="@color/qa_my_comment_item_from_color"
+        android:textSize="12sp"
+        app:layout_constraintStart_toStartOf="@+id/qa_tv_my_comment_item_comment"
+        app:layout_constraintTop_toBottomOf="@+id/qa_tv_my_comment_item_comment"
+        tools:text="Do you like Van 游戏, Axl Rose Axl Rose Axl Rose Axl Rose Axl Rose Axl Rose Axl Rose Axl Rose Axl Rose Axl Rose Axl Rose " />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/qa_iv_my_comment_item_reply"
+        android:layout_width="20.35dp"
+        android:layout_height="20.35dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="26dp"
+        app:layout_constraintBottom_toTopOf="@+id/qa_view_comment_divide_line"
+        app:layout_constraintStart_toStartOf="@+id/qa_tv_my_comment_item_comment"
+        app:layout_constraintTop_toBottomOf="@+id/qa_tv_my_comment_from"
+        app:srcCompat="@drawable/qa_ic_dynamic_comment_count" />
+
+    <com.mredrock.cyxbs.qa.ui.widget.likeview.LikeView
+        android:layout_marginStart="16dp"
+        android:id="@+id/qa_like_view_my_comment_item_praise"
+        android:layout_width="40dp"
+        android:layout_height="wrap_content"
+        app:checkedColor="#323FD9"
+        app:cirRadius="14dp"
+        app:checkedLikeIconRes="@drawable/qa_ic_answer_list_praised"
+        app:cycleTime="1000"
+        app:defaultColor="@color/qa_likeview_color"
+        android:layout_marginBottom="6dp"
+        app:defaultLikeIconRes="@drawable/qa_ic_answer_list_praise"
+        app:layout_constraintStart_toEndOf="@+id/qa_iv_my_comment_item_reply"
+        app:layout_constraintTop_toTopOf="@+id/qa_iv_my_comment_item_reply"
+        app:layout_constraintBottom_toBottomOf="@id/qa_iv_my_comment_item_reply"
+        app:srcCompat="@drawable/qa_ic_answer_list_praise" />
+
+    <View
+        android:id="@+id/qa_view_comment_divide_line"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/qa_mine_common_divide_line"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

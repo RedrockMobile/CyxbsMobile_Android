@@ -9,10 +9,10 @@ import android.os.Bundle
 import android.transition.Slide
 import android.view.Gravity
 import android.view.View
-import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.mredrock.cyxbs.common.ui.BaseActivity
 import com.mredrock.cyxbs.common.utils.extensions.dp2px
 import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.common.utils.extensions.sp
@@ -41,7 +41,7 @@ import kotlin.math.max
  *@description 复用DynamicDetailViewModel的详细界面
  */
 
-class ReplyDetailActivity : AppCompatActivity() {
+class ReplyDetailActivity : BaseActivity() {
     // 要展示的回复的id
     private var commentId: String = "-1"
 

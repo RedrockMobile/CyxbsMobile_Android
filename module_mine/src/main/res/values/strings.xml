@@ -5,6 +5,7 @@
     <string name="mine_to_download">扫一扫下载，长按保存</string>
 
     <!--    首页-->
+    <!--TODO: 删除无用String-->
     <string name="mine_sign_name">签到</string>
     <string name="mine_sing_successive_default">已连续签到--天</string>
     <string name="mine_question">提问</string>
@@ -22,7 +23,7 @@
     <string name="mine_login_now">马上登录</string>
     <string name="mine_logout_title">退出登录</string>
     <string name="mine_logout_content">是否退出当前账号？</string>
-
+    <string name="mine_dynamic">动态</string>
     <!--    编辑-->
     <string name="mine_nickname">昵称</string>
     <string name="mine_nickname_default">输入您的昵称</string>

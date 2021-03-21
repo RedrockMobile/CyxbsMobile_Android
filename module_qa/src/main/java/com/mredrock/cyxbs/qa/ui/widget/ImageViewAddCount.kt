@@ -59,25 +59,29 @@ class ImageViewAddCount(context: Context?, attrs: AttributeSet?) : androidx.appc
             }
 
             NUMBER_POINT -> {
-                if (messageNumber in 1..9)
-                    canvas?.drawCircle((width - paddingRight).toFloat(), paddingTop.toFloat(), paddingRight.toFloat(), paint)
-                else if (messageNumber in 10..99) {
+                var textPaintwidth = 0.0
+                if (messageNumber in 1..9) {
+                    textPaintwidth = 1.5
+                    canvas?.drawCircle((width - paddingRight * 1.5).toFloat(), paddingTop * 1.5.toFloat(), paddingRight.toFloat(), paint)
+                } else if (messageNumber in 1..99) {
                     val rect = RectF()
                     rect.left = width - (paddingLeft * 2.5).toFloat()
                     rect.right = width.toFloat()
-                    rect.bottom = (paddingTop * 1.8).toFloat()
-                    rect.top = 0f
+                    rect.bottom = (paddingTop * 2.3).toFloat()
+                    rect.top = 14f
                     canvas?.drawRoundRect(rect, 28f, 28f, paint)
+                    textPaintwidth = 1.2
                 }
                 var showText = ""
                 if (messageNumber in 1..99)
                     showText = messageNumber.toString() + ""
                 else if (messageNumber >= 100) {
                     showText = "99+"
+                    textPaintwidth = 1.2
                 }
                 val textWidth = textPaint?.measureText(showText)
-                var x = (width - paddingRight * 1.05 - textWidth!! / 2).toFloat()
-                var y = (paddingTop + textPaint?.fontMetrics?.bottom!! * 1.1).toFloat()
+                val x = (width - paddingRight * textPaintwidth - textWidth!! / 2).toFloat()
+                val y = (paddingTop * 1.8).toFloat()
                 canvas?.drawText(showText, x, y, textPaint)
             }
 
