@@ -91,16 +91,16 @@
                 android:background="@drawable/volunteer_shape_tab"
                 app:tabBackground="@android:color/transparent"
                 app:tabGravity="center"
-                app:tabIndicatorColor="@color/qa_question_tab_indicator_color"
+                app:tabIndicatorColor="@color/volunteer_question_tab_indicator_color"
                 app:tabIndicatorFullWidth="false"
                 app:tabIndicatorHeight="3dp"
                 app:tabMaxWidth="150dp"
                 app:tabMinWidth="150dp"
                 app:tabMode="fixed"
                 app:tabRippleColor="@android:color/transparent"
-                app:tabSelectedTextColor="@color/qa_tab_selected_color"
+                app:tabSelectedTextColor="@color/volunteer_tab_selected_color"
                 app:tabTextAppearance="@style/TabLayout.TabText"
-                app:tabTextColor="@color/qa_tab_unselected_color" />
+                app:tabTextColor="@color/volunteer_tab_unselected_color" />
 
 
             <FrameLayout

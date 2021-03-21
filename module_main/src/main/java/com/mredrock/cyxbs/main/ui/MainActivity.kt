@@ -5,7 +5,6 @@ package com.mredrock.cyxbs.main.ui
 import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.FrameLayout
 import androidx.appcompat.widget.AppCompatButton
@@ -28,7 +27,6 @@ import com.mredrock.cyxbs.common.mark.ActionLoginStatusSubscriber
 import com.mredrock.cyxbs.common.mark.EventBusLifecycleSubscriber
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
-import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.debug
 import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
 import com.mredrock.cyxbs.common.utils.extensions.getStatusBarHeight
@@ -71,8 +69,6 @@ class MainActivity : BaseViewModelActivity<MainViewModel>(),
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<FrameLayout>
 
     private lateinit var bottomHelper: BottomNavigationHelper
-
-    private var isQa = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(R.style.MainActivityTheme)//恢复真正的主题，保证WindowBackground为主题色
@@ -152,7 +148,7 @@ class MainActivity : BaseViewModelActivity<MainViewModel>(),
         bottomSheetBehavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
             override fun onSlide(bottomSheet: View, slideOffset: Float) {
                 mainService.obtainBottomSheetStateLiveData().value = slideOffset
-                if (!isQa && slideOffset >= 0)
+                if (main_view_pager.currentItem != 1 && slideOffset >= 0)
                     ll_nav_main_container.translationY = ll_nav_main_container.height * slideOffset
             }
 
@@ -201,17 +197,14 @@ class MainActivity : BaseViewModelActivity<MainViewModel>(),
 
             when(it){
                 0 ->{
-                    isQa = false
                     bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
                 }
                 1->{
                     //点击Tab刷新邮问
-                    isQa = true
                     bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
                     if (bottomHelper.peeCheckedItemPosition == 1) EventBus.getDefault().post(RefreshQaEvent())
                 }
                 2->{
-                    isQa = false
                     bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
                 }
             }
@@ -314,7 +307,6 @@ class MainActivity : BaseViewModelActivity<MainViewModel>(),
     companion object {
         const val BOTTOM_SHEET_STATE = "BOTTOM_SHEET_STATE"
         const val NAV_SELECT = "NAV_SELECT"
-        const val PAGE_CLASS_TAG = "PAGE_CLASS_TAG"
         const val SPLASH_PHOTO_NAME = "splash_photo.jpg"
         const val SPLASH_PHOTO_LOCATION = "splash_store_location"
         const val FAST = "com.mredrock.cyxbs.action.COURSE"
