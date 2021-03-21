@@ -38,6 +38,15 @@
             android:textColor="@color/common_level_three_font_color"
             android:textSize="20sp" />
 
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/qa_iv_circle_detail_share"
+            android:layout_width="20.5dp"
+            android:layout_height="20.5dp"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginEnd="16dp"
+            android:src="@drawable/qa_ic_dynamic_share" />
+
     </RelativeLayout>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -84,7 +93,7 @@
                 app:tabIndicatorColor="@color/common_mine_tab_layout_indicator_color"
                 app:tabIndicatorFullWidth="false"
                 app:tabIndicatorHeight="3dp"
-                app:tabMode="fixed"
+                app:tabMode="scrollable"
                 app:tabRippleColor="@color/common_transparent_background"
                 app:tabSelectedTextColor="@color/common_level_two_font_color"
                 app:tabTextAppearance="@style/tab_style"

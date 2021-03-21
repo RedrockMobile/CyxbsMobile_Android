@@ -1,8 +1,10 @@
 package com.mredrock.cyxbs.qa.pages.dynamic.ui.adapter
 
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -82,6 +84,7 @@ class CirclesAdapter(private val onItemClickEvent: (Topic, View) -> Unit, privat
         }
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (getItemViewType(position)) {
             NO_CIRCLE -> {
@@ -97,8 +100,8 @@ class CirclesAdapter(private val onItemClickEvent: (Topic, View) -> Unit, privat
                         circlesItemList[position].post_count = 0
                         onItemClickEvent(circlesItemList[position], viewHolder.itemView.findViewById<LinearLayout>(R.id.qa_ll_topic))
                     }
-
                     qa_iv_circle.apply {
+
                         setAvatarImageFromUrl(circlesItemList[position].topicLogo)
                         setHaveMessage(true)
                         topicMessageList.forEach { topicMessage ->
@@ -106,7 +109,10 @@ class CirclesAdapter(private val onItemClickEvent: (Topic, View) -> Unit, privat
                                 setMessageBum(topicMessage.post_count)
                         }
                     }
-                    qa_tv_circle_name.text = circlesItemList[position].topicName
+                    if (circlesItemList[position].topicName.length <= 4)
+                        qa_tv_circle_name.text = circlesItemList[position].topicName
+                    else
+                        qa_tv_circle_name.text = circlesItemList[position].topicName.substring(0, 4) + "..."
                 }
             }
         }

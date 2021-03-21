@@ -29,7 +29,8 @@ object RequestResultCode {
     const val NEED_REFRESH_RESULT = 1
     const val RESULT_CODE = 5
 
-        /*
-        启动的位置来源，用于圈子详情设置不同的setResult
-        */
+    /*
+    判断邮问知识库是否被点击
+    */
+     var ClickKnowledge=false
 }

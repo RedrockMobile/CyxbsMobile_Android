@@ -60,16 +60,16 @@
                 android:textColor="@color/common_white_background"
                 android:textSize="18sp" />
 
-            <TextView
+            <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/qa_tv_toolbar_right"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
                 android:background="@drawable/qa_shape_send_dynamic_btn_grey_background"
-                android:paddingStart="12dp"
+                android:paddingStart="20dp"
                 android:paddingTop="5dp"
-                android:paddingEnd="12dp"
+                android:paddingEnd="20dp"
                 android:paddingBottom="5dp"
                 android:textColor="@color/common_white_background"
                 android:textSize="15sp"

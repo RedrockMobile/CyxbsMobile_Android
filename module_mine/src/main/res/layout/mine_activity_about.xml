@@ -97,7 +97,7 @@
 
 
     <RelativeLayout
-        android:id="@+id/mine_about_rl_share"
+        android:id="@+id/mine_about_rl_update"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:foreground="?android:selectableItemBackground"
@@ -113,12 +113,24 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
-            android:text="@string/mine_about_sharing"
+            android:text="@string/mine_about_update"
             android:textColor="@color/common_mine_about_text_color_normal"
             android:textSize="16sp"
-            tools:text="分享" />
+            tools:text="版本更新" />
+
+        <TextView
+            android:id="@+id/mine_about_tv_already_up_to_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="18dp"
+            android:layout_toStartOf="@id/mine_about_arrow_update"
+            android:textColor="@color/common_mine_about_text_color_up_to_date"
+            android:textSize="13sp"
+            tools:text="已是最新版本" />
 
         <ImageView
+            android:id="@+id/mine_about_arrow_update"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
@@ -139,7 +151,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/mine_about_rl_share">
+        app:layout_constraintTop_toBottomOf="@+id/mine_about_rl_update">
 
         <TextView
             android:layout_width="wrap_content"
@@ -147,8 +159,7 @@
             android:layout_marginStart="20dp"
             android:text="@string/mine_about_function_intro"
             android:textColor="@color/common_mine_about_text_color_normal"
-            android:textSize="16sp"
-            tools:text="功能介绍" />
+            android:textSize="16sp" />
 
         <ImageView
             android:layout_width="wrap_content"
@@ -167,7 +178,7 @@
         android:foreground="?android:selectableItemBackground"
         android:paddingTop="9dp"
         android:paddingBottom="9dp"
-        app:layout_constraintBottom_toTopOf="@+id/mine_about_rl_update"
+        app:layout_constraintBottom_toTopOf="@+id/mine_about_rl_share"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
@@ -191,15 +202,16 @@
     </RelativeLayout>
 
     <RelativeLayout
-        android:id="@+id/mine_about_rl_update"
+        android:id="@+id/mine_about_rl_share"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="50dp"
         android:foreground="?android:selectableItemBackground"
         android:paddingTop="9dp"
         android:paddingBottom="9dp"
-        android:layout_marginBottom="50dp"
         app:layout_constraintBottom_toTopOf="@+id/mine_about_legal"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/mine_about_rl_website">
 
@@ -208,23 +220,11 @@
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_marginStart="20dp"
-            android:text="@string/mine_about_update"
+            android:text="@string/mine_about_sharing"
             android:textColor="@color/common_mine_about_text_color_normal"
             android:textSize="16sp" />
 
-        <TextView
-            android:id="@+id/mine_about_tv_already_up_to_date"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginEnd="18dp"
-            android:layout_toStartOf="@id/mine_about_arrow_update"
-            android:textColor="@color/common_mine_about_text_color_up_to_date"
-            android:textSize="13sp"
-            tools:text="已是最新版本" />
-
         <ImageView
-            android:id="@+id/mine_about_arrow_update"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"

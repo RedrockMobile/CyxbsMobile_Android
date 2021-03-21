@@ -83,7 +83,7 @@ open class DynamicListViewModel(kind: String) : BaseViewModel() {
 
     fun ignore(dynamic: Dynamic) {
         ApiGenerator.getApiService(ApiServiceNew::class.java)
-                .ignoreUid(dynamic.postId)
+                .ignoreUid(dynamic.uid)
                 .setSchedulers()
                 .doOnError {
                     toastEvent.value = R.string.qa_ignore_dynamic_failure

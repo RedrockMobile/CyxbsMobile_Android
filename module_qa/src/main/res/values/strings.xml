@@ -66,7 +66,7 @@
     <string name="qa_quiz_type_empty">类型不能为空哦～</string>
     <string name="qa_search_ed_hint_text">搜索你想知道的</string>
     <string name="qa_reply_et_hint_text">说点什么吧，万一火了呢</string>
-    <string name="qa_report_hint_text">150字以内</string>
+    <string name="qa_report_hint_text">150字以内(选填)</string>
     <string name="qa_dynamic_detail_title_text">详细</string>
     <string name="qa_ignore_dynamic_success">屏蔽成功</string>
     <string name="qa_ignore_dynamic_failure">屏蔽失败</string>
@@ -86,6 +86,7 @@
     <string name="qa_recycler_item_dynamic_name">刘童鞋</string>
     <string name="qa_recycler_item_dynamic_time">2019.8.22</string>
     <string name="qa_recycler_item_dynamic_label">#校园周边</string>
+    <string name="qa_recycler_item_anti_ignore">取消屏蔽</string>
     <string name="qa_question_hot">热门解答</string>
     <string name="qa_answer_list_accept">采纳</string>
     <string name="qa_search_knowledge_from_where">来源：%1$s</string>
@@ -121,4 +122,7 @@
     <string name="qa_dialog_share_qqzone">QQ空间</string>
     <string name="qa_share_wechat_text">微信权限,我们正在争取中</string>
     <string name="qa_dialog_report_text">举报字数已到达150字</string>
+    <string name="qa_my_comment_reply_your_comment">回复了你的评论</string>
+    <string name="qa_my_comment_no_reply">暂时还没有回复哦</string>
+    <string name="qa_square_title">圈子广场</string>
 </resources>

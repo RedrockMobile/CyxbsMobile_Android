@@ -105,7 +105,7 @@
         android:layout_height="0dp"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
-        android:src="@color/qa_answer_item_divider_color"
+        android:src="@color/common_grades_gpa_child_bottom_line"
         app:layout_constraintBottom_toBottomOf="@+id/grades_tv_a_credit_number"
         app:layout_constraintEnd_toStartOf="@+id/grades_tv_b_credit"
         app:layout_constraintHorizontal_bias="0.5"
@@ -117,7 +117,7 @@
         android:layout_width="0dp"
         android:layout_height="10dp"
         android:layout_marginTop="24dp"
-        android:src="@color/qa_answer_item_divider_color"
+        android:src="@color/common_grades_gpa_child_bottom_line"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/grades_imageview3" />

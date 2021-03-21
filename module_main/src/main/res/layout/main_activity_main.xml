@@ -19,7 +19,6 @@
             android:id="@+id/main_view_pager"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:paddingBottom="94dp"
             app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
         <androidx.fragment.app.FragmentContainerView
@@ -27,7 +26,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:behavior_peekHeight="@dimen/main_main_bottom_navigation_height_twice_as_much"
-            app:layout_behavior="@string/bottom_sheet_behavior" />
+            app:behavior_hideable="true"
+            app:layout_behavior="@string/bottom_sheet_behavior">
 
         <include layout="@layout/main_bottom_nav" />
 

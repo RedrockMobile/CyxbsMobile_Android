@@ -38,8 +38,7 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginTop="25dp"
-            android:alpha="0.1"
-            android:background="@color/qa_quiz_toolbar_divider_line_color" />
+            android:background="@color/qa_mine_common_divide_line" />
 
         <RelativeLayout
             android:id="@+id/ll_history_title"

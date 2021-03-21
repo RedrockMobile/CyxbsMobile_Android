@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:context=".pages.mine.ui.MyCommentActivity">
+
+    <include
+        android:id="@+id/qa_tb_my_comment"
+        layout="@layout/qa_common_toolbar" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/qa_mine_common_divide_line"
+        app:layout_constraintBottom_toBottomOf="@+id/qa_tb_my_comment" />
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/qa_swl_my_comment"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@color/qa_ignore_item_background_color"
+        app:layout_constraintBottom_toTopOf="@+id/qa_cl_my_comment_reply"
+        app:layout_constraintTop_toBottomOf="@+id/qa_tb_my_comment">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/qa_rv_my_comment"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            tools:listitem="@layout/qa_recycler_item_my_comment" />
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/qa_cl_my_comment_reply"
+        android:visibility="gone"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:background="@color/qa_reply_bottom_sheet_background_color"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/qa_et_my_comment_reply"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:background="@drawable/qa_shape_reply_edittext_background"
+            android:hint="@string/qa_reply_et_hint_text"
+            android:imeOptions="actionSearch"
+            android:inputType="text"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:textColor="@color/common_level_three_font_color"
+            android:textColorHint="@color/qa_common_hint_text_color"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/qa_btn_my_comment_send"
+            app:layout_constraintStart_toEndOf="@+id/qa_iv_my_comment_select_pic"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/qa_iv_my_comment_select_pic"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/qa_ic_camera" />
+
+        <Button
+            android:id="@+id/qa_btn_my_comment_send"
+            android:layout_width="55dp"
+            android:layout_height="28dp"
+            android:layout_marginEnd="16dp"
+            android:background="@drawable/qa_shape_send_dynamic_btn_blue_background"
+            android:text="发送"
+            android:textColor="#FFFFFF"
+            android:textSize="13sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

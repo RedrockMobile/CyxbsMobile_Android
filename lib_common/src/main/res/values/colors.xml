@@ -154,10 +154,14 @@
     <!--    我的模块首页颜色-->
     <color name="common_mine_main_btn_gradient_start">#4841E2</color>
     <color name="common_mine_main_btn_gradient_end">#5D5DF7</color>
+    <color name="common_mine_main_btn_positive_blue">#3D35E1</color>
 
     <!--     我的模块的账号安全部分-->
     <color name="common_mine_security_binding_tip">#2A4E84</color>
     <color name="common_mine_security_content_edt_hint_color">#94A6C4</color>
+
+    <!--     我的模块设置部分颜色-->
+    <color name="common_mine_setting_common_back_color">#F1F3F8</color>
     <!--69%透明度的打字框背景颜色-->
     <color name="common_mine_security_question_edt_back_color">#E8F0FC</color>
     <color name="common_mine_security_light_button_back_color">#C3D4EE</color>
@@ -168,6 +172,7 @@
     <color name="common_mine_security_two_front_color_64_percent">#A315315B</color>
     <color name="common_mine_security_send_message_color">#4B45E5</color>
     <color name="common_mine_security_line_under_edit_text">#707070</color>
+    <color name="common_mine_main_common_blue">#E8F0FC</color>
 
     <!--    考试成绩-->
     <color name="common_grades_gpa_rv_list_round_corner_background">#88E8F1FC
@@ -193,6 +198,7 @@
     <color name="common_grades_gpa_circle_inside_color">#FFFFFFFF</color>
     <color name="common_grades_gpa_gradient_bottom_color">#66FFFFFF</color>
     <color name="common_grades_gpa_gradient_top_color">#44A19EFF</color>
+    <color name="common_grades_gpa_child_bottom_line">#162A4E84</color>
 
     <!--    公共dialog背景-->
     <color name="common_dialog_bg">#FFFFFF</color>
@@ -211,6 +217,7 @@
 
     <!--   同学课表搜索hint颜色-->
     <color name="common_othercourse_common_hint_text_color">#94A6C4</color>
+    <color name="common_othercourse_shape_back_color">#acE8F0FC</color>
     <!--    发现教务在线颜色-->
     <color name="common_discover_academic_online_colors">#ffffff</color>
     <color name="common_discover_academic_online_colors_background">#AFD2FB</color>

@@ -1,6 +1,7 @@
 package com.mredrock.cyxbs.qa.beannew
 
 import com.google.gson.annotations.SerializedName
+import java.io.Serializable
 
 data class Comment(@SerializedName("comment_id")
                    var commentId: String = "",
@@ -47,4 +48,4 @@ data class Comment(@SerializedName("comment_id")
                    @SerializedName("pics")
                    var pics: List<String>? = mutableListOf()
 
-)
+): Serializable
