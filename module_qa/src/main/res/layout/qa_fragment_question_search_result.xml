@@ -39,6 +39,7 @@
                         android:text="邮问知识库"
                         android:textColor="@color/common_level_two_font_color"
                         android:textSize="18sp"
+                        android:textStyle="bold"
                         app:layout_constraintLeft_toLeftOf="@id/qa_search_cs_one"
                         app:layout_constraintTop_toTopOf="@id/qa_search_cs_one" />
 
@@ -83,6 +84,7 @@
                 android:text="相关动态"
                 android:textColor="@color/common_level_two_font_color"
                 android:textSize="18sp"
+                android:textStyle="bold"
                 app:layout_constraintLeft_toLeftOf="@id/qa_knowledge_cs_two"
                 app:layout_constraintTop_toTopOf="@id/qa_knowledge_cs_two" />
 

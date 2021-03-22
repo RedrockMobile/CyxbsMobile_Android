@@ -20,7 +20,7 @@
 
     <ImageView
         android:id="@+id/qa_imageview3"
-        android:layout_width="150dp"
+        android:layout_width="141dp"
         android:layout_height="90dp"
         android:background="@drawable/qa_ic_no_circles"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -33,6 +33,7 @@
         android:text="发现你喜欢的圈子~"
         android:textColor="@color/qa_item_no_circles_text_color"
         android:textSize="16sp"
+        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.405"

@@ -35,11 +35,12 @@ class CircleSquareAdapter(val viewmodel: CircleSquareViewModel, private val onIt
             itemView.tv_circle_square_name.text = data?.topicName
             itemView.tv_circle_square_descriprion.text = data?.introduction
             itemView.tv_circle_square_person_number.text = data?.follow_count.toString() + "个成员"
-            itemView.btn_circle_square_concern.text = "+关注"
             if (data?._isFollow!=null) {
                 if (data._isFollow.equals(1)) {
+                    itemView.btn_circle_square_concern.text = "已关注"
                     itemView.btn_circle_square_concern.background = context.getDrawable(R.drawable.qa_shape_send_dynamic_btn_grey_background)
                 } else {
+                    itemView.btn_circle_square_concern.text = "+关注"
                     itemView.btn_circle_square_concern.background = context.getDrawable(R.drawable.qa_shape_send_dynamic_btn_blue_background)
                 }
             }
@@ -63,12 +64,14 @@ class CircleSquareAdapter(val viewmodel: CircleSquareViewModel, private val onIt
                 holder.itemView.btn_circle_square_concern.background = context.getDrawable(R.drawable.qa_shape_send_dynamic_btn_blue_background)
                 dataList[position]._isFollow=0
                 dataList[position].follow_count=dataList[position].follow_count-1
+                holder.itemView.btn_circle_square_concern.text = "+关注"
                 notifyDataSetChanged()
             } else {
                 viewmodel.followTopic(dataList[position].topicName, dataList[position]._isFollow.equals(1))
                 holder.itemView.btn_circle_square_concern.background = context.getDrawable(R.drawable.qa_shape_send_dynamic_btn_grey_background)
                 dataList[position]._isFollow=1
                 dataList[position].follow_count=dataList[position].follow_count+1
+                holder.itemView.btn_circle_square_concern.text = "已关注"
                 notifyDataSetChanged()
             }
         }

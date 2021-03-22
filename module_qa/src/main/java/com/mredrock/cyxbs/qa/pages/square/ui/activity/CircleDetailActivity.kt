@@ -233,11 +233,12 @@ class CircleDetailActivity : BaseViewModelActivity<CircleDetailViewModel>() {
             tv_circle_square_name.text = topic.topicName
             tv_circle_square_descriprion.text = topic.introduction
             tv_circle_square_person_number.text = topic.follow_count.toString() + "个成员"
-            btn_circle_square_concern.text = "+关注"
             qa_detail_tv_title.text = topic.topicName
             if (topic._isFollow.equals(1)) {
+                btn_circle_square_concern.text = "已关注"
                 btn_circle_square_concern.background = context.getDrawable(R.drawable.qa_shape_send_dynamic_btn_grey_background)
             } else {
+                btn_circle_square_concern.text = "+关注"
                 btn_circle_square_concern.background = context.getDrawable(R.drawable.qa_shape_send_dynamic_btn_blue_background)
             }
         }
