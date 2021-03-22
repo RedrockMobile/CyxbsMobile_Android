@@ -9,6 +9,7 @@ import androidx.core.app.ActivityCompat.startActivityForResult
 import androidx.core.app.ActivityOptionsCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.BaseApp.Companion.context
@@ -78,7 +79,7 @@ class CircleSquareActivity : BaseViewModelActivity<CircleSquareViewModel>() {
             onBackPressed()
         }
         qa_tv_toolbar_title.text = resources.getText(R.string.qa_square_title)
-        qa_circle_square_toolbar.background= ContextCompat.getDrawable(context,R.color.qa_dynamic_circle_background_color)
+        qa_circle_square_toolbar.background= ContextCompat.getDrawable(context,R.color.qa_circle_toolbar_back_color)
     }
 
     private fun initView() {
@@ -88,6 +89,11 @@ class CircleSquareActivity : BaseViewModelActivity<CircleSquareViewModel>() {
         }
         rv_circle_square.layoutManager = LinearLayoutManager(context)
         rv_circle_square.adapter = adapter
+        val divide = DividerItemDecoration(this, DividerItemDecoration.VERTICAL)
+        ContextCompat.getDrawable(this, R.drawable.qa_shape_divide_line)?.let {
+            divide.setDrawable(it)
+            rv_circle_square.addItemDecoration(divide)
+        }
         viewModel.getAllCirCleData("问答圈", "test1")
         viewModel.allCircle.observe {
             if (it != null) {

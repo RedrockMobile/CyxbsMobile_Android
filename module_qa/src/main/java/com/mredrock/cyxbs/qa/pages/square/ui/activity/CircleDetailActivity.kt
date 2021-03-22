@@ -119,11 +119,12 @@ class CircleDetailActivity : BaseViewModelActivity<CircleDetailViewModel>() {
                                 tv_circle_square_name.text = topic.topicName
                                 tv_circle_square_descriprion.text = topic.introduction
                                 tv_circle_square_person_number.text = topic.follow_count.toString() + "个成员"
-                                btn_circle_square_concern.text = "+关注"
                                 qa_detail_tv_title.text = topic.topicName
                                 if (topic._isFollow.equals(1)) {
+                                    btn_circle_square_concern.text = "已关注"
                                     btn_circle_square_concern.background = ContextCompat.getDrawable(context, R.drawable.qa_shape_send_dynamic_btn_grey_background)
                                 } else {
+                                    btn_circle_square_concern.text = "+关注"
                                     btn_circle_square_concern.background = ContextCompat.getDrawable(context, R.drawable.qa_shape_send_dynamic_btn_blue_background)
                                 }
                                 qa_vp_circle_detail.adapter = NewHotViewPagerAdapter(this@CircleDetailActivity, listOf(lastNewFragment, hotFragment))
@@ -185,12 +186,14 @@ class CircleDetailActivity : BaseViewModelActivity<CircleDetailViewModel>() {
                 //关注的状态下点击，取消关注
                 viewModel.followTopic(topic.topicName, topic._isFollow.equals(1))
                 btn_circle_square_concern.background = context.getDrawable(R.drawable.qa_shape_send_dynamic_btn_blue_background)
+                btn_circle_square_concern.text = "+关注"
                 topic.follow_count = topic.follow_count - 1
                 tv_circle_square_person_number.text = topic.follow_count.toString() + "个成员"
                 topic._isFollow = 0
             } else {
                 viewModel.followTopic(topic.topicName, topic._isFollow.equals(1))
                 btn_circle_square_concern.background = context.getDrawable(R.drawable.qa_shape_send_dynamic_btn_grey_background)
+                btn_circle_square_concern.text = "已关注"
                 topic.follow_count = topic.follow_count + 1
                 tv_circle_square_person_number.text = topic.follow_count.toString() + "个成员"
                 topic._isFollow = 1

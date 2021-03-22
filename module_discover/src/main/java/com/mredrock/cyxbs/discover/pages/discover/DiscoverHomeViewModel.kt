@@ -4,6 +4,7 @@ import android.os.Parcelable
 import androidx.lifecycle.MutableLiveData
 import com.mredrock.cyxbs.common.config.DISCOVERY_ROLLER_VIEW_INFO
 import com.mredrock.cyxbs.common.network.ApiGenerator
+import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.mapOrThrowApiException
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers

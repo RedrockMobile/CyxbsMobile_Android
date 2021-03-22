@@ -15,11 +15,12 @@ interface CourseApiService {
      * @param stuNum 学生学号
      * @param week 获取哪一周的课程信息。可以不传值
      */
+    @FormUrlEncoded
     @Headers("API_APP: android")
-    @GET(CourseUrls.API_GET_COURSE)
-    fun getCourse(@Query("stuNum") stuNum: String,
-                  @Query("week") week: String = "",
-                  @Query("force_fetch") isForceFetch: Boolean = false): Observable<CourseApiWrapper<List<Course>>>
+    @POST(CourseUrls.API_GET_COURSE)
+    fun getCourse(@Field("stuNum") stuNum: String,
+                  @Field("week") week: String = "",
+                  @Field("force_fetch") isForceFetch: Boolean = false): Observable<CourseApiWrapper<List<Course>>>
 
 
     /**
