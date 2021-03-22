@@ -20,6 +20,8 @@ import com.mredrock.cyxbs.qa.beannew.Dynamic
 import com.mredrock.cyxbs.qa.beannew.Knowledge
 import com.mredrock.cyxbs.qa.component.recycler.BaseRvAdapter
 import com.mredrock.cyxbs.qa.component.recycler.BaseViewHolder
+import com.mredrock.cyxbs.qa.config.RequestResultCode
+import com.mredrock.cyxbs.qa.config.RequestResultCode.ClickKnowledge
 import com.mredrock.cyxbs.qa.ui.activity.ViewImageActivity
 import com.mredrock.cyxbs.qa.ui.widget.NineGridView
 import com.mredrock.cyxbs.qa.utils.dynamicTimeDescription
@@ -54,6 +56,7 @@ class SearchResultHeaderAdapter( val searchKnowledgeAdapter: SearchKnowledgeAdap
         flexBoxManager.flexWrap = FlexWrap.WRAP
 
         holder.cancleImage.setOnClickListener {
+            ClickKnowledge = false
             recyclerView.adapter = searchKnowledgeAdapter
             recyclerView.layoutManager = flexBoxManager
         }

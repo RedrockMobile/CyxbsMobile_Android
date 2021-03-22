@@ -146,7 +146,7 @@ class CircleDetailActivity : BaseViewModelActivity<CircleDetailViewModel>() {
     }
 
     override fun onBackPressed() {
-        window.returnTransition = Slide(Gravity.END).apply { duration = 500 }
+//        window.returnTransition = Slide(Gravity.END).apply { duration = 500 }
         if (!isFormReceive){
             LogUtils.d("zt", topic.toString())
             when (startPosition) {
@@ -160,13 +160,14 @@ class CircleDetailActivity : BaseViewModelActivity<CircleDetailViewModel>() {
                 }
             }
         }
+        finish()
         super.onBackPressed()
     }
 
     @SuppressLint("UseCompatLoadingForDrawables", "SetTextI18n")
     private fun initClick() {
         qa_circle_detail_iv_back.setOnSingleClickListener {
-            window.returnTransition = Slide(Gravity.END).apply { duration = 500 }
+//            window.returnTransition = Slide(Gravity.END).apply { duration = 500 }
             when (startPosition) {
                 RESULT_CODE -> {
                     val intent = Intent()
