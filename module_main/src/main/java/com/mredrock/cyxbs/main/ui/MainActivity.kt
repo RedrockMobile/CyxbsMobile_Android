@@ -218,8 +218,11 @@ class MainActivity : BaseViewModelActivity<MainViewModel>(),
             when (it) {
                 0 -> {
                     changeFragment(discoverFragment)
+                    //规避掉第一次打开App时因设置打开App展开课表而导致被下拉
+                    if (isQa){
+                        bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+                    }
                     isQa = false
-                    bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
                 }
                 1 -> {
                     //点击Tab刷新邮问

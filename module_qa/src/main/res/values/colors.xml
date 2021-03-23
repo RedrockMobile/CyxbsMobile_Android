@@ -98,6 +98,8 @@
     <color name="qa_ignore_item_background_color">#F1F3F8</color>
     <!--    被回复的语句的颜色-->
     <color name="qa_my_comment_item_from_color">#556C8B</color>
+    <!--    圈子广场无关注的背景颜色 -->
+    <color name="qa_circle_empty_back_color">#FFFFFF</color>
     <!--    QA个人界面泛用式分割线颜色-->
     <color name="qa_mine_common_divide_line">#E2E8EE</color>
     <color name="qa_dialog_report_cancel_text_color">#ffffff</color>

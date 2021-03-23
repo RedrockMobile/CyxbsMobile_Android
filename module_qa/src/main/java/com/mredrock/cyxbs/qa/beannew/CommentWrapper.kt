@@ -12,5 +12,7 @@ data class CommentWrapper(
         @SerializedName("from")
         val from: String,
         @SerializedName("comment")
-        val comment: Comment
+        val comment: Comment,
+        @SerializedName("type")
+        val type: Int
 ): Serializable

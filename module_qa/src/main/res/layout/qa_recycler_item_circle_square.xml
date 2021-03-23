@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginTop="5dp"
-    android:background="@color/qa_quiz_select_type_background_color"
+    android:background="@color/qa_ignore_item_background_color"
     android:clickable="true"
     android:focusable="true"
     android:orientation="vertical"

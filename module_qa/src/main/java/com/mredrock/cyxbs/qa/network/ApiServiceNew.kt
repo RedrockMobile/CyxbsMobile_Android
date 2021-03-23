@@ -138,8 +138,7 @@ interface ApiServiceNew {
     @POST("/magipoke-loop/user/replyme")
     fun getUserReplay(
             @Field("page") page: Int,
-            @Field("size") size: Int,
-            @Field("type") type: Int
+            @Field("size") size: Int
     ): Observable<RedrockApiWrapper<List<CommentWrapper>>>
 
     /**
@@ -149,8 +148,7 @@ interface ApiServiceNew {
     @POST("/magipoke-loop/user/praisedme")
     fun getUserPraise(
             @Field("page") page: Int,
-            @Field("size") size: Int,
-            @Field("type") type: Int
+            @Field("size") size: Int
     ): Observable<RedrockApiWrapper<List<Praise>>>
 
     /**

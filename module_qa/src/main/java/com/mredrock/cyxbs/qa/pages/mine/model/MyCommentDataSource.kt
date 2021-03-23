@@ -24,8 +24,6 @@ class MyCommentDataSource : PageKeyedDataSource<Int, CommentWrapper>() {
     val initialLoad = MutableLiveData<Int>()
     private var failedRequest: (() -> Unit)? = null
     private var requestType = 1
-    private var needAddKey = false
-    private var needStop = false
 
     override fun loadInitial(params: LoadInitialParams<Int>, callback: LoadInitialCallback<Int, CommentWrapper>) {
         //最开始加上判断，以防登录bug
@@ -36,16 +34,10 @@ class MyCommentDataSource : PageKeyedDataSource<Int, CommentWrapper>() {
             return
         }
 
-        //由于接口的type1和type2的page和size并不相关，所以这里的请求逻辑为
-        //1：固定size为6
-        //2：奇数次加载为type1，偶数次加载为type2
-        //由于存在请求某一个人type返回值为空的情况，所以需要单独进行判空处理
-
         ApiGenerator.getApiService(ApiServiceNew::class.java)
                 .getUserReplay(
                         1,
-                        params.requestedLoadSize,
-                        requestType
+                        params.requestedLoadSize
                 )
                 .mapOrThrowApiException()
                 .setSchedulers()
@@ -62,8 +54,9 @@ class MyCommentDataSource : PageKeyedDataSource<Int, CommentWrapper>() {
                 .safeSubscribeBy { list ->
                     initialLoad.postValue(NetworkState.SUCCESSFUL)
                     networkState.postValue(NetworkState.SUCCESSFUL)
+                    val nextKey = 2.takeUnless { list.size < params.requestedLoadSize }
                     if (list.isNotEmpty()){//如果这个集合是空的，不予以返回，因为这里还不能确定后面是否为空
-                        callback.onResult(list, 1, 1)
+                        callback.onResult(list, 1, nextKey)
                     }
                 }
     }
@@ -75,8 +68,7 @@ class MyCommentDataSource : PageKeyedDataSource<Int, CommentWrapper>() {
         ApiGenerator.getApiService(ApiServiceNew::class.java)
                 .getUserReplay(
                         params.key,
-                        params.requestedLoadSize,
-                        requestType
+                        params.requestedLoadSize
                 )
                 .mapOrThrowApiException()
                 .setSchedulers()
@@ -91,23 +83,10 @@ class MyCommentDataSource : PageKeyedDataSource<Int, CommentWrapper>() {
                     }
                 }
                 .safeSubscribeBy { list ->
-                    needAddKey = !needAddKey
                     networkState.postValue(NetworkState.SUCCESSFUL)
                     initialLoad.postValue(NetworkState.SUCCESSFUL)
-                    val adjacentPageKey = if (needAddKey) params.key + 1 else params.key
-                    if (list.size < params.requestedLoadSize) {
-                        //adjacentPageKey为null是加载的结束标志
-                        //只有两个type下的size均小于requestLoadSize才算正式结束
-                        if (needStop) {
-                            callback.onResult(list, null)
-                        } else {
-                            needStop = true
-                            callback.onResult(list, adjacentPageKey)
-                        }
-                        return@safeSubscribeBy
-                    }
+                    val adjacentPageKey = (params.key+1).takeUnless { list.size <= params.requestedLoadSize }
                     callback.onResult(list, adjacentPageKey)
-
                 }
 
     }

@@ -84,7 +84,7 @@
                 android:padding="5dp"
                 android:textStyle="bold"
                 android:text="@string/qa_choose_one_circle"
-                android:textColor="#15315B"
+                android:textColor="@color/common_level_two_font_color"
                 android:textSize="15sp" />
 
             <com.google.android.material.chip.ChipGroup

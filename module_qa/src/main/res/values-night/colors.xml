@@ -30,13 +30,13 @@
     <!--    RecyclerView加载时的holder背景颜色-->
     <color name="qa_question_item_shadow_color">#ffffff</color>
     <!--    提问选择类型的背景颜色-->
-    <color name="qa_quiz_select_type_background_color">#000000</color>
+    <color name="qa_quiz_select_type_background_color">#3F3F3F</color>
     <!--    提问选择类型的文字颜色-->
-    <color name="qa_quiz_select_type_text_color">#556C89</color>
+    <color name="qa_quiz_select_type_text_color">#000000</color>
     <!--    提问选中类型的文字颜色-->
-    <color name="qa_quiz_selected_type_text_color">#FF9C8D</color>
+    <color name="qa_quiz_selected_type_text_color">#000000</color>
     <!--    提问选中类型的背景颜色，指定78的透明度-->
-    <color name="qa_quiz_selected_type_background_color">#F7DAD7</color>
+    <color name="qa_quiz_selected_type_background_color">#2CDEFF</color>
     <!--    提问标题框和内容框的背景颜色，指定69的透明度-->
     <color name="qa_quiz_new_text_background_color">#acE8F0FC</color>
     <!--    提问内容文字hint颜色-->
@@ -95,12 +95,14 @@
     <color name="qa_reply_inner_background_color">#88000000</color>
     <!--    屏蔽的人item的背景颜色-->
     <color name="qa_ignore_item_background_color">#000000</color>
+    <!--    圈子广场无关注的背景颜色 -->
+    <color name="qa_circle_empty_back_color">#1D1D1D</color>
     <!--    QA个人界面泛用式分割线颜色-->
     <color name="qa_mine_common_divide_line">#252525</color>
     <color name="qa_my_comment_item_from_color">#838384</color>
     <color name="qa_dialog_report_cancel_text_color">#ffffff</color>
     <color name="qa_dialog_share_cancel_text_color">#94A6C4</color>
-    <color name="qa_item_no_circles_text_color">#556C89</color>
+    <color name="qa_item_no_circles_text_color">#F0F0F2</color>
     <color name="qa_mine_content_front_line_color">#838384</color>
     <color name="qa_reply_icon_color">#5A5A5A</color>
     <color name="qa_circle_toolbar_back_color">#000000</color>

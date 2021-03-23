@@ -41,14 +41,16 @@
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/qa_tv_my_comment_item_comment"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="13.5dp"
-        android:textColor="@color/common_level_three_font_color"
-        android:textSize="15sp"
+        android:layout_marginEnd="16dp"
+        android:ellipsize="end"
         android:maxEms="18"
         android:maxLines="1"
-        android:ellipsize="end"
+        android:textColor="@color/common_level_three_font_color"
+        android:textSize="15sp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/qa_tv_my_comment_item_tip_and_date"
         app:layout_constraintTop_toBottomOf="@+id/qa_tv_my_comment_item_tip_and_date"
         tools:text="woc，已经冲了, 这都不冲？？？？？？？？？？？？？？" />
@@ -64,15 +66,17 @@
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/qa_tv_my_comment_from"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="6dp"
         android:layout_marginTop="12dp"
+        android:layout_marginEnd="16dp"
+        android:ellipsize="end"
         android:maxEms="18"
         android:maxLines="1"
-        android:ellipsize="end"
         android:textColor="@color/qa_my_comment_item_from_color"
         android:textSize="12sp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/qa_tv_my_comment_item_comment"
         app:layout_constraintTop_toBottomOf="@+id/qa_tv_my_comment_item_comment"
         tools:text="Do you like Van 游戏, Axl Rose Axl Rose Axl Rose Axl Rose Axl Rose Axl Rose Axl Rose Axl Rose Axl Rose Axl Rose Axl Rose " />
