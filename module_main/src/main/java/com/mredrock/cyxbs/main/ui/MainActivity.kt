@@ -198,7 +198,7 @@ class MainActivity : BaseViewModelActivity<MainViewModel>(),
             when(it){
                 0 ->{
                     //如果用户选择了点击App优先展示课表，会存在课表自动下滑的情况，需要加以判断
-                    if (lastState == BottomSheetBehavior.STATE_HIDDEN){
+                    if (bottomSheetBehavior.state == BottomSheetBehavior.STATE_HIDDEN){
                         bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
                     }
                 }

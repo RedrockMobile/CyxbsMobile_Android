@@ -50,7 +50,7 @@
                 android:layout_gravity="bottom"
                 android:layout_marginBottom="20dp"
                 android:background="@color/qa_mine_common_divide_line"
-                android:visibility="visible" />
+                android:visibility="gone" />
         </com.google.android.material.appbar.CollapsingToolbarLayout>
     </com.google.android.material.appbar.AppBarLayout>
 

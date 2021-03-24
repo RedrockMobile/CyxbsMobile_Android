@@ -1,16 +1,13 @@
 package com.mredrock.cyxbs.common.network
 
 import android.util.SparseArray
-import android.widget.Toast
 import com.mredrock.cyxbs.common.BuildConfig
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.api.account.IUserStateService
-import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.config.getBaseUrl
 import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.takeIfNoException
-import com.mredrock.cyxbs.common.utils.extensions.toast
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.Response
@@ -175,12 +172,7 @@ object ApiGenerator {
                         checkRefresh(it)
                     }
                     else -> {
-                        //HttpStatus判断
-                        val response = it.proceed(it.request().newBuilder().header("Authorization", "Bearer $token").build())
-                        when(response.code){
-                            403 -> { checkRefresh(it) }
-                            else -> { response }
-                        }
+                        it.proceed(it.request().newBuilder().header("Authorization", "Bearer $token").build())
                     }
                 } as Response
             })
@@ -196,11 +188,10 @@ object ApiGenerator {
          * 当第一个过期token请求接口后，改变token和refreshToken，防止同步refreshToken失效
          * 之后进入该方法的请求，token已经刷新
          */
-        if (refreshToken.isNotEmpty() && (isTokenExpired() || response.code == 403)) {
+        if (refreshToken.isNotEmpty() && isTokenExpired()) {
             takeIfNoException {
                 ServiceManager.getService(IAccountService::class.java).getVerifyService().refresh(
                         onError = {
-                            //TODO: 强制下线
                             response.close()
                         },
                         action = { s: String ->
