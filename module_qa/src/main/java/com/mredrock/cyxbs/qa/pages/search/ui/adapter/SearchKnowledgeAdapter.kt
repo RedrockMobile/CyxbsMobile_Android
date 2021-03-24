@@ -8,6 +8,8 @@ import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.beannew.Knowledge
 import com.mredrock.cyxbs.qa.component.recycler.BaseRvAdapter
 import com.mredrock.cyxbs.qa.component.recycler.BaseViewHolder
+import com.mredrock.cyxbs.qa.config.RequestResultCode
+import com.mredrock.cyxbs.qa.config.RequestResultCode.ClickKnowledge
 import kotlinx.android.synthetic.main.qa_recycler_item_dynamic_label.view.*
 
 /**
@@ -28,6 +30,7 @@ class SearchKnowledgeAdapter( val recyclerView: RecyclerView) : BaseRvAdapter<Kn
     override fun onItemClickListener(holder: BaseViewHolder<Knowledge>, position: Int, data: Knowledge) {
         super.onItemClickListener(holder, position, data)
         holder.itemView.setOnClickListener {
+            ClickKnowledge = true
             searchResultHeaderAdapter?.knowledge=data
             recyclerView.adapter=searchResultHeaderAdapter
             recyclerView.layoutManager=LinearLayoutManager(BaseApp.context)

@@ -262,7 +262,6 @@ class QuestionSearchedFragment : BaseViewModelFragment<QuestionSearchedViewModel
                 knowledges=it
                 val adapterKnowledge=SearchKnowledgeAdapter(qa_rv_knowledge)
                 val adapterSearchResultHeader=SearchResultHeaderAdapter(adapterKnowledge,qa_rv_knowledge)
-
                 adapterKnowledge.searchResultHeaderAdapter=adapterSearchResultHeader
                 val flexBoxManager = FlexboxLayoutManager(BaseApp.context)
                 flexBoxManager.flexWrap = FlexWrap.WRAP
@@ -271,6 +270,7 @@ class QuestionSearchedFragment : BaseViewModelFragment<QuestionSearchedViewModel
                 knowledges?.let { it1 ->
                     adapterKnowledge.addData(it1)
                 }
+                qa_rv_knowledge.layoutManager=flexBoxManager
             } else {
                 qa_rv_knowledge.gone()
                 qa_line.gone()
