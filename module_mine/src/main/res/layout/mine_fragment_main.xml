@@ -290,61 +290,6 @@
                 android:src="@drawable/mine_ic_arrow_right" />
         </FrameLayout>
 
-        <!--<TextView
-=======
-        <TextView
-            android:id="@+id/mine_main_tv_security"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="18dp"
-            android:foreground="?android:selectableItemBackground"
-            android:paddingStart="16dp"
-            android:paddingTop="9dp"
-            android:paddingBottom="9dp"
-            android:text="@string/mine_security"
-            android:textColor="@color/common_level_three_font_color"
-            android:textSize="15sp" />
-
-        <TextView
->>>>>>> 086357b472e0829bf18e56602486afc6440569a6
-            android:id="@+id/mine_main_tv_feedback"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="18dp"
-            android:foreground="?android:selectableItemBackground"
-            android:paddingStart="16dp"
-            android:paddingTop="9dp"
-            android:paddingBottom="9dp"
-            android:text="@string/mine_feedback_suggestion"
-            android:textColor="@color/common_level_three_font_color"
-            android:textSize="15sp" />
-
-        <TextView
-            android:id="@+id/mine_main_tv_redrock"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="18dp"
-            android:foreground="?android:selectableItemBackground"
-            android:paddingStart="16dp"
-            android:paddingTop="9dp"
-            android:paddingBottom="9dp"
-            android:text="@string/mine_about_redrock"
-            android:textColor="@color/common_level_three_font_color"
-            android:textSize="15sp" />
-
-        <TextView
-            android:id="@+id/mine_main_tv_about"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="18dp"
-            android:foreground="?android:selectableItemBackground"
-            android:paddingStart="16dp"
-            android:paddingTop="9dp"
-            android:paddingBottom="9dp"
-            android:text="@string/mine_about"
-            android:textColor="@color/common_level_three_font_color"
-            android:textSize="15sp" />-->
-
         <Space
             android:layout_width="match_parent"
             android:layout_height="100dp" />

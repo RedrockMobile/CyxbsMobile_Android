@@ -208,7 +208,7 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>(), Eve
     }
 
     private fun addFeedFragment(fragment: Fragment) {
-        parentFragmentManager.beginTransaction().add(R.id.ll_discover_feeds, fragment).commit()
+        childFragmentManager.beginTransaction().add(R.id.ll_discover_feeds, fragment).commit()
 
     }
 

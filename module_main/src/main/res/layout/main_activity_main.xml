@@ -15,19 +15,19 @@
         tools:background="@color/common_window_background"
         tools:context=".ui.MainActivity">
 
-        <FrameLayout
-            android:id="@+id/other_fragment_container"
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/main_view_pager"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layout_behavior="@string/appbar_scrolling_view_behavior" />
-        <FrameLayout
+
+        <androidx.fragment.app.FragmentContainerView
             android:id="@+id/course_bottom_sheet_content"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:behavior_peekHeight="@dimen/main_main_bottom_navigation_height_twice_as_much"
             app:behavior_hideable="true"
-            app:layout_behavior="@string/bottom_sheet_behavior">
-        </FrameLayout>
+            app:layout_behavior="@string/bottom_sheet_behavior" />
 
         <include layout="@layout/main_bottom_nav" />
 
@@ -39,7 +39,7 @@
             无论后面是不是被隐藏了，那块区域bottomSheet都不会相应滑动手势
             你可以在课表bottomSheet完全展开后滑动底部tab还未隐藏时的上下滑动进行验证
             或者在CoordinatorLayout最后添加一个宽高都match_parent控件进行验证-->
-    <FrameLayout
+    <androidx.fragment.app.FragmentContainerView
         android:id="@+id/main_activity_splash_viewStub"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

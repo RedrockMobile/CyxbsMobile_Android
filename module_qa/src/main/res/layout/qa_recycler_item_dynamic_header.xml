@@ -45,7 +45,7 @@
 
     <ImageView
         android:id="@+id/qa_iv_dynamic_more_tips_clicked"
-        android:layout_width="30dp"
+        android:layout_width="25dp"
         android:layout_height="30dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.931"
