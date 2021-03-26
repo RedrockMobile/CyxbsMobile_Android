@@ -136,6 +136,28 @@ open class DynamicListViewModel(kind: String) : BaseViewModel() {
                 }
     }
 
+    fun followGroup(topicName: String, followState: Boolean){
+        ApiGenerator.getApiService(ApiServiceNew::class.java)
+                .followTopicGround(topicName)
+                .setSchedulers()
+                .safeSubscribeBy {
+                    if (it.status == 200) {
+                        if (followState) {
+                            //如果处于关注状态,点击之后是取消关注
+                            toastEvent.value = R.string.qa_unfollow_circle
+                        } else {
+                            //如果处于未关注状态,点击之后是关注
+                            toastEvent.value = R.string.qa_follow_circle
+                        }
+                    } else {
+                        toastEvent.value = R.string.qa_follow_circle
+                    }
+                    //刷新数据
+                    getMyCirCleData()
+                    invalidateQuestionList()
+                }
+    }
+
     fun invalidateQuestionList() = dynamicList.value?.dataSource?.invalidate()
 
     fun retry() = factory.dynamicDataSourceLiveData.value?.retry()

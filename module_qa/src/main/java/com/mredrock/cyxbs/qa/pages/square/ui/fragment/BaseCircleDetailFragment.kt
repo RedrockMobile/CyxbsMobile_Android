@@ -73,7 +73,7 @@ abstract class BaseCircleDetailFragment<T : CircleDetailViewModel> : BaseViewMod
                 val url = "${CommentConfig.SHARE_URL}dynamic?id=${dynamic.postId}?id_token=$token"
                 when (mode) {
                     QQ_FRIEND ->{
-                        val pic = if(dynamic.pics.isEmpty()) "" else dynamic.pics[0]
+                        val pic = if(dynamic.pics.isNullOrEmpty()) "" else dynamic.pics[0]
                         mTencent?.let { it1 -> ShareUtils.qqShare(it1, this@BaseCircleDetailFragment, dynamic.topic, dynamic.content, url, pic) }
                     }
                     QQ_ZONE ->

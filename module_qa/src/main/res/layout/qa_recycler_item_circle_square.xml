@@ -71,11 +71,11 @@
 
     <TextView
         android:id="@+id/tv_circle_square_descriprion"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="15.5dp"
+        android:layout_marginStart="0dp"
         android:layout_marginTop="20dp"
-        android:layout_marginEnd="41.5dp"
+        android:layout_marginEnd="0dp"
         android:layout_marginBottom="25dp"
         android:textColor="@color/qa_item_square_describe_color"
         android:textSize="13sp"

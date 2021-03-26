@@ -2,13 +2,11 @@ package com.mredrock.cyxbs.qa.pages.mine.ui
 
 import android.graphics.Color
 import android.os.Bundle
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.common.config.QA_DYNAMIC_MINE
-import com.mredrock.cyxbs.common.config.getBaseUrl
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.LogUtils
@@ -67,7 +65,7 @@ class MyDynamicActivity : BaseViewModelActivity<MyDynamicViewModel>() {
                         val url = "${SHARE_URL}dynamic?id=${dynamic.postId}?id_token=$token"
                         when (mode) {
                             CommentConfig.QQ_FRIEND ->{
-                                val pic = if(dynamic.pics.isEmpty()) "" else dynamic.pics[0]
+                                val pic = if(dynamic.pics.isNullOrEmpty()) "" else dynamic.pics[0]
                                 mTencent?.let { it1 -> ShareUtils.qqShare(it1, this@MyDynamicActivity, dynamic.topic, dynamic.content, url, pic) }
                             }
                             CommentConfig.QQ_ZONE ->

@@ -21,11 +21,13 @@ import com.mredrock.cyxbs.qa.component.recycler.BaseViewHolder
 import com.mredrock.cyxbs.qa.config.CommentConfig
 import com.mredrock.cyxbs.qa.config.CommentConfig.COPY_LINK
 import com.mredrock.cyxbs.qa.config.CommentConfig.DELETE
+import com.mredrock.cyxbs.qa.config.CommentConfig.FOLLOW
 import com.mredrock.cyxbs.qa.config.CommentConfig.FRIEND_CIRCLE
 import com.mredrock.cyxbs.qa.config.CommentConfig.IGNORE
 import com.mredrock.cyxbs.qa.config.CommentConfig.QQ_FRIEND
 import com.mredrock.cyxbs.qa.config.CommentConfig.QQ_ZONE
 import com.mredrock.cyxbs.qa.config.CommentConfig.REPORT
+import com.mredrock.cyxbs.qa.config.CommentConfig.UN_FOLLOW
 import com.mredrock.cyxbs.qa.ui.activity.ViewImageActivity
 import com.mredrock.cyxbs.qa.ui.widget.NineGridView
 import com.mredrock.cyxbs.qa.ui.widget.OptionalPopWindow
@@ -86,6 +88,8 @@ class DynamicAdapter(val context: Context, private val onItemClickEvent: (Dynami
                                         onPopWindowClickListener?.invoke(position, IGNORE, dynamic)
                                     }.addOptionAndCallback(REPORT) {
                                         onPopWindowClickListener?.invoke(position, REPORT, dynamic)
+                                    }.addOptionAndCallback(FOLLOW) {
+                                        onPopWindowClickListener?.invoke(position, FOLLOW, dynamic)
                                     }.show(view, OptionalPopWindow.AlignMode.RIGHT, 0)
                         } else {
                             OptionalPopWindow.Builder().with(context)
@@ -93,6 +97,8 @@ class DynamicAdapter(val context: Context, private val onItemClickEvent: (Dynami
                                         onPopWindowClickListener?.invoke(position, IGNORE, dynamic)
                                     }.addOptionAndCallback(REPORT) {
                                         onPopWindowClickListener?.invoke(position, REPORT, dynamic)
+                                    }.addOptionAndCallback(UN_FOLLOW) {
+                                        onPopWindowClickListener?.invoke(position, UN_FOLLOW, dynamic)
                                     }.show(view, OptionalPopWindow.AlignMode.RIGHT, 0)
                         }
                     } else {

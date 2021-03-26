@@ -24,7 +24,6 @@ import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.common.BaseApp.Companion.context
 import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.common.config.QA_DYNAMIC_DETAIL
-import com.mredrock.cyxbs.common.config.getBaseUrl
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.LogUtils
@@ -80,7 +79,7 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
                     val opt = ActivityOptionsCompat.makeSceneTransitionAnimation(it, dynamicItem, "dynamicItem")
                     val intent = Intent(it, DynamicDetailActivity::class.java)
                     dynamicOrigin = data
-                    it.window.exitTransition = Slide(Gravity.START).apply { duration = 250 }
+                    it.window.exitTransition = Slide(Gravity.START).apply { duration = 300 }
                     it.startActivityForResult(intent, DYNAMIC_DETAIL_REQUEST, opt.toBundle())
                 }
             }
@@ -100,7 +99,7 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
                 activity?.let {
                     val intent = Intent(context, DynamicDetailActivity::class.java)
                     intent.putExtra("post_id", postId)
-                    it.window.exitTransition = Slide(Gravity.START).apply { duration = 500 }
+                    it.window.exitTransition = Slide(Gravity.START).apply { duration = 300 }
                     it.startActivityForResult(intent, DYNAMIC_DETAIL_REQUEST)
                 }
             }
@@ -109,6 +108,8 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
         const val DYNAMIC_DELETE = "0"
         const val COMMENT_DELETE = "1"
     }
+
+    private val animatorDuration = 300L
 
     private val emptyRvAdapter by lazy { EmptyRvAdapter(getString(R.string.qa_comment_list_empty_hint)) }
 
@@ -210,7 +211,7 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
         }
 
         // 设置进入动画
-        window.enterTransition = Slide(Gravity.END).apply { duration = 500 }
+        window.enterTransition = Slide(Gravity.END).apply { duration = animatorDuration }
         // 设置标题
         qa_tv_toolbar_title.text = resources.getText(R.string.qa_dynamic_detail_title_text)
         // 注册
@@ -236,7 +237,7 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
                 val colorFinal = Color.parseColor(endColor)
                 val va = ValueAnimator.ofInt(colorStart, colorFinal)
                 va.setEvaluator(ArgbEvaluator())
-                va.duration = 500
+                va.duration = animatorDuration
                 va.addUpdateListener { vav ->
                     val gd = qa_ctl_dynamic.background as GradientDrawable
                     gd.setColor(vav.animatedValue as Int)
@@ -387,7 +388,7 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
                     initView(onCancelListener = View.OnClickListener {
                         dismiss()
                     }, qqshare = View.OnClickListener {
-                        val pic = if(dynamic.pics.isEmpty()) "" else dynamic.pics[0]
+                        val pic = if(dynamic.pics.isNullOrEmpty()) "" else dynamic.pics[0]
                         mTencent?.let { it1 -> ShareUtils.qqShare(it1, this@DynamicDetailActivity, dynamic.topic, dynamic.content, url, pic) }
                     }, qqZoneShare = View.OnClickListener {
                         mTencent?.let { it1 -> ShareUtils.qqQzoneShare(it1, this@DynamicDetailActivity, dynamic.topic, dynamic.content, url, ArrayList(dynamic.pics)) }
@@ -501,7 +502,7 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
         if (haveShareItem) {
             initChangeColorAnimator("#000000", "#1D1D1D")
         }
-        window.returnTransition = Slide(Gravity.END).apply { duration = 250 }
+        window.returnTransition = Slide(Gravity.END).apply { duration = animatorDuration }
         dynamicOrigin = null
         super.onBackPressed()
     }

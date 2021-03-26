@@ -66,6 +66,7 @@ class MyPraiseDataSource : PageKeyedDataSource<Int, Praise>() {
     override fun loadBefore(params: LoadParams<Int>, callback: LoadCallback<Int, Praise>) = Unit
 
     override fun loadAfter(params: LoadParams<Int>, callback: LoadCallback<Int, Praise>) {
+        LogUtils.d("RayleighZ", params.key.toString())
         ApiGenerator.getApiService(ApiServiceNew::class.java)
                 .getUserPraise(
                         params.key,

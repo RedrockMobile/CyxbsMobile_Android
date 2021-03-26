@@ -20,14 +20,16 @@
 
     <ImageView
         android:id="@+id/qa_imageview3"
-        android:layout_width="141dp"
-        android:layout_height="90dp"
-        android:background="@drawable/qa_ic_no_circles"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:src="@drawable/qa_ic_no_circles"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/qa_appcompattextview"
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/qa_appcompattextview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="发现你喜欢的圈子~"

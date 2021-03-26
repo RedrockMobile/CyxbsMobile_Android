@@ -17,7 +17,7 @@
         android:paddingBottom="10dp"
         android:text="@string/qa_dialog_share_text"
         android:textColor="@color/qa_draft_dialog_text_color"
-        android:textSize="14sp"
+        android:textSize="12sp"
         app:layout_constraintTop_toTopOf="parent"
         tools:layout_editor_absoluteX="0dp" />
 
@@ -167,9 +167,10 @@
         android:paddingTop="10dp"
         android:paddingBottom="10dp"
         android:layout_marginBottom="20dp"
+        android:textStyle="bold"
         android:text="@string/qa_dialog_cancel"
         android:textColor="@color/qa_dialog_share_cancel_text_color"
-        android:textSize="14sp"
+        android:textSize="15sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@id/qa_ll_share_ivs"
         tools:layout_editor_absoluteX="0dp" />

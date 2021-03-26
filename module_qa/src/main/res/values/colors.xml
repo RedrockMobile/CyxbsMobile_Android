@@ -111,4 +111,8 @@
 
     <color name="qa_reply_inner_reply_name_color">#556C89</color>
     <color name="qa_ic_search_color">#9aa6bd</color>
+    <color name="qa_ic_btn_white_color">#BDCCE5</color>
+    <color name="qa_share_back_color">#f1f3f8</color>
+    <color name="qa_add_images_back_color">#F3F2FB</color>
+    <color name="qa_add_image_icon_color">#ABBCD9</color>
 </resources>

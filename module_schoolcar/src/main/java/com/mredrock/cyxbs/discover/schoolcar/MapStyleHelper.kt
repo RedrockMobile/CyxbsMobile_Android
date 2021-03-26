@@ -9,7 +9,6 @@ import com.mredrock.cyxbs.common.utils.extensions.editor
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.discover.schoolcar.network.MapService
-import com.mredrock.cyxbs.schoolcar.BuildConfig
 import okhttp3.ResponseBody
 import retrofit2.Retrofit
 import java.io.File

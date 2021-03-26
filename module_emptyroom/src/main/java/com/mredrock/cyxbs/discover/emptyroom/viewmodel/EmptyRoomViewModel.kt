@@ -8,9 +8,7 @@ import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.discover.emptyroom.bean.EmptyClassRoom
-import com.mredrock.cyxbs.discover.emptyroom.bean.EmptyRoom
 import com.mredrock.cyxbs.discover.emptyroom.network.ApiService
-import com.mredrock.cyxbs.discover.emptyroom.utils.EmptyConverter
 import io.reactivex.disposables.Disposable
 import java.util.concurrent.TimeUnit
 

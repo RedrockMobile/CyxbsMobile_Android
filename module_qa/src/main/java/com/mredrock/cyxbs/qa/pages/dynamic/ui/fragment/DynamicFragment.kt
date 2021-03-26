@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.google.android.material.appbar.CollapsingToolbarLayout
 import com.mredrock.cyxbs.api.account.IAccountService
+import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.common.config.CyxbsMob
 import com.mredrock.cyxbs.common.config.QA_ENTRY
@@ -26,16 +27,19 @@ import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.ui.BaseViewModelFragment
 import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.doIfLogin
+import com.mredrock.cyxbs.common.utils.extensions.dp2px
 import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.component.recycler.RvAdapterWrapper
 import com.mredrock.cyxbs.qa.config.CommentConfig
 import com.mredrock.cyxbs.qa.config.CommentConfig.COPY_LINK
 import com.mredrock.cyxbs.qa.config.CommentConfig.DELETE
+import com.mredrock.cyxbs.qa.config.CommentConfig.FOLLOW
 import com.mredrock.cyxbs.qa.config.CommentConfig.IGNORE
 import com.mredrock.cyxbs.qa.config.CommentConfig.QQ_FRIEND
 import com.mredrock.cyxbs.qa.config.CommentConfig.QQ_ZONE
 import com.mredrock.cyxbs.qa.config.CommentConfig.REPORT
+import com.mredrock.cyxbs.qa.config.CommentConfig.UN_FOLLOW
 import com.mredrock.cyxbs.qa.config.RequestResultCode.DYNAMIC_DETAIL_REQUEST
 import com.mredrock.cyxbs.qa.config.RequestResultCode.NEED_REFRESH_RESULT
 import com.mredrock.cyxbs.qa.config.RequestResultCode.RELEASE_DYNAMIC_ACTIVITY_REQUEST
@@ -117,7 +121,7 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), EventBusL
                         val url = "${CommentConfig.SHARE_URL}dynamic?id=${dynamic.postId}&id_token=$token"
                         when (mode) {
                             QQ_FRIEND ->{
-                                val pic = if(dynamic.pics.isEmpty()) "" else dynamic.pics[0]
+                                val pic = if(dynamic.pics.isNullOrEmpty()) "" else dynamic.pics[0]
                                 mTencent?.let { it1 -> ShareUtils.qqShare(it1, this@DynamicFragment, dynamic.topic, dynamic.content, url, pic) }
                             }
                             QQ_ZONE ->
@@ -141,6 +145,12 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), EventBusL
                                         viewModel.report(dynamic, reportContent)
                                     }
                                 }
+                            }
+                            FOLLOW -> {
+                                viewModel.followGroup(dynamic.topic, false)
+                            }
+                            UN_FOLLOW -> {
+                                viewModel.followGroup(dynamic.topic, true)
                             }
                             DELETE -> {
                                 this@DynamicFragment.activity?.let { it1 ->
@@ -199,16 +209,21 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), EventBusL
                 val layoutParams = CollapsingToolbarLayout.LayoutParams(qa_rv_circles_List.layoutParams)
                 layoutParams.topMargin = 70
                 layoutParams.bottomMargin = 30
+                layoutParams.height = BaseApp.context.dp2px(130f)
+                qa_rv_circles_List.setPadding(0, 0, 0, BaseApp.context.dp2px(30f))
                 qa_rv_circles_List.layoutParams = layoutParams
                 qa_tv_my_notice.visibility = View.VISIBLE
                 view_divide.visibility = View.VISIBLE
                 circlesAdapter?.addCircleData(it)
             } else {
                 val layoutParams = CollapsingToolbarLayout.LayoutParams(qa_rv_circles_List.layoutParams)
+                layoutParams.height = BaseApp.context.dp2px(110f)
+                qa_rv_circles_List.setPadding(0, 0, 0, BaseApp.context.dp2px(0f))
                 circlesAdapter?.noticeChangeCircleData()
                 view_divide.visibility = View.GONE
                 qa_tv_my_notice.visibility = View.INVISIBLE
                 qa_rv_circles_List.layoutParams = layoutParams
+                qa_rv_circles_List.invalidate()
             }
         }
 

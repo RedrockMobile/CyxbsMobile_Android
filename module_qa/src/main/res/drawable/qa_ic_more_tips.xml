@@ -5,11 +5,11 @@
     android:viewportHeight="8">
   <path
       android:pathData="M4,4m-4,0a4,4 0,1 1,8 0a4,4 0,1 1,-8 0"
-      android:fillColor="#94a6c4"/>
+      android:fillColor="@color/qa_reply_icon_color"/>
   <path
       android:pathData="M16,4m-4,0a4,4 0,1 1,8 0a4,4 0,1 1,-8 0"
-      android:fillColor="#94a6c4"/>
+      android:fillColor="@color/qa_reply_icon_color"/>
   <path
       android:pathData="M28,4m-4,0a4,4 0,1 1,8 0a4,4 0,1 1,-8 0"
-      android:fillColor="#94a6c4"/>
+      android:fillColor="@color/qa_reply_icon_color"/>
 </vector>

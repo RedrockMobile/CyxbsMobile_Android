@@ -22,7 +22,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
-        android:textColor="@color/common_level_three_font_color"
+        android:textColor="@color/qa_dynamic_nickname_text_color"
         android:textSize="13sp"
         app:layout_constraintStart_toEndOf="@+id/qa_circle_iv_my_comment_item_avatar"
         app:layout_constraintTop_toTopOf="@+id/qa_circle_iv_my_comment_item_avatar"

@@ -39,8 +39,8 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/qa_rv_circles_List"
                 android:layout_width="match_parent"
-                android:layout_height="130dp"
-                android:paddingBottom="30dp"
+                android:layout_height="110dp"
+                android:paddingBottom="0dp"
                 tools:listitem="@layout/qa_recycler_item_circles" />
 
             <View

@@ -9,12 +9,13 @@
         android:id="@+id/common_dialog_background"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/common_dialog_btn_negative"
+        android:layout_marginBottom="45dp"
+        android:orientation="vertical"
         android:src="@drawable/common_shape_round_corner_dialog"
-        android:orientation="vertical" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 
     <FrameLayout
@@ -31,8 +32,8 @@
         android:layout_width="wrap_content"
         android:layout_height="34dp"
         android:paddingHorizontal="5dp"
-        android:layout_marginTop="12dp"
-        android:layout_marginBottom="12dp"
+        android:layout_marginTop="37dp"
+        android:layout_marginBottom="23dp"
         android:background="@drawable/common_dialog_btn_positive_blue"
         android:textColor="@color/common_white_font_color"
         android:textSize="15sp"
@@ -43,8 +44,8 @@
 
     <ImageView
         android:id="@+id/common_dialog_btn_negative"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
         android:src="@drawable/common_dialog_negative"
         app:layout_constraintTop_toBottomOf="@id/common_dialog_background"
         app:layout_constraintStart_toStartOf="parent"
