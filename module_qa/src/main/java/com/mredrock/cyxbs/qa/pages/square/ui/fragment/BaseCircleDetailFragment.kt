@@ -70,12 +70,14 @@ abstract class BaseCircleDetailFragment<T : CircleDetailViewModel> : BaseViewMod
         }.apply {
             onShareClickListener = { dynamic, mode ->
                 val token = ServiceManager.getService(IAccountService::class.java).getUserTokenService().getToken()
-                val url = "https://fe-prod.redrock.team/zscy-youwen-share/#/dynamic?id=${dynamic.postId}?id_token=$token"
+                val url = "${CommentConfig.SHARE_URL}dynamic?id=${dynamic.postId}?id_token=$token"
                 when (mode) {
-                    QQ_FRIEND ->
-                        mTencent?.let { it1 -> ShareUtils.qqShare(it1, this@BaseCircleDetailFragment, dynamic.topic, dynamic.content, url, "") }
+                    QQ_FRIEND ->{
+                        val pic = if(dynamic.pics.isEmpty()) "" else dynamic.pics[0]
+                        mTencent?.let { it1 -> ShareUtils.qqShare(it1, this@BaseCircleDetailFragment, dynamic.topic, dynamic.content, url, pic) }
+                    }
                     QQ_ZONE ->
-                        mTencent?.let { it1 -> ShareUtils.qqQzoneShare(it1, this@BaseCircleDetailFragment, dynamic.topic, dynamic.content, url, ArrayList()) }
+                        mTencent?.let { it1 -> ShareUtils.qqQzoneShare(it1, this@BaseCircleDetailFragment, dynamic.topic, dynamic.content, url, ArrayList(dynamic.pics)) }
                     COPY_LINK ->{
                         this@BaseCircleDetailFragment.context?.let {
                             ClipboardController.copyText(it, url)

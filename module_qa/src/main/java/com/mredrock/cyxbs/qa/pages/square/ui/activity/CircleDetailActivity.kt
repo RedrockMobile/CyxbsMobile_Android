@@ -203,15 +203,16 @@ class CircleDetailActivity : BaseViewModelActivity<CircleDetailViewModel>() {
 
         qa_iv_circle_detail_share.setOnSingleClickListener {
             val token = ServiceManager.getService(IAccountService::class.java).getUserTokenService().getToken()
-            val url = "https://fe-prod.redrock.team/zscy-youwen-share/#/quanzi?id=${topic.topicId}&id_token=$token"
+            val url = "${CommentConfig.SHARE_URL}quanzi?id=${topic.topicId}&id_token=$token"
             ShareDialog(it.context).apply {
                 initView(onCancelListener = View.OnClickListener {
                     dismiss()
                 }, qqshare = View.OnClickListener {
-                    mTencent?.let { it1 -> ShareUtils.qqShare(it1, this@CircleDetailActivity, topic.topicName, topic.introduction, url, "") }
+                    mTencent?.let { it1 -> ShareUtils.qqShare(it1, this@CircleDetailActivity, topic.topicName, topic.introduction, url, topic.topicLogo) }
                 }, qqZoneShare = View.OnClickListener {
-                    mTencent?.let { it1 -> ShareUtils.qqQzoneShare(it1, this@CircleDetailActivity, topic.topicName, topic.introduction, url, ArrayList()) }
-
+                    val topicArray = ArrayList<String>()//写出这样的代码，我很抱歉，可惜腾讯要的是ArrayList
+                    topicArray.add(topic.topicLogo)
+                    mTencent?.let { it1 -> ShareUtils.qqQzoneShare(it1, this@CircleDetailActivity, topic.topicName, topic.introduction, url, topicArray) }
                 }, weChatShare = View.OnClickListener {
                     CyxbsToast.makeText(context, R.string.qa_share_wechat_text, Toast.LENGTH_SHORT).show()
 
@@ -220,7 +221,6 @@ class CircleDetailActivity : BaseViewModelActivity<CircleDetailViewModel>() {
 
                 }, copylink = View.OnClickListener {
                     ClipboardController.copyText(this@CircleDetailActivity, url)
-
                 })
             }.show()
         }

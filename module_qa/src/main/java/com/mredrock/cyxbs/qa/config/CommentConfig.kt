@@ -8,6 +8,8 @@ package com.mredrock.cyxbs.qa.config
  */
 object CommentConfig {
 
+    const val SHARE_URL = "https://fe-prod.redrock.team/zscy-youwen-share/#/"
+
     const val IGNORE = "屏蔽此人"
     const val REPORT = "举报"
     const val REPLY = "回复"

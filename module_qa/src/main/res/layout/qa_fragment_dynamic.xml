@@ -71,11 +71,12 @@
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/iv_question_search"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="22.5dp"
+                android:layout_height="20dp"
+                android:layout_alignParentStart="true"
                 android:layout_centerVertical="true"
-                android:layout_marginStart="21dp"
-                android:src="@drawable/qa_ic_question_search" />
+                android:layout_marginStart="17dp"
+                android:src="@drawable/qa_ic_search" />
 
             <ViewFlipper
                 android:id="@+id/vf_hot_search"

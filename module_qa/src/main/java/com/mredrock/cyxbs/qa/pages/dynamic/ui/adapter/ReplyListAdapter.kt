@@ -9,6 +9,8 @@ import android.text.style.ForegroundColorSpan
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
+import androidx.core.content.ContextCompat
+import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.utils.extensions.setAvatarImageFromUrl
 import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.qa.R
@@ -68,7 +70,7 @@ class ReplyListAdapter(private val onReplyInnerClickEvent: (comment: Comment) ->
                         // 回复时，被回复人名称显示颜色
                         val span = SpannableString("回复 @${data.fromNickname} : ${data.content}").apply {
                             setSpan(
-                                    ForegroundColorSpan(Color.BLUE),
+                                    ForegroundColorSpan(ContextCompat.getColor(BaseApp.context, R.color.qa_reply_inner_reply_name_color)),
                                     3, 3 + data.fromNickname.length + 1,
                                     Spannable.SPAN_INCLUSIVE_EXCLUSIVE
                             )

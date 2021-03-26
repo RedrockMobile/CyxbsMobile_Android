@@ -80,7 +80,7 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
                     val opt = ActivityOptionsCompat.makeSceneTransitionAnimation(it, dynamicItem, "dynamicItem")
                     val intent = Intent(it, DynamicDetailActivity::class.java)
                     dynamicOrigin = data
-                    it.window.exitTransition = Slide(Gravity.START).apply { duration = 500 }
+                    it.window.exitTransition = Slide(Gravity.START).apply { duration = 250 }
                     it.startActivityForResult(intent, DYNAMIC_DETAIL_REQUEST, opt.toBundle())
                 }
             }
@@ -383,13 +383,14 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
             viewModel.dynamic.value?.let {dynamic ->
                 ShareDialog(view.context).apply {
                     val token = ServiceManager.getService(IAccountService::class.java).getUserTokenService().getToken()
-                    val url = "https://fe-prod.redrock.team/zscy-youwen-share/#/dynamic?id=${dynamic.postId}&id_token=$token"
+                    val url = "${CommentConfig.SHARE_URL}dynamic?id=${dynamic.postId}&id_token=$token"
                     initView(onCancelListener = View.OnClickListener {
                         dismiss()
                     }, qqshare = View.OnClickListener {
-                        mTencent?.let { it1 -> ShareUtils.qqShare(it1, this@DynamicDetailActivity, dynamic.topic, dynamic.content, url, "") }
+                        val pic = if(dynamic.pics.isEmpty()) "" else dynamic.pics[0]
+                        mTencent?.let { it1 -> ShareUtils.qqShare(it1, this@DynamicDetailActivity, dynamic.topic, dynamic.content, url, pic) }
                     }, qqZoneShare = View.OnClickListener {
-                        mTencent?.let { it1 -> ShareUtils.qqQzoneShare(it1, this@DynamicDetailActivity, dynamic.topic, dynamic.content, url, ArrayList()) }
+                        mTencent?.let { it1 -> ShareUtils.qqQzoneShare(it1, this@DynamicDetailActivity, dynamic.topic, dynamic.content, url, ArrayList(dynamic.pics)) }
 
                     }, weChatShare = View.OnClickListener {
                         CyxbsToast.makeText(context, R.string.qa_share_wechat_text, Toast.LENGTH_SHORT).show()
@@ -500,7 +501,7 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
         if (haveShareItem) {
             initChangeColorAnimator("#000000", "#1D1D1D")
         }
-        window.returnTransition = Slide(Gravity.END).apply { duration = 500 }
+        window.returnTransition = Slide(Gravity.END).apply { duration = 250 }
         dynamicOrigin = null
         super.onBackPressed()
     }

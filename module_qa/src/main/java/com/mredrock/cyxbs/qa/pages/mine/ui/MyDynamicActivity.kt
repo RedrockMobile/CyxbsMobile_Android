@@ -16,6 +16,7 @@ import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.component.recycler.RvAdapterWrapper
 import com.mredrock.cyxbs.qa.config.CommentConfig
+import com.mredrock.cyxbs.qa.config.CommentConfig.SHARE_URL
 import com.mredrock.cyxbs.qa.network.NetworkState
 import com.mredrock.cyxbs.qa.pages.dynamic.model.TopicDataSet
 import com.mredrock.cyxbs.qa.pages.dynamic.ui.activity.DynamicDetailActivity
@@ -63,12 +64,14 @@ class MyDynamicActivity : BaseViewModelActivity<MyDynamicViewModel>() {
 
                     onShareClickListener = { dynamic, mode ->
                         val token = ServiceManager.getService(IAccountService::class.java).getUserTokenService().getToken()
-                        val url = "https://fe-prod.redrock.team/zscy-youwen-share/#/dynamic?id=${dynamic.postId}?id_token=$token"
+                        val url = "${SHARE_URL}dynamic?id=${dynamic.postId}?id_token=$token"
                         when (mode) {
-                            CommentConfig.QQ_FRIEND ->
-                                mTencent?.let { it1 -> ShareUtils.qqShare(it1, this@MyDynamicActivity, dynamic.topic, dynamic.content, url, "") }
+                            CommentConfig.QQ_FRIEND ->{
+                                val pic = if(dynamic.pics.isEmpty()) "" else dynamic.pics[0]
+                                mTencent?.let { it1 -> ShareUtils.qqShare(it1, this@MyDynamicActivity, dynamic.topic, dynamic.content, url, pic) }
+                            }
                             CommentConfig.QQ_ZONE ->
-                                mTencent?.let { it1 -> ShareUtils.qqQzoneShare(it1, this@MyDynamicActivity, dynamic.topic, dynamic.content, url, ArrayList()) }
+                                mTencent?.let { it1 -> ShareUtils.qqQzoneShare(it1, this@MyDynamicActivity, dynamic.topic, dynamic.content, url, ArrayList(dynamic.pics)) }
                             CommentConfig.COPY_LINK -> {
                                 ClipboardController.copyText(this@MyDynamicActivity, url)
                             }

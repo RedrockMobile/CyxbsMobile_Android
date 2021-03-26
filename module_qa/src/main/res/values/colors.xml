@@ -108,4 +108,7 @@
     <color name="qa_mine_content_front_line_color">#E2E8EE</color>
     <color name="qa_reply_icon_color">#abbcd9</color>
     <color name="qa_circle_toolbar_back_color">#F1F3F8</color>
+
+    <color name="qa_reply_inner_reply_name_color">#556C89</color>
+    <color name="qa_ic_search_color">#9aa6bd</color>
 </resources>

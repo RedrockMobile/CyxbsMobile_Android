@@ -34,15 +34,14 @@ object ShareUtils {
     分享到qq好友
     */
     fun qqShare(tencent: Tencent, activity: Activity, title: String, content: String, url: String, imageUrl: String) {
-        val QzoneType = QzoneShare.SHARE_TO_QZONE_TYPE_NO_TYPE
         val params = Bundle()
-        params.putInt(QzoneShare.SHARE_TO_QZONE_KEY_TYPE, QzoneType)
+        params.putInt(QzoneShare.SHARE_TO_QZONE_KEY_TYPE, QQShare.SHARE_TO_QQ_TYPE_DEFAULT)
         params.putString(QzoneShare.SHARE_TO_QQ_TITLE, title) //分享标题
         params.putString(QzoneShare.SHARE_TO_QQ_SUMMARY, content) //分享的内容摘要
         params.putString(QzoneShare.SHARE_TO_QQ_TARGET_URL, url) //分享的链接
         params.putString(QQShare.SHARE_TO_QQ_IMAGE_URL, imageUrl) //分享的图片URL
         params.putString(QQShare.SHARE_TO_QQ_APP_NAME, CommentConfig.APP_NAME) //应用名称
-        tencent.shareToQzone(activity, params, BaseUiListener())
+        tencent.shareToQQ(activity, params, BaseUiListener())
     }
 
 
