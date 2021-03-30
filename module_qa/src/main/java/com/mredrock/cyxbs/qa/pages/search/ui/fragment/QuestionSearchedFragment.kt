@@ -3,7 +3,6 @@ package com.mredrock.cyxbs.qa.pages.search.ui.fragment
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,13 +11,10 @@ import com.google.android.flexbox.FlexWrap
 import com.google.android.flexbox.FlexboxLayoutManager
 import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.common.BaseApp
-import com.mredrock.cyxbs.common.config.getBaseUrl
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.ui.BaseViewModelFragment
-import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.doIfLogin
 import com.mredrock.cyxbs.common.utils.extensions.gone
-import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.beannew.Knowledge
 import com.mredrock.cyxbs.qa.component.recycler.RvAdapterWrapper
@@ -153,10 +149,10 @@ class QuestionSearchedFragment : BaseViewModelFragment<QuestionSearchedViewModel
                 when (mode) {
                     QQ_FRIEND ->{
                         val pic = if(dynamic.pics.isNullOrEmpty()) "" else dynamic.pics[0]
-                        mTencent?.let { it1 -> ShareUtils.qqShare(it1, this@QuestionSearchedFragment, dynamic.topic, dynamic.content, url, pic) }
+                        mTencent?.let { it1 -> ShareUtils.qqShare(it1, this@QuestionSearchedFragment, dynamic.topic, dynamic.contentProcess, url, pic) }
                     }
                     QQ_ZONE ->
-                        mTencent?.let { it1 -> ShareUtils.qqQzoneShare(it1, this@QuestionSearchedFragment, dynamic.topic, dynamic.content, url, ArrayList(dynamic.pics)) }
+                        mTencent?.let { it1 -> ShareUtils.qqQzoneShare(it1, this@QuestionSearchedFragment, dynamic.topic, dynamic.contentProcess, url, ArrayList(dynamic.pics)) }
                     COPY_LINK ->{
                         this@QuestionSearchedFragment.context?.let {
                             ClipboardController.copyText(it, url)

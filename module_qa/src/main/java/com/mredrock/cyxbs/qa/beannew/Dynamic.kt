@@ -2,7 +2,9 @@ package com.mredrock.cyxbs.qa.beannew
 
 import android.os.Parcel
 import android.os.Parcelable
+import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
+import com.mredrock.cyxbs.qa.utils.cutEnterAndBlank
 
 data class Dynamic(@SerializedName("post_id")
                    var postId: String = "",
@@ -34,7 +36,7 @@ data class Dynamic(@SerializedName("post_id")
                    val uid: String = "",
 
                    @SerializedName("content")
-                   val content: String = "",
+                   val contentRaw: String = "",
 
                    @SerializedName("comment_count")
                    var commentCount: Int = 0,
@@ -54,6 +56,10 @@ data class Dynamic(@SerializedName("post_id")
                 _isPraised = 0
             }
         }
+
+    @Expose
+    val contentProcess = cutEnterAndBlank(contentRaw)
+
     constructor(parcel: Parcel) : this(
             parcel.readString(),
             parcel.readInt(),
@@ -81,7 +87,7 @@ data class Dynamic(@SerializedName("post_id")
         parcel.writeString(topic)
         parcel.writeLong(publishTime)
         parcel.writeString(uid)
-        parcel.writeString(content)
+        parcel.writeString(contentProcess)
         parcel.writeInt(commentCount)
         parcel.writeStringList(pics)
     }

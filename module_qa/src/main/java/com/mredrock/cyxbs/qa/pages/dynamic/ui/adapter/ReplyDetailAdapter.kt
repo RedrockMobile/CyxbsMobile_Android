@@ -40,12 +40,12 @@ class ReplyDetailAdapter(private val isReplyDetail: Boolean, private val onReply
                 qa_tv_reply_detail_date.text = dynamicTimeDescription(System.currentTimeMillis(), data.publishTime * 1000)
                 qa_tv_reply_detail_nickname.text = data.nickName
                 if (data.fromNickname.isEmpty()) {
-                    qa_tv_reply_detail_content.text = data.content
+                    qa_tv_reply_detail_content.text = data.contentProcess
                     qa_tv_reply_detail_show_detail.gone()
                 } else {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                         // 回复时，被回复人名称显示颜色
-                        val span = SpannableString("回复 @${data.fromNickname} : ${data.content}").apply {
+                        val span = SpannableString("回复 @${data.fromNickname} : ${data.contentProcess}").apply {
                             setSpan(
                                     ForegroundColorSpan(Color.BLUE),
                                     3, 3 + data.fromNickname.length + 1,

@@ -10,7 +10,6 @@ import android.widget.TextView
 import android.widget.Toast
 import android.widget.ViewFlipper
 import androidx.core.content.ContextCompat
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.alibaba.android.arouter.facade.annotation.Route
@@ -20,12 +19,10 @@ import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.common.config.CyxbsMob
 import com.mredrock.cyxbs.common.config.QA_ENTRY
-import com.mredrock.cyxbs.common.config.getBaseUrl
 import com.mredrock.cyxbs.common.event.RefreshQaEvent
 import com.mredrock.cyxbs.common.mark.EventBusLifecycleSubscriber
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.ui.BaseViewModelFragment
-import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.doIfLogin
 import com.mredrock.cyxbs.common.utils.extensions.dp2px
 import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
@@ -122,10 +119,10 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), EventBusL
                         when (mode) {
                             QQ_FRIEND ->{
                                 val pic = if(dynamic.pics.isNullOrEmpty()) "" else dynamic.pics[0]
-                                mTencent?.let { it1 -> ShareUtils.qqShare(it1, this@DynamicFragment, dynamic.topic, dynamic.content, url, pic) }
+                                mTencent?.let { it1 -> ShareUtils.qqShare(it1, this@DynamicFragment, dynamic.topic, dynamic.contentProcess, url, pic) }
                             }
                             QQ_ZONE ->
-                                mTencent?.let { it1 -> ShareUtils.qqQzoneShare(it1, this@DynamicFragment, dynamic.topic, dynamic.content, url, ArrayList(dynamic.pics)) }
+                                mTencent?.let { it1 -> ShareUtils.qqQzoneShare(it1, this@DynamicFragment, dynamic.topic, dynamic.contentProcess, url, ArrayList(dynamic.pics)) }
                             COPY_LINK -> {
                                 ClipboardController.copyText(this@DynamicFragment.requireContext(), url)
                             }

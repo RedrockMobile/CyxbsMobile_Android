@@ -7,12 +7,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mredrock.cyxbs.api.account.IAccountService
-import com.mredrock.cyxbs.common.BaseApp
-import com.mredrock.cyxbs.common.config.getBaseUrl
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.ui.BaseViewModelFragment
 import com.mredrock.cyxbs.qa.R
-import com.mredrock.cyxbs.qa.beannew.Dynamic
 import com.mredrock.cyxbs.qa.component.recycler.RvAdapterWrapper
 import com.mredrock.cyxbs.qa.config.CommentConfig
 import com.mredrock.cyxbs.qa.config.CommentConfig.COPY_LINK
@@ -24,12 +21,10 @@ import com.mredrock.cyxbs.qa.config.CommentConfig.REPORT
 import com.mredrock.cyxbs.qa.config.RequestResultCode
 import com.mredrock.cyxbs.qa.config.RequestResultCode.DYNAMIC_DETAIL_REQUEST
 import com.mredrock.cyxbs.qa.config.RequestResultCode.RELEASE_DYNAMIC_ACTIVITY_REQUEST
-import com.mredrock.cyxbs.qa.network.NetworkState
 import com.mredrock.cyxbs.qa.network.NetworkState.Companion.CANNOT_LOAD_WITHOUT_LOGIN
 import com.mredrock.cyxbs.qa.network.NetworkState.Companion.LOADING
 import com.mredrock.cyxbs.qa.pages.dynamic.ui.activity.DynamicDetailActivity
 import com.mredrock.cyxbs.qa.pages.dynamic.ui.adapter.DynamicAdapter
-import com.mredrock.cyxbs.qa.pages.dynamic.viewmodel.DynamicListViewModel
 import com.mredrock.cyxbs.qa.pages.square.viewmodel.CircleDetailViewModel
 import com.mredrock.cyxbs.qa.ui.adapter.EmptyRvAdapter
 import com.mredrock.cyxbs.qa.ui.adapter.FooterRvAdapter
@@ -74,10 +69,10 @@ abstract class BaseCircleDetailFragment<T : CircleDetailViewModel> : BaseViewMod
                 when (mode) {
                     QQ_FRIEND ->{
                         val pic = if(dynamic.pics.isNullOrEmpty()) "" else dynamic.pics[0]
-                        mTencent?.let { it1 -> ShareUtils.qqShare(it1, this@BaseCircleDetailFragment, dynamic.topic, dynamic.content, url, pic) }
+                        mTencent?.let { it1 -> ShareUtils.qqShare(it1, this@BaseCircleDetailFragment, dynamic.topic, dynamic.contentProcess, url, pic) }
                     }
                     QQ_ZONE ->
-                        mTencent?.let { it1 -> ShareUtils.qqQzoneShare(it1, this@BaseCircleDetailFragment, dynamic.topic, dynamic.content, url, ArrayList(dynamic.pics)) }
+                        mTencent?.let { it1 -> ShareUtils.qqQzoneShare(it1, this@BaseCircleDetailFragment, dynamic.topic, dynamic.contentProcess, url, ArrayList(dynamic.pics)) }
                     COPY_LINK ->{
                         this@BaseCircleDetailFragment.context?.let {
                             ClipboardController.copyText(it, url)

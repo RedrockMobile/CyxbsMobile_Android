@@ -2,16 +2,12 @@ package com.mredrock.cyxbs.qa.pages.dynamic.ui.adapter
 
 
 import android.content.Context
-import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.DiffUtil
-import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.component.CyxbsToast
-import com.mredrock.cyxbs.common.config.CyxbsMob
-import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.setAvatarImageFromUrl
 import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.qa.R
@@ -22,7 +18,6 @@ import com.mredrock.cyxbs.qa.config.CommentConfig
 import com.mredrock.cyxbs.qa.config.CommentConfig.COPY_LINK
 import com.mredrock.cyxbs.qa.config.CommentConfig.DELETE
 import com.mredrock.cyxbs.qa.config.CommentConfig.FOLLOW
-import com.mredrock.cyxbs.qa.config.CommentConfig.FRIEND_CIRCLE
 import com.mredrock.cyxbs.qa.config.CommentConfig.IGNORE
 import com.mredrock.cyxbs.qa.config.CommentConfig.QQ_FRIEND
 import com.mredrock.cyxbs.qa.config.CommentConfig.QQ_ZONE
@@ -129,7 +124,7 @@ class DynamicAdapter(val context: Context, private val onItemClickEvent: (Dynami
                 qa_iv_dynamic_avatar.setAvatarImageFromUrl(data.avatar)
                 qa_tv_dynamic_topic.text = "# " + data.topic
                 qa_tv_dynamic_nickname.text = data.nickName
-                qa_tv_dynamic_content.text = data.content
+                qa_tv_dynamic_content.text = data.contentProcess
                 qa_tv_dynamic_comment_count.text = data.commentCount.toString()
                 qa_tv_dynamic_publish_at.text = dynamicTimeDescription(System.currentTimeMillis(), data.publishTime * 1000)
                 //解决图片错乱的问题

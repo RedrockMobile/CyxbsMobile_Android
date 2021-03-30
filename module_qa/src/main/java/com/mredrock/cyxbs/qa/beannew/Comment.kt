@@ -1,6 +1,8 @@
 package com.mredrock.cyxbs.qa.beannew
 
+import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
+import com.mredrock.cyxbs.qa.utils.cutEnterAndBlank
 import java.io.Serializable
 
 data class Comment(@SerializedName("comment_id")
@@ -40,7 +42,7 @@ data class Comment(@SerializedName("comment_id")
                    val uid: String = "",
 
                    @SerializedName("content")
-                   val content: String = "",
+                   val contentRaw: String = "",
 
                    @SerializedName("has_more_reply")
                    val hasMoreReply: Int = 0,
@@ -48,4 +50,7 @@ data class Comment(@SerializedName("comment_id")
                    @SerializedName("pics")
                    var pics: List<String>? = mutableListOf()
 
-): Serializable
+) : Serializable {
+    @Expose
+    val contentProcess = cutEnterAndBlank(contentRaw)
+}
