@@ -176,9 +176,11 @@ class ReplyDetailActivity : BaseActivity() {
                     // 如果回复不是自己的，就可以举报
                     if (!comment.isSelf) {
                         optionPopWindow.addOptionAndCallback(CommentConfig.REPORT) {
-                            QaReportDialog.show(this) {
-                                viewModel?.report(comment.commentId, it, CommentConfig.REPORT_COMMENT_MODEL)
-                            }
+                            QaReportDialog(this).apply {
+                                show { reportContent ->
+                                    viewModel?.report(comment.commentId, reportContent, CommentConfig.REPORT_COMMENT_MODEL)
+                                }
+                            }.show()
                         }
                     }
                     optionPopWindow.show(itemView, OptionalPopWindow.AlignMode.CENTER, 0)

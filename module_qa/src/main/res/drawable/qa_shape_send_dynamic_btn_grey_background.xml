@@ -2,8 +2,8 @@
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="rectangle">
     <gradient
-        android:endColor="#BDCCE5"
-        android:startColor="#BDCCE5"
+        android:endColor="@color/qa_quiz_quiz_button_color"
+        android:startColor="@color/qa_quiz_quiz_button_color"
         android:type="linear"
         android:useLevel="true" />
     <corners

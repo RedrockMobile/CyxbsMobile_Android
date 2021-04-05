@@ -29,6 +29,7 @@
     <color name="qa_question_item_empty_holder_color">#E6E6E6</color>
     <!--    RecyclerView加载时的holder背景颜色-->
     <color name="qa_question_item_shadow_color">#ffffff</color>
+    <color name="qa_quiz_quiz_button_color">#BDCCE5</color>
     <!--    提问选择类型的背景颜色-->
     <color name="qa_quiz_select_type_background_color">#F1F3F8</color>
     <!--    提问选择类型的文字颜色-->

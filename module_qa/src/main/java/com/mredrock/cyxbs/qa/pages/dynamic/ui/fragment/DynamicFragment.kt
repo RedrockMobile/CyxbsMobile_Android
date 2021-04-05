@@ -10,7 +10,6 @@ import android.widget.TextView
 import android.widget.Toast
 import android.widget.ViewFlipper
 import androidx.core.content.ContextCompat
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.alibaba.android.arouter.facade.annotation.Route
@@ -19,7 +18,6 @@ import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.common.config.CyxbsMob
 import com.mredrock.cyxbs.common.config.QA_ENTRY
-import com.mredrock.cyxbs.common.config.getBaseUrl
 import com.mredrock.cyxbs.common.event.RefreshQaEvent
 import com.mredrock.cyxbs.common.mark.EventBusLifecycleSubscriber
 import com.mredrock.cyxbs.common.service.ServiceManager
@@ -133,10 +131,12 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), EventBusL
                                 viewModel.ignore(dynamic)
                             }
                             REPORT -> {
-                                this@DynamicFragment.activity?.let {
-                                    QaReportDialog.show(it) { reportContent ->
-                                        viewModel.report(dynamic, reportContent)
-                                    }
+                                this@DynamicFragment.context?.let {
+                                    QaReportDialog(it).apply {
+                                        show { reportContent ->
+                                            viewModel.report(dynamic, reportContent)
+                                        }
+                                    }.show()
                                 }
                             }
                             DELETE -> {

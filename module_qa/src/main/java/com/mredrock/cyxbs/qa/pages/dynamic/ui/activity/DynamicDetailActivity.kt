@@ -156,9 +156,11 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
                 }
                 if (!comment.isSelf) {
                     optionPopWindow.addOptionAndCallback(CommentConfig.REPORT) {
-                        QaReportDialog.show(this) {
-                            viewModel.report(comment.commentId, it, CommentConfig.REPORT_COMMENT_MODEL)
-                        }
+                        QaReportDialog(this).apply {
+                            show { reportContent ->
+                                viewModel.report(comment.commentId, reportContent, CommentConfig.REPORT_COMMENT_MODEL)
+                            }
+                        }.show()
                     }
                 }
                 optionPopWindow.show(itemView, OptionalPopWindow.AlignMode.CENTER, 0)
@@ -185,9 +187,11 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
                 // 如果回复不是自己的，就可以举报
                 if (!comment.isSelf) {
                     optionPopWindow.addOptionAndCallback(CommentConfig.REPORT) {
-                        QaReportDialog.show(this) {
-                            viewModel.report(comment.commentId, it, CommentConfig.REPORT_COMMENT_MODEL)
-                        }
+                        QaReportDialog(this).apply {
+                            show { reportContent ->
+                                viewModel.report(comment.commentId, reportContent, CommentConfig.REPORT_COMMENT_MODEL)
+                            }
+                        }.show()
                     }
                 }
                 optionPopWindow.show(itemView, OptionalPopWindow.AlignMode.CENTER, 0)
@@ -206,7 +210,7 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
         intent.extras?.apply {
             if (!getBoolean("isFromReceive")) return@apply
             val postId = getString("id")
-            intent.putExtra("post_id",postId)
+            intent.putExtra("post_id", postId)
         }
 
         // 设置进入动画
@@ -379,8 +383,8 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
 
 
 
-        qa_iv_dynamic_share.setOnSingleClickListener {view ->
-            viewModel.dynamic.value?.let {dynamic ->
+        qa_iv_dynamic_share.setOnSingleClickListener { view ->
+            viewModel.dynamic.value?.let { dynamic ->
                 ShareDialog(view.context).apply {
                     val token = ServiceManager.getService(IAccountService::class.java).getUserTokenService().getToken()
                     val url = "https://fe-prod.redrock.team/zscy-youwen-share/#/dynamic?id=${dynamic.postId}&id_token=$token"
@@ -424,9 +428,11 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
                 }
             } else { // 如果是别人的帖子，则可以举报
                 optionPopWindow.addOptionAndCallback(CommentConfig.REPORT) {
-                    QaReportDialog.show(this) { reportText ->
-                        viewModel.report(viewModel.dynamic.value!!.postId, reportText, CommentConfig.REPORT_DYNAMIC_MODEL)
-                    }
+                    QaReportDialog(this).apply {
+                        show { reportContent ->
+                            viewModel.report(viewModel.dynamic.value!!.postId, reportContent, CommentConfig.REPORT_DYNAMIC_MODEL)
+                        }
+                    }.show()
                 }
             }
             optionPopWindow.show(it, OptionalPopWindow.AlignMode.RIGHT, 0)

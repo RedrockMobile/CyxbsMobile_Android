@@ -168,11 +168,14 @@ class QuestionSearchedFragment : BaseViewModelFragment<QuestionSearchedViewModel
                         viewModel.ignore(dynamic)
                     }
                    REPORT -> {
-                        activity?.let {
-                            QaReportDialog.show(it) { reportContent ->
-                                viewModel.report(dynamic, reportContent)
-                            }
-                        }
+                       this@QuestionSearchedFragment.context?.let {
+                           QaReportDialog(it).apply {
+                               show { reportContent ->
+                                   viewModel.report(dynamic, reportContent)
+
+                               }
+                           }.show()
+                       }
                     }
                     DELETE -> {
                         activity?.let { it1 ->

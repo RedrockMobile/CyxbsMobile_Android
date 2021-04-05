@@ -54,8 +54,6 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
         const val MAX_SELECTABLE_IMAGE_COUNT = 9
         const val NOT_DRAFT = "0"
         const val UPDATE_DRAFT = "1"
-        const val FIRST_QUIZ = "cyxbs_quiz_is_first_time"
-        const val FIRST_QUIZ_SP_KEY = "isFirstTimeQuiz"
         fun activityStart(fragment: Fragment, type: String, requestCode: Int) {
             fragment.startActivityForResult<QuizActivity>(requestCode, "type" to type)
         }

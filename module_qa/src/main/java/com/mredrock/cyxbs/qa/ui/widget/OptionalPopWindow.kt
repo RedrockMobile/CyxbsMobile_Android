@@ -92,8 +92,6 @@ class OptionalPopWindow private constructor(val context: Context?) : PopupWindow
                 offsetYt = -(View.MeasureSpec.getSize(mainView!!.measuredHeight) + view.height) / 2
             }
 
-            // 隐藏最后一个选项的分割线
-            (mainView as LinearLayout).getChildAt((mainView as LinearLayout).childCount - 1).findViewById<View>(R.id.qa_divide_line).gone()
             // 显示弹窗
             optionalPopWindow!!.showAsDropDown(view, offsetXt, offsetYt, Gravity.START)
             optionalPopWindow!!.showBackgroundAnimator()
