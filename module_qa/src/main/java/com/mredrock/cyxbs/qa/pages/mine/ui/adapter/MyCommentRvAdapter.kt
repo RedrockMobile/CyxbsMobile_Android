@@ -6,6 +6,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
+import com.mredrock.cyxbs.common.BaseApp
+import com.mredrock.cyxbs.common.utils.LogUtils
+import com.mredrock.cyxbs.common.utils.extensions.toast
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.beannew.CommentWrapper
 import com.mredrock.cyxbs.qa.component.recycler.BaseEndlessRvAdapter
@@ -40,7 +43,11 @@ class MyCommentRvAdapter(private val activity: MyCommentActivity, private val vi
             holder.itemView.apply {
                 qa_cl_my_comment_item.setOnClickListener {
                     //执行跳转操作
-                    DynamicDetailActivity.activityStart(activity, comment.postId)
+                    if (comment.postId == "0"){
+                        BaseApp.context.toast("该评论已被删除")
+                    } else {
+                        DynamicDetailActivity.activityStart(activity, comment.postId)
+                    }
                 }
                 qa_iv_my_comment_item_reply.setOnClickListener {
                     activity.qa_cl_my_comment_reply.visibility = View.VISIBLE

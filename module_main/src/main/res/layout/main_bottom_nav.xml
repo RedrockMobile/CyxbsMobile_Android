@@ -39,7 +39,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:drawableTop="@drawable/main_selector_bottom_mine"
-        android:drawablePadding="2dp"
+        android:drawablePadding="20dp"
         android:gravity="center"
         android:text="@string/common_mine"
         android:textAlignment="center"
