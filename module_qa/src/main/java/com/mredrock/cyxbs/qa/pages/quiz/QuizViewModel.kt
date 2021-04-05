@@ -11,6 +11,7 @@ import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.common.viewmodel.event.ProgressDialogEvent
 import com.mredrock.cyxbs.common.viewmodel.event.SingleLiveEvent
+import com.mredrock.cyxbs.mine.network.model.DynamicDraft
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.beannew.Topic
 import com.mredrock.cyxbs.qa.network.ApiService
@@ -28,6 +29,8 @@ import java.io.File
  */
 class QuizViewModel : BaseViewModel() {
     val imageLiveData = MutableLiveData<ArrayList<String>>()
+
+    val draft = MutableLiveData<DynamicDraft>()
 
     //为再次进入图库保存以前添加的图片，进行的逻辑
     val lastImageLiveData = ArrayList<String>()
@@ -108,67 +111,57 @@ class QuizViewModel : BaseViewModel() {
         return result
     }
 
-    fun addItemToDraft(content: String?, type: String?) {
-        if (type.isNullOrBlank() && content.isNullOrBlank()) {
-            return
-        }
-        val s = "{\"title\":\"$title\",\"description\":\"$content\",\"kind\":\"$type\"${getImgListStrings()}}"
-        val json = Base64.encodeToString(s.toByteArray(), Base64.DEFAULT)
-        ApiGenerator.getApiService(ApiService::class.java)
-                .addItemToDraft("question", json, "")
+    fun getDraft() {
+        ApiGenerator.getApiService(ApiServiceNew::class.java)
+                .getDraft()
+                .mapOrThrowApiException()
                 .setSchedulers()
-                .checkError()
                 .doOnError {
-                    toastEvent.value = R.string.qa_quiz_save_failed
-                    finishActivityEvent.value = true
+                    toastEvent.value = R.string.qa_get_draft_failure
                 }
                 .safeSubscribeBy {
-                    toastEvent.value = R.string.qa_quiz_save_success
-                    finishActivityEvent.value = true
+                    LogUtils.d("draft", it.toString())
+                    draft.value = it
                 }
-                .lifeCycle()
     }
 
-    fun updateDraftItem(content: String?, id: String, type: String?) {
-        if (type.isNullOrEmpty() && content.isNullOrEmpty()) {
-            deleteDraft(id)
-        }
-        val s = "{\"title\":\"$title\",\"description\":\"$content\",\"kind\":\"$type\"${getImgListStrings()}}"
-        val json = Base64.encodeToString(s.toByteArray(), Base64.DEFAULT)
-        ApiGenerator.getApiService(ApiService::class.java)
-                .updateDraft(json, id)
+    fun deleteDraft() {
+        ApiGenerator.getApiService(ApiServiceNew::class.java)
+                .deleteDraft()
                 .setSchedulers()
-                .checkError()
                 .doOnError {
-                    toastEvent.value = R.string.qa_quiz_update_failed
-                    finishActivityEvent.value = true
+                    toastEvent.value = R.string.qa_delete_draft
                 }
                 .safeSubscribeBy {
-                    toastEvent.value = R.string.qa_quiz_update_success
-                    finishActivityEvent.value = true
+                    LogUtils.d("deletedraft", it.toString())
                 }
-                .lifeCycle()
     }
 
-    fun deleteDraft(id: String) {
-        ApiGenerator.getApiService(ApiService::class.java)
-                .deleteDraft(id)
-                .setSchedulers()
-                .checkError()
-                .safeSubscribeBy()
-                .lifeCycle()
-    }
-
-    private fun getImgListStrings(): String {
-        val list = imageLiveData.value ?: return ""
-        val res = arrayListOf<String>()
-        list.forEachIndexed { index, s ->
-            if (!isInvalidList[index] || s.isNotEmpty()) res.add(s)
+    fun updateDraftItem(flag: String, content: String, type: String) {
+        val builder = MultipartBody.Builder()
+                .setType(MultipartBody.FORM)
+                .addFormDataPart("flag", flag)
+                .addFormDataPart("content", content)
+                .addFormDataPart("type", type)
+        if (!imageLiveData.value.isNullOrEmpty()) {
+            val name = "images"
+            imageLiveData.value?.forEach { path ->
+                builder.addFormDataPart(name, path)
+            }
         }
-        val s = StringBuilder()
-        res.forEach { s.append("\"$it\",") }
-        return if (s.isNotEmpty()) ",\"photo_url\":[${s.substring(0, s.length - 1)}]"
-        else ""
+        ApiGenerator.getApiService(ApiServiceNew::class.java)
+                .updateDraft(builder.build().parts)
+                .setSchedulers()
+                .doOnError {
+                    toastEvent.value = R.string.qa_save_draft_failure
+                    backAndRefreshPreActivityEvent.value = true
+
+                }
+                .safeSubscribeBy {
+                    toastEvent.value = R.string.qa_save_draft_success
+                    backAndRefreshPreActivityEvent.value = true
+
+                }
     }
 
     fun checkInvalid(b: Boolean) {

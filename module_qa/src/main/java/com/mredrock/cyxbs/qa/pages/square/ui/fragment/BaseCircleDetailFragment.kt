@@ -86,11 +86,11 @@ abstract class BaseCircleDetailFragment<T : CircleDetailViewModel> : BaseViewMod
                         viewModel.ignore(dynamic)
                     }
                     REPORT -> {
-                        this@BaseCircleDetailFragment.activity?.let {
-                            QaReportDialog.show(it) { reportContent ->
-                                viewModel.report(dynamic, reportContent)
-                            }
-                        }
+//                        this@BaseCircleDetailFragment.activity?.let {
+//                            QaReportDialog.show(it) { reportContent ->
+//                                viewModel.report(dynamic, reportContent)
+//                            }
+//                        }
                     }
 
                     DELETE -> {

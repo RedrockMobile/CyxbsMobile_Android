@@ -137,10 +137,12 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), EventBusL
                                 viewModel.ignore(dynamic)
                             }
                             REPORT -> {
-                                this@DynamicFragment.activity?.let {
-                                    QaReportDialog.show(it) { reportContent ->
-                                        viewModel.report(dynamic, reportContent)
-                                    }
+                                this@DynamicFragment.context?.let {
+                                    QaReportDialog(it).apply {
+                                        show { reportContent ->
+                                            viewModel.report(dynamic, reportContent)
+                                        }
+                                    }.show()
                                 }
                             }
                             FOLLOW -> {

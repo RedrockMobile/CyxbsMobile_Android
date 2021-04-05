@@ -303,7 +303,7 @@
     <color name="map_dialog_tip_title_color" tools:ignore="ResourceName">#F0F0F2</color>
     <color name="map_dialog_tip_text_color" tools:ignore="ResourceName">#F0F0F2</color>
     <color name="map_dialog_tip_deny_text_color" tools:ignore="ResourceName">#86AAE4</color>
-    <color name="map_dialog_tip_deny_background_color" tools:ignore="ResourceName">#E7EFFD</color>
+    <color name="map_dialog_tip_deny_background_color" tools:ignore="ResourceName">#5A5A5A</color>
     <color name="map_dialog_tip_positive_text_color" tools:ignore="ResourceName">#FFFFFF</color>
     <color name="map_dialog_tip_positive_background_color" tools:ignore="ResourceName">#4B44E5
     </color>

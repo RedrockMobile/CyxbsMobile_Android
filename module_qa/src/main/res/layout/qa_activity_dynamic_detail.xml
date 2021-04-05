@@ -18,6 +18,12 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:alpha="0.1"
+        android:background="@color/qa_quiz_toolbar_divider_line_color"
+        app:layout_constraintBottom_toBottomOf="@+id/qa_include_toolbar" />
     <com.mredrock.cyxbs.qa.ui.widget.CoordinatorLayoutTouch
         android:id="@+id/qa_coordinatorlayout"
         android:layout_width="0dp"

@@ -67,7 +67,7 @@
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
                 android:background="@drawable/qa_shape_send_dynamic_btn_grey_background"
-
+                android:textStyle="bold"
                 android:paddingStart="20dp"
                 android:paddingTop="5dp"
                 android:paddingEnd="20dp"

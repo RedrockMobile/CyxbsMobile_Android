@@ -27,6 +27,7 @@ import com.mredrock.cyxbs.common.mark.EventBusLifecycleSubscriber
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.*
+import com.mredrock.cyxbs.mine.network.model.DynamicDraft
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.R.drawable.*
 import com.mredrock.cyxbs.qa.beannew.Question
@@ -37,6 +38,7 @@ import com.mredrock.cyxbs.qa.ui.widget.DraftDialog
 import com.mredrock.cyxbs.qa.ui.widget.RectangleView
 import com.mredrock.cyxbs.qa.utils.CHOOSE_PHOTO_REQUEST
 import com.mredrock.cyxbs.qa.utils.selectImageFromAlbum
+import com.umeng.commonsdk.debug.D
 import kotlinx.android.synthetic.main.qa_activity_quiz.*
 import kotlinx.android.synthetic.main.qa_common_toolbar.*
 import org.greenrobot.eventbus.EventBus
@@ -45,37 +47,32 @@ import org.greenrobot.eventbus.ThreadMode
 import top.limuyang2.photolibrary.LPhotoHelper
 
 @Route(path = QA_QUIZ)
-class QuizActivity : BaseViewModelActivity<QuizViewModel>(), EventBusLifecycleSubscriber {
+class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
 
     companion object {
         const val MAX_CONTENT_SIZE = 500
         const val MAX_SELECTABLE_IMAGE_COUNT = 9
-        const val NOT_DRAFT_ID = "-1"
-        const val FIRST_QUIZ = "cyxbs_quiz_is_first_time"
-        const val FIRST_QUIZ_SP_KEY = "isFirstTimeQuiz"
+        const val NOT_DRAFT = "0"
+        const val UPDATE_DRAFT = "1"
         fun activityStart(fragment: Fragment, type: String, requestCode: Int) {
             fragment.startActivityForResult<QuizActivity>(requestCode, "type" to type)
         }
     }
 
     private var progressDialog: ProgressDialog? = null
-
-    //    override val isFragmentActivity = false
-    private var draftId = NOT_DRAFT_ID
     private var dynamicType: String = ""
-    private var isFirstQuiz: Boolean = true
+
     private val exitDialog by lazy { createExitDialog() }
     private var isComment = ""
+    private var draftId = ""
+    private var backId = "1"
     private var replyId = ""
     private var postId = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.qa_activity_quiz)
-
         initEditListener()
-
-        isFirstQuiz = sharedPreferences(FIRST_QUIZ).getBoolean(FIRST_QUIZ_SP_KEY, true)
         if (!intent.getStringExtra("isComment").isNullOrEmpty()) {
             isComment = intent.getStringExtra("isComment")
             if (!intent.getStringExtra("commentContent").isNullOrEmpty()) {
@@ -94,11 +91,14 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>(), EventBusLifecycleSu
         initImageAddView()
         initTypeSelector()
 
+        viewModel.getDraft()
+        viewModel.draft.observe { draft ->
+            if (draft != null) {
+                loadDraft(draft)
+            }
+        }
         viewModel.backAndRefreshPreActivityEvent.observeNotNull {
             if (it) {
-                if (draftId != NOT_DRAFT_ID && draftId != isComment) {
-                    viewModel.deleteDraft(draftId)
-                }
                 setResult(NEED_REFRESH_RESULT)
                 progressDialog?.dismiss()
                 finish()
@@ -173,7 +173,7 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>(), EventBusLifecycleSu
     @SuppressLint("SetTextI18n")
     private fun initToolbar() {
         qa_ib_toolbar_back.setOnClickListener(View.OnClickListener {
-            if (qa_edt_quiz_content.text.isNullOrEmpty() && draftId == NOT_DRAFT_ID || draftId == isComment) {
+            if (qa_edt_quiz_content.text.isNullOrEmpty() || backId == isComment) {
                 finish()
                 return@OnClickListener
             }
@@ -191,7 +191,7 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>(), EventBusLifecycleSu
             }
             qa_tv_choose_circle.visibility = View.GONE
             qa_layout_quiz_tag.visibility = View.GONE
-            draftId = isComment
+            backId = isComment
         } else {
             qa_tv_toolbar_title.text = getString(R.string.qa_quiz_toolbar_title_text)
         }
@@ -203,6 +203,7 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>(), EventBusLifecycleSu
                 if (isComment == "") {
                     if (viewModel.checkTitleAndContent(dynamicType, qa_edt_quiz_content.text.toString())) {
                         progressDialog?.show()
+                        viewModel.deleteDraft()
                         viewModel.submitDynamic()
                     }
                 } else {
@@ -280,7 +281,7 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>(), EventBusLifecycleSu
                 if (viewModel.lastImageLiveData.size + imageListAbsolutePath.size <= 8)
                     viewModel.lastImageLiveData.addAll(imageListAbsolutePath)
                 else {
-                    CyxbsToast.makeText(this, "请重新选择图片，一次性只能够发布8张图片", Toast.LENGTH_SHORT).show()
+                    CyxbsToast.makeText(this, getString(R.string.qa_choose_image_tips), Toast.LENGTH_SHORT).show()
                 }
                 viewModel.setImageList(viewModel.lastImageLiveData)
             }
@@ -306,7 +307,7 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>(), EventBusLifecycleSu
             if (exitDialog.isShowing) {
                 return super.onKeyDown(keyCode, event)
             }
-            return if (qa_edt_quiz_content.text.isNullOrEmpty() && draftId == NOT_DRAFT_ID || draftId == isComment) {
+            return if (qa_edt_quiz_content.text.isNullOrEmpty() || backId == isComment) {
                 super.onKeyDown(keyCode, event)
             } else {
                 exitDialog.show()
@@ -318,25 +319,20 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>(), EventBusLifecycleSu
 
     private fun saveDraft() {
         progressDialog?.show()
-        if (draftId == NOT_DRAFT_ID) {
-            viewModel.addItemToDraft(qa_edt_quiz_content.text.toString(), dynamicType)
-        } else {
-            viewModel.updateDraftItem(qa_edt_quiz_content.text.toString(), draftId, dynamicType)
-        }
+        LogUtils.d("draftId",draftId)
+        viewModel.updateDraftItem(draftId, qa_edt_quiz_content.text.toString(), dynamicType)
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
-    fun loadDraft(event: DynamicDraftEvent) {
-        if (intent.getStringExtra("type") != null) {
-            EventBus.getDefault().removeStickyEvent(event)
-            return
+
+    fun loadDraft(draft: DynamicDraft) {
+        draftId = if (draft.isDraft == 1) {
+            UPDATE_DRAFT
+        } else {
+            NOT_DRAFT
         }
-        val json = String(Base64.decode(event.jsonString, Base64.DEFAULT))
-        val question = Gson().fromJson(json, Question::class.java)
-        qa_edt_quiz_content.setText(question.description)
-        draftId = event.selfId
-        if (!question.photoUrl.isNullOrEmpty()) {
-            viewModel.setImageList(arrayListOf<String>().apply { addAll(question.photoUrl) })
+        qa_edt_quiz_content.setText(draft.content)
+        if (!draft.images.isNullOrEmpty()) {
+            viewModel.setImageList(arrayListOf<String>().apply { addAll(draft.images) })
         }
     }
 
@@ -345,6 +341,7 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>(), EventBusLifecycleSu
             saveDraft()
             dismiss()
         }, noSaveListener = View.OnClickListener {
+            viewModel.deleteDraft()
             dismiss()
             finish()
         }, cancelListener = View.OnClickListener {

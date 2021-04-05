@@ -81,11 +81,11 @@ class MyDynamicActivity : BaseViewModelActivity<MyDynamicViewModel>() {
                                 viewModel.ignore(dynamic)
                             }
                             CommentConfig.REPORT -> {
-                                this.let {
-                                    QaReportDialog.show(this@MyDynamicActivity) { reportContent ->
+                                QaReportDialog(this@MyDynamicActivity).apply {
+                                    show { reportContent ->
                                         viewModel.report(dynamic, reportContent)
                                     }
-                                }
+                                }.show()
                             }
                             CommentConfig.DELETE -> {
                                 this@MyDynamicActivity.let { it1 ->

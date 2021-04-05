@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <!--    发布界面发布按钮字体-->
+    <color name="qa_quiz_quiz_button_color" tools:ignore="MissingDefaultResource">#838384</color>
     <!--    问题JCardView背景-->
     <color name="qa_question_list_color">#F8F9FC</color>
     <!--    问题item的昵称颜色-->
@@ -53,10 +56,10 @@
     <color name="qa_reply_bottom_sheet_background_color">#2D2D2D</color>
     <color name="qa_reply_popwindow_background_color">#1D1D1D</color>
     <color name="qa_reply_popwindow_text_color">#FFFFFF</color>
-    <color name="qa_dialog_tip_text_color">#0C3573</color>
+    <color name="qa_dialog_tip_text_color">#F0F0F2</color>
     <color name="qa_dialog_tip_div_view_background_color">#E2E8EE</color>
-    <color name="qa_dialog_tip_background_color">#FFFFFF</color>
-    <color name="qa_dialog_top_report_et_text_color">#0C3573</color>
+    <color name="qa_dialog_tip_background_color">#3D3B3E</color>
+    <color name="qa_dialog_top_report_et_text_color">#ACACAD</color>
     <color name="qa_reply_detail_nickname_text_color">#838384</color>
     <color name="qa_reply_detail_date_text_color">#5A5A5A</color>
     <color name="qa_reply_detail_content_text_color">#F0F0F0</color>

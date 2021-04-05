@@ -2,10 +2,12 @@ package com.mredrock.cyxbs.qa.network
 
 import com.mredrock.cyxbs.common.bean.RedrockApiStatus
 import com.mredrock.cyxbs.common.bean.RedrockApiWrapper
+import com.mredrock.cyxbs.mine.network.model.DynamicDraft
 import com.mredrock.cyxbs.qa.beannew.*
 import io.reactivex.Observable
 import okhttp3.MultipartBody
 import retrofit2.http.*
+import java.io.File
 
 /**
  * Created By zhangzhe 2020/12/1
@@ -20,7 +22,7 @@ interface ApiServiceNew {
                              @Query("size")
                              size: Int = 6,
                              @Query("type")
-                             type: String):Observable<RedrockApiWrapper<List<Dynamic>>>
+                             type: String): Observable<RedrockApiWrapper<List<Dynamic>>>
 
     @GET("/magipoke-loop/post/getMainPage")
     fun getDynamicList(@Query("type")
@@ -169,5 +171,23 @@ interface ApiServiceNew {
             @Query("page") page: Int,
             @Query("size") size: Int
     ): Observable<RedrockApiWrapper<List<Dynamic>>>
+    /*
+    获取草稿
+     */
+    @POST("https://be-prod.redrock.team/magipoke-draft/new/getDraft")
+    fun getDraft(): Observable<RedrockApiWrapper<DynamicDraft>>
+
+    /*
+    上传或者更新草稿
+     */
+    @POST("https://be-prod.redrock.team/magipoke-draft/new/addDraft")
+    @Multipart
+    fun updateDraft(@Part parts: List<MultipartBody.Part>): Observable<RedrockApiStatus>
+
+    /*
+    删除草稿
+     */
+    @POST("https://be-prod.redrock.team/magipoke-draft/new/delDraft")
+    fun deleteDraft(): Observable<RedrockApiStatus>
 
 }
