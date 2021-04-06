@@ -30,11 +30,13 @@ class SettingActivity : BaseActivity() {
         //初始化toolbar
 
         mine_setting_toolbar.toolbar.apply {
-            withSplitLine(true)
             setTitleLocationAtLeft(false)
             setBackgroundColor(ContextCompat.getColor(this@SettingActivity, R.color.common_mine_setting_common_back_color))
-            title = "设置"
-
+            initWithSplitLine(
+                    "设置",
+                    withSplitLine = true,
+                    titleOnLeft = false
+            )
         }
         //启动App优先显示课表
         mine_setting_switch.setOnCheckedChangeListener { _, isChecked ->

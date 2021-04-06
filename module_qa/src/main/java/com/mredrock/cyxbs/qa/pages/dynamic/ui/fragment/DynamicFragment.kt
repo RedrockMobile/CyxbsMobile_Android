@@ -119,10 +119,10 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), EventBusL
                         when (mode) {
                             QQ_FRIEND ->{
                                 val pic = if(dynamic.pics.isNullOrEmpty()) "" else dynamic.pics[0]
-                                mTencent?.let { it1 -> ShareUtils.qqShare(it1, this@DynamicFragment, dynamic.topic, dynamic.contentProcess, url, pic) }
+                                mTencent?.let { it1 -> ShareUtils.qqShare(it1, this@DynamicFragment, dynamic.topic, dynamic.content, url, pic) }
                             }
                             QQ_ZONE ->
-                                mTencent?.let { it1 -> ShareUtils.qqQzoneShare(it1, this@DynamicFragment, dynamic.topic, dynamic.contentProcess, url, ArrayList(dynamic.pics)) }
+                                mTencent?.let { it1 -> ShareUtils.qqQzoneShare(it1, this@DynamicFragment, dynamic.topic, dynamic.content, url, ArrayList(dynamic.pics)) }
                             COPY_LINK -> {
                                 ClipboardController.copyText(this@DynamicFragment.requireContext(), url)
                             }

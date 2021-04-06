@@ -108,3 +108,8 @@ const val COURSE_POS_TO_MAP = "COURSE_POS_TO_MAP"
 
 //qa进入回答列表传入的问题id的key
 const val QA_PARAM_QUESTION_ID = "question_id"
+
+
+//统一拦截的HTTP状态码
+const val TOKEN_EXPIRE = 403//token过期
+const val SUCCESS = 200//正常

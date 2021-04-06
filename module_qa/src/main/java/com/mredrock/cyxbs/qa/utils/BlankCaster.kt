@@ -6,6 +6,6 @@ package com.mredrock.cyxbs.qa.utils
  * Describe: 字符串中出现的连续回车（超过两行）或者大量空白（180个空格或者等价的tab）替换为两个回车
  */
 fun cutEnterAndBlank(content: String): String{
-    val pattern = "\\n{3,}|[ ]{160,}".toRegex()
+    val pattern = "\\n{3,}|[ ]{160,}|\n{3,}".toRegex()
     return content.replace("\\t".toRegex(), "    ").replace(pattern, "\n\n\n")
 }

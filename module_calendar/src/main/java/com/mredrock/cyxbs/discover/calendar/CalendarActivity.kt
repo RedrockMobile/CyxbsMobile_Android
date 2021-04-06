@@ -29,7 +29,7 @@ class CalendarActivity : BaseActivity() {
                 .diskCacheStrategy(DiskCacheStrategy.DATA)
                 .skipMemoryCache(true)
         Glide.with(this)
-                .load("${getBaseUrl()}/renewapi/schoolCalendar")
+                .load("${getBaseUrl()}/magipoke-jwzx/schoolCalendar")
                 .apply(request)
                 .into(object : DrawableImageViewTarget(iv_calendar) {
                     override fun onResourceReady(resource: Drawable, transition: Transition<in Drawable>?) {

@@ -133,10 +133,10 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
     // 评论点击的逻辑
     private val commentListRvAdapter = CommentListAdapter(
             onItemClickEvent = { comment ->
-                viewModel.replyInfo.value = ReplyInfo(comment.nickName, comment.contentProcess, comment.commentId)
+                viewModel.replyInfo.value = ReplyInfo(comment.nickName, comment.content, comment.commentId)
             },
             onReplyInnerClickEvent = { comment ->
-                viewModel.replyInfo.value = ReplyInfo(comment.nickName, comment.contentProcess, comment.commentId)
+                viewModel.replyInfo.value = ReplyInfo(comment.nickName, comment.content, comment.commentId)
             },
             onItemLongClickEvent = { comment, itemView ->
                 // 消除回复弹窗
@@ -144,9 +144,9 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
 
                 val optionPopWindow = OptionalPopWindow.Builder().with(this)
                         .addOptionAndCallback(CommentConfig.REPLY) {
-                            viewModel.replyInfo.value = ReplyInfo(comment.nickName, comment.contentProcess, comment.commentId)
+                            viewModel.replyInfo.value = ReplyInfo(comment.nickName, comment.content, comment.commentId)
                         }.addOptionAndCallback(CommentConfig.COPY) {
-                            ClipboardController.copyText(this, comment.contentProcess)
+                            ClipboardController.copyText(this, comment.content)
                         }
                 if (viewModel.dynamic.value?.isSelf == 1 || comment.isSelf) {
                     optionPopWindow.addOptionAndCallback(CommentConfig.DELETE) {
@@ -173,9 +173,9 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
 
                 val optionPopWindow = OptionalPopWindow.Builder().with(this)
                         .addOptionAndCallback(CommentConfig.REPLY) {
-                            viewModel.replyInfo.value = ReplyInfo(comment.nickName, comment.contentProcess, comment.commentId)
+                            viewModel.replyInfo.value = ReplyInfo(comment.nickName, comment.content, comment.commentId)
                         }.addOptionAndCallback(CommentConfig.COPY) {
-                            ClipboardController.copyText(this, comment.contentProcess)
+                            ClipboardController.copyText(this, comment.content)
                         }
                 // 如果总动态是自己发的，或者该评论是自己的，则可以删除（可以控评）
                 if (viewModel.dynamic.value?.isSelf == 1 || comment.isSelf) {
@@ -393,9 +393,9 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
                         dismiss()
                     }, qqshare = View.OnClickListener {
                         val pic = if(dynamic.pics.isNullOrEmpty()) "" else dynamic.pics[0]
-                        mTencent?.let { it1 -> ShareUtils.qqShare(it1, this@DynamicDetailActivity, dynamic.topic, dynamic.contentProcess, url, pic) }
+                        mTencent?.let { it1 -> ShareUtils.qqShare(it1, this@DynamicDetailActivity, dynamic.topic, dynamic.content, url, pic) }
                     }, qqZoneShare = View.OnClickListener {
-                        mTencent?.let { it1 -> ShareUtils.qqQzoneShare(it1, this@DynamicDetailActivity, dynamic.topic, dynamic.contentProcess, url, ArrayList(dynamic.pics)) }
+                        mTencent?.let { it1 -> ShareUtils.qqQzoneShare(it1, this@DynamicDetailActivity, dynamic.topic, dynamic.content, url, ArrayList(dynamic.pics)) }
 
                     }, weChatShare = View.OnClickListener {
                         CyxbsToast.makeText(context, R.string.qa_share_wechat_text, Toast.LENGTH_SHORT).show()
@@ -420,7 +420,7 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
                         KeyboardController.showInputKeyboard(this, qa_et_my_comment_reply)
                         viewModel.replyInfo.value = ReplyInfo("", "", "")
                     }.addOptionAndCallback(CommentConfig.COPY) {
-                        ClipboardController.copyText(this, viewModel.dynamic.value!!.contentProcess)
+                        ClipboardController.copyText(this, viewModel.dynamic.value!!.content)
                     }
             if (viewModel.dynamic.value?.isSelf == 1) { // 如果帖子是自己的，则可以删除
                 optionPopWindow.addOptionAndCallback(CommentConfig.DELETE) {
@@ -472,7 +472,7 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
         qa_iv_dynamic_avatar.setAvatarImageFromUrl(viewModel.dynamic.value?.avatar)
         qa_tv_dynamic_topic.text = "# " + viewModel.dynamic.value?.topic
         qa_tv_dynamic_nickname.text = viewModel.dynamic.value?.nickName
-        qa_tv_dynamic_content.text = viewModel.dynamic.value?.contentProcess
+        qa_tv_dynamic_content.text = viewModel.dynamic.value?.content
         qa_tv_dynamic_comment_count.text = viewModel.dynamic.value?.commentCount.toString()
         qa_tv_dynamic_publish_at.text = dynamicTimeDescription(System.currentTimeMillis(), viewModel.dynamic.value!!.publishTime * 1000)
         if (viewModel.dynamic.value?.pics.isNullOrEmpty())

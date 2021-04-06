@@ -156,14 +156,14 @@ class ReplyDetailActivity : BaseActivity() {
                 isReplyDetail = !replyIdScreen.isNullOrEmpty(),
                 onReplyInnerClickEvent = { comment ->
                     startActivity(Intent(this, DynamicDetailActivity::class.java))
-                    viewModel?.replyInfo?.value = ReplyInfo(comment.nickName, comment.contentProcess, comment.commentId)
+                    viewModel?.replyInfo?.value = ReplyInfo(comment.nickName, comment.content, comment.commentId)
                 },
                 onReplyInnerLongClickEvent = { comment, itemView ->
                     val optionPopWindow = OptionalPopWindow.Builder().with(this)
                             .addOptionAndCallback(CommentConfig.REPLY) {
-                                viewModel?.replyInfo?.value = ReplyInfo(comment.nickName, comment.contentProcess, comment.commentId)
+                                viewModel?.replyInfo?.value = ReplyInfo(comment.nickName, comment.content, comment.commentId)
                             }.addOptionAndCallback(CommentConfig.COPY) {
-                                ClipboardController.copyText(this, comment.contentProcess)
+                                ClipboardController.copyText(this, comment.content)
                             }
                     // 如果总动态是自己发的，或者该评论是自己的，则可以删除（可以控评）
                     if (viewModel?.dynamic?.value?.isSelf == 1 || comment.isSelf) {

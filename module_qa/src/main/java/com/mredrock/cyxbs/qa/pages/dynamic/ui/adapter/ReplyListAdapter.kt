@@ -63,11 +63,11 @@ class ReplyListAdapter(private val onReplyInnerClickEvent: (comment: Comment) ->
             itemView.apply {
                 qa_tv_reply_inner_nickname.text = data.nickName
                 if (data.fromNickname.isEmpty()) {
-                    qa_tv_reply_inner_content.text = data.contentProcess
+                    qa_tv_reply_inner_content.text = data.content
                 } else {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                         // 回复时，被回复人名称显示颜色
-                        val span = SpannableString("回复 @${data.fromNickname} : ${data.contentProcess}").apply {
+                        val span = SpannableString("回复 @${data.fromNickname} : ${data.content}").apply {
                             setSpan(
                                     ForegroundColorSpan(ContextCompat.getColor(BaseApp.context, R.color.qa_reply_inner_reply_name_color)),
                                     3, 3 + data.fromNickname.length + 1,

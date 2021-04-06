@@ -215,7 +215,7 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
     }
 
     private fun initImageAddView() {
-        nine_grid_view.addView(ContextCompat.getDrawable(this, qa_ic_add_images)?.let { createImageViewFromVector(it) })
+        nine_grid_view.addView(ContextCompat.getDrawable(this, qa_ic_add_photo)?.let { createImageViewFromVector(it) })
         nine_grid_view.setOnItemClickListener { _, index ->
             if (index == nine_grid_view.childCount - 1) {
 

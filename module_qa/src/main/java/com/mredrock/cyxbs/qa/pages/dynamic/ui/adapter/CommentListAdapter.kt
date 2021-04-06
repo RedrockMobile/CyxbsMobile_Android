@@ -51,7 +51,7 @@ class CommentListAdapter(
                 qa_tv_reply_nickname.text = data.nickName
                 qa_tv_reply_publish_at.text = dynamicTimeDescription(System.currentTimeMillis(), data.publishTime * 1000)
 
-                qa_tv_reply_content.text = data.contentProcess
+                qa_tv_reply_content.text = data.content
                 qa_iv_reply_praise_count_image.isChecked = data.isPraised
                 qa_iv_reply_avatar.setAvatarImageFromUrl(data.avatar)
                 if (data.pics.isNullOrEmpty())

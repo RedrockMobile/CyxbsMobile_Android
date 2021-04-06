@@ -1,13 +1,18 @@
-package com.mredrock.cyxbs.common.network
+ package com.mredrock.cyxbs.common.network
 
 import android.util.SparseArray
+import com.bumptech.glide.util.Synthetic
 import com.mredrock.cyxbs.common.BuildConfig
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.api.account.IUserStateService
+import com.mredrock.cyxbs.common.BaseApp
+import com.mredrock.cyxbs.common.config.SUCCESS
+import com.mredrock.cyxbs.common.config.TOKEN_EXPIRE
 import com.mredrock.cyxbs.common.config.getBaseUrl
 import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.takeIfNoException
+import com.mredrock.cyxbs.common.utils.extensions.toast
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.Response
@@ -29,6 +34,9 @@ object ApiGenerator {
     private var token = ""
     private var refreshToken = ""
     private val retrofitMap by lazy { SparseArray<Retrofit>() }
+
+    //是否正在刷新Token
+    private var lastExpiredToken = ""
 
     //init对两种公共的retrofit进行配置
     init {
@@ -163,16 +171,30 @@ object ApiGenerator {
                         token = ServiceManager.getService(IAccountService::class.java).getUserTokenService().getToken()
                         refreshToken = ServiceManager.getService(IAccountService::class.java).getUserTokenService().getRefreshToken()
                         if (isTokenExpired()) {
-                            checkRefresh(it)
+                            checkRefresh(it, token)
                         } else {
                             it.proceed(it.request().newBuilder().header("Authorization", "Bearer $token").build())
                         }
                     }
                     isTokenExpired() -> {
-                        checkRefresh(it)
+                        checkRefresh(it, token)
                     }
                     else -> {
-                        it.proceed(it.request().newBuilder().header("Authorization", "Bearer $token").build())
+                        val response = it.proceed(it.request().newBuilder().header("Authorization", "Bearer $token").build())
+                        LogUtils.d("RayleighZ","responseCode = ${response.code}")
+                        //此处拦截http状态码进行统一处理
+                        when(response.code){
+                            TOKEN_EXPIRE -> {
+                                response.close()
+                                checkRefresh(it, token)
+                            }
+                            SUCCESS -> {
+                                return@Interceptor response
+                            }
+                            else -> {
+                                return@Interceptor response
+                            }
+                        }
                     }
                 } as Response
             })
@@ -181,20 +203,28 @@ object ApiGenerator {
 
     //对token和refreshToken进行刷新
     @Synchronized
-    private fun checkRefresh(chain: Interceptor.Chain): Response? {
+    private fun checkRefresh(chain: Interceptor.Chain, expiredToken: String): Response? {
         var response = chain.proceed(chain.request().newBuilder().header("Authorization", "Bearer $token").build())
         /**
          * 刷新token条件设置为，已有refreshToken，并且已经过期，也可以后端返回特定到token失效code
          * 当第一个过期token请求接口后，改变token和refreshToken，防止同步refreshToken失效
          * 之后进入该方法的请求，token已经刷新
          */
-        if (refreshToken.isNotEmpty() && isTokenExpired()) {
+        //需要防止这个方法被请求多次，使用同一个过期token进行的刷新只进行第一次刷新
+        if (lastExpiredToken == expiredToken){//认定已经刷新成功，直接返回新的请求
+            return chain.run { proceed(chain.request().newBuilder().header("Authorization", "Bearer $token").build()) }
+        }
+        lastExpiredToken = expiredToken
+        if (refreshToken.isNotEmpty() && (isTokenExpired() || response.code == 403)) {
             takeIfNoException {
                 ServiceManager.getService(IAccountService::class.java).getVerifyService().refresh(
                         onError = {
                             response.close()
+                            LogUtils.d("RayleighZ", "Token刷新失败")
+                            BaseApp.context.toast("用户认证刷新失败，请重新登录")
                         },
                         action = { s: String ->
+                            LogUtils.d("RayleighZ", "Token刷新成功")
                             response.close()
                             response = chain.run { proceed(chain.request().newBuilder().header("Authorization", "Bearer $s").build()) }
                         }

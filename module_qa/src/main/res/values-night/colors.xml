@@ -57,7 +57,7 @@
     <color name="qa_reply_popwindow_background_color">#1D1D1D</color>
     <color name="qa_reply_popwindow_text_color">#FFFFFF</color>
     <color name="qa_dialog_tip_text_color">#F0F0F2</color>
-    <color name="qa_dialog_tip_div_view_background_color">#E2E8EE</color>
+    <color name="qa_dialog_tip_div_view_background_color">#343434</color>
     <color name="qa_dialog_tip_background_color">#3D3B3E</color>
     <color name="qa_dialog_top_report_et_text_color">#ACACAD</color>
     <color name="qa_reply_detail_nickname_text_color">#838384</color>
