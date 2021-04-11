@@ -18,6 +18,7 @@ import com.mredrock.cyxbs.qa.config.CommentConfig
 import com.mredrock.cyxbs.qa.network.ApiServiceNew
 import com.mredrock.cyxbs.qa.network.NetworkState
 import com.mredrock.cyxbs.qa.pages.dynamic.ui.activity.DynamicDetailActivity
+import com.mredrock.cyxbs.qa.utils.removeContinuousEnters
 
 /**
  * @Author: zhangzhe
@@ -101,7 +102,8 @@ open class DynamicDetailViewModel : BaseViewModel() {
             return
         }
         ApiGenerator.getApiService(ApiServiceNew::class.java)
-                .releaseComment(content, postId, replyInfo.value?.replyId ?: "")
+                .releaseComment(content.removeContinuousEnters(), postId, replyInfo.value?.replyId
+                        ?: "")
                 .mapOrThrowApiException()
                 .setSchedulers()
                 .doOnSubscribe {

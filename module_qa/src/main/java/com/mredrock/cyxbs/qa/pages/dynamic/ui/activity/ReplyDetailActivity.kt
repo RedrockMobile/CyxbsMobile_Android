@@ -186,7 +186,10 @@ class ReplyDetailActivity : BaseActivity() {
                     optionPopWindow.show(itemView, OptionalPopWindow.AlignMode.CENTER, 0)
                 },
                 onReplyMoreDetailClickEvent = { replyIdScreen ->
-                    activityStart(this, viewModel!!, commentId, replyIdScreen)
+                    viewModel?.let {
+                        activityStart(this, it, commentId, replyIdScreen)
+                    }
+
                 }
         )
 

@@ -108,15 +108,17 @@ class LikeViewSlim @JvmOverloads constructor(
         }
         observer["${this.id}-${this.model}"]?.add(weakP!!)
 
-        setCheckedWithoutAnimator(this.isPraised)
+        setCheckedWithoutAnimator(isPraised)
         invalidate()
     }
 
     // 根据id和model去map中寻找对应的“帖子/动态”点赞数和是否点赞
     private fun notifyData() {
-        isPraised = likeMap["$id-$model"]?.second ?: false
+        val isPraisedData = likeMap["$id-$model"]?.second ?: false
         praiseCount = likeMap["$id-$model"]?.first ?: 0
-        setCheckedWithoutAnimator(this.isPraised)
+        if (isPraisedData != isPraised) {
+            setCheckedWithoutAnimator(isPraisedData)
+        }
         invalidate()
     }
 
@@ -133,11 +135,6 @@ class LikeViewSlim @JvmOverloads constructor(
                     weakR.get()?.notifyData()
                 }
             }
-        }
-
-
-        observer[key]?.forEach {
-
         }
     }
 
