@@ -199,7 +199,7 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
                 optionPopWindow.show(itemView, OptionalPopWindow.AlignMode.CENTER, 0)
 
             },
-            onMoreReplyClickEvent = { commentId -> ReplyDetailActivity.activityStart(this, viewModel, commentId, null) }
+            onMoreReplyClickEvent = { commentId -> ReplyDetailActivity.activityStart(this, commentId, null) }
     )
 
 

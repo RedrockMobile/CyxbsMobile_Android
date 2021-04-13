@@ -12,7 +12,7 @@ import android.view.View
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.mredrock.cyxbs.common.ui.BaseActivity
+import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.extensions.*
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.beannew.Comment
@@ -40,9 +40,11 @@ import kotlin.math.max
  *@description 复用DynamicDetailViewModel的详细界面
  */
 
-class ReplyDetailActivity : BaseActivity() {
+class ReplyDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
     // 要展示的回复的id
     private var commentId: String = "-1"
+
+    override fun getViewModelFactory() = DynamicDetailViewModel.Factory()
 
     // 增加回复的header
     private var itemDecoration = object : RecyclerView.ItemDecoration() {
@@ -77,10 +79,8 @@ class ReplyDetailActivity : BaseActivity() {
     private var replyIdScreen: String? = null
 
     companion object {
-        var viewModel: DynamicDetailViewModel? = null
 
-
-        fun activityStart(activity: Activity, vm: DynamicDetailViewModel, cId: String, replyIdScreen: String?) {
+        fun activityStart(activity: Activity, cId: String, replyIdScreen: String?) {
             activity.apply {
                 window.exitTransition = Slide(Gravity.START).apply { duration = 500 }
                 startActivityForResult(
@@ -90,7 +90,6 @@ class ReplyDetailActivity : BaseActivity() {
                         },
                         RequestResultCode.REPLY_DETAIL_REQUEST
                 )
-                viewModel = vm
             }
         }
     }
@@ -119,7 +118,7 @@ class ReplyDetailActivity : BaseActivity() {
         /**
          * 从整个评论列表中根据{@param replyId}找到当前评论的回复。
          */
-        viewModel?.commentList?.observe(this, Observer { value ->
+        viewModel.commentList.observe(this, Observer { value ->
 
             Observable.create<List<Comment>> {
                 var dataList: List<Comment>? = null
@@ -165,20 +164,20 @@ class ReplyDetailActivity : BaseActivity() {
                 isReplyDetail = !replyIdScreen.isNullOrEmpty(),
                 onReplyInnerClickEvent = { comment ->
                     startActivity(Intent(this, DynamicDetailActivity::class.java))
-                    viewModel?.replyInfo?.value = ReplyInfo(comment.nickName, comment.content, comment.commentId)
+                    viewModel.replyInfo.value = ReplyInfo(comment.nickName, comment.content, comment.commentId)
                 },
                 onReplyInnerLongClickEvent = { comment, itemView ->
                     val optionPopWindow = OptionalPopWindow.Builder().with(this)
                             .addOptionAndCallback(CommentConfig.REPLY) {
-                                viewModel?.replyInfo?.value = ReplyInfo(comment.nickName, comment.content, comment.commentId)
+                                viewModel.replyInfo.value = ReplyInfo(comment.nickName, comment.content, comment.commentId)
                             }.addOptionAndCallback(CommentConfig.COPY) {
                                 ClipboardController.copyText(this, comment.content)
                             }
                     // 如果总动态是自己发的，或者该评论是自己的，则可以删除（可以控评）
-                    if (viewModel?.dynamic?.value?.isSelf == 1 || comment.isSelf) {
+                    if (viewModel.dynamic.value?.isSelf == 1 || comment.isSelf) {
                         optionPopWindow.addOptionAndCallback(CommentConfig.DELETE) {
                             QaDialog.show(this, resources.getString(R.string.qa_dialog_tip_delete_comment_text), {}) {
-                                viewModel?.deleteId(comment.commentId, DynamicDetailActivity.COMMENT_DELETE)
+                                viewModel.deleteId(comment.commentId, DynamicDetailActivity.COMMENT_DELETE)
                             }
                         }
                     }
@@ -187,7 +186,7 @@ class ReplyDetailActivity : BaseActivity() {
                         optionPopWindow.addOptionAndCallback(CommentConfig.REPORT) {
                             QaReportDialog(this).apply {
                                 show { reportContent ->
-                                    viewModel?.report(comment.commentId, reportContent, CommentConfig.REPORT_COMMENT_MODEL)
+                                    viewModel.report(comment.commentId, reportContent, CommentConfig.REPORT_COMMENT_MODEL)
                                 }
                             }.show()
                         }
@@ -195,9 +194,7 @@ class ReplyDetailActivity : BaseActivity() {
                     optionPopWindow.show(itemView, OptionalPopWindow.AlignMode.CENTER, 0)
                 },
                 onReplyMoreDetailClickEvent = { replyIdScreen ->
-                    viewModel?.let {
-                        activityStart(this, it, commentId, replyIdScreen)
-                    }
+                    activityStart(this, commentId, replyIdScreen)
 
                 }
         )
@@ -224,6 +221,6 @@ class ReplyDetailActivity : BaseActivity() {
 
 
     fun refresh() {
-        viewModel?.refreshCommentList(viewModel?.dynamic?.value?.postId ?: "-1", "-1")
+        viewModel.refreshCommentList(viewModel.dynamic.value?.postId ?: "-1", "-1")
     }
 }

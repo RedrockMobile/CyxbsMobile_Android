@@ -22,9 +22,6 @@ abstract class BaseViewModelFragment<T : BaseViewModel> : BaseFragment() {
 
     private var progressDialog: ProgressDialog? = null
 
-    // 覆写返回true决定fragment使用activity的viewModel（*同一个实例）
-    protected open fun useActivityViewModel() = false
-
     private fun initProgressBar() = ProgressDialog(context).apply {
         isIndeterminate = true
         setMessage("Loading...")
@@ -36,17 +33,9 @@ abstract class BaseViewModelFragment<T : BaseViewModel> : BaseFragment() {
         val viewModelFactory = getViewModelFactory()
         val viewModelClass = (javaClass.genericSuperclass as ParameterizedType).actualTypeArguments[0] as Class<T>
         viewModel = if (viewModelFactory != null) {
-            if (useActivityViewModel()) {
-                ViewModelProvider(requireActivity(), viewModelFactory).get(viewModelClass)
-            } else {
-                ViewModelProvider(this, viewModelFactory).get(viewModelClass)
-            }
+            ViewModelProvider(this, viewModelFactory).get(viewModelClass)
         } else {
-            if (useActivityViewModel()) {
-                ViewModelProvider(requireActivity()).get(viewModelClass)
-            } else {
-                ViewModelProvider(this).get(viewModelClass)
-            }
+            ViewModelProvider(this).get(viewModelClass)
         }
         
         viewModel.apply {

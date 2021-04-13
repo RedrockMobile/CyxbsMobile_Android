@@ -11,8 +11,6 @@ import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.beannew.Dynamic
 import com.mredrock.cyxbs.qa.config.CommentConfig
 import com.mredrock.cyxbs.qa.network.ApiServiceNew
-import com.mredrock.cyxbs.qa.pages.dynamic.model.DynamicDataSource
-import com.mredrock.cyxbs.qa.pages.dynamic.viewmodel.DynamicListViewModel
 import com.mredrock.cyxbs.qa.pages.square.model.CircleDynamicDataSource
 
 /**
@@ -42,6 +40,10 @@ open class CircleDetailViewModel(kind: String, loop: Int) : BaseViewModel() {
         circleDynamicList = LivePagedListBuilder<Int, Dynamic>(factory, config).build()
         networkState = Transformations.switchMap(factory.circleDynamicDataSourceLiveData) { it.networkState }
         initialLoad = Transformations.switchMap(factory.circleDynamicDataSourceLiveData) { it.initialLoad }
+
+    }
+
+    fun getTopicGround(topicName: String, instruction: String, id: Int) {
 
     }
 
