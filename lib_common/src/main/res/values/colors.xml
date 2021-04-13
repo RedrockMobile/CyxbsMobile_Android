@@ -216,8 +216,8 @@
     <color name="common_main_bottom_tab_un_select">#a9bbd7</color>
 
     <!--   同学课表搜索hint颜色-->
-    <color name="common_othercourse_common_hint_text_color">#85F0F0F2</color>
-    <color name="common_othercourse_shape_back_color">#94A6C4</color>
+    <color name="common_othercourse_common_hint_text_color">#94A6C4</color>
+    <color name="common_othercourse_shape_back_color">#acE8F0FC</color>
     <!--    发现教务在线颜色-->
     <color name="common_discover_academic_online_colors">#ffffff</color>
     <color name="common_discover_academic_online_colors_background">#AFD2FB</color>

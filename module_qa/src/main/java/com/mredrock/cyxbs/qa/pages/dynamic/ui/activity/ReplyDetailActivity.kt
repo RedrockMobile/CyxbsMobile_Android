@@ -13,9 +13,7 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.mredrock.cyxbs.common.ui.BaseActivity
-import com.mredrock.cyxbs.common.utils.extensions.dp2px
-import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
-import com.mredrock.cyxbs.common.utils.extensions.sp
+import com.mredrock.cyxbs.common.utils.extensions.*
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.beannew.Comment
 import com.mredrock.cyxbs.qa.beannew.ReplyInfo
@@ -30,6 +28,7 @@ import com.mredrock.cyxbs.qa.ui.widget.OptionalPopWindow
 import com.mredrock.cyxbs.qa.ui.widget.QaDialog
 import com.mredrock.cyxbs.qa.ui.widget.QaReportDialog
 import com.mredrock.cyxbs.qa.utils.ClipboardController
+import io.reactivex.Observable
 import kotlinx.android.synthetic.main.qa_activity_reply_detail.*
 import kotlinx.android.synthetic.main.qa_common_toolbar.*
 import kotlin.math.max
@@ -121,28 +120,38 @@ class ReplyDetailActivity : BaseActivity() {
          * 从整个评论列表中根据{@param replyId}找到当前评论的回复。
          */
         viewModel?.commentList?.observe(this, Observer { value ->
-            var dataList: List<Comment>? = null
-            value.forEach {
-                if (it.commentId == commentId) {
-                    dataList = it.replyList.toMutableList().filter { comment ->
-                        if (replyIdScreen.isNullOrEmpty()) {
-                            true
-                        } else {
-                            comment.commentId == replyIdScreen || comment.replyId == replyIdScreen
+
+            Observable.create<List<Comment>> {
+                var dataList: List<Comment>? = null
+                value.forEach {
+                    if (it.commentId == commentId) {
+                        dataList = it.replyList.toMutableList().filter { comment ->
+                            if (replyIdScreen.isNullOrEmpty()) {
+                                true
+                            } else {
+                                comment.commentId == replyIdScreen || comment.replyId == replyIdScreen
+                            }
+                        }.sortedBy { comment ->
+                            comment.publishTime
                         }
-                    }.sortedBy { comment ->
-                        comment.publishTime
                     }
                 }
+                dataList?.let { it1 -> it.onNext(it1) }
             }
-            dataList?.toMutableList()?.let { replyDetailAdapter?.refreshData(it) }
-            qa_reply_detail_swipe_refresh.isRefreshing = false
+                    .setSchedulers()
+                    .safeSubscribeBy {
+                        it?.toMutableList()?.let { it1 -> replyDetailAdapter?.refreshData(it1) }
 
-            qa_reply_detail_rv_reply_list.removeItemDecoration(itemDecoration)
-            if (!replyIdScreen.isNullOrEmpty() && (dataList?.size
-                            ?: 0) > 1 && dataList?.get(0)?.commentId == replyIdScreen) {
-                qa_reply_detail_rv_reply_list.addItemDecoration(itemDecoration)
-            }
+                        qa_reply_detail_swipe_refresh.isRefreshing = false
+
+                        qa_reply_detail_rv_reply_list.removeItemDecoration(itemDecoration)
+                        if (!replyIdScreen.isNullOrEmpty() && (it?.size
+                                        ?: 0) > 1 && it?.get(0)?.commentId == replyIdScreen) {
+                            qa_reply_detail_rv_reply_list.addItemDecoration(itemDecoration)
+                        }
+
+                    }
+
         })
     }
 
