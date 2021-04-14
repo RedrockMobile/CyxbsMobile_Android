@@ -21,13 +21,10 @@ import com.mredrock.cyxbs.common.config.SP_REFRESH_DAY
 import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.network.exception.RedrockApiException
 import com.mredrock.cyxbs.common.service.ServiceManager
-import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
-import com.mredrock.cyxbs.common.utils.extensions.editor
-import com.mredrock.cyxbs.common.utils.extensions.runOnUiThread
-import com.mredrock.cyxbs.common.utils.extensions.takeIfNoException
 import com.mredrock.cyxbs.api.electricity.IElectricityService
 import com.mredrock.cyxbs.main.MAIN_LOGIN
 import com.mredrock.cyxbs.api.volunteer.IVolunteerService
+import com.mredrock.cyxbs.common.utils.extensions.*
 import retrofit2.HttpException
 
 /**
@@ -193,6 +190,12 @@ internal class AccountService : IAccountService {
             val refreshToken = tokenWrapper?.refreshToken ?: return
             val response = ApiGenerator.getCommonApiService(ApiService::class.java).refresh(RefreshParams(refreshToken)).execute()
             if (response.body() == null) {
+                //TODO: 与后端确认一下状态码
+                if(response.code() == 400){//确定是因为refreshToken失效引起的刷新失败
+                    mContext.runOnUiThread {
+                        toast(R.string.account_token_expired_tip)
+                    }
+                }
                 onError.invoke()
                 throw HttpException(response)
             }

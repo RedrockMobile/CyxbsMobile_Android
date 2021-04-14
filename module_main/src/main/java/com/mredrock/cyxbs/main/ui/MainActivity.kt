@@ -27,6 +27,7 @@ import com.mredrock.cyxbs.common.mark.ActionLoginStatusSubscriber
 import com.mredrock.cyxbs.common.mark.EventBusLifecycleSubscriber
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
+import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.debug
 import com.mredrock.cyxbs.common.utils.extensions.*
 import com.mredrock.cyxbs.main.MAIN_MAIN
