@@ -58,11 +58,13 @@ class QuestionSearchedFragment : BaseViewModelFragment<QuestionSearchedViewModel
     companion object {
         const val SEARCH_KEY = "searchKey"
     }
+
     private var mTencent: Tencent? = null
+
     //搜索关键词
     private var searchKey = ""
     lateinit var dynamicListRvAdapter: DynamicAdapter
-    var knowledges:List<Knowledge> ?=null
+    var knowledges: List<Knowledge>? = null
     var emptyRvAdapter: SearchNoResultAdapter? = null
     var footerRvAdapter: FooterRvAdapter? = null
 
@@ -121,15 +123,15 @@ class QuestionSearchedFragment : BaseViewModelFragment<QuestionSearchedViewModel
                     }
                     if (viewModel.isKnowledge) {
                         //知识库不为空时候显示
-                        if (ClickKnowledge){
+                        if (ClickKnowledge) {
                             qa_line.gone()
                             qa_tv_knowledge.gone()
-                        }else{
+                        } else {
                             qa_line.visibility = View.VISIBLE
                             qa_rv_knowledge.visibility = View.VISIBLE
                             qa_tv_knowledge.visibility = View.VISIBLE
                         }
-                    }else{
+                    } else {
                         qa_line.gone()
                         qa_tv_knowledge.gone()
                     }
@@ -147,13 +149,13 @@ class QuestionSearchedFragment : BaseViewModelFragment<QuestionSearchedViewModel
                 val token = ServiceManager.getService(IAccountService::class.java).getUserTokenService().getToken()
                 val url = "${CommentConfig.SHARE_URL}dynamic?id=${dynamic.postId}?id_token=$token"
                 when (mode) {
-                    QQ_FRIEND ->{
-                        val pic = if(dynamic.pics.isNullOrEmpty()) "" else dynamic.pics[0]
+                    QQ_FRIEND -> {
+                        val pic = if (dynamic.pics.isNullOrEmpty()) "" else dynamic.pics[0]
                         mTencent?.let { it1 -> ShareUtils.qqShare(it1, this@QuestionSearchedFragment, dynamic.topic, dynamic.content, url, pic) }
                     }
                     QQ_ZONE ->
                         mTencent?.let { it1 -> ShareUtils.qqQzoneShare(it1, this@QuestionSearchedFragment, dynamic.topic, dynamic.content, url, ArrayList(dynamic.pics)) }
-                    COPY_LINK ->{
+                    COPY_LINK -> {
                         this@QuestionSearchedFragment.context?.let {
                             ClipboardController.copyText(it, url)
                         }
@@ -165,15 +167,15 @@ class QuestionSearchedFragment : BaseViewModelFragment<QuestionSearchedViewModel
                     IGNORE -> {
                         viewModel.ignore(dynamic)
                     }
-                   REPORT -> {
-                       this@QuestionSearchedFragment.context?.let {
-                           QaReportDialog(it).apply {
-                               show { reportContent ->
-                                   viewModel.report(dynamic, reportContent)
+                    REPORT -> {
+                        this@QuestionSearchedFragment.context?.let {
+                            QaReportDialog(it).apply {
+                                show { reportContent ->
+                                    viewModel.report(dynamic, reportContent)
 
-                               }
-                           }.show()
-                       }
+                                }
+                            }.show()
+                        }
                     }
                     DELETE -> {
                         activity?.let { it1 ->
@@ -240,38 +242,38 @@ class QuestionSearchedFragment : BaseViewModelFragment<QuestionSearchedViewModel
             }
         }
         swipe_refresh_layout_searching.setOnRefreshListener {
-            if(ClickKnowledge){
+            if (ClickKnowledge) {
                 //点击知识库时的刷新
                 viewModel.invalidateSearchQuestionList()
                 qa_line.gone()
                 qa_tv_knowledge.gone()
-            }else{
+            } else {
                 viewModel.invalidateSearchQuestionList()
             }
         }
         viewModel.deleteTips.observe {
             if (it == true)
-            viewModel.invalidateSearchQuestionList()
+                viewModel.invalidateSearchQuestionList()
         }
-        viewModel.ignorePeople.observe{
+        viewModel.ignorePeople.observe {
             if (it == true)
-            viewModel.invalidateSearchQuestionList()
+                viewModel.invalidateSearchQuestionList()
         }
 
         viewModel.knowledge.observe {
             if (!it.isNullOrEmpty()) {
-                knowledges=it
-                val adapterKnowledge=SearchKnowledgeAdapter(qa_rv_knowledge)
-                val adapterSearchResultHeader=SearchResultHeaderAdapter(adapterKnowledge,qa_rv_knowledge)
-                adapterKnowledge.searchResultHeaderAdapter=adapterSearchResultHeader
+                knowledges = it
+                val adapterKnowledge = SearchKnowledgeAdapter(qa_rv_knowledge)
+                val adapterSearchResultHeader = SearchResultHeaderAdapter(adapterKnowledge, qa_rv_knowledge)
+                adapterKnowledge.searchResultHeaderAdapter = adapterSearchResultHeader
                 val flexBoxManager = FlexboxLayoutManager(BaseApp.context)
                 flexBoxManager.flexWrap = FlexWrap.WRAP
-                qa_rv_knowledge.layoutManager=flexBoxManager
+                qa_rv_knowledge.layoutManager = flexBoxManager
                 qa_rv_knowledge.adapter = adapterKnowledge
                 knowledges?.let { it1 ->
                     adapterKnowledge.addData(it1)
                 }
-                qa_rv_knowledge.layoutManager=flexBoxManager
+                qa_rv_knowledge.layoutManager = flexBoxManager
             } else {
                 qa_rv_knowledge.gone()
                 qa_line.gone()
@@ -279,6 +281,7 @@ class QuestionSearchedFragment : BaseViewModelFragment<QuestionSearchedViewModel
             }
         }
     }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         when (requestCode) {
             // 从动态详细返回
