@@ -63,7 +63,6 @@ import kotlinx.android.synthetic.main.qa_recycler_item_dynamic_header.*
 @Route(path = QA_DYNAMIC_DETAIL)
 class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
     companion object {
-        var dynamicOrigin: Dynamic? = null // 由于点赞数、发帖数会改变，故保存一个Dynamic的引用
 
         // 有共享元素动画的启动
         fun activityStart(page: Any?, dynamicItem: View, data: Dynamic) {
@@ -78,7 +77,7 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
                 activity?.let { it ->
                     val opt = ActivityOptionsCompat.makeSceneTransitionAnimation(it, dynamicItem, "dynamicItem")
                     val intent = Intent(it, DynamicDetailActivity::class.java)
-                    dynamicOrigin = data
+                    intent.putExtra("dynamic", data)
                     it.window.exitTransition = Slide(Gravity.START).apply { duration = 300 }
                     it.startActivityForResult(intent, DYNAMIC_DETAIL_REQUEST, opt.toBundle())
                 }
@@ -123,11 +122,13 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
 
     private var haveShareItem = false
 
+    private var dynamic: Dynamic? = null
+
     override fun getViewModelFactory() = DynamicDetailViewModel.Factory()
 
 
     private fun refreshCommentList() {
-        dynamicOrigin?.let {
+        viewModel.dynamic.value?.let {
             viewModel.refreshCommentList(it.postId, "-1")
         }
     }
@@ -200,7 +201,7 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
                 optionPopWindow.show(itemView, OptionalPopWindow.AlignMode.CENTER, 0)
 
             },
-            onMoreReplyClickEvent = { commentId -> ReplyDetailActivity.activityStart(this, viewModel, commentId, null) }
+            onMoreReplyClickEvent = { commentId -> ReplyDetailActivity.activityStart(this, commentId, null) }
     )
 
 
@@ -208,6 +209,8 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.qa_activity_dynamic_detail)
+
+        dynamic = intent.getParcelableExtra("dynamic")
 
         LogUtils.d("RayleighZ", intent.toString())
         intent.extras?.apply {
@@ -224,7 +227,7 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
         mTencent = Tencent.createInstance(CommentConfig.APP_ID, this)
 
         //判断是否有共享元素
-        haveShareItem = dynamicOrigin != null
+        haveShareItem = intent.getParcelableExtra<Dynamic>("dynamic") != null
 
         initChangeColorAnimator("#1D1D1D", "#000000")
         initObserve()
@@ -347,11 +350,10 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
             qa_et_my_comment_reply.setText("")
             KeyboardController.hideInputKeyboard(this, qa_et_my_comment_reply)
 
-            dynamicOrigin?.let { dynamic ->
+            viewModel.dynamic.value?.let { dynamic ->
                 viewModel.refreshCommentList(dynamic.postId, (it?.commentId
                         ?: -1).toString())
             }
-
         }
         viewModel.deleteDynamic.observe {
             // 通知主页面刷新
@@ -359,10 +361,6 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
             finish()
         }
         viewModel.dynamic.observe {
-            // 有人发帖了，修改原引用的评论数
-            it?.let {
-                dynamicOrigin?.commentCount = it.commentCount
-            }
             refreshDynamic()
         }
     }
@@ -383,16 +381,14 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
         layoutParams.behavior = behavior
 
 
-        if (dynamicOrigin == null) {
-            dynamicOrigin = Dynamic().apply {
+        if (dynamic == null) {
+            dynamic = Dynamic().apply {
                 postId = intent.getStringExtra("post_id")
             }
         }
-        dynamicOrigin?.let {
+        dynamic?.let {
             viewModel.dynamic.value = it
         }
-
-
 
         qa_iv_dynamic_share.setOnSingleClickListener { view ->
             viewModel.dynamic.value?.let { dynamic ->
@@ -531,7 +527,6 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
             initChangeColorAnimator("#000000", "#1D1D1D")
         }
         window.returnTransition = Slide(Gravity.END).apply { duration = animatorDuration }
-        dynamicOrigin = null
         super.onBackPressed()
     }
 
@@ -543,7 +538,9 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
             RequestResultCode.RELEASE_COMMENT_ACTIVITY_REQUEST -> {
                 if (resultCode == NEED_REFRESH_RESULT) {
                     // 需要刷新 则 刷新显示动态
-                    viewModel.refreshCommentList(dynamicOrigin!!.postId, "-1")
+                    viewModel.dynamic.value?.let {
+                        viewModel.refreshCommentList(it.postId, "-1")
+                    }
                     viewModel.replyInfo.value = ReplyInfo("", "", "")
                 }
                 data?.getStringExtra("text")?.let {

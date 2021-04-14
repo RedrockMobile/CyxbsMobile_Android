@@ -210,8 +210,8 @@
     <!--    发现菜单字体颜色-->
     <color name="common_discovery_function_item_color">#8C8C8C</color>
     <!--    同学课表搜索hint颜色-->
-    <color name="common_othercourse_common_hint_text_color">#94A6C4</color>
-    <color name="common_othercourse_shape_back_color">#acE8F0FC</color>
+    <color name="common_othercourse_common_hint_text_color">#85F0F0F2</color>
+    <color name="common_othercourse_shape_back_color">#94A6C4</color>
 
 
     <color name="common_alpha_level_two_font_color">#5A5A5A</color>

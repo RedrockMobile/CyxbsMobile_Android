@@ -73,15 +73,16 @@ open class DynamicDetailViewModel : BaseViewModel() {
                     dynamic.postValue(it)
                 }
     }
+
     // 回复后，滑动到刚刚回复的comment下
     private fun findCommentByCommentId(dataList: List<Comment>, commentId: String): Int {
 
-        if (commentId == ""){
+        if (commentId == "") {
             return -1
         }
         for (i in dataList.indices) {
             // 如果是直接回复
-            if (dataList[i].commentId == commentId){
+            if (dataList[i].commentId == commentId) {
                 return i
             }
             // 如果回复是回复别人，则滚动到被回复的comment地方
@@ -170,7 +171,7 @@ open class DynamicDetailViewModel : BaseViewModel() {
                         CommentConfig.REPORT_DYNAMIC_MODEL -> {
                             toastEvent.value = R.string.qa_report_dynamic_failure
                         }
-                        CommentConfig.REPORT_COMMENT_MODEL-> {
+                        CommentConfig.REPORT_COMMENT_MODEL -> {
                             toastEvent.value = R.string.qa_report_comment_failure
                         }
                     }
@@ -181,7 +182,7 @@ open class DynamicDetailViewModel : BaseViewModel() {
                             CommentConfig.REPORT_DYNAMIC_MODEL -> {
                                 toastEvent.value = R.string.qa_report_dynamic_success
                             }
-                            CommentConfig.REPORT_COMMENT_MODEL-> {
+                            CommentConfig.REPORT_COMMENT_MODEL -> {
                                 toastEvent.value = R.string.qa_report_comment_success
                             }
                         }
@@ -190,10 +191,23 @@ open class DynamicDetailViewModel : BaseViewModel() {
 
 
     class Factory : ViewModelProvider.Factory {
+
+        companion object {
+            var viewModel: ViewModel? = null
+        }
+
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
             @Suppress("UNCHECKED_CAST")
+
             if (modelClass.isAssignableFrom(DynamicDetailViewModel::class.java)) {
-                return DynamicDetailViewModel() as T
+
+                return if (viewModel == null) {
+                    DynamicDetailViewModel().also {
+                        viewModel = it
+                    } as T
+                } else {
+                    viewModel as T
+                }
             } else {
                 throw IllegalArgumentException("ViewModel Not Found.")
             }

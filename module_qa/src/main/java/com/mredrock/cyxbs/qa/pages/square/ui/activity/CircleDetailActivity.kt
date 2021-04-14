@@ -103,7 +103,14 @@ class CircleDetailActivity : BaseViewModelActivity<CircleDetailViewModel>() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.qa_activity_circle_detail)
         intent.extras?.apply { //在目前情况下，属于是自receive跳转的情况，所以需要再度请求圈子信息
-            val id = getString("id")
+            val id = try {
+                getString("id")?.toInt() ?: 0
+            } catch (e: Exception) {
+                return@apply
+            }
+            if (id == 0) {
+                return@apply
+            }
             isFormReceive = getBoolean("isFromReceive")
             if (!isFormReceive) return@apply
             ApiGenerator.getApiService(ApiServiceNew::class.java)
@@ -113,7 +120,10 @@ class CircleDetailActivity : BaseViewModelActivity<CircleDetailViewModel>() {
                     .doOnErrorWithDefaultErrorHandler { true }
                     .safeSubscribeBy(
                             onNext = {
-                                topic = it[id.toInt() - 1]
+                                if (id !in 1..it.size) {
+                                    return@safeSubscribeBy
+                                }
+                                topic = it[id - 1]
                                 iv_circle_square.setAvatarImageFromUrl(topic.topicLogo)
                                 tv_circle_square_name.text = topic.topicName
                                 tv_circle_square_descriprion.text = topic.introduction
@@ -132,7 +142,7 @@ class CircleDetailActivity : BaseViewModelActivity<CircleDetailViewModel>() {
                             },
                             onError = {
                                 context.toast("获取圈子信息失败")
-                                LogUtils.d("RayleighZ",it.toString())
+                                LogUtils.d("RayleighZ", it.toString())
                             }
                     )
         }
@@ -257,5 +267,12 @@ class CircleDetailActivity : BaseViewModelActivity<CircleDetailViewModel>() {
         super.finish()
         val timeStamp = System.currentTimeMillis() / 1000
         TopicDataSet.storageTopicTime(timeStamp.toString())
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == NEED_REFRESH_RESULT) {
+            qa_vp_circle_detail.adapter = NewHotViewPagerAdapter(this@CircleDetailActivity, listOf(lastNewFragment, hotFragment))
+        }
     }
 }

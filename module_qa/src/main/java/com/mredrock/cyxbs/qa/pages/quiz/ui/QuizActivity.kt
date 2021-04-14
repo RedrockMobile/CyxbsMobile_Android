@@ -8,7 +8,6 @@ import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
 import android.text.InputFilter
-import android.util.Base64
 import android.view.KeyEvent
 import android.view.View
 import android.widget.ImageView
@@ -19,18 +18,14 @@ import androidx.fragment.app.Fragment
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
-import com.google.gson.Gson
 import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.common.config.QA_QUIZ
-import com.mredrock.cyxbs.common.event.DynamicDraftEvent
-import com.mredrock.cyxbs.common.mark.EventBusLifecycleSubscriber
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.*
 import com.mredrock.cyxbs.mine.network.model.DynamicDraft
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.R.drawable.*
-import com.mredrock.cyxbs.qa.beannew.Question
 import com.mredrock.cyxbs.qa.config.RequestResultCode.NEED_REFRESH_RESULT
 import com.mredrock.cyxbs.qa.pages.quiz.QuizViewModel
 import com.mredrock.cyxbs.qa.ui.activity.ViewImageCropActivity
@@ -38,12 +33,8 @@ import com.mredrock.cyxbs.qa.ui.widget.DraftDialog
 import com.mredrock.cyxbs.qa.ui.widget.RectangleView
 import com.mredrock.cyxbs.qa.utils.CHOOSE_PHOTO_REQUEST
 import com.mredrock.cyxbs.qa.utils.selectImageFromAlbum
-import com.umeng.commonsdk.debug.D
 import kotlinx.android.synthetic.main.qa_activity_quiz.*
 import kotlinx.android.synthetic.main.qa_common_toolbar.*
-import org.greenrobot.eventbus.EventBus
-import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.ThreadMode
 import top.limuyang2.photolibrary.LPhotoHelper
 
 @Route(path = QA_QUIZ)
@@ -207,6 +198,10 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
                         viewModel.submitDynamic()
                     }
                 } else {
+                    if (qa_edt_quiz_content.text.toString().isBlank()) {
+                        toast(R.string.qa_hint_content_empty)
+                        return@setOnClickListener
+                    }
                     progressDialog?.show()
                     viewModel.submitComment(postId, qa_edt_quiz_content.text.toString(), replyId)
                 }
