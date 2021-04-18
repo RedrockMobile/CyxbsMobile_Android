@@ -8,10 +8,12 @@ import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.api.account.IUserStateService
 import com.mredrock.cyxbs.common.BaseApp
+import com.mredrock.cyxbs.common.R
 import com.mredrock.cyxbs.common.config.SUCCESS
 import com.mredrock.cyxbs.common.config.TOKEN_EXPIRE
 import com.mredrock.cyxbs.common.config.getBaseUrl
 import com.mredrock.cyxbs.common.utils.LogUtils
+import com.mredrock.cyxbs.common.utils.extensions.runOnUiThread
 import com.mredrock.cyxbs.common.utils.extensions.takeIfNoException
 import com.mredrock.cyxbs.common.utils.extensions.toast
 import okhttp3.Interceptor
@@ -210,8 +212,10 @@ object ApiGenerator {
          * 刷新token条件设置为，已有refreshToken，并且已经过期，也可以后端返回特定到token失效code
          * 当第一个过期token请求接口后，改变token和refreshToken，防止同步refreshToken失效
          * 之后进入该方法的请求，token已经刷新
+         * 2021-04版本中由于添加了自http状态码而来的token过期检测
+         * 可能会出现多个接口因为token过期导致同时（虽然是顺序执行）的情况
+         * 故要求在刷新时传递过期token过来，如果该过期token已经被刷新，就直接配置新token，不再刷新
          */
-        //需要防止这个方法被请求多次，使用同一个过期token进行的刷新只进行第一次刷新
         if (lastExpiredToken == expiredToken){//认定已经刷新成功，直接返回新的请求
             return chain.run { proceed(chain.request().newBuilder().header("Authorization", "Bearer $token").build()) }
         }
@@ -221,11 +225,8 @@ object ApiGenerator {
                 ServiceManager.getService(IAccountService::class.java).getVerifyService().refresh(
                         onError = {
                             response.close()
-                            LogUtils.d("RayleighZ", "Token刷新失败")
-                            BaseApp.context.toast("用户认证刷新失败，请重新登录")
                         },
                         action = { s: String ->
-//                            LogUtils.d("RayleighZ", "Token刷新成功")
                             response.close()
 //                            BaseApp.context.toast("用户认证刷新成功")
                             response = chain.run { proceed(chain.request().newBuilder().header("Authorization", "Bearer $s").build()) }

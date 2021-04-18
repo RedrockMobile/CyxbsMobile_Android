@@ -65,7 +65,6 @@ import kotlinx.android.synthetic.main.qa_recycler_item_dynamic_header.*
 @Route(path = QA_DYNAMIC_DETAIL)
 class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
     companion object {
-        var dynamicOrigin: Dynamic? = null // 由于点赞数、发帖数会改变，故保存一个Dynamic的引用
 
         // 有共享元素动画的启动
         fun activityStart(page: Any?, dynamicItem: View, data: Dynamic) {
@@ -80,7 +79,7 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
                 activity?.let { it ->
                     val opt = ActivityOptionsCompat.makeSceneTransitionAnimation(it, dynamicItem, "dynamicItem")
                     val intent = Intent(it, DynamicDetailActivity::class.java)
-                    dynamicOrigin = data
+                    intent.putExtra("dynamic", data)
                     it.window.exitTransition = Slide(Gravity.START).apply { duration = 300 }
                     it.startActivityForResult(intent, DYNAMIC_DETAIL_REQUEST, opt.toBundle())
                 }
@@ -125,11 +124,15 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
 
     private var haveShareItem = false
 
+    private var dynamic: Dynamic? = null
+
     override fun getViewModelFactory() = DynamicDetailViewModel.Factory()
 
 
     private fun refreshCommentList() {
-        viewModel.refreshCommentList(dynamicOrigin!!.postId, "-1")
+        viewModel.dynamic.value?.let {
+            viewModel.refreshCommentList(it.postId, "-1")
+        }
     }
 
     // 评论点击的逻辑
@@ -200,7 +203,7 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
                 optionPopWindow.show(itemView, OptionalPopWindow.AlignMode.CENTER, 0)
 
             },
-            onMoreReplyClickEvent = { commentId -> ReplyDetailActivity.activityStart(this, viewModel, commentId, null) }
+            onMoreReplyClickEvent = { commentId -> ReplyDetailActivity.activityStart(this, commentId, null) }
     )
 
 
@@ -208,6 +211,8 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.qa_activity_dynamic_detail)
+
+        dynamic = intent.getParcelableExtra("dynamic")
 
         LogUtils.d("RayleighZ", intent.toString())
         intent.extras?.apply {
@@ -224,7 +229,7 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
         mTencent = Tencent.createInstance(CommentConfig.APP_ID, this)
 
         //判断是否有共享元素
-        haveShareItem = dynamicOrigin != null
+        haveShareItem = intent.getParcelableExtra<Dynamic>("dynamic") != null
 
         initChangeColorAnimator("#1D1D1D", "#000000")
         initObserve()
@@ -274,7 +279,9 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
         }
 
         qa_btn_my_comment_send.setOnSingleClickListener {
-            viewModel.releaseComment(viewModel.dynamic.value!!.postId, qa_et_my_comment_reply.text.toString())
+            viewModel.dynamic.value?.let {
+                viewModel.releaseComment(it.postId, qa_et_my_comment_reply.text.toString())
+            }
         }
         qa_iv_dynamic_comment_count.setOnSingleClickListener {
             KeyboardController.showInputKeyboard(this, qa_et_my_comment_reply)
@@ -345,9 +352,10 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
             qa_et_my_comment_reply.setText("")
             KeyboardController.hideInputKeyboard(this, qa_et_my_comment_reply)
 
-            viewModel.refreshCommentList(dynamicOrigin!!.postId, (it?.commentId
-                    ?: -1).toString())
-
+            viewModel.dynamic.value?.let { dynamic ->
+                viewModel.refreshCommentList(dynamic.postId, (it?.commentId
+                        ?: -1).toString())
+            }
         }
         viewModel.deleteDynamic.observe {
             // 通知主页面刷新
@@ -355,8 +363,6 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
             finish()
         }
         viewModel.dynamic.observe {
-            // 有人发帖了，修改原引用的评论数
-            dynamicOrigin?.commentCount = it!!.commentCount
             refreshDynamic()
         }
 
@@ -388,14 +394,14 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
         layoutParams.behavior = behavior
 
 
-        if (dynamicOrigin == null) {
-            dynamicOrigin = Dynamic().apply {
+        if (dynamic == null) {
+            dynamic = Dynamic().apply {
                 postId = intent.getStringExtra("post_id")
             }
         }
-        viewModel.dynamic.value = dynamicOrigin!!
-
-
+        dynamic?.let {
+            viewModel.dynamic.value = it
+        }
 
         qa_iv_dynamic_share.setOnSingleClickListener { view ->
             viewModel.dynamic.value?.let { dynamic ->
@@ -433,26 +439,34 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
                         KeyboardController.showInputKeyboard(this, qa_et_my_comment_reply)
                         viewModel.replyInfo.value = ReplyInfo("", "", "")
                     }.addOptionAndCallback(CommentConfig.COPY) {
-                        ClipboardController.copyText(this, viewModel.dynamic.value!!.content)
+                        viewModel.dynamic.value?.let {
+                            ClipboardController.copyText(this, it.content)
+                        }
                     }
             if (viewModel.dynamic.value?.isSelf == 1) { // 如果帖子是自己的，则可以删除
                 optionPopWindow.addOptionAndCallback(CommentConfig.DELETE) {
                     QaDialog.show(this, resources.getString(R.string.qa_dialog_tip_delete_dynamic_text), {}) {
-                        viewModel.deleteId(viewModel.dynamic.value!!.postId, DYNAMIC_DELETE)
+                        viewModel.dynamic.value?.let { dynamic ->
+                            viewModel.deleteId(dynamic.postId, DYNAMIC_DELETE)
+                        }
                     }
                 }
             } else { // 如果是别人的帖子，则可以举报
                 optionPopWindow.addOptionAndCallback(CommentConfig.REPORT) {
                     QaReportDialog(this).apply {
                         show { reportContent ->
-                            viewModel.report(viewModel.dynamic.value!!.postId, reportContent, CommentConfig.REPORT_DYNAMIC_MODEL)
+                            viewModel.dynamic.value?.let { dynamic ->
+                                viewModel.report(dynamic.postId, reportContent, CommentConfig.REPORT_DYNAMIC_MODEL)
+                            }
                         }
                     }.show()
                 }
             }
             optionPopWindow.show(it, OptionalPopWindow.AlignMode.RIGHT, 0)
         }
-        qa_iv_dynamic_praise_count_image.registerLikeView(viewModel.dynamic.value!!.postId, CommentConfig.PRAISE_MODEL_DYNAMIC, viewModel.dynamic.value!!.isPraised, viewModel.dynamic.value!!.praiseCount)
+        viewModel.dynamic.value?.let {
+            qa_iv_dynamic_praise_count_image.registerLikeView(it.postId, CommentConfig.PRAISE_MODEL_DYNAMIC, it.isPraised, it.praiseCount)
+        }
         qa_iv_dynamic_praise_count_image.setOnSingleClickListener {
             qa_iv_dynamic_praise_count_image.click()
         }
@@ -487,7 +501,9 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
         qa_tv_dynamic_nickname.text = viewModel.dynamic.value?.nickName
         qa_tv_dynamic_content.text = viewModel.dynamic.value?.content
         qa_tv_dynamic_comment_count.text = viewModel.dynamic.value?.commentCount.toString()
-        qa_tv_dynamic_publish_at.text = dynamicTimeDescription(System.currentTimeMillis(), viewModel.dynamic.value!!.publishTime * 1000)
+        viewModel.dynamic.value?.let {
+            qa_tv_dynamic_publish_at.text = dynamicTimeDescription(System.currentTimeMillis(), it.publishTime * 1000)
+        }
         if (viewModel.dynamic.value?.pics.isNullOrEmpty())
             qa_dynamic_nine_grid_view.setRectangleImages(emptyList(), NineGridView.MODE_IMAGE_THREE_SIZE)
         else {
@@ -508,7 +524,9 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
 
         }
         qa_dynamic_nine_grid_view.setOnItemClickListener { _, index ->
-            ViewImageActivity.activityStart(this, viewModel.dynamic.value!!.pics.map { it }.toTypedArray(), index)
+            viewModel.dynamic.value?.let { dynamic ->
+                ViewImageActivity.activityStart(this, dynamic.pics.map { it }.toTypedArray(), index)
+            }
         }
     }
 
@@ -522,7 +540,6 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
             initChangeColorAnimator("#000000", "#1D1D1D")
         }
         window.returnTransition = Slide(Gravity.END).apply { duration = animatorDuration }
-        dynamicOrigin = null
         super.onBackPressed()
     }
 
@@ -534,7 +551,9 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
             RequestResultCode.RELEASE_COMMENT_ACTIVITY_REQUEST -> {
                 if (resultCode == NEED_REFRESH_RESULT) {
                     // 需要刷新 则 刷新显示动态
-                    viewModel.refreshCommentList(dynamicOrigin!!.postId, "-1")
+                    viewModel.dynamic.value?.let {
+                        viewModel.refreshCommentList(it.postId, "-1")
+                    }
                     viewModel.replyInfo.value = ReplyInfo("", "", "")
                 }
                 data?.getStringExtra("text")?.let {

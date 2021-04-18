@@ -119,4 +119,5 @@
     <color name="qa_knowledge_background_color">#FFFFFF</color>
     <color name="qa_btn_positive_color">#C3D4EE</color>
     <color name="qa_draft_cancel_color">#0C3573</color>
+    <color name="qa_praise_text_color">#3D35E1</color>
 </resources>

@@ -1,10 +1,8 @@
 package com.mredrock.cyxbs.qa.pages.quiz
 
-import android.util.Base64
 import androidx.lifecycle.MutableLiveData
 import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.utils.LogUtils
-import com.mredrock.cyxbs.common.utils.extensions.checkError
 import com.mredrock.cyxbs.common.utils.extensions.mapOrThrowApiException
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
@@ -14,9 +12,9 @@ import com.mredrock.cyxbs.common.viewmodel.event.SingleLiveEvent
 import com.mredrock.cyxbs.mine.network.model.DynamicDraft
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.beannew.Topic
-import com.mredrock.cyxbs.qa.network.ApiService
 import com.mredrock.cyxbs.qa.network.ApiServiceNew
 import com.mredrock.cyxbs.qa.utils.isNullOrEmpty
+import com.mredrock.cyxbs.qa.utils.removeContinuousEnters
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -69,7 +67,7 @@ class QuizViewModel : BaseViewModel() {
     fun submitDynamic() {
         val builder = MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
-                .addFormDataPart("content", content)
+                .addFormDataPart("content", content.removeContinuousEnters())
                 .addFormDataPart("topic_id", type)
         if (!imageLiveData.value.isNullOrEmpty()) {
             val files = imageLiveData.value!!.asSequence()
@@ -175,7 +173,7 @@ class QuizViewModel : BaseViewModel() {
     fun submitComment(postId: String, content: String, replyId: String) {
         val builder = MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
-                .addFormDataPart("content", content)
+                .addFormDataPart("content", content.removeContinuousEnters())
                 .addFormDataPart("post_id", postId)
                 .addFormDataPart("reply_id", replyId)
         if (!imageLiveData.value.isNullOrEmpty()) {
