@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.flexbox.FlexWrap
 import com.google.android.flexbox.FlexboxLayoutManager
@@ -118,6 +119,9 @@ class QuestionSearchedFragment : BaseViewModelFragment<QuestionSearchedViewModel
                     }
                     if (SEARCHRESULT) {
                         qa_tv_contract_content.visibility = View.VISIBLE
+                        this.context?.apply {
+                            rv_searched_question.background=ContextCompat.getDrawable(this,R.drawable.qa_shape_comment_header_background)
+                        }
                     }
                     if (viewModel.isKnowledge) {
                         //知识库不为空时候显示
@@ -208,6 +212,7 @@ class QuestionSearchedFragment : BaseViewModelFragment<QuestionSearchedViewModel
     private fun initResultView() {
         viewModel.questionList.observe {
             dynamicListRvAdapter.submitList(it)
+
         }
         viewModel.networkState.observe {
             it?.run {
@@ -264,6 +269,7 @@ class QuestionSearchedFragment : BaseViewModelFragment<QuestionSearchedViewModel
                 val adapterKnowledge=SearchKnowledgeAdapter(qa_rv_knowledge)
                 val adapterSearchResultHeader=SearchResultHeaderAdapter(adapterKnowledge,qa_rv_knowledge)
                 adapterKnowledge.searchResultHeaderAdapter=adapterSearchResultHeader
+
                 val flexBoxManager = FlexboxLayoutManager(BaseApp.context)
                 flexBoxManager.flexWrap = FlexWrap.WRAP
                 qa_rv_knowledge.layoutManager=flexBoxManager

@@ -24,10 +24,10 @@
 
             <ImageButton
                 android:id="@+id/qa_ib_toolbar_back"
-                android:layout_width="30dp"
+                android:layout_width="wrap_content"
                 android:layout_height="30dp"
                 android:layout_centerVertical="true"
-                android:layout_gravity="center_vertical"
+                android:layout_gravity="center_horizontal"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:src="@drawable/qa_ic_arrow_left" />
 
@@ -57,7 +57,7 @@
                 android:paddingTop="5dp"
                 android:paddingEnd="12dp"
                 android:paddingBottom="5dp"
-                android:textColor="@color/common_white_background"
+                android:textColor="@color/common_white_font_color"
                 android:textSize="18sp" />
 
             <androidx.appcompat.widget.AppCompatTextView
@@ -72,7 +72,7 @@
                 android:paddingTop="5dp"
                 android:paddingEnd="20dp"
                 android:paddingBottom="5dp"
-                android:textColor="@color/common_white_background"
+                android:textColor="@color/common_white_font_color"
                 android:textSize="13sp"
                 android:visibility="gone"
                 tools:text="发布" />

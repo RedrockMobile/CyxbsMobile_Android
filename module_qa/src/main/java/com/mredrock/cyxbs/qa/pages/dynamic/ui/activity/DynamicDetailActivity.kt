@@ -15,6 +15,8 @@ import android.view.View
 import android.widget.Toast
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.app.ActivityOptionsCompat
+import androidx.core.content.ContextCompat
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -357,6 +359,17 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
             dynamicOrigin?.commentCount = it!!.commentCount
             refreshDynamic()
         }
+
+        qa_et_my_comment_reply.addTextChangedListener {
+            it?.apply {
+                qa_btn_my_comment_send.background =
+                        if (length == 0) {
+                            ContextCompat.getDrawable(this@DynamicDetailActivity, R.drawable.qa_shape_send_dynamic_btn_grey_background)
+                        } else {
+                            ContextCompat.getDrawable(this@DynamicDetailActivity, R.drawable.qa_shape_send_dynamic_btn_blue_background)
+                        }
+            }
+        }
     }
 
     override fun onDestroy() {
@@ -392,7 +405,7 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
                     initView(onCancelListener = View.OnClickListener {
                         dismiss()
                     }, qqshare = View.OnClickListener {
-                        val pic = if(dynamic.pics.isNullOrEmpty()) "" else dynamic.pics[0]
+                        val pic = if (dynamic.pics.isNullOrEmpty()) "" else dynamic.pics[0]
                         mTencent?.let { it1 -> ShareUtils.qqShare(it1, this@DynamicDetailActivity, dynamic.topic, dynamic.content, url, pic) }
                     }, qqZoneShare = View.OnClickListener {
                         mTencent?.let { it1 -> ShareUtils.qqQzoneShare(it1, this@DynamicDetailActivity, dynamic.topic, dynamic.content, url, ArrayList(dynamic.pics)) }

@@ -1,5 +1,6 @@
  package com.mredrock.cyxbs.common.network
 
+import android.os.Looper
 import android.util.SparseArray
 import com.bumptech.glide.util.Synthetic
 import com.mredrock.cyxbs.common.BuildConfig
@@ -224,8 +225,9 @@ object ApiGenerator {
                             BaseApp.context.toast("用户认证刷新失败，请重新登录")
                         },
                         action = { s: String ->
-                            LogUtils.d("RayleighZ", "Token刷新成功")
+//                            LogUtils.d("RayleighZ", "Token刷新成功")
                             response.close()
+//                            BaseApp.context.toast("用户认证刷新成功")
                             response = chain.run { proceed(chain.request().newBuilder().header("Authorization", "Bearer $s").build()) }
                         }
                 )
