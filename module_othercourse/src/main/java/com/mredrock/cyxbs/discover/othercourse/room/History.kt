@@ -10,6 +10,6 @@ const val TEACHER_TYPE = 1
 data class History(
         var info: String,
         var type: Int = STUDENT_TYPE,
-        var verify: String = "",//记录的标识，对于学生而言是学号，对于老师而言是名字
+        var verify: String = "",//记录的标识，学生/老师的编号
         @PrimaryKey(autoGenerate = true) var historyId: Int = 0
 )

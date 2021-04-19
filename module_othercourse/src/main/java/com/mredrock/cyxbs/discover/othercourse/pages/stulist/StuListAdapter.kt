@@ -46,7 +46,7 @@ class StuListAdapter(val stuListActivity: StuListActivity, private val mList: Li
                         Observable.just("")
                                 .subscribeOn(Schedulers.io())
                                 .safeSubscribeBy {
-                                    LogUtils.d("RayleighZ", stuListActivity.historyId.toString())
+                                    LogUtils.d("RayleighZ", "updating stuNum, history id = ${stuListActivity.historyId}")
                                     stuListActivity.database
                                             .getHistoryDao()
                                             .updateHistory(stuListActivity.historyId, mList[position].num)
@@ -59,7 +59,7 @@ class StuListAdapter(val stuListActivity: StuListActivity, private val mList: Li
                                 .safeSubscribeBy {
                                     stuListActivity.database
                                             .getHistoryDao()
-                                            .updateHistory(stuListActivity.historyId, mList[position].name)
+                                            .updateHistory(stuListActivity.historyId, mList[position].num)
                                 }
                     }
                 }
@@ -73,6 +73,7 @@ class StuListAdapter(val stuListActivity: StuListActivity, private val mList: Li
         val fragment = (ARouter.getInstance().build(COURSE_ENTRY).navigation() as Fragment).apply {
             arguments = Bundle().apply {
                 putString(key, mList[position].num)
+                //如果是老师，则需要额外添加name属性
                 if (key == OTHERS_TEA_NUM) {
                     putString(OTHERS_TEA_NAME, mList[position].name)
                 }

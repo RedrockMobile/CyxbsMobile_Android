@@ -41,11 +41,12 @@ abstract class OtherCourseSearchViewModel : BaseViewModel() {
 
     }
 
-    protected fun addHistoryInternal(history: History) {
+    protected fun addHistoryInternal(history: History, onAddFinished: () -> Unit) {
         Observable.just(history)
                 .subscribeOn(Schedulers.io())
                 .safeSubscribeBy {
                     curHistoryId = database.getHistoryDao().insertHistory(it).toInt()
+                    onAddFinished.invoke()
                 }.lifeCycle()
         mHistory.value?.add(0, history)
         mHistory.value = mHistory.value
@@ -59,5 +60,6 @@ abstract class OtherCourseSearchViewModel : BaseViewModel() {
                 }.lifeCycle()
     }
 
-    abstract fun addHistory(history: History)
+    //需要在历史记录添加进去之后再跳转activity，所以添加了onAddFinished回调
+    abstract fun addHistory(history: History, onAddFinished: ()->Unit)
 }

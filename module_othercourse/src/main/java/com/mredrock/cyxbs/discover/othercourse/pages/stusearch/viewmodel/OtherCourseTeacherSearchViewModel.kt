@@ -42,8 +42,8 @@ class OtherCourseTeacherSearchViewModel : OtherCourseSearchViewModel() {
         getHistoryInternal(TEACHER_TYPE)
     }
 
-    override fun addHistory(history: History) {
+    override fun addHistory(history: History, onAddFinished: () -> Unit) {
         history.type = TEACHER_TYPE
-        addHistoryInternal(history)
+        addHistoryInternal(history, onAddFinished)
     }
 }

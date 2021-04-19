@@ -85,7 +85,7 @@ class RedRockAutoWarpView : FrameLayout {
                 //当前是第几排[从0计数]
                 var row = 0
                 //横向已经用的宽度
-                var rowUsedWith = 0
+                var rowUsedWidth = 0
                 var i = 0
                 while (i < childCount) {
                     val itemView = getChildAt(i)
@@ -95,16 +95,16 @@ class RedRockAutoWarpView : FrameLayout {
                     )
                     val itemWidth: Int = itemView.measuredWidth
                     val itemHeight: Int = itemView.measuredHeight
-                    val remainingWidth = mWidth - rowUsedWith
+                    val remainingWidth = mWidth - rowUsedWidth
 
-                    if (itemWidth >= remainingWidth && rowUsedWith != 0) {
+                    if (itemWidth >= remainingWidth && rowUsedWidth != 0) {
                         row++
                         if (row == maxLine) break
-                        rowUsedWith = 0
+                        rowUsedWidth = 0
                         continue
                     }
 
-                    if (rowUsedWith == 0 && row + 1 > measureColumnUsedHeights.size) {
+                    if (rowUsedWidth == 0 && row + 1 > measureColumnUsedHeights.size) {
                         measureColumnUsedHeights.add(itemHeight)
                     } else {
                         if (measureColumnUsedHeights[row] < itemHeight) {
@@ -118,7 +118,7 @@ class RedRockAutoWarpView : FrameLayout {
                     }
 
                     //记录横向所用宽度
-                    rowUsedWith += realWidth + spacingH
+                    rowUsedWidth += realWidth + spacingH
                     i++
                 }
             }

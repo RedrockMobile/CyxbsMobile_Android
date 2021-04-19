@@ -12,6 +12,7 @@ import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.common.config.COURSE_ENTRY
 import com.mredrock.cyxbs.common.config.OTHERS_STU_NUM
 import com.mredrock.cyxbs.common.config.OTHERS_TEA_NAME
+import com.mredrock.cyxbs.common.config.OTHERS_TEA_NUM
 import com.mredrock.cyxbs.common.ui.BaseViewModelFragment
 import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.gone
@@ -54,10 +55,11 @@ abstract class OtherCourseSearchFragment<T : OtherCourseSearchViewModel> : BaseV
             if (it.isNotEmpty()) {
                 lastSearch?.let { text ->
                     val history = History(text)
-                    viewModel.addHistory(history)
+                    viewModel.addHistory(history){
+                        LogUtils.d("RayleighZ", "curHistory = ${viewModel.curHistoryId}")
+                        context?.startActivity<StuListActivity>(("stu_list" to it), ("history_id" to viewModel.curHistoryId))
+                    }
                 }
-                LogUtils.d("RayleighZ", "curHistory = ${viewModel.curHistoryId}")
-                context?.startActivity<StuListActivity>(("stu_list" to it), ("history_id" to viewModel.curHistoryId))
             } else {
                 context?.let { it1 -> CyxbsToast.makeText(it1, "查无此人", Toast.LENGTH_SHORT).show() }
             }
@@ -94,12 +96,11 @@ abstract class OtherCourseSearchFragment<T : OtherCourseSearchViewModel> : BaseV
             aw_other_course_fragment.adapter = AutoWrapAdapter(it ?: listOf(),
                     //这里是历史记录的点击位置
                     onTextClickListener = { history ->
-                        LogUtils.d("RayleighZ", "点击ing")
                         if (history.verify != "") {
                             if (history.type == STUDENT_TYPE)
                                 openCourseFragment(OTHERS_STU_NUM, history.verify)
                             else
-                                openCourseFragment(OTHERS_TEA_NAME, history.verify)
+                                openCourseFragment(OTHERS_TEA_NUM, history.verify, history.info)
                         } else {
                             //viewModel更新当前id
                             LogUtils.d("RayleighZ", "update history id, id = ${history.historyId}")
@@ -124,10 +125,14 @@ abstract class OtherCourseSearchFragment<T : OtherCourseSearchViewModel> : BaseV
         }
     }
 
-    private fun openCourseFragment(key: String, verify: String) {
+    //需要传递key（用来区分学生或者老师）以及两个verify进来，对于学生，只需要学号就好，对于老师，则需要额外传递姓名进来
+    private fun openCourseFragment(key: String, verify: String, name: String = "") {
         val fragment = (ARouter.getInstance().build(COURSE_ENTRY).navigation() as Fragment).apply {
             arguments = Bundle().apply {
                 putString(key, verify)
+                if (key == OTHERS_TEA_NUM){
+                    putString(OTHERS_TEA_NAME, name)
+                }
             }
         }
         //在滑动下拉课表容器it中添加整个课表
