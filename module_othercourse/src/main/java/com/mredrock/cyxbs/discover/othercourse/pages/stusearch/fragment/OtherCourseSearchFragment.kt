@@ -5,8 +5,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.Fragment
+import com.alibaba.android.arouter.launcher.ARouter
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.mredrock.cyxbs.common.component.CyxbsToast
+import com.mredrock.cyxbs.common.config.COURSE_ENTRY
+import com.mredrock.cyxbs.common.config.OTHERS_STU_NUM
+import com.mredrock.cyxbs.common.config.OTHERS_TEA_NAME
 import com.mredrock.cyxbs.common.ui.BaseViewModelFragment
+import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.gone
 import com.mredrock.cyxbs.common.utils.extensions.startActivity
 import com.mredrock.cyxbs.common.utils.extensions.visible
@@ -15,7 +22,10 @@ import com.mredrock.cyxbs.discover.othercourse.R
 import com.mredrock.cyxbs.discover.othercourse.pages.stulist.StuListActivity
 import com.mredrock.cyxbs.discover.othercourse.pages.stusearch.viewmodel.OtherCourseSearchViewModel
 import com.mredrock.cyxbs.discover.othercourse.room.History
+import com.mredrock.cyxbs.discover.othercourse.room.STUDENT_TYPE
 import com.mredrock.cyxbs.discover.othercourse.snackbar
+import kotlinx.android.synthetic.main.othercourse_discover_activity_other_course.*
+import kotlinx.android.synthetic.main.othercourse_discover_activity_stu_list.*
 import kotlinx.android.synthetic.main.othercourse_other_course_search_fragment.*
 
 /**
@@ -43,17 +53,19 @@ abstract class OtherCourseSearchFragment<T : OtherCourseSearchViewModel> : BaseV
         viewModel.mList.observeNotNull {
             if (it.isNotEmpty()) {
                 lastSearch?.let { text ->
-                    viewModel.addHistory(History(text))
-
+                    val history = History(text)
+                    viewModel.addHistory(history)
                 }
-                context?.startActivity<StuListActivity>("stu_list" to it)
+                LogUtils.d("RayleighZ", "curHistory = ${viewModel.curHistoryId}")
+                context?.startActivity<StuListActivity>(("stu_list" to it), ("history_id" to viewModel.curHistoryId))
             } else {
                 context?.let { it1 -> CyxbsToast.makeText(it1, "查无此人", Toast.LENGTH_SHORT).show() }
             }
         }
         viewModel.mListFromHistory.observeNotNull {
             if (it.isNotEmpty()) {
-                context?.startActivity<StuListActivity>("stu_list" to it)
+                LogUtils.d("RayleighZ", viewModel.curHistoryId.toString())
+                context?.startActivity<StuListActivity>(("stu_list" to it), ("history_id" to viewModel.curHistoryId))
             } else {
                 context?.let { it1 -> CyxbsToast.makeText(it1, "查无此人", Toast.LENGTH_SHORT).show() }
             }
@@ -80,8 +92,20 @@ abstract class OtherCourseSearchFragment<T : OtherCourseSearchViewModel> : BaseV
         viewModel.getHistory()
         viewModel.mHistory.observe {
             aw_other_course_fragment.adapter = AutoWrapAdapter(it ?: listOf(),
-                    onTextClickListener = { text ->
-                        viewModel.getPerson(text, true)
+                    //这里是历史记录的点击位置
+                    onTextClickListener = { history ->
+                        LogUtils.d("RayleighZ", "点击ing")
+                        if (history.verify != "") {
+                            if (history.type == STUDENT_TYPE)
+                                openCourseFragment(OTHERS_STU_NUM, history.verify)
+                            else
+                                openCourseFragment(OTHERS_TEA_NAME, history.verify)
+                        } else {
+                            //viewModel更新当前id
+                            LogUtils.d("RayleighZ", "update history id, id = ${history.historyId}")
+                            viewModel.curHistoryId = history.historyId
+                            viewModel.getPerson(history.info, true)
+                        }
                     },
                     onDeleteClickListener = { id ->
                         viewModel.deleteHistory(id)
@@ -98,6 +122,22 @@ abstract class OtherCourseSearchFragment<T : OtherCourseSearchViewModel> : BaseV
             }
 
         }
+    }
+
+    private fun openCourseFragment(key: String, verify: String) {
+        val fragment = (ARouter.getInstance().build(COURSE_ENTRY).navigation() as Fragment).apply {
+            arguments = Bundle().apply {
+                putString(key, verify)
+            }
+        }
+        //在滑动下拉课表容器it中添加整个课表
+        this.activity?.let {
+            it.supportFragmentManager.beginTransaction().replace(R.id.course_bottom_sheet_search, fragment).apply {
+                commit()
+            }
+            BottomSheetBehavior.from(it.course_bottom_sheet_search).state = BottomSheetBehavior.STATE_EXPANDED
+        }
+
     }
 
 }

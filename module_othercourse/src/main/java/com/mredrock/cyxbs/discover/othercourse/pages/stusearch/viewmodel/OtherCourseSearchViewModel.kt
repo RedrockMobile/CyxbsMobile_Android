@@ -1,7 +1,9 @@
 package com.mredrock.cyxbs.discover.othercourse.pages.stusearch.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.mredrock.cyxbs.common.BaseApp
+import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
@@ -15,6 +17,8 @@ abstract class OtherCourseSearchViewModel : BaseViewModel() {
     var mList = MutableLiveData<List<Person>>()
     var mListFromHistory = MutableLiveData<List<Person>>()
     val mHistory = MutableLiveData<MutableList<History>>()
+    //当前搜索对应的history的id
+    var curHistoryId = -1
     protected val database: HistoryDatabase by lazy { HistoryDatabase.getDatabase(BaseApp.context) }
     abstract fun getPerson(str: String, fromHistory: Boolean? = false)
 
@@ -31,6 +35,7 @@ abstract class OtherCourseSearchViewModel : BaseViewModel() {
                     )
         }.setSchedulers()
                 .safeSubscribeBy {
+                    LogUtils.d("RayleighZ", it.toString())
                     mHistory.value = it
                 }
 
@@ -41,6 +46,7 @@ abstract class OtherCourseSearchViewModel : BaseViewModel() {
                 .subscribeOn(Schedulers.io())
                 .safeSubscribeBy {
                     database.getHistoryDao().insertHistory(it)
+                    curHistoryId = it.historyId
                 }.lifeCycle()
         mHistory.value?.add(0, history)
         mHistory.value = mHistory.value
