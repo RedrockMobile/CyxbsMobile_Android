@@ -27,8 +27,7 @@
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/qa_search_cs_one"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginTop="10dp">
+                    android:layout_height="match_parent">
 
                     <androidx.appcompat.widget.AppCompatTextView
                         android:id="@+id/qa_tv_knowledge"

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <solid android:color="@color/map_dialog_tip_deny_background_color" />
+    <solid android:color="@color/qa_btn_positive_color" />
     <corners android:radius="17dp" />
     <size android:height="34dp" android:width="93dp"/>
 </shape>

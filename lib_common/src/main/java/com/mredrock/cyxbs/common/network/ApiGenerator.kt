@@ -228,6 +228,7 @@ object ApiGenerator {
                         },
                         action = { s: String ->
                             response.close()
+//                            BaseApp.context.toast("用户认证刷新成功")
                             response = chain.run { proceed(chain.request().newBuilder().header("Authorization", "Bearer $s").build()) }
                         }
                 )

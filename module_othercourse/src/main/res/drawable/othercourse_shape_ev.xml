@@ -3,5 +3,5 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     tools:ignore="MissingDefaultResource">
     <corners android:radius="29dp" />
-    <solid android:color="@color/common_othercourse_shape_back_color" />
+    <solid android:color="@color/common_othercourse_history_back_color" />
 </shape>

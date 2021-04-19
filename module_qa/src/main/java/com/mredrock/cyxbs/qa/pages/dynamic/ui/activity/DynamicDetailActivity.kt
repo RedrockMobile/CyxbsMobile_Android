@@ -15,6 +15,8 @@ import android.view.View
 import android.widget.Toast
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.app.ActivityOptionsCompat
+import androidx.core.content.ContextCompat
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -362,6 +364,17 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
         }
         viewModel.dynamic.observe {
             refreshDynamic()
+        }
+
+        qa_et_my_comment_reply.addTextChangedListener {
+            it?.apply {
+                qa_btn_my_comment_send.background =
+                        if (length == 0) {
+                            ContextCompat.getDrawable(this@DynamicDetailActivity, R.drawable.qa_shape_send_dynamic_btn_grey_background)
+                        } else {
+                            ContextCompat.getDrawable(this@DynamicDetailActivity, R.drawable.qa_shape_send_dynamic_btn_blue_background)
+                        }
+            }
         }
     }
 

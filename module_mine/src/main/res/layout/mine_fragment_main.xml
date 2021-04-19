@@ -154,7 +154,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="50dp"
-                android:layout_marginTop="50dp"
+                android:layout_marginTop="54dp"
                 android:layout_marginBottom="27dp"
                 android:text="@string/mine_dynamic"
                 android:textColor="@color/levelFourFontColor"
