@@ -45,8 +45,7 @@ abstract class OtherCourseSearchViewModel : BaseViewModel() {
         Observable.just(history)
                 .subscribeOn(Schedulers.io())
                 .safeSubscribeBy {
-                    database.getHistoryDao().insertHistory(it)
-                    curHistoryId = it.historyId
+                    curHistoryId = database.getHistoryDao().insertHistory(it).toInt()
                 }.lifeCycle()
         mHistory.value?.add(0, history)
         mHistory.value = mHistory.value

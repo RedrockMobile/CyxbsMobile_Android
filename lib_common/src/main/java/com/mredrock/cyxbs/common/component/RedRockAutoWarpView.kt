@@ -71,6 +71,7 @@ class RedRockAutoWarpView : FrameLayout {
             defStyleRes: Int
     ) : super(context, attrs, defStyleAttr, defStyleRes)
 
+    //每一行的最大高度
     val measureColumnUsedHeights = mutableListOf<Int>()
 
 
@@ -92,11 +93,11 @@ class RedRockAutoWarpView : FrameLayout {
                             MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED),
                             MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED)
                     )
-                    val itemWith: Int = itemView.measuredWidth
+                    val itemWidth: Int = itemView.measuredWidth
                     val itemHeight: Int = itemView.measuredHeight
                     val remainingWidth = mWidth - rowUsedWith
 
-                    if (itemWith >= remainingWidth && rowUsedWith != 0) {
+                    if (itemWidth >= remainingWidth && rowUsedWith != 0) {
                         row++
                         if (row == maxLine) break
                         rowUsedWith = 0
@@ -110,20 +111,20 @@ class RedRockAutoWarpView : FrameLayout {
                             measureColumnUsedHeights[row] = itemHeight
                         }
                     }
-                    val realWith = if (itemWith > measuredWidth) {
+                    val realWidth = if (itemWidth > measuredWidth) {
                         measuredWidth
                     } else {
-                        itemWith
+                        itemWidth
                     }
 
                     //记录横向所用宽度
-                    rowUsedWith += realWith + spacingH
+                    rowUsedWith += realWidth + spacingH
                     i++
                 }
             }
             setMeasuredDimension(
                     MeasureSpec.getSize(widthMeasureSpec),
-                    measureColumnUsedHeights.sum() + spacingH * (measureColumnUsedHeights.count() - 1) + paddingTop + paddingBottom
+                    measureColumnUsedHeights.sum() + spacingV * (measureColumnUsedHeights.count() - 1) + paddingTop + paddingBottom
             )
         }
 
@@ -137,7 +138,7 @@ class RedRockAutoWarpView : FrameLayout {
                 //当前是第几排[从0计数]
                 var row = 0
                 //横向已经用的宽度
-                var rowUsedWith = 0
+                var rowUsedWidth = 0
                 var columnUsedHeight = 0
                 //每一行的最大高度
                 val columnUsedHeights = mutableListOf<Int>()
@@ -146,23 +147,23 @@ class RedRockAutoWarpView : FrameLayout {
                 var i = 0
                 while (i < childCount) {
                     val itemView = getChildAt(i)
-                    val itemWith: Int = itemView.measuredWidth
+                    val itemWidth: Int = itemView.measuredWidth
                     val itemHeight: Int = itemView.measuredHeight
-                    val remainingWidth = availableWidth - rowUsedWith
-                    var realWith: Int
+                    val remainingWidth = availableWidth - rowUsedWidth
+                    var realWidth: Int
 
-                    if (itemWith >= remainingWidth && rowUsedWith != 0) {
+                    if (itemWidth >= remainingWidth && rowUsedWidth != 0) {
                         row++
                         if (row == maxLine) break
                         columnUsedHeight =
                                 columnUsedHeights.sum() + spacingV * columnUsedHeights.count()
-                        rowUsedWith = 0
+                        rowUsedWidth = 0
                         continue
                     } else {
-                        realWith = if (itemWith > availableWidth) {
+                        realWidth = if (itemWidth > availableWidth) {
                             availableWidth
                         } else {
-                            itemWith
+                            itemWidth
                         }
 
                         val centerTop = ((measureColumnUsedHeights.getOrElse(row) { 0 } - itemHeight) / 2).run {
@@ -171,14 +172,14 @@ class RedRockAutoWarpView : FrameLayout {
                             else 0
                         }
                         itemView.layout(
-                                paddingStart + rowUsedWith,
+                                paddingStart + rowUsedWidth,
                                 centerTop + paddingTop + columnUsedHeight,
-                                paddingStart + rowUsedWith + realWith,
+                                paddingStart + rowUsedWidth + realWidth,
                                 centerTop + paddingTop + columnUsedHeight + itemHeight
                         )
                     }
 
-                    if (rowUsedWith == 0 && row + 1 > columnUsedHeights.size) {
+                    if (rowUsedWidth == 0 && row + 1 > columnUsedHeights.size) {
                         columnUsedHeights.add(itemHeight)
                     } else {
                         if (columnUsedHeights[row] < itemHeight) {
@@ -187,7 +188,7 @@ class RedRockAutoWarpView : FrameLayout {
                     }
 
                     //记录横向所用宽度
-                    rowUsedWith += realWith + spacingH
+                    rowUsedWidth += realWidth + spacingH
                     i++
                 }
             }
