@@ -29,9 +29,9 @@
     <color name="qa_search_layout_color">#1F1F1F</color>
     <color name="qa_answer_praised_count_color">#4841E2</color>
     <!--    RecyclerView加载时的holder颜色-->
-    <color name="qa_question_item_empty_holder_color">#E6E6E6</color>
+    <color name="qa_question_item_empty_holder_color">#5A5A5A</color>
     <!--    RecyclerView加载时的holder背景颜色-->
-    <color name="qa_question_item_shadow_color">#ffffff</color>
+    <color name="qa_question_item_shadow_color">#2D2D2D</color>
     <!--    提问选择类型的背景颜色-->
     <color name="qa_quiz_select_type_background_color">#3F3F3F</color>
     <!--    提问选择类型的文字颜色-->
