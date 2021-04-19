@@ -39,7 +39,7 @@
         android:layout_marginTop="14dp"
         android:background="@drawable/qa_ic_more_tips"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.918"
+        app:layout_constraintHorizontal_bias="0.92"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

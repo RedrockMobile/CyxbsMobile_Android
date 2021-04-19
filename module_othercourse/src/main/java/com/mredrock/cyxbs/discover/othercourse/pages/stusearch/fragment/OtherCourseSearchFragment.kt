@@ -56,7 +56,6 @@ abstract class OtherCourseSearchFragment<T : OtherCourseSearchViewModel> : BaseV
                 lastSearch?.let { text ->
                     val history = History(text)
                     viewModel.addHistory(history){
-                        LogUtils.d("RayleighZ", "curHistory = ${viewModel.curHistoryId}")
                         context?.startActivity<StuListActivity>(("stu_list" to it), ("history_id" to viewModel.curHistoryId))
                     }
                 }
@@ -66,7 +65,6 @@ abstract class OtherCourseSearchFragment<T : OtherCourseSearchViewModel> : BaseV
         }
         viewModel.mListFromHistory.observeNotNull {
             if (it.isNotEmpty()) {
-                LogUtils.d("RayleighZ", viewModel.curHistoryId.toString())
                 context?.startActivity<StuListActivity>(("stu_list" to it), ("history_id" to viewModel.curHistoryId))
             } else {
                 context?.let { it1 -> CyxbsToast.makeText(it1, "查无此人", Toast.LENGTH_SHORT).show() }
@@ -103,7 +101,6 @@ abstract class OtherCourseSearchFragment<T : OtherCourseSearchViewModel> : BaseV
                                 openCourseFragment(OTHERS_TEA_NUM, history.verify, history.info)
                         } else {
                             //viewModel更新当前id
-                            LogUtils.d("RayleighZ", "update history id, id = ${history.historyId}")
                             viewModel.curHistoryId = history.historyId
                             viewModel.getPerson(history.info, true)
                         }

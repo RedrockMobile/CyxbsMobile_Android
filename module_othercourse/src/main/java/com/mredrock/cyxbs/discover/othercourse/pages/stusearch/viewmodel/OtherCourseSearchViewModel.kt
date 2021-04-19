@@ -35,7 +35,6 @@ abstract class OtherCourseSearchViewModel : BaseViewModel() {
                     )
         }.setSchedulers()
                 .safeSubscribeBy {
-                    LogUtils.d("RayleighZ", it.toString())
                     mHistory.value = it
                 }
 

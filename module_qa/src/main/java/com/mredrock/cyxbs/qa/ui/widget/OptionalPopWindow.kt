@@ -9,8 +9,11 @@ import android.view.*
 import android.widget.LinearLayout
 import android.widget.PopupWindow
 import android.widget.TextView
-import com.mredrock.cyxbs.common.utils.extensions.gone
+import androidx.core.view.children
+import com.mredrock.cyxbs.common.BaseApp
+import com.mredrock.cyxbs.common.utils.extensions.dp2px
 import com.mredrock.cyxbs.qa.R
+import kotlinx.android.synthetic.main.qa_popwindow_option_normal.view.*
 
 /**
  * created by zhangzhe, SpreadWater
@@ -83,7 +86,18 @@ class OptionalPopWindow private constructor(val context: Context?) : PopupWindow
                 AlignMode.MIDDLE -> -(View.MeasureSpec.getSize(mainView!!.measuredWidth) - view.width) / 2
                 AlignMode.LEFT -> 0
                 AlignMode.RIGHT -> -(View.MeasureSpec.getSize(mainView!!.measuredWidth) - view.width)
-                AlignMode.CENTER -> -(View.MeasureSpec.getSize(mainView!!.measuredWidth) - view.width) / 2
+                AlignMode.CENTER -> {
+                    //居中时需要遍历子view来提升宽度
+                    val width = BaseApp.context.dp2px(178f)
+                    mainView?.apply{
+                        for (v in (this as LinearLayout).children){
+                            val lp = v.qa_popwindow_tv_option.layoutParams as LinearLayout.LayoutParams
+                            lp.width = width
+                            v.qa_popwindow_tv_option.layoutParams = lp
+                        }
+                    }
+                    -(View.MeasureSpec.getSize(width) - view.width) / 2
+                }
             }
 
             // 如果是正中间，则修改Y坐标为正中间

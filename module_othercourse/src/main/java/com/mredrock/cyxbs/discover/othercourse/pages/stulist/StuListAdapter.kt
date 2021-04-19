@@ -46,7 +46,6 @@ class StuListAdapter(val stuListActivity: StuListActivity, private val mList: Li
                         Observable.just("")
                                 .subscribeOn(Schedulers.io())
                                 .safeSubscribeBy {
-                                    LogUtils.d("RayleighZ", "updating stuNum, history id = ${stuListActivity.historyId}")
                                     stuListActivity.database
                                             .getHistoryDao()
                                             .updateHistory(stuListActivity.historyId, mList[position].num)
