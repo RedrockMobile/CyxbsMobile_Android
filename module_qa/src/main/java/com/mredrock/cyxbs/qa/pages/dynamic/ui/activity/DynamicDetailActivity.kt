@@ -228,8 +228,11 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
         // 注册
         mTencent = Tencent.createInstance(CommentConfig.APP_ID, this)
 
-        //判断是否有共享元素
+        // 判断是否有共享元素
         haveShareItem = intent.getParcelableExtra<Dynamic>("dynamic") != null
+
+        // 清空原来的评论显示
+        viewModel.commentList.value = listOf()
 
         initChangeColorAnimator("#1D1D1D", "#000000")
         initObserve()
@@ -464,7 +467,7 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
             }
             optionPopWindow.show(it, OptionalPopWindow.AlignMode.RIGHT, 0)
         }
-        viewModel.dynamic.value?.let {
+        dynamic?.let {
             qa_iv_dynamic_praise_count_image.registerLikeView(it.postId, CommentConfig.PRAISE_MODEL_DYNAMIC, it.isPraised, it.praiseCount)
         }
         qa_iv_dynamic_praise_count_image.setOnSingleClickListener {

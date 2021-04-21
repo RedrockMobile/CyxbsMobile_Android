@@ -5,6 +5,7 @@ import android.graphics.Canvas
 import android.os.Build
 import android.text.TextPaint
 import android.util.AttributeSet
+import android.util.Log
 import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.utils.extensions.*
 import com.mredrock.cyxbs.qa.R
@@ -76,6 +77,7 @@ class LikeViewSlim @JvmOverloads constructor(
      * 传入id和model，注册LikeView的监听，并且自动取消原来的监听
      */
     fun registerLikeView(id: String, model: String, isPraised: Boolean, praiseCount: Int) {
+        Log.e("sandyzhang", "[$id:$model], isPraised = $isPraised, praiseCount = $praiseCount")
         if (id == "0") {
             throw IllegalStateException("id must not be 0")
         }
@@ -108,7 +110,7 @@ class LikeViewSlim @JvmOverloads constructor(
         }
         observer["${this.id}-${this.model}"]?.add(weakP!!)
 
-        setCheckedWithoutAnimator(isPraised)
+        setCheckedWithoutAnimator(this.isPraised)
         invalidate()
     }
 
@@ -118,6 +120,7 @@ class LikeViewSlim @JvmOverloads constructor(
         praiseCount = likeMap["$id-$model"]?.first ?: 0
         if (isPraisedData != isPraised) {
             setCheckedWithoutAnimator(isPraisedData)
+            isPraised = isPraisedData
         }
         invalidate()
     }

@@ -35,13 +35,13 @@ open class DynamicDetailViewModel : BaseViewModel() {
 
     val dynamic = MutableLiveData<Dynamic>()
 
-    var position = 0
+    var position = -1
 
     val commentReleaseResult = MutableLiveData<CommentReleaseResult>()
 
     val deleteDynamic = MutableLiveData<Boolean>()
 
-
+    // commentId用于刷新后聚焦到某一个评论。
     fun refreshCommentList(postId: String, commentId: String) {
         ApiGenerator.getApiService(ApiServiceNew::class.java)
                 .getComment(postId)
