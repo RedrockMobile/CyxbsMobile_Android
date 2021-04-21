@@ -10,6 +10,7 @@ import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.transition.Slide
+import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.widget.Toast
@@ -32,6 +33,7 @@ import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.dp2px
 import com.mredrock.cyxbs.common.utils.extensions.setAvatarImageFromUrl
 import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
+import com.mredrock.cyxbs.common.utils.extensions.startActivityForResult
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.beannew.Dynamic
 import com.mredrock.cyxbs.qa.beannew.ReplyInfo
@@ -56,6 +58,7 @@ import com.tencent.tauth.Tencent
 import kotlinx.android.synthetic.main.qa_activity_dynamic_detail.*
 import kotlinx.android.synthetic.main.qa_common_toolbar.*
 import kotlinx.android.synthetic.main.qa_recycler_item_dynamic_header.*
+import kotlinx.android.synthetic.main.qa_recycler_item_dynamic_header.view.*
 
 
 /**
@@ -71,7 +74,9 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
 
             page.apply {
                 var activity: Activity? = null
+                var fragment: Fragment? = null
                 if (page is Fragment) {
+                    fragment = page
                     activity = page.activity
                 } else if (page is Activity) {
                     activity = page
@@ -81,7 +86,11 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
                     val intent = Intent(it, DynamicDetailActivity::class.java)
                     intent.putExtra("dynamic", data)
                     it.window.exitTransition = Slide(Gravity.START).apply { duration = 300 }
-                    it.startActivityForResult(intent, DYNAMIC_DETAIL_REQUEST, opt.toBundle())
+                    if (fragment != null) {
+                        fragment.startActivityForResult(intent, DYNAMIC_DETAIL_REQUEST, opt.toBundle())
+                    } else {
+                        it.startActivityForResult(intent, DYNAMIC_DETAIL_REQUEST, opt.toBundle())
+                    }
                 }
             }
         }
@@ -499,6 +508,7 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
 
     @SuppressLint("SetTextI18n")
     private fun refreshDynamic() {
+        LogUtils.d("RayleighZ", "Refreshing dynamic")
         qa_iv_dynamic_avatar.setAvatarImageFromUrl(viewModel.dynamic.value?.avatar)
         qa_tv_dynamic_topic.text = "# " + viewModel.dynamic.value?.topic
         qa_tv_dynamic_nickname.text = viewModel.dynamic.value?.nickName
@@ -531,6 +541,9 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
                 ViewImageActivity.activityStart(this, dynamic.pics.map { it }.toTypedArray(), index)
             }
         }
+        val data = Intent()
+        data.putExtra("refresh_dynamic", viewModel.dynamic.value)
+        setResult(-1, data)
     }
 
     override fun onBackPressed() {

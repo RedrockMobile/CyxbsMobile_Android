@@ -23,10 +23,12 @@ import com.mredrock.cyxbs.common.event.RefreshQaEvent
 import com.mredrock.cyxbs.common.mark.EventBusLifecycleSubscriber
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.ui.BaseViewModelFragment
+import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.doIfLogin
 import com.mredrock.cyxbs.common.utils.extensions.dp2px
 import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.qa.R
+import com.mredrock.cyxbs.qa.beannew.Dynamic
 import com.mredrock.cyxbs.qa.component.recycler.RvAdapterWrapper
 import com.mredrock.cyxbs.qa.config.CommentConfig
 import com.mredrock.cyxbs.qa.config.CommentConfig.COPY_LINK
@@ -117,8 +119,8 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), EventBusL
                         val token = ServiceManager.getService(IAccountService::class.java).getUserTokenService().getToken()
                         val url = "${CommentConfig.SHARE_URL}dynamic?id=${dynamic.postId}&id_token=$token"
                         when (mode) {
-                            QQ_FRIEND ->{
-                                val pic = if(dynamic.pics.isNullOrEmpty()) "" else dynamic.pics[0]
+                            QQ_FRIEND -> {
+                                val pic = if (dynamic.pics.isNullOrEmpty()) "" else dynamic.pics[0]
                                 mTencent?.let { it1 -> ShareUtils.qqShare(it1, this@DynamicFragment, dynamic.topic, dynamic.content, url, pic) }
                             }
                             QQ_ZONE ->
@@ -389,7 +391,14 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), EventBusL
                     viewModel.invalidateQuestionList()
                 } else {
                     // 不需要刷新，则更新当前的dynamic为详细页的dynamic（避免出现评论数目不一致的问题）
-                    dynamicListRvAdapter.notifyDataSetChanged()
+                    LogUtils.d("RayleighZ", "onResult")
+                    dynamicListRvAdapter.curSharedItem?.apply {
+                        val dynamic = data?.getParcelableExtra<Dynamic>("refresh_dynamic")
+                        dynamic?.let {
+                            LogUtils.d("RayleighZ", "on result, refreshing count = ${it.commentCount}")
+                            this.findViewById<TextView>(R.id.qa_tv_dynamic_comment_count).text = it.commentCount.toString()
+                        }
+                    }
                 }
             }
             // 从发动态返回

@@ -50,6 +50,8 @@ class DynamicAdapter(val context: Context, private val onItemClickEvent: (Dynami
     var onShareClickListener: ((Dynamic, String) -> Unit)? = null
     var onTopicListener: ((String, View) -> Unit)? = null
     var onPopWindowClickListener: ((Int, String, Dynamic) -> Unit)? = null
+
+    var curSharedItem: View? = null
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = DynamicViewHolder(parent)
 
     override fun onBindViewHolder(holder: BaseViewHolder<Dynamic>, position: Int) {
@@ -111,6 +113,7 @@ class DynamicAdapter(val context: Context, private val onItemClickEvent: (Dynami
     override fun onItemClickListener(holder: BaseViewHolder<Dynamic>, position: Int, data: Dynamic) {
         super.onItemClickListener(holder, position, data)
         if (holder !is DynamicViewHolder) return
+        curSharedItem = holder.itemView
         onItemClickEvent.invoke(data, holder.itemView.findViewById<ConstraintLayout>(R.id.qa_ctl_dynamic))
     }
 
@@ -125,7 +128,6 @@ class DynamicAdapter(val context: Context, private val onItemClickEvent: (Dynami
                 qa_iv_dynamic_avatar.setAvatarImageFromUrl(data.avatar)
                 qa_tv_dynamic_topic.text = "# " + data.topic
                 qa_tv_dynamic_nickname.text = data.nickName
-                LogUtils.d("RayleighZ", "content = ${data.content}")
                 qa_tv_dynamic_content.text = data.content
                 qa_tv_dynamic_comment_count.text = data.commentCount.toString()
                 qa_tv_dynamic_publish_at.text = dynamicTimeDescription(System.currentTimeMillis(), data.publishTime * 1000)
