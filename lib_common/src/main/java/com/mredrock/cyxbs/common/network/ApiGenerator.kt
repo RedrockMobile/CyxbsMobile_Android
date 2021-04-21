@@ -1,28 +1,30 @@
- package com.mredrock.cyxbs.common.network
+package com.mredrock.cyxbs.common.network
 
-import android.os.Looper
+import android.util.Log
 import android.util.SparseArray
-import com.bumptech.glide.util.Synthetic
+import android.widget.Toast
 import com.mredrock.cyxbs.common.BuildConfig
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.api.account.IUserStateService
 import com.mredrock.cyxbs.common.BaseApp
-import com.mredrock.cyxbs.common.R
-import com.mredrock.cyxbs.common.config.SUCCESS
 import com.mredrock.cyxbs.common.config.TOKEN_EXPIRE
 import com.mredrock.cyxbs.common.config.getBaseUrl
+import com.mredrock.cyxbs.common.network.cache.NetworkCache
 import com.mredrock.cyxbs.common.utils.LogUtils
-import com.mredrock.cyxbs.common.utils.extensions.runOnUiThread
+import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.common.utils.extensions.takeIfNoException
-import com.mredrock.cyxbs.common.utils.extensions.toast
-import okhttp3.Interceptor
-import okhttp3.OkHttpClient
-import okhttp3.Response
+import io.reactivex.Observable
+import okhttp3.*
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.ResponseBody.Companion.toResponseBody
 import okhttp3.logging.HttpLoggingInterceptor
+import okio.Buffer
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
+import java.nio.charset.Charset
+import java.nio.charset.StandardCharsets
 import java.util.concurrent.TimeUnit
 
 /**
@@ -63,7 +65,10 @@ object ApiGenerator {
             this.defaultConfig()
             configRetrofitBuilder {
                 it.defaultConfig()
-                it.configureOkHttp()
+                it.configureOkHttp {
+                    it.addInterceptor(TokenInterceptor())
+//                    it.addInterceptor(CacheInterceptor())
+                }
             }
         }.build()
         commonRetrofit = Retrofit.Builder().apply {
@@ -76,11 +81,12 @@ object ApiGenerator {
         }.build()
     }
 
-    fun <T> getApiService(clazz: Class<T>) = if (isTouristMode()) {
-        getCommonApiService(clazz)
-    } else {
-        retrofit.create(clazz)
-    }
+    fun <T> getApiService(clazz: Class<T>) = retrofit.create(clazz)
+//            if (isTouristMode()) {
+//        getCommonApiService(clazz)
+//    } else {
+//        retrofit.create(clazz)
+//    }
 
     fun <T> getApiService(retrofit: Retrofit, clazz: Class<T>) = retrofit.create(clazz)
 
@@ -125,7 +131,9 @@ object ApiGenerator {
                 .configRetrofitBuilder {
                     it.apply {
                         if (tokenNeeded && !isTouristMode())
-                            configureOkHttp()
+                            configureOkHttp{
+                                it.addInterceptor(TokenInterceptor())
+                            }
                         if (okHttpClientConfig == null)
                             this.defaultConfig()
                         else
@@ -161,52 +169,15 @@ object ApiGenerator {
     }
 
     //带token请求的OkHttp配置
-    private fun OkHttpClient.Builder.configureOkHttp(): OkHttpClient {
+    private fun OkHttpClient.Builder.configureOkHttp(config: (OkHttpClient.Builder) -> Unit): OkHttpClient {
         return this.apply {
-            interceptors().add(Interceptor {
-                /**
-                 * 所有请求添加token到header
-                 * 在外面加一层判断，用于token未过期时，能够异步请求，不用阻塞在checkRefresh()
-                 * 如果有更好方式再改改
-                 */
-                when {
-                    refreshToken.isEmpty() || token.isEmpty() -> {
-                        token = ServiceManager.getService(IAccountService::class.java).getUserTokenService().getToken()
-                        refreshToken = ServiceManager.getService(IAccountService::class.java).getUserTokenService().getRefreshToken()
-                        if (isTokenExpired()) {
-                            checkRefresh(it, token)
-                        } else {
-                            it.proceed(it.request().newBuilder().header("Authorization", "Bearer $token").build())
-                        }
-                    }
-                    isTokenExpired() -> {
-                        checkRefresh(it, token)
-                    }
-                    else -> {
-                        val response = it.proceed(it.request().newBuilder().header("Authorization", "Bearer $token").build())
-                        LogUtils.d("RayleighZ","responseCode = ${response.code}")
-                        //此处拦截http状态码进行统一处理
-                        when(response.code){
-                            TOKEN_EXPIRE -> {
-                                response.close()
-                                checkRefresh(it, token)
-                            }
-                            SUCCESS -> {
-                                return@Interceptor response
-                            }
-                            else -> {
-                                return@Interceptor response
-                            }
-                        }
-                    }
-                } as Response
-            })
+            config.invoke(this)
         }.build()
     }
 
     //对token和refreshToken进行刷新
     @Synchronized
-    private fun checkRefresh(chain: Interceptor.Chain, expiredToken: String): Response? {
+    private fun checkRefreshAndRequest(chain: Interceptor.Chain, expiredToken: String): Response {
         var response = chain.proceed(chain.request().newBuilder().header("Authorization", "Bearer $token").build())
         /**
          * 刷新token条件设置为，已有refreshToken，并且已经过期，也可以后端返回特定到token失效code
@@ -216,7 +187,7 @@ object ApiGenerator {
          * 可能会出现多个接口因为token过期导致同时（虽然是顺序执行）的情况
          * 故要求在刷新时传递过期token过来，如果该过期token已经被刷新，就直接配置新token，不再刷新
          */
-        if (lastExpiredToken == expiredToken){//认定已经刷新成功，直接返回新的请求
+        if (lastExpiredToken == expiredToken) {//认定已经刷新成功，直接返回新的请求
             return chain.run { proceed(chain.request().newBuilder().header("Authorization", "Bearer $token").build()) }
         }
         lastExpiredToken = expiredToken
@@ -228,11 +199,11 @@ object ApiGenerator {
                         },
                         action = { s: String ->
                             response.close()
-                            response = chain.run { proceed(chain.request().newBuilder().header("Authorization", "Bearer $s").build()) }
+                            token = s
                         }
                 )
             }
-
+            response = chain.run { proceed(chain.request().newBuilder().header("Authorization", "Bearer $token").build()) }
         }
         return response
     }
@@ -242,4 +213,104 @@ object ApiGenerator {
 
     //是否是游客模式
     private fun isTouristMode() = ServiceManager.getService(IAccountService::class.java).getVerifyService().isTouristMode()
+
+    class TokenInterceptor : Interceptor {
+        override fun intercept(chain: Interceptor.Chain): Response {
+            /**
+             * 所有请求添加token到header
+             * 在外面加一层判断，用于token未过期时，能够异步请求，不用阻塞在checkRefresh()
+             */
+            // 这个变量存 当前正在请求的url，的response
+            var responseUrl = when {
+                refreshToken.isEmpty() || token.isEmpty() -> {
+
+                    token = ServiceManager.getService(IAccountService::class.java).getUserTokenService().getToken()
+                    refreshToken = ServiceManager.getService(IAccountService::class.java).getUserTokenService().getRefreshToken()
+                    if (isTokenExpired()) {
+                        checkRefreshAndRequest(chain, token) // 这个方法无论是否刷新token成功，都会返回一个当前url的请求
+                    } else {
+                        chain.proceed(chain.request().newBuilder().header("Authorization", "Bearer $token").build()) // 当前url的请求
+                    }
+                }
+                isTokenExpired() -> {
+                    checkRefreshAndRequest(chain, token) // 这个方法无论是否刷新token成功，都会返回一个当前url的请求
+                }
+                else -> {
+                    chain.proceed(chain.request().newBuilder().header("Authorization", "Bearer $token").build()) // 当前url的请求
+                }
+            }
+            Log.e("sandyzhang", "toast1"+responseUrl.isSuccessful)
+            // 上面是分情况讨论token可能的情况，并执行token刷新
+            // 如果还是失败则再刷新一遍，以防情况：既没过期也不空，但是由于服务器原因导致token失效
+            if (responseUrl.code == TOKEN_EXPIRE || !responseUrl.isSuccessful) {
+                responseUrl.close()
+                responseUrl = checkRefreshAndRequest(chain, token)
+            }
+
+//            if (!responseUrl.isSuccessful) {
+//                Log.e("sandyzhang", "toast")
+//                responseUrl.close()
+//                responseUrl = chain.proceed(chain.request().newBuilder().addHeader("Authorization", "Bearer $token").addHeader("UseCache", "true").build()) // 链式请求下一个Interceptor，也就是CacheInterceptor，要求返回缓存Response
+//            } else {
+//                saveCache(chain.request(), responseUrl)
+//            }
+
+            return responseUrl
+        }
+    }
+
+    class CacheInterceptor : Interceptor {
+        override fun intercept(chain: Interceptor.Chain): Response {
+            return if (chain.request().headers["UseCache"] != "true") {
+                return chain.proceed(chain.request())
+            } else {
+                Log.e("sandyzhang", "UseCache"+ getCache(chain.request()))
+
+                val p = Observable.create<String> { it.onNext("使用缓存") }.setSchedulers().subscribe {
+                    Toast.makeText(BaseApp.context, "使用缓存！", Toast.LENGTH_SHORT).show()
+                }
+                Response.Builder().code(200)
+                        .message("OK")
+                        .protocol(Protocol.HTTP_1_1)
+                        .body(getCache(chain.request())?.toResponseBody("application/json;charset=UTF-8".toMediaTypeOrNull()))
+                        .request(Request.Builder().url("http://localhost/").build())
+                        .build()
+            }
+        }
+    }
+
+    fun getCache(request: Request): String? {
+        val buffer2 = Buffer()
+        request.body?.writeTo(buffer2)
+        val contentType2 = request.body?.contentType()
+        val charset2: Charset =
+                contentType2?.charset(StandardCharsets.UTF_8) ?: StandardCharsets.UTF_8
+        val args = buffer2.readString(charset2)
+        return NetworkCache.getCache("${request.url}?${args}")
+
+    }
+
+    fun saveCache(request: Request, response: Response) {
+        val source = response.body?.source() ?: return
+        source.request(Long.MAX_VALUE)
+        val buffer = source.buffer
+        val contentType = response.body?.contentType()
+        val charset: Charset =
+                contentType?.charset(StandardCharsets.UTF_8) ?: StandardCharsets.UTF_8
+
+
+        val buffer2 = Buffer()
+        request.body?.writeTo(buffer2)
+        val contentType2 = request.body?.contentType()
+        val charset2: Charset =
+                contentType2?.charset(StandardCharsets.UTF_8) ?: StandardCharsets.UTF_8
+        val args = buffer2.readString(charset2)
+
+        NetworkCache.addCache("${request.url}?${args}", buffer.clone().readString(charset))
+        Log.e(
+                "sandyzhang6",
+                "${request.url}?${args}" + "*" + buffer.clone().readString(charset) + " ==${buffer.size}"
+        )
+    }
+
 }
