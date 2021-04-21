@@ -77,7 +77,7 @@ class LikeViewSlim @JvmOverloads constructor(
      * 传入id和model，注册LikeView的监听，并且自动取消原来的监听
      */
     fun registerLikeView(id: String, model: String, isPraised: Boolean, praiseCount: Int) {
-        Log.e("sandyzhang", "[$id:$model], isPraised = $isPraised, praiseCount = $praiseCount")
+        // Log.e("sandyzhang", "[$id:$model], isPraised = $isPraised, praiseCount = $praiseCount")
         if (id == "0") {
             throw IllegalStateException("id must not be 0")
         }

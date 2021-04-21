@@ -9,6 +9,7 @@ import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.common.viewmodel.event.ProgressDialogEvent
+import com.mredrock.cyxbs.common.viewmodel.event.SingleLiveEvent
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.beannew.Comment
 import com.mredrock.cyxbs.qa.beannew.CommentReleaseResult
@@ -37,7 +38,7 @@ open class DynamicDetailViewModel : BaseViewModel() {
 
     var position = -1
 
-    val commentReleaseResult = MutableLiveData<CommentReleaseResult>()
+    val commentReleaseResult = SingleLiveEvent<CommentReleaseResult>()
 
     val deleteDynamic = MutableLiveData<Boolean>()
 
@@ -77,7 +78,7 @@ open class DynamicDetailViewModel : BaseViewModel() {
     // 回复后，滑动到刚刚回复的comment下
     private fun findCommentByCommentId(dataList: List<Comment>, commentId: String): Int {
 
-        if (commentId == "") {
+        if (commentId == "" || commentId == "-1") {
             return -1
         }
         for (i in dataList.indices) {

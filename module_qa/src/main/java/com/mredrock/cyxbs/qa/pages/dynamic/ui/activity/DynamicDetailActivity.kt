@@ -10,6 +10,7 @@ import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.transition.Slide
+import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.widget.Toast
@@ -214,7 +215,8 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
 
         dynamic = intent.getParcelableExtra("dynamic")
 
-        LogUtils.d("RayleighZ", intent.toString())
+        viewModel.position = -1
+
         intent.extras?.apply {
             if (!getBoolean("isFromReceive")) return@apply
             val postId = getString("id")
@@ -301,7 +303,10 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
             if (it != null) {
                 commentListRvAdapter.refreshData(it)
                 if (viewModel.position != -1) {
+
                     qa_rv_comment_list.smoothScrollToPosition(viewModel.position)
+                    Log.e("sandyzhang======", viewModel.position.toString())
+                    viewModel.position = -1
                     qa_appbar_dynamic.setExpanded(false, true)
                 } else {
                     qa_appbar_dynamic.setExpanded(true, false)
@@ -343,6 +348,7 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
                     }
                     ReplyPopWindow.show(qa_et_my_comment_reply, ReplyPopWindow.AlignMode.LEFT, this@DynamicDetailActivity.dp2px(6f))
                 } else {
+                    qa_coordinatorlayout.isReplyEdit = false
                     if (ReplyPopWindow.isShowing()) {
                         ReplyPopWindow.dismiss()
                     }
