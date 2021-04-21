@@ -120,4 +120,6 @@
     <color name="qa_btn_positive_color">#5A5A5A</color>
     <color name="qa_draft_cancel_color">#838384</color>
     <color name="qa_praise_text_color">#2CDEFF</color>
+    <!--    展开按钮的颜色-->
+    <color name="qa_tv_expand_text_color">#556C8B</color>
 </resources>

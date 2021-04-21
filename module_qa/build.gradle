@@ -10,4 +10,5 @@ dependencies {
     implementation project(':lib_account:api_account')
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     implementation 'com.tencent.tauth:qqopensdk:3.52.0'
+    implementation 'com.github.MZCretin:ExpandableTextView:v1.6.1-x'
 }

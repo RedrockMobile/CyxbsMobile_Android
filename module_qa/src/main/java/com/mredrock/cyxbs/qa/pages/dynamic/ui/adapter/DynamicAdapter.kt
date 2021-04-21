@@ -125,8 +125,7 @@ class DynamicAdapter(val context: Context, private val onItemClickEvent: (Dynami
                 qa_iv_dynamic_avatar.setAvatarImageFromUrl(data.avatar)
                 qa_tv_dynamic_topic.text = "# " + data.topic
                 qa_tv_dynamic_nickname.text = data.nickName
-                LogUtils.d("RayleighZ", "content = ${data.content}")
-                qa_tv_dynamic_content.text = data.content
+                qa_tv_dynamic_content.setContent(data.content)
                 qa_tv_dynamic_comment_count.text = data.commentCount.toString()
                 qa_tv_dynamic_publish_at.text = dynamicTimeDescription(System.currentTimeMillis(), data.publishTime * 1000)
                 //解决图片错乱的问题

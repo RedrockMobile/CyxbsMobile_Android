@@ -508,7 +508,7 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
         qa_iv_dynamic_avatar.setAvatarImageFromUrl(viewModel.dynamic.value?.avatar)
         qa_tv_dynamic_topic.text = "# " + viewModel.dynamic.value?.topic
         qa_tv_dynamic_nickname.text = viewModel.dynamic.value?.nickName
-        qa_tv_dynamic_content.text = viewModel.dynamic.value?.content
+        qa_tv_dynamic_content.setContent( viewModel.dynamic.value?.content)
         qa_tv_dynamic_comment_count.text = viewModel.dynamic.value?.commentCount.toString()
         viewModel.dynamic.value?.let {
             qa_tv_dynamic_publish_at.text = dynamicTimeDescription(System.currentTimeMillis(), it.publishTime * 1000)

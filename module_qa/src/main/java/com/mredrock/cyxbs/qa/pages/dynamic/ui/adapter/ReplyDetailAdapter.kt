@@ -41,22 +41,25 @@ class ReplyDetailAdapter(private val isReplyDetail: Boolean, private val onReply
                 qa_tv_reply_detail_date.text = dynamicTimeDescription(System.currentTimeMillis(), data.publishTime * 1000)
                 qa_tv_reply_detail_nickname.text = data.nickName
                 if (data.fromNickname.isEmpty()) {
-                    qa_tv_reply_detail_content.text = data.content
+                    qa_tv_reply_detail_content.setContent(data.content)
                     qa_tv_reply_detail_show_detail.gone()
                 } else {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                        // 回复时，被回复人名称显示颜色
-                        val span = SpannableString("回复 @${data.fromNickname} : ${data.content}").apply {
-                            setSpan(
-                                    ForegroundColorSpan(ContextCompat.getColor(context, R.color.qa_reply_inner_reply_name_color)),
-                                    3, 3 + data.fromNickname.length + 1,
-                                    Spannable.SPAN_INCLUSIVE_EXCLUSIVE
-                            )
-                        }
-                        qa_tv_reply_detail_content.text = span
-                    } else {
-                        qa_tv_reply_detail_content.text = "回复 @${data.fromNickname} : "
-                    }
+//                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+//                        // 回复时，被回复人名称显示颜色
+//                        val span = SpannableString("回复 @${data.fromNickname} : ${data.content}").apply {
+//                            setSpan(
+//                                    ForegroundColorSpan(ContextCompat.getColor(context, R.color.qa_reply_inner_reply_name_color)),
+//                                    3, 3 + data.fromNickname.length + 1,
+//                                    Spannable.SPAN_INCLUSIVE_EXCLUSIVE
+//                            )
+//                        }
+//                        qa_tv_reply_detail_content.text = span
+//                    } else {
+//                        qa_tv_reply_detail_content.text = "回复 @${data.fromNickname} : ${data.content}"
+//                    }
+                    qa_tv_reply_detail_content.setContent("回复 @${data.fromNickname} : ${data.content}")
+
+
                     qa_tv_reply_detail_show_detail.visible()
                     qa_tv_reply_detail_show_detail.setOnSingleClickListener {
                         onReplyMoreDetailClickEvent.invoke(data.replyId)
