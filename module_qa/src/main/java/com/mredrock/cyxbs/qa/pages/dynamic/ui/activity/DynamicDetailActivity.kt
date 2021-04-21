@@ -223,7 +223,8 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
 
         dynamic = intent.getParcelableExtra("dynamic")
 
-        LogUtils.d("RayleighZ", intent.toString())
+        viewModel.position = -1
+
         intent.extras?.apply {
             if (!getBoolean("isFromReceive")) return@apply
             val postId = getString("id")
@@ -310,7 +311,10 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
             if (it != null) {
                 commentListRvAdapter.refreshData(it)
                 if (viewModel.position != -1) {
+
                     qa_rv_comment_list.smoothScrollToPosition(viewModel.position)
+                    Log.e("sandyzhang======", viewModel.position.toString())
+                    viewModel.position = -1
                     qa_appbar_dynamic.setExpanded(false, true)
                 } else {
                     qa_appbar_dynamic.setExpanded(true, false)
@@ -352,6 +356,7 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
                     }
                     ReplyPopWindow.show(qa_et_my_comment_reply, ReplyPopWindow.AlignMode.LEFT, this@DynamicDetailActivity.dp2px(6f))
                 } else {
+                    qa_coordinatorlayout.isReplyEdit = false
                     if (ReplyPopWindow.isShowing()) {
                         ReplyPopWindow.dismiss()
                     }
@@ -508,11 +513,10 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
 
     @SuppressLint("SetTextI18n")
     private fun refreshDynamic() {
-        LogUtils.d("RayleighZ", "Refreshing dynamic")
         qa_iv_dynamic_avatar.setAvatarImageFromUrl(viewModel.dynamic.value?.avatar)
         qa_tv_dynamic_topic.text = "# " + viewModel.dynamic.value?.topic
         qa_tv_dynamic_nickname.text = viewModel.dynamic.value?.nickName
-        qa_tv_dynamic_content.text = viewModel.dynamic.value?.content
+        qa_tv_dynamic_content.setContent( viewModel.dynamic.value?.content)
         qa_tv_dynamic_comment_count.text = viewModel.dynamic.value?.commentCount.toString()
         viewModel.dynamic.value?.let {
             qa_tv_dynamic_publish_at.text = dynamicTimeDescription(System.currentTimeMillis(), it.publishTime * 1000)

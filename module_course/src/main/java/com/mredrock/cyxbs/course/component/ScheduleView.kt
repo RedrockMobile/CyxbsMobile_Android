@@ -265,7 +265,6 @@ class ScheduleView : ViewGroup {
      */
     private fun addCourseView(notNullAdapter: Adapter, isCheckChange: Boolean = false) {
         courseItemCount = 0
-        LogUtils.d("RayleighZ","正在添加CourseView")
         if (isCheckChange) notNullAdapter.notifyDataChange()
         //为了不影响检查变化
         clearTouchView()

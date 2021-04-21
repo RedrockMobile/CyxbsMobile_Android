@@ -391,11 +391,9 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), EventBusL
                     viewModel.invalidateQuestionList()
                 } else {
                     // 不需要刷新，则更新当前的dynamic为详细页的dynamic（避免出现评论数目不一致的问题）
-                    LogUtils.d("RayleighZ", "onResult")
                     dynamicListRvAdapter.curSharedItem?.apply {
                         val dynamic = data?.getParcelableExtra<Dynamic>("refresh_dynamic")
                         dynamic?.let {
-                            LogUtils.d("RayleighZ", "on result, refreshing count = ${it.commentCount}")
                             this.findViewById<TextView>(R.id.qa_tv_dynamic_comment_count).text = it.commentCount.toString()
                         }
                     }

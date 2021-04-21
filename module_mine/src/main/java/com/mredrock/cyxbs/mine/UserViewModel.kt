@@ -89,7 +89,6 @@ class UserViewModel : BaseViewModel() {
     }
 
     fun getUserUncheckCount(type: Int) {
-        LogUtils.d("RayleighZ", "requestForUncheckCount")
         val sp = BaseApp.context.defaultSharedPreferences
         val lastCheckTimeStamp = if (type == 1) sp.getLong(UNCHECK_COMMENT_KEY, 0L) else sp.getLong(UNCHECK_PRAISE_KEY, 0L)
         apiService.getUncheckCount(

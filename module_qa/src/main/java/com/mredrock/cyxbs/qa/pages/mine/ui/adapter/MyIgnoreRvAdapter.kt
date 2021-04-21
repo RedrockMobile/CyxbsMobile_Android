@@ -39,7 +39,6 @@ class MyIgnoreRvAdapter(val viewModel: MyIgnoreViewModel): BaseEndlessRvAdapter<
 
         holder.itemView.qa_btn_ignore_item_anti_ignore.setOnSingleClickListener {
             ignore?.apply {
-                LogUtils.d("RayleighZ", "uid is $uid")
                 viewModel.antiIgnore(uid){
                     BaseApp.context.toast("解除屏蔽成功")
                     viewModel.invalidateList()

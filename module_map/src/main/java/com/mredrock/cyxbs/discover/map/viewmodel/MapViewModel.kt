@@ -392,7 +392,6 @@ class MapViewModel : BaseViewModel() {
                     true
                 }
                 .safeSubscribeBy {
-                    LogUtils.d("RayleighZ", it.status.toString())
                     if (!it.isSuccessful) {
                         MapToast.makeText(BaseApp.context, BaseApp.context.getString(R.string.map_add_hot_failed), Toast.LENGTH_SHORT).show()
                     }

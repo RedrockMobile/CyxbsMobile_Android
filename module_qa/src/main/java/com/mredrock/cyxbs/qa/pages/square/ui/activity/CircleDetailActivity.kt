@@ -142,7 +142,6 @@ class CircleDetailActivity : BaseViewModelActivity<CircleDetailViewModel>() {
                             },
                             onError = {
                                 context.toast("获取圈子信息失败")
-                                LogUtils.d("RayleighZ", it.toString())
                             }
                     )
         }

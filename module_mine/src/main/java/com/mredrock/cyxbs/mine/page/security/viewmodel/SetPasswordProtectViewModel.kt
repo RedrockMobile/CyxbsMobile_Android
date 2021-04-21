@@ -55,7 +55,6 @@ class SetPasswordProtectViewModel : BaseViewModel() {
                         content = securityAnswer.get().toString())
                         .setSchedulers()
                         .doOnErrorWithDefaultErrorHandler {
-                            LogUtils.d("RayleighZ","$it")
                             context.toast(it.toString())
                             true
                         }

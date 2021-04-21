@@ -340,7 +340,6 @@ class CoursesViewModel : BaseViewModel() {
                     coursesFromInternet?.data?.let {
                         updateNowWeek(coursesFromInternet.nowWeek)//涉及到UI操作，所以在UI线程
                         if (it.isNotEmpty() && isGetOthers.get() == false) {
-                            LogUtils.d("RayleighZ", it.toString())
                             toastEvent.value = R.string.course_course_update_tips
                             context.defaultSharedPreferences.editor {
                                 //小部件缓存课表
@@ -356,7 +355,6 @@ class CoursesViewModel : BaseViewModel() {
                         }
                     }
                 }, onExecuteOnFinal = {
-                    LogUtils.d("RayleighZ", "通知刷新, Course")
                     isGetAllData(COURSE_TAG)
                 }))
     }
@@ -429,7 +427,6 @@ class CoursesViewModel : BaseViewModel() {
 //                                        isGetAllData(AFFAIR_TAG)
                 },
                         onExecuteOnFinal = {
-                            LogUtils.d("RayleighZ", "通知刷新,Affair")
                             isGetAllData(AFFAIR_TAG)
                         }))
     }

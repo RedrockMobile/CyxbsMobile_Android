@@ -38,7 +38,6 @@ class EmptyRoomViewModel : BaseViewModel() {
 
     fun getData(week: Int, weekday: Int, building: Int, section: List<Int>) {
         val tag = section.joinToString(",", " ", " ").replace(" ", "")
-        LogUtils.d("RayleighZ", "section = $section, tag = $tag")
         if (section.isEmpty()) {
             status.value = DEFAULT
             return
@@ -57,7 +56,6 @@ class EmptyRoomViewModel : BaseViewModel() {
                             rooms.value = it
                         },
                         onError = {
-                            LogUtils.d("RayleighZ", it.toString())
                             status.value = ERROR
                         })
         d?.lifeCycle()

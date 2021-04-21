@@ -54,6 +54,5 @@ data class Comment(@SerializedName("comment_id")
 ) : Serializable {
     init {
         content = cutEnterAndBlank(content)
-        LogUtils.d("RayleighZ", content)
     }
 }

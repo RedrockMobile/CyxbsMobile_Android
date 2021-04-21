@@ -108,7 +108,6 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
 
         viewModel.userUncheckCount.observe(viewLifecycleOwner, Observer {
             it?.let {
-                LogUtils.d("RayleighZ","正在刷新未读消息数")
                 it.uncheckPraiseCount?.let { uncheckPraise -> viewModel.setViewWidthAndText(mine_main_tv_uncheck_praise_count, uncheckPraise) }
                 it.uncheckCommentCount?.let { uncheckComment -> viewModel.setViewWidthAndText(mine_main_tv_uncheck_comment_count, uncheckComment) }
             }

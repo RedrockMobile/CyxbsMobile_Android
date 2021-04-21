@@ -184,7 +184,6 @@ object ApiGenerator {
                     }
                     else -> {
                         val response = it.proceed(it.request().newBuilder().header("Authorization", "Bearer $token").build())
-                        LogUtils.d("RayleighZ","responseCode = ${response.code}")
                         //此处拦截http状态码进行统一处理
                         when(response.code){
                             TOKEN_EXPIRE -> {
