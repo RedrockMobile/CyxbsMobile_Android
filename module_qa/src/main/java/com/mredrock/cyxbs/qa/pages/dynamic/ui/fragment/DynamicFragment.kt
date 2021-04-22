@@ -394,9 +394,11 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), EventBusL
                     dynamicListRvAdapter.curSharedItem?.apply {
                         val dynamic = data?.getParcelableExtra<Dynamic>("refresh_dynamic")
                         dynamic?.let {
+                            dynamicListRvAdapter.curSharedDynamic?.commentCount = dynamic.commentCount
                             this.findViewById<TextView>(R.id.qa_tv_dynamic_comment_count).text = it.commentCount.toString()
                         }
                     }
+                    dynamicListRvAdapter.notifyDataSetChanged()
                 }
             }
             // 从发动态返回

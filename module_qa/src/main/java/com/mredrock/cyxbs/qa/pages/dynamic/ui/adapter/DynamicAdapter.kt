@@ -52,6 +52,7 @@ class DynamicAdapter(val context: Context, private val onItemClickEvent: (Dynami
     var onPopWindowClickListener: ((Int, String, Dynamic) -> Unit)? = null
 
     var curSharedItem: View? = null
+    var curSharedDynamic: Dynamic? = null
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = DynamicViewHolder(parent)
 
     override fun onBindViewHolder(holder: BaseViewHolder<Dynamic>, position: Int) {
@@ -113,6 +114,7 @@ class DynamicAdapter(val context: Context, private val onItemClickEvent: (Dynami
     override fun onItemClickListener(holder: BaseViewHolder<Dynamic>, position: Int, data: Dynamic) {
         super.onItemClickListener(holder, position, data)
         if (holder !is DynamicViewHolder) return
+        curSharedDynamic = data
         curSharedItem = holder.itemView
         onItemClickEvent.invoke(data, holder.itemView.findViewById<ConstraintLayout>(R.id.qa_ctl_dynamic))
     }

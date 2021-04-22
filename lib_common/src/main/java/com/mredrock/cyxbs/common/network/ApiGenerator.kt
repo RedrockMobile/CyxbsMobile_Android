@@ -57,8 +57,9 @@ object ApiGenerator {
             }
         }
         token = accountService.getUserTokenService().getToken()
-        LogUtils.d("tokenTag", token)
         refreshToken = accountService.getUserTokenService().getRefreshToken()
+        LogUtils.d("tokenTag", "token = $token")
+        LogUtils.d("tokenTag", "refresh token = $refreshToken")
         retrofit = Retrofit.Builder().apply {
             this.defaultConfig()
             configRetrofitBuilder {
