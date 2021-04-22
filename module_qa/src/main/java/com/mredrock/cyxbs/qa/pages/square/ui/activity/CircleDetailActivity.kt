@@ -211,7 +211,7 @@ class CircleDetailActivity : BaseViewModelActivity<CircleDetailViewModel>() {
 
         qa_iv_circle_detail_share.setOnSingleClickListener {
             val token = ServiceManager.getService(IAccountService::class.java).getUserTokenService().getToken()
-            val url = "${CommentConfig.SHARE_URL}quanzi?id=${topic.topicId}&id_token=$token"
+            val url = "${CommentConfig.SHARE_URL}quanzi?id=${topic.topicId}"
             ShareDialog(it.context).apply {
                 initView(onCancelListener = View.OnClickListener {
                     dismiss()

@@ -66,8 +66,7 @@ abstract class BaseCircleDetailFragment<T : CircleDetailViewModel> : BaseViewMod
             DynamicDetailActivity.activityStart(this, view, dynamic)
         }.apply {
             onShareClickListener = { dynamic, mode ->
-                val token = ServiceManager.getService(IAccountService::class.java).getUserTokenService().getToken()
-                val url = "${CommentConfig.SHARE_URL}dynamic?id=${dynamic.postId}?id_token=$token"
+                val url = "${CommentConfig.SHARE_URL}dynamic?id=${dynamic.postId}"
                 when (mode) {
                     QQ_FRIEND ->{
                         val pic = if(dynamic.pics.isNullOrEmpty()) "" else dynamic.pics[0]

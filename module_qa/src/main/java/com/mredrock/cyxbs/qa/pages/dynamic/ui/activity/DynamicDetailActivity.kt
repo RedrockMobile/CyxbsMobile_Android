@@ -424,7 +424,7 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
             viewModel.dynamic.value?.let { dynamic ->
                 ShareDialog(view.context).apply {
                     val token = ServiceManager.getService(IAccountService::class.java).getUserTokenService().getToken()
-                    val url = "${CommentConfig.SHARE_URL}dynamic?id=${dynamic.postId}&id_token=$token"
+                    val url = "${CommentConfig.SHARE_URL}dynamic?id=${dynamic.postId}"
                     initView(onCancelListener = View.OnClickListener {
                         dismiss()
                     }, qqshare = View.OnClickListener {

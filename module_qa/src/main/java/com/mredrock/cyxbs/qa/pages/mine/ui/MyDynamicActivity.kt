@@ -67,8 +67,7 @@ class MyDynamicActivity : BaseViewModelActivity<MyDynamicViewModel>() {
                 }.apply {
 
                     onShareClickListener = { dynamic, mode ->
-                        val token = ServiceManager.getService(IAccountService::class.java).getUserTokenService().getToken()
-                        val url = "${SHARE_URL}dynamic?id=${dynamic.postId}?id_token=$token"
+                        val url = "${SHARE_URL}dynamic?id=${dynamic.postId}"
                         when (mode) {
                             CommentConfig.QQ_FRIEND ->{
                                 val pic = if(dynamic.pics.isNullOrEmpty()) "" else dynamic.pics[0]
