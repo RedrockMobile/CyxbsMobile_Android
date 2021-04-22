@@ -85,7 +85,7 @@ class MyCommentDataSource : PageKeyedDataSource<Int, CommentWrapper>() {
                 .safeSubscribeBy { list ->
                     networkState.postValue(NetworkState.SUCCESSFUL)
                     initialLoad.postValue(NetworkState.SUCCESSFUL)
-                    val adjacentPageKey = (params.key+1).takeUnless { list.size <= params.requestedLoadSize }
+                    val adjacentPageKey = (params.key+1).takeUnless { list.size < params.requestedLoadSize }
                     callback.onResult(list, adjacentPageKey)
                 }
 
