@@ -55,7 +55,8 @@ object ShareUtils {
         params.putString(QzoneShare.SHARE_TO_QQ_TITLE, title) //分享标题
         params.putString(QzoneShare.SHARE_TO_QQ_SUMMARY, content) //分享的内容摘要
         params.putString(QzoneShare.SHARE_TO_QQ_TARGET_URL, url) //分享的链接
-        //分享的图片, 以ArrayList<String>的类型传入，以便支持多张图片（注：图片最多支持9张图片，多余的图片会被丢弃）
+        //分享的图片, 以ArrayList<String>的类型传入，以便支持多张图片
+        // （注：图片最多支持9张图片，多余的图片会被丢弃），qq接口暂时只支持一张
         params.putStringArrayList(QzoneShare.SHARE_TO_QQ_IMAGE_URL, imageUrl) //分享的图片URL
         tencent.shareToQzone(fragment.activity, params, BaseUiListener())
     }
@@ -70,7 +71,6 @@ object ShareUtils {
         params.putString(QzoneShare.SHARE_TO_QQ_TITLE, title) //分享标题
         params.putString(QzoneShare.SHARE_TO_QQ_SUMMARY, content) //分享的内容摘要
         params.putString(QzoneShare.SHARE_TO_QQ_TARGET_URL, url) //分享的链接
-        //分享的图片, 以ArrayList<String>的类型传入，以便支持多张图片（注：图片最多支持9张图片，多余的图片会被丢弃）
         params.putStringArrayList(QzoneShare.SHARE_TO_QQ_IMAGE_URL, imageUrl) //分享的图片URL
         tencent.shareToQzone(activity, params, BaseUiListener())
     }

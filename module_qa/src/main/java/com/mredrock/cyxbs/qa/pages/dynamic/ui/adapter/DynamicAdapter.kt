@@ -29,6 +29,7 @@ import com.mredrock.cyxbs.qa.ui.widget.NineGridView
 import com.mredrock.cyxbs.qa.ui.widget.OptionalPopWindow
 import com.mredrock.cyxbs.qa.ui.widget.ShareDialog
 import com.mredrock.cyxbs.qa.utils.dynamicTimeDescription
+import kotlinx.android.synthetic.main.qa_recycler_item_dynamic_header.*
 import kotlinx.android.synthetic.main.qa_recycler_item_dynamic_header.view.*
 
 /**
@@ -128,7 +129,7 @@ class DynamicAdapter(val context: Context, private val onItemClickEvent: (Dynami
                 qa_iv_dynamic_avatar.setAvatarImageFromUrl(data.avatar)
                 qa_tv_dynamic_topic.text = "# " + data.topic
                 qa_tv_dynamic_nickname.text = data.nickName
-                qa_tv_dynamic_content.setContent(data.content)
+                qa_tv_dynamic_content.setContent( data.content)
                 qa_tv_dynamic_comment_count.text = data.commentCount.toString()
                 qa_tv_dynamic_publish_at.text = dynamicTimeDescription(System.currentTimeMillis(), data.publishTime * 1000)
                 //解决图片错乱的问题

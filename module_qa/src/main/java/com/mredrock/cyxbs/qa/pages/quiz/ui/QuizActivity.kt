@@ -21,7 +21,6 @@ import com.google.android.material.chip.ChipGroup
 import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.common.config.QA_QUIZ
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
-import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.*
 import com.mredrock.cyxbs.mine.network.model.DynamicDraft
 import com.mredrock.cyxbs.qa.R
@@ -42,7 +41,7 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
 
     companion object {
         const val MAX_CONTENT_SIZE = 500
-        const val MAX_SELECTABLE_IMAGE_COUNT = 9
+        const val MAX_SELECTABLE_IMAGE_COUNT = 8
         const val NOT_DRAFT = "0"
         const val UPDATE_DRAFT = "1"
         fun activityStart(fragment: Fragment, type: String, requestCode: Int) {
@@ -51,15 +50,15 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
     }
 
     private var progressDialog: ProgressDialog? = null
-    private var dynamicType: String = ""
-
+    private var topicType: String = ""
     private val exitDialog by lazy { createExitDialog() }
     private var isComment = ""
     private var draftId = ""
     private var backId = "1"
     private var replyId = ""
     private var postId = ""
-
+    private var currentTypeIndex = 0
+    private val topicMap = HashMap<String, String>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.qa_activity_quiz)
@@ -81,8 +80,6 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
         initToolbar()
         initImageAddView()
         initTypeSelector()
-
-        viewModel.getDraft()
         viewModel.draft.observe { draft ->
             if (draft != null) {
                 loadDraft(draft)
@@ -118,13 +115,15 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
             if (!it.isNullOrEmpty()) {
                 val chipGroup = findViewById<ChipGroup>(R.id.qa_layout_quiz_tag)
                 for (topic in it.withIndex()) {
-                    chipGroup.addView((layoutInflater.inflate(R.layout.qa_quiz_view_chip, chipGroup, false) as Chip).apply {
+                    topicMap[topic.value.topicName] = topic.value.topicId
+                    chipGroup?.addView((layoutInflater.inflate(R.layout.qa_quiz_view_chip, chipGroup, false) as Chip).apply {
                         text = "# " + topic.value.topicName
                         setOnClickListener {
-                            if (dynamicType == getTopicText(text.toString())) {
-                                dynamicType = ""
+                            if (topicType == getTopicText(text.toString())) {
+                                //当第二次点击时值为零，表示未选择圈子
+                                topicType = "0"
                             } else {
-                                dynamicType = getTopicText(text.toString())
+                                topicType = getTopicText(text.toString())
                             }
                         }
                     })
@@ -192,7 +191,7 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
             text = getString(R.string.qa_quiz_dialog_next)
             setOnClickListener {
                 if (isComment == "") {
-                    if (viewModel.checkTitleAndContent(dynamicType, qa_edt_quiz_content.text.toString())) {
+                    if (viewModel.checkTitleAndContent(topicType, qa_edt_quiz_content.text.toString())) {
                         progressDialog?.show()
                         viewModel.deleteDraft()
                         viewModel.submitDynamic()
@@ -314,8 +313,7 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
 
     private fun saveDraft() {
         progressDialog?.show()
-        LogUtils.d("draftId",draftId)
-        viewModel.updateDraftItem(draftId, qa_edt_quiz_content.text.toString(), dynamicType)
+        viewModel.updateDraftItem(draftId, qa_edt_quiz_content.text.toString(), topicType)
     }
 
 
@@ -326,6 +324,18 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
             NOT_DRAFT
         }
         qa_edt_quiz_content.setText(draft.content)
+        //草稿保存了上一次选择圈子的状态，重新添加上
+        val chipGroup = findViewById<ChipGroup>(R.id.qa_layout_quiz_tag)
+        val childView = Array(chipGroup.childCount) { chipGroup.getChildAt(it) as Chip }
+        val type = draft.type
+        if (type.isNotEmpty()) {
+            //避免空指针
+            topicType = type
+            if (topicMap[type]?.isNotEmpty() == true) {
+                currentTypeIndex = topicMap[type]?.toInt()!!
+                childView[currentTypeIndex - 1].isChecked = true
+            }
+        }
         if (!draft.images.isNullOrEmpty()) {
             viewModel.setImageList(arrayListOf<String>().apply { addAll(draft.images) })
         }
