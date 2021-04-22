@@ -23,17 +23,11 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.google.android.material.appbar.AppBarLayout
-import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.common.BaseApp.Companion.context
 import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.common.config.QA_DYNAMIC_DETAIL
-import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
-import com.mredrock.cyxbs.common.utils.LogUtils
-import com.mredrock.cyxbs.common.utils.extensions.dp2px
-import com.mredrock.cyxbs.common.utils.extensions.setAvatarImageFromUrl
-import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
-import com.mredrock.cyxbs.common.utils.extensions.startActivityForResult
+import com.mredrock.cyxbs.common.utils.extensions.*
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.beannew.Dynamic
 import com.mredrock.cyxbs.qa.beannew.ReplyInfo
@@ -273,6 +267,11 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
             val gd = qa_ctl_dynamic.background as GradientDrawable
             gd.setColor(Color.parseColor(endColor))
         }
+
+        if (viewModel.dynamic.value?.postId == "0") {
+            context.toast("帖子不存在或已删除")
+            return
+        }
     }
 
     private fun initOnClickListener() {
@@ -414,6 +413,10 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
         if (dynamic == null) {
             dynamic = Dynamic().apply {
                 postId = intent.getStringExtra("post_id")
+                if (postId == "0") {
+                    context.toast("帖子不存在或已删除")
+                    return
+                }
             }
         }
         dynamic?.let {
@@ -423,7 +426,6 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
         qa_iv_dynamic_share.setOnSingleClickListener { view ->
             viewModel.dynamic.value?.let { dynamic ->
                 ShareDialog(view.context).apply {
-                    val token = ServiceManager.getService(IAccountService::class.java).getUserTokenService().getToken()
                     val url = "${CommentConfig.SHARE_URL}dynamic?id=${dynamic.postId}"
                     initView(onCancelListener = View.OnClickListener {
                         dismiss()
@@ -516,7 +518,7 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
         qa_iv_dynamic_avatar.setAvatarImageFromUrl(viewModel.dynamic.value?.avatar)
         qa_tv_dynamic_topic.text = "# " + viewModel.dynamic.value?.topic
         qa_tv_dynamic_nickname.text = viewModel.dynamic.value?.nickName
-        qa_tv_dynamic_content.setContent( viewModel.dynamic.value?.content)
+        qa_tv_dynamic_content.setContent(viewModel.dynamic.value?.content)
         qa_tv_dynamic_comment_count.text = viewModel.dynamic.value?.commentCount.toString()
         viewModel.dynamic.value?.let {
             qa_tv_dynamic_publish_at.text = dynamicTimeDescription(System.currentTimeMillis(), it.publishTime * 1000)

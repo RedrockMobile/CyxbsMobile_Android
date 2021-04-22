@@ -118,10 +118,10 @@
 
         <ImageView
             android:id="@+id/iv_hint"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="167dp"
+            android:layout_height="127dp"
             android:layout_gravity="center_horizontal"
-            android:src="@drawable/qa_ic_question_no_question" />
+            android:src="@drawable/qa_ic_question_no_question_or_answer" />
 
         <TextView
             android:id="@+id/tv_hint"

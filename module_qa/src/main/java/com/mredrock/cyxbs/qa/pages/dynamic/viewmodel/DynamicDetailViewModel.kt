@@ -3,10 +3,12 @@ package com.mredrock.cyxbs.qa.pages.dynamic.viewmodel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.utils.extensions.mapOrThrowApiException
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
+import com.mredrock.cyxbs.common.utils.extensions.toast
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.common.viewmodel.event.ProgressDialogEvent
 import com.mredrock.cyxbs.common.viewmodel.event.SingleLiveEvent
@@ -44,6 +46,22 @@ open class DynamicDetailViewModel : BaseViewModel() {
 
     // commentId用于刷新后聚焦到某一个评论。
     fun refreshCommentList(postId: String, commentId: String) {
+
+        ApiGenerator.getApiService(ApiServiceNew::class.java)
+                .getPostInfo(postId)
+                .mapOrThrowApiException()
+                .setSchedulers()
+                .doOnSubscribe {
+                }
+                .doOnError {
+                }
+                .safeSubscribeBy {
+                    if (it == null){
+                        BaseApp.context.toast("帖子不存在或已删除")
+                    }
+                    dynamic.postValue(it)
+                }
+
         ApiGenerator.getApiService(ApiServiceNew::class.java)
                 .getComment(postId)
                 .mapOrThrowApiException()
@@ -60,18 +78,6 @@ open class DynamicDetailViewModel : BaseViewModel() {
                     position = findCommentByCommentId(list.reversed(), commentId)
 
 
-                }
-
-        ApiGenerator.getApiService(ApiServiceNew::class.java)
-                .getPostInfo(postId)
-                .mapOrThrowApiException()
-                .setSchedulers()
-                .doOnSubscribe {
-                }
-                .doOnError {
-                }
-                .safeSubscribeBy {
-                    dynamic.postValue(it)
                 }
     }
 
