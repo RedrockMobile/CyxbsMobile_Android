@@ -63,10 +63,10 @@ class RectangleView @JvmOverloads constructor(
             if (isShowMask)
                 canvas.drawColor(maskColor)
             if (imageCount > 0) {
-                var showText = "+$imageCount"
+                val showText = "+$imageCount"
                 val textWidth = textPaint.measureText(showText)
-                var x = width / 2 - textWidth / 2
-                var y = height / 2 + textPaint.fontMetrics.bottom
+                val x = width / 2 - textWidth / 2
+                val y = height / 2 + textPaint.fontMetrics.bottom
                 canvas.drawText(showText, x, y, textPaint)
             }
         } else {
@@ -76,13 +76,11 @@ class RectangleView @JvmOverloads constructor(
 
     fun setShowMask() {
         isShowMask = true
-        invalidate()
     }
 
     @SuppressLint("ResourceType")
     fun setAddImageCount(imageCount: Int) {
         this.imageCount = imageCount
-        invalidate()
     }
 
 }

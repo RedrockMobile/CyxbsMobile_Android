@@ -75,7 +75,7 @@ import org.greenrobot.eventbus.ThreadMode
  * @Date: 2020/11/16 22:07
  */
 @Route(path = QA_ENTRY)
-class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), EventBusLifecycleSubscriber {
+class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>()                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 {
     companion object {
         const val REQUEST_LIST_REFRESH_ACTIVITY = 0x1
 
@@ -361,15 +361,6 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), EventBusL
             setTextColor(ContextCompat.getColor(context, R.color.common_level_two_font_color))
             textSize = 14f
         }
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
-    open fun refreshQuestionList(event: RefreshQaEvent) {
-        if (isRvAtTop)
-            viewModel.invalidateQuestionList()
-        else
-            qa_rv_dynamic_List.smoothScrollToPosition(0)
-
     }
 
     override fun onPause() {

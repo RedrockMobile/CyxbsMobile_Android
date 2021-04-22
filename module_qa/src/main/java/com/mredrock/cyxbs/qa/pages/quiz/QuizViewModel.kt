@@ -59,6 +59,10 @@ class QuizViewModel : BaseViewModel() {
                 .doOnError {
                     toastEvent.value = R.string.qa_get_circle_data_failure
                 }
+                .doFinally {
+                    //初始化圈子完后在加载草稿，避免因为请求回复时间不一致导致的保存圈子未能显示问题
+                    getDraft()
+                }
                 .safeSubscribeBy {
                     allCircle.value = it
                 }.lifeCycle()
