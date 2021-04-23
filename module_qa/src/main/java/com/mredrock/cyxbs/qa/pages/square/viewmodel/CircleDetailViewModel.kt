@@ -28,6 +28,7 @@ open class CircleDetailViewModel(kind: String, loop: Int) : BaseViewModel() {
 
     val ignorePeople = MutableLiveData<Boolean>()
     val deleteTips = MutableLiveData<Boolean>()
+    var topicId = 1
 
     init {
         val config = PagedList.Config.Builder()
@@ -40,10 +41,6 @@ open class CircleDetailViewModel(kind: String, loop: Int) : BaseViewModel() {
         circleDynamicList = LivePagedListBuilder<Int, Dynamic>(factory, config).build()
         networkState = Transformations.switchMap(factory.circleDynamicDataSourceLiveData) { it.networkState }
         initialLoad = Transformations.switchMap(factory.circleDynamicDataSourceLiveData) { it.initialLoad }
-
-    }
-
-    fun getTopicGround(topicName: String, instruction: String, id: Int) {
 
     }
 

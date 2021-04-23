@@ -80,8 +80,6 @@ class CircleDetailActivity : BaseViewModelActivity<CircleDetailViewModel>() {
 
     private var isFormReceive = false
 
-//    override val isFragmentActivity = true
-
     override fun getViewModelFactory(): ViewModelProvider.Factory? {
         var loop = 1
         intent.extras?.apply {
@@ -93,10 +91,22 @@ class CircleDetailActivity : BaseViewModelActivity<CircleDetailViewModel>() {
     lateinit var topic: Topic
 
     private val lastNewFragment by lazy(LazyThreadSafetyMode.NONE) {
-        LastNewFragment(topic.topicId.toInt())
+        LastNewFragment().apply {
+            arguments = Bundle().apply {
+                putInt("loop", viewModel.topicId)
+                putString("type", "latest")
+                LogUtils.d("RayleighZ","topic id = ${viewModel.topicId}")
+            }
+        }
     }
     private val hotFragment by lazy(LazyThreadSafetyMode.NONE) {
-        HotFragment(topic.topicId.toInt())
+        HotFragment().apply {
+            arguments = Bundle().apply {
+                putInt("loop", viewModel.topicId)
+                putString("type", "hot")
+                LogUtils.d("RayleighZ","topic id = ${viewModel.topicId}")
+            }
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -113,6 +123,7 @@ class CircleDetailActivity : BaseViewModelActivity<CircleDetailViewModel>() {
             }
             isFormReceive = getBoolean("isFromReceive")
             if (!isFormReceive) return@apply
+            //下面的代码只会在前端跳转时执行
             ApiGenerator.getApiService(ApiServiceNew::class.java)
                     .getTopicGround("问答圈", "test1")
                     .mapOrThrowApiException()
@@ -124,6 +135,7 @@ class CircleDetailActivity : BaseViewModelActivity<CircleDetailViewModel>() {
                                     return@safeSubscribeBy
                                 }
                                 topic = it[id - 1]
+                                viewModel.topicId = topic.topicId.toInt()
                                 iv_circle_square.setAvatarImageFromUrl(topic.topicLogo)
                                 tv_circle_square_name.text = topic.topicName
                                 tv_circle_square_descriprion.text = topic.introduction
@@ -148,7 +160,7 @@ class CircleDetailActivity : BaseViewModelActivity<CircleDetailViewModel>() {
         mTencent = Tencent.createInstance(CommentConfig.APP_ID, this)
         window.enterTransition = Slide(Gravity.END).apply { duration = 500 }
         initView()
-        if (!isFormReceive){
+        if (!isFormReceive) {
             qa_vp_circle_detail.adapter = NewHotViewPagerAdapter(this, listOf(lastNewFragment, hotFragment))
             initTab()
             initClick()
@@ -157,7 +169,7 @@ class CircleDetailActivity : BaseViewModelActivity<CircleDetailViewModel>() {
 
     override fun onBackPressed() {
 //        window.returnTransition = Slide(Gravity.END).apply { duration = 500 }
-        if (!isFormReceive){
+        if (!isFormReceive) {
             LogUtils.d("zt", topic.toString())
             when (startPosition) {
                 RESULT_CODE -> {
@@ -238,6 +250,7 @@ class CircleDetailActivity : BaseViewModelActivity<CircleDetailViewModel>() {
     private fun initView() {
         if (!isFormReceive) {
             topic = intent.getParcelableExtra("topicItem")
+            viewModel.topicId = topic.topicId.toInt()
             iv_circle_square.setAvatarImageFromUrl(topic.topicLogo)
             tv_circle_square_name.text = topic.topicName
             tv_circle_square_descriprion.text = topic.introduction

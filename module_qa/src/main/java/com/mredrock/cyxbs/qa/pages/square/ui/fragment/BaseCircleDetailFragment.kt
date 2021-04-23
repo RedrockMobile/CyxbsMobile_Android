@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.ui.BaseViewModelFragment
+import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.beannew.Dynamic
 import com.mredrock.cyxbs.qa.component.recycler.RvAdapterWrapper
@@ -47,8 +48,18 @@ abstract class BaseCircleDetailFragment<T : CircleDetailViewModel> : BaseViewMod
 
     private var mTencent: Tencent? = null
     lateinit var dynamicListRvAdapter: DynamicAdapter
+    private var loop = 1
+    private var type = "main"
+    override fun onCreate(savedInstanceState: Bundle?) {
+        arguments?.apply {
+            loop = getInt("loop")
+            type = getString("type", "main")
+            LogUtils.d("RayleighZ", "loop = $loop")
+        }
+        super.onCreate(savedInstanceState)
+    }
 
-    override fun getViewModelFactory() = CircleDetailViewModel.Factory("main",1)
+    override fun getViewModelFactory() = CircleDetailViewModel.Factory(type,loop)
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {

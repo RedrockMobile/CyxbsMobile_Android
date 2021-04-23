@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.alibaba.android.arouter.launcher.ARouter
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_EXPANDED
 import com.mredrock.cyxbs.common.config.COURSE_ENTRY
 import com.mredrock.cyxbs.common.config.OTHERS_STU_NUM
 import com.mredrock.cyxbs.common.config.OTHERS_TEA_NAME
@@ -20,6 +21,7 @@ import com.mredrock.cyxbs.discover.othercourse.room.STUDENT_TYPE
 import com.mredrock.cyxbs.discover.othercourse.room.TEACHER_TYPE
 import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
+import kotlinx.android.synthetic.main.othercourse_discover_activity_stu_list.*
 import kotlinx.android.synthetic.main.othercourse_discover_other_course_item_rv_stu.view.*
 
 /**
@@ -69,20 +71,31 @@ class StuListAdapter(val stuListActivity: StuListActivity, private val mList: Li
     }
 
     private fun openCourseFragment(key: String, position: Int) {
-        val fragment = (ARouter.getInstance().build(COURSE_ENTRY).navigation() as Fragment).apply {
-            arguments = Bundle().apply {
-                putString(key, mList[position].num)
-                //如果是老师，则需要额外添加name属性
-                if (key == OTHERS_TEA_NUM) {
-                    putString(OTHERS_TEA_NAME, mList[position].name)
+        stuListActivity.bottomSheetBehavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
+            override fun onStateChanged(bottomSheet: View, newState: Int) {
+                if (newState == STATE_EXPANDED) {
+                    //在滑动下拉课表容器中添加整个课表
+                    val fragment = (ARouter.getInstance().build(COURSE_ENTRY).navigation() as Fragment).apply {
+                        arguments = Bundle().apply {
+                            putString(key, mList[position].num)
+                            //如果是老师，则需要额外添加name属性
+                            if (key == OTHERS_TEA_NUM) {
+                                putString(OTHERS_TEA_NAME, mList[position].name)
+                            }
+                        }
+                    }
+                    stuListActivity.supportFragmentManager.beginTransaction().replace(R.id.course_bottom_sheet_content, fragment).apply {
+                        commit()
+                    }
                 }
             }
-        }
-        //在滑动下拉课表容器中添加整个课表
-        stuListActivity.supportFragmentManager.beginTransaction().replace(R.id.course_bottom_sheet_content, fragment).apply {
-            commit()
-        }
-        stuListActivity.bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {
+                // do noting
+            }
+
+        })
+        stuListActivity.bottomSheetBehavior.state = STATE_EXPANDED
     }
 
 
