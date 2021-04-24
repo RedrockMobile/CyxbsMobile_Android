@@ -131,16 +131,14 @@ class DynamicAdapter(val context: Context, private val onItemClickEvent: (Dynami
                 qa_iv_dynamic_avatar.setAvatarImageFromUrl(data.avatar)
                 qa_tv_dynamic_topic.text = "# " + data.topic
                 qa_tv_dynamic_nickname.text = data.nickName
-                qa_tv_dynamic_content.setContent( data.content)
+                qa_tv_dynamic_content.setContent(data.content)
                 qa_tv_dynamic_comment_count.text = data.commentCount.toString()
                 qa_tv_dynamic_publish_at.text = dynamicTimeDescription(System.currentTimeMillis(), data.publishTime * 1000)
                 //解决图片错乱的问题
                 if (data.pics.isNullOrEmpty())
                     qa_dynamic_nine_grid_view.setRectangleImages(emptyList(), NineGridView.MODE_IMAGE_THREE_SIZE)
                 else {
-                    data.pics.map {
-                        it.replace(".png", "mid.png")
-                    }.apply {
+                    data.pics.apply {
                         val tag = qa_dynamic_nine_grid_view.tag
                         if (null == tag || tag == this) {
                             val tagStore = qa_dynamic_nine_grid_view.tag
