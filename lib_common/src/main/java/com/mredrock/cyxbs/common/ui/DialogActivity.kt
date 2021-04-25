@@ -13,7 +13,7 @@ import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.main.MAIN_LOGIN
 
 @Route(path = MAIN_REQUEST_LOGIN_DIALOG)
-class DialogActivity : AppCompatActivity() {
+class DialogActivity : BaseActivity() {
 
     companion object {
         private var mDialog: MaterialDialog? = null
