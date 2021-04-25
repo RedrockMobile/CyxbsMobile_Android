@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--    改掉MD的动效，我很抱歉，可惜视觉不喜欢-->
 <com.google.android.material.chip.Chip
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -11,6 +12,9 @@
     android:paddingTop="5dp"
     android:paddingEnd="15dp"
     android:paddingBottom="5dp"
+    android:stateListAnimator="@null"
+    android:selectableItemBackground="@null"
+    android:selectableItemBackgroundBorderless="@null"
     android:textColor="@color/qa_selector_quiz_type_text_default_select"
     android:textSize="13sp"
     app:chipBackgroundColor="@color/qa_selector_quiz_type_default_select"

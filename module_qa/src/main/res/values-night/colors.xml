@@ -29,9 +29,9 @@
     <color name="qa_search_layout_color">#1F1F1F</color>
     <color name="qa_answer_praised_count_color">#4841E2</color>
     <!--    RecyclerView加载时的holder颜色-->
-    <color name="qa_question_item_empty_holder_color">#E6E6E6</color>
+    <color name="qa_question_item_empty_holder_color">#5A5A5A</color>
     <!--    RecyclerView加载时的holder背景颜色-->
-    <color name="qa_question_item_shadow_color">#ffffff</color>
+    <color name="qa_question_item_shadow_color">#2D2D2D</color>
     <!--    提问选择类型的背景颜色-->
     <color name="qa_quiz_select_type_background_color">#3F3F3F</color>
     <!--    提问选择类型的文字颜色-->
@@ -43,7 +43,7 @@
     <!--    提问标题框和内容框的背景颜色，指定69的透明度-->
     <color name="qa_quiz_new_text_background_color">#acE8F0FC</color>
     <!--    提问内容文字hint颜色-->
-    <color name="qa_quiz_content_edt_hint_color">#94A6C4</color>
+    <color name="qa_quiz_content_edt_hint_color">#838384</color>
     <!--    邮问积分说明背景颜色-->
     <color name="qa_dialog_qa_reward_description_background_color">#ffffff</color>
     <color name="qa_circle_square_person_number_color">#5A5A5A</color>
@@ -115,4 +115,11 @@
     <color name="qa_share_back_color">#3F3F3F</color>
     <color name="qa_add_images_back_color">#3f3f3f</color>
     <color name="qa_add_image_icon_color">#838384</color>
+    <color name="qa_knowledge_content_color">#B5B5B5</color>
+    <color name="qa_knowledge_background_color">#1D1D1D</color>
+    <color name="qa_btn_positive_color">#5A5A5A</color>
+    <color name="qa_draft_cancel_color">#838384</color>
+    <color name="qa_praise_text_color">#2CDEFF</color>
+    <!--    展开按钮的颜色-->
+    <color name="qa_tv_expand_text_color">#556C8B</color>
 </resources>

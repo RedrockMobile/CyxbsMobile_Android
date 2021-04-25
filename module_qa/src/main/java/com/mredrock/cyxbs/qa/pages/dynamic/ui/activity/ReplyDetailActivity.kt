@@ -1,14 +1,17 @@
 package com.mredrock.cyxbs.qa.pages.dynamic.ui.activity
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.graphics.Canvas
+import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Rect
 import android.os.Bundle
 import android.transition.Slide
 import android.view.Gravity
 import android.view.View
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -214,6 +217,7 @@ class ReplyDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
 
     private fun initToolbar() {
         qa_tv_toolbar_title.text = resources.getText(R.string.qa_reply_detail_title_text)
+        qa_include_toolbar.setBackgroundColor(ContextCompat.getColor(this, R.color.qa_reply_inner_background_color))
         qa_ib_toolbar_back.setOnSingleClickListener {
             onBackPressed()
         }

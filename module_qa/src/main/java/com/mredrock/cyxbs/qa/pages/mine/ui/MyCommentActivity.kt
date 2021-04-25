@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.core.content.ContextCompat
+import androidx.core.widget.addTextChangedListener
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.mredrock.cyxbs.common.BaseApp
@@ -134,6 +135,16 @@ class MyCommentActivity : BaseViewModelActivity<MyCommentViewModel>() {
                     putExtra("replyNickname", comment.fromNickname)
                     startActivity(this)
                 }
+            }
+        }
+        qa_et_my_comment_reply.addTextChangedListener {
+            it?.apply {
+                qa_btn_my_comment_send.background =
+                        if (length == 0) {
+                            ContextCompat.getDrawable(this@MyCommentActivity, R.drawable.qa_shape_send_dynamic_btn_grey_background)
+                        } else {
+                            ContextCompat.getDrawable(this@MyCommentActivity, R.drawable.qa_shape_send_dynamic_btn_blue_background)
+                        }
             }
         }
     }

@@ -18,7 +18,6 @@
     <color name="common_white_font_color">#ffffff</color>
     <!--    启动页颜色-->
     <color name="common_start_page_white_color">#CCCCCC</color>
-
     <color name="common_transparent_background">#00000000</color>
 
 
@@ -212,6 +211,7 @@
     <!--    同学课表搜索hint颜色-->
     <color name="common_othercourse_common_hint_text_color">#85F0F0F2</color>
     <color name="common_othercourse_shape_back_color">#94A6C4</color>
+    <color name="common_othercourse_history_back_color">#b32C2C2C</color>
 
 
     <color name="common_alpha_level_two_font_color">#5A5A5A</color>
