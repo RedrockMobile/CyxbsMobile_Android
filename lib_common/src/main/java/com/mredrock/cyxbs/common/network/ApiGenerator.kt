@@ -31,7 +31,7 @@ import java.util.concurrent.TimeUnit
  * Created by AceMurder on 2018/1/24.
  */
 object ApiGenerator {
-    private const val DEFAULT_TIME_OUT = 30
+    private const val DEFAULT_TIME_OUT = 10
 
     private var retrofit: Retrofit //统一添加了token到header
     private var commonRetrofit: Retrofit // 未添加token到header
@@ -39,9 +39,6 @@ object ApiGenerator {
     private var token = ""
     private var refreshToken = ""
     private val retrofitMap by lazy { SparseArray<Retrofit>() }
-
-    //是否正在刷新Token
-    private var lastExpiredToken = ""
 
     //init对两种公共的retrofit进行配置
     init {
@@ -67,7 +64,7 @@ object ApiGenerator {
                 it.defaultConfig()
                 it.configureOkHttp {
                     it.addInterceptor(TokenInterceptor())
-//                    it.addInterceptor(CacheInterceptor())
+                    it.addInterceptor(CacheInterceptor())
                 }
             }
         }.build()
@@ -131,7 +128,7 @@ object ApiGenerator {
                 .configRetrofitBuilder {
                     it.apply {
                         if (tokenNeeded && !isTouristMode())
-                            configureOkHttp{
+                            configureOkHttp {
                                 it.addInterceptor(TokenInterceptor())
                             }
                         if (okHttpClientConfig == null)
@@ -175,10 +172,27 @@ object ApiGenerator {
         }.build()
     }
 
+    fun tryProceed(request: Request, chain: Interceptor.Chain): Response? {
+        return try {
+            chain.proceed(request)
+        } catch (e: Exception) {
+            null
+        }
+    }
+
     //对token和refreshToken进行刷新
     @Synchronized
-    private fun checkRefreshAndRequest(chain: Interceptor.Chain, expiredToken: String): Response {
-        var response = chain.proceed(chain.request().newBuilder().header("Authorization", "Bearer $token").build())
+    private fun checkRefreshAndRequest(chain: Interceptor.Chain, expiredToken: String): Response? {
+        Log.e("sandyzhang", "正在请求")
+        var response: Response? = null
+        try {
+            response = chain.proceed(chain.request().newBuilder().header("Authorization", "Bearer $token").build())
+        } catch (e: Exception) {
+            Log.e("sandyzhang", "出错1")
+            e.printStackTrace()
+            return null
+        }
+
         /**
          * 刷新token条件设置为，已有refreshToken，并且已经过期，也可以后端返回特定到token失效code
          * 当第一个过期token请求接口后，改变token和refreshToken，防止同步refreshToken失效
@@ -187,24 +201,28 @@ object ApiGenerator {
          * 可能会出现多个接口因为token过期导致同时（虽然是顺序执行）的情况
          * 故要求在刷新时传递过期token过来，如果该过期token已经被刷新，就直接配置新token，不再刷新
          */
-        if (lastExpiredToken == expiredToken) {//认定已经刷新成功，直接返回新的请求
-            return chain.run { proceed(chain.request().newBuilder().header("Authorization", "Bearer $token").build()) }
-        }
-        lastExpiredToken = expiredToken
-        if (refreshToken.isNotEmpty() && (isTokenExpired() || response.code == 403)) {
-            takeIfNoException {
+        Log.e("sandyzhang", "请求完成！！！执行刷新"+(response.isSuccessful))
+        if (!response.isSuccessful || (refreshToken.isNotEmpty() && (isTokenExpired() || response.code == 403))) {
+            takeIfNoException (action = {
                 ServiceManager.getService(IAccountService::class.java).getVerifyService().refresh(
                         onError = {
-                            response.close()
+                            response?.close()
+                            Log.e("sandyzhang", "刷新失败")
                         },
                         action = { s: String ->
-                            response.close()
+                            response?.close()
+                            Log.e("sandyzhang", "刷新成功")
                             token = s
                         }
                 )
-            }
+            }, doOnException = {
+                it.printStackTrace()
+            })
+            Log.e("sandyzhang", "重新请求")
             response = chain.run { proceed(chain.request().newBuilder().header("Authorization", "Bearer $token").build()) }
         }
+        Log.e("sandyzhang", "刷新执行完成")
+
         return response
     }
 
@@ -216,44 +234,47 @@ object ApiGenerator {
 
     class TokenInterceptor : Interceptor {
         override fun intercept(chain: Interceptor.Chain): Response {
+            Log.e("sandyzhang", "进入！！！！！！！！！！！！！！！！！！！！")
             /**
              * 所有请求添加token到header
              * 在外面加一层判断，用于token未过期时，能够异步请求，不用阻塞在checkRefresh()
              */
             // 这个变量存 当前正在请求的url，的response
-            var responseUrl = when {
-                refreshToken.isEmpty() || token.isEmpty() -> {
+            var responseUrl = checkRefreshAndRequest(chain, token) // 这个方法无论是否刷新token成功，都会返回一个当前url的请求
+//                    when {
+//                        refreshToken.isEmpty() || token.isEmpty() -> {
+//
+//                            token = ServiceManager.getService(IAccountService::class.java).getUserTokenService().getToken()
+//                            refreshToken = ServiceManager.getService(IAccountService::class.java).getUserTokenService().getRefreshToken()
+//                            if (isTokenExpired()) {
+//                                checkRefreshAndRequest(chain, token) // 这个方法无论是否刷新token成功，都会返回一个当前url的请求
+//                            } else {
+//                                chain.proceed(chain.request().newBuilder().header("Authorization", "Bearer $token").build()) // 当前url的请求
+//                            }
+//                        }
+//                        isTokenExpired() -> {
+//                            checkRefreshAndRequest(chain, token) // 这个方法无论是否刷新token成功，都会返回一个当前url的请求
+//                        }
+//                        else -> {
+//                            chain.proceed(chain.request().newBuilder().header("Authorization", "Bearer $token").build()) // 当前url的请求
+//                        }
+//                    }
 
-                    token = ServiceManager.getService(IAccountService::class.java).getUserTokenService().getToken()
-                    refreshToken = ServiceManager.getService(IAccountService::class.java).getUserTokenService().getRefreshToken()
-                    if (isTokenExpired()) {
-                        checkRefreshAndRequest(chain, token) // 这个方法无论是否刷新token成功，都会返回一个当前url的请求
-                    } else {
-                        chain.proceed(chain.request().newBuilder().header("Authorization", "Bearer $token").build()) // 当前url的请求
-                    }
-                }
-                isTokenExpired() -> {
-                    checkRefreshAndRequest(chain, token) // 这个方法无论是否刷新token成功，都会返回一个当前url的请求
-                }
-                else -> {
-                    chain.proceed(chain.request().newBuilder().header("Authorization", "Bearer $token").build()) // 当前url的请求
-                }
-            }
-            Log.e("sandyzhang", "toast1"+responseUrl.isSuccessful)
+            Log.e("sandyzhang", "请求或刷新token再请求完成" + (responseUrl?.isSuccessful == true))
             // 上面是分情况讨论token可能的情况，并执行token刷新
             // 如果还是失败则再刷新一遍，以防情况：既没过期也不空，但是由于服务器原因导致token失效
-            if (responseUrl.code == TOKEN_EXPIRE || !responseUrl.isSuccessful) {
-                responseUrl.close()
+            if (responseUrl?.code == TOKEN_EXPIRE || responseUrl?.isSuccessful != true) {
+                responseUrl?.close()
                 responseUrl = checkRefreshAndRequest(chain, token)
             }
 
-//            if (!responseUrl.isSuccessful) {
-//                Log.e("sandyzhang", "toast")
-//                responseUrl.close()
-//                responseUrl = chain.proceed(chain.request().newBuilder().addHeader("Authorization", "Bearer $token").addHeader("UseCache", "true").build()) // 链式请求下一个Interceptor，也就是CacheInterceptor，要求返回缓存Response
-//            } else {
-//                saveCache(chain.request(), responseUrl)
-//            }
+            if (responseUrl?.isSuccessful != true) {
+                Log.e("sandyzhang", "toast")
+                responseUrl?.close()
+                responseUrl = chain.proceed(chain.request().newBuilder().addHeader("Authorization", "Bearer $token").addHeader("UseCache", "true").build()) // 链式请求下一个Interceptor，也就是CacheInterceptor，要求返回缓存Response
+            } else {
+                saveCache(chain.request(), responseUrl)
+            }
 
             return responseUrl
         }
@@ -264,7 +285,7 @@ object ApiGenerator {
             return if (chain.request().headers["UseCache"] != "true") {
                 return chain.proceed(chain.request())
             } else {
-                Log.e("sandyzhang", "UseCache"+ getCache(chain.request()))
+                Log.e("sandyzhang", "UseCache" + getCache(chain.request()))
 
                 val p = Observable.create<String> { it.onNext("使用缓存") }.setSchedulers().subscribe {
                     Toast.makeText(BaseApp.context, "使用缓存！", Toast.LENGTH_SHORT).show()
