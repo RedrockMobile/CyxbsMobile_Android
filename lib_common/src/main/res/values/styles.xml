@@ -24,6 +24,29 @@
         <item name="md_color_button_text">@color/common_level_two_font_color</item>
     </style>
 
+    <style name="AppDialogTheme" parent="Theme.AppCompat.DayNight.Dialog" tools:ignore="ResourceName">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <!--        透明状态栏-->
+        <item name="statusBarBackground">@color/common_transparent_background</item>
+        <!--        每个Activity的Window背景，最好别设置透明或者空-->
+        <item name="android:windowBackground">@color/common_window_background</item>
+        <!--        Transition转场动画，暂未启用-->
+        <item name="android:windowEnterTransition">@transition/common_fade</item>
+        <item name="android:windowExitTransition">@transition/common_fade</item>
+        <item name="android:windowSharedElementEnterTransition">@transition/common_app_transaction
+        </item>
+        <item name="android:windowSharedElementExitTransition">@transition/common_app_transaction
+        </item>
+        <item name="actionMenuTextColor">@color/common_level_two_font_color</item>
+        <!--   Material Dialog color-->
+        <item name="md_color_title">@color/common_level_three_font_color</item>
+        <item name="md_color_content">@color/levelFourFontColor</item>
+        <item name="md_color_button_text">@color/common_level_two_font_color</item>
+    </style>
+
     <style name="AppTheme.FullScreen" parent="AppTheme" tools:ignore="ResourceName">
         <item name="android:windowFullscreen">true</item>
     </style>

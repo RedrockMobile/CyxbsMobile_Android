@@ -17,7 +17,7 @@ import org.greenrobot.eventbus.EventBus
 class VolunteerService : IVolunteerService {
     private var mContext: Context? = null
     override fun getVolunteerFeed(): Fragment {
-        return ARouter.getInstance().build(DISCOVER_VOLUNTEER_FEED).navigation() as Fragment
+        return ARouter.getInstance().build(DISCOVER_VOLUNTEER_FEED).withBoolean("touristMode", true).navigation() as Fragment
     }
 
     override fun clearSP() {

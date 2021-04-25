@@ -1,44 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.mredrock.cyxbs.common">
-
     <!-- 蓝牙 -->
     <uses-permission android:name="android.permission.BLUETOOTH" />
-    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
-    <!-- wifi -->
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" /> <!-- wifi -->
     <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <!-- 网络 -->
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" /> <!-- 网络 -->
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <!-- 存储(危险权限) -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> <!-- 存储(危险权限) -->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <!-- 位置（危险权限） -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> <!-- 位置（危险权限） -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
-    <!-- 相机（危险权限） -->
-    <uses-permission android:name="android.permission.CAMERA" />
-    <!-- 电话相关（危险权限） -->
+    <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" /> <!-- 相机（危险权限） -->
+    <uses-permission android:name="android.permission.CAMERA" /> <!-- 电话相关（危险权限） -->
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <uses-permission android:name="android.permission.CALL_PHONE" />
-    <!-- 日历（危险权限） -->
+    <uses-permission android:name="android.permission.CALL_PHONE" /> <!-- 日历（危险权限） -->
     <uses-permission android:name="android.permission.READ_CALENDAR" />
-    <uses-permission android:name="android.permission.WRITE_CALENDAR" />
-    <!-- 其他 -->
+    <uses-permission android:name="android.permission.WRITE_CALENDAR" /> <!-- 其他 -->
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
-    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
-
-    <!--    弹窗权限-->
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" /> <!-- 弹窗权限 -->
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
 
     <application>
+        <activity
+            android:name=".ui.DialogActivity"
+            android:theme="@style/AppDialogTheme" />
+
         <service
-            android:name="AppUpdateDownloadService"
+            android:name=".AppUpdateDownloadService"
             android:enabled="true"
             android:exported="true" />
 
@@ -57,16 +50,12 @@
             android:theme="@android:style/Theme.Translucent" />
         <activity
             android:name=".ui.ExceptionActivity"
-            android:process=":exception_handler"
             android:launchMode="singleTop"
+            android:process=":exception_handler"
             android:theme="@style/AppTheme" />
-
         <activity
             android:name=".component.PhotoViewerActivity"
-            android:launchMode="singleInstance" />
-
-
-        <!-- 友盟推送基本配置 start-->
+            android:launchMode="singleInstance" /> <!-- 友盟推送基本配置 start -->
         <service
             android:name="com.taobao.accs.ChannelService"
             android:exported="true"
@@ -85,6 +74,7 @@
                 <action android:name="com.taobao.accs.intent.action.RECEIVE" />
             </intent-filter>
         </service>
+
         <receiver
             android:name="com.taobao.accs.EventReceiver"
             android:process=":channel">
@@ -96,6 +86,7 @@
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.PACKAGE_REMOVED" />
+
                 <data android:scheme="package" />
             </intent-filter>
             <intent-filter>
@@ -112,10 +103,11 @@
                 <action android:name="com.taobao.accs.intent.action.START_FROM_AGOO" />
             </intent-filter>
         </receiver>
+
         <service
             android:name="com.taobao.accs.internal.AccsJobService"
             android:permission="android.permission.BIND_JOB_SERVICE"
-            android:process=":channel"/>
+            android:process=":channel" />
         <service
             android:name="com.taobao.accs.ChannelService$KernelService"
             android:process=":channel" />
@@ -142,6 +134,7 @@
                 <action android:name="org.agoo.android.intent.action.RECEIVE" />
             </intent-filter>
         </service>
+
         <receiver
             android:name="com.taobao.agoo.AgooCommondReceiver"
             android:exported="true"
@@ -151,9 +144,11 @@
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.PACKAGE_REMOVED" />
+
                 <data android:scheme="package" />
             </intent-filter>
         </receiver>
+
         <service
             android:name="com.umeng.message.UmengMessageIntentReceiverService"
             android:exported="true"
@@ -162,13 +157,15 @@
                 <action android:name="org.android.agoo.client.MessageReceiverService" />
             </intent-filter>
         </service>
+
         <receiver
             android:name="com.umeng.message.NotificationProxyBroadcastReceiver"
             android:exported="false" />
+
         <service
             android:name="com.umeng.message.UmengMessageCallbackHandlerService"
-            android:permission="android.permission.BIND_JOB_SERVICE"
-            android:exported="false">
+            android:exported="false"
+            android:permission="android.permission.BIND_JOB_SERVICE">
             <intent-filter>
                 <action android:name="com.umeng.messge.registercallback.action" />
             </intent-filter>
@@ -187,16 +184,15 @@
         </service>
         <service
             android:name="com.umeng.message.UmengDownloadResourceService"
-            android:permission="android.permission.BIND_JOB_SERVICE"
-            android:exported="false" />
+            android:exported="false"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
+
         <provider
             android:name="com.umeng.message.provider.MessageProvider"
             android:authorities="${applicationId}.umeng.message"
             android:exported="false">
             <grant-uri-permission android:pathPattern=".*" />
         </provider>
-        <!-- 友盟推送基本配置 end-->
-
     </application>
 
 </manifest>

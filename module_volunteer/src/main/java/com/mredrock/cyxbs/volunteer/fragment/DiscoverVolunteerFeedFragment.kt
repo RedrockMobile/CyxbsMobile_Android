@@ -2,6 +2,8 @@ package com.mredrock.cyxbs.volunteer.fragment
 
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
+import com.alibaba.android.arouter.facade.annotation.Autowired
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
 import com.mredrock.cyxbs.api.account.IAccountService
@@ -28,10 +30,13 @@ import org.greenrobot.eventbus.ThreadMode
 @Route(path = DISCOVER_VOLUNTEER_FEED)
 class DiscoverVolunteerFeedFragment : BaseFeedFragment<DiscoverVolunteerFeedViewModel>(), EventBusLifecycleSubscriber {
 
+    @JvmField
+    @Autowired(name = "touristMode")
+    var touristMode: Boolean? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        //对登录状态判断
+        ARouter.getInstance().inject(this)
         if (ServiceManager.getService(IAccountService::class.java).getVerifyService().isLogin()) {
             setAdapter(VolunteerFeedUnbindAdapter())
         }

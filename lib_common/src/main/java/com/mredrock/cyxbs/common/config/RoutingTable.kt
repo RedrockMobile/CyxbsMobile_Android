@@ -84,3 +84,6 @@ const val ELECTRICITY_SERVICE = "/electricity/service"
 
 //电费模块服务
 const val VOLUNTEER_SERVICE = "/volunteer/service"
+
+//询问登录Dialog
+const val MAIN_REQUEST_LOGIN_DIALOG = "/main/request_login"

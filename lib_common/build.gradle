@@ -1,5 +1,6 @@
 apply from: config
 apply from: secret
+apply plugin: 'kotlin-android'
 
 android.defaultConfig {
     manifestPlaceholders = secret.manifestPlaceholders

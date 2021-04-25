@@ -71,9 +71,9 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>(), Eve
         initViewPager()
         viewModel.getRollInfo()
         iv_check_in.setOnSingleClickListener {
-            context?.doIfLogin("签到") {
+//            context?.doIfLogin("签到") {
                 ARouter.getInstance().build(MINE_CHECK_IN).navigation()
-            }
+//            }
         }
     }
 
