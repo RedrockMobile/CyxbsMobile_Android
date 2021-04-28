@@ -95,7 +95,6 @@ class CircleDetailActivity : BaseViewModelActivity<CircleDetailViewModel>() {
             arguments = Bundle().apply {
                 putInt("loop", viewModel.topicId)
                 putString("type", "latest")
-                LogUtils.d("RayleighZ","topic id = ${viewModel.topicId}")
             }
         }
     }
@@ -104,7 +103,6 @@ class CircleDetailActivity : BaseViewModelActivity<CircleDetailViewModel>() {
             arguments = Bundle().apply {
                 putInt("loop", viewModel.topicId)
                 putString("type", "hot")
-                LogUtils.d("RayleighZ","topic id = ${viewModel.topicId}")
             }
         }
     }

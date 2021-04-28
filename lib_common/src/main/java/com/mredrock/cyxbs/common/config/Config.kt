@@ -47,9 +47,9 @@ const val SP_SHOW_MODE = "showMode"
 //连续签到每日提醒
 const val SP_SIGN_REMIND = "signRemind"
 
-const val APP_WEBSITE = "https://wx.redrock.team/game/handheldcqupt-mobile/#/"
+const val APP_WEBSITE = "https://m.app.redrock.team"
 
-const val ABOUT_US_WEBSITE = "https://redrock.team/aboutus/"
+const val ABOUT_US_WEBSITE = "https://redrock.team"
 
 //小控件课表及事务
 const val WIDGET_COURSE = "course_widget"

@@ -34,7 +34,7 @@ open class DynamicDetailViewModel : BaseViewModel() {
 
     val loadStatus = MutableLiveData<Int>()
 
-    val replyInfo = MutableLiveData<ReplyInfo>()
+    val replyInfo = SingleLiveEvent<ReplyInfo>()
 
     val dynamic = MutableLiveData<Dynamic>()
 

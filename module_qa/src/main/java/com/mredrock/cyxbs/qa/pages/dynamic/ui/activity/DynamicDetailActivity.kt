@@ -27,6 +27,7 @@ import com.mredrock.cyxbs.common.BaseApp.Companion.context
 import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.common.config.QA_DYNAMIC_DETAIL
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
+import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.*
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.beannew.Dynamic
@@ -345,7 +346,9 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
         }
         viewModel.replyInfo.observe {
             it?.let {
+                LogUtils.d("RayleighZ","info = ${it.replyId}")
                 if (it.replyId.isNotEmpty()) {
+                    LogUtils.d("RayleighZ","show pop window")
                     qa_coordinatorlayout.isReplyEdit = true
                     KeyboardController.showInputKeyboard(this@DynamicDetailActivity, qa_et_my_comment_reply)
                     ReplyPopWindow.with(this@DynamicDetailActivity)
@@ -404,6 +407,8 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
     }
 
     private fun initDynamic() {
+
+        LogUtils.d("RayleighZ", "create")
 
         // 设置behavior
         val layoutParams = qa_ll_reply.layoutParams as CoordinatorLayout.LayoutParams

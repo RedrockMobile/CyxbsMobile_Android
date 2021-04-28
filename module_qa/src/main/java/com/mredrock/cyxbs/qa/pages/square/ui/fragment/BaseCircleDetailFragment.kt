@@ -54,7 +54,6 @@ abstract class BaseCircleDetailFragment<T : CircleDetailViewModel> : BaseViewMod
         arguments?.apply {
             loop = getInt("loop")
             type = getString("type", "main")
-            LogUtils.d("RayleighZ", "loop = $loop")
         }
         super.onCreate(savedInstanceState)
     }
@@ -98,11 +97,13 @@ abstract class BaseCircleDetailFragment<T : CircleDetailViewModel> : BaseViewMod
                         viewModel.ignore(dynamic)
                     }
                     REPORT -> {
-//                        this@BaseCircleDetailFragment.activity?.let {
-//                            QaReportDialog.show(it) { reportContent ->
-//                                viewModel.report(dynamic, reportContent)
-//                            }
-//                        }
+                        this@BaseCircleDetailFragment.context?.let {
+                            QaReportDialog(it).apply {
+                                show { reportContent ->
+                                    viewModel.report(dynamic, reportContent)
+                                }
+                            }.show()
+                        }
                     }
 
                     DELETE -> {

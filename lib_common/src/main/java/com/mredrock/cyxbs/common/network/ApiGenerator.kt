@@ -1,4 +1,4 @@
- package com.mredrock.cyxbs.common.network
+package com.mredrock.cyxbs.common.network
 
 import android.os.Looper
 import android.util.SparseArray
@@ -177,25 +177,29 @@ object ApiGenerator {
                         if (isTokenExpired()) {
                             checkRefresh(it, token)
                         } else {
-                            it.proceed(it.request().newBuilder().header("Authorization", "Bearer $token").build())
+                            proceedPoxyWithTryCatch {
+                                it.proceed(it.request().newBuilder().header("Authorization", "Bearer $token").build())
+                            }
                         }
                     }
                     isTokenExpired() -> {
                         checkRefresh(it, token)
                     }
                     else -> {
-                        val response = it.proceed(it.request().newBuilder().header("Authorization", "Bearer $token").build())
+                        val response = proceedPoxyWithTryCatch { it.proceed(it.request().newBuilder().header("Authorization", "Bearer $token").build()) }
                         //此处拦截http状态码进行统一处理
-                        when(response.code){
-                            TOKEN_EXPIRE -> {
-                                response.close()
-                                checkRefresh(it, token)
-                            }
-                            SUCCESS -> {
-                                return@Interceptor response
-                            }
-                            else -> {
-                                return@Interceptor response
+                        response?.apply {
+                            when (code) {
+                                TOKEN_EXPIRE -> {
+                                    response.close()
+                                    checkRefresh(it, token)
+                                }
+                                SUCCESS -> {
+                                    return@Interceptor this
+                                }
+                                else -> {
+                                    return@Interceptor this
+                                }
                             }
                         }
                     }
@@ -207,7 +211,7 @@ object ApiGenerator {
     //对token和refreshToken进行刷新
     @Synchronized
     private fun checkRefresh(chain: Interceptor.Chain, expiredToken: String): Response? {
-        var response = chain.proceed(chain.request().newBuilder().header("Authorization", "Bearer $token").build())
+        var response = proceedPoxyWithTryCatch { chain.proceed(chain.request().newBuilder().header("Authorization", "Bearer $token").build()) }
         /**
          * 刷新token条件设置为，已有refreshToken，并且已经过期，也可以后端返回特定到token失效code
          * 当第一个过期token请求接口后，改变token和refreshToken，防止同步refreshToken失效
@@ -216,26 +220,38 @@ object ApiGenerator {
          * 可能会出现多个接口因为token过期导致同时（虽然是顺序执行）的情况
          * 故要求在刷新时传递过期token过来，如果该过期token已经被刷新，就直接配置新token，不再刷新
          */
-        if (lastExpiredToken == expiredToken){//认定已经刷新成功，直接返回新的请求
-            return chain.run { proceed(chain.request().newBuilder().header("Authorization", "Bearer $token").build()) }
+        if (lastExpiredToken == expiredToken) {//认定已经刷新成功，直接返回新的请求
+            return proceedPoxyWithTryCatch { chain.run { proceed(chain.request().newBuilder().header("Authorization", "Bearer $token").build()) } }
         }
         lastExpiredToken = expiredToken
-        if (refreshToken.isNotEmpty() && (isTokenExpired() || response.code == 403)) {
+        if (refreshToken.isNotEmpty() && (isTokenExpired() || response?.code == 403)) {
             takeIfNoException {
                 ServiceManager.getService(IAccountService::class.java).getVerifyService().refresh(
                         onError = {
-                            response.close()
+                            response?.close()
                         },
                         action = { s: String ->
-                            response.close()
+                            response?.close()
 //                            BaseApp.context.toast("用户认证刷新成功")
-                            response = chain.run { proceed(chain.request().newBuilder().header("Authorization", "Bearer $s").build()) }
+                            response = proceedPoxyWithTryCatch { chain.run { proceed(chain.request().newBuilder().header("Authorization", "Bearer $s").build()) } }
                         }
                 )
             }
 
         }
         return response
+    }
+
+    private fun proceedPoxyWithTryCatch(proceed: () -> Response) : Response?{
+        var response: Response? = null
+        try {
+            response = proceed.invoke()
+        } catch (e: Exception){
+            LogUtils.d("RayleighZ", "exception")
+            e.printStackTrace()
+        } finally {
+            return response
+        }
     }
 
     //检查token是否过期

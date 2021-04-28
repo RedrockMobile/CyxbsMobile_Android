@@ -73,7 +73,6 @@ data class Dynamic(@SerializedName("post_id")
         parcel.readStringList(pics)
         //利用正则剔除大量空白
         content = cutEnterAndBlank(content)
-        LogUtils.d("RayleighZ", content)
     }
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
