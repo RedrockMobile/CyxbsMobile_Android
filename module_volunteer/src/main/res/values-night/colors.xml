@@ -2,7 +2,7 @@
 <resources>
 
     <color name="volunteer_question_tab_indicator_color">#1ad0f2</color>
-    <color name="volunteer_tab_unselected_color">#15315B</color>
-    <color name="volunteer_tab_selected_color">#15315B</color>
+    <color name="volunteer_tab_unselected_color">#84F0F0F2</color>
+    <color name="volunteer_tab_selected_color">#F0F0F2</color>
 
 </resources>

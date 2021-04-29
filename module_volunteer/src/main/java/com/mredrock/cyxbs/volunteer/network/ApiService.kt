@@ -5,6 +5,7 @@ import com.mredrock.cyxbs.volunteer.bean.*
 import io.reactivex.Observable
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
+import retrofit2.http.GET
 import retrofit2.http.POST
 
 interface ApiService {
@@ -16,13 +17,8 @@ interface ApiService {
     @POST("/volunteer-message/select")
     fun getVolunteerRecord(): Observable<VolunteerTime>
 
-    @POST("/cyb-volunteer/volunteer/activity/info/new")
+    @GET("/cyb-volunteer/volunteer/activity/info/new")
     fun getVolunteerAffair(): Observable<RedrockApiWrapper<List<VolunteerAffair>>>
-
-
-    @FormUrlEncoded
-    @POST("/cyb-volunteer/volunteer/activity/info")
-    fun getVolunteerAffairDetail(@Field("id") id: Int): Observable<RedrockApiWrapper<VolunteerAffairDetail>>
 
     @POST("/volunteer-message/judge")
     fun judgeBind(): Observable<VolunteerJudge>

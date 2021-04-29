@@ -26,7 +26,6 @@
             android:orientation="horizontal"
             android:textColor="@color/levelFourFontColor"
             android:textSize="32sp"
-            android:textStyle="bold"
             tools:text="18" />
 
         <androidx.appcompat.widget.AppCompatTextView
@@ -75,7 +74,6 @@
             android:fontFamily="@font/impact_min"
             android:textColor="@color/levelFourFontColor"
             android:textSize="32sp"
-            android:textStyle="bold"
             tools:text="18" />
 
         <androidx.appcompat.widget.AppCompatTextView

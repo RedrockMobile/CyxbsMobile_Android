@@ -32,20 +32,17 @@ class VolunteerAffairFragment : BaseViewModelFragment<VolunteerAffairViewModel>(
             swl_volunteer_affair.isRefreshing = false
             val adapter = rl_volunteer_affair.adapter
             if (adapter == null) {
-                rl_volunteer_affair.adapter = VolunteerAffairAdapter(it ?: return@observe) { id ->
-                    viewModel.getVolunteerAffairDetail(id)
+                rl_volunteer_affair.adapter = VolunteerAffairAdapter(it ?: return@observe) { affair ->
+                    if (context == null) return@VolunteerAffairAdapter
+                    if (volunteerAffairBottomSheetDialog == null) {
+                        volunteerAffairBottomSheetDialog = VolunteerAffairBottomSheetDialog(requireContext())
+                    }
+                    volunteerAffairBottomSheetDialog?.show()
+                    volunteerAffairBottomSheetDialog?.refresh(affair)
                 }
             } else {
                 it?.let { list -> (adapter as VolunteerAffairAdapter).refreshData(list) }
             }
-        }
-        viewModel.volunteerAffairDetail.observe { data ->
-            if (context == null || data == null) return@observe
-            if (volunteerAffairBottomSheetDialog == null) {
-                volunteerAffairBottomSheetDialog = VolunteerAffairBottomSheetDialog(context!!)
-            }
-            volunteerAffairBottomSheetDialog?.show()
-            volunteerAffairBottomSheetDialog?.refresh(data)
         }
     }
 }
