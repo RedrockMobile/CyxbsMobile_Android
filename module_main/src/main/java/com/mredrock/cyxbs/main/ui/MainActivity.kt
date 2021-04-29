@@ -195,6 +195,7 @@ class MainActivity : BaseViewModelActivity<MainViewModel>(),
 
             when(it){
                 0 ->{
+                    bottomSheetBehavior.isHideable = false
                     //如果用户选择了点击App优先展示课表，会存在课表自动下滑的情况，需要加以判断
                     if (bottomSheetBehavior.state == BottomSheetBehavior.STATE_HIDDEN){
                         bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
@@ -203,13 +204,15 @@ class MainActivity : BaseViewModelActivity<MainViewModel>(),
                     }
                 }
                 1->{
-                    //切换到邮问时，底部状态栏变为隐藏，并添加z轴高度
+                    //切换到邮问时，bottomSheet变为隐藏，并添加z轴高度
+                    bottomSheetBehavior.isHideable = true
                     bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
                     ll_nav_main_container.elevation = BaseApp.context.dp2px(4f).toFloat()
                     //点击Tab刷新邮问
                     if (bottomHelper.peeCheckedItemPosition == 1) EventBus.getDefault().post(RefreshQaEvent())
                 }
                 2->{
+                    bottomSheetBehavior.isHideable = false
                     bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
                     ll_nav_main_container.elevation = 0f
                 }

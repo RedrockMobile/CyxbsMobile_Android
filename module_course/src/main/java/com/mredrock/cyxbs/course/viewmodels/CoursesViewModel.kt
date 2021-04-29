@@ -424,7 +424,7 @@ class CoursesViewModel : BaseViewModel() {
                     EventBus.getDefault().post(AffairFromInternetEvent(affairsCourse))
                     affairs.addAll(affairsCourse)
                 }, onExecuteOnceError = {
-//                                        isGetAllData(AFFAIR_TAG)
+                                        isGetAllData(AFFAIR_TAG)
                 },
                         onExecuteOnFinal = {
                             isGetAllData(AFFAIR_TAG)

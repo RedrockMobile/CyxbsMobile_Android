@@ -1,6 +1,7 @@
 package com.mredrock.cyxbs.volunteer
 
 import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import androidx.lifecycle.Observer
 import com.alibaba.android.arouter.facade.annotation.Route
@@ -28,8 +29,12 @@ class VolunteerRecordActivity : BaseViewModelActivity<VolunteerRecordViewModel>(
 
 
     companion object {
-        fun startActivity(activity: Activity) {
-            activity.startActivity<VolunteerRecordActivity>()
+        fun startActivity(activity: Activity, volunteerTime: VolunteerTime) {
+            activity.startActivity(
+                    Intent(activity, VolunteerRecordActivity::class.java).apply {
+                        putExtra("volunteerTime", Gson().toJson(volunteerTime))
+                    }
+            )
         }
     }
 

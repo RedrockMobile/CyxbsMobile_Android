@@ -26,7 +26,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:behavior_peekHeight="@dimen/main_main_bottom_navigation_height_twice_as_much"
-            app:behavior_hideable="true"
+            app:behavior_hideable="false"
             app:layout_behavior="@string/bottom_sheet_behavior" />
 
         <include layout="@layout/main_bottom_nav" />
