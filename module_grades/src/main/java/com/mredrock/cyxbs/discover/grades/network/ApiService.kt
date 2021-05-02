@@ -20,7 +20,7 @@ interface ApiService {
      * 获取考试信息（不含补考）
      */
     @FormUrlEncoded
-    @POST("/renewapi/examSchedule")
+    @POST("/magipoke-jwzx/examSchedule")
     fun getExam(@Field("stuNum") stuNum: String): Observable<RedrockApiWrapper<List<Exam>>>
 
     /**

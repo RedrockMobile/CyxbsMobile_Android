@@ -221,6 +221,7 @@ object ApiGenerator {
          * 故要求在刷新时传递过期token过来，如果该过期token已经被刷新，就直接配置新token，不再刷新
          */
         if (lastExpiredToken == expiredToken) {//认定已经刷新成功，直接返回新的请求
+            response?.close()
             return proceedPoxyWithTryCatch { chain.run { proceed(chain.request().newBuilder().header("Authorization", "Bearer $token").build()) } }
         }
         lastExpiredToken = expiredToken
