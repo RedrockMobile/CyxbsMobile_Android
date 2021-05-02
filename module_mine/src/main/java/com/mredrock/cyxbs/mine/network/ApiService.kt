@@ -311,4 +311,8 @@ interface ApiService {
             @Query("time") timeStamp: Long,
             @Query("type") type: Int
     ):Observable<RedrockApiWrapper<UserUncheckCount>>
+
+    //仿ping接口，用于检测magipoke系列接口状态
+    @GET("magipoke/ping")
+    fun pingMagipoke(): Observable<RedrockApiStatus>
 }

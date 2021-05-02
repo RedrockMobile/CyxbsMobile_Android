@@ -14,8 +14,8 @@ class DoubleChooseDialog(context: Context?, theme: Int) : Dialog(context, theme)
             if (context == null) return
             val doubleChooseDialog = DoubleChooseDialog(context, R.style.transparent_dialog)
             doubleChooseDialog.setContentView(R.layout.mine_dialog_double_choose)
-            val buttonToBindingEmail = doubleChooseDialog.findViewById<Button>(R.id.mine_bt_security_dialog_binding_email)
-            val buttonToSetPasswordProtect = doubleChooseDialog.findViewById<Button>(R.id.mine_bt_security_dialog_set_protect)
+            val buttonToBindingEmail = doubleChooseDialog.findViewById<Button>(R.id.mine_bt_security_dialog_postive)
+            val buttonToSetPasswordProtect = doubleChooseDialog.findViewById<Button>(R.id.mine_bt_security_dialog_negative)
             buttonToSetPasswordProtect.setOnClickListener {
                 SetPasswordProtectActivity.actionStart(context)
                 doubleChooseDialog.hide()
