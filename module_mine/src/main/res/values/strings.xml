@@ -131,4 +131,7 @@
     <string name="mine_security_click_to_get_confirm_code">你的保密邮箱是，请点击获取验证码</string>
     <string name="mine_security_get_confirm_code">获取验证码</string>
     <string name="mine_security_out_of_date_or_wrong">验证码有误或过期，请重新获取</string>
+    <string name="mine_string_about_us">关于我们</string>
+    <string name="mine_string_setting">设置</string>
+    <string name="mine_string_score_store">积分商城</string>
 </resources>
