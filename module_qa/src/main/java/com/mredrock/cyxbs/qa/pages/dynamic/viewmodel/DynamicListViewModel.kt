@@ -88,12 +88,10 @@ open class DynamicListViewModel(kind: String) : BaseViewModel() {
                 .doOnError {
                     toastEvent.value = R.string.qa_ignore_dynamic_failure
                 }
-                .doOnSubscribe {
-                    ignorePeople.value = true
-                }
                 .safeSubscribeBy {
                     if (it.status == 200) {
                         toastEvent.value = R.string.qa_ignore_dynamic_success
+                        ignorePeople.value = true
                     }
                 }
 

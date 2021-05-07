@@ -41,16 +41,19 @@ class QuestionSearchedViewModel(var searchKey: String) : BaseViewModel() {
 
     init {
         val config = PagedList.Config.Builder()
-                .setEnablePlaceholders(false)
-                .setPrefetchDistance(3)
-                .setPageSize(6)
-                .setInitialLoadSizeHint(6)
-                .build()
+            .setEnablePlaceholders(false)
+            .setPrefetchDistance(3)
+            .setPageSize(6)
+            .setInitialLoadSizeHint(6)
+            .build()
         factory = SearchQuestionDataSource.Factory(searchKey)
         questionList = LivePagedListBuilder<Int, Dynamic>(factory, config).build()
-        networkState = Transformations.switchMap(factory.searchQuestionDataSourceLiveData) { it.networkState }
-        initialLoad = Transformations.switchMap(factory.searchQuestionDataSourceLiveData) { it.initialLoad }
-        isCreateOver = Transformations.switchMap(factory.searchQuestionDataSourceLiveData) { it.isCreateOver }
+        networkState =
+            Transformations.switchMap(factory.searchQuestionDataSourceLiveData) { it.networkState }
+        initialLoad =
+            Transformations.switchMap(factory.searchQuestionDataSourceLiveData) { it.initialLoad }
+        isCreateOver =
+            Transformations.switchMap(factory.searchQuestionDataSourceLiveData) { it.isCreateOver }
     }
 
     fun retry() = factory.searchQuestionDataSourceLiveData.value?.retry()
@@ -68,66 +71,64 @@ class QuestionSearchedViewModel(var searchKey: String) : BaseViewModel() {
     }
 
     fun ignore(dynamic: Dynamic) {
-        LogUtils.d("RatleighZ","when ignore, uid = ${dynamic.uid}")
+        LogUtils.d("RatleighZ", "when ignore, uid = ${dynamic.uid}")
         ApiGenerator.getApiService(ApiServiceNew::class.java)
-                .ignoreUid(dynamic.uid)
-                .setSchedulers()
-                .doOnError {
-                    toastEvent.value = R.string.qa_ignore_dynamic_failure
-                    ignorePeople.value = false
-                }
-                .doOnSubscribe {
+            .ignoreUid(dynamic.uid)
+            .setSchedulers()
+            .doOnError {
+                toastEvent.value = R.string.qa_ignore_dynamic_failure
+                ignorePeople.value = false
+            }
+            .safeSubscribeBy {
+                if (it.status == 200) {
+                    toastEvent.value = R.string.qa_ignore_dynamic_success
                     ignorePeople.value = true
                 }
-                .safeSubscribeBy {
-                    if (it.status == 200) {
-                        toastEvent.value = R.string.qa_ignore_dynamic_success
-                    }
-                }
+            }
 
     }
 
 
     fun report(dynamic: Dynamic, content: String) {
         ApiGenerator.getApiService(ApiServiceNew::class.java)
-                .report(dynamic.postId, CommentConfig.REPORT_DYNAMIC_MODEL, content)
-                .setSchedulers()
-                .doOnError {
-                    toastEvent.value = R.string.qa_report_dynamic_failure
-                }
-                .safeSubscribeBy {
-                    if (it.status == 200)
-                        toastEvent.value = R.string.qa_report_dynamic_success
-                }
+            .report(dynamic.postId, CommentConfig.REPORT_DYNAMIC_MODEL, content)
+            .setSchedulers()
+            .doOnError {
+                toastEvent.value = R.string.qa_report_dynamic_failure
+            }
+            .safeSubscribeBy {
+                if (it.status == 200)
+                    toastEvent.value = R.string.qa_report_dynamic_success
+            }
     }
 
     fun deleteId(id: String, model: String) {
         ApiGenerator.getApiService(ApiServiceNew::class.java)
-                .deleteId(id, model)
-                .setSchedulers()
-                .doOnError {
-                    toastEvent.value = R.string.qa_delete_dynamic_failure
-                    deleteTips.value = false
-                }
-                .safeSubscribeBy {
-                    deleteTips.value = true
-                }
+            .deleteId(id, model)
+            .setSchedulers()
+            .doOnError {
+                toastEvent.value = R.string.qa_delete_dynamic_failure
+                deleteTips.value = false
+            }
+            .safeSubscribeBy {
+                deleteTips.value = true
+            }
     }
 
     fun getKnowledge(key: String, page: Int = 1, size: Int = 6) {
         ApiGenerator.getApiService(ApiServiceNew::class.java)
-                .getSearchKnowledge(key, page, size)
-                .mapOrThrowApiException()
-                .setSchedulers()
-                .safeSubscribeBy {
-                    if (it.isNotEmpty()) {
-                        LogUtils.d("zt", "5")
-                        isKnowledge = true
-                        knowledge.value = it
-                    } else {
-                        LogUtils.d("zt", "6")
-                        isKnowledge = false
-                    }
+            .getSearchKnowledge(key, page, size)
+            .mapOrThrowApiException()
+            .setSchedulers()
+            .safeSubscribeBy {
+                if (it.isNotEmpty()) {
+                    LogUtils.d("zt", "5")
+                    isKnowledge = true
+                    knowledge.value = it
+                } else {
+                    LogUtils.d("zt", "6")
+                    isKnowledge = false
                 }
+            }
     }
 }

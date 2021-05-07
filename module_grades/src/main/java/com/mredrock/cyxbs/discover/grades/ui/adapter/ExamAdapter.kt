@@ -5,6 +5,7 @@ import android.content.Context
 import android.graphics.Color
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.text.isDigitsOnly
+import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.SchoolCalendar
 import com.mredrock.cyxbs.discover.grades.R
 import com.mredrock.cyxbs.discover.grades.bean.Exam
@@ -185,6 +186,7 @@ class ExamAdapter(val context: Context,
                     return -2
                 }
             }
+            LogUtils.d("RayleighZ","Exam date = $time")
             examDate.set(array[0].toInt(), array[1].toInt() - 1, array[2].toInt())
             val diff = examDate.time.time - now.time
             val day = 1000 * 24 * 60 * 60

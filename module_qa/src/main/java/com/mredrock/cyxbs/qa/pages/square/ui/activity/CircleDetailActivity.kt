@@ -15,13 +15,11 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.google.android.material.tabs.TabLayoutMediator
-import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.BaseApp.Companion.context
 import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.common.config.QA_CIRCLE_DETAIL
 import com.mredrock.cyxbs.common.network.ApiGenerator
-import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.ui.BaseActivity
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.LogUtils
@@ -53,7 +51,11 @@ class CircleDetailActivity : BaseViewModelActivity<CircleDetailViewModel>() {
 
         fun activityStartFromSquare(activity: BaseActivity, topicItemView: View, data: Topic) {
             activity.let {
-                val opt = ActivityOptionsCompat.makeSceneTransitionAnimation(it, topicItemView, "topicItem")
+                val opt = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                    it,
+                    topicItemView,
+                    "topicItem"
+                )
                 val intent = Intent(context, CircleDetailActivity::class.java)
                 intent.putExtra("topicItem", data)
                 it.window.exitTransition = Slide(Gravity.START).apply { duration = 500 }
@@ -65,7 +67,11 @@ class CircleDetailActivity : BaseViewModelActivity<CircleDetailViewModel>() {
         fun activityStartFromCircle(fragment: Fragment, topicItemView: View, data: Topic) {
             fragment.apply {
                 activity?.let {
-                    val opt = ActivityOptionsCompat.makeSceneTransitionAnimation(it, topicItemView, "topicItem")
+                    val opt = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                        it,
+                        topicItemView,
+                        "topicItem"
+                    )
                     val intent = Intent(BaseApp.context, CircleDetailActivity::class.java)
                     intent.putExtra("topicItem", data)
                     it.window.exitTransition = Slide(Gravity.START).apply { duration = 500 }
@@ -123,45 +129,57 @@ class CircleDetailActivity : BaseViewModelActivity<CircleDetailViewModel>() {
             if (!isFormReceive) return@apply
             //下面的代码只会在前端跳转时执行
             ApiGenerator.getApiService(ApiServiceNew::class.java)
-                    .getTopicGround("问答圈", "test1")
-                    .mapOrThrowApiException()
-                    .setSchedulers()
-                    .doOnErrorWithDefaultErrorHandler { true }
-                    .safeSubscribeBy(
-                            onNext = {
-                                if (id !in 1..it.size) {
-                                    return@safeSubscribeBy
-                                }
-                                topic = it[id - 1]
-                                viewModel.topicId = topic.topicId.toInt()
-                                iv_circle_square.setAvatarImageFromUrl(topic.topicLogo)
-                                tv_circle_square_name.text = topic.topicName
-                                tv_circle_square_descriprion.text = topic.introduction
-                                tv_circle_square_person_number.text = topic.follow_count.toString() + "个成员"
-                                qa_detail_tv_title.text = topic.topicName
-                                if (topic._isFollow.equals(1)) {
-                                    btn_circle_square_concern.text = "已关注"
-                                    btn_circle_square_concern.background = ContextCompat.getDrawable(context, R.drawable.qa_shape_send_dynamic_btn_grey_background)
-                                } else {
-                                    btn_circle_square_concern.text = "+关注"
-                                    btn_circle_square_concern.background = ContextCompat.getDrawable(context, R.drawable.qa_shape_send_dynamic_btn_blue_background)
-                                }
-                                qa_vp_circle_detail.adapter = NewHotViewPagerAdapter(this@CircleDetailActivity, listOf(lastNewFragment, hotFragment))
-                                initTab()
-                                initClick()
-                            },
-                            onError = {
-                                context.toast("获取圈子信息失败")
-                            }
-                    )
+                .getTopicGround("问答圈", "test1")
+                .mapOrThrowApiException()
+                .setSchedulers()
+                .doOnErrorWithDefaultErrorHandler { true }
+                .safeSubscribeBy(
+                    onNext = {
+                        if (id !in 1..it.size) {
+                            return@safeSubscribeBy
+                        }
+                        topic = it[id - 1]
+                        viewModel.topicId = topic.topicId.toInt()
+                        iv_circle_square.setAvatarImageFromUrl(topic.topicLogo)
+                        tv_circle_square_name.text = topic.topicName
+                        tv_circle_square_descriprion.text = topic.introduction
+                        tv_circle_square_person_number.text = topic.follow_count.toString() + "个成员"
+                        qa_detail_tv_title.text = topic.topicName
+                        if (topic._isFollow.equals(1)) {
+                            btn_circle_square_concern.text = "已关注"
+                            btn_circle_square_concern.background = ContextCompat.getDrawable(
+                                context,
+                                R.drawable.qa_shape_send_dynamic_btn_grey_background
+                            )
+                        } else {
+                            btn_circle_square_concern.text = "+关注"
+                            btn_circle_square_concern.background = ContextCompat.getDrawable(
+                                context,
+                                R.drawable.qa_shape_send_dynamic_btn_blue_background
+                            )
+                        }
+                        qa_vp_circle_detail.adapter = NewHotViewPagerAdapter(
+                            this@CircleDetailActivity,
+                            listOf(lastNewFragment, hotFragment)
+                        )
+                        initTab()
+                        initClick()
+                        initObserve()
+                    },
+                    onError = {
+                        context.toast("获取圈子信息失败")
+                    }
+                )
         }
         mTencent = Tencent.createInstance(CommentConfig.APP_ID, this)
         window.enterTransition = Slide(Gravity.END).apply { duration = 500 }
         initView()
         if (!isFormReceive) {
-            qa_vp_circle_detail.adapter = NewHotViewPagerAdapter(this, listOf(lastNewFragment, hotFragment))
+            qa_vp_circle_detail.adapter =
+                NewHotViewPagerAdapter(this, listOf(lastNewFragment, hotFragment))
             initTab()
             initClick()
+            initObserve()
         }
     }
 
@@ -184,7 +202,12 @@ class CircleDetailActivity : BaseViewModelActivity<CircleDetailViewModel>() {
         super.onBackPressed()
     }
 
-    @SuppressLint("UseCompatLoadingForDrawables", "SetTextI18n")
+    private fun initObserve() {
+        viewModel.followStateChangedMark.observe {
+            changeFollowState()
+        }
+    }
+
     private fun initClick() {
         qa_circle_detail_iv_back.setOnSingleClickListener {
 //            window.returnTransition = Slide(Gravity.END).apply { duration = 500 }
@@ -201,41 +224,45 @@ class CircleDetailActivity : BaseViewModelActivity<CircleDetailViewModel>() {
             finish()
         }
         btn_circle_square_concern.setOnClickListener {
-            if (topic._isFollow.equals(1)) {
-                //关注的状态下点击，取消关注
-                viewModel.followTopic(topic.topicName, topic._isFollow.equals(1))
-                btn_circle_square_concern.background = context.getDrawable(R.drawable.qa_shape_send_dynamic_btn_blue_background)
-                btn_circle_square_concern.text = "+关注"
-                topic.follow_count = topic.follow_count - 1
-                tv_circle_square_person_number.text = topic.follow_count.toString() + "个成员"
-                topic._isFollow = 0
-            } else {
-                viewModel.followTopic(topic.topicName, topic._isFollow.equals(1))
-                btn_circle_square_concern.background = context.getDrawable(R.drawable.qa_shape_send_dynamic_btn_grey_background)
-                btn_circle_square_concern.text = "已关注"
-                topic.follow_count = topic.follow_count + 1
-                tv_circle_square_person_number.text = topic.follow_count.toString() + "个成员"
-                topic._isFollow = 1
-            }
+            changeFollowState()
         }
 
         qa_iv_circle_detail_share.setOnSingleClickListener {
-            val token = ServiceManager.getService(IAccountService::class.java).getUserTokenService().getToken()
             val url = "${CommentConfig.SHARE_URL}quanzi?id=${topic.topicId}"
             ShareDialog(it.context).apply {
                 initView(onCancelListener = View.OnClickListener {
                     dismiss()
                 }, qqshare = View.OnClickListener {
-                    mTencent?.let { it1 -> ShareUtils.qqShare(it1, this@CircleDetailActivity, topic.topicName, topic.introduction, url, topic.topicLogo) }
+                    mTencent?.let { it1 ->
+                        ShareUtils.qqShare(
+                            it1,
+                            this@CircleDetailActivity,
+                            topic.topicName,
+                            topic.introduction,
+                            url,
+                            topic.topicLogo
+                        )
+                    }
                 }, qqZoneShare = View.OnClickListener {
                     val topicArray = ArrayList<String>()//写出这样的代码，我很抱歉，可惜腾讯要的是ArrayList
                     topicArray.add(topic.topicLogo)
-                    mTencent?.let { it1 -> ShareUtils.qqQzoneShare(it1, this@CircleDetailActivity, topic.topicName, topic.introduction, url, topicArray) }
+                    mTencent?.let { it1 ->
+                        ShareUtils.qqQzoneShare(
+                            it1,
+                            this@CircleDetailActivity,
+                            topic.topicName,
+                            topic.introduction,
+                            url,
+                            topicArray
+                        )
+                    }
                 }, weChatShare = View.OnClickListener {
-                    CyxbsToast.makeText(context, R.string.qa_share_wechat_text, Toast.LENGTH_SHORT).show()
+                    CyxbsToast.makeText(context, R.string.qa_share_wechat_text, Toast.LENGTH_SHORT)
+                        .show()
 
                 }, friendShipCircle = View.OnClickListener {
-                    CyxbsToast.makeText(context, R.string.qa_share_wechat_text, Toast.LENGTH_SHORT).show()
+                    CyxbsToast.makeText(context, R.string.qa_share_wechat_text, Toast.LENGTH_SHORT)
+                        .show()
 
                 }, copylink = View.OnClickListener {
                     ClipboardController.copyText(this@CircleDetailActivity, url)
@@ -256,10 +283,12 @@ class CircleDetailActivity : BaseViewModelActivity<CircleDetailViewModel>() {
             qa_detail_tv_title.text = topic.topicName
             if (topic._isFollow.equals(1)) {
                 btn_circle_square_concern.text = "已关注"
-                btn_circle_square_concern.background = context.getDrawable(R.drawable.qa_shape_send_dynamic_btn_grey_background)
+                btn_circle_square_concern.background =
+                    context.getDrawable(R.drawable.qa_shape_send_dynamic_btn_grey_background)
             } else {
                 btn_circle_square_concern.text = "+关注"
-                btn_circle_square_concern.background = context.getDrawable(R.drawable.qa_shape_send_dynamic_btn_blue_background)
+                btn_circle_square_concern.background =
+                    context.getDrawable(R.drawable.qa_shape_send_dynamic_btn_blue_background)
             }
         }
     }
@@ -282,7 +311,35 @@ class CircleDetailActivity : BaseViewModelActivity<CircleDetailViewModel>() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == NEED_REFRESH_RESULT) {
-            qa_vp_circle_detail.adapter = NewHotViewPagerAdapter(this@CircleDetailActivity, listOf(lastNewFragment, hotFragment))
+            qa_vp_circle_detail.adapter = NewHotViewPagerAdapter(
+                this@CircleDetailActivity,
+                listOf(lastNewFragment, hotFragment)
+            )
+        }
+    }
+
+    private fun changeFollowState() {
+        if (topic._isFollow == 1) {
+            //关注的状态下点击，取消关注
+            viewModel.followTopic(topic.topicName, topic._isFollow == 1)
+            btn_circle_square_concern.background = ContextCompat.getDrawable(
+                this,
+                R.drawable.qa_shape_send_dynamic_btn_blue_background
+            )
+            btn_circle_square_concern.text = "+关注"
+            topic.follow_count = topic.follow_count - 1
+            tv_circle_square_person_number.text = topic.follow_count.toString() + "个成员"
+            topic._isFollow = 0
+        } else {
+            viewModel.followTopic(topic.topicName, topic._isFollow == 1)
+            btn_circle_square_concern.background = ContextCompat.getDrawable(
+                this,
+                R.drawable.qa_shape_send_dynamic_btn_grey_background
+            )
+            btn_circle_square_concern.text = "已关注"
+            topic.follow_count = topic.follow_count + 1
+            tv_circle_square_person_number.text = topic.follow_count.toString() + "个成员"
+            topic._isFollow = 1
         }
     }
 }

@@ -39,7 +39,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:text="@string/mine_security_please_set_protect_or_bind_email"
-        android:textColor="#2A4E84"
+        android:textColor="@color/levelFourFontColor"
         android:textSize="12sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

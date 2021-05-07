@@ -6,21 +6,23 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.mredrock.cyxbs.api.account.IAccountService
-import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.ui.BaseViewModelFragment
-import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.beannew.Dynamic
 import com.mredrock.cyxbs.qa.component.recycler.RvAdapterWrapper
 import com.mredrock.cyxbs.qa.config.CommentConfig
 import com.mredrock.cyxbs.qa.config.CommentConfig.COPY_LINK
 import com.mredrock.cyxbs.qa.config.CommentConfig.DELETE
+import com.mredrock.cyxbs.qa.config.CommentConfig.FOLLOW
 import com.mredrock.cyxbs.qa.config.CommentConfig.IGNORE
 import com.mredrock.cyxbs.qa.config.CommentConfig.QQ_FRIEND
 import com.mredrock.cyxbs.qa.config.CommentConfig.QQ_ZONE
 import com.mredrock.cyxbs.qa.config.CommentConfig.REPORT
+import com.mredrock.cyxbs.qa.config.CommentConfig.UN_FOLLOW
 import com.mredrock.cyxbs.qa.config.RequestResultCode
 import com.mredrock.cyxbs.qa.config.RequestResultCode.DYNAMIC_DETAIL_REQUEST
 import com.mredrock.cyxbs.qa.config.RequestResultCode.RELEASE_DYNAMIC_ACTIVITY_REQUEST
@@ -105,7 +107,12 @@ abstract class BaseCircleDetailFragment<T : CircleDetailViewModel> : BaseViewMod
                             }.show()
                         }
                     }
-
+                    UN_FOLLOW->{
+                        activityViewModels<CircleDetailViewModel>().value.followStateChangedMark.value = false
+                    }
+                    FOLLOW ->{
+                        activityViewModels<CircleDetailViewModel>().value.followStateChangedMark.value = true
+                    }
                     DELETE -> {
                         this@BaseCircleDetailFragment.activity?.let { it1 ->
                             QaDialog.show(it1, resources.getString(R.string.qa_dialog_tip_delete_comment_text), {}) {
