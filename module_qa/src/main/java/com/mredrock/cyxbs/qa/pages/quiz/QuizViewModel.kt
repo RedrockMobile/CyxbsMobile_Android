@@ -29,6 +29,7 @@ class QuizViewModel : BaseViewModel() {
     val imageLiveData = MutableLiveData<ArrayList<String>>()
 
     val draft = MutableLiveData<DynamicDraft>()
+    var isReleaseSuccess = false
 
     //为再次进入图库保存以前添加的图片，进行的逻辑
     val lastImageLiveData = ArrayList<String>()
@@ -89,11 +90,12 @@ class QuizViewModel : BaseViewModel() {
                 .mapOrThrowApiException()
                 .setSchedulers()
                 .doOnError {
+                    isReleaseSuccess = false
                     toastEvent.value = R.string.qa_release_dynamic_failure
                     backAndRefreshPreActivityEvent.value = true
                 }
                 .safeSubscribeBy {
-                    LogUtils.d("RayJoe", "输出一条请求")
+                    isReleaseSuccess = true
                     toastEvent.value = R.string.qa_release_dynamic_success
                     backAndRefreshPreActivityEvent.value = true
                 }

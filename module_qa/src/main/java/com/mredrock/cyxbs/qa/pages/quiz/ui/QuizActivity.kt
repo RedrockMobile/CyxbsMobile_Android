@@ -27,6 +27,7 @@ import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.R.drawable.*
 import com.mredrock.cyxbs.qa.config.RequestResultCode.NEED_REFRESH_RESULT
 import com.mredrock.cyxbs.qa.pages.quiz.QuizViewModel
+import com.mredrock.cyxbs.qa.pages.square.ui.activity.CircleDetailActivity
 import com.mredrock.cyxbs.qa.ui.activity.ViewImageCropActivity
 import com.mredrock.cyxbs.qa.ui.widget.DraftDialog
 import com.mredrock.cyxbs.qa.ui.widget.RectangleView
@@ -87,9 +88,20 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
         }
         viewModel.backAndRefreshPreActivityEvent.observeNotNull {
             if (it) {
-                setResult(NEED_REFRESH_RESULT)
-                progressDialog?.dismiss()
-                finish()
+                if (viewModel.isReleaseSuccess){
+                    topicMap[topicType]?.let { id ->
+                        CircleDetailActivity.activityStartFormQuiz(
+                            this,
+                            id
+                        )
+                    }
+                    progressDialog?.dismiss()
+                    finish()
+                } else {
+                    setResult(NEED_REFRESH_RESULT)
+                    progressDialog?.dismiss()
+                    finish()
+                }
             }
         }
 

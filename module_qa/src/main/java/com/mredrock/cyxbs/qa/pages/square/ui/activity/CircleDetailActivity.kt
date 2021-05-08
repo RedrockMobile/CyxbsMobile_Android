@@ -80,6 +80,14 @@ class CircleDetailActivity : BaseViewModelActivity<CircleDetailViewModel>() {
                 }
             }
         }
+
+        //自发送动态的页面而来，这里等同于自前端分享跳转而来
+        fun activityStartFormQuiz(activity: Activity, circleId: String) {
+            val intent = Intent(activity, CircleDetailActivity::class.java)
+            intent.putExtra("id", circleId)
+            intent.putExtra("isFromReceive", true)
+            activity.startActivity(intent)
+        }
     }
 
     private var mTencent: Tencent? = null
@@ -122,7 +130,7 @@ class CircleDetailActivity : BaseViewModelActivity<CircleDetailViewModel>() {
             } catch (e: Exception) {
                 return@apply
             }
-            if (id == 0) {
+            if (id <= 0) {
                 return@apply
             }
             isFormReceive = getBoolean("isFromReceive")
@@ -145,7 +153,7 @@ class CircleDetailActivity : BaseViewModelActivity<CircleDetailViewModel>() {
                         tv_circle_square_descriprion.text = topic.introduction
                         tv_circle_square_person_number.text = topic.follow_count.toString() + "个成员"
                         qa_detail_tv_title.text = topic.topicName
-                        if (topic._isFollow.equals(1)) {
+                        if (topic._isFollow == 1) {
                             btn_circle_square_concern.text = "已关注"
                             btn_circle_square_concern.background = ContextCompat.getDrawable(
                                 context,
@@ -184,7 +192,6 @@ class CircleDetailActivity : BaseViewModelActivity<CircleDetailViewModel>() {
     }
 
     override fun onBackPressed() {
-//        window.returnTransition = Slide(Gravity.END).apply { duration = 500 }
         if (!isFormReceive) {
             LogUtils.d("zt", topic.toString())
             when (startPosition) {
@@ -210,7 +217,6 @@ class CircleDetailActivity : BaseViewModelActivity<CircleDetailViewModel>() {
 
     private fun initClick() {
         qa_circle_detail_iv_back.setOnSingleClickListener {
-//            window.returnTransition = Slide(Gravity.END).apply { duration = 500 }
             when (startPosition) {
                 RESULT_CODE -> {
                     val intent = Intent()
