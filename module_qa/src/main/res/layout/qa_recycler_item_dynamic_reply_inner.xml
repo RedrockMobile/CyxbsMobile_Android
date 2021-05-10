@@ -42,6 +42,8 @@
         android:textColor="@color/qa_reply_detail_nickname_text_color"
         android:textSize="13sp"
         android:textStyle="bold"
+        android:maxEms="10"
+        android:singleLine="true"
         app:layout_constraintBottom_toBottomOf="@+id/qa_iv_reply_inner_avatar"
         app:layout_constraintStart_toEndOf="@id/qa_iv_reply_inner_avatar"
         app:layout_constraintTop_toTopOf="@id/qa_iv_reply_inner_avatar"

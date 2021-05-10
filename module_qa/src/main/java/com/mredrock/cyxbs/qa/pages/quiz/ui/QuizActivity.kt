@@ -88,11 +88,11 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
         }
         viewModel.backAndRefreshPreActivityEvent.observeNotNull {
             if (it) {
-                if (viewModel.isReleaseSuccess){
+                if (viewModel.isReleaseSuccess) {
                     topicMap[topicType]?.let { id ->
                         CircleDetailActivity.activityStartFormQuiz(
-                            this,
-                            id
+                                this,
+                                id
                         )
                     }
                     progressDialog?.dismiss()
@@ -122,7 +122,7 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
     //发布页标签单选
     @SuppressLint("SetTextI18n")
     private fun initTypeSelector() {
-        viewModel.getAllCirCleData("问答圈", "test1")
+        viewModel.getAllCirCleData()
         viewModel.allCircle.observe {
             if (!it.isNullOrEmpty()) {
                 val chipGroup = findViewById<ChipGroup>(R.id.qa_layout_quiz_tag)
