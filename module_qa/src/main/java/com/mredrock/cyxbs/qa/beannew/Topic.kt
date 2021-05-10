@@ -14,7 +14,7 @@ data class Topic(@SerializedName("topic_id")
                  val topicName: String = "",
 
                  @SerializedName("new_mes_count")
-                 val newMesCount: Int = 0,
+                 val newMesCount: Int =0,
 
                  @SerializedName("follow_count")
                  var follow_count: Int = 0,

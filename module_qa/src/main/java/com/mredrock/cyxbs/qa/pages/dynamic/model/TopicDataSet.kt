@@ -1,5 +1,7 @@
 package com.mredrock.cyxbs.qa.pages.dynamic.model
 
+import android.content.Context
+import android.content.SharedPreferences
 import com.google.gson.Gson
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.utils.extensions.editor
@@ -22,6 +24,17 @@ object TopicDataSet {
             putString(topic.topicName, s)
         }
     }
+
+    /*
+    得到所有的关注圈子
+     */
+    fun getAllTopic(): Map<String?, *>? {
+        return if (sharedPreferences.all.isNullOrEmpty())
+            null
+        else
+            sharedPreferences.all
+    }
+
 
     fun getTopicData(topicName: String): Topic? {
         val s1 = sharedPreferences.getString(topicName, "")

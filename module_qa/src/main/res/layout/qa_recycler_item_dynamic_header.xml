@@ -61,6 +61,8 @@
         android:textColor="@color/qa_dynamic_nickname_text_color"
         android:textSize="15sp"
         android:textStyle="bold"
+        android:maxEms="10"
+        android:singleLine="true"
         app:layout_constraintStart_toEndOf="@id/qa_iv_dynamic_avatar"
         app:layout_constraintTop_toTopOf="@+id/qa_iv_dynamic_avatar"
         tools:text="@string/qa_recycler_item_dynamic_name" />

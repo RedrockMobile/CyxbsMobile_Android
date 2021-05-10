@@ -85,6 +85,8 @@
         android:textColor="@color/qa_dynamic_nickname_text_color"
         android:textSize="13sp"
         android:textStyle="bold"
+        android:maxEms="10"
+        android:singleLine="true"
         app:layout_constraintBottom_toTopOf="@+id/qa_tv_reply_detail_date"
         app:layout_constraintStart_toEndOf="@id/qa_iv_reply_detail_avatar"
         app:layout_constraintTop_toTopOf="@+id/qa_iv_reply_detail_avatar"

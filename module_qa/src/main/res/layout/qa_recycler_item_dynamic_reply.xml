@@ -4,9 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@drawable/qa_ripple_comment_background_ripple"
     android:clipChildren="false"
     android:clipToPadding="false"
-    android:background="@drawable/qa_ripple_comment_background_ripple"
     android:paddingTop="21dp">
 
     <androidx.constraintlayout.widget.Guideline
@@ -38,6 +38,8 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
         android:layout_toEndOf="@id/qa_iv_reply_avatar"
+        android:maxEms="10"
+        android:singleLine="true"
         android:textColor="@color/qa_reply_detail_nickname_text_color"
         android:textSize="13sp"
         android:textStyle="bold"
@@ -68,20 +70,20 @@
         android:singleLine="false"
         android:textColor="@color/qa_dynamic_content_text_color"
         android:textSize="16sp"
+        app:ep_contract_color="@color/qa_tv_expand_text_color"
+        app:ep_contract_text="折叠"
+        app:ep_expand_color="@color/qa_tv_expand_text_color"
+        app:ep_expand_text="展开"
+        app:ep_max_line="4"
+        app:ep_need_animation="true"
+        app:ep_need_contract="true"
+        app:ep_need_link="false"
+        app:ep_need_mention="false"
         app:layout_constraintEnd_toStartOf="@id/qa_gl_reply_end"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/qa_tv_reply_nickname"
         app:layout_constraintTop_toBottomOf="@id/qa_iv_reply_avatar"
-        tools:text="有一起打游戏的吗？顺丰不浪，逆风不投"
-        app:ep_max_line="4"
-        app:ep_need_animation="true"
-        app:ep_need_contract="true"
-        app:ep_expand_color="@color/qa_tv_expand_text_color"
-        app:ep_contract_color="@color/qa_tv_expand_text_color"
-        app:ep_need_link="false"
-        app:ep_need_mention="false"
-        app:ep_contract_text="折叠"
-        app:ep_expand_text="展开"/>
+        tools:text="有一起打游戏的吗？顺丰不浪，逆风不投" />
 
     <com.mredrock.cyxbs.qa.ui.widget.NineGridView
         android:id="@+id/qa_reply_nine_grid_view"
@@ -112,11 +114,11 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="11dp"
+        android:clipChildren="false"
+        android:clipToPadding="false"
         app:layout_constraintEnd_toStartOf="@+id/qa_gl_reply_end"
         app:layout_constraintStart_toEndOf="@+id/qa_iv_reply_avatar"
         app:layout_constraintTop_toBottomOf="@+id/qa_reply_nine_grid_view"
-        android:clipChildren="false"
-        android:clipToPadding="false"
         tools:listitem="@layout/qa_recycler_item_dynamic_reply_inner" />
 
     <ImageView

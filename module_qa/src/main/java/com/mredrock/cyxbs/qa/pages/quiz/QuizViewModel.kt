@@ -1,6 +1,7 @@
 package com.mredrock.cyxbs.qa.pages.quiz
 
 import androidx.lifecycle.MutableLiveData
+import com.google.gson.Gson
 import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.mapOrThrowApiException
@@ -13,12 +14,14 @@ import com.mredrock.cyxbs.mine.network.model.DynamicDraft
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.beannew.Topic
 import com.mredrock.cyxbs.qa.network.ApiServiceNew
+import com.mredrock.cyxbs.qa.pages.dynamic.model.TopicDataSet
 import com.mredrock.cyxbs.qa.utils.isNullOrEmpty
 import com.mredrock.cyxbs.qa.utils.removeContinuousEnters
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import java.io.File
+import java.lang.StringBuilder
 
 
 /**
@@ -40,7 +43,6 @@ class QuizViewModel : BaseViewModel() {
     var editingImgPos = -1
         private set
     private var type: String = ""
-    private var title: String = ""
     private var content: String = ""
     private val isInvalidList = arrayListOf<Boolean>()
     fun tryEditImg(pos: Int): String? {
@@ -52,21 +54,18 @@ class QuizViewModel : BaseViewModel() {
         imageLiveData.value = imageList
     }
 
-    fun getAllCirCleData(topic_name: String, instruction: String) {
-        ApiGenerator.getApiService(ApiServiceNew::class.java)
-                .getTopicGround(topic_name, instruction)
-                .mapOrThrowApiException()
-                .setSchedulers()
-                .doOnError {
-                    toastEvent.value = R.string.qa_get_circle_data_failure
-                }
-                .doFinally {
-                    //初始化圈子完后在加载草稿，避免因为请求回复时间不一致导致的保存圈子未能显示问题
-                    getDraft()
-                }
-                .safeSubscribeBy {
-                    allCircle.value = it
-                }.lifeCycle()
+    fun getAllCirCleData() {
+        val topicList = ArrayList<Topic>()
+        val map: Map<String?, *>? = TopicDataSet.getAllTopic()
+        if (!map.isNullOrEmpty()) {
+            for ((key, value) in map) {
+                val gson = Gson()
+                if (!key.equals("outTime"))
+                    topicList.add(gson.fromJson(value.toString(), Topic::class.java))
+            }
+            allCircle.value = topicList
+        }
+        getDraft()
     }
 
     fun submitDynamic() {
@@ -103,7 +102,7 @@ class QuizViewModel : BaseViewModel() {
 
     fun checkTitleAndContent(type: String, content: String): Boolean {
         var result = false
-        if (type.isBlank()) {
+        if (type.isBlank()||type.equals("0")) {
             toastEvent.value = R.string.qa_quiz_hint_title_empty
         } else if (content.isBlank()) {
             toastEvent.value = R.string.qa_hint_content_empty
