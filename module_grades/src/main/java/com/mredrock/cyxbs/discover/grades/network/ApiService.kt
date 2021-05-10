@@ -4,6 +4,7 @@ import com.mredrock.cyxbs.common.bean.RedrockApiWrapper
 import com.mredrock.cyxbs.discover.grades.bean.Exam
 import com.mredrock.cyxbs.discover.grades.bean.IdsBean
 import com.mredrock.cyxbs.discover.grades.bean.IdsStatus
+import com.mredrock.cyxbs.discover.grades.bean.Status
 import com.mredrock.cyxbs.discover.grades.bean.analyze.GPAStatus
 import io.reactivex.Observable
 import retrofit2.http.*
@@ -27,7 +28,7 @@ interface ApiService {
      * 获取补考信息
      */
     @FormUrlEncoded
-    @POST("/api/examReexam")
+    @POST("/magipoke-jwzx/examReexam")
     fun getReExam(@Field("stuNum") stu: String): Observable<RedrockApiWrapper<List<Exam>>>
 
     @POST("/magipoke/ids/bind")
@@ -35,5 +36,8 @@ interface ApiService {
 
     @GET("/magipoke/gpa")
     fun getAnalyzeData(): Observable<GPAStatus>
+
+    @GET("/magipoke-jwzx/nowStatus")
+    fun getNowStatus(): Observable<RedrockApiWrapper<Status>>
 
 }

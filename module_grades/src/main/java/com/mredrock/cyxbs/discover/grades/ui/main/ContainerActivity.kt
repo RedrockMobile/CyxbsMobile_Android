@@ -1,6 +1,7 @@
 package com.mredrock.cyxbs.discover.grades.ui.main
 
 import android.content.Intent
+import android.content.res.Configuration
 import android.os.Bundle
 import android.view.View
 import androidx.core.content.ContextCompat
@@ -12,20 +13,20 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.bumptech.glide.Glide
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.mredrock.cyxbs.api.account.IAccountService
+import com.mredrock.cyxbs.api.account.IUserService
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.bean.LoginConfig
 import com.mredrock.cyxbs.common.config.DISCOVER_GRADES
 import com.mredrock.cyxbs.common.service.ServiceManager
-import com.mredrock.cyxbs.api.account.IAccountService
-import com.mredrock.cyxbs.api.account.IUserService
 import com.mredrock.cyxbs.common.ui.BaseActivity
 import com.mredrock.cyxbs.common.utils.extensions.pressToZoomOut
 import com.mredrock.cyxbs.discover.grades.R
 import com.mredrock.cyxbs.discover.grades.bean.Exam
 import com.mredrock.cyxbs.discover.grades.bean.analyze.isSuccessful
 import com.mredrock.cyxbs.discover.grades.ui.adapter.ExamAdapter
-import com.mredrock.cyxbs.discover.grades.ui.fragment.NoBindFragment
 import com.mredrock.cyxbs.discover.grades.ui.fragment.GPAFragment
+import com.mredrock.cyxbs.discover.grades.ui.fragment.NoBindFragment
 import com.mredrock.cyxbs.discover.grades.ui.viewModel.ContainerViewModel
 import com.mredrock.cyxbs.discover.grades.utils.extension.dp2px
 import kotlinx.android.synthetic.main.grades_activity_container.*
@@ -71,9 +72,16 @@ class ContainerActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.grades_activity_container)
         common_toolbar.apply {
-            setBackgroundColor(ContextCompat.getColor(this@ContainerActivity, R.color.common_mine_sign_store_bg))
-            initWithSplitLine("考试与成绩",
-                    false)
+            setBackgroundColor(
+                ContextCompat.getColor(
+                    this@ContainerActivity,
+                    R.color.common_mine_sign_store_bg
+                )
+            )
+            initWithSplitLine(
+                "考试与成绩",
+                false
+            )
             setTitleLocationAtLeft(true)
         }
         viewModel = ViewModelProvider(this@ContainerActivity).get(ContainerViewModel::class.java)
@@ -116,8 +124,8 @@ class ContainerActivity : BaseActivity() {
         viewModel.bottomStateListener.observe(this@ContainerActivity, Observer {
             if (it == true) {
                 val behavior = BottomSheetBehavior.from(fl_grades_bottom_sheet)
-                if(behavior.state==BottomSheetBehavior.STATE_COLLAPSED)
-                behavior.state = BottomSheetBehavior.STATE_EXPANDED
+                if (behavior.state == BottomSheetBehavior.STATE_COLLAPSED)
+                    behavior.state = BottomSheetBehavior.STATE_EXPANDED
             }
         })
         viewModel.analyzeData.observe(this@ContainerActivity, Observer {
@@ -139,7 +147,12 @@ class ContainerActivity : BaseActivity() {
     }
 
     private fun initExam() {
-        mAdapter = ExamAdapter(this@ContainerActivity, data, intArrayOf(R.layout.grades_item_init, R.layout.grades_item_exam))
+        viewModel.getStatus()
+        mAdapter = ExamAdapter(
+            this@ContainerActivity,
+            data,
+            intArrayOf(R.layout.grades_item_init, R.layout.grades_item_exam)
+        )
         rv_exam_main.adapter = mAdapter
         rv_exam_main.layoutManager = LinearLayoutManager(this@ContainerActivity)
 
@@ -149,7 +162,16 @@ class ContainerActivity : BaseActivity() {
             mAdapter.notifyDataSetChanged()
         })
 
-        loadExam()
+        viewModel.nowStatus.observe(this@ContainerActivity, Observer { status ->
+            if (status.examModel == "magipoke") {
+                rv_exam_main.visibility = View.VISIBLE
+                wv_exam_main.visibility = View.GONE
+                loadExam()
+            } else {
+                loadH5(status.url)
+            }
+        })
+
     }
 
     private fun loadExam() {
@@ -197,5 +219,19 @@ class ContainerActivity : BaseActivity() {
         } else {
             super.onBackPressed()
         }
+    }
+
+    private fun loadH5(baseUrl: String) {
+        rv_exam_main.visibility = View.GONE
+        wv_exam_main.visibility = View.VISIBLE
+        val stuNum = user.getStuNum()
+        val uiType =
+            if (
+                BaseApp.context.resources.configuration.uiMode
+                and Configuration.UI_MODE_NIGHT_MASK
+                == Configuration.UI_MODE_NIGHT_YES
+            ) 1 else 0
+        val url = "$baseUrl/?stuNum=$stuNum&uiType=$uiType"
+        wv_exam_main.loadUrl(url)
     }
 }
