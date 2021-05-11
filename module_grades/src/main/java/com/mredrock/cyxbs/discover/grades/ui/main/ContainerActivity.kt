@@ -1,9 +1,13 @@
 package com.mredrock.cyxbs.discover.grades.ui.main
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
 import android.view.View
+import android.webkit.WebChromeClient
+import android.webkit.WebSettings
+import android.webkit.WebViewClient
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
@@ -32,6 +36,7 @@ import com.mredrock.cyxbs.discover.grades.utils.extension.dp2px
 import kotlinx.android.synthetic.main.grades_activity_container.*
 import kotlinx.android.synthetic.main.grades_bottom_sheet.*
 import kotlinx.android.synthetic.main.grades_bottom_sheet.view.*
+
 
 /**
  * @CreateBy: FxyMine4ever
@@ -221,9 +226,23 @@ class ContainerActivity : BaseActivity() {
         }
     }
 
+    @SuppressLint("SetJavaScriptEnabled")
     private fun loadH5(baseUrl: String) {
         rv_exam_main.visibility = View.GONE
         wv_exam_main.visibility = View.VISIBLE
+        //H5使用Vue，需要开启js
+        wv_exam_main.setBackgroundColor(0)
+        wv_exam_main.settings.apply {
+            javaScriptEnabled = true
+            domStorageEnabled = true
+            useWideViewPort = true
+            loadWithOverviewMode = true
+            setSupportZoom(true)
+            builtInZoomControls = true
+            displayZoomControls = false
+            mixedContentMode = WebSettings.MIXED_CONTENT_ALWAYS_ALLOW
+            mediaPlaybackRequiresUserGesture = false
+        }
         val stuNum = user.getStuNum()
         val uiType =
             if (
