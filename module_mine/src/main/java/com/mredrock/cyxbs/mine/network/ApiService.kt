@@ -18,7 +18,7 @@ interface ApiService {
      * 上传头像
      */
     @Multipart
-    @POST("magipoke-intergral/Home/Photo/uploadArticle")
+    @POST("magipoke/person/upload/avatar")
     fun uploadSocialImg(@Part("stunum") stunum: RequestBody,
                         @Part file: MultipartBody.Part): Observable<RedrockApiWrapper<UploadImgResponse>>
 
@@ -76,81 +76,6 @@ interface ApiService {
      */
     @POST("app/index.php/QA/User/mine")
     fun getQANumber(): Observable<RedrockApiWrapper<QANumber>>
-
-    /**
-     * 获取已发布的问题
-     */
-    @FormUrlEncoded
-    @POST("app/index.php/QA/User/question")
-    fun getAskPostedList(@Field("page") page: Int,
-                         @Field("size") size: Int): Observable<RedrockApiWrapper<List<AskPosted>>>
-
-    /**
-     * 获取已发布的回答
-     */
-    @FormUrlEncoded
-    @POST("app/index.php/QA/User/answer")
-    fun getAnswerPostedList(@Field("page") page: Int,
-                            @Field("size") size: Int): Observable<RedrockApiWrapper<List<AnswerPosted>>>
-
-    /**
-     * 获取用户发出的评论
-     *
-     */
-    @FormUrlEncoded
-    @POST("app/index.php/QA/User/comment")
-    fun getCommentList(@Field("page") page: Int,
-                       @Field("size") size: Int): Observable<RedrockApiWrapper<List<Comment>>>
-
-    /**
-     * 获取别人对用户的评论
-     * 注：即用户的回答，别人在下面评论
-     */
-    @FormUrlEncoded
-    @POST("app/index.php/QA/User/reComment")
-    fun getCommentReceivedList(@Field("page") page: Int,
-                               @Field("size") size: Int): Observable<RedrockApiWrapper<List<CommentReceived>>>
-
-
-    /**
-     * 提问草稿
-     */
-    @FormUrlEncoded
-    @POST("/magipoke-draft/User/getDraftQuestionList")
-    fun getAskDraftList(@Field("page") page: Int,
-                        @Field("size") size: Int): Observable<RedrockApiWrapper<List<AskDraft>>>
-
-    /**
-     * 回答草稿
-     */
-    @FormUrlEncoded
-    @POST("/magipoke-draft/User/getDraftAnswerList")
-    fun getAnswerDraftList(@Field("page") page: Int,
-                           @Field("size") size: Int): Observable<RedrockApiWrapper<List<AnswerDraft>>>
-
-
-    /**
-     * 删除草稿
-     */
-    @FormUrlEncoded
-    @POST("/magipoke-draft/User/deleteItemInDraft")
-    fun deleteDraftById(@Field("id") id: Int): Observable<RedrockApiStatus>
-
-
-    /**
-     * 根据question的id获取Question，注意，网络请求结果为RequestBody对象，未解析
-     * 当跳转qa时，需要传递requestBody的string
-     * 因为qa和mine互不通信，故采取此方法传递Question对象
-     */
-    @FormUrlEncoded
-    @POST("app/index.php/QA/Question/getDetailedInfo")
-    fun getQuestion(
-            @Field("question_id") qid: String): Observable<ResponseBody>
-
-    @FormUrlEncoded
-    @POST("app/index.php/QA/Answer/getAnswerInfo")
-    fun getAnswer(
-            @Field("answer_id") answer_id: String): Observable<ResponseBody>
 
 
     /**
