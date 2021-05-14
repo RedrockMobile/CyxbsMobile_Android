@@ -20,9 +20,9 @@ class MyPraiseViewHolder(item: View): BaseViewHolder<Praise>(item) {
                 //2021-05-13T23:27:49+08:00
                 val dateFormat =
                 if (type == 0){//如果是对动态的点赞
-                   SimpleDateFormat("赞了你的动态      yyyy.MM.dd  hh:mm", Locale.getDefault())
+                   SimpleDateFormat("赞了你的动态      yyyy.MM.dd  HH:mm", Locale.getDefault())
                 } else {
-                    SimpleDateFormat("赞了你的评论      yyyy.MM.dd  hh:mm", Locale.getDefault())
+                    SimpleDateFormat("赞了你的评论      yyyy.MM.dd  HH:mm", Locale.getDefault())
                 }
                 val dateDecodeFormat = SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ssXXX", Locale.getDefault())
                 val date = dateDecodeFormat.parse(time)

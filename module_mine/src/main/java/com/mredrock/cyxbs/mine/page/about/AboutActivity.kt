@@ -47,7 +47,6 @@ class AboutActivity : BaseViewModelActivity<AboutViewModel>() {
         mine_about_legal.setOnClickListener { clickLegal() }
         mine_about_rl_share.setOnClickListener { onShareClick() }
         mine_about_rl_update.setOnClickListener { clickUpdate() }
-
         mine_about_rl_function.setOnClickListener { clickFeatureIntroduction() }
     }
 

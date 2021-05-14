@@ -16,7 +16,7 @@ class MyCommentViewHolder(val item: View) : BaseViewHolder<CommentWrapper>(item)
     override fun refresh(data: CommentWrapper?) {
         val comment = data?.comment
         val from = data?.from
-        val dateFormat = SimpleDateFormat("回复了你的评论      yyyy.MM.dd  hh:mm", Locale.getDefault())
+        val dateFormat = SimpleDateFormat("回复了你的评论      yyyy.MM.dd  HH:mm", Locale.getDefault())
         item.apply {
             comment?.apply {
                 qa_like_view_my_comment_item_praise.setCheckedWithoutAnimator(comment.isPraised)
