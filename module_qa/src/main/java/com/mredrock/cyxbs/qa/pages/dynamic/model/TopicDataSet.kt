@@ -1,7 +1,5 @@
 package com.mredrock.cyxbs.qa.pages.dynamic.model
 
-import android.content.Context
-import android.content.SharedPreferences
 import com.google.gson.Gson
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.utils.extensions.editor
@@ -57,6 +55,13 @@ object TopicDataSet {
             null
         } else {
             outTime
+        }
+    }
+
+    //清除所有的圈子主题缓存
+    fun clearCircleDetailTime() {
+        sharedPreferences.editor {
+            clear()
         }
     }
 }
