@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.*
 import android.graphics.drawable.Drawable
+import android.net.Uri
 import android.text.TextPaint
 import android.util.AttributeSet
 import androidx.appcompat.widget.AppCompatImageView
@@ -36,8 +37,18 @@ class RectangleView @JvmOverloads constructor(
         }
     }
 
+    override fun setImageBitmap(bm: Bitmap?) {
+        super.setImageBitmap(bm)
+        bitmap = bm
+    }
+
     override fun setImageDrawable(drawable: Drawable?) {
         super.setImageDrawable(drawable)
+        bitmap = drawable?.toBitmap()
+    }
+
+    override fun setImageURI(uri: Uri?) {
+        super.setImageURI(uri)
         bitmap = drawable?.toBitmap()
     }
 

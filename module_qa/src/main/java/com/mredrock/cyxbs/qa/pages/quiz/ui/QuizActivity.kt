@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.ProgressDialog
 import android.content.Intent
+import android.graphics.BitmapFactory
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
@@ -16,6 +17,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import com.alibaba.android.arouter.facade.annotation.Route
+import com.bumptech.glide.Glide
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import com.mredrock.cyxbs.common.component.CyxbsToast
@@ -305,7 +307,8 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
 
     private fun createImageView(uri: Uri) = RectangleView(this).apply {
         scaleType = ImageView.ScaleType.CENTER_CROP
-        setImageURI(uri)
+        val bitMap = uri.bmSizeStandardizing(context = this.context)
+        setImageBitmap(bitMap)
     }
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
