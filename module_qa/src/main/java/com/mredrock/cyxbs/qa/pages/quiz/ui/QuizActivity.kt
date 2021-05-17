@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.ProgressDialog
 import android.content.Intent
-import android.graphics.BitmapFactory
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
@@ -17,12 +16,13 @@ import androidx.core.content.ContextCompat
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import com.alibaba.android.arouter.facade.annotation.Route
-import com.bumptech.glide.Glide
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
+import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.common.config.QA_QUIZ
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
+import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.*
 import com.mredrock.cyxbs.mine.network.model.DynamicDraft
 import com.mredrock.cyxbs.qa.R
@@ -93,8 +93,8 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
                 if (viewModel.isReleaseSuccess) {
                     topicMap[topicType]?.let { id ->
                         CircleDetailActivity.activityStartFormQuiz(
-                                this,
-                                id
+                            this,
+                            id
                         )
                     }
                     progressDialog?.dismiss()
@@ -130,17 +130,22 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
                 val chipGroup = findViewById<ChipGroup>(R.id.qa_layout_quiz_tag)
                 for (topic in it.withIndex()) {
                     topicMap[topic.value.topicName] = topic.value.topicId
-                    chipGroup?.addView((layoutInflater.inflate(R.layout.qa_quiz_view_chip, chipGroup, false) as Chip).apply {
-                        text = "# " + topic.value.topicName
-                        setOnClickListener {
-                            if (topicType == getTopicText(text.toString())) {
-                                //当第二次点击时值为零，表示未选择圈子
-                                topicType = "0"
-                            } else {
-                                topicType = getTopicText(text.toString())
+                    chipGroup?.addView(
+                        (layoutInflater.inflate(
+                            R.layout.qa_quiz_view_chip,
+                            chipGroup,
+                            false
+                        ) as Chip).apply {
+                            text = "# " + topic.value.topicName
+                            setOnClickListener {
+                                topicType = if (topicType == getTopicText(text.toString())) {
+                                    //当第二次点击时值为零，表示未选择圈子
+                                    "0"
+                                } else {
+                                    getTopicText(text.toString())
+                                }
                             }
-                        }
-                    })
+                        })
                 }
             }
         }
@@ -157,16 +162,21 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
     @SuppressLint("SetTextI18n")
     private fun initEditListener() {
         qa_edt_quiz_content.filters = arrayOf(
-                object : InputFilter.LengthFilter(
-                        MAX_CONTENT_SIZE) {}
+            object : InputFilter.LengthFilter(
+                MAX_CONTENT_SIZE
+            ) {}
         )
         qa_edt_quiz_content.doOnTextChanged { text, _, _, _ ->
             text?.let {
                 qa_tv_edit_num.text = "${text.length}/$MAX_CONTENT_SIZE"
                 if (text.length in 1..MAX_CONTENT_SIZE) {
-                    qa_tv_toolbar_right.setBackgroundResource(qa_shape_send_dynamic_btn_blue_background)
+                    qa_tv_toolbar_right.setBackgroundResource(
+                        qa_shape_send_dynamic_btn_blue_background
+                    )
                 } else {
-                    qa_tv_toolbar_right.setBackgroundResource(qa_shape_send_dynamic_btn_grey_background)
+                    qa_tv_toolbar_right.setBackgroundResource(
+                        qa_shape_send_dynamic_btn_grey_background
+                    )
                 }
             }
         }
@@ -204,8 +214,14 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
             visible()
             text = getString(R.string.qa_quiz_dialog_next)
             setOnClickListener {
+                LogUtils.d("RayleighZ", "click")
                 if (isComment == "") {
-                    if (viewModel.checkTitleAndContent(topicType, qa_edt_quiz_content.text.toString())) {
+                    if (viewModel.checkTitleAndContent(
+                            topicType,
+                            qa_edt_quiz_content.text.toString()
+                        )
+                    ) {
+                        LogUtils.d("RayleighZ", "show")
                         progressDialog?.show()
                         viewModel.deleteDraft()
                         viewModel.submitDynamic()
@@ -223,14 +239,21 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
     }
 
     private fun initImageAddView() {
-        nine_grid_view.addView(ContextCompat.getDrawable(this, qa_ic_add_photo)?.let { createImageViewFromVector(it) })
+        nine_grid_view.addView(
+            ContextCompat.getDrawable(this, qa_ic_add_photo)?.let { createImageViewFromVector(it) })
         nine_grid_view.setOnItemClickListener { _, index ->
             if (index == nine_grid_view.childCount - 1) {
-
-                this@QuizActivity.selectImageFromAlbum(MAX_SELECTABLE_IMAGE_COUNT)
+                //如果达到选择图片的上限，就ban掉不允许添加图片
+                if (nine_grid_view.childCount <= MAX_SELECTABLE_IMAGE_COUNT) {
+                    this@QuizActivity.selectImageFromAlbum(MAX_SELECTABLE_IMAGE_COUNT)
+                } else {
+                    BaseApp.context.toast("已达图片数上限")
+                }
             } else {
-                ViewImageCropActivity.activityStartForResult(this@QuizActivity, viewModel.tryEditImg(index)
-                        ?: return@setOnItemClickListener)
+                ViewImageCropActivity.activityStartForResult(
+                    this@QuizActivity, viewModel.tryEditImg(index)
+                        ?: return@setOnItemClickListener
+                )
             }
         }
 
@@ -257,13 +280,16 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
             }
             //补充缺少的view
             selectedImageFiles.asSequence()
-                    .filterIndexed { index, _ -> index >= nine_grid_view.childCount - 1 }
-                    .forEach {
-                        if (it.isNotEmpty()) {
-                            nine_grid_view.addView(createImageView(Uri.parse(it)), nine_grid_view.childCount - 1)
-                            viewModel.checkInvalid(false)
-                        } else viewModel.checkInvalid(true)
-                    }
+                .filterIndexed { index, _ -> index >= nine_grid_view.childCount - 1 }
+                .forEach {
+                    if (it.isNotEmpty()) {
+                        nine_grid_view.addView(
+                            createImageView(Uri.parse(it)),
+                            nine_grid_view.childCount - 1
+                        )
+                        viewModel.checkInvalid(false)
+                    } else viewModel.checkInvalid(true)
+                }
         }
     }
 
@@ -284,24 +310,36 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
                     it.toString()
                 }
                 val imageListAbsolutePath = ArrayList<String>()
-                imageListUri.forEach { imageListAbsolutePath.add(Uri.parse(it).getAbsolutePath(this)) }
+                imageListUri.forEach {
+                    imageListAbsolutePath.add(
+                        Uri.parse(it).getAbsolutePath(this)
+                    )
+                }
                 //为再次进入图库保存以前添加的图片，进行的逻辑
                 if (viewModel.lastImageLiveData.size + imageListAbsolutePath.size <= 8)
                     viewModel.lastImageLiveData.addAll(imageListAbsolutePath)
                 else {
-                    CyxbsToast.makeText(this, getString(R.string.qa_choose_image_tips), Toast.LENGTH_SHORT).show()
+                    CyxbsToast.makeText(
+                        this,
+                        getString(R.string.qa_choose_image_tips),
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
                 viewModel.setImageList(viewModel.lastImageLiveData)
             }
             ViewImageCropActivity.DEFAULT_RESULT_CODE -> viewModel.setImageList(viewModel.imageLiveData.value!!.apply {
-                set(viewModel.editingImgPos, data.getStringExtra(ViewImageCropActivity.EXTRA_NEW_PATH))
+                set(
+                    viewModel.editingImgPos,
+                    data.getStringExtra(ViewImageCropActivity.EXTRA_NEW_PATH)
+                )
             })
         }
     }
 
     private fun createImageViewFromVector(drawable: Drawable) = RectangleView(this).apply {
         scaleType = ImageView.ScaleType.CENTER
-        background = ContextCompat.getDrawable(this@QuizActivity, qa_shape_quiz_select_pic_empty_background)
+        background =
+            ContextCompat.getDrawable(this@QuizActivity, qa_shape_quiz_select_pic_empty_background)
         setImageDrawable(drawable)
     }
 
@@ -357,16 +395,23 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
     }
 
     private fun createExitDialog() = DraftDialog(this).apply {
-        initView(title = getString(R.string.qa_quiz_dialog_exit_text), saveText = "保存", noSaveText = "不保存", cancelText = "取消", saveListener = View.OnClickListener {
-            saveDraft()
-            dismiss()
-        }, noSaveListener = View.OnClickListener {
-            viewModel.deleteDraft()
-            dismiss()
-            finish()
-        }, cancelListener = View.OnClickListener {
-            dismiss()
-        })
+        initView(
+            title = getString(R.string.qa_quiz_dialog_exit_text),
+            saveText = "保存",
+            noSaveText = "不保存",
+            cancelText = "取消",
+            saveListener = View.OnClickListener {
+                saveDraft()
+                dismiss()
+            },
+            noSaveListener = View.OnClickListener {
+                viewModel.deleteDraft()
+                dismiss()
+                finish()
+            },
+            cancelListener = View.OnClickListener {
+                dismiss()
+            })
     }
 
     override fun onPause() {
