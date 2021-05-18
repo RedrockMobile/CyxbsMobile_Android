@@ -125,6 +125,7 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
     @SuppressLint("SetTextI18n")
     private fun initTypeSelector() {
         viewModel.getAllCirCleData()
+        viewModel.getImageLimits()
         viewModel.allCircle.observe {
             if (!it.isNullOrEmpty()) {
                 val chipGroup = findViewById<ChipGroup>(R.id.qa_layout_quiz_tag)

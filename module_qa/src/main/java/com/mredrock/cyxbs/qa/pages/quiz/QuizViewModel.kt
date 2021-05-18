@@ -39,8 +39,8 @@ import java.io.FileOutputStream
 class QuizViewModel : BaseViewModel() {
     val imageLiveData = MutableLiveData<ArrayList<String>>()
 
-    //图片的最大上限(5M)，超过之后需要压缩到5m
-    private val fileMaxSize = 5242880
+    //默认的图片的最大上限(5M)，超过之后需要压缩到5m
+    private var fileMaxSize = 5242880
 
     val draft = MutableLiveData<DynamicDraft>()
     var isReleaseSuccess = false
@@ -203,6 +203,15 @@ class QuizViewModel : BaseViewModel() {
         isInvalidList.clear()
     }
 
+    fun getImageLimits(){
+        ApiGenerator.getApiService(ApiServiceNew::class.java)
+            .getImageMaxSize()
+            .setSchedulers()
+            .safeSubscribeBy{
+                fileMaxSize = it.data.image_limit * 1024 * 1024
+            }
+    }
+
     fun submitComment(postId: String, content: String, replyId: String) {
         val builder = MultipartBody.Builder()
             .setType(MultipartBody.FORM)
@@ -241,12 +250,6 @@ class QuizViewModel : BaseViewModel() {
                 toastEvent.value = R.string.qa_release_comment_success
                 finishReleaseCommentEvent.value = true
             }
-
-        files?.forEach {
-            if (it.second && it.first.exists()){
-                it.first.delete()
-            }
-        }
     }
 
     //图像压缩

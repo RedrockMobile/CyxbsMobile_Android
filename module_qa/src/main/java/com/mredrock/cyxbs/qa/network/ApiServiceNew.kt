@@ -190,4 +190,8 @@ interface ApiServiceNew {
     @POST("https://be-prod.redrock.team/magipoke-draft/new/delDraft")
     fun deleteDraft(): Observable<RedrockApiStatus>
 
+
+    //获取图片压缩的上限
+    @GET("/magipoke-loop/config")
+    fun getImageMaxSize(): Observable<RedrockApiWrapper<ImageConfig>>
 }
