@@ -2,9 +2,11 @@ package com.mredrock.cyxbs.qa.pages.quiz
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.os.Environment
 import androidx.lifecycle.MutableLiveData
 import com.google.gson.Gson
 import com.mredrock.cyxbs.common.BaseApp
+import com.mredrock.cyxbs.common.config.DIR_PHOTO
 import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.mapOrThrowApiException
@@ -21,13 +23,13 @@ import com.mredrock.cyxbs.qa.network.ApiServiceNew
 import com.mredrock.cyxbs.qa.pages.dynamic.model.TopicDataSet
 import com.mredrock.cyxbs.qa.utils.isNullOrEmpty
 import com.mredrock.cyxbs.qa.utils.removeContinuousEnters
+import io.reactivex.Observable
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
-import kotlin.collections.ArrayList
 
 
 /**
@@ -38,9 +40,7 @@ class QuizViewModel : BaseViewModel() {
     val imageLiveData = MutableLiveData<ArrayList<String>>()
 
     //图片的最大上限(5M)，超过之后需要压缩到5m
-    private val fileMaxSize = 10485760
-
-    private val fileAfterCompassSize = 5242880
+    private val fileMaxSize = 5242880
 
     val draft = MutableLiveData<DynamicDraft>()
     var isReleaseSuccess = false
@@ -85,32 +85,47 @@ class QuizViewModel : BaseViewModel() {
             .addFormDataPart("content", content.removeContinuousEnters())
             .addFormDataPart("topic_id", type)
         if (!imageLiveData.value.isNullOrEmpty()) {
-            val files = imageLiveData.value!!.asSequence()
-                .map { fileCaster(it) }
-                .toList()
-            files.forEachIndexed { index, file ->
-                val suffix = file.name.substring(file.name.lastIndexOf(".") + 1)
-                val imageBody = RequestBody.create("image/$suffix".toMediaTypeOrNull(), file)
-                val name = "photo" + (index + 1)
-                builder.addFormDataPart(name, file.name, imageBody)
-            }
-        }
-        ApiGenerator.getApiService(ApiServiceNew::class.java)
-            .releaseDynamic(builder.build().parts)
-            .mapOrThrowApiException()
-            .setSchedulers()
-            .doOnError {
-                isReleaseSuccess = false
-                it?.let { e ->
-                    BaseApp.context.toast(e.toString())
+            Observable.fromArray(imageLiveData.value)
+                .setSchedulers()
+                .map {
+                    it.map { path ->
+                        fileCaster(path)
+                    }
                 }
-                backAndRefreshPreActivityEvent.value = true
-            }
-            .safeSubscribeBy {
-                isReleaseSuccess = true
-                toastEvent.value = R.string.qa_release_dynamic_success
-                backAndRefreshPreActivityEvent.value = true
-            }
+                .safeSubscribeBy {
+                    it.forEachIndexed { index, pair ->
+                        val suffix = pair.first.name.substring(pair.first.name.lastIndexOf(".") + 1)
+                        val imageBody =
+                            RequestBody.create("image/$suffix".toMediaTypeOrNull(), pair.first)
+                        val name = "photo" + (index + 1)
+                        builder.addFormDataPart(name, pair.first.name, imageBody)
+                    }
+
+                    ApiGenerator.getApiService(ApiServiceNew::class.java)
+                        .releaseDynamic(builder.build().parts)
+                        .mapOrThrowApiException()
+                        .setSchedulers()
+                        .doFinally{
+                            it.forEach { pair ->
+                                if (pair.second && pair.first.exists()){
+                                    pair.first.delete()
+                                }
+                            }
+                        }
+                        .doOnError { throwable ->
+                            isReleaseSuccess = false
+                            throwable?.let { e ->
+                                BaseApp.context.toast(e.toString())
+                            }
+                            backAndRefreshPreActivityEvent.value = true
+                        }
+                        .safeSubscribeBy {
+                            isReleaseSuccess = true
+                            toastEvent.value = R.string.qa_release_dynamic_success
+                            backAndRefreshPreActivityEvent.value = true
+                        }
+                }
+        }
     }
 
     fun checkTitleAndContent(type: String, content: String): Boolean {
@@ -194,22 +209,30 @@ class QuizViewModel : BaseViewModel() {
             .addFormDataPart("content", content.removeContinuousEnters())
             .addFormDataPart("post_id", postId)
             .addFormDataPart("reply_id", replyId)
+        var files: List<Pair<File, Boolean>>? = null
         if (!imageLiveData.value.isNullOrEmpty()) {
-            val files = imageLiveData.value!!.asSequence()
+            files = imageLiveData.value!!.asSequence()
                 .map { fileCaster(it) }
                 .toList()
-            files.forEachIndexed { index, file ->
-                val suffix = file.name.substring(file.name.lastIndexOf(".") + 1)
-                val imageBody = RequestBody.create("image/$suffix".toMediaTypeOrNull(), file)
+            files.forEachIndexed { index, pair ->
+                val suffix = pair.first.name.substring(pair.first.name.lastIndexOf(".") + 1)
+                val imageBody = RequestBody.create("image/$suffix".toMediaTypeOrNull(), pair.first)
                 val name = "photo" + (index + 1)
-                builder.addFormDataPart(name, file.name, imageBody)
+                builder.addFormDataPart(name, pair.first.name, imageBody)
             }
         }
         ApiGenerator.getApiService(ApiServiceNew::class.java)
             .releaseComment(builder.build().parts)
             .mapOrThrowApiException()
             .setSchedulers()
-            .doFinally { progressDialogEvent.value = ProgressDialogEvent.DISMISS_DIALOG_EVENT }
+            .doFinally {
+                files?.forEach { pair ->
+                    if (pair.second && pair.first.exists()){
+                        pair.first.delete()
+                    }
+                }
+                progressDialogEvent.value = ProgressDialogEvent.DISMISS_DIALOG_EVENT
+            }
             .doOnError {
                 toastEvent.value = R.string.qa_release_comment_failure
                 finishReleaseCommentEvent.value = false
@@ -218,21 +241,32 @@ class QuizViewModel : BaseViewModel() {
                 toastEvent.value = R.string.qa_release_comment_success
                 finishReleaseCommentEvent.value = true
             }
+
+        files?.forEach {
+            if (it.second && it.first.exists()){
+                it.first.delete()
+            }
+        }
     }
 
     //图像压缩
-    private fun fileCaster(imagePath: String): File {
+    private fun fileCaster(imagePath: String): Pair<File, Boolean> {
         val file = File(imagePath)
         if (file.length() >= fileMaxSize) {
-            BaseApp.context.toast("正在压缩图片")
             //超过阈值，需要进行压缩
             val bitMap = BitmapFactory.decodeFile(imagePath)
             //如果是奇奇怪怪的格式，不能转换层bitmap，就直接吧文件传出去
             bitMap?.let { bm ->
-                val quality = fileAfterCompassSize * 100 / file.length()//计算压缩质量
+                val quality = fileMaxSize * 100 / file.length()//计算压缩质量
                 if (quality in 0..100) {//从数学上说，这个是恒成立的，但是为了求稳还是写一步判断
                     val outputStream = ByteArrayOutputStream()
-                    val newPath = "${imagePath.substring(0, imagePath.lastIndexOf('.'))}compass${imagePath.substring(imagePath.lastIndexOf('.'))}"
+                    val newPath = "${
+                        Environment.getExternalStorageDirectory()
+                            .toString() + DIR_PHOTO + imagePath.substring(
+                            imagePath.lastIndexOf('/'),
+                            imagePath.lastIndexOf('.')
+                        )
+                    }compassByCyxbs${imagePath.substring(imagePath.lastIndexOf('.'))}"
                     val newFile = File(newPath)//写一个新的文件名
                     if (!newFile.exists()) newFile.createNewFile()
                     val fos = FileOutputStream(newFile)
@@ -240,10 +274,10 @@ class QuizViewModel : BaseViewModel() {
                     fos.write(outputStream.toByteArray())
                     fos.flush()
                     fos.close()
-                    return newFile
+                    return Pair(newFile, true)
                 }
             }
         }
-        return file
+        return Pair(file, false)
     }
 }
