@@ -7,10 +7,7 @@ import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
-import android.util.DisplayMetrics
 import androidx.annotation.RequiresApi
-import java.io.File
-import java.io.InputStream
 import java.lang.Exception
 import java.lang.IllegalStateException
 
