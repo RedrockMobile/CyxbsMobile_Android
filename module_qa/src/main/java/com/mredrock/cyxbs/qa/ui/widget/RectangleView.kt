@@ -9,6 +9,7 @@ import android.text.TextPaint
 import android.util.AttributeSet
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.core.graphics.drawable.toBitmap
+import com.mredrock.cyxbs.common.utils.LogUtils
 
 
 class RectangleView @JvmOverloads constructor(
