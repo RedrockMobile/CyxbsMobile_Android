@@ -186,7 +186,6 @@ class ExamAdapter(val context: Context,
                     return -2
                 }
             }
-            LogUtils.d("RayleighZ","Exam date = $time")
             examDate.set(array[0].toInt(), array[1].toInt() - 1, array[2].toInt())
             val diff = examDate.time.time - now.time
             val day = 1000 * 24 * 60 * 60

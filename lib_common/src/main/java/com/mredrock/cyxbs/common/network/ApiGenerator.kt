@@ -248,7 +248,6 @@ object ApiGenerator {
         try {
             response = proceed.invoke()
         } catch (e: Exception){
-            LogUtils.d("RayleighZ", "exception")
             e.printStackTrace()
         } finally {
             return response

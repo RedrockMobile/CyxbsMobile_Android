@@ -217,14 +217,12 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
             visible()
             text = getString(R.string.qa_quiz_dialog_next)
             setOnClickListener {
-                LogUtils.d("RayleighZ", "click")
                 if (isComment == "") {
                     if (viewModel.checkTitleAndContent(
                                     topicType,
                                     qa_edt_quiz_content.text.toString()
                             )
                     ) {
-                        LogUtils.d("RayleighZ", "show")
                         progressDialog?.show()
                         viewModel.deleteDraft()
                         viewModel.submitDynamic()
@@ -382,7 +380,7 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
     }
 
 
-    fun loadDraft(draft: DynamicDraft) {
+    private fun loadDraft(draft: DynamicDraft) {
         draftId = if (draft.isDraft == 1) {
             UPDATE_DRAFT
         } else {
@@ -401,8 +399,12 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
                 childView[currentTypeIndex - 1].isChecked = true
             }
         }
+        LogUtils.d("Gibson", "when load, draft = $draft, image")
         if (!draft.images.isNullOrEmpty()) {
             viewModel.setImageList(arrayListOf<String>().apply { addAll(draft.images) })
+        } else {//表示草稿中并没有图像，就直接清空
+            LogUtils.d("Gibson", "refresh imageList")
+            viewModel.imageLiveData.value = null
         }
     }
 

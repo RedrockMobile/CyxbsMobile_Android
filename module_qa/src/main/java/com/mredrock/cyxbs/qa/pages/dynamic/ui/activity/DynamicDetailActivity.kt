@@ -346,9 +346,7 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
         }
         viewModel.replyInfo.observe {
             it?.let {
-                LogUtils.d("RayleighZ","info = ${it.replyId}")
                 if (it.replyId.isNotEmpty()) {
-                    LogUtils.d("RayleighZ","show pop window")
                     qa_coordinatorlayout.isReplyEdit = true
                     KeyboardController.showInputKeyboard(this@DynamicDetailActivity, qa_et_my_comment_reply)
                     ReplyPopWindow.with(this@DynamicDetailActivity)
@@ -408,7 +406,6 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
 
     private fun initDynamic() {
 
-        LogUtils.d("RayleighZ", "create")
 
         // 设置behavior
         val layoutParams = qa_ll_reply.layoutParams as CoordinatorLayout.LayoutParams

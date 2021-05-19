@@ -89,43 +89,53 @@ class QuizViewModel : BaseViewModel() {
                 .setSchedulers()
                 .map {
                     it.map { path ->
+                        LogUtils.d("Gibson", "file name = $path")
                         fileCaster(path)
                     }
                 }
                 .safeSubscribeBy {
-                    it.forEachIndexed { index, pair ->
-                        val suffix = pair.first.name.substring(pair.first.name.lastIndexOf(".") + 1)
-                        val imageBody =
-                            RequestBody.create("image/$suffix".toMediaTypeOrNull(), pair.first)
-                        val name = "photo" + (index + 1)
-                        builder.addFormDataPart(name, pair.first.name, imageBody)
+                    it?.let { list ->
+                        list.forEachIndexed { index, pair ->
+                            val suffix = pair.first.name.substring(pair.first.name.lastIndexOf(".") + 1)
+                            val imageBody =
+                                RequestBody.create("image/$suffix".toMediaTypeOrNull(), pair.first)
+                            val name = "photo" + (index + 1)
+                            builder.addFormDataPart(name, pair.first.name, imageBody)
+                        }
+                        sendDynamicRequest(parts = builder.build().parts, filePairs = list)
                     }
-
-                    ApiGenerator.getApiService(ApiServiceNew::class.java)
-                        .releaseDynamic(builder.build().parts)
-                        .mapOrThrowApiException()
-                        .setSchedulers()
-                        .doFinally{
-                            it.forEach { pair ->
-                                if (pair.second && pair.first.exists()){
-                                    pair.first.delete()
-                                }
-                            }
-                        }
-                        .doOnError { throwable ->
-                            isReleaseSuccess = false
-                            throwable?.let { e ->
-                                BaseApp.context.toast(e.toString())
-                            }
-                            backAndRefreshPreActivityEvent.value = true
-                        }
-                        .safeSubscribeBy {
-                            isReleaseSuccess = true
-                            toastEvent.value = R.string.qa_release_dynamic_success
-                            backAndRefreshPreActivityEvent.value = true
-                        }
                 }
+        } else {
+            //不含图片的情况
+            sendDynamicRequest(parts = builder.build().parts, filePairs = null)
         }
+    }
+
+    //暂时想不出太好的解耦合方案，这里设计的不太好，可能需要重构
+    fun sendDynamicRequest(parts :List<MultipartBody.Part>, filePairs: List<Pair<File, Boolean>>?){
+        ApiGenerator.getApiService(ApiServiceNew::class.java)
+            .releaseDynamic(parts)
+            .mapOrThrowApiException()
+            .setSchedulers()
+            .doFinally {
+                filePairs?.forEach { pair ->
+                    if (pair.second && pair.first.exists()) {
+                        pair.first.delete()
+                    }
+                }
+            }
+            .doOnError { throwable ->
+                isReleaseSuccess = false
+                throwable?.let { e ->
+                    BaseApp.context.toast(e.toString())
+                }
+                backAndRefreshPreActivityEvent.value = true
+            }
+            .safeSubscribeBy {
+                isReleaseSuccess = true
+                toastEvent.value = R.string.qa_release_dynamic_success
+                backAndRefreshPreActivityEvent.value = true
+            }
     }
 
     fun checkTitleAndContent(type: String, content: String): Boolean {
@@ -151,8 +161,15 @@ class QuizViewModel : BaseViewModel() {
                 toastEvent.value = R.string.qa_get_draft_failure
             }
             .safeSubscribeBy {
-                LogUtils.d("draft", it.toString())
+                LogUtils.d("Gibson", it.toString())
+                //后端返回的json的images可能是[""]，会引起fileNotFind，这里要进行一次过滤
+                //判空的原因是后端还有可能返回的是null，不加就会空指针
+                val newList = it.images?.filter { path ->
+                    path != ""
+                }
+                it.images = newList
                 draft.value = it
+                LogUtils.d("Gibson", "after cast = $it, imagesIsNullOrEmpty = ${draft.value?.images.isNullOrEmpty()}, imageList size = ${draft.value?.images?.size}")
             }
     }
 
@@ -203,11 +220,11 @@ class QuizViewModel : BaseViewModel() {
         isInvalidList.clear()
     }
 
-    fun getImageLimits(){
+    fun getImageLimits() {
         ApiGenerator.getApiService(ApiServiceNew::class.java)
             .getImageMaxSize()
             .setSchedulers()
-            .safeSubscribeBy{
+            .safeSubscribeBy {
                 fileMaxSize = it.data.image_limit * 1024 * 1024
             }
     }
@@ -236,7 +253,7 @@ class QuizViewModel : BaseViewModel() {
             .setSchedulers()
             .doFinally {
                 files?.forEach { pair ->
-                    if (pair.second && pair.first.exists()){
+                    if (pair.second && pair.first.exists()) {
                         pair.first.delete()
                     }
                 }

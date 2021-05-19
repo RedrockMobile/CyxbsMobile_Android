@@ -12,7 +12,7 @@ data class DynamicDraft(
         @SerializedName("content")
         val content: String,
         @SerializedName("images")
-        val images: List<String>,
+        var images: List<String>,
         @SerializedName("type")
         val type: String
 ) : Serializable
