@@ -186,6 +186,7 @@ class QuizViewModel : BaseViewModel() {
     }
 
     fun updateDraftItem(flag: String, content: String, type: String) {
+        LogUtils.d("Gibson", "flag = $flag, content = $content")
         val builder = MultipartBody.Builder()
             .setType(MultipartBody.FORM)
             .addFormDataPart("flag", flag)

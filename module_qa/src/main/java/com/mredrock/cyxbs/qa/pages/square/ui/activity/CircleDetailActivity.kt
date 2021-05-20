@@ -48,7 +48,6 @@ class CircleDetailActivity : BaseViewModelActivity<CircleDetailViewModel>() {
 
     companion object {
         private var startPosition = 0
-
         fun activityStartFromSquare(activity: BaseActivity, topicItemView: View, data: Topic) {
             activity.let {
                 val opt = ActivityOptionsCompat.makeSceneTransitionAnimation(
@@ -210,7 +209,7 @@ class CircleDetailActivity : BaseViewModelActivity<CircleDetailViewModel>() {
     }
 
     private fun initObserve() {
-        viewModel.followStateChangedMark.observe {
+        viewModel.followStateChangedMarkObservableByActivity.observe {
             changeFollowState()
         }
     }
@@ -231,6 +230,7 @@ class CircleDetailActivity : BaseViewModelActivity<CircleDetailViewModel>() {
         }
         btn_circle_square_concern.setOnClickListener {
             changeFollowState()
+            viewModel.followStateChangedMarkObservableByFragment.value = true
         }
 
         qa_iv_circle_detail_share.setOnSingleClickListener {

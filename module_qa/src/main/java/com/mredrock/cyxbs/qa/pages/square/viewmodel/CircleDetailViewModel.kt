@@ -30,8 +30,10 @@ open class CircleDetailViewModel(kind: String, loop: Int) : BaseViewModel() {
     val ignorePeople = MutableLiveData<Boolean>()
     val deleteTips = MutableLiveData<Boolean>()
     var topicId = 1
-    val followStateChangedMark = MutableLiveData<Boolean>()
-
+    //Activity观察的liveData，用于监测内部Fragment引起的FollowState的改变
+    val followStateChangedMarkObservableByActivity = MutableLiveData<Boolean>()
+    //Fragment观察的liveData，用于监测内部Activity引起的FollowState的改变
+    val followStateChangedMarkObservableByFragment = MutableLiveData<Boolean>()
     init {
         val config = PagedList.Config.Builder()
             .setEnablePlaceholders(false)

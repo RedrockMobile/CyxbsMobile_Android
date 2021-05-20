@@ -7,8 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mredrock.cyxbs.common.ui.BaseViewModelFragment
 import com.mredrock.cyxbs.qa.R
@@ -108,10 +106,12 @@ abstract class BaseCircleDetailFragment<T : CircleDetailViewModel> : BaseViewMod
                         }
                     }
                     UN_FOLLOW->{
-                        activityViewModels<CircleDetailViewModel>().value.followStateChangedMark.value = false
+                        activityViewModels<CircleDetailViewModel>().value.followStateChangedMarkObservableByActivity.value = false
+                        viewModel.invalidateQuestionList()
                     }
                     FOLLOW ->{
-                        activityViewModels<CircleDetailViewModel>().value.followStateChangedMark.value = true
+                        activityViewModels<CircleDetailViewModel>().value.followStateChangedMarkObservableByActivity.value = true
+                        viewModel.invalidateQuestionList()
                     }
                     DELETE -> {
                         this@BaseCircleDetailFragment.activity?.let { it1 ->
@@ -122,6 +122,9 @@ abstract class BaseCircleDetailFragment<T : CircleDetailViewModel> : BaseViewMod
                     }
                 }
             }
+        }
+        activityViewModels<CircleDetailViewModel>().value.followStateChangedMarkObservableByFragment.observe {
+            viewModel.invalidateQuestionList()
         }
         viewModel.deleteTips.observeNotNull {
             if (it == true)
