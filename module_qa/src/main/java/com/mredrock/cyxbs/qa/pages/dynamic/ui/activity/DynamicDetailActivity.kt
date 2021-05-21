@@ -523,6 +523,9 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
         qa_tv_dynamic_content.setContent(viewModel.dynamic.value?.content)
         qa_tv_dynamic_comment_count.text = viewModel.dynamic.value?.commentCount.toString()
         viewModel.dynamic.value?.let {
+            qa_iv_dynamic_praise_count_image.registerLikeView(it.postId, CommentConfig.PRAISE_MODEL_DYNAMIC, it.isPraised, it.praiseCount)
+        }
+        viewModel.dynamic.value?.let {
             qa_tv_dynamic_publish_at.text = dynamicTimeDescription(System.currentTimeMillis(), it.publishTime * 1000)
         }
         if (viewModel.dynamic.value?.pics.isNullOrEmpty())
