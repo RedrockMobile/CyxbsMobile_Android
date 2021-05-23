@@ -156,11 +156,11 @@ open class DynamicListViewModel(kind: String) : BaseViewModel() {
                 }
                 //刷新数据
                 getMyCirCleData()
-                invalidateQuestionList()
+                invalidateDynamicList()
             }
     }
 
-    fun invalidateQuestionList() = dynamicList.value?.dataSource?.invalidate()
+    fun invalidateDynamicList() = dynamicList.value?.dataSource?.invalidate()
 
     fun retry() = factory.dynamicDataSourceLiveData.value?.retry()
 

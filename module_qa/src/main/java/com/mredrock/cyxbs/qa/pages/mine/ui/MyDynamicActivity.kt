@@ -106,7 +106,7 @@ class MyDynamicActivity : BaseViewModelActivity<MyDynamicViewModel>() {
         qa_rv_my_dynamic.adapter = dynamicListRvAdapter
         viewModel.deleteTips.observe {
             if (it == true)
-                viewModel.invalidateQuestionList()
+                viewModel.invalidateDynamicList()
         }
         val footerRvAdapter = FooterRvAdapter { viewModel.retry() }
         val emptyRvAdapter = EmptyRvAdapter(getString(R.string.qa_question_list_empty_hint))
@@ -141,7 +141,7 @@ class MyDynamicActivity : BaseViewModelActivity<MyDynamicViewModel>() {
                 LogUtils.d("swipeOutTime", TopicDataSet.getOutCirCleDetailTime().toString())
                 TopicDataSet.getOutCirCleDetailTime()?.let { viewModel.getTopicMessages(it) }
             }
-            viewModel.invalidateQuestionList()
+            viewModel.invalidateDynamicList()
             viewModel.getMyCirCleData()
         }
     }

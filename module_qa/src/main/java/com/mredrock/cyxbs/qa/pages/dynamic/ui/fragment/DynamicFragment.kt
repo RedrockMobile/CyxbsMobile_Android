@@ -75,7 +75,7 @@ import org.greenrobot.eventbus.ThreadMode
  * @Date: 2020/11/16 22:07
  */
 @Route(path = QA_ENTRY)
-class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>()                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 {
+class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(),EventBusLifecycleSubscriber                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                {
     companion object {
         const val REQUEST_LIST_REFRESH_ACTIVITY = 0x1
 
@@ -165,12 +165,12 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>()           
 
         viewModel.ignorePeople.observe {
             if (it == true)
-                viewModel.invalidateQuestionList()
+                viewModel.invalidateDynamicList()
         }
 
         viewModel.deleteTips.observe {
             if (it == true)
-                viewModel.invalidateQuestionList()
+                viewModel.invalidateDynamicList()
         }
         val footerRvAdapter = FooterRvAdapter { viewModel.retry() }
         val emptyRvAdapter = EmptyRvAdapter(getString(R.string.qa_question_list_empty_hint))
@@ -242,7 +242,7 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>()           
 
         swipe_refresh_layout.setOnRefreshListener {
             refreshTopicMessage()
-            viewModel.invalidateQuestionList()
+            viewModel.invalidateDynamicList()
             viewModel.getMyCirCleData()
         }
     }
@@ -378,7 +378,7 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>()           
                     //获取用户进入圈子详情退出的时间，去请求从而刷新未读消息
                     viewModel.getMyCirCleData()
                     refreshTopicMessage()
-                    viewModel.invalidateQuestionList()
+                    viewModel.invalidateDynamicList()
                 } else {
                     // 不需要刷新，则更新当前的dynamic为详细页的dynamic（避免出现评论数目不一致的问题）
                     dynamicListRvAdapter.curSharedItem?.apply {
@@ -399,10 +399,17 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>()           
                     //获取用户进入圈子详情退出的时间，去请求从而刷新未读消息
                     viewModel.getMyCirCleData()
                     refreshTopicMessage()
-                    viewModel.invalidateQuestionList()
+                    viewModel.invalidateDynamicList()
                 }
             }
         }
     }
+    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
+    open fun refreshQuestionList(event: RefreshQaEvent) {
+        if (isRvAtTop)
+            viewModel.invalidateDynamicList()
+        else
+            qa_rv_dynamic_List.smoothScrollToPosition(0)
 
+    }
 }
