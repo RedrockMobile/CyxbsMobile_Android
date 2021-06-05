@@ -61,8 +61,10 @@ object ApiGenerator {
         retrofit = Retrofit.Builder().apply {
             this.defaultConfig()
             configRetrofitBuilder {
-                it.defaultConfig()
-                it.configureOkHttp()
+                it.apply {
+                    defaultConfig()
+                    configureTokenOkHttp()
+                }.build()
             }
         }.build()
         commonRetrofit = Retrofit.Builder().apply {
@@ -70,6 +72,7 @@ object ApiGenerator {
             configRetrofitBuilder {
                 it.apply {
                     defaultConfig()
+                    configureCommonOkHttp()
                 }.build()
             }
         }.build()
@@ -124,7 +127,7 @@ object ApiGenerator {
                 .configRetrofitBuilder {
                     it.apply {
                         if (tokenNeeded && !isTouristMode())
-                            configureOkHttp()
+                            configureTokenOkHttp()
                         if (okHttpClientConfig == null)
                             this.defaultConfig()
                         else
@@ -159,80 +162,28 @@ object ApiGenerator {
         this.connectTimeout(DEFAULT_TIME_OUT.toLong(), TimeUnit.SECONDS)
     }
 
-    //带token请求的OkHttp配置
-    private fun OkHttpClient.Builder.configureOkHttp(): OkHttpClient {
+
+    //不带token请求的OkHttp配置
+    private fun OkHttpClient.Builder.configureCommonOkHttp(): OkHttpClient {
         return this.apply {
             /**
-             * 切换url的Interceptor
+             * 连接失败时切换备用url的Interceptor
              * 一旦切换，只有重启app才能切回来（因为如果请求得到的url不是原来的@{link getBaseUrl()}，则切换到新的url，而以后访问都用这个新的url了）
              * 放在tokenInterceptor上游的理由是：因为那里面还有token刷新机制，无法判断是否真正是因为服务器的原因请求失败
              */
-            interceptors().add(object : Interceptor {
+            interceptors().add(BackupInterceptor())
+        }.build()
+    }
 
-                private var useBackupUrl: Boolean = false
-                private var backupUrl: String = ""
-
-                override fun intercept(chain: Interceptor.Chain): Response {
-
-                    // 如果切换过url，则直接用这个url请求
-                    if (useBackupUrl) {
-                        return useBackupUrl(chain)
-                    }
-
-                    // 正常请求，照理说应该进入tokenInterceptor
-                    val response = proceedPoxyWithTryCatch {
-                        chain.proceed(chain.request())
-                    }
-
-                    if (response?.isSuccessful == true) {
-                        return response
-                    }
-
-//                    Log.e("sandyzhang", "请求失败，开始获取baseUrl")
-
-
-                    // 如果请求失败（是tokenInterceptor即便刷新token也无法请求成功的情况），则请求是否有新的url
-                    backupUrl = getBackupUrl()
-                    // 约定给的backupUrl不带https前缀，加上
-                    if ("https://$backupUrl" != getBaseUrl()) {
-                        useBackupUrl = true
-                        // 重新请求并返回
-                        return useBackupUrl(chain)
-                    }
-
-
-                    return response!!
-                }
-
-                private fun useBackupUrl(chain: Interceptor.Chain): Response {
-                    val newUrl: HttpUrl = chain.request().url
-                            .newBuilder()
-                            .scheme("https")
-                            .host(backupUrl)
-                            .build()
-                    val builder: Request.Builder = chain.request().newBuilder()
-                    return chain.proceed(builder.url(newUrl).build())
-                }
-
-                private fun getBackupUrl(): String {
-                    val okHttpClient = OkHttpClient()
-                    val request: Request = Request.Builder()
-                            .url(BASE_NORMAL_BACKUP_GET)
-                            .build()
-                    val call = okHttpClient.newCall(request)
-                    val json = call.execute().body?.string()
-                    return try {
-                        val backupUrlStatus = Gson().fromJson<RedrockApiWrapper<BackupUrlStatus>>(json, object : TypeToken<RedrockApiWrapper<BackupUrlStatus>>() {}.type)
-//                        Log.e("sandyzhang", backupUrlStatus.data.baseUrl)
-                        backupUrlStatus.data.baseUrl
-                    } catch (e: Exception) {
-                        e.printStackTrace()
-                        ""
-                    }
-                }
-
-
-            })
+    //带token请求的OkHttp配置
+    private fun OkHttpClient.Builder.configureTokenOkHttp(): OkHttpClient {
+        return this.apply {
+            /**
+             * 连接失败时切换备用url的Interceptor
+             * 一旦切换，只有重启app才能切回来（因为如果请求得到的url不是原来的@{link getBaseUrl()}，则切换到新的url，而以后访问都用这个新的url了）
+             * 放在tokenInterceptor上游的理由是：因为那里面还有token刷新机制，无法判断是否真正是因为服务器的原因请求失败
+             */
+            interceptors().add(BackupInterceptor())
 
 
             interceptors().add(Interceptor {
@@ -282,6 +233,7 @@ object ApiGenerator {
     //对token和refreshToken进行刷新
     @Synchronized
     private fun checkRefresh(chain: Interceptor.Chain, expiredToken: String): Response? {
+
         var response = proceedPoxyWithTryCatch { chain.proceed(chain.request().newBuilder().header("Authorization", "Bearer $token").build()) }
         /**
          * 刷新token条件设置为，已有refreshToken，并且已经过期，也可以后端返回特定到token失效code
@@ -330,4 +282,69 @@ object ApiGenerator {
 
     //是否是游客模式
     private fun isTouristMode() = ServiceManager.getService(IAccountService::class.java).getVerifyService().isTouristMode()
+
+    class BackupInterceptor : Interceptor {
+
+        private var useBackupUrl: Boolean = false
+        private var backupUrl: String = ""
+
+        override fun intercept(chain: Interceptor.Chain): Response {
+
+            // 如果切换过url，则直接用这个url请求
+            if (useBackupUrl) {
+                return useBackupUrl(chain)
+            }
+
+            // 正常请求，照理说应该进入tokenInterceptor
+            val response = proceedPoxyWithTryCatch {
+                chain.proceed(chain.request())
+            }
+
+            if (response?.isSuccessful == true) {
+                return response
+            }
+
+
+            // 如果请求失败（是tokenInterceptor即便刷新token也无法请求成功的情况），则请求是否有新的url
+            backupUrl = getBackupUrl()
+            // 约定给的backupUrl不带https前缀，加上
+            if ("https://$backupUrl" != getBaseUrl()) {
+                useBackupUrl = true
+                // 重新请求并返回
+                return useBackupUrl(chain)
+            }
+
+
+            return response!!
+        }
+
+        private fun useBackupUrl(chain: Interceptor.Chain): Response {
+            val newUrl: HttpUrl = chain.request().url
+                    .newBuilder()
+                    .scheme("https")
+                    .host(backupUrl)
+                    .build()
+            val builder: Request.Builder = chain.request().newBuilder()
+            return chain.proceed(builder.url(newUrl).build())
+        }
+
+        private fun getBackupUrl(): String {
+            val okHttpClient = OkHttpClient()
+            val request: Request = Request.Builder()
+                    .url(BASE_NORMAL_BACKUP_GET)
+                    .build()
+            val call = okHttpClient.newCall(request)
+            val json = call.execute().body?.string()
+            return try {
+                val backupUrlStatus = Gson().fromJson<RedrockApiWrapper<BackupUrlStatus>>(json, object : TypeToken<RedrockApiWrapper<BackupUrlStatus>>() {}.type)
+                backupUrlStatus.data.baseUrl
+            } catch (e: Exception) {
+                e.printStackTrace()
+                ""
+            }
+        }
+
+
+    }
+
 }
