@@ -1,29 +1,27 @@
 package com.mredrock.cyxbs.common.network
 
-import android.os.Looper
 import android.util.SparseArray
-import com.bumptech.glide.util.Synthetic
-import com.mredrock.cyxbs.common.BuildConfig
-import com.mredrock.cyxbs.common.service.ServiceManager
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.api.account.IUserStateService
-import com.mredrock.cyxbs.common.BaseApp
-import com.mredrock.cyxbs.common.R
+import com.mredrock.cyxbs.common.BuildConfig
+import com.mredrock.cyxbs.common.bean.BackupUrlStatus
+import com.mredrock.cyxbs.common.bean.RedrockApiWrapper
+import com.mredrock.cyxbs.common.config.BASE_NORMAL_BACKUP_GET
 import com.mredrock.cyxbs.common.config.SUCCESS
 import com.mredrock.cyxbs.common.config.TOKEN_EXPIRE
 import com.mredrock.cyxbs.common.config.getBaseUrl
+import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.utils.LogUtils
-import com.mredrock.cyxbs.common.utils.extensions.runOnUiThread
 import com.mredrock.cyxbs.common.utils.extensions.takeIfNoException
-import com.mredrock.cyxbs.common.utils.extensions.toast
-import okhttp3.Interceptor
-import okhttp3.OkHttpClient
-import okhttp3.Response
+import okhttp3.*
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
+
 
 /**
  * Created by AceMurder on 2018/1/24.
@@ -164,6 +162,79 @@ object ApiGenerator {
     //带token请求的OkHttp配置
     private fun OkHttpClient.Builder.configureOkHttp(): OkHttpClient {
         return this.apply {
+            /**
+             * 切换url的Interceptor
+             * 一旦切换，只有重启app才能切回来（因为如果请求得到的url不是原来的@{link getBaseUrl()}，则切换到新的url，而以后访问都用这个新的url了）
+             * 放在tokenInterceptor上游的理由是：因为那里面还有token刷新机制，无法判断是否真正是因为服务器的原因请求失败
+             */
+            interceptors().add(object : Interceptor {
+
+                private var useBackupUrl: Boolean = false
+                private var backupUrl: String = ""
+
+                override fun intercept(chain: Interceptor.Chain): Response {
+
+                    // 如果切换过url，则直接用这个url请求
+                    if (useBackupUrl) {
+                        return useBackupUrl(chain)
+                    }
+
+                    // 正常请求，照理说应该进入tokenInterceptor
+                    val response = proceedPoxyWithTryCatch {
+                        chain.proceed(chain.request())
+                    }
+
+                    if (response?.isSuccessful == true) {
+                        return response
+                    }
+
+//                    Log.e("sandyzhang", "请求失败，开始获取baseUrl")
+
+
+                    // 如果请求失败（是tokenInterceptor即便刷新token也无法请求成功的情况），则请求是否有新的url
+                    backupUrl = getBackupUrl()
+                    // 约定给的backupUrl不带https前缀，加上
+                    if ("https://$backupUrl" != getBaseUrl()) {
+                        useBackupUrl = true
+                        // 重新请求并返回
+                        return useBackupUrl(chain)
+                    }
+
+
+                    return response!!
+                }
+
+                private fun useBackupUrl(chain: Interceptor.Chain): Response {
+                    val newUrl: HttpUrl = chain.request().url
+                            .newBuilder()
+                            .scheme("https")
+                            .host(backupUrl)
+                            .build()
+                    val builder: Request.Builder = chain.request().newBuilder()
+                    return chain.proceed(builder.url(newUrl).build())
+                }
+
+                private fun getBackupUrl(): String {
+                    val okHttpClient = OkHttpClient()
+                    val request: Request = Request.Builder()
+                            .url(BASE_NORMAL_BACKUP_GET)
+                            .build()
+                    val call = okHttpClient.newCall(request)
+                    val json = call.execute().body?.string()
+                    return try {
+                        val backupUrlStatus = Gson().fromJson<RedrockApiWrapper<BackupUrlStatus>>(json, object : TypeToken<RedrockApiWrapper<BackupUrlStatus>>() {}.type)
+//                        Log.e("sandyzhang", backupUrlStatus.data.baseUrl)
+                        backupUrlStatus.data.baseUrl
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                        ""
+                    }
+                }
+
+
+            })
+
+
             interceptors().add(Interceptor {
                 /**
                  * 所有请求添加token到header
@@ -243,11 +314,11 @@ object ApiGenerator {
         return response
     }
 
-    private fun proceedPoxyWithTryCatch(proceed: () -> Response) : Response?{
+    private fun proceedPoxyWithTryCatch(proceed: () -> Response): Response? {
         var response: Response? = null
         try {
             response = proceed.invoke()
-        } catch (e: Exception){
+        } catch (e: Exception) {
             e.printStackTrace()
         } finally {
             return response
