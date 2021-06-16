@@ -9,6 +9,4 @@ import com.mredrock.cyxbs.qa.pages.square.viewmodel.CircleDetailViewModel
  *@author SpreadWater
  *@description
  */
-class HotFragment(private val loop:Int) :BaseCircleDetailFragment<CircleDetailViewModel>() {
-    override fun getViewModelFactory() = CircleDetailViewModel.Factory("hot",loop)
-}
+class HotFragment : BaseCircleDetailFragment<CircleDetailViewModel>()

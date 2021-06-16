@@ -5,6 +5,7 @@ import android.content.Context
 import android.graphics.Color
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.text.isDigitsOnly
+import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.SchoolCalendar
 import com.mredrock.cyxbs.discover.grades.R
 import com.mredrock.cyxbs.discover.grades.bean.Exam

@@ -13,13 +13,13 @@ import retrofit2.http.POST
  * Created By jay68 on 2018/8/10.
  */
 interface ApiService {
-    @GET("/wxapi/magipoke-text/start/photo")
+    @GET("/magipoke-text/start/photo")
     fun getStartPage(): Observable<RedrockApiWrapper<List<StartPage>>>
 
     /**
      * 检查是否绑定信息
      */
     @FormUrlEncoded
-    @POST("/wxapi/user-secret/user/bind/is")
+    @POST("/user-secret/user/bind/is")
     fun checkBinding(@Field("stu_num") stu_num: String): Observable<RedrockApiWrapper<BindingResponse>>
 }

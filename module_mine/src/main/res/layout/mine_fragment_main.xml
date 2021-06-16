@@ -154,7 +154,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="50dp"
-                android:layout_marginTop="50dp"
+                android:layout_marginTop="54dp"
                 android:layout_marginBottom="27dp"
                 android:text="@string/mine_dynamic"
                 android:textColor="@color/levelFourFontColor"
@@ -232,7 +232,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="16dp"
-                android:text="积分商城"
+                android:text="@string/mine_string_score_store"
                 android:textColor="@color/common_level_three_font_color"
                 android:textSize="15sp" />
 
@@ -255,7 +255,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="16dp"
-                android:text="设置"
+                android:text="@string/mine_string_setting"
                 android:textColor="@color/common_level_three_font_color"
                 android:textSize="15sp" />
 
@@ -278,7 +278,30 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="16dp"
-                android:text="关于我们"
+                android:text="@string/mine_string_about_us"
+                android:textColor="@color/common_level_three_font_color"
+                android:textSize="15sp" />
+
+            <ImageView
+                android:layout_width="6dp"
+                android:layout_height="12.5dp"
+                android:layout_gravity="end|center_vertical"
+                android:layout_marginEnd="25.5dp"
+                android:src="@drawable/mine_ic_arrow_right" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/mine_main_fm_feedback"
+            android:layout_width="match_parent"
+            android:layout_height="36dp"
+            android:layout_marginTop="12.5dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="16dp"
+                android:text="@string/mine_feedback_suggestion"
                 android:textColor="@color/common_level_three_font_color"
                 android:textSize="15sp" />
 

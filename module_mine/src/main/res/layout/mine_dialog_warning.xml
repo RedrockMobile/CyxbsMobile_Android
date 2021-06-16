@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="255dp"
+    android:layout_height="329dp"
+    android:background="@drawable/mine_shape_dialog_back">
+
+    <ImageView
+        android:id="@+id/mine_imageview3"
+        android:layout_width="150dp"
+        android:layout_height="108dp"
+        android:layout_marginStart="63dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginEnd="42dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/mine_ic_dialog" />
+
+    <TextView
+        android:id="@+id/mine_tv_dialog_warning_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="90dp"
+        android:layout_marginTop="22dp"
+        android:layout_marginEnd="90dp"
+        android:text="@string/mine_security_dialog_tip"
+        android:textColor="@color/common_level_two_font_color"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/mine_imageview3" />
+
+    <TextView
+        android:id="@+id/mine_tv_dialog_warning_content"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:layout_marginEnd="12dp"
+        android:layout_marginTop="10dp"
+        android:text="@string/mine_security_please_set_protect_or_bind_email"
+        android:textColor="@color/levelFourFontColor"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/mine_tv_dialog_warning_title" />
+
+    <Button
+        android:id="@+id/mine_bt_security_dialog_negative"
+        android:layout_width="96dp"
+        android:layout_height="34dp"
+        android:layout_marginStart="23dp"
+        android:layout_marginBottom="29dp"
+        android:background="@drawable/mine_shape_round_corner_light_blue"
+        android:letterSpacing="0.1"
+        android:lineSpacingExtra="21dp"
+        android:text="取消"
+        android:textColor="#FFFFFF"
+        android:textSize="15sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/mine_bt_security_dialog_postive"
+        android:layout_width="96dp"
+        android:layout_height="34dp"
+        android:layout_marginEnd="23dp"
+        android:layout_marginBottom="29dp"
+        android:background="@drawable/mine_shape_round_cornor_purple_blue"
+        android:letterSpacing="0.1"
+        android:lineSpacingExtra="21dp"
+        android:text="确定"
+        android:textColor="#FFFFFF"
+        android:textSize="15sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>

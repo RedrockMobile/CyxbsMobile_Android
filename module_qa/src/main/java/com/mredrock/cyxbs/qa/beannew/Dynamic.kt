@@ -3,6 +3,8 @@ package com.mredrock.cyxbs.qa.beannew
 import android.os.Parcel
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import com.mredrock.cyxbs.common.utils.LogUtils
+import com.mredrock.cyxbs.qa.utils.cutEnterAndBlank
 
 data class Dynamic(@SerializedName("post_id")
                    var postId: String = "",
@@ -34,7 +36,7 @@ data class Dynamic(@SerializedName("post_id")
                    val uid: String = "",
 
                    @SerializedName("content")
-                   val content: String = "",
+                   var content: String = "",
 
                    @SerializedName("comment_count")
                    var commentCount: Int = 0,
@@ -54,6 +56,7 @@ data class Dynamic(@SerializedName("post_id")
                 _isPraised = 0
             }
         }
+
     constructor(parcel: Parcel) : this(
             parcel.readString(),
             parcel.readInt(),
@@ -68,6 +71,8 @@ data class Dynamic(@SerializedName("post_id")
             parcel.readString(),
             parcel.readInt()) {
         parcel.readStringList(pics)
+        //利用正则剔除大量空白
+        content = cutEnterAndBlank(content)
     }
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {

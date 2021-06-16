@@ -25,8 +25,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:alpha="0.1"
-                android:background="@color/qa_quiz_toolbar_divider_line_color" />
+                android:background="@color/qa_mine_common_divide_line" />
 
             <androidx.appcompat.widget.AppCompatEditText
                 android:id="@+id/qa_edt_quiz_content"
@@ -71,8 +70,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:alpha="0.1"
-                android:background="@color/qa_quiz_toolbar_divider_line_color" />
+                android:background="@color/qa_mine_common_divide_line" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/qa_tv_choose_circle"
@@ -82,9 +80,10 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="10dp"
                 android:padding="5dp"
+                android:textStyle="bold"
                 android:text="@string/qa_choose_one_circle"
-                android:textColor="#15315B"
-                android:textSize="18sp" />
+                android:textColor="@color/common_level_two_font_color"
+                android:textSize="15sp" />
 
             <com.google.android.material.chip.ChipGroup
                 android:id="@+id/qa_layout_quiz_tag"

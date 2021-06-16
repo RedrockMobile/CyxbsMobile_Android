@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <!--    发布界面发布按钮字体-->
+    <color name="qa_quiz_quiz_button_color" tools:ignore="MissingDefaultResource">#838384</color>
     <!--    问题JCardView背景-->
     <color name="qa_question_list_color">#F8F9FC</color>
     <!--    问题item的昵称颜色-->
@@ -7,7 +10,7 @@
     <!--    问题item的下面的各类数字颜色-->
     <color name="qa_question_bottom_count_color">#838384</color>
     <!--    问题item的分割线颜色-->
-    <color name="qa_question_recycler_item_divide_line_color">#BDCCE5</color>
+    <color name="qa_question_recycler_item_divide_line_color">#252525</color>
     <!--    评论list背景颜色-->
     <color name="qa_comment_list_background_color">#f6fafd</color>
     <!--    评论底部背景颜色-->
@@ -15,7 +18,7 @@
     <!--    回答发布toolbar分割线-->
     <color name="qa_quiz_toolbar_divider_line_color">#2A4E84</color>
     <!--    提问hint颜色-->
-    <color name="qa_common_hint_text_color">#94A6C4</color>
+    <color name="qa_common_hint_text_color">#838384</color>
     <!--    提问时间选择器时间颜色-->
     <color name="qa_quiz_time_select_color">#2A4E84</color>
     <!--    回答被采纳的标签背景颜色-->
@@ -26,37 +29,37 @@
     <color name="qa_search_layout_color">#1F1F1F</color>
     <color name="qa_answer_praised_count_color">#4841E2</color>
     <!--    RecyclerView加载时的holder颜色-->
-    <color name="qa_question_item_empty_holder_color">#E6E6E6</color>
+    <color name="qa_question_item_empty_holder_color">#5A5A5A</color>
     <!--    RecyclerView加载时的holder背景颜色-->
-    <color name="qa_question_item_shadow_color">#ffffff</color>
+    <color name="qa_question_item_shadow_color">#2D2D2D</color>
     <!--    提问选择类型的背景颜色-->
-    <color name="qa_quiz_select_type_background_color">#F1F3F8</color>
+    <color name="qa_quiz_select_type_background_color">#3F3F3F</color>
     <!--    提问选择类型的文字颜色-->
-    <color name="qa_quiz_select_type_text_color">#556C89</color>
+    <color name="qa_quiz_select_type_text_color">#000000</color>
     <!--    提问选中类型的文字颜色-->
-    <color name="qa_quiz_selected_type_text_color">#FF9C8D</color>
+    <color name="qa_quiz_selected_type_text_color">#000000</color>
     <!--    提问选中类型的背景颜色，指定78的透明度-->
-    <color name="qa_quiz_selected_type_background_color">#F7DAD7</color>
+    <color name="qa_quiz_selected_type_background_color">#2CDEFF</color>
     <!--    提问标题框和内容框的背景颜色，指定69的透明度-->
     <color name="qa_quiz_new_text_background_color">#acE8F0FC</color>
     <!--    提问内容文字hint颜色-->
-    <color name="qa_quiz_content_edt_hint_color">#94A6C4</color>
+    <color name="qa_quiz_content_edt_hint_color">#838384</color>
     <!--    邮问积分说明背景颜色-->
     <color name="qa_dialog_qa_reward_description_background_color">#ffffff</color>
-    <color name="qa_circle_square_person_number_color">#748BB0</color>
+    <color name="qa_circle_square_person_number_color">#5A5A5A</color>
     <color name="qa_full_screen_pic_indicator_color">#ffffff</color>
     <color name="qa_crop_logo_color">#f0000000</color>
-    <color name="qa_draft_dialog_text_color">#0C3573</color>
+    <color name="qa_draft_dialog_text_color">#F0F0F2</color>
     <color name="qa_draft_dialog_text_red_color">#CC0000</color>
-    <color name="qa_draft_dialog_divide_color">#F1F3F8</color>
+    <color name="qa_draft_dialog_divide_color">#343434</color>
     <color name="qa_likeview_color">#ffcccccc</color>
     <color name="qa_reply_bottom_sheet_background_color">#2D2D2D</color>
     <color name="qa_reply_popwindow_background_color">#1D1D1D</color>
     <color name="qa_reply_popwindow_text_color">#FFFFFF</color>
-    <color name="qa_dialog_tip_text_color">#0C3573</color>
-    <color name="qa_dialog_tip_div_view_background_color">#E2E8EE</color>
-    <color name="qa_dialog_tip_background_color">#FFFFFF</color>
-    <color name="qa_dialog_top_report_et_text_color">#0C3573</color>
+    <color name="qa_dialog_tip_text_color">#F0F0F2</color>
+    <color name="qa_dialog_tip_div_view_background_color">#343434</color>
+    <color name="qa_dialog_tip_background_color">#3D3B3E</color>
+    <color name="qa_dialog_top_report_et_text_color">#ACACAD</color>
     <color name="qa_reply_detail_nickname_text_color">#838384</color>
     <color name="qa_reply_detail_date_text_color">#5A5A5A</color>
     <color name="qa_reply_detail_content_text_color">#F0F0F0</color>
@@ -66,6 +69,8 @@
     <color name="qa_tab_selected_color">#15315B</color>
     <color name="qa_tab_unselected_color">#15315B</color>
     <color name="qa_item_back_color">#1D1D1D</color>
+    <color name="qa_item_square_describe_color">#838384</color>
+    <color name="qa_item_square_title_color">#FFFFFF</color>
 
     <!--    动态item的内容字体颜色-->
     <color name="qa_dynamic_content_text_color">#F0F0F2</color>
@@ -88,17 +93,33 @@
     <color name="qa_circle_label_text_color">#838384</color>
     <color name="qa_search_history_text_color">#838384</color>
     <!--    回复详细显示“回复”文字的header的背景颜色-->
-    <color name="qa_reply_detail_header_background_color">#031430</color>
+    <color name="qa_reply_detail_header_background_color">#000000</color>
     <!--    小回复布局的背景颜色-->
     <color name="qa_reply_inner_background_color">#88000000</color>
     <!--    屏蔽的人item的背景颜色-->
     <color name="qa_ignore_item_background_color">#000000</color>
+    <!--    圈子广场无关注的背景颜色 -->
+    <color name="qa_circle_empty_back_color">#1D1D1D</color>
     <!--    QA个人界面泛用式分割线颜色-->
     <color name="qa_mine_common_divide_line">#252525</color>
     <color name="qa_my_comment_item_from_color">#838384</color>
     <color name="qa_dialog_report_cancel_text_color">#ffffff</color>
-    <color name="qa_dialog_share_cancel_text_color">#94A6C4</color>
-    <color name="qa_item_no_circles_text_color">#556C89</color>
+    <color name="qa_dialog_share_cancel_text_color">#F0F0F2</color>
+    <color name="qa_item_no_circles_text_color">#F0F0F2</color>
     <color name="qa_mine_content_front_line_color">#838384</color>
     <color name="qa_reply_icon_color">#5A5A5A</color>
+    <color name="qa_circle_toolbar_back_color">#000000</color>
+
+    <color name="qa_ic_search_color">#5A5A5A</color>
+    <color name="qa_ic_btn_white_color">#5A5A5A</color>
+    <color name="qa_share_back_color">#3F3F3F</color>
+    <color name="qa_add_images_back_color">#3f3f3f</color>
+    <color name="qa_add_image_icon_color">#838384</color>
+    <color name="qa_knowledge_content_color">#B5B5B5</color>
+    <color name="qa_knowledge_background_color">#1D1D1D</color>
+    <color name="qa_btn_positive_color">#5A5A5A</color>
+    <color name="qa_draft_cancel_color">#838384</color>
+    <color name="qa_praise_text_color">#2CDEFF</color>
+    <!--    展开按钮的颜色-->
+    <color name="qa_tv_expand_text_color">#838384</color>
 </resources>

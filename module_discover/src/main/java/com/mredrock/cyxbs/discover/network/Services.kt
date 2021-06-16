@@ -17,6 +17,6 @@ interface Services {
     @GET(API_ROLLER_VIEW)
     fun getRollerViewInfo(): Observable<RedrockApiWrapper<List<RollerViewInfo>>>
 
-    @GET("/234/newapi/jwNews/list")
+    @GET("/magipoke-jwzx/jwNews/list")
     fun getNewsList(@Query("page") page: Int): Observable<RedrockApiWrapper<List<NewsListItem>>>
 }

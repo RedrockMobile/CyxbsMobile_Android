@@ -1,3 +1,4 @@
+
 package com.mredrock.cyxbs.qa.pages.dynamic.model
 
 import com.google.gson.Gson
@@ -23,6 +24,17 @@ object TopicDataSet {
         }
     }
 
+    /*
+    得到所有的关注圈子
+     */
+    fun getAllTopic(): Map<String?, *>? {
+        return if (sharedPreferences.all.isNullOrEmpty())
+            null
+        else
+            sharedPreferences.all
+    }
+
+
     fun getTopicData(topicName: String): Topic? {
         val s1 = sharedPreferences.getString(topicName, "")
         return if (s1 == "") {
@@ -44,6 +56,13 @@ object TopicDataSet {
             null
         } else {
             outTime
+        }
+    }
+
+    //清除所有的圈子主题缓存
+    fun clearCircleDetailTime() {
+        sharedPreferences.editor {
+            clear()
         }
     }
 }

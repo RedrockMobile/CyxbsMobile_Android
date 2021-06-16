@@ -14,7 +14,7 @@ import kotlinx.android.synthetic.main.volunteer_item_volunteer_affair.view.*
 /**
  * Created by yyfbe, Date on 2020/9/4.
  */
-class VolunteerAffairAdapter(private var dataList: List<VolunteerAffair>, private val onItemClick: (Int) -> Unit) : RecyclerView.Adapter<VolunteerAffairAdapter.ViewHolder>() {
+class VolunteerAffairAdapter(private var dataList: List<VolunteerAffair>, private val onItemClick: (VolunteerAffair) -> Unit) : RecyclerView.Adapter<VolunteerAffairAdapter.ViewHolder>() {
 
 
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -45,7 +45,7 @@ class VolunteerAffairAdapter(private var dataList: List<VolunteerAffair>, privat
             }
         }
         holder.itemView.setOnClickListener {
-            onItemClick(dataList[position].id)
+            onItemClick(dataList[position])
         }
     }
 

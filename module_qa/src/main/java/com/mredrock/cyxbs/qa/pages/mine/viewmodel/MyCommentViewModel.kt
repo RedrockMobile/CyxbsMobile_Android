@@ -1,14 +1,11 @@
 package com.mredrock.cyxbs.qa.pages.mine.viewmodel
 
-import android.widget.BaseAdapter
-import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.network.ApiGenerator
-import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.doOnErrorWithDefaultErrorHandler
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
@@ -16,10 +13,9 @@ import com.mredrock.cyxbs.common.utils.extensions.toast
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.qa.beannew.Comment
 import com.mredrock.cyxbs.qa.beannew.CommentWrapper
-import com.mredrock.cyxbs.qa.beannew.Dynamic
 import com.mredrock.cyxbs.qa.network.ApiServiceNew
 import com.mredrock.cyxbs.qa.pages.mine.model.MyCommentDataSource
-import com.mredrock.cyxbs.qa.utils.KeyboardController
+import com.mredrock.cyxbs.qa.utils.removeContinuousEnters
 
 /**
  * @date 2021-03-05
@@ -74,7 +70,7 @@ class MyCommentViewModel : BaseViewModel() {
         }
         ApiGenerator.getApiService(ApiServiceNew::class.java)
                 .releaseComment(
-                        rContent,
+                        rContent.removeContinuousEnters(),
                         comment.postId,
                         commentId
                 )

@@ -2,11 +2,7 @@ package com.mredrock.cyxbs.qa.beannew
 
 import android.os.Parcel
 import android.os.Parcelable
-import com.google.gson.Gson
 import com.google.gson.annotations.SerializedName
-import com.google.gson.reflect.TypeToken
-import com.mredrock.cyxbs.common.utils.LogUtils
-import java.lang.Exception
 
 data class Topic(@SerializedName("topic_id")
                  var topicId: String = "",
@@ -18,7 +14,7 @@ data class Topic(@SerializedName("topic_id")
                  val topicName: String = "",
 
                  @SerializedName("new_mes_count")
-                 val newMesCount: Int = 0,
+                 val newMesCount: Int =0,
 
                  @SerializedName("follow_count")
                  var follow_count: Int = 0,

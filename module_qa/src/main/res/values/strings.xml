@@ -67,7 +67,7 @@
     <string name="qa_search_ed_hint_text">搜索你想知道的</string>
     <string name="qa_reply_et_hint_text">说点什么吧，万一火了呢</string>
     <string name="qa_report_hint_text">150字以内(选填)</string>
-    <string name="qa_dynamic_detail_title_text">详细</string>
+    <string name="qa_dynamic_detail_title_text">详情</string>
     <string name="qa_ignore_dynamic_success">屏蔽成功</string>
     <string name="qa_ignore_dynamic_failure">屏蔽失败</string>
     <string name="qa_report_dynamic_success">举报动态成功</string>
@@ -98,8 +98,8 @@
 
     <string name="qa_dialog_tip_positive_text">确定</string>
     <string name="qa_dialog_tip_deny_text">取消</string>
-    <string name="qa_dialog_tip_delete_dynamic_text">确定删除此条动态吗？</string>
-    <string name="qa_dialog_tip_delete_comment_text">确定删除此条评论吗？</string>
+    <string name="qa_dialog_tip_delete_dynamic_text">确定删除此条动态</string>
+    <string name="qa_dialog_tip_delete_comment_text">确定删除此条评论</string>
     <string name="qa_dialog_tip_report_text">填写举报理由</string>
     <string name="qa_cancel_circle_failure">取消关注圈子失败</string>
     <string name="qa_cancel_circle">取消关注圈子成功</string>
@@ -125,4 +125,10 @@
     <string name="qa_my_comment_reply_your_comment">回复了你的评论</string>
     <string name="qa_my_comment_no_reply">暂时还没有回复哦</string>
     <string name="qa_square_title">圈子广场</string>
+    <string name="qa_save_draft_success">保存草稿成功</string>
+    <string name="qa_save_draft_failure">保存草稿失败</string>
+    <string name="qa_get_draft_failure">获取草稿失败</string>
+    <string name="qa_choose_image_tips">请重新选择图片，一次性只能够发布8张图片</string>
+    <string name="qa_delete_draft">删除草稿失败</string>
+    <string name="qa_item_no_circle_text">发现你喜欢的圈子~</string>
 </resources>

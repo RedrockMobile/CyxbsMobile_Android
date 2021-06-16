@@ -23,15 +23,6 @@
             android:name=".page.sign.DailySignActivity"
             android:launchMode="singleTop" />
         <activity
-            android:name=".page.answer.AnswerActivity"
-            android:launchMode="singleTop" />
-        <activity
-            android:name=".page.ask.AskActivity"
-            android:launchMode="singleTop" />
-        <activity
-            android:name=".page.comment.CommentActivity"
-            android:launchMode="singleTop" />
-        <activity
             android:name=".page.about.AboutActivity"
             android:launchMode="singleTop" />
         <activity

@@ -17,6 +17,7 @@ import com.mredrock.cyxbs.common.config.APP_WEBSITE
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.api.update.AppUpdateStatus
 import com.mredrock.cyxbs.api.update.IAppUpdateService
+import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.extensions.toast
 import com.mredrock.cyxbs.common.utils.getAppVersionName
@@ -46,7 +47,6 @@ class AboutActivity : BaseViewModelActivity<AboutViewModel>() {
         mine_about_legal.setOnClickListener { clickLegal() }
         mine_about_rl_share.setOnClickListener { onShareClick() }
         mine_about_rl_update.setOnClickListener { clickUpdate() }
-
         mine_about_rl_function.setOnClickListener { clickFeatureIntroduction() }
     }
 
@@ -62,10 +62,16 @@ class AboutActivity : BaseViewModelActivity<AboutViewModel>() {
         materialDialog.show()
         getAppVersionName(this@AboutActivity)?.let {
             val name = "zscy-feature-intro-${it}"
-            viewModel.getFeatureIntro(name) {
-                featureIntroAdapter.notifyDataSetChanged()
-                view.loader.visibility = View.GONE
-            }
+            viewModel.getFeatureIntro(name,
+                    successCallBack = {
+                        featureIntroAdapter.notifyDataSetChanged()
+                        view.loader.visibility = View.GONE
+                    },
+                    errorCallback = {
+                        materialDialog.dismiss()
+                        BaseApp.context.toast("获取失败")
+                    }
+            )
         }
 
     }

@@ -30,10 +30,10 @@
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/course_tip"
-                android:layout_width="40dp"
-                android:layout_height="8dp"
+                android:layout_width="38dp"
+                android:layout_height="5dp"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="10dp"
                 android:background="@drawable/common_shape_tip"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

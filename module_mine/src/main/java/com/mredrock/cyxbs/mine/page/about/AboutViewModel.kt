@@ -18,7 +18,7 @@ class AboutViewModel : BaseViewModel() {
 
     val featureIntroList: MutableList<DownMessageText> = mutableListOf()
 
-    fun getFeatureIntro(packageName: String, successCallBack: () -> Unit) {
+    fun getFeatureIntro(packageName: String, successCallBack: () -> Unit, errorCallback: () -> Unit) {
         val time = System.currentTimeMillis()
         ApiGenerator.getCommonApiService(CommonApiService::class.java)
                 .getDownMessage(DownMessageParams(packageName))
@@ -35,6 +35,9 @@ class AboutViewModel : BaseViewModel() {
                             featureIntroList.clear()
                             featureIntroList.addAll(it.data.textList)
                             successCallBack()
+                        },
+                        onExecuteOnceError = {
+                            errorCallback()
                         }
                 ))
     }

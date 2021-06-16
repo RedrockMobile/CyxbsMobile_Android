@@ -3,4 +3,5 @@
     <string name="account_whether_login" tools:ignore="ResourceName">是否登录?</string>
     <string name="account_login_now" tools:ignore="ResourceName">马上去登录</string>
     <string name="account_login_later" tools:ignore="ResourceName">我再看看</string>
+    <string name="account_token_expired_tip">用户认证刷新失败，请重新登录</string>
 </resources>

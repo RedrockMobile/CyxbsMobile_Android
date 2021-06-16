@@ -9,6 +9,4 @@ import com.mredrock.cyxbs.qa.pages.square.viewmodel.CircleDetailViewModel
  *@author SpreadWater
  *@description
  */
-class LastNewFragment(private val loop:Int) :BaseCircleDetailFragment<CircleDetailViewModel>() {
-    override fun getViewModelFactory() = CircleDetailViewModel.Factory("latest",loop)
-}
+class LastNewFragment : BaseCircleDetailFragment<CircleDetailViewModel>()

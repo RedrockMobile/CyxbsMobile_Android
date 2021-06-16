@@ -1,8 +1,7 @@
 package com.mredrock.cyxbs.discover.schoolcar
 
 import android.content.Context
-import com.mredrock.cyxbs.common.config.END_POINT_REDROCK_VERSION_TWO
-import com.mredrock.cyxbs.common.config.SCHOOL_CAR_MAP_RES
+import com.mredrock.cyxbs.common.config.*
 import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
@@ -26,7 +25,7 @@ class MapStyleHelper(val context: Context) {
     fun saveMapStyle(callback: () -> Unit) {
         checkFile()
         ApiGenerator.registerNetSettings(SCHOOL_CAR_MAP_RES, retrofitConfig = { builder: Retrofit.Builder ->
-            builder.baseUrl(END_POINT_REDROCK_VERSION_TWO)
+            builder.baseUrl(getBaseUrl())
         },tokenNeeded = true)
         val apiService = ApiGenerator.getApiService(0, MapService::class.java)
         apiService.getMapRes("map_A")

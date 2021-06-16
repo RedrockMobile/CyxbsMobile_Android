@@ -22,7 +22,7 @@ import com.amap.api.maps.model.LatLng
 import com.amap.api.maps.model.MyLocationStyle
 import com.amap.api.maps.utils.overlay.SmoothMoveMarker
 import com.mredrock.cyxbs.common.config.DISCOVER_SCHOOL_CAR
-import com.mredrock.cyxbs.common.config.END_POINT_REDROCK
+import com.mredrock.cyxbs.common.config.END_POINT_REDROCK_PROD
 import com.mredrock.cyxbs.common.ui.BaseActivity
 import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
@@ -48,7 +48,7 @@ const val IS_MAP_SAVED = "isMapSaved"
 class SchoolCarActivity : BaseActivity(), View.OnClickListener {
     companion object {
         const val TAG: String = "ExploreSchoolCar"
-        const val EXPLORE_SCHOOL_CAR_URL: String = "$END_POINT_REDROCK/app/schoolbus/load.gif"
+        const val EXPLORE_SCHOOL_CAR_URL: String = "$END_POINT_REDROCK_PROD/app/schoolbus/load.gif"
         const val TIME_OUT: Int = 1
         const val LOST_SERVICES: Int = 2
         const val NO_GPS: Int = 3

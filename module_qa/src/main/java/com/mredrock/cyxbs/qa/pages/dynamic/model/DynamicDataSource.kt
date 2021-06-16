@@ -68,6 +68,24 @@ class DynamicDataSource(private val kind: String) : PageKeyedDataSource<Int, Dyn
     }
 
     override fun loadAfter(params: LoadParams<Int>, callback: LoadCallback<Int, Dynamic>) {
+        if (kind == "mine"){
+            ApiGenerator.getApiService(ApiServiceNew::class.java)
+                    .getUserDynamic(params.key, params.requestedLoadSize)
+                    .mapOrThrowApiException()
+                    .setSchedulers()
+                    .doOnSubscribe { initialLoad.postValue(NetworkState.LOADING) }
+                    .doOnError {
+                        initialLoad.value = NetworkState.FAILED
+                        failedRequest = { loadAfter(params, callback) }
+                    }
+                    .safeSubscribeBy {
+                        list ->
+                        initialLoad.value = NetworkState.SUCCESSFUL
+                        val adjacentPageKey = (params.key + 1).takeUnless { list.size < params.requestedLoadSize }
+                        callback.onResult(list, adjacentPageKey)
+                    }
+            return
+        }
         ApiGenerator.getApiService(ApiServiceNew::class.java)
                 .getDynamicList(kind, params.key, params.requestedLoadSize)
                 .mapOrThrowApiException()

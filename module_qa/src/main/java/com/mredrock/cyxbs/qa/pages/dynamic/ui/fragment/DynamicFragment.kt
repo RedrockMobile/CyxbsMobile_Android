@@ -10,12 +10,12 @@ import android.widget.TextView
 import android.widget.Toast
 import android.widget.ViewFlipper
 import androidx.core.content.ContextCompat
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.google.android.material.appbar.CollapsingToolbarLayout
 import com.mredrock.cyxbs.api.account.IAccountService
+import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.common.config.CyxbsMob
 import com.mredrock.cyxbs.common.config.QA_ENTRY
@@ -23,17 +23,22 @@ import com.mredrock.cyxbs.common.event.RefreshQaEvent
 import com.mredrock.cyxbs.common.mark.EventBusLifecycleSubscriber
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.ui.BaseViewModelFragment
+import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.doIfLogin
+import com.mredrock.cyxbs.common.utils.extensions.dp2px
 import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.qa.R
+import com.mredrock.cyxbs.qa.beannew.Dynamic
 import com.mredrock.cyxbs.qa.component.recycler.RvAdapterWrapper
 import com.mredrock.cyxbs.qa.config.CommentConfig
 import com.mredrock.cyxbs.qa.config.CommentConfig.COPY_LINK
 import com.mredrock.cyxbs.qa.config.CommentConfig.DELETE
+import com.mredrock.cyxbs.qa.config.CommentConfig.FOLLOW
 import com.mredrock.cyxbs.qa.config.CommentConfig.IGNORE
 import com.mredrock.cyxbs.qa.config.CommentConfig.QQ_FRIEND
 import com.mredrock.cyxbs.qa.config.CommentConfig.QQ_ZONE
 import com.mredrock.cyxbs.qa.config.CommentConfig.REPORT
+import com.mredrock.cyxbs.qa.config.CommentConfig.UN_FOLLOW
 import com.mredrock.cyxbs.qa.config.RequestResultCode.DYNAMIC_DETAIL_REQUEST
 import com.mredrock.cyxbs.qa.config.RequestResultCode.NEED_REFRESH_RESULT
 import com.mredrock.cyxbs.qa.config.RequestResultCode.RELEASE_DYNAMIC_ACTIVITY_REQUEST
@@ -70,7 +75,7 @@ import org.greenrobot.eventbus.ThreadMode
  * @Date: 2020/11/16 22:07
  */
 @Route(path = QA_ENTRY)
-class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), EventBusLifecycleSubscriber {
+class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(),EventBusLifecycleSubscriber                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                {
     companion object {
         const val REQUEST_LIST_REFRESH_ACTIVITY = 0x1
 
@@ -111,13 +116,14 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), EventBusL
                 }.apply {
 
                     onShareClickListener = { dynamic, mode ->
-                        val token = ServiceManager.getService(IAccountService::class.java).getUserTokenService().getToken()
-                        val url = "https://wx.redrock.team/game/zscy-youwen-share/#/dynamic?id=${dynamic.postId}&id_token=$token"
+                        val url = "${CommentConfig.SHARE_URL}dynamic?id=${dynamic.postId}"
                         when (mode) {
-                            QQ_FRIEND ->
-                                mTencent?.let { it1 -> ShareUtils.qqShare(it1, this@DynamicFragment, dynamic.topic, dynamic.content, url, "") }
+                            QQ_FRIEND -> {
+                                val pic = if (dynamic.pics.isNullOrEmpty()) "" else dynamic.pics[0]
+                                mTencent?.let { it1 -> ShareUtils.qqShare(it1, this@DynamicFragment, dynamic.topic, dynamic.content, url, pic) }
+                            }
                             QQ_ZONE ->
-                                mTencent?.let { it1 -> ShareUtils.qqQzoneShare(it1, this@DynamicFragment, dynamic.topic, dynamic.content, url, ArrayList()) }
+                                mTencent?.let { it1 -> ShareUtils.qqQzoneShare(it1, this@DynamicFragment, dynamic.topic, dynamic.content, url, ArrayList(dynamic.pics)) }
                             COPY_LINK -> {
                                 ClipboardController.copyText(this@DynamicFragment.requireContext(), url)
                             }
@@ -132,11 +138,19 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), EventBusL
                                 viewModel.ignore(dynamic)
                             }
                             REPORT -> {
-                                this@DynamicFragment.activity?.let {
-                                    QaReportDialog.show(it) { reportContent ->
-                                        viewModel.report(dynamic, reportContent)
-                                    }
+                                this@DynamicFragment.context?.let {
+                                    QaReportDialog(it).apply {
+                                        show { reportContent ->
+                                            viewModel.report(dynamic, reportContent)
+                                        }
+                                    }.show()
                                 }
+                            }
+                            FOLLOW -> {
+                                viewModel.followGroup(dynamic.topic, false)
+                            }
+                            UN_FOLLOW -> {
+                                viewModel.followGroup(dynamic.topic, true)
                             }
                             DELETE -> {
                                 this@DynamicFragment.activity?.let { it1 ->
@@ -151,12 +165,12 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), EventBusL
 
         viewModel.ignorePeople.observe {
             if (it == true)
-                viewModel.invalidateQuestionList()
+                viewModel.invalidateDynamicList()
         }
 
         viewModel.deleteTips.observe {
             if (it == true)
-                viewModel.invalidateQuestionList()
+                viewModel.invalidateDynamicList()
         }
         val footerRvAdapter = FooterRvAdapter { viewModel.retry() }
         val emptyRvAdapter = EmptyRvAdapter(getString(R.string.qa_question_list_empty_hint))
@@ -195,16 +209,21 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), EventBusL
                 val layoutParams = CollapsingToolbarLayout.LayoutParams(qa_rv_circles_List.layoutParams)
                 layoutParams.topMargin = 70
                 layoutParams.bottomMargin = 30
+                layoutParams.height = BaseApp.context.dp2px(130f)
+                qa_rv_circles_List.setPadding(0, 0, 0, BaseApp.context.dp2px(30f))
                 qa_rv_circles_List.layoutParams = layoutParams
                 qa_tv_my_notice.visibility = View.VISIBLE
                 view_divide.visibility = View.VISIBLE
                 circlesAdapter?.addCircleData(it)
             } else {
                 val layoutParams = CollapsingToolbarLayout.LayoutParams(qa_rv_circles_List.layoutParams)
+                layoutParams.height = BaseApp.context.dp2px(110f)
+                qa_rv_circles_List.setPadding(0, 0, 0, BaseApp.context.dp2px(0f))
                 circlesAdapter?.noticeChangeCircleData()
-                view_divide.visibility = View.VISIBLE
+                view_divide.visibility = View.GONE
                 qa_tv_my_notice.visibility = View.INVISIBLE
                 qa_rv_circles_List.layoutParams = layoutParams
+                qa_rv_circles_List.invalidate()
             }
         }
 
@@ -223,7 +242,7 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), EventBusL
 
         swipe_refresh_layout.setOnRefreshListener {
             refreshTopicMessage()
-            viewModel.invalidateQuestionList()
+            viewModel.invalidateDynamicList()
             viewModel.getMyCirCleData()
         }
     }
@@ -344,15 +363,6 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), EventBusL
         }
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
-    open fun refreshQuestionList(event: RefreshQaEvent) {
-        if (isRvAtTop)
-            viewModel.invalidateQuestionList()
-        else
-            qa_rv_dynamic_List.smoothScrollToPosition(0)
-
-    }
-
     override fun onPause() {
         super.onPause()
         vf_hot_search.stopFlipping()
@@ -368,9 +378,16 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), EventBusL
                     //获取用户进入圈子详情退出的时间，去请求从而刷新未读消息
                     viewModel.getMyCirCleData()
                     refreshTopicMessage()
-                    viewModel.invalidateQuestionList()
+                    viewModel.invalidateDynamicList()
                 } else {
                     // 不需要刷新，则更新当前的dynamic为详细页的dynamic（避免出现评论数目不一致的问题）
+                    dynamicListRvAdapter.curSharedItem?.apply {
+                        val dynamic = data?.getParcelableExtra<Dynamic>("refresh_dynamic")
+                        dynamic?.let {
+                            dynamicListRvAdapter.curSharedDynamic?.commentCount = dynamic.commentCount
+                            this.findViewById<TextView>(R.id.qa_tv_dynamic_comment_count).text = it.commentCount.toString()
+                        }
+                    }
                     dynamicListRvAdapter.notifyDataSetChanged()
                 }
             }
@@ -382,10 +399,17 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), EventBusL
                     //获取用户进入圈子详情退出的时间，去请求从而刷新未读消息
                     viewModel.getMyCirCleData()
                     refreshTopicMessage()
-                    viewModel.invalidateQuestionList()
+                    viewModel.invalidateDynamicList()
                 }
             }
         }
     }
+    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
+    open fun refreshQuestionList(event: RefreshQaEvent) {
+        if (isRvAtTop)
+            viewModel.invalidateDynamicList()
+        else
+            qa_rv_dynamic_List.smoothScrollToPosition(0)
 
+    }
 }

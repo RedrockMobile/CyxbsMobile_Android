@@ -40,9 +40,7 @@ class MyIgnoreDataSource : PageKeyedDataSource<Int,Ignore>() {
                 .setSchedulers()
                 .doOnSubscribe { networkState.postValue(NetworkState.LOADING) }
                 .doOnError {
-                    LogUtils.d("RayleighZ","init 失败, 原因为 = $it")
                     if (it is RedrockApiIllegalStateException){
-                        LogUtils.d("RayleighZ", "data = null, already back no data")
                         networkState.postValue(NetworkState.NO_MORE_DATA)
                         initialLoad.postValue(NetworkState.SUCCESSFUL)
                     } else {
@@ -53,7 +51,6 @@ class MyIgnoreDataSource : PageKeyedDataSource<Int,Ignore>() {
                 .safeSubscribeBy { list ->
                     initialLoad.postValue(NetworkState.SUCCESSFUL)
                     networkState.postValue(NetworkState.SUCCESSFUL)
-                    LogUtils.d("RayleighZ","已经通知请求Success")
                     val nextPageKey = 2.takeUnless { (list.size < params.requestedLoadSize) }
                     callback.onResult(list, 1, nextPageKey)
                 }
@@ -62,14 +59,12 @@ class MyIgnoreDataSource : PageKeyedDataSource<Int,Ignore>() {
     override fun loadBefore(params: LoadParams<Int>, callback: LoadCallback<Int, Ignore>) = Unit
 
     override fun loadAfter(params: LoadParams<Int>, callback: LoadCallback<Int, Ignore>) {
-        LogUtils.d("RayleighZ","正在进行二次请求")
         ApiGenerator.getApiService(ApiServiceNew::class.java)
                 .getIgnoreUid(params.key, 6)
                 .mapOrThrowApiException()
                 .setSchedulers()
                 .doOnSubscribe { networkState.postValue(NetworkState.LOADING) }
                 .doOnError {
-                    LogUtils.d("RayleighZ","load 失败, 原因为 = $it")
                     if (it is RedrockApiIllegalStateException){
                         networkState.postValue(NetworkState.NO_MORE_DATA)
                         initialLoad.postValue(NetworkState.SUCCESSFUL)

@@ -1,20 +1,26 @@
 package com.mredrock.cyxbs.qa.pages.mine.ui
 
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
-import androidx.recyclerview.widget.DividerItemDecoration
+import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.mredrock.cyxbs.api.account.IAccountService
+import com.mredrock.cyxbs.common.config.QA_DYNAMIC_DETAIL
 import com.mredrock.cyxbs.common.config.QA_DYNAMIC_MINE
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.qa.R
+import com.mredrock.cyxbs.qa.beannew.Dynamic
 import com.mredrock.cyxbs.qa.component.recycler.RvAdapterWrapper
 import com.mredrock.cyxbs.qa.config.CommentConfig
+import com.mredrock.cyxbs.qa.config.CommentConfig.SHARE_URL
+import com.mredrock.cyxbs.qa.config.RequestResultCode
+import com.mredrock.cyxbs.qa.config.RequestResultCode.DYNAMIC_DETAIL_REQUEST
 import com.mredrock.cyxbs.qa.network.NetworkState
 import com.mredrock.cyxbs.qa.pages.dynamic.model.TopicDataSet
 import com.mredrock.cyxbs.qa.pages.dynamic.ui.activity.DynamicDetailActivity
@@ -36,6 +42,7 @@ class MyDynamicActivity : BaseViewModelActivity<MyDynamicViewModel>() {
 
     private var isRvAtTop = true
     private var isSendDynamic = false
+    lateinit var dynamicListRvAdapter: DynamicAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,20 +61,20 @@ class MyDynamicActivity : BaseViewModelActivity<MyDynamicViewModel>() {
 
     private fun initDynamics() {
         val mTencent = Tencent.createInstance(CommentConfig.APP_ID, this)
-        val dynamicListRvAdapter =
+        dynamicListRvAdapter =
                 DynamicAdapter(this) { dynamic, view ->
                     DynamicDetailActivity.activityStart(this, view, dynamic)
-//                    initClick()
                 }.apply {
 
                     onShareClickListener = { dynamic, mode ->
-                        val token = ServiceManager.getService(IAccountService::class.java).getUserTokenService().getToken()
-                        val url = "https://wx.redrock.team/game/zscy-youwen-share/#/dynamic?id=${dynamic.postId}?id_token=$token"
+                        val url = "${SHARE_URL}dynamic?id=${dynamic.postId}"
                         when (mode) {
-                            CommentConfig.QQ_FRIEND ->
-                                mTencent?.let { it1 -> ShareUtils.qqShare(it1, this@MyDynamicActivity, dynamic.topic, dynamic.content, url, "") }
+                            CommentConfig.QQ_FRIEND ->{
+                                val pic = if(dynamic.pics.isNullOrEmpty()) "" else dynamic.pics[0]
+                                mTencent?.let { it1 -> ShareUtils.qqShare(it1, this@MyDynamicActivity, dynamic.topic, dynamic.content, url, pic) }
+                            }
                             CommentConfig.QQ_ZONE ->
-                                mTencent?.let { it1 -> ShareUtils.qqQzoneShare(it1, this@MyDynamicActivity, dynamic.topic, dynamic.content, url, ArrayList()) }
+                                mTencent?.let { it1 -> ShareUtils.qqQzoneShare(it1, this@MyDynamicActivity, dynamic.topic, dynamic.content, url, ArrayList(dynamic.pics)) }
                             CommentConfig.COPY_LINK -> {
                                 ClipboardController.copyText(this@MyDynamicActivity, url)
                             }
@@ -79,11 +86,11 @@ class MyDynamicActivity : BaseViewModelActivity<MyDynamicViewModel>() {
                                 viewModel.ignore(dynamic)
                             }
                             CommentConfig.REPORT -> {
-                                this.let {
-                                    QaReportDialog.show(this@MyDynamicActivity) { reportContent ->
+                                QaReportDialog(this@MyDynamicActivity).apply {
+                                    show { reportContent ->
                                         viewModel.report(dynamic, reportContent)
                                     }
-                                }
+                                }.show()
                             }
                             CommentConfig.DELETE -> {
                                 this@MyDynamicActivity.let { it1 ->
@@ -99,7 +106,7 @@ class MyDynamicActivity : BaseViewModelActivity<MyDynamicViewModel>() {
         qa_rv_my_dynamic.adapter = dynamicListRvAdapter
         viewModel.deleteTips.observe {
             if (it == true)
-                viewModel.invalidateQuestionList()
+                viewModel.invalidateDynamicList()
         }
         val footerRvAdapter = FooterRvAdapter { viewModel.retry() }
         val emptyRvAdapter = EmptyRvAdapter(getString(R.string.qa_question_list_empty_hint))
@@ -134,7 +141,7 @@ class MyDynamicActivity : BaseViewModelActivity<MyDynamicViewModel>() {
                 LogUtils.d("swipeOutTime", TopicDataSet.getOutCirCleDetailTime().toString())
                 TopicDataSet.getOutCirCleDetailTime()?.let { viewModel.getTopicMessages(it) }
             }
-            viewModel.invalidateQuestionList()
+            viewModel.invalidateDynamicList()
             viewModel.getMyCirCleData()
         }
     }
@@ -171,6 +178,20 @@ class MyDynamicActivity : BaseViewModelActivity<MyDynamicViewModel>() {
                     emptyRvAdapter.hideHolder()
                 }
             }
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == DYNAMIC_DETAIL_REQUEST){
+            dynamicListRvAdapter.curSharedItem?.apply {
+                val dynamic = data?.getParcelableExtra<Dynamic>("refresh_dynamic")
+                dynamic?.let {
+                    dynamicListRvAdapter.curSharedDynamic?.commentCount = dynamic.commentCount
+                    this.findViewById<TextView>(R.id.qa_tv_dynamic_comment_count).text = it.commentCount.toString()
+                }
+            }
+            dynamicListRvAdapter.notifyDataSetChanged()
         }
     }
 }

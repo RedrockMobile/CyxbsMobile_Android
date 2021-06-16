@@ -4,7 +4,6 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import com.mredrock.cyxbs.common.BaseApp
-import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.common.utils.extensions.toast
@@ -40,7 +39,6 @@ class MyIgnoreRvAdapter(val viewModel: MyIgnoreViewModel): BaseEndlessRvAdapter<
 
         holder.itemView.qa_btn_ignore_item_anti_ignore.setOnSingleClickListener {
             ignore?.apply {
-                LogUtils.d("RayleighZ", "uid is $uid")
                 viewModel.antiIgnore(uid){
                     BaseApp.context.toast("解除屏蔽成功")
                     viewModel.invalidateList()

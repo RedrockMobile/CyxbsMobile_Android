@@ -1,5 +1,6 @@
 package com.mredrock.cyxbs.course.viewmodels
 
+import android.util.Log
 import android.view.View
 import androidx.annotation.WorkerThread
 import androidx.databinding.ObservableField
@@ -15,6 +16,7 @@ import com.mredrock.cyxbs.common.config.WIDGET_COURSE
 import com.mredrock.cyxbs.common.event.CurrentDateInformationEvent
 import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.utils.ClassRoomParse
+import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.Num2CN
 import com.mredrock.cyxbs.common.utils.SchoolCalendar
 import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
@@ -352,7 +354,9 @@ class CoursesViewModel : BaseViewModel() {
                             longToastEvent.value = R.string.course_use_cache
                         }
                     }
-                }, onExecuteOnFinal = { isGetAllData(COURSE_TAG) }))
+                }, onExecuteOnFinal = {
+                    isGetAllData(COURSE_TAG)
+                }))
     }
 
     /**
@@ -419,7 +423,12 @@ class CoursesViewModel : BaseViewModel() {
                     }
                     EventBus.getDefault().post(AffairFromInternetEvent(affairsCourse))
                     affairs.addAll(affairsCourse)
-                }, onExecuteOnFinal = { isGetAllData(AFFAIR_TAG) }))
+                }, onExecuteOnceError = {
+                                        isGetAllData(AFFAIR_TAG)
+                },
+                        onExecuteOnFinal = {
+                            isGetAllData(AFFAIR_TAG)
+                        }))
     }
 
     /**
@@ -515,10 +524,10 @@ class CoursesViewModel : BaseViewModel() {
             now.timeInMillis >= firstDay.timeInMillis && nowWeek != 0 ->
                 "第${Num2CN.number2ChineseNumber(nowWeek.toLong())}周 " +
                         "周${
-                        if (now[Calendar.DAY_OF_WEEK] != 1)
-                            Num2CN.number2ChineseNumber(now[Calendar.DAY_OF_WEEK] - 1.toLong())
-                        else
-                            "日"
+                            if (now[Calendar.DAY_OF_WEEK] != 1)
+                                Num2CN.number2ChineseNumber(now[Calendar.DAY_OF_WEEK] - 1.toLong())
+                            else
+                                "日"
                         }"
             //8，9月欢迎新同学
             nowWeek == 0 && (now[Calendar.MONTH] + 1 == 8 || now[Calendar.MONTH] + 1 == 9) -> "欢迎新同学～"

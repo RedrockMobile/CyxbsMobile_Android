@@ -16,14 +16,14 @@ import retrofit2.http.Streaming
  * Description: com.mredrock.cyxbs.discover.news.network
  */
 interface ApiService {
-    @GET("/234/newapi/jwNews/list")
+    @GET("/magipoke-jwzx/jwNews/list")
     fun getNewsList(@Query ("page") page: Int): Observable<RedrockApiWrapper<List<NewsListItem>>>
 
-    @GET("/234/newapi/jwNews/content")
+    @GET("/magipoke-jwzx/jwNews/content")
     fun getNewsDetails(@Query("id") id: String,
                        @Query("forceFetch") fetch: Boolean = true): Observable<RedrockApiWrapper<NewsDetails>>
 
     @Streaming
-    @GET("/234/newapi/jwNews/file")
+    @GET("/magipoke-jwzx/jwNews/file")
     fun download(@Query("id") id: String): Call<ResponseBody>
 }

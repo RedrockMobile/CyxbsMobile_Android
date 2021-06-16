@@ -59,7 +59,6 @@ class MyIgnorePeopleActivity : BaseViewModelActivity<MyIgnoreViewModel>() {
 
         //观察网络状态
         viewModel.networkState.observe {
-            LogUtils.d("RayleighZ","刷新网络状态，data is $it")
             it?.run {
                 footerRvAdapter.refreshData(listOf(this))
             }

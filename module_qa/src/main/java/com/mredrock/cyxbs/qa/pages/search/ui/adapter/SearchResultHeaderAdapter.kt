@@ -20,6 +20,8 @@ import com.mredrock.cyxbs.qa.beannew.Dynamic
 import com.mredrock.cyxbs.qa.beannew.Knowledge
 import com.mredrock.cyxbs.qa.component.recycler.BaseRvAdapter
 import com.mredrock.cyxbs.qa.component.recycler.BaseViewHolder
+import com.mredrock.cyxbs.qa.config.RequestResultCode
+import com.mredrock.cyxbs.qa.config.RequestResultCode.ClickKnowledge
 import com.mredrock.cyxbs.qa.ui.activity.ViewImageActivity
 import com.mredrock.cyxbs.qa.ui.widget.NineGridView
 import com.mredrock.cyxbs.qa.utils.dynamicTimeDescription
@@ -36,7 +38,6 @@ class SearchResultHeaderAdapter( val searchKnowledgeAdapter: SearchKnowledgeAdap
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val baseTitle: TextView = view.findViewById(R.id.tv_knowledge_base_title);
         val baseDetail: TextView = view.findViewById(R.id.tv_knowledge_base_detail);
-        val baseFrom: TextView = view.findViewById(R.id.tv_knowledge_from);
         val cancleImage: ImageView = view.findViewById(R.id.qa_knowledge_cancle);
     }
 
@@ -49,11 +50,11 @@ class SearchResultHeaderAdapter( val searchKnowledgeAdapter: SearchKnowledgeAdap
         val holder = holder as ViewHolder
         holder.baseTitle.text = knowledge?.title
         holder.baseDetail.text = knowledge?.description
-        holder.baseFrom.text = holder.itemView.context.resources.getString(R.string.qa_search_knowledge_from_where, knowledge?.from)
         val flexBoxManager = FlexboxLayoutManager(BaseApp.context)
         flexBoxManager.flexWrap = FlexWrap.WRAP
 
         holder.cancleImage.setOnClickListener {
+            ClickKnowledge = false
             recyclerView.adapter = searchKnowledgeAdapter
             recyclerView.layoutManager = flexBoxManager
         }

@@ -11,25 +11,41 @@
         android:layout_height="match_parent">
 
         <com.mredrock.cyxbs.common.component.JToolbar
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/common_mine_sign_store_bg"
             android:fitsSystemWindows="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             app:navigationIcon="@drawable/common_ic_back"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_exam_main"
+        <FrameLayout
             android:layout_width="0dp"
             android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/toolbar" />
+            app:layout_constraintTop_toBottomOf="@id/toolbar">
+
+            <!--    如果数据错误到端上无法解决的地步，就用webView代替原RecyclerView-->
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_exam_main"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="visible" />
+
+            <WebView
+                android:id="@+id/wv_exam_main"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="45dp"
+                android:visibility="gone" />
+        </FrameLayout>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <com.mredrock.cyxbs.common.component.JCardViewPlus

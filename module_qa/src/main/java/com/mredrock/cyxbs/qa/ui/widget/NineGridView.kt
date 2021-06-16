@@ -1,14 +1,13 @@
 package com.mredrock.cyxbs.qa.ui.widget
 
 import android.content.Context
-import android.graphics.ColorMatrix
-import android.graphics.ColorMatrixColorFilter
 import android.util.AttributeSet
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.ImageView
 import androidx.core.view.forEach
+import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.*
 import com.mredrock.cyxbs.qa.R
 
@@ -17,7 +16,8 @@ import com.mredrock.cyxbs.qa.R
  * 图片九宫格布局
  * Created By jay68 on 2018/9/29.
  */
-class NineGridView(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : FrameLayout(context, attrs, defStyleAttr) {
+class NineGridView(context: Context, attrs: AttributeSet?, defStyleAttr: Int) :
+    FrameLayout(context, attrs, defStyleAttr) {
     companion object {
         const val MODE_FILL = 0
         const val MODE_NORMAL = 1
@@ -34,7 +34,7 @@ class NineGridView(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : 
      * 邮问改版判断图片剪掉3张后剩下的图片数
      */
 
-    private var imageCount = 0
+    private var extraImageCount = 0
 
 
     /**
@@ -43,7 +43,8 @@ class NineGridView(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : 
     private var arrangement = MODE_NORMAL
 
     init {
-        val typeArrayList = context.obtainStyledAttributes(attrs, intArrayOf(R.attr.arrangementMode))
+        val typeArrayList =
+            context.obtainStyledAttributes(attrs, intArrayOf(R.attr.arrangementMode))
         arrangement = typeArrayList.getInt(R.styleable.NineGridView_arrangementMode, MODE_NORMAL)
         typeArrayList.recycle()
     }
@@ -173,10 +174,10 @@ class NineGridView(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : 
     }
 
     fun setImages(urls: List<String>, countSize: Int, imageShape: ImageMode) {
-        imageCount = urls.size - MODE_IMAGE_THREE_SIZE
+        extraImageCount = urls.size - MODE_IMAGE_THREE_SIZE
         when (imageShape) {
             ImageMode.MODE_IMAGE_RECTANGLE -> {
-                setRectangleImages(setShowPhotoSize(urls, countSize), imageCount)
+                setRectangleImages(setShowPhotoSize(urls, countSize), extraImageCount)
             }
             ImageMode.MODE_IMAGE_NORMAL -> {
                 setNormalImages(setShowPhotoSize(urls, countSize))
@@ -195,11 +196,16 @@ class NineGridView(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : 
         return photoUrls
     }
 
-    fun setRectangleImages(urls: List<String>, imageCounts: Int) {
-        repeat(childCount) {
+    fun setRectangleImages(urls: List<String>, extraImageCount: Int) {
+        repeat(childCount) { index ->
             when {
-                it < urls.size -> {
-                    context.loadRedrockImage(urls[it], getChildAt(it) as RectangleView)
+                index < urls.size -> {
+                    getChildAt(index)?.let {
+                        (it as RectangleView).apply {
+                            scaleType = ImageView.ScaleType.CENTER_CROP
+                            context.loadRedrockImage(urls[index], this)
+                        }
+                    }
                 }
                 urls.isNullOrEmpty() -> {
                     removeAllViews()
@@ -215,11 +221,15 @@ class NineGridView(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : 
                 scaleType = ImageView.ScaleType.CENTER_CROP
                 context.loadRedrockImage(urls[i], this@apply)
             }
-            if (i == 2 && imageCounts > 0) {
-                view.setShowMask()
-                view.setAddImageCount(imageCount)
-            }
             this.addView(view, childCount)
+        }
+        if (extraImageCount > 0) {
+            getChildAt(2)?.let { view ->
+                (view as RectangleView).apply {
+                    setShowMask()
+                    setAddImageCount(extraImageCount)
+                }
+            }
         }
     }
 }

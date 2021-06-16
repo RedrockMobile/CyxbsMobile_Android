@@ -5,10 +5,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
+import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.mredrock.cyxbs.api.account.IAccountService
-import com.mredrock.cyxbs.common.BaseApp
-import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.ui.BaseViewModelFragment
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.beannew.Dynamic
@@ -16,19 +15,19 @@ import com.mredrock.cyxbs.qa.component.recycler.RvAdapterWrapper
 import com.mredrock.cyxbs.qa.config.CommentConfig
 import com.mredrock.cyxbs.qa.config.CommentConfig.COPY_LINK
 import com.mredrock.cyxbs.qa.config.CommentConfig.DELETE
+import com.mredrock.cyxbs.qa.config.CommentConfig.FOLLOW
 import com.mredrock.cyxbs.qa.config.CommentConfig.IGNORE
 import com.mredrock.cyxbs.qa.config.CommentConfig.QQ_FRIEND
 import com.mredrock.cyxbs.qa.config.CommentConfig.QQ_ZONE
 import com.mredrock.cyxbs.qa.config.CommentConfig.REPORT
+import com.mredrock.cyxbs.qa.config.CommentConfig.UN_FOLLOW
 import com.mredrock.cyxbs.qa.config.RequestResultCode
 import com.mredrock.cyxbs.qa.config.RequestResultCode.DYNAMIC_DETAIL_REQUEST
 import com.mredrock.cyxbs.qa.config.RequestResultCode.RELEASE_DYNAMIC_ACTIVITY_REQUEST
-import com.mredrock.cyxbs.qa.network.NetworkState
 import com.mredrock.cyxbs.qa.network.NetworkState.Companion.CANNOT_LOAD_WITHOUT_LOGIN
 import com.mredrock.cyxbs.qa.network.NetworkState.Companion.LOADING
 import com.mredrock.cyxbs.qa.pages.dynamic.ui.activity.DynamicDetailActivity
 import com.mredrock.cyxbs.qa.pages.dynamic.ui.adapter.DynamicAdapter
-import com.mredrock.cyxbs.qa.pages.dynamic.viewmodel.DynamicListViewModel
 import com.mredrock.cyxbs.qa.pages.square.viewmodel.CircleDetailViewModel
 import com.mredrock.cyxbs.qa.ui.adapter.EmptyRvAdapter
 import com.mredrock.cyxbs.qa.ui.adapter.FooterRvAdapter
@@ -49,8 +48,17 @@ abstract class BaseCircleDetailFragment<T : CircleDetailViewModel> : BaseViewMod
 
     private var mTencent: Tencent? = null
     lateinit var dynamicListRvAdapter: DynamicAdapter
+    private var loop = 1
+    private var type = "main"
+    override fun onCreate(savedInstanceState: Bundle?) {
+        arguments?.apply {
+            loop = getInt("loop")
+            type = getString("type", "main")
+        }
+        super.onCreate(savedInstanceState)
+    }
 
-    override fun getViewModelFactory() = CircleDetailViewModel.Factory("main",1)
+    override fun getViewModelFactory() = CircleDetailViewModel.Factory(type,loop)
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -68,13 +76,14 @@ abstract class BaseCircleDetailFragment<T : CircleDetailViewModel> : BaseViewMod
             DynamicDetailActivity.activityStart(this, view, dynamic)
         }.apply {
             onShareClickListener = { dynamic, mode ->
-                val token = ServiceManager.getService(IAccountService::class.java).getUserTokenService().getToken()
-                val url = "https://wx.redrock.team/game/zscy-youwen-share/#/dynamic?id=${dynamic.postId}?id_token=$token"
+                val url = "${CommentConfig.SHARE_URL}dynamic?id=${dynamic.postId}"
                 when (mode) {
-                    QQ_FRIEND ->
-                        mTencent?.let { it1 -> ShareUtils.qqShare(it1, this@BaseCircleDetailFragment, dynamic.topic, dynamic.content, url, "") }
+                    QQ_FRIEND ->{
+                        val pic = if(dynamic.pics.isNullOrEmpty()) "" else dynamic.pics[0]
+                        mTencent?.let { it1 -> ShareUtils.qqShare(it1, this@BaseCircleDetailFragment, dynamic.topic, dynamic.content, url, pic) }
+                    }
                     QQ_ZONE ->
-                        mTencent?.let { it1 -> ShareUtils.qqQzoneShare(it1, this@BaseCircleDetailFragment, dynamic.topic, dynamic.content, url, ArrayList()) }
+                        mTencent?.let { it1 -> ShareUtils.qqQzoneShare(it1, this@BaseCircleDetailFragment, dynamic.topic, dynamic.content, url, ArrayList(dynamic.pics)) }
                     COPY_LINK ->{
                         this@BaseCircleDetailFragment.context?.let {
                             ClipboardController.copyText(it, url)
@@ -88,13 +97,22 @@ abstract class BaseCircleDetailFragment<T : CircleDetailViewModel> : BaseViewMod
                         viewModel.ignore(dynamic)
                     }
                     REPORT -> {
-                        this@BaseCircleDetailFragment.activity?.let {
-                            QaReportDialog.show(it) { reportContent ->
-                                viewModel.report(dynamic, reportContent)
-                            }
+                        this@BaseCircleDetailFragment.context?.let {
+                            QaReportDialog(it).apply {
+                                show { reportContent ->
+                                    viewModel.report(dynamic, reportContent)
+                                }
+                            }.show()
                         }
                     }
-
+                    UN_FOLLOW->{
+                        activityViewModels<CircleDetailViewModel>().value.followStateChangedMarkObservableByActivity.value = false
+                        viewModel.invalidateQuestionList()
+                    }
+                    FOLLOW ->{
+                        activityViewModels<CircleDetailViewModel>().value.followStateChangedMarkObservableByActivity.value = true
+                        viewModel.invalidateQuestionList()
+                    }
                     DELETE -> {
                         this@BaseCircleDetailFragment.activity?.let { it1 ->
                             QaDialog.show(it1, resources.getString(R.string.qa_dialog_tip_delete_comment_text), {}) {
@@ -104,6 +122,9 @@ abstract class BaseCircleDetailFragment<T : CircleDetailViewModel> : BaseViewMod
                     }
                 }
             }
+        }
+        activityViewModels<CircleDetailViewModel>().value.followStateChangedMarkObservableByFragment.observe {
+            viewModel.invalidateQuestionList()
         }
         viewModel.deleteTips.observeNotNull {
             if (it == true)
@@ -122,6 +143,7 @@ abstract class BaseCircleDetailFragment<T : CircleDetailViewModel> : BaseViewMod
         )
         qa_rv_circle_detail_last_hot.adapter = adapterWrapper
         qa_rv_circle_detail_last_hot.layoutManager = LinearLayoutManager(context)
+        //手动添加分割线
 
         qa_hot_last_swipe_refresh_layout.setOnRefreshListener {
             viewModel.invalidateQuestionList()
@@ -161,6 +183,15 @@ abstract class BaseCircleDetailFragment<T : CircleDetailViewModel> : BaseViewMod
                     viewModel.invalidateQuestionList()
                 } else {
                     // 不需要刷新，则更新当前的dynamic为详细页的dynamic（避免出现评论数目不一致的问题）
+                    dynamicListRvAdapter
+                    dynamicListRvAdapter.curSharedItem?.apply {
+                        val dynamic = data?.getParcelableExtra<Dynamic>("refresh_dynamic")
+                        dynamic?.let {
+                            dynamicListRvAdapter.curSharedDynamic?.commentCount = dynamic.commentCount
+                            this.findViewById<TextView>(R.id.qa_tv_dynamic_comment_count).text = it.commentCount.toString()
+                        }
+                    }
+                    dynamicListRvAdapter.notifyDataSetChanged()
                     dynamicListRvAdapter.notifyDataSetChanged()
                 }
             }

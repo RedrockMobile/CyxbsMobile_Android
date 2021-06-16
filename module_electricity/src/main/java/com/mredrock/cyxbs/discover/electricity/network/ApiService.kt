@@ -13,10 +13,10 @@ import retrofit2.http.POST
  */
 interface ApiService {
     @FormUrlEncoded
-    @POST("/wxapi/magipoke-elecquery/getElectric")
+    @POST("/magipoke-elecquery/getElectric")
     fun getElectricityInfo(@Field("building") building: String, @Field("room") room: String): Observable<ElectricityInfo>
 
 
-    @POST("/wxapi/magipoke-elecquery/getElectric")
+    @POST("/magipoke-elecquery/getElectric")
     fun getElectricityInfo(): Observable<ElectricityInfo>
 }

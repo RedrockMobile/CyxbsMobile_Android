@@ -1,15 +1,18 @@
 package com.mredrock.cyxbs.volunteer
 
 import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import androidx.lifecycle.Observer
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
+import com.google.gson.Gson
 import com.mredrock.cyxbs.common.config.DISCOVER_VOLUNTEER
 import com.mredrock.cyxbs.common.config.DISCOVER_VOLUNTEER_RECORD
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.extensions.startActivity
 import com.mredrock.cyxbs.volunteer.adapter.VolunteerMainFragmentAdapter
+import com.mredrock.cyxbs.volunteer.bean.VolunteerTime
 import com.mredrock.cyxbs.volunteer.event.VolunteerLogoutEvent
 import com.mredrock.cyxbs.volunteer.fragment.VolunteerAffairFragment
 import com.mredrock.cyxbs.volunteer.fragment.VolunteerRecordFragment
@@ -26,8 +29,12 @@ class VolunteerRecordActivity : BaseViewModelActivity<VolunteerRecordViewModel>(
 
 
     companion object {
-        fun startActivity(activity: Activity) {
-            activity.startActivity<VolunteerRecordActivity>()
+        fun startActivity(activity: Activity, volunteerTime: VolunteerTime) {
+            activity.startActivity(
+                    Intent(activity, VolunteerRecordActivity::class.java).apply {
+                        putExtra("volunteerTime", Gson().toJson(volunteerTime))
+                    }
+            )
         }
     }
 
@@ -39,7 +46,14 @@ class VolunteerRecordActivity : BaseViewModelActivity<VolunteerRecordViewModel>(
     }
 
     private fun initView() {
-        vp_volunteer_category.adapter = VolunteerMainFragmentAdapter(supportFragmentManager, listOf(VolunteerRecordFragment(), VolunteerAffairFragment()), listOf(getString(R.string.volunteer_string_tab_record), getString(R.string.volunteer_string_tab_activity)))
+        val vtJson = intent.getStringExtra("volunteerTime")
+        viewModel.volunteerTime.value = Gson().fromJson<VolunteerTime>(vtJson, VolunteerTime::class.java)
+        val volunteerRecordFragment = VolunteerRecordFragment().apply {
+            arguments = Bundle().apply {
+                putString("volunteerTime", vtJson)
+            }
+        }
+        vp_volunteer_category.adapter = VolunteerMainFragmentAdapter(supportFragmentManager, listOf(volunteerRecordFragment, VolunteerAffairFragment()), listOf(getString(R.string.volunteer_string_tab_record), getString(R.string.volunteer_string_tab_activity)))
         tl_volunteer_category.setupWithViewPager(vp_volunteer_category)
         tl_volunteer_category.setSelectedTabIndicator(R.drawable.volunteer_ic_question_tab_indicator)
 

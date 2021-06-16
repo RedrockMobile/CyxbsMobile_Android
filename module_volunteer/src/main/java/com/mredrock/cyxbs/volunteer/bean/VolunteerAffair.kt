@@ -15,6 +15,8 @@ class VolunteerAffair(
         val name: String = "",
         @SerializedName("description")
         val description: String = "",
+        @SerializedName("place")
+        val place: String = "",
         @SerializedName("date")
         val date: Long = 0L,
         @SerializedName("last_date")

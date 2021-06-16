@@ -5,28 +5,24 @@ import com.mredrock.cyxbs.volunteer.bean.*
 import io.reactivex.Observable
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
+import retrofit2.http.GET
 import retrofit2.http.POST
 
 interface ApiService {
     @FormUrlEncoded
-    @POST("/wxapi/volunteer-message/binding")
+    @POST("/volunteer-message/binding")
     fun volunteerLogin(@Field("account") account: String,
                        @Field("password") password: String): Observable<VolunteerBase>
 
-    @POST("/wxapi/volunteer-message/select")
+    @POST("/volunteer-message/select")
     fun getVolunteerRecord(): Observable<VolunteerTime>
 
-    @POST("/wxapi/cyb-volunteer/volunteer/activity/info/new")
+    @GET("/cyb-volunteer/volunteer/activity/info/new")
     fun getVolunteerAffair(): Observable<RedrockApiWrapper<List<VolunteerAffair>>>
 
-
-    @FormUrlEncoded
-    @POST("/wxapi/cyb-volunteer/volunteer/activity/info")
-    fun getVolunteerAffairDetail(@Field("id") id: Int): Observable<RedrockApiWrapper<VolunteerAffairDetail>>
-
-    @POST("/wxapi/volunteer-message/judge")
+    @POST("/volunteer-message/judge")
     fun judgeBind(): Observable<VolunteerJudge>
 
-    @POST("/wxapi/volunteer-message/unbinding")
+    @POST("/volunteer-message/unbinding")
     fun unbindVolunteerAccount(): Observable<VolunteerBase>
 }

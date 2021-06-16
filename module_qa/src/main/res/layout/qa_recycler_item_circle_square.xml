@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginTop="5dp"
-    android:background="@color/qa_quiz_select_type_background_color"
+    android:background="@color/qa_ignore_item_background_color"
     android:clickable="true"
     android:focusable="true"
     android:orientation="vertical"
@@ -23,7 +23,7 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <androidx.appcompat.widget.AppCompatButton
+    <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/btn_circle_square_concern"
         android:layout_width="59dp"
         android:layout_height="28dp"
@@ -46,8 +46,9 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
         android:layout_marginTop="24dp"
-        android:textColor="@color/qa_tab_selected_color"
+        android:textColor="@color/qa_item_square_title_color"
         android:textSize="15sp"
+        android:textStyle="bold"
         app:layout_constraintLeft_toRightOf="@id/iv_circle_square"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="高级学术交流中心" />
@@ -70,13 +71,13 @@
 
     <TextView
         android:id="@+id/tv_circle_square_descriprion"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="15.5dp"
+        android:layout_marginStart="0dp"
         android:layout_marginTop="20dp"
-        android:layout_marginEnd="41.5dp"
+        android:layout_marginEnd="0dp"
         android:layout_marginBottom="25dp"
-        android:textColor="@color/qa_tab_selected_color"
+        android:textColor="@color/qa_item_square_describe_color"
         android:textSize="13sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/btn_circle_square_concern"
@@ -86,10 +87,10 @@
         app:layout_constraintVertical_bias="1.0"
         tools:text="重邮也有猫猫图鉴啦，欢迎大家一起来分享你看见的猫猫~" />
 
-    <View
+<!--    <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="@color/qa_mine_common_divide_line"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent" />-->
 </androidx.constraintlayout.widget.ConstraintLayout>

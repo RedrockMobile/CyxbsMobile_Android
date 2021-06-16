@@ -19,6 +19,7 @@ import com.mredrock.cyxbs.discover.grades.R
 import com.mredrock.cyxbs.discover.grades.bean.Exam
 import com.mredrock.cyxbs.discover.grades.bean.IdsBean
 import com.mredrock.cyxbs.discover.grades.bean.IdsStatus
+import com.mredrock.cyxbs.discover.grades.bean.Status
 import com.mredrock.cyxbs.discover.grades.bean.analyze.GPAStatus
 import com.mredrock.cyxbs.discover.grades.network.ApiService
 import io.reactivex.Observable
@@ -32,6 +33,10 @@ class ContainerViewModel : BaseViewModel() {
 
     //监听从bindactivity回来containerativity方便用户观看成绩则将bottom展开，如果是在本来在containeractivity则折叠
     val bottomStateListener = MutableLiveData<Boolean>()
+
+    //当前采取的考试展示策略
+    val nowStatus = MutableLiveData<Status>()
+
     fun isContainerActivity() {
         bottomStateListener.postValue(false)
     }
@@ -42,14 +47,14 @@ class ContainerViewModel : BaseViewModel() {
         val exam = apiService.getExam(stuNum)
         val reExam = apiService.getReExam(stuNum)
         Observable.merge(exam, reExam)
-                .setSchedulers()
-                .doOnErrorWithDefaultErrorHandler {
-                    toastEvent.value = R.string.grades_no_exam_history
-                    false
-                }
-                .safeSubscribeBy {
-                    examData.value = it.data
-                }.lifeCycle()
+            .setSchedulers()
+            .doOnErrorWithDefaultErrorHandler {
+                toastEvent.value = R.string.grades_no_exam_history
+                false
+            }
+            .safeSubscribeBy {
+                examData.value = it.data
+            }.lifeCycle()
     }
 
 
@@ -63,37 +68,37 @@ class ContainerViewModel : BaseViewModel() {
         bubble.invoke()
         val startTime = System.currentTimeMillis()
         apiService.bindIds(IdsBean(idsNum, idsPassword))
-                .doOnNext {
-                    sleepThread(startTime)
-                }
-                .doOnError {
-                    sleepThread(startTime)
-                }
-                .setSchedulers()
-                .safeSubscribeBy(
-                        onNext = {
-                            replaceBindFragmentToGPAFragment.postValue(true)
-                            bottomStateListener.postValue(true)
-                            BaseApp.context.toast(R.string.grades_bottom_sheet_bind_success)
-                            isAnimating = false
-                        },
-                        onError = {
-                            //密码错误的话,会导致状态码为400，Retrofit无法回调onNext
-                            //详见：https://www.cnblogs.com/fuyaozhishang/p/8607706.html
-                            if (it is HttpException) {
-                                val body = (it).response()?.errorBody() ?: return@safeSubscribeBy
-                                val data = Gson().fromJson(body.string(), IdsStatus::class.java)
-                                if (data.errorCode == ERROR) {
-                                    replaceBindFragmentToGPAFragment.postValue(false)
-                                    BaseApp.context.toast(R.string.grades_bottom_sheet_bind_fail)
-                                }
-                            } else {
-                                replaceBindFragmentToGPAFragment.postValue(false)
-                                BaseApp.context.toast("绑定ids失败")
-                            }
-                            isAnimating = false
+            .doOnNext {
+                sleepThread(startTime)
+            }
+            .doOnError {
+                sleepThread(startTime)
+            }
+            .setSchedulers()
+            .safeSubscribeBy(
+                onNext = {
+                    replaceBindFragmentToGPAFragment.postValue(true)
+                    bottomStateListener.postValue(true)
+                    BaseApp.context.toast(R.string.grades_bottom_sheet_bind_success)
+                    isAnimating = false
+                },
+                onError = {
+                    //密码错误的话,会导致状态码为400，Retrofit无法回调onNext
+                    //详见：https://www.cnblogs.com/fuyaozhishang/p/8607706.html
+                    if (it is HttpException) {
+                        val body = (it).response()?.errorBody() ?: return@safeSubscribeBy
+                        val data = Gson().fromJson(body.string(), IdsStatus::class.java)
+                        if (data.errorCode == ERROR) {
+                            replaceBindFragmentToGPAFragment.postValue(false)
+                            BaseApp.context.toast(R.string.grades_bottom_sheet_bind_fail)
                         }
-                ).lifeCycle()
+                    } else {
+                        replaceBindFragmentToGPAFragment.postValue(false)
+                        BaseApp.context.toast("绑定ids失败")
+                    }
+                    isAnimating = false
+                }
+            ).lifeCycle()
 
     }
 
@@ -113,29 +118,42 @@ class ContainerViewModel : BaseViewModel() {
 
     fun getAnalyzeData() {
         apiService.getAnalyzeData()
-                .setSchedulers()
-                .safeSubscribeBy(
-                        onNext = {
-                            _analyzeData.postValue(it)
-                        },
-                        onError = {
-                            //未绑定的话,会导致状态码为400，Retrofit无法回调onNext
-                            //详见：https://www.cnblogs.com/fuyaozhishang/p/8607706.html
-                            if (it is HttpException) {
-                                val errorBody = it.response()?.errorBody()?.string() ?: ""
-                                val gpaStatus = Gson().fromJson(errorBody, GPAStatus::class.java)
-                                _analyzeData.postValue(gpaStatus)
-                            } else {
-                                //此时说明是一些其他的错误
-                                val s = "{\"errcode\":\"10010\",\"errmessage\":\"errCode:114514 errMsg: runtime error: index out of range [-1]\"}"
-                                val gpaStatus = Gson().fromJson(s, GPAStatus::class.java)
-                                _analyzeData.postValue(gpaStatus)
+            .setSchedulers()
+            .safeSubscribeBy(
+                onNext = {
+                    _analyzeData.postValue(it)
+                },
+                onError = {
+                    //未绑定的话,会导致状态码为400，Retrofit无法回调onNext
+                    //详见：https://www.cnblogs.com/fuyaozhishang/p/8607706.html
+                    if (it is HttpException) {
+                        val errorBody = it.response()?.errorBody()?.string() ?: ""
+                        val gpaStatus = Gson().fromJson(errorBody, GPAStatus::class.java)
+                        _analyzeData.postValue(gpaStatus)
+                    } else {
+                        //此时说明是一些其他的错误
+                        val s =
+                            "{\"errcode\":\"10010\",\"errmessage\":\"errCode:114514 errMsg: runtime error: index out of range [-1]\"}"
+                        val gpaStatus = Gson().fromJson(s, GPAStatus::class.java)
+                        _analyzeData.postValue(gpaStatus)
 
-                                BaseApp.context.toast("加载绩点失败")
-                            }
+                        BaseApp.context.toast("加载绩点失败")
+                    }
 
-                        }
-                ).lifeCycle()
+                }
+            ).lifeCycle()
+    }
+
+    //获取当前采取的成绩展示方案
+    fun getStatus() {
+        apiService.getNowStatus()
+            .setSchedulers()
+            .doOnErrorWithDefaultErrorHandler { true }
+            .safeSubscribeBy {
+                it?.data?.let { status ->
+                    nowStatus.postValue(status)
+                }
+            }
     }
 
 }

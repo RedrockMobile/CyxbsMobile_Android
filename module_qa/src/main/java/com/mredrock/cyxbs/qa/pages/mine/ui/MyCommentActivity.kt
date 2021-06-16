@@ -1,8 +1,10 @@
 package com.mredrock.cyxbs.qa.pages.mine.ui
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.core.content.ContextCompat
+import androidx.core.widget.addTextChangedListener
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.mredrock.cyxbs.common.BaseApp
@@ -12,14 +14,22 @@ import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.common.utils.extensions.toast
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.beannew.Comment
+import com.mredrock.cyxbs.qa.beannew.ReplyInfo
 import com.mredrock.cyxbs.qa.component.recycler.RvAdapterWrapper
+import com.mredrock.cyxbs.qa.config.RequestResultCode
 import com.mredrock.cyxbs.qa.network.NetworkState
+import com.mredrock.cyxbs.qa.pages.dynamic.ui.activity.DynamicDetailActivity
 import com.mredrock.cyxbs.qa.pages.mine.ui.adapter.MyCommentRvAdapter
 import com.mredrock.cyxbs.qa.pages.mine.viewmodel.MyCommentViewModel
+import com.mredrock.cyxbs.qa.pages.quiz.ui.QuizActivity
 import com.mredrock.cyxbs.qa.ui.adapter.EmptyRvAdapter
 import com.mredrock.cyxbs.qa.ui.adapter.FooterRvAdapter
 import com.mredrock.cyxbs.qa.utils.KeyboardController
+import kotlinx.android.synthetic.main.qa_activity_dynamic_detail.*
 import kotlinx.android.synthetic.main.qa_activity_my_comment.*
+import kotlinx.android.synthetic.main.qa_activity_my_comment.qa_btn_my_comment_send
+import kotlinx.android.synthetic.main.qa_activity_my_comment.qa_et_my_comment_reply
+import kotlinx.android.synthetic.main.qa_activity_my_comment.qa_iv_my_comment_select_pic
 import kotlinx.android.synthetic.main.qa_common_toolbar.*
 
 @Route(path = QA_MY_COMMENT)
@@ -112,6 +122,29 @@ class MyCommentActivity : BaseViewModelActivity<MyCommentViewModel>() {
                     qa_cl_my_comment_reply.visibility = View.GONE
                     KeyboardController.hideInputKeyboard(this, qa_et_my_comment_reply)
                 }
+            }
+        }
+
+        qa_iv_my_comment_select_pic.setOnSingleClickListener {
+            curReplyComment?.let { comment ->
+                Intent(this, QuizActivity::class.java).apply {
+                    putExtra("isComment", "1")
+                    putExtra("postId", comment.postId)
+                    putExtra("replyId", comment.replyId)
+                    putExtra("commentContent", qa_et_my_comment_reply.text.toString())
+                    putExtra("replyNickname", comment.fromNickname)
+                    startActivity(this)
+                }
+            }
+        }
+        qa_et_my_comment_reply.addTextChangedListener {
+            it?.apply {
+                qa_btn_my_comment_send.background =
+                        if (length == 0) {
+                            ContextCompat.getDrawable(this@MyCommentActivity, R.drawable.qa_shape_send_dynamic_btn_grey_background)
+                        } else {
+                            ContextCompat.getDrawable(this@MyCommentActivity, R.drawable.qa_shape_send_dynamic_btn_blue_background)
+                        }
             }
         }
     }

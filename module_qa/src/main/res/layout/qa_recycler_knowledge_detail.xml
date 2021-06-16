@@ -12,14 +12,14 @@
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:cardBackgroundColor="@color/qa_question_list_color"
+        app:cardBackgroundColor="@color/qa_knowledge_background_color"
         app:cardCornerRadius="10dp"
         app:cardElevation="0dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/common_white_background">
+            android:background="@color/qa_knowledge_background_color">
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/tv_knowledge_base_title"
@@ -41,36 +41,38 @@
                 android:layout_marginStart="18dp"
                 android:layout_marginTop="14dp"
                 android:layout_marginEnd="16dp"
+                android:layout_marginBottom="20dp"
                 android:alpha="0.68"
-                android:textColor="@color/qa_quiz_select_type_text_color"
-                android:textSize="13sp"
+                android:textColor="@color/qa_knowledge_content_color"
                 android:textIsSelectable="true"
-                app:layout_constraintStart_toStartOf="parent"
+                android:textSize="13sp"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_knowledge_base_title"
                 tools:text="如上所诉，你可以主动对您获取的回答进行采纳，将你的积分悬赏给该用户
                 ；但是如果你没有及时对用户的回答进行采纳，
                 且你的提问已经超过了任务最晚完成时间，这个时候我们将对你所
                 提问的所有回答进行查看，选出最有价值的回答，将你的积分悬赏给该" />
 
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/tv_knowledge_from"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="20dp"
-                android:layout_marginBottom="20dp"
-                android:textColor="@color/qa_common_hint_text_color"
-                android:textSize="14.6sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_knowledge_base_detail"
-                tools:text="来源：邮问知识库" />
+<!--            <androidx.appcompat.widget.AppCompatTextView-->
+<!--                android:id="@+id/tv_knowledge_from"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginStart="20dp"-->
+<!--                android:layout_marginTop="20dp"-->
+<!--                android:layout_marginBottom="20dp"-->
+<!--                android:textColor="@color/qa_common_hint_text_color"-->
+<!--                android:textSize="14.6sp"-->
+<!--                app:layout_constraintBottom_toBottomOf="parent"-->
+<!--                app:layout_constraintStart_toStartOf="parent"-->
+<!--                app:layout_constraintTop_toBottomOf="@id/tv_knowledge_base_detail"-->
+<!--                tools:text="来源：邮问知识库" />-->
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/qa_knowledge_cancle"
                 android:layout_width="12dp"
                 android:layout_height="12dp"
-                android:src="@drawable/qa_ic_cancle_knowledge"
+                android:src="@drawable/qa_ic_detail_cancel"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 android:layout_marginTop="27dp"

@@ -43,7 +43,7 @@ abstract class BaseViewModelFragment<T : BaseViewModel> : BaseFragment() {
             longToastEvent.observe { str -> str?.let { CyxbsToast.makeText(context, it, Toast.LENGTH_LONG).show() } }
             progressDialogEvent.observe {
                 it ?: return@observe
-                //确保只有一个对话框会被弹出
+                // 确保只有一个对话框会被弹出
                 if (it != ProgressDialogEvent.DISMISS_DIALOG_EVENT && progressDialog?.isShowing != true) {
                     progressDialog = progressDialog ?: initProgressBar()
                     progressDialog?.show()

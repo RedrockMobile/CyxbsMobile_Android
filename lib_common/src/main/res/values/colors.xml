@@ -217,7 +217,8 @@
 
     <!--   同学课表搜索hint颜色-->
     <color name="common_othercourse_common_hint_text_color">#94A6C4</color>
-    <color name="common_othercourse_shape_back_color">#acE8F0FC</color>
+    <color name="common_othercourse_shape_back_color">#94A6C4</color>
+    <color name="common_othercourse_history_back_color">#acE8F0FC</color>
     <!--    发现教务在线颜色-->
     <color name="common_discover_academic_online_colors">#ffffff</color>
     <color name="common_discover_academic_online_colors_background">#AFD2FB</color>
@@ -350,7 +351,6 @@
     <color name="map_download_progressbar_background" tools:ignore="ResourceName">#E7EFFD</color>
     <color name="map_download_progressbar" tools:ignore="ResourceName">#4B44E5</color>
     <color name="map_download_text" tools:ignore="ResourceName">#132F5B</color>
-
 
 </resources>
 

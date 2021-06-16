@@ -2,30 +2,23 @@ package com.mredrock.cyxbs.qa.pages.dynamic.ui.adapter
 
 
 import android.annotation.SuppressLint
-import android.app.Activity
-import android.content.Intent
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.view.setPadding
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.mredrock.cyxbs.common.BaseApp
-import com.mredrock.cyxbs.common.utils.LogUtils
+import com.mredrock.cyxbs.common.utils.extensions.dp2px
+import com.mredrock.cyxbs.common.utils.extensions.getScreenWidth
 import com.mredrock.cyxbs.common.utils.extensions.setAvatarImageFromUrl
 import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
-import com.mredrock.cyxbs.common.utils.extensions.sharedPreferences
 import com.mredrock.cyxbs.qa.R
-import com.mredrock.cyxbs.qa.beannew.Dynamic
 import com.mredrock.cyxbs.qa.beannew.Topic
 import com.mredrock.cyxbs.qa.beannew.TopicMessage
-import com.mredrock.cyxbs.qa.pages.dynamic.model.TopicDataSet
 import com.mredrock.cyxbs.qa.pages.dynamic.ui.fragment.DynamicFragment
-
 import com.mredrock.cyxbs.qa.pages.square.ui.activity.CircleSquareActivity
 import com.mredrock.cyxbs.qa.ui.widget.ImageViewAddCount
 import kotlinx.android.synthetic.main.qa_recycler_item_circles.view.*
@@ -79,7 +72,7 @@ class CirclesAdapter(private val onItemClickEvent: (Topic, View) -> Unit, privat
                         parent,
                         false
                 )
-                return CirclesItem(view)
+                return CircleListViewHolder(view)
             }
         }
     }
@@ -94,7 +87,7 @@ class CirclesAdapter(private val onItemClickEvent: (Topic, View) -> Unit, privat
                 }
             }
             HAVE_CIRCLE -> {
-                val viewHolder = holder as CirclesItem
+                val viewHolder = holder as CircleListViewHolder
                 viewHolder.itemView.apply {
                     setOnSingleClickListener {
                         circlesItemList[position].post_count = 0
@@ -142,5 +135,19 @@ class CirclesAdapter(private val onItemClickEvent: (Topic, View) -> Unit, privat
         topicMessageList.clear()
         topicMessageList.addAll(newTopicMessageData)
         notifyDataSetChanged()
+    }
+
+    //保证单页可以显示4.5个圈子的ViewHolder
+    class CircleListViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        init {
+            val width = BaseApp.context.getScreenWidth()//单位为px
+            val wishWidth = width.toFloat() / 4.5//希望View达到的宽度
+            val rawWidth = BaseApp.context.dp2px(70f)//内部ImageView的宽度，理解为最低宽度
+            if (wishWidth >= rawWidth) {//保证这样除以之后的宽度大于77dp，防止view显示不全或者太挤
+                val leftPadding = (wishWidth - rawWidth) / 2//期望情况下的padding
+                val topPadding = BaseApp.context.dp2px(10f)
+                itemView.setPadding(leftPadding.toInt(), topPadding, leftPadding.toInt(), 0)
+            }
+        }
     }
 }

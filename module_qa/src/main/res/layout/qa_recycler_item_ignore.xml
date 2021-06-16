@@ -9,8 +9,8 @@
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/qa_circle_iv_ignore_avatar"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="20dp"
         android:layout_marginBottom="20dp"
@@ -25,9 +25,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="7dp"
-        android:layout_marginTop="4dp"
         tools:text="林其彳亍"
-        android:textColor="@color/common_level_three_font_color"
+        android:textColor="@color/qa_dynamic_nickname_text_color"
         android:textSize="15sp"
         android:textStyle="bold"
         app:layout_constraintStart_toEndOf="@+id/qa_circle_iv_ignore_avatar"
@@ -37,11 +36,11 @@
         android:id="@+id/qa_tv_ignore_item_user_assign"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="4dp"
         android:textColor="@color/qa_circle_square_person_number_color"
         android:textSize="11sp"
         app:layout_constraintBottom_toBottomOf="@+id/qa_circle_iv_ignore_avatar"
         app:layout_constraintStart_toStartOf="@+id/qa_tv_ignore_item_nickname"
+        app:layout_constraintTop_toBottomOf="@+id/qa_tv_ignore_item_nickname"
         tools:text="彳亍，yyds" />
 
     <androidx.appcompat.widget.AppCompatButton

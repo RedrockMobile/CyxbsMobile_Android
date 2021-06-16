@@ -89,7 +89,6 @@ class UserViewModel : BaseViewModel() {
     }
 
     fun getUserUncheckCount(type: Int) {
-        LogUtils.d("RayleighZ", "requestForUncheckCount")
         val sp = BaseApp.context.defaultSharedPreferences
         val lastCheckTimeStamp = if (type == 1) sp.getLong(UNCHECK_COMMENT_KEY, 0L) else sp.getLong(UNCHECK_PRAISE_KEY, 0L)
         apiService.getUncheckCount(
@@ -110,8 +109,9 @@ class UserViewModel : BaseViewModel() {
 
     //思考了一下，这里view的引用应该会随着函数调用的结束出栈，所以不会引起内存泄漏
     fun judgeChangedAndSetText(textView: TextView, count: Int){
-        if (textView.text == count.toString()) return
-        textView.text = getNumber(count)
+        val text = getNumber(count)
+        if (textView.text == text) return
+        textView.text = text
         val animator = ValueAnimator.ofFloat(0f, 1f)
         animator.duration = 200
         animator.interpolator = DecelerateInterpolator()
@@ -138,9 +138,10 @@ class UserViewModel : BaseViewModel() {
             return
         }
         //如果前后数字没有变化就不进行刷新
-        if (textView.text == count.toString()) return
+        val text = getNumber(count)
+        if (textView.text == text) return
         textView.visibility = View.VISIBLE
-        textView.text = getNumber(count)
+        textView.text = text
         val width = when {
             count > 99 -> {
                 26.5f
@@ -190,7 +191,7 @@ class UserViewModel : BaseViewModel() {
     }
 
     //转换数字为对应字符
-    fun getNumber(number: Int): String = when {
+    private fun getNumber(number: Int): String = when {
         number in 0..99 -> number.toString()
         number > 99 -> "99+"
         else -> "0"

@@ -4,14 +4,11 @@ package com.mredrock.cyxbs.mine
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.DecelerateInterpolator
-import android.widget.TextView
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityOptionsCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
@@ -21,19 +18,20 @@ import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.mredrock.cyxbs.api.account.IAccountService
-import com.mredrock.cyxbs.common.BaseApp
-import com.mredrock.cyxbs.common.component.CommonDialogFragment
 import com.mredrock.cyxbs.common.config.*
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.ui.BaseViewModelFragment
 import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.*
-import com.mredrock.cyxbs.main.MAIN_LOGIN
 import com.mredrock.cyxbs.mine.page.about.AboutActivity
 import com.mredrock.cyxbs.mine.page.edit.EditInfoActivity
+import com.mredrock.cyxbs.mine.page.security.util.Jump2QQHelper
 import com.mredrock.cyxbs.mine.page.setting.SettingActivity
 import com.mredrock.cyxbs.mine.page.sign.DailySignActivity
 import kotlinx.android.synthetic.main.mine_fragment_main.*
+import java.io.BufferedReader
+import java.io.IOException
+import java.io.InputStreamReader
 
 /**
  * Created by zzzia on 2018/8/14.
@@ -65,6 +63,7 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
             mine_main_tv_praise_number.setOnSingleClickListener { doIfLogin { jumpAndSaveTime(QA_MY_PRAISE, 2) } }
             mine_main_tv_comment.setOnSingleClickListener { doIfLogin { jumpAndSaveTime(QA_MY_COMMENT, 1) } }
             mine_main_tv_praise.setOnSingleClickListener { doIfLogin { jumpAndSaveTime(QA_MY_PRAISE, 2) } }
+            mine_main_fm_feedback.setOnSingleClickListener { doIfLogin { Jump2QQHelper.onFeedBackClick(this) } }
             mine_main_cl_info_edit.setOnClickListener {
                 doIfLogin {
                     startActivity(
@@ -111,7 +110,6 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
 
         viewModel.userUncheckCount.observe(viewLifecycleOwner, Observer {
             it?.let {
-                LogUtils.d("RayleighZ","正在刷新未读消息数")
                 it.uncheckPraiseCount?.let { uncheckPraise -> viewModel.setViewWidthAndText(mine_main_tv_uncheck_praise_count, uncheckPraise) }
                 it.uncheckCommentCount?.let { uncheckComment -> viewModel.setViewWidthAndText(mine_main_tv_uncheck_comment_count, uncheckComment) }
             }

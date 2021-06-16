@@ -1,13 +1,21 @@
 package com.mredrock.cyxbs.common.network
 
+import android.os.Looper
 import android.util.SparseArray
+import com.bumptech.glide.util.Synthetic
 import com.mredrock.cyxbs.common.BuildConfig
-import com.mredrock.cyxbs.common.config.END_POINT_REDROCK
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.api.account.IUserStateService
+import com.mredrock.cyxbs.common.BaseApp
+import com.mredrock.cyxbs.common.R
+import com.mredrock.cyxbs.common.config.SUCCESS
+import com.mredrock.cyxbs.common.config.TOKEN_EXPIRE
+import com.mredrock.cyxbs.common.config.getBaseUrl
 import com.mredrock.cyxbs.common.utils.LogUtils
+import com.mredrock.cyxbs.common.utils.extensions.runOnUiThread
 import com.mredrock.cyxbs.common.utils.extensions.takeIfNoException
+import com.mredrock.cyxbs.common.utils.extensions.toast
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.Response
@@ -30,6 +38,9 @@ object ApiGenerator {
     private var refreshToken = ""
     private val retrofitMap by lazy { SparseArray<Retrofit>() }
 
+    //是否正在刷新Token
+    private var lastExpiredToken = ""
+
     //init对两种公共的retrofit进行配置
     init {
         //添加监听得到登录后的token和refreshToken,应用于初次登录或重新登录
@@ -46,8 +57,9 @@ object ApiGenerator {
             }
         }
         token = accountService.getUserTokenService().getToken()
-        LogUtils.d("tokenTag", token)
         refreshToken = accountService.getUserTokenService().getRefreshToken()
+        LogUtils.d("tokenTag", "token = $token")
+        LogUtils.d("tokenTag", "refresh token = $refreshToken")
         retrofit = Retrofit.Builder().apply {
             this.defaultConfig()
             configRetrofitBuilder {
@@ -141,7 +153,7 @@ object ApiGenerator {
 
     //默认配置
     private fun Retrofit.Builder.defaultConfig() {
-        this.baseUrl(END_POINT_REDROCK)
+        this.baseUrl(getBaseUrl())
     }
 
     //默认配置
@@ -163,16 +175,33 @@ object ApiGenerator {
                         token = ServiceManager.getService(IAccountService::class.java).getUserTokenService().getToken()
                         refreshToken = ServiceManager.getService(IAccountService::class.java).getUserTokenService().getRefreshToken()
                         if (isTokenExpired()) {
-                            checkRefresh(it)
+                            checkRefresh(it, token)
                         } else {
-                            it.proceed(it.request().newBuilder().header("Authorization", "Bearer $token").build())
+                            proceedPoxyWithTryCatch {
+                                it.proceed(it.request().newBuilder().header("Authorization", "Bearer $token").build())
+                            }
                         }
                     }
                     isTokenExpired() -> {
-                        checkRefresh(it)
+                        checkRefresh(it, token)
                     }
                     else -> {
-                        it.proceed(it.request().newBuilder().header("Authorization", "Bearer $token").build())
+                        val response = proceedPoxyWithTryCatch { it.proceed(it.request().newBuilder().header("Authorization", "Bearer $token").build()) }
+                        //此处拦截http状态码进行统一处理
+                        response?.apply {
+                            when (code) {
+                                TOKEN_EXPIRE -> {
+                                    response.close()
+                                    checkRefresh(it, token)
+                                }
+                                SUCCESS -> {
+                                    return@Interceptor this
+                                }
+                                else -> {
+                                    return@Interceptor this
+                                }
+                            }
+                        }
                     }
                 } as Response
             })
@@ -181,28 +210,48 @@ object ApiGenerator {
 
     //对token和refreshToken进行刷新
     @Synchronized
-    private fun checkRefresh(chain: Interceptor.Chain): Response? {
-        var response = chain.proceed(chain.request().newBuilder().header("Authorization", "Bearer $token").build())
+    private fun checkRefresh(chain: Interceptor.Chain, expiredToken: String): Response? {
+        var response = proceedPoxyWithTryCatch { chain.proceed(chain.request().newBuilder().header("Authorization", "Bearer $token").build()) }
         /**
          * 刷新token条件设置为，已有refreshToken，并且已经过期，也可以后端返回特定到token失效code
          * 当第一个过期token请求接口后，改变token和refreshToken，防止同步refreshToken失效
          * 之后进入该方法的请求，token已经刷新
+         * 2021-04版本中由于添加了自http状态码而来的token过期检测
+         * 可能会出现多个接口因为token过期导致同时（虽然是顺序执行）的情况
+         * 故要求在刷新时传递过期token过来，如果该过期token已经被刷新，就直接配置新token，不再刷新
          */
-        if (refreshToken.isNotEmpty() && isTokenExpired()) {
+        if (lastExpiredToken == expiredToken) {//认定已经刷新成功，直接返回新的请求
+            response?.close()
+            return proceedPoxyWithTryCatch { chain.run { proceed(chain.request().newBuilder().header("Authorization", "Bearer $token").build()) } }
+        }
+        lastExpiredToken = expiredToken
+        if (refreshToken.isNotEmpty() && (isTokenExpired() || response?.code == 403)) {
             takeIfNoException {
                 ServiceManager.getService(IAccountService::class.java).getVerifyService().refresh(
                         onError = {
-                            response.close()
+                            response?.close()
                         },
                         action = { s: String ->
-                            response.close()
-                            response = chain.run { proceed(chain.request().newBuilder().header("Authorization", "Bearer $s").build()) }
+                            response?.close()
+//                            BaseApp.context.toast("用户认证刷新成功")
+                            response = proceedPoxyWithTryCatch { chain.run { proceed(chain.request().newBuilder().header("Authorization", "Bearer $s").build()) } }
                         }
                 )
             }
 
         }
         return response
+    }
+
+    private fun proceedPoxyWithTryCatch(proceed: () -> Response) : Response?{
+        var response: Response? = null
+        try {
+            response = proceed.invoke()
+        } catch (e: Exception){
+            e.printStackTrace()
+        } finally {
+            return response
+        }
     }
 
     //检查token是否过期

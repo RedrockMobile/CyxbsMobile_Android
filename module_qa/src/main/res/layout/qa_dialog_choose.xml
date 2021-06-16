@@ -2,8 +2,8 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="314dp"
-    android:layout_height="200dp"
+    android:layout_width="256dp"
+    android:layout_height="157dp"
     android:layout_marginLeft="30dp"
     android:layout_marginRight="30dp"
     android:background="@drawable/qa_shape_dialog_tip_background"
@@ -21,11 +21,11 @@
         android:layout_marginEnd="76dp"
         android:gravity="center_horizontal"
         android:textColor="@color/qa_dialog_tip_text_color"
-        android:textSize="15sp"
+        android:textSize="11sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="确定吗？" />
+        tools:text="确定删除此条评论" />
 
     <TextView
         android:id="@+id/qa_tv_tip_deny"
@@ -37,8 +37,9 @@
         android:layout_marginBottom="27dp"
         android:background="@drawable/qa_shape_dialog_tip_deny"
         android:text="@string/qa_dialog_tip_deny_text"
-        android:textColor="@color/map_dialog_tip_deny_text_color"
+        android:textColor="@color/common_white_font_color"
         android:textSize="15sp"
+        android:gravity="center"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/qa_tv_tip_positive"
         app:layout_constraintStart_toStartOf="parent"
@@ -53,6 +54,7 @@
         android:layout_marginBottom="27dp"
         android:background="@drawable/qa_shape_dialog_tip_positive"
         android:text="@string/qa_dialog_tip_positive_text"
+        android:gravity="center"
         android:textColor="@color/map_dialog_tip_positive_text_color"
         android:textSize="15sp"
         app:layout_constraintBottom_toBottomOf="parent"

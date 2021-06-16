@@ -17,6 +17,12 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/qa_mine_common_divide_line"
+        app:layout_constraintBottom_toBottomOf="@+id/qa_circle_square_toolbar" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_circle_square"
         android:layout_width="match_parent"

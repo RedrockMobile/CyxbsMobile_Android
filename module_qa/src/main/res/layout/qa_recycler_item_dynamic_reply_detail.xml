@@ -10,7 +10,7 @@
     android:paddingTop="9dp"
     android:paddingBottom="16dp">
 
-    <androidx.appcompat.widget.AppCompatTextView
+    <com.ctetin.expandabletextviewlibrary.ExpandableTextView
         android:id="@+id/qa_tv_reply_detail_content"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -25,7 +25,17 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/qa_tv_reply_detail_nickname"
         app:layout_constraintTop_toBottomOf="@id/qa_iv_reply_detail_avatar"
-        tools:text="菜还瘾大？" />
+        tools:text="菜还瘾大？"
+        app:ep_max_line="2"
+        app:ep_need_animation="true"
+        app:ep_need_contract="true"
+        app:ep_expand_color="@color/qa_tv_expand_text_color"
+        app:ep_contract_color="@color/qa_tv_expand_text_color"
+        app:ep_mention_color="@color/qa_my_comment_item_from_color"
+        app:ep_need_link="false"
+        app:ep_need_mention="true"
+        app:ep_contract_text="折叠"
+        app:ep_expand_text="展开"/>
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/qa_tv_reply_detail_date"
@@ -75,6 +85,8 @@
         android:textColor="@color/qa_dynamic_nickname_text_color"
         android:textSize="13sp"
         android:textStyle="bold"
+        android:maxEms="10"
+        android:singleLine="true"
         app:layout_constraintBottom_toTopOf="@+id/qa_tv_reply_detail_date"
         app:layout_constraintStart_toEndOf="@id/qa_iv_reply_detail_avatar"
         app:layout_constraintTop_toTopOf="@+id/qa_iv_reply_detail_avatar"

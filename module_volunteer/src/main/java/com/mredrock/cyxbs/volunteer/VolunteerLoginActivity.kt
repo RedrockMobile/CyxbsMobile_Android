@@ -7,8 +7,11 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.core.view.iterator
 import com.alibaba.android.arouter.facade.annotation.Route
+import com.alibaba.android.arouter.launcher.ARouter
+import com.google.gson.Gson
 import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.common.config.DISCOVER_VOLUNTEER
+import com.mredrock.cyxbs.common.config.DISCOVER_VOLUNTEER_RECORD
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.extensions.gone
 import com.mredrock.cyxbs.common.utils.extensions.invisible
@@ -89,7 +92,7 @@ class VolunteerLoginActivity : BaseViewModelActivity<VolunteerLoginViewModel>() 
         }
         viewModel.volunteerTime.observe {
             it ?: return@observe
-            VolunteerRecordActivity.startActivity(this)
+            VolunteerRecordActivity.startActivity(this, it)
             EventBus.getDefault().postSticky(VolunteerLoginEvent(it))
             finish()
         }

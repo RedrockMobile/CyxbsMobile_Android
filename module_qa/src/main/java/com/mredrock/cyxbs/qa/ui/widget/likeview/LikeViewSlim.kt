@@ -5,6 +5,7 @@ import android.graphics.Canvas
 import android.os.Build
 import android.text.TextPaint
 import android.util.AttributeSet
+import android.util.Log
 import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.utils.extensions.*
 import com.mredrock.cyxbs.qa.R
@@ -43,12 +44,6 @@ class LikeViewSlim @JvmOverloads constructor(
     private val textPaint = TextPaint()
 
     init {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            textPaint.color = resources.getColor(R.color.qa_question_bottom_count_color, null)
-        } else {
-            textPaint.color = resources.getColor(R.color.qa_question_bottom_count_color)
-        }
-
         textPaint.textSize = context.sp(11).toFloat()
         textPaint.isAntiAlias = true
     }
@@ -67,6 +62,12 @@ class LikeViewSlim @JvmOverloads constructor(
     override fun onDraw(canvas: Canvas?) {
         val fontMetrics = textPaint.fontMetrics
         val offsetY: Float = (fontMetrics.bottom - fontMetrics.top) / 2 - fontMetrics.bottom
+        textPaint.color = if (isPraised) {
+            //如果点过赞，就换做点赞后的颜色
+            getColor(R.color.qa_praise_text_color)
+        } else {
+            getColor(R.color.qa_question_bottom_count_color)
+        }
         canvas?.drawText(praiseCount.toString(), width / 2f + context.dp2px(18f), height / 2f + offsetY, textPaint)
         canvas?.translate(0f, -7f)
         super.onDraw(canvas)
@@ -76,6 +77,7 @@ class LikeViewSlim @JvmOverloads constructor(
      * 传入id和model，注册LikeView的监听，并且自动取消原来的监听
      */
     fun registerLikeView(id: String, model: String, isPraised: Boolean, praiseCount: Int) {
+        // Log.e("sandyzhang", "[$id:$model], isPraised = $isPraised, praiseCount = $praiseCount")
         if (id == "0") {
             throw IllegalStateException("id must not be 0")
         }
@@ -114,9 +116,12 @@ class LikeViewSlim @JvmOverloads constructor(
 
     // 根据id和model去map中寻找对应的“帖子/动态”点赞数和是否点赞
     private fun notifyData() {
-        isPraised = likeMap["$id-$model"]?.second ?: false
+        val isPraisedData = likeMap["$id-$model"]?.second ?: false
         praiseCount = likeMap["$id-$model"]?.first ?: 0
-        setCheckedWithoutAnimator(this.isPraised)
+        if (isPraisedData != isPraised) {
+            setCheckedWithoutAnimator(isPraisedData)
+            isPraised = isPraisedData
+        }
         invalidate()
     }
 
@@ -133,11 +138,6 @@ class LikeViewSlim @JvmOverloads constructor(
                     weakR.get()?.notifyData()
                 }
             }
-        }
-
-
-        observer[key]?.forEach {
-
         }
     }
 
@@ -156,10 +156,13 @@ class LikeViewSlim @JvmOverloads constructor(
         if (isPraised) {
             isPraised = false
             praiseCount -= 1
+            textPaint.color = getColor(R.color.qa_question_bottom_count_color)
         } else {
             isPraised = true
             praiseCount += 1
+            textPaint.color = getColor(R.color.qa_praise_text_color)
         }
+
         isChecked = isPraised
         likeMap["$tmpId-$tmpModel"] = Pair(praiseCount, isPraised)
         invalidate()
@@ -180,5 +183,12 @@ class LikeViewSlim @JvmOverloads constructor(
 
     }
 
+    private fun getColor(res: Int): Int {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            resources.getColor(res, null)
+        } else {
+            resources.getColor(res)
+        }
+    }
 
 }

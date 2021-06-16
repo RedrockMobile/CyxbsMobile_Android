@@ -8,7 +8,7 @@ import java.io.Serializable
  * @author Sca RayleighZ
  */
 data class Praise(
-        @SerializedName("id")
+        @SerializedName("post_id")
         val id: String,
         @SerializedName("type")
         val type: Int,

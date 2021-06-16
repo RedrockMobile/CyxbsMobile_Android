@@ -24,9 +24,6 @@ class MyPraiseDataSource : PageKeyedDataSource<Int, Praise>() {
     val networkState = MutableLiveData<Int>()
     val initialLoad = MutableLiveData<Int>()
     private var failedRequest: (() -> Unit)? = null
-    private var requestType = 1
-    private var needAddKey = false
-    private var needStop = false
 
     override fun loadInitial(params: LoadInitialParams<Int>, callback: LoadInitialCallback<Int, Praise>) {
         //最开始加上判断，以防登录bug
@@ -44,8 +41,7 @@ class MyPraiseDataSource : PageKeyedDataSource<Int, Praise>() {
         ApiGenerator.getApiService(ApiServiceNew::class.java)
                 .getUserPraise(
                         1,
-                        params.requestedLoadSize,
-                        requestType
+                        params.requestedLoadSize
                 )
                 .mapOrThrowApiException()
                 .setSchedulers()
@@ -62,19 +58,18 @@ class MyPraiseDataSource : PageKeyedDataSource<Int, Praise>() {
                 .safeSubscribeBy { list ->
                     networkState.postValue(NetworkState.SUCCESSFUL)
                     initialLoad.postValue(NetworkState.SUCCESSFUL)
-                    callback.onResult(list, 1, 1)
+                    val nextKey = 2.takeUnless { list.size < params.requestedLoadSize }
+                    callback.onResult(list, 1, nextKey)
                 }
     }
 
     override fun loadBefore(params: LoadParams<Int>, callback: LoadCallback<Int, Praise>) = Unit
 
     override fun loadAfter(params: LoadParams<Int>, callback: LoadCallback<Int, Praise>) {
-        requestType = if (requestType == 1) 2 else 1
         ApiGenerator.getApiService(ApiServiceNew::class.java)
                 .getUserPraise(
                         params.key,
-                        params.requestedLoadSize,
-                        requestType
+                        params.requestedLoadSize
                 )
                 .mapOrThrowApiException()
                 .setSchedulers()
@@ -89,21 +84,9 @@ class MyPraiseDataSource : PageKeyedDataSource<Int, Praise>() {
                     }
                 }
                 .safeSubscribeBy { list ->
-                    needAddKey = !needAddKey
                     networkState.postValue(NetworkState.SUCCESSFUL)
                     initialLoad.postValue(NetworkState.SUCCESSFUL)
-                    val adjacentPageKey = if (needAddKey) params.key + 1 else params.key
-                    if (list.size < params.requestedLoadSize) {
-                        //adjacentPageKey为null是加载的结束标志
-                        //只有两个type下的size均小于requestLoadSize才算正式结束
-                        if (needStop) {
-                            callback.onResult(list, null)
-                        } else {
-                            needStop = true
-                            callback.onResult(list, adjacentPageKey)
-                        }
-                        return@safeSubscribeBy
-                    }
+                    val adjacentPageKey = (params.key+1).takeUnless { list.size < params.requestedLoadSize }
                     callback.onResult(list, adjacentPageKey)
                 }
     }
