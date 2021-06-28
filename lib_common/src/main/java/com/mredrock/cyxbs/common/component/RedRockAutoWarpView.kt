@@ -97,10 +97,11 @@ class RedRockAutoWarpView : FrameLayout {
                     val itemHeight: Int = itemView.measuredHeight
                     val remainingWidth = mWidth - rowUsedWidth
 
+
                     if (itemWidth >= remainingWidth && rowUsedWidth != 0) {
                         row++
                         if (row == maxLine) break
-                        rowUsedWidth = 0
+                        rowUsedWidth = 0//如果超过设定的行宽，就需要换行，正在使用的行宽就直接清零
                         continue
                     }
 
@@ -111,8 +112,8 @@ class RedRockAutoWarpView : FrameLayout {
                             measureColumnUsedHeights[row] = itemHeight
                         }
                     }
-                    val realWidth = if (itemWidth > measuredWidth) {
-                        measuredWidth
+                    val realWidth = if (itemWidth > MeasureSpec.getSize(widthMeasureSpec)) {
+                        MeasureSpec.getSize(widthMeasureSpec)
                     } else {
                         itemWidth
                     }
