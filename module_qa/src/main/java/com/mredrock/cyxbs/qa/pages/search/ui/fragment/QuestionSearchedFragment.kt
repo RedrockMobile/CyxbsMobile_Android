@@ -153,13 +153,13 @@ class QuestionSearchedFragment : BaseViewModelFragment<QuestionSearchedViewModel
         }.apply {
             onShareClickListener = { dynamic, mode ->
                 val url = "${CommentConfig.SHARE_URL}dynamic?id=${dynamic.postId}"
+                val pic = if (dynamic.pics.isNullOrEmpty()) "" else dynamic.pics[0]
                 when (mode) {
                     QQ_FRIEND -> {
-                        val pic = if (dynamic.pics.isNullOrEmpty()) "" else dynamic.pics[0]
                         mTencent?.let { it1 -> ShareUtils.qqShare(it1, this@QuestionSearchedFragment, dynamic.topic, dynamic.content, url, pic) }
                     }
                     QQ_ZONE ->
-                        mTencent?.let { it1 -> ShareUtils.qqQzoneShare(it1, this@QuestionSearchedFragment, dynamic.topic, dynamic.content, url, ArrayList(dynamic.pics)) }
+                        mTencent?.let { it1 -> ShareUtils.qqQzoneShare(it1, this@QuestionSearchedFragment, dynamic.topic, dynamic.content, url, arrayListOf(pic)) }
                     COPY_LINK -> {
                         this@QuestionSearchedFragment.context?.let {
                             ClipboardController.copyText(it, url)

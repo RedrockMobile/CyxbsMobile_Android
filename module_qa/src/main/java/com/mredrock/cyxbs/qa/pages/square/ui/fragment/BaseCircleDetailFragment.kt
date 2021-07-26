@@ -77,13 +77,14 @@ abstract class BaseCircleDetailFragment<T : CircleDetailViewModel> : BaseViewMod
         }.apply {
             onShareClickListener = { dynamic, mode ->
                 val url = "${CommentConfig.SHARE_URL}dynamic?id=${dynamic.postId}"
+                val pic = if(dynamic.pics.isNullOrEmpty()) "" else dynamic.pics[0]
                 when (mode) {
                     QQ_FRIEND ->{
                         val pic = if(dynamic.pics.isNullOrEmpty()) "" else dynamic.pics[0]
                         mTencent?.let { it1 -> ShareUtils.qqShare(it1, this@BaseCircleDetailFragment, dynamic.topic, dynamic.content, url, pic) }
                     }
                     QQ_ZONE ->
-                        mTencent?.let { it1 -> ShareUtils.qqQzoneShare(it1, this@BaseCircleDetailFragment, dynamic.topic, dynamic.content, url, ArrayList(dynamic.pics)) }
+                        mTencent?.let { it1 -> ShareUtils.qqQzoneShare(it1, this@BaseCircleDetailFragment, dynamic.topic, dynamic.content, url, arrayListOf(pic)) }
                     COPY_LINK ->{
                         this@BaseCircleDetailFragment.context?.let {
                             ClipboardController.copyText(it, url)
