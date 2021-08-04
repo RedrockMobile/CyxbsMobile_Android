@@ -11,6 +11,7 @@ import android.graphics.Paint;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.animation.LinearInterpolator;
@@ -19,6 +20,7 @@ import android.widget.Checkable;
 
 import androidx.annotation.Nullable;
 
+import com.mredrock.cyxbs.common.utils.LogUtils;
 import com.mredrock.cyxbs.qa.R;
 
 import java.util.Random;
@@ -165,9 +167,10 @@ public class LikeView extends View implements Checkable {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         canvas.translate(mCenterX, mCenterY);//使坐标原点在canvas中心位置
+        Log.d("Gibson", mCurrentState + "");
         switch (mCurrentState) {
             case State.HEART_VIEW:
-                drawInnerShape(canvas, mCurrentRadius, isChecked);
+//                drawInnerShape(canvas, mCurrentRadius, isChecked);
                 break;
             case State.CIRCLE_VIEW:
                 drawCircle(canvas, mCurrentRadius, mCurrentColor);
@@ -270,7 +273,7 @@ public class LikeView extends View implements Checkable {
             angleB += 2 * Math.PI / 7;
         }
         mCurrentRadius = (int) (mRadius / mInnerShapeScale + (mInnerShapeScale*1.5-2) * mRadius  * mCurrentPercent/ mInnerShapeScale);
-        drawInnerShape(canvas, mCurrentRadius, true);
+//        drawInnerShape(canvas, mCurrentRadius, true);
 
     }
 
@@ -299,7 +302,7 @@ public class LikeView extends View implements Checkable {
             mCurrentRadius = (int) (mCurrentRadius - dotR / 16);
 
         }
-        drawInnerShape(canvas, mCurrentRadius, true);
+//        drawInnerShape(canvas, mCurrentRadius, true);
 
         //圆点逐渐变小
         dotRS =  (dotR * (1 - mCurrentPercent));

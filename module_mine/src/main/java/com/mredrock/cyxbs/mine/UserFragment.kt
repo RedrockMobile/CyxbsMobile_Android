@@ -71,6 +71,9 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
                             ActivityOptionsCompat.makeSceneTransitionAnimation(context as Activity, Pair(mine_main_avatar, "avatar")).toBundle())
                 }
             }
+            mine_check_line_view.setOnClickListener {
+                mine_check_line_view.setStatusWithAnime(true)
+            }
         }
     }
 

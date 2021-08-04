@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <declare-styleable name="CheckLineView" tools:ignore="ResourceName">
+        <!--    左侧check圈的半径-->
+        <attr name="left_radius" format="dimension"/>
+        <!--    选中之后的颜色-->
+        <attr name="checked_line_color" format="color"/>
+        <!--    未选中时的颜色-->
+        <attr name="unchecked_line_color" format="color"/>
+        <!--    是否已经check-->
+        <attr name="is_checked" format="boolean"/>
+    </declare-styleable>
+</resources>
