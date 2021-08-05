@@ -1,4 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="todo_check_line_color">#15315B</color>
+    <color name="todo_inner_add_save_text_color">#2923D2</color>
+    <color name="todo_inner_add_thing_et_shape_color">#9AE8F1FC</color>
+    <color name="todo_inner_add_thing_et_hint_color">#6815315B</color>
+    <color name="todo_inner_add_thing_nf_tv_unclick_color">#802A4E84</color>
+    <color name="todo_inner_add_thing_nf_tv_click_color">#1002A4E84</color>
+    <color name="todo_inner_add_thing_repeat_time_item_shape_color">#F2F3F7</color>
+    <color name="todo_inner_add_thing_repeat_time_canlce">#A0EDF4FD</color>
+    <color name="todo_inner_add_thing_repeat_time_canlce_text_color">#4015315B</color>
+    <color name="todo_inner_add_thing_repeat_time_confirm_text_color">#FFFFFF</color>
+    <color name="todo_inner_detail_line_color">#102A4E84</color>
+    <color name="todo_inner_detail_edittext_line_color">#20BDCCE5</color>
 </resources>

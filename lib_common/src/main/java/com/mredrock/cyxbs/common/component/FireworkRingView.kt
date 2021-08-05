@@ -67,6 +67,15 @@ abstract class FireworkRingView @kotlin.jvm.JvmOverloads constructor(
         //计算圆环宽度，最小为0，随着动化进程发展逐渐变细
         val ringPercent = min(1f - ringCurPercent, 1f) * 0.2f
         val ringWidth = 2 * maxRingRadius * ringPercent
+
+        paint.strokeWidth = ringWidth
+        paint.style = Paint.Style.STROKE
+
+        if (ringCurPercent <= 1f){
+            canvas.drawArc(ringRectF, 0f, 360f, false, paint)
+        }
+
+        //绘制
     }
 
 }

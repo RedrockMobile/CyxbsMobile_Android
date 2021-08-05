@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/common_white_background"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/todo_inner_home_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="44dp">
+        <!-- TODO 添加图片的webp图片-->
+        <ImageView
+            android:id="@+id/todo_inner_home_bar_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="15dp" />
+        <TextView
+            android:id="@+id/todo_inner_home_bar_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="37dp"
+            android:text="邮子清单"
+            android:textColor="@color/todo_check_line_color"
+            android:textSize="21sp"
+            android:textStyle="bold" />
+        <ImageView
+            android:id="@+id/todo_inner_home_bar_add"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center_vertical"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="15dp" />
+    </RelativeLayout>
+
+  <TextView
+      android:id="@+id/todo_inner_home_todo_title"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="待办"
+      android:textColor="@color/todo_check_line_color"
+      android:textSize="24sp"
+      android:textStyle="bold"
+      android:layout_marginStart="15dp"
+      android:layout_marginTop="30dp" />
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/todo_inner_home_rv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="18dp"
+        android:layout_marginStart="15dp"/>
+</androidx.appcompat.widget.LinearLayoutCompat>
