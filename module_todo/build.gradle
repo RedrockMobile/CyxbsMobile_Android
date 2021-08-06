@@ -1,1 +1,2 @@
 apply from: config
+apply plugin: 'kotlin-android'

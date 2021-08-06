@@ -15,7 +15,7 @@ abstract class TodoDatabase : RoomDatabase() {
     abstract fun todoDao(): TodoDao
 
     companion object {
-        val INSTANCE: TodoDatabase by lazy {
+        val CHECKED_INSTANCE: TodoDatabase by lazy {
             Room.databaseBuilder(
                 context,
                 TodoDatabase::class.java, "todo_database"

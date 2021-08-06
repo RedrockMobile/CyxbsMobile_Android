@@ -8,7 +8,6 @@ import android.graphics.Paint
 import android.graphics.RectF
 import android.util.AttributeSet
 import android.view.View
-import android.view.animation.OvershootInterpolator
 import com.cyxbsmobile_single.module_todo.R
 import com.mredrock.cyxbs.common.utils.extensions.dip
 
@@ -58,7 +57,7 @@ class CheckLineView @JvmOverloads constructor(
             in 0f..100f -> {
                 drawLeftArc(curAnimeProcess, canvas)
             }
-            in 100f..200f -> {
+            in 101f..200f -> {
                 if (isChecked) {
                     //如果已经check
                     drawLeftArc(100f, canvas)
@@ -66,7 +65,9 @@ class CheckLineView @JvmOverloads constructor(
                     canvas.drawLine(
                         leftRadius * 2 + paint.strokeWidth / 2f,
                         leftRadius + paint.strokeWidth / 2f,
-                        width.toFloat() * (curAnimeProcess - 100) / 100,
+                        (leftRadius * 2 + paint.strokeWidth / 2f) +
+                                (width.toFloat() - leftRadius * 2 + paint.strokeWidth / 2f)
+                                * (curAnimeProcess - 100) / 100,
                         leftRadius,
                         paint
                     )
@@ -80,20 +81,20 @@ class CheckLineView @JvmOverloads constructor(
         }
     }
 
-    private fun setStatusWithoutAnime(isChecked: Boolean) {
+    fun setStatusWithoutAnime(isChecked: Boolean) {
         curAnimeProcess = 200f
         this.isChecked = isChecked
     }
 
-    private fun setStatusWithAnime(isChecked: Boolean){
+    fun setStatusWithAnime(isChecked: Boolean) {
         this.isChecked = isChecked
-        if (isChecked){
+        if (isChecked) {
             selectAnime ?: let {
                 selectAnime = ValueAnimator.ofFloat(0f, 200f).apply {
                     duration = 1000
-                    interpolator = OvershootInterpolator()
                     addUpdateListener {
                         curAnimeProcess = it.animatedValue as Float
+                        invalidate()
                     }
                 }
             }
@@ -102,9 +103,9 @@ class CheckLineView @JvmOverloads constructor(
             unSelectAnime ?: let {
                 unSelectAnime = ValueAnimator.ofFloat(200f, 0f).apply {
                     duration = 1000
-                    interpolator = OvershootInterpolator()
                     addUpdateListener {
                         curAnimeProcess = it.animatedValue as Float
+                        invalidate()
                     }
                 }
             }
@@ -124,6 +125,6 @@ class CheckLineView @JvmOverloads constructor(
             bottom = leftRadius * 2 + paint.strokeWidth
         }
         sweepAngle = (360f - startAngle) * process / 100
-        canvas.drawArc(leftCircleRectF, startAngle, 360f - startAngle, false, paint)
+        canvas.drawArc(leftCircleRectF, startAngle, sweepAngle, false, paint)
     }
 }

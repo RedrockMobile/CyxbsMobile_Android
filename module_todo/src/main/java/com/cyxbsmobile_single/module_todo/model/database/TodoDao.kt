@@ -25,6 +25,9 @@ interface TodoDao {
     @Query("SELECT * FROM todo_list WHERE todoId = :todoId")
     fun queryTodoById(todoId: Long): Flowable<Todo>
 
+    @Query("SELECT * FROM todo_list WHERE isChecked = :isChecked")
+    fun queryTodoByWeatherDone(isChecked: Boolean): Flowable<List<Todo>>
+
     @Query("DELETE FROM todo_list")
     fun deleteAllTodo()
 

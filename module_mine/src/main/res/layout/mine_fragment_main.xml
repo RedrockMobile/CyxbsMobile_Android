@@ -312,13 +312,6 @@
                 android:layout_marginEnd="25.5dp"
                 android:src="@drawable/mine_ic_arrow_right" />
         </FrameLayout>
-
-        <com.mredrock.cyxbs.mine.util.widget.CheckLineView
-            android:paddingLeft="16dp"
-            android:id="@+id/mine_check_line_view"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            app:left_radius="7.5dp"/>
         <Space
             android:layout_width="match_parent"
             android:layout_height="100dp" />
