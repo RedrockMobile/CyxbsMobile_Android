@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.appcompat.widget.LinearLayoutCompat
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -44,7 +43,7 @@
         android:layout_marginStart="18dp"
         android:layout_marginTop="33dp"
         android:layout_marginEnd="18dp"
-        android:background="@drawable/todo_inner_add_thing_shape_ev"
+        android:background="@drawable/todo_shape_inner_add_thing_ev"
         android:hint="@string/todo_inner_add_thing_et_hint"
         android:imeOptions="actionSearch"
         android:inputType="text"
@@ -116,14 +115,16 @@
             android:layout_marginStart="52dp"
             android:layout_marginTop="20dp"
             android:background="#4CAF50">
+
             <ImageView
                 android:id="@+id/iv_todo_inner_add_thing_repeat_time_index"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="93dp"
                 android:src="@drawable/todo_ic_inner_add_thing_time_index"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                android:layout_marginTop="93dp"/>
+                app:layout_constraintTop_toTopOf="parent" />
+
             <com.super_rabbit.wheel_picker.WheelPicker
                 android:id="@+id/todo_add_thing_first"
                 android:layout_width="wrap_content"
@@ -160,25 +161,23 @@
                 app:wheelItemCount="7" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.appcompat.widget.LinearLayoutCompat>
-    <View
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_weight="1"/>
+
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom">
+        android:layout_gravity="bottom"
+        android:layout_marginTop="37dp">
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/todo_inner_add_thing_repeat_time_cancle"
             android:layout_width="120dp"
             android:layout_height="40dp"
-            android:background="@drawable/todo_inner_add_thing_repeat_time_cancle_button"
-            android:text="取消"
+            android:layout_gravity="left"
             android:layout_marginStart="48dp"
             android:layout_marginBottom="40dp"
+            android:background="@drawable/todo_shape_inner_add_thing_repeat_time_cancle_button"
             android:gravity="center"
-            android:layout_gravity="left"
+            android:text="取消"
             android:textColor="@color/todo_inner_add_thing_repeat_time_canlce_text_color"
             android:textSize="18sp" />
 
@@ -186,12 +185,12 @@
             android:id="@+id/todo_inner_add_thing_repeat_time_confirm"
             android:layout_width="120dp"
             android:layout_height="40dp"
-            android:background="@drawable/todo_inner_add_thing_shape_confirm_button"
-            android:text="确定"
             android:layout_gravity="right"
-            android:gravity="center"
             android:layout_marginEnd="47dp"
             android:layout_marginBottom="40dp"
+            android:background="@drawable/todo_shape_inner_add_thing_shape_confirm_button"
+            android:gravity="center"
+            android:text="确定"
             android:textColor="@color/todo_inner_add_thing_repeat_time_confirm_text_color"
             android:textSize="18sp" />
     </FrameLayout>

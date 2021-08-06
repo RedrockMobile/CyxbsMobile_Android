@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.appcompat.widget.LinearLayoutCompat
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/common_white_background"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:ignore="ResourceName">
 
     <FrameLayout
         android:id="@+id/todo_inner_detail_header"
@@ -119,4 +123,20 @@
         android:layout_marginStart="50dp"
         android:layout_marginTop="4dp"
         android:background="@color/todo_inner_detail_edittext_line_color" />
+    <View
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
+    <androidx.appcompat.widget.AppCompatButton
+        android:layout_width="120dp"
+        android:layout_height="40dp"
+        android:background="@drawable/todo_shape_inner_add_thing_repeat_time_cancle_button"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:text="删除"
+        android:textSize="18sp"
+        android:textStyle="normal"
+        android:textColor="@color/todo_inner_add_thing_repeat_time_canlce_text_color"
+        android:layout_marginBottom="52dp"/>
+
 </androidx.appcompat.widget.LinearLayoutCompat>
