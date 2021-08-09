@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
+import com.cyxbsmobile_single.api_todo.ITodoService
 import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.common.component.SpacesHorizontalItemDecoration
 import com.mredrock.cyxbs.common.config.DISCOVER_ENTRY
@@ -192,6 +193,7 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>(), Eve
     }
 
     private fun initFeeds() {
+        addFeedFragment(ServiceManager.getService(ITodoService::class.java).getTodoFeed())
         addFeedFragment(ServiceManager.getService(IElectricityService::class.java).getElectricityFeed())
         addFeedFragment(ServiceManager.getService(IVolunteerService::class.java).getVolunteerFeed())
         //处理手机屏幕过长导致feed无法填充满下方的情况

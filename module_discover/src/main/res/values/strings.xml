@@ -23,6 +23,9 @@
     <string name="discover_title_map">重邮地图</string>
     <string name="discover_detail_map">校园地图，尽收重邮风光</string>
 
+    <string name="discover_title_todo">邮子清单</string>
+    <string name="discover_detail_todo">待办事项</string>
+
     <string name="discover_title_more_function">更多功能</string>
     <string name="discover_detail_more_function">敬请期待</string>
     <string name="discover_more_function_notice_text">更多功能，敬请期待</string>

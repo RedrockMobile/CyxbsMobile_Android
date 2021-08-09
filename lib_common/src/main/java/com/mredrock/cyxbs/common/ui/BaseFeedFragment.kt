@@ -6,6 +6,7 @@ import android.transition.TransitionManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import com.mredrock.cyxbs.common.R
 import com.mredrock.cyxbs.common.utils.extensions.visible
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
@@ -54,6 +55,10 @@ abstract class BaseFeedFragment<T : BaseViewModel> : BaseViewModelFragment<T>() 
 
     fun setSubtitle(res: Int) {
         tv_feed_subtitle.setText(res)
+    }
+
+    fun setLeftIcon(res: Int){
+        iv_feed_left_icon.background = ContextCompat.getDrawable(requireContext(), res)
     }
 
     fun setAdapter(adapter: Adapter) {

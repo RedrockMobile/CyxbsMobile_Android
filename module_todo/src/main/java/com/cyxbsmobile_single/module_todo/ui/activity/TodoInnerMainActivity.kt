@@ -2,20 +2,17 @@ package com.cyxbsmobile_single.module_todo.ui.activity
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.cyxbsmobile_single.module_todo.R
-import com.cyxbsmobile_single.module_todo.adapter.DoubleListFoldRvAdapter
-import com.cyxbsmobile_single.module_todo.model.bean.Todo
-import com.cyxbsmobile_single.module_todo.model.bean.TodoItemWrapper
-import com.mredrock.cyxbs.common.config.TODO_DETAIL_ACTIVITY
-import kotlinx.android.synthetic.main.activity_todo_inner_main.*
+import com.mredrock.cyxbs.common.BaseApp
+import com.mredrock.cyxbs.common.config.DISCOVER_TODO_MAIN
+import com.mredrock.cyxbs.common.ui.BaseActivity
 
-@Route(path = TODO_DETAIL_ACTIVITY)
-class TodoInnerMainActivity : AppCompatActivity() {
+@Route(path = DISCOVER_TODO_MAIN)
+class TodoInnerMainActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_todo_inner_main)
+        setContentView(R.layout.todo_activity_inner_main)
 //        todo_inner_home_rv.adapter = adapter
 //        todo_inner_home_rv.layoutManager = LinearLayoutManager(this)
     }

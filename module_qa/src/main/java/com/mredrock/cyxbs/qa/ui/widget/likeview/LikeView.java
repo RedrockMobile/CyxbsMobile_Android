@@ -170,7 +170,7 @@ public class LikeView extends View implements Checkable {
         Log.d("Gibson", mCurrentState + "");
         switch (mCurrentState) {
             case State.HEART_VIEW:
-//                drawInnerShape(canvas, mCurrentRadius, isChecked);
+                drawInnerShape(canvas, mCurrentRadius, isChecked);
                 break;
             case State.CIRCLE_VIEW:
                 drawCircle(canvas, mCurrentRadius, mCurrentColor);
@@ -273,7 +273,7 @@ public class LikeView extends View implements Checkable {
             angleB += 2 * Math.PI / 7;
         }
         mCurrentRadius = (int) (mRadius / mInnerShapeScale + (mInnerShapeScale*1.5-2) * mRadius  * mCurrentPercent/ mInnerShapeScale);
-//        drawInnerShape(canvas, mCurrentRadius, true);
+        drawInnerShape(canvas, mCurrentRadius, true);
 
     }
 
@@ -302,7 +302,7 @@ public class LikeView extends View implements Checkable {
             mCurrentRadius = (int) (mCurrentRadius - dotR / 16);
 
         }
-//        drawInnerShape(canvas, mCurrentRadius, true);
+        drawInnerShape(canvas, mCurrentRadius, true);
 
         //圆点逐渐变小
         dotRS =  (dotR * (1 - mCurrentPercent));
