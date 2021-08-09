@@ -45,6 +45,7 @@ class CheckLineView @JvmOverloads constructor(
         )
         isChecked = typeArray.getBoolean(R.styleable.CheckLineView_is_checked, false)
         leftRadius = typeArray.getDimension(R.styleable.CheckLineView_left_radius, 0f)
+        setStatusWithoutAnime(isChecked)
         typeArray.recycle()
         paint.style = Paint.Style.STROKE
     }
@@ -115,8 +116,8 @@ class CheckLineView @JvmOverloads constructor(
 
     private fun drawLeftArc(process: Float, canvas: Canvas) {
         //绘制左侧check圈圈
-        paint.color = checkedColor
-        paint.strokeWidth = context.dip(1).toFloat()
+        paint.color = if (isChecked) checkedColor else uncheckedColor
+        paint.strokeWidth = if (isChecked) context.dip(1).toFloat() else context.dip(1.5f).toFloat()
         //刷新右侧矩形
         leftCircleRectF.apply {
             top = 0f + paint.strokeWidth
@@ -124,7 +125,7 @@ class CheckLineView @JvmOverloads constructor(
             right = leftRadius * 2 + paint.strokeWidth
             bottom = leftRadius * 2 + paint.strokeWidth
         }
-        sweepAngle = (360f - startAngle) * process / 100
+        sweepAngle = if(isChecked) (360f - startAngle) * process / 100 else 360f
         canvas.drawArc(leftCircleRectF, startAngle, sweepAngle, false, paint)
     }
 }

@@ -1,6 +1,6 @@
 package com.cyxbsmobile_single.module_todo.model.bean
 
-import com.cyxbsmobile_single.module_todo.adapter.DoubleListFoldableRvAdapter
+import java.io.Serializable
 
 /**
  * Author: RayleighZ
@@ -12,4 +12,4 @@ data class TodoItemWrapper(
     val viewType: Int,
     var title: String? = null,
     var todo: Todo? = null
-)
+): Serializable

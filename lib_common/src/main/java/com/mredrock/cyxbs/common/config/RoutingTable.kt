@@ -70,6 +70,9 @@ const val QA_MY_PRAISE = "/my_praise/qa/entry"
 // 迎新专题
 const val FRESHMAN_ENTRY = "/freshman/entry"
 
+//todo模块
+const val TODO_DETAIL_ACTIVITY = "/todo/detail"
+
 // 更新服务
 const val APP_UPDATE_SERVICE = "/update/service"
 
