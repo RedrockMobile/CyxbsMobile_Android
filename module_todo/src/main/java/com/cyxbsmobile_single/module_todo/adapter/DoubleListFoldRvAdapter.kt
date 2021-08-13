@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.cyxbsmobile_single.module_todo.R
+import com.cyxbsmobile_single.module_todo.adapter.`interface`.ItemChangeInterface
 import com.cyxbsmobile_single.module_todo.model.bean.TodoItemWrapper
 
 /**
@@ -16,7 +17,7 @@ import com.cyxbsmobile_single.module_todo.model.bean.TodoItemWrapper
 @Suppress("UNCHECKED_CAST")
 class DoubleListFoldRvAdapter(
     private val todoItemWrapperArrayList: ArrayList<TodoItemWrapper>
-) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>(){
 
     companion object {
         const val TODO = 0
@@ -57,12 +58,14 @@ class DoubleListFoldRvAdapter(
 
     private fun foldItem() {
         wrapperCopyList.subList(checkedTopMark, itemCount).clear()
-        val diffRes = DiffUtil.calculateDiff(DiffCallBack(todoItemWrapperArrayList, wrapperCopyList))
+        val diffRes =
+            DiffUtil.calculateDiff(DiffCallBack(todoItemWrapperArrayList, wrapperCopyList))
         diffRes.dispatchUpdatesTo(this)
     }
 
     private fun showItem() {
-        val diffRes = DiffUtil.calculateDiff(DiffCallBack(wrapperCopyList, todoItemWrapperArrayList))
+        val diffRes =
+            DiffUtil.calculateDiff(DiffCallBack(wrapperCopyList, todoItemWrapperArrayList))
         wrapperCopyList.clear()
         wrapperCopyList.addAll(todoItemWrapperArrayList)
         diffRes.dispatchUpdatesTo(this)
@@ -104,8 +107,8 @@ class DoubleListFoldRvAdapter(
             val oldItem = oldList[oldItemPosition]
             val newItem = newList[newItemPosition]
 
-            return if (oldItem.viewType == newItem.viewType){
-                if (oldItem.viewType == TITLE){
+            return if (oldItem.viewType == newItem.viewType) {
+                if (oldItem.viewType == TITLE) {
                     oldItem.title == newItem.title
                 } else {
                     oldItem.todo?.todoId == newItem.todo?.todoId
@@ -118,9 +121,13 @@ class DoubleListFoldRvAdapter(
         override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
             val oldItem = oldList[oldItemPosition]
             val newItem = newList[newItemPosition]
-
             return oldItem.toString() == newItem.toString()
         }
 
+    }
+
+    fun delItem(position: Int) {
+        wrapperCopyList.removeAt(position)
+        todoItemWrapperArrayList.removeAt(position)
     }
 }

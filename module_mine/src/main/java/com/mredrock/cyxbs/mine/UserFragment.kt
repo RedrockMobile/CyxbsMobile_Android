@@ -25,6 +25,7 @@ import com.mredrock.cyxbs.mine.page.about.AboutActivity
 import com.mredrock.cyxbs.mine.page.edit.EditInfoActivity
 import com.mredrock.cyxbs.mine.page.setting.SettingActivity
 import com.mredrock.cyxbs.mine.page.sign.DailySignActivity
+import com.mredrock.cyxbs.mine.util.apiService
 import kotlinx.android.synthetic.main.mine_fragment_main.*
 
 /**
