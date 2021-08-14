@@ -7,11 +7,11 @@
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/todo_rv_item_iv_empty"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="233dp"
+        android:layout_height="130dp"
         android:layout_marginTop="30dp"
         android:layout_gravity="center_horizontal"
-        tools:src="@drawable/todo_ic_empty1"/>
+        android:src="@drawable/todo_ic_empty1"/>
 
     <TextView
         android:id="@+id/todo_rv_item_tv_empty"

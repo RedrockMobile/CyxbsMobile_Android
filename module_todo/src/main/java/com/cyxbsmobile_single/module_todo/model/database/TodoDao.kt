@@ -14,10 +14,10 @@ import io.reactivex.Flowable
 @Dao
 interface TodoDao {
     @Insert
-    fun insertTodoList(todoList: List<Todo>)
+    fun insertTodoList(todoList: List<Todo>)//: Flowable<List<Long>>
 
     @Insert
-    fun insertTodo(todo: Todo)
+    fun insertTodo(todo: Todo)//: Flowable<Long>
 
     @Query("SELECT * FROM todo_list")
     fun queryAllTodo(): Flowable<List<Todo>>

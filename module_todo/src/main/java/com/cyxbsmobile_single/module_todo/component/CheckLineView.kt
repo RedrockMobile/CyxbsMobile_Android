@@ -8,6 +8,7 @@ import android.graphics.Paint
 import android.graphics.RectF
 import android.util.AttributeSet
 import android.view.View
+import androidx.core.animation.doOnEnd
 import com.cyxbsmobile_single.module_todo.R
 import com.mredrock.cyxbs.common.utils.extensions.dip
 
@@ -87,7 +88,7 @@ class CheckLineView @JvmOverloads constructor(
         this.isChecked = isChecked
     }
 
-    fun setStatusWithAnime(isChecked: Boolean) {
+    fun setStatusWithAnime(isChecked: Boolean, onSuccess: (() -> Unit)? = null) {
         this.isChecked = isChecked
         if (isChecked) {
             selectAnime ?: let {
@@ -100,6 +101,9 @@ class CheckLineView @JvmOverloads constructor(
                 }
             }
             selectAnime?.start()
+            selectAnime?.doOnEnd {
+                onSuccess?.invoke()
+            }
         } else {
             unSelectAnime ?: let {
                 unSelectAnime = ValueAnimator.ofFloat(200f, 0f).apply {
@@ -110,6 +114,9 @@ class CheckLineView @JvmOverloads constructor(
                     }
                 }
             }
+            unSelectAnime?.doOnEnd {
+                onSuccess?.invoke()
+            }
             unSelectAnime?.start()
         }
     }
@@ -117,7 +124,8 @@ class CheckLineView @JvmOverloads constructor(
     private fun drawLeftArc(process: Float, canvas: Canvas) {
         //绘制左侧check圈圈
         paint.color = if (isChecked) checkedColor else uncheckedColor
-        paint.strokeWidth = if (isChecked) context.dip(1.2f).toFloat() else context.dip(1.5f).toFloat()
+        paint.strokeWidth =
+            if (isChecked) context.dip(1.2f).toFloat() else context.dip(1.5f).toFloat()
         //刷新右侧矩形
         leftCircleRectF.apply {
             top = 0f + paint.strokeWidth / 2f
@@ -125,7 +133,7 @@ class CheckLineView @JvmOverloads constructor(
             right = leftRadius * 2 + paint.strokeWidth / 2f
             bottom = leftRadius * 2 + paint.strokeWidth / 2f
         }
-        sweepAngle = if(isChecked) (360f - startAngle) * process / 100 else 360f
+        sweepAngle = if (isChecked) (360f - startAngle) * process / 100 else 360f
         canvas.drawArc(leftCircleRectF, startAngle, sweepAngle, false, paint)
     }
 }

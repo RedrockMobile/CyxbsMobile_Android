@@ -13,7 +13,7 @@ import java.io.Serializable
 data class Todo(
     @PrimaryKey(autoGenerate = true)
     @SerializedName("todo_id")
-    val todoId: Long,//用户todo的唯一标识
+    var todoId: Long,//用户todo的唯一标识
     @SerializedName("title")
     var title: String,//todo的标题
     @SerializedName("remind_time")

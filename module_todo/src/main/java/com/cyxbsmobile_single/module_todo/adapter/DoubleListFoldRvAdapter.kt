@@ -1,14 +1,12 @@
 package com.cyxbsmobile_single.module_todo.adapter
 
 import android.graphics.Color
-import android.opengl.Visibility
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.cyxbsmobile_single.module_todo.R
-import com.cyxbsmobile_single.module_todo.adapter.`interface`.ItemChangeInterface
 import com.cyxbsmobile_single.module_todo.model.bean.TodoItemWrapper
 import com.cyxbsmobile_single.module_todo.util.remindTimeStamp2String
 import kotlinx.android.synthetic.main.todo_rv_item_empty.view.*
@@ -57,13 +55,36 @@ class DoubleListFoldRvAdapter(
         }
         return object : RecyclerView.ViewHolder(
             LayoutInflater.from(parent.context).inflate(layoutId, parent, false)
-        ) {}
+        ) {  }
     }
 
-    lateinit var onBindView: (itemView: View, position: Int, viewType: Int) -> Unit
+    lateinit var onBindView: (itemView: View, position: Int, viewType: Int, wrapper: TodoItemWrapper) -> Unit
 
-    fun doOnBindView(onBindView: (itemView: View, position: Int, viewType: Int) -> Unit) {
+    fun doOnBindView(onBindView: (itemView: View, position: Int, viewType: Int, wrapper: TodoItemWrapper) -> Unit) {
         this.onBindView = onBindView
+    }
+
+    fun checkItem(position: Int){
+        val item = wrapperCopyList.removeAt(position)
+        item.todo?.isChecked = true
+        wrapperCopyList.add(checkedTopMark, item)
+
+        val diffRes =
+            DiffUtil.calculateDiff(DiffCallBack(todoItemWrapperArrayList, wrapperCopyList))
+        diffRes.dispatchUpdatesTo(this)
+
+        //同步修改todoItemWrapperArrayList
+        val itemInTrue = todoItemWrapperArrayList.removeAt(position)
+        itemInTrue.todo?.isChecked = true
+        todoItemWrapperArrayList.add(checkedTopMark, itemInTrue)
+    }
+
+    fun delItem(position: Int) {
+        wrapperCopyList.removeAt(position)
+        val diffRes =
+            DiffUtil.calculateDiff(DiffCallBack(todoItemWrapperArrayList, wrapperCopyList))
+        diffRes.dispatchUpdatesTo(this)
+        todoItemWrapperArrayList.removeAt(position)
     }
 
     private fun foldItem() {
@@ -111,6 +132,7 @@ class DoubleListFoldRvAdapter(
                         if (todo.isChecked){
                             //TODO: 替换为res资源
                             todo_tv_todo_title.setTextColor(Color.parseColor("#6615315B"))
+                            todo_iv_check.visibility = View.VISIBLE
                         } else {
                             todo_iv_check.visibility = View.GONE
                         }
@@ -120,7 +142,7 @@ class DoubleListFoldRvAdapter(
 
             EMPTY -> {
                 itemView.apply {
-                    if (position != 2){
+                    if (position != 1){
                         //认定为下方的缺省
                         todo_rv_item_iv_empty.setImageResource(R.drawable.todo_ic_empty2)
                         todo_rv_item_tv_empty.text = "还没有已完成事项哦，期待你的好消息！"
@@ -128,7 +150,7 @@ class DoubleListFoldRvAdapter(
                 }
             }
         }
-        onBindView(holder.itemView, position, curWrapper.viewType)
+        onBindView(holder.itemView, holder.adapterPosition, curWrapper.viewType, curWrapper)
     }
 
     override fun getItemCount(): Int {
@@ -169,10 +191,5 @@ class DoubleListFoldRvAdapter(
             return oldItem.toString() == newItem.toString()
         }
 
-    }
-
-    fun delItem(position: Int) {
-        wrapperCopyList.removeAt(position)
-        todoItemWrapperArrayList.removeAt(position)
     }
 }

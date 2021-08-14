@@ -3,8 +3,10 @@ package com.cyxbsmobile_single.module_todo.adapter.slide_callback
 import android.animation.ValueAnimator
 import android.graphics.Canvas
 import android.view.animation.DecelerateInterpolator
+import androidx.core.animation.doOnEnd
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
+import com.cyxbsmobile_single.module_todo.adapter.slide_callback.SlideCallback.CurStatus.*
 import com.cyxbsmobile_single.module_todo.adapter.slide_callback.SlideCallback.UserIntent.*
 import com.mredrock.cyxbs.common.utils.LogUtils
 import kotlinx.android.synthetic.main.todo_rv_item_todo.view.*
@@ -22,6 +24,13 @@ class SlideCallback :
         LEFT,
         UNDEFINE
     }
+
+    enum class CurStatus{
+        OPEN,
+        CLOSE
+    }
+
+    var curStatus = CLOSE
 
     var delWidth = 0
     var itemWidth = 0
@@ -89,7 +98,9 @@ class SlideCallback :
         isCurrentlyActive: Boolean
     ) {
         viewHolder.itemView.apply {
-
+            if (todo_fl_del == null){
+                return
+            }
             //记录条目宽度与删除按钮宽度
             itemWidth = width
             delWidth = todo_fl_del.width
@@ -154,6 +165,13 @@ class SlideCallback :
                 touchFingerCount++
             } else {
                 if (!isFirstTimeReleaseFinger) return
+                transAnime.removeAllUpdateListeners()
+                if (dX < -delWidth){
+                    curStatus = OPEN
+                }
+                if (dX > delWidth){
+                    curStatus = CLOSE
+                }
                 when (dX) {
                     in -delWidth.toFloat()..-delWidth / 2f -> {
                         //| * |   |
@@ -172,6 +190,8 @@ class SlideCallback :
                                 -startX / delWidth + (1 + startX / delWidth) * (it.animatedValue as Float)
                             delBtnAnime(delProcess)
                         }
+                        transAnime.start()
+                        curStatus = OPEN
                     }
                     in -delWidth / 2f..0f -> {
                         //判定为需要关闭动画
@@ -189,6 +209,8 @@ class SlideCallback :
                                 (-startX) / delWidth - (1 + startX / delWidth) * (it.animatedValue as Float)
                             delBtnAnime(delProcess)
                         }
+                        transAnime.start()
+                        curStatus = CLOSE
                     }
                     in 0f..delWidth / 2f -> {
                         //判定为需要展开动画
@@ -206,6 +228,8 @@ class SlideCallback :
                                 startX / delWidth + (1 - startX / delWidth) * (it.animatedValue as Float)
                             delBtnAnime(delProcess)
                         }
+                        transAnime.start()
+                        curStatus = OPEN
                     }
                     in delWidth / 2f..delWidth.toFloat() -> {
                         //判定为需要关闭动画
@@ -222,12 +246,18 @@ class SlideCallback :
                             val delProcess =
                                 startX / delWidth - (1 - startX / delWidth) * (it.animatedValue as Float)
                             delBtnAnime(delProcess)
+                            curStatus = CLOSE
                         }
+                        transAnime.start()
                     }
                 }
-                transAnime.start()
+                transAnime.doOnEnd {
+                    isFirstTimeReleaseFinger = false
+                    touchFingerCount = 0
+                }
                 isFirstTimeReleaseFinger = false
                 touchFingerCount = 0
+                todo_fl_del.isClickable = curStatus == OPEN
             }
         }
     }
