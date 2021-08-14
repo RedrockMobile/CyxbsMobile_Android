@@ -1,5 +1,7 @@
 package com.cyxbsmobile_single.module_todo.adapter
 
+import android.graphics.Color
+import android.opengl.Visibility
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,6 +10,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.cyxbsmobile_single.module_todo.R
 import com.cyxbsmobile_single.module_todo.adapter.`interface`.ItemChangeInterface
 import com.cyxbsmobile_single.module_todo.model.bean.TodoItemWrapper
+import com.cyxbsmobile_single.module_todo.util.remindTimeStamp2String
+import kotlinx.android.synthetic.main.todo_rv_item_empty.view.*
+import kotlinx.android.synthetic.main.todo_rv_item_title.view.*
+import kotlinx.android.synthetic.main.todo_rv_item_todo.view.*
 
 /**
  * Author: RayleighZ
@@ -22,6 +28,7 @@ class DoubleListFoldRvAdapter(
     companion object {
         const val TODO = 0
         const val TITLE = 1
+        const val EMPTY = 2
     }
 
     private var checkedTopMark = 0
@@ -40,6 +47,9 @@ class DoubleListFoldRvAdapter(
             }
             TITLE -> {
                 R.layout.todo_rv_item_title
+            }
+            EMPTY -> {
+                R.layout.todo_rv_item_empty
             }
             else -> {
                 R.layout.todo_rv_item_title
@@ -83,6 +93,41 @@ class DoubleListFoldRvAdapter(
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val curWrapper = wrapperCopyList[position]
+        val itemView = holder.itemView
+        //在这里进行基础的数据类绑定
+
+        when(curWrapper.viewType){
+            TITLE -> {
+                itemView.todo_tv_item_title.text = curWrapper.title
+            }
+
+            TODO -> {
+                itemView.apply {
+                    curWrapper.todo?.let { todo ->
+                        todo_fl_del.visibility = View.GONE
+                        todo_tv_todo_title.text = todo.title
+                        todo_tv_notify_time.text = remindTimeStamp2String(todo.remindTime)
+                        todo_clv_todo_item.setStatusWithoutAnime(todo.isChecked)
+                        if (todo.isChecked){
+                            //TODO: 替换为res资源
+                            todo_tv_todo_title.setTextColor(Color.parseColor("#6615315B"))
+                        } else {
+                            todo_iv_check.visibility = View.GONE
+                        }
+                    }
+                }
+            }
+
+            EMPTY -> {
+                itemView.apply {
+                    if (position != 2){
+                        //认定为下方的缺省
+                        todo_rv_item_iv_empty.setImageResource(R.drawable.todo_ic_empty2)
+                        todo_rv_item_tv_empty.text = "还没有已完成事项哦，期待你的好消息！"
+                    }
+                }
+            }
+        }
         onBindView(holder.itemView, position, curWrapper.viewType)
     }
 

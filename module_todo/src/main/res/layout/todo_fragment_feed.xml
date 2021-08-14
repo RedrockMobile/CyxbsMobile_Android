@@ -17,4 +17,25 @@
         tools:itemCount="3"
         tools:listitem="@layout/todo_rv_item_todo" />
 
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/todo_tv_feed_empty_notify"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="39dp"
+        android:layout_marginBottom="39dp"
+        android:visibility="gone"
+        android:textColor="@color/todo_item_checked_color"
+        android:textSize="15sp"
+        android:text="@string/todo_string_empty_todo_notify"
+        app:layout_constraintBottom_toBottomOf="@+id/todo_rv_todo_list"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/todo_rv_todo_list" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/todo_feed_divide_line_color"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

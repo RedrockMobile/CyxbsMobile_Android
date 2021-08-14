@@ -6,8 +6,12 @@
     android:orientation="horizontal">
 
     <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/todo_tv_item_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        tools:text="代办"/>
+        android:textSize="24sp"
+        android:layout_marginStart="15dp"
+        android:textColor="@color/todo_check_line_color"
+        tools:text="待办"/>
 
 </LinearLayout>

@@ -18,8 +18,10 @@ import com.mredrock.cyxbs.common.utils.extensions.*
 abstract class BaseFeedFragment<T : BaseViewModel> : BaseViewModelFragment<T>() {
     private lateinit var adapter: Adapter
     protected abstract var hasTopSplitLine: Boolean
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.common_fragment_base_feed, container, false)
     }
@@ -57,8 +59,14 @@ abstract class BaseFeedFragment<T : BaseViewModel> : BaseViewModelFragment<T>() 
         tv_feed_subtitle.setText(res)
     }
 
-    fun setLeftIcon(res: Int){
+    fun setLeftIcon(res: Int) {
         iv_feed_left_icon.background = ContextCompat.getDrawable(requireContext(), res)
+    }
+
+    fun onLeftIconClick(onClick: (view: View) -> Unit) {
+        iv_feed_left_icon.setOnClickListener {
+            onClick.invoke(it)
+        }
     }
 
     fun setAdapter(adapter: Adapter) {

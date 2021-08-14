@@ -14,4 +14,6 @@
     <color name="todo_inner_detail_edittext_line_color">#20BDCCE5</color>
     <color name="todo_item_del_red">#FF6262</color>
     <color name="todo_item_nf_time_color">#862A4E84</color>
+    <color name="todo_item_checked_color">#6615315B</color>
+    <color name="todo_feed_divide_line_color">#142A4E84</color>
 </resources>

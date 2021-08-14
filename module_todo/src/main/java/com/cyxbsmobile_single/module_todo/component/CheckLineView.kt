@@ -117,13 +117,13 @@ class CheckLineView @JvmOverloads constructor(
     private fun drawLeftArc(process: Float, canvas: Canvas) {
         //绘制左侧check圈圈
         paint.color = if (isChecked) checkedColor else uncheckedColor
-        paint.strokeWidth = if (isChecked) context.dip(1).toFloat() else context.dip(1.5f).toFloat()
+        paint.strokeWidth = if (isChecked) context.dip(1.2f).toFloat() else context.dip(1.5f).toFloat()
         //刷新右侧矩形
         leftCircleRectF.apply {
-            top = 0f + paint.strokeWidth
-            left = 0f + paint.strokeWidth
-            right = leftRadius * 2 + paint.strokeWidth
-            bottom = leftRadius * 2 + paint.strokeWidth
+            top = 0f + paint.strokeWidth / 2f
+            left = 0f + paint.strokeWidth / 2f
+            right = leftRadius * 2 + paint.strokeWidth / 2f
+            bottom = leftRadius * 2 + paint.strokeWidth / 2f
         }
         sweepAngle = if(isChecked) (360f - startAngle) * process / 100 else 360f
         canvas.drawArc(leftCircleRectF, startAngle, sweepAngle, false, paint)

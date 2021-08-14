@@ -10,7 +10,6 @@
         android:id="@+id/todo_cl_item_main"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#ffffff"
         android:elevation="3dp"
         android:paddingVertical="7dp">
 
@@ -19,7 +18,7 @@
             android:layout_width="0dp"
             android:layout_height="19dp"
             android:layout_marginStart="16dp"
-            app:is_checked="true"
+            app:is_checked="false"
             app:layout_constraintBottom_toBottomOf="@+id/todo_tv_todo_title"
             app:layout_constraintEnd_toEndOf="@+id/todo_tv_todo_title"
             app:layout_constraintStart_toStartOf="parent"
@@ -78,6 +77,7 @@
         android:layout_width="80dp"
         android:layout_height="match_parent"
         android:layout_gravity="end"
+        android:visibility="gone"
         android:background="@color/todo_item_del_red"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
