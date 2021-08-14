@@ -4,8 +4,8 @@
 4
 5    <uses-sdk
 6        android:minSdkVersion="21"
-6-->D:\RayleighZ_FeatPrj\CyxbsMobile_Android\module_todo\api_todo\src\main\AndroidManifest.xml
+6-->E:\cqupt_zy\CyxbsMobile_Android\module_todo\api_todo\src\main\AndroidManifest.xml
 7        android:targetSdkVersion="26" />
-7-->D:\RayleighZ_FeatPrj\CyxbsMobile_Android\module_todo\api_todo\src\main\AndroidManifest.xml
+7-->E:\cqupt_zy\CyxbsMobile_Android\module_todo\api_todo\src\main\AndroidManifest.xml
 8
 9</manifest>
