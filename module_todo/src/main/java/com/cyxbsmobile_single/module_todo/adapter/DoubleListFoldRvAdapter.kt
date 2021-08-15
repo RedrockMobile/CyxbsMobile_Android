@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.cyxbsmobile_single.module_todo.R
 import com.cyxbsmobile_single.module_todo.model.bean.TodoItemWrapper
 import com.cyxbsmobile_single.module_todo.util.remindTimeStamp2String
+import com.mredrock.cyxbs.common.utils.LogUtils
 import kotlinx.android.synthetic.main.todo_rv_item_empty.view.*
 import kotlinx.android.synthetic.main.todo_rv_item_title.view.*
 import kotlinx.android.synthetic.main.todo_rv_item_todo.view.*
@@ -31,6 +32,9 @@ class DoubleListFoldRvAdapter(
 
     private var checkedTopMark = 0
     private var isShowItem = true
+
+    //position更新用
+    private val positionChangeArray by lazy { ArrayList<Int>() }
 
     //真正用于展示的list，会动态的增减
     private var wrapperCopyList: ArrayList<TodoItemWrapper> =
@@ -64,27 +68,27 @@ class DoubleListFoldRvAdapter(
         this.onBindView = onBindView
     }
 
-    fun checkItem(position: Int){
-        val item = wrapperCopyList.removeAt(position)
-        item.todo?.isChecked = true
-        wrapperCopyList.add(checkedTopMark, item)
+    fun checkItem(wrapper: TodoItemWrapper){
+        wrapperCopyList.remove(wrapper)
+        wrapper.todo?.isChecked = true
+        wrapperCopyList.add(checkedTopMark, wrapper)
 
         val diffRes =
             DiffUtil.calculateDiff(DiffCallBack(todoItemWrapperArrayList, wrapperCopyList))
         diffRes.dispatchUpdatesTo(this)
 
         //同步修改todoItemWrapperArrayList
-        val itemInTrue = todoItemWrapperArrayList.removeAt(position)
-        itemInTrue.todo?.isChecked = true
-        todoItemWrapperArrayList.add(checkedTopMark, itemInTrue)
+        todoItemWrapperArrayList.remove(wrapper)
+        wrapper.todo?.isChecked = true
+        todoItemWrapperArrayList.add(checkedTopMark, wrapper)
     }
 
-    fun delItem(position: Int) {
-        wrapperCopyList.removeAt(position)
+    fun delItem(wrapper: TodoItemWrapper) {
+        wrapperCopyList.remove(wrapper)
         val diffRes =
             DiffUtil.calculateDiff(DiffCallBack(todoItemWrapperArrayList, wrapperCopyList))
         diffRes.dispatchUpdatesTo(this)
-        todoItemWrapperArrayList.removeAt(position)
+        todoItemWrapperArrayList.remove(wrapper)
     }
 
     private fun foldItem() {
@@ -150,7 +154,7 @@ class DoubleListFoldRvAdapter(
                 }
             }
         }
-        onBindView(holder.itemView, holder.adapterPosition, curWrapper.viewType, curWrapper)
+        onBindView(holder.itemView, position, curWrapper.viewType, curWrapper)
     }
 
     override fun getItemCount(): Int {
@@ -158,6 +162,8 @@ class DoubleListFoldRvAdapter(
             if (index != 0 && wrapper.viewType == TODO && wrapperCopyList[index - 1].viewType == TITLE) {
                 checkedTopMark = index
             }
+            //记录原始的position
+            positionChangeArray.add(index, index)
         }
         return wrapperCopyList.size
     }

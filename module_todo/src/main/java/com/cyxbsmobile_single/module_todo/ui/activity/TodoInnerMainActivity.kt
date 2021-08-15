@@ -18,6 +18,7 @@ import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.config.DISCOVER_TODO_MAIN
 import com.mredrock.cyxbs.common.ui.BaseActivity
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
+import com.mredrock.cyxbs.common.utils.LogUtils
 import kotlinx.android.synthetic.main.todo_activity_inner_main.*
 import kotlinx.android.synthetic.main.todo_rv_item_todo.view.*
 
@@ -39,14 +40,15 @@ class TodoInnerMainActivity : BaseViewModelActivity<TodoViewModel>() {
 
                     view.todo_fl_del.visibility = View.VISIBLE
                     view.todo_fl_del.setOnClickListener {
-                        adapter.delItem(pos)
+                        adapter.delItem(wrapper)
+                        LogUtils.d("RayJoe", "position = $pos")
                     }
                     view.todo_cl_item_main.setBackgroundColor(Color.WHITE)
                     view.todo_clv_todo_item.setOnClickListener {
                         wrapper.todo?.apply {
                             if (!isChecked) {
                                 view.todo_clv_todo_item.setStatusWithAnime(true) {
-                                    adapter.checkItem(pos)
+                                    adapter.checkItem(wrapper)
                                     changeItemToChecked(view)
                                 }
                             }
