@@ -6,7 +6,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import androidx.transition.Slide
 import com.cyxbsmobile_single.module_todo.R
+import com.cyxbsmobile_single.module_todo.adapter.slide_callback.SlideCallback
+import com.cyxbsmobile_single.module_todo.model.bean.Todo
 import com.cyxbsmobile_single.module_todo.model.bean.TodoItemWrapper
 import com.cyxbsmobile_single.module_todo.util.remindTimeStamp2String
 import com.mredrock.cyxbs.common.utils.LogUtils
@@ -22,7 +25,7 @@ import kotlinx.android.synthetic.main.todo_rv_item_todo.view.*
 @Suppress("UNCHECKED_CAST")
 class DoubleListFoldRvAdapter(
     private val todoItemWrapperArrayList: ArrayList<TodoItemWrapper>
-) : RecyclerView.Adapter<RecyclerView.ViewHolder>(){
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     companion object {
         const val TODO = 0
@@ -58,8 +61,10 @@ class DoubleListFoldRvAdapter(
             }
         }
         return object : RecyclerView.ViewHolder(
-            LayoutInflater.from(parent.context).inflate(layoutId, parent, false)
-        ) {  }
+            LayoutInflater.from(parent.context).inflate(layoutId, parent, false).apply {
+                tag = SlideCallback.CurStatus.CLOSE
+            }
+        ) {}
     }
 
     lateinit var onBindView: (itemView: View, position: Int, viewType: Int, wrapper: TodoItemWrapper) -> Unit
@@ -68,11 +73,10 @@ class DoubleListFoldRvAdapter(
         this.onBindView = onBindView
     }
 
-    fun checkItem(wrapper: TodoItemWrapper){
+    fun checkItem(wrapper: TodoItemWrapper) {
         wrapperCopyList.remove(wrapper)
         wrapper.todo?.isChecked = true
-        wrapperCopyList.add(checkedTopMark, wrapper)
-
+        wrapperCopyList.add(checkedTopMark - 1, wrapper)
         val diffRes =
             DiffUtil.calculateDiff(DiffCallBack(todoItemWrapperArrayList, wrapperCopyList))
         diffRes.dispatchUpdatesTo(this)
@@ -80,7 +84,7 @@ class DoubleListFoldRvAdapter(
         //同步修改todoItemWrapperArrayList
         todoItemWrapperArrayList.remove(wrapper)
         wrapper.todo?.isChecked = true
-        todoItemWrapperArrayList.add(checkedTopMark, wrapper)
+        todoItemWrapperArrayList.add(checkedTopMark - 1, wrapper)
     }
 
     fun delItem(wrapper: TodoItemWrapper) {
@@ -116,24 +120,35 @@ class DoubleListFoldRvAdapter(
         isShowItem = !isShowItem
     }
 
+    fun addTodo(todo: Todo) {
+        val wrapper = TodoItemWrapper.todoWrapper(todo)
+        wrapperCopyList.add(1, wrapper)
+        val diffRes =
+            DiffUtil.calculateDiff(DiffCallBack(todoItemWrapperArrayList, wrapperCopyList))
+        diffRes.dispatchUpdatesTo(this)
+        todoItemWrapperArrayList.add(1, wrapper)
+    }
+
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val curWrapper = wrapperCopyList[position]
         val itemView = holder.itemView
         //在这里进行基础的数据类绑定
-
-        when(curWrapper.viewType){
+        when (curWrapper.viewType) {
             TITLE -> {
                 itemView.todo_tv_item_title.text = curWrapper.title
             }
 
             TODO -> {
+                if (itemView.todo_cl_item_main.translationX != 0f){
+                    clearView(viewHolder = holder)
+                }
                 itemView.apply {
                     curWrapper.todo?.let { todo ->
                         todo_fl_del.visibility = View.GONE
                         todo_tv_todo_title.text = todo.title
                         todo_tv_notify_time.text = remindTimeStamp2String(todo.remindTime)
                         todo_clv_todo_item.setStatusWithoutAnime(todo.isChecked)
-                        if (todo.isChecked){
+                        if (todo.isChecked) {
                             //TODO: 替换为res资源
                             todo_tv_todo_title.setTextColor(Color.parseColor("#6615315B"))
                             todo_iv_check.visibility = View.VISIBLE
@@ -146,7 +161,7 @@ class DoubleListFoldRvAdapter(
 
             EMPTY -> {
                 itemView.apply {
-                    if (position != 1){
+                    if (position != 1) {
                         //认定为下方的缺省
                         todo_rv_item_iv_empty.setImageResource(R.drawable.todo_ic_empty2)
                         todo_rv_item_tv_empty.text = "还没有已完成事项哦，期待你的好消息！"
@@ -197,5 +212,19 @@ class DoubleListFoldRvAdapter(
             return oldItem.toString() == newItem.toString()
         }
 
+    }
+
+    private fun clearView(viewHolder: RecyclerView.ViewHolder) {
+        LogUtils.d("RayleighZ", "clearView")
+        viewHolder.itemView.apply {
+            todo_fl_del.apply {
+                pivotX = 0f
+                pivotY = height.toFloat() / 2f
+                scaleX = 1f
+                scaleY = 1f
+                alpha = 1f
+            }
+            todo_cl_item_main.translationX = 0f
+        }
     }
 }

@@ -105,7 +105,6 @@ class SlideCallback :
             itemWidth = width
             delWidth = todo_fl_del.width
 
-
             LogUtils.d(
                 "RayleighZ",
                 "delWidth = $delWidth, dX = $dX， touchCount = $touchFingerCount"
@@ -263,10 +262,9 @@ class SlideCallback :
     }
 
     //此处配置为：不论滑动的多块或者多远，均不会触发onSwiped
-    override fun getSwipeThreshold(viewHolder: RecyclerView.ViewHolder): Float =
-        Int.MAX_VALUE.toFloat()
+    override fun getSwipeThreshold(viewHolder: RecyclerView.ViewHolder): Float = Int.MAX_VALUE.toFloat()
 
-    override fun getSwipeEscapeVelocity(defaultValue: Float): Float = defaultValue * 100
+    override fun getSwipeEscapeVelocity(defaultValue: Float): Float = Int.MAX_VALUE.toFloat()
 
     override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
         //以为我们是侧滑按钮点击删除，所以这里不写任何删除相关逻辑

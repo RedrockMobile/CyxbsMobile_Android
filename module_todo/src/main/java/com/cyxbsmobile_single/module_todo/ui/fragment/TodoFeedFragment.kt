@@ -29,25 +29,26 @@ class TodoFeedFragment: BaseFeedFragment<TodoViewModel>() {
     }
 
     private fun init(){
-        viewModel.initDataList()
-        setAdapter(
-            TodoFeedAdapter(
-                when(viewModel.uncheckTodoList.size){
-                    0 -> {
-                        emptyList()
-                    }
+        viewModel.initDataList{
+            setAdapter(
+                TodoFeedAdapter(
+                    when(viewModel.uncheckTodoList.size){
+                        0 -> {
+                            emptyList()
+                        }
 
-                    in 1..2 -> {
-                        //数目不不够三条，截取到size就好了
-                        viewModel.wrapperList.subList(1, viewModel.uncheckTodoList.size)
-                    }
+                        in 1..2 -> {
+                            //数目不不够三条，截取到size就好了
+                            viewModel.wrapperList.subList(1, viewModel.uncheckTodoList.size)
+                        }
 
-                    else -> {
-                        viewModel.wrapperList.subList(1, 4)
+                        else -> {
+                            viewModel.wrapperList.subList(1, 4)
+                        }
                     }
-                }
+                )
             )
-        )
+        }
         setTitle(R.string.todo_feed_title)
         setSubtitle("")
         setLeftIcon(R.drawable.todo_ic_add)

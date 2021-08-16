@@ -6,6 +6,7 @@ import androidx.room.Query
 import androidx.room.Update
 import com.cyxbsmobile_single.module_todo.model.bean.Todo
 import io.reactivex.Flowable
+import io.reactivex.Single
 
 /**
  * Author: RayleighZ
@@ -17,7 +18,7 @@ interface TodoDao {
     fun insertTodoList(todoList: List<Todo>)//: Flowable<List<Long>>
 
     @Insert
-    fun insertTodo(todo: Todo)//: Flowable<Long>
+    fun insertTodo(todo: Todo): Single<Long>
 
     @Query("SELECT * FROM todo_list")
     fun queryAllTodo(): Flowable<List<Todo>>
