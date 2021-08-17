@@ -26,6 +26,7 @@ class TodoInnerMainActivity : BaseViewModelActivity<TodoViewModel>() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.todo_activity_inner_main)
         viewModel.initDataList{
+            LogUtils.d("RayJoe", "${viewModel.wrapperList}")
             val adapter = DoubleListFoldRvAdapter(viewModel.wrapperList, NORMAL)
             val callback = SlideCallback()
             todo_inner_home_bar_add.setOnClickListener {

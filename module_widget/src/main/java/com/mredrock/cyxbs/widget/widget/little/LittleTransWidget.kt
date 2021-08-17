@@ -65,7 +65,7 @@ class LittleTransWidget : BaseLittleWidget() {
             rv.setTextViewText(getRoomResId(), filterClassRoom(courseStatus.classroom!!))
             //course和room设置点击事件到Activity，title设置刷新，没课才设置点击事件
             rv.setOnClickPendingIntent(getCourseNameResId(),
-                    getClickPendingIntent(context,getCourseNameResId(),"btn.start.com",javaClass))
+                    getClickPendingIntent(context,getCourseNameResId(),"``````````````````````````````btn.start.com``````````````````````````````",javaClass))
             rv.setOnClickPendingIntent(getRoomResId(),
                     getClickPendingIntent(context,getRoomResId(),"btn.start.com",javaClass))
             rv.setOnClickPendingIntent(getTitleResId(),

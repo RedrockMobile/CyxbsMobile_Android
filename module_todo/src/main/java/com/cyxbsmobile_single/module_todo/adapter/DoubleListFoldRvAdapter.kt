@@ -48,9 +48,17 @@ class DoubleListFoldRvAdapter(
         THREE
     }
 
+    private var uncheckedCount = 0
+    private var checkedCount = 0
+
     private var checkedTopMark = 0
     private var isShowItem = true
 
+    private var isAddedUpEmpty = false
+    private var isAddedDownEmpty = false
+
+    private val upEmptyHolder by lazy { TodoItemWrapper(EMPTY) }
+    private val downEmptyHolder by lazy { TodoItemWrapper(EMPTY) }
 
     //真正用于展示的list，会动态的增减
     private var wrapperCopyList: ArrayList<TodoItemWrapper> =
@@ -88,6 +96,12 @@ class DoubleListFoldRvAdapter(
 
     //内部check, 将条目置换到下面
     fun checkItemAndSwap(wrapper: TodoItemWrapper) {
+
+        uncheckedCount--
+        checkedCount++
+
+        checkEmptyItem()
+
         wrapperCopyList.remove(wrapper)
         wrapper.todo?.isChecked = true
         wrapperCopyList.add(checkedTopMark - 1, wrapper)
@@ -96,9 +110,15 @@ class DoubleListFoldRvAdapter(
         todoItemWrapperArrayList.remove(wrapper)
         wrapper.todo?.isChecked = true
         todoItemWrapperArrayList.add(checkedTopMark - 1, wrapper)
-
         //更新database中的todo
         updateTodo(wrapper.todo)
+
+        if (checkedCount == 0 && showType == NORMAL) {
+            //如果增加的时候没有uncheckedTodo，需要撤销原本的缺省图
+            wrapperCopyList.remove(downEmptyHolder)
+            refreshList()
+            todoItemWrapperArrayList.remove(downEmptyHolder)
+        }
     }
 
     //feed处的check, check之后将条目上浮
@@ -110,10 +130,14 @@ class DoubleListFoldRvAdapter(
 
         //更新database中的todo
         updateTodo(wrapperTodo.todo)
+        uncheckedCount--
+        checkedCount++
     }
 
     fun delItem(wrapper: TodoItemWrapper) {
         wrapper.todo?.let { todo ->
+            if (todo.isChecked) checkedCount-- else uncheckedCount--
+            checkEmptyItem()
             Observable.just(wrapper)
                 .map {
                     TodoDatabase.INSTANCE
@@ -142,6 +166,48 @@ class DoubleListFoldRvAdapter(
         diffRes.dispatchUpdatesTo(this)
     }
 
+    //检查是否需要缺省图
+    private fun checkEmptyItem(needShow: Boolean = true) {
+        LogUtils.d("RayG", "checkEmpty")
+        if (showType == THREE)
+            return
+        if (uncheckedCount == 0 && !isAddedUpEmpty) {
+            //已经莫得待办事项了，将上部更替为缺省图
+            isAddedUpEmpty = true
+            wrapperCopyList.add(1, upEmptyHolder)
+            if (needShow) {
+                refreshList()
+            }
+            todoItemWrapperArrayList.add(1, upEmptyHolder)
+        }
+        if (checkedCount == 0 && !isAddedDownEmpty) {
+            //如果已经莫得已完成事项了，将下部替换为缺省图
+            isAddedDownEmpty = true
+            wrapperCopyList.add(checkedTopMark, downEmptyHolder)
+            if (needShow) {
+                refreshList()
+            }
+            todoItemWrapperArrayList.add(checkedTopMark, downEmptyHolder)
+        }
+
+        if (uncheckedCount != 0 && isAddedUpEmpty){
+            wrapperCopyList.remove(upEmptyHolder)
+            if (needShow) {
+                refreshList()
+            }
+            todoItemWrapperArrayList.remove(upEmptyHolder)
+            isAddedDownEmpty = false
+        }
+
+        if (checkedCount != 0 && isAddedDownEmpty){
+            wrapperCopyList.remove(downEmptyHolder)
+            if (needShow) {
+                refreshList()
+            }
+            todoItemWrapperArrayList.remove(downEmptyHolder)
+            isAddedDownEmpty = false
+        }
+    }
 
     fun changeFoldStatus() {
         if (isShowItem) {
@@ -153,6 +219,9 @@ class DoubleListFoldRvAdapter(
     }
 
     fun addTodo(todo: Todo) {
+        uncheckedCount ++
+        checkEmptyItem()
+
         TodoDatabase.INSTANCE
             .todoDao()
             .insertTodo(todo)
@@ -195,7 +264,6 @@ class DoubleListFoldRvAdapter(
                         todo_tv_notify_time.text = remindTimeStamp2String(todo.remindTime)
                         todo_clv_todo_item.setStatusWithoutAnime(todo.isChecked)
                         if (todo.isChecked) {
-                            //TODO: 替换为res资源
                             todo_tv_todo_title.setTextColor(Color.parseColor("#6615315B"))
                             todo_iv_check.visibility = View.VISIBLE
                         } else {
@@ -216,23 +284,6 @@ class DoubleListFoldRvAdapter(
             }
         }
         onBindView(holder.itemView, position, curWrapper.viewType, curWrapper)
-    }
-
-    override fun getItemCount(): Int {
-        for ((index, wrapper) in wrapperCopyList.withIndex()) {
-            if (index != 0 && wrapper.viewType == TODO && wrapperCopyList[index - 1].viewType == TITLE) {
-                checkedTopMark = index
-            }
-        }
-        return when (showType) {
-            NORMAL -> {
-                wrapperCopyList.size
-            }
-
-            THREE -> {
-                wrapperCopyList.size.coerceAtMost(3)
-            }
-        }
     }
 
     inner class DiffCallBack(
@@ -281,7 +332,7 @@ class DoubleListFoldRvAdapter(
         }
     }
 
-    private fun updateTodo(todo: Todo?){
+    private fun updateTodo(todo: Todo?) {
         todo?.let {
             Observable.just(it)
                 .map { todo ->
@@ -296,6 +347,35 @@ class DoubleListFoldRvAdapter(
                         }
                     )
                 )
+        }
+    }
+
+    override fun getItemCount(): Int {
+        checkedTopMark = 0
+        checkedCount = 0
+        uncheckedCount = 0
+        for (wrapper in wrapperCopyList) {
+            if (wrapper.viewType == TODO) {
+                wrapper.todo?.let {
+                    if (it.isChecked) {
+                        checkedCount++
+                    } else {
+                        uncheckedCount++
+                    }
+                }
+            }
+        }
+        LogUtils.d("RayJoe", "$wrapperCopyList")
+        checkedTopMark = 2 + uncheckedCount.coerceAtLeast(1)
+        checkEmptyItem(false)
+        return when (showType) {
+            NORMAL -> {
+                wrapperCopyList.size
+            }
+
+            THREE -> {
+                wrapperCopyList.size.coerceAtMost(3)
+            }
         }
     }
 }

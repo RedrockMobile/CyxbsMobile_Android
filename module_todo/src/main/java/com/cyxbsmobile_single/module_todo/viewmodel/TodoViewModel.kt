@@ -42,11 +42,11 @@ class TodoViewModel : BaseViewModel() {
             .subscribe(
                 ExecuteOnceObserver(
                     onExecuteOnceNext = {
+                        wrapperList.clear()
+                        checkedTodoList.clear()
+                        uncheckTodoList.clear()
+                        todoList.clear()
                         if (!it.isNullOrEmpty()) {
-                            wrapperList.clear()
-                            checkedTodoList.clear()
-                            uncheckTodoList.clear()
-                            todoList.clear()
                             todoList.addAll(it)
                             for (todo in it) {
                                 if (todo.isChecked) checkedTodoList.add(TodoItemWrapper.todoWrapper(todo))
@@ -56,16 +56,13 @@ class TodoViewModel : BaseViewModel() {
                             for (todoWrapper in uncheckTodoList) {
                                 wrapperList.add(todoWrapper)
                             }
-                            if (uncheckTodoList.isNullOrEmpty()) {
-                                wrapperList.add(TodoItemWrapper(DoubleListFoldRvAdapter.EMPTY))
-                            }
                             wrapperList.add(TodoItemWrapper.titleWrapper("已完成"))
                             for (todoWrapper in checkedTodoList) {
                                 wrapperList.add(todoWrapper)
                             }
-                            if (checkedTodoList.isNullOrEmpty()) {
-                                wrapperList.add(TodoItemWrapper(DoubleListFoldRvAdapter.EMPTY))
-                            }
+                        } else {
+                            wrapperList.add(TodoItemWrapper.titleWrapper("待办"))
+                            wrapperList.add(TodoItemWrapper.titleWrapper("已完成"))
                         }
                         onLoadSuccess.invoke()
                     }

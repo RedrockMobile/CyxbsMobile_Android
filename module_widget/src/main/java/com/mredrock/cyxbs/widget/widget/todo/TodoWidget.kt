@@ -16,7 +16,6 @@ import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
-import com.mredrock.cyxbs.widget.widget.todo.adapter.TodoListAdapter
 import com.mredrock.cyxbs.widget.R
 import com.mredrock.cyxbs.widget.bean.Todo
 import com.mredrock.cyxbs.widget.service.TodoWidgetService
