@@ -36,6 +36,9 @@ interface TodoDao {
     @Query("DELETE FROM todo_list")
     fun deleteAllTodo()
 
+    @Query("DELETE FROM todo_list WHERE todoId = :todoId")
+    fun deleteTodoById(todoId: Long)
+
     @Update
     fun updateTodo(todo: Todo)
 }

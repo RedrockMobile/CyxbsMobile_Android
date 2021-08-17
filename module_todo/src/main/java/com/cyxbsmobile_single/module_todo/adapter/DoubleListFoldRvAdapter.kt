@@ -6,13 +6,22 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import androidx.transition.Slide
 import com.cyxbsmobile_single.module_todo.R
+import com.cyxbsmobile_single.module_todo.adapter.DoubleListFoldRvAdapter.ShowType.NORMAL
+import com.cyxbsmobile_single.module_todo.adapter.DoubleListFoldRvAdapter.ShowType.THREE
 import com.cyxbsmobile_single.module_todo.adapter.slide_callback.SlideCallback
 import com.cyxbsmobile_single.module_todo.model.bean.Todo
 import com.cyxbsmobile_single.module_todo.model.bean.TodoItemWrapper
+import com.cyxbsmobile_single.module_todo.model.database.TodoDatabase
 import com.cyxbsmobile_single.module_todo.util.remindTimeStamp2String
+import com.mredrock.cyxbs.common.BaseApp
+import com.mredrock.cyxbs.common.ui.BaseActivity
+import com.mredrock.cyxbs.common.utils.ExecuteOnceObserver
 import com.mredrock.cyxbs.common.utils.LogUtils
+import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
+import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
+import com.mredrock.cyxbs.common.utils.extensions.toast
+import io.reactivex.Observable
 import kotlinx.android.synthetic.main.todo_rv_item_empty.view.*
 import kotlinx.android.synthetic.main.todo_rv_item_title.view.*
 import kotlinx.android.synthetic.main.todo_rv_item_todo.view.*
@@ -24,7 +33,8 @@ import kotlinx.android.synthetic.main.todo_rv_item_todo.view.*
  */
 @Suppress("UNCHECKED_CAST")
 class DoubleListFoldRvAdapter(
-    private val todoItemWrapperArrayList: ArrayList<TodoItemWrapper>
+    private val todoItemWrapperArrayList: ArrayList<TodoItemWrapper>,
+    private val showType: ShowType
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     companion object {
@@ -33,11 +43,14 @@ class DoubleListFoldRvAdapter(
         const val EMPTY = 2
     }
 
+    enum class ShowType {
+        NORMAL,
+        THREE
+    }
+
     private var checkedTopMark = 0
     private var isShowItem = true
 
-    //position更新用
-    private val positionChangeArray by lazy { ArrayList<Int>() }
 
     //真正用于展示的list，会动态的增减
     private var wrapperCopyList: ArrayList<TodoItemWrapper> =
@@ -73,33 +86,52 @@ class DoubleListFoldRvAdapter(
         this.onBindView = onBindView
     }
 
-    fun checkItem(wrapper: TodoItemWrapper) {
+    //内部check, 将条目置换到下面
+    fun checkItemAndSwap(wrapper: TodoItemWrapper) {
         wrapperCopyList.remove(wrapper)
         wrapper.todo?.isChecked = true
         wrapperCopyList.add(checkedTopMark - 1, wrapper)
-        val diffRes =
-            DiffUtil.calculateDiff(DiffCallBack(todoItemWrapperArrayList, wrapperCopyList))
-        diffRes.dispatchUpdatesTo(this)
-
+        refreshList()
         //同步修改todoItemWrapperArrayList
         todoItemWrapperArrayList.remove(wrapper)
         wrapper.todo?.isChecked = true
         todoItemWrapperArrayList.add(checkedTopMark - 1, wrapper)
+
+        //更新database中的todo
+        updateTodo(wrapper.todo)
+    }
+
+    //feed处的check, check之后将条目上浮
+    fun checkItemAndPopUp(wrapperTodo: TodoItemWrapper) {
+        wrapperCopyList.remove(wrapperTodo)
+        wrapperTodo.todo?.isChecked = true
+        refreshList()
+        todoItemWrapperArrayList.remove(wrapperTodo)
+
+        //更新database中的todo
+        updateTodo(wrapperTodo.todo)
     }
 
     fun delItem(wrapper: TodoItemWrapper) {
-        wrapperCopyList.remove(wrapper)
-        val diffRes =
-            DiffUtil.calculateDiff(DiffCallBack(todoItemWrapperArrayList, wrapperCopyList))
-        diffRes.dispatchUpdatesTo(this)
-        todoItemWrapperArrayList.remove(wrapper)
+        wrapper.todo?.let { todo ->
+            Observable.just(wrapper)
+                .map {
+                    TodoDatabase.INSTANCE
+                        .todoDao()
+                        .deleteTodoById(todo.todoId)
+                }
+                .setSchedulers()
+                .safeSubscribeBy {
+                    wrapperCopyList.remove(wrapper)
+                    refreshList()
+                    todoItemWrapperArrayList.remove(wrapper)
+                }
+        }
     }
 
     private fun foldItem() {
         wrapperCopyList.subList(checkedTopMark, itemCount).clear()
-        val diffRes =
-            DiffUtil.calculateDiff(DiffCallBack(todoItemWrapperArrayList, wrapperCopyList))
-        diffRes.dispatchUpdatesTo(this)
+        refreshList()
     }
 
     private fun showItem() {
@@ -121,12 +153,26 @@ class DoubleListFoldRvAdapter(
     }
 
     fun addTodo(todo: Todo) {
-        val wrapper = TodoItemWrapper.todoWrapper(todo)
-        wrapperCopyList.add(1, wrapper)
+        TodoDatabase.INSTANCE
+            .todoDao()
+            .insertTodo(todo)
+            .toObservable()
+            .setSchedulers()
+            .safeSubscribeBy {
+                //逻辑放在这里的目的是为了更新todo的id
+                LogUtils.d("RayJoe", "add one item")
+                todo.todoId = it
+                val wrapper = TodoItemWrapper.todoWrapper(todo)
+                wrapperCopyList.add(1, wrapper)
+                refreshList()
+                todoItemWrapperArrayList.add(1, wrapper)
+            }
+    }
+
+    fun refreshList() {
         val diffRes =
             DiffUtil.calculateDiff(DiffCallBack(todoItemWrapperArrayList, wrapperCopyList))
         diffRes.dispatchUpdatesTo(this)
-        todoItemWrapperArrayList.add(1, wrapper)
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
@@ -139,7 +185,7 @@ class DoubleListFoldRvAdapter(
             }
 
             TODO -> {
-                if (itemView.todo_cl_item_main.translationX != 0f){
+                if (itemView.todo_cl_item_main.translationX != 0f) {
                     clearView(viewHolder = holder)
                 }
                 itemView.apply {
@@ -177,10 +223,16 @@ class DoubleListFoldRvAdapter(
             if (index != 0 && wrapper.viewType == TODO && wrapperCopyList[index - 1].viewType == TITLE) {
                 checkedTopMark = index
             }
-            //记录原始的position
-            positionChangeArray.add(index, index)
         }
-        return wrapperCopyList.size
+        return when (showType) {
+            NORMAL -> {
+                wrapperCopyList.size
+            }
+
+            THREE -> {
+                wrapperCopyList.size.coerceAtMost(3)
+            }
+        }
     }
 
     inner class DiffCallBack(
@@ -223,8 +275,27 @@ class DoubleListFoldRvAdapter(
                 scaleX = 1f
                 scaleY = 1f
                 alpha = 1f
+                isClickable = false
             }
             todo_cl_item_main.translationX = 0f
+        }
+    }
+
+    private fun updateTodo(todo: Todo?){
+        todo?.let {
+            Observable.just(it)
+                .map { todo ->
+                    LogUtils.d("RayFucker", "try to update")
+                    TodoDatabase.INSTANCE.todoDao()
+                        .updateTodo(todo)
+                }.setSchedulers()
+                .safeSubscribe(
+                    ExecuteOnceObserver(
+                        onExecuteOnceError = {
+                            BaseApp.context.toast("更新数据失败")
+                        }
+                    )
+                )
         }
     }
 }

@@ -1,7 +1,6 @@
 package com.cyxbsmobile_single.module_todo.ui.activity
 
 import android.graphics.Color
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -9,15 +8,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.cyxbsmobile_single.module_todo.R
 import com.cyxbsmobile_single.module_todo.adapter.DoubleListFoldRvAdapter
+import com.cyxbsmobile_single.module_todo.adapter.DoubleListFoldRvAdapter.ShowType.*
 import com.cyxbsmobile_single.module_todo.adapter.slide_callback.SlideCallback
 import com.cyxbsmobile_single.module_todo.model.bean.Todo
-import com.cyxbsmobile_single.module_todo.model.database.TodoDatabase
 import com.cyxbsmobile_single.module_todo.viewmodel.TodoViewModel
 import com.mredrock.cyxbs.common.config.DISCOVER_TODO_MAIN
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.LogUtils
-import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
-import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import kotlinx.android.synthetic.main.todo_activity_inner_main.*
 import kotlinx.android.synthetic.main.todo_rv_item_todo.view.*
 
@@ -29,13 +26,13 @@ class TodoInnerMainActivity : BaseViewModelActivity<TodoViewModel>() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.todo_activity_inner_main)
         viewModel.initDataList{
-            val adapter = DoubleListFoldRvAdapter(viewModel.wrapperList)
+            val adapter = DoubleListFoldRvAdapter(viewModel.wrapperList, NORMAL)
             val callback = SlideCallback()
             todo_inner_home_bar_add.setOnClickListener {
                 count++
                 adapter.addTodo(
                     Todo(
-                        count,
+                        0,
                         "新增待办$count",
                         114514191,
                         0,
@@ -62,7 +59,7 @@ class TodoInnerMainActivity : BaseViewModelActivity<TodoViewModel>() {
                             wrapper.todo?.apply {
                                 if (!isChecked) {
                                     view.todo_clv_todo_item.setStatusWithAnime(true) {
-                                        adapter.checkItem(wrapper)
+                                        adapter.checkItemAndSwap(wrapper)
                                         changeItemToChecked(view)
                                     }
                                 }

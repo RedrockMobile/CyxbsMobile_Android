@@ -1,6 +1,5 @@
 package com.mredrock.cyxbs.course.viewmodels
 
-import android.util.Log
 import android.view.View
 import androidx.annotation.WorkerThread
 import androidx.databinding.ObservableField
@@ -16,7 +15,6 @@ import com.mredrock.cyxbs.common.config.WIDGET_COURSE
 import com.mredrock.cyxbs.common.event.CurrentDateInformationEvent
 import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.utils.ClassRoomParse
-import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.Num2CN
 import com.mredrock.cyxbs.common.utils.SchoolCalendar
 import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
@@ -31,7 +29,7 @@ import com.mredrock.cyxbs.course.network.AffairMapToCourse
 import com.mredrock.cyxbs.course.network.Course
 import com.mredrock.cyxbs.course.network.CourseApiService
 import com.mredrock.cyxbs.course.network.CourseApiWrapper
-import com.mredrock.cyxbs.course.rxjava.ExecuteOnceObserver
+import com.mredrock.cyxbs.common.utils.ExecuteOnceObserver
 import com.mredrock.cyxbs.course.ui.fragment.CourseContainerEntryFragment
 import com.mredrock.cyxbs.course.utils.CourseTimeParse
 import com.mredrock.cyxbs.course.utils.getNowCourse
@@ -414,7 +412,8 @@ class CoursesViewModel : BaseViewModel() {
                 }
                 .map { it.data?.let { it1 -> AffairMapToCourse().apply(it1) } }
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(ExecuteOnceObserver(onExecuteOnceNext = { affairsCourse ->
+                .subscribe(
+                    ExecuteOnceObserver(onExecuteOnceNext = { affairsCourse ->
                     affairsCourse ?: return@ExecuteOnceObserver
                     context.defaultSharedPreferences.editor {
                         //小部件缓存事务
@@ -428,7 +427,8 @@ class CoursesViewModel : BaseViewModel() {
                 },
                         onExecuteOnFinal = {
                             isGetAllData(AFFAIR_TAG)
-                        }))
+                        })
+                )
     }
 
     /**
