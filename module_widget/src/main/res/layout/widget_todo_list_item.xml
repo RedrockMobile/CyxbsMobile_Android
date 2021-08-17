@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/widget_ll_todo_item"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:orientation="horizontal">
+        <ImageView
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/widget_ic_todo_uncheck"/>
+
+        <TextView
+            android:id="@+id/widget_tv_todo_title"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="10dp"
+            android:textColor="@color/common_level_one_font_color"
+            android:textSize="14sp"
+            tools:text="复习高数" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/widget_todo_notify_time"
+        android:layout_width="wrap_content"
+        android:layout_height="18dp"
+        android:textSize="13sp"
+        android:layout_marginStart="26dp"
+        android:textColor="#5015315b"
+        tools:text="8月2日 12:00"/>
+
+</LinearLayout>

@@ -54,6 +54,10 @@ const val ABOUT_US_WEBSITE = "https://redrock.team"
 //小控件课表及事务
 const val WIDGET_COURSE = "course_widget"
 const val WIDGET_AFFAIR = "course_affair"
+//从Room中获取的原生的todo列表
+const val WIDGET_TODO_RAW = "todo_list_raw_json"
+//在小组件中修改的todo列表（check掉和新增加的todo）
+const val WIDGET_TODO_MODIFY = "todo_list_modify_json"
 const val SP_WIDGET_NEED_FRESH = "sharepreference_widget_need_fresh"
 
 //课表辨别是查同学课表的key

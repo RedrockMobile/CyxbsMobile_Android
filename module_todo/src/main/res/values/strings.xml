@@ -6,5 +6,4 @@
     <string name="todo_feed_title">邮子清单</string>
     <string name="todo_string_empty_todo_notify">还没有待做事项哦~快去添加吧！</string>
     <string name="todo_string_empty_uncheck_notify">还没有待做事项哦，快去添加吧！</string>
-
 </resources>

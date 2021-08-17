@@ -229,3 +229,7 @@ fun startOperation(dataBean: WidgetCourse.DataBean) {
         EventBus.getDefault().postSticky(WidgetCourseEvent(mutableListOf(dataBean)))
     }
 }
+
+fun remindTimeStamp2String(timeStamp: Long): String{
+    return SimpleDateFormat("M月d日 hh:mm", Locale.CHINA).format(timeStamp)
+}

@@ -66,6 +66,25 @@
                 android:resource="@xml/widget_oversized_app_widget_info" />
         </receiver>
 
+
+        <!--    todoList相关小组件-->
+        <receiver
+            android:name=".widget.todo.TodoWidget"
+            android:label="邮子清单">
+
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="cyxbs.widget.todo.refresh"/>
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_todo_provider"/>
+        </receiver>
+
+        <service android:name=".service.TodoWidgetService"
+            android:permission="android.permission.BIND_REMOTEVIEWS" />
+
         <activity
             android:name=".widget.page.oversized.OversizedAppWidgetConfigureActivity"
             android:theme="@style/widget_Theme">

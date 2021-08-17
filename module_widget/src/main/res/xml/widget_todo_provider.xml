@@ -2,7 +2,7 @@
 <appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
     android:minWidth="40dp"
     android:minHeight="80dp"
-    android:updatePeriodMillis="1200000"
+    android:updatePeriodMillis="600000"
     android:initialLayout="@layout/widget_todo"
     android:resizeMode="vertical|horizontal"
     android:widgetCategory="home_screen|keyguard">
