@@ -34,6 +34,7 @@ class CheckLineView @JvmOverloads constructor(
     private var selectAnime: ValueAnimator? = null
     private var unSelectAnime: ValueAnimator? = null
     private val leftCircleRectF by lazy { RectF() }
+    private var firstEndOfAnime = true
 
     init {
         val typeArray = context.obtainStyledAttributes(attrs, R.styleable.CheckLineView)
@@ -102,9 +103,17 @@ class CheckLineView @JvmOverloads constructor(
                 }
             }
             selectAnime?.doOnEnd {
-                onSuccess?.invoke()
+                if (firstEndOfAnime){
+                    LogUtils.d("RayZY", "anime do on end")
+                    onSuccess?.invoke()
+                    firstEndOfAnime = false
+                }
             }
             selectAnime?.start()
+<<<<<<< HEAD
+=======
+            firstEndOfAnime = true
+>>>>>>> e7c15b7adba4c3580085e6fe1b436b492bf964a7
         } else {
             unSelectAnime ?: let {
                 unSelectAnime = ValueAnimator.ofFloat(200f, 0f).apply {
@@ -116,9 +125,14 @@ class CheckLineView @JvmOverloads constructor(
                 }
             }
             unSelectAnime?.doOnEnd {
-                onSuccess?.invoke()
+                if (firstEndOfAnime){
+                    LogUtils.d("RayZY", "anime do on end")
+                    onSuccess?.invoke()
+                    firstEndOfAnime = false
+                }
             }
             unSelectAnime?.start()
+            firstEndOfAnime = true
         }
     }
 
