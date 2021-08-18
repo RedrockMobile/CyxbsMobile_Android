@@ -10,6 +10,7 @@ import android.util.AttributeSet
 import android.view.View
 import androidx.core.animation.doOnEnd
 import com.cyxbsmobile_single.module_todo.R
+import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.dip
 
 
@@ -100,10 +101,10 @@ class CheckLineView @JvmOverloads constructor(
                     }
                 }
             }
-            selectAnime?.start()
             selectAnime?.doOnEnd {
                 onSuccess?.invoke()
             }
+            selectAnime?.start()
         } else {
             unSelectAnime ?: let {
                 unSelectAnime = ValueAnimator.ofFloat(200f, 0f).apply {

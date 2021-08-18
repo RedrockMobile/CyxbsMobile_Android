@@ -6,6 +6,8 @@
     android:background="@color/common_white_background"
     android:orientation="vertical">
 
+    <!--    bottomSheet顶部有一个20dp的距离，下面就适时的削减20dp-->
+
     <FrameLayout
         android:id="@+id/todo_inner_add_thing_header"
         android:layout_width="match_parent"
@@ -17,7 +19,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="left"
             android:layout_marginStart="15dp"
-            android:layout_marginTop="21dp"
+            android:layout_marginTop="1dp"
             android:text="取消"
             android:textColor="@color/todo_check_line_color"
             android:textSize="15sp"
@@ -28,7 +30,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="right"
-            android:layout_marginTop="21dp"
+            android:layout_marginTop="1dp"
             android:layout_marginEnd="15dp"
             android:text="保存"
             android:textColor="@color/todo_inner_add_save_text_color"
