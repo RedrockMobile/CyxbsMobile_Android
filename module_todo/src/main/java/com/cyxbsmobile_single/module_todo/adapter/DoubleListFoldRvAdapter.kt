@@ -21,6 +21,7 @@ import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.common.utils.extensions.toast
+import com.umeng.commonsdk.debug.E
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.todo_rv_item_empty.view.*
 import kotlinx.android.synthetic.main.todo_rv_item_title.view.*
@@ -48,8 +49,10 @@ class DoubleListFoldRvAdapter(
         THREE
     }
 
-    private var uncheckedCount = 0
-    private var checkedCount = 0
+    private val uncheckedArray by lazy { ArrayList<TodoItemWrapper>() }
+    private val checkedArray by lazy { ArrayList<TodoItemWrapper>() }
+
+    private var isFirstTimeGetItemCount = true
 
     private var checkedTopMark = 0
     private var isShowItem = true
@@ -57,8 +60,8 @@ class DoubleListFoldRvAdapter(
     private var isAddedUpEmpty = false
     private var isAddedDownEmpty = false
 
-    private val upEmptyHolder by lazy { TodoItemWrapper(EMPTY) }
-    private val downEmptyHolder by lazy { TodoItemWrapper(EMPTY) }
+    private val upEmptyHolder by lazy { TodoItemWrapper(EMPTY, title = "1") }
+    private val downEmptyHolder by lazy { TodoItemWrapper(EMPTY, title = "2") }
 
     //真正用于展示的list，会动态的增减
     private var wrapperCopyList: ArrayList<TodoItemWrapper> =
@@ -96,12 +99,7 @@ class DoubleListFoldRvAdapter(
 
     //内部check, 将条目置换到下面
     fun checkItemAndSwap(wrapper: TodoItemWrapper) {
-
-        uncheckedCount--
-        checkedCount++
-
-        checkEmptyItem()
-
+        LogUtils.d("RayZY", "checkedTopMark = $checkedTopMark")
         wrapperCopyList.remove(wrapper)
         wrapper.todo?.isChecked = true
         wrapperCopyList.add(checkedTopMark - 1, wrapper)
@@ -112,13 +110,9 @@ class DoubleListFoldRvAdapter(
         todoItemWrapperArrayList.add(checkedTopMark - 1, wrapper)
         //更新database中的todo
         updateTodo(wrapper.todo)
-
-        if (checkedCount == 0 && showType == NORMAL) {
-            //如果增加的时候没有uncheckedTodo，需要撤销原本的缺省图
-            wrapperCopyList.remove(downEmptyHolder)
-            refreshList()
-            todoItemWrapperArrayList.remove(downEmptyHolder)
-        }
+        checkedArray.add(wrapper)
+        uncheckedArray.remove(wrapper)
+        checkEmptyItem(true)
     }
 
     //feed处的check, check之后将条目上浮
@@ -127,17 +121,13 @@ class DoubleListFoldRvAdapter(
         wrapperTodo.todo?.isChecked = true
         refreshList()
         todoItemWrapperArrayList.remove(wrapperTodo)
-
         //更新database中的todo
         updateTodo(wrapperTodo.todo)
-        uncheckedCount--
-        checkedCount++
     }
 
     fun delItem(wrapper: TodoItemWrapper) {
         wrapper.todo?.let { todo ->
-            if (todo.isChecked) checkedCount-- else uncheckedCount--
-            checkEmptyItem()
+            if (todo.isChecked) checkedArray.remove(wrapper) else uncheckedArray.remove(wrapper)
             Observable.just(wrapper)
                 .map {
                     TodoDatabase.INSTANCE
@@ -149,6 +139,7 @@ class DoubleListFoldRvAdapter(
                     wrapperCopyList.remove(wrapper)
                     refreshList()
                     todoItemWrapperArrayList.remove(wrapper)
+                    checkEmptyItem(true)
                 }
         }
     }
@@ -167,45 +158,53 @@ class DoubleListFoldRvAdapter(
     }
 
     //检查是否需要缺省图
-    private fun checkEmptyItem(needShow: Boolean = true) {
+    private fun checkEmptyItem(needShow: Boolean) {
         LogUtils.d("RayG", "checkEmpty")
         if (showType == THREE)
             return
-        if (uncheckedCount == 0 && !isAddedUpEmpty) {
+        if (uncheckedArray.size == 0 && !isAddedUpEmpty) {
             //已经莫得待办事项了，将上部更替为缺省图
             isAddedUpEmpty = true
             wrapperCopyList.add(1, upEmptyHolder)
             if (needShow) {
                 refreshList()
             }
+            LogUtils.d(
+                "TestRay",
+                "new size = ${wrapperCopyList.size}, old size = ${todoItemWrapperArrayList.size}, needShow = $needShow"
+            )
             todoItemWrapperArrayList.add(1, upEmptyHolder)
+            LogUtils.d("RayG", "checkEmpty1")
         }
-        if (checkedCount == 0 && !isAddedDownEmpty) {
+        if (checkedArray.size == 0 && !isAddedDownEmpty) {
             //如果已经莫得已完成事项了，将下部替换为缺省图
             isAddedDownEmpty = true
-            wrapperCopyList.add(checkedTopMark, downEmptyHolder)
+            wrapperCopyList.add(downEmptyHolder)
             if (needShow) {
                 refreshList()
             }
-            todoItemWrapperArrayList.add(checkedTopMark, downEmptyHolder)
+            todoItemWrapperArrayList.add(downEmptyHolder)
+            LogUtils.d("RayG", "checkEmpty2")
         }
 
-        if (uncheckedCount != 0 && isAddedUpEmpty){
+        if (uncheckedArray.size != 0 && isAddedUpEmpty) {
             wrapperCopyList.remove(upEmptyHolder)
             if (needShow) {
                 refreshList()
             }
             todoItemWrapperArrayList.remove(upEmptyHolder)
-            isAddedDownEmpty = false
+            isAddedUpEmpty = false
+            LogUtils.d("RayG", "checkEmpty3")
         }
 
-        if (checkedCount != 0 && isAddedDownEmpty){
+        if (checkedArray.size != 0 && isAddedDownEmpty) {
             wrapperCopyList.remove(downEmptyHolder)
             if (needShow) {
                 refreshList()
             }
             todoItemWrapperArrayList.remove(downEmptyHolder)
             isAddedDownEmpty = false
+            LogUtils.d("RayG", "checkEmpty4")
         }
     }
 
@@ -219,9 +218,6 @@ class DoubleListFoldRvAdapter(
     }
 
     fun addTodo(todo: Todo) {
-        uncheckedCount ++
-        checkEmptyItem()
-
         TodoDatabase.INSTANCE
             .todoDao()
             .insertTodo(todo)
@@ -232,13 +228,15 @@ class DoubleListFoldRvAdapter(
                 LogUtils.d("RayJoe", "add one item")
                 todo.todoId = it
                 val wrapper = TodoItemWrapper.todoWrapper(todo)
+                uncheckedArray.add(wrapper)
                 wrapperCopyList.add(1, wrapper)
                 refreshList()
                 todoItemWrapperArrayList.add(1, wrapper)
+                checkEmptyItem(true)
             }
     }
 
-    fun refreshList() {
+    private fun refreshList() {
         val diffRes =
             DiffUtil.calculateDiff(DiffCallBack(todoItemWrapperArrayList, wrapperCopyList))
         diffRes.dispatchUpdatesTo(this)
@@ -297,12 +295,24 @@ class DoubleListFoldRvAdapter(
         override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
             val oldItem = oldList[oldItemPosition]
             val newItem = newList[newItemPosition]
-
             return if (oldItem.viewType == newItem.viewType) {
-                if (oldItem.viewType == TITLE) {
-                    oldItem.title == newItem.title
-                } else {
-                    oldItem.todo?.todoId == newItem.todo?.todoId
+                return when(oldItem.viewType){
+                    TITLE -> {
+                        oldItem.title == newItem.title
+                    }
+
+                    TODO -> {
+                        oldItem.todo?.todoId == newItem.todo?.todoId
+                    }
+
+                    EMPTY -> {
+                        LogUtils.d("RayG", "EMPTY judge")
+                        oldItem === newItem
+                    }
+
+                    else -> {
+                        false
+                    }
                 }
             } else {
                 false
@@ -336,7 +346,6 @@ class DoubleListFoldRvAdapter(
         todo?.let {
             Observable.just(it)
                 .map { todo ->
-                    LogUtils.d("RayFucker", "try to update")
                     TodoDatabase.INSTANCE.todoDao()
                         .updateTodo(todo)
                 }.setSchedulers()
@@ -352,22 +361,25 @@ class DoubleListFoldRvAdapter(
 
     override fun getItemCount(): Int {
         checkedTopMark = 0
-        checkedCount = 0
-        uncheckedCount = 0
+        checkedArray.clear()
+        uncheckedArray.clear()
         for (wrapper in wrapperCopyList) {
             if (wrapper.viewType == TODO) {
                 wrapper.todo?.let {
                     if (it.isChecked) {
-                        checkedCount++
+                        checkedArray.add(wrapper)
                     } else {
-                        uncheckedCount++
+                        uncheckedArray.add(wrapper)
                     }
                 }
             }
         }
-        LogUtils.d("RayJoe", "$wrapperCopyList")
-        checkedTopMark = 2 + uncheckedCount.coerceAtLeast(1)
-        checkEmptyItem(false)
+        checkedTopMark = 2 + uncheckedArray.size.coerceAtLeast(1)
+        //仅在第一次加载的时候判断是否需要插入缺省
+        if (isFirstTimeGetItemCount) {
+            checkEmptyItem(false)
+            isFirstTimeGetItemCount = false
+        }
         return when (showType) {
             NORMAL -> {
                 wrapperCopyList.size
