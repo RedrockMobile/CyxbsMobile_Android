@@ -10,18 +10,17 @@ import com.cyxbsmobile_single.module_todo.R
 import com.cyxbsmobile_single.module_todo.adapter.DoubleListFoldRvAdapter.ShowType.NORMAL
 import com.cyxbsmobile_single.module_todo.adapter.DoubleListFoldRvAdapter.ShowType.THREE
 import com.cyxbsmobile_single.module_todo.adapter.slide_callback.SlideCallback
+import com.cyxbsmobile_single.module_todo.model.bean.RemindMode
 import com.cyxbsmobile_single.module_todo.model.bean.Todo
 import com.cyxbsmobile_single.module_todo.model.bean.TodoItemWrapper
 import com.cyxbsmobile_single.module_todo.model.database.TodoDatabase
-import com.cyxbsmobile_single.module_todo.util.remindTimeStamp2String
+import com.cyxbsmobile_single.module_todo.util.repeatMode2RemindTime
 import com.mredrock.cyxbs.common.BaseApp
-import com.mredrock.cyxbs.common.ui.BaseActivity
 import com.mredrock.cyxbs.common.utils.ExecuteOnceObserver
 import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.common.utils.extensions.toast
-import com.umeng.commonsdk.debug.E
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.todo_rv_item_empty.view.*
 import kotlinx.android.synthetic.main.todo_rv_item_title.view.*
@@ -35,7 +34,8 @@ import kotlinx.android.synthetic.main.todo_rv_item_todo.view.*
 @Suppress("UNCHECKED_CAST")
 class DoubleListFoldRvAdapter(
     private val todoItemWrapperArrayList: ArrayList<TodoItemWrapper>,
-    private val showType: ShowType
+    private val showType: ShowType,
+    private val itemRes: Int
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     companion object {
@@ -72,7 +72,7 @@ class DoubleListFoldRvAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val layoutId = when (viewType) {
             TODO -> {
-                R.layout.todo_rv_item_todo
+                itemRes
             }
             TITLE -> {
                 R.layout.todo_rv_item_title
@@ -259,7 +259,11 @@ class DoubleListFoldRvAdapter(
                     curWrapper.todo?.let { todo ->
                         todo_fl_del.visibility = View.GONE
                         todo_tv_todo_title.text = todo.title
-                        todo_tv_notify_time.text = remindTimeStamp2String(todo.remindTime)
+                        if (todo.remindMode.time == ""){
+                            //确定为没有设置提醒时间
+                            todo_tv_notify_time.visibility = View.GONE
+                        }
+                        todo_tv_notify_time.text = repeatMode2RemindTime(todo.remindMode)
                         todo_clv_todo_item.setStatusWithoutAnime(todo.isChecked)
                         if (todo.isChecked) {
                             todo_tv_todo_title.setTextColor(Color.parseColor("#6615315B"))

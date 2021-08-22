@@ -1,7 +1,6 @@
 package com.mredrock.cyxbs.widget.service
 
 import android.content.Intent
-import android.view.View
 import android.widget.RemoteViews
 import android.widget.RemoteViewsService
 import com.google.gson.Gson
@@ -11,8 +10,9 @@ import com.mredrock.cyxbs.common.config.WIDGET_TODO_RAW
 import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
 import com.mredrock.cyxbs.widget.R
+import com.mredrock.cyxbs.widget.bean.RemindMode
 import com.mredrock.cyxbs.widget.bean.Todo
-import com.mredrock.cyxbs.widget.util.remindTimeStamp2String
+import com.mredrock.cyxbs.widget.util.repeatMode2RemindTime
 
 /**
  * @date 2021-08-18
@@ -55,10 +55,17 @@ class TodoWidgetService : RemoteViewsService() {
             if (position in todoList.indices) {
                 val curTodo = todoList[position]
                 listItem.setTextViewText(R.id.widget_tv_todo_title, curTodo.title)
-                listItem.setTextViewText(
-                    R.id.widget_todo_notify_time,
-                    remindTimeStamp2String(curTodo.remindTime)
-                )
+                if (curTodo.remindMode.repeatMode == RemindMode.NONE){
+                    listItem.setTextViewText(
+                        R.id.widget_todo_notify_time,
+                        ""
+                    )
+                } else {
+                    listItem.setTextViewText(
+                        R.id.widget_todo_notify_time,
+                        repeatMode2RemindTime(curTodo.remindMode)
+                    )
+                }
             }
             return listItem
         }

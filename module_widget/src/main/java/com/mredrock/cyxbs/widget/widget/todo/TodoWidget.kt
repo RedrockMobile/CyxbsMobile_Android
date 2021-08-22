@@ -1,5 +1,6 @@
 package com.mredrock.cyxbs.widget.widget.todo
 
+import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
 import android.content.ComponentName
@@ -7,9 +8,11 @@ import android.content.Context
 import android.content.Intent
 import android.widget.BaseAdapter
 import android.widget.RemoteViews
+import com.alibaba.android.arouter.launcher.ARouter
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.mredrock.cyxbs.common.BaseApp
+import com.mredrock.cyxbs.common.config.TODO_ADD_TODO_BY_WIDGET
 import com.mredrock.cyxbs.common.config.WIDGET_TODO_RAW
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.utils.LogUtils
@@ -38,29 +41,51 @@ class TodoWidget : AppWidgetProvider() {
         }
     }
 
-    private fun initRemoteView(context: Context): RemoteViews{
+    private fun initRemoteView(context: Context): RemoteViews {
         val remoteView = RemoteViews(context.packageName, R.layout.widget_todo)
         val intent = Intent(context, TodoWidgetService::class.java)
         val json = BaseApp.context.defaultSharedPreferences.getString(WIDGET_TODO_RAW, "")
         LogUtils.d("MasterRay", "onInit, json = $json")
-        if (json!=""){
+        if (json != "") {
             intent.putExtra("todoJson", json)
             remoteView.apply {
                 setRemoteAdapter(R.id.widget_lv_todo_list, intent)
             }
         }
+        remoteView.setOnClickPendingIntent(
+            R.id.widget_iv_add_todo,
+            PendingIntent.getBroadcast(
+                context,
+                1,
+                Intent(context, TodoWidget::class.java).apply {
+                    action = "cyxbs.widget.todo.add"
+                },
+                PendingIntent.FLAG_UPDATE_CURRENT
+            )
+        )
         return remoteView
     }
 
     override fun onReceive(context: Context?, intent: Intent?) {
         super.onReceive(context, intent)
-        LogUtils.d("MasterRay", "onReceive")
-        context?.let {
-            val manager = AppWidgetManager.getInstance(it)
-            val componentName = ComponentName(it,TodoWidget::class.java)
-            val remoteView = initRemoteView(it)
-            manager.updateAppWidget(componentName, remoteView)
-            manager.notifyAppWidgetViewDataChanged(manager.getAppWidgetIds(componentName), R.id.widget_lv_todo_list)
+        intent?.action?.let { LogUtils.d("RayleighZZH", it) }
+        when(intent?.action){
+            "cyxbs.widget.todo.refresh" -> {
+                context?.let {
+                    val manager = AppWidgetManager.getInstance(it)
+                    val componentName = ComponentName(it, TodoWidget::class.java)
+                    val remoteView = initRemoteView(it)
+                    manager.updateAppWidget(componentName, remoteView)
+                    manager.notifyAppWidgetViewDataChanged(
+                        manager.getAppWidgetIds(componentName),
+                        R.id.widget_lv_todo_list
+                    )
+                }
+            }
+
+            "cyxbs.widget.todo.add" -> {
+                ARouter.getInstance().build(TODO_ADD_TODO_BY_WIDGET).navigation()
+            }
         }
     }
 }

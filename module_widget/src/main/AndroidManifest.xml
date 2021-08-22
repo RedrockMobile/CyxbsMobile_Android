@@ -68,6 +68,7 @@
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
                 <action android:name="cyxbs.widget.todo.refresh" />
+                <action android:name="cyxbs.widget.todo.add"/>
             </intent-filter>
 
             <meta-data

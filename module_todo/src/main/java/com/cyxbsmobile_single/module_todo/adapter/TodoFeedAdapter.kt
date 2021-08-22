@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.cyxbsmobile_single.module_todo.R
 import com.cyxbsmobile_single.module_todo.adapter.DoubleListFoldRvAdapter.ShowType.*
+import com.cyxbsmobile_single.module_todo.model.bean.Todo
 import com.cyxbsmobile_single.module_todo.model.bean.TodoItemWrapper
 import com.cyxbsmobile_single.module_todo.viewmodel.TodoViewModel
 import com.mredrock.cyxbs.common.ui.BaseFeedFragment
@@ -40,7 +41,7 @@ class TodoFeedAdapter(private val todoViewModel: TodoViewModel) :
                 todo_rv_todo_list.visibility = View.VISIBLE
                 todo_tv_feed_empty_notify.visibility = View.GONE
                 //这里可以保证，viewModel和adapter的list是同一个引用，可以保证操作的同步性
-                val adapter = DoubleListFoldRvAdapter(todoViewModel.uncheckTodoList, THREE)
+                val adapter = DoubleListFoldRvAdapter(todoViewModel.uncheckTodoList, THREE, R.layout.todo_rv_item_todo)
                 adapter.onBindView = { view, _, viewType, wrapper ->
                     //此处不可能出现title，但为了稳一波，还是加上了判断
                     if (viewType == DoubleListFoldRvAdapter.TODO){

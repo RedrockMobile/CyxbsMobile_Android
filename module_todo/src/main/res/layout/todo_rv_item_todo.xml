@@ -19,6 +19,8 @@
             android:layout_height="19dp"
             android:layout_marginStart="16dp"
             app:is_checked="false"
+            app:uncheck_line_width="1.5dp"
+            app:checked_line_width="1dp"
             app:layout_constraintBottom_toBottomOf="@+id/todo_tv_todo_title"
             app:layout_constraintEnd_toEndOf="@+id/todo_tv_todo_title"
             app:layout_constraintStart_toStartOf="parent"

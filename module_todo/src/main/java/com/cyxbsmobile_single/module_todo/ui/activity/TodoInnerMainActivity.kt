@@ -21,28 +21,13 @@ import kotlinx.android.synthetic.main.todo_rv_item_todo.view.*
 @Route(path = DISCOVER_TODO_MAIN)
 class TodoInnerMainActivity : BaseViewModelActivity<TodoViewModel>() {
 
-    var count = 10L
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.todo_activity_inner_main)
         viewModel.initDataList{
             LogUtils.d("RayJoe", "${viewModel.wrapperList}")
-            val adapter = DoubleListFoldRvAdapter(viewModel.wrapperList, NORMAL)
+            val adapter = DoubleListFoldRvAdapter(viewModel.wrapperList, NORMAL, R.layout.todo_rv_item_todo_inner)
             val callback = SlideCallback()
-            todo_inner_home_bar_add.setOnClickListener {
-                count++
-                adapter.addTodo(
-                    Todo(
-                        0,
-                        "新增待办$count",
-                        114514191,
-                        0,
-                        "详情",
-                        false,
-                        1145141919
-                    )
-                )
-            }
             adapter.onBindView = { view, pos, viewType, wrapper ->
                 if (viewType == DoubleListFoldRvAdapter.TITLE && pos != 0) {
                     view.setOnClickListener {

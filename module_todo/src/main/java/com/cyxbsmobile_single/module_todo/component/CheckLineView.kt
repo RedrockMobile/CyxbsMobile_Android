@@ -10,7 +10,6 @@ import android.util.AttributeSet
 import android.view.View
 import androidx.core.animation.doOnEnd
 import com.cyxbsmobile_single.module_todo.R
-import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.dip
 
 
@@ -23,7 +22,12 @@ class CheckLineView @JvmOverloads constructor(
     attrs: AttributeSet? = null,
     defStyle: Int = 0
 ) : View(context, attrs, defStyle) {
-    private val paint by lazy { Paint().apply { isAntiAlias = true } }
+    private val paint by lazy {
+        Paint().apply {
+            isAntiAlias = true
+            strokeCap = Paint.Cap.ROUND
+        }
+    }
     private val startAngle = 40f//左侧圆圈的起始角度
     private var curAnimeProcess = 0f//当前动画的进度，0~200，其中0~100表示圆圈的绘制，100~200表示线的绘制
     private var checkedColor = 0
@@ -35,6 +39,8 @@ class CheckLineView @JvmOverloads constructor(
     private var unSelectAnime: ValueAnimator? = null
     private val leftCircleRectF by lazy { RectF() }
     private var firstEndOfAnime = true
+    private var uncheckLineWidth = 0f
+    private var checkedLineWidth = 0f
 
     init {
         val typeArray = context.obtainStyledAttributes(attrs, R.styleable.CheckLineView)
@@ -48,6 +54,10 @@ class CheckLineView @JvmOverloads constructor(
         )
         isChecked = typeArray.getBoolean(R.styleable.CheckLineView_is_checked, false)
         leftRadius = typeArray.getDimension(R.styleable.CheckLineView_left_radius, 0f)
+        uncheckLineWidth =
+            typeArray.getDimension(R.styleable.CheckLineView_uncheck_line_width, 1.5f)
+        checkedLineWidth =
+            typeArray.getDimension(R.styleable.CheckLineView_checked_line_width, 1.2f)
         setStatusWithoutAnime(isChecked)
         typeArray.recycle()
         paint.style = Paint.Style.STROKE
@@ -78,7 +88,7 @@ class CheckLineView @JvmOverloads constructor(
                 } else {
                     //如果尚未check（走到这个逻辑里多半是默认加载为没有check）
                     paint.color = uncheckedColor
-                    paint.strokeWidth = context.dip(1.5f).toFloat()
+                    paint.strokeWidth = uncheckLineWidth
                     drawLeftArc(100f, canvas)
                 }
             }
@@ -103,17 +113,9 @@ class CheckLineView @JvmOverloads constructor(
                 }
             }
             selectAnime?.doOnEnd {
-                if (firstEndOfAnime){
-                    LogUtils.d("RayZY", "anime do on end")
-                    onSuccess?.invoke()
-                    firstEndOfAnime = false
-                }
+                onSuccess?.invoke()
             }
             selectAnime?.start()
-<<<<<<< HEAD
-=======
-            firstEndOfAnime = true
->>>>>>> e7c15b7adba4c3580085e6fe1b436b492bf964a7
         } else {
             unSelectAnime ?: let {
                 unSelectAnime = ValueAnimator.ofFloat(200f, 0f).apply {
@@ -125,11 +127,7 @@ class CheckLineView @JvmOverloads constructor(
                 }
             }
             unSelectAnime?.doOnEnd {
-                if (firstEndOfAnime){
-                    LogUtils.d("RayZY", "anime do on end")
-                    onSuccess?.invoke()
-                    firstEndOfAnime = false
-                }
+                onSuccess?.invoke()
             }
             unSelectAnime?.start()
             firstEndOfAnime = true
@@ -140,7 +138,7 @@ class CheckLineView @JvmOverloads constructor(
         //绘制左侧check圈圈
         paint.color = if (isChecked) checkedColor else uncheckedColor
         paint.strokeWidth =
-            if (isChecked) context.dip(1.2f).toFloat() else context.dip(1.5f).toFloat()
+            if (isChecked) checkedLineWidth else uncheckLineWidth
         //刷新右侧矩形
         leftCircleRectF.apply {
             top = 0f + paint.strokeWidth / 2f

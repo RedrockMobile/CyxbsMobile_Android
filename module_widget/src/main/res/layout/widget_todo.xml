@@ -27,6 +27,7 @@
             android:layout_weight="1"/>
 
         <ImageView
+            android:id="@+id/widget_iv_add_todo"
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:layout_marginTop="17dp"

@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/todo_cl_item_main"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:elevation="3dp"
+        android:paddingTop="7dp">
+
+        <com.cyxbsmobile_single.module_todo.component.CheckLineView
+            android:id="@+id/todo_clv_todo_item"
+            android:layout_width="0dp"
+            android:layout_height="23dp"
+            android:layout_marginStart="15dp"
+            app:is_checked="true"
+            app:checked_line_width="2dp"
+            app:uncheck_line_width="2dp"
+            app:layout_constraintBottom_toBottomOf="@+id/todo_tv_todo_title"
+            app:layout_constraintEnd_toEndOf="@+id/todo_tv_todo_title"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/todo_tv_todo_title"
+            app:left_radius="10.5dp" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/todo_iv_check"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5.34dp"
+            android:layout_marginBottom="3dp"
+            android:src="@drawable/todo_ic_right"
+            app:layout_constraintBottom_toBottomOf="@+id/todo_clv_todo_item"
+            app:layout_constraintStart_toStartOf="@+id/todo_clv_todo_item"
+            app:layout_constraintTop_toTopOf="@+id/todo_clv_todo_item" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/todo_tv_todo_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="50dp"
+            android:height="25dp"
+            android:gravity="center"
+            android:paddingEnd="1dp"
+            android:textColor="@color/todo_check_line_color"
+            android:textSize="18sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="复习高数" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/todo_iv_bell"
+            android:layout_width="11dp"
+            android:layout_height="13dp"
+            android:src="@drawable/todo_ic_bell_gray"
+            app:layout_constraintBottom_toBottomOf="@+id/todo_tv_notify_time"
+            app:layout_constraintStart_toStartOf="@+id/todo_tv_todo_title"
+            app:layout_constraintTop_toTopOf="@+id/todo_tv_notify_time" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/todo_tv_notify_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="7dp"
+            android:textColor="#7815315b"
+            android:textSize="13sp"
+            android:layout_marginBottom="16dp"
+            android:layout_marginTop="6dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/todo_iv_bell"
+            app:layout_constraintTop_toBottomOf="@+id/todo_tv_todo_title"
+            tools:text="8月2日 12:00" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_marginStart="50dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:background="@color/todo_feed_divide_line_color"
+            app:layout_constraintStart_toStartOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <FrameLayout
+        android:id="@+id/todo_fl_del"
+        android:layout_width="80dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="end"
+        android:visibility="gone"
+        android:background="@color/todo_item_del_red"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:layout_width="24dp"
+            android:layout_height="26dp"
+            android:layout_gravity="center"
+            android:src="@drawable/todo_ic_del" />
+    </FrameLayout>
+
+</FrameLayout>

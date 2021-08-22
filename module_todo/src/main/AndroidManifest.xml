@@ -5,7 +5,8 @@
     <application>
         <activity
             android:name=".ui.activity.WidgetAddTodoActivity"
-            android:theme="@style/todo_TranslucentStyle"/>
+            android:theme="@style/todo_TranslucentStyle"
+            android:launchMode="singleInstance"/>
         <activity android:name=".ui.activity.TodoInnerMainActivity" />
     </application>
 

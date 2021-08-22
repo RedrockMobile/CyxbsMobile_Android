@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/common_white_background"
+    android:layout_marginTop="20dp"
+    android:paddingTop="20dp"
     android:orientation="vertical">
 
     <!--    bottomSheet顶部有一个20dp的距离，下面就适时的削减20dp-->
@@ -42,6 +44,7 @@
         android:id="@+id/et_discover_other_course_search"
         android:layout_width="match_parent"
         android:layout_height="44dp"
+        android:gravity="center_vertical"
         android:layout_marginStart="18dp"
         android:layout_marginTop="33dp"
         android:layout_marginEnd="18dp"
@@ -50,7 +53,6 @@
         android:imeOptions="actionSearch"
         android:inputType="text"
         android:paddingStart="17dp"
-        android:paddingTop="12dp"
         android:singleLine="true"
         android:textColor="@color/todo_check_line_color"
         android:textColorHint="@color/common_othercourse_common_hint_text_color" />
@@ -67,6 +69,7 @@
             android:src="@drawable/todo_ic_inner_add_thing_nf" />
 
         <TextView
+            android:id="@+id/todo_tv_set_notify_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
@@ -88,6 +91,7 @@
             android:src="@drawable/todo_ic_inner_add_thing_repeat_time" />
 
         <TextView
+            android:id="@+id/todo_tv_set_repeat_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
@@ -113,27 +117,28 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/todo_inner_add_thing_time_select_cl"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="194dp"
             android:layout_marginStart="52dp"
-            android:layout_marginTop="20dp"
-            android:background="#4CAF50">
+            android:layout_marginTop="20dp">
 
             <ImageView
                 android:id="@+id/iv_todo_inner_add_thing_repeat_time_index"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="93dp"
+                android:visibility="gone"
                 android:src="@drawable/todo_ic_inner_add_thing_time_index"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <com.super_rabbit.wheel_picker.WheelPicker
-                android:id="@+id/todo_add_thing_first"
+                android:id="@+id/todo_inner_add_thing_first"
                 android:layout_width="wrap_content"
+                android:visibility="gone"
                 android:layout_height="194dp"
+                android:layout_marginStart="20dp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/todo_inner_add_thing_second"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/iv_todo_inner_add_thing_repeat_time_index"
                 app:layout_constraintTop_toTopOf="parent"
                 app:selectedTextColor="@color/todo_check_line_color"
                 app:textSize="20sp"
@@ -143,10 +148,11 @@
                 android:id="@+id/todo_inner_add_thing_second"
                 android:layout_width="wrap_content"
                 android:layout_height="194dp"
-                app:layout_constraintBottom_toBottomOf="@+id/todo_add_thing_first"
-                app:layout_constraintEnd_toEndOf="@+id/todo_inner_add_thing_third"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/todo_add_thing_first"
+                android:layout_marginStart="40dp"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/todo_inner_add_thing_first"
+                app:layout_constraintTop_toTopOf="parent"
                 app:selectedTextColor="@color/todo_check_line_color"
                 app:textSize="20sp"
                 app:wheelItemCount="7" />
@@ -155,18 +161,31 @@
                 android:id="@+id/todo_inner_add_thing_third"
                 android:layout_width="wrap_content"
                 android:layout_height="194dp"
-                app:layout_constraintBottom_toBottomOf="@+id/todo_inner_add_thing_second"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/todo_add_thing_first"
+                android:layout_marginStart="40dp"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/todo_inner_add_thing_second"
+                app:layout_constraintTop_toTopOf="parent"
                 app:selectedTextColor="@color/todo_check_line_color"
                 app:textSize="20sp"
                 app:wheelItemCount="7" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/todo_iv_add_repeat"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:layout_marginEnd="52dp"
+                android:visibility="gone"
+                android:src="@drawable/todo_ic_add_repeat"
+                app:layout_constraintBottom_toBottomOf="@+id/todo_inner_add_thing_third"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/todo_inner_add_thing_third" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.appcompat.widget.LinearLayoutCompat>
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
         android:layout_gravity="bottom"
         android:layout_marginTop="37dp">
 
@@ -177,6 +196,7 @@
             android:layout_gravity="left"
             android:layout_marginStart="48dp"
             android:layout_marginBottom="40dp"
+            android:visibility="gone"
             android:background="@drawable/todo_shape_inner_add_thing_repeat_time_cancle_button"
             android:gravity="center"
             android:text="取消"
@@ -188,6 +208,7 @@
             android:layout_width="120dp"
             android:layout_height="40dp"
             android:layout_gravity="right"
+            android:visibility="gone"
             android:layout_marginEnd="47dp"
             android:layout_marginBottom="40dp"
             android:background="@drawable/todo_shape_inner_add_thing_shape_confirm_button"
