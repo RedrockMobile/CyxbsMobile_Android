@@ -115,6 +115,7 @@ const val QA_PARAM_QUESTION_ID = "question_id"
 
 //todo模块存储提醒日期+星期数
 const val TODO_WEEK_MONTH_ARRAY = "todo_week_moth_array"
+const val TODO_YEAR_OF_WEEK_MONTH_ARRAY = "todo_year_of_week_moth_array"
 
 //统一拦截的HTTP状态码
 const val TOKEN_EXPIRE = 403//token过期

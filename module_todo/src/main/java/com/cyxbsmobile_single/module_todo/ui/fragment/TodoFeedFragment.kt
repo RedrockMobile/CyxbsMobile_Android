@@ -49,9 +49,8 @@ class TodoFeedFragment: BaseFeedFragment<TodoViewModel>() {
             refresh()
         }
         onLeftIconClick {
-            AddItemDialog(requireContext()){ todo, dialog ->
+            AddItemDialog(requireContext()){ todo ->
                 viewModel.addTodo(todo){
-                    dialog.hide()
                     refresh()
                 }
             }.show()

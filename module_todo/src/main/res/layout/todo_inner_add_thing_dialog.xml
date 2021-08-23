@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginTop="20dp"
-    android:paddingTop="20dp"
+    android:paddingTop="19dp"
     android:orientation="vertical">
 
     <!--    bottomSheet顶部有一个20dp的距离，下面就适时的削减20dp-->
@@ -41,7 +41,7 @@
     </FrameLayout>
 
     <androidx.appcompat.widget.AppCompatEditText
-        android:id="@+id/et_discover_other_course_search"
+        android:id="@+id/todo_et_todo_title"
         android:layout_width="match_parent"
         android:layout_height="44dp"
         android:gravity="center_vertical"
@@ -107,11 +107,12 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <com.mredrock.cyxbs.common.component.RedRockAutoWarpView
-            android:id="@+id/todo_inner_add_thing_repeat_tv_time_text"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/todo_inner_add_rv_thing_repeat_list"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="36dp"
             android:layout_marginStart="18dp"
+            tools:listitem="@layout/todo_inner_add_thing_repeat_select_auto_warp_item"
             android:layout_marginTop="14dp" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -122,7 +123,7 @@
             android:layout_marginTop="20dp">
 
             <ImageView
-                android:id="@+id/iv_todo_inner_add_thing_repeat_time_index"
+                android:id="@+id/todo_iv_inner_add_thing_repeat_time_index"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="93dp"
@@ -138,10 +139,10 @@
                 android:layout_height="194dp"
                 android:layout_marginStart="20dp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/iv_todo_inner_add_thing_repeat_time_index"
+                app:layout_constraintStart_toEndOf="@+id/todo_iv_inner_add_thing_repeat_time_index"
                 app:layout_constraintTop_toTopOf="parent"
                 app:selectedTextColor="@color/todo_check_line_color"
-                app:textSize="20sp"
+                app:textSize="16sp"
                 app:wheelItemCount="7" />
 
             <com.super_rabbit.wheel_picker.WheelPicker
@@ -154,7 +155,7 @@
                 app:layout_constraintStart_toEndOf="@+id/todo_inner_add_thing_first"
                 app:layout_constraintTop_toTopOf="parent"
                 app:selectedTextColor="@color/todo_check_line_color"
-                app:textSize="20sp"
+                app:textSize="16sp"
                 app:wheelItemCount="7" />
 
             <com.super_rabbit.wheel_picker.WheelPicker
@@ -167,18 +168,18 @@
                 app:layout_constraintStart_toEndOf="@+id/todo_inner_add_thing_second"
                 app:layout_constraintTop_toTopOf="parent"
                 app:selectedTextColor="@color/todo_check_line_color"
-                app:textSize="20sp"
+                app:textSize="16sp"
                 app:wheelItemCount="7" />
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/todo_iv_add_repeat"
                 android:layout_width="18dp"
                 android:layout_height="18dp"
-                android:layout_marginEnd="52dp"
+                android:layout_marginStart="40dp"
                 android:visibility="gone"
                 android:src="@drawable/todo_ic_add_repeat"
                 app:layout_constraintBottom_toBottomOf="@+id/todo_inner_add_thing_third"
-                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/todo_inner_add_thing_second"
                 app:layout_constraintTop_toTopOf="@+id/todo_inner_add_thing_third" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.appcompat.widget.LinearLayoutCompat>
@@ -189,7 +190,7 @@
         android:layout_gravity="bottom"
         android:layout_marginTop="37dp">
 
-        <androidx.appcompat.widget.AppCompatButton
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/todo_inner_add_thing_repeat_time_cancle"
             android:layout_width="120dp"
             android:layout_height="40dp"
@@ -203,7 +204,7 @@
             android:textColor="@color/todo_inner_add_thing_repeat_time_canlce_text_color"
             android:textSize="18sp" />
 
-        <androidx.appcompat.widget.AppCompatButton
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/todo_inner_add_thing_repeat_time_confirm"
             android:layout_width="120dp"
             android:layout_height="40dp"

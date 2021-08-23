@@ -8,13 +8,16 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.cyxbsmobile_single.module_todo.R
 import com.cyxbsmobile_single.module_todo.adapter.DoubleListFoldRvAdapter
-import com.cyxbsmobile_single.module_todo.adapter.DoubleListFoldRvAdapter.ShowType.*
+import com.cyxbsmobile_single.module_todo.adapter.DoubleListFoldRvAdapter.ShowType.NORMAL
 import com.cyxbsmobile_single.module_todo.adapter.slide_callback.SlideCallback
-import com.cyxbsmobile_single.module_todo.model.bean.Todo
+import com.cyxbsmobile_single.module_todo.model.bean.RemindMode
+import com.cyxbsmobile_single.module_todo.util.setMargin
 import com.cyxbsmobile_single.module_todo.viewmodel.TodoViewModel
+import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.config.DISCOVER_TODO_MAIN
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.LogUtils
+import com.mredrock.cyxbs.common.utils.extensions.dip
 import kotlinx.android.synthetic.main.todo_activity_inner_main.*
 import kotlinx.android.synthetic.main.todo_rv_item_todo.view.*
 
@@ -24,47 +27,72 @@ class TodoInnerMainActivity : BaseViewModelActivity<TodoViewModel>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.todo_activity_inner_main)
-        viewModel.initDataList{
-            LogUtils.d("RayJoe", "${viewModel.wrapperList}")
-            val adapter = DoubleListFoldRvAdapter(viewModel.wrapperList, NORMAL, R.layout.todo_rv_item_todo_inner)
-            val callback = SlideCallback()
-            adapter.onBindView = { view, pos, viewType, wrapper ->
-                if (viewType == DoubleListFoldRvAdapter.TITLE && pos != 0) {
-                    view.setOnClickListener {
-                        adapter.changeFoldStatus()
+        viewModel.initDataList {
+            onDateLoaded()
+        }
+    }
+
+    private fun changeItemToChecked(itemView: View) {
+        itemView.apply {
+            todo_tv_todo_title.setTextColor(Color.parseColor("#6615315B"))
+            todo_iv_check.visibility = View.VISIBLE
+        }
+    }
+
+    private fun onDateLoaded() {
+        LogUtils.d("RayJoe", "${viewModel.wrapperList}")
+        val adapter =
+            DoubleListFoldRvAdapter(viewModel.wrapperList, NORMAL, R.layout.todo_rv_item_todo_inner)
+        val callback = SlideCallback()
+        adapter.onBindView = { view, pos, viewType, wrapper ->
+            when (viewType) {
+                DoubleListFoldRvAdapter.TITLE -> {
+                    if (pos != 0) {//确定是已完成事项的title
+                        view.setOnClickListener {
+                            adapter.changeFoldStatus()
+                        }
+                    } else {
+                        view.isClickable = false
                     }
-                } else {
-                    if (viewType == DoubleListFoldRvAdapter.TODO) {
-                        view.todo_fl_del.visibility = View.VISIBLE
-                        view.todo_fl_del.setOnClickListener {
+                }
+
+                DoubleListFoldRvAdapter.TODO -> {
+                    view.apply {
+                        todo_fl_del.visibility = View.VISIBLE
+                        todo_fl_del.setOnClickListener {
                             adapter.delItem(wrapper)
                             LogUtils.d("RayJoe", "position = $pos")
                         }
-                        view.todo_cl_item_main.setBackgroundColor(Color.WHITE)
-                        view.todo_clv_todo_item.setOnClickListener {
+                        todo_cl_item_main.setBackgroundColor(Color.WHITE)
+
+                        if (wrapper.todo?.remindMode?.notifyDateTime == "") {
+                            //判断为没有设置提醒，也没有设置重复
+                            //调整上下宽高
+                            setMargin(todo_tv_todo_title, top = BaseApp.context.dip(29), bottom = BaseApp.context.dip(29))
+                        } else {
+                            setMargin(todo_tv_todo_title, top = BaseApp.context.dip(18), bottom = BaseApp.context.dip(40))
+                        }
+
+                        todo_clv_todo_item.setOnClickListener {
                             wrapper.todo?.apply {
                                 if (!isChecked) {
-                                    view.todo_clv_todo_item.setStatusWithAnime(true) {
+                                    todo_clv_todo_item.setStatusWithAnime(true) {
                                         adapter.checkItemAndSwap(wrapper)
                                         changeItemToChecked(view)
                                     }
+                                } else {
+                                    todo_clv_todo_item.isClickable = false
                                 }
                             }
                         }
                     }
                 }
             }
-            val touchHelper = ItemTouchHelper(callback)
-            touchHelper.attachToRecyclerView(todo_inner_home_rv)
-            todo_inner_home_rv.adapter = adapter
-            todo_inner_home_rv.layoutManager = LinearLayoutManager(this)
         }
-    }
 
-    private fun changeItemToChecked(itemView: View){
-        itemView.apply {
-            todo_tv_todo_title.setTextColor(Color.parseColor("#6615315B"))
-            todo_iv_check.visibility = View.VISIBLE
-        }
+        val touchHelper = ItemTouchHelper(callback)
+        touchHelper.attachToRecyclerView(todo_inner_home_rv)
+        todo_inner_home_rv.adapter = adapter
+        todo_inner_home_rv.layoutManager = LinearLayoutManager(this)
     }
 }

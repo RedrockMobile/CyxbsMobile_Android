@@ -26,7 +26,7 @@ class WidgetAddTodoActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.todo_activity_widget_add_todo)
-        AddItemDialog(this){todo, addItemDialog ->
+        AddItemDialog(this){todo ->
             TodoDatabase.INSTANCE.todoDao()
                 .insertTodo(todo)
                 .toObservable()
@@ -47,7 +47,6 @@ class WidgetAddTodoActivity : AppCompatActivity() {
                     this.sendBroadcast(
                         Intent("cyxbs.widget.todo.refresh")
                     )
-                    addItemDialog.hide()
                     finish()
                 }
         }.show()

@@ -1,23 +1,25 @@
 package com.cyxbsmobile_single.module_todo.model.bean
 
+import android.widget.ArrayAdapter
 import com.google.gson.annotations.SerializedName
 import java.io.Serializable
 
 /**
  * @date 2021-08-18
  * @author Sca RayleighZ
+ * 写成ArrayList是为了方便添加数据
  */
 data class RemindMode(
     @SerializedName("repeat_mode")
-    val repeatMode: Int,
+    var repeatMode: Int,
     @SerializedName("date")
-    var date: List<String>,
+    var date: ArrayList<String>,
     @SerializedName("week")
-    var week: List<Int>,
+    var week: ArrayList<Int>,
     @SerializedName("day")
-    var day: List<Int>,
-    @SerializedName("time")
-    val time: String
+    var day: ArrayList<Int>,
+    @SerializedName("notify_date_time")
+    var notifyDateTime: String
 ): Serializable{
     companion object{
         const val NONE = 0
@@ -25,5 +27,15 @@ data class RemindMode(
         const val WEEK = 2
         const val MONTH = 3
         const val YEAR = 4
+
+        fun generateDefaultRemindMode(): RemindMode{
+            return RemindMode(
+                NONE,
+                arrayListOf(),
+                arrayListOf(),
+                arrayListOf(),
+                ""
+            )
+        }
     }
 }

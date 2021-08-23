@@ -7,7 +7,7 @@ import com.mredrock.cyxbs.common.BuildConfig
 
 //6.1.0版本之后后端环境更新，baseUrl分为测试环境和线上环境
 const val END_POINT_REDROCK_DEV = "https://be-dev.redrock.team"//测试环境url
-const val END_POINT_REDROCK_PROD = "https://be-prod.redrock.cqupt.edu.cn"//线上环境url
+const val END_POINT_REDROCK_PROD = "https://be-prod.redrock.team"//线上环境url
 const val BASE_NORMAL_IMG_URL = "$END_POINT_REDROCK_PROD/app/Public/photo/"
 
 const val BASE_THUMBNAIL_IMG_URL = BASE_NORMAL_IMG_URL + "thumbnail/"

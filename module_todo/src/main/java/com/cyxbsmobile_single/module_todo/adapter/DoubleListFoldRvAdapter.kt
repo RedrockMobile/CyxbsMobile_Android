@@ -10,7 +10,6 @@ import com.cyxbsmobile_single.module_todo.R
 import com.cyxbsmobile_single.module_todo.adapter.DoubleListFoldRvAdapter.ShowType.NORMAL
 import com.cyxbsmobile_single.module_todo.adapter.DoubleListFoldRvAdapter.ShowType.THREE
 import com.cyxbsmobile_single.module_todo.adapter.slide_callback.SlideCallback
-import com.cyxbsmobile_single.module_todo.model.bean.RemindMode
 import com.cyxbsmobile_single.module_todo.model.bean.Todo
 import com.cyxbsmobile_single.module_todo.model.bean.TodoItemWrapper
 import com.cyxbsmobile_single.module_todo.model.database.TodoDatabase
@@ -259,17 +258,21 @@ class DoubleListFoldRvAdapter(
                     curWrapper.todo?.let { todo ->
                         todo_fl_del.visibility = View.GONE
                         todo_tv_todo_title.text = todo.title
-                        if (todo.remindMode.time == ""){
-                            //确定为没有设置提醒时间
-                            todo_tv_notify_time.visibility = View.GONE
-                        }
                         todo_tv_notify_time.text = repeatMode2RemindTime(todo.remindMode)
+                        if (todo_tv_notify_time.text.toString() == ""){
+                            todo_tv_notify_time.visibility = View.GONE
+                            todo_iv_bell.visibility = View.GONE
+                        } else {
+                            todo_tv_notify_time.visibility = View.VISIBLE
+                            todo_iv_bell.visibility = View.VISIBLE
+                        }
                         todo_clv_todo_item.setStatusWithoutAnime(todo.isChecked)
                         if (todo.isChecked) {
                             todo_tv_todo_title.setTextColor(Color.parseColor("#6615315B"))
                             todo_iv_check.visibility = View.VISIBLE
                         } else {
                             todo_iv_check.visibility = View.GONE
+                            todo_tv_todo_title.setTextColor(Color.parseColor("#15315B"))
                         }
                     }
                 }

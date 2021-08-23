@@ -3,10 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:paddingEnd="14dp">
 
     <TextView
-        android:id="@+id/repeat_time"
+        android:id="@+id/todo_tv_repeat_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
@@ -27,13 +28,13 @@
         tools:text="周一" />
 
     <ImageView
-        android:id="@+id/repeat_time_iv_cancel"
+        android:id="@+id/todo_iv_repeat_time_cancel"
         android:layout_width="15dp"
         android:layout_height="15dp"
-        app:layout_constraintBottom_toBottomOf="@id/repeat_time"
+        app:layout_constraintBottom_toBottomOf="@id/todo_tv_repeat_time"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="@id/repeat_time"
+        app:layout_constraintStart_toStartOf="@id/todo_tv_repeat_time"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0"
         app:srcCompat="@drawable/todo_ic_inner_thing_repeat_time_cancle" />
