@@ -134,4 +134,23 @@
     <string name="mine_string_about_us">关于我们</string>
     <string name="mine_string_setting">设置</string>
     <string name="mine_string_score_store">积分商城</string>
+
+    <!--    反馈编辑页-->
+    <string name="mine_feedback_toolbar_title">意见反馈</string>
+    <string name="mine_feed_edit_title_tv">添加标题</string>
+    <string name="mine_feedback_edit_description_tv">请添加问题描述</string>
+    <string name="mine_feedback_edit_pic_tv">相关问题的截图或照片</string>
+    <string name="mine_feedback_edit_btn_tv">提交</string>
+    <string name="mine_stamp_back_iv">返回键</string>
+
+    <!--    意见与反馈页-->
+    <string name="mine_feedback_center_toolbar_title">意见与反馈</string>
+    <string name="mine_feedback_center_history_icon">历史反馈</string>
+    <string name="mine_feedback_center_normal_question">常见问题</string>
+    <string name="mine_feedback_center_btn_tv">意见反馈</string>
+    <string name="mine_feedback_center_qq_tv">实时反馈可添加QQ反馈群：</string>
+    <string name="mine_feedback_center_qq_num">57919844</string>
+    <string name="mine_feedback_edit_title_num">12</string>
+    <string name="mine_feedback_edit_description_num">%d/200</string>
+    <string name="mine_feedback_edit_pic_num">0/3</string>
 </resources>

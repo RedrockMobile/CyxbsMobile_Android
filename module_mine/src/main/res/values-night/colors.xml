@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--    反馈编辑页颜色-->
+    <color name="mine_feedback_edit_bg">#2D2D2D</color>
+    <!--    反馈添加标题颜色hint-->
+    <color name="mine_feedback_edit_title_hint">#66F0F0F2</color>
+    <!--    反馈添加标题颜色-->
+    <color name="mine_feedback_edit_title">#F0F0F2</color>
+    <!--    反馈内容描述颜色hint-->
+    <color name="mine_feedback_edit_description_hint">#66F0F0F2</color>
+    <!--    反馈内容描述颜色-->
+    <color name="mine_feedback_edit_description">#F0F0F2</color>
+    <!--    反馈图片文字颜色-->
+    <color name="mine_feedback_edit_pic">#99DFDFE3</color>
+
+
+    <!--    意见与反馈主界面颜色-->
+    <!--    历史反馈图标颜色-->
+    <color name="mine_feedback_center_history">#FFFFFF</color>
+    <!--    常见问题颜色-->
+    <color name="mine_feedback_center_normal_question">#F0F0F2</color>
+    <!--    下划线第一条-->
+    <color name="mine_feedback_edit_underline">#4DF8F9FC</color>
+    <!--    记录字数的颜色-->
+    <color name="mine_feedback_edit_num">#B3DFDFE3</color>
+    <!--    主界面顶部邮票中心颜色-->
+    <color name="mine_center_toolbar_title">#DFDFE3</color>
+    <!--    顶部详情标题颜色-->
+    <color name="mine_goods_toolbar_title_tv">#DFDFE3</color>
+
+</resources>

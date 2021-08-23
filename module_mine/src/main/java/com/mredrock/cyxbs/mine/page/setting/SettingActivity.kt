@@ -16,6 +16,7 @@ import com.mredrock.cyxbs.common.ui.BaseActivity
 import com.mredrock.cyxbs.common.utils.extensions.*
 import com.mredrock.cyxbs.main.MAIN_LOGIN
 import com.mredrock.cyxbs.mine.R
+import com.mredrock.cyxbs.mine.page.feedback.edit.ui.FeedbackEditActivity
 import com.mredrock.cyxbs.mine.page.security.activity.SecurityActivity
 import com.mredrock.cyxbs.mine.util.apiService
 import com.mredrock.cyxbs.mine.util.ui.WarningDialog
@@ -61,6 +62,7 @@ class SettingActivity : BaseActivity() {
         mine_setting_fm_security.setOnClickListener { doIfLogin { startActivity<SecurityActivity>() } }
         //屏蔽此人
         mine_setting_fm_shield_person.setOnClickListener { doIfLogin { ARouter.getInstance().build(QA_MY_IGNORE).navigation() } }
+        mine_setting_fm_test.setOnClickListener{startActivity<FeedbackEditActivity>()}
         //退出登录
         mine_setting_btn_exit.setOnClickListener { doIfLogin { onExitClick() } }
     }

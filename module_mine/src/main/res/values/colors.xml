@@ -1,4 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <!--    反馈编辑页颜色-->
+    <color name="mine_feedback_edit_bg">#FFFFFF</color>
+    <!--    反馈添加标题颜色hint-->
+    <color name="mine_feedback_edit_title_hint">#6615315B</color>
+    <!--    反馈添加标题颜色-->
+    <color name="mine_feedback_edit_title">#15315B</color>
+    <!--    反馈内容描述颜色hint-->
+    <color name="mine_feedback_edit_description_hint">#6615315B</color>
+    <!--    反馈内容描述颜色-->
+    <color name="mine_feedback_edit_description">#15315B</color>
+    <!--    反馈图片文字颜色-->
+    <color name="mine_feedback_edit_pic">#9915315B</color>
 
+
+    <!--    意见与反馈主界面颜色-->
+    <!--    历史反馈图标颜色-->
+    <color name="mine_feedback_center_history">#15315B</color>
+    <!--    常见问题颜色-->
+    <color name="mine_feedback_center_normal_question">#15315B</color>
+    <!--    下划线第一条-->
+    <color name="mine_feedback_edit_underline">#4DBDCCE5</color>
+    <!--    记录字数的颜色-->
+    <color name="mine_feedback_edit_num">#B32A4E84</color>
+    <!--    主界面顶部邮票中心颜色-->
+    <color name="mine_center_toolbar_title">#15315B</color>
+    <!--    顶部详情标题颜色-->
+    <color name="mine_goods_toolbar_title_tv">#15315B</color>
 </resources>

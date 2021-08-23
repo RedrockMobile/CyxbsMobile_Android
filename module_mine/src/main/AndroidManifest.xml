@@ -3,6 +3,8 @@
     package="com.mredrock.cyxbs.mine">
 
     <application android:theme="@style/AppTheme">
+        <activity android:name=".page.feedback.edit.ui.FeedbackEditActivity"/>
+        <activity android:name=".page.feedback.center.ui.FeedbackCenterActivity"/>
         <activity android:name=".page.setting.SettingActivity"></activity>
         <activity android:name=".page.security.activity.FindPasswordActivity"/>
         <activity android:name=".page.security.activity.ForgetPasswordActivity"/>

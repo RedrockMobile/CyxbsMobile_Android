@@ -10,7 +10,7 @@ import io.reactivex.disposables.Disposable
 /**
  * Created By jay68 on 2018/8/23.
  */
-open class BaseViewModel : ViewModel() {
+open class BaseViewModel : ViewModel() ,IVM{
     val toastEvent: MutableLiveData<Int> by lazy { SingleLiveEvent<Int>() }
     val longToastEvent: MutableLiveData<Int> by lazy { SingleLiveEvent<Int>() }
     val progressDialogEvent: MutableLiveData<ProgressDialogEvent> by lazy { SingleLiveEvent<ProgressDialogEvent>() }
