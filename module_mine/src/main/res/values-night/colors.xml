@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--    feedback-->
+    <color name="mine_feedback_toolbar_text_color">#F0F0F2</color>
+    <color name="mine_feedback_divider_color">#303031</color>
+    <color name="mine_feedback_recycle_item_title_color">#F0F0F2</color>
+    <color name="mine_feedback_recycle_item_data_color">#A5A5A8</color>
+    <color name="mine_feedback_bg_color_not_reply">#FFE8E5</color>
+    <color name="mine_feedback_bg_color_reply">#0BCCF0</color>
+    <color name="mine_feedback_cards_background_color">#FFFFFF</color>
+    <color name="mine_feedback_cards_title_color">#F0F0F2</color>
+    <color name="mine_feedback_cards_content_text_color">#F0F0F2</color>
+    <color name="mine_feedback_label_text_color">#000101</color>
+    <color name="mine_feedback_reply_date_text_color">#F0F0F2</color>
+    <color name="mine_feedback_label_bg_color">
+        #5A5A5A
+    </color>
+    <color name="mine_feedback_no_reply_content_color">#DFDFE3</color>
+
+</resources>

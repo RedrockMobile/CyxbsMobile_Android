@@ -1,4 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <!--    feedback-->
+    <color name="mine_feedback_toolbar_text_color">#15315B</color>
+    <color name="mine_feedback_divider_color">#E3E8F0</color>
+    <color name="mine_feedback_bg_color_reply">#E8F0FC</color>
+    <color name="mine_feedback_recycle_item_title_color">#15315B</color>
+    <color name="mine_feedback_recycle_item_data_color">#677895</color>
+    <color name="mine_feedback_bg_color_not_reply">#FFE8E5</color>
+    <color name="mine_feedback_cards_background_color">#FFFFFF</color>
+    <color name="mine_feedback_cards_title_color">#15315B</color>
+    <color name="mine_feedback_cards_content_text_color">#15315B</color>
+    <color name="mine_feedback_label_text_color">#7A99CC</color>
+    <color name="mine_feedback_reply_date_text_color">#15315B</color>
+    <color name="mine_feedback_label_bg_color">#E8F0FC</color>
+    <color name="mine_feedback_no_reply_content_color">#112C54</color>
 
 </resources>

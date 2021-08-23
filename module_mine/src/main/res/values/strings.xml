@@ -134,4 +134,18 @@
     <string name="mine_string_about_us">关于我们</string>
     <string name="mine_string_setting">设置</string>
     <string name="mine_string_score_store">积分商城</string>
+
+    <!--    feedback-->
+    <string name="mine_feedback_back_ic_description">返回键</string>
+    <string name="mine_feedback_toolbar_text">历史反馈</string>
+    <string name="mine_feedback_recycle_item_test_date">2021/07/25 13:44</string>
+    <string name="mine_feedback_recycle_item_reply_text">已回复</string>
+    <string name="mine_feedback_recycle_item_test_title">参加买一送一活动</string>
+    <string name="mine_feedback_feedback_date_text">2021/07/25 13:44</string>
+    <string name="mine_feedback_cards_title">参与买一送一活动</string>
+    <string name="mine_feedback_reply_date_test_text">2021/07/25 15:44</string>
+    <string name="mine_feedback_reply_content_text">回复：你的问题我们已收到，感谢同学你的反馈。</string>
+    <string name="mine_feedback_none_reply_text_content">还没有收到回复哦~再等等吧！</string>
+    <string name="mine_feedback_label_text">#账号问题</string>
+    <string name="mine_feedback_feedback_content_text">今天喝了脉动呐，吃了果冻呐，打了电动呐， 还是挡不住对你的心动呐~</string>
 </resources>

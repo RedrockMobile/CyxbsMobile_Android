@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".page.feedback.history.detail.HistoryDetailActivity">
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/ll_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/mine_feedback_toolbar_height"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:background="@color/common_transparent_background"
+            android:backgroundTint="@color/common_transparent_background"
+            android:contentDescription="@string/mine_feedback_back_ic_description"
+            android:gravity="center"
+            app:borderWidth="@dimen/mine_feedback_toolbar_fab_boder_width"
+            app:elevation="@dimen/mine_feedback_toobar_fab_elevation"
+            app:fabCustomSize="@dimen/mine_feedback_toolbar_fab_size"
+            app:pressedTranslationZ="@dimen/mine_feedback_translaztion_z_size"
+            app:srcCompat="@drawable/mine_ic_feedback_back_arrow" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:text="@string/mine_feedback_toolbar_text"
+            android:textColor="@color/mine_feedback_toolbar_text_color"
+            android:textSize="@dimen/mine_feedback_toolbar_text_size"
+            android:textStyle="bold" />
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <View
+        android:id="@+id/mine_view"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/mine_feedback_divider_dimension"
+        android:layout_marginTop="@dimen/mine_feedback_toolbar_divider_margin_dimension"
+        android:background="@color/mine_feedback_divider_color"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ll_toolbar" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tv_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/mine_feedback_feedback_date_text_margin"
+        android:textColor="@color/mine_feedback_toolbar_text_color"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/mine_view"
+        tools:text="@string/mine_feedback_feedback_date_text" />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cv_feedback"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/mine_feedback_cards_height"
+        android:layout_marginStart="@dimen/mine_feedback_cards_horizontal_margins"
+        android:layout_marginTop="@dimen/mine_feedback_cards_margin_top_dimension"
+        android:layout_marginEnd="@dimen/mine_feedback_cards_horizontal_margins"
+        android:background="@color/mine_feedback_cards_background_color"
+        app:cardCornerRadius="@dimen/mine_feedback_cards_radius"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_date">
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:paddingStart="@dimen/mine_feedback_cards_horizontal_paddings"
+            android:paddingTop="@dimen/mine_feedback_cards_vertical_paddings"
+            android:paddingEnd="@dimen/mine_feedback_cards_horizontal_margins"
+            android:paddingBottom="@dimen/mine_feedback_cards_vertical_paddings">
+
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_feedback_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/mine_feedback_cards_title"
+                android:textColor="@color/mine_feedback_cards_title_color"
+                android:textSize="@dimen/mine_feedback_cards_title_text_size"
+                android:textStyle="bold" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_content"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/mine_feedback_cards_content_margin_top"
+                android:text="@string/mine_feedback_feedback_content_text"
+                android:textColor="@color/mine_feedback_cards_content_text_color"
+                android:textSize="@dimen/mine_feedback_cards_content_text_size" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/mine_feedback_banner_marigin_top_dimension"
+                android:orientation="horizontal">
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/iv_pic_1"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_gravity="start"
+                    app:cardCornerRadius="@dimen/mine_feedback_banner_radius"
+                    app:cardElevation="@dimen/mine_feedback_banner_elevation"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintDimensionRatio="h,1:1"
+                    app:layout_constraintEnd_toStartOf="@id/iv_pic_2"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        app:srcCompat="@drawable/mine_feedback_feedback_image_holder">
+
+                    </androidx.appcompat.widget.AppCompatImageView>
+
+                </androidx.cardview.widget.CardView>
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/iv_pic_2"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="@dimen/mine_feedback_banner_interval"
+                    app:cardCornerRadius="@dimen/mine_feedback_banner_radius"
+                    app:cardElevation="@dimen/mine_feedback_banner_elevation"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintDimensionRatio="h,1:1"
+                    app:layout_constraintEnd_toStartOf="@id/iv_pic_3"
+                    app:layout_constraintStart_toEndOf="@id/iv_pic_1"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        app:srcCompat="@drawable/mine_feedback_feedback_image_holder"
+
+                        />
+
+                </androidx.cardview.widget.CardView>
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/iv_pic_3"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_gravity="end"
+                    android:layout_marginStart="@dimen/mine_feedback_banner_interval"
+                    app:cardCornerRadius="@dimen/mine_feedback_banner_radius"
+                    app:cardElevation="@dimen/mine_feedback_banner_elevation"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintDimensionRatio="h,1:1"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/iv_pic_2"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/mine_feedback_feedback_image_holder">
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        app:srcCompat="@drawable/mine_feedback_feedback_image_holder"
+
+                        />
+                </androidx.cardview.widget.CardView>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/iv_feedback_label"
+                android:layout_width="@dimen/mine_feedback_label_text_width"
+                android:layout_height="@dimen/mine_feedback_label_text_height"
+                android:layout_marginTop="@dimen/mine_feedback_label_text_margin_top"
+                android:background="@drawable/mine_feedback_label_bg"
+                android:text="@string/mine_feedback_label_text"
+                android:textColor="@color/mine_feedback_label_text_color" />
+
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+    </androidx.cardview.widget.CardView>
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tv_reply_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/mine_feedback_reply_date_margin_top"
+        android:text="@string/mine_feedback_reply_date_test_text"
+        android:textColor="@color/mine_feedback_reply_date_text_color"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/cv_feedback" />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cv_reply"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/mine_feedback_reply_card_height"
+        android:layout_marginStart="@dimen/mine_feedback_reply_card_horizontal_margin"
+        android:layout_marginTop="@dimen/mine_feedback_reply_card_margin_top"
+        android:layout_marginEnd="@dimen/mine_feedback_reply_card_horizontal_margin"
+        app:cardCornerRadius="@dimen/mine_feedback_cards_radius"
+        app:layout_constraintTop_toBottomOf="@id/tv_reply_date">
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:paddingStart="@dimen/mine_feedback_reply_card_horizontal_padding"
+            android:paddingTop="@dimen/mine_feedback_reply_card_vertical_padding"
+            android:paddingEnd="@dimen/mine_feedback_reply_card_horizontal_padding"
+            android:paddingBottom="@dimen/mine_feedback_reply_card_vertical_padding">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_reply_content"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/mine_feedback_reply_content_text"
+                android:textColor="@color/mine_feedback_cards_content_text_color" />
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/iv_reply_pic"
+                android:layout_width="@dimen/mine_feedback_reply_card_size"
+                android:layout_height="@dimen/mine_feedback_reply_card_size"
+                android:layout_marginTop="@dimen/mine_feedback_reply_card_matgin_top"
+                android:background="@drawable/mine_feedback_round_card_shape"
+                app:cardCornerRadius="@dimen/mine_feedback_banner_radius"
+                app:cardElevation="0dp">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/iv_reply_pic_1"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:srcCompat="@drawable/mine_feedback_reply_image_holder" />
+
+
+            </androidx.cardview.widget.CardView>
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+    </androidx.cardview.widget.CardView>
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/mine_feedback_none_reply_margin_bottom"
+        android:text="@string/mine_feedback_none_reply_text_content"
+        android:textColor="@color/mine_feedback_no_reply_content_color"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

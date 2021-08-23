@@ -29,6 +29,8 @@
             android:name="com.yalantis.ucrop.UCropActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" />
+        <activity android:name=".page.feedback.history.detail.HistoryDetailActivity" />
+        <activity android:name=".page.feedback.history.list.HistoryListActivity" />
     </application>
 
 </manifest>
