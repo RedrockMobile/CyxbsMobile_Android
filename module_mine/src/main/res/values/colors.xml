@@ -14,5 +14,6 @@
     <color name="mine_feedback_reply_date_text_color">#15315B</color>
     <color name="mine_feedback_label_bg_color">#E8F0FC</color>
     <color name="mine_feedback_no_reply_content_color">#112C54</color>
+    <color name="mine_feedback_not_reply_color">#FFE8E5</color>
 
 </resources>

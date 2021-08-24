@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <import
+            alias="DateUtils"
+            type="com.mredrock.cyxbs.mine.page.feedback.utils.DateUtils" />
+
+        <variable
+            name="data"
+            type="com.mredrock.cyxbs.mine.page.feedback.history.list.bean.History" />
+
+        <variable
+            name="itemClickListener"
+            type="com.mredrock.cyxbs.mine.page.feedback.adapter.RvListAdapter.ItemClickListener" />
+    </data>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/mine_feedback_recycle_item_height_dimension"
+        android:onClick="@{(v)->itemClickListener.clicked(v,data)}"
+        android:paddingStart="@dimen/mine_feedback_recycle_item_padding_horizontal"
+        android:paddingEnd="@dimen/mine_feedback_recycle_item_padding_horizontal">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:text="@{data.title}"
+            android:textColor="@color/mine_feedback_recycle_item_title_color"
+            android:textSize="@dimen/mine_feedback_recycle_item_title_text_size"
+            android:textStyle="bold"
+            tools:text="@string/mine_feedback_recycle_item_test_title" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_title"
+            android:layout_marginTop="@dimen/mine_feedback_recycle_item_date_margin_top_dimension"
+            android:text="@{DateUtils.longToDate(`yyyy/MM/dd HH:mm`,data.date)}"
+            android:textColor="@color/mine_feedback_recycle_item_data_color"
+            android:textSize="@dimen/mine_feedback_recycle_item_date_text_size"
+            tools:text="@string/mine_feedback_recycle_item_test_date" />
+
+        <com.mredrock.cyxbs.mine.page.feedback.history.widget.RightTopPointButton
+            android:layout_width="@dimen/mine_feedback_recycle_item_btn_width"
+            android:layout_height="@dimen/mine_feedback_recycle_item_btn_height"
+            android:layout_alignBottom="@id/tv_date"
+            android:layout_alignParentEnd="true"
+            android:background="@drawable/mine_feedback_bg_round_reply"
+            android:clickable="false"
+            android:text="@{data.replyOrNot ? `已回复` : `未回复`}"
+            android:textSize="11sp"
+            app:backgroundFalse="@{@drawable/mine_feedback_bg_round_not_reply}"
+            app:backgroundTrue="@{@drawable/mine_feedback_bg_round_reply}"
+            app:pointVisible="@{data.replyOrNot &amp; (!data.isRead)}"
+            app:viewState="@{data.replyOrNot}"
+            tools:text="@string/mine_feedback_recycle_item_reply_text" />
+
+    </RelativeLayout>
+</layout>

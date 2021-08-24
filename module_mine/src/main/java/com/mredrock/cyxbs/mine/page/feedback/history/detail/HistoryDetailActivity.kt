@@ -1,12 +1,20 @@
 package com.mredrock.cyxbs.mine.page.feedback.history.detail
 
-import androidx.appcompat.app.AppCompatActivity
-import android.os.Bundle
 import com.mredrock.cyxbs.mine.R
+import com.mredrock.cyxbs.mine.databinding.MineActivityHistoryDetailBinding
+import com.mredrock.cyxbs.mine.page.feedback.base.ui.BaseMVPVMActivity
 
-class HistoryDetailActivity : AppCompatActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.mine_activity_history_detail)
+class HistoryDetailActivity :
+    BaseMVPVMActivity<HistoryDetailViewModel, MineActivityHistoryDetailBinding, HistoryDetailPresenter>() {
+
+    override fun createPresenter(): HistoryDetailPresenter = HistoryDetailPresenter()
+
+    override fun getLayoutId(): Int = R.layout.mine_activity_history_detail
+
+    override fun initView() {
+        binding?.apply {
+            vm = viewModel
+        }
     }
+
 }

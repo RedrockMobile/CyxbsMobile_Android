@@ -18,4 +18,26 @@
         <attr name="shadowColor" format="color" />
         <attr name="shadowRadius" format="dimension" />
     </declare-styleable>
+
+
+    <!--    右上方带有圆点的Button-->
+    <declare-styleable name="RightTopPointButton" tools:ignore="ResourceName">
+        <attr name="pointColor" format="color" />
+        <attr name="pointSize" format="dimension" />
+        <attr name="pointVisible" format="boolean" />
+    </declare-styleable>
+
+
+    <!--<declare-styleable name="RightTopDrawableImage" tools:ignore="ResourceName">
+        <attr name="rightTopDrawable" format="reference" />
+    </declare-styleable>-->
+
+
+    <declare-styleable name="RightTopDrawableLayout" tools:ignore="ResourceName">
+        <attr name="rightTopDrawable" format="reference" />
+        <attr name="rightTopDrawableSize" format="dimension" />
+
+    </declare-styleable>
+
+
 </resources>
