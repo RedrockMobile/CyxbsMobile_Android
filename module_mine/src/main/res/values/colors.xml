@@ -39,4 +39,10 @@
     <color name="mine_center_toolbar_title">#15315B</color>
     <!--    顶部详情标题颜色-->
     <color name="mine_goods_toolbar_title_tv">#15315B</color>
+    <!--    item的题目颜色-->
+    <color name="mine_item_center_title">#2A4E84</color>
+    <!--    item的下划线颜色-->
+    <color name="mine_item_v_underline">#4DBDCCE5</color>
+    <!--    详情页内容颜色-->
+    <color name="mine_feedback_detail_content_tv">#15315B</color>
 </resources>

@@ -13,6 +13,6 @@ interface FeedbackCenterContract {
     }
 
     interface IVM {
-
+        fun setContentList(value:List<String>)
     }
 }
