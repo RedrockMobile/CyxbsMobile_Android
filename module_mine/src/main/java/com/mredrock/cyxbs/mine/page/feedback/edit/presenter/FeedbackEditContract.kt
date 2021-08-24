@@ -1,6 +1,7 @@
 package com.mredrock.cyxbs.mine.page.feedback.edit.presenter
 
 import android.text.TextWatcher
+import android.widget.CompoundButton
 
 /**
  * @Date : 2021/8/23   21:00
@@ -9,7 +10,7 @@ import android.text.TextWatcher
  * @Request : God bless my code
  **/
 interface FeedbackEditContract {
-    interface IPresenter{
+    interface IPresenter: CompoundButton.OnCheckedChangeListener{
 
     }
 

@@ -62,6 +62,65 @@
 
         </RelativeLayout>
 
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/chip_group"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
+            android:theme="@style/Theme.MaterialComponents"
+            app:layout_constraintBottom_toTopOf="@+id/mine_guideline14"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/mine_guideline21"
+            app:singleSelection="true">
+
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_one"
+                style="@style/Widget.MaterialComponents.Chip.MyChoice"
+                app:chipSurfaceColor="#00000000"
+                app:chipStrokeColor="@color/mine_edit_chip_border_un"
+                app:chipStrokeWidth="1dp"
+                android:textColor="@color/mine_edit_chip_tv_un"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="意见建议" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_two"
+                style="@style/Widget.MaterialComponents.Chip.MyChoice"
+                app:chipSurfaceColor="#00000000"
+                app:chipStrokeColor="@color/mine_edit_chip_border_un"
+                app:chipStrokeWidth="1dp"
+                android:textColor="@color/mine_edit_chip_tv_un"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="系统问题" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_three"
+                style="@style/Widget.MaterialComponents.Chip.MyChoice"
+                app:chipSurfaceColor="#00000000"
+                app:chipStrokeColor="@color/mine_edit_chip_border_un"
+                app:chipStrokeWidth="1dp"
+                android:textColor="@color/mine_edit_chip_tv_un"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="账号问题" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_four"
+                style="@style/Widget.MaterialComponents.Chip.MyChoice"
+                app:chipSurfaceColor="#00000000"
+                app:chipStrokeColor="@color/mine_edit_chip_border_un"
+                app:chipStrokeWidth="1dp"
+                android:textColor="@color/mine_edit_chip_tv_un"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="其他" />
+        </com.google.android.material.chip.ChipGroup>
+
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/mine_guideline14"
             android:layout_width="wrap_content"
@@ -251,6 +310,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/mine_guideline17"
             tools:ignore="TouchTargetSizeCheck" />
+
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/mine_guideline21"

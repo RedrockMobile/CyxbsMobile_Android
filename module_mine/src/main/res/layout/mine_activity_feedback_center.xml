@@ -59,6 +59,7 @@
                 android:textStyle="bold" />
 
             <ImageView
+                android:id="@+id/iv_history"
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
                 android:layout_alignParentEnd="true"
@@ -79,7 +80,7 @@
             app:layout_constraintGuide_percent="0.18" />
 
         <TextView
-            android:id="@+id/mine_textview"
+            android:id="@+id/tv_normal_question"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
@@ -89,7 +90,7 @@
             android:textStyle="bold"
             app:layout_constraintBottom_toTopOf="@+id/mine_guideline22"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.045"
+            app:layout_constraintHorizontal_bias="0"
             app:layout_constraintStart_toStartOf="parent" />
 
         <androidx.constraintlayout.widget.Guideline
@@ -100,7 +101,7 @@
             app:layout_constraintGuide_percent="0.84" />
 
         <Button
-            android:id="@+id/mine_button2"
+            android:id="@+id/btn_question"
             android:layout_width="155dp"
             android:layout_height="39dp"
             android:background="@drawable/mine_shape_edit_btn_bg"
@@ -120,19 +121,23 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/mine_button2">
+            app:layout_constraintTop_toBottomOf="@+id/btn_question">
+
             <TextView
+                android:id="@+id/tv_qq_one"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="11sp"
                 android:text="@string/mine_feedback_center_qq_tv"
-                android:textColor="#ABBCDB"/>
+                android:textColor="#ABBCDB"
+                android:textSize="11sp" />
+
             <TextView
+                android:id="@+id/tv_qq_two"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="11sp"
                 android:text="@string/mine_feedback_center_qq_num"
-                android:textColor="#0BCCF0"/>
+                android:textColor="#0BCCF0"
+                android:textSize="11sp" />
         </LinearLayout>
 
         <androidx.recyclerview.widget.RecyclerView
@@ -140,7 +145,6 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="8dp"
             android:layout_marginEnd="16dp"
             app:layout_constraintBottom_toTopOf="@+id/mine_guideline23"
             app:layout_constraintEnd_toEndOf="parent"

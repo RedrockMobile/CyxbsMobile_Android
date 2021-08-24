@@ -41,6 +41,10 @@ class FeedbackEditActivity : BaseMVPVMActivity<FeedbackEditViewModel, MineActivi
         binding?.apply {
             etEditDescription.addTextChangedListener(presenter?.DesTextWatcher())
             etEditTitle.addTextChangedListener(presenter?.TitleTextWatcher())
+            chipOne.setOnCheckedChangeListener(presenter)
+            chipTwo.setOnCheckedChangeListener(presenter)
+            chipThree.setOnCheckedChangeListener(presenter)
+            chipFour.setOnCheckedChangeListener(presenter)
         }
     }
 

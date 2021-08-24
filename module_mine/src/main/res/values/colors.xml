@@ -12,6 +12,18 @@
     <color name="mine_feedback_edit_description">#15315B</color>
     <!--    反馈图片文字颜色-->
     <color name="mine_feedback_edit_pic">#9915315B</color>
+    <!--    chip选中背景颜色-->
+    <color name="mine_edit_chip_selected">#1A4841E2</color>
+    <!--    chip选中背景颜色二-->
+    <color name="mine_edit_chip_selected_two">#1A5D5DF7</color>
+    <!--    chip边缘颜色-->
+    <color name="mine_edit_chip_border">#5D5DF7</color>
+    <!--    chip边缘未选中颜色-->
+    <color name="mine_edit_chip_border_un">#91A3C0</color>
+    <!--    chip字体选中颜色-->
+    <color name="mine_edit_chip_tv">#4F4AE9</color>
+    <!--    chip字体未选中颜色-->
+    <color name="mine_edit_chip_tv_un">#802A4E84</color>
 
 
     <!--    意见与反馈主界面颜色-->

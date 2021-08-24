@@ -15,5 +15,20 @@
     <style name="transparent_dialog" parent="Theme.AppCompat.Dialog">
         <item name="android:windowBackground">@null</item>
     </style>
+    <style name="Widget.MaterialComponents.Chip.MyChoice" parent="Base.Widget.MaterialComponents.Chip">
+        <item name="android:checkable">true</item>
+
+        <item name="chipIconVisible">false</item>
+        <item name="checkedIconVisible">false</item>
+        <item name="closeIconVisible">false</item>
+
+        <item name="checkedIcon">@drawable/ic_mtrl_chip_checked_black</item>
+
+        <item name="android:textColor">@color/mtrl_choice_chip_text_color</item>
+
+        <item name="chipBackgroundColor">@color/mine_selector_edit_chip</item>
+        <item name="rippleColor">@color/mtrl_choice_chip_ripple_color</item>
+
+    </style>
 
 </resources>
