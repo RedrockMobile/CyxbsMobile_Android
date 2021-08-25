@@ -17,7 +17,6 @@
         android:onClick="@{eventHandler::onItemClick}"
         android:layout_height="57dp">
 
-
         <TextView
             android:id="@+id/tv_center_title"
             android:layout_width="wrap_content"
