@@ -3,9 +3,9 @@ package com.mredrock.cyxbs.mine.page.feedback.base.ui
 import android.os.Bundle
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
-import com.mredrock.cyxbs.mine.page.feedback.base.presenter.BasePresenter
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
+import com.mredrock.cyxbs.mine.page.feedback.base.presenter.BasePresenter
 
 /**
  *@author ZhiQiang Tu

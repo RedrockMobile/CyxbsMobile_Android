@@ -13,17 +13,24 @@ import com.mredrock.cyxbs.mine.page.feedback.history.detail.bean.Reply
  */
 class HistoryDetailViewModel : BaseViewModel() {
     //反馈的信息
-    private val _feedback:MutableLiveData<Feedback> = MutableLiveData()
-    val feedback:LiveData<Feedback> = _feedback
-    fun setFeedback(value:Feedback){
+    private val _feedback: MutableLiveData<Feedback> = MutableLiveData()
+    val feedback: LiveData<Feedback> = _feedback
+    fun setFeedback(value: Feedback) {
         _feedback.value = value
     }
 
     //回复的信息
-    private val _reply:MutableLiveData<Reply> = MutableLiveData()
-    val reply:LiveData<Reply> = _reply
-    fun setReply(value: Reply){
+    private val _reply: MutableLiveData<Reply> = MutableLiveData()
+    val reply: LiveData<Reply> = _reply
+    fun setReply(value: Reply) {
         _reply.value = value
+    }
+
+    //reply pics url
+    private val _replyPicUrls: MutableLiveData<List<String>> = MutableLiveData()
+    val replyPicUrls: LiveData<List<String>> = _replyPicUrls
+    fun setReplyPicUrls(value: List<String>) {
+        _replyPicUrls.value = value
     }
 
 }

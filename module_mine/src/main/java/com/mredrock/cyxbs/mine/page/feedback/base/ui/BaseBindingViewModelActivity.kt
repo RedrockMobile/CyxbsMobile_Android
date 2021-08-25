@@ -11,16 +11,16 @@ import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
  *@time 2021/8/5  10:49
  *@signature 我们不明前路，却已在路上
  */
-abstract class BaseBindingViewModelActivity<VM : BaseViewModel,T : ViewDataBinding> :
+abstract class BaseBindingViewModelActivity<VM : BaseViewModel, T : ViewDataBinding> :
     BaseViewModelActivity<VM>() {
 
-    protected var binding:T? = null
+    protected var binding: T? = null
 
-    abstract fun getLayoutId():Int
+    abstract fun getLayoutId(): Int
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = DataBindingUtil.setContentView(this,getLayoutId())
+        binding = DataBindingUtil.setContentView(this, getLayoutId())
         binding?.lifecycleOwner = this
 
         //初始化view

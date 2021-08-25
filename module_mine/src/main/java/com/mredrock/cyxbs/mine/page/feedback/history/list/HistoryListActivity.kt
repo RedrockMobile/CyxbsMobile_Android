@@ -1,17 +1,28 @@
 package com.mredrock.cyxbs.mine.page.feedback.history.list
 
 import android.content.Intent
+import android.net.Uri
 import android.view.View
 import androidx.lifecycle.LiveData
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.common.utils.extensions.toast
 import com.mredrock.cyxbs.mine.R
 import com.mredrock.cyxbs.mine.databinding.MineActivityHistoryListBinding
 import com.mredrock.cyxbs.mine.page.feedback.adapter.RvListAdapter
+import com.mredrock.cyxbs.mine.page.feedback.adapter.rv.RvAdapter
+import com.mredrock.cyxbs.mine.page.feedback.adapter.rv.RvBinder
 import com.mredrock.cyxbs.mine.page.feedback.base.ui.BaseMVPVMActivity
 import com.mredrock.cyxbs.mine.page.feedback.history.detail.HistoryDetailActivity
+import com.mredrock.cyxbs.mine.page.feedback.history.list.adapter.PicBannerBinderAdd
+import com.mredrock.cyxbs.mine.page.feedback.history.list.adapter.PicBannerBinderPic
 import com.mredrock.cyxbs.mine.page.feedback.history.list.bean.History
+import com.mredrock.cyxbs.mine.page.feedback.history.list.bean.Pic
+import com.mredrock.cyxbs.mine.page.feedback.utils.CHOOSE_FEED_BACK_PIC
+import com.mredrock.cyxbs.mine.page.feedback.utils.selectImageFromAlbum
+import com.mredrock.cyxbs.mine.page.feedback.utils.setSelectedPhotos
+import java.util.*
 
 class HistoryListActivity :
     BaseMVPVMActivity<HistoryListViewModel, MineActivityHistoryListBinding, HistoryListPresenter>() {
@@ -19,6 +30,10 @@ class HistoryListActivity :
 
     private val rvAdapter by lazy {
         RvListAdapter()
+    }
+
+    private val rvPicAdapter by lazy {
+        RvAdapter()
     }
 
     override fun createPresenter(): HistoryListPresenter = HistoryListPresenter()
@@ -31,6 +46,12 @@ class HistoryListActivity :
         binding?.rvHistoryList?.apply {
             adapter = rvAdapter
             layoutManager = LinearLayoutManager(this@HistoryListActivity)
+        }
+
+///////////////////////////////////////
+        binding?.rvBanner?.apply {
+            adapter = rvPicAdapter
+            layoutManager = GridLayoutManager(this@HistoryListActivity, 3)
         }
     }
 
@@ -56,14 +77,63 @@ class HistoryListActivity :
             }
         )
 
-        binding?.apply {
-            includeToolbar.fabBack.setOnSingleClickListener { finish() }
+        binding?.includeToolBar?.fabBack?.setOnSingleClickListener {
+            finish()
         }
     }
 
     override fun observeData() {
         viewModel?.apply {
             observeRvList(listData)
+///////////////////////////////////////
+            observePics(uris)
+        }
+    }
+
+    ///////////////////////////////////////
+    private fun observePics(uris: LiveData<List<Uri>>) {
+        uris.observe(this) {
+            val list = mutableListOf<RvBinder<*>>().apply {
+                //添加上传的图片
+                addAll(
+                    it.map {
+                        Pic(it)
+                    }.map {
+                        PicBannerBinderPic(it).apply {
+                            setOnContentClickListener { view, i ->
+                                toast("内容被点击")
+                            }
+
+                            setOnIconClickListener { view, i ->
+                                toast("删除被点击")
+                                presenter?.removePic(i)
+                            }
+                        }
+                    }
+                )
+                //添加Add的图标
+                if (size < 3) {
+                    add(
+                        PicBannerBinderAdd().apply {
+                            setClickListener { view, i ->
+                                val list = ArrayList(viewModel?.uris?.value)
+                                setSelectedPhotos(list)
+                                toast("添加按钮被点击")
+                                this@HistoryListActivity.selectImageFromAlbum(3)
+                            }
+                        }
+                    )
+                }
+            }
+            rvPicAdapter.submitList(list)
+
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == CHOOSE_FEED_BACK_PIC) {
+            presenter?.dealPic(data)
         }
     }
 

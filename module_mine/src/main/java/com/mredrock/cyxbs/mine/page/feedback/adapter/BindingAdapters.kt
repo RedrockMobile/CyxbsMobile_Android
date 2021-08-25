@@ -1,6 +1,7 @@
 package com.mredrock.cyxbs.mine.page.feedback.adapter
 
 import android.graphics.drawable.Drawable
+import android.net.Uri
 import android.view.View
 import android.widget.ImageView
 import androidx.databinding.BindingAdapter
@@ -9,10 +10,10 @@ import com.bumptech.glide.Glide
 object BindingAdapters {
     @JvmStatic
     @BindingAdapter("showView")
-    fun showView(view: View?, show: Boolean?){
-        if (show == false){
+    fun showView(view: View?, show: Boolean?) {
+        if (show == false) {
             view?.visibility = View.GONE
-        }else{
+        } else {
             view?.visibility = View.VISIBLE
         }
     }
@@ -44,4 +45,16 @@ object BindingAdapters {
         if (!url.matches(Regex("http.+"))) return
         Glide.with(imageView).load(url).placeholder(placeholder).error(error).into(imageView)
     }
+
+    @JvmStatic
+    @BindingAdapter("localImage")
+    fun localImage(
+        imageView: ImageView?,
+        imageUri: Uri?,
+    ) {
+        imageView ?: return
+        imageUri ?: return
+        Glide.with(imageView).load(imageUri).into(imageView)
+    }
+
 }

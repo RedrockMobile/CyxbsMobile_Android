@@ -17,5 +17,7 @@
     <color name="mine_feedback_not_reply_color">#FFE8E5</color>
     <color name="mine_feedback_recycle_item_text_color">#7A99CC</color>
     <color name="mine_feedback_recycle_item_dividor_color">#E6ECF5</color>
+    <color name="mine_feedback_add_bg_color">#F7FAFF</color>
+    <color name="mine_feedback_add_fill_color">#E1EBFA</color>
 
 </resources>

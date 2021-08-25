@@ -10,10 +10,10 @@ import java.util.*
  */
 object DateUtils {
     @JvmStatic
-    fun longToDate(format:String,timePill:Long): String {
-        if(timePill == 0L) return ""
+    fun longToDate(format: String, timePill: Long): String {
+        if (timePill == 0L) return ""
         val date = Date(timePill)
-        val simpleFormat = SimpleDateFormat(format,Locale.CHINA)
+        val simpleFormat = SimpleDateFormat(format, Locale.CHINA)
         return simpleFormat.format(date) ?: ""
     }
 }

@@ -22,7 +22,8 @@ import java.lang.reflect.ParameterizedType
  *@time 2021/8/6  14:21
  *@signature 我们不明前路，却已在路上
  */
-abstract class BaseBindingSharedVMFragment<VM : BaseViewModel, T : ViewDataBinding> : BaseFragment() {
+abstract class BaseBindingSharedVMFragment<VM : BaseViewModel, T : ViewDataBinding> :
+    BaseFragment() {
     protected var binding: T? = null
     protected var shardViewModel: VM? = null
 
@@ -36,8 +37,20 @@ abstract class BaseBindingSharedVMFragment<VM : BaseViewModel, T : ViewDataBindi
 
     private fun configVM() {
         shardViewModel?.apply {
-            toastEvent.observe { str -> str?.let { CyxbsToast.makeText(context, it, Toast.LENGTH_SHORT).show() } }
-            longToastEvent.observe { str -> str?.let { CyxbsToast.makeText(context, it, Toast.LENGTH_LONG).show() } }
+            toastEvent.observe { str ->
+                str?.let {
+                    CyxbsToast.makeText(context,
+                        it,
+                        Toast.LENGTH_SHORT).show()
+                }
+            }
+            longToastEvent.observe { str ->
+                str?.let {
+                    CyxbsToast.makeText(context,
+                        it,
+                        Toast.LENGTH_LONG).show()
+                }
+            }
             progressDialogEvent.observe {
                 it ?: return@observe
                 // 确保只有一个对话框会被弹出
@@ -56,7 +69,7 @@ abstract class BaseBindingSharedVMFragment<VM : BaseViewModel, T : ViewDataBindi
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View? {
         super.onCreateView(inflater, container, savedInstanceState)
         //获取Binding并对binding进行配置
@@ -70,9 +83,9 @@ abstract class BaseBindingSharedVMFragment<VM : BaseViewModel, T : ViewDataBindi
         val viewModelFactory = getViewModelFactory()
         //获取viewModel
         activity?.apply {
-            shardViewModel = if (viewModelFactory == null){
+            shardViewModel = if (viewModelFactory == null) {
                 ViewModelProvider(this).get(getActivityVMClass())
-            }else{
+            } else {
                 getViewModelFactory()?.let {
                     ViewModelProvider(this,
                         it
@@ -92,11 +105,14 @@ abstract class BaseBindingSharedVMFragment<VM : BaseViewModel, T : ViewDataBindi
         }
     }
 
-    inline fun <T> LiveData<T>.observe(crossinline onChange: (T?) -> Unit) = observe(this@BaseBindingSharedVMFragment, Observer { onChange(value) })
-    inline fun <T> LiveData<T>.observeNotNull(crossinline onChange: (T) -> Unit) = observe(this@BaseBindingSharedVMFragment, Observer {
-        it ?: return@Observer
-        onChange(it)
-    })
+    inline fun <T> LiveData<T>.observe(crossinline onChange: (T?) -> Unit) =
+        observe(this@BaseBindingSharedVMFragment, Observer { onChange(value) })
+
+    inline fun <T> LiveData<T>.observeNotNull(crossinline onChange: (T) -> Unit) =
+        observe(this@BaseBindingSharedVMFragment, Observer {
+            it ?: return@Observer
+            onChange(it)
+        })
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         //初始化配置
@@ -112,7 +128,8 @@ abstract class BaseBindingSharedVMFragment<VM : BaseViewModel, T : ViewDataBindi
         observeData()
     }
 
-    private fun getActivityVMClass(): Class<VM> = (javaClass.genericSuperclass as ParameterizedType).actualTypeArguments[0] as Class<VM>
+    private fun getActivityVMClass(): Class<VM> =
+        (javaClass.genericSuperclass as ParameterizedType).actualTypeArguments[0] as Class<VM>
 
     protected open fun initConfiguration() {}
 

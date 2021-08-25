@@ -24,8 +24,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:onClick="@{(v)->itemClickListener.clicked(v,data)}"
-        android:background="?attr/selectableItemBackground"
-        android:paddingTop="16dp">
+        android:background="?attr/selectableItemBackground">
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tv_title"
@@ -33,6 +32,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:paddingStart="@dimen/mine_feedback_recycle_item_padding_horizontal"
+            android:layout_marginTop="16dp"
             android:paddingEnd="@dimen/mine_feedback_recycle_item_padding_horizontal"
             android:text="@{data.title}"
             android:textColor="@color/mine_feedback_recycle_item_title_color"

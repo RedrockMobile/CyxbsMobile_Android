@@ -44,23 +44,32 @@ class RightTopDrawableLayout @JvmOverloads constructor(
     }
 
     override fun onTouchEvent(event: MotionEvent?): Boolean {
-        if (event?.action == MotionEvent.ACTION_UP){
+        if (event?.action == MotionEvent.ACTION_UP) {
             val x = event?.x ?: 0F
             val y = event?.y ?: 0F
             val circleX = width - rightTopDrawableSize / 2
             val circleY = rightTopDrawableSize / 2
             //如果事件在1.2倍半径区域内视为点击成功
             val clickState =
-                (x - circleX).pow(2) + (y - circleY).pow(2) <= (0.5*rightTopDrawableSize*1.2).pow(2)
+                (x - circleX).pow(2) + (y - circleY).pow(2) <= (0.5 * rightTopDrawableSize * 1.2).pow(
+                    2)
             if (clickState) {
                 iconClicked?.invoke(this)
             } else {
-                if (x > 0 && x < width && y > 0 && y < height){
+                if (x > 0 && x < width && y > 0 && y < height) {
                     contentClicked?.invoke(this)
                 }
             }
         }
         return true
+    }
+
+    fun setOnContentClickListener(listener: (View) -> Unit) {
+        this.contentClicked = listener
+    }
+
+    fun setOnIconClickListener(listener: (View) -> Unit) {
+        this.iconClicked = listener
     }
 
     override fun dispatchDraw(canvas: Canvas?) {

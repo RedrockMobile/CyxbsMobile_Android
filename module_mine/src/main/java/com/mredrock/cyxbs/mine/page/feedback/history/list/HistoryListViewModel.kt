@@ -1,12 +1,11 @@
 package com.mredrock.cyxbs.mine.page.feedback.history.list
 
-import android.util.Log
+import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.mine.page.feedback.history.list.bean.History
-import com.mredrock.cyxbs.mine.util.extension.log
 
 /**
  *@author ZhiQiang Tu
@@ -14,7 +13,7 @@ import com.mredrock.cyxbs.mine.util.extension.log
  *@signature 我们不明前路，却已在路上
  */
 class HistoryListViewModel : BaseViewModel() {
-    companion object{
+    companion object {
         private const val TAG = "HistoryListViewModel"
     }
 
@@ -25,7 +24,15 @@ class HistoryListViewModel : BaseViewModel() {
         _listData.value = value
     }
 
-    val hasHistory: LiveData<Boolean> = Transformations.map(_listData){
+    val hasHistory: LiveData<Boolean> = Transformations.map(_listData) {
         it.isNotEmpty()
     }
+
+    private val _uris: MutableLiveData<List<Uri>> = MutableLiveData(listOf())
+    val uris: LiveData<List<Uri>> = _uris
+    fun setUris(value: List<Uri>) {
+        _uris.value = value
+    }
+
+
 }

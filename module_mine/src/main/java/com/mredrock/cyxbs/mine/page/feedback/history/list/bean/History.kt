@@ -9,6 +9,6 @@ data class History(
     val title: String,
     val date: Long,
     val replyOrNot: Boolean,
-    var isRead:Boolean,
-    val id:Long
+    var isRead: Boolean,
+    val id: Long,
 )

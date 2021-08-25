@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
     <dimen name="mine_main_small_s">11sp</dimen>
     <dimen name="mine_main_medium">18sp</dimen>
     <dimen name="mine_main_medium_l">22sp</dimen>
@@ -45,8 +45,9 @@
     <dimen name="mine_feedback_reply_card_matgin_top">10dp</dimen>
     <dimen name="mine_feedback_none_reply_margin_bottom">140dp</dimen>
     <dimen name="mine_feedback_toolbar_height">34dp</dimen>
+    <dimen name="mine_shop_card_elevation">0dp</dimen>
     <item name="mine_feedback_detail_rv_margin_top_size" type="dimen">29dp</item>
-    <item name="mine_feedback_recycle_item_bg_corner_radius"  type="dimen">10dp
+    <item name="mine_feedback_recycle_item_bg_corner_radius" type="dimen">10dp
     </item>
     <item name="mine_feedback_feedback_date_text_margin" type="dimen">23dp</item>
 </resources>

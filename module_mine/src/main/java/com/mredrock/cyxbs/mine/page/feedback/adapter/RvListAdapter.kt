@@ -46,8 +46,8 @@ class RvListAdapter : ListAdapter<History, HistoryItemHolder>(diff) {
         this.itemClickListener = listener
     }
 
-    interface ItemClickListener{
-        fun clicked(view: View, data :History)
+    interface ItemClickListener {
+        fun clicked(view: View, id: History)
     }
 
 }

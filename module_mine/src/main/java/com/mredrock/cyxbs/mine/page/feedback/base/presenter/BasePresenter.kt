@@ -41,7 +41,7 @@ abstract class BasePresenter</*V : IView,*/ VM : BaseViewModel> : LifecycleObser
      * @see com.mredrock.cyxbs.common.ui.BaseMVPVMFragment
      * @see com.mredrock.cyxbs.common.ui.BaseMVPVMActivity
      */
-    override fun onDetachVM(){
+    override fun onDetachVM() {
         vm = null
     }
 
@@ -49,7 +49,7 @@ abstract class BasePresenter</*V : IView,*/ VM : BaseViewModel> : LifecycleObser
      *  1.在Activity被Destroy掉的时候调用
      *  2.改方法是用以清楚Presenter中一些可能会存在内存泄漏的变量
      */
-    open fun clear(){}
+    open fun clear() {}
 
 
     /**
