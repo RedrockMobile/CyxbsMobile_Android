@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="position"
+            type="Integer" />
+
+        <variable
+            name="data"
+            type="com.mredrock.cyxbs.mine.page.feedback.history.list.adapter.PicBannerBinderAdd" />
+
+
+    </data>
+
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="4dp">
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/common_transparent_background"
+            app:cardElevation="0dp"
+            app:cardCornerRadius="5dp">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/mine_feedback_add_bg_color"
+                android:elevation="1dp"
+                android:onClick="@{(v)->data.onClicked(v,position)}"
+                android:padding="34dp"
+                app:srcCompat="@drawable/mine_ic_feedback_add_more" />
+
+        </androidx.cardview.widget.CardView>
+
+    </FrameLayout>
+</layout>

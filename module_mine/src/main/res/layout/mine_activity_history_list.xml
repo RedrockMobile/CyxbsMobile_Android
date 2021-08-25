@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="vm"
+            type="com.mredrock.cyxbs.mine.page.feedback.history.list.HistoryListViewModel" />
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true"
+        tools:context=".page.feedback.history.list.HistoryListActivity">
+
+        <include
+            layout="@layout/mine_layout_history_toolbar"
+            android:id="@+id/include_tool_bar"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/mine_feedback_toolbar_height"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <View
+            android:id="@+id/mine_view"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/mine_feedback_divider_dimension"
+            android:layout_marginTop="@dimen/mine_feedback_toolbar_divider_margin_dimension"
+            android:background="@color/mine_feedback_divider_color"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/include_tool_bar" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_history_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/mine_feedback_detail_rv_margin_top_size"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/mine_view"
+            app:showView="@{vm.hasHistory}"
+            tools:itemCount="4"
+            tools:listitem="@layout/mine_feedback_recycle_item_detail" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_none_history"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:text="@string/mine_feedback_none_history_text"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/mine_view"
+            app:showView="@{!vm.hasHistory}"
+            tools:text="@string/mine_feedback_none_history_text" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_banner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_none_history" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

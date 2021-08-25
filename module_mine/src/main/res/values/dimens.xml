@@ -1,6 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
     <dimen name="mine_main_small_s">11sp</dimen>
     <dimen name="mine_main_medium">18sp</dimen>
     <dimen name="mine_main_medium_l">22sp</dimen>
+
+    <!--    feedback-->
+    <dimen name="mine_feedback_toolbar_text_size">21sp</dimen>
+    <dimen name="mine_feedback_divider_dimension">1dp</dimen>
+    <dimen name="mine_feedback_toolbar_fab_boder_width">0dp</dimen>
+    <dimen name="mine_feedback_toobar_fab_elevation">0dp</dimen>
+    <dimen name="mine_feedback_toolbar_fab_size">27dp</dimen>
+    <dimen name="mine_feedback_translaztion_z_size">13dp</dimen>
+    <dimen name="mine_feedback_toolbar_divider_margin_dimension">4dp</dimen>
+    <dimen name="mine_feedback_recycle_item_height_dimension">59dp</dimen>
+    <dimen name="mine_feedback_recycle_item_padding_horizontal">16dp</dimen>
+    <dimen name="mine_feedback_recycle_item_date_margin_top_dimension">4dp</dimen>
+    <dimen name="mine_feedback_recycle_item_btn_width">53dp</dimen>
+    <dimen name="mine_feedback_recycle_item_btn_height">21dp</dimen>
+    <dimen name="mine_feedback_recycle_item_title_text_size">16sp</dimen>
+    <dimen name="mine_feedback_recycle_item_date_text_size">13sp</dimen>
+    <dimen name="mine_feedback_cards_height">273dp</dimen>
+    <dimen name="mine_feedback_cards_margin_top_dimension">12dp</dimen>
+    <dimen name="mine_feedback_cards_horizontal_margins">16dp</dimen>
+    <dimen name="mine_feedback_cards_radius">8dp</dimen>
+    <dimen name="mine_feedback_cards_horizontal_paddings">18dp</dimen>
+    <dimen name="mine_feedback_cards_vertical_paddings">20dp</dimen>
+    <dimen name="mine_feedback_cards_title_text_size">16sp</dimen>
+    <dimen name="mine_feedback_cards_content_margin_top">16dp</dimen>
+    <dimen name="mine_feedback_cards_content_text_size">15sp</dimen>
+    <dimen name="mine_feedback_banner_marigin_top_dimension">10dp</dimen>
+    <dimen name="mine_feedback_banner_radius">4dp</dimen>
+    <dimen name="mine_feedback_banner_interval">8dp</dimen>
+    <dimen name="mine_feedback_banner_elevation">0dp</dimen>
+    <dimen name="mine_feedback_label_text_width">76dp</dimen>
+    <dimen name="mine_feedback_label_text_height">22dp</dimen>
+    <dimen name="mine_feedback_label_text_margin_top">16dp</dimen>
+    <dimen name="mine_feedback_reply_date_margin_top">30dp</dimen>
+    <dimen name="mine_feedback_reply_card_height">190dp</dimen>
+    <dimen name="mine_feedback_reply_card_horizontal_margin">16dp</dimen>
+    <dimen name="mine_feedback_reply_card_margin_top">12dp</dimen>
+    <dimen name="mine_feedback_reply_card_horizontal_padding">16dp</dimen>
+    <dimen name="mine_feedback_reply_card_vertical_padding">20dp</dimen>
+    <dimen name="mine_feedback_reply_card_size">98dp</dimen>
+    <dimen name="mine_feedback_reply_card_matgin_top">10dp</dimen>
+    <dimen name="mine_feedback_none_reply_margin_bottom">140dp</dimen>
+    <dimen name="mine_feedback_toolbar_height">34dp</dimen>
+    <dimen name="mine_shop_card_elevation">0dp</dimen>
+    <item name="mine_feedback_detail_rv_margin_top_size" type="dimen">29dp</item>
+    <item name="mine_feedback_recycle_item_bg_corner_radius" type="dimen">10dp
+    </item>
+    <item name="mine_feedback_feedback_date_text_margin" type="dimen">23dp</item>
 </resources>

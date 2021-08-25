@@ -32,7 +32,7 @@ buildscript {
 
     dependencies {
         classpath "com.android.tools.build:gradle:${gradle_plugins}"
-        classpath deps.kotlin.gradle
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.20"
         classpath "com.alibaba:arouter-register:1.0.2"
         //walle多渠道打包
         classpath 'com.meituan.android.walle:plugin:1.1.7'

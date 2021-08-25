@@ -13,3 +13,4 @@ include ':module_app', ':lib_common', ':module_main', ':lib_account', ':lib_upda
         ':module_calendar', ':module_electricity', ':module_emptyroom',
         ':module_grades', ':module_volunteer', ':module_schoolcar',
         ':module_news', ':module_widget', ':module_redrock_home'
+include ':module_feedback'
