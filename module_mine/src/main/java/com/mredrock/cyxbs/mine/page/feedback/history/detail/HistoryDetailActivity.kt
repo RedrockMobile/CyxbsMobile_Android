@@ -1,5 +1,6 @@
 package com.mredrock.cyxbs.mine.page.feedback.history.detail
 
+import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.mine.R
 import com.mredrock.cyxbs.mine.databinding.MineActivityHistoryDetailBinding
 import com.mredrock.cyxbs.mine.page.feedback.base.ui.BaseMVPVMActivity
@@ -14,6 +15,12 @@ class HistoryDetailActivity :
     override fun initView() {
         binding?.apply {
             vm = viewModel
+        }
+    }
+
+    override fun initListener() {
+        binding?.apply {
+            includeToolbar.fabBack.setOnSingleClickListener { finish() }
         }
     }
 

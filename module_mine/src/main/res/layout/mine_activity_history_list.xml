@@ -16,38 +16,14 @@
         android:fitsSystemWindows="true"
         tools:context=".page.feedback.history.list.HistoryListActivity">
 
-        <androidx.appcompat.widget.LinearLayoutCompat
-            android:id="@+id/ll_toolbar"
+        <include layout="@layout/mine_layout_history_toolbar"
+            android:id="@+id/include_toolbar"
             android:layout_width="match_parent"
             android:layout_height="@dimen/mine_feedback_toolbar_height"
             android:orientation="horizontal"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:background="@color/common_transparent_background"
-                android:backgroundTint="@color/common_transparent_background"
-                android:contentDescription="@string/mine_feedback_back_ic_description"
-                android:gravity="center"
-                app:borderWidth="@dimen/mine_feedback_toolbar_fab_boder_width"
-                app:elevation="@dimen/mine_feedback_toobar_fab_elevation"
-                app:fabCustomSize="@dimen/mine_feedback_toolbar_fab_size"
-                app:pressedTranslationZ="@dimen/mine_feedback_translaztion_z_size"
-                app:srcCompat="@drawable/mine_ic_feedback_back_arrow" />
-
-            <androidx.appcompat.widget.AppCompatTextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center_vertical"
-                android:text="@string/mine_feedback_toolbar_text"
-                android:textColor="@color/mine_feedback_toolbar_text_color"
-                android:textSize="@dimen/mine_feedback_toolbar_text_size"
-                android:textStyle="bold" />
-        </androidx.appcompat.widget.LinearLayoutCompat>
+            app:layout_constraintTop_toTopOf="parent"/>
 
         <View
             android:id="@+id/mine_view"
@@ -57,13 +33,13 @@
             android:background="@color/mine_feedback_divider_color"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/ll_toolbar" />
+            app:layout_constraintTop_toBottomOf="@id/include_toolbar" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_history_list"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/mine_feedback_detail_rv_margin_top_size"
+            android:layout_marginTop="13dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/mine_view"
@@ -84,7 +60,7 @@
             app:showView="@{!vm.hasHistory}"
             tools:text="@string/mine_feedback_none_history_text" />
 
-        <com.mredrock.cyxbs.mine.page.feedback.history.widget.RightTopDrawableLayout
+        <!--<com.mredrock.cyxbs.mine.page.feedback.history.widget.RightTopDrawableLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -99,12 +75,11 @@
                 <androidx.appcompat.widget.AppCompatImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:srcCompat="@drawable/mine_feedback_reply_image_holder" />
+                    app:srcCompat="@drawable/mine_ic_feedback_reply_image_holder" />
 
             </androidx.cardview.widget.CardView>
 
-        </com.mredrock.cyxbs.mine.page.feedback.history.widget.RightTopDrawableLayout>
-
+        </com.mredrock.cyxbs.mine.page.feedback.history.widget.RightTopDrawableLayout>-->
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

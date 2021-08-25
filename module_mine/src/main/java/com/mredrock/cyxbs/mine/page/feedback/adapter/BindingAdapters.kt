@@ -2,7 +2,9 @@ package com.mredrock.cyxbs.mine.page.feedback.adapter
 
 import android.graphics.drawable.Drawable
 import android.view.View
+import android.widget.ImageView
 import androidx.databinding.BindingAdapter
+import com.bumptech.glide.Glide
 
 object BindingAdapters {
     @JvmStatic
@@ -29,5 +31,17 @@ object BindingAdapters {
         } else {
             view?.background = backgroundFalse
         }
+    }
+
+    @JvmStatic
+    @BindingAdapter("netImage", "placeholder", "error", requireAll = true)
+    fun netImage(
+        imageView: ImageView, url: String?,
+        placeholder: Drawable?,
+        error: Drawable?,
+    ) {
+        url ?: return
+        if (!url.matches(Regex("http.+"))) return
+        Glide.with(imageView).load(url).placeholder(placeholder).error(error).into(imageView)
     }
 }

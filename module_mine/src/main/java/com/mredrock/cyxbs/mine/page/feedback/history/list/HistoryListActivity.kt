@@ -4,6 +4,7 @@ import android.content.Intent
 import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.common.utils.extensions.toast
 import com.mredrock.cyxbs.mine.R
 import com.mredrock.cyxbs.mine.databinding.MineActivityHistoryListBinding
@@ -54,6 +55,10 @@ class HistoryListActivity :
 
             }
         )
+
+        binding?.apply {
+            includeToolbar.fabBack.setOnSingleClickListener { finish() }
+        }
     }
 
     override fun observeData() {

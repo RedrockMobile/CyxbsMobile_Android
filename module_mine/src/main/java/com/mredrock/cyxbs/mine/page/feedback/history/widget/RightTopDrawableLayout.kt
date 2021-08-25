@@ -4,7 +4,6 @@ import android.content.Context
 import android.graphics.Canvas
 import android.graphics.drawable.Drawable
 import android.util.AttributeSet
-import android.util.Log
 import android.util.TypedValue
 import android.view.MotionEvent
 import android.view.View
@@ -23,7 +22,7 @@ class RightTopDrawableLayout @JvmOverloads constructor(
 ) : FrameLayout(context, attrs) {
 
     var rightTopDrawable: Drawable? =
-        ResourcesCompat.getDrawable(resources, R.drawable.mine_feedback_ic_cancel, null)
+        ResourcesCompat.getDrawable(resources, R.drawable.mine_ic_feedback_ic_cancel, null)
     var rightTopDrawableSize: Float = 0f
 
     var iconClicked: ((View) -> Unit)? = null

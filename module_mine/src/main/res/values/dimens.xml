@@ -9,7 +9,7 @@
     <dimen name="mine_feedback_divider_dimension">1dp</dimen>
     <dimen name="mine_feedback_toolbar_fab_boder_width">0dp</dimen>
     <dimen name="mine_feedback_toobar_fab_elevation">0dp</dimen>
-    <dimen name="mine_feedback_toolbar_fab_size">34dp</dimen>
+    <dimen name="mine_feedback_toolbar_fab_size">27dp</dimen>
     <dimen name="mine_feedback_translaztion_z_size">13dp</dimen>
     <dimen name="mine_feedback_toolbar_divider_margin_dimension">4dp</dimen>
     <dimen name="mine_feedback_recycle_item_height_dimension">59dp</dimen>

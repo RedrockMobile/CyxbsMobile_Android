@@ -20,7 +20,7 @@
         android:fitsSystemWindows="true"
         tools:context=".page.feedback.history.detail.HistoryDetailActivity">
 
-        <androidx.appcompat.widget.LinearLayoutCompat
+        <!--<androidx.appcompat.widget.LinearLayoutCompat
             android:id="@+id/ll_toolbar"
             android:layout_width="match_parent"
             android:layout_height="@dimen/mine_feedback_toolbar_height"
@@ -51,7 +51,16 @@
                 android:textColor="@color/mine_feedback_toolbar_text_color"
                 android:textSize="@dimen/mine_feedback_toolbar_text_size"
                 android:textStyle="bold" />
-        </androidx.appcompat.widget.LinearLayoutCompat>
+        </androidx.appcompat.widget.LinearLayoutCompat>-->
+
+        <include layout="@layout/mine_layout_history_toolbar"
+            android:id="@+id/include_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/mine_feedback_toolbar_height"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
 
         <View
             android:id="@+id/mine_view"
@@ -61,7 +70,7 @@
             android:background="@color/mine_feedback_divider_color"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/ll_toolbar" />
+            app:layout_constraintTop_toBottomOf="@id/include_toolbar" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tv_date"
@@ -142,7 +151,11 @@
                             android:id="@+id/iv_feedback_pic_1"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            app:srcCompat="@drawable/mine_feedback_feedback_image_holder">
+                            app:srcCompat="@drawable/mine_ic_feedback_feedback_image_holder"
+                            app:showView="@{vm.feedback.urls.size() > 0}"
+                            app:netImage="@{vm.feedback.urls.size() > 0 ? vm.feedback.urls.get(0) : `NULL`}"
+                            app:error="@{@drawable/mine_ic_feedback_feedback_image_holder}"
+                            app:placeholder="@{@drawable/mine_ic_feedback_feedback_image_holder}">
 
                         </androidx.appcompat.widget.AppCompatImageView>
 
@@ -166,8 +179,11 @@
                             android:id="@+id/iv_feedback_pic_2"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            app:srcCompat="@drawable/mine_feedback_feedback_image_holder"
-
+                            app:srcCompat="@drawable/mine_ic_feedback_feedback_image_holder"
+                            app:showView="@{vm.feedback.urls.size() > 1}"
+                            app:netImage="@{vm.feedback.urls.size() > 1 ? vm.feedback.urls.get(1) : `NULL`}"
+                            app:error="@{@drawable/mine_ic_feedback_feedback_image_holder}"
+                            app:placeholder="@{@drawable/mine_ic_feedback_feedback_image_holder}"
                             />
 
                     </androidx.cardview.widget.CardView>
@@ -185,24 +201,33 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toEndOf="@id/cv_card_2"
                         app:layout_constraintTop_toTopOf="parent"
-                        app:srcCompat="@drawable/mine_feedback_feedback_image_holder">
+                        app:srcCompat="@drawable/mine_ic_feedback_feedback_image_holder">
 
                         <androidx.appcompat.widget.AppCompatImageView
                             android:id="@+id/iv_feedback_pic_3"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            app:srcCompat="@drawable/mine_feedback_feedback_image_holder" />
+                            app:srcCompat="@drawable/mine_ic_feedback_feedback_image_holder"
+                            app:showView="@{vm.feedback.urls.size() > 2}"
+                            app:netImage="@{vm.feedback.urls.size() > 2 ? vm.feedback.urls.get(2) : `NULL`}"
+                            app:error="@{@drawable/mine_ic_feedback_feedback_image_holder}"
+                            app:placeholder="@{@drawable/mine_ic_feedback_feedback_image_holder}"/>
                     </androidx.cardview.widget.CardView>
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-                <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/btn_feedback_label"
-                    android:layout_width="@dimen/mine_feedback_label_text_width"
-                    android:layout_height="@dimen/mine_feedback_label_text_height"
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tv_feedback_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/mine_feedback_label_text_margin_top"
-                    android:background="@drawable/mine_feedback_label_bg"
+                    android:clickable="false"
+                    android:paddingStart="10dp"
+                    android:paddingEnd="10dp"
+                    android:paddingTop="4dp"
+                    android:paddingBottom="4dp"
+                    android:background="@drawable/mine_shape_feedback_label_bg"
                     android:text="@{@string/mine_feedback_label_text(vm.feedback.label)}"
                     android:textColor="@color/mine_feedback_label_text_color"
                     tools:text="@string/mine_feedback_label_text" />
@@ -259,7 +284,7 @@
                     android:layout_width="@dimen/mine_feedback_reply_card_size"
                     android:layout_height="@dimen/mine_feedback_reply_card_size"
                     android:layout_marginTop="@dimen/mine_feedback_reply_card_matgin_top"
-                    android:background="@drawable/mine_feedback_round_card_shape"
+                    android:background="@drawable/mine_shape_feedback_round_card_shape"
                     app:cardCornerRadius="@dimen/mine_feedback_cards_radius"
                     app:cardElevation="0dp">
 
@@ -267,7 +292,7 @@
                         android:id="@+id/iv_reply_pic_1"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        app:srcCompat="@drawable/mine_feedback_reply_image_holder" />
+                        app:srcCompat="@drawable/mine_ic_feedback_reply_image_holder" />
 
 
                 </androidx.cardview.widget.CardView>

@@ -47,7 +47,7 @@ class RvListAdapter : ListAdapter<History, HistoryItemHolder>(diff) {
     }
 
     interface ItemClickListener{
-        fun clicked(view: View,id :History)
+        fun clicked(view: View, data :History)
     }
 
 }

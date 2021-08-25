@@ -10,4 +10,5 @@ data class Feedback(
     val title: String,
     val content: String,
     val label: String,
+    val urls: List<String>,
 )

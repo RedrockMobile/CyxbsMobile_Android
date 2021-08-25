@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+    </data>
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/ll_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/mine_feedback_toolbar_height"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:id="@+id/fab_back"
+            android:layout_margin="3dp"
+            android:background="@color/common_transparent_background"
+            android:backgroundTint="@color/common_transparent_background"
+            android:contentDescription="@string/mine_feedback_back_ic_description"
+            android:gravity="center"
+            app:borderWidth="@dimen/mine_feedback_toolbar_fab_boder_width"
+            app:elevation="@dimen/mine_feedback_toobar_fab_elevation"
+            app:fabCustomSize="@dimen/mine_feedback_toolbar_fab_size"
+            app:pressedTranslationZ="@dimen/mine_feedback_translaztion_z_size"
+            app:srcCompat="@drawable/mine_ic_feedback_back_arrow" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:text="@string/mine_feedback_toolbar_text"
+            android:textColor="@color/mine_feedback_toolbar_text_color"
+            android:textSize="@dimen/mine_feedback_toolbar_text_size"
+            android:textStyle="bold" />
+    </androidx.appcompat.widget.LinearLayoutCompat>
+</layout>
