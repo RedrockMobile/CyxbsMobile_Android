@@ -1,11 +1,26 @@
 package com.mredrock.cyxbs.mine.page.feedback.edit.ui
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import androidx.lifecycle.LiveData
+import androidx.recyclerview.widget.GridLayoutManager
 import com.mredrock.cyxbs.common.ui.BaseMVPVMActivity
+import com.mredrock.cyxbs.common.utils.extensions.toast
 import com.mredrock.cyxbs.mine.R
 import com.mredrock.cyxbs.mine.databinding.MineActivityFeedbackEditBinding
+import com.mredrock.cyxbs.mine.page.feedback.adapter.rv.RvAdapter
+import com.mredrock.cyxbs.mine.page.feedback.adapter.rv.RvBinder
 import com.mredrock.cyxbs.mine.page.feedback.edit.presenter.FeedbackEditPresenter
 import com.mredrock.cyxbs.mine.page.feedback.edit.viewmodel.FeedbackEditViewModel
+import com.mredrock.cyxbs.mine.page.feedback.history.list.adapter.PicBannerBinderAdd
+import com.mredrock.cyxbs.mine.page.feedback.history.list.adapter.PicBannerBinderPic
+import com.mredrock.cyxbs.mine.page.feedback.history.list.bean.Pic
+import com.mredrock.cyxbs.mine.page.feedback.utils.CHOOSE_FEED_BACK_PIC
+import com.mredrock.cyxbs.mine.page.feedback.utils.selectImageFromAlbum
+import com.mredrock.cyxbs.mine.page.feedback.utils.setSelectedPhotos
+import java.net.URI
+import java.util.ArrayList
 
 /**
  * @Date : 2021/8/23   20:52
@@ -14,6 +29,13 @@ import com.mredrock.cyxbs.mine.page.feedback.edit.viewmodel.FeedbackEditViewMode
  * @Request : God bless my code
  **/
 class FeedbackEditActivity : BaseMVPVMActivity<FeedbackEditViewModel, MineActivityFeedbackEditBinding, FeedbackEditPresenter>() {
+
+    /**
+     * Add
+     */
+    private val rvPicAdapter by lazy {
+        RvAdapter()
+    }
 
     /**
      * 得到P层
@@ -46,13 +68,76 @@ class FeedbackEditActivity : BaseMVPVMActivity<FeedbackEditViewModel, MineActivi
             chipThree.setOnCheckedChangeListener(presenter)
             chipFour.setOnCheckedChangeListener(presenter)
         }
+
+        binding?.rvBanner?.apply {
+            adapter = rvPicAdapter
+            layoutManager = GridLayoutManager(this@FeedbackEditActivity, 3)
+        }
     }
 
     /**
      * 监听LiveData
      */
     override fun observeData() {
+        viewModel?.apply {
+            //Change
+            observePics(uris)
+        }
+    }
 
+    /**
+     *
+     * 打开相册后用户筛选图片，最后返回到Activity更新选择的图片
+     */
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == CHOOSE_FEED_BACK_PIC) {
+            presenter?.dealPic(data)
+        }
+    }
+
+
+    /**
+     * Add
+     * 观察图片Uri并对rv_banner进行初始化操作
+     */
+    private fun observePics(uris: LiveData<List<Uri>>) {
+        uris.observe(this) {
+            val list = mutableListOf<RvBinder<*>>().apply {
+                //添加上传的图片
+                addAll(
+                    it.map {
+                        Pic(it)
+                    }.map {
+                        PicBannerBinderPic(it).apply {
+                            setOnContentClickListener { view, i ->
+                                toast("内容被点击")
+                            }
+
+                            setOnIconClickListener { view, i ->
+                                toast("删除被点击")
+                                presenter?.removePic(i)
+                            }
+                        }
+                    }
+                )
+                //添加Add的图标
+                if (size < 3) {
+                    add(
+                        PicBannerBinderAdd().apply {
+                            setClickListener { view, i ->
+                                val list = ArrayList(viewModel?.uris?.value)
+                                setSelectedPhotos(list)
+                                toast("添加按钮被点击")
+                                this@FeedbackEditActivity.selectImageFromAlbum(3)
+                            }
+                        }
+                    )
+                }
+            }
+            rvPicAdapter.submitList(list)
+
+        }
     }
 
     /**

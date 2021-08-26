@@ -3,12 +3,15 @@ package com.mredrock.cyxbs.mine.page.feedback.center.ui
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mredrock.cyxbs.common.ui.BaseMVPVMActivity
+import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.mine.R
 import com.mredrock.cyxbs.mine.databinding.MineActivityFeedbackCenterBinding
 import com.mredrock.cyxbs.mine.page.feedback.center.adapter.FeedbackCenterAdapter
 import com.mredrock.cyxbs.mine.page.feedback.center.presenter.FeedbackCenterPresenter
 import com.mredrock.cyxbs.mine.page.feedback.center.viewmodel.FeedbackCenterViewModel
 import com.mredrock.cyxbs.mine.page.feedback.edit.ui.FeedbackEditActivity
+import com.mredrock.cyxbs.mine.page.feedback.history.list.HistoryListActivity
+import kotlinx.android.synthetic.main.mine_activity_feedback_center.*
 
 /**
  * @Date : 2021/8/23   20:51
@@ -49,6 +52,9 @@ class FeedbackCenterActivity :
         binding?.apply {
             btnQuestion.setOnClickListener {
                 startActivity<FeedbackEditActivity>()
+            }
+            ivHistory.setOnSingleClickListener {
+                startActivity<HistoryListActivity>()
             }
         }
     }

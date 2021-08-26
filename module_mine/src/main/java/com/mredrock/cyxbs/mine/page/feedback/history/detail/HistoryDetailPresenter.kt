@@ -11,6 +11,14 @@ import com.mredrock.cyxbs.mine.page.feedback.history.detail.bean.Reply
  */
 class HistoryDetailPresenter : BasePresenter<HistoryDetailViewModel>() {
     override fun fetch() {
+        //设置默认数据
+        setDefaultData()
+    }
+
+    /**
+     * 设置默认数据
+     */
+    private fun setDefaultData() {
         val defaultFeedback = getDefaultFeedback()
         vm?.setFeedback(defaultFeedback)
         val defaultReply = getDefaultReply()

@@ -1,45 +1,42 @@
 package com.mredrock.cyxbs.mine.page.feedback.history.list
 
 import android.content.Intent
-import android.net.Uri
 import android.view.View
 import androidx.lifecycle.LiveData
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.common.utils.extensions.toast
 import com.mredrock.cyxbs.mine.R
 import com.mredrock.cyxbs.mine.databinding.MineActivityHistoryListBinding
 import com.mredrock.cyxbs.mine.page.feedback.adapter.RvListAdapter
-import com.mredrock.cyxbs.mine.page.feedback.adapter.rv.RvAdapter
-import com.mredrock.cyxbs.mine.page.feedback.adapter.rv.RvBinder
 import com.mredrock.cyxbs.mine.page.feedback.base.ui.BaseMVPVMActivity
 import com.mredrock.cyxbs.mine.page.feedback.history.detail.HistoryDetailActivity
-import com.mredrock.cyxbs.mine.page.feedback.history.list.adapter.PicBannerBinderAdd
-import com.mredrock.cyxbs.mine.page.feedback.history.list.adapter.PicBannerBinderPic
 import com.mredrock.cyxbs.mine.page.feedback.history.list.bean.History
-import com.mredrock.cyxbs.mine.page.feedback.history.list.bean.Pic
-import com.mredrock.cyxbs.mine.page.feedback.utils.CHOOSE_FEED_BACK_PIC
-import com.mredrock.cyxbs.mine.page.feedback.utils.selectImageFromAlbum
-import com.mredrock.cyxbs.mine.page.feedback.utils.setSelectedPhotos
 import java.util.*
 
 class HistoryListActivity :
     BaseMVPVMActivity<HistoryListViewModel, MineActivityHistoryListBinding, HistoryListPresenter>() {
 
-
+    /**
+     * rv_history_list
+     */
     private val rvAdapter by lazy {
         RvListAdapter()
     }
 
-    private val rvPicAdapter by lazy {
-        RvAdapter()
-    }
-
+    /**
+     * 创建Presenter
+     */
     override fun createPresenter(): HistoryListPresenter = HistoryListPresenter()
 
+    /**
+     * 获取布局Id
+     */
     override fun getLayoutId(): Int = R.layout.mine_activity_history_list
 
+    /**
+     * 初始化视图
+     */
     override fun initView() {
         binding?.vm = viewModel
         //初始化Rv配置
@@ -48,14 +45,13 @@ class HistoryListActivity :
             layoutManager = LinearLayoutManager(this@HistoryListActivity)
         }
 
-///////////////////////////////////////
-        binding?.rvBanner?.apply {
-            adapter = rvPicAdapter
-            layoutManager = GridLayoutManager(this@HistoryListActivity, 3)
-        }
     }
 
+    /**
+     * 初始化监听器
+     */
     override fun initListener() {
+        //RecyclerView的Item点击
         rvAdapter.setOnItemClickListener(
             object : RvListAdapter.ItemClickListener {
                 var tag: Long = 0L
@@ -76,67 +72,24 @@ class HistoryListActivity :
 
             }
         )
-
+        //返回键的点击监听
         binding?.includeToolBar?.fabBack?.setOnSingleClickListener {
             finish()
         }
     }
 
+    /**
+     * 观察vm数据变化
+     */
     override fun observeData() {
         viewModel?.apply {
             observeRvList(listData)
-///////////////////////////////////////
-            observePics(uris)
         }
     }
 
-    ///////////////////////////////////////
-    private fun observePics(uris: LiveData<List<Uri>>) {
-        uris.observe(this) {
-            val list = mutableListOf<RvBinder<*>>().apply {
-                //添加上传的图片
-                addAll(
-                    it.map {
-                        Pic(it)
-                    }.map {
-                        PicBannerBinderPic(it).apply {
-                            setOnContentClickListener { view, i ->
-                                toast("内容被点击")
-                            }
-
-                            setOnIconClickListener { view, i ->
-                                toast("删除被点击")
-                                presenter?.removePic(i)
-                            }
-                        }
-                    }
-                )
-                //添加Add的图标
-                if (size < 3) {
-                    add(
-                        PicBannerBinderAdd().apply {
-                            setClickListener { view, i ->
-                                val list = ArrayList(viewModel?.uris?.value)
-                                setSelectedPhotos(list)
-                                toast("添加按钮被点击")
-                                this@HistoryListActivity.selectImageFromAlbum(3)
-                            }
-                        }
-                    )
-                }
-            }
-            rvPicAdapter.submitList(list)
-
-        }
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == CHOOSE_FEED_BACK_PIC) {
-            presenter?.dealPic(data)
-        }
-    }
-
+    /**
+     * Rv的数据
+     */
     private fun observeRvList(listData: LiveData<List<History>>) {
         listData.observe(this) {
             rvAdapter.submitList(it)

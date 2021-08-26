@@ -65,69 +65,61 @@
 
         <com.google.android.material.chip.ChipGroup
             android:id="@+id/chip_group"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingStart="10dp"
             android:paddingEnd="10dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
             android:theme="@style/Theme.MaterialComponents"
-            app:layout_constraintBottom_toTopOf="@+id/mine_guideline14"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/mine_guideline21"
+            app:layout_constraintTop_toBottomOf="@id/mine_relativelayout2"
             app:singleSelection="true">
 
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chip_one"
                 style="@style/Widget.MaterialComponents.Chip.MyChoice"
-                app:chipSurfaceColor="#00000000"
-                app:chipStrokeColor="@color/mine_edit_chip_border_un"
-                app:chipStrokeWidth="1dp"
-                android:textColor="@color/mine_edit_chip_tv_un"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="意见建议" />
+                android:text="意见建议"
+                android:textColor="@color/mine_edit_chip_tv_un"
+                app:chipStrokeColor="@color/mine_edit_chip_border_un"
+                app:chipStrokeWidth="1dp"
+                app:chipSurfaceColor="#00000000" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chip_two"
                 style="@style/Widget.MaterialComponents.Chip.MyChoice"
-                app:chipSurfaceColor="#00000000"
-                app:chipStrokeColor="@color/mine_edit_chip_border_un"
-                app:chipStrokeWidth="1dp"
-                android:textColor="@color/mine_edit_chip_tv_un"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="系统问题" />
+                android:text="系统问题"
+                android:textColor="@color/mine_edit_chip_tv_un"
+                app:chipStrokeColor="@color/mine_edit_chip_border_un"
+                app:chipStrokeWidth="1dp"
+                app:chipSurfaceColor="#00000000" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chip_three"
                 style="@style/Widget.MaterialComponents.Chip.MyChoice"
-                app:chipSurfaceColor="#00000000"
-                app:chipStrokeColor="@color/mine_edit_chip_border_un"
-                app:chipStrokeWidth="1dp"
-                android:textColor="@color/mine_edit_chip_tv_un"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="账号问题" />
+                android:text="账号问题"
+                android:textColor="@color/mine_edit_chip_tv_un"
+                app:chipStrokeColor="@color/mine_edit_chip_border_un"
+                app:chipStrokeWidth="1dp"
+                app:chipSurfaceColor="#00000000" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chip_four"
                 style="@style/Widget.MaterialComponents.Chip.MyChoice"
-                app:chipSurfaceColor="#00000000"
-                app:chipStrokeColor="@color/mine_edit_chip_border_un"
-                app:chipStrokeWidth="1dp"
-                android:textColor="@color/mine_edit_chip_tv_un"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="其他" />
+                android:text="其他"
+                android:textColor="@color/mine_edit_chip_tv_un"
+                app:chipStrokeColor="@color/mine_edit_chip_border_un"
+                app:chipStrokeWidth="1dp"
+                app:chipSurfaceColor="#00000000" />
         </com.google.android.material.chip.ChipGroup>
-
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/mine_guideline14"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            app:layout_constraintGuide_percent="0.2" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/mine_guideline17"
@@ -136,167 +128,157 @@
             android:orientation="horizontal"
             app:layout_constraintGuide_percent="0.82" />
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/mine_constraintlayout"
+        <androidx.core.widget.NestedScrollView
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:background="@drawable/mine_shape_edit_bg"
             app:layout_constraintBottom_toTopOf="@+id/mine_guideline17"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/mine_guideline14">
+            app:layout_constraintTop_toBottomOf="@+id/chip_group" >
 
-            <androidx.constraintlayout.widget.Guideline
-                android:id="@+id/mine_guideline18"
-                android:layout_width="wrap_content"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/mine_constraintlayout"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                app:layout_constraintGuide_percent="0.11" />
-
-            <androidx.constraintlayout.widget.Guideline
-                android:id="@+id/mine_guideline19"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                app:layout_constraintGuide_percent="0.68" />
-
-            <androidx.constraintlayout.widget.Guideline
-                android:id="@+id/mine_guideline20"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                app:layout_constraintGuide_percent="0.75" />
-
-            <EditText
-                android:id="@+id/et_edit_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:autofillHints="name"
-                android:background="#00000000"
-                android:hint="@string/mine_feed_edit_title_tv"
-                android:inputType="text"
-                android:maxLength="12"
-                android:singleLine="false"
-                android:textColor="@color/mine_feedback_edit_title"
-                android:textColorHint="@color/mine_feedback_edit_title_hint"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toTopOf="@+id/mine_guideline18"
-                app:layout_constraintStart_toStartOf="@+id/et_edit_pic"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.0"
-                tools:ignore="TouchTargetSizeCheck,TextContrastCheck" />
-
-            <EditText
-                android:id="@+id/et_edit_description"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="17dp"
-                android:layout_marginEnd="16dp"
-                android:autofillHints="name"
-                android:background="#00000000"
-                android:hint="@string/mine_feedback_edit_description_tv"
-                android:inputType="textMultiLine"
-                android:maxLength="200"
-                android:textColor="@color/mine_feedback_edit_description"
-                android:textColorHint="@color/mine_feedback_edit_description_hint"
-                android:textSize="15sp"
-                app:layout_constraintBottom_toTopOf="@+id/mine_guideline19"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="@+id/et_edit_pic"
-                app:layout_constraintTop_toTopOf="@+id/mine_guideline18"
-                app:layout_constraintVertical_bias="0.0"
-                tools:ignore="TouchTargetSizeCheck,TextContrastCheck" />
-
-
-            <TextView
-                android:id="@+id/et_edit_pic"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="18dp"
-                android:text="@string/mine_feedback_edit_pic_tv"
-                android:textColor="@color/mine_feedback_edit_pic"
-                android:textSize="15sp"
-                app:layout_constraintBottom_toTopOf="@+id/mine_guideline20"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/mine_guideline19"
-                app:layout_constraintVertical_bias="1.0"
-                tools:ignore="TextContrastCheck" />
-
-            <View
-                android:id="@+id/v_first"
-                android:layout_width="0dp"
-                android:layout_height="1dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
-                android:background="@color/mine_feedback_edit_underline"
-                app:layout_constraintBottom_toTopOf="@+id/mine_guideline18"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/mine_guideline18" />
+                android:background="@drawable/mine_shape_edit_bg">
 
-            <View
-                android:id="@+id/v_underline_second"
-                android:layout_width="0dp"
-                android:layout_height="1dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"
-                android:background="@color/mine_feedback_edit_underline"
-                app:layout_constraintBottom_toTopOf="@+id/mine_guideline19"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/mine_guideline19" />
+                <EditText
+                    android:id="@+id/et_edit_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:autofillHints="name"
+                    android:background="#00000000"
+                    android:hint="@string/mine_feed_edit_title_tv"
+                    android:inputType="text"
+                    android:maxLength="12"
+                    android:singleLine="false"
+                    android:textColor="@color/mine_feedback_edit_title"
+                    android:textColorHint="@color/mine_feedback_edit_title_hint"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="@+id/et_edit_pic"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:ignore="TouchTargetSizeCheck,TextContrastCheck" />
 
-            <TextView
-                android:id="@+id/tv_title_num"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="6dp"
-                android:text="@{String.valueOf(vm.editTitleNum)}"
-                android:textColor="@color/mine_feedback_edit_num"
-                android:textSize="12sp"
-                app:layout_constraintBottom_toBottomOf="@+id/et_edit_title"
-                app:layout_constraintEnd_toEndOf="@+id/tv_des_num"
-                app:layout_constraintTop_toTopOf="@+id/et_edit_title"
-                tools:ignore="TextContrastCheck" />
-
-            <TextView
-                android:id="@+id/tv_des_num"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:text="@{@string/mine_feedback_edit_description_num(vm.editDesNum)}"
-                android:textColor="@color/mine_feedback_edit_num"
-                android:textSize="12sp"
-                app:layout_constraintBottom_toTopOf="@+id/mine_guideline19"
-                app:layout_constraintEnd_toEndOf="@+id/tv_pic_num"
-                app:layout_constraintTop_toTopOf="@+id/mine_guideline18"
-                app:layout_constraintVertical_bias="1.0"
-                tools:ignore="TextContrastCheck" />
-
-            <TextView
-                android:id="@+id/tv_pic_num"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="18dp"
-                android:text="@string/mine_feedback_edit_pic_num"
-                android:textColor="@color/mine_feedback_edit_num"
-                android:textSize="12sp"
-                app:layout_constraintBottom_toBottomOf="@+id/et_edit_pic"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="1.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/et_edit_pic"
-                tools:ignore="TextContrastCheck" />
+                <EditText
+                    android:id="@+id/et_edit_description"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:autofillHints="name"
+                    android:background="#00000000"
+                    android:hint="@string/mine_feedback_edit_description_tv"
+                    android:inputType="textMultiLine"
+                    android:maxLength="200"
+                    android:textColor="@color/mine_feedback_edit_description"
+                    android:textColorHint="@color/mine_feedback_edit_description_hint"
+                    android:textSize="15sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="@+id/et_edit_pic"
+                    app:layout_constraintTop_toBottomOf="@id/v_first"
+                    tools:ignore="TouchTargetSizeCheck,TextContrastCheck" />
 
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+                <TextView
+                    android:id="@+id/et_edit_pic"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="18dp"
+                    android:layout_marginTop="16dp"
+                    android:text="@string/mine_feedback_edit_pic_tv"
+                    android:textColor="@color/mine_feedback_edit_pic"
+                    android:textSize="15sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/v_underline_second"
+                    tools:ignore="TextContrastCheck" />
+
+                <View
+                    android:id="@+id/v_first"
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="16dp"
+                    android:background="@color/mine_feedback_edit_underline"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/et_edit_title" />
+
+                <View
+                    android:id="@+id/v_underline_second"
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="16dp"
+                    android:background="@color/mine_feedback_edit_underline"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_des_num" />
+
+                <TextView
+                    android:id="@+id/tv_title_num"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="6dp"
+                    android:text="@{String.valueOf(vm.editTitleNum)}"
+                    android:textColor="@color/mine_feedback_edit_num"
+                    android:textSize="12sp"
+                    app:layout_constraintBottom_toBottomOf="@+id/et_edit_title"
+                    app:layout_constraintEnd_toEndOf="@+id/tv_des_num"
+                    app:layout_constraintTop_toTopOf="@+id/et_edit_title"
+                    tools:ignore="TextContrastCheck" />
+
+                <TextView
+                    android:id="@+id/tv_des_num"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="@{@string/mine_feedback_edit_description_num(vm.editDesNum)}"
+                    android:textColor="@color/mine_feedback_edit_num"
+                    android:textSize="12sp"
+                    app:layout_constraintEnd_toEndOf="@+id/tv_pic_num"
+                    app:layout_constraintStart_toStartOf="@+id/tv_pic_num"
+                    app:layout_constraintTop_toBottomOf="@+id/et_edit_description"
+                    tools:ignore="TextContrastCheck" />
+
+                <TextView
+                    android:id="@+id/tv_pic_num"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="18dp"
+                    android:text="@string/mine_feedback_edit_pic_num"
+                    android:textColor="@color/mine_feedback_edit_num"
+                    android:textSize="12sp"
+                    app:layout_constraintBottom_toBottomOf="@+id/et_edit_pic"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="1.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/et_edit_pic"
+                    tools:ignore="TextContrastCheck" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_banner"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="7dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginBottom="22dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/et_edit_pic"
+                    tools:layout_editor_absoluteX="16dp" />
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.core.widget.NestedScrollView>
 
         <Button
             android:id="@+id/mine_button"
@@ -312,13 +294,6 @@
             app:layout_constraintTop_toTopOf="@+id/mine_guideline17"
             tools:ignore="TouchTargetSizeCheck" />
 
-
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/mine_guideline21"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            app:layout_constraintGuide_percent="0.11" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

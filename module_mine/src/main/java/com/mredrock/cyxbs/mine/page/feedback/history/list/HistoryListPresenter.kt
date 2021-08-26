@@ -69,24 +69,4 @@ class HistoryListPresenter : BasePresenter<HistoryListViewModel>() {
         }
     }
 
-    fun dealPic(data: Intent?) {
-        //获取选择的图片
-        val selectImageUris = ArrayList(LPhotoHelper.getSelectedPhotos(data))
-        //把图片地址存入vm中
-        if (selectImageUris.size != 0) {
-            vm?.setUris(selectImageUris)
-        }
-    }
-
-    fun removePic(i: Int) {
-        //防止重复点击删除导致的数组越界
-        try {
-            val urls = vm?.uris?.value ?: return
-            val list: MutableList<Uri> = mutableListOf<Uri>().apply { addAll(urls) }
-            list.removeAt(i)
-            vm?.setUris(list)
-        } catch (e: Exception) {
-
-        }
-    }
 }

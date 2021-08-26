@@ -1,6 +1,8 @@
 package com.mredrock.cyxbs.mine.page.feedback.edit.presenter
 
+import android.content.Intent
 import android.graphics.Color
+import android.net.Uri
 import android.os.Build
 import android.text.Editable
 import android.text.TextWatcher
@@ -12,6 +14,7 @@ import com.mredrock.cyxbs.mine.R
 import com.mredrock.cyxbs.mine.base.presenter.BasePresenter
 import com.mredrock.cyxbs.mine.page.feedback.edit.viewmodel.FeedbackEditViewModel
 import org.w3c.dom.Text
+import top.limuyang2.photolibrary.LPhotoHelper
 
 /**
  * @Date : 2021/8/23   20:59
@@ -65,6 +68,35 @@ class FeedbackEditPresenter: BasePresenter<FeedbackEditViewModel>(), FeedbackEdi
                 setChipStrokeColorResource(R.color.mine_edit_chip_border_un)
                 setTextColor(resources.getColor(R.color.mine_edit_chip_tv_un,context.theme))
             }
+        }
+    }
+
+    /**
+     * Add
+     * 处理ActivityResult返回的图片
+     */
+    fun dealPic(data: Intent?) {
+        //获取选择的图片
+        val selectImageUris = ArrayList(LPhotoHelper.getSelectedPhotos(data))
+        //把图片地址存入vm中
+        if (selectImageUris.size != 0) {
+            vm?.setUris(selectImageUris)
+        }
+    }
+
+    /**
+     * Add
+     * 当移除图片的按钮被点击的时候移除对应的图片
+     */
+    fun removePic(i: Int) {
+        //防止重复点击删除导致的数组越界
+        try {
+            val urls = vm?.uris?.value ?: return
+            val list: MutableList<Uri> = mutableListOf<Uri>().apply { addAll(urls) }
+            list.removeAt(i)
+            vm?.setUris(list)
+        } catch (e: Exception) {
+
         }
     }
 }

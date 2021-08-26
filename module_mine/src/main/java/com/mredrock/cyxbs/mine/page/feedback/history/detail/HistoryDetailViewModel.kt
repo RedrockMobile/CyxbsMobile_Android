@@ -26,7 +26,7 @@ class HistoryDetailViewModel : BaseViewModel() {
         _reply.value = value
     }
 
-    //reply pics url
+    //回复的图片的地址
     private val _replyPicUrls: MutableLiveData<List<String>> = MutableLiveData()
     val replyPicUrls: LiveData<List<String>> = _replyPicUrls
     fun setReplyPicUrls(value: List<String>) {

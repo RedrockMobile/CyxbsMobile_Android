@@ -28,11 +28,5 @@ class HistoryListViewModel : BaseViewModel() {
         it.isNotEmpty()
     }
 
-    private val _uris: MutableLiveData<List<Uri>> = MutableLiveData(listOf())
-    val uris: LiveData<List<Uri>> = _uris
-    fun setUris(value: List<Uri>) {
-        _uris.value = value
-    }
-
 
 }
