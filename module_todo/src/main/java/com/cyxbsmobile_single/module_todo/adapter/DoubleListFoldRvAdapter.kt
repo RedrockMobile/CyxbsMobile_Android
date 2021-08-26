@@ -10,6 +10,7 @@ import com.cyxbsmobile_single.module_todo.R
 import com.cyxbsmobile_single.module_todo.adapter.DoubleListFoldRvAdapter.ShowType.NORMAL
 import com.cyxbsmobile_single.module_todo.adapter.DoubleListFoldRvAdapter.ShowType.THREE
 import com.cyxbsmobile_single.module_todo.adapter.slide_callback.SlideCallback
+import com.cyxbsmobile_single.module_todo.model.bean.RemindMode
 import com.cyxbsmobile_single.module_todo.model.bean.Todo
 import com.cyxbsmobile_single.module_todo.model.bean.TodoItemWrapper
 import com.cyxbsmobile_single.module_todo.model.database.TodoDatabase
@@ -91,10 +92,6 @@ class DoubleListFoldRvAdapter(
     }
 
     lateinit var onBindView: (itemView: View, position: Int, viewType: Int, wrapper: TodoItemWrapper) -> Unit
-
-    fun doOnBindView(onBindView: (itemView: View, position: Int, viewType: Int, wrapper: TodoItemWrapper) -> Unit) {
-        this.onBindView = onBindView
-    }
 
     //内部check, 将条目置换到下面
     fun checkItemAndSwap(wrapper: TodoItemWrapper) {
@@ -258,9 +255,11 @@ class DoubleListFoldRvAdapter(
                     curWrapper.todo?.let { todo ->
                         todo_fl_del.visibility = View.GONE
                         todo_tv_todo_title.text = todo.title
+                        LogUtils.d("RayleighZ", "todo = $todo")
                         todo_tv_notify_time.text = repeatMode2RemindTime(todo.remindMode)
+                        LogUtils.d("RayleighZ", "onShow Time = ${repeatMode2RemindTime(todo.remindMode)}")
                         todo_tv_todo_title.setOnClickListener { }//防止穿透点击
-                        if (todo_tv_notify_time.text.toString() == ""){
+                        if (todo.remindMode.notifyDateTime == ""){
                             todo_tv_notify_time.visibility = View.GONE
                             todo_iv_bell.visibility = View.GONE
                         } else {

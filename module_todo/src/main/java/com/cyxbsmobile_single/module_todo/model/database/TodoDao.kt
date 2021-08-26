@@ -20,7 +20,7 @@ interface TodoDao {
     @Insert
     fun insertTodo(todo: Todo): Single<Long>
 
-    @Query("SELECT * FROM todo_list")
+    @Query("SELECT * FROM todo_list ORDER by lastModifyTime desc")
     fun queryAllTodo(): Flowable<List<Todo>>
 
     @Query("SELECT * FROM todo_list WHERE todoId = :todoId")

@@ -23,7 +23,9 @@ data class Todo(
     @SerializedName("is_done")
     var isChecked: Boolean,//todo是否已经完成
     @SerializedName("remind_mode")
-    var remindMode: RemindMode
+    var remindMode: RemindMode,
+    @SerializedName("last_modify_time")
+    var lastModifyTime: Long
 ) : Serializable{
     companion object{
         fun generateEmptyTodo(): Todo{
@@ -32,7 +34,8 @@ data class Todo(
                 "",
                 "",
                 false,
-                RemindMode.generateDefaultRemindMode()
+                RemindMode.generateDefaultRemindMode(),
+                System.currentTimeMillis()
             )
         }
     }

@@ -21,7 +21,7 @@ import kotlinx.android.synthetic.main.todo_rv_item_todo.view.*
 class TodoFeedAdapter(private val todoViewModel: TodoViewModel) :
     BaseFeedFragment.Adapter() {
 
-    lateinit var feedView: View
+    private lateinit var feedView: View
 
     override fun onCreateView(context: Context, parent: ViewGroup): View {
         feedView = LayoutInflater.from(context).inflate(R.layout.todo_fragment_feed, parent, false)

@@ -9,21 +9,31 @@ import java.io.Serializable
  */
 data class RemindMode(
     @SerializedName("repeat_mode")
-    val repeatMode: Int,
+    var repeatMode: Int,
     @SerializedName("date")
-    var date: List<String>,
+    var date: ArrayList<String>,
     @SerializedName("week")
-    var week: List<Int>,
+    var week: ArrayList<Int>,
     @SerializedName("day")
-    var day: List<Int>,
-    @SerializedName("time")
-    val time: String
-): Serializable {
+    var day: ArrayList<Int>,
+    @SerializedName("notify_date_time")
+    var notifyDateTime: String
+): Serializable{
     companion object{
         const val NONE = 0
         const val DAY = 1
         const val WEEK = 2
         const val MONTH = 3
         const val YEAR = 4
+
+        fun generateDefaultRemindMode(): RemindMode{
+            return RemindMode(
+                NONE,
+                arrayListOf(),
+                arrayListOf(),
+                arrayListOf(),
+                ""
+            )
+        }
     }
 }

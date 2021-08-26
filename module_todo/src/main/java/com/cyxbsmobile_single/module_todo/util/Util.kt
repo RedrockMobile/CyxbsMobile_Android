@@ -1,7 +1,12 @@
 package com.cyxbsmobile_single.module_todo.util
 
+import android.app.Activity
+import android.content.Context
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
+import android.view.inputmethod.InputMethodManager
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.view.marginBottom
 import androidx.core.view.marginLeft
 import androidx.core.view.marginRight
@@ -37,20 +42,32 @@ val weekStringList = listOf(
     "日"
 )
 
-//根据remindMode生成提醒日期
-//如果仅仅加以重复而不提醒，则返回提醒那天的
+/**
+ * 根据remindMode生成提醒日期
+ * 仅重复不提醒       -> 返回下一次提醒当天的凌晨00:00
+ * 重复+提醒 | 仅提醒  -> 返回下一次提醒的时间
+ * 不重复不提醒       -> 返回""
+ */
 fun repeatMode2RemindTime(remindMode: RemindMode): String {
-    if (remindMode.notifyDateTime == "") return ""
+    if (remindMode.notifyDateTime == "" && remindMode.repeatMode == RemindMode.NONE){
+        return ""
+    }
     //今天的日历
     val calendar = Calendar.getInstance()
-    calendar.time = Date(System.currentTimeMillis())
-    //提醒那一天的日历
-    val remindDateCalender = Calendar.getInstance()
-    val format = SimpleDateFormat("yy年MM月dd日hh:mm", Locale.CHINA)
-    val remindDate = format.parse(remindMode.notifyDateTime)
-    remindDateCalender.time = remindDate
-    val remindTime =
+    val remindTime = if (remindMode.notifyDateTime == ""){
+        //只要没设置提醒时间，就返回""，ui不展示
+        "00:00"
+    } else {
+        //提醒那一天的日历
+        val remindDateCalender = Calendar.getInstance()
+        //这里可以保证已经是可以解析的了
+        val format = SimpleDateFormat("yy年MM月dd日hh:mm", Locale.CHINA)
+        LogUtils.d("RayleighZ", "notifyTime = ${remindMode.notifyDateTime}")
+        val remindDate = format.parse(remindMode.notifyDateTime)
+        remindDateCalender.time = remindDate
         "${remindDateCalender.get(Calendar.HOUR_OF_DAY)}:${remindDateCalender.get(Calendar.MINUTE)}"
+    }
+
     when (remindMode.repeatMode) {
         RemindMode.DAY -> {
             return "${calendar.get(Calendar.MONTH) + 1}月${calendar.get(Calendar.DAY_OF_MONTH)}日 $remindTime"
@@ -87,14 +104,14 @@ fun repeatMode2RemindTime(remindMode: RemindMode): String {
         }
 
         RemindMode.YEAR -> {
-            for (day in remindMode.date) {
+            for ((index, day) in remindMode.date.withIndex()) {
                 val monthAndDay = day.split('.').map {
                     Integer.parseInt(it)
                 }
                 val notifyCalender = Calendar.getInstance()
                 notifyCalender.set(Calendar.MONTH, monthAndDay[0])
                 notifyCalender.set(Calendar.DAY_OF_MONTH, monthAndDay[1])
-                if (calendar.timeInMillis < notifyCalender.timeInMillis) {
+                if (calendar.timeInMillis < notifyCalender.timeInMillis || index == remindMode.date.size - 1) {
                     //判定为当前日期早于第一个提醒日期
                     return "${monthAndDay[0]}月${monthAndDay[1]}日 $remindTime"
                 }
@@ -102,16 +119,23 @@ fun repeatMode2RemindTime(remindMode: RemindMode): String {
         }
 
         RemindMode.NONE -> {
+            //走到这里可以保证是存在notifyDateTime的
+            val remindDateCalender = Calendar.getInstance()
+            //这里可以保证已经是可以解析的了
+            val format = SimpleDateFormat("yy年MM月dd日hh:mm", Locale.CHINA)
+            LogUtils.d("RayleighZ", "notifyTime = ${remindMode.notifyDateTime}")
+            val remindDate = format.parse(remindMode.notifyDateTime)
+            remindDateCalender.time = remindDate
             return "${remindDateCalender.get(Calendar.MONTH) + 1}月${remindDateCalender.get(Calendar.DAY_OF_MONTH)}日 $remindTime"
         }
     }
-    return "提醒日期错误"
+    return ""
 }
 
 fun getNextNotifyDay(remindMode: RemindMode): DateBeen {
     val repeatString = repeatMode2RemindTime(remindMode)
     //表示永远不会提醒
-    if (repeatString == "提醒日期错误") return DateBeen(-1, -1, -1)
+    if (repeatString == "") return DateBeen(0, 0, 0)
 
     val date = SimpleDateFormat("MM月dd日 hh:mm", Locale.CHINA).parse(repeatString)
     val calendar = Calendar.getInstance()
@@ -218,4 +242,9 @@ fun remindMode2RemindList(remindMode: RemindMode): List<String> {
             return listOf("设置提醒时间")
         }
     }
+}
+
+fun hideKeyboard(context: Context, v: View) {
+    val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+    imm.hideSoftInputFromWindow(v.windowToken, 0)
 }

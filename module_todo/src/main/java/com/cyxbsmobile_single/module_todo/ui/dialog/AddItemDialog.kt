@@ -13,6 +13,7 @@ import com.cyxbsmobile_single.module_todo.model.bean.RemindMode
 import com.cyxbsmobile_single.module_todo.model.bean.Todo
 import com.cyxbsmobile_single.module_todo.ui.dialog.AddItemDialog.CurOperate.*
 import com.cyxbsmobile_single.module_todo.util.getThisYearDateSting
+import com.cyxbsmobile_single.module_todo.util.hideKeyboard
 import com.cyxbsmobile_single.module_todo.util.remindMode2RemindList
 import com.cyxbsmobile_single.module_todo.util.weekStringList
 import com.mredrock.cyxbs.common.BaseApp
@@ -45,7 +46,7 @@ class AddItemDialog(context: Context, onConfirm: (Todo) -> Unit) :
     private var curOperate: CurOperate = NONE
     private val repeatTimeAdapter by lazy {
         RepeatTimeAdapter(arrayListOf()) {
-            when(todo.remindMode.repeatMode){
+            when (todo.remindMode.repeatMode) {
                 RemindMode.YEAR -> todo.remindMode.date.removeAt(it)
                 RemindMode.WEEK -> todo.remindMode.week.removeAt(it)
                 RemindMode.MONTH -> todo.remindMode.day.removeAt(it)
@@ -64,6 +65,7 @@ class AddItemDialog(context: Context, onConfirm: (Todo) -> Unit) :
 
         dialogView?.apply {
             todo_tv_set_notify_time.setOnClickListener {
+                hideKeyboard(context, this)
                 showNotifyDatePicker()
                 todo_tv_set_repeat_time.isClickable = false
             }
@@ -84,6 +86,7 @@ class AddItemDialog(context: Context, onConfirm: (Todo) -> Unit) :
             }
 
             todo_tv_set_repeat_time.setOnClickListener {
+                hideKeyboard(context, this)
                 showRepeatModePicker()
                 todo_tv_set_notify_time.isClickable = false
             }
@@ -114,7 +117,7 @@ class AddItemDialog(context: Context, onConfirm: (Todo) -> Unit) :
 
             todo_thing_add_thing_save.setOnClickListener {
                 todo.title = todo_et_todo_title.text.toString()
-                if (todo.title == ""){
+                if (todo.title == "") {
                     BaseApp.context.toast("标题不可为空哦")
                     return@setOnClickListener
                 }
@@ -149,7 +152,10 @@ class AddItemDialog(context: Context, onConfirm: (Todo) -> Unit) :
             "每年" -> {
                 todo.remindMode.apply {
                     repeatMode = RemindMode.YEAR
-                    date.add(0,"${todo_inner_add_thing_second.getCurrentItem()}.${todo_inner_add_thing_third.getCurrentItem()}")
+                    date.add(
+                        0,
+                        "${todo_inner_add_thing_second.getCurrentItem()}.${todo_inner_add_thing_third.getCurrentItem()}"
+                    )
                 }
                 "每年${todo_inner_add_thing_second.getCurrentItem()}月${todo_inner_add_thing_third.getCurrentItem()}日"
             }
@@ -234,7 +240,7 @@ class AddItemDialog(context: Context, onConfirm: (Todo) -> Unit) :
     }
 
     //设置为只有单个选择（重复或者提醒时间）
-    fun setAsSinglePicker(){
+    fun setAsSinglePicker() {
         todo_inner_add_thing_header.visibility = View.GONE
         todo_et_todo_title.visibility = View.GONE
         todo_iv_add_bell.visibility = View.GONE
@@ -261,7 +267,9 @@ class AddItemDialog(context: Context, onConfirm: (Todo) -> Unit) :
                     newVal: String
                 ) {
                     repeatTimeAdapter.removeAll()
+                    val remindDate = todo.remindMode.notifyDateTime
                     todo.remindMode = RemindMode.generateDefaultRemindMode()
+                    todo.remindMode.notifyDateTime = remindDate
                     when (newVal) {
                         "每天" -> {
                             todo_inner_add_thing_second.apply {

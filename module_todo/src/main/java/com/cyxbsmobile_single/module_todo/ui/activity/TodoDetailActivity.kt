@@ -103,6 +103,7 @@ class TodoDetailActivity : BaseViewModelActivity<TodoDetailViewModel>() {
 
         todo_thing_detail_save.setOnClickListener {
             todo.detail = todo_inner_detail_remark_ed.text.toString()
+            todo.lastModifyTime = System.currentTimeMillis()
             viewModel.updateTodo(todo){
                 finish()
             }

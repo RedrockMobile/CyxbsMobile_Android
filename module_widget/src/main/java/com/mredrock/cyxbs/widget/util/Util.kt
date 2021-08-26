@@ -21,6 +21,7 @@ import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.config.TODO_WEEK_MONTH_ARRAY
+import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.SchoolCalendar
 import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
 import com.mredrock.cyxbs.common.utils.extensions.editor
@@ -240,17 +241,39 @@ fun remindTimeStamp2String(timeStamp: Long): String{
     return SimpleDateFormat("M月d日 hh:mm", Locale.CHINA).format(timeStamp)
 }
 
-//根据repeatMode生成提醒日期
+/**
+ * 根据remindMode生成提醒日期
+ * 仅重复不提醒       -> 返回下一次提醒当天的凌晨00:00
+ * 重复+提醒 | 仅提醒  -> 返回下一次提醒的时间
+ * 不重复不提醒       -> 返回""
+ */
 fun repeatMode2RemindTime(remindMode: RemindMode): String {
+    if (remindMode.notifyDateTime == "" && remindMode.repeatMode == RemindMode.NONE){
+        return ""
+    }
+    //今天的日历
     val calendar = Calendar.getInstance()
-    calendar.time = Date(System.currentTimeMillis())
+    val remindTime = if (remindMode.notifyDateTime == ""){
+        //只要没设置提醒时间，就返回""，ui不展示
+        "00:00"
+    } else {
+        //提醒那一天的日历
+        val remindDateCalender = Calendar.getInstance()
+        //这里可以保证已经是可以解析的了
+        val format = SimpleDateFormat("yy年MM月dd日hh:mm", Locale.CHINA)
+        LogUtils.d("RayleighZ", "notifyTime = ${remindMode.notifyDateTime}")
+        val remindDate = format.parse(remindMode.notifyDateTime)
+        remindDateCalender.time = remindDate
+        "${remindDateCalender.get(Calendar.HOUR_OF_DAY)}:${remindDateCalender.get(Calendar.MINUTE)}"
+    }
+
     when (remindMode.repeatMode) {
         RemindMode.DAY -> {
-            return "${calendar.get(Calendar.MONTH)}月${calendar.get(Calendar.DAY_OF_MONTH)}日 ${remindMode.time}"
+            return "${calendar.get(Calendar.MONTH) + 1}月${calendar.get(Calendar.DAY_OF_MONTH)}日 $remindTime"
         }
 
         RemindMode.MONTH -> {
-            remindMode.day = remindMode.day.sorted()
+            remindMode.day.sort()
             if (remindMode.day.last() > 31) {
                 BaseApp.context.toast("提醒日期错误")
                 return "提醒日期错误"
@@ -262,35 +285,50 @@ fun repeatMode2RemindTime(remindMode: RemindMode): String {
             for (day in remindMode.day) {
                 if (calendar.get(Calendar.DAY_OF_MONTH) <= day) {
                     //如果今日日期要早于提醒时间，就展示提为day
-                    return "${calendar.get(Calendar.MONTH)}月${day}日 ${remindMode.time}"
+                    return "${calendar.get(Calendar.MONTH) + 1}月${day}日 $remindTime"
                 }
             }
         }
 
         RemindMode.WEEK -> {
-            remindMode.week = remindMode.week.sorted()
+            remindMode.week.sort()
             for (weekDay in remindMode.week) {
                 if (calendar.get(Calendar.DAY_OF_WEEK) <= weekDay) {
                     //判定为今天是早于下一次提醒的时间的，所以说可以进行提醒
                     val dif = weekDay - calendar.get(Calendar.DAY_OF_WEEK)
                     calendar.add(Calendar.DAY_OF_WEEK, dif)
-                    return "${calendar.get(Calendar.MONTH)}月${calendar.get(Calendar.DAY_OF_MONTH)}日 ${remindMode.time}"
+                    return "${calendar.get(Calendar.MONTH) + 1}月${calendar.get(Calendar.DAY_OF_MONTH)}日 $remindTime"
                 }
             }
         }
 
         RemindMode.YEAR -> {
-            for (day in remindMode.date){
-                val date = SimpleDateFormat("MM:dd", Locale.CHINA).parse(day)
-                if (calendar.timeInMillis < date.time){
+            for ((index, day) in remindMode.date.withIndex()) {
+                val monthAndDay = day.split('.').map {
+                    Integer.parseInt(it)
+                }
+                val notifyCalender = Calendar.getInstance()
+                notifyCalender.set(Calendar.MONTH, monthAndDay[0])
+                notifyCalender.set(Calendar.DAY_OF_MONTH, monthAndDay[1])
+                if (calendar.timeInMillis < notifyCalender.timeInMillis || index == remindMode.date.size - 1) {
                     //判定为当前日期早于第一个提醒日期
-                    calendar.time = date
-                    return "${calendar.get(Calendar.MONTH)}月${calendar.get(Calendar.DAY_OF_MONTH)}日 ${remindMode.time}"
+                    return "${monthAndDay[0]}月${monthAndDay[1]}日 $remindTime"
                 }
             }
         }
+
+        RemindMode.NONE -> {
+            //走到这里可以保证是存在notifyDateTime的
+            val remindDateCalender = Calendar.getInstance()
+            //这里可以保证已经是可以解析的了
+            val format = SimpleDateFormat("yy年MM月dd日hh:mm", Locale.CHINA)
+            LogUtils.d("RayleighZ", "notifyTime = ${remindMode.notifyDateTime}")
+            val remindDate = format.parse(remindMode.notifyDateTime)
+            remindDateCalender.time = remindDate
+            return "${remindDateCalender.get(Calendar.MONTH) + 1}月${remindDateCalender.get(Calendar.DAY_OF_MONTH)}日 $remindTime"
+        }
     }
-    return "提醒日期错误"
+    return ""
 }
 
 fun getNextNotifyDay(remindMode: RemindMode): DateBeen {

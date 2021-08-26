@@ -10,7 +10,7 @@ import com.mredrock.cyxbs.common.BaseApp.Companion.context
  * Author: RayleighZ
  * Time: 2021-08-02 9:16
  */
-@Database(entities = [Todo::class], version = 5, exportSchema = false)
+@Database(entities = [Todo::class], version = 7, exportSchema = false)
 @TypeConverters(Convert::class)
 abstract class TodoDatabase : RoomDatabase() {
     abstract fun todoDao(): TodoDao
