@@ -11,7 +11,6 @@ import com.mredrock.cyxbs.mine.page.feedback.center.presenter.FeedbackCenterPres
 import com.mredrock.cyxbs.mine.page.feedback.center.viewmodel.FeedbackCenterViewModel
 import com.mredrock.cyxbs.mine.page.feedback.edit.ui.FeedbackEditActivity
 import com.mredrock.cyxbs.mine.page.feedback.history.list.HistoryListActivity
-import kotlinx.android.synthetic.main.mine_activity_feedback_center.*
 
 /**
  * @Date : 2021/8/23   20:51
@@ -20,18 +19,31 @@ import kotlinx.android.synthetic.main.mine_activity_feedback_center.*
  * @Request : God bless my code
  **/
 class FeedbackCenterActivity :
-        BaseMVPVMActivity<FeedbackCenterViewModel, MineActivityFeedbackCenterBinding, FeedbackCenterPresenter>() {
+    BaseMVPVMActivity<FeedbackCenterViewModel, MineActivityFeedbackCenterBinding, FeedbackCenterPresenter>() {
+    /**
+     * 初始化adapter
+     */
     private val mAdapter by lazy {
         FeedbackCenterAdapter()
     }
 
+    /**
+     * 获取P层
+     */
     override fun createPresenter(): FeedbackCenterPresenter {
         return FeedbackCenterPresenter()
     }
 
+    /**
+     * 获取布局信息
+     */
     override fun getLayoutId(): Int {
         return R.layout.mine_activity_feedback_center
     }
+
+    /**
+     * 初始化view
+     */
     override fun initView() {
         mAdapter.setEventHandler(EventHandler())
         binding?.mineRecyclerview?.run {
@@ -40,14 +52,20 @@ class FeedbackCenterActivity :
         }
     }
 
+    /**
+     * 监听数据
+     */
     override fun observeData() {
         viewModel.apply {
-            contentList.observe({lifecycle},{
+            contentList.observe({ lifecycle }, {
                 mAdapter.setData(it)
             })
         }
     }
 
+    /**
+     * 初始化listener
+     */
     override fun initListener() {
         binding?.apply {
             btnQuestion.setOnClickListener {
@@ -59,8 +77,11 @@ class FeedbackCenterActivity :
         }
     }
 
-    inner class EventHandler{
-        fun onItemClick(itemView: View){
+    /**
+     * 每个item的监听事件 通过dataBinding传递
+     */
+    inner class EventHandler {
+        fun onItemClick(itemView: View) {
             startActivity<FeedbackDetailActivity>()
         }
     }

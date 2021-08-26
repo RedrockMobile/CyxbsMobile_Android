@@ -3,6 +3,7 @@ package com.mredrock.cyxbs.mine.page.feedback.history.detail
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.observe
 import androidx.recyclerview.widget.GridLayoutManager
 import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.mine.R
@@ -58,7 +59,7 @@ class HistoryDetailActivity :
      * 观察vm中的数据变动
      */
     override fun observeData() {
-        viewModel?.apply {
+        viewModel.apply {
             observeReplyBannerUrl(replyPicUrls)
         }
     }

@@ -39,7 +39,7 @@ class FeedbackEditViewModel:BaseViewModel(),FeedbackEditContract.IVM {
      */
     private val _uris: MutableLiveData<List<Uri>> = MutableLiveData(listOf())
     val uris: LiveData<List<Uri>> = _uris
-    fun setUris(value: List<Uri>) {
+    override fun setUris(value: List<Uri>) {
         _uris.value = value
     }
 }

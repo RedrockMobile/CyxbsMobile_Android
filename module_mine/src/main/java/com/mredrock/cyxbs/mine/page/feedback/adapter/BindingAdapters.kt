@@ -24,7 +24,7 @@ object BindingAdapters {
         view: View?,
         state: Boolean?,
         backgroundFalse: Drawable?,
-        backgroundTrue: Drawable?,
+        backgroundTrue: Drawable?
     ) {
         if (state == null) return
         if (state) {
@@ -39,7 +39,7 @@ object BindingAdapters {
     fun netImage(
         imageView: ImageView, url: String?,
         placeholder: Drawable?,
-        error: Drawable?,
+        error: Drawable?
     ) {
         url ?: return
         if (!url.matches(Regex("http.+"))) return
@@ -50,7 +50,7 @@ object BindingAdapters {
     @BindingAdapter("localImage")
     fun localImage(
         imageView: ImageView?,
-        imageUri: Uri?,
+        imageUri: Uri?
     ) {
         imageView ?: return
         imageUri ?: return

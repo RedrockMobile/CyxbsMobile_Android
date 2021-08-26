@@ -58,9 +58,7 @@
     <color name="mine_feedback_cards_content_text_color">#F0F0F2</color>
     <color name="mine_feedback_label_text_color">#000101</color>
     <color name="mine_feedback_reply_date_text_color">#F0F0F2</color>
-    <color name="mine_feedback_label_bg_color">
-        #5A5A5A
-    </color>
+    <color name="mine_feedback_label_bg_color">#5A5A5A</color>
     <color name="mine_feedback_no_reply_content_color">#DFDFE3</color>
     <color name="mine_feedback_not_reply_color">#FFE8E5</color>
     <color name="mine_feedback_recycle_item_text_color">#000101</color>

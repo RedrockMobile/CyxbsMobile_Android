@@ -19,18 +19,21 @@ class HistoryListActivity :
 
     /**
      * rv_history_list
+     * 初始化两个adapter
      */
     private val rvAdapter by lazy {
         RvListAdapter()
     }
 
+
     /**
-     * 创建Presenter
+     * 获取P层
      */
     override fun createPresenter(): HistoryListPresenter = HistoryListPresenter()
 
     /**
      * 获取布局Id
+     * 获取布局信息
      */
     override fun getLayoutId(): Int = R.layout.mine_activity_history_list
 
@@ -48,7 +51,7 @@ class HistoryListActivity :
     }
 
     /**
-     * 初始化监听器
+     * 初始化listener
      */
     override fun initListener() {
         //RecyclerView的Item点击
@@ -60,11 +63,8 @@ class HistoryListActivity :
                     val current = System.currentTimeMillis()
                     if (current - tag < 500) return
                     tag = current
-
                     presenter?.savedState(data)
-
                     toast(data.toString())
-
                     val intentExtra = Intent(this@HistoryListActivity,
                         HistoryDetailActivity::class.java).putExtra("id", data.id)
                     startActivity(intentExtra)
@@ -72,6 +72,7 @@ class HistoryListActivity :
 
             }
         )
+
         //返回键的点击监听
         binding?.includeToolBar?.fabBack?.setOnSingleClickListener {
             finish()
@@ -82,16 +83,17 @@ class HistoryListActivity :
      * 观察vm数据变化
      */
     override fun observeData() {
-        viewModel?.apply {
+        viewModel.apply {
             observeRvList(listData)
         }
     }
+
 
     /**
      * Rv的数据
      */
     private fun observeRvList(listData: LiveData<List<History>>) {
-        listData.observe(this) {
+        listData.observe({ lifecycle }) {
             rvAdapter.submitList(it)
         }
     }

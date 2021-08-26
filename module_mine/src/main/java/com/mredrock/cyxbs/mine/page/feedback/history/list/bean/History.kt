@@ -10,5 +10,5 @@ data class History(
     val date: Long,
     val replyOrNot: Boolean,
     var isRead: Boolean,
-    val id: Long,
+    val id: Long
 )

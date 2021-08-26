@@ -18,7 +18,7 @@ import kotlin.math.pow
  *@signature 我们不明前路，却已在路上
  */
 class RightTopDrawableLayout @JvmOverloads constructor(
-    context: Context, attrs: AttributeSet? = null,
+    context: Context, attrs: AttributeSet? = null
 ) : FrameLayout(context, attrs) {
 
     var rightTopDrawable: Drawable? =

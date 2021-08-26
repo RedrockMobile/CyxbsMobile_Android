@@ -69,7 +69,7 @@ abstract class BaseBindingSharedVMFragment<VM : BaseViewModel, T : ViewDataBindi
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?,
+        savedInstanceState: Bundle?
     ): View? {
         super.onCreateView(inflater, container, savedInstanceState)
         //获取Binding并对binding进行配置

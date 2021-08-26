@@ -15,7 +15,7 @@ import com.mredrock.cyxbs.mine.R
  *@signature 我们不明前路，却已在路上
  */
 class RightTopPointButton @JvmOverloads constructor(
-    context: Context, attrs: AttributeSet? = null,
+    context: Context, attrs: AttributeSet? = null
 ) : androidx.appcompat.widget.AppCompatTextView(context, attrs) {
 
      var pointVisible: Boolean = false
