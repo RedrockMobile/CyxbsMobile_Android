@@ -62,15 +62,6 @@
             app:showView="@{!vm.hasHistory}"
             tools:text="@string/mine_feedback_none_history_text" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_banner"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_none_history" />
-
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

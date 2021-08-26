@@ -34,6 +34,7 @@ class FeedbackEditViewModel:BaseViewModel(),FeedbackEditContract.IVM {
     }
 
     /**
+     * Add
      * 图片的Uri地址
      */
     private val _uris: MutableLiveData<List<Uri>> = MutableLiveData(listOf())

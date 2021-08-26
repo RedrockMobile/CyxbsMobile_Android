@@ -25,7 +25,8 @@ import top.limuyang2.photolibrary.LPhotoHelper
  * @Usage :
  * @Request : God bless my code
  **/
-class FeedbackEditPresenter: BasePresenter<FeedbackEditViewModel>(), FeedbackEditContract.IPresenter {
+class FeedbackEditPresenter : BasePresenter<FeedbackEditViewModel>(),
+    FeedbackEditContract.IPresenter {
 
     /**
      * 初始化数据
@@ -41,15 +42,15 @@ class FeedbackEditPresenter: BasePresenter<FeedbackEditViewModel>(), FeedbackEdi
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onCheckedChanged(p0: CompoundButton?, p1: Boolean) {
         p0 as Chip
-        if(p1){
+        if (p1) {
             p0.apply {
                 setChipStrokeColorResource(R.color.mine_edit_chip_border)
                 setTextColor(Color.parseColor("#4F4AE9"))
             }
-        }else{
+        } else {
             p0.apply {
                 setChipStrokeColorResource(R.color.mine_edit_chip_border_un)
-                setTextColor(resources.getColor(R.color.mine_edit_chip_tv_un,context.theme))
+                setTextColor(resources.getColor(R.color.mine_edit_chip_tv_un, context.theme))
             }
         }
     }
@@ -88,7 +89,7 @@ class FeedbackEditPresenter: BasePresenter<FeedbackEditViewModel>(), FeedbackEdi
         uri: List<Uri>,
         contentListener: (View, Int) -> Unit,
         iconListener: (View, Int) -> Unit,
-        clickListener: (View, Int) -> Unit
+        clickListener: (View, Int) -> Unit,
     ): MutableList<RvBinder<*>> {
         return mutableListOf<RvBinder<*>>().apply {
             addAll(
@@ -115,22 +116,24 @@ class FeedbackEditPresenter: BasePresenter<FeedbackEditViewModel>(), FeedbackEdi
     /**
      * 内容详情的监听器
      */
-    inner class DesTextWatcher:TextWatcher{
+    inner class DesTextWatcher : TextWatcher {
         override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
         override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-            vm?.setEditDesNum(p1+p3)
+            vm?.setEditDesNum(p1 + p3)
         }
+
         override fun afterTextChanged(p0: Editable?) {}
     }
 
     /**
      * 标题的监听器
      */
-    inner class TitleTextWatcher:TextWatcher{
+    inner class TitleTextWatcher : TextWatcher {
         override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
         override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-            vm?.setEditTitleNum(12-p1-p3)
+            vm?.setEditTitleNum(12 - p1 - p3)
         }
+
         override fun afterTextChanged(p0: Editable?) {}
     }
 }

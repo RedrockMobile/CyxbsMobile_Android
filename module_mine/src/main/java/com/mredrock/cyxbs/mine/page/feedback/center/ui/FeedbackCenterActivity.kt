@@ -3,13 +3,14 @@ package com.mredrock.cyxbs.mine.page.feedback.center.ui
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mredrock.cyxbs.common.ui.BaseMVPVMActivity
+import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.mine.R
 import com.mredrock.cyxbs.mine.databinding.MineActivityFeedbackCenterBinding
 import com.mredrock.cyxbs.mine.page.feedback.center.adapter.FeedbackCenterAdapter
 import com.mredrock.cyxbs.mine.page.feedback.center.presenter.FeedbackCenterPresenter
 import com.mredrock.cyxbs.mine.page.feedback.center.viewmodel.FeedbackCenterViewModel
 import com.mredrock.cyxbs.mine.page.feedback.edit.ui.FeedbackEditActivity
-import com.mredrock.cyxbs.mine.page.feedback.history.detail.HistoryDetailActivity
+import com.mredrock.cyxbs.mine.page.feedback.history.list.HistoryListActivity
 
 /**
  * @Date : 2021/8/23   20:51
@@ -18,7 +19,7 @@ import com.mredrock.cyxbs.mine.page.feedback.history.detail.HistoryDetailActivit
  * @Request : God bless my code
  **/
 class FeedbackCenterActivity :
-        BaseMVPVMActivity<FeedbackCenterViewModel, MineActivityFeedbackCenterBinding, FeedbackCenterPresenter>() {
+    BaseMVPVMActivity<FeedbackCenterViewModel, MineActivityFeedbackCenterBinding, FeedbackCenterPresenter>() {
     /**
      * 初始化adapter
      */
@@ -56,7 +57,7 @@ class FeedbackCenterActivity :
      */
     override fun observeData() {
         viewModel.apply {
-            contentList.observe({lifecycle},{
+            contentList.observe({ lifecycle }, {
                 mAdapter.setData(it)
             })
         }
@@ -70,8 +71,8 @@ class FeedbackCenterActivity :
             btnQuestion.setOnClickListener {
                 startActivity<FeedbackEditActivity>()
             }
-            ivHistory.setOnClickListener {
-                startActivity<HistoryDetailActivity>()
+            ivHistory.setOnSingleClickListener {
+                startActivity<HistoryListActivity>()
             }
         }
     }
@@ -79,8 +80,8 @@ class FeedbackCenterActivity :
     /**
      * 每个item的监听事件 通过dataBinding传递
      */
-    inner class EventHandler{
-        fun onItemClick(itemView: View){
+    inner class EventHandler {
+        fun onItemClick(itemView: View) {
             startActivity<FeedbackDetailActivity>()
         }
     }

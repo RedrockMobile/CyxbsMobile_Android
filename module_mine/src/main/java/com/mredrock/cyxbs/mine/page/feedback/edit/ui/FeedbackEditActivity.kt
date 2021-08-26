@@ -71,6 +71,11 @@ class FeedbackEditActivity :
                 layoutManager = GridLayoutManager(this@FeedbackEditActivity, 3)
             }
         }
+
+        binding?.rvBanner?.apply {
+            adapter = rvPicAdapter
+            layoutManager = GridLayoutManager(this@FeedbackEditActivity, 3)
+        }
     }
 
     /**

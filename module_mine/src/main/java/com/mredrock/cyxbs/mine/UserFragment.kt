@@ -25,6 +25,7 @@ import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.*
 import com.mredrock.cyxbs.mine.page.about.AboutActivity
 import com.mredrock.cyxbs.mine.page.edit.EditInfoActivity
+import com.mredrock.cyxbs.mine.page.feedback.center.ui.FeedbackCenterActivity
 import com.mredrock.cyxbs.mine.page.feedback.history.detail.HistoryDetailActivity
 import com.mredrock.cyxbs.mine.page.feedback.history.list.HistoryListActivity
 import com.mredrock.cyxbs.mine.page.security.util.Jump2QQHelper
@@ -66,7 +67,7 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
             mine_main_tv_comment.setOnSingleClickListener { doIfLogin { jumpAndSaveTime(QA_MY_COMMENT, 1) } }
             mine_main_tv_praise.setOnSingleClickListener { doIfLogin { jumpAndSaveTime(QA_MY_PRAISE, 2) } }
             /*mine_main_fm_feedback.setOnSingleClickListener { doIfLogin { Jump2QQHelper.onFeedBackClick(this) } }*/
-            mine_main_fm_feedback.setOnSingleClickListener { doIfLogin { startActivity(Intent(context,HistoryListActivity::class.java)) } }
+            mine_main_fm_feedback.setOnSingleClickListener { doIfLogin { startActivity(Intent(context,FeedbackCenterActivity::class.java)) } }
             mine_main_cl_info_edit.setOnClickListener {
                 doIfLogin {
                     startActivity(

@@ -256,6 +256,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:text="@{@string/mine_feedback_edit_description_num(vm.editDesNum)}"
+                    tools:text="0/200"
                     android:textColor="@color/mine_feedback_edit_num"
                     android:textSize="12sp"
                     app:layout_constraintEnd_toEndOf="@+id/tv_pic_num"
