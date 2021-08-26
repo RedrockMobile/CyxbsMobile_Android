@@ -27,9 +27,20 @@ import kotlin.collections.ArrayList
  * TODO模块一些简单的通用工具类
  */
 
+val weekStringList = listOf(
+    "一",
+    "二",
+    "三",
+    "四",
+    "五",
+    "六",
+    "日"
+)
+
 //根据remindMode生成提醒日期
+//如果仅仅加以重复而不提醒，则返回提醒那天的
 fun repeatMode2RemindTime(remindMode: RemindMode): String {
-    if(remindMode.notifyDateTime == "") return ""
+    if (remindMode.notifyDateTime == "") return ""
     //今天的日历
     val calendar = Calendar.getInstance()
     calendar.time = Date(System.currentTimeMillis())
@@ -140,6 +151,8 @@ fun getThisYearDateSting(): ArrayList<DateBeen> {
             .editor {
                 putString(TODO_WEEK_MONTH_ARRAY, arrayJson)
             }
+        val todayCalendar = Calendar.getInstance()
+        dateBeanArray.subList(0, todayCalendar.get(Calendar.DAY_OF_YEAR) - 1).clear()
         return dateBeanArray
     } else {
         //使用本地缓存
@@ -165,16 +178,6 @@ fun needTodayDone(remindMode: RemindMode): Boolean {
     )
 }
 
-val weekStringList = listOf(
-    "一",
-    "二",
-    "三",
-    "四",
-    "五",
-    "六",
-    "日"
-)
-
 fun setMargin(
     view: View,
     top: Int = view.marginTop,
@@ -186,4 +189,33 @@ fun setMargin(
     params.setMargins(left, top, right, bottom)
     view.layoutParams = params
     view.requestLayout()
+}
+
+fun remindMode2RemindList(remindMode: RemindMode): List<String> {
+    when (remindMode.repeatMode) {
+        RemindMode.NONE -> {
+            return listOf("设置提醒时间")
+        }
+
+        RemindMode.DAY -> {
+            return listOf("每天")
+        }
+
+        RemindMode.WEEK -> {
+            return remindMode.week.map {
+                "每周$it"
+            }
+        }
+
+        RemindMode.YEAR -> {
+            return remindMode.date.map {
+                val monthAndDay = it.split('.')
+                "每年${monthAndDay[0]}月${monthAndDay[1]}日"
+            }
+        }
+
+        else -> {
+            return listOf("设置提醒时间")
+        }
+    }
 }

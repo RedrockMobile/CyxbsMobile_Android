@@ -3,10 +3,11 @@
     package="com.cyxbsmobile_single.module_todo">
 
     <application>
+        <activity android:name=".ui.activity.TodoDetailActivity"></activity>
         <activity
             android:name=".ui.activity.WidgetAddTodoActivity"
-            android:theme="@style/todo_TranslucentStyle"
-            android:launchMode="singleInstance"/>
+            android:launchMode="singleInstance"
+            android:theme="@style/todo_TranslucentStyle" />
         <activity android:name=".ui.activity.TodoInnerMainActivity" />
     </application>
 

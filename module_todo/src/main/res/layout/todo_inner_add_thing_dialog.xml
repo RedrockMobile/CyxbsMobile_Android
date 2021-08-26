@@ -58,6 +58,7 @@
         android:textColorHint="@color/common_othercourse_common_hint_text_color" />
 
     <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/todo_ll_notify_time"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="34.5dp">
@@ -80,11 +81,13 @@
     </androidx.appcompat.widget.LinearLayoutCompat>
 
     <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/todo_ll_repeat_mode"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="17.5dp">
 
         <ImageView
+            android:id="@+id/todo_iv_add_bell"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="21dp"
@@ -94,7 +97,7 @@
             android:id="@+id/todo_tv_set_repeat_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
+            android:layout_marginStart="12dp"
             android:clickable="true"
             android:text="@string/todo_inner_add_thing_repeat_time_text"
             android:textColor="@color/todo_inner_add_thing_nf_tv_color"
@@ -175,11 +178,11 @@
                 android:id="@+id/todo_iv_add_repeat"
                 android:layout_width="18dp"
                 android:layout_height="18dp"
-                android:layout_marginStart="40dp"
+                android:layout_marginEnd="52dp"
                 android:visibility="gone"
                 android:src="@drawable/todo_ic_add_repeat"
                 app:layout_constraintBottom_toBottomOf="@+id/todo_inner_add_thing_third"
-                app:layout_constraintStart_toEndOf="@id/todo_inner_add_thing_second"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/todo_inner_add_thing_third" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.appcompat.widget.LinearLayoutCompat>

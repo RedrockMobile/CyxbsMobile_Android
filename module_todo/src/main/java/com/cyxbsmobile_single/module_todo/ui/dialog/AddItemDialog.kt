@@ -2,6 +2,7 @@ package com.cyxbsmobile_single.module_todo.ui.dialog
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -12,15 +13,19 @@ import com.cyxbsmobile_single.module_todo.model.bean.RemindMode
 import com.cyxbsmobile_single.module_todo.model.bean.Todo
 import com.cyxbsmobile_single.module_todo.ui.dialog.AddItemDialog.CurOperate.*
 import com.cyxbsmobile_single.module_todo.util.getThisYearDateSting
+import com.cyxbsmobile_single.module_todo.util.remindMode2RemindList
 import com.cyxbsmobile_single.module_todo.util.weekStringList
+import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.component.RedRockBottomSheetDialog
 import com.mredrock.cyxbs.common.utils.LogUtils
+import com.mredrock.cyxbs.common.utils.extensions.toast
 import com.super_rabbit.wheel_picker.OnValueChangeListener
 import com.super_rabbit.wheel_picker.WheelAdapter
 import com.super_rabbit.wheel_picker.WheelPicker
 import kotlinx.android.synthetic.main.todo_inner_add_thing_dialog.*
 import kotlinx.android.synthetic.main.todo_inner_add_thing_dialog.view.*
 import java.util.*
+import java.util.regex.Pattern
 
 /**
  * @date 2021-08-18
@@ -38,7 +43,17 @@ class AddItemDialog(context: Context, onConfirm: (Todo) -> Unit) :
     }
 
     private var curOperate: CurOperate = NONE
-    private val repeatTimeAdapter by lazy { RepeatTimeAdapter(arrayListOf()) }
+    private val repeatTimeAdapter by lazy {
+        RepeatTimeAdapter(arrayListOf()) {
+            when(todo.remindMode.repeatMode){
+                RemindMode.YEAR -> todo.remindMode.date.removeAt(it)
+                RemindMode.WEEK -> todo.remindMode.week.removeAt(it)
+                RemindMode.MONTH -> todo.remindMode.day.removeAt(it)
+            }
+        }
+    }
+
+    private var isFromDetail = false
 
     private val todo by lazy { Todo.generateEmptyTodo() }
 
@@ -74,6 +89,10 @@ class AddItemDialog(context: Context, onConfirm: (Todo) -> Unit) :
             }
 
             todo_inner_add_thing_repeat_time_cancle.setOnClickListener {
+                if (isFromDetail) {
+                    hide()
+                    return@setOnClickListener
+                }
                 todo_tv_set_notify_time.isClickable = true
                 todo_tv_set_repeat_time.isClickable = true
                 //制空remindMode
@@ -85,11 +104,20 @@ class AddItemDialog(context: Context, onConfirm: (Todo) -> Unit) :
                 if (curOperate == NOTIFY) {
                     updateNotifyTime()
                 }
+                if (isFromDetail) {
+                    onConfirm(todo)
+                    hide()
+                    return@setOnClickListener
+                }
                 hideWheel()
             }
 
             todo_thing_add_thing_save.setOnClickListener {
                 todo.title = todo_et_todo_title.text.toString()
+                if (todo.title == ""){
+                    BaseApp.context.toast("标题不可为空哦")
+                    return@setOnClickListener
+                }
                 onConfirm(todo)
                 hide()
             }
@@ -102,6 +130,7 @@ class AddItemDialog(context: Context, onConfirm: (Todo) -> Unit) :
                 todo.remindMode.apply {
                     repeatMode = RemindMode.WEEK
                     week.add(
+                        0,
                         weekStringList.indexOf(
                             todo_inner_add_thing_second.getCurrentItem()
                                 .subSequence(1, 2)
@@ -113,14 +142,14 @@ class AddItemDialog(context: Context, onConfirm: (Todo) -> Unit) :
             "每月" -> {
                 todo.remindMode.apply {
                     repeatMode = RemindMode.MONTH
-                    day.add(Integer.parseInt(todo_inner_add_thing_second.getCurrentItem()))
+                    day.add(0, Integer.parseInt(todo_inner_add_thing_second.getCurrentItem()))
                 }
                 "每月${todo_inner_add_thing_second.getCurrentItem()}日"
             }
             "每年" -> {
                 todo.remindMode.apply {
                     repeatMode = RemindMode.YEAR
-                    date.add("${todo_inner_add_thing_second.getCurrentItem()}.${todo_inner_add_thing_third.getCurrentItem()}")
+                    date.add(0,"${todo_inner_add_thing_second.getCurrentItem()}.${todo_inner_add_thing_third.getCurrentItem()}")
                 }
                 "每年${todo_inner_add_thing_second.getCurrentItem()}月${todo_inner_add_thing_third.getCurrentItem()}日"
             }
@@ -175,7 +204,7 @@ class AddItemDialog(context: Context, onConfirm: (Todo) -> Unit) :
         }
     }
 
-    private fun showNotifyDatePicker() {
+    fun showNotifyDatePicker() {
         curOperate = NOTIFY
         todo_iv_add_repeat.visibility = View.GONE
         todo_iv_inner_add_thing_repeat_time_index.visibility = View.VISIBLE
@@ -193,7 +222,27 @@ class AddItemDialog(context: Context, onConfirm: (Todo) -> Unit) :
         initWheelPicker(todo_inner_add_thing_third, SubOneNumberAdapter(60))
     }
 
-    private fun showRepeatModePicker() {
+    fun resetNotifyTime(todo: Todo) {
+        this.todo.remindMode = todo.remindMode
+        isFromDetail = true
+    }
+
+    fun resetAllRepeatMode(todo: Todo) {
+        repeatTimeAdapter.resetAll(remindMode2RemindList(todo.remindMode))
+        this.todo.remindMode = todo.remindMode
+        isFromDetail = true
+    }
+
+    //设置为只有单个选择（重复或者提醒时间）
+    fun setAsSinglePicker(){
+        todo_inner_add_thing_header.visibility = View.GONE
+        todo_et_todo_title.visibility = View.GONE
+        todo_iv_add_bell.visibility = View.GONE
+        todo_ll_notify_time.visibility = View.GONE
+        todo_tv_set_repeat_time.setTextColor(Color.parseColor("#15315b"))
+    }
+
+    fun showRepeatModePicker() {
         curOperate = REPEAT
         todo_iv_add_repeat.visibility = View.VISIBLE
         todo_iv_inner_add_thing_repeat_time_index.visibility = View.VISIBLE
@@ -212,6 +261,7 @@ class AddItemDialog(context: Context, onConfirm: (Todo) -> Unit) :
                     newVal: String
                 ) {
                     repeatTimeAdapter.removeAll()
+                    todo.remindMode = RemindMode.generateDefaultRemindMode()
                     when (newVal) {
                         "每天" -> {
                             todo_inner_add_thing_second.apply {
@@ -243,15 +293,20 @@ class AddItemDialog(context: Context, onConfirm: (Todo) -> Unit) :
                             todo_inner_add_thing_second.visibility = View.VISIBLE
                             todo_inner_add_thing_third.visibility = View.VISIBLE
                             //先加载一下(因为pos不会清零)
-                            val month =
-                                Integer.parseInt(todo_inner_add_thing_second.getCurrentItem())
-                            val calendar = Calendar.getInstance()
-                            LogUtils.d("RayleighZ", "$month")
-                            calendar.set(Calendar.MONTH, month - 1)
-                            initWheelPicker(
-                                todo_inner_add_thing_third,
-                                NumAdapter(calendar.getActualMaximum(Calendar.DAY_OF_MONTH))
-                            )
+                            val pattern: Pattern = Pattern.compile("-?[0-9]+\\.?[0-9]*")
+                            if (pattern.matcher(todo_inner_add_thing_second.getCurrentItem())
+                                    .matches()
+                            ) {
+                                val month =
+                                    Integer.parseInt(todo_inner_add_thing_second.getCurrentItem())
+                                val calendar = Calendar.getInstance()
+                                LogUtils.d("RayleighZ", "$month")
+                                calendar.set(Calendar.MONTH, month - 1)
+                                initWheelPicker(
+                                    todo_inner_add_thing_third,
+                                    NumAdapter(calendar.getActualMaximum(Calendar.DAY_OF_MONTH))
+                                )
+                            }
                             todo_inner_add_thing_second.setOnValueChangeListener(
                                 object : OnValueChangeListener {
                                     override fun onValueChange(
@@ -259,13 +314,15 @@ class AddItemDialog(context: Context, onConfirm: (Todo) -> Unit) :
                                         oldVal: String,
                                         newVal: String
                                     ) {
-                                        val innerMonth = Integer.parseInt(newVal)
-                                        val innerCalendar = Calendar.getInstance()
-                                        innerCalendar.set(Calendar.MONTH, innerMonth - 1)
-                                        initWheelPicker(
-                                            todo_inner_add_thing_third,
-                                            NumAdapter(innerCalendar.getActualMaximum(Calendar.DAY_OF_MONTH))
-                                        )
+                                        if (pattern.matcher(newVal).matches()) {
+                                            val innerMonth = Integer.parseInt(newVal)
+                                            val innerCalendar = Calendar.getInstance()
+                                            innerCalendar.set(Calendar.MONTH, innerMonth - 1)
+                                            initWheelPicker(
+                                                todo_inner_add_thing_third,
+                                                NumAdapter(innerCalendar.getActualMaximum(Calendar.DAY_OF_MONTH))
+                                            )
+                                        }
                                     }
                                 }
                             )

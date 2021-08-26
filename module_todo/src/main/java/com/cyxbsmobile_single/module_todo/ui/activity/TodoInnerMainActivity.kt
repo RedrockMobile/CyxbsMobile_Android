@@ -10,7 +10,7 @@ import com.cyxbsmobile_single.module_todo.R
 import com.cyxbsmobile_single.module_todo.adapter.DoubleListFoldRvAdapter
 import com.cyxbsmobile_single.module_todo.adapter.DoubleListFoldRvAdapter.ShowType.NORMAL
 import com.cyxbsmobile_single.module_todo.adapter.slide_callback.SlideCallback
-import com.cyxbsmobile_single.module_todo.model.bean.RemindMode
+import com.cyxbsmobile_single.module_todo.ui.dialog.AddItemDialog
 import com.cyxbsmobile_single.module_todo.util.setMargin
 import com.cyxbsmobile_single.module_todo.viewmodel.TodoViewModel
 import com.mredrock.cyxbs.common.BaseApp
@@ -44,6 +44,16 @@ class TodoInnerMainActivity : BaseViewModelActivity<TodoViewModel>() {
         val adapter =
             DoubleListFoldRvAdapter(viewModel.wrapperList, NORMAL, R.layout.todo_rv_item_todo_inner)
         val callback = SlideCallback()
+
+        todo_inner_home_bar_add.setOnClickListener {
+            AddItemDialog(this){
+                adapter.addTodo(it)
+            }.show()
+        }
+
+        todo_inner_home_bar_back.setOnClickListener {
+            finish()
+        }
         adapter.onBindView = { view, pos, viewType, wrapper ->
             when (viewType) {
                 DoubleListFoldRvAdapter.TITLE -> {
@@ -58,6 +68,11 @@ class TodoInnerMainActivity : BaseViewModelActivity<TodoViewModel>() {
 
                 DoubleListFoldRvAdapter.TODO -> {
                     view.apply {
+                        todo_fl_todo_back.setOnClickListener {
+                            wrapper.todo?.let {
+                                TodoDetailActivity.startActivity(it, this@TodoInnerMainActivity)
+                            }
+                        }
                         todo_fl_del.visibility = View.VISIBLE
                         todo_fl_del.setOnClickListener {
                             adapter.delItem(wrapper)
@@ -73,15 +88,15 @@ class TodoInnerMainActivity : BaseViewModelActivity<TodoViewModel>() {
                             setMargin(todo_tv_todo_title, top = BaseApp.context.dip(18), bottom = BaseApp.context.dip(40))
                         }
 
-                        todo_clv_todo_item.setOnClickListener {
+                        todo_iv_todo_item.setOnClickListener {
                             wrapper.todo?.apply {
                                 if (!isChecked) {
-                                    todo_clv_todo_item.setStatusWithAnime(true) {
+                                    todo_iv_todo_item.setStatusWithAnime(true) {
                                         adapter.checkItemAndSwap(wrapper)
                                         changeItemToChecked(view)
                                     }
                                 } else {
-                                    todo_clv_todo_item.isClickable = false
+                                    todo_iv_todo_item.isClickable = false
                                 }
                             }
                         }

@@ -7,8 +7,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.cyxbsmobile_single.module_todo.R
 import com.cyxbsmobile_single.module_todo.adapter.DoubleListFoldRvAdapter.ShowType.*
-import com.cyxbsmobile_single.module_todo.model.bean.Todo
-import com.cyxbsmobile_single.module_todo.model.bean.TodoItemWrapper
+import com.cyxbsmobile_single.module_todo.ui.activity.TodoDetailActivity
 import com.cyxbsmobile_single.module_todo.viewmodel.TodoViewModel
 import com.mredrock.cyxbs.common.ui.BaseFeedFragment
 import com.mredrock.cyxbs.common.utils.LogUtils
@@ -46,8 +45,13 @@ class TodoFeedAdapter(private val todoViewModel: TodoViewModel) :
                     //此处不可能出现title，但为了稳一波，还是加上了判断
                     if (viewType == DoubleListFoldRvAdapter.TODO){
                         view.apply {
-                            todo_clv_todo_item.setOnClickListener {
-                                todo_clv_todo_item.setStatusWithAnime(isChecked = true){
+                            todo_fl_todo_back.setOnClickListener {
+                                wrapper.todo?.let {
+                                    TodoDetailActivity.startActivity(it, context)
+                                }
+                            }
+                            todo_iv_todo_item.setOnClickListener {
+                                todo_iv_todo_item.setStatusWithAnime(isChecked = true){
                                     adapter.checkItemAndPopUp(wrapper)
                                     if (adapter.itemCount == 0){
                                         //如果所有条目都下去了

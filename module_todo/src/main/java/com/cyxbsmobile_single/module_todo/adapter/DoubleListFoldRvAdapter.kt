@@ -259,6 +259,7 @@ class DoubleListFoldRvAdapter(
                         todo_fl_del.visibility = View.GONE
                         todo_tv_todo_title.text = todo.title
                         todo_tv_notify_time.text = repeatMode2RemindTime(todo.remindMode)
+                        todo_tv_todo_title.setOnClickListener { }//防止穿透点击
                         if (todo_tv_notify_time.text.toString() == ""){
                             todo_tv_notify_time.visibility = View.GONE
                             todo_iv_bell.visibility = View.GONE
@@ -266,7 +267,7 @@ class DoubleListFoldRvAdapter(
                             todo_tv_notify_time.visibility = View.VISIBLE
                             todo_iv_bell.visibility = View.VISIBLE
                         }
-                        todo_clv_todo_item.setStatusWithoutAnime(todo.isChecked)
+                        todo_iv_todo_item.setStatusWithoutAnime(todo.isChecked)
                         if (todo.isChecked) {
                             todo_tv_todo_title.setTextColor(Color.parseColor("#6615315B"))
                             todo_iv_check.visibility = View.VISIBLE

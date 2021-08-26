@@ -1,13 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.appcompat.widget.LinearLayoutCompat
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/common_white_background"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
+    android:fitsSystemWindows="true"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
     tools:ignore="ResourceName">
-
+    
     <FrameLayout
         android:id="@+id/todo_inner_detail_header"
         android:layout_width="match_parent"
@@ -20,6 +23,7 @@
             android:layout_gravity="left"
             android:layout_marginStart="15dp"
             android:layout_marginTop="15dp"
+            android:layout_marginBottom="9dp"
             android:background="@drawable/todo_ic_detail_back" />
 
         <TextView
@@ -27,8 +31,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="right"
-            android:layout_marginTop="15dp"
             android:layout_marginEnd="15dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="4.5dp"
             android:text="保存"
             android:textColor="@color/todo_inner_add_thing_repeat_time_canlce_text_color"
             android:textSize="20sp"
@@ -39,7 +44,54 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="@color/todo_inner_detail_line_color" />
-    <!--    TODO item布局-->
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/todo_iv_todo_item"
+            android:layout_width="wrap_content"
+            android:layout_height="23dp"
+            android:src="@drawable/todo_ic_detail_check_eclipse"
+            android:layout_marginStart="15dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/todo_tv_todo_title"/>
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/todo_iv_check"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_marginBottom="3dp"
+            android:src="@drawable/todo_ic_detail_check"
+            app:layout_constraintBottom_toBottomOf="@+id/todo_iv_todo_item"
+            app:layout_constraintStart_toStartOf="@+id/todo_iv_todo_item"
+            app:layout_constraintTop_toTopOf="@+id/todo_iv_todo_item" />
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/todo_tv_todo_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="50dp"
+            android:layout_marginTop="29.5dp"
+            android:layout_marginEnd="15dp"
+            android:background="@null"
+            android:gravity="center_vertical"
+            android:inputType="textMultiLine"
+            android:paddingEnd="1dp"
+            android:textColor="@color/todo_check_line_color"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0"
+            tools:text="111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+    
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -50,14 +102,14 @@
         android:textSize="18sp"
         android:textStyle="normal" />
 
-    <androidx.appcompat.widget.AppCompatEditText
-        android:id="@+id/todo_inner_detail_time_ed"
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/todo_tv_inner_detail_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="50dp"
         android:layout_marginTop="10dp"
+        android:textSize="15sp"
         android:hint="@string/todo_inner_add_thing_nf_text"
-        android:inputType="text"
         android:textColor="@color/todo_check_line_color"
         android:textColorHint="@color/todo_inner_add_thing_repeat_time_canlce_text_color" />
 
@@ -78,16 +130,14 @@
         android:textSize="18sp"
         android:textStyle="normal" />
 
-    <androidx.appcompat.widget.AppCompatEditText
-        android:id="@+id/todo_inner_detail_repeat_time_ed"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/todo_rv_inner_detail_repeat_time"
+        android:layout_width="match_parent"
+        android:layout_height="21dp"
         android:layout_marginStart="50dp"
         android:layout_marginTop="10dp"
-        android:hint="@string/todo_inner_add_thing_repeat_time_text"
-        android:inputType="text"
-        android:textColor="@color/todo_check_line_color"
-        android:textColorHint="@color/todo_inner_add_thing_repeat_time_canlce_text_color" />
+        tools:listitem="@layout/todo_rv_item_simple_text"
+        android:textColor="@color/todo_check_line_color" />
 
     <View
         android:layout_width="match_parent"
@@ -108,12 +158,16 @@
 
     <androidx.appcompat.widget.AppCompatEditText
         android:id="@+id/todo_inner_detail_remark_ed"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="50dp"
+        android:layout_marginEnd="16dp"
         android:layout_marginTop="10dp"
+        android:textSize="15sp"
         android:hint="@string/todo_inner_detail_remark_hint_text"
-        android:inputType="text"
+        android:inputType="textMultiLine"
+        android:background="@null"
+        android:maxLines="20"
         android:textColor="@color/todo_check_line_color"
         android:textColorHint="@color/todo_inner_add_thing_repeat_time_canlce_text_color" />
 
@@ -127,7 +181,7 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_weight="1"/>
-    <androidx.appcompat.widget.AppCompatButton
+    <androidx.appcompat.widget.AppCompatTextView
         android:layout_width="120dp"
         android:layout_height="40dp"
         android:background="@drawable/todo_shape_inner_add_thing_repeat_time_cancle_button"
