@@ -29,7 +29,7 @@ abstract class BaseMVPVMFragment<VM : BaseViewModel, T : ViewDataBinding, P : Ba
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?,
+        savedInstanceState: Bundle?
     ): View? {
         super.onCreateView(inflater, container, savedInstanceState)
         binding = DataBindingUtil.inflate(inflater, getLayoutId(), container, false)

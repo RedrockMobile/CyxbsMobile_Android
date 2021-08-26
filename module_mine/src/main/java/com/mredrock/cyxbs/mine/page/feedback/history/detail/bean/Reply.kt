@@ -8,5 +8,5 @@ package com.mredrock.cyxbs.mine.page.feedback.history.detail.bean
 data class Reply(
     val date: Long,
     val content: String,
-    val isReply: Boolean,
+    val isReply: Boolean
 )

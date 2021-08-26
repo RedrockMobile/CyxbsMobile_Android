@@ -1,5 +1,6 @@
 package com.mredrock.cyxbs.mine.page.feedback.edit.viewmodel
 
+import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
@@ -30,5 +31,14 @@ class FeedbackEditViewModel:BaseViewModel(),FeedbackEditContract.IVM {
         get() = _editTitleNum
     override fun setEditTitleNum(value: Int){
         _editTitleNum.value = value
+    }
+
+    /**
+     * 图片的Uri地址
+     */
+    private val _uris: MutableLiveData<List<Uri>> = MutableLiveData(listOf())
+    val uris: LiveData<List<Uri>> = _uris
+    override fun setUris(value: List<Uri>) {
+        _uris.value = value
     }
 }

@@ -10,7 +10,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fitsSystemWindows="true"
+        android:fillViewport="true"
         tools:context=".page.feedback.center.ui.FeedbackDetailActivity">
 
         <RelativeLayout
@@ -55,6 +55,7 @@
                 android:layout_marginBottom="3dp"
                 android:layout_toEndOf="@id/fab_center_back"
                 android:gravity="center_vertical"
+                android:ellipsize="marquee"
                 android:text="@string/mine_feedback_detail_toolbar_title"
                 android:textColor="@color/mine_goods_toolbar_title_tv"
                 android:textSize="22sp"

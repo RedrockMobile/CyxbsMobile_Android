@@ -8,5 +8,5 @@ import android.net.Uri
  *@signature 我们不明前路，却已在路上
  */
 class Pic(
-    val picUri: Uri,
+    val picUri: Uri
 )

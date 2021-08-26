@@ -10,6 +10,9 @@ import com.mredrock.cyxbs.mine.page.feedback.center.viewmodel.FeedbackCenterView
  **/
 class FeedbackCenterPresenter:
         BasePresenter<FeedbackCenterViewModel>() ,FeedbackCenterContract.IPresenter{
+    /**
+     * 初始化数据
+     */
     override fun fetch() {
         vm?.setContentList(listOf(
                 "标题",

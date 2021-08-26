@@ -9,6 +9,7 @@ import com.mredrock.cyxbs.mine.page.feedback.center.adapter.FeedbackCenterAdapte
 import com.mredrock.cyxbs.mine.page.feedback.center.presenter.FeedbackCenterPresenter
 import com.mredrock.cyxbs.mine.page.feedback.center.viewmodel.FeedbackCenterViewModel
 import com.mredrock.cyxbs.mine.page.feedback.edit.ui.FeedbackEditActivity
+import com.mredrock.cyxbs.mine.page.feedback.history.detail.HistoryDetailActivity
 
 /**
  * @Date : 2021/8/23   20:51
@@ -18,17 +19,30 @@ import com.mredrock.cyxbs.mine.page.feedback.edit.ui.FeedbackEditActivity
  **/
 class FeedbackCenterActivity :
         BaseMVPVMActivity<FeedbackCenterViewModel, MineActivityFeedbackCenterBinding, FeedbackCenterPresenter>() {
+    /**
+     * 初始化adapter
+     */
     private val mAdapter by lazy {
         FeedbackCenterAdapter()
     }
 
+    /**
+     * 获取P层
+     */
     override fun createPresenter(): FeedbackCenterPresenter {
         return FeedbackCenterPresenter()
     }
 
+    /**
+     * 获取布局信息
+     */
     override fun getLayoutId(): Int {
         return R.layout.mine_activity_feedback_center
     }
+
+    /**
+     * 初始化view
+     */
     override fun initView() {
         mAdapter.setEventHandler(EventHandler())
         binding?.mineRecyclerview?.run {
@@ -37,6 +51,9 @@ class FeedbackCenterActivity :
         }
     }
 
+    /**
+     * 监听数据
+     */
     override fun observeData() {
         viewModel.apply {
             contentList.observe({lifecycle},{
@@ -45,14 +62,23 @@ class FeedbackCenterActivity :
         }
     }
 
+    /**
+     * 初始化listener
+     */
     override fun initListener() {
         binding?.apply {
             btnQuestion.setOnClickListener {
                 startActivity<FeedbackEditActivity>()
             }
+            ivHistory.setOnClickListener {
+                startActivity<HistoryDetailActivity>()
+            }
         }
     }
 
+    /**
+     * 每个item的监听事件 通过dataBinding传递
+     */
     inner class EventHandler{
         fun onItemClick(itemView: View){
             startActivity<FeedbackDetailActivity>()

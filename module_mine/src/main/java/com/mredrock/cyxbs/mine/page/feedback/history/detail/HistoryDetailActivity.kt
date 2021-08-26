@@ -1,6 +1,7 @@
 package com.mredrock.cyxbs.mine.page.feedback.history.detail
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.observe
 import androidx.recyclerview.widget.GridLayoutManager
 import com.mredrock.cyxbs.mine.R
 import com.mredrock.cyxbs.mine.databinding.MineActivityHistoryDetailBinding
@@ -29,13 +30,13 @@ class HistoryDetailActivity :
     }
 
     override fun observeData() {
-        viewModel?.apply {
+        viewModel.apply {
             observeReplyBannerUrl(replyPicUrls)
         }
     }
 
     private fun observeReplyBannerUrl(replyPicUrls: LiveData<List<String>>) {
-        replyPicUrls.observe(this) {
+        replyPicUrls.observe({lifecycle}) {
             replyBannerRvAdapter.submitList(it)
         }
     }

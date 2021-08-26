@@ -4,6 +4,7 @@ import android.content.Intent
 import android.net.Uri
 import android.view.View
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.observe
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
@@ -27,7 +28,9 @@ import java.util.*
 class HistoryListActivity :
     BaseMVPVMActivity<HistoryListViewModel, MineActivityHistoryListBinding, HistoryListPresenter>() {
 
-
+    /**
+     * 初始化两个adapter
+     */
     private val rvAdapter by lazy {
         RvListAdapter()
     }
@@ -36,25 +39,36 @@ class HistoryListActivity :
         RvAdapter()
     }
 
+    /**
+     * 获取P层
+     */
     override fun createPresenter(): HistoryListPresenter = HistoryListPresenter()
 
+    /**
+     * 获取布局信息
+     */
     override fun getLayoutId(): Int = R.layout.mine_activity_history_list
 
+    /**
+     * 初始化view
+     */
     override fun initView() {
-        binding?.vm = viewModel
-        //初始化Rv配置
-        binding?.rvHistoryList?.apply {
-            adapter = rvAdapter
-            layoutManager = LinearLayoutManager(this@HistoryListActivity)
-        }
-
-///////////////////////////////////////
-        binding?.rvBanner?.apply {
-            adapter = rvPicAdapter
-            layoutManager = GridLayoutManager(this@HistoryListActivity, 3)
+        binding?.apply {
+            vm = viewModel
+            rvHistoryList.apply {
+                adapter = rvAdapter
+                layoutManager = LinearLayoutManager(this@HistoryListActivity)
+            }
+            rvBanner.apply {
+                adapter = rvPicAdapter
+                layoutManager = GridLayoutManager(this@HistoryListActivity, 3)
+            }
         }
     }
 
+    /**
+     * 初始化listener
+     */
     override fun initListener() {
         rvAdapter.setOnItemClickListener(
             object : RvListAdapter.ItemClickListener {
@@ -64,11 +78,8 @@ class HistoryListActivity :
                     val current = System.currentTimeMillis()
                     if (current - tag < 500) return
                     tag = current
-
                     presenter?.savedState(data)
-
                     toast(data.toString())
-
                     val intentExtra = Intent(this@HistoryListActivity,
                         HistoryDetailActivity::class.java).putExtra("id", data.id)
                     startActivity(intentExtra)
@@ -76,23 +87,25 @@ class HistoryListActivity :
 
             }
         )
-
         binding?.includeToolBar?.fabBack?.setOnSingleClickListener {
             finish()
         }
     }
 
+    /**
+     * 监听事件
+     */
     override fun observeData() {
-        viewModel?.apply {
+        viewModel.apply {
             observeRvList(listData)
-///////////////////////////////////////
+    ///////////////////////////////////////
             observePics(uris)
         }
     }
 
     ///////////////////////////////////////
     private fun observePics(uris: LiveData<List<Uri>>) {
-        uris.observe(this) {
+        uris.observe({lifecycle}) {
             val list = mutableListOf<RvBinder<*>>().apply {
                 //添加上传的图片
                 addAll(
@@ -103,7 +116,6 @@ class HistoryListActivity :
                             setOnContentClickListener { view, i ->
                                 toast("内容被点击")
                             }
-
                             setOnIconClickListener { view, i ->
                                 toast("删除被点击")
                                 presenter?.removePic(i)
@@ -138,7 +150,7 @@ class HistoryListActivity :
     }
 
     private fun observeRvList(listData: LiveData<List<History>>) {
-        listData.observe(this) {
+        listData.observe({ lifecycle }) {
             rvAdapter.submitList(it)
         }
     }
