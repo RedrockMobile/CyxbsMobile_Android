@@ -73,6 +73,11 @@ class TodoInnerMainActivity : BaseViewModelActivity<TodoViewModel>() {
                                 TodoDetailActivity.startActivity(it, this@TodoInnerMainActivity)
                             }
                         }
+                        todo_tv_todo_title.setOnClickListener{
+                            wrapper.todo?.let {
+                                TodoDetailActivity.startActivity(it, this@TodoInnerMainActivity)
+                            }
+                        }
                         todo_fl_del.visibility = View.VISIBLE
                         todo_fl_del.setOnClickListener {
                             adapter.delItem(wrapper)

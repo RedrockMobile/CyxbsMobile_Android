@@ -2,15 +2,16 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/todo_fl_todo_back"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:id="@+id/todo_fl_todo_back"
     android:orientation="horizontal">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/todo_cl_item_main"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingEnd="15dp"
         android:elevation="3dp">
 
         <com.cyxbsmobile_single.module_todo.component.CheckLineView
@@ -19,14 +20,14 @@
             android:layout_height="23dp"
             android:layout_marginStart="15dp"
             app:checked_line_color="#8997ad"
-            app:is_checked="true"
             app:checked_line_width="2dp"
-            app:uncheck_line_width="2dp"
+            app:is_checked="true"
             app:layout_constraintBottom_toBottomOf="@+id/todo_tv_todo_title"
             app:layout_constraintEnd_toEndOf="@+id/todo_tv_todo_title"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/todo_tv_todo_title"
-            app:left_radius="10.5dp" />
+            app:left_radius="10.5dp"
+            app:uncheck_line_width="2dp" />
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/todo_iv_check"
@@ -44,17 +45,24 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="50dp"
-            android:height="25dp"
-            android:gravity="center"
-            android:paddingEnd="1dp"
             android:layout_marginTop="18dp"
+            android:layout_marginEnd="15dp"
             android:layout_marginBottom="40dp"
+            android:ellipsize="end"
+            android:height="25dp"
+            android:gravity="center_vertical"
+            android:paddingEnd="1dp"
             android:textColor="@color/todo_check_line_color"
             android:textSize="18sp"
+            android:singleLine="true"
+            app:layout_constrainedWidth="true"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="复习高数" />
+            app:layout_constraintVertical_bias="1.0"
+            tools:text="复习高数114514191911451419191145141919" />
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/todo_iv_bell"
@@ -70,10 +78,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="7dp"
+            android:layout_marginTop="6dp"
+            android:layout_marginBottom="16dp"
             android:textColor="#7815315b"
             android:textSize="13sp"
-            android:layout_marginBottom="16dp"
-            android:layout_marginTop="6dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@+id/todo_iv_bell"
             app:layout_constraintTop_toBottomOf="@+id/todo_tv_todo_title"
@@ -83,9 +91,9 @@
             android:layout_width="0dp"
             android:layout_height="1dp"
             android:layout_marginStart="50dp"
+            android:background="@color/todo_feed_divide_line_color"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:background="@color/todo_feed_divide_line_color"
             app:layout_constraintStart_toStartOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
@@ -95,8 +103,8 @@
         android:layout_width="80dp"
         android:layout_height="match_parent"
         android:layout_gravity="end"
-        android:visibility="gone"
         android:background="@color/todo_item_del_red"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent">

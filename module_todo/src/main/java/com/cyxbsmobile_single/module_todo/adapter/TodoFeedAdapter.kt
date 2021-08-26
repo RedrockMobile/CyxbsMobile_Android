@@ -50,6 +50,13 @@ class TodoFeedAdapter(private val todoViewModel: TodoViewModel) :
                                     TodoDetailActivity.startActivity(it, context)
                                 }
                             }
+
+                            todo_tv_todo_title.setOnClickListener{
+                                wrapper.todo?.let {
+                                    TodoDetailActivity.startActivity(it, context)
+                                }
+                            }
+
                             todo_iv_todo_item.setOnClickListener {
                                 todo_iv_todo_item.setStatusWithAnime(isChecked = true){
                                     adapter.checkItemAndPopUp(wrapper)

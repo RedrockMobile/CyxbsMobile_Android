@@ -187,9 +187,9 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.appcompat.widget.LinearLayoutCompat>
 
-    <FrameLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="60dp"
         android:layout_gravity="bottom"
         android:layout_marginTop="37dp">
 
@@ -197,28 +197,28 @@
             android:id="@+id/todo_inner_add_thing_repeat_time_cancle"
             android:layout_width="120dp"
             android:layout_height="40dp"
-            android:layout_gravity="left"
-            android:layout_marginStart="48dp"
-            android:layout_marginBottom="40dp"
-            android:visibility="gone"
             android:background="@drawable/todo_shape_inner_add_thing_repeat_time_cancle_button"
             android:gravity="center"
             android:text="取消"
             android:textColor="@color/todo_inner_add_thing_repeat_time_canlce_text_color"
-            android:textSize="18sp" />
+            android:textSize="18sp"
+            app:layout_constraintEnd_toStartOf="@+id/todo_inner_add_thing_repeat_time_confirm"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/todo_inner_add_thing_repeat_time_confirm"
             android:layout_width="120dp"
             android:layout_height="40dp"
-            android:layout_gravity="right"
-            android:visibility="gone"
-            android:layout_marginEnd="47dp"
-            android:layout_marginBottom="40dp"
             android:background="@drawable/todo_shape_inner_add_thing_shape_confirm_button"
             android:gravity="center"
             android:text="确定"
             android:textColor="@color/todo_inner_add_thing_repeat_time_confirm_text_color"
-            android:textSize="18sp" />
-    </FrameLayout>
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/todo_inner_add_thing_repeat_time_cancle"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.appcompat.widget.LinearLayoutCompat>
