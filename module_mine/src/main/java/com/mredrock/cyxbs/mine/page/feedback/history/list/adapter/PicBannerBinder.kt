@@ -5,6 +5,7 @@ import com.mredrock.cyxbs.mine.R
 import com.mredrock.cyxbs.mine.databinding.MineRecycleItemBannerAddBinding
 import com.mredrock.cyxbs.mine.databinding.MineRecycleItemBannerPicBinding
 import com.mredrock.cyxbs.mine.page.feedback.adapter.rv.RvBinder
+import com.mredrock.cyxbs.mine.page.feedback.adapter.rv.RvHolder
 import com.mredrock.cyxbs.mine.page.feedback.history.list.bean.Pic
 
 /**
@@ -23,24 +24,24 @@ class PicBannerBinderAdd : RvBinder<MineRecycleItemBannerAddBinding>() {
         this.listener = listener
     }
 
-    override fun onBind(position: Int) {
+    override fun onBind(holder: RvHolder) {
         binding?.apply {
             data = this@PicBannerBinderAdd
-            this.position = position
+            this.holder = holder
         }
     }
 
     //点击事件对外暴露
-    fun onClicked(view: View, position: Int) {
+    fun onClicked(view: View, holder: RvHolder) {
         //防止重复点击
         val time = System.currentTimeMillis()
         if (time - tag < 500) return
         tag = time
-
+        val position = holder.adapterPosition
         listener?.invoke(view, position)
     }
 
-    override fun areContentsTheSame(oldItem: RvBinder<*>): Boolean = oldItem == this
+    override fun areContentsTheSame(oldItem: RvBinder<*>): Boolean = true
 }
 
 class PicBannerBinderPic(private val pic: Pic) : RvBinder<MineRecycleItemBannerPicBinding>() {
@@ -58,14 +59,14 @@ class PicBannerBinderPic(private val pic: Pic) : RvBinder<MineRecycleItemBannerP
         this.iconClicked = listener
     }
 
-    override fun onBind(position: Int) {
+    override fun onBind(holder: RvHolder) {
         binding?.apply {
             rtdlBannerPic.setOnContentClickListener {
                 //防止重复点击
                 val time = System.currentTimeMillis()
                 if (time - tag < 500) return@setOnContentClickListener
                 tag = time
-
+                val position = holder.adapterPosition
                 contentClicked?.invoke(it, position)
             }
 
@@ -74,7 +75,7 @@ class PicBannerBinderPic(private val pic: Pic) : RvBinder<MineRecycleItemBannerP
                 val time = System.currentTimeMillis()
                 if (time - tag < 500) return@setOnIconClickListener
                 tag = time
-
+                val position = holder.adapterPosition
                 iconClicked?.invoke(it, position)
             }
         }
@@ -83,6 +84,6 @@ class PicBannerBinderPic(private val pic: Pic) : RvBinder<MineRecycleItemBannerP
 
     }
 
-    override fun areContentsTheSame(oldItem: RvBinder<*>): Boolean = oldItem == this
+    override fun areContentsTheSame(oldItem: RvBinder<*>): Boolean = true
 
 }

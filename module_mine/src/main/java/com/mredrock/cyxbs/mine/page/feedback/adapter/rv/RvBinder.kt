@@ -8,8 +8,11 @@ import androidx.databinding.ViewDataBinding
  *@signature 我们不明前路，却已在路上
  */
 abstract class RvBinder<Binding : ViewDataBinding> {
+
+    var itemId: String = ""
+
     open var binding: Binding? = null
-    open fun onBind(position: Int) {}
+    open fun onBind(holder: RvHolder) {}
     abstract fun layoutId(): Int
     abstract fun areContentsTheSame(oldItem: RvBinder<*>): Boolean
 }

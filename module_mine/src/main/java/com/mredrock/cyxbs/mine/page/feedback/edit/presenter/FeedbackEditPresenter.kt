@@ -99,6 +99,7 @@ class FeedbackEditPresenter : BasePresenter<FeedbackEditViewModel>(),
                     PicBannerBinderPic(it).apply {
                         setOnContentClickListener { view, i -> contentListener(view, i) }
                         setOnIconClickListener { view, i -> iconListener(view, i) }
+                        itemId = it.picUri.toString()
                     }
                 }
             )
