@@ -25,7 +25,9 @@ class RvAdapter() : ListAdapter<RvBinder<*>, RvHolder>(diff) {
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RvHolder {
-        return RvHolder(parent.inflateBinding(viewType))
+        val holder = RvHolder(parent.inflateBinding(viewType))
+//        holder.setIsRecyclable(false)
+        return holder
     }
 
     override fun onBindViewHolder(holder: RvHolder, position: Int) {

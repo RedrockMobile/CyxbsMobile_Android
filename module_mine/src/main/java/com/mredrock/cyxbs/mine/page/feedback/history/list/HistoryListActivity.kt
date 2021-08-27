@@ -25,7 +25,6 @@ class HistoryListActivity :
         RvListAdapter()
     }
 
-
     /**
      * 获取P层
      */

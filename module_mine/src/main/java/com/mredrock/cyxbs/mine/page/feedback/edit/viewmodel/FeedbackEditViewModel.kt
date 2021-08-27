@@ -38,8 +38,18 @@ class FeedbackEditViewModel:BaseViewModel(),FeedbackEditContract.IVM {
      * 图片的Uri地址
      */
     private val _uris: MutableLiveData<List<Uri>> = MutableLiveData(listOf())
-    val uris: LiveData<List<Uri>> = _uris
+    val uris: LiveData<List<Uri>>
+    get() = _uris
     override fun setUris(value: List<Uri>) {
         _uris.value = value
     }
+
+    private val _position = MutableLiveData<Int>()
+    val position: LiveData<Int>
+    get() = _position
+    fun setPosition(position:Int){
+        _position.value = position
+    }
+
+
 }

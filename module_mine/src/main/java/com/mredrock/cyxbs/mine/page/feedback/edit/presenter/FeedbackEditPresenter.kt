@@ -72,6 +72,7 @@ class FeedbackEditPresenter : BasePresenter<FeedbackEditViewModel>(),
      */
     override fun removePic(i: Int) {
         //防止重复点击删除导致的数组越界
+        vm?.setPosition(i)
         try {
             val urls = vm?.uris?.value ?: return
             val list: MutableList<Uri> = mutableListOf<Uri>().apply { addAll(urls) }
@@ -89,7 +90,7 @@ class FeedbackEditPresenter : BasePresenter<FeedbackEditViewModel>(),
         uri: List<Uri>,
         contentListener: (View, Int) -> Unit,
         iconListener: (View, Int) -> Unit,
-        clickListener: (View, Int) -> Unit,
+        clickListener: (View, Int) -> Unit
     ): MutableList<RvBinder<*>> {
         return mutableListOf<RvBinder<*>>().apply {
             addAll(

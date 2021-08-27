@@ -4,7 +4,9 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.ViewTreeLifecycleOwner
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.mredrock.cyxbs.common.ui.BaseMVPVMActivity
 import com.mredrock.cyxbs.common.utils.extensions.toast
 import com.mredrock.cyxbs.mine.R
@@ -70,11 +72,6 @@ class FeedbackEditActivity :
                 adapter = rvPicAdapter
                 layoutManager = GridLayoutManager(this@FeedbackEditActivity, 3)
             }
-        }
-
-        binding?.rvBanner?.apply {
-            adapter = rvPicAdapter
-            layoutManager = GridLayoutManager(this@FeedbackEditActivity, 3)
         }
     }
 

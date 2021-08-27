@@ -60,6 +60,8 @@ class PicBannerBinderPic(private val pic: Pic) : RvBinder<MineRecycleItemBannerP
 
     override fun onBind(position: Int) {
         binding?.apply {
+            rtdlBannerPic.setOnContentClickListener { null }
+            rtdlBannerPic.setOnIconClickListener{null}
             rtdlBannerPic.setOnContentClickListener {
                 //防止重复点击
                 val time = System.currentTimeMillis()
