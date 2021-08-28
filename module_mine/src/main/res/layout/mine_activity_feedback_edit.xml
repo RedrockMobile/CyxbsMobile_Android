@@ -19,9 +19,7 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp">
+            android:layout_height="wrap_content">
 
             <RelativeLayout
                 android:id="@+id/mine_relativelayout2"
@@ -75,9 +73,7 @@
                 android:id="@+id/chip_group"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
                 android:layout_marginTop="4dp"
-                android:layout_marginEnd="8dp"
                 android:layout_marginBottom="4dp"
                 android:theme="@style/Theme.MaterialComponents"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -159,7 +155,9 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/mine_shape_edit_bg"
                 app:layout_constraintTop_toBottomOf="@+id/chip_group"
-                tools:layout_editor_absoluteX="16dp">
+                tools:layout_editor_absoluteX="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp">
 
                 <EditText
                     android:id="@+id/et_edit_title"
