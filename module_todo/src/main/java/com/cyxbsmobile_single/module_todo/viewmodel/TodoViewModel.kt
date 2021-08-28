@@ -1,21 +1,15 @@
 package com.cyxbsmobile_single.module_todo.viewmodel
 
-import com.cyxbsmobile_single.module_todo.model.bean.RepeatBean
 import com.cyxbsmobile_single.module_todo.model.bean.RemindMode
+import com.cyxbsmobile_single.module_todo.model.bean.RepeatBean
 import com.cyxbsmobile_single.module_todo.model.bean.Todo
 import com.cyxbsmobile_single.module_todo.model.bean.TodoItemWrapper
 import com.cyxbsmobile_single.module_todo.model.database.TodoDatabase
 import com.cyxbsmobile_single.module_todo.util.needTodayDone
-import com.google.gson.Gson
-import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.utils.ExecuteOnceObserver
-import com.mredrock.cyxbs.common.utils.LogUtils
-import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
-import com.mredrock.cyxbs.common.utils.extensions.editor
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
-import kotlin.collections.ArrayList
 
 /**
  * Author: RayleighZ
@@ -92,8 +86,8 @@ class TodoViewModel : BaseViewModel() {
             .setSchedulers()
             .safeSubscribeBy {
                 todo.todoId = it
-                uncheckTodoList.add(TodoItemWrapper.todoWrapper(todo))
-                wrapperList.add(TodoItemWrapper.todoWrapper(todo))
+                uncheckTodoList.add(0, TodoItemWrapper.todoWrapper(todo))
+                wrapperList.add(0, TodoItemWrapper.todoWrapper(todo))
                 onSuccess.invoke()
             }
     }

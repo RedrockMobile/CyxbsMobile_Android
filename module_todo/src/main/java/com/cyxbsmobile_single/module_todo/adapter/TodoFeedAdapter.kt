@@ -32,7 +32,6 @@ class TodoFeedAdapter(private val todoViewModel: TodoViewModel) :
     }
 
     fun refresh() {
-        LogUtils.d("RayleighZ", "refresh feed")
         feedView.apply {
             if (todoViewModel.uncheckTodoList.isNullOrEmpty()) {
                 changeToEmpty()
