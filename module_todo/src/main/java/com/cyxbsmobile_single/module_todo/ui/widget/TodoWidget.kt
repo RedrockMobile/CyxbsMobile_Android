@@ -6,21 +6,14 @@ import android.appwidget.AppWidgetProvider
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
-import android.widget.BaseAdapter
 import android.widget.RemoteViews
 import com.alibaba.android.arouter.launcher.ARouter
 import com.cyxbsmobile_single.module_todo.R
 import com.cyxbsmobile_single.module_todo.service.TodoWidgetService
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.config.TODO_ADD_TODO_BY_WIDGET
-import com.mredrock.cyxbs.common.config.WIDGET_TODO_RAW
-import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
-import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
-import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 
 
 /**
@@ -43,13 +36,8 @@ class TodoWidget : AppWidgetProvider() {
     private fun initRemoteView(context: Context): RemoteViews {
         val remoteView = RemoteViews(context.packageName, R.layout.todo_widget_main)
         val intent = Intent(context, TodoWidgetService::class.java)
-        val json = BaseApp.context.defaultSharedPreferences.getString(WIDGET_TODO_RAW, "")
-        LogUtils.d("MasterRay", "onInit, json = $json")
-        if (json != "") {
-            intent.putExtra("todoJson", json)
-            remoteView.apply {
-                setRemoteAdapter(R.id.todo_lv_widget_todo_list, intent)
-            }
+        remoteView.apply {
+            setRemoteAdapter(R.id.todo_lv_widget_todo_list, intent)
         }
         remoteView.setOnClickPendingIntent(
             R.id.todo_iv_widget_add_todo,
@@ -68,7 +56,7 @@ class TodoWidget : AppWidgetProvider() {
     override fun onReceive(context: Context?, intent: Intent?) {
         super.onReceive(context, intent)
         intent?.action?.let { LogUtils.d("RayleighZZH", it) }
-        when(intent?.action){
+        when (intent?.action) {
             "cyxbs.widget.todo.refresh" -> {
                 context?.let {
                     val manager = AppWidgetManager.getInstance(it)

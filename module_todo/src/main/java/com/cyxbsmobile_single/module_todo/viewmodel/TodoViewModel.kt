@@ -8,7 +8,6 @@ import com.cyxbsmobile_single.module_todo.model.database.TodoDatabase
 import com.cyxbsmobile_single.module_todo.util.needTodayDone
 import com.google.gson.Gson
 import com.mredrock.cyxbs.common.BaseApp
-import com.mredrock.cyxbs.common.config.WIDGET_TODO_RAW
 import com.mredrock.cyxbs.common.utils.ExecuteOnceObserver
 import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
@@ -97,17 +96,5 @@ class TodoViewModel : BaseViewModel() {
                 wrapperList.add(TodoItemWrapper.todoWrapper(todo))
                 onSuccess.invoke()
             }
-    }
-
-    //为了todo小组件，将待办事项存入JSON
-    fun saveToJson() {
-        val uncheckedList = todoList.filter {
-            !it.isChecked
-        }
-        BaseApp.context.defaultSharedPreferences.editor {
-            LogUtils.d("MasterRay", Gson().toJson(uncheckedList))
-            putString(WIDGET_TODO_RAW, Gson().toJson(uncheckedList))
-            apply()
-        }
     }
 }

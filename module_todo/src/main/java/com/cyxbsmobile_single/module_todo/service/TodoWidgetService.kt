@@ -6,13 +6,15 @@ import android.widget.RemoteViewsService
 import com.cyxbsmobile_single.module_todo.R
 import com.cyxbsmobile_single.module_todo.model.bean.RemindMode
 import com.cyxbsmobile_single.module_todo.model.bean.Todo
+import com.cyxbsmobile_single.module_todo.model.database.TodoDatabase
 import com.cyxbsmobile_single.module_todo.util.repeatMode2RemindTime
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.mredrock.cyxbs.common.BaseApp
-import com.mredrock.cyxbs.common.config.WIDGET_TODO_RAW
 import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
+import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
+import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 
 /**
  * @date 2021-08-18
@@ -20,28 +22,34 @@ import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
  */
 class TodoWidgetService : RemoteViewsService() {
 
-    lateinit var todoList: List<Todo>
-
     override fun onGetViewFactory(intent: Intent?): RemoteViewsFactory {
-        intent?.let {
-            todoList = Gson().fromJson<List<Todo>>(
-                it.getStringExtra("todoJson"),
-                object : TypeToken<List<Todo>>() {}.type
-            )
-        }
         LogUtils.d("MasterRay", "factory init")
-        return TodoWidgetFactory(todoList)
+        return TodoWidgetFactory()
     }
 
-    inner class TodoWidgetFactory(var todoList: List<Todo>) : RemoteViewsFactory {
-        override fun onCreate() {
+    inner class TodoWidgetFactory : RemoteViewsFactory {
 
+        private var todoList: List<Todo> = emptyList()
+
+        override fun onCreate() {
+            TodoDatabase.INSTANCE.todoDao()
+                .queryTodoByWeatherDone(false)
+                .toObservable()
+                .setSchedulers()
+                .safeSubscribeBy {
+                    todoList = it
+                }
         }
 
         override fun onDataSetChanged() {
-            val json = BaseApp.context.defaultSharedPreferences.getString(WIDGET_TODO_RAW, "")
-            if (json != "") todoList =
-                Gson().fromJson<List<Todo>>(json, object : TypeToken<List<Todo>>() {}.type)
+            //从room中加载尚未完成的todo
+            TodoDatabase.INSTANCE.todoDao()
+                .queryTodoByWeatherDone(false)
+                .toObservable()
+                .setSchedulers()
+                .safeSubscribeBy {
+                    todoList = it
+                }
         }
 
         override fun onDestroy() {

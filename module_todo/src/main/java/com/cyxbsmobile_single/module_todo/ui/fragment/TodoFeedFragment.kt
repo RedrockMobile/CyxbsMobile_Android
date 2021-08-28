@@ -36,8 +36,7 @@ class TodoFeedFragment: BaseFeedFragment<TodoViewModel>() {
 
     fun refresh(){
         todoAdapter.refresh()
-        //存入JSON，方便小组件获取数据
-        viewModel.saveToJson()
+        //发送广播通知小组件更新
         BaseApp.context.sendBroadcast(Intent("cyxbs.widget.todo.refresh"))
     }
 

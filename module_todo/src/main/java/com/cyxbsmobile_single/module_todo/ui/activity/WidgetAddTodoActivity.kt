@@ -13,7 +13,6 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.config.TODO_ADD_TODO_BY_WIDGET
-import com.mredrock.cyxbs.common.config.WIDGET_TODO_RAW
 import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
 import com.mredrock.cyxbs.common.utils.extensions.editor
@@ -32,18 +31,7 @@ class WidgetAddTodoActivity : AppCompatActivity() {
                 .toObservable()
                 .setSchedulers()
                 .safeSubscribeBy {
-                    todo.todoId = it
-                    val todoList = ArrayList<Todo>()
-                    val json = BaseApp.context.defaultSharedPreferences.getString(WIDGET_TODO_RAW, "")
-                    if (json != "") todoList.addAll(
-                        Gson().fromJson<List<Todo>>(json, object : TypeToken<List<Todo>>() {}.type)
-                    )
-                    todoList.add(todo)
-                    BaseApp.context.defaultSharedPreferences.editor {
-                        putString(WIDGET_TODO_RAW, Gson().toJson(todoList))
-                        apply()
-                    }
-                    LogUtils.d("RayK", Gson().toJson(todoList))
+                    //通知小组件更新数据
                     this.sendBroadcast(
                         Intent("cyxbs.widget.todo.refresh")
                     )
