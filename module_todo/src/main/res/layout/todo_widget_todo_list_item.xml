@@ -14,10 +14,10 @@
             android:layout_width="16dp"
             android:layout_height="16dp"
             android:layout_gravity="center_vertical"
-            android:src="@drawable/widget_ic_todo_uncheck"/>
+            android:src="@drawable/todo_ic_detail_check_eclipse"/>
 
         <TextView
-            android:id="@+id/widget_tv_todo_title"
+            android:id="@+id/todo_tv_widget_todo_title"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_gravity="center_vertical"
@@ -28,7 +28,7 @@
     </LinearLayout>
 
     <TextView
-        android:id="@+id/widget_todo_notify_time"
+        android:id="@+id/todo_widget_notify_time"
         android:layout_width="wrap_content"
         android:layout_height="18dp"
         android:textSize="13sp"

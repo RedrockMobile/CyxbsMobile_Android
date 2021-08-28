@@ -3,7 +3,7 @@
     android:minWidth="335dp"
     android:minHeight="161dp"
     android:updatePeriodMillis="600000"
-    android:initialLayout="@layout/widget_todo"
+    android:initialLayout="@layout/todo_widget_main"
     android:resizeMode="vertical|horizontal"
     android:widgetCategory="home_screen|keyguard">
 </appwidget-provider>

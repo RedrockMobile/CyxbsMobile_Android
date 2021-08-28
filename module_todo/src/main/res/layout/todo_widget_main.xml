@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="@drawable/widget_shape_todo_back_ground"
+    android:background="@drawable/todo_shape_widget_back_ground"
     android:orientation="vertical"
     android:paddingHorizontal="15dp">
 
@@ -27,11 +27,11 @@
             android:layout_weight="1"/>
 
         <ImageView
-            android:id="@+id/widget_iv_add_todo"
+            android:id="@+id/todo_iv_widget_add_todo"
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:layout_marginTop="17dp"
-            android:src="@drawable/widget_ic_add_todo"/>
+            android:src="@drawable/todo_ic_add"/>
 
     </LinearLayout>
 
@@ -41,12 +41,12 @@
         android:background="#142A4E84" />
 
     <ListView
-        android:id="@+id/widget_lv_todo_list"
+        android:id="@+id/todo_lv_widget_todo_list"
         android:layout_width="match_parent"
         android:layout_height="232dp"
         android:layout_marginBottom="32dp"
         android:layout_marginTop="20dp"
         android:divider="#00ffffff"
-        tools:listitem="@layout/widget_todo_list_item"/>
+        tools:listitem="@layout/todo_widget_todo_list_item"/>
     
 </LinearLayout>
