@@ -26,7 +26,7 @@ data class Todo(
     var remindMode: RemindMode,
     @SerializedName("last_modify_time")
     var lastModifyTime: Long
-) : Serializable{
+) : Serializable, Comparable<Todo>{
     companion object{
         fun generateEmptyTodo(): Todo{
             return Todo(
@@ -38,5 +38,9 @@ data class Todo(
                 System.currentTimeMillis()
             )
         }
+    }
+
+    override fun compareTo(other: Todo): Int {
+        return (this.lastModifyTime - other.lastModifyTime).toInt()
     }
 }

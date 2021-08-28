@@ -55,7 +55,6 @@ const val ABOUT_US_WEBSITE = "https://redrock.team"
 const val WIDGET_COURSE = "course_widget"
 const val WIDGET_AFFAIR = "course_affair"
 //在小组件中修改的todo列表（check掉和新增加的todo）
-const val WIDGET_TODO_MODIFY = "todo_list_modify_json"
 const val SP_WIDGET_NEED_FRESH = "sharepreference_widget_need_fresh"
 
 //课表辨别是查同学课表的key
@@ -114,6 +113,12 @@ const val QA_PARAM_QUESTION_ID = "question_id"
 //todo模块存储提醒日期+星期数
 const val TODO_WEEK_MONTH_ARRAY = "todo_week_moth_array"
 const val TODO_YEAR_OF_WEEK_MONTH_ARRAY = "todo_year_of_week_moth_array"
+//todo模块的上次同步时间本地缓存
+const val TODO_LAST_SYNC_TIME = "todo_last_sync_time"
+//todo模块本地的最后修改时间
+const val TODO_LAST_MODIFY_TIME = "todo_last_modify_time"
+//todo模块本地修改的todo的id列表
+const val TODO_OFFLINE_MODIFY_LIST = "todo_offline_modify_list"
 
 //统一拦截的HTTP状态码
 const val TOKEN_EXPIRE = 403//token过期
