@@ -1,5 +1,7 @@
 package com.cyxbsmobile_single.module_todo.adapter
 
+import android.content.ComponentName
+import android.content.Intent
 import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
@@ -14,6 +16,7 @@ import com.cyxbsmobile_single.module_todo.model.bean.RemindMode
 import com.cyxbsmobile_single.module_todo.model.bean.Todo
 import com.cyxbsmobile_single.module_todo.model.bean.TodoItemWrapper
 import com.cyxbsmobile_single.module_todo.model.database.TodoDatabase
+import com.cyxbsmobile_single.module_todo.ui.widget.TodoWidget
 import com.cyxbsmobile_single.module_todo.util.repeatMode2RemindTime
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.utils.ExecuteOnceObserver
@@ -229,6 +232,9 @@ class DoubleListFoldRvAdapter(
                 refreshList()
                 todoItemWrapperArrayList.add(1, wrapper)
                 checkEmptyItem(true)
+                BaseApp.context.sendBroadcast(Intent("cyxbs.widget.todo.refresh").apply {
+                    component = ComponentName(BaseApp.context, TodoWidget::class.java)
+                })
             }
     }
 
@@ -255,9 +261,7 @@ class DoubleListFoldRvAdapter(
                     curWrapper.todo?.let { todo ->
                         todo_fl_del.visibility = View.GONE
                         todo_tv_todo_title.text = todo.title
-                        LogUtils.d("RayleighZ", "todo = $todo")
                         todo_tv_notify_time.text = repeatMode2RemindTime(todo.remindMode)
-                        LogUtils.d("RayleighZ", "onShow Time = ${repeatMode2RemindTime(todo.remindMode)}")
                         todo_tv_todo_title.setOnClickListener { }//防止穿透点击
                         if (todo.remindMode.notifyDateTime == ""){
                             todo_tv_notify_time.visibility = View.GONE
@@ -335,7 +339,6 @@ class DoubleListFoldRvAdapter(
     }
 
     private fun clearView(viewHolder: RecyclerView.ViewHolder) {
-        LogUtils.d("RayleighZ", "clearView")
         viewHolder.itemView.apply {
             todo_fl_del.apply {
                 pivotX = 0f

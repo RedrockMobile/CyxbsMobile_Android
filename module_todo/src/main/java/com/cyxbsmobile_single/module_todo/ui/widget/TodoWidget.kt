@@ -55,7 +55,7 @@ class TodoWidget : AppWidgetProvider() {
 
     override fun onReceive(context: Context?, intent: Intent?) {
         super.onReceive(context, intent)
-        intent?.action?.let { LogUtils.d("RayleighZZH", it) }
+        intent?.action?.let { LogUtils.d("RayleighZ", it) }
         when (intent?.action) {
             "cyxbs.widget.todo.refresh" -> {
                 context?.let {

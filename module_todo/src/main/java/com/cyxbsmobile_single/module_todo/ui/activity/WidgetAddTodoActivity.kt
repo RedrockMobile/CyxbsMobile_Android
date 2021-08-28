@@ -9,6 +9,7 @@ import com.cyxbsmobile_single.module_todo.R
 import com.cyxbsmobile_single.module_todo.model.bean.Todo
 import com.cyxbsmobile_single.module_todo.model.database.TodoDatabase
 import com.cyxbsmobile_single.module_todo.ui.dialog.AddItemDialog
+import com.cyxbsmobile_single.module_todo.ui.widget.TodoWidget
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.mredrock.cyxbs.common.BaseApp
@@ -33,7 +34,9 @@ class WidgetAddTodoActivity : AppCompatActivity() {
                 .safeSubscribeBy {
                     //通知小组件更新数据
                     this.sendBroadcast(
-                        Intent("cyxbs.widget.todo.refresh")
+                        Intent("cyxbs.widget.todo.refresh").apply {
+                            component = ComponentName(BaseApp.context, TodoWidget::class.java)
+                        }
                     )
                     finish()
                 }

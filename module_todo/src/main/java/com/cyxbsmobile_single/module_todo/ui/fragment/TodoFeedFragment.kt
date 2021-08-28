@@ -13,6 +13,7 @@ import com.cyxbsmobile_single.module_todo.adapter.TodoFeedAdapter
 import com.cyxbsmobile_single.module_todo.model.bean.TodoItemWrapper
 import com.cyxbsmobile_single.module_todo.ui.activity.WidgetAddTodoActivity
 import com.cyxbsmobile_single.module_todo.ui.dialog.AddItemDialog
+import com.cyxbsmobile_single.module_todo.ui.widget.TodoWidget
 import com.cyxbsmobile_single.module_todo.viewmodel.TodoViewModel
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.config.DISCOVER_TODO_FEED
@@ -37,7 +38,9 @@ class TodoFeedFragment: BaseFeedFragment<TodoViewModel>() {
     fun refresh(){
         todoAdapter.refresh()
         //发送广播通知小组件更新
-        BaseApp.context.sendBroadcast(Intent("cyxbs.widget.todo.refresh"))
+        requireContext().sendBroadcast(Intent("cyxbs.widget.todo.refresh").apply {
+            component = ComponentName(BaseApp.context, TodoWidget::class.java)
+        })
     }
 
     override fun onRefresh() {
@@ -50,6 +53,7 @@ class TodoFeedFragment: BaseFeedFragment<TodoViewModel>() {
         onLeftIconClick {
             AddItemDialog(requireContext()){ todo ->
                 viewModel.addTodo(todo){
+                    LogUtils.d("Gibson", "on feed refresh")
                     refresh()
                 }
             }.show()
