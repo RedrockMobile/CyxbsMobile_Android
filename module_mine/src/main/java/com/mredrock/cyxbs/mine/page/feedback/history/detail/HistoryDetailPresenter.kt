@@ -9,7 +9,7 @@ import com.mredrock.cyxbs.mine.page.feedback.history.detail.bean.Reply
  *@time 2021/8/24  9:12
  *@signature 我们不明前路，却已在路上
  */
-class HistoryDetailPresenter(private val id: Long) :
+class HistoryDetailPresenter(private val id: Long,private val isReply: Boolean) :
     BasePresenter<HistoryDetailViewModel>() {
     override fun fetch() {
         //设置默认数据
@@ -23,7 +23,6 @@ class HistoryDetailPresenter(private val id: Long) :
         //获取反馈内容
         val defaultFeedback = getDefaultFeedback()
         vm?.setFeedback(defaultFeedback)
-        val isReply = id==1L || id==2L
         vm?.setIsReply(isReply)
         //获取返回内容
         val defaultReply = getDefaultReply()

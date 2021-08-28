@@ -13,7 +13,7 @@ class HistoryDetailActivity :
     /**
      * 创建Presenter对象
      */
-    override fun createPresenter(): HistoryDetailPresenter = HistoryDetailPresenter(intent.getLongExtra("id",-1L))
+    override fun createPresenter(): HistoryDetailPresenter = HistoryDetailPresenter(intent.getLongExtra("id",-1L),intent.getBooleanExtra("isReply",false))
 
     /**
      * 返回布局Id

@@ -37,8 +37,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:layout_alignParentBottom="true"
-                    android:alpha="0.1"
-                    android:background="#2A4E84" />
+                    android:background="@color/mine_feedback_divider_color" />
 
                 <com.google.android.material.floatingactionbutton.FloatingActionButton
                     android:id="@+id/fab_center_back"
@@ -277,7 +276,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="18dp"
                     android:text="@{@string/mine_feedback_edit_pic_num(vm.picCount)}"
-                    tools:text="0/3"
                     android:textColor="@color/mine_feedback_edit_num"
                     android:textSize="12sp"
                     app:layout_constraintBottom_toBottomOf="@+id/et_edit_pic"
