@@ -26,8 +26,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:layout_alignParentBottom="true"
-                android:alpha="0.1"
-                android:background="#2A4E84" />
+                android:background="@color/mine_feedback_divider_color" />
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/fab_center_back"

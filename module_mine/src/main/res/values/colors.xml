@@ -42,7 +42,7 @@
     <!--    item的题目颜色-->
     <color name="mine_item_center_title">#2A4E84</color>
     <!--    item的下划线颜色-->
-    <color name="mine_item_v_underline">#4DBDCCE5</color>
+    <color name="mine_item_v_underline">#BDCCE5</color>
     <!--    详情页内容颜色-->
     <color name="mine_feedback_detail_content_tv">#15315B</color>
 
@@ -68,5 +68,6 @@
     <color name="mine_feedback_add_bg_color">#F7FAFF</color>
     <color name="mine_feedback_add_fill_color">#E1EBFA</color>
     <color name="mine_feedback_history_icon_color">#15315B</color>
+    <color name="mine_feedback_edit_underline_color">#2A4E84</color>
 
 </resources>

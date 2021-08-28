@@ -9,7 +9,8 @@ import com.mredrock.cyxbs.mine.page.feedback.history.detail.bean.Reply
  *@time 2021/8/24  9:12
  *@signature 我们不明前路，却已在路上
  */
-class HistoryDetailPresenter : BasePresenter<HistoryDetailViewModel>() {
+class HistoryDetailPresenter(private val id: Long) :
+    BasePresenter<HistoryDetailViewModel>() {
     override fun fetch() {
         //设置默认数据
         setDefaultData()
@@ -19,12 +20,15 @@ class HistoryDetailPresenter : BasePresenter<HistoryDetailViewModel>() {
      * 设置默认数据
      */
     private fun setDefaultData() {
+        //获取反馈内容
         val defaultFeedback = getDefaultFeedback()
         vm?.setFeedback(defaultFeedback)
+        val isReply = id==1L || id==2L
+        vm?.setIsReply(isReply)
+        //获取返回内容
         val defaultReply = getDefaultReply()
         vm?.setReply(defaultReply)
-        val defaultBannerPic = getDefaultBannerPic()
-        vm?.setReplyPicUrls(defaultBannerPic)
+        vm?.setReplyPicUrls(defaultReply.bannerPics)
     }
 
     private fun getDefaultBannerPic(): List<String> {
@@ -36,7 +40,7 @@ class HistoryDetailPresenter : BasePresenter<HistoryDetailViewModel>() {
     }
 
     private fun getDefaultReply(): Reply {
-        return Reply(System.currentTimeMillis(), "你的问题我们已收到，感谢同学你的反馈。", false)
+        return Reply(System.currentTimeMillis(), "你的问题我们已收到，感谢同学你的反馈。", getDefaultBannerPic())
     }
 
     private fun getDefaultFeedback(): Feedback {

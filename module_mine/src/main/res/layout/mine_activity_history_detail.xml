@@ -222,7 +222,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/cv_feedback"
-                app:showView="@{vm.reply.isReply}"
+                app:showView="@{vm.isReply}"
                 tools:text="@string/mine_feedback_reply_date_test_text" />
 
             <androidx.cardview.widget.CardView
@@ -235,7 +235,7 @@
                 app:cardCornerRadius="@dimen/mine_feedback_cards_radius"
                 app:cardElevation="@dimen/mine_feedback_banner_elevation"
                 app:layout_constraintTop_toBottomOf="@id/tv_reply_date"
-                app:showView="@{vm.reply.isReply}">
+                app:showView="@{vm.isReply}">
 
                 <androidx.appcompat.widget.LinearLayoutCompat
                     android:layout_width="match_parent"
@@ -271,13 +271,12 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal|bottom"
                 android:layout_marginTop="100dp"
-                android:text="@{vm.reply.content}"
                 android:textColor="@color/mine_feedback_no_reply_content_color"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_reply_date"
-                app:showView="@{!vm.reply.isReply}"
-                tools:text="@string/mine_feedback_none_reply_text_content" />
+                app:showView="@{!vm.isReply}"
+                android:text="@string/mine_feedback_none_reply_text_content" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,9 +1,6 @@
 package com.mredrock.cyxbs.mine.page.feedback.history.detail
 
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.observe
 import androidx.recyclerview.widget.GridLayoutManager
 import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.mine.R
@@ -16,7 +13,7 @@ class HistoryDetailActivity :
     /**
      * 创建Presenter对象
      */
-    override fun createPresenter(): HistoryDetailPresenter = HistoryDetailPresenter()
+    override fun createPresenter(): HistoryDetailPresenter = HistoryDetailPresenter(intent.getLongExtra("id",-1L))
 
     /**
      * 返回布局Id

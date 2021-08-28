@@ -45,7 +45,7 @@
             android:id="@+id/v_underline"
             android:layout_width="0dp"
             android:layout_height="1dp"
-            android:background="@color/mine_item_v_underline"
+            android:background="@color/mine_feedback_divider_color"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

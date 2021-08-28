@@ -1,13 +1,10 @@
 package com.mredrock.cyxbs.mine.page.feedback.history.list
 
-import android.content.Intent
-import android.net.Uri
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.mine.page.feedback.base.presenter.BasePresenter
 import com.mredrock.cyxbs.mine.page.feedback.history.list.bean.History
 import com.mredrock.cyxbs.mine.page.feedback.utils.change
 import com.mredrock.cyxbs.mine.page.feedback.utils.getPointStateSharedPreference
-import top.limuyang2.photolibrary.LPhotoHelper
 
 /**
  *@author ZhiQiang Tu
@@ -17,12 +14,33 @@ import top.limuyang2.photolibrary.LPhotoHelper
 class HistoryListPresenter : BasePresenter<HistoryListViewModel>() {
     override fun fetch() {
         val defaultHistoryList = getDefaultHistoryList()
-        vm?.setListData(defaultHistoryList)
+        //获取状态
         defaultHistoryList.forEachIndexed { index, it ->
             val state = getState(it)
             defaultHistoryList[index].isRead = state
         }
-        vm?.setListData(defaultHistoryList)
+        //对list进行排序
+        val sortedList = sortHistoryList(defaultHistoryList)
+        vm?.setListData(sortedList)
+    }
+
+    private fun sortHistoryList(historyList: List<History>): List<History> {
+        var repliedIndex = 0
+        var notReplyIndex = 0
+        var checkedIndex = 0
+        val list: MutableList<History> = mutableListOf()
+
+        val repliedList = historyList.filter { !it.isRead && it.replyOrNot }.sortedByDescending { it.date }
+        val checkedList = historyList.filter { it.isRead && it.replyOrNot }.sortedByDescending { it.date }
+        val notReplyList = historyList.filter { !it.replyOrNot }.sortedByDescending { it.date }
+
+        list.apply {
+            addAll(repliedList)
+            addAll(notReplyList)
+            addAll(checkedList)
+        }
+
+        return list
     }
 
     private fun getDefaultHistoryList(): List<History> {
@@ -31,22 +49,43 @@ class HistoryListPresenter : BasePresenter<HistoryListViewModel>() {
                 "参与买一送一活动",
                 System.currentTimeMillis(),
                 true,
-                false,
-                1
+                isRead = false,
+                id = 1
             ),
             History(
                 "无法切换账号",
                 System.currentTimeMillis(),
                 false,
+                isRead = false,
+                id = 2
+            ),
+            History(
+                "a",
+                System.currentTimeMillis(),
                 true,
-                2
+                isRead = false,
+                id = 3
+            ),
+            History(
+                "b",
+                System.currentTimeMillis(),
+                false,
+                isRead = false,
+                id = 4
+            ),
+            History(
+                "c",
+                System.currentTimeMillis(),
+                false,
+                isRead = false,
+                id = 5
             ),
             History(
                 "点击电费查询后数据为空",
                 System.currentTimeMillis(),
                 true,
-                true,
-                3
+                isRead = false,
+                id = 6
             )
         )
     }
