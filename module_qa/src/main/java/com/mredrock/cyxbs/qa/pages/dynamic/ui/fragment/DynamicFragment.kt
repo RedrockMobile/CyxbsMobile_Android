@@ -1,10 +1,10 @@
 package com.mredrock.cyxbs.qa.pages.dynamic.ui.fragment
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.os.Handler
+import android.view.*
 import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
@@ -23,7 +23,6 @@ import com.mredrock.cyxbs.common.event.RefreshQaEvent
 import com.mredrock.cyxbs.common.mark.EventBusLifecycleSubscriber
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.ui.BaseViewModelFragment
-import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.doIfLogin
 import com.mredrock.cyxbs.common.utils.extensions.dp2px
 import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
@@ -66,6 +65,8 @@ import kotlinx.android.synthetic.main.qa_fragment_dynamic.*
 import kotlinx.android.synthetic.main.qa_recycler_item_dynamic_header.view.*
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import java.util.*
+import kotlin.collections.ArrayList
 
 
 /**
@@ -75,12 +76,16 @@ import org.greenrobot.eventbus.ThreadMode
  * @Date: 2020/11/16 22:07
  */
 @Route(path = QA_ENTRY)
-class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(),EventBusLifecycleSubscriber                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                {
+class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), EventBusLifecycleSubscriber {
     companion object {
         const val REQUEST_LIST_REFRESH_ACTIVITY = 0x1
 
         //R.string.qa_search_hot_word_key 长度
         const val HOT_WORD_HEAD_LENGTH = 6
+    }
+
+    init {
+        isOpenLifeCycleLog = true
     }
 
     private var isSendDynamic = false
@@ -89,10 +94,12 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(),EventBusLi
 
     // 判断rv是否到顶
     protected var isRvAtTop = true
-    lateinit var dynamicListRvAdapter: DynamicAdapter
+    private lateinit var dynamicListRvAdapter: DynamicAdapter
     override fun getViewModelFactory() = DynamicListViewModel.Factory("recommend")
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
 
         return inflater.inflate(R.layout.qa_fragment_dynamic, container, false)
     }
@@ -111,57 +118,84 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(),EventBusLi
     private fun initDynamics() {
         viewModel.getAllCirCleData("问答圈", "test1")
         dynamicListRvAdapter =
-                DynamicAdapter(this.requireContext()) { dynamic, view ->
-                    DynamicDetailActivity.activityStart(this, view, dynamic)
-                }.apply {
+            DynamicAdapter(this.requireContext()) { dynamic, view ->
+                DynamicDetailActivity.activityStart(this, view, dynamic)
+            }.apply {
 
-                    onShareClickListener = { dynamic, mode ->
-                        val url = "${CommentConfig.SHARE_URL}dynamic?id=${dynamic.postId}"
-                        when (mode) {
-                            QQ_FRIEND -> {
-                                val pic = if (dynamic.pics.isNullOrEmpty()) "" else dynamic.pics[0]
-                                mTencent?.let { it1 -> ShareUtils.qqShare(it1, this@DynamicFragment, dynamic.topic, dynamic.content, url, pic) }
-                            }
-                            QQ_ZONE ->
-                                mTencent?.let { it1 -> ShareUtils.qqQzoneShare(it1, this@DynamicFragment, dynamic.topic, dynamic.content, url, ArrayList(dynamic.pics)) }
-                            COPY_LINK -> {
-                                ClipboardController.copyText(this@DynamicFragment.requireContext(), url)
+                onShareClickListener = { dynamic, mode ->
+                    val url = "${CommentConfig.SHARE_URL}dynamic?id=${dynamic.postId}"
+                    when (mode) {
+                        QQ_FRIEND -> {
+                            val pic = if (dynamic.pics.isNullOrEmpty()) "" else dynamic.pics[0]
+                            mTencent?.let { it1 ->
+                                ShareUtils.qqShare(
+                                    it1,
+                                    this@DynamicFragment,
+                                    dynamic.topic,
+                                    dynamic.content,
+                                    url,
+                                    pic
+                                )
                             }
                         }
+                        QQ_ZONE ->
+                            mTencent?.let { it1 ->
+                                ShareUtils.qqQzoneShare(
+                                    it1,
+                                    this@DynamicFragment,
+                                    dynamic.topic,
+                                    dynamic.content,
+                                    url,
+                                    ArrayList(dynamic.pics)
+                                )
+                            }
+                        COPY_LINK -> {
+                            ClipboardController.copyText(this@DynamicFragment.requireContext(), url)
+                        }
                     }
-                    onTopicListener = { topic, view ->
-                        TopicDataSet.getTopicData(topic)?.let { CircleDetailActivity.activityStartFromCircle(this@DynamicFragment, view, it) }
+                }
+                onTopicListener = { topic, view ->
+                    TopicDataSet.getTopicData(topic)?.let {
+                        CircleDetailActivity.activityStartFromCircle(
+                            this@DynamicFragment,
+                            view,
+                            it
+                        )
                     }
-                    onPopWindowClickListener = { position, string, dynamic ->
-                        when (string) {
-                            IGNORE -> {
-                                viewModel.ignore(dynamic)
-                            }
-                            REPORT -> {
-                                this@DynamicFragment.context?.let {
-                                    QaReportDialog(it).apply {
-                                        show { reportContent ->
-                                            viewModel.report(dynamic, reportContent)
-                                        }
-                                    }.show()
-                                }
-                            }
-                            FOLLOW -> {
-                                viewModel.followGroup(dynamic.topic, false)
-                            }
-                            UN_FOLLOW -> {
-                                viewModel.followGroup(dynamic.topic, true)
-                            }
-                            DELETE -> {
-                                this@DynamicFragment.activity?.let { it1 ->
-                                    QaDialog.show(it1, resources.getString(R.string.qa_dialog_tip_delete_comment_text), {}) {
-                                        viewModel.deleteId(dynamic.postId, "0")
+                }
+                onPopWindowClickListener = { _, string, dynamic ->
+                    when (string) {
+                        IGNORE -> {
+                            viewModel.ignore(dynamic)
+                        }
+                        REPORT -> {
+                            this@DynamicFragment.context?.let {
+                                QaReportDialog(it).apply {
+                                    show { reportContent ->
+                                        viewModel.report(dynamic, reportContent)
                                     }
+                                }.show()
+                            }
+                        }
+                        FOLLOW -> {
+                            viewModel.followGroup(dynamic.topic, false)
+                        }
+                        UN_FOLLOW -> {
+                            viewModel.followGroup(dynamic.topic, true)
+                        }
+                        DELETE -> {
+                            this@DynamicFragment.activity?.let { it1 ->
+                                QaDialog.show(
+                                    it1,
+                                    resources.getString(R.string.qa_dialog_tip_delete_comment_text),
+                                    {}) {
+                                    viewModel.deleteId(dynamic.postId, "0")
                                 }
                             }
                         }
                     }
                 }
+            }
 
         viewModel.ignorePeople.observe {
             if (it == true)
@@ -175,9 +209,9 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(),EventBusLi
         val footerRvAdapter = FooterRvAdapter { viewModel.retry() }
         val emptyRvAdapter = EmptyRvAdapter(getString(R.string.qa_question_list_empty_hint))
         val adapterWrapper = RvAdapterWrapper(
-                normalAdapter = dynamicListRvAdapter,
-                emptyAdapter = emptyRvAdapter,
-                footerAdapter = footerRvAdapter
+            normalAdapter = dynamicListRvAdapter,
+            emptyAdapter = emptyRvAdapter,
+            footerAdapter = footerRvAdapter
         )
         val circlesAdapter = this.activity?.let {
             CirclesAdapter({ topic, view ->
@@ -206,7 +240,8 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(),EventBusLi
 
         viewModel.myCircle.observe {
             if (!it.isNullOrEmpty()) {
-                val layoutParams = CollapsingToolbarLayout.LayoutParams(qa_rv_circles_List.layoutParams)
+                val layoutParams =
+                    CollapsingToolbarLayout.LayoutParams(qa_rv_circles_List.layoutParams)
                 layoutParams.topMargin = 70
                 layoutParams.bottomMargin = 30
                 layoutParams.height = BaseApp.context.dp2px(130f)
@@ -216,7 +251,8 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(),EventBusLi
                 view_divide.visibility = View.VISIBLE
                 circlesAdapter?.addCircleData(it)
             } else {
-                val layoutParams = CollapsingToolbarLayout.LayoutParams(qa_rv_circles_List.layoutParams)
+                val layoutParams =
+                    CollapsingToolbarLayout.LayoutParams(qa_rv_circles_List.layoutParams)
                 layoutParams.height = BaseApp.context.dp2px(110f)
                 qa_rv_circles_List.setPadding(0, 0, 0, BaseApp.context.dp2px(0f))
                 circlesAdapter?.noticeChangeCircleData()
@@ -247,16 +283,18 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(),EventBusLi
         }
     }
 
-    fun refreshTopicMessage() {
+    private fun refreshTopicMessage() {
         //获取用户进入圈子详情退出的时间，去请求从而刷新未读消息
         if (!TopicDataSet.getOutCirCleDetailTime().isNullOrEmpty()) {
             TopicDataSet.getOutCirCleDetailTime()?.let { viewModel.getTopicMessages(it) }
         }
     }
 
-    open fun observeLoading(dynamicListRvAdapter: DynamicAdapter,
-                            footerRvAdapter: FooterRvAdapter,
-                            emptyRvAdapter: EmptyRvAdapter): DynamicListViewModel = viewModel.apply {
+    private fun observeLoading(
+        dynamicListRvAdapter: DynamicAdapter,
+        footerRvAdapter: FooterRvAdapter,
+        emptyRvAdapter: EmptyRvAdapter
+    ): DynamicListViewModel = viewModel.apply {
         dynamicList.observe {
             dynamicListRvAdapter.submitList(it)
         }
@@ -294,13 +332,18 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(),EventBusLi
             if (isSendDynamic)
                 turnToQuiz()
             else {
-                CyxbsToast.makeText(this.activity, R.string.qa_server_go_out, Toast.LENGTH_SHORT).show()
+                CyxbsToast.makeText(this.activity, R.string.qa_server_go_out, Toast.LENGTH_SHORT)
+                    .show()
             }
         }
     }
 
     override fun onResume() {
         super.onResume()
+        val window: Window = requireActivity().window
+        val layoutParams: WindowManager.LayoutParams = window.attributes
+        layoutParams.alpha = 1F
+        window.attributes = layoutParams
         vf_hot_search.startFlipping()
     }
 
@@ -342,6 +385,19 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(),EventBusLi
                     }
                 }
             }
+
+            //跳转到searchActivity时让这个window的alpha为透明,防止searchActivity的window alpha变小时这个页面的window展示出来
+            //在fragment onResume时将alpha值设置回来
+            Handler().postDelayed(
+                {
+                    val window: Window = requireActivity().window
+                    val layoutParams: WindowManager.LayoutParams = window.attributes
+                    layoutParams.alpha = 0F
+                    window.attributes = layoutParams
+                }, 500
+            )
+
+
             SearchActivity.activityStart(this, hotWord.toString(), iv_question_search)
             MobclickAgent.onEvent(context, CyxbsMob.Event.QA_SEARCH_RECOMMEND)
         }
@@ -350,6 +406,8 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(),EventBusLi
         viewFlipper.setInAnimation(context, R.anim.qa_anim_hot_search_flip_in)
         viewFlipper.setOutAnimation(context, R.anim.qa_anim_hot_search_flip_out)
     }
+
+
 
     private fun getTextView(info: String): TextView {
         return TextView(context).apply {
@@ -368,6 +426,7 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(),EventBusLi
         vf_hot_search.stopFlipping()
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         when (requestCode) {
             // 从动态详细返回
@@ -384,8 +443,10 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(),EventBusLi
                     dynamicListRvAdapter.curSharedItem?.apply {
                         val dynamic = data?.getParcelableExtra<Dynamic>("refresh_dynamic")
                         dynamic?.let {
-                            dynamicListRvAdapter.curSharedDynamic?.commentCount = dynamic.commentCount
-                            this.findViewById<TextView>(R.id.qa_tv_dynamic_comment_count).text = it.commentCount.toString()
+                            dynamicListRvAdapter.curSharedDynamic?.commentCount =
+                                dynamic.commentCount
+                            this.findViewById<TextView>(R.id.qa_tv_dynamic_comment_count).text =
+                                it.commentCount.toString()
                         }
                     }
                     dynamicListRvAdapter.notifyDataSetChanged()
@@ -404,12 +465,13 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(),EventBusLi
             }
         }
     }
+
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     open fun refreshQuestionList(event: RefreshQaEvent) {
         if (isRvAtTop)
             viewModel.invalidateDynamicList()
         else
             qa_rv_dynamic_List.smoothScrollToPosition(0)
-
     }
+
 }

@@ -48,15 +48,22 @@
             android:textSize="16sp" />
     </RelativeLayout>
 
-    <androidx.appcompat.widget.AppCompatImageView
+    <RelativeLayout
         android:id="@+id/qa_iv_search_back"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/common_ic_back"
-        android:layout_marginStart="16dp"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_marginStart="4dp"
         app:layout_constraintBottom_toBottomOf="@+id/rl_question_searching"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/rl_question_searching"/>
+        app:layout_constraintTop_toTopOf="@+id/rl_question_searching">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:src="@drawable/common_ic_back" />
+    </RelativeLayout>
+
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fcv_question_search"
