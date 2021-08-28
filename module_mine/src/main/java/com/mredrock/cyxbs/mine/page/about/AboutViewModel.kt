@@ -2,6 +2,7 @@ package com.mredrock.cyxbs.mine.page.about
 
 import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.network.CommonApiService
+import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.down.bean.DownMessageText
 import com.mredrock.cyxbs.common.utils.down.params.DownMessageParams
 import com.mredrock.cyxbs.common.utils.extensions.errorHandler
@@ -34,6 +35,7 @@ class AboutViewModel : BaseViewModel() {
                         onExecuteOnceNext = {
                             featureIntroList.clear()
                             featureIntroList.addAll(it.data.textList)
+                            LogUtils.d("AboutViewModel",it.data.textList.toString()+"\n")
                             successCallBack()
                         },
                         onExecuteOnceError = {
