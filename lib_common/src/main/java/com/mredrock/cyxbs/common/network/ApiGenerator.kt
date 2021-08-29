@@ -174,16 +174,9 @@ object ApiGenerator {
                     refreshToken.isEmpty() || token.isEmpty() -> {
                         token = ServiceManager.getService(IAccountService::class.java).getUserTokenService().getToken()
                         refreshToken = ServiceManager.getService(IAccountService::class.java).getUserTokenService().getRefreshToken()
-                        if (isTokenExpired()) {
-                            checkRefresh(it, token)
-                        } else {
-                            proceedPoxyWithTryCatch {
-                                it.proceed(it.request().newBuilder().header("Authorization", "Bearer $token").build())
-                            }
+                        proceedPoxyWithTryCatch {
+                            it.proceed(it.request().newBuilder().header("Authorization", "Bearer $token").build())
                         }
-                    }
-                    isTokenExpired() -> {
-                        checkRefresh(it, token)
                     }
                     else -> {
                         val response = proceedPoxyWithTryCatch { it.proceed(it.request().newBuilder().header("Authorization", "Bearer $token").build()) }
@@ -225,7 +218,7 @@ object ApiGenerator {
             return proceedPoxyWithTryCatch { chain.run { proceed(chain.request().newBuilder().header("Authorization", "Bearer $token").build()) } }
         }
         lastExpiredToken = expiredToken
-        if (refreshToken.isNotEmpty() && (isTokenExpired() || response?.code == 403)) {
+        if (refreshToken.isNotEmpty() && (response?.code == 403)) {
             takeIfNoException {
                 ServiceManager.getService(IAccountService::class.java).getVerifyService().refresh(
                         onError = {
@@ -253,9 +246,6 @@ object ApiGenerator {
             return response
         }
     }
-
-    //检查token是否过期
-    private fun isTokenExpired() = ServiceManager.getService(IAccountService::class.java).getVerifyService().isExpired()
 
     //是否是游客模式
     private fun isTouristMode() = ServiceManager.getService(IAccountService::class.java).getVerifyService().isTouristMode()
