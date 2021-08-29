@@ -11,7 +11,6 @@ import com.mredrock.cyxbs.qa.R
 import kotlinx.android.synthetic.main.qa_dialog_draft.*
 
 
-
 /**
  * Create by xgl at 2020-12-14
  * 草稿dialog
@@ -32,13 +31,14 @@ class DraftDialog(context: Context) : Dialog(context) {
     }
 
     fun initView(
-            title: String,
-            saveText: String,
-            noSaveText: String?,
-            cancelText: String,
-            saveListener: View.OnClickListener,
-            noSaveListener: View.OnClickListener,
-            cancelListener: View.OnClickListener?) {
+        title: String,
+        saveText: String,
+        noSaveText: String?,
+        cancelText: String,
+        saveListener: View.OnClickListener,
+        noSaveListener: View.OnClickListener,
+        cancelListener: View.OnClickListener?
+    ) {
         qa_tv_title.text = title
         qa_tv_save.text = saveText
         qa_tv_no_save.text = noSaveText

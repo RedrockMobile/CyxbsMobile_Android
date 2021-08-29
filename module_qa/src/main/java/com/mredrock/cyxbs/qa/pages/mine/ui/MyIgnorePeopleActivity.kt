@@ -5,7 +5,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.mredrock.cyxbs.common.config.QA_MY_IGNORE
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
-import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.component.recycler.RvAdapterWrapper
@@ -19,7 +18,7 @@ import kotlinx.android.synthetic.main.qa_common_toolbar.*
 
 @Route(path = QA_MY_IGNORE)
 class MyIgnorePeopleActivity : BaseViewModelActivity<MyIgnoreViewModel>() {
-    lateinit var myIgnoreRvAdapter: MyIgnoreRvAdapter
+    private lateinit var myIgnoreRvAdapter: MyIgnoreRvAdapter
     lateinit var emptyRvAdapter: EmptyRvAdapter
     lateinit var footerRvAdapter: FooterRvAdapter
 
@@ -42,16 +41,16 @@ class MyIgnorePeopleActivity : BaseViewModelActivity<MyIgnoreViewModel>() {
         emptyRvAdapter = EmptyRvAdapter("暂时还没有屏蔽的人哦")
 
         val adapterWrapper = RvAdapterWrapper(
-                normalAdapter = myIgnoreRvAdapter,
-                footerAdapter = footerRvAdapter,
-                emptyAdapter = emptyRvAdapter
+            normalAdapter = myIgnoreRvAdapter,
+            footerAdapter = footerRvAdapter,
+            emptyAdapter = emptyRvAdapter
         )
 
         qa_rv_my_ignore.adapter = adapterWrapper
         qa_rv_my_ignore.layoutManager = LinearLayoutManager(this)
     }
 
-    private fun initObserve(){
+    private fun initObserve() {
         //观察List是否变化
         viewModel.ignoreList.observe {
             myIgnoreRvAdapter.submitList(it)
@@ -66,7 +65,7 @@ class MyIgnorePeopleActivity : BaseViewModelActivity<MyIgnoreViewModel>() {
 
         //观察网络请求返回结果
         viewModel.initialLoad.observe {
-            when(it){
+            when (it) {
                 NetworkState.LOADING -> {
                     qa_swl_my_ignore.isRefreshing = true
                     (qa_rv_my_ignore.adapter as? RvAdapterWrapper)?.apply {}
@@ -83,7 +82,7 @@ class MyIgnorePeopleActivity : BaseViewModelActivity<MyIgnoreViewModel>() {
         }
     }
 
-    private fun initClick(){
+    private fun initClick() {
         qa_swl_my_ignore.setOnRefreshListener {
             viewModel.invalidateList()
         }

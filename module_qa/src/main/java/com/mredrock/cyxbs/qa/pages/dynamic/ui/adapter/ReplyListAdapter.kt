@@ -72,7 +72,7 @@ class ReplyListAdapter(
                 } else {
                     qa_tv_reply_inner_content.setContent("回复 @${data.fromNickname} : ${data.content}")
                 }
-                LogUtils.d("ReplyListAdapter_isFromMine","isFromMine-->$isFromMine")
+                LogUtils.d("ReplyListAdapter_isFromMine", "isFromMine-->$isFromMine")
                 qa_iv_reply_inner_praise_count_image.registerLikeView(
                     data.commentId,
                     CommentConfig.PRAISE_MODEL_COMMENT,

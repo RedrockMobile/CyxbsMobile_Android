@@ -1,6 +1,7 @@
 package com.mredrock.cyxbs.qa.ui.widget
 
 import android.animation.ValueAnimator
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.graphics.Color
@@ -40,10 +41,11 @@ class OptionalPopWindow private constructor(val context: Context?) : PopupWindow
     }
 
     class Builder {
-        var optionalPopWindow: OptionalPopWindow? = null
+        private var optionalPopWindow: OptionalPopWindow? = null
         var context: Context? = null
-        var mainView: View? = null
-        var childCount = 0
+        private var mainView: View? = null
+        private var childCount = 0
+        @SuppressLint("InflateParams")
         fun with(context: Context): Builder {
             optionalPopWindow = OptionalPopWindow(context)
             this.context = context
@@ -52,6 +54,7 @@ class OptionalPopWindow private constructor(val context: Context?) : PopupWindow
             return this
         }
 
+        @SuppressLint("InflateParams")
         fun addOptionAndCallback(optionText: String, onClickCallback: () -> Unit): Builder {
             if (context == null || optionalPopWindow == null) {
                 throw IllegalStateException("$TAG Can't add option without context!")
@@ -123,8 +126,8 @@ class OptionalPopWindow private constructor(val context: Context?) : PopupWindow
             if (needWindowAlphaChange)
                 optionalPopWindow!!.showBackgroundAnimator()
             optionalPopWindow!!.setOnDismissListener {
-                if(needWindowAlphaChange)
-                optionalPopWindow!!.hideBackgroundAnimator()
+                if (needWindowAlphaChange)
+                    optionalPopWindow!!.hideBackgroundAnimator()
             }
 
         }

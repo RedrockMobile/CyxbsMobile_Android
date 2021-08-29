@@ -10,9 +10,8 @@ import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.qa.R
-
-import com.mredrock.cyxbs.qa.beannew.Knowledge
 import com.mredrock.cyxbs.qa.beannew.Dynamic
+import com.mredrock.cyxbs.qa.beannew.Knowledge
 import com.mredrock.cyxbs.qa.config.CommentConfig
 import com.mredrock.cyxbs.qa.network.ApiServiceNew
 import com.mredrock.cyxbs.qa.pages.search.model.SearchQuestionDataSource
@@ -71,7 +70,6 @@ class QuestionSearchedViewModel(var searchKey: String) : BaseViewModel() {
     }
 
     fun ignore(dynamic: Dynamic) {
-        LogUtils.d("RatleighZ", "when ignore, uid = ${dynamic.uid}")
         ApiGenerator.getApiService(ApiServiceNew::class.java)
             .ignoreUid(dynamic.uid)
             .setSchedulers()

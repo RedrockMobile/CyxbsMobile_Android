@@ -10,7 +10,10 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
  *@author SpreadWater
  *@description
  */
-class NewHotViewPagerAdapter(fragmentActivity: FragmentActivity, private val fragments: List<Fragment>) : FragmentStateAdapter(fragmentActivity) {
+class NewHotViewPagerAdapter(
+    fragmentActivity: FragmentActivity,
+    private val fragments: List<Fragment>
+) : FragmentStateAdapter(fragmentActivity) {
 
     override fun getItemCount(): Int = 2
 

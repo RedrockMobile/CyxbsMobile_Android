@@ -13,7 +13,6 @@ import android.widget.Toast
 import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.qa.R
-import com.mredrock.cyxbs.qa.pages.dynamic.ui.fragment.DynamicFragment
 import kotlinx.android.synthetic.main.qa_dialog_report.*
 
 /**
@@ -21,7 +20,6 @@ import kotlinx.android.synthetic.main.qa_dialog_report.*
  *@date 2020/8/18
  *@description
  */
-
 
 class QaReportDialog(context: Context) : Dialog(context) {
     init {
@@ -37,32 +35,35 @@ class QaReportDialog(context: Context) : Dialog(context) {
             setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         }
     }
-    fun show( onPositive: (String) -> Unit) {
+
+    fun show(onPositive: (String) -> Unit) {
         qa_tv_tip_deny.setOnSingleClickListener {
             dismiss()
         }
 
         qa_et_report.filters = arrayOf(
-                object : InputFilter.LengthFilter(
-                        Companion.MAX_SIZE) {}
+            object : InputFilter.LengthFilter(
+                MAX_SIZE
+            ) {}
         )
         qa_et_report.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(
-                    charSequence: CharSequence,
-                    i: Int,
-                    i1: Int,
-                    i2: Int
+                charSequence: CharSequence,
+                i: Int,
+                i1: Int,
+                i2: Int
             ) {
             }
 
             override fun onTextChanged(
-                    charSequence: CharSequence,
-                    i: Int,
-                    i1: Int,
-                    i2: Int
+                charSequence: CharSequence,
+                i: Int,
+                i1: Int,
+                i2: Int
             ) {
                 if (charSequence.length >= 150) {
-                    CyxbsToast.makeText(context, R.string.qa_dialog_report_text, Toast.LENGTH_SHORT).show()
+                    CyxbsToast.makeText(context, R.string.qa_dialog_report_text, Toast.LENGTH_SHORT)
+                        .show()
                 }
             }
 

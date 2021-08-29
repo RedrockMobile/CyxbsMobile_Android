@@ -14,7 +14,8 @@ import kotlinx.android.synthetic.main.qa_recycler_item_empty_holder.view.*
 class EmptyRvAdapter(private val hint: String) : BaseRvAdapter<Boolean>() {
     private var showed = false
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = EmptyViewHolder(hint, parent)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
+        EmptyViewHolder(hint, parent)
 
     fun showHolder(size: Int = 1) {
         if (!showed) {
@@ -27,7 +28,8 @@ class EmptyRvAdapter(private val hint: String) : BaseRvAdapter<Boolean>() {
         refreshData(listOf(true))
     }
 
-    class EmptyViewHolder(private val hint: String, parent: ViewGroup) : BaseViewHolder<Boolean>(parent, R.layout.qa_recycler_item_empty_holder) {
+    class EmptyViewHolder(private val hint: String, parent: ViewGroup) :
+        BaseViewHolder<Boolean>(parent, R.layout.qa_recycler_item_empty_holder) {
         override fun refresh(data: Boolean?) {
             if (data == true) {
                 itemView.card_holder.gone()

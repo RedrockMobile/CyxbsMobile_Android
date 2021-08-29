@@ -3,9 +3,7 @@ package com.mredrock.cyxbs.qa.pages.search.ui
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.View
-import android.view.Window
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import androidx.core.app.ActivityOptionsCompat
@@ -13,11 +11,10 @@ import androidx.fragment.app.Fragment
 import com.mredrock.cyxbs.common.config.CyxbsMob
 import com.mredrock.cyxbs.common.mark.EventBusLifecycleSubscriber
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
-import com.mredrock.cyxbs.common.utils.LogUtils.d
 import com.mredrock.cyxbs.common.utils.extensions.intentFor
 import com.mredrock.cyxbs.common.utils.extensions.longToast
 import com.mredrock.cyxbs.qa.R
-import com.mredrock.cyxbs.qa.bean.QAHistory
+import com.mredrock.cyxbs.qa.beannew.QAHistory
 import com.mredrock.cyxbs.qa.config.RequestResultCode.ClickKnowledge
 import com.mredrock.cyxbs.qa.event.QASearchEvent
 import com.mredrock.cyxbs.qa.pages.search.ui.fragment.QuestionSearchedFragment
@@ -25,7 +22,6 @@ import com.mredrock.cyxbs.qa.pages.search.ui.fragment.QuestionSearchingFragment
 import com.mredrock.cyxbs.qa.pages.search.viewmodel.SearchViewModel
 import com.umeng.analytics.MobclickAgent
 import kotlinx.android.synthetic.main.qa_activity_question_search.*
-import org.greenrobot.eventbus.Logger
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
@@ -37,7 +33,6 @@ class SearchActivity : BaseViewModelActivity<SearchViewModel>(), EventBusLifecyc
     private val questionSearchedFragment: QuestionSearchedFragment by lazy(LazyThreadSafetyMode.NONE) { QuestionSearchedFragment() }
 
     private var searchText = "红岩"//用于保存搜索的数据
-
 
     companion object {
         private const val SEARCH_HINT_KEY = "search_hint_key"

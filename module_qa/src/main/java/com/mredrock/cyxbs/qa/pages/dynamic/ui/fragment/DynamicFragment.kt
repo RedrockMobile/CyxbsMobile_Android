@@ -76,16 +76,12 @@ import kotlin.collections.ArrayList
  * @Date: 2020/11/16 22:07
  */
 @Route(path = QA_ENTRY)
-class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), EventBusLifecycleSubscriber {
+open class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), EventBusLifecycleSubscriber {
     companion object {
         const val REQUEST_LIST_REFRESH_ACTIVITY = 0x1
 
         //R.string.qa_search_hot_word_key 长度
         const val HOT_WORD_HEAD_LENGTH = 6
-    }
-
-    init {
-        isOpenLifeCycleLog = true
     }
 
     //用来将发送调节window alpha的handler,如果任务还未执行就返回到了这个window就马上取消任务
@@ -97,7 +93,7 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), EventBusL
     private var token: String? = null
 
     // 判断rv是否到顶
-    protected var isRvAtTop = true
+    private var isRvAtTop = true
     private lateinit var dynamicListRvAdapter: DynamicAdapter
     override fun getViewModelFactory() = DynamicListViewModel.Factory("recommend")
     override fun onCreateView(
@@ -414,7 +410,6 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), EventBusL
         viewFlipper.setInAnimation(context, R.anim.qa_anim_hot_search_flip_in)
         viewFlipper.setOutAnimation(context, R.anim.qa_anim_hot_search_flip_out)
     }
-
 
 
     private fun getTextView(info: String): TextView {
