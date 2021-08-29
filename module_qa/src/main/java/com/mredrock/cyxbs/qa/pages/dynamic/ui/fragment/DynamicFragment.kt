@@ -1,19 +1,24 @@
 package com.mredrock.cyxbs.qa.pages.dynamic.ui.fragment
 
+import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
 import android.widget.ViewFlipper
 import androidx.core.content.ContextCompat
+import androidx.core.view.doOnPreDraw
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.google.android.material.appbar.CollapsingToolbarLayout
+import com.google.android.material.transition.MaterialElevationScale
 import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.component.CyxbsToast
@@ -93,12 +98,13 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(),EventBusLi
     override fun getViewModelFactory() = DynamicListViewModel.Factory("recommend")
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-
         return inflater.inflate(R.layout.qa_fragment_dynamic, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        postponeEnterTransition()
+        view.doOnPreDraw { startPostponedEnterTransition() }
         initScrollText()
         initDynamics()
         initClick()
@@ -377,18 +383,21 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(),EventBusLi
                     viewModel.getAllCirCleData("问答圈", "test1")
                     //获取用户进入圈子详情退出的时间，去请求从而刷新未读消息
                     viewModel.getMyCirCleData()
-                    refreshTopicMessage()
-                    viewModel.invalidateDynamicList()
+//                    refreshTopicMessage()
+//                    viewModel.invalidateDynamicList()
                 } else {
                     // 不需要刷新，则更新当前的dynamic为详细页的dynamic（避免出现评论数目不一致的问题）
                     dynamicListRvAdapter.curSharedItem?.apply {
                         val dynamic = data?.getParcelableExtra<Dynamic>("refresh_dynamic")
                         dynamic?.let {
-                            dynamicListRvAdapter.curSharedDynamic?.commentCount = dynamic.commentCount
-                            this.findViewById<TextView>(R.id.qa_tv_dynamic_comment_count).text = it.commentCount.toString()
+                            if (dynamicListRvAdapter.curSharedDynamic?.commentCount != it.commentCount){
+                                dynamicListRvAdapter.curSharedDynamic?.commentCount = it.commentCount
+                                this.findViewById<TextView>(R.id.qa_tv_dynamic_comment_count).text = it.commentCount.toString()
+                                dynamicListRvAdapter.notifyItemChanged(dynamicListRvAdapter.curSharedItemPosition)
+                            }
                         }
                     }
-                    dynamicListRvAdapter.notifyDataSetChanged()
+//                    dynamicListRvAdapter.notifyDataSetChanged()
                 }
             }
             // 从发动态返回

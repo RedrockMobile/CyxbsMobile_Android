@@ -29,7 +29,8 @@
             android:windowSoftInputMode="adjustResize|stateVisible" />
         <activity
             android:name=".pages.dynamic.ui.activity.DynamicDetailActivity"
-            android:launchMode="singleTask" />
+            android:launchMode="singleTask"
+            android:windowSoftInputMode="adjustResize"/>
         <activity
             android:name="com.tencent.tauth.AuthActivity"
             android:launchMode="singleTask"

@@ -53,6 +53,7 @@ class SearchActivity : BaseViewModelActivity<SearchViewModel>(), EventBusLifecyc
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        window.setBackgroundDrawableResource(android.R.color.transparent)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.qa_activity_question_search)
         viewModel.getHistoryFromDB()

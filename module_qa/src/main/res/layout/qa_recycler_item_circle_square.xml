@@ -70,7 +70,7 @@
         tools:text="475个成员" />
 
     <TextView
-        android:id="@+id/tv_circle_square_descriprion"
+        android:id="@+id/tv_circle_square_description"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="0dp"

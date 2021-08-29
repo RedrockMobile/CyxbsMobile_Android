@@ -54,7 +54,7 @@
         </com.google.android.material.appbar.CollapsingToolbarLayout>
     </com.google.android.material.appbar.AppBarLayout>
 
-    <RelativeLayout
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/common_window_background"
@@ -76,7 +76,8 @@
                 android:layout_alignParentStart="true"
                 android:layout_centerVertical="true"
                 android:layout_marginStart="17dp"
-                android:src="@drawable/qa_ic_search" />
+                android:src="@drawable/qa_ic_search"
+                android:transitionName="ImageView_Search"/>
 
             <ViewFlipper
                 android:id="@+id/vf_hot_search"
@@ -92,7 +93,7 @@
                 android:textColor="@color/common_level_two_font_color"
                 android:textSize="14sp" />
         </RelativeLayout>
-    </RelativeLayout>
+    </FrameLayout>
 
     <RelativeLayout
         android:id="@+id/rl_tab_view_pager"
@@ -126,7 +127,8 @@
                     android:id="@+id/qa_rv_dynamic_List"
                     android:layout_width="match_parent"
                     android:layout_height="100dp"
-                    tools:listitem="@layout/qa_recycler_item_dynamic_header" />
+                    tools:listitem="@layout/qa_recycler_item_dynamic_header"
+                    android:transitionGroup="true"/>
             </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
         </LinearLayout>
     </RelativeLayout>

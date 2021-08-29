@@ -54,6 +54,7 @@ class DynamicAdapter(val context: Context, private val onItemClickEvent: (Dynami
 
     var curSharedItem: View? = null
     var curSharedDynamic: Dynamic? = null
+    var curSharedItemPosition: Int = 0
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = DynamicViewHolder(parent)
 
     override fun onBindViewHolder(holder: BaseViewHolder<Dynamic>, position: Int) {
@@ -117,7 +118,8 @@ class DynamicAdapter(val context: Context, private val onItemClickEvent: (Dynami
         if (holder !is DynamicViewHolder) return
         curSharedDynamic = data
         curSharedItem = holder.itemView
-        onItemClickEvent.invoke(data, holder.itemView.findViewById<ConstraintLayout>(R.id.qa_ctl_dynamic))
+        curSharedItemPosition = position
+        onItemClickEvent.invoke(data, holder.itemView)
     }
 
     class DynamicViewHolder(parent: ViewGroup) : BaseViewHolder<Dynamic>(parent, R.layout.qa_recycler_item_dynamic_header) {

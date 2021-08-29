@@ -56,7 +56,7 @@ class CircleDetailActivity : BaseViewModelActivity<CircleDetailViewModel>() {
                     "topicItem"
                 )
                 val intent = Intent(context, CircleDetailActivity::class.java)
-                intent.putExtra("topicItem", data)
+                intent.putExtra("topicItemData", data)
                 it.window.exitTransition = Slide(Gravity.START).apply { duration = 500 }
                 startPosition = RESULT_CODE
                 startActivityForResult(activity, intent, RESULT_CODE, opt.toBundle())
@@ -72,8 +72,8 @@ class CircleDetailActivity : BaseViewModelActivity<CircleDetailViewModel>() {
                         "topicItem"
                     )
                     val intent = Intent(BaseApp.context, CircleDetailActivity::class.java)
-                    intent.putExtra("topicItem", data)
-                    it.window.exitTransition = Slide(Gravity.START).apply { duration = 500 }
+                    intent.putExtra("topicItemData", data)
+                    it.window.exitTransition = Slide(Gravity.START).apply { duration = 300L }
                     startPosition = DYNAMIC_DETAIL_REQUEST
                     startActivityForResult(intent, DYNAMIC_DETAIL_REQUEST, opt.toBundle())
                 }
@@ -121,6 +121,7 @@ class CircleDetailActivity : BaseViewModelActivity<CircleDetailViewModel>() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        window.setBackgroundDrawableResource(android.R.color.transparent)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.qa_activity_circle_detail)
         intent.extras?.apply { //在目前情况下，属于是自receive跳转的情况，所以需要再度请求圈子信息
@@ -149,7 +150,7 @@ class CircleDetailActivity : BaseViewModelActivity<CircleDetailViewModel>() {
                         viewModel.topicId = topic.topicId.toInt()
                         iv_circle_square.setAvatarImageFromUrl(topic.topicLogo)
                         tv_circle_square_name.text = topic.topicName
-                        tv_circle_square_descriprion.text = topic.introduction
+                        tv_circle_square_description.text = topic.introduction
                         tv_circle_square_person_number.text = topic.follow_count.toString() + "个成员"
                         qa_detail_tv_title.text = topic.topicName
                         if (topic._isFollow == 1) {
@@ -179,7 +180,7 @@ class CircleDetailActivity : BaseViewModelActivity<CircleDetailViewModel>() {
                 )
         }
         mTencent = Tencent.createInstance(CommentConfig.APP_ID, this)
-        window.enterTransition = Slide(Gravity.END).apply { duration = 500 }
+        window.enterTransition = Slide(Gravity.END).apply { duration = 300L }
         initView()
         if (!isFormReceive) {
             qa_vp_circle_detail.adapter =
@@ -204,7 +205,6 @@ class CircleDetailActivity : BaseViewModelActivity<CircleDetailViewModel>() {
                 }
             }
         }
-        finish()
         super.onBackPressed()
     }
 
@@ -280,11 +280,11 @@ class CircleDetailActivity : BaseViewModelActivity<CircleDetailViewModel>() {
     @SuppressLint("SetTextI18n", "UseCompatLoadingForDrawables")
     private fun initView() {
         if (!isFormReceive) {
-            topic = intent.getParcelableExtra("topicItem")
+            topic = intent.getParcelableExtra("topicItemData")
             viewModel.topicId = topic.topicId.toInt()
             iv_circle_square.setAvatarImageFromUrl(topic.topicLogo)
             tv_circle_square_name.text = topic.topicName
-            tv_circle_square_descriprion.text = topic.introduction
+            tv_circle_square_description.text = topic.introduction
             tv_circle_square_person_number.text = topic.follow_count.toString() + "个成员"
             qa_detail_tv_title.text = topic.topicName
             if (topic._isFollow.equals(1)) {

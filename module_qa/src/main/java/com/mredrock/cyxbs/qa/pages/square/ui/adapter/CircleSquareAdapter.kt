@@ -1,21 +1,20 @@
 package com.mredrock.cyxbs.qa.pages.square.ui.adapter
 
 import android.annotation.SuppressLint
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.content.res.AppCompatResources.getDrawable
-import androidx.constraintlayout.widget.ConstraintLayout
+import android.widget.TextView
+import androidx.appcompat.widget.AppCompatTextView
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
+import androidx.recyclerview.widget.RecyclerView
 import com.mredrock.cyxbs.common.BaseApp.Companion.context
-import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.setAvatarImageFromUrl
-import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.qa.R
-import com.mredrock.cyxbs.qa.beannew.Dynamic
 import com.mredrock.cyxbs.qa.beannew.Topic
-import com.mredrock.cyxbs.qa.component.recycler.BaseRvAdapter
-import com.mredrock.cyxbs.qa.component.recycler.BaseViewHolder
-import com.mredrock.cyxbs.qa.pages.square.viewmodel.CircleSquareViewModel
-import kotlinx.android.synthetic.main.qa_recycler_item_circle_square.view.*
+import com.mredrock.cyxbs.qa.pages.square.ui.activity.CircleSquareActivity
+import de.hdodenhof.circleimageview.CircleImageView
 
 /**
  *@Date 2020-11-19
@@ -23,57 +22,98 @@ import kotlinx.android.synthetic.main.qa_recycler_item_circle_square.view.*
  *@author SpreadWater
  *@description
  */
-class CircleSquareAdapter(val viewmodel: CircleSquareViewModel, private val onItemClickEvent: (Topic, View,Int) -> Unit) : BaseRvAdapter<Topic>() {
+class CircleSquareAdapter :
+    ListAdapter<Topic, CircleSquareAdapter.ViewHolder>(CircleSquareDiffCallback()) {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder<Topic> = CircleSquareViewHolder(parent)
+    /**
+     * Item点击方法回调
+     */
+    var itemClick: ((Topic, View) -> Unit)? = null
 
+    /**
+     * 关注按钮点击方法回调
+     */
+    var concernClick: ((String, Boolean) -> Unit)? = null
 
-    class CircleSquareViewHolder(parent: ViewGroup) : BaseViewHolder<Topic>(parent, R.layout.qa_recycler_item_circle_square) {
-        @SuppressLint("UseCompatLoadingForDrawables", "SetTextI18n")
-        override fun refresh(data: Topic?) {
-            itemView.iv_circle_square.setAvatarImageFromUrl(data?.topicLogo)
-            itemView.tv_circle_square_name.text = data?.topicName
-            itemView.tv_circle_square_descriprion.text = data?.introduction
-            itemView.tv_circle_square_person_number.text = data?.follow_count.toString() + "个成员"
-            if (data?._isFollow!=null) {
-                if (data._isFollow.equals(1)) {
-                    itemView.btn_circle_square_concern.text = "已关注"
-                    itemView.btn_circle_square_concern.background = context.getDrawable(R.drawable.qa_shape_send_dynamic_btn_grey_background)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        val view = LayoutInflater.from(parent.context)
+            .inflate(R.layout.qa_recycler_item_circle_square, parent, false)
+        return ViewHolder(view)
+    }
+
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        holder.bind(getItem(position))
+    }
+
+    @SuppressLint("SetTextI18n", "UseCompatLoadingForDrawables")
+    inner class ViewHolder constructor(itemView: View) : RecyclerView.ViewHolder(itemView) {
+
+        // 找到控件，这里没用dataBinding，会增加编译时间
+        private val circleAvatar: CircleImageView = itemView.findViewById(R.id.iv_circle_square)
+        private val circleName: TextView = itemView.findViewById(R.id.tv_circle_square_name)
+        private val circleDesc: TextView = itemView.findViewById(R.id.tv_circle_square_description)
+        private val circlePersonNum: TextView =
+            itemView.findViewById(R.id.tv_circle_square_person_number)
+        private val circleConcern: AppCompatTextView =
+            itemView.findViewById(R.id.btn_circle_square_concern)
+
+        init {
+            // 在ViewHolder中设置点击事件，减少性能损耗
+            itemView.setOnClickListener {
+                itemClick?.invoke(getItem(adapterPosition), it)
+            }
+            circleConcern.setOnClickListener {
+                val item = getItem(adapterPosition)
+                // 更新关注UI
+                if (item._isFollow == 1) {
+                    item._isFollow = 0
+                    circleConcern.text = "+关注"
+                    circleConcern.background = context.getDrawable(
+                        R.drawable.qa_shape_send_dynamic_btn_blue_background
+                    )
                 } else {
-                    itemView.btn_circle_square_concern.text = "+关注"
-                    itemView.btn_circle_square_concern.background = context.getDrawable(R.drawable.qa_shape_send_dynamic_btn_blue_background)
+                    item._isFollow = 1
+                    circleConcern.text = "已关注"
+                    circleConcern.background = context.getDrawable(
+                        R.drawable.qa_shape_send_dynamic_btn_grey_background
+                    )
+                }
+                concernClick?.invoke(item.topicName, item._isFollow == 0)
+            }
+        }
+
+        // 绑定数据
+        fun bind(data: Topic?) {
+            circleAvatar.setAvatarImageFromUrl(data?.topicLogo)
+            circleName.text = data?.topicName
+            circleDesc.text = data?.introduction
+            circlePersonNum.text = data?.follow_count.toString() + "个成员"
+            data?._isFollow?.let {
+                if (it == 1) {
+                    circleConcern.text = "已关注"
+                    circleConcern.background = context.getDrawable(
+                        R.drawable.qa_shape_send_dynamic_btn_grey_background
+                    )
+                } else {
+                    circleConcern.text = "+关注"
+                    circleConcern.background = context.getDrawable(
+                        R.drawable.qa_shape_send_dynamic_btn_blue_background
+                    )
                 }
             }
         }
     }
+}
 
-    @SuppressLint("UseCompatLoadingForDrawables")
-    override fun onItemClickListener(holder: BaseViewHolder<Topic>, position: Int, data: Topic) {
-        super.onItemClickListener(holder, position, data)
-        onItemClickEvent.invoke(data,
-                holder.itemView.findViewById<ConstraintLayout>(R.id.qa_ctl_topic),position )
-    }
+/**
+ * 圈子广场List的DiffUtil
+ */
+class CircleSquareDiffCallback : DiffUtil.ItemCallback<Topic>() {
+    override fun areItemsTheSame(oldItem: Topic, newItem: Topic) =
+        oldItem.topicId == newItem.topicId
 
-    @SuppressLint("UseCompatLoadingForDrawables")
-    override fun onBindViewHolder(holder: BaseViewHolder<Topic>, position: Int) {
-        super.onBindViewHolder(holder, position)
-        holder.itemView.btn_circle_square_concern.setOnClickListener {
-            if (dataList[position]._isFollow.equals(1)) {
-                //已经关注的状态点击是取消关注
-                viewmodel.followTopic(dataList[position].topicName, dataList[position]._isFollow.equals(1))
-                holder.itemView.btn_circle_square_concern.background = context.getDrawable(R.drawable.qa_shape_send_dynamic_btn_blue_background)
-                dataList[position]._isFollow=0
-                dataList[position].follow_count=dataList[position].follow_count-1
-                holder.itemView.btn_circle_square_concern.text = "+关注"
-                notifyDataSetChanged()
-            } else {
-                viewmodel.followTopic(dataList[position].topicName, dataList[position]._isFollow.equals(1))
-                holder.itemView.btn_circle_square_concern.background = context.getDrawable(R.drawable.qa_shape_send_dynamic_btn_grey_background)
-                dataList[position]._isFollow=1
-                dataList[position].follow_count=dataList[position].follow_count+1
-                holder.itemView.btn_circle_square_concern.text = "已关注"
-                notifyDataSetChanged()
-            }
-        }
+    override fun areContentsTheSame(oldItem: Topic, newItem: Topic): Boolean {
+        return oldItem == newItem
+
     }
 }
