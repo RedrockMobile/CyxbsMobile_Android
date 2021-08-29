@@ -18,9 +18,12 @@ import kotlinx.android.synthetic.main.protocol_activity_web_container.*
 @Route(path = PROTOCOL_WEB_CONTAINER)
 class WebContainerActivity : BaseActivity() {
 
+
+
+
+
     companion object {
         const val URI = "uri"
-
         fun loadWebPage(context: Context, uri: String) {
             context.startActivity(Intent(context, WebContainerActivity::class.java).apply {
                 putExtra(URI, uri)
@@ -32,12 +35,9 @@ class WebContainerActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         val uri = intent.getStringExtra(URI)
         setContentView(R.layout.protocol_activity_web_container)
-
-
         val dialog = ProgressDialog(this)
         dialog.setMessage("加载中...")
         dialog.show()
-
         web_view.settings.apply {
             javaScriptEnabled = true
             domStorageEnabled = true
@@ -65,7 +65,6 @@ class WebContainerActivity : BaseActivity() {
             }
         }
     }
-
 
     override fun onResume() {
         super.onResume()

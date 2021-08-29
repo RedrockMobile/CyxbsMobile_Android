@@ -2,6 +2,7 @@ package com.mredrock.cyxbs.qa.pages.dynamic.ui.adapter
 
 
 import android.content.Context
+import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
@@ -153,7 +154,9 @@ class DynamicAdapter(val context: Context, private val onItemClickEvent: (Dynami
                         }
                     }
                 }
+
                 qa_dynamic_nine_grid_view.setOnItemClickListener { _, index ->
+
                     ViewImageActivity.activityStart(context, data.pics.map { it }.toTypedArray(), index)
                 }
             }

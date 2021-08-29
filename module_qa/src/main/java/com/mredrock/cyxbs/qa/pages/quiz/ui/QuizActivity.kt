@@ -10,6 +10,7 @@ import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
 import android.text.InputFilter
+import android.util.Log
 import android.view.KeyEvent
 import android.view.View
 import android.widget.ImageView
@@ -98,9 +99,10 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
                                 this,
                                 id
                         )
+
                     }
                     progressDialog?.dismiss()
-                    finish()
+                finish()
                 } else {
                     setResult(NEED_REFRESH_RESULT)
                     progressDialog?.dismiss()
@@ -112,12 +114,14 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
         viewModel.finishReleaseCommentEvent.observeNotNull {
             if (it) {
                 setResult(NEED_REFRESH_RESULT, Intent().apply { putExtra("text", "") })
+                Log.e("xxx","(QuizActivity.kt:116)-> 发布动态成功")
                 finish()
             }
         }
 
         viewModel.finishActivityEvent.observeNotNull {
             progressDialog?.dismiss()
+            Log.e("xxx","(QuizActivity.kt:116)-> 发布动态成功")
             finish()
         }
     }
@@ -132,6 +136,7 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
             if (!it.isNullOrEmpty()) {
                 val chipGroup = findViewById<ChipGroup>(R.id.qa_layout_quiz_tag)
                 for (topic in it.withIndex()) {
+
                     topicMap[topic.value.topicName] = topic.value.topicId
                     chipGroup?.addView(
                             (layoutInflater.inflate(
@@ -217,7 +222,9 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
             visible()
             text = getString(R.string.qa_quiz_dialog_next)
             setOnClickListener {
+
                 if (isComment == "") {
+
                     if (viewModel.checkTitleAndContent(
                                     topicType,
                                     qa_edt_quiz_content.text.toString()
@@ -233,6 +240,7 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
                         return@setOnClickListener
                     }
                     progressDialog?.show()
+                    Log.e("xxx","(QuizActivity.kt:241)->提交方法执行了嘛 ")
                     viewModel.submitComment(postId, qa_edt_quiz_content.text.toString(), replyId)
                 }
             }

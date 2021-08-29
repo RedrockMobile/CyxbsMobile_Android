@@ -1,6 +1,7 @@
 package com.mredrock.cyxbs.qa.pages.search.ui.adapter
 
 import android.annotation.SuppressLint
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -54,6 +55,7 @@ class SearchResultHeaderAdapter( val searchKnowledgeAdapter: SearchKnowledgeAdap
         flexBoxManager.flexWrap = FlexWrap.WRAP
 
         holder.cancleImage.setOnClickListener {
+            Log.e("xxx","(SearchResultHeaderAdapter.kt:57)->holder.cancleImage 点击事件 ")
             ClickKnowledge = false
             recyclerView.adapter = searchKnowledgeAdapter
             recyclerView.layoutManager = flexBoxManager

@@ -2,6 +2,7 @@ package com.mredrock.cyxbs.qa.pages.dynamic.ui.fragment
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -112,7 +113,8 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(),EventBusLi
         viewModel.getAllCirCleData("问答圈", "test1")
         dynamicListRvAdapter =
                 DynamicAdapter(this.requireContext()) { dynamic, view ->
-                    DynamicDetailActivity.activityStart(this, view, dynamic)
+
+                  DynamicDetailActivity.activityStart(this, view, dynamic)
                 }.apply {
 
                     onShareClickListener = { dynamic, mode ->
@@ -291,6 +293,7 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(),EventBusLi
 
     private fun initClick() {
         qa_bt_to_quiz.setOnSingleClickListener {
+            Log.e("xxx","(发动态的地方:296)-> ")
             if (isSendDynamic)
                 turnToQuiz()
             else {

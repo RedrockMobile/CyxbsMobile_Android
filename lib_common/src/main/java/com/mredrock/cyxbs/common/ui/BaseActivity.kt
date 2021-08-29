@@ -6,6 +6,7 @@ import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.os.PersistableBundle
+import android.util.Log
 import android.view.Menu
 import android.view.View
 import androidx.annotation.DrawableRes
@@ -164,7 +165,9 @@ abstract class BaseActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
+        Log.e("onResume","(BaseActivity.kt:167)->BaseActivity的 onResume执行 ")
         lifeCycleLog("onResume")
+        Log.e("onResume","(BaseActivity.kt:167)-> BaseActivity   lifeCycleLog(\"onResume\") ")
     }
 
     override fun onPause() {

@@ -1,5 +1,6 @@
 package com.mredrock.cyxbs.qa.pages.search.ui.adapter
 
+import android.util.Log
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -30,6 +31,7 @@ class SearchKnowledgeAdapter( val recyclerView: RecyclerView) : BaseRvAdapter<Kn
     override fun onItemClickListener(holder: BaseViewHolder<Knowledge>, position: Int, data: Knowledge) {
         super.onItemClickListener(holder, position, data)
         holder.itemView.setOnClickListener {
+            Log.e("xxx","(SearchKnowledgeAdapter.kt:33)->holder.itemView+ 点击事件触发 ")
             ClickKnowledge = true
             searchResultHeaderAdapter?.knowledge=data
             recyclerView.adapter=searchResultHeaderAdapter

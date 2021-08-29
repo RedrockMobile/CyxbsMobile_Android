@@ -130,16 +130,16 @@ class QuestionSearchedFragment : BaseViewModelFragment<QuestionSearchedViewModel
                     if (viewModel.isKnowledge) {
                         //知识库不为空时候显示
                         if (ClickKnowledge) {
-                            qa_line.gone()
-                            qa_tv_knowledge.gone()
+                            qa_line.visibility = View.INVISIBLE
+                            qa_tv_knowledge.visibility = View.INVISIBLE
                         } else {
                             qa_line.visibility = View.VISIBLE
                             qa_rv_knowledge.visibility = View.VISIBLE
                             qa_tv_knowledge.visibility = View.VISIBLE
                         }
                     } else {
-                        qa_line.gone()
-                        qa_tv_knowledge.gone()
+                        qa_line.visibility = View.INVISIBLE
+                        qa_tv_knowledge.visibility = View.INVISIBLE
                     }
                 }
             }
@@ -251,8 +251,8 @@ class QuestionSearchedFragment : BaseViewModelFragment<QuestionSearchedViewModel
             if (ClickKnowledge) {
                 //点击知识库时的刷新
                 viewModel.invalidateSearchQuestionList()
-                qa_line.gone()
-                qa_tv_knowledge.gone()
+                qa_line.visibility = View.INVISIBLE
+                qa_tv_knowledge.visibility = View.INVISIBLE
             } else {
                 viewModel.invalidateSearchQuestionList()
             }
@@ -282,9 +282,9 @@ class QuestionSearchedFragment : BaseViewModelFragment<QuestionSearchedViewModel
                 }
                 qa_rv_knowledge.layoutManager = flexBoxManager
             } else {
-                qa_rv_knowledge.gone()
-                qa_line.gone()
-                qa_tv_knowledge.gone()
+                qa_rv_knowledge.visibility = View.INVISIBLE
+                qa_line.visibility = View.INVISIBLE
+                qa_tv_knowledge.visibility = View.INVISIBLE
             }
         }
     }

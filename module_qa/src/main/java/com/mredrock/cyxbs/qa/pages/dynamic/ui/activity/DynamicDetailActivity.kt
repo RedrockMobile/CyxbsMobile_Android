@@ -67,20 +67,26 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
         // 有共享元素动画的启动
         fun activityStart(page: Any?, dynamicItem: View, data: Dynamic) {
 
+
             page.apply {
+
                 var activity: Activity? = null
                 var fragment: Fragment? = null
+
                 if (page is Fragment) {
                     fragment = page
                     activity = page.activity
                 } else if (page is Activity) {
                     activity = page
                 }
+
+
                 activity?.let { it ->
                     val opt = ActivityOptionsCompat.makeSceneTransitionAnimation(it, dynamicItem, "dynamicItem")
                     val intent = Intent(it, DynamicDetailActivity::class.java)
                     intent.putExtra("dynamic", data)
                     it.window.exitTransition = Slide(Gravity.START).apply { duration = 300 }
+                    it.startActivityForResult(intent, DYNAMIC_DETAIL_REQUEST, opt.toBundle())
                     if (fragment != null) {
                         fragment.startActivityForResult(intent, DYNAMIC_DETAIL_REQUEST, opt.toBundle())
                     } else {
@@ -211,15 +217,13 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
     )
 
 
-    @SuppressLint("ClickableViewAccessibility")
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.qa_activity_dynamic_detail)
-
         dynamic = intent.getParcelableExtra("dynamic")
-
         viewModel.position = -1
-
         intent.extras?.apply {
             if (!getBoolean("isFromReceive")) return@apply
             val postId = getString("id")
@@ -246,6 +250,9 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
         initOnClickListener()
 
     }
+
+
+
 
     private fun initChangeColorAnimator(startColor: String, endColor: String) {
         val isDarkMode = context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES
@@ -374,10 +381,14 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
                         ?: -1).toString())
             }
         }
+
         viewModel.deleteDynamic.observe {
             // 通知主页面刷新
             setResult(NEED_REFRESH_RESULT)
-            finish()
+            if( viewModel.isNeedFinish==true){
+                finish()
+                viewModel.isNeedFinish=false
+            }
         }
         viewModel.dynamic.observe {
             refreshDynamic()
