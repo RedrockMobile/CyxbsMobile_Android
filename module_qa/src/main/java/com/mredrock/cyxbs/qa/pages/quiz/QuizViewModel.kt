@@ -26,7 +26,7 @@ import com.mredrock.cyxbs.qa.utils.removeContinuousEnters
 import io.reactivex.Observable
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
-import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.asRequestBody
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
@@ -96,9 +96,10 @@ class QuizViewModel : BaseViewModel() {
                 .safeSubscribeBy {
                     it?.let { list ->
                         list.forEachIndexed { index, pair ->
-                            val suffix = pair.first.name.substring(pair.first.name.lastIndexOf(".") + 1)
+                            val suffix =
+                                pair.first.name.substring(pair.first.name.lastIndexOf(".") + 1)
                             val imageBody =
-                                RequestBody.create("image/$suffix".toMediaTypeOrNull(), pair.first)
+                                pair.first.asRequestBody("image/$suffix".toMediaTypeOrNull())
                             val name = "photo" + (index + 1)
                             builder.addFormDataPart(name, pair.first.name, imageBody)
                         }
@@ -112,7 +113,7 @@ class QuizViewModel : BaseViewModel() {
     }
 
     //暂时想不出太好的解耦合方案，这里设计的不太好，可能需要重构
-    fun sendDynamicRequest(parts :List<MultipartBody.Part>, filePairs: List<Pair<File, Boolean>>?){
+    private fun sendDynamicRequest(parts: List<MultipartBody.Part>, filePairs: List<Pair<File, Boolean>>?) {
         ApiGenerator.getApiService(ApiServiceNew::class.java)
             .releaseDynamic(parts)
             .mapOrThrowApiException()
@@ -152,7 +153,7 @@ class QuizViewModel : BaseViewModel() {
         return result
     }
 
-    fun getDraft() {
+    private fun getDraft() {
         ApiGenerator.getApiService(ApiServiceNew::class.java)
             .getDraft()
             .mapOrThrowApiException()
@@ -169,7 +170,10 @@ class QuizViewModel : BaseViewModel() {
                 }
                 it.images = newList
                 draft.value = it
-                LogUtils.d("Gibson", "after cast = $it, imagesIsNullOrEmpty = ${draft.value?.images.isNullOrEmpty()}, imageList size = ${draft.value?.images?.size}")
+                LogUtils.d(
+                    "Gibson",
+                    "after cast = $it, imagesIsNullOrEmpty = ${draft.value?.images.isNullOrEmpty()}, imageList size = ${draft.value?.images?.size}"
+                )
             }
     }
 
@@ -181,7 +185,6 @@ class QuizViewModel : BaseViewModel() {
                 toastEvent.value = R.string.qa_delete_draft
             }
             .safeSubscribeBy {
-                LogUtils.d("deletedraft", it.toString())
             }
     }
 
@@ -243,7 +246,7 @@ class QuizViewModel : BaseViewModel() {
                 .toList()
             files.forEachIndexed { index, pair ->
                 val suffix = pair.first.name.substring(pair.first.name.lastIndexOf(".") + 1)
-                val imageBody = RequestBody.create("image/$suffix".toMediaTypeOrNull(), pair.first)
+                val imageBody = pair.first.asRequestBody("image/$suffix".toMediaTypeOrNull())
                 val name = "photo" + (index + 1)
                 builder.addFormDataPart(name, pair.first.name, imageBody)
             }

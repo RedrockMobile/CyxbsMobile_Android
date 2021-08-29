@@ -4,16 +4,17 @@ import android.graphics.Path;
 import android.graphics.PointF;
 
 /**
+ *
  */
 final public class HeartShapePathController {
     /**
-     * Bézier曲线画圆的近似常数
+     * Bezier曲线画圆的近似常数
      */
     private static final float BEZIER_C = 0.551915024494f;
     public static final float LR_GROUP_C_RATIO = 0.92f;
     public static final float LR_GROUP_B_RATIO = 1.0f;
-    public static final float B_GROUP_AC_RATIO =0.7f ;
-    public static final float T_GROUP_B_RATIO =0.5f ;
+    public static final float B_GROUP_AC_RATIO = 0.7f;
+    public static final float T_GROUP_B_RATIO = 0.5f;
     private final float mLrGroupCRatio;
     private final float mLrGroupBRatio;
     private final float mBGroupACRatio;
@@ -33,23 +34,24 @@ final public class HeartShapePathController {
     private PointF lPointC;
 
     public HeartShapePathController(float lrGroupCRatio, float lrGroupBRatio, float bGroupLRRatio, float tGroupBRatio) {
-        this.mLrGroupCRatio =lrGroupCRatio;
-        this.mLrGroupBRatio =lrGroupBRatio;
-        this.mBGroupACRatio =bGroupLRRatio;
-        this.mTroupBRatio =tGroupBRatio;
+        this.mLrGroupCRatio = lrGroupCRatio;
+        this.mLrGroupBRatio = lrGroupBRatio;
+        this.mBGroupACRatio = bGroupLRRatio;
+        this.mTroupBRatio = tGroupBRatio;
     }
+
     /**
-     * 初始化Bézier 曲线四组控制点
+     * 初始化Bezier 曲线四组控制点
      */
     private void updateControlPoints(int radius) {
-        float  offset = BEZIER_C * radius;
+        float offset = BEZIER_C * radius;
 
         tPointA = new PointF(-offset, -radius);
         tPointB = new PointF(0, -radius * mTroupBRatio);
         tPointC = new PointF(offset, -radius);
 
         rPointA = new PointF(radius, -offset);
-        rPointB = new PointF(radius*mLrGroupBRatio, 0);
+        rPointB = new PointF(radius * mLrGroupBRatio, 0);
         rPointC = new PointF(radius * mLrGroupCRatio, offset);
 
         bPointA = new PointF(-offset, radius * mBGroupACRatio);
@@ -57,7 +59,7 @@ final public class HeartShapePathController {
         bPointC = new PointF(offset, radius * mBGroupACRatio);
 
         lPointA = new PointF(-radius, -offset);
-        lPointB = new PointF(-radius* mLrGroupBRatio, 0);
+        lPointB = new PointF(-radius * mLrGroupBRatio, 0);
         lPointC = new PointF(-radius * mLrGroupCRatio, offset);
     }
 

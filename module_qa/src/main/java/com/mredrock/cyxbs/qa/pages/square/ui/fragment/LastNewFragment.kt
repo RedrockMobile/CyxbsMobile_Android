@@ -1,6 +1,5 @@
 package com.mredrock.cyxbs.qa.pages.square.ui.fragment
 
-import com.mredrock.cyxbs.qa.pages.dynamic.viewmodel.DynamicListViewModel
 import com.mredrock.cyxbs.qa.pages.square.viewmodel.CircleDetailViewModel
 
 /**

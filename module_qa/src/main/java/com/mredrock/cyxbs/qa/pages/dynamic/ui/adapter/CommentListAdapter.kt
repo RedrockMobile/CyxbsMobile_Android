@@ -110,7 +110,12 @@ class CommentListAdapter(
                 }
                 if (qa_rv_reply.adapter == null) {
                     qa_rv_reply.adapter =
-                        ReplyListAdapter(onReplyInnerClickEvent, onReplyInnerLongClickEvent, {},isFromMine)
+                        ReplyListAdapter(
+                            onReplyInnerClickEvent,
+                            onReplyInnerLongClickEvent,
+                            {},
+                            isFromMine
+                        )
                 }
                 //判断是否有二级回复
                 if (data.replyList.isNullOrEmpty()) {

@@ -5,6 +5,7 @@ import android.graphics.Canvas
 import android.os.Build
 import android.text.TextPaint
 import android.util.AttributeSet
+import androidx.core.content.ContextCompat
 import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.utils.extensions.*
 import com.mredrock.cyxbs.qa.R
@@ -87,7 +88,6 @@ class LikeViewSlim @JvmOverloads constructor(
         praiseCount: Int,
         isFromMine: Boolean = false
     ) {
-        // Log.e("sandyzhang", "[$id:$model], isPraised = $isPraised, praiseCount = $praiseCount")
         if (id == "0") {
             throw IllegalStateException("id must not be 0")
         }
@@ -198,7 +198,7 @@ class LikeViewSlim @JvmOverloads constructor(
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             resources.getColor(res, null)
         } else {
-            resources.getColor(res)
+            ContextCompat.getColor(context,res)
         }
     }
 

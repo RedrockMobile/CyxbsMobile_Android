@@ -1,10 +1,8 @@
 package com.mredrock.cyxbs.qa.pages.dynamic.ui.activity
 
-import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.graphics.Canvas
-import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Rect
 import android.os.Bundle
@@ -51,7 +49,12 @@ class ReplyDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
 
     // 增加回复的header
     private var itemDecoration = object : RecyclerView.ItemDecoration() {
-        override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
+        override fun getItemOffsets(
+            outRect: Rect,
+            view: View,
+            parent: RecyclerView,
+            state: RecyclerView.State
+        ) {
             if (parent.getChildAdapterPosition(view) == 0) {
                 outRect.set(0, 0, 0, dp2px(40f))
             } else {
@@ -61,17 +64,19 @@ class ReplyDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
 
         override fun onDrawOver(c: Canvas, parent: RecyclerView, state: RecyclerView.State) {
             val height = dp2px(40f) // header高度
-            val topY = max((parent.layoutManager?.findViewByPosition(1)?.top?.toFloat()
-                    ?: 0f) - height, 0f)
+            val topY = max(
+                (parent.layoutManager?.findViewByPosition(1)?.top?.toFloat()
+                    ?: 0f) - height, 0f
+            )
 
             c.drawRect(Rect(0, topY.toInt(), parent.width, topY.toInt() + height), Paint().apply {
-                color = resources.getColor(R.color.qa_reply_detail_header_background_color)
+                color = ContextCompat.getColor(this@ReplyDetailActivity,R.color.qa_reply_detail_header_background_color)
                 isAntiAlias = true
             })
             c.drawText("回复", dp2px(12f).toFloat(), topY + dp2px(26f), Paint().apply {
                 textSize = sp(16).toFloat()
                 isAntiAlias = true
-                color = resources.getColor(R.color.common_level_one_font_color)
+                color = ContextCompat.getColor(this@ReplyDetailActivity,R.color.common_level_one_font_color)
             })
         }
     }
@@ -87,11 +92,11 @@ class ReplyDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
             activity.apply {
                 window.exitTransition = Slide(Gravity.START).apply { duration = 500 }
                 startActivityForResult(
-                        Intent(this, ReplyDetailActivity::class.java).apply {
-                            putExtra("commentId", cId)
-                            replyIdScreen?.let { putExtra("replyIdScreen", it) }
-                        },
-                        RequestResultCode.REPLY_DETAIL_REQUEST
+                    Intent(this, ReplyDetailActivity::class.java).apply {
+                        putExtra("commentId", cId)
+                        replyIdScreen?.let { putExtra("replyIdScreen", it) }
+                    },
+                    RequestResultCode.REPLY_DETAIL_REQUEST
                 )
             }
         }
@@ -140,19 +145,20 @@ class ReplyDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
                 }
                 dataList?.let { it1 -> it.onNext(it1) }
             }
-                    .setSchedulers()
-                    .safeSubscribeBy {
-                        it?.toMutableList()?.let { it1 -> replyDetailAdapter?.refreshData(it1) }
+                .setSchedulers()
+                .safeSubscribeBy {
+                    it?.toMutableList()?.let { it1 -> replyDetailAdapter?.refreshData(it1) }
 
-                        qa_reply_detail_swipe_refresh.isRefreshing = false
+                    qa_reply_detail_swipe_refresh.isRefreshing = false
 
-                        qa_reply_detail_rv_reply_list.removeItemDecoration(itemDecoration)
-                        if (!replyIdScreen.isNullOrEmpty() && (it?.size
-                                        ?: 0) > 1 && it?.get(0)?.commentId == replyIdScreen) {
-                            qa_reply_detail_rv_reply_list.addItemDecoration(itemDecoration)
-                        }
-
+                    qa_reply_detail_rv_reply_list.removeItemDecoration(itemDecoration)
+                    if (!replyIdScreen.isNullOrEmpty() && (it?.size
+                            ?: 0) > 1 && it?.get(0)?.commentId == replyIdScreen
+                    ) {
+                        qa_reply_detail_rv_reply_list.addItemDecoration(itemDecoration)
                     }
+
+                }
 
         })
     }
@@ -164,51 +170,63 @@ class ReplyDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
         }
 
         replyDetailAdapter = ReplyDetailAdapter(
-                isReplyDetail = !replyIdScreen.isNullOrEmpty(),
-                onReplyInnerClickEvent = { comment ->
-                    startActivity(Intent(this, DynamicDetailActivity::class.java))
-                    viewModel.replyInfo.value = ReplyInfo(comment.nickName, comment.content, comment.commentId)
-                },
-                onReplyInnerLongClickEvent = { comment, itemView ->
-                    val optionPopWindow = OptionalPopWindow.Builder().with(this)
-                            .addOptionAndCallback(CommentConfig.REPLY) {
-                                viewModel.replyInfo.value = ReplyInfo(comment.nickName, comment.content, comment.commentId)
-                            }.addOptionAndCallback(CommentConfig.COPY) {
-                                ClipboardController.copyText(this, comment.content)
-                            }
-                    // 如果总动态是自己发的，或者该评论是自己的，则可以删除（可以控评）
-                    if (viewModel.dynamic.value?.isSelf == 1 || comment.isSelf) {
-                        optionPopWindow.addOptionAndCallback(CommentConfig.DELETE) {
-                            QaDialog.show(this, resources.getString(R.string.qa_dialog_tip_delete_comment_text), {}) {
-                                viewModel.deleteId(comment.commentId, DynamicDetailActivity.COMMENT_DELETE)
-                            }
+            isReplyDetail = !replyIdScreen.isNullOrEmpty(),
+            onReplyInnerClickEvent = { comment ->
+                startActivity(Intent(this, DynamicDetailActivity::class.java))
+                viewModel.replyInfo.value =
+                    ReplyInfo(comment.nickName, comment.content, comment.commentId)
+            },
+            onReplyInnerLongClickEvent = { comment, itemView ->
+                val optionPopWindow = OptionalPopWindow.Builder().with(this)
+                    .addOptionAndCallback(CommentConfig.REPLY) {
+                        viewModel.replyInfo.value =
+                            ReplyInfo(comment.nickName, comment.content, comment.commentId)
+                    }.addOptionAndCallback(CommentConfig.COPY) {
+                        ClipboardController.copyText(this, comment.content)
+                    }
+                // 如果总动态是自己发的，或者该评论是自己的，则可以删除（可以控评）
+                if (viewModel.dynamic.value?.isSelf == 1 || comment.isSelf) {
+                    optionPopWindow.addOptionAndCallback(CommentConfig.DELETE) {
+                        QaDialog.show(
+                            this,
+                            resources.getString(R.string.qa_dialog_tip_delete_comment_text),
+                            {}) {
+                            viewModel.deleteId(
+                                comment.commentId,
+                                DynamicDetailActivity.COMMENT_DELETE
+                            )
                         }
                     }
-                    // 如果回复不是自己的，就可以举报
-                    if (!comment.isSelf) {
-                        optionPopWindow.addOptionAndCallback(CommentConfig.REPORT) {
-                            QaReportDialog(this).apply {
-                                show { reportContent ->
-                                    viewModel.report(comment.commentId, reportContent, CommentConfig.REPORT_COMMENT_MODEL)
-                                }
-                            }.show()
-                        }
-                    }
-                    optionPopWindow.show(itemView, OptionalPopWindow.AlignMode.CENTER, 0)
-                },
-                onReplyMoreDetailClickEvent = { replyIdScreen ->
-                    activityStart(this, commentId, replyIdScreen)
-
                 }
+                // 如果回复不是自己的，就可以举报
+                if (!comment.isSelf) {
+                    optionPopWindow.addOptionAndCallback(CommentConfig.REPORT) {
+                        QaReportDialog(this).apply {
+                            show { reportContent ->
+                                viewModel.report(
+                                    comment.commentId,
+                                    reportContent,
+                                    CommentConfig.REPORT_COMMENT_MODEL
+                                )
+                            }
+                        }.show()
+                    }
+                }
+                optionPopWindow.show(itemView, OptionalPopWindow.AlignMode.CENTER, 0)
+            },
+            onReplyMoreDetailClickEvent = { replyIdScreen ->
+                activityStart(this, commentId, replyIdScreen)
+
+            }
         )
 
         qa_reply_detail_rv_reply_list.apply {
             layoutManager = LinearLayoutManager(context)
 
             val adapterWrapper = RvAdapterWrapper(
-                    normalAdapter = replyDetailAdapter!!,
-                    emptyAdapter = emptyRvAdapter,
-                    footerAdapter = footerRvAdapter
+                normalAdapter = replyDetailAdapter!!,
+                emptyAdapter = emptyRvAdapter,
+                footerAdapter = footerRvAdapter
             )
             adapter = adapterWrapper
         }
@@ -217,7 +235,12 @@ class ReplyDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
 
     private fun initToolbar() {
         qa_tv_toolbar_title.text = resources.getText(R.string.qa_reply_detail_title_text)
-        qa_include_toolbar.setBackgroundColor(ContextCompat.getColor(this, R.color.qa_reply_inner_background_color))
+        qa_include_toolbar.setBackgroundColor(
+            ContextCompat.getColor(
+                this,
+                R.color.qa_reply_inner_background_color
+            )
+        )
         qa_ib_toolbar_back.setOnSingleClickListener {
             onBackPressed()
         }

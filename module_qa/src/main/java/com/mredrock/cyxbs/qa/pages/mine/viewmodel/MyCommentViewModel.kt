@@ -30,11 +30,11 @@ class MyCommentViewModel : BaseViewModel() {
 
     init {
         val config = PagedList.Config.Builder()
-                .setEnablePlaceholders(false)
-                .setPrefetchDistance(3)
-                .setPageSize(6)
-                .setInitialLoadSizeHint(6)
-                .build()
+            .setEnablePlaceholders(false)
+            .setPrefetchDistance(3)
+            .setPageSize(6)
+            .setInitialLoadSizeHint(6)
+            .build()
         factory = MyCommentDataSource.Factory()
         cwList = LivePagedListBuilder<Int, CommentWrapper>(factory, config).build()
 
@@ -48,41 +48,41 @@ class MyCommentViewModel : BaseViewModel() {
 
     fun praise(id: String, onSuccess: () -> Unit) {
         ApiGenerator.getApiService(ApiServiceNew::class.java)
-                .praise(id, "2")//model确定为对评论进行点赞
-                .setSchedulers()
-                .doOnErrorWithDefaultErrorHandler { true }
-                .safeSubscribeBy(
-                        onError = {
-                            BaseApp.context.toast("点赞失败")
-                        },
-                        onNext = {
-                            onSuccess.invoke()
-                        }
-                )
+            .praise(id, "2")//model确定为对评论进行点赞
+            .setSchedulers()
+            .doOnErrorWithDefaultErrorHandler { true }
+            .safeSubscribeBy(
+                onError = {
+                    BaseApp.context.toast("点赞失败")
+                },
+                onNext = {
+                    onSuccess.invoke()
+                }
+            )
     }
 
-    fun reply(comment: Comment, content: String, onSuccess: () -> Unit){
+    fun reply(comment: Comment, content: String, onSuccess: () -> Unit) {
         var rContent = content
         val commentId = if (comment.replyId == "") comment.commentId else comment.replyId
-        if (comment.fromNickname != ""){
+        if (comment.fromNickname != "") {
             //TODO: 实现手段有待商榷
-            rContent = "回复 @${comment.fromNickname}: "+content
+            rContent = "回复 @${comment.fromNickname}: " + content
         }
         ApiGenerator.getApiService(ApiServiceNew::class.java)
-                .releaseComment(
-                        rContent.removeContinuousEnters(),
-                        comment.postId,
-                        commentId
-                )
-                .setSchedulers()
-                .doOnErrorWithDefaultErrorHandler { true }
-                .safeSubscribeBy(
-                        onError = {
-                            BaseApp.context.toast("评论失败o(*￣▽￣*)o")
-                        },
-                        onNext = {
-                            onSuccess.invoke()
-                        }
-                )
+            .releaseComment(
+                rContent.removeContinuousEnters(),
+                comment.postId,
+                commentId
+            )
+            .setSchedulers()
+            .doOnErrorWithDefaultErrorHandler { true }
+            .safeSubscribeBy(
+                onError = {
+                    BaseApp.context.toast("评论失败o(*￣▽￣*)o")
+                },
+                onNext = {
+                    onSuccess.invoke()
+                }
+            )
     }
 }

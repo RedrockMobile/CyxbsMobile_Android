@@ -1,14 +1,9 @@
 package com.mredrock.cyxbs.qa.pages.mine.ui
 
 import android.graphics.Color
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.WrapperListAdapter
-import androidx.core.content.ContextCompat
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.alibaba.android.arouter.facade.annotation.Route
-import com.mredrock.cyxbs.common.config.QA_ANSWER
 import com.mredrock.cyxbs.common.config.QA_MY_PRAISE
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
@@ -19,10 +14,8 @@ import com.mredrock.cyxbs.qa.pages.mine.ui.adapter.MyPraiseRvAdapter
 import com.mredrock.cyxbs.qa.pages.mine.viewmodel.MyPraiseViewModel
 import com.mredrock.cyxbs.qa.ui.adapter.EmptyRvAdapter
 import com.mredrock.cyxbs.qa.ui.adapter.FooterRvAdapter
-import kotlinx.android.synthetic.main.qa_activity_my_comment.*
 import kotlinx.android.synthetic.main.qa_activity_my_praise.*
 import kotlinx.android.synthetic.main.qa_common_toolbar.*
-import kotlinx.android.synthetic.main.qa_common_toolbar.view.*
 
 @Route(path = QA_MY_PRAISE)
 class MyPraiseActivity : BaseViewModelActivity<MyPraiseViewModel>() {
@@ -39,7 +32,7 @@ class MyPraiseActivity : BaseViewModelActivity<MyPraiseViewModel>() {
         initClick()
     }
 
-    private fun initView(){
+    private fun initView() {
         //初始化toolBar
         qa_tv_toolbar_title.text = "收到的赞"
         qa_ib_toolbar_back.setOnSingleClickListener {
@@ -53,16 +46,16 @@ class MyPraiseActivity : BaseViewModelActivity<MyPraiseViewModel>() {
         footerRvAdapter = FooterRvAdapter { viewModel.retry() }
 
         val adapterWrapper = RvAdapterWrapper(
-                normalAdapter = myPraiseRvAdapter,
-                emptyAdapter = emptyRvAdapter,
-                footerAdapter = footerRvAdapter
+            normalAdapter = myPraiseRvAdapter,
+            emptyAdapter = emptyRvAdapter,
+            footerAdapter = footerRvAdapter
         )
 
         qa_rv_my_praise.adapter = adapterWrapper
         qa_rv_my_praise.layoutManager = LinearLayoutManager(this)
     }
 
-    private fun initObserve(){
+    private fun initObserve() {
         //观察List是否变化
         viewModel.praiseList.observe {
             myPraiseRvAdapter.submitList(it)
@@ -77,7 +70,7 @@ class MyPraiseActivity : BaseViewModelActivity<MyPraiseViewModel>() {
 
         //观察网络请求返回结果
         viewModel.initialLoad.observe {
-            when(it){
+            when (it) {
                 NetworkState.LOADING -> {
                     qa_swl_my_praise.isRefreshing = true
                     (qa_rv_my_praise.adapter as? RvAdapterWrapper)?.apply {
@@ -95,7 +88,7 @@ class MyPraiseActivity : BaseViewModelActivity<MyPraiseViewModel>() {
         }
     }
 
-    private fun initClick(){
+    private fun initClick() {
         qa_swl_my_praise.setOnRefreshListener {
             viewModel.invalidateCWList()
         }
