@@ -2,12 +2,10 @@ package com.mredrock.cyxbs.qa.pages.search.ui
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
-import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityOptionsCompat
 import androidx.fragment.app.Fragment
 import com.mredrock.cyxbs.common.config.CyxbsMob
@@ -22,8 +20,6 @@ import com.mredrock.cyxbs.qa.event.QASearchEvent
 import com.mredrock.cyxbs.qa.pages.search.ui.fragment.QuestionSearchedFragment
 import com.mredrock.cyxbs.qa.pages.search.ui.fragment.QuestionSearchingFragment
 import com.mredrock.cyxbs.qa.pages.search.viewmodel.SearchViewModel
-import com.mredrock.cyxbs.qa.utils.Focusable
-import com.mredrock.cyxbs.qa.utils.KeyboardController
 import com.umeng.analytics.MobclickAgent
 import kotlinx.android.synthetic.main.qa_activity_question_search.*
 import org.greenrobot.eventbus.Subscribe

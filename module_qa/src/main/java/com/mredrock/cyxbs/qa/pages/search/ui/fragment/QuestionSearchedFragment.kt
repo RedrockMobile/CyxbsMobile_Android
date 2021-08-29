@@ -3,21 +3,18 @@ package com.mredrock.cyxbs.qa.pages.search.ui.fragment
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.TextView
-import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.flexbox.FlexWrap
 import com.google.android.flexbox.FlexboxLayoutManager
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.ui.BaseViewModelFragment
-import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.doIfLogin
 import com.mredrock.cyxbs.common.utils.extensions.gone
 import com.mredrock.cyxbs.qa.R
@@ -31,7 +28,6 @@ import com.mredrock.cyxbs.qa.config.CommentConfig.IGNORE
 import com.mredrock.cyxbs.qa.config.CommentConfig.QQ_FRIEND
 import com.mredrock.cyxbs.qa.config.CommentConfig.QQ_ZONE
 import com.mredrock.cyxbs.qa.config.CommentConfig.REPORT
-import com.mredrock.cyxbs.qa.config.EditTextConfig
 import com.mredrock.cyxbs.qa.config.RequestResultCode.ClickKnowledge
 import com.mredrock.cyxbs.qa.config.RequestResultCode.DYNAMIC_DETAIL_REQUEST
 import com.mredrock.cyxbs.qa.config.RequestResultCode.NEED_REFRESH_RESULT
@@ -42,7 +38,6 @@ import com.mredrock.cyxbs.qa.pages.dynamic.ui.activity.DynamicDetailActivity
 import com.mredrock.cyxbs.qa.pages.dynamic.ui.adapter.DynamicAdapter
 import com.mredrock.cyxbs.qa.pages.quiz.ui.QuizActivity
 import com.mredrock.cyxbs.qa.pages.search.model.SearchQuestionDataSource.Companion.SEARCH_RESULT
-import com.mredrock.cyxbs.qa.pages.search.ui.SearchActivity
 import com.mredrock.cyxbs.qa.pages.search.ui.adapter.SearchKnowledgeAdapter
 import com.mredrock.cyxbs.qa.pages.search.ui.adapter.SearchNoResultAdapter
 import com.mredrock.cyxbs.qa.pages.search.ui.adapter.SearchResultHeaderAdapter
@@ -51,7 +46,6 @@ import com.mredrock.cyxbs.qa.ui.adapter.FooterRvAdapter
 import com.mredrock.cyxbs.qa.ui.widget.QaDialog
 import com.mredrock.cyxbs.qa.ui.widget.QaReportDialog
 import com.mredrock.cyxbs.qa.utils.ClipboardController
-import com.mredrock.cyxbs.qa.utils.KeyboardController
 import com.mredrock.cyxbs.qa.utils.ShareUtils
 import com.mredrock.cyxbs.qa.utils.isNullOrEmpty
 import com.tencent.tauth.Tencent
