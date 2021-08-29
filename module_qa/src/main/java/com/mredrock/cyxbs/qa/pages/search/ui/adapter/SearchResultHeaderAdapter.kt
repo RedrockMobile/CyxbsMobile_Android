@@ -1,10 +1,10 @@
 package com.mredrock.cyxbs.qa.pages.search.ui.adapter
-
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.flexbox.FlexWrap
@@ -38,7 +38,7 @@ class SearchResultHeaderAdapter( val searchKnowledgeAdapter: SearchKnowledgeAdap
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val baseTitle: TextView = view.findViewById(R.id.tv_knowledge_base_title);
         val baseDetail: TextView = view.findViewById(R.id.tv_knowledge_base_detail);
-        val cancleImage: ImageView = view.findViewById(R.id.qa_knowledge_cancle);
+        val cancleImage: RelativeLayout = view.findViewById(R.id.qa_knowledge_cancel);
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {

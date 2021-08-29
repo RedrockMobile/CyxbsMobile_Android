@@ -88,10 +88,6 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), EventBusL
         isOpenLifeCycleLog = true
     }
 
-    //用来将发送调节window alpha的handler,如果任务还未执行就返回到了这个window就马上取消任务
-    private lateinit var handler: Handler
-    private lateinit var windowAlphaRunnable: Runnable
-
     private var isSendDynamic = false
     private var mTencent: Tencent? = null
     private var token: String? = null
@@ -104,14 +100,6 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), EventBusL
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        handler = Handler()
-        windowAlphaRunnable = Runnable()
-        {
-            val window: Window = requireActivity().window
-            val layoutParams: WindowManager.LayoutParams = window.attributes
-            layoutParams.alpha = 0F
-            window.attributes = layoutParams
-        }
         return inflater.inflate(R.layout.qa_fragment_dynamic, container, false)
     }
 
@@ -352,14 +340,9 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), EventBusL
     override fun onResume() {
         super.onResume()
 
-        //如果进入搜索界面马上返回需要立刻取消任务
-        handler.removeCallbacks(windowAlphaRunnable)
-
-        //调节当前window alpha值
-        val window: Window = requireActivity().window
-        val layoutParams: WindowManager.LayoutParams = window.attributes
-        layoutParams.alpha = 1F
-        window.attributes = layoutParams
+        val decorView = requireActivity().window.decorView
+        decorView.animate().cancel()
+        decorView.alpha = 1F
 
         vf_hot_search.startFlipping()
     }
@@ -404,7 +387,7 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), EventBusL
 
             //跳转到searchActivity时让这个window的alpha为透明,防止searchActivity的window alpha变小时这个页面的window展示出来
             //在fragment onResume时将alpha值设置回来
-            handler.postDelayed(windowAlphaRunnable, 1000)
+            requireActivity().window.decorView.animate().alpha(0F).duration = 500L
 
             SearchActivity.activityStart(this, hotWord.toString(), iv_question_search)
             MobclickAgent.onEvent(context, CyxbsMob.Event.QA_SEARCH_RECOMMEND)
