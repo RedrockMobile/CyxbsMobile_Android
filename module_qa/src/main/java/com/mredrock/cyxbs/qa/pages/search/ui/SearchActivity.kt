@@ -32,7 +32,7 @@ import org.greenrobot.eventbus.ThreadMode
 /**
  * Created by yyfbe, Date on 2020/8/12.
  */
-class SearchActivity() : BaseViewModelActivity<SearchViewModel>(), EventBusLifecycleSubscriber {
+class SearchActivity : BaseViewModelActivity<SearchViewModel>(), EventBusLifecycleSubscriber {
     private val questionSearchingFragment: QuestionSearchingFragment by lazy(LazyThreadSafetyMode.NONE) { QuestionSearchingFragment() }
     private val questionSearchedFragment: QuestionSearchedFragment by lazy(LazyThreadSafetyMode.NONE) { QuestionSearchedFragment() }
 
@@ -51,8 +51,7 @@ class SearchActivity() : BaseViewModelActivity<SearchViewModel>(), EventBusLifec
 
             fragment.startActivity(intent, fragment.activity?.let {
                 ActivityOptionsCompat.makeSceneTransitionAnimation(it, view, "ImageView_Search")
-                    .apply {
-                    }.toBundle()
+                    .apply {}.toBundle()
             })
         }
     }
@@ -63,6 +62,7 @@ class SearchActivity() : BaseViewModelActivity<SearchViewModel>(), EventBusLifec
         viewModel.getHistoryFromDB()
         initView()
     }
+
 
     @SuppressLint("ClickableViewAccessibility")
     private fun initView() {
@@ -148,7 +148,7 @@ class SearchActivity() : BaseViewModelActivity<SearchViewModel>(), EventBusLifec
             supportFragmentManager.beginTransaction()
                 .replace(R.id.fcv_question_search, searchedFragment).commit()
         } else {
-            supportFinishAfterTransition()
+            finish()
         }
     }
 }

@@ -88,6 +88,10 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), EventBusL
         isOpenLifeCycleLog = true
     }
 
+    //用来将发送调节window alpha的handler,如果任务还未执行就返回到了这个window就马上取消任务
+    private lateinit var handler: Handler
+    private lateinit var windowAlphaRunnable: Runnable
+
     private var isSendDynamic = false
     private var mTencent: Tencent? = null
     private var token: String? = null
@@ -100,7 +104,14 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), EventBusL
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
+        handler = Handler()
+        windowAlphaRunnable = Runnable()
+        {
+            val window: Window = requireActivity().window
+            val layoutParams: WindowManager.LayoutParams = window.attributes
+            layoutParams.alpha = 0F
+            window.attributes = layoutParams
+        }
         return inflater.inflate(R.layout.qa_fragment_dynamic, container, false)
     }
 
@@ -340,10 +351,14 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), EventBusL
 
     override fun onResume() {
         super.onResume()
+
+        handler.removeCallbacks(windowAlphaRunnable)
+
         val window: Window = requireActivity().window
         val layoutParams: WindowManager.LayoutParams = window.attributes
         layoutParams.alpha = 1F
         window.attributes = layoutParams
+
         vf_hot_search.startFlipping()
     }
 
@@ -357,7 +372,6 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), EventBusL
     }
 
     private fun turnToQuiz() {
-
         context?.doIfLogin("提问") {
             QuizActivity.activityStart(this, "发动态", REQUEST_LIST_REFRESH_ACTIVITY)
             MobclickAgent.onEvent(context, CyxbsMob.Event.CLICK_ASK)
@@ -388,15 +402,7 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), EventBusL
 
             //跳转到searchActivity时让这个window的alpha为透明,防止searchActivity的window alpha变小时这个页面的window展示出来
             //在fragment onResume时将alpha值设置回来
-            Handler().postDelayed(
-                {
-                    val window: Window = requireActivity().window
-                    val layoutParams: WindowManager.LayoutParams = window.attributes
-                    layoutParams.alpha = 0F
-                    window.attributes = layoutParams
-                }, 500
-            )
-
+            handler.postDelayed(windowAlphaRunnable, 1000)
 
             SearchActivity.activityStart(this, hotWord.toString(), iv_question_search)
             MobclickAgent.onEvent(context, CyxbsMob.Event.QA_SEARCH_RECOMMEND)
