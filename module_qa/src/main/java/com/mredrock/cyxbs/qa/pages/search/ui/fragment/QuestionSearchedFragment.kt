@@ -1,5 +1,6 @@
 package com.mredrock.cyxbs.qa.pages.search.ui.fragment
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -280,7 +281,6 @@ class QuestionSearchedFragment : BaseViewModelFragment<QuestionSearchedViewModel
                 knowledges?.let { it1 ->
                     adapterKnowledge.addData(it1)
                 }
-                qa_rv_knowledge.layoutManager = flexBoxManager
             } else {
                 qa_rv_knowledge.gone()
                 qa_line.gone()
@@ -289,6 +289,7 @@ class QuestionSearchedFragment : BaseViewModelFragment<QuestionSearchedViewModel
         }
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         when (requestCode) {
             // 从动态详细返回

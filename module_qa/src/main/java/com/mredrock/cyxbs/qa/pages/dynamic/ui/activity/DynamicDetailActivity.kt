@@ -64,7 +64,7 @@ import kotlinx.android.synthetic.main.qa_recycler_item_dynamic_header.view.*
 class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
     companion object {
 
-        // 有共享元素动画的启动
+        // 有共享元素动画的启动，是从邮问主界面启动的
         fun activityStart(page: Any?, dynamicItem: View, data: Dynamic) {
 
             page.apply {
@@ -90,7 +90,7 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
             }
         }
 
-        // 根据postId启动
+        // 根据postId启动,是从个人界面启动的
         fun activityStart(page: Any?, postId: String) {
 
             var activity: Activity? = null
@@ -104,6 +104,7 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
                 activity?.let {
                     val intent = Intent(context, DynamicDetailActivity::class.java)
                     intent.putExtra("post_id", postId)
+                    intent.putExtra("is_from_mine",true)
                     it.window.exitTransition = Slide(Gravity.START).apply { duration = 300 }
                     it.startActivityForResult(intent, DYNAMIC_DETAIL_REQUEST)
                 }
@@ -113,6 +114,9 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
         const val DYNAMIC_DELETE = "0"
         const val COMMENT_DELETE = "1"
     }
+
+    //是否从个人界面进入的动态详情界面
+    private var isFromMine = false
 
     private val animatorDuration = 300L
 
@@ -225,6 +229,10 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
             val postId = getString("id")
             intent.putExtra("post_id", postId)
         }
+
+        isFromMine = intent.extras?.get("is_from_mine") as Boolean? ?:false
+        LogUtils.d("is_from_mine","isFromMine-->$isFromMine")
+        commentListRvAdapter.isFromMine = isFromMine
 
         // 设置进入动画
         window.enterTransition = Slide(Gravity.END).apply { duration = animatorDuration }

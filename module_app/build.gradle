@@ -15,6 +15,7 @@ apply from: 'andresguard.gradle'
 apply from: 'redex.gradle'
 
 android {
+
     compileSdkVersion build_versions.compile_sdk
     buildToolsVersion build_versions.build_tools
 
