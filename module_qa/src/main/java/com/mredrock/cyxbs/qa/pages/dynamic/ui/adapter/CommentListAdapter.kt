@@ -32,6 +32,7 @@ class CommentListAdapter(
     private val onMoreReplyClickEvent: (replyList: String) -> Unit
 ) : BaseRvAdapter<Comment>() {
 
+    //是否从个人界面进入的动态详情界面
     var isFromMine = false
 
     override fun onItemClickListener(
@@ -109,8 +110,9 @@ class CommentListAdapter(
                 }
                 if (qa_rv_reply.adapter == null) {
                     qa_rv_reply.adapter =
-                        ReplyListAdapter(onReplyInnerClickEvent, onReplyInnerLongClickEvent, {})
+                        ReplyListAdapter(onReplyInnerClickEvent, onReplyInnerLongClickEvent, {},isFromMine)
                 }
+                //判断是否有二级回复
                 if (data.replyList.isNullOrEmpty()) {
                     (qa_rv_reply.adapter as ReplyListAdapter).refreshData(listOf())
                     (qa_rv_reply.adapter as ReplyListAdapter).onMoreClickEvent = {}

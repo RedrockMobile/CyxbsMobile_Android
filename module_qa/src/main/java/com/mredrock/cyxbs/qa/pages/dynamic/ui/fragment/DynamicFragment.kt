@@ -352,8 +352,10 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), EventBusL
     override fun onResume() {
         super.onResume()
 
+        //如果进入搜索界面马上返回需要立刻取消任务
         handler.removeCallbacks(windowAlphaRunnable)
 
+        //调节当前window alpha值
         val window: Window = requireActivity().window
         val layoutParams: WindowManager.LayoutParams = window.attributes
         layoutParams.alpha = 1F

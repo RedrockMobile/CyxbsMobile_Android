@@ -115,6 +115,7 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
         const val COMMENT_DELETE = "1"
     }
 
+    //是否从个人界面进入的动态详情界面
     private var isFromMine = false
 
     private val animatorDuration = 300L
