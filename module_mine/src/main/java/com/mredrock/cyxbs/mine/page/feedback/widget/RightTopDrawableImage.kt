@@ -1,5 +1,5 @@
 /*
-package com.mredrock.cyxbs.mine.page.feedback.history.widget
+package com.mredrock.cyxbs.mine.page.feedback.widget
 
 import android.content.Context
 import android.graphics.Canvas

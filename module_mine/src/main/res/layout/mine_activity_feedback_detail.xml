@@ -12,6 +12,7 @@
         android:layout_height="match_parent"
         android:fillViewport="true"
         android:fitsSystemWindows="true"
+        android:background="@color/mine_feedback_bg_color"
         tools:context=".page.feedback.center.ui.FeedbackDetailActivity">
 
         <RelativeLayout
@@ -44,7 +45,7 @@
                 app:elevation="0dp"
                 app:fabCustomSize="40dp"
                 app:pressedTranslationZ="13dp"
-                app:srcCompat="@drawable/mine_ic_center_back" />
+                app:srcCompat="@drawable/mine_ic_center_back"/>
 
             <TextView
                 android:id="@+id/tv_edit_toolbar"

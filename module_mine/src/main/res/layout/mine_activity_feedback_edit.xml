@@ -19,7 +19,8 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:background="@color/mine_feedback_bg_color">
 
             <RelativeLayout
                 android:id="@+id/mine_relativelayout2"
@@ -153,18 +154,17 @@
                 android:id="@+id/mine_constraintlayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
                 android:background="@drawable/mine_shape_edit_bg"
                 app:layout_constraintTop_toBottomOf="@+id/chip_group"
-                tools:layout_editor_absoluteX="16dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp">
+                tools:layout_editor_absoluteX="16dp">
 
                 <EditText
                     android:id="@+id/et_edit_title"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
-                    android:layout_marginEnd="40dp"
                     android:autofillHints="name"
                     android:background="#00000000"
                     android:hint="@string/mine_feed_edit_title_tv"
@@ -175,15 +175,15 @@
                     android:textColorHint="@color/mine_feedback_edit_title_hint"
                     android:textSize="16sp"
                     android:textStyle="bold"
-                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="@+id/et_edit_pic"
                     app:layout_constraintTop_toTopOf="parent"
                     tools:ignore="TouchTargetSizeCheck,TextContrastCheck" />
 
                 <EditText
                     android:id="@+id/et_edit_description"
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
                     android:layout_marginTop="16dp"
                     android:layout_marginEnd="16dp"
                     android:autofillHints="name"
@@ -196,24 +196,19 @@
                     android:textColor="@color/mine_feedback_edit_description"
                     android:textColorHint="@color/mine_feedback_edit_description_hint"
                     android:textSize="15sp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.0"
-                    app:layout_constraintStart_toStartOf="@+id/et_edit_pic"
                     app:layout_constraintTop_toBottomOf="@id/v_first"
-                    tools:ignore="TouchTargetSizeCheck,TextContrastCheck" />
+                    tools:ignore="TouchTargetSizeCheck,TextContrastCheck"
+                    tools:layout_editor_absoluteX="259dp" />
 
                 <TextView
                     android:id="@+id/et_edit_pic"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="18dp"
                     android:layout_marginTop="16dp"
                     android:text="@string/mine_feedback_edit_pic_tv"
                     android:textColor="@color/mine_feedback_edit_pic"
                     android:textSize="15sp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.0"
-                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintStart_toStartOf="@+id/v_underline_second"
                     app:layout_constraintTop_toBottomOf="@id/v_underline_second"
                     tools:ignore="TextContrastCheck" />
 
@@ -245,25 +240,26 @@
                     android:id="@+id/tv_title_num"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
                     android:layout_marginBottom="6dp"
                     android:text="@{String.valueOf(vm.editTitleNum)}"
                     android:textColor="@color/mine_feedback_edit_num"
                     android:textSize="12sp"
                     app:layout_constraintBottom_toBottomOf="@+id/et_edit_title"
-                    app:layout_constraintEnd_toEndOf="@+id/tv_des_num"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="@+id/et_edit_title"
-                    tools:ignore="TextContrastCheck" />
+                    tools:ignore="TextContrastCheck"
+                    tools:text="16" />
 
                 <TextView
                     android:id="@+id/tv_des_num"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="8dp"
                     android:text="@{@string/mine_feedback_edit_description_num(vm.editDesNum)}"
                     android:textColor="@color/mine_feedback_edit_num"
                     android:textSize="12sp"
-                    app:layout_constraintEnd_toEndOf="@+id/tv_pic_num"
-                    app:layout_constraintStart_toStartOf="@+id/tv_pic_num"
+                    app:layout_constraintEnd_toEndOf="@+id/et_edit_description"
                     app:layout_constraintTop_toBottomOf="@+id/et_edit_description"
                     tools:ignore="TextContrastCheck"
                     tools:text="0/200" />
@@ -272,23 +268,21 @@
                     android:id="@+id/tv_pic_num"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="18dp"
                     android:text="@{@string/mine_feedback_edit_pic_num(vm.picCount)}"
                     android:textColor="@color/mine_feedback_edit_num"
                     android:textSize="12sp"
                     app:layout_constraintBottom_toBottomOf="@+id/et_edit_pic"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="1.0"
-                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="@+id/v_underline_second"
                     app:layout_constraintTop_toTopOf="@+id/et_edit_pic"
-                    tools:ignore="TextContrastCheck" />
+                    tools:ignore="TextContrastCheck"
+                    tools:text="0/3" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rv_banner"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
-                    android:layout_marginTop="7dp"
+                    android:layout_marginTop="10dp"
                     android:layout_marginEnd="16dp"
                     android:layout_marginBottom="22dp"
                     app:layout_constraintBottom_toBottomOf="parent"

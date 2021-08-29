@@ -1,4 +1,4 @@
-package com.mredrock.cyxbs.mine.page.feedback.history.widget
+package com.mredrock.cyxbs.mine.page.feedback.widget
 
 import android.content.Context
 import android.graphics.Canvas
@@ -74,7 +74,7 @@ class RightTopDrawableLayout @JvmOverloads constructor(
 
     override fun dispatchDraw(canvas: Canvas?) {
         super.dispatchDraw(canvas)
-        setPadding(0, dpToFloat(3f).toInt(), dpToFloat(3f).toInt(), 0)
+        setPadding(0, (rightTopDrawableSize/6).toInt(), (rightTopDrawableSize/6).toInt(), 0)
         rightTopDrawable?.setBounds((width - rightTopDrawableSize).toInt(),
             0,
             width,
