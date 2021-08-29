@@ -105,9 +105,9 @@
         android:paddingBottom="9dp"
         app:layout_constraintBottom_toBottomOf="@+id/mine_about_rl_function"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintVertical_bias="0.3"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/mine_about_iv">
+        app:layout_constraintTop_toTopOf="@+id/mine_about_iv"
+        app:layout_constraintVertical_bias="0.3">
 
         <TextView
             android:layout_width="wrap_content"
