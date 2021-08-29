@@ -13,5 +13,5 @@ data class TodoListGetWrapper(
     @SerializedName("sync_time")
     val syncTime: Long,
     @SerializedName("del_todo_array")
-    var delTodoArray: List<Int> = emptyList()
+    var delTodoArray: List<Long> = emptyList()
 ): Serializable

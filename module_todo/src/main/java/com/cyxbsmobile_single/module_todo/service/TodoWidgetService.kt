@@ -4,6 +4,7 @@ import android.content.Intent
 import android.widget.RemoteViews
 import android.widget.RemoteViewsService
 import com.cyxbsmobile_single.module_todo.R
+import com.cyxbsmobile_single.module_todo.model.TodoModel
 import com.cyxbsmobile_single.module_todo.model.bean.RemindMode
 import com.cyxbsmobile_single.module_todo.model.bean.Todo
 import com.cyxbsmobile_single.module_todo.model.database.TodoDatabase
@@ -32,24 +33,16 @@ class TodoWidgetService : RemoteViewsService() {
         private var todoList: List<Todo> = emptyList()
 
         override fun onCreate() {
-            TodoDatabase.INSTANCE.todoDao()
-                .queryTodoByWeatherDone(false)
-                .toObservable()
-                .setSchedulers()
-                .safeSubscribeBy {
-                    todoList = it
-                }
+            TodoModel.INSTANCE.queryByIsDone(false){
+                todoList = it
+            }
         }
 
         override fun onDataSetChanged() {
             //从room中加载尚未完成的todo
-            TodoDatabase.INSTANCE.todoDao()
-                .queryTodoByWeatherDone(false)
-                .toObservable()
-                .setSchedulers()
-                .safeSubscribeBy {
-                    todoList = it
-                }
+            TodoModel.INSTANCE.queryByIsDone(false){
+                todoList = it
+            }
         }
 
         override fun onDestroy() {

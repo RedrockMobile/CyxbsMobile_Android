@@ -9,7 +9,7 @@ import java.io.Serializable
  */
 data class DelPushWrapper(
     @SerializedName("")
-    val delTodoList: List<Int>,
+    val delTodoList: List<Long>,
     @SerializedName("sync_time")
     val syncTime: Long,
     @SerializedName("force")
