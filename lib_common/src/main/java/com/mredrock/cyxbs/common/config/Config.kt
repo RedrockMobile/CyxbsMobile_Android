@@ -119,6 +119,8 @@ const val TODO_LAST_SYNC_TIME = "todo_last_sync_time"
 const val TODO_LAST_MODIFY_TIME = "todo_last_modify_time"
 //todo模块本地修改的todo的id列表
 const val TODO_OFFLINE_MODIFY_LIST = "todo_offline_modify_list"
+//todo模块本地删除的todo的id列表
+const val TODO_OFFLINE_DEL_LIST = "todo_offline_del_list"
 
 //统一拦截的HTTP状态码
 const val TOKEN_EXPIRE = 403//token过期

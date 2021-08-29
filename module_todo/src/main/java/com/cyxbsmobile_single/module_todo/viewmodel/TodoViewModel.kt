@@ -1,5 +1,6 @@
 package com.cyxbsmobile_single.module_todo.viewmodel
 
+import com.cyxbsmobile_single.module_todo.model.TodoModel
 import com.cyxbsmobile_single.module_todo.model.bean.RemindMode
 import com.cyxbsmobile_single.module_todo.model.bean.RepeatBean
 import com.cyxbsmobile_single.module_todo.model.bean.Todo
@@ -34,57 +35,46 @@ class TodoViewModel : BaseViewModel() {
 
     //从数据库加载数据
     fun initDataList(onLoadSuccess: () -> Unit) {
-        TodoDatabase.INSTANCE.todoDao()
-            .queryAllTodo()
-            .toObservable()
-            .setSchedulers()
-            .subscribe(
-                ExecuteOnceObserver(
-                    onExecuteOnceNext = {
-                        wrapperList.clear()
-                        checkedTodoList.clear()
-                        uncheckTodoList.clear()
-                        todoList.clear()
-                        if (!it.isNullOrEmpty()) {
-                            for (todo in it) {
-                                //下面的逻辑是：如果到达了todo重复提醒的下一次的那一天，则将todo设定为尚未完成
-                                if (todo.remindMode.repeatMode != RemindMode.NONE) {
-                                    if (needTodayDone(todo.remindMode)) {
-                                        todo.isChecked = false
-                                    }
-                                }
-                                if (todo.isChecked) checkedTodoList.add(
-                                    TodoItemWrapper.todoWrapper(
-                                        todo
-                                    )
-                                )
-                                else uncheckTodoList.add(TodoItemWrapper.todoWrapper(todo))
-                            }
-                            todoList.addAll(it)
-                            wrapperList.add(TodoItemWrapper.titleWrapper("待办"))
-                            for (todoWrapper in uncheckTodoList) {
-                                wrapperList.add(todoWrapper)
-                            }
-                            wrapperList.add(TodoItemWrapper.titleWrapper("已完成"))
-                            for (todoWrapper in checkedTodoList) {
-                                wrapperList.add(todoWrapper)
-                            }
-                        } else {
-                            wrapperList.add(TodoItemWrapper.titleWrapper("待办"))
-                            wrapperList.add(TodoItemWrapper.titleWrapper("已完成"))
+        TodoModel.INSTANCE.getTodoList {
+            wrapperList.clear()
+            checkedTodoList.clear()
+            uncheckTodoList.clear()
+            todoList.clear()
+            if (!it.isNullOrEmpty()) {
+                for (todo in it) {
+                    //下面的逻辑是：如果到达了todo重复提醒的下一次的那一天，则将todo设定为尚未完成
+                    if (todo.remindMode.repeatMode != RemindMode.NONE) {
+                        if (needTodayDone(todo.remindMode)) {
+                            todo.isChecked = false
                         }
-                        onLoadSuccess.invoke()
                     }
-                )
-            )
+                    if (todo.isChecked) checkedTodoList.add(
+                        TodoItemWrapper.todoWrapper(
+                            todo
+                        )
+                    )
+                    else uncheckTodoList.add(TodoItemWrapper.todoWrapper(todo))
+                }
+                todoList.addAll(it)
+                wrapperList.add(TodoItemWrapper.titleWrapper("待办"))
+                for (todoWrapper in uncheckTodoList) {
+                    wrapperList.add(todoWrapper)
+                }
+                wrapperList.add(TodoItemWrapper.titleWrapper("已完成"))
+                for (todoWrapper in checkedTodoList) {
+                    wrapperList.add(todoWrapper)
+                }
+            } else {
+                wrapperList.add(TodoItemWrapper.titleWrapper("待办"))
+                wrapperList.add(TodoItemWrapper.titleWrapper("已完成"))
+            }
+            onLoadSuccess.invoke()
+        }
     }
 
     fun addTodo(todo: Todo, onSuccess: () -> Unit) {
-        TodoDatabase.INSTANCE
-            .todoDao().insertTodo(todo)
-            .toObservable()
-            .setSchedulers()
-            .safeSubscribeBy {
+        TodoModel.INSTANCE
+            .addTodo(todo){
                 todo.todoId = it
                 uncheckTodoList.add(0, TodoItemWrapper.todoWrapper(todo))
                 wrapperList.add(0, TodoItemWrapper.todoWrapper(todo))

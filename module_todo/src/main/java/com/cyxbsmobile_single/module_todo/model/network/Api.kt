@@ -31,20 +31,20 @@ interface Api {
      * 上传todo到数据库
      */
     @POST("/magipoke-todo/batch-create")
-    fun pushAllTodo(@Body pushWrapper: TodoListPushWrapper):
+    fun pushTodo(@Body pushWrapper: TodoListPushWrapper):
             Observable<RedrockApiWrapper<SyncTime>>
 
     /**
      * 获取最后修改的时间戳
      */
-    @GET
+    @GET("/magipoke-todo/sync-time")
     fun getLastSyncTime():
             Observable<RedrockApiWrapper<SyncTime>>
 
     /**
      * 删除todo
      */
-    @DELETE
+    @DELETE("/magipoke-todo/todos")
     fun delTodo(
         @Body delPushWrapper: DelPushWrapper
     ): Observable<RedrockApiWrapper<SyncTime>>

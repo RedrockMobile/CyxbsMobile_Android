@@ -1,5 +1,6 @@
 package com.cyxbsmobile_single.module_todo.viewmodel
 
+import com.cyxbsmobile_single.module_todo.model.TodoModel
 import com.cyxbsmobile_single.module_todo.model.bean.Todo
 import com.cyxbsmobile_single.module_todo.model.database.TodoDatabase
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
@@ -17,15 +18,7 @@ class TodoDetailViewModel: BaseViewModel() {
     var isChanged = false
 
     fun updateTodo(todo: Todo, onSuccess: () -> Unit){
-        Observable.just(todo)
-            .map {
-                TodoDatabase.INSTANCE.todoDao().updateTodo(todo)
-            }
-            .setSchedulers()
-            .safeSubscribeBy {
-                onSuccess.invoke()
-            }
-
+        TodoModel.INSTANCE.updateTodo(todo, onSuccess)
     }
 
     fun judgeChange(todoAfterChange: Todo): Boolean{

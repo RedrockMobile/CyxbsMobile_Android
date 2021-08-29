@@ -12,6 +12,7 @@ import com.cyxbsmobile_single.module_todo.R
 import com.cyxbsmobile_single.module_todo.adapter.DoubleListFoldRvAdapter.ShowType.NORMAL
 import com.cyxbsmobile_single.module_todo.adapter.DoubleListFoldRvAdapter.ShowType.THREE
 import com.cyxbsmobile_single.module_todo.adapter.slide_callback.SlideCallback
+import com.cyxbsmobile_single.module_todo.model.TodoModel
 import com.cyxbsmobile_single.module_todo.model.bean.RemindMode
 import com.cyxbsmobile_single.module_todo.model.bean.Todo
 import com.cyxbsmobile_single.module_todo.model.bean.TodoItemWrapper
@@ -127,19 +128,12 @@ class DoubleListFoldRvAdapter(
     fun delItem(wrapper: TodoItemWrapper) {
         wrapper.todo?.let { todo ->
             if (todo.isChecked) checkedArray.remove(wrapper) else uncheckedArray.remove(wrapper)
-            Observable.just(wrapper)
-                .map {
-                    TodoDatabase.INSTANCE
-                        .todoDao()
-                        .deleteTodoById(todo.todoId)
-                }
-                .setSchedulers()
-                .safeSubscribeBy {
-                    wrapperCopyList.remove(wrapper)
-                    refreshList()
-                    todoItemWrapperArrayList.remove(wrapper)
-                    checkEmptyItem(true)
-                }
+            TodoModel.INSTANCE.delTodo(todo.todoId){
+                wrapperCopyList.remove(wrapper)
+                refreshList()
+                todoItemWrapperArrayList.remove(wrapper)
+                checkEmptyItem(true)
+            }
         }
     }
 
@@ -217,12 +211,8 @@ class DoubleListFoldRvAdapter(
     }
 
     fun addTodo(todo: Todo) {
-        TodoDatabase.INSTANCE
-            .todoDao()
-            .insertTodo(todo)
-            .toObservable()
-            .setSchedulers()
-            .safeSubscribeBy {
+        TodoModel.INSTANCE
+            .addTodo(todo){
                 //逻辑放在这里的目的是为了更新todo的id
                 LogUtils.d("RayJoe", "add one item")
                 todo.todoId = it
@@ -354,18 +344,7 @@ class DoubleListFoldRvAdapter(
 
     private fun updateTodo(todo: Todo?) {
         todo?.let {
-            Observable.just(it)
-                .map { todo ->
-                    TodoDatabase.INSTANCE.todoDao()
-                        .updateTodo(todo)
-                }.setSchedulers()
-                .safeSubscribe(
-                    ExecuteOnceObserver(
-                        onExecuteOnceError = {
-                            BaseApp.context.toast("更新数据失败")
-                        }
-                    )
-                )
+            TodoModel.INSTANCE.updateTodo(todo){ }
         }
     }
 
